@@ -114,7 +114,7 @@ I built a detector for it, and the number I trust most is this one: run it over
 output and it reads **34**. The signature is not in your photographs. The
 software is putting it there.
 
-#### Then I got it wrong, and the correction matters to you
+#### Then I got it wrong — repeatedly — and the corrections matter to you
 
 I spent several hours measuring that mosaic before checking what the file I was
 measuring actually *was*. It turned out to be a **deliberate negative control** —
@@ -122,27 +122,46 @@ a build with the protection switched off, which the project keeps around
 precisely because it is supposed to look bad. I had been carefully measuring a
 known-bad configuration and describing it as your stacker.
 
-So I re-measured the real thing. **On your actual full-size render the patchwork
-is real but localised: about a quarter of the background** (3 of 12 sampled
-patches). But where it does appear it is severe — the worst patch scores **90**,
-against **42** for a synthetic mosaic I generated *specifically to define what the
-defect looks like*. **The worst real patch is more like crazy paving than the
-artificial crazy paving.**
+Then I built a detector to find the mosaic in the real render, and **the detector
+turned out to fire on your unmerged photographs too** — three times out of
+twelve, harder than it fired on the merge. And the comparison I had been quoting
+put a render of *one* subject against a frame of a *different* subject, which
+compares nothing at all.
 
-The honest headline is therefore not "your backgrounds are a mosaic" but **"a
-quarter of your background is a mosaic, and where it is, it is bad."** I would
-rather hand you the smaller true number than the larger one I had at midnight.
+So I threw all of that out. I would rather hand you a smaller true result than a
+larger one I cannot stand behind. Six things I claimed tonight are now formally
+withdrawn in the project record, and — this is the part I found genuinely
+interesting — **every single one of the six was an error in what I was comparing
+to what, not in how I measured it.** The arithmetic was right every time.
 
-#### And that demoted it, because the halo is worse
+#### What actually survives, measured on identical pixels
 
-The same comparison answered a second question I had not thought to ask. The
-protection that removes the mosaic **leaves the halo completely untouched** — the
-bright outline tracing every hair, leg and antenna, the "cut-out sticker" look.
-In the middle panel the paving is gone and every hair still has a bright rim
-around it.
+The one comparison that holds everything constant — same scene, same geometry,
+same pixels, one contrast stretch shared across all panels — is
+**`C:\dev\strehl-out\ORCH-morning\AB-SHARED-STRETCH.png`**. Open it. Three
+panels:
 
-That flips the ranking. The mosaic is localised, and the shipped configuration
-already suppresses most of it. The halo is on **every** silhouette in **every**
+- **Right:** one of your frames straight from the camera. Soft, slightly grainy,
+  out of focus. What a background should look like.
+- **Left:** the same pixels with the protection switched off. Crazy paving.
+- **Middle:** the same pixels as your stacker actually ships. **The paving is
+  gone.**
+
+Numerically, against the noisiest of your own input frames, the amount of
+structure the stacker adds that is in none of your photographs falls from
+**2.13x to 1.11x** when the shipped protection is on, and the number of sampled
+patches that fail the test falls from **12 of 12 to 7 of 12**. So: the shipped
+stacker is much better than the crippled one, and **it is still measurably
+inventing texture in more than half the background patches I sampled.**
+
+#### And that demoted the mosaic, because the halo is worse
+
+The same comparison answered a question I had not thought to ask. The protection
+that removes the mosaic **leaves the halo completely untouched** — the bright
+outline tracing every hair, leg and antenna, the "cut-out sticker" look. In the
+middle panel the paving is gone and every hair still has a bright rim around it.
+
+That flips the ranking. The halo is on **every** silhouette in **every**
 configuration, and **we have no working fix for it** — one candidate works and
 makes the picture look worse, the other does nothing at all.
 
@@ -150,8 +169,8 @@ makes the picture look worse, the other does nothing at all.
 
 | | defect | status |
 | --- | --- | --- |
-| **1** | Bright halo tracing every silhouette — the "cut-out sticker" look | Real, severe, on every edge. **No working fix.** One candidate looks worse, the other is a no-op. This is now the lead defect. |
-| **2** | Background patchwork / crazy paving | Real, but **localised** — about a quarter of the background. Mostly suppressed already by the shipped settings; a residual survives in ~5 of 12 patches. |
+| **1** | Bright halo tracing every silhouette — the "cut-out sticker" look | Real, severe, on every edge, in every configuration. **No working fix.** One candidate looks worse, the other is a no-op. A dedicated agent is on the mechanism tonight. |
+| **2** | Background texture the stacker invents | Real: 1.11x more fine structure than any of your frames, in 7 of 12 patches. Mostly suppressed already by the shipped settings; a residual survives. |
 | **3** | Lateral chromatic aberration — coloured fringes on bright edges | Confirmed by my own eye. Correction exists, switched off, **under audit** — see below. |
 | **4** | General softness | Expected: at your magnification the optics are the limit, not the software. |
 
@@ -163,6 +182,24 @@ right and I was wrong to overrule him. But **the halo itself is real**, and
 withdrawing the cure is not withdrawing the diagnosis: look at
 `C:\dev\strehl-out\crop-leg-halo.png` and you will see a bright scalloped band
 tracing the whole leg and both claws.
+
+On **#3**, I am deliberately *not* telling you to turn the chromatic-aberration
+correction on yet. I promoted one correction tonight on a headline number that
+turned out to be fifteen points wrong and to come from a section whose title was
+"why I am telling you not to enable it." A second agent is auditing the CA
+numbers the same way before I put them in front of you again. If it clears, that
+is a real win and it is one line to enable.
+
+**What this needs from you: §12.** A static repeat burst is the arm that proves
+the protection *doesn't* fire when nothing moved. Right now that has to be
+simulated. Thirty seconds of your time replaces a simulation with your actual
+camera, your actual sensor, your actual noise.
+
+**Also running tonight:** a campaign measuring every default-off improvement on
+your real captures and writing before/after 1:1 crops to `C:\dev\strehl-out\M116\`
+— look there first in the morning.
+
+### Why §24 is first, and why its purpose changed overnight
 
 On **#3**, I am deliberately *not* telling you to turn the chromatic-aberration
 correction on yet. I promoted one correction tonight on a headline number that
