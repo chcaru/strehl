@@ -303,7 +303,75 @@ file, so it is flagged rather than done.
 
 ---
 
-## 5. Speed — recorded, not acted on
+## 5. Hot pixels — measured, and mostly not the problem
+
+I characterised the sensor's fixed pattern from `D:\macro-dark-frames`
+(11 ISO folders, 50–2000, 22 frames each; the first 2 of every folder discarded
+as stabilisation shots, per the brief). Averaging the 20 usable frames beats
+read noise down by √20 and leaves the fixed pattern. Hot photosites are found
+**within each CFA phase separately** — the four Bayer positions have different
+offsets, and mixing them would flag every red site as hot — against a local
+same-phase median, thresholded in MAD-scaled sigma.
+
+Result: **8685 photosites** are hot at half or more of the ISOs, 183 at every
+ISO, out of 33 MP.
+
+That count on its own is misleading, and it would have been easy to stop there
+and "fix" something. Two things kill it:
+
+1. **The amplitude is tiny at low ISO.** At ISO 100 the median persistent hot
+   pixel sits **2.1 DN** above its neighbours — 0.013% of range. Exactly *two*
+   photosites in the whole sensor exceed 0.1% of range, and *none* exceed 0.5%.
+2. **The dark campaign is at the wrong exposure to answer the question.** All
+   242 darks are 1/100 s. The owner's stacks run **1/40 s to 2.5 s** — up to
+   250× longer — and dark current accumulates with exposure. A count from these
+   darks does not transfer to the library.
+
+So I measured it on the real frames instead. Within a focus bracket the scene is
+static and only focus changes, so a per-pixel **minimum** across frames keeps
+whatever is constant (the fixed pattern) while real detail, sharp in only a few
+frames, falls to its defocused floor. A random 200k-pixel sample is the control.
+
+| stack | exposure / ISO | hot p99 | control p99 | sites > 1% of range |
+|---|---|---:|---:|---:|
+| `lead-1-cpl` | 2.5 s, ISO 100 | 25 DN | 10 DN | **0** |
+| `bee-1-cpl` | ISO 100 | 40 DN | 36 DN | **0** |
+| `foam` | 1.6 s, ISO 1000 | 276 DN | 62 DN | **90** |
+| `coffee-bubbles` | 2.5 s, ISO 1000 | 406 DN | 55 DN | **130** |
+
+**The verdict: hot pixels are real, but they are not why the stacks are
+unusable.** At ISO 100 — 14 of the 26 subjects, including every subject that
+shows the halo — the hot sites are indistinguishable from the scene floor even
+at a 2.5 s exposure (40 DN against a 36 DN control). They become material only
+at ISO 1000, which is exactly **two** subjects, `foam` and `coffee-bubbles`,
+and neither of those is a subject the halo disqualifies.
+
+I therefore did **not** wire repair into the Rust IO path. It would be real work
+for two subjects while the actual disqualifier sits elsewhere, and the brief
+orders me to bias toward a visible result sooner. The expensive half is already
+done and stored: the persistent-site map is at
+`C:\dev\strehl-out\hotpixels\hot-persistent-xy.npy`, so the repair itself is a
+short job whenever it is wanted.
+
+**Capture request for ORCH** (`docs/captures-needed.md` is ORCH's file, so this
+is flagged, not filed): *the dark-frame campaign is mis-specified for its
+purpose.* It is 11 ISOs at a single 1/100 s exposure, but exposure — not ISO —
+is what drives dark current, and the library shoots 1/40 s to 2.5 s. Darks at
+the **exposure times actually used** (≥1 s, at ISO 100 and ISO 1000) would let
+this be settled directly instead of by extrapolation.
+
+### Re-running it
+
+```powershell
+python scripts\hotpixels.py characterise --out C:\dev\strehl-out\hotpixels
+python scripts\hotpixels.py materiality --frames 25 `
+    "D:\personal\macro\lead-1-cpl" "D:\personal\macro\coffee-bubbles" `
+    "D:\personal\macro\foam" "D:\personal\macro\bee-1-cpl"
+```
+
+---
+
+## 6. Speed — recorded, not acted on
 
 Per the brief, nothing was optimised. Whole library: **4825 frames across 26
 subjects in roughly 26 minutes** on a machine simultaneously running other
@@ -314,12 +382,11 @@ sidecar is worth roughly 1.8x on a 299-frame stack (`bee-3-cpl` 49.9 s vs
 
 ---
 
-## 6. Not done
+## 7. Not done
 
-- **Hot-pixel detection and repair from `D:\macro-dark-frames`** (22 frames,
-  discard the first 2 stabilisation shots). Assigned to me, not started —
-  the render table and the instrument took the time. This is the obvious next
-  thing in my lane.
+- **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
+  site map is stored (§5); repair is deliberately deferred, with the measured
+  reason given there. Detection is *not* a gap — it was measured and answered.
 - The measurement-path colour tag and the highlight-ceiling loss in §4.
 - The FOV upsample in §1.3.
 - The silent-success-on-refused-alignment in §1.1.
