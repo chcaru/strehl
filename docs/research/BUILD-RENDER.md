@@ -382,6 +382,175 @@ sidecar is worth roughly 1.8x on a 299-frame stack (`bee-3-cpl` 49.9 s vs
 
 ---
 
+## 8. The haze — the develop path had no tone rendering
+
+The owner opened the full-frame renders and said: *"i'm very disappointed. these
+look horrible."* ORCH then looked at a whole frame personally — the first time
+anyone had, rather than reading crop-level agent reports — and described a milky
+veil over the entire image, a white petal rendering as flat grey, saturated
+green anthers rendering as muddy olive, and lifted blacks. *"It looks like a
+scan, not a photograph."*
+
+### The single-frame control: which lane owns it
+
+The defect could have been in develop (mine) or in the merge contributing a
+low-frequency lift from defocused frames (BUILD-HALO's). ORCH asked for that
+partition before any change, and it costs one render: push a **single frame**
+and the **full stack** through the identical develop path and compare.
+
+| | luminance p0.1 | luminance p99.9 |
+|---|---|---|
+| single frame (`--limit 1 --srgb`) | 0.0836 | 0.7479 |
+| full stack (`--srgb`) | 0.0576 | 0.8219 |
+
+**The single frame is hazier than the stack.** The merge is not adding the
+veil — if anything it removes a little. The defect is in develop, which is this
+lane. That is the whole of the partition, and it took ninety seconds.
+
+### The cause
+
+The develop path was, verbatim from the binary's own report:
+
+```
+black, as-shot WB, demosaic, matrix, clamp, sRGB curve
+```
+
+and it stopped there. **There was no tone rendering at all.** That is
+colorimetrically defensible and photographically dead, because the sRGB transfer
+function is an *encoding*, not a *rendering*. Every camera and every raw
+developer applies a tone rendering on top of it.
+
+Measured on `flower-inner-edge-cpl` in **linear sRGB** (never on an `--srgb`
+render):
+
+- The darkest 0.01% of the frame sat at **0.0038 linear**, not 0. The sRGB toe
+  is steep, so 0.004 linear encodes to ≈0.058 — **a 6% grey floor over the whole
+  picture.** That is the milk.
+- The 99.9th percentile sat at **0.641**, leaving **0.64 stops** of output range
+  simply unused.
+- With no contrast rendering, midtones stayed flat, and flat midtones read as
+  desaturated. The greens were never a colour problem.
+
+One detail worth recording because it rules something out: the floor is **not**
+a uniform DN offset surviving black subtraction. If it were, white balance would
+amplify it most in red (gains run 2.13–2.86×), but the measured floors go the
+other way (G 0.0035 > R 0.0017). It is consistent with real lens flare and
+matrix mixing. The fix is the same either way — a photographic render needs an
+explicit black point regardless of whether the floor is the scene's or ours.
+
+Separately, **12% of pixels (973,235) clamp to zero blue** after the matrix.
+That is a gamut question, not a tone question, and it is untouched here.
+
+### Why 1786 recorded facts missed it
+
+Every measurement this project has ever taken was on **16-bit linear crops**.
+The veil is invisible in a linear crop by construction: it is a small additive
+offset that only becomes a visible grey floor once the transfer curve's toe
+expands it, and the rule "never measure on an `--srgb` render" — which is a
+correct rule, and which has saved results here — guarantees nobody was ever
+looking at the space where it shows. The measurement discipline that kept the
+numbers honest is exactly what hid this. It took opening a picture.
+
+### The fix
+
+`Tone { black, white, contrast }` in `image_out.rs`, measured per image from a
+subsample of linear luminance, and **printed** with the other develop parameters
+so any render can be reproduced:
+
+```
+tone            : black 0.00470, white 0.71107 (linear), contrast 0.55
+```
+
+- **Black and white are placed in linear light**, where the statement is
+  physical: a measured flare floor and a measured exposure. Black is p0.1 —
+  deliberately not the minimum, which a single dead pixel would pin. White reuses
+  the p99.9 → 0.90 rule that M100 *measured* over 7 percentiles × 5 targets × 2
+  statistics, rather than inventing a second, competing convention.
+- **Contrast is a smoothstep S-curve applied in display space**, after the
+  transfer curve, which is where raw developers put it and where it belongs: an
+  S-curve in linear light crushes shadows violently, because linear light is not
+  perceptually spaced. It fixes 0, 0.5 and 1 exactly and is monotonic, so it
+  cannot fold or clip. Applied **per channel**, which is what brings the colour
+  back — a per-channel contrast curve stretches the distance between channels as
+  well as between tones, and that is perceived as saturation.
+
+The safety argument is the *placement*, not the arithmetic. Tone rides with
+`OutputSpace::applies_curve()`, so it is on for `--srgb` and off for
+`--linear-srgb`, camera-linear and `Develop::measurement`. **Every number in the
+corpus is still measured on exactly the pixels it was measured on before, and
+both byte-freeze rows still hold.**
+
+### Result
+
+Both arms were rendered from binaries built from **one source tree differing
+only in `image_out.rs`**, so the merge code is byte-identical across them. This
+matters: three renders of one command previously produced three different files
+because other agents landed builds mid-run.
+
+| | before | after |
+|---|---|---|
+| black floor (p0.1, R/G) | 5.1% / 6.2% of range | 0.0% / 0.3% |
+| white (p99.9, R) | 79.6% | 95.8% |
+| pixels blown in all 3 channels | 0.000% | **0.000%** |
+| pixels crushed in all 3 channels | 0.000% | 0.118% |
+
+0.118% crushed is the 0.1 percentile that was asked for, plus the S-curve's toe.
+Nothing is blown.
+
+But the numbers are not the argument. **Look at
+`C:\dev\strehl-out\tone-ab\before-view.png` and `after-view.png`.** Before: the
+petal is a flat grey-green, the anthers are olive, the frame has no depth.
+After: the petal is white, the anthers are yellow-green and separated, the tips
+are translucent. It is a photograph.
+
+---
+
+## 9. The gallery — the thing the owner opens
+
+Every full-frame image this project produced had coloured ROI rectangles and
+text labels burned into it, and those were the images the owner was shown. He
+had never once seen a clean render of his own photographs. `crop_set.py full`
+drew the boxes unconditionally into a directory called `full`, which reads like
+a deliverable and was treated as one.
+
+Worse, there was no way to look at the product at viewing scale at all.
+Judgement happened at 100% crops and through scalars — which is precisely how a
+veil over every frame survived §8 for so long.
+
+```powershell
+pwsh -File scripts\gallery.ps1 -Exe <pinned strehl.exe>
+```
+
+Renders every subject in `D:\personal\macro`, full frame, through the real Rust
+develop path, downsampled to 2400 px long edge, as clean JPEGs in
+`C:\dev\strehl-out\gallery\`. Beside them:
+
+- `RUN.txt` — the binary's path, size, mtime and **SHA-256**, and the exact
+  render command. Without this a gallery is unfalsifiable: you cannot tell an
+  improvement from a different binary.
+- `manifest.tsv` — subject, frames, seconds, peak MB, exit code, and the tone
+  parameters chosen for that image. Written every iteration, so a run that dies
+  at subject 19 still leaves 18 rows of evidence.
+
+`-Only <substring>` renders one subject for iteration. `-KeepTiff` keeps the
+16-bit intermediates.
+
+**Annotated variants are a sibling, never the gallery.** `crop_set.py full` now
+writes to `annotated/` and takes `--clean`. Those previews deliberately stay on
+the *linear measurement view* rather than the product's tone rendering, because
+they are compared against a frozen baseline and the comparison only means
+anything if the view is fixed. So an annotated preview looks flatter than the
+gallery **on purpose**: the gallery shows the photograph, the overlay shows the
+measurement.
+
+`gallery_view.py` does nothing to the pixels but downsample and drop to 8 bits.
+If it started adjusting images the gallery would stop being a picture of what
+`strehl` produces, which is the only thing it is for. It reads with `tifffile`
+and asserts `uint16`; `PIL.Image.open` silently downconverts 16-bit RGB TIFFs
+and has corrupted results in this project before.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
