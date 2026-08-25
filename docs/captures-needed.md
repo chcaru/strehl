@@ -90,68 +90,91 @@ reason**. I have withdrawn it from the top of the queue.
 ### Then I looked at your photos, and it reordered everything
 
 This is the part I am least proud of and it is the most useful thing in this
-document. The project has run 119 milestones, written 156 research reports and
+document. The project has run 120 milestones, written 156 research reports and
 recorded 1600 facts. **Tonight was the first time I opened one of the rendered
 images and looked at it.**
 
-Ten minutes of looking found a defect that has no milestone, no metric and no
-name anywhere in the corpus — and it is, to my eye, the worst thing in your
-pictures.
+Ten minutes of looking found a defect that had no milestone, no metric and no
+name anywhere in the corpus. I then spent the rest of the night measuring it, got
+it wrong once in a way worth telling you about, and ended up **reordering the list
+of what is actually wrong with your pictures.**
 
-**Open `C:\dev\strehl-out\M87-before-after\00-BEFORE-shipped-merge-tight2x.png`
-and look at the white background, not the bee.** It is broken into irregular
-flat polygons with faint brightness steps between them. Crazy paving. Once you
-see it you cannot unsee it, and it is everywhere the background is out of focus —
-which is most of the frame area in every stack you have shown me.
+#### What I found: the background is partly crazy paving
 
-It is not photographic. A smoothly out-of-focus background is a smooth gradient;
-it cannot contain hard-edged polygons. **The stacker is manufacturing structure
-that is not in any of your frames.** That, I think, is the honest answer to "those
-stacks don't look too good yet" — better than any of the answers I gave you
-earlier tonight, all of which were about defects somebody had already thought to
-build an instrument for.
+**Open `C:\dev\strehl-out\ORCH-morning\AB-SHARED-STRETCH.png`.** Three panels,
+same pixels, same contrast stretch, so a smoother panel genuinely looks smoother.
+The right-hand panel is one of *your* frames straight out of the camera: a soft,
+slightly grainy, out-of-focus background. The left-hand panel is what a stacker
+with its safety switch turned off does to it: **hundreds of flat polygons with
+hard edges.** Crazy paving. It is not photographic — a smoothly out-of-focus
+background is a smooth gradient and cannot contain hard-edged polygons.
 
-**Why I think it happens** — this is a hypothesis, not a measurement, and an agent
-is trying to kill it as I write. Where the background is out of focus in *every*
-frame, no frame is sharper than any other, so the "which frame is sharpest here?"
-question has no answer and the software answers it with noise. A smoothing step
-then tidies that noise into patches. Each patch pulls its pixels from a different
-frame, the frames differ very slightly in brightness, and those differences become
-the visible steps between the patches.
+I built a detector for it, and the number I trust most is this one: run it over
+**one of your unmerged frames** and it reads **0.05**. Run it over the merged
+output and it reads **34**. The signature is not in your photographs. The
+software is putting it there.
 
-If that is right, the fix is already written and switched off — the same story as
-everything else in this section. It is called the soft gate: where the frames are
-genuinely indistinguishable, stop picking a winner and average them instead, which
-is both smooth *and* less noisy. It is being tested tonight against exactly this.
+#### Then I got it wrong, and the correction matters to you
+
+I spent several hours measuring that mosaic before checking what the file I was
+measuring actually *was*. It turned out to be a **deliberate negative control** —
+a build with the protection switched off, which the project keeps around
+precisely because it is supposed to look bad. I had been carefully measuring a
+known-bad configuration and describing it as your stacker.
+
+So I re-measured the real thing. **On your actual full-size render the patchwork
+is real but localised: about a quarter of the background** (3 of 12 sampled
+patches). But where it does appear it is severe — the worst patch scores **90**,
+against **42** for a synthetic mosaic I generated *specifically to define what the
+defect looks like*. **The worst real patch is more like crazy paving than the
+artificial crazy paving.**
+
+The honest headline is therefore not "your backgrounds are a mosaic" but **"a
+quarter of your background is a mosaic, and where it is, it is bad."** I would
+rather hand you the smaller true number than the larger one I had at midnight.
+
+#### And that demoted it, because the halo is worse
+
+The same comparison answered a second question I had not thought to ask. The
+protection that removes the mosaic **leaves the halo completely untouched** — the
+bright outline tracing every hair, leg and antenna, the "cut-out sticker" look.
+In the middle panel the paving is gone and every hair still has a bright rim
+around it.
+
+That flips the ranking. The mosaic is localised, and the shipped configuration
+already suppresses most of it. The halo is on **every** silhouette in **every**
+configuration, and **we have no working fix for it** — one candidate works and
+makes the picture look worse, the other does nothing at all.
 
 **The ranking by eye, which is now the ranking I am working to:**
 
 | | defect | status |
 | --- | --- | --- |
-| **1** | Background patchwork / waxy blobs | New tonight. Candidate fix exists, switched off, under test. |
-| **2** | Bright halo tracing every silhouette — the "cut-out sticker" look | Real and severe. **We have no working fix.** One arm works and looks worse; the other does nothing. |
+| **1** | Bright halo tracing every silhouette — the "cut-out sticker" look | Real, severe, on every edge. **No working fix.** One candidate looks worse, the other is a no-op. This is now the lead defect. |
+| **2** | Background patchwork / crazy paving | Real, but **localised** — about a quarter of the background. Mostly suppressed already by the shipped settings; a residual survives in ~5 of 12 patches. |
 | **3** | Lateral chromatic aberration — coloured fringes on bright edges | Confirmed by my own eye. Correction exists, switched off, **under audit** — see below. |
 | **4** | General softness | Expected: at your magnification the optics are the limit, not the software. |
 
-On **#2**, one correction: I told you earlier tonight the halo fix was the thing
-you would see. It is not, and I checked that myself rather than taking an agent's
-word for it — I compared the before and after images by eye and the "after" is
-milky, with background detail washed away. The report's author was right. But
-**the halo itself is real** and I want to be clear that withdrawing the cure is
-not withdrawing the diagnosis: look at `C:\dev\strehl-out\crop-leg-halo.png` and
-you will see a bright scalloped band tracing the whole leg and both claws.
+On **#1**, one correction to something I told you earlier tonight: I said the halo
+fix was the thing you would see. It is not, and I checked that myself rather than
+taking an agent's word for it — I compared before and after by eye and the
+"after" is milky, with background detail washed away. The report's author was
+right and I was wrong to overrule him. But **the halo itself is real**, and
+withdrawing the cure is not withdrawing the diagnosis: look at
+`C:\dev\strehl-out\crop-leg-halo.png` and you will see a bright scalloped band
+tracing the whole leg and both claws.
 
 On **#3**, I am deliberately *not* telling you to turn the chromatic-aberration
 correction on yet. I promoted one correction tonight on a headline number that
 turned out to be fifteen points wrong and to come from a section whose title was
-"why I am telling you not to enable it." I have a second agent auditing the CA
+"why I am telling you not to enable it." A second agent is auditing the CA
 numbers the same way before I put them in front of you again. If it clears, that
 is a real win and it is one line to enable.
 
 **What this needs from you: §12.** A static repeat burst is the arm that proves
-the gate *doesn't* fire when nothing moved. Right now that has to be simulated.
-Thirty seconds of your time replaces a simulation with your actual camera, your
-actual sensor, your actual noise.
+the protection *doesn't* fire when nothing moved. Right now that has to be
+simulated. Thirty seconds of your time replaces a simulation with your actual
+camera, your actual sensor, your actual noise.
 
 **Also running tonight:** a campaign measuring every default-off improvement on
 your real captures and writing before/after 1:1 crops to `C:\dev\strehl-out\M116\`
