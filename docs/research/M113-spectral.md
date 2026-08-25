@@ -262,3 +262,61 @@ target still.
    would not by itself refute the mechanism — so it does not, and the verdict is
    NOT SUPPORTED rather than REFUTED, even though the stronger word was available
    and would have made a better headline.
+
+## Reader audit: the PIL 16-bit-RGB defect
+
+ORCH's fleet notice: `PIL.Image.open()` silently returns `uint8` for a 16-bit RGB
+TIFF. Audited by measurement, not by reading the source
+(`experiments/M113-spectral/src/s9_pilaudit.py`).
+
+The probe first reproduces the defect on a file of my own construction, so it is
+known to be sensitive before it is trusted: source `uint16` 16116 levels,
+`tifffile` exact, **PIL `uint8`, 256 levels, mode RGB**.
+
+**M113-ca and M113-spectral are NOT affected.** Every number in both reports was
+read through `cs.load_tiff_u16`, which does call `Image.open` — but only for the
+**tags**. It asserts `bits == {16}` and `spp == 3`, verifies strip contiguity
+rather than assuming it, and reads the pixels with
+`np.memmap(path, dtype="<u2", ...)`. Measured against `tifffile` on five files
+including both arms of bee-3-cpl: **byte-identical, `uint16`, every time**.
+
+**M113-kernel-verify metrics are NOT affected** — `k2, k3, k5, k5b, k7, k8, k12,
+k13, k14, k15, k16` all read via `tifffile.imread`.
+
+**One real exposure: `k6_byeye.py` line 24** calls `KC.load()` from
+`kernel_crops.py`, which is `Image.open` + `np.asarray`. Confirmed live on my own
+render: PIL `uint8` max 159 where `tifffile` reads `uint16` max 40781. Those
+arrays fed only the 1:1 PNG zoom crops, and were passed straight through
+`KC.to8()`, so the destination was 8-bit regardless — but the ringing question is
+a small-signal one, so it was re-run rather than argued
+(`experiments/M113-kernel-verify/src/k17_bitaudit.py`):
+
+| ROI | modulation ranking, 16-bit vs 8-bit | ringing-proxy ranking |
+| --- | --- | --- |
+| thorax hairs | `nn>l3>cr` / `nn>l3>cr` — SAME | flipped |
+| hair tips vs background | `nn>l3>cr` / `nn>l3>cr` — SAME | flipped |
+| leg + claw | `l3>nn>cr` / `l3>nn>cr` — SAME | flipped |
+
+**Fact 1374's structural conclusion is reader-independent**: `nearest` out-resolves
+`catmull-rom` on hair modulation in all three ROIs under both readers. The
+ringing-proxy ordering does flip, but only because `cr` and `l3` sit within
+0.03-1.3 % of each other on that crude proxy — an 8-bit read reorders a tie. The
+ringing figure actually reported came from `k5`/`k5b`/`k12`, all `tifffile`.
+
+**Two corrections to the triage list, both of which affect other agents.**
+
+1. **`experiments/ORCH-drift-check/ca_radial.py` is a FALSE POSITIVE on the
+   affected list.** Its `load_tiff_u16` is the *safe* pattern described above and
+   was measured byte-identical to `tifffile`. This matters because it is the
+   shared reader several milestones import; telling the fleet it is affected
+   would cause correct work to be re-run, or a working reader to be "fixed".
+2. **The list is incomplete for that directory.** Also reading pixels through
+   `Image.open` + `np.asarray`: `patchwork16.py:66`, `patchwork_16bit.py:27`,
+   `owner_sheets.py:28`, `patchwork_look.py:18`, `viewprep.py:26`. Of these
+   `patchwork_16bit.py` is the worst case — a script *named* for 16 bits, which
+   then computes `full = np.iinfo(a.dtype).max` and so normalises against **255
+   instead of 65535** on top of already-quantised data.
+
+The one-line guard that would have caught all of it is an assert on `dtype`
+immediately after the load. `load_tiff_u16` effectively has one, in the form of
+its `bits == {16}` tag check, which is why it survived.
