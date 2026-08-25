@@ -47,6 +47,17 @@ always written `P1-placebo` and is never the fact `P1`.
 | outlier / robustness mask | not reachable | not reachable | not reachable | **UNREACHABLE** | `1043` lines, zero callers outside its own example harness at the pinned SHA |
 | robust (election-time) | not reachable | not reachable | not reachable | **UNREACHABLE** | `509` lines, zero callers outside its own example harness at the pinned SHA |
 | lateral-CA correction | see the CA table below | — | see the CA table below | **HOLD** | best-evidenced instrument in M116; CD1 fails on 2 of 4 subjects |
+| soft gate, re-asked on the **background patchwork** | artefact visible, metric failed its plant | no artefact found | no artefact found | **NO INSTRUMENT** | section 5h; `G1` and `H1` both FAILED, so no recommendation is made despite the crops |
+
+**Read the soft-gate rows together, because they disagree and the disagreement
+is the point.** Campaign 1 judged the soft gate KEEP-OFF on a *detail* bar,
+which was the wrong question: the instrument is aimed at flat and defocused
+regions and was condemned on sharp ones. Section 5h re-asked it on the right
+bar and found the artefact real, visible, and removed by the treatment — and
+then failed to build a metric that could pass a plant. **`NO INSTRUMENT` is not
+`KEEP-OFF`.** It means the question is still open and the pictures in
+`C:\dev\strehl-out\M116\SOFTGATE-*.png` are currently the best evidence
+anyone has.
 
 The lateral-CA correction was measured on its own four `-cpl` stacks (section
 5f), against the displacement that lateral CA physically is, so it gets its own
@@ -1124,6 +1135,354 @@ one-canonical-site rule, met here from the other direction: I could not give
 these numbers one site, because a report needs a summary, so I made every site
 count instead.
 
+**D-w (proposed discipline). A scale-invariant metric is immune to the
+confound you feared and blind to a dense version of the artefact you want.**
+Excess kurtosis was chosen because denoising cannot move it. It also cannot
+read a patchwork that fills the ROI, because "heavy tails relative to the
+distribution's own width" is a statement about *sparsity*, not about amount:
+the gate-0 plant read `2.911` against the shipped arm's `26.660` while its
+Laplacian standard deviation was `14.3x` larger. **Before adopting a metric for
+its invariance, ask what else that invariance makes it blind to, and check the
+saturated case explicitly** — the dose where the artefact covers everything,
+not just the dose where it is visible.
+
+**D-x (proposed discipline). Selecting an ROI by "most artefact-prone" using a
+proxy can land on the one region where the artefact is structurally
+impossible.** Twice here. "Flattest" chose the region where `n_eff = 99.00`, so
+the elected winner never reaches the output and no election error can appear.
+"Narrow gate plus low contrast" chose a region where one frame genuinely wins,
+which is what being in focus looks like. **A proxy for "the mechanism can fire
+here" is not the same as the mechanism firing, and both failures are only
+visible if a plant is evaluated per-ROI rather than pooled.** Pooling would
+have hidden ROI-N inside ROI-W's pass.
+
+**D-y (proposed discipline). When a registered bar fails and the pictures
+disagree with it, report both and promote neither.** The temptation at the end
+of section 5h is to narrow `H1` to the ROI that passed, because the crops are
+persuasive and the controls are exactly quiet. Section 5g refused exactly this
+move for `CD1` when the stakes were a positive result; taking it here would
+retroactively make that refusal a matter of convenience rather than of method.
+**The value of a frozen bar is entirely in the cases where you want to move
+it.** Record the visual evidence as visual evidence, hand the instrument
+problem to someone who has not seen the answer, and let the verdict stand.
+
+---
+
+## 5h. Addendum: the background patchwork — two instruments, two failed plants, and a picture that disagrees with both
+
+This campaign was opened at ORCH's direction after it looked at strehl's output
+for the first time and identified a **polygonal patchwork in the defocused
+background** — "crazy paving" — as the worst artefact in the render, ahead of
+the halo. Its proposed mechanism, which it correctly flagged as argued rather
+than measured: in a region defocused in every frame the focus response is flat,
+so the elected winner is noise; the spatial regulariser snaps that random field
+into piecewise-constant regions; each region then draws from a different frame,
+and frames differ in background brightness, so the boundaries become visible
+steps. Its proposed fix: `STREHL_SOFT_GATE`, built and switched off.
+
+**Two things should be said before the findings.** First, the mechanism was
+already half-measured in this milestone's own section 5b — P17 recorded
+flat-region argmax indeterminacy with an elected-frame histogram at `20.1 %`
+against `20.0 %` chance, and P18 recorded the patchwork as directly visible and
+surviving the shipped gate. Section 11 already recommended the soft gate be
+re-measured on a flat-field bar rather than the detail bar that condemned it in
+campaign 1. ORCH arrived at the same place independently and by eye, which is
+worth more than either route alone.
+
+Second, and this is the part that matters for anyone repeating the work:
+**`STREHL_SOFT_GATE=1` does not mean "on". It panics.** `merge.rs:684-687` at
+the pinned SHA constructs the estimator from `kernel_from_setting`
+(`merge.rs:451`), which accepts only `gaussian` and `exponential`; `unset`,
+`""`, `0`, `off` and `false` all return `Ok(None)`, the shipped hard gate, and
+**everything else is an `Err` that aborts the run**. An experimenter reaching
+for the obvious truthy value gets a crash, not a measurement. That fact is also
+what makes `STREHL_SOFT_GATE="0"` a free, source-pinned trap arm, used below.
+
+### P62. THE FIRST INSTRUMENT FAILED ITS REGISTERED PLANT, AND THE PICTURE PROVED THE PLANT WAS VALID
+
+Registered in `prereg-patchwork.txt` at `5aa8fc7`: the primary metric is `K`,
+the **excess kurtosis of the Laplacian** over a background ROI. Kurtosis and
+not a magnitude, for a registered reason — the soft gate averages more frames,
+so it denoises, so *any* magnitude-of-local-difference metric falls under the
+treatment whether or not a single polygon is removed. Excess kurtosis is
+scale-invariant, so uniform denoising reads zero.
+
+`G1` was the plant: `K(M0) >= 2.0 * K(A0)` on `bee-3-cpl`, where `M0` is the
+gate-0 arm in which P18 established the patchwork is largest. Bar: `>= 53.320`.
+
+| arm | `K` | `lap_sd` |
+| --- | ---: | ---: |
+| `A0` shipped gate 4 | `26.660` | `32.78` |
+| `A2` soft gate, gaussian | `0.034` | `29.61` |
+| `M0` gate 0 — **the plant** | `2.911` | **`467.24`** |
+
+**`G1` FAILED, with the sign reversed.** The plant read *lower* than the arm it
+was planted against.
+
+The crop adjudicates, and it is not close.
+`images-patch/bee-3-cpl__roiG1__A0-A1-A2-M0.png` shows `M0` as textbook
+patchwork — irregular flat polygons with hard brightness steps, their
+boundaries drawn explicitly as a web of closed curves in the Laplacian panel —
+while `A0` in the same ROI is smooth. **The plant is valid and the metric
+cannot read it.**
+
+The diagnosis is the same property that was supposed to be the design's
+strength. Excess kurtosis measures how heavy the tails are *relative to the
+distribution's own width*, which is what made it immune to denoising. At gate 0
+the polygons **fill** the ROI: every pixel is inside a patch or on a boundary,
+so the Laplacian is broadly distributed and its tails are not heavy relative to
+that width. `K` collapses while `lap_sd` goes to `467.24` against `32.78` — a
+factor of `14.3` in the correct direction, from the magnitude metric I had
+rejected on principle. **Kurtosis reads sparse outliers. The patchwork is
+dense.**
+
+### P63. THE HEADLINE THE DEAD METRIC WOULD HAVE PRODUCED, AND WHAT IT WAS ACTUALLY MEASURING
+
+Had the plant not been registered, this campaign's primary comparison read
+
+> `K(A2) / K(A0) = 0.034 / 26.660 = 0.00128`
+
+— a **99.9 % reduction** in the patchwork metric from switching on the soft
+gate. It is the largest single effect measured anywhere in M116 and it is
+**VOID**.
+
+It is void twice over, and the second reason is worse than the first. The
+registered ROI selector took the **lowest coarse-gradient decile**, which on
+this subject is the pure white out-of-focus background. That ROI contains one
+small localised blob at its right edge, visible in panels 1 and 2 of the crop
+and absent from panel 3. A blob is a *sparse* outlier, which is exactly what
+kurtosis reads. **`K(A0) = 26.660` was a dust-scale feature, and `A2` removed
+it.** The metric's headline number on the shipped arm was never patchwork at
+all.
+
+Both defects were caught by the plant. Neither would have been caught by the
+primary comparison, which would have been reported as a spectacular win.
+
+### P64. THE FLATTEST REGION IN THE FRAME IS THE ONE PLACE THE ARTEFACT CANNOT EXIST
+
+Selecting the ROI as "flattest" was not merely unlucky. It was structurally
+guaranteed to miss.
+
+`n_eff`, the effective number of frames the gate admits per pixel, dumped for
+`A0` on `bee-3-cpl`:
+
+| statistic | value |
+| --- | ---: |
+| median over the frame | `36.00` |
+| median in the flattest-decile ROI | **`99.00`** |
+| median on oriented detail | `21.00` |
+| fraction of frame with `n_eff < 2` | `0.1339` |
+| fraction with `n_eff < 10` | `0.3377` |
+| fraction with `n_eff < 50` | `0.5502` |
+
+In the pure white background the shipped hard gate **already admits
+essentially every frame**. Where every frame is admitted the elected winner is
+irrelevant, so a random election *cannot* propagate to the output. The flattest
+region is the one region in the frame where the artefact is impossible by
+construction — and it is the region a flatness-ranking selector will always
+choose.
+
+The artefact instead lives in **mid-tone, partially structured defocused**
+regions: defocused limbs and wings, which carry enough local contrast to
+narrow the gate but not enough real detail for the election to mean anything.
+`images-patch/bee-3-cpl__neff-map.png` shows this directly — the defocused
+limbs are dark, meaning a narrow gate, in the middle of a bright field meaning
+a wide one.
+
+### P65. ORCH'S MECHANISM: FIRST HALF CONFIRMED, SECOND HALF REFUTED WHERE IT WAS AIMED
+
+`maps/bee-3-cpl__A0-index.tif`, rendered at
+`images-patch/bee-3-cpl__election-index.png`, is ORCH's hypothesis made
+visible. Off the subject, the elected-frame field is a dense random speckle
+with no spatial coherence; on the subject it forms smooth coherent structures.
+**The election in flat regions is indeterminate exactly as argued** — this is
+P17 re-derived from a different artefact.
+
+But the second half — *"each polygon then gathers its pixels from a different
+frame, so the boundaries become brightness steps"* — **does not hold on the
+shipped path in the region ORCH pointed at.** With `n_eff = 99.00` in the flat
+background, the merge there is already the broad average ORCH proposed the soft
+gate to produce. The hard gate is not committing to a winner in flat regions;
+it is admitting everything.
+
+The mechanism survives, relocated: the steps appear where the gate is **narrow
+and the scene is defocused**, which is a strictly smaller region than "the
+background". Reporting this precisely matters because a fix aimed at the flat
+background would have nothing to act on.
+
+### P66. THE REPLACEMENT INSTRUMENT ALSO FAILED ITS PLANT — ON ONE OF THE TWO ROIs IT REQUIRED
+
+`prereg-patchwork2.txt` at `9253125`, written and committed before any
+replacement number existed, registered `F4`: the **fraction of coarse-scale
+gradient pixels exceeding `4.0x` the ROI's own median gradient**, at a `4x` bin.
+`F4` is a ratio of the ROI's gradient distribution to itself, so a uniform
+rescaling — which is approximately what denoising is — leaves it unchanged. Its
+residual bias was registered in advance and runs *against* the soft gate:
+removing noise lowers the median more than it lowers a contour, so the
+threshold falls and `F4` tends to **rise** on a denoised field.
+
+`H1` was the plant: `F4(M0) >= 1.5 * F4(A0)` **on ROI-W and on ROI-N**.
+
+| ROI | `F4(A0)` | `F4(M0)` | ratio | bar `>= 1.5` |
+| --- | ---: | ---: | ---: | --- |
+| ROI-W `y=256 x=768 384px` | `0.00738` | `0.02029` | **`2.749`** | PASS |
+| ROI-N `y=1024 x=2560 256px` | `0.05908` | `0.05811` | **`0.984`** | **FAIL** |
+
+**`H1` FAILED as registered.** The bar is a conjunction over two named ROIs and
+one of them did not fire.
+
+The diagnosis is again selection, not arithmetic. ROI-N was chosen because its
+median `n_eff(A0)` is `2.00` and its contrast is below the frame median — I
+reasoned that low contrast plus a narrow gate implies indeterminate election. It
+does not. **A narrow gate can equally mean one frame genuinely wins**, which is
+what an in-focus feature looks like. At ROI-N nothing moves for any arm:
+`F4` spans `0.05786` to `0.06323` across all nine arms including the plant, and
+`L995` spans `1580.66` to `1649.91`. There is no artefact there to read.
+
+`H1` is DECIDING, and its registered consequence is explicit: *"campaign 5
+reports 'no working instrument', and NO soft-gate recommendation is made. I
+will not write a third prereg for this artefact tonight."* **That stands.** The
+correct reading of my own contract is that I picked one good ROI and one bad
+one, wrote `and` between them, and lost. Narrowing `H1` to ROI-W after seeing
+that ROI-W passed is precisely the move section 5g refused for `CD1`, and
+refusing it there and taking it here would make both refusals worthless.
+
+### P67. THE CONTROLS WERE EXACTLY QUIET — THREE ARMS, THREE SUBJECTS, EXACT EQUALITY
+
+Reported before the positives, per section 3.
+
+| bar | arm | result |
+| --- | --- | --- |
+| `H2` null | `N1` re-render | `F4(N1) - F4(A0) = 0.0` **exactly**, every ROI, 3/3 subjects |
+| `H3` placebo | `P1`, private cache dir | `F4(P1) - F4(A0) = 0.0` **exactly**, every ROI, 3/3 subjects |
+| `H4` trap | `T2`, `STREHL_SOFT_GATE="0"` | `F4(T2) - F4(A0) = 0.0` **exactly**, every ROI, 3/3 subjects |
+
+Not "within tolerance" — identical to every printed digit on all three
+subjects, `0.00738` at ROI-W, `0.05908` at ROI-N, `0.02026` / `0.16382` /
+`0.00488` on the automatic tile sets. The same three arms were exactly equal
+under the *dead* kurtosis metric too (`26.660` / `116.617` / `4.163`). **The
+harness contributes nothing, and the trap confirms `"0"` is a genuine no-op at
+the pinned source.** Both instruments failed on their plants, not on their
+noise.
+
+### P68. THE BLUR CONTROL PASSED, AT THE ONE ROI WHERE THE PLANT FIRED
+
+`H5` was the bar the addendum was really built around: the soft gate must beat
+what pure blur buys for free. Blur `A0` at a bisected `sigma` until its `L995`
+matches `A2`'s to within `1 %`, then race on `F4`. Blur creates no contours and
+corrects no election, so whatever it shows is the confound, priced. This is the
+construction M87 used to refute its own halo blur hypothesis.
+
+At **ROI-W**, `sigma = 0.7932 px`:
+
+| quantity | value |
+| --- | ---: |
+| `F4(A0)` | `0.00738` |
+| `F4(A2)` soft gate | `0.00380` |
+| `F4(blur matched to A2's L995)` | `0.00618` |
+| gain, soft gate | `+0.00358` |
+| gain, blur | `+0.00119` |
+| **ratio, bar `>= 2.0`** | **`3.000`** — PASS |
+
+The soft gate's `F4` improvement is **three times** what an `L995`-matched blur
+delivers. The magnitude metric shows why the control was necessary at all:
+`L995` falls from `393.11` to `164.53`, a `58 %` drop, so a naive magnitude
+reading would have credited the soft gate with far more than it earned.
+
+`H5` is a real result and it is worth carrying forward. It is also **not
+sufficient**, because `H1` gates it: a blur control tells you the effect is not
+blur, not that the metric reads the artefact.
+
+### P69. WHAT IT COSTS, AND WHERE THE EFFECT IS AND IS NOT
+
+`H7`, the detail cost, on the identical oriented-highpass instrument used for
+`CB6`/`CD7`:
+
+| arm | `bee-3-cpl` | `foam` | `tweezers-cpl` | bar `>= -0.02` |
+| --- | ---: | ---: | ---: | --- |
+| `A1` photometric | `+0.00733` | `+0.00315` | `+0.00765` | PASS |
+| `A2` soft gate gaussian | `-0.01868` | `-0.00076` | `-0.00114` | PASS, narrowly |
+| `A3` soft gate exponential | `-0.02173` | `-0.00089` | `-0.00133` | **FAIL** |
+| `A4` both | `-0.01118` | `+0.00278` | `+0.00667` | PASS |
+
+The exponential kernel fails the cost bar on `bee-3-cpl` and the gaussian
+clears it with `0.00132` dex to spare. Campaign 1 reached the same ordering on
+a different bar. **If the soft gate is ever promoted it should be `gaussian`,
+and `A4` — photometric *and* gaussian — costs less than the soft gate alone on
+every subject.**
+
+`H6`, the prevalence bar, on ROI-AUTO — tiles selected mechanically from the
+untreated arm and the `n_eff` map only, so selection cannot favour the
+treatment:
+
+| subject | tiles | `F4(A0)` | `F4(A2)` | `F4(M0)` plant |
+| --- | ---: | ---: | ---: | ---: |
+| `bee-3-cpl` | `3` | `0.02026` | `0.01392` | `0.01855` |
+| `foam` | `58` | `0.16382` | `0.16431` | `0.16406` |
+| `tweezers-cpl` | `24` | `0.00488` | `0.00476` | `0.00488` |
+
+On `bee-3-cpl` the ratio is `0.687`, inside the `0.90` bar. **But the plant does
+not fire on ROI-AUTO either** — `M0` reads `0.01855` against `A0`'s `0.02026` —
+so that movement is uninterpretable by the same argument that killed `H1`. On
+`foam` and `tweezers-cpl` nothing moves at all, on any arm, including the plant.
+Only **three** tiles on the one subject where the artefact is visible met the
+automatic criteria. **The honest statement of prevalence is that I could not
+establish it**, and my own prereg section 6 named this outcome in advance:
+*"If ROI-AUTO shows no effect while ROI-W does, the artefact is rare and a
+default-on recommendation is not supported by two hand-found crops."*
+
+`H8` was a registered prediction with no pass/fail attached, and **I got it
+wrong.** I predicted photometric normalisation alone would move `F4` *much*
+less than the soft gate, because the contours looked like boundaries between
+different scene content rather than between different exposures of the same
+content. Measured: `A1` delivers `66.7 %` of `A2`'s `F4` reduction at ROI-W
+(`0.00738 -> 0.00499` against `0.00380`) and `46.2 %` on ROI-AUTO
+(`0.02026 -> 0.01733` against `0.01392`). **Frame-to-frame brightness drift is
+carrying between a half and two thirds of this effect**, which is ORCH's stated
+mechanism and not mine. It also explains why `A4` is the best arm on both `F4`
+and cost.
+
+`H9`, election invariance, is **NOT VERIFIED**. It required the elected-frame
+polygon count to be unchanged between `A0` and `A2`, since the soft gate acts
+in pass two only. I have `A0`'s index map (`557` components in ROI-W, `154` in
+ROI-N) but never dumped `A2`'s, so the check could not be run. The mechanistic
+claim that the soft gate does not change the election therefore rests on my
+reading of `merge.rs` alone and should be treated as source-argued, not
+measured.
+
+### P70. THE VERDICT, AND THE PICTURE THAT DISAGREES WITH IT
+
+**Campaign 5 verdict: NO WORKING INSTRUMENT. No promotion recommendation for
+`STREHL_SOFT_GATE`.** `H1` failed, `H1` is DECIDING, and the promotion rule
+requires it.
+
+That verdict is uncomfortable, and it should be recorded that it is
+uncomfortable, because **the pictures look like a clear win**:
+
+- `SOFTGATE-1-background-OFF-vs-ON.png` — the defocused wing on `bee-3-cpl`, a
+  region out of focus in every one of the 100 frames. OFF: hard-edged waxy
+  lobes with abrupt boundaries, reading as cut-out stickers. ON: smooth,
+  continuous, photographic defocus. Shared stretch, so no step is manufactured
+  by autoscaling.
+- `SOFTGATE-3-plant-gate0-vs-shipped-vs-ON.png` — the same region with the
+  gate-0 plant beside it, showing the same artefact at higher dose. The
+  three-panel ordering is a dose response the eye can check.
+- `SOFTGATE-2-detail-OFF-vs-ON.png` — the antenna and hairs. Detail survives:
+  cuticle texture, individual hairs and specular highlights are all present in
+  both, consistent with `-0.01868` dex.
+
+So the state of the evidence is: **an artefact that is real and visible, a
+treatment that visibly removes it, a blur control that says the removal is not
+just smoothing, three controls that are exactly quiet — and no metric that
+passes a plant.** What is missing is not the effect. It is an instrument that
+can be shown to read the effect, on ROIs chosen without my eye in the loop.
+
+The correct next step is a third campaign with a plant-first design — build the
+metric *against* the `M0`/`A0` pair until it fires, then freeze it, then choose
+ROIs — and it should be run by someone who has not already seen these crops.
+**I am not the right person to design that instrument, having now failed twice
+and seen the answer I want.**
+
 ---
 
 ## 6. Patches
@@ -1318,6 +1677,27 @@ correct response to it remains a measurement milestone, not a patch.
   blur.** LB4, the bar registered to decide that, is void by premise failure
   (P47). The question is open and it belongs to M111, which owns the metric
   audit; these per-rung curves are handed over as its input, not as its answer.
+- **It does not claim the soft gate removes the background patchwork.** The
+  crops show it doing so on one region of one subject, and the `H1` plant that
+  was registered to license that claim FAILED. Section 5h's verdict is NO
+  INSTRUMENT, and the images are offered as images.
+- **It does not claim the patchwork is rare.** ROI-AUTO found `3` qualifying
+  tiles on `bee-3-cpl` and none that moved on the other two subjects, but the
+  plant did not fire on ROI-AUTO either, so that tile set is not shown to be
+  sensitive to the artefact. **Prevalence is unmeasured in both directions.**
+- **It does not claim the soft gate leaves the election unchanged.** `H9` was
+  registered and **not run**: `A2`'s elected-frame index map was never dumped.
+  The claim rests on reading `merge.rs:451-483` at the pinned SHA and is
+  source-argued only.
+- **It does not claim `K(A2)/K(A0) = 0.00128` means anything.** That `99.9 %`
+  reduction is the largest effect measured anywhere in M116 and it is VOID by
+  its own plant, twice over — see P63. It is stated in this report only so that
+  it cannot be quoted from the raw JSON as a result.
+- **It does not claim ORCH's mechanism is wrong.** Its first half is confirmed
+  (P65) and `H8` shows photometric normalisation — which targets exactly the
+  frame-to-frame brightness drift ORCH blamed — carrying `46.2 %` to `66.7 %`
+  of the effect. What is refuted is only that the mechanism operates *in the
+  flat background*, where `n_eff = 99.00` prevents it.
 
 ---
 
@@ -1508,6 +1888,27 @@ check it. State both, mark which one binds, and claim only that one.
 ---
 
 ## 9. Images
+
+### 9a. The background patchwork (section 5h) — `C:\dev\strehl-out\M116\`
+
+**Open these first.** They are the answer to the owner's *"those stacks don't
+look too good yet"* that this milestone can actually show him, and they are the
+strongest visual evidence in M116 — while carrying a verdict of NO INSTRUMENT,
+which the captions must not hide.
+
+| file | what it shows |
+| --- | --- |
+| `SOFTGATE-1-background-OFF-vs-ON.png` | `bee-3-cpl`, a defocused wing that is out of focus in all 100 frames. **OFF:** hard-edged waxy lobes with abrupt boundaries — the cut-out-sticker look. **ON:** smooth continuous defocus. A defocused scene cannot physically contain a hard edge, so the OFF panel is a defect statement that needs no aesthetics. |
+| `SOFTGATE-3-plant-gate0-vs-shipped-vs-ON.png` | the same region with the gate-0 plant beside it: plant / shipped / soft gate. A three-rung dose response the eye can check without trusting any metric. |
+| `SOFTGATE-2-detail-OFF-vs-ON.png` | the antenna and hairs, the detail the soft gate could have averaged away. Cuticle texture, individual hairs and specular highlights survive, consistent with `-0.01868` dex. |
+| `images-patch/bee-3-cpl__roiG1__A0-A1-A2-M0.png` | **the picture that killed the first metric.** Panel 4 is textbook patchwork; the Laplacian row below draws its polygon boundaries explicitly. The metric read this as `K = 2.911` against the smooth panel 1's `26.660`. |
+| `images-patch/bee-3-cpl__neff-map.png` | why "flattest" was the wrong ROI. White is a wide gate. The bright field is where the artefact **cannot** occur; the dark defocused limbs are where it does. |
+| `images-patch/bee-3-cpl__election-index.png` | ORCH's hypothesis made visible: the elected-frame field is random speckle off the subject and coherent on it. P17, re-derived from a different artefact. |
+
+All six use a **shared stretch across panels**, computed from the first panel,
+because per-panel autoscaling would manufacture or hide exactly the brightness
+step under discussion. All are gamma-encoded **for looking only**; every number
+in section 5h comes from the linear renders.
 
 ### The dose ladder (section 5e) — `C:\dev\strehl-out\M116\images-ladder\`
 
@@ -1757,9 +2158,81 @@ exit 0.
   M87's are its own halo-metric ISO at `--gate 2` on 299 frames. I did not
   reproduce `72.9%` and do not claim to have refuted it.
 - `experiments/ORCH-drift-check/reachability.py` was run, not edited.
+
+### Campaign 5 — the background patchwork, in reply to ORCH's message #6
+
+- **Your hypothesis was already half-measured in my own section 5b, before you
+  sent it.** P17 recorded flat-region argmax indeterminacy with an
+  elected-frame histogram at `20.1 %` against `20.0 %` chance; P18 recorded the
+  patchwork as directly visible. Section 11 already recommended the soft gate be
+  re-measured on a flat-field bar. You reached the same place by eye and
+  independently, which is worth more than either route alone.
+- **The first thing to fix in your instructions to anyone else:
+  `STREHL_SOFT_GATE=1` PANICS.** `merge.rs:451` accepts only `gaussian` and
+  `exponential`; `unset`/`""`/`0`/`off`/`false` return the shipped hard gate and
+  **everything else aborts the run** at `merge.rs:684-687`. Anyone told to "set
+  it to 1" gets a crash, not an OFF arm.
+- **Your mechanism's first half is confirmed and its second half is refuted
+  where you aimed it.** `images-patch/bee-3-cpl__election-index.png` shows the
+  election is random speckle off the subject. But `n_eff` in the flat white
+  background is `99.00` of 100 frames — **the shipped hard gate already averages
+  everything there**, so the random winner never reaches the output. The steps
+  occur where the gate is *narrow* and the scene is *defocused*, which is a
+  strictly smaller region than "the background". A fix aimed at the flat
+  background would have had nothing to act on.
+- **Your ROI advice would have failed, and mine did.** You proposed "a pure
+  background region — out of focus in every frame, no subject". I registered the
+  equivalent, flattest-decile selection, and it chose exactly the region where
+  the artefact is structurally impossible. Two independent routes to the same
+  wrong ROI, which is worth recording as a hazard rather than as either of our
+  mistakes.
+- **Both metrics failed their plants, and I am reporting NO INSTRUMENT.**
+  `G1`: excess Laplacian kurtosis read `2.911` on the gate-0 plant against
+  `26.660` on the shipped arm — reversed. `H1`: `F4` passed on ROI-W (`2.749x`,
+  bar `1.5x`) and failed on ROI-N (`0.984x`); the bar was a conjunction and I am
+  not narrowing it. Section 5g refused the identical move for CA when the prize
+  was a positive result.
+- **You asked me to quantify the patchwork rather than only show it. I could
+  not, and that is the finding.** Your suggested metrics were Laplacian
+  kurtosis or a count of locally flat components. I built the first. It is
+  blind to a *dense* patchwork, because heavy-tails-relative-to-own-width is a
+  statement about sparsity: at gate 0 the polygons fill the ROI, so `K` falls
+  while `lap_sd` rises `14.3x`. Discipline D-w.
+- **The pictures are in `C:\dev\strehl-out\M116\` and they are the deliverable
+  you asked for.** `SOFTGATE-1-background-OFF-vs-ON.png` is the one to open:
+  hard-edged waxy lobes in a region that is defocused in all 100 frames, gone
+  on the treated arm. `SOFTGATE-3-` adds the gate-0 plant as a third rung.
+  `SOFTGATE-2-` is the detail check and detail survives. Shared stretch across
+  panels throughout; gamma for looking, linear for every number.
+- **Your strongest-available-control suggestion is superseded by a better one I
+  could actually run.** You proposed comparing merged high-frequency energy
+  against single input frames. I could not: geometry differs between the
+  aligned merges and the surviving unaligned singles. Instead `H5` bisects a
+  Gaussian on the untreated arm until its `L995` matches the treated arm's, then
+  races on `F4` — M87's own construction. **The soft gate beats matched blur by
+  `3.000x`**, bar `2.0x`. So the improvement is not smoothing. It still does not
+  license a promotion, because a blur control tells you what the effect is not.
+- **Photometric normalisation carries between `46.2 %` and `66.7 %` of the
+  effect, which is your mechanism and not mine.** I registered a prediction that
+  it would move `F4` much less than the soft gate, and I was wrong. `A4`
+  — photometric **and** gaussian soft gate — is the best arm on both the metric
+  and the cost on every subject. If anything here is ever promoted it is that
+  pair, and the exponential kernel should be dropped: it fails the `-0.02` dex
+  cost bar on `bee-3-cpl` at `-0.02173`.
+- **What I did not run:** `H9`, election invariance, needed `A2`'s index map and
+  I never dumped it, so "the soft gate does not change the election" is
+  source-argued from `merge.rs` and not measured. And prevalence is unmeasured
+  in both directions — ROI-AUTO found `3` qualifying tiles on bee and the plant
+  did not fire there either.
+- **What I recommend, and it is not a render.** A third campaign with a
+  **plant-first** design: build the metric against the `M0`/`A0` pair until it
+  demonstrably fires, freeze it, *then* choose ROIs, *then* look. Run it with
+  someone who has not seen these crops. I have now failed twice and I have seen
+  the answer I want, which disqualifies me from designing the instrument that
+  would license it.
 - `python scripts/corpus_lint.py` reports **OK — no violations** over 190
   markdown and 61 rust files. Earlier in this milestone it reported 2, both in
   `docs/research/M95-election-quality.md:241`; that file's owner has since fixed
-  them. The linter caught 4 violations of my own in this section's tables —
+  them. The linter caught 4 violations of my own in section 5f's tables —
   unescaped `\|` inside code spans on table rows, which the renderer discards
   silently — and they are fixed.
