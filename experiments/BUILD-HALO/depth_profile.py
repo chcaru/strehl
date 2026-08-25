@@ -13,10 +13,15 @@ election is noise spanning the bracket, and noise is exactly what a local
 spread statistic sees.  A real object has a resolvable depth and elects
 coherently.
 
-UNITS -- the trap.  The election map is on the PLANE grid, which is half sensor
-resolution per axis.  WINDOW_RADIUS=13 and SOBEL_RADIUS=1 are plane pixels, so
-window support is 14 plane px = 28 px.  Everything below is reported in
-SENSOR pixels, the grid the merged image and the viewing PNG come from.
+UNITS -- the trap, and the correction.  I first assumed the election map was on
+a half-resolution plane grid and doubled the predicted support to 28 px.  THAT
+WAS WRONG AND IT IS WORTH SAYING SO HERE, because a doubled prediction happens
+to agree with the ring this build was chasing and would have confirmed the
+wrong mechanism.  Measured, the map is 3520x2344 -- the SAME grid as the
+render -- so window support is SOBEL_RADIUS + WINDOW_RADIUS = 14 px in output
+pixels.  `run` therefore measures the ratio (`L.shape[0] / m_plane.shape[0]`)
+and rescales, rather than assuming either value; do not reintroduce a constant
+here.
 """
 import sys
 from pathlib import Path

@@ -1579,3 +1579,161 @@ So this must never be reported as a plane-wide fraction. It is binned on an
 independent depth-step map or it is not reported. That is also the error that
 made my `(B)` per-band table look monotone and beautiful while the overlay showed
 it firing on empty background.
+
+## 19. The acceptance measurement, for any merge
+
+ORCH has opened a second arm (BUILD-BLEND, a Laplacian-pyramid multi-band
+merge) on a different representation. This section exists so that both arms are
+judged by the same yardstick and neither of us grades our own homework. It is
+written to be run by someone who did not build either fix.
+
+Nothing here is specific to the selection representation. It measures **a merged
+image**, whatever produced it.
+
+### 19.1 What is being accepted, and what is explicitly NOT the artefact
+
+The occluding-edge artefact has two features that were confused with each other
+for most of this build, and only one of them is ours.
+
+| feature | extent | is it ours? | evidence |
+|---|---|---|---|
+| the **rim** | ~10-20 px, the window zone | **yes** | the merge departs from every single frame there |
+| the **wide aura** | 400+ px, ~4% rise | **no, it is the scene** | present identically in renders with no election in them |
+
+The aura is the subject's own illumination field. `off`, `on`, `frame000` and
+`frame298` superimpose within noise across 470 px and all rise by the same ~4%
+(section 15); two of those arms contain no election at all, and **a feature
+identical in a single exposure and in the merge cannot have been produced by the
+merge**. ORCH's independent attempt corroborates the number from the other
+direction: his radial profile died on a background gradient of ~10 DN over
+100 px against a base of ~220 DN, which is ~4.5% over the same distance scale,
+on a different subject, measured a different way. His confound was this
+illumination field.
+
+**Therefore: a merge that removes the wide aura has FAILED, not passed.** It has
+edited the photograph's real lighting. Any acceptance metric that rewards
+flatness far from the silhouette is disqualified, and that includes fitting and
+subtracting a smooth background. This is the single most expensive thing this
+build learned and it cost three retracted hypotheses, two of them mine.
+
+### 19.2 The reference is a single frame, not another merge
+
+`STREHL_ONLY_FRAME=k` renders one frame with **no election at all**. It is the
+reference a merge-versus-merge comparison structurally cannot provide: two
+merges differ only in what their selectors did, so neither can tell you what the
+right answer was. A single frame contains the optics, the illumination field and
+the noise, and contains no selection artefact by construction.
+
+Choose `k` from **data, not intuition**: dump the winner field with
+`STREHL_DUMP_ELECTION`, and take the median election of the far background. That
+is the background-focused frame by the engine's own reckoning. On
+`flower-bud-with-background-fern-cpl` it is frame 221 and on `lavendar-cpl` it is
+frame 247; a guessed `k` silently changes the reference level and every number
+downstream.
+
+### 19.3 The halo measurement
+
+Run `experiments/BUILD-HALO/trade_measure.py`. In full, so it can be rebuilt if
+that file is lost:
+
+1. **Silhouette from depth, frozen.** Segment the subject on *depth coherence*
+   in the election map (`depth_profile.depth_mask`): dead ground elects noise
+   spanning the bracket, a real object elects coherently. Two luminance
+   thresholds failed on these subjects before this worked -- a white flower on
+   mid grey defeats a global threshold, and a median-over-focus image is smeared
+   by the very defocus under study.
+   **Compute it once, from the `off` arm, and freeze it across every arm.**
+   Recomputing per arm lets a fix move its own goalposts: a stronger collapse
+   changes the winner field, which changes the silhouette, which changes which
+   pixels get measured.
+2. **Distance transform on `~mask`.** `distance_transform_edt` returns 0 *inside*
+   a mask, so without the complement the first band swallows the entire subject
+   and reports the subject's own brightness as background. That produced a
+   3.9 M-pixel first band here before it was caught.
+3. **Near band `1 <= d < 20 px`**, background side only. This is the window zone
+   from 19.1, not a tuned choice.
+4. **Far reference `d > 300 px`.**
+5. **halo = median(merge - frame_k)[near] - median(merge - frame_k)[far]**, in DN
+   of 65535.
+
+The far referencing is not optional and it is not cosmetic. It cancels two
+things at once: the global exposure offset between any two renders, which is
+-1400 to +1800 DN here and roughly an order of magnitude larger than the
+artefact being looked for; and the illumination field of 19.1, which is common
+to the merge and the frame. An unreferenced radial profile cannot separate a
+few-DN artefact from a 10-DN scene gradient, which is exactly how ORCH's
+verification of his own hypothesis came back ambiguous.
+
+**Report the signed value.** Its sign is diagnostic -- it flips with scene
+polarity -- and an absolute value throws that away.
+
+### 19.4 The texture guard, which is a placebo and not a metric
+
+`couch-fibers-cpl` **has no depth silhouettes**. There is nothing there for an
+edge-aware or depth-aware merge to treat, so the correct behaviour is a no-op
+and the guard needs no threshold and no interpretation:
+
+- **`rms dev`** and **`p99.9`**: deviation from the `off` arm, in DN. Any
+  deviation at all is damage.
+- **`px moved`**: fraction of pixels that moved by more than 0.5 DN.
+- **`SD ratio`**: median local standard deviation (3 px) over textured pixels,
+  arm divided by `off`. Below 1 is softer.
+
+The first three cannot be gamed, because zero is the target and any change in
+either direction counts against. The `SD ratio` is a high-frequency statistic
+and therefore *is* gameable by injected structure -- read it **only for its
+direction**, and only next to the deviation numbers. It is there to say whether
+damage is softening or sharpening, not to say whether there is damage.
+
+This guard is genuinely double-edged. It rejected this lane's own fix at
+`859edac` (section 17), which is why it is trustworthy enough to hand to another
+arm.
+
+### 19.5 Instruments that are banned here, each because it failed here
+
+| banned | why |
+|---|---|
+| gradient / high-pass energy as a **halo** score | satisfied by injected structure; it has already fooled two agents on this exact artefact |
+| merge-versus-merge comparison | cannot see what a selector should have done; only a no-election reference can |
+| unreferenced radial profile | cannot separate the artefact from the illumination field of 19.1 |
+| a **luminance** silhouette | failed twice; once it put the "background" annulus on the subject and manufactured a 596,000x anisotropy that read exactly like a directional shadow |
+| a plane-wide bimodality fraction | a global mean against a permutation null is pinned below 1 whatever the scene does; bin it on an independent depth-step map or do not report it |
+| `--srgb` renders | the transfer curve moves every ratio a metric computes. Measure on `--linear-srgb` |
+| judging severity from `baseline-full\lavendar-cpl.png` | that file has debug ROI overlays burned into it |
+
+Two of those were caught only by **drawing the mask and looking at it**
+(section 15.4). Any new segmentation gets an overlay PNG before its numbers are
+believed.
+
+### 19.6 Pass criteria
+
+An arm passes when all four hold, measured back to back from one commissioned
+binary:
+
+1. **Halo.** `|halo|` on `flower-bud-with-background-fern-cpl` is within the
+   noise of the near band. Anything short of that is reported as a percentage of
+   the `off` arm and is a *reduction*, not a pass.
+2. **Aura preserved.** The far-field profile beyond 100 px still matches the
+   single-frame reference to within noise. A flattened aura is a failure
+   (19.1).
+3. **Texture guard.** `couch-fibers-cpl` deviation from `off` is at or near
+   zero, and `SD ratio` is not below 1.
+4. **The picture.** A full-frame developed PNG at ~1400 px of `bee-2-cpl` and
+   `flower-inner-edge-cpl` in which the owner cannot see a rim.
+
+**Criterion 4 outranks 1-3 and is the actual deliverable.** Every scalar in this
+section exists to make 4 diagnosable when it fails, and to stop an arm claiming
+a win the pictures do not show. This lane has already published a sharpness
+claim it had not looked at (section 13.9); the numbers are the servant here.
+
+### 19.7 The knob has to be commissioned, not just the binary
+
+A dose-response is worthless if the dose is not connected. If the strength
+parameter were ignored, every arm would come back byte-identical and a flat
+trade curve would read as "there is no trade" rather than "the knob is dead".
+`trade_ladder.ps1` therefore hashes every arm and reports the distinct count.
+
+On `couch-fibers-cpl` identical hashes are the *correct* result, because the fix
+is meant to be a no-op there. On the halo subject they are a dead knob. Same
+observation, opposite meaning, which is why the ladder prints both subjects
+separately rather than one pass/fail.
