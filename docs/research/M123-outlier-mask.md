@@ -2,7 +2,7 @@
 
 Instrument: `crates/strehl-cli/examples/m123-outlier-real.rs`,
 `crates/strehl-cli/examples/m123-trap-decompose.rs`.
-Pre-registration: `experiments/M123-robustness-mask/PREREGISTRATION.md`, written
+Pre-registration: `experiments/M123-outlier-mask/PREREGISTRATION.md`, written
 before any result was looked at.
 Measured against `crates/strehl-core/src/outlier.rs` unchanged, at
 `outlier.rs` sha256 `66CDB1B5A40085E5682F58F2A1BAABE7E208BCC886F77758E9395A86138FC32E`
@@ -377,6 +377,68 @@ measured the average-side specification at **-5.21%** against a registered
 **>= +10%**. My independent measurement of the detector explains *why* that
 happened, and fact 1189's ruling — **"Do not re-specify the average-side mask;
 gate the election"** — stands unchallenged by anything in this milestone.
+
+**M14 — DERIVED, and it is the most useful thing in this report. My result and
+M89's are not in conflict; the difference between them localises exactly why
+`outlier.rs` cannot work as designed.** M89 asked the same question — does a
+noise-normalised disagreement statistic separate motion from focus difference on
+real captures — and answered **yes**. I answered **no**. Both are correct,
+because the two instruments use different axes.
+
+| | M89 (`robust.rs`) | M123 (`outlier.rs`) |
+|---|---|---|
+| axis | **temporal** — frame index | **spatial** — within a plane |
+| support | window of `w=5` frames | **2 planes**, `a` and `b` |
+| statistic | `z_f` per pixel, leave-one-out order-`p` polynomial | `chi2` per 32x32 tile |
+| kernel | `[1,-4,6,-4,1]/6` (fourth difference) | `(a-b)^2 / (var_a+var_b)` |
+| how defocus is rejected | **algebraic annihilation** | spatial filtering / LK displacement |
+| detail-dependence on clean data | **1.173x** | 2.12x separation vs 0.96x true |
+
+M89 separates because defocus is **smooth in frame index** — a bracket steps the
+focal plane in even increments, so a pixel traces a locally polynomial
+through-focus curve — while motion is a **discrete event** in frame index. A
+leave-one-out predictor of order `p` annihilates any polynomial of degree `<= p`
+*exactly, at every pixel, regardless of contrast*. That is why M89's null is flat
+in detail and why it bounds defocus leakage at **<= 0.04%** of its null `z^2`.
+
+`outlier.rs` sees **two planes**. Two samples cannot distinguish "smooth in `f`"
+from "discrete in `f`", because any two-point difference is degree-`<=1` in `f`
+by construction. **The module structurally discards the one axis along which this
+separation is algebraically free**, and then attempts it spatially instead —
+where M11 shows it cannot succeed, because translation, illumination drift and
+magnification breathing all share the low-frequency passband with the signal.
+
+This also prices the module's intended third arm. `outlier.rs`'s header names
+comparison "against the running estimate" as "the only one where focus
+difference is absent from the data term by construction", and it is unimplemented.
+But a running estimate is a **mean over frames**, i.e. a degree-0 predictor —
+which is precisely M89's `p=0` arm, and M89 *measured* that arm: it inflates the
+null's detail ratio from **1.173 to 1.939**, mean `z^2` from **0.990 to 1.083**,
+and the `>8 sigma` rate **11.5x on a stack where nothing moved**. So the arm
+`outlier.rs` reserves as its principled future direction is the one M89 already
+measured as the naive baseline and rejected.
+
+**Conclusion: `outlier.rs` is not a duplicate of `robust.rs` — it is a strictly
+weaker instrument aimed at a strictly worse stage.** Weaker because it uses two
+frames where five are available and the fifth-order structure is what does the
+work; worse-staged because it acts at the averaging, where fact 1189 prices the
+recovery at 6% against 100% (M13). Both facts point the same way, and neither
+depends on my measurements being right.
+
+**M15 — OBSERVED. Three reports now agree that a *pairwise spatial* disagreement
+statistic is substantially a texture detector, and one report disagrees by
+changing the axis.** M60 measured its merge-time statistic varying **5.11x with
+detail on clean data** and declined to build the mask. M97r measured `LowFreq`
+firing on 100.0% of a synthetic defocus trap. M123 measures a 2.12x gated
+separation over a 0.96x true displacement separation, plus a rank inversion
+(M12). M89, using temporal annihilation instead, measures **1.173x** — about 24x
+flatter in the quantity that defeated M60.
+
+The generalisation is not about any one implementation: **noise-normalising a
+two-frame spatial difference does not remove its dependence on scene detail,
+because the normalisation divides by the *noise*, and the nuisance is *signal*.**
+Only a statistic that annihilates the nuisance structurally — rather than
+normalising it — has been shown to work here.
 
 ---
 
