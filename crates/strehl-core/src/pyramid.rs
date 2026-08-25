@@ -1,0 +1,1468 @@
+//! Laplacian-pyramid (multi-band) merging.
+//!
+//! # Why this module exists
+//!
+//! The shipped merge is a **per-pixel selection followed by a gather**: a focus
+//! measure is computed in a fixed window, one winner frame is elected per
+//! pixel, the winner field is regularised, and the output pixel is taken from
+//! the elected frame. That has one structural property which no amount of
+//! tuning removes:
+//!
+//! > wherever the elected frame changes, the output has a **discontinuity at
+//! > every spatial frequency at once**, including the low frequencies.
+//!
+//! A step in the low frequencies is exactly what a "cut-out sticker" rim is,
+//! and it is what the eye finds first in a print. The subject detail can be
+//! perfect and the frame is still unusable.
+//!
+//! A multi-band merge cannot produce that artefact, for a reason that is
+//! structural rather than empirical:
+//!
+//! * the image is split into octave bands, and each band is merged separately;
+//! * the **weights are themselves band-limited**, because they are formed from
+//!   a smoothed statistic at that band's own scale and, at coarse levels, live
+//!   on a grid that is 2^k times coarser than the output;
+//! * so a selection error at level `k` can only inject an error whose spatial
+//!   extent and amplitude are those of level `k`. A wrong choice in the finest
+//!   band is a faint, high-frequency blemish. There is **no path** by which it
+//!   becomes a hard low-frequency step.
+//!
+//! This is the most widely deployed anti-seam technique in image compositing
+//! (Burt & Adelson 1983, "A multiresolution spline with application to image
+//! mosaics") and it is what focus-stacking products mean by "pyramid" or
+//! "PMax" methods.
+//!
+//! # What this module adds over a textbook pyramid stacker
+//!
+//! A naive pyramid stacker takes, at each coefficient, the frame with the
+//! largest `|L|`. That is a maximum over `n` noisy numbers, so **in a flat
+//! region it reliably selects the frame whose noise happened to be largest**.
+//! The result is the blotchy, high-contrast mottle that this project has been
+//! burned by before, and it is worse the deeper the stack.
+//!
+//! This module refuses to select on evidence the calibrated sensor noise model
+//! says is not there. Every band coefficient is compared against the noise
+//! floor **at that band's scale**, propagated from the same per-pixel
+//! `sigma^2(S) = g*S + (RN*g)^2` relation that gates the shipped merge. Where
+//! no frame's band energy clears the floor, the merge falls back to the plain
+//! mean across frames — which is not a compromise but the *correct* estimator
+//! when there is no information: it is the only operation that gets below
+//! single-frame noise.
+//!
+//! # Streaming
+//!
+//! Real stacks here are 20-300 frames at 33 MP. Holding every frame's pyramid
+//! is not an option. Every accumulator in [`BandMerge`] is a **sum**, so the
+//! merge is a fold: build one frame's pyramid, accumulate, drop it. [`BandMerge::absorb`]
+//! makes it a monoid, so a caller can run several accumulators over disjoint
+//! frame chunks in parallel and combine them, and the result is the same
+//! merge.
+//!
+//! This crate has no `rayon` dependency and this module is therefore
+//! single-threaded by construction. Parallelism belongs to the caller, which is
+//! why the chunk/absorb shape is part of the API rather than an internal
+//! detail.
+
+use crate::noise::NoiseModel;
+
+/// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
+///
+/// Burt & Adelson's `a = 0.4` member of the generating-kernel family, which is
+/// the one that is exactly binomial. It is chosen here for the usual reasons —
+/// separable, non-negative (so no ringing is manufactured by the operator
+/// itself), unit DC gain — plus one that matters specifically for this
+/// application: it is the widest kernel whose support is still small enough
+/// that a level's coefficients depend on a genuinely *local* neighbourhood, so
+/// a depth boundary cannot influence a coefficient many pixels away.
+pub const KERNEL: [f32; 5] = [1.0 / 16.0, 4.0 / 16.0, 6.0 / 16.0, 4.0 / 16.0, 1.0 / 16.0];
+
+/// Dimensions of one pyramid level.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LevelSize {
+    pub width: usize,
+    pub height: usize,
+}
+
+impl LevelSize {
+    pub const fn pixels(&self) -> usize {
+        self.width * self.height
+    }
+
+    /// The size of the next coarser level. Ceiling division, so an odd
+    /// dimension keeps its last sample rather than dropping it.
+    pub const fn reduced(&self) -> LevelSize {
+        LevelSize {
+            width: self.width.div_ceil(2),
+            height: self.height.div_ceil(2),
+        }
+    }
+}
+
+/// The size of every level of a pyramid with `bands` Laplacian levels.
+///
+/// Returns `bands + 1` entries: levels `0..bands` are the Laplacian bands and
+/// the last is the base (coarsest Gaussian residual).
+///
+/// Levels stop early if a further reduction would take a dimension below
+/// [`MIN_LEVEL_EXTENT`], because a 3-pixel-wide band carries no usable
+/// selection signal and its border handling would dominate it.
+pub fn level_sizes(width: usize, height: usize, bands: usize) -> Vec<LevelSize> {
+    let mut out = vec![LevelSize { width, height }];
+    for _ in 0..bands {
+        let next = out[out.len() - 1].reduced();
+        if next.width < MIN_LEVEL_EXTENT || next.height < MIN_LEVEL_EXTENT {
+            break;
+        }
+        out.push(next);
+    }
+    out
+}
+
+/// Smallest dimension a pyramid level may have.
+///
+/// The 5-tap kernel reads two samples either side, so below this the level is
+/// mostly border-replicated and its statistics stop meaning anything.
+pub const MIN_LEVEL_EXTENT: usize = 8;
+
+/// Default number of Laplacian bands.
+///
+/// Seven octaves takes a 3516 x 2344 quad plane down to a 28 x 19 base. That is
+/// deliberately deep: the whole point of the exercise is that the **low**
+/// frequencies must be blended rather than switched, and stopping at four or
+/// five levels leaves a band at ~100 px scale still being selected, which is
+/// visible as exactly the halo this is meant to remove.
+pub const DEFAULT_BANDS: usize = 7;
+
+// ---------------------------------------------------------------------------
+// the two operators
+// ---------------------------------------------------------------------------
+
+/// `REDUCE`: blur with [`KERNEL`] and decimate by two.
+///
+/// Borders replicate. Replication is the right choice here rather than
+/// reflection or zero-padding: the merge runs on registered frames whose
+/// outermost pixels are already the least trustworthy, and zero-padding would
+/// manufacture a huge artificial gradient all the way round the frame that the
+/// selection statistic would then treat as detail.
+///
+/// `scratch` must hold at least `dst_size.width * src_size.height` floats.
+pub fn reduce(src: &[f32], src_size: LevelSize, dst: &mut [f32], scratch: &mut [f32]) {
+    let dst_size = src_size.reduced();
+    assert_eq!(src.len(), src_size.pixels(), "reduce: source is not level-sized");
+    assert_eq!(dst.len(), dst_size.pixels(), "reduce: destination is not level-sized");
+    let (sw, sh) = (src_size.width, src_size.height);
+    let (dw, dh) = (dst_size.width, dst_size.height);
+    assert!(scratch.len() >= dw * sh, "reduce: scratch is too small");
+
+    // Horizontal: sw -> dw, all sh rows.
+    for y in 0..sh {
+        let row = &src[y * sw..y * sw + sw];
+        let out = &mut scratch[y * dw..y * dw + dw];
+        for (x, o) in out.iter_mut().enumerate() {
+            let c = 2 * x;
+            let mut acc = 0.0f32;
+            for (t, k) in KERNEL.iter().enumerate() {
+                let sx = clamp_tap(c, t, sw);
+                acc += k * row[sx];
+            }
+            *o = acc;
+        }
+    }
+    // Vertical: sh -> dh.
+    for y in 0..dh {
+        let c = 2 * y;
+        let out = &mut dst[y * dw..y * dw + dw];
+        out.fill(0.0);
+        for (t, k) in KERNEL.iter().enumerate() {
+            let sy = clamp_tap(c, t, sh);
+            let row = &scratch[sy * dw..sy * dw + dw];
+            for (o, v) in out.iter_mut().zip(row) {
+                *o += k * v;
+            }
+        }
+    }
+}
+
+/// Index of tap `t` (of 5, centred) at centre `c`, clamped into `0..n`.
+#[inline]
+fn clamp_tap(c: usize, t: usize, n: usize) -> usize {
+    let i = c as isize + t as isize - 2;
+    i.clamp(0, n as isize - 1) as usize
+}
+
+/// `EXPAND`: upsample by two and interpolate with [`KERNEL`].
+///
+/// Implemented as an explicit two-phase filter rather than "insert zeros,
+/// convolve, multiply by four", because that form makes the two properties this
+/// merge depends on checkable by inspection:
+///
+/// * the **even** phase is `[1, 6, 1] / 8` and the **odd** phase is
+///   `[1, 1] / 2`. Both sum to one, so a constant expands to itself exactly and
+///   no DC step can be introduced by the operator.
+/// * both phases reproduce a linear ramp exactly, so the operator adds no
+///   curvature of its own to a smooth region.
+///
+/// `dst_size` must be either `2 * src` or `2 * src - 1` per axis — i.e. it must
+/// be a size whose [`LevelSize::reduced`] is `src_size`.
+///
+/// `scratch` must hold at least `dst_size.width * src_size.height` floats.
+pub fn expand(
+    src: &[f32],
+    src_size: LevelSize,
+    dst: &mut [f32],
+    dst_size: LevelSize,
+    scratch: &mut [f32],
+) {
+    assert_eq!(src.len(), src_size.pixels(), "expand: source is not level-sized");
+    assert_eq!(dst.len(), dst_size.pixels(), "expand: destination is not level-sized");
+    assert_eq!(
+        dst_size.reduced(),
+        src_size,
+        "expand: destination does not reduce to the source size"
+    );
+    let (sw, sh) = (src_size.width, src_size.height);
+    let (dw, dh) = (dst_size.width, dst_size.height);
+    assert!(scratch.len() >= dw * sh, "expand: scratch is too small");
+
+    for y in 0..sh {
+        let row = &src[y * sw..y * sw + sw];
+        let out = &mut scratch[y * dw..y * dw + dw];
+        for (x, o) in out.iter_mut().enumerate() {
+            *o = expand_tap(row, sw, x);
+        }
+    }
+    for y in 0..dh {
+        let out = &mut dst[y * dw..y * dw + dw];
+        if y % 2 == 0 {
+            let c = y / 2;
+            let a = &scratch[clamp_idx(c as isize - 1, sh) * dw..][..dw];
+            let b = &scratch[c * dw..][..dw];
+            let d = &scratch[clamp_idx(c as isize + 1, sh) * dw..][..dw];
+            for (i, o) in out.iter_mut().enumerate() {
+                *o = 0.125 * a[i] + 0.75 * b[i] + 0.125 * d[i];
+            }
+        } else {
+            let c = y / 2;
+            let a = &scratch[c * dw..][..dw];
+            let b = &scratch[clamp_idx(c as isize + 1, sh) * dw..][..dw];
+            for (i, o) in out.iter_mut().enumerate() {
+                *o = 0.5 * (a[i] + b[i]);
+            }
+        }
+    }
+}
+
+#[inline]
+fn clamp_idx(i: isize, n: usize) -> usize {
+    i.clamp(0, n as isize - 1) as usize
+}
+
+#[inline]
+fn expand_tap(row: &[f32], n: usize, x: usize) -> f32 {
+    let c = x / 2;
+    if x % 2 == 0 {
+        0.125 * row[clamp_idx(c as isize - 1, n)] + 0.75 * row[c] + 0.125 * row[clamp_idx(c as isize + 1, n)]
+    } else {
+        0.5 * (row[c] + row[clamp_idx(c as isize + 1, n)])
+    }
+}
+
+// ---------------------------------------------------------------------------
+// pyramids
+// ---------------------------------------------------------------------------
+
+/// A Laplacian pyramid: `bands` difference levels plus a base residual.
+///
+/// `data[k]` is level `k`; the last entry is the base. [`Pyramid::collapse`]
+/// inverts the decomposition exactly (to float rounding).
+#[derive(Debug, Clone)]
+pub struct Pyramid {
+    sizes: Vec<LevelSize>,
+    data: Vec<Vec<f32>>,
+}
+
+impl Pyramid {
+    /// An all-zero pyramid with the given level sizes.
+    pub fn zeros(sizes: &[LevelSize]) -> Self {
+        Self {
+            sizes: sizes.to_vec(),
+            data: sizes.iter().map(|s| vec![0.0; s.pixels()]).collect(),
+        }
+    }
+
+    pub fn sizes(&self) -> &[LevelSize] {
+        &self.sizes
+    }
+
+    /// Number of levels, Laplacian bands **plus** the base.
+    pub fn levels(&self) -> usize {
+        self.sizes.len()
+    }
+
+    /// Number of Laplacian bands, i.e. every level except the base.
+    pub fn bands(&self) -> usize {
+        self.sizes.len() - 1
+    }
+
+    pub fn level(&self, k: usize) -> &[f32] {
+        &self.data[k]
+    }
+
+    pub fn level_mut(&mut self, k: usize) -> &mut [f32] {
+        &mut self.data[k]
+    }
+
+    /// Total float count across every level. `~4/3` of the base image.
+    pub fn floats(&self) -> usize {
+        self.sizes.iter().map(LevelSize::pixels).sum()
+    }
+
+    /// Decompose `src` into this pyramid, reusing its allocation.
+    pub fn build(&mut self, src: &[f32], ws: &mut Workspace) {
+        assert_eq!(src.len(), self.sizes[0].pixels(), "pyramid: source is not level-0 sized");
+        let n = self.levels();
+        // Gaussian levels first, into the pyramid's own storage.
+        self.data[0].copy_from_slice(src);
+        for k in 1..n {
+            let (lo, hi) = self.data.split_at_mut(k);
+            reduce(&lo[k - 1], self.sizes[k - 1], &mut hi[0], &mut ws.scratch);
+        }
+        // Then the differences, coarse to fine, so each level still holds its
+        // Gaussian when it is used as the source of the next expand.
+        for k in (0..n - 1).rev() {
+            expand(
+                &self.data[k + 1],
+                self.sizes[k + 1],
+                &mut ws.expanded,
+                self.sizes[k],
+                &mut ws.scratch,
+            );
+            for (d, e) in self.data[k].iter_mut().zip(&ws.expanded[..self.sizes[k].pixels()]) {
+                *d -= e;
+            }
+        }
+    }
+
+    /// Rebuild the level-0 image from the bands and the base.
+    pub fn collapse(&self, ws: &mut Workspace) -> Vec<f32> {
+        let n = self.levels();
+        let mut acc = self.data[n - 1].clone();
+        for k in (0..n - 1).rev() {
+            expand(
+                &acc,
+                self.sizes[k + 1],
+                &mut ws.expanded,
+                self.sizes[k],
+                &mut ws.scratch,
+            );
+            acc = ws.expanded[..self.sizes[k].pixels()].to_vec();
+            for (a, l) in acc.iter_mut().zip(&self.data[k]) {
+                *a += l;
+            }
+        }
+        acc
+    }
+
+    /// Build the **Gaussian** pyramid of `src` in place — every level holds a
+    /// blurred, decimated copy rather than a difference.
+    ///
+    /// Used for fields that are not images and must not be differenced: the
+    /// per-pixel noise variance, and any weight field a caller wants carried to
+    /// coarser grids.
+    pub fn build_gaussian(&mut self, src: &[f32], ws: &mut Workspace) {
+        assert_eq!(src.len(), self.sizes[0].pixels(), "pyramid: source is not level-0 sized");
+        self.data[0].copy_from_slice(src);
+        for k in 1..self.levels() {
+            let (lo, hi) = self.data.split_at_mut(k);
+            reduce(&lo[k - 1], self.sizes[k - 1], &mut hi[0], &mut ws.scratch);
+        }
+    }
+}
+
+/// Reusable scratch for the pyramid operators, so a per-frame fold allocates
+/// once rather than 300 times.
+#[derive(Debug, Clone)]
+pub struct Workspace {
+    scratch: Vec<f32>,
+    expanded: Vec<f32>,
+}
+
+impl Workspace {
+    pub fn new(sizes: &[LevelSize]) -> Self {
+        let n = sizes[0].pixels();
+        Self {
+            scratch: vec![0.0; n + sizes[0].width],
+            expanded: vec![0.0; n],
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// the band noise floor
+// ---------------------------------------------------------------------------
+
+/// How much of a white-noise input's variance survives into each Laplacian
+/// band, MEASURED on the operators in this module rather than assumed.
+///
+/// # Why this is measured and not derived
+///
+/// The tempting derivation is "the kernel's squared weights sum to `70/256`, so
+/// each reduction cuts the variance by `0.0748` per axis". That is right for
+/// the *first* reduction and wrong for every one after it, because after one
+/// blur the samples are no longer independent and the second reduction removes
+/// much less than the formula claims. Compounding a wrong factor over seven
+/// octaves is how a noise floor ends up an order of magnitude too low, at which
+/// point the gate stops gating and the merge is a naive argmax again — the
+/// exact failure this module exists to avoid.
+///
+/// So `beta[k] = E[L_k^2] / sigma_0^2` is obtained by pushing a deterministic
+/// unit-variance white field through the real [`Pyramid::build`] and reading
+/// the answer off. It is a property of the operators, so it is the same for
+/// every stack and every camera; only the per-pixel `sigma_0^2` it multiplies
+/// is scene dependent.
+#[derive(Debug, Clone)]
+pub struct BandGain {
+    beta: Vec<f32>,
+}
+
+impl BandGain {
+    /// Measure the per-band variance gain for a pyramid of the given depth.
+    ///
+    /// Deterministic: the probe field comes from a fixed-seed LCG, so two runs
+    /// of the same binary produce the same floor and a render is reproducible.
+    /// Costs a few milliseconds on a 256 x 256 probe, once per process.
+    pub fn measure(bands: usize) -> Self {
+        const N: usize = 256;
+        let sizes = level_sizes(N, N, bands);
+        let mut ws = Workspace::new(&sizes);
+        let mut pyr = Pyramid::zeros(&sizes);
+
+        // A fixed-seed LCG, then centred and normalised to exactly unit sample
+        // variance so the ratio below is not itself a noisy estimate.
+        let mut state: u64 = 0x2545_F491_4F6C_DD1D;
+        let mut field: Vec<f32> = (0..N * N)
+            .map(|_| {
+                // Two uniforms summed twelve times would be Gaussian; it does
+                // not need to be. The band gain of a linear operator depends on
+                // the input's variance and its whiteness, not on its
+                // distribution.
+                state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+                ((state >> 33) as f32) / ((1u64 << 31) as f32) - 1.0
+            })
+            .collect();
+        let mean = field.iter().sum::<f32>() / field.len() as f32;
+        for v in field.iter_mut() {
+            *v -= mean;
+        }
+        let var = field.iter().map(|v| v * v).sum::<f32>() / field.len() as f32;
+        let s = var.sqrt().recip();
+        for v in field.iter_mut() {
+            *v *= s;
+        }
+
+        pyr.build(&field, &mut ws);
+        let beta = (0..sizes.len())
+            .map(|k| {
+                let sz = sizes[k];
+                // Interior only. The replicated border is correlated with
+                // itself and would bias the estimate downward.
+                let m = 4usize.min(sz.width / 4).min(sz.height / 4);
+                let lv = pyr.level(k);
+                let mut acc = 0.0f64;
+                let mut n = 0usize;
+                for y in m..sz.height.saturating_sub(m) {
+                    for x in m..sz.width.saturating_sub(m) {
+                        let v = f64::from(lv[y * sz.width + x]);
+                        acc += v * v;
+                        n += 1;
+                    }
+                }
+                if n == 0 { 1.0 } else { (acc / n as f64) as f32 }
+            })
+            .collect();
+        Self { beta }
+    }
+
+    /// `E[L_k^2] / sigma_0^2` for band `k`.
+    pub fn beta(&self, k: usize) -> f32 {
+        self.beta[k]
+    }
+
+    pub fn all(&self) -> &[f32] {
+        &self.beta
+    }
+}
+
+/// The per-pixel green-luma **variance** of one frame, in DN^2, from the
+/// calibrated noise model.
+///
+/// This is the level-0 input to the band noise floor. It is a variance and not
+/// a sigma on purpose: variances are what add, and what the pyramid's linear
+/// operators act on.
+pub fn luma_variance(luma: &[f32], noise: &NoiseModel, dst: &mut [f32]) {
+    assert_eq!(luma.len(), dst.len());
+    for (d, l) in dst.iter_mut().zip(luma) {
+        let s = noise.green_luma_sigma(*l);
+        *d = s * s;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// the merge
+// ---------------------------------------------------------------------------
+
+/// How a band coefficient is chosen across frames.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SelectMode {
+    /// Weighted mean, weight `= excess_band_power^exponent`.
+    ///
+    /// **This is the default and it should stay the default.** Two independent
+    /// reasons:
+    ///
+    /// 1. *Sign coherence comes free.* The classic failure of coefficient-wise
+    ///    argmax-of-magnitude is that adjacent coefficients get taken from
+    ///    frames whose detail has opposite sign, which is ringing. A weighted
+    ///    mean cannot do that: it is a convex combination, so its output is
+    ///    bounded by the inputs and neighbouring outputs move continuously.
+    /// 2. *It degrades to averaging.* Where several frames are genuinely
+    ///    indistinguishable the weights are equal and the merge averages them,
+    ///    which is the only operation that gets below single-frame noise. A
+    ///    hard maximum inherits one frame's noise everywhere, and because the
+    ///    pick is made using that same frame's noise the two are correlated and
+    ///    the noise is *amplified* rather than merely retained.
+    SoftPower,
+    /// Take the coefficient of the frame with the largest excess band power.
+    ///
+    /// Present as a **control arm**, not as an option to ship. This is the
+    /// textbook "PMax" rule, and having it reachable is what makes the claim
+    /// that the soft rule is better a measurement rather than an assertion.
+    HardMax,
+}
+
+/// How the coarsest residual — the band that carries overall tone — is merged.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BaseBand {
+    /// Plain mean across frames. The conservative choice: it cannot introduce a
+    /// low-frequency discontinuity of any kind, because it does not depend on
+    /// position at all.
+    Mean,
+    /// Weighted by the coarsest Laplacian band's weight, reduced once onto the
+    /// base grid.
+    ///
+    /// This is the better default. The base grid is 2^bands coarser than the
+    /// output, so even a hard mask on it is, after the collapse, a transition
+    /// spread over ~2^bands output pixels — smooth by construction. What it
+    /// buys is local tone: at a depth boundary the in-focus frame's low
+    /// frequencies win locally instead of being averaged with every defocused
+    /// frame's veil.
+    WeightedFromCoarsest,
+}
+
+/// Everything the multi-band merge is parameterised by.
+#[derive(Debug, Clone, Copy)]
+pub struct MergeConfig {
+    /// Number of Laplacian bands. See [`DEFAULT_BANDS`].
+    pub bands: usize,
+    /// How many multiples of the modelled band-noise power a coefficient's
+    /// local energy must exceed before it is allowed to influence the
+    /// selection.
+    ///
+    /// The energy statistic is a smoothed mean of ~13 squared samples, so under
+    /// pure noise it fluctuates by about 39% of its mean. `2.0` therefore sits
+    /// roughly 2.6 of its own standard deviations above the noise expectation:
+    /// high enough that noise essentially never wins a selection, low enough
+    /// that real low-contrast detail is not thrown away.
+    pub gate: f32,
+    /// Exponent on the noise-corrected band power.
+    ///
+    /// `1.0` is a Wiener-like weighting and blends generously; `2.0` is sharply
+    /// selective while remaining a convex combination. The trade is real: with
+    /// a 300-frame stack, twenty defocused frames each carrying 5% of the
+    /// in-focus frame's band power contribute 45% of the weight at exponent 1
+    /// and 3% at exponent 2. Defocus is a low-pass, so that contamination is
+    /// *blur*, and 45% of it is visible. Hence the default of 2.
+    pub exponent: f32,
+    pub select: SelectMode,
+    pub base: BaseBand,
+}
+
+impl Default for MergeConfig {
+    fn default() -> Self {
+        Self {
+            bands: DEFAULT_BANDS,
+            gate: 2.0,
+            exponent: 2.0,
+            select: SelectMode::SoftPower,
+            base: BaseBand::WeightedFromCoarsest,
+        }
+    }
+}
+
+/// A streaming multi-band merge over any number of frames and colour planes.
+///
+/// Every field is a sum over frames, which is what makes this a fold and makes
+/// [`absorb`](Self::absorb) exact.
+#[derive(Debug, Clone)]
+pub struct BandMerge {
+    cfg: MergeConfig,
+    sizes: Vec<LevelSize>,
+    planes: usize,
+    /// `sum(w * L)`, indexed `[level * planes + plane]`.
+    num: Vec<Vec<f32>>,
+    /// `sum(L)`, same indexing. The fallback numerator where no frame cleared
+    /// the noise floor.
+    usum: Vec<Vec<f32>>,
+    /// `sum(w)`, per level. Shared by every plane, because the selection is
+    /// made on green luma only — the same rule the shipped election uses, and
+    /// for the same reason: letting a colour plane's own noise drive the
+    /// decision is how chroma noise becomes structure.
+    den: Vec<Vec<f32>>,
+    /// For [`SelectMode::HardMax`]: the best weight seen so far, per level.
+    best: Vec<Vec<f32>>,
+    frames: u32,
+    /// Frames whose contribution was entirely below the noise floor at every
+    /// level. Reported, because a stack where this is large is one where the
+    /// gate is wrong.
+    gain: BandGain,
+}
+
+impl BandMerge {
+    pub fn new(width: usize, height: usize, planes: usize, cfg: MergeConfig) -> Self {
+        assert!(planes > 0, "a merge needs at least one plane");
+        let sizes = level_sizes(width, height, cfg.bands);
+        let nl = sizes.len();
+        let per_level = || -> Vec<Vec<f32>> { sizes.iter().map(|s| vec![0.0; s.pixels()]).collect() };
+        Self {
+            cfg,
+            planes,
+            num: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),
+            usum: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),
+            den: per_level(),
+            best: match cfg.select {
+                SelectMode::HardMax => per_level(),
+                SelectMode::SoftPower => Vec::new(),
+            },
+            frames: 0,
+            gain: BandGain::measure(sizes.len() - 1),
+            sizes,
+        }
+    }
+
+    pub fn sizes(&self) -> &[LevelSize] {
+        &self.sizes
+    }
+
+    pub fn frames(&self) -> u32 {
+        self.frames
+    }
+
+    pub fn band_gain(&self) -> &BandGain {
+        &self.gain
+    }
+
+    /// Peak resident floats held by this accumulator. For an honest memory
+    /// report rather than a guess.
+    pub fn accumulator_floats(&self) -> usize {
+        let per_level: usize = self.sizes.iter().map(LevelSize::pixels).sum();
+        per_level * (2 * self.planes + 1 + usize::from(!self.best.is_empty()))
+    }
+
+    /// Fold one frame in.
+    ///
+    /// `planes` are the frame's colour planes, black-subtracted, all at level-0
+    /// size. `luma` is the plane the selection is made on — green luma, so that
+    /// the decision is the same one the shipped election makes. `variance` is
+    /// the per-pixel level-0 noise variance of `luma`, from [`luma_variance`].
+    pub fn add_frame(
+        &mut self,
+        planes: &[&[f32]],
+        luma: &[f32],
+        variance: &[f32],
+        ws: &mut FrameWorkspace,
+    ) {
+        assert_eq!(planes.len(), self.planes, "wrong number of planes");
+        let n0 = self.sizes[0].pixels();
+        assert_eq!(luma.len(), n0);
+        assert_eq!(variance.len(), n0);
+
+        // 1. The selection pyramid, and the noise pyramid beside it.
+        ws.luma.build(luma, &mut ws.ws);
+        ws.var.build_gaussian(variance, &mut ws.ws);
+
+        // 2. Per band, a noise-corrected local energy, then a weight.
+        let nb = self.sizes.len() - 1;
+        for k in 0..nb {
+            let sz = self.sizes[k];
+            let px = sz.pixels();
+            let lv = ws.luma.level(k);
+            let sq = &mut ws.sq[..px];
+            for (s, l) in sq.iter_mut().zip(lv) {
+                *s = l * l;
+            }
+            // Smooth the squared coefficients with the same binomial kernel,
+            // at the same scale. An unsmoothed |L| is a single noisy sample and
+            // makes the weight field as noisy as the data.
+            smooth5(sq, sz, &mut ws.smooth_scratch);
+            let beta = self.gain.beta(k);
+            let gate = self.cfg.gate;
+            let p = self.cfg.exponent;
+            let w = &mut ws.weight[..px];
+            let vv = ws.var.level(k);
+            for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
+                // The floor at this band's scale: the level-0 variance carried
+                // down to this grid, times the measured band gain.
+                let floor = gate * beta * v.max(0.0);
+                let excess = (*e - floor).max(0.0);
+                *w = pow_fast(excess, p);
+            }
+            self.accumulate_level(k, planes, &mut ws.plane, w);
+        }
+
+        // 3. The base band.
+        //
+        // `ws.weight` still holds the coarsest Laplacian band's weight from the
+        // loop above, so the base weight is that field reduced once onto the
+        // base grid — carried through the same operator, so it is band-limited
+        // in exactly the way every other level's weight is. Under
+        // [`BaseBand::Mean`] it is simply zero everywhere, which routes every
+        // base coefficient through the unweighted fallback.
+        let kb = nb;
+        let szb = self.sizes[kb];
+        match self.cfg.base {
+            BaseBand::Mean => ws.coarse[..szb.pixels()].fill(0.0),
+            BaseBand::WeightedFromCoarsest => {
+                let prev = self.sizes[nb - 1];
+                reduce(
+                    &ws.weight[..prev.pixels()],
+                    prev,
+                    &mut ws.coarse[..szb.pixels()],
+                    &mut ws.smooth_scratch,
+                );
+            }
+        }
+        Self::accumulate_level(self, kb, planes, &mut ws.plane, &ws.coarse[..szb.pixels()]);
+
+        self.frames += 1;
+    }
+
+    /// Decompose each colour plane and fold level `k` of it into the
+    /// accumulators with the shared weight `w`.
+    ///
+    /// The plane pyramids are rebuilt per level, which looks wasteful and is
+    /// not: `ws.plane` holds them for the whole frame and is built once, on the
+    /// first level touched.
+    fn accumulate_level(&mut self, k: usize, planes: &[&[f32]], cache: &mut PlaneCache, w: &[f32]) {
+        cache.ensure(planes, &self.sizes);
+        let px = self.sizes[k].pixels();
+        let den = &mut self.den[k][..px];
+        match self.cfg.select {
+            SelectMode::SoftPower => {
+                for (d, wv) in den.iter_mut().zip(w) {
+                    *d += wv;
+                }
+                for c in 0..self.planes {
+                    let lv = cache.pyramids[c].level(k);
+                    let num = &mut self.num[k * self.planes + c][..px];
+                    let usum = &mut self.usum[k * self.planes + c][..px];
+                    for i in 0..px {
+                        num[i] += w[i] * lv[i];
+                        usum[i] += lv[i];
+                    }
+                }
+            }
+            SelectMode::HardMax => {
+                let best = &mut self.best[k][..px];
+                for c in 0..self.planes {
+                    let lv = cache.pyramids[c].level(k);
+                    let num = &mut self.num[k * self.planes + c][..px];
+                    let usum = &mut self.usum[k * self.planes + c][..px];
+                    for i in 0..px {
+                        if w[i] > best[i] {
+                            num[i] = lv[i];
+                        }
+                        usum[i] += lv[i];
+                    }
+                }
+                for (b, wv) in best.iter_mut().zip(w) {
+                    if wv > b {
+                        *b = *wv;
+                    }
+                }
+                for (d, wv) in den.iter_mut().zip(w) {
+                    *d = d.max(*wv);
+                }
+            }
+        }
+    }
+
+    /// Combine another accumulator's frames into this one.
+    ///
+    /// Exact for [`SelectMode::SoftPower`], because every field is a sum. For
+    /// [`SelectMode::HardMax`] it is exact too — a maximum is associative —
+    /// **except** for ties, where which frame wins depends on the order frames
+    /// were folded. Ties on a continuous statistic are measure-zero and only
+    /// arise where both weights are exactly zero, in which case the fallback
+    /// mean is used and the tie does not reach the output.
+    pub fn absorb(&mut self, other: &BandMerge) {
+        assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
+        assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
+        match self.cfg.select {
+            SelectMode::SoftPower => {
+                for k in 0..self.sizes.len() {
+                    for (a, b) in self.den[k].iter_mut().zip(&other.den[k]) {
+                        *a += b;
+                    }
+                    for c in 0..self.planes {
+                        let i = k * self.planes + c;
+                        for (a, b) in self.num[i].iter_mut().zip(&other.num[i]) {
+                            *a += b;
+                        }
+                        for (a, b) in self.usum[i].iter_mut().zip(&other.usum[i]) {
+                            *a += b;
+                        }
+                    }
+                }
+            }
+            SelectMode::HardMax => {
+                for k in 0..self.sizes.len() {
+                    for c in 0..self.planes {
+                        let i = k * self.planes + c;
+                        let (bs, os) = (&other.best[k], &other.num[i]);
+                        for j in 0..self.num[i].len() {
+                            if bs[j] > self.best[k][j] {
+                                self.num[i][j] = os[j];
+                            }
+                        }
+                        for (a, b) in self.usum[i].iter_mut().zip(&other.usum[i]) {
+                            *a += b;
+                        }
+                    }
+                    for (a, b) in self.best[k].iter_mut().zip(&other.best[k]) {
+                        if *b > *a {
+                            *a = *b;
+                        }
+                    }
+                    for (a, b) in self.den[k].iter_mut().zip(&other.den[k]) {
+                        *a = a.max(*b);
+                    }
+                }
+            }
+        }
+        self.frames += other.frames;
+    }
+
+    /// Fraction of coefficients, per level, where no frame cleared the noise
+    /// floor and the merge therefore averaged.
+    ///
+    /// This is the single most informative diagnostic this merge produces. Near
+    /// 1.0 at the fine levels means the gate is refusing everything and the
+    /// output is a plain average — soft, but honest. Near 0.0 everywhere means
+    /// the gate is not gating and this has become a naive pyramid stacker.
+    pub fn averaged_fraction(&self) -> Vec<f64> {
+        self.den
+            .iter()
+            .map(|d| d.iter().filter(|v| **v <= 0.0).count() as f64 / d.len().max(1) as f64)
+            .collect()
+    }
+
+    /// Resolve the accumulators into one merged Laplacian pyramid per plane and
+    /// collapse each to a level-0 image.
+    ///
+    /// Returns `planes` images at level-0 size, in the order they were supplied
+    /// to [`add_frame`](Self::add_frame).
+    pub fn finish(&self, ws: &mut Workspace) -> Vec<Vec<f32>> {
+        assert!(self.frames > 0, "cannot finish a merge with no frames");
+        let inv_n = 1.0 / self.frames as f32;
+        (0..self.planes)
+            .map(|c| {
+                let mut pyr = Pyramid::zeros(&self.sizes);
+                for k in 0..self.sizes.len() {
+                    let i = k * self.planes + c;
+                    let den = &self.den[k];
+                    let num = &self.num[i];
+                    let usum = &self.usum[i];
+                    let out = pyr.level_mut(k);
+                    match self.cfg.select {
+                        SelectMode::SoftPower => {
+                            for j in 0..out.len() {
+                                out[j] = if den[j] > 0.0 {
+                                    num[j] / den[j]
+                                } else {
+                                    usum[j] * inv_n
+                                };
+                            }
+                        }
+                        SelectMode::HardMax => {
+                            for j in 0..out.len() {
+                                out[j] = if den[j] > 0.0 { num[j] } else { usum[j] * inv_n };
+                            }
+                        }
+                    }
+                }
+                pyr.collapse(ws)
+            })
+            .collect()
+    }
+}
+
+/// Per-frame reusable buffers. One of these per worker, not per frame.
+#[derive(Debug, Clone)]
+pub struct FrameWorkspace {
+    ws: Workspace,
+    luma: Pyramid,
+    var: Pyramid,
+    plane: PlaneCache,
+    sq: Vec<f32>,
+    weight: Vec<f32>,
+    coarse: Vec<f32>,
+    smooth_scratch: Vec<f32>,
+}
+
+impl FrameWorkspace {
+    pub fn new(sizes: &[LevelSize], planes: usize) -> Self {
+        let n0 = sizes[0].pixels();
+        Self {
+            ws: Workspace::new(sizes),
+            luma: Pyramid::zeros(sizes),
+            var: Pyramid::zeros(sizes),
+            plane: PlaneCache::new(sizes, planes),
+            sq: vec![0.0; n0],
+            weight: vec![0.0; n0],
+            coarse: vec![0.0; n0],
+            smooth_scratch: vec![0.0; n0 + sizes[0].width],
+        }
+    }
+
+    /// Floats held by this workspace, for the memory report.
+    pub fn floats(&self) -> usize {
+        self.ws.scratch.len()
+            + self.ws.expanded.len()
+            + self.luma.floats()
+            + self.var.floats()
+            + self.plane.pyramids.iter().map(Pyramid::floats).sum::<usize>()
+            + self.sq.len()
+            + self.weight.len()
+            + self.coarse.len()
+            + self.smooth_scratch.len()
+    }
+
+    /// Drop the memoised plane pyramids, so the next frame rebuilds them.
+    pub fn next_frame(&mut self) {
+        self.plane.valid = false;
+    }
+}
+
+#[derive(Debug, Clone)]
+struct PlaneCache {
+    pyramids: Vec<Pyramid>,
+    ws: Workspace,
+    valid: bool,
+}
+
+impl PlaneCache {
+    fn new(sizes: &[LevelSize], planes: usize) -> Self {
+        Self {
+            pyramids: (0..planes).map(|_| Pyramid::zeros(sizes)).collect(),
+            ws: Workspace::new(sizes),
+            valid: false,
+        }
+    }
+
+    fn ensure(&mut self, planes: &[&[f32]], _sizes: &[LevelSize]) {
+        if self.valid {
+            return;
+        }
+        for (p, src) in self.pyramids.iter_mut().zip(planes) {
+            p.build(src, &mut self.ws);
+        }
+        self.valid = true;
+    }
+}
+
+/// In-place separable 5-tap binomial smoothing at one level's own scale.
+fn smooth5(data: &mut [f32], size: LevelSize, scratch: &mut [f32]) {
+    let (w, h) = (size.width, size.height);
+    assert!(scratch.len() >= w * h + w, "smooth5: scratch is too small");
+    for y in 0..h {
+        let row = &data[y * w..y * w + w];
+        let out = &mut scratch[..w];
+        for (x, o) in out.iter_mut().enumerate() {
+            let mut acc = 0.0f32;
+            for (t, k) in KERNEL.iter().enumerate() {
+                acc += k * row[clamp_tap(x, t, w)];
+            }
+            *o = acc;
+        }
+        data[y * w..y * w + w].copy_from_slice(&scratch[..w]);
+    }
+    // Vertical needs a full copy, because a row is read after it is written.
+    let col = &mut scratch[..w * h];
+    col.copy_from_slice(&data[..w * h]);
+    for y in 0..h {
+        let out = &mut data[y * w..y * w + w];
+        out.fill(0.0);
+        for (t, k) in KERNEL.iter().enumerate() {
+            let sy = clamp_tap(y, t, h);
+            let row = &col[sy * w..sy * w + w];
+            for (o, v) in out.iter_mut().zip(row) {
+                *o += k * v;
+            }
+        }
+    }
+}
+
+/// `x^p` for the small set of exponents this merge uses, without a `powf` call
+/// per coefficient. Falls back to `powf` for anything else.
+#[inline]
+fn pow_fast(x: f32, p: f32) -> f32 {
+    if p == 1.0 {
+        x
+    } else if p == 2.0 {
+        x * x
+    } else if p == 0.5 {
+        x.sqrt()
+    } else {
+        x.powf(p)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn ramp(w: usize, h: usize) -> Vec<f32> {
+        (0..w * h).map(|i| (i % 97) as f32 * 0.37 + (i / 97) as f32 * 0.11).collect()
+    }
+
+    #[test]
+    fn the_generating_kernel_is_binomial_and_sums_to_one() {
+        assert_eq!(KERNEL, [1.0 / 16.0, 4.0 / 16.0, 6.0 / 16.0, 4.0 / 16.0, 1.0 / 16.0]);
+        assert!((KERNEL.iter().sum::<f32>() - 1.0).abs() < 1e-7);
+    }
+
+    #[test]
+    fn reduce_and_expand_preserve_a_constant_exactly() {
+        let size = LevelSize { width: 37, height: 23 };
+        let src = vec![4.25f32; size.pixels()];
+        let ds = size.reduced();
+        let mut small = vec![0.0; ds.pixels()];
+        let mut scratch = vec![0.0; size.pixels() + size.width];
+        reduce(&src, size, &mut small, &mut scratch);
+        for v in &small {
+            assert!((v - 4.25).abs() < 1e-5, "reduce moved a constant: {v}");
+        }
+        let mut back = vec![0.0; size.pixels()];
+        expand(&small, ds, &mut back, size, &mut scratch);
+        for v in &back {
+            assert!((v - 4.25).abs() < 1e-5, "expand moved a constant: {v}");
+        }
+    }
+
+    #[test]
+    fn expand_reproduces_a_linear_ramp() {
+        // Both phases are exact on a ramp, which is what keeps the operator
+        // from adding curvature of its own inside a smooth region. A kernel
+        // that failed this would put a low-amplitude checkerboard into every
+        // flat gradient in the frame.
+        let ss = LevelSize { width: 16, height: 1 };
+        let src: Vec<f32> = (0..16).map(|i| i as f32).collect();
+        let ds = LevelSize { width: 32, height: 1 };
+        let mut out = vec![0.0; 32];
+        let mut scratch = vec![0.0; 64];
+        expand(&src, ss, &mut out, ds, &mut scratch);
+        // Interior only: the ends are clamped, which is correct behaviour and
+        // is not a ramp.
+        for x in 4..28 {
+            let want = x as f32 * 0.5;
+            assert!(
+                (out[x] - want).abs() < 1e-4,
+                "expand is not exact on a ramp at {x}: {} vs {want}",
+                out[x]
+            );
+        }
+    }
+
+    #[test]
+    fn a_laplacian_pyramid_reconstructs_its_input() {
+        // The property everything else rests on. If the decomposition is not
+        // invertible then every "improvement" measured through it is confounded
+        // with a reconstruction error.
+        for (w, h) in [(64usize, 64usize), (37, 23), (129, 71)] {
+            let sizes = level_sizes(w, h, 4);
+            let mut ws = Workspace::new(&sizes);
+            let mut pyr = Pyramid::zeros(&sizes);
+            let src = ramp(w, h);
+            pyr.build(&src, &mut ws);
+            let back = pyr.collapse(&mut ws);
+            let err = src
+                .iter()
+                .zip(&back)
+                .map(|(a, b)| (a - b).abs())
+                .fold(0.0f32, f32::max);
+            assert!(err < 1e-2, "{w}x{h}: reconstruction error {err}");
+        }
+    }
+
+    #[test]
+    fn a_constant_image_has_zero_detail_bands() {
+        let sizes = level_sizes(64, 64, 4);
+        let mut ws = Workspace::new(&sizes);
+        let mut pyr = Pyramid::zeros(&sizes);
+        pyr.build(&vec![7.0; 64 * 64], &mut ws);
+        for k in 0..pyr.bands() {
+            let m = pyr.level(k).iter().fold(0.0f32, |a, v| a.max(v.abs()));
+            assert!(m < 1e-4, "band {k} of a constant image is not zero: {m}");
+        }
+        let base = pyr.level(pyr.bands());
+        for v in base {
+            assert!((v - 7.0).abs() < 1e-4);
+        }
+    }
+
+    #[test]
+    fn levels_stop_before_a_band_becomes_meaningless() {
+        let sizes = level_sizes(3516, 2344, 7);
+        assert_eq!(sizes.len(), 8, "7 bands plus a base");
+        assert_eq!(sizes[0], LevelSize { width: 3516, height: 2344 });
+        assert!(sizes[7].width >= MIN_LEVEL_EXTENT && sizes[7].height >= MIN_LEVEL_EXTENT);
+        // And a small plane truncates rather than producing 2x1 levels.
+        let small = level_sizes(40, 40, 7);
+        assert!(small.len() < 8);
+        assert!(small.last().unwrap().width >= MIN_LEVEL_EXTENT);
+    }
+
+    #[test]
+    fn the_band_noise_gain_falls_with_scale_and_is_never_zero() {
+        // The number the gate multiplies. If this were computed by compounding
+        // the kernel's squared-weight sum it would read 0.0748^k and be an
+        // order of magnitude too small by level 3, at which point the gate
+        // stops gating. These are the operators' real numbers.
+        let g = BandGain::measure(5);
+        assert_eq!(g.all().len(), 6);
+        for (k, b) in g.all().iter().enumerate() {
+            assert!(*b > 0.0 && b.is_finite(), "beta[{k}] = {b}");
+        }
+        assert!(g.beta(0) > g.beta(1), "the finest band must carry the most noise");
+        assert!(g.beta(1) > g.beta(2));
+        // Level 0 keeps most of a white input: REDUCE removes almost all of it,
+        // so the difference keeps almost all of it.
+        assert!(g.beta(0) > 0.5, "beta[0] = {}", g.beta(0));
+        // And it is deterministic.
+        let again = BandGain::measure(5);
+        assert_eq!(g.all(), again.all(), "the band gain probe is not reproducible");
+    }
+
+    /// Build a frame that is sharp on the left and blurred on the right, and
+    /// its mirror image. This is a synthetic depth boundary with a known right
+    /// answer.
+    fn split_focus(w: usize, h: usize, sharp_left: bool) -> Vec<f32> {
+        let mut v = vec![0.0f32; w * h];
+        for y in 0..h {
+            for x in 0..w {
+                // A fine texture on a smooth background, so there is genuine
+                // detail to select and a genuine low frequency to blend.
+                let bg = 1000.0 + 400.0 * ((x as f32 / w as f32) * 3.0).sin();
+                let fine = 120.0 * (((x * 7 + y * 5) % 11) as f32 / 11.0 - 0.5);
+                let is_sharp = (x < w / 2) == sharp_left;
+                v[y * w + x] = if is_sharp { bg + fine } else { bg };
+            }
+        }
+        v
+    }
+
+    #[test]
+    fn the_merge_recovers_detail_from_both_frames() {
+        let (w, h) = (128usize, 96usize);
+        let a = split_focus(w, h, true);
+        let b = split_focus(w, h, false);
+        let cfg = MergeConfig { bands: 4, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        // A tiny, uniform variance: the synthetic detail is far above it.
+        let var = vec![4.0f32; w * h];
+        for f in [&a, &b] {
+            fws.next_frame();
+            merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+        }
+        let mut ws = Workspace::new(&sizes);
+        let out = merge.finish(&mut ws)[0].clone();
+
+        // Detail amplitude, measured well away from the seam so this is about
+        // selection and not about the transition.
+        let amp = |img: &[f32], x0: usize, x1: usize| -> f32 {
+            let mut acc = 0.0f64;
+            let mut n = 0;
+            for y in 8..h - 8 {
+                for x in x0..x1 {
+                    let c = img[y * w + x];
+                    let m = 0.25 * (img[y * w + x - 1] + img[y * w + x + 1] + img[(y - 1) * w + x] + img[(y + 1) * w + x]);
+                    acc += f64::from((c - m) * (c - m));
+                    n += 1;
+                }
+            }
+            (acc / n as f64).sqrt() as f32
+        };
+        let left_a = amp(&a, 8, w / 2 - 8);
+        let right_b = amp(&b, w / 2 + 8, w - 8);
+        let left_out = amp(&out, 8, w / 2 - 8);
+        let right_out = amp(&out, w / 2 + 8, w - 8);
+        assert!(
+            left_out > 0.75 * left_a,
+            "left detail lost: {left_out} vs {left_a}"
+        );
+        assert!(
+            right_out > 0.75 * right_b,
+            "right detail lost: {right_out} vs {right_b}"
+        );
+    }
+
+    #[test]
+    fn the_merge_does_not_step_across_the_seam() {
+        // THE structural claim. A per-pixel selection followed by a gather puts
+        // a discontinuity into the LOW frequencies wherever the elected frame
+        // changes; a multi-band merge cannot. Both frames here share the same
+        // smooth background, so any low-frequency step at the seam was
+        // manufactured by the merge.
+        let (w, h) = (128usize, 96usize);
+        let a = split_focus(w, h, true);
+        let b = split_focus(w, h, false);
+        let cfg = MergeConfig { bands: 4, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let var = vec![4.0f32; w * h];
+        for f in [&a, &b] {
+            fws.next_frame();
+            merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+        }
+        let mut ws = Workspace::new(&sizes);
+        let out = merge.finish(&mut ws)[0].clone();
+
+        // Low-pass both the input and the output the same way, then compare
+        // near the seam. Working on the low-passed image is the point: a rim is
+        // a LOW-frequency step, and measuring the raw pixels would just find
+        // the fine texture.
+        let lowpass = |img: &[f32]| -> Vec<f32> {
+            let s = LevelSize { width: w, height: h };
+            let mut p = Pyramid::zeros(&sizes);
+            let mut lws = Workspace::new(&sizes);
+            p.build_gaussian(img, &mut lws);
+            // Expand the coarsest level back to full size.
+            let mut cur = p.level(sizes.len() - 1).to_vec();
+            for k in (0..sizes.len() - 1).rev() {
+                let mut up = vec![0.0; sizes[k].pixels()];
+                expand(&cur, sizes[k + 1], &mut up, sizes[k], &mut lws.scratch);
+                cur = up;
+            }
+            assert_eq!(cur.len(), s.pixels());
+            cur
+        };
+        let lo_in = lowpass(&a);
+        let lo_out = lowpass(&out);
+        // The residual of the output's low frequencies against a frame that has
+        // the same low frequencies everywhere. A selection seam shows up here
+        // as a localised spike at x = w/2.
+        let seam = (0..h)
+            .map(|y| (lo_out[y * w + w / 2] - lo_in[y * w + w / 2]).abs())
+            .fold(0.0f32, f32::max);
+        let away = (0..h)
+            .map(|y| (lo_out[y * w + 12] - lo_in[y * w + 12]).abs())
+            .fold(0.0f32, f32::max);
+        let bg = 400.0f32; // the background's own peak-to-peak swing
+        assert!(
+            seam < 0.02 * bg,
+            "a low-frequency step appeared at the seam: {seam} DN against a {bg} DN background"
+        );
+        assert!(seam < away + 0.01 * bg, "the seam is worse than a non-seam column");
+    }
+
+    #[test]
+    fn pure_noise_is_averaged_not_selected() {
+        // The failure mode of every naive pyramid stacker: argmax over n noisy
+        // coefficients reliably picks the largest noise excursion, so a flat
+        // region gains contrast instead of losing it. The noise gate is what
+        // stops that, and this is the test that says it works.
+        let (w, h) = (96usize, 96usize);
+        let n = 16usize;
+        let sigma = 10.0f32;
+        let var = vec![sigma * sigma; w * h];
+        let mut state: u64 = 12345;
+        let mut rnd = move || {
+            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            (((state >> 33) as f32) / ((1u64 << 31) as f32) - 1.0) * sigma * 1.732
+        };
+        let frames: Vec<Vec<f32>> = (0..n)
+            .map(|_| (0..w * h).map(|_| 500.0 + rnd()).collect())
+            .collect();
+        let cfg = MergeConfig { bands: 4, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        for f in &frames {
+            fws.next_frame();
+            merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+        }
+        let mut ws = Workspace::new(&sizes);
+        let out = merge.finish(&mut ws)[0].clone();
+
+        let sd = |img: &[f32]| -> f32 {
+            let inner: Vec<f32> = (8..h - 8)
+                .flat_map(|y| (8..w - 8).map(move |x| (y, x)))
+                .map(|(y, x)| img[y * w + x])
+                .collect();
+            let m = inner.iter().sum::<f32>() / inner.len() as f32;
+            (inner.iter().map(|v| (v - m) * (v - m)).sum::<f32>() / inner.len() as f32).sqrt()
+        };
+        let single = sd(&frames[0]);
+        let merged = sd(&out);
+        let ideal = single / (n as f32).sqrt();
+        // A selector would land at or ABOVE `single`. Averaging lands at
+        // `ideal`. Allow generous slack for the fact that the gate lets a few
+        // coefficients through, but the answer must be on the averaging side by
+        // a wide margin.
+        assert!(
+            merged < 0.35 * single,
+            "pure noise was selected, not averaged: merged sd {merged}, single {single}, ideal {ideal}"
+        );
+    }
+
+    #[test]
+    fn chunked_folding_gives_the_same_merge() {
+        // The streaming property, asserted rather than assumed. A 300-frame
+        // stack at 33 MP cannot be merged any other way, and a fold that is not
+        // associative would make the render depend on the worker count.
+        let (w, h) = (64usize, 48usize);
+        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![9.0f32; w * h];
+        let frames: Vec<Vec<f32>> = (0..6)
+            .map(|i| {
+                let mut v = split_focus(w, h, i % 2 == 0);
+                for (j, x) in v.iter_mut().enumerate() {
+                    *x += ((i * 31 + j * 17) % 13) as f32;
+                }
+                v
+            })
+            .collect();
+
+        let run = |chunks: usize| -> Vec<f32> {
+            let per = frames.len().div_ceil(chunks);
+            let mut acc: Option<BandMerge> = None;
+            for c in frames.chunks(per) {
+                let mut m = BandMerge::new(w, h, 1, cfg);
+                let mut fws = FrameWorkspace::new(&sizes, 1);
+                for f in c {
+                    fws.next_frame();
+                    m.add_frame(&[f.as_slice()], f, &var, &mut fws);
+                }
+                match &mut acc {
+                    Some(a) => a.absorb(&m),
+                    None => acc = Some(m),
+                }
+            }
+            let mut ws = Workspace::new(&sizes);
+            acc.unwrap().finish(&mut ws)[0].clone()
+        };
+        let one = run(1);
+        let three = run(3);
+        let err = one.iter().zip(&three).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
+        let scale = one.iter().fold(0.0f32, |a, v| a.max(v.abs()));
+        assert!(err < 1e-3 * scale, "chunking changed the merge: {err} on a scale of {scale}");
+    }
+
+    #[test]
+    fn the_selection_is_shared_across_planes() {
+        // Colour planes must be gathered by the SAME decision the green luma
+        // made. If each plane elected for itself, chroma noise would drive the
+        // selection and the merge would manufacture colour speckle.
+        let (w, h) = (64usize, 64usize);
+        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![4.0f32; w * h];
+        let mut merge = BandMerge::new(w, h, 2, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 2);
+        for sharp_left in [true, false] {
+            let luma = split_focus(w, h, sharp_left);
+            // Second plane is the first scaled by 3. A shared selection must
+            // reproduce that ratio exactly in the output.
+            let scaled: Vec<f32> = luma.iter().map(|v| v * 3.0).collect();
+            fws.next_frame();
+            merge.add_frame(&[luma.as_slice(), scaled.as_slice()], &luma, &var, &mut fws);
+        }
+        let mut ws = Workspace::new(&sizes);
+        let out = merge.finish(&mut ws);
+        let err = out[0]
+            .iter()
+            .zip(&out[1])
+            .map(|(a, b)| (a * 3.0 - b).abs())
+            .fold(0.0f32, f32::max);
+        let scale = out[1].iter().fold(0.0f32, |a, v| a.max(v.abs()));
+        assert!(err < 1e-3 * scale, "planes did not share one selection: {err} of {scale}");
+    }
+
+    #[test]
+    fn a_merge_of_identical_frames_returns_the_frame() {
+        // The identity a merge must satisfy: if every frame is the same
+        // photograph, the merge is that photograph. Any pyramid bug -- a
+        // mis-sized level, a border that does not replicate, a collapse that
+        // does not invert the build -- shows up here as a difference.
+        let (w, h) = (100usize, 60usize);
+        let cfg = MergeConfig::default();
+        let sizes = level_sizes(w, h, cfg.bands);
+        let src = ramp(w, h);
+        let var = vec![25.0f32; w * h];
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        for _ in 0..5 {
+            fws.next_frame();
+            merge.add_frame(&[src.as_slice()], &src, &var, &mut fws);
+        }
+        let mut ws = Workspace::new(&sizes);
+        let out = merge.finish(&mut ws)[0].clone();
+        let err = src.iter().zip(&out).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
+        assert!(err < 1e-2, "merging a frame with itself moved it by {err} DN");
+    }
+
+    #[test]
+    fn hard_max_is_reachable_as_a_control() {
+        // Kept honest: the soft rule is only defensibly better than the
+        // textbook one if the textbook one can actually be run.
+        let (w, h) = (64usize, 64usize);
+        let cfg = MergeConfig { bands: 3, select: SelectMode::HardMax, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![4.0f32; w * h];
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        for sharp_left in [true, false] {
+            let f = split_focus(w, h, sharp_left);
+            fws.next_frame();
+            merge.add_frame(&[f.as_slice()], &f, &var, &mut fws);
+        }
+        let mut ws = Workspace::new(&sizes);
+        let out = merge.finish(&mut ws)[0].clone();
+        assert!(out.iter().all(|v| v.is_finite()));
+        assert_eq!(merge.frames(), 2);
+    }
+
+    #[test]
+    fn the_averaged_fraction_reports_where_the_gate_refused() {
+        let (w, h) = (64usize, 64usize);
+        let cfg = MergeConfig { bands: 3, ..Default::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let flat = vec![800.0f32; w * h];
+        // A huge declared noise floor: nothing can clear it, so every level
+        // must report that it averaged.
+        let var = vec![1.0e6f32; w * h];
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        for _ in 0..3 {
+            fws.next_frame();
+            merge.add_frame(&[flat.as_slice()], &flat, &var, &mut fws);
+        }
+        let frac = merge.averaged_fraction();
+        for (k, f) in frac.iter().enumerate().take(sizes.len() - 1) {
+            assert!(*f > 0.999, "level {k} claims it selected on pure noise: {f}");
+        }
+    }
+}

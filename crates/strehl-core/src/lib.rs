@@ -25,6 +25,7 @@ pub mod outlier;
 pub mod photometric;
 pub mod plane;
 pub mod profile;
+pub mod pyramid;
 pub mod restore;
 pub mod robust;
 pub mod softgate;
