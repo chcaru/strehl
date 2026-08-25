@@ -518,6 +518,31 @@ monolithic binary and ship only that binary.
     milestone number**, and tell the agent explicitly that "this is already
     answered, nothing to add" is a successful outcome. (SYNTHESIS fact 782.)
 
+    **This is now mechanical. Run it — do not do it by memory:**
+
+    ```powershell
+    python experiments\ORCH-drift-check\prior_art.py <subject words>
+    ```
+
+    It ranks every report in `docs/research/` against the subject, weights an H1
+    headline match at 40× a body match, quotes any **prior refusal** sentence it
+    finds (`should not ship`, `did not build`, `NO-GO`, `REFUTED`), and greps
+    `crates/` for test names and `MEASURED FAILURE` markers, because a test whose
+    *name* is the answer is the cheapest prior art there is. `--commission`
+    self-tests it against two subjects with known answers and one invented
+    subject that must return **nothing**; it exits 1 on failure, so it can gate a
+    dispatch.
+
+    **The rule was written after two violations and has since been violated
+    twice more, both by the orchestrator, in a single night** (SYNTHESIS facts
+    1650-1655, 1666-1669; disciplines 850-851): `M115` was briefed on
+    deconvolution citing none of M19/M20/M41/M70, and **M41 had already killed
+    it on the noise axis**; `M123` was briefed on the outlier mask citing none of
+    M28/M60/M89/M97r, **three of which had already used real captures and one of
+    which had derived why the answer must be no**. Both misses take under a
+    minute to prevent. A rule that depends on remembering to follow it will be
+    broken again, which is why it now has a script.
+
 41. **A milestone number is an identifier. Allocate it from the index below at
     dispatch, and record the allocation there before the agent starts.** I
     dispatched a second `M60` while M54 was still authoring `M60` and `M60c`,
