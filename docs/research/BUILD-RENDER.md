@@ -1125,6 +1125,124 @@ render, which this project already has a rule against, wearing different clothes
 
 ---
 
+## 15. The visible coloured speckles are lateral CA, and the correction was off
+
+The gallery JPEG of `foam` has isolated magenta, orange and cyan dots scattered
+over a subject that is physically black foam. ORCH's standing instruction on hot
+pixels was that repair stays deferred *unless the gallery shows them*. The
+gallery showed something. This is what it turned out to be.
+
+### It is not hot pixels, and the null control is what says so
+
+My earlier deferral quoted "0 material at ISO 100, 90-130 at ISO 1000". That was
+misfiled. Re-reading `hotpixels/materiality.json`, the 90 and 130 are **`foam`
+and `coffee-bubbles`** -- two of the three acceptance subjects -- with
+`hot_max_dn` of 561 and **1255 DN against a 15871 DN range, i.e. 7.9%**, against
+control p99 of 62 and 55. On its face that is a strong case to build repair.
+
+It is still the wrong answer, and only the null control shows it. Detecting
+isolated outliers on the camera-linear `foam` render (brighter than all eight
+neighbours by >= 250 DN) and colocating them against the 8685 persistent-hot
+sites from `D:\macro-dark-frames`:
+
+| | hits | rate |
+|---|---|---|
+| speckles within +/-2 px of a persistent-hot site | 33 / 4000 | 0.83% |
+| **random positions, identical detector and tolerance** | 31 / 4000 | 0.78% |
+
+**Enrichment 1.06x. That is chance.** A hot map of 8685 sites will collect
+speckles by coincidence, and without the random-position arm the 0.83% would
+have read as confirmation and I would have built the wrong fix. Hot-pixel repair
+stays deferred, now for a measured reason rather than an assumption.
+
+### It is not demosaic either
+
+Rendering `foam` with and without `--demosaic` (the second is quad-binned, with
+no interpolation at all) and cropping the same region at 1:1: the fringing is
+present in **both**, with the same sign and the same orientation. Demosaic is
+exonerated.
+
+### It is lateral CA, and the correction already existed
+
+The corpus had this the whole time. SYNTHESIS fact 1414: lateral CA on this path
+is *a clean one-parameter radial magnification error of -704.5 ppm in red, R^2 =
+0.9969, worth ~3 output pixels at the corner*. Fact 1449 records that measured,
+tested subsystems have **no consumer in the render path**.
+
+`optics.rs` implements it and `merge.rs` and `align_cmd.rs` consume it, selected
+by the `STREHL_FIX_CA` environment variable. Unset means silently off. It was
+unset in `gallery.ps1`, in `render_all.ps1`, and in every render the owner has
+ever been shown. The algorithm was finished months ago; nothing turned it on.
+
+### Measured, two subjects, one binary, back-to-back
+
+Mean `|R-G|` at strong edges, normalised by local green, by radial band --
+camera-linear, never `--srgb`:
+
+| subject | 0.00-0.17 | 0.17-0.33 | 0.33-0.50 | 0.50-0.67 | 0.67-0.83 | 0.83-1.00 |
+|---|---|---|---|---|---|---|
+| `flat-on-ruler-cpl` off | 0.070 | 0.074 | 0.106 | 0.150 | 0.164 | **0.227** |
+| `flat-on-ruler-cpl` on | 0.068 | 0.075 | 0.084 | 0.086 | 0.087 | **0.089** |
+| `foam` off | 0.167 | 0.209 | 0.278 | 0.348 | 0.418 | **0.461** |
+| `foam` on | 0.148 | 0.125 | 0.127 | 0.126 | 0.124 | **0.152** |
+
+The signature of a correct radial correction is not that a number falls. It is
+that **the radial growth is removed and a flat non-radial floor is left behind**,
+and that is what both subjects show. Corner improvement is -61% and -67%. The
+residual flat floor is the achromatic edge chroma that is not radial in origin:
+demosaic, noise, and axial CA.
+
+`|B-G|` moves by under 4% in either direction, which is the correct behaviour
+rather than a shortfall -- SYNTHESIS fact 1515 records that no blue lateral
+displacement is supported on this path, and the profile corrects red only.
+
+**`foam` is not a CPL subject**, so it doubles as the out-of-sample transfer
+test for a profile keyed `a7c2-fe100gm-2xtc-x4cpl`. It transfers, which is what
+a lens-plus-teleconverter aberration should do: a CPL is plane-parallel and adds
+no radial magnification difference.
+
+### The pictures, which are what decides
+
+`experiments/BUILD-RENDER-hotpix/ca_ab.py` crops **fixed fractional ROIs**
+weighted to the corners, because lateral CA is zero on axis and a comparison
+that crops the middle of the frame is guaranteed to show nothing. The ROIs are
+stated in the output so two runs are comparable, and they are not chosen by
+searching for a flattering tile.
+
+- `flat-on-ruler-cpl` corner BR: the dark bar has a cyan rim on one edge and a
+  warm red rim on the other. With the correction on, both edges are neutral.
+- `foam` corner BR: the bright cell-wall speculars go from red- and
+  cyan-fringed to neutral silver. This is the gallery defect, resolved.
+- **Centre is unchanged in both.** That is the built-in null: lateral CA is zero
+  at the optical axis by construction, so a correction that changed the centre
+  would be doing something other than what it claims. Detail is fully preserved
+  at every radius -- it removes colour, not sharpness.
+
+A residual rainbow remains on `foam`'s transparent cell walls. Part of that is
+real dispersion in the material. Part is **axial** CA, which SYNTHESIS fact 1413
+records as baked permanently into every render because the election is computed
+from `green_luma` alone and the single winning index is reused across all four
+CFA accumulators. That is the merge's lane, not mine, and it is routed rather
+than touched.
+
+### Wired
+
+`gallery.ps1` gains `-FixCa`, defaulting to the owner's profile, recorded in
+`RUN.txt`. Commissioned both ways before being believed: a deliberately bogus
+key **fails the render with exit 1**, and the real key renders, so the variable
+demonstrably reaches the binary rather than being assumed to. The binary
+refusing an unknown key instead of silently rendering uncorrected is good design
+by whoever wrote `profile_from_setting`, and it is what makes the negative
+control possible.
+
+Still an environment variable rather than a `--fix-ca` flag on the CLI. That is
+the right next step for the product and it is in my lane; it is not done yet.
+
+The `couch-fibers-cpl` guard is expected to fire on the next run. That is the
+guard working: the develop path changed on purpose.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the

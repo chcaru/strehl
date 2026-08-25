@@ -64,6 +64,38 @@
   Skip the dated copy. The history is what lets anyone see the trajectory at
   viewing scale instead of trusting a sequence of agent reports.
 
+.PARAMETER FixCa
+  Lateral-CA profile key, passed to the binary as STREHL_FIX_CA. Defaults to the
+  owner's optical path. Pass '' to disable.
+
+  This defaults ON because the correction is a large, visible, print-relevant
+  win and it was previously off in every render the owner had ever seen. The
+  binary REFUSES an unknown key rather than silently rendering uncorrected, so a
+  typo here fails the run instead of quietly producing the old pictures.
+
+  Measured on two subjects, camera-linear, one binary, back-to-back. Mean |R-G|
+  at strong edges, normalised by local green, by radial band -- off, then on:
+
+    flat-on-ruler-cpl   0.070 0.074 0.106 0.150 0.164 0.227   (grows with radius)
+                        0.068 0.075 0.084 0.086 0.087 0.089   (flat)
+    foam                0.167 0.209 0.278 0.348 0.418 0.461   (grows with radius)
+                        0.148 0.125 0.127 0.126 0.124 0.152   (flat)
+
+  The signature of a correct radial correction is not that the number falls, it
+  is that the RADIAL GROWTH is removed and a flat non-radial floor is left
+  behind. That is what both subjects show. Corner improvement is -61% and -67%.
+  |B-G| moves under 4% either way, consistent with SYNTHESIS fact 1515: no blue
+  lateral displacement is supported on this path, and the profile corrects red
+  only.
+
+  `foam` is not a CPL subject, so this is also the out-of-sample transfer test.
+  It transfers, which is what a lens-plus-teleconverter aberration should do:
+  a CPL is plane-parallel and adds no radial magnification difference.
+
+  The built-in null is the frame centre, where lateral CA is zero by
+  construction. The centre crops are unchanged, so the correction is not a
+  global desaturation or a blur. Detail is fully preserved at every radius.
+
 .EXAMPLE
   pwsh -File scripts\gallery.ps1 -Exe C:\dev\strehl-out\pin\target\release\strehl.exe
 #>
@@ -77,6 +109,7 @@ param(
     [string[]]$Only = @(),
     [string[]]$Guard = @('couch-fibers-cpl'),
     [string]$GuardDir = "C:\dev\strehl-out\gallery-guard",
+    [string]$FixCa = "a7c2-fe100gm-2xtc-x4cpl",
     [switch]$NoHistory
 )
 
@@ -110,6 +143,11 @@ New-Item -ItemType Directory -Force -Path $raw | Out-Null
 # Record what made these pictures. Without this a gallery is unfalsifiable: you
 # cannot tell a real improvement from a different binary.
 $exeInfo = Get-Item $Exe
+
+# Lateral-CA correction is selected by the environment, and it was unset -- and
+# therefore silently off -- in every gallery before this one.
+if ($FixCa) { $env:STREHL_FIX_CA = $FixCa } else { Remove-Item Env:\STREHL_FIX_CA -ErrorAction SilentlyContinue }
+
 $run = @(
     "gallery run     : $(Get-Date -Format o)"
     "binary          : $Exe"
@@ -119,6 +157,7 @@ $run = @(
     "library         : $Library"
     "subjects        : $($subjects.Count)"
     "long edge       : $LongEdge"
+    "STREHL_FIX_CA   : $(if ($FixCa) { $FixCa } else { '(off)' })"
     "render command  : strehl stack <DIR> --out <TIFF> --srgb --demosaic"
     ""
     "--srgb is correct HERE and only here: this is a viewing render, and the"
