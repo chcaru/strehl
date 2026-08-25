@@ -116,6 +116,31 @@ wavelength* of each channel — which depends on the **colours in the scene**. Y
 bee and your couch fibres are lit differently and coloured differently, so they
 genuinely need different corrections.
 
+**The practical news is better than any of that, and it is available now: the
+correction is switched off.** It is one of the six quality gates that default to
+off. Your renders have had *no* chromatic-aberration correction applied at all —
+which is why the fringes are the most obvious thing in them. Turning it on was
+measured overnight on your own captures: edge-localised colour excess falls
+**61.0 %** on one subject and **58.7 %** on another, and an independent by-eye
+check on 1:1 crops found the corrected version *"visibly cleaner"*, with the
+red/cyan speckle across a wing's fine dot texture largely gone and what remains
+reading as neutral grey rather than opposed colour. A 1.06–1.25× over-shoot is a
+small residual on top of a correction that is doing most of its job.
+
+One honest caveat on what it does: it makes fringes **fainter, not thinner**. The
+peak of the fringe drops faster than its tail, so edge contrast improves markedly
+while the fringe's width is unchanged.
+
+**And I have to withdraw something I said earlier tonight.** I reported that the
+correction "recoloured rather than removed" the fringes — that it flipped their
+colour instead of eliminating them — and treated that as a defect for most of the
+night. It was a defect in **the test**, not the correction. The test counted how
+many fringes changed colour sign. Measured properly: **62.9 % of fringes flip
+sign, but only 9–19 % get bigger.** Most flips are fringes being pushed *through*
+neutral toward grey, which is exactly what a working correction does. A perfect
+correction would score close to total failure on that test. Two agents reached
+this from different directions and their numbers agree.
+
 **Which is exactly why the coloured-gel sets in §24 are now the point of the
 shoot.** Shooting the same flat target under red, green and blue light measures
 that spectral dependence directly, on your lens, at your magnification. It is the
