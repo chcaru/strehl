@@ -1753,6 +1753,45 @@ Note the interaction with §18.7, which is not a coincidence: an artificially
 clean control and a control that cannot fail are the same defect wearing
 different clothes. Both produce a `PASS` that was never at risk.
 
+**Why this ROI was hit hard, and the gauge that predicts it.** ORCH's refinement
+is that damage scales with the file's *occupied* range, not the full 16-bit
+range. Measured on the exact 50 172 px the decider used:
+
+| gauge | 16-bit | 8-bit | loss |
+|---|---:|---:|---:|
+| distinct levels across the ROI | 11 542 | 93 | 124.1× |
+| `sigma(5)` median, flattest quartile (blob interiors) | 322.834 DN | **1.2611 DN** | — |
+
+The first row looks survivable — 93 of 256 levels retained. **It is the wrong
+gauge.** `sigma(5)` is a *local* statistic over 5×5 windows, and what decides the
+damage is the occupied range of the window the statistic actually integrates
+over, not of the ROI. In the blob interiors the true `sigma(5)` is **1.2611 DN in
+8-bit units against a quantisation step of 1.0 DN**, and `FLOOR = 0.5` was 40% of
+it. The denominator of the decider's ratio was the same size as the
+quantisation step — not "inside the quantisation error" as a turn of phrase, but
+literally 1.26 steps of it.
+
+That is the whole mechanism, and it predicts both observed distortions:
+
+- `flatness = sigma(31)/(sigma(5)+FLOOR)` is **large-over-small**. Narrowing adds
+  a floor to the denominator, so the ratio is **compressed toward 1** — measured
+  3.7324 against a true 4.8411. ORCH warns that small-over-large ratios compress
+  toward 1 and so fail toward a clean null; large-over-small with a destroyed
+  denominator fails the same way for the mirrored reason.
+- The **separations** are large-over-small with the small term destroyed to near
+  zero, so they **inflate**: 959.5× against a true 90.4×.
+- The **ratio of two arms on the same data** cancels, and moved **−1.2%**
+  (0.8262 → 0.8162) — against the −1.0% ORCH measured under a planted narrowing.
+  Two independent estimates of the same protection.
+
+Applying ORCH's two triage questions to this milestone: the surviving claim is a
+ratio of two arms (protected, and measured to be), while everything absolute or
+denominator-limited moved. `blobs.py`, `crop2.py`, `waxmap.py` and `waxsweep.py`
+are exposed by the stricter test — *did a number I reported come out of pixels
+`np.asarray(Image.open(p))` returned* — and `crop2.py` is repaired above.
+`waxmap.py` and `waxsweep.py` are unaffected in practice only because §17.6
+already committed them with their numbers explicitly not quoted.
+
 ## 18. Is `e(j)` smooth or jittery? — jittery, by ~110×
 
 The orchestrator asked for one number rather than a fix, because fact 1393
