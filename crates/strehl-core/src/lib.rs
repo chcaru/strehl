@@ -15,6 +15,7 @@ pub mod boxfilter;
 pub mod clip;
 pub mod color;
 pub mod demosaic;
+pub mod edgeaware;
 pub mod flat_ratio;
 pub mod focus;
 pub mod merge;

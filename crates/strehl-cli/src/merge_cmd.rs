@@ -43,10 +43,11 @@ use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
 use strehl_core::align::Resampler;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::color::{self, AppliedExposure, Exposure};
+use strehl_core::edgeaware::{self, LayerSupport};
 use strehl_core::flat_ratio::{self, FrameFlat};
-use strehl_core::focus::FocusField;
-use strehl_core::merge::{
-    Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_WIDTH, regularise,
+use strehl_core::focus::FocusField;use strehl_core::merge::{
+    Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_RADIUS, REGULARISER_WIDTH, regularise,
+    regularise_at, regularise_layered,
 };
 use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
@@ -874,6 +875,19 @@ struct Ctx<'a> {
     /// the G1 sites of the active area — is paid only by the mode that needs
     /// it, and the `off` and `on` paths are untouched.
     measure_drift: bool,
+    /// Depth-layer masked selection support, or `None` for the shipped
+    /// full-window operator.
+    ///
+    /// When this is `Some`, [`Ctx::field_for`] elects on
+    /// [`FocusField::compute_layered`] and [`regularise_layered`] instead of the
+    /// plain pair. Both compute the shipped box mean first and overwrite only
+    /// the treated pixels, so a support that treats nothing is byte-identical
+    /// to `None`; the distinction here is about **cost**, not behaviour.
+    support: Option<&'a LayerSupport>,
+    /// Elect at this radius with the plain shipped operator, ignoring
+    /// `support`. Set only by the depth-guide pass, which needs a narrow
+    /// window; `None` everywhere else.
+    guide_radius: Option<usize>,
 }
 
 /// Per-worker scratch, allocated once per chunk and reused across frames.
@@ -902,6 +916,9 @@ struct Scratch {
     /// that the alignment solve already recovers about half of the level
     /// change, so a post-warp reading would systematically under-report.
     drift_level: Option<f64>,
+    /// Two planes of working space for [`regularise_layered`]. Empty unless the
+    /// merge is electing edge-aware.
+    lay_scratch: Vec<f32>,
 }
 
 impl Scratch {
@@ -916,6 +933,7 @@ impl Scratch {
             clipped: vec![false; px],
             warp: warp.then(|| WarpScratch::new(geom)),
             drift_level: None,
+            lay_scratch: Vec::new(),
         }
     }
 }
@@ -1103,7 +1121,11 @@ impl Ctx<'_> {
             &mut scratch.clipped,
         );
         if scratch.fine.is_empty() {
-            scratch.field.compute(&scratch.luma, noise);
+            match (self.guide_radius, self.support) {
+                (Some(r), _) => scratch.field.compute_at_radius(&scratch.luma, noise, r),
+                (None, None) => scratch.field.compute(&scratch.luma, noise),
+                (None, Some(s)) => scratch.field.compute_layered(&scratch.luma, noise, s),
+            }
         } else {
             // One shared gradient pass produces both scales. The selection field
             // is bit-identical either way — pinned by
@@ -1116,26 +1138,182 @@ impl Ctx<'_> {
                 &mut scratch.fine,
             );
         }
-        regularise(
-            scratch.field.values(),
-            self.geom,
-            &mut scratch.box_scratch,
-            &mut scratch.reg,
-        );
+        match self.support.filter(|_| self.guide_radius.is_none()) {
+            None => match self.guide_radius {
+                // The guide's regulariser is capped to the guide's own window,
+                // or the radius-8 box would displace the step it is looking for.
+                Some(r) => regularise_at(
+                    scratch.field.values(),
+                    self.geom,
+                    r,
+                    &mut scratch.box_scratch,
+                    &mut scratch.reg,
+                ),
+                None => regularise(
+                    scratch.field.values(),
+                    self.geom,
+                    &mut scratch.box_scratch,
+                    &mut scratch.reg,
+                ),
+            },
+            // Both ends of the election's box cascade have to be told about the
+            // depth step. An edge-aware focus window under a radius-8
+            // regulariser just re-manufactures the rim at the regulariser's own
+            // scale.
+            Some(s) => {
+                let px = self.geom.pixels();
+                if scratch.lay_scratch.len() != 2 * px {
+                    scratch.lay_scratch = vec![0.0; 2 * px];
+                }
+                let (tmp, acc) = scratch.lay_scratch.split_at_mut(px);
+                regularise_layered(
+                    scratch.field.values(),
+                    self.geom,
+                    s,
+                    &mut scratch.box_scratch,
+                    tmp,
+                    acc,
+                    &mut scratch.reg,
+                );
+            }
+        }
         t.work += t0.elapsed().as_secs_f64();
         Ok(frame)
     }
-
     fn release(&self, frame: Frame) {
         drop(frame);
         self.live.fetch_sub(1, Ordering::Relaxed);
     }
 }
 
+/// Environment switch for the edge-aware election (BUILD-HALO).
+///
+/// An environment variable rather than a flag for the same reason
+/// `STREHL_ALIGN` and `STREHL_FIX_HALO` are: the subcommand definition in
+/// `main.rs` is owned by another agent tonight. The flag is the better
+/// long-term home.
+pub const EDGE_AWARE_ENV: &str = "STREHL_EDGE_AWARE";
+/// Override for the depth-step tolerance, in frames. See [`edge_tau`].
+pub const EDGE_TAU_ENV: &str = "STREHL_EDGE_TAU";
+/// Override for the confidence veto, in multiples of the plane's own
+/// low-percentile guide response. Default 2.0.
+pub const EDGE_CONF_ENV: &str = "STREHL_EDGE_CONF";
+
+/// Radius the depth guide elects at.
+///
+/// Narrow on purpose. The shipped merge's own winner field has its depth step
+/// displaced outward by exactly one window radius — that displacement IS the
+/// halo — so a guide elected at 13 px cannot locate the silhouette the support
+/// has to avoid. 4 px carries a ~5 px step of its own, well inside the 13 px
+/// the masking has to reach.
+const GUIDE_RADIUS: usize = 4;
+
+fn edge_conf() -> f32 {
+    env_num(EDGE_CONF_ENV, 2.0)
+}
+
+fn env_num(key: &str, default: f32) -> f32 {
+    match std::env::var(key) {
+        Err(_) => default,
+        Ok(raw) => raw
+            .trim()
+            .parse()
+            .unwrap_or_else(|_| panic!("{key}={raw:?} is not a number")),
+    }
+}
+
+fn edge_aware_enabled() -> bool {
+    matches!(
+        std::env::var(EDGE_AWARE_ENV).ok().as_deref(),
+        Some("1") | Some("on") | Some("true")
+    )
+}
+
+/// How many frames of guide variation a support box may span before it is
+/// judged to cross a depth discontinuity.
+///
+/// **Scaled from the bracket, not carried across stacks** (AGENTS.md: never
+/// carry a threshold across stacks). The default is an eighth of the guide
+/// winner field's own robust span, floored at 4 frames. A tilted subject sweeps
+/// the winner field smoothly and must not read as a step: at the shipped radius
+/// a box spans 27 px, so a tilt of one frame per pixel spans 26 frames, and an
+/// eighth of a full 299-frame bracket clears that comfortably. A genuine
+/// occluding silhouette jumps most of the bracket in a pixel or two.
+fn edge_tau(guide: &[u16]) -> f32 {
+    if let Ok(raw) = std::env::var(EDGE_TAU_ENV) {
+        let v: f32 = raw
+            .trim()
+            .parse()
+            .unwrap_or_else(|_| panic!("{EDGE_TAU_ENV}={raw:?} is not a number"));
+        assert!(v > 0.0, "{EDGE_TAU_ENV} must be positive");
+        return v;
+    }
+    let mut v: Vec<u16> = guide.iter().copied().filter(|&k| k != u16::MAX).collect();
+    if v.is_empty() {
+        return 4.0;
+    }
+    v.sort_unstable();
+    let q = |f: f64| f32::from(v[((v.len() - 1) as f64 * f) as usize]);
+    // Robust span, not max - min: a handful of pixels electing frame 0 or
+    // frame N-1 out of noise would otherwise set the tolerance for the plane.
+    ((q(0.99) - q(0.01)) / 8.0).max(4.0)
+}
+
+/// Elect a winner field at [`edgeaware::GUIDE_LEVEL`] to locate depth steps.
+///
+/// This is a **third pass over the frames** and it is the price of the fix.
+/// It exists because the shipped winner field cannot locate its own silhouettes:
+/// it is haloed by exactly one window radius, so its depth steps sit 13 px into
+/// the background and a support truncated at them still swallows the foreground
+/// (see `edgeaware`'s module header, and the BUILD-HALO ladder that measured the
+/// displacement).
+///
+/// It folds nothing but [`FocusStats`] — no flat ROI, no flux, no drift, no
+/// clip census — because the only thing read off it is `best_index`.
+fn guide_winner_field(
+    paths: &[std::path::PathBuf],
+    plan: &Plan,
+    ctx: &Ctx<'_>,
+    geom: PlaneGeometry,
+) -> Result<(Vec<u16>, Vec<f32>, Timings)> {
+    let out = paths
+        .par_chunks(plan.chunk_len)
+        .enumerate()
+        .map(|(ci, chunk)| -> Result<(FocusStats, Timings)> {
+            let first_index = (ci * plan.chunk_len) as u16;
+            let mut stats = FocusStats::new(geom);
+            let mut scratch = Scratch::new_with_warp(geom, false, ctx.warps.is_some());
+            let mut t = Timings::default();
+            for (offset, path) in chunk.iter().enumerate() {
+                let index = first_index + offset as u16;
+                // The guide must skip exactly the frames the merge skips, or it
+                // would locate silhouettes in a bracket the election never sees.
+                if ctx.is_refused(index) {
+                    continue;
+                }
+                let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
+                ctx.release(frame);
+                stats
+                    .fold(index, &scratch.reg)
+                    .map_err(|e| map_dim_err(index, e))?;
+            }
+            Ok((stats, t))
+        })
+        .reduce_with(|a, b| match (a, b) {
+            (Ok((mut sa, mut ta)), Ok((sb, tb))) => {
+                sa.absorb(&sb).map_err(|e| map_dim_err(0, e))?;
+                ta.add(tb);
+                Ok((sa, ta))
+            }
+            (Err(e), _) | (Ok(_), Err(e)) => Err(e),
+        })
+        .expect("at least one chunk")?;
+    Ok((out.0.best_index().to_vec(), out.0.best_focus().to_vec(), out.1))
+}
+
 struct Pass1 {
     stats: FocusStats,
-    /// Per-frame flux over the fixed low-detail region, for the photometric
-    /// fit. Empty unless the photometric term was asked for. One `Flux` per
+    /// Per-frame flux over the fixed low-detail region, for the photometric    /// fit. Empty unless the photometric term was asked for. One `Flux` per
     /// frame decoded by this worker, so it is constant in the region size.
     flux: Vec<(u16, Flux)>,
     /// Census of samples pinned at the container maximum. Two bytes per pixel,
@@ -1736,6 +1914,81 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         // it is, but pass two never reads `scratch.drift_level`, so the
         // reading is taken once per frame and not twice.
         measure_drift: opts.photometric == PhotometricMode::Auto,
+        support: None,
+        guide_radius: None,
+    };
+
+    // ---- pass zero: the depth guide, and the layer masks it builds ---------
+    //
+    // Skipped entirely unless asked for, so the shipped two-pass merge costs
+    // exactly what it costed.
+    let layer_support: Option<LayerSupport> = if edge_aware_enabled() {
+        let t0 = Instant::now();
+        let ctx_guide = Ctx {
+            guide_radius: Some(GUIDE_RADIUS),
+            measure_drift: false,
+            ..ctx
+        };
+        let (guide, guide_resp, gt) = guide_winner_field(&paths, &plan, &ctx_guide, geom)?;
+        let tau = edge_tau(&guide);
+        let conf = edge_conf();
+        let radii = [strehl_core::focus::WINDOW_RADIUS, REGULARISER_RADIUS];
+        let support = LayerSupport::from_guide(&guide, &guide_resp, geom, tau, conf, &radii);
+        let hist = support.histogram();
+        eprintln!("--- pass zero: depth guide for the edge-aware election (MEASURED) ---");
+        eprintln!(
+            "guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose"
+        );
+        eprintln!(
+            "depth tolerance : tau = {tau:.1} frames{}",
+            if std::env::var(EDGE_TAU_ENV).is_ok() {
+                "  (from the environment)"
+            } else {
+                "  (an eighth of this bracket's own robust winner span)"
+            }
+        );
+        eprintln!(
+            "confidence veto : {conf:.1}x the {:.0}th-percentile guide response, so ground with \
+             no sharp content in reach is left alone",
+            100.0 * f64::from(edgeaware::FLOOR_Q)
+        );
+        eprintln!(
+            "support masked  : {} of the plane elects on its own depth layer only, at the \
+             UNCHANGED {} px radius",
+            format_args!("{:.2}%", 100.0 * support.treated_fraction()),
+            strehl_core::focus::WINDOW_RADIUS
+        );
+        eprintln!(
+            "  by layer      : {}",
+            hist.iter()
+                .enumerate()
+                .map(|(l, n)| format!(
+                    "L{l} {:.2}%",
+                    100.0 * *n as f64 / geom.pixels() as f64
+                ))
+                .collect::<Vec<_>>()
+                .join("  ")
+        );
+        eprintln!(
+            "wall clock      : {:.3} s  (decode {:.1} s, work {:.1} s summed across workers)",
+            t0.elapsed().as_secs_f64(),
+            gt.decode,
+            gt.work
+        );
+        eprintln!(
+            "  NOTE          : this is a THIRD pass over the frames. The winner field the \
+             shipped merge elects is haloed by one window radius, so it cannot locate the \
+             silhouettes the support has to avoid; the guide is elected narrow for that reason \
+             and never elects an output pixel."
+        );
+        eprintln!();
+        (!support.is_empty()).then_some(support)
+    } else {
+        None
+    };
+    let ctx = Ctx {
+        support: layer_support.as_ref(),
+        ..ctx
     };
 
     // A refused frame is dropped, not merged unregistered. Counted once here so

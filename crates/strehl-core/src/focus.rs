@@ -82,6 +82,46 @@ use crate::plane::PlaneGeometry;
 /// constant and not a number woven through the code.
 pub const WINDOW_RADIUS: usize = 13;
 
+/// Environment override for [`WINDOW_RADIUS`]. **Diagnostic only.**
+///
+/// M121 established that the occlusion halo carries the focus window's length
+/// scale (`w50 = 10.0 px`, cutoff `13.25 px`, against `WINDOW_RADIUS = 13`) and
+/// matches none of the three physical alternatives checked. That is a *match*,
+/// not a dose-response: one point on one curve is consistent with the window
+/// setting the width and equally consistent with a coincidence at 13.
+///
+/// This exists so the ladder can be run without five builds, which is the only
+/// way to tell those apart. It is read **once** per process, and it is read by
+/// [`window_radius`] rather than substituted for the constant, so the shipped
+/// default is bit-identical when the variable is unset.
+///
+/// **A malformed value panics rather than falling back to 13.** A dose-response
+/// that silently rendered every rung at the default would look like a flat
+/// curve and would refute the mechanism it was built to test.
+pub const WINDOW_RADIUS_ENV: &str = "STREHL_WINDOW_RADIUS";
+
+/// The selection window radius actually in force, honouring [`WINDOW_RADIUS_ENV`].
+///
+/// Returns [`WINDOW_RADIUS`] unless the environment overrides it. Cached, so the
+/// per-frame focus pass does not touch the environment 299 times.
+#[must_use]
+pub fn window_radius() -> usize {
+    static CACHED: std::sync::OnceLock<usize> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(WINDOW_RADIUS_ENV) {
+        Err(_) => WINDOW_RADIUS,
+        Ok(raw) => {
+            let r: usize = raw.trim().parse().unwrap_or_else(|_| {
+                panic!("{WINDOW_RADIUS_ENV}={raw:?} is not a non-negative integer")
+            });
+            assert!(
+                (1..=64).contains(&r),
+                "{WINDOW_RADIUS_ENV}={r} is outside the supported range 1..=64"
+            );
+            r
+        }
+    })
+}
+
 /// Box-window radius for the **statistics** field: 2, a `5x5` mean.
 ///
 /// **MEASURED, M21** (SYNTHESIS fact 152). This is not a second opinion about
@@ -174,6 +214,12 @@ pub struct FocusField {
     focus: Vec<f32>,
     grad: Vec<f32>,
     scratch: Vec<f32>,
+    /// The multi-scale ladder, `LEVEL_RADII.len()` planes laid end to end.
+    ///
+    /// **Empty unless [`FocusField::compute_scaled`] is called**, so the
+    /// shipped two-pass merge allocates exactly the three planes M8's ratchet
+    /// prices and the edge-aware path pays for its own ladder.
+    level_buf: Vec<f32>,
 }
 
 impl FocusField {
@@ -183,6 +229,7 @@ impl FocusField {
             focus: vec![0.0; geom.pixels()],
             grad: vec![0.0; geom.pixels()],
             scratch: vec![0.0; geom.pixels()],
+            level_buf: Vec::new(),
         }
     }
 
@@ -207,12 +254,26 @@ impl FocusField {
     /// radius to within 2.53% over w1-w40; a naive `(2w+1)^2` gather at radius
     /// 13 would be 841x the taps and would invalidate that result.
     pub fn compute(&mut self, luma: &[f32], noise: &NoiseModel) {
+        self.compute_at_radius(luma, noise, window_radius());
+    }
+
+    /// [`compute`](Self::compute) at an explicit radius.
+    ///
+    /// The edge-aware election's *guide* pass needs a deliberately narrow
+    /// window. It cannot get one from [`WINDOW_RADIUS_ENV`], which is process-
+    /// wide and cached, and it must not get one from the shipped radius: the
+    /// winner field the shipped merge elects has its own depth step displaced
+    /// outward by exactly one window radius (that displacement IS the halo), so
+    /// a guide elected at radius 13 cannot locate the silhouettes the support
+    /// has to avoid. Measured: the rim cutoff tracks the window radius 1:1 over
+    /// radii 9-26, slope 1.07, intercept 1.08.
+    pub fn compute_at_radius(&mut self, luma: &[f32], noise: &NoiseModel, radius: usize) {
         assert_eq!(luma.len(), self.geom.pixels());
         gradient_magnitude(luma, self.geom, &mut self.grad);
         box_mean(
             &self.grad,
             self.geom,
-            WINDOW_RADIUS,
+            radius,
             &mut self.scratch,
             &mut self.focus,
         );
@@ -248,7 +309,7 @@ impl FocusField {
         box_mean(
             &self.grad,
             self.geom,
-            WINDOW_RADIUS,
+            window_radius(),
             &mut self.scratch,
             &mut self.focus,
         );
@@ -259,6 +320,106 @@ impl FocusField {
 
     pub fn values(&self) -> &[f32] {
         &self.focus
+    }
+
+    /// Compute the focus field with a **per-pixel** support radius.
+    ///
+    /// `scale` supplies, for each pixel, an index into
+    /// [`LEVEL_RADII`](crate::edgeaware::LEVEL_RADII); the field at that pixel
+    /// is the box mean of the gradient magnitude at that radius. It is the same
+    /// operator as [`compute`](Self::compute) everywhere `scale` asks for
+    /// [`FULL_LEVEL`](crate::edgeaware::FULL_LEVEL), and
+    /// `SelectionScale::uniform(geom, FULL_LEVEL)` reproduces it **exactly** —
+    /// same gradient pass, same `box_mean`, same divisor — which is what the
+    /// `uniform_full_scale_is_the_shipped_operator` test pins.
+    ///
+    /// # Why the levels are all-plane rather than per-pixel gathers
+    ///
+    /// A spatially varying radius is not separable, so a direct evaluation is
+    /// `(2r+1)^2` taps per pixel and would cost 841 at the widest — the exact
+    /// cost [`box_mean`]'s running sum exists to avoid, and the thing that
+    /// makes M13's flat-in-radius cost measurement valid. Instead each of the
+    /// five radii is evaluated over the whole plane by running sum, O(1) in the
+    /// radius, and the per-pixel choice is one gather. That is five separable
+    /// passes rather than one, and nothing that scales with the radius.
+    ///
+    /// The normalisation is applied **after** the gather, so every level
+    /// divides by the same `sigma(L(p))` and the choice of level cannot leak
+    /// into the divisor.
+    pub fn compute_scaled(
+        &mut self,
+        luma: &[f32],
+        noise: &NoiseModel,
+        scale: &crate::edgeaware::SelectionScale,
+    ) {
+        assert_eq!(luma.len(), self.geom.pixels());
+        assert_eq!(scale.geometry(), self.geom);
+        gradient_magnitude(luma, self.geom, &mut self.grad);
+        let levels = scale.levels();
+        let px = self.geom.pixels();
+        if self.level_buf.len() != crate::edgeaware::LEVEL_RADII.len() * px {
+            self.level_buf = vec![0.0; crate::edgeaware::LEVEL_RADII.len() * px];
+        }
+        for (l, &r) in crate::edgeaware::LEVEL_RADII.iter().enumerate() {
+            let (_, tail) = self.level_buf.split_at_mut(l * px);
+            box_mean(
+                &self.grad,
+                self.geom,
+                r,
+                &mut self.scratch,
+                &mut tail[..px],
+            );
+        }
+        for (i, f) in self.focus.iter_mut().enumerate() {
+            *f = self.level_buf[levels[i] as usize * px + i];
+        }
+        normalise_by_luma_sigma(&mut self.focus, luma, noise);
+    }
+
+    /// Bytes the multi-scale ladder adds once [`compute_scaled`](Self::compute_scaled)
+    /// has been called, for the memory report.
+    /// Compute the focus field with **depth-layer masked support** at the full
+    /// shipped radius.
+    ///
+    /// Identical to [`FocusField::compute`] at every untreated pixel, by
+    /// construction: the full-window box mean is computed first and
+    /// [`LayerSupport::apply`] only overwrites the treated minority. That is
+    /// what lets the feature ship dark.
+    pub fn compute_layered(
+        &mut self,
+        luma: &[f32],
+        noise: &NoiseModel,
+        support: &crate::edgeaware::LayerSupport,
+    ) {
+        assert_eq!(luma.len(), self.geom.pixels());
+        assert_eq!(support.geometry(), self.geom);
+        let px = self.geom.pixels();
+        let support_radius = window_radius();
+        gradient_magnitude(luma, self.geom, &mut self.grad);
+        box_mean(
+            &self.grad,
+            self.geom,
+            support_radius,
+            &mut self.scratch,
+            &mut self.focus,
+        );
+        if self.level_buf.len() != 2 * px {
+            self.level_buf = vec![0.0; 2 * px];
+        }
+        let (tmp, acc) = self.level_buf.split_at_mut(px);
+        support.apply_at(
+            &self.grad,
+            support_radius,
+            &mut self.scratch,
+            tmp,
+            acc,
+            &mut self.focus,
+        );
+        normalise_by_luma_sigma(&mut self.focus, luma, noise);
+    }
+
+    pub fn scaled_extra_bytes(&self) -> usize {
+        self.level_buf.len() * std::mem::size_of::<f32>()
     }
 }
 
@@ -298,6 +459,75 @@ mod tests {
             width: w,
             height: h,
         }
+    }
+
+    /// The edge-aware path must be the shipped operator when it is asked for
+    /// the shipped radius — **bit for bit**, not to a tolerance.
+    ///
+    /// This is the whole safety argument for `compute_scaled`. M13's window
+    /// ruling, `FOCUS_NOISE_SD`, the gate calibration and the byte-freeze all
+    /// describe `compute`; if the multi-scale ladder rounded differently at
+    /// `FULL_LEVEL` then every pixel away from a silhouette — which is most of
+    /// every frame — would quietly stop being the thing those numbers were
+    /// measured on.
+    #[test]
+    fn uniform_full_scale_is_the_shipped_operator() {
+        use crate::edgeaware::{FULL_LEVEL, SelectionScale};
+        let (w, h) = (61, 47);
+        let g = geometry(w, h);
+        let luma: Vec<f32> = (0..w * h)
+            .map(|i| {
+                let (x, y) = (i % w, i / w);
+                600.0 + 300.0 * ((x * 3 + y * 5) % 17) as f32 + if x > 30 { 2000.0 } else { 0.0 }
+            })
+            .collect();
+        let mut a = FocusField::new(g);
+        a.compute(&luma, &model());
+        let want = a.values().to_vec();
+
+        let mut b = FocusField::new(g);
+        b.compute_scaled(&luma, &model(), &SelectionScale::uniform(g, FULL_LEVEL));
+
+        assert_eq!(
+            b.values(),
+            &want[..],
+            "the multi-scale path is not bit-identical to compute() at the full radius"
+        );
+    }
+
+    /// A narrower level must actually narrow the support, or the scale map is
+    /// decorative. Read at a pixel far enough from the step that the wide
+    /// window straddles it and the narrow one cannot.
+    #[test]
+    fn a_narrow_level_excludes_content_the_wide_window_reaches() {
+        use crate::edgeaware::{LEVEL_RADII, SelectionScale};
+        let (w, h) = (81, 81);
+        let g = geometry(w, h);
+        // Flat everywhere except a single high-contrast column at x = 40.
+        let luma: Vec<f32> = (0..w * h)
+            .map(|i| if i % w == 40 { 9000.0 } else { 700.0 })
+            .collect();
+
+        let probe = 40 - 6; // 6 px from the only gradient in the plane
+        let mut wide = FocusField::new(g);
+        wide.compute(&luma, &model());
+        let wide_v = wide.values()[40 * w + probe];
+
+        let narrow_level = 1u8; // radius 2
+        assert!(LEVEL_RADII[narrow_level as usize] < 6);
+        let mut narrow = FocusField::new(g);
+        narrow.compute_scaled(&luma, &model(), &SelectionScale::uniform(g, narrow_level));
+        let narrow_v = narrow.values()[40 * w + probe];
+
+        assert!(
+            wide_v > 0.0,
+            "the wide window should see the column from 6 px away"
+        );
+        assert_eq!(
+            narrow_v, 0.0,
+            "a radius-2 window 6 px from the only edge in the plane must see \
+             nothing, got {narrow_v}"
+        );
     }
 
     fn field(w: usize, h: usize, luma: &[f32]) -> Vec<f32> {

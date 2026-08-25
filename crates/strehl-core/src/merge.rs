@@ -194,6 +194,92 @@ pub fn regularise(focus: &[f32], geom: PlaneGeometry, scratch: &mut [f32], dst: 
     box_mean(focus, geom, REGULARISER_RADIUS, scratch, dst);
 }
 
+/// Apply the merge regulariser at an explicit radius.
+///
+/// The depth-guide pass needs its regulariser capped to its own narrow window:
+/// the guide exists to locate silhouettes to a few pixels, and a radius-8 box
+/// over it would displace the very step it is being asked to find.
+pub fn regularise_at(
+    focus: &[f32],
+    geom: PlaneGeometry,
+    radius: usize,
+    scratch: &mut [f32],
+    dst: &mut [f32],
+) {
+    box_mean(focus, geom, radius.min(REGULARISER_RADIUS), scratch, dst);
+}
+
+/// Apply the merge regulariser with **depth-layer masked support**.
+///
+/// The regulariser is a second box cascade over the focus field. Left at its
+/// shipped radius 8 while the focus operator is made edge-aware, it averages
+/// the newly-correct responses straight back across the silhouette and
+/// re-manufactures a rim of its own radius, so the two have to be masked
+/// together or neither.
+///
+/// `dst` is filled with the shipped radius-8 box mean first and only the
+/// treated pixels are overwritten, so an empty support is byte-identical to
+/// [`regularise`].
+pub fn regularise_layered(
+    focus: &[f32],
+    geom: PlaneGeometry,
+    support: &crate::edgeaware::LayerSupport,
+    scratch: &mut [f32],
+    tmp: &mut [f32],
+    acc: &mut [f32],
+    dst: &mut [f32],
+) {
+    box_mean(focus, geom, REGULARISER_RADIUS, scratch, dst);
+    support.apply_at(focus, REGULARISER_RADIUS, scratch, tmp, acc, dst);
+}
+
+
+///
+/// # Why this must exist and cannot be skipped
+///
+/// Making only [`FocusField::compute_scaled`](crate::focus::FocusField::compute_scaled)
+/// edge-aware does not remove the halo, it moves it. The regulariser is a
+/// second box cascade over the focus field; left at radius 8 it takes the
+/// newly-correct narrow-support responses next to a silhouette and averages
+/// them straight back across it, re-manufacturing a rim of its own radius. The
+/// election's total spill is the composition of the two, which is why M121
+/// derived a 22 px prediction from `WINDOW_RADIUS = 13` composed with
+/// `REGULARISER_RADIUS = 8`. Both ends of that composition have to be told
+/// about the depth step or neither is.
+///
+/// The cap is what keeps this a no-op away from silhouettes: at
+/// [`FULL_LEVEL`](crate::edgeaware::FULL_LEVEL) the radius is `min(13, 8) = 8`,
+/// which is [`regularise`] exactly.
+pub fn regularise_scaled(
+    focus: &[f32],
+    geom: PlaneGeometry,
+    scale: &crate::edgeaware::SelectionScale,
+    scratch: &mut [f32],
+    ladder: &mut Vec<f32>,
+    dst: &mut [f32],
+) {
+    assert_eq!(scale.geometry(), geom);
+    let px = geom.pixels();
+    let n = crate::edgeaware::LEVEL_RADII.len();
+    if ladder.len() != n * px {
+        ladder.resize(n * px, 0.0);
+    }
+    for (l, &r) in crate::edgeaware::LEVEL_RADII.iter().enumerate() {
+        let (_, tail) = ladder.split_at_mut(l * px);
+        box_mean(
+            focus,
+            geom,
+            r.min(REGULARISER_RADIUS),
+            scratch,
+            &mut tail[..px],
+        );
+    }
+    let levels = scale.levels();
+    for (i, d) in dst.iter_mut().enumerate() {
+        *d = ladder[levels[i] as usize * px + i];
+    }
+}
+
 /// The rule admitting a frame to the average at a pixel.
 ///
 /// A frame is admitted when its regularised focus response is within
