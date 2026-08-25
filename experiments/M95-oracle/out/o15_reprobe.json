@@ -1,0 +1,122 @@
+[
+ {
+  "test": "float-count",
+  "levels": 175477,
+  "native": true,
+  "modal_gap": null,
+  "gap1_frac": null,
+  "array": "truth_AHD.npy",
+  "arm": "real",
+  "dtype": "float32"
+ },
+ {
+  "test": "float-count",
+  "levels": 223,
+  "native": false,
+  "modal_gap": null,
+  "gap1_frac": null,
+  "array": "truth_AHD.npy",
+  "arm": "plant8",
+  "dtype": "float32"
+ },
+ {
+  "test": "float-count",
+  "levels": 174060,
+  "native": true,
+  "modal_gap": null,
+  "gap1_frac": null,
+  "array": "truth_VNG.npy",
+  "arm": "real",
+  "dtype": "float32"
+ },
+ {
+  "test": "float-count",
+  "levels": 218,
+  "native": false,
+  "modal_gap": null,
+  "gap1_frac": null,
+  "array": "truth_VNG.npy",
+  "arm": "plant8",
+  "dtype": "float32"
+ },
+ {
+  "test": "float-count",
+  "levels": 171771,
+  "native": true,
+  "modal_gap": null,
+  "gap1_frac": null,
+  "array": "truth_LINEAR.npy",
+  "arm": "real",
+  "dtype": "float32"
+ },
+ {
+  "test": "float-count",
+  "levels": 201,
+  "native": false,
+  "modal_gap": null,
+  "gap1_frac": null,
+  "array": "truth_LINEAR.npy",
+  "arm": "plant8",
+  "dtype": "float32"
+ },
+ {
+  "test": "int-spacing",
+  "levels": 7511,
+  "modal_gap": 1,
+  "gap1_frac": 0.9860186418109188,
+  "native": true,
+  "array": "M95-resample/rawpy-A.npy",
+  "arm": "real",
+  "dtype": "uint16"
+ },
+ {
+  "test": "int-spacing",
+  "levels": 174,
+  "modal_gap": 54,
+  "gap1_frac": 0.0,
+  "native": false,
+  "array": "M95-resample/rawpy-A.npy",
+  "arm": "plant8",
+  "dtype": "uint16"
+ },
+ {
+  "test": "int-spacing",
+  "levels": 21649,
+  "modal_gap": 1,
+  "gap1_frac": 0.9572246858832225,
+  "native": true,
+  "array": "M95-resample/merge-g0-linear.tif",
+  "arm": "real",
+  "dtype": "uint16"
+ },
+ {
+  "test": "int-spacing",
+  "levels": 213,
+  "modal_gap": 150,
+  "gap1_frac": 0.0,
+  "native": false,
+  "array": "M95-resample/merge-g0-linear.tif",
+  "arm": "plant8",
+  "dtype": "uint16"
+ },
+ {
+  "test": "int-spacing",
+  "levels": 21776,
+  "modal_gap": 1,
+  "gap1_frac": 0.9620665901262916,
+  "native": true,
+  "array": "M95-resample/merge-g0-noalign.tif",
+  "arm": "real",
+  "dtype": "uint16"
+ },
+ {
+  "test": "int-spacing",
+  "levels": 217,
+  "modal_gap": 158,
+  "gap1_frac": 0.0,
+  "native": false,
+  "array": "M95-resample/merge-g0-noalign.tif",
+  "arm": "plant8",
+  "dtype": "uint16"
+ }
+]

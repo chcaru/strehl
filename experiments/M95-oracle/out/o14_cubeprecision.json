@@ -1,0 +1,98 @@
+[
+ {
+  "levels": 4394,
+  "lo": 677,
+  "hi": 5094,
+  "modal_gap": 1,
+  "gap1_frac": 0.9984065558843614,
+  "native": true,
+  "roi": "ROI-LOWDRIFT",
+  "arm": "real",
+  "dtype": "uint16",
+  "frame": 149
+ },
+ {
+  "levels": 256,
+  "lo": 677,
+  "hi": 5094,
+  "modal_gap": 17,
+  "gap1_frac": 0.0,
+  "native": false,
+  "roi": "ROI-LOWDRIFT",
+  "arm": "plant8",
+  "dtype": "uint16",
+  "frame": 149
+ },
+ {
+  "levels": 4377,
+  "lo": 992,
+  "hi": 8175,
+  "modal_gap": 1,
+  "gap1_frac": 0.9929159049360147,
+  "native": true,
+  "roi": "ROI-MIDDRIFT",
+  "arm": "real",
+  "dtype": "uint16",
+  "frame": 149
+ },
+ {
+  "levels": 168,
+  "lo": 992,
+  "hi": 8175,
+  "modal_gap": 28,
+  "gap1_frac": 0.0,
+  "native": false,
+  "roi": "ROI-MIDDRIFT",
+  "arm": "plant8",
+  "dtype": "uint16",
+  "frame": 149
+ },
+ {
+  "levels": 4439,
+  "lo": 720,
+  "hi": 5429,
+  "modal_gap": 1,
+  "gap1_frac": 0.9952681388012619,
+  "native": true,
+  "roi": "ROI-HIGHDRIFT",
+  "arm": "real",
+  "dtype": "uint16",
+  "frame": 149
+ },
+ {
+  "levels": 247,
+  "lo": 720,
+  "hi": 5429,
+  "modal_gap": 18,
+  "gap1_frac": 0.0,
+  "native": false,
+  "roi": "ROI-HIGHDRIFT",
+  "arm": "plant8",
+  "dtype": "uint16",
+  "frame": 149
+ },
+ {
+  "levels": 1110,
+  "lo": 615,
+  "hi": 1773,
+  "modal_gap": 1,
+  "gap1_frac": 0.9729486023444545,
+  "native": true,
+  "roi": "ROI-FLAT",
+  "arm": "real",
+  "dtype": "uint16",
+  "frame": 149
+ },
+ {
+  "levels": 255,
+  "lo": 615,
+  "hi": 1773,
+  "modal_gap": 5,
+  "gap1_frac": 0.0,
+  "native": false,
+  "roi": "ROI-FLAT",
+  "arm": "plant8",
+  "dtype": "uint16",
+  "frame": 149
+ }
+]

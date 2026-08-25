@@ -1,0 +1,25 @@
+BARS: int -> modal gap 1 and >= 90% unit gaps; float -> > 4096 distinct
+
+array                              arm     test            levels   gap   gap==1  verdict
+truth_AHD.npy                      real    float-count     175477     -        -  NATIVE
+truth_AHD.npy                      plant8  float-count        223     -        -  NARROWED
+
+truth_VNG.npy                      real    float-count     174060     -        -  NATIVE
+truth_VNG.npy                      plant8  float-count        218     -        -  NARROWED
+
+truth_LINEAR.npy                   real    float-count     171771     -        -  NATIVE
+truth_LINEAR.npy                   plant8  float-count        201     -        -  NARROWED
+
+M95-resample/rawpy-A.npy           real    int-spacing       7511     1    98.6%  NATIVE
+M95-resample/rawpy-A.npy           plant8  int-spacing        174    54     0.0%  NARROWED
+
+M95-resample/merge-g0-linear.tif   real    int-spacing      21649     1    95.7%  NATIVE
+M95-resample/merge-g0-linear.tif   plant8  int-spacing        213   150     0.0%  NARROWED
+
+M95-resample/merge-g0-noalign.tif  real    int-spacing      21776     1    96.2%  NATIVE
+M95-resample/merge-g0-noalign.tif  plant8  int-spacing        217   158     0.0%  NARROWED
+
+====================================================================================
+POWER CONTROL: planted arm read NARROWED on 6/6 arrays
+REAL ARM: NATIVE on 6/6
+VERDICT: o12's conclusion CONFIRMED under the correct test

@@ -1,0 +1,19 @@
+BAR: NATIVE = modal gap 1 AND >= 90% of gaps are 1
+
+ROI              arm         levels            range  modalgap   gap==1  verdict
+ROI-LOWDRIFT     real          4394     677..5094            1   99.8%  NATIVE
+ROI-LOWDRIFT     plant8         256     677..5094           17    0.0%  NARROWED
+
+ROI-MIDDRIFT     real          4377     992..8175            1   99.3%  NATIVE
+ROI-MIDDRIFT     plant8         168     992..8175           28    0.0%  NARROWED
+
+ROI-HIGHDRIFT    real          4439     720..5429            1   99.5%  NATIVE
+ROI-HIGHDRIFT    plant8         247     720..5429           18    0.0%  NARROWED
+
+ROI-FLAT         real          1110     615..1773            1   97.3%  NATIVE
+ROI-FLAT         plant8         255     615..1773            5    0.0%  NARROWED
+
+==============================================================================
+POWER CONTROL: planted 8-bit arm read NARROWED on 4/4 ROIs
+REAL ARM: NATIVE on 4/4 ROIs (levels 1110..4439)
+VERDICT: cube is native precision; no quantisation floor enters any pooled statistic

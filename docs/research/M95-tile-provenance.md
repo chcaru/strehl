@@ -85,31 +85,106 @@ mismatch. `L` comes straight from `rawpy.imread(ARW).postprocess(output_bps=16)`
 
 ## 3. Provenance -- measured against a bar stated first
 
-**BAR:** an array is NARROWED if a 4M-pixel sample of one channel holds fewer
-than **4096 distinct values**. Native 16-bit RAW clears it widely; anything
-through an 8-bit stage cannot.
+**The first bar was blunt and I replaced it.** `o12_precision.py` called an array
+narrowed if it held fewer than 4096 distinct levels. `o14` showed that bar is
+wrong in **both** directions: it convicts low-contrast native data, and it clears
+narrowed data that spans a wide range. The oracle's `ROI-FLAT` is the proof --
+genuinely native, and only **1110** distinct levels, because low contrast is the
+property it was selected for.
 
-| array | dtype | distinct levels | verdict |
-| --- | --- | --- | --- |
-| `M95-demosaic/scratch/truth_AHD.npy` | float32 | **175,477** | native |
-| `truth_VNG.npy` | float32 | **174,060** | native |
-| `truth_LINEAR.npy` | float32 | **171,771** | native |
-| `M95-resample/rawpy-A.npy` | uint16 | **7,511** | native |
-| `M95-ref/merge-g0-linear.tif` | uint16 | **21,649** | native |
-| `M95-ref/merge-g0-noalign.tif` | uint16 | **21,776** | native |
+**The correct discriminator is level SPACING, not level count.** Native RAW
+arrives as consecutive integers, so the gap between neighbouring distinct values
+is 1. Anything rescaled from an 8-bit stage lands on a lattice with a constant
+stride greater than 1. Spacing separates narrowing from low contrast; a count
+cannot.
 
-**Arrays probed 6, NARROWED 0.**
+**BAR (`o15_reprobe.py`):** integer arrays are NATIVE if the modal gap between
+consecutive distinct levels is **1** and at least **90 %** of gaps are 1. Float
+arrays have no lattice, but an 8-bit stage caps them at ~256 distinct values
+regardless of range, so a count bar is decisive there: NATIVE if **> 4096**.
+
+**POWER CONTROL, mandatory because the headline is an absence:** every array is
+also measured after a planted 8-bit round trip. The planted arm must read
+NARROWED, or the real-arm reading proves nothing.
+
+| array | test | levels | modal gap | gaps == 1 | verdict |
+| --- | --- | --- | --- | --- | --- |
+| `truth_AHD.npy` | float-count | **175,477** | -- | -- | native |
+| `truth_VNG.npy` | float-count | **174,060** | -- | -- | native |
+| `truth_LINEAR.npy` | float-count | **171,771** | -- | -- | native |
+| `M95-resample/rawpy-A.npy` | int-spacing | 7,511 | **1** | **98.6 %** | native |
+| `M95-resample/merge-g0-linear.tif` | int-spacing | 21,649 | **1** | **95.7 %** | native |
+| `M95-resample/merge-g0-noalign.tif` | int-spacing | 21,776 | **1** | **96.2 %** | native |
+
+**REAL ARM: NATIVE 6/6. POWER CONTROL: planted arm NARROWED 6/6** (modal gap
+54-158, **0.0 %** unit gaps; floats collapse to 201-223 levels). The instrument
+could have said otherwise and did, on demand.
+
+**o12's conclusion is confirmed under the correct test.** It was reached with a
+blunt instrument and it survived a sharper one, which is the only reason it is
+still in this report.
 
 `m95cov.load_luma` reads through **`tifffile.imread`**, not PIL
 (`m95cov.py:24-25`), so the coverage tree was already structurally immune to the
 16-bit-RGB narrowing hazard rather than accidentally so.
 
+## 3a. The hazard broadened to AVERAGING -- what that reopens, and what it does not
+
+ORCH corrected the mechanism after this audit began: the vulnerable operation is
+not **differencing** but **averaging**, because quantisation error is
+value-deterministic and moves a whole sample population together instead of
+averaging down (fact 1765; reproduced at 79x on a rank statistic with no
+differencing in it). So `pick_tiles` is exposed for a more general reason than
+first given, and **any pooled statistic is a candidate**.
+
+**This does not reopen sections 2 or 3, and the reason is structural.** The audit
+rests on two legs and both are mechanism-independent:
+
+- **Pinned selection.** If every arm is scored on the same tiles, arms cannot
+  differ by tile set -- whatever makes the ranking statistic vulnerable.
+- **Native input.** If nothing is narrowed, no quantisation error enters at all,
+  so no operation can be exposed to it, averaging or differencing.
+
+The broadening changes **which operations are candidates**, not **whether
+narrowed input is present** -- and the input side is the side I measured.
+
+**It does reopen something else, and this is the part that needed new work.**
+The election-quality milestone never calls `pick_tiles`, so `o11`/`o12` never
+covered it. Under "any pooled statistic", its ROI means, box means and band
+powers all become candidates for the first time -- and its headline (excess
+deficit **+0.8119 / +2.3615 / +2.3793 pp**) is exactly the *small pooled number*
+ORCH flags as most at risk, since a quantisation floor would sit under it.
+
+**Measured, `o14_cubeprecision.py`,** on the cube those statistics pool
+(`C:\dev\strehl-out\M95-oracle\ROI-*.g1.npy`, built by `o1_cube.py:74-80`
+directly from `decode_raw(p).cfa` green planes -- no demosaic, no TIFF round
+trip, no 8-bit stage anywhere in the path):
+
+| ROI | arm | levels | modal gap | gaps == 1 | verdict |
+| --- | --- | --- | --- | --- | --- |
+| LOWDRIFT | real | 4,394 | **1** | **99.8 %** | native |
+| LOWDRIFT | planted 8-bit | 256 | 17 | 0.0 % | NARROWED |
+| MIDDRIFT | real | 4,377 | **1** | **99.3 %** | native |
+| MIDDRIFT | planted 8-bit | 168 | 28 | 0.0 % | NARROWED |
+| HIGHDRIFT | real | 4,439 | **1** | **99.5 %** | native |
+| HIGHDRIFT | planted 8-bit | 247 | 18 | 0.0 % | NARROWED |
+| FLAT | real | **1,110** | **1** | **97.3 %** | native |
+| FLAT | planted 8-bit | 255 | 5 | 0.0 % | NARROWED |
+
+**Real arm NATIVE 4/4; power control NARROWED 4/4.** No quantisation floor enters
+any pooled statistic in the oracle tree, and the headline stands unchanged.
+
+`ROI-FLAT`'s row is why section 3 changed instrument. At 1,110 levels the count
+bar would have convicted the one ROI whose entire purpose is to be flat.
+
 ## 4. Load-bearing exposure: none
+
 
 - **My published milestone does not use `pick_tiles` at all.** The election-
   quality work (`experiments/M95-oracle/`, `experiments/M95-merge-vs-frame/`)
   contains zero call sites; it selects ROIs by an explicit contrast criterion and
-  scores every pixel in them.
+  scores every pixel in them. Not-calling-it is an argument, not a measurement,
+  so section 3a measured its inputs anyway: **native 4/4, power control 4/4**.
 - The `+0.1160 dex` resampler-kernel number ranked tiles through this helper, and
   it is **already withdrawn** on independent grounds (band is 12.8 % subject
   detail, 87.2 % noise; dark-frame placebo 1.0006). Nothing rests on it.

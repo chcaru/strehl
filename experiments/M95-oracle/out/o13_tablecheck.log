@@ -1,0 +1,7 @@
+self-check: escaped row clean; unescaped row caught (6 bars vs header 4) -- instrument responds
+
+M95-election-quality.md: 0 mismatched row(s)
+M95-tile-provenance.md: 0 mismatched row(s)
+
+files scanned 2, mismatched rows 0
+VERDICT: CLEAN
