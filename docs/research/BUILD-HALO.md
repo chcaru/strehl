@@ -3084,3 +3084,93 @@ estimator over frames that keeps the gate's averaging by construction -- ORCH's
 specification, already built that way. The related-but-distinct cost I *do* carry
 is section 30.6's **+8.36%** backdrop gradient, which is the extremum choosing
 independently per pixel. The cleanest-third mean is the fix for that one.
+
+---
+
+## 32. The fix does not generalise. `coffee-bean` inverts it.
+
+ORCH measured the veiling term independently on `coffee-bean` -- `-38.2%` of far
+field against `flower-bud`'s `-36.5%`, agreeing within 1.7 points on two
+unrelated captures -- and offered it as the *cleaner* acceptance subject, free of
+the trichome fringe. I rendered it from the same pin as section 30's table.
+
+**It fails, visibly, and in the opposite direction to the defect.**
+
+### 32.1 The deficit metric is confounded here and says the wrong thing twice
+
+`veil_accept` reports each band as a deficit against the far field. That frame is
+valid only while the far field is fixed. On `flower-bud` it moved **4 DN** and
+the deficits mean what they say. On `coffee-bean` it moved **+2488 DN**, so every
+band's deficit changes by construction. The harness duly reported every band
+getting *worse* -- which is also not what happened. `veil_absolute.py` prints the
+levels instead:
+
+| band | off DN | veil DN | delta |
+| --- | --- | --- | --- |
+| **1-4 (the rim, where the veil is worst)** | 15430 | 15466 | **+36 (+0.23%)** |
+| 12-16 | 24054 | 27382 | +3329 (+13.8%) |
+| 30-60 | 36442 | 42737 | +6294 (+17.3%) |
+| 120-200 | 45237 | 47284 | +2047 (+4.5%) |
+| **500-900 (far field, no veil to remove)** | 48353 | 50841 | **+2488 (+5.15%)** |
+
+Normalising each band by its own arm's far field, which divides the global lift
+out: **4 bands flattened, 5 worsened.** On `flower-bud` the same test gives 7
+flattened, 2 worsened.
+
+**The correction did nothing at the rim and lifted the clean far background by
+5%.** That is not a weak fix, it is an exposure error over the majority of the
+frame.
+
+### 32.2 The picture shows a gate contour
+
+`pics/cb-full-off-vs-on.png`, both panels at one shared gain taken from the OFF
+arm, because the failure under investigation *is* a global brightening and an
+arm-specific stretch would normalise it away.
+
+The ON panel has a **large hard-edged grey region in the upper-left quadrant with
+a curved boundary**, and heavy speckle across the backdrop. My first probe called
+it smooth and was wrong, because it read the **median** gradient: a contour is a
+*curve*, so it occupies a vanishing pixel fraction and cannot move a median. Read
+in the tail, on backdrop at `d >= 300 px`:
+
+| | correction applied at d>=300 | p99 gradient step vs backdrop |
+| --- | --- | --- |
+| `flower-bud` | mean **+20 DN**, p99 +349 | 5.6x -- negligible, confined to the rim |
+| `coffee-bean` | mean **+2355 DN**, p99 **+6977** | **32.6x -- a gate contour** |
+
+### 32.3 The mechanism: the cut is borrowed from a gate that knows nothing about veiling
+
+`first_mode_z` deciles, and what the same cut of 4.0 sigma does to each subject:
+
+| subject | z p10 / p50 / p90 | eligible | which half that is |
+| --- | --- | --- | --- |
+| `flower-bud` | 2.39 / **2.97** / 4.79 | 83.51% | most of the frame, **including the rim** |
+| `coffee-bean` | 2.04 / **4.00** / 4.70 | 50.11% | **the flat far field, excluding the rim** |
+
+`coffee-bean`'s median significance is **exactly the cut**. The gate therefore
+splits that image at its own median, and the half it keeps is the featureless far
+background -- where there is no veil -- while the rim, which has structure
+because the veil gradient and the silhouette are themselves content, is scored
+*peaked* and excluded.
+
+> **The gate selected the complement of the target population.**
+
+ORCH's invariant is right: apply the envelope where the election has nothing to
+choose between. What is wrong is my **cut**. I took it from `--gate`, the merge's
+significance threshold, which is a statement about when averaging is safe and
+carries no information about veiling. It landed correctly on `flower-bud` by
+coincidence of that subject's z distribution relative to a number chosen for an
+unrelated purpose. Section 30 called that "not a tuned constant". It is worse
+than a tuned constant: it is an **untuned** one, and one subject cannot show the
+difference.
+
+### 32.4 Consequences
+
+- **The veil must not ship default-ON.** It stays behind `STREHL_VEIL`.
+- Section 30's `flower-bud` numbers stand as measured and are now known to be
+  **unrepresentative**. One subject was never enough and this is the proof.
+- The 26-subject gallery delta ORCH mandated would have caught this. It is now
+  the blocking item, not a formality.
+- The cut needs deriving from the veil's own statistics -- the veiling slope
+  against `|k - k_F|`, which is zero where nothing is spilling -- rather than
+  borrowed from the election's gate. That is the next build.
