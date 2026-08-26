@@ -2823,3 +2823,54 @@ reason to delete.
 `r13 off -> on` is the mechanism in one column: with the term deleted, between
 97% and **99.99%** of every one of these frames elected on the same fixed 13 px
 box. The geometric cap was not subsuming the noise term; it was barely running.
+
+---
+
+## 29. ORCH's subject-detail guard, run against the shipped in-crate veil
+
+ORCH measured 0.355x subject gradient energy for a signed max and called it
+"build this or do not ship". Run against the shipped gate, on renders already on
+disk, five subjects, both a luma mask and an independent detail mask:
+
+| subject | veil changed | detail px touched | subject gradRMS, erode 0 -> 80 px |
+| --- | --- | --- | --- |
+| `flower-bud-alone-cpl` | 15.72% | 11.18% | 1.060x -> 1.000x |
+| `bee-2-cpl` | 10.68% | 0.06% | 1.000x flat |
+| `couch-fibers-cpl` | 17.49% | 0.04% | 1.000x flat |
+| `pencil-steep-angle-cpl` | 0.00% | 0.00% | 1.000x flat |
+| `109MSDCF` | 1.54% | 2.95% | 1.000x flat |
+
+**Nothing is destroyed anywhere.** The one subject that moves, `flower-bud`,
+moves UP: the veil lifts the veiled surround beside the silhouette, which raises
+local contrast in exactly the band ORCH's aura measurement is about. Against the
+0.355x ORCH measured for the ungated out-of-crate estimator, the gated in-crate
+one is 1.000x-1.060x. **The guard was already built and it holds.**
+
+### 29.1 The first version of this guard was very nearly tautological
+
+The natural subject mask is `luma < 0.5 * backdrop`. The veil's own luminance
+floor is `0.5 * (backdrop - black) + black`. **Those are the same threshold**,
+and the first run duly reported the veil had touched `0.00%` of the mask on four
+of five subjects and `1.000x` at every erosion distance.
+
+That is not evidence. It is the floor's definition read back. A veil that
+ravaged everything the floor admits would have scored exactly the same.
+
+The second mask is the top quartile of smoothed gradient energy -- the pixels
+that carry detail, which is what the guard is *about*, and a quantity the veil's
+gate never reads. It is not flattering: it reports the veil touching 11.18% of
+`flower-bud`'s detail pixels where the luma mask said 0.00%. The conclusion
+survives the honest instrument, which is the only reason it is worth stating.
+
+**Generalisable: when a guard's mask is built from the same threshold as the
+gate it is auditing, it cannot fail. Choose the mask from a quantity the
+mechanism under test does not read.**
+
+### 29.2 Erosion distance swept, not fixed
+
+ORCH specified 40 px. A single distance cannot distinguish "the interior is
+untouched" from "40 px happened to clear the affected band". Sweeping 0/10/20/
+40/80 px separates them: flat in the distance means untouched, climbing toward
+1.0 means an edge band that the fixed distance merely stepped over. Four of five
+subjects are flat; `flower-bud` climbs 1.060 -> 1.000, which correctly localises
+its effect to a band near the silhouette.
