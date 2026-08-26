@@ -559,11 +559,38 @@ case and is quoted as one: the tool's own model predicts **0.4439x** image-wide
 at this gate, because 21.95% of pixels still average nothing. Both numbers are
 right; they describe different regions.
 
-On resolved detail the expected gain is **~1.2-1.8x** — at a sane focus step only
-about 1.3 to 1.5 frames have any given depth inside their depth of field — but
-that figure is `ARGUED`, not measured, and the noise column above is not a
-result on its own: a plain mean wins it outright while collapsing detail, which
-is why `merge` refuses to report it without a `--detail-roi`.
+On resolved detail the expected gain was **`ARGUED` at ~1.2-1.8x** — the
+reasoning being that at a sane focus step only about 1.3 to 1.5 frames have any
+given depth inside their depth of field. **That figure has now been measured,
+and it is not observed.** Six subjects rendered twice from one binary — the
+shipping merge and the shipping `argmax-baseline` selector — and compared green
+plane, camera-linear, at 36 matched sites chosen on the mean of both arms, come
+out **indistinguishable to within 0.5 px of equivalent Gaussian blur**. That
+0.5 px is not a small number here: it is also what the same instrument reports
+for the two arms' *noise gap alone* with zero blur planted, so it is the
+instrument's floor rather than a measured difference. Selection wins outright on
+one subject, `flat-on-ruler-cpl`, by about 0.4 px on three statistics that
+agree.
+
+**The merge's advantage on this corpus is noise and the absence of invented
+structure, not fineness.** That is a narrower claim than the one this paragraph
+used to make, and it is the one the measurement supports.
+
+Two candidate detail statistics were killed by their own commissioning before
+they could vote — both *rise* on blur, by 5.1x and 12.6x on a ground-truth
+chirp. A third, which I supplied, failed a noise null it had never been given:
+it moves +33% under 15% added noise and reports −0.34 to −0.49 px on a pure
+noise difference, which accounts for its entire apparent result on five of the
+six subjects. A statistic that has never been shown to fail is not evidence.
+
+This result is **under independent verification right now** and is labelled as
+such, for the same reason the merge-limited zero above was: a negative is as
+capable of being an instrument artifact as a positive, and this one is load
+bearing enough that it should not be believed on one agent's word — including
+when that agent is arguing against the project's own headline. The noise column
+above is unaffected, and was never a result on its own: a plain mean wins it
+outright while collapsing detail, which is why `merge` refuses to report it
+without a `--detail-roi`.
 
 **Speed.** The same 22-frame 33 MP stack merges in **3.19 s** end to end
 (1.15 s pass one, 2.04 s pass two) at **262 MB/s** over 836 MB of RAW, on a
