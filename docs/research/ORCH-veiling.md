@@ -1562,3 +1562,156 @@ reference must be rendered with identical flags in the same colour space;
 `B-camlin` reading 82.6% acuity against an sRGB reference is the instrument
 detecting a colour-space mismatch, not a defect in the merge.
 
+# 19. The frames are not the same exposure, and nothing corrects for it
+
+This began as a failed measurement. 18.8 established *where* the clamped pixels
+live; the halo needed the same treatment, so `halo.py` was built to measure the
+veil as a radial profile of background level against distance from the
+silhouette, with two paired cost columns — rim sharpness and background noise —
+so that a repair could not flatten the profile by softening the edge or smearing
+the background.
+
+**Its commissioning failed, on a prediction registered before the run.** The
+prediction was that the merge would show a larger veil than any single frame,
+since the halo is a stacking artifact. It does not. The merge reads −31.61% and
+the ten single frames run −38.20% to −42.03%: the merge has the *smallest* veil
+of any arm measured. The metric is dominated by the defocus penumbra, which is
+physically present in every frame and swamps whatever the merge adds. As a halo
+gate it is dead, and it is recorded here as dead rather than quietly rebuilt.
+
+What it did do was print a column nobody had asked it for.
+
+## 19.1 The measurement
+
+The far-field background level was not constant across the bracket. It climbed,
+monotonically, frame after frame. So the trend was re-measured in a way that
+shares nothing with the first method — a fixed 64-px border frame read at
+*identical absolute pixel coordinates* in every image, with no threshold, no
+subject mask and no distance transform, so that nothing in the measurement can
+move when the subject changes size.
+
+`flower-bud-alone-cpl`, camera-linear:
+
+| frame | borderR | borderG | borderB | centreG | cornerG |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| f025 | 16541 | 17063 | 16556 | 1701 | 17598 |
+| f051 | 16931 | 17458 | 16947 | 1748 | 18039 |
+| f076 | 17316 | 17854 | 17332 | 1774 | 18468 |
+| f127 | 18129 | 18696 | 18158 | 1818 | 19407 |
+| f153 | 18561 | 19141 | 18591 | 1845 | 19919 |
+| f178 | 18958 | 19540 | 18980 | 1898 | 20386 |
+
+- **Strictly monotone: 5/5 ascending steps on all five independent measures.**
+  Reported as a step count rather than asserted by eye, so a noisy sequence could
+  not have read as a trend.
+- **Span 14.5%** across these six frames, and **+19.0%** across the full bracket
+  from f0 to f204.
+- **Achromatic** — 14.61%, 14.52%, 14.64% on R, G, B, agreeing to 0.12%. So it is
+  exposure, not white balance or illuminant colour.
+- **Global rather than vignetting** — border and centre move together.
+- **Multiplicative rather than additive**, and this discriminates cleanly: the
+  border gains **+2477 DN** while the centre gains **+197 DN**, an order of
+  magnitude apart in absolute terms, while the *ratios* are 1.145 and 1.116. An
+  additive pedestal shift would have moved both by the same DN.
+
+These are aligned renders, so a border sample could in principle be reading warp
+padding rather than photometry, and a bracket whose frames are scaled by
+different amounts would manufacture exactly this trend. The control was already
+in hand: `halo.py` had measured a **mid-field annulus 300–600 px from the
+subject**, spatially disjoint from the border frame, and it spans **14.06%**
+against the border's **14.52%**. Two samplings with nothing in common agree to
+half a point. The trend is in the photometry, not in the warp.
+
+## 19.2 Nothing in the pipeline corrects it
+
+`pyramid.rs`, `merge.rs` and `blend-render.rs` contain no per-frame photometric
+gain or offset. The repository's 379 matches for "normalis" are all *focus-field*
+normalisation — the focus **response** divided by luma sigma — which is a
+different quantity and does nothing to pixel levels. The merge is compositing
+frames that differ by up to a fifth in exposure.
+
+## 19.3 Why this is the leading candidate for the clamp
+
+The coarsest pyramid bands carry the low-frequency content, and a whole-frame
+level difference is exactly low-frequency content. Electing different frames in
+different bands therefore mixes **incompatible pedestals**, and the resulting
+error is broad, low-frequency, and largest where there is nothing else in the
+band — that is, in flat regions.
+
+Set that against what was already measured, independently and earlier:
+
+| prediction of the pedestal-mismatch mechanism | already measured |
+| --- | --- |
+| error is born in the coarsest band | 52× step on the 7th band alone (18.4) |
+| error is broad and low-frequency, worst in flat areas | clip risk *falls* 23.9% → 4.4% as gradient rises (18.8) |
+| reconstruction leaves the per-pixel frame hull | attributed in 18.7 |
+
+Three measurements taken for unrelated reasons, one mechanism that predicts all
+three. That is the reason to take it seriously, and it is still a hypothesis.
+
+**It may also be the halo.** If the selector elects a different frame on either
+side of an occluding boundary — and at a rim it certainly does — then even a
+*correct* focus decision imports a frame whose exposure differs by up to 19%,
+and the result is a brightness step hugging the subject, which is what an aura
+is. That would sharpen BUILD-HALO's keeper finding rather than contradict it: the
+rim is where the selector is confident and right about focus, and wrong about
+exposure. The amplitude is checkable — elected-index jump across the rim,
+multiplied by the per-frame level drift — and that check has been handed to the
+lane that holds the rim instrumentation.
+
+## 19.4 The form is not settled, and a correction I had to issue
+
+The first brief sent to the implementing lane said a per-frame **scalar
+multiplicative gain** was justified and told it not to start with gain+offset or
+a spatial field. That was drawn from one subject, which is the exact error this
+document has refused to let anyone else make. The generalisation check that
+should have preceded it was then run.
+
+`pen`, same mask-free method:
+
+| measure | span | monotone |
+| --- | ---: | --- |
+| borderR | 46.00% | 2/2 |
+| borderG | 46.69% | 2/2 |
+| borderB | 31.25% | 2/2 |
+| centreG | 25.96% | 2/2 |
+| cornerG | 76.38% | 2/2 |
+
+The finding survives and grows — the trend is three times larger here — but the
+*form* does not. On `pen` it is **chromatic** (blue spans 31% against red and
+green at 46%, where `flower-bud-alone-cpl`'s channels agreed to 0.12%),
+**spatially non-uniform** (corner 76% against centre 26%, a factor of three), and
+neither pure gain nor pure offset: border ×1.467 / +1829 DN against centre ×1.260
+/ +3285 DN, so equal ratios and equal differences both fail. The instruction was
+withdrawn and replaced with: fit the model, do not assume it, and let the
+residual argue for any term beyond a scalar.
+
+One confound is explicitly **not** ruled out on `pen`. It is a bright subject on
+a dark background, the opposite polarity, and the border ring has not been
+verified free of subject in every frame; if the pen reaches into the border, then
+breathing alone would change the sampling mix and manufacture a monotone trend
+with no photometric cause. `flower-bud-alone-cpl` is the trustworthy measurement
+— plain background, subject far from the edge, channels agreeing to 0.12%, and
+the disjoint-annulus control above. `pen` corroborates that a large trend exists
+and warns that the model may need more than a scalar; it does not specify one.
+
+## 19.5 The registered test
+
+Normalise each frame photometrically upstream of the pyramid decomposition, and
+clipping on `dry-erase-marker-head-cpl` must fall substantially **with
+sharpening, exponent and band count all untouched** — none of the levers that
+have repeatedly bought a better number by turning the stacker off.
+`couch-fibers-cpl` stays at exactly 0. `accept.py`'s cost columns hold: `acuity`
+and `microC` at or above 98% of reference, `p1` not rising.
+
+If clipping does not fall, the leading candidate is dead, and that is worth as
+much as a confirmation — it would remove the only mechanism currently predicting
+all three of the measurements in 19.3.
+
+One implementation hazard is worth stating because getting it wrong would be
+invisible: **the noise model must see the gain.** σ²(S) is signal-dependent, so
+rescaling pixel values rescales their noise, and a gate comparing band
+coefficients against a noise floor computed before normalisation would
+miscalibrate — most severely in the lit low-contrast regions where the merge is
+already weakest.
+
