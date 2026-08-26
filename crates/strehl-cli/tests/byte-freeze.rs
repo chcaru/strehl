@@ -428,6 +428,15 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_EDGE_TAU",
     "STREHL_EDGE_CONF",
     "STREHL_ONLY_FRAME",
+    // Which merge runs, and how its fold is partitioned. `STREHL_MERGE` is the
+    // most dangerous entry in this list: it selects the whole backend, so an
+    // ambient `STREHL_MERGE=pyramid` would render a completely different
+    // pipeline than every row here claims -- 99.9895% of pixels, mean 1820 DN.
+    // `STREHL_PYRAMID_WORKERS` is milder but real: it changes the fold's
+    // reduction order, which is worth 1 DN on a fifth of a percent of pixels,
+    // and a byte-freeze is precisely the instrument that cannot tolerate 1 DN.
+    "STREHL_MERGE",
+    "STREHL_PYRAMID_WORKERS",
 ];
 
 impl Freeze {
@@ -442,6 +451,23 @@ impl Freeze {
         let mut v = vec![
             "stack".to_string(),
             stack_dir.display().to_string(),
+            // Every row in this registry was frozen before `strehl stack` had
+            // a choice of merge, when the estimator was the only thing the
+            // command could run. The default is now the pyramid merge, so an
+            // invocation that does not name a backend no longer describes the
+            // pipeline it froze -- and `--gate` is an estimator flag, which
+            // the CLI refuses rather than ignores under the other backend.
+            //
+            // This is the STREHL_ALIGN=0 defect a third time, in the shape the
+            // header warns about: an input that moves every hash in this file
+            // while appearing nowhere in any record. Naming it here makes the
+            // recorded command and the executed command the same object again.
+            //
+            // It is hardcoded rather than a column because every existing row
+            // genuinely is an estimator freeze. The day a pyramid row is added
+            // this must become a registry column, exactly like `--gate` did.
+            "--merge".to_string(),
+            "estimator".to_string(),
             "--limit".to_string(),
             self.limit.clone(),
             "--gate".to_string(),

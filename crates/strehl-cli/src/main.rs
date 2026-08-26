@@ -44,8 +44,41 @@ enum Command {
         limit: Option<usize>,
     },
 
-    /// Stack a directory of RAW files into one image, by noise-gated
-    /// ESTIMATION. This is the default path and the thing strehl is for.
+    /// Stack a directory of RAW files into one image.
+    ///
+    /// TWO MERGES LIVE HERE AND --merge PICKS ONE.
+    ///
+    ///   pyramid   (DEFAULT) A Laplacian multi-band merge. Selection happens
+    ///             per band and per coefficient, not per pixel, so a depth
+    ///             boundary is a transition inside each band's own frequency
+    ///             range instead of a step in the image. The selection exponent
+    ///             ramps with scale: near winner-take-all in the fine bands,
+    ///             where all the acuity is and where a wrong pick is one
+    ///             high-frequency coefficient nobody can see, and gently
+    ///             blended in the coarse bands, where a wrong pick IS the
+    ///             "cut-out sticker" rim. Every good render in this project's
+    ///             research corpus came from this merge; until it was wired
+    ///             here it was reachable only from an example binary that
+    ///             ships nothing.
+    ///
+    ///   estimator The regularised-winner, noise-gated merge described below.
+    ///             It is what `strehl stack` did before --merge existed and
+    ///             `--merge estimator` is byte-identical to it. Every quality
+    ///             number in the corpus was measured on it. It is kept
+    ///             reachable because a default chosen over an alternative is
+    ///             only a measurement while the alternative can still be run.
+    ///
+    /// STREHL_MERGE=pyramid|estimator does the same for a harness that cannot
+    /// edit the command line; the flag wins. An unrecognised value in either
+    /// channel is an ERROR, never a silent fall back to the other merge.
+    ///
+    /// The estimator-only flags -- --gate, --target-n-eff, --index-map,
+    /// --n-eff-map, --photometric, --stats, --flat-roi, --detail-roi -- are
+    /// REFUSED under the pyramid backend rather than accepted and ignored. A
+    /// flag that parses and does nothing is indistinguishable from one that
+    /// works, and this project has shipped that failure before.
+    ///
+    /// WHAT THE ESTIMATOR BACKEND DOES, by noise-gated ESTIMATION:
     ///
     /// Two passes. Pass one elects a winner per pixel from a 17x17-REGULARISED
     /// focus field. Pass two averages every frame whose regularised response the
@@ -108,6 +141,60 @@ enum Command {
         /// Stack at most this many frames, in filename order.
         #[arg(short, long)]
         limit: Option<usize>,
+        /// Which merge produces the pixels: `pyramid` (the default) or
+        /// `estimator`. See this subcommand's help for what each one is.
+        ///
+        /// STREHL_MERGE does the same for a harness that cannot edit the
+        /// command line; this flag wins. An unrecognised value is an error in
+        /// either channel -- neither can mean a backend by accident.
+        #[arg(long = "merge", value_name = "BACKEND")]
+        merge_backend: Option<String>,
+        /// Number of Laplacian bands in the `pyramid` merge.
+        ///
+        /// Deeper means the coarsest band is coarser, so overall tone is
+        /// carried further from the pixel grid. Too shallow and the base band
+        /// still holds structure: `--pyramid-bands 2` keeps acuity but loses
+        /// the darkest densities -- grey ink instead of black.
+        #[arg(long, value_name = "N")]
+        pyramid_bands: Option<usize>,
+        /// Multiples of the modelled band-noise power a coefficient's local
+        /// energy must exceed before it may influence selection, in the
+        /// `pyramid` merge. Below it NO frame wins and the merge averages.
+        ///
+        /// NOT the same quantity as --gate, which is the estimator's threshold
+        /// on a focus field in units of focus noise. They are different numbers
+        /// on different scales and must not be transferred between backends.
+        #[arg(long, value_name = "F")]
+        pyramid_gate: Option<f32>,
+        /// Selection exponent at the COARSEST band of the `pyramid` merge; the
+        /// floor of the per-octave ramp, not a single global value.
+        #[arg(long, value_name = "F")]
+        pyramid_exponent: Option<f32>,
+        /// How much sharper selection is per octave toward the fine bands, in
+        /// the `pyramid` merge. 1.0 disables the ramp and restores a single
+        /// global exponent.
+        #[arg(long, value_name = "F")]
+        pyramid_sharpen: Option<f32>,
+        /// Selection rule for the `pyramid` merge: `soft` (the default, a
+        /// convex combination weighted by excess band power) or `hard-max`
+        /// (the textbook PMax argmax).
+        ///
+        /// `hard-max` is a CONTROL ARM, not an option to ship: it inherits one
+        /// frame's noise everywhere and can take adjacent coefficients from
+        /// opposite-signed frames, which is ringing.
+        #[arg(long, value_name = "MODE")]
+        pyramid_select: Option<String>,
+        /// How the `pyramid` merge combines the coarsest residual, the band
+        /// that carries overall tone: `mean` (the default) or `weighted`.
+        ///
+        /// MEASURED on flower-bud-alone-cpl: weighting the base band cost
+        /// -475.0 DN of global level and 835.0 DN of position-dependent
+        /// structure, against +11.0 DN and 45.0 DN for the mean, with no
+        /// difference in aura removal between them. `weighted` is kept
+        /// reachable because a default chosen by measurement needs the arm it
+        /// beat to remain runnable.
+        #[arg(long, value_name = "MODE")]
+        pyramid_base: Option<String>,
         /// Render for viewing: camera colour matrix (to sRGB/BT.709 primaries,
         /// D65) then the sRGB transfer curve. For looking at, NOT for
         /// measuring. Changes what pre-M85 --srgb emitted.
@@ -272,7 +359,10 @@ enum Command {
         /// the reported mean n_eff -- the gate that gives a chosen n_eff varies
         /// 28.9x across the corpus (MEASURED, M52), so a gate is not portable
         /// between stacks and a default is a starting point, not a calibration.
-        #[arg(long = "gate", value_name = "T", num_args = 1.., default_values_t = [DEFAULT_GATE])]
+        ///
+        /// ESTIMATOR BACKEND ONLY. Under `--merge pyramid` this is refused, not
+        /// ignored. Omitting it entirely means DEFAULT_GATE, exactly as before.
+        #[arg(long = "gate", value_name = "T", num_args = 1..)]
         gates: Vec<f32>,
         /// Low-detail region for the noise invariant, in PLANE coordinates
         /// (half sensor resolution).
@@ -586,6 +676,13 @@ fn main() -> Result<()> {
             dir,
             out,
             limit,
+            merge_backend,
+            pyramid_bands,
+            pyramid_gate,
+            pyramid_exponent,
+            pyramid_sharpen,
+            pyramid_select,
+            pyramid_base,
             srgb,
             linear_srgb,
             demosaic,
@@ -620,6 +717,65 @@ fn main() -> Result<()> {
                 unsafe { std::env::set_var(strehl_core::optics::CA_ENV, key) };
             }
 
+            // Resolved here, alongside `resampler` and `photometric`, so that
+            // an unrecognised spelling is one error in one place.
+            let backend = merge_cmd::resolve_merge_backend(merge_backend.as_deref())?;
+
+            // A flag belonging to the other backend is REFUSED, not ignored.
+            // The failure this guards against is the one the whole switch
+            // exists to escape: a flag that parses, prints nothing, and does
+            // nothing is indistinguishable at the terminal from one that
+            // works. Each entry pairs the user's spelling with whether they
+            // actually passed it, so a default can never trip the refusal.
+            let wrong_backend: &[(&str, bool, merge_cmd::MergeBackend)] = &[
+                ("--gate", !gates.is_empty(), merge_cmd::MergeBackend::Pyramid),
+                ("--target-n-eff", target_n_eff.is_some(), merge_cmd::MergeBackend::Pyramid),
+                ("--index-map", index_map.is_some(), merge_cmd::MergeBackend::Pyramid),
+                ("--n-eff-map", n_eff_map.is_some(), merge_cmd::MergeBackend::Pyramid),
+                ("--photometric", photometric.is_some(), merge_cmd::MergeBackend::Pyramid),
+                ("--stats", stats, merge_cmd::MergeBackend::Pyramid),
+                ("--stats-placebo", stats_placebo, merge_cmd::MergeBackend::Pyramid),
+                ("--flat-roi", flat_roi.is_some(), merge_cmd::MergeBackend::Pyramid),
+                ("--detail-roi", detail_roi.is_some(), merge_cmd::MergeBackend::Pyramid),
+                ("--pyramid-bands", pyramid_bands.is_some(), merge_cmd::MergeBackend::Estimator),
+                ("--pyramid-gate", pyramid_gate.is_some(), merge_cmd::MergeBackend::Estimator),
+                ("--pyramid-exponent", pyramid_exponent.is_some(), merge_cmd::MergeBackend::Estimator),
+                ("--pyramid-sharpen", pyramid_sharpen.is_some(), merge_cmd::MergeBackend::Estimator),
+                ("--pyramid-select", pyramid_select.is_some(), merge_cmd::MergeBackend::Estimator),
+                ("--pyramid-base", pyramid_base.is_some(), merge_cmd::MergeBackend::Estimator),
+            ];
+            for (flag, given, refused_under) in wrong_backend {
+                anyhow::ensure!(
+                    !(*given && backend == *refused_under),
+                    "{flag} belongs to the {} merge, and --merge selected {}. Pass --merge {} \
+                     to use it, or drop {flag}. It is refused rather than ignored because a \
+                     flag that silently does nothing looks exactly like one that works.",
+                    refused_under.other().name(),
+                    backend.name(),
+                    refused_under.other().name(),
+                );
+            }
+
+            let mut pyramid = strehl_core::pyramid::MergeConfig::default();
+            if let Some(v) = pyramid_bands {
+                pyramid.bands = v;
+            }
+            if let Some(v) = pyramid_gate {
+                pyramid.gate = v;
+            }
+            if let Some(v) = pyramid_exponent {
+                pyramid.exponent = v;
+            }
+            if let Some(v) = pyramid_sharpen {
+                pyramid.sharpen_per_octave = v;
+            }
+            if let Some(v) = &pyramid_select {
+                pyramid.select = merge_cmd::parse_select_mode(v)?;
+            }
+            if let Some(v) = &pyramid_base {
+                pyramid.base = merge_cmd::parse_base_band(v)?;
+            }
+
             merge_cmd::run(&MergeOptions {
             dir,
             out,
@@ -639,7 +795,15 @@ fn main() -> Result<()> {
             demosaic: demosaic || (srgb && !binned),
             exposure,
             auto_exposure,
-            gates,
+            // Filled in here rather than by clap, so that "the user passed a
+            // gate" and "the user did not" stay distinguishable above. An
+            // estimator run that omits --gate is unchanged: it still folds
+            // DEFAULT_GATE and exactly that.
+            gates: if gates.is_empty() {
+                vec![DEFAULT_GATE]
+            } else {
+                gates
+            },
             flat_roi,
             detail_roi,
             index_map,
@@ -656,6 +820,8 @@ fn main() -> Result<()> {
             // uses, so an unknown name is one error message in one place and
             // never a silent fall back to the default.
             resampler: align_cmd::parse_resampler(&resampler)?,
+            backend,
+            pyramid,
         })
         }
     }

@@ -194,6 +194,31 @@ REGISTRY: dict[str, Declared] = {
         evidence="focus.rs:101 (WINDOW_RADIUS_ENV)",
         note="Focus-measure window radius. Unset uses the shipped WINDOW_RADIUS=13.",
     ),
+    "STREHL_MERGE": Declared(
+        kind="quality",
+        default="pyramid",
+        verified="measured",
+        evidence="merge_cmd.rs (MERGE_BACKEND_ENV, resolve_merge_backend, "
+        "`_ => Ok(MergeBackend::default())` with `#[default] Pyramid`); "
+        "main.rs (--merge, and the wrong-backend refusal table)",
+        note=(
+            "WHICH MERGE PRODUCES THE PIXELS. `pyramid` or `estimator`, and an "
+            "unrecognised value is a hard error in BOTH the flag and the env "
+            "channel -- neither can mean a backend by accident. THE DEFAULT IS "
+            "pyramid, the Laplacian multi-band merge. It is reachable-by-"
+            "default rather than dark, which is the whole point of the switch: "
+            "`strehl_core::pyramid` was 1898 lines of compiled, tested code "
+            "that no shipped binary could reach, while every good render in "
+            "the research corpus came from it through an EXAMPLE that ships "
+            "nothing. MEASURED, not read: unset and with no flag, `strehl "
+            "stack --srgb` on flower-bud-alone-cpl (205 frames) emits sha256 "
+            "F8A49C0A... where `--merge estimator` emits CA8C9E3E..., so the "
+            "default demonstrably selects the pyramid arm on a full stack. "
+            "`--merge estimator` is byte-identical to the pre-switch binary on "
+            "all three write branches, so the arm the default was chosen over "
+            "is still exactly runnable."
+        ),
+    ),
     # ---------------- control ----------------
     "STREHL_SOFT_GATE": Declared(
         kind="control",
@@ -244,6 +269,34 @@ REGISTRY: dict[str, Declared] = {
         default="platform default",
         evidence="align_cmd.rs:1058",
         note="Alignment sidecar cache location. Infrastructure, not quality.",
+    ),
+    "STREHL_PYRAMID_WORKERS": Declared(
+        kind="control",
+        default="solved from the memory budget alone",
+        verified="measured",
+        evidence="merge_cmd.rs (BAND_WORKERS_ENV, band_workers); "
+        "MEMORY_BUDGET_BYTES at stack.rs:50",
+        note=(
+            "Worker count for the pyramid merge's fold. Unset it is "
+            "min(MEMORY_BUDGET_BYTES / per-worker bytes, frames) -- 5 on the "
+            "205-frame flower stack at 1070 MB per worker against the 6144 MB "
+            "budget. Infrastructure, not quality: it chooses how the fold is "
+            "partitioned and nothing else. IT NONETHELESS MOVES THE OUTPUT "
+            "BYTES, which was measured rather than assumed and is the reason "
+            "this entry exists in the shape it does: float addition is not "
+            "associative and `BandMerge::absorb` sums the per-worker "
+            "accumulators, so a different worker count is a different "
+            "reduction order. On flower-bud-alone-cpl, 2 workers against 7 "
+            "differ on 0.2573% of pixels at max |delta| = 1 DN with ZERO "
+            "pixels above 1 DN -- last-bit rounding, against a control on the "
+            "same pair of images (the two backends) of 99.9895% of pixels and "
+            "a mean of 1820 DN. Because of this, the default deliberately does "
+            "NOT consult available_parallelism(): every input to it is a "
+            "property of the build and the stack, never of the host, so the "
+            "shipped default merge is reproducible across machines. Setting "
+            "this variable therefore leaves the byte-freeze net; that is what "
+            "it is for."
+        ),
     ),
     "STREHL_CAPTURES": Declared(
         kind="control",

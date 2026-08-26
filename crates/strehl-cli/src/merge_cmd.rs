@@ -52,6 +52,10 @@ use strehl_core::focus::FocusField;use strehl_core::merge::{
 use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
 use strehl_core::profile;
+use strehl_core::pyramid::{
+    BandMerge, BaseBand, FrameWorkspace, MergeConfig, SelectMode, Workspace, level_sizes,
+    luma_variance,
+};
 use strehl_core::stack::{DEFAULT_SPECKLE_TOLERANCE as SPECKLE_TOLERANCE, speckle_fraction};
 use strehl_core::through_focus::{
     ConfidenceVector, FINE_FOCUS_NOISE_SD, FLAG_BIMODAL, FLAG_BRACKET_BOUNDARY,
@@ -202,6 +206,119 @@ pub struct MergeOptions {
     /// which [`alignment_for`] says out loud rather than silently ignoring the
     /// flag.
     pub resampler: Resampler,
+    /// Which merge actually produces the pixels.
+    ///
+    /// Resolved in `main.rs` from `--merge` / [`MERGE_BACKEND_ENV`] so that an
+    /// unrecognised spelling is one error in one place, exactly as
+    /// [`resolve_photometric_mode`] does it.
+    pub backend: MergeBackend,
+    /// Configuration for [`MergeBackend::Pyramid`]. Ignored, and REFUSED by
+    /// `main.rs` rather than ignored silently, under the other backend.
+    pub pyramid: MergeConfig,
+}
+
+/// Which merge produces the merged pixels.
+///
+/// Two merges exist in this tree and until now only one of them was reachable
+/// from the binary. The Laplacian multi-band merge lived in
+/// `crates/strehl-cli/examples/blend-render.rs`, which ships nothing, and is
+/// what every good render in the research corpus was made with. This enum is
+/// what connects it to `strehl stack`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum MergeBackend {
+    /// [`strehl_core::pyramid`]: a Laplacian multi-band merge. **THE DEFAULT.**
+    ///
+    /// Selection happens per band and per coefficient rather than per pixel, so
+    /// a depth boundary is a transition in each band's own frequency rather
+    /// than a step in the image, and the coarse bands -- where the eye reads
+    /// the "cut-out sticker" rim -- stay gently blended while the fine bands,
+    /// where acuity lives, run near winner-take-all.
+    #[default]
+    Pyramid,
+    /// [`strehl_core::merge`]: the regularised-winner, noise-gated estimator.
+    ///
+    /// **Kept reachable on purpose.** It is what shipped before this flag
+    /// existed, every quality number in the corpus was measured on it, and a
+    /// default chosen over an alternative is only a measurement while the
+    /// alternative can still be run. `--merge estimator` is byte-identical to
+    /// what `strehl stack` did before the backend switch existed.
+    Estimator,
+}
+
+impl MergeBackend {
+    /// Parse a backend name. **An unrecognised value is an error**, in either
+    /// channel, for the same reason `--photometric` refuses one: a merge that
+    /// silently fell back to the other merge is indistinguishable, from the
+    /// terminal, from one that did what was asked.
+    pub fn parse(v: &str) -> Result<Self> {
+        match v.trim().to_ascii_lowercase().as_str() {
+            "pyramid" | "bands" | "blend" => Ok(Self::Pyramid),
+            "estimator" | "merge" | "legacy" => Ok(Self::Estimator),
+            other => bail!(
+                "unknown merge backend {other:?}; valid values are `pyramid` (the default, the \
+                 Laplacian multi-band merge) and `estimator` (the regularised-winner noise-gated \
+                 merge that shipped before)"
+            ),
+        }
+    }
+
+    /// The spelling `--merge` accepts for this backend, and the one the
+    /// refusal messages quote back, so a message can never name a value the
+    /// parser would reject.
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Pyramid => "pyramid",
+            Self::Estimator => "estimator",
+        }
+    }
+
+    /// The other backend. Used to name the one a refused flag belongs to.
+    pub fn other(self) -> Self {
+        match self {
+            Self::Pyramid => Self::Estimator,
+            Self::Estimator => Self::Pyramid,
+        }
+    }
+}
+
+/// Env-var twin of `--merge`, for A/B harnesses that cannot edit argv.
+pub const MERGE_BACKEND_ENV: &str = "STREHL_MERGE";
+
+/// Resolve the merge backend from the flag and the environment.
+///
+/// Precedence and rigour are copied deliberately from
+/// [`resolve_photometric_mode`]: `--merge` wins, then [`MERGE_BACKEND_ENV`],
+/// then the default. **Neither channel may mean a backend by accident** -- an
+/// unrecognised spelling is an error and not a silent fall back, because the
+/// whole point of this switch is that which merge ran must be knowable.
+pub fn resolve_merge_backend(flag: Option<&str>) -> Result<MergeBackend> {
+    if let Some(v) = flag {
+        return MergeBackend::parse(v).with_context(|| format!("reading --merge {v:?}"));
+    }
+    match std::env::var(MERGE_BACKEND_ENV) {
+        Ok(v) if !v.trim().is_empty() => MergeBackend::parse(&v)
+            .with_context(|| format!("reading {MERGE_BACKEND_ENV}={v:?}")),
+        // Unset, empty, or not valid UTF-8: the default.
+        _ => Ok(MergeBackend::default()),
+    }
+}
+
+/// Parse `--pyramid-select`. Unknown spellings are errors, not defaults.
+pub fn parse_select_mode(v: &str) -> Result<SelectMode> {
+    match v.trim().to_ascii_lowercase().as_str() {
+        "soft" | "soft-power" | "softpower" => Ok(SelectMode::SoftPower),
+        "hard" | "hard-max" | "hardmax" | "pmax" => Ok(SelectMode::HardMax),
+        other => bail!("unknown --pyramid-select {other:?}; valid values are `soft` and `hard-max`"),
+    }
+}
+
+/// Parse `--pyramid-base`. Unknown spellings are errors, not defaults.
+pub fn parse_base_band(v: &str) -> Result<BaseBand> {
+    match v.trim().to_ascii_lowercase().as_str() {
+        "mean" => Ok(BaseBand::Mean),
+        "weighted" | "weighted-from-coarsest" => Ok(BaseBand::WeightedFromCoarsest),
+        other => bail!("unknown --pyramid-base {other:?}; valid values are `mean` and `weighted`"),
+    }
 }
 
 /// The outcome of solving a measured gate ladder for a target mean `n_eff`.
@@ -2040,7 +2157,21 @@ fn write_n_eff_map(path: &Path, n_eff: &[u16], frames: u32, geom: PlaneGeometry)
     Ok(())
 }
 
+/// Run the merge the options selected.
+///
+/// **The dispatch is the point.** Both merges are compiled and both are
+/// reachable; which one ran is decided here, printed on stderr by the arm that
+/// runs, and settable from one flag. Before this existed, `pyramid` was 1898
+/// lines of compiled, tested, unreachable code and `blend-render` -- an example
+/// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
+    match opts.backend {
+        MergeBackend::Pyramid => run_pyramid(opts),
+        MergeBackend::Estimator => run_estimator(opts),
+    }
+}
+
+fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // Same reason as the --n-eff-map refusal below: fail on configuration
     // before a frame is read. An invalid STREHL_FIX_CA otherwise surfaces only
     // after the first decode (53.4 s), which reads as a slow arm in a matrix.
@@ -3129,8 +3260,10 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
 
     if let Some(path) = &opts.out {
         write_merged(
-            &p2.est[0],
-            halo_fix.as_ref(),
+            Merged::Estimated {
+                est: &p2.est[0],
+                halo: halo_fix.as_ref(),
+            },
             levels,
             wb,
             xyz_to_cam.as_ref(),
@@ -3140,6 +3273,594 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             path,
         )?;
     }
+    Ok(())
+}
+
+/// The number of CFA planes the band merge carries, and the order it carries
+/// them in: `R`, `G1`, `G2`, `B` -- RGGB, matching `CfaPlane::rggb_at`.
+///
+/// Deliberately NOT `CfaPlane::ALL`, which is `[R, G1, B, G2]`. Both orders are
+/// self-consistent; what matters is that the order the planes are folded in is
+/// the order [`band_slot`] reads them back out in, and stating it once here is
+/// what makes that checkable.
+const BAND_PLANES: usize = 4;
+
+/// `(dx, dy)` of each plane inside the 2x2 quad, in [`BAND_PLANES`] order.
+const BAND_PLANE_OFFSETS: [(usize, usize); BAND_PLANES] = [(0, 0), (1, 0), (0, 1), (1, 1)];
+
+/// Which slot of a [`BandMerge`] output holds a given CFA site.
+const fn band_slot(p: CfaPlane) -> usize {
+    match p {
+        CfaPlane::R => 0,
+        CfaPlane::G1 => 1,
+        CfaPlane::G2 => 2,
+        CfaPlane::B => 3,
+    }
+}
+
+/// A merged image ready to be developed, whichever backend produced it.
+///
+/// **Both variants answer in black-subtracted, non-negative DN.** That is the
+/// one convention the write path needs and the one place the two backends
+/// disagreed: the estimator accumulates raw sensor DN and the black level comes
+/// off at the write, while the band merge folds planes that were
+/// black-subtracted at decode and has nothing left to subtract. Pushing the
+/// subtraction behind this enum is what lets **one** develop path -- one
+/// exposure rule, one colour matrix, one set of caveats -- serve both, instead
+/// of a second copy of the arithmetic that can drift from the first. The
+/// example this merge came from carries exactly such a copy, with a comment
+/// saying it "must stay that way".
+///
+/// The estimator's arithmetic is unchanged: `(raw - black).max(0.0)` happens
+/// here rather than three lines later, in the same order, so the byte-frozen
+/// measurement branch below still emits the bytes M85 proved.
+enum Merged<'a> {
+    /// [`MergeBackend::Estimator`] output, with its optional halo correction.
+    Estimated {
+        est: &'a Estimator,
+        halo: Option<&'a halo::Fix>,
+    },
+    /// [`MergeBackend::Pyramid`] output: four collapsed planes in
+    /// [`BAND_PLANES`] order on the quad grid.
+    Bands {
+        geom: PlaneGeometry,
+        planes: &'a [Vec<f32>],
+    },
+}
+
+impl Merged<'_> {
+    fn geometry(&self) -> PlaneGeometry {
+        match self {
+            Self::Estimated { est, .. } => est.geometry(),
+            Self::Bands { geom, .. } => *geom,
+        }
+    }
+
+    /// Black-subtracted, non-negative value at CFA site `p` of quad `i`.
+    fn value(&self, p: CfaPlane, i: usize, black: f32) -> f32 {
+        match self {
+            Self::Estimated { est, halo } => {
+                let raw = match halo {
+                    Some(h) => h.value(est, p, i),
+                    None => est.value(p, i),
+                };
+                (raw - black).max(0.0)
+            }
+            Self::Bands { planes, .. } => planes[band_slot(p)][i].max(0.0),
+        }
+    }
+
+    /// Black-subtracted, non-negative mean of the quad's two green sites.
+    ///
+    /// The clamp is applied to the *mean*, not to each site, on both arms: that
+    /// is what the estimator has always done and the two must agree, or the
+    /// binned render and the demosaiced render of one image would disagree
+    /// about green in the shadows.
+    fn green_mean(&self, i: usize, black: f32) -> f32 {
+        match self {
+            Self::Estimated { est, halo } => {
+                let raw = match halo {
+                    Some(h) => h.green_mean(est, i),
+                    None => est.green_mean(i),
+                };
+                (raw - black).max(0.0)
+            }
+            Self::Bands { planes, .. } => {
+                (0.5 * (planes[band_slot(CfaPlane::G1)][i] + planes[band_slot(CfaPlane::G2)][i]))
+                    .max(0.0)
+            }
+        }
+    }
+}
+
+/// One worker's per-frame buffers for the band merge, allocated once per chunk.
+struct BandWorker {
+    merge: BandMerge,
+    fws: FrameWorkspace,
+    warp: WarpScratch,
+    planes: Vec<Vec<f32>>,
+    luma: Vec<f32>,
+    var: Vec<f32>,
+}
+
+impl BandWorker {
+    fn new(geom: PlaneGeometry, cfg: MergeConfig) -> Self {
+        let sizes = level_sizes(geom.width, geom.height, cfg.bands);
+        let px = geom.pixels();
+        Self {
+            merge: BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg),
+            fws: FrameWorkspace::new(&sizes, BAND_PLANES),
+            warp: WarpScratch::new(geom),
+            planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
+            luma: vec![0.0; px],
+            var: vec![0.0; px],
+        }
+    }
+
+    /// Decode, register and fold one frame. `false` means the alignment solve
+    /// refused this frame, so it was skipped rather than merged unregistered.
+    fn fold(
+        &mut self,
+        path: &Path,
+        index: usize,
+        geom: PlaneGeometry,
+        levels: Levels,
+        noise: &NoiseModel,
+        warps: Option<&WarpMap>,
+    ) -> Result<bool> {
+        let mut frame = strehl_raw::decode(path).with_context(|| format!("frame {index}"))?;
+        ensure!(
+            frame.levels == levels,
+            "frame {index} has levels black {} white {}, but the stack was calibrated at \
+             black {} white {}",
+            frame.levels.black,
+            frame.levels.white,
+            levels.black,
+            levels.white
+        );
+        if let Some(map) = warps {
+            match map.warp(index)? {
+                FrameWarp::Placed(t) => {
+                    align_cmd::warp_frame_in_place(
+                        &mut frame,
+                        *t,
+                        geom,
+                        map.resampler(),
+                        &mut self.warp,
+                    )?;
+                }
+                // The solve could not connect this frame to the bracket, so its
+                // geometry is unknown and folding it would put mis-registered
+                // data into the merge.
+                FrameWarp::Refused(_) => return Ok(false),
+            }
+        }
+
+        let black = levels.black;
+        let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
+        let (gw, gh) = (geom.width, geom.height);
+        for (p, (dx, dy)) in BAND_PLANE_OFFSETS.iter().enumerate() {
+            let out = &mut self.planes[p];
+            for py in 0..gh {
+                let row = (ay + 2 * py + dy) * stride + ax + dx;
+                let dst = &mut out[py * gw..py * gw + gw];
+                for (px, o) in dst.iter_mut().enumerate() {
+                    *o = (f32::from(frame.data[row + 2 * px]) - black).max(0.0);
+                }
+            }
+        }
+        drop(frame);
+
+        // Green luma, `L = (G1 + G2) / 2`, exactly as `plane::green_luma`
+        // computes it -- the same plane the estimator's election runs on.
+        // Selecting on green only is what keeps chroma noise out of the
+        // decision.
+        for i in 0..self.luma.len() {
+            self.luma[i] = 0.5 * (self.planes[1][i] + self.planes[2][i]);
+        }
+        luma_variance(&self.luma, noise, &mut self.var);
+
+        let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
+        self.fws.next_frame();
+        self.merge
+            .add_frame(&refs, &self.luma, &self.var, &mut self.fws);
+        Ok(true)
+    }
+}
+
+/// Env twin of `--pyramid-workers`, and the only way to raise the fold's
+/// parallelism on a machine with more RAM than the budget assumes.
+const BAND_WORKERS_ENV: &str = "STREHL_PYRAMID_WORKERS";
+
+/// How many workers the band merge's fold gets.
+///
+/// Each worker holds a whole accumulator plus one frame's working set, which is
+/// hundreds of megabytes, so defaulting to the core count would ask for tens of
+/// gigabytes. Solved against the same [`MEMORY_BUDGET_BYTES`] the estimator's
+/// plan uses rather than against a hardcoded 3, which is what the example did.
+///
+/// # Why the core count is deliberately not an input
+///
+/// This started as `by_memory.min(available_parallelism()).min(frames)`, and
+/// that was wrong for a reason worth writing down, because it was measured
+/// rather than reasoned about.
+///
+/// The worker count sets how the fold is partitioned, and `BandMerge::absorb`
+/// sums the per-worker accumulators. Float addition is not associative, so a
+/// different worker count is a different reduction order and a different image.
+/// Measured on flower-bud-alone-cpl, 205 frames: 2 workers against 7 differ on
+/// 0.2573% of pixels, `max |delta| = 1 DN`, and *zero* pixels differ by more
+/// than 1 DN. So the effect is last-bit rounding and nothing a viewer could
+/// ever see -- but it is not nothing, because this repository's regression net
+/// is a byte-freeze, and because the same measurement on the two backends
+/// returns 99.9895% of pixels and a mean of 1820 DN, which is what a difference
+/// that matters actually looks like.
+///
+/// `available_parallelism()` varies by machine. Leaving it in the default would
+/// have meant the shipped default merge produced different bytes on a laptop
+/// and a workstation, which is a bad property to hand a user and a worse one to
+/// hand a byte-freeze. Every remaining input -- the budget constant, the
+/// per-worker size implied by the plane geometry, the frame count -- is a
+/// property of the build and the stack, not of the host.
+///
+/// Nothing is lost on a machine with fewer cores than workers: the workers are
+/// rayon tasks, so a core-poor host simply runs them in more passes, and peak
+/// memory is bounded by however many are genuinely in flight, which is at most
+/// this many and possibly fewer.
+fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
+    if let Ok(v) = std::env::var(BAND_WORKERS_ENV)
+        && !v.trim().is_empty()
+    {
+        let n: usize = v
+            .trim()
+            .parse()
+            .with_context(|| format!("reading {BAND_WORKERS_ENV}={v:?}"))?;
+        ensure!(n >= 1, "{BAND_WORKERS_ENV} must be at least 1");
+        return Ok(n.min(frames.max(1)));
+    }
+    let by_memory = (MEMORY_BUDGET_BYTES / per_worker_bytes.max(1)).max(1);
+    Ok(by_memory.min(frames.max(1)))
+}
+
+/// `strehl stack --merge pyramid`: the Laplacian multi-band merge, on the
+/// shipped path.
+///
+/// This is the merge every good render in this project's corpus came from. It
+/// was reachable only from `crates/strehl-cli/examples/blend-render.rs` -- an
+/// example, which ships nothing -- and this function is that example's fold
+/// wired to the real command, the real registration and the real develop path.
+///
+/// # What it does that the estimator does not
+///
+/// Selection is per band and per coefficient rather than per pixel. A depth
+/// boundary therefore becomes a transition inside each band's own frequency
+/// range instead of a step in the image, and the exponent ramps with scale, so
+/// the fine bands run near winner-take-all (all the acuity, and a wrong pick
+/// there is one invisible high-frequency coefficient) while the coarse bands
+/// stay gently blended (a wrong pick there IS the "cut-out sticker" rim).
+///
+/// # What it does NOT do, stated because it is a real difference
+///
+/// * **No photometric normalisation.** `--photometric` is the estimator's, and
+///   `main.rs` refuses the pair rather than accepting a flag it would ignore.
+/// * **No clip census, no outlier rejection, no halo correction, and no
+///   through-focus statistics.** Those are stages of the estimator path and
+///   none of them is what this arm is.
+/// * **No gate ladder.** Its gate is a band-power threshold, not the
+///   estimator's focus-noise gate, and the two are not the same number.
+fn run_pyramid(opts: &MergeOptions) -> Result<()> {
+    // Ask once, up front, and throw the answer away. `warp_frame_in_place`
+    // re-reads the profile per frame, so a typo'd STREHL_FIX_CA would otherwise
+    // surface only after a full decode.
+    align_cmd::preflight_ca_profile()?;
+    let cfg = opts.pyramid;
+    ensure!(cfg.bands >= 1, "--pyramid-bands must be at least 1");
+    ensure!(
+        cfg.gate.is_finite() && cfg.gate >= 0.0,
+        "--pyramid-gate must be finite and non-negative"
+    );
+    ensure!(
+        cfg.exponent.is_finite() && cfg.exponent > 0.0,
+        "--pyramid-exponent must be finite and positive"
+    );
+    ensure!(
+        cfg.sharpen_per_octave.is_finite() && cfg.sharpen_per_octave >= 1.0,
+        "--pyramid-sharpen must be finite and at least 1.0 (1.0 disables the ramp)"
+    );
+    // Same rule and same reason as the estimator arm: a viewing control asked
+    // for without --srgb is an error, refused before a frame is read, because a
+    // user who believes they brightened the measurement file and did not has no
+    // way to find out.
+    let exposure = Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
+
+    let t_start = Instant::now();
+    let paths = crate::raw_paths(&opts.dir, opts.limit)?;
+    let paths = only_frame(paths);
+    ensure!(
+        paths.len() < u16::MAX as usize,
+        "{} frames exceeds the u16 frame-index range",
+        paths.len()
+    );
+
+    let t_prologue = Instant::now();
+    let first = strehl_raw::decode(&paths[0]).context("decoding the first frame")?;
+    let prologue_secs = t_prologue.elapsed().as_secs_f64();
+    let geom = first.geometry();
+    let levels = first.levels;
+    let camera = first.camera.clone();
+    let iso = first.iso;
+    let wb = first.wb_gains();
+    let xyz_to_cam = first.xyz_to_cam_rgb_with_source();
+    let frame_bytes = first.allocated_bytes();
+    drop(first);
+
+    let noise = profile::noise_model_for(&camera, iso, levels);
+    let sizes = level_sizes(geom.width, geom.height, cfg.bands);
+
+    eprintln!(
+        "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid, THE DEFAULT since it was \
+         wired)"
+    );
+    eprintln!("camera          : {camera}");
+    eprintln!(
+        "lateral CA      : {}",
+        match std::env::var(strehl_core::optics::CA_ENV) {
+            Ok(k) if !k.is_empty() && k != "0" => format!("CORRECTING, profile {k:?}"),
+            _ => "off (--fix-ca / STREHL_FIX_CA unset)".to_string(),
+        }
+    );
+    eprintln!(
+        "iso             : {}",
+        iso.map(|v| format!("{v:.0}")).unwrap_or("UNKNOWN".into())
+    );
+    eprintln!(
+        "levels          : black {}, white {}",
+        levels.black, levels.white
+    );
+    eprintln!("{}", provenance_line(&noise));
+    eprintln!(
+        "frames          : {} from {}  (first decode {prologue_secs:.2} s)",
+        paths.len(),
+        opts.dir.display()
+    );
+    eprintln!(
+        "planes          : {} x {} per CFA plane",
+        geom.width, geom.height
+    );
+    eprintln!("--- the merge ---");
+    eprintln!(
+        "bands           : {} Laplacian levels + 1 base, coarsest {} x {}",
+        sizes.len() - 1,
+        sizes[sizes.len() - 1].width,
+        sizes[sizes.len() - 1].height
+    );
+    eprintln!(
+        "selection       : {}",
+        match cfg.select {
+            SelectMode::SoftPower =>
+                "SOFT -- weight = (band power above the noise floor)^exponent, a convex \
+                 combination.\n                  Sign coherence is free: a convex combination \
+                 cannot take adjacent\n                  coefficients from opposite-signed \
+                 frames, which is the ringing a\n                  coefficient-wise argmax \
+                 produces.",
+            SelectMode::HardMax =>
+                "HARD -- argmax of band power. THE CONTROL ARM, the textbook PMax rule.",
+        }
+    );
+    eprintln!(
+        "noise gate      : {:.2} x the modelled band-noise power. Below it, NO frame may win \
+         and the\n                  merge averages -- which is the correct estimator when there \
+         is no\n                  information, and the only operation that gets below \
+         single-frame noise.",
+        cfg.gate
+    );
+    eprintln!("exponent        : {:.2}", cfg.exponent);
+    eprintln!(
+        "per-band exp    : {}   (coarsest -> finest)",
+        (0..sizes.len() - 1)
+            .rev()
+            .map(|k| format!("{:.0}", cfg.exponent_at(k, sizes.len() - 1)))
+            .collect::<Vec<_>>()
+            .join(" ")
+    );
+    eprintln!(
+        "                  sharpness ramps {:.1}x per octave toward the fine bands. A wrong \
+         pick in a\n                  fine band is one high-frequency coefficient nobody can \
+         see; a wrong pick\n                  in a coarse band IS the rim.",
+        cfg.sharpen_per_octave
+    );
+    eprintln!(
+        "base band       : {}",
+        match cfg.base {
+            BaseBand::Mean => "plain mean across frames",
+            BaseBand::WeightedFromCoarsest =>
+                "weighted by the coarsest band's weight, reduced once onto the base grid",
+        }
+    );
+    eprintln!(
+        "not applied     : photometric gain, clip census, outlier rejection, halo correction, \
+         through-focus\n                  statistics. Those are the --merge estimator path's \
+         stages; this arm is the merge only."
+    );
+
+    // ---- registration -----------------------------------------------------
+    //
+    // The same resolver the estimator uses, so STREHL_WARPMAP, STREHL_ALIGN and
+    // --resampler behave identically on both arms and a sidecar solved for one
+    // is the sidecar the other gathers through.
+    let t_align = Instant::now();
+    let alignment = alignment_for(&opts.dir, &paths, opts.resampler)?;
+    let alignment = alignment.map(|(m, how)| {
+        let (m, k) = align_cmd::cover_or_explain(m);
+        (m, how, k)
+    });
+    match &alignment {
+        Some((map, how, k)) => {
+            let p = map.provenance();
+            eprintln!(
+                "alignment       : ON ({how}), reference frame {}, {} placed / {} refused, \
+                 {:.1} s",
+                p.reference,
+                map.placed_count(),
+                map.refused_count(),
+                t_align.elapsed().as_secs_f64()
+            );
+            eprintln!(
+                "  held-out err  : {}   resampler: {:?}",
+                p.heldout_px
+                    .map(|e| format!("{e:.3} px"))
+                    .unwrap_or("NOT MEASURED".into()),
+                map.resampler()
+            );
+            match k {
+                Some(k) if *k >= 0.999_999 => {
+                    eprintln!("  coverage      : every frame covers the whole grid; no crop needed")
+                }
+                Some(k) => eprintln!(
+                    "  coverage      : field of view scaled to {k:.4} so that EVERY frame covers \
+                     every pixel ({:.1}% of width dropped, then upsampled to keep the output \
+                     dimensions).",
+                    100.0 * (1.0 - k)
+                ),
+                None => eprintln!(
+                    "  coverage      : WARNING -- could not fit a fully covered grid; the render \
+                     may contain black regions where no frame reaches."
+                ),
+            }
+        }
+        None => eprintln!(
+            "alignment       : OFF -- frames are combined unregistered. M86 measured 232.7 px of \
+             drift on bee-3-cpl."
+        ),
+    }
+
+    // ---- the fold ---------------------------------------------------------
+    let acc_floats = BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg).accumulator_floats();
+    let ws_floats = FrameWorkspace::new(&sizes, BAND_PLANES).floats();
+    // The plane extraction buffers, the luma and the variance field, and one
+    // decoded frame, all of which are live at once inside `fold`.
+    let per_worker_bytes =
+        4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;
+    let workers = band_workers(per_worker_bytes, paths.len())?;
+    let per_chunk = paths.len().div_ceil(workers);
+    eprintln!(
+        "memory plan     : {workers} workers x {:.0} MB = {:.1} GB against a {} MB budget, \
+         CONSTANT in\n                  the frame count. The merge is a fold: every accumulator \
+         is a sum, so a\n                  frame is built, added and dropped. \
+         {BAND_WORKERS_ENV}=N overrides.",
+        per_worker_bytes as f64 / (1 << 20) as f64,
+        workers as f64 * per_worker_bytes as f64 / (1 << 30) as f64,
+        MEMORY_BUDGET_BYTES / (1 << 20),
+    );
+
+    let warps = alignment.as_ref().map(|(m, _, _)| m);
+    let t_fold = Instant::now();
+    let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
+    let parts: Vec<Result<(BandMerge, usize)>> = indexed
+        .par_chunks(per_chunk)
+        .map(|chunk| {
+            let mut w = BandWorker::new(geom, cfg);
+            let mut folded = 0usize;
+            for (i, p) in chunk {
+                if w.fold(p, *i, geom, levels, &noise, warps)? {
+                    folded += 1;
+                }
+            }
+            Ok((w.merge, folded))
+        })
+        .collect();
+
+    let mut merged: Option<BandMerge> = None;
+    let mut folded_total = 0usize;
+    for part in parts {
+        let (m, n) = part?;
+        folded_total += n;
+        match &mut merged {
+            Some(a) => a.absorb(&m),
+            None => merged = Some(m),
+        }
+    }
+    let merge = merged.context("no frames were folded")?;
+    ensure!(
+        folded_total > 0,
+        "every frame was refused by the alignment solve"
+    );
+    let fold_secs = t_fold.elapsed().as_secs_f64();
+    eprintln!();
+    eprintln!(
+        "folded          : {folded_total} / {} frames in {fold_secs:.1} s ({:.2} s per frame, \
+         {workers} workers)",
+        paths.len(),
+        fold_secs / folded_total as f64
+    );
+    eprintln!(
+        "band noise gain : {}",
+        merge
+            .band_gain()
+            .all()
+            .iter()
+            .map(|b| format!("{b:.4}"))
+            .collect::<Vec<_>>()
+            .join(" ")
+    );
+    eprintln!(
+        "                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)"
+    );
+    eprintln!(
+        "averaged        : {}",
+        merge
+            .averaged_fraction()
+            .iter()
+            .map(|f| format!("{:.1}%", 100.0 * f))
+            .collect::<Vec<_>>()
+            .join(" ")
+    );
+    eprintln!(
+        "                  per level, the fraction of coefficients where NO frame cleared the \
+         noise\n                  floor and the merge therefore averaged instead of selecting. \
+         Near 0%\n                  everywhere would mean the gate is not gating and this is a \
+         naive\n                  pyramid stacker."
+    );
+    eprintln!();
+
+    // ---- collapse and write ----------------------------------------------
+    let Some(path) = &opts.out else {
+        eprintln!(
+            "no --out        : nothing written. This arm has no measurement report of its own \
+             yet, so a\n                  run without --out only proves the fold completes."
+        );
+        eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
+        return Ok(());
+    };
+    let t_out = Instant::now();
+    let mut ws = Workspace::new(&sizes);
+    let planes = merge.finish(&mut ws);
+    drop(ws);
+    drop(merge);
+    ensure!(
+        planes.len() == BAND_PLANES,
+        "the band merge returned {} planes, not {BAND_PLANES}",
+        planes.len()
+    );
+
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent).ok();
+    }
+    write_merged(
+        Merged::Bands {
+            geom,
+            planes: &planes,
+        },
+        levels,
+        wb,
+        xyz_to_cam.as_ref(),
+        opts.space,
+        opts.demosaic,
+        exposure,
+        path,
+    )?;
+    eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
+    eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
     Ok(())
 }
 
@@ -4252,8 +4973,7 @@ const PLACEBO_SEED: u64 = 0x4D31_385E;
 
 #[allow(clippy::too_many_arguments)]
 fn write_merged(
-    est: &Estimator,
-    halo: Option<&halo::Fix>,
+    merged: Merged<'_>,
     levels: Levels,
     wb: Option<[f32; 3]>,
     xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
@@ -4268,21 +4988,21 @@ fn write_merged(
     // that name has not changed -- what changed is that the matrix no longer
     // rides on it.
     let srgb = space.applies_curve();
-    let geom = est.geometry();
+    let geom = merged.geometry();
     let n = geom.pixels();
-    // The only place the halo correction can reach. Untreated pixels fall
-    // straight through to the estimator, so `halo = None` and "treated nothing"
-    // produce the identical file.
-    let val = |p: CfaPlane, i: usize| match halo {
-        Some(h) => h.value(est, p, i),
-        None => est.value(p, i),
-    };
-    let gmean = |i: usize| match halo {
-        Some(h) => h.green_mean(est, i),
-        None => est.green_mean(i),
-    };
     let range = levels.range();
     ensure!(range > 0.0, "white level is not above black level");
+    let black = levels.black;
+    // The only place the halo correction can reach, and the only place the two
+    // backends' conventions are reconciled. Both return BLACK-SUBTRACTED,
+    // non-negative DN, so every `norm` below is one multiply and neither arm's
+    // convention leaks into it. For the estimator that is `(raw - black).max(0)`
+    // computed here instead of three lines later -- the same operations in the
+    // same order, which is what keeps the measurement branch byte-frozen.
+    // Untreated pixels fall straight through to the estimator, so `halo = None`
+    // and "treated nothing" produce the identical file.
+    let val = |p: CfaPlane, i: usize| merged.value(p, i, black);
+    let gmean = |i: usize| merged.green_mean(i, black);
     let gains = wb.unwrap_or([1.0, 1.0, 1.0]);
 
     // The colour matrix rides with `--srgb`, and only with `--srgb`. Both are
@@ -4355,7 +5075,7 @@ fn write_merged(
     // It reads through `val`/`gmean`, so with the halo correction on it
     // measures the pixels it is about to write, not a different image.
     let choose = || {
-        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        let norm = |v: f32, gain: f32| v * gain / range;
         let mut luma: Vec<f32> = (0..n)
             .map(|i| {
                 color::display_luminance(
@@ -4453,7 +5173,7 @@ fn write_merged(
         // -- see the binned branch below for why that is exact and not merely
         // convenient.
         let eg = applied.gain();
-        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
+        let norm = |v: f32, gain: f32| v * gain * eg / range;
         for py in 0..geom.height {
             let (top, bot) = mosaic[py * 2 * mw..].split_at_mut(mw);
             for px in 0..geom.width {
@@ -4495,7 +5215,7 @@ fn write_merged(
         // of scaling one already flattened to it. Folding it here is also what
         // lets the byte-frozen branch below stay textually untouched.
         let eg = applied.gain();
-        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
+        let norm = |v: f32, gain: f32| v * gain * eg / range;
         let mut lin = vec![0.0f32; n * 3];
         let (pixels, _) = lin.as_chunks_mut::<3>();
         for (i, px) in pixels.iter_mut().enumerate() {
@@ -4530,9 +5250,15 @@ fn write_merged(
     // `docs/research/M85-output-correctness.md` carries the SHA-256 proof that
     // it still emits the identical bytes. Do not refactor it into the helpers
     // above for tidiness; the tidiness is not worth re-measuring the corpus.
+    //
+    // The one thing that moved is that `(raw - levels.black).max(0.0)` now
+    // happens inside `val`/`gmean` rather than inside `encode`. Same operations,
+    // same order, same operands; it moved because the band merge folds planes
+    // that are already black-subtracted and one develop path serving both
+    // backends beats a second copy of this arithmetic that can drift from it.
     // ------------------------------------------------------------------
-    let encode = |raw: f32, gain: f32| -> u16 {
-        let v = ((raw - levels.black).max(0.0) * gain / range).min(1.0);
+    let encode = |v: f32, gain: f32| -> u16 {
+        let v = (v * gain / range).min(1.0);
         let v = if srgb { srgb_encode(v) } else { v };
         (v * u16::MAX as f32 + 0.5) as u16
     };
