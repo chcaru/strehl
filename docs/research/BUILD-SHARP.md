@@ -3635,3 +3635,323 @@ support radius **3** against Malvar's 2. Rather than move the margin until the
 test passed, it now *proves* the reason: Malvar exact at margin 2, directional
 exact at margin 3, and the margin-2 ring asserted **inexact** with every
 inexact pixel required to lie on that ring.
+
+## 32. V-DEMOSAIC's defects, answered: three accepted, one closed negative by measurement, and s27.4's headroom column retracted
+
+V-DEMOSAIC returned DEFECTS FOUND on s27/s28. **Three of the findings are
+correct and I have reconfirmed two of them with my own instruments rather than
+taking them on report.** One -- the suspected units collision, which was the only
+item that could have been degrading shipped pixels -- is **closed negative by
+measurement**. One item was already overtaken by s31.
+
+Order below is ORCH's priority order, not the report's numbering.
+
+### 32.1 The suspected units collision in `restore.rs`: MEASURED, and there is no defect
+
+**Answer: there is no collision, in either mode, and the shipped path could not
+exhibit one even if there were.**
+
+The premise of the charge was that `design_fir`'s basis lags `k` index plane
+samples while `cfg.gain`'s `f` is an output frequency. Reading the module
+settles the convention differently: **`f` is cycles per sample of the array
+being restored** -- the same array whose lags `k` index -- and `grid_factor`
+converts that to gather-grid units **for the `gather_mtf` lookup only**
+(`restore.rs:269`). Under that reading both modes are self-consistent:
+
+- `grid_factor = 1.0`: the array is the CFA plane, which **is** the gather grid,
+  so `f` needs no conversion. This is what the shipped path uses --
+  `RestorePlan::config` hardcodes it at `restore.rs:1321` with the comment "the
+  CFA planes ARE the gather grid", consumed at `merge_cmd.rs:6000-6001`.
+- `grid_factor = 2.0`: the array is the demosaiced output, `f` is output
+  cycles/px, and the gather loss is correctly looked up at `2f`.
+
+But that is reading, and this project has been wrong from reading three times
+tonight. So it was measured on the real Rust, through
+`crates/strehl-core/examples/restore-plane.rs`, which calls `restore_plane`
+itself -- no Python reimplementation that could only prove itself consistent.
+Pure tones were planted at known frequencies of the restored array and the
+realised gain measured. `experiments/BUILD-SHARP/src/restore_units.py`.
+
+**The measurement scores two rival predictions, because reporting only the one
+I expected would be the same defect as the ceiling arm in 32.2:**
+
+```
+H0 (no collision)  realised(phi) == fir_response(taps, phi)
+H1 (collision)     realised(phi) == fir_response(taps, 2*phi)
+```
+
+| grid_factor | worst \|realised - H0\| | worst \|realised - H1\| | max separation H0 vs H1 | verdict |
+|---|---:|---:|---:|---|
+| 1.0 (shipped) | **0.00000** | 0.39401 | 0.39401 | H0 -- no collision |
+| 2.0 (control) | **0.00000** | 0.41563 | 0.41563 | H0 -- no collision |
+
+The separation column is what makes this evidence: the two hypotheses differ by
+up to **0.416**, so the test could have reported a collision and did not.
+
+A second, independent discriminator used the `roll_off` taper's zero rather
+than the taps. At `grid_factor = 2.0` the excess gain is driven to exactly zero
+at design `f = 0.5`, so if the applied axis were half the design axis, array
+Nyquist would land on the **knee** -- maximum boost -- instead:
+
+```
+realised gain at array Nyquist      : 1.00133
+predicted if applied axis IS design : 1.00133
+predicted if applied axis is HALF   : 1.19971
+```
+
+At `grid_factor = 1.0` the same discriminator **reported itself VACUOUS** --
+`knee()` returns 0.5, no taper engages, and the two predictions coincide at
+1.43287. It is recorded here as vacuous rather than as a third pass, per the
+project rule that a skipped check must not be readable as a passed one.
+
+**Item routed to BUILD-WIRE, not fixed by me** (`restore.rs` is theirs): at the
+shipped `grid_factor = 1.0`, `knee()` returns 0.5 and `roll_off` therefore
+**never engages**. The correction runs untapered to the plane's Nyquist -- in
+this harness `gain_at_nyquist` reached **1.43287**. That is a strength question
+and possibly a correct one; it is stated because the anti-folding guard
+`the_response_never_rises_above_the_knee` is written at `grid_factor = 2.0` and
+so does not exercise the configuration that ships.
+
+### 32.2 s27.4's ceiling arm is DEGENERATE, and the headroom column is retracted
+
+**Accepted, and independently reconfirmed by my own instrument.**
+
+First, the arithmetic, which needs no instrument at all. Dividing my own
+published table:
+
+```
+f=0.20  malvar 1.0604  1/malvar 0.9430  published 0.943  |d| 0.00004
+f=0.25  malvar 1.0000  1/malvar 1.0000  published 1.000  |d| 0.00000
+f=0.30  malvar 0.9058  1/malvar 1.1040  published 1.104  |d| 0.00000
+f=0.35  malvar 0.7713  1/malvar 1.2965  published 1.297  |d| 0.00049
+f=0.40  malvar 0.6228  1/malvar 1.6057  published 1.606  |d| 0.00035
+f=0.45  malvar 0.5385  1/malvar 1.8570  published 1.857  |d| 0.00001
+rows where published headroom != 1/malvar : 0 of 6
+```
+
+**The headroom column is 1/D_malvar at every row.** The ceiling arm contributed
+the constant 1.0000 and therefore contributed nothing. The column measures
+Malvar's loss and then *asserts* that something could have recovered all of it.
+That assertion was the thing requiring measurement and it is the one thing the
+table does not contain.
+
+Second, why the oracle is degenerate -- reconstructed and commissioned here
+rather than taken on report (`experiments/BUILD-SHARP/src/ceiling_commission.py`).
+Three cases whose answers are fixed by construction:
+
+| case | fx, fy | \|fx\|+\|fy\| | truth | ceiling returns |
+|---|---|---:|---|---:|
+| in-diamond | 0.20 / 0.35 / 0.45, 0 | <= 0.45 | 1.0, recoverable | 1.0000 |
+| **out-of-diamond** | 0.35,0.35 | 0.70 | **NOT 1.0 -- outside the support** | **1.0000** |
+| **out-of-diamond** | 0.40,0.40 | 0.80 | **NOT 1.0** | **1.0000** |
+| **out-of-diamond** | 0.45,0.30 | 0.75 | **NOT 1.0** | **1.0000** |
+| alias pair | 0.35,0 + alias | -- | NOT 1.0 -- sum is ambiguous | 0.0000 |
+
+**3 of 3 out-of-diamond cases return exactly unity where the information is
+provably absent.** The quincunx support is |fx| + |fy| <= 0.5; at 0.70 the tone
+is indistinguishable from its alias and no reconstruction can recover it. An
+instrument that returns 1.0 there is fitting three parameters to 21,632 samples
+at a *known* frequency and reporting the fit, not the information. And on the
+alias pair -- where the truth is that the single-component amplitude is **not**
+recoverable -- it returns 0.0000, so it is not merely optimistic, it is
+uncorrelated with the answer.
+
+**RETRACTED: the `ceiling` and `headroom` columns of s27.4, and every
+downstream use of "1.297x" as a measured ceiling.** The `Malvar` and `bilinear`
+columns stand; they are direct measurements of two real filters.
+
+**RETRACTED: s28.3 point 1's inference.** It argued "if that band were
+manufactured by the interpolator, a fit to the samples would return
+approximately zero; it returns unity." It returns unity unconditionally for a
+single tone. The conclusion may still be true -- the antiphase-cancellation
+argument for G1/G2 is independent of the oracle and I still believe it -- but
+**this measurement is not evidence for it** and I withdraw it as such.
+
+**The rule, stated because I applied it to others' instruments tonight and not
+to my own: an arm that returns the same value on every input has not been
+commissioned.** Two statistics were killed by their own commissioning earlier
+this session and I wrote the commissioning for both. This one I published
+without it, and its constancy should have read as a symptom rather than a
+result.
+
+### 32.3 The factorisation was arithmetically inconsistent; corrected it is STRONGER
+
+**Accepted.** s27.5 wrote `0.7713 x 0.8690 = 0.6703` and then equated the
+product to `0.6913` in the same sentence -- a 3.1% mismatch inside a claim of
+clean factorisation.
+
+The root cause is a real defect in my estimator, and V-DEMOSAIC found it
+exactly: `compose_price.py`'s `amp_at` projected **without removing DC**, against
+a scene carrying a 0.5 pedestal, so Dirichlet leakage off the pedestal biased D,
+G and GD by different amounts and manufactured an apparent interaction term. Its
+sibling `demosaic_price.py:project` had always removed the mean; the two
+estimators disagreed and I never compared them. Fixed at
+`compose_price.py:amp_at`.
+
+Corrected, per-axis, green, cycles per output pixel:
+
+| f_out | D (demosaic) | G (gather) | GD | G*D | GD/(G*D) |
+|---|---:|---:|---:|---:|---:|
+| 0.10 | 1.0368 | 0.9707 | 1.0112 | 1.0064 | 1.0047 |
+| 0.15 | 1.0596 | 0.8892 | 0.9435 | 0.9421 | 1.0014 |
+| 0.20 | 1.0541 | 0.7388 | 0.7826 | 0.7787 | 1.0050 |
+| 0.25 | 1.0000 | 0.6230 | 0.6230 | 0.6230 | 1.0000 |
+| 0.30 | 0.8995 | 0.7388 | 0.6678 | 0.6645 | 1.0050 |
+| **0.35** | **0.7660** | **0.8892** | **0.6820** | **0.6811** | **1.0014** |
+| 0.40 | 0.6330 | 0.9707 | 0.6174 | 0.6145 | 1.0047 |
+
+The null still passes exactly: an integer-shift gather gives `G = 1.000000` and
+`GD - D = 0.00e+00` at both probe frequencies.
+
+**Composition is much cleaner than published.** `GD/(G*D)` was `[0.979, 1.040]`,
+a spread of 6.1 points; it is now `[1.0000, 1.0050]`, a spread of 0.50 points --
+a **12x tightening**, and the residual is one-sided at +0.5%. I do **not**
+reproduce V-DEMOSAIC's exact 1.0000 at all frequencies; my own number is
+1.0014-1.0050 and I report mine. The losses multiply; the earlier claim
+survives on better evidence than it was published with.
+
+**Numbers that move, and every downstream user of them should update:**
+
+| quantity | published | corrected |
+|---|---:|---:|
+| demosaic loss at f_out = 0.35, per-axis | 22.9% | **23.4%** (D = 0.7660) |
+| gather loss at f_out = 0.35, per-axis | 13.1% | **11.1%** (G = 0.8892) |
+| restore's legitimate target at f_out = 0.35 | 1.15x | **1.1246x** |
+| delivered green at f_out = 0.35 | 0.6913 | **0.6820** |
+
+An unlooked-for corroboration falls out of the corrected table: **G is now
+symmetric about f_out = 0.25** -- 0.9707 at both 0.10 and 0.40, 0.8892 at both
+0.15 and 0.35, 0.7388 at both 0.20 and 0.30. That is exactly the fold
+`H(f) = H(0.5 - f)`, arriving from my own estimator, and it is the mechanism of
+32.4 below. The corrected `G(0.35) = 0.8892` also lands on the Catmull-Rom
+closed form at the folded frequency **exactly**, where s28.3 point 2 could only
+claim agreement "to 2%" with the uncorrected 0.8690.
+
+### 32.4 s28.3's "structural ceiling at f_out = 0.25" is FALSE. Correction routed to BUILD-WIRE.
+
+**Accepted.** s28.3 concluded that a per-CFA-plane restoration "structurally
+cannot reach the quincunx recombination band at all, whatever strength it is
+given", and that "the top half of the output band is the demosaic's alone". I
+gave that to BUILD-WIRE as a constraint on where restoration may legitimately
+act. **It is wrong.**
+
+The mechanism is the fold, and my own corrected table in 32.3 exhibits it. Plane
+sample spacing is 2 output px, so an output frequency f appears on the plane at
+2f; a real symmetric FIR is even and 1-periodic in plane cycles, hence
+
+```
+H_out(f) = H_out(0.5 - f)
+```
+
+A per-plane filter reaches f_out = 0.35 **through its 0.15 twin**. V-DEMOSAIC
+measured a per-plane symmetric FIR, placed exactly where `merge_cmd.rs` runs
+`restore_plane`, changing delivered f_out = 0.35 green amplitude by **1.2618x**,
+matching the fold prediction H(0.30) = 1.2618 to four decimals.
+
+**The defensible claim is non-selectivity, not unreachability:** f and 0.5 - f
+necessarily receive identical gain, so a per-plane filter cannot boost
+f_out = 0.35 without boosting f_out = 0.15 by exactly the same factor. That is a
+real and severe constraint -- it is why a per-plane restoration cannot be tuned
+to the band the owner is complaining about without equally amplifying a band
+four times coarser -- but it is a different constraint from the one I stated,
+and BUILD-WIRE should be working from it rather than from mine.
+
+This also partly reverses s28's framing that the top half of the band belongs to
+the interpolator alone. It does not; it belongs to the interpolator **and** to
+whatever the per-plane filter does to its low-frequency twin.
+
+### 32.5 s28.5 mischaracterised its comparand -- but the rule survives on better evidence than I gave it
+
+**Accepted.** V-bestframe's 0.9462 is not "an aggregate demosaic score". It is a
+Difference-of-Gaussians **band** statistic, `DoG(1,2)`, medianed over 352 tiles.
+Measured, that band peaks at 0.153 cyc/px with half-max 0.072-0.269 and only
+**3.3% of its power above 0.30**. So s28.5's phrase "nearly blind to the band in
+complaint" is literally true -- 96.7% of the weight sits below it -- but the
+**mechanism I gave was wrong**: it is a mis-centred passband, not whole-spectrum
+aggregation. My "3.9x further from unity" also compared my synthetic
+bilinear-vs-Malvar against their real LINEAR-vs-AHD: different pair, different
+data, different band. Apples-to-apples on the same real tiles it is **1.37x**.
+
+**The rule is nonetheless earned, by a sign flip rather than by a ratio:**
+
+| statistic | bilinear/malvar | ha/malvar |
+|---|---:|---:|
+| V-bestframe's exact DoG(1,2) | 0.8746 | **0.9897 -- HA scores WORSE** |
+| truth-referenced 0.30-0.40 wedge | 0.8293 | **1.0966 -- HA 9.7% BETTER** |
+
+A DoG-style statistic would **reject** the candidate that a band-correct
+statistic would **select**. That is far stronger than any ratio, and it is
+directly actionable: any demosaic selection made on a DoG-style statistic
+anywhere in this project is choosing on a band nobody is complaining about.
+
+**And there is a second lesson in that table which is mine, not V-DEMOSAIC's,
+and which s31 supplies.** The band-correct wedge selected Hamilton-Adams at
+1.0966 -- and s31 then measured HA on the owner's real captures and found it
+delivers **nothing** at detail sites while adding maze artifacts in defocus.
+So the wedge was right about the band and still wrong about the picture.
+**Measuring in the correct band is necessary but not sufficient; the stimulus
+has to exist in the real data too.** That is the s30/s31 rule extended one step,
+and it is the single most transferable thing in this section.
+
+### 32.6 The s27.4 generator
+
+**Accepted with a correction of fact.** `demosaic_price.py` **is** committed, at
+`f1bc28d8`, and contains a `ceiling_arm` -- but that is the **red** ceiling
+(red lattice, period 2) from s22, not the green quincunx oracle of s27.4. The
+green oracle is genuinely not in the repository, and V-DEMOSAIC is right that
+s27.4 is not reproducible from it.
+
+I am not resurrecting it. The column it produced is retracted in 32.2, and
+committing a degenerate generator would invite someone to re-run it. What is
+committed instead is `ceiling_commission.py`, which reconstructs the oracle
+exactly as s27.4 describes it and **demonstrates why its output must not be
+used** -- the instrument that should have existed before the table was
+published.
+
+### 32.7 Hamilton-Adams: already rejected before the report arrived, and V-DEMOSAIC's data strengthens the rejection
+
+V-DEMOSAIC measured a tree that had moved. The "+286 uncommitted lines of
+Hamilton-Adams green" were landed as the default in `d67fe13b` and then
+**reverted in `0c236d85`**, before this report was routed to me. `demosaic.rs`
+is clean, the default is Malvar, and the revert was verified by rendering rather
+than asserted: with no environment override the output is **byte-identical
+(MD5)** to the malvar arm and **differs** from the directional arm, so the check
+is not vacuous.
+
+Their evidence and mine agree and were reached independently, from opposite
+directions:
+
+| source | finding |
+|---|---|
+| V-DEMOSAIC, synthetic, off-axis | ha/malvar 1.304 at fy = 0, 1.002 at fy = 0.15, **0.650 at fy = 0.20** |
+| V-DEMOSAIC, 8 real stacks | mean **1.099**, median 1.119, range **0.991**-1.161; **1.045** over all orientations |
+| BUILD-SHARP s31, 2 real stacks | **no gain at detail sites** (0.9903, 0.9831 gradient); **+50% HF power in defocus**; maze artifacts visible in the crop |
+
+A synthetic advantage that is 1.304x on-axis, 0.650x off-axis and 1.045x over
+all orientations is exactly what would deliver nothing on a real subject whose
+edges point in every direction -- which is what s31 measured on the picture.
+**No guard is needed, because it is not landing.** The one-line answer to
+"should it land with a per-orientation characterisation" is no: at 1.045x over
+all orientations it is not worth a maze artifact, and the maze is not a
+frequency-domain cost that a characterisation would have exposed.
+
+The moving-SHA256 note is mine and is accepted: `demosaic.rs` changed twice
+under V-DEMOSAIC. It is now landed and clean.
+
+### 32.8 Net effect on the board
+
+**Dead**: the 1.297x ceiling and every headroom figure derived from it; s28.3's
+structural ceiling at f_out = 0.25; s28.5's aggregation mechanism and its 3.9x;
+Hamilton-Adams as a shipping candidate.
+
+**Alive and now better founded**: the losses multiply, with the residual
+interaction cut 12x; D = 0.7660 and G = 0.8892 at f_out = 0.35; restore's target
+of **1.1246x**; the units of the f column; the non-selectivity constraint on any
+per-plane restoration; and the rule that a demosaic must not be selected on a
+DoG-style statistic.
+
+**Unchanged**: s31's conclusion. The demosaic is not the sharpness lever this
+project needs, and with the ceiling retracted there is no longer even a
+synthetic number claiming it might be. The binding constraint at the scales the
+owner calls soft remains the **optics floor**, and the most valuable open thread
+remains s24's restoration measured **inert** at the sigma^2 it was given.

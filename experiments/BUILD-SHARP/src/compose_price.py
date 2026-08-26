@@ -102,8 +102,18 @@ def resample_x(plane: np.ndarray, phase: float, extra: float = 0.0) -> np.ndarra
 
 def amp_at(img: np.ndarray, f: float, step: int = 1) -> float:
     """Least-squares amplitude of the f component along x, on a lattice of
-    spacing `step` sensor pixels."""
+    spacing `step` sensor pixels.
+
+    DC is removed per row before projecting. `truth` carries a 0.5 pedestal and
+    the window is a finite rectangle, so without this the pedestal's Dirichlet
+    leakage lands in the projection and biases every amplitude here by up to
+    +2.3% -- which is not a constant factor across D, G and GD and therefore
+    manufactured an apparent interaction term in the factorisation. This
+    omission was the defect V-DEMOSAIC found; the sibling estimator in
+    `demosaic_price.py:project` had always removed the mean.
+    """
     m = img[MARGIN:-MARGIN, MARGIN:-MARGIN]
+    m = m - m.mean(axis=1, keepdims=True)
     x = np.arange(m.shape[1]) * step + MARGIN
     s, c = np.sin(2 * np.pi * f * x), np.cos(2 * np.pi * f * x)
     a_s = 2.0 * (m * s).mean(axis=1)
