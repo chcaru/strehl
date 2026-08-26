@@ -57,6 +57,22 @@ shipped), at the same asymptotic cost. Section 10 adopts it into the section 4
 specification. H5's instrument also **independently re-confirms H4**, killing the
 main open threat to section 9.6.
 
+**Amended by section 11, after running the owner's pre-registered acceptance
+test on real merges.** A modified pin (commissioned bit-identical at the shipped
+setting, potency-checked) rendered `flower-bud` and `coffee-bean` under all four
+candidate focus statistics. **Every one fails his ring test, including mine:**
+12.47% shipped, 13.89% under H5's box max, 12.44% under section 4's high-pass,
+12.26% under section 10.10. The negative control never moves and the veiling term
+never moves, so the arms are neither inert nor random — the bright ring simply is
+not a focus-statistic defect. It is **H4 at d = +21 px**: no frame in 205
+resolves the trichome fringe there (peak gradient flat to 1.32x while brightness
+climbs monotonically 60.5% to 103.5%), and the merge's band edge carries **7.6x
+more gradient than any source frame**, so the scalloped boundary is manufactured
+at a seam rather than selected. Section 2's mechanism was measured *inside* the
+subject and I carried it to the band without re-testing; that was wrong. The band
+needs abstention and a coverage output, not a better statistic. See sections 11.3
+to 11.7.
+
 ---
 
 ## 1. The picture, first
@@ -908,3 +924,234 @@ Neither needs a render. `h5.py` reads
 Pictures: `pics/H5-choice-flower-bud.png` (the decisive one),
 `pics/H5-curves-flower-bud.png`, `bee/pics/H5-choice-bee.png`,
 `bee/pics/H5-curves-bee.png`, `pics/MILK-profile.png`.
+
+---
+
+## 11. The owner's pre-registered acceptance test, run for real
+
+**All four candidate focus statistics fail it, including my own.** The bright
+ring is not produced by the focus statistic, and no change to the election can
+remove it. This section is a negative result against section 4 and I am stating
+it plainly.
+
+### 11.1 His numbers, independently re-derived (MEASURED)
+
+`src/ringprofile.py` is written from scratch, not adapted from his
+`rimprofile.py`: different bin grid (uniform 2 px where the ring lives, against
+his hand-placed edges), different peak finder. Two of his design choices are
+copied deliberately because they are correct — prominence measured against the
+trough **outside** the peak rather than the far field, and the whole profile
+printed above the verdict.
+
+| | his number | mine | agree |
+| --- | --- | --- | --- |
+| flower-bud ring | 12.0% at d = 18 px | **12.47% at d = 21 px** | yes |
+| flower-bud darkening | -36.5% | **-40.4%** | yes |
+| coffee-bean darkening | -38.2% | **-39.4%** | yes |
+
+His headline number reproduces. Better than that: my baseline render `fb-mean`
+is **bit-identical by SHA-256** to the `fb-1cacb61-lin.tif` he measured, so the
+two instruments read the same pixels and the 0.47 point difference is binning
+alone.
+
+One number does not reproduce. He reports coffee-bean's only interior peak as
+0.23% at 450 px; I find **1.92% at 155 px**, with a whole ladder of far-field
+peaks his coarse bins stepped over. This does not damage his argument — at the
+*matched* location where flower-bud's ring lives, coffee-bean reads **0.02% at
+9 px**, so at like-for-like distance the separation is far larger than the 52x
+he claimed, not smaller.
+
+### 11.2 The instrument: a modified pin, commissioned (MEASURED)
+
+To run his test against real merges rather than ROI simulations I cloned the pin
+to `C:\dev\strehl-out\pin-elect\` and added one env-gated selector to
+`focus.rs::compute_at_radius`, following the existing `STREHL_WINDOW_RADIUS`
+convention. `crates/` in the repo is untouched.
+
+`STREHL_FOCUS_STAT` = `mean` (shipped) | `max` (H5) | `hp` (section 4) |
+`hpmax` (section 10.10). A separable running max via a monotonic deque provides
+the max pooling.
+
+Two gates, both required, both passed:
+
+- **Commissioning.** `STREHL_FOCUS_STAT=mean` on `coffee-bean` is
+  **bit-identical by SHA-256** to the shipped binary. The clone did not drift.
+- **Potency.** `fb-max` differs from `fb-mean` (3.79% of samples, max delta
+  15970 DN) and `fb-hp` differs too (0.69%, max delta 16365 DN). The env var
+  reaches the production election. This check was not optional: `merge_cmd.rs`
+  branches to `compute_with_fine` when statistics are enabled, which bypasses the
+  patched function, and an inert arm would have produced four identical "results"
+  that looked like a clean finding.
+
+### 11.3 The result (MEASURED)
+
+**Target — `flower-bud`, must go from 12.47% toward 0.23%:**
+
+| arm | ring prominence | vs shipped | veiling darkening |
+| --- | --- | --- | --- |
+| `mean` (shipped) | 12.47% | — | -40.4% |
+| `max` (H5's fix) | **13.89%** | **worse by 11%** | -39.5% |
+| `hp` (section 4, mine) | **12.44%** | unchanged | -40.4% |
+| `hpmax` (section 10.10) | **12.26%** | -1.7% | -40.4% |
+
+**Negative control — `coffee-bean`, must not move:**
+
+| arm | ring at 155 px | at 9 px | darkening |
+| --- | --- | --- | --- |
+| shipped | 1.92% | 0.02% | -39.4% |
+| `max` | 1.92% | 0.10% | -39.4% |
+| `hp` | 1.92% | 0.02% | -39.4% |
+| `hpmax` | 1.92% | 0.09% | -39.4% |
+
+The negative control **passes for every arm** — nothing moved. And his fourth
+constraint holds: the veiling darkening does not move under `hp` or `hpmax`
+(-40.4% throughout). I did not reach into the other lane's term.
+
+So the arms are not inert and they are not random. They simply do not touch the
+ring.
+
+**The picture is the result, not the table.** `pics/ACCEPT-fb-arms.png` shows one
+crop across the silhouette in all three arms under one fixed tone transform. The
+white scalloped band is present, thick and identical in all three: band luma
+102.7%, 102.6%, 102.6% of the far field. The difference maps below show both arms
+moved only hairline contours; the median of `|hp - mean|` **inside the band is
+0 DN**. My fix does not touch the artifact it was proposed to fix.
+
+### 11.4 Why: H4, at the band, which I had never tested there (MEASURED)
+
+Six single frames spanning the bracket already existed. At the band locus:
+
+| frame | band luma | % far field | `hp` peak gradient |
+| --- | --- | --- | --- |
+| f025 | 11524 | 60.5% | 184 |
+| f051 | 13035 | 68.5% | 192 |
+| f076 | 16030 | 84.2% | 208 |
+| f127 | 19552 | 102.7% | 242 |
+| f153 | 19603 | 103.0% | 240 |
+| f178 | 19689 | 103.5% | 243 |
+| **the merge** | **19854** | **104.3%** | **1853** |
+
+Two things, and both are decisive.
+
+**There is no in-focus frame at the band.** Peak gradient runs 184 to 243 across
+the bracket — flat to **1.32x**, the same signature that made me accept H4 on the
+bee at 1.13x and 1.25x. What varies is not focus but *brightness*, smoothly and
+monotonically from 60.5% to 103.5%. `pics/BAND-frames.png` confirms it by eye:
+every frame is either a soft dark blur or clean white paper, and **not one
+contains a crisp trichome fringe.** The bracket has no answer here.
+
+**The merge's band edge exists in no source frame.** Merge peak gradient 1853
+against at most 243 in any input — **7.6x more edge energy than the data
+contains.** A per-pixel election can only emit values that some frame holds, so a
+boundary sharper than every input is not selected, it is *manufactured* at the
+seam where the winner index jumps. That is the hard scalloped edge.
+
+This explains the null in 11.3 completely. **Both candidate fixes change how
+frames are ranked, and at the band there is nothing to rank.** All 205 frames are
+equally featureless; any statistic returns noise; the argmax is arbitrary; and the
+arbitrary choice is biased toward the bright end because brightness rises
+monotonically with frame index. Substituting a better discriminator cannot help
+when the thing being discriminated is absent.
+
+### 11.5 A correction to my own report
+
+Section 2 established veiling misranking at `pale-wash`, an ROI **inside** the
+subject, where a real texture peak at f40 exists and the election misses it by
+~96 frames. That finding stands and section 4 fixes it.
+
+The **band** is at d = +21 px, *outside* the silhouette, and it is a different
+case: H4, no answer, nothing to elect. When the owner reassigned the band to my
+lane I carried section 2's mechanism across to it without re-testing at the new
+location. That was wrong. Section 4 was never aimed at the band and, measured, it
+does nothing there.
+
+`flower-bud` therefore carries **both** failure modes, at different distances from
+the same silhouette — misranking inside, no-answer outside — which is why a single
+remedy was never going to clear the whole image.
+
+### 11.6 His pairing is confounded, though it does not change the verdict (MEASURED)
+
+His inference rests on the two subjects differing in exactly one property. They
+differ in at least three:
+
+| | coffee-bean | flower-bud | ratio |
+| --- | --- | --- | --- |
+| subject/backdrop contrast | 2.91:1 | **12.48:1** | **4.29x** |
+| subject share of frame | 59.6% | 21.7% | 2.74x |
+| pixels at clip | 2.39% | 0.00% | — |
+
+Contrast is not a nuisance variable here: it is the driver *both* candidate
+mechanisms depend on, so the correlation is equally consistent with either and
+cannot choose between them. And coffee-bean's silhouette covers 59.6% of its
+frame with backdrop on two sides only, which is a thin basis for a far-field
+reference. It remains a usable **negative control** — it has no ring to remove and
+none of my arms gave it one — but it is not a controlled contrast to
+`flower-bud`.
+
+`couch-fibers-cpl` is worth one line: unimodal, p95/p5 = **2.30** against 15.90
+and 17.96 for the other two. It is dense fine structure with **no silhouette at
+all**, which is why it is a good do-no-harm subject and a poor discriminator. It
+kills "fine density alone is sufficient to fool the measure", which H5 never quite
+claimed, and leaves H5's actual conjunction untested by it.
+
+### 11.7 The specification, corrected
+
+**For the band, no focus statistic is the answer.** The remedy is the one the
+owner's own H4 instruction names: *report it, do not fabricate it.*
+
+- **Where:** `crates/strehl-core/src/merge.rs`, the election, not `focus.rs`.
+- **Invariant:** where the through-focus response is flat to within the noise
+  floor across the bracket, the merge must **abstain** rather than argmax. Measured
+  flatness threshold from three independent ROIs on two subjects: a peak-to-floor
+  ratio below **1.35x** is indistinguishable from no answer (band 1.32x, bee
+  `blob` 1.34x, bee `fringe` 1.17x; a good ROI on the same subject reads 41.2x).
+- **Behaviour on abstention:** emit a coverage/confidence plane, and fall back to
+  the *near* end of the bracket rather than the far end. ARGUED on MEASURED
+  values: at the band f025 sits at 60.5% of the far field against the merge's
+  104.3%, so a near fallback cannot produce a bright ring — prominence goes to
+  zero or negative by construction.
+- **Target number:** `flower-bud` ring prominence from **12.47%** to **below
+  1.0%**, measured by `src/ringprofile.py` with the mask taken from the shipped
+  arm. Not 0.23%: that was coffee-bean's *far-field* wobble at 450 px and is not
+  the right yardstick. At the matched 9-21 px distance coffee-bean reads 0.02%.
+- **Guard:** `coffee-bean` must stay at 1.92% / 0.02% and its darkening at
+  -39.4%; `flower-bud` darkening must stay at -40.4%, which is the other lane's
+  term.
+
+Section 4 stands unchanged for the subject **interior**. Section 10.10 stands as a
+margin improvement. Neither addresses the band and I no longer claim they do.
+
+### 11.8 The cost
+
+Abstention with a near fallback trades a bright fabricated fringe for a **soft
+honest one**. At the band the near frames are visibly blurred — f025 is a smooth
+dark gradient with no resolved hairs. The image gets a silhouette that reads as
+out of focus instead of one that reads as cut out and pasted. That is better, and
+it is not free: the owner will see softness where he now sees a hard edge, and on
+a subject whose entire visual interest is its trichome fringe that is a real loss.
+
+The deeper cost is that **the capture cannot be fixed in software**. 205 frames
+and not one resolves the fringe. If the fringe matters, it needs a bracket that
+covers it — finer steps through the near end, or a different aperture. A coverage
+output is what tells the photographer that *at capture time*, which is the only
+point where it is still fixable.
+
+### 11.9 Reproduction
+
+```powershell
+# the modified pin (built outside the repo; crates/ untouched)
+cd C:\dev\strehl-out\pin-elect
+& "$env:USERPROFILE\.cargo\bin\cargo.exe" build --release -p strehl-cli
+$env:STREHL_FOCUS_STAT = "hp"   # mean | max | hp | hpmax
+.\target\release\strehl.exe stack D:\personal\macro\flower-bud-alone-cpl `
+    --out C:\dev\strehl-out\BUILD-ELECT\accept\fb-hp.tiff --demosaic
+
+cd experiments\BUILD-ELECT\src
+python ringprofile.py <arms...> --mask-from ...\fb-mean.tiff
+python acceptlook.py     # pics/ACCEPT-fb-arms.png
+python bandframes.py     # pics/BAND-frames.png
+```
+
+Pictures: `pics/ACCEPT-fb-arms.png` (the four-arm null),
+`pics/BAND-frames.png` (why), `pics/RING-masks.png` (the coffee-bean mask),
+`pics/COUCH-look.png`.
