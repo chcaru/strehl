@@ -88,7 +88,25 @@ def main() -> int:
     ap.add_argument("merged_tiff")
     ap.add_argument("--frames", type=int, default=8)
     ap.add_argument("--tiles", type=int, default=6)
+    ap.add_argument("--mid", action="store_true",
+                    help="select tiles at the MEDIAN input texture level. This is "
+                         "the probe that matters for a gate change: the flat tiles "
+                         "are where a higher gate trivially helps, and the most "
+                         "textured tiles sit far above any gate and are immune. "
+                         "Real low-contrast detail -- structure just above the "
+                         "noise floor -- is the only place a raised gate can "
+                         "quietly cost something, and it is invisible to both "
+                         "extremes.")
     ap.add_argument("--crop-out", default=None)
+    ap.add_argument("--detail", action="store_true",
+                    help="select the most TEXTURED input tiles instead of the "
+                         "flattest, and report output HF against the best single "
+                         "frame there. This is the other half of the metric: a "
+                         "global mean scores a perfect 0.07 on flat tiles and is "
+                         "useless, so background cleanliness is only meaningful "
+                         "while detail is held. On these tiles a good stack should "
+                         "land near or above 1.0 -- it is supposed to be carrying "
+                         "the sharpest frame's detail.")
     ap.add_argument("--plant", type=float, default=None,
                     help="commissioning plant: add polygonal structure of this "
                          "amplitude (in output DN, 16-bit scale) to the merged arm")
@@ -139,15 +157,32 @@ def main() -> int:
         lut = rng.normal(0.0, 1.0, size=(cy.max() + 2, cx.max() + 2))
         M = M + args.plant * lut[cy, cx]
 
-    # --- selection: flattest tiles in the INPUT arm, by the WORST frame ---
+    # --- selection: on the INPUT arm only, never on the output ---
     margin = 64
     cands = []
     for y in range(margin, h - TILE - margin, TILE):
         for x in range(margin, w - TILE - margin, TILE):
-            worst = max(tile_stat(X[k], y, x) for k in range(X.shape[0]))
-            cands.append((worst, y, x))
+            if args.detail:
+                # most textured: rank by the BEST frame, since that is the frame
+                # the stack is supposed to be reproducing here.
+                score = -max(tile_stat(X[k], y, x) for k in range(X.shape[0]))
+            else:
+                # featureless in EVERY frame: rank by the worst.
+                score = max(tile_stat(X[k], y, x) for k in range(X.shape[0]))
+            cands.append((score, y, x))
     cands.sort()
-    chosen = cands[:args.tiles]
+    if args.mid:
+        # Rank by the best frame's texture, then take the tiles sitting at the
+        # median of that distribution.
+        ranked = sorted(
+            (max(tile_stat(X[k], y, x) for k in range(X.shape[0])), y, x)
+            for _, y, x in cands
+        )
+        mid = len(ranked) // 2
+        half = args.tiles // 2
+        chosen = [(s, y, x) for s, y, x in ranked[max(0, mid - half):mid - half + args.tiles]]
+    else:
+        chosen = cands[:args.tiles]
 
     ctrl = X.mean(axis=0)   # known spatially-constant convex weighting
 
@@ -173,13 +208,22 @@ def main() -> int:
     print(f"median merged/single-frame-max : {r:.3f}")
     print(f"median  MEAN /single-frame-max : {cr:.3f}   (control; 1/sqrt({n}) = {1/np.sqrt(n):.3f})")
 
-    if cr >= 1.0:
+    if cr >= 1.0 and not (args.detail or args.mid):
         print("\nCONTROL FAILED: a known constant convex weighting did not land "
               "below the single-frame max. The statistic is broken; no verdict.")
         return 3
-    print("control OK: the known-convex arm lands below the max, as it must.")
+    if not (args.detail or args.mid):
+        print("control OK: the known-convex arm lands below the max, as it must.")
 
-    if r > 1.0:
+    if args.mid:
+        print(f"\nMID-CONTRAST TILES: output carries {r:.3f}x the best single "
+              "frame's HF. This is the number a gate change must not move. A drop "
+              "here is low-contrast detail being averaged away.")
+    elif args.detail:
+        print(f"\nDETAIL TILES: output carries {r:.2f}x the best single frame's HF. "
+              "Near or above 1.0 is the stack doing its job; well below 1.0 is "
+              "detail being averaged away.")
+    elif r > 1.0:
         print(f"\nVERDICT: merged HF is {r:.2f}x the single-frame maximum in regions "
               "featureless in EVERY frame. No spatially constant convex weighting "
               "can do that. Structure is being invented or the weights vary in space.")

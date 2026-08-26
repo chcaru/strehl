@@ -4151,3 +4151,76 @@ One subject (`bee-1-cpl`), 8 of 299 frames sampled, 6 tiles, one spatial scale (
 box high-pass at half resolution). The arm ordering is large and unambiguous, but the
 **absolute** 1.305 should not be quoted as a gallery-wide constant until it is run across
 subjects and scales. It is a floor-referenced ratio on one subject, and that is all.
+
+---
+
+## 40 — The patchwork is a gate default, not an architecture problem: 1.305 -> 0.165 for free
+
+Section 39 priced the patchwork at **1.305x** and left it as work for someone. It is
+cheaper than that. The mechanism is written in `pyramid.rs`'s own design notes, and once
+read it names its own fix.
+
+### 40.1 The mechanism, from the module's own reasoning
+
+`sharpen_per_octave` makes fine bands deliberately **near-argmax**, on the stated argument
+that "a selection error at a fine scale injects only a small-amplitude, high-frequency
+error". That argument is sound where there is signal. In a region that is **featureless in
+every frame**, the fine bands contain *only noise* — so near-argmax selects the frame that
+happened to fluctuate highest, independently at each pixel. That is amplified noise with
+spatially varying weights, which is exactly what the patchwork is and exactly what "stacking
+sparkle" means.
+
+The defence against it already exists: `gate`, whose doc says `2.0` sits "roughly 2.6 of its
+own standard deviations above the noise expectation: high enough that noise essentially
+never wins a selection, low enough that real low-contrast detail is not thrown away." The
+first clause is the claim I tested.
+
+### 40.2 Three probes, because two of them cannot see the risk
+
+A gate change is trivially good on featureless tiles and trivially invisible on the most
+textured ones, which sit far above any gate. Measuring only those two would be measuring
+where the answer is easy. So `patchwork.py` grew a third selection rule at the **median**
+input texture — the only place a raised gate can quietly cost something.
+
+Each detail probe is commissioned against the global-average arm, which must collapse if
+the probe can see detail loss at all:
+
+| probe | gate 2.0 | gate 3.0 | gate 4.5 | global-average sensitivity check |
+|---|---|---|---|---|
+| background, featureless in every frame | **1.305** | 0.434 | **0.165** | 0.074 |
+| **mid-contrast** | 4.340 | 4.339 | **4.338** | **0.206** — a 21x drop |
+| high-contrast detail | 1.108 | 1.109 | **1.109** | **0.046** — a 24x drop |
+
+**Background invented structure falls 87%, from 1.305 to 0.165 — below 1.0, and therefore
+inside what a spatially constant convex weighting can produce. Detail does not move at any
+contrast level: −0.05% at mid-contrast, +0.09% at high contrast.**
+
+Both detail probes are demonstrably able to report a loss — they fall by 21x and 24x on an
+arm that really does destroy detail. Their silence here is a measured null, not an absent
+measurement.
+
+### 40.3 The eye agrees, and agrees harder than the number
+
+Contrast-stretched crops of the same background tile, each stretched to **its own** 0.5–99.5
+percentiles. That normalisation works *against* the conclusion: the gate 4.5 tile has ~8x
+less to show, so whatever remains is amplified ~8x more than the gate 2.0 tile's noise.
+
+At gate 2.0 the tile is dense pixel-level grain, edge to edge. At gate 4.5 it is a smooth
+gradient with isolated specks — and the specks look like hot pixels and dust, which is a
+separate and still-unaddressed item, not patchwork.
+
+### 40.4 Recommendation, and what it is not
+
+Raise the default `gate` in `MergeConfig::default()` from `2.0`. **4.5 is measured-good, not
+measured-optimal**: background improves monotonically across 2.0 -> 3.0 -> 4.5 while detail
+stays flat, so the sweep has not yet found the edge where the doc's second clause — real
+low-contrast detail being thrown away — starts to bite. Whoever lands this should extend the
+sweep upward with the same three probes until mid-contrast moves, and set the default below
+that point rather than at the end of my ladder.
+
+### 40.5 Scope
+
+One subject (`bee-1-cpl`), 8 of 299 frames, 6 tiles per probe, a single spatial scale. The
+effect is an 87% change against detail nulls of 0.05%, which is not a marginal signal, but
+it is one subject and the default belongs to all of them. This needs the gallery before it
+ships, and it needs someone who did not measure it to measure it again.
