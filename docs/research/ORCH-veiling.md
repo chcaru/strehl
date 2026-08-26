@@ -9864,3 +9864,72 @@ instant it has N items and never lets the upstream signal completion. The intuit
 consumed everything it must have drained" is wrong, and it is the version a careful person
 will reason their way into trusting. They added `Select-String` and `Select-Object -Skip`
 to the verified-safe list — `Select-String` being the one most of us actually reach for.
+
+## §87 — the check fired on the side nobody reads, and "no trace anywhere" had a fourth place
+
+Two claims from BUILD-HIGHLIGHT, measured in a throwaway repo before rebroadcast. They split:
+one corrected a rule I had issued to eleven agents, the other was wrong in an instructive way.
+
+### The polarity defect — CONFIRMED, my rule was wrong
+
+I had told the fleet: before committing a shared file run `git --no-pager diff -- <path>` and
+stop if it contains changes you did not make. Same collision as §84, both probes side by side:
+
+```
+git diff -- shared.txt            (the rule I issued)
+  -AGENT-A halo work, staged not committed    <- the endangered work, as a MINUS
+  +AGENT-B different change                   <- your own, as a PLUS
+
+git diff --cached -- shared.txt   (the amendment)
+  -ORIGINAL baseline line
+  +AGENT-A halo work, staged not committed    <- the endangered work, as a PLUS
+```
+
+Both probes surface the collision, so my rule was not inert — it was **mis-polarised**. The
+instruction says *"changes you did not make"*, and a reader scanning **additions** for foreign
+content sees only their own edit and passes. The colleague's work sits on the minus side, where
+it reads exactly like you replacing your own earlier draft.
+
+> **A check can fire correctly and still fail, if it presents the evidence in the polarity the
+> reader is not scanning.** Firing is not the same as being read. Position was §85's lesson;
+> **presentation** is this one, and it is the subtler of the two.
+
+Note the compounding: my own pre-flight already gated on `--cached` — I wrote the correct check
+for myself and the weaker one into the rule. Nobody audits the instruction against their own
+practice, because the practice feels like the source of the instruction.
+
+### "The evidence of the failure is exactly what the failure deletes" — REFUTED
+
+BUILD-HIGHLIGHT argued no retrospective audit could ever clear a lane, since destroyed index
+content leaves no trace *"not in the commit, not in the index, not in the reflog."* All three
+correct. The conclusion is false:
+
+```
+A's staged blob : 65084333b90290e18ba8ca8ce9ace0ce9e814203
+after the sweep : dangling blob 65084333b90290e18ba8ca8ce9ace0ce9e814203
+git cat-file -p -> 'AGENT-A halo work, staged not committed'
+```
+
+`git add` writes the blob to the **object database**; the path-scoped commit only detaches the
+index entry. §86's census is the audit they had proved impossible, and it came back clean.
+
+> **An exhaustive-sounding list of the places you checked is not an exhaustive list of places.**
+> Three correct negatives, delivered with the cadence of completeness, and the trace was in the
+> fourth. The rhetorical form of exhaustiveness is available to an incomplete search.
+
+This is the same error as §82's binary scan in the opposite direction — there, absence in the
+places I looked *was* conclusive and I had to argue why; here it was not, and the argument was
+never made because the list sounded finished.
+
+### Two smaller instruments, same family
+
+**`Measure-Object -Line` silently drops empty lines.** It reported this log at 7614 lines when
+`(Get-Content).Count` gives **9866** — a 2199-line discrepancy, and had I quoted it the log would
+carry a false measurement of itself. Fifteenth instrument tonight whose output has the shape of
+the thing you wanted. Use `(Get-Content $f).Count`.
+
+**`write_agent` fails atomically.** One mistyped recipient id and *zero* of eleven were delivered,
+reported loudly. That is the correct design and worth naming, because the tempting alternative —
+deliver to the ten valid ones and warn — would have produced a fleet in two different states with
+a warning nobody re-read. **Partial success is the failure mode that hides; all-or-nothing is a
+kindness.**
