@@ -3359,3 +3359,59 @@ f_out = 0.35 (oracle, so an upper bound, and noise will cut it); cost under 1%
 of render wall-clock; no noise-amplifying denominator, hence not restore's
 failure mode -- against which V-RESTORE has measured 3.75% of pixels pushed
 outside their own input support by up to 7107 DN.
+
+## 29. Response to the cross-build and hull-clamp warnings
+
+### 29.1 Cross-build -- checked, not asserted; no conclusion moves
+
+Every arm in s27 and s28 came from **one** executable,
+`pin-a2d5a811/.../demosaic-plane.exe`, SHA256 `77C058F9...D87A2`, and the
+gather half is pure NumPy (`compose_price.py:91-100`) with no binary in it at
+all. The scenes are synthetic, so no artefact rendered earlier tonight is
+reused as a reference anywhere.
+
+One exposure did exist and is now closed by measurement rather than by
+argument. The **earlier** demosaic figure (s22's 23.3%) may have been run
+against the worktree build, SHA256 `2766ECD7...56979`. I fed both binaries the
+same input and compared per channel:
+
+| arm | R | G | B |
+|---|---|---|---|
+| malvar | 0 | 0 | 0 |
+| bilinear | 0 | 0 | 0 |
+
+**Bit-identical on all three channels**, not merely on green. The comparison
+was not vacuous: the two binaries have **different SHA256**, so a disagreement
+was possible. The reason is structural -- the chromatic-aberration correction
+BUILD-HULL found lives in `optics.rs` and is not on the `demosaic` path that
+`demosaic-plane` exercises. **No cross-build contamination in any number I have
+reported.**
+
+### 29.2 Hull clamp -- one conclusion is now incomplete, and it is mine
+
+Nothing in s27/s28 is invalidated: my instruments are synthetic and never enter
+`pyramid.rs`, so the clamp is absent from both arms of every A/B I ran, and the
+measured ratios stand as measured.
+
+**But s27.5's factorisation is incomplete and I am flagging it rather than
+letting it be read as total.** I wrote that the delivered loss at
+f_out = 0.35 is 0.6913 and "factors cleanly: 0.7713 demosaic x 0.8690 gather".
+That is the loss of the **resample-and-demosaic pixel path only**. If the
+default hull clamp costs 15.5-18.9% of microcontrast on `coffee-bean`
+(measured by BUILD-HULL, matched-pair, one binary, determinism null 0 DN), then
+it is a **third multiplicand upstream of both of mine**, and the delivered
+figure is worse than 0.6913 -- plausibly nearer 0.57 if the clamp cost carries
+to this band, which I have not measured and will not, because it is owned.
+
+Two consequences, both in the direction of my lane rather than against it:
+
+1. **The absolute headroom is larger than s27 implies**, exactly as ORCH says.
+   My 1.297x is a ceiling on the demosaic term alone and composes with whatever
+   the clamp policy returns.
+2. **The restore-strength bound in s27.5 is unchanged and still binding.**
+   It was derived from the ratio 0.8690, and a common upstream factor divides
+   out of a ratio. Restore still corrects the gather term only, still asks for
+   **1.15x at f_out = 0.35**, and -- per s28.3 -- still cannot reach above
+   f_out = 0.25 at any strength because it acts per CFA plane.
+
+I have not touched `pyramid.rs` and have not re-derived the clamp cost.
