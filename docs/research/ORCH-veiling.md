@@ -4290,3 +4290,73 @@ precisely so it can **count** how many output pixels the clamp moved, and return
 Withdrawn, and worth saying plainly rather than letting it lapse: an open worry that is
 never resolved reads, months later, exactly like an open defect. **Retract flags as loudly
 as you raise them.**
+
+---
+
+## 42 — Correction to section 40: gate 4.5 is not a safe universal default
+
+Section 40 measured one subject and recommended raising the default gate. I said there that
+it needed the gallery before it shipped. It did. A second subject reverses the trade.
+
+### 42.1 `couch-fibers-cpl`, the adversarial case
+
+Chosen deliberately: fine, low-contrast texture across the whole frame, which is where the
+`gate` doc's *second* clause — "low enough that real low-contrast detail is not thrown
+away" — should bite if it bites anywhere.
+
+| probe | gate 2.0 | gate 4.5 | change |
+|---|---|---|---|
+| background, flattest tiles | **4.215** | **4.070** | **−3.4%** |
+| mid-contrast | 2.527 | 2.445 | **−3.2%** |
+| high-contrast detail | 1.217 | 1.189 | **−2.3%** |
+
+Compare `bee-1-cpl`: background −87%, detail −0.05%. **On this subject the gate buys almost
+nothing and costs detail.** That is the opposite trade, and a default belongs to every
+subject.
+
+### 42.2 The premise the background probe never checked
+
+The verdict line asserts the tiles are "featureless in EVERY frame". `patchwork.py` selects
+the *flattest available* tiles; it never checked they were actually near the noise floor.
+A subject with no featureless region would get the same sentence printed over real texture.
+
+The check was already in the output, unread. `ctrl/max` is `HF(mean of N frames)` over the
+single-frame maximum, and for **pure independent noise** it must equal `1/sqrt(N)`:
+
+| subject | input HF, flat tiles | `ctrl/max` | `1/sqrt(8)` | reading |
+|---|---|---|---|---|
+| `bee-1-cpl` | ~75 | **0.446–0.456** | 0.354 | *above* noise — some correlated static structure |
+| `couch-fibers-cpl` | ~110 | **0.330–0.356** | 0.354 | *at* noise — genuinely noise-dominated |
+
+So the premise **holds** on `couch-fibers`, and its 4.215 is real invented structure — **3.2x
+worse than `bee-1`'s 1.305**, on the subject I had not looked at. The uncomfortable reading
+is that the subject with the worse defect is the one the fix does not help.
+
+> **A probe that names its own premise in its verdict must test that premise.** Mine printed
+> "featureless in EVERY frame" as an assertion about tiles chosen only for being the flattest
+> on offer. The statistic that could confirm it was already in the table, one column away,
+> and I read it only after a second subject disagreed with the first.
+
+### 42.3 What this does and does not overturn
+
+**Stands:** the arm ladder of §39 (floor 0.074, pyramid 1.305, pure selector 3.996 on
+`bee-1`), the instrument, its 54x dynamic range, and the two commissioned detail probes.
+The pyramid is still far better than pure selection.
+
+**Withdrawn:** the recommendation to raise the default gate to 4.5. It is a per-subject win
+on `bee-1` and a per-subject loss on `couch-fibers`, which means it is not a default — at
+best it is an *adaptive* decision, and at worst the mechanism differs between the two cases
+and neither number generalises.
+
+**Opened:** why does gate 4.5 collapse `bee-1`'s background 87% and move `couch-fibers`'
+only 3.4%, when both have noise-dominated flat tiles? A gate expressed in units of the noise
+model should act the same on both. It does not, and that difference is now the most
+interesting unexplained thing in this file.
+
+### 42.4 Process note
+
+I recommended a default change on one subject, then found the counter-example myself an hour
+later, before anything shipped. The recommendation carried its own scope limit in §40.5 and
+the implementer was told to run the gallery before landing it — which is the only reason
+this is a correction rather than a regression. **Write the scope limit down at the moment of
+the claim, not after someone disagrees with it.**
