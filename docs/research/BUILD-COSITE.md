@@ -334,3 +334,98 @@ figure is the better one, as ORCH said.
 None of this changes the conclusion in §4. The fold is arithmetically right,
 reproduces within 1.8% at the band that matters, and is on a render path the
 photographer never opens.
+
+---
+
+## 9. The profile translation is not the co-site, and cannot collide with it
+
+ORCH relayed BUILD-SHARP's flag that `A7C2_FE100GM_2XTC_X4CPL` carries
+`translation: (0.6294, -0.4240)` px, documented as unattributed and as *"the
+same order as the ~0.5 px/axis that CFA co-siting predicts"*, with the worry
+that a folded co-site plus that term would double-correct by half a pixel per
+axis on R and B. Checked at HEAD `c75979c`. `optics.rs` is BUILD-CHROMA's lane
+and was read, not edited.
+
+### 9.1 The shipping path zeroes it, and the repo already asserts that
+
+`profile_from_setting` (`optics.rs:585`) maps the profile key to
+`A7C2_FE100GM_2XTC_X4CPL_RADIAL`, and `applied_form` (`optics.rs:612`) does the
+same for the gear-matched default-on route. That twin is `translation: (0.0,
+0.0)`. Confirmed by running the repo's own pins rather than by reading them:
+`cargo test --release -p strehl-core optics` gives 27 passed / 0 failed,
+including `the_default_on_path_applies_the_radial_form`,
+`the_gate_applies_the_radial_term_only`, and
+`the_two_profiles_differ_only_in_translation`.
+
+ORCH asked whether a fold could **assert** this rather than assume it. The
+assert already exists and is already named: `every_profile_has_a_radial_form`,
+guarding the fallback at `optics.rs:617` whose comment reads *"if that test
+fails, this line applies an unattributed translation to a real render."* A
+second guard in `image_out.rs` would not improve on that, and it would sit in a
+file the co-site's other consumers do not route through. No assert added.
+
+### 9.2 The stronger reason: it is the wrong shape to be a co-site
+
+The magnitude coincidence is the only property that matches. Three structural
+properties disagree, and each is sufficient on its own.
+
+The CFA co-site, in quad units relative to the green centroid `(+0.25, +0.25)`:
+
+| channel | x | y |
+|---|---:|---:|
+| R | -0.25 | -0.25 |
+| B | +0.25 | +0.25 |
+
+The profile translation, as `compose` actually applies it. `translation` is a
+**single shared field**, not a per-channel one -- `let (tx, ty) = p.translation`
+with no `ch` in it -- and the early return `let Some(eps) = p.eps(ch) else {
+return t }` combined with `eps(Green) = None` means:
+
+| channel | x | y |
+|---|---:|---:|
+| R | +0.6294 | -0.4240 |
+| B | +0.6294 | -0.4240 |
+| G | none | none |
+
+1. **Channel symmetry.** The co-site is *antisymmetric*: R and B move in
+   opposite directions. The translation is *common-mode*: R and B move the same
+   way by the same amount. A common-mode term cannot double an antisymmetric
+   one, in either sign, on either channel.
+2. **Axis sign.** A square-lattice offset has the same sign on both axes for a
+   given channel. This term has opposite signs, `+0.629` against `-0.424`.
+3. **Axis magnitude.** A square-lattice offset is equal on both axes by
+   construction. This term differs by 48% between them.
+
+"The same order as ~0.5 px" is true and is also the weakest available evidence,
+since every sub-pixel term is the same order as every other. So the *"may be
+lattice"* branch of that field's attribution is disfavoured on structure,
+independently of magnitude. That is a finding for BUILD-CHROMA, not for me.
+
+### 9.3 One thing worth routing: red's term is applied to blue
+
+The translation was fitted against **red** -- the module header derives it as
+*"the red site sits half a quad from the greens in each axis"* -- and `compose`
+applies that same `(tx, ty)` to blue, because there is one field and blue's
+branch reads it unchanged. If the term ever were lattice, blue's lattice offset
+is opposite red's, so applying red's fitted value to blue would push blue the
+wrong way rather than merely imprecisely. Latent only: the radial twin zeroes it
+before it reaches a render. Flagged for BUILD-CHROMA's lane, not touched.
+
+### 9.4 "Everything else in the chain is free" is scoped to a chain nobody renders
+
+BUILD-SHARP priced lateral CA at -0.41 / -1.52 / -4.48% and the pyramid at a
+round-trip error of 4.441e-16, and ORCH drew the conclusion that the co-site is
+*"the only removable loss in the chain, and it is the whole of it"*, with a
+stated baseline of *"G 0.698, R/B 0.468 at f=0.35"* for *"the shipped chain
+today"*.
+
+Both hold for the **binned** chain. Neither describes the shipped one. §8.2
+showed by hash that deleting the co-site outright changes not one byte of
+`--srgb --auto-exposure`, so on the render the photographer opens the co-site
+contributes exactly zero and cannot be "the whole of" anything. The R/B figure
+0.468 is therefore not the shipped baseline; it is the baseline of
+`--linear-srgb`. The shipped R/B number is still unmeasured, because the term
+that dominates it -- Malvar-He-Cutler -- has never been priced.
+
+The chain audit is sound. It audited a chain that stops one stage short of the
+output.
