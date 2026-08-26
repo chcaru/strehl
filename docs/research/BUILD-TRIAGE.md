@@ -1212,3 +1212,194 @@ SHA-256 hashes. They are separate captures of similar scenes. Recorded because
 the suspicion came from looking at the pictures and the check came from not
 trusting the look. One genuine wart: `lead-1-cpl` depicts a *leaf*, so the name
 is very likely a typo for `leaf-1-cpl`.
+
+## 10. ORCH's retraction, and what auditing my own instrument against it found
+
+ORCH withdrew the pale-flower hypothesis (`sharpvscontrast.py`): `flowers-cpl`
+moves from rank 25 by absolute detail to rank **5** once divided by the contrast
+actually present, and holds the corpus's **lowest contrast at 1282 DN**. The
+governing lesson, which I have now applied to three of my own numbers:
+
+> A detail statistic in absolute units measures the subject as much as the tool.
+
+**My through-focus work had already reached that conclusion independently**
+(SS8.3), before the retraction arrived, by a different route: shape rather than
+amplitude. 9/9 flower detail sites show a resolved interior peak. The flowers are
+not re-opened as defective.
+
+### 10.1 Audit of my own detail mask -- it survives, and here is why
+
+`flowers-cpl`'s 55.2% coverage verdict rests on a "detail-bearing" mask, and if
+that mask were an absolute-DN threshold it would select a different population on
+the corpus's lowest-contrast subject -- precisely the artefact ORCH retracted.
+
+**It is not.** `coverage.py:158` is `100.0 * np.mean(rates[7:])`, where `rates`
+is indexed by contrast **decile**: the top three deciles *within each subject*.
+It is a per-subject percentile, never a DN constant, so it adapts to a quiet
+subject rather than penalising one. It additionally carries a size-matched
+shuffled null, against which `flowers-cpl` enriches **1.57x** -- so the mask is
+targeting real structure, not noise.
+
+MEASURED. The verdict stands. ORCH's finding and mine are about *different
+regions* of that frame: its narrow in-focus band is excellently resolved per unit
+of contrast, and most of the frame is bokeh that no frame ever held in focus.
+Both are true, and the per-region split is the deliverable.
+
+### 10.2 Two bugs in my own commissioning plants, found by taking ORCH's lesson seriously
+
+**(a) C13's blur ladder was measuring its own border.** `np.convolve(..., "same")`
+zero-pads, so a window of real pixels acquires an artificial step at its edge
+whose HF contribution **grows with kernel radius** (r = 2, 3, 6 for s = 0.5, 1.0,
+2.0). Every rung was therefore read under a *different* amount of contamination:
+the project's recurring error reproduced inside the plant built to catch it.
+
+Measured, richest window, margin 0 vs 10 px:
+
+| subject | s=0.0 | s=0.5 | s=1.0 | s=2.0 | |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `119MSDCF` m=0 | 0.1728 | 0.1460 | **0.1496** | 0.0776 | inverted |
+| `119MSDCF` m=10 | 0.2807 | 0.2194 | **0.1355** | 0.0700 | monotone |
+| `flowers-cpl` m=10 | 0.0939 | 0.0475 | 0.0071 | **0.0011** | 19x lower than m=0 |
+| `bee-3-cpl` m=10 | 0.2678 | 0.1745 | 0.0694 | 0.0208 | barely moves |
+
+**The bug only bit windows with little true HF** -- i.e. exactly the low-contrast
+subjects the ladder most needs to certify -- which is why it hid behind
+`bee-3-cpl` for so long. Fixed at `sitescan.py` C13 by measuring the interior with
+a fixed margin applied identically to every rung, including s = 0. `ladderprobe.py`
+reproduces the diagnosis.
+
+This also means my earlier `richest_window()` change was treating a symptom. It
+was not wrong -- a richer plant is a better plant -- but it masked this.
+
+**(b) The noise floor could be exactly zero, and that was a real measurement.**
+`noise_model` *fits* variance against level and `focus_score` clamps the residual
+at zero, so tiles below the fit line -- ordinary scatter -- read 0. On a mostly
+featureless frame the 2nd percentile collapses. Measured share of tiles scoring
+exactly zero: `119MSDCF` **9.8%**, `109MSDCF` **2.3%**, `bee-3-cpl` **0.0%**, with
+**no clipping in any group** (near-max pixels 0.0%), which refutes the obvious
+saturation explanation. Fixed by falling back to the 2nd percentile of the tiles
+that do score.
+
+**Consequence now documented at `noise_floor`:** the floor is per-subject
+(`bee-3-cpl` 0.0053, `119MSDCF` 0.0012, a factor of 4.4), so `peak_over_floor` is
+scale-free *within* a subject but **not comparable across subjects** -- an emptier
+frame flatters its own peaks. Cross-subject statements must use
+`fall_to_first`/`fall_to_last`, which carry no floor. This is ORCH's lesson
+reappearing inside a ratio that looked immune to it.
+
+### 10.3 `stepwidth.py` -- how many captured frames actually hold a site in focus
+
+New instrument. FWHM of the through-focus curve above the noise floor, expressed
+in **real captured frames** (samples x stride), so stacks of different length are
+comparable. Commissioned: three planted Gaussian widths recovered to <5%,
+stride-invariance to <12%, and two nulls (flat curve, monotone ramp) both refused.
+
+**It refuted my own "step too coarse" hypothesis for `119MSDCF`:** FWHM = **8.74
+and 8.75 frames**, against `bee-3-cpl` at 15.4/18.4. Eight to nine captured frames
+hold each site in focus. The sweep is not undersampling its own depth of field.
+
+### 10.4 `fillfactor.py` -- and the refutation of my second hypothesis
+
+If the sources are sharp, the sampling adequate and the merge faithful, the
+remaining candidate was **composition**: ORCH's `raw` is a mean over an 800x800
+tile, and a tile that is 90% flat ink averages low no matter how sharp its 10% is.
+So partition the tile: `fill` (fraction carrying resolvable structure), `raw`
+(mean over everything -- ORCH's statistic) and `cond` (mean over detail-bearing
+pixels only).
+
+**Correction, caught by reading the finished sheet.** I first wrote
+`raw ~= fill * cond`. That is false. The exact decomposition is
+`raw = fill*cond + (1-fill)*(mean over sub-threshold pixels)`, and the second
+term is not small: `wrapped-text-2` has fill = 0.010 and cond = 764, giving
+`fill*cond` = 7.6 against a measured `raw` of **416** -- its sub-threshold pixels
+carry ~417 DN of |laplacian| from shot noise alone, because it is a bright white
+label. The bad identity would have flattered exactly the sparse bright subjects
+this instrument exists to identify.
+
+Detail-bearing is defined by a **Monte-Carlo null**: synthesise a tile of the same
+mean level and same measured pixel noise with no structure, and threshold at its
+99th percentile. Neither an absolute DN constant (ORCH's retraction) nor a
+within-tile percentile -- the latter is degenerate, reporting `fill = 1.000` on a
+perfectly flat tile, because a relative threshold always finds something.
+
+Commissioned: fills 0.25/0.50/0.75 recovered to <0.06; `cond` blind to fill within
+1.0%; `raw` tracks fill 2.42x; `cond` tracks contrast 3.50x; flat null 0.017; and
+a **grain null at 0.017** -- pure high-amplitude noise scores as non-detail, so
+this estimator cannot be fooled by the grain-as-detail trap the corpus has already
+fallen into once.
+
+**The hypothesis is dead.** The two subjects are the *least* sparse in the corpus:
+
+| subject | fill | cond | rk_raw -> rk_cond |
+| --- | ---: | ---: | --- |
+| `109MSDCF` | **0.261 (highest)** | 171.7 | 22 -> 24 |
+| `119MSDCF` | **0.182 (3rd highest)** | 336.5 | 20 -> 20 |
+| `bee-3-cpl` | 0.075 | 756.8 | 17 -> **12** |
+| `wrapped-text-2` | 0.010 | 764.3 | 7 -> 11 |
+
+More detail-bearing area than anything else, less sharpness within it. That
+confirms ORCH's ranking rather than explaining it away.
+
+### 10.5 Why I am not reclassifying `119MSDCF` and `109MSDCF`
+
+Every capture *defect* is individually excluded by a measurement:
+
+| candidate | measurement | verdict |
+| --- | --- | --- |
+| merge lost it | edge ratio 0.955 / 0.974, inside the 8.6-18.9% clamp handicap | excluded |
+| coverage gap | `detail_gap` 0.50% / 0.35% | excluded |
+| step too coarse | FWHM 8.74 frames (`119MSDCF`) | excluded |
+| motion | adjacent-frame NCC 0.99986 / 0.99965 | excluded |
+| sources never resolved | probe rel **0.1517**, x58.9 above floor, at 119MSDCF's ink edge | excluded |
+
+So the merge is faithful and the frames are sharp where I probed, yet absolute
+detail across the tile is the corpus floor. **I decline to invent a category for
+this, for two reasons.**
+
+First, `cond` sorted runs 366, 337, 275, 240, 195, 172, 128, 108 -- **no empty
+band anywhere**. Every threshold in this report was read off a gap in the corpus
+(the SNR band 2.99 -> 5.59; the coverage band 7.34 -> 55.17). A cut placed here
+would be manufactured, and a manufactured threshold is how a finding becomes a
+number nobody can defend.
+
+Second, ORCH's lesson applies symmetrically. `cond` is absolute DN, and
+`119MSDCF` at 1:1 is **thick glossy marker ink on paper** -- a substance that
+genuinely has no fine texture. Declaring it "under-resolved" would repeat the
+retracted error with the sign flipped. What I can say, and it is enough:
+
+> MEASURED: the merge reproduces what these frames contain; these frames contain
+> the least fine detail in the corpus. No merge change will improve them.
+
+That is an advisory, not a defect, and it is what the tile must carry.
+
+**Partition unchanged: 19 + 2 + 0 + 0 + 1 + 0 + 4 + 0 = 26.** No verdict moved
+this segment; two instruments were corrected and two of my own hypotheses were
+refuted by my own measurements.
+
+### 10.6 A natural experiment the sheet exposed, not yet run
+
+Ordering the tiles by verdict put four camera-folder subjects side by side, and
+at that point it is visible that they are **two scenes shot twice**:
+`119MSDCF`/`109MSDCF` are both the same crossing marker strokes, and
+`113MSDCF`/`112MSDCF` are both the same dendritic frost pattern. ARGUED, from
+looking at the tiles; the files are not duplicates (four distinct SHA-256, SS8).
+
+If that holds, each pair is a same-subject control on frame count:
+
+| pair | frames | detail (cond, DN) | rank |
+| --- | ---: | ---: | ---: |
+| `119MSDCF` | 33 | 337 | 20 |
+| `109MSDCF` | 22 | 172 | 24 |
+| `113MSDCF` | 63 | 366 | 19 |
+| `112MSDCF` | 79 | 195 | 23 |
+
+The first pair moves the way more frames should; **the second moves the opposite
+way**, and 79 frames deliver less detail than 63. One pair cannot be explained by
+frame count alone, so frame count is not the operative variable in at least one
+case -- which is consistent with ORCH's own warning that the census is a prior,
+not a classification.
+
+I am not resolving this. The measurement that would: run `sitescan.py` at matched
+coordinates on both members of a pair, confirm the scenes register, and compare
+through-focus shape. Recorded here because a subject that merely *looks* like a
+control is worth more as a stated lead than as an unstated assumption.

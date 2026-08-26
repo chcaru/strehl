@@ -252,6 +252,17 @@ def noise_floor(g: np.ndarray, tiles: int = 16) -> float:
     256 px, which happens to be blank on a ruler and happens to be the
     SHARPEST region on `flowers-cpl` -- so the floor came out above the signal
     and the commissioning plant failed.
+
+    LIMITATION, and it constrains how `peak_over_floor` may be read. The floor is
+    a per-subject quantity: `bee-3-cpl` returns 0.0053 and `119MSDCF` 0.0012, a
+    factor of 4.4. A ratio taken against it is therefore scale-free WITHIN a
+    subject -- which is what makes it a valid "did this site resolve?" test -- but
+    it is NOT comparable ACROSS subjects, because an emptier frame yields a
+    smaller denominator and so flatters its own peaks. This is the corpus lesson
+    that a statistic in absolute units measures the subject as much as the tool,
+    reappearing in a ratio that looked immune to it. For cross-subject statements
+    use `fall_to_first`/`fall_to_last`, which are fractions of each peak's own
+    range and carry no floor at all.
     """
     a, b = noise_model(g)
     h, w = g.shape
@@ -262,7 +273,25 @@ def noise_floor(g: np.ndarray, tiles: int = 16) -> float:
             t = g[r * th:(r + 1) * th, c * tw:(c + 1) * tw]
             if t.shape[0] > 4 and t.shape[1] > 4:
                 vals.append(focus_score(t, a, b))
-    return float(np.percentile(vals, 2)) if vals else 0.0
+    if not vals:
+        return 0.0
+    p2 = float(np.percentile(vals, 2))
+    if p2 > 0.0:
+        return p2
+    # Degenerate floor.  noise_model FITS variance against level; focus_score
+    # subtracts that fit and clamps at zero, so tiles below the fit line -- which
+    # is ordinary scatter, not an error -- read exactly 0.  On a frame that is
+    # mostly featureless, many tiles sit at the noise floor, roughly half of those
+    # fall below the fit, and the 2nd percentile collapses to 0.  Measured, 16x16
+    # tiling, fraction of tiles scoring exactly zero:
+    #     119MSDCF   9.8%      109MSDCF   2.3%      bee-3-cpl   0.0%
+    # with NO clipping in any of them (near-max pixels 0.0% in all groups, so the
+    # obvious saturation explanation is refuted).  A zero floor is therefore a
+    # true statement about those subjects, but it is unusable as the denominator
+    # of a ratio.  Fall back to the smallest scores the estimator can still tell
+    # apart from zero: the 2nd percentile of the tiles that do score.
+    pos = [v for v in vals if v > 0.0]
+    return float(np.percentile(pos, 2)) if pos else 0.0
 
 
 def richest_window(g: np.ndarray, half: int) -> np.ndarray:
@@ -344,11 +373,33 @@ def commission(g: np.ndarray) -> float:
         out = np.apply_along_axis(lambda m: np.convolve(m, k, "same"), 0, a)
         return np.apply_along_axis(lambda m: np.convolve(m, k, "same"), 1, out)
 
-    sig = [hf_rel(blur(win, s)) for s in (0.0, 0.5, 1.0, 2.0)]
+    # Measure the INTERIOR only.  np.convolve(..., "same") zero-pads, so a window
+    # of real pixels ~1000 DN acquires an enormous artificial step at its border,
+    # and the HF that step injects GROWS with kernel radius -- r = 2, 3, 6 for
+    # s = 0.5, 1.0, 2.0.  Each rung would then be read under a DIFFERENT amount of
+    # border contamination, which is this project's recurring error (comparing
+    # across a transformation that is not held fixed) reproduced inside the
+    # commissioning plant meant to catch it.
+    #
+    # It inverted C13 on two subjects, both at rungs 2<->3.  Measured, ladder on
+    # the richest window, margin 0 vs 10:
+    #     119MSDCF     0.1460, 0.1496  ->  0.2194, 0.1355   (inversion removed)
+    #     flowers-cpl  s=2.0  0.0206   ->  0.0011           (19x overstated)
+    #     bee-3-cpl    s=2.0  0.0271   ->  0.0208           (barely moves)
+    # The bug hid because it only bites windows with little true HF -- i.e. exactly
+    # the low-contrast subjects the ladder most needs to certify.  BORDER exceeds
+    # the largest radius used anywhere here: the ramp reaches s = 7*0.35 = 2.45,
+    # so r = 7.  Cropping is applied to EVERY rung including s = 0.
+    BORDER = 10
+
+    def hf_blurred(a: np.ndarray, s: float) -> float:
+        return hf_rel(blur(a, s)[BORDER:-BORDER, BORDER:-BORDER])
+
+    sig = [hf_blurred(win, s) for s in (0.0, 0.5, 1.0, 2.0)]
     assert sig[0] > sig[1] > sig[2] > sig[3], \
         f"C13 monotonicity: blur did not reduce HF monotonically: {sig}"
     peak = 7
-    ramp = np.array([hf_rel(blur(win, abs(i - peak) * 0.35)) for i in range(15)])
+    ramp = np.array([hf_blurred(win, abs(i - peak) * 0.35) for i in range(15)])
     cr = classify(ramp, lo)
     assert cr["argmax_sample"] == peak, \
         f"C13 plant: peak planted at {peak}, recovered at {cr['argmax_sample']}"

@@ -99,6 +99,37 @@ def load_triage(path: str | None):
     return {r["subject"]: r for r in doc["rows"]}, doc["counts"]
 
 
+def load_fill(path: str | None):
+    """BUILD-TRIAGE fillfactor.json keyed by subject, or {} if absent.
+
+    Optional by design: the sheet must still build for anyone who has not run
+    fillfactor.py.  A missing file drops the detail line and says so, rather
+    than failing or -- worse -- printing a blank where a number belongs.
+    """
+    if not path or not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as fh:
+        return {r["sub"]: r for r in json.load(fh)["rows"]}
+
+
+def detail_line(sub: str, fill_rows: dict, n: int) -> str:
+    """Absolute detail actually present, and how much of the tile carries it.
+
+    Two numbers, because either alone misleads.  `cond` is sharpness measured
+    ONLY over detail-bearing pixels, so it is not diluted by flat area; `fill`
+    is how much of the tile that was.  A low `cond` at high `fill` is a subject
+    that is genuinely under-resolved; a low mean at low `fill` is merely a
+    sparse subject, and the corpus contains both.  Ranked, not thresholded:
+    `cond` has no empty band anywhere in this corpus, so any cut placed on it
+    would be invented rather than measured.
+    """
+    r = fill_rows.get(sub)
+    if not r:
+        return ""
+    return (f"detail {r['cond']:.0f} DN at {100.0 * r['fill']:.0f}% fill; "
+            f"sharpness rank {r['rk_cond']}/{n}")
+
+
 def measure_line(row: dict) -> str:
     """One line of the number that produced the verdict -- never a bare label."""
     e = row.get("evidence") or {}
@@ -158,9 +189,10 @@ def wrap(s: str, n: int) -> list[str]:
 WRAP_COLS = 62
 EVIDENCE_LINES = 1
 REMEDY_LINES = 2
+DETAIL_LINES = 1
 
 
-def check_budgets(tri_rows: dict) -> None:
+def check_budgets(tri_rows: dict, fill_rows: dict | None = None) -> None:
     """Hard-fail on any caption the sheet would silently truncate.
 
     The tile draws a fixed number of wrapped lines and discards the rest with a
@@ -170,10 +202,13 @@ def check_budgets(tri_rows: dict) -> None:
     worse than no caption, because it still looks authoritative.
     """
     bad = []
+    fill_rows = fill_rows or {}
+    n = len(fill_rows)
     for name, row in sorted(tri_rows.items()):
         for what, text, budget in (
                 ("evidence", measure_line(row), EVIDENCE_LINES),
-                ("remedy", row.get("remedy") or "", REMEDY_LINES)):
+                ("remedy", row.get("remedy") or "", REMEDY_LINES),
+                ("detail", detail_line(name, fill_rows, n), DETAIL_LINES)):
             lines = wrap(text, WRAP_COLS)
             if len(lines) > budget:
                 bad.append(f"  {name} [{what}] needs {len(lines)} lines, "
@@ -182,7 +217,9 @@ def check_budgets(tri_rows: dict) -> None:
         raise SystemExit("caption budget exceeded; these would be truncated:\n"
                          + "\n".join(bad))
     print(f"caption budgets OK: {len(tri_rows)} tiles fit "
-          f"{EVIDENCE_LINES}+{REMEDY_LINES} lines at {WRAP_COLS} cols")
+          f"{EVIDENCE_LINES}+{REMEDY_LINES}+{DETAIL_LINES} lines at "
+          f"{WRAP_COLS} cols"
+          + ("" if fill_rows else "  (no fillfactor.json: detail line omitted)"))
 
 
 def main() -> int:
@@ -196,6 +233,10 @@ def main() -> int:
     ap.add_argument("--triage", default=None,
                     help="path to BUILD-TRIAGE triage.json; adds per-tile "
                          "verdicts, evidence and remedies to the sheet")
+    ap.add_argument("--fill",
+                    default=r"C:\dev\strehl-out\BUILD-TRIAGE\fillfactor.json",
+                    help="path to BUILD-TRIAGE fillfactor.json; adds the "
+                         "measured detail line. Optional: omitted if absent")
     args = ap.parse_args()
 
     vdir = os.path.join(args.dst, "view")
@@ -233,8 +274,9 @@ def main() -> int:
     cw = max(t.size[0] for _, t in thumbs)
     ch = max(t.size[1] for _, t in thumbs)
     tri_rows, tri_counts = load_triage(args.triage)
+    fill_rows = load_fill(args.fill)
     if tri_rows:
-        check_budgets(tri_rows)
+        check_budgets(tri_rows, fill_rows)
         # ORDERING.  Alphabetical order is why the owner judged the tool by its
         # worst tiles: `flowers-cpl` and `flower-inner-edge-cpl` land in the
         # middle of the sheet with no indication that they are capture failures,
@@ -267,7 +309,7 @@ def main() -> int:
             ev = row.get("evidence") or {}
             print(f"  {i:2d}. {n:<38} {row.get('verdict','?'):<38} "
                   f"{float(ev.get('merge_edge_dnpx') or 0.0):>8.1f} DN/px")
-    lab = 30 if not tri_rows else 96
+    lab = 30 if not tri_rows else 114
     pad = 14
     head = 56 if not tri_rows else 148
     W = cols * (cw + pad) + pad
@@ -346,6 +388,10 @@ def main() -> int:
             for j, line in enumerate(wrap(row.get("remedy") or "", 62)[:2]):
                 d.text((x, y + ch + 57 + j * 15), line, font=font(12),
                        fill=(150, 152, 162))
+            dl = detail_line(n, fill_rows, len(fill_rows))
+            if dl:
+                d.text((x, y + ch + 89), dl, font=font(12),
+                       fill=(126, 138, 150))
 
     cp = os.path.join(args.dst, "contact-triage.jpg" if tri_rows else "contact.jpg")
     sheet.save(cp, "JPEG", quality=93, optimize=True)
