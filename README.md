@@ -283,12 +283,15 @@ argued.** All 26 reference renders were produced on this path, and the question
 of whether any of them *needed* those two stages was put to three independent
 tests.
 
-*Motion.* Seventeen crops at 1:1 across thirteen subjects, examined as
+*Motion.* Twenty-two crops at 1:1 across fifteen subjects, examined as
 pictures: **zero visible ghosting**, including the hardest geometries in the
-set — bee setae against white, and printed text. Numerically, 10 of 26 subjects
-show any inter-frame displacement clearing a floor measured on a subject that
-physically cannot move, and the largest detection anywhere in the corpus clears
-that floor by only 1.90x. Nothing in the corpus needed outlier rejection.
+set — bee setae against white, and printed text. The other eleven subjects were
+**not viewed** (15 viewed + 11 not viewed = 26, stated as a partition so an
+unexamined subject cannot read as a clean one; they are the subjects with no
+hot cluster worth cropping). Numerically, 10 of 26 subjects show any
+inter-frame displacement clearing a floor measured on a subject that physically
+cannot move, and the largest detection anywhere in the corpus clears that floor
+by only 1.90x. Nothing in the corpus needed outlier rejection.
 
 *Exposure.* This one corrected the reason, not just the claim. Several subjects
 show flux ramps across a bracket that look alarming — up to half a stop
