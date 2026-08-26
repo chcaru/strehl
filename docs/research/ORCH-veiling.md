@@ -7907,3 +7907,117 @@ trusting your eye:
 > metric works. The fifteenth, where they agree on a defect, tells you where to
 > spend. A metric that has never been checked against an opened image has not
 > been commissioned -- it has only been computed.
+
+
+## 67. Which flags reach a pixel: the accident, made systematic
+
+Three features of this tool have now been found to be documented, banner-reported,
+tested, and inert:
+
+| feature | found by | how |
+| --- | --- | --- |
+| `--exposure` / `--auto-exposure` | me, §64 | an 8x darkening moved 0 of 98,898,048 samples while the banner said it was applied |
+| `STREHL_ROBUST_ELECTION` | M126 | constants quoted correctly in a report; the code never executes |
+| `outlier.rs` | M126 | referenced only by `lib.rs:23`; reachable solely from `examples/` |
+
+All three were found **by accident, by parties looking for something else**. That
+is the finding. Three independent accidents is not three accidents; it is a
+detection rate, and it implies a population. Finding them one at a time, when
+somebody happens to trip over one, does not scale and cannot be reported to a
+user as a level of assurance.
+
+`scripts/check-potency.py` is the accident made systematic. One rule:
+
+> A flag is not wired until an **absurd** value has changed the output.
+
+Absurdity is doing real work in that sentence. A *small* measured difference is
+indistinguishable from a small correctly-chosen one, and that ambiguity is
+precisely where dead code survives review. Eight stops, a gate of zero, one
+pyramid band: the only reading that cannot be explained away is a difference of
+nothing at all.
+
+### The audit judges itself before it judges anything else
+
+Three probes exist only to license the other eleven, because an audit that
+reports "all dead" because the renderer crashed is indistinguishable from an
+audit that found a catastrophe:
+
+| control | probe | required | measured |
+| --- | --- | --- | --- |
+| NULL | baseline against itself | byte-identical | byte-identical |
+| POSITIVE | `--pyramid-gate 0.0` | must read LIVE | LIVE, 96,397,031 samples, 97.47 % |
+| NEGATIVE | `--exposure=-6.0` | must read inert | 0 differing samples |
+
+### Results, one binary before the highlight fix and one after
+
+Fourteen probes, `109MSDCF`, 8 frames, `--merge pyramid --srgb`, banner backend
+`pyramid (--merge)` confirmed on every arm.
+
+| probe | pre-fix `C46BDF06` | post-fix `71C0F627` |
+| --- | --- | --- |
+| `--pyramid-gate 0.0` | LIVE 97.47 % | LIVE 97.47 % |
+| `--pyramid-bands 1` | LIVE 97.19 % | LIVE 97.19 % |
+| `--pyramid-exponent 0.01` | LIVE 97.13 % | LIVE 97.13 % |
+| `--pyramid-sharpen 4.0` | LIVE 88.60 % | LIVE 88.60 % |
+| `--resampler nearest` | LIVE 97.48 % | LIVE 97.48 % |
+| `STREHL_ALIGN=0` | LIVE 97.60 % | LIVE 97.60 % |
+| `STREHL_HIGHLIGHT_KNEE=0.02` | **DEAD** | **LIVE 79.48 %, max 2891 DN** |
+| `--exposure=-6.0` | 0 samples | 0 samples |
+| `--auto-exposure` | 325,061 samples, **max 1 DN** | 325,061 samples, **max 1 DN** |
+| `STREHL_ROBUST_ELECTION=1` | DEAD | DEAD |
+| `STREHL_SMOOTH=1` | DEAD | DEAD |
+| `STREHL_RESTORE=1` | DEAD | DEAD |
+
+**Exactly one verdict moved between the two builds, and it is the one that was
+repaired.** That is the strongest commissioning available: the instrument was
+shown able to detect not merely an absence but a *repair*, on a change it had
+already scored as absent, without being told which row to watch.
+
+### A third verdict was needed, and `--auto-exposure` is why
+
+`--auto-exposure` moves 325,061 samples with a peak of **exactly 1 DN in 65535**,
+while its own banner announces `+2.61 stops (gain 6.105x)`. A differs / does-not-
+differ test scores that as working. It is not working; it is rounding. So the
+audit has three verdicts, not two:
+
+- **DEAD** — byte-identical. Reaches no pixel.
+- **TOKEN** — differs, peak <= 2 DN under an absurd value. **Worse than dead**,
+  because it passes every test that asks only whether something changed, and it
+  issues a receipt for an effect no pixel carries.
+- **LIVE** — a real change.
+
+### Independent confirmation of two other lanes, and one of my own tools
+
+- **BUILD-HIGHLIGHT's null reproduces, and it is not vacuous.** Their claim is
+  that `109MSDCF` is byte-identical across their fix because its maxima reach
+  only `u <= 0.5707`, below the 0.60 knee, and they state they predicted this
+  before rendering. I measured the two default renders: sha256
+  `7C77E638...E756F4` on both. But a null is only worth reading if the path
+  could have fired, so: on those **same two binaries and the same subject**,
+  moving the knee to 0.02 changes 79.48 % of pixels. **Present, potent, and
+  correctly silent on data that stays below it.** I withheld this from the
+  verifier I had already commissioned, so that their reading stays independent
+  of mine and the two can be compared rather than merged.
+- **M126's `STREHL_ROBUST_ELECTION` finding reproduces** by a completely
+  different method — they read the code, I rendered an image.
+- **`STREHL_SMOOTH` and `STREHL_RESTORE` are new**, and the second is the
+  uncomfortable one. My own `scripts/check-defaults.py` has been reporting RED
+  for exactly one reason: that `STREHL_RESTORE` is off by default. **Turning it
+  on changes nothing at all.** My checker has been demanding that somebody flip a
+  switch that is not connected to anything, and the demand looked like diligence.
+
+The rule, which I am applying to myself first:
+
+> A checker that demands a setting be changed has asserted that the setting
+> matters. That assertion is a claim about the program, it is testable in one
+> render, and mine was wrong. Before requiring a gate be turned on, turn it on
+> and confirm a pixel moved.
+
+### What this does not establish
+
+DEAD here means *reached no pixel under these conditions*. That is one of two
+very different things: genuinely dead code, or code nested behind another gate
+that is off. **They produce an identical null and mean opposite things**, and
+M126 has already been burned once attributing a byte-identity to a constant in
+code that never ran. Separating them requires reading the code, and the audit
+prints that warning next to its own results rather than in a footnote.
