@@ -178,6 +178,59 @@ if ($empty.Count -gt 0) {
 }
 if ($subjects.Count -eq 0) { throw "no subjects with RAW frames" }
 
+# ---------------------------------------------------------------------------
+# The lateral-CA profile names an optical path. Verify each stack IS that path.
+# ---------------------------------------------------------------------------
+# `a7c2-fe100gm-2xtc-x4cpl` is a per-channel radial rescale fitted for one body,
+# one lens and one teleconverter. Applied to a stack shot on anything else it
+# does not merely fail to help -- it ADDS an aberration that was never there.
+#
+# This was raised as an unavoidable caveat, on the grounds that a teleconverter
+# cannot be detected from the frames. It can. It is not even in the maker notes:
+# `LensModel` is a standard EXIF tag and it spells the converter out in full.
+# So the caveat becomes a check, and a check is worth more than a warning
+# because a warning has to be read by someone who is already suspicious.
+#
+# Verified rather than assumed, per subject, every run. On a mismatch the
+# correction is switched off FOR THAT SUBJECT ONLY and the reason is recorded in
+# the manifest. A stack shot on new glass gets an uncorrected render, which is
+# the safe direction to fail: no correction is a known quantity, a
+# wrong-coefficient correction is a new defect that looks like a real one.
+$CA_BODY = 'ILCE-7CM2'
+$CA_LENS = 'FE 100mm F2.8 Macro GM OSS + 2X Teleconverter'
+$caPath = @{}
+$caVerify = "not attempted"
+if ($FixCa) {
+    $et = Get-Command exiftool -ErrorAction SilentlyContinue
+    if (-not $et) {
+        # exiftool is not a declared dependency of this repo. Absent it, apply
+        # the profile as asked but say plainly that nothing checked it.
+        $caVerify = "UNVERIFIED (exiftool not found; profile applied on trust)"
+        Write-Warning "exiftool not found -- cannot verify optical path; applying $FixCa unchecked"
+        foreach ($s in $subjects) { $caPath[$s.Name] = $true }
+    } else {
+        $probes = foreach ($s in $subjects) {
+            (Get-ChildItem -File $s.FullName |
+                Where-Object { $_.Extension -match $RAW_EXT } |
+                Sort-Object Name | Select-Object -First 1).FullName
+        }
+        $tags = & exiftool -fast2 -T -q -Model -LensModel @probes
+        $k = 0; $mismatch = @()
+        foreach ($s in $subjects) {
+            $p = ($tags[$k] -split "`t"); $k++
+            $ok = ($p[0] -eq $CA_BODY) -and ($p[1] -eq $CA_LENS)
+            $caPath[$s.Name] = $ok
+            if (-not $ok) { $mismatch += "$($s.Name) [$($p[0]) / $($p[1])]" }
+        }
+        $caVerify = if ($mismatch.Count -eq 0) {
+            "verified: $($subjects.Count)/$($subjects.Count) stacks are $CA_BODY + $CA_LENS"
+        } else {
+            "PARTIAL: CA disabled on $($mismatch.Count) stack(s) -- $($mismatch -join '; ')"
+        }
+        Write-Host "optical path: $caVerify"
+    }
+}
+
 # EVERY render goes into a private staging directory, and `gallery\` is only
 # ever replaced WHOLESALE at the end. This is not tidiness, it is the fix for a
 # real failure: a run that died at subject 12 of 26 left `gallery\` holding 10
@@ -227,8 +280,9 @@ New-Item -ItemType Directory -Force -Path $raw | Out-Null
 $exeInfo = Get-Item $Exe
 
 # Lateral-CA correction is selected by the environment, and it was unset -- and
-# therefore silently off -- in every gallery before this one.
-if ($FixCa) { $env:STREHL_FIX_CA = $FixCa } else { Remove-Item Env:\STREHL_FIX_CA -ErrorAction SilentlyContinue }
+# therefore silently off -- in every gallery before this one. It is now set
+# PER SUBJECT inside the render loop, after the optical path has been checked.
+Remove-Item Env:\STREHL_FIX_CA -ErrorAction SilentlyContinue
 
 $run = @(
     "gallery run     : $(Get-Date -Format o)"
@@ -242,6 +296,10 @@ $run = @(
     $(if ($empty.Count -gt 0) { "skipped (no RAW frames): $($empty.Name -join ', ')" } else { "skipped          : (none)" })
     "long edge       : $LongEdge"
     "STREHL_FIX_CA   : $(if ($FixCa) { $FixCa } else { '(off)' })"
+    "  optical path  : $caVerify"
+    "  what it is    : a per-channel radial rescale for ONE body/lens/TC path."
+    "                  It corrects the LENS. It is orthogonal to the merge, and"
+    "                  it does not touch the halo or the tone rendering."
     "render command  : strehl stack <DIR> --out <TIFF> --srgb --demosaic"
     ""
     "--srgb is correct HERE and only here: this is a viewing render, and the"
@@ -254,7 +312,7 @@ $rows = New-Object System.Collections.Generic.List[string]
 # `binary` is per ROW, not per run. The whole directory-level provenance story
 # failed exactly because it was per run: one hash at the top of RUN.txt cannot
 # describe a directory that ended up holding two binaries' work.
-$rows.Add("subject`tframes`tseconds`texit`tblack`twhite`tzeroRGB`tblownRGB`tjpeg`tguard`tbinary")
+$rows.Add("subject`tframes`tseconds`texit`tblack`twhite`tzeroRGB`tblownRGB`tjpeg`tguard`tbinary`tca")
 $guardMoved = New-Object System.Collections.Generic.List[string]
 $failed = New-Object System.Collections.Generic.List[string]
 
@@ -268,9 +326,15 @@ foreach ($s in $subjects) {
     # the right subject's name, which is the same class of lie as a mixed
     # directory.
     $frames = 0; $exit = $null; $black = ""; $white = ""
-    $zero = ""; $blown = ""; $jpg = ""; $guardState = ""
+    $zero = ""; $blown = ""; $jpg = ""; $guardState = ""; $ca = "off"
     $sw = [Diagnostics.Stopwatch]::StartNew()
   try {
+    # Set per subject, so a stack shot on a different optical path is rendered
+    # without a coefficient that does not describe it.
+    $caOn = $FixCa -and $caPath[$n]
+    if ($caOn) { $env:STREHL_FIX_CA = $FixCa }
+    else { Remove-Item Env:\STREHL_FIX_CA -ErrorAction SilentlyContinue }
+    $ca = if ($caOn) { $FixCa } elseif ($FixCa) { "off:path" } else { "off" }
     $frames = (Get-ChildItem -File $s.FullName |
         Where-Object { $_.Extension -match $RAW_EXT }).Count
     Write-Host ("[{0,2}/{1}] {2} ({3} frames)" -f $i, $subjects.Count, $n, $frames)
@@ -301,7 +365,7 @@ foreach ($s in $subjects) {
         $jpg = Join-Path $work "$n.jpg"
         # Stamped into the JPEG itself, so one file taken out of the directory
         # can still say what produced it.
-        $prov = "strehl gallery`nsubject $n`nbinary sha256 $exeSha`nSTREHL_FIX_CA $(if ($FixCa) { $FixCa } else { '(off)' })`nrendered $(Get-Date -Format o)`nlong edge $LongEdge"
+        $prov = "strehl gallery`nsubject $n`nbinary sha256 $exeSha`nSTREHL_FIX_CA $ca`nrendered $(Get-Date -Format o)`nlong edge $LongEdge"
         $viewOut = & python (Join-Path $PSScriptRoot "gallery_view.py") $tif $jpg $LongEdge $prov 2>&1
         $viewOut | Write-Host
         if ($LASTEXITCODE -ne 0) { Write-Warning "$n : view conversion failed" ; $jpg = "" ; $failed.Add("$n (view)") }
@@ -349,9 +413,9 @@ foreach ($s in $subjects) {
     $failed.Add("$n (script error: $($_.Exception.Message))")
   }
     $sw.Stop()
-    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}`t{9}`t{10}" -f `
+    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}`t{9}`t{10}`t{11}" -f `
         $n, $frames, [int]$sw.Elapsed.TotalSeconds, $exit, $black, $white, $zero, $blown, `
-        $(if ($jpg) { Split-Path $jpg -Leaf } else { "" }), $guardState, $exeShort))
+        $(if ($jpg) { Split-Path $jpg -Leaf } else { "" }), $guardState, $exeShort, $ca))
     # Written every iteration, not at the end: a run that dies at subject 19
     # should still leave 18 rows of evidence behind.
     [IO.File]::WriteAllLines((Join-Path $work "manifest.tsv"), $rows, (New-Object Text.UTF8Encoding $false))

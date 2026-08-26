@@ -1256,6 +1256,77 @@ guard working: the develop path changed on purpose.
 
 ---
 
+## 15b. The teleconverter caveat is detectable, and now enforced
+
+ORCH corroborated the CA finding interventionally (`coffee-bean` EDGE chroma
+−6.34%, `flower-bud-with-background-fern-cpl` −9.13%, flat placebo −0.41% and
++0.33%) and asked for the profile to be switched on in the gallery — where it
+already was, defaulted since `b914f31`.
+
+Carried with it was a caveat: the profile names a 2× teleconverter and "there
+is no way to detect from the frames whether a given stack was shot with it."
+
+**There is.** It is not even in the maker notes — `LensModel` is a standard EXIF
+tag and it spells the converter out in full:
+
+```
+[EXIF] LensModel : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+[EXIF] Model     : ILCE-7CM2
+```
+
+`ILCE-7CM2` is the profile key's `a7c2`, and `+ 2X Teleconverter` is its
+`2xtc`. Three of the key's four components are machine-checkable. Only the CPL
+is not, and a flat filter is not a plausible source of a radial per-channel
+scale — `foam` is non-CPL and the correction transfers to it at −61%.
+
+### The corpus, surveyed per frame
+
+Not one frame per subject — **every frame**:
+
+| frames surveyed | distinct optical paths |
+|---|---|
+| **4825** | **1** — `ILCE-7CM2` / `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter` / 200.0 mm |
+
+So for this library the caveat is not merely detectable, it is **moot**: there
+is no stack the coefficient fails to describe. That is a stronger statement than
+the one the caveat asked for, and it took ninety seconds to establish.
+
+### Made an invariant rather than a note
+
+A caveat in `RUN.txt` has to be read by someone who is already suspicious, and
+the failure it guards against is silent: applied to the wrong glass, a
+per-channel radial rescale does not fail to help, it **adds** an aberration that
+was never in the frame — a new defect wearing the appearance of a real one.
+
+`gallery.ps1` now reads `Model` and `LensModel` from the first frame of each
+subject every run and compares them against the path the profile names. On a
+mismatch the correction is disabled **for that subject only**, and the reason is
+recorded in the `ca` column of `manifest.tsv` and in that JPEG's own comment.
+Failing to uncorrected is the safe direction: no correction is a known
+quantity. Without `exiftool` the profile is applied as asked and `RUN.txt` says
+`UNVERIFIED` rather than pretending a check happened.
+
+Commissioned both ways, because a guard that never fires is indistinguishable
+from a guard that cannot. A frame was copied to a scratch subject and its
+`LensModel` rewritten to `FE 90mm F2.8 Macro G OSS`:
+
+| subject | planted lens | `ca` recorded |
+|---|---|---|
+| `109MSDCF` | (genuine) | `a7c2-fe100gm-2xtc-x4cpl` |
+| `coffee-bubbles` | (genuine) | `a7c2-fe100gm-2xtc-x4cpl` |
+| `fake-lens` | `FE 90mm F2.8 Macro G OSS` | **`off:path`** |
+
+`RUN.txt` named it without being asked: `PARTIAL: CA disabled on 1 stack(s) --
+fake-lens [ILCE-7CM2 / FE 90mm F2.8 Macro G OSS]`. The other two were
+unaffected, which is the part that matters — the guard is per subject, not a
+global kill switch.
+
+When BUILD-CHROMA's self-measured per-stack coefficient lands this check becomes
+unnecessary for correctness, but it stays useful as provenance: the `ca` column
+still records what was actually applied to each picture.
+
+---
+
 ## 16. The gallery had no provenance and no atomicity
 
 ORCH found `gallery\` holding two binaries' output at once: 14 JPEGs from one
