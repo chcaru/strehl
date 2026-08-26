@@ -2526,3 +2526,197 @@ immaterial to its role as the veil isolate, but the record said zero and zero wa
 wrong. `shape.py` also reported "no clipped pixels" for it while only ever
 examining the black rail — the same partial-coverage error, in a probe written in
 the same hour as the fix for it.
+
+## 25 — The notch: half the finest band never selects at all
+
+The clamp is 1.4% of pixels. This is the defect that makes the stacks look the
+way they look, and it was sitting in a diagnostic the merge has been printing all
+along.
+
+### 25.1 What the curve shows
+
+`ampcurve.py` bins tiles by the *reference's* band-pass amplitude and reports the
+pyramid's amplitude as a fraction of it. Null control — reference against itself —
+is exactly `1.0000` in every bin on every subject, so the binning is not lying.
+
+Four subjects, all with a minimum in the same place:
+
+| subject | minimum | at refAmp | recovers to |
+|---|---:|---|---|
+| `tweezers-cpl` | 0.3111 | 31–53 DN | 0.98 by 272 |
+| `flower-bud` | 0.4562 | 42–55 DN | 0.91 by 209 |
+| `wrapped-text-1` | 0.6377 | <41 DN | 1.01 by 98 |
+| `couch-fibers` | 0.7592 | <52 DN | 1.06 by 134 |
+
+Up to **69% of mid-band amplitude gone**. The minimum lands at the same *absolute*
+DN on subjects whose amplitude ranges differ fourfold. That last property is the
+whole clue, and it took two refuted predictions to read it.
+
+### 25.2 Two predictions of mine, both refuted
+
+**First: the noise gate.** It is the only threshold on that axis, so I swept it
+1 / 4 / 16, three distinct hashes. The minimum stayed in the same 31–53 bin
+(1.4887 / 0.3111 / 0.2872). I recorded "not the gate" and moved on. That reading
+was half right and I state the half I got wrong in 25.4.
+
+**Second: over-selection.** The weight is `(excess/floor/SNR_REF)^p` with `p`
+capped at 8 in the fine bands, so I predicted a frame clearing the floor by a hair
+takes the whole coefficient, and that *lowering* the exponent would fill the
+notch. The sweep says the opposite, monotonically, and hard-max — pure argmax,
+no blending anywhere — is the best arm in **every single bin**:
+
+| arm | 10–18 | 18–31 | **31–53** | 53–92 | 470–810 |
+|---|---:|---:|---:|---:|---:|
+| `--exponent 1.0 --sharpen 1.0` | 0.6309 | 0.3605 | **0.2356** | 0.5419 | 0.7109 |
+| `--exponent 2.0 --sharpen 1.0` | 0.6386 | 0.3756 | **0.2645** | 0.6391 | 0.8500 |
+| shipped default (ramp 2,3,4,5,8,8,8) | 0.6524 | 0.4055 | **0.3111** | 0.7585 | 0.9835 |
+| `--hard-max` | 0.6643 | 0.4379 | **0.3432** | 0.8154 | 1.0221 |
+
+Two things fall out of that table. At `p = 1` even the strongest edges in the
+frame lose 29% — plain averaging dilution across frames that all clear, a second
+and separate defect. And **the notch survives pure argmax**, where every output
+coefficient is copied verbatim from one frame and dilution is impossible. So it
+is not a weighting defect at all.
+
+### 25.3 The mechanism, in a line the merge has been printing all night
+
+`pyramid.rs:1048-1058`:
+
+```rust
+out[j] = if den[j] > 0.0 { num[j] / den[j] } else { usum[j] * inv_n };
+```
+
+`den[j] <= 0.0` means no frame's smoothed band energy cleared `gate * beta * var`.
+The coefficient then becomes `usum[j] / frames` — the unweighted **mean of that
+Laplacian coefficient over all N frames**.
+
+`averaged_fraction()`, which `blend-render` prints on every run:
+
+```
+averaged : 47.9% 36.8% 9.9% 0.3% 0.0% 0.0% 0.0% 100.0%
+```
+
+**47.9% of the finest band and 36.8% of the next take that fallback.** Level 7 at
+100% is the base band under `BaseBand::Mean`, correct by design and not the
+issue: DC is present in every frame, so its mean is its right estimator.
+
+For a *band-pass* coefficient in a focus stack it is not. The detail lives in
+only the handful of frames where that pixel is in focus, so a mean over 100
+frames returns roughly `n_focus / N` of it — an attenuation that gets **worse the
+deeper the stack**, applied to nearly half of every fine detail in the image.
+
+And it explains the signature nothing else explains. The threshold
+`gate * beta * var` is an absolute noise-floor quantity in DN², identical across
+subjects shot on one sensor at one ISO. **A defect pinned to the noise floor is
+pinned to an absolute DN**, which is exactly why four subjects with fourfold
+different amplitude ranges notch in the same place.
+
+The shipped diagnostic warns only about the opposite failure — "near 0% would
+mean the gate is not gating and this is a naive pyramid stacker". Nothing in it
+says what half the finest band being averaged would mean, so nobody read 47.9%
+as a number that needed reading.
+
+### 25.4 What I got wrong about the gate, stated plainly
+
+25.2 records "the gate sweep refutes the gate". The *position* argument holds —
+a 16x change in the threshold does not move the minimum, because the threshold
+lives in per-coefficient noise-floor units while the x-axis is tile-pooled
+reference amplitude, and the two do not map onto each other. But I also read the
+*depths* as flat and they are not: 1.4887 / 0.3111 / 0.2872 for gate 1 / 4 / 16 is
+monotone, and monotone in the direction the fallback predicts — a higher gate
+sends more coefficients into the mean and deepens the notch. The gate is not the
+cause, but it is the control that decides how much of the image the cause gets to
+touch, and I called it irrelevant when the same table already showed it was not.
+
+### 25.5 A ratio below 1.0 has two readings, and I nearly acted on the wrong one
+
+A band-pass amplitude below the reference's means either **(A)** the pyramid is
+destroying real detail, or **(B)** the pyramid is correctly suppressing noise the
+reference wrongly keeps. (B) is the design's own argument — below the gate no
+frame has information, so averaging is the right estimator and the only operation
+that gets below single-frame noise. The amplitude ratio cannot separate them.
+
+`structure.py` was built to separate them by correlation, which is
+amplitude-invariant: under (A) the pyramid should be `alpha * reference`, same
+structure, so Pearson r stays near the strong-edge pole. It does not. Commissioned
+at r = 1.0000 exactly in 12/12 null bins, against a shift placebo (pyramid
+displaced 64 px, identical tile population):
+
+| refAmp bin | n | ampRatio | r(aligned) | r(shifted) |
+|---|---:|---:|---:|---:|
+| 10–18 | 169 | 0.6632 | 0.4313 | 0.1151 |
+| 18–31 | 21 | 0.4379 | 0.1951 | 0.0414 |
+| **31–53** | 17 | **0.3292** | **0.1156** | −0.0258 |
+| 273–470 | 396 | 1.0268 | 0.9666 | −0.0049 |
+| 470–811 | 425 | 1.0221 | 0.9713 | 0.0014 |
+
+By its pre-registered rule that reads as (B): the notch sits 0.1414 from the
+placebo and 0.85 from the strong-edge pole.
+
+**That rule was wrong, and I caught it before acting on it.** Low correlation is
+produced by (B) *and* by a third case the rule did not name: the fallback crushes
+the coefficient to a few percent and what survives is averaging residue rather
+than attenuated signal. Both give low r. A two-arm correlation cannot tell them
+apart, because both predict the same number.
+
+### 25.6 The pole that settles it is computed, not borrowed
+
+The two cases disagree about a **single-image** property of the reference — is its
+content there structure or noise? — and that needs no second arm. Band-passing an
+i.i.d. field imposes an autocorrelation set entirely by the DoG kernel, so the
+noise pole is derivable rather than sampled from some region assumed featureless.
+
+`whitetest.py`, 24 synthetic draws, tiles cropped from a larger field so no filter
+edge artefact inflates the result: **pure noise reads lag-1 = +0.2107**. The
+strong-edge pole is +0.8269.
+
+| refAmp bin | ctrl lag1 | pyramid lag1 |
+|---|---:|---:|
+| 0–3 | 0.3617 | 0.4089 |
+| 6–10 | 0.4437 | 0.4641 |
+| 18–31 | 0.6039 | 0.4128 |
+| **31–53** | **0.7140** | **0.5708** |
+| 273–470 | 0.8264 | 0.8261 |
+| 470–810 | 0.8276 | 0.8272 |
+
+The reference's content in the notch is **structure** — 0.11 from the edge pole,
+0.50 from the noise pole. (B) is dead: "averaging is correct because there is no
+information there" is false at that amplitude.
+
+Autocorrelation rises with SNR across bins, plainly, so the across-bin reading
+carries a confound. The **paired** reading does not: on the *same tiles*, the
+reference is 0.7140 and the pyramid 0.5708. The pyramid's own content is
+measurably less structured than the reference's, pulled toward the noise pole. It
+did not attenuate the detail; it replaced it with something flatter and
+uncorrelated, which is worse than the 0.33x ratio suggested on its own.
+
+The flat bins are the guard rail and they say the fallback is right where it
+should be right: at 0–10 DN the pyramid is slightly *smoother* than the reference
+(0.4641 vs 0.4437, 0.4089 vs 0.3617), which is what averaging noise correctly
+looks like. Any fix must fill the notch without pushing those toward +0.2107.
+
+### 25.7 What this costs, and what it changes
+
+Three refuted predictions in one section — the gate, the exponent, and my own
+correlation rule — and the defect was legible in a printed diagnostic from the
+first render. The lesson is not that the instruments failed. Each one worked and
+each one killed a hypothesis, which is what they are for. It is that
+**`averaged: 47.9%` was on screen for every render all night and nobody had
+written down what a bad value would be.** A diagnostic with no stated failure
+threshold is decoration; it gets read as ordinary precisely because there is
+nothing to read it against.
+
+> **A diagnostic that names only one of its two failure directions will be read as
+> normal in the other.**
+
+> **Low correlation does not mean "different content". It means "not the same
+> content", and annihilation satisfies that as easily as substitution.**
+
+The fix is `pyramid.rs`'s and belongs to its owner: a selectable sub-gate
+fallback (`mean` as the control, `best`, `topk` with k=3) scored on all four
+instruments as a conjunction — amplitude *and* correlation *and* structure *and*
+the flat-tile noise cells. Recovering amplitude without recovering correlation
+would mean putting back energy that is not the scene's, and would fail.
+
+The pyramid default stays where it is until that lands. Flipping today would ship
+the clamp and this together.
