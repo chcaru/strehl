@@ -9436,3 +9436,84 @@ unaffected; only the noise ratio quoted beside it is withdrawn.*
 
 A retraction that takes a whole paragraph down with the one number it targets
 would destroy a measured result that still stands.
+
+## 82. A feature can be finished, tested, documented, and unreachable
+
+### The finding
+
+`STREHL_ROBUST_ELECTION` cannot be turned on in the shipping binary. Not
+"defaults to off" -- **cannot be set**, by anyone, by any means.
+
+Six links, each measured:
+
+| # | link | evidence |
+|---|---|---|
+| 1 | the literal is not in the binary | raw byte scan: `STREHL_ROBUST_ELECTION` **0** occurrences; siblings `STREHL_HIGHLIGHT_KNEE` 1, `STREHL_SMOOTH` 3, `STREHL_RESTORE` 2 |
+| 2 | not a stale binary | wiring commit `e0281139` dated 2026-08-24 20:00; exe built 2026-08-26 16:24, **44 h later**; `--is-ancestor ... HEAD` -> 0 |
+| 3 | not a feature gate | the only `cfg` in `merge.rs` is `#[cfg(test)]` at L2670 |
+| 4 | nothing calls the env reader | workspace scan for `new_robust(` returns **one hit: its own definition**, `merge.rs:850` |
+| 5 | production uses the plain ctor | `merge_cmd.rs:2173`, `:3374` -> `FocusStats::new(geom)`, both above that file's `cfg(test)` at L6768 |
+| 6 | the tests use the env-free ctor | all 8 `new_robust_with` sites are 4998-5254, i.e. **inside** `merge.rs`'s test module |
+
+In Rust a `const` is inlined at its use sites, so an absent literal is not weak
+evidence -- it is **unreachability certified by the linker** rather than inferred
+from a null.
+
+### The mechanism, and why it is worth a rule
+
+The test constructor `new_robust_with` takes the arm **directly** instead of
+reading the environment. Its doc comment gives the reason, and the reason is
+*correct*:
+
+> *"Env-free on purpose... the test suite runs in one process and in parallel, so
+> a test that had to set a variable to choose an arm would race every other test
+> in the binary."*
+
+That is good practice. It is also precisely what hid the defect. The env-free
+path is exercised eight ways; the env-reading path that the CLI would need has
+no caller at all. So the suite is green, the feature demonstrably *works*, and
+the product cannot reach it.
+
+> **A test that constructs the feature directly proves the feature works and
+> says nothing about whether the product can reach it.** Reachability is a
+> property of the call graph, not of the unit. No amount of unit coverage
+> measures it, and the more carefully the tests avoid global state -- the better
+> the engineering -- the more completely they stop testing the wiring.
+
+The cheap detector is the one that caught it: **grep the shipped binary for the
+flag's own name.** A gate whose name is absent from `.rdata` is not merely off,
+it is unreachable, and that check costs one byte scan and no renders.
+
+### The near-miss, which is the more important half
+
+This finding was **inside an audit that had disqualified itself**. The potency
+run printed, above these rows:
+
+```
+! NULL FAILED: NULL baseline vs baseline read DEGEN; the renderer is not
+  deterministic and no verdict above is meaningful
+```
+
+...and exited 2. That verdict was false: the null had *passed perfectly*. The
+NULL re-runs the baseline with no args and no env, so it produces byte-identical
+pixels **and** an identical banner -- and the degenerate-arm guard upgraded
+`DEAD` to `DEGEN` on exactly that unchanged banner. The sibling depth guard four
+lines below already carried the right exemption, `prior is None`, with a comment
+saying controls are exempt because their expected verdict is a property of
+renderer determinism. I wrote that exemption, wrote the reason for it, and
+applied it to one of the two guards.
+
+> **A false alarm in commissioning discards the true findings along with the
+> noise.** "No verdict above is meaningful" is a load-bearing sentence: it
+> invalidates the real rows as thoroughly as the fake ones. A commissioning
+> check that fires spuriously is worse than none, because it converts a
+> published finding into a discarded one and does it with the full authority of
+> a self-check.
+
+Thirteenth instrument failure of the run; the fourth of them mine; and the
+first that would have destroyed a true positive rather than manufacturing a
+false one. **It is being commissioned by an independent verifier on a 2x2** --
+does the null pass, does the guard still fire on a genuine degenerate arm, does
+the null still fail under real non-determinism, does the new negative-control
+branch fire -- because "the null passes now" would also be true if I had simply
+deleted the guard.

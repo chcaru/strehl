@@ -375,7 +375,16 @@ def main() -> int:
         # is an untested arm, not a dead flag, and the two are indistinguishable
         # from the pixels alone. Both false findings this audit's first run
         # produced would have been caught here.
-        if verdict == "DEAD" and normalise_banner(banner, out) == ref_banner:
+        #
+        # Commissioning probes are exempt, for the same reason they are exempt
+        # from the depth guard below. The NULL re-runs the baseline with no args
+        # and no env, so an unchanged banner is not evidence of a degenerate arm
+        # -- it is REQUIRED, and a banner that CHANGED would be the alarm. Without
+        # this exemption a perfectly deterministic renderer produces DEAD, is
+        # upgraded to DEGEN, and is then reported as "the renderer is not
+        # deterministic and no verdict above is meaningful": an audit
+        # disqualified by its own passing control.
+        if verdict == "DEAD" and prior is None and normalise_banner(banner, out) == ref_banner:
             verdict = "DEGEN"
             note = (note + "  banner unchanged: the value was the default "
                     "or the no-op").strip()
@@ -406,6 +415,15 @@ def main() -> int:
             failures.append(f"NEGATIVE CONTROL CHANGED: {name} read {verdict}. This "
                             f"is GOOD NEWS if the flag was repaired -- confirm, then "
                             f"retire it as a control")
+        elif prior == "dead" and verdict != "DEAD":
+            # Partition the control's outcomes exhaustively. Without this branch
+            # an ERROR, a SHALLOW or a DEGEN on the negative control is silently
+            # not-LIVE, and a control that never ran reads exactly like a control
+            # that passed.
+            failures.append(f"NEGATIVE CONTROL UNREADABLE: {name} read {verdict}, "
+                            f"which is neither the expected DEAD nor the LIVE that "
+                            f"would mean repair. A control that did not run "
+                            f"certifies nothing")
 
     unknown = [(n, v) for n, v, p in rows if p is None]
     dead = [n for n, v in unknown if v == "DEAD"]
