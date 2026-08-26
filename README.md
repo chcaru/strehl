@@ -580,25 +580,23 @@ right; they describe different regions.
 On resolved detail the expected gain was **`ARGUED` at ~1.2-1.8x** — the
 reasoning being that at a sane focus step only about 1.3 to 1.5 frames have any
 given depth inside their depth of field. **That figure has now been measured,
-and it is not observed.** Six subjects rendered twice from one binary — a merge
-arm and the shipping `argmax-baseline` selector — and compared green
-plane, camera-linear, at 36 matched sites chosen on the mean of both arms, come
-out **indistinguishable to within 0.5 px of equivalent Gaussian blur**. That
-0.5 px is not a small number here: it is also what the same instrument reports
-for the two arms' *noise gap alone* with zero blur planted, so it is the
-instrument's floor rather than a measured difference. Selection wins outright on
-one subject, `flat-on-ruler-cpl`, by about 0.4 px on three statistics that
-agree.
+and it is not observed.** Six subjects rendered twice from one binary — the
+shipping pyramid merge and the shipping `argmax-baseline` selector — and
+compared green plane, camera-linear, at 36 matched sites chosen on the mean of
+both arms, come out **indistinguishable to within 0.5 px of equivalent Gaussian
+blur**. That 0.5 px is not a small number here: it is also what the same
+instrument reports for the two arms' *noise gap alone* with zero blur planted,
+so it is the instrument's floor rather than a measured difference. Selection
+wins outright on one subject, `flat-on-ruler-cpl`, by about 0.4 px on three
+statistics that agree.
 
-> **Which merge arm that was is under active confirmation, and it matters.** The
-> measuring agent described it as the shipping default *and* reported a mean
-> `n_eff` for it — but `n_eff` is an estimator-only statistic that the pyramid
-> does not produce, so both descriptions cannot be true of one run. Given the
-> inference trap described above, the arm may have been the estimator. If it
-> was, this remains a real result about the estimator and will be published as
-> one, but it says nothing about the backend that ships. **This paragraph was
-> committed before that check was complete — that was my error, and this is the
-> correction standing in until the banners settle it.**
+That it is the *shipping* backend was checked from the runs' own banners rather
+than assumed from their command lines, because the two can disagree: passing any
+estimator-only flag without `--merge` silently selects the estimator, and the
+binary reports that this caught 338 call sites in 185 files. All six headline
+arms print `merge backend : pyramid (default)`; the only estimator banners in
+the tree read `estimator (--merge)`, stated rather than inferred; and the string
+`inferred from` does not occur anywhere in it.
 
 **The merge's advantage on this corpus is noise and the absence of invented
 structure, not fineness.** That is a narrower claim than the one this paragraph
