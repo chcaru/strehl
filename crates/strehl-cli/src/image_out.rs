@@ -56,10 +56,37 @@
 //! Measured in `docs/research/M95-chroma-cositing.md`: the correction removes
 //! 89-97% of the misregistration and 51-60% of the chroma error at edges.
 //!
-//! This does **not** touch the byte-frozen measurement path. Both callers reach
-//! [`write_binned`] only inside `if let Some(m) = matrix`, so it is the
-//! "for looking at" render; the measurement path writes through
-//! [`write_rgb16`] and never enters this function.
+//! # Where this actually runs, which is NOT where it says it runs
+//!
+//! It is tempting to read the paragraph above as "co-siting is on the render
+//! you look at". **It is not, and that misreading has already cost a milestone
+//! of effort** (`docs/research/BUILD-COSITE.md`). Both callers reach
+//! [`write_binned`] only *after* a `if demosaic { .. return }` branch, and
+//! `main.rs` resolves `demosaic: demosaic || (srgb && !binned)`. So `--srgb`
+//! **demosaics** unless `--binned` is also passed, and the gallery render --
+//! `stack DIR --merge pyramid --pyramid-gate 4.5 --srgb --auto-exposure` --
+//! emits 7032x4688 through [`write_demosaiced`] and never enters this function.
+//! Verified by rendering it: the shipped gallery TIFFs are 7032x4688.
+//!
+//! [`write_binned`] is reachable by exactly two invocations:
+//!
+//!   - `--linear-srgb` without `--demosaic`, and
+//!   - `--srgb --binned`.
+//!
+//! (`--exposure`/`--auto-exposure` also claim the binned branch, but both are
+//! refused without `--srgb`, so that route collapses into the second.) The
+//! first of those is the *measurement* render, which is the opposite of what
+//! the old wording implied: the serial resample below is charged to the file
+//! quality is judged on and not to the file the photographer sees.
+//!
+//! It does remain true that the **byte-frozen** path never enters here; that
+//! one writes through [`write_rgb16`].
+//!
+//! What this costs, measured on `coffee-bean` and reproduced in closed form
+//! from [`keys_weights`]: the shift below retains 0.881 / 0.681 / 0.473 of
+//! amplitude at 0.25 / 0.35 / 0.50 cyc/px in red and blue. On the demosaiced
+//! render that cost is not paid at all -- Malvar-He-Cutler co-sites inherently,
+//! by estimating every channel at every site.
 
 use std::fs::File;
 use std::io::BufWriter;
