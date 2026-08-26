@@ -2770,3 +2770,132 @@ recommendation on the default is therefore **off**, and it will stay off until
 the overshoot trade curve exists -- not because I doubt the module, but because
 ORCH asked for the default to be set by measurement and the measurement is the
 part I did not reach.
+
+## 24. The restoration is wired, default off, and MEASURED INERT at the sigma^2 I gave it
+
+Landed: `crates/strehl-core/src/restore.rs` gains `RESTORE_ENV`,
+`gain_cap_from_env` and `RestorePlan` (commit `794e605`, newline fix `a2d5a81`);
+`crates/strehl-cli/src/merge_cmd.rs` threads one `Option<RestorePlan>` into
+`write_merged` and restores the four CFA planes before interleaving.
+`cargo check -p strehl-cli` rc=0. The flag is `STREHL_RESTORE`, whose value IS
+the strength, because `gain_cap = 1.0` is a documented no-op and that makes
+"off" the same code path as "on at zero" rather than a second one that can
+drift.
+
+Placement is (b), per 23.3: once on the merged CFA planes, before the demosaic.
+
+### 24.1 It reaches the code, and it changes nothing. Both halves measured.
+
+Sweep on `flower-bud-alone-cpl`, 205 frames, one binary
+(`pin-a2d5a811/target/release/strehl.exe`), one shared warp cache so alignment
+is identical across arms, camera-linear and demosaiced, no `--srgb`:
+
+    strehl stack <dir> --out linear.tif --resampler catmull-rom --demosaic --pyramid-gate 4.5
+
+Provenance read from the logs, not the filenames, and identical on every arm:
+`merge backend : pyramid`, `levels : black 512, white 15360`,
+`held-out err : 0.352 px  resampler: CatmullRom`, output
+`7040 x 4688, 16-bit RGB, linear camera-native RGB`.
+
+The flag fires. At cap 1.5 the writer logs, per plane:
+
+    restore R  : cap 1.500, max gain 1.0000, at Nyquist 1.0000, recovered 0.0000, mean 1291.3 DN
+    restore G1 : cap 1.500, max gain 1.0000, at Nyquist 1.0000, recovered 0.0000, mean 3500.6 DN
+    restore G2 : cap 1.500, max gain 1.0000, at Nyquist 1.0000, recovered 0.0000, mean 3497.5 DN
+    restore B  : cap 1.500, max gain 1.0000, at Nyquist 1.0000, recovered 0.0000, mean 2302.8 DN
+
+`max gain 1.0000` at every plane and every cap. I did not take that from the
+log, because a log is an author's claim; I took it from the artefact:
+
+| arm | SHA-256 (first 16) | bytes |
+| --- | --- | --- |
+| off | 20D67637515491F4 | 198023291 |
+| 1.2 | 20D67637515491F4 | 198023291 |
+| 1.5 | 20D67637515491F4 | 198023291 |
+
+**Byte-identical.** The restoration is reachable, executes, and is a complete
+no-op on real data.
+
+### 24.2 Why, exactly, and it is my error and not the module's
+
+From `RestoreConfig::gain`, gain exceeds 1 only where
+
+    h / (h^2 + sigma^2/S)  >  1     i.e.    sigma^2/S  <  h(1 - h)
+
+At f = 0.35 the gather MTF is h = 0.82113, so the entire budget is
+h(1-h) = **0.1476**. The filter has to be handed a plane whose signal power at
+that frequency is at least 6.8x its noise variance before it will lift a finger.
+
+I supplied `NoiseModel::variance(plane, mean_dn)` -- the **single-frame**
+variance -- and wrote in the doc comment that this "OVERSTATES what is actually
+present" and that the direction was "deliberate", because over-regularising
+cannot cause overshoot. That is true and it is beside the point. **This merge
+combined 205 frames.** Over-regularising cannot cause overshoot and it equally
+cannot cause sharpening, and at up to 205x too much variance it does not clear
+0.1476 anywhere in the frame.
+
+The reasoning error is worth naming because it is not arithmetic. sigma^2 in the
+Wiener form is the noise **of the plane in the filter's hand**. The plane in the
+filter's hand is a 205-frame merge. Substituting a single frame's noise is not a
+conservative version of the right number, it is a different quantity, and
+"conservative" was the word that stopped me checking it.
+
+### 24.3 What the trade curve is, and why it is not the deliverable ORCH asked for
+
+**There is no trade curve to report.** Sharpness gain is 0.0000 at every cap
+tested, so the overshoot guard is trivially passed and the pass means nothing:
+an operator that does not run cannot put a local maximum into the
+signed-distance profile. Reporting "monotonic, guard passed" here would be a
+skipped check dressed as a passed one, which is precisely the failure this
+project has a rule about. **The guard is NOT RUN, not PASSED.**
+
+### 24.4 The fix, and the part of it that is not mine
+
+sigma^2 must be the merged plane's noise. The calibrated model already exposes
+the right shape -- `NoiseModel::averaged_green_luma_sigma(luma_dn, n,
+rho_warp)` takes the frame count and the warp correlation, so this stays inside
+the calibration and does not become a tuning knob. `n` is a fact of the render
+(205 here), not a number chosen to make a result land.
+
+The honest complication, and it is real: the pyramid merge is a **convex
+combination whose effective n varies per pixel**. In flat regions it approaches
+205; on detail pixels the selection is nearly winner-take-all and n_eff
+approaches 1, where the single-frame variance I used is exactly right. So a
+single scalar is wrong everywhere except at one extreme, and the correct input
+is a per-pixel n_eff map from the merge. **That map is inside `pyramid.rs` and
+`merge.rs`, which are not my files.** I need either an n_eff plane exposed at
+the writer, or ORCH's routing to whoever owns those.
+
+Until then the conservative scalar keeps the flag inert, which is a safe state
+for a default-off flag but is not a shippable sharpener.
+
+### 24.5 Recommendation
+
+**Default OFF, and now for a second and stronger reason than in 23.7.** Then it
+was unmeasured; now it is measured to do nothing. Turning it on tonight would
+ship a flag that parses, logs four confident lines per render, and cannot change
+a pixel -- the exact failure `merge --help` already warns about in its own text
+("a flag that parses and does nothing is indistinguishable from one that works,
+and this project has shipped that failure before").
+
+The wiring itself is sound and worth keeping: it is one parameter in the shared
+file, it is `None` on every existing path, and it produces byte-identical output
+when off -- which the table in 24.1 demonstrates rather than asserts.
+
+### 24.6 Corrections and standing items
+
+- The `restore.rs:573` "known defect" is **still not a defect**, restated here
+  because the brief has now asked for it twice. Phase-averaged Catmull-Rom is
+  0.94024 at f=0.25, **0.74255 at f=0.40**, 0.62500 at f=0.50, matching L573's
+  labels exactly; the header's 13.3% Lanczos ratio peaks at **f=0.350**. Three
+  independent derivations agree, including `V-chroma2.md:388-404`, which reached
+  it before I did.
+- `sharpen_per_octave` remains ARGUED, not MEASURED (23.2). The measurement I
+  proposed -- vary it and see whether restore's effect moves -- **cannot be run
+  while restore's effect is zero.** It is blocked behind 24.4, not forgotten.
+- I committed once with `corpus_lint` FAILING (S3, missing trailing newline)
+  because my script ran `git commit` unconditionally instead of gating on the
+  lint's exit code. Caught and fixed in `a2d5a81`. The lint had told me on the
+  previous line and the shell had printed `lastbyte=125`; I read neither.
+- `restore.rs` still needs V-RESTORE. 24.2 is a defect in the wiring I wrote
+  around the module, not in the module, and it does not substitute for that read.
