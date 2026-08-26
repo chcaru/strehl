@@ -1160,6 +1160,150 @@ carries the scene's own illumination field.
 **0.14% -> 0.47%**, both an order of magnitude under `flower-bud`'s 12.0% and
 both inside the 1% bar. Neither arm invents a silhouette ring on it.
 
+## ORCH's contamination question, answered: the pair was toned, and the arms were toned differently
+
+ORCH profiled `ca-ctrl-` and `ca-blend-flower-bud-with-background-fern-cpl.tiff`
+and read them as "linear, no tone curve", then asked whether the gallery recipe
+contains a global normalisation that would contaminate cross-arm absolute DN.
+
+**It does, that pair went through it, and the two arms got different
+parameters.** `image_out.rs` writes the tone into each file's own
+`ImageDescription`, so the files answer this themselves.
+`experiments/BUILD-BLEND/tonecheck.py` reads the tag out of the TIFF header
+without decoding 198 MB of pixels:
+
+| file | space | tone black | tone white | span |
+|---|---|---:|---:|---:|
+| `ca-ctrl-...` | **sRGB, "For viewing"** | 0.011119 | 0.306019 | 0.294900 |
+| `ca-blend-...` | **sRGB, "For viewing"** | **0.000000** | **0.319798** | 0.319798 |
+
+Two separate problems. They are **sRGB-encoded, not linear**; and the tone black
+and white are percentiles of *each image's own* luminance
+(`TONE_BLACK_PCT` 0.1, `TONE_WHITE_PCT` 99.9, `image_out.rs:448/474`), so each
+arm placed itself on its own scale. The blend's span is **8.44% wider**, so it
+compresses harder, and its black is 0.0111 lower.
+
+`image_out.rs:1389` has a test named
+`tone_rides_with_the_viewing_render_and_never_with_a_measurement`, and the
+measurement path is clean: `dev.tone` is `None`, so `develop_pixel` applies no
+gain, no `gamut_map` and no `s_curve`, and with `srgb` false the output is
+`linear * 65535`. The only global term left is the raw normalisation by
+`(white - black)`, and those come from the **camera metadata** -- fixed
+per-capture constants, identical for both arms. **Untoned pairs are safe to
+compare in absolute DN. Toned pairs are not.**
+
+### How much of ORCH's table was tone
+
+`tonesplit.py` reproduces the full chain from `image_out.rs` (`Tone::gain`, the
+soft toe, `srgb_encode`, `s_curve`), inverts the control's chain by bisection to
+recover the true linear value of each row, then pushes that *same* value through
+the blend's chain. The result is what each row would read **if the two images
+were identical**.
+
+A pure null, same linear input through both tones, zero image difference:
+
+| linear | ctrl DN | blend DN | tone alone |
+|---:|---:|---:|---:|
+| 0.05 | 24368 | 27102 | **+2733** |
+| 0.10 | 39832 | 40640 | +808 |
+| 0.15 | 50081 | 49986 | -96 |
+| 0.20 | 57221 | 56685 | -536 |
+| 0.25 | 62121 | 61435 | -685 |
+
+Applied to ORCH's rows, **40% of the reported total is tone**. The far-field
+rows are almost entirely tone: at d = 200-600 the tone term alone is -613 to
+-631 DN against a reported -535 to -867. The mid-field rows are the opposite --
+the tone term there is *negative*, so it was **masking** part of the win.
+
+Sensitivity is good: perturbing the control DN by +/-50 moves the recovered
+value by -0.90 to -0.97 DN per DN, so every row is well conditioned. The linear
+values are 0.098-0.222, nowhere near the compressive top of the curve.
+
+### Why the two arms were toned differently, which is the whole mechanism
+
+The blend arm's tone black is **exactly 0.000000**. Since
+`black = at(0.1) * 0.85`, that means at least 0.1% of its pixels had *zero*
+luminance. That is the black-point collapse this lane already found and fixed --
+the clip that ran at 1.4043% before `Hull::InputRange`.
+
+`ca-blend` was rendered from `tree-ca-6a51e43`, i.e. commit `6a51e43`, which is
+**two `pyramid.rs` commits behind HEAD** and does not contain `275fbd1`
+("confine the reconstruction to the hull of its inputs"). So the chain is:
+
+1. the pre-hull build clipped pixels to zero;
+2. that dragged the image's own 0.1th percentile to zero;
+3. which set a different tone black;
+4. which produced a different affine placement, 8.44% wider;
+5. which printed a broad deficit into the toned sRGB output;
+6. which reads as a mysterious far-field bowl.
+
+**ORCH was profiling a superseded build of this arm through a data-dependent
+transform that the build's own defect had perturbed.**
+
+## The far-field bowl, re-measured clean: real, and about a quarter of what was seen
+
+The above would let me say the bowl is entirely tone. **It is not, and the clean
+measurement is the one that decides it.** `flower-bud-with-background-fern-cpl`
+re-rendered through the untoned measurement path, both arms, one binary,
+`--demosaic`, no `--srgb`, CA and photometric unset
+(`C:\dev\strehl-out\BUILD-BLEND\fern\`, confirmed `LINEAR` by `tonecheck.py`),
+profiled with ORCH's own `rimprofile.py`. Each arm against **its own** far field:
+
+| d (px) | control | blend | change |
+|---:|---:|---:|---:|
+| 0-4 | -4584 | -4739 | -155 |
+| 8-12 | -1368 | -1546 | -178 |
+| 12-16 | -967 | -1303 | **-336** |
+| 25-30 | -531 | -868 | **-337** |
+| 30-40 | -897 | -678 | +219 |
+| 50-65 | -1386 | -407 | **+979** |
+| 65-80 | -1314 | -288 | **+1026** |
+| 80-100 | -1095 | -197 | +898 |
+| 100-125 | -936 | -82 | +854 |
+| 125-150 | -872 | -36 | +836 |
+| 150-200 | -748 | -158 | +590 |
+| 200-250 | -523 | -224 | +299 |
+| 300-400 | -319 | -261 | +58 |
+| 400-500 | -245 | -389 | **-144** |
+| 500-600 | -222 | -399 | **-177** |
+
+Three findings, and only one of them is good news.
+
+**The mid-field win is real and survives the clean measurement.** At d = 50-150
+the deficit falls from -1386/-872 to -407/-36, a 71-96% reduction, and the
+control's characteristic bowl -- deepening from -531 at d = 25-30 to -1386 at
+d = 50-65 before recovering -- is flattened into a monotone approach. The tight
+interior peak the detector finds moves from **+855 DN at d = 27** to **+363 DN
+at d = 137**: less than half the amplitude, five times further out.
+
+**The far-field bowl is real, and ORCH's hypothesis (1) is right.** At
+d = 400-600 the blend is 144-177 DN below the control against its own far field,
+about **1.0-1.2% of level**, which is the 1-1.5 sRGB levels ORCH estimated. It
+is roughly **one quarter** of the 535-867 DN they measured -- the other
+three quarters was tone -- but it is not zero and it should not be reported as
+zero. ORCH's proposed remedy is well supported by the split: the win lives at
+d = 30-300 and the bowl at d = 400-600+, which are different octaves, so
+tapering the coarsest level should cost little of it.
+
+**A regression they did not flag, and I am not going to bury it.** At
+d = 8-30 the blend is **worse than the control by 178-337 DN**. On this subject
+my arm slightly deepens the near-silhouette deficit while transforming the
+mid-field. That zone is the one ORCH assigned to BUILD-HALO, but "someone else
+owns it" is not the same as "my change did not move it," and my change moved it
+the wrong way.
+
+### One limit of this measurement, stated
+
+`rimprofile.py` builds its mask from the image it is profiling, so the two arms
+were segmented separately and the near-silhouette rows are the ones most exposed
+to that. My own `dnlevel.py` -- which builds one mask from the control and reads
+both arms through it -- **refuses this subject**, correctly: the fern behind the
+bud shreds a luminance threshold into 1880 components with the second largest at
+36% of the first. So the d = 8-30 regression above is measured through the
+weaker of my two instruments and deserves a paired re-measurement on a subject
+whose backdrop can be segmented before it is treated as settled.
+
+
 ## Absolute levels in DN, because a ratio cannot answer the question asked
 
 ORCH made this a hard requirement across the project after a near-miss:
