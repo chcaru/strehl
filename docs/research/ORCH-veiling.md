@@ -9796,3 +9796,71 @@ lies conditionally (BUILD-ELECT). The pre-flight probe must precede `add`
 (BUILD-SHARP). All three were rules I issued; all three were corrected by the
 agents receiving them; all three were verified here before rebroadcast, and one
 was *sharpened* in verification rather than merely confirmed.
+
+## §86 — a boolean pass carries no scale; the magnitude caught what the boolean could not
+
+V-HIGHLIGHT confirmed that a path-scoped commit over a colleague's staged file leaves
+that colleague's content in the object database as a **dangling blob**, recoverable with
+`git cat-file -p <sha>` — but only until the next prune, and `gc --auto` fires on its own.
+So the question stopped being theoretical: *had any lane already been swept tonight?*
+
+**Protection first.** `gc.auto` was **unset**, so git's 6700-loose-object default was live
+and an ordinary operation could have closed every recovery window without anyone asking.
+Set `gc.auto 0`, repo-locally and reversibly. The window is now held open indefinitely.
+
+**Then the census.** Eleven dangling blobs: three `.commitmsg` files, two cargo build logs,
+five substantive. The three `.commitmsg` blobs are the sweep mechanism operating in the
+wild, benignly — agents `git add`ed them and a later path-scoped commit cleared the index
+entry. Field confirmation of BUILD-SHARP's finding, at zero cost.
+
+For the five that mattered I ran two tests, and the second one caught the first one lying.
+
+**Test 1 (boolean).** Grep a distinctive mid-document line from each blob against HEAD;
+does the content still exist anywhere? All five: `content-present-in-HEAD = True`.
+Reassuring, and for one of them **false**.
+
+**Test 2 (magnitude).** For each blob, how many substantive lines exist *only* in the blob?
+
+| blob | mapped file | blob | head | only-in-blob |
+|---|---|---|---|---|
+| `72176f909b` | `docs/research/V-ca.md` | 359 | 359 | 0 |
+| `d785b4dadd` | `docs/research/M81-estimation-merge.md` | 333 | 474 | 0 |
+| `5d1502b39f` | `docs/research/M4-fpn-measured.md` | 584 | 659 | 6 (prose rewording) |
+| `f64a1dec4f` | `experiments/m2-fpn/src/main.rs` | 1157 | 1086 | 34 (M2-era refactor) |
+| `33130a9e59` | ~~`crates/strehl-cli/examples/m65-election.rs`~~ | 695 | 656 | **422** |
+
+That last row is not a draft. A 422-line divergence is impossible for a file revised in
+place — and the impossibility was a statement about my **mapping**, not about the content.
+The grep had matched `m65-election.rs` on a generic line shared by every FPN experiment
+file. The blob's real home is `experiments/m2-fpn/src/stats.rs`, found by anchoring on its
+own first line instead of a middle one. Re-run against the correct target: `blob=695
+head=925 only-in-blob=0`. Strictly an earlier draft. No loss.
+
+**Verdict: no lane lost work.** All five are earlier drafts of files that still exist and
+are tracked.
+
+The rule is the shape of the error, not the outcome:
+
+> **A boolean pass carries no scale, so it cannot self-check.** `True` looks the same
+> whether the identification was right or wrong. Ask the same question in a form that
+> returns a **magnitude** and an implausible number will expose an error in your
+> identification rather than in your subject.
+
+This is the fourteenth instrument tonight whose failure mode resembled its intended
+output, and the first one caught not by suspicion but *by arithmetic that refused to be
+plausible*. Worth preferring on those grounds alone: vigilance does not scale, and a
+number that cannot be true does not require anyone to be paying attention.
+
+A corollary for the identification step itself: **anchor on a line unique to the artifact
+(its first line, its title) and not on a line sampled from its middle.** A middle line is
+drawn from exactly the population a sibling file also draws from. This is the same medicine
+as §81's "anchor on a neighbouring literal, never the bare token", arriving from the other
+direction — there the token was too common inside one document, here it was too common
+across a family of them.
+
+V-HIGHLIGHT also sharpened the `-First` boundary: masking occurs at **`N <= lines`**, not
+`N < lines`. `-First 3` on exactly three lines is still masked, because `-First` stops the
+instant it has N items and never lets the upstream signal completion. The intuition "if it
+consumed everything it must have drained" is wrong, and it is the version a careful person
+will reason their way into trusting. They added `Select-String` and `Select-Object -Skip`
+to the verified-safe list — `Select-String` being the one most of us actually reach for.
