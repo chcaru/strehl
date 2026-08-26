@@ -1134,23 +1134,59 @@ free: it moves the pyramid merge toward the estimator's behaviour, and the estim
 is the arm that loses the acuity. That tradeoff is a real decision and should be made
 with a paired cost column, not assumed away.
 
-### 14.11 What section 14 did not measure
+### 14.11 The placebo is not established
 
-- **`couch-fibers-cpl`, the placebo, is not in this section.** It is 299 frames and
-  its hull basis had not finished rendering when this was written. **This matters
-  more than it looks:** ORCH's constraint that "a proposal that moves couch-fibers is
-  wrong" rests on it reading exactly 0 clipped pixels in both arms, and 14.7 shows
-  that predicate is blind to above-hull excursions and to any below-hull excursion
-  that does not reach zero. Until couch-fibers is hull-tested, **it is unproven that
-  it is a placebo at all**, and it should not be used to reject a fix. Render is
-  running under `couch.ps1`.
+ORCH's standing constraint is that `couch-fibers-cpl` reads exactly 0 clipped pixels,
+0 of 33 million, in both arms, therefore it is a placebo and any proposal that moves it
+is wrong. That argument requires couch-fibers to be genuinely insensitive to the merge
+backend. It is not. **MEASURED**, same binary, `STREHL_ALIGN=0`, shipped defaults, only
+`--merge` differing:
+
+| quantity | estimator | pyramid |
+|---|---|---|
+| samples identical between arms | 21911 (0.0885%) | -- |
+| samples differing between arms | **24730729 (99.9115%)** | -- |
+| mean level | 8208.6 DN | 8218.1 DN |
+| p1 / p50 / p99 | 3032 / 8108 / 13825 | 2838 / 8137 / 13788 |
+| min / max | 373 / 40309 | **0** / 46790 |
+| `np.any(im == 0)` black pixels | **0** | **268** |
+| `np.any(im >= 65535)` white pixels | 0 | 0 |
+
+Signed difference pyramid minus estimator: mean **+9.5689 DN** over every sample, p1
+-1631, p50 +22, p99 +1577, worst -18588 and +36592 DN.
+
+Two things follow. **MEASURED:** on this configuration couch-fibers is not insensitive
+to the backend at all -- the two arms disagree on 99.91% of samples, and the pyramid
+arm reaches black on 268 pixels where the estimator's minimum is 373 DN. **ARGUED:** a
+predicate that returns 0 on both arms while the arms differ on 99.91% of samples is
+reporting the location of its own threshold, not the behaviour of the merge, and
+cannot support an inference of insensitivity.
+
+**A configuration caveat I want on the record rather than buried.** ORCH's count is
+"33 million" pixels; mine is 8,250,880, exactly one quarter, which means ORCH measured
+a full-resolution demosaiced render and I measured a binned one. That is a real
+difference and it is the most likely reconciliation of 0 against 268. I am **not**
+claiming ORCH's number was wrong on ORCH's configuration. I am claiming the placebo
+status has not been established on mine, and that a subject this sensitive to the
+backend should not be used to veto a fix until it has been hull-tested rather than
+clip-tested.
+
+### 14.12 What section 14 did not measure
+
+- **The couch-fibers hull test is still pending.** Its 299-frame co-registered basis
+  was still rendering when this was written (`couch.ps1`). 14.11 is a merge-versus-merge
+  comparison, which needs no hull; the out-of-hull fraction for couch-fibers is
+  genuinely unmeasured and is not asserted anywhere above.
 - **`dry-erase-marker-head-cpl` was not measured here**, so ORCH's attribution ladder
   is neither confirmed nor contradicted on its own subject.
 - **The weights themselves were never observed.** Everything in 14.4 through 14.6 is
   inferred from output pixels under knob changes. I never read a weight, because
   doing so needs a change in `crates/` and that tree is contested.
+- **Every number in section 14 is from binned renders**, no `--demosaic`, so that the
+  merge output and its hull basis share one geometry. Section 14.11 shows this can
+  differ materially from a full-resolution measurement.
 
-### 14.12 Reproducing section 14
+### 14.13 Reproducing section 14
 
 ```
 cd C:\dev\strehl-out\BUILD-HULL
@@ -1161,6 +1197,7 @@ python pyrhull.py test --merged pyr\merge-A-default.tiff --tag PLANT-pos \
                        --plant 5000 --plant-box "150,350,150,350"   # +120000 exactly
 powershell -File .\pyr_arms.ps1                      # the 2x2, hard-max, estimator
 powershell -File .\pyr_ladder.ps1 ; python pyr_ladder.py             # the dose curve
+python couchdiff.py                                  # 14.11, needs no hull
 ```
 
 All renders use `STREHL_ALIGN=0` on both the merge and every single-frame render, so
