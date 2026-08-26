@@ -2069,3 +2069,157 @@ fixed.
   restriction is conservative rather than required, but it is not lifted.
 - The three subjects are 205, 105 and 299 frames. No subject below 100 frames was
   measured, and the noise floor of a short stack will be higher.
+
+## 18. `hullband.py`'s band split is wrong by 4^k, and `microC` defined exactly
+
+Two answers ORCH asked for directly, and one refutation that was invited.
+
+Section 17, committed before this request arrived, already retracts the 15% and
+reverses the recommendation. This section answers the two questions section 17
+did not: what `microC` actually is, and whether ORCH's band decomposition holds.
+It does not.
+
+### 18.1 `microC`, exactly
+
+From `C:\dev\strehl-out\ORCH-CLAMP\accept.py:82-88`:
+
+| property | value |
+| --- | --- |
+| statistic | **median** over tiles of the per-tile standard deviation |
+| support | non-overlapping **8x8** tiles, green plane, linear DN |
+| population | tiles whose *lit* fraction exceeds 0.5, where lit is "above the 20th luminance percentile" |
+| band | whatever an 8x8 standard deviation responds to — periods up to ~16 px, i.e. the two or three finest octaves |
+| normalisation | none within a tile; the reported figure is a ratio to the reference arm |
+
+`acuity`, for contrast, is the **mean** `|Laplacian|` over lit *pixels*.
+
+That difference is the whole disagreement and ORCH's guess about it was right. A
+**mean over pixels** is dominated by the small population of strong edges. A
+**median over tiles** is dominated by the *typical* tile, and in a macro frame
+the typical tile is low-amplitude texture. So `microC` reports on precisely the
+population where the merge's residual noise lives, and section 17.4 measured the
+clamp's removal there at **0.29 sigma** on `coffee-bean`.
+
+**Which quantity corresponds to what a person calls a soft print?** `acuity`,
+and neither cleanly. Softness is a statement about edges and fine structure that
+a viewer can resolve, which is the edge-weighted population. `microC` was built
+as "a second, independent acuity witness" against a blur that preserves gradient
+energy by ringing, and for that job it is well chosen. It is not a detail metric,
+because it cannot distinguish texture from noise of the same amplitude — and
+here the thing removed *was* noise-amplitude. That is why section 16.7's 15% was
+a real number about the wrong quantity, and why ORCH's ~3% is the better figure.
+
+### 18.2 The defect in `hullband.py`
+
+`hullband.py:88-92` forms the share of total change as
+
+```
+w = a.size                    # = N / 4**k for a decimated pyramid
+tot_d2 += rd * rd * w
+```
+
+weighting each band by its own **coefficient count**. But a decimated band is
+upsampled back to full resolution when it is reconstructed, and each coefficient
+covers `4**k` full-resolution pixels. The full-resolution energy of band `k` is
+
+```
+(N / 4**k) coefficients  x  4**k pixels each  x  rd^2   =   N * rd^2
+```
+
+a **constant** `N` per band. `hullband.py` under-weights band `k` by exactly
+`4**k` — 4x at band 1, 1024x at band 5, **4096x at the residual**.
+
+This is not a quarrel with the box filter. The docstring's claim that "nothing
+here depends on filter shape" is correct and is not the problem; the weighting
+would corrupt the share with a perfect filter.
+
+### 18.3 Commissioned on a plant with a known answer
+
+The correction is not asserted. `attack_hullband.py` copies ORCH's `decimate`,
+`upsample` and `bands` **verbatim**, so the only difference between the two
+columns is the weighting, then feeds both a synthetic pair whose change is
+99.75% coarse by construction — a 512 px cosine of mean-square 10000 plus white
+noise of mean-square 25.
+
+| attributed to bands 4+/residual | value |
+| --- | ---: |
+| truth, by construction | **99.75%** |
+| `hullband.py` weighting | **13.70%** |
+| corrected weighting | **99.11%** |
+
+Both gates pass: the corrected weighting recovers the truth to within 15 points,
+and the plant separates the two methods by more than 40 points. Had it not
+separated them the script says so and exits non-zero.
+
+### 18.4 The real pair, and what falls
+
+Same code, same verbatim decomposition, `coffee-bean`:
+
+| band | RMS of diff | `hullband.py` | corrected |
+| --- | ---: | ---: | ---: |
+| band0 (2px) | 73.53 | **60.37%** | 5.84% |
+| band1 (4px) | 100.96 | 28.45% | 11.01% |
+| band2 (8px) | 112.91 | 8.90% | 13.77% |
+| band3 (16px) | 102.26 | 1.82% | 11.29% |
+| band4 (32px) | 82.23 | 0.29% | 7.30% |
+| band5 (64px) | 72.35 | 0.06% | 5.65% |
+| residual (>128px) | 204.46 | **0.11%** | **45.14%** |
+
+Note the `RMS of diff` column, which is weighting-free: it **rises** from 73.53
+at 2 px to 204.46 at the residual. The raw measurement was pointing at the coarse
+end the whole time; only the share hid it.
+
+**ORCH's finding 1 is refuted.** "88.8% of the total change is in the 2 px and
+4 px bands" becomes 16.8% under the corrected weighting. And ORCH's discarded
+first hypothesis — "the clamp merely shifts tone" — was right. The band split did
+not refute it; the band split was miscomputed.
+
+This agrees with section 17, which used a **non-decimated** decomposition where
+the weighting question cannot arise and read `coffee-bean` as detail0 14.81% /
+base 82.48%. Two decompositions with different filters, different band edges and
+different code now agree that the action is coarse. They disagree on how the
+coarse energy distributes across bands 2-5 — a box filter has poor stopband
+attenuation and leaks between bands — which is why the crude filter is fine for
+"coarse or fine" and not for a per-band profile.
+
+**ORCH's finding 2 stands.** "24.6% of pixels change, 17.1% by more than 100 DN"
+is a direct count, untouched by the weighting, and section 17 measured 13.0% /
+33.0% / 20.3% on three subjects by the same kind of count. `pyramid.rs:666-674`'s
+"binds constantly while changing nothing" is still wrong on the second half.
+
+### 18.5 The undershoot hypothesis: right about the sign, wrong about the place
+
+ORCH's percentile signature — p1 +137 DN, p25 +208, p50 +2, p75 -17 — is
+one-sided dark-end lifting, and section 18.4 now agrees the action is coarse.
+Both point the same way: **the clamp removes negative excursions in dark
+regions.** Content below the hull of every contributing frame was seen by no
+frame, cannot be detail, and is correctly removed. That conclusion holds and it
+is the same one section 17 reached from the noise floor.
+
+The mechanism attached to it does not. ORCH describes "a Laplacian reconstruction
+ringing *downward* at edges", but section 15's spatial risk map, binned on
+luminance x gradient with both axes measured on the control arm, found risk
+**falling** as gradient rises within the darkest quintile — 23.9% to 4.4% on
+`dry-erase-marker-head-cpl`. The excursion lives in dark **flat** regions, not at
+edges, and ORCH withdrew the occluding-edge mechanism once already on that
+evidence. Ringing is an edge phenomenon; this is not one.
+
+The distinction matters for the fix. A coarse-band pedestal error in dark flat
+areas is the cross-band weight-divergence mechanism of section 15 — bands drawn
+from different frames summing to a pedestal no frame had — and it is what
+BUILD-BLEND's base-band-from-mean change addresses. An edge-ringing account would
+point at the sharpening ramp instead, which section 17.9 has already ruled out on
+separate evidence.
+
+### 18.6 What was not measured
+
+- `hullgeom.py` and `hullcrop.py` were not attacked. Only `hullband.py` was, and
+  only its weighting; its geometry checks are untouched by this and the pair they
+  validate is my own, which section 17.3 independently re-registered at
+  `dy=0 dx=0, ncc=0.9984`.
+- The corrected per-band profile in section 18.4 is not trustworthy band by band,
+  only in aggregate, because of box-filter leakage. Section 17's non-decimated
+  numbers are the ones to quote.
+- `microC` was characterised from its source, not by measuring its response to a
+  planted texture of known amplitude. A plant would settle exactly which octaves
+  it answers to.
