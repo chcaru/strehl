@@ -349,20 +349,52 @@ geometry, and there is no bright rim along them. `coffee-bean` is the third —
 V-HULLCOST found it needs the hull clamp more than any other subject, so it is
 also the test that the clamp is not costing detail. It is not.
 
-**One residual, named rather than folded into that verdict.** A separate
-edge-profile measurement of the shipping blend finds the hard rim genuinely
-gone — the excess at ~21 px, where a rim would sit, is **below 1%** — but the
-same measurement finds a **1.24% interior peak at d = 275 px**, far inside the
-silhouette and far broader than any rim. Two acceptance criteria had been
-written for this and they disagree: it **passes** *"the ring at ~21 px is below
-1%"* and **fails** *"no interior peak above 1%"*. Choosing between them after
-seeing the number is precisely the error this document keeps catching
-elsewhere, so neither is chosen here. What is measured is stated instead: the
-hard white rim tracing the silhouette — the thing that was actually complained
-about — is gone, and a broad, low-amplitude interior feature at 1.24% is not.
-They are different features at different scales. The second has **not** yet
-been looked at by eye at 1:1, and that, rather than another statistic, is the
-next thing that should happen to it.
+**One residual, named rather than folded into that verdict — and corrected once
+since.** A separate edge-profile measurement of the shipping blend finds the
+hard rim genuinely gone — the excess at ~21 px, where a rim would sit, is
+**below 1%**. That measurement also reported a **1.24% peak at d = 275 px**,
+which this document originally described as *interior*. **That was wrong on two
+counts, and both corrections came from opening the picture.**
+
+*The geometry was backwards.* The measurement's `signed_distance` returns
+`d_out − d_in`, so positive `d` is **outward, into the backdrop** — not inside
+the silhouette. An outward feature is not a curiosity; it is the *dark aura
+outside the subject* that was complained about in the first place, so it was
+worth stopping for.
+
+*The number was an artifact of averaging.* Azimuthally, the feature is median
+**2.34%** and max **6.64%** — it lives in a few sectors, and the mean over all
+of them reports a value that occurs at no azimuth. The general rule, kept:
+**for anything with angular structure, report the per-sector distribution, not
+the azimuthal mean.**
+
+So the picture was opened at 1:1, which is what this section said should happen
+next. Both arms, same crop, same gate. Measured **within** each image, so any
+global tonal difference between the two backends cancels:
+
+| arm | backdrop profile, near → far from the silhouette | near-band vs far field |
+|---|---|---|
+| **pyramid** (ships) | 0.9623 · 0.9688 · 0.9512 · 0.9313 · 0.9138 | **+5.31%** |
+| estimator (control) | 0.6938 · 0.7982 · 0.9063 · 0.9199 · 0.9094 | **−23.71%** |
+
+**The shipping blend is the arm without an aura.** The control's backdrop sits
+23.71% *below* its own far field right beside the subject and is still climbing
+three bands out; the blend's sits 5.31% *above* it, in the opposite direction,
+consistent with ordinary illumination falloff. By eye the difference is not
+close: the control carries a wide grey aura tracing the whole silhouette and
+blown blobs on the trichomes, the blend a black subject and a near-clean
+backdrop.
+
+A ratio statistic had reported the reverse — blend 12.1×, control 0.9× — and
+the reason it did is the useful part:
+
+> **A defect broader than the separation between the signal window and the null
+> window contaminates its own reference, and reads as absent.**
+
+The control's aura spans the entire near field, so the null sat inside it, and
+the arm with the worst defect scored the cleanest. What survives, honestly
+sized: the blend's backdrop does carry faint broad mottling, far-field rms
+**0.708%**. That is a minor open item with a number attached, not a halo.
 
 The hardest case of all is `highly-angled-ruler-mm-cpl`: a steel rule crossing
 the frame at a steep angle, so a hard occluding edge runs diagonally through it

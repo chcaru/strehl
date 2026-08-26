@@ -8273,3 +8273,167 @@ the specular fringe. And the print masters exist: SHIP-V2 and SHIP-V2-ICC are
 both complete at 26/26 with `.ok` markers, sidecars and `COMPLETE.txt` -- my
 belief that the batch was still in flight was one of BUILD-RENDER's own test
 arms, misread as the batch.
+
+---
+
+## 71. Four ways to be handed the same nothing
+
+Two agents reported on the specular fringe within an hour of each other, and
+between them they killed every candidate I had -- including one I never wrote
+down because I thought it was obvious. Then, chasing what looked like a
+regression, I made the same class of error a fourth time. That fourth one is
+the useful part of this section, so it goes last.
+
+### The fringe is not the merge, and it is not the demosaic
+
+BUILD-HIGHLIGHT ran the four-arm ladder on `coffee-bubbles`, one binary, all
+`--linear-srgb`, all on one 3516x2344 grid so no arm was resolution-advantaged:
+
+| arm | H (speckle) | L (bands) |
+|---|---:|---:|
+| K1 single frame, demosaiced | **0.2955** | 0.3083 |
+| K3 stack, demosaiced | **0.2558** | 0.3583 |
+| K2 stack, never demosaiced | **0.2928** | 0.3660 |
+| K5 stack, `--fix-ca off` | **0.2920** | 0.3663 |
+
+**The merge is innocent.** A single frame carries **15.5% more** high-frequency
+chroma than the stack of it. The defect is fully present before any merging
+happens, and merging *reduces* it. They did not stop at the number either:
+`pyramid.rs:990-993` computes `den` once on green luma and shares it across all
+planes, pinned by the test `the_selection_is_shared_across_planes` at `:2216` --
+and **a shared scalar cannot manufacture chroma**. I had called a merge-origin
+fringe "a far more serious finding" than the halo. It is dead, and the pairing
+of a measurement with the mechanism that makes the measurement necessary is the
+strongest form of argument this project has produced.
+
+**My own leading candidate is refuted.** I argued green's 2x CFA sample density
+would make fine bright features reconstruct green-biased -- textbook Malvar
+false colour. The never-demosaiced arm is **12.6% worse**, on the same lattice.
+That is the opposite of what the hypothesis predicts. Recorded as refuted.
+
+### The best catch in the report is a selector that contained its conclusion
+
+BUILD-HIGHLIGHT withdrew three of their own findings before publishing. The
+second is the one worth keeping:
+
+> BT.709 luma is 71.5% green, so ranking candidate pixels on luma preferentially
+> selects **high-green pixels** -- the very effect I was about to report.
+
+Under `--select-on rb` the blue half of their result collapses
+`-0.0882 -> -0.0071 -> +0.0004` and flips sign. That is not a correction to a
+finding; it is the difference between a finding and an artifact of how the
+pixels were chosen. They found it by deliberately picking a selector that could
+not produce their result. The other two withdrawals are the same virtue: a mask
+that selected blown cores and printed a confident table of `0.000000` on every
+arm -- **neutral by construction**, a number that could not have been anything
+else -- and a "the CA correction is making it worse" headline retracted on the
+grounds that one selector is not a result.
+
+### And the flower bud is not blown at all
+
+I had told V-HIGHLIGHT that `flower-bud-alone-cpl` carried a magenta fringe
+where the bud meets a **blown-out white background**, and registered a
+prediction that the highlight roll-off would reduce it. The prediction is
+**refuted**, and the reason is worse than being wrong about the mechanism:
+
+```
+per-channel ceiling : R 2.8288  G 1.0689  B 1.5595
+frame max u         : 0.3125          (the knee is 0.60)
+brightest pixel     : 5471 DN of a 16383 container
+pixels at 65535     : 0.000000%
+```
+
+**Nothing in that image is remotely near clipping.** The background is at a
+third of the sensor's range; the `--srgb` tone curve lifts it **2.74x**, and I
+read the result as saturation. I have spent this week telling other agents that
+a magnitude must be measured in linear -- and then diagnosed a *clipping*
+defect by eye, off a tone-mapped render, without once probing the raw. The rule
+I had was too narrow. The general form:
+
+> **A saturated appearance is a statement about the render, not about the
+> sensor.** "Blown" is a claim about DN against a container and can only be
+> settled in the raw domain. Every judgement made from a display-referred image
+> inherits the tone curve's opinion.
+
+V-HIGHLIGHT then discarded their *own* first result on the same subject, which
+had looked strongly CA-like (antisymmetry -483.8/+483.6, radial growth
+-174 -> -1294): `corr(chroma, luminance) = +0.7320` on edges, so an intensity
+edge at constant hue fakes a radial chroma trend. On a scale-invariant metric
+the shipping arm's radial profile is **flat** (-0.0275 -> -0.0269). CA
+correction removes only 19.7% of that fringe. And chroma excess falls
+**monotonically 3.1x** from the darkest to the brightest quintile -- which rules
+out clipping unaided, since a clipping-driven error must do the opposite.
+
+So on `flower-bud-alone-cpl` the fringe is **unattributed**: not clipping, not
+demosaic, not the merge, and only one-fifth CA. That is an honest open state and
+it is recorded as one. It also now conflicts with BUILD-HIGHLIGHT's radial
+finding on `coffee-bubbles`, and the conflict is live: one used raw chroma, one
+used a scale-invariant metric, and V-HIGHLIGHT has shown the raw form is
+contaminated by exactly the luminance correlation that a specular-on-dark
+subject maximises.
+
+### The fourth way to be handed nothing
+
+Chasing V-HIGHLIGHT's commissioning number, I found what looked like a clean
+regression. They measured `STREHL_HIGHLIGHT_KNEE=0.05` moving **67.56%** of
+`109MSDCF`. I ran the *more* extreme `0.02` on the same subject and got
+byte-identical output -- and byte-identical at `0.05` and at `off` too, all
+three the same hash `7C77E638BF7FE597`.
+
+It was not a regression. My pin was built from `96b7e119`, and:
+
+```
+$ git cat-file -e 96b7e119:crates/strehl-core/src/highlight.rs
+fatal: path exists on disk, but not in '96b7e119'
+```
+
+**The feature did not exist in that tree.** The binary had never heard of the
+variable, so byte-identical output is the only thing it could possibly have
+produced. Confirmed independently: `0.0`, which V-HIGHLIGHT showed must emit a
+warning, emits nothing.
+
+Now count them. This audit has produced a false "dead flag" verdict four times,
+by four unrelated mechanisms, and **every one of them emitted the identical
+glyph**:
+
+| # | cause | what it actually measures | verdict now |
+|---|---|---|---|
+| 1 | `=1` on a multiplicative gate | the identity element | DEGEN |
+| 2 | a value equal to the default | the arm never ran | DEGEN |
+| 3 | 8 frames on a frame-pooled gate | the probe's shallowness | SHALLOW |
+| 4 | a binary predating the flag | nothing at all | **UNIMPL** |
+
+> **Byte-identical output is the null result of every possible probe failure,
+> and from the pixels alone it is indistinguishable from a true negative.**
+> Every guard in `check-potency.py` exists to subtract one member of that family
+> from the DEAD column, so that DEAD can mean what it says: *present, reached,
+> and inert.*
+
+The fourth guard is now wired, and it needs no render. Rust emits
+`std::env::var("NAME")` and clap's flag names as literals in `.rdata`, so a flag
+absent from the binary's own bytes cannot be under test. Measured on the pin:
+
+```
+STREHL_HIGHLIGHT_KNEE    ABSENT  <- cannot be probed
+STREHL_SMOOTH_HUBER      PRESENT
+STREHL_RESTORE           PRESENT
+STREHL_FIX_HALO          PRESENT
+STREHL_PHOTOMETRIC       PRESENT
+STREHL_WARPMAP           PRESENT
+28 distinct STREHL_ env literals found
+```
+
+The scanner is commissioned on both halves, because **a scan that finds nothing
+looks identical to a binary that contains nothing**: it requires at least ten
+real `STREHL_` literals to prove it reaches `.rdata`, and requires a fabricated
+token to be *absent* to prove it can say no. Both are checked before any
+`UNIMPL` verdict is allowed to print, and the audit hard-exits `2` if either
+fails.
+
+There is a lesson here about pins specifically. I have been treating "pin the
+binary" as sufficient rigour for weeks. It is not:
+
+> **A pin freezes provenance, which is only a virtue if the provenance contains
+> the thing you are testing.** An old pin is a perfect instrument for measuring
+> a feature that did not exist -- it will answer every question about it,
+> consistently, and always with the same wrong answer.
