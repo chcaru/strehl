@@ -1623,6 +1623,21 @@ ARM 3 (named): CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (operator asked for
 Pixels are untouched by the log fix: `fx_unset == br_unset` and `fx_off ==
 br_off`, byte-identical.
 
+**Stating which A/B this was, per the cross-build rule.** The three-row hash
+table above is a **same-binary** A/B — one `blend-render` binary, three env
+settings — so the cross-build hazard does not apply to it. The `fx_* == br_*`
+identity immediately above **is** cross-build (pre-fix vs post-fix binary), a
+category the project holds void unless restricted to green, and I did not label
+it as such when I first reported it. It survives anyway, for a reason worth
+spelling out rather than assuming: the cross-build hazard *injects spurious
+differences* (red moving up to 3902 DN), and no mechanism that injects
+differences can manufacture byte-identity. The null is therefore robust in the
+one direction that matters, and is itself evidence the hazard was absent for
+this pair. The control against the opposite failure — a stale binary making
+identity trivially true, which is exactly the mtime trap recorded above — is
+that the post-fix **stdout demonstrably changed** (new reason strings), proving
+the binary rebuilt. Both renders came from genuinely different binaries.
+
 Three tests added where there were zero, and **I commissioned them** rather than
 trusting green: `c11_commission_status.py` plants both directions of the original
 inversion and requires RED. 2/2 caught. `cargo test -p strehl-core --lib optics`
