@@ -95,7 +95,26 @@ param(
 
     # Use an existing binary instead of building a pin. For iterating on the
     # harness itself; a run made this way is recorded as UNPINNED.
-    [string]$Exe
+    [string]$Exe,
+
+    # Skip the graded presentation outputs and emit masters only.
+    #
+    # The presentation files exist because a faithful --srgb master is flat by
+    # construction -- it applies the colour matrix and the transfer curve and
+    # nothing else, which is correct for a master and is not what any raw
+    # developer ships. A viewer judging the tool on unGRADED masters is judging
+    # a rendering choice, not the stacking.
+    #
+    # They are written to a SEPARATE directory with its own warning file, and
+    # they carry no provenance sidecar, deliberately: a sidecar would imply
+    # they are reproducible measurement artifacts and they are not. Nothing
+    # numeric may ever be computed from them -- they sit on the far side of both
+    # a tone curve and a per-image percentile normalisation, so a gate fed one
+    # would be measuring the grade.
+    [switch]$NoPresent,
+
+    # Long edge of the presentation JPEGs.
+    [int]$PresentWidth = 1400
 )
 
 $ErrorActionPreference = 'Stop'
@@ -239,7 +258,40 @@ Remove-Item (Join-Path $out 'COMPLETE.txt') -ErrorAction SilentlyContinue
 
 $manifest = Join-Path $out 'manifest.tsv'
 if (-not (Test-Path $manifest)) {
-    "subject`tframes`tsecs`texit`tbytes`tstatus`texposure_stops" | Out-File -Encoding utf8 $manifest
+    "subject`tframes`tsecs`texit`tbytes`tstatus`texposure_stops`tviewable`tgraded" |
+        Out-File -Encoding utf8 $manifest
+}
+
+# Presentation outputs live apart from the masters and say so on the tin, so a
+# graded JPEG can never be picked up by a glob that meant to find a master.
+$presentDir = Join-Path $out '_presentation'
+$faithfulDir = Join-Path $out '_faithful'
+if (-not $NoPresent) {
+    New-Item -ItemType Directory -Force -Path $presentDir, $faithfulDir | Out-Null
+    @(
+        "PRESENTATION ONLY -- DO NOT MEASURE ANYTHING FROM THESE FILES."
+        ''
+        'These JPEGs are GRADED: a percentile black point, a filmic S-curve and'
+        'a saturation lift have been applied on top of the master. They exist so'
+        'a photographer can judge the pictures, because a faithful --srgb master'
+        'is flat by construction and reads as poor work when it is not.'
+        ''
+        'They sit on the far side of BOTH a tone curve and a per-image'
+        'percentile normalisation. Two consequences:'
+        '  - No gate, metric or A/B comparison may be fed one. The standing'
+        '    project rule is that nothing numeric crosses a tone curve, and the'
+        '    percentile step additionally makes each file scaled differently'
+        '    from every other, so even comparing two of these to each other is'
+        '    measuring the grade rather than the render.'
+        '  - They are 8-bit and JPEG. Fine detail and rim artifacts are exactly'
+        '    what JPEG discards; judge those on the masters at 100%.'
+        ''
+        'The faithful, measurable artifacts are the .tiff masters beside this'
+        'directory, each with a .provenance.txt sidecar. ../_faithful holds an'
+        '8-bit UNgraded reduction of each master, for seeing what the master'
+        'itself looks like; it is still 8-bit JPEG and still not a measurement'
+        'surface.'
+    ) | Out-File -Encoding utf8 (Join-Path $presentDir 'DO-NOT-MEASURE.txt')
 }
 
 # STREHL_FIX_CA is set EXPLICITLY in both directions. Since 96571ee an absent
@@ -257,6 +309,44 @@ foreach ($v in @(
     Remove-Item "Env:\$v" -ErrorAction SilentlyContinue
 }
 
+function New-Presentation {
+    # Master -> faithful 8-bit viewable -> GRADED presentation JPEG.
+    #
+    # Idempotent, and called from the resume path as well as the render path.
+    # Without that a subject whose grading failed on the first pass could never
+    # be repaired by re-running, because the master would then exist and the
+    # whole subject would be skipped -- the failure would become permanent and
+    # invisible.
+    param($Name, [string]$Tif)
+
+    if ($NoPresent) { return @{ Viewable = 'off'; Graded = 'off' } }
+    if (-not (Test-Path $Tif)) { return @{ Viewable = 'nomaster'; Graded = 'nomaster' } }
+
+    $fj = Join-Path $faithfulDir "$Name.jpg"
+    $gj = Join-Path $presentDir "$Name.jpg"
+    if ((Test-Path $fj) -and (Test-Path $gj)) { return @{ Viewable = 'skip'; Graded = 'skip' } }
+
+    $vlog = Join-Path $out "$Name--$Arm.present.log"
+    $viewState = '-'; $gradeState = '-'
+    try {
+        # Redirected to a file rather than piped: captured `& $exe 2>&1` yields
+        # ErrorRecord objects that stringify unpredictably downstream, which is
+        # a trap already live elsewhere in this project's own scripts.
+        & python (Join-Path $repo 'scripts\viewable.py') $Tif $fj --maxw $PresentWidth *> $vlog
+        $viewState = $(if (Test-Path $fj) { 'ok' } else { 'fail' })
+        if ($viewState -eq 'ok') {
+            & python (Join-Path $repo 'experiments\ORCH-drift-check\grade.py') `
+                $fj $gj --single --maxw $PresentWidth --label 'PRESENTATION' *>> $vlog
+            $gradeState = $(if (Test-Path $gj) { 'ok' } else { 'fail' })
+        } else { $gradeState = 'skip' }
+    } catch {
+        Write-Warning "present ${Name}: $_"
+        if ($viewState -eq '-') { $viewState = 'threw' }
+        if ($gradeState -eq '-') { $gradeState = 'threw' }
+    }
+    return @{ Viewable = $viewState; Graded = $gradeState }
+}
+
 function Invoke-Subject {
     param($S, [int]$Index, [int]$Total, [string]$Note)
 
@@ -264,9 +354,12 @@ function Invoke-Subject {
     $log = Join-Path $out "$($S.Name)--$Arm.log"
 
     if ((Test-Path $tif) -and ((Get-Item $tif).Length -gt 0) -and (Test-Path "$tif.ok")) {
-        Write-Host ("[{0,2}/{1}] {2} -- already rendered, skipping" -f $Index, $Total, $S.Name)
+        $pr = New-Presentation -Name $S.Name -Tif $tif
+        Write-Host ("[{0,2}/{1}] {2} -- already rendered, skipping{3}" -f $Index, $Total, $S.Name,
+            $(if ($pr.Graded -eq 'ok') { ' (graded now)' } else { '' }))
         return [pscustomobject]@{ Name = $S.Name; Frames = $S.Frames; Secs = 0; Exit = 0
             Bytes = (Get-Item $tif).Length; Status = 'skip'
+            Viewable = $pr.Viewable; Graded = $pr.Graded
         }
     }
     Remove-Item "$tif.ok" -ErrorAction SilentlyContinue
@@ -358,10 +451,22 @@ function Invoke-Subject {
     # subject whose provenance failed to write.
     if ($status -eq 'ok') { "$binHash" | Out-File -Encoding ascii "$tif.ok" }
 
-    Write-Host ("        {0}  {1:N0}s  {2:N0} MB{3}" -f $status, $sw.Elapsed.TotalSeconds, ($bytes / 1MB),
-        $(if ($expoStops) { "  exp $expoStops st" } else { '' }))
+    # Presentation outputs. Deliberately AFTER the sentinel and reported in
+    # their own manifest columns: a grading failure is a presentation defect,
+    # not a render defect, and must not mark a good master bad. The converse
+    # also holds -- these are only attempted for a master that actually
+    # rendered, so a graded JPEG can never exist for a failed subject and be
+    # mistaken for evidence that it worked.
+    $pr = $(if ($status -eq 'ok') { New-Presentation -Name $S.Name -Tif $tif }
+        else { @{ Viewable = 'norender'; Graded = 'norender' } })
+    $viewState = $pr.Viewable; $gradeState = $pr.Graded
+
+    Write-Host ("        {0}  {1:N0}s  {2:N0} MB{3}{4}" -f $status, $sw.Elapsed.TotalSeconds, ($bytes / 1MB),
+        $(if ($expoStops) { "  exp $expoStops st" } else { '' }),
+        $(if ($gradeState -notin @('-', 'off', 'ok')) { "  graded:$gradeState" } else { '' }))
     [pscustomobject]@{ Name = $S.Name; Frames = $S.Frames; Secs = [math]::Round($sw.Elapsed.TotalSeconds, 1)
         Exit = $exit; Bytes = $bytes; Status = $status; Exposure = $expoStops
+        Viewable = $viewState; Graded = $gradeState
     }
 }
 
@@ -374,7 +479,7 @@ foreach ($s in $subjects) {
     catch {
         Write-Warning "$($s.Name): $_"
         $results += [pscustomobject]@{ Name = $s.Name; Frames = $s.Frames; Secs = 0; Exit = -1
-            Bytes = 0; Status = 'threw'
+            Bytes = 0; Status = 'threw'; Viewable = '-'; Graded = '-'
         }
     }
 }
@@ -396,8 +501,10 @@ if ($retry) {
 $runSw.Stop()
 
 foreach ($r in $results) {
-    "{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}" -f $r.Name, $r.Frames, $r.Secs, $r.Exit, $r.Bytes, $r.Status,
-    $(if ($r.Exposure) { $r.Exposure } else { '-' }) |
+    "{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}" -f $r.Name, $r.Frames, $r.Secs, $r.Exit, $r.Bytes, $r.Status,
+    $(if ($r.Exposure) { $r.Exposure } else { '-' }),
+    $(if ($r.Viewable) { $r.Viewable } else { '-' }),
+    $(if ($r.Graded) { $r.Graded } else { '-' }) |
         Out-File -Encoding utf8 -Append $manifest
 }
 
