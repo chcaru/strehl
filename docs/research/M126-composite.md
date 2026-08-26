@@ -827,5 +827,35 @@ python mag.py C:\dev\strehl-out\M126-POTENCY\bee-3-cpl\lin S_unset "S_h"
 `0xC0000409` and `memory allocation of 73400320 bytes failed` while eleven agents were
 rendering concurrently. Not a defect — an OOM. `S_unset` was recovered from the
 composite run, which used byte-identical argv and environment and is cross-validated
-byte-identical on `109MSDCF`. **`S_0` on 299 frames is still unrendered** and is the one
-gap in this addendum.
+byte-identical on `109MSDCF`. `S_0` on 299 frames was re-rendered successfully once
+memory freed and is reported in §12.9.
+
+### 12.9 The frame-count floor is a dose-response, not a threshold
+
+Both solve variables were re-measured on 299 frames. The gap named above is closed.
+
+| gate | 22 frames (`109MSDCF`) | 299 frames (`bee-3-cpl`) |
+|---|---|---|
+| | % differ / peak DN / verdict | % differ / peak DN / verdict |
+| `STREHL_SMOOTH=0` | 92.8205 / **1306** / LIVE | 99.1088 / **16974** / LIVE |
+| `STREHL_SMOOTH_HUBER=off` | 0.0000 / **0** / **DEAD** | 99.3482 / **24331** / LIVE |
+
+`STREHL_SMOOTH=0` grows **13x in peak** (1.99 % -> 25.90 % of full scale) with frame
+count. So the floor is not a binary threshold that one gate happens to sit on — **the
+effect of the whole smoothness mechanism scales with stack length**, and the huber
+sub-gate simply crosses zero somewhere between 22 and 299 frames while its parent does
+not. That is a stronger statement than §12.5's and it makes the warning about 8-frame
+probing correspondingly stronger: an 8-frame subject under-measures these gates
+*continuously*, not just near a cliff.
+
+**One result I cannot explain and am not going to dress up.** At 299 frames, turning the
+robust threshold *off* (`huber=off`, peak 24331 DN) perturbs the render **more** than
+turning the entire prior off (`lambda=0`, peak 16974 DN). A sub-option is more
+disruptive than the option that contains it. The obvious reading is that `huber=None`
+leaves the prior active but **purely quadratic**, so real track steps that the robust
+threshold was there to let through are instead smoothed away, dragging the track further
+from truth than having no prior at all — which is exactly the failure mode
+`apply_smooth_env`'s doc says the Huber threshold exists to prevent ("a bumped tripod...
+which then survives"). **That is a hypothesis I have not tested**, and per discipline 912
+I am not recording it as a mechanism. What is measured is the ordering, and the ordering
+is the wrong way round from what a naive reading of "off" would predict.
