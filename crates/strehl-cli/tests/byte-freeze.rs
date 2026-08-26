@@ -445,6 +445,21 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_VEIL",
     "STREHL_VEIL_MARGIN",
     "STREHL_VEIL_FLOOR",
+    // The lateral-CA profile. This one arrived by the opposite route to every
+    // entry above: the variable is old, but it only became able to move a hash
+    // when the correction was defaulted ON. While unset meant off, an ambient
+    // value could only ever move the bytes AWAY from the recorded pipeline in
+    // the direction nobody used, and the omission never bit. Now unset means
+    // the gear-matched profile applies, `off` is a real and different render,
+    // and the row's bytes depend on which of the two the ambient shell happens
+    // to hold. `scripts\gallery.ps1` sets this variable, so "ran the gallery,
+    // then ran the tests, in one shell" is not a hypothetical path to it.
+    //
+    // Worth stating plainly because it generalises: a default flip can turn a
+    // dormant unrecorded input into a live one without anything in this file
+    // changing. The list is not made safe by being complete on the day it was
+    // written.
+    "STREHL_FIX_CA",
 ];
 
 impl Freeze {
