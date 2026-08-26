@@ -129,12 +129,97 @@ def commission() -> int:
     return 0 if ok else 1
 
 
+def commission_on(path: Path) -> int:
+    """Commission the detector on a REAL supplied render.
+
+    `commission()` plants into a synthetic field of ideal steps, and an ideal
+    step is the one case where this detector is guaranteed to recover the
+    planted amplitude exactly. That is a licence to trust it on ideal steps and
+    nothing more. A render from a different stacker carries a different noise
+    level, a different grade and a different edge population, and a detector
+    that has only ever been seen to respond on our own images has not been
+    shown to respond on theirs.
+
+    So the same two demands are made again, on the actual file that will be
+    measured:
+
+      NULL   the arm IS the reference -- max |d| must be EXACTLY 0, which tests
+             that pairing and site selection are deterministic on this image.
+      PLANT  a calibrated [-a, 1+2a, -a] overshoot must come back at its
+             planted size, measured as the PAIRED median delta rather than as
+             an absolute value, because a real render has no true plateaux and
+             its absolute overshoot is therefore not a meaningful zero.
+
+    Whatever recovery this reports is the tolerance every later number on this
+    image inherits, and it is printed rather than assumed.
+    """
+    y = luma(path)
+    ys, xs, amp_floor = pick_edges(y)
+    v_ref, k_ref = overshoot_at(y, ys, xs, amp_floor)
+    print(f"COMMISSIONING on a real render: {path.name}")
+    print(f"  shape {y.shape}, amplitude floor {amp_floor:.6g}"
+          "   (units are the file's own -- it may be float or DN)")
+    print(f"  sites that are real steps : {int(k_ref.sum())} of {len(ys)}")
+    print(f"  baseline p99 overshoot    : {np.nanquantile(v_ref, 0.99):.4f}"
+          "   (NOT a zero -- real edges are not steps)")
+    ok = True
+
+    v_n, k_n = overshoot_at(y, ys, xs, amp_floor)
+    both = k_ref & k_n
+    dmax = float(np.abs(v_n[both] - v_ref[both]).max())
+    print(f"  NULL   max |d| = {dmax:.6f}   {'PASS' if dmax == 0.0 else 'FAIL'}")
+    ok &= dmax == 0.0
+
+    # The plant is calibrated on an IDEAL step, where it deposits exactly `a`
+    # beyond the plateau. Real edges are blurred over several pixels, so the
+    # kernel's negative lobes sit on intermediate values rather than on the
+    # plateau and the SAME ringing yields proportionally less overshoot. Exact
+    # recovery is therefore the wrong demand on a real render, and loosening it
+    # to "pass" would be tuning the test to the answer. What is demanded instead
+    # is what a usable instrument actually needs -- determinism, a monotone
+    # response, and a clear direction -- and the recovery fraction is REPORTED
+    # as this image's sensitivity, which every later number on it inherits.
+    rec, prev = [], None
+    mono = True
+    for a in (0.05, 0.15, 0.30):
+        v_p, k_p = overshoot_at(ring_plant(y, a), ys, xs, amp_floor)
+        both = k_ref & k_p
+        if both.sum() == 0:
+            print(f"  PLANT a={a:.2f}  VACUOUS -- no paired edges")
+            ok = False
+            continue
+        delta = float(np.median(v_p[both] - v_ref[both]))
+        worse = float((v_p[both] > v_ref[both]).mean())
+        if prev is not None and delta <= prev:
+            mono = False
+        prev = delta
+        rec.append(delta / a)
+        flag = "PASS" if (delta > 0 and worse > 0.6) else "FAIL"
+        print(f"  PLANT a={a:.2f}  paired median delta = {delta:.4f} "
+              f"({delta / a:.2f}x of planted), worse = {worse:.4f}   {flag}")
+        ok &= delta > 0 and worse > 0.6
+    ok &= mono
+    print(f"  MONOTONE in plant size : {'PASS' if mono else 'FAIL'}")
+    if rec:
+        print(f"  SENSITIVITY on this image: recovers {np.mean(rec):.2f}x of planted "
+              "ringing.")
+        print("  => its magnitudes are a LOWER BOUND on this image, and magnitudes")
+        print("     may NOT be compared across images with different edge blur.")
+        print("     Paired `worse` and delta, within one image, remain valid.")
+    print("  COMMISSIONED ON THIS IMAGE" if ok
+          else "  NOT COMMISSIONED ON THIS IMAGE -- do not read results from it")
+    return 0 if ok else 1
+
+
 def main() -> int:
     if len(sys.argv) == 2 and sys.argv[1] == "--commission":
         return commission()
+    if len(sys.argv) == 3 and sys.argv[1] == "--commission-on":
+        return commission_on(Path(sys.argv[2]))
     if len(sys.argv) < 3:
         raise SystemExit("usage: restore_ring.py <off.tif> <arm.tif> [arm.tif ...]\n"
-                         "       restore_ring.py --commission")
+                         "       restore_ring.py --commission\n"
+                         "       restore_ring.py --commission-on <real.tif>")
     poff = Path(sys.argv[1])
     off = luma(poff)
     ys, xs, amp_floor = pick_edges(off)

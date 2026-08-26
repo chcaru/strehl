@@ -4661,3 +4661,131 @@ the focus decision has to move to full resolution. If they are ringing, the
 finding is that this rig cannot deliver contrast at 0.30 cyc/px, nobody's
 software can, and we should stop chasing it -- and that is a result worth as
 much as a win.
+
+## s37. Commissioning against a stranger's render, and `flowers-cpl` is not ours
+
+Two assignments. The first produced the more important result, and it is a
+result about an instrument rather than about the product.
+
+### s37.1 The ringing detector, commissioned on comparator output
+
+ORCH's objection was exact: my plants were injected into strehl's own images,
+and a detector that fires on synthetic ringing in a strehl render has not been
+shown to fire on `INTER_LANCZOS4` output at a different noise level and grade.
+So `restore_ring.py` gained a `--commission-on <real.tif>` mode that runs the
+same two demands -- an exact null and a calibrated plant -- on whatever file
+will actually be measured.
+
+Run on the fork's own render and on a strehl render:
+
+| render | null max abs d | recovers | baseline p99 |
+| --- | ---: | ---: | ---: |
+| synthetic ideal steps | 0.000000 | **1.00x** | (0 by construction) |
+| fork `smoke.tif` | 0.000000 | **0.38x** | 0.7390 |
+| strehl `flowers-cpl` linear | 0.000000 | **0.08x** | 2.0857 |
+
+**The detector is 4.75x more sensitive on the fork's render than on ours.**
+
+Had I done what the assignment literally asked -- measure overshoot on both and
+compare -- the fork would have read as roughly five times ringier than strehl
+**with no ringing present anywhere**, purely because the instrument responds
+differently to the two images. That number would have confirmed the hypothesis I
+was sent to test. It is the confirmatory failure mode ORCH named: an instrument
+whose error resembles its intended output reads as a success every time it
+breaks.
+
+The mechanism is physical rather than a bug. The plant `[-a, 1+2a, -a]` is
+calibrated on an IDEAL step, where it deposits exactly `a` beyond the plateau
+and recovery is exact. Real edges are blurred across several pixels, so the
+kernel's negative lobes sit on intermediate values instead of the plateau and
+the same ringing yields proportionally less overshoot. Sensitivity therefore
+scales with how step-like a render's edges are, which is itself a property that
+differs between stackers -- which is precisely the quantity under dispute. **The
+instrument is confounded with its own subject.**
+
+I did NOT loosen the pass criterion to make the arms pass, because the criterion
+was not wrong about ideal steps; it was being applied outside the domain it was
+calibrated on. What the commissioning now demands is what a usable instrument
+needs -- an exact null, a strictly monotone response, and a clear direction --
+and it REPORTS the recovery fraction as the sensitivity every later number on
+that image inherits.
+
+**The protocol this forces on the strehl-versus-comparator comparison**, and it
+is not optional:
+
+1. Both renders must be of the **same subject**. The two files above are not --
+   `smoke.tif` is `flat-on-ruler-cpl` and mine is `flowers-cpl` -- so the 4.75x
+   confounds subject, grade and pipeline and attributes to none of them.
+2. Each render must be commissioned **separately**, and its measured overshoot
+   divided by its own recovery fraction before the two are compared.
+3. Absolute magnitudes may never be compared across images. Paired `worse` and
+   paired delta remain valid within one image.
+
+Without step 2 the comparison measures edge blur and calls it ringing.
+
+One incidental catch worth recording because it nearly cost the instrument: the
+first run printed `amplitude floor 0.0 DN` and I took it for a degenerate image.
+The floor was 0.00815; the file is float32 in [0.0175, 0.2333] and I had
+formatted it `:.1f`. **A display format in my own commissioning output almost
+produced a false verdict about a working detector.** Now printed `:.6g`, with
+the units stated as the file's own rather than assumed to be DN.
+
+### s37.2 `flowers-cpl`: the merge is not losing anything the data holds
+
+ORCH's reading was that the subject extends deeper than the capture covered.
+The decisive comparison is the merge against the best frame available per
+region, and it took three instruments because the first two were confounded.
+
+**Attempt 1, retracted.** A contrast-normalised gradient over the raw frames,
+max across the bracket. It returned argmax frame **0** for 20 of 24 regions. On
+a 176-frame focus bracket the first frame being sharpest almost everywhere is a
+statement about the instrument, and I did not report it. Its verdict logic was
+also one-sided -- it tested only for a pileup at the LAST frame, so a sweep that
+ran out at the NEAR end would have been classified "every region has an interior
+optimum", the same defect class retracted in s36.4.
+
+**Attempt 2, also retracted, with the cause found.** Keeping the whole
+through-focus curve instead of its maximum showed every region declining
+MONOTONICALLY across all 176 frames, and the exposure trace showed the frame
+mean rising 6671.4 -> 7908.9 DN, an **18.5% ramp**. `mean|grad I| / mean I` is
+invariant to a global gain in its signal term but not in its noise term: photon
+noise scales as sqrt(I), so its contribution falls as 1/sqrt(I), predicting an
+~8.8% decline over that ramp by itself against observed declines of 10-15%. The
+statistic was tracking the lamp. A second statistic was computed precisely to
+catch this and agreed on 22 of 24 regions -- **two statistics agreeing is not
+independence when both are normalised by intensity and both are being moved by
+the same ramp.**
+
+**Attempt 3, which answers the question.** `argmax-baseline` is strehl's own
+negative control and it selects per pixel the frame with the highest
+NOISE-NORMALISED Tenengrad measure, so an exposure ramp cannot move its choice
+the way it moved mine. It is binned rather than demosaiced and its output is
+linear. It is not a candidate output and is not proposed as one -- it does not
+align -- but as evidence about what the INPUT contains it is exactly right: if a
+region is soft in the best-frame composite, no captured frame holds it sharp.
+
+The acutance table said the merge was at 0.19-0.69x of the baseline, worst
+region 0.186, which read as a catastrophic merge deficit. **It is not, and the
+tell was in the table.** The baseline's acutance is nearly FLAT across the
+frame, left/right 1.254, while the merge falls 3.359x. A genuinely detail-rich
+best-frame composite cannot be uniform on a subject that is visibly soft on the
+right, so the baseline's acutance is not detail.
+
+Opening both at 1:1 settled it. The baseline is not sharper: it is **blotchy** --
+irregular flat patches with hard boundaries, the unregularised per-pixel winner
+map, exactly the artifact this subcommand's own help says it exists to
+demonstrate. **Those patch boundaries are what my acutance statistic was
+counting as gradient.** Underneath them the content carries the same blur as the
+merge, and in the right-hand regions both are equally soft.
+
+**Verdict for routing: `flowers-cpl` is not a second instance of the
+`flower-bud-alone-cpl` defect.** Pure per-pixel selection over the same frames
+recovers no detail the merge lacks. The merge is doing what the data permits.
+
+**What I did NOT establish, and will not imply.** I have not shown the bracket
+is incomplete. That claim needs a valid through-focus census and mine was
+confounded by the exposure ramp; I retracted it rather than repair it under
+time. The measured statement is the narrower one -- selection over these frames
+does no better than our merge -- which is enough to answer whether `flowers-cpl`
+counts against the tool, and not enough to explain why it is soft. The 18.5%
+exposure ramp is itself worth routing to whoever owns capture advice.
