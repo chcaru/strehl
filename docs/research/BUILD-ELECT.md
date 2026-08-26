@@ -73,6 +73,31 @@ subject and I carried it to the band without re-testing; that was wrong. The ban
 needs abstention and a coverage output, not a better statistic. See sections 11.3
 to 11.7.
 
+**Amended by section 12, after looking at a real winner field at 1:1.** The
+mechanism is now measured, and it unifies the band, the polygonal patches and the
+owner's own 52x fringed-versus-smooth separation. On `lavendar-cpl` the field is
+**smooth on the subject** (0.741 frames mean neighbour difference) and **20.4x
+rougher in the backdrop** (15.094): the 191-frame excursions another lane
+reported are the paper sweep, not seams cutting photographed detail, so the
+speckle reading wins and the blocky-field reading dies. But the picture showed
+what no first-difference statistic could report, because it is *smooth*: a
+**coherent lobed collar** of extreme index hugging the silhouette. Roughness
+rises monotonically outward, 1.04 to 17.32 frames, so the election is at its most
+confident exactly where the artifact is, and the collar elects ~220 while the
+subject elects 108. The mechanism: the near backdrop has no texture in any frame
+but does carry the **veil**, a smooth ramp whose steepness varies frame to frame,
+which a box aggregate of gradient magnitude cannot distinguish from texture. It
+ranks veil steepness and returns a confident wrong answer; far out the veil is
+gone and the field collapses to noise. **The scalloped boundary is the handover
+contour between those two regimes**, and a handover contour follows silhouette
+morphology, which is why a fringe produces lobes and a smooth bean does not. This
+is why all four focus statistics failed: they reorder a ranking, and in the collar
+there is nothing to rank. The fix is abstention plus nearest-confident propagation,
+specified in section 12.6. One instrument failure of my own is recorded in 12.1:
+my component test returned SEAMS at 137.92x a random null and was **wrong**,
+because the null was drawn from the whole frame while the excursions are confined
+to one region, so region membership scored as shape. The picture caught it.
+
 ---
 
 ## 1. The picture, first
@@ -1155,3 +1180,285 @@ python bandframes.py     # pics/BAND-frames.png
 Pictures: `pics/ACCEPT-fb-arms.png` (the four-arm null),
 `pics/BAND-frames.png` (why), `pics/RING-masks.png` (the coffee-bean mask),
 `pics/COUCH-look.png`.
+
+## 12. The winner field, looked at: seams, speckle, and a coherent collar
+
+The owner supplied a free 1:1 linear election dump from BUILD-CHROMA
+(`lavendar-index.tif` on the plane grid, plus its matching binned merge), a lead
+(neighbour excursions reaching 191 frames), and a correction (nobody, including
+him, had actually verified that those excursions form straight or scalloped
+boundaries; BUILD-CHROMA retracted its only supporting crop because it was 6x
+`np.repeat` and therefore blocky by construction). He asked for the falsification
+if the excursions turned out to be isolated speckle.
+
+This section answers that question, and in answering it finds the mechanism for
+the band.
+
+### 12.1 My first instrument said SEAMS and it was wrong
+
+`seamshape.py` thresholded the field at a 50-frame neighbour jump, ran 8-connected
+component morphology, and compared against three random spatial nulls of identical
+pixel count. MEASURED:
+
+| | px | comps | mean size | max size | px in comps >= 8 |
+| --- | --- | --- | --- | --- | --- |
+| measured | 1514179 (18.35%) | 4392 | 344.76 | 1117713 | 99.7% |
+| random null x3 | 1514179 | ~605700 | 2.50 | ~54 | ~21.4% |
+
+It printed `SEAMS: excursions are connected, far beyond chance`, at 137.92x the
+null mean component size.
+
+The picture (`pics/SEAM-shape.png`) contradicted it in three seconds. The subject
+carries a **smooth, coherent, organic depth field**. The **backdrop** is
+salt-and-pepper chaos, and that chaos is where essentially all the excursions
+live. Two of the three largest components, cropped and shown at 1:1, are
+multicoloured noise spanning index 0 to 298 inside a 180 px box, over a merge
+region with no detail in it at all.
+
+**The defect is mine and it is worth recording.** The null scattered pixels over
+the whole frame while the real excursions are confined to one region. A confined
+set percolates inside its own region, so the test was measuring *"these pixels are
+clustered into a region"*, which is true and trivial, rather than *"these pixels
+form curvilinear seams"*, which is the claim on trial. A null must be drawn from
+the same region as the measurement, otherwise region membership is scored as
+shape. This is the same class of error as the owner's far-field prominence test:
+a detector that cannot see the thing it was built to see, returning a confident
+verdict either way.
+
+It was caught only because the script emits a picture next to its verdict. The
+house rule earns its keep again: **a verdict line must never be the only output.**
+
+### 12.2 Redone with a region-matched null
+
+`seamwhere.py` segments subject from backdrop on local contrast (brightness
+thresholding fails: a lavender head on a bright sweep is not cleanly bimodal),
+then repeats the shape test with the null drawn from the same region. MEASURED:
+
+| region | mean abs 4-neighbour diff | > 50-frame jumps | > 150-frame jumps | median index |
+| --- | --- | --- | --- | --- |
+| **subject** | **0.741 frames** | **1.00%** | 0.32% | 108 |
+| backdrop | 15.094 frames | 27.38% | 9.68% | 219 |
+
+**The backdrop is 20.4x rougher than the subject.** On the subject, where the
+photograph is, the elected index changes by less than three quarters of a frame
+per pixel step, out of 299.
+
+So the owner's lead resolves cleanly, and against his own reading:
+
+- **CONFIRMED:** excursions of up to 298 frames (the entire bracket) between
+  adjacent pixels are real.
+- **REFUTED:** they are not on the subject and they are not seams cutting through
+  photographed detail. **97% of them are in the featureless backdrop**, where no
+  frame contains any texture, every frame is an equally good answer, and the
+  argmax is decided by sensor noise. BUILD-CHROMA's 191-frame figure is a
+  measurement of the paper sweep.
+
+This is H4, the null, holding over an entire region rather than at a single ROI:
+where the data has no answer, the election returns noise. It also explains
+BUILD-CHROMA's own caveat that roughness was only a 1.15x contributor to chroma.
+Electing a random frame in a region where all frames are the same blank white
+costs almost nothing in the image domain. **Excursion count does not imply
+image-domain effect size, and here it demonstrably does not.**
+
+On the subject there remain 28027 excursion pixels (1.00%), organised at 143x the
+region-matched null. That set is real and structured, but it is one percent, it is
+sparse, and it is not what makes these pictures unusable.
+
+### 12.3 What the picture showed that no statistic had asked about
+
+`pics/SEAM-where.png`, panel 3, shows the backdrop index alone. The far backdrop
+is noise, as above. But **hugging the silhouette there is a solid, smooth,
+coherent rind of extreme index with lobed and scalloped outer boundaries.** It is
+not speckle, it is not noise, and no first-difference statistic could have
+reported it, because it is smooth: a roughness metric scores it as the *best*
+behaved part of the frame.
+
+`seamcollar.py` profiles roughness and elected index against signed distance
+outward from the silhouette. MEASURED, whole profile:
+
+| d (px) | n | median index | roughness (frames) | luma (DN) |
+| --- | --- | --- | --- | --- |
+| 2 | 53793 | 222 | **1.04** | 9237 |
+| 6 | 52027 | 218 | 1.26 | 9323 |
+| 12 | 92773 | 212 | 1.95 | 9375 |
+| 20 | 84660 | 198 | 3.08 | 9348 |
+| 28 | 81037 | 194 | 4.06 | 9271 |
+| 40 | 148134 | 196 | 6.14 | 9386 |
+| 56 | 137627 | 205 | 8.74 | 10197 |
+| 80 | 248816 | 227 | 12.18 | 10591 |
+| 112 | 235514 | 232 | 15.06 | 10688 |
+| 160 | 442774 | 226 | 16.13 | 11147 |
+| 224 | 435820 | 224 | 16.57 | 11762 |
+| 320 | 837456 | 222 | 16.76 | 11984 |
+| 448 | 798879 | 218 | 17.07 | 12244 |
+| 640 | 1233481 | 217 | 17.32 | 12861 |
+| 984 | 512772 | 224 | 16.47 | 14160 |
+
+Subject median index: **108**.
+
+Two facts, both monotonic and neither previously reported:
+
+1. **Roughness rises monotonically with distance, 1.04 -> 17.32 frames.** The
+   near-silhouette collar is **9.2x smoother** than the far field. The election is
+   at its most confident and coherent exactly where the artifact is.
+2. **The backdrop elects ~212-222 at every distance, while the subject elects
+   108.** The collar is rendered from frames **~104 away** from the subject's own
+   focus, roughly a third of the bracket.
+
+### 12.4 The mechanism
+
+Put the two halves together, and §2 of this report supplies the missing link.
+
+§2 MEASURED, inside the subject at `pale-wash`, that veiling glare from a
+defocused silhouette scores as focus: the full focus measure peaked at f136 while
+its high-frequency part peaked at f40. The same thing is happening in the collar,
+and there it is unopposed.
+
+- The paper sweep near the silhouette has **no texture of its own** in any frame.
+  H4 holds: there is no correct answer available from the backdrop's own content.
+- But it is not featureless. It carries the **veil**: a smooth luminance ramp cast
+  by the defocused subject, whose steepness varies frame to frame as the subject's
+  blur circle grows and shrinks.
+- A box aggregate of gradient magnitude cannot tell that ramp from texture. It
+  ranks frames by veil steepness and returns a **confident, low-noise, spatially
+  coherent argmax** at index ~220: the frame in which the subject is most
+  defocused and its veil is broadest.
+- Far from the silhouette the veil is gone, nothing is left to rank, and the field
+  collapses to noise at roughness 17.
+
+**The collar's outer boundary is the handover contour between those two regimes**,
+where veil-driven ranking loses to noise-driven ranking. That contour is set by
+the local strength of the veil, which is set by the local shape of the silhouette:
+lobes project more veil than concavities, and a trichome fringe projects more than
+smooth skin. **A handover contour follows silhouette morphology, so it is lobed
+and scalloped.**
+
+This is the owner's original argument, vindicated in its class and corrected in
+its mechanism. He said straight and scalloped boundaries do not occur in defocus
+and must therefore come from the election. Correct. But the boundary is not a
+blocky winner field, not a box-window plateau, not a tile grid, and not a
+density-driven focus statistic. It is **a region boundary between two election
+regimes**, and it is smooth on both sides of itself.
+
+It also explains his own 52x separation without invoking H5 at all.
+`coffee-bean`'s silhouette is smooth and convex, so its veil ramp is smooth and
+monotone, so the handover contour is a near-circle and the collar is uniform and
+invisible: 0.23%. `flower-bud`'s trichome fringe modulates the veil at the scale
+of the fringe, so the handover contour is lobed at that scale and the collar reads
+as poured liquid: 12.0%.
+
+### 12.5 Why every fix tried so far failed
+
+§10 and §11 tested four focus statistics: `mean`, `max`, `hp`, `hpmax`. All four
+failed the ring test (12.47 / 13.89 / 12.44 / 12.26%) while the negative control
+never moved and the veiling term never moved, so the arms were neither inert nor
+random.
+
+§12.4 says why, and the statement is now general. **All four rank the same set of
+frames by the same evidence.** In the collar that evidence is entirely veil. An
+order statistic reorders a ranking; it cannot decline to rank. `hp` is the closest
+to correct because it removes the low-frequency ramp, but §11.4 MEASURED that at
+the flower-bud band no frame resolves the fringe at all (peak gradient flat to
+1.32x while brightness climbs 60.5% -> 103.5%), so once the ramp is removed there
+is nothing underneath it and `hp` elects noise instead of veil. Noise and veil are
+both wrong.
+
+**The fix cannot be a better ranking rule. There is nothing there to rank.** It
+has to be an abstention plus a source of an answer from somewhere that does have
+one.
+
+### 12.6 The specification, revised
+
+Supersedes §4 and §11.7 for the backdrop collar. §4's high-pass remains correct
+for `pale-wash`, which is inside the subject and does have a texture peak to find.
+
+**File:** `crates/strehl-core/src/merge.rs`, in the winner-field stage, after the
+per-frame focus responses exist and before the regulariser.
+
+**Invariant.** A pixel may only be elected by argmax if its through-focus response
+carries texture evidence. Define, per pixel, `dr = max_k(hp_k) / median_k(hp_k)`
+on the **high-passed** focus response, where the high pass is §4's. If
+`dr < TAU_ABSTAIN`, the pixel **abstains**: it is excluded from the argmax and
+marked in a coverage plane.
+
+**Then fill, do not guess.** Abstaining pixels take their index by nearest-labelled
+propagation (a distance-transform fill, or one pass of the existing regulariser
+restricted to confident pixels as sources). In the collar the nearest confident
+source is the subject, so the collar renders from a frame near index 108, in which
+the subject is sharp and its veil is at its narrowest.
+
+**Target numbers, all pre-registered and all already measured on the baseline:**
+
+| quantity | baseline | required |
+| --- | --- | --- |
+| `flower-bud` ring prominence | 12.47% | **< 1.0%**, toward `coffee-bean`'s 0.23% |
+| `coffee-bean` ring prominence | 1.92% at d=155 | unchanged to within 0.2 points |
+| backdrop collar median index (`lavendar`, d <= 24) | 212-222 | within 30 frames of the subject's 108 |
+| collar roughness (d <= 24) | 1.04 frames | must not rise above ~3 |
+| veiling darkening | -36.5% (`flower-bud`), -38.2% (`coffee-bean`) | unchanged to within 1 point |
+| subject-region roughness (`lavendar`) | 0.741 frames | must not rise |
+
+**Threshold.** `TAU_ABSTAIN` sits between the measured no-answer and has-answer
+populations. MEASURED separations available to calibrate it: bee `blob` 1.34x and
+`fringe` 1.17x versus `leg-good` **41.22x** (§10.6); flower-bud band peak gradient
+flat to **1.32x** across six frames (§11.4). A value of **1.35x** separates every
+measured pair in this report, with the nearest miss at 1.34 and the nearest hold
+at 41.22. It must be calibrated per subject against the noise floor, not shipped
+as a constant, because the gap is 1.34 to 41.22 on one subject and the low side is
+close.
+
+**Guard.** `couch-fibers-cpl` is dense fine structure with no silhouette and is
+audited print-worthy. It must abstain on **< 1%** of subject pixels. If abstention
+climbs on `couch-fibers`, the threshold is eating texture and the change is wrong.
+
+**Coverage output.** The abstention plane is a product feature, not a debug
+artifact. Where the bracket genuinely does not cover a surface, the correct
+behaviour is to say so. §9 MEASURED honest coverage gaps at 2 of 3 bee defect ROIs
+(texture flat to 1.13x and 1.25x across 299 frames). Those pixels have no answer
+and the stacker should report that rather than fabricate one.
+
+### 12.7 The cost
+
+1. **The backdrop stops being independently focused.** Any genuinely resolved
+   background at its own depth keeps its own index (it has texture evidence and
+   never abstains), but a *weakly* textured background will be pulled toward the
+   subject's depth. On a scene with a real, softly-textured backdrop this is a
+   regression.
+2. **Noise averaging is lost in the fill region.** A propagated index is one
+   frame's noise, not an argmax wandering over many. Backdrop noise will rise.
+   Unmeasured; see §12.8.
+3. **A threshold that can be set wrong.** 1.35x has a 1.34x near-miss in the
+   measurements already taken. Set too high it eats real fringe detail, which is
+   the exact failure `couch-fibers` guards against.
+4. **It does not restore the fringe.** §11.4 MEASURED that no frame in the
+   flower-bud bracket resolves the trichomes. Abstention makes the band stop being
+   a bright scalloped wash; it cannot make hairs appear that were never captured.
+   The remaining honest product answer there is a denser bracket.
+
+### 12.8 What §12 did not verify
+
+- **Not rendered.** §12.6 is specified and its targets are measured on the
+  baseline, but no arm implementing abstention has been built or run. Every number
+  in the "required" column is a target, not a result. Marked ARGUED.
+- The mechanism is measured on `lavendar-cpl` (roughness and index versus
+  distance) and linked to `flower-bud` through §2, §11.4 and the owner's 52x
+  separation. **The collar profile has not been repeated on `flower-bud` or
+  `coffee-bean` directly**, because no index dump exists for them; it would need
+  two renders with `--index-map`. That is the first thing I would do next.
+- The subject segmentation is a local-contrast threshold at p70, tuned by eye
+  against the picture. The 20.4x subject-versus-backdrop roughness ratio is large
+  enough that the exact threshold cannot plausibly reverse it, but it was not
+  swept.
+- The 1.00% of excursion pixels that are on the subject and organised at 143x the
+  null were not characterised. They are not the dominant defect, but they are real.
+- Whether the regulariser straddle the owner proposed (radius 8 averaging across a
+  large jump, landing at a frame where neither depth is in focus) occurs anywhere
+  that matters. On the subject the field is smooth to 0.741 frames per step, so
+  there is almost nothing to straddle there; in the backdrop it certainly happens,
+  but the backdrop is featureless so the consequence is small. Not tested directly.
+
+Pictures, in the order to look at them:
+
+- `pics/SEAM-where.png` (panel 3 is the finding: the coherent lobed collar)
+- `pics/SEAM-collar.png` (panel 3, and the monotonic roughness ramp)
+- `pics/SEAM-shape.png` (the instrument that was wrong, and the picture that caught it)
