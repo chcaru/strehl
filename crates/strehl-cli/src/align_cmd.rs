@@ -927,6 +927,14 @@ fn run_resampler_cost(args: &AlignArgs) -> Result<()> {
 /// it is in the M86 report.
 pub const ALIGN_ENV: &str = "STREHL_ALIGN";
 
+/// Environment switch for the coverage enlargement, which is **on** by default.
+///
+/// Set `STREHL_COVER=0` to skip [`fit_to_cover`] while keeping registration.
+/// This exists so the enlargement can be priced against the identical render
+/// with the identical solve from the identical binary; it is not a shipping
+/// option, because a render made with it has edge pixels no frame covers.
+pub const COVER_ENV: &str = "STREHL_COVER";
+
 /// Is registration enabled?
 ///
 /// Anything other than `0`, `off`, `false` or `no` leaves it on.
@@ -1296,6 +1304,31 @@ fn save_atomic(map: &WarpMap, path: &Path) -> Result<()> {
 /// an aligned render is measured against an unaligned one at a different
 /// sampling density, and the upsample alone moves gradient energy.
 pub fn cover_or_explain(map: WarpMap) -> (WarpMap, Option<f64>) {
+    // Measurement control (BUILD-RESAMP). `fit_to_cover`'s enlargement and the
+    // per-frame gather are folded into one matrix and paid in one resample, so
+    // no A/B against an unregistered render can separate them: turning
+    // alignment off removes the registration too, and the ghosting that
+    // unregistered frames leave in the merge lands in exactly the band under
+    // test. Skipping only the fit keeps the identical solve, the identical
+    // per-frame warp and the identical merge, and changes one thing: whether
+    // the fused matrix carries the extra 1/k scale. The output then has
+    // uncovered pixels at the edges -- which is why this is a control and not
+    // an option -- so anything measured through it must stay well inside.
+    let skip_fit = std::env::var(COVER_ENV)
+        .map(|v| {
+            matches!(
+                v.trim().to_ascii_lowercase().as_str(),
+                "0" | "off" | "false" | "no"
+            )
+        })
+        .unwrap_or(false);
+    if skip_fit {
+        eprintln!(
+            "  coverage      : SKIPPED ({COVER_ENV}=0). Frames keep their solved scale, so edge \
+             pixels NO frame covers are left as the merge found them. Measurement control only."
+        );
+        return (map, None);
+    }
     // Catmull-Rom reads one sample before and two after, so the grid must stay
     // that far inside the source or the interpolator's support leaves it.
     let (fitted, k) = match fit_to_cover(&map, 3.0) {
