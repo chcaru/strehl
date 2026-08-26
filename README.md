@@ -198,6 +198,42 @@ curve — no tone curve, no saturation, no roll-off — and both refuse to run
 without `--srgb`, because the linear output is the measurement output. Use the
 flags to look, drop them to measure.
 
+### What the output actually looks like
+
+Three things are worth stating plainly, because two of them are defects this
+class of tool is notorious for and the third is the one that is actually still
+open.
+
+**The halo is gone on this path, and that is measured rather than asserted.**
+The classic focus-stacking artifact is a bright or dark band tracing every
+silhouette, left behind where the merge picked a defocused frame's veiling glow
+over the background it should have kept. Profiled by signed distance from the
+silhouette on `flower-bud`, both arms rendered camera-linear from a single
+binary so nothing is compared across a tone curve: the older estimator backend
+shows an interior peak of **+12.65% at 21 px**, and the pyramid backend that
+ships by default is **monotonic from 1 px to 275 px with no interior maximum at
+all**. It also survives the harder test, which is looking at it: at 1:1 across a
+dark hairy stem against a blown-white backdrop, the backdrop stays clean to the
+edge and the individual hairs resolve against it.
+
+**Highlights are not clipped by the merge.** A pyramid merge can leave the
+output above or below the range of every input that fed it, which shows up as
+punched-out white or crushed black along high-contrast edges. The delivered
+renders carry **zero** exact-zero RGB pixels on subjects where an unclamped
+merge produces 0.371% and 1.048%. Dark is subject, not clipping.
+
+**What is still open is sharpness, and it is uneven.** The tool is not uniformly
+soft — it is *inconsistent*, which is worse, because a contact sheet that mixes
+both gives you no way to tell which is which. Gradient magnitude at each
+subject's own sharpest site: `bee-3-cpl` **0.03072**, with individually resolved
+leg hairs and sensory pits visible on the antenna; `flowers-cpl` **0.00939**,
+which is 3.3x less and reads as mush at the same magnification. Some of that
+spread is capture — depth coverage, aperture, subject motion — and some of it is
+the merge. Telling those two apart per subject is in progress, and until it is
+settled the honest summary is that this tool will hand you a print-worthy file
+on some stacks and a soft one on others, and does not yet tell you which you
+are holding.
+
 ## What is actually different
 
 | | Every shipping stacker | `strehl` |
