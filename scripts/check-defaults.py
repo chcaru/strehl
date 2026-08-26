@@ -159,6 +159,16 @@ REGISTRY: dict[str, Declared] = {
             "argv records what the CALLER said; only the run's own banner "
             "records what the PROGRAM did. Running the binary took one command "
             "and printed the answer in one line. "
+            "INDEPENDENTLY CORROBORATED ON THE PROVENANCE SUBJECT ITSELF: "
+            "re-ran the full argv the orchestrator quoted -- `stack "
+            "D:/personal/macro/pencil-steep-angle-cpl --merge pyramid "
+            "--pyramid-gate 4.5 --srgb --auto-exposure`, no --fix-ca, plus "
+            "--limit 4 -- on target/release/strehl.exe built 2026-08-26 13:52. "
+            "rc=0 and the banner printed `camera: ILCE-7CM2` / `lateral CA: "
+            "CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; "
+            "default on)`. So the correction was active on the very render the "
+            "'every image the owner has looked at was rendered without it' "
+            "claim was built from. "
             "It is default-ON behind the EXIF gear guard, which reads body and "
             "composed lens id out of the file and declines on a mismatch -- "
             "because applying this profile to a different optical path would "
@@ -501,8 +511,17 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_SOFT_GATE": Declared(
         kind="control",
-        default="off",
-        evidence="merge.rs:457-465 (SOFT_GATE_ENV)",
+        default="off (None -- the shipped top-hat Gate)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: SOFT_GATE_ENV at merge.rs:476 is read "
+            "at :628 via `kernel_from_setting(std::env::var(SOFT_GATE_ENV).ok()"
+            ".as_deref())`, and `kernel_from_setting` at :596 opens `let raw = "
+            "match value { None => return Ok(None), .. }` -- unset is None is "
+            "the top-hat. An empty value, `0`, `off` or `false` also return "
+            "Ok(None) (:603-609); an unrecognised key is Err(UnknownSoftKernel), "
+            "not a silent default."
+        ),
         note=(
             "DELIBERATE. merge.rs states it: 'None is the shipped top-hat Gate "
             "and must remain the default. Every byte-freeze in the corpus is "
@@ -514,8 +533,17 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_ROBUST_ELECTION": Declared(
         kind="control",
-        default="off",
-        evidence="merge.rs:633 (ROBUST_ENV); arm_from_setting at :635",
+        default="off (no robust arm)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: ROBUST_ENV at merge.rs:652 is read at "
+            ":669 by `active_arm()` as `arm_from_setting(std::env::var("
+            "ROBUST_ENV).ok().as_deref())`, and `arm_from_setting` at :654 "
+            "opens `let Some(raw) = raw else { return Ok(None) }` -- unset is "
+            "None is off. '' | '0' | 'off' | 'false' also map to Ok(None) "
+            "(:657); an unknown key returns Err(UnknownArm) (:661-663), which "
+            "is the rigour the note below describes, present in the code."
+        ),
         note=(
             "Four-valued: off | soft | hard | ungated, and an unknown key is a "
             "hard error, not off - 'a typo that disables a gate you believe is "
@@ -527,26 +555,94 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_ALIGN": Declared(
         kind="control",
-        default="off",
-        evidence="align_cmd.rs:928 (ALIGN_ENV)",
-        note="Selects the alignment arm.",
+        default="on (registration runs)",
+        verified="measured",
+        evidence=(
+            "MEASURED, AND IT CORRECTED THIS ENTRY. `align_enabled()` at "
+            "align_cmd.rs:941-949 is `match std::env::var(ALIGN_ENV) { Ok(v) => "
+            "!matches!(v.trim().to_ascii_lowercase().as_str(), \"0\"|\"off\"|"
+            "\"false\"|\"no\"), Err(_) => true }` -- unset falls in the "
+            "`Err(_) => true` arm, so registration is ON. Confirmed by running "
+            "ONE binary (target/release/strehl.exe, built 2026-08-26 13:52) "
+            "twice over bee-3-cpl --limit 3 with identical flags, differing "
+            "only in the variable. Unset printed `alignment : ON (sidecar), "
+            "reference frame 1, 3 placed / 0 refused`; STREHL_ALIGN=off printed "
+            "`alignment : OFF -- frames are combined unregistered. M86 measured "
+            "232.7 px of drift on bee-3-cpl.` The two renders differ (SHA-256 "
+            "D9BE3CEC..3BBA564F unset against 00E70E4B..C2ABAC14 off), so unset "
+            "is demonstrably not off. Same binary both arms, so no cross-build "
+            "hazard applies. A second read at align_cmd.rs:1338 gives the value "
+            "`zoom` a third meaning (fit the cover scale but apply nothing "
+            "else), which is why the default is stated as an arm and not a bool."
+        ),
+        note=(
+            "Selects the alignment arm. THIS ENTRY WAS DECLARED `off` AND WAS "
+            "WRONG -- the same shape as the STREHL_PHOTOMETRIC defect this "
+            "file's header was written about: a plausible-sounding default that "
+            "nobody read the resolving expression for, trusted by a script that "
+            "trusts declarations. It mattered more than PHOTOMETRIC's did, "
+            "because it described the product's REGISTRATION -- the stage that "
+            "makes a focus stack a focus stack rather than an average of "
+            "misaligned frames -- as off by default, on a subject where turning "
+            "it off genuinely costs 232.7 px of drift. Nothing in the SHIPPED "
+            "PRODUCT was broken by it: alignment was running the whole time. "
+            "The DECLARATION was broken, which is bad in one specific way -- "
+            "this file is what the project reads to find out what it ships, so "
+            "a wrong row here is a wrong answer to the only question the file "
+            "exists to answer, and it is wrong with the script's blessing."
+        ),
     ),
     "STREHL_SMOOTH": Declared(
         kind="control",
-        default="built-in",
-        evidence="align_cmd.rs:585",
-        note="Warp-field smoothness lambda override.",
+        default="built-in (DEFAULT_SMOOTH_LAMBDA)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: `apply_smooth_env()` at align_cmd.rs:584 "
+            "opens `match std::env::var(\"STREHL_SMOOTH\")` at :585 whose FIRST "
+            "arm is `Err(_) => DEFAULT_SMOOTH_LAMBDA` (:586) -- unset is the "
+            "built-in lambda, not zero. `off` maps to 0.0 at :587, and the "
+            "guard `if lambda <= 0.0 { return; }` at :599-601 then leaves "
+            "`opts` untouched, so `off` also suppresses the huber read below it."
+        ),
+        note=(
+            "Warp-field smoothness lambda override. Its own doc comment defends "
+            "the prior as 'a strictly better registration at the span the merge "
+            "selects across, at no cost' -- not as a sharpness fix."
+        ),
     ),
     "STREHL_SMOOTH_HUBER": Declared(
         kind="control",
-        default="built-in",
-        evidence="align_cmd.rs:603",
-        note="Huber threshold, in pixels, for the smoothness term.",
+        default="built-in (DEFAULT_SMOOTH_HUBER_PX)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: align_cmd.rs:603 `match "
+            "std::env::var(\"STREHL_SMOOTH_HUBER\")` closes on `Err(_) => "
+            "Some(DEFAULT_SMOOTH_HUBER_PX)` at :610, so unset is the built-in "
+            "threshold. NOT INDEPENDENT OF STREHL_SMOOTH: this read sits after "
+            "the `if lambda <= 0.0 { return; }` guard at :599, so with "
+            "STREHL_SMOOTH=off it is never reached at all. A set value that "
+            "does not parse, or is non-finite or <= 0, silently becomes None "
+            "via `.ok().filter(..)` at :608-609 rather than failing."
+        ),
+        note=(
+            "Huber threshold, in pixels, for the smoothness term. Registered in "
+            "SOLVE_ENV (align_cmd.rs:993) so it lands in the alignment cache "
+            "key; that list's own comment warns that extending "
+            "`apply_smooth_env` without adding the variable there reopens the "
+            "defect `solve_config_key` exists to close."
+        ),
     ),
     "STREHL_CACHE_DIR": Declared(
         kind="control",
         default="platform default",
-        evidence="align_cmd.rs:1058",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: `cache_root()` at align_cmd.rs:1065 is "
+            "`std::env::var_os(\"STREHL_CACHE_DIR\").map(PathBuf::from)"
+            ".unwrap_or_else(..)`, so unset takes the fallback branch -- "
+            "%LOCALAPPDATA%\\strehl\\warpmaps on Windows, "
+            "$XDG_CACHE_HOME/strehl/warpmaps elsewhere, then the temp dir."
+        ),
         note="Alignment sidecar cache location. Infrastructure, not quality.",
     ),
     "STREHL_PYRAMID_MEAN_COARSE": Declared(
@@ -613,13 +709,23 @@ REGISTRY: dict[str, Declared] = {
     "STREHL_CAPTURES": Declared(
         kind="control",
         default="unset",
-        evidence="tests/byte-freeze.rs:656",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: byte-freeze.rs:739 is `if let Some(p) = "
+            "std::env::var_os(\"STREHL_CAPTURES\")`, so unset takes no branch "
+            "and the net has no corpus to check against."
+        ),
         note="Points the byte-freeze net at the corpus. Test infrastructure.",
     ),
     "STREHL_FREEZE_REQUIRE": Declared(
         kind="control",
-        default="unset",
-        evidence="tests/byte-freeze.rs:717",
+        default="unset (a missing corpus SKIPS)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: byte-freeze.rs:800-802 is "
+            "`std::env::var(\"STREHL_FREEZE_REQUIRE\").map(..).unwrap_or(false)` "
+            "-- unset is `false`, i.e. absent captures skip rather than fail."
+        ),
         note=(
             "Forces the byte-freeze net to fail rather than skip when captures "
             "are absent. Unset means a missing corpus SKIPS - so a green "
@@ -630,7 +736,15 @@ REGISTRY: dict[str, Declared] = {
     "STREHL_ONLY_FRAME": Declared(
         kind="diagnostic",
         default="off",
-        evidence="merge_cmd.rs:1258 (ONLY_FRAME_ENV)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: ONLY_FRAME_ENV is declared at "
+            "merge_cmd.rs:1709 and read at :1731 as `let Ok(raw) = "
+            "std::env::var(ONLY_FRAME_ENV) else { .. }`, so unset takes the "
+            "else branch and no single-frame render happens. A set value that "
+            "is not a frame index PANICS at :1737 rather than falling back -- "
+            "the rigour this file asks for, already present here."
+        ),
         note=(
             "Renders one frame with no election. TRAP: it changes the digest, so "
             "the alignment sidecar is rejected and alignment re-solves."
@@ -639,7 +753,13 @@ REGISTRY: dict[str, Declared] = {
     "STREHL_DUMP_ELECTION": Declared(
         kind="diagnostic",
         default="off",
-        evidence="merge_cmd.rs:1839 (ELECTION_ENV)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: ELECTION_ENV at merge_cmd.rs:2346, read "
+            "at :2365 as `let raw = std::env::var(ELECTION_ENV).ok()?` -- the "
+            "`?` returns None when unset, so nothing is dumped. (The cited line "
+            "had drifted from :1839; the const is the durable anchor.)"
+        ),
         note=(
             "Dumps the pass-one winner field. The elected frame index IS a depth "
             "ordering, which is what BUILD-HALO's depth-coherence silhouette is "
@@ -649,32 +769,199 @@ REGISTRY: dict[str, Declared] = {
     "STREHL_DUMP_NEFF": Declared(
         kind="diagnostic",
         default="off",
-        evidence="merge_cmd.rs:1919 (NEFF_ENV)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: NEFF_ENV at merge_cmd.rs:2426, read at "
+            ":2612 as `let raw = std::env::var(NEFF_ENV).ok()?` -- None when "
+            "unset. (Cited line had drifted from :1919.)"
+        ),
         note="Dumps the n_eff map. Env twin of a flag.",
     ),
     "STREHL_DUMP_MERGE_STATE": Declared(
         kind="diagnostic",
         default="off",
-        evidence="merge_cmd/dump.rs:42 (DUMP_ENV)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: DUMP_ENV at merge_cmd/dump.rs:42, read "
+            "at :50 as `let raw = std::env::var(DUMP_ENV).ok()?` -- None when "
+            "unset."
+        ),
         note="Dumps merge internals.",
     ),
     "STREHL_BIMODAL_DUMP": Declared(
         kind="diagnostic",
         default="off",
-        evidence="merge_cmd.rs:1443 (BIMODAL_DUMP_ENV)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: BIMODAL_DUMP_ENV at merge_cmd.rs:1950, "
+            "read at :1953 as `std::env::var_os(BIMODAL_DUMP_ENV)"
+            ".map(std::path::PathBuf::from)` -- None when unset, so no path and "
+            "no dump. (Cited line had drifted from :1443.)"
+        ),
         note="Dumps the through-focus bimodality statistic.",
     ),
     "STREHL_WARPMAP": Declared(
         kind="diagnostic",
         default="off",
-        evidence="merge_cmd.rs:1773 (WARPMAP_ENV)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: WARPMAP_ENV at merge_cmd.rs:2280, read "
+            "at :2297 as `let Some(explicit) = std::env::var_os(WARPMAP_ENV) "
+            "else { .. }` -- unset takes the else branch. (Cited line had "
+            "drifted from :1773.)"
+        ),
         note="Dumps the per-frame warp field.",
     ),
     "STREHL_FIX_HALO_DELTA": Declared(
         kind="diagnostic",
-        default="off",
-        evidence="merge_cmd/halo.rs:71 (DELTA_ENV)",
+        default="built-in DELTA (and the stage reading it is gated off)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ, AND THE DECLARED `off` WAS IMPRECISE: "
+            "DELTA_ENV at merge_cmd/halo.rs:85 is read at :124-128 as "
+            "`std::env::var(DELTA_ENV).ok().and_then(|v| v.trim()"
+            ".parse::<u16>().ok()).unwrap_or(DELTA)` -- unset resolves to the "
+            "built-in DELTA constant, NOT to nothing. The product-level "
+            "behaviour is still 'no delta image written', but for a different "
+            "reason than this row used to give: the whole stage is gated off by "
+            "STREHL_FIX_HALO (halo.rs:113, `Err(_) => false`), which is itself "
+            "estimator-only. DEFECT WORTH NAMING: `.unwrap_or(DELTA)` swallows "
+            "a malformed value silently, so STREHL_FIX_HALO_DELTA=abc renders "
+            "at the default delta while the operator believes they moved it. "
+            "That is the pattern main.rs:649 bans for --photometric ('neither "
+            "can mean ON by accident'). Low stakes because the switch is "
+            "diagnostic and doubly gated, but it is the same shape."
+        ),
         note="Writes the halo correction's delta image, for inspection.",
+    ),
+    # ---- previously UNDECLARED; declared 2026-08-26 after reading each
+    # ---- resolving expression. An undeclared switch is one nobody has decided
+    # ---- the default for, which is how this file's header says three measured
+    # ---- fixes shipped turned off.
+    "STREHL_COVER": Declared(
+        kind="control",
+        default="on (the coverage fit is applied)",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: COVER_ENV at align_cmd.rs:936, read at "
+            ":1317-1324 as `let skip_fit = std::env::var(COVER_ENV).map(|v| "
+            "matches!(.., \"0\"|\"off\"|\"false\"|\"no\")).unwrap_or(false)` -- "
+            "unset gives `skip_fit = false`, so the fit RUNS. Note the "
+            "inversion: the variable names the thing it can turn OFF, so "
+            "`STREHL_COVER=0` skips the fit. Its own doc comment at :930 states "
+            "'the coverage enlargement, which is **on** by default', and the "
+            "banner from an unset run agrees -- the pencil-steep-angle-cpl "
+            "render printed `coverage : field of view scaled to 0.9954 so that "
+            "EVERY frame covers every pixel`."
+        ),
+        note=(
+            "Skips only the cover fit, keeping the identical solve, per-frame "
+            "warp and merge. Its own comment insists this is a MEASUREMENT "
+            "CONTROL and not a shipping option, because a render made with it "
+            "has edge pixels no frame covers; anything measured through it must "
+            "stay well inside the frame. Distinct from STREHL_ALIGN=off, which "
+            "removes registration entirely and lands ghosting in the band under "
+            "test."
+        ),
+    ),
+    "STREHL_HIGHLIGHT_KNEE": Declared(
+        kind="quality",
+        default="on (knee at 0.60 of the container ceiling)",
+        verified="measured",
+        evidence=(
+            "RESOLVING EXPRESSION READ AND A/B MEASURED: KNEE_ENV at "
+            "highlight.rs:113; `knee()` "
+            "at :151 is a OnceLock whose initialiser opens `match "
+            "std::env::var(KNEE_ENV)` at :152 with FIRST arm `Err(_) => "
+            "Some(DEFAULT_KNEE)` at :153 -- unset is ON at the built-in knee, "
+            "not off. DEFAULT_KNEE = 0.60 (highlight.rs:131). `off` or `0` "
+            "yields None, which the doc records as 'the state the render was in "
+            "before this module existed'. A set value outside (0,1) warns on "
+            "stderr and falls back to 0.60 rather than failing."
+        ),
+        note=(
+            "Chroma roll-off near the highlight container ceiling. ON BY "
+            "DEFAULT BECAUSE IT IS A DEFECT FIX, per the module doc at "
+            "highlight.rs:107. The 0.60 knee is anchored on the corpus's "
+            "unsaturated stacks rather than tuned to the residual, so stacks "
+            "that never approach saturation are bit identical with margin -- "
+            "the module's own placebo arm. REACH ON THE DEFAULT BACKEND IS "
+            "MEASURED, not argued: one binary (target/release/strehl.exe, built "
+            "2026-08-26 13:52), dry-erase-marker-head-cpl (the corpus's worst "
+            "clipper, chosen because the module's own null says an unsaturated "
+            "stack MUST come back identical and so could not tell reach from "
+            "no-op), --srgb --auto-exposure --limit 6, default pyramid backend, "
+            "differing only in the variable: unset gave SHA-256 1CED2444.."
+            "B8B36013 and STREHL_HIGHLIGHT_KNEE=off gave 7876A8DC..7C67D810. "
+            "The stage therefore reaches pixels on the path that ships."
+        ),
+    ),
+    "STREHL_VEIL_DISPERSION": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        backend="estimator",
+        evidence=(
+            "RESOLVING EXPRESSION READ: merge_cmd.rs:3600-3602, "
+            "`std::env::var(\"STREHL_VEIL_DISPERSION\").map(|v| v != \"0\" && "
+            "!v.is_empty()).unwrap_or(false)` -- unset is false. BACKEND: the "
+            "read sits inside fn run_estimator (defined :2680), not run_pyramid "
+            "(:4341), so the shipping default backend never reaches it."
+        ),
+        note=(
+            "Diagnostic arm of the veil stage. Its own comment states why it is "
+            "off and must stay off: debiasing by the OBSERVED spread is the "
+            "right diagnosis of the far-field lift and the WRONG OPERATOR at a "
+            "veiled pixel, because the observed spread there is mostly the veil "
+            "signal itself. Off is a decision, not neglect."
+        ),
+    ),
+    "STREHL_CONFIDENCE_MAP": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="measured",
+        evidence=(
+            "RESOLVING EXPRESSION READ AND MEASURED. CONFIDENCE_ENV at "
+            "merge_cmd.rs:4273, read at :4280 as `let raw = "
+            "std::env::var(CONFIDENCE_ENV).ok()?` -- None when unset. MEASURED "
+            "on one binary over bee-3-cpl: with the flag the run wrote a "
+            "3516x2344 u16 map and partitioned every pixel (graded 8241504 + "
+            "saturated 0 + unreached 0 = 8241504); with and without the flag "
+            "the RENDERED IMAGE was SHA-256 identical, which is the property "
+            "that makes it safe as a diagnostic -- asking for the artifact "
+            "cannot change the picture."
+        ),
+        note=(
+            "Env twin of --confidence-map. Emits the per-pixel centrality rank "
+            "on the DEFAULT pyramid backend: for each pixel, how far the merged "
+            "value sits from the middle of the observation cloud that produced "
+            "it, in milli-units. OFF IS THE RIGHT DEFAULT ON COST, NOT ON "
+            "DOUBT: it costs a second full traversal of every frame (85.8 s "
+            "against the fold's 148.2 s on bee-3-cpl), so it roughly halves "
+            "throughput for an artifact most renders do not need. Not `quality` "
+            "-- it writes a file and provably does not touch the image."
+        ),
+    ),
+    "STREHL_CONFIDENCE_DEBUG": Declared(
+        kind="diagnostic",
+        default="off",
+        verified="code",
+        evidence=(
+            "RESOLVING EXPRESSION READ: merge_cmd.rs:5091, `let debug_dir = "
+            "std::env::var(\"STREHL_CONFIDENCE_DEBUG\").ok()` -- None when "
+            "unset, and the debug branch is taken only for Some(dir)."
+        ),
+        note=(
+            "MEASUREMENT SCAFFOLDING, deliberately retained. Set to a directory "
+            "to have the confidence pass emit all five candidate statistics "
+            "(dmin, dsharp, spread, centrality, withinfrac) from ONE traversal, "
+            "which is how centrality was chosen over the other four rather than "
+            "asserted: on the known veiled tarsus in bee-3-cpl at matched "
+            "subject contrast, dmin 0.848 / dsharp 0.909 / spread 0.911 all "
+            "read the KNOWN merge failure as MORE confident, and only "
+            "centrality (1.453) read it as worse. Kept so a verifier can re-run "
+            "the comparison instead of taking that on trust."
+        ),
     ),
 }
 
