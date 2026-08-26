@@ -1,0 +1,20 @@
+ORCH rule: p5=3503 p95=62872 thr=33188  largest dark component = 59.55% of frame  (1994 components)
+V-RIM rule: Otsu on green, backdrop from border  subject = 67.21% of frame
+
+signed distance from ORCH's boundary to MY boundary, over 39300 points
+  (positive = ORCH's boundary lies OUTSIDE my subject, in the backdrop)
+    p5    -2956.5 px
+    p25   -2691.1 px
+    p50   -1094.7 px
+    p75    -349.7 px
+    p95      +1.4 px
+    mean -1419.0 px   |median| 1094.7 px
+
+luminance at each boundary, green channel
+  at ORCH's boundary : median    32429 DN
+  at MY boundary     : median    31494 DN
+  subject interior   : median     9635 DN
+  backdrop far field : median    57944 DN
+
+IoU of the two masks: 0.8755
+area disagreement   : 7.66 points of frame

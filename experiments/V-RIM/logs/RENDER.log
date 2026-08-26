@@ -1,0 +1,30 @@
+﻿V-RIM render start 2026-08-25T16:09:46.7907471-07:00
+binary sha256 AAB9E331208E9941CB91D78C1563DE0D95CC13CA97E880E25215006208B86FC5
+command: strehl stack <DIR> --out <TIFF> --demosaic   (no --srgb)
+DONE  coffee-bean                              rc=0      86s    197798267 bytes
+DONE  flower-bud-alone-cpl                     rc=0     223s    198023291 bytes
+DONE  109MSDCF                                 rc=0      41s    197798267 bytes
+DONE  112MSDCF                                 rc=0     120s    197798267 bytes
+DONE  113MSDCF                                 rc=0     119s    197798267 bytes
+DONE  119MSDCF                                 rc=0      57s    197798267 bytes
+DONE  bee-1-cpl                                rc=0     409s    197798267 bytes
+DONE  bee-2-cpl                                rc=0     301s    197798267 bytes
+DONE  bee-3-cpl                                rc=0     442s    197798267 bytes
+DONE  coffee-bubbles                           rc=0      38s    197798267 bytes
+DONE  couch-fibers-cpl                         rc=0     528s    198023291 bytes
+DONE  dry-erase-marker-head-cpl                rc=-1073740791      91s            0 bytes
+DONE  flat-on-ruler-cpl                        rc=0     123s    198023291 bytes
+DONE  flower-bud-with-background-fern-cpl      rc=0     328s    198023291 bytes
+DONE  flower-inner-edge-cpl                    rc=0     316s    197798267 bytes
+DONE  flowers-cpl                              rc=0     201s    198023291 bytes
+DONE  foam                                     rc=0      97s    197798267 bytes
+DONE  highly-angled-ruler-mm-cpl               rc=0     184s    198023291 bytes
+DONE  lavendar-cpl                             rc=0     227s    198023291 bytes
+DONE  lead-1-cpl                               rc=0      93s    198023291 bytes
+DONE  leaf-2-cpl                               rc=0     125s    198023291 bytes
+DONE  pencil-flatter-angle-cpl                 rc=0     201s    197798267 bytes
+DONE  pencil-steep-angle-cpl                   rc=0     201s    197798267 bytes
+DONE  tweezers-cpl                             rc=0      73s    198023291 bytes
+DONE  wrapped-text-1                           rc=0      89s    197798267 bytes
+DONE  wrapped-text-2                           rc=0      89s    197798267 bytes
+V-RIM render end 2026-08-25T17:29:48.5324904-07:00

@@ -1,0 +1,11 @@
+﻿stage2 waiting 2026-08-25T17:04:20.0839488-07:00
+stage2 start 2026-08-25T17:29:51.4113589-07:00 after 26 DONE lines
+retry dry-erase rc=0 206s
+fb frame 10 rc=0 9s
+fb frame 30 rc=0 9s
+fb frame 50 rc=0 10s
+fb frame 70 rc=0 9s
+fb frame 90 rc=0 8s
+cb frame 45 rc=0 9s
+cb frame 58 rc=0 9s
+cb frame 65 rc=0 10s

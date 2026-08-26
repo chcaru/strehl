@@ -1,0 +1,32 @@
+coffee-bean: ORCH rule  p5=3503 p95=62872 thr=33188
+  raw dark fraction            59.81%
+  largest of 1994 components     59.55%   <-- ORCH's mask
+  same mask with holes filled  59.92%
+  HOLE AREA inside silhouette  0.37% of frame = 121745 px
+  number of holes              3467, largest 4675 px, holes over 1000 px: 19
+
+  ORCH bin      n px      % of those px INSIDE the outer silhouette
+     0-4       215564    46.35%   median all=   34550  backdrop-only=   34520  inside-only=   34589
+     4-8       117037    15.92%   median all=   36820  backdrop-only=   36650  inside-only=   37602
+     8-12       76050     3.15%   median all=   37267  backdrop-only=   37318  inside-only=   36242
+    12-16       67709     1.04%   median all=   37692  backdrop-only=   37758  inside-only=   34034
+    16-20       61031     0.17%   median all=   38565  backdrop-only=   38560  inside-only=   39169
+    20-25       70352     0.00%   median all=   39338  backdrop-only=   39338  inside-only=     nan
+    25-30       69621     0.00%   median all=   39627  backdrop-only=   39627  inside-only=     nan
+    30-40      133371     0.00%   median all=   40678  backdrop-only=   40678  inside-only=     nan
+    40-50      128358     0.00%   median all=   41776  backdrop-only=   41776  inside-only=     nan
+    50-65      189531     0.00%   median all=   42655  backdrop-only=   42655  inside-only=     nan
+    65-80      187418     0.00%   median all=   43730  backdrop-only=   43730  inside-only=     nan
+    80-100     247394     0.00%   median all=   46270  backdrop-only=   46270  inside-only=     nan
+   100-125     303289     0.00%   median all=   49588  backdrop-only=   49588  inside-only=     nan
+   125-150     300321     0.00%   median all=   52551  backdrop-only=   52551  inside-only=     nan
+   150-200     589798     0.00%   median all=   53653  backdrop-only=   53653  inside-only=     nan
+   200-250     577267     0.00%   median all=   55107  backdrop-only=   55107  inside-only=     nan
+   250-300     566497     0.00%   median all=   56182  backdrop-only=   56182  inside-only=     nan
+   300-400    1047861     0.00%   median all=   56292  backdrop-only=   56292  inside-only=     nan
+   400-500     923933     0.00%   median all=   56454  backdrop-only=   56454  inside-only=     nan
+   500-600     835992     0.00%   median all=   56324  backdrop-only=   56324  inside-only=     nan
+
+  far-field 600-1400 as ORCH computes it           55896
+  far-field 600-1400 restricted to real backdrop    55896
+  fraction of that band inside the silhouette   0.00%

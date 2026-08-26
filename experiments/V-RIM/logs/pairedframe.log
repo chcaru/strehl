@@ -1,0 +1,37 @@
+C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\_core\fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\_core\_methods.py:134: RuntimeWarning: invalid value encountered in divide
+  ret = um.true_divide(
+C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\_core\_methods.py:142: RuntimeWarning: invalid value encountered in divide
+  ret = ret.dtype.type(ret / rcount)
+images under test: ['MERGE', 'FRAME10', 'FRAME30', 'FRAME52', 'FRAME95']
+
+### pixel-paired, ray set from the MERGE mask, STRAIGHTEST QUARTILE
+    rays=2037  merge subj=67.21%  fi_p25=1.000
+
+  image        far DN   inner DN  10-90 edge   ring t   ring %   t=+1 %far
+  MERGE          60039       9368       120.6       34    +7.13      -38.03
+        profile: 0:35356 5:41600 10:44337 20:48765 30:52195 34:52468 40:52219 50:51869 70:48485 100:53580 150:60860 200:60255 280:60023
+  FRAME10        61481      12293         nan      111    +0.31      -37.99
+        profile: 0:37808 5:39613 10:41335 20:44880 30:48186 34:49460 40:51312 50:54025 70:57973 100:61138 150:61285 200:61252 280:61374
+  FRAME30        65535      15814        63.3      nan     +nan      -37.37
+        profile: 0:40146 5:44224 10:47551 20:53486 30:58782 34:60515 40:62870 50:65512 70:65535 100:65535 150:65535 200:65535 280:65535
+  FRAME52          nan        nan         nan      nan     +nan        +nan
+        profile: 0:nan 5:nan 10:nan 20:nan 30:nan 34:nan 40:nan 50:nan 70:nan 100:nan 150:nan 200:nan 280:nan
+  FRAME95        52689      49548         nan        5    +1.50       -2.44
+        profile: 0:51364 5:51670 10:51480 20:51337 30:51078 34:51080 40:51022 50:51121 70:51201 100:51077 150:51113 200:51218 280:52247
+
+### pixel-paired, ray set from the MERGE mask, ALL RAYS
+    rays=2213  merge subj=67.21%  fi_p25=1.000
+
+  image        far DN   inner DN  10-90 edge   ring t   ring %   t=+1 %far
+  MERGE          59658       9448       120.9       34    +6.99      -38.95
+        profile: 0:34780 5:40746 10:43598 20:48265 30:52024 34:52248 40:52046 50:51554 70:48448 100:53393 150:60790 200:59938 280:59599
+  FRAME10        61138      12644         nan      112    +0.12      -37.72
+        profile: 0:37686 5:39461 10:41216 20:44641 30:47882 34:49117 40:50867 50:53495 70:57887 100:60792 150:61059 200:61062 280:61102
+  FRAME30        65535      15894        61.7      nan     +nan      -37.43
+        profile: 0:40152 5:44093 10:47429 20:53501 30:58956 34:60742 40:63072 50:65535 70:65535 100:65535 150:65535 200:65535 280:65535
+  FRAME52        44689      36279       261.7       82    +0.57       -9.82
+        profile: 0:40135 5:40234 10:40356 20:40515 30:40437 34:40390 40:40617 50:40762 70:41112 100:41328 150:42082 200:43330 280:44342
+  FRAME95        50268      45985         nan        1    +0.88       -2.58
+        profile: 0:48914 5:48907 10:48900 20:48759 30:48722 34:48725 40:48749 50:48652 70:48662 100:49227 150:49909 200:49658 280:50201

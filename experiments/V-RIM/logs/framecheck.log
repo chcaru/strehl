@@ -1,0 +1,13 @@
+image        subj%    cy      cx    y0    y1    x0    x1   subjDN   backDN   clip%   p99.9
+MERGE        67.21    2566    2575     0  4687     0  5647     9635    57944   0.868   65535
+FRAME10      67.04    2568    2570     0  4687     0  5642     9123    59519   5.636   65535
+FRAME30      65.87    2577    2551    23  4687     0  5608    10271    65057  16.362   65535
+FRAME52      65.56    2582    2533    16  4687     0  5577     8933    57531   1.262   65535
+FRAME95      64.20    2603    2502    84  4687     0  5510     8711    54719   0.000   63948
+
+mask agreement with MERGE (IoU) and best integer shift found by
+maximising overlap over a +-160 px search on a 4x-downsampled mask:
+  FRAME10   IoU=0.9922   best shift (4x px) dy=  +0 dx=  +0 -> full-res dy=   +0 dx=   +0  overlap gain=1.0000x
+  FRAME30   IoU=0.9801   best shift (4x px) dy=  +0 dx=  +0 -> full-res dy=   +0 dx=   +0  overlap gain=1.0000x
+  FRAME52   IoU=0.9742   best shift (4x px) dy=  +0 dx=  +0 -> full-res dy=   +0 dx=   +0  overlap gain=1.0000x
+  FRAME95   IoU=0.9540   best shift (4x px) dy=  +0 dx=  +0 -> full-res dy=   +0 dx=   +0  overlap gain=1.0000x

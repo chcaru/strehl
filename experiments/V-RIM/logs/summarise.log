@@ -1,0 +1,30 @@
+pre-registered: 14 subjects, 14 MEASURABLE (7 FRINGED, 7 SMOOTH)
+ring window t=[0,140] px; null window t=[170,300] px; detection needs ring >= 3x that subject's own null
+
+=== per subject, pre-registered class frozen before measurement ===
+subject                              class    polarity       edge %far  straight ring    null  fringed ring      outcome
+bee-1-cpl                            FRINGED  dark-on-bright    -21.90     +0.97@119   1.77%    +9.79@  3 unmeasurable
+bee-2-cpl                            FRINGED  dark-on-bright    -31.77     +5.06@127   3.65%    +6.53@  3 unmeasurable
+bee-3-cpl                            FRINGED  dark-on-bright    -35.36     +4.48@ 29   0.77%    +6.00@  4         RING
+dry-erase-marker-head-cpl            FRINGED  BRIGHT-on-dark    +76.09     +7.38@ 10  29.08%   +29.63@  0     polarity
+flower-bud-alone-cpl                 FRINGED  dark-on-bright    -35.20     +3.18@ 22   0.00%   +17.01@ 39         RING
+flower-bud-with-background-fern-cpl  FRINGED  dark-on-bright    -32.54     +9.76@ 21   0.08%    +3.97@ 52         RING
+lavendar-cpl                         FRINGED  dark-on-bright    -25.13     +2.93@ 22   0.18%    +6.04@ 61         RING
+109MSDCF                             SMOOTH   dark-on-bright    -35.32     +1.36@ 49  40.20%    +8.68@ 10 unmeasurable
+119MSDCF                             SMOOTH   dark-on-bright    -37.07     +0.56@125   0.57%    +3.86@ 37 unmeasurable
+coffee-bean                          SMOOTH   dark-on-bright    -38.78     +7.13@ 34   0.59%   +11.74@ 36         RING
+highly-angled-ruler-mm-cpl           SMOOTH   BRIGHT-on-dark    +42.06    +42.24@  3   4.18%    +3.90@ 80     polarity
+pencil-flatter-angle-cpl             SMOOTH   BRIGHT-on-dark    +30.14    +13.90@  0  11.39%   +13.64@ 87     polarity
+pencil-steep-angle-cpl               SMOOTH   BRIGHT-on-dark    +44.80     +8.59@  1   4.97%    +9.20@ 48     polarity
+tweezers-cpl                         SMOOTH   -                      -              -       -             - NOT MEASURED (rays did not register)
+
+outcome partition over 14 MEASURABLE subjects:
+    NOT MEASURED (rays did not register)   1
+    RING detected                          5
+    backdrop too noisy to decide           4
+    excluded by R1 polarity                4
+    TOTAL                                 14
+
+=== C2 across subjects, like-polarity only (n=9) ===
+  SMOOTH   n=3  mean  +3.02%  max  +7.13%  (coffee-bean)
+  FRINGED  n=6  mean  +4.40%  max  +9.76%  (flower-bud-with-background-fern-cpl)
