@@ -142,6 +142,47 @@ sweep that would justify moving the compiled default is open, and until it lands
 this line is the honest one: **what ships by default is not what was measured**,
 and the flag is how you get the measured thing.
 
+### What the default backend does not do
+
+The pyramid merge is the merge and nothing else. It prints this itself on every
+run, and it is worth reading rather than scrolling past:
+
+```
+not applied     : photometric gain, clip census, outlier rejection, halo correction,
+                  through-focus statistics. Those are the --merge estimator path's
+                  stages; this arm is the merge only.
+```
+
+Two of those matter on real captures, and you will meet them by accident rather
+than on purpose:
+
+- **No outlier rejection.** If something in your scene *moved* between frames — an
+  antenna, a leg, a bubble, a leaf in a draught — nothing defends the merge
+  against it. You get the ghost.
+- **No photometric normalisation.** If exposure drifted across the bracket, the
+  gate reads the drift as signal rather than as gain.
+
+These are refused rather than ignored, which is the behaviour you want:
+
+```
+$ strehl stack <DIR> --photometric on
+Error: --photometric belongs to the estimator merge, and --merge selected pyramid.
+  what to do  : NOT YET IMPLEMENTED on this backend, rather than inapplicable. [...]
+  or          : pass --merge estimator to use --photometric as it stands.
+Refused rather than ignored because a flag that silently does nothing looks
+exactly like one that works.
+```
+
+The obstacle is the pass structure, not the backend: fitting a per-frame gain
+needs every frame's flux *before* the first frame is folded, and the pyramid
+folds in a single pass. The gain itself would apply unchanged. This is a known
+gap with a known fix, not a design position.
+
+**In practice, on this corpus:** all 26 reference renders were produced on this
+path and none of them needed those stages. If your subject held still and your
+exposure held steady, neither will yours. If it moved, use `--merge estimator`
+and accept the patchwork, or wait for the port.
+
 `--srgb` applies the camera's colour matrix and the sRGB transfer curve, and
 since M95 it emits at **full sensor resolution by default** — pass `--binned`
 for the old half-resolution render. **None of this is on by default**, because

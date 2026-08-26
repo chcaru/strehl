@@ -5550,3 +5550,87 @@ reason.
 > the agents inside those lanes will not notice, because from inside a lane
 > everything still passes.
 
+
+---
+
+## 52. What the default path does not do, in its own words
+
+Section 51 established that the flip re-parented BUILD-HALO's lane. Following
+that thread one step further produced the more consequential finding, and it did
+not need an instrument -- **the binary says it out loud.**
+
+`run_pyramid` prints, on every run:
+
+```
+not applied     : photometric gain, clip census, outlier rejection, halo correction,
+                  through-focus statistics. Those are the --merge estimator path's
+                  stages; this arm is the merge only.
+```
+
+So flipping the default did not merely change a merge kernel. It traded the
+estimator's polygonal patchwork -- a real defect, measured and reproduced on two
+subjects in section 45 and section 47 -- for the loss of **five stages**.
+
+### 52.1 Verified by refusal, not by reading
+
+The banner is a claim like any other, so I tested it on a clean build of
+`a4bd795`:
+
+```
+$ strehl stack <DIR> --photometric on --srgb -o out.tiff
+rc=1
+Error: --photometric belongs to the estimator merge, and --merge selected pyramid.
+  what to do  : NOT YET IMPLEMENTED on this backend, rather than inapplicable. The
+                per-frame affine gain would apply unchanged, but fitting it needs
+                every frame's flux before the first frame is folded, which the
+                pyramid's single-pass fold does not currently do.
+  or          : pass --merge estimator to use --photometric as it stands.
+Refused rather than ignored because a flag that silently does nothing looks
+exactly like one that works.
+```
+
+That last line is the right engineering and deserves recording as a standard.
+
+> **A flag that silently does nothing looks exactly like one that works.** Refuse
+> the combination at the boundary, name the counterpart, and distinguish *not
+> implemented here* from *inapplicable here* -- they lead a reader to opposite
+> conclusions about whether to wait for it.
+
+The error also states the real obstacle precisely: the affine gain *would apply
+unchanged*, but fitting it needs every frame's flux **before the first frame is
+folded**, which a single-pass fold does not do. That is the architectural seam
+the project's own review flagged long ago -- decode is 0.91 s warm, so a second
+pass is cheap and preserves O(workers) memory. **The obstacle is the pass
+structure, not the estimator.**
+
+### 52.2 Why this matters for the claim being made
+
+Two of the five missing stages are named in this project's own review as things
+*"SOTA dies without"*: per-frame **photometric normalisation**, without which the
+gate misreads exposure drift as signal; and an **outlier/robustness mask**,
+without which one twitching antenna poisons the merge with no defence. The
+corpus contains exactly the captures that need them -- a stack that moved, a
+stack with bubble motion, and a same-subject pair a full stop apart in exposure.
+
+Against that, the honest counter-evidence: the 26-subject gallery was rendered on
+this path, inspected at 1:1 on six subjects, and is clean. On *this* corpus, at
+*these* subjects, the missing stages have not visibly cost anything. Both facts
+are true and the tension between them is the actual state of the product.
+
+> **A default is a claim about the common case, and swapping one changes which
+> defects a user meets by accident.** The estimator's patchwork was visible and
+> is gone; the pyramid's gaps are invisible and arrive only on captures that
+> happen to contain motion or drift. Trading a loud defect for a quiet one is
+> usually right, and is never free -- and the quiet one has to be written down
+> where the user will read it, or the trade was not made honestly.
+
+Disclosed in the README rather than left in a startup banner nobody keeps.
+
+### 52.3 Deliberately not fixed tonight
+
+Four agents already share `merge_cmd.rs`. Adding a fifth to port these stages
+into `run_pyramid` -- concurrently with the lane being redirected into the same
+function -- is how work gets silently clobbered in a shared tree, which this
+project has already been bitten by twice. The port is real, wanted, and next;
+it is not a thing to start while the file is this busy.
+
