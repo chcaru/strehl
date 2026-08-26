@@ -32,6 +32,32 @@ normalisation. That assertion was ARGUED. This report measures it.
 
 ---
 
+## Provenance — which binary produced these numbers
+
+Added in response to ORCH's cross-build warning (BUILD-HULL: across two builds from
+tonight's tree, green is bit-identical at `max|d| = 0` while red moves by up to 3902 DN
+on 97.7% of samples, from a chromatic-aberration correction).
+
+**Which binary produced these numbers: none of them.** No `strehl` binary was built or
+invoked for any figure in this report, so there is no cross-build arm anywhere in it.
+
+- **Parts 1 and 2 read camera RAW directly** via `rawpy` — `ghostlib.py:103`,
+  `exposure.py:71`, `controls.py:406`. That is upstream of every merge, every demosaic
+  and every CA correction. The finding cannot reach them: there is no build in the path.
+- **Part 3 reads the SHIP-V1 masters** (`tifffile`, dtype asserted `uint16`) but only to
+  **look at them**. `crops.py` and `verdictcrops.py` emit pictures, not numbers.
+- **One number in this report is derived from a master:** `hotsites.py`'s structure
+  percentile. It is computed on luminance, so it does touch red and blue — but it is a
+  **within-image rank**. The reference distribution is a grid over the *same* file
+  (`hotsites.py:75-77`) and the site is scored against that (`hotsites.py:84`). There is
+  no second arm and no second build, so a per-build CA difference has nothing to bias; it
+  moves a site and its own reference together. It also supported a **retraction** of one
+  of my own claims rather than a positive finding, so it carries no weight in the verdict
+  in either direction. Re-deriving it on green is available on request — I judged it
+  non-load-bearing for the reason above, rather than skipping it silently.
+
+---
+
 ## Part 0 — the detector, and why you should believe it
 
 No corpus number below was quoted until the control suite was green.
@@ -300,6 +326,39 @@ on physical grounds to have moved. The 11 unviewed are subjects Part 1 measured 
 quiet with no hot cluster at any baseline, so there was no motion site to crop; a ghost
 there would have to be one my detector missed entirely. That is a real residual risk and
 I am not claiming otherwise — it is the main thing an independent verifier should attack.
+
+### Does the default hull clamp change this verdict?
+
+Added in response to ORCH's second warning (BUILD-HULL: the default clamp costs
+97.7% microcontrast retention on `couch-fibers-cpl`, 84.6% on `coffee-bean`). Everything
+I viewed in Part 3 was viewed through that stage, so the question is fair. Two answers,
+and they point in different directions.
+
+**It cannot have hidden a ghost from me.** The hull is `[min_k, max_k]` over the aligned
+input frames at that pixel, accumulated from the frames as supplied, before any
+decomposition (`pyramid.rs:1099-1105`; enum at `pyramid.rs:760-762`). A ghost is *by
+construction* a blend of contributors at one pixel — antenna in frame A, background in
+frames B..N — so its value lies strictly **inside** `[min_k, max_k]`, and `clamp` is a
+no-op on it. The clamp can only remove reconstruction excursions *outside* the input
+range, which is a different artifact class from the one I was hunting. It also binds
+least where frames disagree, and motion sites *are* disagreement sites. So the clamp is
+not the reason I saw no ghosting, and relaxing it cannot reveal a ghost it was
+suppressing. **ARGUED — but from the accumulation code, not from prose.** I deliberately
+did not lean on the enum doc's adjacent argument at `pyramid.rs:740-747` ("why clamping
+cannot cost anything real"), because that is precisely the claim BUILD-HULL falsified;
+a doc that is wrong one paragraph down is not an authority.
+
+**It does condition the visual verdict, and I cannot fully discharge that.** If the
+clamp removes 15–19% of microcontrast, a ghost's contrast was attenuated along with
+everything else in the frames I viewed. I did not re-derive the clamp cost — it is owned
+by BUILD-HULL and duplicating it was explicitly ruled out — so this is **ARGUED**:
+recovering ~1.18× contrast does not usually turn an invisible smear into an obvious one,
+and what I saw was *no doubling at all* rather than faint doubling, so I do not expect
+the verdict to flip. But the cheap insurance is real: **when BUILD-BLEND lands the clamp
+change, re-run `verdictcrops.py` and re-view.** The sites are already nominated in
+`verdict.json`, so it is minutes, not a re-measurement.
+
+Parts 1 and 2 are untouched by this — they are on RAW, upstream of the merge entirely.
 
 ---
 
