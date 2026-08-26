@@ -8186,3 +8186,90 @@ touch the subjects a macro photographer would print.
 
 That is a materially different sentence from the one this project could write
 seventy-two hours ago, and the six unopened subjects are the remaining risk.
+
+
+## 70. A 68-pixel error on an image that is sharp
+
+BUILD-RENDER's provenance work turned up something better than metadata: **the
+sidecar's whitelist kept 6 of 27 fields**, and among the twenty-one it dropped
+was the binary stating its own absent stages.
+
+```
+not applied : photometric gain, clip census, outlier rejection,
+              halo correction, through-focus statistics
+```
+
+**That is the fact this fleet spent an evening inferring wrongly from an argv,
+printed by the program, in the log, on disk, the whole time.** I read a SHIP-V2
+command line, saw no `--fix-ca`, concluded the shipping masters had the fringing
+correction off, broadcast it, and sent an agent after a promotion of something
+that had already shipped. One line of the program's own self-report would have
+made that impossible.
+
+The fix was not to add the two missing keys. **A whitelist re-arms the trap
+every time the program learns to say something new**, so the self-report is now
+carried verbatim with the extract labelled as an index into it, commissioned by
+a fidelity null at 71/71 character-identical lines. `FULL` was also struck from
+`FULL ARGV`, correctly: a header promising verbatim truth while silent about
+three things that changed pixels is worse than no header, because it licenses
+the inference I made.
+
+### Then the partition surfaced something in the shipping set
+
+Held-out alignment error, partitioned so that nothing hides: **19 measured, 6
+NOT MEASURED, 1 REFUSED = 26.** The refused one is
+`highly-angled-ruler-mm-cpl`, and it is in the print set:
+
+```
+alignment : REFUSED -- tilted subject; a global similarity cannot
+            describe it (M86). Merging unregistered.
+```
+
+And the measured tail is alarming on its face: `pencil-steep-angle-cpl`
+**68.20 px**, `pencil-flatter-angle-cpl` **55.79 px**, `lavendar-cpl` 24.24,
+`bee-1-cpl` 17.00, against `flower-bud-alone-cpl` at 0.35.
+
+### So I opened the two extremes, and the metric is not measuring what it reads like
+
+- **The unregistered ruler** is crisp. Graduation lines unghosted, machining
+  striations resolved, debris specks sharp. **No doubling** -- which is exactly
+  the artifact unregistered merging would produce if there were real
+  misregistration to correct.
+- **The 68.20 px pencil** resolves individual graphite crystal facets glinting
+  separately, with extrusion striations across the whole shaft. It is one of the
+  sharper images in the corpus.
+
+M86's score asks whether **a global similarity composes across the graph**. On a
+steeply tilted subject a global similarity is the wrong model *by construction*
+-- different depths move differently -- so a large score reports **model
+inadequacy, not residual misregistration**. The merge does not need a globally
+correct similarity; it needs local correspondence, and it has it.
+
+> **A number that reads like a defect must carry its caveat at the point of
+> publication.** `68.20 px` printed beside a visibly sharp image will be read as
+> a failure by every reader who does not also have the paragraph above, and
+> relying on the reader to find that paragraph is not a plan.
+
+### The guard is inconsistent, and I am recording rather than fixing it
+
+The guard **refuses** the tilted ruler while `pencil-steep-angle` (68.20) and
+`pencil-flatter-angle` (55.79) are the **same geometric class, worse on the
+metric, and not refused**. The guard and the metric disagree about one failure
+mode. That is a real correctness defect.
+
+It is also **costing no image quality** -- all three subjects look right,
+including the unregistered one. So it is logged, not staffed, and the ranking
+rule is worth stating because this project's instinct runs the other way:
+
+> **A correctness defect with no measured cost ranks below a defect a reader can
+> see.** Rigour is a means here, not the product. If the MTF work in flight
+> finds a fine-scale deficit that tracks these subjects, this moves to the top
+> the same hour.
+
+### Twenty-two of twenty-six
+
+Both subjects above join the survey. **Twenty print-worthy**, one soft, two with
+the specular fringe. And the print masters exist: SHIP-V2 and SHIP-V2-ICC are
+both complete at 26/26 with `.ok` markers, sidecars and `COMPLETE.txt` -- my
+belief that the batch was still in flight was one of BUILD-RENDER's own test
+arms, misread as the batch.
