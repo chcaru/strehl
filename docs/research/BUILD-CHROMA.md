@@ -1903,3 +1903,96 @@ blown pixels, corner demosaic error, genuine thin-film iridescence) and not a
 shared mechanism. §4.4 stands exactly where it was — real, under-powered, three
 stacks, **not** to be built on — and it has not gained field coverage tonight.
 
+
+## 25. `foam`'s corner blue: **clipping**, and the "radial" framing was never radial
+
+ORCH asked one narrow product question — can the clipping confound be separated
+from demosaic error and iridescence, because clipping is the only one of the
+three that is a defect this tool could be fixing and could be corrupting other
+subjects silently. Answer: **yes, and it is clipping.**
+
+### 25.1 A false green I produced first, and why it looked like a pass
+
+My first gate thresholded on fractions of 65535. The master's maximum DN is
+**52239**, so every threshold sat *above the image maximum* and the gate removed
+**zero** pixels on all eight rows. The script then printed "the elevation
+survives removal of every near-clip pixel". Two controls had already fired and
+the verdict logic simply did not read them: an identical kept-count on every row,
+and a matched-count random control reporting **sd 0.000 over 20 trials**. v2
+asserts that the gate removes a non-zero count and that the random control's sd
+is non-zero, and the v1 script is deleted rather than kept.
+
+This is the same lesson from the other end: I had a working control and drew a
+conclusion without looking at it.
+
+### 25.2 There is no clipping *plateau* — which does not acquit clipping
+
+No pile-up at the top (`>=0.999*max` is 0.0000% in every channel) and the
+per-channel maxima are far apart (R 42213, G 38921, B 52239). p99 is ~9,400
+against a max of 52,239: a long thin highlight tail, the opposite of a clipped
+histogram. But ORCH's 0.76% blown is a **raw/scene** statistic, and raw clipping
+happens before a *monotonic* tone curve, which maps it to high-but-unclipped
+master values. So the gate has to be defined by **percentile of this master**,
+not by an absolute ceiling.
+
+### 25.3 The elevation is carried entirely by the brightest 0.76%
+
+| drop top | DN | dilate | edges removed | centre | corner | corner/centre |
+| --- | --- | --- | --- | --- | --- | --- |
+| — (baseline) | — | — | 0 | 0.0672 | 0.1262 | **1.878** |
+| 0.76% | 10438 | 0 | 14,765 | 0.0671 | 0.0692 | **1.031** |
+| 0.76% | 10438 | 3 | 19,070 | 0.0670 | 0.0709 | 1.058 |
+| 5% | 7293 | 3 | 41,231 | 0.0676 | 0.0781 | 1.156 |
+| 25% | 4963 | 3 | 72,593 | 0.0783 | 0.0929 | 1.185 |
+
+Removing ORCH's own 0.76% collapses 1.878 → **1.031**, i.e. **96% of the
+elevation is gone**. Matched-count random removal leaves it intact at
+**1.856 ± 0.088** — the level gate stands **7.6 sd** from the size-matched
+control, so the change is attributable to level and not to sample size.
+
+### 25.4 It was never radial — it is composition
+
+| band | edge px | hot (top 0.76%) | hot frac | \|B−G\|/G **hot** | \|B−G\|/G **cool** |
+| --- | --- | --- | --- | --- | --- |
+| 0 (centre) | 2,369 | 16 | **0.68%** | 0.0783 | 0.0671 |
+| 3 | 18,659 | 1,199 | 6.43% | 0.0516 | 0.0649 |
+| 5 (corner) | 17,027 | 8,853 | **51.99%** | 0.1788 | 0.0692 |
+
+**The cool column is flat across the whole field** — 0.0671 at the centre against
+0.0692 at the corner. The corner band is 52% bright highlights against the
+centre's 0.68%, a 76× composition difference, and bright pixels carry high blue
+colour *wherever they sit*. The radial signal was the radial distribution of
+highlights, not a radial optical term.
+
+**This eliminates the demosaic confound outright:** corner demosaic error would
+still be radius-dependent at matched level, and at matched level there is no
+radial trend left.
+
+### 25.5 Clipping, not iridescence — two independent discriminators
+
+Level-dependence alone does not name a cause, because foam's thin-film
+iridescence lives on exactly the bright specular films the gate removed. These
+separate them:
+
+1. **Hue consistency.** Among the 14,765 hot edge pixels, `B−G` is positive on
+   **88.9%** and `R−G` negative on 69.4% — one-sided blue-excess/red-deficit.
+   Thin-film interference cycles hue with film thickness (ORCH's own note
+   describes "orange, cyan and magenta" rims) and would populate both signs.
+2. **Monotonicity in level.** `B/G` climbs **1.0257 → 1.2903 across all 9 decile
+   steps**, a 25.8% divergence. A fixed white-balance gain makes `B/G` a
+   *constant* multiple independent of level and cannot produce this; only a
+   nonlinear channel-dependent effect at the top of the range can. Green's
+   ceiling (38921) also sits well below blue's (52239).
+
+Green runs out before blue, so `B/G` climbs with brightness and the brightest
+pixels acquire a one-sided blue excess.
+
+### 25.6 Verdict
+
+**Clipping is the explanation.** By ORCH's own decision rule this is a
+channel-asymmetric highlight-saturation defect and a build task, not a chroma
+question — and because it is a function of level rather than of field position,
+**it will affect any subject with blown specular highlights**, which is what
+ORCH was worried about. It has nothing to do with lateral CA, and nothing here
+touches §23.2's `eps_b` or revives §4.4.
+
