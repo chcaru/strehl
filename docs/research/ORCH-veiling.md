@@ -8306,8 +8306,13 @@ fringe "a far more serious finding" than the halo. It is dead, and the pairing
 of a measurement with the mechanism that makes the measurement necessary is the
 strongest form of argument this project has produced.
 
-> **CORRECTED at section 76. "The merge is innocent" is too broad and I wrote
-> it.** The 15.5% measurement stands, and a shared scalar denominator genuinely
+> **CORRECTED at section 76, attribution amended at section 78. "The merge is
+> innocent" is too broad.** The sentence and the shared-`den` argument beneath it
+> were **BUILD-HIGHLIGHT's**; I escalated the conclusion and carried it into this
+> log without checking it. Its author asked for that to be recorded as a **joint
+> miss** rather than mine, which is the accurate version and is the opposite of
+> the direction people usually push an attribution. The 15.5% measurement stands,
+> and a shared scalar denominator genuinely
 > cannot manufacture chroma *amplitude*. But `den` being computed on green luma
 > and shared across planes means R and B are elected at **green's** best focus
 > rather than their own, and under longitudinal CA those are not the same frame
@@ -9056,3 +9061,123 @@ the halves differ rather than only that they do.
 I could not delete the second copy the way BUILD-TRIAGE deleted `0.3 px`, because
 prose describing a design decision has no constant to source from. **Mine
 remains the weaker class of fix and saying so is part of the fix.**
+
+## 78. Going wrong beats going blind, and a caveat can discredit itself
+
+### An instrument that goes blind announces itself; one that drifts does not
+
+BUILD-RESAMP was asked to find the slanted-edge MTF's blindness threshold, on
+the model of section 77's. There is no blindness threshold. There is something
+worse.
+
+| w10-90 px | 1.90 | 2.56 | 3.85 | **5.13** | 6.41 | 7.69 | 10.25 | 12.82 | 15.38 | 17.99 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| measured / true MTF50 | 0.998 | 1.005 | 1.020 | **1.038** | 1.059 | 1.087 | 1.154 | 1.232 | 1.332 | **1.446** |
+
+> **It does not go blind. It goes wrong -- monotonically, and toward the
+> expected answer.**
+
+That distinction inverts how this log has been treating applicability limits:
+
+> **A blind instrument is a safe failure. A biased one is not.** A zero on an
+> image that visibly rings is alarming enough to investigate. `1.4404` on a soft
+> edge is an entirely plausible number that no reader would question, and it is
+> wrong by 44%.
+
+Section 77's shape test was the *lucky* instrument. It failed loudly.
+
+**And the magnitude settles the original question by subtraction.** The two
+renders do not share an edge width, so they do not share an inflation:
+**1.2593x** (strehl, 13.52 px) against **1.4404x** (fork, 17.86 px), ratio
+**1.1438** -- a **14.38% systematic bias from edge width alone**, running in the
+direction that makes the fork read sharper, against a claimed deficit of
+**17-23%**. Most of the number this project steered by for days was the ruler
+bending.
+
+**Three mechanisms, one pair, all flattering the same conclusion:**
+nearest-neighbour scoring **+29%/+42%**; a 0.5x downscale scoring **4.35x
+better**; and now edge-width inflation. Three unrelated statistics -- a band
+ratio, a shape test, a slanted-edge MTF -- and:
+
+> **The confound is in the variable, not the statistic.** Any instrument bounded
+> by edge sharpness fails a comparison *of* edge sharpness. Reached
+> independently by two agents through two entry points; promoted from lesson to
+> measured finding.
+
+The consequence is a **capture**, now filed as `captures-needed.md` section 30
+and promoted to #4 in its index: the corpus has no valid slanted edge. Its edges
+are 13-18 px wide against a 5.13 px limit, and the instrument pointed at a page
+of text reported **3568 of 3570** candidate edges flatter than 0.03 degrees. The
+blocker is the corpus, not the code.
+
+### The near-miss: a spurious confirmation of a correct finding
+
+Before gating, BUILD-RESAMP's per-render probe printed recoveries of `0.238x`
+and **`-0.967x`** at f=0.05 -- a *negative* sensitivity -- because it divides by
+`1 - 0.9877 = 0.0123`, turning a 1% measurement error into an 80% recovery
+error. In their words: **"that is arithmetic, not evidence, and it would have
+read as a 4x sensitivity difference."**
+
+Section 75's independently measured figure was **4.75x**. They came within one
+ungated frequency bin of confirming a true conclusion for a fabricated reason,
+and caught it only because a sensitivity came out negative -- not because the
+magnitude looked wrong. It did not look wrong. **It looked like agreement.**
+
+> **A spurious confirmation is harder to catch than a spurious refutation,
+> because nobody audits the result they were hoping for.**
+
+### A mis-aimed caveat is worse than no caveat
+
+I asked BUILD-HIGHLIGHT to move a warning inline, next to the table it governed.
+They complied. Then, auditing their own report with a purpose-built duplicate
+detector, they found the warning was **pointed at the wrong table** -- and found
+it through the detector's **silence**.
+
+The caveat read *"These rows are ONE measurement, not three"*, sitting directly
+above four rows that are four genuinely distinct measurements. The three
+collapsed rows had been in an earlier table; when the caveat moved, it attached
+to the survivor.
+
+> **A mis-aimed caveat discredits itself.** A reader who checks it against the
+> table finds it false and correctly discounts the warning -- and it sits there
+> wearing the borrowed authority of a self-criticism.
+
+**This is a defect I introduced by asking for it**, and it is the second time
+tonight that a fix has damaged the thing it repaired (section 75's unrestored
+mutation was the first). Moving prose next to data couples them; if the prose is
+about *different* data, proximity converts a stale note into a false claim.
+
+The honest warning turned out not to be about duplication at all but about
+**absence**: that table has **no selector control**, because `edge_mask` ignores
+`select_on` outright (`l2_falsecolour.py:73`), so the adversarial-selector
+control that overturned half of their section 11 does not operate below that
+line. Stronger than the warning I requested, and unlike it, true.
+
+**The method deserves its own line.** They refused to answer by reading their own
+tables -- *"reading my own report for a bias I know I have is the same error one
+level up"* -- built a detector, calibrated it two-sided (three planted duplicates
+-> 2 flags; distinct rows, `0.100` vs `0.101` -> 0), scanned 80 numeric rows,
+and reported its two false positives rather than hiding them. Then the finding
+came from where it **did not** fire.
+
+> **A calibrated null that contradicts your belief about your own document is
+> worth more than any hit.**
+
+### Attribution, corrected in the direction nobody pushes
+
+Section 71's *"the merge is innocent"* was annotated at section 76 as my error.
+Its author objected -- to take **more** blame:
+
+> *"I wrote the sentence, and the shared-`den` argument was mine. You escalated
+> my conclusion; you didn't originate the error. That distinction belongs in the
+> log as a joint miss, not yours."*
+
+Recorded as a joint miss, and section 71's block amended. Both halves were
+sound in isolation and neither of us checked the join: **a shared selection is
+not a shared amplitude.**
+
+They also flagged the successor claim before anyone could over-trust it: the
+axial-CA mechanism is **their hypothesis, generated to explain a residual, still
+untested**, backed by two confounded instruments with opposite signs. It goes
+forward to the election lane **"with a mechanism and a measurement-shaped hole
+where its evidence should be"** -- their phrase, and it travels with the fact.
