@@ -146,13 +146,14 @@ separate wrong conclusions in this project came from judging pictures at
 thumbnail scale, including one that had already been sent to two contributors as
 an instruction before it was retracted.
 
-Judged that way, **eight subjects are print-worthy today, and every subject
+Judged that way, **thirteen subjects are print-worthy today, and every subject
 examined so far has passed**: `bee-1-cpl`, `bee-2-cpl`, `bee-3-cpl`,
-`leaf-2-cpl`, `tweezers-cpl`, `coffee-bean`, `112MSDCF` and
-`flower-bud-with-background-fern-cpl`. Individual compound-eye facets, plumose
-hair barbules including their branched side-structure, chloroplast speckle,
-brushed-metal striations, porous cellular texture, and crystal dendrites to near
-single-pixel width all resolve.
+`leaf-2-cpl`, `tweezers-cpl`, `coffee-bean`, `112MSDCF`,
+`flower-bud-with-background-fern-cpl`, `119MSDCF`, `109MSDCF`,
+`wrapped-text-1`, `foam` and `highly-angled-ruler-mm-cpl`. Individual
+compound-eye facets, plumose hair barbules including their branched
+side-structure, chloroplast speckle, brushed-metal striations, porous cellular
+texture, and crystal dendrites to near single-pixel width all resolve.
 
 **The occlusion halo is gone.** Not only where pale hairs cross a dark
 defocused compound eye, but in `flower-bud-with-background-fern-cpl` — a dense
@@ -165,13 +166,21 @@ geometry, and there is no bright rim along them. `coffee-bean` is the third —
 V-HULLCOST found it needs the hull clamp more than any other subject, so it is
 also the test that the clamp is not costing detail. It is not.
 
-The remaining eighteen subjects are labelled **"not individually judged at
+The hardest case of all is `highly-angled-ruler-mm-cpl`: a steel rule crossing
+the frame at a steep angle, so a hard occluding edge runs diagonally through it
+with the background surface behind, and the steep angle forces the deepest
+bracket in the corpus — the most frames, and the most chances to get the
+boundary wrong. The millimetre graduations terminate crisply at that edge with
+**no rim brightening on either side**. The only dark band below the rule is the
+rule's own shadow.
+
+The remaining thirteen subjects are labelled **"not individually judged at
 1:1"** in the gallery rather than given an implied pass. That distinction is
 deliberate: a subject nobody looked at and a subject that passed must not print
 the same way.
 
-**Ten subjects have now been opened at 1:1 and none shows a merge defect.** The
-two most recent were my own two *worst*-ranked: I had labelled `119MSDCF` and
+**Thirteen subjects have now been opened at 1:1 and none shows a merge defect.**
+Two of them were my own *worst*-ranked: I had labelled `119MSDCF` and
 `109MSDCF` "genuinely under-resolved, last of 26" on a contrast-normalised
 detail ranking. Opening them refutes it — the olive band in `109MSDCF` resolves
 hundreds of individual bubbles as crisp high-contrast points, and `119MSDCF`
@@ -190,6 +199,24 @@ Three of my "soft" findings have now been retracted on inspection
 detail-ranking statistic, and all three turned out to be subjects with little
 structure rather than outputs with little sharpness. **The statistic was
 measuring the subject.**
+
+The cure is not a better statistic. It is an **in-frame control** — a feature in
+the same picture you already know should be sharp. `wrapped-text-1` is the clean
+demonstration: printed lettering whose ink edges are visibly soft, sitting on a
+surface whose speckles are individually crisp. Both came out of the same frames
+through the same estimator, so the soft edges are the ink bleeding into the
+texture, not the stacker. That takes seconds to see and needs no calibration,
+and it is the check the detail ranking was standing in for.
+
+One open observation, recorded because it is actionable rather than settled:
+`foam` is dark cellular plastic with blown specular highlights — maximum
+contrast at a hard edge, the worst case for lateral chromatic aberration — and
+its highlight rims carry visible orange, cyan and magenta. Foam has thin films
+and thin-film iridescence is a real optical effect, so this is **not** evidence
+of an aberration on its own. It is the right subject to settle it on, because
+whatever a CA correction removes was aberration and whatever survives is
+iridescence. This matters because `STREHL_FIX_CA` — credited with removing
+61–67% of corner colour fringing — is **off** in the shipping render.
 
 ### Two verdicts per subject: retouch this, or reshoot this
 
