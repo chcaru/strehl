@@ -5067,7 +5067,7 @@ the flip does not need the defect to be universal.
 
 ---
 
-## 48. The softness had a cause, it was in the path nobody measured, and it is recoverable
+## 48. RETRACTED -- see section 53. The softness had a cause, it was in the path nobody measured, and it is recoverable
 
 BUILD-SHARP was re-tasked into its own lane -- price the resampling chain by
 *phase*, not by count -- after its Catmull-Rom refutation killed my skip-guard
@@ -5633,4 +5633,122 @@ into `run_pyramid` -- concurrently with the lane being redirected into the same
 function -- is how work gets silently clobbered in a shared tree, which this
 project has already been bitten by twice. The port is real, wanted, and next;
 it is not a thing to start while the file is this busy.
+
+
+---
+
+## 53. RETRACTION: section 48's central claim was backwards
+
+Section 48 was the largest quality finding I recorded. It is wrong, in the one
+way that mattered, and the correction inverts the conclusion rather than
+softening it.
+
+**What section 48 claimed:** a fixed phi=0.25 chroma co-site runs serially on the
+**viewable** render at `image_out.rs`, costing R/B a factor of ~1.44 at f=0.35;
+it lives only inside `write_binned`, so every ESF number the project took on
+`linear.tif` **excluded** it; removing it was the largest available sharpness
+win.
+
+**What is true:** `write_binned` is not the viewable path. Both callers reach it
+only *after* an `if demosaic { ... return }`, and `--srgb` demosaics. **The
+co-site never executes on the render the owner is looking at.**
+
+### 53.1 Verified by me, directly, before accepting the contradiction
+
+Two agents disagreed, so I checked the crux myself rather than believing the
+newer report:
+
+- **The shipped artefact.** `SHIP-V1\bee-3-cpl.tiff` reads as `(4688, 7032, 3)`,
+  `uint16` -- full sensor resolution, three channels. A binned render would be
+  half that and is not three-channel by this route.
+- **The render's own log**, from the gallery command re-run verbatim:
+  `wrote : ... (7032 x 4688, 16-bit RGB, sRGB ... , Malvar-He-Cutler demosaic)`.
+- **The branch.** In `merge_cmd.rs` the demosaic arm calls `write_demosaiced` and
+  then `return Ok(())`, *above* the `write_binned` call at L5835.
+
+Three independent confirmations, one of them an artefact I had already inspected
+at 1:1 and certified as print-grade. **The evidence that refuted section 48 was
+sitting in a file I had personally verified weeks earlier.** I had checked that
+the gallery was 7032x4688; I never asked what that implied about which writer
+produced it.
+
+### 53.2 The instrument bias is real, and points the other way
+
+Section 48's *rule* survives intact and is if anything better supported: an
+instrument and the product must be on the same side of every transformation.
+What flips is who was on which side.
+
+`write_binned` -- and therefore the co-site -- is on the `--linear-srgb`
+**measurement** path. So ESF numbers taken there **carry** a co-site the shipped
+render does not. The measurement understates R/B relative to the product, rather
+than the product silently paying a cost the measurement missed. Same defect,
+opposite sign, and the sign is the whole engineering consequence.
+
+### 53.3 The fix would have damaged the product
+
+This is the part that justifies the implementer's decision not to land, and it
+is the reason to be glad the work was measured rather than executed.
+
+Folding the shift into the gather changes what Malvar sees, because Malvar
+treats co-sited samples as if they were still at their CFA corners. Measured on
+the demosaiced pair: **sd(R-G) x1.235, sd(B-G) x1.230, HF(R-G) x1.313, HF(B-G)
+x1.317** -- all worse. And the effect is not a rigid shift the demosaic could
+absorb: the implementer's shift estimator reads **0.02 px**, and it is potent
+there (a planted 0.5 px recovered at 1.06x, a planted 1.0 px at 1.000x), because
+Malvar rebuilds R at three of four sites from the green gradient.
+
+The kernel arithmetic was never in doubt and still is not: the measured fold
+reproduced the closed form to **within 1.8% at f=0.35** (1.4325x R, 1.3925x B
+against 1.438 predicted), with green **bit-identical** (`50aebee0c023dae6` both
+arms, `np.array_equal` True over the whole plane). A correct implementation of
+the wrong change, priced exactly, and then declined.
+
+> **"Composing is exact" is a property of an operator, not of its consumers.**
+> The gather's transform does compose. Three different writers consume it, and
+> one of them *wants* the co-site. A change can be mathematically free and still
+> wrong, because correctness lives at the boundary, not in the kernel.
+
+> **An implementer asked to land a fix, who measures first and returns "the fix
+> is real, reproduces to 1.8%, and must not ship", has done the job.** Compliance
+> would have shipped a measured regression with a green test suite behind it.
+
+### 53.4 What was actually found, which is bigger
+
+**The demosaic is the largest unpriced term on the viewable path**, and no
+instrument in this project has ever looked at it.
+
+The merge estimates all four CFA sites per quad independently -- R, both greens,
+B -- and then **throws that structure away**, re-interleaving into a Bayer mosaic
+so that Malvar can reconstruct what was just estimated. Malvar was designed for a
+single noisy exposure; here it is handed merged estimates from tens of frames,
+with entirely different noise characteristics, and its cross-channel
+assumptions were never re-examined for that input.
+
+Whether a direct upsample of four known planes beats Malvar interpolating them
+is genuinely open -- green is sampled at quincunx density and Malvar's gradient
+term does add real R/B detail under the slowly-varying-chroma assumption -- but
+it has never been measured, and it sits directly on the delivered pixels.
+
+Section 48's partition had bucketed the demosaic as NOT-ON-THIS-PATH, on the
+reasoning that a quad collapse never demosaics. Correct about a quad collapse.
+The shipped render is not one.
+
+### 53.5 What I got wrong, mechanically
+
+I trusted a module-header comment. `image_out.rs` described `write_binned` as
+*"the 'for looking at' render"*, which is false; the implementer has replaced it
+with a measured reachability rule. Section 48's audit read the sentence and
+propagated it into a headline, and I amplified it -- into a corpus section, into
+a task brief for the implementer, into a warning to a second verifier, and into
+a status report to the owner.
+
+> **A comment is a claim by an author who is not present, about code that has
+> changed since.** Reachability is a property of the call graph and the flags,
+> and it is cheap to establish from the artefact: read the shape of the file the
+> product actually wrote.
+
+The corollary for how I work: I had the refuting evidence and did not query it.
+The gallery's `7032x4688` was in my own notes as a *quality* fact -- full sensor
+resolution, good -- and never as a *routing* fact. **A number recorded under one
+heading does not get consulted when the question arrives under another.**
 
