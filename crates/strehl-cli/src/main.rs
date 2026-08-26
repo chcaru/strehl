@@ -85,12 +85,24 @@ enum Command {
     /// works, and this project has shipped that failure before.
     ///
     /// NOTE, now that the pyramid is the default: a harness that passes one of
-    /// those flags WITHOUT also passing `--merge estimator` now fails where it
-    /// used to run. That is the refusal working as designed, not a regression,
-    /// and it is loud rather than silent. Swept over this repository at the
-    /// time of the flip it is 338 call sites in 185 files, of which 189 are
-    /// executable; `--gate` alone accounts for 275. Add `--merge estimator` to
-    /// pin the old arm, or drop the flag to use the new one.
+    /// those flags WITHOUT also passing `--merge estimator` still RUNS, and
+    /// gets the ESTIMATOR. The backend is inferred from the flags when `--merge`
+    /// is absent, so naming an estimator parameter selects the estimator rather
+    /// than colliding with a backend the caller never chose. Exit codes are
+    /// unchanged: measured, 0 of 8 fail.
+    ///
+    /// The consequence is the one worth stating plainly. Those call lines are
+    /// not broken, but they are no longer on the merge this tool now defaults
+    /// to -- they keep the older arm, including the faceted "cut-out sticker"
+    /// plateaus the pyramid was made to remove. Swept over this repository at
+    /// the time of the flip that is 338 call sites in 185 files, of which 189
+    /// are executable; `--gate` alone accounts for 275. So the run log names the
+    /// backend AND the reason, and says outright when an inferred backend is
+    /// not the default. Drop the flag to get the new merge; pass
+    /// `--merge estimator` to say you meant the old one.
+    ///
+    /// Naming a backend explicitly still refuses a contradicting flag, exactly
+    /// as before. Inference applies only where nothing was stated.
     ///
     /// WHAT THE ESTIMATOR BACKEND DOES, by noise-gated ESTIMATION:
     ///
@@ -1208,6 +1220,56 @@ mod tests {
             "expected the \"at most one --gate\" wording on both --out and \
              --n-eff-map, found {} occurrence(s) in `stack --help`",
             true_claim,
+        );
+    }
+
+    /// The NOTE about pre-flip command lines makes a MEASURED claim ("0 of 8
+    /// fail") about a list it also enumerates. Those two must not drift apart.
+    ///
+    /// The claim was false once already: before backend inference landed, the
+    /// NOTE said those flags "now fails where it used to run", and after
+    /// inference every one of them runs and selects the estimator. Measured
+    /// 0 of 8 failing. Prose that describes the tool's exit codes is as
+    /// load-bearing as prose that names a default, so it gets the same
+    /// treatment: coupled to something that changes when the truth changes.
+    ///
+    /// Adding a ninth estimator-only flag now fails this test until the
+    /// measured count is re-taken, which is the point.
+    #[test]
+    fn the_migration_note_counts_the_flags_it_enumerates() {
+        // The help is hard-wrapped, so collapse before matching: every one of
+        // these phrases spans a line break at some terminal width.
+        let help = stack_help();
+        let flat = help.split_whitespace().collect::<Vec<_>>().join(" ");
+
+        assert!(
+            !flat.contains("now fails where it used to run"),
+            "`stack --help` still claims the estimator-only flags fail without \
+             `--merge estimator`. Backend inference makes them run and select \
+             the estimator; measured 0 of 8 failing."
+        );
+
+        let list = flat
+            .split_once("The estimator-only flags -- ")
+            .and_then(|(_, r)| r.split_once(" -- are REFUSED"))
+            .map(|(l, _)| l)
+            .expect("could not find the estimator-only flag enumeration in --help");
+        let enumerated = list.split(',').filter(|s| s.contains("--")).count();
+
+        let claimed = flat
+            .split_once("unchanged: measured, 0 of ")
+            .and_then(|(_, r)| r.split_once(" fail"))
+            .map(|(n, _)| n.trim().to_string())
+            .expect("could not find the measured \"0 of N fail\" claim in --help");
+
+        assert_eq!(
+            claimed,
+            enumerated.to_string(),
+            "`stack --help` enumerates {} estimator-only flags but reports the \
+             measurement over {}. Re-run \
+             C:\\dev\\strehl-out\\BUILD-WIRE\\notecheck.ps1 and update both.",
+            enumerated,
+            claimed,
         );
     }
 
