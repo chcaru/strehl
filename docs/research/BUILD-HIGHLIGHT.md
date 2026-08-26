@@ -732,11 +732,15 @@ Same binary `F9BD5191`, same instrument, same `edge` population, same selector, 
 not grow; coffee-bubbles' reaches **-0.3508**, an **8.5x larger** corner value on the same
 population and instrument.
 
-> **These rows are ONE measurement, not three.** The `edge` population ranks on the luma
-> *gradient*, so `--select-on` is inert and `luma`, `rb` and `max` return byte-identical
-> rows. They are printed three times and must not be counted as three agreeing readings -
-> the adversarial-selector control that overturned the blue result in section 11 **does not
-> operate on this population at all**. `edge_mask`'s docstring says so at the source.
+> **This table has no selector control, and section 11.3's does.** The rows here vary by
+> *subject* and *axis* — not by selector. The selector axis is missing because it is **inert
+> on this population**: `edge_mask` ranks on the luma *gradient* and ignores `select_on`
+> outright (`l2_falsecolour.py:73`, *"`select_on` IS DELIBERATELY IGNORED HERE"*), so running
+> it under `luma`, `rb` and `max` returns three **identical** rows. I print one rather than
+> three, because three identical rows read as three agreeing confirmations and are one
+> measurement. But the reader must carry the consequence: **the adversarial-selector control
+> that overturned the blue half of section 11 does not operate on anything below this line.**
+> Section 11.3's four rows *do* separate under `luma` vs `max`; these would not.
 
 **I withdraw, before stating it, the hypothesis I went in with.** I expected R-B to be
 partly *blind* to a residual carried against green, since green is this codebase's reference
@@ -935,3 +939,69 @@ correct in magnitude, a global rescale is already rejected, its support limit go
 of the affected population, and it demonstrably stabilises the outer field. The remaining
 74 % is on-axis and belongs to whatever makes red systematically weaker on fine bright
 features - most plausibly the green-only election, which is the estimator's, not optics'.
+
+---
+
+## 14. Auditing my own report for the failure mode I found in it
+
+ORCH's closing task: check whether any *other* table here repeats a measurement under
+different-looking headings, *"since that is the failure mode you already identified and your
+own report is the last place it would be looked for."*
+
+I did not read the tables to answer this. Reading my own report for a bias I already know I
+have is the same error one level up, and there are 115 table lines across 13 sections.
+`n3_dupscan.py` extracts every row's numeric signature and flags repeats: within a table
+under different labels, across tables under different headings, and inside ``` fences.
+
+**Calibrated before it was believed**, six cases, and it must both fire and stay silent:
+
+| planted | required | got |
+|---|---|---|
+| three identical rows | flag | **2 flags** (n-1 duplicates) |
+| same row under two headings | flag | **1 flag** |
+| repeat inside a ``` fence | flag | **1 flag** |
+| all-distinct rows | silent | **0** |
+| `0.100` vs `0.101` | silent | **0** |
+| distinct fence lines | silent | **0** |
+
+### 14.1 The scan found no second instance of the defect
+
+80 numeric rows scanned. Two hits, both adjudicated by reading:
+
+* **§5.3, `before, SHA-256` == `after, SHA-256`.** A true repeat and an *intentional* one —
+  the identity **is** the result, and the line under it says **"Byte-identical."** Not a
+  defect; the detector is correct to raise it and a human is correct to clear it.
+* **§11.3 vs §12.2, signature `0 1 2 3 4 5`.** False positive: those are the band indices in
+  the header `| b0 | b1 | ... |`, not data. Known false-positive mode, stated not hidden.
+
+### 14.2 What the scan's SILENCE found, which is the real result
+
+**The detector did not flag §12.2 — and that is what exposed the defect.** I had assumed the
+three identical rows were sitting in that table. They are not: §12.2's four rows vary by
+*subject* and *axis* and are all distinct. I had collapsed the selector rows when I wrote it
+and then, when ORCH asked me to move the caveat inline, attached it to the surviving table.
+
+So the caveat read **"These rows are ONE measurement, not three"** directly above four rows
+that are four measurements. A reader checking the claim against the table would have found it
+false, and correctly discounted the warning — **a mis-aimed caveat is worse than no caveat,
+because it discredits itself.**
+
+The honest statement, now in place, is not about duplication at all. It is about **absence**:
+
+> This table has **no selector control**, and §11.3's has one. The selector axis is missing
+> because `edge_mask` ranks on the luma *gradient* and ignores `select_on` outright
+> (`l2_falsecolour.py:73`). Three selectors return three identical rows, so I print one. The
+> consequence the reader must carry: the adversarial-selector control that overturned the
+> blue half of §11 **does not operate on anything below that line.** §11.3's rows *do*
+> separate under `luma` vs `max`; these would not.
+
+That is a stronger warning than the one ORCH asked for, and it is the one the data supports.
+
+### 14.3 Blind spots, declared
+
+The scan detects **numeric** duplication only. The same run reported twice at different
+roundings, or under two names with one column dropped, would evade it entirely — that is
+semantic duplication and it still needs a reader. Header rows containing numbered column
+names produce spurious cross-table signatures, as §14.1's second hit shows. And only 2
+numeric lines live inside fences in this report, so that arm of the scan is barely exercised
+on real data despite passing its plant.
