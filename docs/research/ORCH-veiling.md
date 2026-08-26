@@ -1715,3 +1715,101 @@ coefficients against a noise floor computed before normalisation would
 miscalibrate — most severely in the lit low-contrast regions where the merge is
 already weakest.
 
+## 19.6 Three corrections, two of them to me
+
+Sections 19.1 to 19.5 were written before I read the corpus on this subject. Then
+the pipeline's own console output mentioned a brightness change "with CONSTANT
+EXIF", which is not the sort of phrase a tool prints about something nobody has
+studied. It had all been measured already.
+
+**Correction 1 — this is not new, and a design already exists.** M24 measured the
+drift and holds facts 180 to 182; `M18-merge-implemented.md` §4d specifies the
+implementation in three steps — fit in pass one alongside the focus field at one
+scalar per frame and no extra decode, carry as a `Vec<f32>` of length `frames` on
+the `Plan` so the memory ratchet is untouched, apply inside the fold to the
+signal and the sigma together — and closes: *"Not built tonight. Stated so it is
+a decision, not an oversight."* What 19.2 correctly reports is that it is
+**unbuilt**. What it wrongly implied is that it was **unknown**. Anyone building
+this reads M18 §4d and §4f first.
+
+**Correction 2 — the gate does not need fixing, and 19.5's hazard note was
+operationally wrong.** M18 §4d already resolves it: gating on `(L_k / g_k)`
+against `σ(L_k) / g_k` is identical to gating in native units with σ evaluated at
+the frame's own observed level, so *native-units gating is automatically correct
+under an unknown gain, and it is what ships*. The gate is already immune. The
+**reconstruction** is not, because the frames still differ in level when their
+bands are summed. Apply the gain to signal and sigma together and the existing
+gating stays correct; adding a separate correction to the gate would introduce
+the error it was meant to prevent.
+
+**Correction 3 — I prescribed a falsified estimator.** The brief I sent said to
+fit the gain with *"a median over a large sample, not a mean over everything."*
+M28 measured precisely that to be wrong, and M18 §4f records it: a median over a
+subject-centred crop reads **4.28%** peak-to-peak where the plain mean over all
+pixels reads **1.02%**, against M24's independent full-frame **0.91%** — because
+subject contrast changes as focus sweeps, so a regional robust statistic absorbs
+*focus* signal into what it calls gain. Restricting to low-gradient pixels was
+the worst of four estimators, 84.98% against 11.05%. §4f's own comment on the
+earlier version of this mistake is exact: *"What was wrong was the instruction I
+left behind, which is exactly the kind of thing that gets built verbatim six
+weeks later."* The instruction was withdrawn within the hour, and the correct
+estimator is the plain arithmetic mean over all pixels.
+
+That correction also indicts this document's own instrument, since `framelevel.py`
+reported a **border median**. It was re-run against the prescribed estimator on
+the same frames:
+
+| subject | meanAll G | medBorder G | median / mean |
+| --- | ---: | ---: | ---: |
+| `flower-bud-alone-cpl` | **19.44%** | 14.52% | 0.75× |
+| `dry-erase-marker-head-cpl` | **45.19%** | 35.93% | 0.79× |
+| `couch-fibers-cpl` | **19.11%** | 17.47% | 0.91× |
+
+The median **under**-reported by 9 to 25%, the opposite of M28's inflation
+direction, so 19.1's figures were conservative rather than overstated. Under the
+correct estimator the channels still agree — 19.25 / 19.44 / 19.98 on
+`flower-bud-alone-cpl` — and every sequence is still strictly monotone. The drift
+is **2 to 5 times larger than the corpus's recorded 6.84% and 8.93%**.
+
+## 19.7 The cross-subject test, and the model it forces
+
+If drift causes the clamp, the subject that clips most should drift most. Three
+stacks, single-frame renders from one pinned binary, measured with the prescribed
+mean:
+
+| subject | clip%, camera-linear | drift, meanAll G |
+| --- | ---: | ---: |
+| `dry-erase-marker-head-cpl` | 1.29 | 45.19% |
+| `flower-bud-alone-cpl` | 1.40 | 19.44% |
+| `couch-fibers-cpl` | **0.0000** | **19.11%** |
+
+**The prediction fails on the control, and that is the useful part.**
+`couch-fibers-cpl` carries essentially the same drift as `flower-bud-alone-cpl`
+— 19.11% against 19.44% — and clips exactly zero pixels out of 33 million. Drift
+alone does not predict clipping, and the hypothesis as stated in 19.3 is
+incomplete.
+
+What fits all six subjects is two factors, not one:
+
+1. **Photometric drift between the frames elected in different bands** supplies a
+   broad, low-frequency excursion.
+2. **A dark local pedestal** lets that excursion cross zero.
+
+`couch-fibers-cpl` is a mid-tone fibre tangle: factor 1 at 19% without factor 2,
+so nothing clips. `dry-erase-marker-head-cpl` has 45% drift *and* black ink. And
+the model predicts the `bee-1-cpl` map exactly — drift is global, yet clipping
+appears **only on the dark legs, antennae and wing edge** while the bright fur
+stays clean, which is what 18.8's zero map shows. It is also 18.8's risk-map
+result restated: darkness is a cliff, with luminance quintiles 2 through 4
+reading *exactly* 0.000.
+
+This is the same two-factor shape proposed in 18.8 with the **first factor
+replaced**. That section argued factor 1 was occluding edges; the gradient test
+refuted it. It is photometric drift. The second factor was right the first time.
+
+The control has also acquired teeth. `couch-fibers-cpl` is no longer merely a
+subject that happens not to clip — it is a stack carrying **19% photometric
+drift** that must remain at exactly 0 clipped pixels through a change that
+visibly alters its levels. A normalisation that moves it is touching something
+other than this defect.
+
