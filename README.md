@@ -170,12 +170,31 @@ pass rate.
 >
 > **The gap has since been rendered and looked at, and it is not small.** Both
 > gates of `109MSDCF`, same pinned binary, same source, nothing else changed:
-> **97.359% of samples differ**, peak difference **21.1% of full scale**, rms
-> **0.41%**. Taking the 256-px block where they disagree most (x=3056, y=3888),
+> **97.359% of samples differ**, peak difference ~~21.1% of full scale~~ **1.386%**,
+> rms ~~0.41%~~ **0.0672%**.
+>
+> > **The two struck magnitudes were measured through a tone curve and are void.**
+> > M126 reproduced them *exactly* and then read the artefacts' own
+> > `ImageDescription`, which says `sRGB … For viewing`. In linear the same
+> > comparison is **15x and 6x smaller**. The linear figures are the ones above.
+> > This project's own standing rule is *measure nothing on `--srgb`*, and I wrote
+> > that rule; the encoding is stamped in the file, so the check was one field
+> > away the whole time.
+> >
+> > The distinction worth keeping, because it is not "sRGB is always wrong": a
+> > **magnitude** stated as *% of full scale* is a physical claim and must be
+> > linear. A **judgement about how something looks** is a perceptual claim, and
+> > sRGB is the correct domain for it — you view images in sRGB. So the crop
+> > verdict below survives unchanged while the percentages did not, and the two
+> > were never the same kind of statement.
+>
+> Taking the 256-px block where they disagree most (x=3056, y=3888),
 > cropping that same box from both at 800x800 with no resampling, and opening it
 > at 1:1: **gate 4.5 is visibly cleaner, and the shipped default is visibly
 > grainier** — plain grain across flat fields, no pixel-peeping required. Within
-> that crop **16.0% of samples differ by more than 0.5% of full scale**. Two
+> that crop **16.0% of samples differ by more than 0.5% of full scale** (this
+> figure shares the sRGB provenance struck above; read it as *many samples move
+> visibly*, not as a calibrated magnitude). Two
 > instruments that share no code now order the two gates the same way. So the
 > gallery **flatters the shipping product**, which is the direction that matters:
 > it is the one that makes this survey read better than the binary a reader runs.
@@ -187,6 +206,21 @@ pass rate.
 > deficit in *Measured against other stackers* below, smoothing our way out of a
 > sharpness problem would register as a win on every noise metric this project
 > owns, which is exactly why the noise numbers cannot decide this.
+>
+> > **That caution has now been answered, by an instrument that was not looking
+> > for flat regions.** On `bee-3-cpl` — 299 frames, the deepest stack in the
+> > corpus — gate 4.5 takes flat-field high-pass rms from **144.37 DN to 14.53 DN
+> > (9.9x)** while the **compound eye is indistinguishable** between the two
+> > gates, and it does it in **228.1 s against 293.5 s**. Noise down tenfold,
+> > detail unmoved, and faster. That is the measurement the paragraph above said
+> > was missing: the resolution question asked on the structure that carries the
+> > resolution, not on the flat field that selected the crop.
+> >
+> > It also lands on the axis the whole worry was about. A wider gate admits more
+> > frames, and on a **deep** stack more frames means reaching further from
+> > focus — so if 4.5 were going to buy quiet with mush, 299 frames of *bee-3-cpl*
+> > is where it would show. It did not. The remaining untested axis is **coarse
+> > step**, which is a different risk from depth and is not covered by this.
 >
 > **So the split was measured, with a control — and the first attempt at it was
 > wrong, so read the retraction before the table.**
