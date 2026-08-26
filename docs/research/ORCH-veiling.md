@@ -7436,3 +7436,193 @@ the measurement rather than writing it alongside* — and when the two are
 separated by even eight lines of correct reasoning, as `triage.py`'s FLAT-only
 policy was from the all-sites average that violated it, they will drift.
 
+## 63. The night the measurements and the product were found to be different products
+
+Two facts sat next to each other tonight and looked like a contradiction. This
+corpus has sixty-two sections of measurement discipline, plants that express the
+failure they test for, placebos, pre-registration, and a standing refusal to let
+an author verify their own work. And the owner's verdict on the output was
+*horrible*.
+
+They are not in tension. They have one cause, and I found it four separate times
+in one night, each time by accident while chasing something else.
+
+**The configuration that gets measured and the configuration that ships have
+drifted apart.** Not once, as an oversight. Four times, in four independent
+subsystems, by four different mechanisms, with nothing in the product's own
+output that would tell anyone.
+
+### 63.1 The verdict: "state of the art" is not defensible
+
+V-HEADTOHEAD ran strehl against the prior `focus-stack` fork and against Zerene
+PMax. Grade removed, 626 and 576 ROIs, tight intervals, both comparators
+agreeing in direction.
+
+- **We lose 17–23% to the fork and 16–27% to Zerene PMax at 3–5 px features.**
+- We win decisively elsewhere: high-pass rms **0.5025% → 0.1125%, a 4.5×
+  reduction**, holding at ≥2.4× under worst-case grade correction; the fork
+  clips **32% of the frame** where strehl clips **4e-6**; strehl is lower on
+  **all four** rim measures.
+
+What makes it credible is what they tried and failed to do with it. They went
+looking for a way to explain the deficit away and could not: it is not capture
+sharpening (`crs:Sharpness="0"` in both XMPs), and it is not a grade artifact —
+removing the grade properly is what *produced* the numbers, and the naive
+comparison would have handed the win to the wrong arm. They also disclosed
+**three of their own instruments failing controls** and **two of their own wrong
+numbers**, self-corrected.
+
+I retracted the SOTA claim in the README the same night and published the band
+table with the losses stated as plainly as the wins, plus three caveats bounding
+even the *competitive* claim. A project that would rather be right than look
+right has to be willing to print the number that costs it the headline.
+
+### 63.2 The gallery describes a gate the product does not use
+
+Chasing an unrelated BUILD-SPEED aside, I found that `SHIP-V1\bee-3-cpl.tiff`
+reproduces byte-for-byte under `--pyramid-gate 4.5`, and **not** under the
+compiled default of 2.0.
+
+`SHIP-V1\` had preserved a log and no script. There was no argv to read, so the
+provenance had to be *measured*: I rendered a second subject, `109MSDCF`, two
+ways through the pinned binary and hashed both.
+
+```
+SHIP-V1\109MSDCF.tiff  322C6C4D135C0E9B3123B55FAF7FFE67C537D369C344ADA7463D439F9CEB0590
+gate 4.5               322C6C4D...0590   identical
+compiled default 2.0   7AACAF79...30CD   different
+```
+
+Two subjects, rendered by two different agents at two bracket depths, both land
+on 4.5. **The entire 26-card print survey — my own headline quality result —
+describes a configuration the product does not ship.**
+
+I wrote the caveat blanket rather than narrowed. The detail-ROI ratio of 0.9945
+suggests the findings probably do transfer to gate 2.0, but *probably* is not a
+measurement, and the conservative direction is the one that does not need to be
+retracted later.
+
+### 63.3 A finished restoration stage nobody switched on
+
+`STREHL_RESTORE` resolves through `gain_cap_from_env()`, which returns `None`
+when the variable is unset. The call is guarded by that `Option` at **both**
+sites — `run_estimator` and, decisively, **`run_pyramid`**. `pyramid` is the
+default backend.
+
+So restore is not a missing feature. It is a **finished stage that nobody
+switched on**, on the path that ships. Its own doc comment says it "exists to
+carry a measured trade curve to whoever sets the default."
+
+Nobody set the default.
+
+The default banner does not list restore under `not applied`. It does not
+mention it at all — so no user, and no agent reading a banner, would learn the
+stage exists.
+
+This is also the reading that changes BUILD-SHARP's §24, which measured restore
+**inert** when enabled. Alone that says the algorithm is weak. Next to "and it
+is off by default on the shipping backend", a second reading opens that has to
+be eliminated first: **a restoration stage that changes nothing when you switch
+it on is more likely unwired than truly null.** I routed a potency arm — set an
+absurd gain cap, hash against the unset render, and if the hashes match the
+stage is not reaching pixels and the §24 null is an artifact of the harness.
+
+### 63.4 The correction is absent exactly where the defect was measured
+
+`STREHL_VEIL` defaults to `false` (`DEFAULT_VEIL_ON`), and its sole call site is
+in `run_estimator`. It is therefore absent on the shipping backend.
+
+Set that against BUILD-VEILMAP, which measured the veil signature as **localised,
+not pervasive**: bimodality **0.324 on `bee-1-cpl`** and **0.199 on `bee-3-cpl`**
+against a **corpus median of 0.007**. Their drift null passed four independent
+ways, and their potency arm passed at 48/96/192 px and *failed* at 384 — which
+they used to bound block size from above rather than quietly drop.
+
+So the veil correction is switched off hardest precisely on the subjects where
+the veil was measured to concentrate. `STREHL_FIX_HALO` is the same shape:
+`Err(_) => false`, estimator-only, and the pyramid's own report lists `halo
+correction` under `not applied`.
+
+### 63.5 The shape
+
+Four subsystems. Four mechanisms — a survey rendered at a non-default flag, a
+stage guarded behind an unset `Option`, a constant defaulting to `false`, a
+whole backend that the tool's own instrumentation refuses to measure (§62.1).
+No two share a cause. Each, taken alone, is a defensible engineering decision
+made by someone with good reasons.
+
+Taken together they are one defect: **the product measured and the product
+shipped are different products, and nothing in the product's output says so.**
+
+This is the answer to the owner's complaint, and it is worse than a bad
+algorithm. A bad algorithm shows up in the next measurement. This does not —
+because the measurement is taken on the good configuration, and the render is
+taken on the shipped one, and both are correct.
+
+It also reframes the SOTA deficit in §63.1. We do not yet know whether strehl
+loses 17–27% at fine detail, or whether *the default configuration of strehl*
+loses 17–27% at fine detail while a configuration we have already built and
+already measured does not. Those are very different findings and the corpus
+cannot currently distinguish them.
+
+### 63.6 The instrument, and its commissioning
+
+`scripts/check-defaults.py` is the ratchet against exactly this. Tonight it went
+from **7 undeclared switches** to **0**, its partition sums to **33 = the number
+of switches found in `crates/`**, and every one of the six quality switches whose
+default nobody had checked now carries `verified="code"` against the resolving
+expression, read at source rather than inferred from a name:
+
+| switch | resolving expression | default |
+| --- | --- | --- |
+| `STREHL_EDGE_AWARE` | unset falls in the **first** match arm | `EdgeArm::Acuity` — ON |
+| `STREHL_EDGE_TAU` | derives tau from the guide field | per image, no constant |
+| `STREHL_EDGE_CONF` | `env_num(..., 2.0)`, `Err(_) => default` | 2.0 |
+| `STREHL_EDGE_FEATHER` | `Err(_) => FEATHER` | the constant |
+| `STREHL_FIX_HALO` | `Err(_) => false` | off |
+| `STREHL_WINDOW_RADIUS` | `Err(_) => WINDOW_RADIUS` | 13 |
+
+Two of those readings corrected the declaration rather than confirming it.
+`EDGE_AWARE` was filed as "on" when what is true is stronger — unset lands in
+the first arm, so it is *positively* Acuity, not merely not-off. `EDGE_TAU` was
+filed as `built-in`, which reads as a fixed constant; it is derived from each
+image's own guide field and there is no constant to quote.
+
+The gate that reports unexamined quality defaults did not fire. **That is only
+good news if the gate can fire**, so I commissioned it: demote
+`STREHL_WINDOW_RADIUS` back to `verified="assumed"` on an anchored, unique
+multi-line string that hard-errors if it does not land, and require RED.
+
+```
+ARM A (clean)                                    gate fired: False
+ARM B (one switch demoted to assumed)            gate fired: True, names it
+                                                 code 13→12, assumed 15→16
+restored, sha256 0d44c63e, match=True
+```
+
+The original was pinned to `$env:TEMP` and restored in a `finally` block — never
+`git checkout --`, which reverts to HEAD and has already destroyed uncommitted
+work on this machine.
+
+The script is now **RED, deliberately, for exactly one reason**:
+`FAIL: 1 quality switch(es) default to OFF` → `STREHL_RESTORE`. That is the
+finding, not a bug in the checker, and I wrote into the registry `note` that
+nobody may flip it on to clear the check.
+
+### 63.7 The one sentence
+
+Section 62 found four numbers whose arithmetic was right and whose labels were
+wrong. This section found four **configurations** that were measured right and
+shipped wrong, which is the same failure moved one level out: in both cases the
+work was correct and the thing it was correct *about* was not the thing anyone
+would use.
+
+So the guard has to be the same shape too. Not "measure more" — this project's
+problem has never been a shortage of measurement. It is: **every quality claim
+must name the configuration it was measured on, and something automated must
+fail when that configuration is not the one the binary runs by default.**
+
+A measurement that does not name its configuration is not a measurement of the
+product. It is a measurement of a product.
+
+
