@@ -1,0 +1,31 @@
+========================================================================
+COMMISSION -- common-selector comparison
+========================================================================
+  PASS  planted 2.00x recovered on common selector: 1.9892
+  PASS  NULL two draws of the same field: 0.9939
+  INFO  per-arm selection 0.9951 vs common selector 0.9926 (spread 0.0025)
+  FAIL  planted defect visible: full-res ranking biases a structureless reference to 0.9949 of its true sigma (must be <0.95)
+  PASS  coarse ranking does not: 0.9970 (must be 1.00 +/- 0.05)
+  --> FAILURES
+
+========================================================================
+selector: lin\bee-1-cpl-FRAME149.tiff
+  arm FRAME        lin\bee-1-cpl-FRAME149.tiff
+  arm BEFORE       lin\bee-1-cpl-before.tiff
+  arm AFTER        lin\bee-1-cpl-after.tiff
+========================================================================
+        signal bin  ntile  model 1f      FRAME     BEFORE      AFTER
+      300-   1000      3      28.8     28.041    487.823    492.769
+     1000-   2000      7      39.3     29.745    573.136    600.057
+     2000-   4000     15      52.0     38.970    892.983    973.270
+     4000-   8000     27      70.1     55.790    776.453    849.652
+     8000-  16000     50     109.4     86.293    319.386    401.295
+    16000-  32000     32     131.7    105.473     17.418    166.895
+
+  ratios to the first arm listed, on the SAME tiles:
+      300-   1000 FRAME=  1.000 BEFORE= 17.397 AFTER= 17.573
+     1000-   2000 FRAME=  1.000 BEFORE= 19.268 AFTER= 20.173
+     2000-   4000 FRAME=  1.000 BEFORE= 22.915 AFTER= 24.975
+     4000-   8000 FRAME=  1.000 BEFORE= 13.917 AFTER= 15.230
+     8000-  16000 FRAME=  1.000 BEFORE=  3.701 AFTER=  4.650
+    16000-  32000 FRAME=  1.000 BEFORE=  0.165 AFTER=  1.582

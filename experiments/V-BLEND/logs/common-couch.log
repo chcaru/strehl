@@ -1,0 +1,23 @@
+========================================================================
+COMMISSION -- common-selector comparison
+========================================================================
+  PASS  planted 2.00x recovered on common selector: 1.9892
+  PASS  NULL two draws of the same field: 0.9939
+  INFO  per-arm selection 0.9951 vs common selector 0.9926 (spread 0.0025)
+  PASS  concentrated excess hides from self-selection: self   99.39 vs neutral  385.76 (self must be < 0.7x neutral)
+  PASS  and a clean arm is insensitive to which selector is used (0.9946)
+  --> ALL PASS
+
+========================================================================
+selector: lin\couch-fibers-cpl-FRAME.tiff
+  arm FRAME        lin\couch-fibers-cpl-FRAME.tiff
+  arm BEFORE       lin\couch-fibers-cpl-before.tiff
+  arm AFTER        lin\couch-fibers-cpl-after.tiff
+========================================================================
+        signal bin  ntile  model 1f      FRAME     BEFORE      AFTER
+     4000-   8000     62      81.4    125.603    679.275    724.268
+     8000-  16000     70      93.3    146.471    622.392    708.417
+
+  ratios to the first arm listed, on the SAME tiles:
+     4000-   8000 FRAME=  1.000 BEFORE=  5.408 AFTER=  5.766
+     8000-  16000 FRAME=  1.000 BEFORE=  4.249 AFTER=  4.837

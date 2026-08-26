@@ -1,0 +1,19 @@
+==============================================================================
+Does one fixed level explain every subject's clamp fraction?
+==============================================================================
+  subject                        clamp %  implied T (DN)  BEFORE p1  BEFORE min
+  flower-bud-alone-cpl            1.0623           561.0      556.0           0
+  dry-erase-marker-head-cpl       2.2675           907.0      808.0           0
+  foam                            1.0495           377.0      372.0           0
+  bee-1-cpl                       0.1224           474.0      605.0           0
+  couch-fibers-cpl                0.0000             nan     3326.0         562
+
+  and the converse -- what each subject's clamp fraction WOULD be if the
+  level were the one fitted on flower-bud:
+  fitted on flower-bud-alone-cpl: T = 561.0 DN
+  subject                       predicted %   observed %    ratio
+  flower-bud-alone-cpl               1.0577       1.0623     1.00
+  dry-erase-marker-head-cpl          0.0020       2.2675  1107.06
+  foam                               5.2308       1.0495     0.20
+  bee-1-cpl                          0.6241       0.1224     0.20
+  couch-fibers-cpl                   0.0000       0.0000      nan

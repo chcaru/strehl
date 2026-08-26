@@ -1,0 +1,30 @@
+========================================================================
+COMMISSION -- common-selector comparison
+========================================================================
+  PASS  planted 2.00x recovered on common selector: 1.9892
+  PASS  NULL two draws of the same field: 0.9939
+  INFO  per-arm selection 0.9951 vs common selector 0.9926 (spread 0.0025)
+  FAIL  planted defect visible: full-res ranking biases a structureless reference to 0.9949 of its true sigma (must be <0.95)
+  PASS  coarse ranking does not: 0.9970 (must be 1.00 +/- 0.05)
+  --> FAILURES
+
+========================================================================
+selector: lin\flower-bud-alone-cpl-FRAME102.tiff
+  arm FRAME        lin\flower-bud-alone-cpl-FRAME102.tiff
+  arm BEFORE       lin\flower-bud-alone-cpl-before.tiff
+  arm AFTER        lin\flower-bud-alone-cpl-after.tiff
+  arm HEADFIX      lin\flower-bud-alone-cpl-after-275fbd1.tiff
+========================================================================
+        signal bin  ntile  model 1f      FRAME     BEFORE      AFTER    HEADFIX
+     1000-   2000     14      38.8     29.239    113.964    119.637    115.094
+     2000-   4000      9      47.7     34.833    309.872    323.052    267.042
+     4000-   8000      3      77.0     67.000   1078.613   1112.297   1069.676
+     8000-  16000      4     124.0    101.404     43.209    103.832    103.833
+    16000-  32000    102     134.7    106.443     44.558    128.783    128.765
+
+  ratios to the first arm listed, on the SAME tiles:
+     1000-   2000 FRAME=  1.000 BEFORE=  3.898 AFTER=  4.092 HEADFIX=  3.936
+     2000-   4000 FRAME=  1.000 BEFORE=  8.896 AFTER=  9.274 HEADFIX=  7.666
+     4000-   8000 FRAME=  1.000 BEFORE= 16.099 AFTER= 16.601 HEADFIX= 15.965
+     8000-  16000 FRAME=  1.000 BEFORE=  0.426 AFTER=  1.024 HEADFIX=  1.024
+    16000-  32000 FRAME=  1.000 BEFORE=  0.419 AFTER=  1.210 HEADFIX=  1.210

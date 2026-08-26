@@ -1,0 +1,22 @@
+
+--- couch-fibers-cpl-after.tiff   7040x4688  n=33,003,520 px/channel ---
+  R: count@0 =          0  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0000  256:0.0000  512:0.0000  1024:0.0361
+     per-level counts  : 0:0  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:0
+     mean per-level density over levels 1..256 = 0.000000% per level
+     SPIKE RATIO p0/density = infx
+  G: count@0 =          0  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0000  256:0.0000  512:0.0000  1024:0.0414
+     per-level counts  : 0:0  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:0
+     mean per-level density over levels 1..256 = 0.000000% per level
+     SPIKE RATIO p0/density = infx
+  B: count@0 =          0  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0000  256:0.0000  512:0.0000  1024:0.0128
+     per-level counts  : 0:0  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:0
+     mean per-level density over levels 1..256 = 0.000000% per level
+     SPIKE RATIO p0/density = infx
+
+  VERDICT for couch-fibers-cpl-after.tiff:
+     R: no meaningful mass at zero (0.0000%)
+     G: no meaningful mass at zero (0.0000%)
+     B: no meaningful mass at zero (0.0000%)

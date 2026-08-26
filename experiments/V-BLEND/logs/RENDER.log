@@ -13,3 +13,7 @@ DONE foam
 BEFORE bee-1-cpl rc=0 573s
 AFTER  bee-1-cpl rc=0 289s
 DONE bee-1-cpl
+BEFORE couch-fibers-cpl rc=0 535s
+AFTER  couch-fibers-cpl rc=0 376s
+DONE couch-fibers-cpl
+BEFORE flower-inner-edge-cpl rc=0 347s
