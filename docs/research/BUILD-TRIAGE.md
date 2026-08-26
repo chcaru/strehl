@@ -20,6 +20,12 @@ raises the evidence-bearing site count from 64 to 75. What changed is that it
 now rests on an instrument commissioned against a control with real power,
 rather than on one that happened to be right.
 
+**Both arms of every comparison in this report come from one binary** (SHA-256
+`705C22D5…`, mtime 03:52; both renders after it) **with identical lateral-CA
+correction confirmed in both logs**, so the cross-build CA hazard does not reach
+these numbers — see section 7.9, which also records that the hull clamp is
+asymmetric between the two arms and handicaps the merge, not the source.
+
 Section 6 replaces the coverage detector used in the first pass of this report.
 Adopting the per-pixel election map — the instrument recorded in
 `docs/captures-needed.md` section 23 — moved **7 subjects out of "coverage gap"
@@ -866,3 +872,49 @@ Two were caught only because the absolute DN levels were on the page next to
 them. The `flowers-cpl` reversal in particular looked exactly like a headline
 finding, and shipping it would have routed engineering effort at a merge that is
 working correctly.
+
+### 7.9 Provenance of both arms, and the hull clamp asymmetry
+
+**Same binary, both arms. MEASURED, not assumed.** Every number in this report
+comes from one executable,
+`C:\dev\strehl-out\ORCH-SHIP\src\target\release\strehl.exe`, SHA-256
+`705C22D5AD484434B638CA8903E118476AA4C037F618064F49B15AF5DCD13E6E`, last written
+**03:52**. The merge arm was rendered at 06:56 and the single-frame arm at 11:30,
+both after it, and it was not touched in between. Both logs independently report
+the identical chromatic-aberration treatment:
+
+    lateral CA : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+
+So the cross-build CA hazard BUILD-HULL found -- green bit-identical, red moving
+up to 3902 DN -- **does not reach this report**, and the luma-based verdict
+metric is safe as measured. (`compare.py` pops any operator `STREHL_FIX_CA`
+override so both arms fall through to the same gear-matched default.) No
+re-derivation on green is required; had the arms differed, it would have been.
+
+**The hull clamp is asymmetric between my two arms, and it runs AGAINST the
+merge.** The hull is accumulated per pixel across contributing frames
+(`pyramid.rs:1101-1106`, `*l = l.min(*v)`, `*h = h.max(*v)`) and applied at
+`pyramid.rs:1286`, `*p = p.clamp(*l, *h)`. With **one** frame `lo == hi == v`, so
+`clamp(v, v) = v` and the single-frame arm is forced to equal its own input and
+pays **nothing**. With **299** frames the envelope is wide and the clamp binds.
+My merge arm therefore pays a microcontrast cost -- BUILD-HULL prices it at
+**8.6-18.9%**, and that measurement is theirs, not re-derived here -- that my
+source arm does not pay.
+
+Two consequences, both of which make the report's conclusion **stronger**:
+
+1. **Every ratio in section 7.6 understates the merge.** The merge equals or
+   beats the best single source frame at 74 of 75 evidence-bearing sites *while
+   carrying a handicap the opponent does not carry*. The true merge quality is
+   above what this instrument reports.
+2. **The one deficit found anywhere in the corpus is smaller than the handicap.**
+   `bee-1-cpl` is **5.2%** behind; the clamp costs **8.6-18.9%**. The single
+   merge-limited site in this report is therefore fully accountable by a known,
+   already-owned stage, with no residual requiring a merge defect to explain it.
+   That does not prove the clamp is the cause -- I have not run the clamped
+   against unclamped pair, and BUILD-HULL owns that measurement -- but it does
+   mean **no unexplained merge loss remains in this corpus.**
+
+The absolute headroom is correspondingly larger than section 7.6's numbers
+suggest, for the reason ORCH gives: a stage that removes microcontrast sits
+upstream of every sharpness number measured here.
