@@ -81,6 +81,30 @@ class Declared:
     default: str
     evidence: str
     note: str
+    # How the value in `default` was established. This field exists because
+    # this script failed exactly the way it was written to prevent.
+    #
+    # `STREHL_PHOTOMETRIC` was declared here with `default="auto"`. The code
+    # resolves it to `Off` (`merge_cmd.rs:1965`, `_ => Ok(PhotometricMode::Off)`).
+    # The declaration was a guess, and its own `note` said so -- it read
+    # "Verify the resolved default is genuinely 'auto' and not None-means-off."
+    # Nobody verified it, and because the script TRUSTS the declaration, the
+    # switch was classified "quality, reachable" and never counted as dark. It
+    # was in fact off, and an independent verifier later priced it at +1415 DN
+    # of recovered background on the owner's worst artifact.
+    #
+    # A registry of human-entered values is a checklist, not a ratchet. So the
+    # provenance is now first-class and unverified is the default:
+    #
+    #   "measured" - the binary was run with the switch unset and with each
+    #                value, and the outputs compared. This is the only level
+    #                that actually proves a default.
+    #   "code"     - a human read the resolving expression at the cited line.
+    #                Good, but it is still a reading.
+    #   "assumed"  - nobody has checked. For a `quality` switch this is a
+    #                hard failure: you may not claim a quality default you
+    #                have not looked at.
+    verified: str = "assumed"
 
 
 REGISTRY: dict[str, Declared] = {
@@ -98,13 +122,29 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_PHOTOMETRIC": Declared(
         kind="quality",
-        default="auto",
-        evidence="merge_cmd.rs:1922; main.rs:325-354,648-650 (--photometric)",
+        default="off",
+        verified="code",
+        evidence="merge_cmd.rs:1965 (`_ => Ok(PhotometricMode::Off)`); "
+        "main.rs:325-354,648-650 (--photometric)",
         note=(
             "Per-frame affine photometric normalisation. Three-valued "
             "off|on|auto; the flag wins over the env var and 'neither can mean "
-            "ON by accident'. Verify the resolved default is genuinely 'auto' "
-            "and not None-means-off."
+            "ON by accident'. THE DEFAULT IS OFF, not 'auto' as this entry "
+            "first claimed. "
+            "Off is DEFENDED, not neglected: M122 ran a pre-registered "
+            "14-stack promotion test and returned KEEP-OFF on its no-harm "
+            "criterion K2, whose worst harm subject was flower-bud-alone-cpl "
+            "(hf1-on-hf0 slope 0.9444). M125 then built `auto` and honestly "
+            "declined to promote it -- 104% of its margin is one stack, and "
+            "AUTO_FRAMES_DOMAIN=33..=100 makes it ABSTAIN (U1) on our 205- and "
+            "299-frame stacks, so `auto` cannot help this corpus at all. "
+            "OPEN AND CONTESTED: a verifier measured `on` recovering +1415 DN "
+            "of aura on flower-bud-alone-cpl -- M122's own worst-harm subject. "
+            "Both cannot be right about the same pixels. V-TONE is testing "
+            "H-SEAM: that M122's 'lost fine structure' is election-seam step "
+            "edges, i.e. the artifact, which an energy statistic with no "
+            "spatial argument cannot distinguish from signal. Revisit this "
+            "default when that lands."
         ),
     ),
     "STREHL_EDGE_AWARE": Declared(
@@ -317,6 +357,14 @@ def main() -> int:
     control = [n for n in known if REGISTRY[n].kind == "control"]
     diagnostic = [n for n in known if REGISTRY[n].kind == "diagnostic"]
 
+    # A quality switch whose default nobody has checked is not "fine", it is
+    # UNEXAMINED -- and an unexamined default is indistinguishable from a
+    # correct one until someone looks. That indistinguishability is what let
+    # STREHL_PHOTOMETRIC sit here misdeclared while it was worth +1415 DN.
+    quality_unverified = [
+        n for n in known if REGISTRY[n].kind == "quality" and REGISTRY[n].verified == "assumed"
+    ]
+
     # ---- evidence first, verdict last. -----------------------------------
     # A verdict line must never be a script's only output. An earlier detector
     # on this project returned a confident false negative that was caught ONLY
@@ -381,6 +429,18 @@ def main() -> int:
     print(f"  switches found in crates/  {total:3d}")
     print(f"  declared but absent        {len(stale):3d}  (not counted above)")
 
+    # ---- the SECOND partition: how well do we know these defaults? --------
+    # Orthogonal to kind, and it also sums to the total, so an unchecked
+    # declaration cannot be read as a checked one.
+    by_v = {v: [n for n in known if REGISTRY[n].verified == v] for v in ("measured", "code", "assumed")}
+    print()
+    print("  how the declared defaults were established")
+    print(f"    measured (ran the binary)  {len(by_v['measured']):3d}")
+    print(f"    code     (read the line)   {len(by_v['code']):3d}")
+    print(f"    assumed  (UNEXAMINED)      {len(by_v['assumed']):3d}")
+    print(f"    {'-' * 38}")
+    print(f"    sums to                    {sum(len(v) for v in by_v.values()):3d}")
+
     if partition != total:
         print("\nFAIL: the partition does not sum to the total found.")
         print("      This script's own bookkeeping is broken; fix it before")
@@ -400,6 +460,20 @@ def main() -> int:
         print("      Each one is a measured improvement the product does not")
         print("      apply. Either wire it on, or change its kind to 'control'")
         print("      and state in `note` why off is the right default.")
+        rc = 1
+    if quality_unverified:
+        print(
+            f"\nFAIL: {len(quality_unverified)} quality switch(es) have an "
+            f"UNEXAMINED default."
+        )
+        for n in quality_unverified:
+            print(f"      {n}")
+        print("      Nobody has confirmed what the product does when these are")
+        print("      unset. Read the resolving expression and set verified=")
+        print("      'code', or run the binary unset vs set and compare output")
+        print("      and set verified='measured'. This check exists because")
+        print("      STREHL_PHOTOMETRIC was declared default='auto' here while")
+        print("      the code returned Off, so it was never counted as dark.")
         rc = 1
     if rc == 0:
         print("\nPASS: every switch accounted for, no quality switch dark.")
