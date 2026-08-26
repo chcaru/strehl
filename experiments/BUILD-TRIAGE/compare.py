@@ -51,6 +51,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tri  # noqa: E402
 import focuscurve as FC  # noqa: E402
+import sitescan as SS  # noqa: E402
 
 EXE = r"C:\dev\strehl-out\ORCH-SHIP\src\target\release\strehl.exe"
 FRAMEDIR = os.path.join(tri.OUT, "frames")
@@ -92,6 +93,39 @@ def _rescaled_window(img: np.ndarray, k: float, cy: int, cx: int,
     return tri.catmull_rom_scale(img, k, (y0, x0, hh, ww)), y0, x0
 
 
+_EDGE_NOISE_C: float | None = None
+
+
+def edge_noise_c() -> float:
+    """What `tri.edge_slope` reports on PURE noise of 1 DN sigma, in DN/px.
+
+    An edge metric run on grain returns a number, and that number is not an
+    edge.  On `flowers-cpl` the best single frame carries 45.2 DN of pixel
+    noise against the merge's 6.7 DN -- the merge averages many frames, so it
+    is 6.7x quieter -- and the raw metric duly reported the frame at 99.6 DN/px
+    against the merge's 37.5, a "ratio 0.37, merge is 3x blurrier" verdict at a
+    site where BOTH crops are visibly blank sky with no edge anywhere in either.
+    The entire effect was the frame's grain.
+
+    So the noise-induced floor is calibrated here rather than assumed, and
+    checked for the linear scaling it must obey if it is to be subtracted in
+    quadrature.
+    """
+    global _EDGE_NOISE_C
+    if _EDGE_NOISE_C is None:
+        rng = np.random.default_rng(7717)
+        shape = (256, 256)
+        c1 = tri.edge_slope(rng.normal(4000.0, 1.0, shape))
+        c8 = tri.edge_slope(rng.normal(4000.0, 8.0, shape))
+        assert c1 > 0, "edge-noise calibration returned zero on pure noise"
+        assert abs(c8 / (8.0 * c1) - 1.0) < 0.05, (
+            f"edge_slope is not linear in noise sigma (1 DN -> {c1:.4f}, "
+            f"8 DN -> {c8:.4f}, expected {8 * c1:.4f}); quadrature subtraction "
+            "would be invalid")
+        _EDGE_NOISE_C = float(c1)
+    return _EDGE_NOISE_C
+
+
 def measure_site(r: dict, ka: float, tA: np.ndarray, nA: float,
                  tB: np.ndarray, nB: float) -> dict:
     """Attach NOISE-SUBTRACTED band metrics to a site, using per-arm templates.
@@ -116,6 +150,20 @@ def measure_site(r: dict, ka: float, tA: np.ndarray, nA: float,
         ecost = 1.0   # see the band-metric note above: no meaningful resample
     eb_corr = eb / ecost if ecost else float("nan")
     eratio = ea / eb_corr if eb_corr > 0 else float("nan")
+
+    # Subtract each arm's OWN noise-induced edge floor before comparing. The
+    # two arms differ in noise by up to 6.7x on this corpus, and that alone
+    # decides the ratio at any site where neither arm has real detail.
+    c = edge_noise_c()
+    na_dn, nb_dn = tri.pixel_noise(tile_a), tri.pixel_noise(tile_b)
+    fa, fb = c * na_dn, c * nb_dn
+    ea_sig = float(np.sqrt(max(ea * ea - fa * fa, 0.0)))
+    eb_sig = float(np.sqrt(max(eb * eb - fb * fb, 0.0)))
+    eb_sig_corr = eb_sig / ecost if ecost else float("nan")
+    # A site votes only if BOTH arms carry edges clear of their own grain.
+    # Where neither does, the honest reading is "no frame ever held detail
+    # here", which is a CAPTURE verdict, not a merge ratio.
+    measurable = bool(ea > 1.5 * fa and eb > 1.5 * fb)
     r["edge"] = {
         "merge_dnpx": round(ea, 3),
         "frame_dnpx": round(eb, 3),
@@ -126,6 +174,15 @@ def measure_site(r: dict, ka: float, tA: np.ndarray, nA: float,
         "blur_equiv_px": round(tri.blur_equiv(tile_a, eratio), 3),
         "noise_merge_dn": round(tri.pixel_noise(tile_a), 3),
         "noise_frame_dn": round(tri.pixel_noise(tile_b), 3),
+        # noise-subtracted arm, and the verdict that is actually allowed to vote
+        "edge_noise_floor_merge_dnpx": round(fa, 3),
+        "edge_noise_floor_frame_dnpx": round(fb, 3),
+        "sig_merge_dnpx": round(ea_sig, 3),
+        "sig_frame_dnpx": round(eb_sig, 3),
+        "sig_frame_corr_dnpx": round(eb_sig_corr, 3),
+        "sig_ratio": round(ea_sig / eb_sig_corr, 4) if eb_sig_corr > 0 else None,
+        "sig_deficit_dnpx": round(eb_sig_corr - ea_sig, 3),
+        "measurable": measurable,
     }
     nmg = r["edge"]["noise_merge_dn"]
     r["edge"]["noise_ratio"] = round(r["edge"]["noise_frame_dn"] / nmg, 3) if nmg else None
@@ -279,31 +336,62 @@ def refine_best_frame(subject: str, u: float, v: float, coarse: int,
     """
     d = os.path.join(tri.RAW, subject)
     files = sorted(f for f in os.listdir(d) if f.lower().endswith(".arw"))
-    lo = max(0, coarse - span)
-    hi = min(len(files) - 1, coarse + span)
-    cand = list(range(lo, hi + 1))
-    # Cap the work: if the neighbourhood is huge, walk it at a stride that
-    # still cannot step over a peak the coarse ladder already localised.
-    if len(cand) > 25:
-        cand = sorted(set(np.linspace(lo, hi, 25).round().astype(int).tolist()))
-
+    n = len(files)
     vals: dict[int, float] = {}
-    for k in cand:
-        g = FC.green_plane(os.path.join(d, files[k]))
-        h, w = g.shape
-        half = 119  # ~477 sensor px, matched to the 512 px compare window
-        cy = int(np.clip(v * h, half, h - half))
-        cx = int(np.clip(u * w, half, w - half))
-        t = g[cy - half:cy + half, cx - half:cx + half]
-        lap = (4 * t[1:-1, 1:-1] - t[:-2, 1:-1] - t[2:, 1:-1]
-               - t[1:-1, :-2] - t[1:-1, 2:])
-        vals[k] = float(np.sqrt((lap ** 2).mean()))
+
+    def scan(lo: int, hi: int) -> None:
+        cand = list(range(lo, hi + 1))
+        # Cap the work: if the neighbourhood is huge, walk it at a stride that
+        # still cannot step over a peak the coarse ladder already localised.
+        if len(cand) > 25:
+            cand = sorted(set(np.linspace(lo, hi, 25).round().astype(int).tolist()))
+        for k in cand:
+            if k in vals:
+                continue
+            g = FC.green_plane(os.path.join(d, files[k]))
+            h, w = g.shape
+            half = 119  # ~477 sensor px, matched to the 512 px compare window
+            cy = int(np.clip(v * h, half, h - half))
+            cx = int(np.clip(u * w, half, w - half))
+            t = g[cy - half:cy + half, cx - half:cx + half]
+            # Noise-subtracted, level-normalised. BOTH naive forms are biased,
+            # in OPPOSITE directions, and either will pick the wrong frame:
+            #   Laplacian RMS in DN   -> noise ~ sqrt(level), so it picks the
+            #                            BRIGHTEST frame. 13 of the 26 subjects
+            #                            brighten monotonically (up to +46.8%).
+            #                            This runs in the flattering direction
+            #                            this docstring warns about.
+            #   Laplacian RMS / level -> noise/level ~ 1/sqrt(level), so it
+            #                            picks the DARKEST frame, manufacturing
+            #                            false merge deficits at soft sites.
+            # Commissioned in sitescan.commission C16: on a featureless site
+            # under a pure +19.1% shot-noise ramp with no focus change at all,
+            # the DN form rises x1.092 and the ratio form falls x0.917 (exactly
+            # sqrt(1.191) and its reciprocal), while this form stays flat to
+            # x1.0006. Per-frame noise model, because the frames differ in level.
+            a_n, b_n = SS.noise_model(g)
+            vals[k] = SS.focus_score(t, a_n, b_n)
+
+    lo = max(0, coarse - span)
+    hi = min(n - 1, coarse + span)
+    scan(lo, hi)
+    # If the optimum sits on the edge of the scanned range, the range did not
+    # contain the peak. Widen and rescan rather than reporting a boundary hit
+    # as if it were a maximum.
+    for _ in range(2):
+        best = max(vals, key=vals.get)
+        if lo < best < hi or (lo == 0 and hi == n - 1):
+            break
+        w2 = max(8, (hi - lo))
+        lo, hi = max(0, lo - w2), min(n - 1, hi + w2)
+        scan(lo, hi)
     best = max(vals, key=vals.get)
     return {"best": int(best), "coarse": int(coarse),
             "moved_by": int(best - coarse),
-            "hf_best": round(vals[best], 3),
-            "hf_coarse": round(vals.get(coarse, float("nan")), 3),
-            "scanned": [int(k) for k in cand]}
+            "hf_best": round(vals[best], 6),
+            "hf_coarse": round(vals.get(coarse, float("nan")), 6),
+            "scan_lo": int(lo), "scan_hi": int(hi),
+            "scanned": sorted(int(k) for k in vals)}
 
 
 def main() -> int:
@@ -318,6 +406,14 @@ def main() -> int:
                          "percentile sites answer 'where is this image best and "
                          "worst', which is not the same question as 'what is "
                          "happening in the corner the owner is pointing at'.")
+    ap.add_argument("--at", action="append", default=[], metavar="LABEL:X,Y",
+                    help="force a comparison site centred on an exact MERGE "
+                         "pixel (X,Y), rather than on a focus-grid block. The "
+                         "block grid is ~1170 px coarse, which cannot separate "
+                         "two features 50 px apart; this can. The best-frame "
+                         "seed is taken from the nearest grid block and then "
+                         "refined over a widened span, because a site chosen by "
+                         "eye may sit at a different depth from its block.")
     ap.add_argument("--tag", default="",
                     help="suffix for the output JSON, so a regional run does "
                          "not overwrite the corpus sweep")
@@ -341,6 +437,29 @@ def main() -> int:
     # including the gather and the tone curve.  Ranks pick the site; stage 2
     # then measures the magnitude there in DN.
     nb_r, nb_c = foc["grid"]
+    # Correct every block's coarse best-frame seed for exposure drift before it
+    # is used to centre the dense refine. focuscurve.py ranks frames by plain
+    # Laplacian RMS in DN, which scales with level; dividing by the recorded
+    # per-sample level trace removes the global illumination ramp. The refine
+    # window is only a few frames wide, so a seed wrong by 174 frames -- which
+    # is what flowers-cpl's DETAIL site actually was -- cannot be recovered
+    # downstream. This is a first-order correction on the coarse SEED only; the
+    # measurement itself is the dense normalised scan in refine_best_frame.
+    _lv = np.array(foc.get("level_dn") or [], np.float64)
+    _seed_moved = 0
+    for b in foc["blocks"]:
+        c = np.array(b.get("curve") or [], np.float64)
+        if c.size and c.size == _lv.size and c.max() > 0:
+            a = int(np.argmax(c / _lv))
+            f = int(foc["sampled"][a])
+            if f != b["best_frame"]:
+                _seed_moved += 1
+            b["best_frame_raw"] = b["best_frame"]
+            b["best_frame"] = f
+    if _seed_moved:
+        print(f"  level-corrected coarse seed on {_seed_moved}/{len(foc['blocks'])} "
+              f"blocks (drift x{(_lv[-1] / max(_lv[0], 1e-9)):.3f})")
+
     mrg = np.zeros(len(foc["blocks"]), np.float64)
     src = np.zeros(len(foc["blocks"]), np.float64)
     pos = []
@@ -378,6 +497,35 @@ def main() -> int:
                 f"focus grid for {sub}")
         sites[label or f"BLOCK-{rr}-{cc}"] = hit[0]
 
+    # Exact-pixel sites.  Same hard-error discipline as --block: the requested
+    # centre must admit a full window, or the run stops rather than silently
+    # sliding the site somewhere else and reporting it under the asked-for name.
+    at_span = 0
+    for spec in args.at:
+        label, _, xy = spec.partition(":")
+        sx, _, sy = xy.partition(",")
+        px, py = int(sx), int(sy)
+        if not (N_WIN // 2 <= px < w - N_WIN // 2
+                and N_WIN // 2 <= py < h - N_WIN // 2):
+            raise SystemExit(
+                f"--at {spec}: ({px},{py}) cannot hold a {N_WIN} px window "
+                f"inside {w}x{h}")
+        u, v = px / w, py / h
+        near = min(foc["blocks"], key=lambda b: (b["u"] - u) ** 2 + (b["v"] - v) ** 2)
+        # Inherit the seed block's focus-curve fields so every downstream key
+        # exists, but flag them: they describe the ~1170 px block, NOT this
+        # exact site. The exact-site through-focus answer comes from
+        # sitescan.py, which probes these same coordinates directly.
+        b = dict(near)
+        b.update({"u": u, "v": v, "at_px": [px, py],
+                  "seed_from_block": [near["r"], near["c"]],
+                  "focus_fields_inherited_from_block": True})
+        cx = int(np.clip(px - N_WIN // 2, N_WIN, w - N_WIN - 1))
+        cy = int(np.clip(py - N_WIN // 2, N_WIN, h - N_WIN - 1))
+        pos.append((cy, cx, b))
+        sites[label or f"AT-{px}-{py}"] = len(pos) - 1
+        at_span = max(at_span, 8)
+
     res = {"subject": sub, "coverage_k_merge": ka, "coverage_k_frame": K_ONLY,
            "ref_frame": meta_a.get("ref_frame"), "n_frames": meta_a.get("n_frames"),
            "resampler": meta_a.get("resampler"), "colour": meta_a.get("colour"),
@@ -390,8 +538,13 @@ def main() -> int:
     step = max(1, foc["n_frames"] // max(1, len(foc["sampled"])))
     for label, bi in sites.items():
         cy, cx, b = pos[bi]
+        # A site chosen by eye can sit at a different depth from the block that
+        # seeded it, so widen the refine span for --at sites. A too-narrow span
+        # would return the seed unchanged and manufacture a merge "win" by
+        # comparing against a frame that was never the sharpest one there.
+        span = max(2, step) + (4 * max(2, step) if "at_px" in b else 0)
         ref = refine_best_frame(sub, b["u"], b["v"], b["best_frame"],
-                                foc["n_frames"], span=max(2, step), 
+                                foc["n_frames"], span=span,
                                 sampled=foc["sampled"])
         kf = ref["best"]
         tif, meta_b = render_frame(sub, kf)
@@ -471,7 +624,15 @@ def main() -> int:
               f"   deficit={e['deficit_dnpx']:+.1f} DN/px\n"
               f"      noise  merge={e['noise_merge_dn']:7.1f} frame="
               f"{e['noise_frame_dn']:7.1f} DN ({e['noise_ratio']}x)"
-              f"   [band metric would say {hi['ratio_corr']}]{flag}")
+              f"   [band metric would say {hi['ratio_corr']}]{flag}\n"
+              f"      SIG    merge={e['sig_merge_dnpx']:9.1f} frame="
+              f"{e['sig_frame_corr_dnpx']:9.1f} DN/px above grain floors "
+              f"({e['edge_noise_floor_merge_dnpx']:.0f}/"
+              f"{e['edge_noise_floor_frame_dnpx']:.0f})"
+              f"   sig_ratio={e['sig_ratio']}"
+              + ("" if e["measurable"] else
+                 "   NOT MEASURABLE: neither arm carries edges clear of its "
+                 "own grain -- no frame held detail here (CAPTURE, not merge)"))
 
     out = os.path.join(tri.OUT, "compare", sub + args.tag + ".json")
     os.makedirs(os.path.dirname(out), exist_ok=True)

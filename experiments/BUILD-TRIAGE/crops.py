@@ -58,11 +58,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("subject")
     ap.add_argument("--n", type=int, default=512)
+    ap.add_argument("--tag", default="",
+                    help="render a tagged compare run (e.g. a regional or "
+                         "control run) instead of the corpus sweep")
     args = ap.parse_args()
     sub = args.subject
     n = args.n
 
-    with open(os.path.join(tri.OUT, "compare", sub + ".json"), encoding="utf-8") as fh:
+    with open(os.path.join(tri.OUT, "compare", sub + args.tag + ".json"),
+              encoding="utf-8") as fh:
         cmp_ = json.load(fh)
     ka = cmp_["coverage_k_merge"]
     rgb_a = tri.load16(os.path.join(tri.LIN, sub + ".tiff"))
@@ -142,7 +146,7 @@ def main() -> int:
                font=f13, fill=(255, 255, 255))
 
     os.makedirs(os.path.join(tri.OUT, "crops"), exist_ok=True)
-    op = os.path.join(tri.OUT, "crops", sub + ".jpg")
+    op = os.path.join(tri.OUT, "crops", sub + args.tag + ".jpg")
     sheet.save(op, quality=95, subsampling=0)
     print(f"{sub}: -> {op}  ({sheet.size[0]}x{sheet.size[1]})")
     return 0

@@ -1,11 +1,24 @@
 # BUILD-TRIAGE: which subjects are the merge's fault, and which are the camera's
 
 **Status:** complete. 26 of 26 subjects classified; instrument commissioned
-(C1-C8, E1-E5, C9-C11). **Headline: the merge is not losing detail on any
-subject. `MERGE-LIMITED = 0` over 64 evidence-bearing sites; the worst deficit
-anywhere is +462.6 DN/px (+5.2%, 0.49 px equivalent) on `bee-1-cpl`, below the
-0.80 px threshold. 19 of 26 are GOOD; the 7 that are not are capture-limited,
-and only 3 of those have a focus problem at all.** See section 4.
+(C1-C8, E1-E5, C9-C11, **C12-C17**). **Headline: the merge is not losing detail
+on any subject. Over 75 evidence-bearing sites the merge is behind the best
+corrected source frame at exactly one site, on one subject, by 5.2%
+(+464.3 DN/px, 0.49 px equivalent, on `bee-1-cpl`) -- below the 0.80 px
+threshold and not visible at 1:1. 19 of 26 are GOOD; the 7 that are not are
+capture-limited, and only 3 of those have a focus problem at all.** See section
+4 for the classification and **section 7 for the corrected arithmetic**.
+
+**Section 7 supersedes the merge-loss arithmetic in section 4.1 and the
+`flowers-cpl` mechanism in sections 3 and 4.2.** The best-frame picker was found
+to be biased -- twice, in opposite directions, depending on whether it was
+normalised by level -- and the edge metric was found to be reading grain as
+detail at empty sites. All three defects were fixed and the corpus re-measured.
+The headline is unchanged in substance: the corrected estimator independently
+reproduces the `bee-1-cpl` deficit to within 0.4% (+464.3 vs +462.6 DN/px) and
+raises the evidence-bearing site count from 64 to 75. What changed is that it
+now rests on an instrument commissioned against a control with real power,
+rather than on one that happened to be right.
 
 Section 6 replaces the coverage detector used in the first pass of this report.
 Adopting the per-pixel election map — the instrument recorded in
@@ -671,3 +684,185 @@ and nothing more. Dimensions are now carried per row in section 3 and on every
 tile of the contact sheet.
 The RAW stacks under `D:\personal\macro\` were opened read-only and never
 written.
+
+---
+
+## 7. The estimator was biased twice, in opposite directions, and fixing it moved the headline
+
+**Status of this section: MEASURED.** It supersedes the merge-loss arithmetic in
+S4.1 and the `flowers-cpl` mechanism in S3/S4.2. Everything here was re-measured
+with the corrected instrument after the biases below were found.
+
+### 7.1 Two mirror-image biases, both fatal, both invisible in a ratio
+
+The best-frame picker decides which single source frame the merge is compared
+against. Get it wrong and the comparison is meaningless in a direction that
+depends on *how* you got it wrong:
+
+| estimator | noise scaling | elects | effect on the verdict |
+| --- | --- | --- | --- |
+| Laplacian RMS in DN | noise ~ `sqrt(level)` | the **brightest** frame | hands the merge a blurrier opponent -- **flatters the merge** |
+| Laplacian RMS / level | noise/level ~ `1/sqrt(level)` | the **darkest** frame | hands the merge a grainier opponent -- **manufactures merge deficits** |
+
+Neither is a focus measure at a low-signal site. This corpus makes the trap
+unavoidable: **13 of 26 subjects brighten monotonically through the bracket**,
+up to `x1.468` on `dry-erase-marker-head-cpl`, so the two estimators disagree
+systematically rather than occasionally.
+
+I hit both. The DN form was in `refine_best_frame` and its own docstring warned
+the error is "DANGEROUS IN THE FLATTERING DIRECTION". I replaced it with the
+ratio form -- and `flowers-cpl` promptly inverted to an apparent
+**MERGE-LIMITED** at ratios 0.36-0.52. That reversal was the mirror bias, not a
+discovery.
+
+### 7.2 The fix, and a control with real power
+
+`sitescan.focus_score` subtracts the noise power before normalising:
+
+    signal^2 = LapRMS^2 - (a*level + b)          # a, b fitted per frame from
+    score    = sqrt(max(signal^2, 0)) / level    # the emptiest tiles per level bin
+
+Commissioned as **C16**, on a plant that had to be rebuilt once. My first
+version scaled a window by `s` -- but that scales signal *and* noise together,
+so `hf_rel` is exactly invariant under it and the control had **no power**. The
+faithful plant is physical: signal `~ level`, shot noise `~ sqrt(level)`, on a
+synthetic featureless field, at the exact +19.1% `flowers-cpl` carries, with the
+focus never changing. C16 now *requires* both naive estimators to fail before it
+will pass:
+
+    hf_dn   x1.092 -> false gap at endN     (= sqrt(1.191), textbook shot noise)
+    hf_rel  x0.917 -> false gap at end0     (= 1/sqrt(1.191))
+    focus_score: featureless -> no gap called; textured -> flat to x1.0006
+
+**C17** requires the emptiest real tile to score far below the richest
+(`x5.5` measured). Its first draft compared the emptiest tile against the frame
+*centre* -- which on `flowers-cpl` is itself bokeh, so it compared two
+featureless things and proved nothing.
+
+### 7.3 ORCH's ruler control passes, and it passed *harder* after the fix
+
+At `flat-on-ruler-cpl`, all seven sites: merge at or above the corrected best
+frame, `blur_equiv 0.00 px`.
+
+| site | merge DN/px | frame corrected | ratio |
+| --- | --- | --- | --- |
+| METAL | 1553.4 | 1510.9 | **1.0281** |
+| MARK | 1769.2 | 1661.4 | **1.0649** |
+| MARK-EDGE | 1696.5 | 1596.7 | **1.0625** |
+
+The merge's lead at METAL **shrank** from `x1.0442` to `x1.0281`, because the
+corrected estimator found a genuinely better source frame (36, not 38). The fix
+moved the numbers in the **unflattering** direction and the merge still won,
+which is much stronger evidence than if it had flattered it. Per ORCH's design:
+the instrument does not lose sharpness at the metal, so its verdict elsewhere
+stands.
+
+### 7.4 The third trap: an edge metric run on grain returns a number that is not an edge
+
+With the picker fixed, `flowers-cpl` *still* showed ratios 0.37-0.52. The noise
+column gave it away: at those sites the source frame carries **45.2 DN** of pixel
+noise against the merge's **6.7 DN**. A merge averages many frames; a single
+frame does not. The merge is up to **10x quieter**, and it loses automatically
+wherever neither arm has real detail.
+
+The crop could not settle it, and believing it would have been the same error in
+new clothes: at a mean level of 8444 DN, a 91 DN/px modulation is **~1%**, which
+after the display transfer is under one 8-bit level. Both arms look blank whether
+or not one holds structure. *Look at the picture* is the right instinct and the
+wrong instrument at that contrast.
+
+So I measured it instead. `grainprobe.py` exploits the fact that adjacent frames
+share their **subject** but not their **grain**: average k neighbours and grain
+falls as `1/sqrt(k)` while structure is preserved. Commissioned on synthetic data
+(pure grain `x0.452` against a predicted `x0.447`; pure structure `x1.000`).
+At the three `flowers-cpl` sites, **54-68% of the source frame's measured edge
+power is grain**, against ~3% for the merge.
+
+### 7.5 The gate, read off the corpus
+
+Sorting all 104 sites by how far the weaker arm sits above its own grain floor
+gives a distribution with a hole in it:
+
+    1.54 ... 2.99   then   5.59 ... 43.46
+
+Nothing in between -- a `x1.87` empty band, 29 sites below and 75 above. The band
+is exactly where the verdicts change:
+
+| min arm SNR | sites | median ratio | % "losing" | median merge edge |
+| --- | --- | --- | --- | --- |
+| 0-2 | 7 | 0.367 | 71% | 55 DN/px |
+| 2-3 | 22 | 0.716 | 55% | 102 DN/px |
+| 3-6 | 3 | 0.987 | **0%** | 252 DN/px |
+| 6-12 | 29 | 1.129 | **0%** | 718 DN/px |
+| 12+ | 43 | 1.260 | 5% | 2143 DN/px |
+
+**Every "the merge loses" verdict in the entire corpus lives below the gap**, at
+sites whose merge edge is under ~100 DN/px -- the emptiest parts of each frame,
+which is precisely what the `FLAT` and `DEFICIT` percentile selectors pick by
+construction. Above the gap the merge's advantage **grows monotonically with how
+much real detail the site holds**. A genuine merge defect would do the opposite:
+it would get worse where there is more to lose. `MIN_ARM_SNR = 4.0`; any value
+inside the band gives identical results.
+
+### 7.6 The corrected headline
+
+**Of 104 sites, 75 carry real detail in both arms. 29 carry detail in neither --
+those are capture verdicts, not merge verdicts, and they must never be reported
+as ratios.**
+
+**Across the 75 sites entitled to vote, the merge is behind the best corrected
+source frame at exactly one site, on one subject, by 5.2%.**
+
+Everywhere else the merge equals or beats the best single frame, typically by a
+wide margin: `x2.91` (`flower-inner-edge-cpl`), `x2.32`
+(`dry-erase-marker-head-cpl`), `x1.68` (`couch-fibers-cpl`), `x1.64`
+(`lavendar-cpl`), `x1.44` (`bee-3-cpl`, confirming ORCH's reference pick).
+
+The one exception, stated with its caveats rather than explained away:
+
+> `bee-1-cpl`, block(1,3) @(3845,1502), frame 44. Merge **8463 DN/px** vs
+> corrected source **8926 DN/px** -- ratio **0.948**, deficit **+464 DN/px**,
+> `blur_equiv` **0.49 px** (sub-pixel), arm SNR 25.
+> **Caveats:** this is the lowest-NCC site measured anywhere in the corpus
+> (**0.691**, against a corpus norm above 0.95), and the content is a compound
+> eye -- a periodic hexagonal lattice near Nyquist, the worst possible subject
+> for a registration-sensitive comparison. At 1:1 **both arms resolve the
+> lattice clearly** and no defect is visible. Real but small; worth a look from
+> whoever owns the merge; not a gallery-visible fault.
+
+### 7.7 `flowers-cpl` is capture-limited, and this refutes an intermediate draft of my own
+
+`flowers-cpl` and `highly-angled-ruler-mm-cpl` score **0 of 4 sites entitled to
+vote** -- no site in either subject holds detail in *either* arm. That is the
+strongest capture-limited statement the instrument can make.
+
+An intermediate draft of `triage.py` relabelled `flowers-cpl` a **coverage gap at
+`end0`**, on the strength of a frameflip in which frame 0 appeared to resolve
+trichomes while every later frame was featureless. That was the `hf_rel` bias
+electing the darkest frame, and my reading of the picture was wrong too: what I
+called resolved texture was a **defocused blob**, which is large-scale contrast,
+not detail. Re-examined at the frames the corrected metric prefers, all six are
+featureless and `hf_rel` is **flat at 0.0551 -> 0.0562 across all 176 frames**.
+A bracket that stopped short rises toward an end; this does not rise at all.
+
+Where the subject *is* reachable, at (1504,1502), the merge beats the best single
+frame **x5.07** and resolves trichomes and pollen grains that no individual frame
+holds. The verdict returns to *no focus plane in this bracket reaches most of
+this frame*, which no number of extra frames would fix. Drift is 0.00 px, so not
+motion.
+
+### 7.8 What this cost, and the rule it confirms
+
+Three separate instrument defects, all the same shape -- **comparing two things
+that are not on the same side of a transformation** -- and each one produced a
+confident, defensible, wrong answer:
+
+1. an exposure ramp read as a coverage gap (level);
+2. a shot-noise floor read as a merge deficit (noise vs level);
+3. grain read as detail (merge quieter than a single frame by up to 10x).
+
+Each was caught by a control, and **not one was caught by looking at a ratio.**
+Two were caught only because the absolute DN levels were on the page next to
+them. The `flowers-cpl` reversal in particular looked exactly like a headline
+finding, and shipping it would have routed engineering effort at a merge that is
+working correctly.

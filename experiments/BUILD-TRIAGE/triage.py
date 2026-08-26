@@ -84,6 +84,27 @@ OCCLUSION = {
     # advice.  The election map confirms it and adds a second component -- broad
     # interstitial shadow between overlapping petals, which is occluded from the
     # lens, not merely out of focus.  Neither component is fixable with frames.
+    #
+    # RE-CONFIRMED against the source frames themselves, after an intermediate
+    # draft of this file wrongly relabelled it a coverage gap at end0.  That
+    # draft rested on a level-normalised focus score, which at a low-signal site
+    # tracks shot noise / level ~ 1/sqrt(level) and therefore always elects the
+    # DARKEST frame -- frame 0 of a bracket that brightens 19.1%.  The
+    # unnormalised form has the mirror bias and elects the brightest.  With the
+    # noise subtracted (sitescan.focus_score, commissioned C16/C17) the picture
+    # is unambiguous and matches the crops:
+    #   * at (1180,900) the through-focus response is FLAT across all 176
+    #     frames (hf_rel 0.0551 -> 0.0562) and every frame is a featureless
+    #     gradient at 1:1.  A bracket that stopped short rises toward an end;
+    #     this does not rise at all.  Nothing reaches that site, ever.
+    #   * at the three background sites both arms sit below 1% modulation and
+    #     54-68% of the SOURCE frame's measured edge power is grain rather than
+    #     detail (grainprobe.py), against ~3% for the merge.
+    #   * where the subject IS reachable, at (1504,1502), the merge beats the
+    #     best single frame by 5.07x and resolves trichomes and pollen grains
+    #     that no individual frame holds.
+    # So the merge is not losing anything here; most of this frame is at depths
+    # no focus plane in this bracket reaches.  Drift is 0.00 px, so not motion.
     "flowers-cpl": (
         "a dense mass of overlapping petals: the end-elections are rim ribbons "
         "on petal edges plus deep interstitial shadow that no focus plane can "
