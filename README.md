@@ -27,7 +27,9 @@ diffraction-limited ideal.
 > **Two corrections to what this paragraph used to say**, both material enough
 > to belong here rather than in a footnote. It claimed the *estimation* merge
 > was the default: it is not. The default is `--merge pyramid`; the estimator is
-> selected with `--merge estimator` and **currently exits rc=1 out of the box**.
+> selected with `--merge estimator`. This line used to say the estimator
+> **"currently exits rc=1 out of the box"**; that is now false and is retracted —
+> see the correction below.
 > It also claimed "per-pixel confidence as outputs": the only per-pixel trust
 > artifact in the tree is `--n-eff-map`, which is one of nine flags the CLI
 > refuses on the default backend. The default emits an image and nothing else.
@@ -465,15 +467,24 @@ reason.
 stage that does not exist. The blanket "none of them needed those stages"
 that stood here before was wrong, and this is what replaced it.
 
-**Do not take the estimator backend as a working fallback.** A reachability
-audit of the whole binary found that `--merge estimator` fails out of the box:
-it exits non-zero with `U3 the eroded low-detail region keeps only 0 px` unless
-`STREHL_PHOTOMETRIC=off` is set in the environment. The advice to fall back to
-it was wrong and is withdrawn until that is fixed. The same audit found that
-four of the five stages the banner lists as "not applied" are fully written and
-reachable only from that broken path — so the capability exists, has never run
-on a delivered image, and the shipping default is the less capable of the two
-backends. Porting what is worth porting into the pyramid is in progress.
+**The estimator backend runs again — this paragraph used to say it did not, and
+that is retracted.** A reachability audit once found that `--merge estimator`
+exited non-zero with `U3 the eroded low-detail region keeps only 0 px` unless
+`STREHL_PHOTOMETRIC=off` was set in the environment. That finding was true when
+made and is now stale: photometric normalisation became **opt-in**, and the
+stage prints `STATUS: NO per-frame gain term is fitted or applied`. Measured on
+the pinned shipping binary, `strehl stack <DIR> --merge estimator` **exits 0**,
+banner `merge backend : estimator (--merge)` — the binary's own words are
+*"reachable, NOT the default"*. Two further full runs by a separate campaign
+also exited 0. The `U3` string still exists at `photometric.rs:371`; it is
+simply no longer reached. **It is still not a fallback to reach for**, for
+different reasons than the ones given here before: it is *slower* than the
+default (320.9 s against 229.7 s at comparable load), and it loses to the
+pyramid on acuity and microcontrast on all three subjects in the comparison
+table below. The audit's other finding stands unchanged — four of the five
+stages the banner lists as "not applied" are fully written and reachable only
+from that path, so the capability exists and has never run on a delivered
+image, and the shipping default remains the less capable of the two backends.
 
 **There is no hot-pixel or defect-pixel correction anywhere in either crate.**
 Not disabled, not stubbed — absent. Every apparent reference in the source is
@@ -594,9 +605,10 @@ per-pixel map of how many frames were effectively averaged
 (`merge_cmd.rs:2636`), and it is one of **nine** flags the CLI refuses on the
 default pyramid backend — along with `--index-map`, `--stats`, `--gate`,
 `--target-n-eff`, `--photometric`, `--flat-roi` and `--detail-roi`. They belong
-to the estimator, and the estimator does not currently run out of the box. So
-the default path emits an image and nothing else, and a user cannot presently
-ask this tool which parts of its output to trust.
+to the estimator. The estimator does run (the claim that it did not is retracted
+above), but it is not the default and is slower, so in practice the default path
+emits an image and nothing else, and a user cannot presently ask this tool which
+parts of its output to trust.
 
 That is the single largest gap between what this project is *for* and what it
 currently *does*. Confidence as an output is the thesis, not a feature: a
@@ -623,11 +635,20 @@ see a given point in focus.
 > --merge selected pyramid."* The pyramid's own knob is `--pyramid-gate`, and the
 > binary is explicit that it is **a different quantity**: a multiple of the
 > modelled band-noise power, where `--gate` is a multiple of the focus-response
-> SD. *The number does not carry over.* So this table has no row for the backend
-> that runs out of the box, and until it does, **the shipping path's noise
-> performance is unquantified.** That measurement is in flight; this notice comes
-> down when the row lands, and not before. Note also the inference trap that
-> produced this gap: passing an estimator-only flag *without* `--merge` silently
+> SD. *The number does not carry over.* This notice used to say that the table
+> had no row for the backend that ships, that the shipping path's noise was
+> therefore **unquantified**, and that the notice would come down when the row
+> landed and not before. **The row has landed** — the last two rows of the table
+> are the default backend, measured by a separate campaign
+> ([`docs/research/BUILD-PYRNOISE.md`](docs/research/BUILD-PYRNOISE.md)) on the
+> same ROI, the same bracket and the same single unstacked frame. Two things
+> support joining the two campaigns in one table: that campaign re-measured the
+> **estimator** at gate 2 with its own instrument and read **0.888x** against
+> this table's **0.890x** — a 0.2% agreement between instruments built weeks
+> apart and never cross-checked before — and its positive control, a planted
+> known σ, recovered `sqrt(σ0²+σa²)` to a worst error of **0.157%** against a
+> 1.0% bar. Note also the inference trap that produced the original gap: passing
+> an estimator-only flag *without* `--merge` silently
 > selects the estimator — measured, `--gate 2` alone prints `merge backend :
 > estimator (inferred from --gate)`. Any harness quoting numbers below may have
 > been on the estimator without meaning to be.
@@ -642,8 +663,10 @@ low-detail region, against a single unstacked frame:
 | 1.0 | 1.884 | **0.973x** | first gate that beats one frame |
 | 2.0 | 2.891 | 0.890x | |
 | 4.0 | 4.987 | 0.788x | |
-| — | — | 1.253x | the argmax `strehl argmax-baseline` ships |
+| — | — | **1.068x** | the argmax `strehl argmax-baseline` ships |
 | — | *N* | 0.534x | a plain mean — the floor, and it destroys 58% of detail |
+| — | not computed | **0.915x** | **`--merge pyramid` at its default `--pyramid-gate 2.0` — this is what you actually get** |
+| — | not computed | **0.746x** | `--merge pyramid --pyramid-gate 4.5` |
 
 Read the first row carefully, because it is the whole argument. **At `n_eff` = 1
 the merge is doing exactly what every other stacker does — selecting — and it is
