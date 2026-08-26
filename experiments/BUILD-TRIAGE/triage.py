@@ -66,6 +66,32 @@ GAP_BLOCKS_BAD = 12
 # read off the corpus rather than asserted.
 GAP_DETAIL_PCT = 2.0
 GAP_ENRICH = 1.0         # must target detail more than a random mask would
+
+# --- localised vs pervasive coverage gap ------------------------------------
+# A coverage gap that touches 6-7% of detail pixels and one that touches 55% are
+# not the same product problem, and collapsing them into one label is what let
+# the owner judge the whole tool by its worst tiles.  The corpus separates them
+# by itself, with the largest gap in the whole distribution:
+#
+#   0.00 ... 0.80 (lavendar), 2.59 (flower-bud-alone), 6.20 (fern),
+#   7.34 (ruler)   <-- then nothing at all until -->   55.17 (flowers-cpl)
+#
+# a 7.5x jump with no subject inside it.  Read off the corpus, not asserted;
+# any threshold in (7.34, 55.17) classifies all 26 identically.  20.1% is the
+# geometric midpoint of that empty band, so it is maximally far from both edges.
+LOCALISED_GAP_PCT = 20.1
+
+# A localised gap is downgraded to "predominantly sound" ONLY when the merge is
+# also shown to be at or ahead of the best single source frame at the subject's
+# own best-resolved site.  That second condition matters: without it this would
+# be a bare threshold that assumes a small gap is harmless.  With it, the claim
+# is "the gap is small AND the rest of the frame is measurably good", which is
+# what the label asserts.  See §8 of docs/research/BUILD-TRIAGE.md -- both
+# subjects that trip this rule (`highly-angled-ruler-mm-cpl` x1.916 and
+# `flower-bud-with-background-fern-cpl` x1.889) were originally mislabelled
+# because compare.py's own windows landed on empty background.
+LOCALISED_MERGE_AHEAD = 0.95
+
 # Diffraction: the source's own best frame never delivers a sharp edge anywhere.
 # Expressed against the corpus, not asserted a priori.
 DIFFRACTION_DNPX = 600.0
@@ -133,6 +159,39 @@ def load(sub: str) -> dict:
             with open(p, encoding="utf-8") as fh:
                 out[kind] = json.load(fh)
     return out
+
+
+def _orch_best(sub: str) -> dict | None:
+    """Merge-vs-source at ORCH's independently chosen best-resolved site.
+
+    A SECOND, INDEPENDENT WINDOW.  compare.py's own selectors include the
+    emptiest sites in the frame by design (see `weak()` below), so a subject
+    whose windows all land on background reads as "no detail anywhere", which is
+    indistinguishable from a genuine capture limit.  ORCH's detailgallery.py
+    picks one site per subject by mean |laplacian| on a coarse grid -- a
+    different statistic, chosen by a different agent -- so agreement between the
+    two pickers is worth more than either alone.  See experiments/BUILD-TRIAGE/
+    orchsites.py for the coordinates and the worked failure that motivated this.
+    """
+    p = os.path.join(tri.OUT, "compare", f"{sub}.orch.json")
+    if not os.path.exists(p):
+        return None
+    try:
+        s = (json.load(open(p, encoding="utf-8"))["sites"] or {}).get("ORCH-BEST")
+    except Exception:
+        return None
+    if not s:
+        return None
+    e = s.get("edge") or {}
+    nm = e.get("noise_merge_dn") or 0.0
+    nf = e.get("noise_frame_dn") or 0.0
+    m = e.get("merge_dnpx") or 0.0
+    f = e.get("frame_corr_dnpx") or 0.0
+    msnr = m / nm if nm > 0 else float("inf")
+    fsnr = f / nf if nf > 0 else float("inf")
+    return {"ratio": e.get("ratio"), "merge_dnpx": m, "frame_dnpx": f,
+            "merge_snr": msnr, "frame_snr": fsnr,
+            "votes": bool(min(msnr, fsnr) >= 4.0)}
 
 
 def classify(sub: str, ev: dict) -> dict:
@@ -309,6 +368,31 @@ def classify(sub: str, ev: dict) -> dict:
         r["remedy"] = (
             f"reshoot extending the bracket past the {end} frame; "
             f"the merge cannot invent focus no frame captured.")
+
+        # LOCALISED?  A 6-7% gap in an otherwise excellent frame is a different
+        # product problem from a 55% one, and the corpus separates them by 7.5x
+        # with nothing in between.  Downgrade only when the merge is ALSO shown
+        # ahead of the best single frame at the subject's own best-resolved
+        # site -- so the claim is "small gap AND the rest measurably good".
+        ob = _orch_best(sub)
+        if ob:
+            r["evidence"]["orch_site_ratio"] = ob["ratio"]
+            r["evidence"]["orch_site_merge_dnpx"] = round(ob["merge_dnpx"], 1)
+            r["evidence"]["orch_site_frame_dnpx"] = round(ob["frame_dnpx"], 1)
+            r["evidence"]["orch_site_frame_snr"] = round(ob["frame_snr"], 1)
+        if (dgap < LOCALISED_GAP_PCT and ob and ob["votes"]
+                and (ob["ratio"] or 0) >= LOCALISED_MERGE_AHEAD):
+            r["verdict"] = "GOOD - localised coverage gap"
+            r["why"] = [
+                f"predominantly sound: at its own best-resolved site the merge "
+                f"is x{ob['ratio']:.2f} the best single source frame "
+                f"({ob['merge_dnpx']:.0f} vs {ob['frame_dnpx']:.0f} DN/px, "
+                f"frame SNR {ob['frame_snr']:.1f}), but {dgap:.1f}% of "
+                f"detail-bearing pixels (centred {loc}) elect the {end} frame "
+                f"and were never captured sharp"]
+            r["remedy"] = (
+                f"usable as delivered; to recover the {loc} region, extend the "
+                f"bracket past the {end} frame.")
         return r
 
     # 3. Merge loss: only now, and only above the instrument's own floor.
@@ -368,7 +452,8 @@ def main() -> int:
     subs = tri.SUBJECTS
     rows = [classify(s, load(s)) for s in subs]
 
-    order = ["GOOD", "MERGE-LIMITED", "CAPTURE-LIMITED - coverage gap",
+    order = ["GOOD", "GOOD - localised coverage gap", "MERGE-LIMITED",
+             "CAPTURE-LIMITED - coverage gap",
              "CAPTURE-LIMITED - occlusion/geometry",
              "CAPTURE-LIMITED - diffraction/magnification",
              "CAPTURE-LIMITED - motion", "UNRESOLVED"]

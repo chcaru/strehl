@@ -63,12 +63,14 @@ def font(sz: int):
 
 
 # Verdict vocabulary, shared with experiments/BUILD-TRIAGE/triage.py.
-CAT_ORDER = ["GOOD", "MERGE-LIMITED", "CAPTURE-LIMITED - coverage gap",
+CAT_ORDER = ["GOOD", "GOOD - localised coverage gap", "MERGE-LIMITED",
+             "CAPTURE-LIMITED - coverage gap",
              "CAPTURE-LIMITED - occlusion/geometry",
              "CAPTURE-LIMITED - diffraction/magnification",
              "CAPTURE-LIMITED - motion", "UNRESOLVED"]
 SHORT = {
     "GOOD": "GOOD",
+    "GOOD - localised coverage gap": "GOOD, one region uncovered",
     "MERGE-LIMITED": "MERGE-LIMITED (fix the software)",
     "CAPTURE-LIMITED - coverage gap": "CAPTURE: coverage gap",
     "CAPTURE-LIMITED - occlusion/geometry": "CAPTURE: occluded geometry",
@@ -78,6 +80,7 @@ SHORT = {
 }
 COLOUR = {
     "GOOD": (110, 205, 120),
+    "GOOD - localised coverage gap": (168, 205, 110),
     "MERGE-LIMITED": (226, 86, 74),
     "CAPTURE-LIMITED - coverage gap": (226, 168, 62),
     "CAPTURE-LIMITED - occlusion/geometry": (214, 132, 92),
@@ -109,6 +112,11 @@ def measure_line(row: dict) -> str:
         return (f"{float(e.get('detail_gap_pct') or 0):.1f}% of detail pixels "
                 f"elect the {end} frame "
                 f"({float(e.get('detail_enrichment') or 0):.2f}x chance)")
+    if v == "GOOD - localised coverage gap":
+        e0, eN = e.get("end0_pct") or 0.0, e.get("endN_pct") or 0.0
+        end = "first" if e0 >= eN else "last"
+        return (f"merge x{float(e.get('orch_site_ratio') or 0):.2f} vs best frame; "
+                f"{float(e.get('detail_gap_pct') or 0):.1f}% detail px elect {end} frame")
     if v == "CAPTURE-LIMITED - occlusion/geometry":
         return (f"{float(e.get('detail_gap_pct') or 0):.1f}% of detail pixels "
                 f"at a bracket end; occlusion-driven")

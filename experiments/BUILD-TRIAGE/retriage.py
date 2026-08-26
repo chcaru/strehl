@@ -123,8 +123,27 @@ def main():
               f"{o['ratio']:>7.3f} {o['merge_snr']:>5.1f}/{o['frame_snr']:<5.1f} {vote:>5}  {st}")
         # A stored capture-limited verdict is CONTRADICTED when the ORCH site
         # both votes and shows the merge at or ahead of the best source frame.
+        #
+        # RESTRICTED TO THE COVERAGE-LIKE CATEGORIES ON PURPOSE.  Coverage gap,
+        # occlusion and diffraction are all claims that "no frame resolved this
+        # detail", so a single site where a frame demonstrably DID resolve it
+        # is a direct contradiction.
+        #
+        # MOTION IS NOT SUCH A CLAIM and must not be auto-revised here.  Motion
+        # is diagnosed from adjacent-frame NCC across the bracket; a subject can
+        # move between frames and still contain a locally sharp site, and the
+        # damage motion does is ghosting and doubled structure, not necessarily
+        # softness at the best-resolved site.  Refuting a motion verdict needs a
+        # motion measurement, which is BUILD-GHOST's instrument, not one sharp
+        # window.  Listing motion subjects here would manufacture false
+        # "revisions" out of evidence that cannot bear on them.
+        CONTRADICTABLE = (
+            "CAPTURE-LIMITED - coverage gap",
+            "CAPTURE-LIMITED - occlusion/geometry",
+            "CAPTURE-LIMITED - diffraction/magnification",
+        )
         if o["votes"] and o["ratio"] is not None and o["ratio"] >= 0.95 \
-                and st.startswith("CAPTURE-LIMITED"):
+                and st in CONTRADICTABLE:
             revisions.append((s, st, o))
 
     if missing:

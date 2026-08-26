@@ -1091,3 +1091,124 @@ width tracks frame count; mean `coverage_k` differs by 0.6%.
 diagnostic.** But a print set whose members differ in width is a genuine
 annoyance for the owner, and the fix is one line — pad or crop all masters to a
 common size.
+
+## 9. Final partition, and the answer to the question that was actually asked
+
+**Status: MEASURED.** Same binary throughout (§7.9).
+
+### 9.1 The headline, in one line
+
+**At each subject's own best-resolved site, the merge is at or ahead of the best
+single source frame in 25 of 26 subjects.** Ratios run ×0.955 to ×2.427.
+
+The 26th (`flower-bud-alone-cpl`) does not vote: its frame arm scores SNR 2.1 at
+that site, below the corpus-derived gate of 4.0, so the apparent ×11.6 is the
+noise-floor artifact characterised in §7 and carries no verdict either way.
+
+Three subjects sit fractionally below parity — `lead-1-cpl` ×0.994,
+`119MSDCF` ×0.987, `109MSDCF` ×0.955. **All three are inside the hull-clamp
+handicap.** Per BUILD-HULL, the default clamp costs 8.6–18.9% of microcontrast,
+and per §7.9 the merge pays it while a single frame does not (with one frame
+`lo == hi == v`, so `clamp(v,v)` is a no-op). Every ratio in this report
+therefore *understates* the merge, and a 4.5% shortfall is smaller than the
+handicap that produced it.
+
+**There is no MERGE-LIMITED subject in the corpus.** The count is 0, and it is 0
+after the estimator was corrected for two mirror-image biases (§7), after the
+grain-as-detail trap was closed (§7), and after the windows were re-placed (§8).
+
+### 9.2 The partition
+
+| verdict | n | meaning |
+| --- | ---: | --- |
+| GOOD | 19 | examined; merge at or above the best single frame everywhere measured |
+| GOOD — localised coverage gap | 2 | examined; predominantly sound, one region never captured sharp |
+| MERGE-LIMITED | **0** | — |
+| CAPTURE-LIMITED — coverage gap | 0 | — (both former members reclassified, §8.1) |
+| CAPTURE-LIMITED — occlusion/geometry | 1 | `flowers-cpl` |
+| CAPTURE-LIMITED — diffraction/magnification | 0 | — |
+| CAPTURE-LIMITED — motion | 4 | `coffee-bubbles`, `foam`, `leaf-2-cpl`, `lead-1-cpl` |
+| UNRESOLVED (not examined) | 0 | — |
+
+`19 + 2 + 0 + 0 + 1 + 0 + 4 + 0 = 26`, asserted in `triage.py` and printed on
+the contact sheet itself. **Every subject was examined**; the not-examined bucket
+exists, is labelled as such on the sheet, and is empty. A skipped subject cannot
+read as a passing one.
+
+### 9.3 The new category, and why it is not grading on a curve
+
+`GOOD — localised coverage gap` was added because a gap touching 6–7% of detail
+pixels and one touching 55% are not the same product problem, and collapsing
+them is part of why the owner judged the whole tool by its worst tiles. The
+corpus separates them by itself, with the largest gap in the distribution:
+
+```
+0.00 ... 0.80 (lavendar), 2.59 (flower-bud-alone), 6.20 (fern), 7.34 (ruler)
+                    <-- nothing at all in between -->                  55.17 (flowers-cpl)
+```
+
+a **7.5× jump with no subject inside it**. The threshold (20.1%) is the geometric
+midpoint of that empty band; any value inside the band classifies all 26
+identically.
+
+The downgrade requires **two** conditions, not one: the gap must be localised
+*and* the merge must be measurably ahead of the best single frame at the
+subject's own best-resolved site. Without the second condition this would be a
+bare threshold asserting that a small gap is harmless. With it, the label
+asserts what it says — the gap is small **and** the rest of the frame is good.
+
+Both members carry the specific advisory the owner asked for, on the tile:
+
+- `highly-angled-ruler-mm-cpl` — merge ×1.92 vs best frame; 7.3% of detail px
+  elect the last frame, centred **right**. *Usable as delivered; to recover the
+  right region, extend the bracket past the last frame.*
+- `flower-bud-with-background-fern-cpl` — merge ×1.89; 6.2%, centred
+  **lower-left**. *Usable as delivered; to recover the lower-left region, extend
+  the bracket past the last frame.*
+
+### 9.4 `flowers-cpl`: two instruments agree on the end, and disagree on the cause
+
+`flowers-cpl` is the one genuinely capture-limited subject, and its 55.2% is
+seven times any other subject's. Two independent instruments agree on **which
+end**:
+
+- the per-pixel election map: **34.8% of detail pixels elect the FIRST frame**
+  (against 0.29% at the last);
+- the through-focus probe, run on raw CFA green with no demosaic, alignment or
+  tone curve: the papillate texture peaks at **frame 7 of 176**.
+
+Both point at the **near** end. They are not independent of the subject but they
+are independent instruments, and neither was tuned on the other.
+
+They do **not** agree on the cause. The stored verdict reads the end-elections as
+occlusion — rim ribbons on petal edges plus interstitial shadow no focus plane
+can reach — while the simplest reading consistent with ORCH's visual report
+("overwhelmingly out of focus … only a narrow in-focus band") and with the frame
+census (176 frames, well under the camera's 299 ceiling, so the sweep stopped on
+its own) is that the sweep did not span the subject. **This tension is left
+open rather than resolved**, because the summary statistics do not separate the
+two mechanisms — §6 already records that `flowers-cpl` (occlusion, enrichment
+1.57) and `highly-angled-ruler-mm-cpl` (a genuine gap, 1.50) are indistinguishable
+on enrichment. What would settle it: a through-focus probe on the *bokeh* regions
+with a control, testing whether their curves are flat (never captured) or still
+climbing at frame 0 (bracket stopped short).
+
+Note the merge still *wins* at the one site that carries detail (×1.359). Per
+ORCH's instruction the label is per-region, not per-subject: the narrow band that
+was covered is rendered well; most of the frame was never covered.
+
+### 9.5 Two things I got wrong, on the record
+
+1. **`highly-angled-ruler-mm-cpl` was mislabelled a coverage gap** because my
+   windows landed on background (§8.1). ORCH's 1:1 tile and an independently
+   chosen site both refute it. It is now `GOOD — localised coverage gap`.
+2. **My `NULL-BOKEH` control on `flower-inner-edge-cpl` was a badly chosen null**
+   — it resolved (×4.6) because it is background at a *different depth*, not
+   because the instrument misbehaved (§8.4).
+
+I also suspected, from the contact sheet, that `leaf-2-cpl`/`lead-1-cpl` and
+`119MSDCF`/`109MSDCF` were duplicate masters. **They are not** — four distinct
+SHA-256 hashes. They are separate captures of similar scenes. Recorded because
+the suspicion came from looking at the pictures and the check came from not
+trusting the look. One genuine wart: `lead-1-cpl` depicts a *leaf*, so the name
+is very likely a typo for `leaf-1-cpl`.
