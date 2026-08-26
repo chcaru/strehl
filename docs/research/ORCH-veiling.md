@@ -8470,3 +8470,122 @@ One caution carried forward rather than dropped: `bee-2-cpl`'s lower-left corner
 hairs are soft. My read is depth beyond the bracket rather than a merge failure,
 on the same grounds as `flowers-cpl` -- but I have not measured it, and it is
 recorded here as unmeasured.
+
+## 73. Seven instruments, one night, one failure mode
+
+Four agents reported between midnight and morning. Every one of them found a
+defect in their own instrument before finding one in the product, and the
+defects are the same defect wearing different clothes. Collected here because
+the pattern is now the most transferable thing this project has produced.
+
+### The catalogue
+
+| # | instrument | how it failed | who caught it |
+|---|---|---|---|
+| 1 | `=1` on a multiplicative gate | probed the identity element | ORCH |
+| 2 | a value equal to the default | the arm never ran | ORCH |
+| 3 | 8 frames on a frame-pooled gate | measured the probe's depth | M126 |
+| 4 | a binary predating the flag | measured nothing | ORCH |
+| 5 | luma selector, 71.5% green | **selected the green excess it was about to report** | BUILD-HIGHLIGHT |
+| 6 | null window inside the defect | normalised a defect against itself | ORCH |
+| 7 | ringing plant on ideal steps | **sensitivity scales with the quantity in dispute** | BUILD-SHARP |
+
+Numbers 1-4 all emit byte-identical output and were folded into
+`check-potency.py` in section 71. Numbers 5-7 are worse, because each one
+returns *the answer the experimenter was hoping for*, with every control
+passing.
+
+**Number 7 is the most dangerous instrument this project has built.** BUILD-SHARP
+was sent to test whether the comparator wins by ringing rather than by
+resolving. Their detector had an exact null, calibrated plants at
+0.05/0.15/0.30, strict monotonicity -- fully commissioned by every rule we had.
+Commissioned *on the actual files*, it recovers **1.00x** on synthetic steps,
+**0.38x** on the fork's render and **0.08x** on ours:
+
+> The detector is **4.75x more sensitive on the fork's render than on ours**.
+> Measuring overshoot on both and comparing would have reported the fork as
+> ~5x ringier **with no ringing present anywhere.**
+
+The cause is physical, not a bug: the plant is calibrated on an ideal step, real
+edges are blurred, and the kernel's negative lobes land on intermediate values
+instead of a plateau. So sensitivity tracks *how step-like the edges are* --
+which is the very thing in dispute.
+
+> **An instrument whose sensitivity is a function of the quantity being measured
+> will return the expected answer on every subject, forever, and pass every
+> control while doing it.**
+
+The fix is not more care. It is: commission **each** render separately and
+divide its reading by **its own** recovery fraction; never compare an absolute
+magnitude across two images; and use the same subject on both sides.
+
+And a coda in the same register: BUILD-SHARP's commissioning output printed
+`amplitude floor 0.0 DN` for a value of `0.00815` because of a `:.1f`. **A
+display format nearly retired a working instrument.**
+
+### The corner of the lens correction was never fitted
+
+BUILD-HIGHLIGHT settled the fringe conflict -- `coffee-bubbles` and
+`flower-bud-alone-cpl` are different populations, not different statistics, and
+both instruments agree wherever they overlap -- and then found the mechanism in
+`optics.rs`:
+
+```
+support_r_max: Some(0.788)
+"outer two annuli empty. The corner is a 1.27x linear extrapolation.
+ Declared, not enforced."
+```
+
+**No data past r = 0.788. Nothing prevents application to r = 1.0. The residual
+grows exactly there.** Three subjects carry the specular fringe, all
+specular-on-dark, all radial, and the correction meant to remove it is
+extrapolating in the region where it appears. A second reading points the same
+way: shipped `eps_r` is **704.5 ppm** against six per-stack fits spanning
+**500.9-651.9** -- above every fit that informed it.
+
+*"Declared, not enforced"* is the defect in three words.
+
+The profile itself is sound provenance -- `lens_type3: 33094`, fitted for the
+teleconverter from 20 red ROIs and 1071 blue tiles, **not** inherited from the
+bare lens as I had guessed. My suspicion was wrong and the real defect is more
+interesting than the one I proposed.
+
+### The merge is noisier than one frame on half the corpus
+
+BUILD-TRIAGE fixed a wording bug and a concealed measurement fell out. Of 21
+GOOD rows, **11 have the merge cleaner on flats than the best single source
+frame and 10 have it noisier** -- and `bee-3-cpl`, at **299 frames** and the
+subject I have been holding up as the print reference, is **2.08x noisier than
+its own best source frame**.
+
+On the project's thesis -- estimation, not selection -- that is the thesis
+failing where it should be strongest. In a flat region every frame is an
+independent measurement of the same value and the ceiling is ~1/sqrt(299).
+
+Registered before it is measured: M126's gate 4.5 gave a **9.9x** flat-field
+noise reduction on this exact subject, and BUILD-TRIAGE's numbers are at the
+compiled default of 2.0. So gate 4.5 should move `bee-3-cpl` from 0.48 to
+roughly **4.7** and flip most of the ten. If it does not, M126's 9.9x is
+measuring something other than the noise a viewer sees, and the README's
+justification for the gate is narrower than I have been writing.
+
+Two artifacts had been printing **contradictory** figures for `bee-3-cpl` --
+`makeviewable.py` saying "2.08x noisier on flats" and `triage.json` saying
+"0.88x less pixel noise" -- for as long as both existed, and nothing ever put
+them side by side.
+
+### A claim of mine, struck
+
+I labelled `flowers-cpl` in the shipping gallery *"soft throughout -- reads as
+an incomplete bracket, not a merge failure"* on nothing but a glance. BUILD-SHARP
+measured the supportable half and refused the rest:
+
+> *"What I did not establish and will not imply: that the bracket is
+> incomplete."*
+
+Per-pixel selection over the same frames recovers nothing the merge lacks, so it
+does not count against the tool -- and the cause of the softness is unexplained.
+The card now says so, including the words *the cause is NOT established*. Their
+route to it cost three instruments and two in-place retractions, including the
+observation that **two statistics both normalised by intensity are not
+independent when the same 18.5% exposure ramp moves both.**
