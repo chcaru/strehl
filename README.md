@@ -205,6 +205,21 @@ geometry, and there is no bright rim along them. `coffee-bean` is the third —
 V-HULLCOST found it needs the hull clamp more than any other subject, so it is
 also the test that the clamp is not costing detail. It is not.
 
+**One residual, named rather than folded into that verdict.** A separate
+edge-profile measurement of the shipping blend finds the hard rim genuinely
+gone — the excess at ~21 px, where a rim would sit, is **below 1%** — but the
+same measurement finds a **1.24% interior peak at d = 275 px**, far inside the
+silhouette and far broader than any rim. Two acceptance criteria had been
+written for this and they disagree: it **passes** *"the ring at ~21 px is below
+1%"* and **fails** *"no interior peak above 1%"*. Choosing between them after
+seeing the number is precisely the error this document keeps catching
+elsewhere, so neither is chosen here. What is measured is stated instead: the
+hard white rim tracing the silhouette — the thing that was actually complained
+about — is gone, and a broad, low-amplitude interior feature at 1.24% is not.
+They are different features at different scales. The second has **not** yet
+been looked at by eye at 1:1, and that, rather than another statistic, is the
+next thing that should happen to it.
+
 The hardest case of all is `highly-angled-ruler-mm-cpl`: a steel rule crossing
 the frame at a steep angle, so a hard occluding edge runs diagonally through it
 with the background surface behind, and the steep angle forces the deepest
