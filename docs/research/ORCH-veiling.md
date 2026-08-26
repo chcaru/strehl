@@ -3867,3 +3867,87 @@ stated to the auditor rather than discovered by them: green's unverified attribu
 single favourable subject, no tiles in the outermost radius bin, blue's possible sampling
 artifact, and the fact that my commissioning plant uses my own resampler rather than the
 pipeline's.
+
+---
+
+## 37 — The acceptance gate passed, measured through the shipped binary
+
+`merge_cmd.rs` carries the flip as a named constant with its blocking condition written
+out in prose, ending in one sentence: **"This line moves the day that clip passes the
+gate."** That is the best piece of process design in this codebase — a decision with one
+address, a stated criterion, and a measurement rather than an opinion behind it. Tonight
+the criterion is met.
+
+### 37.1 The measurement
+
+Shipped `strehl.exe` built from pinned HEAD `4ea70dca` in an isolated `git archive` tree,
+because the repo-root release build fails `Access is denied (os error 5)` under nine
+concurrent agents. Camera-linear, `--demosaic`, with `STREHL_FIX_CA`, `STREHL_PHOTOMETRIC`
+and `STREHL_MERGE` removed from the environment so the arms differ in the merge and in
+nothing else.
+
+| subject | arm | clip% | p1 (DN) | exact-zero px |
+| --- | --- | --- | --- | --- |
+| flower-bud-alone-cpl | estimator | 0.0000 | 1003.7 | 0 |
+| flower-bud-alone-cpl | **pyramid** | **0.0000** | **1012.7** | **0** |
+| couch-fibers-cpl | estimator | 0.0000 | 3091.3 | 0 |
+| couch-fibers-cpl | **pyramid** | **0.0000** | **3266.0** | **0** |
+
+Against the recorded blocker:
+
+| quantity | recorded | now |
+| --- | --- | --- |
+| flower-bud clip% | pyramid **1.4043** vs estimator 0.0001 | pyramid **0.0000** vs estimator 0.0000 |
+| flower-bud p1 | pyramid **334** vs estimator 1028 | pyramid **1012.7** vs estimator 1003.7 |
+
+Both ends of what BUILD-WIRE correctly called "a contrast expansion at both ends" are
+closed. The pyramid's shadows now sit marginally **above** the estimator's rather than
+collapsed below them.
+
+The pyramid is also **faster**: 72.6 s against 108.1 s on flower-bud, 106.1 s against
+151.9 s on couch-fibers. About 32% off wall-clock on the subject that was blocking.
+
+### 37.2 The gate can fail, which is why its passing means anything
+
+`flipgate.py` asserts the **estimator** arm still reads what the constant records, on the
+grounds that if the baseline has drifted then this is not the comparison the constant
+authorises. It reads clip 0.0000 against the recorded 0.0001 and p1 1003.7 against the
+recorded 1028 — intact. Had the estimator moved, the script withholds a verdict instead of
+returning one.
+
+That matters because a gate whose only outcome is "pass" is not a gate. This one has a
+withheld state and two independent fail states, and the numbers it compares are the two
+the constant itself names rather than two I chose after seeing the data.
+
+> **Rule.** A gate on a decision must re-measure the baseline the decision was written
+> against, not only the arm under test. A drifted baseline turns a comparison into a
+> coincidence.
+
+### 37.3 What this does not settle
+
+The quality blocker is gone. **F2 is not**: with the default flipped, every command line
+carrying `--gate`, `--target-n-eff`, `--index-map`, `--n-eff-map`, `--photometric`,
+`--stats`, `--flat-roi` or `--detail-roi` exits 1, because those are refused rather than
+ignored under the pyramid. That refusal design is **right** and should not be weakened —
+tonight produced two fresh instances of the failure it exists to prevent, `STREHL_FIX_HALO`
+printing `halo fix : ON` while emitting byte-identical output, and `EDGE_AWARE` on by
+default but throttled to a 99.46% share of its floor radius. Accept-and-ignore is how both
+of those became invisible.
+
+So the remaining work is a compatibility migration, not a quality one, and it is the last
+thing between this project and its default being the merge that makes its good pictures.
+
+### 37.4 The state of the pictures
+
+All 26 subjects render through the clamped pyramid with `dark<500` between **0.00% and
+0.03%** and highlight clip at or below 0.32%, that maximum being a black marker head
+against white, which is specular and legitimate. No halo is visible on any subject,
+including the flower-buds that were the worst cases in this corpus. Text renders with
+individual toner particles resolved and no fringing on black-against-white, which is where
+a halo is most visible and where registration error would show first.
+
+Two subjects are soft: `flowers-cpl`, badly, and `highly-angled-ruler-mm-cpl`, mildly and
+plausibly by geometry. Whether `flowers-cpl` is capture-limited or a merge failure is
+under independent test against the strongest available invariant — that a stack must never
+be worse than the best single frame that went into it — and I am not guessing at the
+answer here.
