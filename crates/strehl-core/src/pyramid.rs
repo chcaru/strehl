@@ -630,6 +630,72 @@ pub enum BaseBand {
     WeightedFromCoarsest,
 }
 
+/// Whether the reconstruction is confined to the range of values the input
+/// frames actually support at each pixel.
+///
+/// # The safety property this exists to restore
+///
+/// This module's selection is a convex combination *within a band*, and that
+/// was stated in the preflight log every run as though it protected the
+/// output. It does not, and the gap is structural: **each band computes its own
+/// weight field**. Band 0 may be dominated by frame 12 while band 5 is
+/// dominated by frame 80, and a sum of convex combinations taken under
+/// *different* weightings is not a convex combination of the original pixels.
+/// Per-band convexity is true and does not imply reconstruction convexity.
+///
+/// ORCH established this by construction rather than by reading the code — a
+/// 1-D pyramid over 8 frames each sharp in a different region, scored against
+/// the per-pixel hull `[min_k, max_k]`:
+///
+/// | case | violating | worst excursion |
+/// |---|---:|---:|
+/// | control: one weighting shared by every band | 0 / 102,400 | 0.000 |
+/// | measured: independent per-band weights | 7 / 102,400 | 0.140 × span |
+///
+/// The rate is driven by the selection exponent, not the gate: 0 violations at
+/// exponent ≤ 1, 72 at exponent 8, 511 at 16. The shipped per-band ramp is
+/// `2 3 4 5 8 8 8`, so **the three finest bands sit exactly where this turns
+/// severe**.
+///
+/// In a real render the excursion is downward into darkness, where the hull
+/// sits near zero and crossing it clips: on `flower-bud-alone-cpl` the
+/// unclamped merge emitted **122,416 exact-zero pixels (0.371%)** in a region
+/// the shipped merge renders at median 3117 DN, blue leading red 3.7×, because
+/// blue carries the least signal and so its hull is nearest zero.
+///
+/// # Why clamping cannot cost anything real
+///
+/// The argument is not aesthetic. A merge that claims to combine N observations
+/// has no basis for emitting a value none of them support, so anything outside
+/// `[min_k, max_k]` is unsupported by the data *by definition* and the clamp
+/// can only remove excursions that were never justified. It degrades gracefully
+/// in both directions: where the frames agree the hull is tight and the clamp
+/// binds constantly while changing nothing, and where they disagree it is loose
+/// and never binds.
+///
+/// It also cannot introduce a seam of its own, which matters in a module whose
+/// entire purpose is not printing hard boundaries. `min(max(x, lo), hi)` is
+/// continuous in all three arguments and `lo`/`hi` are themselves order
+/// statistics of smooth images, so the clamped result is continuous — it agrees
+/// with the reconstruction where it does not bind, and the two are equal at the
+/// crossing. The clamp costs a gradient discontinuity, never a step.
+///
+/// The alternative fix — lowering the exponent until the violations stop —
+/// trades a localised artifact for a diffuse one, because loss is monotone in
+/// selectivity. That is the wrong trade and this is not it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Hull {
+    /// Clamp each output pixel to `[min_k, max_k]` over the aligned input
+    /// frames at that pixel. The default.
+    InputRange,
+    /// Emit the reconstruction as-is.
+    ///
+    /// Kept reachable because a fix whose defect can no longer be reproduced
+    /// cannot be measured interventionally, and because the excursion is the
+    /// only direct evidence that the clamp is doing anything.
+    Unclamped,
+}
+
 /// Everything the multi-band merge is parameterised by.
 #[derive(Debug, Clone, Copy)]
 pub struct MergeConfig {
@@ -686,6 +752,8 @@ pub struct MergeConfig {
     pub sharpen_per_octave: f32,
     pub select: SelectMode,
     pub base: BaseBand,
+    /// See [`Hull`]. Confines the reconstruction to what the inputs support.
+    pub hull: Hull,
 }
 
 impl MergeConfig {
@@ -749,6 +817,10 @@ impl Default for MergeConfig {
             // structure on flower-bud-alone-cpl, against +11 DN and 45 DN for
             // the mean, with no difference in aura removal between them.
             base: BaseBand::Mean,
+            // A merge has no basis for emitting a value none of its inputs
+            // support. Per-band convexity does not imply reconstruction
+            // convexity -- see `Hull`.
+            hull: Hull::InputRange,
         }
     }
 }
@@ -774,6 +846,14 @@ pub struct BandMerge {
     den: Vec<Vec<f32>>,
     /// For [`SelectMode::HardMax`]: the best weight seen so far, per level.
     best: Vec<Vec<f32>>,
+    /// Running per-pixel minimum and maximum of the aligned inputs, indexed by
+    /// plane, at level-0 size. Empty under [`Hull::Unclamped`].
+    ///
+    /// Both are folds — `min` and `max` are associative and commutative — so
+    /// they stream over any number of frames and [`absorb`](Self::absorb)
+    /// stays exact.
+    lo: Vec<Vec<f32>>,
+    hi: Vec<Vec<f32>>,
     frames: u32,
     /// Frames whose contribution was entirely below the noise floor at every
     /// level. Reported, because a stack where this is large is one where the
@@ -796,6 +876,18 @@ impl BandMerge {
             best: match cfg.select {
                 SelectMode::HardMax => per_level(),
                 SelectMode::SoftPower => Vec::new(),
+            },
+            // Seeded at the identities so the first frame sets both, rather
+            // than seeding from frame 0 and special-casing it.
+            lo: match cfg.hull {
+                Hull::InputRange => (0..planes).map(|_| vec![f32::INFINITY; sizes[0].pixels()]).collect(),
+                Hull::Unclamped => Vec::new(),
+            },
+            hi: match cfg.hull {
+                Hull::InputRange => {
+                    (0..planes).map(|_| vec![f32::NEG_INFINITY; sizes[0].pixels()]).collect()
+                }
+                Hull::Unclamped => Vec::new(),
             },
             frames: 0,
             // Measured for the depth this plane geometry ACTUALLY reaches, not
@@ -824,6 +916,7 @@ impl BandMerge {
     pub fn accumulator_floats(&self) -> usize {
         let per_level: usize = self.sizes.iter().map(LevelSize::pixels).sum();
         per_level * (2 * self.planes + 1 + usize::from(!self.best.is_empty()))
+            + self.lo.iter().chain(&self.hi).map(Vec::len).sum::<usize>()
     }
 
     /// Fold one frame in.
@@ -902,6 +995,20 @@ impl BandMerge {
         }
         Self::accumulate_level(self, kb, planes, &mut ws.plane, &ws.coarse[..szb.pixels()]);
 
+        // 4. The hull of the aligned inputs, which the reconstruction will be
+        //    confined to. Taken from the frames as supplied — before any
+        //    decomposition — because it is a statement about the observations,
+        //    not about the representation.
+        if self.cfg.hull == Hull::InputRange {
+            for c in 0..self.planes {
+                let (lo, hi) = (&mut self.lo[c][..n0], &mut self.hi[c][..n0]);
+                for ((l, h), v) in lo.iter_mut().zip(hi.iter_mut()).zip(planes[c]) {
+                    *l = l.min(*v);
+                    *h = h.max(*v);
+                }
+            }
+        }
+
         self.frames += 1;
     }
 
@@ -966,6 +1073,19 @@ impl BandMerge {
     pub fn absorb(&mut self, other: &BandMerge) {
         assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
         assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
+        if self.cfg.hull == Hull::InputRange {
+            assert_eq!(other.cfg.hull, Hull::InputRange, "cannot absorb a merge with no hull");
+            for c in 0..self.planes {
+                for ((a, b), (x, y)) in self.lo[c]
+                    .iter_mut()
+                    .zip(&other.lo[c])
+                    .zip(self.hi[c].iter_mut().zip(&other.hi[c]))
+                {
+                    *a = a.min(*b);
+                    *x = x.max(*y);
+                }
+            }
+        }
         match self.cfg.select {
             SelectMode::SoftPower => {
                 for k in 0..self.sizes.len() {
@@ -1059,7 +1179,57 @@ impl BandMerge {
                         }
                     }
                 }
-                pyr.collapse(ws)
+                let mut img = pyr.collapse(ws);
+                // Confine the reconstruction to what the inputs support. See
+                // [`Hull`]: per-band convexity does not imply reconstruction
+                // convexity, so this is the only stage that can make the
+                // module's stated safety property true of its output.
+                if self.cfg.hull == Hull::InputRange {
+                    for ((p, l), h) in img.iter_mut().zip(&self.lo[c]).zip(&self.hi[c]) {
+                        *p = p.clamp(*l, *h);
+                    }
+                }
+                img
+            })
+            .collect()
+    }
+
+    /// Fraction of output pixels, per plane, where the hull clamp moved the
+    /// value by more than `tol`.
+    ///
+    /// `tol` is explicit and not defaulted because the answer at `tol = 0` is
+    /// not the one anybody wants: a stack of identical frames has a *point*
+    /// hull, so every float error in the collapse is formally outside it and
+    /// the honest reading of "0 excursions" would be drowned in dust. In DN, a
+    /// fraction of a DN is the right order.
+    ///
+    /// Reported rather than inferred. Near zero means the reconstruction was
+    /// already inside the range its inputs support and the clamp is inert;
+    /// large means the merge is routinely emitting values no frame observed,
+    /// which is a statement about the selection exponent and not about the
+    /// clamp. Empty under [`Hull::Unclamped`].
+    pub fn clamped_fraction(&self, ws: &mut Workspace, tol: f32) -> Vec<f64> {
+        if self.cfg.hull != Hull::InputRange {
+            return Vec::new();
+        }
+        let unclamped = BandMerge {
+            cfg: MergeConfig { hull: Hull::Unclamped, ..self.cfg },
+            lo: Vec::new(),
+            hi: Vec::new(),
+            ..self.clone()
+        };
+        unclamped
+            .finish(ws)
+            .iter()
+            .enumerate()
+            .map(|(c, img)| {
+                let n = img.len().max(1) as f64;
+                img.iter()
+                    .zip(&self.lo[c])
+                    .zip(&self.hi[c])
+                    .filter(|((p, l), h)| **p < **l - tol || **p > **h + tol)
+                    .count() as f64
+                    / n
             })
             .collect()
     }
@@ -1847,6 +2017,175 @@ mod tests {
     /// and 45 DN for the mean, with no difference in aura removal. Nothing in
     /// the suite noticed that change when it was made, which is exactly the
     /// condition this test exists to remove.
+    /// Frames engineered so that different bands prefer different frames at the
+    /// same pixel — the precondition for a hull violation.
+    ///
+    /// Frame `f` carries fine texture in one vertical stripe and a coarse blob
+    /// in a *different* stripe, so the finest band's weight field and the
+    /// coarsest band's weight field are dominated by different frames over the
+    /// same ground. Part of the field is dark, because that is where an
+    /// excursion crosses zero and clips.
+    fn disagreeing_bands(w: usize, h: usize, nf: usize, f: usize) -> Vec<f32> {
+        let mut v = vec![0.0f32; w * h];
+        let stripe = w / nf;
+        let fine_lo = f * stripe;
+        let coarse_lo = ((f + nf / 2) % nf) * stripe;
+        for y in 0..h {
+            for x in 0..w {
+                // A dark left third, so the hull sits near zero there.
+                let bg = if x < w / 3 { 60.0 } else { 900.0 };
+                let coarse = if x >= coarse_lo && x < coarse_lo + stripe { 700.0 } else { 0.0 };
+                let fine = if x >= fine_lo && x < fine_lo + stripe {
+                    260.0 * (((x * 5 + y * 3) % 7) as f32 / 7.0 - 0.5)
+                } else {
+                    0.0
+                };
+                v[y * w + x] = bg + coarse + fine;
+            }
+        }
+        v
+    }
+
+    /// Merge `nf` disagreeing frames and count output pixels outside the
+    /// per-pixel hull of the inputs.
+    fn hull_violations(hull: Hull) -> (usize, usize, f32) {
+        let (w, h, nf) = (192usize, 144usize, 8usize);
+        let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
+        let cfg = MergeConfig { hull, ..MergeConfig::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let var = vec![4.0f32; w * h];
+        for f in &frames {
+            fws.next_frame();
+            merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+        }
+        let out = merge.finish(&mut Workspace::new(&sizes))[0].clone();
+
+        let (mut bad, mut worst) = (0usize, 0.0f32);
+        for i in 0..out.len() {
+            let lo = frames.iter().fold(f32::INFINITY, |a, f| a.min(f[i]));
+            let hi = frames.iter().fold(f32::NEG_INFINITY, |a, f| a.max(f[i]));
+            let d = (lo - out[i]).max(out[i] - hi);
+            if d > 1e-3 {
+                bad += 1;
+                worst = worst.max(d / (hi - lo).max(1.0));
+            }
+        }
+        (bad, out.len(), worst)
+    }
+
+    #[test]
+    fn unclamped_the_reconstruction_leaves_the_hull_of_its_inputs() {
+        // The negative control, and it is the load-bearing half of this pair.
+        // A clamp that is never asked to do anything passes its own test
+        // trivially, so this asserts the defect is genuinely present in the
+        // construction before the next test asserts it is gone.
+        let (bad, n, worst) = hull_violations(Hull::Unclamped);
+        assert!(
+            bad > 0,
+            "no hull violation to clamp: the construction does not exercise the defect, \
+             so the clamp test below would be vacuous ({n} px)"
+        );
+        // Not a hair outside: a violation at the noise level would not be the
+        // phenomenon ORCH measured.
+        assert!(worst > 0.01, "violations are trivially small (worst {worst} of span)");
+    }
+
+    #[test]
+    fn the_reconstruction_never_leaves_the_hull_of_its_inputs() {
+        let (bad, n, worst) = hull_violations(Hull::InputRange);
+        assert_eq!(bad, 0, "{bad}/{n} output pixels outside the input hull, worst {worst} of span");
+    }
+
+    #[test]
+    fn the_clamp_is_exact_on_a_single_frame() {
+        // The clamp must be inert where the answer is known. With one frame the
+        // hull is the frame itself, so `[lo, hi]` is a point and clamping to it
+        // is either exact or catastrophic -- there is no middle.
+        let (w, h) = (96, 72);
+        let img = ramp(w, h);
+        let sizes = level_sizes(w, h, MergeConfig::default().bands);
+        let mut m = BandMerge::new(w, h, 1, MergeConfig::default());
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        m.add_frame(&[&img], &img, &vec![4.0f32; w * h], &mut fws);
+        let out = m.finish(&mut Workspace::new(&sizes));
+        for (i, (a, b)) in out[0].iter().zip(&img).enumerate() {
+            assert_eq!(*a, *b, "pixel {i}: clamped to {a} from a single input of {b}");
+        }
+    }
+
+    #[test]
+    fn the_hull_survives_chunked_folding() {
+        // `absorb` must fold the hull as exactly as it folds the sums, or a
+        // chunked render and a serial one are different merges.
+        let (w, h, nf) = (128usize, 96usize, 8usize);
+        let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
+        let cfg = MergeConfig::default();
+        let sizes = level_sizes(w, h, cfg.bands);
+        let var = vec![4.0f32; w * h];
+        let fold = |range: std::ops::Range<usize>| {
+            let mut m = BandMerge::new(w, h, 1, cfg);
+            let mut fws = FrameWorkspace::new(&sizes, 1);
+            for f in range {
+                fws.next_frame();
+                m.add_frame(&[frames[f].as_slice()], &frames[f], &var, &mut fws);
+            }
+            m
+        };
+        let serial = fold(0..nf);
+        let mut chunked = fold(0..3);
+        chunked.absorb(&fold(3..nf));
+        for i in 0..w * h {
+            assert_eq!(serial.lo[0][i], chunked.lo[0][i], "hull floor differs at {i}");
+            assert_eq!(serial.hi[0][i], chunked.hi[0][i], "hull ceiling differs at {i}");
+        }
+    }
+
+    #[test]
+    fn the_clamped_fraction_reports_what_the_clamp_did() {
+        // The diagnostic must move with the phenomenon, not merely exist.
+        let (w, h, nf) = (192usize, 144usize, 8usize);
+        let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
+        let sizes = level_sizes(w, h, MergeConfig::default().bands);
+        let mut m = BandMerge::new(w, h, 1, MergeConfig::default());
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let var = vec![4.0f32; w * h];
+        for f in &frames {
+            fws.next_frame();
+            m.add_frame(&[f.as_slice()], f, &var, &mut fws);
+        }
+        let frac = m.clamped_fraction(&mut Workspace::new(&sizes), 1.0);
+        assert_eq!(frac.len(), 1);
+        assert!(frac[0] > 0.0, "the clamp bound on this stack but reported {}", frac[0]);
+
+        // And it is silent where nothing is wrong: identical frames have a
+        // POINT hull, so the collapse's own float error is formally outside it.
+        // That dust is why `clamped_fraction` takes a tolerance -- assert it is
+        // dust, then assert the diagnostic is not fooled by it.
+        let img = ramp(w, h);
+        let mut flat = BandMerge::new(w, h, 1, MergeConfig::default());
+        for _ in 0..4 {
+            fws.next_frame();
+            flat.add_frame(&[&img], &img, &var, &mut fws);
+        }
+        let raw = flat.clamped_fraction(&mut Workspace::new(&sizes), 0.0);
+        let worst = flat
+            .finish(&mut Workspace::new(&sizes))[0]
+            .iter()
+            .zip(&img)
+            .fold(0.0f32, |a, (p, b)| a.max((p - b).abs()));
+        assert!(worst < 1.0, "identical frames reconstructed {worst} DN off, which is not dust");
+        assert!(raw[0] > 0.0, "no dust at tol=0, so this test is not exercising the tolerance");
+        let q = flat.clamped_fraction(&mut Workspace::new(&sizes), 1.0);
+        assert_eq!(q[0], 0.0, "the clamp bound on identical frames, reporting {}", q[0]);
+    }
+
+    #[test]
+    fn the_hull_is_on_by_default() {
+        assert_eq!(MergeConfig::default().hull, Hull::InputRange);
+    }
+
     #[test]
     fn the_base_band_default_is_the_measured_one() {
         assert_eq!(MergeConfig::default().base, BaseBand::Mean);

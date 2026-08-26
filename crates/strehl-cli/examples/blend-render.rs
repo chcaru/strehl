@@ -53,7 +53,7 @@ use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource};
 use strehl_core::profile;
 use strehl_core::pyramid::{
-    BandMerge, BaseBand, FrameWorkspace, MergeConfig, SelectMode, Workspace, level_sizes,
+    BandMerge, BaseBand, FrameWorkspace, Hull, MergeConfig, SelectMode, Workspace, level_sizes,
     luma_variance,
 };
 use strehl_core::warpmap::{FrameWarp, WarpMap};
@@ -85,7 +85,7 @@ fn parse_args() -> Result<Args> {
     let mut it = std::env::args().skip(1);
     let dir = it.next().context(
         "usage: blend-render <DIR> <OUT.tiff> [--limit N] [--bands N] [--gate F] \
-         [--exponent F] [--hard-max] [--base-mean] [--base-weighted] [--chunks N] \
+         [--exponent F] [--hard-max] [--base-mean] [--base-weighted] [--unclamped] [--chunks N] \
          [--linear] [--camera-linear] [--exposure S]",
     )?;
     let out = it.next().context("an output path is required")?;
@@ -118,6 +118,10 @@ fn parse_args() -> Result<Args> {
             // reachable is what makes `BaseBand::Mean` a measurement rather
             // than a preference.
             "--base-weighted" => a.cfg.base = BaseBand::WeightedFromCoarsest,
+            // Reproduces the mid-tone clip: without the hull clamp the
+            // reconstruction may emit values no input frame supports, which on
+            // real stacks crushes dark pixels to exact zero. See `Hull`.
+            "--unclamped" => a.cfg.hull = Hull::Unclamped,
             "--linear" => a.linear = true,
             // Camera-native primaries, linear, no matrix and no transfer curve
             // -- `image_out::OutputSpace::CameraLinear`, the byte-frozen
@@ -326,9 +330,11 @@ fn main() -> Result<()> {
         match args.cfg.select {
             SelectMode::SoftPower =>
                 "SOFT -- weight = (band power above the noise floor)^exponent, a convex \
-                 combination.\n                  Sign coherence is free: a convex combination \
-                 cannot take adjacent\n                  coefficients from opposite-signed frames, \
-                 which is the ringing a\n                  coefficient-wise argmax produces.",
+                 combination\n                  WITHIN each band. That does NOT make the \
+                 reconstruction convex: each band\n                  has its own weight field, so \
+                 a sum of convex combinations taken under\n                  different weightings \
+                 is not a convex combination of the inputs. The\n                  hull clamp is \
+                 what confines the output to what the frames support.",
             SelectMode::HardMax =>
                 "HARD -- argmax of band power. THE CONTROL ARM, the textbook PMax rule.",
         }
@@ -496,6 +502,22 @@ fn main() -> Result<()> {
     // ---- collapse and write ----------------------------------------------
     let t_out = Instant::now();
     let mut ws = Workspace::new(&sizes);
+    // What the hull clamp actually did on THIS stack. Measured per render
+    // rather than argued once: the clamp's whole justification is that it only
+    // removes values no input frame supports, and that claim is checkable.
+    let clamped = merge.clamped_fraction(&mut ws, 1.0);
+    if !clamped.is_empty() {
+        eprintln!(
+            "hull clamp      : {}",
+            clamped.iter().map(|f| format!("{:.3}%", 100.0 * f)).collect::<Vec<_>>().join(" ")
+        );
+        eprintln!(
+            "                  per plane, the fraction of output pixels the reconstruction put \
+             outside\n                  the range its own input frames support, and which were \
+             clamped back\n                  into it. Per-band convexity does not imply \
+             reconstruction convexity."
+        );
+    }
     let planes = merge.finish(&mut ws);
     drop(ws);
     drop(merge);
