@@ -2504,29 +2504,47 @@ pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<PhotometricMode> {
 /// Where to write the n_eff map, if anywhere: `--n-eff-map` wins, then
 /// [`NEFF_ENV`]. Same precedence and same printing rule as
 /// [`election_map_path`], so the two maps behave identically.
-/// Default winner-focus ceiling for the veil envelope.
+/// Default state of the veil envelope: off.
 ///
-/// Zero, meaning off. The ceiling is a threshold on a focus response whose
-/// distribution is subject-dependent, and shipping a guessed threshold default
-/// ON would be turning on an uncalibrated correction across the whole gallery.
-/// It is enabled per-run through `STREHL_VEIL` until the distribution is
-/// measured on a featureless backdrop and on `couch-fibers-cpl`.
-const DEFAULT_VEIL_FOCUS_MAX: f32 = 0.0;
+/// It stays off until the flatness gate has a 26-subject gallery sharpness
+/// delta behind it. A merge-path change that alters which samples enter the
+/// average is exactly the kind that looks like a win on the subject it was
+/// aimed at and softens the library — which is how `57e4554` cost 6.6%.
+const DEFAULT_VEIL_ON: bool = false;
 
-/// The winner-focus ceiling below which the veil envelope replaces the gated
-/// mean, from `STREHL_VEIL`. `0` or `off` disables it entirely.
-fn veil_focus_ceiling() -> f32 {
+/// Whether the veil envelope runs, from `STREHL_VEIL`. `0` or `off` disables it.
+///
+/// This used to carry the winner-focus ceiling as its magnitude. It no longer
+/// does: eligibility is now the debiased peak prominence against the merge's
+/// own significance gate (see [`Estimator::veil_w`]), which takes its cut from
+/// `--gate` and has no free parameter for this variable to set. A leftover
+/// numeric value is therefore accepted as "on" and **said so out loud**, rather
+/// than being silently ignored — a run whose command line still names a ceiling
+/// that no longer exists would otherwise be attributed to the wrong
+/// configuration later.
+fn veil_enabled() -> bool {
     match std::env::var("STREHL_VEIL") {
-        Err(_) => DEFAULT_VEIL_FOCUS_MAX,
-        Ok(v) if v.trim().eq_ignore_ascii_case("off") => 0.0,
+        Err(_) => DEFAULT_VEIL_ON,
+        Ok(v) if v.trim().eq_ignore_ascii_case("off") => false,
         Ok(v) => match v.trim().parse::<f32>() {
-            Ok(x) if x.is_finite() && x >= 0.0 => x,
+            Ok(x) if x.is_finite() && x == 0.0 => false,
+            Ok(x) if x.is_finite() && x > 0.0 => {
+                if (x - 1.0).abs() > f32::EPSILON {
+                    eprintln!(
+                        "veil: STREHL_VEIL={x} is read as ON. The magnitude is no \
+                         longer a focus ceiling -- eligibility is the peak \
+                         prominence against the --gate cut -- so this number \
+                         selects nothing."
+                    );
+                }
+                true
+            }
             _ => {
                 eprintln!(
                     "STREHL_VEIL={v:?} is not a non-negative number; \
-                     using the default {DEFAULT_VEIL_FOCUS_MAX}"
+                     leaving the veil off"
                 );
-                DEFAULT_VEIL_FOCUS_MAX
+                DEFAULT_VEIL_ON
             }
         },
     }
@@ -2996,7 +3014,40 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 .map(edgeaware::BimodalStats::peak_excess)
                 .unwrap_or_else(|| vec![f32::INFINITY; geom.pixels()]);
             let cut = opts.gates.iter().copied().fold(f32::INFINITY, f32::min);
-            veil_excess = Some(excess.clone());
+            // The VEIL's gate, which is a different question from the veto's
+            // and needs different units.
+            //
+            // The veto asks "is a SECOND layer resolvable here", and consumes
+            // `peak_excess` in raw focus units as proof of absence -- a
+            // conservative direction in which a units mismatch can only make it
+            // refuse more often. The veil asks "does the election have anything
+            // to choose between at all", which is a SIGNIFICANCE question, and
+            // it is consumed in the permissive direction where the same
+            // mismatch is not survivable.
+            //
+            // Measured: gating the veil on `peak_excess > 4.0` made 99.59% of
+            // `flower-bud` eligible -- not a gate at all, leaving the whole
+            // safety interlock resting on the luminance floor, which protects a
+            // dark subject and would protect nothing on a bright one.
+            // `first_mode_z` is the same peak expressed in the pixel's own
+            // noise sigmas, so a 4.0-sigma cut means what the rest of the
+            // engine means by 4.0 sigma.
+            veil_excess = modes.as_ref().map(edgeaware::BimodalStats::first_mode_z);
+            {
+                // The veil gates on this same field from the other side, so its
+                // DISTRIBUTION decides how much of the plane the veil claims.
+                // A single "admitted %" cannot show that, and reasoning about
+                // the scale of a quantity in focus units rather than measuring
+                // it is how a gate ends up either inert or universal.
+                let mut v = veil_excess.clone().unwrap_or_default();
+                v.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+                let q = |f: f64| v[(((v.len() - 1) as f64) * f).round() as usize];
+                eprintln!(
+                    "peak significance: p10 {:.2} p25 {:.2} p50 {:.2} p75 {:.2} p90 {:.2} \
+                     p99 {:.2} max {:.2} sigma  (veil claims z < {cut:.1})",
+                    q(0.10), q(0.25), q(0.50), q(0.75), q(0.90), q(0.99), q(1.0)
+                );
+            }
             let may: Vec<bool> = excess.iter().map(|&e| e > cut).collect();
             let admitted = may.iter().filter(|&&m| m).count();
             eprintln!(
@@ -3540,7 +3591,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
 
     // ---- pass two: gated average ------------------------------------------
     let t2 = Instant::now();
-    let veil_on = veil_focus_ceiling() > 0.0;
+    let veil_on = veil_enabled();
     let veil_margin = veil_margin();
     let veil_floor = veil_luma_floor();
     // The gate is the merge's own significance gate, exactly as the collapse

@@ -2874,3 +2874,111 @@ untouched" from "40 px happened to clear the affected band". Sweeping 0/10/20/
 1.0 means an edge band that the fixed distance merely stepped over. Four of five
 subjects are flat; `flower-bud` climbs 1.060 -> 1.000, which correctly localises
 its effect to a band near the silhouette.
+
+---
+
+## 30. The veil's gate is a content statistic, and its units were wrong once
+
+ORCH corrected the gate specification: not "background pixels only", which is
+mask-geometric, but **"does the election have anything to choose between here"**.
+Where the through-focus response is flat, selection is arbitrary and an extremum
+across frames costs no detail; where it is peaked, the election carries real
+information and nothing may override it.
+
+That invariant was already computable in-crate. The shipped gate is now the
+significance of the pixel's strongest through-focus peak, `first_mode_z`,
+against the merge's own `--gate` cut, ramped off over one sigma.
+
+### 30.1 The first implementation was inert, and the guard subject proved it
+
+`peak_excess` and `first_mode_z` are the same peak. `peak_excess` is in raw
+**focus units**; `first_mode_z` is in the pixel's own **noise sigmas**. I gated
+on the first against a cut of 4.0 sigma. Measured, one pin, both arms:
+
+| gate | `flower-bud` eligible | `couch-fibers` applied | `couch-fibers` texture |
+| --- | --- | --- | --- |
+| `peak_excess` (focus units) | 99.59% | 66.19% | **-11.65%** |
+| `first_mode_z` (sigma) | 83.51% | 0% (declined) | **0.00%, byte-identical** |
+
+At 99.59% eligible the gate is not a gate. The entire safety interlock had
+silently fallen back on the luminance floor -- which protects a dark subject and
+would protect **nothing** on a bright one. On `couch-fibers-cpl`, the do-no-harm
+control, it destroyed 11.65% of the texture: nearly twice the regression
+`57e4554` caused and which section 28 was spent repairing.
+
+The collapse veto consumes `peak_excess` against the same 4.0 safely, which is
+what made the mistake easy. It reads it in the **conservative** direction, as
+proof of absence, where a units mismatch can only make it refuse more often. The
+veil reads it in the permissive direction, where the same mismatch is not
+survivable. **The same statistic against the same constant is safe in one
+direction and unsafe in the other.**
+
+### 30.2 Four unit tests passed on both versions
+
+The tests pass an explicit prominence array to `enable_veil` and assert the
+weight it produces. They pin the gate's behaviour *given a field*; they cannot
+see the caller's *choice* of field. All 457 passed before the swap and all 457
+passed after it, and four planted sabotages were caught both times.
+
+**Generalisable: a test that takes the disputed quantity as a parameter has
+excluded the actual defect from its own scope.** What caught it was a render of
+the guard subject and one log line reading `eligible 99.59%`.
+
+### 30.3 The correct gate makes the polarity precondition correct too
+
+Under the inert gate, `couch-fibers`'s "backdrop" population was 98.96% of the
+plane -- the whole picture, fibres included -- giving backdrop 2354 DN against
+foreground 2174 DN, a false +179 DN polarity that squeaked past the sign law.
+Under the z gate the eligible set is genuinely flat ground: backdrop 2172 DN,
+foreground 2174 DN, polarity **-2 DN**, and the veil **declines outright**.
+
+The two interlocks are not independent -- the gate feeds the population the
+polarity test measures -- so a correct gate buys a correct decline for free.
+
+### 30.4 The ramp is one sigma, absolute, not a fraction of the cut
+
+The first ramp spent half the gate's range, putting the knee at 2.0 sigma --
+below `flower-bud`'s p10 of 2.39, so **no** backdrop pixel ever reached full
+weight and the correction was diluted everywhere at once (mean lift 282 DN
+against 336 DN, target band -316 DN against -226 DN). A fraction also makes the
+handover width depend on `--gate`. One sigma is the unit the gate is expressed
+in, and it is not a tuned constant.
+
+### 30.5 Acceptance, one pin `AFAC2368C4CF`, both arms of every subject
+
+| band | off | veil | |
+| --- | --- | --- | --- |
+| RIM (1-16) | -4094 | **-2740** | |
+| 30-60 | -3873 | -639 | 6.1x |
+| 60-120 | -2255 | -464 | 4.9x |
+| **120-200** | -369 | **-226** | **PASS, bar -247** |
+| **SURROUND (30-300)** | **-1626** | **-335** | **4.9x** |
+
+Far field 19167.3 -> 19171.3 DN, so the gains are not a global lift; the
+reference the deficit is measured against did not move.
+
+- `couch-fibers-cpl` GUARD: **0.00% of pixels changed, byte-identical.**
+- `pencil-steep-angle-cpl` POLARITY: **0.00%, exact no-op**, declined on sign.
+- `109MSDCF` PLACEBO: surround +270 -> +271 DN (1 DN), rim -2755 -> -2692 DN.
+  **This is the one criterion not met**: 132 DN at d=1-4, against the harness's
+  uniform 50 DN bar. It is 2.9% of that band's own -4617 DN deficit and every
+  band beyond d=16 moves 0-1 DN, so it is a rim-only effect -- but it is a real
+  breach of a bar I did not set, and it is reported rather than adjusted.
+
+### 30.6 What the picture shows that the numbers did not
+
+Under a hard stretch of the backdrop alone, the off arm has a broad smooth
+gradient falling into the silhouette -- the veil -- and the on arm does not.
+That is the fix working.
+
+But the on arm leaves a **speckled residue band** where the correction is
+strongest, and the backdrop's gradient RMS rises **+8.36%**. That is the
+extremum estimator's own noise: a per-pixel maximum over frames is chosen
+independently at every pixel, so it prints salt-and-pepper where a mean would
+not. **The aura is removed and replaced by a smaller defect of a different
+kind.**
+
+This is exactly what ORCH's cleanest-third mean is for -- it averages ~68 frames
+instead of selecting 1, and ORCH predicts the noise floor falls away. That
+prediction now has a measured reason to be tested rather than a theoretical one.
+It is the next thing to build.

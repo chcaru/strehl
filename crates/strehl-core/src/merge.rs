@@ -186,6 +186,25 @@ pub fn selection_inflation(n: u16) -> f32 {
 /// against the operator as configured, so changing either breaks it loudly.
 pub const FOCUS_NOISE_SD: f32 = 0.015_214;
 
+/// Width of the band over which the veil's gate ramps off, in sigma.
+///
+/// The veil's eligibility is a threshold on a noisy per-pixel statistic, and a
+/// hard threshold on a noisy statistic prints its own contour into the picture:
+/// neighbouring pixels either side of the cut get materially different
+/// estimators, so the gate becomes visible as a seam wherever the statistic
+/// crosses it slowly.
+///
+/// **Absolute, not a fraction of the cut.** The first version spent half the
+/// gate's range on the ramp, which made the ramp width depend on `--gate` —
+/// change the gate and the handover silently changes with it. Worse, at gate
+/// 4.0 the knee landed at 2.0 sigma, below `flower-bud`'s p10 of 2.39, so
+/// *no* pixel on the backdrop ever reached full weight and the correction was
+/// diluted everywhere at once: mean lift fell from 352 DN to 282 DN for no
+/// gain in safety. One sigma is the unit the gate itself is expressed in, and
+/// the handover spanning one sigma of that same scale is the statement that a
+/// pixel within one sigma of the cut is genuinely marginal.
+pub const VEIL_BLEND_SIGMA: f32 = 1.0;
+
 /// Apply the merge regulariser to one frame's focus field.
 ///
 /// `scratch` and `dst` must be `geom.pixels()` long; `scratch` is overwritten.
@@ -1160,14 +1179,48 @@ pub struct Estimator {
     /// The winner-focus level at or above which [`Estimator::apply_veil`] does
     /// nothing. Meaningless while `pmax` is empty.
     ///
-    /// This is the whole safety interlock. A pixel whose winning focus response
-    /// is *high* has some frame in which real structure resolved there, and a
-    /// maximum across frames would replace that structure with a defocused
-    /// smear of it — section 24 measured exactly that population on `bee-2`,
-    /// where a merge darker than every one of its inputs was the stacker
-    /// working correctly on resolved hairs. Only dead ground, where no frame
-    /// found anything, is eligible.
-    veil_focus_max: f32,
+    /// This is the whole safety interlock, and it is a statement about **what
+    /// the election has to choose between**, not about where a pixel sits.
+    ///
+    /// A pixel whose through-focus response has a resolvable *peak* has some
+    /// frame in which real structure resolved there, and a maximum across
+    /// frames would replace that structure with a defocused smear of it —
+    /// section 24 measured exactly that population on `bee-2`, where a merge
+    /// darker than every one of its inputs was the stacker working correctly on
+    /// resolved hairs. Where the response is *flat*, selection is arbitrary,
+    /// every frame's sample is the same latent value plus veil plus noise, and
+    /// an extremum costs nothing because there is no detail to lose.
+    ///
+    /// So the gate is the significance of the pixel's strongest through-focus
+    /// peak,
+    /// [`BimodalStats::first_mode_z`](crate::edgeaware::BimodalStats::first_mode_z),
+    /// against the merge's own gate in sigma. Where that peak does not clear
+    /// the gate, the pixel is featureless ground and the election is choosing
+    /// between frames that differ only by noise.
+    ///
+    /// **The units matter and were got wrong once.** The first version gated on
+    /// `peak_excess`, which is the same peak in raw *focus* units, against the
+    /// same 4.0 — and made 99.59% of `flower-bud` eligible. That is not a gate;
+    /// it left the entire safety interlock resting on the luminance floor,
+    /// which happens to protect a dark subject and would protect nothing on a
+    /// bright one. The collapse veto consumes `peak_excess` against the same
+    /// number safely only because it reads it in the *conservative* direction,
+    /// where a units mismatch can only make it refuse more often.
+    ///
+    /// **This replaced an absolute ceiling on `best_focus` calibrated from
+    /// deciles.** That ceiling could not be derived (see
+    /// [`Self::focus_deciles`]), and it silently went stale whenever anything
+    /// moved the focus field's scale — restoring the acuity window shrink in
+    /// `6430fb2` did exactly that. A prominence measured against a pixel's own
+    /// baseline and cut at the calibrated noise gate has no such failure mode.
+    ///
+    /// Stored as a per-pixel weight in `[0, 1]` rather than a boolean so the
+    /// operator ramps off across a band instead of leaving a seam along a
+    /// threshold contour.
+    veil_w: Vec<f32>,
+    /// The significance gate `veil_w` was built against, kept only so that two
+    /// estimators reduced together can prove they used the same one.
+    veil_gate_cut: f32,
     /// How far above the gated mean the envelope must sit, in units of the
     /// single-frame noise sigma, before it is believed.
     ///
@@ -1334,7 +1387,8 @@ impl Estimator {
             wsum,
             wsq,
             pmax: [Vec::new(), Vec::new(), Vec::new(), Vec::new()],
-            veil_focus_max: 0.0,
+            veil_w: Vec::new(),
+            veil_gate_cut: 0.0,
             veil_margin: 0.0,
             veil_luma_floor: 0.0,
             censor: Vec::new(),
@@ -1884,8 +1938,13 @@ impl Estimator {
                  their maxima are not commensurable"
             );
             assert_eq!(
-                self.veil_focus_max, other.veil_focus_max,
-                "estimators used different veil focus ceilings and cannot be reduced"
+                self.veil_gate_cut, other.veil_gate_cut,
+                "estimators used different veil significance gates and cannot be reduced"
+            );
+            assert_eq!(
+                self.veil_w.len(),
+                other.veil_w.len(),
+                "estimators used different veil weight fields and cannot be reduced"
             );
             assert_eq!(
                 self.veil_margin, other.veil_margin,
@@ -2055,34 +2114,71 @@ impl Estimator {
         out
     }
 
-    /// Turn on veil-envelope accumulation, eligible only where the winning
-    /// focus response is below `focus_max`.
+    /// Turn on veil-envelope accumulation, eligible where the pixel's
+    /// through-focus response has **no resolvable peak** — that is, where the
+    /// election has nothing to choose between and an extremum across frames
+    /// therefore costs no detail.
+    ///
+    /// `excess` is the debiased peak prominence per pixel, in focus units, as
+    /// produced by
+    /// [`BimodalStats::peak_excess`](crate::edgeaware::BimodalStats::peak_excess).
+    /// `cut` is the merge's own significance gate in sigma — pass the same
+    /// value the collapse veto is given, because this is deliberately the same
+    /// test read the other way round.
+    ///
+    /// The weight is 1 where the prominence is comfortably under the gate,
+    /// ramps to 0 as it approaches the gate, and is 0 at or above it. A pixel
+    /// with no prominence measurement at all (`excess` infinite, which is what
+    /// the caller supplies when bimodal statistics were never computed) scores
+    /// 0 and is left to the election — absence of evidence is not licence.
     ///
     /// Must be called before the first fold: a maximum that missed frames is
     /// not a maximum.
-    pub fn enable_veil(&mut self, focus_max: f32, margin: f32, luma_floor: f32) {
+    pub fn enable_veil(&mut self, excess: &[f32], cut: f32, margin: f32, luma_floor: f32) {
         assert!(
             self.frames == 0,
             "enable_veil must precede the first fold; {} frames are already \
              folded and a maximum that missed them is not a maximum",
             self.frames
         );
+        let px = self.geom.pixels();
+        assert_eq!(
+            excess.len(),
+            px,
+            "veil prominence field is {} px but the estimator covers {px} px",
+            excess.len()
+        );
         assert!(
-            focus_max.is_finite() && focus_max >= 0.0,
-            "veil focus ceiling must be finite and non-negative, got {focus_max}"
+            cut.is_finite() && cut > 0.0,
+            "veil significance gate must be finite and positive, got {cut}"
         );
         assert!(
             margin.is_finite() && margin >= 0.0,
             "veil margin must be finite and non-negative, got {margin}"
         );
-        let px = self.geom.pixels();
         self.pmax = [
             vec![f32::NEG_INFINITY; px],
             vec![f32::NEG_INFINITY; px],
             vec![f32::NEG_INFINITY; px],
             vec![f32::NEG_INFINITY; px],
         ];
-        self.veil_focus_max = focus_max;
+        let knee = (cut - VEIL_BLEND_SIGMA).max(0.0);
+        self.veil_w = excess
+            .iter()
+            .map(|&e| {
+                if !e.is_finite() {
+                    return 0.0;
+                }
+                if e <= knee {
+                    1.0
+                } else if e >= cut {
+                    0.0
+                } else {
+                    (cut - e) / (cut - knee)
+                }
+            })
+            .collect();
+        self.veil_gate_cut = cut;
         self.veil_margin = margin;
         self.veil_luma_floor = luma_floor;
     }
@@ -2154,7 +2250,7 @@ impl Estimator {
                     continue;
                 }
                 let luma = 0.5 * (self.sum[1][i] + self.sum[3][i]) / d;
-                if self.best_focus[i] < self.veil_focus_max {
+                if self.veil_w[i] > 0.0 {
                     back.push(luma);
                 }
                 all.push((self.best_focus[i], luma));
@@ -2189,7 +2285,8 @@ impl Estimator {
         report.luma_floor_dn = floor;
 
         for i in 0..px {
-            if !(self.best_focus[i] < self.veil_focus_max) {
+            let w = self.veil_w[i];
+            if !(w > 0.0) {
                 continue;
             }
             report.eligible += 1;
@@ -2224,7 +2321,9 @@ impl Estimator {
                 let est = m - debias * sigma;
                 let current = self.sum[s][i] / divisor;
                 if est > current + self.veil_margin * sigma {
-                    self.sum[s][i] = est * divisor;
+                    // Ramped, not switched: `w` carries the operator off across
+                    // a band so no seam is left along the gate's contour.
+                    self.sum[s][i] = (w * est + (1.0 - w) * current) * divisor;
                     moved = true;
                 }
             }
@@ -2779,7 +2878,14 @@ mod tests {
             stats.fold(k, &field).unwrap();
         }
         let mut est = Estimator::new(&stats, Gate::new(4.0));
-        est.enable_veil(1.5, 3.0, 0.5);
+        // The prominence field, expressing the fixture's intent directly: the
+        // subject has a peak the election is using (8.0, over the 4.0 gate, so
+        // weight 0) and the backdrop has none worth the name (0.6, under the
+        // 2.0 knee, so weight 1). Previously this was an absolute ceiling of
+        // 1.5 on `best_focus`, which discriminated the same two populations —
+        // the fixture means what it always meant.
+        let excess: Vec<f32> = (0..g.pixels()).map(focus).collect();
+        est.enable_veil(&excess, 4.0, 3.0, 0.5);
         for k in 0..n {
             let field: Vec<f32> = (0..g.pixels()).map(focus).collect();
             let frame = QuadGrid::new(g.width, g.height, |x, y| {
@@ -2823,6 +2929,105 @@ mod tests {
         assert!(r.declined, "bright subject on a dark backdrop must decline: {r:?}");
         assert!(r.polarity_dn < 0.0, "{r:?}");
         assert_eq!(r.applied, 0, "a declined veil must touch nothing: {r:?}");
+    }
+
+    /// Flat dead ground where the veil has something real to do: one unveiled
+    /// frame among seven veiled ones, plus a dark subject so the polarity
+    /// precondition has a foreground to measure against. Only the backdrop's
+    /// gate weight is swept; the subject is always held above the cut.
+    fn ramp_scene(g: PlaneGeometry, excess_value: f32) -> Estimator {
+        let n = 8u16;
+        let subject = |i: usize| i % 4 == 0;
+        let focus = |i: usize| if subject(i) { 8.0f32 } else { 0.6f32 };
+        let mut stats = FocusStats::new(g);
+        for k in 0..n {
+            let field: Vec<f32> = (0..g.pixels()).map(focus).collect();
+            stats.fold(k, &field).unwrap();
+        }
+        let mut est = Estimator::new(&stats, Gate::new(4.0));
+        let excess: Vec<f32> = (0..g.pixels())
+            .map(|i| if subject(i) { 8.0 } else { excess_value })
+            .collect();
+        est.enable_veil(&excess, 4.0, 3.0, 0.5);
+        for k in 0..n {
+            let field: Vec<f32> = (0..g.pixels()).map(focus).collect();
+            let frame = QuadGrid::new(g.width, g.height, |x, y| {
+                let i = y * g.width + x;
+                let v: u16 = if subject(i) {
+                    1000
+                } else if k == 0 {
+                    8000
+                } else {
+                    5000
+                };
+                [v, v, v, v]
+            });
+            est.fold(k, &frame, &field).unwrap();
+        }
+        est
+    }
+
+    /// A pixel with no prominence measurement at all must be left to the
+    /// election.
+    ///
+    /// The caller supplies an infinite excess when bimodal statistics were
+    /// never computed. Infinity is not "flat" — it is "unmeasured", and the two
+    /// must not be confused, because treating unmeasured ground as eligible
+    /// would turn the veil on across the whole plane on exactly the runs where
+    /// its safety interlock is unavailable. Absence of evidence is not licence.
+    #[test]
+    fn an_unmeasured_prominence_is_not_a_flat_one() {
+        let g = geom(16, 16);
+        let m = unit_sigma_model();
+        let mut est = ramp_scene(g, f32::INFINITY);
+        let r = est.apply_veil(&m, 0.0);
+        assert_eq!(
+            r.eligible, 0,
+            "an unmeasured prominence must make the veil inert, not universal: {r:?}"
+        );
+        assert_eq!(r.applied, 0, "{r:?}");
+    }
+
+    /// The gate ramps off across a band rather than switching at a contour.
+    ///
+    /// A hard threshold on a noisy per-pixel statistic prints its own contour
+    /// into the picture. The three arms here sit below the knee, inside the
+    /// band, and above the cut, and the middle one must land strictly between
+    /// the other two — not at either endpoint, which is what both a missing
+    /// ramp and an always-on ramp would produce.
+    #[test]
+    fn the_gate_ramps_off_across_the_band_instead_of_switching() {
+        let g = geom(16, 16);
+        let m = unit_sigma_model();
+        let value_at = |e: f32| {
+            let mut est = ramp_scene(g, e);
+            let r = est.apply_veil(&m, 0.0);
+            // Pixel 1 is backdrop; pixel 0 is subject and must never move.
+            (est.green_mean(1), r)
+        };
+        // knee = cut - 1 sigma = 3.0, cut = 4.0.
+        let (full, rf) = value_at(0.6);
+        let (half, rh) = value_at(3.5);
+        let (none, rn) = value_at(5.0);
+        assert!(rf.eligible > 0 && rh.eligible > 0, "{rf:?} {rh:?}");
+        assert_eq!(rn.eligible, 0, "above the cut the election keeps the pixel: {rn:?}");
+        assert!(
+            rf.applied > 0,
+            "the fixture must actually give the veil something to do, or this \
+             test cannot tell a ramp from a no-op: {rf:?}"
+        );
+        assert!(
+            full > half && half > none,
+            "the band must be a genuine interpolation: full {full} half {half} none {none}"
+        );
+        // Squarely between, not merely between: a ramp that collapses to either
+        // endpoint under rounding would still satisfy a bare ordering.
+        let mid = 0.5 * (full + none);
+        assert!(
+            (half - mid).abs() < 0.05 * (full - none),
+            "half-weight must land near the midpoint: full {full} half {half} \
+             none {none} mid {mid}"
+        );
     }
 
     /// The backdrop level must come from the dead-ground population, not from a
