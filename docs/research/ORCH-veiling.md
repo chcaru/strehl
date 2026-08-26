@@ -5437,3 +5437,116 @@ Logged to `docs/captures-needed.md`:
 > of subjects; it is a sample of *configurations*, and it is currently constant
 > in the variables the guard reads.
 
+
+---
+
+## 51. The flip orphaned a lane, and only a byte comparison found it
+
+Section 49 called measuring across a path boundary a *class* and listed three
+instances. The fourth arrived within the hour, and it is the most expensive one
+yet: **28 hours of correctly executed measurement, on the arm that stopped being
+the product halfway through.**
+
+### 51.1 What happened
+
+`DEFAULT_MERGE_BACKEND` flipped from `Estimator` to `Pyramid` at `5142ace`.
+BUILD-HALO had by then spent 28 hours on the occlusion halo -- the owner's
+single loudest complaint, and the reason all research was stopped -- building the
+adaptive election radius, the silhouette veto, the noise-driven acuity shrink,
+and an attribution methodology good enough to isolate a single term
+bit-exactly.
+
+**All of it is inside `run_estimator`. None of it is reachable from
+`run_pyramid`.**
+
+```
+merge_cmd.rs L2521  pub fn run   -> match backend { Pyramid => run_pyramid, Estimator => run_estimator }
+              L2528  run_estimator   spans L2528..L4027   <- the acuity block sits at L2806
+              L4028  run_pyramid     spans L4028..L4336
+```
+
+Searching the whole body of `run_pyramid` for
+`acuity|SelectionScale|edgeaware|tighten_by` returns **zero matches**.
+
+### 51.2 The structural argument is the weaker half
+
+The reading above is an inference from source. The measurement is not. I built a
+clean binary at HEAD `a4bd795` -- which contains BUILD-HALO's `6430fb2` and
+`ce59c31` -- and rendered `coffee-bean` on the shipped configuration, then
+compared it to the gallery render produced by the pinned binary at `3e5a03ea`:
+
+| arm | binary | SHA-256 (20) | bytes |
+| --- | --- | --- | --- |
+| SHIP-V1 | `3e5a03ea`, 9,339,392 B | `C085A0569B9584EC96A3` | 197,798,531 |
+| HEAD | `a4bd795`, 9,343,488 B | `C085A0569B9584EC96A3` | 197,798,531 |
+
+**Byte-identical.** Two binaries differing by 4,096 bytes and 1.4 hours of
+commits produce the same 197,798,531 bytes. An acuity term that BUILD-RENDER
+priced at **-6.6% gradient RMS across 26 subjects** when it was deleted moved
+**nothing** on the path that ships.
+
+> **A byte comparison across a version gap answers a question no code reading
+> can: not "is this code called?" but "did anything I did reach the product?"**
+> It costs one render and one hash, and it is the cheapest orphan detector
+> available. Every long-running lane should be made to produce one.
+
+### 51.3 The system had already said so, in a voice nobody was listening to
+
+BUILD-HALO's own byte-freeze rows pass `--merge estimator` and `--photometric
+off` **explicitly**. Its attribution script omitted them on the first attempt
+and **the tool refused the flag combination outright**. Its note records that
+refusal as *"the only reason the omission did not silently produce a confident
+wrong attribution."*
+
+That refusal was the defaults moving out from under the frozen rows, announcing
+itself. It was read as a near-miss in one script rather than as news about the
+product. The signal was correct, arrived on time, and was scoped too narrowly by
+its reader -- including by me.
+
+> **When a tool refuses a flag combination that used to work, the news is not
+> about your invocation. It is that a default moved.** Ask what else was
+> standing on it.
+
+### 51.4 What this does and does not cost
+
+It does not invalidate the work. The estimator path still exists and is still
+selectable, and the attribution methodology -- isolating a term with
+`STREHL_ACUITY` and requiring **both** arms, because *"off reproduces the old
+bytes"* alone would also be satisfied by a build that ignored the flag and moved
+nothing -- is the best attribution standard this project has produced. It is now
+pointed at the path that ships.
+
+What it does cost is the answer to the owner's actual question. **Nobody has
+measured whether the pyramid backend halos at all.** Every halo instrument here
+was built against the estimator's winner field, and the pyramid backend has no
+winner field; it gates band-wise. Two possibilities, both live:
+
+- pyramid is structurally immune, the flip already answered the complaint, and
+  the lane closes with a proof; or
+- pyramid halos differently, invisibly to instruments looking for a winner-field
+  signature, and **the flip needs re-arguing** -- because `5142ace` was justified
+  on the polygonal patchwork, a decision taken *before* the acuity term was
+  restored, and a decision made before its counterparty improved may not survive
+  it.
+
+Routed to BUILD-HALO with the requirement that a negative result carry a potency
+check: an instrument that reports "no halo" without having been shown to detect
+one is reporting nothing.
+
+### 51.5 The orchestration lesson, which is mine
+
+Four instances of one class in a single night, and the pattern in *how they were
+found* is sharper than the pattern in the failures. None was found by the agent
+that owned the lane. Each was found by someone holding two lanes at once and
+noticing they disagreed. Section 48 came from an agent auditing a chain rather
+than a component; section 50 came from an implementer handed a coordinate who
+checked the class instead; this one came from a hash I took for an unrelated
+reason.
+
+> **A lane cannot see its own boundary.** The orchestrator's distinctive job is
+> not to review work inside lanes -- the lanes are better at that -- but to keep
+> asking, of every lane, *is this still attached to the product?* Flipping a
+> default is not a local edit. It re-parents every lane downstream of it, and
+> the agents inside those lanes will not notice, because from inside a lane
+> everything still passes.
+
