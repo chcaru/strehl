@@ -330,3 +330,74 @@ sharpness, all failing on a comparison OF edge sharpness. **The variable, not
 the statistic, is the defect.** The structural finding is that this corpus's
 edges are 13–18 px wide at 10-90%, and no instrument bounded by edge sharpness
 can compare them.
+
+## What the fork's 2.54x ESF residual is made of
+
+Not a resolution comparison. The residual decomposes because a displaced edge
+and additive noise enter it differently: if the edge at row `y` sits `δᵧ` off
+the fitted line, a sample at normal distance `d` reads `E(d) + δᵧ·E'(d)`, so
+
+    residual²(d) = σ_noise² + var(δ)·E'(d)²
+
+— a straight line in `E'(d)²` whose **intercept is that image's own noise** and
+whose **slope is edge-position jitter in px²**. The intercept has an independent
+cross-check: per-pixel scatter in the flat ESF shoulders.
+
+### Commissioned first, because the estimator leans on E' and E' is sharpness
+
+| arm | result |
+|---|---|
+| NULL, no noise no jitter | jitter **0.0103–0.0135 px**, noise 0–1.9 DN, R² 0.9995 |
+| NULL, same ROI twice | `max|Δnoise| = 0.000000e+00`, `max|Δjitter| = 0.000000e+00` **PASS** |
+| PLANT 100 / 300 DN noise | recovered **0.99898x / 1.0104x**; shoulders agree to 1.2% |
+| PLANT 0.10 / 0.30 px jitter | recovered 1.067x / 0.902x |
+| PLANT 1.00 px jitter | recovered **0.570x** — saturates, `E(d+δ)≈E(d)+δE'(d)` breaks |
+| **SWEEP 0.30 px jitter, w10-90 1.90→17.99 px** | **0.880–0.908x, varying 3.1%** |
+
+**The sweep passes.** Recovery varies by 3.1% across the width range where
+MTF50 inflated by 45%. A constant ~0.90x scale bias is citable; a
+sharpness-dependent one is fatal. **This estimator is not bounded by the
+variable that killed the other three.** Stated envelope: jitter 0.05–0.35 px,
+noise below ~600 DN at 20000 DN contrast.
+
+Two defects the controls caught, both recorded rather than quietly fixed:
+
+* **The null exposed a 0.072169 px jitter floor**, constant at every blur level.
+  That is exactly `sqrt(1/12)/OVERSAMPLE` — binning to ¼ px spreads each bin's
+  samples over that width, so the ESF's own slope inside a bin contributes a
+  variance. Analytic, and it comes off in quadrature.
+* **The plant exposed a noise leak**: 300 DN leaks 0.349 px into jitter. A 1 px
+  boxcar on the regressor was tried and **made it far worse** — `ms(d)` is
+  proportional to the *raw* `E'(d)²`, so smoothing only the regressor destroyed
+  the correspondence: R² fell 0.99988 → 0.00010 and jitter pinned to exactly
+  zero at every blur level. Both states are in the git history.
+
+### The measurement, and where it stops
+
+| | strehl | fork |
+|---|---:|---:|
+| sites | 300 / 300 | 209 / 209 |
+| edge contrast (common 0–60000 normalised scale) | 19140.5 DN | **8833.5 DN** |
+| noise floor, from fit | 2830.0 DN = **14.79%** of contrast | 3362.9 DN = **38.07%** |
+| noise floor, shoulders (independent) | 2092.2 DN = 10.93% | 2870.6 DN = 32.5% |
+| two estimates agree to | 1.353x | 1.172x |
+| total ESF residual | 0.1511 | 0.3793 |
+| **noise explains** | **97.88%** | **100%** |
+| decomposition R² | **0.107** | **0.042** |
+
+**The residual is essentially all noise on both renders — there is no geometric
+signal in it.** The low R² is not a failure here, it is the same finding from
+the other side: if a `var(δ)·E'²` term were present, R² would be high. It is
+not, so the residual is dominated by the constant term.
+
+Arithmetically the 2.54x factors as **1.19x more absolute noise x 2.17x less
+measured edge contrast**. **The contrast half is not trustworthy and I am not
+citing it.** At the fork's 17.86 px 10-90% width the full transition spans
+roughly 45 px inside a 64 px support, leaving ~6 px of shoulder — so the
+plateaus may never be reached and the contrast would be underestimated, which
+inflates the noise fraction. Same disease as everything else tonight: the
+support is too short for the edge.
+
+**The jitter figures (0.833 px, 0.609 px) are void** — both above the 0.35 px
+commissioned envelope, and both resting on a fit that explains 4–11% of the
+variance. Recorded so nobody reuses them.
