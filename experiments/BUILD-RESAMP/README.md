@@ -253,3 +253,80 @@ boundary.
 attenuates only 1.2%, so the recovery divides by 0.0123 and the first run duly
 printed **−0.967x, a negative sensitivity**. That is arithmetic, not evidence,
 and the gate suppresses the column rather than letting it be read.
+
+## Frame parity on the head-to-head pair: false alarm, cleanly closed
+
+`h2h24` is a **stale label of my own making**, not a frame count. It came from
+the fork's frame-count ladder (6 / 12 / **24** frames succeed, 33 dies
+`0xC0000005`); I named the output directory after the rung I was aiming at, then
+used stride 6, which yields 22 of 130. The name arbitrates nothing.
+
+Both sides consumed **22 frames of the same directory**, from each side's own
+words rather than mine:
+
+| evidence | source | count |
+|---|---|---|
+| staged directory contents | filesystem (driver clears it before staging) | **22 ARW** |
+| `framelist.txt` manifest | driver | **22** |
+| `frames : 22 from …\subset24\wrapped-text-1` | **strehl's own banner** | **22** |
+| `22 placed / 0 refused`, `folded 22 / 22 frames` | **strehl's own banner** | **22** |
+| `Align-residual` task count | **fork's own task graph** | **22** |
+| `WAVS` task count | **fork's own task graph** | **22** |
+
+Both recorded ARGV lines name `C:\dev\strehl-out\BUILD-RESAMP\subset24\wrapped-text-1`.
+The fork's console truncates paths, so its filenames are not in its log — the
+two per-frame task types are the primary evidence. No published number is
+affected, because no head-to-head number was ever published from this pair.
+
+## Applicability limit: measured, and both renders are outside it
+
+BUILD-SHARP's shape test went blind past **4.33 px** of 10-90% edge width. The
+question put to this lane was whether a slanted-edge MTF escapes that, since it
+recovers a transfer function from the ESF's own frequency content rather than
+comparing an amplitude to an external reference.
+
+`applicability.py` sweeps a synthetic Gaussian-blurred slanted step from 1.90 px
+to 17.99 px of 10-90% width. Both answers are exact and nothing is fitted:
+`MTF50 = 0.187241/σ`, `w10-90 = 2.563103σ`. NULL: same synthetic twice,
+`max |ΔMTF| = 0.000000e+00`.
+
+**It does not escape. It does not go blind — it goes wrong, monotonically, in
+the direction of the expected answer.**
+
+| w10-90 px | measured MTF50 / true |
+|---:|---:|
+| 1.897 | 0.9978 |
+| 2.563 | 1.0050 |
+| 3.845 | 1.0200 |
+| 5.126 | 1.0380 |
+| 6.408 | 1.0589 |
+| 7.689 | 1.0871 |
+| 10.25 | 1.1544 |
+| 12.82 | 1.2317 |
+| 15.38 | 1.3321 |
+| 17.99 | **1.4462** |
+
+**Applicability limit: w10-90 ≤ 5.13 px** (tracks to within 5%). Identical on
+clean data and at 1% noise; at 3% noise it is worse and non-monotonic (0.81x to
+1.35x) and the widest case is rejected outright.
+
+**Our renders sit at 13.52 px and 17.86 px — 2.6x and 3.5x beyond the limit**,
+the same "more than 3x past the threshold" BUILD-SHARP found. Interpolating the
+clean sweep:
+
+| render | w10-90 | inflation |
+|---|---:|---:|
+| strehl | 13.52 px | **1.2593x** |
+| fork | 17.86 px | **1.4404x** |
+
+They do not share an inflation factor because they do not share an edge width,
+so a cross-render MTF50 comparison carries a **14.38% systematic bias from edge
+width alone, in the direction that makes the fork read sharper** — most of the
+17–23% that was being claimed.
+
+Three instruments now, three different statistics — a band-power ratio, a
+plateau-normalised shape test, and a slanted-edge MTF — all bounded by edge
+sharpness, all failing on a comparison OF edge sharpness. **The variable, not
+the statistic, is the defect.** The structural finding is that this corpus's
+edges are 13–18 px wide at 10-90%, and no instrument bounded by edge sharpness
+can compare them.
