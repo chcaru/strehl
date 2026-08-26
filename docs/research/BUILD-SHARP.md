@@ -4318,3 +4318,131 @@ commissioned. This is the dual, and it cost a false verdict to find:
 **A potency arm must move the knob the mechanism is actually sensitive to.
 Choosing the wrong knob produces a silent instrument, and a silent instrument
 reads exactly like a dead stage.**
+
+## 35. The trace ORCH asked for: reachable, and `STREHL_RESTORE=1` is the no-op
+
+ORCH's `check-potency.py` reports `STREHL_RESTORE=1` byte-identical on two
+binaries and concludes the flag "reaches no pixel on either build", then asks me
+to determine by reading the code whether the stage is **structurally
+unreachable** or **measurably useless**.
+
+**It is neither.** It is reachable, it reaches pixels, and the null is an
+instrument artifact with a one-line cause.
+
+### 35.1 `STREHL_RESTORE=1` is rejected by an explicit guard
+
+`restore.rs:1240`:
+
+```rust
+if cap.is_finite() && cap > 1.0 { Some(cap) } else { None }
+```
+
+**The value is a gain cap, not a boolean.** `1` parses to `1.0`, `1.0 > 1.0` is
+false, and the function returns `None` -- the identical state to the variable
+being unset. The module's own doc comment says so above the constant: "`1.0` is
+a documented no-op", and above the function: "`None` ... also when the cap is
+not above `1.0`".
+
+So the potency arm compared **off against off**. Byte-identity was guaranteed by
+construction, on any binary, on any subject, at any setting. Nothing about the
+render path was tested.
+
+### 35.2 The full trace, every branch named
+
+| # | site | condition | ORCH's arm |
+|---|---|---|---|
+| 1 | `restore.rs:1234` | `env::var(RESTORE_ENV).ok()?` | passes |
+| 2 | `restore.rs:1236` | empty, `0`, `off` -> `None` | passes |
+| 3 | **`restore.rs:1240`** | **`cap > 1.0` -> else `None`** | **DIES HERE** |
+| 4 | `merge_cmd.rs:5128` | `.and_then(..)`, needs `alignment` | not reached |
+| 5 | `merge_cmd.rs:6476` | `if let Some(plan) = restore.as_ref()` | not reached |
+| 6 | `merge_cmd.rs:6488` | `restore_plane(&mut v, ..)` -- **the pixel write** | not reached |
+
+`restore_plane` takes `&mut v`, and `v` is the plane pushed into `planes` and
+written out. That is a write into pixel data, six steps from the `env::var`
+read. There are exactly **two** branches that can silently disable the stage:
+the `cap > 1.0` threshold and the `alignment.is_some()` requirement at step 4.
+
+### 35.3 Straddling the threshold, at maximum aggression
+
+One binary `BD5EB013...109F`, `112MSDCF`, pyramid backend quoted from each
+render's own banner. Every arm holds `STREHL_RESTORE_SIGMA=0.000001`, so a
+byte-identity cannot be blamed on a weak setting. Baseline (unset) is
+`ED0F92649C19C97B2E93757979D80FE6`.
+
+| `STREHL_RESTORE` | result | **restore banner lines** | max gain |
+|---|---|---:|---:|
+| `1` (ORCH's value) | **IDENTICAL** `ED0F9264` | **0** | -- |
+| `1.0000001` | **CHANGED** `721BEB99` | **4** | 1.0000 |
+| `4.0` | **CHANGED** `0997FC08` | **4** | 1.5704 |
+
+**A change of 1e-7 in the flag value flips the stage from completely dead to
+live.** That is the `cap > 1.0` threshold and nothing else. A structurally
+unreachable stage does not have a threshold you can straddle.
+
+**The banner count is the part ORCH could have read without me.** The product
+already distinguishes the two cases in its own output: `1` emits **zero**
+`restore` lines because the plan is `None` and `restore_plane` is never called;
+`1.0000001` emits **four**, one per CFA plane. ORCH's house rule is "quote the
+banner rather than your intent". The banner was quiet, and the quiet was the
+answer.
+
+### 35.4 What ORCH should and should not retract
+
+**Do NOT retract `check-defaults.py`.** Its RED is correct and its subject is
+real: the restoration exists, is reachable, reaches pixels, and is off by
+default. ORCH offered to retract it if the trace showed unreachability. The
+trace shows the opposite, so the check stands on its own terms.
+
+**DO retract `check-potency.py`'s verdict on this flag.** It is repairable in
+one character: any value above 1.0. The rule the checker encodes -- "a flag is
+not wired until an absurd value has changed the output" -- is sound; the flag
+was never given an absurd value. For a *cap*, absurd means large, and `1` is the
+minimum meaningful setting rather than an extreme one.
+
+**Neither of M126's two patterns applies.** This is not `robust.rs:64`, whose
+constants are correct and whose code never executes; and it is not `outlier.rs`,
+reachable only from `examples/`. `restore_plane` executes on the shipping
+pyramid path and writes pixels, which s33 and s34 measured before this section
+was written.
+
+### 35.5 The defect that is real, and fixed here
+
+The flag is a numeric gain cap wearing the costume of a boolean. `=1` reads to
+any engineer as "enable" and means "disable" to the code, **silently**. That
+trap has now produced a false verdict at the orchestration level, and it had
+already produced two degenerate potency arms of my own in s34 -- three misfires
+on one knob.
+
+`restore.rs` is mine, so I have made the no-op **announce itself** rather than
+be silent:
+
+```
+restore        : STREHL_RESTORE=1 is the documented NO-OP (the value is a gain
+cap and 1.0000 is not above 1.0), so the restoration will NOT run and the
+output will be byte-identical to leaving it unset. Pass a cap above 1.0
+(e.g. 4.0) to enable it.
+```
+
+A non-numeric value gets the same treatment; previously `STREHL_RESTORE=yes`
+also returned `None` without a word.
+
+**This is diagnostic only and changes no pixel.** Verified: with the warning in
+place, `STREHL_RESTORE=1` still renders `ED0F92649C19C97B2E93757979D80FE6`,
+byte-identical to the baseline. `cargo test -p strehl-core --release`: **480
+passed, 0 failed**. Binary carrying the fix is
+`ADECDAD8B92A528B0224D8E5B477E2A49306AD38DCB0C720DCDCFA3E867B63EB`; every
+measurement above was taken on the earlier pin `BD5EB013...109F`, which does not
+contain it.
+
+I have **not** touched the algorithm, the default, or any call site, per ORCH's
+instruction to keep the two effects separable.
+
+### 35.6 The rule
+
+s34.6 said a potency arm must move the knob the mechanism is sensitive to. This
+is the sharper form, and it cost a verdict at two levels to learn:
+
+**Before trusting a potency arm, confirm the value you set was accepted. A flag
+that silently rejects your input is indistinguishable from a stage that ignores
+it -- and the product's own banner usually already knows which.**

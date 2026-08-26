@@ -1230,16 +1230,37 @@ pub const RESTORE_ENV: &str = "STREHL_RESTORE";
 /// `None` when the flag is unset, empty, `0` or `off`, and also when the cap is
 /// not above `1.0` -- that is the no-op, and declining to run reaches the
 /// identical picture by a cheaper route.
+///
+/// The `1.0` case is announced rather than silent. `STREHL_RESTORE=1` reads to
+/// a human as "enable" -- that is the idiom for every boolean flag -- but this
+/// value IS the gain cap, and a cap of 1.0 is the identity. An orchestrator
+/// commissioning this flag set it to `1`, observed byte-identical output, and
+/// concluded the stage was unreachable on the render path; it is reachable, and
+/// `1` had merely selected the documented no-op. Silence is what made that
+/// conclusion available, so the no-op now says so on the same stream the
+/// restore banner uses.
 pub fn gain_cap_from_env() -> Option<f64> {
     let raw = std::env::var(RESTORE_ENV).ok()?;
     let raw = raw.trim().to_string();
     if raw.is_empty() || raw == "0" || raw.eq_ignore_ascii_case("off") {
         return None;
     }
-    let cap: f64 = raw.parse().ok()?;
+    let Ok(cap) = raw.parse::<f64>() else {
+        eprintln!(
+            "restore        : {RESTORE_ENV}={raw:?} is not a number -- the value is a gain \
+             cap, not a boolean. The restoration will NOT run. Pass a cap above 1.0 (e.g. 4.0)."
+        );
+        return None;
+    };
     if cap.is_finite() && cap > 1.0 {
         Some(cap)
     } else {
+        eprintln!(
+            "restore        : {RESTORE_ENV}={raw} is the documented NO-OP (the value is a \
+             gain cap and {cap:.4} is not above 1.0), so the restoration will NOT run and \
+             the output will be byte-identical to leaving it unset. Pass a cap above 1.0 \
+             (e.g. 4.0) to enable it."
+        );
         None
     }
 }
