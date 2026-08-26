@@ -47,6 +47,17 @@ use crate::image_out;
 /// Working-set ceiling used to size the worker pool. SYNTHESIS §3.2 ratchets
 /// peak RSS at 8 GB independent of frame count; this leaves headroom for the
 /// decoder's own scratch and the output buffers.
+///
+/// **This budget assumes the process owns the machine.** With several agents
+/// rendering in one working tree that is false, and the failure is an abort
+/// (`allocation of 33003520 bytes failed`, `0xC0000409`) partway into an
+/// unattended full-corpus pass -- the run that most needed to finish. Making it
+/// overridable is the right fix and is deliberately NOT done here: the constant
+/// is read at nineteen sites across `stack.rs` and `merge_cmd.rs`, and a knob
+/// wired at some of them is worse than no knob at all. It also changes the
+/// worker count, which sets the fold's reduction order, so it would be an
+/// unrecorded input to the byte-freeze unless registered in `RENDER_ENV`
+/// alongside `STREHL_PYRAMID_WORKERS`. Logged for routing, not half-built.
 pub(crate) const MEMORY_BUDGET_BYTES: usize = 6 << 30;
 
 /// Peak RSS with one chunk on one thread, above that one worker's own buffers:
