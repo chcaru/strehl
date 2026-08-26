@@ -225,23 +225,58 @@ pass rate.
 > ones** — 0.2159 against 0.1267 in the top band, 0.4865 against 0.2262 below
 > that. Structure is preferentially retained. **That is not the same as "no
 > detail is lost", and the earlier claim that nothing was lost is withdrawn.**
-> Opened at 1:1 the two crops are visually indistinguishable, which is evidence
-> but not proof at these frequencies.
 >
-> Two limits of this instrument, stated because they bound what it can support.
-> The detail block is chosen by **gradient energy**, which favours a single
-> strong edge over fine texture — an edge has a 1/f spectrum, so the top bands
-> even of the "detail" crop are probably noise-dominated, and that alone could
-> explain why they track the flat control. And one subject cannot separate
-> "removes noise above the optical cutoff", which is correct behaviour given this
-> rig's measured MTF near Nyquist, from "removes real detail", which is not.
-> Distinguishing those is the open question.
+> **The instrument was then rebuilt to settle it, and it does.** Two defects in
+> the version above: the detail block was chosen by *gradient* energy, which
+> favours one strong edge over fine texture (an edge has a 1/f spectrum, so its
+> top bands are noise-dominated for trivial reasons); and a pairwise ratio cannot
+> say whether a band held real signal in the first place. The rebuild selects the
+> detail block by **high-frequency energy** — the quantity actually in question —
+> and adds the rung that makes it decisive: **gate 0, ungated**, all detail and
+> all noise, against which every other rung is measured.
 >
-> That is not a licence to move the default, for one further reason: a higher
-> gate admits **more frames** into the average, which is why it denoises, and the
-> failure mode is admitting frames that are genuinely out of focus. Whether that
-> happens depends on focus-step size against depth of field, and a 22-frame stack
-> cannot answer it for a deep stack with coarse steps. That sweep is in flight.
+> `detail kept` is high-frequency power in the detail crop relative to gate 0;
+> `noise kept` is the same in the flat crop; **FoM = detail kept / noise kept.**
+> The construction is self-checking: if a band's "detail" were really just noise,
+> the two would fall together and **FoM would read 1.0**. Crop separation was
+> **15.4x**, and the script aborts below 3x rather than report an
+> indistinguishable pair.
+>
+> | band (cyc/px) | arm | detail kept | noise kept | **FoM** |
+> |---|---|---|---|---|
+> | 0.10–0.20 | gate 2.0 **(ships)** | 0.9870 | 0.7328 | **1.35** |
+> | | gate 4.5 (gallery) | 0.9674 | 0.4630 | **2.09** |
+> | | gate 8.0 | 0.9513 | 0.3383 | **2.81** |
+> | 0.20–0.30 | gate 2.0 **(ships)** | 0.8401 | 0.5153 | **1.63** |
+> | | gate 4.5 (gallery) | 0.7116 | 0.1492 | **4.77** |
+> | | gate 8.0 | 0.6826 | 0.1274 | **5.36** |
+> | 0.30–0.40 | gate 2.0 **(ships)** | 0.5781 | 0.4433 | **1.30** |
+> | | gate 4.5 (gallery) | 0.2813 | 0.0591 | **4.76** |
+> | 0.40–0.50 | gate 2.0 **(ships)** | 0.4719 | 0.4433 | **1.06** |
+> | | gate 4.5 (gallery) | 0.1019 | 0.0354 | **2.87** |
+>
+> **The shipped default is the weakest operating point on the curve.** At
+> 0.40–0.50 cyc/px gate 2.0 scores **1.06** — it discards detail and noise in
+> almost exactly equal proportion, which is what an indiscriminate blur does.
+> Gate 4.5 scores **2.87–4.77** across the same bands. Gate 8.0 is marginally
+> better again but buys very little over 4.5 (0.0975 vs 0.1019 detail kept in the
+> top band), so the curve has flattened by then.
+>
+> And the pixels agree, which is the part a trade curve cannot supply: at 1:1 all
+> four rungs are **near-indistinguishable** — the paper striations and the
+> dendritic fingers on the ink edge survive in every one. So the 72% of
+> high-frequency power that gate 4.5 discards above 0.3 cyc/px **is not visible
+> as detail loss**, which is consistent with that band sitting above this rig's
+> measured optical cutoff, where there is little real signal to lose. The
+> print-relevant detail lives at 0.1–0.3 cyc/px, and there gate 4.5 keeps
+> **71–97%** of it while removing **54–85%** of the noise.
+>
+> That is a well-supported case that **2.0 is the wrong default**. It is still
+> one subject. A higher gate admits **more frames** into the average — that is
+> why it denoises — and the failure mode is admitting frames that are genuinely
+> out of focus, which depends on focus step against depth of field. A 22-frame
+> stack cannot answer that for a deep stack with coarse steps, and that sweep is
+> in flight.
 >
 > **None of that rescues the scoping.** A survey of 26 subjects that describes a
 > configuration the user does not get by typing `strehl stack` is scoped to that
