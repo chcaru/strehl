@@ -825,3 +825,80 @@ mod tests {
         );
     }
 }
+
+// ---------------------------------------------------------------------------
+// Wiring. Added when this module was connected to the product for the first
+// time; everything above predates it and is unchanged.
+// ---------------------------------------------------------------------------
+
+/// Opt-in flag for the restoration, read from the environment.
+///
+/// An environment variable rather than a CLI argument, following
+/// `crate::optics`'s `STREHL_FIX_CA`: the argument parser is shared surface
+/// with several agents in it, and this flag is meant to be temporary -- it
+/// exists to carry a measured trade curve to whoever sets the default.
+///
+/// The value IS the strength: it is [`RestoreConfig::gain_cap`]. `1.0` is a
+/// documented no-op, so the sweep runs from off to full through a single knob
+/// and "off" is not a second code path that could drift from "on at zero".
+pub const RESTORE_ENV: &str = "STREHL_RESTORE";
+
+/// `None` when the flag is unset, empty, `0` or `off`, and also when the cap is
+/// not above `1.0` -- that is the no-op, and declining to run reaches the
+/// identical picture by a cheaper route.
+pub fn gain_cap_from_env() -> Option<f64> {
+    let raw = std::env::var(RESTORE_ENV).ok()?;
+    let raw = raw.trim().to_string();
+    if raw.is_empty() || raw == "0" || raw.eq_ignore_ascii_case("off") {
+        return None;
+    }
+    let cap: f64 = raw.parse().ok()?;
+    if cap.is_finite() && cap > 1.0 {
+        Some(cap)
+    } else {
+        None
+    }
+}
+
+/// Everything the writer needs, bundled so that wiring costs the shared file
+/// exactly one parameter.
+///
+/// Carries the noise model rather than a number because the brief is explicit
+/// that sigma^2 comes from the calibration and is never chosen to make a
+/// result land.
+pub struct RestorePlan<'a> {
+    /// The resampler the gather ACTUALLY used -- the sidecar's, not
+    /// `--resampler`'s. Handing it the wrong one restores the wrong MTF, which
+    /// is the mistake this field's doc on [`RestoreConfig`] already warns about.
+    pub resampler: Resampler,
+    pub gain_cap: f64,
+    pub noise: &'a crate::noise::NoiseModel,
+}
+
+impl RestorePlan<'_> {
+    /// The Wiener regulariser for one plane, in the units the writer holds.
+    ///
+    /// `mean_dn` is the plane's own black-subtracted mean and `scale` is the
+    /// factor the writer already applied to reach those units, so the variance
+    /// carries across by `scale^2`.
+    ///
+    /// This is the SINGLE-FRAME variance. The merge has already reduced the
+    /// noise, so it OVERSTATES what is actually present and the filter is more
+    /// conservative than the calibration strictly permits. That direction is
+    /// deliberate: the failure mode under guard is overshoot at an edge, and
+    /// over-regularising cannot cause overshoot.
+    pub fn sigma2(&self, p: crate::CfaPlane, mean_dn: f32, scale: f64) -> f64 {
+        self.noise.variance(p, mean_dn.max(0.0)) as f64 * scale * scale
+    }
+
+    /// `grid_factor` is 1.0 because the CFA planes ARE the gather grid: one
+    /// sample per quad per plane, which is the grid the loss happened on.
+    pub fn config(&self, sigma2: f64) -> RestoreConfig {
+        RestoreConfig {
+            resampler: self.resampler,
+            grid_factor: 1.0,
+            sigma2,
+            gain_cap: self.gain_cap,
+        }
+    }
+}

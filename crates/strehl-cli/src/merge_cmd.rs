@@ -2938,6 +2938,13 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     //
     // Skipped only when explicitly switched off for an A/B arm.
     let mut acuity: Option<edgeaware::SelectionScale> = None;
+    // The veil needs the same prominence field the veto computes, and the veto
+    // computes it inside an arm-conditional block. Hoisting a binding out is
+    // cheaper and less invasive than widening `LayerSupport`, and it keeps the
+    // two consumers provably reading one array: if the veto ever stops
+    // computing this, the veil goes inert rather than silently gating on
+    // something else.
+    let mut veil_excess: Option<Vec<f32>> = None;
     let layer_support: Option<LayerSupport> = if edge_aware_arm() != EdgeArm::Off {
         let t0 = Instant::now();
         let ctx_guide = Ctx {
@@ -2989,6 +2996,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 .map(edgeaware::BimodalStats::peak_excess)
                 .unwrap_or_else(|| vec![f32::INFINITY; geom.pixels()]);
             let cut = opts.gates.iter().copied().fold(f32::INFINITY, f32::min);
+            veil_excess = Some(excess.clone());
             let may: Vec<bool> = excess.iter().map(|&e| e > cut).collect();
             let admitted = may.iter().filter(|&&m| m).count();
             eprintln!(
@@ -3532,9 +3540,30 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
 
     // ---- pass two: gated average ------------------------------------------
     let t2 = Instant::now();
-    let veil_focus_max = veil_focus_ceiling();
+    let veil_on = veil_focus_ceiling() > 0.0;
     let veil_margin = veil_margin();
     let veil_floor = veil_luma_floor();
+    // The gate is the merge's own significance gate, exactly as the collapse
+    // veto uses it — the veil is that same test read in the opposite
+    // direction, so it must not acquire a threshold of its own.
+    let veil_cut = opts.gates.iter().copied().fold(f32::INFINITY, f32::min);
+    // Refused, not silently disabled. The prominence field is the veil's whole
+    // safety interlock; without it the operator would have to fall back on
+    // either a geometric mask or an absolute focus ceiling, and both were tried
+    // and both were wrong (see `Estimator::veil_w`). A veil that cannot prove
+    // the election has nothing to choose between must not run at all.
+    ensure!(
+        !veil_on || veil_excess.is_some(),
+        "STREHL_VEIL needs the bimodal prominence field, which is only computed \
+         when the edge-aware arm is on: the veil is gated on proving the \
+         through-focus response has no resolvable peak, and without that field \
+         it has no way to tell dead ground from resolved detail"
+    );
+    ensure!(
+        !veil_on || veil_cut.is_finite(),
+        "STREHL_VEIL needs at least one finite gate to take its significance \
+         cut from"
+    );
     // Refused, not silently accepted. The envelope is a per-pixel maximum over
     // the bracket, so on a bracket whose level drifts it returns the
     // highest-EXPOSURE frame rather than the least-VEILED one, and reports a
@@ -3542,7 +3571,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // observed directly: flower-bud drifts 18.3% and the uncorrected envelope
     // raised the far field by 1520 DN, which is the drift, not the veil.
     ensure!(
-        veil_focus_max <= 0.0 || photometric_map.is_some(),
+        !veil_on || photometric_map.is_some(),
         "STREHL_VEIL needs --photometric on (or auto): the veil envelope is a \
          maximum across frames, and without level normalisation it selects the \
          brightest exposure rather than the least veiled sample"
@@ -3557,8 +3586,13 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 .iter()
                 .map(|g| {
                     let mut e = Estimator::new(&p1.stats, Gate::new(*g));
-                    if veil_focus_max > 0.0 {
-                        e.enable_veil(veil_focus_max, veil_margin, veil_floor);
+                    if veil_on {
+                        e.enable_veil(
+                            veil_excess.as_deref().expect("refused above if absent"),
+                            veil_cut,
+                            veil_margin,
+                            veil_floor,
+                        );
                     }
                     e
                 })
@@ -3638,7 +3672,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
 
     // The veil envelope is applied once, after every chunk has been reduced in,
     // because a maximum over a subset is not a maximum over the bracket.
-    if veil_focus_max > 0.0 {
+    if veil_on {
         for (g, e) in opts.gates.iter().zip(p2.est.iter_mut()) {
             let d = e.focus_deciles();
             eprintln!(
@@ -3662,7 +3696,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 continue;
             }
             eprintln!(
-                "veil: gate {g} ceiling {veil_focus_max} margin {veil_margin} sigma \
+                "veil: gate {g} flat-cut {veil_cut:.1} sigma margin {veil_margin} sigma \
                  floor {veil_floor} x backdrop {:.0} DN = {:.0} DN \
                  (foreground {:.0} DN, polarity {:+.0} DN) \
                  -> eligible {:.2}% applied {:.2}% mean lift {:+.1} DN debias {:.2} sigma",
@@ -3833,6 +3867,15 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             opts.space,
             opts.demosaic,
             exposure,
+            strehl_core::restore::gain_cap_from_env().and_then(|cap| {
+                alignment
+                    .as_ref()
+                    .map(|(m, _, _)| strehl_core::restore::RestorePlan {
+                        resampler: m.resampler(),
+                        gain_cap: cap,
+                        noise: &noise,
+                    })
+            }),
             path,
         )?;
     }
@@ -4459,6 +4502,15 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         opts.space,
         opts.demosaic,
         exposure,
+        strehl_core::restore::gain_cap_from_env().and_then(|cap| {
+            alignment
+                .as_ref()
+                .map(|(m, _, _)| strehl_core::restore::RestorePlan {
+                    resampler: m.resampler(),
+                    gain_cap: cap,
+                    noise: &noise,
+                })
+        }),
         path,
     )?;
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
@@ -5582,6 +5634,11 @@ fn write_merged(
     space: image_out::OutputSpace,
     demosaic: bool,
     exposure: Exposure,
+    // `Some` only when the restoration flag is set AND alignment actually ran:
+    // with no gather there is no resampling loss, so there is nothing to undo.
+    // `None` leaves every arithmetic expression below textually and
+    // numerically identical to what it was before this was wired.
+    restore: Option<strehl_core::restore::RestorePlan<'_>>,
     path: &Path,
 ) -> Result<()> {
     // The transfer curve, and *only* the transfer curve. Bound here so the
@@ -5776,16 +5833,54 @@ fn write_merged(
         // convenient.
         let eg = applied.gain();
         let norm = |v: f32, gain: f32| v * gain * eg / range;
+        // The four CFA planes, materialised BEFORE interleaving so that the
+        // restoration runs on the grid the gather actually resampled: one
+        // sample per quad per plane. Restoring after the interleave would hand
+        // the filter a mosaic, in which neighbouring samples are different
+        // colours, and the correction would be nonsense.
+        //
+        // With `restore` None each value is the same expression, evaluated in
+        // the same order, as before this branch was wired.
+        let spec = [
+            (CfaPlane::R, gains[0]),
+            (CfaPlane::G1, gains[1]),
+            (CfaPlane::G2, gains[1]),
+            (CfaPlane::B, gains[2]),
+        ];
+        let mut planes: Vec<Vec<f32>> = Vec::with_capacity(4);
+        for (p, gain) in spec {
+            let mut v: Vec<f32> = (0..n).map(|i| norm(val(p, i), gain)).collect();
+            if let Some(plan) = restore.as_ref() {
+                // The plane's own mean, black-subtracted, is where the
+                // calibrated model is evaluated -- shot noise is signal
+                // dependent, so a single global level would misprice three of
+                // the four planes.
+                let mean_dn = if n == 0 {
+                    0.0
+                } else {
+                    ((0..n).map(|i| val(p, i) as f64).sum::<f64>() / n as f64) as f32
+                };
+                let scale = (gain * eg / range) as f64;
+                let cfg = plan.config(plan.sigma2(p, mean_dn, scale));
+                let rep = strehl_core::restore::restore_plane(&mut v, geom.width, geom.height, &cfg);
+                eprintln!(
+                    "restore {p:?}       : cap {:.3}, max gain {:.4}, at Nyquist {:.4}, \
+                     recovered {:.4}, mean {mean_dn:.1} DN",
+                    cfg.gain_cap, rep.max_gain, rep.gain_at_nyquist, rep.recovered_fraction
+                );
+            }
+            planes.push(v);
+        }
         for py in 0..geom.height {
             let (top, bot) = mosaic[py * 2 * mw..].split_at_mut(mw);
             for px in 0..geom.width {
                 let i = py * geom.width + px;
                 // RGGB, matching `CfaPlane::rggb_at`: R G1 on the even row,
                 // G2 B on the odd one.
-                top[px * 2] = norm(val(CfaPlane::R, i), gains[0]);
-                top[px * 2 + 1] = norm(val(CfaPlane::G1, i), gains[1]);
-                bot[px * 2] = norm(val(CfaPlane::G2, i), gains[1]);
-                bot[px * 2 + 1] = norm(val(CfaPlane::B, i), gains[2]);
+                top[px * 2] = planes[0][i];
+                top[px * 2 + 1] = planes[1][i];
+                bot[px * 2] = planes[2][i];
+                bot[px * 2 + 1] = planes[3][i];
             }
         }
         image_out::write_demosaiced(path, mw, mh, &mosaic, &dev)?;
