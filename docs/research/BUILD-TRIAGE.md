@@ -915,6 +915,19 @@ Two consequences, both of which make the report's conclusion **stronger**:
    against unclamped pair, and BUILD-HULL owns that measurement -- but it does
    mean **no unexplained merge loss remains in this corpus.**
 
+> **RETRACTED in full, 2026-08-26 (SS11).** The 8.6-18.9% figure was withdrawn by
+> BUILD-HULL itself (§17, `ba5f234`) and independently refuted by V-HULLCOST
+> (`6222142e`) at ~3.1% overall, removing **less than the noise already present**
+> at every octave where detail lives (0.10-0.42 sigma). **There is no handicap.**
+> Both numbered consequences above are void: no ratio in §7.6 is understated on
+> this account, and `bee-1-cpl`'s 5.2% is no longer "accounted for" by anything.
+>
+> The verdicts do not move, because the clamp was never *inside* the measurement
+> -- see SS11.1 for what the numbers do without it -- but this paragraph was a
+> borrowed constant used to dissolve evidence that disagreed with my conclusion,
+> which is the same failure it was meant to guard against. Struck rather than
+> deleted, so the reasoning stays auditable.
+
 The absolute headroom is correspondingly larger than section 7.6's numbers
 suggest, for the reason ORCH gives: a stage that removes microcontrast sits
 upstream of every sharpness number measured here.
@@ -1106,12 +1119,28 @@ that site, below the corpus-derived gate of 4.0, so the apparent ×11.6 is the
 noise-floor artifact characterised in §7 and carries no verdict either way.
 
 Three subjects sit fractionally below parity — `lead-1-cpl` ×0.994,
-`119MSDCF` ×0.987, `109MSDCF` ×0.955. **All three are inside the hull-clamp
-handicap.** Per BUILD-HULL, the default clamp costs 8.6–18.9% of microcontrast,
-and per §7.9 the merge pays it while a single frame does not (with one frame
-`lo == hi == v`, so `clamp(v,v)` is a no-op). Every ratio in this report
-therefore *understates* the merge, and a 4.5% shortfall is smaller than the
-handicap that produced it.
+`119MSDCF` ×0.987, `109MSDCF` ×0.955.
+
+> **CORRECTED, 2026-08-26 (§11.1).** This paragraph originally read "all three
+> are inside the hull-clamp handicap … a 4.5% shortfall is smaller than the
+> handicap that produced it." The handicap does not exist (§7.9, retracted), so
+> that sentence is struck. It was also the wrong instrument: the clamp was never
+> inside these ratios, which are already gather-corrected. What the stored
+> numbers say when read per band, at the ORCH site:
+>
+> | subject | band | ratio_corr | frame-arm SNR |
+> | --- | --- | ---: | ---: |
+> | `109MSDCF` | low | **0.979** | 2.78 |
+> | `109MSDCF` | mid / high | 0.803 / 0.663 | **0.00 / 0.00** |
+> | `119MSDCF` | low | **0.983** | 2.53 |
+> | `119MSDCF` | mid / high | 0.792 / 0.604 | 1.14 / **0.00** |
+>
+> At the only band where **both** arms carry signal, the merge is within ~2% of
+> the best frame. The larger apparent deficits are at bands where the frame arm's
+> measured signal is **zero** and SNR is far below this report's own commissioned
+> gate of `MIN_ARM_SNR = 4.0` — the "no detail in either arm" condition §7
+> already documents as unable to classify. The verdicts stand on that, not on a
+> borrowed constant. `reparity.py` re-reads the stored JSON and prints it.
 
 **There is no MERGE-LIMITED subject in the corpus.** The count is 0, and it is 0
 after the estimator was corrected for two mirror-image biases (§7), after the
@@ -1346,7 +1375,7 @@ Every capture *defect* is individually excluded by a measurement:
 
 | candidate | measurement | verdict |
 | --- | --- | --- |
-| merge lost it | edge ratio 0.955 / 0.974, inside the 8.6-18.9% clamp handicap | excluded |
+| merge lost it | low band ratio_corr 0.979 / 0.983, both arms carrying signal (§11.1) | excluded |
 | coverage gap | `detail_gap` 0.50% / 0.35% | excluded |
 | step too coarse | FWHM 8.74 frames (`119MSDCF`) | excluded |
 | motion | adjacent-frame NCC 0.99986 / 0.99965 | excluded |
@@ -1403,3 +1432,63 @@ I am not resolving this. The measurement that would: run `sitescan.py` at matche
 coordinates on both members of a pair, confirm the scenes register, and compare
 through-focus shape. Recorded here because a subject that merely *looks* like a
 control is worth more as a stated lead than as an unstated assumption.
+
+## 11. The hull-clamp retraction, and a borrowed constant I should not have used
+
+ORCH retracted the clamp cost. BUILD-HULL withdrew it itself (§17, `ba5f234`);
+V-HULLCOST independently priced it at ~3.1% (`6222142e`), removing **less than
+the noise already present** at every octave where detail lives (0.10-0.42 sigma
+against a base-octave 4.49 sigma). It is a pedestal correction -- a denoiser --
+not a defect. **There is no 8.6-18.9% handicap and there never was.**
+
+### 11.1 What it changes here: a justification, not a measurement
+
+I used the retracted figure in exactly two places, and in both it was an
+*explanation applied after the fact* rather than a term inside any computation.
+Nothing was ever divided by it. So no stored number changes, and no verdict
+moves. But the argument that carried three subjects is gone and has to be
+replaced with the evidence that was underneath it all along.
+
+`compare.py` already removes the alignment-gather cost per band -- the stored
+records carry `gather_cost` explicitly (0.83-1.00 across bands) and report
+`ratio_corr` alongside `ratio_raw`. Reading the three near-parity subjects per
+band at the ORCH site, which `reparity.py` does from stored JSON with no re-run:
+
+| subject | low | mid | high | frame-arm SNR, low / mid / high |
+| --- | ---: | ---: | ---: | --- |
+| `109MSDCF` | **0.979** | 0.803 | 0.663 | 2.78 / **0.00** / **0.00** |
+| `119MSDCF` | **0.983** | 0.792 | 0.604 | 2.53 / 1.14 / **0.00** |
+| `lead-1-cpl` | 0.979 | **1.006** | **1.010** | 0.00 / 1.75 / 0.00 |
+
+**At the only band where both arms carry measurable signal, the merge is within
+~2% of the best single frame.** The deeper apparent deficits sit at bands where
+the frame arm's measured signal is *zero* -- SNR 0.00, against this report's own
+corpus-derived gate of `MIN_ARM_SNR = 4.0`. That is the "no detail in either arm"
+condition §7 already identifies as unclassifiable, not a merge loss. The
+conclusion **0 MERGE-LIMITED** therefore rests on gated, signal-bearing bands and
+did not need the clamp at all.
+
+### 11.2 The failure mode, stated against myself
+
+ORCH's lesson was: *an instrument that contradicts a hypothesis is not thereby
+evidence against the hypothesis* -- it discarded a correct percentile reading
+because a broken band-share number disagreed.
+
+**Mine is the mirror image and is worth logging separately.** I had a measurement
+that disagreed with my own conclusion -- `109MSDCF` at x0.955 against a headline
+of "0 MERGE-LIMITED" -- and I dissolved it by importing a constant from another
+agent instead of interrogating my own data. The per-band record showing SNR 0.00
+in the deficit bands was sitting in a JSON file I had already written. I never
+opened it, because the borrowed number had already made the problem go away.
+
+> **DISCIPLINE.** A number borrowed from another agent may explain a residual, but
+> it must never be the *first* explanation tried. Exhaust your own instrument's
+> stored evidence before reaching for someone else's constant -- especially when
+> the constant is convenient, and most especially when it removes an inconvenience
+> rather than adding one. Getting the right answer by the wrong route leaves no
+> trace when the route is withdrawn.
+
+I was lucky: the underlying evidence supported the conclusion anyway. Had it not,
+this retraction would have flipped a headline finding rather than a footnote.
+
+**Partition unchanged: 19 + 2 + 0 + 0 + 1 + 0 + 4 + 0 = 26.**
