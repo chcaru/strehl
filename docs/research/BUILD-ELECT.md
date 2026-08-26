@@ -7,9 +7,10 @@ proved it, what killed the alternatives, what the remedy costs.
 as UNVERIFIED until a verifier repeats it.
 
 Pin: `1cacb61`, binary `C:\dev\strehl-out\pin-1cacb61\target\release\strehl.exe`,
-source matched at `C:\dev\strehl-out\pin-1cacb61\`. Subject
-`flower-bud-alone-cpl`, 205 frames. Scripts in `experiments/BUILD-ELECT/src/`,
-renders and pictures in `C:\dev\strehl-out\BUILD-ELECT\`.
+source matched at `C:\dev\strehl-out\pin-1cacb61\`. Subjects
+`flower-bud-alone-cpl`, 205 frames (sections 1 to 8) and `bee-1-cpl`, 299 frames
+(section 9). Scripts in `experiments/BUILD-ELECT/src/`, renders and pictures in
+`C:\dev\strehl-out\BUILD-ELECT\`.
 
 Claims are labelled **MEASURED** (a number I computed, script named) or
 **ARGUED** (reasoning, attackable cheaply).
@@ -33,6 +34,15 @@ over the subject means pass two does not blend the step away.
 
 The one-line version: **the focus measure is not measuring focus near a bright
 silhouette, and it is decisively confident about it.**
+
+**Amended by section 9, after a second subject.** `bee-1-cpl` reproduces the
+mechanism (Spearman -0.998 inward, drop 77 frames) and shows that the bright
+outline tracing the silhouette is the same defect, not a separate one. But it
+also shows the null H4 is **true at some pixels**: two of three defect ROIs have
+no texture peak anywhere in 299 frames. The election does not abstain there, it
+elects on veil strength alone, and section 4's remedy alone makes those regions
+**worse**. The specification is therefore two-part and the parts must ship
+together. See sections 9.6 to 9.9.
 
 ---
 
@@ -314,4 +324,271 @@ python src/mechanism.py                              # pics/MECH-*.png
 python src/simfix.py                                 # pics/SIMFIX-*.png
 python src/h2control.py                              # pics/H2-*.png
 python src/depthprofile.py                           # pics/DEPTH-profile.png
+```
+
+---
+
+## 9. `bee-1-cpl`: a second subject, and what it changes
+
+The owner rendered the whole library from the same pin, looked at
+`gallery-1cacb61\bee-1-cpl.jpg` at full frame, and reported a hard bright outline
+tracing the entire silhouette with a **jagged, stair-stepped boundary**. He
+proposed that this and the interior patches are one mechanism: a **blocky winner
+field**. He also warned that the image he looked at was a JPEG downsampled 2.93x
+from the 7032 px render, and that both steps can manufacture stair-stepping.
+
+299 frames, dark bee on a white paper sweep. Renders in
+`C:\dev\strehl-out\BUILD-ELECT\bee\`: `D-*` aligned, `E-noalign-*` with
+`STREHL_ALIGN=0`, both with the election and `n_eff` dumps.
+
+**His unification is right. His mechanism is wrong. And on this subject the null
+he told me to test is partly TRUE, which changes the specification.**
+
+### 9.1 The caution, tested first (MEASURED)
+
+`bee1.py` crops the linear 16-bit TIFF at 1:1 beside the same region of the JPEG,
+under one fixed tone transform taken from measured paper white, with no per-panel
+autoscaling.
+
+The jaggedness is **real at 1:1**. It is not JPEG and not resampling. The crops
+also show more than he described: large flat featureless taupe blobs laid over the
+foreleg and the upper-left body, with hard boundaries carrying straight segments
+and sharp angular corners, while the surrounding pixels carry fine hair detail.
+
+Pictures: `pics/BEE1-left-foreleg.png`, `pics/BEE1-upper-left-body.png`.
+
+### 9.2 His sharp test, confirmed (MEASURED)
+
+He predicted that dumping the election should show the same jagged boundary in the
+field itself, spatially coincident with the outline. `bee2.py` renders merge,
+winner index, `|grad winner|`, `n_eff` and painted seams at 1:1 with
+nearest-neighbour upsampling only.
+
+**Confirmed exactly.** Seams trace every lobe, notch and angular corner of the
+visible blobs. The winner field is a piecewise-constant patchwork spanning f36 to
+f298 inside a single 760 px crop, and `n_eff` median 2 to 3 means nothing blends.
+
+Pictures: `pics/BEE2-D-left-foreleg.png`, `pics/BEE2-D-upper-left-body.png`.
+
+### 9.3 His mechanism, refuted (MEASURED)
+
+A blocky field from a box window or a tile grid must leave seams preferentially
+axis-aligned. `bee3_orient.py` measures seam tangent orientation against two
+baselines: the picture's own edges, and a uniform null at 22.22% within 10 degrees
+of an axis.
+
+| region | seams within 10 deg of axis | picture edges | uniform null |
+| --- | --- | --- | --- |
+| silhouette band, 40 px | 20.49% | 15.43% | 22.22% |
+| interior | 19.72% | 24.61% | 22.22% |
+
+Both regions are **below** the uniform null. There is no grid signature. This
+matches the flower-bud result (12.75% against the same null) on a subject with a
+completely different silhouette.
+
+An instrument defect found and fixed here: the first verdict rule compared seams
+only against the picture's own edges, and declared grid leakage live in the
+silhouette band purely because the picture's edges there happened to be unusually
+non-axial. A criterion has to beat the theoretical null as well as the data
+baseline. Corrected, both regions read clean.
+
+Picture: `pics/BEE3-orientation.png`.
+
+### 9.4 Alignment is not the cause (MEASURED)
+
+The bee's alignment is poor by the project's own standard: held-out error
+**17.001 px** against M86's `T_usable` of 4.0, and coverage rescaled the FOV to
+0.9236 before upsampling. So it had to be ruled out rather than assumed.
+
+Re-running the whole comparison on `E-noalign-*` reproduces the defect
+identically: same flat blobs, same seams tracing them, `n_eff` median 2, winner
+p5 to p95 34 to 210 on the foreleg crop. Alignment is not the cause, exactly as on
+flower-bud.
+
+### 9.5 The veiling fingerprint is present here too (MEASURED)
+
+This is the cross-subject confirmation section 6 listed as missing. `beedepth.py`
+profiles the elected index against distance inward from the silhouette, with the
+backdrop as a control.
+
+| | bee-1-cpl | flower-bud-alone-cpl |
+| --- | --- | --- |
+| elected index at the silhouette | f175 | f120 |
+| deep inside the subject | f98 | f34 |
+| drop | 77 frames | 86 frames |
+| Spearman, inward | **-0.998** | -0.97 |
+| Spearman, backdrop control | -0.648 | non-monotone |
+
+The mechanism generalises. The middle panel of the picture is the plainest
+statement of it in this whole document: the thorax core elects f30 to f50, which
+is correct, and a broad band electing f200 to f280 hugs the entire silhouette.
+**That band is the bright outline the owner saw.** The outline is not a rim light
+and not a cut-out artifact. It is the veil ramp winning the election in a collar
+around the subject.
+
+Two honesty notes. The subject mask needed a fixed region chosen by eye
+(`Y_KEEP = 0.86`) because the shaded foreground lip of the paper sweep is below
+any luma threshold that keeps the bee and joins it across the full width of the
+frame, so no morphological rule separates them. And the backdrop control at -0.648
+is weaker than flower-bud's, because a paper sweep genuinely recedes and so
+genuinely has a monotone depth.
+
+Picture: `pics/BEE-depthprofile.png`.
+
+### 9.6 H4 is ACCEPTED here, at two of three defect ROIs (MEASURED)
+
+The brief requires the null to be tested before any fix is proposed. On flower-bud
+it died: there was a clear texture peak at f40 that the election missed by 96
+frames. On the bee it does not die.
+
+`beeladder.py` renders 26 single frames spanning f0 to f298 with `STREHL_ALIGN=0`,
+keeping crops. `beedecomp.py` runs the `focus.rs` replica over them and splits the
+luma into a veil part and a texture part. The replica commissions **5/5** on band
+and 4/5 on median against the shipped align-off election, and the `bee-sharp`
+control passes: the test correctly reports that the election is right there.
+
+| ROI | elected | texture peak | peak / own floor | verdict |
+| --- | --- | --- | --- | --- |
+| `blob` | f270 | f204 | **1.25** | H4 ACCEPTED, curve flat |
+| `fringe` | **f298** | f36 | **1.13** | H4 ACCEPTED, curve flat |
+| `fringe-ok` | f108 | f264 | 1.70 | H4 rejected, election missed it |
+| `leg-good` | f177 | f180 | 17.14 | election correct |
+| `bee-sharp` | f45 | f48 | 4.35 | election correct, control PASS |
+
+At `blob` and `fringe` the texture response is flat to within 1.13x to 1.25x of
+its own floor across all 299 frames, against 17.14x at a neighbouring ROI 90 px
+away. The contact sheet says the same thing without arithmetic: those crops are
+featureless in **every** frame in the bracket. `fringe` elects f298, the very last
+frame, which is the classic symptom of an argmax that never had anything to turn
+over on.
+
+So for those pixels the capture genuinely has no answer, and the patch is the
+correct answer to a bad capture in the narrow sense the brief meant.
+
+**This does not make the stacker blameless.** When every frame is featureless, the
+gradient aggregate is not flat, because it still ranks frames by veil strength.
+The election therefore does not abstain; it confidently imports a wash from a
+frame 90 or more steps away from the local surface, and lays it against
+neighbours that did have an answer. The hard seam is manufactured by the election
+even though the depth information was never there. **The defect is the absence of
+abstention, not only the choice of measure.**
+
+Pictures: `pics/BEE-H4-sheet.png` (the pixels, elected frame ringed in red),
+`pics/BEE-H4-curves-n0.png` (the curves).
+
+### 9.7 My own remedy, tested per pixel, and where it fails (MEASURED)
+
+Section 4 proposed high-passing the luma before the gradient. That was measured on
+a subject where a texture peak existed. A flat curve is the case that breaks it,
+because argmax over a flat curve is a coin flip and a coin flip per pixel is
+speckle, which is invisible in an ROI median. `beesimfix.py` therefore runs three
+rules per pixel over whole crops: **A** `argmax(full)`, what ships; **B**
+`argmax(high)`, the section 4 remedy; **C** B plus abstention, where a pixel whose
+peak does not clear its own floor by 1.30 does not vote and takes the mean of the
+confident pixels within 12 px instead.
+
+| ROI | abstain | seam A | seam B | seam C | spread A | spread B | spread C |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `leg-good` | 2.0% | 1.57 | **1.00** | **0.87** | 168 | **12** | **12** |
+| `bee-sharp` | 0.0% | 0.93 | **0.73** | **0.73** | 120 | **48** | **48** |
+| `fringe-ok` | 11.1% | 2.89 | 3.17 | **2.02** | 240 | 108 | 92 |
+| `blob` | 35.0% | 3.48 | **5.13** | 3.99 | 298 | 192 | 192 |
+| `fringe` | 53.0% | 3.21 | **10.12** | 8.23 | 262 | **274** | 274 |
+
+Where the data has an answer the remedy is not marginal, it is dramatic:
+`leg-good` collapses from a 168-frame spread of veil bands to a **12-frame**
+near-uniform field. Where the data has no answer it is actively harmful, and the
+worse the coverage the worse the damage.
+
+**Falsification attempt against my own claim.** A, B and C above are raw
+per-pixel argmax, while the shipped field is regularised (`merge_cmd.rs`
+1167-1215, `REGULARISER_RADIUS = 8`). If regularisation absorbs B's speckle the
+harm claim is overstated. Applying a median filter at the shipped radius equally
+to all three:
+
+| ROI | seam A* | seam B* | seam C* |
+| --- | --- | --- | --- |
+| `leg-good` | 1.17 | **0.37** | **0.29** |
+| `bee-sharp` | 0.64 | **0.31** | **0.31** |
+| `fringe-ok` | 1.78 | **1.01** | **0.87** |
+| `blob` | 1.74 | 1.69 | **1.42** |
+| `fringe` | 1.49 | **3.21** | 2.71 |
+
+The claim **survives only in narrowed form**. Regularisation absorbs the damage at
+`blob`, and B is a clear win at three of five ROIs. At `fringe`, the 53%-abstain
+ROI, B remains 2.2x worse than A after regularisation and its spread stays at 274
+frames against A's 262. Abstention improves it to 2.71 but does not repair it,
+because there is nothing nearby to borrow from.
+
+Picture: `pics/BEE-simfix.png`.
+
+### 9.8 The amended specification
+
+Section 4 stands and is unchanged, but it is **necessary and not sufficient**. It
+needs a second part, and shipping the first without the second will make
+low-coverage regions worse.
+
+**Part 2, where.** `crates/strehl-core/src/merge.rs`, at the point the winner is
+chosen, and in the `Estimator` that already knows the per-frame focus responses.
+
+**Part 2, the invariant.** *A pixel whose through-focus texture response does not
+rise above its own floor by a prominence threshold must not elect a frame by
+`argmax`.* It must instead take the elected index from the confident pixels around
+it, and must be marked in a per-pixel confidence output.
+
+**Part 2, the target number.** Prominence `max/min` of the high-passed response,
+threshold **1.30**. Measured separation at that threshold: 17.14 and 4.35 for the
+two correctly-elected ROIs against 1.13 and 1.25 for the two H4-accepted ROIs.
+That is an order of magnitude of daylight, not a tuned edge.
+
+**Part 2, the guard.** Abstention fraction must be **0.0% at `bee-sharp` and
+2.0% at `leg-good`**. If a change makes correctly-elected regions abstain, it has
+broken the instrument rather than the defect. And the confidence output must be
+emitted, not just used internally, because the brief's own answer for a region
+with no answer is to report it rather than fabricate detail.
+
+The abstention mask in column 5 of `pics/BEE-simfix.png` is already that product
+deliverable in prototype: on this subject it marks exactly the regions a
+photographer would want flagged as un-stacked.
+
+### 9.9 What the amended fix costs, beyond section 5
+
+- **It admits the stacker cannot always answer.** 53% of one ROI and 35% of
+  another get flagged rather than filled. That is honest and it is also a visibly
+  weaker product claim than the current silent confidence.
+- **A borrowed index is still not the truth.** Rule C fills from neighbours, which
+  is a smoothness prior, not a measurement. It will be wrong across a genuine
+  depth discontinuity, which is precisely where occlusion lives.
+- **Part 1 without part 2 is a regression** in low-coverage regions, measured at
+  2.2x seam energy after regularisation. These two changes must ship together.
+
+### 9.10 What I did not verify on the bee
+
+- I did not run the amended rule inside the binary. Everything in 9.7 is a
+  replica of `focus.rs` operating on ladder renders, commissioned 5/5 on band but
+  never on the shipped merge path.
+- The regularisation mimic is a median filter at the shipped radius, **not** the
+  shipped regulariser, which is guided and gated. It is a proxy and its numbers
+  should not be quoted as the regulariser's.
+- 26 rungs over 299 frames. A texture peak narrower than 12 frames would be
+  invisible to this ladder, and a flat curve is exactly what a missed narrow peak
+  would look like. This is the strongest surviving threat to the H4 acceptance in
+  9.6 and I could not close it without a denser ladder.
+- I did not establish **why** `blob` and `fringe` are featureless in every frame:
+  a genuinely smooth surface, a see-through gap to blank paper, and a region
+  washed out by veil in every frame all produce the same flat curve here.
+- The three defect ROIs are three ROIs. I have not measured what fraction of the
+  whole subject is H4-accepted, so I cannot say how much of the outline is
+  recoverable and how much only reportable.
+
+### 9.11 Bee reproduction
+
+```
+python src/beerois.py                                 # pick + draw ROIs, check by eye
+python src/beeladder.py --frames 0:299:12 --tag crops # ~7 min, 26 rungs, keeps crops
+python src/beedecomp.py --tag crops --normalise 0     # commissioning, H4, contact sheet
+python src/beesimfix.py --tag crops                   # three rules + regulariser mimic
+python src/beedepth.py                                # whole-subject fingerprint
+python src/bee2.py --tag E-noalign                    # winner-field coincidence
+python src/bee3_orient.py                             # seam orientation
 ```
