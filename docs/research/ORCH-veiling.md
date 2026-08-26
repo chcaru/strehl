@@ -7626,3 +7626,125 @@ A measurement that does not name its configuration is not a measurement of the
 product. It is a measurement of a product.
 
 
+
+## 64. The out-of-box experience, measured -- and a shipped flag that reaches no pixel
+
+Section 63 argued that the product measured and the product shipped are
+different products. This section stops arguing and photographs it, and in the
+course of doing so found a live defect that no amount of further merge work
+would have fixed.
+
+### 64.1 What a photographer actually gets [MEASURED]
+
+One binary, one merge (`--merge pyramid`, `--pyramid-gate 2.00`, named in the
+banner rather than inferred from argv), one subject (`109MSDCF`, 22 frames).
+The only thing that varies is the render stage, so any difference is
+attributable to it and to nothing else. Every rung is shown the way an ordinary
+viewer shows a 16-bit file: values mapped linearly onto 0..255. That is the
+whole transform.
+
+| rung | resolution | mean luma | median | % near-black |
+|---|---|---|---|---|
+| **default -- what `strehl stack` writes** | 3516x2344 | **23.5** | 25.6 | **53.5%** |
+| `--srgb` | 7032x4688 | 183.6 | 213.3 | 2.7% |
+| `--srgb --auto-exposure` | 7032x4688 | 183.6 | 213.3 | 2.7% |
+
+**The default output renders 53.5% of the frame as near-black and sits 7.81x
+darker in mean luma than the same pixels rendered for viewing.** Opened side by
+side, the default is a murky grey-brown image in which white paper reads as
+dark grey and saturated marker strokes read as mud; the `--srgb` render of the
+identical merge is brilliant white paper and clean saturated colour.
+
+This is not a defect in the sense of a bug. The tool documents it exactly:
+
+> By DEFAULT the output is BINNED, LINEAR, CAMERA-NATIVE RGB ... **It will look
+> dark and grey-green in an ordinary viewer.** That is correct: it is what
+> measurement needs.
+
+It is correct, and it is the right default for the corpus, and it is the wrong
+default for a photography tool. **The sharpness is identical in both rungs** --
+the strokes, the graphite striations and the fine speckles are equally resolved
+in the dark one. Nothing about the stack is worse. The owner's standing verdict
+that the output looks bad has, at minimum, a large component that is not a
+stacking result at all. It is a presentation default, and it is the first thing
+anyone sees.
+
+### 64.2 The finding that arrived uninvited: exposure reaches no pixel [MEASURED]
+
+The third rung above should not equal the second. `--auto-exposure` printed
+
+    exposure        : +2.61 stops (gain 6.105x), chosen from the image
+
+and produced an image with the same mean luma to four significant figures. The
+first comparison was weak evidence -- 0.331% of samples differing by a maximum
+of **1 DN** -- and 1 DN is exactly the size of a benign explanation ("it chose
+about zero for this subject"). That is how a defect like this survives
+inspection.
+
+So the arm was replaced with one that admits no benign reading: an explicit
+`--exposure=-3.0`, a gain of 0.125x, an **eight-fold darkening**.
+
+    differing samples : 0 / 98,898,048        max |diff| : 0 DN
+    means             : 47807.7  vs  47807.7
+
+while the banner reported, confidently:
+
+    exposure        : -3.00 stops (gain 0.125x), as asked
+
+**Neither `--exposure` nor `--auto-exposure` reaches a single pixel.** Measured
+on the pin `b9b6921e` and again on the current build `C46BDF06A7136F54`, so it
+is long-standing and live rather than a fresh regression.
+
+And it is worse than a plain no-op. The two files are **not** byte-identical
+(`96039D8E...` against `670E50C2...`) while **zero pixels differ**: the
+requested exposure is being recorded in the file's metadata and never applied
+to the image. The artefact carries a receipt for a correction it does not
+contain.
+
+This is precisely the failure the tool's own help text says it refuses to ship:
+
+> A flag that parses and does nothing is indistinguishable from one that works,
+> and this project has shipped that failure before.
+
+### 64.3 Why the unit tests did not catch it
+
+`strehl-core/src/color.rs` already contains
+`zero_stops_normalises_to_no_exposure_at_all` and
+`exposure_preserves_every_ratio_it_does_not_clip`. The exposure function is
+fine. **What does not exist is a test asserting that a non-zero exposure
+changes the written file.** An eight-fold gain can therefore evaporate between
+a passing unit test and the artefact, and every green run agrees that nothing is
+wrong.
+
+A unit test on a function the pipeline cancels is not evidence about the
+pipeline. It is the same shape as section 63's finding one level down: the thing
+tested and the thing shipped are different things, and nothing automated
+notices.
+
+### 64.4 The rule this earns
+
+> **A flag is not wired until an absurd value has visibly ruined the output.**
+> Test potency with a setting no benign mechanism could absorb -- an eight-fold
+> darkening, a gain cap of a thousand -- because a small measured difference is
+> indistinguishable from a small correctly-chosen one, and that ambiguity is
+> where dead code lives. The first arm here differed by 1 DN and would have been
+> dismissed; the potency arm differed by zero and could not be.
+
+Corollary, from the metadata split: **a provenance line is a claim, and it must
+be generated from the value that reached the pixels, not from the value that was
+parsed.** A banner printed before the work is a prediction, and this one was
+wrong.
+
+### 64.5 Standing
+
+Routed to the owner of the wiring, with the reproduction, the potency arm, a
+hypothesis about the cancellation point flagged explicitly as a hypothesis, and
+a required deliverable that is not just the fix: an end-to-end gate asserting
+the written file changes with exposure, **commissioned by planting the bug back
+and confirming the gate goes red**. A gate nobody has seen fire is not evidence.
+
+The out-of-box default is a product decision and is recorded here as one, not
+taken unilaterally: the measurement path's byte-frozen output is load-bearing
+for the entire corpus, and any change to what `strehl stack` writes by default
+must make the old path **missing rather than different**, so that a harness
+still expecting it fails loudly instead of silently measuring a tone curve.
