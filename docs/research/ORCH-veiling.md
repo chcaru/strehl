@@ -3951,3 +3951,114 @@ plausibly by geometry. Whether `flowers-cpl` is capture-limited or a merge failu
 under independent test against the strongest available invariant — that a stack must never
 be worse than the best single frame that went into it — and I am not guessing at the
 answer here.
+
+---
+
+## 38 — The two WASHED flags are the sweep, not the render: a global statistic priced by area
+
+`scripts/tone_profile.py` is the project's display-space acceptance instrument, and run
+across the 26 delivered JPEGs it flags two subjects **WASHED**:
+
+| subject | median | p99.9 | span | flag |
+|---|---|---|---|---|
+| `flower-bud-alone-cpl` | 0.936 | 0.978 | **0.042** | WASHED |
+| `flower-bud-with-background-fern-cpl` | 0.892 | 0.978 | **0.086** | WASHED |
+
+Everything else passed, and the delivered gallery is the thing the owner will look at, so
+a flag on it is a blocker until it is either fixed or shown to be false.
+
+### 38.1 First: the gallery is not an artifact of the example binary
+
+My delivered gallery came from `blend-render`, not from the shipped `strehl stack`, and the
+shipped path has an exposure policy the example binary does not run. So the flag had an
+innocent explanation available: I rendered around the policy. That is worth ruling out
+before anything else, because if true it would mean the delivered images misrepresent the
+product.
+
+Rendered both subjects through the shipped binary with the flip's own configuration —
+`strehl stack --merge pyramid --srgb --auto-exposure` — and measured the same instrument:
+
+| subject | blend-render median / span | shipped `--auto-exposure` median / span |
+|---|---|---|
+| `flower-bud-alone-cpl` | 0.936 / 0.042 | **0.935 / 0.043** |
+| `bee-1-cpl` | 0.761 / 0.216 | **0.761 / 0.217** |
+
+Agreement to 0.001 in both statistics on both subjects. Two things follow. The exposure
+policy does not move this, so the flag is not a rendering-path mistake. And, incidentally
+but usefully, **the gallery I delivered is tonally the shipped product** — that was an
+assumption I had been carrying and it is now measured.
+
+### 38.2 The flag is measuring backdrop area
+
+Both flagged subjects are the same presentation: a small subject on a **white sweep**. That
+is a standard macro studio setup, not an error. The backdrop is legitimately near-white and
+legitimately occupies most of the frame, so a frame-global median reports *how much sweep
+is in shot*. Grow the sweep and the median rises with no change whatever to how the subject
+is rendered.
+
+This is the same defect as retraction 23 and it is worth naming as a class: **a summary
+statistic whose value is set by a region nobody is judging.** There it was a far-field
+median contaminated by a backdrop gradient; here it is a frame median contaminated by
+backdrop area. In both cases the number was real, computed correctly, and answering a
+question no one asked.
+
+So split the frame and measure each region on its own — `subjtone.py`, segmenting on the
+bright mode, because the one thing certain about a white sweep is that it is the bright
+mode. The split is reported rather than assumed: a run that captures 2% or 98% of the frame
+is refused rather than scored.
+
+### 38.3 Commissioning: the instrument must still be able to say "washed"
+
+An instrument built to overturn a flag will overturn it. So it ships with the plant that
+would make it fire: compress the **subject** pixels toward their own mean by 10x in linear
+light, leaving the backdrop untouched, segmenting once on the unplanted frame so the plant
+cannot move its own boundary.
+
+| subject | subject span, live | subject span, 10x plant |
+|---|---|---|
+| `flower-bud-alone-cpl` | 0.419 | **0.047  SUBJECT WASHED** |
+| `flower-bud-with-background-fern-cpl` | 0.664 | **0.065  SUBJECT WASHED** |
+| `bee-1-cpl` | 0.735 | **0.062  SUBJECT WASHED** |
+
+Three for three. And the backdrop column is *bit-identical* across the two runs
+(0.061 / 0.087 / 0.104 both times), which is the plant's own null: it proves the
+disturbance went where it was aimed and did not leak into the region used to normalise.
+
+### 38.4 Result: 26 of 26 subjects carry subject-region range
+
+`flower-bud-alone-cpl`'s **subject** spans **0.419** — ten times the frame-global 0.042 that
+raised the flag. Across the gallery the ordering is monotone in subject fraction (21.9% →
+0.419, 40.5% → 0.664, 62.1% → 0.735), which is exactly the signature of an area-driven
+statistic and not of a tone problem.
+
+Every subject reads "subject has range" except `coffee-bubbles`, which the instrument
+**self-flagged as SPLIT DEGENERATE** at 99.4%: it is a dark frame with no bright mode, so
+there was no backdrop to split off and the "subject" region is the whole frame. Its
+frame-global span is 0.944 — the opposite of washed. The guard refused to let a meaningless
+number print as a verdict, which is the behaviour I want and the reason the degenerate case
+is a printed state rather than a silent pass.
+
+**Both WASHED flags are false positives of a global statistic on white-sweep presentations.
+The delivered gallery is clean on tone.**
+
+### 38.5 A defect in `scripts/tone_profile.py`, for whoever owns it
+
+The WASHED rule needs a subject-area qualifier, or it will keep firing on white-sweep work
+— which is a large fraction of serious macro. I have not touched the file; it is not mine.
+Reported here with the reproduction and the fix direction: compute the span over the
+non-backdrop region, and print the segmentation fraction so a degenerate split is visible
+rather than scored.
+
+> **A statistic computed over the whole frame is a claim about the whole frame.** If the
+> thing being judged occupies a quarter of it, the number is mostly about the other three
+> quarters. Segment before summarising, and print the segmentation so the reader can
+> disbelieve it.
+
+### 38.6 What this also settles about the halo
+
+`flower-bud-alone-cpl` is the hardest halo case in this corpus: a dark, hairy subject
+against a blown white backdrop, which is the geometry that produced the worst artifacts
+recorded here. At full frame the boundary is clean — individual hairs project into the
+white and stay individually resolved, with no dark rim and no bright rim. That is a visual
+observation, and it is consistent with the census in section 33 rather than a substitute
+for it.
