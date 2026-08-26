@@ -473,21 +473,43 @@ pub const MERGE_BACKEND_ENV: &str = "STREHL_MERGE";
 
 /// Resolve the merge backend from the flag and the environment.
 ///
-/// Precedence and rigour are copied deliberately from
-/// [`resolve_photometric_mode`]: `--merge` wins, then [`MERGE_BACKEND_ENV`],
-/// then the default. **Neither channel may mean a backend by accident** -- an
-/// unrecognised spelling is an error and not a silent fall back, because the
-/// whole point of this switch is that which merge ran must be knowable.
+/// Precedence: `--merge` wins, then [`MERGE_BACKEND_ENV`], then the default.
+/// **Neither channel may mean a backend by accident** -- an unrecognised
+/// spelling is an error and not a silent fall back, because the whole point of
+/// this switch is that which merge ran must be knowable.
+///
+/// The environment is parsed on EVERY call, including the calls the flag wins.
+/// The obvious implementation returns on the flag before it ever looks at the
+/// environment, and then `STREHL_MERGE=banana` is ignored for exactly as long
+/// as argv happens to carry `--merge` -- so the same environment is an error on
+/// one command line and silent on the next, and which one you get depends on an
+/// unrelated argument. VERIFY-WIRE found that as F5 and measured it:
+/// `STREHL_MERGE=banana --merge estimator` exited 0. The flag still WINS. It
+/// just no longer excuses a malformed environment.
+///
+/// Empty, whitespace-only and non-UTF-8 values are NOT errors: they mean the
+/// variable carries no opinion, which is what an exported-but-cleared variable
+/// means in every shell. That asymmetry is the resolver's, not the parser's --
+/// `MergeBackend::parse` refuses those spellings, and a test pins which of the
+/// two owns the decision.
+///
+/// NOTE: [`resolve_photometric_mode`] still has the F5 hole this function no
+/// longer has. It is deliberately not fixed in the same change: `STREHL_PHOTOMETRIC`
+/// is in live use by another agent's measurements tonight, and widening its
+/// error surface mid-run would invalidate them. The divergence is recorded here
+/// so it is not mistaken for an oversight.
 pub fn resolve_merge_backend(flag: Option<&str>) -> Result<MergeBackend> {
+    let from_env = match std::env::var(MERGE_BACKEND_ENV) {
+        Ok(v) if !v.trim().is_empty() => Some(
+            MergeBackend::parse(&v)
+                .with_context(|| format!("reading {MERGE_BACKEND_ENV}={v:?}"))?,
+        ),
+        _ => None,
+    };
     if let Some(v) = flag {
         return MergeBackend::parse(v).with_context(|| format!("reading --merge {v:?}"));
     }
-    match std::env::var(MERGE_BACKEND_ENV) {
-        Ok(v) if !v.trim().is_empty() => MergeBackend::parse(&v)
-            .with_context(|| format!("reading {MERGE_BACKEND_ENV}={v:?}")),
-        // Unset, empty, or not valid UTF-8: the default.
-        _ => Ok(MergeBackend::default()),
-    }
+    Ok(from_env.unwrap_or_else(MergeBackend::default))
 }
 
 /// Parse `--pyramid-select`. Unknown spellings are errors, not defaults.
@@ -6987,6 +7009,55 @@ mod tests {
             MergeBackend::Pyramid,
             "--merge did not outrank {MERGE_BACKEND_ENV}"
         );
+        // F5. The flag WINNING must not mean the environment goes unread. A
+        // malformed STREHL_MERGE is a mistake in the caller's harness whether
+        // or not this particular run also passed --merge, and reporting it only
+        // when the flag is absent makes the error blink in and out with an
+        // unrelated argument. Measured before the fix: this combination exited
+        // 0 and ran the estimator without a word about `banana`.
+        unsafe { std::env::set_var(MERGE_BACKEND_ENV, "banana") };
+        let err = resolve_merge_backend(Some("estimator"))
+            .expect_err("a malformed STREHL_MERGE was excused because --merge was present")
+            .to_string();
+        assert!(
+            err.contains("banana"),
+            "the refusal does not name the offending environment value: {err}"
+        );
+        unsafe { std::env::remove_var(MERGE_BACKEND_ENV) };
+
+        // Both spellings of the flag, through the resolver rather than through
+        // `parse`, because the resolver is what main.rs actually calls.
+        for (v, want) in [
+            ("pyramid", MergeBackend::Pyramid),
+            ("estimator", MergeBackend::Estimator),
+            ("legacy", MergeBackend::Estimator),
+        ] {
+            assert_eq!(
+                resolve_merge_backend(Some(v)).unwrap(),
+                want,
+                "--merge {v} did not resolve to {want:?}"
+            );
+        }
+        assert!(
+            resolve_merge_backend(Some("banana")).is_err(),
+            "an unrecognised --merge value was not an error"
+        );
+        // Empty and whitespace-only are errors in the FLAG channel, where they
+        // can only be a typo, and the default in the ENV channel, where they
+        // mean an exported-but-cleared variable. Pinned because the two
+        // channels genuinely differ and that is easy to "tidy" into a bug.
+        for v in ["", "   "] {
+            assert!(
+                resolve_merge_backend(Some(v)).is_err(),
+                "--merge {v:?} was not an error"
+            );
+            unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
+            assert_eq!(
+                resolve_merge_backend(None).unwrap(),
+                DEFAULT_MERGE_BACKEND,
+                "{MERGE_BACKEND_ENV}={v:?} did not mean `no opinion`"
+            );
+        }
         unsafe { std::env::remove_var(MERGE_BACKEND_ENV) };
         assert_eq!(
             resolve_merge_backend(None).unwrap(),
