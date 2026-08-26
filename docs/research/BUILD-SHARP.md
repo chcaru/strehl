@@ -3415,3 +3415,43 @@ Two consequences, both in the direction of my lane rather than against it:
    f_out = 0.25 at any strength because it acts per CFA plane.
 
 I have not touched `pyramid.rs` and have not re-derived the clamp cost.
+
+## 30. s29.2 withdrawn -- s27.5's factorisation is complete after all
+
+**s29.2 is withdrawn in full.** It rested on a hull-clamp cost of 15.5-18.9%
+of microcontrast, since retracted by its own author (BUILD-HULL s17,
+`ba5f234`) and independently refuted by V-HULLCOST (`6222142e`) at ~3.1%. The
+measured position is that at the finest octave the clamp removes **0.29σ** on
+`coffee-bean` and **0.42σ** on `flower-bud-alone` against the merge's own noise
+floor -- less than the noise already present at every scale where detail lives.
+
+Three corrections follow, and the middle one is a defect of mine rather than an
+inherited one:
+
+1. **s27.5's factorisation is complete, not incomplete.** The delivered loss at
+   f_out = 0.35 is `0.7713 demosaic x 0.8690 gather = 0.6913`, and there is no
+   third multiplicand at detail scale. The clamp is a base-octave tone
+   operation -- confirmed by the corrected band shares, residual 45.14% against
+   bands 0-1 at 16.8% -- so it does not sit in the band s27 measures.
+
+2. **My "plausibly nearer 0.57" was an extrapolation and should not have been
+   written.** The 15.5% I was given had been measured as an aggregate
+   microcontrast figure; I carried it into a *specific band at a specific
+   frequency* where it had never been measured, and produced a number by
+   multiplication. Being sourced from a named agent made the input citable, not
+   the extrapolation sound. **A number is only valid in the band it was
+   measured in**, and that is the discipline I failed here, independently of
+   the input turning out to be wrong.
+
+3. **The headroom claim reverses.** s29.2 said the absolute headroom is larger
+   than s27 implies because of a free 15% upstream. There is no free 15%. The
+   demosaic's **1.297x at f_out = 0.35** (s27.4) is not competing with a larger
+   free win sitting above it; on the current board it **is** the largest
+   measured ring-free sharpness lever in the project.
+
+Unchanged by any of this, because each was derived from a ratio or from
+single-binary synthetic data: the restore bound of **1.15x at f_out = 0.35**,
+restore's structural ceiling at **f_out = 0.25** (s28.3), the demosaic loss of
+**22.9% at f_out = 0.35 cycles per output pixel, per-axis** (s28.1), and the
+cross-build check in s29.1, which was bit-identical on all three channels
+between two binaries of differing SHA256.
