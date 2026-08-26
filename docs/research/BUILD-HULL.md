@@ -1203,3 +1203,361 @@ python couchdiff.py                                  # 14.11, needs no hull
 All renders use `STREHL_ALIGN=0` on both the merge and every single-frame render, so
 the merge and its hull basis are co-registered by construction -- route (a) of section
 3, unchanged.
+
+## 15. The aligned, warped hull: the measurement ORCH asked for
+
+Sections 1--14 built the hull from renders made with `STREHL_ALIGN=0`, which co-registers
+merge and basis by turning alignment off on both sides. That is defensible but it is not
+the shipped configuration. ORCH asked for the hull over the **aligned, warped** frames as
+the merge actually sees them, and warned that comparing against unwarped frames would
+manufacture violations everywhere and is the main way this instrument could lie.
+
+This section does that. Everything below is **measured** unless a line begins with
+*Argued*.
+
+### 15.1 Getting genuinely co-registered warped frames
+
+`alignment_for` (`merge_cmd.rs:2051`) refuses a sidecar unless the stack digest matches
+**and** `map.len() == paths.len()`. `STREHL_ONLY_FRAME=k` makes `paths.len() == 1`, so a
+205-frame sidecar is refused for both the cache path and the `STREHL_WARPMAP` override.
+That is the confound named in the brief, and it is real.
+
+The route around it: the sidecar is a documented text format, and `StackIdentity`
+(`warpmap.rs:194`) is FNV-1a 64-bit over `(file name, file size)` per frame.
+`warpframes.py` synthesises a **one-frame sidecar carrying frame k's own placement**,
+copied verbatim as f64 bit patterns from the real 205-frame solve, with a digest computed
+over the one-frame listing. Each frame then renders through strehl's own gather and its
+own Catmull-Rom kernel onto the reference grid.
+
+Commissioning of the digest: my Python FNV-1a reproduced the solver's own
+`stack-digest 2da87e45b71aed22` exactly. Acceptance is self-commissioning, because
+`alignment_for` answers a bad sidecar with a hard error and never silently re-solves
+("Refusal instead of recovery", `merge_cmd.rs:2034`).
+
+The merge itself was rendered under the full 205-frame sidecar and logs:
+
+```
+alignment : ON (sidecar-override), reference frame 102, 205 placed / 0 refused
+```
+
+Merge and frames both come out `2344 x 3520 x 3`, so **the aligned merge does not crop
+relative to the basis**. This was an open risk; it is now closed by measurement.
+
+### 15.2 The registration fear in the brief was overstated by ~300x
+
+The brief cited "227 px of silhouette-radius drift" as grounds to distrust any
+non-co-registered hull. `strehl align` on this stack reports **total corner drift frame 0
+to 204 of 0.715 plane px**, held-out median 0.352 px, cycle floor 0.052 px.
+
+*Argued:* 227 px is defocus blur changing the silhouette's apparent radius, which is a
+photometric effect, not geometric registration. A silhouette-radius measurement moves with
+blur; the plane does not.
+
+Independently, `coreg.py` measured registration directly by normalised cross-correlation
+of high-pass tiles, integer shifts only:
+
+| tile | hp energy | peak dy,dx | ncc | surface median | status |
+|---|---|---|---|---|---|
+| y362 x1322 | 88.9 | +0,+0 | 0.6214 | -0.0184 | usable |
+| y682 x1962 | 82.7 | +0,+0 | 0.5057 | -0.0039 | usable |
+| y682 x2122 | 74.7 | +0,+0 | 0.4793 | -0.0055 | usable |
+| y362 x1802 | 73.9 | -1,+0 | 0.3636 | 0.0037 | usable |
+| y1482 x2442 | 68.2 | +0,+0 | 0.4993 | -0.0031 | usable |
+| y202 x1642 | 65.2 | +0,+0 | 0.2431 | 0.0092 | usable |
+| y682 x2442 | 64.5 | +0,+0 | 0.1942 | -0.0004 | usable |
+| y682 x522 | 63.8 | +0,+0 | 0.1694 | -0.0005 | usable |
+
+Tiles examined 8 = usable 8 + unusable 0. **Seven of eight peaks at exactly (0,0)**,
+worst 1 px.
+
+**The first version of this detector was wrong and its control caught it.** Correlating
+raw luma gave NCC ~0.98 at every offset with peaks pinned to the search boundary, because
+raw luma is dominated by smooth content and because a single frame in a focus bracket is
+defocused nearly everywhere. It reported "misregistered by up to 12 px". That number was
+never used. The fix was to high-pass both images and to select tiles by the high-pass
+energy of the warped frame, i.e. only where that frame is genuinely in focus.
+
+A second bug in the same script: the plant check compared the planted peak to zero
+instead of to each tile's own baseline peak, and reported six spurious misses. Corrected,
+the planted shift of `dy=+3 dx=-2` is recovered on **8/8 usable tiles**. Sensitivity is
+proven, so the registration number is reportable. When sensitivity is not proven the
+script exits non-zero and refuses to print a registration number.
+
+This is route **(a)** of the brief's three options: co-registered per-frame samples,
+measured rather than asserted.
+
+### 15.3 Why my Laplacian does not need to match the Rust one
+
+This is the load-bearing argument for every per-band number below, so it is stated in
+full.
+
+Let `L` be **any** linear operator. Suppose the merge were a single convex combination
+with one weight vector `w_k >= 0`, `sum_k w_k = 1`, **shared across all bands**, so
+`O = sum_k w_k F_k`. Then by linearity
+
+```
+L(O) = L(sum_k w_k F_k) = sum_k w_k L(F_k)
+```
+
+which is a convex combination of `{L(F_k)}` and therefore lies inside
+`[min_k L(F_k), max_k L(F_k)]` -- necessarily, for every band, every linear `L`, every
+pixel.
+
+So a per-band violation under **my** Laplacian proves the merge is not a single convex
+combination with weights shared across bands. My decomposition need not match
+`pyramid.rs`'s; it need only be linear, and blur, decimate, upsample and subtract all are.
+This turns "I cannot read the merge's internal coefficients without editing BUILD-BLEND's
+file" from a limitation into an irrelevance.
+
+What the per-band numbers do **not** do: identify which internal Rust band carries the
+defect. The claim is about which **octave** the excursion occupies, not about their array
+indices.
+
+### 15.4 Commissioning, before any result
+
+**Synthetic, `commission_bands.py`.** Same frames in every arm; only the weighting differs.
+
+| arm | below | above | worst/span |
+|---|---:|---:|---:|
+| C1 shared weights, fixed | **0** | **0** | 0.000 |
+| C5 shared weights, data-dependent | **0** | **0** | 0.000 |
+| M independent per-band weights | 5,840 | 5,824 | 6.573 |
+| C2 single-frame passthrough | **0** | **0** | 0.000 |
+| C3 telescoping `sum(bands) - frame` | max abs error **0.000e+00** | | |
+
+C5 exists because C1 and M alone confound "shared vs independent" with "fixed vs
+data-dependent". That is precisely the flaw I reported in ORCH's `hullproof.py` (attack
+A2), and my own harness must not carry it. With the cell filled: shared+fixed = 0,
+shared+data-dependent = 0, independent+data-dependent = 11,664. **The operative variable
+is shared vs independent per-band weighting, not data-dependence.**
+
+**On real data, the null.** `--pyramid-exponent 0` is refused by the CLI ("must be finite
+and positive"). The reachable point is exponent `1e-6` with `--pyramid-sharpen 1.0`, which
+the merge logs as `exponent : 0.00` and `sharpness ramps 1.0x per octave` -- a flat ramp,
+so every band shares one near-uniform weighting. Through the real pipeline, on the real
+warped basis, that arm reads **0.0002%** (25 below, 19 above of 24,752,640; worst 0.127
+hull spans). It is not exactly zero and is not claimed to be: exponent `1e-6` is not `0`,
+and the output is quantised to `uint16`.
+
+**On real data, the plant.** `plantcheck.py` predicts the count from the hull alone,
+before consulting the detector:
+
+| quantity | predicted | measured |
+|---|---:|---:|
+| ABOVE, whole frame | 90,330 | **90,330** |
+| of which inside the plant box | 90,311 | -- |
+| of which outside the box | 19 (= unplanted baseline) | -- |
+| BELOW, unchanged | 25 | **25** |
+
+Exact on all four checks. The plant recovers 90,330 rather than the 120,000 samples
+planted because the hull is wide (mean span 4042 DN) and +5000 DN does not clear `hi`
+where the merge already sat far below it -- and the headroom accounting confirms that
+exactly.
+
+**Hull sanity.** Mean span 4042.0 DN, median 3761.0, min 123, max 18829.
+**Degenerate (span == 0) samples: 0 of 24,752,640.** No violation anywhere can be an
+artifact of a zero-width interval.
+
+### 15.5 Whole-image result, per channel
+
+205 warped frames, guard +/- 1 DN, arms requested 5 = scored 5 + missing 0.
+
+| arm | region | rate | below | above | worst/span | mean DN |
+|---|---|---:|---:|---:|---:|---:|
+| **W-pyramid (shipped)** | whole | **10.1590%** | 2,281,305 | 233,317 | 7.051 | **-398.0** |
+| W-pyramid | bbox | **24.7028%** | 2,281,305 | 230,871 | 7.051 | -398.7 |
+| W-uniform (null) | whole | 0.0002% | 25 | 19 | 0.127 | -2.3 |
+| W-e1s1 | whole | 4.2810% | 1,025,929 | 33,721 | 4.560 | -273.6 |
+| W-bands1 | whole | 0.0116% | 2,564 | 297 | 0.372 | -91.1 |
+| W-estimator | whole | 0.4103% | 73,403 | 28,146 | 0.327 | -13.2 |
+
+Shipped arm per channel, whole frame: R 8.8323%, G 10.5310%, **B 11.1137%**. Worst single
+sample -4513 DN. Net over the frame **-1,000,920,704 DN**, i.e. the excursion is a
+darkening, which is the direction of the complaint that opened this investigation.
+
+Two things worth stating precisely:
+
+- **Every one of the 2,281,305 below-hull samples lies inside ORCH's bbox.** Whole-frame
+  below and bbox below are the same number. Of the above-hull samples, 230,871 of 233,317
+  (98.95%) are inside it. ORCH predicted "heavily concentrated inside the bbox";
+  measured, the below-hull concentration is total.
+- **The estimator is not exactly clean here.** Section 14.3 reported the estimator at
+  exactly 100.000000% inside on `109MSDCF`. On this subject with the warped basis it reads
+  0.4103%. That earlier claim was measured on a different subject and an unaligned basis
+  and should not be generalised. The estimator's excursion is nonetheless ~25x rarer and
+  ~30x shallower than the pyramid's, and section 15.7 shows it is a different phenomenon.
+
+### 15.6 Per octave, matched to the merge's own band geometry
+
+My first decomposition held the Laplacian at full resolution. It is linear, so the theorem
+applied and the numbers were real -- but seven repeated 5-tap blurs reach an effective
+sigma of only ~2.6 px, so its "base" meant "coarser than 2.6 px", **not** the merge's
+coarsest octave. Reporting that as a per-band result would have implied a correspondence
+with `pyramid.rs`'s levels that did not exist. I discarded it and rebuilt a properly
+decimated pyramid matching what the merge logs, `7 Laplacian levels + 1 base, coarsest
+28 x 19`:
+
+```
+3520x2344 -> 1760x1172 -> 880x586 -> 440x293 -> 220x147 -> 110x74 -> 55x37 -> 28x19
+```
+
+Shipped arm, violation rate by octave and channel:
+
+| octave | grid | R | G | B | worst/span |
+|---|---|---:|---:|---:|---:|
+| detail0 (finest) | 3520x2344 | 0.8102% | 12.1627% | 1.0990% | 1.248 |
+| detail1 | 1760x1172 | 0.6212% | 6.9783% | 0.7833% | 1.305 |
+| detail2 | 880x586 | 1.5756% | 13.7000% | 1.7303% | 1.479 |
+| detail3 | 440x293 | 2.2332% | 19.2616% | 2.3162% | 1.842 |
+| detail4 | 220x147 | 5.6463% | 18.7910% | 6.4471% | 3.137 |
+| detail5 | 110x74 | 14.9877% | 22.7027% | 16.2408% | 5.443 |
+| detail6 | 55x37 | 28.0590% | 32.2359% | 28.4521% | 5.509 |
+| **base** | **28x19** | **7.5188%** | **7.8947%** | **9.3985%** | 1.256 |
+
+Rate and relative depth both escalate monotonically toward the coarse octaves. And in the
+base octave the violations are **132 below, 0 above** across all three channels -- every
+single coarse-scale excursion is a darkening, with no brightening anywhere to balance it.
+
+The same table for the null arm reads `0` below and `0` above in the base octave, and
+`0 DN` of violation, exactly.
+
+### 15.7 Footprint-weighted attribution, and the common-mode trap
+
+Raw per-octave DN shares must not be reported alone: detail0 has 8,250,880 samples per
+channel and the base has 532, so detail0 dominates any unweighted sum by existing. What
+reaches the viewer is the reconstruction, where one base coefficient lands on ~128x128
+output pixels. `footprint.py` upsamples each octave's violation field back to full
+resolution and subtracts the null arm octave by octave.
+
+The null subtraction matters because **detail0 violates in every arm including the
+near-uniform-mean null** (null detail0 = 98.798% of its own tiny total). That is
+common-mode -- demosaic and CFA interpolation, not per-band selection. The brief warned
+about exactly this trap for demosaic, and it is real: crediting the pyramid for detail0
+would have been wrong.
+
+| octave | grid | rate | net DN full-res | null net | excess over null | share |
+|---|---|---:|---:|---:|---:|---:|
+| detail0 | 3520x2344 | 4.691% | +3,491,521 | +1,252,907 | +2,238,614 | 0.387% |
+| detail1 | 1760x1172 | 2.794% | +424,216 | -36,891 | +461,107 | 0.080% |
+| detail2 | 880x586 | 5.669% | -1,133,855 | -31,696 | -1,102,159 | 0.191% |
+| detail3 | 440x293 | 7.937% | -2,259,931 | -26,475 | -2,233,456 | 0.387% |
+| detail4 | 220x147 | 10.295% | -12,375,836 | -19,449 | -12,356,387 | 2.139% |
+| detail5 | 110x74 | 17.977% | -39,966,568 | -6,074 | -39,960,494 | 6.917% |
+| detail6 | 55x37 | 29.582% | -61,195,388 | -4,232 | -61,191,156 | 10.592% |
+| **base** | **28x19** | **8.271%** | **-458,193,248** | **0** | **-458,193,248** | **79.308%** |
+
+Total excess over null, full-res weighted: **577,736,622 DN**.
+
+- detail0, the finest octave and common-mode with the null: **0.387%**
+- detail1 through base, the coarser octaves: **99.613%**
+- the three coarsest octaves alone (detail5, detail6, base): **96.817%**
+
+For contrast, the estimator's excursion sits at the opposite end of the spectrum:
+detail0 54.255%, detail1 23.905%, base **0.001%**. The estimator's violations are a
+high-frequency phenomenon, almost certainly its sharpening stage. **The pyramid's are
+low-frequency and are a darkening.** These are two different defects and should not be
+conflated.
+
+### 15.8 ORCH's registered prediction, scored
+
+ORCH registered, before I ran anything: *"violations concentrated in the three finest
+bands, blue worst, and heavily concentrated inside the bbox."*
+
+| claim | verdict | evidence |
+|---|---|---|
+| concentrated in the three finest bands | **REFUTED** | three finest octaves carry **0.658%** of the null-subtracted excess; three coarsest carry **96.817%** |
+| blue worst | **CONFIRMED, whole-image and base octave** | whole frame B 11.1137% > G 10.5310% > R 8.8323%; base octave B 9.3985% > G 7.8947% > R 7.5188% |
+| heavily concentrated inside the bbox | **CONFIRMED, and stronger than predicted** | 100% of below-hull samples lie inside the bbox; rate 24.70% inside vs 10.16% whole-frame |
+
+The band localisation is inverted, by roughly 147x. Green is worst in the fine octaves
+(consistent with the Bayer CFA sampling green twice, though that is *argued*, not
+measured); blue is worst where the magnitude actually lives.
+
+ORCH's earlier "52x step on the seventh band" (section 14.4) remains overturned, and the
+"dark flat cliff" (section 14.7) remains falsified.
+
+### 15.9 What this means for BUILD-BLEND's fix
+
+**This is the operationally important paragraph.** The shipped pyramid arm already logs
+
+```
+base band : plain mean across frames
+```
+
+`--pyramid-base mean` is the default and it is in effect in the 10.1590% arm. So taking
+the low-frequency base band from a mean is **already shipped**, and the output's
+coarse-scale content is *still* below the hull on 8.27% of base coefficients, carrying
+79.3% of the darkening. ORCH's coordination note said that if my excursion turned out to
+be entirely low-frequency, my finding and BUILD-BLEND's fix would be the same event. It is
+low-frequency, and they are **not** the same event: a mean base band does not prevent it.
+
+*Argued:* the mechanism is that Laplacian detail bands are not exactly zero-mean at coarse
+scale. Selecting a different frame per band leaves a DC residue in each reconstructed
+detail band, and those residues accumulate into the output's low-frequency content even
+though the base band itself is an honest mean. This is ORCH's "a sum of convex
+combinations under different weightings is not convex", realised at low frequency rather
+than at edges.
+
+I cannot attribute this to a specific line in `pyramid.rs` without instrumenting it, and
+that file is BUILD-BLEND's. What I can say from outside, by measurement, is that the
+constraint must be applied to the **reconstruction**, not to the base band alone.
+
+And per ORCH's instruction: do not simply clamp the reconstruction to the hull. Clamping
+would move 10.16% of the frame and leave the wrong value at the clamp. The 79.3% figure
+says where to look -- the coarse octaves' selection, where the shipped exponent ramp
+`2 3 4 5 8 8 8` is at its floor and the noise gate has the least real signal to work with.
+
+### 15.10 Verdict
+
+Restating the three outcomes the brief asked me to decide between:
+
+1. **The merge is genuinely non-convex.** **This one.** 10.1590% of output samples lie
+   outside the hull of the aligned, warped, strehl-rendered input samples at that pixel,
+   net -1.0009e9 DN of darkening, worst sample -4513 DN, on a hull with zero degenerate
+   intervals. The same binary, same basis, same subject, with weights made uniform across
+   bands, reads 0.0002% and exactly 0 in the base octave.
+2. The merge is convex and the comparison was not apples-to-apples. **Rejected for the
+   pyramid backend**, on the null arm and the exact plant. It remains the correct verdict
+   for the original -805 DN claim, which section 13 refuted on separate grounds (its
+   "hull" was a 7x8 array of per-band medians, not pixels).
+3. Could not be determined. **No.**
+
+The stage is per-band selection with independently-solved weights, and the excursion is
+**low-frequency and negative**: 79.3% of it in the coarsest octave, 96.8% in the three
+coarsest, 0.387% in the finest once the common-mode demosaic component is subtracted.
+
+### 15.11 Reproduction
+
+```
+cd C:\dev\strehl-out\BUILD-HULL
+python commission_bands.py                 # synthetic 2x2, must print GREEN
+python warpframes.py --sidecar warp\flower-205.warpmap.txt ^
+       --subject D:\personal\macro\flower-bud-alone-cpl --outdir warp ^
+       --binary C:\dev\strehl-out\VERIFY-WIRE\target-a\release\strehl.exe
+powershell -File .\warp_merges.ps1 ; powershell -File .\warp_nulls.ps1
+python coreg.py --merge warp\merge-W-pyramid.tiff --warped warp\frames\f0102.tiff
+python bfold.py --frames warp\frames --n 205 --cache warp\cache --bands
+python btest.py --cache warp\cache --dir warp                      # 15.5
+python btest.py --cache warp\cache --dir warp --plant 5000 --plant-arm W-uniform
+python plantcheck.py                                               # must print GREEN
+python octave.py                                                   # 15.6
+python footprint.py --arm W-pyramid --null W-uniform               # 15.7
+```
+
+Binary `C:\dev\strehl-out\VERIFY-WIRE\target-a\release\strehl.exe`, sha256
+`6E4B369664F1E75321B669EDAADDDB9DC6B23A444F01DDBF41833C6E70B59419`. The pinned
+`859edac` binary cannot be used for any of this: it predates the `--merge` flag and has no
+pyramid backend.
+
+### 15.12 What I did not measure
+
+- **A second subject through the warped route.** Only `flower-bud-alone-cpl` has a warped
+  205-frame basis; rendering one costs ~56 minutes. `couch-fibers-cpl` has both merges
+  rendered but 0 of 299 warped frames, so it is **requested, not scored**, and nothing in
+  section 15 should be read as cross-subject.
+- **Which internal Rust band carries the defect.** My octaves are my operator. The
+  attribution is to spatial frequency, not to `pyramid.rs` array indices.
+- **Whether the base-octave result survives a larger coefficient count.** The base octave
+  has 1,596 samples across three channels and 132 of them violate. The contrast against
+  the null's exact 0 is clean, but 132 is a small number and a second subject should
+  confirm it before anyone treats 79.3% as precise.
