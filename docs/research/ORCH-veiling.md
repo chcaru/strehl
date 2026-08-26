@@ -9517,3 +9517,52 @@ does the null pass, does the guard still fire on a genuine degenerate arm, does
 the null still fail under real non-determinism, does the new negative-control
 branch fire -- because "the null passes now" would also be true if I had simply
 deleted the guard.
+
+### The same scan, run against every flag in the codebase
+
+One byte read found one defect, so it was worth asking whether there were
+others. Every `STREHL_*` literal declared anywhere in `crates/`, checked against
+the shipped `.exe`:
+
+```
+declared: 39   present: 35   ABSENT FROM BINARY: 4
+  -> STREHL_BUILD_ID, STREHL_CAPTURES, STREHL_FREEZE_REQUIRE, STREHL_ROBUST_ELECTION
+```
+
+**Three of the four absences are correct, and they are the control this scan
+came with for free:**
+
+| flag | declared in | why absent |
+|---|---|---|
+| `STREHL_BUILD_ID` | `strehl-cli/build.rs` | a build script; runs at compile time and is never linked into the product |
+| `STREHL_CAPTURES` | `strehl-cli/tests/byte-freeze.rs` | test-only; not compiled into a release binary |
+| `STREHL_FREEZE_REQUIRE` | `strehl-cli/tests/byte-freeze.rs` | test-only, same |
+| **`STREHL_ROBUST_ELECTION`** | **`strehl-core/src/merge.rs`** | **production source, no `cfg` gate -- the defect** |
+
+Three benign absences with three different, checkable reasons demonstrate the
+scan is reading what it claims to read, and leave exactly one flag declared in
+production source and missing from the product. **No second instance of this
+defect exists**, which is a bounded answer rather than a reassuring one.
+
+### What this scan does and does not prove
+
+The two directions are not symmetric, and conflating them would rebuild the
+`DEAD`-glyph problem in a new place:
+
+- **Absent is conclusive.** A `const` is inlined at its use sites, so if the
+  name is not in `.rdata` no code can read it. The linker has certified
+  unreachability; nothing further need be measured.
+- **Present is nearly worthless on its own.** It proves the literal was
+  compiled in. It does not prove the code that reads it runs, and it does not
+  prove that running it changes a pixel. `--auto-exposure` is present in the
+  binary *and* reads `TOKEN`: 325,061 pixels moved, maximum **1 DN**, 0.329% of
+  frame. It announces an effect in the banner that no pixel carries.
+
+> **Presence in the binary is necessary and not sufficient; absence is
+> sufficient and not necessary.** A name can be linked in and still be dead
+> code behind a branch nobody takes. Use the scan to *refute* reachability
+> cheaply, never to *establish* it -- establishing it costs a render.
+
+The scan is therefore a fast pre-filter in front of the expensive probe, not a
+replacement for it: 39 flags cost one byte read, and the one it condemns needs
+no render at all to condemn.
