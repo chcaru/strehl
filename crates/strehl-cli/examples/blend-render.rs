@@ -293,11 +293,28 @@ fn main() -> Result<()> {
 
     eprintln!("strehl BUILD-BLEND -- LAPLACIAN MULTI-BAND MERGE (an experiment, not the ship path)");
     eprintln!("camera          : {camera}");
+    // Cheap: seeks a few hundred bytes of metadata, no pixel decode.
+    let ident = strehl_raw::identity(&paths[0]);
+    // Reports the RESOLVED DECISION, not the switch. Those used to be the same
+    // thing; the default-on flip decoupled them, and this line kept reading the
+    // variable -- printing `CORRECTING, profile "off"` for an uncorrected render
+    // and `off (STREHL_FIX_CA unset)` for a corrected one. Wrong in both
+    // directions, and this is a harness whose whole job is A/B comparison, so a
+    // lying arm label is the worst possible defect to have here.
+    //
+    // Resolved from the same first frame the aligner reads, through the same
+    // call, so the label cannot drift from the pixels without the pixels moving.
     eprintln!(
         "lateral CA      : {}",
-        match std::env::var(strehl_core::optics::CA_ENV) {
-            Ok(k) if !k.is_empty() && k != "0" => format!("CORRECTING, profile {k:?}"),
-            _ => "off (STREHL_FIX_CA unset)".to_string(),
+        match strehl_core::optics::resolve_for_capture_env(
+            ident.model.as_deref(),
+            ident.lens_type3,
+        ) {
+            Ok(d) => d.to_string(),
+            // Unreachable: `preflight_ca_profile` rejects an unusable setting
+            // before any decode. Stated as `off` because that is what the render
+            // would do, rather than guessed at.
+            Err(e) => format!("off (unusable setting: {e})"),
         }
     );
     eprintln!(

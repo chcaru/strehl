@@ -650,6 +650,177 @@ impl OpticalProfile {
     }
 }
 
+/// Why the CA path reached the decision it reached.
+///
+/// Exists so a status line can be **derived from the decision** instead of
+/// reconstructed from the switch. Reconstruction is the bug class: before the
+/// default-on flip, the environment variable and the behaviour were the same
+/// thing, so reading the variable was correct; the flip decoupled them and every
+/// consumer still reading the variable silently began lying. V-CA found one such
+/// consumer printing `CORRECTING` for an uncorrected render and `off` for a
+/// corrected one — wrong in **both** directions, on the one switch the flip
+/// makes load-bearing.
+///
+/// The fix is not to invert a second reconstruction. It is to make the reason a
+/// **return value of the resolution itself**, so that a caller cannot obtain the
+/// explanation without obtaining the decision it explains.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CaReason {
+    /// The operator refused the correction explicitly.
+    OperatorOff {
+        /// What they actually typed, echoed so a surprising spelling is visible.
+        setting: String,
+    },
+    /// The operator named a profile, which outranks the guard.
+    OperatorNamed { setting: String },
+    /// Nobody spoke and the guard recognised the gear. **The default-on case.**
+    GearMatched { body: String, lens_type3: u16 },
+    /// Nobody spoke and the guard declined. Carries what it declined **on**.
+    GearDeclined {
+        body: Option<String>,
+        lens_type3: Option<u16>,
+    },
+}
+
+/// A resolved CA decision: the profile the pixels will use, and why.
+///
+/// The two fields are produced together by [`resolve_for_capture`] and must be
+/// consumed together. `Display` renders the prologue line.
+#[derive(Debug, Clone, PartialEq)]
+pub struct CaDecision {
+    /// Exactly what the gather will apply. `None` means no correction.
+    pub profile: Option<&'static OpticalProfile>,
+    /// Why [`profile`](Self::profile) is what it is.
+    pub reason: CaReason,
+}
+
+impl CaDecision {
+    /// Is the render correcting? Reads [`profile`](Self::profile), never the
+    /// reason, so the two cannot disagree about the headline state.
+    #[inline]
+    pub fn is_correcting(&self) -> bool {
+        self.profile.is_some()
+    }
+}
+
+impl core::fmt::Display for CaDecision {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        // The CORRECTING/off word is taken from `self.profile` -- the same value
+        // the gather uses -- and never from the reason. A reason that somehow
+        // disagreed would produce a visibly odd line rather than a confident
+        // wrong one.
+        match (&self.profile, &self.reason) {
+            (Some(p), CaReason::OperatorNamed { setting }) => write!(
+                f,
+                "CORRECTING, profile {:?} (operator asked for {setting:?})",
+                p.key
+            ),
+            (Some(p), CaReason::GearMatched { body, lens_type3 }) => write!(
+                f,
+                "CORRECTING, profile {:?} (gear matched {body:?} / lens {lens_type3}; default on)",
+                p.key
+            ),
+            (None, CaReason::OperatorOff { setting }) => {
+                write!(f, "off (operator asked for {setting:?})")
+            }
+            (None, CaReason::GearDeclined { body, lens_type3 }) => match (body, lens_type3) {
+                // Named a body and a lens, neither matched a profile. The
+                // operator needs to see WHICH gear was rejected.
+                (Some(b), Some(l)) => write!(
+                    f,
+                    "off (no profile for body {b:?} / lens {l}; correction is gear-guarded)"
+                ),
+                // Identity unreadable. A different problem with a different fix,
+                // so it gets a different sentence.
+                _ => write!(
+                    f,
+                    "off (capture identity unreadable: body {} / lens {}; \
+                     name a profile with {CA_ENV} to override)",
+                    body.as_deref().unwrap_or("?"),
+                    lens_type3.map_or("?".to_string(), |l| l.to_string()),
+                ),
+            },
+            // Structurally unreachable: every arm above pairs a profile state
+            // with the reason that produced it. Printed rather than panicked
+            // because a prologue must never take down a render.
+            (p, r) => write!(
+                f,
+                "INCONSISTENT (profile {:?}, reason {r:?}) -- please report",
+                p.map(|x| x.key)
+            ),
+        }
+    }
+}
+
+/// Resolve the CA decision **and its explanation** in one pass.
+///
+/// This is the single source of truth. [`profile_for_capture`] is a thin
+/// projection of it, so the profile a status line reports and the profile the
+/// gather applies are not merely equal by inspection — they are the same value.
+///
+/// See [`profile_for_capture`] for the truth table and for why default-on is
+/// defensible; this function adds only the reason.
+pub fn resolve_for_capture(
+    setting: Option<&str>,
+    body_model: Option<&str>,
+    lens_type3: Option<u16>,
+) -> Result<CaDecision, CaConfigError> {
+    if let Some(raw) = setting.filter(|s| !s.trim().is_empty()) {
+        let trimmed = raw.trim().to_string();
+        // `profile_from_setting` owns the off-words and the typo error; this
+        // must not re-implement either, or the two spellings of "off" drift.
+        return Ok(match profile_from_setting(Some(raw))? {
+            Some(p) => CaDecision {
+                profile: Some(p),
+                reason: CaReason::OperatorNamed { setting: trimmed },
+            },
+            None => CaDecision {
+                profile: None,
+                reason: CaReason::OperatorOff { setting: trimmed },
+            },
+        });
+    }
+    Ok(
+        match PROFILES
+            .iter()
+            .copied()
+            .find(|p| p.matches_gear(body_model, lens_type3) == GearMatch::Match)
+        {
+            Some(p) => CaDecision {
+                profile: Some(applied_form(p)),
+                // Unwraps are sound: `matches_gear` returns `Match` only when
+                // both fields are `Some`.
+                reason: CaReason::GearMatched {
+                    body: body_model.expect("Match implies a body").to_string(),
+                    lens_type3: lens_type3.expect("Match implies a lens"),
+                },
+            },
+            None => CaDecision {
+                profile: None,
+                reason: CaReason::GearDeclined {
+                    body: body_model.map(str::to_string),
+                    lens_type3,
+                },
+            },
+        },
+    )
+}
+
+/// [`resolve_for_capture`] with the setting read from [`CA_ENV`].
+///
+/// What a prologue should call. Pair it with [`profile_for_capture_env`] on the
+/// same frame and the two agree by construction.
+pub fn resolve_for_capture_env(
+    body_model: Option<&str>,
+    lens_type3: Option<u16>,
+) -> Result<CaDecision, CaConfigError> {
+    resolve_for_capture(
+        std::env::var(CA_ENV).ok().as_deref(),
+        body_model,
+        lens_type3,
+    )
+}
+
 /// Resolve the profile for a capture, **default-on when the gear is recognised**.
 ///
 /// This is the function the render path should call. It supersedes
@@ -705,17 +876,11 @@ pub fn profile_for_capture(
     body_model: Option<&str>,
     lens_type3: Option<u16>,
 ) -> Result<Option<&'static OpticalProfile>, CaConfigError> {
-    // An operator who said anything at all outranks the gear match. Empty and
-    // whitespace-only are treated as "said nothing", matching the way an unset
-    // variable and `STREHL_FIX_CA=` are indistinguishable in most shells.
-    if setting.is_some_and(|s| !s.trim().is_empty()) {
-        return profile_from_setting(setting);
-    }
-    Ok(PROFILES
-        .iter()
-        .copied()
-        .find(|p| p.matches_gear(body_model, lens_type3) == GearMatch::Match)
-        .map(applied_form))
+    // A PROJECTION of `resolve_for_capture`, not a second implementation. The
+    // status line and the gather therefore read the same value rather than two
+    // values that happen to agree -- which is exactly the property that was
+    // missing when the prologue reconstructed its state from the environment.
+    Ok(resolve_for_capture(setting, body_model, lens_type3)?.profile)
 }
 
 /// [`profile_for_capture`] with the setting read from [`CA_ENV`].
@@ -1520,8 +1685,120 @@ mod tests {
         }
         // An override naming a real profile applies even on unknown gear: the
         // operator is allowed to know something EXIF does not.
-        let forced = profile_for_capture(Some(A7C2_FE100GM_2XTC_X4CPL.key), None, None)
-            .unwrap();
+        let forced =
+            profile_for_capture(Some(A7C2_FE100GM_2XTC_X4CPL.key), None, None).unwrap();
         assert!(forced.is_some(), "an explicit profile must not need the guard");
+    }
+
+    /// **The truth table V-CA's blocker was about.** One row per case,
+    /// asserting the resolved decision and the printed line **together**, so
+    /// they cannot drift apart again.
+    ///
+    /// The defect this pins was not that the string was ugly. It was that the
+    /// string was computed from a *different input* than the pixels were, so
+    /// the two were free to disagree — and they did, in both directions.
+    /// Asserting only the string would leave that freedom intact; asserting
+    /// only the profile would not have caught the original bug at all.
+    #[test]
+    fn the_status_line_matches_the_decision_on_every_row() {
+        let (m, l) = RIG;
+        let key = A7C2_FE100GM_2XTC_X4CPL.key;
+
+        // Row 1: operator silent, gear matches -> CORRECTING (default on).
+        let d = resolve_for_capture(None, m, l).unwrap();
+        assert!(d.is_correcting(), "silent + matching gear must correct");
+        let s = d.to_string();
+        assert!(s.starts_with("CORRECTING"), "{s}");
+        assert!(s.contains(key), "the line must name the profile: {s}");
+        assert!(s.contains("default on"), "and say WHY it is on: {s}");
+
+        // Row 2: operator says off, gear matches -> off. This is the row that
+        // printed `CORRECTING, profile "off"` before the fix.
+        let d = resolve_for_capture(Some("off"), m, l).unwrap();
+        assert!(!d.is_correcting(), "an explicit off must defeat the guard");
+        let s = d.to_string();
+        assert!(s.starts_with("off ("), "{s}");
+        assert!(!s.contains("CORRECTING"), "the inverted line, verbatim: {s}");
+        assert!(s.contains("\"off\""), "echo what the operator typed: {s}");
+
+        // Row 3: operator names the profile -> CORRECTING, and says so.
+        let d = resolve_for_capture(Some(key), m, l).unwrap();
+        assert!(d.is_correcting());
+        let s = d.to_string();
+        assert!(s.contains("operator asked for"), "{s}");
+
+        // Row 4: gear declined. The operator must be told WHAT was declined.
+        let d = resolve_for_capture(None, Some("ILCE-7RM5"), Some(32893)).unwrap();
+        assert!(!d.is_correcting(), "unrecognised gear must not be corrected");
+        let s = d.to_string();
+        assert!(s.starts_with("off ("), "{s}");
+        assert!(
+            s.contains("ILCE-7RM5") && s.contains("32893"),
+            "a decline must name the body AND lens it declined on: {s}"
+        );
+
+        // Row 5: identity unreadable -- a different problem, so a different
+        // sentence, and it must point at the override.
+        let d = resolve_for_capture(None, None, None).unwrap();
+        assert!(!d.is_correcting());
+        let s = d.to_string();
+        assert!(s.contains("unreadable"), "{s}");
+        assert!(s.contains(CA_ENV), "tell them how to override: {s}");
+    }
+
+    /// The reported profile and the applied profile are **the same value**, not
+    /// two values that agree.
+    ///
+    /// This is the structural half of the fix. `profile_for_capture` is a
+    /// projection of `resolve_for_capture`, so a future edit that reintroduces a
+    /// second reconstruction has to defeat this test to do it.
+    #[test]
+    fn the_reported_profile_is_the_applied_profile() {
+        let cases: [(Option<&str>, Option<&str>, Option<u16>); 8] = [
+            (None, Some("ILCE-7CM2"), Some(33094)),
+            (None, Some("ILCE-7CM2"), Some(32893)),
+            (None, Some("ILCE-7RM5"), Some(33094)),
+            (None, None, None),
+            (Some("off"), Some("ILCE-7CM2"), Some(33094)),
+            (Some("0"), Some("ILCE-7CM2"), Some(33094)),
+            (Some(""), Some("ILCE-7CM2"), Some(33094)),
+            (
+                Some(A7C2_FE100GM_2XTC_X4CPL.key),
+                Some("ILCE-7RM5"),
+                Some(1),
+            ),
+        ];
+        for (set, m, l) in cases {
+            let decision = resolve_for_capture(set, m, l).unwrap();
+            let applied = profile_for_capture(set, m, l).unwrap();
+            assert_eq!(
+                decision.profile, applied,
+                "status and gather disagree for {set:?} / {m:?} / {l:?}"
+            );
+            // And the headline word must follow the profile, not the reason.
+            assert_eq!(decision.is_correcting(), applied.is_some());
+            let s = decision.to_string();
+            assert_eq!(
+                s.starts_with("CORRECTING"),
+                applied.is_some(),
+                "printed {s:?} but the gather gets {:?}",
+                applied.map(|p| p.key)
+            );
+            assert!(!s.contains("INCONSISTENT"), "unreachable arm reached: {s}");
+        }
+    }
+
+    /// An error must stay an error through the reason-bearing path too.
+    ///
+    /// A typo'd override that quietly resolved to the gear default would
+    /// discard the operator's stated intent without a word — the same class of
+    /// silent disagreement, one level up.
+    #[test]
+    fn resolve_propagates_the_typo_error_rather_than_defaulting() {
+        let (m, l) = RIG;
+        assert!(resolve_for_capture(Some("nope"), m, l).is_err());
+        for truthy in ["1", "true", "on"] {
+            assert!(resolve_for_capture(Some(truthy), m, l).is_err(), "{truthy}");
+        }
     }
 }
