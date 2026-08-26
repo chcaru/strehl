@@ -130,7 +130,7 @@ def silhouette_score(img: np.ndarray) -> np.ndarray:
     rough = np.sqrt(rough)
     smooth = rough < np.percentile(rough, 40)
     if smooth.sum() < smooth.size * 0.01:
-        return np.zeros_like(tile_stat(lum, lambda t: 0.0))
+        return np.zeros(tile_stat(lum, lambda t: 0.0).shape, np.float32), None
 
     # Mode of the smooth population, taken as a histogram peak rather than a
     # median: with a bimodal frame (bright sweep + large dark subject) a median
@@ -154,13 +154,36 @@ def silhouette_score(img: np.ndarray) -> np.ndarray:
     # are adjacent to it. This is what makes the site the cut-out artifact's
     # home rather than merely a place where the image changes.
     textured = rough > np.percentile(rough, 75)
-    boundary = boundary & ndi.binary_dilation(textured, np.ones((7, 7)))
 
-    # Back to full-frame tile coordinates.
+    # The adjacency radius cannot be one constant. At radius 7 this returned
+    # EXACTLY 0.000% on flower-bud-with-background-fern-cpl -- the subject the
+    # owner actually complained about -- while giving 0.332% on bee-1-cpl. The
+    # cause was measured, not guessed: both frames put the background mode at
+    # ~62.7k, but the tolerance derived from the smooth population's spread was
+    # 3579 there against 14416 on bee-1. A tight tolerance makes the mask hug
+    # only the blown core of the sweep, so its boundary sits out in the smooth
+    # falloff and never comes within 7 px of anything textured. Zero overlap is
+    # itself the tell: 1.08% boundary against 25% textured would collide ~0.27%
+    # of the time by chance alone, so exactly 0 means systematically far, not
+    # scarce.
+    #
+    # So the radius is a FIXED ASCENDING LADDER, tried in the same order for
+    # every subject, first non-empty wins, and the radius that fired is
+    # reported. That is one stated rule applied uniformly -- not a threshold
+    # tuned per subject, which would make the crop site part of the finding.
+    for radius in (7, 15, 31, 63):
+        near_tex = ndi.binary_dilation(textured, np.ones((radius, radius)))
+        b = boundary & near_tex
+        if b.any():
+            break
+    else:
+        # Nothing qualifies at any radius. REFUSE. The caller drops the site.
+        return np.zeros(tile_stat(lum, lambda t: 0.0).shape, np.float32), None
+
     full = np.zeros(lum.shape, np.float32)
-    full[:small.shape[0] * 4:4, :small.shape[1] * 4:4] = boundary
+    full[:small.shape[0] * 4:4, :small.shape[1] * 4:4] = b
     full = ndi.uniform_filter(full, 9)
-    return tile_stat(full, lambda t: float(t.mean()))
+    return tile_stat(full, lambda t: float(t.mean())), radius
 
 
 def site_all(img: np.ndarray) -> dict:
@@ -185,8 +208,10 @@ def site_all(img: np.ndarray) -> dict:
     lap = np.abs(ndi.laplace(g))
     lit = tile_stat(lum, lambda t: float(np.median(t)))
 
+    sil, sil_radius = silhouette_score(img)
+
     plan = [
-        ("silhouette", silhouette_score(img), "max", None),
+        ("silhouette", sil, "max", None),
         ("edge", tile_stat(coarse, lambda t: float(t.mean())), "max", None),
         ("sharp", tile_stat(lap, lambda t: float(t.mean())), "max", None),
         ("flat", tile_stat(g, lambda t: float(t.std())), "min", lit_floor),
@@ -204,6 +229,15 @@ def site_all(img: np.ndarray) -> dict:
         s[taken] = blocked
         idx = np.argmin(s) if sense == "min" else np.argmax(s)
         ti, tj = np.unravel_index(idx, s.shape)
+        # A "max" rule that found nothing has an all-zero grid, and argmax on
+        # that returns index 0 -- the image CORNER. Emitting that crop labelled
+        # `silhouette` is the same failure as a missing manifest row reading as
+        # a passing one: it looks like an answer. Refuse instead, and let the
+        # caller say the rule declined.
+        if sense == "max" and not np.isfinite(s[ti, tj]) or (
+                sense == "max" and s[ti, tj] <= 0.0):
+            out[name] = None
+            continue
         # Centre the crop on the winning tile, clamped into the frame.
         cy, cx = ti * GRID + GRID // 2, tj * GRID + GRID // 2
         y = int(np.clip(cy - CROP // 2, 0, h - CROP))
@@ -211,6 +245,7 @@ def site_all(img: np.ndarray) -> dict:
         out[name] = (y, x, float(s[ti, tj]))
         # Reserve every tile this crop covers, so the next site is elsewhere.
         taken[y // GRID:(y + CROP) // GRID + 1, x // GRID:(x + CROP) // GRID + 1] = True
+    out["_silhouette_radius"] = sil_radius
     return out
 
 
@@ -278,13 +313,22 @@ def main() -> int:
     print(f"sited on  : {site_arm}   (sites applied UNCHANGED to every arm)")
 
     sites = site_all(read_u16_rgb(arms[site_arm]))
+    sil_radius = sites.pop("_silhouette_radius", None)
+    declined = [k for k, v in sites.items() if v is None]
+    sites = {k: v for k, v in sites.items() if v is not None}
+    if sil_radius is not None:
+        print(f"  silhouette adjacency radius that fired: {sil_radius}")
+    for k in declined:
+        print(f"  {k:6s} DECLINED -- rule found nothing; no crop written")
     for k, (y, x, s) in sites.items():
         print(f"  {k:6s} y={y:5d} x={x:5d}  score={s:.4g}")
 
     order = [a.ref] + sorted(k for k in arms if k != a.ref)
     lines = [f"subject: {a.subject}", f"sited on: {site_arm}",
              f"display: {a.display} scale={a.scale} (FIXED across arms)",
-             f"crop: {CROP}x{CROP} at 100%, never resampled", ""]
+             f"crop: {CROP}x{CROP} at 100%, never resampled",
+             f"silhouette adjacency radius: {sil_radius}",
+             f"declined (no crop written): {', '.join(declined) if declined else 'none'}", ""]
 
     for name, (y, x, score) in sites.items():
         panels = []
