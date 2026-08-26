@@ -21,6 +21,24 @@ The working tree is never written, so the other lanes keep their changes and
 Every step is checked. A filter that silently selected zero hunks, or a patch
 that silently failed to apply, would produce a green run and an empty commit --
 which is the failure this project keeps rediscovering, so each is a hard error.
+
+CHANGED 2026-08-26, and the reason matters. Step 2 originally took `git diff`,
+which is worktree-vs-INDEX, while step 1 builds the temp index from HEAD. Those
+are different bases whenever another lane has something STAGED, and one did: a
+staged edit to check-defaults.py at line ~196 that is not in the worktree and
+that shortens the file by 4 lines. My hunk therefore appeared at old-side 288
+against the index but 292 against HEAD, so the patch would have been applied to
+a base it was not computed against and `git apply` would have had to guess.
+It now diffs against HEAD explicitly, which is the base the temp index actually
+has.
+
+Usage:
+    python commit_mine.py <msgfile> <path>:<lo>:<hi> [<path>:<lo>:<hi> ...]
+
+where lo..hi bound the NEW-side start line of the hunks that are mine. Ranges
+are given per invocation rather than hard-coded, because a stale range from a
+previous commit either fails loudly or, much worse, sweeps a hunk that has since
+become somebody else's.
 """
 import os
 import re
@@ -35,11 +53,14 @@ REPO = r"C:\dev\blog\death-of-software\projects\strehl"
 # positions: in merge_cmd.rs theirs sit at 133/142 and 1701+, in main.rs at
 # 437+. The gaps either side are wide, so -U3 context cannot merge a hunk of
 # mine with a hunk of theirs.
-MINE = {
-    "crates/strehl-cli/src/merge_cmd.rs": (200, 420),
-    "crates/strehl-cli/src/main.rs": (40, 175),
-    "scripts/check-defaults.py": (0, 10**9),
-}
+# Filled from argv. path -> (min_new_start, max_new_start) of the hunks that
+# are MINE. See the usage note in the docstring: these are deliberately NOT
+# hard-coded, because a range left over from an earlier commit is a loaded gun.
+MINE: dict[str, tuple[int, int]] = {}
+
+# The temp index is built from HEAD, so the patch must be computed against HEAD
+# too. See the CHANGED note in the docstring.
+DIFF_BASE = "HEAD"
 
 HUNK = re.compile(rb"^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@")
 
@@ -53,7 +74,7 @@ def git(*args, **kw):
 
 def filter_patch(path, lo, hi):
     """Return the patch bytes for `path` containing only hunks in [lo, hi]."""
-    raw = git("diff", "-U3", "--", path)
+    raw = git("diff", DIFF_BASE, "-U3", "--", path)
     if not raw.strip():
         sys.exit(f"FAILED: no diff at all for {path}")
     lines = raw.split(b"\n")
@@ -87,8 +108,15 @@ def filter_patch(path, lo, hi):
 
 def main():
     msg_path = sys.argv[1]
+    specs = sys.argv[2:]
+    if not specs:
+        sys.exit("no <path>:<lo>:<hi> specs given -- refusing to commit nothing")
+    for spec in specs:
+        path, lo, hi = spec.rsplit(":", 2)
+        MINE[path.replace("\\", "/")] = (int(lo), int(hi))
     head = git("rev-parse", "HEAD").decode().strip()
     print(f"HEAD = {head}")
+    print(f"diff base = {DIFF_BASE}")
 
     tmpdir = tempfile.mkdtemp(prefix="blend-idx-")
     idx = os.path.join(tmpdir, "index")
