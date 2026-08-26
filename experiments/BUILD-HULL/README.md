@@ -43,6 +43,17 @@ not to a `pyramid.rs` array index. It cannot do the latter and does not claim to
 | `clamptest.py` | scores clamped vs unclamped arms against one hull; carries the build control |
 | `builddiff.py` | isolates what changed between two binaries on a path with no hull code |
 | `pairprice.py` | prices the clamp from a matched one-build pair, with a determinism null |
+| `sigtest.py` | signal-vs-noise per octave, with the registration and plant controls |
+| `sigshare.py` | octave energy *share* across subjects — see the warning below |
+| `signoise.py` | removal magnitude against the merged output's own noise floor |
+
+## Do not read `sigshare.py` alone
+
+It reports octave energy *share*, and share inverts the conclusion. On
+`couch-fibers-cpl` the finest octave is 39.47% of the removal, which looks
+alarming until `signoise.py` shows that removal is 0.10x the merge's own noise.
+A fraction of nearly nothing reads exactly like a fraction of a great deal.
+`signoise.py` is the one that carries the verdict.
 
 ## Which hull is which
 

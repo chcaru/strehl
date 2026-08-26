@@ -1858,3 +1858,214 @@ I have not edited `pyramid.rs` and this is a proposal, not a change.
 4. **Do not extend the clamp to RGB to make my 5.3126% go to zero.** That number is
    measured against a hull nobody enforces and the right response is to decide whether the
    RGB hull *should* be enforced, not to chase the number.
+
+## 17. The clamp removes noise, not detail — section 16.7 retracted
+
+Section 16.7 priced the hull clamp at 15.5-18.9% of microcontrast and recommended
+against shipping it unconditionally. **That recommendation is withdrawn.** The
+cost it measured is real as a number and wrong as a conclusion: the content the
+clamp removes at every scale where detail lives is *below the noise floor of the
+merge's own output*, on all three subjects measured. A metric that counts that
+removal as a loss is counting the removal of noise.
+
+This section also refutes all three of ORCH's registered predictions and my own.
+
+### 17.1 The decisive test as posed is a tautology
+
+ORCH proposed: "for the pixels the clamp moves, does the unclamped value lie
+outside the hull of the contributing frames or inside it? Outside is ringing,
+correctly removed. Inside is detail, wrongly removed."
+
+In the domain the clamp operates in that test returns 100% by arithmetic.
+`pyramid.rs:1189` is `*p = p.clamp(*l, *h)`, which moves a pixel **if and only
+if** it is outside `[l, h]`. The question cannot come out any other way, so it
+cannot discriminate.
+
+Reading the fold that builds `[l, h]` shows the hull is also not the suspect.
+`pyramid.rs:1002-1009` folds `l = min(l, v)`, `h = max(h, v)` over **every frame
+pushed**, unconditionally — not over the frames that won weight. That is the
+widest hull available from the data, so the clamp cannot be too tight through
+frame selection.
+
+The non-tautological question is one of magnitude: **is what the clamp removes
+large or small compared with the noise, and at what scale does it live?**
+
+### 17.2 The first noise reference was biased, in a known direction
+
+`sigtest.py` compared the removal against single-frame sensor noise, estimated
+from adjacent-frame differences `(f_i - f_i+1)/sqrt(2)` over five disjoint pairs
+on the warped flower-bud basis. That gave a finest-octave noise floor of
+**59.83 DN**.
+
+It is the wrong reference. The merge averages ~200 frames, so the noise in its
+*output* is far below the noise in one input frame, and comparing against a
+single frame's noise biases every verdict toward "this is only noise". The bias
+was declared when the script was written, but declaring a bias is not removing
+one.
+
+`signoise.py` removes it by estimating the noise of the thing the clamp actually
+modifies: the merged output. It uses `sigma = 1.4826 * MAD` on the finest octave
+of the unclamped render — the standard robust estimator, valid because
+finest-octave coefficients of a natural image are sparse, mostly noise with a
+small edge population that the median ignores.
+
+### 17.3 Two controls, one of which caught me
+
+**Registration.** The matched pair comes from `blend-render` at 4688x7040; the
+hull cache and the octave decomposition live on the binned 2344x3520 grid. The
+pair is brought down by an exact 2x2 block mean, which is lossless for a
+*difference* because the block mean is linear.
+
+The first run compared the render against warped frame 0 and reported a 22 x 24
+px offset with the planted-shift check failing. Both readings were my error:
+
+- frame 0 sits at one end of the bracket and is defocused almost everywhere, so
+  it is a poor correlation reference;
+- the potency check asserted the plant would be recovered at its nominal value,
+  when a plant **composes with the baseline offset** and is only recoverable as a
+  difference. Recovered `(-4,-36)` minus baseline `(-22,-24)` is `(+18,-12)`
+  against a plant of `(+17,-11)` — the finder was working perfectly and my
+  assertion was mis-specified.
+
+Against the binned `strehl stack` render, which section 16.6 already scored
+against this cache, registration is **dy=0 dx=0, ncc=0.9984**, with the plant
+recovered as `(16,-10)` inside the 2 px search step.
+
+> **A planted control must be asserted in the same frame of reference the
+> instrument reports in.** A plant applied on top of an unknown baseline is
+> recoverable only as a difference; asserting its nominal value tests the
+> baseline, not the plant, and fails green instruments.
+
+**The noise estimator.** It is commissioned against an independently measured
+quantity rather than trusted. On flower-bud the single-frame floor is 59.83 DN
+and a plain mean of 205 frames would give 4.18 DN. The estimate must fall between
+those. It reads **47.13 DN** — below the single-frame floor and not absurdly
+below the mean bound, so the merge is retaining most of one frame's noise, which
+is what a selective merge that mostly picks rather than averages should do.
+
+### 17.4 What the clamp removes, in units of the merge's own noise
+
+| subject | sigma | detail0 | detail1 | detail2 | detail3 | detail4 | detail5 | base |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `flower-bud-alone-cpl` | 47.13 | **0.42** | 0.17 | 0.12 | 0.09 | 0.07 | 0.06 | **4.49** |
+| `coffee-bean` | 340.30 | **0.29** | 0.09 | 0.06 | 0.04 | 0.03 | 0.02 | 0.68 |
+| `couch-fibers-cpl` | 196.04 | **0.10** | 0.03 | 0.02 | 0.01 | 0.01 | 0.01 | 0.12 |
+
+The same rows in absolute DN:
+
+| subject | detail0 | detail1 | detail2 | detail3 | detail4 | detail5 | base |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `flower-bud-alone-cpl` | 19.69 | 8.19 | 5.58 | 4.26 | 3.44 | 2.88 | 211.73 |
+| `coffee-bean` | 97.56 | 32.18 | 19.12 | 13.33 | 10.10 | 8.05 | 230.25 |
+| `couch-fibers-cpl` | 19.82 | 5.19 | 3.05 | 2.13 | 1.63 | 1.31 | 23.61 |
+
+Two things follow, and they are the whole result.
+
+**At every scale where detail lives, the clamp removes less than the noise
+already present there.** 0.42, 0.29 and 0.10 times sigma at the finest octave.
+It is arithmetically incapable of removing detail it is not reaching.
+
+**The clamp's real work is at the base octave of the one subject that clips.**
+4.49 sigma on `flower-bud-alone-cpl`, against 0.68 and 0.12 on the two that do
+not. That is a pedestal correction at scales above 64 px — tone, not texture —
+and it is confined to the subject with a defect to fix. The clamp is
+well-targeted, which is the opposite of what section 16.7 concluded.
+
+### 17.5 A share table that misled, and its correction
+
+An intermediate run reported octave *energy share*, and it pointed the wrong way:
+
+| subject | detail0 share | base share |
+| --- | ---: | ---: |
+| `flower-bud-alone-cpl` | 0.86% | 98.84% |
+| `coffee-bean` | 14.81% | 82.48% |
+| `couch-fibers-cpl` | **39.47%** | 55.99% |
+
+Read alone, `couch-fibers-cpl` looks alarming: 39.5% of the removal at the finest
+octave on the subject that clips nothing. The absolute table shows why that is an
+artifact. Couch-fibers' *total* removal is tiny, so a large share of it is still
+0.10 sigma. The share is a ratio between two small numbers.
+
+> **A share is not a magnitude.** Normalising by a total makes subjects
+> comparable and makes each one uninterpretable on its own; a fraction of
+> nearly nothing reads identically to a fraction of a great deal. Report the
+> absolute alongside, or the normalisation will invert the conclusion.
+
+### 17.6 Scoring the registered predictions
+
+ORCH registered three before the run, and asked to be told honestly, "including
+if it is wrong by 147x again". All three are refuted.
+
+| prediction | source | outcome | measurement |
+| --- | --- | --- | --- |
+| removed content is signal at the fine octaves | ORCH | **REFUTED** | 0.42 / 0.29 / 0.10 sigma — below noise on all three |
+| removed content is noise at the base octave | ORCH | **REFUTED** | base is the *largest* removal, 4.49 sigma on flower-bud |
+| coffee-bean's larger loss is signal | ORCH | **REFUTED** | coffee-bean has the largest absolute fine removal (97.56 DN) and the *second lowest* relative one (0.29 sigma), because its render is noisier (sigma 340.30) |
+| removed content exceeds the noise floor at every octave | BUILD-HULL | **REFUTED** | it is below the noise floor at every octave except one subject's base |
+
+My own was refuted as squarely as ORCH's, and by the same table. The reasoning
+behind it — that a clamp moving 24.6% of pixels could not be operating only on
+noise — confused *frequency* with *magnitude*. It binds constantly and moves
+each pixel by very little, which is precisely what `pyramid.rs:666-674` claims
+and what section 16.7 said was false. On this evidence the doc comment was right
+about the fine scales and wrong only about the base.
+
+### 17.7 What this does to the 3% versus 15% disagreement
+
+Section 58.4 of `ORCH-veiling.md` measured ~3% where section 16.7 measured
+15.5-18.9%, and concluded both could be honest, differing in what they average
+over. That is correct, and this section resolves which quantity is the useful
+one.
+
+`accept.py`'s `microC` is a median local standard deviation in 8x8 tiles. A local
+standard deviation at 8 px scale is dominated by the finest octaves, and the
+finest-octave removal is 0.29 sigma on coffee-bean. **The 15% was measuring the
+removal of sub-noise-floor variation** — it is a real change in the metric and
+not a loss of anything a viewer can see. ORCH's ~3%, being edge-weighted, is
+closer to the quantity a person means by sharpness.
+
+This is the second time tonight a metric has answered precisely and about the
+wrong quantity, and both times the fix was to establish what the operation
+removes before pricing its removal.
+
+### 17.8 Recommendation, reversed
+
+**Keep the hull clamp on by default. Section 16.7's recommendation is retracted.**
+
+- It removes content that is below the merge's own noise at every detail scale.
+- Its one substantial action is a base-octave pedestal correction on the subject
+  that clips, which is exactly the defect it exists to guard.
+- 6.64% of the pixels it moves on flower-bud lie outside the **entire observed
+  range of all 205 frames** (p99 = 2.09 hull spans). That content was seen by no
+  frame and cannot be detail.
+
+**Do not spend on the policy sweep.** Margin, soft-knee and post-demosaic
+clamping are all ways of buying back a cost that this section shows is not a
+cost. Per-octave clamping is the one policy the data would support — clamp the
+base, leave the fine octaves — but since the fine-octave removal is already
+sub-noise there is nothing left to recover by doing it. The measurement has
+selected "leave it alone".
+
+**The upstream defect is still real and still unfixed.** A correct guard is not a
+correct merge: the base-octave excursion of 4.49 sigma means the reconstruction's
+pedestal genuinely goes wrong before the clamp catches it, which is the
+cross-band weight-divergence mechanism of section 15. BUILD-BLEND's base-band-
+from-mean change addresses that cause. The clamp should stay regardless, because
+a guard that costs nothing measurable is worth keeping even after its cause is
+fixed.
+
+### 17.9 What was not measured
+
+- **`sharpen_per_octave` is not an amplitude gain.** I hypothesised the clamp was
+  fighting the sharpener and checked before pursuing it: `pyramid.rs:762-776`
+  ramps the *selection exponent*, weights stay normalised, and `pyramid.rs:1675`
+  tests that normalisation. The hypothesis is dead; recorded so it is not raised
+  a third time.
+- The noise estimator is validated on flower-bud only, where an independent floor
+  existed. Its readings on coffee-bean and couch-fibers rest on the estimator's
+  general validity, not on a per-subject check.
+- Everything here is green-channel. Section 16.5's build difference makes red and
+  blue unsafe across builds; both arms here come from one binary, so the
+  restriction is conservative rather than required, but it is not lifted.
+- The three subjects are 205, 105 and 299 frames. No subject below 100 frames was
+  measured, and the noise floor of a short stack will be higher.
