@@ -5178,3 +5178,125 @@ co-site is on. Measured on the linear path the fix will appear to do nothing.
 > different failure modes, and only the second one determines whether the fix
 > pays for itself.
 
+
+---
+
+## 49. Three instances of one error in a single night: measuring across a path boundary
+
+Section 48 recorded that the project's ESF sharpness instrument had been
+measuring `linear.tif`, a file the chroma co-site never touches and the
+photographer never sees. That looked like an incident. By the end of the night
+it had happened three times, in three different lanes, to three different
+agents including me, and it is better understood as a **class**.
+
+### 49.1 The three instances
+
+| # | the instrument measured | the product delivered | consequence |
+| --- | --- | --- | --- |
+| 1 (§45) | the **pyramid** backend, in every quality claim | the **estimator** backend, by compiled default | the shipped default drew the polygonal patchwork while every measurement said the merge was clean |
+| 2 (§48) | `linear.tif`, the measurement output | the **viewable** sRGB render | the largest single amplitude loss in the pipeline sat entirely in the gap between them, unpriced for weeks |
+| 3 (§49.3) | an **unwarped** rawpy decode as the single-frame reference | the **warped** merge output | *under investigation* -- if confirmed, a per-tile survey reported the merge losing on detail tiles as a mechanical consequence of its own construction |
+
+Each was invisible from inside its own lane. Each was found only by someone
+holding two lanes at once.
+
+### 49.2 The rule
+
+> **An instrument and the product must be on the same side of every
+> transformation between them.** Whenever a pipeline has a "measurement output"
+> and a "delivery output", or a reference arm and a test arm that are produced
+> by different paths, the defect budget must be computed for the delivered
+> artefact, not the convenient one. The honest linear file is otherwise an alibi
+> for the one that ships.
+
+The corollary is what makes it operational, because the error is not detectable
+by looking at either arm:
+
+> **Name the path boundary explicitly when designing any A/B.** For each arm,
+> write down every transformation it has undergone. If the two lists differ by
+> anything other than the variable under test, the difference is in the result
+> whether or not anyone intended to measure it.
+
+### 49.3 The third instance, and why it was worth chasing
+
+V-bestframe built a per-tile "never worse than the best single frame"
+instrument, deliberately decoding the ARWs with `rawpy` so that it shares no
+code with the thing it audits. That instruction was mine and I still think it
+was right: an instrument that shares code with its subject cannot find a fault
+in the shared code.
+
+But an independent decode of an ARW yields the **unwarped original**, while the
+merge output has been through the alignment gather. BUILD-SHARP, holding the
+amplitude numbers, asked the question the survey could not ask itself: is the
+reference arm warped or not? If unwarped, the single frame pays **zero**
+resamples while the merge pays the full chain -- a **1.43x handicap on green**
+at f=0.35 and **2.14x on R/B** -- and such a survey reports the merge losing on
+textured tiles *even if the merge is perfect*.
+
+The predictions of that hypothesis match the observed table uncomfortably well:
+the deficit concentrates in **detail** tiles, which is exactly where resampling
+loss bites and where flat tiles are untouched; and the subjects richest in fine
+detail rank worst (`109MSDCF`, 246/352 detail tiles, 4.5% pass).
+
+There is a sharp lesson in the headline subject. `flowers-cpl` has only
+**48/352** detail tiles and scores 83.3%, mid-pack. Under the original H1
+reading that was evidence of capture limitation. Under the handicap hypothesis
+it is *also* exactly what would be produced. **The subject the instrument was
+built to adjudicate cannot discriminate between the two explanations of the
+instrument's own output.**
+
+What survives regardless: H1 for `flowers-cpl` rests on the merge-**independent**
+column -- how many detail tiles exist in the *frames* -- which never involves the
+merge and is untouched by this objection. A verdict resting on the arm that the
+confound cannot reach is a verdict that survives the confound.
+
+### 49.4 What §21 settled, which narrowed the target to one thing
+
+BUILD-SHARP priced the two arms that had fired since §20:
+
+- **Lateral-CA correction is structurally free, not merely cheap.**
+  `OpticalProfile::compose` (`optics.rs:297`) returns **one** `Similarity` doing
+  alignment and CA together, handed straight to `gather_checked` per CFA plane.
+  A radial magnification about a point *is* a similarity, and similarities
+  compose. Residual cost **-0.41% / -1.52% / -4.48%**. The counterfactual is the
+  number worth keeping: as a separate pass, red would have paid a **14.3% loss
+  at f=0.35** -- avoided, not paid.
+- **The pyramid backend costs exactly nothing.** Round-trip error **4.441e-16**,
+  per-band retention **1.000000** at all three bands. `[1,4,6,4,1]/16` is a
+  severe low-pass, but it sits inside a **perfect-reconstruction** filter bank,
+  so the blur `expand` adds is exactly the blur subtracted to form the
+  Laplacian. **Pricing the kernel alone would have produced a large fictitious
+  number** -- a reminder that a filter's cost is a property of the system it
+  sits in, not of the filter. Potency shown rather than asserted: scaling the
+  finest band by 0.80 returns 0.800000 / 0.800350 / 0.800128, MOVED 3/3.
+
+So the shipped chain is **G 0.698, R/B 0.468 at f=0.35**, and the serial chroma
+co-site is **the only removable loss and the whole of it**.
+
+BUILD-SHARP also corrected its own §20 arithmetic in the **conservative**
+direction -- it had used `a z + b` where `apply_at` is centre-relative, worth
+**+0.29 / +1.04 / +3.17%** -- meaning the original report slightly *overstated*
+the loss it had found. A correction that makes your own headline smaller is the
+kind that can be trusted.
+
+### 49.5 A latent collision, caught before it landed
+
+The profile `A7C2_FE100GM_2XTC_X4CPL` carries `translation: (0.6294, -0.4240)`
+px, which its own documentation calls unattributed and describes as *"the same
+order as the ~0.5 px/axis that CFA co-siting predicts"* -- plausibly the very
+quantity the co-site fix folds in.
+
+**No collision today:** `resolve_for_capture` returns the `_RADIAL` twin, whose
+translation is exactly `(0, 0)`. But wiring the non-radial profile would
+silently double-correct by roughly half a pixel per axis on R and B, presenting
+as lateral chromatic aberration on a build where CA correction is default-on --
+misattributable, and exactly the kind of defect that ships. Routed to the
+implementer as an assertion to add rather than an assumption to hold, and the
+two files sit in different lanes, which is why it needed a third party to see it
+at all.
+
+> **A quantity that appears in two places will eventually be applied twice.**
+> The defence is not vigilance but an assertion at the point of use, because the
+> collision only becomes reachable under a configuration change made by someone
+> who never read either site.
+
