@@ -92,7 +92,7 @@ VERDICTS = {
     "coffee-bubbles": (2, "minor", "green-yellow fringe on sub-pixel speculars; residual lateral CA"),
     "foam": (2, "minor", "specular fringe, as coffee-bubbles; the stack also moved"),
     "dry-erase-marker-head-cpl": (2, "minor", "specular fringe, as coffee-bubbles"),
-    "flowers-cpl": (3, "capture-limited", "soft throughout -- reads as an incomplete bracket, not a merge failure"),
+    "flowers-cpl": (3, "capture-limited", "soft over most of the frame; per-pixel selection over the same frames recovers nothing the merge lacks, so it is not a merge failure -- the cause is NOT established"),
     "flower-bud-alone-cpl": (3, "capture-limited",
         "softest merge-vs-best-frame in the corpus, plus an unattributed edge fringe"),
 }
