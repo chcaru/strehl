@@ -1120,3 +1120,48 @@ it outright.
 > **When statistics cannot separate two mechanisms, draw the picture. A mask
 > rendered over the photograph settled in one look what four summary statistics
 > had left ambiguous, and it overturned the verdict the statistics had produced.**
+
+### 17.4 A correction to 17.2: right conclusion, wrong reason
+
+Section 17.2 attributed the clamped blue channel to the merge on the stated
+ground that the measurement sat "upstream of the tone stage, so no per-image
+black point can reach it."
+
+**That ground was false.** `crops.ps1` renders the control arm with `--srgb`, so
+those TIFFs are viewing renders, not linear sensor data. The claim was an
+assumption stated as a fact, and it happened to be the single assumption on which
+the whole attribution rested.
+
+Two checks were run rather than repairing the sentence.
+
+**First, is the difference merely an encoding mismatch?** The two arms are
+invoked differently -- the control gets `--srgb --demosaic`, the blend arm gets no
+flags -- so if one wrote camera-linear and the other sRGB, the sRGB toe would lift
+shadows by more than a factor of ten and manufacture exactly this result. Refuted:
+the arms' percentiles agree closely (median 0.930 against 0.933, p95 0.970 against
+0.966), sRGB-encoding the blend arm lands nowhere near the control (p5 0.419
+against 0.136), and binning one arm against the other gives **0 of 10 bins**
+consistent with a single-valued curve. The arms differ by content, not by a
+transfer function.
+
+**Second, can the tone stage move a zero count at all?** One binary, one subject,
+one merge, rendered twice with the tone setting as the only difference:
+
+| threshold | B channel, `--srgb` | B channel, linear | delta |
+| --- | ---: | ---: | ---: |
+| 0 | 0.0005% | 0.0000% | −0.0005 |
+| 256 | 0.0081% | 0.0004% | −0.0077 |
+
+**Largest movement attributable to the tone stage: 0.0077 pt, against the 2.192
+pt measured between the two merges. A factor of 285.**
+
+So the conclusion of 17.2 stands and is now on firmer ground than when it was
+written: the black point is excluded as an explanation by measurement rather than
+by assumption. What does *not* stand is the reason originally given. A reader who
+took 17.2 at its word would believe those TIFFs are linear, and would carry that
+false belief into the next measurement they made on them.
+
+> **When an argument rests on one assumption, the assumption is the experiment.
+> "Upstream of the tone stage" was load-bearing, unchecked, and wrong; the
+> conclusion survived only because a control was run afterwards, which is luck,
+> not method. Identify the single load-bearing premise and measure that first.**
