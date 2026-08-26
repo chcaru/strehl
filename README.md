@@ -17,12 +17,21 @@ much it trusts its own answer.
 The name is the Strehl ratio: how close a real optical system comes to the
 diffraction-limited ideal.
 
-> **Status: the estimation merge is the default path and runs end to end.**
-> `strehl stack` implements the thesis on real RAW files: a 17x17-regularised
-> winner field in pass one, a noise-gated average in pass two, with `n_eff`,
-> boundary flags and per-pixel confidence as outputs. The naive per-pixel argmax
-> now lives at `strehl argmax-baseline`, kept deliberately as the reference
-> artifact every quality claim is measured against.
+> **Status: the pyramid merge is the default path and runs end to end.**
+> `strehl stack` produces print-worthy 16-bit masters from real RAW files —
+> four subjects verified by eye at true 1:1, with the occlusion halo gone
+> (see *Looking at the output* below). The naive per-pixel argmax lives at
+> `strehl argmax-baseline`, kept deliberately as the reference artifact every
+> quality claim is measured against.
+>
+> **Two corrections to what this paragraph used to say**, both material enough
+> to belong here rather than in a footnote. It claimed the *estimation* merge
+> was the default: it is not. The default is `--merge pyramid`; the estimator is
+> selected with `--merge estimator` and **currently exits rc=1 out of the box**.
+> It also claimed "per-pixel confidence as outputs": the only per-pixel trust
+> artifact in the tree is `--n-eff-map`, which is one of nine flags the CLI
+> refuses on the default backend. The default emits an image and nothing else.
+> Closing that is the top build priority; see the comparison table below.
 >
 > **Measured end to end on the reference rig:** 299 frames of 33 MP Sony ARW to
 > a 7032 x 4688 16-bit sRGB TIFF in **51.6 s** — decode, align, focus, elect,
@@ -30,6 +39,13 @@ diffraction-limited ideal.
 > figure was **23.1 s** before alignment was wired into the merge; registration
 > is what the extra ~28 s buys. Full sensor resolution is **free**: the binned
 > render measures 51.4 s, inside the run-to-run spread of the full one.
+>
+> **Read that number with its caveat.** "Elect" is an estimator stage, so 51.6 s
+> was measured on the path that is no longer the default. The **shipping
+> pyramid path's end-to-end time has not been re-measured** since it became the
+> default, and a speed claim about a path nobody timed is not a speed claim.
+> Treat 51.6 s as evidence that the architecture is fast at 299 frames and 33 MP
+> — not as the current default's number.
 >
 > **Measured and refused, not pending.** Two items previously listed here as
 > "not yet built" have since been built, measured against the merge that already
