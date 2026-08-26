@@ -2960,3 +2960,125 @@ only the backend would ship the arm this corpus has never characterised.
 Held pending a measurement of the veil at gate 2. If the win is gate-independent
 the gate can be argued on detail and noise alone; if it is not, the gate value
 is part of the fix and must move with it.
+
+## 28 — I generalised from two crops, and the crops were chosen by edge density
+
+Section 27 concluded that the pyramid removes the halo and that two lines stood
+between the shipped product and a better one. The first half survives. The
+conclusion does not, and the way it failed is worth more than the finding was.
+
+### 28.1 The sampling rule was blind to the thing that mattered
+
+`crops.py` picks its crops by silhouette density — it ranks a coarse grid by how
+many edge pixels each cell contains and takes the busiest. That is a sensible
+rule for looking at a halo, and it is exactly why it could not see this.
+
+**A sampling rule that selects for one feature is blind to everything that is
+not that feature.** Both crops landed on clean silhouettes 2700 px apart, both
+showed the halo gone, and I read two agreeing samples as a survey. They agreed
+because they were drawn from the same stratum, and the stratum was chosen by me.
+
+Then I rendered the full frame and looked at it. A large region of the subject
+that is ordinary mid-tone green in the estimator arm is **nearly solid black in
+the pyramid arm**.
+
+### 28.2 The pyramid clips mid-tones to exact zero
+
+`flower-bud-alone-cpl`, both arms, full resolution, camera-linear:
+
+| | exact-zero RGB px | luma < 500 DN | darker than ctrl by >2000 DN |
+|---|---:|---:|---:|
+| estimator | **0** (0.000%) | 686 (0.002%) | — |
+| pyramid | **122,416** (0.371%) | 432,421 (1.310%) | 721,189 (2.19%) |
+
+In the 721,189-pixel disagreement set the estimator median is 3920.7 DN and the
+pyramid median is 878.0 DN. Mid-tones collapsed to the floor, in one contiguous
+region — bbox y 744..4687, x 1668..5104, centroid y 3169 x 3678 — not speckle.
+
+Across all six clean6 subjects, with the partition printed so a skipped subject
+cannot read as a passing one (requested 6, scored 6, missing 0):
+
+| subject | estimator exact-0 | pyramid exact-0 | pyramid % |
+|---|---:|---:|---:|
+| couch-fibers-cpl | 0 | 0 | 0.000% |
+| **dry-erase-marker-head-cpl** | 0 | **345,849** | **1.048%** |
+| flat-on-ruler-cpl | 0 | 0 | 0.000% |
+| **flower-bud-alone-cpl** | 0 | **122,416** | **0.371%** |
+| tweezers-cpl | 0 | 0 | 0.000% |
+| wrapped-text-1 | 0 | 12 | 0.000% |
+
+**The two subjects that clip are exactly the two that showed the large veil
+win** — the two dark-subject-on-bright-ground stacks. Two effects appearing on
+the same two subjects and nowhere else is either one mechanism or a coincidence
+across a 6-subject sample, and the first is worth testing before the second is
+assumed.
+
+### 28.3 So I tested it, and my own hypothesis lost
+
+The obvious single mechanism is **edge overshoot**: a Laplacian pyramid with
+per-band sharpening pushes the bright side of an edge brighter and the dark side
+darker. That would explain both — the bright lobe would masquerade as veil
+removal, and the dark lobe would be what clips. If true, section 27's headline
+result was not an improvement at all but the visible half of a new artifact.
+
+Overshoot is antisymmetric about the edge, so it is falsifiable on one image.
+`veilpair.py` could not see it, because it profiles only the background side,
+where veil removal and overshoot predict the same thing. `twoside.py` extends
+the distance transform to negative values inside the subject. Null control: the
+reference against itself is +0.0 DN in all fourteen bins.
+
+| signed distance | n | ctrl med | pyramid med | difference |
+|---|---:|---:|---:|---:|
+| −128..−64 | 2,098,896 | 13992.3 | 16853.7 | **+2861.4** |
+| −32..−16 | 668,521 | 15652.5 | 17345.0 | +1692.5 |
+| −8..−4 | 191,176 | 16256.0 | 17097.8 | +841.8 |
+| −2..0 | 104,772 | 16881.5 | 17113.3 | +231.9 |
+| 0..2 | 64,597 | 17095.2 | 17364.4 | +269.2 |
+| 8..16 | 252,212 | 17518.0 | 18214.2 | +696.3 |
+| 16..32 | 337,579 | 17498.7 | 18383.9 | +885.2 |
+| 64..128 | 1,202,256 | 17831.0 | 18165.7 | +334.7 |
+
+**Positive on both sides. Not antisymmetric. The overshoot hypothesis is dead.**
+
+Two things follow that I would not have got from the ratio alone. First, the
+far-field is unchanged between arms (+0.4 DN at 300–400 px), so the near-edge
+lift is a *localised* correction and not a global tone shift — the veil result
+in 27.2 survives this test rather than being explained away by it. Second, the
+pyramid's median is **brighter** everywhere while a contiguous minority is
+crushed to zero, so the clip is not the tail of a tone shift. It is a separate,
+localised failure that the median cannot see.
+
+> **A median that moves the right way is not evidence that nothing moved the
+> wrong way. Report the rails and the tails beside it, or a catastrophic
+> minority will hide under a healthy centre.**
+
+### 28.4 The flip is off
+
+- **Estimator**: white halo tracing every silhouette; zero clipped pixels.
+- **Pyramid**: no halo; 0.37–1.05% of the frame clipped to exact zero on the two
+  subjects where it most helps.
+
+Neither ships. A clipped-to-zero pixel contains no recoverable information at
+all, which is strictly worse than a halo that preserves what is underneath, so
+the trade is not close and `DEFAULT_MERGE_BACKEND` stays on `Estimator` until
+the clip is fixed. BUILD-WIRE has been told to hold and to enumerate what else
+moves with the constant; BUILD-BLEND has the clip as its top priority, ahead of
+both the gate question and the notch.
+
+The discriminator sent with it needs no reference arm and cannot be argued with:
+**for each output pixel, compare against the min and max across all input frames
+at that pixel.** Anything claiming to be a weighted combination of N
+observations that lands outside `[min_k, max_k]` is arithmetically impossible,
+not merely poor, and the violating fraction per band localises the bug.
+
+### 28.5 What this cost, stated plainly
+
+Sections 22 through 26 characterised the pyramid's notch in detail. Section 27
+found a defect in the shipped estimator that is far larger and was visible on
+first opening a file. Section 28 found a defect in the pyramid that is larger
+still and was visible on first viewing a *whole* file rather than a crop.
+
+Three escalating findings, each cheaper than the last, each requiring only that
+someone look at the output at a scale nobody had looked at yet. The instruments
+were never wrong. They answered the questions they were asked, and for a long
+time nobody asked the one that a person looking at the picture asks first.
