@@ -25,8 +25,18 @@ OUTS = {"GAL": r"C:\dev\strehl-out\V-BESTFRAME",
         "SHIP": r"C:\dev\strehl-out\V-BESTFRAME-SHIP"}
 RAW = Path(r"D:\personal\macro")
 GATE, FM_TOL, SNR_MIN, MIN_DETAIL = 0.80, 1.5, 3.0, 20
-SWEEP = [1.000, 0.961, 0.900, 0.800, 0.698, 0.468]
-MEASURED_R = 0.961      # boundary.py, frame grid, align + co-site, worst of 4 subjects
+SWEEP = [1.000, 0.930, 0.900, 0.870, 0.800, 0.698]
+# cfawarp.py: FINE band retention through the gather AT ITS REAL HALF-RESOLUTION
+# CFA PLANE GEOMETRY, measured on real pixels, per subject. This SUPERSEDES the
+# 0.961 that boundary.py produced by applying the kernel at full-resolution
+# spacing, which was the wrong geometry and under-priced the loss ~3x.
+RG = {"109MSDCF": 0.9188, "119MSDCF": 0.9264, "flower-bud-alone-cpl": 0.8669,
+      "couch-fibers-cpl": 0.8773, "112MSDCF": 0.9316, "bee-1-cpl": 0.8838,
+      "flowers-cpl": 0.8615, "flat-on-ruler-cpl": 0.9463}
+# demosaic_spread.py: LibRaw's demosaic family spans 0.946 (LINEAR) to 1.00
+# against AHD. Malvar-He-Cutler is bilinear plus a gradient term, so it cannot
+# sit below LINEAR. 0.946 is therefore the WORST case for the merge.
+R_DEMOSAIC = 0.946
 
 
 def collect(tag):
@@ -100,6 +110,15 @@ def main():
             cells = "  ".join(f"{100 * np.mean(r >= R):6.1f}" for R in SWEEP)
             print(f"  {s:<34} {len(r):5d}  {cells}   {np.median(r):6.3f} "
                   f"{r_needed(r, 0.50):8.3f} {r_needed(r, 0.95):8.3f}")
+        print(f"  {'-- at each subject''s OWN measured R --':<34} {'':>5}  "
+              f"{'R_gather':>8} {'>=frm':>7} {'xR_demo':>8} {'>=frm':>7}")
+        for s in order:
+            if s not in RG:
+                continue
+            r = d[s]
+            rw = RG[s] * R_DEMOSAIC
+            print(f"  {s:<34} {len(r):5d}  {RG[s]:8.4f} {100*np.mean(r >= RG[s]):6.1f}% "
+                  f"{rw:8.4f} {100*np.mean(r >= rw):6.1f}%")
         allr = np.concatenate([d[s] for s in order])
         cells = "  ".join(f"{100 * np.mean(allr >= R):6.1f}" for R in SWEEP)
         print(f"  {'ALL TILES POOLED':<34} {len(allr):5d}  {cells}   "
@@ -109,11 +128,22 @@ def main():
     print(f"\n{'=' * 108}")
     print("THE DECIDING COMPARISON")
     print("=" * 108)
-    print(f"  R measured for THIS band on real pixels (boundary.py, frame grid,")
-    print(f"    align + chroma co-site, worst of 4 subjects)          R = {MEASURED_R:.3f}")
-    print(f"  R modelled for this band (resample_price.py, alpha=2)   R = 0.988")
-    print(f"  R quoted by BUILD-SHARP 21.5 at f=0.35, green          R = 0.698")
-    print(f"  R quoted by BUILD-SHARP 21.5 at f=0.35, red/blue       R = 0.468")
+    print(f"  R measured on real pixels at the gather's REAL half-res CFA plane")
+    print(f"    geometry (cfawarp.py)               R = {min(RG.values()):.4f} to "
+          f"{max(RG.values()):.4f}, median {np.median(list(RG.values())):.4f}")
+    print(f"  worst-case demosaic asymmetry (demosaic_spread.py)      R = {R_DEMOSAIC:.3f}")
+    print(f"  combined worst case for the merge                       R = "
+          f"{min(RG.values()) * R_DEMOSAIC:.4f} to {max(RG.values()) * R_DEMOSAIC:.4f}")
+    print(f"  SUPERSEDED: boundary.py's full-res-spacing figure        R = 0.961")
+    print(f"  R quoted by BUILD-SHARP 21.5 at f=0.35, green           R = 0.698")
+    print()
+    print("  ANTI-CORRELATION -- the handicap does not track the deficit:")
+    for s in sorted(RG, key=lambda k: RG[k]):
+        w = res["GAL"].get(s)
+        if w is None:
+            continue
+        print(f"    {s:<24} R = {RG[s]:.4f} (handicap {1/RG[s]:.3f}x)  "
+              f"raw merge>=frame {100*np.mean(w >= 1.0):5.1f}%")
     for tag in ("GAL", "SHIP"):
         for s in ("109MSDCF", "119MSDCF"):
             if s in res[tag]:

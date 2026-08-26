@@ -34,10 +34,13 @@ comparison could not have tested the backend flip, because
 **Section 13 answers BUILD-SHARP 21.6 and concedes half of it.** This
 instrument's reference arm IS the unwarped original, so the merge does pay
 resamples the frame does not, exactly as alleged. But the FINE band peaks at
-f = 0.153 cyc/px, below BUILD-SHARP's lowest tabulated row, and the handicap
-measured there on real pixels is **1.02x-1.04x, not 1.43x**. Correcting for it
-moves `109MSDCF` from 4.5% to **10.6%** and the pooled rate from 84.7% to 86.5%.
-**The deficit survives the correction.**
+f = 0.153 cyc/px, below BUILD-SHARP's lowest tabulated row. Measured at the
+gather's **real half-resolution CFA plane geometry** the handicap is
+**1.06x-1.16x**, not 1.43x. It moves `109MSDCF` from 4.5% to **22.8%** and the
+pooled rate from 84.7% to 91.8%. **The deficit survives the correction**, and
+the decisive reason is that the handicap does not track it:
+`Spearman = +0.096, p = 0.821`, with three subjects reading 100.0% while paying
+a **larger** handicap than `109MSDCF` pays.
 
 ---
 
@@ -713,115 +716,196 @@ survive. `phasecheck.py` measures the phase my synthetic warp actually produces:
 **The model is harsher than the thing it models on every column.** Everything
 below therefore over-prices the handicap.
 
-### 13.5 Measuring it on real pixels, with a null and a potency control
+### 13.5 My first attempt priced the wrong geometry. Retracting it.
 
-`boundary.py` takes the arm that pays nothing (the tone-mapped `rawpy` frame)
-and pushes it through a reconstruction of the chain the merge pays: the align
-gather at the swept phase above, then the chroma co-site as a fixed phi = 0.25
-on R and B only. It then reads the per-tile FINE band amplitude before and after.
+The version of this section committed as `5f6c7c0` reported a handicap of
+**1.02x-1.04x**. **That number is wrong and I withdraw it.** `boundary.py`
+applied Catmull-Rom at **full-resolution** pixel spacing to demosaiced luma. The
+gather does not run there. `align_cmd.rs` deinterleaves the CFA first:
 
-| subject | merge grid align+co-site | **frame grid align+co-site** | **handicap 1/R** |
+```rust
+for dy in 0..2usize { for dx in 0..2usize {
+    let row = (ay + 2 * py + dy) * stride + ax + dx;
+    *o = frame.data[row + 2 * px] as f32;          // stride 2: HALF resolution
+    ...
+    gather_checked(src, t_site, geom, resampler, &mut scratch.dst, ...)
+```
+
+Each plane is a single CFA site at half resolution in both axes, so the
+interpolator's taps are **2 output pixels apart**, and a structure at `f` cyc/px
+in the render sits at `2f` cyc/plane-px, where Catmull-Rom is far weaker. Pricing
+it at full-res spacing evaluates the kernel at half the frequency it actually
+sees.
+
+Corroborated from the artefact rather than from the code, per ORCH's rule:
+BUILD-SHARP 20.2's warpmap geometry is **3516x2344**, exactly half of the
+**7032x4688** the gallery writes. The warp is stored in plane units.
+
+| | R (alpha=0) | R (alpha=2) | handicap |
 | --- | ---: | ---: | ---: |
-| 109MSDCF | 0.9939 | 0.9799 | 1.0205x |
-| 119MSDCF | 0.9937 | 0.9801 | 1.0203x |
-| bee-1-cpl | 0.9943 | 0.9641 | 1.0372x |
-| flowers-cpl | 0.9885 | 0.9612 | **1.0404x** |
+| full-res spacing (what I did, **withdrawn**) | 0.9727 | 0.9875 | 1.013x-1.028x |
+| **plane spacing (what the code does)** | **0.8267** | **0.9000** | **1.111x-1.210x** |
 
-**Measured handicap: 1.02x to 1.04x.** BUILD-SHARP's green figure at f = 0.35 is
-1.43x and their red/blue is 2.14x. The modelled band integral in
-`resample_price.py` independently gives R = 0.9875 at alpha = 2 and R = 0.9727
-at alpha = 0, bracketing the measurement.
+The same reading confirms ORCH's retraction independently:
+`cfa_site_channel(dx, dy)` returns a `Channel` (`optics.rs:449`), not an offset,
+and the comment records that with `ca == None`, `t_site` is exactly `t`. **There
+is no chroma co-site on this path**, so the align-only column is the right one
+and my earlier align+co-site column overstated the chain by a stage.
 
-**CONTROL, null.** Merge against itself with no resample, all 352 tiles, all four
-subjects: `median 1.000000000  min 1.000000000  max 1.000000000  -> PASS`. Not
-"approximately"; the identical code path on identical pixels returns exactly one.
+### 13.6 Measuring it at the right geometry
 
-**CONTROL, potency -- the one that had to be able to fail.** An extra planted
-phi = 0.5 resample must drop retention by an amount predicted independently, by
-the analytic band integral, which shares no code with the measurement:
+`cfawarp.py` deinterleaves the real CFA, Catmull-Rom warps each half-res plane at
+the swept phase, writes it back into `rawpy`'s own buffer and lets `rawpy`
+demosaic. The unwarped arm is the same decode without the warp, so the demosaic
+is common-mode and cancels; what remains is the gather alone.
 
-| subject | measured further drop | independent prediction |
-| --- | ---: | --- |
-| 109MSDCF | 0.9717 | 0.9475 to 0.9761 |
-| 119MSDCF | 0.9740 | 0.9475 to 0.9761 |
-| bee-1-cpl | 0.9547 | 0.9475 to 0.9761 |
-| flowers-cpl | 0.9544 | 0.9475 to 0.9761 |
+| subject | **R (gather)** | handicap | two serial gathers | predicted R^2 |
+| --- | ---: | ---: | ---: | ---: |
+| flowers-cpl | 0.8615 | **1.161x** | 0.7846 | 0.7422 |
+| flower-bud-alone-cpl | 0.8669 | 1.154x | 0.7979 | 0.7515 |
+| couch-fibers-cpl | 0.8773 | 1.140x | 0.8049 | 0.7696 |
+| bee-1-cpl | 0.8838 | 1.131x | 0.8140 | 0.7810 |
+| 109MSDCF | 0.9188 | 1.088x | 0.8708 | 0.8442 |
+| 119MSDCF | 0.9264 | 1.079x | 0.8833 | 0.8582 |
+| 112MSDCF | 0.9316 | 1.073x | 0.8912 | 0.8678 |
+| flat-on-ruler-cpl | 0.9463 | **1.057x** | 0.9105 | 0.8954 |
 
-All four land inside the bracket. **The instrument sees a resample when one is
-there, and reports the right size.** The null and the potency control together
-mean a reading of "no meaningful handicap" is informative rather than inert.
+**Measured handicap: 1.06x to 1.16x**, median R = 0.9013. Three to four times my
+withdrawn figure, and still well below BUILD-SHARP's 1.43x.
 
-### 13.6 Inverting the question: what would R have to be?
+**CONTROL, null, 8 of 8.** An identity warp through the identical deinterleave,
+gather and reinterleave path: `median 1.000000000  min 1.000000000  max
+1.000000000` on all 352 tiles of all eight subjects. Exactly one, not approximately.
 
-The handicap enters as a pure multiplicative factor on the merge's band
-amplitude, so the corrected ratio is exactly `ratio / R`. That makes the
-objection testable without re-running anything: sweep R. `corrected.py`, on the
-capped arm that section 11 reports, `GALLERY-FIXED-SRGB`:
+**CONTROL, potency, 8 of 8 -- and the first version of this control was inert.**
+In `5f6c7c0` the plant was an added constant phase of 0.5. That is useless here:
+the base warp already sweeps phase uniformly, and a uniform distribution plus a
+constant is still uniform. It moved `109MSDCF` from 0.9188 to only 0.9157 and I
+would have been reporting a control that could not fail. Replaced with a
+**second serial gather**, which must cost about `R^2`:
 
-| subject | nDet | R=1.000 | **R=0.961** | R=0.900 | R=0.800 | R=0.698 | R=0.468 | R needed for 50% |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 109MSDCF | 246 | 4.5 | **10.6** | 31.3 | 65.9 | 72.8 | 92.3 | **0.863** |
-| 119MSDCF | 221 | 22.6 | **31.7** | 54.8 | 75.1 | 85.1 | 96.4 | **0.909** |
-| flower-bud-alone-cpl | 193 | 46.6 | 48.2 | 54.9 | 74.1 | 92.7 | 97.4 | 0.935 |
-| flowers-cpl | 48 | 83.3 | 83.3 | 91.7 | 95.8 | 100.0 | 100.0 | 1.414 |
-| bee-1-cpl | 222 | 99.5 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 2.719 |
-| couch-fibers-cpl | 177 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 2.816 |
-| **ALL TILES POOLED** | **5190** | **84.7** | **86.5** | 90.2 | 94.2 | 96.1 | 98.7 | 1.843 |
+    109MSDCF     predicted 0.8442  measured 0.8708  ratio 1.0314  PASS
+    flowers-cpl  predicted 0.7422  measured 0.7846  ratio 1.0570  PASS
+    (all eight subjects: ratios 1.0169 to 1.0618, all PASS)
 
-`R = 0.961` is the worst value measured on real pixels. **It moves `109MSDCF`
-from 4.5% to 10.6%.** For half of its detail tiles to break even the whole
-pipeline would have to be discarding **13.7%** of amplitude at f = 0.153 cyc/px
-relative to `rawpy`; for 95% it would have to discard **54%**, which is below
-even BUILD-SHARP's red/blue figure at a frequency more than twice as high.
+All eight land slightly **above** `R^2`, which is the correct sign: the second
+gather acts on an already-depleted spectrum. The instrument responds to a
+resample and reports the right size.
 
-### 13.7 Verdict on the objection
+### 13.7 The demosaic asymmetry, now bounded rather than open
 
-**The construction fault is real and I should have priced it. It does not
-explain the deficit, and it is not close.** Measured handicap 1.02x-1.04x;
-required handicap 1.16x for a median break-even on `109MSDCF` and 2.19x for 95%.
-The correction moves the pooled pass rate 84.7% -> 86.5%.
+Section 13.8 of `5f6c7c0` listed this as un-ruled-out. It is now measured.
+The frame arm decodes with AHD; the gallery log says `blend-render` used
+Malvar-He-Cutler. LibRaw does not offer MHC, so `demosaic_spread.py` measures the
+spread across the family it does offer, on `109MSDCF`, band amplitude against AHD:
 
-Every number in sections 11 and 12 is therefore biased against the merge by
-**2% to 4% in amplitude**, and should be read that way. The correction is
-uniform, so it changes no ordering and no verdict.
+| algorithm | median | p05 | p95 |
+| --- | ---: | ---: | ---: |
+| LINEAR | 0.9462 | 0.8958 | 0.9945 |
+| VNG | 0.9718 | 0.9169 | 1.0223 |
+| PPG | 0.9850 | 0.9712 | 0.9979 |
+| DCB | 0.9957 | 0.9726 | 1.0162 |
+| AAHD | not measured | | |
 
-One further reason the objection cannot carry, internal to the data and needing
-no value of R at all: a path-boundary handicap is a property of the interpolator
-and the band, not of the subject. It is the same factor everywhere. Yet at
-R = 1.000, `couch-fibers-cpl` reads 100.0% over 177 detail tiles and `112MSDCF`
-100.0% over 348, while `109MSDCF` reads 4.5% over 246. Fourteen of 24 subjects
-sit at or above 90% **while already paying the full chain the frame does not
-pay**. A single multiplicative constant cannot produce that spread, and the
-subjects that fail are not the ones with the most detail: `flat-on-ruler-cpl`
-and `112MSDCF` carry 352 detail tiles each, the maximum possible, and read 86.4%
-and 100.0%.
+**5 of 6 attempted, 1 failed:** AAHD raised
+`rawpy._rawpy.LibRawUnsufficientMemoryError`. It is not counted as a pass.
 
-### 13.8 What I could not rule out
+MHC is bilinear plus a gradient-correction term, so it cannot sit below LINEAR.
+**R_demosaic >= 0.946 is the worst case for the merge**, and every measured
+alternative is closer to 1 than that.
 
-**The demosaic asymmetry, which I did not price.** `rawpy.postprocess` uses AHD;
-`blend-render` uses its own demosaic. Both cost high-frequency amplitude, neither
-is in BUILD-SHARP's chain audit because it is not a resample, and I have no
-measurement of the difference. Its direction is unknown: if strehl's demosaic is
-softer than AHD the frame arm gains a further advantage, if sharper the merge
-does. **What I can bound is the size that would matter.** To lift `109MSDCF` to
-the ~99% that six other subjects reach, the combined pipeline asymmetry would
-have to be near **3x** at f = 0.153 cyc/px. An asymmetry that large would make
-every strehl render visibly softer than a `rawpy` decode of any of its own input
-frames, which is not what the gallery looks like. It is a real gap and it is a
-small one.
+### 13.8 Inverting the question, with the corrected numbers
 
-**Sub-pixel residual in the frame-pair covariance.** `paircov` aligns pairs on
-integer shifts only, and its own C4 self-test measures what a half-pixel residual
-costs. This biases the frame arm's signal **down**, which flatters the merge, and
-so works against the deficit rather than for it.
+`corrected.py`, capped arm, `GALLERY-FIXED-SRGB`. The last two columns apply each
+subject's **own measured** gather retention, and then that times the worst-case
+demosaic bound:
 
-**`SEARCH = 10` saturation.** A few corner tiles hit the search limit at 14.14
-px, under-measuring frame signal. Also flatters the merge.
+| subject | nDet | R=1.000 | R=0.930 | R=0.870 | R=0.800 | **own R** | **own R x demosaic** |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 109MSDCF | 246 | 4.5 | 15.4 | 45.5 | 65.9 | **22.8** | **45.9** |
+| 119MSDCF | 221 | 22.6 | 41.6 | 62.9 | 75.1 | **43.0** | **61.5** |
+| flower-bud-alone-cpl | 193 | 46.6 | 50.8 | 56.5 | 74.1 | 57.0 | 71.0 |
+| flowers-cpl | 48 | 83.3 | 89.6 | 91.7 | 95.8 | 91.7 | 95.8 |
+| flat-on-ruler-cpl | 352 | 86.4 | 95.5 | 99.7 | 100.0 | 92.3 | 97.4 |
+| bee-1-cpl | 222 | 99.5 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+| 112MSDCF | 348 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+| couch-fibers-cpl | 177 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+| **POOLED** | **5190** | **84.7** | **88.2** | **91.8** | **94.2** | | |
 
-### 13.9 This does not touch the H1 verdict
+`SHIP-V1` pooled behaves the same: 84.8 / 88.2 / 91.5 / 93.5.
 
-Deliberately restated because it would be easy to over-read section 13.
-`flowers-cpl`'s verdict rests on `detail` = 48/352, and `detail` is computed from
+**The correction matters and it is not decisive.** `109MSDCF` moves from 4.5% to
+22.8%, and to 45.9% only if MHC is as soft as bilinear. It still fails. Half its
+detail tiles breaking even needs R = 0.863; 95% needs R = 0.456.
+
+### 13.9 Why it cannot be the explanation: the handicap does not track the deficit
+
+This is the decisive test and it needs no assumed value of R at all. If the
+deficit were a path-boundary artefact, the subjects with the **largest** measured
+handicap would fail **hardest**. Measured, `anticorr.py`:
+
+    Spearman(R_gather, merge>=frame %) = +0.096, p = 0.821   (n = 8)
+
+No relationship, and at the halves it runs the wrong way:
+
+| | R range | median merge>=frame |
+| --- | --- | ---: |
+| worst-handicap half | 0.8615-0.8838 | **91.4%** |
+| gentlest-handicap half | 0.9188-0.9463 | **54.5%** |
+
+`couch-fibers-cpl` carries the third-largest handicap measured (1.140x) and reads
+**100.0%**. `109MSDCF` carries the second-**smallest** (1.088x) and reads
+**4.5%**. R varies by a factor of 1.098 across these subjects; the pass rate
+varies from 4.5% to 100.0%. **A quantity spanning 10% cannot produce a spread
+spanning 95 points**, and it does not even order them.
+
+### 13.10 Verdict on the objection
+
+**Correct in kind, and it accounts for part of the effect but not the effect.**
+The arms do sit on opposite sides of a path boundary; I did not price it, then
+priced it at the wrong geometry, and the corrected handicap of 1.06x-1.16x is
+real and should be carried on every number in sections 11 and 12. It lifts the
+pooled rate from 84.7% to 91.8% and `109MSDCF` from 4.5% to 22.8%.
+
+It cannot carry the deficit, because the deficit is not distributed the way a
+handicap is distributed. Three subjects read 100.0% **while already paying a
+larger handicap than `109MSDCF` pays**.
+
+### 13.11 What I still cannot rule out
+
+**Whether MHC is softer than every LibRaw algorithm.** Bounded but not measured:
+if MHC were softer than LINEAR the bound in 13.7 breaks. I judge this unlikely
+because MHC is bilinear plus a correction, but I have not run MHC.
+
+**The gather's phase on the real warpmaps of these specific subjects.** I use
+BUILD-SHARP's `coffee-bean-20` distribution as a stand-in and verified my sweep
+is harsher (mean distance-to-integer 0.2489-0.2554 against 0.2369). A subject
+whose real warp is nearly integer everywhere would have a smaller handicap than I
+assign it, which would make its corrected pass rate lower, not higher.
+
+**Whether `blend-render` gathers exactly as `align_cmd.rs` does.** I read the
+deinterleave loop in `align_cmd.rs`. I did not trace `merge_cmd.rs`'s own call
+path to the same loop, so "the shipped render uses this gather" rests on it being
+the only gather in the crate rather than on a routing trace. **That is precisely
+the kind of step ORCH's retraction warns about and I flag it as unclosed.**
+
+**Sub-pixel residual in the frame-pair covariance** and **`SEARCH = 10`
+saturation** both bias the frame arm's signal down, flattering the merge, and so
+work against the deficit rather than for it.
+
+### 13.12 A question back to BUILD-SHARP about the frequency axis
+
+Given that the gather runs on half-resolution planes, **in which units is the `f`
+column of BUILD-SHARP 20.3 and 21.5?** If those are output pixels, the table
+evaluates the kernel at half the frequency the plane sees and under-prices the
+chain. If they are plane pixels, then `f = 0.35` there corresponds to
+`0.175` cyc/output-px and the 1.43x is a monochromatic figure near the top of
+this instrument's band rather than across it. The two readings differ by a factor
+of two in frequency and it changes their headline, not just mine.
+
+### 13.13 This does not touch the H1 verdict
+
+`flowers-cpl`'s verdict rests on `detail` = 48/352, computed from
 `snr = sqrt(Sft / F)`, in which `Sft` is a frame-pair covariance and `F` a
 fixed-pattern floor. **The merge never enters that quantity**, so no merge-side
 resampling argument can move it. H1 stands exactly as written in section 1.
