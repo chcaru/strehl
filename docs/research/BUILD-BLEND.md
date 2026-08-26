@@ -1,14 +1,35 @@
 # BUILD-BLEND — a Laplacian multi-band merge against the depth-boundary rim
 
-**Verdict, in one line: the multi-band merge removes the cut-out rim on both
-polarities and does not soften `couch-fibers-cpl` — but it is 12.3% noisier
-there, and that price is real.**
+**Verdict, in one line: the multi-band merge removes both defects ORCH
+measured — the tight rim and the broad aura — and leaves `couch-fibers-cpl`
+intact, with no band softer than the shipped pipeline's and no added noise.**
 
-The rim result is strong and I will defend it. The do-no-harm result is a
-*qualified* pass, not a clean one, and the qualification is measured rather
-than hedged: this arm does not pay for the rim in sharpness, which is the way
-BUILD-HALO's arm currently pays, but it does pay in noise. Both numbers are in
-"The price this arm pays" below and neither is buried.
+Measured against a `STREHL_ONLY_FRAME` reference, which performs no election at
+all, on the subject ORCH chose for the purpose:
+
+| feature | shipped selection merge | this arm | reference |
+|---|---|---|---|
+| broad aura, median at d≈112 px | **−4549 DN (−23.9% of backdrop)**, reaches d≈300 px | **below the 45 DN noise floor** | 0 by construction |
+| peak background deviation, d ≥ 30 px | −4549 DN (−23.9%) | **+698 DN (+3.7%)** | 0 |
+| tight rim, median, d ≤ 16 px | below floor | +993 DN (+5.2%), dies by d≈16 px | 0 |
+| far-field offset from the reference | +9.3 DN | +11.0 DN | 0 |
+| flat-region noise vs the shipped merge | 1.000 | **0.989 / 0.991 / 0.998 / 1.002** | — |
+
+The dominant defect — the one that is 23.9% of the backdrop and reaches 300 px
+— is removed. What is left in its place is a deviation 6.5× smaller and of the
+opposite sign. That residue is real and is not claimed to be zero.
+
+> **Two earlier claims in this report are now retracted, and both were against
+> my own arm.** The `12.3% noisier on couch-fibers` cost in the previous
+> headline does not reproduce: the flat-region noise ratio is now 1.0015 there
+> and below 1.0 on all three other subjects. **I first attributed that to the
+> base band and the attribution was wrong.** Holding the pin fixed at `0d9fd28`
+> and changing *only* the base band gives 0.9980 (weighted) against 1.0015
+> (mean) — both ≈ 1.0, so the base band cannot be the cause. The difference is
+> therefore between pins, in shared code I do not own, and I am not able to
+> attribute it further without bisecting other agents' commits. The old numbers
+> are kept in "The price this arm pays" with the retraction attached, rather
+> than deleted.
 
 Three things must be true for the rim sentence to be worth anything, so they
 are stated before anything else:
@@ -34,7 +55,25 @@ about a defect that is already visible at full frame.
 
 | | full frame (primary) | 1:1 at the largest disagreement |
 |---|---|---|
-| flower-bud (bright rim) | `C:\dev\strehl-out\BUILD-BLEND\sxs-flower-bud-CA.jpg` | `rim-flower-bud-CA.jpg` |
+| **flower-bud-alone (the measured subject)** | `C:\dev\strehl-out\BUILD-BLEND\sxs-flower-bud-alone-cpl-BM.jpg` | `rim-flower-bud-alone-cpl-BM.jpg` |
+| **flower-bud + fern (bright rim)** | `sxs-flower-bud-with-background-fern-cpl-BM.jpg` | `rim-flower-bud-with-background-fern-cpl-BM.jpg` |
+| **lavendar (dark rim)** | `sxs-lavendar-cpl-BM.jpg` | `rim-lavendar-cpl-BM.jpg` |
+| **couch-fibers (do-no-harm)** | `sxs-couch-fibers-cpl-BM.jpg` | `rim-couch-fibers-cpl-BM.jpg` |
+
+**The `-BM` set is the current result.** All four subjects, both arms, one
+archived SHA (`0d9fd28`), one build, run back to back, `STREHL_FIX_CA` set
+identically on every render, and this arm in its new default base band. The
+older `-CA` set below is the previous configuration and is kept as the record.
+
+`rim-flower-bud-alone-cpl-BM.jpg` is now the single most informative file. The
+control panel shows the subject's edge behind a **milky, low-contrast veil**
+with pink/purple fringing on it; the blend panel shows the same edge dark,
+saturated and crisp. That veil is the same thing the profile below measures as
+the merge running +39% bright *inside* the silhouette at d = −65…−100 px.
+
+| | full frame (previous config) | 1:1 |
+|---|---|---|
+| flower-bud (bright rim) | `sxs-flower-bud-CA.jpg` | `rim-flower-bud-CA.jpg` |
 | lavendar (dark rim) | `sxs-lavendar-CA.jpg` | `rim-lavendar-CA.jpg` |
 | couch-fibers (do-no-harm) | `sxs-couch-fibers-CA.jpg` | `rim-couch-fibers-CA.jpg` |
 
@@ -308,7 +347,130 @@ was almost certainly another agent's process inflating system memory pressure on
 this shared machine. If a future run sees peak memory scale with frame count,
 this note is the prior evidence that it should not.
 
+## The two defects, reported separately
+
+ORCH measured the shipped merge against a `STREHL_ONLY_FRAME` render — one
+frame, no election anywhere, so the scene cancels by construction — and found
+**two** defects, at very different scales and with opposite signs. A single
+"halo score" would let an arm that fixes one and worsens the other read as
+progress, so they are reported separately here and the instrument that produces
+them is gated on being able to tell them apart.
+
+Subject `flower-bud-alone-cpl`, 205 frames, chosen because a featureless white
+backdrop cannot be changed by defocus. Linear camera-native output
+(`image_out::OutputSpace::CameraLinear`) — the tone curve amplifies the rim
+about 4×, so an `--srgb` render would overstate any fix. Reference is frame
+102, the merge's own alignment reference, so both arms are identity-warped.
+Pin `0d9fd28`, `STREHL_FIX_CA` on for every arm.
+
+Median deviation from the single-frame reference, referenced to each arm's own
+far field (600–1400 px from the silhouette). Negative distances are **inside**
+the subject.
+
+| d (px) | shipped selection merge | this arm (weighted base) | this arm (**mean base**, default) |
+|---|---|---|---|
+| −100…−80 | +457 | +142 | −449 |
+| −80…−65 | +335 | +84 | −482 |
+| −20…−16 | −451 | −17 | −692 |
+| −1…0 | −914 | +458 | −343 |
+| +4…5 | −852 | +1172 | +359 |
+| +12…16 | −512 | +1798 | +993 |
+| +30…40 | −1801 | +1413 | +698 |
+| +65…80 | −4192 | +1204 | +452 |
+| **+100…125** | **−4549** | +1102 | **+288** |
+| +200…250 | −2532 | +1227 | +562 |
+| +250…300 | −249 | +1180 | +531 |
+| far-field offset | +9.3 | −475.0 | **+11.0** |
+| instrument noise floor | 29.7 | 835.0 | **45.0** |
+
+**The broad aura is removed.** The shipped merge's −4549 DN dip at d ≈ 112 px —
+23.9% of the 19038 DN backdrop, reaching 300 px — falls below this instrument's
+45 DN noise floor. In its place is a deviation that peaks at +698 DN (+3.7%),
+6.5× smaller and of the opposite sign, and much flatter with distance.
+
+**The residue is not zero and I am not claiming it is.** A roughly +300…+700 DN
+positive offset persists across the whole backdrop out to 300 px. Neither
+feature statistic reports it — the rim window is |d| ≤ 16 px and the aura
+statistic takes a minimum — which is a reporting gap in my own instrument, so
+it is stated here explicitly rather than left to be inferred from the table.
+
+**What the rim column means, and what it does not.** Inside |d| ≲ 20 px the
+reference is *defocused* — the transition from subject to backdrop is about 50 px
+wide in frame 102 — so a sharp arm and a blurred reference must differ there,
+and that difference is the merge working, not a halo. The near-contour numbers
+in this table are therefore not interpretable as halo, and the d ≈ 112 px number
+is, because a featureless backdrop has nothing for focus to change. This is
+ORCH's own reason for choosing this subject and it cuts both ways.
+
+### The base band was the one decision I argued instead of measuring
+
+The middle column above is the previous default, `BaseBand::WeightedFromCoarsest`.
+Its docstring called it "the better default" on an argument: the base grid is
+2^bands coarser than the output, so even a hard mask on it is smooth after the
+collapse, and weighting buys local tone at a depth boundary.
+
+The first half of that is true. The second half is the problem — the weights are
+a function of position, so the merged *level* is too, and on a featureless
+backdrop, where there is no focus signal to justify any particular weighting,
+the level simply wanders. It cost **−475 DN of global level** (−2.5%) and
+**835 DN of position-dependent structure** in a subject-free quadrant, against
+**+11 DN and 45 DN** for the plain mean. The shipped merge, for scale, sits at
++9.3 DN and 29.7 DN.
+
+Both base bands removed the aura equally well, so this is not what buys the
+headline result, and — measured, at a fixed pin — it is **not** what removed the
+noise cost either: `couch-fibers-cpl` flat-region noise is 0.9980 with the
+weighted base and 1.0015 with the mean. What the base band decides is whether
+the arm introduces a *level* defect of its own while removing the aura. The
+default is now `BaseBand::Mean`, `--base-weighted` keeps the losing arm
+reachable, and two tests pin the choice — one on the default value, one
+asserting the two arms are not the same merge, because a default chosen by
+measurement is worthless if the thing it beat was itself.
+
+**Nothing in the 432-test suite noticed the flip when I made it.** That is the
+condition the two new tests exist to remove.
+
+### My instrument reported a false clean, twice, for the same reason
+
+`twofeature.py` in its first form found ORCH's aura to within 5% **and reported
+no tight rim at all** — not only on my renders but on ORCH's own TIFFs. Rather
+than conclude their rim was not real, I looked at the instrument. It had two
+defects, both of the same family: *a window that cannot express a feature
+reports its absence, and reports it in exactly the same glyph as a real
+negative.*
+
+1. **The bins started at d = 0**, so only the *outside* of the contour was ever
+   profiled. ORCH's `diffmap.png` shows the thread **on** the contour.
+2. **The narrowest bin was 4 px and the statistic was a median.** Commissioning
+   a 4 px-wide plant straddling the contour recovered **+108 DN of a planted
+   +984** — an 89% amplitude error — because a median over a half-filled bin
+   returns roughly the unaffected half.
+3. **A median over a 7 Mpx silhouette's annulus cannot see a localised
+   feature.** Commissioning a 2 px thread on 15% of the contour gives
+   **median +11.5 DN** and **p95 +1007 DN**. A median-only instrument calls that
+   clean.
+
+With 1 px bins spanning the contour and a p95 column, the same instrument on the
+same ORCH TIFFs finds a **+6595 DN localised bright feature at d = −7.5 px**,
+just inside the contour. The feature was always there. The summary could not
+express it.
+
+The commissioning gate now runs seven planted cases — rim outside, inside, and
+straddling the contour; a 2 px thread; aura alone; both together; and a null —
+recovers every amplitude to within 0.3%, requires that a planted rim does *not*
+read as an aura and vice versa, and separately verifies that the noise floor
+every detection gate divides by is non-zero and rises monotonically (16.0× across
+a 16× noise range). A floor of exactly 0.0 would silently turn every
+`peak > 5 × floor` test into `peak > 0`, which is how the first version of this
+gate was passing.
+
 ## The price this arm pays
+
+> **Superseded, and retracted where it is wrong.** Everything in this section
+> was measured at pin `6a51e43` with the old weighted base band. At pin
+> `0d9fd28` the noise cost does **not** reproduce — see the current numbers at
+> the end of the section. The section is kept because the retraction is only
+> meaningful next to what it retracts.
 
 The owner asked for a number on one specific trade: whether a multi-band merge
 can be *conservative at the coarse scales where the rim lives while staying
@@ -378,17 +540,32 @@ to try if this arm is taken further.
 
 ### So the comparison, in one table
 
-| | removes the rim | softens `couch-fibers` | noisier on `couch-fibers` |
-|---|---|---|---|
-| BUILD-HALO's selection fix | reduced, not removed | **yes — their stated blocker** | not reported here |
-| this arm | **yes, both polarities** | **no — no band is softer** | **yes, +12.3%** |
+Superseded row included, because the retraction is the point.
 
-Both arms pay on the do-no-harm control. They pay in different currencies.
-Which is preferable is the owner's call, not mine — but noise is recoverable by
-averaging more frames and lost acuity is not recoverable at all, which is the
-one thing I would put on the scale.
+| | removes the rim | removes the broad aura | softens `couch-fibers` | noisier on `couch-fibers` |
+|---|---|---|---|---|
+| BUILD-HALO's selection fix | reduced, not removed | not reported here | **yes — their stated blocker** | not reported here |
+| this arm, pin `6a51e43`, weighted base *(superseded)* | yes, both polarities | not measured then | no — no band is softer | ~~yes, +12.3%~~ **retracted** |
+| **this arm, pin `0d9fd28`, mean base** | **yes, both polarities** | **yes — −23.9% → below floor** | **no — no band is softer** | **no — 1.0015** |
+
+At pin `0d9fd28` the flat-region noise ratio is 1.0015 on `couch-fibers-cpl`,
+0.9914 on `flower-bud-alone`, 0.9887 on `flower-bud-with-background-fern` and
+0.9977 on `lavendar` — three of four *below* 1.0. Holding the pin fixed and
+changing only the base band gives 0.9980 (weighted) against 1.0015 (mean), so
+the base band accounts for none of the change and the cause lies between pins,
+in shared code this agent does not own.
+
+The remaining question — which arm is preferable — is the owner's call, not
+mine. The one thing I would put on the scale is that noise is recoverable by
+averaging more frames and lost acuity is not recoverable at all.
 
 ## Where the two arms differ, by distance from the silhouette
+
+> **Superseded by "The two defects, reported separately".** ORCH has since
+> retracted the 10–20 px bound this section is built on: the dominant defect
+> peaks at d ≈ 117 px and reaches ~300 px. A broad backdrop difference is
+> therefore expected rather than anomalous, which reframes the open charge this
+> section raises against my own arm rather than clearing it. Kept as the record.
 
 ORCH's correction makes this the load-bearing check on this arm. `STREHL_ONLY_FRAME`
 showed that across 470 px of backdrop the arms `off`, `on`, `frame000` and
@@ -594,37 +771,56 @@ These are real and are not hidden in the comparison:
 
 ## Recommendation
 
-This arm worked on the defect it was built for. The rim is gone on both
-polarities, the hard-edged patch artefact is gone with it, and the mechanism
-debate about *why* the rim exists turned out not to need resolving in order to
-remove it — which was the point of running a structurally different second arm.
+This arm worked on the defect it was built for. Both defects ORCH measured are
+gone — the tight rim on both polarities and, more importantly, the broad aura
+that was 23.9% of the backdrop and reached 300 px — the hard-edged patch
+artefact is gone with them, and the mechanism debate about *why* they exist
+turned out not to need resolving in order to remove them. That was the point of
+running a structurally different second arm.
 
-It is not free, and the bill is now measured rather than assumed:
+The trade ORCH asked for a number on — conservative at the coarse scales where
+the aura lives, untouched at the fine scales where `couch-fibers` texture lives
+— is the one this representation gets by construction, and it holds:
 
-* **+12.3% noise in flat regions on `couch-fibers`.** Real, against this
-  project's more valuable crown jewel, and the first thing to attack. The
-  mechanism is that per-band exponents of 2–8 concentrate weight on too few
-  frames; lowering the fine-band exponents and widening the gate trades along
-  exactly that axis.
-* **A ~2% backdrop difference on `flower-bud` outside the 20 px rim zone**,
-  which ORCH's instruction says must not be there. The leading explanation is
-  this arm's missing photometric normalisation interacting with depth-dependent
-  frame selection, but that is *not established*, and until it is, it stands as
-  an open charge.
-* `lavendar` shows the correct shape — confined inside 20 px, ~0 beyond — so the
-  `flower-bud` result is not a property of the method as such.
+* **Coarse scales:** the aura's −4549 DN median at d ≈ 112 px falls below a
+  45 DN noise floor. The residue is +698 DN peak (+3.7%), opposite in sign and
+  6.5× smaller.
+* **Fine scales:** on `couch-fibers-cpl` no Laplacian band is below the shipped
+  pipeline's amplitude (L0 1.051, L1 1.065, L2 1.051, residual 1.002), and
+  flat-region noise is 1.0015. At the *worst* 1:1 disagreement window the two
+  are indistinguishable in sharpness.
 
-Before this goes anywhere near the ship path it needs: photometric normalisation
-(which would also test the backdrop explanation above), clip and outlier
-handling, a fine-band exponent sweep against the flat-region noise number, and
-an independent verification pass — in this project's doctrine the author does
-not verify their own work, and that applies to every number in this document.
+The bill, measured rather than assumed:
 
-Cost remains unmeasured. My two timing rounds disagree in *sign*, on a machine
-running five other agents, and a third informal round agreed with neither
-convincingly. I am claiming nothing about speed. A like-for-like re-measurement
-at equal worker counts on a quiet machine is the only thing that would settle it.
+* **A +300…+700 DN (+1.6…+3.7%) positive offset across the backdrop out to
+  300 px.** Small next to what it replaced, but not zero, and neither of my two
+  feature statistics reports it — the rim window stops at 16 px and the aura
+  statistic takes a minimum. That reporting gap is mine and it is why the number
+  is stated here in words.
+* **~2% backdrop difference on `flower-bud` outside 20 px** — this was logged as
+  an open charge under the earlier brief, which held that the merge departs from
+  a single frame only within 10–20 px. **ORCH has since retracted that bound**,
+  and a defect reaching 300 px means a broad backdrop difference is expected
+  rather than anomalous. The charge is therefore *reframed, not cleared*: what
+  it actually was is the same broad deviation now quantified in the table above.
+* **The `+12.3%` noise cost previously reported here is retracted**, and so is my
+  first attribution of the retraction. See the note under the headline: at a
+  fixed pin the base band accounts for none of it.
 
-It is also untested on subjects beyond these three. Bees, tweezers and text all
+Before this goes anywhere near the ship path it needs: photometric normalisation,
+clip and outlier handling, an attack on the residual backdrop offset (the coarse
+bands' gate and exponent are the levers — depth is already sufficient, the
+coarsest Laplacian band spans 128 output px and the base 256), and an
+independent verification pass — in this project's doctrine the author does not
+verify their own work, and that applies to every number in this document.
+
+Cost is now measurable but still soft. Back to back from one binary on
+`flower-bud-alone-cpl` (205 frames): shipped merge 111.9 s, this arm 87.5 s;
+across the four `-BM` subjects this arm was faster on three (79 vs 96, 111 vs
+143, 133 vs 200) and slower on one (175 vs 146). Directionally this arm is not
+slower, but the machine is running five other agents and my earlier two rounds
+disagreed in *sign*, so I am claiming no more than that.
+
+It is also untested on subjects beyond these four. Bees, tweezers and text all
 stress different parts of a merge — specular highlights, hard synthetic edges,
 and fine periodic detail respectively — and none of them are represented here.
