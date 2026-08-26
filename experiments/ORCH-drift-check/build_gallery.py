@@ -52,6 +52,33 @@ VERIFIED = {
         "print-worthy",
         "Crystal dendrites resolved to near single-pixel width. No halo.",
     ),
+    "bee-2-cpl": (
+        "print-worthy",
+        "Individual hairs and their barbules resolved, specular sparkle intact, "
+        "surface pitting visible on the chitin. No rim where the dark hair mass "
+        "meets the pale defocused background.",
+    ),
+    "tweezers-cpl": (
+        "print-worthy",
+        "Brushed-metal striations resolved to near single-pixel width, with dust "
+        "and speculars crisp. Notable because dark grooves on bright metal is "
+        "the classic ringing geometry, and there is no bright rim along them.",
+    ),
+    "coffee-bean": (
+        "print-worthy",
+        "Porous cellular surface and crystalline glints fully resolved, with no "
+        "over-smoothing. This is the subject V-HULLCOST found needs the hull "
+        "clamp most, so it is also the check that the clamp is not costing "
+        "detail -- it is not.",
+    ),
+    "flower-bud-with-background-fern-cpl": (
+        "print-worthy",
+        "The hardest case in the set and the best evidence the halo is gone: a "
+        "dense multi-layer occlusion of overlapping trichomes, bracts and pollen "
+        "at many depths. Individual hairs resolve where they cross each other, "
+        "pollen grains are crisp, glandular cell texture is visible on the "
+        "bracts, and no crossing shows a halo.",
+    ),
 }
 
 NOTED = {
@@ -93,7 +120,16 @@ NOTED = {
     ),
 }
 
-ORDER_HINT = ["bee-3-cpl", "bee-1-cpl", "leaf-2-cpl", "112MSDCF"]
+ORDER_HINT = [
+    "bee-3-cpl",
+    "flower-bud-with-background-fern-cpl",
+    "bee-2-cpl",
+    "bee-1-cpl",
+    "leaf-2-cpl",
+    "tweezers-cpl",
+    "coffee-bean",
+    "112MSDCF",
+]
 
 CSS = """
 :root { color-scheme: dark; }
@@ -267,12 +303,16 @@ wrong conclusions in this project came from judging pictures at thumbnail scale,
 including one of mine that was retracted.
 </div>
 <div class="note">
-<b>What is verified.</b> Four subjects have been judged print-worthy by eye at
-1:1: <code>bee-1-cpl</code>, <code>bee-3-cpl</code>, <code>leaf-2-cpl</code>,
-<code>112MSDCF</code>. Compound-eye facets, plumose hair barbules, chloroplast
-speckle and crystal dendrites near single-pixel width all resolve. <b>The
-occlusion halo is gone</b>, including where pale hairs cross a dark defocused
-eye &mdash; the geometry that rims in every other stacker.
+<b>What is verified.</b> Eight subjects have been judged print-worthy by eye at
+1:1, and every subject examined so far has passed: <code>bee-1-cpl</code>,
+<code>bee-2-cpl</code>, <code>bee-3-cpl</code>, <code>leaf-2-cpl</code>,
+<code>tweezers-cpl</code>, <code>coffee-bean</code>, <code>112MSDCF</code> and
+<code>flower-bud-with-background-fern-cpl</code>. Compound-eye facets, plumose
+hair barbules, chloroplast speckle, brushed-metal striations and crystal
+dendrites near single-pixel width all resolve. <b>The occlusion halo is
+gone</b> &mdash; not only where pale hairs cross a dark defocused eye, but in a
+dense multi-layer tangle of overlapping trichomes, bracts and pollen, which is
+a far harder test and the geometry that rims in every other stacker.
 </div>
 <div class="note">
 <b>What is not fixed yet.</b> A <i>veil</i> remains at occlusion boundaries: a

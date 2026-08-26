@@ -146,12 +146,29 @@ separate wrong conclusions in this project came from judging pictures at
 thumbnail scale, including one that had already been sent to two contributors as
 an instruction before it was retracted.
 
-Judged that way, four subjects are print-worthy today: `bee-1-cpl`,
-`bee-3-cpl`, `leaf-2-cpl`, `112MSDCF`. Individual compound-eye facets, plumose
-hair barbules including their branched side-structure, chloroplast speckle, and
-crystal dendrites to near single-pixel width all resolve. **The occlusion halo
-is gone**, including where pale hairs cross a dark defocused compound eye —
-the geometry that rims in every other stacker.
+Judged that way, **eight subjects are print-worthy today, and every subject
+examined so far has passed**: `bee-1-cpl`, `bee-2-cpl`, `bee-3-cpl`,
+`leaf-2-cpl`, `tweezers-cpl`, `coffee-bean`, `112MSDCF` and
+`flower-bud-with-background-fern-cpl`. Individual compound-eye facets, plumose
+hair barbules including their branched side-structure, chloroplast speckle,
+brushed-metal striations, porous cellular texture, and crystal dendrites to near
+single-pixel width all resolve.
+
+**The occlusion halo is gone.** Not only where pale hairs cross a dark
+defocused compound eye, but in `flower-bud-with-background-fern-cpl` — a dense
+multi-layer tangle of overlapping trichomes, bracts and pollen grains at many
+depths, where individual hairs resolve *where they cross each other* and no
+crossing shows a rim. That is a far harder test than the single-boundary case,
+and it is the geometry that rims in every other stacker. `tweezers-cpl` is the
+complementary check: dark grooves on bright metal is the classic ringing
+geometry, and there is no bright rim along them. `coffee-bean` is the third —
+V-HULLCOST found it needs the hull clamp more than any other subject, so it is
+also the test that the clamp is not costing detail. It is not.
+
+The remaining eighteen subjects are labelled **"not individually judged at
+1:1"** in the gallery rather than given an implied pass. That distinction is
+deliberate: a subject nobody looked at and a subject that passed must not print
+the same way.
 
 What is not fixed: a *veil* at occlusion boundaries. Its mechanism is measured
 rather than guessed — the merge selects the right frame, and the veiled detail
