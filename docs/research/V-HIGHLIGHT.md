@@ -289,3 +289,150 @@ it is not silent — which is why this is LOW and not MEDIUM.
   corpus-level null and potency exist only in this report and in
   `docs/research/BUILD-HIGHLIGHT.md`. A future edit could make the roll-off inert
   on real data and every test would still pass.
+
+---
+
+# Phase 2 — the pre-registered flower-bud prediction
+
+ORCH registered a prediction before I tested it: `flower-bud-alone-cpl` carries a
+visible magenta/violet fringe where the pale bud lobe meets blown-out white
+background, seen on a pre-fix pin (`C46BDF06A7136F54`) an hour before
+BUILD-HIGHLIGHT reported and without knowledge of that work. The prediction was
+that a post-fix binary at the default knee should measurably reduce that fringe,
+and that `STREHL_HIGHLIGHT_KNEE=off` should bring it back. Two failure modes
+were named in advance and I was told to report either as loudly as a success.
+
+## Verdict: REFUTED, failure mode 1. The fringe is unchanged — bit-exactly.
+
+All four arms below are the **same binary**
+`471D50DA15D1575916AC16D3338C497F1CD18D09511873E56F972119AA110432`, same subject,
+same flags, one environment variable varied.
+
+| arm | flags | knee | SHA-256 (first 16) |
+|---|---|---|---|
+| `fba-srgb-off`     | `--merge pyramid --pyramid-gate 4.5 --srgb` | `off` | `DC5135A714F90E87` |
+| `fba-srgb-default` | `--merge pyramid --pyramid-gate 4.5 --srgb` | default 0.60 | `DC5135A714F90E87` |
+| `fba-lin-off`      | `--merge pyramid --pyramid-gate 4.5 --linear-srgb` | `off` | `5154995376C34865` |
+| `fba-lin-default`  | `--merge pyramid --pyramid-gate 4.5 --linear-srgb` | default 0.60 | `5154995376C34865` |
+
+Banners were identical across each pair apart from the varied knee:
+
+```
+merge backend   : pyramid (--merge)
+lateral CA      : CORRECTING (gear matched; default on)
+noise gate      : 4.50
+tone            : black 0.01259, white 1.18627 (linear), contrast 0.55
+```
+
+The roll-off does not touch this subject at all, in either the measurement
+render or the viewing render ORCH actually looked at.
+
+## The null is commissioned — this is not broken wiring
+
+A null is worthless unless the instrument could have failed it. On the **same
+subject, same flags, same binary**, knee `0.05`:
+
+```
+python experiments/V-HIGHLIGHT/diffstat.py fba-lin-off.tiff fba-lin-k005.tiff
+pixels moved      : 6611150 / 8250880 = 80.1266%
+  R max|d|    384   G max|d|    139   B max|d|    639
+```
+
+80.13% of the frame moves. The code path is reached on this subject; it declines
+to act at 0.60 because of level, not because of plumbing.
+
+## Why: the subject never approaches the container
+
+`strehl probe D:\personal\macro\flower-bud-alone-cpl`:
+
+```
+levels          : black 512, white 15360
+wb coeffs       : [2.6464844, 1, 1.4589844, NaN]
+```
+
+so `k0 = (16383-512)/14848 = 1.068898` and the per-channel ceilings are
+R 2.8288 / G 1.0689 / B 1.5595. Measuring `u = v_c / ceil_c` directly off the
+camera-linear render (`experiments/V-HIGHLIGHT/umeasure.py`):
+
+```
+frame max u            : 0.3125
+   p99.99  u = 0.3106       p100 u = 0.3125
+argmax channel of u    : R 0.00%  G 100.00%  B 0.00%
+KNEE = 0.60. Pixels above it: 0 (0.000000%)
+brightest pixel: raw DN = 5471 DN of a 16383 container
+pixels at 65535 in camera-native: 0.000000%
+```
+
+**The brightest pixel in the frame uses 31% of the sensor's raw container.**
+Nothing is clipped. The "blown-out white background" is not blown — it is a
+heavily under-exposed capture that the `--srgb` tone curve lifts to white with a
+`1/0.36547 = 2.74x` gain. Green is indeed the first channel to run out of
+headroom (it is the `argmax` of `u` on 100% of pixels, exactly as the author's
+mechanism predicts) — it simply never gets close to running out.
+
+So the roll-off is behaving correctly. Its null here is principled and exact.
+
+## Failure mode 2 (lateral CA): supported in part, NOT established
+
+I ran the discriminator ORCH specified. First with a raw magenta index
+`(R+B)/2 - G` minus a local mean, it looked strongly CA-like: T1 antisymmetry
+`-483.8` outward vs `+483.6` inward, T2 separation growing `-174 -> -1294` with
+radius. **That result is contaminated and I am discarding it.** The confound
+check shows `corr(normalised chroma, luminance) = +0.7320` on edge pixels, so a
+pure intensity edge at constant hue fakes the antisymmetry.
+
+Re-run with a scale-invariant chroma metric (`experiments/V-HIGHLIGHT/radial2.py`):
+
+* **T1 antisymmetry** — shipping arm gives outward `-0.00067`, inward `+0.02928`.
+  That is "inward edges are magenta, outward edges are neutral", not the clean
+  sign reversal CA requires. With CA correction **off** the two sides have the
+  **same** sign (`+0.021`, `+0.007`) — the antisymmetry does not survive.
+* **T2 radial growth** — shipping arm is **flat**: `-0.0275, -0.0237, -0.0305,
+  -0.0308, -0.0280, -0.0269` across radius octiles, a trend of `-0.00029`/octile,
+  about 1% of the value. No radial growth.
+* Disabling CA correction removes only **19.7%** of the magenta excess at the
+  fringe, and that A/B is itself unclean because the correction resamples
+  99.9988% of pixels.
+* **Demosaic is excluded**: the binned arm (`--linear-srgb`, one sensor quad per
+  pixel, no interpolation) carries *more* edge chroma than the Malvar-He-Cutler
+  arm, `0.03530` vs `0.02829`. Caveat: the two arms differ in tone as well as
+  demosaic, so this is suggestive rather than conclusive.
+
+## What IS solid
+
+**T3 rules out clipping asymmetry on its own.** Mean absolute chroma excess at
+edges, by luminance quintile, shipping arm:
+
+```
+lum  3182-26698 : 0.04649
+lum 26698-36599 : 0.03522
+lum 36599-44214 : 0.02573
+lum 44214-50404 : 0.01917
+lum 50404-60527 : 0.01486
+```
+
+It decreases monotonically with level, by 3.1x from darkest to brightest. A
+clipping-driven chroma error must do the opposite. Identical shape in the CA-off
+arm. Combined with `max u = 0.3125`, the artefact ORCH saw **cannot** be the
+mechanism `highlight.rs` addresses.
+
+The fringe is real — I can see it in my own render on the upper lobe rim, and it
+is visually unchanged between CA-on and CA-off. It belongs to a different lane
+and it is currently **unattributed**. I could not identify its cause and I am not
+going to guess.
+
+## Consequences for the author's claims
+
+Nothing in Phase 1 is overturned. Claims 1-8 stand as verified. But two of them
+now read differently:
+
+* Claim 7, "96.6% of `coffee-bean`'s clipped pixels were coloured, not blown", is
+  arithmetically true and I reproduced it exactly. It does **not** generalise to
+  "the coloured highlight artefacts a viewer notices are this defect". The one
+  artefact in the corpus that a human independently flagged is not this defect,
+  and the fix is bit-exactly inert on it.
+* The corpus null is now 9 subjects wide, and for `flower-bud-alone-cpl` I can
+  state the reason numerically rather than by absence: `max u = 0.3125` against a
+  `0.60` knee.
+
+I did not measure sharpness on this subject and make no claim about it.
