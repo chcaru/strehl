@@ -774,11 +774,105 @@ above is unaffected, and was never a result on its own: a plain mean wins it
 outright while collapsing detail, which is why `merge` refuses to report it
 without a `--detail-roi`.
 
-**Speed.** The same 22-frame 33 MP stack merges in **3.19 s** end to end
-(1.15 s pass one, 2.04 s pass two) at **262 MB/s** over 836 MB of RAW, on a
-Ryzen 9 9950X3D. Peak memory is bounded at 5 in-flight frames — **never O(N)** —
-and decode alone is 1.78 s cold, 0.91 s warm. See
+**Speed — the shipping default, measured end to end.** On the 299-frame, 33 MP
+reference stack (11.3 GB of Sony ARW), `strehl stack <DIR> --out <PATH>` — which
+is `--merge pyramid` — writes a 7032 x 4688 16-bit TIFF in **116.9 s warm, best
+of 3** (96.8 MB/s, 0.391 s per frame, 5.7 GB peak resident), and **327.4 s on a
+cold cache**, of which 73.4 s is a one-time registration solve every later run
+reads from a sidecar. The fold is **98.5% of the run**: decode, registration
+lookup, collapse and the 198 MB write together cost 1.8 s. Cost is linear in
+frame count — `wall = 1.1 s + 0.77 s x N`, R² 0.998 — with a **one-second
+intercept**, so a small stack pays no fixed setup. Memory is flat at 5.6-5.8 GB
+from 20 frames to 299, a 3.2% spread across a 14.9x range of N: the O(workers)
+claim holding under measurement rather than being asserted.
+
+> **These are upper bounds, and the machine was the confound.** They were taken
+> on a box shared with a dozen concurrent agents. Twelve runs producing
+> byte-identical output spanned **116.9 s to 240.2 s**, tracking the machine's
+> busy fraction at R² 0.88; child CPU-seconds are not load-invariant either, 510
+> to 904 for identical work. The same subject rendered in **102.2 s** on a quiet
+> box, for output this build reproduces byte for byte. A worker sweep shows the
+> memory-derived 4-worker cap costs **1.29x** against 8 workers on a 16-core
+> part — the cap is deliberate, because float addition is non-associative and a
+> host-dependent worker count would change the shipped bytes. Commit
+> `b9b6921e`, binary SHA-256 `88782BBC…2916`; every timed run exited zero and
+> was checked for geometry, dtype, non-degeneracy and detail-in-family against
+> the shipped master, with a flat-region control alongside.
+
+**The 22-frame figure is a different measurement, and is scoped as one.** That
+stack *merges* in **3.19 s** end to end (1.15 s pass one, 2.04 s pass two) at
+**262 MB/s** over 836 MB of RAW, on a Ryzen 9 9950X3D — but that is the `merge`
+subcommand on the **estimator** path at an older commit, not `strehl stack` on
+the default backend. The two are not comparable and should not be quoted
+against each other. Peak memory is bounded at 5 in-flight frames — **never
+O(N)** — and decode alone is 1.78 s cold, 0.91 s warm. See
 [`M1`](docs/research/M1-decode-measured.md).
+
+## Measured against other stackers
+
+**This is the section that decides whether the project's ambition has been met,
+and today it has not been.** An independent verification pass compared strehl
+against two external comparators on identical frame sets
+([`V-HEADTOHEAD`](docs/research/V-HEADTOHEAD.md)): the patched `focus-stack`
+fork this project's owner used before, and **Zerene Stacker PMax**. Frame-set
+equivalence was confirmed for both subjects (105 and 63 identical exposures),
+and every comparison below has the tone grade removed. Without that step the
+numbers are meaningless — the first attempt at them read 0.349 where the correct
+answer was 0.735, and a naive microcontrast comparison would have handed the win
+to the wrong arm outright.
+
+Contrast ratios by spatial frequency, strehl over comparator, **grade-removed**,
+626 ROIs against the fork and 576 against Zerene. **Below 1.0 means strehl is
+behind:**
+
+| band (cyc/px) | feature size | vs the fork | vs Zerene PMax |
+| --- | --- | ---: | ---: |
+| 0.05-0.10 | ~10-20 px | 1.063 | 1.007 |
+| 0.10-0.20 | ~5-10 px | 1.079 | 0.936 |
+| **0.20-0.30** | **~3-5 px** | **0.833** | **0.735** |
+| **0.30-0.40** | **~2-3 px** | **0.766** | **0.843** |
+| 0.40-0.48 | ~2 px | 1.060 | 1.511 |
+
+**strehl is at parity or ahead at coarse scales and 17-27% behind at 3-5 pixel
+features — against both comparators independently, on two subjects, with tight
+confidence intervals.** The 0.40-0.48 band is noise-dominated in both
+comparisons and is not evidence of resolution; do not read 1.511 as a win. The
+verifier tried to explain the deficit away and could not: it is **not** capture
+sharpening, because both subjects' XMP sidecars read `crs:Sharpness="0"`, and it
+is not an artifact of the grade, because removing the grade properly is what
+produced these numbers. About **half** is attributable to strehl's own 3.5%
+coverage upscale; the rest sits in the merge and the gather kernel, where strehl
+uses Catmull-Rom against the fork's `cv::INTER_LANCZOS4`. Work to close it is in
+flight.
+
+**What strehl wins, and these are not close:**
+
+- **Noise.** On flat defocused ground, high-pass rms **0.5025% → 0.1125%** — a
+  **4.5x** reduction against the fork, of which at least **2.4x** survives a
+  worst-case grade correction. The fork's residual is grain; strehl's is real
+  structure. This is estimation-not-selection doing the thing it was built for.
+- **Clipping.** The fork clips **32% of the frame** on one subject; strehl
+  clips **4e-6** of it.
+- **Occlusion halos.** strehl is lower on **all four** rim measures, and
+  neither arm's median edge profile exceeds 1.0. Bounded honestly: the
+  instrument only resolves rims above roughly strong-unsharp-mask strength.
+
+**So "state of the art" is not a defensible claim for this tool today, and is
+not made anywhere in this document.** What the measurements support is that
+strehl is competitive with both comparators, decisively better on noise and on
+clipping, and measurably behind on fine microcontrast. Three caveats bound even
+that: both subjects were Lightroom-developed for the comparators and RAW for
+strehl, a confound that cannot be removed without abandoning the comparator the
+owner actually uses; Zerene's **DMap** mode never rendered, so this is only
+against PMax, its contrast-and-noise-raising mode, which flatters it on exactly
+the axis strehl loses; and two subjects against two comparators is a floor under
+*competitive*, not a foundation for *state of the art*.
+
+The same pass reported that **three of its own instruments failed their
+controls** — a 10-90% rise metric with no power, and two rim measures reading
++428% on a clean image and +0.02% on a real unsharp mask. They are recorded in
+the report rather than quietly dropped. The numbers above are the ones that
+survived commissioning.
 
 ## Usage
 
