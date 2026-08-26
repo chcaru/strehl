@@ -2552,3 +2552,134 @@ Commissioned the back-fill before running it on delivered files: a log whose
 and rc=1; a directory with the logs removed gave `no-log 26` and rc=1; re-runs
 gave `already-present 26` / `already-correct 26` and moved nothing.
 `verify_ship.py` after the edits: 26/26/26, SHIP-V2-ICC VERIFIED.
+
+## Print QA: what a press does to these masters, and what I got wrong
+
+ORCH asked four questions: soft-proof the 26 masters against a real print
+profile, verify the ICC variants are correct rather than merely present,
+report shadow and highlight headroom, and name the subjects I would not send
+to a lab. Answering them refuted two of my own hypotheses and one of my own
+instruments, so the retractions are recorded first.
+
+### RETRACTED: "coffee-bubbles will print as a black rectangle"
+
+MEASURED and false. `coffee-bubbles` has a median L* of 2.61 with 89.64% of
+its pixels below L* 5, which I read as a subject that would collapse into one
+ink. `shadowqa.py` tests the actual question -- does the tonal SEPARATION
+inside the shadows survive the round trip -- and the answer is that it does:
+ratio 1.07, i.e. the press round trip slightly EXPANDS its shadow separation.
+Across all 26 masters, 0 are CRUSHED and the worst ratio is 0.66.
+
+The mechanism is black-point compensation. It maps the source black to the
+paper black, so the whole dark field is remapped into the printable range and
+the gradations travel with it. The instrument's midtone control (ratio 0.97)
+proves the transform is not compressing on its own, so the shadow readings
+are attributable to the shadows.
+
+What survives of the concern is a different fact with a different owner:
+`coffee-bubbles` carries only 1.89 L* of separation across 94.67% of its
+frame. The press does not destroy that modulation; it was never there. That
+is a capture and tone question, not a print defect, and I am not calling it
+a defect.
+
+### RETRACTED: my own gamut table over-reported, and LOOKING is what caught it
+
+`printqa.py` reported `severe%` as pixels losing more than 5 Lab units of
+chroma. The `flowers-cpl` soft-proof sheet showed a window scoring 90.5% in
+which MASTER and PRINTABLE are indistinguishable by eye -- because the crop
+had landed on featureless background bokeh, and the loss was taken off a
+near-neutral. Five Lab units off a saturated flower flattens the subject;
+five off a tinted grey is invisible. The statistic could not tell them apart.
+
+`gamut_corrected.py` conditions the loss on there being saturation to lose
+(master C* >= 20, which is the MEASURED mean chroma of the corpus's most
+saturated master) and prints `sat%` alongside, so a low score cannot be
+misread: where `sat%` is near zero the subject has no saturated content and
+the print question does not arise, which is a different fact from passing.
+
+Commissioned on two arms that must disagree: a tinted neutral scores 0.00%
+saturated loss with `sat%` 0.00 explaining why, and a saturated green scores
+100.00%, so the statistic still fires where colour is genuinely lost.
+
+The corrections are large enough to have changed conclusions:
+
+| subject | old severe% | corrected satSevere% |
+| --- | --- | --- |
+| `flower-bud-alone-cpl` | 15.49 | 3.40 |
+| `flower-inner-edge-cpl` | 45.97 | 34.14 |
+| `flowers-cpl` | 0.94 | 0.25 |
+| `lavendar-cpl` | 0.24 | 0.00 |
+
+**10 of 26 subjects have essentially no saturated content at all**, so the
+gamut question does not arise for them.
+
+### The ICC null is now potent, so item 2 is genuinely answered
+
+`printqa.py` found 23 of 26 masters round-trip through their own embedded
+profile at 0 DN and 3 at 1 DN. A transform that ignored the profile would
+report the same thing. `icc_potency.py` runs the same code path with a
+DCI-P3 display profile substituted for the embedded one:
+
+* ARM A, embedded profile: max |dDN| = 0
+* ARM B, wrong profile: max |dDN| = 92 -- the path demonstrably reads the
+  profile it is given
+* ARM C, sRGB -> P3 -> sRGB: max |dDN| = 3 -- ARM B's movement is an
+  invertible reinterpretation, not corruption
+
+RETRACTED ARM, recorded because the retraction is the finding: the control
+first asserted a SIGN, that sRGB data mislabelled P3 must desaturate. It DID
+desaturate (mean chroma 20.14 -> 18.83) but the reasoning was wrong, so the
+agreement was luck: the substituted profile is a display profile whose tone
+curve is not sRGB's, and mean chroma over a frame moves with lightness as
+well as saturation. Inverting the assertion to match the observation would
+have been fitting the control to the data. It was removed instead.
+
+### The tone rule anchors both tails and nothing in between
+
+MEASURED across all 26 masters: p99.9 of linear-sRGB luma is pinned to within
+2.1% (0.9348 to 0.9560) while median L* spans 91.56 units (2.61 to 94.18).
+
+That is `image_out.rs` doing exactly what it documents. `TONE_BLACK_PCT` is
+0.1 and `TONE_WHITE_PCT` is 99.9, both order statistics in the tails, with a
+single luminance-derived gain between them and a fixed-strength S-curve. No
+stage places the subject's midtone, so subject lightness is a free variable.
+The code's own comment predicts the measurement: it says the floor develops
+to "2.2% on `coffee-bubbles`", and the master's median L* is 2.61.
+
+This is a design gap for print rather than a bug, and given the shadow result
+above it is currently costing nothing measurable. Recorded, not actioned.
+
+### Subjects I would not send to a lab, judged from pictures
+
+Two failure classes, both visible at 1:1 in the soft-proof sheets, and both
+exactly CMYK's classic weak spots:
+
+* **Saturated yellow-greens flatten to olive.** `leaf-2-cpl` (32.21%) is the
+  clearest: the master's vivid yellow-green becomes muddy olive-khaki, with
+  the lost-chroma panel near-uniformly red across the whole leaf. Same
+  failure on `lead-1-cpl` (29.52%) and `flower-inner-edge-cpl` (34.14%),
+  whose saturated bud renders as muddy olive-grey.
+* **Saturated blues dull toward slate-purple.** `119MSDCF` (25.74%) and
+  `109MSDCF` (25.11%): 100% of the sampled window out of gamut, the vivid
+  blue visibly duller and hue-shifted.
+
+Detail and sharpness are NOT the problem on any of them -- `leaf-2-cpl`
+resolves vein network, cellular texture and surface specks crisply. The
+disqualification is colour only.
+
+**THE LIMITATION THAT BOUNDS ALL OF THIS**, and it is the biggest open item
+in the print verdict: RSWOP.icm is web-coated offset. A fine-art pigment
+inkjet on rag paper -- which is what a macro photographer actually prints on
+-- has a substantially wider gamut, most of all in the saturated blues and
+greens that these five subjects fail on. So the honest statement is that
+five subjects are AT RISK ON A PRESS-CLASS GAMUT. I cannot say they fail at
+the owner's lab without the owner's lab profile, and getting that profile
+would change these five verdicts more than any code change would.
+
+### Data labelling, for whoever publishes the gallery
+
+`lead-1-cpl` is not pencil lead. The master is a backlit leaf, confirmed on
+the full frame, which is why it sits beside `leaf-2-cpl` in every colour
+statistic. The source folder `D:\personal\macro\lead-1-cpl` (123 files) is
+named that way, so this is a capture-time label, not a render defect. It
+will read as an error to anyone browsing the gallery.
