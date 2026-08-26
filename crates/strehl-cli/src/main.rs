@@ -262,16 +262,23 @@ enum Command {
         /// lateral CA is zero on axis by construction, so anything that moved
         /// the centre would be doing something other than what it claims.
         ///
-        /// This is NOT defaulted on. The profile describes one specific
-        /// camera, lens, teleconverter and filter stack, and applying it to a
+        /// This is DEFAULTED ON when the gear matches. The profile describes
+        /// one specific camera, lens and teleconverter, and applying it to a
         /// different optical path would ADD an aberration rather than remove
-        /// one. It must be asked for.
+        /// one -- so the render path resolves it through the gear guard, which
+        /// reads the body and composed lens id out of the file and declines
+        /// unless both match. It cannot see a filter change.
+        ///
+        /// Pass `off` (or `0`/`false`) for an uncorrected render. That is now
+        /// the only way to get one, so it is the supported escape hatch rather
+        /// than an incidental spelling.
         ///
         /// An unknown key is an error, not a silent no-op -- the failure mode
         /// worth avoiding is a run that looks like it corrected and did not.
         /// Pass any invalid name to be told which profiles exist.
         ///
-        /// Takes precedence over the STREHL_FIX_CA environment variable.
+        /// Takes precedence over the STREHL_FIX_CA environment variable, and
+        /// over the gear match, in BOTH directions.
         #[arg(long, value_name = "PROFILE")]
         fix_ca: Option<String>,
         /// Exposure for the viewing render, in STOPS. Requires --srgb.

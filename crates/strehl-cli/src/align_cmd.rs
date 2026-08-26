@@ -1387,10 +1387,30 @@ pub fn warp_frame_in_place(
     let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
     let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
     let mut covered_total = 0usize;
-    // Lateral-CA profile, if the operator named one. `None` => `compose` returns
-    // `t` untouched => this loop is bit-for-bit what it was before the switch
-    // existed. Resolved once per frame, outside the plane loop.
-    let ca = strehl_core::optics::active_profile()?;
+    // Lateral-CA profile. Resolved through the GEAR GUARD, not the bare
+    // environment switch: `profile_for_capture_env` returns a profile only when
+    // the body and composed lens id in this file match the one it was measured
+    // on, and an operator's `STREHL_FIX_CA` still outranks the match in BOTH
+    // directions. `None` => `compose` returns `t` untouched => this loop is
+    // bit-for-bit what it was before the switch existed.
+    //
+    // This line is the default-on change. The algorithm was finished months ago
+    // and every render the owner has ever seen ran with it off, because nothing
+    // called it -- the switch defaulted to unset and unset meant silently off.
+    // Defaulting on is only safe BECAUSE the guard is three-valued: `Unknown`
+    // declines rather than collapsing to a match, so an unreadable file gets an
+    // uncorrected render instead of someone else's measured aberration.
+    //
+    // Read per frame. `identity` re-opens the file to parse EXIF, which is a
+    // few hundred microseconds against a multi-second per-frame decode, so it
+    // does not show up in a render. Hoisting it to stack level would still be
+    // better and is noted as a follow-up rather than done here, because this
+    // function is the narrowest place the change can be made correctly.
+    let ident = strehl_raw::identity(&frame.path);
+    let ca = strehl_core::optics::profile_for_capture_env(
+        ident.model.as_deref(),
+        ident.lens_type3,
+    )?;
 
     for dy in 0..2usize {
         for dx in 0..2usize {
