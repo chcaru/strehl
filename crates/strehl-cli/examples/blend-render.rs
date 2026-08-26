@@ -77,6 +77,7 @@ struct Args {
     chunks: usize,
     cfg: MergeConfig,
     linear: bool,
+    camera_linear: bool,
     exposure_stops: f32,
 }
 
@@ -84,7 +85,8 @@ fn parse_args() -> Result<Args> {
     let mut it = std::env::args().skip(1);
     let dir = it.next().context(
         "usage: blend-render <DIR> <OUT.tiff> [--limit N] [--bands N] [--gate F] \
-         [--exponent F] [--hard-max] [--base-mean] [--chunks N] [--linear] [--exposure S]",
+         [--exponent F] [--hard-max] [--base-mean] [--chunks N] [--linear] \
+         [--camera-linear] [--exposure S]",
     )?;
     let out = it.next().context("an output path is required")?;
     let mut a = Args {
@@ -94,6 +96,7 @@ fn parse_args() -> Result<Args> {
         chunks: 0,
         cfg: MergeConfig::default(),
         linear: false,
+        camera_linear: false,
         exposure_stops: 0.0,
     };
     while let Some(flag) = it.next() {
@@ -112,6 +115,14 @@ fn parse_args() -> Result<Args> {
             "--hard-max" => a.cfg.select = SelectMode::HardMax,
             "--base-mean" => a.cfg.base = BaseBand::Mean,
             "--linear" => a.linear = true,
+            // Camera-native primaries, linear, no matrix and no transfer curve
+            // -- `image_out::OutputSpace::CameraLinear`, the byte-frozen
+            // measurement output the corpus was built on. This exists so the
+            // two arms can be differenced in the space ORCH measured the rim
+            // and the aura in. `--linear` is LinearSrgb and DOES apply the
+            // colour matrix, so differencing a `--linear` blend against a
+            // camera-native control would compare two colour spaces.
+            "--camera-linear" => a.camera_linear = true,
             other => bail!("unknown flag {other}"),
         }
     }
@@ -493,6 +504,7 @@ fn main() -> Result<()> {
         xyz_to_cam.as_ref(),
         &planes,
         args.linear,
+        args.camera_linear,
         args.exposure_stops,
     )?;
     eprintln!(
@@ -522,12 +534,15 @@ fn write_frame(
     xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
     planes: &[Vec<f32>],
     linear: bool,
+    camera_linear: bool,
     exposure_stops: f32,
 ) -> Result<()> {
     let range = levels.range();
     ensure!(range > 0.0, "white level is not above black level");
     let gains = wb.unwrap_or([1.0, 1.0, 1.0]);
-    let space = if linear {
+    let space = if camera_linear {
+        image_out::OutputSpace::CameraLinear
+    } else if linear {
         image_out::OutputSpace::LinearSrgb
     } else {
         image_out::OutputSpace::Srgb
