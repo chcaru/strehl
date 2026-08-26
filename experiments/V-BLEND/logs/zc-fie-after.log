@@ -1,0 +1,13 @@
+
+--- flower-inner-edge-cpl-after.tiff   7032x4688  n=32,966,016 px/channel ---
+  R: count@0 =      2,641  =   0.0080% of frame
+     cumulative %<=lvl : 0:0.0080  1:0.0088  2:0.0094  3:0.0099  4:0.0104  8:0.0120  16:0.0150  32:0.0231  64:0.0527  128:0.2015  256:1.2666  512:5.0769  1024:13.2680
+     per-level counts  : 0:2,641  1:262  2:198  3:157  4:170  5:141  10:119  20:125  50:276  100:771  200:3,098
+     mean per-level density over levels 1..256 = 0.004916% per level
+     SPIKE RATIO p0/density = 1.6x
+  G: count@0 =      1,126  =   0.0034% of frame
+     cumulative %<=lvl : 0:0.0034  1:0.0034  2:0.0034  3:0.0035  4:0.0035  8:0.0036  16:0.0038  32:0.0051  64:0.0100  128:0.0401  256:0.6437  512:3.8431  1024:12.3270
+     per-level counts  : 0:1,126  1:5  2:6  3:9  4:9  5:6  10:8  20:21  50:53  100:135  200:1,753
+     mean per-level density over levels 1..256 = 0.002501% per level
+     SPIKE RATIO p0/density = 1.4x
+  B: count@0 =        936  =   0.0028% of frame

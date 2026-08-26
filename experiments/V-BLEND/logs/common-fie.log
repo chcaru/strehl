@@ -1,0 +1,33 @@
+========================================================================
+COMMISSION -- common-selector comparison
+========================================================================
+  PASS  planted 2.00x recovered on common selector: 1.9892
+  PASS  NULL two draws of the same field: 0.9939
+  INFO  per-arm selection 0.9951 vs common selector 0.9926 (spread 0.0025)
+  PASS  concentrated excess hides from self-selection: self   99.39 vs neutral  385.76 (self must be < 0.7x neutral)
+  PASS  and a clean arm is insensitive to which selector is used (0.9946)
+  --> ALL PASS
+
+========================================================================
+selector: lin\flower-inner-edge-cpl-FRAME.tiff
+  arm FRAME        lin\flower-inner-edge-cpl-FRAME.tiff
+  arm BEFORE       lin\flower-inner-edge-cpl-before.tiff
+  arm AFTER        lin\flower-inner-edge-cpl-after.tiff
+========================================================================
+        signal bin  ntile  model 1f      FRAME     BEFORE      AFTER
+      300-   1000     10      24.9     18.371    149.082    153.751
+     1000-   2000     14      37.7     27.489    147.091    147.250
+     2000-   4000     25      50.4     35.923    130.838    126.657
+     4000-   8000     22      72.0     54.941    211.802    226.144
+     8000-  16000     14      94.1     74.331    315.645    331.918
+    16000-  32000     26     142.1    112.442    501.797    542.419
+    32000-  60000     20     182.8    153.233   1048.066   1093.907
+
+  ratios to the first arm listed, on the SAME tiles:
+      300-   1000 FRAME=  1.000 BEFORE=  8.115 AFTER=  8.369
+     1000-   2000 FRAME=  1.000 BEFORE=  5.351 AFTER=  5.357
+     2000-   4000 FRAME=  1.000 BEFORE=  3.642 AFTER=  3.526
+     4000-   8000 FRAME=  1.000 BEFORE=  3.855 AFTER=  4.116
+     8000-  16000 FRAME=  1.000 BEFORE=  4.246 AFTER=  4.465
+    16000-  32000 FRAME=  1.000 BEFORE=  4.463 AFTER=  4.824
+    32000-  60000 FRAME=  1.000 BEFORE=  6.840 AFTER=  7.139

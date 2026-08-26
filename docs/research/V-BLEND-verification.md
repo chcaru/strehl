@@ -9,10 +9,11 @@ and `noise_vs_detail.py` were left unread until after every number below existed
 | claim | verdict |
 | --- | --- |
 | **C1** - the blend clamps a channel to zero on the subject | **CONFIRMED**, and stronger than stated. Also **already fixed** at HEAD `275fbd1`, with a residual deficit that is not. |
-| **C2** - the blend's noise penalty is recovered detail, not noise | **REFUTED as a general claim**, on 2 of 3 subjects tested. **Not testable on `couch-fibers-cpl`**, BUILD-BLEND's own subject, where it may hold - see section 5.7. |
+| **C2** - the blend's noise penalty is recovered detail, not noise | **REFUTED as a general claim.** Refuted on both subjects where it is testable; **not testable** on the other two, including `couch-fibers-cpl`, BUILD-BLEND's own subject, where it may hold - section 5.7. |
 
 C1 survived every confound I could construct, including one ORCH did not use, and
-reproduced on three subjects ORCH had never measured (four in total). C2 fails at two
+reproduced on four subjects ORCH had never measured (six tested; four clamp heavily, one
+marginally, one not at all, and the one that does not was predicted). C2 fails at two
 independent points, and the second is decisive:
 
 1. Its counterfactual is the wrong one. Real sensor noise in this pipeline does not
@@ -56,8 +57,8 @@ ORCH's spoken conclusion is the correct one; the scripts that support it are not
 
 ## 2. What I measured with, and how it was commissioned
 
-Four instruments, all written for this job, all under `C:\dev\strehl-out\V-BLEND\`
-and mirrored into `experiments/V-BLEND/src/`.
+All written for this job, all under `C:\dev\strehl-out\V-BLEND\` and mirrored into
+`experiments/V-BLEND/src/`.
 
 | instrument | what it does |
 | --- | --- |
@@ -510,6 +511,10 @@ considered strongest, reproducing ORCH's own magnitude.
 | `foam` | 0.7311% / 0.7078% / 1.0495% | 343 / 287 / 1,411 px |
 | `bee-1-cpl` | 0.0551% / 0.0998% / 0.1224% | 105 / 32 / 84 px |
 | `couch-fibers-cpl` | **0 / 0 / 0** | 0 / 0 / 0 px |
+| `flower-inner-edge-cpl` | 0.0080% / 0.0034% / 0.0028% | 0 / 0 / 200 px |
+
+Six subjects. Four clamp heavily (0.12% to 2.27% of frame), one clamps marginally, one
+not at all.
 
 **The one subject that does not clamp is the one with no shadows, and that was
 predicted.** `couch-fibers-cpl`'s control arm has a whole-frame minimum of **562 DN** and
@@ -548,6 +553,20 @@ averaged), **and in a detail-rich region it rises above one** (it elected). Comp
 | `bee-1-cpl` bright bin | 72.1 | **0.165** | **1.582** | detail-free; blend adds |
 | `couch-fibers-cpl` 4000-8000 | 2.7 | **5.408** | 5.766 | detail-rich; not separable |
 | `couch-fibers-cpl` 8000-16000 | 2.7 | **4.249** | 4.837 | detail-rich; not separable |
+| `flower-inner-edge-cpl` 2000-4000 | 4.2 | **3.642** | 3.526 | detail-rich; not separable |
+| `flower-inner-edge-cpl` 16000-32000 | 4.2 | **4.463** | 4.824 | detail-rich; not separable |
+
+**The control arm's own `mean n_eff` predicts which category a subject falls into**, and
+the binary prints it. Where `n_eff` is large the merge mostly averaged, meaning it found
+little to elect, and detail-free regions exist to test in. Where `n_eff` is a handful the
+merge elected almost everywhere and no such region exists:
+
+| subject | mean n_eff | has a detail-free region | AFTER/BEFORE where measurable |
+| --- | --- | --- | --- |
+| `flower-bud-alone-cpl` | 138.7 | yes | **2.890** |
+| `bee-1-cpl` | 72.1 | yes | **9.582** |
+| `flower-inner-edge-cpl` | 4.2 | no | 0.968 - 1.085 |
+| `couch-fibers-cpl` | 2.7 | no | 1.066 - 1.138 |
 
 `couch-fibers-cpl` is dense filament fill. Its control averages **2.728 frames per pixel**
 against flower-bud's 138.7, because nearly every pixel has its own in-focus frame. It has
@@ -555,12 +574,16 @@ against flower-bud's 138.7, because nearly every pixel has its own in-focus fram
 a single frame against the model's 81-93, so the frame has structure everywhere. Both
 merges sit 4-6x above one exposure, which is exactly what a working focus merge should do.
 
-On this subject AFTER/BEFORE is **1.066** and **1.138**, right at BUILD-BLEND's
-self-reported +12.3%. **I cannot say whether that 12.3% is noise or recovered detail**,
-because the discriminator that works on the other subjects has nothing to stand on here.
-ORCH's claim may well be correct on `couch-fibers-cpl` specifically. What is refuted is
-the general claim, on subjects that do have detail-free regions - and those are the ones
-where the penalty is largest (+189% and +858%).
+On `couch-fibers-cpl` AFTER/BEFORE is **1.066** and **1.138**, right at BUILD-BLEND's
+self-reported +12.3%, and on `flower-inner-edge-cpl` it is **0.968 to 1.085**. **I cannot
+say whether those are noise or recovered detail**, because the discriminator that works on
+the other subjects has nothing to stand on here. ORCH's claim may well be correct on both.
+
+What is refuted is the general claim, on subjects that do have detail-free regions - and
+those are the ones where the penalty is largest by an order of magnitude (**+189%** and
+**+858%**, against 7-14% here). The two subjects where the penalty is small are the two
+where it might be detail; the two where it is enormous are the two where it provably is
+not.
 
 ## 6. Defects found in my own instruments
 
@@ -614,10 +637,15 @@ clean-looking result.
   835 DN base-band structure `pyramid.rs` measured. I did not isolate the term
   responsible, and I did not check whether it persists at HEAD in the same form on
   subjects other than `flower-bud-alone-cpl` (there it does: section 5.3).
-- **C2 outside flat regions.** Everything in section 5.3 is argued on backdrop tiles,
-  where the absence of detail is what makes the test decisive. I have **not** shown that
-  the blend recovers no real detail anywhere - only that its measured noise penalty in
-  flat regions is not explained by detail recovery.
+- **C2 outside detail-free regions, which is where ORCH may still be right.** Section 5.3
+  is decisive only where the absence of detail is itself measured. On `couch-fibers-cpl`
+  and `flower-inner-edge-cpl` no such region exists and my discriminator has nothing to
+  stand on; there AFTER/BEFORE is 0.97-1.14 and I cannot say what it is. I have **not**
+  shown that the blend recovers no real detail anywhere - only that on the subjects where
+  the penalty is large it provably is not detail. Section 5.7.
+- **Whether the blend's added energy would be visible in a print.** Every number here is
+  a standard deviation in a flat tile. I did not assess perceptual impact, and the owner's
+  rejection of the current output is about prints, not sigmas.
 - **ORCH's `rho_add` algebra.** I did not check it, because I did not need to: I measured
   the literal difference between the arms instead. If the algebra is right, the
   conclusion still fails on the counterfactual (section 5.2).

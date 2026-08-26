@@ -1,0 +1,13 @@
+
+--- flower-inner-edge-cpl-before.tiff   7032x4688  n=32,966,016 px/channel ---
+  R: count@0 =          0  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0000  256:0.0872  512:2.2857  1024:10.0122
+     per-level counts  : 0:0  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:147
+     mean per-level density over levels 1..256 = 0.000341% per level
+     SPIKE RATIO p0/density = 0.0x
+  G: count@0 =          0  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0000  256:0.0341  512:1.7466  1024:9.3465
+     per-level counts  : 0:0  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:0
+     mean per-level density over levels 1..256 = 0.000133% per level
+     SPIKE RATIO p0/density = 0.0x
+  B: count@0 =        200  =   0.0006% of frame
