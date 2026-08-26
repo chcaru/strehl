@@ -668,6 +668,24 @@ monolithic binary and ship only that binary.
     `stack` has no sidecar argument and will read the shared file anyway.
     (SYNTHESIS fact 1367; discipline 681.)
 
+    **BUT: the sidecar's recorded resampler BEATS `--resampler`, and the run
+    says so.** `merge_cmd::alignment_for` prints *"THE SIDECAR WINS"* and uses
+    the kernel the map was solved with, ignoring your flag. So for any
+    experiment whose independent variable is the **gather kernel** this rule is
+    **actively harmful** — it would silently render every arm with one
+    resampler and return a null that looks like a finding. Those experiments
+    must `Remove-Item Env:\STREHL_WARPMAP` and accept the shared-sidecar risk,
+    or serialise against other agents. `solve_config_key` hashes the resampler
+    into the cache key, so a fresh solve per kernel is correct and cheap.
+
+    The general form, which is the part worth carrying elsewhere: **an
+    isolation mechanism pins more than the thing you meant to isolate.** Pinning
+    a solve to protect it from other agents also pins the kernel, the geometry
+    and every other choice baked into that solve. Before pinning, ask what else
+    travels with it, and whether your independent variable is inside the pin —
+    because if it is, the pin will hold it constant and the experiment will
+    report that your variable does nothing. This one announces itself in the
+    banner; the next one may not.
 46. **Never read a pass/fail gate through a truncating pipeline.**
     `$LASTEXITCODE` reads **0** after a command that exited **1** whenever
     `Select-Object -First N` short-circuits the stream -- and that is this
