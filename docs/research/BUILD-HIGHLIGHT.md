@@ -40,7 +40,13 @@ earlier — in the frames, before the merge dilutes it. That is what this report
 * **ORCH's 10:07 master and my 11:32 renders differ non-linearly** — percentile ratios
   vary 1.6x to 3.3x, my renders have a *lower* green mean `u` (0.0456 vs 0.0563) and a
   *much* higher max (0.9355 vs 0.5773), with 0.55 % of pixels at output full scale versus
-  none. The estimator backend renders equally bright, so it is not a backend difference.
+  none. An estimator render of the same subject reaches green `max_u` **0.93173** against
+  the pyramid's **0.93113** — a 0.06 % difference, so it is not a backend difference.
+  *That comparison is stated on the green plane only, and deliberately:* the two arm
+  renders come from my early harness, which did not yet record the binary hash, so I
+  cannot prove they share a build, and a cross-build reading is void off green. The
+  ceilings themselves are metadata-derived and are **bit-identical** between the arms
+  (`B = 1.6304872179822196` in both), which no build difference could affect.
   The tree moved a great deal in that window (veil, blend/hull, ICC). **Not explained.**
 
 ---
@@ -453,3 +459,77 @@ The module's 12 tests are written to be able to fail:
    Section 1 records it rather than smoothing it over.
 5. **`coffee-bean`'s 5.28 % saturation cost.** Correct behaviour by my reading, but it is
    a judgement, and section 6.1 gives the owner the numbers to overrule me with.
+
+---
+
+## 10. Cross-cut: the roll-off against BUILD-ELECT's clip rate
+
+ORCH asked two questions after BUILD-ELECT measured the shipping pyramid arm pinning
+`== 65535` on **4.65 %** of frame against the estimator's **1.87 %**: does this fix's
+correctness depend on the clip rate, and does it behave the same at both figures.
+
+### 10.1 The answer is structural first
+
+The roll-off is a **pointwise function of one pixel's own `u = v_c/ceil_c`**. It carries no
+neighbourhood term, no global statistic and no aggregate normaliser. What it does to a
+pixel is therefore *mathematically* independent of how many other pixels are clipped: the
+clip rate cannot change its output anywhere. That is a property of the code, not a
+measurement, and it is the strongest form the answer can take.
+
+What the clip rate *does* change is how much of the correction survives **to the file**,
+because the writer's `clamp(0,1)` is downstream of `Render::develop`. That is the residual
+already recorded in section 8, and its direction is favourable: a *lower* clip rate lets
+*more* of the correction through. The fix and BUILD-ELECT's concern pull the same way.
+
+### 10.2 And it is corroborated across a range that brackets both their figures
+
+`h10_cliprate.py`, frame-wide, same binary `F9BD5191...`, all arms `merge backend :
+pyramid (--merge)`, arms differing only by `STREHL_HIGHLIGHT_KNEE`:
+
+| subject | any-ch before | any-ch after | factor | R/G/B before | R/G/B after |
+| --- | ---: | ---: | ---: | --- | --- |
+| `109MSDCF` | 0.0000 % | 0.0000 % | — | 0 / 0 / 0 | 0 / 0 / 0 |
+| `tweezers-cpl` | 0.0031 % | 0.0022 % | 0.703x | 0.0025 / 0.0016 / 0.0024 | 0.0022 / 0.0021 / 0.0021 |
+| `coffee-bubbles` | 0.2995 % | 0.1988 % | 0.664x | 0.1787 / 0.1875 / 0.2652 | 0.1953 / 0.1899 / 0.1924 |
+| `foam` | 0.5535 % | 0.3812 % | 0.689x | 0.3963 / 0.2989 / 0.5136 | 0.3733 / 0.3579 / 0.3659 |
+| `coffee-bean` | **5.0732 %** | **2.1657 %** | **0.427x** | 0.1735 / 3.4289 / 4.9765 | 2.1657 / 2.1656 / 2.1656 |
+
+My corpus spans **0.0000 % to 5.0732 %** frame-wide, which brackets both of BUILD-ELECT's
+figures. The effect is the same sign and the same shape at every point on that range, and
+at zero clipping the output is byte-identical.
+
+### 10.3 The more interesting column is `any` against `all`
+
+A pixel clipped on *some* channels is a coloured highlight. A pixel clipped on *all* of
+them is white. That distinction is this entire lane in one statistic:
+
+| subject | `any` before | `all` before | neutral share | `any` after | `all` after | neutral share |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `foam` | 0.5535 % | 0.2601 % | 47.0 % | 0.3812 % | 0.3570 % | **93.6 %** |
+| `coffee-bubbles` | 0.2995 % | 0.1365 % | 45.6 % | 0.1988 % | 0.1887 % | **94.9 %** |
+| `coffee-bean` | 5.0732 % | 0.1729 % | **3.4 %** | 2.1657 % | 2.1656 % | **99.995 %** |
+
+Before the fix, **96.6 %** of `coffee-bean`'s clipped pixels were clipped on only some
+channels — they were coloured, not blown. After, essentially every clipped pixel is
+clipped on all three. That is the defect stated in BUILD-ELECT's own units.
+
+### 10.4 One cost, stated plainly
+
+Luminance-preserving desaturation raises the weak channel as it lowers the strong one, so
+**green clips slightly more often after the fix** (`foam` 0.2989 % -> 0.3579 %). Red and
+blue fall further, so the any-channel total drops on every subject. If BUILD-BLEND is
+measuring contrast on green in a band, that is a number they should take from a
+post-fix render rather than a pre-fix one.
+
+### 10.5 What I do and do not need from BUILD-BLEND
+
+* **Not a dependency.** I validated the above without any merge-side census, by counting
+  pinned pixels in the output TIFF. Sequencing me behind the census would be a false
+  dependency.
+* **The `47-93 px` band statistic is theirs, and I did not reproduce it.** I do not have
+  their ROI definition and I will not guess at one; section 10.2 is frame-wide only and is
+  comparable to their frame-wide row and to nothing else in their report.
+* **Remedy (3) needs a different artefact.** A frame-wide *counter* — the thing being
+  proposed — does not unlock highlight reconstruction. That needs a **per-pixel** record of
+  which pixels and which channels were censored, which is a much heavier object. Adding the
+  counter is worth doing on its own merits; it should not be expected to enable (3).
