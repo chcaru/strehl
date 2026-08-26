@@ -732,6 +732,12 @@ Same binary `F9BD5191`, same instrument, same `edge` population, same selector, 
 not grow; coffee-bubbles' reaches **-0.3508**, an **8.5x larger** corner value on the same
 population and instrument.
 
+> **These rows are ONE measurement, not three.** The `edge` population ranks on the luma
+> *gradient*, so `--select-on` is inert and `luma`, `rb` and `max` return byte-identical
+> rows. They are printed three times and must not be counted as three agreeing readings -
+> the adversarial-selector control that overturned the blue result in section 11 **does not
+> operate on this population at all**. `edge_mask`'s docstring says so at the source.
+
 **I withdraw, before stating it, the hypothesis I went in with.** I expected R-B to be
 partly *blind* to a residual carried against green, since green is this codebase's reference
 channel (`optics.rs` gives it no coefficient and freezes both green gathers bitwise) and red
@@ -797,3 +803,135 @@ Two further coefficient facts, offered as leads and **not** as findings:
   tonight for resting on a single reading. **This needs its own test before anyone acts on
   it**, and the natural one is whether a per-radius or second-order term beats the single
   scalar.
+
+---
+
+## 13. Closing the fringe: the remedy does not belong in `optics.rs`
+
+ORCH granted me `optics.rs` to enforce the declared support limit, test whether one global
+scalar is enough, and settle my `eps_r` lead. **I did not edit it, and this section is why.**
+Three of the four things I was asked to do are either already settled against me or are not
+expressible in the code as it stands, and the fourth is aimed at a minority term.
+
+**Ownership checked first, as instructed:** `git log --oneline -12 -- crates/strehl-core/src/optics.rs`
+shows the last commit at **05:04**, 10.5 hours before I started, and
+`git status --porcelain -- crates/strehl-core/` shows no uncommitted changes to it. Another
+lane is live in `photometric.rs` and four `examples/`, but not in my file. It was idle.
+
+### 13.1 The premise is wrong, and one number does it
+
+ORCH's brief: *"the residual you measured grows exactly there [past r = 0.788]."* It does
+grow there. But growth is a statement about the radial term's **slope**, not about **how
+much of the defect is radial** - a distinction my own section 12 did not make, and should
+have. Decomposing `cr(r) = A + B*r` separates them, and the decomposition is decisive.
+
+Per-annulus medians of `(R-G)/Y` on `coffee-bubbles`, edge population, `--linear-srgb`,
+binary `F9BD5191`, banner `merge backend : pyramid (--merge)`:
+
+| r | 0.04 | 0.13 | 0.21 | 0.29 | 0.37 | 0.45 | 0.53 | 0.61 | 0.70 | 0.78 | 0.86 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| CA **on** | **-0.26** | -0.20 | -0.19 | -0.21 | -0.26 | -0.30 | -0.31 | -0.28 | -0.28 | -0.33 | -0.35 |
+| CA **off** | **-0.26** | -0.21 | -0.20 | -0.23 | -0.31 | -0.19 | -0.27 | -0.34 | -0.13 | -0.15 | -0.55 |
+
+**At r = 0.04 - on axis, where lateral CA is identically zero - the red deficit is already
+-0.2588**, against a corner value of -0.3549. That is a direct annulus median, not a fit.
+**About 74 % of the defect is present where the aberration being blamed for it contributes
+nothing.** `optics.rs::displacement_at` returns `eps * radius`; M107 records the displacement
+going "-> 0 at the optical centre". A term that is large on axis cannot be lateral CA, and no
+clamp, taper or refit of a radial coefficient can reach it.
+
+**And the region ORCH asked me to enforce contains almost nothing.** Only **1.3 %** of the
+masked population lies beyond `r = 0.788`. Enforcing the declared support could touch at most
+that 1.3 %, of a term that is itself the minority of the defect.
+
+### 13.2 The remedies are not expressible in the current transform class
+
+This is the structural reason "declared, not enforced" was the right call for a stronger
+reason than M107b gave, and it applies to all three of ORCH's options.
+
+The correction is applied as a **`Similarity`**. `OpticalProfile::compose`
+(`optics.rs:296`) returns `Similarity { a: t.a * s, b: t.b * s + t }` with `s = 1 + eps`,
+and `align_cmd::warp_frame_in_place` takes a `Similarity`. Its own doc comment states the
+design goal: *"Both closed forms, and a single similarity - the correction rides the gather's
+existing interpolation and adds no second resampling pass."*
+
+**A similarity is a uniform scale about the origin. There is no radius in it.** `eps * r`
+appears only in `displacement_at`, which is a reporting function with no production caller;
+`support_r_max` is likewise read only by a test (`optics.rs:1301`). So:
+
+* **"Clamp at r = 0.788"** - not expressible. A uniform scale cannot stop at a radius.
+* **"Taper to zero"** - not expressible, same reason.
+* **"Fit a term supported out there"** - a higher-order radial term is also not a similarity.
+
+Any of them requires either changing the registration core to accept a non-linear warp -
+breaking the invariant the code explicitly relies on, *"still a Similarity, so L6 is
+unaffected"* - or adding a **second resampling pass**. The second option is worse than it
+looks: an extra resample is an extra low-pass on R and B, and the defect under investigation
+is *red losing amplitude on small bright features*. The obvious fix pushes in the direction
+of the defect.
+
+### 13.3 My `eps_r` lead: WITHDRAWN, and it was settled before I raised it
+
+I reported that shipped `eps_r` = 704.5 ppm sits above every per-stack fit (500.9-651.9 ppm).
+**That comparison is invalid and the refutation was three pages above the table I read it
+from.** BUILD-CHROMA §11.2:
+
+> *"the shipped `eps_r = -704.5 ppm` is **already correct**, and my Phase-2 draft claiming it
+> over-corrects by 7-26 % was wrong. That draft was built on raw estimates which are
+> **attenuated by a stack-dependent factor of 0.69-0.94**. Correcting for the attenuation
+> moves my six red measurements from a 39 %-spread band that excludes -704.5 into a
+> 16 %-spread band **centred on it**."*
+
+The per-stack figures are **raw and attenuated**; the shipped scalar is de-attenuated. I put
+one against the other. This is the same class of error as the luma-selector circularity in
+section 11 - a number that looked like evidence because of how it had been prepared.
+
+**A global rescale has also already been tried and rejected.** M113 measured the needed gain
+as **1.2496** on `bee-3-cpl` and **1.0557** on `couch-fibers-cpl` - *"The gain does not
+transfer"* - and `captures-needed.md` records that the proposed x0.692 **"must not ship"**
+because on `couch-fibers-cpl` it converts a 5.6 % over-correction into a **27.0 %
+under-correction**. ORCH's item 3 is closed, by prior work, against me.
+
+### 13.4 The band-4 wobble, carried forward as instructed
+
+The erratic outer annuli are a **CA-off** phenomenon. With the correction off the outer field
+reads `-0.34, -0.13, -0.15, -0.55`; with it on, `-0.28, -0.28, -0.33, -0.35`. **The
+correction does stabilise the outer field** even though it does not remove the constant term,
+which is a point in its favour and against any move to disable it. I have not explained the
+CA-off instability itself; with 1.3 % of the population beyond r = 0.788 and a `-0.0455`
+single-band excursion in the earlier six-band binning, small-sample variance is the obvious
+candidate and I have not excluded it.
+
+### 13.5 What the constant term probably is - and why I am NOT claiming it
+
+The field-independent red deficit has an obvious candidate already measured in this corpus.
+**M107 fact 1413:** axial CA is real and baked in, because the election is computed from
+`green_luma` alone and the winning index is reused across all four CFA accumulators;
+`k_R - k_G` = **-0.67 to -1.07 frames**, and red forfeits **8.96-14.74 %** of its gradient
+energy. A channel elected at the wrong focus is defocused **everywhere in the field**, and a
+defocused channel loses proportionally most amplitude on the *narrowest* features - which is
+exactly a red deficit on small bright speculars, on axis, independent of radius.
+
+**I tried twice to test this and both instruments were confounded, so I am reporting it
+untested rather than picking the one that agreed with me.**
+
+* Gradient energy normalised by channel **mean** gave red **-85 %** against green. Rejected:
+  on a near-black subject that ratio conflates level with sharpness, and it disagrees with
+  M107's established 8.96-14.74 % by an order of magnitude.
+* Gradient energy normalised by channel **variance** (scale-invariant, calibrated on planted
+  blur: sigma 0.3/0.5/0.8 -> 0.99/0.74/0.33) gave red **+42 %**, the opposite sign. Rejected:
+  red has the lowest SNR on this subject and noise inflates a high-frequency fraction, so
+  this cannot separate "red is sharper" from "red is noisier".
+
+Two confounded instruments are not one finding. The hypothesis is handed over, with its
+citation, and **the discriminating experiment is a per-channel focus-index offset** - which
+is fact 1417's ARGUED cheaper alternative to per-channel election, and which lives in the
+estimator, not in `optics.rs`.
+
+### 13.6 What I recommend
+
+**Do not change `optics.rs`.** The lateral-CA correction is the minority term, it is measured
+correct in magnitude, a global rescale is already rejected, its support limit governs 1.3 %
+of the affected population, and it demonstrably stabilises the outer field. The remaining
+74 % is on-axis and belongs to whatever makes red systematically weaker on fine bright
+features - most plausibly the green-only election, which is the estimator's, not optics'.
