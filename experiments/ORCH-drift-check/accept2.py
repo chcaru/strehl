@@ -87,6 +87,32 @@ def lap_rms(g: np.ndarray) -> float:
     return float(np.sqrt((lap.astype(np.float64) ** 2).mean()))
 
 
+# Difference-of-Gaussians matched to the same 0.2-0.7 f/Nyq band the gate binds
+# on. A Gaussian of std s has response exp(-2*pi^2*s^2*f^2) with f in cycles per
+# pixel, so its half-power point sits at s = sqrt(ln2/(2*pi^2))/f = 0.1874/f.
+# Nyquist is 0.5 c/px, so the band is 0.1-0.35 c/px and s = 1.874 and 0.535.
+#
+# This exists because the first version of this gate used lap_rms per tile and
+# then failed wrapped-text-1 on its FLATTEST quintile (0.9309) while that same
+# file measured 0.9996 in the mid-band. The Laplacian is top-octave weighted, so
+# a per-tile Laplacian statistic reproduces, at tile scale, precisely the defect
+# this gate was written to remove from accept.py. A gate must not be built from
+# the instrument it replaces.
+DOG_LO, DOG_HI = 0.535, 1.874
+
+
+def dog(g: np.ndarray) -> np.ndarray:
+    from scipy.ndimage import gaussian_filter
+
+    return gaussian_filter(g, DOG_LO) - gaussian_filter(g, DOG_HI)
+
+
+def tile_rms(a: np.ndarray, t: int) -> np.ndarray:
+    ny, nx = a.shape[0] // t, a.shape[1] // t
+    v = a[: ny * t, : nx * t].reshape(ny, t, nx, t)
+    return np.sqrt((v.astype(np.float32) ** 2).mean(axis=(1, 3), dtype=np.float64))
+
+
 def radial_psd(tile: np.ndarray, idx: np.ndarray, win: np.ndarray) -> np.ndarray:
     t = (tile - tile.mean()) * win
     F = np.fft.fftshift(np.fft.fft2(t))
@@ -118,6 +144,9 @@ def compare(pref: Path, ptest: Path) -> dict:
 
     clipped_px = np.logical_or((T == 0).any(axis=2), (T == 65535).any(axis=2))
 
+    bp_r = tile_rms(dog(gr), TILE)
+    bp_t = tile_rms(dog(gt), TILE)
+
     h, w = gr.shape
     ny, nx = h // TILE, w // TILE
     recs = []
@@ -127,9 +156,18 @@ def compare(pref: Path, ptest: Path) -> dict:
             if lit[sl].mean() < 0.9:
                 continue
             hr = lap_rms(gr[sl])
-            if hr <= 0:
+            if hr <= 0 or bp_r[iy, ix] <= 0:
                 continue
-            recs.append((hr, lap_rms(gt[sl]) / hr, iy, ix, bool(clipped_px[sl].any())))
+            recs.append(
+                (
+                    hr,
+                    lap_rms(gt[sl]) / hr,
+                    iy,
+                    ix,
+                    bool(clipped_px[sl].any()),
+                    float(bp_t[iy, ix] / bp_r[iy, ix]),
+                )
+            )
     if not recs:
         raise SystemExit(f"{ptest.name}: no fully-lit tiles to judge")
 
@@ -137,6 +175,7 @@ def compare(pref: Path, ptest: Path) -> dict:
     refamp = np.array([r[0] for r in recs])
     ratio = np.array([r[1] for r in recs])
     dirty = np.array([r[4] for r in recs])
+    bpr = np.array([r[5] for r in recs])
 
     quint = []
     for i in range(5):
@@ -149,6 +188,8 @@ def compare(pref: Path, ptest: Path) -> dict:
                 float(ratio[s][cl].mean()) if cl.any() else float("nan"),
                 s.stop - s.start,
                 int((~cl).sum()),
+                float(bpr[s].mean()),
+                float(bpr[s][cl].mean()) if cl.any() else float("nan"),
             )
         )
 
@@ -168,7 +209,8 @@ def compare(pref: Path, ptest: Path) -> dict:
         sel = tiles[::step]
         pr = np.zeros(NBIN)
         pt = np.zeros(NBIN)
-        for _, _, iy, ix, _ in sel:
+        for r in sel:
+            iy, ix = r[2], r[3]
             sl = (slice(iy * TILE, (iy + 1) * TILE), slice(ix * TILE, (ix + 1) * TILE))
             pr += radial_psd(gr[sl], idx, win)
             pt += radial_psd(gt[sl], idx, win)
@@ -186,6 +228,10 @@ def compare(pref: Path, ptest: Path) -> dict:
         "clip_test": clip_cells(T, lit),
         "quint": quint,
         "worst_quint": min(q[1] for q in quint),
+        "worst_bp": min(q[5] for q in quint),
+        "worst_bp_clean": min(
+            (q[6] for q in quint if not np.isnan(q[6])), default=float("nan")
+        ),
         "worst_quint_clean": min(
             (q[2] for q in quint if not np.isnan(q[2])), default=float("nan")
         ),
@@ -221,8 +267,8 @@ def verdict(m: dict):
         rise = m["clip_test"][k] - m["clip_ref"][k]
         if rise > CLIP_MAX:
             fails.append(f"clip {k} +{rise:.4f}%")
-    if m["worst_quint"] < QUINTILE_MIN:
-        fails.append(f"worst quintile {m['worst_quint']:.4f}")
+    if m["worst_bp"] < QUINTILE_MIN:
+        fails.append(f"worst bandpass quintile {m['worst_bp']:.4f}")
     if m["mid"] < MIDBAND_MIN:
         fails.append(f"midband {m['mid']:.4f}")
     if m["p1_test"] - m["p1_ref"] > P1_MAX_RISE * 65535:
@@ -241,11 +287,11 @@ def show(name: str, m: dict):
         tot_t += t
         print(f"    {k:<14}{r:10.4f}{t:10.4f}{t - r:+10.4f}")
     print(f"    {'TOTAL':<14}{tot_r:10.4f}{tot_t:10.4f}{tot_t - tot_r:+10.4f}")
-    print(f"    {'quintile':<14}{'refAmp':>10}{'ampRatio':>10}{'clipFree':>10}"
-          f"{'nTiles':>9}{'nDirty':>8}")
-    for i, (ra, rr, rc, n, nd) in enumerate(m["quint"]):
-        cs = f"{rc:10.4f}" if not np.isnan(rc) else f"{'--':>10}"
-        print(f"    q{i:<13d}{ra:10.1f}{rr:10.4f}{cs}{n:9d}{nd:8d}")
+    print(f"    {'quintile':<10}{'refAmp':>9}{'BANDPASS':>10}{'bpClipFree':>11}"
+          f"{'lapRMS':>9}{'nTiles':>8}{'nDirty':>8}")
+    for i, (ra, rr, rc, n, nd, bp, bpc) in enumerate(m["quint"]):
+        bs = f"{bpc:11.4f}" if not np.isnan(bpc) else f"{'--':>11}"
+        print(f"    q{i:<9d}{ra:9.1f}{bp:10.4f}{bs}{rr:9.4f}{n:8d}{nd:8d}")
     print(f"    band ALL sharp tiles ({m['n_psd']:>3})   low {m['low']:.4f}"
           f"   MID {m['mid']:.4f}   high {m['high']:.4f}")
     print(f"    band CLIP-FREE only  ({m['n_psd_clean']:>3})   low {m['low_clean']:.4f}"
@@ -283,7 +329,8 @@ def main() -> int:
         if a.ref not in arms:
             continue
         m = compare(arms[a.ref], arms[a.ref])
-        dev = max(abs(m["overall"] - 1), abs(m["mid"] - 1), abs(m["worst_quint"] - 1))
+        dev = max(abs(m["overall"] - 1), abs(m["mid"] - 1),
+                  abs(m["worst_quint"] - 1), abs(m["worst_bp"] - 1))
         f = verdict(m)
         status = "OK" if dev < 1e-9 and not f else f"BROKEN dev={dev:.2e} {f}"
         print(f"  {subj:<26} self-vs-self max|dev| {dev:.2e}   {status}")

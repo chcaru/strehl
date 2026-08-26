@@ -2295,3 +2295,103 @@ Nothing about the ship decision changes: the merge is still unreachable from
 photograph. But the case for wiring it was stronger than the record said, and the
 record said otherwise because of a metric this document is responsible for.
 
+## 23 The silhouette discriminator, pre-registered and tested at n=6
+
+§22.7 closed by naming its own weakness: one subject per arm, with the
+classification assigned by judgement, on a corpus that has been burned by
+two-subject conclusions before. `PREREG-silhouette.md` fixed the classification,
+the thresholds and the refutation conditions in writing, and was committed before
+any of the four new subjects was rendered.
+
+## 23.1 The result
+
+Clip-free sharp-quintile mid-band amplitude ratio, pyramid over legacy, all six
+subjects under one commissioning pass that returned `0.00e+00` on every arm:
+
+| subject | class, fixed in advance | clip-free MID | predicted | held? |
+| --- | --- | ---: | --- | --- |
+| flower-bud-alone-cpl | SILHOUETTE | 0.6719 | — | generating pair |
+| couch-fibers-cpl | NO SILHOUETTE | 1.1081 | — | generating pair |
+| dry-erase-marker-head-cpl | SILHOUETTE | **0.6850** | < 0.90 | yes |
+| tweezers-cpl | SILHOUETTE | **0.9041** | < 0.90 | no, by 0.004 |
+| wrapped-text-1 | NO SILHOUETTE | **0.9996** | ≥ 0.95 | yes |
+| flat-on-ruler-cpl | NO SILHOUETTE | **1.0345** | ≥ 0.95 | yes |
+
+Prediction 1 held on three of four. `tweezers-cpl` sits 0.004 above a threshold
+picked by eye, which is a threshold failure and is recorded as one.
+
+Prediction 2 — the strong one, separation with no overlap — held on all six.
+Silhouette {0.6719, 0.6850, 0.9041}; no silhouette {0.9996, 1.0345, 1.1081}. The
+worst non-silhouette subject sits above the best silhouette subject with a clear
+gap. Nothing crosses.
+
+Prediction 3, the secondary one, held directionally and no further: black-rail
+clipping appears only in silhouette subjects, and in two of the three. Silhouette
+looks necessary and is plainly not sufficient, which is the same shape as §19's
+finding that drift alone does not predict clipping.
+
+## 23.2 The isolate that separates the two defects
+
+`tweezers-cpl` is the subject this test needed and did not know it was asking
+for. It has a silhouette, it clips **0.0000%** on the black rail, and it is
+deficient anyway — mid-band 0.9041, and its second quintile at **0.7094**.
+
+Until now the veil and the clamp had only ever been observed on subjects where
+both were present, and §22.7 separated them by excluding three tiles from one
+spectrum. `tweezers` separates them by construction: a mid-band deficit of the
+predicted kind with no clipped pixel anywhere to explain it. The veil is real and
+it is not a side effect of the clamp.
+
+## 23.3 Two subjects pass outright, and both are unseen
+
+`flat-on-ruler-cpl` — all five quintiles 1.0313–1.0363, mid-band 1.0345, zero in
+all four clip cells. `couch-fibers-cpl` — quintiles 1.0780–1.1104, mid-band
+1.1081, zero clipping. On subjects with no occluding outline the pyramid merge is
+uniformly better than the shipped one, and one of those two subjects had never
+been looked at when the claim was made.
+
+`wrapped-text-1` fails on one number, its flattest quintile at 0.9677, with a
+mid-band of 0.9996. `dry-erase-marker-head-cpl` fails on everything, and its
+reference arm is already **7.88% white-clipped** before the pyramid merge touches
+it — a blown-highlight capture where the legacy render is itself damaged, and not
+a clean test of anything. Its `p1` falls 892 → 0.
+
+## 23.4 The gate contained the defect it was built to remove
+
+The first run of `accept2` failed `wrapped-text-1` on its flattest quintile at
+0.9309 while the same file measured 0.9996 in the mid-band. Those two numbers
+cannot both be describing the picture, and the reason is that the per-quintile
+statistic was still `lap_rms` — the top-octave-weighted operator §22.3 had just
+finished condemning in `accept.py`. The gate reproduced, at tile scale, exactly
+the defect it existed to correct.
+
+Replaced with a difference-of-Gaussians matched to the same 0.2–0.7 f/Nyq band
+the gate binds on (`σ = 0.1874/f` at the half-power point gives 0.535 and 1.874).
+What makes the change trustworthy is that it did not simply raise everything:
+
+| | lap_rms | band-pass | reading |
+| --- | ---: | ---: | --- |
+| wrapped-text-1 q0 | 0.9309 | **0.9677** | part of that deficit was noise |
+| tweezers q2 | 0.7761 | **0.7094** | that deficit is real and mid-band |
+| couch-fibers q0 | 1.0268 | **1.1104** | now agrees with its own mid-band |
+
+A statistic that moved everything one way would be a rescale. This moved the
+noise-dominated tile up, the signal-dominated tile down, and brought the quintile
+column into agreement with the band column it had been contradicting.
+
+> A gate must not be built out of the instrument it replaces.
+
+## 23.5 What is now established, and what is still argued
+
+MEASURED: the pyramid merge beats the shipped merge on every subject without an
+occluding outline, and is deficient on every subject with one; the deficiency
+survives the complete absence of clipping; the two failure modes are separable
+and separately owned.
+
+ARGUED still: that the mechanism is the veil. The classification is a judgement
+about what each subject *is*, not a measurement, and §22's own note stands — the
+honest version of this test derives the class from depth-map bimodality rather
+than from a person looking at a photograph. Six subjects with a clean gap is
+evidence; it is not the mechanism. BUILD-HALO's fix remains the falsification.
+
+

@@ -1,0 +1,139 @@
+accept2 gate   clip rise<=0.02%/cell   worst quintile>=0.98   midband>=0.98   p1 rise<=2%
+reference arm: ctrl
+
+=== COMMISSIONING: every arm against itself, must be exactly 1.0000 ===
+  couch-fibers-cpl           self-vs-self max|dev| 0.00e+00   OK
+  dry-erase-marker-head-cpl  self-vs-self max|dev| 0.00e+00   OK
+  flat-on-ruler-cpl          self-vs-self max|dev| 0.00e+00   OK
+  flower-bud-alone-cpl       self-vs-self max|dev| 0.00e+00   OK
+  tweezers-cpl               self-vs-self max|dev| 0.00e+00   OK
+  wrapped-text-1             self-vs-self max|dev| 0.00e+00   OK
+  gate commissioned
+
+couch-fibers-cpl
+
+  --- blend  =>  PASS ---
+    tiles judged 1083   psd tiles 217
+    clip cell          ref %    test %      rise
+    black_lit         0.0000    0.0000   +0.0000
+    black_dark        0.0000    0.0000   +0.0000
+    white_lit         0.0000    0.0000   +0.0000
+    white_dark        0.0000    0.0000   +0.0000
+    TOTAL             0.0000    0.0000   +0.0000
+    quintile     refAmp  BANDPASS bpClipFree   lapRMS  nTiles  nDirty
+    q0            289.5    1.1104     1.1104   1.0268     216       0
+    q1            343.5    1.1090     1.1090   1.0528     217       0
+    q2            390.7    1.0875     1.0875   1.0400     216       0
+    q3            444.3    1.0867     1.0867   1.0482     217       0
+    q4            590.5    1.0780     1.0780   1.0365     217       0
+    band ALL sharp tiles (217)   low 1.0361   MID 1.1081   high 0.9571
+    band CLIP-FREE only  (217)   low 1.0361   MID 1.1081   high 0.9571   <- the veil's target, clamp excluded
+    (high band does not bind: this rig's optics have already zeroed it)
+    overall 1.0408   p1 3076 -> 3212   accept.py acuity would read 0.9020
+
+dry-erase-marker-head-cpl
+
+  --- blend  =>  FAIL: clip black_lit +0.0223%; clip black_dark +1.4914%; clip white_lit +0.5284%; worst bandpass quintile 0.5224; midband 0.6838 ---
+    tiles judged 1198   psd tiles 240
+    clip cell          ref %    test %      rise
+    black_lit         0.0000    0.0223   +0.0223
+    black_dark        0.0002    1.4917   +1.4914
+    white_lit         7.8774    8.4058   +0.5284
+    white_dark        0.0000    0.0000   +0.0000
+    TOTAL             7.8776    9.9197   +2.0421
+    quintile     refAmp  BANDPASS bpClipFree   lapRMS  nTiles  nDirty
+    q0             44.8    1.6176     1.7192   1.5104     239      17
+    q1             71.0    1.3381     1.3574   1.1923     240       6
+    q2            150.7    0.5224     0.5290   0.5736     239      23
+    q3            480.1    0.7859     0.8071   0.6477     240      39
+    q4           1218.5    0.9091     0.9013   0.7201     240      70
+    band ALL sharp tiles (240)   low 1.0162   MID 0.6838   high 0.6044
+    band CLIP-FREE only  (170)   low 1.0174   MID 0.6850   high 0.6243   <- the veil's target, clamp excluded
+    (high band does not bind: this rig's optics have already zeroed it)
+    overall 0.9286   p1 892 -> 0   accept.py acuity would read 0.7811
+
+flat-on-ruler-cpl
+
+  --- blend  =>  PASS ---
+    tiles judged 1101   psd tiles 221
+    clip cell          ref %    test %      rise
+    black_lit         0.0000    0.0000   +0.0000
+    black_dark        0.0000    0.0000   +0.0000
+    white_lit         0.0000    0.0000   -0.0000
+    white_dark        0.0000    0.0000   +0.0000
+    TOTAL             0.0000    0.0000   -0.0000
+    quintile     refAmp  BANDPASS bpClipFree   lapRMS  nTiles  nDirty
+    q0            429.8    1.0355     1.0355   1.0486     220       0
+    q1            491.2    1.0363     1.0363   1.0442     220       0
+    q2            534.0    1.0314     1.0314   1.0339     220       0
+    q3            577.2    1.0350     1.0350   1.0372     220       0
+    q4            668.2    1.0313     1.0314   1.0218     221       1
+    band ALL sharp tiles (221)   low 1.0482   MID 1.0344   high 0.9936
+    band CLIP-FREE only  (220)   low 1.0483   MID 1.0345   high 0.9940   <- the veil's target, clamp excluded
+    (high band does not bind: this rig's optics have already zeroed it)
+    overall 1.0371   p1 1377 -> 1399   accept.py acuity would read 0.9984
+
+flower-bud-alone-cpl
+
+  --- blend  =>  FAIL: clip black_lit +0.0401%; clip black_dark +1.3613%; worst bandpass quintile 0.9077; midband 0.5155 ---
+    tiles judged 1534   psd tiles 154
+    clip cell          ref %    test %      rise
+    black_lit         0.0000    0.0401   +0.0401
+    black_dark        0.0000    1.3614   +1.3613
+    white_lit         0.0000    0.0000   +0.0000
+    white_dark        0.0000    0.0000   +0.0000
+    TOTAL             0.0001    1.4015   +1.4014
+    quintile     refAmp  BANDPASS bpClipFree   lapRMS  nTiles  nDirty
+    q0             99.5    1.0171     1.0171   1.0153     306       0
+    q1            112.8    1.0100     1.0100   1.0084     307       0
+    q2            122.6    1.0138     1.0138   1.0091     307       0
+    q3            134.6    1.0284     1.0284   1.0214     307       0
+    q4            241.4    0.9077     0.9091   0.8511     307       6
+    band ALL sharp tiles (154)   low 0.7889   MID 0.5155   high 0.5699
+    band CLIP-FREE only  (151)   low 0.9789   MID 0.6719   high 0.6335   <- the veil's target, clamp excluded
+    (high band does not bind: this rig's optics have already zeroed it)
+    overall 0.9810   p1 1028 -> 339   accept.py acuity would read 0.9101
+
+tweezers-cpl
+
+  --- blend  =>  FAIL: worst bandpass quintile 0.7094; midband 0.8865 ---
+    tiles judged 1203   psd tiles 241
+    clip cell          ref %    test %      rise
+    black_lit         0.0000    0.0000   +0.0000
+    black_dark        0.0000    0.0000   -0.0000
+    white_lit         0.0029    0.0033   +0.0004
+    white_dark        0.0000    0.0000   +0.0000
+    TOTAL             0.0029    0.0033   +0.0004
+    quintile     refAmp  BANDPASS bpClipFree   lapRMS  nTiles  nDirty
+    q0             44.5    1.0811     1.0811   1.0492     240       0
+    q1             56.4    1.0599     1.0599   1.0331     241       0
+    q2             80.7    0.7094     0.7094   0.7761     240       0
+    q3            677.0    0.8923     0.8923   0.8528     241       0
+    q4           1149.7    0.9953     0.9903   0.9310     241      14
+    band ALL sharp tiles (241)   low 1.0294   MID 0.8865   high 0.7987
+    band CLIP-FREE only  (227)   low 1.0149   MID 0.9041   high 0.8529   <- the veil's target, clamp excluded
+    (high band does not bind: this rig's optics have already zeroed it)
+    overall 0.9285   p1 1933 -> 1676   accept.py acuity would read 0.9279
+
+wrapped-text-1
+
+  --- blend  =>  FAIL: worst bandpass quintile 0.9677 ---
+    tiles judged 1132   psd tiles 227
+    clip cell          ref %    test %      rise
+    black_lit         0.0000    0.0000   +0.0000
+    black_dark        0.0000    0.0003   +0.0003
+    white_lit         0.0000    0.0000   +0.0000
+    white_dark        0.0000    0.0000   +0.0000
+    TOTAL             0.0000    0.0003   +0.0003
+    quintile     refAmp  BANDPASS bpClipFree   lapRMS  nTiles  nDirty
+    q0            213.0    0.9677     0.9677   0.9309     226       0
+    q1            302.5    1.0121     1.0121   1.0058     226       0
+    q2            388.8    1.0079     1.0079   0.9909     227       0
+    q3            453.1    1.0060     1.0060   0.9899     226       0
+    q4            529.4    1.0028     1.0028   0.9833     227       0
+    band ALL sharp tiles (227)   low 0.9857   MID 0.9996   high 0.9297
+    band CLIP-FREE only  (227)   low 0.9857   MID 0.9996   high 0.9297   <- the veil's target, clamp excluded
+    (high band does not bind: this rig's optics have already zeroed it)
+    overall 0.9802   p1 413 -> 535   accept.py acuity would read 0.9716
+
+=== 2 pass, 4 fail, 0 skipped = 6 groups ===
