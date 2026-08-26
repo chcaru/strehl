@@ -1910,3 +1910,88 @@ only if the halo's amplitude is coming from the gate's admitted set, and that ha
 not yet been measured. Assigning it before the measurement would be building the
 fix that the story suggests rather than the one the data supports, which is the
 error this section exists to record.
+
+## 20.5 The same pattern in a second form, and the case against my own framing
+
+Modules are one way to be unreachable. A switch is another, and `strehl` has 23
+of them. `scripts/check-defaults.py` partitions every one found in `crates/`
+into quality-reachable, quality-dark, control, and diagnostic, and the partition
+sums to the count of switches found — so a switch cannot be skipped and read as
+audited.
+
+**Three quality switches default off.** One of them, `STREHL_FIX_CA`, the audit
+labels *"THE ORIGINAL DARK FEATURE"*: lateral-CA correction, finished long ago at
+**R² = 0.9969** and **−704.5 ppm**, removing **61–67% of corner colour fringing**
+and taking blue displacement from **0.363 px to 0.059 px** — and unset in every
+render the owner has ever seen. The visible coloured speckles in our output were
+this, and the fix was already in the tree. It is now being made default-on behind
+an EXIF gear guard, which is the mechanism the project's founding brief asked for:
+*"the camera + lens specifics should be pluggable too, to enhance stacking for
+gear where available (but optional)."*
+
+That is 20.3's rule again in a second form. **But the third dark switch refutes
+the general reading**, and it is the more important entry.
+
+## 20.6 `Off` can be a defended position, and mine was the lazy reading
+
+I assumed `STREHL_PHOTOMETRIC=off` was a stale default chosen when the measured
+drift was 7%, and that my 19–45% would simply overturn it. The audit records
+otherwise:
+
+- **M122** ran a **pre-registered 14-stack promotion test** and returned
+  **KEEP-OFF** on its no-harm criterion K2 — and its **worst-harm subject was
+  `flower-bud-alone-cpl`**, `hf1-on-hf0` slope **0.9444**. That is the same
+  subject we use as the halo acceptance target.
+- **M125** built the `auto` mode and **honestly declined to promote it**: 104% of
+  its margin came from a single stack.
+
+So the default was not neglected. It was tested twice and defended twice. My
+drift measurement raises the question again; it does not settle it, and 20.3's
+rule does not license flipping a switch merely because it is off.
+
+There is also a trap inside `auto` that would have wasted a night. Its domain is
+`AUTO_FRAMES_DOMAIN = 33..=100` frames, and this corpus's stacks are **205 and
+299 frames**. **`auto` abstains on every subject we care about.** I had already
+instructed an implementer to A/B `auto` against `off`; both arms would have been
+identical, the correct report would have been "no difference", and we would have
+recorded a null that measured nothing but the domain guard. The instruction was
+corrected to `on` against `off`. **A switch that cannot fire on the corpus it is
+evaluated against produces a null indistinguishable from a real one.**
+
+## 20.7 The contest, and an A/B that is void by construction
+
+The photometric entry is flagged **OPEN AND CONTESTED**, and the two claims
+cannot both be true:
+
+- A verifier measured `on` **recovering +1415 DN of aura** on
+  `flower-bud-alone-cpl` — roughly **a third** of the −3787 / −4293 DN aura
+  measured independently by two instruments.
+- M122 measured that same subject as `on`'s **worst harm**, by a
+  high-frequency energy statistic.
+
+The live reconciliation is **H-SEAM**: that M122's "lost fine structure" is
+**election-seam step edges — the artifact itself** — which an energy statistic
+*with no spatial argument* cannot distinguish from signal. If H-SEAM holds, M122
+scored the removal of a defect as damage, and a default rests on a metric that
+cannot tell a seam from a feather. The decisive test is therefore **spatial, not
+energetic**: not how much high-frequency energy `on` costs, but **where**. Energy
+is the instrument under suspicion and cannot adjudicate its own case.
+
+The third dark switch supplies the sharpest instrument lesson of the three.
+`STREHL_FIX_HALO` carries two unresolved defects, and the first is fatal:
+
+> `report()` and `report_statistics()` at `merge_cmd.rs:2083-2085` run **before**
+> the halo pass at `:2088`.
+
+**Every A/B conducted on those printed statistics is null by construction** — the
+numbers are produced before the thing under test has run. The second defect
+compounds it: `=1` without `--out` is a silent no-op **that still prints an ON
+banner**. A harness that reports before it acts, and announces an effect it did
+not apply, will return a confident, reproducible, precisely-formatted null
+forever. It is worth stating as a general check, because nothing in the output
+looks wrong:
+
+> **Confirm that an A/B harness reads its numbers after the code path under test
+> has run.** A switch that prints an ON banner is not evidence that it did
+> anything, and a statistic printed before the pass is not evidence about the
+> pass.
