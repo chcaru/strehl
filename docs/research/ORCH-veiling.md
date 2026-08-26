@@ -3082,3 +3082,113 @@ Three escalating findings, each cheaper than the last, each requiring only that
 someone look at the output at a scale nobody had looked at yet. The instruments
 were never wrong. They answered the questions they were asked, and for a long
 time nobody asked the one that a person looking at the picture asks first.
+
+## 29 — Per-band convexity does not imply reconstruction convexity
+
+Section 28 left the clip as "a separate, localised failure". This section names
+it, and the naming was done by construction rather than by reading the code, so
+it does not depend on my reading being right.
+
+### 29.1 Eliminating the suspects
+
+`flower-bud-alone-cpl` rendered at `--gate 2` as well as `--gate 4`:
+
+| arm | exact-zero px | luma<500 | median DN |
+|---|---:|---:|---:|
+| estimator | 0 (0.000%) | 0.002% | 18137.2 |
+| pyramid gate 4 | 122,416 (0.371%) | 1.310% | 18550.5 |
+| pyramid gate 2 | 121,297 (0.368%) | 1.318% | 18540.7 |
+
+**Jaccard 0.9424; 96.59% of the gate-4 zeros are also zero at gate 2.** The same
+pixels, at two gates whose fallback behaviour is wildly different — `averaged`
+reads `49.1% 0.0% 0.0% ...` at gate 2 against `47.9% 36.8% 9.9% 0.3% ...` at
+gate 4. **The gate and the sub-gate fallback are both eliminated**, and with
+them the notch as an explanation for anything visible.
+
+Two further signatures: blue leads by 3.7x (R 123,050, G 176,531, B 460,886),
+and the estimator renders the same region at median 3117 DN. The data there is
+dark and perfectly ordinary. The zeros are manufactured.
+
+### 29.2 The module's safety argument, and the step that does not follow
+
+From `pyramid.rs`'s own preflight log:
+
+> `selection : SOFT -- weight = (band power above the noise floor)^exponent, a
+> convex combination. Sign coherence is free: a convex combination cannot take
+> adjacent coefficients from opposite-signed frames`
+
+Per-band convexity is real and the sign-coherence claim is true *within a band*.
+The inference that it protects the reconstruction is false, and structurally so.
+**Each band computes its own weights.** Band 0 may be dominated by frame 12
+while band 5 is dominated by frame 80. The reconstruction sums bands drawn from
+different weight vectors, and a sum of convex combinations under *different*
+weightings is not a convex combination of the original pixels.
+
+### 29.3 Decided by construction, with a control that reads exactly zero
+
+`hullproof.py` — 1-D Laplacian pyramid, 8 frames each sharp in a different
+region, hull `[min_k, max_k]` per pixel:
+
+| case | violating | worst excursion |
+|---|---:|---:|
+| **CONTROL: one weighting shared by every band** | **0 / 102,400** | **0.000** |
+| MEASURED: independent per-band weights | 7 / 102,400 | 0.140 x span |
+| CONTROL: single-frame passthrough | max abs err 2.22e-16 | — |
+
+The shared-weight control is the load-bearing one. If per-band convexity did
+protect the reconstruction, the measured row would be zero too. A harness whose
+positive control cannot come out zero proves nothing; this one does, and the
+measured row still does not.
+
+**The rate is driven by the selection exponent, not the gate:**
+
+| exponent | violating | rate | worst excursion |
+|---|---:|---:|---:|
+| 0 (uniform mean) | 0 | 0.00% | 0.000 |
+| 1 | 0 | 0.00% | 0.000 |
+| 2 | 1 | 0.00% | 0.336 |
+| 4 | 2 | 0.00% | 0.054 |
+| **8** | **72** | **0.09%** | **0.752** |
+| 16 | 511 | 0.67% | 2.924 |
+
+The shipped per-band ramp is `2 3 4 5 8 8 8`. **The three finest bands sit at
+exactly the exponent where this turns severe**, and at 16 the reconstruction
+lands nearly three times outside the range of any input frame.
+
+This predicts every signature in 29.1 without further assumption: gate-
+independent because the exponent drives it; worst in dark regions because the
+hull sits near zero there and a downward excursion crosses it; blue-led because
+blue carries the least signal so its hull is nearest zero; the same pixels at
+both gates because the exponents are the same at both gates.
+
+### 29.4 The fix, and why it cannot cost anything real
+
+**Clamp the reconstruction to the per-pixel hull of the aligned inputs.**
+
+The argument is not aesthetic. A merge that claims to combine N observations has
+no basis for emitting a value none of them support. Anything outside
+`[min_k, max_k]` is unsupported by the data *by definition*, so the clamp can
+only remove excursions that were never justified. It degrades gracefully in both
+directions: where frames agree the hull is tight and the clamp binds constantly
+while changing nothing; where they disagree it is loose and never binds.
+
+Not by lowering the exponent — 25.2 measured loss as monotone in selectivity
+with hard-max best in every amplitude bin, so that trades a fixable artifact for
+a diffuse one.
+
+> **A safety property proved for one stage is not a safety property of the
+> pipeline. Convexity per band was true, was stated in the log every run, and
+> was load-bearing for a conclusion it does not support.**
+
+### 29.5 The shape of all four findings
+
+| section | defect | found by | visible at |
+|---|---|---|---|
+| 22–26 | the notch | band-ratio instruments | tile statistics |
+| 27 | the estimator's halo | opening a file at 100% | one crop |
+| 28 | the pyramid's clip | opening a *whole* file | full frame |
+| 29 | why the clip happens | 40 lines of numpy | no image at all |
+
+Each was cheaper than the last. The most expensive instrument in this corpus
+found the least important defect, and the mechanism behind the most important
+one fell out of a toy model that never touched the codebase.
