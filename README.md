@@ -878,12 +878,30 @@ given depth inside their depth of field. **That figure has now been measured,
 and it is not observed.** Six subjects rendered twice from one binary — the
 shipping pyramid merge and the shipping `argmax-baseline` selector — and
 compared green plane, camera-linear, at 36 matched sites chosen on the mean of
-both arms, come out **indistinguishable to within 0.5 px of equivalent Gaussian
-blur**. That 0.5 px is not a small number here: it is also what the same
-instrument reports for the two arms' *noise gap alone* with zero blur planted,
-so it is the instrument's floor rather than a measured difference. Selection
-wins outright on one subject, `flat-on-ruler-cpl`, by about 0.4 px on three
-statistics that agree.
+both arms, come out **indistinguishable**.
+
+**The direction survives independent re-measurement; the number did not.** A
+verifier built a separate instrument sharing no code with the first — a spectral
+blur-match, commissioned to identity at +0.0000 and to a pure-scale pair at
+−0.002 — and over its own 109-tile grid reports pooled **−0.183 px, 95% CI
+[−0.249, +0.076]**: no merge gain on any of six subjects. But the published
+**"0.5 px" is an artifact of a truncated ladder**, not a floor: a relative
+deficit of 1e-6 inverts to 0.155–0.184 px through that ladder and to **exactly
+0.000** through an exact Gaussian. **The claim that the noise gap was "also 0.5
+px" is therefore withdrawn** — it was never a physical coincidence, but two
+small relative differences pushed through one compressive nonlinearity. Measured
+with a noise-corrected instrument, the arms' pure noise difference is **+0.04 to
++0.09 px** on five of six subjects.
+
+The form of this result that needs no ladder, no inversion and no Gaussian model
+is the raw half-energy frequency: **`f50_merge / f50_argmax` = 0.900 to 1.010**,
+against the 1.20–1.80 that was argued. Those are the units the claim should
+always have been in. Selection wins outright on one subject,
+`flat-on-ruler-cpl`.
+
+The tie is also **backend-invariant**, which closes a trap rather than opening
+one: the same comparison run against the estimator backend gives margins that
+agree with the pyramid's. There is no hidden win on the other path.
 
 That it is the *shipping* backend was checked from the runs' own banners rather
 than assumed from their command lines, because the two can disagree: passing any
@@ -906,24 +924,41 @@ edges *as detail*. Measured on the two arms' own crops, as gradient kurtosis
 inside low-detail regions chosen on the mean of both arms (higher = more flat
 plateaus punctuated by hard steps):
 
-| subject | merge | argmax | ratio | subject geometry |
-| --- | --- | --- | --- | --- |
-| `bee-3-cpl` | 5.83 | 16.26 | **2.79x** | deep, defocused ground |
-| `flowers-cpl` | 3.90 | 7.71 | 1.98x | 3D, defocused ground |
-| `bee-1-cpl` | 7.85 | 14.81 | 1.89x | 3D |
-| `leaf-2-cpl` | 3.52 | 5.54 | 1.57x | 3D |
-| `tweezers-cpl` | 4.25 | 4.97 | 1.17x | near-planar |
-| `flat-on-ruler-cpl` | 4.44 | 4.51 | **1.01x** | planar |
-
-Read it against geometry rather than as a ranking, and it explains its own
-exception. **`flat-on-ruler-cpl` — the one subject where argmax beat the merge
-on detail — is exactly the subject where argmax invents nothing.** A flat planar
-target has every pixel cleanly in focus in some frame, so selection is a
-well-posed problem there and it does the job. On subjects with real out-of-focus
-ground it is not well posed, and selection fills the gap with structure that was
-never in the scene. So the honest reading of the null is: **the merge ties
-selection on a detail metric while declining to manufacture detail, and loses
-only where nothing is being manufactured.**
+> **WITHDRAWN, 2026-08-26.** A six-row gradient-kurtosis table stood here, with
+> ratios from 2.79x down to 1.01x, and a geometric story that read them against
+> subject depth. **I asked the verifier to attack it and it did not survive.**
+> Four defects, any one of which is disqualifying at the precision I quoted:
+>
+> - **It was measured through a tone curve.** The crops were written as
+>   `(v ** (1/2.2) * 255)` and read back through a luma channel mix. This
+>   project's own standing rule is that nothing is measured on a gamma-encoded
+>   path, and I broke it in the README.
+> - **The statistic rises 2.313x on a pure blur plant and 1.302x on pure
+>   noise** — the confounds are the size of the effect it was reporting.
+> - **`frac = 0.35` was load-bearing and was never varied.** At `frac = 0.10`
+>   the top subject reads **0.90**, below unity, reversing its sign.
+> - **Three implementations disagree**: `bee-3-cpl` reads 2.79 / 3.58 / 2.26.
+>
+> And the correction destroys the narrative rather than shifting it.
+> Recomputed camera-linear the *median* effect strengthens, but `tweezers-cpl`
+> moves from **1.17x to between 1.86x and 4.20x** — and tweezers has the
+> highest absolute kurtosis of any subject in the set. It was the near-planar
+> anchor of the "selection is well-posed on flat subjects" story, and it no
+> longer sits where that story needs it. Only `flat-on-ruler-cpl` survives as
+> an exception.
+>
+> **What survives is the direction and nothing quantitative**: per-pixel
+> selection has no correct value to choose in genuinely out-of-focus ground,
+> because no frame contains one, so adjacent pixels elect different source
+> frames and the region breaks into piecewise-constant plateaus with hard
+> polygonal edges — which a detail statistic scores *as detail*. That mechanism
+> is real, visible, and is why the merge should be preferred on a detail tie.
+> The size of it is unmeasured and the table that claimed to measure it is gone.
+>
+> I wrote to the verifier that if the table was an artifact I had put an
+> artifact in the README and needed to know that night. It was, and this is the
+> consequence. **A statistic that has never been shown to fail is not evidence
+> — and I published one that had only ever been shown to succeed.**
 
 Two caveats, because this is the kind of result that gets overstated. The
 per-subject cut above was made *after* seeing the per-tile numbers, so it is
@@ -941,11 +976,13 @@ it moves +33% under 15% added noise and reports −0.34 to −0.49 px on a pure
 noise difference, which accounts for its entire apparent result on five of the
 six subjects. A statistic that has never been shown to fail is not evidence.
 
-This result is **under independent verification right now** and is labelled as
-such, for the same reason the merge-limited zero above was: a negative is as
-capable of being an instrument artifact as a positive, and this one is load
-bearing enough that it should not be believed on one agent's word — including
-when that agent is arguing against the project's own headline. The noise column
+**That verification has now landed, and it found defects** — the truncated-
+ladder floor, the refuted noise-gap equivalence, and the withdrawn table above.
+The direction was confirmed independently and the numbers were not, which is the
+outcome the labelling existed for: a negative is as capable of being an
+instrument artifact as a positive, and this one was load bearing enough that it
+should not have been believed on one agent's word — including when that agent
+was arguing against the project's own headline. The noise column
 above is unaffected, and was never a result on its own: a plain mean wins it
 outright while collapsing detail, which is why `merge` refuses to report it
 without a `--detail-roi`.
