@@ -8437,3 +8437,36 @@ binary" as sufficient rigour for weeks. It is not:
 > the thing you are testing.** An old pin is a perfect instrument for measuring
 > a feature that did not exist -- it will answer every question about it,
 > consistently, and always with the same wrong answer.
+
+## 72. The last of the twenty-six
+
+`bee-2-cpl` was the only subject never named in this log. Opened at 1:1 from the
+SHIP-V2 master, it is the strongest single frame in the corpus for the question
+the owner actually asked.
+
+Individual bee hairs are separable across the whole thorax, each with a tapering
+tip, and dozens of them cross from the black body out over the white backdrop --
+**thin, low-contrast, translucent structure against a bright field**, which is
+the exact geometry that produces a rim if anything in the pipeline is going to
+produce one. There is no rim. There is no aura. The white immediately beside the
+black chitin is the same white as the far field. Pollen grains on the leg carry
+individual surface texture, and the speculars on the chitin are clean, with none
+of the green-yellow fringe that `coffee-bubbles` and `foam` show.
+
+That closes the survey at **26 of 26 opened**, which the README had already
+recorded and this log had not. The two documents now agree, and the agreement
+was reached by looking rather than by copying.
+
+Worth stating plainly, because tonight produced two independent lines of it:
+
+> **The halo complaint is answered.** `wrapped-text-1` (black laser text on white
+> paper, toner particles resolved to the letter edge, no rim) and `bee-2-cpl`
+> (hair tips over white, no rim) are the two hardest cases in the corpus for
+> that defect, and both are clean. The measured backdrop profile on
+> `flower-bud-alone-cpl` puts a number on it: **+5.31%** near-band for the
+> shipping blend against **-23.71%** for the control arm.
+
+One caution carried forward rather than dropped: `bee-2-cpl`'s lower-left corner
+hairs are soft. My read is depth beyond the bracket rather than a merge failure,
+on the same grounds as `flowers-cpl` -- but I have not measured it, and it is
+recorded here as unmeasured.
