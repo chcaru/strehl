@@ -921,6 +921,39 @@ pub struct MergeConfig {
     /// signal level without a hand-tuned DN anywhere. An absolute epsilon would
     /// have to be re-chosen per capture and would be wrong for both tails.
     pub hull_lambda: f32,
+
+    /// Bound only the *low* side of the per-level hull.
+    ///
+    /// Measured, by ORCH, on the acceptance gate: the excursion that reaches
+    /// the output is one-sided. `flower-bud-alone-cpl` clips 3.01% at hard
+    /// black, and `flower-bud-with-background-fern-cpl` collapses `p1` from
+    /// 8431 to 110. Both are the shadow end. Nothing in that data implicates
+    /// the highlight side.
+    ///
+    /// The upper bound, meanwhile, is the one with a cost: a merged Gaussian
+    /// legitimately exceeds the frames' Gaussian hull wherever the merge is
+    /// recovering contrast a single frame did not have, which is the entire
+    /// point of the exercise. A symmetric bound pays for a dark-end fix with
+    /// bright-end detail.
+    ///
+    /// `false` reproduces the symmetric behaviour measured at 0.953 acuity /
+    /// 0.917 fine-band, so that result stays reproducible from defaults.
+    pub hull_low_only: bool,
+
+    /// Finest pyramid level at which the per-level bound acts. `1` bounds every
+    /// level that has a hull (level 0 is handled by the final clamp).
+    ///
+    /// The 2x2 factorial attributes 56% of the clip to the newly *selected*
+    /// coarsest band and 3% to the exponent ramp, so the excursion is born
+    /// coarse and compounds downward through the expands. Raising this confines
+    /// the bound to where the defect originates.
+    ///
+    /// This is the knob that decides whether the fix can pay in acuity at all.
+    /// The acuity statistics are a p99.9 gradient and a 2 px high-pass; a bound
+    /// applied only at level 5 or 6 (110 px and 55 px wide) has no mechanism to
+    /// move either. If clipping falls under a coarse-only bound, the fix is
+    /// sharp-by-construction rather than sharp-by-measurement.
+    pub hull_from_level: usize,
 }
 
 impl MergeConfig {
@@ -994,6 +1027,11 @@ impl Default for MergeConfig {
             // See `MergeConfig::hull_lambda`. Chosen by the ladder in
             // `docs/research/BUILD-BLEND.md`; inert unless `hull` is `PerLevel`.
             hull_lambda: 2.0,
+            // Both default to the behaviour measured in `BUILD-BLEND.md`, so
+            // that the committed 0.953 / 0.917 figures remain reproducible from
+            // defaults. The targeted forms are opt-in until they are measured.
+            hull_low_only: false,
+            hull_from_level: 1,
         }
     }
 }
@@ -1520,16 +1558,7 @@ impl BandMerge {
         // membership of the hull deserves to be enforced rather than reasoned
         // about.
         if n - 1 >= 1 {
-            let idx = (n - 2) * self.planes + c;
-            let lam = self.cfg.hull_lambda;
-            for (((p, l), h), s) in acc
-                .iter_mut()
-                .zip(&self.lo_lv[idx])
-                .zip(&self.hi_lv[idx])
-                .zip(&self.sig_lv[idx])
-            {
-                *p = p.clamp(l - lam * s, h + lam * s);
-            }
+            self.clamp_level(&mut acc, n - 1, c);
         }
         for k in (0..n - 1).rev() {
             let px = pyr.sizes()[k].pixels();
@@ -1539,20 +1568,46 @@ impl BandMerge {
                 *u += b;
             }
             if k >= 1 {
-                let idx = (k - 1) * self.planes + c;
-                let lam = self.cfg.hull_lambda;
-                for (((p, l), h), s) in up
-                    .iter_mut()
-                    .zip(&self.lo_lv[idx])
-                    .zip(&self.hi_lv[idx])
-                    .zip(&self.sig_lv[idx])
-                {
-                    *p = p.clamp(l - lam * s, h + lam * s);
-                }
+                self.clamp_level(&mut up, k, c);
             }
             acc = up;
         }
         acc
+    }
+
+    /// Apply the per-level hull bound to a partial reconstruction at level `k`.
+    ///
+    /// Factored out of `collapse_bounded` because that function applied the
+    /// same clamp at two sites -- the base residual and each expand -- and a
+    /// bound that is narrowed at one site and not the other is silent: the
+    /// output changes, no test fails, and the measured effect is attributed to
+    /// whichever knob was nominally turned.
+    ///
+    /// Honours `hull_from_level` and `hull_low_only`; see both for why.
+    fn clamp_level(&self, acc: &mut [f32], k: usize, c: usize) {
+        debug_assert!(k >= 1, "level 0 is bounded by the final clamp, not here");
+        if k < self.cfg.hull_from_level.max(1) {
+            return;
+        }
+        let idx = (k - 1) * self.planes + c;
+        let lam = self.cfg.hull_lambda;
+        let low_only = self.cfg.hull_low_only;
+        for (((p, l), h), s) in acc
+            .iter_mut()
+            .zip(&self.lo_lv[idx])
+            .zip(&self.hi_lv[idx])
+            .zip(&self.sig_lv[idx])
+        {
+            let lo = l - lam * s;
+            if *p < lo {
+                *p = lo;
+            } else if !low_only {
+                let hi = h + lam * s;
+                if *p > hi {
+                    *p = hi;
+                }
+            }
+        }
     }
 
     /// Fraction of output pixels, per plane, where the hull clamp moved the
@@ -2505,6 +2560,102 @@ mod tests {
             }
         }
         (pinned, out.len())
+    }
+
+    /// Render the standard disagreeing-bands fixture under an arbitrary config.
+    fn render_cfg(cfg: MergeConfig) -> Vec<f32> {
+        let (w, h, nf) = (192usize, 144usize, 8usize);
+        let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let var = vec![4.0f32; w * h];
+        for f in &frames {
+            fws.next_frame();
+            merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+        }
+        merge.finish(&mut Workspace::new(&sizes))[0].clone()
+    }
+
+    fn differing(a: &[f32], b: &[f32]) -> usize {
+        a.iter().zip(b).filter(|(x, y)| (*x - *y).abs() > 1e-3).count()
+    }
+
+    #[test]
+    fn hull_from_level_gates_the_bound_and_is_not_inert() {
+        // Commissioning, and it exists because `hull_lambda` shipped WIRED AND
+        // INERT: it was plumbed correctly, had a plausible rationale, and moved
+        // the output by 0.008% between lambda 2 and lambda 4. That was caught
+        // only by rendering a full 400s ladder. A knob that cannot be shown to
+        // act in a unit test will be measured as "no effect" and the effect
+        // will be attributed to the physics rather than to the plumbing.
+        //
+        // Both directions are asserted. Raising the floor above every level
+        // must reproduce `InputRange` exactly (the bound is fully gated), and
+        // the intermediate settings must differ from each other (the gate is
+        // not stuck open or shut).
+        let base = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };
+        let all = render_cfg(MergeConfig { hull_from_level: 1, ..base });
+        let none = render_cfg(MergeConfig { hull_from_level: 999, ..base });
+        let flat = render_cfg(MergeConfig { hull: Hull::InputRange, ..MergeConfig::default() });
+
+        assert_eq!(
+            differing(&none, &flat),
+            0,
+            "hull_from_level past the top level did not fully gate the per-level \
+             bound; it is still acting somewhere"
+        );
+        assert!(
+            differing(&all, &none) > 0,
+            "the per-level bound is inert: gating it off changed nothing, so \
+             every measurement attributed to it would be measuring noise"
+        );
+    }
+
+    #[test]
+    fn hull_low_only_bounds_the_dark_side_alone() {        // ORCH's acceptance data is one-sided -- 3.01% clipped at hard black
+        // and p1 collapsing 8431 -> 110 -- so the low side is the side with a
+        // defect and the high side is the side with a cost. This asserts the
+        // knob does exactly that and nothing else: every pixel where the two
+        // modes disagree must be one the symmetric bound pushed DOWN.
+        let base = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };
+        let sym = render_cfg(MergeConfig { hull_low_only: false, ..base });
+        let low = render_cfg(MergeConfig { hull_low_only: true, ..base });
+        let off = render_cfg(MergeConfig { hull_from_level: 999, ..base });
+
+        // MEASURED, and it redirected the plan. The first version of this test
+        // asserted `differing(&sym, &low) > 0` and FAILED: dropping the upper
+        // bound changed not one pixel, because on this fixture the per-level
+        // bound only ever fires downward. The clamp is already one-sided in
+        // practice.
+        //
+        // The consequence is the useful part. PerLevel's measured 4.7% acuity
+        // cost cannot be blamed on the upper bound, since the upper bound never
+        // acted -- it is the LOWER bound, the same clamp that fixes the clip.
+        // So making the bound one-sided is free and cures nothing, and the knob
+        // that can separate the fix from its cost is `hull_from_level`.
+        assert_eq!(
+            differing(&sym, &low),
+            0,
+            "the upper per-level bound has become active; the finding that the \
+             clamp is one-sided in practice no longer holds and the acuity \
+             attribution above must be re-measured"
+        );
+        for (i, (s, l)) in sym.iter().zip(&low).enumerate() {
+            assert!(
+                *l >= *s - 1e-3,
+                "pixel {i}: dropping the upper bound made the output DARKER \
+                 ({l} vs {s}); the two sides are coupled and the knob is not \
+                 the one-sided bound it claims to be"
+            );
+        }
+        // Without this the assertion above is satisfied by a bound that does
+        // nothing at all, which is the `hull_lambda` failure exactly.
+        assert!(
+            differing(&low, &off) > 0,
+            "the low-side bound is inert too, so this test compares two \
+             identical renders and proves nothing"
+        );
     }
 
     #[test]

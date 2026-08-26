@@ -42,6 +42,18 @@ mod align_cmd;
 #[path = "../src/image_out.rs"]
 mod image_out;
 
+/// TIFF tag 305, required by the `#[path]`-included `image_out.rs`.
+///
+/// `image_out.rs` reads `crate::SOFTWARE`, and because it is included by path
+/// rather than through a library target, "the crate root" is THIS file, not
+/// `main.rs`. When `main.rs` grew the constant, this example stopped compiling
+/// with `cannot find value SOFTWARE in the crate root` -- a break in a file
+/// nobody edited, caused by an edit to a file it does not own.
+///
+/// Deliberately marked so the provenance of a stray render is never in doubt:
+/// an experimental TIFF must not claim to be a shipped one.
+const SOFTWARE: &str = concat!("strehl blend-render (examples/, not the shipped merge) ", env!("CARGO_PKG_VERSION"));
+
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
@@ -124,6 +136,19 @@ fn parse_args() -> Result<Args> {
             "--unclamped" => a.cfg.hull = Hull::Unclamped,
             "--per-level" => a.cfg.hull = Hull::PerLevel,
             "--hull-lambda" => a.cfg.hull_lambda = val()?.parse()?,
+            // The knob that decides whether the per-level bound can pay in
+            // acuity. `--hull-from 5` confines it to levels coarser than any
+            // scale the acuity statistics can see. Implies `--per-level`,
+            // because it is inert otherwise and a silently inert sweep is how
+            // `hull_lambda` wasted a render cycle.
+            "--hull-from" => {
+                a.cfg.hull_from_level = val()?.parse()?;
+                a.cfg.hull = Hull::PerLevel;
+            }
+            "--hull-low-only" => {
+                a.cfg.hull_low_only = true;
+                a.cfg.hull = Hull::PerLevel;
+            }
             "--linear" => a.linear = true,
             // Camera-native primaries, linear, no matrix and no transfer curve
             // -- `image_out::OutputSpace::CameraLinear`, the byte-frozen
