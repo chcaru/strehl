@@ -3174,3 +3174,159 @@ difference.
 - The cut needs deriving from the veil's own statistics -- the veiling slope
   against `|k - k_F|`, which is zero where nothing is spilling -- rather than
   borrowed from the election's gate. That is the next build.
+
+---
+
+## 33. The gate is the election's own coherence, in three stages
+
+Section 32 left the cut needing derivation from something other than a borrowed
+threshold. It has one now, and it is not a threshold on the veil's statistics at
+all -- it is a question put to the **election**.
+
+> Dead ground elects incoherently. Neighbouring pixels pick unrelated frames
+> from across the bracket, because there is nothing to focus on and the argmax
+> is chasing noise. A real object elects coherently, because its neighbours are
+> at the same depth.
+
+That is ORCH's invariant -- *does the election have anything to choose between*
+-- arrived at from the other side, and it has a property the luminance
+silhouettes lacked: it never reads brightness, so it traces a pale subject on a
+pale ground and a dark one on a dark ground identically.
+
+The implementation is `crates/strehl-core/src/election_coherence.rs`. It took
+three stages, and **each of the last two exists because the stage before it was
+measured on `coffee-bean` and found wanting.** None of the three was designed in
+advance; every one is a repair to a defect visible in a picture.
+
+### 33.1 Stage one -- the per-pixel question, cut at a quantile
+
+Local standard deviation of the elected frame index over a 9x9 window, cut at
+**q0.55 of this image's own distribution**. The quantile is the specific repair
+for section 32: a fixed number is a different test on every subject depending on
+where that subject's distribution falls relative to it.
+
+Gated on this alone, `coffee-bean` read **eligible 44.98%, applied 30.52%** --
+neither inert nor universal, so by the numbers it looked correct.
+
+### 33.2 Stage two -- support, because the per-pixel answer wrote a lacework
+
+The picture said otherwise. `INCOH/pics/cb-lift.png` -- the signed difference
+between arms, which is the single most informative frame in this whole section
+and which I should have made first -- showed the correction toggling on and off
+at the scale of individual paper fibres. Whether one fibre happened to be
+resolved somewhere in the bracket is a genuine per-pixel fact. It is also an
+invisible one, and a correction that follows it writes visible dirt onto a
+smooth backdrop.
+
+So the veil ramps not on the per-pixel predicate but on the **fraction of each
+neighbourhood that answers yes**, over a 49x49 window: large against paper
+fibre, small against the ~1400 px object casting the veil.
+
+| | treated pixels on their own boundary |
+| --- | --- |
+| stage one alone | **11.82%** |
+| with support | **1.42%** |
+
+A second property comes free. The stage-two thresholds are **fractions**, and a
+fraction carries no scene units, so "a quarter of this neighbourhood" means the
+same thing on every subject. That is the one kind of constant section 32's
+failure cannot recur through.
+
+### 33.3 Stage three -- reach, because safe is not the same as needed
+
+Support fixed the texture and made the band table better, but the far field was
+still lifting **+6.04%** and the innermost band still went backwards. The reason
+is a gap in the specification rather than in the code:
+
+> The coherence gate says where the envelope is **safe**. It does not say where
+> it is **needed**, and on `coffee-bean` those are different sets over most of
+> the frame. Dead ground 900 px from the bean is maximally safe -- there is
+> nothing there to choose between -- and carries no veil whatever, because a
+> veil is cast by an occluder and there is no occluder within reach of it.
+
+Applied there, the correction stops being a shape correction and becomes a gain
+change. So the envelope is scaled by **proximity to coherently-elected content**,
+which restores the fall-off the physical term actually has (ORCH measures it at
+~250 px, `ORCH-veiling.md` section 12).
+
+This is not the mask-geometric gate ORCH refuted and I want to be exact about
+why. Eligibility stays where the specification put it: content, via stage two.
+Stage three is the **amplitude** of a term that genuinely decays with distance.
+
+### 33.4 Result on the out-of-sample subject
+
+`coffee-bean` is the subject that **inverted** the section 32 gate, and it is
+where this must be judged. All arms from one pin, linear 16-bit, read off the
+TIFF.
+
+| band, px | off / far field | veil / far field | |
+| --- | --- | --- | --- |
+| 1-4 | 0.3191 | **0.3220** | the rim itself, which both earlier gates made worse |
+| 4-12 | 0.3823 | **0.4075** | |
+| 12-16 | 0.4975 | **0.5568** | |
+| 16-30 | 0.6518 | **0.7111** | |
+| 30-60 | 0.7537 | **0.7834** | |
+| 60-420 | 0.8770-0.9384 | unchanged to 4 decimals | |
+
+| | stage 1 | + support | + reach |
+| --- | --- | --- | --- |
+| far field lift | +3.67% | +6.04% | **+0.30%** |
+| lift gradient vs the scene's own, p50 | 1.68x | 1.52x | **0.09x** |
+| verdict | did not flatten | did not flatten | **flattened** |
+
+Every band inside the veil zone flattens, the outer bands do not move, and the
+lift is smooth. The picture agrees: `INCOH3/pics/cb-full-off-vs-on.png` has no
+mottling, no gate contour, and a visibly lighter backdrop against the bean.
+
+### 33.5 Two instruments of mine that were wrong, and how
+
+Both are the same error -- **a statistic computed over the wrong population** --
+and it is the third and fourth time tonight.
+
+- `veil_lift.py` first normalised the lift's gradient against the whole frame.
+  On `coffee-bean` the frame is 41% bean, the bean's texture set p99.9 at 10353
+  DN, and the lacework scored 4507 for a confident **"smooth"** verdict on a lift
+  that is plainly lacy to the eye. Worse, p50 came out at exactly 0.00x, because
+  65% of the frame was untouched and the median was measuring untreated pixels.
+  Restricted to the treated set it reads **1.68x** and says SPECKLE.
+- ORCH's `rimprofile.py` **cannot be trusted on `coffee-bean`**. Its luminance
+  threshold calls the subject **59.58% of the frame**; the bean is about 41%.
+  The backdrop carries a strong luminance gradient and the largest connected
+  component swallows the dark corner, so every band is measured outward from a
+  silhouette that is not the bean's. Its -38.2% headline for this subject should
+  be re-derived before it is relied on. Reported to ORCH.
+
+### 33.6 What is not done
+
+- **`flower-bud` is inert** under stage three: applied 3.43%, mean lift +9.1 DN,
+  every band flat. Safe, but not a fix. The product of two window fractions
+  inherits how much of a window the subject fills, which is a property of the
+  subject's shape and not of the veil, so a thin fringed subject scores low
+  everywhere.
+
+  **The obvious repair was built, measured and is refuted.** Referring the final
+  gate variable to its own p99 -- the same adaptivity the other two stages carry,
+  and it looked principled rather than like tuning -- opens `coffee-bean`'s gate
+  from 16.56% to 50.74% of the plane and flattens the middle of the profile
+  harder:
+
+  | band, px | off / far | stage three | + p99 normalisation |
+  | --- | --- | --- | --- |
+  | **1-4** | 0.3191 | **0.3220** | 0.3158 |
+  | 16-30 | 0.6518 | 0.7111 | **0.7676** |
+  | 30-60 | 0.7537 | 0.7834 | **0.8517** |
+  | far field lift | -- | **+0.30%** | +2.82% |
+
+  It buys the middle with the two things that were actually asked for: the
+  **silhouette band goes back to worsening**, and the clean far field lifts
+  again. Eight of nine bands flatten and the headline verdict reads better, which
+  is exactly why the verdict line is not the test. Reverted; the refutation is
+  recorded at the point of use in `merge_cmd.rs` so it is not rediscovered.
+
+  So `flower-bud`'s inertness is still open, and the shape-dependence named above
+  is still the diagnosis. What is now known is that the cheap fix for it costs
+  the target band.
+- **Still not default-ON**, and the 26-subject gallery delta remains the
+  blocking item it became in section 32.4.
+- The estimator is still the debiased signed extremum. The cleanest-third mean
+  is unbuilt.

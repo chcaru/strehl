@@ -3628,6 +3628,14 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
         // how much of a window a subject fills is a property of the subject.
         let prox = strehl_core::election_coherence::occluder_proximity(&sd, geom, cut);
         let full = strehl_core::election_coherence::quantile(&prox, 0.99).max(1e-6);
+        // Referring this product to its own p99 as well was built and measured
+        // and is REFUTED, on the criterion that was specified. It flattens the
+        // middle of the profile harder (band 16-30 px reaches 0.7676 of the far
+        // field against 0.7111) but it does so by opening the gate from 16.56%
+        // to 50.74% of the plane, and it pays for the middle with the two things
+        // that were actually asked for: the silhouette band 1-4 px goes back to
+        // worsening, 0.3220 -> 0.3158, and the clean far field lifts +2.82%
+        // instead of +0.30%. See BUILD-HALO.md section 33.6.
         support
             .iter()
             .zip(prox.iter())
