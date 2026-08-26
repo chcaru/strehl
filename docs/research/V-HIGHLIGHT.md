@@ -436,3 +436,62 @@ now read differently:
   `0.60` knee.
 
 I did not measure sharpness on this subject and make no claim about it.
+
+---
+
+# Correction — my own seven-subject null was outside the instrument's range
+
+Prompted by the fleet standing question: *what property of the input decides
+whether this check can see anything, and have I varied it?* Applied to my own
+Phase 1 work it has one obvious target, and the answer was no.
+
+In section 3 I wrote that claim 2 was **"CONFIRMED, and widened to 8 subjects"**,
+having screened seven the author never tested and found all byte-identical. For a
+knee-gated roll-off the property that decides whether byte-identity means
+anything is the subject's **max `u`**. I never measured it for those seven.
+
+Measured now — same pinned binary `471D50DA...`, same `--merge pyramid
+--limit 10`, per-subject WB and levels from `strehl probe`:
+
+```
+subject               max u   p99.99   raw DN   verdict
+112MSDCF             0.1086   0.0796     2236   below knee -- roll-off CANNOT fire
+113MSDCF             0.2304   0.1674     4168   below knee -- roll-off CANNOT fire
+119MSDCF             0.5449   0.2919     9159   below knee -- roll-off CANNOT fire
+wrapped-text-1       0.1488   0.1459     2874   below knee -- roll-off CANNOT fire
+flowers-cpl          0.2659   0.2590     4732   below knee -- roll-off CANNOT fire
+lavendar-cpl         0.2236   0.2167     4060   below knee -- roll-off CANNOT fire
+bee-3-cpl            0.3188   0.3123     5571   below knee -- roll-off CANNOT fire
+
+subjects able to reach the 0.60 knee: 0 of 7
+max u across all seven          : 0.5449
+```
+
+**All seven sit below the knee.** Their byte-identity was guaranteed a priori by
+the arithmetic and carries no information about whether the roll-off is correct.
+A null is only evidence if the instrument could have failed it, and on these
+seven it could not.
+
+**I retract "widened to 8 subjects."** The correct statement is that the null
+rests on the author's `109MSDCF` — the one subject whose headroom was actually
+measured (`u <= 0.5707`) — plus seven subjects that were never in the sensitive
+range. The null's support is **not** materially wider than the author's report
+claimed, and my sentence saying otherwise should not be relied on.
+
+The rest of section 3 stands: potency was established separately on
+`coffee-bubbles` (0.2807% of pixels moved, same binary, one env var), and the
+knee-0.05 negative control moved 67.5582% of `109MSDCF`. Those are real. It is
+only the *widening* that was empty.
+
+Worth naming precisely, because it is the same error I flagged in others twice
+tonight. I credited the author for predicting `109MSDCF`'s null from measured `u`
+*before* rendering, and I refuted their `bee-2-cpl` worst case by recomputing
+what they had asserted. Then I extended their null by seven subjects without
+performing the measurement I had just praised them for. The check I ran could not
+have come out any other way, and I reported its result as though it could.
+
+`119MSDCF` at `0.5449` is the closest of the seven and still short of `0.60`. The
+corpus subject that comes nearest the knee remains the author's own `109MSDCF` at
+`0.5707`. Finding a corpus subject that genuinely crosses the knee, other than
+the saturating ones already known (`coffee-bubbles`, `coffee-bean`, `foam`,
+`tweezers-cpl`), remains open.
