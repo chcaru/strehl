@@ -208,15 +208,54 @@ through the same estimator, so the soft edges are the ink bleeding into the
 texture, not the stacker. That takes seconds to see and needs no calibration,
 and it is the check the detail ranking was standing in for.
 
-One open observation, recorded because it is actionable rather than settled:
-`foam` is dark cellular plastic with blown specular highlights — maximum
-contrast at a hard edge, the worst case for lateral chromatic aberration — and
-its highlight rims carry visible orange, cyan and magenta. Foam has thin films
-and thin-film iridescence is a real optical effect, so this is **not** evidence
-of an aberration on its own. It is the right subject to settle it on, because
-whatever a CA correction removes was aberration and whatever survives is
-iridescence. This matters because `STREHL_FIX_CA` — credited with removing
-61–67% of corner colour fringing — is **off** in the shipping render.
+One observation that was open and is now settled, and it ended somewhere none of
+the three candidate explanations expected. `foam` is dark cellular plastic with
+blown specular highlights — maximum contrast at a hard edge — and its highlight
+rims carry visible orange, cyan and magenta. Three explanations were live:
+lateral chromatic aberration, thin-film iridescence (foam has thin films, and
+iridescence is a real optical effect), and clipping. All three were eliminated
+or confirmed by measurement rather than argument.
+
+**It is not lateral CA.** Rendering `foam` twice from one binary with the
+correction on and off, and measuring edge colour in six radial bands with the
+edge mask found on *green* so it cannot be manufactured by the colour being
+measured, gives a clean radial signature in red — `1.003x` at the centre, which
+is a perfect null since lateral CA is zero on axis, falling to `0.758x` at the
+corner. But blue is barely touched at all: `0.988x` at the same corner, on the
+same edges. Something non-radial was surviving the correction.
+
+**It is not iridescence, and it is not demosaic error.** Among hot edge pixels
+`B−G` is positive on **88.9%** of them; thin-film interference cycles hue
+through both signs and cannot produce a one-sided excess. Demosaic error would
+stay radius-dependent, and at matched level the blue edge colour is **flat
+across the whole field** (0.0671 centre against 0.0692 corner).
+
+**It is a channel-asymmetric highlight-saturation defect, and it is ours.** In
+the rendered master **green's ceiling is 38921 while blue's is 52239**, so as a
+highlight brightens green pins first and the pixel acquires a one-sided blue
+excess. `B/G` climbs monotonically **1.0257 → 1.2903 across all nine level
+deciles** — which a fixed white-balance gain cannot do, because a gain makes
+`B/G` a constant multiple independent of level. Dropping the top 0.76% of
+luminance collapses the corner/centre ratio from **1.878 → 1.031**, about 96% of
+the effect, while removing *the same number* of pixels at random leaves it at
+**1.856 ± 0.088** — a 7.6 sd separation, so it is *which* pixels were removed
+and not how many.
+
+**The apparent radial pattern was composition, not optics**: the corner band is
+51.99% bright highlights against the centre's 0.68%. Chasing it as a field
+effect was chasing a sampling artifact, and two of us did.
+
+Because the defect is a function of **level rather than field position, it will
+affect any subject with blown speculars** — wet surfaces, dew, chitin, glass,
+metal — not just this one. A fix is in progress.
+
+This paragraph previously ended by saying `STREHL_FIX_CA` is **off** in the
+shipping render. **That was false and is retracted.** The correction is default
+**on** whenever the EXIF gear guard matches, which it does for this rig; the
+pinned shipping binary prints `lateral CA : CORRECTING, profile
+"a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)`. The claim came from
+reading a command line instead of running the program, which is the error the
+rest of this section exists to avoid.
 
 ### Two verdicts per subject: retouch this, or reshoot this
 
