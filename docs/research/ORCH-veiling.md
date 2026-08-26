@@ -7064,3 +7064,183 @@ Two of the three suspects were cleared by measurement that contradicted the
 people who nominated them, including me. That is the process working. It is also
 the reason the third should not be trusted until someone who did not measure it
 tries to kill it.
+
+## 61. The dark feature that was never dark
+
+I spent part of this night telling fourteen agents that the shipping product had
+a measured quality fix switched off. It did not. The fix had been on the whole
+time, and one command would have told me so.
+
+### 61.1 What I claimed, and how I got there
+
+`scripts/check-defaults.py` is mine. It audits every `STREHL_*` runtime switch
+found in `crates/` against a hand-maintained registry of what each one defaults
+to. It returned `rc=1` with a headline I took straight to the fleet: three
+quality switches defaulting off, twenty-two of twenty-six defaults never
+verified by anyone. Top of the list was `STREHL_FIX_CA`, annotated in my own
+registry as **THE ORIGINAL DARK FEATURE** — a lateral chromatic aberration
+correction measured at 61-67% of corner colour fringing removed, `R^2 = 0.9969`,
+and blue displacement from 0.363 px to 0.059 px.
+
+I then pulled SHIP-V2's provenance block and found what looked like
+confirmation:
+
+```
+strehl.exe stack "D:\personal\macro\pencil-steep-angle-cpl" --out ...
+  --merge pyramid --pyramid-gate 4.5 --srgb --auto-exposure
+```
+
+No `--fix-ca`. I concluded that every master the owner had looked at was
+rendered with that correction switched off, and I said so.
+
+### 61.2 What the binary says
+
+Running the shipping binary on the shipping flags, with the flag absent, exactly
+as the provenance line describes:
+
+```
+$ strehl stack D:\personal\macro\bee-3-cpl --srgb --auto-exposure --limit 6
+camera          : ILCE-7CM2
+lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl"
+                  (gear matched; default on)
+```
+
+`rc=0`. The correction is default-on, resolved through a gear guard that reads
+the body and composed lens id out of the file and declines on a mismatch —
+because applying this profile to a different optical path would add an
+aberration rather than remove one. `stack --help` says the same in prose. The
+absent flag meant the default applied, and the default was on.
+
+The masters had the correction. There was no dark feature. Two agents were
+working on promoting something that had already shipped.
+
+> **An argv records what the caller said. Only the run's own banner records what
+> the program did.** An absent flag is not an absent behaviour; it is a
+> delegation to a default, and reading the argv tells you nothing about which
+> way that default fell. This is the third time this run I have inferred a
+> measurement instead of taking one, and the cheapest of the three to have
+> avoided: the answer printed itself in one line.
+
+### 61.3 The structural defect underneath, which is the more useful finding
+
+Strip that error away and the registry still called two more switches dark:
+`STREHL_PHOTOMETRIC` and `STREHL_FIX_HALO`. The same run refutes both, by
+omission. Its banner names the merge backend, the CA state and the alignment —
+and says nothing whatever about photometric gain or halo correction, because
+those are **estimator-path stages and the default backend is the pyramid**. The
+pyramid arm's own report has been listing them under `not applied` the entire
+time.
+
+So the registry had no notion of *which backend a switch reaches*, and therefore
+reported estimator-only stages as dark defaults of a product that never runs
+them.
+
+> **Absent and off are both "the product does not apply this", and they have
+> opposite remedies.** A dark switch is a flag to flip and costs a decision. An
+> absent stage is a thing to build and costs a milestone. A checker that returns
+> the same word for both sends people to flip a flag that changes no pixel.
+
+The fix adds a `backend` field — `any`, `pyramid`, `estimator` — defaulting to
+`any`, so that **forgetting the field gets a switch checked rather than
+excused**. The permissive value has to be the one that gets examined, or the
+omission becomes the loophole. Switches that cannot run on the default path now
+get their own named, counted bucket in the partition rather than being dropped:
+a skipped check must never print the same glyph as a passed one.
+
+### 61.4 Commissioning the field that could hide the defect
+
+The `backend` field is also a new way to silence a check: any genuinely dark
+switch can now be excused by declaring it estimator-only. A field that can
+silence a check has to be shown load-bearing in both directions before it is
+believed, so `experiments/ORCH-drift-check/commission_backend.py` plants both
+against the live file, anchored on a unique three-line block that the harness
+asserts occurs exactly once and hard-errors if it does not.
+
+| arm | plant | required | result |
+| --- | --- | --- | --- |
+| A | dark switch, `backend=any` | still caught as dark | dark 0 -> 1, section printed, switch named — **PASS** |
+| B | same switch, `backend=estimator` | reported, counted, **not** dark | dark 0 -> 0, not-on-default 2 -> 3, named — **PASS** |
+
+2/2, restored from a `$TEMP` pin and verified byte-identical to the file as
+found. The corrected audit now reads **`dark = 0`**: there are no dark quality
+switches on the shipping path. The count that survives is `assumed = 21`, which
+is a real and separate debt.
+
+### 61.5 What CA actually does, measured on the worst subject for it
+
+Knowing the default is on turns an open item in my print verdict into a
+two-render experiment. `foam` is dark cellular plastic with blown specular
+highlights — maximum contrast at a hard edge, the worst case for lateral CA —
+and its highlights carry visible orange, cyan and magenta rims. Foam also has
+thin films, and thin-film iridescence is a real optical effect, so the colour
+alone proves nothing. But the two have different geometry, and geometry is
+falsifiable: lateral CA is zero on axis by construction and grows with radius.
+Iridescence has no such rule.
+
+One binary, one subject, one flag changed. Mean `|R-G|` and `|B-G|` at strong
+edges, normalised by local green, in six radial bands. The edge mask is found on
+**green**, so it cannot be created by the very colour difference being measured:
+
+| band | | R−G on/off | B−G on/off |
+| --- | --- | --- | --- |
+| 0 | **centre (the null)** | **1.003x** | 0.996x |
+| 1 | | 0.946x | 0.999x |
+| 2 | | 0.925x | 0.973x |
+| 3 | | 0.895x | 0.985x |
+| 4 | | 0.812x | 0.955x |
+| 5 | **corner** | **0.758x** | 0.988x |
+
+Monotonic in radius, with the centre untouched at `1.003x`. That is the
+signature, and it is not a signature a level shift can fake: 24% of corner
+red-green edge colour removed while the frame centre is left exactly alone.
+
+The answer to the original question is therefore **no** — foam's rims are not
+lateral CA. That is already corrected on the default path.
+
+### 61.6 The part where I had to correct myself again, one hour later
+
+I ran this first on an `--srgb` render and read the corrected residual as
+**flat** across radius, which would have meant nothing but demosaic and noise
+remained. Re-run in `--linear-srgb`, which is the mode this project's own rule
+says to measure in, the residual is **not** flat: the corner sits at `0.1006`
+and `0.1262` against the centre's `0.0870` and `0.0672`, and the blue-green
+residual is barely touched by the correction at all (`0.988x`).
+
+The transfer curve had compressed exactly the quantity I was measuring, and it
+did not merely shrink the effect — it changed the shape of the conclusion. The
+`--srgb` run also understated the correction itself, `0.865x` against `0.758x`
+at the corner.
+
+> **A non-linearity does not just scale a result, it can flatten a structure you
+> were reading as the finding.** The standing rule against measuring on an
+> `--srgb` render exists for this, and I broke it while running an experiment
+> designed to be careful about geometry.
+
+So a substantial non-radial colour residual survives at the corner and lateral
+correction cannot touch it. Three candidates remain open, in order of my
+confidence: longitudinal chromatic aberration, which BUILD-CHROMA is measuring
+and which has no radial signature; clipping, since foam carries 0.76% blown
+pixels and the channels do not clip together; and iridescence. I am not
+asserting which. What I can now say is that the one explanation I could test has
+been tested and eliminated, which is more than the entry started with.
+
+### 61.7 And the item I got wrong in the opposite direction
+
+Having retracted two false alarms, I told the same two agents that the surviving
+real gap was the pyramid's absent outlier rejection, and that it was the one I
+would rather they were looking at. The first half is verified: `pyramid.rs` is
+106.4 KB and contains zero matches for `outlier|robust|reject|mad_`. The second
+half I had not checked. BUILD-GHOST had already closed it — 17 crops at 1:1
+across 13 subjects, zero visible ghosting including bee setae on white and
+printed text, largest detection 1.90x over a rigid-subject floor. It was sitting
+in the acceptance ledger in state DONE with its evidence attached, one query
+away.
+
+The correct status is **deferred, not dismissed**: a known architectural gap,
+measured not to bite on the captures in hand, which will bite the first user who
+stacks a leaf in a draught. That is the good kind of deferral, because there is
+a measurement behind it.
+
+> **Assigning a priority is a claim, and it needs the same evidence as a
+> number.** I retracted two claims and then, in the same message, made a third
+> one of exactly the kind I had just apologised for.
