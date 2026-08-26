@@ -2424,3 +2424,46 @@ REGISTRY GAP, ORCH's file, not fixed by me: `STREHL_FIX_HALO` carries
 `backend="estimator"` but `STREHL_FIX_HALO_DELTA` does not, so the delta still
 prints as `built-in default: off` on a pyramid render. It is the same stage.
 Five entries are classified; at least a sixth belongs.
+
+### The same defect, one level up, in my own new feature
+
+MEASURED. `scripts/check-defaults.py` contains **5** explicit `backend=` lines
+across 33 entries. **Zero** entries declare `backend="any"`. The other 28 have no
+declaration at all and merely fall through the dataclass default at :130.
+
+My parser read that default as the value, so the block I shipped an hour ago
+said "5 inapplicable to this backend" and, by omission, offered 28 switches as
+applicable. They are not known to be applicable. Nobody has classified them.
+That is an unexamined item reading as an examined one -- the identical defect
+class I had just corrected in the sidecar, reproduced in the correction.
+
+The block now prints a partition that sums to the total:
+
+    RESOLVED SWITCH STATE (33 registry switches; 1 set)
+      backend applicability: 0 applicable, 5 INAPPLICABLE, 28 unclassified
+
+0 + 5 + 28 = 33. There is no residue to hide a skipped check in.
+
+REGISTRY EVIDENCE FOR ORCH, on `STREHL_FIX_HALO_DELTA` specifically.
+
+MEASURED -- which product source reads each switch:
+
+| switch | rust files reading it | registry backend |
+|---|---|---|
+| `STREHL_FIX_HALO`       | byte-freeze.rs, halo.rs, merge_cmd.rs | `estimator` |
+| `STREHL_FIX_HALO_DELTA` | byte-freeze.rs, halo.rs                | (none)      |
+
+MEASURED -- `halo.rs` is `crates/strehl-cli/src/merge_cmd/halo.rs`, referenced
+only by merge_cmd.rs and byte-freeze.rs (the test harness). `pyramid.rs` has two
+matches for "halo" and BOTH are prose inside doc comments (:135, :642), not code.
+
+ARGUED from those two measurements: HALO_DELTA is read in a strict SUBSET of the
+files that read HALO, and its only product file is the estimator halo stage the
+pyramid never calls. It cannot apply to a broader backend than HALO does, and
+HALO is classified `estimator`. So HALO_DELTA is estimator-only and the registry
+should say so. ORCH's file; not edited by me.
+
+Also MEASURED: my registry parser survives ORCH's 212-line rewrite of
+check-defaults.py in `ed607493` -- 33 switches parsed, 0 defaults unparsed,
+the same 5 estimator entries. The coupling held, but it is a coupling, and it is
+checked by probing the shipped parser rather than by reading the file.
