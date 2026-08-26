@@ -390,3 +390,260 @@ Under his exact recipe the placebo collapses from -2338.0 DN to **+642.1 DN**.
 **ORCH's placebo control is sound and his null control is sound.** The paired
 mask design in `veilpair.py` — one mask and one distance transform from a named
 reference arm, applied unchanged to every arm — is correct and I adopted it.
+
+---
+
+# Part 2 — the clamped arm, and a retraction of my own link-2 verdict
+
+Assignment: re-point the hull-excursion instrument at a **clamped** pyramid render.
+Arms verified before use: clamped `458ecd00a5c8d5f3`, unclamped `f62f41da9e107bd0`,
+both matching the quoted prefixes. Both logs show identical argv
+`--gate 4 --base-mean --camera-linear --chunks 5`, 205 frames, alignment reference
+102, and `colour : no characterisation; CAMERA-NATIVE RGB`. Colour space asserted
+from the log and from the data, not from the flag alone.
+
+## Line 1, because it is the answer to the question that was asked
+
+**The clamp does not remove the excursion. It removes 0.000% of it in the
+background beyond d=32 px.** Clamped and unclamped background profiles are
+identical to within 1 DN from d=128 px outward. The cause survives the bound.
+
+**But my previous verdict on link 2 was wrong and I retract it.** It rested on a
+mask that was not on the silhouette. Corrected, link 2 is **CONFIRMED**: the
+pyramid removes a real ring artifact that the estimator has and that no input
+frame has. Two implementers acting on link 2 should continue.
+
+## My own error, first
+
+My Part 1 link-2 table quoted the pyramid as 371-677 DN outside its inputs' range
+and concluded it "erases real optical flare". That used ORCH's `q=0.35` luminance
+split as the silhouette. It is not the silhouette.
+
+The subject is dark on a bright sweep and is surrounded by a wide veil that is
+*also* below the 35th percentile. The threshold lands at **17063.9 DN** against a
+background of 19075 DN, so the mask swallows the entire veil and stops at the
+veil's outer edge. `MASK-overlay.png` shows it directly: the mask boundary stands
+off the visible bud by a wide moat. **Every distance bin I reported in Part 1 was
+measured from the outer edge of the halo, not from the bud.** ORCH's Section 27
+and Section 28 use the same rule and inherit the same error.
+
+Replacement rule, anchored on unambiguously dark bud pixels: `luma < frac x own
+median`, largest component, holes filled, with `frac` swept over 0.30 / 0.42 /
+0.55. Mask area 21.5% instead of 32.2%.
+
+### Commissioning of the corrected instrument
+
+```
+PLANT   +50.0 DN at d=16..32 (361595 px) -> measured   +50.00 DN  err +0.00  neighbour move 0.00  PASS
+PLANT  +300.0 DN at d=16..32 (361595 px) -> measured  +300.00 DN  err +0.00  neighbour move 0.00  PASS
+PLANT +1500.0 DN at d=16..32 (361595 px) -> measured +1500.00 DN  err +0.00  neighbour move 0.00  PASS
+NULL  (no plant)                         -> worst bin movement 0.000000 DN                        PASS
+```
+
+Three amplitudes recovered exactly, locality held, null exactly zero. The Part 1
+instrument was never commissioned this way, which is how the mask error survived.
+
+## Evidence: background residual vs own far field, DN, N = 13 input frames
+
+Frame count raised from 5 to 13 by rendering frames 12, 64, 89, 128, 166, 192 on
+the verified pin `DF209CE003E2E6B9`. Every excursion below is against a 13-frame
+envelope.
+
+| d (px) | 0-4 | 4-8 | 8-16 | 16-32 | 32-64 | 64-128 | 128-200 | 200-300 | 300-400 | 400-600 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| frames MIN (13) | -12329 | -12062 | -11664 | -10887 | -9353 | -6408 | -3634 | -1318 | -430 | -177 |
+| frames MAX (13) | -10248 | -10077 | -8940 | -6566 | -2877 | -800 | -226 | -151 | -83 | 38 |
+| ESTIMATOR | -10220 | -7754 | -5836 | -4040 | **-4051** | **-4582** | **-4079** | -1916 | -266 | 13 |
+| PYR-UNCLAMPED | -9678 | -5209 | -2166 | -1043 | -498 | -106 | 142 | 335 | 289 | 144 |
+| PYR-CLAMPED | -9716 | -5274 | -2295 | -1097 | -536 | -108 | **142** | **335** | **289** | **143** |
+
+Far-field levels: estimator 19009.9 DN, unclamped 19003.2, clamped 19003.2,
+frame 102 19010.2. **The two merges agree to 6.7 DN and the estimator matches the
+alignment reference frame to 0.3 DN**, so nothing below is a global level artifact.
+
+### Why a hull test is not valid near the silhouette
+
+Inside about 32 px the residual is dominated by the subject's own edge falloff. A
+sharper edge recovers faster, so an all-in-focus merge is *expected* to sit above
+every single frame there. The sharpest frame f102 gives -8940 DN at d=8-16 and the
+most defocused f204 gives -11664. Being outside the envelope in the bright
+direction at small d is the signature of successful stacking, not a defect. **This
+invalidates the near-field half of my Part 1 table as well as this one**, and I
+restrict every level verdict below to d >= 128 px.
+
+## 1. Clamped pyramid, bright excursion — SURVIVES THE CLAMP, UNCHANGED
+
+Far field only, where no edge-sharpness argument applies:
+
+| d (px) | 128-200 | 200-300 | 300-400 | 400-600 | worst |
+|---|---:|---:|---:|---:|---:|
+| EXCURSION estimator | -445 | -597 | 0 | 0 | **-597 DN** |
+| EXCURSION pyramid unclamped | +368 | +486 | +372 | +106 | **+486 DN** |
+| EXCURSION pyramid CLAMPED | +368 | +486 | +372 | +105 | **+486 DN** |
+
+**The clamp changed the far-field excursion by 1 DN in one bin and 0 DN in the
+other three.** The clamped pyramid is outside its inputs' range in **all four** far
+bins.
+
+Threshold sweep, mean residual at d >= 128 px:
+
+| frac | estimator | unclamped | clamped |
+|---|---:|---:|---:|
+| 0.30 | -1786 DN | +208 DN | +201 DN |
+| 0.42 | -1562 DN | +227 DN | +227 DN |
+| 0.55 | -1433 DN | +249 DN | +249 DN |
+
+Sign and ordering are stable across the sweep. The verdict does not depend on the
+threshold.
+
+### Why the clamp is nearly vacuous here — measured, not argued
+
+Where the clamp actually fired, from a per-pixel diff of the two arms
+(12.945% of output pixels overall; the log reports 8.590% / 10.007% / 10.009% /
+10.945% per pre-demosaic plane):
+
+| region | n px | fired % | median abs dDN |
+|---|---:|---:|---:|
+| background d>400 | 16,430,751 | **0.000%** | 0 |
+| background d 128-400 | 3,790,799 | **0.000%** | 0 |
+| background d 32-128 | 1,385,008 | **0.000%** | 0 |
+| background d 16-32 | 254,047 | 0.468% | 59 |
+| background d 4-16 | 344,211 | 5.105% | 229 |
+| background d 0-4 | 161,757 | 6.481% | 305 |
+| subject depth 0-16 | 708,808 | 10.599% | 232 |
+| subject depth >16 | 9,927,958 | **41.981%** | 298 |
+
+The clamp's entire action is inside the subject and within ~16 px of the
+silhouette. The reason it cannot bite in the background is that the clamp bounds
+the output to the per-pixel range of the **aligned inputs in absolute DN**, and the
+bracket drifts in exposure: the 13 sampled frames' far-field levels span
+**17464.1 to 21517.8 DN, a hull 4053.7 DN wide (23.2% drift)**. A +486 DN
+excursion is **12.0%** of that width and passes untouched.
+
+**Verdict: the clamp bounds the error without removing its cause. It is a
+guardrail, not a fix, and it is not a guardrail at all in smooth background.**
+
+## 2. Clamped pyramid, dark excursion — REMOVED
+
+| quantity | unclamped | clamped |
+|---|---:|---:|
+| exact-zero RGB pixels | 122,416 (0.3709%) | **0 (0.0000%)** |
+| luma < 500 DN | 432,421 (1.310%) | **101 (0.000%)** |
+| frame median | 18550.5 DN | 18547.9 DN |
+
+Confirmed against the hull rather than the zero count: the clamp fired on
+**41.981%** of deep-subject pixels with a median correction of **298 DN**, which is
+where those pixels were. Cost to the frame median: **2.6 DN, 0.014%**. Link 3's
+defect is genuinely fixed, not merely floored.
+
+## 3. Estimator vs clamped pyramid on identical tiles — level says one thing, shape says the other
+
+| statistic | ESTIMATOR | PYR-CLAMPED | 13 input frames |
+|---|---:|---:|---:|
+| worst far-field level excursion | **-597 DN** | **+486 DN** | 0 by definition |
+| far bins outside the envelope | 2 of 4 | **4 of 4** | - |
+| descending steps in the profile | **2** | 2 | **0 in all 13** |
+| departure from own monotone envelope | **542 DN** | **191 DN** | **0 DN in all 13** |
+
+**On level the two arms are comparable and opposite: the estimator is too dark by
+597 DN, the clamped pyramid too bright by 486 DN. Neither is faithful.**
+
+On shape they are not comparable. **All 13 input frames are strictly monotone in
+distance — zero descending steps, zero departure.** The estimator departs by
+**542 DN**, dipping from -4040 at d=16-32 to -4582 at d=64-128 before recovering.
+That is departure, an interior extremum, and return: **a ring, in the estimator, on
+the discriminator ORCH himself specified.** The clamped pyramid's departure is
+**191 DN, 2.8x smaller**, and sits at d=400-600 rather than at the silhouette.
+
+The eye sees shape, not level, which is why the ring is the visible artifact and
+the 486 DN lift is not.
+
+## 4. The picture — ORCH is right, I was wrong, do not retract Section 32
+
+`STRIP-A-hairy-silhouette.png`: frame 102, estimator, unclamped pyramid, clamped
+pyramid, 560 px at 1:1, identical coordinates, one shared display curve
+(lo 1486, hi 20618 DN), with a backdrop-subtracted row beneath at a shared
++-900 DN.
+
+- **ESTIMATOR: a hard white halo traces every contour of the bud and reaches into
+  the concavities between the trichomes**, with a dark smudge beyond it. It is the
+  cut-out sticker outline of Section 27.3, and it is unmistakable at 1:1.
+- **Both pyramid arms: no halo.** Background smooth, individual trichomes resolved.
+- frame 102 is defocused in this region and shows no halo either.
+
+My Part 1 statement that "the bright cut-out halo is on the pyramid" is **wrong and
+withdrawn**. It came from comparing arms after subtracting a global cubic backdrop,
+which converted the estimator's dark mid-field moat into an apparent bright rim on
+the other arm. Section 32 stands.
+
+Crop A was chosen by maximum silhouette-boundary density, which selects for edges.
+`STRIP-B-neutral-5050.png` repeats it under a rule neutral to edges — the window
+closest to 50/50 subject/background occupancy — and shows the same thing.
+
+## 5. Section 33's flatcrop selection rule — the non-reproduction survives
+
+ORCH asked whether `flatcrop.py` selecting tiles by flatness made it blind to a
+noise penalty. Measured with **no tile selection at all**: every background pixel at
+d > 400 px, noise as 1.4826 x MAD of the 5-point Laplacian over sqrt(20).
+
+| arm | level DN | noise DN | vs estimator |
+|---|---:|---:|---:|
+| ESTIMATOR | 19049.2 | 22.62 | 1.000 |
+| PYR-UNCLAMPED | 19055.6 | 22.78 | **1.007** |
+| PYR-CLAMPED | 19055.6 | 22.78 | **1.007** |
+| frame 102 (input) | 19033.4 | 72.14 | 3.190 |
+
+**1.007x, not V-RIM's 1.21-1.58x.** Section 33's non-reproduction holds under a
+rule that is neutral to both flatness and edge density. The suspicion was
+reasonable and it is not borne out.
+
+## 6. Link 4, confirmed again by the shipped code
+
+The clamped render's own log prints `hull clamp : 8.590% 10.007% 10.009% 10.945%`
+per plane. Against the two toy predictions for 205 frames and 7 bands:
+
+| model | predicted violation rate at 205 frames |
+|---|---:|
+| ORCH's global per-band weights (`hullproof.py` design) | **0.000%** |
+| my per-pixel per-band weights | **11.58%** |
+| **the shipped merge, measured** | **8.590 - 10.945%** |
+
+The per-pixel correction lands within a factor of 1.06 to 1.35 of the real code;
+the global-weight toy is off by everything there is. Link 4's mechanism is
+confirmed a third way, and the correction to its supporting argument is confirmed
+with it.
+
+## Verdicts, revised
+
+| link | Part 1 verdict | **revised** |
+|---|---|---|
+| 1 — estimator draws a halo | CONFIRMED w/ QUALIFICATION | **CONFIRMED.** The ring is real, is in the estimator, is 542 DN, and is absent from all 13 inputs. My "not monotone, therefore not a veil" was right; the conclusion it supports is "ringing", not "no artifact". |
+| 2 — pyramid removes it | REFUTED | **CONFIRMED — I retract the refutation.** It rested on a mask that was not on the silhouette. |
+| 3 — pyramid clips to zero | CONFIRMED | **CONFIRMED, and fixed by the clamp** (122,416 -> 0 at 2.6 DN median cost). |
+| 4 — per-band convexity | CONFIRMED, extrapolation refuted | **CONFIRMED, now by the shipped code** (8.6-10.9% measured vs 11.58% predicted). |
+
+## The number that does not fit
+
+**Both merge backends are outside their inputs' envelope in the far background, in
+opposite directions, by comparable amounts: estimator -597 DN, clamped pyramid
++486 DN.** The frames' own envelope at d=200-300 is -1318 to -151 DN and neither
+arm lands in it. A backend that is merely "not the estimator" has not been shown to
+be faithful, only to be wrong in a less visible way. Whatever ships, the far-field
+level needs its own test.
+
+## What remains unverified
+
+- **The clamp is uncommissioned as an intervention.** I verified the two binaries
+  differ and that the diff is confined to where the log says, but I did not plant a
+  sabotage into `interv.py`'s mutation to prove it would have caught a no-op edit.
+  I am relying on ORCH's harness for that, which is the thing I am not supposed to
+  do.
+- One subject, `flower-bud-alone-cpl`. `dry-erase-marker-head-cpl` arms exist at
+  `ORCH-CLAMP/interv/renders/` and are not measured here.
+- The 13-frame envelope is 13 of 205. It is a lower bound on the true envelope, so
+  every excursion quoted is an upper bound on the true excursion.
+- The estimator arm still comes from a different binary (`strehl.exe`) than the two
+  pyramid arms (`blend-render.exe`). The clamped-vs-unclamped comparison is clean
+  one-line interventional; the estimator-vs-pyramid comparison is not.
+- `--index-map` with `--n-eff-map` did not recur as `0xC0000409` in this session; I
+  did not invoke that pair.
