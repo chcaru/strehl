@@ -1165,3 +1165,252 @@ false belief into the next measurement they made on them.
 > "Upstream of the tone stage" was load-bearing, unchecked, and wrong; the
 > conclusion survived only because a control was run afterwards, which is luck,
 > not method. Identify the single load-bearing premise and measure that first.**
+
+## 18. The clamp, attributed: a ladder, a sweep, and a fix that would have destroyed the photograph
+
+Section 17.2 established that the multi-band blend writes pixels at exactly zero
+where the control writes ordinary mid-shadow values, and 17.4 re-earned that
+conclusion after demolishing its original reasoning. Neither said *why*, and a
+defect without a mechanism cannot be fixed, only avoided. This section attributes
+it.
+
+It also contains two retractions of my own claims and one near-miss that would
+have shipped a "fix" which scored perfectly and ruined every photograph it
+touched. The near-miss is the most useful thing here.
+
+### 18.1 First, the picture, because no statistic conveyed this
+
+17.2 reported the defect as a percentage. That framing is what let it sit
+unresolved: 2.19% of pixels sounds like a shadow-noise question. It is not. The
+100% crop of `dry-erase-marker-head-cpl` at site (6136, 1360) shows **solid black
+axis-aligned blocks roughly 40 to 60 px across, hard-edged, sitting on and beside
+the ink marks, with red and magenta fringes on their edges.** The control panel at
+the same site has none. It is the single most visually destructive artifact in the
+output, worse than the halo that prompted this whole line of work, and no print
+survives it.
+
+Two things follow immediately from the *shape*. A smooth reconstruction
+undershoot cannot make a hard-edged block; a coarse-band coefficient can, because
+its reconstruction footprint **is** a block of about that size. And the defect is
+not blue-specific. 17.2's title says "the blue channel" because `flower-bud-alone`
+is blue-dominant. On `dry-erase-marker-head-cpl` all three channels clip within
+0.5 pt of each other:
+
+| subject | R | G | B | verdict |
+| --- | ---: | ---: | ---: | --- |
+| `dry-erase-marker-head-cpl` | +1.8556 | +1.9588 | +2.3560 | merge |
+| `foam` | +0.9936 | +0.6579 | +1.1217 | merge |
+| `flower-bud-alone-cpl` | +0.1841 | +0.2999 | +2.1914 | merge |
+| `bee-1-cpl` | +0.0579 | +0.0947 | +0.1180 | marginal |
+| `flower-inner-edge-cpl` | +0.0457 | +0.0051 | **−0.6661** | marginal, blend *better* |
+| `couch-fibers-cpl` | +0.0000 | +0.0000 | +0.0000 | none |
+
+Percentage points of pixels at exactly zero in the linear 16-bit TIFF, blend minus
+control. It hits whichever channel is darkest at that site. **Read 17.2's title as
+subject-specific, not as a statement about the channel.**
+
+### 18.2 The ladder: one candidate mechanism removed per rung
+
+Reading `blend-render.rs` there are two places a negative can be floored, and the
+shipped TIFF is downstream of both: `norm`'s `v.max(0.0)` at line 572, which
+clamps the *merged plane*, and `space.develop(matrix)`, whose camera-to-sRGB
+off-diagonals are negative and can push an in-gamut camera colour below zero in
+sRGB. A third possibility covers neither: the values are small and *positive* and
+simply underflow 16-bit. Those three demand three different responses, so guessing
+between them was not acceptable.
+
+Six rungs on `dry-erase-marker-head-cpl`, binary built from HEAD
+(`6E1E2E86…41B3`), predictions registered before the first render:
+
+| rung | removes | R | G | B |
+| --- | --- | ---: | ---: | ---: |
+| A shipped | nothing | 1.2320 | 1.2237 | 1.4648 |
+| B `--camera-linear` | the colour matrix | 1.1841 | 1.2866 | 1.3815 |
+| C `--sharpen 0` | the sharpening ramp | **0.0000** | **0.0000** | **0.0000** |
+| D `--exposure 3` | 16-bit underflow | 1.1783 | 1.2835 | 1.3740 |
+| E `--base-weighted` | *adds back* the old base band | 1.8510 | 2.0722 | 2.2442 |
+| F `--bands 2` | all but one Laplacian band | 0.0466 | 0.0926 | 0.0667 |
+
+- **The colour matrix is excluded.** A to B barely moves.
+- **The values are genuinely negative, not underflowed positives.** Rung D
+  multiplies by eight *before* quantisation and changes nothing, because
+  `max(0, ·)` is scale-invariant in sign. A positive underflow would have been
+  rescued. This is the rung that cost 116 seconds and settled a question three
+  summary statistics could not.
+- **The base-band flip in `23ae8dc` genuinely helped** — the old band is 60%
+  worse — **and did not fix it.**
+- **HEAD is not fixed.** Same site: control 0.000%, pinned blend 1.995%, HEAD
+  blend 1.936%.
+
+The first attempt at this ladder died at rung B with `unknown flag
+--camera-linear`, because that flag landed in `0d9fd28`, *after* the pinned binary
+was built. The script threw rather than skipping the rung. That is the only reason
+the substitution to a HEAD-built binary was noticed and compensated for with rung
+E, instead of silently comparing two different codebases.
+
+### 18.3 The retraction that matters: rung C scores perfectly and destroys the image
+
+Rung C reads **0.0000 in all three channels**. Perfect. Total elimination. I
+drafted the sentence "sharpening is the cause".
+
+Then I looked at the crop. **At `--sharpen 0` the ink mark is a faint featureless
+grey smudge with no edge and no internal structure.** There is no stacking left in
+it at all.
+
+Obvious in hindsight. `sharpen_per_octave` is not an enhancement bolted onto the
+merge; **it is the selection.** It ramps the selection exponent toward the fine
+bands. Set it to zero, the weights go flat, and the merge becomes a plain average
+across every focus position — the mean of a defocus sweep. Which is mush.
+
+So the honest statement of the ladder is not "sharpening causes the defect". It is:
+
+> **The out-of-hull excursion is monotone in selection peakedness, and selection
+> peakedness is the thing that makes stacking work.**
+
+Had the number alone been reported, the fix would have been "reduce the sharpening
+ramp", every acceptance test would have gone green, and every photograph would
+have gone soft. This is the same failure the flat-noise metric produced in 17.1 —
+a metric named for what you hope it measures, believed as though it measured that
+— arriving by a different route within the same week.
+
+> **An acceptance number that can be satisfied by destroying the subject is not an
+> acceptance number. Every quality gate needs a paired cost column, produced by
+> the same script, so that neither can be reported without the other.**
+
+### 18.4 The sweep: it is one band, and density and defect arrive together
+
+Rung F needed the same scepticism, and got the opposite answer. **F is not
+degenerate.** At `--bands 2` the paper fibres are crisply resolved, arguably
+crisper than at bands 7. What F loses is low-frequency *density* — the ink renders
+grey rather than black — for a legible reason: at bands 2 the base band sits at
+440×293 for a 3520-wide plane, so a ~60 px ink blob is several pixels wide in a
+band that is a plain **mean** across frames, and it averages with the frames where
+it is defocused. Different failure mode, different lever. My first note to
+BUILD-BLEND lumped C and F together and was wrong to.
+
+Sweeping the band count, with an ink-density column (1st percentile of green in
+the crop; low is correct dark ink, high is washed out):
+
+| bands | R | G | B | ink p1 | per-band exponent (coarsest→finest) |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 2 | 0.0466 | 0.0926 | 0.0667 | 0.5806 | 2 3 |
+| 3 | 0.0373 | 0.0609 | 0.0537 | 0.4802 | 2 3 4 |
+| 4 | 0.0107 | 0.0145 | 0.0178 | 0.3317 | 2 3 4 5 |
+| 5 | 0.0029 | 0.0026 | 0.0049 | 0.1822 | 2 3 4 5 8 |
+| 6 | 0.0205 | 0.0248 | 0.0389 | 0.0795 | 2 3 4 5 8 8 |
+| **7** | **1.1841** | **1.2866** | **1.3815** | 0.0000 | 2 3 4 5 8 8 8 |
+
+Flat and negligible from 2 through 6, then a **52× step on the single addition of
+the seventh band.** Not a smooth accumulation across the mid bands. One band.
+
+And ink density improves *monotonically* with band count: 0.58, 0.48, 0.33, 0.18,
+0.08, 0.00. The merge is driving the ink darker with every band added, which is
+correct — the ink **is** dark in the frames where it is in focus — and at the
+seventh band it overshoots straight past black. The 0.0000 is not better density;
+it is the clamp eating the darkest percentile.
+
+> **The excursion is systematically darkward on dark features, and it arrives in
+> the same bands that carry the subject's correct density. The defect and the
+> quality are produced by the same operation, which is why no band count resolves
+> it.**
+
+### 18.5 The mitigation that failed its own bar
+
+In the crop strip, bands 6 is the best frame of the six: full ink density, sharp
+fibres, no blocks. That is a one-constant change to the default and it was
+tempting to recommend on the spot.
+
+`dry-erase-marker-head-cpl` was chosen *because it fails hardest*, which makes it
+the least representative capture available. So the condition was registered before
+rendering: at least a 10× cut on both remaining failures, and the placebo unmoved
+within 0.01 pt.
+
+| subject | arm | R | G | B | p1 green |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `foam` | 7 | 0.6826 | 0.6441 | 0.9825 | 0.0014 |
+| | 6 | 0.6519 | 0.5985 | 0.9380 | 0.0017 |
+| `flower-bud-alone-cpl` | 7 | 0.3696 | 0.5365 | 1.3982 | 0.0051 |
+| | 6 | 0.0763 | 0.1591 | 0.6189 | 0.0113 |
+| `couch-fibers-cpl` (placebo) | 7 | 0.0000 | 0.0000 | 0.0000 | 0.0491 |
+| | 6 | 0.0000 | 0.0000 | 0.0000 | 0.0511 |
+
+**`foam` improves 1.0×. `flower-bud-alone-cpl` improves 2.3×.** The placebo is
+inert, which is the one thing that worked as hoped. The 52× on
+`dry-erase-marker-head-cpl` does not generalise at all.
+
+**Do not change the default.** And the negative result is worth more than the
+mitigation would have been:
+
+> **The band count is not the mechanism. The same seventh band that is
+> catastrophic on one subject is nearly irrelevant on another, so the excursion is
+> content-dependent — which is an argument that the fix must be content-adaptive
+> too. A constraint against the frame hull is content-adaptive by construction; a
+> band count is not.**
+
+Had the bar been set after seeing `dry-erase`, it would have been set at 10× and
+declared met. It was set before, and it failed. That is the entire value of
+pre-registration in one measurement.
+
+### 18.6 Two of my own claims, retracted against BUILD-HALO's measurements
+
+BUILD-HALO tested two things I asserted while reconciling its rim finding against
+BUILD-CHROMA's index jumps, and both are refuted.
+
+**Retracted: that the broad veil near the silhouette is the wrong-frame patch
+field.** Binned on an *election-independent* silhouette (a `STREHL_ONLY_FRAME`
+render, so the map cannot be a statistic of itself), extreme adjacent-pixel index
+jumps are **zero in 231,610 background pixels within 20 px of the silhouette**,
+and enriched 1.62× in the open field at 288–400 px. Not few. Zero. The patch field
+is real, and it lives in dead ground — a featureless backdrop has no focus signal,
+so the argmax is noise spanning the bracket — but it is *not* what sits at the rim.
+
+**Retracted: that the box regulariser must invent an index between two modes.** I
+argued that averaging indices 40 and 231 yields 135, at which neither depth is in
+focus. `merge.rs::regularise` boxes the **focus field**, not the index field, and
+the winner is an argmax over frames of the regularised field, so the elected index
+is always one some frame actually attained. 135 can never be synthesised. Measured
+rather than read off the source: only 11.8% of near-band pixels elect the middle
+60% of the subject-to-background gap, far below the 60% a filled distribution
+would give. Bimodal, not averaged. My argument was correct in the abstract and
+false about this code, which is the more embarrassing of the two ways to be wrong.
+
+BUILD-HALO's reframing is the part worth keeping, and it is a better result than
+the claim it replaced:
+
+> **The rim is not where the selector is uncertain. It is where the selector is
+> confident and wrong.**
+
+That kills every "detect low-confidence pixels and repair them" approach at once,
+because they target a population that does not overlap the artifact.
+
+### 18.7 What the fix has to be, and what it must not be
+
+Not a lower sharpening ramp, not a capped exponent, not a reduced band count. Each
+turns the acceptance number green and the photograph soft, and soft is the defect
+this project exists to remove.
+
+The remaining hypothesis, consistent with everything above and not yet proven: a
+per-band convex combination is not convex overall,
+
+```
+  sum_b convex_k(band_b,k)  !=  convex_k( sum_b band_b,k )
+```
+
+so a near-argmax pick that differs between coarse and fine bands reconstructs a
+pixel from a frame that never existed, and at ink-on-paper contrast that pixel
+lands below black. The `SoftPower` guarantee — that a convex combination cannot
+take adjacent coefficients from opposite-signed frames — holds *within* a band and
+does not survive the sum across bands.
+
+If that is right, the clamp is the messenger and the hull violation is the bug,
+and the fix keeps the peaked selection while separately forbidding the
+reconstruction from leaving the range the contributing frames actually span at
+that pixel — with a margin set by the calibrated noise rather than an arbitrary
+epsilon, so that genuine reconstruction gain remains possible and impossible
+pixels do not.
+
+Acceptance, registered here: all three merge-verdict subjects within +0.05 pt on
+the linear 16-bit TIFF, `couch-fibers-cpl` unmoved at 0.0000, **and** the ink at
+(6136, 1360) at least as crisp and as dark as bands 6 renders it. The last clause
+exists because of 18.3.
+
