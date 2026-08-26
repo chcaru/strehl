@@ -158,6 +158,35 @@ in my own instruments are fixed in 15.7, including one caveat I had published
 against my own number and which was simply false. The lane still closes; three
 items are routed out of it, in 15.9.
 
+**Amended by section 16, which withdraws a finding of mine, and then by 16.10,
+which withdraws my first reason for withdrawing it.** The owner gave me back the
+shadow-washout claim I had reported outside my brief -- that both arms lose about
+a third of a real, **focus-invariant** shadow on `coffee-bean` at d=120..250.
+**It is withdrawn, and it should stay withdrawn.** What holds: the truth value is
+not obtainable, because mean versus median on identical pixels moves it **3.39
+points**, larger than the 2.6-point effect claimed; 15.5's per-frame masks slide
+by **4.99 points of frame area, IoU down to 56%**, so its invariance test never
+held the region fixed; and the band does not lie on a cast shadow at all -- on a
+second subject it traces the edge of a bright sweep while the rule's own shadow,
+at negative d, is never sampled.
+
+What does **not** hold is the mechanism I first offered. I wrote that the deficit
+is focus-dependent (r = +0.654, +0.982) and therefore defocus bleed. A verifier
+refuted it: **bracket index predicts the deficit better than sharpness does, r =
++0.9887**, the "sharpest" frames are merely the late ones, and detrending the
+bracket collapses the effect to **0.13 points** and reverses its sign on the
+second subject. The cause is measured in 16.9 -- **~176 full-res px of scene
+motion across the bracket, reversing sign across the frame, i.e. a magnification
+change from focus breathing** -- against a band 130 px wide. So 15.5 held the
+scene and moved the mask; I held the pixel window and let the scene move.
+**Neither instrument ever held scene content fixed.** The single-frame ladder's
+exoneration list is also cut from eight stages to five: the two output TIFFs are
+**100.0000% identical**, and the hull clamp, Laplacian reconstruct, photometric
+fit, clip census and regulariser are inert or forced at n=1 rather than measured
+innocent. The d=120..250 row of 15.5's table is retracted; so is 16.4's bleed
+claim. Two further instruments of mine failed their own commissioning and are
+reported dead in 16.8.
+
 ---
 
 ## 1. The picture, first
@@ -2201,3 +2230,424 @@ differ and the number is close enough that the choice matters.
 - `lavendar` and `couch-fibers` still have no ring measurement on linear data,
   as 14.7 said.
 - The 12.6 abstention plane is still unimplemented and unrendered.
+
+---
+
+## 16. I orphaned the shadow-washout finding. I own it now, and I am withdrawing it.
+
+The owner assigned me a finding I had reported outside my brief: that both merge
+arms wash out about a third of a real shadow on `coffee-bean` at d=120..250, and
+that the deficit is **focus-invariant**, which is what ruled out the obvious
+explanation that it is a focus-selection artifact.
+
+**It does not survive, and neither did my first attempt to bury it.  The
+withdrawal stands; the reason I originally gave for it was wrong and is
+corrected below.**
+
+I first wrote that the deficit is *focus-dependent* -- r = +0.654 on
+`coffee-bean`, r = +0.982 on a second subject -- and therefore defocus bleed by
+15.5's own discriminator.  **A verifier killed that, and it was right to.**
+Bracket index predicts the deficit better than sharpness does (r = **+0.9887**
+against +0.654), the "sharpest 10%" frames are just the *late* frames, and
+removing the bracket trend collapses the effect from 1.43 points to **0.13** on
+`coffee-bean` and **reverses its sign** on the ruler.  I had replaced an unsound
+"it is shadow" with an equally unsound "it is bleed".
+
+The real answer is that **nobody has measured this quantity yet, including me.**
+MEASURED, independently, on the raw frames: scene content moves **~88 half-res
+px = ~176 full-res px** between the ends of the `coffee-bean` bracket, and the
+displacement **reverses sign across the frame** -- outward at both edges in the
+early frames, inward in the late ones.  That is not translation, it is a
+**magnification change: focus breathing**, which is exactly what racking focus on
+a macro lens does.  The band in question is 130 full-res px wide.
+
+So both instruments failed, in mirror image, and for the same underlying reason:
+
+| | what it held fixed | what moved | consequence |
+| --- | --- | --- | --- |
+| **15.5** | the scene | the mask (per-frame, IoU to 56%) | measured different territory each frame |
+| **16, as first written** | the pixel window | **the scene** (176 px of breathing) | measured different content each frame |
+
+**Neither ever held scene content fixed, so neither could detect
+focus-dependence in either direction.**  The finding is withdrawn for
+under-determination, not because a competing mechanism was proven.  Section
+15.5's table should be read as retracted for the d=120..250 row, and 16.4's
+original bleed claim is retracted with it.  16.10 records the verification in
+full.
+
+### 16.1 Provenance, before any number
+
+- **Binary** `C:\dev\strehl-out\BUILD-BLEND\target-flip\release\strehl.exe`,
+  SHA-256 `DC72971E27EF654E18535E8162C6E6E55FDC7E1208EB21626A0EBDDEC7EA6FD9`.
+  The `flip/` TIFFs it is compared against were produced *before* this file's
+  mtime, so **for the `flip/` pair the binary is still not hash-verified** (15.1).
+  Every render *I* made in this section was made by this hashed binary.
+- **Argv diff, pasted rather than described.**  My two ladder arms differ in
+  exactly two tokens, the merge mode and the output path, which is the minimum
+  possible:
+
+      ARGV A: stack <dir> --merge estimator --out <A>.tiff --demosaic
+      ARGV B: stack <dir> --merge pyramid   --out <B>.tiff --demosaic
+
+  For contrast, BUILD-BLEND's `placebo-render.ps1:14` that produced the `flip/`
+  pair differs in **three**: it adds `--gate 2.0` to the estimator arm only.
+- **Gate.**  Two different parameters with two different compiled defaults, and
+  my first draft of this line conflated them.  The estimator arm's noise gate is
+  **4.00** (`one-estimator.log:22`, `merge.rs:443 DEFAULT_GATE = 4.0`); the
+  pyramid arm's band gate is **2.00** (`one-pyramid.log:27`, `pyramid.rs:944`).
+  Neither is the gallery masters' `--pyramid-gate 4.5`.
+- **Runtime banner, quoted not paraphrased**, from `one-pyramid.log`: `bands: 7
+  Laplacian levels + 1 base`, `noise gate: 2.00`, `folded: 1 / 1 frames`, and
+  `not applied: photometric gain, clip census, outlier rejection, halo
+  correction, through-focus statistics`.
+- Instrument: `experiments/BUILD-ELECT/src/shadowenv.py`, committed at
+  `22a2069f`.  Logs `shadowenv-{cb,one,ruler}.log`, pictures
+  `pics/SHADOWENV-{cb,one,ruler}.png`, all under `C:\dev\strehl-out\BUILD-ELECT\`.
+
+### 16.2 The instrument, and what it does not share with the original
+
+15.5's number rests on four soft parts: a brightness mask, a distance transform,
+a radial median, and a far-field reference.  `shadowenv.py` shares none of them.
+It is per-pixel, not radial; each image is normalised by its **own** unshadowed
+reference, which is also the only way a rawpy decode and a strehl render can be
+compared at all, since their DN scales differ; the distance transform only
+*proposes* regions and the picture shows what it proposed.
+
+It also brings one thing 15.5's construction cannot have: **one fixed mask for
+every image**, taken from the merge, so the band is the same physical pixels in
+every frame and in both merges.  15.5 gave each frame **its own** mask.  16.6
+measures what that costs.
+
+**Commissioning runs before any result and both nulls are printed above it.**
+
+| check | `coffee-bean` | ruler | reading |
+| --- | ---: | ---: | --- |
+| PLANT, darken band x0.90 | error **-0.0000** pts | error **-0.0000** pts | PASS |
+| NULL, two halves of the reference | **+22.399%** | **-6.717%** | **FAIL both** |
+
+**The reference band is not flat.**  On `coffee-bean` two halves of the region
+used as "unshadowed reference" differ by 22.4%.  That does not invalidate a
+merge-versus-frames *comparison*, because the same non-flatness multiplies every
+arm equally, but it does mean **no absolute depth taken against it is a physical
+number.**
+
+### 16.3 The truth value is not soft, it is under-determined
+
+The owner asked whether -6.4% could be obtained a second, independent way.  It
+cannot, and the reason is worse than imprecision.  MEASURED, identical pixels,
+same 105 frames, the only difference being the central statistic:
+
+| statistic | truth over 105 frames | estimator arm | pyramid arm |
+| --- | ---: | ---: | ---: |
+| band **mean** | **-3.69%** | -5.17%  (-1.47 pts) | -3.82%  (**-0.13** pts) |
+| band **median** | **-0.30%** | -3.46%  (-3.16 pts) | +0.34%  (**+0.64** pts) |
+| swing | **3.39 points** | | sign of the pyramid difference **flips** |
+
+The effect being claimed was 2.6 points of loss.  **The instrument's own
+choice between mean and median moves the answer by 3.39 points on the same
+pixels, and flips the sign of the pyramid's difference from -0.13 to +0.64.**
+A 2.6-point claim cannot be made on a quantity with a 3.4-point analysis
+ambiguity.  Neither reading reproduces -6.4%.
+
+On the single-frame ladder the same split is 2.93 points (-3.49% mean versus
+-0.56% median) on **one** frame, so this is not sampling noise across the
+bracket; it is the band's azimuthal non-uniformity, which the NULL had already
+reported as 22.4%.
+
+**Two corrections to this table, from verification.**  First, the swing is *not*
+a clipping artifact -- on `DSC00068` the band holds **0.000%** of pixels at or
+above 64000 DN (max 60448), and excluding saturation from both regions still
+leaves a 3.01-point gap.  The cause is band heterogeneity: the band's 1st to
+99th percentiles run **32351 to 59688 DN** about a mean of 48272, sd 8425 = 17%.
+Second, and against me: **the pyramid arm's median is measured through the
+container ceiling.**  On the full-res merge grid the pyramid band has **20.73%**
+of pixels pinned at 65535, and its reference band 8.64%, against 7.88% and 2.93%
+for the estimator.  The -0.13 -> +0.64 sign flip therefore **cannot be attributed
+to the mean/median choice alone** and should not be offered as clean evidence.
+The under-determination conclusion stands on the `coffee-bean` truth column,
+which is unclipped.
+
+### 16.4 The premise -- focus-invariance -- is unfalsifiable here, not false
+
+**This section originally claimed the deficit is focus-dependent and therefore
+defocus bleed.  That claim is RETRACTED.**  It is preserved here with its
+refutation because the way it failed is the useful part.
+
+15.5 argued the deficit was real shadow *because* it was focus-invariant across
+the bracket at -5.70% to -7.03%, a 1.3-point spread.  With one fixed mask,
+MEASURED:
+
+| subject | frames | corr(band sharpness, depth) | sharpest 10% | softest 10% | difference |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `coffee-bean` | 105 | +0.654 | -3.03% | -4.46% | 1.43 pts |
+| `highly-angled-ruler-mm-cpl` | 60 | +0.982 | -24.09% | -37.03% | 12.94 pts |
+
+Those correlations reproduce exactly under independent code.  **They do not mean
+what I said they meant.**  Three measurements kill the inference:
+
+| test | `coffee-bean` | ruler |
+| --- | ---: | ---: |
+| corr(band **sharpness**, depth) | +0.654 | +0.982 |
+| corr(**bracket index**, depth) | **+0.9887** | **+0.9914** |
+| sharpest-vs-softest split, raw | +1.434 pts | +12.930 pts |
+| the same split, **bracket trend removed** | **+0.133 pts** | **-1.045 pts** |
+
+**Bracket position explains 97.75% of the depth variance; band sharpness
+explains 42.7%.**  The "sharpest 10%" frames on `coffee-bean` have mean index
+75.4 and the "softest" have mean index 25.5, so the split I read as a focus
+split is a *position* split wearing a focus label.  Detrend the bracket and the
+effect collapses to a fifth of a point -- and on the ruler it changes sign.
+
+Two further checks, both against me:
+
+- **Matched-sharpness pairs.**  60 `coffee-bean` frame pairs matched to within
+  3.0 in band sharpness but separated by more than 40 in bracket index differ in
+  depth by up to **1.90 points** -- more than the whole 1.43-point effect I
+  attributed to focus.  `DSC00016` and `DSC00120` sit **5.3%** apart in
+  sharpness and span **100%** of the depth range.
+- **The mechanism I proposed is contradicted by my own frames.**  I argued that
+  as a frame defocuses, the dark body spreads outward into the band and darkens
+  it.  Band sharpness peaks at index 75 (271.2) and falls back to 195.8 by index
+  104 -- the band re-blurs -- while depth over that same leg gets *shallower*,
+  -3.03% to -2.58%.  Under my own mechanism it had to get deeper.
+
+And on the ruler the correlation is **non-identifiable**: in that 60-frame even
+stride, every focus proxy is monotone in bracket order, so focus and position are
+the same variable and r = +0.982 distinguishes nothing.
+
+The reason all of this happens is 16.0's measurement: **the scene is sliding
+through my fixed window at ~176 full-res px across the bracket, monotonically,
+because magnification changes with focus.**  Bracket index is the breathing
+parameter.  A fixed pixel window on unregistered frames measures the breathing,
+not the focus.
+
+**Consequence for the truth value.**  I had written that against the sharpest
+frames both arms come out *deeper* than truth.  That result does not survive
+either, because it depends on which focus proxy defines "sharpest".  MEASURED,
+same pixels, same 105 frames:
+
+| sharpness proxy | corr with depth | sharpest-10% truth | pyramid arm reads as |
+| --- | ---: | ---: | --- |
+| band gradient (the one I used) | +0.654 | -3.03% | 0.79 pts **deeper** |
+| far-field reference, d=600..1400 | +0.297 | -3.99% | 0.17 pts deeper |
+| **subject interior, d <= -300** | **-0.437** | **-4.42%** | 0.60 pts **lifted** |
+| whole frame | -0.439 | -4.26% | 0.44 pts lifted |
+
+**The correlation does not even keep its sign across proxies, and the verdict
+flips with it.**  "Truth = the sharpest frames" is not a defined quantity on this
+data.  Choosing the proxy after seeing which answer it gives is precisely the
+error this project has spent the night catching, and I committed it.
+
+### 16.5 Generalisation: it does not, and the reason indicts the instrument
+
+The owner suggested the ruler because "the only dark band below the rule is the
+rule's own shadow".  I rendered it (299 frames, both arms, hashed binary above)
+and looked at what the bands landed on -- `pics/SHADOWENV-ruler.png`.
+
+**The d=120..250 band does not lie on the rule's shadow.**  It lies along the
+edge of the bright sweep in the lower right.  The rule's own shadow is a
+diagonal band deep in the mask interior, at negative d, and is never measured.
+
+That is the general problem, and it applies to `coffee-bean` too, where the band
+traces the bean's silhouette on one side and the boundary of a dark backdrop
+gradient on the other (the mask is 59.62% of frame because a dark region of the
+sweep joins the subject's connected component).  **The band is defined by a
+brightness threshold, so it traces brightness contours.  A brightness contour is
+exactly where a "depth below the far field" statistic will always find a
+deficit, whether or not any shadow is present.**  The instrument locates the
+threshold, not the shadow.
+
+So: **it does not generalise, and the failure is not subject-specific bad luck.**
+
+### 16.6 Why 15.5 got a different number: its mask slides through the bracket
+
+15.5 profiled each frame "using its own mask and its own far field, so no
+registration is needed".  `maskdrift.py`, MEASURED on five frames spanning the
+`coffee-bean` bracket:
+
+| frame | mask, % of frame | threshold, DN | band, px | IoU with mid-bracket band |
+| --- | ---: | ---: | ---: | ---: |
+| DSC00016 | 60.22% | 32153 | 670101 | **56.12%** |
+| DSC00042 | 58.59% | 33059 | 690778 | 74.67% |
+| DSC00068 | 57.24% | 30877 | 695399 | 100% |
+| DSC00094 | 56.25% | 30232 | 710897 | 77.26% |
+| DSC00120 | 55.23% | 29678 | 719088 | **60.81%** |
+
+The mask shrinks monotonically by **4.99 points of frame** and its threshold
+drifts **7.7%** first-to-last across the bracket -- **10.2%** max-to-min, and
+unlike the area the threshold is **not monotone** (32153, 33059, 30877, ...).
+That is the photometric drift the runtime banner already warns about for this
+exact subject: `coffee-bean 11.70% -> 2.34 gate units`, under `STATUS: NO
+per-frame gain term is fitted or applied.`
+
+**At the ends of the bracket only 56% of "the band" is the same pixels as at the
+middle.**  A per-frame mask makes the d=120..250 band a moving target, so the
+1.3-point spread that 15.5 read as evidence of focus-invariance was a spread
+measured over **different territory in every frame**.  It could not have detected
+focus-dependence, because it never held the region fixed.
+
+**Two corrections, one of them fatal to the way I used this section.**
+
+First, scale.  `maskdrift.py:20` computes the band on the **half-res** rawpy
+grid, so its `d=120..250` is physically `d=240..500` on the merge grid -- *not*
+the band under discussion.  At the band actually in question (`d=60..125`
+half-res) the end-of-bracket IoU is **27.26% and 34.55%**, not 56% and 61%.  The
+criticism of 15.5 holds a fortiori; the published figures were for a wider ring.
+
+Second, and this is the one that matters: **I used this table to convict 15.5 of
+a fault whose mirror image is in my own instrument.**  `shadowenv.py` holds the
+region fixed *in pixels* and never registers the frames to each other -- and
+16.0 measures ~176 full-res px of scene motion across this very bracket.  15.5
+held the scene and moved the mask; I held the window and let the scene move.
+**Both measure different content in every frame.**  This does not rehabilitate
+15.5's -6.4%; it removes my standing to have replaced it with a mechanism.
+
+### 16.7 What is doing the lifting: a separation experiment, not a favourite
+
+The owner asked for an A/B that discriminates between the hull clamp, the
+pyramid reconstruction, the demosaic, black-level handling, and exposure.  There
+is one experiment that separates all of them at once: **stack a single frame.**
+With one frame there is no election and no combination, so anything that moves
+the shadow is a per-frame stage.  Compared against a rawpy decode of the *same*
+frame, in the *same* band, with the *same* fixed mask:
+
+| arm | band mean depth | vs rawpy | band median depth | vs rawpy |
+| --- | ---: | ---: | ---: | ---: |
+| rawpy decode of DSC00068 | -3.49% | -- | -0.56% | -- |
+| `--merge estimator`, 1 frame | -3.64% | **-0.14 pts** | -0.66% | **-0.10 pts** |
+| `--merge pyramid`, 1 frame | -3.64% | **-0.14 pts** | -0.66% | **-0.10 pts** |
+
+The two output TIFFs have different SHA-256s (`3AF3CF5C...` vs `1B99A15F...`),
+and I originally offered that as proof the arms had not collapsed to one code
+path.  **It proves nothing.**  MEASURED on the pixels: the two files are
+**100.0000% identical -- 6 differing samples out of 98,898,048**, max |diff| 101
+DN, means agreeing to six decimal places.  At the level this measurement
+operates on, the arms *did* collapse.
+
+That forces a much narrower exoneration list than I first wrote, because several
+stages are **inert at n=1 by construction** rather than measured innocent:
+
+| stage | status at n=1 | evidence |
+| --- | --- | --- |
+| hull clamp | **untested** -- output is forced | `pyramid.rs:2199` test `the_clamp_is_exact_on_a_single_frame`: with one frame the hull is the frame, so `[lo,hi]` is a point |
+| Laplacian decompose/reconstruct | **untested** -- overwritten by the clamp | same test, `assert_eq!` per pixel |
+| photometric normalisation | **inert** | `one-estimator.log:54` `gain span : 1.0000 (max/min across 1 frames)` |
+| clipping census | **inert** | `one-estimator.log:80` `ever clipped : 0.0000% (3 of 8241504)` |
+| 17x17 regulariser | **vacuous** | regularises a winner field with one candidate; `n_eff=1 100.00%` |
+
+**What the experiment genuinely supports, and all it supports: the demosaic,
+black-level handling, exposure, CA correction and the single-frame align
+resample together land within 0.14 points of a rawpy AHD decode.  None of those
+lifts a shadow.**  The five rows above are **not** exonerated and I withdraw the
+claim that they were.
+
+The section as first written was also internally inconsistent: it exonerated the
+hull clamp and photometric normalisation and then said "whatever residual
+difference exists must come from combining frames" -- those two stages only act
+*when* frames are combined.
+
+### 16.8 Two of my own instruments failed their commissioning and are reported dead
+
+Reporting these rather than quietly dropping them, because a detector that has
+never returned a known answer is not an instrument.
+
+- **The backdrop surface fit is unusable.**  Its null mirrors the real geometry
+  exactly -- fit an 800 px band, predict a 130 px band 350 px inside it, on
+  shadow-free backdrop.  Held-out null by order on `coffee-bean`: -2.3%, -3.2%,
+  +3.0%, -5.6%, +1.9%, against a 0.5% criterion.  **FAIL at every order.**  The
+  fitted depth swings from -11.5% to +7.7% across orders and the sign of the
+  merge-minus-truth difference is not stable, so by the rule printed above the
+  table it was never a result.  A global polynomial cannot represent this
+  backdrop.  On the ruler order 5 diverges to 1e15 outright.
+- **The envelope test is dead by its own null.**  It counts pixels where the
+  merge exceeds the per-pixel max over all frames -- light that was
+  manufactured, not selected.  It reports 53.5% and 64.9% of the shadow band,
+  but **57.8% and 55.8% of the shadow-free reference band**, so it is firing
+  everywhere and separates nothing.  Frames are unregistered, which widens the
+  envelope and should have made violations *harder*; it did not.  Any future use
+  needs the frames registered first.
+
+An earlier version of the fit null split the reference into top and bottom
+halves.  That put the held-out set outside the fitted domain and the polynomials
+diverged to 1e15.  **A null that tests the wrong extrapolation is not a null**,
+and it read as a catastrophic failure of the estimator when it was a failure of
+the null.
+
+### 16.9 What section 16 does not settle
+
+- **The rule's own shadow has still never been measured.**  I showed the band
+  misses it; I did not then hand-place an ROI on it.  A hand-placed ROI is a
+  different kind of soft -- selection by eye -- but it is the honest way to get
+  a real cast shadow, and it is the obvious follow-up if anyone still wants the
+  number.
+- **The absolute depth of any shadow in this corpus remains unmeasured.**  16.3
+  shows the mean/median ambiguity is 3.4 points; nothing here produces a
+  physical value, only comparisons.
+- **The ruler was measured on a 60-frame subsample of 299**, chosen by even
+  stride.  `coffee-bean` used all 105.
+- **Frames are never registered to each other, and they move a long way.**  This
+  is 16's largest defect and it was found by verification, not by me.  My
+  instrument registers the rawpy grid to the merge grid *once*, integer-only,
+  with a flat peak (ncc 0.62125 against 0.62101 for the best non-adjacent rival
+  on `coffee-bean`, an exact tie at zero shift on the ruler).  I then asserted
+  regional means are insensitive to a 1-2 px offset.  **The actual inter-frame
+  motion is two orders of magnitude larger.**  MEASURED by NCC on 500x500
+  patches against the mid-bracket frame, half-res grid:
+
+  | site | DSC00016 peak | ncc, peak vs zero shift | DSC00120 peak | ncc, peak vs zero shift |
+  | --- | ---: | ---: | ---: | ---: |
+  | far-left | (+4, **-48**) | 0.9870 vs 0.8949 | (-6, **+40**) | 0.9827 vs 0.9119 |
+  | right-mid | (-6, **+52**) | 0.9513 vs 0.7933 | (-8, **-36**) | 0.9737 vs 0.7895 |
+
+  ~88 half-res px = **~176 full-res px** between bracket ends, in a band 130
+  full-res px wide.  The sign **reverses between left and right within a single
+  frame** -- early frames push content outward at both edges, late frames pull it
+  inward -- so it is a **magnification change of roughly 7 points across the
+  bracket**, not a translation.  Focus breathing, which is what a macro lens does
+  when you rack it.  **The correct experiment -- the depth series on properly
+  registered frames -- has not been run by anyone, so the true focus-dependence
+  of this band is unknown in both directions.**
+- **15.5's producing script and log no longer exist**, in the tree or under
+  `C:\dev\strehl-out\`; a search for `-7.03`, `-6.40%` and `-5.70` across every
+  log there returns nothing.  So -6.4% cannot be re-derived and I cannot say
+  which pixel grid it used.  That is one more reason it should not stand, and
+  one reason the scale mismatch in 16.6 cannot be fully resolved.
+- Source frames decode rawpy AHD `half_size` while the merges are
+  Malvar-He-Cutler.  For smooth backdrop levels this is a small bias, but it is
+  not zero and it is not characterised.
+- **No regression test covers any of this.**  Same gap 15.10 recorded.
+- Nothing here is independently verified.  A verifier was commissioned on 16
+  before it was reported as settled.
+
+### 16.10 The verification, and what it cost me
+
+16 was written, then verified by an independent agent instructed to kill it.  It
+returned **DEFECTS FOUND**, and the honest summary is that **the withdrawal
+survived and my reasons for it did not.**  Recorded here rather than quietly
+patched, because the pattern is more useful than the conclusion.
+
+| claim | verdict | what changed |
+| --- | --- | --- |
+| deficit is focus-dependent, therefore bleed | **refuted** | bracket index beats sharpness, +0.9887 vs +0.654; detrended effect 1.43 -> **0.13** pts, sign reverses on the ruler |
+| truth is under-determined, 3.4-pt mean/median swing | **holds** | reproduced at +3.40 pts; not clipping (0.000% saturated); pyramid sign-flip leg contaminated by 20.73% clipping |
+| 15.5's mask slides | **holds** | every figure reproduced to the digit; but computed on the half-res band, so the numbers describe `d=240..500` |
+| single-frame ladder exonerates 8 stages | **refuted** | outputs 100.0000% identical; 5 of the 8 stages are inert or forced at n=1 |
+| the band does not lie on the rule's shadow | **holds** | confirmed from the pictures |
+
+Two verifier claims I re-derived myself at the primary source before accepting
+them, per the rule that a verifier's prescription can carry its own defects: the
+`gates : 4.00` line in `one-estimator.log:22` against `merge.rs:443`, and the
+6-of-98,898,048 pixel difference, which I recomputed with my own code.  The
+breathing measurement in 16.9 is mine, run independently after the verifier
+reported motion; my patch sites and search parameters differ from its, and the
+displacements differ in detail while agreeing on the fact and the sign reversal.
+
+**The lesson, and it is the same one that cost the orchestrator two numbers
+tonight.**  I had a correlation of +0.654, a mechanism that explained it, and a
+discriminator handed to me by the section I was retracting.  I did not check
+whether a *third* variable predicted the outcome better than my candidate did --
+and one did, at +0.9887, on data I had already collected.  A confound that sits
+in your own array is not caught by adding more subjects; the ruler agreed with me
+at +0.982 and was the *most* confounded of the two.  **Agreement between two
+measurements that share a confound is not corroboration, it is the confound
+speaking twice.**
