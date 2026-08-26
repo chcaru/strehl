@@ -257,6 +257,13 @@ def main() -> int:
     ap.add_argument("--also-v2", action="store_true",
                     help="also report the RETRACTED v2 statistic, for the record")
     ap.add_argument("--tile", type=int, default=TILE)
+    ap.add_argument("--strip-arm", action="store_true",
+                    help="treat `<subject>--<arm>.tiff` as subject `<subject>`, "
+                         "so the ranking key matches the `<subject>.jpg` "
+                         "presentation files. Off by default: it changes the "
+                         "identity of every row, and a ranking whose keys "
+                         "silently changed meaning is worse than one that "
+                         "fails to match.")
     args = ap.parse_args()
 
     verdicts = {}
@@ -270,9 +277,37 @@ def main() -> int:
     if not files:
         raise SystemExit(f"no *.tiff under {args.src}")
 
+    # finalpass.ps1 names masters `<subject>--<arm>.tiff` so accept.py can group
+    # them; a plain gallery names them `<subject>.tiff`. The presentation JPEGs
+    # are always `<subject>.jpg`, so without stripping, every tile of an
+    # arm-named render resolves to nothing and the sheet is entirely MISSING.
+    #
+    # Collisions are fatal rather than last-write-wins: pointed at a directory
+    # holding two arms, stripping maps both to one subject, and the quiet
+    # outcome would be a ranking with duplicate rows that still looks well
+    # formed. finalpass asserts subjects contain no `--`, so the split is
+    # unambiguous for the files this is meant to read.
+    def name_of(p: Path) -> str:
+        return p.stem.split("--")[0] if args.strip_arm else p.stem
+
+    if args.strip_arm:
+        seen: dict[str, Path] = {}
+        clash: list[tuple[str, Path, Path]] = []
+        for p in files:
+            n = name_of(p)
+            if n in seen:
+                clash.append((n, seen[n], p))
+            else:
+                seen[n] = p
+        if clash:
+            lines = "\n".join(f"  {n}: {a.name} and {b.name}" for n, a, b in clash)
+            raise SystemExit(
+                f"--strip-arm maps {len(clash)} pair(s) to the same subject:\n{lines}\n"
+                "Point this at ONE arm directory.")
+
     rows, failed = [], []
     for p in files:
-        subject = p.stem
+        subject = name_of(p)
         try:
             img = read_u16(p)
             m = resolved_detail(img, args.encoded, args.tile)
