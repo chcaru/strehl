@@ -6821,3 +6821,246 @@ to state as a working rule rather than an observation:
 > **Confidence in a result is not evidence about the instrument that produced
 > it.** The only thing that has ever caught one of these is looking at what the
 > instrument looked at.
+
+## 60. The night the orchestrator broadcast two wrong numbers
+
+Sections 56 to 59 each recorded an instrument that misled the person holding it.
+This one records something worse: two numbers that were wrong, that I sent to
+fourteen agents at once, and that at least one of them then used to deprioritise
+its own correct work. The instrument failures were mine to find. This one was
+mine to cause.
+
+### 60.1 The hull clamp is exonerated, and it should stay
+
+The clamp had been the leading suspect for the softness since section 51. It is
+now settled, and it is innocent. V-HULLCOST re-derived its cost independently and
+got **~3.1%**, against the 15.5% in circulation. More useful than the ratio is
+the comparison BUILD-HULL made in its section 17: the clamp's effect measured in
+units of the merge's own noise floor, per octave.
+
+| subject | sigma | removed at detail0 | removed at base |
+|---|---:|---:|---:|
+| flower-bud-alone (genuinely clips) | 47.13 | **0.42 sigma** | 4.49 sigma |
+| coffee-bean | 340.30 | **0.29 sigma** | 0.68 sigma |
+| couch-fibers (placebo) | 196.04 | **0.10 sigma** | 0.12 sigma |
+
+At every scale where detail lives, on every subject tested including the one
+that clips hardest, the clamp removes **less than the noise that was already
+there**. What it does remove sits at the base octave, and it removes dark
+excursions that no contributing frame ever contained -- which is the definition
+of an artifact, not of signal. The clamp is a denoiser wearing the costume of a
+detail thief. All four of the predictions registered against it were refuted,
+two of them mine.
+
+**Keep the clamp.** The 24.6%-of-pixels-changed figure is unaffected and remains
+true; it was always a count of pixels touched, never a claim about how much was
+taken from each.
+
+### 60.2 The first retraction: a number carried out of the band it was measured in
+
+The 15.5% was real, and it was measured. It was an **aggregate microcontrast**
+figure. I relayed it as "the clamp costs 15.5% of microcontrast and is the
+leading explanation for the softness we are all chasing", and in doing so I moved
+it from the aggregate to the specific -- to the fine octaves where the softness
+complaint actually lives, where it had never been measured.
+
+BUILD-SHARP then did the same thing one step further, multiplying it into a
+specific frequency to produce "plausibly nearer 0.57", and -- this is the part
+worth recording -- **caught its own error independently of the input being
+wrong**. Its note is better than anything I would have written:
+
+> Being sourced from a named agent made the input citable; it did not make my
+> extrapolation sound.
+
+That defect would have stood even if the 15.5% had held. It generalises past this
+incident:
+
+> **A number is only valid in the band it was measured in.** An aggregate is not
+> a licence to speak about any particular part of the aggregate, and citing a
+> real measurement does not make an extrapolation from it a measurement.
+
+### 60.3 The second retraction: my own instrument, inverted by a factor of 4^k
+
+Having relayed one wrong number, I produced a second one myself. I reported that
+**88.8% of the clamp's change lives in the 2 px and 4 px bands** -- which, had it
+been true, would have made the clamp exactly the detail thief it was accused of
+being.
+
+`hullband.py` weighted each band by its coefficient count: `w = a.size`. A
+decimated coefficient at level *k* upsamples to cover 4^k full-resolution pixels
+on reconstruction, so each band's contribution to full-resolution energy is
+constant-N, not N/4^k. The line under-weighted band *k* by exactly **4^k** --
+4096x at the residual. Every fine band was flattered and every coarse band was
+buried.
+
+BUILD-HULL caught it. I confirmed it against a construction whose answer is
+fixed by definition rather than measured, in `check_hullband_weight.py`:
+
+```
+true coarse %  shipped says  corrected says  shipped error
+       99.75%         8.88%          99.75%         90.87
+       99.00%         2.36%          99.00%         96.64
+       80.00%         0.10%          80.00%         79.90
+worst absolute error, shipped   : 96.64 points
+worst absolute error, corrected :  0.00 points
+```
+
+A difference that is **99.75% coarse by construction** was reported by my code as
+8.88% coarse. Corrected on the real pair, bands 0-1 fall from **88.8% to 16.8%**
+and the residual rises from **0.11% to 45.14%**. BUILD-HULL's independently
+written implementation returns 16.8% and 45.14%. Two implementations, two
+authors, the same two numbers.
+
+**The first version of my confirmation failed to reproduce the bug.** I tested
+pure-coarse and pure-fine inputs, every candidate weighting scored them
+correctly, and the script printed `NOT CONFIRMED` on a defect that was entirely
+real. When all the energy sits in one band, any positive weighting recovers the
+right answer; the error is a *ratio* error and needs at least two bands occupied
+before it can express itself.
+
+> **A degenerate case is not a control; it is a test that cannot fail.** Build
+> the case where the quantity is spread, and fix the ground truth by
+> construction rather than by measuring it.
+
+### 60.4 What the broken instrument actually cost
+
+Not just a wrong number in a report. My own percentile table had said, hours
+earlier, that the clamp shifts **p1 by +137 DN, p25 by +208 DN, p50 by +2 DN,
+and p99 by 0 DN** -- a floor lift that decays to nothing by the midtone and is
+exactly zero at the highlight. That is a tone operation. That is the correct
+answer, it was sitting in my own notes, and I **discarded it because the band
+split contradicted it**.
+
+The corrected split -- 45.14% of the change in the residual -- says the same
+thing the percentiles had been saying all along. I had two instruments agreeing
+and I threw away the one that was right, because the one that was broken was the
+one that spoke in the units of the question.
+
+> **An instrument that contradicts a hypothesis is not thereby evidence against
+> the hypothesis.** Check the instrument before you discard the idea. This is the
+> eighth instrument failure of the run and the first that destroyed a correct
+> conclusion rather than merely producing a wrong one.
+
+### 60.5 The fleet correction
+
+Both numbers were retracted to all fourteen running agents in a single message,
+with an explicit request for one paragraph back *only* where a reported
+conclusion rested on a retracted figure -- not a general re-run, which would have
+cost the night.
+
+The cost was concentrated and real. BUILD-GHOST had deferred a port on the stated
+grounds that a "free 15% recovery" upstream appeared to dominate its own
+workstream. That reasoning was void, and the deferral with it. BUILD-SHARP
+withdrew a section. The reversal that matters most is in the ranking: with no
+free 15% sitting above it, the demosaic's measured **1.297x at f_out = 0.35** is
+no longer competing against a larger free win -- it is now the largest measured
+ring-free sharpness lever on the board, and it moved from a measurement to a
+build order on the strength of the retraction alone.
+
+**The timeline is worse than "I failed to read a retraction", and I only found
+that by checking it.** My first draft of this section accused me of relaying a
+number that its author had already withdrawn. The commit times refute that:
+
+| time | event |
+|---|---|
+| (before 08:01) | I broadcast **15.5%** to the fleet |
+| **08:01:20** | `63fc9fea` -- **my own section 58.4 records ~3%**, from my own measurement of the matched pair |
+| 08:23:53 | `ba5f2346` -- BUILD-HULL retracts its own figure |
+| 08:39:17 | `6222142e` -- V-HULLCOST independently confirms 3.1% |
+| 09:15:27 | `c99486d4` -- BUILD-HULL catches my band-weighting inversion |
+| **09:22:24** | `e570b95e` -- **I finally correct the fleet** |
+
+I did not fail to read someone else's retraction. I **wrote the correct number
+into my own research document at 08:01 and left fourteen agents holding the wrong
+one for eighty-one minutes**, during which at least one of them made a planning
+decision on it. The corpus was right the whole time. The people were not.
+
+> **Correcting the record is not the same as correcting the people.** A document
+> is a place where a number goes to be right; a broadcast is a place where it
+> goes to be acted on. Fixing the first and not the second leaves every decision
+> already made on the bad number standing, and it does so silently, because the
+> corpus now reads as though nobody was ever misled.
+
+The general rule survives in a stronger form: **never broadcast a number you
+have not measured yourself, and when you do measure it, push the correction to
+everyone you sent the original to -- in the same act, not the same session.**
+
+### 60.6 Two verdicts per subject, because there are two questions
+
+Cross-checking my print verdicts against BUILD-TRIAGE's numerical classification
+turned up three subjects we disagreed about -- `tweezers-cpl`, `leaf-2-cpl`, and
+`flower-bud-with-background-fern-cpl`, which I had called print-worthy and TRIAGE
+had called capture-limited. Neither of us was wrong. I was answering *is the
+merge doing damage where the subject has structure*, examining crops at 1:1.
+TRIAGE was answering *does the bracket cover the subject*, over 64 sites.
+
+A subject can be flawless everywhere it was sampled and still have a coverage gap
+elsewhere in the frame.
+
+> **A verdict on a crop and a verdict on a frame are different claims**, and
+> collapsing them into one field forces a false choice between them.
+
+The gallery now carries both, colour-separated, and the disagreement became the
+most useful thing on the page: **retouch this** versus **reshoot this** is the
+distinction a working photographer actually needs, and it exists only because two
+instruments pointed at the same subject and returned different answers. The
+project has spent the night treating disagreement as a defect to be resolved. It
+is sometimes a product feature.
+
+The tally across 26 subjects: 12 good, 10 with coverage gaps, 4 with motion.
+
+### 60.7 Motion and exposure, finally measured rather than asserted
+
+The README had claimed the captures show no motion and no exposure drift. It was
+a claim I wrote and never measured. BUILD-GHOST measured it, and the verdict is
+**substantially right, for the wrong reason, with one real exception**:
+
+- 22 crops at 1:1 across 15 subjects, **zero visible ghosting**. The partition is
+  stated honestly as 15 viewed and 11 not viewed, summing to 26 -- a count that
+  cannot be read as coverage it does not have.
+- The apparent half-stop exposure ramps are not exposure at all. They are
+  **magnification from focus breathing**: `ln flux = -2 ln scale`, no free
+  parameter, permutation p = 0.0025, up to 5.06x RMS reduction when the model is
+  applied. Adjacent-frame residual after that is 0.003 to 0.006 stops.
+- **`foam` is a genuine exception**: 0.32 stops within 8 frames, with EXIF that
+  does not corroborate it. Photometric normalisation does not exist on the
+  default pyramid path, so this one is deferred rather than fixed, and it is
+  recorded as deferred rather than quietly dropped.
+
+The residual is a **lower bound**, and the agent said so unprompted -- the
+estimate is biased toward the README being right. That disclosure is worth more
+than the number.
+
+### 60.8 The under-resolved category is empty, and the statistic that filled it is discredited
+
+Two subjects, `119MSDCF` and `109MSDCF`, had been recorded as "genuinely
+under-resolved, last of 26". Opening them refuted it: both are sharp wherever the
+subject has structure. Retracted.
+
+That is the **third** retraction sourced from the same detail-ranking statistic,
+after `flowers-cpl` and `flower-inner-edge-cpl` -- and it stayed wrong even after
+contrast normalisation, which was the fix applied the first two times. Every one
+of the three was a subject with little structure, not an output with little
+sharpness.
+
+> **The detail ranking measures the subject, not the tool.** It has now produced
+> three wrong verdicts and zero right ones. Do not rank sharpness by a detail
+> statistic without opening the image. Normalising it does not repair it, because
+> the defect is in what it is a statistic *of*.
+
+No subject in the corpus is currently believed to be under-resolved by the merge.
+
+### 60.9 Where this leaves the softness question
+
+Three candidate explanations entered the night. The clamp is **exonerated** at
+0.1 to 0.4 sigma. The merge is **exonerated** by BUILD-TRIAGE at a worst deficit
+of 0.49 px against a 0.80 px threshold, though that classification has a zero in
+it and a zero is under suspicion until its detector is shown to be potent.
+Demosaic is **the survivor**, at a measured 22.9% loss per axis at f_out = 0.35
+with an oracle bound of 1.297x, and it is the only one of the three that is now a
+build rather than an investigation.
+
+Two of the three suspects were cleared by measurement that contradicted the
+people who nominated them, including me. That is the process working. It is also
+the reason the third should not be trusted until someone who did not measure it
+tries to kill it.
