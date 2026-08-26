@@ -1600,6 +1600,153 @@ campaign), `coffee-bubbles` residual zero-blue at 13.47%, and `109MSDCF` at
 
 ---
 
+## 20. The correction is on by default, and blue now moves too
+
+§15 found that lateral-CA correction worked and that nothing turned it on.
+`b914f31` switched it on in `gallery.ps1`; `993f0cc` added a `--fix-ca` flag.
+Neither was a fix. A flag declared `Option<String>` still defaults to `None`,
+and the product still shipped the correction off — the difference was only that
+the owner now had a thing he could type instead of a variable he could export.
+
+`96571ee` moves the default into the binary. `align_cmd.rs:1393` called
+`active_profile()`, which reads `STREHL_FIX_CA` and returns `None` when unset;
+it now calls BUILD-CHROMA's `profile_for_capture_env`, which applies the profile
+**iff the body model and composed lens id in the file match the ones it was
+measured on**. `main.rs` needed no code change at all: `--fix-ca` already sets
+the environment variable, so `--fix-ca off` routes through `profile_from_setting`
+to `Ok(None)` and remains the escape hatch, and a typo still hard-errors. Only
+its help text changed, because it described the flag as the way to enable a
+correction that is now on.
+
+Default-on is defensible **only because the guard is three-valued**. `Unknown`
+declines. An unreadable file gets an uncorrected render, never a stranger's
+measured aberration applied at full strength to glass it was not measured on.
+
+### Commissioned on pixels, not on a log line
+
+A log line saying "profile applied" is a claim the binary makes about itself.
+Four arms from one pinned binary compared by file hash is a claim about the
+image, and the two disagree exactly when the wiring is broken.
+
+| arm | flag | `flat-on-ruler-cpl` | `foam` |
+| --- | --- | --- | --- |
+| default | *(none)* | `510A1DF0…` | `922E07E1…` |
+| explicit | `--fix-ca a7c2-…` | `510A1DF0…` | `922E07E1…` |
+| off | `--fix-ca off` | `201DAD59…` | `3D792AB5…` |
+| typo | `--fix-ca not-a-profile` | exit 1, no output | exit 1, no output |
+
+7/7 checks on both subjects. The identity pair is the load-bearing one:
+*default ≠ off* alone is satisfied by any change at all, including a bug. Pairing
+it with *default = explicit* pins down **which** of the two states the default
+landed in.
+
+### The radial-band table, re-run with `283ccf4`
+
+ORCH predicted that BUILD-CHROMA landing `eps_b: None → Some(174.4e-6)` would
+make `|B−G|` flatten the way `|R−G|` did, and that a failure would mean one of
+the two lanes was wrong. Measured in camera-linear, never on an `--srgb` render.
+
+| subject | channel | centre (null) | corner | growth centre→corner |
+| --- | --- | --- | --- | --- |
+| ruler | `\|R−G\|` | 0.07036 → 0.06803 | 0.22684 → 0.08810 (**−61.2%**) | 3.22× → **1.29×** |
+| ruler | `\|B−G\|` | 0.04187 → 0.04089 | 0.10555 → 0.06292 (**−40.4%**) | 2.52× → **1.54×** |
+| foam | `\|R−G\|` | 0.16682 → 0.14800 | 0.46104 → 0.15077 (**−67.3%**) | 2.76× → **1.02×** |
+| foam | `\|B−G\|` | 0.14298 → 0.14041 | 0.22409 → 0.14071 (**−37.2%**) | 1.57× → **1.002×** |
+
+Blue moved, from the <4% ceiling §15 reported to −40.4% and −37.2% at the corner.
+The prediction holds.
+
+**A free internal control came with it.** §15's red numbers were measured on a
+pre-`283ccf4` binary: ruler 0.070→0.227 becoming 0.068→0.089, foam 0.167→0.461
+becoming 0.148→0.152. The red columns above reproduce those to 3–4 decimal
+places on both subjects. Since `283ccf4` only added `eps_b`, red *must* be
+unchanged, and it is — so blue is demonstrably the only thing that moved between
+the two binaries. That is a stronger statement than either table alone, and it
+cost nothing.
+
+The acceptance signature I set in §15 was that a correct radial correction does
+not merely lower a number, it **removes the radial growth and leaves a flat
+non-radial floor**. Foam now shows that for both channels: blue reads 0.14041,
+0.13625, 0.13455, 0.13106, 0.12843, 0.14071 across the six bands — flat to
+within the noise, growth 1.002×.
+
+### What the pictures say, which is more than the numbers
+
+`ca-ruler-283ccf4.png` and `ca-foam-283ccf4.png`, fixed fractional ROIs, 1:1.
+
+In the corners of the **off** arm every bright grain on the ruler carries an
+opposite-signed fringe *pair*, cyan on one flank and orange on the other, and the
+dark bar has a cyan edge on one side and a warm edge on the other. On foam every
+specular strut carries a hard red flank and a cyan flank. In the **on** arm those
+are neutral.
+
+The detail that matters: they are neutral, **not merely less red**. Correcting
+red alone would have left a blue/yellow residual fringe of its own. It doesn't.
+That is picture-level confirmation of `eps_b` that owes nothing to the table.
+The centre control is visually identical in both arms on both subjects, which is
+what a correction that is zero on axis has to look like.
+
+Honest caveat, unchanged: this is a correction for a **lens**. It is orthogonal
+to the halo and to the tone work and fixes neither.
+
+### The byte-freeze move, and a defect the default flip created
+
+One row moved: `coffee-bean-20-gate2-sidecar`. `coffee-bean-20-gate2-unaligned`
+did not, and that is the localisation this project's freeze header predicts —
+the correction is applied during **warp application**, so a row that applies no
+warp cannot see it. A change that moved both rows would have been a merge-core
+change and would not have been mine.
+
+Attribution followed the standard BUILD-HALO set on this row: **isolate the
+variable, do not blame a commit range.** Pinning a parent commit can only show
+bytes differ *across* a boundary. From a clean `git archive` pin of `96571ee`,
+re-rendering the row's own recorded invocation with `STREHL_FIX_CA=off`
+reproduces the superseded baseline `6325922C…27D8F` bit-exactly, and unset
+reproduces `88154E2D…461E` bit-exactly. Both arms are required — "off reproduces
+the old bytes" alone is also satisfied by a build that ignores the flag and moves
+nothing. As a side effect this clears every other commit since `2525e08`, and the
+four files other agents had uncommitted in the shared tree at the time, of
+touching these bytes.
+
+**`RENDER_ENV` was missing `STREHL_FIX_CA`.** That is the same unrecorded-input
+defect as the `STREHL_ALIGN` and `EDGE_AWARE` entries, with a twist that
+generalises past this project:
+
+> The variable is old, and the omission never bit while unset meant off, because
+> the only reachable ambient state matched the recorded pipeline. **Defaulting it
+> on turned a dormant unrecorded input into a live one with nothing in that file
+> changing.** A clear-list is not made safe by being complete on the day it was
+> written.
+
+This is not hypothetical: `scripts/gallery.ps1` sets that very variable, so "ran
+the gallery, then ran the tests, in one shell" is a real path to a mismatched
+hash.
+
+Commissioned rather than assumed, because a clear-list entry nobody exercises is
+precisely the defect class ORCH named. With the entry removed and an ambient
+`STREHL_FIX_CA=off`, the freeze test **fails** (exit 101, 1 failed); with it
+present under the same pollution it passes 5/5. The mutation is anchored on a
+unique full-line string and hard-errors if it does not land, and the source is
+restored from a `$env:TEMP` copy and asserted byte-identical.
+
+### The limitation, carried rather than buried
+
+BUILD-CHROMA's caveat stands and default-on is written knowing it: **the gear
+guard has never declined a real file.** All 26 corpus stacks are the same body,
+lens and teleconverter, so the negative path has no natural test case. The three
+synthetic negatives exercise the *matcher*; what is untested is the *parse* —
+whether a genuine non-TC ARW yields `lens_type3 == Some(32893)` rather than
+`None`. The guard is correct by construction, not by experiment. A short bracket
+shot without the teleconverter is on the capture list and would settle it.
+
+Note that §15b's per-subject EXIF check in `gallery.ps1` is a second, independent
+layer over the same question, and it *has* been exercised both ways against a
+planted mismatch. It is not a substitute — it guards the gallery script, not the
+binary — but the binary is no longer the only thing standing between a foreign
+lens and a misapplied coefficient.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
