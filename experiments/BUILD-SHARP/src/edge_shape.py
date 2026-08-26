@@ -54,6 +54,15 @@ HALF = 14
 N_EDGES = 60000
 PLATEAU = 5
 
+# STATED APPLICABILITY RANGE. This instrument cannot answer on edges wider than
+# this, and says so rather than returning a number. Derived by `--range`, which
+# sweeps blur and reports the widest edge at which a matched lanczos plant is
+# still distinguishable from a matched linear null. Both renders in the
+# strehl-vs-fork comparison measured 13.52 and 17.86 samples, several times past
+# it, so their excursions of exactly 0.000000 were the test refusing -- not an
+# absence of ringing. Re-derive with `--range` if HALF or PLATEAU change.
+APPLICABLE_MAX_WIDTH = 2.69
+
 
 def luma(path: Path) -> np.ndarray:
     a = tifffile.imread(str(path)).astype(np.float64)
@@ -121,17 +130,34 @@ def profiles(y: np.ndarray, label: str, verbose: bool = True):
     over = float(inner.max() - 1.0)
     under = float(0.0 - inner.min())
     if verbose:
+        wid = width_10_90(mean)
+        answerable = wid <= APPLICABLE_MAX_WIDTH
         print(f"  {label}")
         print(f"    edges used {len(acc)}, rejected {rej_amp} low-amp, "
               f"{rej_flat} no-plateau")
-        print(f"    mean profile max {mean.max():.4f}  min {mean.min():.4f}"
-              "   (whole window, includes the plateau samples themselves)")
-        print(f"    OVERSHOOT beyond bright plateau : {max(over, 0.0):.6f}")
-        print(f"    UNDERSHOOT below dark plateau   : {max(under, 0.0):.6f}")
-        print(f"    per-edge p95 overshoot          : "
-              f"{float(np.quantile(P[:, lo:hi].max(axis=1), 0.95)) - 1.0:.4f}")
-        print(f"    edge width 10-90%               : "
-              f"{width_10_90(mean):.2f} samples")
+        print(f"    edge width 10-90%               : {wid:.2f} samples "
+              f"(applicable range: <= {APPLICABLE_MAX_WIDTH})")
+        if answerable:
+            print(f"    OVERSHOOT beyond bright plateau : {max(over, 0.0):.6f}")
+            print(f"    UNDERSHOOT below dark plateau   : {max(under, 0.0):.6f}")
+            print("    VERDICT: RINGING" if max(over, under) > 1e-4
+                  else "    VERDICT: NO RINGING")
+        else:
+            # Structurally refuse rather than print a number a reader could
+            # mistake for a verdict. Outside the applicable range this test
+            # returns ~0.000000 whether or not ringing is present, so the
+            # number is not merely imprecise -- it is uninterpretable.
+            print(f"    VERDICT: REFUSED -- edge width {wid:.2f} exceeds the")
+            print(f"      applicable range {APPLICABLE_MAX_WIDTH}. Blur absorbs"
+                  " the excursion into a")
+            print("      transition that is still rising, so this test reads"
+                  " ~0 with or")
+            print("      without ringing present. Use a method that does not"
+                  " compare an")
+            print("      amplitude to an external reference (e.g. ISO 12233"
+                  " slanted edge).")
+            print(f"    (raw, NOT A VERDICT: over {max(over, 0.0):.6f}, "
+                  f"under {max(under, 0.0):.6f})")
         print("    profile: " + " ".join(f"{v:.3f}" for v in mean))
     return mean, over, under
 
@@ -216,6 +242,40 @@ def widths() -> int:
     return 0
 
 
+def applicable_range() -> int:
+    """Derive the applicability range by sweeping blur, rather than quoting it.
+
+    s38.5 reported a blindness threshold of 4.33 samples, but that came from a
+    three-point grid (blur 0 / 1.5 / 2.5) and is therefore an upper bound on
+    the last WORKING width, not a measurement of where the test fails. This
+    sweeps finely and reports the widest edge at which a matched plant is still
+    detectable.
+    """
+    print("APPLICABILITY RANGE -- swept, not quoted.")
+    print("Matched pairs at each blur: linear (no negative lobes) against")
+    print("lanczos-3 (negative lobes). Detectable = plant > max(20x null, 1e-4).\n")
+    print(f"  {'blur':>5}  {'width 10-90':>11}  {'null':>10}  {'plant':>10}  detectable")
+    last_ok = None
+    for blur in [0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5]:
+        nres = profiles(synth("linear", 0.0, blur), "n", verbose=False)
+        pres = profiles(synth("lanczos", 0.0, blur), "p", verbose=False)
+        if nres is None or pres is None:
+            print(f"  {blur:5.2f}  VACUOUS")
+            continue
+        null = max(nres[1], nres[2], 0.0)
+        plant = max(pres[1], pres[2], 0.0)
+        wid = width_10_90(nres[0])
+        det = plant > max(20.0 * null, 1e-4)
+        if det:
+            last_ok = wid
+        print(f"  {blur:5.2f}  {wid:11.2f}  {null:10.6f}  {plant:10.6f}  "
+              f"{'yes' if det else 'NO'}")
+    print(f"\n  WIDEST EDGE STILL ANSWERABLE: {last_ok:.2f} samples"
+          if last_ok is not None else "\n  NEVER ANSWERABLE")
+    print(f"  Module constant is APPLICABLE_MAX_WIDTH = {APPLICABLE_MAX_WIDTH}")
+    return 0
+
+
 def commission() -> int:
     print("COMMISSIONING the shape test")
     print("  Matched pairs: identical pipeline, only the sign of the shift")
@@ -247,6 +307,8 @@ def commission() -> int:
 def main() -> int:
     if len(sys.argv) == 2 and sys.argv[1] == "--commission":
         return commission()
+    if len(sys.argv) == 2 and sys.argv[1] == "--range":
+        return applicable_range()
     if len(sys.argv) == 2 and sys.argv[1] == "--widths":
         return widths()
     print("EDGE SHAPE, each render in its OWN geometry, no resampling\n")

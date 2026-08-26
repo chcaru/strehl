@@ -4957,3 +4957,80 @@ And, from s38.3, the one that cost the least and saved the most:
 > something moved. Both of this section's fatal defects -- a 4.3e11 division
 > blowup and a statistic reading back its own reference -- produced a PASSING
 > plant.
+
+### s38.9 The instrument now states where it is blind, and the range is tighter than s38.5 said
+
+ORCH's request: put s38's blindness threshold on the instrument itself, so the
+next person is told by the code rather than by this report.
+
+Doing that required re-deriving it, and the re-derivation **corrects s38.5**.
+That section reported a blindness threshold of **4.33 samples**, taken from a
+three-point grid (blur 0 / 1.5 / 2.5). A three-point grid cannot locate a
+threshold; 4.33 was the first width observed to FAIL, which makes it an upper
+bound on the last working width, not a measurement of it. Swept finely by
+`edge_shape.py --range`:
+
+| blur | width 10-90% | null (linear) | plant (lanczos) | detectable |
+| ---: | ---: | ---: | ---: | --- |
+| 0.00 | 1.89 | 0.000000 | 0.063624 | yes |
+| 0.25 | 2.16 | 0.000000 | 0.055554 | yes |
+| 0.50 | 2.37 | 0.000000 | 0.017203 | yes |
+| 0.75 | **2.69** | 0.000000 | 0.000988 | **yes -- last** |
+| 1.00 | 3.18 | 0.000000 | 0.000000 | NO |
+| 1.25 | 3.77 | 0.000000 | 0.000001 | NO |
+| 1.50 | 4.33 | 0.000000 | 0.000000 | NO |
+| 2.00 | 5.45 | 0.000000 | 0.000000 | NO |
+| 2.50 | 6.66 | 0.000000 | 0.000013 | NO |
+
+**The applicable range is 2.69 samples, not 4.33.** Detectability does not
+decay gently, it falls off a cliff: 0.0636, 0.0556, 0.0172, 0.000988, then
+nothing. The usable window is under three samples wide.
+
+This does not change s38's conclusion, it strengthens it. The two renders are
+**5.0x and 6.6x** past the applicable range, not the 3.1x and 4.1x that 4.33
+implied. And it sharpens the correction I owe: **s38.5's threshold flattered
+the instrument.** A number derived from where a test first fails will always
+overstate how far it works.
+
+`APPLICABLE_MAX_WIDTH = 2.69` is now a module constant carrying its own
+provenance, and `profiles()` refuses structurally rather than returning a
+number a reader could mistake for a verdict:
+
+```
+VERDICT: REFUSED -- edge width 13.52 exceeds the applicable range 2.69.
+  Blur absorbs the excursion into a transition that is still rising, so this
+  test reads ~0 with or without ringing present.
+(raw, NOT A VERDICT: over 0.000000, under 0.000000)
+```
+
+### s38.10 The guard is commissioned, because a check that always refuses is also broken
+
+A refusal guard that fires on everything is the same defect as a plant that
+passes on everything -- it is a test that cannot fail, s36.4. So the guard was
+commissioned on three fixtures through the ordinary code path:
+
+| fixture | edge width | verdict |
+| --- | ---: | --- |
+| `guard-inrange-ring` (lanczos, no blur) | 1.61 | **RINGING**, over 0.025239 |
+| `guard-inrange-clean` (linear, no blur) | 2.02 | **NO RINGING**, over 0.000000 |
+| `guard-outrange-ring` (lanczos, blur 2.0) | 5.29 | **REFUSED** |
+
+Three inputs, three different verdicts, so the guard discriminates rather than
+refusing by reflex.
+
+The third row is the one that justifies the whole exercise. It is a **genuinely
+ringing image** -- the same lanczos kernel that reads 0.025239 in row one --
+and it measures exactly 0.000000. Without the guard it would have been reported
+as clean, with an exact null and a passing plant behind it. That is the failure
+this instrument was capable of producing on any sufficiently blurred input, and
+it is now impossible to reach without the code saying so.
+
+### s38.11 The rule
+
+> **A threshold derived from where a test first fails is an upper bound on
+> where it still works, and it always flatters the instrument.** Sweep for it;
+> do not read it off the first failing grid point. Mine was 61% too generous.
+
+> **An instrument should name the region where it is blind, in code.** A report
+> saying so protects the reader who reads the report. A constant and a refusal
+> protect the reader who does not.
