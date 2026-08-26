@@ -60,13 +60,28 @@ param(
     # Arm label. Becomes the `--<arm>` suffix accept.py groups on.
     [Parameter(Mandatory = $true)][string]$Arm,
 
-    # Flags applied to EVERY subject. The default is camera-linear:
-    # accept.py defines clip% as "any channel exactly 0 in linear 16-bit", and
-    # the clamp defect it exists to catch is a linear negative-clamp. A
-    # tone-mapped arm's zeros are the black point, which is a different
-    # question -- use -Flags '--srgb --demosaic' and a distinct -Arm for that,
-    # never both in one arm.
-    [string]$Flags = '--demosaic',
+    # Flags applied to EVERY subject.
+    #
+    # --linear-srgb is the project's own stated answer to "what space is this
+    # measured in": it applies the camera colour matrix to sRGB/BT.709 primaries
+    # at D65 and then STOPS, before the transfer curve. Its help text is
+    # unambiguous -- "THIS IS THE MODE TO MEASURE IN" -- and the reason is that
+    # the only alternative, the bare default, uses the sensor's own primaries,
+    # which are stated nowhere. A measurement was therefore either taken through
+    # a curve or in an undeclared space. accept.py reads absolute DN, so the
+    # space has to be declared for its table to mean anything.
+    #
+    # CAVEAT worth carrying: the colour matrix has negative off-diagonal terms,
+    # so it can move a pixel across zero in either direction. clip% measured
+    # here is therefore "negative after the matrix", not "negative at
+    # blend-render.rs:572". To isolate the pre-matrix clamp, run a second arm
+    # with -Flags '--demosaic' -- one flag apart, and this harness makes an
+    # extra arm cheap. Do not put both in one arm.
+    #
+    # For print JUDGEMENT rather than measurement use '--srgb', in its own arm
+    # with its own name. Never mix: a tone-mapped arm and a linear arm are not
+    # two arms of one experiment.
+    [string]$Flags = '--linear-srgb --demosaic',
 
     [string]$Library = 'D:\personal\macro',
     [string]$OutRoot = 'C:\dev\strehl-out\acceptance',
@@ -124,12 +139,15 @@ if ($Arm -like '*--*') { throw "arm name must not contain '--': $Arm" }
 if (-not $subjects) { throw "no subjects with frames found under $Library" }
 
 # Largest first: the stacks that fail on memory fail early, not at minute 95.
-$subjects = $subjects | Sort-Object Frames -Descending
+# @() is not decoration: a single-subject -Only run makes Where-Object return a
+# scalar, and $subjects.Count then read 0, which printed "[ 1/0]".
+$subjects = @($subjects | Sort-Object Frames -Descending)
+$nSubjects = $subjects.Count
 
 $totalFrames = ($subjects | Measure-Object Frames -Sum).Sum
 $projSecs = $totalFrames * $SECS_PER_FRAME
 
-Write-Host ("subjects        : {0}" -f $subjects.Count)
+Write-Host ("subjects        : {0}" -f $nSubjects)
 Write-Host ("frames          : {0:N0}" -f $totalFrames)
 Write-Host ("projected wall  : {0:N0} min at {1} s/frame (measured under load)" -f ($projSecs / 60), $SECS_PER_FRAME)
 Write-Host ("arm             : {0}" -f $Arm)
@@ -268,7 +286,7 @@ $results = @()
 $i = 0
 foreach ($s in $subjects) {
     $i++
-    try { $results += Invoke-Subject -S $s -Index $i -Total $subjects.Count -Note '' }
+    try { $results += Invoke-Subject -S $s -Index $i -Total $nSubjects -Note '' }
     catch {
         Write-Warning "$($s.Name): $_"
         $results += [pscustomobject]@{ Name = $s.Name; Frames = $s.Frames; Secs = 0; Exit = -1
@@ -286,7 +304,7 @@ if ($retry) {
     foreach ($r in $retry) {
         $s = $subjects | Where-Object Name -eq $r.Name
         try {
-            $again = Invoke-Subject -S $s -Index 0 -Total $subjects.Count -Note '  [retry]'
+            $again = Invoke-Subject -S $s -Index 0 -Total $nSubjects -Note '  [retry]'
             $results = @($results | Where-Object Name -ne $r.Name) + $again
         } catch { Write-Warning "retry $($s.Name): $_" }
     }
@@ -309,7 +327,7 @@ $bad = @($results | Where-Object { $_.Status -notin @('ok', 'skip') })
     "binary sha256   : $binHash"
     "library         : $Library"
     "flags           : $Flags   (IDENTICAL on every subject)"
-    "subjects        : $($ok.Count)/$($subjects.Count) rendered"
+    "subjects        : $($ok.Count)/$($nSubjects) rendered"
     "frames          : $totalFrames"
     "wall clock      : $([math]::Round($runSw.Elapsed.TotalMinutes,1)) min"
     if ($Only.Count) { "PARTIAL ARM     : -Only was used -- $($Only -join ', ')" }
