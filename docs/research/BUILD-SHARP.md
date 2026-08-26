@@ -3051,3 +3051,81 @@ operator that does not execute cannot put a maximum into a profile, and I am not
 recording that as a pass. `restore.rs` still has no independent read; V-RESTORE
 is outstanding, and 24.2 was a defect in the wiring I wrote around the module,
 not evidence about the module.
+
+## 26. The `SonyFNumber2` lead is CLOSED. The aligner fits magnification per frame, and the held-out error refutes the premise.
+
+Cheap check first, as ORCH asked. `experiments/BUILD-SHARP/src/align_scale_span.py`,
+read straight off the sidecar the 205-frame `flower-bud-alone-cpl` merge actually
+used (`flower-bud-alone-cpl-4c58ad95fe89ce86.warpmap.txt`).
+
+### 26.1 Item 4 answered: magnification is a fitted parameter of the warp
+
+The aligner's per-frame transform is a `Similarity`, and
+`SimilarityParams::g` (`align.rs:238-241`) is documented as *"Scale minus one.
+`+0.01` is a 1% magnification."* Magnification is **not** something a separate
+ladder has to contain; it is solved for per frame, alongside translation and
+rotation, in the bundle adjustment.
+
+Worth recording because it is what made the lead plausible: **"scale ladder" is
+overloaded in this repository.** `photometric.rs:33` uses it for a per-frame
+*gain* ladder, `align.rs:556` for the coarse *decimation* ladder of the search
+pyramid, and `edgeaware.rs:763` for a multi-scale selection ladder. None of the
+three is the magnification model.
+
+### 26.2 What the aligner actually fitted, MEASURED
+
+| quantity | value |
+| --- | --- |
+| placements parsed | 205 (frames 0..204) |
+| merge plane | 3520 x 2344, half-diagonal **2115 px** |
+| fitted scale, min | 0.99991182 |
+| fitted scale, max | 1.00010753 |
+| **fitted span** | **0.00019572 = 0.0196 %** |
+| span as corner displacement | **0.41 px** |
+| held-out error (sidecar header) | **0.3519 px** |
+
+**The null passes and it could have failed.** If the aligner did not fit scale,
+every `|a|` would be exactly 1.0. Measured: **205 distinct values**, exactly
+**one** equal to 1.0 — frame 102, which the header names as the reference. The
+instrument was capable of reporting "no scale is fitted" and did not.
+
+### 26.3 The premise is arithmetically impossible, and the arbiter is the held-out error
+
+The relayed claim was ~13% magnification drift, essentially unmodelled. The
+decisive quantity is not the fitted span — a small fitted span is equally
+consistent with "the aligner missed a big ramp" and "the ramp is genuinely
+small". It is the **held-out error**: 0.3519 px, measured on frames excluded
+from the fit, which is precisely a bound on unmodelled misregistration.
+
+A 13% unmodelled magnification ramp would put the extreme frames ~275 px apart
+at this plane's half-diagonal (ORCH's ~450 px used r = 3500; the merge plane is
+binned, so the true half-diagonal is 2115 px — the conclusion is unchanged and
+the correction makes it no better for the claim). **A 275 px unmodelled error
+cannot coexist with a 0.3519 px held-out error.** The two are not in tension;
+they are contradictory.
+
+ORCH reached the same place from the pictures — `bee-3-cpl` resolving antenna
+sensory pits is not the output of a stack misregistered by hundreds of pixels —
+and the sidecar agrees with the pictures.
+
+So the error is in item 1 or item 2 of ORCH's list (the EXIF-to-magnification
+conversion, or a silhouette measurement whose "independent agreement" was never
+shown capable of disagreeing), **not item 4**. Item 4's answer is that the
+ladder is essentially the whole story and it is correctly small. **I am not
+chasing items 1-2**; the lead is closed for the purpose it was routed to me for,
+which was whether registration is a hidden third contributor to softness. It is
+not.
+
+### 26.4 What this does and does not exonerate
+
+**MEASURED:** residual scale-induced displacement across the whole 205-frame
+bracket is 0.41 px at the extreme corner, and total held-out registration error
+is 0.3519 px. Sub-pixel. Registration is **not** a third amplitude-loss term
+hiding behind the gather and demosaic numbers.
+
+**NOT claimed:** that 0.35 px is free. It is not zero, and a sub-pixel residual
+still costs amplitude through the same phase-averaged kernel priced in §20 —
+that cost is already inside the 0.6978 gather figure rather than additional to
+it. And this is one stack; the finding is that the *model* absorbs
+magnification, which generalises, rather than that every stack registers to
+0.35 px, which does not.
