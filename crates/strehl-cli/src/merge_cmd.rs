@@ -259,19 +259,36 @@ pub enum MergeBackend {
 ///
 /// # Why it is still the estimator
 ///
-/// Because the pyramid merge does not yet pass the acceptance gate, and the
-/// gate is the criterion. Measured on this binary, against the estimator as
-/// reference, on three subjects: it wins micro-contrast everywhere (+35% to
-/// +192%) and it wins acuity on all three -- but it clips **1.68% and 2.99%**
-/// of pixels on `dry-erase-marker-head-cpl` and `flower-bud-alone-cpl` against
-/// the estimator's 0.0009% and 0.0006%, and on the fern subject ORCH measured
-/// the shadow end collapsing with it, `p1` 8431 -> 110.
+/// Because the pyramid merge hard-clips, and the gate is the criterion.
 ///
-/// A merge that renders a subject's edge properly and hard-clips 3% of the
-/// frame is not obviously better than one that smears the edge; it is worse in
-/// a different place. So the pyramid path ships reachable and unselected until
-/// the clip is fixed -- that fix is BUILD-BLEND's, in `pyramid.rs`, and it
-/// targets exactly this -- and this line moves the day its gate table passes.
+/// Measured through this binary, both arms, camera-linear with `--demosaic`,
+/// `STREHL_FIX_CA` and `STREHL_PHOTOMETRIC` explicitly unset, so the arms
+/// differ in the merge and nothing else -- which is possible only because both
+/// merges now live behind one command and share one develop path:
+///
+/// | subject | arm | clip% | acuity | microC | p1 |
+/// | --- | --- | --- | --- | --- | --- |
+/// | couch-fibers | estimator | 0.0000 | 290.3 | 274.76 | 3076 |
+/// | | pyramid | 0.0000 | **392.0** | **348.14** | 3216 |
+/// | flower-bud-alone | estimator | 0.0001 | 108.7 | 43.67 | 1028 |
+/// | | pyramid | **1.4043** | **227.6** | **119.04** | **334** |
+///
+/// The pyramid merge wins acuity and micro-contrast on both subjects,
+/// including on `couch-fibers-cpl`, which has no silhouette and therefore no
+/// smear artifact to inflate the estimator's reference. It is the better merge
+/// and by eye it is not close.
+///
+/// It still does not get the default, because on `flower-bud-alone-cpl` it
+/// clips **1.4043% of pixels against 0.0001%** -- four orders of magnitude --
+/// and drops `p1` from 1028 to 334 at the same time. Clipping and shadow
+/// collapse together are a contrast expansion at both ends, not a highlight
+/// artefact, and neither moves with the band gate: at `--pyramid-gate 4` the
+/// clip is 1.4015% and `p1` is 339, essentially unchanged. So it is the merge,
+/// and it is BUILD-BLEND's to fix in `pyramid.rs`.
+///
+/// A merge that renders a subject's edge properly and hard-clips 1.4% of the
+/// frame is not better than one that smears the edge; it is worse in a
+/// different place. This line moves the day that clip passes the gate.
 pub const DEFAULT_MERGE_BACKEND: MergeBackend = MergeBackend::Estimator;
 
 impl Default for MergeBackend {
