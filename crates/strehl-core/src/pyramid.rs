@@ -761,12 +761,81 @@ pub enum Hull {
     /// Clamp each output pixel to `[min_k, max_k]` over the aligned input
     /// frames at that pixel. The default.
     InputRange,
+    /// [`InputRange`](Self::InputRange), plus the same bound applied to the
+    /// **partial reconstruction at every pyramid level** during collapse.
+    ///
+    /// # Why bounding only the final sum is not enough
+    ///
+    /// Collapse runs coarse to fine, and at each step
+    ///
+    /// ```text
+    ///   acc_k     = expand(acc_k+1)     + merged_Lap_k
+    ///   Gauss_f,k = expand(Gauss_f,k+1) + Lap_f,k        for a single frame f
+    /// ```
+    ///
+    /// [`SelectMode::SoftPower`] makes `merged_Lap_k` a convex combination
+    /// *within* band `k`, so it lies inside the frames' Laplacian hull there.
+    /// Bounding the band itself is therefore a no-op — the coefficient is
+    /// already inside. The leak is in the **sum**: because
+    /// `min(a + b) >= min a + min b`, the admissible range of `acc_k` is
+    /// strictly wider than `[min_f Gauss_f,k, max_f Gauss_f,k]`, and that slack
+    /// compounds through every remaining expand. Clamping once at level 0 lets
+    /// the excursion born at the coarsest level ride all the way down.
+    ///
+    /// # Why this is aimed at the coarse end
+    ///
+    /// Measured, not assumed. A 2x2 factorial separating the two things a band
+    /// count change does at once (see `docs/research/BUILD-BLEND.md` s18)
+    /// attributes the excursion to the newly *selected* coarsest band, not to
+    /// the exponent ramp that shifts with it: the new band alone explains 56%
+    /// of the effect and the ramp alone 3%. Independently, a risk map binned on
+    /// control-arm luminance and gradient finds the clipped population is dark
+    /// and **flat**, not dark and edgy — risk falls 5.5x as gradient rises. Both
+    /// point at broad, low-frequency, flat-region excursion, which is what a
+    /// coarse-band inconsistency produces and what this bounds.
+    ///
+    /// Bounding every level rather than only the coarse ones is the cheaper
+    /// choice to justify: at fine levels the bound is nearly inactive precisely
+    /// because little slack has accumulated yet, so it costs almost nothing to
+    /// include them and removes a free parameter that would otherwise have to be
+    /// tuned.
+    ///
+    /// # What it does not do
+    ///
+    /// It does not touch selection. The exponent ramp, the band count and
+    /// `sharpen_per_octave` are all unchanged, which matters because every one
+    /// of those is a way to make the excursion disappear by turning the stacker
+    /// off: `--sharpen 0` scores a perfect zero clip count and renders the
+    /// subject as a featureless grey smudge. A bound is not a softener.
+    PerLevel,
     /// Emit the reconstruction as-is.
     ///
     /// Kept reachable because a fix whose defect can no longer be reproduced
     /// cannot be measured interventionally, and because the excursion is the
     /// only direct evidence that the clamp is doing anything.
     Unclamped,
+}
+
+impl Hull {
+    /// Whether this mode maintains the level-0 hull of the input frames.
+    ///
+    /// Both clamping modes need it: [`Hull::PerLevel`] is a strict tightening
+    /// of [`Hull::InputRange`] and still applies the level-0 bound, so every
+    /// site that asks "am I accumulating a hull?" must accept both. Writing it
+    /// as a method rather than repeating `== InputRange || == PerLevel` at each
+    /// site exists because that comparison is load-bearing in five places and a
+    /// missed one would silently leave a hull unaccumulated, which reads as a
+    /// merge that simply has no clamp.
+    #[must_use]
+    pub fn bounds(self) -> bool {
+        matches!(self, Hull::InputRange | Hull::PerLevel)
+    }
+
+    /// Whether the partial reconstruction is bounded at every pyramid level.
+    #[must_use]
+    pub fn bounds_each_level(self) -> bool {
+        matches!(self, Hull::PerLevel)
+    }
 }
 
 /// Everything the multi-band merge is parameterised by.
@@ -933,6 +1002,11 @@ pub struct BandMerge {
     /// stays exact.
     lo: Vec<Vec<f32>>,
     hi: Vec<Vec<f32>>,
+    /// Per-level hulls of the frames' **Gaussian** pyramids for levels
+    /// `1..sizes.len()`, indexed `(k - 1) * planes + c`. See [`Hull::PerLevel`].
+    /// Empty in every other mode.
+    lo_lv: Vec<Vec<f32>>,
+    hi_lv: Vec<Vec<f32>>,
     frames: u32,
     /// Frames whose contribution was entirely below the noise floor at every
     /// level. Reported, because a stack where this is large is one where the
@@ -958,15 +1032,41 @@ impl BandMerge {
             },
             // Seeded at the identities so the first frame sets both, rather
             // than seeding from frame 0 and special-casing it.
-            lo: match cfg.hull {
-                Hull::InputRange => (0..planes).map(|_| vec![f32::INFINITY; sizes[0].pixels()]).collect(),
-                Hull::Unclamped => Vec::new(),
+            lo: match cfg.hull.bounds() {
+                true => (0..planes).map(|_| vec![f32::INFINITY; sizes[0].pixels()]).collect(),
+                false => Vec::new(),
             },
-            hi: match cfg.hull {
-                Hull::InputRange => {
+            hi: match cfg.hull.bounds() {
+                true => {
                     (0..planes).map(|_| vec![f32::NEG_INFINITY; sizes[0].pixels()]).collect()
                 }
-                Hull::Unclamped => Vec::new(),
+                false => Vec::new(),
+            },
+            // Coarser-level hulls, indexed `(k - 1) * planes + c` for
+            // `k` in `1..sizes.len()`. Level 0 is already `lo`/`hi` and is not
+            // duplicated here. Allocated only under [`Hull::PerLevel`], so the
+            // default configuration carries no extra memory at all.
+            lo_lv: if cfg.hull.bounds_each_level() {
+                let mut v = Vec::with_capacity((sizes.len() - 1) * planes);
+                for k in 1..sizes.len() {
+                    for _ in 0..planes {
+                        v.push(vec![f32::INFINITY; sizes[k].pixels()]);
+                    }
+                }
+                v
+            } else {
+                Vec::new()
+            },
+            hi_lv: if cfg.hull.bounds_each_level() {
+                let mut v = Vec::with_capacity((sizes.len() - 1) * planes);
+                for k in 1..sizes.len() {
+                    for _ in 0..planes {
+                        v.push(vec![f32::NEG_INFINITY; sizes[k].pixels()]);
+                    }
+                }
+                v
+            } else {
+                Vec::new()
             },
             frames: 0,
             // Measured for the depth this plane geometry ACTUALLY reaches, not
@@ -1096,12 +1196,33 @@ impl BandMerge {
         //    confined to. Taken from the frames as supplied — before any
         //    decomposition — because it is a statement about the observations,
         //    not about the representation.
-        if self.cfg.hull == Hull::InputRange {
+        if self.cfg.hull.bounds() {
             for c in 0..self.planes {
                 let (lo, hi) = (&mut self.lo[c][..n0], &mut self.hi[c][..n0]);
                 for ((l, h), v) in lo.iter_mut().zip(hi.iter_mut()).zip(planes[c]) {
                     *l = l.min(*v);
                     *h = h.max(*v);
+                }
+            }
+        }
+        // 4b. The same statement about the observations, made at every coarser
+        //     scale. See [`Hull::PerLevel`]. The frame's GAUSSIAN pyramid is the
+        //     right object here, not its Laplacian: during collapse the partial
+        //     reconstruction at level `k` is an estimate of the frames' Gaussian
+        //     at level `k`, so that is what it has to be confined to. Bounding
+        //     the Laplacian band instead would be a no-op, because SoftPower
+        //     already makes each band a convex combination within itself.
+        if self.cfg.hull.bounds_each_level() {
+            for c in 0..self.planes {
+                ws.ghull.build_gaussian(planes[c], &mut ws.ws);
+                for k in 1..self.sizes.len() {
+                    let idx = (k - 1) * self.planes + c;
+                    let g = ws.ghull.level(k);
+                    let (lo, hi) = (&mut self.lo_lv[idx], &mut self.hi_lv[idx]);
+                    for ((l, h), v) in lo.iter_mut().zip(hi.iter_mut()).zip(g) {
+                        *l = l.min(*v);
+                        *h = h.max(*v);
+                    }
                 }
             }
         }
@@ -1170,13 +1291,32 @@ impl BandMerge {
     pub fn absorb(&mut self, other: &BandMerge) {
         assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
         assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
-        if self.cfg.hull == Hull::InputRange {
-            assert_eq!(other.cfg.hull, Hull::InputRange, "cannot absorb a merge with no hull");
+        if self.cfg.hull.bounds() {
+            assert_eq!(
+                other.cfg.hull, self.cfg.hull,
+                "cannot absorb a merge with a different hull mode"
+            );
             for c in 0..self.planes {
                 for ((a, b), (x, y)) in self.lo[c]
                     .iter_mut()
                     .zip(&other.lo[c])
                     .zip(self.hi[c].iter_mut().zip(&other.hi[c]))
+                {
+                    *a = a.min(*b);
+                    *x = x.max(*y);
+                }
+            }
+            // The coarser-level hulls are min/max folds exactly as level 0 is,
+            // so they absorb identically. Missing this is the failure mode the
+            // `Hull::bounds` helper exists to prevent: a chunked render would
+            // then clamp each chunk to its OWN per-level hull and produce a
+            // result no serial render could, which is precisely the seam this
+            // module exists to remove.
+            for i in 0..self.lo_lv.len() {
+                for ((a, b), (x, y)) in self.lo_lv[i]
+                    .iter_mut()
+                    .zip(&other.lo_lv[i])
+                    .zip(self.hi_lv[i].iter_mut().zip(&other.hi_lv[i]))
                 {
                     *a = a.min(*b);
                     *x = x.max(*y);
@@ -1276,12 +1416,27 @@ impl BandMerge {
                         }
                     }
                 }
-                let mut img = pyr.collapse(ws);
+                let mut img = if self.cfg.hull.bounds_each_level() {
+                    // Bound the partial reconstruction at every level on the way
+                    // down, so an excursion born in a coarse band cannot be
+                    // carried through the remaining expands and amplified. See
+                    // [`Hull::PerLevel`] for why the final clamp alone is not
+                    // sufficient.
+                    self.collapse_bounded(&pyr, c, ws)
+                } else {
+                    pyr.collapse(ws)
+                };
                 // Confine the reconstruction to what the inputs support. See
                 // [`Hull`]: per-band convexity does not imply reconstruction
                 // convexity, so this is the only stage that can make the
                 // module's stated safety property true of its output.
-                if self.cfg.hull == Hull::InputRange {
+                //
+                // Still applied under `PerLevel`: the per-level pass bounds
+                // levels `1..n`, and this is level 0. Together they bound every
+                // level, and running this unconditionally means `PerLevel` is a
+                // strict tightening of `InputRange` rather than a replacement
+                // whose weaker cases would have to be argued separately.
+                if self.cfg.hull.bounds() {
                     for ((p, l), h) in img.iter_mut().zip(&self.lo[c]).zip(&self.hi[c]) {
                         *p = p.clamp(*l, *h);
                     }
@@ -1289,6 +1444,45 @@ impl BandMerge {
                 img
             })
             .collect()
+    }
+
+    /// [`Pyramid::collapse`], with the partial reconstruction clamped to the
+    /// frames' Gaussian hull at each level before it is expanded again.
+    ///
+    /// Mirrors `collapse` exactly apart from the clamp, deliberately: any
+    /// divergence in the reconstruction arithmetic itself would show up as a
+    /// difference between hull modes and be misread as an effect of the bound.
+    fn collapse_bounded(&self, pyr: &Pyramid, c: usize, ws: &mut Workspace) -> Vec<f32> {
+        let n = pyr.levels();
+        let mut acc = pyr.level(n - 1).to_vec();
+        // The coarsest level is the base residual. It is a convex combination of
+        // the frames' Gaussians there, so this clamp is very nearly inactive --
+        // but it is applied anyway rather than assumed inactive, because "nearly"
+        // is not a property and the unweighted fallback is a mean whose
+        // membership of the hull deserves to be enforced rather than reasoned
+        // about.
+        if n - 1 >= 1 {
+            let idx = (n - 2) * self.planes + c;
+            for ((p, l), h) in acc.iter_mut().zip(&self.lo_lv[idx]).zip(&self.hi_lv[idx]) {
+                *p = p.clamp(*l, *h);
+            }
+        }
+        for k in (0..n - 1).rev() {
+            let px = pyr.sizes()[k].pixels();
+            let mut up = vec![0.0; px];
+            expand(&acc, pyr.sizes()[k + 1], &mut up, pyr.sizes()[k], &mut ws.scratch);
+            for (u, b) in up.iter_mut().zip(pyr.level(k)) {
+                *u += b;
+            }
+            if k >= 1 {
+                let idx = (k - 1) * self.planes + c;
+                for ((p, l), h) in up.iter_mut().zip(&self.lo_lv[idx]).zip(&self.hi_lv[idx]) {
+                    *p = p.clamp(*l, *h);
+                }
+            }
+            acc = up;
+        }
+        acc
     }
 
     /// Fraction of output pixels, per plane, where the hull clamp moved the
@@ -1306,13 +1500,15 @@ impl BandMerge {
     /// which is a statement about the selection exponent and not about the
     /// clamp. Empty under [`Hull::Unclamped`].
     pub fn clamped_fraction(&self, ws: &mut Workspace, tol: f32) -> Vec<f64> {
-        if self.cfg.hull != Hull::InputRange {
+        if !self.cfg.hull.bounds() {
             return Vec::new();
         }
         let unclamped = BandMerge {
             cfg: MergeConfig { hull: Hull::Unclamped, ..self.cfg },
             lo: Vec::new(),
             hi: Vec::new(),
+            lo_lv: Vec::new(),
+            hi_lv: Vec::new(),
             ..self.clone()
         };
         unclamped
@@ -1338,6 +1534,10 @@ pub struct FrameWorkspace {
     ws: Workspace,
     luma: Pyramid,
     var: Pyramid,
+    /// Gaussian pyramid of one plane, reused plane-by-plane to fold the
+    /// per-level hulls under [`Hull::PerLevel`]. Allocated always (it is one
+    /// pyramid per worker, not per frame) but only written in that mode.
+    ghull: Pyramid,
     plane: PlaneCache,
     sq: Vec<f32>,
     weight: Vec<f32>,
@@ -1352,6 +1552,7 @@ impl FrameWorkspace {
             ws: Workspace::new(sizes),
             luma: Pyramid::zeros(sizes),
             var: Pyramid::zeros(sizes),
+            ghull: Pyramid::zeros(sizes),
             plane: PlaneCache::new(sizes, planes),
             sq: vec![0.0; n0],
             weight: vec![0.0; n0],
@@ -2193,6 +2394,91 @@ mod tests {
     fn the_reconstruction_never_leaves_the_hull_of_its_inputs() {
         let (bad, n, worst) = hull_violations(Hull::InputRange);
         assert_eq!(bad, 0, "{bad}/{n} output pixels outside the input hull, worst {worst} of span");
+    }
+
+    #[test]
+    fn per_level_also_never_leaves_the_hull_of_its_inputs() {
+        // `PerLevel` is a strict tightening of `InputRange`, so it inherits the
+        // safety property rather than trading it away.
+        let (bad, n, worst) = hull_violations(Hull::PerLevel);
+        assert_eq!(bad, 0, "{bad}/{n} output pixels outside the input hull, worst {worst} of span");
+    }
+
+    /// Pixels the FINAL level-0 clamp had to rescue, i.e. sitting exactly on the
+    /// hull boundary in the output.
+    ///
+    /// This is the statistic that separates the two clamping modes. Both end up
+    /// inside the hull, so counting violations cannot tell them apart -- both
+    /// read zero. What `PerLevel` claims is that the excursion is caught at the
+    /// coarse level where it is born, so that by the time the reconstruction
+    /// reaches level 0 there is far less for the last clamp to do. A pixel
+    /// pinned exactly at `lo` or `hi` is one the last clamp rescued.
+    fn pinned_to_hull(hull: Hull) -> (usize, usize) {
+        let (w, h, nf) = (192usize, 144usize, 8usize);
+        let frames: Vec<Vec<f32>> = (0..nf).map(|f| disagreeing_bands(w, h, nf, f)).collect();
+        let cfg = MergeConfig { hull, ..MergeConfig::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let var = vec![4.0f32; w * h];
+        for f in &frames {
+            fws.next_frame();
+            merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+        }
+        let out = merge.finish(&mut Workspace::new(&sizes))[0].clone();
+        let mut pinned = 0usize;
+        for i in 0..out.len() {
+            let lo = frames.iter().fold(f32::INFINITY, |a, f| a.min(f[i]));
+            let hi = frames.iter().fold(f32::NEG_INFINITY, |a, f| a.max(f[i]));
+            if (out[i] - lo).abs() < 1e-3 || (out[i] - hi).abs() < 1e-3 {
+                pinned += 1;
+            }
+        }
+        (pinned, out.len())
+    }
+
+    #[test]
+    fn per_level_leaves_the_final_clamp_less_to_do() {
+        // The whole claim of `Hull::PerLevel`, stated as something that can
+        // fail. If bounding each level did nothing, the last clamp would rescue
+        // the same pixels it always did and these two counts would match.
+        let (pinned_flat, n) = pinned_to_hull(Hull::InputRange);
+        let (pinned_deep, _) = pinned_to_hull(Hull::PerLevel);
+        assert!(
+            pinned_flat > 0,
+            "the fixture does not exercise the clamp at all ({n} px), so this \
+             comparison would be vacuous"
+        );
+        assert!(
+            pinned_deep < pinned_flat,
+            "bounding every level did not reduce the work left to the final clamp: \
+             {pinned_deep} pinned vs {pinned_flat} of {n} px"
+        );
+    }
+
+    #[test]
+    fn per_level_is_exact_when_every_frame_agrees() {
+        // The do-no-harm case. With identical frames the hull is a point at
+        // every level, so a correct bound is inert and the output must be the
+        // frame itself. A bound that damaged this would be clamping to
+        // something other than what the frames actually support.
+        let (w, h) = (96usize, 72usize);
+        let frame = disagreeing_bands(w, h, 4, 1);
+        let cfg = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let var = vec![4.0f32; w * h];
+        for _ in 0..5 {
+            fws.next_frame();
+            merge.add_frame(&[frame.as_slice()], &frame, &var, &mut fws);
+        }
+        let out = merge.finish(&mut Workspace::new(&sizes))[0].clone();
+        let worst = out
+            .iter()
+            .zip(&frame)
+            .fold(0.0f32, |a, (o, f)| a.max((o - f).abs()));
+        assert!(worst < 1e-2, "identical frames did not reconstruct themselves: worst {worst} DN");
     }
 
     #[test]

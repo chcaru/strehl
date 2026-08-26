@@ -122,6 +122,7 @@ fn parse_args() -> Result<Args> {
             // reconstruction may emit values no input frame supports, which on
             // real stacks crushes dark pixels to exact zero. See `Hull`.
             "--unclamped" => a.cfg.hull = Hull::Unclamped,
+            "--per-level" => a.cfg.hull = Hull::PerLevel,
             "--linear" => a.linear = true,
             // Camera-native primaries, linear, no matrix and no transfer curve
             // -- `image_out::OutputSpace::CameraLinear`, the byte-frozen
