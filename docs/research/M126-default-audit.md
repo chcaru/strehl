@@ -1427,3 +1427,52 @@ constant, so it never enters the promote/keep-off table. It is recorded here as
 a **correctness check that passed**, with one named residual (§16.7, alignment)
 that a future milestone should close.
 
+
+---
+
+## 17. Addendum 5 — the composite, and a refutation of this report's own headline
+
+**Report:** [`M126-composite.md`](M126-composite.md). **Commit:** `1b187815`.
+**Binary:** the pin at `b9b6921e` (one binary for all arms). **Subjects:** 2 x 9 arms.
+
+ORCH asked what the render looks like with every measured-good-but-dark stage
+switched **on at once**. The answer is that **the composite is not constructible**:
+three of the four stages have no call site reachable from the shipping `pyramid`
+backend at all, established by enumerating the complete call-site set rather than
+inferred from a null. The one that is reachable (`STREHL_RESTORE`, under
+`--demosaic`) **runs and reports `recovered 0.0000`** at four caps spanning 7.3x,
+with all five outputs byte-identical — a measured identity, not a wiring defect.
+
+**The promotable finding is a compiled constant, not an env gate:**
+`--pyramid-gate 4.5` cuts flat-field high-pass rms on `bee-3-cpl` from
+**144.37 to 14.53 DN (9.9x)** with the compound eye **indistinguishable by eye**,
+and it renders **faster** (228.1 s vs 293.5 s).
+
+### 17.1 What this refutes in the report above
+
+> **§7 and §11 of this report name `STREHL_FIX_HALO` as the only gate to clear all
+> three bars on `bee-3-cpl` (`dD` +0.01810, 73.2 % of tiles improved), and call it
+> the milestone's biggest surprise. Looking at the pixels, that exception does not
+> survive.**
+
+Halo correction on `bee-3-cpl` **erases the wing membrane's microtexture** and
+replaces it with posterised plateaus and hard contour banding (gradient energy
+542.14 -> 309.92 at the block where it acted hardest; 12.772 % of pixels changed,
+peak 49.363 % of full scale). The binary's own banner says so in advance: *"This is
+NOT a fidelity improvement ... cuts the halo metric 79.8 % and raises RMSE against
+truth 254.6 %."*
+
+The **KEEP OFF verdict survives**. One of its two stated reasons does not, and the
+recorded exception is withdrawn. Per discipline 912, a correct verdict reached
+partly by a wrong argument is recorded as an error, not as a pass. The tile metric
+rewarded boundary contrast and was blind to texture destroyed *between* boundaries;
+only opening the file found it.
+
+### 17.2 What it confirms
+
+* The **41-frame floor** for halo (§7) now has a two-point dose-response in both
+  directions: **byte-identical at 22 frames** (`109MSDCF`), **12.772 % of pixels at
+  299** (`bee-3-cpl`).
+* The `STREHL_RESTORE=1.0` placebo read **exactly zero on both subjects**.
+* `STREHL_ROBUST_ELECTION` remains unwired (§13); nothing in the composite arms
+  moved it.
