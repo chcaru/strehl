@@ -35,6 +35,27 @@ const VERSION: &str = concat!(
     ")"
 );
 
+/// The same fact as [`VERSION`], in the form TIFF tag 305 `Software` takes.
+///
+/// This is the third home of the build stamp and the longest-lived one. The
+/// banner scrolls away and `--version` is asked once, but the tag is the only
+/// provenance that travels *on the artifact*, so it is the only one still
+/// present when someone opens a print master a year later. Every master shipped
+/// before this said `strehl 0.0.0`, which names no source at all.
+///
+/// It is assembled by a second `concat!` rather than from [`VERSION`] because
+/// `concat!` takes literals and cannot interpolate a `const`. That is exactly
+/// the shape that drifts, so
+/// `the_software_tag_and_the_version_string_are_the_same_fact` holds the two
+/// together: two provenance strings that disagree are worse than one missing.
+const SOFTWARE: &str = concat!(
+    "strehl ",
+    env!("CARGO_PKG_VERSION"),
+    " (",
+    env!("STREHL_BUILD_ID"),
+    ")"
+);
+
 #[derive(Parser)]
 #[command(name = "strehl", version = VERSION, about = "Noise-aware RAW focus stacking")]
 struct Cli {
@@ -1121,6 +1142,7 @@ mod tests {
     use clap::CommandFactory;
 
     use super::merge_cmd::{DEFAULT_MERGE_BACKEND, DEFAULT_PHOTOMETRIC_MODE, MergeBackend};
+    use super::{SOFTWARE, VERSION};
     use strehl_core::photometric::PhotometricMode;
 
     /// Every photometric mode with the spelling `--help` uses for it, so the
@@ -1276,6 +1298,42 @@ mod tests {
             "expected the non-default backend to carry the \"is NOT the \
              default\" caveat, found {} such caveats in `stack --help`",
             caveats,
+        );
+    }
+
+    /// The banner, `--version` and TIFF tag 305 must name the same build.
+    ///
+    /// [`SOFTWARE`] cannot be spelled `concat!("strehl ", VERSION)` because
+    /// `concat!` takes literals and will not interpolate a `const`, so the
+    /// string is assembled twice from the same pair of `env!`s. Twice is where
+    /// drift lives: someone edits one and not the other, and thereafter the
+    /// artifact disagrees with the log that describes it. Two provenance
+    /// strings that disagree are worse than one that is missing, because the
+    /// disagreement has to be adjudicated by somebody who no longer has either
+    /// build.
+    ///
+    /// The second assertion is the one with teeth. `strehl 0.0.0` is what all
+    /// 26 masters shipped before this said, and it is a version string that
+    /// names no source: the package version has not moved since the first
+    /// commit and will not move again on its own. A tag is only provenance if
+    /// it carries the build id, so an empty or absent stamp fails here rather
+    /// than shipping a plausible-looking `strehl 0.0.0 ()`.
+    #[test]
+    fn the_software_tag_and_the_version_string_are_the_same_fact() {
+        assert_eq!(
+            SOFTWARE,
+            format!("strehl {VERSION}"),
+            "the TIFF Software tag and --version name different builds"
+        );
+        let id = env!("STREHL_BUILD_ID");
+        assert!(
+            !id.is_empty(),
+            "the build stamp is empty, so tag 305 would say `strehl {} ()`",
+            env!("CARGO_PKG_VERSION")
+        );
+        assert!(
+            SOFTWARE.ends_with(&format!("({id})")),
+            "the Software tag does not carry the build id {id}: {SOFTWARE}"
         );
     }
 

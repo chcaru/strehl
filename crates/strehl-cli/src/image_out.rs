@@ -96,8 +96,8 @@ use anyhow::{Context, Result};
 use rayon::prelude::*;
 use strehl_core::color;
 use strehl_core::demosaic::{Mosaic, demosaic_row};
-use tiff::encoder::{TiffEncoder, colortype};
-use tiff::tags::Tag;
+use tiff::encoder::{Rational, TiffEncoder, colortype};
+use tiff::tags::{ResolutionUnit, Tag};
 
 fn writer(path: &Path) -> Result<TiffEncoder<BufWriter<File>>> {
     if let Some(parent) = path.parent()
@@ -520,6 +520,58 @@ fn icc_for(dev: &Develop) -> Option<Vec<u8>> {
     }
 }
 
+/// The print resolution written into every tagged master, in dots per inch.
+///
+/// **What it replaces.** `tiff` writes `XResolution = YResolution = 1/1` with
+/// `ResolutionUnit::None` unless told otherwise (`encoder/mod.rs:696-698`), and
+/// that default reached all 26 shipped masters. It declares *one pixel per
+/// undefined unit*, which is not a small imprecision: Photoshop, Lightroom,
+/// Capture One and every RIP read tags 282/283/296 to establish physical size,
+/// so a `7032x4688` master either opens as a document 7032 by 4688 **inches**
+/// -- about 590 by 390 feet -- or the application substitutes a default of its
+/// own, and those defaults differ between applications. A print master whose
+/// physical size is undefined is not a print master.
+///
+/// **Why 300 rather than 360.** At 300 dpi the 7032x4688 master is
+/// `7032 / 300 = 23.44` by `4688 / 300 = 15.63` inches. The alternative worth
+/// naming is 360, the native pitch of the Epson pigment printers this rig would
+/// actually use, giving `7032 / 360 = 19.53` by `4688 / 360 = 13.02` inches.
+/// Both are real, desirable print sizes and neither is wrong. 300 wins because
+/// **this tag is advisory**: it declares an intended physical size and resamples
+/// nothing, so no pixel is better or worse for the choice. Given that, the
+/// interchange default is the one that behaves predictably in the widest set of
+/// readers, and anyone driving an Epson can state 360 at print time without the
+/// file having lost anything. Were the tag lossy the argument would run the
+/// other way.
+const PRINT_DPI: u32 = 300;
+
+/// What tag 305 says on a **measurement** render, and why it is deliberately
+/// not the build stamp.
+///
+/// [`crate::SOFTWARE`] carries the source commit, which is the whole point of
+/// it -- an artifact that cannot name its build cannot be audited. But a commit
+/// hash changes on every commit *by construction*, and the measurement renders
+/// are hashed whole by `tests/byte-freezes.tsv`. Stamping the build into them
+/// makes those rows a function of the commit they are checked at, so they would
+/// go red on every commit forever and be re-baselined without anybody reading
+/// them. A regression test that must be re-baselined routinely is not a
+/// regression test.
+///
+/// MEASURED, and this is the measurement that forced the split: with the stamp
+/// written unconditionally, `coffee-bean-20-gate2-unaligned` grew by 37 bytes
+/// on a tree stamped `6e8c3898b2da-dirty` and by 31 on the same source stamped
+/// `72b997e8e4ee`. The six-byte gap is the length of `-dirty`. The frozen hash
+/// had become a function of which tree the test ran in.
+///
+/// So the split is by *kind of file*, using the discriminator this module
+/// already trusts: a profile is emitted exactly when a colour matrix was
+/// applied. A colorimetric render is a picture -- somebody looks at it, prints
+/// it, keeps it -- and its provenance has to travel with it. A camera-native
+/// render is measurement data whose provenance is recorded far more completely
+/// in the freeze registry, which stores the entire invocation beside the hash.
+/// The one that needs the stamp least is the one that cannot afford it.
+const MEASUREMENT_SOFTWARE: &str = concat!("strehl ", env!("CARGO_PKG_VERSION"));
+
 /// Interleaved RGB, 16 bits per channel, with the colour space stated in the
 /// file.
 ///
@@ -547,17 +599,40 @@ pub fn write_rgb16_described(
         .with_context(|| format!("tagging {}", path.display()))?;
     // The machine-readable half of the same statement. The description above is
     // for a human; this is the only part a colour-managed application reads.
-    if let Some(profile) = icc_for(dev) {
+    //
+    // Whether a profile exists is also the line between the two kinds of file
+    // this function writes, so it is computed once and reused below rather than
+    // asked twice: a profile is emitted exactly when a colour matrix was
+    // applied, which is exactly when the result is a picture somebody looks at
+    // or prints. Without one the pixels are camera-native measurement data.
+    let profile = icc_for(dev);
+    if let Some(profile) = &profile {
         img.encoder()
-            .write_tag(Tag::IccProfile, IccBytes(&profile))
+            .write_tag(Tag::IccProfile, IccBytes(profile))
             .with_context(|| format!("embedding ICC profile in {}", path.display()))?;
     }
     img.encoder()
         .write_tag(
             Tag::Software,
-            concat!("strehl ", env!("CARGO_PKG_VERSION")),
+            if profile.is_some() {
+                crate::SOFTWARE
+            } else {
+                MEASUREMENT_SOFTWARE
+            },
         )
         .with_context(|| format!("tagging {}", path.display()))?;
+    if profile.is_some() {
+        // Physical size, tags 282/283/296. Written through the crate's own
+        // setter so all three move together: a resolution without a unit, or a
+        // unit without a resolution, is the state this replaces.
+        img.resolution(
+            ResolutionUnit::Inch,
+            Rational {
+                n: PRINT_DPI,
+                d: 1,
+            },
+        );
+    }
     img.write_data(data)
         .with_context(|| format!("writing {}", path.display()))
 }
@@ -1587,6 +1662,124 @@ mod tests {
         let path = dir.join("binned.tif");
         write_binned(&path, w, h, &rgb_lin, &dev).unwrap();
         assert!(std::fs::metadata(&path).unwrap().len() > 0);
+        let _ = std::fs::remove_file(&path);
+        let _ = std::fs::remove_dir(&dir);
+    }
+
+    /// The tags a print master is judged by, read back **out of the file**.
+    ///
+    /// This deliberately does not assert that [`PRINT_DPI`] equals `PRINT_DPI`.
+    /// All 26 masters shipped carrying `XResolution 1/1`,
+    /// `ResolutionUnit none` and `Software strehl 0.0.0` while every test in
+    /// this file passed, because not one of them opened an artifact — the
+    /// values came from `tiff`'s own defaults, several layers below anything
+    /// under test. A constant-to-constant assertion would have passed then too.
+    /// So this writes through the real encoder and decodes what landed.
+    ///
+    /// The unit is checked separately from the number because they fail
+    /// independently, and `300` with `ResolutionUnit::None` is the *more*
+    /// dangerous of the two failures: the physical size is just as undefined,
+    /// but the file now looks configured to anyone who reads only tag 282.
+    #[test]
+    fn the_written_file_states_its_print_size_and_the_build_that_made_it() {
+        let (w, h) = (4u32, 3u32);
+        let dev = Develop {
+            matrix: Some(color::camera_to_srgb(A7C2).expect("invertible")),
+            srgb: true,
+            ..Develop::default()
+        };
+        let dir = std::env::temp_dir().join("strehl-print-tags-test");
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("tags.tif");
+        write_rgb16_described(&path, w, h, &vec![1000u16; (w * h) as usize * 3], &dev).unwrap();
+
+        let file = std::fs::File::open(&path).unwrap();
+        let mut dec = tiff::decoder::Decoder::new(std::io::BufReader::new(file))
+            .expect("the writer produced a file the decoder cannot open");
+
+        assert_eq!(
+            dec.get_tag(Tag::ResolutionUnit).unwrap(),
+            tiff::decoder::ifd::Value::Short(ResolutionUnit::Inch.to_u16()),
+            "the file does not say which unit its resolution is in, so its \
+             physical size is undefined whatever tags 282/283 say"
+        );
+        for tag in [Tag::XResolution, Tag::YResolution] {
+            assert_eq!(
+                dec.get_tag(tag).unwrap(),
+                tiff::decoder::ifd::Value::Rational(PRINT_DPI, 1),
+                "{tag:?} is not the declared print resolution"
+            );
+        }
+
+        let software = dec.get_tag_ascii_string(Tag::Software).unwrap();
+        assert_eq!(
+            software,
+            crate::SOFTWARE,
+            "the file names a different build than the binary that wrote it"
+        );
+        assert!(
+            software.contains('('),
+            "tag 305 carries no build id, so the artifact cannot name its \
+             source: {software}"
+        );
+
+        drop(dec);
+        let _ = std::fs::remove_file(&path);
+        let _ = std::fs::remove_dir(&dir);
+    }
+
+    /// The other half of the same decision: a **measurement** render carries
+    /// neither the print size nor the build stamp, and that is not an oversight.
+    ///
+    /// This is the assertion that keeps `tests/byte-freezes.tsv` meaningful.
+    /// Those rows hash the whole file, and [`crate::SOFTWARE`] contains the
+    /// source commit, so stamping it here would make every frozen row a
+    /// function of the commit it is checked at -- red on every commit, forever,
+    /// and re-baselined by rote until nobody reads the diff. The freeze rows
+    /// would still be *present*; they would simply have stopped meaning
+    /// anything, which is the failure mode that is hard to see.
+    ///
+    /// Asserting the exact legacy string rather than "some string" is the
+    /// point: `MEASUREMENT_SOFTWARE` may not drift by so much as a character
+    /// without a frozen hash moving, so the test that guards it has to be
+    /// exact.
+    #[test]
+    fn a_measurement_render_carries_neither_print_size_nor_build_stamp() {
+        let (w, h) = (4u32, 3u32);
+        let dev = Develop::measurement(true);
+        assert!(
+            icc_for(&dev).is_none(),
+            "this arm is only a measurement render while it has no profile"
+        );
+
+        let dir = std::env::temp_dir().join("strehl-measurement-tags-test");
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("measure.tif");
+        write_rgb16_described(&path, w, h, &vec![1000u16; (w * h) as usize * 3], &dev).unwrap();
+
+        let file = std::fs::File::open(&path).unwrap();
+        let mut dec = tiff::decoder::Decoder::new(std::io::BufReader::new(file)).unwrap();
+
+        let software = dec.get_tag_ascii_string(Tag::Software).unwrap();
+        assert_eq!(
+            software, MEASUREMENT_SOFTWARE,
+            "a measurement render's Software tag moved; every byte-freeze row \
+             hashing this path has just changed for a reason unrelated to its \
+             pixels"
+        );
+        assert!(
+            !software.contains('('),
+            "the build stamp reached a byte-frozen measurement render: {software}"
+        );
+        assert_eq!(
+            dec.get_tag(Tag::ResolutionUnit).unwrap(),
+            tiff::decoder::ifd::Value::Short(ResolutionUnit::None.to_u16()),
+            "a measurement render declared a print resolution, which both \
+             claims a physical size for camera-native data and moves the \
+             frozen bytes"
+        );
+
+        drop(dec);
         let _ = std::fs::remove_file(&path);
         let _ = std::fs::remove_dir(&dir);
     }
