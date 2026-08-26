@@ -6685,7 +6685,9 @@ PROBE  : TWO-PEAK     floor=84.2  f182 prom=0.45   f288 prom=0.29
 ```
 
 The control responds, the null stays quiet, and the probe is **bimodal**: two
-peaks on the same pixels, **108 frames apart**. A per-frame contact sheet says
+peaks on the same pixels, **106 frames apart** (f182 and f288; the source report
+said 108, and 288 - 182 = 106 -- corrected here on recomputation). A per-frame
+contact sheet says
 what each peak is -- `f171-198` is sharp foreground hairs on blank paper,
 `f285-291` is the claw with the hairs dissolved. This is the two-layer occlusion
 case, directly observed rather than inferred.
@@ -6772,6 +6774,32 @@ implemented a statistic incapable of expressing it.
 > **A statistic that reports the location of a maximum cannot report that there
 > were two.** If the docstring names bimodality, the implementation owes a
 > prominence test, not an argmax.
+
+The repair is in, and commissioning it turned up a second defect in the same
+five lines. `commission_verdict.py` runs the old and the new implementation over
+the same seven curves -- four synthetic with truth known by construction, one
+decoy built specifically to tempt a spurious second peak, and the real claw
+curve. The repaired `verdict()` is correct on **7/7** and catches **3/3**
+two-layer cases; the original **missed 3/3**, which is what establishes that
+this change repairs something rather than merely rewriting it.
+
+On real data the repaired instrument reproduces the independent measurement:
+`TWO-PEAK frame#182 prom=0.45 frame#288 prom=0.29 separation=106 frames`,
+against V-VEILCLAW's f182 prom=0.45 / f288 prom=0.29 from its own code. Two
+implementations, same numbers.
+
+The second defect: the original returned `INTERIOR-PEAK` on **every** non-flat
+curve in the set, including a monotone rise to the end of the bracket. Its
+end-of-bracket test read the argmax of the *raw* curve, and near any maximum a
+smooth function is flat, so noise moves the argmax several samples -- enough to
+push it off the last two and convert "the bracket ran out" into "a frame had
+it". The repaired version takes the argmax of the smoothed curve. This defect
+was not the one being fixed; it was found because the harness included a case
+that had nothing to do with bimodality.
+
+> **Smooth before you take an argmax.** The location of a maximum is the least
+> stable thing about a peak, because that is precisely where the derivative is
+> zero.
 
 ### 59.5 What the three findings have in common
 

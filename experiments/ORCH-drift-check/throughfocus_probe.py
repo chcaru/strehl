@@ -41,20 +41,95 @@ def sharp(plane):
     return float(lap.mean())
 
 
+def _smooth(v, k=7):
+    """Boxcar with edge padding. Peak detection on an unsmoothed noisy curve
+    finds noise, so smoothing is not cosmetic here -- it is what makes the
+    prominence test mean anything."""
+    if k <= 1 or len(v) < k:
+        return v
+    ker = np.ones(k) / k
+    return np.convolve(np.pad(v, k // 2, mode="edge"), ker, mode="valid")[: len(v)]
+
+
+def _peaks(v, floor, min_prom=0.10, min_sep=15):
+    """Local maxima ranked by prominence, expressed as a fraction of `floor`.
+
+    Prominence is measured against the highest saddle separating this peak from
+    a higher one -- NOT against the global minimum on each side. The global-min
+    form is more permissive and inflates the prominence of a small bump that
+    happens to sit near a deep valley, which on a through-focus curve is the
+    normal situation at the ends of a bracket. Using the saddle costs nothing
+    and is the definition that will not manufacture a second layer.
+    """
+    n = len(v)
+    cand = [i for i in range(1, n - 1) if v[i] >= v[i - 1] and v[i] > v[i + 1]]
+    out = []
+    for i in cand:
+        higher_l = [j for j in cand if j < i and v[j] > v[i]]
+        higher_r = [j for j in cand if j > i and v[j] > v[i]]
+        left = v[: i + 1].min() if not higher_l else v[higher_l[-1] : i + 1].min()
+        right = v[i:].min() if not higher_r else v[i : higher_r[0] + 1].min()
+        prom = (v[i] - max(left, right)) / max(floor, 1e-9)
+        out.append((i, float(v[i]), float(prom)))
+    out.sort(key=lambda t: -t[2])
+    kept = []
+    for i, val, prom in out:
+        if prom < min_prom:
+            continue
+        if any(abs(i - j) < min_sep for j, _, _ in kept):
+            continue
+        kept.append((i, val, prom))
+    return sorted(kept)
+
+
 def verdict(vals):
+    """Classify a through-focus response curve.
+
+    This function previously took the argmax and asked only whether it was
+    interior. That cannot express the two-layer case -- which this probe's own
+    docstring names as the case that matters most -- and on the flagship's
+    occluded claw it returned INTERIOR-PEAK for the *foreground* peak and would
+    have reported a merge defect where the truth was veiling. A statistic that
+    reports where the maximum is cannot report that there were two.
+    """
     v = np.asarray(vals, dtype=np.float64)
     n = len(v)
     if n < 5:
         return "TOO-FEW-FRAMES"
-    k = int(np.argmax(v))
     lo, hi = float(v.min()), float(v.max())
     contrast = (hi - lo) / max(lo, 1e-9)
-    edge = k <= 1 or k >= n - 2
     if contrast < 0.15:
-        return f"FLAT (peak/floor={1+contrast:.3f}) -> never resolved"
-    if edge:
+        return f"FLAT (peak/floor={1 + contrast:.3f}) -> never resolved"
+
+    s = _smooth(v, 7)
+    floor = float(np.percentile(s, 10))
+
+    # The end-of-bracket test reads the SMOOTHED curve. Near any maximum a
+    # smooth function is flat, so the argmax of a noisy curve wanders by several
+    # samples -- which is enough to move it off the last two and turn "the
+    # bracket ran out" into "a frame had it". The original implementation tested
+    # the raw argmax and failed exactly this way on a monotone rising curve.
+    k = int(np.argmax(s))
+    if k <= 1 or k >= n - 2:
         return f"PEAK-AT-END frame#{k}/{n - 1} (ratio {1 + contrast:.2f}) -> bracket ran out"
-    return f"INTERIOR-PEAK frame#{k}/{n - 1} (ratio {1 + contrast:.2f}) -> a frame HAD it"
+
+    pk = _peaks(s, floor)
+    if not pk:
+        return "FLAT (no peak with prominence >= 0.10 of floor) -> never resolved"
+
+    desc = "  ".join(f"frame#{i} prom={p:.2f}" for i, _, p in pk)
+    if len(pk) == 1:
+        return f"SINGLE-PEAK {desc} (ratio {1 + contrast:.2f}) -> one layer, a frame HAD it"
+    if len(pk) == 2:
+        sep = abs(pk[1][0] - pk[0][0])
+        return (
+            f"TWO-PEAK {desc} separation={sep} frames (ratio {1 + contrast:.2f})"
+            " -> TWO LAYERS share this pixel; veiling, not a merge defect"
+        )
+    return (
+        f"{len(pk)}-PEAK {desc} (ratio {1 + contrast:.2f})"
+        " -> multiple layers share this pixel"
+    )
 
 
 def main():
@@ -101,10 +176,13 @@ def main():
     print()
     cv = verdict(ctl)
     print(f"CONTROL  : {cv}")
-    if not cv.startswith("INTERIOR-PEAK"):
-        print("INSTRUMENT NOT COMMISSIONED -- control did not peak in the interior.")
-        print("The probe result below is UNINTERPRETABLE. Move the control onto")
-        print("structure known to be sharp somewhere in the middle of the bracket.")
+    if not cv.startswith("SINGLE-PEAK"):
+        print("INSTRUMENT NOT COMMISSIONED -- control did not resolve to exactly")
+        print("one interior peak. The probe result below is UNINTERPRETABLE.")
+        print("A control that is FLAT proves nothing about the probe's ability to")
+        print("respond; a control that is itself TWO-PEAK is not a control, it is a")
+        print("second probe. Move the control onto structure known to be sharp in")
+        print("exactly one place in the middle of the bracket.")
     print(f"PROBE    : {verdict(win)}")
 
     if "--out" in argv:
