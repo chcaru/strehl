@@ -34,6 +34,83 @@ def linear_to_srgb(x: np.ndarray) -> np.ndarray:
     return np.where(x <= 0.0031308, x * 12.92, (1 + a) * x ** (1 / 2.4) - a)
 
 
+S_CURVE_STRENGTH = 0.42
+
+
+def s_curve(x: np.ndarray) -> np.ndarray:
+    """A monotone filmic S: darkens shadows, brightens highlights, holds 0 and 1.
+
+    Sign matters and has been wrong here once. `(2x-1)` is negative below the
+    midpoint and positive above it, so ADDING the term pushes each half away
+    from the centre, which is contrast. Negating it pulls both halves toward
+    the centre, which is the opposite. See `assert_is_an_s_curve`.
+    """
+    return x + S_CURVE_STRENGTH * x * (1.0 - x) * (2.0 * x - 1.0)
+
+
+def assert_is_an_s_curve() -> None:
+    """Refuse to run if the tone curve is not, in fact, an S.
+
+    This is cheap and it runs on every invocation, because the failure it
+    guards against is silent: an inverted curve still produces a plausible
+    picture, still clips nothing, and still passes every structural check.
+    The only thing that distinguishes it is the direction of the contrast,
+    and nothing was checking the direction.
+    """
+    x = np.linspace(0.0, 1.0, 1001)
+    y = s_curve(x)
+    if not np.all(np.diff(y) > 0):
+        raise SystemExit("grade.py: tone curve is not monotonic - refusing to run")
+    if not (abs(y[0]) < 1e-9 and abs(y[-1] - 1.0) < 1e-9):
+        raise SystemExit("grade.py: tone curve does not hold its endpoints")
+    if y[250] >= 0.25:
+        raise SystemExit(f"grade.py: curve LIFTS shadows (0.25 -> {y[250]:.4f}) - it is inverted")
+    if y[750] <= 0.75:
+        raise SystemExit(f"grade.py: curve PULLS DOWN highlights (0.75 -> {y[750]:.4f}) - it is inverted")
+    mid = (x >= 0.25) & (x <= 0.75)
+    slope = np.polyfit(x[mid], y[mid], 1)[0]
+    if slope <= 1.0:
+        raise SystemExit(f"grade.py: midtone slope {slope:.4f} <= 1 - this curve reduces contrast")
+
+
+def midtone_contrast(rgb: np.ndarray) -> float:
+    """p75-p25 of BT.709 luma. A blunt but honest proxy for "has contrast"."""
+    lum = rgb @ np.array([0.2126, 0.7152, 0.0722])
+    return float(np.percentile(lum, 75) - np.percentile(lum, 25))
+
+
+def apply_s_curve_safely(out: np.ndarray) -> tuple[np.ndarray, float]:
+    """Apply the S-curve only as hard as it actually helps this image.
+
+    A fixed contrast curve is wrong for a high-key subject. Measured on
+    `flower-bud-alone-cpl` -- a white bud on white, median luma 239/255 --
+    full strength drove midtone contrast 13.0 -> 9.2, i.e. WORSE than the
+    ungraded input, because an S-curve brightens highlights and this subject
+    is already living in them. Five other subjects gained 11-32% from the
+    same curve.
+
+    So: back the strength off until the grade is not worse than no grade.
+    This mirrors the merge's own "never worse than a single frame" invariant
+    -- a presentation render that degrades the picture is not a presentation
+    render. Returns the graded image and the strength actually used, so the
+    caller can report a backed-off subject instead of silently shipping one.
+    """
+    global S_CURVE_STRENGTH
+    before = midtone_contrast(out)
+    full = S_CURVE_STRENGTH
+    for factor in (1.0, 0.5, 0.25, 0.0):
+        S_CURVE_STRENGTH = full * factor
+        if factor == 0.0:
+            S_CURVE_STRENGTH = full
+            return out, 0.0
+        cand = np.clip(s_curve(np.clip(out, 0.0, 1.0)), 0.0, 1.0)
+        if midtone_contrast(cand) >= before:
+            S_CURVE_STRENGTH = full
+            return cand, full * factor
+    S_CURVE_STRENGTH = full
+    return out, 0.0
+
+
 def grade(img: np.ndarray) -> np.ndarray:
     """A conservative, entirely conventional photographic rendering.
 
@@ -58,9 +135,19 @@ def grade(img: np.ndarray) -> np.ndarray:
 
     # Filmic-ish S-curve in display space. Contrast where the midtones are,
     # shoulders that do not clip.
-    c = 0.42
+    #
+    # The `* -1.0` that used to close this line INVERTED the curve. Measured on
+    # the 1001-point ladder in curve_check.py: midtone slope 0.822 instead of
+    # 1.178, shadows LIFTED 0.25 -> 0.2894, highlights PULLED DOWN 0.75 ->
+    # 0.7106. It was a contrast-crushing curve wearing the name of an S-curve,
+    # and across the 26-subject corpus it cost a median 0.939x of midtone
+    # contrast -- so the script written to ask "do these look bad because they
+    # are FLAT?" was flattening them before anyone looked.
     out = np.clip(out, 0.0, 1.0)
-    out = out + c * out * (1.0 - out) * (2.0 * out - 1.0) * -1.0
+    out, used = apply_s_curve_safely(out)
+    if used < S_CURVE_STRENGTH:
+        print(f"  note: S-curve backed off to {used:.3f} of {S_CURVE_STRENGTH:.3f} "
+              f"(full strength would have REDUCED midtone contrast on this subject)")
     out = np.clip(out, 0.0, 1.0)
 
     # Modest saturation. Macro subjects carry real colour that a faithful
@@ -82,6 +169,8 @@ def main() -> int:
         help="write the graded image alone, with no side-by-side and no caption",
     )
     args = ap.parse_args()
+
+    assert_is_an_s_curve()
 
     im = Image.open(args.src).convert("RGB")
     if im.width > args.maxw:
