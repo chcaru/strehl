@@ -1097,6 +1097,14 @@ pub struct VeilReport {
     pub mean_lift_dn: f64,
     /// The extreme-value debias actually subtracted, in sigmas.
     pub debias_sigmas: f32,
+    /// Mean `spread / sigma_model` over the pixels the veil moved.
+    ///
+    /// The magnitude of the dispersion correction, printed so it can be
+    /// audited rather than trusted. `1.0` means the modelled sensor noise
+    /// already described the bracket's frame-to-frame spread and the
+    /// correction did nothing; values above `1.0` are the factor by which a
+    /// modelled sigma would have under-debiased the envelope.
+    pub dispersion_ratio: f32,
     /// Estimated backdrop level, in raw DN: the median of the dead-ground
     /// population, which is the population the estimator acts on.
     pub backdrop_dn: f32,
@@ -1176,6 +1184,43 @@ pub struct Estimator {
     /// would be a maximum over the contaminated population and would recover
     /// nothing.
     pmax: [Vec<f32>; 4],
+    /// Welford state for green luma over **every** frame, gated or not.
+    ///
+    /// This exists because [`Estimator::apply_veil`] debiases a *measured
+    /// maximum*, and an extremum's expectation scales with the dispersion it
+    /// was actually drawn from. At a background pixel that dispersion is not
+    /// the sensor noise: it also carries defocus variation across the bracket,
+    /// alignment resampling and illumination drift, all of which are larger.
+    ///
+    /// `luma_sum` / `luma_sumsq` cannot serve here even though they are a
+    /// dispersion of the same channel. They accumulate *below* the gate's
+    /// `continue`, so they describe the admitted subset. At a flat backdrop
+    /// pixel the gate admits many near-identical frames, that dispersion sits
+    /// at the noise floor, and a debias taken from it would be inert in
+    /// exactly the region where the far-field lift was measured.
+    ///
+    /// Welford rather than `sum`/`sumsq`: the same cancellation this file
+    /// warns about for `luma_sumsq` applies, and this population is larger.
+    vmean: Vec<f32>,
+    vm2: Vec<f32>,
+    vn: Vec<u16>,
+    /// Debias the envelope by the observed spread instead of the modelled one.
+    ///
+    /// **Off by default, and that default is a measured result, not caution.**
+    /// The observed spread is signal *plus* noise, and at a genuinely veiled
+    /// pixel the signal dominates it — that is precisely why the maximum sits
+    /// above the mean there. Subtracting `debias * observed_sd` therefore
+    /// cancels the very recovery the veil pass exists to make. The shipped
+    /// test `the_gate_ramps_off_across_the_band_instead_of_switching` catches
+    /// it: with this on, `applied` falls to zero on the ramp fixture.
+    ///
+    /// It is kept because it is the correct diagnosis of the *far-field* lift
+    /// — there the modelled sigma understates the true frame-to-frame spread
+    /// (defocus variation, alignment resampling, lamp drift) and the envelope
+    /// adds light. A correct fix needs the *noise* dispersion separated from
+    /// the *signal* dispersion, which a streaming maximum cannot provide and
+    /// which a mean over a selected subset gets for free.
+    veil_dispersion: bool,
     /// The winner-focus level at or above which [`Estimator::apply_veil`] does
     /// nothing. Meaningless while `pmax` is empty.
     ///
@@ -1387,6 +1432,10 @@ impl Estimator {
             wsum,
             wsq,
             pmax: [Vec::new(), Vec::new(), Vec::new(), Vec::new()],
+            vmean: Vec::new(),
+            vm2: Vec::new(),
+            vn: Vec::new(),
+            veil_dispersion: false,
             veil_w: Vec::new(),
             veil_gate_cut: 0.0,
             veil_margin: 0.0,
@@ -1445,6 +1494,13 @@ impl Estimator {
     /// load-bearing. The fractional count is [`Estimator::soft_n_eff`].
     pub fn n_eff(&self) -> &[u16] {
         &self.n
+    }
+
+    /// Debias the veil envelope by the observed frame-to-frame spread.
+    ///
+    /// A diagnostic arm, not the shipped path. See [`Estimator::veil_dispersion`].
+    pub fn set_veil_dispersion(&mut self, on: bool) {
+        self.veil_dispersion = on;
     }
 
     /// The admission kernel this estimator is folding, if any.
@@ -1764,13 +1820,25 @@ impl Estimator {
                 // admits at a veiled background pixel are exactly the veiled
                 // ones; seeing past them is the entire point.
                 if !self.pmax[0].is_empty() {
+                    let mut g = 0.0f32;
                     for (s, (ox, oy)) in off.iter().enumerate() {
                         let row = if *oy == 0 { row0 } else { row1 };
                         let v = f32::from(row[2 * px + ox]);
                         if v > self.pmax[s][i] {
                             self.pmax[s][i] = v;
                         }
+                        // Subplanes 1 and 3 are the greens, matching the luma
+                        // this file reports lift in.
+                        if s == 1 || s == 3 {
+                            g += 0.5 * v;
+                        }
                     }
+                    // Welford, over the same frames the maximum just saw.
+                    let n = self.vn[i].saturating_add(1);
+                    self.vn[i] = n;
+                    let d = g - self.vmean[i];
+                    self.vmean[i] += d / f32::from(n);
+                    self.vm2[i] += d * (g - self.vmean[i]);
                 }
                 let winner = self.best_index[i] == frame_index;
                 // `wt`, not `w` -- `w` is the plane width three lines up.
@@ -1960,6 +2028,28 @@ impl Estimator {
                         *a = *b;
                     }
                 }
+            }
+            // Chan's parallel form. A variance taken over one tile's frames is
+            // not a variance over the bracket, exactly as for the maximum
+            // above, and the debias would silently differ between the tiled
+            // and single-threaded paths if this were not folded here.
+            for i in 0..self.vn.len() {
+                let nb = f32::from(other.vn[i]);
+                if nb == 0.0 {
+                    continue;
+                }
+                let na = f32::from(self.vn[i]);
+                if na == 0.0 {
+                    self.vn[i] = other.vn[i];
+                    self.vmean[i] = other.vmean[i];
+                    self.vm2[i] = other.vm2[i];
+                    continue;
+                }
+                let n = na + nb;
+                let d = other.vmean[i] - self.vmean[i];
+                self.vmean[i] += d * nb / n;
+                self.vm2[i] += other.vm2[i] + d * d * na * nb / n;
+                self.vn[i] = self.vn[i].saturating_add(other.vn[i]);
             }
         } else {
             assert!(
@@ -2162,6 +2252,9 @@ impl Estimator {
             vec![f32::NEG_INFINITY; px],
             vec![f32::NEG_INFINITY; px],
         ];
+        self.vmean = vec![0.0; px];
+        self.vm2 = vec![0.0; px];
+        self.vn = vec![0; px];
         let knee = (cut - VEIL_BLEND_SIGMA).max(0.0);
         self.veil_w = excess
             .iter()
@@ -2246,6 +2339,9 @@ impl Estimator {
             vec![f32::NEG_INFINITY; px],
             vec![f32::NEG_INFINITY; px],
         ];
+        self.vmean = vec![0.0; px];
+        self.vm2 = vec![0.0; px];
+        self.vn = vec![0; px];
         self.veil_w = incoherence
             .iter()
             .map(|&s| {
@@ -2298,6 +2394,8 @@ impl Estimator {
         report.debias_sigmas = debias;
 
         let mut lift_sum = 0.0f64;
+        let mut ratio_sum = 0.0f64;
+        let mut ratio_n = 0u64;
         // Backdrop and foreground levels, estimated by partitioning on the
         // FOCUS field rather than on a global luma quantile.
         //
@@ -2401,13 +2499,41 @@ impl Estimator {
                     continue;
                 }
                 let sigma = noise.green_luma_sigma(m - black_dn).max(0.0);
-                let est = m - debias * sigma;
+                // Debias against the dispersion the maximum was actually drawn
+                // from, not the modelled sensor noise.
+                //
+                // `debias * sigma_model` is correct only if the frames differ
+                // by photon and read noise alone. At a background pixel they
+                // also differ by defocus variation across the bracket,
+                // alignment resampling and lamp drift, so the true spread is
+                // larger, `E[max]` is correspondingly higher, and the
+                // subtraction falls short. The shortfall is added light, which
+                // is precisely the failure mode that nulls a darkening metric
+                // without removing the darkening.
+                //
+                // Floored at the modelled sigma so a pixel whose frames happen
+                // to agree can never be debiased by less than the noise.
+                let sd = if self.vn[i] >= 2 {
+                    (self.vm2[i].max(0.0) / f32::from(self.vn[i] - 1)).sqrt()
+                } else {
+                    0.0
+                };
+                let spread = if self.veil_dispersion {
+                    sigma.max(sd)
+                } else {
+                    sigma
+                };
+                let est = m - debias * spread;
                 let current = self.sum[s][i] / divisor;
-                if est > current + self.veil_margin * sigma {
+                if est > current + self.veil_margin * spread {
                     // Ramped, not switched: `w` carries the operator off across
                     // a band so no seam is left along the gate's contour.
                     self.sum[s][i] = (w * est + (1.0 - w) * current) * divisor;
                     moved = true;
+                    if sigma > 0.0 {
+                        ratio_sum += f64::from(spread / sigma);
+                        ratio_n += 1;
+                    }
                 }
             }
             if moved {
@@ -2416,6 +2542,11 @@ impl Estimator {
                 lift_sum += f64::from(after - before);
             }
         }
+        report.dispersion_ratio = if ratio_n > 0 {
+            (ratio_sum / ratio_n as f64) as f32
+        } else {
+            0.0
+        };
         report.mean_lift_dn = if report.applied > 0 {
             lift_sum / report.applied as f64
         } else {

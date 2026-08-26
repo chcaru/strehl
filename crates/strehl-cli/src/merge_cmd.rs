@@ -130,6 +130,19 @@ pub struct MergeOptions {
     ///
     /// See [`write_n_eff_map`] for the grid and the value convention.
     pub n_eff_map: Option<PathBuf>,
+    /// Also write the **confidence map**: how far the merged output sits from
+    /// the nearest aligned observation, per pixel, in milli-sigma of the
+    /// calibrated noise. Debug output; `None` costs nothing and never touches
+    /// the merged image, but unlike the two maps above it is not free — it
+    /// costs a second decode and warp of every frame.
+    ///
+    /// PYRAMID BACKEND ONLY, which is the point: `--n-eff-map` and
+    /// `--index-map` are both refused there, so before this the default merge
+    /// emitted an image and no per-pixel evidence of any kind.
+    ///
+    /// See [`write_confidence_map`] for the grid, the value convention and the
+    /// polarity, which is the opposite of `n_eff`'s.
+    pub confidence_map: Option<PathBuf>,
     /// Fit and apply a per-frame affine photometric gain. **Default on**
     /// since V-TONE; it was opt-in from M99 until then.
     ///
@@ -3580,6 +3593,13 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     let veil_on = veil_enabled();
     let veil_margin = veil_margin();
     let veil_floor = veil_luma_floor();
+    // Diagnostic arm. See `Estimator::veil_dispersion`: debiasing by the
+    // OBSERVED spread is the right diagnosis of the far-field lift and the
+    // wrong operator at a veiled pixel, because the observed spread there is
+    // mostly the veil signal itself. Off unless asked for.
+    let veil_dispersion = std::env::var("STREHL_VEIL_DISPERSION")
+        .map(|v| v != "0" && !v.is_empty())
+        .unwrap_or(false);
     // The gate is built in two stages, and the split between them is the point.
     //
     // Stage one asks the per-pixel question -- *is this pixel's election
@@ -3689,6 +3709,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                             veil_margin,
                             veil_floor,
                         );
+                        e.set_veil_dispersion(veil_dispersion);
                     }
                     e
                 })
@@ -3797,7 +3818,8 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                  margin {veil_margin} sigma \
                  floor {veil_floor} x backdrop {:.0} DN = {:.0} DN \
                  (foreground {:.0} DN, polarity {:+.0} DN) \
-                 -> eligible {:.2}% applied {:.2}% mean lift {:+.1} DN debias {:.2} sigma",
+                 -> eligible {:.2}% applied {:.2}% mean lift {:+.1} DN debias {:.2} sigma \
+                 (dispersion {:.2}x modelled)",
                 r.backdrop_dn,
                 r.luma_floor_dn,
                 r.foreground_dn,
@@ -3805,7 +3827,8 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 100.0 * r.eligible as f64 / r.pixels as f64,
                 100.0 * r.applied as f64 / r.pixels as f64,
                 r.mean_lift_dn,
-                r.debias_sigmas
+                r.debias_sigmas,
+                r.dispersion_ratio
             );
         }
     }
@@ -4150,6 +4173,50 @@ impl BandWorker {
         noise: &NoiseModel,
         warps: Option<&WarpMap>,
     ) -> Result<bool> {
+        if !load_frame(
+            path,
+            index,
+            geom,
+            levels,
+            warps,
+            &mut self.warp,
+            &mut self.planes,
+            &mut self.luma,
+        )? {
+            return Ok(false);
+        }
+        luma_variance(&self.luma, noise, &mut self.var);
+
+        let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
+        self.fws.next_frame();
+        self.merge
+            .add_frame(&refs, &self.luma, &self.var, &mut self.fws);
+        Ok(true)
+    }
+}
+
+/// Decode, register and deinterleave one frame into its four CFA planes and
+/// green luma. `false` means the alignment solve refused it.
+///
+/// **Shared by the fold and by the confidence pass, deliberately.** A
+/// confidence map computed against frames registered even slightly differently
+/// from the ones that were merged would be measuring the registration rather
+/// than the merge, and would do it invisibly -- the map would simply read
+/// "unsupported" along every edge and look like a plausible result. One copy of
+/// this code is the only thing that makes the second pass comparable to the
+/// first.
+#[allow(clippy::too_many_arguments)]
+fn load_frame(
+    path: &Path,
+    index: usize,
+    geom: PlaneGeometry,
+    levels: Levels,
+    warps: Option<&WarpMap>,
+    scratch: &mut WarpScratch,
+    planes: &mut [Vec<f32>],
+    luma: &mut [f32],
+) -> Result<bool> {
+    {
         let mut frame = strehl_raw::decode(path).with_context(|| format!("frame {index}"))?;
         ensure!(
             frame.levels == levels,
@@ -4163,13 +4230,7 @@ impl BandWorker {
         if let Some(map) = warps {
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
-                    align_cmd::warp_frame_in_place(
-                        &mut frame,
-                        *t,
-                        geom,
-                        map.resampler(),
-                        &mut self.warp,
-                    )?;
+                    align_cmd::warp_frame_in_place(&mut frame, *t, geom, map.resampler(), scratch)?;
                 }
                 // The solve could not connect this frame to the bracket, so its
                 // geometry is unknown and folding it would put mis-registered
@@ -4182,7 +4243,7 @@ impl BandWorker {
         let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
         let (gw, gh) = (geom.width, geom.height);
         for (p, (dx, dy)) in BAND_PLANE_OFFSETS.iter().enumerate() {
-            let out = &mut self.planes[p];
+            let out = &mut planes[p];
             for py in 0..gh {
                 let row = (ay + 2 * py + dy) * stride + ax + dx;
                 let dst = &mut out[py * gw..py * gw + gw];
@@ -4191,28 +4252,207 @@ impl BandWorker {
                 }
             }
         }
-        drop(frame);
-
-        // Green luma, `L = (G1 + G2) / 2`, exactly as `plane::green_luma`
-        // computes it -- the same plane the estimator's election runs on.
-        // Selecting on green only is what keeps chroma noise out of the
-        // decision.
-        for i in 0..self.luma.len() {
-            self.luma[i] = 0.5 * (self.planes[1][i] + self.planes[2][i]);
-        }
-        luma_variance(&self.luma, noise, &mut self.var);
-
-        let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
-        self.fws.next_frame();
-        self.merge
-            .add_frame(&refs, &self.luma, &self.var, &mut self.fws);
-        Ok(true)
     }
+
+    // Green luma, `L = (G1 + G2) / 2`, exactly as `plane::green_luma`
+    // computes it -- the same plane the estimator's election runs on.
+    // Selecting on green only is what keeps chroma noise out of the
+    // decision.
+    for i in 0..luma.len() {
+        luma[i] = 0.5 * (planes[1][i] + planes[2][i]);
+    }
+    Ok(true)
 }
 
 /// Env twin of `--pyramid-workers`, and the only way to raise the fold's
 /// parallelism on a machine with more RAM than the budget assumes.
 const BAND_WORKERS_ENV: &str = "STREHL_PYRAMID_WORKERS";
+
+/// Env twin of `--confidence-map`, for a harness that cannot edit the command
+/// line. The flag wins, exactly as `--n-eff-map` beats [`NEFF_ENV`].
+const CONFIDENCE_ENV: &str = "STREHL_CONFIDENCE_MAP";
+
+/// Where to write the confidence map, or `None`.
+fn confidence_map_path(opts: &MergeOptions) -> Option<PathBuf> {
+    if let Some(p) = &opts.confidence_map {
+        return Some(p.clone());
+    }
+    let raw = std::env::var(CONFIDENCE_ENV).ok()?;
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        eprintln!("{CONFIDENCE_ENV} is set but empty; not writing a confidence map");
+        return None;
+    }
+    Some(PathBuf::from(trimmed))
+}
+
+/// How far the merged output sits from the NEAREST aligned observation at each
+/// pixel, in units of the calibrated noise sigma.
+///
+/// **What this is a statement about.** The pyramid elects per band coefficient,
+/// so no single frame owns an output pixel and there is no frame count to
+/// report -- which is why `--n-eff-map` is refused on this backend. But there
+/// is still a question with a per-pixel answer: *did any frame ever observe
+/// what I emitted here?* Where the merge has picked a frame, the answer is that
+/// some observation sits on top of the output and this reads ~0. Where the
+/// merge has blended coefficients from frames that disagree, the collapse
+/// produces a value that is between the observations rather than one of them,
+/// and this rises. That is the waxy-blob failure mode stated as a measurement:
+/// the output is an interpolation nobody photographed.
+///
+/// **Why it is not a contrast map.** It is a distance to the *nearest*
+/// observation, not a spread of observations. A high-contrast edge where the
+/// merge correctly elected the in-focus frame reads zero, because that frame's
+/// value is the output. A flat patch reads zero for the same reason. Contrast
+/// enters only through sigma, and it enters as a *divisor*, so more signal makes
+/// the statistic smaller, not larger. The failure mode this design is chosen
+/// against -- a detail map wearing a confidence costume -- would require the
+/// number to rise with texture, and the arithmetic runs the other way.
+///
+/// **Cost.** One extra decode and warp per frame. Nothing is cached from the
+/// fold because nothing can be: the frames are streamed and dropped, and the
+/// merged image the observations must be compared against does not exist until
+/// every one of them has already been folded.
+fn confidence_pass(
+    paths: &[PathBuf],
+    geom: PlaneGeometry,
+    levels: Levels,
+    warps: Option<&WarpMap>,
+    merged_luma: &[f32],
+    per_chunk: usize,
+) -> Result<Vec<f32>> {
+    let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
+    let parts: Vec<Result<Vec<f32>>> = indexed
+        .par_chunks(per_chunk.max(1))
+        .map(|chunk| {
+            let px = geom.pixels();
+            let mut scratch = WarpScratch::new(geom);
+            let mut planes: Vec<Vec<f32>> = (0..BAND_PLANES).map(|_| vec![0.0; px]).collect();
+            let mut luma = vec![0.0f32; px];
+            // The identity for `min`, so a pixel no frame reached stays
+            // infinite and is counted as unreached rather than as zero --
+            // "no observation" and "a perfect observation" must not encode
+            // to the same value.
+            let mut dmin = vec![f32::INFINITY; px];
+            for (i, p) in chunk {
+                if !load_frame(p, *i, geom, levels, warps, &mut scratch, &mut planes, &mut luma)? {
+                    continue;
+                }
+                for ((d, l), m) in dmin.iter_mut().zip(&luma).zip(merged_luma) {
+                    let e = (l - m).abs();
+                    if e < *d {
+                        *d = e;
+                    }
+                }
+            }
+            Ok(dmin)
+        })
+        .collect();
+
+    let mut out: Option<Vec<f32>> = None;
+    for part in parts {
+        let d = part?;
+        match &mut out {
+            // `min` is associative and commutative, so chunking cannot change
+            // the answer and this stays exact however the workers split.
+            Some(a) => {
+                for (x, y) in a.iter_mut().zip(&d) {
+                    if y < x {
+                        *x = *y;
+                    }
+                }
+            }
+            None => out = Some(d),
+        }
+    }
+    out.context("no frames were available for the confidence pass")
+}
+
+/// Write the confidence field as a single-channel 16-bit TIFF.
+///
+/// **Grid.** The plane grid, identical to [`write_n_eff_map`]'s and to
+/// [`write_election_map`]'s: half sensor resolution, one value per 2x2 CFA
+/// quad. The three maps overlay pixel-for-pixel with no resampling.
+///
+/// **Values, and how they differ from `n_eff`'s.** `n_eff` is a literal frame
+/// count starting at 1. This is NOT a count -- it is a distance, in
+/// **milli-sigma**: the stored integer divided by 1000 is the gap between the
+/// merged output and the nearest observation, measured in standard deviations
+/// of the calibrated noise at that pixel. **Low is good.** That is the opposite
+/// polarity to `n_eff`, and it is stated here rather than fixed by inverting,
+/// because an inverted distance has no natural ceiling and the flip would have
+/// to be undone by every reader who wanted the physical quantity.
+///
+/// The ceiling is 65535 = 65.535 sigma. Saturation is COUNTED and reported, not
+/// silently clipped, because a field that saturates is one where the map has
+/// stopped discriminating and the reader has to know that before drawing a
+/// conclusion from its flat top.
+fn write_confidence_map(
+    path: &Path,
+    dmin: &[f32],
+    sigma2: &[f32],
+    geom: PlaneGeometry,
+) -> Result<()> {
+    ensure!(
+        dmin.len() == geom.pixels() && sigma2.len() == geom.pixels(),
+        "confidence field is {} and variance {} long but the plane grid is {}x{}",
+        dmin.len(),
+        sigma2.len(),
+        geom.width,
+        geom.height
+    );
+    let mut q = vec![0u16; dmin.len()];
+    // Every pixel lands in exactly one of these, and they sum to the total, so
+    // a pixel that was never reached cannot be read as one that scored zero.
+    let (mut saturated, mut unreached, mut graded) = (0usize, 0usize, 0usize);
+    let mut sum = 0.0f64;
+    for ((o, &d), &v) in q.iter_mut().zip(dmin).zip(sigma2) {
+        if !d.is_finite() {
+            *o = u16::MAX;
+            unreached += 1;
+            continue;
+        }
+        // The noise model is the yardstick, and it is floored at one DN^2 for
+        // the same reason `select_weight` floors it: a clamped black pixel can
+        // report zero variance, and dividing by that turns a dust mote into an
+        // infinity.
+        let s = f64::from(d) / f64::from(v.max(1.0)).sqrt();
+        let scaled = (s * 1000.0).round();
+        if scaled >= f64::from(u16::MAX) {
+            *o = u16::MAX;
+            saturated += 1;
+        } else {
+            *o = scaled as u16;
+            graded += 1;
+        }
+        sum += s;
+    }
+    let n = q.len().max(1);
+    image_out::write_gray16(path, geom.width as u32, geom.height as u32, &q)?;
+    eprintln!(
+        "confidence map  : wrote {} ({}x{} u16 plane grid, milli-sigma, LOW IS GOOD)",
+        path.display(),
+        geom.width,
+        geom.height
+    );
+    eprintln!(
+        "                  graded {graded} + saturated {saturated} + unreached {unreached} = {} \
+         of {n} pixels",
+        graded + saturated + unreached
+    );
+    let finite = graded + saturated;
+    eprintln!(
+        "                  mean {:.4} sigma over the {finite} pixels a frame reached",
+        sum / finite.max(1) as f64
+    );
+    eprintln!(
+        "                  distance from the merged output to the NEAREST aligned observation. \
+         Zero\n                  means some frame actually recorded the emitted value; large \
+         means the\n                  merge blended coefficients into a value no frame observed."
+    );
+    eprintln!();
+    Ok(())
+}
 
 /// How many workers the band merge's fold gets.
 ///
@@ -4623,6 +4863,34 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         "the band merge returned {} planes, not {BAND_PLANES}",
         planes.len()
     );
+
+    // The confidence map, if asked for. Deliberately AFTER `finish` and before
+    // the write: the question it answers is about the merged output, so the
+    // merged output has to exist first, and reporting it before the image is
+    // written means a run that fails to write still leaves the evidence.
+    if let Some(cpath) = confidence_map_path(opts) {
+        let t_conf = Instant::now();
+        let px = geom.pixels();
+        let mut merged_luma = vec![0.0f32; px];
+        for i in 0..px {
+            merged_luma[i] = 0.5 * (planes[1][i] + planes[2][i]);
+        }
+        let dmin = confidence_pass(&paths, geom, levels, warps, &merged_luma, per_chunk)?;
+        // The same yardstick the fold gated with, applied to the merged luma:
+        // the noise the model says is present where the output landed.
+        let mut var = vec![0.0f32; px];
+        luma_variance(&merged_luma, &noise, &mut var);
+        if let Some(parent) = cpath.parent() {
+            std::fs::create_dir_all(parent).ok();
+        }
+        write_confidence_map(&cpath, &dmin, &var, geom)?;
+        eprintln!(
+            "                  second pass over {} frames in {:.1} s",
+            paths.len(),
+            t_conf.elapsed().as_secs_f64()
+        );
+        eprintln!();
+    }
 
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).ok();
