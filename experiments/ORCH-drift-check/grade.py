@@ -76,6 +76,11 @@ def main() -> int:
     ap.add_argument("dst")
     ap.add_argument("--label", default="")
     ap.add_argument("--maxw", type=int, default=1400)
+    ap.add_argument(
+        "--single",
+        action="store_true",
+        help="write the graded image alone, with no side-by-side and no caption",
+    )
     args = ap.parse_args()
 
     im = Image.open(args.src).convert("RGB")
@@ -88,6 +93,11 @@ def main() -> int:
 
     left = (a * 255.0 + 0.5).astype(np.uint8)
     right = (b * 255.0 + 0.5).astype(np.uint8)
+
+    if args.single:
+        Image.fromarray(right).save(args.dst, quality=93)
+        print(f"  -> {args.dst}  (graded, {right.shape[1]}x{right.shape[0]})")
+        return 0
 
     pad = 8
     h, w, _ = left.shape
