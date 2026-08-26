@@ -15,8 +15,28 @@ use merge_cmd::MergeOptions;
 use stack::{MemoryModel, Roi, StackOptions, parse_roi};
 use strehl_core::merge::DEFAULT_GATE;
 
+/// What `--version` and the run banner report.
+///
+/// `STREHL_BUILD_ID` is stamped by `build.rs` from the source commit, with a
+/// `-dirty` suffix when the compiled sources under `crates/` differ from that
+/// commit. It reads `unknown` when git could not answer, which is a report of
+/// ignorance rather than a plausible-looking guess.
+///
+/// This is in the banner as well as in `--version` because the two answer
+/// different questions. `--version` answers it for a binary somebody still has;
+/// the banner answers it for a RENDER somebody kept the log of, which is the
+/// case that actually comes up -- an artifact outlives the binary that made it,
+/// and without this the only record of which source produced a measurement was
+/// a filesystem timestamp.
+const VERSION: &str = concat!(
+    env!("CARGO_PKG_VERSION"),
+    " (",
+    env!("STREHL_BUILD_ID"),
+    ")"
+);
+
 #[derive(Parser)]
-#[command(name = "strehl", version, about = "Noise-aware RAW focus stacking")]
+#[command(name = "strehl", version = VERSION, about = "Noise-aware RAW focus stacking")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -897,6 +917,11 @@ fn main() -> Result<()> {
             // failure the refusal guards against. After the flip, a caller who
             // passes --gate is opting out of the better merge; they are told so
             // and told how to opt back in.
+            // Provenance FIRST, because every other line in this banner is a
+            // claim about what a binary did, and that is only ever a claim
+            // about the source which produced it. A log that records the
+            // settings but not the build cannot be re-derived later.
+            eprintln!("build           : strehl {VERSION}");
             eprintln!("merge backend   : {}", choice.why);
             if choice.source == merge_cmd::MergeSource::Inferred
                 && backend != merge_cmd::DEFAULT_MERGE_BACKEND
