@@ -2065,3 +2065,152 @@ independent agent should re-run 19.5 and 19.6 before this ships default-on. I
 note that my bias here ran toward under-claiming -- I predicted the result would
 fall below the instrument floor and it did not -- but that is an argument about
 direction, not a substitute for a second pair of eyes.
+
+## 20. The resampling chain, priced in amplitude
+
+HEAD `e718c46fa157e90d67e33bd014f8252a3eeb52ec`. Instruments:
+`experiments/BUILD-SHARP/src/resample_audit.py` (new) on top of
+`resample_price.py` (committed `142f3fb`).
+
+ORCH's framing, which is the right one and not the one I would have chosen
+unprompted: a resample *count* proves nothing, because two resamples at 0.04 px
+cost under 2% together. The finding that matters is **a resample at large
+phase**. So the deliverable is a phase distribution and a composed amplitude,
+not a tally.
+
+### 20.1 Coverage, as counted outcomes
+
+Eight sites found. Every one lands in exactly one bucket and the buckets sum to
+eight, so a site I skipped cannot be read as a site I cleared.
+
+| outcome | n | sites |
+| --- | ---: | --- |
+| PRICED | 2 | alignment gather; chroma co-site |
+| NOT-ON-THIS-PATH | 4 | demosaic; pyramid reduce/expand; align-solve downsample; lateral-CA warp |
+| NOT-A-RESAMPLE | 2 | 2x2 quad binning; `edgeaware::gather_levels` |
+| COULD-NOT-INSTRUMENT | 0 | -- |
+| **TOTAL** | **8** | |
+
+Three of the four NOT-ON-THIS-PATH entries are conditional and I want them
+recorded as conditional rather than dismissed. `pyramid` is off the path only
+because ORCH's reachability sweep found it DARK; the moment BUILD-BLEND lands
+its CLI wiring it becomes a priced site. The lateral-CA warp is off the path
+only because `--fix-ca` defaults off at this HEAD; when ORCH flips that default
+it becomes a priced site whose phase is already known -- red 0.152 px, blue
+0.039 px, from ORCH's own radial/tangential decomposition. Demosaic is off the
+binned path because a quad collapse never demosaics.
+
+### 20.2 The alignment gather is a genuinely large-phase resample
+
+Measured, not assumed, from a real 20-frame sidecar
+(`coffee-bean-20.warpmap.txt`, 3516x2344). The warp is stored as a complex
+similarity `z' = a z + b`, so evaluating it over a 64-px grid across every
+placed frame reproduces the coordinate the gather actually samples rather than
+modelling it. 40,700 samples.
+
+The phase histogram is near-uniform over [0,1) -- ten bins between 3666 and
+5803, with a mild pile-up in [0.9,1.0). That is the expected signature: the
+per-frame scale term `g ~ 2e-3` over a 3516 px plane sweeps the displacement
+through several whole pixels across the field, so the phase cycles many times
+and no single number summarises it.
+
+    distance to nearest integer: mean 0.2369  median 0.2373  p90 0.4470  p99 0.4942
+    fraction further than 0.2 from an integer: 57.3%
+
+A uniform phase is the worst case short of a fixed half-pixel, and it is what we
+have. This is not a defect -- the frames genuinely need moving -- but it prices
+the floor that everything else stacks on top of.
+
+### 20.3 The composed cost, and it is worse for red and blue
+
+Serial application costs the product of the stages.
+
+| f (cyc/px) | align (2-D) | co-site (2-D) | **G retained** | **R/B retained** |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.25 | 0.88986 | 0.88135 | **0.88986** | **0.78428** |
+| 0.35 | 0.69055 | 0.68133 | **0.69055** | **0.47050** |
+| 0.50 | 0.42096 | 0.47266 | **0.42096** | **0.19897** |
+
+ORCH asked what number would redirect the softness effort. It is this one: at
+f = 0.35 the viewable render retains **69% of green and 47% of red and blue**.
+That is not an optics floor, it is arithmetic on our own interpolator, and
+roughly half of the red/blue deficit is recoverable.
+
+Largest single contributor: the **chroma co-site** at f = 0.25 and f = 0.35
+(11.87% and 31.87% of amplitude); the alignment gather takes over at Nyquist.
+
+Scope, stated precisely because it decides who cares: co-siting runs only
+inside `write_binned`, which both callers reach only within `if let Some(m) =
+matrix`. So it is on the **viewable** render and not on the byte-frozen
+measurement path that `write_rgb16` serves. My section 19 ESF numbers were taken
+on `linear.tif` and therefore do **not** include this cost -- but the owner's
+"these look horrible" is about the viewable render, which does. That gap is
+itself a finding: our sharpness instrument has been measuring a path the
+photographer never sees.
+
+### 20.4 Potency -- the audit is not merely quiet
+
+`--plant PHI` injects an extra resample at a stated phase into the chain. The
+expected amplitude is computed independently of the audit's own accounting and
+the two are compared.
+
+    planted phi=0.5 both axes
+      f=0.25  priced 0.781250  expected 0.781250  MATCH
+      f=0.35  priced 0.402210  expected 0.402210  MATCH
+      f=0.50  priced 0.000000  expected 0.000000  MATCH
+
+The plant also re-ranks the "largest contributor" line from the co-site to the
+PLANT at all three bands, so the ranking logic responds too and is not a
+constant. The audit sees a large-phase resample when one is there.
+
+### 20.5 The fix, and why it is free -- ROUTE, do not merge
+
+`gather_checked` (`warpmap.rs:441`) takes a **single plane** and a
+`Similarity`, and evaluates `t.apply_at(px, py, cx, cy)` per pixel. The
+co-site is a constant translation of +/-0.25 on both axes applied to R and B
+**after** that gather, by a second interpolation
+(`image_out.rs:956-957`). Two warps applied serially; one composed warp
+available.
+
+Composing is exact: replace `t` with `t` composed with the constant co-site
+translation for the R and B planes only, leaving G untouched (G is not
+co-sited today and must not start being resampled). The sample count, the
+kernel and the cost are unchanged -- only the coordinate differs.
+
+It commutes with the merge. The shift is a fixed geometric property of the CFA
+quad, identical for every frame, so it passes through any per-pixel weighted
+mean and through argmax selection alike. Doing it per-frame before the merge
+and doing it once after are the same operation on a linear combination.
+
+Control, because "free" is a claim: adding a constant 0.25 to a near-uniform
+phase distribution should not change the gather's own mean cost, and it very
+nearly does not -- ratios 0.9942 / 0.9800 / 0.9471 at the three bands, the
+residual being the [0.9,1.0) pile-up rather than the offset. Netting that
+against the removed stage:
+
+| f | serial (today) | folded | gain | amplitude recovered |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.25 | 0.78428 | 0.88469 | 1.128x | +10.0 pts |
+| 0.35 | 0.47050 | 0.67678 | **1.438x** | **+20.6 pts** |
+| 0.50 | 0.19897 | 0.39867 | 2.004x | +20.0 pts |
+
+`image_out.rs` is not my lane and neither is the aligner, so this is a routing
+request, not a patch I am landing. What it needs is a per-plane co-site offset
+threaded into the gather call and the `resample_shift` calls deleted -- not
+`resample_shift` itself, which the non-composed path may still want.
+
+### 20.6 What I did not establish
+
+The 1.438x is a **predicted** amplitude gain from the composition, computed on
+the measured phase distribution. It is not yet an ESF measurement on a rendered
+frame, because rendering it requires the code change that is not mine to make.
+When it lands, the check is the section 19 ESF instrument run on the *viewable*
+render rather than `linear.tif`, and the prediction to falsify is that red and
+blue sharpen while green is bit-identical. Green's bit-identity is the built-in
+placebo and it should be asserted, not eyeballed.
+
+I have also not priced the 2x2 bin itself. It is a real MTF cost and it is
+larger than anything above, but it is a decimation that defines the output
+lattice rather than an interpolation at a phase, so folding it into this table
+would be double counting a different quantity. It deserves its own section and
+does not have one yet.
