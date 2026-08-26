@@ -81,10 +81,21 @@ def main() -> int:
     print()
     if far_delta is None:
         print("  no far field on this subject; the discriminator cannot run here.")
-    elif abs(far_delta) > 0.5 * PREDICTED_BIAS_DN:
-        print(f"  FAIL: level rose {far_delta:+.0f} DN where there is no veil to "
+    elif far_delta > 0.5 * PREDICTED_BIAS_DN:
+        print(f"  FAIL: level ROSE {far_delta:+.0f} DN where there is no veil to "
               f"remove. That is the order of the predicted arithmetic bias "
               f"(+{PREDICTED_BIAS_DN:.0f} DN). The estimator is adding light.")
+    elif far_delta < -0.5 * PREDICTED_BIAS_DN:
+        # Not the predicted failure. BUILD-SHARP's bias is UPWARD against a
+        # darkening defect; a far field that FALLS cannot be that bias filling
+        # the artifact in. Reported separately because the first version of
+        # this test took abs() and printed "level rose" on a fall -- a verdict
+        # line that contradicted its own rows.
+        print(f"  NOT THE BIAS: far-field level FELL {far_delta:+.0f} DN. The "
+              f"predicted artifact is an UPWARD bias (+{PREDICTED_BIAS_DN:.0f} "
+              f"DN) against a darkening, so a fall is not it. If the rim rows "
+              f"above rose while this fell, the two move in OPPOSITE "
+              f"directions and an additive bias cannot explain both.")
     else:
         print(f"  PASS: far-field level moved {far_delta:+.0f} DN against a "
               f"+{PREDICTED_BIAS_DN:.0f} DN prediction for an undebiased "
