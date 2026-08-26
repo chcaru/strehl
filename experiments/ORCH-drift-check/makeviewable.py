@@ -20,10 +20,24 @@ Rules this obeys, learned the hard way in this project:
     autolevel, no per-image normalisation: the renders already carry
     --auto-exposure, and a second per-image gain here would make the sheet lie
     about what the tool produced.
+
+THE VERDICT OVERLAY (--triage)
+------------------------------
+A contact sheet that shows 26 subjects with no indication of which is which is
+a product failure independent of any algorithm: the owner saw the bad ones and
+judged the whole tool.  With --triage pointing at BUILD-TRIAGE's triage.json,
+every tile carries its verdict, the number behind it, and -- where one exists --
+the remedy, colour-coded by whether the fix belongs to the MERGE or to the
+CAMERA.  The header prints the category counts and their arithmetic.
+
+Nothing here grades on a curve.  A subject that is bad is labelled bad, with
+the reason, and the sheet says whether it is worth retouching or needs a
+reshoot.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import os
 
 import numpy as np
@@ -48,6 +62,81 @@ def font(sz: int):
     return ImageFont.load_default()
 
 
+# Verdict vocabulary, shared with experiments/BUILD-TRIAGE/triage.py.
+CAT_ORDER = ["GOOD", "MERGE-LIMITED", "CAPTURE-LIMITED - coverage gap",
+             "CAPTURE-LIMITED - diffraction/magnification",
+             "CAPTURE-LIMITED - motion", "UNRESOLVED"]
+SHORT = {
+    "GOOD": "GOOD",
+    "MERGE-LIMITED": "MERGE-LIMITED (fix the software)",
+    "CAPTURE-LIMITED - coverage gap": "CAPTURE: coverage gap",
+    "CAPTURE-LIMITED - diffraction/magnification": "CAPTURE: diffraction",
+    "CAPTURE-LIMITED - motion": "CAPTURE: subject moved",
+    "UNRESOLVED": "UNRESOLVED (not examined)",
+}
+COLOUR = {
+    "GOOD": (110, 205, 120),
+    "MERGE-LIMITED": (226, 86, 74),
+    "CAPTURE-LIMITED - coverage gap": (226, 168, 62),
+    "CAPTURE-LIMITED - diffraction/magnification": (96, 158, 226),
+    "CAPTURE-LIMITED - motion": (176, 124, 220),
+    "UNRESOLVED": (150, 150, 156),
+}
+
+
+def load_triage(path: str | None):
+    """Verdicts keyed by subject, or ({}, {}) when running without them."""
+    if not path:
+        return {}, {}
+    with open(path, encoding="utf-8") as fh:
+        doc = json.load(fh)
+    return {r["subject"]: r for r in doc["rows"]}, doc["counts"]
+
+
+def measure_line(row: dict) -> str:
+    """One line of the number that produced the verdict -- never a bare label."""
+    e = row.get("evidence") or {}
+    v = row["verdict"]
+    if v == "MERGE-LIMITED":
+        return (f"merge {e.get('worst_blur_px')} px softer than best frame "
+                f"({e.get('merge_edge_dnpx')} vs {e.get('frame_edge_dnpx')} DN/px)")
+    if v == "CAPTURE-LIMITED - coverage gap":
+        return (f"{e.get('n_gap_blocks')}/24 blocks peak at a bracket end "
+                f"({e.get('gap_far')} far, {e.get('gap_near')} near)")
+    if v == "CAPTURE-LIMITED - motion":
+        return (f"adjacent-frame NCC {e.get('motion_med_ncc')}, "
+                f"{e.get('motion_blocks')}/24 blocks moving")
+    if v == "CAPTURE-LIMITED - diffraction/magnification":
+        return (f"best source frame only {e.get('frame_edge_dnpx')} DN/px; "
+                f"merge {e.get('merge_edge_dnpx')} DN/px")
+    if v == "GOOD":
+        # Quoted from the FLAT reference site: a median-residual noise statistic
+        # counts resolved detail as noise wherever there is detail to resolve.
+        na = e.get("noise_flat")
+        if na is None:
+            noise = "flat-site noise not measured"
+        elif na >= 1.0:
+            noise = f"{na:.2f}x cleaner at flat site"
+        else:
+            noise = f"{1.0 / na:.2f}x noisier at flat site"
+        return (f"merge within {float(e.get('worst_blur_px') or 0.0):.2f} px "
+                f"of best frame; {noise}")
+    return "; ".join(row.get("why") or []) or "no evidence"
+
+
+def wrap(s: str, n: int) -> list[str]:
+    out, line = [], ""
+    for word in s.split():
+        if len(line) + len(word) + 1 > n:
+            out.append(line)
+            line = word
+        else:
+            line = f"{line} {word}".strip()
+    if line:
+        out.append(line)
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("src", nargs="?", default=r"C:\dev\strehl-out\SHIP-V1")
@@ -56,6 +145,9 @@ def main() -> int:
     ap.add_argument("--cols", type=int, default=5)
     ap.add_argument("--cell", type=int, default=560)
     ap.add_argument("--skip-full", action="store_true")
+    ap.add_argument("--triage", default=None,
+                    help="path to BUILD-TRIAGE triage.json; adds per-tile "
+                         "verdicts, evidence and remedies to the sheet")
     args = ap.parse_args()
 
     vdir = os.path.join(args.dst, "view")
@@ -92,24 +184,81 @@ def main() -> int:
     rows = (len(thumbs) + cols - 1) // cols
     cw = max(t.size[0] for _, t in thumbs)
     ch = max(t.size[1] for _, t in thumbs)
-    pad, lab = 14, 30
+    tri_rows, tri_counts = load_triage(args.triage)
+    lab = 30 if not tri_rows else 96
+    pad = 14
+    head = 56 if not tri_rows else 148
     W = cols * (cw + pad) + pad
-    H = rows * (ch + pad + lab) + pad + 56
+    H = rows * (ch + pad + lab) + pad + head
     sheet = Image.new("RGB", (W, H), (18, 18, 20))
     d = ImageDraw.Draw(sheet)
     d.text((pad, 16),
            f"strehl SHIP-V1  --  {len(thumbs)} subjects, pyramid merge, "
            f"lateral-CA correction on, full sensor resolution",
            font=font(22), fill=(235, 235, 240))
+    if tri_rows:
+        d.text((pad, 46),
+               "Each tile carries its own verdict.  The question behind every "
+               "verdict: did the MERGE lose detail the source frames contain "
+               "(retouch), or did NO frame ever contain it (reshoot)?",
+               font=font(15), fill=(170, 172, 182))
+        cx = pad
+        total = 0
+        for cat in CAT_ORDER:
+            k = tri_counts.get(cat, 0)
+            total += k
+            # Zero-count categories are drawn too.  A category that is absent
+            # from the key and absent from the arithmetic is indistinguishable
+            # from a category that was never tested, and "0 MERGE-LIMITED" is
+            # the single most consequential number on this sheet: it is the
+            # statement that no subject here needs a software fix.
+            txt = f"{k}  {SHORT.get(cat, cat)}"
+            col = COLOUR.get(cat, (128, 128, 128))
+            if not k:
+                col = tuple(int(60 + 0.25 * (c - 60)) for c in col)
+            d.rectangle([cx, 74, cx + 13, 87], fill=col)
+            d.text((cx + 20, 72), txt, font=font(16),
+                   fill=(225, 225, 232) if k else (128, 130, 140))
+            cx += 26 + int(d.textlength(txt, font=font(16)))
+        d.text((pad, 98),
+               f"{'  +  '.join(str(tri_counts.get(c, 0)) for c in CAT_ORDER)}"
+               f"  =  {total} of {len(thumbs)} subjects."
+               f"  Sharpness measured as edge slope in DN/px on camera-linear "
+               f"renders of BOTH arms; blur quoted as an equivalent Gaussian "
+               f"sigma in pixels (instrument floor 0.3 px).",
+               font=font(14), fill=(150, 152, 162))
+        d.text((pad, 120),
+               "Colour = who fixes it.  Green: nothing to fix.  Red: the merge "
+               "lost detail the frames hold -- fix the software.  Amber/blue/"
+               "violet: no frame ever held it -- fix the capture.",
+               font=font(14), fill=(150, 152, 162))
 
     for i, (n, t) in enumerate(thumbs):
         r, c = divmod(i, cols)
         x = pad + c * (cw + pad)
-        y = 56 + pad + r * (ch + pad + lab)
+        y = head + pad + r * (ch + pad + lab)
         sheet.paste(t, (x + (cw - t.size[0]) // 2, y))
-        d.text((x, y + ch + 6), n[:44], font=font(15), fill=(200, 200, 208))
+        if not tri_rows:
+            d.text((x, y + ch + 6), n[:44], font=font(15), fill=(200, 200, 208))
+            continue
+        row = tri_rows.get(n)
+        cat = row["verdict"] if row else "UNRESOLVED"
+        col = COLOUR.get(cat, (128, 128, 128))
+        # A 3 px rule in the verdict colour along the top of the tile, so the
+        # classification is legible at a glance from across the sheet.
+        d.rectangle([x + (cw - t.size[0]) // 2, y,
+                     x + (cw + t.size[0]) // 2 - 1, y + 3], fill=col)
+        d.text((x, y + ch + 5), n[:46], font=font(15), fill=(210, 210, 218))
+        d.text((x, y + ch + 23), SHORT.get(cat, cat), font=font(15), fill=col)
+        if row:
+            for j, line in enumerate(wrap(measure_line(row), 62)[:1]):
+                d.text((x, y + ch + 41 + j * 15), line, font=font(12),
+                       fill=(185, 187, 196))
+            for j, line in enumerate(wrap(row.get("remedy") or "", 62)[:2]):
+                d.text((x, y + ch + 57 + j * 15), line, font=font(12),
+                       fill=(150, 152, 162))
 
-    cp = os.path.join(args.dst, "contact.jpg")
+    cp = os.path.join(args.dst, "contact-triage.jpg" if tri_rows else "contact.jpg")
     sheet.save(cp, "JPEG", quality=93, optimize=True)
     print(f"\ncontact sheet -> {cp}  ({sheet.size[0]}x{sheet.size[1]})")
     print(f"browse copies -> {vdir}")
