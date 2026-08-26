@@ -253,9 +253,33 @@ needs every frame's flux *before* the first frame is folded, and the pyramid
 folds in a single pass. The gain itself would apply unchanged. This is a known
 gap with a known fix, not a design position.
 
-**In practice, on this corpus:** all 26 reference renders were produced on this
-path and none of them needed those stages. If your subject held still and your
-exposure held steady, neither will yours.
+**In practice, on this corpus — and this has now been measured rather than
+argued.** All 26 reference renders were produced on this path, and the question
+of whether any of them *needed* those two stages was put to three independent
+tests.
+
+*Motion.* Seventeen crops at 1:1 across thirteen subjects, examined as
+pictures: **zero visible ghosting**, including the hardest geometries in the
+set — bee setae against white, and printed text. Numerically, 10 of 26 subjects
+show any inter-frame displacement clearing a floor measured on a subject that
+physically cannot move, and the largest detection anywhere in the corpus clears
+that floor by only 1.90x. Nothing in the corpus needed outlier rejection.
+
+*Exposure.* This one corrected the reason, not just the claim. Several subjects
+show flux ramps across a bracket that look alarming — up to half a stop
+end-to-end — and the obvious reading is exposure drift. It is mostly not.
+It is **magnification**: as focus breathing changes the scale, flux follows
+`ln flux = -2 ln scale` with no free parameter, which reduces the ramp RMS by
+up to 5.06x and survives a permutation null at p=0.0025. Between *adjacent*
+frames the residual is 0.003-0.006 stops, which is nothing. So the gate is not
+being fed drift on most of this corpus, and the earlier phrasing here —
+"if your exposure held steady" — was giving the right advice for the wrong
+reason.
+
+*The exception.* `foam` is a genuine photometric outlier: **0.32 stops within
+8 frames**, with inconsistent EXIF. One subject in twenty-six does need the
+stage that does not exist. The blanket "none of them needed those stages"
+that stood here before was wrong, and this is what replaced it.
 
 **Do not take the estimator backend as a working fallback.** A reachability
 audit of the whole binary found that `--merge estimator` fails out of the box:
