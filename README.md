@@ -180,8 +180,25 @@ gap with a known fix, not a design position.
 
 **In practice, on this corpus:** all 26 reference renders were produced on this
 path and none of them needed those stages. If your subject held still and your
-exposure held steady, neither will yours. If it moved, use `--merge estimator`
-and accept the patchwork, or wait for the port.
+exposure held steady, neither will yours.
+
+**Do not take the estimator backend as a working fallback.** A reachability
+audit of the whole binary found that `--merge estimator` fails out of the box:
+it exits non-zero with `U3 the eroded low-detail region keeps only 0 px` unless
+`STREHL_PHOTOMETRIC=off` is set in the environment. The advice to fall back to
+it was wrong and is withdrawn until that is fixed. The same audit found that
+four of the five stages the banner lists as "not applied" are fully written and
+reachable only from that broken path — so the capability exists, has never run
+on a delivered image, and the shipping default is the less capable of the two
+backends. Porting what is worth porting into the pyramid is in progress.
+
+**There is no hot-pixel or defect-pixel correction anywhere in either crate.**
+Not disabled, not stubbed — absent. Every apparent reference in the source is
+prose. On long exposures at high ISO you will keep your sensor's hot pixels, and
+because they are fixed in sensor coordinates while the frames are warped into
+alignment, they smear into short trails rather than staying points. Dark frames
+sufficient to identify them have been captured; the correction has not been
+built.
 
 `--srgb` applies the camera's colour matrix and the sRGB transfer curve, and
 since M95 it emits at **full sensor resolution by default** — pass `--binned`
@@ -200,9 +217,9 @@ flags to look, drop them to measure.
 
 ### What the output actually looks like
 
-Three things are worth stating plainly, because two of them are defects this
-class of tool is notorious for and the third is the one that is actually still
-open.
+Four things are worth stating plainly: two are defects this class of tool is
+notorious for, one is the positive result, and the last is what is actually
+still open.
 
 **The halo is gone on this path, and that is measured rather than asserted.**
 The classic focus-stacking artifact is a bright or dark band tracing every
@@ -222,17 +239,30 @@ punched-out white or crushed black along high-contrast edges. The delivered
 renders carry **zero** exact-zero RGB pixels on subjects where an unclamped
 merge produces 0.371% and 1.048%. Dark is subject, not clipping.
 
+**On a good capture the result is print-worthy, and that judgement was made by
+looking at pixels rather than at a metric.** Three subjects were pulled to true
+1:1 out of the delivered masters, through a single display curve derived once
+per master so no two crops are graded differently: `bee-3-cpl` resolves
+individual plumose hair barbules, including the branched side-structure that
+makes bee hair feathery rather than smooth; `leaf-2-cpl` resolves vein structure
+at three scales plus cell-level texture and chloroplast speckle; `112MSDCF`
+resolves crystal dendrites down to near single-pixel branch width. None of the
+three shows a halo. `leaf-2-cpl` is the searching case of that set, because long
+straight high-contrast veins are the geometry a Laplacian pyramid rings against
+most readily.
+
 **What is still open is sharpness, and it is uneven.** The tool is not uniformly
 soft — it is *inconsistent*, which is worse, because a contact sheet that mixes
-both gives you no way to tell which is which. Gradient magnitude at each
-subject's own sharpest site: `bee-3-cpl` **0.03072**, with individually resolved
-leg hairs and sensory pits visible on the antenna; `flowers-cpl` **0.00939**,
-which is 3.3x less and reads as mush at the same magnification. Some of that
-spread is capture — depth coverage, aperture, subject motion — and some of it is
-the merge. Telling those two apart per subject is in progress, and until it is
-settled the honest summary is that this tool will hand you a print-worthy file
-on some stacks and a soft one on others, and does not yet tell you which you
-are holding.
+both gives you no way to tell which is which. Resolved-detail score at each
+subject's own sharpest site spans an order of magnitude across the corpus, from
+`flat-on-ruler-cpl` at **0.0503** down to `flowers-cpl` at **0.0045**, which
+reads as mush at the same magnification the top of that range reads as a print.
+Some of that spread is capture — depth coverage, aperture, subject motion — and
+some of it is the merge. Telling those two apart per subject is in progress, and
+until it is settled the honest summary is that this tool will hand you a
+print-worthy file on some stacks and a soft one on others, and does not yet tell
+you which you are holding. Making it tell you is the point of the confidence
+map, and it is the difference between a defect report and an instrument.
 
 ## What is actually different
 
