@@ -437,6 +437,14 @@ const RENDER_ENV: &[&str] = &[
     // and a byte-freeze is precisely the instrument that cannot tolerate 1 DN.
     "STREHL_MERGE",
     "STREHL_PYRAMID_WORKERS",
+    // The veil envelope. `STREHL_VEIL` rewrites the merged sums at every
+    // eligible pixel, so an ambient setting would move these hashes while
+    // appearing nowhere in any row. Registered here in the same commit that
+    // introduced the variables, because the two comments above record what it
+    // costs to do otherwise.
+    "STREHL_VEIL",
+    "STREHL_VEIL_MARGIN",
+    "STREHL_VEIL_FLOOR",
 ];
 
 impl Freeze {

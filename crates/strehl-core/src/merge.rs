@@ -1054,6 +1054,37 @@ impl FocusStats {
     }
 }
 
+/// What [`Estimator::apply_veil`] actually did.
+///
+/// Returned rather than logged, in the idiom of [`FocusStats::robust_fallbacks`]:
+/// a correction that fired on 0.0% of the plane and one that fired everywhere
+/// both produce a picture, and only this tells them apart.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct VeilReport {
+    /// Pixels in the plane.
+    pub pixels: usize,
+    /// Pixels whose winning focus response was below the ceiling.
+    pub eligible: usize,
+    /// Pixels the estimator actually raised.
+    ///
+    /// Always `<= eligible`, because the estimator may only *raise* a value: a
+    /// pixel whose gated mean already exceeds the debiased envelope is left
+    /// exactly alone. That one-sidedness is the safety property. Veiling can
+    /// only darken a bright backdrop, so a correction for it should only ever
+    /// brighten — and an operator that cannot lower a pixel cannot destroy
+    /// resolved dark structure even where the focus interlock misfires.
+    pub applied: usize,
+    /// Mean green-luma lift over the pixels it moved, in raw DN.
+    pub mean_lift_dn: f64,
+    /// The extreme-value debias actually subtracted, in sigmas.
+    pub debias_sigmas: f32,
+    /// Estimated backdrop level, in raw DN.
+    pub backdrop_dn: f32,
+    /// Luminance floor derived from it, in raw DN. No pixel below this is
+    /// touched.
+    pub luma_floor_dn: f32,
+}
+
 /// Pass two: the noise-gated average.
 ///
 /// Accumulates in `f32` per CFA plane, in **native raw DN** — M26's ruling. No
@@ -1089,6 +1120,67 @@ pub struct Estimator {
     /// weighted arithmetic exists to round differently.
     wsum: Vec<f32>,
     wsq: Vec<f32>,
+    /// Per-plane, per-pixel **maximum over every folded frame**, in raw DN.
+    ///
+    /// Empty unless [`Estimator::enable_veil`] was called, exactly as `wsum`
+    /// and `censor` encode their features being off, and for the same reason:
+    /// emptiness is what makes the shipped path byte-identical by construction
+    /// rather than by inspection.
+    ///
+    /// This is the veil estimator's raw material. Veiling by a dark subject can
+    /// only *darken* a bright backdrop, so the largest sample a pixel ever took
+    /// is its least-veiled one, and the maximum is an estimate of the unveiled
+    /// value rather than an outlier to be rejected.
+    ///
+    /// It accumulates over **every** frame, not the admitted set, and that is
+    /// load-bearing. Section 22 measured the election ramping smoothly with
+    /// distance from the silhouette, so at a veiled background pixel the
+    /// admitted set is precisely the frames in which the subject is most
+    /// defocused and spilling hardest onto it. A maximum over the admitted set
+    /// would be a maximum over the contaminated population and would recover
+    /// nothing.
+    pmax: [Vec<f32>; 4],
+    /// The winner-focus level at or above which [`Estimator::apply_veil`] does
+    /// nothing. Meaningless while `pmax` is empty.
+    ///
+    /// This is the whole safety interlock. A pixel whose winning focus response
+    /// is *high* has some frame in which real structure resolved there, and a
+    /// maximum across frames would replace that structure with a defocused
+    /// smear of it — section 24 measured exactly that population on `bee-2`,
+    /// where a merge darker than every one of its inputs was the stacker
+    /// working correctly on resolved hairs. Only dead ground, where no frame
+    /// found anything, is eligible.
+    veil_focus_max: f32,
+    /// How far above the gated mean the envelope must sit, in units of the
+    /// single-frame noise sigma, before it is believed.
+    ///
+    /// Without this the operator is `max(envelope, mean)`, and the maximum of
+    /// two estimators of the same quantity is biased *above* both. On unveiled
+    /// backdrop the two agree, so that bias is pure brightening of exactly the
+    /// region used as the aura's reference level — which does not merely add
+    /// noise, it corrupts the measurement of the thing being fixed. Requiring a
+    /// significant excess makes the operator inert wherever there is no veil to
+    /// remove, which is the same significance-gate idiom the merge already uses
+    /// to decide which frames to average.
+    veil_margin: f32,
+    /// Fraction of the backdrop level below which no pixel may be raised.
+    ///
+    /// This is the sign law, and without it the correction is unsound rather
+    /// than merely imprecise. An upper envelope is the right estimator only
+    /// when the contaminating neighbour is *darker* than the pixel, which is
+    /// the case this was built for: a dark subject spilling onto a bright
+    /// backdrop. Where the neighbour is brighter — pale hairs spilling onto
+    /// black chitin — the veiled samples are the *bright* ones and the correct
+    /// envelope is the lower one, so raising is exactly backwards.
+    ///
+    /// A focus threshold alone cannot separate those cases, because a smooth
+    /// glossy dark surface produces almost no gradient and is therefore
+    /// indistinguishable from dead ground to the focus measure. Measured
+    /// directly: on `bee-2-cpl` at ceiling 1.5 the correction cleaned the rim
+    /// off the legs and simultaneously punched flat grey blotches through the
+    /// eye, thorax and wing. A luminance floor is what states the precondition
+    /// the envelope's validity actually rests on.
+    veil_luma_floor: f32,
     /// Per-pixel, per-plane censoring state, four bits packed into one byte:
     /// bit `s` of `censor[i]` is set when plane `s` at pixel `i` is censored.
     ///
@@ -1224,6 +1316,10 @@ impl Estimator {
             soft: kernel,
             wsum,
             wsq,
+            pmax: [Vec::new(), Vec::new(), Vec::new(), Vec::new()],
+            veil_focus_max: 0.0,
+            veil_margin: 0.0,
+            veil_luma_floor: 0.0,
             censor: Vec::new(),
             censor_level: None,
             clip_w: [Vec::new(), Vec::new(), Vec::new(), Vec::new()],
@@ -1592,6 +1688,19 @@ impl Estimator {
             let base = py * w;
             for px in 0..w {
                 let i = base + px;
+                // The veil envelope is a maximum over EVERY frame, so it is
+                // taken here, above the gate's `continue`. The samples the gate
+                // admits at a veiled background pixel are exactly the veiled
+                // ones; seeing past them is the entire point.
+                if !self.pmax[0].is_empty() {
+                    for (s, (ox, oy)) in off.iter().enumerate() {
+                        let row = if *oy == 0 { row0 } else { row1 };
+                        let v = f32::from(row[2 * px + ox]);
+                        if v > self.pmax[s][i] {
+                            self.pmax[s][i] = v;
+                        }
+                    }
+                }
                 let winner = self.best_index[i] == frame_index;
                 // `wt`, not `w` -- `w` is the plane width three lines up.
                 let wt = match self.soft {
@@ -1747,6 +1856,42 @@ impl Estimator {
                  variances are not commensurable"
             );
         }
+        // The veil envelope is a maximum, so it reduces by `max`, not by `+`.
+        // Folding it here is what keeps the tiled and single-threaded paths
+        // agreeing: a maximum taken over one tile's frames is not a maximum
+        // over the bracket, and nothing downstream could tell the difference.
+        if !other.pmax[0].is_empty() {
+            assert!(
+                !self.pmax[0].is_empty(),
+                "one estimator accumulated a veil envelope and the other did not; \
+                 their maxima are not commensurable"
+            );
+            assert_eq!(
+                self.veil_focus_max, other.veil_focus_max,
+                "estimators used different veil focus ceilings and cannot be reduced"
+            );
+            assert_eq!(
+                self.veil_margin, other.veil_margin,
+                "estimators used different veil margins and cannot be reduced"
+            );
+            assert_eq!(
+                self.veil_luma_floor, other.veil_luma_floor,
+                "estimators used different veil luminance floors and cannot be reduced"
+            );
+            for (dst, src) in self.pmax.iter_mut().zip(&other.pmax) {
+                for (a, b) in dst.iter_mut().zip(src) {
+                    if *b > *a {
+                        *a = *b;
+                    }
+                }
+            }
+        } else {
+            assert!(
+                self.pmax[0].is_empty(),
+                "one estimator accumulated a veil envelope and the other did not; \
+                 their maxima are not commensurable"
+            );
+        }
         self.frames += other.frames;
         Ok(())
     }
@@ -1866,6 +2011,183 @@ impl Estimator {
         } else {
             self.sum[s][i] / self.wsum[i]
         }
+    }
+
+    /// Deciles of the winning focus response, for calibrating the veil ceiling.
+    ///
+    /// The ceiling cannot be derived. The focus response is normalised by its
+    /// own noise, so `FOCUS_NOISE_SD` is its *standard deviation* on dead
+    /// ground — but its *mean* there is the Rayleigh mean of the box-averaged
+    /// gradient, which is order 0.5, not zero. A ceiling written as a small
+    /// multiple of `FOCUS_NOISE_SD` would therefore sit far below every real
+    /// pixel and disable the correction silently. Hence deciles, measured.
+    ///
+    /// Returns `[p10, p20, ..., p90]`.
+    pub fn focus_deciles(&self) -> [f32; 9] {
+        let mut v: Vec<f32> = self.best_focus.clone();
+        v.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+        let mut out = [0.0f32; 9];
+        if v.is_empty() {
+            return out;
+        }
+        for (k, slot) in out.iter_mut().enumerate() {
+            let q = (k + 1) as f64 / 10.0;
+            let idx = ((v.len() - 1) as f64 * q).round() as usize;
+            *slot = v[idx];
+        }
+        out
+    }
+
+    /// Turn on veil-envelope accumulation, eligible only where the winning
+    /// focus response is below `focus_max`.
+    ///
+    /// Must be called before the first fold: a maximum that missed frames is
+    /// not a maximum.
+    pub fn enable_veil(&mut self, focus_max: f32, margin: f32, luma_floor: f32) {
+        assert!(
+            self.frames == 0,
+            "enable_veil must precede the first fold; {} frames are already \
+             folded and a maximum that missed them is not a maximum",
+            self.frames
+        );
+        assert!(
+            focus_max.is_finite() && focus_max >= 0.0,
+            "veil focus ceiling must be finite and non-negative, got {focus_max}"
+        );
+        assert!(
+            margin.is_finite() && margin >= 0.0,
+            "veil margin must be finite and non-negative, got {margin}"
+        );
+        let px = self.geom.pixels();
+        self.pmax = [
+            vec![f32::NEG_INFINITY; px],
+            vec![f32::NEG_INFINITY; px],
+            vec![f32::NEG_INFINITY; px],
+            vec![f32::NEG_INFINITY; px],
+        ];
+        self.veil_focus_max = focus_max;
+        self.veil_margin = margin;
+        self.veil_luma_floor = luma_floor;
+    }
+
+    /// Replace the gated mean with the debiased upper envelope at dead-ground
+    /// pixels, where the mean is an average over the veil.
+    ///
+    /// Call once, after the last fold and before [`Estimator::value`].
+    ///
+    /// This rewrites `sum` in place rather than branching in `value`, so
+    /// censoring, [`Estimator::predicted_sigma`] and every downstream consumer
+    /// keep reading the one array they already read and cannot disagree with
+    /// the output about what the output is.
+    ///
+    /// The raw maximum of `n` samples sits about `sqrt(2 ln n)` sigma above the
+    /// mean by noise alone, which at 205 frames is 3.2 sigma and not
+    /// negligible, so it is subtracted back off using the calibrated noise
+    /// model — the same extreme-value correction `BimodalStats` already makes.
+    pub fn apply_veil(&mut self, noise: &NoiseModel, black_dn: f32) -> VeilReport {
+        let px = self.geom.pixels();
+        let mut report = VeilReport {
+            pixels: px,
+            ..VeilReport::default()
+        };
+        if self.pmax[0].is_empty() {
+            return report;
+        }
+        // `max_index` is the highest frame index the focus pass saw, so the
+        // bracket depth is one more. Taken from the field rather than from a
+        // caller-supplied count so the debias cannot silently disagree with the
+        // population it is debiasing.
+        let frames = f64::from(u32::from(self.max_index) + 1);
+        let debias = (2.0 * frames.max(2.0).ln()).sqrt() as f32;
+        report.debias_sigmas = debias;
+
+        let mut lift_sum = 0.0f64;
+        // Backdrop level, estimated from the merged green itself so the floor
+        // is a property of this scene rather than a hardcoded DN. A high
+        // quantile, because the backdrop is the bright population; subsampled
+        // because a quantile does not need every pixel and this must not cost
+        // a second full sort of a 24 MP plane.
+        let backdrop = {
+            let step = (px / 400_000).max(1);
+            let mut s: Vec<f32> = (0..px)
+                .step_by(step)
+                .filter(|&i| self.n[i] > 0)
+                .map(|i| {
+                    let d = if self.wsum.is_empty() {
+                        f32::from(self.n[i])
+                    } else {
+                        self.wsum[i]
+                    };
+                    if d > 0.0 {
+                        0.5 * (self.sum[1][i] + self.sum[3][i]) / d
+                    } else {
+                        0.0
+                    }
+                })
+                .collect();
+            s.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+            if s.is_empty() {
+                0.0
+            } else {
+                s[(s.len() - 1) * 9 / 10]
+            }
+        };
+        let floor = self.veil_luma_floor * (backdrop - black_dn).max(0.0) + black_dn;
+        report.backdrop_dn = backdrop;
+        report.luma_floor_dn = floor;
+
+        for i in 0..px {
+            if !(self.best_focus[i] < self.veil_focus_max) {
+                continue;
+            }
+            report.eligible += 1;
+            if self.n[i] == 0 {
+                continue;
+            }
+            let divisor = if self.wsum.is_empty() {
+                f32::from(self.n[i])
+            } else {
+                self.wsum[i]
+            };
+            if !(divisor > 0.0) {
+                continue;
+            }
+            let before = 0.5 * (self.sum[1][i] + self.sum[3][i]) / divisor;
+            // The sign law. Below the floor this pixel is subject, not veiled
+            // backdrop, and an upper envelope there is the wrong estimator
+            // rather than a slightly noisy one.
+            if before < floor {
+                continue;
+            }
+            let mut moved = false;
+            for s in 0..4 {
+                if self.censor_level.is_some() && self.censor[i] & (1u8 << s) != 0 {
+                    continue;
+                }
+                let m = self.pmax[s][i];
+                if !m.is_finite() {
+                    continue;
+                }
+                let sigma = noise.green_luma_sigma(m - black_dn).max(0.0);
+                let est = m - debias * sigma;
+                let current = self.sum[s][i] / divisor;
+                if est > current + self.veil_margin * sigma {
+                    self.sum[s][i] = est * divisor;
+                    moved = true;
+                }
+            }
+            if moved {
+                report.applied += 1;
+                let after = 0.5 * (self.sum[1][i] + self.sum[3][i]) / divisor;
+                lift_sum += f64::from(after - before);
+            }
+        }
+        report.mean_lift_dn = if report.applied > 0 {
+            lift_sum / report.applied as f64
+        } else {
+            0.0
+        };
+        report
     }
 
     /// Green as the output uses it, `(G1 + G2) / 2`, still in raw DN.

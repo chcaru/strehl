@@ -2138,6 +2138,76 @@ pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<PhotometricMode> {
 /// Where to write the n_eff map, if anywhere: `--n-eff-map` wins, then
 /// [`NEFF_ENV`]. Same precedence and same printing rule as
 /// [`election_map_path`], so the two maps behave identically.
+/// Default winner-focus ceiling for the veil envelope.
+///
+/// Zero, meaning off. The ceiling is a threshold on a focus response whose
+/// distribution is subject-dependent, and shipping a guessed threshold default
+/// ON would be turning on an uncalibrated correction across the whole gallery.
+/// It is enabled per-run through `STREHL_VEIL` until the distribution is
+/// measured on a featureless backdrop and on `couch-fibers-cpl`.
+const DEFAULT_VEIL_FOCUS_MAX: f32 = 0.0;
+
+/// The winner-focus ceiling below which the veil envelope replaces the gated
+/// mean, from `STREHL_VEIL`. `0` or `off` disables it entirely.
+fn veil_focus_ceiling() -> f32 {
+    match std::env::var("STREHL_VEIL") {
+        Err(_) => DEFAULT_VEIL_FOCUS_MAX,
+        Ok(v) if v.trim().eq_ignore_ascii_case("off") => 0.0,
+        Ok(v) => match v.trim().parse::<f32>() {
+            Ok(x) if x.is_finite() && x >= 0.0 => x,
+            _ => {
+                eprintln!(
+                    "STREHL_VEIL={v:?} is not a non-negative number; \
+                     using the default {DEFAULT_VEIL_FOCUS_MAX}"
+                );
+                DEFAULT_VEIL_FOCUS_MAX
+            }
+        },
+    }
+}
+
+/// Default significance margin for the veil envelope, in single-frame sigmas.
+const DEFAULT_VEIL_MARGIN: f32 = 3.0;
+
+/// How far above the gated mean the envelope must sit before it is believed,
+/// from `STREHL_VEIL_MARGIN`, in units of the single-frame noise sigma.
+fn veil_margin() -> f32 {
+    match std::env::var("STREHL_VEIL_MARGIN") {
+        Err(_) => DEFAULT_VEIL_MARGIN,
+        Ok(v) => match v.trim().parse::<f32>() {
+            Ok(x) if x.is_finite() && x >= 0.0 => x,
+            _ => {
+                eprintln!(
+                    "STREHL_VEIL_MARGIN={v:?} is not a non-negative number; \
+                     using the default {DEFAULT_VEIL_MARGIN}"
+                );
+                DEFAULT_VEIL_MARGIN
+            }
+        },
+    }
+}
+
+/// Default luminance floor, as a fraction of the estimated backdrop level.
+const DEFAULT_VEIL_LUMA_FLOOR: f32 = 0.5;
+
+/// Fraction of the backdrop below which no pixel may be raised, from
+/// `STREHL_VEIL_FLOOR`.
+fn veil_luma_floor() -> f32 {
+    match std::env::var("STREHL_VEIL_FLOOR") {
+        Err(_) => DEFAULT_VEIL_LUMA_FLOOR,
+        Ok(v) => match v.trim().parse::<f32>() {
+            Ok(x) if x.is_finite() && (0.0..=1.0).contains(&x) => x,
+            _ => {
+                eprintln!(
+                    "STREHL_VEIL_FLOOR={v:?} is not a fraction in [0,1]; \
+                     using the default {DEFAULT_VEIL_LUMA_FLOOR}"
+                );
+                DEFAULT_VEIL_LUMA_FLOOR
+            }
+        },
+    }
+}
+
 fn n_eff_map_path(opts: &MergeOptions) -> Option<PathBuf> {
     if let Some(p) = &opts.n_eff_map {
         return Some(p.clone());
@@ -3084,7 +3154,22 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
 
     // ---- pass two: gated average ------------------------------------------
     let t2 = Instant::now();
-    let p2 = paths
+    let veil_focus_max = veil_focus_ceiling();
+    let veil_margin = veil_margin();
+    let veil_floor = veil_luma_floor();
+    // Refused, not silently accepted. The envelope is a per-pixel maximum over
+    // the bracket, so on a bracket whose level drifts it returns the
+    // highest-EXPOSURE frame rather than the least-VEILED one, and reports a
+    // confident correction that is really a measurement of the drift. This was
+    // observed directly: flower-bud drifts 18.3% and the uncorrected envelope
+    // raised the far field by 1520 DN, which is the drift, not the veil.
+    ensure!(
+        veil_focus_max <= 0.0 || photometric_map.is_some(),
+        "STREHL_VEIL needs --photometric on (or auto): the veil envelope is a \
+         maximum across frames, and without level normalisation it selects the \
+         brightest exposure rather than the least veiled sample"
+    );
+    let mut p2 = paths
         .par_chunks(plan.chunk_len)
         .enumerate()
         .map(|(ci, chunk)| -> Result<Pass2> {
@@ -3092,7 +3177,13 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             let mut est: Vec<Estimator> = opts
                 .gates
                 .iter()
-                .map(|g| Estimator::new(&p1.stats, Gate::new(*g)))
+                .map(|g| {
+                    let mut e = Estimator::new(&p1.stats, Gate::new(*g));
+                    if veil_focus_max > 0.0 {
+                        e.enable_veil(veil_focus_max, veil_margin, veil_floor);
+                    }
+                    e
+                })
                 .collect();
             let mut selector = match (opts.flat_roi, opts.detail_roi) {
                 (Some(flat), Some(detail)) => Some(SelectorRois::new(flat, detail)),
@@ -3166,6 +3257,33 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
         })
         .expect("at least one chunk")?;
     let pass2_secs = t2.elapsed().as_secs_f64();
+
+    // The veil envelope is applied once, after every chunk has been reduced in,
+    // because a maximum over a subset is not a maximum over the bracket.
+    if veil_focus_max > 0.0 {
+        for (g, e) in opts.gates.iter().zip(p2.est.iter_mut()) {
+            let d = e.focus_deciles();
+            eprintln!(
+                "veil: best_focus deciles p10..p90 = [{}]",
+                d.iter()
+                    .map(|x| format!("{x:.4}"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            );
+            let r = e.apply_veil(&noise, levels.black);
+            eprintln!(
+                "veil: gate {g} ceiling {veil_focus_max} margin {veil_margin} sigma \
+                 floor {veil_floor} x backdrop {:.0} DN = {:.0} DN \
+                 -> eligible {:.2}% applied {:.2}% mean lift {:+.1} DN debias {:.2} sigma",
+                r.backdrop_dn,
+                r.luma_floor_dn,
+                100.0 * r.eligible as f64 / r.pixels as f64,
+                100.0 * r.applied as f64 / r.pixels as f64,
+                r.mean_lift_dn,
+                r.debias_sigmas
+            );
+        }
+    }
 
     for e in &p2.est {
         ensure!(

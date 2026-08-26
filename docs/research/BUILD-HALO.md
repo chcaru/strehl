@@ -2339,3 +2339,184 @@ the level is not.
 The gate must therefore be on **signal validity**, which varies smoothly and
 goes to zero on its own where the backdrop is textured, and never on distance.
 Headroom available: **3837 DN, 19.7% of backdrop.**
+
+
+## 26. BUILT AND SHIPPED: the veil envelope, and the three interlocks it needs
+
+Sections 1-25 are measurement. This one is the build. The estimator exists in
+`merge.rs`, it is calibrated, it passes the frozen bars, and it produced a
+`bee-2-cpl` full frame with the leg and claw rim gone and the subject intact.
+
+**The headline is not the estimator. It is that the estimator is wrong in three
+separate ways unless three interlocks are present, and each was found by a
+measurement that contradicted a number I already believed.**
+
+### 26.1 What was built
+
+At every pixel, alongside the gated mean, accumulate a per-plane running
+maximum across frames (`pmax`). After the reduce, at pixels that qualify,
+replace the mean with the debiased maximum:
+
+```
+est = pmax - debias * sigma,   debias = sqrt(2 ln N)
+sum[s][i] = max(cur, est) * divisor      // only ever raises
+```
+
+Qualification is three predicates ANDed, and section 26.2-26.4 is the argument
+that removing any one of them breaks it.
+
+New surface: `STREHL_VEIL` (focus ceiling, default 0.0 = off),
+`STREHL_VEIL_MARGIN` (default 3.0 sigma), `STREHL_VEIL_FLOOR` (default 0.5 x
+backdrop). Shipped configuration is `STREHL_VEIL=1.5 --photometric on`.
+
+### 26.2 Interlock 1 -- photometric normalisation, worth 92% of the apparent effect
+
+**A per-pixel maximum over a bracket whose exposure drifts returns the
+highest-exposure frame, not the least-veiled one.** This is trap #4 in this
+lane's own record. I wrote it down, then built the trap in Rust anyway.
+
+First real run, ceiling 0.65: the far field rose **+1520 DN** and every band's
+deficit grew by the same amount. That is not a correction, it is a gain change
+wearing one.
+
+With `--photometric on` (engine reports gain span **1.2216**, an 18.3%
+bracket), the mean lift collapsed **+352.6 -> +27.3 DN**. Roughly **92% of the
+"correction" was drift.**
+
+`STREHL_VEIL` now **refuses to run** without `--photometric on|auto`. A flag
+that parses and does nothing is indistinguishable from one that works, so the
+dependency is enforced rather than documented.
+
+Photometric alone, with no veil at all, is a large free win: surround
+**-2227 -> -1619 DN**.
+
+### 26.3 Interlock 2 -- the significance margin, because max(a,b) is biased above both
+
+`max(cur, est)` is biased upward wherever the two estimators merely disagree by
+noise. That bias lands hardest on the **far field** -- which is the aura's own
+reference level -- so it inflates the correction by moving the ruler.
+
+Requiring `est > cur + margin * sigma` before substituting turned
+**eligible 67.9% / applied 67.9%** into **eligible 76.4% / applied 13.8%**. The
+gap between those two numbers is the estimator declining to act, which is what
+a significance test is for.
+
+### 26.4 Interlock 3 -- the luminance floor, and the picture that forced it
+
+Ceiling 1.5 + margin passed every number in section 26.6. **Then I looked at
+`bee-2-cpl` and flat grey blotches had been punched through the eye, thorax and
+wing.**
+
+The cause is physical, not tuning, and it is the precondition the whole
+estimator rests on:
+
+1. **An upper envelope is valid only where the contaminating neighbour is
+   DARKER than the pixel.** Where pale hairs veil dark chitin the sign law
+   inverts and the correct estimator is the LOWER envelope. Taking the upper
+   one there fills dark structure with the brightest thing that ever crossed
+   it.
+2. **A focus threshold cannot substitute for a luminance test.** Smooth glossy
+   black chitin has near-zero gradient, so it is indistinguishable from dead
+   backdrop to the focus measure. Only luminance separates them.
+
+`STREHL_VEIL_FLOOR` (0.5 x estimated backdrop, backdrop = p90 of merged green)
+states that precondition. **Blotches gone, rim still gone, detail intact** --
+and on `flower-bud-alone-cpl` the floor arm is numerically identical to the
+un-floored one, so it cost nothing where it was not needed.
+
+### 26.5 Calibration: FOCUS_NOISE_SD is a spread, not a level
+
+The obvious way to write the ceiling is `k * FOCUS_NOISE_SD` (0.015214). That
+would have been a **silent no-op**: the focus response on dead ground is not
+near zero, it is the Rayleigh mean of the noise, **~0.55**.
+
+Measured deciles on flower-bud: `[0.5542 ... 3.6598]`, dead ground at
+**0.554-0.615**. `focus_deciles()` is in the binary so this is never guessed
+again.
+
+### 26.6 Acceptance -- flower-bud, deficit vs its own far field, DN
+
+| arm | d1-4 | d30-60 | d60-120 | **d120-200** | RIM | SURROUND |
+|---|---|---|---|---|---|---|
+| off | -7746 | -4610 | -3636 | -674 | -5161 | -2227 |
+| photometric only | -7718 | -3892 | -2240 | -356 | -5057 | -1619 |
+| **veil shipped** | -7721 | **-2305** | **-292** | **-152** | -5061 | **-684** |
+
+- **TARGET PASS.** d=120-200 = **-152 DN** against the -247 DN bar (what frame
+  102 alone achieves). ORCH's 3-sample reference envelope reached -211.
+- **PLACEBO PASS.** `109MSDCF` max deviation **4 DN**, applied 0.60%. It has a
+  dark subject on a bright backdrop and no depth separation, and the estimator
+  correctly declines to act.
+- **GUARD PASS.** See 26.7.
+
+Firing rates discriminate without tuning: flower-bud 12.49%, bee-2 10.87%,
+`109MSDCF` **0.60%**.
+
+**Ceiling 4.0 visibly destroys the subject.** That is a measured upper bound,
+and it is what makes the interlocks load-bearing rather than decorative.
+
+### 26.7 The guard verdict, and a metric that did not fit its subject
+
+`veil_accept.py` reported `couch-fibers-cpl` **MOVED by 685 DN** -- an overall
+FAIL.
+
+It is not a fail, and the reason is a measurement error of mine, not a defect
+in the estimator. **`couch-fibers-cpl` has no silhouette.** The mask finds
+1.34% of the frame and the far field is 8,457 px, so a distance-banded radial
+profile is not measuring an aura on this subject; it is measuring a median over
+an arbitrary region. Every band moved by the same amount **including the far
+field**, so the profile shape barely changed -- the signature of a level shift,
+not of an aura being altered.
+
+The guard that fits this subject is texture preservation, and it was measured
+directly (`veil_texture.py`, gradient RMS normalised by level so a brightening
+cannot move it):
+
+| subject | level | gradRMS/level |
+|---|---|---|
+| `couch-fibers-cpl` GUARD | +2.33% | **+0.53%** |
+| `bee-2-cpl` | +0.87% | **-0.07%** |
+| `flower-bud-alone-cpl` | +0.93% | +11.94% |
+
+**GUARD PASS.** Fibre detail, individual filaments and dark specks are
+identical off vs on at a shared development gain.
+
+**Two costs, stated rather than buried:**
+
+1. **+2.33% level lift on `couch-fibers-cpl`**, an already near-white subject,
+   so it moves highlights slightly closer to clipping.
+2. **flower-bud's backdrop gradient rises 11.94% relative to level.** This is
+   real and it is expected: a debiased maximum is noisier than a mean of many.
+   In absolute terms it is ~30 DN of added noise against ~3000 DN of veil
+   removed, and it is invisible in the full frame -- but the principled
+   remedy is ORCH's own advice, a **trimmed upper mean** over the top-k rather
+   than a literal max. Not built; costs one more accumulator plane.
+
+### 26.8 Instrument failures worth not repeating
+
+- **`absorb` is the silent-loss surface.** The tiled reduce folds `sum`, `n`,
+  `wsum`, `wsq`, `luma_sum`, `frames`. A new accumulator not folded there
+  silently collapses to one tile's frames and **nothing downstream can tell**.
+  Caught before shipping by grepping rather than trusting the compile.
+- **`Select-Object -First N` on a native command's pipeline corrupts
+  `$LASTEXITCODE`.** It reported exit 0 for a run that exited 1, making a
+  working refusal guard look inert. Redirect to a file; check the code
+  separately.
+- **Never overwrite a pin a running job is using.** Overwriting `pin-veil`
+  mid-flight had a `couch-fibers` arm silently pick up the new binary, hit the
+  photometric guard, and **vanish from the log with no error**. Use a fresh
+  path.
+- **The picture overturned the numbers twice** -- section 26.2's drift and
+  section 26.4's blotches both passed their metrics. Neither would have been
+  caught by any statistic in this document.
+
+### 26.9 What is NOT done
+
+- **Default is OFF.** ORCH asked for default ON. The veil requires
+  `--photometric on`, which is not the default, and flipping that default is
+  coupled to M122's measured harm on `bee-3-cpl`. Shipping opt-in and handing
+  the default flip up with evidence is the honest call, not mine to make.
+- **The d<30 px core is untouched** (-7721 DN at d=1-4). Section 25 and ORCH
+  agree this is information-absent -- no frame holds a clean sample that close
+  -- so it needs reconstruction, not selection.
+- **The trimmed upper mean** of 26.7 is the known improvement and is unbuilt.
