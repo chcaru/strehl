@@ -51,13 +51,23 @@ diffraction-limited ideal.
 > **Still open, and correctly attributed:** occlusion modelling — a bright veil
 > along the subject silhouette, present at `--gate 0`, surviving alignment, with
 > **no established mechanism** (the three obvious explanations are each measured
-> and each refuted,
-> `crates/strehl-cli/src/merge_cmd/halo.rs`) — and a **polygonal patchwork in
-> defocused backgrounds**, which is now *proved* rather than observed: in a ROI
-> where all 299 input frames are featureless, the shipped render carries **3.4x
-> more fine structure than any spatially constant convex weighting can produce**,
-> so the cause is the *spatial variation* of the merge weights
-> ([`M120`](docs/research/M120-patchwork.md)).
+> and each refuted, `crates/strehl-cli/src/merge_cmd/halo.rs`).
+>
+> **The polygonal patchwork is closed, and the cause was the backend.** It was
+> first *proved* rather than observed: in a ROI where all 299 input frames are
+> featureless, the estimator's render carries **3.4x more fine structure than any
+> spatially constant convex weighting can produce**, so the cause is the *spatial
+> variation* of the merge weights ([`M120`](docs/research/M120-patchwork.md)).
+> It has since been seen directly and localised to one component. On the same
+> pinned binary, the same 299-frame subject and the same 1:1 crop — the crop site
+> chosen independently in each arm by a stated gradient rule, and landing on the
+> same coordinates in both — the **estimator** backend draws hard-edged grey
+> polygons across the defocused background and smears hair detail, and the
+> **pyramid** backend draws neither, at gate 4.5 *and* at its own default gate of
+> 2.0, while also resolving hairs and pollen more crisply. So the patchwork is a
+> property of the per-pixel winner field rather than of the noise gate, and the
+> fix is the backend rather than a tuning parameter. Pass `--merge pyramid`; see
+> the quickstart.
 >
 > **The honest consequence:** there is currently **no measured route to resolving
 > detail beyond the sharpest captured frame.** The claim this project defends is
@@ -75,8 +85,16 @@ $ cargo build --release -p strehl-cli
 $ strehl probe <DIR>
 
 # Stack, and render something you can actually look at.
-$ strehl stack <DIR> --gate 2 --srgb --auto-exposure -o out.tif
+$ strehl stack <DIR> --merge pyramid --srgb --auto-exposure -o out.tif
 ```
+
+**Pass `--merge pyramid`.** It is not the compiled-in default yet, and it is
+exactly the backend the measurement above singles out: same binary, same subject,
+same crop, polygons in the default arm and none in this one. The pyramid backend
+carries its own gate default and needs no `--gate` of its own. This line will
+lose the flag when `DEFAULT_MERGE_BACKEND` flips; until then a quickstart that
+omitted it would be handing new users the one defect the project already knows
+how to avoid.
 
 `--srgb` applies the camera's colour matrix and the sRGB transfer curve, and
 since M95 it emits at **full sensor resolution by default** — pass `--binned`

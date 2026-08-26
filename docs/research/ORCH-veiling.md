@@ -4784,3 +4784,178 @@ quietly dropped, because a placebo that moves is a result about the instrument.
 
 > **When a placebo moves, the metric is not measuring what its name says.** Report it next
 > to the number it undermines, not in a footnote.
+
+---
+
+## 46. The placebo that moved, and the two explanations that died before the right one
+
+Section 45.6 ended by refusing to quote a number. The corpus-wide lateral-CA
+census had returned a clean-looking result -- every comparable subject improved,
+median edge R-G 0.6533 -- next to a placebo that had moved 0.35 from 1.0. The
+rule written there was that a placebo that moves means the metric is not
+measuring what its name says, so the number went unquoted and the excursion went
+on the stack as an open defect in my own instrument.
+
+Three explanations were tried. The first two were mine, both plausible, both
+wrong, and the second was wrong in the most useful way available: the data was
+ordered the exact opposite of the way the hypothesis required.
+
+### 46.1 Hypothesis 1 -- the two arms were built by different binaries. REFUTED.
+
+`GALLERY-FINAL` was rendered days before `SHIP-V1`, by a binary that no longer
+exists in that form. If the two arms differ by more than the CA flag, then every
+row of the census is contaminated and the placebo is simply reading that
+contamination.
+
+Tested directly: re-render `bee-3-cpl` with the *current pinned binary* and CA
+explicitly off, then compare that against `GALLERY-FINAL/bee-3-cpl.tiff` on the
+same crop with the same six statistics the census uses.
+
+All six returned **exactly 1.0000**. The files are byte-equivalent on that crop.
+There is no binary drift between the arms, the comparison is clean, and the
+hypothesis is dead.
+
+### 46.2 Hypothesis 2 -- the "flat" set is not flat. REFUTED, and inverted.
+
+The census selected its flat set as *the bottom 50% of gradient*. That is a
+percentile, and a percentile always selects half the frame whether or not a
+single pixel in it is flat. On an all-texture subject -- a frost dendrite filling
+the frame, woven fabric, a ruler face -- the "flat" half is fine texture, so the
+placebo would be measuring real edges and would move for an entirely mundane
+reason.
+
+This was attractive because the correlation looked right: the biggest placebo
+excursions were on `112MSDCF`, `113MSDCF`, `couch-fibers-cpl` and `foam`, which
+are exactly the subjects with texture everywhere.
+
+So the flat set was re-cut on an **absolute** gradient threshold, and a `struct`
+column was added reporting how much chroma the flat set carries relative to the
+edge set in one arm alone. A genuinely featureless set reads near zero. A set
+full of structure reads near one.
+
+The result refuted the hypothesis and reversed it:
+
+| subject | struct | flat% | worst placebo |
+| --- | --- | --- | --- |
+| `foam` | **0.034** | 9.4% | **0.8026** |
+| `113MSDCF` | 0.052 | 10.0% | 0.8530 |
+| `112MSDCF` | 0.068 | 7.3% | 0.8809 |
+| `couch-fibers-cpl` | 0.117 | 10.9% | 0.8983 |
+| `109MSDCF` | **1.170** | 47.2% | **0.9999** |
+| `119MSDCF` | 1.307 | 60.2% | 1.0000 |
+
+The subjects whose flat set is *most genuinely flat* have the *largest*
+excursions. The subjects whose flat set carries more chroma than their own edge
+set -- the ones the hypothesis said should be worst -- are the two cleanest rows
+in the census. The correlation runs backwards, which does not merely fail to
+support the hypothesis; it names the mechanism, because whatever is happening
+gets **stronger as the region gets emptier**.
+
+Something that grows as signal vanishes is acting on noise.
+
+### 46.3 The mechanism -- interpolation is a low-pass filter, and a flat set is noise
+
+Correcting lateral CA resamples R and B by a small radial displacement. G is the
+reference channel and is never touched. Resampling white noise with any kernel
+whose taps do not sum in quadrature to one **reduces its variance**. So in a
+region that is pure noise, the corrected arm's R and B are quieter than the
+source arm's, and a standard-deviation ratio reports that as improvement without
+a single fringe having been removed.
+
+This is checkable in closed form, and `noisegain.py` checks it with no project
+code: build the Catmull-Rom taps from the basis polynomials, take
+`sqrt(sum(tap^2))`, and shift synthetic CFA-weighted noise by the measured
+displacements.
+
+```
+  phi     gain          predicted chroma ratios (sigma_R = sigma_B = sqrt(2) sigma_G)
+ 0.00   1.0000          dR/dB      R-G      R-B      B-G
+ 0.20   0.9297          0.20/0.08  0.9537   0.9585   0.9911
+ 0.30   0.8690          0.30/0.12  0.9148   0.9216   0.9811
+ 0.40   0.8196          0.40/0.16  0.8838   0.8880   0.9683
+ 0.50   0.8004          0.50/0.20  0.8720   0.8670   0.9536
+```
+
+Against the observed placebos:
+
+| subject | R-G | R-B | B-G |
+| --- | --- | --- | --- |
+| `foam` | 0.8026 | 0.8261 | 0.9766 |
+| `113MSDCF` | 0.8530 | 0.9341 | 0.9948 |
+| `112MSDCF` | 0.8809 | 0.9401 | 0.9906 |
+| `couch-fibers-cpl` | 0.8983 | 0.9663 | 0.9961 |
+
+The synthetic table brackets the observed values and reproduces the **channel
+ordering on every row**: R-G lowest, R-B in the middle, B-G nearest 1. That
+ordering is not a fitted parameter -- it follows from R being displaced most by
+the measured CA profile and B least, and it is the same ordering in the data.
+
+`foam` at 0.8026 sits *below* the 1-D half-pixel prediction of 0.8720 and above
+the 2-D prediction of 0.779. It should. The synthetic shift is along one axis;
+the real correction is **radial**, so both axes are resampled and the gain
+applies twice. A radial warp is required to land between the two, and it does.
+
+The placebo was innocent. It was reporting a real property of the operation
+under test, and the fault was in reading its number as a verdict on the
+comparison rather than as a measurement of the resample.
+
+### 46.4 What it does to the result: dilution, not inflation
+
+The worry that stopped the number being quoted was that the CA win might be
+partly this noise-smoothing artefact rather than fringe removal. The correction
+is a variance decomposition -- `struct` gives the noise fraction of the edge
+set's chroma, the subject's own placebo gives its noise gain `k`, so
+
+```
+fringe_ratio = sqrt( (obs^2 - k^2 struct^2) / (1 - struct^2) )
+```
+
+Over the 19 subjects with a genuinely flat placebo set, the deconfounded median
+is **0.6047** against a raw median of **0.6320** on the same rows: the correction
+moves the number by **-0.0273**. It moves the *right way*. Because the flat set
+is where noise smoothing lives and the edge set is dominated by fringes, the
+noise floor was **diluting** the measured win, not inflating it. Removing it
+shows slightly more fringe removal, not less.
+
+The six subjects where `struct >= 0.5` are excluded and counted rather than
+silently clamped, because there the decomposition has no meaning -- the noise
+term exceeds the total and the formula would return a floor of zero that is not
+a measurement.
+
+### 46.5 The certified census
+
+Full corpus, all 26 subjects, both arms complete, same pinned binary, CA the only
+difference:
+
+```
+compared 26, skipped 0, total 26
+edge R-G: improved 25, worsened 0, unchanged 1  (sums to 26)
+placebo: evaluated 25, not evaluated (no flat set) 1  (sums to 26)
+median edge R-G 0.6533   R-B 0.7480   B-G 0.9452
+```
+
+The one unchanged row is `highly-angled-ruler-mm-cpl` at exactly 1.0000 on all
+three channels -- a subject where the correction is a measured no-op, which is a
+better built-in control than anything I would have designed.
+
+**Zero subjects worsened.** Lateral-CA correction is certified corpus-wide and
+ships on by default.
+
+### 46.6 Rules
+
+> **A placebo that moves is a measurement of the operation under test, and the
+> operation may be innocent.** Before treating an excursion as contamination,
+> ask what the placebo would read if the operation were working perfectly. Here
+> the correct answer was never 1.0.
+
+> **When the obvious explanation is refuted, look at which way the data ordered
+> itself.** An inverted correlation is worth more than a null: it does not just
+> remove a hypothesis, it points at the mechanism, because the quantity that
+> grows as signal vanishes is acting on what remains when signal is gone.
+
+> **A percentile cannot express emptiness.** Selecting "the flattest half"
+> always returns half a frame. If a probe's premise is that a region is
+> featureless, the threshold must be absolute and the coverage must be
+> reported, so that a frame with no flat region says so instead of nominating
+> its quietest texture.
+
