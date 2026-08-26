@@ -681,3 +681,119 @@ the table. One selector is not a result.
   colour ORCH wants protected (the pollen grains). The residual is radial and therefore
   *modellable*: the next test is whether the CA profile's single global parameter is
   insufficient (a higher-order or per-radius fit), measured on the same ladder.
+
+---
+
+## 12. ORCH's discriminator: my radial statistic on BUILD-SHARP's subject
+
+BUILD-SHARP measured `flower-bud-alone-cpl` and concluded the fringe is **not** lateral CA
+(R-B displacement bounded at 0.05 px, G-vs-G null exactly 0.0000). I measured
+`coffee-bubbles` and concluded C is the survivor. ORCH asked for the cheapest discriminator:
+**my statistic, their subject, same ladder** - and explicitly not a re-run of theirs.
+
+**Verdict: ORCH's possibility 1. The two fringes are different defects. Both reports stand,
+and the two statistics do not disagree about anything.**
+
+### 12.1 The subjects do not share a population
+
+This is the whole answer, and it was visible before any statistic was computed:
+
+| | `coffee-bubbles` | `flower-bud-alone-cpl` |
+|---|---:|---:|
+| per-channel max DN (gallery `--srgb`) | 65535 / 65535 / 65535 | 63809 / **64516** / 63733 |
+| pixels at 65535, any channel | **0.0705 %** | **0.0000 %** |
+| median luma (linear) | 0.0191 | 0.2848 |
+| max luma (linear) | 1.0000 | **0.3400** |
+
+**`flower-bud-alone-cpl` contains no clipped pixels at all**, has no near-black ground, and
+spans a narrow mid-tone range. `coffee-bubbles` is specular-on-black and clips in all three
+channels. My `feature_mask` - small bright *unblown* features on dark ground - returned
+**zero pixels** on flower-bud and the instrument **refused to report**, which is the guard
+working. Reporting "my mask found nothing" as "no defect" would have been precisely the
+error this project has already paid for once, so the **statistic was held fixed and the
+population was changed** to the one this subject actually has: high-gradient edges. The swap
+is recorded in every output row.
+
+### 12.2 The radial reading, like-for-like
+
+Same binary `F9BD5191`, same instrument, same `edge` population, same selector, all
+`--linear-srgb`. Every banner `merge backend : pyramid (--merge)`; the CA arms read
+`CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)` against
+`off (operator asked for "off")`, and the harness **asserts** those differ.
+
+| subject / axis | b0 | b1 | b2 | b3 | b4 | b5 | corner/centre |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| coffee `(R-G)/Y` **mine** | -0.2114 | -0.2027 | -0.2455 | -0.2756 | -0.3331 | -0.3508 | **1.66x** |
+| coffee `(R-B)/Y` *SHARP's axis* | +0.0182 | -0.0293 | -0.3662 | -0.3383 | -0.5592 | -0.7109 | **39x** |
+| flower-bud `(R-G)/Y` **mine** | -0.0316 | -0.0432 | -0.0534 | -0.0366 | -0.0376 | -0.0414 | **1.31x** |
+| flower-bud `(R-B)/Y` *SHARP's axis* | +0.0998 | +0.0827 | +0.0848 | +0.1106 | +0.1038 | +0.0790 | **0.79x** |
+
+**My statistic reads flat on their subject.** Flower-bud's `(R-G)/Y` sits at -0.04 and does
+not grow; coffee-bubbles' reaches **-0.3508**, an **8.5x larger** corner value on the same
+population and instrument.
+
+**I withdraw, before stating it, the hypothesis I went in with.** I expected R-B to be
+partly *blind* to a residual carried against green, since green is this codebase's reference
+channel (`optics.rs` gives it no coefficient and freezes both green gathers bitwise) and red
+and blue are corrected toward it with opposite-signed coefficients. That would have been a
+tidy reconciliation. **It is false:** on coffee-bubbles the R-B axis grows **39x** to -0.71,
+far more strongly than my own axis. SHARP's instrument would have caught my defect easily had
+it been pointed at my subject. There is no conflict between the statistics - only between the
+subjects.
+
+### 12.3 The instrument was calibrated for this question first
+
+The radial axis had never been shown able to fail, so two planted cases were added before any
+of the above was believed (`--selftest`, now 7 cases, all passing):
+
+* **E, purely photometric radial attenuation with ZERO geometric shift** - the case a
+  displacement bound scores as *exactly* zero. Read `-0.0351 -> -0.2287`: **detected.**
+* **F, a flat red offset of comparable size and no radius dependence** - read
+  `-0.1284 -> -0.1284`, **exactly flat**. The axis does not convict a plain colour cast of
+  being lateral CA.
+
+E and F together are what license the claim: the statistic sees radial-photometric defects
+that plant no displacement, and stays silent on non-radial ones.
+
+### 12.4 ORCH's registered prediction on `flower-bud-alone-cpl`, resolved
+
+ORCH registered that my roll-off should have removed the fringe there. **It could not have,
+and did not run at all.** Same binary, same subject, knee off against knee on:
+
+```
+M1 knee=off : 48AF23CC123144284F6BB99A8E4BF3B3
+M3 knee=on  : 48AF23CC123144284F6BB99A8E4BF3B3   => BYTE-IDENTICAL
+```
+
+and the same test **does** separate the arms on coffee-bubbles (`2A36DAB1...` vs
+`4C50881...`), so it is not an instrument that always says "identical". The roll-off engages
+on `u = v_c/ceil_c` above a knee of 0.60; this subject's maximum is 0.34. **The prediction
+was mis-specified rather than falsified** - it was pointed at a subject the fix provably
+never touches.
+
+### 12.5 The profile's provenance, which ORCH asked be put to the code first
+
+**It was fitted for the teleconverter, not inherited and renamed.** `optics.rs:423` pins
+`lens_type3: 33094`, documented as "the composed path WITH the 2x teleconverter; the bare
+lens is 32893 and **must not match**", and `measured_from` cites M107's 20 gated ROIs
+(tweezers-cpl, bee-3-cpl) for red and BUILD-CHROMA's 1071 tiles for blue. ORCH's suspicion is
+answered: no.
+
+**But the corner is extrapolated, and that is the live limitation.**
+`support_r_max: Some(0.788)` carries its own comment: *"the 20 gated ROIs span
+r = 0.208..0.788, six of ten annuli populated, **outer two annuli empty. The corner is a
+1.27x linear extrapolation. Declared, not enforced.**"* The fit has **no data** past
+r = 0.788, nothing stops it being applied to r = 1.0, and the outer bands are exactly where
+my residual grows.
+
+Two further coefficient facts, offered as leads and **not** as findings:
+
+* The shipped `eps_r` is **704.5 ppm**, while the six per-stack fits recorded in the same
+  file span **500.9-651.9 ppm** - the global value is larger than every individual
+  measurement, from a different instrument on different subjects.
+* Consistent with that, on unclipped flower-bud the correction moves `cr_med` from
+  **+0.0258 (off) to -0.0426 (on)** - from near-neutral to a small red deficit. One subject,
+  small effect, and I have already withdrawn one "the correction makes it worse" claim
+  tonight for resting on a single reading. **This needs its own test before anyone acts on
+  it**, and the natural one is whether a per-radius or second-order term beats the single
+  scalar.

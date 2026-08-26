@@ -51,6 +51,40 @@ def colour_diff(img: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     return (img[..., 0] - img[..., 1]) / d, (img[..., 2] - img[..., 1]) / d, y
 
 
+def edge_mask(y: np.ndarray, img: np.ndarray, pct: float, select_on: str = "luma"):
+    """High-local-contrast EDGES, at any brightness.
+
+    WHY A SECOND POPULATION EXISTS. `feature_mask` selects small bright
+    features on dark ground, which is the population the `coffee-bubbles` and
+    `foam` defect lives in. On `flower-bud-alone-cpl` that population is EMPTY
+    -- measured, not assumed: the subject's per-channel maxima are
+    R 63809 / G 64516 / B 63733 with **0.0000 % of pixels at 65535**, a median
+    luma of 0.285 and a maximum of 0.340 in linear. There are no speculars and
+    no dark ground.
+
+    Returning "my mask found nothing" would be worthless, and worse, it is
+    exactly the failure this project has already paid for once: a gate that
+    removed zero pixels and reported that the effect survived. So the STATISTIC
+    is held fixed -- the signed radial profile of a colour difference -- and the
+    POPULATION is changed to the one this subject actually has: edges, where a
+    fringe of any origin would show. Comparisons between subjects are then
+    between like populations, and the swap is declared in the output.
+
+    `select_on` IS DELIBERATELY IGNORED HERE. This population ranks on the luma
+    GRADIENT, not on level, so the green-weighting hazard that `select_on`
+    exists to control does not arise -- but neither does the control. Running
+    this mask under three selectors returns three IDENTICAL rows, and they must
+    not be read as three agreeing measurements. They are one measurement
+    printed three times.
+    """
+    gy = np.abs(np.gradient(y, axis=0))
+    gx = np.abs(np.gradient(y, axis=1))
+    g = gy + gx
+    thr = float(np.percentile(g, pct))
+    unblown = img.max(axis=2) < 0.99
+    return (g >= thr) & unblown, thr
+
+
 def feature_mask(y: np.ndarray, img: np.ndarray, bright_pct: float, dark_ratio: float, bg: int, select_on: str = "luma"):
     """Small BRIGHT UNBLOWN features on DARK ground.
 
@@ -94,9 +128,12 @@ def feature_mask(y: np.ndarray, img: np.ndarray, bright_pct: float, dark_ratio: 
     return m, float(thr)
 
 
-def stats(img: np.ndarray, bright_pct=99.5, dark_ratio=0.5, bg=33, full_res=True, select_on="luma") -> dict:
+def stats(img: np.ndarray, bright_pct=99.5, dark_ratio=0.5, bg=33, full_res=True, select_on="luma", population="specular") -> dict:
     cr, cb, y = colour_diff(img)
-    m, thr = feature_mask(y, img, bright_pct, dark_ratio, bg, select_on)
+    if population == "edge":
+        m, thr = edge_mask(y, img, bright_pct, select_on)
+    else:
+        m, thr = feature_mask(y, img, bright_pct, dark_ratio, bg, select_on)
     n = int(m.sum())
     if n < 100:
         raise ValueError(f"mask kept only {n} px -- refusing to report on it")
@@ -176,11 +213,23 @@ def stats(img: np.ndarray, bright_pct=99.5, dark_ratio=0.5, bg=33, full_res=True
     # -- SIGNED radial profile of (R-G)/Y. Lateral CA is a red-vs-green
     #    magnification error, so it must be ~0 on axis and grow with radius.
     #    An offset that is flat in radius is not CA, whatever else it is.
-    crb = []
-    for i in range(6):
-        sel = (r >= edges[i]) & (r < edges[i + 1])
-        crb.append(float(np.median(cr[yy[sel], xx[sel]])) if sel.sum() > 20 else None)
-    out["RADcr_bands"] = crb
+    #
+    #    THREE AXES, NOT ONE. Green is this codebase's reference channel --
+    #    optics.rs gives it no coefficient and freezes both green gathers
+    #    bitwise -- and red and blue are corrected toward it with OPPOSITE
+    #    signs (eps_r -704.5 ppm, eps_b +174.4 ppm). So a residual carried
+    #    against green can be large while R-B stays small, and reporting only
+    #    one axis cannot tell "no defect" from "an axis blind to this defect".
+    #    R-B is the axis BUILD-SHARP bounded; R-G is mine; B-G closes the set.
+    axes = {"RADcr_bands": cr, "RADcb_bands": cb, "RADcrb_bands": cr - cb}
+    for name, plane in axes.items():
+        prof = []
+        for i in range(6):
+            sel = (r >= edges[i]) & (r < edges[i + 1])
+            prof.append(
+                float(np.median(plane[yy[sel], xx[sel]])) if sel.sum() > 20 else None
+            )
+        out[name] = prof
     return out
 
 
@@ -236,6 +285,45 @@ def selftest() -> None:
     # The two must be SEPARABLE, not merely both non-zero.
     assert sa["HL_ratio"] > 4 * sb["HL_ratio"], "H/L does not separate speckle from bands"
 
+    # ---- E and F calibrate the RADIAL axis, which adjudicates BUILD-SHARP. ----
+    #
+    # E: a PURELY PHOTOMETRIC radial attenuation of red, with ZERO geometric
+    #    shift. Nothing moves, so a displacement statistic scores this EXACTLY
+    #    zero, while a colour statistic must see it. This is the case that
+    #    decides whether "R-B displacement < 0.05 px" and "(R-G)/Y grows with
+    #    radius" can both be true of the same image. If my radial axis cannot
+    #    detect a defect that plants no displacement, I have no standing to
+    #    claim their axis is blind to it.
+    h, w = base.shape[:2]
+    gy, gx = np.mgrid[0:h, 0:w]
+    rr = np.hypot(gy - h / 2.0, gx - w / 2.0)
+    rr = (rr / rr.max()).astype(np.float32)
+    e = base.copy()
+    e[..., 0] *= 1.0 - 0.25 * rr
+    se = stats(e, full_res=True)
+    ecr = [x for x in se["RADcr_bands"] if x is not None]
+    assert ecr[-1] < ecr[0] - 0.02, f"radial axis BLIND to planted radial red attenuation: {ecr}"
+    print(
+        f"  E radial photometric  (R-G)/Y {ecr[0]:+.4f} -> {ecr[-1]:+.4f}"
+        f"  (grows with radius; plants ZERO displacement)"
+    )
+
+    # F: the NULL for the radial axis. A FLAT red offset of the same sign and a
+    #    comparable size, with no radius dependence at all. The radial axis must
+    #    NOT report growth here, or it would convict every colour cast of being
+    #    lateral CA -- which is precisely the error I would be accusing myself
+    #    of if I reported E without F.
+    f = base.copy()
+    f[..., 0] *= 1.0 - 0.125
+    sf = stats(f, full_res=True)
+    fcr = [x for x in sf["RADcr_bands"] if x is not None]
+    assert abs(fcr[-1] - fcr[0]) < 0.02, f"radial axis reports GROWTH on a FLAT offset: {fcr}"
+    assert abs(fcr[0]) > 0.01, f"flat offset was too small to be a meaningful null: {fcr}"
+    print(
+        f"  F flat offset (null)  (R-G)/Y {fcr[0]:+.4f} -> {fcr[-1]:+.4f}"
+        f"  (offset present, NO radial growth)"
+    )
+
     # PH: phase-locked chroma must be detected; phase-blind chroma must not be.
     p = base.copy()
     grid = (((np.mgrid[0 : base.shape[0], 0 : base.shape[1]][0] % 2) == 0)).astype(np.float32)
@@ -284,6 +372,19 @@ def main() -> int:
     )
     ap.add_argument("--bright-pct", type=float, default=99.5)
     ap.add_argument(
+        "--population",
+        default="specular",
+        choices=["specular", "edge"],
+        help="WHICH PIXELS the statistic is computed over. `specular` is small "
+        "bright unblown features on dark ground -- the population the "
+        "coffee-bubbles/foam defect lives in. `edge` is high-local-contrast "
+        "pixels at any brightness, which is the only population that EXISTS on "
+        "an unclipped mid-tone subject such as flower-bud-alone-cpl (measured: "
+        "0.0000%% of its pixels reach 65535). The statistic is identical in both "
+        "cases; only the population changes, and the choice is recorded in the "
+        "output so no cross-subject comparison can silently mix the two.",
+    )
+    ap.add_argument(
         "--select-on",
         default="luma",
         choices=["luma", "rb", "max", "mean"],
@@ -310,7 +411,8 @@ def main() -> int:
             h, w, _ = img.shape
             img = img[: h // 2 * 2, : w // 2 * 2].reshape(h // 2, 2, w // 2, 2, 3).mean(axis=(1, 3))
         full = img.shape[1] > 5000
-        s = stats(img, bright_pct=a.bright_pct, full_res=full, select_on=a.select_on)
+        s = stats(img, bright_pct=a.bright_pct, full_res=full, select_on=a.select_on, population=a.population)
+        s["population"] = a.population
         s["binned_2x2"] = bin2
         res[name] = s
         cr, cb = s["cr_med"], s["cb_med"]
