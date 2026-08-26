@@ -533,3 +533,151 @@ post-fix render rather than a pre-fix one.
   proposed — does not unlock highlight reconstruction. That needs a **per-pixel** record of
   which pixels and which channels were censored, which is a much heavier object. Adding the
   counter is worth doing on its own merits; it should not be expected to enable (3).
+
+---
+
+## 11. Cross-cut: ORCH's green-fringe ladder (`coffee-bubbles`, `foam`)
+
+ORCH observed green-yellow rings on `coffee-bubbles` and rainbow speckle on `foam`, offered
+four candidate mechanisms (A demosaic false colour, B real iridescence, C lateral CA,
+D my channel-asymmetric clipping), and asked for a **ladder** localising the defect to a
+pipeline stage *before* any fix is proposed. This section is that ladder. **No fix is
+proposed here**, as instructed.
+
+### 11.0 Provenance of ORCH's crops
+
+The gallery binary is `C46BDF06...` (11:23). I scanned it for both of my fix's marker
+strings, `chroma roll-off knee moved to` and `STREHL_HIGHLIGHT_KNEE`. **Neither is present.**
+ORCH's crops therefore **predate the roll-off** and are not evidence about it either way.
+All ladder arms below were consequently run with `STREHL_HIGHLIGHT_KNEE=off` so that they
+reproduce ORCH's conditions rather than mine.
+
+Two pipeline facts had to be established first, because they silently change what is being
+compared:
+
+* `--demosaic` (Malvar-He-Cutler) is **on by default whenever `--srgb` is given**. The
+  gallery is `--srgb`, so ORCH looked at **demosaiced** images. Every highlight measurement
+  in sections 1-10 of this document used `--linear-srgb` **without** `--demosaic`, i.e.
+  **binned, never demosaiced**. The two populations were never comparable.
+* The merge runs **per CFA plane at 3516x2344, before demosaic** (banner order:
+  `black, as-shot WB, demosaic, matrix, clamp, sRGB curve`).
+
+### 11.1 The instrument, and the two times it was wrong
+
+`l2_falsecolour.py` reports four statistics on a mask of small bright features on dark
+ground: `H` (high-pass chroma energy - speckle, candidate A), `L` (low-pass - smooth bands,
+candidate B), `PH` (CFA-phase-locked spread, candidate A) and a radial profile (candidate C).
+
+Calibration, from `--selftest` (5 cases, all passing):
+
+| planted case | H | L | H/L | reads |
+|---|---:|---:|---:|---|
+| neutral scene | 0.00039 | 0.00005 | - | both ~0, as required |
+| A, false colour speckle | 0.16852 | 0.02558 | **6.59** | H only |
+| B, iridescence-like bands | 0.00058 | 0.25887 | **0.00** | L only |
+| phase-locked plant | `PH=0.2751` | vs phase-blind noise `PH=0.0185` | | separated |
+| degenerate mask | **REFUSED** | | | guard fires |
+
+**The instrument was wrong twice and both times a control caught it.** Recording them
+because the near-misses are the part worth keeping:
+
+1. **A confident table of zeros.** The first `feature_mask` selected blown *cores*, which are
+   exactly neutral by construction, so every arm reported `cr_med = cb_med = 0.000000` and
+   `PH = 0.0000`. Fixed by requiring `max(RGB) < 0.99` and adding a **refusal guard** that
+   aborts when >50% of the mask is exactly neutral. `neutral_frac` is now 0.0000 on all arms.
+2. **A green-excess headline that was partly my own mask.** BT.709 luma is **71.5% green**,
+   so ranking features by luma preferentially selects high-green pixels - which is precisely
+   the "green excess" I was about to report. I added an adversarial selector `--select-on rb`,
+   which ranks on `(R+B)/2` and **contains no green at all**, biased the opposite way.
+
+The adversarial selector **changed the answer**, and this is the single most important line
+in the section:
+
+| statistic | luma | rb (adversarial) | max | robust? |
+|---|---:|---:|---:|---|
+| `cr = (R-G)/Y`, K3 | -0.1934 | -0.2089 | -0.2367 | **yes** - negative under all three, *more* so under `rb` |
+| `cb = (B-G)/Y`, K3 | -0.0882 | -0.0071 | +0.0004 | **no** - collapses to zero, flips sign |
+
+**So the blue half of "green excess" was a selection artefact and I withdraw it.** What
+survives every selector is a **red deficit relative to green**. I would have reported the
+blue component as fact had I not run this control.
+
+### 11.2 The ladder
+
+All arms: **one binary** `F9BD5191...`, all banners `merge backend : pyramid (--merge)`,
+all `--linear-srgb` (magnitudes measured in linear, per ORCH's caution), all
+`STREHL_HIGHLIGHT_KNEE=off`. Resolution-fair rows apply a 2x2 mean (`--bin2`) so every arm
+is compared on the same 3516x2344 grid.
+
+| arm | what it isolates | H (speckle) | L (bands) | H/L |
+|---|---|---:|---:|---:|
+| K1 single frame, demosaiced, `--bin2` | is it in ONE frame? | **0.2955** | 0.3083 | 0.96 |
+| K3 stack, demosaiced, `--bin2` | shipping-ish | **0.2558** | 0.3583 | 0.71 |
+| K2 stack, **binned, never demosaiced** | is it demosaic? | **0.2928** | 0.3660 | 0.80 |
+| K5 stack, demosaiced, **`--fix-ca off`** | is it CA? | **0.2920** | 0.3663 | 0.80 |
+
+**P1 - the merge is innocent. CONFIRMED.** K1 (one frame) `H=0.2955` vs K3 (stack)
+`H=0.2558`: the **stack has 15.5% LESS** high-frequency chroma than a single frame. The
+defect is **fully present in a single frame**; the merge slightly *reduces* it. ORCH's
+"far more serious finding" - that per-channel weights diverge where signal is sparse - is
+**dead**, and independently so by code: `pyramid.rs:990-993` computes the selection
+denominator `den` **once on green luma and shares it across all planes**, with the existing
+test `the_selection_is_shared_across_planes` (:2216) pinning exactly that. A shared scalar
+weight cannot manufacture chroma.
+
+**P2 - demosaic false colour. REFUTED.** K2, which is **never demosaiced**, scores
+`H=0.2928` against demosaiced K3's `0.2558` on an identical grid - the never-demosaiced arm
+is **12.6% worse**. Candidate A cannot be the primary cause of something that is present, and
+larger, before demosaic runs. (Bound, not proof: demosaic-then-bin is mildly low-passed by
+construction. The *direction* is the finding.)
+
+**D - my channel-asymmetric clipping. DEAD BY SIGN.** D predicts green pins first, hence a
+green *deficit* and **magenta** rims. Measured is a green *excess* / red deficit on every arm
+and every selector. Opposite sign. ORCH anticipated this and was right.
+
+### 11.3 Candidate C is not dead - it is the survivor
+
+ORCH's discriminator was: *"if the fringe sign is uncorrelated with radial position, C is
+dead."* It is strongly correlated. Signed `(R-G)/Y` by radial band, centre -> corner:
+
+| arm / selector | b0 | b1 | b2 | b3 | b4 | b5 | corner/centre |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| K3 CA **on**, luma | -0.1713 | -0.1804 | -0.2030 | -0.2854 | -0.2898 | -0.3954 | **2.31x** |
+| K5 CA **off**, luma | -0.1726 | -0.1902 | -0.2122 | -0.1962 | -0.3069 | -0.4318 | **2.50x** |
+| K3 CA **on**, max | -0.2037 | -0.2155 | -0.2504 | -0.3975 | -0.3296 | -0.4248 | **2.09x** |
+| K5 CA **off**, max | -0.2041 | -0.2312 | -0.2617 | -0.4466 | -0.3906 | -0.6109 | **2.99x** |
+
+The effect is **red-versus-green** and **grows 2.1x-3.0x from centre to corner**, monotonically
+on every arm under every selector. That is the signature of **lateral chromatic aberration**,
+which is a red-vs-green magnification error. It also explains the population specificity ORCH
+noticed: a radial displacement of the red plane of order 1-3 px barely dents an *extended*
+edge (`wrapped-text-1`, clean) but is comparable to the **entire width of a 1-2 px specular**,
+so the red image of a tiny feature only partly overlaps the green one - a large fractional red
+deficit exactly where ORCH sees rims.
+
+`--fix-ca` is **already on by default** when the gear matches (banner:
+`lateral CA : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)`).
+It **helps but does not finish the job**: it lowers `H` (0.1837 vs 0.2018 under luma; 0.2018
+vs 0.2426 under max) and lowers radial growth (2.31x vs 2.50x; 2.09x vs 2.99x). A residual
+red deficit still grows >2x to the corner **after** correction.
+
+**A third near-miss, disclosed.** Under the `rb` selector alone, CA-off read *flat* (1.11x)
+while CA-on read radial (2.22x) - which would have supported the headline "the CA correction
+is making it worse". Two further selectors refuted it: under both `luma` and `max`, CA-off is
+*more* radial than CA-on, i.e. the correction works in the correct direction. **I withdraw
+that reading.** `rb` was the outlier and its CA-off profile is the only non-monotonic one in
+the table. One selector is not a result.
+
+### 11.4 What I am handing back
+
+* The defect is **not the merge**, **not demosaic**, and **not my clipping asymmetry**.
+* It is **radial, red-vs-green, present in a single frame** - i.e. **optical, candidate C**,
+  partially corrected already, with a residual concentrated on small bright features.
+* **B (real iridescence) is not excluded** and is probably also present: `H/L` is 0.50-0.96
+  on real data against 6.59 for planted speckle and 0.00 for planted bands, i.e. a large
+  smooth component plus a real but non-dominant speckled one.
+* **The correct next experiment is not a chroma median filter.** A chroma-domain median would
+  suppress the *symptom* of a residual registration error and would blunt the very fine real
+  colour ORCH wants protected (the pollen grains). The residual is radial and therefore
+  *modellable*: the next test is whether the CA profile's single global parameter is
+  insufficient (a higher-order or per-radius fit), measured on the same ladder.
