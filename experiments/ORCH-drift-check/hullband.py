@@ -60,6 +60,7 @@ def main():
         print(f"  p{p:<5} clamped {a:9.1f}   unclamped {b:9.1f}   delta {a-b:+9.1f} DN")
 
     bc, rc = bands(cl)
+    g_size = cl.size
     bu, ru = bands(un)
 
     print("\nENERGY BY BAND (RMS, linear DN, green)")
@@ -71,19 +72,33 @@ def main():
         ra = float(np.sqrt((a ** 2).mean()))
         rb = float(np.sqrt((b ** 2).mean()))
         rd = float(np.sqrt(((a - b) ** 2).mean()))
-        # every band is at its own resolution; weight by pixel count for the share
-        w = a.size
+        # CORRECTED. This was `w = a.size`, justified by a comment reading
+        # "every band is at its own resolution; weight by pixel count for the
+        # share". That is wrong, and it inverted this script's headline finding.
+        #
+        # A band-k coefficient is upsampled to cover 4^k full-resolution pixels
+        # on reconstruction, so band k contributes N*rd^2 of full-res energy --
+        # constant N for every band, NOT N/4^k. Weighting by a.size therefore
+        # under-weights band k by exactly 4^k: 4x at band 1, 4096x at the
+        # residual.
+        #
+        # Found by BUILD-HULL (section 18, c99486d4) and confirmed here by
+        # check_hullband_weight.py on mixtures whose coarse share is fixed by
+        # construction: a difference that is 99.75% coarse was reported by the
+        # old weighting as 8.88% coarse, worst error 96.64 points. The
+        # corrected weighting is exact (0.00 error) at every ratio tested.
+        w = float(g_size)
         tot_d2 += rd * rd * w
         rows.append((i, 2 ** (i + 1), ra, rb, rd, w))
     rd_res = float(np.sqrt(((rc - ru) ** 2).mean()))
-    tot_d2 += rd_res * rd_res * rc.size
+    tot_d2 += rd_res * rd_res * float(g_size)
 
     for i, per, ra, rb, rd, w in rows:
         share = 100.0 * (rd * rd * w) / tot_d2
         print(f"{i:>6} {per:>11} {ra:>11.2f} {rb:>11.2f} "
               f"{100.0 * ra / rb if rb else float('nan'):>9.2f}% {rd:>12.2f}   "
               f"share of total change {share:5.1f}%")
-    share = 100.0 * (rd_res * rd_res * rc.size) / tot_d2
+    share = 100.0 * (rd_res * rd_res * float(g_size)) / tot_d2
     print(f"{'resid':>6} {'>128':>11} {float(np.sqrt((rc**2).mean())):>11.2f} "
           f"{float(np.sqrt((ru**2).mean())):>11.2f} "
           f"{100.0 * np.sqrt((rc**2).mean()) / np.sqrt((ru**2).mean()):>9.2f}% "
