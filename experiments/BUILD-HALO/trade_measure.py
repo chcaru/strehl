@@ -50,6 +50,7 @@ ARMS = ["off", "default", "tau064", "tau032", "tau016", "tau008", "tau004"]
 
 NEAR = (1, 20)      # the window zone: where the merge departs from single frames
 FAR = 300           # reference: far enough that the merge and the frame agree
+TILE = 384          # spatial block for the paired arm-to-arm comparison
 
 
 def arm_path(subj, arm):
@@ -85,7 +86,7 @@ def halo_axis():
     ref_p = arm_path(HALO_SUBJ, "f221")
     if not ref_p.exists():
         print(f"  reference frame not rendered yet: {ref_p.name}")
-        return []
+        return [], {}
     ref = luma(ref_p)
 
     m_plane = frozen_mask()
@@ -102,17 +103,37 @@ def halo_axis():
     if near_sel.sum() < 5000 or far_sel.sum() < 20000:
         sys.exit("bands too small to trust")
 
-    rows = []
+    # THE ERROR BAR HAS TO BE SPATIAL, NOT A BOOTSTRAP. The halo is not the same
+    # all the way round a silhouette -- it depends on local contrast and on
+    # which way the depth step runs -- so resampling the near band would
+    # estimate the precision of the median and call it the uncertainty of the
+    # result, which is the smaller and wrong number. Tiling captures the
+    # variation that actually matters, and comparing arms TILE BY TILE pairs it
+    # away: every tile sees both arms, so the spatial variation cancels and what
+    # is left is the effect of the knob.
+    tiles = []
+    for y in range(0, ref.shape[0], TILE):
+        for x in range(0, ref.shape[1], TILE):
+            sel = near_sel[y:y + TILE, x:x + TILE]
+            if sel.sum() >= 2000:
+                tiles.append((y, x))
+    print(f"  paired over {len(tiles)} tiles of {TILE} px with >=2000 near-band px")
+
+    rows, per_tile = [], {}
     for arm in ARMS:
         p = arm_path(HALO_SUBJ, arm)
         if not p.exists():
             continue
         diff = luma(p) - ref
-        near = float(np.median(diff[near_sel]))
         far = float(np.median(diff[far_sel]))
+        near = float(np.median(diff[near_sel]))
         # In DN of a 16-bit render, referenced so the illumination field cancels.
         rows.append((arm, (near - far) * 65535.0))
-    return rows
+        per_tile[arm] = np.array([
+            (float(np.median(diff[y:y + TILE, x:x + TILE][near_sel[y:y + TILE, x:x + TILE]])) - far) * 65535.0
+            for y, x in tiles
+        ])
+    return rows, per_tile
 
 
 def texture_axis():
@@ -155,14 +176,29 @@ def main():
     print("  merge minus the background-focused single frame (221), near-edge")
     print("  band referenced to the far field. 0 = the merge agrees with a")
     print("  render that has no election in it. Signed DN of 65535.\n")
-    h = halo_axis()
+    h, per_tile = halo_axis()
     if h:
         base = dict(h).get("off")
-        print(f"  {'arm':<10} {'halo (DN)':>12} {'vs off':>10}")
-        print("  " + "-" * 34)
+        off_t = per_tile.get("off")
+        print(f"  {'arm':<10} {'halo (DN)':>12} {'vs off':>9}   "
+              f"{'paired vs off (DN)':>20} {'tiles worse':>12}")
+        print("  " + "-" * 70)
         for arm, v in h:
-            rel = "" if base in (None, 0) else f"{100.0 * v / base:>9.0f}%"
-            print(f"  {arm:<10} {v:>+12.1f} {rel:>10}")
+            rel = "" if base in (None, 0) else f"{100.0 * v / base:>8.0f}%"
+            pair = ""
+            worse = ""
+            if off_t is not None and arm in per_tile and arm != "off":
+                dt = per_tile[arm] - off_t
+                lo, med, hi = np.percentile(dt, [25, 50, 75])
+                pair = f"{med:>+8.1f}  [{lo:+.1f},{hi:+.1f}]"
+                # Sign convention: the halo here is positive, so a POSITIVE
+                # paired difference means the arm moved further from the
+                # no-election reference -- worse.
+                worse = f"{np.mean(dt > 0):>11.0%}"
+            print(f"  {arm:<10} {v:>+12.1f} {rel:>9}   {pair:>20} {worse:>12}")
+        print("\n  paired column: per-tile difference from the off arm, median")
+        print("  and interquartile range across tiles. Positive = the arm sits")
+        print("  FURTHER from the no-election reference than off does = worse.")
 
     print(f"\n\nTEXTURE AXIS -- {TEX_SUBJ} (no depth silhouettes: a no-op is correct)")
     print("  deviation from the off arm. Any deviation is damage; the SD ratio")

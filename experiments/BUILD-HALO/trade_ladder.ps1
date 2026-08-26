@@ -88,35 +88,83 @@ foreach ($n in $order) {
 # byte-freeze registry's header describes and it has bitten this build twice.
 $hooks = @("STREHL_EDGE_AWARE", "STREHL_EDGE_TAU", "STREHL_EDGE_CONF", "STREHL_ONLY_FRAME")
 
+# FIVE AGENTS RENDER IN THIS TREE AT ONCE AND EACH RENDER WANTS ~8 GB.
+# The first pass of this ladder lost couch-fibers-cpl-off to
+# `memory allocation of 67481600 bytes failed`, which is contention, not a code
+# fault. An arm lost that way leaves NO FILE, and a missing row in a
+# dose-response reads as a gap in the curve rather than as a failure -- exactly
+# the confusion between "not measured" and "measured as zero" that section 19.7
+# warns about. So: wait for headroom, retry, and account for every arm at the
+# end.
+function Wait-ForMemory {
+    param([double]$NeedGB = 11.0, [int]$MaxWaitSec = 900)
+    $t0 = Get-Date
+    while ($true) {
+        $free = (Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1MB
+        if ($free -ge $NeedGB) { return $true }
+        if (((Get-Date) - $t0).TotalSeconds -ge $MaxWaitSec) {
+            Write-Output ("      headroom {0:N1} GB < {1:N1} GB after {2}s; going anyway" -f $free, $NeedGB, $MaxWaitSec)
+            return $false
+        }
+        Start-Sleep 30
+    }
+}
+
+$rendered = @(); $failed = @(); $skipped = @()
+
 $i = 0
 foreach ($j in $jobs) {
     $i++
     $tag = "$($j.subj)-$($j.arm.name)"
     $dst = Join-Path $Out "$tag.tif"
-    if (Test-Path $dst) { Write-Output ("SKIP  [{0,2}/{1}] {2}" -f $i, $jobs.Count, $tag); continue }
-
-    foreach ($h in $hooks) { Remove-Item "Env:$h" -ErrorAction SilentlyContinue }
-    foreach ($k in $j.arm.env.Keys) { Set-Item -Path "Env:$k" -Value $j.arm.env[$k] }
-
-    $t0 = Get-Date
-    $log = & $Exe stack "$Src\$($j.subj)" -o $dst --linear-srgb --gate 4.0 2>&1
-    $rc = $LASTEXITCODE
-    $dt = ((Get-Date) - $t0).TotalSeconds
-
-    # Keep the stderr: the Acuity arm prints the solved tau and the collapsed
-    # fraction, which is the only record of what the knob actually did.
-    $log | Set-Content -Encoding utf8 (Join-Path $Out "$tag.log")
-
-    if ($rc -ne 0) {
-        Write-Output ("FAIL  [{0,2}/{1}] {2} rc={3}" -f $i, $jobs.Count, $tag, $rc)
-        $log | Select-Object -Last 8 | ForEach-Object { Write-Output "        $_" }
+    if (Test-Path $dst) {
+        Write-Output ("SKIP  [{0,2}/{1}] {2}" -f $i, $jobs.Count, $tag)
+        $skipped += $tag
+        continue
     }
-    else {
-        Write-Output ("OK    [{0,2}/{1}] {2,-52} {3,5:N0}s" -f $i, $jobs.Count, $tag, $dt)
+
+    $ok = $false
+    foreach ($attempt in 1..3) {
+        Wait-ForMemory | Out-Null
+
+        foreach ($h in $hooks) { Remove-Item "Env:$h" -ErrorAction SilentlyContinue }
+        foreach ($k in $j.arm.env.Keys) { Set-Item -Path "Env:$k" -Value $j.arm.env[$k] }
+
+        $t0 = Get-Date
+        $log = & $Exe stack "$Src\$($j.subj)" -o $dst --linear-srgb --gate 4.0 2>&1
+        $rc = $LASTEXITCODE
+        $dt = ((Get-Date) - $t0).TotalSeconds
+        $log | Set-Content -Encoding utf8 (Join-Path $Out "$tag.log")
+
+        if ($rc -eq 0 -and (Test-Path $dst)) {
+            Write-Output ("OK    [{0,2}/{1}] {2,-52} {3,5:N0}s{4}" -f $i, $jobs.Count, $tag, $dt, $(if ($attempt -gt 1) { "  (attempt $attempt)" } else { "" }))
+            $rendered += $tag
+            $ok = $true
+            break
+        }
+
+        # A render killed part way leaves a short file that would later be read
+        # as a valid arm. Remove it before retrying.
+        if (Test-Path $dst) { Remove-Item $dst -ErrorAction SilentlyContinue }
+        $oom = ($log -join "`n") -match "memory allocation of"
+        Write-Output ("RETRY [{0,2}/{1}] {2} rc={3} attempt {4}/3{5}" -f $i, $jobs.Count, $tag, $rc, $attempt, $(if ($oom) { " (OOM)" } else { "" }))
+        if (-not $oom) { $log | Select-Object -Last 5 | ForEach-Object { Write-Output "        $_" } }
+        Start-Sleep 60
     }
+    if (-not $ok) { Write-Output ("FAIL  [{0,2}/{1}] {2} -- gave up after 3 attempts" -f $i, $jobs.Count, $tag); $failed += $tag }
 }
 
 foreach ($h in $hooks) { Remove-Item "Env:$h" -ErrorAction SilentlyContinue }
+
+# Every arm accounted for, and the three outcomes sum to the job count, so a
+# render lost to contention cannot be mistaken for one that was never asked for.
+Write-Output ""
+Write-Output ("ACCOUNTING  rendered {0} + skipped {1} + failed {2} = {3} of {4} jobs" -f `
+        $rendered.Count, $skipped.Count, $failed.Count, ($rendered.Count + $skipped.Count + $failed.Count), $jobs.Count)
+if ($failed.Count) {
+    Write-Output "FAILED ARMS (re-run this script to retry exactly these):"
+    $failed | ForEach-Object { Write-Output "    $_" }
+}
 
 # COMMISSIONING THE KNOB, not just the binary. A dose-response is worthless if
 # the dose is not connected: if STREHL_EDGE_TAU were ignored, every arm would
