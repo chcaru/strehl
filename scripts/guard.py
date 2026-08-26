@@ -33,10 +33,25 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-# Below this, the change is JPEG-grade noise or a one-bit rounding difference
-# and calling it a regression would train everyone to ignore the guard. Above
-# it, a human should look. Chosen to be a delta that is visible when you flick
-# between two images, not one that survives a t-test.
+# A pixel delta answers "did anything change". The question the guard is FOR is
+# "did this subject lose detail", and those are different questions: raising
+# contrast scales every edge amplitude, so a tone change and a defocus produce
+# the same edge-weighted difference map. Deciding on the raw delta means the
+# guard fires on a change its own author intended, forever, and a guard that
+# always fires is worse than no guard -- it launders a real regression through
+# an alarm everyone has learned to ignore.
+#
+# So the VERDICT comes from a contrast-normalised gradient statistic, which is
+# invariant to any monotonic global rescale of the image, and the raw delta is
+# kept only as context for the human who looks at the picture afterwards. This
+# is the same correction already made to trend.py (see BUILD-RENDER.md section
+# 14), where the un-normalised form reported a library-wide regression that was
+# nothing but the tone curve landing.
+SOFTER = 0.98   # normalised sharpness ratio below this: detail was lost
+SHARPER = 1.06  # and above this: ringing or over-sharpening, also a regression
+# Raw delta thresholds. NOT a verdict any more -- printed so a real change is
+# still visible, and used only to suppress the diff images when nothing at all
+# happened.
 MOVED_MEAN = 0.25  # mean |delta|, 8-bit DN
 MOVED_P999 = 6.0  # p99.9 |delta|, 8-bit DN
 
@@ -44,6 +59,24 @@ MOVED_P999 = 6.0  # p99.9 |delta|, 8-bit DN
 def load(path: Path) -> np.ndarray:
     with Image.open(path) as im:
         return np.asarray(im.convert("RGB"), dtype=np.int16)
+
+
+def sharpness_normalised(a: np.ndarray) -> float:
+    """Gradient RMS after standardising the image to zero mean, unit variance.
+
+    The standardisation is what makes this blind to tone. Multiplying an image
+    by 0.95 multiplies its gradient RMS by 0.95 and its standard deviation by
+    0.95, so the ratio is unchanged -- while a blur lowers the gradient without
+    lowering the variance nearly as much, and still registers.
+    """
+    y = a.astype(np.float32).mean(axis=2)
+    s = float(y.std())
+    if s < 1e-6:
+        return 0.0
+    y = (y - y.mean()) / s
+    gx = np.diff(y, axis=1)
+    gy = np.diff(y, axis=0)
+    return float(np.sqrt((gx * gx).mean() + (gy * gy).mean()))
 
 
 def compare(current: Path, reference: Path, out_dir: Path) -> int:
@@ -55,13 +88,28 @@ def compare(current: Path, reference: Path, out_dir: Path) -> int:
     d = np.abs(cur - ref)
     lum = d.max(axis=2).astype(np.float32)
     mean, p999, mx = float(lum.mean()), float(np.percentile(lum, 99.9)), float(lum.max())
-    moved = mean > MOVED_MEAN or p999 > MOVED_P999
+    differs = mean > MOVED_MEAN or p999 > MOVED_P999
 
-    tag = "MOVED" if moved else "held "
+    s_cur = sharpness_normalised(cur)
+    s_ref = sharpness_normalised(ref)
+    ratio = s_cur / s_ref if s_ref > 0 else 0.0
+    moved = ratio < SOFTER or ratio > SHARPER
+
+    if moved:
+        tag = "MOVED"
+    elif differs:
+        # The honest middle case, and the one that used to be a false alarm:
+        # the picture changed but its detail did not. A tone change lands here.
+        tag = "held*"
+    else:
+        tag = "held "
     print(
-        f"GUARD  {current.stem}: {tag}  mean {mean:6.3f}  p99.9 {p999:6.2f}  "
-        f"max {mx:6.1f} DN8  ({(lum > 2).mean() * 100:5.2f}% of pixels differ by >2)"
+        f"GUARD  {current.stem}: {tag}  sharp x{ratio:5.3f}  "
+        f"mean {mean:6.3f}  p99.9 {p999:6.2f}  max {mx:6.1f} DN8  "
+        f"({(lum > 2).mean() * 100:5.2f}% of pixels differ by >2)"
     )
+    if tag == "held*":
+        print("       pixels moved but detail did not -- a tone or colour change, not a regression")
 
     if not moved:
         return 0

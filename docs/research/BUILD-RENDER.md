@@ -1490,6 +1490,78 @@ report and helpfully corrects it.
 
 ---
 
+## 18. The guard was anti-correlated with its own purpose
+
+ORCH found the `couch-fibers-cpl` guard firing `MOVED` on a clean `1cacb61`
+pin, looked at the diff, and reported it as entirely edge-structured —
+ambiguous between "the fibres got softer" and "the tone curve landed", because
+raising contrast scales every edge amplitude. The diagnosis was right and the
+consequence was the one that kills guards: it fires forever, and a guard that
+always fires is worse than none, because it launders a real regression through
+an alarm everyone has learned to ignore.
+
+This is the **same confound already fixed in `trend.py`** (§14), where the
+un-normalised form called a library-wide regression that was nothing but the
+tone curve landing. `guard.py` never got the correction. That is on me: I fixed
+the instrument I was looking at and left its twin alone.
+
+### The verdict now comes from a tone-invariant statistic
+
+`guard.py` decides on **contrast-normalised gradient RMS** — each image
+standardised to zero mean and unit variance before the gradient is taken. A
+monotonic global rescale divides out; a blur does not, because it lowers the
+gradient far more than the variance. The raw pixel delta is still printed as
+context for the human who looks at the picture, and a third verdict `held*`
+was added for the honest middle case: *pixels moved, detail did not.*
+
+### Commissioned before re-seeding, both directions
+
+A guard that never fires cannot be told from a guard that cannot fire, so both
+halves were planted. A linear contrast scale turned out to be the wrong null —
+it clips on a real photograph, and clipping destroys detail, so the null would
+have failed for a real reason at the wrong moment. The assertion caught it. The
+planted tone changes are therefore strictly monotonic S-curves and gammas, which
+is also what the real tone rendering is, and is the harder test: exact
+invariance holds only for a linear rescale.
+
+| arm | sharp ratio | verdict | raw mean Δ |
+|---|---|---|---|
+| identity | ×1.000 | held | 0.00 |
+| S-curve t=0.35 | ×0.996 | held | **7.04** |
+| S-curve t=0.60 | ×0.996 | held | **12.33** |
+| gamma 0.85 | ×1.008 | held | 10.03 |
+| gamma 1.18 | ×0.995 | held | 12.21 |
+| blur σ=0.5 | ×0.886 | **MOVED** | **0.73** |
+| blur σ=0.8 | ×0.724 | **MOVED** | 2.42 |
+| blur σ=1.5 | ×0.495 | **MOVED** | 5.26 |
+| unsharp +90% | ×1.497 | **MOVED** | 5.22 |
+
+9 of 9. Worst null ×0.995 against mildest positive ×0.886, so the ×0.98
+threshold sits four times the null noise away from one side and 5.7% clear of
+the other.
+
+**The right-hand column is the finding.** The old guard decided on that number.
+It is **7.04 DN for a harmless tone change and 0.73 DN for a real blur** — ten
+times more sensitive to the thing it should ignore than to the thing it exists
+to catch. It would have ranked a genuine softening as a *smaller* event than a
+tone tweak. Not a noisy instrument: an instrument pointed the wrong way. Nobody
+had noticed because until the tone fix landed, nothing had ever exercised it.
+
+Over-sharpening is now a regression too (×1.497 fires). Ringing on
+high-frequency texture is a plausible way for a deconvolution lane to damage
+this subject, and a one-sided guard would have called it an improvement.
+
+### Re-seeded deliberately, with the reason stored beside it
+
+`gallery-guard\RESEED.txt` records the source render, the binary SHA
+(`1cacb61`, ORCH's clean `git archive` pin), the sha256 of the reference, the
+commissioning table, and the caveat that `1cacb61` predates the lateral-CA
+correction — so if the next CA-enabled run moves this, that is real information
+about what CA costs in edge amplitude and should be looked at, not re-seeded
+away.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
