@@ -4738,3 +4738,49 @@ gold-plate the migration.
 - The comparison is of *appearance*, adjudicated by eye against crops selected by a stated
   rule. It is not a metric, and it does not need to be: a defect this size does not require
   a statistic to establish, and the corpus already has the statistic.
+
+### 45.6 Follow-up, measured: the polygons are absent at the pyramid's OWN default gate
+
+Section 45.5 flagged that arm P had been rendered at `--pyramid-gate 4.5` rather than the
+shipped 2.0, and that my expectation — polygons are the estimator's per-pixel winner field,
+not the pyramid's band gate — must not be asserted on my say-so. Measured now.
+
+Third arm, same pinned binary from `3e5a03ea`, same subject, same flags:
+
+```
+--merge pyramid --pyramid-gate 2.0   -> ab/bee3-pyr-gate2.tiff   119.2 s
+```
+
+That makes the comparison **each backend at its own shipped default gate**, which is the only
+comparison that licenses a default flip. Crops lifted at 1:1 at the two sites `printqa.py`
+had already chosen independently on the estimator render:
+
+- `ab/gate2-vs-estimator-TRANS.jpg` `(3640,520)`: estimator shows hard-edged angular grey
+  plateaus across the dark background; **pyramid shows smooth continuous tone.**
+- `ab/gate2-vs-estimator-DETAIL.jpg` `(1040,2600)`: the estimator's grey polygon sits in the
+  white background with a hard faceted boundary; **the pyramid's background is clean.**
+
+**The expectation held, and it is now a measurement.** The flip therefore needs no gate
+change, and `--pyramid-gate`'s default stays where section 42 left it, pending BUILD-BLEND.
+
+**Three further wins I was not looking for**, at the DETAIL site and at the default gate:
+individual hair strands and their speculars are resolved where the estimator smears them;
+the pollen grains on the leg are crisper and better separated; and the magenta fringing on
+the upper hairs is reduced.
+
+Chroma numbers, pyramid relative to estimator, recorded as **corroborating and not
+load-bearing**:
+
+| site | edge R-G | edge R-B | edge B-G | flat placebos |
+|---|---|---|---|---|
+| DETAIL `(1040,2600)` | 0.8727 | 0.9135 | 0.9252 | 0.8914 / 0.8576 / 0.8084 |
+| TRANSITION `(3640,520)` | 0.8944 | 0.9399 | 0.9818 | 0.9011 / 0.9346 / 0.9479 |
+
+The flat placebo moves 0.81-0.95. **That is too much for these ratios to carry the claim**,
+and it means something real: two different merges differ in noise *everywhere*, not only on
+edges, so an edge-selected chroma statistic cannot cleanly separate them. The appearance
+evidence is the claim; these numbers merely fail to contradict it. Recorded rather than
+quietly dropped, because a placebo that moves is a result about the instrument.
+
+> **When a placebo moves, the metric is not measuring what its name says.** Report it next
+> to the number it undermines, not in a footnote.
