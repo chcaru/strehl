@@ -2266,3 +2266,58 @@ class as the known `git show HEAD:path > tmp` corruption on this machine.
 Measured both ways: with the redirect, endless bad-header retries; without it,
 `rc=0` and **6842 files extracted**. Any harness that builds a pin must not run
 under a global stream redirect.
+
+## Correction (2026-08-26): two ORCH numbers retracted; my lever list shortens
+
+ORCH retracted the "hull clamp costs 15.5% of microcontrast" figure (dead by its
+own author in BUILD-HULL S17 `ba5f234`, independently refuted by V-HULLCOST
+`6222142e` at ~3.1%) and the "88.8% of the clamp's change is in the 2px/4px
+bands" figure (its instrument weighted band k by coefficient count, under-
+weighting by 4^k). Neither number appears anywhere in this lane record and no
+measurement of mine rests on either -- checked by grep over this file, not from
+memory. The gamut census, the ICC pixel nulls and the potency control are colour
+and metadata results; none is a sharpness statistic, so the claimed "15% haircut
+upstream of every sharpness number" never bore on them.
+
+One thing above **does** change. The entry at "Only the pending work --
+restoration wiring, hull-clamp policy -- can change what he is looking at" named
+two remaining levers on the owner's verdict. With KEEP THE CLAMP settled,
+hull-clamp policy is off that list. The conclusion survives and sharpens: the
+default-path pixels the owner judged are still not reachable by re-rendering,
+and the sole remaining lever on them is BUILD-BLEND's base-band fix, since
+BUILD-WIRE's restoration lands behind a flag defaulting off.
+
+### MEASURED: the chromatic-aberration change lies outside b9b6921e..96b7e119
+
+ORCH's still-valid warning is that two binaries built at different points in the
+tree differ by a CA correction leaving green bit-identical while red moves up to
+3902 DN, so cross-build RGB comparisons must be restricted to green. The
+SHIP-V2 -> SHIP-V2-ICC pixel comparison in `verify_ship.py` is such a
+cross-build comparison, and it does not need that restriction, because it came
+back identical on the very channel the warning is about:
+
+| | |
+|---|---|
+| SHIP-V2 binary | `CF33AE08...D6E6` at `b9b6921e` |
+| SHIP-V2-ICC binary | `0B3B6F19...DBEC` at `96b7e119` |
+| commits in window | 54 |
+| `crates/` files touched | `image_out.rs`, `merge_cmd.rs`, `halo.rs`, `demosaic.rs`, `election_coherence.rs`, `lib.rs`, `merge.rs`, `restore.rs` |
+| result, 26/26 subjects | max per-channel abs diff = 0 on R, G **and** B |
+
+`verify_ship.py:96-100` takes the max over each channel separately and prints
+"identical RGB" only when all three are zero, so this is a per-channel null and
+not a luminance proxy. Two consequences. First, the CA correction did not land
+in this window -- it is either before `b9b6921e` or after `96b7e119`, which
+bounds it for anyone else pricing a cross-build A/B. Second, 54 commits touching
+eight Rust files including the demosaic and merge cores moved the default-path
+output by zero bytes, which is a third independent instance of the stability
+already recorded above.
+
+### Correction to my own report
+
+I opened my last report to ORCH with "everything below is from one binary". That
+is true of the ICC A/B, the potency control, the gamut census and the render
+itself, but not of the SHIP-V2 pixel comparison, which is inherently two. The
+scope of the claim was wrong even though its value was not, and ORCH had asked
+every agent to state which comparisons were same-binary. Recorded here so the
+imprecision is not inherited.
