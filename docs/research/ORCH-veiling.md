@@ -9566,3 +9566,57 @@ The two directions are not symmetric, and conflating them would rebuild the
 The scan is therefore a fast pre-filter in front of the expensive probe, not a
 replacement for it: 39 flags cost one byte read, and the one it condemns needs
 no render at all to condemn.
+
+## 83. The complaint is answered, and the comparison still is not
+
+Opened `bee-3-cpl` at 1:1 and as a full frame -- 299 frames, the deepest stack
+in the corpus, and the one carrying the strongest claim.
+
+**The artifact the owner called "horrendous" and "entirely unusable" is not
+present.** The 1:1 crop lands on the mid-leg: hundreds of individually separable
+hairs, tips crossing a bright background, each fading naturally into it. **No
+rim, no dark outline, no ghost edge, no doubled strand.** That geometry -- fine
+light structures against a bright ground -- is where a halo is loudest, so its
+absence there is worth more than its absence anywhere else in the set. Pollen
+granules are individually textured; speculars on the black chitin are sharp and
+correctly placed.
+
+The full frame holds focus from the near foreleg through the wing tips to the
+antenna tip: wing venation crisp with the membrane's cell structure visible,
+tarsal claws individually resolved including the small mid-frame ones, the
+compound eye a clean dome with correct speculars, and a white ground free of
+mottling or silhouette ghosting.
+
+By eye, at 1:1, this is a print-worthy frame.
+
+### Two honest limits on that sentence
+
+**It is soft, and the softness is not the merge's.** Micro-contrast sits below
+the best commercial macro work. That is what fact 12 and fact 28 predict: at
+this rig's magnification MTF at Nyquist is near zero at every aperture, so the
+contrast is destroyed in the optics before any software runs. Selection cannot
+recover it and neither can this merge. It is the argument for the deconvolution
+work, not evidence against the current pipeline.
+
+**"Print-worthy by eye" is not "state of the art", and I cannot currently claim
+the second.** Every instrument aimed at the head-to-head comparison has been
+disqualified -- five independent results now, most recently ISO 12233, which did
+not go blind but went *wrong*, monotonically, by 14.38% in the flattering
+direction. What I can say is bounded and true: **the defect the owner reported is
+gone, and the output stands up at 1:1.** What ranks it against another tool
+still needs section 30's slanted-edge chart, because the confound lives in the
+variable and not in any statistic computed from it.
+
+### A caption that did not demonstrate its own claim
+
+`bee-3-cpl`'s note read *"compound eye resolved"* while its 1:1 crop shows a
+**leg**. The claim is true -- the eye is resolved, in the full frame -- so this
+was not the `lead-1-cpl` mislabel repeating, and checking the full frame before
+accusing myself a fourth time was the right call. But a viewer reading that card
+sees a caption about an eye above a crop of a leg, and cannot verify the claim
+from what is in front of them.
+
+> **A caption beside a crop is read as a claim about the crop.** Rewritten to
+> describe the hairs the crop actually shows -- and to say why that geometry is
+> the informative one -- while keeping the full-frame claims explicitly labelled
+> as full-frame.

@@ -72,7 +72,10 @@ def pick_crop(lum):
 VERDICTS = {
     "wrapped-text-1": (0, "showcase", "toner particles resolved to the letter edge; no rim"),
     "bee-2-cpl": (0, "showcase", "hair tips over white, no rim; pollen individually textured"),
-    "bee-3-cpl": (0, "showcase", "299 frames, the deepest stack; compound eye resolved"),
+    "bee-3-cpl": (0, "showcase", "299 frames, the deepest stack. The 1:1 crop is the mid-leg: "
+                                 "hundreds of individually separable hairs with clean tips over white, "
+                                 "which is the geometry a halo would be loudest in. The compound eye, "
+                                 "wing venation and tarsal claws resolve in the full frame."),
     "bee-1-cpl": (0, "showcase", "clean speculars on chitin"),
     "leaf-2-cpl": (0, "showcase", "vein network and surface texture"),
     "couch-fibers-cpl": (0, "showcase", "dense overlapping fibre depth"),
