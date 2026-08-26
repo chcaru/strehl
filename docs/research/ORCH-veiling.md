@@ -2395,3 +2395,134 @@ than from a person looking at a photograph. Six subjects with a clean gap is
 evidence; it is not the mechanism. BUILD-HALO's fix remains the falsification.
 
 
+
+# 24 The clamp is blue, and my account of its shape was wrong
+
+## 24.1 Two instruments disagreed, and neither was reading the same thing
+
+Three numbers were in circulation for one defect on one subject:
+
+| source | flower-bud clip | predicate | render |
+|---|---:|---|---|
+| `accept.py` (BUILD-WIRE) | 2.9920% | any channel `== 0` | 2x2 binned |
+| `accept2.py` (this gate) | 1.4014% rise | any channel `== 0` | full res, demosaiced |
+| `ORCH-gallery2` C4 | 2.192% | blue `== 0` | example binary |
+
+The first disagreement is not a disagreement at all. `accept.py`'s `clip%` is
+`np.any(im == 0, axis=2)` and it has **no white-rail term whatsoever**. It cannot
+see a blown highlight. That is why it scores `dry-erase`'s reference arm at
+0.0009% while this gate measures the same file as 7.8774% white-clipped: the two
+instruments are counting different rails, and one of them only counts one.
+
+The second gap is resolution. Binned 2.9920% against demosaiced 1.4014% on the
+same defect.
+
+## 24.2 A claim I made from a ratio instead of a measurement
+
+From that 2.99 -> 1.40 fall I concluded the crushed population must be a thin rim
+at the silhouette: interpolation eats a rim's boundary but leaves a blob's
+interior, so a halving implies thinness. I wrote that into 22.4, and I sent it to
+BUILD-BLEND as the target description.
+
+It is an inference from a coincidence between two different renders. I never
+measured the shape. `shape.py` measures it, on the files this gate actually
+scores.
+
+## 24.3 What it is
+
+Per-channel exact-zero rise, flower-bud, full resolution:
+
+| channel | rise |
+|---|---:|
+| R | +0.3728% |
+| G | +0.5349% |
+| **B** | **+1.3964%** |
+
+against a reference that is 0.0000% in all three. The joint pattern is a true
+partition of the zero set:
+
+| channels dead together | % of frame |
+|---|---:|
+| **B alone** | **0.8651** |
+| RGB | 0.3709 |
+| GB | 0.1590 |
+| RB | 0.0015 |
+| G | 0.0045 |
+| RG | 0.0004 |
+| R | 0.0000 |
+
+**62% of the zero set is blue with red and green intact.** The 1.3964% blue rise
+is essentially the entire 1.4014% any-channel figure.
+
+Morphology, 6738 connected components: the largest is 268,720 px = **58.1%** of
+the zero set, the top ten are 88.1% — but the median component is 1.0 px and
+there are 4504 singletons. And the giant component is thin: a single 3x3 erosion
+leaves **32.9%** standing, 5x5 leaves 25.6%. A compact blob of 268,720 px loses
+under 1% to one erosion. So it is one large connected *ramified* network — a web,
+not a disc — plus thousands of isolated pixels.
+
+Location: a zero pixel sits p50 **110 px** from the nearest top-1% luminance edge
+in the reference, against a frame-wide p50 of **693 px**. Edge-associated by 6.3x,
+and nowhere near a boundary rim.
+
+## 24.4 Both accounts were wrong, in opposite directions
+
+Mine said thin rim at the silhouette. `ORCH-gallery2` C4 said "the brightest
+neighbour of a zero pixel has a median of 0.0 DN, so these are large contiguous
+regions, not rims." On the full-resolution demosaiced files, the brightest
+8-neighbour of a zero pixel is p50 **422 DN**, p75 752, p90 1032. Those pixels are
+adjacent to real signal.
+
+The gallery's *location* finding reproduces — shadowed crevices in the subject's
+interior structure. Its *shape* finding does not. Correct statement, now measured:
+**a blue-led crush forming a thin ramified network through the shadowed interior
+of the subject.** Retracted: "at the silhouette boundary" (22.4, and two messages
+to BUILD-BLEND).
+
+## 24.5 The gate could not have seen any of this
+
+`clip_cells` used `(a == 0).any(axis=2)`. It reports *that* a pixel is clipped and
+never *which channel*, so a blue-only crush and an achromatic crush of the same
+pixel count produce an identical number and need different fixes. That is the
+fourth defect found in this gate since it was written to replace a defective one.
+
+Fixed: rail x channel marginals now bind alongside the rail x population cells,
+and the joint pattern is printed as a true partition. The marginals are labelled
+as overlapping and are not claimed to sum. Recommissioned: `0.00e+00` on both
+subjects.
+
+> A predicate that answers *whether* cannot be asked *which*.
+
+## 24.6 The hypothesis that decides the fix
+
+Blue may not be special. Blue has the smallest pedestal in camera-linear space on
+this subject, so an **achromatic** undershoot of a fixed number of DN reaches zero
+in blue first while red and green survive it. If that is the mechanism, this is
+not a chroma bug and a per-channel clamp would be treating a symptom — and
+clamping each channel independently at zero is exactly what converts an
+achromatic undershoot into an irreversible yellow-green cast in the shadows,
+which is the reason the gallery called it print-blocking.
+
+The test is cheap and pre-registered: read the reference arm's per-channel DN at
+the zero locations. Achromatic undershoot predicts the reference is already
+B < G < R there by about the undershoot magnitude, and that the R/G/B ordering of
+the zero counts follows the ordering of the reference pedestals. It does order
+correctly (R 0.3728 < G 0.5349 < B 1.3964), which is consistent — but ordering
+alone is weak evidence and the DN test is the one that decides. Assigned to
+BUILD-BLEND, who owns `pyramid.rs`.
+
+## 24.7 Two smaller corrections
+
+`dry-erase`'s white rail rises +0.5284% at threshold 0 and **falls** to +0.4578%
+at threshold 256. A rise that shrinks as the window widens is pile-up *on* the
+rail, not a broadened distribution: the merge is pushing near-white pixels onto
+65535. Both rails are genuine rail states — flower-bud's black rise is 1.4014% at
+t=0 and only 1.6206% at t<=8, so those pixels are *at* zero, not near it. The
+exact-zero predicate is sound; it was only blind to colour.
+
+And `tweezers` is not clean in all four cells as 23.2 recorded — it carries
+`white_lit` 0.0029% in *both* arms, rising to 0.0033%. Below every threshold and
+immaterial to its role as the veil isolate, but the record said zero and zero was
+wrong. `shape.py` also reported "no clipped pixels" for it while only ever
+examining the black rail — the same partial-coverage error, in a probe written in
+the same hour as the fix for it.

@@ -70,16 +70,46 @@ def load(path: Path) -> np.ndarray:
     return a
 
 
+JOINT = {1: "R", 2: "G", 3: "RG", 4: "B", 5: "RB", 6: "GB", 7: "RGB"}
+
+
 def clip_cells(a: np.ndarray, lit: np.ndarray) -> dict:
-    lo = (a == 0).any(axis=2)
-    hi = (a == 65535).any(axis=2)
+    """Three views of the same clipped set, each of which binds.
+
+    FAILURE 4, found after this gate had already shipped two verdicts. The
+    predicate was `(a == 0).any(axis=2)`, which reports THAT a pixel is clipped
+    and never WHICH channel. On flower-bud the rise decomposes R +0.3728,
+    G +0.5349, B +1.3964, and 62% of the zero set is blue with red and green
+    intact -- a chroma defect producing an irreversible yellow-green cast in the
+    shadows. Under `.any(axis=2)` that is indistinguishable from an achromatic
+    crush of the same pixel count, and the two need different fixes.
+
+    rail x population  -- true partition of the clipped pixels (unchanged)
+    rail x channel     -- MARGINALS, and they OVERLAP: a pixel dead in both R
+                          and B is counted in each. They do not sum to the
+                          total and are not claimed to.
+    joint pattern      -- true partition again, by which combination of
+                          channels died together. This is the diagnostic one.
+    """
+    lo_c = [(a[:, :, c] == 0) for c in range(3)]
+    hi_c = [(a[:, :, c] == 65535) for c in range(3)]
+    lo = lo_c[0] | lo_c[1] | lo_c[2]
+    hi = hi_c[0] | hi_c[1] | hi_c[2]
     n = a.shape[0] * a.shape[1]
-    return {
+    out = {
         "black_lit": 100.0 * np.logical_and(lo, lit).sum() / n,
         "black_dark": 100.0 * np.logical_and(lo, ~lit).sum() / n,
         "white_lit": 100.0 * np.logical_and(hi, lit).sum() / n,
         "white_dark": 100.0 * np.logical_and(hi, ~lit).sum() / n,
     }
+    for c, lab in enumerate("RGB"):
+        out[f"black_{lab}"] = 100.0 * lo_c[c].sum() / n
+        out[f"white_{lab}"] = 100.0 * hi_c[c].sum() / n
+    code = lo_c[0].astype(np.uint8) | (lo_c[1].astype(np.uint8) << 1) | (lo_c[2].astype(np.uint8) << 2)
+    out["joint_black"] = {
+        v: 100.0 * float((code == v).sum()) / n for v in range(1, 8)
+    }
+    return out
 
 
 def lap_rms(g: np.ndarray) -> float:
@@ -263,7 +293,8 @@ def compare(pref: Path, ptest: Path) -> dict:
 
 def verdict(m: dict):
     fails = []
-    for k in ("black_lit", "black_dark", "white_lit", "white_dark"):
+    for k in ("black_lit", "black_dark", "white_lit", "white_dark",
+              "black_R", "black_G", "black_B", "white_R", "white_G", "white_B"):
         rise = m["clip_test"][k] - m["clip_ref"][k]
         if rise > CLIP_MAX:
             fails.append(f"clip {k} +{rise:.4f}%")
@@ -287,6 +318,22 @@ def show(name: str, m: dict):
         tot_t += t
         print(f"    {k:<14}{r:10.4f}{t:10.4f}{t - r:+10.4f}")
     print(f"    {'TOTAL':<14}{tot_r:10.4f}{tot_t:10.4f}{tot_t - tot_r:+10.4f}")
+    print(f"    {'per channel':<14}{'ref %':>10}{'test %':>10}{'rise':>10}"
+          f"   (marginals, they OVERLAP -- do not sum)")
+    for rail in ("black", "white"):
+        for lab in "RGB":
+            k = f"{rail}_{lab}"
+            r, t = m["clip_ref"][k], m["clip_test"][k]
+            if r > 1e-9 or t > 1e-9:
+                print(f"    {k:<14}{r:10.4f}{t:10.4f}{t - r:+10.4f}")
+    jr, jt = m["clip_ref"]["joint_black"], m["clip_test"]["joint_black"]
+    if any(v > 1e-9 for v in jt.values()):
+        print(f"    {'black joint':<14}{'ref %':>10}{'test %':>10}{'rise':>10}"
+              f"   (true partition of the zero set)")
+        for v in range(1, 8):
+            if jr[v] > 1e-9 or jt[v] > 1e-9:
+                print(f"    {'  ' + JOINT[v]:<14}{jr[v]:10.4f}{jt[v]:10.4f}"
+                      f"{jt[v] - jr[v]:+10.4f}")
     print(f"    {'quintile':<10}{'refAmp':>9}{'BANDPASS':>10}{'bpClipFree':>11}"
           f"{'lapRMS':>9}{'nTiles':>8}{'nDirty':>8}")
     for i, (ra, rr, rc, n, nd, bp, bpc) in enumerate(m["quint"]):
