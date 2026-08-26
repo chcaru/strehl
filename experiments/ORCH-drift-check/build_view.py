@@ -93,9 +93,15 @@ VERDICTS = {
     "112MSDCF": (1, "clean", ""),
     "113MSDCF": (1, "clean", ""),
     "119MSDCF": (1, "clean", ""),
-    "coffee-bubbles": (2, "minor", "green-yellow fringe on sub-pixel speculars; residual lateral CA"),
-    "foam": (2, "minor", "specular fringe, as coffee-bubbles; the stack also moved"),
-    "dry-erase-marker-head-cpl": (2, "minor", "specular fringe, as coffee-bubbles"),
+    "coffee-bubbles": (2, "minor", "green-yellow fringe on sub-pixel speculars. <b>The cause is not settled.</b> "
+        "It was attributed to residual lateral chromatic aberration until it was measured per-annulus: "
+        "<b>74% of the deficit is already present on the optical axis</b>, where lateral CA is identically zero, "
+        "so a radial mechanism cannot be the main term. The leading candidate is that red and blue are "
+        "focus-elected on <i>green's</i> sharpness rather than their own, which defocuses them slightly "
+        "across the whole field \u2014 but that hypothesis is untested, and the two instruments aimed at it "
+        "returned opposite signs."),
+    "foam": (2, "minor", "specular fringe, as coffee-bubbles and with the same unsettled cause; the stack also moved"),
+    "dry-erase-marker-head-cpl": (2, "minor", "specular fringe, as coffee-bubbles and with the same unsettled cause"),
     "flowers-cpl": (3, "capture-limited", "soft over most of the frame; per-pixel selection over the same frames recovers nothing the merge lacks, so it is not a merge failure -- the cause is NOT established"),
     "flower-bud-alone-cpl": (3, "capture-limited",
         "softest merge-vs-best-frame in the corpus, plus an unattributed edge fringe"),
