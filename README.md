@@ -66,7 +66,8 @@ diffraction-limited ideal.
 > **pyramid** backend draws neither, at gate 4.5 *and* at its own default gate of
 > 2.0, while also resolving hairs and pollen more crisply. So the patchwork is a
 > property of the per-pixel winner field rather than of the noise gate, and the
-> fix is the backend rather than a tuning parameter. Pass `--merge pyramid`; see
+> fix is the backend rather than a tuning parameter. **`--merge pyramid` is now
+> the compiled-in default**, so this needs nothing from you; the gate does — see
 > the quickstart.
 >
 > **The honest consequence:** there is currently **no measured route to resolving
@@ -121,21 +122,25 @@ $ strehl probe <DIR>
 $ strehl stack <DIR> --merge pyramid --pyramid-gate 4.5 --srgb --auto-exposure -o out.tif
 ```
 
-**Pass `--merge pyramid`.** It is not the compiled-in default yet, and it is
-exactly the backend the measurement above singles out: same binary, same subject,
-same crop, polygons in the default arm and none in this one. This line will lose
-the flag when `DEFAULT_MERGE_BACKEND` flips; until then a quickstart that omitted
-it would be handing new users the one defect the project already knows how to
-avoid.
+**`--merge pyramid` is now the compiled-in default.** The flag in the line above
+is redundant and is written out only so the command reads the same whichever
+build you have. It is the backend the measurement above singles out: same binary,
+same subject, same crop, polygons in the old default arm and none in this one.
+Verified on this build — a bare `strehl stack <DIR> --srgb --auto-exposure`
+reports `LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)`.
 
-**On `--pyramid-gate 4.5`.** The backend's own compiled default is `2.0`, and the
-patchwork is absent at *both* values — the measurement above was run at 2.0 and at
-4.5 and neither draws polygons, so this is not a defect workaround. A higher gate
-averages more frames per band, which lowers noise; `4.5` is the value every
-reference render in the gallery was produced at, and it is written here so that
-what you render matches what you were shown. The corpus-wide sweep that would
-justify moving the compiled default is a separate open question and is not
-settled by this line.
+**`--pyramid-gate 4.5` is NOT redundant, and you should keep it.** The compiled
+default is still `2.0`. Those two values do not produce the same picture: run at
+`4.5` and at the default on the same subject with the same binary and the outputs
+differ (`C085A056…` against `6980D447…`, same 197,798,531 bytes). Every reference
+render in the gallery, and every quality claim made about them, was produced at
+`4.5`. Drop the flag and you get a render nobody has certified.
+
+The patchwork is absent at *both* values, so this is not a defect workaround — a
+higher gate averages more frames per band, which lowers noise. The corpus-wide
+sweep that would justify moving the compiled default is open, and until it lands
+this line is the honest one: **what ships by default is not what was measured**,
+and the flag is how you get the measured thing.
 
 `--srgb` applies the camera's colour matrix and the sRGB transfer curve, and
 since M95 it emits at **full sensor resolution by default** — pass `--binned`
