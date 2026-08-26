@@ -800,6 +800,20 @@ now stands on two statistics that fail in opposite directions.** It is not close
 the ladder is still 26 rungs of 299 and a peak narrower than ~12 frames would fall
 between them — but the mean-washout explanation is dead.
 
+**And the picture says it better than the ratios do.** In
+`bee/pics/H5-choice-bee.png` the `blob` row is three featureless smooth gradients:
+f264, f252 and f204 are visually indistinguishable and none of them contains any
+structure at all. The `fringe` row is the strongest single frame in this whole
+investigation — `mean|g|` and `max|g|` elect **f298**, the high-pass elects
+**f36**, and the two panels are *identically blank*. Those frames are 262 apart in
+a 299-frame bracket. Two nearly opposite ends of the capture render the same empty
+wash, which means the information is not somewhere else in the bracket; it is
+nowhere in the bracket. Compare the `leg-good` row directly below, same subject,
+same render, where individual hairs are resolved with specular highlights on them.
+
+No change to the election can fix `blob` and `fringe`. This is what abstention is
+for, and it is why section 9.8's part two is not optional.
+
 ### 10.8 The spilled-milk band, measured (MEASURED)
 
 The owner's first constraint was that the band is "brighter than the subject and
