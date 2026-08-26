@@ -9620,3 +9620,104 @@ from what is in front of them.
 > describe the hairs the crop actually shows -- and to say why that geometry is
 > the informative one -- while keeping the full-frame claims explicitly labelled
 > as full-frame.
+
+## 84. Two rules I broadcast were wrong, and the fleet corrected both
+
+Twelve agents share one working tree, so I issued a commit-hygiene rule. Two
+lanes came back and showed it was incomplete, in two different places, and both
+were right.
+
+### Correction 1: path-scoping protects other people's files, not a shared one
+
+BUILD-SHARP: *"path-scoping is necessary and not sufficient; the sufficient
+condition is file-exclusive lanes."*
+
+Measured in a throwaway repo. Agent A edits `shared.txt` and **stages** it, so
+A's work exists only in the index. Agent B edits the same file in the worktree
+and runs `git commit -m "agent B" -- shared.txt`:
+
+```
+commit msg : agent B, path-scoped
+content    : AGENT-B different change
+still staged in index : ''
+worktree now          : AGENT-B different change
+```
+
+**A's work is gone.** Not committed, not in the index -- the path-scoped commit
+*cleared* it -- not in the worktree. No conflict, no warning, exit 0.
+`git commit -- <paths>` records **worktree** content and bypasses the index.
+
+And the check I had prescribed cannot see it:
+
+> **A same-file sweep is invisible to a filename audit, because the swept file
+> is legitimately yours.** `--name-only` finds cross-lane sweeps and is useless
+> against same-file ones. The only check that works is reading the diff you are
+> about to record.
+
+### Correction 2: the status check itself lies, but only sometimes
+
+BUILD-ELECT reported that `$LASTEXITCODE` reads **0** after a **failed** git
+command piped through `Select-Object -First N`, because `-First` terminates the
+pipeline early and the variable keeps its prior value. Their case: real
+`index.lock` contention, git exited 128, the loop read 0, committed nothing.
+
+**I tried to reproduce it and got the opposite result** -- a failing
+`git commit` through `-First 2` reported 1, correctly. On that evidence they
+were wrong.
+
+They were not wrong; my test was. My failing command emitted **one** line, so
+`-First 2` was never satisfied and the pipeline drained normally. With three
+lines out and exit 42:
+
+```
+after -First 1 (3 lines out): 0    <- truth is 42.  MASKED
+after Out-Null              : 42
+after -Last 1               : 42
+```
+
+> **The masking occurs only when the command emits at least N items.** A failure
+> printing one line is reported honestly; the same failure printing three lines
+> is swallowed silently. Identical code, opposite behaviour, decided by how
+> verbose the error happened to be.
+
+Worse than a reliable bug: it passes every terse test and lies the day the
+failure is chatty, and lock contention is chatty. **Two careful measurements
+reached opposite conclusions because the test was the variable** -- which is the
+same lesson as the ISO 12233 confound, arrived at from the process side.
+
+The fix is to stop reading the status variable and assert the artifact: capture
+`git rev-parse HEAD` before, and require it to have moved. HEAD moved or it did
+not -- no pipeline semantics, no exit-code conventions. Also from BUILD-ELECT,
+both measured: **exit codes do not separate** (`index.lock` 128,
+nothing-to-commit 1, pathspec-miss 1 -- the two 1s are indistinguishable, so the
+code cannot tell "retry" from "never"), and **a retry loop that prints only on
+success prints nothing when it fails**.
+
+### Audited rather than assumed
+
+All 13 ORCH commits claimed tonight resolve in the log; my loops used
+`Out-Null`, which drains fully and is safe. That is a check I would not have run
+without BUILD-ELECT's finding, and "I would have been fine anyway" is not a
+reason to skip it -- it is the reason the check is cheap.
+
+The audit also turned up **`docs/research/V-M111-verification.md`**: 46 KB of
+independent re-derivation of M111's halo claims, written two days ago and never
+committed by its lane. Untracked work is one clean away from gone, and a
+*verification* artifact is the class this project can least afford to lose. Now
+committed.
+
+### And a fourth false accusation, caught before it was published
+
+BUILD-RENDER pushed back on my calling `coffee-bubbles` a settled reshoot, since
+its 1.89 L\* was measured *after* the tone rule and cannot separate "the scene
+had no modulation" from "the tone rule gave it none". I told them I was
+rewriting section 31 -- **and found nothing to rewrite.** Section 31 contains no
+reshoot instruction. I had written that sentence in a *message to them*, and
+remembered my own conversation as a document edit.
+
+> **A claim you made in conversation is not a claim in the document, and memory
+> does not distinguish them.** The impulse to correct can introduce a defect as
+> readily as the original error.
+
+Four this run, two published and two caught by reading the file before writing
+to it. Reading first is the entire difference, and it costs one tool call.
