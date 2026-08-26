@@ -604,6 +604,43 @@ agree.
 structure, not fineness.** That is a narrower claim than the one this paragraph
 used to make, and it is the one the measurement supports.
 
+**And the null is more favourable than it sounds, because of what the losing
+arm is doing while it ties.** Per-pixel selection has no correct value to choose
+in genuinely out-of-focus ground — no frame contains one — so adjacent pixels
+elect different source frames and the region shatters into piecewise-constant
+plateaus with hard polygonal edges. A detail statistic scores those manufactured
+edges *as detail*. Measured on the two arms' own crops, as gradient kurtosis
+inside low-detail regions chosen on the mean of both arms (higher = more flat
+plateaus punctuated by hard steps):
+
+| subject | merge | argmax | ratio | subject geometry |
+| --- | --- | --- | --- | --- |
+| `bee-3-cpl` | 5.83 | 16.26 | **2.79x** | deep, defocused ground |
+| `flowers-cpl` | 3.90 | 7.71 | 1.98x | 3D, defocused ground |
+| `bee-1-cpl` | 7.85 | 14.81 | 1.89x | 3D |
+| `leaf-2-cpl` | 3.52 | 5.54 | 1.57x | 3D |
+| `tweezers-cpl` | 4.25 | 4.97 | 1.17x | near-planar |
+| `flat-on-ruler-cpl` | 4.44 | 4.51 | **1.01x** | planar |
+
+Read it against geometry rather than as a ranking, and it explains its own
+exception. **`flat-on-ruler-cpl` — the one subject where argmax beat the merge
+on detail — is exactly the subject where argmax invents nothing.** A flat planar
+target has every pixel cleanly in focus in some frame, so selection is a
+well-posed problem there and it does the job. On subjects with real out-of-focus
+ground it is not well posed, and selection fills the gap with structure that was
+never in the scene. So the honest reading of the null is: **the merge ties
+selection on a detail metric while declining to manufacture detail, and loses
+only where nothing is being manufactured.**
+
+Two caveats, because this is the kind of result that gets overstated. The
+per-subject cut above was made *after* seeing the per-tile numbers, so it is
+descriptive rather than a pre-registered test, and anything built on it needs
+its own run. And the crop labels were checked before publication rather than
+assumed: on 31 of 35 tiles the argmax-labelled panel is the noisier one in flat
+regions, as selection physics requires, and the four exceptions are all
+high-detail tiles where the flat-mask catches real subject content
+(`experiments/ORCH-drift-check/labelcheck.py`).
+
 Two candidate detail statistics were killed by their own commissioning before
 they could vote — both *rise* on blur, by 5.1x and 12.6x on a ground-truth
 chirp. A third, which I supplied, failed a noise null it had never been given:
