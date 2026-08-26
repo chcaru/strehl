@@ -4360,3 +4360,205 @@ later, before anything shipped. The recommendation carried its own scope limit i
 the implementer was told to run the gallery before landing it — which is the only reason
 this is a correction rather than a regression. **Write the scope limit down at the moment of
 the claim, not after someone disagrees with it.**
+
+## 43. Three of my own claims die in one night, and one instrument turns out to lie
+
+Tonight was a falsification night. Two mechanisms I proposed were refuted in closed form,
+one instrument I cited as evidence turned out to print the opposite of the truth, and a
+convexity test another agent and I had both leaned on fires falsely on four of the seven
+bands the product actually ships. Nothing in this section is a new capability. All of it is
+subtraction, and the file is more trustworthy for it.
+
+### 43.1 The blue-channel "free blur" hypothesis is dead — Catmull-Rom at zero phase is the exact identity
+
+In section 36 I recommended a per-channel skip guard: blue's lateral-CA displacement looked
+too small to remove a fringe, yet `caprice.py` measured blue losing 9.36% of its edge
+high-frequency energy, so I proposed the pipeline was "paying a full interpolation blur for
+a shift it cannot deliver" and should skip the resample below a threshold.
+
+BUILD-SHARP refuted this from the kernel, and because the refutation kills a code change I
+had already requested, I rebuilt the kernel myself rather than accept it
+(`experiments/ORCH-drift-check/crcheck.py`, from the Catmull-Rom basis polynomials, no
+project code):
+
+```
+taps at phase 0   : [0. 1. 0. 0.]
+taps at phase 0.5 : [-0.0625  0.5625  0.5625 -0.0625]
+sum of taps, phase 0..1 : 1.0 at every sample
+phase-0 taps are EXACTLY [0,1,0,0]: True
+```
+
+| phase px | f=0.25 | f=0.35 | f=0.50 |
+|---|---|---|---|
+| 0.000 | 1.000000 | 1.000000 | 1.000000 |
+| **0.039** (blue's measured) | 0.997838 | 0.994462 | 0.991111 |
+| 0.152 (red's measured) | 0.972561 | 0.925851 | 0.875423 |
+| 0.500 (worst case) | 0.883883 | 0.634200 | 0.000000 |
+
+**Catmull-Rom is an interpolating kernel.** At zero phase it is not approximately the
+identity, it is bit-exactly the identity. So there is no fixed interpolation cost that a
+skip guard could avoid — the cost is a continuous function of phase that vanishes at zero.
+The guard I asked for would have saved nothing, because the kernel already implements it.
+
+The quantitative gap is decisive too. Inverting the response, a **9.36% amplitude loss at
+f=0.35 requires 0.1731 px** — **4.4x** blue's measured 0.039 px. On an energy reading
+(9.36% energy = 4.79% amplitude) it still needs 2.4-5.6x. The gap does not close on either
+reading. My numbers agree with BUILD-SHARP's to five decimals, computed independently.
+
+**Withdrawn:** the per-channel skip guard. **Still standing:** the symptom. V-CA
+independently confirms blue's benefit is smaller than its HF cost on **3 of 6 subjects**
+(`eps_b` 101.3-222.7 ppm, r-squared 0.32-0.88). Blue costs more than it earns on half the
+corpus; my explanation for *why* was simply wrong. Routed to BUILD-CHROMA with the
+mechanism space narrowed to (a) a wrong profile coefficient and (b) a second resample at
+large phase.
+
+> **A hypothesis about a kernel can be settled from the kernel.** I proposed a code change
+> on an intuition about interpolation cost without once evaluating the interpolant. Three
+> lines of basis polynomial would have killed it before it reached an implementer.
+
+### 43.2 The confound in my own blue evidence, which I asserted past
+
+Re-reading section 36's table with an adversarial eye, there is a hole I walked over:
+
+| ch | radial px | tangential px | ratio | vs green |
+|---|---|---|---|---|
+| R | 0.152 | 0.015 | 9.94 | 10.1x radial |
+| G (null) | 0.015 | 0.011 | 1.35 | — |
+| B | 0.039 | 0.030 | 1.30 | **2.60x radial, 2.73x tangential** |
+
+I concluded "blue is indistinguishable from the null" from the **ratio** (1.30 vs 1.35). But
+blue's radial is 2.60x green's and its tangential is 2.73x green's — blue moves more than
+the null in *both* components. Read on magnitudes alone, blue is doing something.
+
+The reading that rescues my conclusion is that blue's estimator is simply ~2.6x noisier than
+green's, because blue carries less texture in this scene, which inflates both components
+equally and leaves the ratio as the correct normalised statistic. The evidence for it is
+that the two scale factors are nearly equal (2.60 and 2.73) and a purely radial warp cannot
+raise the tangential component at all.
+
+**That reading is probably right and I did not measure it.** It is my own rule 42.2 —
+a probe that names its own premise in its verdict must test that premise — and I broke it
+one section after writing it. The test is cheap and now assigned: split the tile set in
+half, estimate independently, and the half-to-half disagreement *is* blue's noise floor. If
+blue's halves agree tightly on 0.039 radial it is real signal and I am wrong.
+
+### 43.3 The instrument I cited as proof prints the opposite of the truth
+
+V-CA's audit of my default-on CA recommendation returned **SHIP-WITH-CONDITIONS**, and the
+condition is a defect live in HEAD (`merge_cmd.rs:3842-3846`): the CA status line is computed
+from the raw environment variable, not from the guard's decision. Measured, both directions
+wrong:
+
+| operator sets | binary actually does | log prints |
+|---|---|---|
+| nothing | **CORRECTING** (guard matched, new default) | `off (--fix-ca / STREHL_FIX_CA unset)` |
+| `STREHL_FIX_CA=off` | **not correcting** | `CORRECTING, profile "off"` |
+
+`--fix-ca` inherits it via `set_var` (`main.rs:717-730`).
+
+**I quoted that line as evidence.** My arm-B justification read "log confirms `lateral CA :
+CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl"`". The arms were in fact correct — the
+inversion landed with the default-on commit `96571ee`, after my measurement — but the
+principle does not care about the timing. I treated a status line as a witness without ever
+asking what computes it.
+
+> **A status line is an instrument, and an instrument that is not derived from the value it
+> reports is a rumour.** If the log and the pixel path reconstruct the state separately,
+> they can disagree, and the log is the one everybody believes.
+
+The fix routed to BUILD-CHROMA is explicitly *not* "invert the second reconstruction" — it
+is to resolve the decision once and have both the correction and the log read that one
+value, plus print the **reason** (explicitly off / named profile / default-on because the
+guard matched / declined on what).
+
+### 43.4 What V-CA's audit confirmed, for the record
+
+The feature itself survives, and survives harder than I claimed it. Absolute numbers from
+V-CA, which I am quoting rather than reproducing:
+
+- **Claim 1 CONFIRMED**, reproduced to 4 d.p. (0.7373 / 0.8061 / 0.9590) and generalised
+  **6/6 subjects**, including the opposite polarity (`coffee-bubbles` 0.8483) and the
+  low-contrast case (`flowers-cpl` 0.8564). My weak point 2 — "one subject, and the most
+  favourable one" — resolves in the recommendation's favour.
+- **Claim 2 CONFIRMED by a different instrument**: benefit grows monotonically with field
+  radius, which a blur cannot do. My weak point 3 (no tiles in the outermost radius bin)
+  also resolves in favour — the corners are now measured.
+- **Claim 3 UNDERDETERMINED**: my weak point 5 was real. My plant was bilinear, the pipeline
+  is `Resampler::CatmullRom` (`blend-render.rs:376`). The 9.94 radial/tangential ratio
+  survives; the **absolute px values are overstated** and should not be quoted as physical
+  displacements.
+- **Byte-domain**: `defaulton` == `envon` == my measured arm, byte-identical
+  (`20D895F2...`); `forcedoff` == the gallery OFF render (`4CFA8F25...`). 24/24 optics tests
+  pass. Prior verification of the decline path transfers exactly, now proven rather than
+  assumed.
+
+V-CA also refuted four of its own objections before publishing, including the one I would
+have found most damaging (green-is-the-colour-matrix, r-squared 0.047).
+
+**Free work now assigned:** the gear guard checks body+lens only, while
+`optics.rs:357-360` sets `measured_at: None` *with an explicit comment that lateral CA
+varies with aperture*. The corpus spans f/5.6, f/8, f/11 and `f_number` is already parsed.
+Either the guard should consider aperture or the comment is wrong.
+
+### 43.5 The convexity test fires falsely on four of the seven bands we ship
+
+V-TONE, re-deriving its own test after BUILD-HULL refuted it, could not make it fire on 30
+provably convex random renders — and then found it fires readily once the render has the
+structure a focus merge actually has (election correlated with local brightness):
+
+| exponent | excess the test reports |
+|---|---|
+| 0, 1, 2 | -0.85, -0.39, -0.19 (no fire) |
+| **4** | **+0.29 FALSE POSITIVE** |
+| **8** | **+0.97 FALSE POSITIVE** |
+| **16** | **+1.72 FALSE POSITIVE** |
+
+**The shipped ramp is `2 3 4 5 8 8 8`. Four of seven bands sit in the false-positive
+regime.** Its pointwise control is clean (0 violations in 6,000,000 convex samples; plants
+at +1/+50/+300 caught 500/500), so the pointwise form is sound and the aggregate form is
+not. V-TONE's 371-677 DN claim is now withdrawn for a **third** independent reason.
+
+This matters beyond that one claim: **section 42's own reasoning leaned on a convexity
+bound** ("output above `max_k ||HF(x_k)||` cannot come from any constant convex weighting").
+That argument is pointwise-per-frequency and does not use V-TONE's aggregate statistic, so
+it survives — but I am recording the adjacency deliberately, because I reached for the same
+family of argument and got lucky in the details.
+
+### 43.6 The aligned merge is not decidable from outside `crates/`, and that is a hole
+
+V-TONE proved rather than asserted this. `STREHL_ONLY_FRAME` reduces the bracket *before*
+`alignment_for`, so both the sidecar digest and the `map.len() == paths.len()` check fail:
+
+```
+STREHL_WARPMAP=<205-frame sidecar> STREHL_ONLY_FRAME=102 ... -> rc=1
+"digest 2da87e45b71aed22, 205 frames" applied to "digest 499972446858e9dd, 1 frames"
+```
+
+`--help` offers only `--index-map` / `--n-eff-map`. Re-implementing the warp externally is
+not a route — a non-bit-identical Catmull-Rom manufactures edge-local excursions exactly
+where the halo under investigation lives.
+
+**So the delivered path — aligned, warped, merged — currently cannot be checked by any
+instrument outside the crate.** Every external verification this project has run, mine
+included, has been on a path that is not quite the shipped one. An in-crate assertion does
+not fix this; it converts *unverifiable* into *self-certified*, which is worse because it
+looks like a result. The minimum fix is an env-gated writer that emits the warped plane for
+frame k after gather and before accumulation, in the same shape as `--index-map`.
+
+> **A pipeline that only its own code can inspect has no external verification, only
+> self-certification.** Build the seam before you need it, because the moment you need it is
+> the moment you have a defect you cannot localise.
+
+Costs, measured by V-TONE, for the section-11 assertion: **+77.7% fold time (160.0 -> 284.3
+s) and +264 MB**, and not load-controlled with nine agents on the box. That prices it as a
+regression guard behind a flag, never as an always-on guarantee — which is also V-TONE's
+recommendation, and BUILD-HULL's own amendment is sharper still: section 11 is blind to the
+-4233 DN artifact because that artifact is *inside* the hull by construction.
+
+### 43.7 Tally
+
+Three claims of mine died tonight (the skip guard, the blue mechanism, the status line as
+evidence), one of my supporting arguments was found to be one section away from a
+false-positive statistic, and the feature I recommended survived an audit that was actively
+trying to kill it. That is a good night. The corpus is shorter on capability and longer on
+things that cannot be true.
