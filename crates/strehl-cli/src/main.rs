@@ -148,8 +148,25 @@ enum Command {
     Stack {
         /// Directory containing RAW files.
         dir: PathBuf,
-        /// Where to write the merged 16-bit RGB TIFF. Requires exactly one
-        /// --gate. Omit it to measure without writing an image.
+        /// Where to write the merged 16-bit RGB TIFF. Omit it to measure
+        /// without writing an image.
+        ///
+        /// AT MOST one --gate, which is not the same as requiring one:
+        /// omitting --gate folds DEFAULT_GATE and writes an image, which is
+        /// the common case. What is refused is TWO or more, because one file
+        /// cannot carry two gates.
+        ///
+        /// The constraint is the estimator's, enforced in `run_estimator`
+        /// before a frame is read. Under `--merge pyramid` the band gate is
+        /// `--pyramid-gate`, which takes a single value by construction, and
+        /// `--gate` is refused outright.
+        // This help used to state the constraint backwards, claiming --gate was
+        // required. It never was: main.rs fills an empty `gates` with
+        // DEFAULT_GATE before run_estimator sees it, and run_estimator refuses
+        // only `len() != 1`. The wrong version turned a working command line
+        // into one users believed was illegal. Kept as a `//` note rather than
+        // `///` so the retired claim does not reach `--help` itself, where a
+        // reader would meet the false sentence again.
         #[arg(short, long)]
         out: Option<PathBuf>,
         /// Stack at most this many frames, in filename order.
@@ -427,7 +444,10 @@ enum Command {
         /// that varies that much between scenes is hiding its own structure.
         /// This is where that structure becomes visible.
         ///
-        /// Requires exactly one --gate, because n_eff is per-gate.
+        /// AT MOST one --gate, because n_eff is per-gate. Omitting --gate uses
+        /// DEFAULT_GATE and writes the map for it; two or more are refused,
+        /// rather than silently writing gate[0]'s map under a name that does
+        /// not say so. ESTIMATOR BACKEND ONLY: refused under `--merge pyramid`.
         /// `STREHL_DUMP_NEFF=<path>` does the same for a harness that cannot
         /// edit the command line; this flag wins.
         #[arg(long, value_name = "PATH")]
@@ -1151,6 +1171,43 @@ mod tests {
             "expected the non-default backend to carry the \"is NOT the \
              default\" caveat, found {} such caveats in `stack --help`",
             caveats,
+        );
+    }
+
+    /// `--out` and `--n-eff-map` both constrain how many `--gate` values may be
+    /// given, and both used to state that constraint backwards.
+    ///
+    /// The retired wording read as "you must pass --gate". The enforcement says
+    /// otherwise: `main.rs` fills an empty `gates` with `DEFAULT_GATE` before
+    /// `run_estimator` sees it, and `run_estimator` refuses only `len() != 1`.
+    /// So omitting the flag is legal and writes an image, and it is TWO or more
+    /// that are refused. The help was wrong about the tool's own contract in
+    /// the direction that turns a working command line into one a user believes
+    /// is illegal.
+    ///
+    /// Counted in both directions on purpose. Asserting only the absence of the
+    /// false claim would pass just as well if the whole paragraph were deleted,
+    /// which is the failure mode this project keeps rediscovering: a check that
+    /// cannot tell "corrected" from "gone".
+    #[test]
+    fn the_gate_multiplicity_claim_matches_what_is_enforced() {
+        let help = stack_help().to_lowercase();
+
+        let false_claim = help.matches("exactly one --gate").count();
+        assert_eq!(
+            false_claim, 0,
+            "`stack --help` still claims \"exactly one --gate\" in {} place(s). \
+             Omitting --gate is legal -- main.rs fills DEFAULT_GATE and \
+             run_estimator refuses only two or more.",
+            false_claim,
+        );
+
+        let true_claim = help.matches("at most one --gate").count();
+        assert_eq!(
+            true_claim, 2,
+            "expected the \"at most one --gate\" wording on both --out and \
+             --n-eff-map, found {} occurrence(s) in `stack --help`",
+            true_claim,
         );
     }
 
