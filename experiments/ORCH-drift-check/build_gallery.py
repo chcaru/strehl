@@ -106,9 +106,105 @@ VERIFIED = {
         "pollen grains are crisp, glandular cell texture is visible on the "
         "bracts, and no crossing shows a halo.",
     ),
+    "couch-fibers-cpl": (
+        "print-worthy",
+        "The strongest halo evidence in the corpus. Hundreds of translucent "
+        "fibers at every depth crossing each other with deep black gaps "
+        "between them -- bright-fiber-against-black-gap is exactly the geometry "
+        "that makes selection stackers bleed white halos into the gaps. The "
+        "gaps reach full black with crisp boundaries and zero rim.",
+    ),
+    "113MSDCF": (
+        "print-worthy",
+        "Frost dendrites: the classic halo-prone geometry, bright thin "
+        "filaments on a dark ground. The finest branchlets resolve to near "
+        "single-pixel width, the deep gaps between fronds stay genuinely black "
+        "with crisp boundaries and zero rim brightening, and the defocused "
+        "fronds at right render smoothly with no plateaus.",
+    ),
+    "lavendar-cpl": (
+        "print-worthy",
+        "Dense white stellate trichomes plus glassy droplets -- hundreds of "
+        "overlapping translucent whites, a brutal subject. Individual star arms "
+        "resolve separately, and the pearls retain gradation inside their "
+        "highlights rather than blowing out, despite the frame being near-white "
+        "throughout.",
+    ),
+    "flower-bud-alone-cpl": (
+        "print-worthy",
+        "The subject the hull clamp works hardest on (0.42 sigma, the only one "
+        "that genuinely clips), so it is the check that the clamp is invisible. "
+        "Trichomes resolve to near single-pixel width, and hairs crossing the "
+        "smooth patches stay crisp -- which is how you know those patches are "
+        "waxy subject surface and not focus failure. No clipping artifacts, no "
+        "dark rims.",
+    ),
+    "flower-inner-edge-cpl": (
+        "print-worthy",
+        "A petal edge against defocused ground -- the halo test geometry. No "
+        "rim, no bright edge at the occluding boundary, background smoothly "
+        "defocused. Carries a good in-frame control: small dark dust and pollen "
+        "specks stay crisply defined near-single-pixel points on a pale ground.",
+    ),
+    "dry-erase-marker-head-cpl": (
+        "print-worthy",
+        "Carries its own in-frame control. The granular crumb texture along the "
+        "left edge is crisply resolved to individual grains while the wet fiber "
+        "mass beside it is smoother -- same frames, same estimator, same merge. "
+        "So the softness is the wet ink surface, not the stack.",
+    ),
+    "pencil-steep-angle-cpl": (
+        "print-worthy",
+        "Graphite at a steep depth gradient, which is what stresses a merge "
+        "across rapid depth change. Individual crystallite sparkles resolve as "
+        "distinct points, longitudinal striations stay crisp and continuous, "
+        "and the tonal ramp across the bright and dark bands is smooth with no "
+        "stepping.",
+    ),
+    "pencil-flatter-angle-cpl": (
+        "print-worthy",
+        "Graphite striations resolve to near single-pixel width over fully "
+        "resolved paper tooth, with discrete graphite crumbs along the bottom "
+        "edge. The light/dark band boundaries are clean: no rim brightening, no "
+        "plateau patchwork, and a smooth ramp into the specular.",
+    ),
+    "flat-on-ruler-cpl": (
+        "print-worthy",
+        "Brushed metal with striations near single-pixel width, uniformly "
+        "crisp. This is the planar subject, and the one place a selection "
+        "baseline legitimately beats the merge on a detail statistic -- because "
+        "on a plane, selection is well-posed and invents nothing.",
+    ),
+    "wrapped-text-1": (
+        "print-worthy",
+        "The in-frame-control subject: printed lettering whose ink edges are "
+        "visibly soft sitting beside substrate texture that is not, in the same "
+        "frame. That is what makes the softness attributable to the print "
+        "rather than to the stack.",
+    ),
+    "wrapped-text-2": (
+        "print-worthy",
+        "The strongest halo and fringing control in the set: near-black toner "
+        "on near-white stock is the worst case for both. Individual toner "
+        "particles resolve sitting on individual substrate grains, the white "
+        "ground abutting the strokes is clean -- no bright rim, no dark rim, no "
+        "colour fringe on maximum-contrast achromatic edges -- and the "
+        "defocused glyph at top right renders as smooth natural blur rather "
+        "than plateaus.",
+    ),
 }
 
 NOTED = {
+    "lead-1-cpl": (
+        "capture-limited, not a merge defect",
+        "Backlit leaf venation, and one of the capture-limited routings "
+        "(1.41-3.00 px deficit at gated sites). It reads UNIFORMLY soft: veins "
+        "have defined edges and areole cell texture is present but never crisp, "
+        "with no single-pixel detail anywhere in frame. The uniformity is the "
+        "point -- no localised defect, no halo, no patchwork -- which is the "
+        "signature of a capture limit rather than a merge failure. The cause is "
+        "not attributable by eye and is not attributed here.",
+    ),
     "flowers-cpl": (
         "sharp, low-contrast",
         "Resolves individual papillate epidermal cells. This is the corpus "
@@ -301,6 +397,7 @@ def classify(stem):
         cls = {
             "under-resolved": "t-bad",
             "low detail, not a defect": "t-low",
+            "capture-limited, not a merge defect": "t-low",
             "sharp where the subject has structure": "t-ok",
         }.get(kind, "t-ok")
         return cls, kind, text
@@ -491,21 +588,42 @@ capture-limited verdicts are also decided <i>before</i> the merge test, so a
 wrong routing there could hide a merge verdict underneath it.
 </div>
 <div class="note">
-<b>What is verified.</b> Thirteen subjects have been judged print-worthy by eye at
-1:1, and every subject examined so far has passed: <code>bee-1-cpl</code>,
+<b>What is verified.</b> Twenty-four subjects have been judged print-worthy by eye at
+1:1, and all 26 have now been examined: <code>bee-1-cpl</code>,
 <code>bee-2-cpl</code>, <code>bee-3-cpl</code>, <code>leaf-2-cpl</code>,
 <code>tweezers-cpl</code>, <code>coffee-bean</code>, <code>112MSDCF</code>,
 <code>flower-bud-with-background-fern-cpl</code>, <code>119MSDCF</code>,
-<code>109MSDCF</code>, <code>wrapped-text-1</code>, <code>foam</code> and
-<code>highly-angled-ruler-mm-cpl</code>. Compound-eye facets, plumose
-hair barbules, chloroplast speckle, brushed-metal striations and crystal
+<code>109MSDCF</code>, <code>wrapped-text-1</code>, <code>foam</code>,
+<code>highly-angled-ruler-mm-cpl</code>, <code>113MSDCF</code>,
+<code>lavendar-cpl</code>, <code>pencil-steep-angle-cpl</code>,
+<code>pencil-flatter-angle-cpl</code>, <code>dry-erase-marker-head-cpl</code>,
+<code>flower-inner-edge-cpl</code>, <code>flat-on-ruler-cpl</code>,
+<code>coffee-bubbles</code>, <code>couch-fibers-cpl</code>,
+<code>flower-bud-alone-cpl</code> and <code>wrapped-text-2</code>. Compound-eye
+facets, plumose hair barbules, chloroplast speckle, brushed-metal striations,
+graphite striations over resolved paper tooth, individual toner particles on
+individual substrate grains, and crystal
 dendrites near single-pixel width all resolve. <b>The occlusion halo is
 gone</b> &mdash; not only where pale hairs cross a dark defocused eye, but in a
 dense multi-layer tangle of overlapping trichomes, bracts and pollen, which is
 a far harder test and the geometry that rims in every other stacker.
 <br><br>
-<b>Thirteen subjects have now been opened at 1:1 and none shows a merge defect.</b>
-Two of them, <code>119MSDCF</code> and <code>109MSDCF</code>, were
+<b>All 26 subjects have now been opened at 1:1 and none shows a merge defect.</b>
+The two that are not called print-worthy are not merge failures either:
+<code>lead-1-cpl</code> is <i>uniformly</i> soft, which is the signature of a
+capture limit rather than a merge defect, and <code>flowers-cpl</code> is
+capture-limited in regions that fall outside the bracket entirely. Neither is
+given an implied pass.
+<br><br>
+And the zero is now <b>complete</b>, which makes it a stronger claim resting on
+weaker evidence per subject, not a stronger one. Twenty-six inspections by a
+single non-blind observer who expected to find nothing is the exact shape of a
+result that should be distrusted. What would settle it is a second party opening
+the same 26 tiles without seeing these verdicts, or a defect deliberately
+planted in a render to establish that this survey can return a defect at all.
+<b>Neither has been done.</b>
+<br><br>
+Two of the passes, <code>119MSDCF</code> and <code>109MSDCF</code>, were
 <i>my</i> two worst-ranked subjects &mdash; I had labelled them "genuinely
 under-resolved, last of 26". Opening them refutes that: the olive band in
 <code>109MSDCF</code> resolves hundreds of individual bubbles as crisp points.

@@ -146,14 +146,31 @@ separate wrong conclusions in this project came from judging pictures at
 thumbnail scale, including one that had already been sent to two contributors as
 an instruction before it was retracted.
 
-Judged that way, **thirteen subjects are print-worthy today, and every subject
-examined so far has passed**: `bee-1-cpl`, `bee-2-cpl`, `bee-3-cpl`,
-`leaf-2-cpl`, `tweezers-cpl`, `coffee-bean`, `112MSDCF`,
+Judged that way, **every one of the 26 subjects has now been opened at 1:1, and
+no subject anywhere in the corpus shows a merge defect.** Twenty-four are
+print-worthy. Two are limited by the capture rather than by the stacker, which
+is a different verdict and is recorded as one below rather than folded into a
+pass rate.
+
+The twenty-four: `bee-1-cpl`, `bee-2-cpl`, `bee-3-cpl`, `leaf-2-cpl`,
+`tweezers-cpl`, `coffee-bean`, `112MSDCF`,
 `flower-bud-with-background-fern-cpl`, `119MSDCF`, `109MSDCF`,
-`wrapped-text-1`, `foam` and `highly-angled-ruler-mm-cpl`. Individual
-compound-eye facets, plumose hair barbules including their branched
-side-structure, chloroplast speckle, brushed-metal striations, porous cellular
-texture, and crystal dendrites to near single-pixel width all resolve.
+`wrapped-text-1`, `foam`, `highly-angled-ruler-mm-cpl`, `113MSDCF`,
+`lavendar-cpl`, `pencil-steep-angle-cpl`, `pencil-flatter-angle-cpl`,
+`dry-erase-marker-head-cpl`, `flower-inner-edge-cpl`, `flat-on-ruler-cpl`,
+`coffee-bubbles`, `couch-fibers-cpl`, `flower-bud-alone-cpl` and
+`wrapped-text-2`. Individual compound-eye facets, plumose hair barbules
+including their branched side-structure, chloroplast speckle, brushed-metal
+striations, porous cellular texture, graphite striations over resolved paper
+tooth, individual toner particles sitting on individual substrate grains, and
+crystal dendrites to near single-pixel width all resolve.
+
+The two that are not: `lead-1-cpl` is **uniformly** soft — no localised defect,
+no halo, no patchwork, which is the signature of a capture limit rather than a
+merge failure; the cause is not attributable by eye and is not attributed here.
+`flowers-cpl` is **capture-limited** in regions that fall outside the bracket
+entirely, where the merge correctly renders smooth natural defocus. Neither is
+a merge defect, and neither is called a pass.
 
 **The occlusion halo is gone.** Not only where pale hairs cross a dark
 defocused compound eye, but in `flower-bud-with-background-fern-cpl` — a dense
@@ -174,12 +191,12 @@ boundary wrong. The millimetre graduations terminate crisply at that edge with
 **no rim brightening on either side**. The only dark band below the rule is the
 rule's own shadow.
 
-The remaining thirteen subjects are labelled **"not individually judged at
-1:1"** in the gallery rather than given an implied pass. That distinction is
-deliberate: a subject nobody looked at and a subject that passed must not print
-the same way.
+The category "not individually judged at 1:1" — which existed precisely so that
+a subject nobody looked at and a subject that passed would not print the same
+way — is now **empty**, because the survey finished rather than because the
+standard moved. The distinction was worth keeping while it had members.
 
-**Thirteen subjects have now been opened at 1:1 and none shows a merge defect.**
+**All 26 subjects have now been opened at 1:1 and none shows a merge defect.**
 Two of them were my own *worst*-ranked: I had labelled `119MSDCF` and
 `109MSDCF` "genuinely under-resolved, last of 26" on a contrast-normalised
 detail ranking. Opening them refutes it — the olive band in `109MSDCF` resolves
@@ -193,6 +210,16 @@ because the two verdicts are not independent — mine by eye, TRIAGE's numerical
 but both formed by parties who expected the merge to be fine. Two methods that
 could have disagreed did not; neither has yet been shown able to return the
 other answer on this corpus.
+
+And the zero is now **complete**, which makes it a stronger claim resting on
+weaker evidence per subject, not a stronger one. Twenty-six inspections by a
+single non-blind observer who expected to find nothing is the exact shape of a
+result that should be distrusted. What would settle it is a second party opening
+the same 26 tiles without seeing these verdicts, or a defect deliberately
+planted in a render to establish that this survey can return a defect at all.
+**Neither has been done.** Until one is, read this section as "one careful person
+found nothing", which is worth something but is not the same as "there is
+nothing".
 
 Three of my "soft" findings have now been retracted on inspection
 (`flowers-cpl`, `flower-inner-edge-cpl`, and this pair). All three came from a

@@ -181,11 +181,12 @@ def main() -> int:
 
     m_list = re.search(
         r"(\w[\w-]*) subjects have been judged print-worthy.*?"
-        r"has passed:(.*?)Compound-eye",
+        r"examined:(.*?)Compound-eye",
         doc, re.S | re.I)
     if not m_list:
         count_bad.append("could not find the print-worthy sentence at all")
         listed = None
+        stated = None
     else:
         stated = WORDS.get(m_list.group(1).lower())
         listed = len(re.findall(r"<code>([^<]+)</code>", m_list.group(2)))
@@ -199,15 +200,54 @@ def main() -> int:
             count_bad.append(
                 f"print-worthy list repeats a subject ({listed} entries, {uniq} unique)")
 
-    m_open = re.search(r"(\w[\w-]*) subjects have now been opened at 1:1", doc, re.I)
+    # The page used to claim every examined subject passed, so "opened" and
+    # "print-worthy" were the same number and checking them equal was right.
+    # That is no longer true: 26 opened, 24 print-worthy. The weak fix would be
+    # to stop comparing them. The rule that replaces it is STRONGER -- the
+    # difference must be discharged by NAMING every subject that was opened and
+    # did not pass. That makes it impossible to quietly drop a subject from the
+    # pass list, which is the failure the original check existed to prevent.
+    m_open = re.search(
+        r"(?:All\s+)?([\w-]+) subjects have now been opened at 1:1", doc, re.I)
+    opened = None
     if not m_open:
         count_bad.append("could not find the 'opened at 1:1' sentence at all")
-    elif listed is not None:
-        opened = WORDS.get(m_open.group(1).lower())
-        if opened != listed:
+    else:
+        tok = m_open.group(1).lower()
+        opened = WORDS.get(tok, int(tok) if tok.isdigit() else None)
+        if opened is None:
+            count_bad.append(f"unparseable 'opened at 1:1' number {tok!r}")
+
+    if opened is not None and opened != len(cards):
+        count_bad.append(
+            f"'opened at 1:1' says {opened} but the page renders {len(cards)} cards")
+
+    if opened is not None and listed is not None:
+        shortfall = opened - listed
+        if shortfall < 0:
             count_bad.append(
-                f"'opened at 1:1' says {m_open.group(1)} ({opened}) "
-                f"but the print-worthy list has {listed}")
+                f"more print-worthy ({listed}) than opened ({opened})")
+        else:
+            m_exc = re.search(
+                r"not called print-worthy are not merge failures either:(.*?)"
+                r"implied pass", doc, re.S | re.I)
+            if not m_exc:
+                if shortfall:
+                    count_bad.append(
+                        f"{shortfall} opened subject(s) are not print-worthy and "
+                        f"no sentence names them")
+            else:
+                named = set(re.findall(r"<code>([^<]+)</code>", m_exc.group(1)))
+                if len(named) != shortfall:
+                    count_bad.append(
+                        f"{shortfall} opened subject(s) did not pass but "
+                        f"{len(named)} are named ({sorted(named)})")
+                overlap = named & set(
+                    re.findall(r"<code>([^<]+)</code>", m_list.group(2)))
+                if overlap:
+                    count_bad.append(
+                        f"subject named as NOT print-worthy also appears in the "
+                        f"print-worthy list: {sorted(overlap)}")
 
     print()
     print(f"broken image src              : {len(bad_src)}")
