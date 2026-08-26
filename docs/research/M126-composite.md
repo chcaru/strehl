@@ -592,3 +592,61 @@ Stated because ORCH asked to be corrected rather than agreed with.
   a story. What is established is that the metric and the eye disagree, and that the eye
   is right.
 
+---
+
+## 11. Independent convergence, and what I do not claim priority on
+
+I rendered for several hours and committed at **14:05**. Three commits landed
+**before** mine, by parties I did not consult, on findings that overlap mine
+substantially. Recording that plainly, because this milestone has already had to
+correct one priority claim (§15 of the main report, M97e and the robust election).
+
+| commit | time | agent | finding |
+|---|---|---|---|
+| `d8a44e9a` | 13:23 | ORCH | `check-potency.py` — a flag is not wired until an **absurd** value changes the output. Reports `STREHL_RESTORE` as "turning it on changes nothing at all". |
+| `f6695f91` | 13:38 | BUILD-HALO | "`STREHL_VEIL` reaches no pixel on the shipping merge, measured" |
+| `6d9f3ece` | 13:55 | BUILD-SHARP | "`STREHL_RESTORE=1` is the documented no-op, not an unwired stage" |
+
+**I do not claim priority on:**
+
+* **The veil being unreachable from the shipping merge.** BUILD-HALO measured it and
+  committed it 27 minutes before me. My contribution is the *call-site enumeration*
+  (`veil_enabled()` has exactly one site, `merge_cmd.rs:3594`, inside `run_estimator`
+  L2680–4255; zero sites after `run_pyramid` begins at L4256) — the **mechanism** for
+  their measurement, arrived at independently and by a different route.
+* **The `STREHL_RESTORE=1` trap.** BUILD-SHARP committed it 10 minutes before me.
+
+**What I believe is mine, and why:**
+
+* **The `--demosaic` nesting of restore.** ORCH's §63.2 and `check-potency.py` both
+  report restore as inert. Neither says *why*. `restore_plane` has **one** consuming
+  call site (`merge_cmd.rs:5916`) and it is inside `if demosaic { … }`, so on the
+  binned default the stage is not merely off — **it is never called, and says
+  nothing.** That distinction is the whole point of ORCH's own warning that a
+  structurally inert gate and a measurably useless gate produce the same number and
+  mean opposite things. Forced reachable under `--demosaic` it **runs, announces
+  itself, and reports `recovered 0.0000`** at four caps spanning 7.3×. So it is a
+  **measured identity**, which is a different verdict from "unwired" and points at
+  the Wiener fit rather than at the wiring.
+* **The halo call-site set** (`:3841–3978`, all inside `run_estimator`) and the
+  **two-point frame-count dose-response** (byte-identical at 22 frames, 12.772 % of
+  pixels at 299).
+* **ORCH's gate numbers being sRGB-space** (§4).
+* **The `--pyramid-gate 4.5` flat-field result** (§5b) — the only *promotable* finding
+  in this report.
+
+**The convergence is worth more than any single strand.** Four methods — ORCH's
+absurd-value potency check, BUILD-HALO's pixel measurement, BUILD-SHARP's source
+read, and my call-site enumeration plus render matrix — reached the same place from
+four directions on the same night. None of us designed that. It is the strongest
+evidence in the report that **the configuration this project measures and the
+configuration it ships are different configurations**, and it is stronger precisely
+because no one coordinated it.
+
+One caution against reading the convergence as unanimity: ORCH's `check-potency.py`
+rule is *"a flag is not wired until an absurd value has changed the output."* By that
+rule `STREHL_RESTORE` is DEAD. By mine it is a **live stage that computes an
+identity**. Both are correct statements about different questions, and the second is
+the one that decides whether anybody should go and fix it. **Nobody should.** The fit
+refuses because there is no headroom — which is ORCH's own deconvolution null
+(`1.0014 ± 0.0184`) arriving a second time, through a completely different door.
