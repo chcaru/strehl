@@ -271,8 +271,25 @@ map, and it is the difference between a defect report and an instrument.
 | Core operation | select the sharpest frame | estimate from all frames, gated by measured noise |
 | Colour domain | demosaic first, then stack | **CFA-native**; the merge emits RGB directly |
 | Noise | not modelled | calibrated `sigma^2(S, ISO)` injected into every stage |
-| Output | an image | an image **plus a per-pixel confidence map** |
+| Output | an image | an image (**see the caveat below — the confidence map is not on the default path**) |
 | Capture geometry | one hardcoded assumption | fitted per stack, not baked from one rig |
+
+**The per-pixel confidence map is designed, built, and not reachable on the
+backend that ships.** This row previously claimed it as a shipped differentiator
+and that was an overclaim. What is true: `--n-eff-map` writes a genuine
+per-pixel map of how many frames were effectively averaged
+(`merge_cmd.rs:2636`), and it is one of **nine** flags the CLI refuses on the
+default pyramid backend — along with `--index-map`, `--stats`, `--gate`,
+`--target-n-eff`, `--photometric`, `--flat-roi` and `--detail-roi`. They belong
+to the estimator, and the estimator does not currently run out of the box. So
+the default path emits an image and nothing else, and a user cannot presently
+ask this tool which parts of its output to trust.
+
+That is the single largest gap between what this project is *for* and what it
+currently *does*. Confidence as an output is the thesis, not a feature: a
+stacker that cannot separate "retouch this" from "reshoot this" is a bug report
+rather than an instrument. Closing it is the top priority after the merge
+itself.
 
 No existing tool is RAW-native. Zerene states plainly that "no stacking software
 really works directly with raw files"; Helicon's RAW workflow demosaics via
