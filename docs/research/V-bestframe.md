@@ -15,6 +15,15 @@ merge is measurably softer (ratio 0.705 and 0.709) than frame `k=0`, the
 least-warped frame in the stack. That is discussed in section 7 and it is not
 subject-specific.
 
+The 26-subject survey in section 11 sharpens this rather than merely extending
+it. `flowers-cpl` is **not** the worst subject on the roster: four rank below it
+and `109MSDCF` loses in 95.5% of its detail tiles. But those subjects have 193 to
+246 detail tiles where `flowers-cpl` has 48, so `flowers-cpl` is not a member of
+that class. The survey also found a real defect on **other** subjects with a
+mechanism in the merge's own log, and two defects in my own instrument that
+appeared only when it was extended past the two headline subjects. Both are
+reported in section 11.
+
 ---
 
 ## 1. What was asked and what would answer it
@@ -158,6 +167,23 @@ crossover**, which is a property of the capture:
 | flowers-cpl, ungated | 176 | 20 | 49 of 352 = 13.9% | 81.6% | 1.379 | 3 (6.1%) |
 | flowers-cpl, gated | 176 | 12 | 48 of 352 = **13.6%** | **83.3%** | 1.414 | 2 (4.2%) |
 
+### The deficit in absolute terms, and its distribution
+
+A mean would hide exactly the localised failure this was sent to find, so the
+shortfall is given as percentiles over tiles in DN of fine-band amplitude.
+Negative means the merge is **ahead**.
+
+| | detail tiles | merge behind | frame minus merge, p05 | p50 | p95 | worst single tile |
+| --- | --- | --- | --- | --- | --- | --- |
+| bee-1-cpl, gated | 222 | 1 (0.5%) | -1025.9 DN | **-433.3 DN** | -67.3 DN | 6.2 DN behind |
+| flowers-cpl, gated | 48 | 8 (16.7%) | -171.7 DN | **-53.7 DN** | +28.3 DN | **43.0 DN behind** |
+
+On `flowers-cpl` the median detail tile has the merge **ahead by 53.7 DN**. Among
+the 8 tiles where it is behind, the median shortfall is 12.7 DN and the worst
+anywhere in the subject is 43.0 DN against a frame detail of 139 DN there — the
+30% softening of section 7. `flowers-cpl` does carry a larger worst-case
+shortfall than the control (43.0 DN against 6.2 DN), and that is stated rather
+than averaged away; it amounts to 8 of 352 tiles, or 2.3% of the image.
 ## 6. The registration gate, and why it is not selection on the arm under test
 
 Every residual false positive in **both** subjects traced to the same cause.
@@ -247,8 +273,171 @@ the control subject too.
 
 ---
 
-## Ranked survey
+## 11. Ranked survey: is flowers-cpl alone?
 
-Filled in from `experiments/V-bestframe/rank.py` once the 26-subject run
-completes. `highly-angled-ruler-mm-cpl` and `lead-1-cpl` are measured at the same
-depth as the headline pair rather than left for the ranking to decide.
+All 26 renders in `GALLERY-FIXED-SRGB` were measured at 6 adjacent pairs, so 12
+frames, except the two subjects called out by name and the two headline subjects,
+measured at 10 pairs, so 20 frames. **A bound from 12 frames is a bound from 12
+frames.** It can only ever say that no sampled frame beat the merge.
+
+### Two defects in my own instrument, found by extending it
+
+Neither affects sections 1 to 10, which rest on `flowers-cpl` and `bee-1-cpl`
+alone, but both would have corrupted this table.
+
+**The registration gate was inert.** PowerShell's `*>>` writes UTF-16LE with a
+BOM. `peaks.py` read its logs with `read_text(errors="ignore")`, which decoded
+that as UTF-8 and produced NUL-interleaved text matching no regex. Every pair
+returned a `nan` peak, `keep` was all-true, and the gate removed nothing on all
+24 survey subjects while the table header said `peak gate 0.80`. **A gate that
+silently passes everything prints exactly like a gate that found nothing to
+remove.** Caught because `pkMed` was `nan` for 24 subjects and 0.889 and 0.948
+for the two whose logs were written by a different route. Fixed by detecting the
+BOM.
+
+**The merge floor was estimated from real signal.** `arms()` sets the merge noise
+floor `Fm` to the median of empty tiles, or, if there are fewer than 8, to the
+5th percentile of merge band energy. On a subject with detail everywhere that
+percentile is not a noise floor, it is the quietest real tile, and subtracting it
+removes real signal from the merge arm. It returned a merge floor of 571.8 DN
+against a single-frame floor of 20.3 DN on `flat-on-ruler-cpl`. **An average of
+79 frames cannot be noisier than one frame**, so that is impossible on its face.
+It held on 13 of the 24 measured subjects. The column below labelled `capped`
+replaces `Fm` with `min(Fm, F)` per tile, which removes the impossible
+over-subtraction but makes the merge arm as strong as physics permits, so
+**`capped` is an upper bound on merge performance, not a best estimate.** Both
+columns are shown.
+
+### The table
+
+`detail` counts tiles where the best frame holds signal at SNR >= 3 above that
+subject's own fixed-pattern floor. It is computed from the frame arm and the
+floor alone, the merge never enters it, so it is a property of the capture and is
+immune to the merge-floor defect above. `avgFine` is the merge's own reported
+fraction of finest-band coefficients where no frame cleared the `--gate 4` noise
+gate and it averaged instead of selecting.
+
+| subject | frames | read | detail | capped >= frame | med ratio | tiles < 0.8 | strict >= frame | avgFine |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 109MSDCF | 22 | 12 | 246/352 | 4.5% | 0.86 | 84 | 4.5% | 91.3% |
+| 119MSDCF | 33 | 12 | 221/352 | 22.6% | 0.91 | 55 | 22.2% | 84.7% |
+| flower-bud-alone-cpl | 205 | 12 | 193/352 | 46.6% | 0.93 | 50 | 43.5% | 86.0% |
+| flower-bud-with-background-fern-cpl | 299 | 12 | 202/352 | 68.8% | 1.84 | 52 | 68.3% | 66.1% |
+| **flowers-cpl** | 176 | 12 | **48/352** | **83.3%** | 1.41 | 2 | 83.3% | 94.5% |
+| flat-on-ruler-cpl | 79 | 12 | 352/352 | 86.4% | 2.09 | 0 | invalid | 0.1% |
+| dry-erase-marker-head-cpl | 299 | 10 | 143/352 | 86.7% | 3.01 | 16 | invalid | 54.8% |
+| wrapped-text-2 | 120 | 12 | 271/352 | 87.1% | 2.49 | 13 | invalid | 32.3% |
+| tweezers-cpl | 100 | 12 | 204/352 | 89.7% | 3.25 | 2 | 89.7% | 47.9% |
+| pencil-steep-angle-cpl | 299 | 8 | 75/352 | 90.7% | 2.38 | 6 | 90.7% | 64.2% |
+| coffee-bubbles | 19 | 12 | 352/352 | 92.0% | 1.28 | 2 | invalid | 82.7% |
+| leaf-2-cpl | 182 | 10 | 195/352 | 93.3% | 2.24 | 4 | invalid | 76.0% |
+| lavendar-cpl | 299 | 8 | 105/352 | 95.2% | 4.14 | 5 | 95.2% | 67.9% |
+| pencil-flatter-angle-cpl | 299 | 8 | 72/352 | 95.8% | 2.84 | 3 | 93.1% | 62.2% |
+| **lead-1-cpl** | 123 | 20 | 329/352 | **97.0%** | 1.80 | **0** | invalid | 72.4% |
+| 113MSDCF | 63 | 12 | 351/352 | 97.7% | 1.52 | 0 | invalid | 47.9% |
+| wrapped-text-1 | 130 | 12 | 285/352 | 97.9% | 3.71 | 0 | invalid | 7.6% |
+| bee-2-cpl | 299 | 8 | 194/352 | 97.9% | 3.48 | 3 | invalid | 49.7% |
+| bee-3-cpl | 299 | 8 | 210/352 | 98.1% | 3.55 | 2 | invalid | 36.3% |
+| coffee-bean | 105 | 12 | 227/352 | 98.7% | 2.17 | 0 | 98.7% | 38.5% |
+| flower-inner-edge-cpl | 299 | 6 | 168/352 | 99.4% | 3.25 | 0 | invalid | 58.6% |
+| **bee-1-cpl** | 299 | 12 | 222/352 | **99.5%** | 2.72 | **0** | 99.5% | 41.5% |
+| 112MSDCF | 79 | 12 | 348/352 | 100.0% | 1.61 | 0 | invalid | 61.2% |
+| couch-fibers-cpl | 299 | 8 | 177/352 | 100.0% | 2.82 | 0 | invalid | 49.8% |
+
+Partition, so that a skipped subject cannot read as a passing one:
+
+| outcome | n |
+| --- | ---: |
+| rendered on disk | 26 |
+| measured and ranked above | 24 |
+| NOT MEASURABLE | 2 |
+| **partition sums to** | **26** |
+
+The two that are not measurable are named, with the reason, in the next section.
+Neither is reported as passing.
+
+### flowers-cpl is not the worst subject, and that sharpens the verdict
+
+Four subjects rank below `flowers-cpl` and one of them, `109MSDCF`, is worse by
+an order of magnitude: the merge loses in 95.5% of its detail tiles at a median
+ratio of 0.86. So `flowers-cpl` is not the visible member of a class of merge
+failures. **It is not in that class at all.**
+
+What separates it is the merge-independent column. `flowers-cpl` has **48 of 352
+detail tiles**. The next lowest among ranked subjects is 72, and every subject
+that ranks below it has 193 to 246. Its frames contain roughly a quarter as much
+resolvable detail as the nearest subject and a fifth as much as its neighbours in
+the ranking. **That is H1 stated in a quantity the merge never touches.**
+
+### A real defect, on other subjects, with a mechanism
+
+The three subjects below `flowers-cpl` show the signature `flowers-cpl` lacks:
+plentiful frame detail and a merge that loses on it. The adversarial render for
+`109MSDCF` is `images/FIG4-109MSDCF-all-H2-candidates.jpg`. Unlike the
+`flowers-cpl` candidate in section 7, whose winning frame was visibly sensor
+noise, these frames show directional filamentary texture that **correlates with
+the merge's own large-scale structure** -- the dark comma in tile (2,5) is
+present in both arms -- so it is scene content, not noise. Display gain between
+the two panels is 1.015, so the comparison is not a stretch artefact.
+
+The mechanism is in the merge's own log. Ranking subjects by `avgFine`:
+
+| group | n | median merge >= frame |
+| --- | ---: | ---: |
+| avgFine >= 80% | 5 | 46.6% |
+| avgFine < 80% | 19 | 97.0% |
+
+Spearman rank correlation between `avgFine` and the merge-beats-frame rate is
+**rho = -0.486, p = 0.016** across 24 subjects. Against `detail` it is
+rho = -0.334, p = 0.110, not significant, so this is not merely poor subjects
+averaging more: **the averaging fraction predicts merge loss beyond what capture
+quality explains.** Where the `--gate 4` noise gate finds no frame above the
+floor, the merge averages, and averaging a scene that focus breathing displaces
+blurs the fine band.
+
+`flowers-cpl` is the outlier above this trend, and consistently so. It has the
+**highest** averaging fraction on the roster at 94.5% and still ranks mid-pack,
+because it has almost no detail for the mechanism to destroy. **It is maximally
+exposed to this defect and largely unharmed by it only because its capture is
+poor.** That is worth saying plainly: fixing the gate would not fix
+`flowers-cpl`.
+
+This is a new finding, it is outside the H1/H2 question I was asked, and I have
+not verified it to the standard of sections 1 to 10. It rests on 12 frames per
+subject, one adversarial render, and a rank correlation over 24 points. **It
+should be treated as a flagged candidate for its own milestone, not as a
+result.**
+
+### The two subjects called out by name
+
+**`highly-angled-ruler-mm-cpl` -- NOT MEASURABLE, and the reason is a finding.**
+Its render log has no `coverage` line because it has no warp map: `alignment :
+REFUSED -- a tilted subject; a global similarity cannot describe it (M86).
+Merging unregistered.` The gallery therefore contains one merge built from
+unregistered frames. My C5 control derives scene displacement from the
+registration solution, which is degenerate here, so predicted displacement is
+identically 0.0 px across all 352 tiles, no tile reaches the 20 px threshold, and
+the fixed-pattern floor is undefined. Independently, 8 of its 10 pairs register
+below 0.80 with a maximum peak of 0.814, the worst on the roster. **Two
+independent signals agree that a frame cannot be put into correspondence with
+this merge.** It is not passing and it is not failing; this instrument cannot
+speak about it.
+
+**`lead-1-cpl` -- measured, and healthy.** 20 frames read, minimum registration
+peak 0.936, 329 of 352 detail tiles, merge at or above the best frame in 97.0% of
+them at a median ratio of 1.80, and **zero tiles below 0.8**. Its strict column is
+invalid for the merge-floor reason above, but the capped bound and the zero count
+of deficient tiles both say the thumbnail-scale worry is not borne out.
+
+**`foam` -- NOT MEASURABLE.** Its fixed-pattern floor reads 0.09 DN against a
+7.54 to 30.74 DN family across every other subject, at two separate control gaps
+of 60 and 30 frames, so it is not a gap artefact. A floor near zero makes SNR
+diverge and every tile read as detail. Cause not established.
+
+### What this section does not establish
+
+The survey does not measure any subject at the depth of sections 1 to 10. It
+reads 12 frames of up to 299, it inspects one adversarial render on one subject,
+and 13 of its 24 ranked subjects carry only an upper bound on the merge arm. It
+is a screen for where to look next, not a verdict on any subject other than
+`flowers-cpl`.

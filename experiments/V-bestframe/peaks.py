@@ -18,11 +18,22 @@ HDR = re.compile(r"^(\S+): (\d+) frames on disk, probing (\d+) ADJACENT PAIRS")
 ROW = re.compile(r"^\s+k=\s*(\d+)/(\d+)\s+\S+\s+s=([\d.]+)/([\d.]+)\s+peak=([\d.]+)/([\d.]+)")
 
 
+def _decode(path):
+    """PowerShell's `*>>` writes UTF-16LE with a BOM. Decoding that as UTF-8
+    yields NUL-interleaved garbage that matches no regex, so a gate reading it
+    silently passes everything -- indistinguishable from a gate that found
+    nothing to remove. Detect the BOM instead of assuming an encoding."""
+    b = path.read_bytes()
+    if b[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        return b.decode("utf-16", errors="ignore")
+    return b.decode("utf-8-sig", errors="ignore")
+
+
 def all_peaks():
     out = {}
     for lg in sorted(OUT.glob("*.log")):
         subj = None
-        for line in lg.read_text(errors="ignore").splitlines():
+        for line in _decode(lg).splitlines():
             m = HDR.match(line)
             if m:
                 subj = m.group(1); out.setdefault(subj, {}); continue
