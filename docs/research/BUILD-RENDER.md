@@ -1562,6 +1562,44 @@ away.
 
 ---
 
+## 19. Honest state of the product
+
+Stated the way ORCH framed it, because it is a narrower and more useful claim
+than "the output is bad":
+
+**Sound on subjects without hard occlusion boundaries. Disqualified on subjects
+with them.**
+
+| judgement | subjects | by |
+|---|---|---|
+| print-worthy now | `113MSDCF` (frost dendrites, 63 frames), `119MSDCF` | ORCH, at 100% |
+| sound machinery, localised defect | `couch-fibers-cpl`, `coffee-bubbles` | BUILD-RENDER + V-TONE |
+| subject print-quality, silhouette disqualifying | `bee-1-cpl` — hairs and eye facets are there, and a hard bright outline traces the whole silhouette "like a badly cut-out sticker" | ORCH |
+| tone extreme, but a false alarm | `flower-bud-alone-cpl` — §17 | BUILD-RENDER, by looking |
+
+What changed the framing was the tone fix. The veil was masking the boundary
+between "this subject is finished" and "this subject is not", so everything read
+as uniformly mediocre. Removing it made the remaining defect legible and
+**local**: the rim at depth discontinuities, which is BUILD-HALO's lane, plus
+outline ghosting on `bee-1-cpl` routed to BUILD-SHARP as registration rather
+than rim.
+
+Two corrections to carry, both from ORCH via BUILD-HALO:
+
+- **`C:\dev\strehl-out\gallery\` is not an unfixed baseline.** At `859edac`
+  the adaptive-radius edge work was already default ON, so "the halo is
+  undiminished" was measured on the *treated* arm.
+- **`gallery\couch-fibers-cpl.jpg` from that run is the softened render** the
+  guard rejected. It is not a texture reference. The guard was re-seeded from
+  ORCH's clean `1cacb61` pin instead (§18), which sidesteps it entirely.
+
+Nothing in my lane is currently the disqualifier. The remaining items I own are
+cosmetic or preventative: vignetting on white sweeps (§17, wants the flat-field
+campaign), `coffee-bubbles` residual zero-blue at 13.47%, and `109MSDCF` at
+7.58% zero-red.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
