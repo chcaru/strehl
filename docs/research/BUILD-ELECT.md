@@ -122,6 +122,25 @@ a merge change but the **coverage output** of 12.6: no frame in `flower-bud`'s
 bracket resolves the trichome fringe, so "the artifact is gone" and "the detail is
 there" are different claims and only the first is supported.
 
+**Corrected by section 14, after independent verification.** Section 13 measured on
+a **tone curve**: `bm/...-ctrl.tif` was rendered `--srgb` (black 0.00985, white
+0.35458) and `bm/...-blend.tif` came from a **different executable with a different
+black point**, so its two arms differed photometrically as well as in the merge. A
+compliant pair — one binary, both arms linear — was already on disk in `flip/`, and
+I read that directory and inferred from filenames what its logs state in their
+first line. Three numbers are withdrawn: the **0.37%** headline, the **12.47 ->
+5.68** attribution split, and the deep-interior **+4.46%** level change, which
+reverses to **-11.83%** on a compliant instrument. **The conclusion is unchanged
+and the finding is stronger.** On one binary with both arms linear the control —
+which is the default ship path — reads **12.65% at d=21 px**, matching the pinned
+gallery baseline's 12.47% to 0.18 points, and the blend has **no interior local
+maximum anywhere inside d=275 px**. So nothing removed half the ring before the
+blend: **the whole of it is the blend**, and section 13 under-credited another lane
+by inventing a step that does not exist. One measurement now runs against the
+blend, in 14.4: on `coffee-bean`, the pre-registered placebo, the blend introduces
+profile structure in the **47-93 px band** that the control does not have, **1.17%
+against 0.07%** at the same distance. At d <= 40 px the placebo still holds.
+
 ---
 
 ## 1. The picture, first
@@ -1712,3 +1731,173 @@ Pictures, in the order to look at them:
 - `pics/BLEND-fb.png` - full frame and 1:1, cut-out sticker against clean silhouette
 - `pics/BLEND-lavendar.png`
 - `pics/BLEND-residual.png`
+## 14. Section 13 measured on a tone curve. Corrected here.
+
+An independent verifier was run against section 13 and found a defect that
+invalidates three of its numbers. The defect is mine, it is the one this report
+warns against in its own preamble, and I am recording it in full rather than
+quietly restating the table.
+
+### 14.1 The retraction
+
+Section 13 states: *"All measurements below are on linear 16-bit TIFFs from
+`C:\dev\strehl-out\BUILD-BLEND\bm\`. No JPEG, no `--srgb`."* **That is false.**
+MEASURED, from the render logs beside the files:
+
+| file | binary | colour | tone |
+| --- | --- | --- | --- |
+| `bm/flower-bud-alone-cpl-ctrl.tif` | `strehl.exe` | camera RGB -> **sRGB** | black 0.00985, white 0.35458 |
+| `bm/flower-bud-alone-cpl-blend.tif` | **`blend-render.exe`** | camera RGB -> **sRGB** | black **0.00000**, white **0.36676** |
+
+So section 13's control arm carries an sRGB transfer curve, and the two arms come
+from **different executables with different black and white points**. Every DN
+comparison in 13.4 and 13.5 crosses that difference. The project's standing rule
+is that the display curve amplifies edge artifacts several-fold and that nothing
+may be measured on an `--srgb` render; I wrote that rule into this report and then
+broke it.
+
+Worse, **a compliant pair was already on disk and I had read the directory.**
+`flip/flower-bud-alone-cpl--estimator.tiff` and `--pyramid.tiff` are **one binary,
+both arms linear**, differing only in the merge. Their logs say so in the first
+line: `estimator` is *"regularised winner + noise-gated average (THE DEFAULT PATH,
+an estimator)"* and `pyramid` is *"LAPLACIAN MULTI-BAND MERGE"*. Section 13.2
+inferred from the filenames that these were "two blend variants rather than an arm
+and its control". **They are exactly an arm and its control.** Section 13.7's first
+bullet, *"No same-binary control exists on disk"*, is therefore not incomplete but
+**false**, which is the failure mode that section named as the most serious
+available to it.
+
+The lesson is narrow and worth keeping: **a render's provenance lives in its log,
+not in its filename.** I inferred from names in a directory whose logs state the
+answer in their first line.
+
+### 14.2 The corrected headline
+
+Re-run on the compliant pair: one binary, both arms linear, one subject mask
+borrowed from the control so the coordinate origin cannot move. MEASURED:
+
+| arm | far field | darkening at 0-2 px | interior peaks (d px, prominence) |
+| --- | --- | --- | --- |
+| `flip/...--estimator` (control) | 19163 DN | -7731 DN = **-40.3%** | **(21, 12.65%)**, (87, 0.31%), (105, 0.10%) |
+| `flip/...--pyramid` (blend) | 19050 DN | -6630 DN = **-34.8%** | (275, 1.24%), (295, 1.22%) |
+
+The control's profile turns over twice, which is the ring sitting inside the veil:
+-40.35% at d=1, up to **-13.12% at d=21**, back down to -25.59% at d=95, then up to
+the far field. The blend's profile is **monotonic from d=1 to d=275**: -34.81%,
+-22.98%, -13.83%, -8.24%, -6.57%, -5.36%, -4.99%, -4.48%, -4.07%, -3.52%, -2.98%,
+-2.12%, -1.55%, -0.62%, -0.09%, +0.32%, +0.58%, +0.59%. **It has no interior local
+maximum anywhere inside d=275 px.**
+
+**The pre-registered bar was 12.0% -> <= 1%. On the correct instrument the control
+reads 12.65% and the blend has no near-field ring at all.** The remaining 1.24% at
+d=275 px is far-field wobble; the control carries far-field structure too.
+
+The number **0.37%** from section 13.1 is withdrawn. It was a property of the sRGB
+curve compressing a bright ring against a compressed far field.
+
+### 14.3 The attribution was wrong, and wrong against BUILD-BLEND
+
+Section 13.1 claimed the control arm was not the gallery baseline, that it "already
+reads 5.68% against the pinned binary's 12.47%", and that something landing before
+the blend "had already removed a bit over half the ring". **Refuted.**
+
+On one binary with both arms linear, the control - which is the **default ship
+path** - reads **12.65%**, against the pinned gallery baseline's **12.47%**. Those
+agree to 0.18 points. **Nothing removed half the ring before the blend. The whole
+of it is the blend.** The 12.47 -> 5.68 step I reported was the tone curve, and I
+under-credited another lane by inventing a step that does not exist.
+
+The same correction applies to section 13.1's DN caveat. It said the pin and
+BUILD-BLEND's build "use different output scaling ... a factor of 3.27". They do
+not: rendered linear, BUILD-BLEND's build gives **19163 DN** far field against the
+pin's **19033 DN**, 0.7% apart. The 3.27x was the tone curve on one arm.
+
+What survives, and is now cleaner because it is same-binary and linear: **the blend
+moves the veiling term**, darkening **-40.3% -> -34.8%**, a 5.5-point change in a
+quantity that belongs to BUILD-HALO and is specified. That should be routed.
+
+### 14.4 The negative control IS moved, and this is the one finding against the blend
+
+`coffee-bean` is the pre-registered placebo: it has no ring, so an arm that moves
+its profile is doing something other than what it claims. On the same-binary
+linear pair, mask borrowed from the control. MEASURED, interior peaks:
+
+| arm | darkening | peaks at d <= 40 px | peaks at d = 41-100 px | headline |
+| --- | --- | --- | --- | --- |
+| `--estimator` (control) | -39.3% | 0.38% at d=25 | 0.17% at d=55, **0.07% at d=93** | 2.46% at d=165 |
+| `--pyramid` (blend) | -37.2% | none | 0.61% at 51, 0.57% at 81, 0.72% at 89, **1.17% at d=93** | 1.63% at d=312 |
+
+**At the distance where `flower-bud`'s ring lives (d <= 40 px) the placebo holds:
+the blend introduces nothing.** But in the **47-93 px band the blend introduces
+structure the control does not have**, rising to **1.17% against 0.07% at the same
+distance, a factor of 16.7**. By the letter of the pre-registered rule, that is the
+blend doing something other than what it claims, and it is the only measurement in
+sections 13 or 14 that runs against it.
+
+Two honest qualifications, neither of which disposes of it. This mask covers
+**59.62% of the frame in 2115 components**, so distance from the silhouette is
+poorly defined here and section 11 already recorded that. And the blend also moves
+`coffee-bean`'s darkening, -39.3% -> -37.2%, consistent with 14.3. It should be
+looked at rather than argued about, and I did not look at it.
+
+### 14.5 What else section 13 got wrong
+
+- **The deep-interior level change reverses sign on a compliant instrument.**
+  Section 13.5 reports `flower-bud`'s deep interior at 13137 -> 13723 DN, **+4.46%**.
+  The verifier measured 1649 -> 1454 DN, **-11.83%**, on the linear pair. The two
+  `bm` arms differ in black point by 0.00985 of full scale = **645 linear DN**,
+  against a deep interior sitting at 1649 DN: the black-point mismatch alone is 39%
+  of the signal. **The +4.46% is not attributable to the merge.** This is exactly
+  the additive bias the owner made a hard requirement tonight, manufactured by my
+  render pair instead of caught by it. Withdrawn.
+- **Section 13.1 mixes two masks in one paragraph.** The table uses the pin's mask;
+  the prose beneath it ("-39% at the silhouette ... trough at d=135 px") comes from
+  a run using the control arm's own mask. Both were MEASURED, presented as one
+  profile. On the pin mask those rows read -19.36%, ring at d=21, trough at d=105.
+- **Sections 13.4 and 13.5 stand as arithmetic and fall as physics.** The verifier
+  independently reproduced the selection-bias reversal on all three subjects
+  (`flower-bud` -25.43% forward against +8.31% reverse; `couch-fibers` unselected
+  +2.31%, reproducing to the digit), so 13.4's self-correction is sound. But those
+  numbers were computed across the sRGB, two-executable, two-black-point pair, so
+  the **magnitudes** are not trustworthy. The `lavendar` cost survives in sign and
+  rough size on independent re-derivation (-10.0% and -10.1% by two unbiased
+  estimators) but its adjudication as *"the one number whose sign survives its
+  reversal control"* does **not** reproduce: the verifier's reverse estimate is
+  +1.5%, indistinguishable from zero. Treat `lavendar`'s contrast loss as real and
+  around -10%, and treat its reversal survival as withdrawn.
+- `couch-fibers` **is not damaged** on either instrument. That guard holds.
+
+### 14.6 The conclusion does not change
+
+**Close the lane.** Every correction above touches a number and none touches the
+finding:
+
+- The commissioned defect is gone on the **correct** instrument, and by a wider
+  margin than section 13 claimed: **no interior local maximum at all** inside
+  d=275 px, against a control with 12.65% at d=21.
+- The verifier looked for somewhere the blend is visibly worse, choosing crops by
+  its own criterion and level-matching to +/-15% so that "a bright wash was removed"
+  could not explain the result, on both `flower-bud` and `lavendar`. **It found
+  none.** At every site the control holds a hard-edged plateau and the blend holds
+  plant, and it reproduced this on the linear pair as well, so section 13.3's
+  picture claim does not depend on the tone curve.
+- Section 12's mechanism is untouched: it was measured on a winner-field dump, not
+  on these renders.
+
+The open item handed back is 14.4, the placebo motion at 47-93 px on `coffee-bean`,
+which is small, real, and unexamined by eye.
+
+### 14.7 What section 14 did not verify
+
+- **`lavendar` and `couch-fibers` were never re-measured on linear data.** Their
+  cost numbers in 13.4 and 13.5 remain computed through the sRGB, two-binary pair.
+  Sign and rough magnitude were independently reproduced; the magnitudes should not
+  be cited until re-run on `flip/`.
+- **14.4 was not looked at.** It is a profile, not a picture, which is the failure
+  this report has committed twice.
+- `flower-bud`'s Weber row is unmeasurable by that instrument on either render pair
+  and stays that way.
+- No `bee-1-cpl` render under the blend. The 12.6 abstention plane is still
+  unimplemented and unrendered.
+- The verifier's own numbers are its own; where 14.5 cites them they are marked as
+  its measurements, not mine. I re-derived 14.2, 14.3 and 14.4 myself.
