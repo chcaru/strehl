@@ -1,0 +1,11 @@
+render shape (full-res, --srgb, demosaiced) : (4688, 7040, 3)
+flat patch chosen on the MEAN of both arms  : y=912 x=384 (200x200)
+
+  selection  --gate 0 : sigma 0.006381   README says 0.006381
+  estimation --gate 2 : sigma 0.000987   README says 0.000987
+  ratio               : 0.1546x               README says 0.1546x
+  equivalent frames   : 41.82         README says 41.8
+
+  patch mean level    : gate0 0.74135  gate2 0.73756  (ratio 0.99489)
+
+REPLICATION EXACT -- the recovered patch is the claim's.

@@ -252,6 +252,20 @@ honest outcome. What the pyramid's noise reduction costs in sharpness is
 
 ## 5. The flat-ROI admission test — a new instrument, commissioned
 
+> **PARTIALLY RETRACTED.** This test is **missing a photometric term and
+> over-rejects.** A single unstacked frame carries the bracket's per-frame level
+> drift; a merged arm does not, because the merge fits and removes it. So
+> `temporal` is inflated by a term neither arm ever sees. On `leaf-2-cpl` the
+> README claim's own ROI reads 1.494 here and **1.017 once a whole-plane
+> per-frame gain is removed**, and across 400 windows the admissible count goes
+> from 1 to 17. The test should be read as `temporal` **after** removing a
+> whole-plane per-frame gain. Separately, §5.1's verdicts are **not applicable
+> to arm-vs-arm ratios between two merges of the same bracket** at all: measured
+> there, admission predicts the error at corr −0.002. The exclusions below were
+> in the safe direction — no published row rests on the defect — but the stated
+> reason for them is not established. Full measurement, controls and mechanism:
+> [`BUILD-PYRNOISE-ADJUDICATION.md`](BUILD-PYRNOISE-ADJUDICATION.md) §3 and §4.
+
 The flat-ROI protocol assumes the region carries noise and nothing else. That
 assumption is never checked; the ROI is picked by a low-high-pass argmin and
 trusted. On a deep focus sweep it is false, and falsifying it changes the
