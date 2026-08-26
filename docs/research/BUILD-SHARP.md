@@ -3129,3 +3129,119 @@ that cost is already inside the 0.6978 gather figure rather than additional to
 it. And this is one stack; the finding is that the *model* absorbs
 magnification, which generalises, rather than that every stack registers to
 0.35 px, which does not.
+
+## 27. Demosaic vs gather: composition, and a 1.30x recoverable shortfall
+
+Scope note: this section is the whole of my remaining assignment. It answers
+ORCH's two questions -- do the two losses compose, and is the demosaic loss
+correctable -- and it corrects a unit error of my own in s22.4.
+
+Instrument: `experiments/BUILD-SHARP/src/compose_price.py`, driving the shipped
+`strehl_core::demosaic` through `crates/strehl-core/examples/demosaic-plane.rs`
+and the shipped `Resampler::sample` gather. Green channel, per-axis horizontal,
+gather phases averaged over a uniform grid.
+
+### 27.1 The unit error in s22.4, and its size
+
+s22.4 multiplied a gather MTF quoted at f = 0.35 by a demosaic MTF quoted at
+f = 0.35 and reported the product. Those are two different physical
+frequencies. The gather runs on CFA planes at half sensor resolution, so its
+argument is cycles per CFA sample; the demosaic runs on the mosaic, so its
+argument is cycles per sensor pixel. **CFA f = 0.35 is sensor f = 0.175.** The
+s22.4 product is withdrawn.
+
+Everything below is in **one variable: cycles per SENSOR pixel**, per-axis.
+
+### 27.2 Composition -- MEASURED, and they do multiply
+
+| f (cyc/sensor px) | D (demosaic) | G (gather) | GD (both) | G*D | GD/(G*D) |
+|---|---|---|---|---|---|
+| 0.10 | 1.0270 | 0.9819 | 0.9872 | 1.0084 | 0.9790 |
+| 0.15 | 1.0395 | 0.8690 | 0.9397 | 0.9034 | 1.0402 |
+| 0.20 | 1.0604 | 0.7434 | 0.7889 | 0.7883 | 1.0008 |
+| 0.25 | 1.0000 | 0.6230 | 0.6230 | 0.6230 | 1.0000 |
+| 0.30 | 0.9058 | 0.7434 | 0.6668 | 0.6734 | 0.9903 |
+| 0.35 | 0.7713 | 0.8690 | 0.6913 | 0.6702 | 1.0314 |
+| 0.40 | 0.6228 | 0.9819 | 0.6112 | 0.6115 | 0.9996 |
+
+`GD/(G*D)` stays inside [0.979, 1.040] with a median of 1.000. **The two
+losses compose as the naive product**, to within 4% worst case and 1% typical.
+Neither masks the other. That is the answer to ORCH's second question.
+
+Commissioning. The **null** is an integer-shift gather (phase 0): G must be
+exactly 1 and GD must equal D. Measured `G = 1.000000` and `GD - D = 0.00e+00`
+at both f = 0.20 and f = 0.35 -- exact, not approximate. The **potency** arm is
+the bilinear/Malvar contrast in 27.4, which the instrument separates by 1.27x
+at f = 0.35, so a real difference in the demosaic does move it.
+
+### 27.3 G is not monotone in sensor units, and this rescales the gather claim
+
+The G column falls to a minimum of **0.6230 at f = 0.25** and comes back up to
+0.9819 at f = 0.40. That is not an error. A CFA plane samples at spacing 2, so
+sensor frequency f is CFA frequency 2f, and above CFA Nyquist the response
+folds: sensor 0.25 is CFA 0.50 (Catmull-Rom MTF 0.62500, measured 0.6230);
+sensor 0.35 is CFA 0.70, which folds to 0.30 (CR 0.8892, measured 0.8690).
+
+Consequence, and BUILD-WIRE needs this before it picks a strength: **at sensor
+f = 0.35 the gather costs 13.1%, not the 30% implied by 1/0.6978 = 1.43x.**
+The 1.43x figure is a 2-D CFA-plane number at CFA f = 0.35, i.e. sensor
+f = 0.175 -- a feature twice as coarse as the label suggests. Restoration sized
+to recover 1.43x at fine detail is oversized by roughly 1.24x, and an oversized
+Wiener FIR at a silhouette is a halo.
+
+### 27.4 Correctability -- MEASURED, and the shortfall is reconstruction, not information
+
+Green is sampled on a quincunx lattice, whose support is the diamond
+|fx| + |fy| <= 0.5. A horizontal f = 0.35 is **inside** that support, so the
+amplitude is present in the samples. An oracle least-squares fit to the
+quincunx green samples alone:
+
+| f | Malvar (shipped) | bilinear | ceiling | headroom |
+|---|---|---|---|---|
+| 0.20 | 1.0604 | 0.8342 | 1.0000 | 0.943 |
+| 0.25 | 1.0000 | 0.7500 | 1.0000 | 1.000 |
+| 0.30 | 0.9058 | 0.6796 | 1.0000 | 1.104 |
+| 0.35 | 0.7713 | 0.6078 | 1.0000 | **1.297** |
+| 0.40 | 0.6228 | 0.5366 | 1.0000 | **1.606** |
+| 0.45 | 0.5385 | 0.5145 | 1.0000 | 1.857 |
+
+The ceiling is exactly 1.0000 at every frequency. **The shipped demosaic's loss
+at f = 0.35 is a reconstruction shortfall of 1.297x, not destroyed
+information.** At sensor f = 0.35 the demosaic (0.7713) is the **larger** of the
+two losses, bigger than the gather's 0.8690.
+
+ARGUED, and the limit of this result: the ceiling arm is an oracle. It fits a
+known frequency, noiseless, globally, on a purely horizontal grating. It bounds
+what is *available* in the samples; it does not prove an implementable filter
+reaches it, and noise will cut into it. Treat 1.297x as a ceiling, not a
+forecast.
+
+### 27.5 Recommendation for BUILD-WIRE
+
+**Which interpolator.** Directional green interpolation -- the AHD / DLMMSE /
+LMMSE class. The reason is specific rather than generic: Malvar is a fixed 5x5
+linear filter whose passband is a square, so it cannot use the corners of the
+quincunx diamond. A directional method interpolates green *along* the locally
+flat direction, which is exactly the operation that harvests the diamond. The
+1.27x that bilinear-to-Malvar already buys (27.4) is evidence that this axis
+has real spread and is not saturated.
+
+**What it costs.** Effectively nothing in context. The demosaic runs **once**,
+on the merged CFA planes at write time, not per frame -- a 205-frame stack
+spends ~200 s in alignment and merge. A directional demosaic is single-digit
+multiples of a Malvar pass on one image.
+
+**What it buys at f = 0.35.** Up to 1.297x per-axis on green, bounded above by
+the ceiling in 27.4 and reduced by noise. Unlike restore it is an
+*interpolation* rather than a *deconvolution*: it does not divide by a small
+number, so it does not carry restore's failure mode. V-RESTORE measured restore
+pushing 3.75% of pixels up to 7107 DN outside their own input support; a
+directional demosaic has negative taps like Malvar already does, but no
+noise-amplifying denominator. Lower overshoot risk, not zero.
+
+**Landing-blocker for the restore strength.** Because the losses multiply
+(27.2), the delivered loss at sensor f = 0.35 is 0.6913 and it factors cleanly:
+0.7713 demosaic x 0.8690 gather. Restore corrects the **gather** term only.
+Sizing it at 1/0.6913 = 1.45x would be correcting the demosaic term with a
+deconvolution as well, and that is double-counting into the halo. The gather
+term alone at sensor f = 0.35 asks for **1.15x**.
