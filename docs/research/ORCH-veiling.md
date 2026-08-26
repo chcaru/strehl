@@ -3678,3 +3678,192 @@ I hypothesised that `couch-fibers-cpl`'s guard reference fires because it
 predates the tone fix. **Refuted:** contrast differs 0.36%, mean 0.5 DN. The
 guard is firing on something else and I nearly sent a lane chasing a wrong
 explanation.
+
+## 35 — Retraction 23: every veil ratio I published was measured against a contaminated reference
+
+V-TONE returned its verdict on the four-link chain that is carrying the merge-backend
+decision. It refuted one link and qualified another, and both findings are against my
+interest. I am recording them before anything else in this section, because the numbers
+they invalidate are quoted in four places above this line.
+
+### 35.1 The reference was the defect
+
+Every veil measurement in §27, §31, §32 and §33 computed a background deficit against a
+**global far-field median**. V-TONE measured the far field itself and found it is not
+flat: on `flower-bud-alone-cpl` its p5–p95 spread is **3610.4 DN**, which is **1.75x the
+entire signal I was claiming**. Sixty-one percent of the "veil" I attributed to the
+estimator backend is backdrop gradient that was in the scene.
+
+Re-stated against a **local** backdrop fitted per image, the estimator's deficit is
+**-813.5 DN**, not the -2269.6 DN I published.
+
+| quantity | as I published it | against a local backdrop |
+| --- | --- | --- |
+| flower-bud deficit at d=0..2 | -2269.6 DN | **-813.5 DN** |
+| far-field p5-p95 (the reference's own spread) | not measured | **3610.4 DN** |
+
+I did not measure the spread of my own reference. That is the whole error. A median is a
+location estimate and says nothing about whether the thing it locates is homogeneous, and
+I had a rule about medians without rails and tails that I did not apply to the one number
+every other number was divided by.
+
+> **Rule.** A ratio is a claim about its denominator too. Measure the reference's own
+> spread before dividing by it, or the ratio inherits a variation you never looked at.
+
+### 35.2 I killed the ringing hypothesis with a broken test
+
+§28.3 rejected ringing because the profile looked monotone from the edge outward. It is
+not monotone **in my own data** — there is an interior extremum, -1235.9 DN at d=8..10
+falling to **-1582.9 at d=16..18** — and under a local reference the pyramid runs +1.9 DN
+at d=0..2, **+274.3 at d=24..32**, then -169.4 by d=200..300. That sign change with an
+extremum a few tens of pixels out is the signature I said was absent. The monotonicity I
+relied on was an artifact of the contaminated reference.
+
+### 35.3 What survives
+
+The visual result of §32 is unaffected: it was a picture, not a ratio. The clamp census is
+unaffected: exact-zero pixels 122,416 -> 0 and 345,850 -> 0 are counts, not ratios against
+a far field. What does not survive is the **magnitude** of the veil advantage, and every
+place I wrote "0.526 at 16-32 px" should now be read as a ratio between two contaminated
+quantities whose true separation is roughly a third of what I reported.
+
+The decision this was carrying — flip the merge backend — is therefore no longer supported
+by the veil ratios at all. It is supported by the clamp census, by the absence of a halo in
+the pixels, and by whatever V-TONE now reads when it re-points its hull instrument at the
+**clamped** arm. That last measurement does not exist yet and I have asked for it.
+
+### 35.4 The tautological control, admitted
+
+V-TONE also found that `hullproof.py`'s shared-weight control is **provably zero** — a
+null dressed as a positive control. Its own planted version catches 200/200 at
+hull+0.05x span. I filed an identity as evidence in the same document that states the rule
+"a placebo that received no dose is an inert probe, not a passing control." Writing a rule
+down does not apply it.
+
+And my 205-frame extrapolation runs the wrong way in my own model: the rate falls to
+0.000% as hull span grows 0.597 -> 0.820. The correct argument is per-pixel weighting,
+which gives **11.58%**, about 100x my toy. I asserted a direction I had not computed.
+
+---
+
+## 36 — Lateral CA correction: red is real, blue may be free blur
+
+`--fix-ca` is **off by default** today. Reviewing `bee-1-cpl` on a uniform 3x3 grid at 100%
+I could see cyan and magenta fringes on the pollen grains of the foreleg and along the
+leg's edge against the white backdrop. That is a print-relevant defect, visible without
+instruments, shipping by default.
+
+### 36.1 The arms
+
+One binary, one set of flags, one environment variable. `--gate 4 --base-mean --chunks 5`
+on both; arm B adds `STREHL_FIX_CA=a7c2-fe100gm-2xtc-x4cpl`, and its log confirms
+`lateral CA : CORRECTING`. This is the cleanest intervention available in this project:
+nothing was rebuilt between arms.
+
+### 36.2 The fringe is reduced, and the placebo is clean
+
+Whole-frame census. Pixel selection is made on the **arm-mean**, so neither arm chooses the
+ground it is judged on. Edge set is the top 1% of gradient; flat set is the bottom 50% and
+serves as the placebo, because a radial channel warp must be a near-no-op where there is no
+edge.
+
+| set | sigma(R-G) | sigma(R-B) | sigma(B-G) |
+| --- | --- | --- | --- |
+| edge, CA off | 0.09186 | 0.15653 | 0.09732 |
+| edge, CA on | 0.06773 | 0.12618 | 0.09334 |
+| **edge ratio** | **0.737** | 0.806 | 0.959 |
+| flat, placebo ratio | 1.005 | 1.006 | 0.999 |
+
+The placebo moves by at most 0.6% while the dose set moves 26%. That separation is what
+makes the effect attributable to the intervention rather than to the render.
+
+### 36.3 Two discriminators died, and the second died usefully
+
+The obvious way to price the correction is HF amplitude: R -13.16%, B -9.36%. **That
+number cannot distinguish removing a fringe from blurring a channel**, because both lower
+it. It is the same shape of error as §33.4 — a scalar with no structural argument cannot
+tell a repair from a destruction.
+
+The second attempt was correlation against green: alignment should move R's edges onto G's
+and raise `corr(HF_R, HF_G)`, blur should smear them and lower it. I built it with a
+potency control — a synthetic blur of R calibrated to reproduce the *same* amplitude loss
+the real correction produced — and the control killed it. The synthetic blur **raised** the
+correlation, 0.5637 -> 0.6036, because blurring removes noise that is uncorrelated with
+green. Both hypotheses predict the same sign; the discriminator has no power.
+
+That is the second time tonight a control has stopped a conclusion before it entered the
+record, and both times the conclusion would have been wrong.
+
+> **Rule.** A discriminator must be shown to separate the hypotheses, not merely to
+> respond to one of them. Calibrate the rival hypothesis to the same effect size and check
+> the two answers differ in sign.
+
+### 36.4 Physics gives a discriminator, and a null for free
+
+Lateral chromatic aberration is a per-channel magnification difference. Its displacement
+field is therefore **strictly radial**, and the **tangential component is a null the physics
+hands over at no cost** — no fitting, no extra render, measured on the same tiles by the
+same estimator as the signal. Green is a second null, being the reference channel.
+
+The estimator was commissioned before any of its numbers were used. A known radial
+magnification change was planted at three amplitudes:
+
+| planted at corner | recovered | ratio |
+| --- | --- | --- |
+| 0.05 px | 0.0128 px | 0.257 |
+| 0.20 px | 0.0532 px | 0.266 |
+| 0.50 px | 0.1465 px | 0.293 |
+
+Stable across a 10x range, therefore linear shrinkage, therefore division by 0.266 is
+legitimate. This project has been bitten by a shrinking shift estimator before — fact 45,
+recovery ratio 0.56 — which is why no raw number from this instrument was published.
+
+Shrinkage-corrected, 155 textured tiles:
+
+| channel | radial px | tangential px | radial/tangential | vs field radius |
+| --- | --- | --- | --- | --- |
+| **R** | 0.152 | 0.015 | **9.94** | 0.041 -> 0.094 -> 0.158 -> 0.177 -> 0.158 |
+| G (null) | 0.015 | 0.011 | 1.35 | flat at noise |
+| **B** | 0.039 | 0.030 | **1.30** | 0.004 -> 0.030 -> 0.034 -> 0.004 -> **-0.053** |
+
+**Red is an unambiguous lateral-CA correction.** Radial dominates tangential 9.94:1 and the
+magnitude rises with field radius, which is what a magnification difference must do.
+
+**Blue is indistinguishable from the untouched reference channel.** Its ratio of 1.30 sits
+inside green's own null of 1.35, and its radius profile changes sign at the outer field,
+which no magnification change can produce — while it still pays 9.36% of its edge HF. The
+hypothesis routed to an implementer is that blue's coefficient is too small to deliver a
+useful shift and the pipeline resamples anyway, paying a full interpolation blur for
+nothing. It is a hypothesis. The rival explanation — that my tiles simply lack blue
+structure at large radius, making this an absence of measurement rather than an absence of
+effect — is not yet excluded, and I have asked for the blue-signal tile count before
+anyone credits it.
+
+### 36.5 A scalar said nothing happened while 4.5% of the pattern moved
+
+The first control I wrote asserted green must be bit-stable across arms, since a lateral
+R/B warp does not touch it. It **failed**: `corr(HF_G off, HF_G on) = 0.9555`. But green's
+HF *amplitude* moved only **-0.16%**.
+
+So the amplitude reported "nothing happened" while the correlation reported that 4.5% of
+green's high-frequency pattern had been rearranged. The attributed cause is pre-demosaic
+correction coupling into green's interpolation, which is a prior finding of another agent's
+that **I have not verified myself**, and I have said so where it matters.
+
+> **Rule.** An amplitude cannot tell "unchanged" from "rearranged". Registration and
+> magnitude are separate questions and a single scalar answers only one of them.
+
+The correct response was not to delete the control but to demote it: it tested a stronger
+claim ("pure R/B warp") than the analysis needed, so the comparison was re-stated as
+**within-arm**, where each arm's red is judged against its own green and green's
+cross-arm behaviour is irrelevant. The failing control stays in the file with its failure
+printed.
+
+### 36.6 Status
+
+Default-on is **recommended, not decided**. It is routed to an implementer to land and to
+an independent auditor to attack, with the five places I think I am most likely wrong
+stated to the auditor rather than discovered by them: green's unverified attribution, a
+single favourable subject, no tiles in the outermost radius bin, blue's possible sampling
+artifact, and the fact that my commissioning plant uses my own resampler rather than the
+pipeline's.
