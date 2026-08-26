@@ -1078,8 +1078,25 @@ pub struct VeilReport {
     pub mean_lift_dn: f64,
     /// The extreme-value debias actually subtracted, in sigmas.
     pub debias_sigmas: f32,
-    /// Estimated backdrop level, in raw DN.
+    /// Estimated backdrop level, in raw DN: the median of the dead-ground
+    /// population, which is the population the estimator acts on.
     pub backdrop_dn: f32,
+    /// Estimated foreground level, in raw DN: the median of the top focus
+    /// decile, which is resolved subject.
+    pub foreground_dn: f32,
+    /// `backdrop_dn - foreground_dn`. Positive means the subject is darker than
+    /// its backdrop, which is the only case in which an *upper* envelope is the
+    /// right estimator.
+    pub polarity_dn: f32,
+    /// Set when the scene failed the polarity precondition and nothing was
+    /// touched.
+    ///
+    /// Veiling is a convex combination between the backdrop and the occluding
+    /// foreground, so its direction is set by which of the two is brighter. On
+    /// a bright subject over a dark backdrop an upper envelope would select the
+    /// *most*-veiled sample at every background pixel and build a maximally
+    /// veiled image. The estimator declines rather than inverting.
+    pub declined: bool,
     /// Luminance floor derived from it, in raw DN. No pixel below this is
     /// touched.
     pub luma_floor_dn: f32,
@@ -2102,38 +2119,73 @@ impl Estimator {
         report.debias_sigmas = debias;
 
         let mut lift_sum = 0.0f64;
-        // Backdrop level, estimated from the merged green itself so the floor
-        // is a property of this scene rather than a hardcoded DN. A high
-        // quantile, because the backdrop is the bright population; subsampled
-        // because a quantile does not need every pixel and this must not cost
-        // a second full sort of a 24 MP plane.
-        let backdrop = {
+        // Backdrop and foreground levels, estimated by partitioning on the
+        // FOCUS field rather than on a global luma quantile.
+        //
+        // The first version of this took a global p90 of merged green and
+        // called it the backdrop. That is only the backdrop when the backdrop
+        // happens to be the bright population. Veiling is a convex combination
+        // between the two layers, so its direction is set by which is brighter:
+        // on a bright subject over a dark backdrop the p90 lands on the
+        // SUBJECT, the floor derived from it falls BELOW the true backdrop,
+        // every backdrop pixel becomes eligible, and an upper envelope then
+        // selects the MOST-veiled sample at each one. That failure is not a
+        // degradation, it is an inversion, and no subject in this build's
+        // evidence set could have caught it because all of them are
+        // dark-on-bright.
+        //
+        // The focus field already separates the populations at no extra cost:
+        // dead ground is backdrop by construction — it is the same predicate
+        // the ceiling uses — and the top focus decile is resolved subject.
+        let (backdrop, foreground) = {
             let step = (px / 400_000).max(1);
-            let mut s: Vec<f32> = (0..px)
-                .step_by(step)
-                .filter(|&i| self.n[i] > 0)
-                .map(|i| {
-                    let d = if self.wsum.is_empty() {
-                        f32::from(self.n[i])
-                    } else {
-                        self.wsum[i]
-                    };
-                    if d > 0.0 {
-                        0.5 * (self.sum[1][i] + self.sum[3][i]) / d
-                    } else {
-                        0.0
-                    }
-                })
-                .collect();
-            s.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
-            if s.is_empty() {
-                0.0
-            } else {
-                s[(s.len() - 1) * 9 / 10]
+            let mut back: Vec<f32> = Vec::new();
+            let mut all: Vec<(f32, f32)> = Vec::new();
+            for i in (0..px).step_by(step) {
+                if self.n[i] == 0 {
+                    continue;
+                }
+                let d = if self.wsum.is_empty() {
+                    f32::from(self.n[i])
+                } else {
+                    self.wsum[i]
+                };
+                if !(d > 0.0) {
+                    continue;
+                }
+                let luma = 0.5 * (self.sum[1][i] + self.sum[3][i]) / d;
+                if self.best_focus[i] < self.veil_focus_max {
+                    back.push(luma);
+                }
+                all.push((self.best_focus[i], luma));
             }
+            fn median(v: &mut [f32]) -> f32 {
+                if v.is_empty() {
+                    return f32::NAN;
+                }
+                v.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+                v[v.len() / 2]
+            }
+            all.sort_unstable_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+            let cut = all.len() - all.len() / 10;
+            let mut fore: Vec<f32> = all[cut..].iter().map(|p| p.1).collect();
+            (median(&mut back), median(&mut fore))
         };
-        let floor = self.veil_luma_floor * (backdrop - black_dn).max(0.0) + black_dn;
         report.backdrop_dn = backdrop;
+        report.foreground_dn = foreground;
+        report.polarity_dn = backdrop - foreground;
+
+        // The sign law, enforced as a measured precondition rather than assumed
+        // from the subjects that happened to be to hand. A polarity too small
+        // to be sure of is not a polarity, so a bare `>` is not enough: require
+        // the separation to be a visible fraction of the backdrop's own level.
+        let need = 0.05 * (backdrop - black_dn).max(0.0);
+        if !backdrop.is_finite() || !foreground.is_finite() || !(backdrop - foreground > need) {
+            report.declined = true;
+            return report;
+        }
+
+        let floor = self.veil_luma_floor * (backdrop - black_dn).max(0.0) + black_dn;
         report.luma_floor_dn = floor;
 
         for i in 0..px {
@@ -2703,6 +2755,103 @@ mod tests {
             est.fold(k, &flat_frame(k, g), &field).unwrap();
         }
         est
+    }
+
+    /// An estimator whose focus field and luminance are set per pixel, so the
+    /// polarity gate can be shown a scene of either sign.
+    ///
+    /// Subject pixels get a high focus response and `subject_dn`; everything
+    /// else is dead ground at `backdrop_dn`. Every frame is identical, so
+    /// nothing here depends on the envelope finding a particular sample — only
+    /// on which population the gate believes is the backdrop.
+    fn veil_scene(
+        g: PlaneGeometry,
+        subject: impl Fn(usize) -> bool,
+        backdrop_dn: u16,
+        subject_dn: u16,
+    ) -> Estimator {
+        let n = 8u16;
+        let s = &subject;
+        let focus = |i: usize| if s(i) { 8.0f32 } else { 0.6f32 };
+        let mut stats = FocusStats::new(g);
+        for k in 0..n {
+            let field: Vec<f32> = (0..g.pixels()).map(focus).collect();
+            stats.fold(k, &field).unwrap();
+        }
+        let mut est = Estimator::new(&stats, Gate::new(4.0));
+        est.enable_veil(1.5, 3.0, 0.5);
+        for k in 0..n {
+            let field: Vec<f32> = (0..g.pixels()).map(focus).collect();
+            let frame = QuadGrid::new(g.width, g.height, |x, y| {
+                let v = if s(y * g.width + x) {
+                    subject_dn
+                } else {
+                    backdrop_dn
+                };
+                [v, v, v, v]
+            });
+            est.fold(k, &frame, &field).unwrap();
+        }
+        est
+    }
+
+    /// Veiling is a convex combination between the backdrop and the occluder,
+    /// so its direction is set by which of the two is brighter. An *upper*
+    /// envelope is the right estimator only when the subject is the darker
+    /// one; on a bright subject over a dark backdrop it would select the
+    /// **most**-veiled sample at every background pixel and build a maximally
+    /// veiled image.
+    ///
+    /// Every subject in this build's evidence set is dark-on-bright, so no
+    /// render could have caught this. The gate is therefore tested directly,
+    /// on the same scene with the two luminances exchanged — which holds the
+    /// focus field, the geometry, the frame count and the gate fixed and
+    /// varies only the thing the law is about.
+    #[test]
+    fn the_veil_declines_rather_than_inverting_on_a_bright_subject() {
+        let g = geom(16, 16);
+        let m = unit_sigma_model();
+        let subject = |i: usize| i % 4 == 0;
+
+        let mut ok = veil_scene(g, subject, 8000, 1000);
+        let r = ok.apply_veil(&m, 0.0);
+        assert!(!r.declined, "dark subject on a bright backdrop must proceed: {r:?}");
+        assert!(r.polarity_dn > 0.0, "{r:?}");
+
+        let mut inverted = veil_scene(g, subject, 1000, 8000);
+        let r = inverted.apply_veil(&m, 0.0);
+        assert!(r.declined, "bright subject on a dark backdrop must decline: {r:?}");
+        assert!(r.polarity_dn < 0.0, "{r:?}");
+        assert_eq!(r.applied, 0, "a declined veil must touch nothing: {r:?}");
+    }
+
+    /// The backdrop level must come from the dead-ground population, not from a
+    /// global luma quantile.
+    ///
+    /// The first version took a global p90 and called it the backdrop. On a
+    /// bright subject that lands on the SUBJECT, which is how the luminance
+    /// floor ended up 2.9x too high on `pencil-steep-angle-cpl` — measured
+    /// 3628 DN against the dead ground's true 1258 DN — and let the estimator
+    /// fire on paint it then visibly destroyed.
+    #[test]
+    fn the_backdrop_level_is_the_dead_ground_not_a_global_quantile() {
+        let g = geom(16, 16);
+        let m = unit_sigma_model();
+        // Subject is the MAJORITY here, so a global high quantile would report
+        // the subject's 9000 DN while the dead ground sits at 2000 DN.
+        let mut est = veil_scene(g, |i| i % 4 != 0, 2000, 9000);
+        let r = est.apply_veil(&m, 0.0);
+        assert!(
+            (r.backdrop_dn - 2000.0).abs() < 1.0,
+            "backdrop should be the dead ground's 2000 DN, got {:.0}: {r:?}",
+            r.backdrop_dn
+        );
+        assert!(
+            (r.foreground_dn - 9000.0).abs() < 1.0,
+            "foreground should be the resolved population's 9000 DN, got {:.0}: {r:?}",
+            r.foreground_dn
+        );
+        assert!(r.declined, "and this scene is bright-on-dark, so: {r:?}");
     }
 
     #[test]

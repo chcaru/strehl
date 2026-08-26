@@ -155,38 +155,35 @@ def run(subject_name: str, arms: dict, bar: float | None, gating: bool = True) -
 
 def main() -> int:
     good = True
+    # Every arm below comes from pin-veil3. Mixing binaries in one comparison is
+    # the confound that made a true no-op look like a change earlier today: two
+    # pins built hours apart differ by other agents' commits to this shared
+    # tree, not by the feature under test.
     good &= run(
         "flower-bud-alone-cpl  -- TARGET",
-        {"off": OUT / "fb-off.tif",
-         "veil0.65": OUT / "fb-v0p65.tif",
-         "pm-off": OUT / "fb-pm-off.tif",
-         "pm-veil": OUT / "fb-pm-v0p65.tif",
-         "pm-c1.5": OUT / "fb-pm-c1p5.tif",
-         "pm-floor": OUT / "fb-pm-fl.tif",
-         "pm-c4.0": OUT / "fb-pm-c4p0.tif"},
+        {"off": OUT / "fb-p3-off.tif",
+         "veil-polarity": OUT / "fb-pol.tif"},
         TARGET_BAR,
     )
     good &= run(
         "109MSDCF  -- PLACEBO (must be a no-op)",
-        {"off": OUT / "ms-pm-off.tif",
-         "veilfloor": OUT / "ms-pm-fl.tif"},
+        {"off": OUT / "d109-p3-off.tif",
+         "veil-polarity": OUT / "d109-p3-on.tif"},
         None,
     )
     good &= run(
         "couch-fibers-cpl  -- GUARD (must be unchanged)",
-        {"off": OUT / "cf-pm-off.tif",
-         "veil1.5": OUT / "cf-pm-c1p5.tif",
-         "veilfloor": OUT / "cf-pm-fl.tif"},
+        {"off": OUT / "cf3-p3-off.tif",
+         "veil-polarity": OUT / "cf3-p3-on.tif"},
         None,
     )
-    good &= run(
-        "bee-2-cpl  -- PORTFOLIO",
-        {"off": OUT / "bee2-pm-off.tif",
-         "veil1.5": OUT / "bee2-pm-c1p5.tif",
-         "veilfloor": OUT / "bee2-pm-fl.tif"},
-        None,
-        gating=False,
-    )
+    # `pencil-steep-angle-cpl` is NOT checked here. `bands_for` builds its
+    # subject mask as `ref < 0.5 * backdrop`, which assumes a DARK subject, so
+    # on a bright pencil it would mask the backdrop and call it the subject and
+    # every number below it would be meaningless. That arm is verified by exact
+    # byte-identity against its own veil-off render instead, which is a stronger
+    # statement than any profile: the polarity gate declined and changed nothing
+    # at all.
     print(f"\n{'=' * 78}\nOVERALL: {'PASS' if good else 'FAIL'}\n{'=' * 78}")
     return 0 if good else 1
 

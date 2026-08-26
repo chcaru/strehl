@@ -23,9 +23,9 @@ import tifffile
 OUT = Path(r"C:\dev\strehl-out\VEIL")
 
 PAIRS = [
-    ("couch-fibers-cpl  GUARD", "cf-pm-off.tif", "cf-pm-fl.tif"),
-    ("bee-2-cpl", "bee2-pm-off.tif", "bee2-pm-fl.tif"),
-    ("flower-bud-alone-cpl", "fb-pm-off.tif", "fb-pm-fl.tif"),
+    ("couch-fibers-cpl  GUARD", "cf3-p3-off.tif", "cf3-p3-on.tif"),
+    ("pencil-steep  POLARITY", "pen-p3-off.tif", "pen-pol.tif"),
+    ("flower-bud-alone-cpl", "fb-p3-off.tif", "fb-pol.tif"),
 ]
 
 

@@ -2520,3 +2520,136 @@ identical off vs on at a shared development gain.
   agree this is information-absent -- no frame holds a clean sample that close
   -- so it needs reconstruction, not selection.
 - **The trimmed upper mean** of 26.7 is the known improvement and is unbuilt.
+
+
+## 27. The sign law was an assumption, not a precondition -- and it inverted
+
+Section 26 shipped an upper envelope. **Every subject in this build's evidence
+set is dark-on-bright**, so nothing measured in sections 1-26 could have
+detected a sign error. ORCH classified all 26 subjects by border-vs-centre luma
+and found the reversed case: `pencil-steep-angle-cpl`, backdrop 0.369, subject
+0.686.
+
+Veiling is a convex combination between the two layers,
+`I_k = a_k(F * PSF_k) + (1 - a_k)(B * PSF_k)`, so its direction is set by which
+layer is brighter. An upper envelope is the right estimator only when the
+subject is the darker one.
+
+### 27.1 The prediction, and the measurement that beat it
+
+Reading `apply_veil`, the failure path was specific: `backdrop` was the
+**global p90** of merged green, which is the backdrop only when the backdrop is
+the bright population. On a bright subject the p90 lands on the SUBJECT, the
+floor (0.5x that) falls BELOW the true backdrop, and every backdrop pixel
+becomes eligible for an envelope that selects the most-veiled sample.
+
+**Measured on the shipped binary: eligible 61.53%, applied 7.03%.** It fired.
+Backdrop estimated at **3628 DN** against the dead ground's true **1258 DN** --
+**2.9x too high**, exactly as predicted.
+
+**But the stratified difference said the opposite.** Change grouped by the
+baseline arm's own luma:
+
+| baseline luma band | px % | mean dDN |
+|---|---|---|
+| 366-1939 DN | 10.0 | **+0.0** |
+| 1939-2850 DN | 15.0 | **+0.0** |
+| 2850-4414 DN | 25.0 | **+0.0** |
+| 4414-10935 DN | 25.0 | +165.0 |
+| 10935-14947 DN | 15.0 | +108.9 |
+| 14947-30582 DN | 10.0 | +40.5 |
+
+The dark backdrop moved by **exactly zero** -- the floor did exclude it after
+all -- so the check printed **"no inversion signature"**. The classic inversion
+did not happen.
+
+### 27.2 The picture, for the third time, overturned the number
+
+The lift went to the **bright** population instead: +61.6 DN mean, **+4668 DN
+maximum**. On the full frame that is not subtle. **The yellow paint along the
+pencil's barrel is eaten away** -- smooth and continuous in the `off` arm,
+mottled with pale patches punched through it with the veil on.
+
+The mechanism is section 26.4's, wearing the other hat: smooth **bright** paint
+has near-zero gradient, so it reads as dead ground to the focus measure, and it
+sits above the (wrongly low) floor. The envelope fired on the subject itself.
+
+**Three times now in this build a passing metric has been refuted by looking at
+the render**: the drift (26.2), the bee-2 blotches (26.4), and this. The
+stratified check was not wrong, it was aimed at the failure I expected instead
+of the one that occurred.
+
+### 27.3 The fix: polarity as a measured precondition
+
+`apply_veil` now partitions on the **focus field** rather than on a global luma
+quantile, which costs one subsample and no new state:
+
+- `B` = median luma of the dead-ground population (`best_focus < ceiling`) --
+  the same predicate the ceiling already uses, so the backdrop estimate is
+  taken from exactly the pixels the estimator acts on.
+- `F` = median luma of the top focus decile -- resolved subject.
+- Proceed only if `B - F > 0.05 * (B - black)`. **A polarity too small to be
+  sure of is not a polarity**, so a bare `>` is not enough.
+
+On failure it **declines and touches nothing**, and says so on stderr, because
+a decline and a no-op produce the same picture and only that line tells them
+apart.
+
+### 27.4 Why it declines rather than inverting the envelope
+
+The general fix ORCH asked for is a *signed* envelope: keep the upper tail when
+`F < B` and the lower tail when `F > B`. **That is not a sign flip, because the
+extreme has to be chosen at accumulation time.** Pass two runs as
+`paths.par_chunks(...)` with one full-frame `Estimator` per chunk, so `pmax`
+already costs `n_threads x 4 planes x px x f32` -- about 384 MB per live chunk
+at 24 MP. A `pmin` alongside it doubles that.
+
+Declining is therefore the honest shipping position: it satisfies the
+non-negotiable bar exactly, and it does so at zero memory and zero risk. The
+signed envelope remains the right eventual answer and is costed, not built.
+
+### 27.5 Acceptance, every arm from ONE binary (pin-veil3, `C023709D6941`)
+
+Re-run from scratch, because the backdrop estimator changed for every subject.
+The earlier arms could not be reused: `pen-pm-off` (pin-veil2) and `pen-pol`
+(pin-veil3) are **not** byte-identical despite the veil declining and touching
+nothing, because other agents commit to this shared tree between builds. **Two
+pins differ by more than my edit, and any comparison that spans them is
+confounded.**
+
+| subject | role | result |
+|---|---|---|
+| `flower-bud-alone-cpl` | TARGET | d=120-200 **-165 DN** vs bar -247. Surround -1619 -> -689. Rim -5056 -> -5060 (unmoved). **PASS** |
+| `pencil-steep-angle-cpl` | POLARITY | **byte-identical** to its own veil-off render, `351FAB2379288C6E`. **PASS** |
+| `109MSDCF` | PLACEBO | max deviation **1 DN**. **PASS** |
+| `couch-fibers-cpl` | GUARD | gradRMS/level **+1.33%**, texture preserved. **PASS** |
+
+The polarity arm is verified by **byte-identity, not by a profile**.
+`veil_accept.py`'s mask is `ref < 0.5 * backdrop`, which assumes a dark
+subject; on a bright pencil it would mask the backdrop, call it the subject,
+and every number under it would be meaningless. Byte-identity is also the
+stronger claim: not "small change" but *zero* change.
+
+### 27.6 The unit tests, and commissioning them
+
+Two tests in `merge.rs` pin the law without a render: the same synthetic scene
+with the two luminances exchanged -- holding focus field, geometry, frame count
+and gate fixed and varying only what the law is about -- plus one asserting the
+backdrop level is the dead ground's and not a global quantile.
+
+**Commissioned by planting a sabotage** (`polarity_commission.py`): with the
+sign comparison removed, both go RED with
+`polarity_dn: -7000.0, declined: false`; restored, both go GREEN.
+
+Two instrument failures found while doing it:
+
+- **A `cargo test <filter>` that matches nothing prints `ok`.** The first run
+  reported `test result: ok. 0 passed; ... 84 filtered out` because the filter
+  `byte_freeze` matches no test name. Only the `filtered out` count made the
+  skip legible. The second test here was skipped the same way, by a filter
+  `veil` that does not appear in its name.
+- **`shutil.copy2` restores the backup's mtime**, which is older than the
+  artifact cargo built from the sabotaged source, so cargo considers the crate
+  fresh and re-runs the **sabotaged** binary. The first commissioning run
+  reported "STILL RED AFTER RESTORE" on a file that was already correct on
+  disk. Use `shutil.copy` and `touch()`.

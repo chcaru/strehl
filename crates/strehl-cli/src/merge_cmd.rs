@@ -2464,6 +2464,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
         "strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)"
     );
     eprintln!("camera          : {camera}");
+    eprintln!("lateral CA      : {}", ca_status_line(&paths[0]));
     eprintln!(
         "iso             : {}",
         iso.map(|v| format!("{v:.0}")).unwrap_or("UNKNOWN".into())
@@ -3323,12 +3324,27 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                     .join(", ")
             );
             let r = e.apply_veil(&noise, levels.black);
+            if r.declined {
+                // A decline and a no-op produce the same picture, and only this
+                // line tells them apart.
+                eprintln!(
+                    "veil: gate {g} DECLINED -- backdrop {:.0} DN is not brighter than \
+                     foreground {:.0} DN (polarity {:+.0} DN). Veiling runs toward the \
+                     occluder's own level, so an upper envelope here would select the \
+                     most-veiled sample at every background pixel. Nothing was touched.",
+                    r.backdrop_dn, r.foreground_dn, r.polarity_dn
+                );
+                continue;
+            }
             eprintln!(
                 "veil: gate {g} ceiling {veil_focus_max} margin {veil_margin} sigma \
                  floor {veil_floor} x backdrop {:.0} DN = {:.0} DN \
+                 (foreground {:.0} DN, polarity {:+.0} DN) \
                  -> eligible {:.2}% applied {:.2}% mean lift {:+.1} DN debias {:.2} sigma",
                 r.backdrop_dn,
                 r.luma_floor_dn,
+                r.foreground_dn,
+                r.polarity_dn,
                 100.0 * r.eligible as f64 / r.pixels as f64,
                 100.0 * r.applied as f64 / r.pixels as f64,
                 r.mean_lift_dn,
@@ -3823,13 +3839,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; reachable, NOT the default)"
     );
     eprintln!("camera          : {camera}");
-    eprintln!(
-        "lateral CA      : {}",
-        match std::env::var(strehl_core::optics::CA_ENV) {
-            Ok(k) if !k.is_empty() && k != "0" => format!("CORRECTING, profile {k:?}"),
-            _ => "off (--fix-ca / STREHL_FIX_CA unset)".to_string(),
-        }
-    );
+    eprintln!("lateral CA      : {}", ca_status_line(&paths[0]));
     eprintln!(
         "iso             : {}",
         iso.map(|v| format!("{v:.0}")).unwrap_or("UNKNOWN".into())
