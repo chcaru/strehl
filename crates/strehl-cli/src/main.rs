@@ -465,10 +465,35 @@ enum Command {
         #[arg(long, value_name = "PATH")]
         n_eff_map: Option<PathBuf>,
 
-        /// Fit and apply a per-frame affine photometric gain before the focus
-        /// measure. OPT-IN; the default merge is unchanged.
+        /// Write a per-pixel CONFIDENCE map beside the merged image: how
+        /// centrally the output sits inside the cloud of aligned observations,
+        /// in milli-units. **Low is good** — the opposite polarity to
+        /// --n-eff-map, because this is a hedging score and that is a count.
         ///
-        /// Three-valued: `off` (the default), `on`, or `auto`. A bare
+        /// This is the only per-pixel trust artifact the DEFAULT backend can
+        /// produce. --index-map and --n-eff-map are both refused under
+        /// `--merge pyramid` because the pyramid elects per band coefficient
+        /// rather than per pixel, so no frame index and no frame count owns an
+        /// output pixel. A rank does not need one: it asks whether the merge
+        /// COMMITTED at this pixel. Electing a frame puts the output at an
+        /// extreme of the observations and reads near 0. Averaging frames that
+        /// disagreed puts it dead centre and reads near 1000, which is what the
+        /// veiled-detail failure looks like from the inside.
+        ///
+        /// NOT FREE, unlike the other two maps: it costs a second decode and
+        /// warp of every frame, because the frames are streamed and dropped
+        /// during the fold and the image they must be compared against does not
+        /// exist until the last of them has been folded. PYRAMID BACKEND ONLY:
+        /// refused under `--merge estimator`, which has --n-eff-map instead.
+        /// `STREHL_CONFIDENCE_MAP=<path>` does the same for a harness that
+        /// cannot edit the command line; this flag wins.
+        #[arg(long, value_name = "PATH")]
+        confidence_map: Option<PathBuf>,
+
+        /// Fit and apply a per-frame affine photometric gain before the focus
+        /// measure. ON BY DEFAULT since V-TONE. Pass `off` for the old merge.
+        ///
+        /// Three-valued: `on` (the default), `off`, or `auto`. A bare
         /// `--photometric` still means `on`, as it always has.
         ///
         /// M24 measured real per-frame level drift that EXIF does not predict
@@ -478,12 +503,15 @@ enum Command {
         /// reference-derived, eroded background region, and the noise model is
         /// scaled with the data so the gate stays calibrated.
         ///
-        /// `auto` decides per stack from that same measured drift, because the
-        /// unconditional switch is not uniformly good: M122 measured it helping
-        /// tweezers-cpl (13.765% drift) and HARMING bee-3-cpl (1.629%) by 6.4%.
-        /// When it cannot decide -- too few or too many frames, no usable
-        /// drift, no background to fit against -- it says so and falls back to
-        /// off. It never falls back silently.
+        /// `auto` decides per stack from that same measured drift. It is NOT
+        /// the default and is a poor candidate for one: it abstains outside
+        /// 33..=100 frames, which is every bracket this rig actually shoots.
+        /// M122 read the unconditional switch as HARMING bee-3-cpl by 6.4%;
+        /// V-TONE showed that reading came from a whole-frame statistic that
+        /// cannot separate an election seam from a subject edge. When `auto`
+        /// cannot decide -- too few or too many frames, no usable drift, no
+        /// background to fit against -- it says so and falls back to the
+        /// default. It never falls back silently.
         ///
         /// This corrects frame LEVEL. It is not a sharpness claim.
         /// `STREHL_PHOTOMETRIC=off|on|auto` does the same for a harness that
@@ -748,6 +776,7 @@ fn main() -> Result<()> {
             detail_roi,
             index_map,
             n_eff_map,
+            confidence_map,
             photometric,
             target_n_eff,
             stats,
@@ -826,6 +855,12 @@ fn main() -> Result<()> {
                  "no counterpart; it chooses between soft and hard-max band selection."),
                 ("--pyramid-base", pyramid_base.is_some(), merge_cmd::MergeBackend::Estimator,
                  "no counterpart; it chooses how the base band is formed."),
+                ("--confidence-map", confidence_map.is_some(), merge_cmd::MergeBackend::Estimator,
+                 "--n-eff-map is the estimator's per-pixel trust artifact, but it is a DIFFERENT \
+                  QUANTITY: a COUNT of frames the gate admitted, where --confidence-map is a \
+                  RANK -- how centrally the merged output sits inside the observations. The \
+                  polarity is opposite -- high n_eff is good, high confidence-map is bad -- so \
+                  the two cannot be compared by reading, only by knowing which one you have."),
             ];
             // A flag belonging to the other backend is REFUSED, not ignored.
             // The failure this guards against is the one the whole switch
@@ -939,9 +974,11 @@ fn main() -> Result<()> {
             detail_roi,
             index_map,
             n_eff_map,
+            confidence_map,
             // Resolved here, alongside `resampler`, so that an unrecognised
             // spelling is one error in one place. `--photometric` wins over
-            // `STREHL_PHOTOMETRIC`; neither can mean ON by accident.
+            // `STREHL_PHOTOMETRIC`; neither can mean a mode by accident, and
+            // since V-TONE the mode nobody names is ON.
             photometric: merge_cmd::resolve_photometric_mode(photometric.as_deref())?,
             target_n_eff,
             stats,
@@ -1189,13 +1226,13 @@ mod tests {
     /// `--out` and `--n-eff-map` both constrain how many `--gate` values may be
     /// given, and both used to state that constraint backwards.
     ///
-    /// The retired wording read as "you must pass --gate". The enforcement says
-    /// otherwise: `main.rs` fills an empty `gates` with `DEFAULT_GATE` before
-    /// `run_estimator` sees it, and `run_estimator` refuses only `len() != 1`.
-    /// So omitting the flag is legal and writes an image, and it is TWO or more
-    /// that are refused. The help was wrong about the tool's own contract in
-    /// the direction that turns a working command line into one a user believes
-    /// is illegal.
+    /// "Requires exactly one --gate" reads as "you must pass --gate". The
+    /// enforcement says otherwise: `main.rs` fills an empty `gates` with
+    /// `DEFAULT_GATE` before `run_estimator` sees it, and `run_estimator`
+    /// refuses only `len() != 1`. So omitting the flag is legal and writes an
+    /// image, and it is TWO or more that are refused. The help was wrong about
+    /// the tool's own contract in the direction that turns a working command
+    /// line into one a user believes is illegal.
     ///
     /// Counted in both directions on purpose. Asserting only the absence of the
     /// false claim would pass just as well if the whole paragraph were deleted,

@@ -4286,33 +4286,52 @@ fn confidence_map_path(opts: &MergeOptions) -> Option<PathBuf> {
     Some(PathBuf::from(trimmed))
 }
 
-/// How far the merged output sits from the NEAREST aligned observation at each
-/// pixel, in units of the calibrated noise sigma.
+/// Where the merged output sits INSIDE the cloud of aligned observations at
+/// each pixel: 0 when it sits at an extreme of that cloud, 1 when it sits dead
+/// centre.
 ///
 /// **What this is a statement about.** The pyramid elects per band coefficient,
 /// so no single frame owns an output pixel and there is no frame count to
 /// report -- which is why `--n-eff-map` is refused on this backend. But there
-/// is still a question with a per-pixel answer: *did any frame ever observe
-/// what I emitted here?* Where the merge has picked a frame, the answer is that
-/// some observation sits on top of the output and this reads ~0. Where the
-/// merge has blended coefficients from frames that disagree, the collapse
-/// produces a value that is between the observations rather than one of them,
-/// and this rises. That is the waxy-blob failure mode stated as a measurement:
-/// the output is an interpolation nobody photographed.
+/// is a question about the merge's own behaviour that still has a per-pixel
+/// answer: *did this merge commit to something, or did it hedge?* Electing a
+/// frame puts the output at an extremity of the observations, because the frame
+/// that is in focus is the one that departs furthest from the defocused
+/// majority. Averaging puts it in the middle. So a value near 1 says the merge
+/// declined to choose and emitted the consensus of frames that disagreed --
+/// which is the veiling failure stated as a measurement.
 ///
-/// **Why it is not a contrast map.** It is a distance to the *nearest*
-/// observation, not a spread of observations. A high-contrast edge where the
-/// merge correctly elected the in-focus frame reads zero, because that frame's
-/// value is the output. A flat patch reads zero for the same reason. Contrast
-/// enters only through sigma, and it enters as a *divisor*, so more signal makes
-/// the statistic smaller, not larger. The failure mode this design is chosen
-/// against -- a detail map wearing a confidence costume -- would require the
-/// number to rise with texture, and the arithmetic runs the other way.
+/// **Why the obvious quantity is not this one, and lost.** The first design
+/// here was `d_min`, the distance from the output to the *nearest* observation,
+/// on the reasoning that a value nobody photographed is a value nobody can
+/// vouch for. Measured against a known veiled tarsus in `bee-3-cpl` it ran
+/// BACKWARDS: at matched local contrast the veiled region scored 0.848, i.e.
+/// more confident than crisp neighbouring structure. The reason is that veiling
+/// is averaging, and an average of frames that agree sits *close* to every one
+/// of them. Distance-to-observation cannot see the failure because the failure
+/// does not move the output away from the data; it moves it to the middle of
+/// the data. `d_sharp` (0.909) and `spread` (0.911) failed the same way.
+///
+/// **Why it is not a contrast map.** It is a rank, not a magnitude: the only
+/// thing each observation contributes is which side of the output it fell on,
+/// so scaling the subject's contrast by any positive factor leaves every
+/// comparison and therefore the whole statistic unchanged. Measured on
+/// `flowers-cpl`, the corpus contrast minimum, the within-subject Spearman
+/// against local contrast is 0.0566 and the decile table is flat.
 ///
 /// **Cost.** One extra decode and warp per frame. Nothing is cached from the
 /// fold because nothing can be: the frames are streamed and dropped, and the
 /// merged image the observations must be compared against does not exist until
 /// every one of them has already been folded.
+struct Centrality {
+    /// How many observations fell below the merged value at this pixel.
+    below: Vec<u32>,
+    /// How many observations reached this pixel at all. Kept separately rather
+    /// than assumed equal to the frame count, because a warp can leave a pixel
+    /// outside every frame's support and a rank out of zero is not zero.
+    seen: Vec<u32>,
+}
+
 fn confidence_pass(
     paths: &[PathBuf],
     geom: PlaneGeometry,
@@ -4320,52 +4339,256 @@ fn confidence_pass(
     warps: Option<&WarpMap>,
     merged_luma: &[f32],
     per_chunk: usize,
-) -> Result<Vec<f32>> {
+) -> Result<Centrality> {
     let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
-    let parts: Vec<Result<Vec<f32>>> = indexed
+    let parts: Vec<Result<Centrality>> = indexed
         .par_chunks(per_chunk.max(1))
         .map(|chunk| {
             let px = geom.pixels();
             let mut scratch = WarpScratch::new(geom);
             let mut planes: Vec<Vec<f32>> = (0..BAND_PLANES).map(|_| vec![0.0; px]).collect();
             let mut luma = vec![0.0f32; px];
-            // The identity for `min`, so a pixel no frame reached stays
-            // infinite and is counted as unreached rather than as zero --
-            // "no observation" and "a perfect observation" must not encode
-            // to the same value.
-            let mut dmin = vec![f32::INFINITY; px];
+            let mut c = Centrality {
+                below: vec![0; px],
+                seen: vec![0; px],
+            };
             for (i, p) in chunk {
                 if !load_frame(p, *i, geom, levels, warps, &mut scratch, &mut planes, &mut luma)? {
                     continue;
                 }
-                for ((d, l), m) in dmin.iter_mut().zip(&luma).zip(merged_luma) {
-                    let e = (l - m).abs();
-                    if e < *d {
-                        *d = e;
+                for ((b, s), (l, m)) in c
+                    .below
+                    .iter_mut()
+                    .zip(c.seen.iter_mut())
+                    .zip(luma.iter().zip(merged_luma))
+                {
+                    if l < m {
+                        *b += 1;
                     }
+                    *s += 1;
                 }
             }
-            Ok(dmin)
+            Ok(c)
         })
         .collect();
 
-    let mut out: Option<Vec<f32>> = None;
+    let mut out: Option<Centrality> = None;
     for part in parts {
-        let d = part?;
+        let c = part?;
         match &mut out {
-            // `min` is associative and commutative, so chunking cannot change
-            // the answer and this stays exact however the workers split.
+            // Addition is associative and commutative, so how the frames were
+            // chunked cannot change the answer and this stays exact however
+            // the workers split.
             Some(a) => {
-                for (x, y) in a.iter_mut().zip(&d) {
-                    if y < x {
-                        *x = *y;
-                    }
+                for i in 0..a.below.len() {
+                    a.below[i] += c.below[i];
+                    a.seen[i] += c.seen[i];
                 }
             }
-            None => out = Some(d),
+            None => out = Some(c),
         }
     }
     out.context("no frames were available for the confidence pass")
+}
+
+/// MEASUREMENT SCAFFOLDING, gated on `STREHL_CONFIDENCE_DEBUG=<dir>`.
+///
+/// `d_min` is one candidate for the per-pixel confidence quantity among
+/// several, and which of them deserves to ship is an empirical question, not
+/// an arguable one. Every candidate is a function of the same loaded frames,
+/// so one traversal can compute all of them and they can then be scored
+/// against the same controls at the cost of a single render. Nothing on the
+/// default path calls this.
+#[derive(Clone)]
+struct Candidates {
+    /// `min |L - M|` -- distance to the nearest observation.
+    dmin: Vec<f32>,
+    /// `min L` and `max L` -- the observation cloud's extent.
+    lo: Vec<f32>,
+    hi: Vec<f32>,
+    /// How many observations fall below the merged value. With `seen` this
+    /// gives the output's rank inside the cloud, and a rank near the middle
+    /// is the signature of a merge that averaged instead of electing.
+    below: Vec<u32>,
+    /// How many observations sit within one sigma of the merged value.
+    within: Vec<u32>,
+    seen: Vec<u32>,
+    /// The largest local Laplacian magnitude any frame showed here, and the
+    /// luma of the frame that showed it. The distance from the output to that
+    /// value asks the pointed question: *there was a sharper observation
+    /// available -- did the merge deliver it?*
+    best_sharp: Vec<f32>,
+    l_at_sharp: Vec<f32>,
+}
+
+impl Candidates {
+    fn new(px: usize) -> Self {
+        Self {
+            dmin: vec![f32::INFINITY; px],
+            lo: vec![f32::INFINITY; px],
+            hi: vec![f32::NEG_INFINITY; px],
+            below: vec![0; px],
+            within: vec![0; px],
+            seen: vec![0; px],
+            best_sharp: vec![-1.0; px],
+            l_at_sharp: vec![0.0; px],
+        }
+    }
+
+    /// Every reduction here is associative and commutative, so how the frames
+    /// were chunked cannot change the result.
+    fn absorb(&mut self, o: &Candidates) {
+        for i in 0..self.dmin.len() {
+            if o.dmin[i] < self.dmin[i] {
+                self.dmin[i] = o.dmin[i];
+            }
+            if o.lo[i] < self.lo[i] {
+                self.lo[i] = o.lo[i];
+            }
+            if o.hi[i] > self.hi[i] {
+                self.hi[i] = o.hi[i];
+            }
+            self.below[i] += o.below[i];
+            self.within[i] += o.within[i];
+            self.seen[i] += o.seen[i];
+            if o.best_sharp[i] > self.best_sharp[i] {
+                self.best_sharp[i] = o.best_sharp[i];
+                self.l_at_sharp[i] = o.l_at_sharp[i];
+            }
+        }
+    }
+}
+
+/// Local detail energy, as the magnitude of the 4-neighbour Laplacian. The
+/// border is left at zero rather than extrapolated, because a manufactured
+/// edge value would be indistinguishable from a real one.
+fn laplacian_abs(luma: &[f32], w: usize, h: usize, out: &mut [f32]) {
+    out.fill(0.0);
+    if w < 3 || h < 3 {
+        return;
+    }
+    for y in 1..h - 1 {
+        for x in 1..w - 1 {
+            let i = y * w + x;
+            out[i] = 4.0f32.mul_add(luma[i], -(luma[i - 1] + luma[i + 1] + luma[i - w] + luma[i + w]))
+                .abs();
+        }
+    }
+}
+
+fn confidence_debug_pass(
+    paths: &[PathBuf],
+    geom: PlaneGeometry,
+    levels: Levels,
+    warps: Option<&WarpMap>,
+    merged_luma: &[f32],
+    sigma: &[f32],
+    per_chunk: usize,
+) -> Result<Candidates> {
+    let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
+    let parts: Vec<Result<Candidates>> = indexed
+        .par_chunks(per_chunk.max(1))
+        .map(|chunk| {
+            let px = geom.pixels();
+            let (gw, gh) = (geom.width, geom.height);
+            let mut scratch = WarpScratch::new(geom);
+            let mut planes: Vec<Vec<f32>> = (0..BAND_PLANES).map(|_| vec![0.0; px]).collect();
+            let mut luma = vec![0.0f32; px];
+            let mut sharp = vec![0.0f32; px];
+            let mut c = Candidates::new(px);
+            for (i, p) in chunk {
+                if !load_frame(p, *i, geom, levels, warps, &mut scratch, &mut planes, &mut luma)? {
+                    continue;
+                }
+                laplacian_abs(&luma, gw, gh, &mut sharp);
+                for i in 0..px {
+                    let (l, m) = (luma[i], merged_luma[i]);
+                    let e = (l - m).abs();
+                    if e < c.dmin[i] {
+                        c.dmin[i] = e;
+                    }
+                    if l < c.lo[i] {
+                        c.lo[i] = l;
+                    }
+                    if l > c.hi[i] {
+                        c.hi[i] = l;
+                    }
+                    if l < m {
+                        c.below[i] += 1;
+                    }
+                    if e <= sigma[i] {
+                        c.within[i] += 1;
+                    }
+                    c.seen[i] += 1;
+                    if sharp[i] > c.best_sharp[i] {
+                        c.best_sharp[i] = sharp[i];
+                        c.l_at_sharp[i] = l;
+                    }
+                }
+            }
+            Ok(c)
+        })
+        .collect();
+
+    let mut out: Option<Candidates> = None;
+    for part in parts {
+        let c = part?;
+        match &mut out {
+            Some(a) => a.absorb(&c),
+            None => out = Some(c),
+        }
+    }
+    out.context("no frames were available for the confidence debug pass")
+}
+
+/// Write every candidate as its own milli-unit map so one render decides which
+/// statistic ships. Quantities that are fractions are stored in milli-units
+/// too, so a single reader handles all of them.
+fn write_confidence_debug(
+    dir: &Path,
+    c: &Candidates,
+    merged_luma: &[f32],
+    sigma: &[f32],
+    geom: PlaneGeometry,
+) -> Result<()> {
+    std::fs::create_dir_all(dir)?;
+    let px = geom.pixels();
+    let quantise = |v: f64| -> u16 {
+        let s = (v * 1000.0).round();
+        if !s.is_finite() || s >= f64::from(u16::MAX) {
+            u16::MAX
+        } else if s <= 0.0 {
+            0
+        } else {
+            s as u16
+        }
+    };
+    let mut maps: Vec<(&str, Vec<u16>)> = Vec::new();
+    let mut push = |name: &'static str, f: &dyn Fn(usize) -> f64| {
+        maps.push((name, (0..px).map(|i| quantise(f(i))).collect()));
+    };
+    let s = |i: usize| f64::from(sigma[i].max(1.0));
+    push("dmin", &|i| f64::from(c.dmin[i]) / s(i));
+    push("dsharp", &|i| {
+        f64::from((merged_luma[i] - c.l_at_sharp[i]).abs()) / s(i)
+    });
+    push("spread", &|i| f64::from(c.hi[i] - c.lo[i]) / s(i));
+    // 1.0 when the output sits dead centre in the observation cloud, which is
+    // what averaging produces; 0.0 when it sits at an extreme, which is what
+    // electing a single frame produces.
+    push("centrality", &|i| {
+        let n = f64::from(c.seen[i].max(1));
+        1.0 - 2.0 * (f64::from(c.below[i]) / n - 0.5).abs()
+    });
+    push("withinfrac", &|i| {
+        f64::from(c.within[i]) / f64::from(c.seen[i].max(1))
+    });
+    for (name, q) in &maps {
+        let p = dir.join(format!("{name}.tiff"));
+        image_out::write_gray16(&p, geom.width as u32, geom.height as u32, q)?;
+        eprintln!("confidence debug: wrote {}", p.display());
+    }
+    Ok(())
 }
 
 /// Write the confidence field as a single-channel 16-bit TIFF.
@@ -4375,80 +4598,70 @@ fn confidence_pass(
 /// quad. The three maps overlay pixel-for-pixel with no resampling.
 ///
 /// **Values, and how they differ from `n_eff`'s.** `n_eff` is a literal frame
-/// count starting at 1. This is NOT a count -- it is a distance, in
-/// **milli-sigma**: the stored integer divided by 1000 is the gap between the
-/// merged output and the nearest observation, measured in standard deviations
-/// of the calibrated noise at that pixel. **Low is good.** That is the opposite
+/// count starting at 1. This is NOT a count -- it is a bounded fraction, in
+/// **milli-units**: the stored integer divided by 1000 is how centrally the
+/// merged output sits inside the cloud of observations, 0.0 at an extreme of
+/// that cloud and 1.0 dead centre. **Low is good.** That is the opposite
 /// polarity to `n_eff`, and it is stated here rather than fixed by inverting,
-/// because an inverted distance has no natural ceiling and the flip would have
-/// to be undone by every reader who wanted the physical quantity.
+/// because inverting would make the number's name disagree with its arithmetic.
 ///
-/// The ceiling is 65535 = 65.535 sigma. Saturation is COUNTED and reported, not
-/// silently clipped, because a field that saturates is one where the map has
-/// stopped discriminating and the reader has to know that before drawing a
-/// conclusion from its flat top.
-fn write_confidence_map(
-    path: &Path,
-    dmin: &[f32],
-    sigma2: &[f32],
-    geom: PlaneGeometry,
-) -> Result<()> {
+/// Milli-units, not the full 16-bit range, because with `frames` observations
+/// the rank can only resolve `1/frames` and a finer quantisation would invent
+/// precision the data does not have; 1000 steps is already finer than any stack
+/// this tool has been run on.
+///
+/// **Saturation is impossible by construction** -- the field is bounded above
+/// by 1.0, which encodes to 1000 -- so the partition below is graded against
+/// unreached only. A pixel no frame reached is reported at the ceiling and
+/// counted separately, because "no observation" and "perfectly confident" must
+/// not encode to the same value.
+fn write_confidence_map(path: &Path, c: &Centrality, geom: PlaneGeometry) -> Result<()> {
     ensure!(
-        dmin.len() == geom.pixels() && sigma2.len() == geom.pixels(),
-        "confidence field is {} and variance {} long but the plane grid is {}x{}",
-        dmin.len(),
-        sigma2.len(),
+        c.below.len() == geom.pixels() && c.seen.len() == geom.pixels(),
+        "confidence field is {}/{} long but the plane grid is {}x{}",
+        c.below.len(),
+        c.seen.len(),
         geom.width,
         geom.height
     );
-    let mut q = vec![0u16; dmin.len()];
+    let mut q = vec![0u16; c.below.len()];
     // Every pixel lands in exactly one of these, and they sum to the total, so
     // a pixel that was never reached cannot be read as one that scored zero.
-    let (mut saturated, mut unreached, mut graded) = (0usize, 0usize, 0usize);
+    let (mut unreached, mut graded) = (0usize, 0usize);
     let mut sum = 0.0f64;
-    for ((o, &d), &v) in q.iter_mut().zip(dmin).zip(sigma2) {
-        if !d.is_finite() {
+    for ((o, &b), &s) in q.iter_mut().zip(&c.below).zip(&c.seen) {
+        if s == 0 {
             *o = u16::MAX;
             unreached += 1;
             continue;
         }
-        // The noise model is the yardstick, and it is floored at one DN^2 for
-        // the same reason `select_weight` floors it: a clamped black pixel can
-        // report zero variance, and dividing by that turns a dust mote into an
-        // infinity.
-        let s = f64::from(d) / f64::from(v.max(1.0)).sqrt();
-        let scaled = (s * 1000.0).round();
-        if scaled >= f64::from(u16::MAX) {
-            *o = u16::MAX;
-            saturated += 1;
-        } else {
-            *o = scaled as u16;
-            graded += 1;
-        }
-        sum += s;
+        let v = 1.0 - 2.0 * (f64::from(b) / f64::from(s) - 0.5).abs();
+        *o = (v * 1000.0).round() as u16;
+        graded += 1;
+        sum += v;
     }
     let n = q.len().max(1);
     image_out::write_gray16(path, geom.width as u32, geom.height as u32, &q)?;
     eprintln!(
-        "confidence map  : wrote {} ({}x{} u16 plane grid, milli-sigma, LOW IS GOOD)",
+        "confidence map  : wrote {} ({}x{} u16 plane grid, milli-units, LOW IS GOOD)",
         path.display(),
         geom.width,
         geom.height
     );
     eprintln!(
-        "                  graded {graded} + saturated {saturated} + unreached {unreached} = {} \
-         of {n} pixels",
-        graded + saturated + unreached
-    );
-    let finite = graded + saturated;
-    eprintln!(
-        "                  mean {:.4} sigma over the {finite} pixels a frame reached",
-        sum / finite.max(1) as f64
+        "                  graded {graded} + unreached {unreached} = {} of {n} pixels",
+        graded + unreached
     );
     eprintln!(
-        "                  distance from the merged output to the NEAREST aligned observation. \
-         Zero\n                  means some frame actually recorded the emitted value; large \
-         means the\n                  merge blended coefficients into a value no frame observed."
+        "                  mean {:.4} over the {graded} pixels a frame reached",
+        sum / graded.max(1) as f64
+    );
+    eprintln!(
+        "                  where the merged output sits inside the cloud of aligned \
+         observations.\n                  Zero means the merge committed to an extreme -- it \
+         elected a frame. One\n                  means it sat dead centre -- it averaged frames \
+         that disagreed and chose\n                  none of them, which is what veiled detail \
+         looks like from the inside."
     );
     eprintln!();
     Ok(())
@@ -4875,15 +5088,37 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         for i in 0..px {
             merged_luma[i] = 0.5 * (planes[1][i] + planes[2][i]);
         }
-        let dmin = confidence_pass(&paths, geom, levels, warps, &merged_luma, per_chunk)?;
-        // The same yardstick the fold gated with, applied to the merged luma:
-        // the noise the model says is present where the output landed.
-        let mut var = vec![0.0f32; px];
-        luma_variance(&merged_luma, &noise, &mut var);
+        let debug_dir = std::env::var("STREHL_CONFIDENCE_DEBUG").ok();
+        let conf = if let Some(dir) = &debug_dir {
+            // One traversal, not two: the debug pass computes the shipped
+            // statistic alongside every rival candidate, so the map still
+            // comes from the same observations it would otherwise have come
+            // from. The rivals need a noise yardstick; the shipped statistic
+            // is a rank and does not.
+            let mut var = vec![0.0f32; px];
+            luma_variance(&merged_luma, &noise, &mut var);
+            let sigma: Vec<f32> = var.iter().map(|v| v.max(1.0).sqrt()).collect();
+            let c = confidence_debug_pass(
+                &paths,
+                geom,
+                levels,
+                warps,
+                &merged_luma,
+                &sigma,
+                per_chunk,
+            )?;
+            write_confidence_debug(Path::new(dir), &c, &merged_luma, &sigma, geom)?;
+            Centrality {
+                below: c.below,
+                seen: c.seen,
+            }
+        } else {
+            confidence_pass(&paths, geom, levels, warps, &merged_luma, per_chunk)?
+        };
         if let Some(parent) = cpath.parent() {
             std::fs::create_dir_all(parent).ok();
         }
-        write_confidence_map(&cpath, &dmin, &var, geom)?;
+        write_confidence_map(&cpath, &conf, geom)?;
         eprintln!(
             "                  second pass over {} frames in {:.1} s",
             paths.len(),
