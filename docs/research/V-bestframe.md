@@ -31,6 +31,14 @@ ranked subjects moves **299 -> 338**, the wrong way. It also establishes that th
 comparison could not have tested the backend flip, because
 `GALLERY-FIXED-SRGB` was **already** a pyramid render.
 
+**Section 13 answers BUILD-SHARP 21.6 and concedes half of it.** This
+instrument's reference arm IS the unwarped original, so the merge does pay
+resamples the frame does not, exactly as alleged. But the FINE band peaks at
+f = 0.153 cyc/px, below BUILD-SHARP's lowest tabulated row, and the handicap
+measured there on real pixels is **1.02x-1.04x, not 1.43x**. Correcting for it
+moves `109MSDCF` from 4.5% to **10.6%** and the pooled rate from 84.7% to 86.5%.
+**The deficit survives the correction.**
+
 ---
 
 ## 1. What was asked and what would answer it
@@ -629,3 +637,191 @@ whether the section 11 mechanism, the finest-band averaging fraction, explains i
 in `SHIP-V1`, because the `SHIP-V1` render log records only exposure and does not
 report `averaged`, `coverage` or `alignment` per subject. **That missing
 per-subject provenance is itself worth fixing before ship.**
+
+## 13. The path-boundary objection: correct in kind, twenty times too small
+
+BUILD-SHARP 21.6 asks one question of this instrument and it is the right one.
+I answer it first, without hedging.
+
+### 13.1 The reference arm is UNWARPED. The objection's premise is CORRECT.
+
+`bestframe.py` says so itself, in capitals, in its own module docstring:
+
+> NEITHER SIDE IS EVER RESAMPLED FOR MEASUREMENT. Resampling destroys exactly
+> the high-frequency content under test. Instead the band radii on the frame
+> side are multiplied by s_k, so both sides probe the same PHYSICAL scale on
+> their own grid.
+
+The mechanism is in `paircov.py`. `band_of` decodes the ARW with `rawpy` and
+never resamples it; `pair_tiles` maps each merge tile into the frame's own grid
+with `int(round(s0 * ye[i] + t0[1]))`, an integer crop. The only
+`map_coordinates` call on the frame side is inside `bestframe.fit_tone`, and it
+runs on an 8x boxdown for the tone fit alone, never on the measured band.
+
+So the merge arm pays the alignment gather and the chroma co-site, and the frame
+arm pays neither. **The two arms do sit on opposite sides of a path boundary.**
+That is the same error class BUILD-SHARP found in the ESF instrument, I did not
+price it, and the objection is well founded.
+
+What does not follow is the magnitude.
+
+### 13.2 The quoted figure is for a band this instrument does not measure
+
+BUILD-SHARP prices f = 0.25, 0.35 and 0.50 cyc/px. The FINE band here is
+`DoG(1.0, 2.0)`, whose amplitude response peaks at
+
+    f = 0.1530 cyc/px      (closed form sqrt(ln(s2^2/s1^2) / (2 pi^2 (s2^2 - s1^2))))
+    power-weighted f10 / f50 / f90 = 0.1164 / 0.1877 / 0.2799 cyc/px
+
+The band's power-weighted **median** sits below BUILD-SHARP's **lowest**
+tabulated row. Catmull-Rom is very flat down there, and the loss is steeply
+frequency dependent, so carrying the f = 0.35 figure across is not conservative:
+it overstates the handicap by more than an order of magnitude. `1.43x` is a real
+number about a real band, and it is not this band.
+
+### 13.3 Identifying the kernel before pricing it
+
+Pricing the wrong interpolator would waste the whole exercise, so the kernel is
+identified by reproducing BUILD-SHARP 20.4's plant numbers rather than by
+reading the source. `resample_price.py`, phi = 0.5 on both axes:
+
+| f | Catmull-Rom (2-D) | bilinear (2-D) | BUILD-SHARP 20.4 | |
+| ---: | ---: | ---: | ---: | --- |
+| 0.25 | 0.781250 | 0.500000 | 0.781250 | CR **MATCH** |
+| 0.35 | 0.402210 | 0.206107 | 0.402210 | CR **MATCH** |
+| 0.50 | 0.000000 | 0.000000 | 0.000000 | CR **MATCH** |
+
+Exact to six decimals on all three, and bilinear is excluded. This also pins
+down the convention: BUILD-SHARP's "2-D" column is amplitude **squared**, the
+product of the two separable axes. Phase-averaged over uniform phase I get
+0.88405 / 0.67426 / 0.39063 against their 0.88986 / 0.69055 / 0.42096; mine are
+uniformly **lower**, consistent with their measured histogram having a pile-up
+near integers that a flat uniform does not.
+
+### 13.4 Is the modelled gather harsh enough? Yes, harsher than the real one
+
+Retention is monotone in distance-to-integer, so under-sweeping the phase would
+under-price the handicap, which is the direction that would let a false deficit
+survive. `phasecheck.py` measures the phase my synthetic warp actually produces:
+
+| | mean | p90 | p99 | >0.2 from integer |
+| --- | ---: | ---: | ---: | ---: |
+| modelled, n = 4688 | **0.2554** | 0.4530 | 0.4950 | 61.3% |
+| modelled, n = 7032 | **0.2489** | 0.4490 | 0.4950 | 59.7% |
+| real warpmap (BUILD-SHARP 20.2) | 0.2369 | 0.4470 | 0.4942 | 57.3% |
+
+**The model is harsher than the thing it models on every column.** Everything
+below therefore over-prices the handicap.
+
+### 13.5 Measuring it on real pixels, with a null and a potency control
+
+`boundary.py` takes the arm that pays nothing (the tone-mapped `rawpy` frame)
+and pushes it through a reconstruction of the chain the merge pays: the align
+gather at the swept phase above, then the chroma co-site as a fixed phi = 0.25
+on R and B only. It then reads the per-tile FINE band amplitude before and after.
+
+| subject | merge grid align+co-site | **frame grid align+co-site** | **handicap 1/R** |
+| --- | ---: | ---: | ---: |
+| 109MSDCF | 0.9939 | 0.9799 | 1.0205x |
+| 119MSDCF | 0.9937 | 0.9801 | 1.0203x |
+| bee-1-cpl | 0.9943 | 0.9641 | 1.0372x |
+| flowers-cpl | 0.9885 | 0.9612 | **1.0404x** |
+
+**Measured handicap: 1.02x to 1.04x.** BUILD-SHARP's green figure at f = 0.35 is
+1.43x and their red/blue is 2.14x. The modelled band integral in
+`resample_price.py` independently gives R = 0.9875 at alpha = 2 and R = 0.9727
+at alpha = 0, bracketing the measurement.
+
+**CONTROL, null.** Merge against itself with no resample, all 352 tiles, all four
+subjects: `median 1.000000000  min 1.000000000  max 1.000000000  -> PASS`. Not
+"approximately"; the identical code path on identical pixels returns exactly one.
+
+**CONTROL, potency -- the one that had to be able to fail.** An extra planted
+phi = 0.5 resample must drop retention by an amount predicted independently, by
+the analytic band integral, which shares no code with the measurement:
+
+| subject | measured further drop | independent prediction |
+| --- | ---: | --- |
+| 109MSDCF | 0.9717 | 0.9475 to 0.9761 |
+| 119MSDCF | 0.9740 | 0.9475 to 0.9761 |
+| bee-1-cpl | 0.9547 | 0.9475 to 0.9761 |
+| flowers-cpl | 0.9544 | 0.9475 to 0.9761 |
+
+All four land inside the bracket. **The instrument sees a resample when one is
+there, and reports the right size.** The null and the potency control together
+mean a reading of "no meaningful handicap" is informative rather than inert.
+
+### 13.6 Inverting the question: what would R have to be?
+
+The handicap enters as a pure multiplicative factor on the merge's band
+amplitude, so the corrected ratio is exactly `ratio / R`. That makes the
+objection testable without re-running anything: sweep R. `corrected.py`, on the
+capped arm that section 11 reports, `GALLERY-FIXED-SRGB`:
+
+| subject | nDet | R=1.000 | **R=0.961** | R=0.900 | R=0.800 | R=0.698 | R=0.468 | R needed for 50% |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 109MSDCF | 246 | 4.5 | **10.6** | 31.3 | 65.9 | 72.8 | 92.3 | **0.863** |
+| 119MSDCF | 221 | 22.6 | **31.7** | 54.8 | 75.1 | 85.1 | 96.4 | **0.909** |
+| flower-bud-alone-cpl | 193 | 46.6 | 48.2 | 54.9 | 74.1 | 92.7 | 97.4 | 0.935 |
+| flowers-cpl | 48 | 83.3 | 83.3 | 91.7 | 95.8 | 100.0 | 100.0 | 1.414 |
+| bee-1-cpl | 222 | 99.5 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 2.719 |
+| couch-fibers-cpl | 177 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 | 2.816 |
+| **ALL TILES POOLED** | **5190** | **84.7** | **86.5** | 90.2 | 94.2 | 96.1 | 98.7 | 1.843 |
+
+`R = 0.961` is the worst value measured on real pixels. **It moves `109MSDCF`
+from 4.5% to 10.6%.** For half of its detail tiles to break even the whole
+pipeline would have to be discarding **13.7%** of amplitude at f = 0.153 cyc/px
+relative to `rawpy`; for 95% it would have to discard **54%**, which is below
+even BUILD-SHARP's red/blue figure at a frequency more than twice as high.
+
+### 13.7 Verdict on the objection
+
+**The construction fault is real and I should have priced it. It does not
+explain the deficit, and it is not close.** Measured handicap 1.02x-1.04x;
+required handicap 1.16x for a median break-even on `109MSDCF` and 2.19x for 95%.
+The correction moves the pooled pass rate 84.7% -> 86.5%.
+
+Every number in sections 11 and 12 is therefore biased against the merge by
+**2% to 4% in amplitude**, and should be read that way. The correction is
+uniform, so it changes no ordering and no verdict.
+
+One further reason the objection cannot carry, internal to the data and needing
+no value of R at all: a path-boundary handicap is a property of the interpolator
+and the band, not of the subject. It is the same factor everywhere. Yet at
+R = 1.000, `couch-fibers-cpl` reads 100.0% over 177 detail tiles and `112MSDCF`
+100.0% over 348, while `109MSDCF` reads 4.5% over 246. Fourteen of 24 subjects
+sit at or above 90% **while already paying the full chain the frame does not
+pay**. A single multiplicative constant cannot produce that spread, and the
+subjects that fail are not the ones with the most detail: `flat-on-ruler-cpl`
+and `112MSDCF` carry 352 detail tiles each, the maximum possible, and read 86.4%
+and 100.0%.
+
+### 13.8 What I could not rule out
+
+**The demosaic asymmetry, which I did not price.** `rawpy.postprocess` uses AHD;
+`blend-render` uses its own demosaic. Both cost high-frequency amplitude, neither
+is in BUILD-SHARP's chain audit because it is not a resample, and I have no
+measurement of the difference. Its direction is unknown: if strehl's demosaic is
+softer than AHD the frame arm gains a further advantage, if sharper the merge
+does. **What I can bound is the size that would matter.** To lift `109MSDCF` to
+the ~99% that six other subjects reach, the combined pipeline asymmetry would
+have to be near **3x** at f = 0.153 cyc/px. An asymmetry that large would make
+every strehl render visibly softer than a `rawpy` decode of any of its own input
+frames, which is not what the gallery looks like. It is a real gap and it is a
+small one.
+
+**Sub-pixel residual in the frame-pair covariance.** `paircov` aligns pairs on
+integer shifts only, and its own C4 self-test measures what a half-pixel residual
+costs. This biases the frame arm's signal **down**, which flatters the merge, and
+so works against the deficit rather than for it.
+
+**`SEARCH = 10` saturation.** A few corner tiles hit the search limit at 14.14
+px, under-measuring frame signal. Also flatters the merge.
+
+### 13.9 This does not touch the H1 verdict
+
+Deliberately restated because it would be easy to over-read section 13.
+`flowers-cpl`'s verdict rests on `detail` = 48/352, and `detail` is computed from
+`snr = sqrt(Sft / F)`, in which `Sft` is a frame-pair covariance and `F` a
+fixed-pattern floor. **The merge never enters that quantity**, so no merge-side
+resampling argument can move it. H1 stands exactly as written in section 1.
