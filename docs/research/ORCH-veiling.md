@@ -9721,3 +9721,78 @@ remembered my own conversation as a document edit.
 
 Four this run, two published and two caught by reading the file before writing
 to it. Reading first is the entire difference, and it costs one tool call.
+
+## 85. The safety check I issued was itself the defect class
+
+BUILD-SHARP found an **ordering** flaw in the pre-flight probe from section 84,
+and verifying it turned up something worse than they reported.
+
+The probe is `git diff --cached --name-only -- <paths>`: non-empty means another
+lane has staged work at your path. It works, and it has a clean control --
+`shared.txt` fires, `other.txt` is silent. But:
+
+```
+[1] probe BEFORE your add:
+    diff --cached shared.txt : 'shared.txt'   <- fires
+    diff --cached other.txt  : ''             <- control, silent
+
+[2] after you run 'git add -- shared.txt':
+    index content : AGENT-B version
+    A's work in index? NO - destroyed at ADD, before any commit ran
+    probe run NOW : 'shared.txt'  <- still fires, but A's content is already gone
+```
+
+**The destruction happens at `git add`, not at `git commit`.** Your own `add`
+overwrites the colleague's index entry, so by the time you reach the commit the
+evidence is unrecoverable.
+
+And the sting: **the probe still fires afterwards.** Run in the wrong position
+it emits output identical to the useful case -- it is now reporting your own
+staged change -- so it looks exactly like a working safety check while
+certifying a file it has just helped destroy.
+
+> **A check placed after the operation it guards can still emit the signal it
+> emits when placed before.** Position is part of the instrument. A probe whose
+> output does not depend on whether it ran in time is not a guard, it is
+> decoration that resembles one.
+
+Sixth instance tonight of a detector whose useless configuration is
+indistinguishable from its useful one -- and the first one that was inside the
+safety machinery rather than the measurement machinery.
+
+BUILD-SHARP's second point corrects a confusion of mine: the two probes are
+**disjoint**. `git diff --cached` sees a colleague's *staged* work; plain
+`git diff` sees their *worktree* edits; **neither sees the other**. I had been
+treating them as alternatives. Run both, unconditionally -- deciding which files
+are "shared enough to check" is exactly the judgement that fails.
+
+### The standing question
+
+BUILD-SHARP was exposed to section 84's `-First` masking bug and not bitten: their
+retry loops piped to `Out-Null` (safe) while their display line used `-First`
+(hazardous). Their own account of it is the most useful sentence of the three
+corrections:
+
+> **"The two ingredients were one line apart."** *"Anyone auditing my scripts for
+> 'does this agent use `-First`?' would have flagged me, and anyone auditing for
+> 'does `-First` gate a retry?' would have cleared me. Only the second question
+> is the right one."*
+
+Which generalises past git, and is now standing doctrine for any instrument here:
+
+> **What property of the input decides whether this check can see anything, and
+> have I varied it?**
+
+Three lanes arrived at that class tonight from unrelated directions -- a shape
+test blind past 2.69 px, a band statistic confounded by the variable it
+compares, an exit-code probe whose honesty depends on how many lines the failure
+printed. **In every case the controls were green and the governing property was
+one nobody had thought to vary.**
+
+### Three corrections in one night, all from lanes
+
+Path-scoping is insufficient for shared files (BUILD-SHARP). The status variable
+lies conditionally (BUILD-ELECT). The pre-flight probe must precede `add`
+(BUILD-SHARP). All three were rules I issued; all three were corrected by the
+agents receiving them; all three were verified here before rebroadcast, and one
+was *sharpened* in verification rather than merely confirmed.
