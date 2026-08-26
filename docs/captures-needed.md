@@ -7,22 +7,26 @@ says exactly what to shoot, why, and what it unblocks.
 
 ## START HERE — one session, in value order
 
-*This index was added 2026-08-24 overnight. There are now 18 open requests across
+*This index was added 2026-08-24 overnight. There are now 19 open requests across
 this document and that is not a list anyone can act on over coffee. **Shoot the
 first two and stop** if you only have twenty minutes — everything below them is
 genuinely useful and none of it is blocking a fix that is already written. (Note
 that #2 is an afternoon, not twenty minutes; if you only have twenty, shoot #1
-and #3.)*
+and #3.) **New 2026-08-26: #4 is different from everything else here.** The
+others make your pictures better; that one makes the *claims* about them true,
+and until it exists the headline comparison stays retracted rather than
+replaced.*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
 | **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation among the CPL stacks**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
 | **2** | **§26** — a **bright** subject against a **deeply defocused dark** background, exposed **1–2 stops down** so nothing clips, 100–300 frames | ~1 afternoon | **The halo.** As of last night the rim around every edge in your renders has a measured fingerprint — it is exactly as wide as the software's frame-choosing window — but **two explanations survive that predict the same thing on every stack you already own.** They differ only on bright-object-on-dark-ground edges, and your corpus contains **5** usable ones. This is the capture that separates them, and the halo is the largest visible defect in your pictures. |
 | **3** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
-| 4 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
-| 5 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
-| 6 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
-| 7 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
+| **4** | **§30** — a **slanted-edge test chart** (printed or bought), shot square-on, filling a decent part of the frame | ~1 hr | **The one capture that unblocks the SOTA claim itself.** Three separate instruments tried to measure whether our output really resolves more detail than the tool we are compared against. **All three failed, and all three failed the same way** — every one of them is bounded by how sharp the edges are, and edge sharpness *is* the thing being compared. Your corpus has no straight, clean edge: its edges are **13–18 px wide**, and the honest limit measured last night is **5.1 px**. A proper chart lands at **2–3 px**, inside every limit found. Until this exists the comparison is not hard, it is **unanswerable**, and the claim stays retracted. |
+| 5 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
+| 6 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
+| 7 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
+| 8 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
 
 ### Before you read any number below: I had my own bookkeeping audited, and it leans one way
 
@@ -3420,3 +3424,113 @@ The qualification that belongs next to that number: **n = 1 at f/8.** A single s
 no spread of its own, so "0.2% across a full stop" is one comparison, not a trend. The
 f/11 point would make it two, and two is the difference between a measurement and an
 anecdote.
+
+## 30. A slanted-edge test chart -- REQUESTED 2026-08-26, about an hour, and it is the only thing standing between this project and a defensible "better than X" claim
+
+### Why you are being asked
+
+Three different people, working from three different directions, tried to measure
+whether strehl's output resolves more real detail than the fork it is compared
+against. **All three failed. All three failed for the same reason, and the reason
+is your corpus, not their code.**
+
+| instrument | what it measures | how it died |
+|---|---|---|
+| band-power ratio | energy in a spatial-frequency band | scores nearest-neighbour **+29%/+42%** and a **0.5x downscale 4.35x better** -- it rewards two unambiguous degradations |
+| plateau-normalised shape test | does a normalised edge profile leave [0,1] | **blind past 2.69 px** of edge width; the renders are 13.52 and 17.86 px |
+| ISO 12233 slanted-edge MTF | the transfer function from the edge's own spectrum | **does not go blind -- goes wrong**, monotonically, toward the expected answer |
+
+The third is the one that matters, because a slanted-edge MTF is the textbook
+answer to this question and it was expected to be immune. It was checked rather
+than assumed, against exact closed forms with an exact null:
+
+| 10-90% edge width, px | 1.90 | 2.56 | 3.85 | 5.13 | 6.41 | 7.69 | 10.25 | 12.82 | 15.38 | 17.99 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| measured / true MTF50 | 0.998 | 1.005 | 1.020 | **1.038** | 1.059 | 1.087 | 1.154 | 1.232 | 1.332 | **1.446** |
+
+**Stated limit: edges must be 5.13 px wide or narrower.** Your renders' edges are
+**13.52 px** and **17.86 px** -- 2.6x and 3.5x outside it. And because the two
+sides do not share an edge width, they do not share an inflation: **1.2593x**
+against **1.4404x**, a ratio of **1.1438**.
+
+> **That is a 14.38% systematic bias from edge width alone, running in the
+> direction that makes the other tool look sharper -- against a claimed deficit
+> of 17-23%.** Most of the number we spent days steering by was the ruler
+> bending, not the thing being measured.
+
+**The general finding, and it is why a fourth instrument would not have helped:**
+
+> **The confound is not in the statistic, it is in the variable.** Any instrument
+> bounded by edge sharpness fails a comparison *of* edge sharpness. Three
+> unrelated statistics, one shared defect, all three biased the same way.
+
+### What to shoot
+
+A **slanted-edge target**: a hard black-to-white straight edge, tilted about
+**5 degrees** off vertical (5-10 is the standard; the tilt is what lets the
+measurement see between the pixels).
+
+Any of these is fine, in descending order of preference:
+
+1. **A bought ISO 12233 or QA-62 style chart.** Best, and reusable forever.
+2. **A printed chart** on matte paper from a good printer -- laser beats inkjet
+   here, matte beats gloss, because the edge must be sharp and the surface must
+   not throw specular highlights into it.
+3. **A razor blade or a machined steel rule** taped to a matte white card. This
+   is genuinely competitive with a printed chart, because the edge is sharper
+   than any printer can lay down. Cheapest good option.
+
+Then:
+
+- **Square-on.** The chart plane parallel to the sensor plane. This one is worth
+  a moment with a level -- everything else here is forgiving, this is not.
+- **Flat lighting, no glare on the edge.** Two lights at 45 degrees, or open
+  shade. The edge is the measurement; a specular rim on it is a wrecked capture.
+- **Fill a decent part of the frame** with the edge -- it does not need to be
+  the whole frame, but more edge is more averaging and this is free.
+- **Focus on the chart**, and take a **short bracket** anyway (10-20 frames) so
+  it goes through the same pipeline as a real stack rather than a special path.
+- **f/5.6, ISO 100**, your normal working settings. Do **not** stop down for
+  this -- we want the rig as it actually shoots.
+- **Two versions if you have the time:** one with the teleconverter and one
+  without. That doubles what this answers at almost no extra cost.
+
+### Why this cannot come from existing files
+
+It was looked for. Both "ruler" subjects in the corpus are **engraved trenches
+with ~20 px sloped walls and a specular rim** -- per-row centroid scatter of
+**1.95 px on a supposedly straight edge**. `wrapped-text-1` is a stochastic
+dither boundary with a wide soft skirt. `coffee-bean` has **no straight edge at
+all**. The instrument, pointed at a page of text, reported that **3568 of 3570
+candidate edges were flatter than 0.03 degrees** -- it found no slanted edge in
+the corpus because there is none.
+
+This is not a case of needing a better analysis. **The information is not in the
+files.**
+
+### What it unblocks
+
+- **The README's headline comparison**, currently **retracted rather than
+  replaced**, and it will stay retracted until this exists. That is the honest
+  state and it is not a comfortable one.
+- Whether the fine-detail deficit is **real, smaller than believed, or not there
+  at all**. All three remain open. The most likely single outcome, on current
+  evidence, is that a large part of it was instrument bias.
+- A **routine** answer, forever. Once a valid target exists, this measurement
+  takes minutes and can run on every build. Right now it cannot be made at all.
+
+### The honest summary
+
+Everything else in this document makes your pictures better. **This one makes the
+claims about them true.** It is roughly an hour, most of which is finding a level
+surface and some decent light, and it converts the single most-contested number
+in the project from unanswerable into routine.
+
+### Related
+
+- §21 asked for a straight edge *inside a real bracket*, for the alignment
+  question. This is a different and stricter request: a **dedicated target**,
+  **tilted**, shot **square-on**. §21 is still worth having; it does not
+  substitute for this.
+- §19's hard edge at three apertures would be **much** more informative shot on
+  this chart. If you do both, do them in the same session.
