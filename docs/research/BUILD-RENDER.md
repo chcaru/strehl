@@ -1917,3 +1917,110 @@ is the good subject, flower-bud-with-background-fern-cpl is worst by eye yet
 ranks last of eleven (0.192), and couch-fibers-cpl measures 0.004. Global
 polarity does not rank this defect; silhouette perimeter against bright ground
 is the better candidate and is untested.
+
+---
+
+## Ordering the 26, and two statistics that failed before one worked
+
+**Task.** ORCH: emit a contact sheet ordered strongest-first, because the
+shipped sheet is alphabetical and `the tool's best work sits between its worst`.
+Supply a better ordering statistic than `contactsheet.py`'s p95 gradient
+proxy, which ranks `foam` first at 0.216 -- ORCH's read being that `a p95
+gradient cannot distinguish fine texture from read noise`.
+
+### ORCH's premise about `foam` is REFUTED [MEASURED]
+
+`foam` was described as `a dark, noisy, flat subject`. It is not noisy. At
+100% it is a soap film with resolved thin-film interference bands, specular
+rims and crisp bubble walls. Its noise fraction sigma/grad is the LOWEST in the
+whole corpus at 0.072, while `flowers-cpl` -- the subject everyone agrees is
+mush -- is the HIGHEST at 0.201. `foam` is dark and finely textured.
+
+The p95 proxy IS fooled by noise (planted noise raises it +0.75%, confirmed),
+so the diagnosis of the instrument was right. The diagnosis of the subject was
+not, and the defect that actually promoted `foam` was sparsity, not noise.
+
+Crops: `C:\dev\strehl-out\BUILD-RENDER-rank\look\`.
+
+### Two failed statistics, each caught by a different control [MEASURED]
+
+**v1, `P90(|grad|)/sigma`.** Passed the null. Passed ORCH's planted-noise arm.
+Backwards: blur RAISED it **+2358%**, because Immerkaer's kernel is a high-pass
+and blur drives sigma toward zero, so the ratio explodes exactly when the
+picture gets worse. Only the positive control caught it. Had I run only the arm
+ORCH asked for, it would have shipped looking green.
+
+**v2, `detail/mean(luminance)`.** Passed all four arms and was still wrong on
+the real corpus: ranked `coffee-bubbles` 1st and pushed `bee-3-cpl`, an
+award-quality frame, to 12th of 26. Mechanism derived, then confirmed: for a
+detailed fraction f of the frame, `detail ~ sqrt(f)*G` and `level ~ f*L`, so
+the ratio goes as **1/sqrt(f)** and rewards SPARSITY. `coffee-bubbles`'s median
+tile sits at level 0.0030 -- near black -- so the division put image-wide detail
+that lives in the bright bubbles over an average dominated by black background.
+
+### The lesson is bigger than either bug [ARGUED]
+
+v2's four arms -- null, noise, blur, rival -- were **all same-subject
+perturbations**. They establish how a statistic responds to a change in ONE
+image and say nothing about whether two DIFFERENT images are comparable. A
+ranking is precisely a cross-subject claim, so the commissioning did not test
+the thing the statistic was for.
+
+Corollary worth carrying: **a global gain and a genuinely dark subject are the
+same multiplication**, so no global normaliser can distinguish them, and any
+statistic invariant to the first is inflated by the second. v2's exposure
+normalisation could not have been fixed; it had to be removed.
+
+### v3, and its commissioning [MEASURED]
+
+    resolved = P90 over 512px tiles of sqrt(max(0, mean|grad L|^2 - sigma^2))
+
+in linear light, sRGB curve inverted exactly first. Per-tile, because a macro
+stack is mostly out-of-focus surround by construction and a frame average
+measures how much background a subject has, not how well it was resolved.
+
+Six arms on `bee-3-cpl`, all PASS: null +0.00% exactly; planted noise
+-0.09%; blur -30.42%; **sparsity -44.10%**; v2 +49.1% under sparsity; p95
+proxy +0.75% under noise.
+
+The sparsity arm's size was **predicted from the mask alone before measuring**
+-- `sqrt(mean m^2)/mean(m) = +52.3%`, measured **+49.1%**. That agreement
+confirms the mechanism rather than the symptom, and simultaneously proves the
+smoothed tile boundaries add no gradient of their own.
+
+Anchors after the fix: `bee-3-cpl` 12 -> **5** (bee-1 4, bee-2 6);
+`flowers-cpl` **26/26**; `foam` 1 -> **11**; `coffee-bubbles` 1 -> **10**.
+
+### A negative result on my own validation, kept [MEASURED]
+
+`duplicate_coherence.py` tests whether near-duplicate captures rank together.
+Pre-registered filename-only grouping: v3 gap 6.000 vs chance 9.000, **p=0.054
+-- a miss** against the declared 0.01 bar. Excluding `MSDCF` (Sony's DCIM
+folder code, not a subject name) all three statistics pass and the **retracted
+v2 comes out tightest**, 2.833 against v3's 3.000. The ordering reverses
+between arms.
+
+The test is confounded by construction: near-duplicates share darkness,
+sparsity and texture, which is exactly what every candidate statistic keys on.
+**It is not evidence for v3 and must not be cited as such.**
+
+### Presentation path
+
+`finalpass.ps1` now emits master + faithful 8-bit viewable + graded
+presentation JPEG + manifest columns. `New-Presentation` is idempotent and
+runs on the RESUME branch, without which a once-failed grading could never be
+repaired -- the master would exist, the subject would skip, and the failure
+would be permanent and invisible.
+
+Commissioned: faithful vs graded sha256 **DIFFER** on both smoke subjects
+(a "graded" file that is not graded is the V-TONE defect one file over);
+re-run reports skip/skip.
+
+**Observation ORCH should weigh:** the *faithful* `bee-3-cpl` is already
+print-worthy -- every hair resolved, venation crisp, tarsal claws sharp, clean
+field. The grade is a modest lift, not the difference between horrible and
+award-quality. On this subject the render carries it, not the grade.
+
+Artifacts: `C:\dev\strehl-out\BUILD-RENDER-present\contactsheet-ranked.png`
+(26 tiles, graded, strongest-first), `ranking.tsv`,
+`BUILD-RENDER-rank\look\` (100% crops).
