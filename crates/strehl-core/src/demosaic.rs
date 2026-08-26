@@ -49,45 +49,40 @@
 //! high-frequency diagonal edges. [`tests`] measures where this one fails and
 //! the failure is asserted rather than hidden.
 //!
-//! # Why the default is no longer Malvar
+//! # A directional green was measured and rejected
 //!
-//! Measured, on the `f` axis in cycles per **output** pixel, per-axis
-//! horizontal, green channel: Malvar's green loses **22.9%** of amplitude at
-//! `f = 0.35` — and an oracle fit to the green samples alone recovers
-//! **1.0000** there, so the amplitude is present in the data and the loss is a
-//! *reconstruction* shortfall rather than an information one. The mechanism is
+//! Malvar's green loses **22.9%** of amplitude at `f = 0.35` cycles per
+//! **output** pixel (per-axis, horizontal), and an oracle fit to the green
+//! samples alone recovers **1.0000** there — so on a synthetic grating the loss
+//! is a *reconstruction* shortfall, not an information one. The mechanism is
 //! in [`green_directional`]: [`F_G`] is exactly the mean of the two directional
 //! estimates, so where one of them is already exact, averaging halves it away.
+//! Selecting the direction instead of averaging recovers it, and on the
+//! synthetic grating it does: `>0.97` against Malvar's `<0.85`.
 //!
-//! Of the four properties above, the directional green keeps three and gives
-//! up one. Being explicit about which:
+//! **On the owner's real captures it buys nothing and costs noise**, so the
+//! default stayed Malvar. Measured from one binary on `bee-3-cpl` and
+//! `tweezers-cpl`, tiles ranked by the Malvar arm's own structure: at the
+//! sharpest 5% of tiles the directional arm's mean gradient is **0.990x** and
+//! **0.983x** — no gain where detail lives — while in the flattest 5%, which
+//! are out of focus and can contain no detail at all, its high-frequency power
+//! is **1.50x** and **1.17x**. The full result is
+//! `docs/research/BUILD-SHARP.md` §31.
 //!
-//! - **Property 1, linearity, is genuinely surrendered.** The direction is
-//!   chosen from image content, so the noise couples to the decision. What
-//!   limits the damage is that the decision only matters where the two
-//!   candidates disagree, and where they disagree one of them is wrong; where
-//!   the image is locally isotropic they agree and the choice is immaterial.
-//!   That is an argument, not a measurement, and it is the property a reviewer
-//!   should attack first.
-//! - **Property 2, that it cannot manufacture detail, survives intact.** Every
-//!   output is still a bounded linear combination of measured photosites — the
-//!   selection picks *which* combination, never invents a value outside them.
-//!   `it_does_not_manufacture_energy_above_the_scenes_band_limit` is the guard
-//!   and it still runs against the default.
-//! - **Property 3, a closed form to test against, survives** for Malvar, which
-//!   is retained as [`demosaic_malvar_row`] and still carries the false-colour
-//!   closed form.
-//! - **Property 4, licence, is unchanged.** Hamilton-Adams is implemented from
-//!   the published algorithm. **No implementation was read to write this**; the
-//!   GPL demosaic implementations named in `AGENTS.md` were not opened.
+//! That is property 1 of the four above, failing exactly as it was written to
+//! warn: an adaptive demosaic couples its decisions to the noise, and at this
+//! rig's SNR the direction is chosen by noise more often than by structure.
+//! The synthetic 1.297x was real, and it was measured on a stimulus this
+//! optical path cannot deliver.
 //!
-//! Chroma moved with it, and that is the half of the change that removes
-//! artifacts rather than adding resolution: red and blue are now interpolated
-//! as **colour differences** against the reconstructed green (see
-//! [`diff_mean`]) instead of as channels in their own right. A neutral subject
-//! has zero colour difference everywhere, so a neutral edge can no longer be
-//! given a colour — which is precisely the failure the false-colour test
-//! measures at 81.8% for the old stencils at a 2.5 px period.
+//! The arm is kept, selectable by [`DEMOSAIC_ENV`] and tested, because it is
+//! the evidence for that decision and because a change on the *capture* side
+//! could revive it. Its chroma stage is the part most likely to be worth
+//! salvaging: red and blue interpolated as **colour differences** against the
+//! reconstructed green (see [`diff_mean`]) make false colour on a neutral
+//! subject structurally impossible — zero difference in, zero difference out —
+//! against the 81.8% of amplitude the stencils put into false colour at a
+//! 2.5 px period.
 //!
 //! # Bayer phase
 //!
@@ -309,22 +304,27 @@ fn diff_mean(m: &Mosaic, x: isize, y: isize, offs: &[(isize, isize)]) -> f32 {
     acc / offs.len() as f32
 }
 
-/// Environment override selecting the reference arm: `STREHL_DEMOSAIC=malvar`.
+/// Environment override selecting the directional arm:
+/// `STREHL_DEMOSAIC=directional`.
 ///
-/// This exists so that an A/B between the default and the arm it replaced can
-/// be rendered from **one binary**. Two builds are not a safe comparison in
-/// this tree — BUILD-HULL measured two binaries from different points tonight
-/// differing by a chromatic-aberration correction, red moving up to 3902 DN —
-/// so an algorithm comparison that needs two executables cannot distinguish
-/// its own variable from that one. Read once; the value cannot change within a
-/// run.
+/// **The default is Malvar.** The directional path was measured on the owner's
+/// own captures and rejected — see `docs/research/BUILD-SHARP.md` §31. It is
+/// kept, selectable, and tested because it is the evidence for that decision
+/// and because a future change to the *capture* side could revive it.
+///
+/// Having both arms in one binary is the point: two builds are not a safe
+/// comparison in this tree — BUILD-HULL measured two binaries from different
+/// points tonight differing by a chromatic-aberration correction, red moving up
+/// to 3902 DN — so an algorithm comparison that needs two executables cannot
+/// distinguish its own variable from that one. Read once; the value cannot
+/// change within a run.
 pub const DEMOSAIC_ENV: &str = "STREHL_DEMOSAIC";
 
-fn use_malvar() -> bool {
+fn use_directional() -> bool {
     static CHOICE: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
     *CHOICE.get_or_init(|| {
         std::env::var(DEMOSAIC_ENV)
-            .map(|v| v.eq_ignore_ascii_case("malvar"))
+            .map(|v| v.eq_ignore_ascii_case("directional"))
             .unwrap_or(false)
     })
 }
@@ -335,13 +335,14 @@ fn use_malvar() -> bool {
 /// getting one for this. The caller owns the parallelism, and the CLI runs this
 /// across rows with `par_chunks_mut`.
 pub fn demosaic_row(m: &Mosaic, y: usize, out: &mut [f32]) {
-    if use_malvar() {
-        return demosaic_malvar_row(m, y, out);
+    if use_directional() {
+        return demosaic_directional_row(m, y, out);
     }
-    demosaic_directional_row(m, y, out)
+    demosaic_malvar_row(m, y, out)
 }
 
-/// The default: directional green, chroma as colour differences.
+/// Directional green, chroma as colour differences. **Measured and rejected as
+/// a default** — see [`DEMOSAIC_ENV`].
 pub fn demosaic_directional_row(m: &Mosaic, y: usize, out: &mut [f32]) {
     assert_eq!(out.len(), m.width * 3, "output row is the wrong width");
     assert!(y < m.height, "row {y} is outside the mosaic");
@@ -508,6 +509,15 @@ mod tests {
         out
     }
 
+    fn run_directional(m: &Mosaic) -> Vec<f32> {
+        let mut out = vec![0.0; m.width * m.height * 3];
+        for y in 0..m.height {
+            let row = &mut out[y * m.width * 3..(y + 1) * m.width * 3];
+            demosaic_directional_row(m, y, row);
+        }
+        out
+    }
+
     /// Mosaic an RGB image: keep only the channel each site actually measures.
     fn mosaic_of(rgb: &[f32], w: usize, h: usize) -> Vec<f32> {
         let mut m = vec![0.0; w * h];
@@ -571,7 +581,7 @@ mod tests {
             2.0 * (sa * sa + ca * ca).sqrt() / n as f32 / amp
         };
 
-        let got = amp_of(&run(&m));
+        let got = amp_of(&run_directional(&m));
         let malvar = amp_of(&run_malvar(&m));
 
         assert!(
@@ -619,7 +629,7 @@ mod tests {
                 width: w,
                 height: h,
             };
-            let out = run(&m);
+            let out = run_directional(&m);
             let mut worst = 0.0f32;
             for y in 4..h - 4 {
                 for x in 4..w - 4 {
@@ -782,8 +792,8 @@ mod tests {
             width: w,
             height: h,
         };
-        let out = run(&m);
-        let worst_from = |margin: usize| -> f32 {
+        let out = run_malvar(&m);
+        let worst_from = |out: &[f32], margin: usize| -> f32 {
             let mut worst = 0.0f32;
             for y in margin..h - margin {
                 for x in margin..w - margin {
@@ -795,21 +805,34 @@ mod tests {
             }
             worst
         };
-        assert!(worst_from(3) < 1e-5, "worst interior ramp error {}", worst_from(3));
-
-        // Support is exactly 3: the ring at margin 2 must be *inexact*, and
-        // every pixel that is inexact must lie on that ring.
+        // The default: Malvar, support radius 2.
         assert!(
-            worst_from(2) > 1e-5,
-            "margin-2 ring came back exact, so the support is narrower than \
-             documented and this test is no longer pinning anything"
+            worst_from(&out, 2) < 1e-5,
+            "worst interior ramp error {}",
+            worst_from(&out, 2)
+        );
+
+        // The directional arm reaches one ring further, because each of its
+        // colour-difference neighbours runs its own radius-2 green estimate.
+        // Pinned here so a change that widens it again fails rather than
+        // silently reaching into reflected data.
+        let dir = run_directional(&m);
+        assert!(
+            worst_from(&dir, 3) < 1e-5,
+            "worst directional interior ramp error {}",
+            worst_from(&dir, 3)
+        );
+        assert!(
+            worst_from(&dir, 2) > 1e-5,
+            "the directional margin-2 ring came back exact, so its support is \
+             narrower than documented and this test is no longer pinning it"
         );
         for y in 2..h - 2 {
             for x in 2..w - 2 {
                 let ring = x == 2 || y == 2 || x == w - 3 || y == h - 3;
                 for c in 0..3 {
                     let i = 3 * (y * w + x) + c;
-                    let e = (out[i] - rgb[i]).abs();
+                    let e = (dir[i] - rgb[i]).abs();
                     assert!(
                         ring || e < 1e-5,
                         "error {e} at ({x},{y}) channel {c} is inside the \

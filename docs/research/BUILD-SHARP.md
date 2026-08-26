@@ -3455,3 +3455,183 @@ restore's structural ceiling at **f_out = 0.25** (s28.3), the demosaic loss of
 **22.9% at f_out = 0.35 cycles per output pixel, per-axis** (s28.1), and the
 cross-build check in s29.1, which was bit-identical on all three channels
 between two binaries of differing SHA256.
+
+## 31. The directional demosaic was built, measured on the owner's own captures, and REJECTED. s27/s28's headline is refuted.
+
+**Status: this section retracts my own headline.** ORCH asked me to ship a better
+interpolator on the default path because I had told it the demosaic was the
+largest measured ring-free sharpness lever on the board. I built it, rendered
+it on two of the owner's real stacks, and it is a **regression**. The default
+has been reverted to Malvar. This is the honest negative, with the numbers and
+the pictures.
+
+### 31.1 What was built
+
+Malvar's green stencil at a red/blue site is
+
+```
+F_G = (G_l + G_r + G_u + G_d)/4 + (4K - K_ll - K_rr - K_uu - K_dd)/8
+```
+
+and the load-bearing algebraic fact behind s27.4's 1.297x is that this is
+**exactly the arithmetic mean** of the two Hamilton-Adams directional
+estimates
+
+```
+H = (G_l + G_r)/2 + (2K - K_ll - K_rr)/4
+V = (G_u + G_d)/2 + (2K - K_uu - K_dd)/4
+```
+
+since (H + V)/2 = F_G identically. On a horizontal grating V is *exact* and H
+is attenuated; averaging them therefore throws away half of an exact answer,
+and that is where the measured 22.9% per-axis loss at f_out = 0.35 comes from.
+Selecting the better direction instead of averaging recovers it: synthetically
+the directional estimator scores > 0.97 where Malvar scores < 0.85.
+
+The implementation is Hamilton-Adams green with chroma carried as colour
+differences, in `crates/strehl-core/src/demosaic.rs`. It is retained behind
+`STREHL_DEMOSAIC=directional` so that **one binary can render both arms** and
+so that this measurement is reproducible; it is **not** the default.
+
+### 31.2 The measurement that killed it
+
+One binary, SHA256 `88DEABFF7406C6E44A585D0BF72E33CBF353CECCE6AD4A98F8AE058581DB45B9`,
+both arms, shared alignment cache per subject, green plane only. Tiles of
+128x128 ranked by the **Malvar** arm, so tile selection cannot be biased by the
+arm under test. Ratios are directional / malvar; > 1 means the directional arm
+has more.
+
+| band | metric | `bee-3-cpl` | `tweezers-cpl` |
+|---|---|---:|---:|
+| flattest 5% -- out of focus, no detail exists to recover | mean gradient | **1.1512** | **1.0650** |
+| | HF power | **1.5016** | **1.1698** |
+| median 10% | mean gradient | 0.9988 | 0.9915 |
+| | HF power | 1.0297 | 1.0314 |
+| sharpest 5% -- detail sites | mean gradient | **0.9903** | **0.9831** |
+| | HF power | 1.0259 | **0.9582** |
+
+Read the two ends together, because either alone is ambiguous and the pair is
+not. **Where there is nothing to recover, the directional arm adds up to 50% more
+high-frequency power. Where the detail actually is, it delivers slightly
+less.** That is the signature of an estimator manufacturing structure from
+noise, and it is the exact failure the module header's property 1 was written
+to prevent. The header was right and I overrode it.
+
+`experiments/BUILD-SHARP/src/demosaic_noise_or_detail.py`.
+
+### 31.3 The picture, which is worse than the number
+
+This project's standing rule is to look at the crops as pictures, and here the
+picture carries a finding the statistics did not. Crops in
+`experiments/BUILD-SHARP/src/demosaic_crops.py`; both arms stretched with the
+**same** black/white points taken from the malvar arm, so a visible difference
+is a difference in the data and not in the normalisation. Non-vacuity was
+asserted before looking: `max|malvar - directional|` on green is **4491 DN** on
+`bee-3-cpl` and **7873 DN** on `tweezers-cpl`, so the arms genuinely differ.
+
+- **Out-of-focus tile, `bee-3-cpl` (1408, 6656).** The malvar arm is smooth
+  defocus carrying quincunx noise. The directional arm carries a **maze /
+  labyrinth pattern** -- the classic directional-demosaic artifact, where the
+  H-vs-V decision flips from pixel to pixel in the absence of a real gradient
+  and the flips organise into connected walls. This is materially worse than
+  the "+50% HF power" number suggests, because the added energy is
+  **structured and correlated**, not white. Correlated false texture reads as
+  detail to a viewer and survives sharpening, tone mapping and print. It is
+  the same class of defect as the halo the owner complained about.
+- **Detail tile, `bee-3-cpl` (3072, 5632)** -- hair and its specular
+  highlights, the finest real structure in the frame. The two arms are
+  **visually indistinguishable**. There is no recovered detail to weigh
+  against the artifact above.
+
+### 31.4 Ringing: checked, and not the reason for rejection
+
+I say what I checked rather than that I checked. A ringing detector was built
+and **commissioned before use**: null 0.0000 on an unmodified edge, and planted
+overshoots of 5% and 15% recovered as **0.0500 and 0.1500 exactly**. It caught
+five defects in itself that inspection had not:
+
+1. a quantile edge threshold that degenerates when all edges share one
+   amplitude, returning zero edges;
+2. plateau windows placed on the transition, hiding overshoot inside the
+   measured amplitude;
+3. a **wrong plant** rather than a wrong detector -- overshoot planted where a
+   soft sigmoid had not yet reached plateau, recovered as 1.85% of a 5% plant;
+4. top-N-by-gradient admitting edge shoulders whose window straddles rather
+   than spans the transition, which broke the null at n_cand = 40000; fixed by
+   requiring a gradient local maximum;
+5. division by a near-zero plateau difference on textured data, fixed with an
+   amplitude floor and a **counted `rejected` partition**, so that a skipped
+   edge cannot read as a passed one.
+
+Result on real data: malvar p99 **10.7303**, directional **10.6058** on
+`bee-3-cpl` -- the directional arm is very slightly *lower*. **The directional
+green does not add classical edge overshoot.** Its artifact is the maze, not
+the halo. The absolute values here remain inflated by textured plateaus and are
+**not trustworthy in absolute terms**; only the malvar-vs-directional
+comparison is, and that comparison exonerates it on ringing specifically.
+
+So the rejection is not "it rings". It is "it manufactures structure where
+there is none and recovers nothing where there is".
+
+### 31.5 What this retracts
+
+**s27.4 and s28 claimed the demosaic was the largest measured ring-free
+sharpness lever in the project. That claim is refuted by contact with real
+data and I withdraw it.**
+
+The 1.297x was correctly measured and I stand by the synthetic number. What was
+wrong was the inference from it. It was measured on a **full-contrast grating
+at f_out = 0.35**, and the whole burden of s1 and s14 is that this optical path
+**cannot deliver that stimulus**: at magnification 2.0 the MTF at Nyquist is
+0.036 at f/5.6 and 0.000 beyond, and the marked f/11 the owner shoots is
+effectively f/33. The directional estimator's advantage over Malvar exists
+only where a strongly-oriented high-frequency edge exists to be detected. On
+this rig, at those frequencies, **what is present is noise, and the estimator
+duly oriented itself to the noise.**
+
+This is the same error as s30, in a new place, and I should have seen it
+coming: **a number is only valid in the band -- and on the stimulus -- it was
+measured in.** In s30 I carried an aggregate figure into a specific band. Here
+I carried a synthetic-stimulus figure onto an optical path that cannot produce
+that stimulus. The correction is the same one and I am recording it as such.
+
+### 31.6 Consequences for other lanes
+
+- **BUILD-WIRE: do not deprioritise restore on my advice.** I told ORCH the
+  demosaic was the better lever because it carried no overshoot risk where
+  restore does. The demosaic lever is not there. Restore's overshoot cost
+  (V-RESTORE: 7.82% 1-D, 16.25% 2-D, 3.75% of pixels outside their own input
+  support) must now be weighed against a board on which no free ring-free
+  alternative exists, not against a 1.297x that does not survive contact with
+  the sensor.
+- **Unchanged and still valid**, because they are ratios or structural facts
+  rather than stimulus-dependent gains: composition measured at
+  `GD/(G.D)` in [0.979, 1.040], median 1.000, i.e. **the gather loss and the
+  demosaic loss multiply** (s27); `f` is **cycles per output pixel** (s28.1);
+  the gather is non-monotone in output units with its minimum **0.6230 at
+  f_out = 0.25** (s28.2); restore acts per CFA plane and therefore
+  **structurally cannot reach above f_out = 0.25** at any strength (s28.3);
+  restore's legitimate target is **1.15x at f_out = 0.35**.
+- **The optics floor is now the live hypothesis for the residual softness**,
+  which is item (e) of my original mandate. Selection cannot recover what the
+  optics destroyed, a better interpolator cannot either, and this section is
+  the measurement that says so on the owner's own pixels rather than in
+  principle. The remaining levers are capture-side (s14) and reconstruction
+  with a calibrated sigma (s13, s24 -- where the restoration was measured
+  **inert** at the sigma^2 it was given, which is now the most valuable open
+  thread on the board rather than a footnote to the demosaic).
+
+### 31.7 State of the code
+
+The default path is **Malvar, unchanged in behaviour**. This was verified
+rather than asserted: rendering `tweezers-cpl` with no environment override
+after the revert produced a file **byte-identical (MD5) to the malvar arm** and
+**different from the directional arm**, so the check is non-vacuous. Test suite
+**467 passed, 0 failed**.
+
+One test needed care rather than widening. `a_linear_ramp_survives_exactly_in_
+the_interior` regressed at margin 2 because the directional estimator has
+support radius **3** against Malvar's 2. Rather than move the margin until the
+test passed, it now *proves* the reason: Malvar exact at margin 2, directional
+exact at margin 3, and the margin-2 ring asserted **inexact** with every
+inexact pixel required to lie on that ring.
