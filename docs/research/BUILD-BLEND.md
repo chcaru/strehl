@@ -1053,3 +1053,221 @@ by argument:
 | **selection exponent ramp** | **refuted — costs 18% acuity, keeps the noise** |
 | the pin (`0d9fd28` → `275fbd1`) | **the only candidate left, and outside my lane** |
 
+
+## The default flip: measured, justified, and blocked on a file I do not hold
+
+ORCH asked me to wire the multi-band merge into the CLI and make it the default.
+Two of those three things were already true when I looked, and the third is one
+line that I could not safely write tonight. All of that is below, with the
+numbers that decide it.
+
+### What was already wired
+
+The CLI surface exists and follows the `--fix-ca` house pattern exactly: `--merge`
+as `Option<String>`, `STREHL_MERGE` as its env twin with the spelling in one
+`pub const`, `resolve_merge_backend` three-valued so an unparseable value is a
+hard error rather than a silent off, dispatch at `merge_cmd.rs:2291`, and a
+cross-backend refusal table in `main.rs` that refuses a flag belonging to the
+other arm rather than ignoring it. I wrote none of it. The flip is therefore not
+a wiring job at all -- it is `DEFAULT_MERGE_BACKEND`, one constant, deliberately
+built so the decision has one address.
+
+### The byte-freeze answer ORCH asked for: zero rows move
+
+`tests/byte-freeze.rs` is immune by construction. `Freeze::argv` hardcodes
+`--merge estimator` into every row's argv, with a comment saying why:
+
+> The day `DEFAULT_MERGE_BACKEND` moves, an unnamed row would silently change
+> pipeline and every hash below would move at once.
+
+`STREHL_MERGE` is also in the scrubbed-environment list, so an ambient value
+cannot contaminate a freeze. **No re-baselining is required and none should be
+done.** The regression net was immunised against this exact flip in advance.
+
+The real blast radius is elsewhere and it is not zero: eight flags are
+estimator-only and are *refused* under `--merge pyramid`, so any harness passing
+one without naming a backend starts failing loudly. A sweep recorded in the
+working tree puts that at 338 call sites in 185 files, 189 of them executable,
+with `--gate` alone accounting for 275. Loud, not silent -- but a harness that
+dies is a measurement that does not happen.
+
+### The criterion was pre-registered, and it is now met
+
+`DEFAULT_MERGE_BACKEND` names its own release condition: *"This line moves the
+day that clip passes the gate."* The blocker was `flower-bud-alone-cpl` clipping
+**1.4043% of pixels against the estimator's 0.0001%**, with `p1` falling
+1028 -> 334. `accept.py` defines `clip%` as pixels with any channel *exactly
+zero* -- it is a black-point statistic, the same defect ORCH-veiling section 29
+diagnosed and assigned to this lane, and the one `Hull::InputRange` was built to
+remove.
+
+Re-measured tonight through one binary, both arms camera-linear (`--demosaic`),
+CA and photometric explicitly unset, stock configuration (band gate 2.00,
+exponent ramp `2 3 4 5 8 8 8`, base = mean):
+
+| subject | arm | clip% | acuity | microC | p1 | verdict |
+|---|---|---:|---:|---:|---:|---|
+| couch-fibers-cpl | estimator | 0.0000 | 334.1 | 289.88 | 3068 | reference |
+| | pyramid | 0.0000 | **373.2** | **339.73** | 3232 | **PASS** |
+| flower-bud-alone-cpl | estimator | 0.0001 | 126.9 | 54.21 | 1028 | reference |
+| | pyramid | **0.0000** | **223.4** | **117.55** | 1042 | **PASS** |
+| lavendar-cpl | estimator | 0.0000 | 165.9 | 42.83 | 1939 | reference |
+| | pyramid | 0.0000 | **330.4** | **161.58** | 2462 | **PASS** |
+| coffee-bean | estimator | 0.0000 | 669.8 | 655.27 | 1801 | reference |
+| | pyramid | 0.0000 | 724.9 | **440.66** | 1726 | **FAIL: micro 67.2%** |
+
+**The clip is 0.0000% and `p1` no longer collapses.** The specific condition
+written against the constant is satisfied. The gate as a whole is not: one
+subject fails, and that subject is new evidence nobody had, because the pair the
+criterion was written against did not include it.
+
+Two claims in the working tree are corrected by this. The pyramid arm was said
+to be uncharacterised at its own default gate, on the grounds that the numbers
+came from `--pyramid-gate 4`; both `FLIP` render logs record `noise gate : 2.00`,
+which is the stock default, and so does every render above. And the acuity
+regression that was once attributed to the merge is absent at stock gate on all
+four subjects -- the pyramid wins acuity everywhere, by 12% to 99%.
+
+### The rim, on ORCH's own instrument and pre-registered targets
+
+`rimprofile.py`, linear 16-bit, my renders. The estimator arm reproduces ORCH's
+section 12 reference **exactly** -- interior local maximum at d=18 px standing
++2279 DN above the trough -- which commissions the instrument before it is used
+to judge anything.
+
+| d (px) | estimator, vs far field | pyramid, vs far field |
+|---:|---:|---:|
+| 16-20 | **-2622**  (ring peak) | -1225  (no local max) |
+| 65-80 | -4774 | -419 |
+| **100-125** | **-4901**  (aura floor) | **-208** |
+| 150-200 | -3942 | +19 |
+| 250-300 | -1194 | +149 |
+
+Both features ORCH separated collapse together:
+
+| feature | estimator | pyramid | target | result |
+|---|---:|---:|---|---|
+| ring prominence at d=18 | **12.0%** (+2279 DN) | **no ring at d=18** | <= 1% | **met** |
+| broad aura at d~117 | **-25.8%** (-4901 DN) | **-1.09%** (-208 DN) | -- | **23.6x smaller** |
+
+The pyramid's profile is *monotone* through the entire rim zone. The detector's
+nearest residual on it is +268 DN (1.41%) at **d=275 px** -- a different, far
+weaker feature fifteen times further out, in the region ORCH has already shown
+carries the scene's own illumination field.
+
+`coffee-bean`, the pre-registered negative control, holds: ring prominence
+**0.14% -> 0.47%**, both an order of magnitude under `flower-bud`'s 12.0% and
+both inside the 1% bar. Neither arm invents a silhouette ring on it.
+
+**`lavendar-cpl` is not reportable on this instrument and I am not reporting a
+number for it.** `rimprofile.py` assumes a dark subject on a bright ground and
+segments with `lum < threshold`; lavendar is a bright subject on mid grey, so the
+mask selects the *ground*, and it fragments into 8137 components. A profile
+computed from that is not measuring the silhouette. This is the same failure
+ORCH-veiling 42.2 warned about -- a probe whose verdict names a premise it never
+tested -- and the correct output is a refusal, not a number.
+
+### The picture, which is the part that matters
+
+`view\sxs-flower-bud-alone-cpl.jpg`. On the estimator the "spilled milk" defect
+is unmistakable: a bright scalloped band with drip-shaped lobes hugging the
+entire silhouette, and a hard outline tracing every edge. On the pyramid it is
+**gone** -- smooth backdrop, no band, no outline -- and the bud carries visibly
+more trichome detail at the same time. The removal is not a blur: acuity rises
+76% and micro-contrast 117% on that frame.
+
+`view\crop-couch-fibers-cpl.jpg`, the do-no-harm guard at 1:1: individual
+filaments are equally crisp in both arms. The guard improves rather than softens
+(+11.7% acuity, +17.2% microC), which is the specific trade ORCH asked me to put
+a number on, and it is the right sign.
+
+### The one failure, diagnosed rather than explained away
+
+`coffee-bean` fails `microC` at 67.2%. I looked at it at 1:1 before deciding what
+that meant. There is no visible loss of detail; what is visible is that the
+*estimator's* dark regions carry blotchy mottle that the pyramid's do not.
+`microC` is a median local standard deviation, and on this subject a large part
+of the scored population is dark bean surface where the estimator's noise is
+being counted as micro-contrast.
+
+That reading is supported but not proven. Splitting local standard deviation by
+population, with rail-clipped control tiles excluded so nothing is a ratio
+against the white rail:
+
+| subject | backdrop | subject interior | control at white rail | pyramid at white rail |
+|---|---:|---:|---:|---:|
+| flower-bud-alone | 2.21x | 1.49x | 0.0000% | 0.0000% |
+| lavendar | 3.87x | 1.27x | 0.0000% | 0.0000% |
+| couch-fibers | 1.17x | 1.17x | 0.0000% | 0.0000% |
+| **coffee-bean** | **1.14x** | **0.85x** | **1.1657%** | **2.8649%** |
+
+`coffee-bean` is the only subject whose interior falls, and it is the only
+subject with material white-rail clipping -- which the pyramid **more than
+doubles**, 1.17% -> 2.86%. That is a real defect and it is mine: the hull clamp
+confines the reconstruction to the hull of its inputs, and where the inputs
+themselves reach the rail the hull permits the rail. Near-argmax selection then
+drives toward it. It is the highlight-side twin of the black-point collapse I
+already fixed, and it is not fixed.
+
+It also disposes of one convenient story: `gradenergy` read the coffee-bean
+backdrop as **10.97x** noisier, and that number is an artifact of comparing
+against clipped control tiles. Excluding them it is **1.14x**. I would have
+reported the 10.97x had I not checked.
+
+### Why the backdrop noise happens, which answers an open question
+
+Across every subject the pyramid raises backdrop local standard deviation --
+1.14x to 3.87x. My own render log says why, in a diagnostic I built and had not
+read carefully enough:
+
+```
+averaged : 49.1%  0.0%  0.0%  0.0%  0.0%  0.0%  0.0%  100.0%
+```
+
+That is the fraction of coefficients at each level where no frame cleared the
+noise floor and the merge averaged instead of selecting. **The gate gates at
+level 0 and does not gate at all at levels 1 through 6.** In a region that is
+featureless in every frame those bands contain only noise, so some frame always
+"wins", independently per coefficient -- which is precisely ORCH-veiling section
+40's patchwork mechanism, visible in my own instrumentation.
+
+The cause is that the floor is `gate * beta * sigma^2` where `beta = E[L_k^2] /
+sigma_0^2` is derived by pushing **white** noise through the operators. Real
+post-demosaic sensor noise is spatially correlated, so it carries more energy at
+coarse scales than white noise predicts, and `beta` collapses fast --
+`0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000`. By level 5 the floor
+is effectively zero and anything clears it.
+
+This also answers the question ORCH-veiling 42.3 left open -- why gate 4.5
+collapses `bee-1`'s background 87% but moves `couch-fibers`' only 3.4%, "when
+both have noise-dominated flat tiles". A gate calibrated for white noise does not
+act in units of the real noise on subjects whose noise correlation differs. The
+fix is to estimate the per-band floor empirically from the frames the fold
+already sees rather than from a white-noise model. That is a change in
+`pyramid.rs`, it is mine, and it is not a 4 a.m. change.
+
+I already know two things it should not be. Lowering the exponent uniformly costs
+18% of textured acuity for almost no noise gain, and raising the gate is a
+per-subject win and a per-subject loss (ORCH-veiling 42). Neither is the fix; a
+correctly calibrated floor plausibly is.
+
+### Why I did not flip the line
+
+`crates/strehl-cli/src/merge_cmd.rs` and `crates/strehl-cli/src/main.rs` are held
+by a live lane. Both carry uncommitted work -- 240 lines across the two -- and
+the `merge_cmd.rs` hunks land **exactly** on the `MergeBackend` variant docs and
+the `DEFAULT_MERGE_BACKEND` doc block, the precise text a flip must rewrite. I
+checked their mtimes at 03:40:51 and they had been written at 03:40:20 and
+03:40:29, thirty seconds earlier. That lane is at the keyboard now.
+
+Flipping the constant is not a one-line edit in effect: three tests in `main.rs`
+read the rendered help back and compare it against this constant, so the value
+and the words move together or the suite fails. Every one of those words is
+inside the diff someone else is holding.
+
+So I stopped. On this repository a clobbered file has already destroyed another
+agent's work twice, and the instruction is explicit that a shared file is
+re-read immediately before editing -- which is what caught this. **The
+measurement that unblocks the criterion is done and is above; the edit needs a
+window in which that file is mine.** It is minutes of work once it is free.
+
