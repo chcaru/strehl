@@ -15,8 +15,8 @@ import numpy as np
 import tifffile
 from PIL import Image
 
-OUT = Path(r"C:\dev\strehl-out\VEILZ2")
-STEM = sys.argv[1] if len(sys.argv) > 1 else "cb"
+OUT = Path(sys.argv[1] if len(sys.argv) > 1 else r"C:\dev\strehl-out\VEILZ2")
+STEM = sys.argv[2] if len(sys.argv) > 2 else "cb"
 
 
 def encode(a: np.ndarray, scale: float) -> np.ndarray:

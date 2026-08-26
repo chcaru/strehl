@@ -2183,6 +2183,89 @@ impl Estimator {
         self.veil_luma_floor = luma_floor;
     }
 
+    /// Turn on veil-envelope accumulation, eligible where the **election is
+    /// incoherent** — that is, where neighbouring pixels pick unrelated frames
+    /// because there is nothing at this depth to focus on.
+    ///
+    /// This is the shipping gate. It supersedes [`Estimator::enable_veil`],
+    /// which asked the same question of the through-focus response against the
+    /// merge's own `--gate` cut and failed on measurement because that cut is
+    /// borrowed from a test about when averaging is safe and carries no
+    /// information about veiling. On `coffee-bean` the borrowed cut fell exactly
+    /// at the image's median significance, so it kept the featureless far
+    /// background — where there is no veil — and excluded the rim, lifting the
+    /// clean far field 5.15% while moving the rim 0.23%. See
+    /// `docs/research/BUILD-HALO.md` section 32.
+    ///
+    /// `incoherence` is the local standard deviation of the elected frame index
+    /// from
+    /// [`election_coherence::incoherence`](crate::election_coherence::incoherence).
+    /// `lo` and `hi` bracket the handover: weight is 0 at or below `lo`, where
+    /// the election is coherent and carries real depth, and 1 at or above `hi`,
+    /// where it is chasing noise. **Both must come from quantiles of this
+    /// image's own distribution**, not from a constant — that is the entire
+    /// repair, and passing constants here reintroduces the defect.
+    ///
+    /// Note the ramp runs the opposite way to `enable_veil`'s: there a *low*
+    /// field value meant eligible, here a *high* one does.
+    ///
+    /// Must be called before the first fold: a maximum that missed frames is
+    /// not a maximum.
+    pub fn enable_veil_from_incoherence(
+        &mut self,
+        incoherence: &[f32],
+        lo: f32,
+        hi: f32,
+        margin: f32,
+        luma_floor: f32,
+    ) {
+        assert!(
+            self.frames == 0,
+            "enable_veil_from_incoherence must precede the first fold; {} frames \
+             are already folded and a maximum that missed them is not a maximum",
+            self.frames
+        );
+        let px = self.geom.pixels();
+        assert_eq!(
+            incoherence.len(),
+            px,
+            "election incoherence field is {} px but the estimator covers {px} px",
+            incoherence.len()
+        );
+        assert!(
+            lo.is_finite() && hi.is_finite() && hi > lo,
+            "veil handover must be a finite widening interval, got lo {lo} hi {hi}"
+        );
+        assert!(
+            margin.is_finite() && margin >= 0.0,
+            "veil margin must be finite and non-negative, got {margin}"
+        );
+        self.pmax = [
+            vec![f32::NEG_INFINITY; px],
+            vec![f32::NEG_INFINITY; px],
+            vec![f32::NEG_INFINITY; px],
+            vec![f32::NEG_INFINITY; px],
+        ];
+        self.veil_w = incoherence
+            .iter()
+            .map(|&s| {
+                if !s.is_finite() {
+                    return 0.0;
+                }
+                if s <= lo {
+                    0.0
+                } else if s >= hi {
+                    1.0
+                } else {
+                    (s - lo) / (hi - lo)
+                }
+            })
+            .collect();
+        self.veil_gate_cut = hi;
+        self.veil_margin = margin;
+        self.veil_luma_floor = luma_floor;
+    }
+
     /// Replace the gated mean with the debiased upper envelope at dead-ground
     /// pixels, where the mean is an average over the veil.
     ///

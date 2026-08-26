@@ -16,6 +16,7 @@ pub mod clip;
 pub mod color;
 pub mod demosaic;
 pub mod edgeaware;
+pub mod election_coherence;
 pub mod flat_ratio;
 pub mod focus;
 pub mod merge;

@@ -2956,13 +2956,12 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     //
     // Skipped only when explicitly switched off for an A/B arm.
     let mut acuity: Option<edgeaware::SelectionScale> = None;
-    // The veil needs the same prominence field the veto computes, and the veto
-    // computes it inside an arm-conditional block. Hoisting a binding out is
-    // cheaper and less invasive than widening `LayerSupport`, and it keeps the
-    // two consumers provably reading one array: if the veto ever stops
-    // computing this, the veil goes inert rather than silently gating on
-    // something else.
-    let mut veil_excess: Option<Vec<f32>> = None;
+    // The veil USED to gate on the veto's prominence field. It no longer does:
+    // that gate was borrowed from `--gate`, which states when averaging is safe
+    // and carries no information about veiling, and it inverted on the first
+    // out-of-sample subject it met (BUILD-HALO.md sec 32). The veil now gates on
+    // election incoherence, which is derived from the image's own distribution.
+    // The prominence field survives here only as a printed diagnostic.
     let layer_support: Option<LayerSupport> = if edge_aware_arm() != EdgeArm::Off {
         let t0 = Instant::now();
         let ctx_guide = Ctx {
@@ -3014,37 +3013,24 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 .map(edgeaware::BimodalStats::peak_excess)
                 .unwrap_or_else(|| vec![f32::INFINITY; geom.pixels()]);
             let cut = opts.gates.iter().copied().fold(f32::INFINITY, f32::min);
-            // The VEIL's gate, which is a different question from the veto's
-            // and needs different units.
-            //
-            // The veto asks "is a SECOND layer resolvable here", and consumes
-            // `peak_excess` in raw focus units as proof of absence -- a
-            // conservative direction in which a units mismatch can only make it
-            // refuse more often. The veil asks "does the election have anything
-            // to choose between at all", which is a SIGNIFICANCE question, and
-            // it is consumed in the permissive direction where the same
-            // mismatch is not survivable.
-            //
-            // Measured: gating the veil on `peak_excess > 4.0` made 99.59% of
-            // `flower-bud` eligible -- not a gate at all, leaving the whole
-            // safety interlock resting on the luminance floor, which protects a
-            // dark subject and would protect nothing on a bright one.
-            // `first_mode_z` is the same peak expressed in the pixel's own
-            // noise sigmas, so a 4.0-sigma cut means what the rest of the
-            // engine means by 4.0 sigma.
-            veil_excess = modes.as_ref().map(edgeaware::BimodalStats::first_mode_z);
             {
-                // The veil gates on this same field from the other side, so its
-                // DISTRIBUTION decides how much of the plane the veil claims.
-                // A single "admitted %" cannot show that, and reasoning about
-                // the scale of a quantity in focus units rather than measuring
-                // it is how a gate ends up either inert or universal.
-                let mut v = veil_excess.clone().unwrap_or_default();
+                // Retained as a DIAGNOSTIC, not as a gate. This distribution is
+                // the evidence for BUILD-HALO.md sec 32: `first_mode_z`'s median
+                // is 2.97 on `flower-bud` but exactly 4.00 on `coffee-bean`, so
+                // a fixed 4.0 cut admits most of one image and the COMPLEMENT of
+                // the target population in the other. Printing the quantiles is
+                // what made that visible; a single "admitted %" could not have,
+                // and reasoning about the scale of a quantity instead of
+                // measuring it is how a gate ends up either inert or universal.
+                let mut v = modes
+                    .as_ref()
+                    .map(edgeaware::BimodalStats::first_mode_z)
+                    .unwrap_or_default();
                 v.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
                 let q = |f: f64| v[(((v.len() - 1) as f64) * f).round() as usize];
                 eprintln!(
                     "peak significance: p10 {:.2} p25 {:.2} p50 {:.2} p75 {:.2} p90 {:.2} \
-                     p99 {:.2} max {:.2} sigma  (veil claims z < {cut:.1})",
+                     p99 {:.2} max {:.2} sigma  (diagnostic; the veil does NOT gate on this)",
                     q(0.10), q(0.25), q(0.50), q(0.75), q(0.90), q(0.99), q(1.0)
                 );
             }
@@ -3594,26 +3580,76 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     let veil_on = veil_enabled();
     let veil_margin = veil_margin();
     let veil_floor = veil_luma_floor();
-    // The gate is the merge's own significance gate, exactly as the collapse
-    // veto uses it — the veil is that same test read in the opposite
-    // direction, so it must not acquire a threshold of its own.
-    let veil_cut = opts.gates.iter().copied().fold(f32::INFINITY, f32::min);
-    // Refused, not silently disabled. The prominence field is the veil's whole
-    // safety interlock; without it the operator would have to fall back on
-    // either a geometric mask or an absolute focus ceiling, and both were tried
-    // and both were wrong (see `Estimator::veil_w`). A veil that cannot prove
-    // the election has nothing to choose between must not run at all.
+    // The gate is built in two stages, and the split between them is the point.
+    //
+    // Stage one asks the per-pixel question -- *is this pixel's election
+    // chasing noise* -- against a cut taken from QUANTILES OF THIS IMAGE'S OWN
+    // incoherence distribution, never from a constant. A fixed number is a
+    // different test on every subject depending on where that subject's
+    // distribution falls relative to it, which is exactly how the previous gate
+    // failed: it borrowed the merge's `--gate` significance cut, that cut landed
+    // at `coffee-bean`'s median, and the gate kept the featureless far
+    // background while excluding the rim. See `BUILD-HALO.md` section 32.
+    //
+    // 0.55 is the split the out-of-crate mask used to trace the silhouette on
+    // `lavendar` and `flower-bud` (`experiments/BUILD-HALO/depth_profile.py`),
+    // where two luminance-threshold silhouettes had failed.
+    //
+    // Stage two is what the veil actually ramps on: the FRACTION of each
+    // neighbourhood that answered yes. Gating on stage one directly wrote a
+    // lacework -- the correction toggling at the scale of paper fibres, because
+    // whether one fibre was resolved somewhere in the bracket is a true but
+    // invisible per-pixel fact. Section 33. A veil has the scale of the object
+    // casting it, so the gate is given that scale too.
+    //
+    // The stage-two thresholds are constants and are allowed to be, because a
+    // fraction carries no scene units: "a quarter of this neighbourhood" means
+    // the same thing on every subject, which is precisely what the borrowed
+    // absolute cut of section 32 did not.
+    const VEIL_SUPPORT_LO: f32 = 0.25;
+    const VEIL_SUPPORT_HI: f32 = 0.75;
+    let veil_incoherence: Option<Vec<f32>> = veil_on.then(|| {
+        let sd = strehl_core::election_coherence::incoherence(p1.stats.best_index(), geom);
+        let cut = strehl_core::election_coherence::quantile(&sd, 0.55);
+        let support = strehl_core::election_coherence::incoherent_fraction(&sd, geom, cut);
+        // Stage three: how much of the correction this pixel is owed.
+        //
+        // Stages one and two say the envelope is SAFE here. They do not say it
+        // is NEEDED here, and on `coffee-bean` those differ over most of the
+        // frame: dead ground 900 px from the bean is maximally safe and carries
+        // no veil, because a veil is cast by an occluder and there is no
+        // occluder within reach of it. Treating it anyway lifted the clean far
+        // field 6.04% and turned a shape correction into a gain change.
+        //
+        // Scaling by proximity to resolved content restores the fall-off the
+        // physical term actually has. The normaliser is this image's own p99
+        // rather than a constant, for the same reason the stage-one cut is:
+        // proximity is measured in "fraction of a window that is occluder", and
+        // how much of a window a subject fills is a property of the subject.
+        let prox = strehl_core::election_coherence::occluder_proximity(&sd, geom, cut);
+        let full = strehl_core::election_coherence::quantile(&prox, 0.99).max(1e-6);
+        support
+            .iter()
+            .zip(prox.iter())
+            .map(|(&s, &p)| s * (p / full).clamp(0.0, 1.0))
+            .collect()
+    });
+    let (veil_lo, veil_hi) = (VEIL_SUPPORT_LO, VEIL_SUPPORT_HI);
+    // Refused, not silently disabled. Where no neighbourhood anywhere in the
+    // frame reads as dead ground there is nothing for the envelope to claim,
+    // and applying it anyway would put it on resolved depth -- the one place
+    // the specification forbids. Read at p99.9 rather than the max so a handful
+    // of hot pixels cannot answer for the frame.
+    let veil_reach = veil_incoherence
+        .as_deref()
+        .map(|s| strehl_core::election_coherence::quantile(s, 0.999))
+        .unwrap_or(0.0);
     ensure!(
-        !veil_on || veil_excess.is_some(),
-        "STREHL_VEIL needs the bimodal prominence field, which is only computed \
-         when the edge-aware arm is on: the veil is gated on proving the \
-         through-focus response has no resolvable peak, and without that field \
-         it has no way to tell dead ground from resolved detail"
-    );
-    ensure!(
-        !veil_on || veil_cut.is_finite(),
-        "STREHL_VEIL needs at least one finite gate to take its significance \
-         cut from"
+        !veil_on || veil_reach > VEIL_SUPPORT_LO,
+        "STREHL_VEIL cannot separate dead ground from resolved depth on this \
+         stack: the most incoherent neighbourhood in the frame is only \
+         {veil_reach:.3} incoherent against a {VEIL_SUPPORT_LO:.2} floor, so \
+         there is no silhouette to gate on"
     );
     // Refused, not silently accepted. The envelope is a per-pixel maximum over
     // the bracket, so on a bracket whose level drifts it returns the
@@ -3638,9 +3674,10 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 .map(|g| {
                     let mut e = Estimator::new(&p1.stats, Gate::new(*g));
                     if veil_on {
-                        e.enable_veil(
-                            veil_excess.as_deref().expect("refused above if absent"),
-                            veil_cut,
+                        e.enable_veil_from_incoherence(
+                            veil_incoherence.as_deref().expect("refused above if absent"),
+                            veil_lo,
+                            veil_hi,
                             veil_margin,
                             veil_floor,
                         );
@@ -3747,7 +3784,9 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 continue;
             }
             eprintln!(
-                "veil: gate {g} flat-cut {veil_cut:.1} sigma margin {veil_margin} sigma \
+                "veil: gate {g} dead-ground support {veil_lo:.2}..{veil_hi:.2} \
+                 (reach {veil_reach:.3}) \
+                 margin {veil_margin} sigma \
                  floor {veil_floor} x backdrop {:.0} DN = {:.0} DN \
                  (foreground {:.0} DN, polarity {:+.0} DN) \
                  -> eligible {:.2}% applied {:.2}% mean lift {:+.1} DN debias {:.2} sigma",
