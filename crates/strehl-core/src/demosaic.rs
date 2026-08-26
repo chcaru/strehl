@@ -49,6 +49,46 @@
 //! high-frequency diagonal edges. [`tests`] measures where this one fails and
 //! the failure is asserted rather than hidden.
 //!
+//! # Why the default is no longer Malvar
+//!
+//! Measured, on the `f` axis in cycles per **output** pixel, per-axis
+//! horizontal, green channel: Malvar's green loses **22.9%** of amplitude at
+//! `f = 0.35` — and an oracle fit to the green samples alone recovers
+//! **1.0000** there, so the amplitude is present in the data and the loss is a
+//! *reconstruction* shortfall rather than an information one. The mechanism is
+//! in [`green_directional`]: [`F_G`] is exactly the mean of the two directional
+//! estimates, so where one of them is already exact, averaging halves it away.
+//!
+//! Of the four properties above, the directional green keeps three and gives
+//! up one. Being explicit about which:
+//!
+//! - **Property 1, linearity, is genuinely surrendered.** The direction is
+//!   chosen from image content, so the noise couples to the decision. What
+//!   limits the damage is that the decision only matters where the two
+//!   candidates disagree, and where they disagree one of them is wrong; where
+//!   the image is locally isotropic they agree and the choice is immaterial.
+//!   That is an argument, not a measurement, and it is the property a reviewer
+//!   should attack first.
+//! - **Property 2, that it cannot manufacture detail, survives intact.** Every
+//!   output is still a bounded linear combination of measured photosites — the
+//!   selection picks *which* combination, never invents a value outside them.
+//!   `it_does_not_manufacture_energy_above_the_scenes_band_limit` is the guard
+//!   and it still runs against the default.
+//! - **Property 3, a closed form to test against, survives** for Malvar, which
+//!   is retained as [`demosaic_malvar_row`] and still carries the false-colour
+//!   closed form.
+//! - **Property 4, licence, is unchanged.** Hamilton-Adams is implemented from
+//!   the published algorithm. **No implementation was read to write this**; the
+//!   GPL demosaic implementations named in `AGENTS.md` were not opened.
+//!
+//! Chroma moved with it, and that is the half of the change that removes
+//! artifacts rather than adding resolution: red and blue are now interpolated
+//! as **colour differences** against the reconstructed green (see
+//! [`diff_mean`]) instead of as channels in their own right. A neutral subject
+//! has zero colour difference everywhere, so a neutral edge can no longer be
+//! given a colour — which is precisely the failure the false-colour test
+//! measures at 81.8% for the old stencils at a 2.5 px period.
+//!
 //! # Bayer phase
 //!
 //! **RGGB only.** `strehl_raw::decode` rejects every other pattern at the
@@ -191,12 +231,162 @@ fn conv(m: &Mosaic, x: usize, y: usize, taps: &[Tap]) -> f32 {
     acc * 0.125
 }
 
+/// The four diagonal neighbours: the chroma sites around an R or a B site.
+const DIAG: [(isize, isize); 4] = [(-1, -1), (1, -1), (-1, 1), (1, 1)];
+/// The two horizontal neighbours.
+const H2: [(isize, isize); 2] = [(-1, 0), (1, 0)];
+/// The two vertical neighbours.
+const V2: [(isize, isize); 2] = [(0, -1), (0, 1)];
+
+/// Green at a red or blue site, **choosing** the interpolation direction
+/// instead of averaging both. Hamilton & Adams, implemented from the algorithm
+/// as described; no implementation was read to write this.
+///
+/// The two candidates are the horizontal and vertical gradient-corrected
+/// estimates. Malvar's [`F_G`] is algebraically their *arithmetic mean* — add
+/// `h` and `v` below and divide by two and the stencil falls out exactly. That
+/// identity is why the mean is the wrong operator here: on structure that runs
+/// in one direction, one candidate is exact and the other is attenuated, and
+/// averaging throws away half of an estimate that was already correct.
+///
+/// The decision is a comparison of two gradients, with no threshold and no
+/// tuned constant, and it is symmetric under transposition so that
+/// `demosaicing_commutes_with_transposing_the_mosaic` still holds.
+#[inline]
+fn green_directional(m: &Mosaic, x: isize, y: isize) -> f32 {
+    let k = m.at(x, y);
+    let (gl, gr) = (m.at(x - 1, y), m.at(x + 1, y));
+    let (gu, gd) = (m.at(x, y - 1), m.at(x, y + 1));
+    // Second differences of the *known* channel, which is sampled every two
+    // pixels along each axis, so these are its Laplacian components.
+    let lh = 2.0 * k - m.at(x - 2, y) - m.at(x + 2, y);
+    let lv = 2.0 * k - m.at(x, y - 2) - m.at(x, y + 2);
+
+    let dh = (gl - gr).abs() + lh.abs();
+    let dv = (gu - gd).abs() + lv.abs();
+
+    let h = 0.5 * (gl + gr) + 0.25 * lh;
+    let v = 0.5 * (gu + gd) + 0.25 * lv;
+
+    if dh < dv {
+        h
+    } else if dv < dh {
+        v
+    } else {
+        // A genuine tie is isotropic structure, where the two candidates agree
+        // anyway; their mean is Malvar's stencil, so the tie case is exactly
+        // the old behaviour.
+        0.5 * (h + v)
+    }
+}
+
+/// Green anywhere: the measured sample at a green site, the directional
+/// estimate elsewhere.
+#[inline]
+fn green_at(m: &Mosaic, x: isize, y: isize) -> f32 {
+    let (rx, ry) = (reflect(x, m.width), reflect(y, m.height));
+    match m.plane_at(rx, ry) {
+        CfaPlane::G1 | CfaPlane::G2 => m.data[ry * m.width + rx],
+        _ => green_directional(m, x, y),
+    }
+}
+
+/// Mean of `known - green` over the given neighbours — the colour difference,
+/// interpolated rather than the chroma channel itself.
+///
+/// This is what carries green's resolution into red and blue. `R - G` is flat
+/// across a *luminance* edge, so interpolating the difference and adding the
+/// sharp green back reconstructs a sharp red; interpolating red directly, as
+/// Malvar's [`F_H`]/[`F_V`]/[`F_X`] do, does not. It is also what keeps a
+/// neutral edge neutral: if `R == G == B` the differences are zero everywhere
+/// and stay zero, so no false colour can be generated at all.
+#[inline]
+fn diff_mean(m: &Mosaic, x: isize, y: isize, offs: &[(isize, isize)]) -> f32 {
+    let mut acc = 0.0f32;
+    for (dx, dy) in offs {
+        acc += m.at(x + dx, y + dy) - green_at(m, x + dx, y + dy);
+    }
+    acc / offs.len() as f32
+}
+
+/// Environment override selecting the reference arm: `STREHL_DEMOSAIC=malvar`.
+///
+/// This exists so that an A/B between the default and the arm it replaced can
+/// be rendered from **one binary**. Two builds are not a safe comparison in
+/// this tree — BUILD-HULL measured two binaries from different points tonight
+/// differing by a chromatic-aberration correction, red moving up to 3902 DN —
+/// so an algorithm comparison that needs two executables cannot distinguish
+/// its own variable from that one. Read once; the value cannot change within a
+/// run.
+pub const DEMOSAIC_ENV: &str = "STREHL_DEMOSAIC";
+
+fn use_malvar() -> bool {
+    static CHOICE: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *CHOICE.get_or_init(|| {
+        std::env::var(DEMOSAIC_ENV)
+            .map(|v| v.eq_ignore_ascii_case("malvar"))
+            .unwrap_or(false)
+    })
+}
+
 /// Demosaic one output row into `out`, which must hold `width * 3` samples.
 ///
 /// Row-at-a-time on purpose: `strehl-core` has no `rayon` dependency and is not
 /// getting one for this. The caller owns the parallelism, and the CLI runs this
 /// across rows with `par_chunks_mut`.
 pub fn demosaic_row(m: &Mosaic, y: usize, out: &mut [f32]) {
+    if use_malvar() {
+        return demosaic_malvar_row(m, y, out);
+    }
+    demosaic_directional_row(m, y, out)
+}
+
+/// The default: directional green, chroma as colour differences.
+pub fn demosaic_directional_row(m: &Mosaic, y: usize, out: &mut [f32]) {
+    assert_eq!(out.len(), m.width * 3, "output row is the wrong width");
+    assert!(y < m.height, "row {y} is outside the mosaic");
+    let yi = y as isize;
+    for x in 0..m.width {
+        let xi = x as isize;
+        let px = &mut out[3 * x..3 * x + 3];
+        let known = m.data[y * m.width + x];
+        match m.plane_at(x, y) {
+            CfaPlane::R => {
+                let g = green_directional(m, xi, yi);
+                px[0] = known;
+                px[1] = g;
+                px[2] = g + diff_mean(m, xi, yi, &DIAG);
+            }
+            CfaPlane::B => {
+                let g = green_directional(m, xi, yi);
+                px[0] = g + diff_mean(m, xi, yi, &DIAG);
+                px[1] = g;
+                px[2] = known;
+            }
+            // G1: even row, odd column. The row is an R row, so red neighbours
+            // are horizontal and blue neighbours are vertical.
+            CfaPlane::G1 => {
+                px[0] = known + diff_mean(m, xi, yi, &H2);
+                px[1] = known;
+                px[2] = known + diff_mean(m, xi, yi, &V2);
+            }
+            // G2: odd row, even column. The row is a B row, so it is the other
+            // way round.
+            CfaPlane::G2 => {
+                px[0] = known + diff_mean(m, xi, yi, &V2);
+                px[1] = known;
+                px[2] = known + diff_mean(m, xi, yi, &H2);
+            }
+        }
+    }
+}
+
+/// The Malvar-He-Cutler stencils, **a reference arm, not the shipping path**.
+///
+/// This was the default until the directional green in [`demosaic_row`]
+/// replaced it. It is kept because it is the closed form the false-colour test
+/// predicts, and because a headline needs something to be scored against.
+pub fn demosaic_malvar_row(m: &Mosaic, y: usize, out: &mut [f32]) {
     assert_eq!(out.len(), m.width * 3, "output row is the wrong width");
     assert!(y < m.height, "row {y} is outside the mosaic");
     for x in 0..m.width {
@@ -309,6 +499,15 @@ mod tests {
         out
     }
 
+    fn run_malvar(m: &Mosaic) -> Vec<f32> {
+        let mut out = vec![0.0; m.width * m.height * 3];
+        for y in 0..m.height {
+            let row = &mut out[y * m.width * 3..(y + 1) * m.width * 3];
+            demosaic_malvar_row(m, y, row);
+        }
+        out
+    }
+
     /// Mosaic an RGB image: keep only the channel each site actually measures.
     fn mosaic_of(rgb: &[f32], w: usize, h: usize) -> Vec<f32> {
         let mut m = vec![0.0; w * h];
@@ -323,6 +522,119 @@ mod tests {
             }
         }
         m
+    }
+
+    /// The reason the default changed, asserted rather than asserted-about.
+    ///
+    /// A horizontal neutral grating is the case where the vertical estimate is
+    /// exact and the horizontal one is attenuated. Malvar averages them and
+    /// loses amplitude; the directional green picks the exact one. Two claims
+    /// are pinned here: that the default recovers materially more amplitude
+    /// than Malvar at the frequency the loss was priced at, and that Malvar's
+    /// own loss is the ~23% that priced it.
+    #[test]
+    fn directional_green_recovers_the_amplitude_malvar_averages_away() {
+        let (w, h) = (64usize, 64usize);
+        let amp = 0.2f32;
+        // f = 0.35 cycles per output pixel, the frequency the loss was priced
+        // at. Period 1/0.35 is not an integer; that is deliberate.
+        let f = 0.35f32;
+
+        let mut rgb = vec![0.0f32; w * h * 3];
+        for y in 0..h {
+            for x in 0..w {
+                let v = 0.5 + amp * (std::f32::consts::TAU * f * x as f32).sin();
+                for c in 0..3 {
+                    rgb[3 * (y * w + x) + c] = v;
+                }
+            }
+        }
+        let data = mosaic_of(&rgb, w, h);
+        let m = Mosaic {
+            data: &data,
+            width: w,
+            height: h,
+        };
+
+        // Least-squares amplitude of the f component of green, interior only.
+        let amp_of = |out: &[f32]| -> f32 {
+            let (mut sa, mut ca, mut n) = (0.0f32, 0.0f32, 0usize);
+            for y in 6..h - 6 {
+                for x in 6..w - 6 {
+                    let g = out[3 * (y * w + x) + 1];
+                    let p = std::f32::consts::TAU * f * x as f32;
+                    sa += (g - 0.5) * p.sin();
+                    ca += (g - 0.5) * p.cos();
+                    n += 1;
+                }
+            }
+            2.0 * (sa * sa + ca * ca).sqrt() / n as f32 / amp
+        };
+
+        let got = amp_of(&run(&m));
+        let malvar = amp_of(&run_malvar(&m));
+
+        assert!(
+            malvar < 0.85,
+            "Malvar green at f=0.35 measured {malvar}, expected the ~0.77 that \
+             priced the loss; if this rose, the premise of the change moved"
+        );
+        assert!(
+            got > 0.97,
+            "directional green at f=0.35 measured {got}, expected near the 1.0 \
+             an oracle fit to the green samples recovers"
+        );
+        assert!(
+            got > malvar * 1.15,
+            "directional green {got} must beat Malvar {malvar} by a margin \
+             worth surrendering linearity for"
+        );
+    }
+
+    /// The half of the change that removes an artifact rather than adding
+    /// resolution. Interpolating colour *differences* means a subject with no
+    /// colour cannot acquire any, at any frequency — including the 2.5 px
+    /// period where the old stencils put 81.8% of amplitude into false colour.
+    ///
+    /// This is also the ringing guard's companion: `tweezers-cpl` is a neutral
+    /// dark-groove-on-bright-metal subject, and a coloured groove edge would be
+    /// as unshippable as a haloed one.
+    #[test]
+    fn a_neutral_grating_stays_neutral_at_every_frequency() {
+        let (w, h) = (64usize, 64usize);
+        let amp = 0.4f32;
+        for period in [16.0f32, 8.0, 4.0, 2.5] {
+            let mut rgb = vec![0.0f32; w * h * 3];
+            for y in 0..h {
+                for x in 0..w {
+                    let v = 0.5 + amp * (std::f32::consts::TAU * x as f32 / period).sin();
+                    for c in 0..3 {
+                        rgb[3 * (y * w + x) + c] = v;
+                    }
+                }
+            }
+            let data = mosaic_of(&rgb, w, h);
+            let m = Mosaic {
+                data: &data,
+                width: w,
+                height: h,
+            };
+            let out = run(&m);
+            let mut worst = 0.0f32;
+            for y in 4..h - 4 {
+                for x in 4..w - 4 {
+                    let i = 3 * (y * w + x);
+                    let (r, g, b) = (out[i], out[i + 1], out[i + 2]);
+                    worst = worst.max((r - g).abs()).max((b - g).abs());
+                }
+            }
+            assert!(
+                worst < 1e-5,
+                "period {period}: neutral grating acquired {worst} of false \
+                 colour; colour-difference interpolation should make this \
+                 structurally impossible"
+            );
+        }
     }
 
     /// **Every stencil must sum to 8.** That is the constant-preservation
@@ -443,6 +755,15 @@ mod tests {
     /// first-order term. This is the second known answer, and it is a much
     /// stronger test than the constant one: bilinear also passes the constant
     /// test, and bilinear does **not** pass this one at green sites.
+    ///
+    /// The interior begins at **3**, not 2. Mirror reflection preserves CFA
+    /// parity but not a ramp — it folds the gradient — so "interior" means
+    /// "outside the operator's support", and the default's support is one ring
+    /// wider than Malvar's: radius 2 for the green estimate, plus radius 1 for
+    /// the colour-difference neighbours which each run their own green
+    /// estimate. The second assertion pins that support size, so a future
+    /// change that widens it again fails here instead of silently reaching
+    /// further into reflected data.
     #[test]
     fn a_linear_ramp_survives_exactly_in_the_interior() {
         let (w, h) = (24usize, 24usize);
@@ -462,16 +783,41 @@ mod tests {
             height: h,
         };
         let out = run(&m);
-        let mut worst = 0.0f32;
+        let worst_from = |margin: usize| -> f32 {
+            let mut worst = 0.0f32;
+            for y in margin..h - margin {
+                for x in margin..w - margin {
+                    for c in 0..3 {
+                        let i = 3 * (y * w + x) + c;
+                        worst = worst.max((out[i] - rgb[i]).abs());
+                    }
+                }
+            }
+            worst
+        };
+        assert!(worst_from(3) < 1e-5, "worst interior ramp error {}", worst_from(3));
+
+        // Support is exactly 3: the ring at margin 2 must be *inexact*, and
+        // every pixel that is inexact must lie on that ring.
+        assert!(
+            worst_from(2) > 1e-5,
+            "margin-2 ring came back exact, so the support is narrower than \
+             documented and this test is no longer pinning anything"
+        );
         for y in 2..h - 2 {
             for x in 2..w - 2 {
+                let ring = x == 2 || y == 2 || x == w - 3 || y == h - 3;
                 for c in 0..3 {
                     let i = 3 * (y * w + x) + c;
-                    worst = worst.max((out[i] - rgb[i]).abs());
+                    let e = (out[i] - rgb[i]).abs();
+                    assert!(
+                        ring || e < 1e-5,
+                        "error {e} at ({x},{y}) channel {c} is inside the \
+                         margin-2 ring, so the support is wider than 3"
+                    );
                 }
             }
         }
-        assert!(worst < 1e-5, "worst interior ramp error {worst}");
     }
 
     /// The known answer that matters: a synthetic scene scored against the
@@ -619,7 +965,7 @@ mod tests {
                 width: w,
                 height: h,
             };
-            let out = run(&m);
+            let out = run_malvar(&m);
             let mut worst = 0.0f32;
             for y in 4..h - 4 {
                 for x in 4..w - 4 {
