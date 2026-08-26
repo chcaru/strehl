@@ -1,0 +1,569 @@
+# BUILD-HULL — is the merge non-convex?
+
+**Agent:** BUILD-HULL. **Subject:** `docs/research/V-veiling.md` §5, the -805 DN
+"unexplained residual", and the claim that it is larger than a convex merge can produce.
+**Standing:** I did not write the merge and I did not write `V-veiling`. I built every
+instrument in this report from scratch and did not open `V-veiling/r7_hull.py` or
+`vv_core.py` until my own numbers on both stacks were final.
+**Pin:** `C:\dev\strehl-out\pin-859edac\target\release\strehl.exe`,
+sha256 `DF209CE0...F97DC70F`, verified before first use. All measurement on linear
+16-bit TIFF. Nothing measured on an sRGB or JPEG render.
+**Instruments:** `C:\dev\strehl-out\BUILD-HULL\` — `hull.py` (the out-of-hull
+instrument), `exchange.py`, `residual.py`, `arms.py`, `strehlrun.py`,
+`commission_gate0.py`, `probe13.py`, `halodiff2.py`. No file under `crates/` was
+edited or read for its logic before the numbers were final.
+
+## Verdict
+
+| # | Question | Verdict |
+|---|---|---|
+| 1 | Does the merge produce values outside the hull of its inputs? | **NO.** 0 of 24,752,640 channel-samples on `flower-bud-alone-cpl` (205 frames); 0 of 24,724,512 on `109MSDCF` (22 frames). Registration held to the identity on both sides |
+| 2 | Is the -805 DN residual evidence of non-convexity? | **NO.** Measured: subtracting 805 DN from the merged output in the very band it was measured leaves **93.2%** of those pixels still inside their own hull |
+| 3 | Is any stage non-convex? | **YES — two, both named, both band-mean-neutral.** The MHC demosaic (measured, 0.171% of samples, net **-0.026 DN**) and the Catmull-Rom warp gather (arithmetic: two of four taps are negative) |
+| 4 | Which outcome is this? | **Outcome 2** — the merge is convex and the -805 DN comparison was not apples-to-apples. §7 gives the three independent reasons |
+| 5 | Scope limit | The **ALIGN=0** pipeline. The shipped *aligned* merge cannot be measured per-pixel by any route available from outside `crates/`. §4 proves why, rather than asserting it |
+
+This report is a **correction of V-veiling and of the brief that commissioned me**, and
+I want to be exact about what it does and does not overturn. It does not touch
+V-veiling's claim 1: the halo is real and it is worse than its inputs look. It refutes
+only the arithmetic sub-claim that the excess is *larger than convexity permits*. That
+sub-claim rested on a test that is not a hull test.
+
+---
+
+## 1. What convexity actually bounds — the arithmetic
+
+The brief's argument is correct and I want to restate it precisely, because the whole
+question turns on a quantifier.
+
+An elect-then-average merge forms, at each output pixel `p`, a weighted mean
+`merge(p) = sum_k w_k(p) x_k(p)` with `w_k(p) >= 0` and `sum_k w_k(p) = 1`. Therefore,
+**pointwise**:
+
+```
+min_k x_k(p)  <=  merge(p)  <=  max_k x_k(p)          (TRUE, at every p)
+```
+
+Average that over a band `B` of pixels and you get the correct band-level consequence:
+
+```
+mean_B(merge)  >=  mean_B( min_k x_k )                 (TRUE)
+```
+
+The statement that was actually tested, and the one that fails, is a different one:
+
+```
+mean_B(merge)  >=  min_k mean_B( x_k )                 (NOT IMPLIED)
+```
+
+These differ because the minimum and the mean do not commute. In general
+
+```
+mean_B( min_k x_k )  <=  min_k mean_B( x_k )
+```
+
+and the gap between them — call it the **exchange term** — is strictly positive
+whenever different pixels in `B` attain their minimum on different frames `k`. That is
+precisely what a per-pixel selector arranges. The merge is *free*, while remaining
+convex at every single pixel, to sit below every individual frame's band mean. It has
+that freedom exactly to the extent that the winning frame varies across the band.
+
+**This also explains why V-veiling's control came back clean and why it was not a
+control for this mechanism.** An honest 7-frame *mean* was measured and read inside the
+envelope of its inputs with 50 DN of bias. It had to. A uniform average uses the same
+weights at every pixel, which collapses the exchange term to zero by construction. A
+flat mean cannot exhibit the effect, so finding that it does not exhibit the effect
+rules nothing out. The control was well-intentioned and structurally incapable of
+firing.
+
+*(Labelled: this section is **argued**. Everything below is **measured** unless it
+says otherwise.)*
+
+---
+
+## 2. The instrument (Deliverable 1)
+
+`C:\dev\strehl-out\BUILD-HULL\hull.py`. Pure Python, no changes to the Rust tree.
+
+For each output pixel `p` and channel `c` it folds all `N` co-registered per-frame
+renders into a streaming per-pixel `lo = min_k x_k(p,c)` and `hi = max_k x_k(p,c)`
+(three planes of peak memory, not `N`), then partitions **every channel-sample** into
+exactly one of three counted outcomes:
+
+```
+inside hull  +  BELOW hull  +  ABOVE hull  =  total channel-samples
+```
+
+and prints that the three sum to the total. It reports the signed violation magnitude
+distribution in DN separately for each direction, writes a spatial map
+(`viol-<tag>.png`, red above / blue below / green tint subject, plus the raw signed
+`.npy`), and partitions violations by distance from the subject silhouette using the
+same band edges as `V-veiling.md` so the tables can be laid side by side. The radial
+table also prints an explicit **unbanded gap** count, so pixels that fall in no band are
+counted rather than silently dropped:
+
+```
+radial bands + subject + gaps = 8221181 of 8250880; unbanded gap = 29699
+```
+
+Silhouette masking follows V-veiling's convention (low-luma threshold on normalised
+luminance, largest connected component, holes filled, Euclidean distance outside).
+One deliberate difference, stated for comparability: my `luma()` uses Rec.709 weights on
+camera-native primaries where V-veiling used a plain mean of RGB. Both are monotone
+binning devices, neither is colorimetry, and §6 shows the verdict does not depend on it
+because the per-channel test is run independently of the luma test and agrees.
+
+---
+
+## 3. Getting co-registered samples — **route (a), achieved exactly**
+
+The brief asked me to state plainly which of three routes I took. **I took route (a):
+I emit genuinely co-registered per-frame samples.** There is no bound and no argument
+in my hull, because there is no mis-registration in it.
+
+**The mechanism.** `STREHL_ALIGN=0` sets the registration to the identity. I set it on
+*both* sides — the merge and every one of the `STREHL_ONLY_FRAME=k` per-frame renders.
+When the warp is the identity for everybody, the merge and the per-frame renders land on
+the same canvas at the same pixel coordinates by construction. There is no sidecar to
+be rejected, no reference frame to be re-solved, and no drift to bound.
+
+**Why the obvious route is closed.** I checked before adopting the alternative.
+`only_frame()` in `merge_cmd.rs` (~line 1431) returns a **1-element** path list, and
+`alignment_for()` (~line 1939) requires both `map.check_stack(&identity)` and
+`map.len() == paths.len()`. A 205-frame sidecar therefore cannot be attached to a
+1-frame render: `STREHL_WARPMAP` + `STREHL_ONLY_FRAME` is closed by code, not by
+policy. Hand-authoring a 1-frame warpmap is mechanically possible (warpmaps are plain
+text and `StackIdentity::from_paths` digests filename and file size only, never
+contents — `warpmap.rs:238`) but does not help: a 1-frame map lands on a *different
+output canvas*, because aligned renders crop the valid rectangle by roughly 7-10%.
+That route does not close either.
+
+**Why routes (b) and (c) fail here, with numbers.** Route (c) — restrict to regions
+where registration cannot matter — is not available in the band under investigation.
+V-veiling measured **227 px** of silhouette-radius drift across the bracket, and the
+veiling gradient in that region changes by roughly 1000 DN over 100 px. A mask
+transferred across that drift moved one of V-veiling's own measurements by a factor of
+**4.2**. There is no sub-region of the 120-200 px band where a 227 px drift is provably
+negligible. Route (b) — bound the widening — would require a bound tighter than the
+805 DN effect on a hull whose width I measure at 4037.5 DN in that band; the bound
+would have to be better than 20% of the hull, which a 227 px drift across a 1000 DN
+gradient cannot supply.
+
+**The cost of route (a), stated plainly.** This measures the **ALIGN=0** pipeline. It
+is the real merge, the real election, the real gate, the real code path — but with the
+warp held to the identity. It is therefore *not* the shipped aligned pipeline, and
+§9 states exactly what that leaves unmeasured. I judged an exactly co-registered
+measurement of a slightly different pipeline to be worth more than a mis-registered
+measurement of the right one, and I am flagging the choice rather than burying it.
+
+**Validation that the identity really is an identity.** `commission_gate0.py` renders
+the merge at `--gate 0` (pure selection: the output must be a *copy* of some input
+sample) and checks it against the per-frame renders:
+
+| stack | pixels | bit-exact | differing | uncovered |
+|---|---|---|---|---|
+| `109MSDCF` | 8,241,504 | 8,241,491 | 13 | 0 |
+| `flower-bud-alone-cpl` | 8,250,880 | 8,250,849 | 31 | 0 |
+
+The handful of exceptions are not registration error. `probe13.py` prints the full
+value stack at every one: they are **exact election ties**. At `--gate 0` the tolerance
+is `<= 0`, so every frame whose regularised response exactly equals the winner's is
+admitted and averaged. Of the 93 channel-disagreements on flower-bud, **0 are outside
+the all-frame hull and 93 are inside it**. Same on 109MSDCF. The identity holds to
+99.99962% bit-exactness and the residue is explained, not waved at.
+
+---
+
+## 4. Commissioning the instrument — **before** trusting a zero
+
+A detector that reports zero violations is indistinguishable from a detector that is
+not looking. Every zero in §5 is backed by the following, all on the real pipeline.
+
+**Planted defects.** `hull.py --plant` (rectangle) and `--plant-band` (radial band)
+inject a known offset into the merged output *after* the pristine silhouette is
+derived, then check hit rate, spill, and signed magnitude:
+
+| stack | plant | planted px | detected | spill outside plant | worst DN seen |
+|---|---|---|---|---|---|
+| `flower-bud-alone-cpl` | **-5000 DN**, band 120-200 | 513,618 | **513,618 (100.000%)** | **0** | -5000 |
+| `flower-bud-alone-cpl` | **-805 DN**, band 120-200 | 513,618 | 35,092 (6.832%) | **0** | -805 |
+| `109MSDCF` | -805 DN, band 120-200 | 610,350 | 604,756 (99.083%) | **0** | -805 |
+| `109MSDCF` | +400 DN, rect | — | 87.592% | **0** | +400 |
+
+The -5000 DN row is the potency proof on the primary subject: **every planted
+channel-sample detected, at its own location, with the right sign and the exact right
+magnitude, and not one false positive anywhere else in the frame.** The instrument is
+looking, on `flower-bud-alone-cpl`, at 205 frames. The 6.832% in the second row is
+therefore not a weakness of the detector — it is the measurement, and it is the
+headline result of this report. See §6.
+
+**Real-pipeline positive controls**, which are worth more than plants because they
+exercise code rather than my arithmetic:
+
+| arm | stack | outcome |
+|---|---|---|
+| `STREHL_PHOTOMETRIC=on` | `109MSDCF` | **FIRED — 70,071 of 24,724,512 (0.2834%) out of hull.** Frames are scaled before merging, so the merge is convex in the scaled samples and not in the raw ones. Exactly the signature a real non-convexity produces |
+| `STREHL_PHOTOMETRIC=on` | `flower-bud-alone-cpl` | **Refused to render**, rc=1: `U3 the eroded low-detail region keeps only 557 px (minimum 1024)`. A legitimate refusal on this scene, not a crash. The control is unavailable here and I am not counting it |
+| `STREHL_FIX_HALO=1` | `109MSDCF` | **INERT — byte-identical output** (`EC06BECB...`) to the base merge while printing `halo fix : ON`. Not a missed detection. See §10 |
+| `STREHL_FIX_HALO=1` | `flower-bud-alone-cpl` | **Potent as an edit, convex as a result.** Different sha256 (`571C2476...` vs `B5AEBF0E...`), 816,065 channel-samples changed (3.297%), excursions to **-13,101 / +13,111 DN** — and still 0 out of hull |
+
+That last row deserves its own table, because "it changed the image by 13,000 DN and
+your detector said zero" is the sort of thing that should be checked rather than
+excused. `halodiff2.py`:
+
+| band | pixels | median &#124;dLuma&#124; | max &#124;dLuma&#124; | hull width | max / width |
+|---|---|---|---|---|---|
+| 4-12 | 58,432 | 5301.4 | 12242.1 | 11436.8 | 1.070 |
+| 12-30 | 121,186 | 2178.2 | 11669.7 | 10881.7 | 1.072 |
+| 30-60 | 191,893 | 0.0 | 8874.7 | 9243.1 | 0.960 |
+| 60-120 | 380,484 | **0.0** | **0.0** | 6236.4 | 0.000 |
+| **120-200** | 513,618 | **0.0** | **0.0** | 4037.5 | 0.000 |
+| 200-300 | 661,260 | 0.0 | 0.0 | 3779.3 | 0.000 |
+| 300-420 | 724,247 | 0.0 | 0.0 | 3853.1 | 0.000 |
+
+The halo fix is a large edit **confined to the rim** (`d < 60 px`), where the hull is
+9,000-11,000 DN wide and easily absorbs it. In the band under investigation it changes
+**exactly zero pixels**. Two consequences: the zero is explained, and the halo fix is
+not a candidate explanation for a `d = 120-200` artifact.
+
+---
+
+## 5. Result: the merge is convex (Deliverable 1)
+
+**`flower-bud-alone-cpl`, 205 frames, ALIGN=0, gate 4, binned plane 3520x2344.**
+
+```
+channel-samples total        : 24752640
+inside hull                  : 24752640   (100.000000%)
+BELOW hull (merge < min_k)   : 0   (0.000000%)
+ABOVE hull (merge > max_k)   : 0   (0.000000%)
+partition sums to            : 24752640  (must equal 24752640)
+PIXELS with any channel out  : 0 of 8250880 (0.000000%)
+```
+
+By radial band, in absolute linear DN — the merge and the two hull surfaces:
+
+| band | pixels | below | above | merge luma | mean min_k | mean max_k | in hull? |
+|---|---|---|---|---|---|---|---|
+| 4-12 | 58,432 | 0 | 0 | 15531.0 | 7418.5 | 18807.5 | YES |
+| 12-30 | 121,186 | 0 | 0 | 14999.5 | 8768.5 | 19593.3 | YES |
+| 30-60 | 191,893 | 0 | 0 | 14575.0 | 11136.7 | 20334.5 | YES |
+| 60-120 | 380,484 | 0 | 0 | 15907.9 | 14528.4 | 20725.7 | YES |
+| **120-200** | 513,618 | **0** | **0** | **18590.7** | **16831.3** | **20811.0** | YES |
+| 200-300 | 661,260 | 0 | 0 | 19007.9 | 17168.6 | 20879.8 | YES |
+| 300-420 | 724,247 | 0 | 0 | 19270.5 | 17392.7 | 21178.6 | YES |
+| 420+ | 3,778,949 | 0 | 0 | 18885.7 | 17058.0 | 20735.3 | YES |
+
+Also 0 of 24,752,640 at `--gate 0`, and 0 of 24,752,640 at `--gate 8`.
+`109MSDCF` likewise: 0 of 24,724,512.
+
+**The merge is convex. There is no violating pixel to find, and the instrument that
+says so has been shown to find a planted one at a 100% rate on this exact stack.**
+
+---
+
+## 6. The decisive measurement: 805 DN is *comfortably* inside the hull
+
+This is the single number that settles the question, and it is a direct experiment
+rather than an inference.
+
+Take the real merged output. Subtract **805 DN** — the exact disputed residual — from
+every pixel in the exact band it was measured in, `d = 120-200 px`. Ask the instrument
+how many of those pixels are now outside the hull of their own inputs.
+
+```
+planted pixels                 : 513618
+planted AND detected           : 35092  (6.832% of the plant)
+detected OUTSIDE the plant     : 0
+```
+
+**93.168% of them are still inside.** The hull in that band is **4037.5 DN** wide and
+the merge sits **1706.8 DN** above its own convex floor. An 805 DN downward excursion
+consumes 47% of the available headroom and leaves the output convex at fifteen pixels
+out of every sixteen.
+
+So the premise "a convex merge cannot be 805 DN below its inputs there" is false as
+stated, and it is false by a wide margin rather than marginally. The `residual.py`
+decomposition puts the same fact in V-veiling's own units — veiling relative to each
+image's own far field:
+
+| band | MERGE | most veiled of 205 | **true convex floor** |
+|---|---|---|---|
+| 4-12 | -3355 | -9626 | **-11450** |
+| 12-30 | -3886 | -8287 | **-10102** |
+| 30-60 | -4311 | -5939 | **-7735** |
+| 60-120 | -2978 | -2574 | **-4333** |
+| **120-200** | **-295** | **-254** | **-2002** |
+| 200-300 | +122 | +110 | **-1652** |
+| 300-420 | +385 | +335 | **-1428** |
+
+Read the `120-200` row across. Against the most veiled single frame the merge is 41 DN
+worse, which is the *shape* of V-veiling's finding. Against the floor that convexity
+actually imposes it has **1707 DN of room to spare**. The two columns differ by an order
+of magnitude, and the published test used the first one.
+
+*(Both statistics agree. `residual.py --stat median`, which matches `vv_core.profile()`'s
+default exactly, gives -439 / -409 / -2187 for the same row: same conclusion, 1748.6 DN
+of headroom.)*
+
+**A worked example where the published test fires on a provably convex merge.** On
+`109MSDCF` I do not have to argue the mechanism, because it occurs:
+
+| band | MERGE | min_k mean_B (the published floor) | mean_B min_k (the convex floor) | A: vs frame | B: vs hull | exchange |
+|---|---|---|---|---|---|---|
+| 12-30 | 7035.1 | 7065.1 | 6780.5 | **-29.9** | **+254.7** | 284.6 |
+| 30-60 | 6953.0 | 6975.5 | 6660.5 | **-22.4** | **+292.5** | 314.9 |
+
+Column A is negative: by the published comparison this merge is "impossible", sitting
+below the darkest single frame's band mean. Column B is positive by 255-292 DN: it is
+inside the hull at every pixel. And the per-pixel test on that same render reports **0
+of 8,241,504 pixels** outside `[min_k, max_k]`. **The signature and the innocence
+coexist in one real render.** That is an existence proof, not a model.
+
+---
+
+## 7. Why the published test read otherwise
+
+I opened `C:\dev\strehl-out\V-veiling\r7_hull.py` only after the above was final. Its
+section titled `"convex-hull test"` computes
+
+```python
+lo, hi = fr[:, i].min(), fr[:, i].max()
+```
+
+where `fr` is a **7 x 8 array of per-band statistics**, not pixels. There are three
+independent reasons this cannot decide convexity, and each is sufficient on its own:
+
+1. **It is a min over band statistics, not over pixels.** `lo` is
+   `min_k median_B(x_k)`, which is the quantity §1 shows is not bounded by convexity.
+   This is the min/median exchange, and §6 measures it firing on a convex merge.
+2. **It uses 7 of 205 frames.** The supporting argument — the 7-frame profile is smooth
+   and U-shaped, so no unsampled frame can be more veiled than -1528 DN — is sound for a
+   *frame-level* profile and irrelevant to a *pointwise* minimum. The pointwise minimum
+   over 205 frames is not the profile minimum over 7; it is a per-pixel infimum that no
+   smoothness argument about frame-level means constrains.
+3. **The bands are not the same pixel set.** `vv_core.subject_mask()` thresholds at
+   `frac * median` of **each image's own** luminance and gives each image **its own**
+   distance map — deliberately and correctly, since the frames are not co-registered.
+   But that means the merge's band `B` and frame `k`'s band `B` are different sets of
+   pixels. A statistic over one compared to a statistic over another is a comparison of
+   two populations, not a containment test.
+
+Reason 3 is a consequence of the very confound V-veiling correctly identified and
+correctly worked around for claim 1. The workaround is right for measuring a profile and
+fatal for testing a hull. **A hull test requires co-registration; that is why §3 is the
+longest section of this report.**
+
+---
+
+## 8. The bisect: which stages *are* non-convex (Deliverable 2)
+
+Ten arms on `109MSDCF`, each a real render with a real knob turned, hull-tested against
+per-frame renders made with the *same* knob. Not code reading.
+
+| arm | channel-samples | BELOW | ABOVE | % out | what it varies |
+|---|---|---|---|---|---|
+| base-gate4 | 24,724,512 | 0 | 0 | 0.0000% | shipped value path |
+| gate0-selection | 24,724,512 | 0 | 0 | 0.0000% | pure selection |
+| gate8 | 24,724,512 | 0 | 0 | 0.0000% | more frames averaged |
+| edge-aware-off | 24,724,512 | 0 | 0 | 0.0000% | `STREHL_EDGE_AWARE=0` |
+| window-radius-1 | 24,724,512 | 0 | 0 | 0.0000% | `STREHL_WINDOW_RADIUS=1` |
+| soft-gate-gaussian | 24,724,512 | 0 | 0 | 0.0000% | `STREHL_SOFT_GATE=gaussian` |
+| robust-election | 24,724,512 | 0 | 0 | 0.0000% | `STREHL_ROBUST_ELECTION=on` |
+| **demosaic** | 98,898,048 | 108,262 | 60,868 | **0.1710%** | `--demosaic`, full-res MHC |
+| **POSCTL-photometric** | 24,724,512 | 30,305 | 39,766 | **0.2834%** | positive control, fired |
+| POSCTL-fix-halo | 24,724,512 | 0 | 0 | 0.0000% | inert on this stack (§4) |
+
+**The election path is convex under every variation I can reach.** The brief's leading
+hypothesis was `regularise_guided` — a guided filter is a local linear model `a*I + b`
+and a linear model extrapolates. The hypothesis is sound in general and **not the
+answer here**: `window-radius-1` and `edge-aware-off` produce radically different
+elections and both give exactly 0 violations. The reason is structural and worth
+recording: `regularise_guided` (`merge.rs:301`) takes `focus: &[f32]` and writes a
+*focus field*. It re-routes **which** frame wins. It never touches a sample value, so
+its extrapolation cannot leave the hull of the samples. The brief's specific worry —
+that regularisation might emit fractional or out-of-range frame indices later used to
+interpolate samples — would break convexity if it happened, and §11 proposes the
+assertion that would catch it if it ever starts happening.
+
+**Demosaic is genuinely non-convex, and cannot be the -805 DN.** Malvar-He-Cutler is
+gradient-corrected: it adds a fraction of the Laplacian of a *known* channel, and that
+kernel has negative lobes. Measured: 0.171% of channel-samples out of hull, worst
+**-1150 / +2074 DN**. But it is **bidirectional and band-mean-neutral**:
+
+```
+108262 x (-38.483)  +  60868 x (+26.424)  =  -2.56e6 DN over 98,898,048 samples
+                                          =  -0.026 DN
+```
+
+Every band mean stays inside the hull. Local kernel ringing at edges averages out at
+band scale to **26 thousandths of a DN**. It cannot supply 805 DN of band-mean bias, and
+it is short by a factor of about 31,000.
+
+This matters more than it looks, because **V-veiling measured on full-resolution
+demosaiced renders** — the 198 MB `vf*-lin.tif` files — which is the same path. The two
+investigations converge on the same non-convex stage. The convergence is real; the
+magnitude is not remotely sufficient.
+
+**Not common-mode.** The brief warned that demosaic might be common-mode with the
+single-frame renders and therefore not the answer. I checked rather than assumed: the
+per-frame renders in that arm were also `--demosaic`, so the demosaic non-convexity is
+present on *both* sides of the comparison and the 0.171% is what survives after it
+cancels. It is a real residue, not an artifact of comparing a demosaiced merge against
+non-demosaiced frames.
+
+**A third non-convex stage, reachable by arithmetic but not by my instrument.** The
+shipped default resampler is Catmull-Rom (`align_cmd.rs:59`,
+`DEFAULT_RESAMPLER_NAME = "catmull-rom"`), a cubic with `a = -1/2`. Its weights
+(`align.rs:2664`) are, for phase `f` in `[0,1)`:
+
+```
+w0 = -0.5f^3 +      f^2 - 0.5f  =  -0.5 f (f-1)^2   <= 0
+w1 =  1.5f^3 -  2.5 f^2 + 1
+w2 = -1.5f^3 +  2.0 f^2 + 0.5f
+w3 =  0.5f^3 -  0.5 f^2         =   0.5 f^2 (f-1)   <= 0
+```
+
+Two of the four taps are non-positive on the whole phase range, so the gather is **not a
+convex combination** and can overshoot: `m95-kernel.rs` already reports a peak-overshoot
+figure for the Lanczos-3 variant of the same machinery. But the four weights sum to
+**exactly 1** (the `f^3`, `f^2` and `f` coefficients cancel: `-0.5+1.5-1.5+0.5 = 0`,
+`1-2.5+2-0.5 = 0`, `-0.5+0+0.5+0 = 0`), so the kernel is exact on constants and its
+error is proportional to local curvature. *(Labelled: this paragraph is **argued** from
+the shipped coefficients, not measured — my instrument runs at ALIGN=0, where this
+kernel is bypassed.)* Like demosaic it should be edge-local and DC-neutral in a flat far
+field, and for the same reason; unlike demosaic I have not measured that, and §9 lists
+it as the principal open item.
+
+---
+
+## 9. What I did **not** measure
+
+Stated separately so it cannot be read as covered.
+
+1. **The shipped aligned merge, per-pixel.** Everything above holds the warp to the
+   identity. §3 proves the aligned pipeline cannot be sampled per-frame in a
+   co-registered way from outside `crates/`. What I have shown is that **the merge
+   arithmetic is convex**, and that **the evidence offered for non-convexity does not
+   establish it**. I have *not* shown that the full RAW-to-TIFF aligned pipeline is
+   convex — and §8 gives a concrete reason to expect it is not, in the Catmull-Rom
+   gather.
+2. **The magnitude of the Catmull-Rom gather's out-of-hull excursion on a real bracket.**
+   Argued to be DC-neutral, not measured. This is the one number that would close the
+   remaining gap, and it needs a hook inside `crates/` that dumps warped samples — which
+   I was instructed not to add.
+3. **The demosaic arm on `flower-bud-alone-cpl`.** Measured on `109MSDCF` only. It needs
+   205 full-resolution per-frame renders at ~198 MB each (~40 GB) and I judged the cost
+   not worth it given that the effect is a factor of 31,000 short of mattering. **I am
+   flagging this as a skip, not a pass.** If the -0.026 DN neutrality is ever load-
+   bearing for a decision, re-run it on the real subject before relying on it.
+4. **`STREHL_PHOTOMETRIC` as a positive control on `flower-bud-alone-cpl`.** It refuses
+   to render on this scene (557 px of eroded low-detail region against a 1024 px
+   minimum). The plants in §4 carry the commissioning burden on that stack instead, and
+   the -5000 DN plant carries it at 100%.
+
+---
+
+## 10. Incidental findings
+
+**`STREHL_FIX_HALO=1` is a byte-identical no-op on `109MSDCF` while announcing itself as
+on.** The render printed `halo fix : ON (STREHL_FIX_HALO=1)` and wrote a file with the
+same sha256 (`EC06BECB...`) as the base merge. `scripts/check-defaults.py` records a
+weaker version of this (`'=1' without --out`); this instance had `--out` and still did
+nothing. On `flower-bud-alone-cpl` the same flag changes 816,065 channel-samples, so it
+is not universally inert — the null on `109MSDCF` is plausibly legitimate for a flat
+subject with no depth separation and therefore no halo to fix. Recorded so that whoever
+owns that flag can decide whether a silent no-op should announce itself as `ON`.
+
+**`--index-map` and `--n-eff-map` together did not reproduce the `0xC0000409`
+stack-buffer-overrun.** I ran them together on both stacks, including the full 205-frame
+`flower-bud-alone-cpl` render, and all expected TIFFs were written at the expected
+sizes. Not reproduced; not refuted either, since it was reported as intermittent.
+
+**At `--gate 0` the merge is not strictly pure selection.** The tolerance test is
+`<= 0`, so exact ties admit multiple frames and average them. This is why 13 pixels on
+`109MSDCF` and 31 on `flower-bud-alone-cpl` are not bit-exact copies of any input. All
+are inside the hull; it is a curiosity, not a defect.
+
+---
+
+## 11. Proposed permanent invariant (Deliverable 3)
+
+**Proposal only. I have not implemented this, because `crates/` is contested.** It is
+specified below tightly enough to apply in one sitting.
+
+**The invariant.** *The merge shall not produce a value outside the hull of the samples
+it elected at that pixel, except at named stages where non-convexity is intended and
+documented.*
+
+**Where it belongs.** In `crates/strehl-core/src/merge.rs`, at the end of pass two, on
+the accumulator output — **before** demosaic and before any post-merge stage. That is
+the last point at which the output is, by design, a pure convex combination.
+
+**What it must be over: the *elected* samples, not all N.** This is the important design
+point. Checking against `min/max` over all `N` frames is the weaker test and is nearly
+useless as a guard: it would not catch a bug in the election indexing, because an
+out-of-range or fractional frame index still yields a value inside the all-frame hull.
+Accumulating `lo`/`hi` over exactly the samples that received non-zero weight makes the
+assertion catch precisely the failure mode the brief was worried about — a regularised
+field emitting a frame index that is then used to index or interpolate samples. Concretely,
+alongside the existing weighted sum, accumulate for each output pixel and channel:
+
+```
+lo = min over {k : w_k > 0} of x_k      hi = max over {k : w_k > 0} of x_k
+assert(lo - TOL <= out && out <= hi + TOL)
+```
+
+**Tolerance: 1 DN in the u16 output domain.** Justified, not guessed. The merge
+accumulates in `f32` and writes `u16`, so the only legitimate excursion is float rounding
+on a weighted mean of at most `N` samples plus the round-to-`u16`. The measured excursion
+at zero tolerance is **exactly zero** across 24,752,640 + 24,724,512 = 49,477,152
+channel-samples on two stacks, and the gate-0 selection identity reproduces bit-exactly
+at 8,250,849 of 8,250,880 pixels. 1 DN therefore has margin over everything observed
+while remaining **805x smaller than the smallest defect anyone in this investigation
+cared about**. A tolerance expressed as a fraction of the hull width would be wrong here:
+the hull is 4037 DN wide in the band of interest and 11437 DN wide at the rim, so any
+percentage tolerance would be enormous in absolute DN — and absolute DN is the unit in
+which the defects show up.
+
+**Cost and gating.** Two extra planes of `f32` accumulator and one comparison per
+admitted sample. That is not free on a 205-frame bracket, so it should sit behind
+`debug_assert!` plus an opt-in `STREHL_ASSERT_HULL=1` for release builds, registered in
+`scripts/check-defaults.py` with the other 23. CI should run it on the small stack, where
+it costs seconds.
+
+**Named exemptions, with their measured numbers, in the assertion's doc comment** — so
+the exemption is auditable rather than a blanket:
+
+| stage | non-convex because | measured | band-mean effect |
+|---|---|---|---|
+| MHC demosaic (`demosaic.rs`) | gradient correction adds a Laplacian; negative lobes | 0.171% of samples, -1150 / +2074 DN | **-0.026 DN** |
+| Catmull-Rom gather (`align.rs:2688`) | cubic `a = -1/2`; taps `w0, w3 <= 0` | not measured (§9) | argued 0 by partition of unity |
+
+**What the invariant buys.** It converts "the merge is convex" from a claim someone has
+to re-derive every time a halo appears, into a property the machine checks. Had it been
+in place, the -805 DN residual would have been attributed to the exchange term on the
+first day instead of the third, and this report would not have needed writing.
+
+---
+
+## 12. Reproducing this
+
+```
+cd C:\dev\strehl-out\BUILD-HULL
+python commission_gate0.py flower-bud-alone-cpl      # the identity holds
+python probe13.py          flower-bud-alone-cpl      # the residue is ties, in hull
+python hull.py     --merged commission-flower-bud-alone-cpl\merge_gate4.tiff \
+                   --frames commission-flower-bud-alone-cpl\frames --n 205 \
+                   --out outflower --tag flower-gate4-REAL
+python hull.py     ... --tag flower-PLANT-5000 --plant-band "120,200,-5000"   # 100.000%
+python hull.py     ... --tag flower-PLANT-805  --plant-band "120,200,-805"    # 6.832%
+python exchange.py ... --tag flower-gate4-EXCHANGE
+python residual.py ... --stat median
+python arms.py     109MSDCF
+```
+
+`strehlrun.py` clears all 25 `STREHL_*` variables before every render and applies only
+the requested ones, so no number here depends on the ambient shell of the five other
+agents working in this tree. Every render caches to a `.json` sidecar recording its
+exact argv, env and wall clock.
