@@ -1,0 +1,57 @@
+=== commissioning on 109MSDCF / frame011 (real pixels, real noise) ===
+detail tile (2696, 1032, 256, 256) mean 6121.4 DN   flat tile (1416, 264, 256, 256) mean 1836.8 DN
+baseline: hp_sd(detail) 416.7088 DN   hp_sd(flat) 42.6960 DN
+          f50(detail)   0.075876 c/px   grad_energy(detail) 232.9682 DN/px
+
+C4  POSITIVE CONTROL -- plant a known sigma, require the predicted move
+      +   5% sigma_a= 2.1348  predicted  42.7493  measured  42.7452  err +0.010%
+      +  15% sigma_a= 6.4044  predicted  43.1737  measured  43.1244  err +0.114%
+      +  30% sigma_a=12.8088  predicted  44.5759  measured  44.5402  err +0.080%
+      + 100% sigma_a=42.6960  predicted  60.3813  measured  60.2867  err +0.157%
+  [PASS] C4  worst |measured/predicted - 1| = 0.157% (bar 1.0%)
+
+C5  NULL -- the shipping arm against a bit-identical re-render
+      sha256 equal: True   (f4fdb145e882c3ec...)
+      raw_sd ratio 1.000000x   hp_sd ratio 1.000000x
+  [PASS] C5  re-render reads 1.000000x
+
+C1  NOISE NULL on the detail statistic (and C6, the sabotage arm)
+      this is the test that killed a gradient norm at +33%.
+      The plant is swept to +100% because that is the SIZE OF THE EFFECT
+      being measured -- a single frame carries roughly twice a merged
+      arm's noise -- and a null commissioned only at +15% would say
+      nothing about the range the arms actually span.
+      +   5% noise :  f50  -0.002%    grad_energy  +0.617%  <-- sabotage
+      +  15% noise :  f50  +0.011%    grad_energy  +4.857%  <-- sabotage
+      +  30% noise :  f50  +0.129%    grad_energy +16.689%  <-- sabotage
+      +  50% noise :  f50  -0.069%    grad_energy +37.641%  <-- sabotage
+      + 100% noise :  f50  +0.052%    grad_energy +101.570%  <-- sabotage
+  [PASS] C1  f50 moves at most +0.129% anywhere in the swept range (bar 3%)
+  [PASS] C6  sabotage moves +101.570% on the same plants -- the plant IS potent, and a naive statistic WOULD have been fooled (bar 10%)
+
+C2  BLUR NULL on the detail statistic
+      sigma  0.5 px :  f50 0.075473 ( -0.532%)    grad_energy  -8.031%
+      sigma  1.0 px :  f50 0.074334 ( -2.032%)    grad_energy -20.591%
+      sigma  1.5 px :  f50 0.073030 ( -3.751%)    grad_energy -29.682%
+      sigma  2.0 px :  f50 0.071637 ( -5.587%)    grad_energy -37.930%
+  [FAIL] C2  monotone=True, fall at sigma=1.0 px is 2.0% (bar 15%)
+
+C3  CONTRAST NULL on the detail statistic
+      x2.0 gain    : f50 0.075876196 vs 0.075876196   d = +0.000e+00
+      +500 DN bias : f50 0.075876196            d = +0.000e+00
+  [PASS] C3  gain and offset invariance are arithmetic, and hold
+
+    f_lo sensitivity (the single free parameter in f50), on this tile:
+      f_lo 0.03 : f50 0.047572   under sigma=1.0 px blur 0.045162  (-5.07%)
+      f_lo 0.05 : f50 0.075876   under sigma=1.0 px blur 0.074334  (-2.03%)
+      f_lo 0.08 : f50 0.092379   under sigma=1.0 px blur 0.087749  (-5.01%)
+      f_lo 0.12 : f50 0.148204   under sigma=1.0 px blur 0.131128  (-11.52%)
+
+C7  RULE 9 -- the detail statistic on a FLAT region
+      flat tile f50 0.100902 -> 0.100297 under +15% noise (-0.600%)
+      flat tile grad_energy 37.791 -> 38.192 (+1.061%)  <-- sabotage
+  [PASS] C7  adding noise to a flat region moves f50 -0.600% (bar 5%)
+
+==============================================================
+COMMISSIONING: FAILED ['C2']
+==============================================================

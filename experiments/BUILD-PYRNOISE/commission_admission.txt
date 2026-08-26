@@ -1,0 +1,34 @@
+==============================================================================
+COMMISSIONING THE FLAT-ROI ADMISSION TEST
+bar = 1.3
+==============================================================================
+
+A1 SYNTHETIC NULL     pure noise, no structure, no motion
+   temporal  39.533 DN   spatial  40.002 DN   ratio 0.9883   require [0.90, 1.15]   PASS
+
+A4 REAL PASS PRESERVED (1416, 264, 256, 256), n=22
+   temporal  45.582 DN   spatial  40.803 DN   ratio 1.1171   require <= 1.3   PASS
+
+A2 PLANTED MOTION      re-cut each frame at a drifting offset
+   DETAIL ROI  0px: 0.722  1px: 0.775  2px: 0.921  4px: 1.335*      (* = REJECTED)
+   flat ROI    0px: 1.117  1px: 1.180  2px: 1.230  4px: 1.347*      (* = REJECTED)
+   Motion of a FLAT region is deliberately NOT detected: a featureless
+   region has nothing to move. The test detects non-stationary CONTENT.
+   On a detailed region the ratio starts BELOW 1 (spatial high-pass picks up
+   edges the temporal estimator does not); the test is only read on flat ROIs.
+
+A3 PLANTED STRUCTURE   frame-dependent low-frequency pattern
+   amplitude   0.0 DN -> ratio  1.117   admits
+   amplitude  10.0 DN -> ratio  1.131   admits
+   amplitude  25.0 DN -> ratio  1.201   admits
+   amplitude  50.0 DN -> ratio  1.422   REJECTS
+   the ROI's own noise sd is 40.8 DN, so the test detects
+   frame-dependent structure once its amplitude reaches 1.23x the noise.
+
+==============================================================================
+  PASS  A1 synthetic null                      ratio 0.9883
+  PASS  A4 real ROI still passes               ratio 1.1171
+  PASS  A2 planted motion rejected at 4 px     detail ROI, threshold 4.0 px
+  PASS  A3 planted structure rejected at 50 DN threshold 50.0 DN = 1.23x noise sd
+==============================================================================
+ADMISSION TEST COMMISSIONED -- its verdicts may be believed.
