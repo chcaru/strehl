@@ -192,3 +192,64 @@ Two readings, both damaging to the statistic that produced the deficit:
    (+29%/+42%), the band statistic now demonstrably rewards two separate,
    unambiguous degradations, one of them by more than four times the entire
    effect under investigation.
+
+## Does ISO 12233 share BUILD-SHARP's sensitivity confound? Measured: YES
+
+BUILD-SHARP's ringing detector recovered **1.00x** of a planted overshoot on
+synthetic steps, **0.38x** on the fork's render and **0.08x** on ours — 4.75x
+more sensitive on one arm than the other, with no ringing anywhere. The
+question put to this lane was whether a slanted-edge MTF is immune.
+
+The theory says it should be. In a ratio of two arms
+
+    MTF_blurred(f) / MTF_base(f) = [O.P.G] / [O.P] = G(f)
+
+the object's transfer `O` and the pipeline's transfer `P` cancel identically,
+and nothing is compared against an externally calibrated amplitude. The NULL
+confirms the cancellation is *exact*: `worst |ratio-1| = 0.000e+00` on **both**
+renders.
+
+**The theory is right about the estimand and wrong about the estimator.**
+`commission_per_render.py` plants the same Gaussian in each render separately
+and reports how much each gives back — BUILD-SHARP's statistic exactly,
+`recovery = (1 - measured) / (1 - predicted)`.
+
+`wrapped-text-1`, 22 identical ARW, both renders linear, 400 / 209 sites:
+
+| σ | f=0.100 | f=0.150 | f=0.200 | render |
+|---|---:|---:|---:|---|
+| 0.5 | 1.139 | 0.962 | 1.042 | strehl `7032x4688` |
+| 0.5 | 0.752 | 0.878 | 0.679 | fork `6748x4472` |
+| 0.5 | **1.514** | **1.096** | **1.535** | ratio |
+| 1.0 | 0.916 | 1.139 | 1.116 | strehl |
+| 1.0 | 1.058 | 0.852 | 0.870 | fork |
+| 1.0 | 0.866 | **1.337** | **1.283** | ratio |
+
+The instrument is **1.1–1.5x more sensitive on our render than on the fork's**,
+and it runs the flattering way round: a cross-render MTF ratio would report
+strehl as *more* degraded than it is, manufacturing a deficit in exactly the
+direction the premise expected.
+
+The mechanism is in the same table. **ESF fit residual / contrast**, the new
+per-edge fit-quality figure:
+
+| render | median | IQR | p95 | usable sites |
+|---|---:|---:|---:|---:|
+| strehl | **0.1495** | 0.1112–0.2128 | 0.4523 | 400 (capped) |
+| fork | **0.3793** | 0.2536–0.5479 | 1.0796 | 209 |
+
+The fork's edges are **2.54x less well described by a 1-D edge model**, and
+recovery falls as that residual rises. The estimand cancels; the *estimator's
+variance does not*, and its variance is set by the render's own noise and edge
+quality — which is the quantity in dispute. Same disease, different organ.
+
+**Consequence: the correction is larger than the effect.** Dividing a
+cross-render ratio by a per-render recovery ratio of 1.1–1.5 with this scatter
+cannot resolve a 17–23% difference. This instrument, on this corpus, **cannot
+price that deficit**, and no absolute MTF magnitude from it may cross an image
+boundary.
+
+`MIN_ATTEN = 0.04` was added after the run above: at f=0.05 a σ=0.5 Gaussian
+attenuates only 1.2%, so the recovery divides by 0.0123 and the first run duly
+printed **−0.967x, a negative sensitivity**. That is arithmetic, not evidence,
+and the gate suppresses the column rather than letting it be read.

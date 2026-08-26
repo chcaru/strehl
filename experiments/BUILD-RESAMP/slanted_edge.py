@@ -308,7 +308,27 @@ def measure_roi(roi, line=None):
     v = mtf50(f, m)
     if v is None:
         return None
+    # ---- ESF fit residual -------------------------------------------------
+    # A slanted-edge measurement assumes the ROI is a 1-D function of distance
+    # along the edge normal and nothing else.  Noise, a second edge, texture,
+    # or a non-straight edge all break that assumption QUIETLY -- the chain
+    # still returns an MTF50.  This is the residual of the raw samples about
+    # the binned ESF, normalised by the edge contrast, so a bad edge reads as
+    # a bad edge instead of as a resolution difference.
+    h, w = roi.shape
+    yy = np.arange(h, dtype=np.float64)[:, None]
+    xx = np.arange(w, dtype=np.float64)[None, :]
+    dist = (xx - (slope * yy + intercept)) / np.sqrt(1.0 + slope * slope)
+    keep = (dist >= -HALF) & (dist < HALF)
+    nb = 2 * HALF * OVERSAMPLE
+    idx = np.clip(((dist[keep] + HALF) * OVERSAMPLE).astype(int), 0, nb - 1)
+    raw = np.ascontiguousarray(roi.astype(np.float64))[keep]
+    tot = np.bincount(idx, weights=raw, minlength=nb)
+    cnt = np.bincount(idx, minlength=nb)
+    model = tot / np.maximum(cnt, 1)
+    esf_resid = float(np.sqrt(np.mean((raw - model[idx]) ** 2)) / contrast)
     return {"mtf50": v, "f": f, "m": m, "angle": ang, "resid": resid,
+            "esf_resid": esf_resid,
             "slope": slope, "icept": intercept,
             "contrast": contrast, "rough": rough, "esf": e}
 
