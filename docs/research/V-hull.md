@@ -647,3 +647,234 @@ level needs its own test.
   one-line interventional; the estimator-vs-pyramid comparison is not.
 - `--index-map` with `--n-eff-map` did not recur as `0xC0000409` in this session; I
   did not invoke that pair.
+
+---
+
+# Part 3 — the aligned merge, and BUILD-HULL's proposed invariant
+
+Two questions: is the shipped *aligned* merge convex or is that undecidable from
+outside `crates/`, and is the §11 invariant the right one. I confirm BUILD-HULL's
+refutation of my own test independently first, because I should not attack its
+proposal while accepting its correction on trust.
+
+## 1. The arithmetic — confirmed, with the regime identified
+
+`min` and `mean` do not commute. For a convex merge the true band-level bound is
+`mean_B(merge) <= mean_B(max_k x_k)`, and what I tested was
+`mean_B(merge) <= max_k mean_B(x_k)`, which is **strictly tighter** and therefore
+admits false positives.
+
+My first attempt to make it fire failed, and I record that: over 30 provably convex
+random renders it fired **0 times**, with the true bound wider by 0.379 (low) and
+1.099 (high) units. Random frames do not trip it. It needs the structure a focus
+merge actually has — election correlated with local brightness, because near a
+silhouette the sharpest frame is also the least veiled.
+
+Provably convex merges (pointwise assertion passed on every row), 205 frames,
+200,000 samples, election weight `(x - min_k x)^expo`:
+
+| selection exponent | mean_B(merge) | max_k mean_B(x_k) | **excess my test reports** | true bound mean_B(max_k x_k) |
+|---:|---:|---:|---:|---:|
+| 0 | -0.0013 | 0.8510 | -0.8523 | 2.8590 |
+| 1 | 0.3463 | 0.7374 | -0.3911 | 2.8282 |
+| 2 | 0.6819 | 0.8714 | -0.1895 | 2.8893 |
+| **4** | 1.1600 | 0.8696 | **+0.2904 FALSE POSITIVE** | 2.8993 |
+| **8** | 1.8300 | 0.8592 | **+0.9708 FALSE POSITIVE** | 2.8668 |
+| **16** | 2.5061 | 0.7849 | **+1.7212 FALSE POSITIVE** | 2.8704 |
+
+**The shipped per-band selection exponent ramp is `2 3 4 5 8 8 8`.** Four of its
+seven bands sit at exponent 4 or above, which is exactly the regime where my test
+manufactures violations out of a convex merge, and the false excess grows
+monotonically with the exponent. My positive control confirms the *pointwise* test
+is fine: planted violations at +1.0, +50.0 and +300.0 above the hull were detected
+500/500 each, and pointwise violations over 6,000,000 convex samples were **0**.
+
+**BUILD-HULL is correct. My 371-677 DN is withdrawn.** That is now the third
+independent reason it was wrong, and they are separable: the mask was not on the
+silhouette (Part 2), near-field hull tests are invalid because a sharper edge
+recovers faster (Part 2), and the statistic was not bounded by convexity at all
+(here). Any one of the three is sufficient.
+
+## 2. Can the shipped ALIGNED merge be decided from outside `crates/`? — NO
+
+BUILD-HULL asserts this and proves it by reading. I tested it.
+
+The only route that could work is to render one frame through the bracket's own
+205-frame sidecar, giving an aligned per-frame sample. `STREHL_WARPMAP` names a
+sidecar and `STREHL_ONLY_FRAME` selects a frame. Together:
+
+```
+STREHL_WARPMAP=...\flower-bud-alone-cpl-2701862c2b7e7f4e.warpmap.txt
+STREHL_ONLY_FRAME=102  strehl stack D:\personal\macro\flower-bud-alone-cpl --out ... --demosaic
+-> rc=1
+Error: the sidecar named by STREHL_WARPMAP (...) was not fitted on this bracket
+Caused by: this warp map was fitted on stack "flower-bud-alone-cpl"
+  (digest 2da87e45b71aed22, 205 frames) but was applied to "flower-bud-alone-cpl"
+  (digest 499972446858e9dd, 1 frames)
+```
+
+`ONLY_FRAME` reduces the bracket before `alignment_for` runs, so the digest and the
+`map.len() == paths.len()` check both fail. This is deliberate — `merge_cmd.rs:1991`
+says silently rendering a different registration "would make every control here
+unfalsifiable" — and it is right to be. It also closes the only route.
+
+`strehl stack --help` offers exactly two map outputs, `--index-map` and
+`--n-eff-map`. There is no aligned-frame export, and no subset-of-bracket merge.
+
+**Re-implementing the warp externally is not a route.** The gather is Catmull-Rom
+with negative taps; any resampler I wrote that was not bit-identical would
+manufacture edge-local excursions of its own, in precisely the near-silhouette
+region under investigation. That confound is larger than the effect.
+
+**Verdict: UNDECIDABLE from outside `crates/`. Convexity is proved on `ALIGN=0` and
+unproved on the pipeline that ships.**
+
+### What would have to exist inside for it to become decidable
+
+The minimum is **not** the assertion. An in-crate assertion moves the claim from
+unverifiable to self-certified, which is a different thing and a worse one if it is
+mistaken for evidence. The minimum that restores external verifiability is an
+env-gated writer that emits **the warped plane for frame k at merge time**, after
+the gather and before accumulation. Two of those plus the merge output make the
+aligned hull measurable by anyone, with no trust in the merge's own opinion of
+itself. It is the same shape as `--index-map`, which already exists and is what
+made my election work possible.
+
+If the assertion ships instead, it must ship with a **commissioning test that plants
+an out-of-hull value and requires the assertion to go red**, in the repository, run
+in CI. Otherwise it is an uncommissioned pin: a green that means nothing.
+
+## 3. Attacking the §11 proposal
+
+### 3a. Is 1 DN the right tolerance? — yes, and it is not where the risk is
+
+The accumulator is `f32` folded over 205 frames at levels around 20,000 DN. Worst
+case relative error is about `205 * 2^-24 = 1.22e-5`, i.e. **0.24 DN**. A 1 DN
+tolerance is ~4x that bound, and BUILD-HULL measured **exactly zero** violations at
+**zero** tolerance across 49,477,152 samples, so 1 DN is slack, not fitting.
+
+Against real defects: the violations the pyramid actually commits have a median
+absolute correction of **298 DN** (measured in Part 2 from the clamped/unclamped
+diff). That is **300x** the tolerance. Nothing that has gone wrong in this project
+could hide under 1 DN. **The tolerance is the least interesting parameter in the
+proposal and I would not spend more time on it.**
+
+### 3b. Are the two exemptions band-mean-neutral, or a hole? — one is a hole
+
+**MHC demosaic is not exempted, it is out of scope**, because the assertion sits
+before it. That is clean as an assertion and it means something different from what
+"exemption" suggests: **the assertion does not cover the pixels the user receives.**
+0.171% of delivered samples are out of hull with excursions measured at -1150 to
++2074 DN. Net -0.026 DN is a global mean and a global mean is exactly the statistic
+that cannot see a locally concentrated defect — the error class that has now bitten
+this project four times. The gap between "what is asserted" and "what ships" should
+be stated in the doc comment.
+
+**The Catmull-Rom gather exemption is the hole, and it is the wrong hole to open.**
+BUILD-HULL's §9 lists it as **not measured**, and argues it neutral "by partition of
+unity". Partition of unity gives DC preservation on a *constant* field. It says
+nothing about a field with an edge in it. The kernel's non-convexity comes from two
+negative taps, so its excursions are **edge-local by construction** — and the
+artifact under investigation is a **near-silhouette halo**, which is edge-local too.
+**Exempting the warp gather exempts precisely the region the whole investigation is
+about.** An unmeasured named exemption over the region of interest is not an
+auditable exemption; it is the defect's hiding place. Measure it before exempting
+it, or scope the exemption to a measured bound rather than to a stage.
+
+### 3c. Does asserting over the ELECTED samples cover the failure that happened?
+
+This is the question ORCH most wanted checked, and the answer has two parts.
+
+**In the form stated, the worry does not land.** The exact-zero crush is a
+*pyramid* defect, and `pyramid.rs:1187` already clamps **after** `collapse` — the
+reconstruction, not the election — with `hull: Hull::InputRange` as the default at
+`pyramid.rs:823`. That siting is correct. The estimator backend has no band
+reconstruction, so for it "end of pass two on the accumulator output" *is* the
+output. Neither backend has an invariant sited before its own reconstruction.
+
+**A worse version does land, and BUILD-HULL states it against its own proposal**:
+
+> "the hull invariant I proposed in §11 is blind to it. The merge elects frames in
+> which the pixel is not backdrop at all, so the offending value is inside the hull
+> by construction. A convexity assertion would have passed this bug silently, and
+> shipping it alone would have been worse than useless because it would have looked
+> like a guarantee."
+
+That is the correct reading and I endorse it. The -4233 DN artifact is **inside the
+hull**. An invariant cannot catch a defect that satisfies it. **§11 is a regression
+guard for a property already measured at zero, not a detector for the defect that
+motivated it.** Ship it as the former, never describe it as the latter, and put
+§12.6 on the critical path instead.
+
+**One thing §11 would genuinely improve and should be credited with**: the pyramid
+currently repairs 8.590% / 10.007% / 10.009% / 10.945% of output pixels per plane
+**silently, every run**, and only prints the rate. A ~10% silent repair rate is not
+a guardrail firing at the margin, it is a structural property of the backend, and it
+should be a warning rather than a statistic in a log tail.
+
+### 3d. Runtime cost — measured, and it is not small
+
+From the two interventional logs, one line apart, identical argv, same machine:
+
+| arm | fold time | total | per frame |
+|---|---:|---:|---:|
+| `Hull::Unclamped` | 160.0 s | 162.0 s | 0.78 s |
+| `Hull::InputRange` | **284.3 s** | **295.5 s** | 1.39 s |
+| **cost** | **+124.3 s, +77.7%** | **+82.4%** | +78% |
+
+Memory: the hull needs `lo` and `hi` at level-0 size per plane
+(`pyramid.rs:883-887`), which for 4 planes of 3520x2344 in `f32` is **264 MB** on
+top of the logged 5.2 GB plan.
+
+**An assertion-only variant does not avoid this.** The dominant cost is maintaining
+the per-pixel running min/max across the fold; the clamp itself is one `clamp` per
+output sample. So the honest figure for "hull invariant on by default" is close to
+**+78% merge time**, not a rounding error.
+
+Caveat, stated because it could change the number: nine agents share this machine
+and the two runs were 3 minutes apart, not interleaved. The comparison is
+interventional in the source but not load-controlled. It should be re-timed on a
+quiet machine before the default is decided on it.
+
+## 4. The switch class — a third instance, already documented in-crate
+
+I did not go looking, but the audit for an aligned-frame export surfaced one.
+`merge_cmd.rs:3053-3054`:
+
+> `// default loudly. The precedent not to repeat is STREHL_FIX_CA, a`
+> `// byte-identical no-op under STREHL_ALIGN=0 that says nothing at all.`
+
+So `STREHL_FIX_CA` under `STREHL_ALIGN=0` is a third member of the class, and the
+codebase already knows it and names it a precedent not to repeat. That matters for
+how the class is treated: it is not three coincidences, it is a **known failure mode
+that has already been written down once and then re-committed twice**
+(`STREHL_FIX_HALO` byte-identical on 109MSDCF; `EDGE_AWARE` throttled to
+near-nothing). The fix is not vigilance, it is a rule: **a switch that reports
+itself ON must be able to prove it changed something, or report OFF with a reason.**
+`optics.rs:546-549` already implements exactly that discipline for `STREHL_FIX_CA`'s
+*parsing* — refusing to guess, refusing a typo, refusing silently-off. The same
+discipline is not applied to its *effect*.
+
+## 5. Verdicts
+
+| question | verdict |
+|---|---|
+| Is my Part-1 test a hull test? | **NO.** Fires on provably convex merges at exponent >= 4; shipped ramp is `2 3 4 5 8 8 8`. Withdrawn. |
+| Is the ALIGN=0 merge convex? | Accepted from BUILD-HULL; I did not re-run it, and I say so in §6. |
+| Is the shipped ALIGNED merge convex? | **UNDECIDABLE from outside `crates/`**, proved by a hard error, not by argument. |
+| Is 1 DN the right tolerance? | **Yes**, ~4x the 0.24 DN `f32` bound, 300x below real defects. Not the risk. |
+| Are the exemptions safe? | **Demosaic: out of scope, state the gap.** **Catmull-Rom: NO — unmeasured, and edge-local over exactly the region under investigation.** |
+| Does §11 catch the failure that happened? | **No, and BUILD-HULL says so first.** Ship as a regression guard, never as a guarantee. §12.6 is the one that matters. |
+| Cost on by default? | **+77.7% fold time, +264 MB.** Decidable, but must be decided explicitly and re-timed on a quiet machine. |
+
+## 6. What remains unverified
+
+- **I did not re-run BUILD-HULL's 0-of-49,477,152 measurement.** I verified its
+  arithmetic and reproduced its false-positive mechanism, which is a different
+  thing. Its convexity result on `ALIGN=0` is accepted, not independently
+  confirmed, and it is the load-bearing input to everything above.
+- The `+77.7%` timing is not load-controlled.
+- I did not measure the Catmull-Rom gather's excursion, only argued why exempting
+  it unmeasured is unsafe. That measurement needs to happen inside `crates/` for
+  the same reason §2 gives.
+- `dry-erase-marker-head-cpl` remains unmeasured in Parts 2 and 3.
