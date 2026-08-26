@@ -72,6 +72,17 @@ way.** The crop is the clearest picture of the whole result — the same leaf
 venation resolved to the same fineness in both arms, with visibly more grain in
 the argmax arm.
 
+> **CORRECTED by ORCH, 2026-08-26. `0.1546x` is retracted and must not be
+> cited.** It does not reproduce on the shipping binary: re-run on the current
+> pin, the same script reports **0.6196x** and **2.61 frames** against 0.1546x
+> and 41.8, with mean `n_eff` falling **15.077 → 5.229** and 62.57% of pixels
+> at `n_eff` = 1. Two pinned conditions agree with each other, so **the merge
+> changed, not the measurement**. `README.md` carries the full retraction; this
+> report predates it and its lane has closed, so the number is annotated here
+> rather than rewritten. **The detail finding this paragraph actually reports —
+> no measurable detail difference either way on `leaf-2-cpl` — is unaffected;
+> only the noise ratio quoted beside it is withdrawn.**
+
 **`flowers-cpl` (176) — the statistics contradict each other, and the reason is
 a defect in the baseline, not in the tool.** S1 says the merge is 0.49 px
 finer; S3 says it is 2.06 px softer. Look at the crop before believing either.

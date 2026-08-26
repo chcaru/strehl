@@ -9363,3 +9363,76 @@ totals read one higher in every class, because the legend renders one instance
 of each badge. My own earlier tally of my own gallery was inflated by exactly
 that, in all four classes -- **a legend is a row of examples, and counting the
 page counts the examples too.**
+
+## 81. Everything the owner gave us was rendered, and a bare-number search is 5/6 wrong
+
+### Corpus coverage, checked three ways and partitioned
+
+Nobody had verified that every stack the owner delivered actually made it into
+the ship set. Checked by set comparison rather than by counting:
+
+```
+source stacks with ARW : 26
+verdict entries        : 26
+rendered masters       : 26
+
+source vs verdicts  diff: NONE - exact match
+source vs rendered  diff: NONE - exact match
+```
+
+**No stack was silently skipped, and no verdict refers to a subject that does
+not exist.** `Compare-Object` in both directions is the check that matters --
+three equal counts would pass with a missing subject and a phantom one
+cancelling out.
+
+### A retracted number, and what a bare-number search is actually worth
+
+`0.1546x` -- the noise ratio the README calls *"the most persuasive number in
+this file"* and then retracts, because it does not reproduce on the shipping
+binary (**0.6196x**, `n_eff` 15.077 -> 5.229) -- appears in **11 places** across
+the corpus. A naive search flagged **6 of them as unretracted**. Reading them
+gave a very different partition:
+
+| site | count | verdict |
+|---|---:|---|
+| `README.md` | 2 | inside the explicit retraction -- correct |
+| `BUILD-PYRNOISE-ADJUDICATION.md` | 5 | **the document is about the number**; it quotes it to prove `REPLICATION EXACT` |
+| `SYNTHESIS.md` | 1 | guarded |
+| `M91-photometry.md`, `M95-dose.md` | 2 | **coincidental digit collisions** -- `foam`'s planted EV, and a coverage-scale value. Unrelated quantities |
+| **`BUILD-THESIS/REPORT.md`** | **1** | **genuine defect -- stated as a live claim, no marker** |
+| total | **11** | |
+
+**One real defect out of eleven, and my detector's six accusations were five-
+sixths wrong.**
+
+Two failure modes, both already in this log and both committed again by me:
+
+1. **A two-line context window.** Section 76's retraction sat *three pages*
+   above the table it governed. Mine looked two lines up and called four
+   documents live.
+2. **A bare numeric token collides.** `0.1546` is four digits; in a corpus of
+   thousands of measurements it occurs by chance, and it did, twice, in tables
+   about entirely different quantities.
+
+> **A search for a retracted number finds every place the number is written,
+> including the places whose job is to write it.** A document that adjudicates a
+> claim must quote the claim. Flagging it is the same error as flagging a
+> retraction for containing the thing it retracts.
+
+The rule this project already had -- *anchor a numeric check on a neighbouring
+literal, never on the bare token* -- would have cut the six to one directly.
+**I own that rule and I did not apply it to my own probe.** Twelfth instrument
+failure of the run, and the third of them mine.
+
+### The defect itself
+
+`experiments/BUILD-THESIS/REPORT.md:70` presents **0.1546x** as current fact, in
+a report dated today, with no marker -- while the README two directories up
+carries a full retraction of it. Its lane has closed, so the number is
+**annotated at the point of the claim** rather than rewritten, with the
+distinction stated explicitly: *the detail finding that paragraph actually
+reports -- no measurable detail difference either way on `leaf-2-cpl` -- is
+unaffected; only the noise ratio quoted beside it is withdrawn.*
+
+A retraction that takes a whole paragraph down with the one number it targets
+would destroy a measured result that still stands.
