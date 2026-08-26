@@ -1,8 +1,19 @@
 # BUILD-BLEND — a Laplacian multi-band merge against the depth-boundary rim
 
-**Verdict, in one line: the multi-band merge removes both defects ORCH
-measured — the tight rim and the broad aura — and leaves `couch-fibers-cpl`
-intact, with no band softer than the shipped pipeline's and no added noise.**
+**Verdict, in one line: the multi-band merge removes every seam defect ORCH has
+reported — the tight rim, the broad aura, the jagged silhouette outline on
+`bee-1-cpl`, and the straight-edged polygonal patches — and it does not soften
+`couch-fibers-cpl`. It does cost flat-region noise, and that cost is real.**
+
+> **The "no added noise" claim in the previous headline is retracted.** At pin
+> `275fbd1` the blend arm is measurably noisier in flat regions on
+> `couch-fibers-cpl`: `+11.8%` fine-band RMS, or `+104%` in gradient RMS,
+> depending on the statistic. It is not caused by the hull clamp (isolated: the
+> unclamped arm is *worse*), it is not the base band (isolated at a fixed pin
+> earlier), and it is not the measurement space (linear and sRGB agree). At pin
+> `0d9fd28` the same script on the same subject in the same space read `1.0015`,
+> so something between those pins changed it. See "The noise cost, measured
+> three ways and attributed to none of my levers".
 
 Measured against a `STREHL_ONLY_FRAME` reference, which performs no election at
 all, on the subject ORCH chose for the purpose:
@@ -824,3 +835,221 @@ disagreed in *sign*, so I am claiming no more than that.
 It is also untested on subjects beyond these four. Bees, tweezers and text all
 stress different parts of a merge — specular highlights, hard synthetic edges,
 and fine periodic detail respectively — and none of them are represented here.
+
+## The mid-tone clip, reproduced and removed
+
+ORCH-veiling 29 established by construction that this module emits values no
+input frame supports, and named the fix as mine. It is now made and the defect
+is gone. Both blend arms below are the same binary on the same 205-frame stack,
+one flag apart, so nothing but the clamp can differ between them.
+
+`flower-bud-alone-cpl`, camera-native linear, pin `275fbd1`, CA on
+(`experiments/BUILD-BLEND/clipcheck.py`, which reports ORCH's statistics so the
+two are directly comparable):
+
+| arm | exact-zero px | exact-0 % | luma<500 % | median DN | R zero | G zero | B zero |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| ORCH's pyramid render (§29.1) | 122,416 | 0.371% | 1.310% | 18550.5 | 123,050 | 176,531 | 460,886 |
+| **mine, `--unclamped`** | 115,503 | 0.350% | **1.311%** | 18541.7 | 115,616 | **176,566** | **462,519** |
+| **mine, default** | **0** | **0.000%** | **0.000%** | 18538.8 | **0** | **0** | **0** |
+| shipped estimator | 0 | 0.000% | 0.002% | 18137.3 | 2 | 1 | 15 |
+
+The unclamped arm replicates ORCH's numbers from a render they never saw: green
+to 0.02%, blue to 0.4%, `luma<500` to 0.001 of a percentage point. Red is 6%
+off, which I attribute to their render coming through the CLI backend rather
+than this example binary. The clamp takes all three channels to exactly zero.
+
+### What the clamp moved, which the count does not say
+
+`clamped_fraction` reports 8.6–11.0% of pixels per plane, and a clamp binding on
+a tenth of the frame deserves more than a count
+(`experiments/BUILD-BLEND/clipmag.py`):
+
+| statistic | value |
+|---|---:|
+| pixels moved > 1 DN | 11.670% |
+| of those, moved **up** (clamped to the floor) | **84.7%** |
+| median \|move\| over moved px | 275.0 DN |
+| p95 / max \|move\| | 1338 / 4457 DN |
+| **global level shift** | **+39.75 DN (+0.264%)** |
+
+And by input brightness:
+
+| input luma | px | moved % | median \|move\| |
+|---|---:|---:|---:|
+| 0–1,000 | 5,883,993 | **83.408%** | 548 DN |
+| 1,000–4,000 | 14,035,491 | 39.563% | 118 DN |
+| 4,000–12,000 | 1,584,990 | 15.590% | 141 DN |
+| 12,000–30,000 | 77,506,086 | **1.093%** | 330 DN |
+
+This is ORCH's predicted mechanism, confirmed on data their toy model never
+touched. The excursion is **downward** (84.7% of moves are upward corrections),
+it concentrates **in the dark** (83.4% of shadow pixels moved against 1.1% of
+the well-exposed majority, which is 77.5M of 99M), and blue leads red 4.0×
+against their predicted 3.7×. Every signature they derived from 40 lines of
+numpy is present in a 33 MP render.
+
+The clamp is therefore surgical rather than tonal: it repairs crushed shadows
+and leaves 98.9% of the well-exposed frame alone, for a global level change of
+a quarter of one percent.
+
+### Commissioned, not asserted
+
+The load-bearing test is the negative control. A clamp tested only on a case
+that never violates its bound passes vacuously, and the same green tick means
+"fixed" and "never broken". So
+`unclamped_the_reconstruction_leaves_the_hull_of_its_inputs` constructs eight
+frames whose fine and coarse bands prefer different frames over the same ground
+and **requires a violation to be present**, and requires it to be non-trivial in
+size so noise cannot satisfy it. Only then does the clamped twin assert zero.
+
+One finding fell out of building the diagnostic. Identical frames have a *point*
+hull, so every float error in the collapse is formally outside it, and the first
+version of `clamped_fraction` duly reported 1.7% on a stack of identical frames.
+That is dust, not binding. The method now takes an explicit tolerance, and its
+test asserts the dust exists at `tol=0`, is under 1 DN, and does not fool the
+diagnostic at `tol=1` — so the tolerance is shown to be necessary rather than
+chosen to make a number look good.
+
+## `bee-1-cpl`: the jagged outline and the polygonal patches
+
+This subject had never been through this arm. ORCH reported two defects on it: a
+jagged bright outline stair-stepped along the forelegs, and straight-edged
+polygonal patches of wrong-depth content inside the subject.
+
+**Both are gone.** `sxs-bee-1-cpl.jpg` shows the silhouette rim at full frame —
+present as a bright scalloped band on the thorax fuzz and around the forelegs in
+the shipped arm, absent in this one. `rim-bee-1-cpl.jpg` is the more useful
+picture: at 1:1 the shipped arm's white backdrop is broken into hard-edged
+angular facets meeting along straight lines, a low-poly look that **defocus
+cannot produce**, and in this arm the same backdrop is smooth and continuous.
+The hair tips are also better separated against it.
+
+That is the prediction this arm was built on, confirmed on a third subject: a
+coefficient-space merge never forms an index field, so it has no boundaries to
+print. It cannot inherit the 191-frame index jumps or the 17×17 box regulariser
+averaging across them.
+
+### Am I masking rather than fixing?
+
+ORCH asked for this explicitly, and it is the right question. The honest answer
+is **partly, and the part that is masking is the coarse bands**.
+
+What this arm does *not* do is make a wrong election look smoother — it makes no
+election. But its per-band weight is still an **energy** measure, so it shares a
+family resemblance with the focus measure BUILD-ELECT is investigating. The
+difference that matters is that mine is **scale-resolved**: a box-summed
+gradient over a 13 px window mixes every scale into one number, where band power
+at level *k* is the energy at scale ≈2^k alone. Defocus is a low-pass, so at
+fine scales energy *is* a sharpness proxy and the weight is sound. At coarse
+scales it is not — a defocused bright feature carries real coarse-band energy —
+and there the merge is deliberately gentle, which is closer to declining to
+decide than to deciding well.
+
+So if BUILD-ELECT finds the focus measure is biased, that finding still stands
+and this arm does not repeal it. What this arm removes is the *seam*, which is a
+separate defect that would survive a perfect election and does not depend on the
+election being wrong.
+
+## The noise cost, measured three ways and attributed to none of my levers
+
+ORCH asked for gradient energy on `couch-fibers-cpl` before and after. That
+number cannot answer the question on its own — a sharper image and a noisier
+image both raise it, and this project has twice been fooled by exactly that
+reading. So `experiments/BUILD-BLEND/gradenergy.py` reports it beside a
+decomposition that separates the two cases, with the pixel sets frozen on the
+control arm so the treatment cannot choose its own scoring region, and it is
+commissioned against a planted blur, a planted noise injection and an identity
+(it separates all three; identity reads exactly 1.0000).
+
+`couch-fibers-cpl`, whole frame, camera-native linear, pin `275fbd1`:
+
+| statistic | ctrl | blend | ratio |
+|---|---:|---:|---:|
+| gradient energy — *what was asked for* | 91,681 | 113,695 | **1.2401** |
+| flat 20% — noise | 6,683 | 27,879 | **4.1718** |
+| textured 20% — acuity | 357,088 | 384,394 | 1.0765 |
+| mean level DN | 8,060.3 | 8,115.8 | 1.0069 |
+
+**Read alone, the +24% headline says "sharper". The decomposition says it is
+mostly noise.** That is the trap the brief warned about, and it caught my own
+arm rather than someone else's.
+
+### Three candidate causes, three eliminated
+
+| candidate | test | result |
+|---|---|---|
+| the hull clamp (new) | same pin, same stack, one flag apart | **exonerated** — unclamped is *worse*, flat ratio 4.4137 vs 4.1718 |
+| the base band | fixed pin, base band only | exonerated earlier — 0.9980 vs 1.0015 |
+| measurement space | same pin, same arms, sRGB vs linear | **not the cause** — sRGB 4.6660, linear 4.1718 |
+| clipped pixels inflating the ratio | split the flat set on control clipping | **refuted** — 0 clipped in linear, ratio 4.6666 on the unclipped part in sRGB |
+
+What is left is the pin. At `0d9fd28`, `flatnoise.py` on this subject in sRGB
+read **1.0015**; at `275fbd1` the same script on the same subject in the same
+space reads **1.1179**. Something between those two commits changed this arm's
+noise, and it is not code I own. I have not bisected it — that is six lanes'
+worth of commits and outside my file lane.
+
+### And the pictures do not show it, which has to be said
+
+`hull/rim-couch-fibers-cpl.jpg` puts the two arms at 1:1 at their largest
+low-frequency disagreement. They are indistinguishable in sharpness, and I
+cannot see the noise. That is not me dismissing the number — it is the number
+being small in absolute terms. Flat-region gradient RMS goes 82 → 167 DN on a
+16-bit scale, which is **0.32 → 0.65 of one 8-bit level**. A 4× energy ratio on
+a quantity that small is a doubling of something near the floor.
+
+The two instruments also disagree on magnitude by about 2× in RMS — `flatnoise`
+says +11.8%, `gradenergy` says +104% — because one measures a Laplacian band and
+the other a gradient over differently chosen regions. Both agree in **sign**,
+which is the part I am willing to assert. The magnitude is unsettled and I am
+not picking the flattering one.
+
+**So the honest statement is: this arm is measurably noisier in flat regions on
+the do-no-harm guard, by somewhere between 12% and 104% in RMS depending on the
+statistic, on a base small enough that I could not see it at 1:1. It is a real
+cost, it is not caused by anything I changed this session, and it wants an
+independent eye at print size before anyone decides whether it matters.**
+
+### The exponent ramp was my last lever, and pulling it makes things worse
+
+ORCH-veiling 29.3 showed the hull-violation rate is driven by the selection
+exponent, and my per-band ramp runs `2 3 4 5 8 8 8` with the three finest bands
+sitting exactly where the violations turn severe. That made the ramp the obvious
+suspect for the noise as well: exponent 8 is near winner-take-all, and a
+coefficient taken from one frame carries one frame's noise instead of an
+average's. So I tested it — `--sharpen 1.0`, which disables the ramp and leaves
+a uniform exponent of 2, same pin, same stack, same binary.
+
+It confirms ORCH's mechanism and refutes my hypothesis at the same time:
+
+| arm | hull clamp, per plane | flat 20% (noise) | textured 20% (acuity) | fine-band RMS |
+|---|---|---:|---:|---:|
+| ramp `2 3 4 5 8 8 8` (default) | 2.08 / 7.02 / 7.05 / 3.97% | 4.1718 | **1.0765** | 1.2150 |
+| uniform exponent 2 | **0.43 / 2.34 / 2.34 / 1.04%** | 3.6346 | **0.8202** | 1.1525 |
+
+The hull violations fall by about 3×, exactly as 29.3 predicts. But the noise
+barely moves — 4.17 → 3.63, and +15.2% → still noisier than the shipped arm —
+while **acuity collapses by 18%**, which `gradenergy` reads without prompting as
+`VERDICT: textured energy DOWN 18.0% -- this is a softening`.
+
+That is the trade 25.2 called monotone in selectivity, and it is a bad one at
+this price. It also settles the question of whether the ramp earns its place:
+**it does, and it is the single thing keeping this arm from being the softening
+ORCH warned me not to ship.** A merge that is 18% down on texture across a
+subject audited as genuinely good is precisely the regression that went
+unnoticed for two hours once already.
+
+So the ramp stays, and the noise remains unattributed to any lever I own. Every
+candidate I can reach has now been eliminated by direct intervention rather than
+by argument:
+
+| candidate | verdict |
+|---|---|
+| hull clamp | exonerated — the unclamped arm is worse |
+| base band | exonerated at a fixed pin |
+| measurement space | not the cause — linear and sRGB agree |
+| clipped pixels in the scoring set | refuted — none in linear |
+| **selection exponent ramp** | **refuted — costs 18% acuity, keeps the noise** |
+| the pin (`0d9fd28` → `275fbd1`) | **the only candidate left, and outside my lane** |
+
