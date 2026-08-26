@@ -310,8 +310,8 @@ Stated plainly, and with the part that argues against the number first:
   back and forth *exactly twice* across the bracket — which is a two-peak
   generator by construction. Its tell is in the output: the median peak
   separation is **149–152 frames**, precisely half the bracket, in every cell.
-  Real `bee-3-cpl` blocks separate by a median of 38 frames and the claw by
-  86–108. A fitted low-order polynomial's error does not oscillate twice, so
+  Real `bee-3-cpl` blocks separate by a median of 38 frames and the claw's grid
+  cell by 80–109. A fitted low-order polynomial's error does not oscillate twice, so
   this is an adversarial upper bound, not a floor. (ARGUED: I did not measure
   the true shape of my model's error, only its magnitude.)
 * Against that, the three tests that need no assumption about the tracker's
