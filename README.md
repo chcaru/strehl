@@ -76,6 +76,39 @@ diffraction-limited ideal.
 > The research corpus is in [`docs/research/`](docs/research/), and
 > [`SYNTHESIS.md`](docs/research/SYNTHESIS.md) is the decision record.
 
+### Lateral chromatic aberration correction — on by default, certified corpus-wide
+
+The one defect visible at 1:1 on otherwise clean renders was lateral CA: red/cyan
+fringing along high-contrast edges, worst toward the frame corners, which is what
+a radial per-channel scale error looks like. Correction is now **on by default**.
+
+It was measured on **all 26 subjects** in the corpus, both arms rendered by the
+same pinned binary with the correction as the only difference, and scored as the
+ratio of edge chroma spread after to before — so **lower is better and 1.0 is no
+change**. The crop and the edge set were chosen on the **mean of the two arms**,
+so neither arm picked its own ground.
+
+```
+compared 26, skipped 0, total 26
+edge R-G: improved 25, worsened 0, unchanged 1   (sums to 26)
+median edge R-G 0.6533   R-B 0.7480   B-G 0.9452
+```
+
+**Zero subjects worsened.** The single unchanged row is
+`highly-angled-ruler-mm-cpl`, which reads exactly `1.0000` on all three channels
+— a subject where the correction is a measured no-op, and a better built-in
+control than anything that would have been designed on purpose.
+
+The flat-region placebo on this test does **not** read 1.0, and that is reported
+rather than buried: correcting CA resamples R and B, interpolation low-passes
+noise, and in a region that is pure noise a spread ratio reads that as
+improvement. The effect is confirmed in closed form against the interpolation
+kernel's own taps, it explains the observed channel ordering, and deconfounding
+for it moves the median by **-0.0273** — the noise floor was *diluting* the
+measured win, not inflating it. See §46 of
+[`ORCH-veiling.md`](docs/research/ORCH-veiling.md).
+
+
 ## Quickstart
 
 ```console
@@ -85,16 +118,24 @@ $ cargo build --release -p strehl-cli
 $ strehl probe <DIR>
 
 # Stack, and render something you can actually look at.
-$ strehl stack <DIR> --merge pyramid --srgb --auto-exposure -o out.tif
+$ strehl stack <DIR> --merge pyramid --pyramid-gate 4.5 --srgb --auto-exposure -o out.tif
 ```
 
 **Pass `--merge pyramid`.** It is not the compiled-in default yet, and it is
 exactly the backend the measurement above singles out: same binary, same subject,
-same crop, polygons in the default arm and none in this one. The pyramid backend
-carries its own gate default and needs no `--gate` of its own. This line will
-lose the flag when `DEFAULT_MERGE_BACKEND` flips; until then a quickstart that
-omitted it would be handing new users the one defect the project already knows
-how to avoid.
+same crop, polygons in the default arm and none in this one. This line will lose
+the flag when `DEFAULT_MERGE_BACKEND` flips; until then a quickstart that omitted
+it would be handing new users the one defect the project already knows how to
+avoid.
+
+**On `--pyramid-gate 4.5`.** The backend's own compiled default is `2.0`, and the
+patchwork is absent at *both* values — the measurement above was run at 2.0 and at
+4.5 and neither draws polygons, so this is not a defect workaround. A higher gate
+averages more frames per band, which lowers noise; `4.5` is the value every
+reference render in the gallery was produced at, and it is written here so that
+what you render matches what you were shown. The corpus-wide sweep that would
+justify moving the compiled default is a separate open question and is not
+settled by this line.
 
 `--srgb` applies the camera's colour matrix and the sRGB transfer curve, and
 since M95 it emits at **full sensor resolution by default** — pass `--binned`
