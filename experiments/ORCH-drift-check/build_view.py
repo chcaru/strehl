@@ -227,10 +227,14 @@ def main():
 </style>
 <h1>strehl &mdash; current renders</h1>
 <p class="lede">{len(cards)} subjects, rendered from one pinned binary. Each card
-shows the full frame and a 100&#37; crop of actual pixels, with the render's own
-banner beneath it so the configuration is never in doubt. Crops are selected by
-high-frequency energy so they land on the finest texture in the frame rather
-than on the strongest edge.</p>
+shows two things and they are not the same picture. The <b>full frame is graded
+for viewing</b> &mdash; black point, filmic S-curve, saturation &mdash; because a
+faithful render is flat by construction and reads as poor work when it is not.
+The <b>100&#37; crop is the faithful master, actual pixels, no curve</b>, because
+a grade is a tone curve and no defect here is judged across one. The render's own
+banner sits beneath both, so the configuration is never in doubt. Crops are
+selected by high-frequency energy so they land on the finest texture in the frame
+rather than on the strongest edge.</p>
 <p class="lede"><b>Order is strongest first, not alphabetical</b>, and every
 subject carries the verdict it earned when it was opened at 1:1:
 <span class="badge b-showcase">showcase</span> the hardest geometry in the
