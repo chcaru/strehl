@@ -3361,3 +3361,106 @@ texture with a CI including 1.00. That argued the flag is **safe**. This section
 measures what it **buys**, which §30 never did: a fifth to a quarter of the veil
 in the first 16 px and nothing past 64. Safe and worth having is a different
 claim from safe, and only the pair of them justifies changing a default.
+
+## 32 — The hull clamp works, verified interventionally and by eye
+
+BUILD-BLEND implemented the clamp §29 argued for (`275fbd1`). This section is
+ORCH's independent verification of it. The author's own test is not the evidence
+here; the four renders below are.
+
+### 32.1 The instrument: one commit, one line, two binaries
+
+Comparing the new build against the older pinned binary would have confounded the
+clamp with every other change on that lane. Instead `interv.py` exports **two
+`git archive` trees from one pinned commit** (`3dfa435`) and mutates exactly one
+line in one of them:
+
+```
+crates/strehl-core/src/pyramid.rs:823
+-             hull: Hull::InputRange,
++             hull: Hull::Unclamped,
+```
+
+The shared `crates/` is never touched — ORCH does not own it and six implementers
+are editing it live. The harness refuses to proceed unless the mutation lands
+(hard error, anchored on a unique full line), unless the control tree is verified
+still pristine, and unless **the two binaries hash differently**: `458ecd00a5c8d5f3`
+against `f62f41da9e107bd0`. A one-line control that compiles to the same bytes is
+testing nothing, and that check is not hypothetical — the first run of this
+harness correctly refused an already-mutated tree rather than silently reporting
+a no-op.
+
+All four renders pin `--chunks 5`, because VERIFY-WIRE measured that worker count
+changes the reduction order and moves output by 1 DN.
+
+### 32.2 The defect is gone
+
+| subject | arm | exact-zero px | exact-zero % | luma<500 % |
+|---|---|---:|---:|---:|
+| flower-bud-alone-cpl | unclamped | 122,416 | 0.371% | 1.310% |
+| flower-bud-alone-cpl | **clamped** | **0** | **0.000%** | **0.000%** |
+| dry-erase-marker-head-cpl | unclamped | 345,850 | 1.048% | 3.342% |
+| dry-erase-marker-head-cpl | **clamped** | **0** | **0.000%** | **0.000%** |
+
+### 32.3 It is a scalpel, and this is the check that could have failed
+
+A fix that removed the crush by lifting or flattening the whole frame would pass
+§32.2 and fail the product. The footprint says it does not:
+
+| | flower-bud | dry-erase |
+|---|---:|---:|
+| samples moved | 11.63% | 16.30% |
+| of those, raised | 85.0% | 81.2% |
+| median magnitude | 275 DN | 239 DN |
+| p99 magnitude | 1814 DN | 1847 DN |
+| **unclamped luma at moved px, median** | **1364** | **1499** |
+| whole-frame luma, median | 18551 | 22646 |
+| net mean change, whole frame | +40.10 DN | +52.28 DN |
+
+The clamp acts on pixels whose luma is an order of magnitude below the frame
+median — it goes where the crush is. Net global change is +0.2%.
+
+### 32.4 The veil win survives, which was the actual risk
+
+The reason to want this backend is that it removes the halo. A clamp that bought
+clean blacks by giving that back would be worthless. Same shared mask and
+distance transform as §31, computed once from the estimator arm.
+
+**flower-bud** — identical from 16 px outward, under 1% cost inside it:
+
+| d (px) | ctrl | unclamped | clamped |
+|---|---:|---:|---:|
+| 8..16 | −1846.8 | −1151.0 | −1160.1 |
+| 16..32 | −1866.1 | −981.3 | −981.3 |
+| 32..64 | −1679.6 | −1069.1 | −1069.1 |
+| 300..400 | −548.0 | −500.7 | −500.7 |
+
+**dry-erase** — 94–96% of the win retained:
+
+| d (px) | ctrl | unclamped | clamped | win retained |
+|---|---:|---:|---:|---:|
+| 16..32 | −7852.1 | −4914.9 | −5027.0 | 96.2% |
+| 32..64 | −6966.5 | −2198.1 | −2457.3 | 94.6% |
+| 200..300 | −854.3 | −50.7 | −60.0 | 98.8% |
+
+### 32.5 And I looked at it
+
+Sheets at `C:\dev\strehl-out\AB-clamp\`, full frame and 100% crops, both arms
+through one tone window computed from the reference arm only. The estimator arm
+puts the subject in a grey puddle with a bright rim tracing every contour. The
+clamped pyramid has none of it, and at 100% it resolves individual trichomes
+against clean white where the estimator's halo swallows them.
+
+This step is not decoration. §28 records the reversal that happened when I read
+band statistics and matched crops without rendering the whole frame. A number
+that moves the right way is a hypothesis about the picture; the picture is the
+measurement.
+
+### 32.6 What is now the blocker
+
+Not image quality. `--gate` and eight other flags are **refused** under the
+pyramid backend (`main.rs:730-746`), so the day the default flips, every command
+line in this repository's own harnesses — including `clean6.ps1`, which passes
+`--gate 4` — begins failing with exit 1. The flip is a migration, not a constant.
+Routed to BUILD-WIRE with the acceptance test: run the exact documented command
+lines against a flipped build and report exit codes.
