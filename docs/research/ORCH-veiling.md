@@ -3464,3 +3464,109 @@ line in this repository's own harnesses — including `clean6.ps1`, which passes
 `--gate 4` — begins failing with exit 1. The flip is a migration, not a constant.
 Routed to BUILD-WIRE with the acceptance test: run the exact documented command
 lines against a flipped build and report exit codes.
+
+## 33 — What the clamp does not fix, and a noise penalty I could not reproduce
+
+§32 verified the clamp on the defect it was built for. V-RIM, verifying a
+different pair of claims, returned two results that temper it. Both are recorded
+here at full strength because §32 reads more triumphantly than the evidence now
+supports.
+
+### 33.1 The clamp bounds the error; it does not remove its cause
+
+V-RIM's measurement, at the exact sites that used to clip: HEAD reads **805 DN
+where the shipping estimator reads 2162 DN**, one-sided (p90 = −29). The
+exact-zero count goes to zero — §32.2 is not wrong — but the reconstruction is
+still landing far below the other arm in those cells. A clamp is a bound. It
+cannot manufacture the value that should have been there; it can only refuse to
+emit one the frames do not support.
+
+So §32's "the defect is gone" is true of **the clipping** and false of the
+**underlying estimate**. The correct statement is: the pathology that produced
+visible black holes is bounded, and the estimator that produced it is still
+wrong in the same direction, by a smaller amount, in the same places.
+
+### 33.2 Two corrections to the clip figures themselves
+
+V-RIM reproduced the original sRGB numbers to the pixel (723,429 / 2.1920% /
+10,913 DN) and then repeated the measurement in camera-linear:
+
+- the clean-space figure is **1.06%, not 2.19%** — the tone stage doubles it;
+- it is **not one channel**. `dry-erase` clamps all three at ~2%.
+
+Six subjects. The only one that does not clamp is `couch-fibers`, whose minimum
+is 562 DN — the one subject with no shadows. That is the right control result:
+the defect needs darkness to express, and the subject without darkness does not
+express it.
+
+### 33.3 A noise penalty I could not reproduce, and where I did not look
+
+V-RIM reports the blend **noisier than one raw exposure** in the out-of-focus
+backdrop — 1.210x on flower-bud, 1.582x on bee-1 — measured against the
+project's calibrated noise model on a tile selector belonging to neither arm.
+For a 205-frame stack that is roughly sqrt(205) the wrong side of where it
+should be, and if it is real it prints as a blotchy background.
+
+I tested it on flower-bud with my own instrument (`flatcrop.py`, tiles chosen
+by **flatness** on a three-arm mean, the opposite selection rule to `sheet.py`)
+and **did not reproduce it there**:
+
+| tile | mean DN | estimator | pyr-unclamped | pyr-clamped |
+|---|---:|---:|---:|---:|
+| 1 | 17407 | 16.5 | 16.6 | 16.6 |
+| 2 | 18352 | 16.5 | 16.8 | 16.8 |
+| 3 | 17853 | 17.5 | 17.8 | 17.8 |
+| 4 | 18374 | 17.1 | 17.4 | 17.4 |
+| 5 | 19363 | 17.7 | 17.8 | 17.8 |
+| **median** | | **17.3** | **17.1** | **17.1** |
+| ratio | | 1.000 | 0.987 | 0.987 |
+
+On the bright backdrop the three arms are indistinguishable, and 17 DN on
+18,000 DN is about 1000:1 — consistent with 205 frames averaging properly.
+
+**This is not a refutation and I am not offering it as one.** V-RIM measured a
+different region on different subjects against a physical floor; I measured
+bright flat backdrop on one subject against the other arm. Two instruments that
+do not overlap cannot contradict each other. What I can say is bounded: *on
+flower-bud's lit backdrop there is no noise penalty*, and the failure V-RIM
+found is not there. Where it is, and whether it survives on the clamped build,
+is unmeasured.
+
+### 33.4 The one tile that showed everything
+
+The instrument found one dark tile (y=1920 x=2432, mean 2057 DN) and it carries
+more information than the five flat ones:
+
+| arm | sigma DN |
+|---|---:|
+| estimator | 17.4 |
+| pyramid unclamped | **5.0** |
+| pyramid clamped | 10.7 |
+
+The unclamped arm is the **quietest** of the three there, and that is the point:
+it is quiet because it is crushed. A noise statistic rewards a flat black hole.
+Rendered at 100% (`AB-clamp/flower-bud-flattile.png`, one stretch from the
+three-arm mean) the panels read: estimator blown to white by the halo, unclamped
+pyramid near-solid black, **clamped pyramid showing real gradient and real
+texture** in the same cell. The clamp is recovering structure, not just
+satisfying a bound.
+
+> **A noise figure alone cannot tell a well-averaged region from a destroyed
+> one. Both are smooth. Report it beside a measure of what content survived.**
+
+That is the same failure as §30's K2 and the same shape as §26.2's amplitude
+without correlation — the third and fourth instance of a statistic that is blind
+to the difference between removing an artefact and removing the picture.
+
+### 33.5 Open, and routed
+
+- Is 805 DN right? Neither arm is a trustworthy reference in those cells: the
+  estimator is blown out by its own halo there, and BUILD-HALO measured the
+  merge below the per-frame envelope **everywhere**, both arms. A third
+  reference is needed before anyone calls a number in the shadows correct.
+- Does V-RIM's backdrop noise penalty survive the clamp, and on which subjects?
+- V-RIM's own methodological finding, which applies to every noise number in
+  this corpus: letting the arm under test help select the tiles **halved** its
+  measured noise (128.8 → 68.4) while moving the control 9%. Every noise figure
+  measured that way — BUILD-BLEND's +12.3%, V-RIM's own +32/+105/+1605% — is a
+  **lower bound**.
