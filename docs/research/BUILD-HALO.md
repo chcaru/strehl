@@ -1992,15 +1992,33 @@ the merge. Averaging contributes; it is not the driver.
 `STREHL_DUMP_ELECTION` on ORCH's own pin (`859edac`, `DF209CE0`). Median elected
 frame against distance from the silhouette:
 
-| d (px) | 1-8 | 16-32 | 64-96 | 96-140 | 140-200 | 200-260 | 260-320 | 320-400 | 400-500 | 500-700 | 700-1000 |
+**CORRECTED 2026-08-25.** The table first published here carried every distance
+at 2x its true value. `distance_transform_edt` runs on the full-resolution
+7040x4688 mask, so its values are TIFF px; subsampling with `[::2, ::2]` changes
+which pixels are kept but NOT the distances they carry, and the band thresholds
+were divided by 2 anyway. The corrected table is below. The shape of the finding
+is unchanged and the ramp is if anything sharper; only the length scale moves.
+Caught by a cross-check against `aura_reconstruct.py`, which uses the full-res
+mask and is correct by construction: the two now agree to 4 significant figures
+(d=96-140: -5061.4 vs -5063.2; d=200-260: -3293.7 vs -3295.2) across two
+different merge renders.
+
+| d (px) | 1-8 | 16-32 | 32-64 | 64-96 | 96-140 | 140-200 | 200-260 | 260-320 | 320-400 | 400-500 | 700-1000 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| median frame | 111 | 105 | 91 | 78 | 61 | 43 | 25 | 5 | 1 | 10 | 106 |
-| IQR/bracket | .21 | .17 | .20 | .19 | .15 | .13 | .14 | .10 | .03 | **.54** | **.55** |
+| median frame | 109 | 101 | 86 | 64 | 41 | 11 | 1 | 5 | 99 | 107 | 116 |
+| IQR/bracket | .19 | .18 | .19 | .15 | .14 | .13 | **.03** | .44 | **.57** | **.54** | **.53** |
 
 **The backdrop's elected frame is a smooth monotone function of its distance
 from the subject, sweeping the entire 205-frame bracket, and tightly determined
-the whole way.** Past d~500 px it collapses into dead-ground noise, which is
-section 21's result appearing here as a built-in control on the same plane.
+the whole way** -- most tightly of all at d=200-260, where the IQR is 3% of the
+bracket and 95% of pixels elect frame <=40. Past d~320 px it collapses into
+dead-ground noise, which is section 21's result appearing here as a built-in
+control on the same plane.
+
+The ramp and the aura terminate together. The aura reads -3294 DN at d=200-260,
+-1322 at 260-320, -500 at 320-400: it dies exactly where the election stops
+ramping and starts electing noise. That correspondence is the strongest single
+piece of evidence that the ramp causes the aura.
 
 A flat white card lies at one depth. It should elect one frame, or noise. Its
 selection is instead dictated by proximity to an object it does not touch.
@@ -2047,3 +2065,103 @@ while the merge reads -5063 DN. Neither the winner alone nor a uniform mean
 accounts for that amplitude. The gate's admitted SET is not dumped and has not
 been measured, so the amplitude accounting is open. The distance-driven ramp in
 22.4 is measured directly and does not depend on resolving it.
+
+## 23. A quarter of the aura is exposure drift, and it is one flag away
+
+### 23.1 The bracket drifts 18.3% and the shipped merge does not correct it
+
+The nine single-frame arms, read in RAW DN at a frozen far-field pixel sample:
+
+| arm | f000 | f025 | f051 | f102 | f153 | f204 | spread |
+|---|---|---|---|---|---|---|---|
+| far-field DN | 17576 | 17950 | 18372 | 19278 | 20183 | 21106 | **3530 DN = 18.3%** |
+
+Monotone with frame index. The engine's own photometric fit agrees from a
+different direction: `gain span 1.2350 (max/min across 205 frames)`.
+
+`main.rs` states the consequence in its own words -- "a gated average without
+this term is reading an exposure change as a signal change" -- and **`off` is
+the shipped default.** M24's worst measured drift was coffee-bean at 11.70%;
+M122 measured the flag HELPING tweezers-cpl at 13.765%. This stack drifts more
+than either.
+
+### 23.2 It broke a measurement, and the broken result was mine
+
+Referencing each arm to **its own** far field -- which ORCH's spill table and my
+`aura_hull.py` both did -- divides every arm by a different number when the arms
+differ by 3530 DN. That alone manufactured this reading:
+
+| test | merge below EVERY sampled frame |
+|---|---|
+| referenced to each arm's own far field | **76.92%** of pixels |
+| raw DN, no reference anywhere | **2.09%** of pixels |
+
+The referenced number says the estimator loses to its own inputs, which would be
+an invariant violation that no reweighting could repair. **It is an artefact.**
+In raw DN the merge is inside the hull of its inputs at 98% of pixels, median
+depth below it 40 DN. A convex combination cannot be darker than its darkest
+input, and this one is not.
+
+The merge's own far field sits 32.5 DN from the mean of the nine frames' far
+fields, which independently confirms section 22's dead-ground control: out there
+the election really is a broad mix.
+
+### 23.3 The decomposition, measured by one flag
+
+`--photometric on`, same pin, same gate, same stack, everything else fixed:
+
+| d (px) | 1-32 (rim) | 64-96 | 96-140 | 140-200 | 200-260 | 260-320 | 320-400 |
+|---|---|---|---|---|---|---|---|
+| OFF (shipped) | -6618 | -4844 | -5061 | -4556 | -3294 | -1322 | -500 |
+| ON | -6735 | -4330 | -4127 | -3157 | -1603 | -727 | -388 |
+| aura removed | **-1.8%** | 10.6% | 18.5% | 30.7% | **51.3%** | 45.0% | 22.4% |
+
+**Over the aura band d=64-260 px, 25.6% of the aura is exposure drift.** The
+fraction rises with distance, reaching 51% at d=200-260 -- which is exactly
+where the election ramp bottoms out at frame 1 and the exposure difference from
+the far field's broad mix is largest. The two curves are the same curve.
+
+The rim (feature 1) gets 1.8% WORSE. It is a different defect and this does not
+touch it.
+
+### 23.4 The control that makes it a decomposition rather than a coincidence
+
+**The election ramp is bit-identical between the two arms** -- 107, 101, 86, 64,
+41, 11, 1, 5, 99, 107 in both. Photometric correction rescales frame levels and
+does not perturb the selection at all. So the 25.6% is the exposure term being
+removed from a fixed election, not a different election being run.
+
+That splits the aura cleanly:
+
+* **~26% -- the per-frame exposure ramp, sampled by the distance-driven
+  election ramp.** Free today, one flag, no new code.
+* **~74% -- genuine veiling.** The defocused subject really does spill onto the
+  backdrop, and the election preferentially selects the frames where it spills
+  most. This is the part ORCH's outlier/envelope estimator has to remove.
+
+Both act through the same election ramp of section 22.4, which remains the
+single upstream cause.
+
+### 23.5 What this does to the 109MSDCF negative control
+
+`109MSDCF` has **22 frames and 0.91% drift** (M24). `flower-bud-alone-cpl` has
+**205 frames and 18.3% drift**. The negative control differs from the positive
+by 9x in bracket length and 20x in exposure drift, not only by depth separation.
+Since a quarter of this aura is now measured to BE exposure drift, that
+confound is real and not hypothetical. The dose-response across paint strokes
+still isolates subject luminance correctly within `109MSDCF`; what it cannot do
+is carry a conclusion ACROSS to a stack that differs in two other large ways.
+
+### 23.6 The estimator ceiling, which survives all of the above
+
+At d=140-200, per-pixel across the nine frames:
+
+| p0 | p25 | p50 | p75 | p100 | dark tail | light tail | skew |
+|---|---|---|---|---|---|---|---|
+| -4122 | -1248 | -568 | -485 | **-379** | 3306 DN | 250 DN | **13.2x** |
+
+Heavily skewed dark, which is what ORCH predicted and what justifies an upper
+envelope. Delivered values on that band: merge **-4549**, best single frame
+**-474**, upper envelope **-379**. The unveiled backdrop IS recoverable from the
+stack, and the envelope beats the single-frame floor rather than merely matching
+it.

@@ -96,7 +96,7 @@ def main() -> int:
     print("  " + "-" * 86)
     rows = []
     for lo, hi in BANDS:
-        m = (dist_e >= lo / 2) & (dist_e < hi / 2) & ~subj_e
+        m = (dist_e >= lo) & (dist_e < hi) & ~subj_e
         n = int(m.sum())
         if n < 2000:
             continue
