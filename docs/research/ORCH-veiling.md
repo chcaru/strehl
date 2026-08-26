@@ -2101,3 +2101,197 @@ merge is about 10% softer **on average**, and where has not been measured. That
 measurement is worth an hour, because a uniform softness is repayable by
 `restore.rs` — which is dark, and which attributes 18.6% of the merge's blur
 variance to the resampling kernel — while a structured loss is not.
+
+## 22 The hour, spent: the softness was never the merge
+
+The hour was spent and it did not return the answer it was sent for. There is no
+uniform softness to repay, because there is no softness. The 10% was the
+instrument.
+
+Four measurements, in the order they were taken, each with a ref-vs-ref null that
+returned exactly `0.00e+00` before any real number was read. Pin
+`tree-lin-0d9fd28`, both arms camera-linear, `STREHL_FIX_CA` and
+`STREHL_PHOTOMETRIC` unset in both, matched resolution.
+
+## 22.1 The loss is structured, and monotone in sharpness
+
+`acuitymap.py`, 128 px tiles, lit population taken from the reference only so the
+partition cannot be shaped by the arm under test. `couch-fibers-cpl`, 1978 tiles
+judged of 1980:
+
+| quintile by reference sharpness | ref acuity | blend/ctrl |
+| --- | ---: | ---: |
+| q0 flattest | 214.8 | 0.7974 |
+| q1 | 253.0 | 0.8821 |
+| q2 | 283.0 | 0.9320 |
+| q3 | 319.5 | 0.9511 |
+| q4 sharpest | 416.0 | 0.9868 |
+
+Perfectly monotone, and 29.8% of tiles *gain* acuity, to a maximum of 1.7020. The
+frame-wide 0.9020 is the average of a 20% deficit in the flattest fifth and a 1.3%
+deficit in the sharpest. Whatever this is, it is concentrated exactly where there
+is least detail to lose.
+
+## 22.2 Not blur: a band-pass gain of up to 34%
+
+Two mechanisms produce a deficit that grows as detail falls, and they have
+opposite consequences. Averaging where no frame wins removes noise and scales the
+high-frequency plateau down by roughly a constant. A low-pass rolls off toward
+Nyquist and takes real detail with it. The radially averaged amplitude ratio
+separates them: flat in frequency is noise, monotone falling is blur.
+
+`spectralratio.py`, `couch-fibers-cpl`, flattest quintile, 216 tiles:
+
+| f/Nyq | 0.02 | 0.10 | 0.19 | 0.27 | 0.35 | 0.44 | 0.52 | 0.60 | 0.69 | 0.77 | 0.85 | 0.94 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| amp ratio | 1.046 | 1.038 | 1.071 | 1.175 | 1.254 | 1.315 | **1.341** | 1.238 | 1.061 | 0.961 | 0.940 | 0.972 |
+
+It is neither. It is a band-pass **gain**, peaking at **+34% near half-Nyquist**,
+with a ~5% deficit confined to the top octave. The sharpest quintile has the same
+shape at a peak of 1.158. The pyramid merge is not softer than the legacy merge
+anywhere except the last octave.
+
+The script's own verdict line read `FALLING toward Nyquist -> consistent with
+BLUR`, because it summarised the curve as a high-half mean minus a low-half mean
+and a band-pass looks like a fall from that vantage. The verdict was wrong and the
+evidence rows above it made that visible in one read, without a re-run. Fifth
+instance of the rule; first instance of the rule paying for the discipline that
+was adopted in response to it.
+
+## 22.3 The gate was rewarding the one octave the optics have destroyed
+
+`accept.py`'s `acuity` is the mean `|Laplacian|` over the lit population. The 3×3
+Laplacian's frequency response is `4 − 2cos(2πu) − 2cos(2πv)`: zero at DC, rising
+monotonically, maximal at Nyquist. The statistic is dominated by the top octave
+and nearly blind to the mid-band.
+
+So it weights hardest precisely the band that facts 12 and 28 say carries almost
+no optical information on this rig — marked f/11 is effectively f/33, and
+MTF@Nyquist is 0.036 at f/5.6 at m=2.0 — and it is blind to the band where the
+merge gains a third. In the flattest tiles it is worse than that: `|Laplacian|`
+against a white noise floor is a noise meter, and the gate was scoring noise
+suppression as lost detail.
+
+`acuity 89.8%` was never a measurement of sharpness. It was a measurement of the
+top octave, taken with an instrument that could not see anything else.
+
+## 22.4 Two defects, not one, and the second is not the merge's
+
+`clipvsloss.py` partitions tiles by whether the test arm clips, and — the part
+that matters — bins on reference amplitude first, so that contrast cannot confound
+clipping. `couch-fibers-cpl` clips nowhere in either arm and serves as the
+placebo: 1083 tiles, all clip-free, amplitude ratio **1.0408**.
+
+`flower-bud-alone-cpl`, matched on reference amplitude:
+
+| quintile | clean n | clean ratio | dirty n | dirty ratio |
+| --- | ---: | ---: | ---: | ---: |
+| q0 amp~99 | 306 | 1.0153 | 0 | — |
+| q1 amp~113 | 307 | 1.0084 | 0 | — |
+| q2 amp~123 | 307 | 1.0091 | 0 | — |
+| q3 amp~135 | 307 | 1.0214 | 0 | — |
+| q4 amp~241 | 301 | **0.8591** | 6 | **0.4495** |
+
+In four of five quintiles the pyramid merge beats the legacy merge on a real
+amplitude measure. Two separate defects sit in the fifth: six tiles annihilated by
+the clamp, and a deficit in 301 tiles that contain no clipped pixel and that
+clipping therefore cannot explain. They have different owners and had been sharing
+one number.
+
+## 22.5 A retraction: I let the arm under test define its own population
+
+Between those two measurements I told BUILD-BLEND that the clipping was entirely
+in the dark population and that no fix should touch lit pixels. That was false,
+and the error was the one this document has spent the night finding in other
+people's work. `rail.py` computed the lit mask from **each arm's own green**:
+
+```python
+a = tifffile.imread(arm); g = a[:, :, 1]
+thr = np.percentile(g, 20.0); lit = g > thr
+```
+
+A pixel lit in the reference and driven to black by the clamp is dark under
+blend's own threshold. The defect deleted itself from its own measurement.
+Partitioned on the reference instead, which is the only defensible choice:
+
+| clip cell | ref % | test % | rise |
+| --- | ---: | ---: | ---: |
+| black_lit | 0.0000 | 0.0401 | +0.0401 |
+| black_dark | 0.0000 | 1.3614 | +1.3613 |
+| white_lit | 0.0000 | 0.0000 | +0.0000 |
+| white_dark | 0.0000 | 0.0000 | +0.0000 |
+| TOTAL | 0.0001 | 1.4015 | +1.4014 |
+
+0.0401% of 33 Mpx is about 13,200 pixels of lit subject turned black. Retracted
+and corrected to the owner within the hour. The rail split survives: the highlight
+end is genuinely clean.
+
+> A reference population computed from the arm under test is not a reference. It
+> is the defect grading its own exam.
+
+## 22.6 The gate, rebuilt
+
+`accept2.py` replaces `accept.py` for this decision. `accept.py` is left untouched
+so every number already in the record stays reproducible. Three changes, one per
+failure:
+
+1. **Amplitude ratio per reference-amplitude quintile, gate binding on the
+   worst.** A frame-wide mean cannot separate "1% softer everywhere" from "the
+   silhouette is destroyed".
+2. **The gate binds on the mid-band, 0.2–0.7 f/Nyq.** The top octave is reported
+   and deliberately does not bind, for the reason in §22.3.
+3. **Clipping split rail × population into four cells that sum to the printed
+   total.** A defect that *moves* between populations can no longer read as a
+   defect that was *fixed*.
+
+It refuses to print a verdict until every arm scores exactly `1.0000` against
+itself. Both subjects returned `0.00e+00`.
+
+The verdict inverts. `couch-fibers-cpl` **PASSES** — all five quintiles
+1.0268–1.0528, band low 1.0361 / **MID 1.1081** / high 0.9571, zero in all four
+clip cells — on the same file `accept.py` failed at 0.9020.
+
+## 22.7 What each owner is actually chasing
+
+`accept2` computes the sharp-quintile spectrum twice, over all tiles and over
+clip-free tiles only, which separates the clamp from the veil:
+
+| band | flower-bud, all sharp (154) | flower-bud, clip-free (151) | couch-fibers (217) |
+| --- | ---: | ---: | ---: |
+| low | 0.7889 | 0.9789 | 1.0361 |
+| **mid** | 0.5155 | **0.6719** | **1.1081** |
+| high | 0.5699 | 0.6335 | 0.9571 |
+
+Excluding **three tiles out of 154** moves the low band from 0.7889 to 0.9789. The
+clamp is essentially the entire low-band deficit of the sharpest fifth of the
+frame, concentrated at the subject outline, and it repays itself when fixed. Only
+a third of the mid-band deficit goes with it. What remains — 0.6719 against the
+control's 1.1081, a 44-point swing between two subjects from one binary at one pin
+— sits in 151 tiles with no clipped pixel in them, and the discriminator between
+the two subjects is whether there is an occluding outline against a defocused
+background. That is BUILD-HALO's veil, now carrying a number.
+
+Targets issued: clamp, all four clip cells to a rise ≤0.02%; veil, flower-bud's
+clip-free mid-band 0.6719 → ≥0.98 with couch-fibers' 1.1081 undisturbed, that
+subject being the placebo precisely because it has no silhouette for a veil fix to
+act on.
+
+One caution against the finding's own grain, since it is n=2: the silhouette
+discriminator is ARGUED, not established, and this corpus has been burned by
+two-subject conclusions before. BUILD-HALO's fix is the falsification. If both
+subjects move, or neither does, the mechanism is not what either of us believes,
+and that is worth more than a passing gate.
+
+## 22.8 The standing correction
+
+The merge that has been called a 10% regression all night is, measured with an
+instrument that can see the band the lens actually delivers, **+11% through the
+mid-band and up to +34% at its peak**, on the subject that has nothing wrong with
+it. Its two real defects are localised, separately owned, separately measured, and
+one of them repays 0.79 → 0.98 on three tiles.
+
+Nothing about the ship decision changes: the merge is still unreachable from
+`strehl stack`, which is still the only thing standing between this project and a
+photograph. But the case for wiring it was stronger than the record said, and the
+record said otherwise because of a metric this document is responsible for.
+
