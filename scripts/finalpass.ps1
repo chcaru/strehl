@@ -299,14 +299,68 @@ if (-not $NoPresent) {
 # -- so leaving it unset would make the arm's colour path depend on the calling
 # shell. Every other variable that re-routes a render is cleared for the same
 # reason; this list mirrors byte-freeze.rs's RENDER_ENV.
-foreach ($v in @(
-        'STREHL_ALIGN', 'STREHL_WARPMAP', 'STREHL_CACHE_DIR',
-        'STREHL_FIX_HALO', 'STREHL_FIX_HALO_DELTA',
-        'STREHL_EDGE_AWARE', 'STREHL_EDGE_TAU', 'STREHL_EDGE_CONF',
-        'STREHL_ONLY_FRAME', 'STREHL_MERGE', 'STREHL_PYRAMID_WORKERS',
-        'STREHL_VEIL', 'STREHL_VEIL_MARGIN', 'STREHL_VEIL_FLOOR',
-        'STREHL_FIX_CA')) {
+$ClearedSwitches = @(
+    'STREHL_ALIGN', 'STREHL_WARPMAP', 'STREHL_CACHE_DIR',
+    'STREHL_FIX_HALO', 'STREHL_FIX_HALO_DELTA',
+    'STREHL_EDGE_AWARE', 'STREHL_EDGE_TAU', 'STREHL_EDGE_CONF',
+    'STREHL_ONLY_FRAME', 'STREHL_MERGE', 'STREHL_PYRAMID_WORKERS',
+    'STREHL_VEIL', 'STREHL_VEIL_MARGIN', 'STREHL_VEIL_FLOOR',
+    'STREHL_FIX_CA')
+foreach ($v in $ClearedSwitches) {
     Remove-Item "Env:\$v" -ErrorAction SilentlyContinue
+}
+
+# ---------------------------------------------------------------------------
+# RESOLVED SWITCH STATE, EMITTED AGAINST THE REGISTRY.
+#
+# Provenance that lists argv alone is a partial record wearing the word
+# "verbatim". Most of this product's quality switches are ENVIRONMENT
+# VARIABLES, not flags: STREHL_FIX_CA, STREHL_FIX_HALO, STREHL_EDGE_AWARE,
+# STREHL_PHOTOMETRIC, STREHL_WINDOW_RADIUS and the rest never appear in argv
+# however they are set, so an argv-only sidecar cannot distinguish a run with
+# the halo fix on from one with it off, and its "REPRODUCE THIS EXACT FILE"
+# line is not sufficient to reproduce the file: someone with a different
+# environment gets different pixels and a sidecar saying they should not have.
+#
+# On 2026-08-26 that silence cost real time. A reviewer read a sidecar, saw no
+# --fix-ca in the argv, and concluded -- correctly, from the evidence the
+# sidecar offered -- that the owner's final masters had been rendered with
+# lateral-CA correction switched off. They had not been. The binary's gear
+# guard defaults it ON when the gear matches, and the binary's own banner said
+# `lateral CA: CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched;
+# default on)` on all 26 subjects. Nothing in the sidecar could show that, so
+# the absence of a flag read as the absence of a correction.
+#
+# Two things follow, and this block does both. Record the RESOLVED state of
+# every registry switch INCLUDING THE UNSET ONES, because unset is exactly the
+# case that has burned this project -- an omitted line is indistinguishable
+# from a switch nobody thought about. And record what the BINARY ITSELF said
+# it did, because only the binary knows the outcome of a gear guard: the
+# environment says "unset" in both the corrected and uncorrected cases.
+#
+# The registry is parsed from scripts/check-defaults.py rather than duplicated
+# here, so a switch added there is covered here without anyone remembering to.
+function Get-SwitchRegistry {
+    $src = Join-Path $PSScriptRoot 'check-defaults.py'
+    $reg = [ordered]@{}
+    if (-not (Test-Path $src)) { return $reg }
+    $lines = Get-Content $src
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        if ($lines[$i] -match '^\s{4}"(STREHL_[A-Z_0-9]+)":\s*Declared\(') {
+            $key = $Matches[1]
+            $def = '(not declared)'
+            for ($j = $i + 1; $j -lt [Math]::Min($i + 40, $lines.Count); $j++) {
+                if ($lines[$j] -match '^\s{4}"STREHL_') { break }
+                if ($lines[$j] -match '^\s*default\s*=\s*"([^"]*)"') { $def = $Matches[1]; break }
+            }
+            $reg[$key] = $def
+        }
+    }
+    return $reg
+}
+$RegistrySwitches = Get-SwitchRegistry
+if ($RegistrySwitches.Count -eq 0) {
+    throw "REFUSING TO RENDER: could not parse the switch registry from check-defaults.py. Provenance would silently omit every environment switch, which is the exact defect this block exists to prevent."
 }
 
 function New-Presentation {
@@ -416,6 +470,36 @@ function Invoke-Subject {
     }
     else { $Flags }
 
+    # Resolved state of every registry switch, set and unset alike.
+    $switchSet = 0
+    $switchLines = @()
+    foreach ($k in $RegistrySwitches.Keys) {
+        $val = [Environment]::GetEnvironmentVariable($k)
+        if ($null -ne $val -and $val -ne '') {
+            $switchSet++
+            $src = if ($ClearedSwitches -contains $k) {
+                'ENVIRONMENT -- set AFTER the harness cleared it'
+            }
+            else {
+                'ENVIRONMENT -- and this harness does not clear it'
+            }
+            $switchLines += ('  {0,-26} = {1,-18} [{2}]' -f $k, $val, $src)
+        }
+        else {
+            $how = if ($ClearedSwitches -contains $k) { 'cleared by harness' } else { 'not set' }
+            $switchLines += ('  {0,-26} = {1,-18} [{2}; built-in default: {3}]' -f
+                $k, '(unset)', $how, $RegistrySwitches[$k])
+        }
+    }
+
+    # What the BINARY said it resolved to. The environment cannot answer this:
+    # STREHL_FIX_CA is unset both when CA is corrected and when it is not, and
+    # only the gear guard's own line distinguishes them.
+    $resolvedKeys = 'merge backend|camera|lateral CA|bands|selection|iso'
+    $binaryState = $binaryOut |
+        Where-Object { $_ -match "^\s*($resolvedKeys)\s*:" } |
+        ForEach-Object { '  ' + $_.Trim() }
+
     @(
         "strehl render provenance"
         "artifact      : $(Split-Path $tif -Leaf)"
@@ -434,11 +518,28 @@ function Invoke-Subject {
         "colour space  : $space"
         "exposure      : $(if ($expo) { ($expo -replace '^\s*exposure\s*:\s*','').Trim() } else { '(not printed by the binary)' })"
         ""
-        "FULL ARGV (verbatim, as executed):"
+        "ARGV (verbatim, as executed -- NOT the whole switch state; see below):"
         "  $Exe $($argv -join ' ')"
+        ""
+        "RESOLVED SWITCH STATE ($($RegistrySwitches.Count) registry switches, $switchSet set)"
+        "  Environment variables never appear in argv however they are set, so"
+        "  the argv line above cannot show them. Unset switches are listed too:"
+        "  an omitted line is indistinguishable from a switch nobody considered."
+        $switchLines
+        ""
+        "BINARY-REPORTED RESOLVED STATE (the binary's own banner, not inferred)"
+        "  A gear-guarded switch reads '(unset)' above whether or not it acted."
+        "  These are the lines where the binary states what it actually did:"
+        $(if ($binaryState) { $binaryState } else { '  (binary printed no recognised state lines)' })
         ""
         "REPRODUCE THIS EXACT FILE:"
         "  $Exe stack `"$($S.Path)`" --out <OUT> $repro"
+        $(if ($switchSet -eq 0) {
+            "  ...with all $($RegistrySwitches.Count) registry switches UNSET, as listed above."
+        }
+        else {
+            "  ...with the $switchSet non-default switch(es) above exported first."
+        })
         $(if ($repro -ne $Flags) {
             "  (--auto-exposure replaced by the gain it CHOSE; re-running with"
             "   --auto-exposure on a different binary may choose differently)"
