@@ -2321,3 +2321,60 @@ itself, but not of the SHIP-V2 pixel comparison, which is inherently two. The
 scope of the claim was wrong even though its value was not, and ORCH had asked
 every agent to state which comparisons were same-binary. Recorded here so the
 imprecision is not inherited.
+
+## MEASURED: lateral CA is ON in every shipped master, and it matters at the corners
+
+ORCH proposed an A/B of `--fix-ca <profile>` against **unset**. That comparison
+is degenerate and would have returned a null: unset IS on. The binary's gear
+guard defaults the correction on when the gear matches, so both arms would have
+carried it and the null would have read as "CA does nothing". The correct
+disabled arm is `STREHL_FIX_CA=0`, which the binary acknowledges in its banner
+as `off (operator asked for "0")`.
+
+Rendered `foam` both ways from ONE binary (96b7e119) in `--linear-srgb`, so no
+tone curve is in the way and no green restriction is needed.
+
+Two instruments, and the first one FAILED ITS OWN CONTROL, which is why it is
+recorded here rather than cited. A brightness-gated edge-chroma statistic gave a
+61.7% corner reduction against a 12.1% centre control -- but its flat-region
+control also fell 34.7%, only 1.8x less than the rims against a pre-registered
+2x threshold. A CA warp resamples R and B, and resampling smooths noise by an
+amount that grows with the shift, which grows with radius; that mimics radial
+fringe removal exactly. The statistic could not separate the two and was not
+cited. Its first version was worse still: it normalised by green over ALL edge
+pixels on a dark subject, so it measured shadow noise, and its crops rendered
+solid black. Looking at the picture caught that; the numbers had looked fine.
+
+The number comes instead from ORCH's `ca_radial.py`, which passed its own
+pre-registered controls including a sub-pixel plant, copied verbatim into this
+lane as `ca_radial_foam.py` with only its two path constants changed (diff
+proven to be exactly those two lines) because its input directory holds M114's
+files and must not be clobbered:
+
+| bin | r | n | median fringe delta | worse |
+|---|---|---|---|---|
+| NULL | 0.045 | 180 | -0.92% | 38% |
+| r0.20 | 0.200 | 180 | -14.53% | 7% |
+| r0.35 | 0.350 | 180 | -31.38% | 0% |
+| r0.50 | 0.500 | 180 | -41.88% | 0% |
+| r0.65 | 0.650 | 102 | -51.55% | 0% |
+| r0.75 | 0.752 | 86 | -56.34% | 0% |
+| r0.83 | 0.830 | 36 | -57.67% | 0% |
+
+Monotonic in radius, null at the optical centre where lateral CA is zero by
+construction, and worse in 0% of windows from r=0.35 outward. R/B opposition
+falls 0.755 -> 0.526; opposition is R and B displacing in OPPOSITE directions,
+which is the specific signature of lateral CA and the one thing resampling
+smoothing cannot manufacture. This independently corroborates the registry's
+61-67% claim on a different subject.
+
+By eye at 1:1, which is the deliverable: at the corner the disabled arm carries
+obvious cyan-teal and magenta fringes on the specular rims and the corrected arm
+reads close to neutral. At the centre the two arms are indistinguishable. The
+iridescent speckle inside the cells survives identically in both arms and at
+both radii -- so the subject supplied its own discrimination exactly as ORCH
+predicted: what the correction removed was aberration, and the real thin-film
+colour is untouched.
+
+Consequence: the shipped masters already carry this. Turning CA off would be a
+57% fringe regression at the corners of a 61 MP frame examined at 1:1.
