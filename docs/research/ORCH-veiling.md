@@ -2857,3 +2857,106 @@ that makes a picture look wrong to a person rather than to a metric.
 > **A defect measured on the arm you are developing is not automatically the
 > defect the product has. Check which arm ships before deciding what is
 > urgent.**
+
+## 27 — The halo is a backend defect, and the other backend already in the tree removes it
+
+Section 26 established that the shipped estimator carries a veil and that the
+owner's complaint is real. This section is the part that matters: the fix is not
+research, it is a constant.
+
+### 27.1 A paired probe that cannot be a mask difference
+
+Every veil measurement before this segmented each arm independently, which
+leaves an obvious hole — two arms with slightly different tonality segment
+slightly different silhouettes, and the "difference" is then partly the masks.
+`veilpair.py` closes it by computing the subject mask and the distance transform
+**once, from a named reference arm, and applying both unchanged to every arm**.
+An identical pixel population is scored in every column.
+
+Commissioned twice before use, because a probe nobody has tried to break is a
+probe nobody knows the sensitivity of:
+
+- **Null:** reference against itself is exactly 0.0 in all ten bins.
+- **Placebo:** the same mask translated 640 px off the silhouette collapses the
+  d = 0 signal from −2269.6 DN to −458.1 DN. The profile really is keyed to the
+  silhouette and is not an artifact of sorting pixels by brightness.
+
+### 27.2 The measurement
+
+`flower-bud-alone-cpl`, background luminance deficit against far-field, ctrl =
+shipped estimator, blend = pyramid at `--gate 4 --base-mean --camera-linear`:
+
+| dist (px) | n | estimator | pyramid | ratio |
+|---|---:|---:|---:|---:|
+| 0..2 | 64,597 | −2269.6 | −2000.8 | 0.88 |
+| 4..8 | 169,532 | −1801.8 | −1288.6 | 0.72 |
+| 8..16 | 252,212 | −1846.8 | −1151.0 | 0.62 |
+| **16..32** | 337,579 | **−1866.1** | **−981.3** | **0.53** |
+| 32..64 | 617,014 | −1679.6 | −1069.1 | 0.64 |
+| 64..128 | 1,202,256 | −1533.8 | −1199.4 | 0.78 |
+
+`dry-erase-marker-head-cpl` is larger: 32..64 goes −6966.5 → −2198.1 (0.32),
+64..128 −3520.2 → −999.0 (0.28), 128..200 −2248.4 → −365.8 (0.16).
+
+**The limitation that bounds the claim.** The mask is a luminance split at
+q = 0.35, so it finds a real figure/ground silhouette only where the subject is
+*darker* than its background. True for `flower-bud` and `dry-erase`; false for
+`tweezers`, where the split inverts and the profile is not measuring a veil at
+all. The strong result rests on two subjects. On the other four the arms agree
+within 1–2%, which is a no-regression result and not a veil result. Reporting
+the second as if it were the first is how a 2-subject finding becomes a 6-
+subject claim.
+
+### 27.3 Then I looked at it
+
+Numbers of this kind have been wrong in this corpus before, so the two arms were
+cropped at 100% on the busiest silhouettes and tone-mapped through **one window
+computed from the reference arm only** — an A/B where each side gets its own
+auto-levels can manufacture or hide any difference you please.
+
+The estimator crops show a **hard white band tracing every contour of the bud**,
+roughly 20–40 px wide, following the silhouette all the way round including into
+the concavities between hairs. It reads exactly like a cut-out sticker outline.
+On the same crop the pyramid shows **none of it** — clean silhouette, smooth
+background, individual hairs separated against the white.
+
+Two independent crops, 2700 px apart in the frame, agree completely.
+
+This is the artifact the owner called horrendous, and it is absent from a
+backend that has been compiled into the tree the whole time.
+
+### 27.4 What this reorganises
+
+Sections 22–26 spent their effort on the pyramid's *own* defect — the sub-gate
+fallback mean, the notch, the gate that cannot adjudicate it. All of that is
+real and none of it is retracted. But it was work on the arm that does not ship,
+measured against a baseline that has a far worse defect, and no one had put the
+two arms side by side on the failing subject.
+
+> **When two implementations of the same stage both exist and both run, compare
+> them on the failing case before deciding which one's defects to study. The
+> cheapest experiment in the tree was the one nobody had run.**
+
+The notch costs mid-band amplitude in low-contrast regions — a defect you find
+with an instrument. The veil puts a white outline around the subject — a defect
+you find by opening the file. **They are not the same size, and they were being
+prioritised as if the measurable one were the larger.**
+
+### 27.5 The flip, and what still blocks it
+
+`merge_cmd.rs:275` is `DEFAULT_MERGE_BACKEND = MergeBackend::Estimator`, and
+`c42cd75` deliberately reduced the change to that one line. `base:
+BaseBand::Mean` is already the pyramid default. So the distance between the
+product the owner has seen and the product measured here is:
+
+1. `merge_cmd.rs:275` — Estimator → Pyramid
+2. `pyramid.rs:731` — `gate: 2.0` → the value the veil win was measured at, 4.0
+
+Two lines, two owners. The second is the open question: every veil number in
+27.2 was taken at gate 4, and the wired default is gate 2, whose sub-31 DN bins
+sit *above* 1.0 with lag-2 autocorrelation on the synthetic-noise pole. Flipping
+only the backend would ship the arm this corpus has never characterised.
+
+Held pending a measurement of the veil at gate 2. If the win is gate-independent
+the gate can be argued on detail and noise alone; if it is not, the gate value
+is part of the fix and must move with it.
