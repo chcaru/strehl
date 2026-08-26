@@ -1561,3 +1561,300 @@ pyramid backend.
   has 1,596 samples across three channels and 132 of them violate. The contrast against
   the null's exact 0 is clean, but 132 is a small number and a second subject should
   confirm it before anyone treats 79.3% as precise.
+
+## 16. Which arm, which hull, and what the clamp costs
+
+ORCH asked four questions after section 15, on the grounds that my headline was one
+careless reading away from being taken as a product measurement. The concern was correct
+and the label was mine to fix. This section answers all four by measurement.
+
+### 16.1 The correction, in one line
+
+**The 10.1590% is the UNCLAMPED reconstruction.** The shipped default clamps, and against
+the same hull the clamped arm reads 5.3126% with its worst excursion cut 21x. No number in
+section 15 describes a delivered master.
+
+Section 15 should be read throughout as a measurement of *the defect the clamp exists to
+remove*, not of the product. I did not label it that way because when I rendered it the
+clamp did not yet exist, and I did not re-check that assumption when ORCH's ship snapshot
+landed four hours later. That is the same class of error the rest of this document exists
+to catch, and it is worth recording that it was caught by someone else reading my summary
+rather than by me.
+
+### 16.2 Which arm: measured, not inferred
+
+I did not reason about which arm it was from flags. I read the binary.
+
+Every number in section 15 came from
+`C:\dev\strehl-out\VERIFY-WIRE\target-a\release\strehl.exe`, sha256
+`6E4B369664F1E75321B669EDAADDDB9DC6B23A444F01DDBF41833C6E70B59419`, built 2026-08-25
+22:55. Scanning its image for the clamp's vocabulary:
+
+| token | occurrences in VERIFY-WIRE | occurrences in ORCH-SHIP |
+|---|---:|---:|
+| `pyramid-hull` | 0 | 0 |
+| `InputRange` | **0** | 1 |
+| `Unclamped` | **0** | 1 |
+| `hull` / `Hull` | **0** | 1 |
+
+`strehl stack --help` on that binary lists no `--pyramid-hull` flag. The binary predates
+the clamp entirely: it does not contain the code and there is no argument, environment
+variable or default that could switch it on. **The 10.1590% arm is unclamped by
+construction of the build, not by a flag I chose.**
+
+The comparison binary is ORCH's pinned ship tree,
+`C:\dev\strehl-out\ORCH-SHIP\src\target\release\strehl.exe`, sha256
+`705C22D5AD484434B638CA8903E118476AA4C037F618064F49B15AF5DCD13E6E`, source 03:48, binary
+03:52. Arms rendered from it are tagged `S-`; arms from the older binary are tagged `W-`.
+
+### 16.3 Where the clamp is applied on the product path
+
+ORCH asked for the call site traced through dispatch, not the enum. In the pinned ship
+tree:
+
+| step | file:line | what |
+|---|---|---|
+| 1 | `pyramid.rs:823` | `hull: Hull::InputRange` inside `impl Default for MergeConfig` |
+| 2 | `main.rs:775` | `let mut pyramid = MergeConfig::default();` -- the product path's config |
+| 3 | `main.rs:776-793` | six `if let Some(v)` assignments: `bands`, `gate`, `exponent`, `sharpen_per_octave`, `select`, `base`. **`hull` is not among them** |
+| 4 | `merge_cmd.rs:220` | carried as `pub pyramid: MergeConfig` on `MergeOptions` |
+| 5 | `merge_cmd.rs:3954` | `BandMerge::new(geom.width, geom.height, BAND_PLANES, cfg)` |
+| 6 | `pyramid.rs:1002` | the hull is folded, per frame, as each frame is absorbed |
+| 7 | **`pyramid.rs:1189`** | **`*p = p.clamp(*l, *h);`** -- the clamp, applied to the collapsed image |
+
+`.hull` is never reassigned anywhere in `strehl-cli/src`, so the product path takes
+`Hull::InputRange` unconditionally. In the live tree the same wiring sits at
+`main.rs:861` and `pyramid.rs:902` / `pyramid.rs:1286`; only the line numbers move.
+
+**It is not a `restore.rs`.** ORCH's worry was that a documented, tested,
+defaulted-looking capability might simply not run. It runs, and the evidence is a rendered
+pixel rather than a call graph: on `flower-bud-alone-cpl` the unclamped arm emits 233,075
+exact-zero samples and the clamped arm emits **0**.
+
+### 16.4 My hull is NOT the object the clamp enforces
+
+ORCH's third possibility was the correct one, and it is the most important paragraph here.
+
+`merge_cmd.rs:3524` sets `const BAND_PLANES: usize = 4`, and `merge_cmd.rs:3530-3535` maps
+those four slots to `CfaPlane::R`, `G1`, `G2`, `B`. **The pyramid merge runs on Bayer CFA
+quad planes, not on RGB.** `merge.finish()` is called at `merge_cmd.rs:4116` and
+`opts.demosaic` is applied afterwards at `merge_cmd.rs:4137`.
+
+So the clamp confines the reconstruction to the hull of the **CFA samples, before
+demosaic**. My instrument measures the hull of **demosaiced RGB**. Those are two different
+objects separated by the demosaic and by the quad-to-RGB recombination, and the gap has a
+sign I can state exactly. Green is `0.5 * (G1 + G2)` (`merge_cmd.rs:3607`), and for any
+frames
+
+```
+min_k (G1_k + G2_k)  >=  min_k G1_k + min_k G2_k
+```
+
+so the clamp's constraint, transported into my domain, is **strictly weaker than my hull**.
+A correctly clamped render can sit outside my hull without ever leaving its own.
+
+The codebase already knows this hazard in its own words, at `merge_cmd.rs:5346`:
+
+> The statistic is ALWAYS taken on the binned quad grid, even under `--demosaic`. The
+> demosaic is an interpolation and must not be able to [affect the statistic].
+
+**So: no. My hull basis and the clamp's hull basis are not the same object.** This is the
+fourth instance in this project of an instrument and its subject sitting on opposite sides
+of a transformation, and this one is mine.
+
+*What survives this.* Section 15's headline does **not** depend on the two hulls being the
+same object, because section 15 never compared across a clamp -- it compared an unclamped
+merge against a hull built from frames that went through the *same* demosaic, with a null
+arm through the same path reading 0.0002%. The null is what bounds the demosaic's own
+contribution, and it bounds it at essentially zero. The 10.1590% remains a real
+non-convexity in the reconstruction.
+
+### 16.5 The build control failed, and that is why the price comes from one binary
+
+The two binaries differ by a night of other agents' commits, not only by the clamp. The
+estimator backend contains no hull code in either build, so differencing the two estimator
+renders measures the intervening commits alone. Both on the same 205-frame aligned basis:
+
+| channel | samples | identical | differing | pct | max abs diff | mean abs diff, edges | flat | ratio |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| R | 8,250,880 | 193,818 | 8,057,062 | 97.651% | **3902** | 143.26 | 41.67 | 3.4x |
+| **G** | 8,250,880 | **8,250,880** | **0** | **0.000%** | **0** | 0.00 | 0.00 | -- |
+| B | 8,250,880 | 647,081 | 7,603,799 | 92.157% | 1326 | 34.49 | 9.68 | 3.6x |
+
+Green is **bit-identical**, R and B moved on most of the frame, and the movement
+concentrates about 3.5x on gradient. That is the signature of a geometric correction
+applied to R and B against G as reference -- a chromatic-aberration correction -- and not
+of a level change.
+
+Two consequences, and both matter beyond this section:
+
+1. **Cross-build comparisons tonight are unsafe on R and B and exact on G.** Any agent
+   differencing renders from binaries either side of that change is measuring the CA
+   correction unless it restricts to green.
+2. A clamped-vs-unclamped comparison across these two binaries cannot price the clamp. The
+   price below therefore comes from **one binary and one flag**.
+
+### 16.6 The clamped arm, measured against a build-matched hull
+
+To remove the confound entirely I rendered a second 205-frame warped basis with the ship
+binary and folded a build-matched hull (0 degenerate intervals of 24,752,640; span min 123
+DN, mean 4041.2). Whole image, all channels, guard +/- 1 DN:
+
+| arm | clamp | rate | below | above | worst/span | worst DN | exact zeros |
+|---|---|---:|---:|---:|---:|---:|---:|
+| W-pyramid | **UNCLAMPED** | **10.1581%** | 2,279,008 | 235,380 | 6.527 | -4513 | 233,075 |
+| S-pyramid | **CLAMPED** | **5.3126%** | 1,185,102 | 129,903 | **0.307** | **-953** | **0** |
+| W-uniform | null | 0.0002% | 24 | 16 | 0.085 | -35 | -- |
+
+Scored against the older basis instead, the same arms read 10.1590% and 5.2476%, so the
+headline is robust to which build supplied the frames. Green, where the two builds are
+bit-identical and the comparison is exact, reads 10.5310% unclamped and 8.4056% clamped.
+
+The clamp roughly halves the rate, cuts the worst excursion **21x** and the worst
+darkening **4.7x**, and removes every exact-zero sample. It does not reach the null,
+because of section 16.4.
+
+**The residual keeps the coarse-scale character.** Footprint-weighted and null-subtracted,
+as in section 15.7:
+
+| octave | unclamped share | clamped share |
+|---|---:|---:|
+| detail0 (finest) | 0.387% | 0.527% |
+| detail5 | 6.917% | 23.518% |
+| detail6 | 10.592% | 25.834% |
+| base (coarsest) | 79.308% | 41.871% |
+| **three coarsest** | **96.817%** | **91.223%** |
+| total excess, full-res weighted | 577,736,622 DN | 265,068,899 DN |
+
+I predicted before running this that if the clamp were airtight in its own domain and the
+residual were demosaic overshoot, the clamped profile would become **finest**-dominated,
+because interpolation overshoot is a fine-scale phenomenon. **That prediction is refuted.**
+The clamped residual is still 91.2% coarse. Demosaic does not explain it; the quad
+recombination of section 16.4 is the remaining explanation and I have not isolated it.
+
+### 16.7 The clamp's price, and it is not free
+
+ORCH asked for the clamp's price on a subject that does not clip, noting that "clamping
+cannot cost anything real" is an argument rather than a measurement. It is a measurement
+now, and **the argument does not survive it.**
+
+`blend-render` is the only binary in the tree where `Hull::Unclamped` is reachable
+(`blend-render.rs:124`), so each pair below is one build, one flag, identical alignment,
+camera-linear, no tone curve anywhere.
+
+**Determinism null, run first:** the same subject rendered twice with identical flags
+differs in **0 samples, max abs diff 0 DN**. The pipeline is deterministic, so everything
+below is the flag and not run-to-run noise.
+
+What the merge says its own clamp did, per CFA plane, in its own domain:
+
+| subject | clipping to fix? | `hull clamp` self-report |
+|---|---|---|
+| `flower-bud-alone-cpl` | yes, 1.4075% | 8.647% 10.106% 10.105% 10.986% |
+| `coffee-bean` | essentially none, 0.0010% | 15.510% 18.911% 18.897% 18.171% |
+| `couch-fibers-cpl` | **none, 0.0000%** | 2.076% 7.021% 7.048% 3.972% |
+
+The clamp binds **more** on the subject with nothing to fix than on the one that clips.
+
+Scored on ORCH's own commissioned `ORCH-CLAMP\accept.py`, with its own pre-registered
+thresholds, unclamped as the reference so every ratio reads directly as the clamp's cost:
+
+| subject | arm | clip% | acuity | microC | verdict |
+|---|---|---:|---:|---:|---|
+| `coffee-bean` | unclamped | 0.0010 | 736.5 | 520.72 | (reference) |
+| `coffee-bean` | clamped | 0.0000 | 724.9 | **440.66** | **FAIL: micro 84.6%** |
+| `couch-fibers-cpl` | unclamped | 0.0000 | 380.7 | 347.81 | (reference) |
+| `couch-fibers-cpl` | clamped | 0.0000 | 373.2 | **339.73** | **FAIL: micro 97.7%** |
+| `flower-bud-alone-cpl` | unclamped | 1.4075 | 224.1 | 118.49 | (reference) |
+| `flower-bud-alone-cpl` | clamped | 0.0000 | 223.4 | 117.55 | **PASS** |
+
+Subjects requested 3, scored 3, missing 0. Gate verdict: **FAIL, 1 pass / 2 fail.**
+
+The pattern is clean and it inverts the doc comment's claim:
+
+- **Where there is clipping to fix, the clamp is nearly free.** flower-bud: removes
+  1.4075% clipping for 0.8% of microcontrast and 0.3% of acuity.
+- **Where there is nothing to fix, the clamp still costs.** couch-fibers removes 0.0000%
+  clipping for 2.3% of microcontrast; coffee-bean removes 0.0010% for **15.4%**.
+
+`pyramid.rs:666-674`, under the heading "Why clamping cannot cost anything real", argues
+that "where the frames agree the hull is tight and the clamp binds constantly while
+changing nothing". The first half is right and the second is
+false: a tight hull is not a safe hull, it is a *restrictive* one, and on subjects whose
+frames agree the clamp binds constantly **and moves the value**, by a mean of 348 DN and up
+to 7304 DN on coffee-bean.
+
+ORCH's own standing rule was that `couch-fibers-cpl` "is the placebo. A proposal that
+moves it is wrong regardless of what it does elsewhere." **The clamp moves it**, below the
+98% bar ORCH registered.
+
+*Argued, not measured:* microcontrast is a local standard deviation and the clamp removes
+variance by construction, so some of that 2.3% and 15.4% may be noise rather than detail.
+I have not separated them. What defeats the post-hoc version of that defence is that the
+98% bar was registered in advance, by ORCH, for exactly this comparison.
+
+### 16.8 Commissioning
+
+Every instrument in this section was commissioned before its result was believed.
+
+| control | requirement | result |
+|---|---|---|
+| determinism null | two identical runs must agree exactly | 0 differing samples, max 0 DN -- **PASS** |
+| potency control | the pair instrument must read non-zero where the clamp is known to act | flower-bud 11.8587% of samples moved, max 4457 DN -- **PASS** |
+| build control | isolates the intervening commits from the clamp | **FAILED as a control**, and the failure is the finding of 16.5 |
+| binary provenance | the clamp's presence read from the image, not from flags | 0 vs 1 occurrences -- **PASS** |
+| hull sanity | no degenerate intervals in the build-matched basis | 0 of 24,752,640 -- **PASS** |
+| null arm | uniform weights through the real pipeline | 0.0002% -- **PASS** |
+
+The `hull clamp` self-report initially read `NOT REPORTED` on every subject while the
+number was sitting in the log. PowerShell's `*>` redirection writes **UTF-16LE with a
+BOM**, and decoding that as UTF-8 with `errors="replace"` yields plausible-looking garbage
+with no exception raised. Had I trusted it I would have reported that the ship binary does
+not instrument its own clamp, which is false. `pairprice.py:read_log` now detects the BOM.
+
+### 16.9 Verdict
+
+Answering ORCH's four questions in order:
+
+1. **The 10.1590% arm is `Hull::Unclamped`** -- and not by a flag, but because the binary
+   contains no clamp code at all. It is the defect the clamp removes, not a product
+   measurement.
+2. **The clamp is applied at `pyramid.rs:1189`**, reached from `main.rs:775` via
+   `MergeConfig::default()` with `hull` never reassigned. It runs: 233,075 exact zeros
+   become 0.
+3. **No, my hull is not the object the clamp enforces.** The clamp bounds CFA quad planes
+   pre-demosaic; I bound demosaiced RGB. For green the clamp's transported constraint is
+   *strictly weaker* than mine, so 5.3126% is a real number about a quantity nobody
+   enforces. Section 15's result is unaffected, because it never compared across a clamp.
+4. **The clamp is not free.** It fails ORCH's pre-registered acceptance gate on two of
+   three subjects, including ORCH's own nominated placebo, and it costs most exactly where
+   it has least to fix.
+
+### 16.10 What I did not measure
+
+- **The clamp inside its own domain.** Confirming it is airtight against the CFA hull
+  needs a 205-frame basis rendered without `--demosaic`, on the binned quad grid. I have
+  not rendered one, so "the clamp is exact in its own domain" remains *unverified* -- I
+  showed only that my RGB-domain residual cannot be attributed to demosaic overshoot.
+- **Whether the microcontrast the clamp removes is signal or noise.** See 16.7.
+- **Which commit produced the R/B build difference.** I characterised it as geometric and
+  CA-shaped from its own signature; I did not bisect the history to name it.
+- **A second subject for the octave attribution.** Unchanged from 15.12.
+
+### 16.11 Proposal for BUILD-BLEND, who owns the fix
+
+I have not edited `pyramid.rs` and this is a proposal, not a change.
+
+1. **Do not ship the clamp unconditionally.** On the evidence above it earns its place on
+   dark-subject-on-bright-ground stacks and loses microcontrast everywhere else. The gate
+   it fails is ORCH's own.
+2. **Clamp the CFA-domain reconstruction only where the reconstruction is actually
+   leaving the hull downward into darkness**, which is where the artifact lives and where
+   the measured cost is near zero, rather than on every coefficient in the frame.
+3. **If the invariant is to be asserted rather than enforced**, assert it in the CFA
+   domain the merge actually works in, with the tolerance expressed in hull spans and not
+   in DN, and exclude nothing -- an assertion that is cheap and always true is worth more
+   than a correction that is expensive and sometimes wrong.
+4. **Do not extend the clamp to RGB to make my 5.3126% go to zero.** That number is
+   measured against a hull nobody enforces and the right response is to decide whether the
+   RGB hull *should* be enforced, not to chase the number.

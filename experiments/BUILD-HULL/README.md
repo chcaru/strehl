@@ -40,6 +40,22 @@ not to a `pyramid.rs` array index. It cannot do the latter and does not claim to
 | `commission_bands.py` | synthetic commissioning, including the shared/independent x fixed/data-dependent 2x2 |
 | `plantcheck.py` | predicts the planted count from the hull alone, then requires exact equality |
 | `bandattrib.py` | magnitude-by-band attribution for the non-decimated decomposition |
+| `clamptest.py` | scores clamped vs unclamped arms against one hull; carries the build control |
+| `builddiff.py` | isolates what changed between two binaries on a path with no hull code |
+| `pairprice.py` | prices the clamp from a matched one-build pair, with a determinism null |
+
+## Which hull is which
+
+Two different objects, and section 16.4 of the report turns on not confusing them:
+
+- **What the clamp enforces** (`pyramid.rs:1189`) is the hull of the **CFA quad planes,
+  before demosaic**. `BAND_PLANES = 4`; the merge runs on R, G1, G2, B.
+- **What these scripts measure** is the hull of **demosaiced RGB**.
+
+For green, `G = 0.5*(G1+G2)` and `min_k(G1_k+G2_k) >= min_k G1_k + min_k G2_k`, so the
+clamp's constraint transported into the RGB domain is *strictly weaker* than the hull here.
+A correctly clamped render can sit outside this hull without leaving its own. Do not read a
+non-zero rate on a clamped arm as a failure of the clamp.
 
 ## Commissioning, which must pass before any number is trusted
 
