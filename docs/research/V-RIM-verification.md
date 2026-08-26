@@ -20,8 +20,15 @@ agreement and disagreement is informative.
 | **C1** — the darkening is an optical veiling term, evidenced by −38.2% and −36.5% agreeing within 1.7 points | **REFUTED as stated** |
 | **C2** — the bright ring appears only where the silhouette carries a fine fringe | **REFUTED** |
 
-What survives, and is worth keeping: **fringe amplifies the ring, it does not
-cause it.** Within a single subject, with scene, exposure, magnification and
+The single sentence that matters most is not in either claim. **Neither the
+veil nor the ring is in the photographs.** Across sixteen usable single-frame
+renders from the two anchors' own brackets — including, on each subject, the
+frame in which the silhouette is genuinely in focus — every profile climbs
+monotonically from silhouette to far field. The merged profile dips, recovers, and dips again.
+Whatever this band is, `strehl` is making it.
+
+What survives of C2, and is worth keeping: **fringe amplifies the ring, it does
+not cause it.** Within a single subject, with scene, exposure, magnification and
 frame count held exactly constant, the most-fringed quartile of the silhouette
 shows the larger ring in **8 of 9** subjects. And C2's *mechanism* — that the
 merge emits the ring — is **confirmed**, by a control ORCH did not run.
@@ -94,30 +101,82 @@ image segmented and registered on its own terms so neither inherits the other's
 geometry. Masks agree at IoU 0.95–0.99 with zero best shift, so the arms share
 a geometry.
 
-| image | 10–90 edge width | ring in t ≤ 140 px | backdrop at t = 50 px |
+| image | 10–90 edge width | ring in t ≤ 120 px | backdrop at t = 50 px |
 | --- | --- | --- | --- |
-| merged output | **120.6 px** | **+7.13%** at t = 34 px | **−13.6%** |
-| frame 52, silhouette in focus | **27.9 px** | **+0.00%**, monotone | **−0.7%** |
-| frame 10 | too defocused to resolve 34 px | none | — |
+| merged output | **120.6 px** | **+7.13%** at t = 34 px | **−13.61%** |
+| frame 58, sharpest silhouette | **24.6 px** | +0.16% | **−0.81%** |
+| frame 52 | 27.9 px | +0.20% | −0.72% |
+| frame 65 | 32.0 px | +0.11% | −1.86% |
+| frame 45 | 37.6 px | +0.15% | −0.66% |
+| frame 10 | too soft to fix a 10% crossing | +0.16% | −7.16% |
+| frame 95 | 82.2 px | +0.16% | not resolvable |
 | frame 30 | backdrop clipped at 65535, unusable | — | — |
-| frame 95 | 82.2 px | none | — |
 
-Frame 52 is the frame in which the silhouette is genuinely in focus: its edge
-is **four times sharper than the merged output's**. It shows a clean monotone
-step onto a flat backdrop, with no veil and no ring. The merge, built from that
-frame among others, has both.
+Frames 45 through 65 are the frames in which the silhouette is genuinely in
+focus, frame 58 sharpest at **five times sharper than the merged output's
+edge**. Each shows a clean monotone step onto a flat backdrop: no veil, and a
+residual ring under +0.20% against the merge's +7.13%. The merge, built from
+those frames among others, has both artifacts at full strength.
+
+`flower-bud-alone-cpl` was then put through the same control, and this one
+sweeps the whole bracket rather than sampling near it: ten frames at 10, 30,
+50, 70, 90, 110, 130, 150, 170 and 190 of 205. The 10–90 edge width turns over,
+so the frame of true silhouette focus is measured rather than extrapolated.
+
+| image | 10–90 edge width | ring in t ≤ 120 px | backdrop at t = 100 px |
+| --- | --- | --- | --- |
+| merged output | **263.5 px** | **+3.03%** at t = 22 px | **−18.94%** |
+| frame 110, sharpest silhouette | **43.9 px** | +0.19%, monotone | **−0.22%** |
+| frame 130 | 55.4 px | +0.13% | −0.52% |
+| frame 90 | 59.6 px | +0.05% | −0.55% |
+| frame 70 | 63.5 px | +0.17% | −0.23% |
+| frame 150 | 72.1 px | +0.16% | −0.55% |
+| frames 10, 30, 50, 170, 190 | silhouette too soft to fix a 10% crossing | ≤ +0.06% | −1.6% to −4.8% |
+
+The merged silhouette is **six times softer** than the sharpest frame of its own
+bracket, and it is 18.94% dark at t = 100 px where that frame is 0.22% dark — a
+factor of **86**.
+
+The shape statement is stronger than the level statement, because levels are
+exposed to focus breathing changing what "t = 100 px" means in each frame, and
+to exposure drift through the bracket. Shape is not. Summing every downward step
+in the median profile between t = 0 and t = 280 px, over all sixteen usable
+single frames and both merges:
+
+| image | reversals | total fall, DN | total fall, % of far |
+| --- | --- | --- | --- |
+| `coffee-bean` merge | 6 | −4820 | **−8.03%** |
+| `flower-bud` merge | 7 | −596 | **−3.33%** |
+| worst single frame (`flower-bud` frame 70) | 2 | −33 | −0.18% |
+| every other single frame | 0 to 2 | −2 to −50 | −0.01% to −0.08% |
+
+**Both merged profiles turn over; not one of the sixteen single frames does.**
+The worst non-monotonicity in any photograph is 0.18% of far field, and the
+merges are 18x and 45x that. A dip-and-recover cannot be produced by focus
+breathing or by exposure drift, both of which are monotone in distance.
+
+One further observation, offered as a lead rather than a finding. At t = 100 px
+the merge sits at 14500 DN. The darkest of the ten sampled frames at that
+location is frame 10 at 16701 DN. **The merge is 2201 DN below the darkest frame
+it could have chosen**, so it is not electing a dark frame; it is synthesising a
+value no input holds. Caveat: 10 frames of 205 were sampled, and per-image masks
+mean the sample point is not physically identical across images.
 
 An optical veiling term belongs to the scene and the lens. It would appear in
-every frame, most clearly in the sharp one. It is absent from the sharp one.
-**Therefore it is not optical.**
+every frame, and most clearly in the sharp ones. It is absent from all six
+usable frames of `coffee-bean` and all ten of `flower-bud-alone-cpl`, including
+on each subject the frame of true silhouette focus. **Therefore it is not
+optical.**
 
-The edge widths are the sharper indictment. The merged silhouette is four times
-softer than the single best frame of its own bracket, which is the same
-"estimator losing to its own inputs" failure this document's Summary already
-reports at −4293 DN on `flower-bud`. Section 12's C1 and the document's opening
-paragraph disagree about the origin of the same band.
+The edge widths are the sharper indictment. The merged silhouette is five times
+softer than the best frame of its own bracket on `coffee-bean` and six times
+softer on `flower-bud-alone-cpl`, which is the same "estimator losing to its own
+inputs" failure this document's Summary already reports at −4293 DN on
+`flower-bud`. Section 12's C1 and the document's opening paragraph disagree
+about the origin of the same band.
 
-Picture: `pics/merge-vs-frame52.png`.
+Pictures: `fb-merge-vs-frame110.png` and `merge-vs-frame52.png`; see the
+Pictures table for the directory.
 
 ## C2 — `coffee-bean` has a ring
 
@@ -232,6 +291,45 @@ Both artifacts named in section 12 come out of the merge, so the two
   what it claims" inverts the truth. `coffee-bean` has a ring, so a genuine fix
   **should** move its profile, and this rule would reject it.
 
+## Both artifacts survive without a demosaic
+
+ORCH argued that measuring luminance rather than resolution makes the
+interpolated render safe. That is worth testing directly, because a demosaic
+kernel does its worst work exactly where I measure.
+
+`strehl`'s default mode is genuinely un-interpolated — one RGB sample per 2x2
+Bayer quad, half resolution, no interpolation kernel anywhere near the
+silhouette. Both anchors were re-rendered that way and profiled by the same
+registered-ray method, with distances multiplied by two so the two arms are
+compared on a common physical axis in units of demosaiced pixels.
+
+Backdrop luminance as a percentage of far field, `coffee-bean`:
+
+| t (demosaic px) | 0 | 10 | 20 | 30 | 40 | 50 | 70 | 100 | 140 | 280 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| demosaiced | 58.9 | 73.9 | 81.2 | 87.0 | 87.0 | 86.4 | 80.8 | 89.3 | 99.8 | 100.0 |
+| binned, un-interpolated | 58.8 | 74.2 | 82.3 | **88.0** | 87.0 | 85.9 | **82.5** | 91.8 | 101.8 | 99.9 |
+
+The un-interpolated render turns over at t = 30 px and falls 5.5 points to
+t = 70 px before recovering. **The ring is present without a demosaic**, at
+close to the magnitude the interpolated render gives. The veil is present in
+both as well. On the question ORCH asked, ORCH is right.
+
+The attack lands somewhere else. Averaged over ORCH's own 0–4 px band:
+
+| subject | demosaiced | binned | bias |
+| --- | --- | --- | --- |
+| `coffee-bean` | 63.91% | 63.89% | **+0.02 pts** |
+| `flower-bud-alone-cpl` | 69.24% | 67.83% | **+1.41 pts** |
+
+The interpolation shifts one subject by 0.02 points and the other by 1.41, and
+at t = 20 px the gap opens to 4.6 points. C1 rests on two numbers agreeing to
+1.7 points. A processing stage that moves those two numbers differentially by
+1.39 points is not a rounding detail; it is the whole effect. This does not
+tell us C1 is false — correcting for it happens to narrow my own measured gap
+from 5.33 to 3.94 points — it tells us the agreement is **not stable at the
+precision the claim is made at**.
+
 ## The seven attacks
 
 | # | attack | landed? | what it showed |
@@ -242,7 +340,7 @@ Both artifacts named in section 12 come out of the merge, so the two
 | 4 | the mask | **landed, against V-RIM** | ORCH's 59.55% **is** genuinely the bean, tight to the silhouette. It carries 121745 px of interior holes and 46.35% of its 0–4 px bin lies inside the outer silhouette, so that bin is a mixture — but the sub-population medians are 34520 and 34589 DN against 34550 overall, so the number survives. My own Otsu mask is the defective one, over-reaching 7.7 points of frame into the dim corner of the sweep at 48061 DN. Re-anchoring on ORCH's mask left my result unchanged. |
 | 5 | the far-field reference | **landed** | The 600–1400 px band is subject-free. But the four defensible references span 57686 to 65519 DN, and swapping ORCH's band for the outer 20% moves the C1 number by 2.25 points — more than the agreement it rests on. `coffee-bean`'s backdrop also wanders by several percent over comparable spans, so the reported 0.23% ring is **below the instrument's own floor** and measures nothing. |
 | 6 | bin population and curvature | **landed, and superseded** | Replaced by per-ray selection on measured local straightness, which removes azimuthal mixing and curvature weighting together. That instrument produced the C2 refutation. |
-| 7 | demosaic bias near high-contrast edges | pending | See Gaps. |
+| 7 | demosaic bias near high-contrast edges | **landed as a precision limit, refuted as a cause** | Both artifacts survive in the un-interpolated binned render, so ORCH is right that they are not demosaic products. But the demosaic injects a subject-dependent luminance bias: **+0.02 pts on `coffee-bean` against +1.41 pts on `flower-bud-alone-cpl`** across ORCH's own 0–4 px band, rising to +4.6 pts at t = 20 px. The 1.39-point differential is of the same size as the 1.7-point agreement C1 rests on. |
 
 ## Defects found in my own instruments, disclosed
 
@@ -268,16 +366,17 @@ measuring, so:
 
 ## Gaps
 
-- **Attack 7 is not yet closed.** Binned-mode renders, which are genuinely
-  un-interpolated, were queued but had not completed. Demosaic bias near
-  high-contrast edges therefore remains **unverified**, not refuted. It is the
-  one attack that could still move the numbers, since it acts exactly where I
-  measure.
-- **The single-frame control is one sharp frame on one subject.** Frame 30 was
-  unusable (backdrop clipped at 65535) and frames 10 and 95 are too defocused
-  at the silhouette to resolve a 34 px feature — a defocused frame cannot show
-  a ring and would fake a clean negative. Only frame 52 is a real test. The
-  same control on `flower-bud` was queued and had not completed.
+- **The single-frame control rests on two subjects, one sharp frame each.**
+  On `coffee-bean` four frames (45, 52, 58, 65) resolve the silhouette; frame
+  30 was unusable with the backdrop clipped at 65535, and frames 10 and 95 are
+  too defocused to resolve a 34 px feature, and a defocused frame cannot show a
+  ring so it would fake a clean negative. `flower-bud-alone-cpl` is the stronger
+  arm — ten frames spanning 205, with the edge width turning over at frame 110,
+  so the focus frame is measured rather than assumed. But two subjects is not
+  the library, and the n=26 sweep was not repeated frame by frame.
+- **The bracket sampling is coarse.** Ten frames of 205 on `flower-bud` and
+  five of 105 on `coffee-bean`. The claim that the merge sits below every
+  input frame is therefore a claim about the sampled frames only.
 - **The renderer aborted twice with `0xC0000409`** under memory pressure from
   concurrent agents, on `dry-erase-marker-head-cpl` and on `cb-frame75`. The
   former succeeded on retry and is included in the tables above; the latter was
@@ -299,9 +398,12 @@ measuring, so:
 
 ## Pictures
 
-| path | what it shows |
-| --- | --- |
-| `pics/merge-vs-frame52.png` | The whole finding in one frame. Same crop, same linear stretch, no gamma: the merged output has a dark band, a bright band and a second dark band; the in-focus single frame has a clean step onto flat backdrop. |
-| `pics/coffee-bean-ring.png` | The ring hugging a smooth silhouette, with the registered ray profiles beside it. |
-| `pics/mask-disagreement.png` | Why attack 4 landed against me. ORCH's mask is tight to the bean; mine swallows the dim corner of the sweep. |
+`*.png` is gitignored repo-wide, so these live in scratch, under
+`C:\dev\strehl-out\V-RIM\pics\`.
 
+| file | what it shows |
+| --- | --- |
+| `fb-merge-vs-frame110.png` | **Look at this one first.** `flower-bud-alone-cpl`, same crop, same linear stretch, no gamma. The in-focus frame is flat at 19100 DN right up to the silhouette. The merge sags to 13800 DN over the 280 px approaching it, with an overshoot spike at the edge. Nothing in the photograph produced that trough. |
+| `merge-vs-frame52.png` | The same comparison on `coffee-bean`: the merged output has a dark band, a bright band and a second dark band; the in-focus single frame has a clean step onto flat backdrop. |
+| `coffee-bean-ring.png` | The ring hugging a smooth silhouette, with the registered ray profiles beside it. This is the frame that refutes C2. |
+| `mask-disagreement.png` | Why attack 4 landed against me. ORCH's mask is tight to the bean; mine swallows the dim corner of the sweep. |

@@ -9,3 +9,6 @@ fb frame 90 rc=0 8s
 cb frame 45 rc=0 9s
 cb frame 58 rc=0 9s
 cb frame 65 rc=0 10s
+cb binned rc=0 80s
+fb binned rc=0 121s
+stage2 end 2026-08-25T17:37:50.4021195-07:00

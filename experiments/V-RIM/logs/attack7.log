@@ -1,0 +1,24 @@
+
+=== coffee-bean ===
+  DEMOSAIC  rays= 2030 subj= 67.21% far=  60023
+     v/far %: 0:58.9 5:69.3 10:73.9 20:81.2 30:87.0 40:87.0 50:86.4 70:80.8 100:89.3 140:99.8 200:100.4 280:100.0
+  BINNED    rays= 1593 subj= 67.23% far=  60291
+     v/far %: 0:58.8 5:69.4 10:74.2 20:82.3 30:88.0 40:87.0 50:85.9 70:82.5 100:91.8 140:101.8 200:101.5 280:99.9
+  --- normalised difference, DEMOSAIC minus BINNED, in points of far field ---
+     diff pts: 0:+0.1 5:-0.1 10:-0.4 20:-1.0 30:-1.1 40:-0.0 50:+0.5 70:-1.7 100:-2.6 140:-1.9 200:-1.1 280:+0.1
+     band   0-  4 px:  demosaic  63.91%  binned  63.89%  bias +0.02 pts
+     band   0- 20 px:  demosaic  72.79%  binned  73.21%  bias -0.42 pts
+     band  20- 60 px:  demosaic  85.91%  binned  86.08%  bias -0.18 pts
+     band  60-140 px:  demosaic  89.53%  binned  91.60%  bias -2.06 pts
+
+=== flower-bud-alone-cpl ===
+  DEMOSAIC  rays= 2383 subj= 21.84% far=  17468
+     v/far %: 0:61.8 5:75.7 10:80.9 20:85.7 30:84.9 40:85.3 50:84.9 70:83.6 100:83.0 140:83.1 200:89.1 280:100.0
+  BINNED    rays= 1890 subj= 21.84% far=  17868
+     v/far %: 0:61.9 5:72.9 10:77.1 20:81.1 30:80.3 40:80.9 50:80.9 70:81.1 100:81.3 140:81.5 200:88.5 280:100.0
+  --- normalised difference, DEMOSAIC minus BINNED, in points of far field ---
+     diff pts: 0:-0.1 5:+2.8 10:+3.8 20:+4.6 30:+4.6 40:+4.3 50:+4.0 70:+2.5 100:+1.7 140:+1.6 200:+0.6 280:+0.0
+     band   0-  4 px:  demosaic  69.24%  binned  67.83%  bias +1.41 pts
+     band   0- 20 px:  demosaic  78.82%  binned  75.59%  bias +3.23 pts
+     band  20- 60 px:  demosaic  85.00%  binned  80.91%  bias +4.09 pts
+     band  60-140 px:  demosaic  83.18%  binned  81.26%  bias +1.92 pts

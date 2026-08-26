@@ -1,0 +1,36 @@
+
+=== coffee-bean: monotonicity of the median profile over t = 0..280 px ===
+  (STRAIGHTEST-QUARTILE block only; far field is column 5 of the row)
+  MERGE    far= 60039  reversals= 6  worst= -1843 DN ( -3.07%)  total fall= -4820 DN ( -8.03%)  NON-MONOTONE
+           reversals at t = [34, 40, 50, 60, 150, 200]
+  FRAME10  far= 63152  reversals= 0  worst=    +0 DN ( +0.00%)  total fall=    +0 DN ( +0.00%)  MONOTONE
+  FRAME30  far= 65535  reversals= 0  worst=    +0 DN ( +0.00%)  total fall=    +0 DN ( +0.00%)  MONOTONE
+  FRAME45  far= 59851  reversals= 1  worst=   -50 DN ( -0.08%)  total fall=   -50 DN ( -0.08%)  MONOTONE
+           reversals at t = [50]
+  FRAME52  far= 59273  reversals= 2  worst=   -25 DN ( -0.04%)  total fall=   -40 DN ( -0.07%)  MONOTONE
+           reversals at t = [150, 200]
+  FRAME58  far= 59419  reversals= 1  worst=   -36 DN ( -0.06%)  total fall=   -36 DN ( -0.06%)  MONOTONE
+           reversals at t = [50]
+  FRAME65  far= 59739  reversals= 0  worst=    +0 DN ( +0.00%)  total fall=    +0 DN ( +0.00%)  MONOTONE
+
+=== flower-bud: monotonicity of the median profile over t = 0..280 px ===
+  (STRAIGHTEST-QUARTILE block only; far field is column 5 of the row)
+  MERGE    far= 17888  reversals= 7  worst=  -195 DN ( -1.09%)  total fall=  -596 DN ( -3.33%)  NON-MONOTONE
+           reversals at t = [20, 40, 50, 60, 70, 85, 100]
+  FRAME10  far= 17545  reversals= 0  worst=    +0 DN ( +0.00%)  total fall=    +0 DN ( +0.00%)  MONOTONE
+  FRAME30  far= 17844  reversals= 1  worst=   -15 DN ( -0.08%)  total fall=   -15 DN ( -0.08%)  MONOTONE
+           reversals at t = [200]
+  FRAME50  far= 18235  reversals= 1  worst=   -13 DN ( -0.07%)  total fall=   -13 DN ( -0.07%)  MONOTONE
+           reversals at t = [200]
+  FRAME70  far= 18449  reversals= 2  worst=   -19 DN ( -0.10%)  total fall=   -33 DN ( -0.18%)  MONOTONE
+           reversals at t = [150, 200]
+  FRAME90  far= 18687  reversals= 1  worst=    -9 DN ( -0.05%)  total fall=    -9 DN ( -0.05%)  MONOTONE
+           reversals at t = [200]
+  FRAME110 far= 19058  reversals= 1  worst=   -16 DN ( -0.08%)  total fall=   -16 DN ( -0.08%)  MONOTONE
+           reversals at t = [150]
+  FRAME130 far= 19133  reversals= 1  worst=    -2 DN ( -0.01%)  total fall=    -2 DN ( -0.01%)  MONOTONE
+           reversals at t = [150]
+  FRAME150 far= 19428  reversals= 0  worst=    +0 DN ( +0.00%)  total fall=    +0 DN ( +0.00%)  MONOTONE
+  FRAME170 far= 20018  reversals= 1  worst=    -9 DN ( -0.04%)  total fall=    -9 DN ( -0.04%)  MONOTONE
+           reversals at t = [200]
+  FRAME190 far= 20290  reversals= 0  worst=    +0 DN ( +0.00%)  total fall=    +0 DN ( +0.00%)  MONOTONE

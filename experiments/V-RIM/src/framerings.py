@@ -105,10 +105,17 @@ def ew(med, inner, far):
     return fx(inner + 0.9 * (far - inner)) - fx(inner + 0.1 * (far - inner))
 
 
-files = [("MERGE", r"C:\dev\strehl-out\ORCH-rim\cb-1cacb61-lin.tif")]
-for p in sorted(glob.glob(r"C:\dev\strehl-out\V-RIM\cb-frame*-lin.tif")):
+# argv: [merge.tif] [frame-glob] [prefix].  Defaults reproduce the coffee-bean run.
+MERGE = sys.argv[1] if len(sys.argv) > 1 else r"C:\dev\strehl-out\ORCH-rim\cb-1cacb61-lin.tif"
+PAT = sys.argv[2] if len(sys.argv) > 2 else r"C:\dev\strehl-out\V-RIM\cb-frame*-lin.tif"
+PFX = sys.argv[3] if len(sys.argv) > 3 else "cb-"
+
+files = [("MERGE", MERGE)]
+for p in sorted(glob.glob(PAT), key=lambda q: int("".join(c for c in Path(q).stem if c.isdigit()))):
     if Path(p).stat().st_size > 1_000_000:
-        files.append((Path(p).stem.replace("cb-", "").replace("-lin", "").upper(), p))
+        files.append((Path(p).stem.replace(PFX, "").replace("-lin", "").upper(), p))
+print(f"# merge: {MERGE}")
+print(f"# frames: {len(files)-1} matching {PAT}")
 
 for straight_only in (True, False):
     print(f"\n### per-image mask and registration, "
