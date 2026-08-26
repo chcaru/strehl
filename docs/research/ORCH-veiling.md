@@ -4118,7 +4118,7 @@ demosaic, same warp, same 2x box downsample — every systematic is common to al
 | arm | `mean n_eff` | HF / single-frame max | what it is |
 |---|---|---|---|
 | `--gate 100000` | **299.000** (`n_eff=1`: 0.00%) | **0.074** | a true global average: spatially constant convex. **The floor.** |
-| `--merge pyramid` | — | **1.305** | the flip candidate, the shipped default |
+| `--merge pyramid` | — | **1.305** | the flip candidate; the shipped default is the estimator |
 | `--gate 0` | **1.000** (`n_eff=1`: 100.00%) | **3.996** | pure winner-take-all: what every other stacker does |
 
 The floor arm lands at **0.074** against a predicted `1/sqrt(299) = 0.058`, and the binary's
