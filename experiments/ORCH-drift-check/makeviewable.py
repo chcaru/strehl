@@ -227,6 +227,38 @@ def main() -> int:
     tri_rows, tri_counts = load_triage(args.triage)
     if tri_rows:
         check_budgets(tri_rows)
+        # ORDERING.  Alphabetical order is why the owner judged the tool by its
+        # worst tiles: `flowers-cpl` and `flower-inner-edge-cpl` land in the
+        # middle of the sheet with no indication that they are capture failures,
+        # while `bee-3-cpl`, `pencil-steep-angle-cpl` and `flat-on-ruler-cpl`
+        # -- genuinely print-worthy work -- are scattered between them.
+        #
+        # So: category first (CAT_ORDER, which leads with GOOD), then WITHIN
+        # each category by the merge's own measured edge slope at its best site,
+        # descending.  That is a measured quantity already in the evidence, not
+        # an opinion, and it puts the most-resolved images first.
+        #
+        # Deliberately NOT sorted by how far the merge beats the source: that
+        # ranks "how much the stacker added", which is a developer's question.
+        # The owner is looking at pictures, so lead with the ones that hold the
+        # most resolved detail.
+        cat_ix = {c: i for i, c in enumerate(CAT_ORDER)}
+
+        def order_key(item):
+            n, _ = item
+            row = tri_rows.get(n) or {}
+            cat = row.get("verdict", "UNRESOLVED")
+            ev = row.get("evidence") or {}
+            detail = float(ev.get("merge_edge_dnpx") or 0.0)
+            return (cat_ix.get(cat, len(CAT_ORDER)), -detail, n)
+
+        thumbs.sort(key=order_key)
+        print("\ntile order (category, then measured detail DN/px, descending):")
+        for i, (n, _) in enumerate(thumbs, 1):
+            row = tri_rows.get(n) or {}
+            ev = row.get("evidence") or {}
+            print(f"  {i:2d}. {n:<38} {row.get('verdict','?'):<38} "
+                  f"{float(ev.get('merge_edge_dnpx') or 0.0):>8.1f} DN/px")
     lab = 30 if not tri_rows else 96
     pad = 14
     head = 56 if not tri_rows else 148

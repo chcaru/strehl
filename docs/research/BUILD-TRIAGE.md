@@ -918,3 +918,176 @@ Two consequences, both of which make the report's conclusion **stronger**:
 The absolute headroom is correspondingly larger than section 7.6's numbers
 suggest, for the reason ORCH gives: a stage that removes microcontrast sits
 upstream of every sharpness number measured here.
+
+## 8. The window was wrong: a third instance of the project's most expensive error, and what it did to two verdicts
+
+**Status: MEASURED.** Same binary as every other number in this report
+(`strehl.exe`, SHA-256 `705C22D5AD…`, mtime 03:52); see §7.9 for provenance.
+
+### 8.1 What happened
+
+ORCH built a 1:1 detail gallery — one native-resolution 800x800 tile per
+master, each at that subject's own best-resolved site, chosen by mean
+|laplacian| on a coarse grid (`experiments/ORCH-drift-check/detailgallery.py`).
+It then reported, correctly, that `highly-angled-ruler-mm-cpl` "looks poor on
+every contact sheet we have produced, and at 1:1 its ruler graduations are
+cleanly resolved with crisp edges", and instructed: "Do not triage any subject
+as merge-limited on thumbnail evidence; check the 1:1 tile first."
+
+I had classified that subject **CAPTURE-LIMITED — coverage gap**, on the
+strength of it scoring **0 of 4 sites entitled to vote**.
+
+That verdict was wrong, and the reason is the error this project has now logged
+four times: **a measurement placed on the wrong side of something.** Here it was
+not a tone curve or an alignment gather. It was the *window*.
+
+`compare.py` picks its sites by gradient percentile within the merge, and two of
+the five labels — `FLAT` and `DEFICIT` — are chosen *specifically to be the
+emptiest sites in the frame*. That is the correct design for the headline
+question, because an apparent deficit at an empty site is caught by the
+min-arm-SNR gate (§7). It is the **wrong** design for classification: if a
+subject's windows all land on background, the subject reads as "no detail in
+either arm anywhere", which is **indistinguishable in the output from a genuine
+capture limit**.
+
+| | window | merge / best frame | frame SNR | reading |
+| --- | --- | --- | --- | --- |
+| mine | (6197,512), (512,1502) — corners | 22–29 DN/px on a 13–17 DN floor | ~1.4 | 0/4 sites vote → "coverage gap" |
+| ORCH's | (3808,3808) | **1490.7 / 778.2 DN/px** | **11.2** | votes; **merge ahead ×1.916** |
+
+`highly-angled-ruler-mm-cpl` is **GOOD**. The merge is nearly twice the best
+single frame at a site that demonstrably carries detail. My previous verdict was
+an artifact of where I looked.
+
+ORCH hit the identical failure independently, with its own instrument, and said
+so: "It caught me placing a probe window on blank background and reading the
+resulting flatness as 'capture-limited' — the reading was right and the window
+was wrong."
+
+### 8.2 The same bug was inside my own commissioning
+
+`sitescan.py`'s C12/C13 anchored their blur-ladder plant on the **centre window**
+of the reference frame. On `flowers-cpl` the frame centre is bokeh, so the plant
+was being placed on a featureless region:
+
+```
+C13 monotonicity: blur did not reduce HF monotonically:
+    0.0607 > 0.0360 > 0.0361 > 0.0169
+```
+
+Steps 2 and 3 tie to 0.2% because after one blur there was nothing left to
+remove and the ladder was sitting on the noise floor. The strict assertion fired
+**correctly** — the fault was the window, not the estimator. C17 already carried
+the fix (it compares the emptiest tile to the *richest* tile, and its comment
+already recorded the `flowers-cpl` bokeh-centre observation); C12/C13 had simply
+never been brought into line.
+
+Fixed by `richest_window()`, which **strengthens** the plant rather than
+weakening it: a window with more high-frequency content has further to fall
+before the monotonic assertion can pass.
+
+**Regression check.** `flower-inner-edge-cpl` was measured under both the old
+and new anchor and the results are bit-identical — contrast 0.0480 / 0.0580 /
+0.0194, shape ×11.315 / ×13.676 / ×4.576, best frames 165 / 165 / 209, every
+`fall` identical. The fix unblocked `flowers-cpl` without moving any verdict it
+had already reached.
+
+### 8.3 The pale-flower hypothesis: candidate 3, measured
+
+ORCH measured that the softest tiles in the corpus are almost all pale flowers
+(four of the six worst; every flower in the bottom seven by in-tile mean
+|laplacian|) and handed over three candidates **to be falsified rather than
+adopted**: (1) capture/motion, (2) focus-measure blindness on low-contrast pale
+subjects, (3) genuinely low subject contrast, correctly reproduced.
+
+ORCH also stated the limitation that makes candidate 3 unsettleable with an
+amplitude statistic, and asked for it on the record: in-tile |laplacian|
+"conflates *contrast* with *sharpness* — it cannot separate them … A subject can
+be perfectly stacked and still score low here." **That is correct, and it is
+recorded here as ORCH asked.** It is also exactly why the discriminator has to be
+the **shape** of the through-focus curve rather than its height:
+
+- **resolved interior peak** → some frame *was* in focus there; the detail
+  existed and was captured.
+- **flat curve** → no frame was ever in focus there; the detail never existed.
+
+`peak_over_floor` is that shape statistic. It is a ratio of the curve to its own
+noise floor, so it is **scale-free**: a subject with one tenth the contrast still
+shows a large `peak_over_floor` if it was properly focused. Reporting contrast
+and shape side by side is what separates the two things a single number cannot.
+
+Measured on the raw CFA green lattice — no demosaic, no alignment, no tone curve
+— with a control window on known-sharp structure required to peak in the
+interior:
+
+| subject | site | contrast | shape | best frame | verdict |
+| --- | --- | ---: | ---: | ---: | --- |
+| `bee-3-cpl` (reference) | REF-OFF | 0.3206 | ×53.2 | 95/299 | detail existed |
+| `bee-3-cpl` (reference) | REF-ORCHBEST | 0.1951 | ×32.4 | 101/299 | detail existed |
+| `flower-bud-with-background-fern-cpl` | PROBE-HAIRS | 0.1918 | ×30.9 | 63/299 | detail existed |
+| `flower-bud-with-background-fern-cpl` | CONTROL-BRACT | 0.1367 | ×22.0 | 70/299 | detail existed |
+| `flower-bud-alone-cpl` | PROBE-TRICHOME | 0.1141 | ×21.4 | 74/205 | detail existed |
+| `flower-bud-alone-cpl` | PROBE-SOFT | 0.0919 | ×17.2 | 78/205 | detail existed |
+| `flower-bud-alone-cpl` | CONTROL-MARK | 0.0912 | ×17.1 | 78/205 | detail existed |
+| `flower-inner-edge-cpl` | PROBE-PAPILLAE | 0.0580 | ×13.7 | 165/299 | detail existed |
+| `flower-inner-edge-cpl` | CONTROL-SPECKS | 0.0480 | ×11.3 | 165/299 | detail existed |
+| `flowers-cpl` | PROBE-PAPILLAE | 0.0493 | ×7.9 | **7**/176 | detail existed |
+| `flowers-cpl` | CONTROL-SEPAL | 0.0363 | ×5.8 | 52/176 | detail existed |
+| `flowers-cpl` | BOKEH-BG | 0.0186 | ×3.0 | 115/176 | **flat — no frame in focus** |
+
+**9 of 9 flower detail sites show a resolved interior peak.** Not one flat curve
+at a site carrying structure. The only flat curve in the set is the deliberate
+bokeh null, which behaved as a null should.
+
+**Candidate 3 is supported and is the dominant explanation.** The flowers carry
+genuinely less contrast — the worst flower site holds **8.8× less** than the
+reference's best (0.0363 vs 0.3206) — but the detail they *do* carry was
+captured and is focus-dependent.
+
+**Candidate 2 is refuted at these sites.** If the focus election were picking
+near-randomly on low-contrast pale subjects, the through-focus curves would be
+flat or their peaks scattered. Instead the peaks are sharp, interior, and
+**tightly clustered across neighbouring sites within a subject** — 74/78/78 on
+`flower-bud-alone-cpl`, 63/70 on the fern, 165/165 on `flower-inner-edge-cpl`. A
+near-random election cannot produce that clustering.
+
+**Candidate 1 is not tested here.** Motion is BUILD-GHOST's instrument and is not
+duplicated. The tight peak clustering argues against gross motion *at these
+sites*, which is weaker than a motion measurement and is not offered as one.
+
+### 8.4 Two bounds on the above, stated because they limit the claim
+
+1. **Selection effect.** These probe sites were placed where structure is
+   *visible in the 1:1 tile*. So "9/9 resolved" means *where there is structure,
+   the frames captured it* — **not** "the whole subject is well covered". A
+   subject can be sound at every site examined and still be mostly bokeh, which
+   is precisely `flowers-cpl`.
+2. **Shared blind spot.** My score is Laplacian-based and therefore shares the
+   corpus's recorded blind spot: a box mean of |grad| is blind on monotone edges
+   because blur conserves total variation. Noise subtraction does not fix that.
+   It is a real limit on candidate 2's refutation.
+
+Also on the record: my `NULL-BOKEH` site on `flower-inner-edge-cpl` **resolved**
+(×4.6, peak at frame 209 rather than the probe's 165). That is not a failed null
+— it is background at a *different depth*, so it correctly peaks at a different
+focus position. It was a badly-chosen null on my part, and the honest reading is
+that it demonstrates the instrument tracks depth, not that it stayed quiet. The
+genuine null is `flowers-cpl`'s `BOKEH-BG`, which did stay flat.
+
+### 8.5 Master width variation (ORCH's question)
+
+| width | n | frame counts | mean coverage_k |
+| --- | ---: | --- | ---: |
+| 7032 x 4688 | 15 | 19–299 (median 120) | 0.9453 |
+| 7040 x 4688 | 11 | 79–299 (median 205) | 0.9510 |
+
+The delta is **8 px — exactly one 8-px block**, the quantum the output is rounded
+to (7032 = 8x879, 7040 = 8x880; height 4688 = 8x586 is identical for all 26).
+The medians differ but the groups overlap across almost the whole corpus range
+and both contain 299-frame stacks, so at n=15/11 this is **not** evidence that
+width tracks frame count; mean `coverage_k` differs by 0.6%.
+
+**Reading: a packaging wart, not a quality defect, and not a useful alignment
+diagnostic.** But a print set whose members differ in width is a genuine
+annoyance for the owner, and the fix is one line — pad or crop all masters to a
+common size.

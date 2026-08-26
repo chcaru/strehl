@@ -265,6 +265,49 @@ def noise_floor(g: np.ndarray, tiles: int = 16) -> float:
     return float(np.percentile(vals, 2)) if vals else 0.0
 
 
+def richest_window(g: np.ndarray, half: int) -> np.ndarray:
+    """The (2*half)^2 window with the most high-frequency content in the frame.
+
+    WHY NOT THE CENTRE.  C12/C13 anchor the commissioning plant on real frame
+    content rather than synthetic noise, which is right -- but the centre of
+    the frame is not guaranteed to HOLD any content.  On `flowers-cpl` the
+    frame centre is bokeh, and planting a blur ladder on bokeh produced
+
+        blur ladder 0.0607 > 0.0360 > 0.0361 > 0.0169
+
+    i.e. steps 2 and 3 tied to 0.2% because after one blur there was no fine
+    structure left to remove and the ladder was sitting on the noise floor.
+    The strict monotonic assertion fired, correctly, but the fault was the
+    WINDOW, not the estimator.
+
+    This is the third time this project has hit the same shape of bug -- a
+    measurement placed somewhere it cannot see the thing it is measuring.
+    C17 already carried the fix (it compares the emptiest tile to the RICHEST
+    tile, not to the centre) and the comment there records the same
+    `flowers-cpl` bokeh-centre observation.  C12/C13 simply had not been
+    brought into line.  ORCH independently hit it a fourth time with
+    throughfocus_probe.py: "It caught me placing a probe window on blank
+    background and reading the resulting flatness as 'capture-limited' -- the
+    reading was right and the window was wrong."
+
+    Note this STRENGTHENS the plant rather than weakening it: a window with
+    more high-frequency content has more for the blur ladder to remove
+    monotonically, so the assertion has further to fall before it can pass.
+    """
+    hh, ww = g.shape
+    best, bwin = -1.0, None
+    for cy in range(hh // 4, 3 * hh // 4, max(1, hh // 12)):
+        for cx in range(ww // 4, 3 * ww // 4, max(1, ww // 12)):
+            if cy - half < 0 or cy + half > hh or cx - half < 0 or cx + half > ww:
+                continue
+            w = g[cy - half:cy + half, cx - half:cx + half]
+            s = hf_rel(w)
+            if s > best:
+                best, bwin = s, w
+    assert bwin is not None, "richest_window: frame too small to sample"
+    return bwin
+
+
 def commission(g: np.ndarray) -> float:
     """C12-C15. An uncommissioned probe and a genuinely null result look alike.
 
@@ -275,10 +318,9 @@ def commission(g: np.ndarray) -> float:
     versa; the floor gate then gets its own test (C15).
     """
     print("commissioning sitescan:")
-    win = g[g.shape[0] // 2 - 64:g.shape[0] // 2 + 64,
-            g.shape[1] // 2 - 64:g.shape[1] // 2 + 64]
+    win = richest_window(g, 64)
     base = hf_rel(win)
-    assert base > 0, "C12 anchor: centre window carries no signal at all"
+    assert base > 0, "C12 anchor: richest window carries no signal at all"
     lo = 0.25 * base            # floor known to sit below the anchor
 
     # C12 NULL -- the same frame repeated must produce a FLAT curve. If this
