@@ -1812,3 +1812,94 @@ works for a difference this corpus cannot detect.
   the guard's negative path, which has never once declined on a real file), and
   **an f/11 bracket of an already-shot subject** (the aperture gap above).
 
+
+## 24. ORCH's `foam` corroboration — **declined, and then refuted on magnitude**
+
+ORCH offered a fourth reading in support of §4.4's blue radial term and asked me
+to retire it if I judged the confounds fatal. I judge them fatal, but not for the
+reason offered: the direction agreement is real and it is worth nothing, because
+the magnitudes are two orders of magnitude apart.
+
+### 24.1 My instrument declines `foam` outright
+
+| stack | tiles ≤2 px | track_res med | max | confident points |
+| --- | --- | --- | --- | --- |
+| **foam** | **0/54** | **9.00** | 28.00 | **0** ← declined |
+| lavendar-cpl | 48/54 | 0.00 | 9.00 | 1492 |
+| coffee-bean | 52/54 | 0.00 | 8.50 | 6155 |
+| bee-2-cpl | 26/54 | 4.50 | 14.00 | 789 |
+| couch-fibers-cpl | 3/54 | 8.00 | 13.00 | 297 |
+
+Not a marginal decline and **not drift**. On `coffee-bean` the per-tile frame
+shifts are mostly exactly zero with rare outliers; on `foam` *every* tile-frame
+shift is a large random value (±30–90 px) with no structure. Foam's self-similar
+bubble texture gives the per-tile matcher no unique correlation peak, so it locks
+a different match in every frame.
+
+**I did not loosen the gate to produce a number.** A randomly-tracked tile still
+has a maximum along the frame axis, and a parabola fitted to it returns a
+confident-looking per-channel offset computed from different scene content in
+each frame. That is exactly the failure the original brief made a mandatory
+negative control — an instrument reporting a confident offset where there is
+none. The gate firing *is* that control working, so this is the instrument
+passing, not failing.
+
+### 24.2 What §4.4 actually predicts for their statistic — **103–160× too small**
+
+This is answerable without `foam`, and it is the useful half.
+
+The chain uses the dose-response I **measured** in §5 rather than a
+blur-to-edge-colour formula I would have to invent. §5's forward arms give
+`bg_sd` 0.0761 at 1× dose and 0.0871 at 10×, so one full dose of the measured
+axial offset moves edge chroma by **1.61%**. §4.4's radial component is 0.25–0.34
+frames against intercepts of 0.48/0.30, so the radial part is **0.34–0.53 of one
+dose**.
+
+| | centre→corner blue edge-colour elevation |
+| --- | --- |
+| **predicted from §4.4** | **0.55% – 0.85%** |
+| **ORCH observed** | **87.8%** (0.0672 → 0.1262) |
+| ratio | **103× – 160×** |
+
+So §4.4's radial term cannot be the mechanism. And the direction agreement
+carries no evidential weight against a gap this size: a two-sided quantity agrees
+in direction half the time by chance.
+
+> **A wrong route I ran and discarded, recorded because it is seductive.** Going
+> directly from 0.30 frames → σ ≈ 0.148 px → edge colour gives ~3–6%, which is
+> the same order as their 5.9-point elevation and would have looked like
+> agreement. It is wrong. It assumes edge chroma is *produced by* the channel
+> blur, whereas §5's forward arm measured that a full σ = 0.369 px blue blur
+> moves the statistic by only ~1.6% — edge chroma here is dominated by sources
+> that are not axial CA. I nearly reported a confirmation from arithmetic that
+> ignored my own measurement.
+
+### 24.3 A duller explanation, entirely inside my lane, that needs no axial term
+
+Both of ORCH's blue observations follow from the shipped profile alone:
+
+- corner displacement applied: red `704.5 ppm × 2112 px` = **1.488 px**; blue
+  `174.4 ppm × 2112 px` = **0.368 px**; ratio **4.04×**.
+- ORCH sees red 0.758× (24.2% of corner edge colour removed) and blue 0.988×
+  (1.2% removed).
+
+Their observation 1 — "lateral correction barely touches blue at the corner" — is
+not a puzzle. Blue's correction is 4× smaller than red's **by construction**. And
+because it removes so little, most of blue's *native radial* edge colour survives
+it, which is their observation 2: a radially elevated blue residual after
+correction, with no axial term anywhere in the story.
+
+Note this is a statement about the residual, not a retraction of `eps_b`. §23.2's
+split-half puts `eps_b` at 7.2–37.0σ on six stacks with one consistent sign; it
+is real and it works. It is simply *small*, and a small correction leaves a large
+residual.
+
+### 24.4 Verdict
+
+**NOT CORROBORATING — retire it.** My instrument cannot measure `foam` at all, so
+there is no fourth reading; and the reading that exists is 103–160× larger than
+§4.4 predicts, so the excess is ORCH's own named confounds (clipping at 0.76%
+blown pixels, corner demosaic error, genuine thin-film iridescence) and not a
+shared mechanism. §4.4 stands exactly where it was — real, under-powered, three
+stacks, **not** to be built on — and it has not gained field coverage tonight.
+
