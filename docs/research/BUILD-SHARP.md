@@ -1353,22 +1353,32 @@ from the baseline arm alone and is printed next to the measured shift.
 The subject mask is derived from the **baseline arm only**. Deriving it from the arm
 under test would let the fix move the geometry the measurement is defined against.
 
-### 17.3 -- Commissioning: six plants into a real render
+### 17.3 -- Commissioning: six plants into the real verification subject
 
-Source `bee-3-cpl` full-frame linear, plants applied outside the subject mask.
+Source `flower-bud-alone-cpl` full-frame linear -- the actual subject the harness
+will judge, not a stand-in -- with plants applied outside the subject mask.
+`bee-3-cpl`, used first, has no bright neutral backdrop at all and the harness
+**refuses** it; that refusal is correct behaviour, and it is why the commissioning
+moved onto the real subject.
 
-| # | plant | far shift (want) | sd ratio mean/per-chan (want) | |
-|---|---|---|---|---|
-| 1 | null | +0.0 (+0.0) | 1.00 / 1.00 (1.00/1.00) | PASS |
-| 2 | pure bias +200 DN | **+200.0** (+200.0) | 1.00 / 1.00 | PASS |
-| 3 | pure repair, exp decay tau=90 px | +2.4 (+0.0) | 1.00 / 1.00 | PASS |
-| 4 | **repair + 120 DN** | **+122.4** (+120.0) | 1.00 / 1.00 | PASS |
-| 5a | 9.7x noise, chroma-correlated | -0.6 (+0.0) | **9.88 / 9.72** (9.70/9.70) | PASS |
-| 5b | 9.7x noise, per-channel independent | +0.0 (+0.0) | **5.76 / 9.71** (5.60/9.70) | PASS |
+| # | plant | far shift | **pedestal** (want) | sd ratio mean/per-chan (want) | |
+|---|---|---|---|---|---|
+| 1 | null | +0.0 | **+0.0** (+0.0) | 1.00 / 1.00 (1.00/1.00) | PASS |
+| 2 | pure bias +200 DN | +200.0 | **+200.0** (+200.0) | 1.00 / 1.00 | PASS |
+| 3 | pure repair, exp decay tau=90 px | +0.8 | **+0.0** (+0.0) | 1.00 / 1.00 | PASS |
+| 4 | **repair + 120 DN** | +120.8 | **+120.0** (+120.0) | 1.00 / 1.00 | PASS |
+| 5a | 9.7x noise, chroma-correlated | -0.6 | -0.3 (+0.0) | **10.97 / 9.71** (10.96/9.70) | PASS |
+| 5b | 9.7x noise, per-channel independent | -0.4 | -0.4 (+0.0) | **6.38 / 9.70** (6.38/9.70) | PASS |
 
 **Cases 3 and 4 are the whole point.** They differ *only* by an additive 120 DN.
 Every self-normalised profile, every ratio, and every "percent of veil recovered"
-score rates them identically; the harness separates them to 2.4 DN.
+score rates them identically; the harness separates them exactly.
+
+The **pedestal** -- the delta in the outermost band, d = 700-1200 px -- is what the
+verdict turns on, not the mean far-field shift. A repair with a long tail still
+moves the mean far field (case 3 gives +0.8 DN) but its pedestal is spent
+(**+0.0 DN**), while an additive bias is flat all the way to the frame edge. Shape
+separates a tail from a pedestal; magnitude alone does not.
 
 ### 17.4 -- What the commissioning caught in the harness itself
 
@@ -1397,7 +1407,101 @@ Both errors pointed the same way: **toward declaring a biased fix acceptable.**
 That is failed instrument #5, and unlike the previous four it was caught by
 commissioning rather than after the fact.
 
-### 17.5 -- Acceptance bar and pin
+A third correction followed from the same case. The expected channel-mean ratio is
+**neither 9.7 nor 9.7/sqrt(3)**: it depends on how chroma-correlated the *baseline*
+noise already is. Measuring that as `k = sd_chan/sd_mean` gives **1.131** on
+flower-bud (against 1.732 for perfectly independent and 1.000 for perfectly
+correlated -- so the merged noise is largely, not wholly, chroma-correlated, as
+demosaic implies). The commissioning now **derives** its expectation from the
+measured `k` rather than asserting a hardcoded constant, and predicts 10.96 and
+6.38 against 10.97 and 6.38 measured. Deriving it made the plant a stricter test,
+not a looser one: it now asserts the instrument's channel arithmetic exactly.
+
+### 17.5 -- What the commissioning caught in the SUBJECTS: two masks were wrong
+
+The mask defines every distance in the measurement, so a wrong mask corrupts
+everything downstream silently. **Both failures were found by looking at the mask,
+not at its area** -- the area was unremarkable in both cases.
+
+- **`coffee-bean`**: a shaded region of the white paper is darker than the
+  threshold and touches the bean, so the largest-connected-component rule
+  swallowed a large piece of **backdrop into the subject**. Every distance in that
+  region was wrong.
+- **`109MSDCF`**: the subject is several paint strokes of *different* luminance, so
+  a single luminance threshold selects a different subset at every threshold, and
+  the largest-component rule kept only one stroke. Mask area ran 10.1% / 17.5% /
+  43.0% across a +/-0.1 threshold sweep -- a 4.3x swing.
+
+Defining the **backdrop** instead of the subject fixes both, because on these
+captures the backdrop is one thing -- bright and neutral -- while the subject is
+merely "not that", and need be neither dark, nor connected, nor of one tone. Two
+guards now run automatically:
+
+| subject | mask | threshold instability | verdict |
+|---|---|---|---|
+| `flower-bud-alone-cpl` | 22.40% | 1.20x | usable, backdrop FLAT (index 1.39) |
+| `109MSDCF` | 50.97% | 1.03x | usable, backdrop FLAT (index 1.16) |
+| `coffee-bean` | 63.11% | 1.18x | usable, backdrop **STRUCTURED** (3.86) |
+| `couch-fibers-cpl` | **99.49%** | 1.00x | **REFUSED** |
+
+**`couch-fibers-cpl` has no backdrop at all** -- it is pure fibre texture edge to
+edge. That is a category error, not a tuning problem: the quantity this harness
+measures does not exist on that subject, and the harness now **refuses to return a
+number** rather than returning an arbitrary one. It stays in the verification as a
+do-no-harm guard judged by `worst_tile.py`, the ESF machinery and by looking.
+
+On `coffee-bean` the far-field tile residual is scene texture rather than noise
+(contamination index 3.86, where the index is the median tile residual sd over its
+10th percentile). The `sigma_frame` chain is therefore **withheld** there. The
+measured shift is still valid on that subject, because it is a difference between
+two arms of the *same scene* and the scene cancels out of it -- which is also why
+the error of the shift is now computed from **per-tile deltas** rather than from
+each arm's own scatter. Taking each arm's scatter and adding in quadrature would
+overstate the error of the difference by an order of magnitude on a busy subject.
+
+### 17.6 -- The baseline profiles, and a correction to 16.10's predicted bias
+
+Measured on the pinned baseline arms, absolute DN, backdrop level by distance:
+
+| subject | d=4-12 | d=120-200 | d=700-1200 | near-field deficit |
+|---|---|---|---|---|
+| `flower-bud-alone-cpl` | 15271 | 15694 | 18937 | **-3666 DN** |
+| `109MSDCF` | 7780 | 9051 | 8793 | **-1014 DN** |
+| `coffee-bean` | 41210 | 53504 | 55406 | **-14196 DN** |
+
+The harness independently reproduces the two published veiling numbers: flower-bud
+at d = 120-200 gives **-3243 DN** against ORCH's -4066 DN, and 109MSDCF's aura
+appears at **-1014 DN** against ORCH's -177 DN. The flower-bud agreement is close;
+the 109MSDCF disagreement is a real difference and it matters, see below.
+
+**Correction to 16.10.** That section estimated the undebiased-envelope bias at
+**+169 DN** from an assumed `sigma_frame` of 200 DN. Measured, it is far larger,
+and it is an interval rather than a number:
+
+| subject | sigma_frame | max of 3 chosen | mean of top 3 of all n |
+|---|---|---|---|
+| `flower-bud-alone-cpl` | 1169 DN | **+994 DN** | **+2898 DN** |
+| `109MSDCF` (n=22) | 634 DN | **+511 DN** | **+914 DN** |
+
+Two things were wrong in 16.10 and both are corrected here.
+
+1. **The assumed `sigma_frame` was ~6x too small.** The measured bias is 994-2898
+   DN on flower-bud, not 169 DN. This *strengthens* the warning considerably:
+   ORCH's -149 DN residual is not merely comparable to the predicted bias, it is
+   an order of magnitude smaller than it.
+2. **"Upper envelope of 3" has two readings that differ by 3x**, and 16.10 quoted
+   one without saying which. The *maximum of 3 chosen frames* is +0.848 sigma; the
+   *mean of the top 3 of all 205* is +2.471 sigma. 16.10's +0.845 sigma was the
+   first reading. Which applies depends on how the fix is implemented, so the
+   harness now reports the **interval** and does not pick an endpoint.
+
+`sigma_frame` is itself an upper bound, since `n_admit` defaults to the full frame
+count and the gate admits fewer. A large predicted bias makes a measured shift look
+like a small fraction of it, which is the unsafe direction -- so **the verdict is
+not taken from this number at all**. It is taken from the shift against zero and
+the pedestal shape, both of which are model-free. The prediction is context.
+
+### 17.7 -- Acceptance bar and pin
 
 Bar, as set by ORCH and refined by §16.10:
 
@@ -1409,6 +1513,20 @@ Bar, as set by ORCH and refined by §16.10:
   (+0.23% at d=450 px against flower-bud's +12.0% at d=18 px), so it separates the
   two defects for free.
 - `couch-fibers-cpl`: do-no-harm guard, pure texture, no flat region anywhere.
+  **Not measurable by this harness** -- see 17.5. Judged by `worst_tile.py`, the
+  ESF machinery, and by looking at the picture.
+
+**One caveat on the placebo, which I am flagging before the fix lands rather than
+after.** 109MSDCF is a *veil* placebo, not an *aura* placebo. With the corrected
+mask covering all the paint strokes, its near-field deficit measures **-1014 DN**,
+not the -177 DN in the brief, and its profile is non-monotonic: it dips at d = 4-12,
+rises *above* the far field at d = 120-200, and settles. That is not a veil shape
+and is consistent with a local edge effect at thick paint strokes rather than
+defocused occlusion. Its placebo role survives intact, because that role depends
+only on there being **no depth-separated foreground to veil the backdrop**, so any
+*far-field* level shift there is still bias and nothing else. But the -177 DN figure
+should not be used as an acceptance threshold on this subject, and I would rather
+say so now than explain it afterwards.
 
 The **22-frame vs 205-frame** difference between 109MSDCF and flower-bud is a second
 discriminator for free: an order-statistic bias grows like `sqrt(2 ln n)`, so a
@@ -1418,8 +1536,10 @@ ratio the harness can predict in advance.
 **Pin.** All arms render from one binary, stated by SHA-256 in
 `veil/run-<arm>.log`, with `--linear-srgb --demosaic --gate 4.0` and **no
 `--auto-exposure`** -- a per-arm exposure choice would normalise away the additive
-bias under test. Baseline arms for this shakedown come from `pin-b001f22`. The
-verification arms will be re-rendered from a single pin built at BUILD-HALO's fix
-commit, and the baseline re-rendered from that same commit with the fix disabled, so
-that BUILD-BLEND's multi-band default and BUILD-RENDER's lateral-CA default cannot
-enter the comparison.
+bias under test. Baseline arms for this shakedown come from `pin-b001f22`, SHA-256
+`34D784478C16EBC837BC3240B3CD5D613F210B170D03B4E5C61EFCDBA4049D68`, with frame
+counts 205 / 22 / 105 / 299 taken from the render logs. The verification arms will
+be re-rendered from a single pin built at BUILD-HALO's fix commit, and the baseline
+re-rendered from that same commit with the fix disabled, so that BUILD-BLEND's
+multi-band default and BUILD-RENDER's lateral-CA default cannot enter the
+comparison.
