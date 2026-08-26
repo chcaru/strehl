@@ -8,7 +8,7 @@
 # Writes 16-bit TIFF plus a viewable JPEG. Sources on D:\ are read-only.
 $ErrorActionPreference = "Continue"
 $exe = "C:\dev\strehl-out\ORCH-CLAMP\interv\clamped\target\release\examples\blend-render.exe"
-$out = "C:\dev\strehl-out\GALLERY-FIXED"
+$out = "C:\dev\strehl-out\GALLERY-FIXED-SRGB"
 $src = "D:\personal\macro"
 
 Remove-Item Env:\STREHL_FIX_CA -ErrorAction SilentlyContinue
@@ -23,7 +23,7 @@ $hash = (Get-FileHash $exe -Algorithm SHA256).Hash
 "" | Out-File "$out\RUN.txt" -Encoding utf8
 "binary sha256 : $hash"       | Out-File "$out\RUN.txt" -Append -Encoding utf8
 "commit        : 3dfa435"     | Out-File "$out\RUN.txt" -Append -Encoding utf8
-"merge         : pyramid, hull clamp ON, gate 4, base-mean, camera-linear" |
+"merge         : pyramid, hull clamp ON, gate 4, base-mean, sRGB (viewable)" |
   Out-File "$out\RUN.txt" -Append -Encoding utf8
 "started       : $(Get-Date -Format o)" | Out-File "$out\RUN.txt" -Append -Encoding utf8
 
@@ -37,7 +37,7 @@ foreach ($s in $subjects) {
   if (Test-Path $dst) { "  {0,-42} already present" -f $s.Name; $skipped++; continue }
   $n = (Get-ChildItem "$($s.FullName)\*.ARW").Count
   $sw = [Diagnostics.Stopwatch]::StartNew()
-  & $exe $s.FullName $dst --gate 4 --base-mean --camera-linear --chunks 5 2>&1 |
+  & $exe $s.FullName $dst --gate 4 --base-mean --chunks 5 2>&1 |
     Out-File -FilePath "$out\$($s.Name).log" -Encoding utf8
   $rc = $LASTEXITCODE
   $sw.Stop()
