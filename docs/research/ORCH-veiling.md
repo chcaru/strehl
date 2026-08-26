@@ -1813,3 +1813,100 @@ drift** that must remain at exactly 0 clipped pixels through a change that
 visibly alters its levels. A normalisation that moves it is touching something
 other than this defect.
 
+
+## 20 The gap is unwired code, not unwritten code
+
+Sections 19.6 and 19.7 cost me three retractions, and all three had the same
+root: I reasoned from the plan instead of from the tree. I told an implementer
+to build a per-frame photometric gain. `crates/strehl-core/src/photometric.rs`
+turned out to be **1966 lines**, already implementing the exact estimator M28
+prescribed, already wired into `merge_cmd.rs` with 34 references and a
+`--photometric off|on|auto` flag with an env twin whose parser treats an
+unrecognised value as an error rather than a silent `On`. It was not missing. It
+was **off**, and absent from the merge path that actually produces our images.
+
+That is a specific enough failure to be worth generalising, so I stopped
+arguing and measured it.
+
+## 20.1 The reachability sweep
+
+`ORCH-CLAMP\wiring.py` takes the 22 modules declared in
+`crates/strehl-core/src/lib.rs` and counts, for each, references from the shipped
+CLI (`crates/strehl-cli/src/**`), from other core modules, and from examples
+(`crates/*/examples/**`). A module is **live** if the CLI references it, or if
+any live module references it — a fixed point, so transitive reachability
+counts. Anything else is **dark**: present, compiled, and unreachable from the
+binary the user runs.
+
+**19 of 22 modules are live. Three are dark, totalling 3403 lines.**
+
+| module | loc | example-only refs | what it is |
+| --- | ---: | ---: | --- |
+| `pyramid` | 1898 | 4 | the multi-scale merge that produces every good render |
+| `outlier` | 1148 | 8 | per-tile, noise-normalised chi-square robustness mask |
+| `restore` | 357 | 0 | Wiener correction for the resampling kernel |
+
+The 19/22 is what makes the result trustworthy. A sweep that flagged most of the
+tree would be measuring my regex, not the code. This one flags three modules,
+and they are not arbitrary three.
+
+## 20.2 They are the three that decide image quality
+
+- **`pyramid`** is the merge. Every render in this document that looked better
+  than the shipped one came from an *example* binary. `merge_cmd.rs` contains
+  zero pyramid references, so `strehl stack` — the command the user runs — does
+  not execute the merge this project spent its nights building.
+- **`outlier`** is the robustness mask that the corpus has repeatedly listed as
+  missing and never built. It is written: `chi2_map`, `thresholds`, `mask`,
+  `mask_tiles`, `fired_fraction`, tile grid and scratch. Its only callers are
+  four experiment binaries.
+- **`restore`** carries its status in its own header: *"Status: BUILT, MEASURED,
+  and NOT WIRED IN."* It attributes **18.6% of the shipped merge's blur
+  variance** to the resampling kernel — the second largest blur term after the
+  optics — and implements the correction. It has **zero** references anywhere,
+  including examples.
+
+Add `photometric`, which is live but defaults `Off` and never reaches the
+pyramid path, and the pattern is four for four: the components that would most
+improve the picture are the components that are not connected to it.
+
+## 20.3 Why this is the honest answer to "why does the output look bad"
+
+The reflex when output disappoints is to look for a missing algorithm. This
+project's disappointing output is not caused by a missing algorithm. Its merge,
+its robustness mask, its resampling restoration and its photometric correction
+are all written, several are measured, and none of them is in the path.
+
+There is a mechanism behind that and it is not carelessness. Every one of these
+was built inside an experiment or an example, where it could be measured against
+a control — which is exactly the discipline that makes this corpus worth
+anything. What was missing was the step after the measurement: the demonstration
+was the deliverable, and the wiring was left as an implied afterthought that
+nobody's milestone owned. `restore.rs` even says so in its own header, in the
+present tense, and has said so for as long as it has existed.
+
+The corollary is a rule, and it is stated as one because the failure repeated
+four times:
+
+> **A component is not built until a shipped binary can reach it.** A measured
+> improvement that no default path executes has not improved anything. State the
+> integration point, or state explicitly that it is deferred and why — the way
+> M18 §4d did, which is the one instance in this corpus that handled it
+> correctly: *"Not built tonight. Stated so it is a decision, not an oversight."*
+
+## 20.4 Standing work
+
+Ownership is serialised, because these all want to land in overlapping files:
+
+| module | owner | boundary |
+| --- | --- | --- |
+| `pyramid.rs` | BUILD-BLEND | clamp fix, then photometric wiring |
+| `focus.rs`, `merge_cmd.rs` | BUILD-HALO | halo mechanism, then the CLI wiring |
+| `restore.rs` | BUILD-SHARP | integration point to be justified, patches to `pyramid.rs` handed over, not applied |
+| `outlier.rs` | unassigned | pending the admitted-set measurement in 22.7 |
+
+`outlier` is deliberately unassigned. Wiring a robustness mask is the right fix
+only if the halo's amplitude is coming from the gate's admitted set, and that has
+not yet been measured. Assigning it before the measurement would be building the
+fix that the story suggests rather than the one the data supports, which is the
+error this section exists to record.
