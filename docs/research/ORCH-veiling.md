@@ -3570,3 +3570,111 @@ to the difference between removing an artefact and removing the picture.
   measured noise (128.8 → 68.4) while moving the control 9%. Every noise figure
   measured that way — BUILD-BLEND's +12.3%, V-RIM's own +32/+105/+1605% — is a
   **lower bound**.
+
+## 34 — `focus.rs` is not on the pyramid path, proved by a byte-identical null
+
+V-M111 was asked to measure what restoring a deleted focus-window shrink term
+costs in aura, *on top of* the multi-band merge. It could not, and the reason it
+could not is the most useful thing it found.
+
+### 34.1 The null, with a live positive control beside it
+
+Two arms, same binary, one with the shrink restored:
+
+| arm | sha256 | verdict |
+|---|---|---|
+| pyramid A | `F267BD82…C13C9` | **identical** |
+| pyramid B | `F267BD82…C13C9` | **identical** |
+| estimator A | `9B777C0B…` | differ |
+| estimator B | `75AE09E0…` | differ |
+
+The pyramid output is **bit-for-bit unchanged** by a modification that visibly
+moves the estimator output **in the same binary, in the same run**. That is a
+null with its own positive control attached, which is the only kind worth
+reporting. Structurally: the shrink lives in `run_estimator` (`merge_cmd.rs:2548`)
+and `run_pyramid` begins at `:3586`.
+
+**Consequence, and it is a planning consequence rather than an imaging one:**
+every hour spent on `focus.rs` and the estimator's focus window is an hour spent
+on a path that the pyramid does not execute. If the pyramid ships, that work
+ships nothing. This answers the question §27 left open and that I had put to
+BUILD-HALO — asked as a call-graph question, answered instead by a hash.
+
+### 34.2 The shrink restore is free, and it should be taken anyway
+
+On the path where it does something:
+
+| subject | aura change | sign |
+|---|---:|---|
+| flower-bud-alone-cpl | **+444 DN** of 14617 (3.0%) | **fills the veil in** |
+| bee-1-cpl | +92 DN (0.50%) | fills in |
+| coffee-bean | +48 DN (0.086%) | fills in |
+
+and the sharpness it buys back **exceeds the loss its deletion was meant to
+avoid** — `bee-1-cpl` gradient RMS **1.1618**, HF **1.3510**.
+
+The commit that deleted it justified the deletion by background noise on three
+flat patches of one subject, predicting 11–16% less noise. Measured: **1.0187 —
+slightly more.** Justified on one subject by a statistic that does not
+reproduce; refuted on 26 by a different one. The estimator is what ships today,
+so this is a real and free improvement to the shipping binary.
+
+The restore must be **surgical, not `git revert`**: that commit also swapped
+`from_acuity`→`from_silhouettes`, deleted the confidence veto, `FLOOR_Q` and
+`conf`, and changed `regularise_guided`. A revert would take the halo fix with
+the shrink and the resulting sharpness gain would arrive bundled with a
+regression nobody would attribute correctly.
+
+### 34.3 Retraction 22 — my own blend arms were sRGB, not linear
+
+I briefed V-M111 that paired **linear** 16-bit TIFFs were on disk. They are
+sRGB: `blend-render.rs:543-549` defaults to `Srgb`. Every DN in the profile
+table I handed it is in the wrong space, and the "−6.90 → −0.94 of 255" line I
+quoted is double-encoded.
+
+The correction does not weaken the conclusion — it **strengthens** it, and it
+reveals something the wrong space was hiding. `rimprofile.py`'s interior-peak
+list on the control goes from
+
+```
+[(275, 403)]        ->        [(22, 3739), (275, 765)]
+```
+
+**A real ring at d = 22 px was invisible in sRGB.** V-M111 corroborated it on
+an independent camera-native render. The blend removes it by 93%.
+
+### 34.4 The number 22 has now arrived by three independent routes
+
+- BUILD-HALO **predicted** it from the focus measure's own geometry:
+  SOBEL(1) + WINDOW(13) + REGULARISER(8) = **22 px**, and measured the merge's
+  radial crossover at ~20 px.
+- V-M111 **measured** an interior ring peak at **d = 22 px** on a corrected
+  linear profile.
+- V-M111 **reproduced** it again on a separate camera-native render.
+
+A prediction from first principles and two independent measurements landing on
+the same number is the strongest single piece of mechanism evidence in this
+corpus. It says the estimator's rim is its focus window's support radius made
+visible, and that is a defect with a known cause and a known fix — which the
+pyramid also happens to remove by not having a focus window at all.
+
+### 34.5 My placebo tested nothing
+
+`109MSDCF` was registered as the placebo: any aura change from the shrink
+restore must be approximately nil there. It read exactly 0 DN. It reads 0 DN
+because its **dose is zero** — radius 13.00 → 13.00, the veto admits 0 px. The
+treatment was never applied.
+
+> **A placebo that received no dose is an inert probe, not a passing control.
+> Report the dose beside the response, or a zero reading proves only that
+> nothing happened.**
+
+No subject in the corpus has a strong dose *and* no occlusion, so this control
+does not currently exist. Recorded as a gap rather than papered over.
+
+### 34.6 One thing I must not now tell BUILD-RENDER
+
+I hypothesised that `couch-fibers-cpl`'s guard reference fires because it
+predates the tone fix. **Refuted:** contrast differs 0.36%, mean 0.5 DN. The
+guard is firing on something else and I nearly sent a lane chasing a wrong
+explanation.
