@@ -201,6 +201,24 @@ if ($Exe) {
 $binHash = (Get-FileHash $Exe -Algorithm SHA256).Hash
 Write-Host ("binary sha256   : {0}" -f $binHash)
 
+# Full 40-char commit, resolved once. With -Exe the operator supplied a binary
+# we cannot attribute to a commit, and that must be SAID rather than left to
+# read as "some commit": an unattributable binary is exactly the case where
+# provenance matters most.
+if ($pinSha -eq 'UNPINNED') {
+    Push-Location $repo
+    $head = (git rev-parse HEAD 2>$null)
+    $dirty = (git status --porcelain 2>$null)
+    Pop-Location
+    $gitFull = "UNATTRIBUTED -- operator-supplied binary; tree HEAD was $($head.Trim())" +
+    $(if ($dirty) { " WITH UNCOMMITTED CHANGES (the binary may not match any commit)" } else { "" })
+} else {
+    Push-Location $repo
+    $gitFull = (git rev-parse $pinSha).Trim()
+    Pop-Location
+}
+Write-Host ("git commit      : {0}" -f $gitFull)
+
 # ---------------------------------------------------------------------------
 # Output directory. One per arm, so accept.py can be handed several at once.
 # ---------------------------------------------------------------------------
@@ -221,7 +239,7 @@ Remove-Item (Join-Path $out 'COMPLETE.txt') -ErrorAction SilentlyContinue
 
 $manifest = Join-Path $out 'manifest.tsv'
 if (-not (Test-Path $manifest)) {
-    "subject`tframes`tsecs`texit`tbytes`tstatus" | Out-File -Encoding utf8 $manifest
+    "subject`tframes`tsecs`texit`tbytes`tstatus`texposure_stops" | Out-File -Encoding utf8 $manifest
 }
 
 # STREHL_FIX_CA is set EXPLICITLY in both directions. Since 96571ee an absent
@@ -271,13 +289,79 @@ function Invoke-Subject {
     elseif ($exit -eq -1073740791 -or $exit -eq 3221226356) { 'OOM/abort' }
     else { "fail($exit)" }
 
+    # PROVENANCE, BESIDE THE ARTIFACT.
+    #
+    # A central _render.log answers "what produced this?" only while the log and
+    # the TIFF stay together. They do not: masters get copied into galleries and
+    # crop directories, and twice tonight an agent inferred a render's backend
+    # from its FILENAME and reached a wrong conclusion. So every master carries
+    # its own sidecar, and the reproduction command is written out in full
+    # rather than left to be reassembled.
+    #
+    # The exposure line is not decoration. --auto-exposure chooses the gain FROM
+    # THE IMAGE, so the flags alone do not determine the pixels; the binary
+    # quantises it to 1/100 stop precisely "so that the printed number
+    # reproduces the file exactly". Without it captured, an --auto-exposure
+    # render cannot be reproduced at all -- not approximately, at all.
+    $binaryOut = @()
+    foreach ($f in @("$log.out", $log)) {
+        if (Test-Path $f) { $binaryOut += Get-Content $f -ErrorAction SilentlyContinue }
+    }
+    $expo = ($binaryOut | Where-Object { $_ -match '^\s*exposure\s*:' } | Select-Object -First 1)
+    $expoStops = if ($expo -match '([+-]?\d+\.\d+)\s*stops') { $Matches[1] } else { $null }
+    $backend = if ($Flags -match '--merge\s+(\S+)') { $Matches[1] } else { 'pyramid (default)' }
+    $gate = if ($Flags -match '--pyramid-gate\s+(\S+)') { "--pyramid-gate $($Matches[1])" }
+    elseif ($Flags -match '--gate\s+(\S+)') { "--gate $($Matches[1])" }
+    else { '(backend default)' }
+    $space = if ($Flags -match '--linear-srgb') { 'linear sRGB -- MEASURABLE' }
+    elseif ($Flags -match '--srgb') { 'sRGB, TONE CURVE APPLIED -- DO NOT MEASURE NUMERICALLY' }
+    else { 'camera-native binned linear -- MEASURABLE (primaries are the sensor''s own)' }
+
+    $repro = if ($expoStops -and $Flags -match '--auto-exposure') {
+        # --auto-exposure is image-dependent; pin it to the printed number.
+        ($Flags -replace '--auto-exposure', "--exposure $expoStops")
+    }
+    else { $Flags }
+
+    @(
+        "strehl render provenance"
+        "artifact      : $(Split-Path $tif -Leaf)"
+        "rendered      : $(Get-Date -Format o)"
+        "status        : $status   (exit $exit, $bytes bytes)"
+        ""
+        "binary        : $Exe"
+        "sha256        : $binHash"
+        "git commit    : $gitFull"
+        "pin           : $(if ($Sha) { $Sha } else { 'UNPINNED (operator-supplied -Exe)' })"
+        ""
+        "source        : $($S.Path)"
+        "frames        : $($S.Frames)"
+        "backend       : $backend"
+        "gate          : $gate"
+        "colour space  : $space"
+        "exposure      : $(if ($expo) { ($expo -replace '^\s*exposure\s*:\s*','').Trim() } else { '(not printed by the binary)' })"
+        ""
+        "FULL ARGV (verbatim, as executed):"
+        "  $Exe $($argv -join ' ')"
+        ""
+        "REPRODUCE THIS EXACT FILE:"
+        "  $Exe stack `"$($S.Path)`" --out <OUT> $repro"
+        $(if ($repro -ne $Flags) {
+            "  (--auto-exposure replaced by the gain it CHOSE; re-running with"
+            "   --auto-exposure on a different binary may choose differently)"
+        })
+    ) | Where-Object { $null -ne $_ } | Out-File -Encoding utf8 "$tif.provenance.txt"
+
     # A sentinel beside the file, not the file's mere existence: a killed render
     # leaves a partial TIFF on disk that is the right name and the wrong image.
+    # It is written LAST, after provenance, so a resumed run can never skip a
+    # subject whose provenance failed to write.
     if ($status -eq 'ok') { "$binHash" | Out-File -Encoding ascii "$tif.ok" }
 
-    Write-Host ("        {0}  {1:N0}s  {2:N0} MB" -f $status, $sw.Elapsed.TotalSeconds, ($bytes / 1MB))
+    Write-Host ("        {0}  {1:N0}s  {2:N0} MB{3}" -f $status, $sw.Elapsed.TotalSeconds, ($bytes / 1MB),
+        $(if ($expoStops) { "  exp $expoStops st" } else { '' }))
     [pscustomobject]@{ Name = $S.Name; Frames = $S.Frames; Secs = [math]::Round($sw.Elapsed.TotalSeconds, 1)
-        Exit = $exit; Bytes = $bytes; Status = $status
+        Exit = $exit; Bytes = $bytes; Status = $status; Exposure = $expoStops
     }
 }
 
@@ -312,7 +396,8 @@ if ($retry) {
 $runSw.Stop()
 
 foreach ($r in $results) {
-    "{0}`t{1}`t{2}`t{3}`t{4}`t{5}" -f $r.Name, $r.Frames, $r.Secs, $r.Exit, $r.Bytes, $r.Status |
+    "{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}" -f $r.Name, $r.Frames, $r.Secs, $r.Exit, $r.Bytes, $r.Status,
+    $(if ($r.Exposure) { $r.Exposure } else { '-' }) |
         Out-File -Encoding utf8 -Append $manifest
 }
 
@@ -325,6 +410,7 @@ $bad = @($results | Where-Object { $_.Status -notin @('ok', 'skip') })
     "pin             : $pinDesc"
     "binary          : $Exe"
     "binary sha256   : $binHash"
+    "git commit      : $gitFull"
     "library         : $Library"
     "flags           : $Flags   (IDENTICAL on every subject)"
     "subjects        : $($ok.Count)/$($nSubjects) rendered"
@@ -358,6 +444,11 @@ if ($bad.Count -eq 0 -and -not $Only.Count) {
     Remove-Item (Join-Path $out 'INCOMPLETE.txt') -ErrorAction SilentlyContinue
     Write-Host "ARM COMPLETE    : $out" -ForegroundColor Green
 } else {
-    Write-Host "ARM INCOMPLETE  : $out  ($($bad.Count) failed, INCOMPLETE.txt kept)" -ForegroundColor Yellow
+    # Distinguish the two reasons, because "INCOMPLETE" alone reads as "something
+    # broke" when a -Only run is incomplete BY CONSTRUCTION and nothing failed.
+    $why = @()
+    if ($bad.Count) { $why += "$($bad.Count) failed" }
+    if ($Only.Count) { $why += "-Only run: partial by construction, nothing failed" }
+    Write-Host "ARM INCOMPLETE  : $out  ($($why -join '; '); INCOMPLETE.txt kept)" -ForegroundColor Yellow
 }
 exit $bad.Count
