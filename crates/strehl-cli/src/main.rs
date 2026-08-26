@@ -48,25 +48,29 @@ enum Command {
     ///
     /// TWO MERGES LIVE HERE AND --merge PICKS ONE.
     ///
-    ///   pyramid   (DEFAULT) A Laplacian multi-band merge. Selection happens
-    ///             per band and per coefficient, not per pixel, so a depth
-    ///             boundary is a transition inside each band's own frequency
-    ///             range instead of a step in the image. The selection exponent
-    ///             ramps with scale: near winner-take-all in the fine bands,
-    ///             where all the acuity is and where a wrong pick is one
-    ///             high-frequency coefficient nobody can see, and gently
-    ///             blended in the coarse bands, where a wrong pick IS the
-    ///             "cut-out sticker" rim. Every good render in this project's
-    ///             research corpus came from this merge; until it was wired
-    ///             here it was reachable only from an example binary that
-    ///             ships nothing.
+    ///   estimator (DEFAULT) The regularised-winner, noise-gated merge
+    ///             described below. It is what `strehl stack` has always done,
+    ///             and every quality number in the corpus was measured on it.
     ///
-    ///   estimator The regularised-winner, noise-gated merge described below.
-    ///             It is what `strehl stack` did before --merge existed and
-    ///             `--merge estimator` is byte-identical to it. Every quality
-    ///             number in the corpus was measured on it. It is kept
-    ///             reachable because a default chosen over an alternative is
-    ///             only a measurement while the alternative can still be run.
+    ///   pyramid   A Laplacian multi-band merge. Selection happens per band
+    ///             and per coefficient, not per pixel, so a depth boundary is
+    ///             a transition inside each band's own frequency range instead
+    ///             of a step in the image. The selection exponent ramps with
+    ///             scale: near winner-take-all in the fine bands, where all
+    ///             the acuity is and where a wrong pick is one high-frequency
+    ///             coefficient nobody can see, and gently blended in the
+    ///             coarse bands, where a wrong pick IS the "cut-out sticker"
+    ///             rim. Every good render in this project's research corpus
+    ///             came from this merge; until it was wired here it was
+    ///             reachable only from an example binary that ships nothing.
+    ///
+    ///             It is NOT the default yet, and that is a measurement rather
+    ///             than an opinion: it wins micro-contrast on every subject
+    ///             tested and wins acuity on this binary, but it hard-clips up
+    ///             to 3% of a frame where the estimator clips 0.0006%. The
+    ///             default moves when that passes the acceptance gate. Until
+    ///             then this flag is how you get the merge the corpus was
+    ///             made with.
     ///
     /// STREHL_MERGE=pyramid|estimator does the same for a harness that cannot
     /// edit the command line; the flag wins. An unrecognised value in either
@@ -141,8 +145,8 @@ enum Command {
         /// Stack at most this many frames, in filename order.
         #[arg(short, long)]
         limit: Option<usize>,
-        /// Which merge produces the pixels: `pyramid` (the default) or
-        /// `estimator`. See this subcommand's help for what each one is.
+        /// Which merge produces the pixels: `estimator` (the default) or
+        /// `pyramid`. See this subcommand's help for what each one is.
         ///
         /// STREHL_MERGE does the same for a harness that cannot edit the
         /// command line; this flag wins. An unrecognised value is an error in

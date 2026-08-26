@@ -224,25 +224,60 @@ pub struct MergeOptions {
 /// `crates/strehl-cli/examples/blend-render.rs`, which ships nothing, and is
 /// what every good render in the research corpus was made with. This enum is
 /// what connects it to `strehl stack`.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MergeBackend {
-    /// [`strehl_core::pyramid`]: a Laplacian multi-band merge. **THE DEFAULT.**
+    /// [`strehl_core::pyramid`]: a Laplacian multi-band merge.
     ///
     /// Selection happens per band and per coefficient rather than per pixel, so
     /// a depth boundary is a transition in each band's own frequency rather
     /// than a step in the image, and the coarse bands -- where the eye reads
     /// the "cut-out sticker" rim -- stay gently blended while the fine bands,
     /// where acuity lives, run near winner-take-all.
-    #[default]
+    ///
+    /// Reachable, and not yet the default. See [`DEFAULT_MERGE_BACKEND`].
     Pyramid,
     /// [`strehl_core::merge`]: the regularised-winner, noise-gated estimator.
     ///
-    /// **Kept reachable on purpose.** It is what shipped before this flag
-    /// existed, every quality number in the corpus was measured on it, and a
-    /// default chosen over an alternative is only a measurement while the
-    /// alternative can still be run. `--merge estimator` is byte-identical to
-    /// what `strehl stack` did before the backend switch existed.
+    /// **The current default**, and what shipped before this flag existed.
+    /// Every quality number in the corpus was measured on it. `--merge
+    /// estimator` is byte-identical to what `strehl stack` did before the
+    /// backend switch existed.
     Estimator,
+}
+
+/// The backend `strehl stack` runs when neither `--merge` nor `STREHL_MERGE`
+/// names one.
+///
+/// # This constant is the flip
+///
+/// Changing it to [`MergeBackend::Pyramid`] moves the shipped merge, and
+/// nothing else has to change: both arms are wired, both are reachable, both
+/// share one develop path, and the flag, its env twin and the cross-backend
+/// refusals are all written against whichever value sits here. It is a named
+/// constant rather than a `#[default]` attribute precisely so that the decision
+/// has one address and a reviewer can see the whole of it at once.
+///
+/// # Why it is still the estimator
+///
+/// Because the pyramid merge does not yet pass the acceptance gate, and the
+/// gate is the criterion. Measured on this binary, against the estimator as
+/// reference, on three subjects: it wins micro-contrast everywhere (+35% to
+/// +192%) and it wins acuity on all three -- but it clips **1.68% and 2.99%**
+/// of pixels on `dry-erase-marker-head-cpl` and `flower-bud-alone-cpl` against
+/// the estimator's 0.0009% and 0.0006%, and on the fern subject ORCH measured
+/// the shadow end collapsing with it, `p1` 8431 -> 110.
+///
+/// A merge that renders a subject's edge properly and hard-clips 3% of the
+/// frame is not obviously better than one that smears the edge; it is worse in
+/// a different place. So the pyramid path ships reachable and unselected until
+/// the clip is fixed -- that fix is BUILD-BLEND's, in `pyramid.rs`, and it
+/// targets exactly this -- and this line moves the day its gate table passes.
+pub const DEFAULT_MERGE_BACKEND: MergeBackend = MergeBackend::Estimator;
+
+impl Default for MergeBackend {
+    fn default() -> Self {
+        DEFAULT_MERGE_BACKEND
+    }
 }
 
 impl MergeBackend {
@@ -255,9 +290,9 @@ impl MergeBackend {
             "pyramid" | "bands" | "blend" => Ok(Self::Pyramid),
             "estimator" | "merge" | "legacy" => Ok(Self::Estimator),
             other => bail!(
-                "unknown merge backend {other:?}; valid values are `pyramid` (the default, the \
-                 Laplacian multi-band merge) and `estimator` (the regularised-winner noise-gated \
-                 merge that shipped before)"
+                "unknown merge backend {other:?}; valid values are `estimator` (the default, the \
+                 regularised-winner noise-gated merge) and `pyramid` (the Laplacian multi-band \
+                 merge)"
             ),
         }
     }
@@ -3598,8 +3633,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let sizes = level_sizes(geom.width, geom.height, cfg.bands);
 
     eprintln!(
-        "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid, THE DEFAULT since it was \
-         wired)"
+        "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; reachable, NOT the default)"
     );
     eprintln!("camera          : {camera}");
     eprintln!(

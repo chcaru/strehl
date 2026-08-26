@@ -196,27 +196,36 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_MERGE": Declared(
         kind="quality",
-        default="pyramid",
+        default="estimator",
         verified="measured",
         evidence="merge_cmd.rs (MERGE_BACKEND_ENV, resolve_merge_backend, "
-        "`_ => Ok(MergeBackend::default())` with `#[default] Pyramid`); "
+        "DEFAULT_MERGE_BACKEND = MergeBackend::Estimator); "
         "main.rs (--merge, and the wrong-backend refusal table)",
         note=(
-            "WHICH MERGE PRODUCES THE PIXELS. `pyramid` or `estimator`, and an "
+            "WHICH MERGE PRODUCES THE PIXELS. `estimator` or `pyramid`, and an "
             "unrecognised value is a hard error in BOTH the flag and the env "
-            "channel -- neither can mean a backend by accident. THE DEFAULT IS "
-            "pyramid, the Laplacian multi-band merge. It is reachable-by-"
-            "default rather than dark, which is the whole point of the switch: "
-            "`strehl_core::pyramid` was 1898 lines of compiled, tested code "
-            "that no shipped binary could reach, while every good render in "
-            "the research corpus came from it through an EXAMPLE that ships "
-            "nothing. MEASURED, not read: unset and with no flag, `strehl "
-            "stack --srgb` on flower-bud-alone-cpl (205 frames) emits sha256 "
-            "F8A49C0A... where `--merge estimator` emits CA8C9E3E..., so the "
-            "default demonstrably selects the pyramid arm on a full stack. "
-            "`--merge estimator` is byte-identical to the pre-switch binary on "
-            "all three write branches, so the arm the default was chosen over "
-            "is still exactly runnable."
+            "channel -- neither can mean a backend by accident. The default is "
+            "the estimator, unchanged, and `--merge estimator` is byte-"
+            "identical to the pre-switch binary on all three write branches; "
+            "the byte-freeze registry reproduces both of its recorded hashes "
+            "twice each through this switch. "
+            "THIS IS NOT A DARK QUALITY SWITCH, and the distinction matters "
+            "for this script's purpose. `pyramid` is 1898 lines that no "
+            "shipped binary could reach at all until it was wired -- every "
+            "good render in the corpus came from it through an EXAMPLE. It is "
+            "now reachable, and it is unselected on a measurement rather than "
+            "by neglect: it wins micro-contrast on every subject tested (+35% "
+            "to +192%) and wins acuity on this binary, but it hard-clips "
+            "1.6777% and 2.9920% of pixels on dry-erase-marker-head-cpl and "
+            "flower-bud-alone-cpl where the estimator clips 0.0009% and "
+            "0.0006%, and ORCH measured p1 collapsing 8431 -> 110 on the fern "
+            "subject. It fails the acceptance gate, so it does not get the "
+            "default. BUILD-BLEND's clamp fix in pyramid.rs targets exactly "
+            "that clipping; when its gate table passes, DEFAULT_MERGE_BACKEND "
+            "is the one line that moves. MEASURED: unset, `strehl stack "
+            "--srgb` on flower-bud-alone-cpl reproduces the pre-switch bytes; "
+            "`--merge pyramid` emits sha256 F8A49C0A..., a different image on "
+            "99.9895% of pixels at a mean of 1820 DN."
         ),
     ),
     # ---------------- control ----------------

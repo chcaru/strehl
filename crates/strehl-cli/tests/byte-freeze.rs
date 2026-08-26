@@ -453,15 +453,12 @@ impl Freeze {
             stack_dir.display().to_string(),
             // Every row in this registry was frozen before `strehl stack` had
             // a choice of merge, when the estimator was the only thing the
-            // command could run. The default is now the pyramid merge, so an
-            // invocation that does not name a backend no longer describes the
-            // pipeline it froze -- and `--gate` is an estimator flag, which
-            // the CLI refuses rather than ignores under the other backend.
-            //
-            // This is the STREHL_ALIGN=0 defect a third time, in the shape the
-            // header warns about: an input that moves every hash in this file
-            // while appearing nowhere in any record. Naming it here makes the
-            // recorded command and the executed command the same object again.
+            // command could run. The estimator is still the default, so these
+            // rows would run correctly without this -- but the backend is now
+            // an INPUT, and an input that is merely defaulted rather than
+            // recorded is the exact defect this file's header describes. The
+            // day DEFAULT_MERGE_BACKEND moves, an unnamed row would silently
+            // change pipeline and every hash below would move at once.
             //
             // It is hardcoded rather than a column because every existing row
             // genuinely is an estimator freeze. The day a pyramid row is added
