@@ -8306,6 +8306,19 @@ fringe "a far more serious finding" than the halo. It is dead, and the pairing
 of a measurement with the mechanism that makes the measurement necessary is the
 strongest form of argument this project has produced.
 
+> **CORRECTED at section 76. "The merge is innocent" is too broad and I wrote
+> it.** The 15.5% measurement stands, and a shared scalar denominator genuinely
+> cannot manufacture chroma *amplitude*. But `den` being computed on green luma
+> and shared across planes means R and B are elected at **green's** best focus
+> rather than their own, and under longitudinal CA those are not the same frame
+> -- measured at `k_R - k_G` = **-0.67 to -1.07 frames**, red forfeiting
+> **8.96-14.74%** of its gradient energy. That is not manufactured chroma, it is
+> **differential defocus**, and it is field-wide. The three lines I cited as
+> exculpatory are the prime suspect. The tell arrived later: **74% of the
+> `coffee-bubbles` deficit is already present at r = 0.04**, on axis, where
+> lateral CA is identically zero -- and a field-independent chroma defect cannot
+> be a radial one.
+
 **My own leading candidate is refuted.** I argued green's 2x CFA sample density
 would make fine bright features reconstruct green-biased -- textbook Malvar
 false colour. The never-demosaiced arm is **12.6% worse**, on the same lattice.
@@ -8836,3 +8849,101 @@ definition is worse than a missing one**, because a reader who cannot find what
 it describes maps it onto the nearest surviving name. That is exactly how
 `noise_flat` and `noise_advantage` came to be read as one quantity while
 disagreeing by 17x in opposite directions.
+
+## 76. The refusal, and the claim of mine it took down
+
+I granted BUILD-HIGHLIGHT `optics.rs` to fix the specular fringe. **They
+declined to edit it**, and their reasoning is better than my brief was. This is
+the correct outcome and it is the second time tonight a lane has been right
+against me.
+
+### My premise failed on one number
+
+I argued the fringe lives past `support_r_max = 0.788`, where the CA profile
+extrapolates 1.27x beyond its data. Per-annulus medians of `(R-G)/Y` on
+`coffee-bubbles`, correction on:
+
+| r | 0.04 | 0.37 | 0.61 | 0.86 |
+|---|---:|---:|---:|---:|
+| median | **-0.2588** | -0.26 | -0.28 | **-0.3549** |
+
+**At r = 0.04 -- on axis, where lateral displacement is identically zero -- the
+deficit is already 74% of the corner value.** Direct annulus medians, not a fit.
+And only **1.3%** of the population lies past r = 0.788.
+
+> **A defect that is 74% present on axis is not a radial defect.** I had a
+> radial statistic, a radial mechanism and a radial remedy, and never checked
+> the intercept.
+
+My three proposed remedies -- clamp, taper, higher-order term -- targeted the
+minority of a minority.
+
+### They were also out of transform class
+
+`compose` at `:296` returns a **`Similarity`**: a uniform scale `s = 1+eps`,
+with no radius in it. `warp_frame_in_place` takes a Similarity, and the doc says
+outright *"a single similarity -- adds no second resampling pass."*
+`support_r_max` is read **only by a test**, at `:1301`.
+
+So clamp, taper and a higher-order term are not merely unwise, they are
+**non-expressible** in the transform the pipeline applies. Each needs a second
+resample, which adds a low-pass to R and B -- pushing *toward* the defect, since
+the defect is red losing amplitude on fine features.
+
+**My prior "clamping beats extrapolating" is neither confirmed nor refuted; it
+is unreachable.** And what data exists leans against it. Outer annuli, CA
+**off**: `-0.34, -0.13, -0.15, -0.55`. CA **on**: `-0.28, -0.28, -0.33, -0.35`.
+**The correction stabilises the outer field.** That also carries section 73's
+band-4 wobble forward with a partial explanation -- it is a CA-**off**
+phenomenon, at 1.3% occupancy, small-sample variance not excluded.
+
+### Two withdrawals, both against themselves
+
+**The `eps_r` lead was dead and the retraction was three pages above the table
+they quoted.** The 500.9-651.9 ppm per-stack fits are *raw and attenuated*
+(x0.69-0.94); de-attenuated they form a band **centred on -704.5**. They had
+compared attenuated numbers against a de-attenuated scalar. I had escalated it
+to "above every single fit that informed it." Separately M113 already rejected a
+global rescale -- gain 1.2496 on bee against 1.0557 on couch, *"does not
+transfer"* -- and `captures-needed.md` says x0.692 **"must not ship."**
+
+**The axial-CA attribution was refused outright.** Two instruments, opposite
+signs: mean-normalised gave red **-85%** (rejected: conflates level with
+sharpness, and disagrees with M107's 8.96-14.74% by an order of magnitude);
+variance-normalised, calibrated on planted blur, gave red **+42%** (rejected: a
+high-frequency *fraction* is inflated by noise and red has the worst SNR here).
+
+> *"Reporting either would be choosing the one that suited my hypothesis."*
+
+They committed the rejected script **marked REJECTED in its own header** rather
+than deleting it. A rejected instrument left in the tree with its verdict
+attached is worth more than a clean directory.
+
+### The claim of mine it took down
+
+In section 71 I wrote **"the merge is innocent"** on the strength of
+`pyramid.rs:990-993` computing `den` once on green luma and sharing it across
+planes: *a shared scalar cannot manufacture chroma*.
+
+The scalar argument is sound and the 15.5% measurement stands. **The conclusion
+does not.** A shared *selection* is not a shared *amplitude*: R and B are elected
+at **green's** best focus rather than their own, and under longitudinal CA those
+are different frames -- `k_R - k_G` = **-0.67 to -1.07 frames**, red forfeiting
+**8.96-14.74%** of its gradient energy (M107 fact 1413). That is not
+manufactured chroma, it is **differential defocus**, and unlike lateral CA it is
+field-wide.
+
+Which is exactly the shape of the measurement: **74% on axis.**
+
+> **The three lines I cited as exculpatory are the prime suspect.** I proved the
+> merge could not do one thing and concluded it had done nothing.
+
+A channel elected at the wrong focus is defocused across the whole field and
+loses most on the narrowest features -- which is a specular-on-dark subject,
+which is all three affected subjects.
+
+**Routed to the election lane, not to optics.** The discriminator is fact 1417's
+per-channel focus-index offset. Recommendation accepted in full: **do not change
+`optics.rs`.** The correction is right in magnitude, its rescale is already
+rejected, its support limit governs 1.3%, and it demonstrably steadies the outer
+field.
