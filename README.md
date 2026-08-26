@@ -230,18 +230,60 @@ else**: `tweezers-cpl`, `leaf-2-cpl` and `flower-bud-with-background-fern-cpl`.
 That is not a contradiction; it is the distinction the tool exists to draw. A
 gallery that showed only one of the two tags would be hiding it.
 
-Across all 26 subjects and 64 evidence-bearing sites, **zero were limited by the
-merge**. All 14 defective subjects are capture-limited — 10 by a bracket that
-ran out of focus travel before covering the subject, 4 by a subject that moved.
-The remedy for those is a different capture, not different software, and the
-gallery now says which and by how much (`13/24 blocks, all far` tells you the
-bracket needed to extend further, and in which direction).
+Across all 26 subjects and **51 distinct evidence-bearing sites**, zero were
+limited by the merge. All 14 defective subjects are capture-limited — 10 by a
+bracket that ran out of focus travel before covering the subject, 4 by a subject
+that moved. The remedy for those is a different capture, not different software,
+and the gallery now says which and by how much (`13/24 blocks, all far` tells
+you the bracket needed to extend further, and in which direction).
 
-That claim is not yet mine to make. It is BUILD-TRIAGE's, and it is under
-independent re-test right now, because **a count of zero reads identically
-whether nothing was wrong or the detector cannot fire**. Until a planted merge
-defect is shown to flip a subject to merge-limited, the zero is unconfirmed and
-is labelled as such.
+**That count used to read 64 and it was inflated by double-counting.** An
+independent re-test found 13 of the 64 were one block counted twice under two
+labels — `bee-1-cpl`'s DETAIL and SOURCE-BEST are the identical measurement,
+8463.3 and 8925.9 DN/px, listed as two sites. 51 is the number of distinct
+`(subject, block)` pairs.
+
+**The zero has now survived the test it needed, and the test says less than the
+sentence above sounds like.** A count of zero reads identically whether nothing
+was wrong or the detector cannot fire, so a merge defect was planted — Gaussian
+blur applied to the merged master alone, sources untouched, hash-verified per
+rung — and the classifier does flip:
+
+| subject | flips to MERGE-LIMITED at |
+| --- | --- |
+| `109MSDCF` (worst site already near parity) | **0.4 px** |
+| `bee-3-cpl` (merge starts 1.81x ahead at DETAIL) | **1.8 px** |
+
+The two thresholds differ because the flip point measures *subject headroom*,
+not detector floor: a plant must first erase the lead the merge already has. On
+a subject at parity the detector fires between 0.3 and 0.4 px. **The detector is
+potent and the zero is a real measurement.**
+
+Three things the same re-test found wrong, all of which narrow the claim:
+
+- **The margin is 7%, not 39%.** The headline paired the maximum of one
+  statistic with the threshold of another. The classifier tests
+  `blur_equiv_px`; the corpus maximum is **0.746 px** against a 0.80 px
+  threshold. Three subjects sit within a factor of 1.63 of it. Fragile at the
+  top, robust below — 19 of 26 subjects read exactly 0.000.
+- **The 0.80 px threshold was never pre-registered.** `git log -S` over all
+  refs finds it in a single commit, and the classifier's mtime is later than
+  every measurement it judges. It is a post-hoc threshold, which is not the same
+  as a wrong one, but it may not be quoted as a prediction that held.
+- **The scope is narrower than "the merge is never the bottleneck."** Only
+  Gaussian blur was planted, and the statistic behind the verdict is a p99.5
+  gradient percentile. A *pedestal-shaped* defect — a veil, a tone shift, a DC
+  offset — does not change local slope and would score 0.00 px at every one of
+  the sites. So the honest claim is **no merge defect of a resolution
+  character**, and the veil described below is precisely the class the
+  instrument cannot see.
+
+One risk remains open and unmeasured, and it is the largest: the capture-limited
+verdicts are adjudicated *before* the merge test runs, so a false coverage-gap
+or motion call would mask a merge verdict underneath it. Three subjects
+(`lead-1-cpl`, `dry-erase-marker-head-cpl`, `flowers-cpl`) carry 1.41–3.00 px
+merge deficits at sites that the earlier rules route away. Nobody has yet shown
+those routings are correct.
 
 What is not fixed: a *veil* at occlusion boundaries. Its mechanism is measured
 rather than guessed — the merge selects the right frame, and the veiled detail

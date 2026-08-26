@@ -379,11 +379,23 @@ They are not the same question, and three subjects here are
 it is the distinction the tool exists to draw: retouch-this versus
 reshoot-this. Hover a capture tag for the number behind it.
 <br><br>
-Across all 26 subjects and 64 evidence-bearing sites, <b>zero</b> were limited
-by the merge; all 14 defective subjects are capture-limited &mdash; 10 by a
-bracket that ran out of focus travel, 4 by a subject that moved. That claim is
-BUILD-TRIAGE's and is currently under independent re-test, because a count of
-zero looks identical whether nothing was wrong or the detector cannot fire.
+Across all 26 subjects and <b>51 distinct</b> evidence-bearing sites, <b>zero</b>
+were limited by the merge; all 14 defective subjects are capture-limited
+&mdash; 10 by a bracket that ran out of focus travel, 4 by a subject that moved.
+<br><br>
+That count read 64 until an independent re-test found 13 of them were one block
+counted twice under two labels. The same re-test <b>confirmed the zero is
+real</b>: a merge defect was planted (blur on the merged master alone, sources
+untouched, hashed per rung) and the classifier does flip &mdash;
+<code>109MSDCF</code> at 0.4&nbsp;px, <code>bee-3-cpl</code> at 1.8&nbsp;px,
+the difference being subject headroom rather than detector floor. But it
+narrowed the claim in three ways: the margin is <b>7%, not 39%</b> (closest
+approach 0.746&nbsp;px against a 0.80&nbsp;px threshold); that threshold was
+never pre-registered; and only blur was planted, so the verdict means <b>no
+merge defect of a <i>resolution</i> character</b> &mdash; a pedestal-shaped
+defect like the veil below would score 0.00&nbsp;px and go unseen. The
+capture-limited verdicts are also decided <i>before</i> the merge test, so a
+wrong routing there could hide a merge verdict underneath it.
 </div>
 <div class="note">
 <b>What is verified.</b> Thirteen subjects have been judged print-worthy by eye at
