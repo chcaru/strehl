@@ -5064,3 +5064,117 @@ the flip does not need the defect to be universal.
 > region, which is a better object than the one it started with. The failure to
 > reproduce is the most valuable row in the section and is reported as such.
 
+
+---
+
+## 48. The softness had a cause, it was in the path nobody measured, and it is recoverable
+
+BUILD-SHARP was re-tasked into its own lane -- price the resampling chain by
+*phase*, not by count -- after its Catmull-Rom refutation killed my skip-guard
+request in section 43. It returned the largest quality finding the project has
+produced.
+
+### 48.1 The finding
+
+The audit enumerated every resampling site from ARW decode to final TIFF and
+partitioned them: **8 sites -> 2 PRICED / 4 NOT-ON-THIS-PATH / 2 NOT-A-RESAMPLE
+/ 0 COULD-NOT-INSTRUMENT, summing to 8.**
+
+The alignment gather's phase, measured on a real warpmap rather than assumed --
+40,700 samples across 20 frames -- is **near-uniform**: mean distance-to-integer
+0.2369, p99 0.4942, **57.3% of samples further than 0.2 from an integer**. That
+kills the comfortable assumption that alignment shifts are small enough to be
+free.
+
+Composed retained amplitude in the **viewable** render:
+
+| f | green | red/blue |
+| ---: | ---: | ---: |
+| 0.25 | 0.890 | 0.784 |
+| **0.35** | **0.691** | **0.471** |
+| 0.50 | 0.421 | 0.199 |
+
+**At f=0.35 the render the photographer looks at keeps 69% of green and 47% of
+red and blue.** The single largest contributor at 0.25 and 0.35 is a fixed
+`phi=0.25` chroma co-site applied on **both axes**, **serially after** the
+alignment gather, at `image_out.rs:956-957`.
+
+### 48.2 The part that is a lesson rather than a bug
+
+Co-siting runs only inside `write_binned` -- the **viewable** path. Every ESF
+sharpness number this project has taken was measured on `linear.tif`, which
+never passes through it.
+
+> **An instrument aimed at the measurement path can be blind to everything that
+> happens on the delivery path.** The project measured sharpness for weeks on a
+> file the photographer never sees, and the largest single amplitude loss in the
+> pipeline sat in the difference between the two. Whenever a tool has a
+> "measurement output" and a "viewable output", the defect budget must be
+> computed for **both**, or the honest linear file becomes an alibi for the one
+> that ships.
+
+This is the same failure class as section 45, where the shipped default backend
+drew the patchwork while every quality measurement was taken on the other one.
+Twice in one night, the thing being measured was not the thing being delivered.
+
+### 48.3 The fix, and checking it before it ships
+
+`gather_checked` (`warpmap.rs:441`) is per-plane and takes a `Similarity`. A
+constant translation composes exactly, so the co-site can be folded into the R
+and B gather transforms and the serial `resample_shift` deleted: same samples,
+same kernel, one resample instead of two. It commutes with the merge because it
+is an identical shift on every frame, so it passes through a weighted mean and
+an argmax alike.
+
+BUILD-SHARP predicted **1.128 / 1.438 / 2.004x** amplitude recovery on R/B at
+f = 0.25 / 0.35 / 0.50, i.e. **+20.6 points at f=0.35**.
+
+A code change was about to ship on that number, so it was re-derived
+independently from the basis polynomials, importing no project code
+(`experiments/ORCH-drift-check/cositecheck.py`):
+
+| f | independent | BUILD-SHARP | delta |
+| ---: | ---: | ---: | ---: |
+| 0.25 | 1.1346 | 1.128 | +0.6% |
+| 0.35 | **1.4677** | **1.438** | +2.1% |
+| 0.50 | 2.1157 | 2.004 | +5.6% |
+
+with `taps(0)` exactly `[0,1,0,0]`, taps summing to `1.000000000000` at
+`phi=0.25`, and amplitude exactly 1.0 at `phi=0`. **Two independent derivations
+agree within 2.1% at the bands that matter**, so the prediction is sound as
+arithmetic and the residual risk is entirely in the implementation.
+
+The control that decides whether the fix pays: folding a constant offset into
+the gather's own phase distribution must be cheap. On a synthetic near-uniform
+phase it costs **-0.03% / -0.10% / -0.07%** -- free, because a uniform
+distribution is invariant under a constant offset. BUILD-SHARP measured
+0.6 / 2.0 / 5.3% on the real distribution, which is not perfectly uniform; that
+is the more conservative figure and it is the one to quote.
+
+### 48.4 What was routed, and the three ways it can still go wrong
+
+Implementation went to a fresh agent, not to the author of the analysis. The
+risks named to it, none of which are about the arithmetic:
+
+1. **Sign.** Backwards, and R and B shift the wrong way -- which presents as
+   lateral chromatic aberration, on a build where lateral-CA correction is now
+   default-on and certified. A sign error would be easy to misattribute to CA
+   and hard to unpick.
+2. **Planes.** R and B only, G untouched. The bit-identical-G hash is the
+   placebo, and it has to be *run*, not argued.
+3. **Replacement, not addition.** If the fold sits alongside the serial call
+   instead of replacing it, the output gets a full extra 0.25 shift. The
+   positive control catches it: R/B would get *softer*, not sharper.
+
+And the measurement itself has a trap already stepped on once: the A/B must be
+measured on the **viewable sRGB render**, because that is the only path the
+co-site is on. Measured on the linear path the fix will appear to do nothing.
+
+### 48.5 Rule
+
+> **Check a prediction from first principles before code ships on it, and check
+> the enabling condition separately from the effect.** Here the effect
+> (1.438x) and the condition (folding is free) are different claims with
+> different failure modes, and only the second one determines whether the fix
+> pays for itself.
+
