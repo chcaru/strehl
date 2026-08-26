@@ -2653,3 +2653,138 @@ Two instrument failures found while doing it:
   fresh and re-runs the **sabotaged** binary. The first commissioning run
   reported "STILL RED AFTER RESTORE" on a file that was already correct on
   disk. Use `shutil.copy` and `touch()`.
+
+---
+
+## 28. The window shrink comes back, and my deletion of it was one-sided
+
+`57e4554` deleted the noise-driven window shrink. BUILD-RENDER's dated gallery
+delta charged that deletion **-6.6% gradient RMS across the library** --
+seventeen of 26 subjects softer, nothing gained more than 2.8% -- and bisected
+it to that commit with separate `git archive` pins. ORCH asked for a restore or
+a library-wide proof that the geometric cap subsumes the term. I restored it.
+
+### 28.1 What I actually measured, and what I concluded from it
+
+I measured **background noise in flat patches** on `bee-2-cpl`, found up to
++18.7%, and wrote that the term "buys nothing". Every number in that commit
+message is still true. The inference is what failed.
+
+Flat patches are the one regime where this rule is silent by construction: a
+peak that clears no noise floor keeps the shipped radius, so in a flat patch the
+term does nothing but add the noise of a smaller window wherever the texture is
+just strong enough. **I sampled the cost everywhere and the benefit nowhere.**
+`a_peak_that_clears_no_noise_floor_keeps_the_shipped_window` now pins that
+regime, so the same measurement cannot be read the same way twice.
+
+This is a different failure from the ones above. Sections 26 and 27 are cases
+where an instrument lied. Here the instrument was honest and I asked it half a
+question.
+
+### 28.2 The cap does not subsume the term, and the reason is my own veto
+
+Both arms from ONE binary via the new `STREHL_ACUITY` switch:
+
+| subject | veto admits | by radius, acuity OFF | by radius, acuity ON |
+| --- | --- | --- | --- |
+| `couch-fibers-cpl` | 1.04% | r13 **99.93%** | r1 45.86% r2 25.30% r4 17.93% r13 3.42% |
+| `bee-2-cpl` | 4.40% | r13 **99.67%** | r1 43.31% r2 9.40% r4 7.98% r13 34.80% |
+
+`ce2c793`'s veto refuses the geometric collapse wherever no second layer is
+resolvable. On a subject with no depth silhouettes that is almost everywhere, so
+**r_geom is very nearly inert on exactly the subjects the deletion hurt.** With
+the noise term gone there was nothing left to adapt the window at all and the
+whole frame elected on a 13 px box. That is the softening.
+
+The argument in `57e4554` -- "contamination requires a window spanning two
+depths, which happens only near a silhouette, and there the geometric cap is
+already the smaller of the two" -- is correct about **halo**, and it is still
+correct. It is silent about **detail**, which is what the other 99% of the frame
+is made of. I generalised a statement about edges into a statement about images.
+
+### 28.3 What restoring it recovers, and what it costs
+
+Reported separately on ORCH's instruction, because the two move in opposite
+directions and one combined score would hide the trade:
+
+| subject | sharpness @ viewing scale | sharpness @ 1:1 | background noise |
+| --- | --- | --- | --- |
+| `couch-fibers-cpl` | **+6.56%** | +9.58% | +3.29% |
+| `bee-2-cpl` | **+6.00%** | +10.16% | -0.02% |
+
+BUILD-RENDER charged the deletion **-6.58%** on `couch-fibers-cpl` (0.9342
+against the audited reference). Restoring it returns **+6.56%** -- from a
+different harness, a different metric implementation, and one binary with an env
+switch rather than two pinned builds. Two independent instruments agreeing to
+two decimal places on a number neither was tuned against.
+
+The noise cost is real and it is an eighth of the size of the recovery. It is
+also far below the +18.7% I once priced the whole term at, because that figure
+came from the pre-veto code where the term fired in different places.
+
+**Looked at, not just measured.** 100% crops at the *sharpest* tile of the OFF
+arm -- chosen from one arm so the choice cannot chase the effect, and the
+hardest place to show a win: filament edges crisper, adjacent fibres separated
+rather than blended, `bee-2-cpl` wing venation and micro-hairs distinctly
+resolved.
+
+### 28.4 Composed rather than reverted
+
+Three later commits of mine touched `edgeaware.rs`, so `git revert` would have
+dropped the veto and the dead-ground refusal with it. `tighten_by_acuity` is a
+separate `min`-ing pass over the geometric result. The signal term can therefore
+only ever **tighten**: a rule that could raise a radius would silently overturn
+a decision the veto had already made for reasons of its own.
+
+`the_radius_is_monotone_in_the_distance_from_the_step` -- written by `57e4554`
+specifically to reject any term that reads the image -- is **narrowed, not
+deleted**. Its monotonicity reasoning is sound; the conclusion drawn from it was
+not. It now pins the property `from_silhouettes` is actually responsible for,
+and its own docs say what overturned its former scope.
+
+### 28.5 The commissioning caught a defect in my own test
+
+The first `the_acuity_term_only_ever_tightens` passed, and proved nothing. It
+used an excess of `1e6` at every pixel, which drives the acuity level to the
+minimum everywhere -- and there `min(lv, 0)` and a bare `lv = 0` **agree**. The
+sabotage harness caught it going green with the `min` deleted.
+
+Rewritten with a *weak* excess against a guide that has a real step, which is
+the fixture that discriminates: `min` keeps the collapse, assignment releases
+it. A second assertion drives it with unlimited signal so that a
+`tighten_by_acuity` whose body was deleted entirely would also fail. 3/3
+sabotages now RED.
+
+**The generalisable form: a fixture that saturates the quantity under test
+cannot discriminate rules that differ only away from saturation.**
+
+### 28.6 A stale comment that had become actively misleading
+
+`merge_cmd.rs` carried, as the documented cause of this subject's softening,
+that `from_silhouettes` "collapses nearly everywhere" on `couch-fibers-cpl`.
+Measured: r13 on **99.93%** of the plane. It collapses almost *nowhere*. The
+claim was true when written and the veto falsified it. The paragraph is marked
+superseded in place rather than rewritten, because the reasoning that follows it
+is what produced the veto and is still correct -- only its factual premise
+expired.
+
+### 28.7 The freeze rows, re-baselined to the registry's own standard
+
+Both `coffee-bean` rows moved. Attribution is proven by **isolating the
+variable**: with `STREHL_ACUITY=0` the current binary reproduces both superseded
+baselines bit-exactly, and with it unset reproduces both new values bit-exactly.
+Both arms are required -- "off reproduces the old bytes" alone would also be
+satisfied by a build that ignored the flag and moved nothing.
+
+Both rows moving together is the correct localisation signature: the election
+runs before warp application and is shared by both rows, so a merge-core change
+must move both.
+
+**One more instrument failure, in the tool built to diagnose instrument
+failures.** The attribution script first omitted `--merge estimator` and
+`--photometric off`, which `byte-freeze.rs` passes explicitly because both
+defaults have moved since these rows were frozen. The tool **refused** the flag
+combination rather than rendering a different pipeline quietly -- and that
+refusal is the only reason the omission did not produce a confident, wrong
+attribution. This file's own header defect, arriving inside the script written
+to honour it.

@@ -35,7 +35,19 @@ Write-Output "BINARY $Exe"
 Write-Output "SHA256 $hash  -- every arm below comes from this one file"
 Write-Output ""
 
-$subjects = @("couch-fibers-cpl", "bee-2-cpl")
+$subjects = @(
+    "couch-fibers-cpl",
+    "bee-2-cpl",
+    # The rest of the subjects BUILD-RENDER's gallery delta charged most
+    # heavily to `57e4554`. ORCH's standing gate is a 26-subject delta; this is
+    # the seven worst, which is what fits, and the full gallery is handed to
+    # BUILD-RENDER as independent verifier rather than claimed here.
+    "bee-1-cpl",
+    "highly-angled-ruler-mm-cpl",
+    "dry-erase-marker-head-cpl",
+    "bee-3-cpl",
+    "pencil-steep-angle-cpl"
+)
 $arms = @(
     @{ tag = "acu-off"; acuity = "0" },
     @{ tag = "acu-on";  acuity = "1" }
