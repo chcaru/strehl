@@ -2581,3 +2581,192 @@ exist above red's Nyquist but not what they look like on a bee. And I did not
 measure the merge's own contribution at all; §21.6's question about whether the
 per-tile survey compares against a warped or unwarped reference is still open and
 still cheap, and it is the one I would spend the next hour on.
+
+## 23. Wiring `restore.rs`: three sub-tasks settled, the seam re-measured, and two of my own predictions refuted
+
+Assignment: `crates/strehl-core/src/restore.rs` is finished, self-testing, and
+has zero callers in any shipped binary. Wire it behind a flag, default off,
+and report the trade. Pinned HEAD `ab0d71a5810667c66dcb2a8641b15c5174937c57`.
+
+This section reports what is settled. **The flag is not landed and the trade
+curve is not measured.** Both reasons are given in 23.5, and the first is a
+correction to the seam I reported to ORCH as narrow.
+
+### 23.1 `selftest()` runs, and the "known defect" is in the brief, not the code
+
+The working tree does not compile -- another agent's edit at `merge.rs:2865`
+calls `est.enable_veil(1.5, 3.0, 0.5)` against a four-argument signature. I
+built a clean tree with `git archive ab0d71a5 | tar -x` at
+`C:\dev\strehl-out\BUILD-SHARP\pin-ab0d71a5` and ran there:
+
+    cargo test -p strehl-core --lib restore    ->  10 passed, 0 failed
+
+`kernels_are_interpolating_and_preserve_dc` calls `selftest().unwrap()`, so
+`selftest` is on the tested path rather than merely present.
+
+ORCH reported a defect: `restore.rs:573`'s constants documented at f = 0.35 but
+actually at f = 0.40. **There is no defect.** I re-derived the phase-averaged
+Catmull-Rom MTF from the basis polynomials, independently of the module:
+
+| f | 0.25 | 0.35 | 0.40 | 0.50 |
+| --- | --- | --- | --- | --- |
+| phase-averaged CR | 0.94024 | 0.82113 | 0.74255 | 0.62500 |
+
+Line 573 reads `[(0.25, 0.9402), (0.40, 0.7425), (0.50, 0.6251)]`. Every
+abscissa is correctly labelled. The header's separate claim -- that the
+Lanczos-3 / Catmull-Rom ratio peaks at 13.3% -- I located at **f = 0.350**
+(ratio 1.1300), also correctly labelled. `docs/research/V-chroma2.md:388-404`
+had already reached this conclusion by a different route. Three independent
+derivations agree, so the mislabel is in the brief. No code change.
+
+### 23.2 `sharpen_per_octave` is orthogonal to restoration -- confirmed, by structure
+
+ORCH asked whether `MergeConfig::sharpen_per_octave` (default 1.4) is partly
+compensating the gather loss by accident, in which case wiring restore on top
+would over-sharpen. Read at `pyramid.rs:772-825`: the ramp is an **exponent on
+a convex combination across frames within a band**, bounded by
+`Hull::InputRange`. A convex combination cannot exceed the largest input, so
+the band's output amplitude is bounded by the **best single frame's** amplitude
+in that band.
+
+The gather loss is **common-mode**: every frame is resampled, so every frame
+has already lost the amplitude before the combination runs. A selectivity
+exponent redistributes weight among frames that have all paid the same cost; it
+cannot recover an amplitude that is absent from all of them. The two knobs
+therefore address disjoint quantities and are not redundant. This is a
+structural argument, not a measurement, and it is falsifiable: if restore at
+unit gain measurably changes with `--pyramid-sharpen`, I am wrong.
+
+### 23.3 Placement: (b), and the reason is not the one I argued
+
+`experiments/BUILD-SHARP/src/restore_placement.py`. The restoration is run by
+the shipped Rust (`restore-plane.exe` from the pinned tree), not transcribed.
+
+**My prediction, on record before running:** `restore_plane` is a symmetric
+FIR, hence linear and shift-invariant, hence it commutes exactly with a
+fixed-weight mean, hence placement cannot change noise and ORCH's prior for (b)
+would be right only on cost.
+
+**Refuted.** At fixed equal weights, K=8, on a 2600 DN signal:
+
+    max |R(mean) - mean(R)| = 4.408e+01 DN     float precision would be < 1e-3
+
+`RestoreConfig::gain(f, signal_power)` is Wiener and `design_fir` fits the
+filter to the spectrum of the plane it is handed. Restore is **data-adaptive**,
+not a fixed operator, and adaptive operators do not commute with averaging.
+
+The direct measurement, flat field, absolute DN:
+
+| arm | flat sd | flat mean |
+| --- | --- | --- |
+| unrestored merge | 11.074 DN | 400.01 DN |
+| **(b) merge then restore** | **12.205 DN** | 400.01 DN |
+| (a) restore then merge | 14.390 DN | 400.04 DN |
+
+**(b) wins on measured noise**, by 18% against (a), for the same operator.
+Means are reported alongside because a ratio hides an additive bias; they agree
+to 0.03 DN, so the sd comparison is between arms at the same level. ORCH's
+prior was right and my argument for indifference was wrong. Placement is (b).
+
+### 23.4 The mechanism is NOT established, and my second attempt at it also failed
+
+I first attributed the non-commutation to per-frame noise inflating each
+plane's S(f). Probe: divide the per-frame noise by 100. The gap fell only to
+**x0.8923**. That refuted the attribution, and I had written the conclusion
+into the script's output before running it -- the script printed a claim its
+own numbers contradicted. That is the failure this project keeps logging and I
+reproduced it.
+
+So I ran a factorial, `experiments/BUILD-SHARP/src/restore_commute_2x2.py`,
+separating the two live candidates -- the per-plane spectral fit (isolated by
+giving every frame the same blur phase) and the `gain_cap` nonlinearity
+(isolated by raising the cap out of reach):
+
+| | cap = 1.4 | cap = 1e6 (off) |
+| --- | --- | --- |
+| varied phase, noisy | 4.310684e+01 | 4.596555e+01 |
+| varied phase, quiet | 6.934738e-02 | 8.224487e-02 |
+| EQUAL phase, noisy | 4.451508e+00 | 4.451508e+00 |
+| **EQUAL phase, quiet (null)** | **5.493164e-04** | **4.882812e-04** |
+
+Readings:
+
+- **The null passes.** Identical planes commute to 5.5e-4 DN, below the 1e-3
+  float floor. The harness is sound, so the large numbers are findings.
+- **`gain_cap` is refuted as the cause.** Removing it changes nothing; the
+  equal-phase-noisy row is bit-identical at 4.451508 both ways.
+- **Both noise and phase variation contribute, and they interact.** Quiet rows
+  are ~0, so noise is necessary; but at equal noise, varied phase is 43.1
+  against 4.45, a factor of ten.
+- **This contradicts the noise/100 probe of the previous paragraph**, and the
+  discrepancy is my error: that probe held the `sigma2` *parameter* at 144
+  while the data noise went to 0.12, so it varied the data and the regulariser
+  independently without saying so. Here `sigma2` tracks the data.
+
+My current hypothesis is that the Wiener design's sensitivity to the per-plane
+spectrum is largest when sigma^2 is comparable to the signal power -- which is
+the regime the calibrated model actually puts us in -- so the filter genuinely
+differs plane to plane. **I am labelling this UNRESOLVED rather than asserting
+it.** I have been wrong twice on this operator's mechanism in one sitting.
+
+**The placement verdict does not depend on it.** 23.3 is a direct measurement
+of noise in both arms; it stands whatever the mechanism turns out to be.
+
+### 23.5 The seam is wider than I told ORCH, and that is why nothing is landed
+
+I reported the wiring point as a ~15 line edit at `merge_cmd.rs:5824`. Having
+now read it properly, that was wrong in two ways.
+
+1. **`write_merged` has no `NoiseModel` in scope.** Its signature at
+   `merge_cmd.rs:5611` is `(merged, levels, wb, xyz_to_cam, space, demosaic,
+   exposure, path)`. The only locals near the seam are `range`, `gains`,
+   `black`. ORCH's instruction is that sigma^2 must come from the calibrated
+   model and not be chosen; `profile::noise_model_for` is called at
+   `merge_cmd.rs:2724` and `:4242`, both far above. So sigma^2 has to be
+   threaded in. The narrowest form is to compute it in the caller, where
+   `noise` is live, and pass one `Option<RestoreConfig>` parameter -- a type I
+   own, keeping the noise logic out of the shared file.
+2. **There are three writers, not one.** `write_merged` is called at
+   `merge_cmd.rs:3859` and `:4485`, and `stack.rs:1109-1178` carries a
+   *mirrored copy* of the same demosaic branch, by its own comments. Wiring one
+   and not the others produces a build where the flag silently does nothing on
+   some paths, which is the exact class of defect this assignment exists to fix.
+
+ORCH's constraint is "keep your edit to the narrowest possible seam" in a file
+with several live agents. A signature change plus three call sites plus a
+mirrored branch in `stack.rs` -- which is not my file -- is not that. **I am
+handing the routing decision back rather than taking it unilaterally.**
+
+What I need from ORCH: either (i) confirmation that I may change
+`write_merged`'s signature and touch `stack.rs`, with the other agents in those
+files told, or (ii) a decision to wire only the `blend-render` gallery path,
+which is what the reference renders actually use, and accept that `stack` is
+unflagged for tonight.
+
+### 23.6 Not done, and not to be read as done
+
+- **The trade curve is not measured.** No strength sweep, no A/B render.
+- **The overshoot guard is not run.** ORCH pre-registered it and it is the one
+  way this change can make the owner's loudest complaint worse. The baseline to
+  beat is on record: monotonic from d=1 to d=275 px with no interior local
+  maximum on `flower-bud`. I do not have camera-linear renders of
+  `flower-bud-alone-cpl` or `lavendar-cpl`; `BUILD-SHARP/renders/` has neither,
+  so this needs a re-render before it can be run at all.
+- **`accept.py` cost columns are not run.**
+- **The flag does not exist.** Nothing in this section changed any shipped code
+  path; `restore.rs` is still unreachable from every binary.
+
+Standing, unchanged: `restore.rs` needs an independent verifier and I authored
+both it and the applicator, so 23.1's "no defect" finding is mine to report and
+not mine to close.
+
+### 23.7 What I would tell the owner
+
+The restoration is real, its transfer function is the best-characterised of any
+sharpness lever here, and it is measurably safe to place at (b). But an
+unmeasured sharpener shipped on a night when the complaint is halos is a bad
+trade at any gain, and the guard that would catch that has not been run. My
+recommendation on the default is therefore **off**, and it will stay off until
+the overshoot trade curve exists -- not because I doubt the module, but because
+ORCH asked for the default to be set by measurement and the measurement is the
+part I did not reach.
