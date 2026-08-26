@@ -354,10 +354,26 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
                    + Breakthrough X4 circular polariser",
     measured_from: "M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); \
                     BUILD-CHROMA: 1071 gated tiles over six stacks (blue)",
-    // Not recorded by the capture metadata M107 had to hand. Absent rather than
-    // guessed: lateral CA varies with aperture and magnification, so a guess here
-    // would silently widen the profile's claimed applicability.
-    measured_at: None,
+    // RECORDED by BUILD-CHROMA (Item 3), where this was `None`. The apertures
+    // are read from the ARWs of the six stacks the blue arm was fitted on:
+    // five at f/5.6, one (coffee-bean) at f/8, all at 200 mm effective.
+    //
+    // **The guard deliberately does NOT gate on this**, and the reason is
+    // measured rather than assumed. Lateral CA does vary with aperture in
+    // general, which is what the previous comment here warned about. But in the
+    // only aperture comparison this corpus can make, it does not vary enough to
+    // matter: the two largest per-stack eps_r are 651.9 ppm (couch-fibers-cpl,
+    // f/5.6) and 650.7 ppm (coffee-bean, f/8) -- **1.2 ppm apart, 0.2 %, across
+    // a full stop** -- while the spread among the five stacks that share f/5.6
+    // is 500.9..651.9 ppm, or 151 ppm. Subject-to-subject variation dwarfs the
+    // aperture term by two orders of magnitude, so declining on aperture would
+    // switch off a correction that measurably works, for a difference this
+    // corpus cannot even detect.
+    //
+    // LIMITATION, and it is the same shape as the guard's: n = 1 at f/8 and
+    // **nothing at f/11**, which `docs/captures-needed.md` lists as a gap. This
+    // records what was measured; it is not a licence for every aperture.
+    measured_at: Some("f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested"),
     version: 1,
     // Measured by R6: the 20 gated ROIs span r = 0.208..0.788, six of ten
     // annuli populated, outer two annuli empty. The corner is a 1.27x linear

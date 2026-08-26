@@ -1568,3 +1568,232 @@ exercise the guard's negative path end to end and give the corpus its first non-
 sample. I have **not** written this into `docs/captures-needed.md` — that file is ORCH's and
 they said they are actively collecting asks into it tonight, so editing it is exactly the
 collision I have avoided all night. Handing it over instead.
+
+## 23. V-CA follow-up: the inverted status line, blue's arm, and aperture
+
+Three items from V-CA's audit (`docs/research/V-ca.md`, `ec5ec9e`). Item 1 landed
+at `48d3acb`; items 2 and 3 are below. **I did not verify any of this myself** —
+project rule — so everything here is "what I ran", not "what passed".
+
+### 23.1 Item 1 (P0) — reproduced, then fixed at the decision rather than the label
+
+I reproduced the inversion before patching, at HEAD `e718c46`, and it was **not**
+where V-CA said it was. `merge_cmd.rs:3842` had already been fixed by another
+lane at `3a22fd2`. The identical defect was still live, verbatim, in
+`crates/strehl-cli/examples/blend-render.rs:296-302` — which matters more than it
+sounds, because `blend-render` **is the A/B harness**. The instrument that lies
+about which arm is on was the one everybody measures with.
+
+Actual stdout, `coffee-bean`, `--limit 2`:
+
+```
+##### ARM 1: STREHL_FIX_CA UNSET #####
+lateral CA      : off (STREHL_FIX_CA unset)
+##### ARM 2: STREHL_FIX_CA=off #####
+lateral CA      : CORRECTING, profile "off"
+```
+
+Both rows are wrong, and I byte-proved the labels are backwards rather than
+trusting the text. `--chunks` is not exposed on `blend-render`, so I carried a
+re-run of the same arm as the determinism control:
+
+| render | sha256 (first 16) |
+| --- | --- |
+| `br_unset` | `13C89646A9655F42` |
+| `br_unset2` (control, same arm) | `13C89646A9655F42` — deterministic |
+| `br_off` | `3DBAED9940C3C235` — differs |
+
+The arm labelled `off` is the one that moved the pixels.
+
+**The fix relocates the decision instead of inverting a second reconstruction.**
+`optics.rs` gained `CaReason`, `CaDecision`, `resolve_for_capture` and
+`resolve_for_capture_env`, and `profile_for_capture` became a one-line
+*projection* of the resolver — so the reported profile and the applied profile
+are now literally the same value, not two values that agree. `CaDecision`'s
+`Display` takes the CORRECTING/off word from `self.profile` and **never** from
+the reason, so a disagreement prints as visibly odd rather than confidently
+wrong. After:
+
+```
+ARM 1 (unset): CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched "ILCE-7CM2" / lens 33094; default on)
+ARM 2 (off):   off (operator asked for "off")
+ARM 3 (named): CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (operator asked for "a7c2-fe100gm-2xtc-x4cpl")
+```
+
+Pixels are untouched by the log fix: `fx_unset == br_unset` and `fx_off ==
+br_off`, byte-identical.
+
+Three tests added where there were zero, and **I commissioned them** rather than
+trusting green: `c11_commission_status.py` plants both directions of the original
+inversion and requires RED. 2/2 caught. `cargo test -p strehl-core --lib optics`
+→ 27 passed.
+
+> **A trap worth recording.** The first commissioning run went green *after*
+> restore for the wrong reason. `shutil.copy2` preserves mtime, so a restored
+> file looked **older** than the artifact cargo had just built from the mutated
+> source; cargo skipped the rebuild and re-ran the mutated binary against
+> restored source. The tell was the failure text quoting a string that provably
+> no longer existed in the file. Fixed with `os.utime(path, None)` after every
+> restore. This generalises to any mtime-based build system.
+
+### 23.2 Item 2 (a) — **REFUTED**. `eps_b` is signal, not noise.
+
+ORCH asked me to settle a confound in their own numbers: blue's radial (0.039)
+and tangential (0.030) are both ≈2.6× green's, they scale *together*, and a
+radial warp cannot raise the tangential component — so perhaps blue's estimator
+is simply noisier and the *ratio* is the right normalised statistic.
+
+The prescribed test is the right one and I ran it exactly: **split the tiles in
+half at random, fit independently, and let the half-to-half disagreement BE the
+noise floor.** 400 random splits per stack, robust IRLS fit, green (G1–G2)
+carried as the null on the same tiles.
+
+| stack | ch | n | eps ppm | noise ppm | \|eps\|/noise |
+| --- | --- | --- | --- | --- | --- |
+| bee-2-cpl | R | 174 | 518.4 | 17.1 | 30.3 |
+| bee-2-cpl | B | 174 | −144.2 | 13.4 | **10.8** |
+| bee-2-cpl | G2 | 174 | −30.0 | 9.2 | 3.3 ← null |
+| bee-3-cpl | B | 162 | −174.8 | 17.6 | **9.9** |
+| bee-3-cpl | G2 | 162 | −19.0 | 6.0 | 3.2 ← null |
+| coffee-bean | B | 209 | −182.8 | 4.9 | **37.0** |
+| coffee-bean | G2 | 209 | −2.4 | 0.5 | 4.6 ← null |
+| couch-fibers-cpl | B | 246 | −94.3 | 3.9 | **24.3** |
+| couch-fibers-cpl | G2 | 246 | −2.6 | 2.0 | 1.3 ← null |
+| lavendar-cpl | B | 103 | −148.9 | 20.8 | **7.2** |
+| lavendar-cpl | G2 | 103 | −5.9 | 4.1 | 1.4 ← null |
+| tweezers-cpl | B | 177 | −169.1 | 5.3 | **32.0** |
+| tweezers-cpl | G2 | 177 | −3.8 | 0.6 | 6.2 ← null |
+
+Blue stands **7.2–37.0** of its own error bars from zero, on all six stacks, with
+**the same sign every time** (−94 to −183 ppm). The green null on the identical
+tiles scores 1.3–6.2. Blue is not fitting noise.
+
+**ORCH's confound resolves in ORCH's favour on the mechanism and against them on
+the conclusion.** They were right that blue's per-tile radial and tangential rms
+scale together and that this is a noise-scale effect — blue has less texture in
+these scenes. But that is a statement about *per-tile scatter*, and `eps` is
+fitted from the systematic radial component, which survives averaging while the
+tangential does not. A noisier estimator gets a wider error bar, and I measured
+the error bar. Blue clears it by a factor of 7 at worst.
+
+So the fix is **not** a per-channel skip guard and **not** a coefficient repair.
+There is nothing here to repair.
+
+### 23.3 Item 2 (b) — the second resample is **CONFIRMED to exist**, and it is not mine
+
+Counting resamples on a blue pixel, from the code:
+
+1. the alignment gather — CA is *composed into* this transform, so it changes an
+   existing resample's phase and does not add one;
+2. `image_out.rs:956-957`, `develop_binned` — a **second** Keys resample, red by
+   `(+0.25,+0.25)` and blue by `(−0.25,−0.25)`, for CFA co-siting.
+
+**Green is not resampled here at all** — `image_out.rs:1293` calls green "the
+null: it is not resampled". So green takes one resample and R/B take two, the
+second at phase 0.25, which is the "large phase" ORCH's hypothesis required.
+
+At f=0.35 the co-site costs 0.8254 per axis and **0.6813 on both** — 31.9% of
+blue's amplitude, before CA is considered at all.
+
+**BUILD-SHARP reached this independently and it is already routed** (`049589f`,
+`ORCH-veiling.md`). I am not claiming it and not acting on it. What I can add is
+an arithmetic cross-check from a different direction: their figures are 69%
+retained for green and 47% for R/B; my co-site-only figure is 0.6813, and
+**0.69 × 0.6813 = 0.470**. Two lanes, different routes, agreeing to three
+figures on the composition.
+
+**But it does not explain the 9.36%,** and I want that stated plainly: the
+co-site runs in *both* CA arms, so it cancels in any CA-on-minus-CA-off
+difference. What it does do is attenuate R and B but not G, which biases every
+blue-vs-green HF comparison in the corpus — including `caprice.py`'s.
+
+### 23.4 What actually explains the 9.36%: BUILD-SHARP priced the wrong displacement
+
+BUILD-SHARP's refutation prices blue's cost at a single **0.039 px**. The
+correction does not apply 0.039 px. It applies `eps_b · r` — **zero on axis and
+0.368 plane px at the corner**:
+
+| field r | r plane px | blue shift px | MTF f=.35 | amp loss |
+| --- | --- | --- | --- | --- |
+| 0.00 | 0 | 0.0000 | 1.0000 | 0.00% |
+| 0.20 | 422 | 0.0737 | 0.9809 | 1.91% |
+| 0.40 | 845 | 0.1473 | 0.9299 | 7.01% |
+| 0.60 | 1267 | 0.2210 | 0.8573 | 14.27% |
+| 1.00 | 2112 | 0.3683 | 0.6998 | 30.02% |
+
+Losing 9.36% **energy** needs 0.1199 px = 0.33 of the corner radius; 9.36%
+**amplitude** needs 0.1731 px = 0.47 of the corner. Both sit squarely inside the
+field. The 9.36% is not anomalous and needs no extra mechanism — it is the
+correction doing what it is designed to do, at the magnitude it actually applies.
+
+My kernel is commissioned against two independent anchors before I use it:
+`restore.rs:573`'s recorded 0.9402 / 0.7425 / 0.6251 all **MATCH**, and
+BUILD-SHARP's own "0.1731 px at f=0.35" reproduces to four decimals.
+
+> **A correction to the brief.** Those three constants are quoted in the brief as
+> f = 0.25 / **0.35** / 0.50. `restore.rs:573` records the middle one at
+> **f = 0.40**. My first run flagged a MISMATCH at 0.35 (0.8211 vs 0.7425) while
+> matching exactly at 0.25 and 0.50 — the signature of a mislabelled abscissa,
+> not a wrong kernel. Nothing downstream depended on it, but the label is wrong
+> wherever it is repeated.
+
+**The honest limit on this, which I did not close.** Because CA is composed into
+the alignment gather, the cost is `MTF(φ+s) − MTF(φ)`, not `MTF(s)`. If the
+elected frames' alignment phases were uniform on [0,1) that difference would be
+**identically zero** — shifting a uniform distribution returns a uniform
+distribution, and I computed that column as 0.00% at every radius as a structural
+control. The reference frame is exactly phase 0 so the true distribution is not
+uniform and the cost is not zero, but **I did not measure the distribution**.
+The table above is therefore an **upper bound, not a prediction**. Closing it
+means histogramming the per-pixel elected-frame phase, which is BUILD-HALO's
+file, not mine.
+
+**Verdict — (a) REFUTED** (blue's coefficient is real signal at 7–37σ, on all six
+stacks, one sign). **(b) CONFIRMED as a mechanism that exists** — blue really is
+resampled twice, green once — **but REFUTED as the explanation for the
+differential**, since it is common to both arms. The 9.36% is explained instead
+by BUILD-SHARP having priced a radially-varying shift at a single small value.
+**No code change is recommended for blue.**
+
+I also want the weak instrument flagged rather than leaned on: `caprice.py`
+cannot distinguish "removed a fringe" from "blurred the channel", and my
+conclusion deliberately does not rest on its 9.36%. It rests on the split-half,
+which is a different instrument with its own null.
+
+### 23.5 Item 3 (P2) — record the aperture, do **not** gate on it
+
+The corpus does not span aperture the way the brief assumed. Reading the ARWs of
+the six stacks the blue arm was fitted on: **five at f/5.6, one at f/8**, all at
+200 mm effective. No f/11. A correlation across six points with 5-vs-1 grouping
+is not a measurement, and I have not reported one as if it were.
+
+But those six do contain one clean datum. The two largest per-stack `eps_r` are
+**651.9 ppm (couch-fibers-cpl, f/5.6)** and **650.7 ppm (coffee-bean, f/8)** —
+**1.2 ppm apart, 0.2%, across a full stop** — while the spread among the five
+stacks that *share* f/5.6 is 500.9–651.9 ppm, or 151 ppm. Subject-to-subject
+variation exceeds the only aperture difference available by two orders of
+magnitude.
+
+So: **the comment is not wrong, but the response to it was.** `measured_at:
+None` was a recording failure, not a modelling one. I set it to what was actually
+measured and wrote the reasoning — including the n=1-at-f/8 and nothing-at-f/11
+limitation — into the code, and deliberately did **not** make the guard decline
+on aperture, because declining would switch off a correction that measurably
+works for a difference this corpus cannot detect.
+
+`cargo test -p strehl-core --lib optics` → 27 passed, 0 failed.
+
+### 23.6 Not done, and asks
+
+- **The render-domain freeze test** on V-CA's `20D895F2…` / `4CFA8F25…` is still
+  not written. It is worth more than the unit tests and I did not get to it.
+- **`merge_cmd.rs` still has its own `ca_status_line`** (behaviourally correct
+  since `3a22fd2`). There are now two implementations that can drift. It should
+  call `resolve_for_capture_env`; I did not touch it because the file is dirty
+  with another lane's work.
+- **The elected-frame phase distribution** is unmeasured, which is what makes
+  §23.4's table a bound rather than a number. BUILD-HALO's files.
+- **Captures wanted:** a short bracket **without the teleconverter** (exercises
+  the guard's negative path, which has never once declined on a real file), and
+  **an f/11 bracket of an already-shot subject** (the aperture gap above).
+
