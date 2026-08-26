@@ -53,6 +53,62 @@ def pick_crop(lum):
     return by, bx, best
 
 
+# The survey verdict for each subject, from opening all 26 at 1:1.
+#
+# This orders the gallery. Alphabetical order opened on `109MSDCF` -- a
+# camera-numbered file -- and buried the two subjects that actually answer the
+# halo complaint at positions 6 and 25. That is a bad first impression of good
+# work. Strongest first is not spin so long as every card carries its own
+# verdict and the weak ones are still present, labelled, and reachable: nothing
+# is hidden, the reading order is just no longer an artifact of filename sort.
+#
+# rank 0 showcase   the hardest geometry in the corpus, and clean
+# rank 1 clean      no defect found at 1:1
+# rank 2 minor      a small diagnosed defect, named on the card
+# rank 3 limited    limited by the capture, not by the stacker
+VERDICTS = {
+    "wrapped-text-1": (0, "showcase", "toner particles resolved to the letter edge; no rim"),
+    "bee-2-cpl": (0, "showcase", "hair tips over white, no rim; pollen individually textured"),
+    "bee-3-cpl": (0, "showcase", "299 frames, the deepest stack; compound eye resolved"),
+    "bee-1-cpl": (0, "showcase", "clean speculars on chitin"),
+    "leaf-2-cpl": (0, "showcase", "vein network and surface texture"),
+    "couch-fibers-cpl": (0, "showcase", "dense overlapping fibre depth"),
+    "flower-bud-with-background-fern-cpl": (0, "showcase",
+        "trichomes crossing a depth boundary -- the adversarial case for the gate"),
+    "lavendar-cpl": (1, "clean", ""),
+    "coffee-bean": (1, "clean", ""),
+    "lead-1-cpl": (1, "clean", ""),
+    "flower-inner-edge-cpl": (1, "clean", ""),
+    "wrapped-text-2": (1, "clean", ""),
+    "tweezers-cpl": (1, "clean", ""),
+    "flat-on-ruler-cpl": (1, "clean", ""),
+    "highly-angled-ruler-mm-cpl": (1, "clean", "merged unregistered; still clean"),
+    "pencil-steep-angle-cpl": (1, "clean", "68.20 px held-out alignment score, visibly sharp"),
+    "pencil-flatter-angle-cpl": (1, "clean", ""),
+    "109MSDCF": (1, "clean", ""),
+    "112MSDCF": (1, "clean", ""),
+    "113MSDCF": (1, "clean", ""),
+    "119MSDCF": (1, "clean", ""),
+    "coffee-bubbles": (2, "minor", "green-yellow fringe on sub-pixel speculars; residual lateral CA"),
+    "foam": (2, "minor", "specular fringe, as coffee-bubbles; the stack also moved"),
+    "dry-erase-marker-head-cpl": (2, "minor", "specular fringe, as coffee-bubbles"),
+    "flowers-cpl": (3, "capture-limited", "soft throughout -- reads as an incomplete bracket, not a merge failure"),
+    "flower-bud-alone-cpl": (3, "capture-limited",
+        "softest merge-vs-best-frame in the corpus, plus an unattributed edge fringe"),
+}
+
+
+def verdict_of(stem):
+    """(rank, label, note) for a render stem, tolerating a --SUFFIX."""
+    key = stem
+    while key and key not in VERDICTS:
+        cut = key.rfind("--")
+        if cut < 0:
+            return (1, "", "")
+        key = key[:cut]
+    return VERDICTS.get(key, (1, "", ""))
+
+
 def config_of(err_path):
     if not err_path.exists():
         return "(no sidecar -- provenance unknown)"
@@ -107,13 +163,26 @@ def main():
         cards.append((stem, fp.name, cp.name, a16.shape, (x0, y0), cfg))
         print(f"    {stem:<44} crop at ({x0},{y0})  hf={e:.3g}")
 
+    # Strongest first, then alphabetical inside each band. Every subject is
+    # still here; only the reading order changed.
+    cards.sort(key=lambda c: (verdict_of(c[0])[0], c[0]))
+    unlabelled = [c[0] for c in cards if not verdict_of(c[0])[1]]
+    if unlabelled:
+        print(f"  WARNING: {len(unlabelled)} subject(s) carry no survey verdict "
+              f"and default to 'clean': {', '.join(unlabelled)}")
+
     rows = []
     for stem, fj, cpng, shp, xy, cfg in cards:
+        _, label, note = verdict_of(stem)
+        badge = (f'<span class="badge b-{label.split("-")[0]}">'
+                 f'{html.escape(label)}</span>' if label else "")
+        notehtml = (f' <span class="note">&mdash; {html.escape(note)}</span>'
+                    if note else "")
         rows.append(f"""
 <section class="card">
-  <h2>{html.escape(stem)}</h2>
+  <h2>{html.escape(stem)} {badge}</h2>
   <div class="meta">{shp[1]} x {shp[0]} &middot; 100% crop at ({xy[0]}, {xy[1]}),
-     chosen by high-frequency energy</div>
+     chosen by high-frequency energy{notehtml}</div>
   <div class="pair">
     <figure><img src="assets/{fj}" loading="lazy"><figcaption>full frame</figcaption></figure>
     <figure><img src="assets/{cpng}" loading="lazy"><figcaption>100% crop &mdash; actual pixels</figcaption></figure>
@@ -137,6 +206,13 @@ def main():
  figcaption{{color:#7d8590;font-size:12px;padding-top:6px}}
  .cfg{{background:#0b0b0b;border:1px solid #262626;color:#8b9;padding:10px 12px;
        font-size:12px;white-space:pre-wrap;margin-top:14px;border-radius:4px}}
+ .badge{{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+       padding:3px 8px;border-radius:10px;vertical-align:middle;margin-left:8px}}
+ .b-showcase{{background:#12341f;color:#7ee0a0;border:1px solid #1e5c36}}
+ .b-clean{{background:#16232e;color:#7fb6dd;border:1px solid #24455e}}
+ .b-minor{{background:#332a12;color:#dcbc6a;border:1px solid #5c4a1e}}
+ .b-capture{{background:#331a1a;color:#e09090;border:1px solid #5c2b2b}}
+ .note{{color:#9a8}}
 </style>
 <h1>strehl &mdash; current renders</h1>
 <p class="lede">{len(cards)} subjects, rendered from one pinned binary. Each card
@@ -144,6 +220,16 @@ shows the full frame and a 100&#37; crop of actual pixels, with the render's own
 banner beneath it so the configuration is never in doubt. Crops are selected by
 high-frequency energy so they land on the finest texture in the frame rather
 than on the strongest edge.</p>
+<p class="lede"><b>Order is strongest first, not alphabetical</b>, and every
+subject carries the verdict it earned when it was opened at 1:1:
+<span class="badge b-showcase">showcase</span> the hardest geometry in the
+corpus and clean,
+<span class="badge b-clean">clean</span> no defect found,
+<span class="badge b-minor">minor</span> a small diagnosed defect named on the
+card, and
+<span class="badge b-capture">capture-limited</span> limited by the capture
+rather than by the stacker. Nothing is hidden &mdash; the weakest subjects are
+still here, at the bottom, labelled.</p>
 {''.join(rows)}
 """
     idx = out / "index.html"
