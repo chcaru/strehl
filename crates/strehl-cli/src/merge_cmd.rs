@@ -250,12 +250,33 @@ pub enum MergeBackend {
 ///
 /// # This constant is the flip
 ///
-/// Changing it to [`MergeBackend::Pyramid`] moves the shipped merge, and
-/// nothing else has to change: both arms are wired, both are reachable, both
-/// share one develop path, and the flag, its env twin and the cross-backend
-/// refusals are all written against whichever value sits here. It is a named
-/// constant rather than a `#[default]` attribute precisely so that the decision
-/// has one address and a reviewer can see the whole of it at once.
+/// Changing it to [`MergeBackend::Pyramid`] moves the shipped merge. It is a
+/// named constant rather than a `#[default]` attribute precisely so that the
+/// decision has one address and a reviewer can see the whole of it at once.
+///
+/// It is one line in the source and it is not one line in effect, and the
+/// difference is worth stating before someone flips it in a hurry. Both arms
+/// are wired, both are reachable, both share one develop path, and the flag,
+/// its env twin and the cross-backend refusals are all written against
+/// whichever value sits here, so no shipped test breaks -- `tests/byte-freeze.rs`
+/// is immune because `Freeze::argv` passes `--merge estimator` explicitly.
+/// But eight flags are estimator-only and `main.rs` REFUSES them under
+/// `--merge pyramid` rather than ignoring them, so every invocation that
+/// passes one without also naming the backend starts failing. Swept over this
+/// repository that is 338 call sites in 185 files, of which 189 are executable
+/// (144 `.ps1`, 42 `.py`, 3 `.rs`); `--gate` alone accounts for 275. Those
+/// failures are loud rather than silent, which is the design, but they are not
+/// nothing, and a harness that dies is a measurement that does not happen.
+///
+/// Prose that moves with this line: the `(DEFAULT)` marker and the "NOT the
+/// default yet" paragraph in `main.rs`'s `Stack` help, `--merge`'s own "(the
+/// default)", the variant docs above, and `scripts/check-defaults.py`'s
+/// `STREHL_MERGE` registry entry. The first three are covered by tests in
+/// `main.rs` that read the rendered help back and compare it against this
+/// constant, so flipping the value fails the suite until the words follow. That
+/// coupling is deliberate: this project has already shipped a subject line
+/// asserting a default that the code did not have, and a stale `(DEFAULT)` in
+/// `--help` is the same defect where more people would read it.
 ///
 /// # Why it is still the estimator
 ///
@@ -280,15 +301,46 @@ pub enum MergeBackend {
 ///
 /// It still does not get the default, because on `flower-bud-alone-cpl` it
 /// clips **1.4043% of pixels against 0.0001%** -- four orders of magnitude --
-/// and drops `p1` from 1028 to 334 at the same time. Clipping and shadow
-/// collapse together are a contrast expansion at both ends, not a highlight
-/// artefact, and neither moves with the band gate: at `--pyramid-gate 4` the
-/// clip is 1.4015% and `p1` is 339, essentially unchanged. So it is the merge,
-/// and it is BUILD-BLEND's to fix in `pyramid.rs`.
+/// and drops `p1` from 1028 to 334 at the same time. Those two are not
+/// independent corroboration of each other: `accept.py`'s clip predicate is
+/// `np.any(im == 0, axis=2)`, black only, so both columns are shadow
+/// statistics and the instrument cannot see the white rail at all. Read them as
+/// one finding about the black point rather than two. Whatever it is, it does
+/// not move with the band gate: at `--pyramid-gate 4` the clip is 1.4015% and
+/// `p1` is 339, essentially unchanged. So it is the merge, and it is
+/// BUILD-BLEND's to fix in `pyramid.rs`.
+///
+/// # Why the case for moving it got stronger anyway
+///
+/// The owner's standing complaint about this renderer is a hard white halo
+/// tracing the silhouette on dark-subject, bright-ground stacks. That halo is
+/// in the estimator, not the pyramid. Scoring both arms through one subject
+/// mask and one distance transform computed from a single reference arm, so
+/// that every column scores an identical pixel population, the pyramid's
+/// background deficit near the silhouette runs 0.53-0.64x the estimator's on
+/// `flower-bud-alone-cpl` and 0.16-0.32x on `dry-erase-marker-head-cpl`
+/// (`experiments/ORCH-drift-check/veilpair.py`; null ref-vs-ref exactly 0.0 in
+/// ten of ten bins, and the same mask translated 640 px off the silhouette
+/// collapses d=0 from -2269.6 DN to -458.1 DN). The defect the owner is
+/// complaining about is on the arm that ships.
+///
+/// # Why it is still not enough
+///
+/// Because none of the numbers on this page describe the arm a flip would
+/// actually ship. Every one of them was measured at `--pyramid-gate 4`.
+/// `strehl stack` passes `MergeConfig::default()` through unmodified unless
+/// `--pyramid-gate` is given, and that default is gate 2.0. Flipping this
+/// constant on its own therefore ships a configuration this corpus has never
+/// characterised, and what evidence exists at gate 2 is unfavourable: its
+/// low-amplitude bins measure above the estimator, which is added energy rather
+/// than preserved detail. That is a second blocker, independent of the clip,
+/// and it also lives in `pyramid.rs`.
 ///
 /// A merge that renders a subject's edge properly and hard-clips 1.4% of the
 /// frame is not better than one that smears the edge; it is worse in a
-/// different place. This line moves the day that clip passes the gate.
+/// different place. This line moves when a pyramid arm measured at its own
+/// default gate passes the acceptance gate -- not on the halo alone, and not on
+/// numbers borrowed from a gate the default does not use.
 pub const DEFAULT_MERGE_BACKEND: MergeBackend = MergeBackend::Estimator;
 
 impl Default for MergeBackend {

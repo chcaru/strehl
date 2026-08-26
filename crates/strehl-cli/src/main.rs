@@ -64,13 +64,16 @@ enum Command {
     ///             came from this merge; until it was wired here it was
     ///             reachable only from an example binary that ships nothing.
     ///
-    ///             It is NOT the default yet, and that is a measurement rather
-    ///             than an opinion: it wins micro-contrast on every subject
-    ///             tested and wins acuity on this binary, but it hard-clips up
-    ///             to 3% of a frame where the estimator clips 0.0006%. The
-    ///             default moves when that passes the acceptance gate. Until
-    ///             then this flag is how you get the merge the corpus was
-    ///             made with.
+    ///             `pyramid` is NOT the default yet, and that is a measurement
+    ///             rather than an opinion. It is the merge that does NOT draw
+    ///             the white halo the estimator draws around a dark subject on
+    ///             a bright ground, and it wins micro-contrast on every
+    ///             subject tested. Against that it hard-clips 1.4043% of a
+    ///             frame where the estimator clips 0.0001%, and every one of
+    ///             those numbers was measured at a band gate this command does
+    ///             not ship. The default moves when a pyramid arm at its own
+    ///             default gate passes the acceptance gate. Until then this
+    ///             flag is how you get the merge the corpus was made with.
     ///
     /// STREHL_MERGE=pyramid|estimator does the same for a harness that cannot
     /// edit the command line; the flag wins. An unrecognised value in either
@@ -921,4 +924,155 @@ fn probe(dir: &Path, limit: Option<usize>) -> Result<()> {
     );
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use clap::CommandFactory;
+
+    use super::merge_cmd::{DEFAULT_MERGE_BACKEND, MergeBackend};
+
+    /// Every backend, so the assertions below can check the ones that are *not*
+    /// the default as well as the one that is. A test that only ever looks at
+    /// the winner cannot tell a correct label from a label that is on both.
+    ///
+    /// Adding a variant breaks [`exhaustive`] below rather than silently
+    /// leaving the new backend unexamined here.
+    const ALL_BACKENDS: [MergeBackend; 2] = [MergeBackend::Estimator, MergeBackend::Pyramid];
+
+    #[allow(dead_code)]
+    fn exhaustive(backend: MergeBackend) {
+        match backend {
+            MergeBackend::Estimator | MergeBackend::Pyramid => {}
+        }
+    }
+
+    /// `strehl stack --help` as a user sees it, with runs of whitespace
+    /// collapsed so that these assertions are about the words and not about
+    /// where clap chose to wrap a column.
+    fn stack_help() -> String {
+        let mut cli = super::Cli::command();
+        let stack = cli
+            .find_subcommand_mut("stack")
+            .expect("`strehl stack` must exist");
+        stack
+            .render_long_help()
+            .to_string()
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
+
+    /// The rendered help must be big enough to be worth asserting against.
+    ///
+    /// Without this, every assertion below is one clap API change away from
+    /// passing against an empty string, and a check that cannot fail is
+    /// indistinguishable from a check that passed.
+    #[test]
+    fn the_help_this_module_reads_is_actually_rendered() {
+        let help = stack_help();
+        assert!(
+            help.len() > 2000,
+            "rendered `stack` long help is only {} chars; the label assertions \
+             in this module would be vacuous. Did render_long_help() change?",
+            help.len()
+        );
+        for backend in ALL_BACKENDS {
+            assert!(
+                help.contains(backend.name()),
+                "rendered help never mentions the `{}` backend",
+                backend.name()
+            );
+        }
+    }
+
+    /// The `(DEFAULT)` marker in the backend list must sit on the backend that
+    /// [`DEFAULT_MERGE_BACKEND`] actually selects.
+    ///
+    /// This project has already shipped exactly this defect one level up: a
+    /// commit subject asserted that `strehl stack` ran the pyramid merge by
+    /// default, a later commit moved the default back, and the claim stayed in
+    /// `git log --oneline` where every subsequent reader would meet it. A stale
+    /// `(DEFAULT)` in `--help` is the same defect somewhere more people look.
+    ///
+    /// So this coupling is deliberate. Flipping the constant fails this test
+    /// until the prose follows, and the failure names the file to edit.
+    #[test]
+    fn stack_help_marks_the_backend_the_constant_selects() {
+        let help = stack_help();
+        for backend in ALL_BACKENDS {
+            let marker = format!("{} (DEFAULT)", backend.name());
+            let should_be_marked = backend == DEFAULT_MERGE_BACKEND;
+            assert_eq!(
+                help.contains(&marker),
+                should_be_marked,
+                "the backend list in `stack --help` {} \"{}\", but \
+                 DEFAULT_MERGE_BACKEND is `{}`. The marker is a claim about \
+                 merge_cmd.rs's constant; fix the `Stack` doc comment in \
+                 main.rs so the two agree.",
+                if should_be_marked {
+                    "is missing"
+                } else {
+                    "still carries"
+                },
+                marker,
+                DEFAULT_MERGE_BACKEND.name(),
+            );
+        }
+    }
+
+    /// `--merge`'s own help names a default too, in different words, and it has
+    /// to be the same backend.
+    #[test]
+    fn the_merge_flag_help_names_the_same_default() {
+        let help = stack_help();
+        for backend in ALL_BACKENDS {
+            let claim = format!("`{}` (the default)", backend.name());
+            assert_eq!(
+                help.contains(&claim),
+                backend == DEFAULT_MERGE_BACKEND,
+                "`--merge`'s help and DEFAULT_MERGE_BACKEND (`{}`) disagree \
+                 about \"{}\"",
+                DEFAULT_MERGE_BACKEND.name(),
+                claim,
+            );
+        }
+    }
+
+    /// The "is NOT the default yet" caveat has to name a backend that is, in
+    /// fact, not the default -- and it has to be there at all.
+    ///
+    /// Counting matches rather than asserting a single `contains` is what keeps
+    /// a deleted caveat from reading as a passed check.
+    #[test]
+    fn the_not_yet_caveat_names_a_backend_that_is_not_the_default() {
+        let help = stack_help();
+        let mut caveats = 0usize;
+        for backend in ALL_BACKENDS {
+            let caveat = format!("`{}` is NOT the default", backend.name());
+            if help.contains(&caveat) {
+                caveats += 1;
+                assert_ne!(
+                    backend, DEFAULT_MERGE_BACKEND,
+                    "`stack --help` says \"{}\" while DEFAULT_MERGE_BACKEND \
+                     selects that same backend",
+                    caveat,
+                );
+            }
+        }
+        assert_eq!(
+            caveats,
+            ALL_BACKENDS.len() - 1,
+            "expected the non-default backend to carry the \"is NOT the \
+             default\" caveat, found {} such caveats in `stack --help`",
+            caveats,
+        );
+    }
+
+    /// [`MergeBackend::default()`] and [`DEFAULT_MERGE_BACKEND`] are one
+    /// decision with one address, not two that happen to agree today.
+    #[test]
+    fn the_default_impl_defers_to_the_constant() {
+        assert_eq!(MergeBackend::default(), DEFAULT_MERGE_BACKEND);
+    }
 }
