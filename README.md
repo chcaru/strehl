@@ -1092,6 +1092,49 @@ coverage upscale; the rest sits in the merge and the gather kernel, where strehl
 uses Catmull-Rom against the fork's `cv::INTER_LANCZOS4`. Work to close it is in
 flight.
 
+> ## ⚠ THE DEFICIT CLAIM IS UNDER RETRACTION — the instrument fails its own controls
+>
+> **Do not cite the 17-27% figure.** The ratios above are real measurements of
+> **band power**. What is now in doubt is the step from band power to
+> *resolution*, and three independent results say that step does not hold:
+>
+> 1. **A nearest-neighbour gather scores +29% / +42% on this statistic** — the
+>    worst resampling available to the program, rated better than everything
+>    else, by a margin **larger than the entire deficit under investigation**.
+> 2. **The flat-region control fails on every subject.** Lanczos-3's apparent
+>    gain is *larger* on featureless ROIs (1.173 / 1.220) than on detail ROIs
+>    (1.071 / 1.078). The statistic rewards added noise power.
+> 3. **The 0.30-0.40 band sits above the merge lattice's Nyquist.** The gather
+>    runs on CFA planes at `3516 x 2344` against a `7032 x 4688` output, putting
+>    plane Nyquist at f = 0.25 cyc/output px. Content above it is reconstructed
+>    by the demosaic, not carried by the gather.
+>
+> **The table was telling me this and I read past it.** The 0.40-0.48 row reads
+> **1.060 and 1.511 — strehl *ahead* at the finest scale** — while the adjacent
+> band claims 23-27% behind. **A resolution deficit is monotonic in frequency:**
+> if a tool is behind at 3-5 px it is further behind at 2 px, never ahead. I
+> resolved that contradiction by annotating one row as "noise-dominated" and
+> reading the row beside it as signal, with nothing to justify the boundary. An
+> escape hatch used on one row is a confession about the whole statistic.
+>
+> **What survives:** strehl is ahead at coarse scales, and the qualitative
+> finding that fine-scale performance needs measuring. **What does not:** the
+> size, the attribution to the gather kernel, and the "about half is the
+> coverage upscale" split — the upscale and the warp are one fused matrix paid
+> in one resample, and a *larger* upscale measures as *less* lossy, so
+> magnification is not the cost.
+>
+> Being re-measured by **slanted-edge MTF (ISO 12233)**, which returns a
+> resolution figure rather than an energy figure and which noise cannot inflate
+> — commissioned with an explicit arm requiring MTF50 to hold still while added
+> noise moves band power. Targets are already in the corpus
+> (`flat-on-ruler-cpl`, `highly-angled-ruler-mm-cpl`, `wrapped-text-1`).
+>
+> The lesson, which is the same one that cost this project a gradient-kurtosis
+> table three days earlier: **a statistic that has only ever been shown to
+> succeed is not evidence.** Both numbers were published without anyone having
+> demonstrated the instrument could fail.
+
 **What strehl wins, and these are not close:**
 
 - **Noise.** On flat defocused ground, high-pass rms **0.5025% → 0.1125%** — a
