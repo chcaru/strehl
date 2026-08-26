@@ -270,13 +270,20 @@ pub enum MergeBackend {
 ///
 /// Prose that moves with this line: the `(DEFAULT)` marker and the "NOT the
 /// default yet" paragraph in `main.rs`'s `Stack` help, `--merge`'s own "(the
-/// default)", the variant docs above, and `scripts/check-defaults.py`'s
-/// `STREHL_MERGE` registry entry. The first three are covered by tests in
-/// `main.rs` that read the rendered help back and compare it against this
-/// constant, so flipping the value fails the suite until the words follow. That
-/// coupling is deliberate: this project has already shipped a subject line
-/// asserting a default that the code did not have, and a stale `(DEFAULT)` in
-/// `--help` is the same defect where more people would read it.
+/// default)", the variant docs above, the two runtime banners at the head of
+/// each merge (via [`merge_banner`]), and `scripts/check-defaults.py`'s
+/// `STREHL_MERGE` registry entry. All but the last are covered by tests that
+/// compare the rendered string against this constant, so flipping the value
+/// fails the suite until the words follow. That coupling is deliberate: this
+/// project has already shipped a subject line asserting a default that the code
+/// did not have, and a stale `(DEFAULT)` in `--help` is the same defect where
+/// more people would read it.
+///
+/// The banners were missing from that list until a binary built with this
+/// constant flipped was actually run. It printed `(--merge pyramid; reachable,
+/// NOT the default)` while running as the default. Reading the enumeration back
+/// would not have caught it, because the enumeration was the thing that was
+/// wrong; only executing the flipped build did.
 ///
 /// # Why it is still the estimator
 ///
@@ -383,6 +390,44 @@ impl MergeBackend {
             Self::Estimator => Self::Pyramid,
         }
     }
+}
+
+/// The banner line a merge prints before it runs, with the default claim
+/// supplied rather than assumed.
+///
+/// Split from [`merge_banner`] so that all four strings are reachable from a
+/// test without mutating [`DEFAULT_MERGE_BACKEND`]. A test that skipped the
+/// branch the constant does not currently select would report a pass for a
+/// string nobody had looked at.
+fn merge_banner_for(backend: MergeBackend, is_default: bool) -> &'static str {
+    match (backend, is_default) {
+        (MergeBackend::Estimator, true) => {
+            "strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)"
+        }
+        (MergeBackend::Estimator, false) => {
+            "strehl stack -- regularised winner + noise-gated average (--merge estimator; reachable, NOT the default)"
+        }
+        (MergeBackend::Pyramid, true) => {
+            "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)"
+        }
+        (MergeBackend::Pyramid, false) => {
+            "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; reachable, NOT the default)"
+        }
+    }
+}
+
+/// The banner line for `backend`, with its default claim derived from
+/// [`DEFAULT_MERGE_BACKEND`].
+///
+/// Both banners used to state their role as a literal. That was measured to be
+/// wrong: a binary built with the constant flipped to `Pyramid` printed
+/// `(--merge pyramid; reachable, NOT the default)` while running as the
+/// default, and the estimator's line went on claiming `THE DEFAULT PATH` after
+/// it had stopped being one. The `--help` strings are covered by tests in
+/// `main.rs`; these two were not, and they are the copy a user actually sees
+/// on every run, so they were the worst of the set to leave hardcoded.
+pub fn merge_banner(backend: MergeBackend) -> &'static str {
+    merge_banner_for(backend, backend == DEFAULT_MERGE_BACKEND)
 }
 
 /// Env-var twin of `--merge`, for A/B harnesses that cannot edit argv.
@@ -2460,9 +2505,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // `shuffle_destroys_adjacency_which_a_rotation_does_not` holds the line.
     let perm: Vec<u16> = shuffled_indices(paths.len(), PLACEBO_SEED);
 
-    eprintln!(
-        "strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)"
-    );
+    eprintln!("{}", merge_banner(MergeBackend::Estimator));
     eprintln!("camera          : {camera}");
     eprintln!("lateral CA      : {}", ca_status_line(&paths[0]));
     eprintln!(
@@ -3883,9 +3926,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let noise = profile::noise_model_for(&camera, iso, levels);
     let sizes = level_sizes(geom.width, geom.height, cfg.bands);
 
-    eprintln!(
-        "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; reachable, NOT the default)"
-    );
+    eprintln!("{}", merge_banner(MergeBackend::Pyramid));
     eprintln!("camera          : {camera}");
     eprintln!("lateral CA      : {}", ca_status_line(&paths[0]));
     eprintln!(
@@ -6580,5 +6621,276 @@ mod tests {
                 "{frames} frames: coverage was {seen:?}"
             );
         }
+    }
+
+    /// Both merge banners state which backend is the default, and both used to
+    /// state it as a literal.
+    ///
+    /// Measured rather than supposed: a release binary built from this tree
+    /// with `DEFAULT_MERGE_BACKEND` flipped to `Pyramid` printed `(--merge
+    /// pyramid; reachable, NOT the default)` on a run where the pyramid *was*
+    /// the default. The `--help` seam in `main.rs` did not catch it, because a
+    /// banner is not help text -- it is the line every run prints, which makes
+    /// it the copy a user is most likely to read and believe.
+    #[test]
+    fn both_merge_banners_state_the_role_the_constant_gives_them() {
+        for backend in [MergeBackend::Estimator, MergeBackend::Pyramid] {
+            let line = merge_banner(backend);
+            let claims_default = line.contains("THE DEFAULT PATH");
+            let claims_not = line.contains("NOT the default");
+            assert_ne!(
+                claims_default, claims_not,
+                "`{}`'s banner must make exactly one claim about its role: {line:?}",
+                backend.name()
+            );
+            assert_eq!(
+                claims_default,
+                backend == DEFAULT_MERGE_BACKEND,
+                "`{}`'s banner and DEFAULT_MERGE_BACKEND (`{}`) disagree: {line:?}",
+                backend.name(),
+                DEFAULT_MERGE_BACKEND.name()
+            );
+        }
+    }
+
+    /// Every branch of [`merge_banner_for`], including the two the constant
+    /// does not currently select.
+    ///
+    /// Exercising only the live branch would report a pass for two strings
+    /// nobody had read -- and those two are exactly the ones that go live on
+    /// the day the default moves, which is the day nobody wants to discover
+    /// them.
+    #[test]
+    fn all_four_banner_strings_are_distinct_and_self_consistent() {
+        let mut seen = Vec::new();
+        for backend in [MergeBackend::Estimator, MergeBackend::Pyramid] {
+            for is_default in [true, false] {
+                let line = merge_banner_for(backend, is_default);
+                assert_eq!(
+                    line.contains("THE DEFAULT PATH"),
+                    is_default,
+                    "`{}` is_default={is_default}: {line:?}",
+                    backend.name()
+                );
+                assert_eq!(
+                    line.contains("NOT the default"),
+                    !is_default,
+                    "`{}` is_default={is_default}: {line:?}",
+                    backend.name()
+                );
+                assert!(
+                    line.contains(backend.name()),
+                    "`{}` is_default={is_default} does not name its backend: {line:?}",
+                    backend.name()
+                );
+                seen.push(line);
+            }
+        }
+        seen.sort_unstable();
+        let before = seen.len();
+        seen.dedup();
+        assert_eq!(before, seen.len(), "two banner branches share one string");
+    }
+
+    /// The two lines this build actually prints, pinned.
+    ///
+    /// Deriving the role from the constant rewrote copy that a large body of
+    /// logs and harness output already contains, so it had to change no bytes
+    /// on the path that ships. Pinned against an explicit `is_default` rather
+    /// than against the constant, so it stays a statement about the strings
+    /// instead of quietly becoming vacuous the day the default moves.
+    #[test]
+    fn the_shipping_banner_bytes_are_unchanged_by_deriving_the_role() {
+        assert_eq!(
+            merge_banner_for(MergeBackend::Estimator, true),
+            "strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)"
+        );
+        assert_eq!(
+            merge_banner_for(MergeBackend::Pyramid, false),
+            "strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; reachable, NOT the default)"
+        );
+    }
+
+    /// `MergeBackend::parse` decides which merge a user gets, and had no test
+    /// of any kind -- nothing in CI would have caught a regression in it.
+    #[test]
+    fn merge_backend_parse_accepts_every_documented_spelling() {
+        for v in ["pyramid", "bands", "blend", "PYRAMID", "  Pyramid  "] {
+            assert_eq!(
+                MergeBackend::parse(v).unwrap(),
+                MergeBackend::Pyramid,
+                "{v:?}"
+            );
+        }
+        for v in ["estimator", "merge", "legacy", "ESTIMATOR", "  Legacy  "] {
+            assert_eq!(
+                MergeBackend::parse(v).unwrap(),
+                MergeBackend::Estimator,
+                "{v:?}"
+            );
+        }
+    }
+
+    /// An unrecognised spelling is an error and never a backend by accident --
+    /// the rule `--photometric` follows, for the same reason: a merge that
+    /// silently fell back is indistinguishable, from the terminal, from one
+    /// that did what was asked.
+    ///
+    /// The empty and whitespace cases are here deliberately. `parse` refuses
+    /// them; `resolve_merge_backend` never asks it about them, because its
+    /// `!v.trim().is_empty()` guard routes them to the default first. That
+    /// asymmetry is a property of the resolver, not of the parser, and this
+    /// test pins which of the two owns it.
+    #[test]
+    fn merge_backend_parse_refuses_unknown_spellings() {
+        for v in ["banana", "", "   ", "pyramidal", "est", "0", "1", "on", "off"] {
+            let err = MergeBackend::parse(v).unwrap_err().to_string();
+            assert!(
+                err.contains("unknown merge backend"),
+                "{v:?} was not refused as unknown: {err}"
+            );
+            assert!(
+                err.contains("estimator") && err.contains("pyramid"),
+                "{v:?}'s refusal does not name both valid values: {err}"
+            );
+        }
+    }
+
+    /// `--pyramid-select`, which had no test.
+    #[test]
+    fn parse_select_mode_accepts_its_spellings_and_refuses_the_rest() {
+        for v in ["soft", "soft-power", "softpower", "SOFT", " Soft "] {
+            assert_eq!(parse_select_mode(v).unwrap(), SelectMode::SoftPower, "{v:?}");
+        }
+        for v in ["hard", "hard-max", "hardmax", "pmax", "HARD"] {
+            assert_eq!(parse_select_mode(v).unwrap(), SelectMode::HardMax, "{v:?}");
+        }
+        for v in ["", "  ", "softest", "max", "hard_max"] {
+            let err = parse_select_mode(v).unwrap_err().to_string();
+            assert!(
+                err.contains("unknown --pyramid-select"),
+                "{v:?} was not refused: {err}"
+            );
+        }
+    }
+
+    /// `--pyramid-base`, which had no test.
+    #[test]
+    fn parse_base_band_accepts_its_spellings_and_refuses_the_rest() {
+        for v in ["mean", "MEAN", " Mean "] {
+            assert_eq!(parse_base_band(v).unwrap(), BaseBand::Mean, "{v:?}");
+        }
+        for v in ["weighted", "weighted-from-coarsest", "WEIGHTED"] {
+            assert_eq!(
+                parse_base_band(v).unwrap(),
+                BaseBand::WeightedFromCoarsest,
+                "{v:?}"
+            );
+        }
+        for v in ["", "  ", "average", "coarsest", "weight"] {
+            let err = parse_base_band(v).unwrap_err().to_string();
+            assert!(
+                err.contains("unknown --pyramid-base"),
+                "{v:?} was not refused: {err}"
+            );
+        }
+    }
+
+    /// Everything in this module that reads the environment, in one `#[test]`.
+    ///
+    /// Rust runs tests as threads sharing one process environment, so these
+    /// cannot be separate `#[test]`s without becoming order-dependent.
+    /// `align_cmd.rs`'s `the_solve_environment_keys_the_cache` serialises its
+    /// env-reading assertions the same way and for the same reason.
+    ///
+    /// Each half ends by clearing its variable and re-asserting the unset
+    /// result, so a leaked variable fails here rather than in whichever test
+    /// happens to run next.
+    #[test]
+    fn the_merge_environment_channels_behave() {
+        // SAFETY: single-threaded within this test; see the doc comment.
+        unsafe { std::env::remove_var(MERGE_BACKEND_ENV) };
+        unsafe { std::env::remove_var(BAND_WORKERS_ENV) };
+
+        assert_eq!(
+            resolve_merge_backend(None).unwrap(),
+            DEFAULT_MERGE_BACKEND,
+            "an unset {MERGE_BACKEND_ENV} did not give the default"
+        );
+        for (v, want) in [
+            ("pyramid", MergeBackend::Pyramid),
+            ("legacy", MergeBackend::Estimator),
+        ] {
+            unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
+            assert_eq!(
+                resolve_merge_backend(None).unwrap(),
+                want,
+                "{MERGE_BACKEND_ENV}={v}"
+            );
+        }
+        unsafe { std::env::set_var(MERGE_BACKEND_ENV, "banana") };
+        assert!(
+            resolve_merge_backend(None).is_err(),
+            "an unrecognised {MERGE_BACKEND_ENV} was not an error"
+        );
+        unsafe { std::env::set_var(MERGE_BACKEND_ENV, "estimator") };
+        assert_eq!(
+            resolve_merge_backend(Some("pyramid")).unwrap(),
+            MergeBackend::Pyramid,
+            "--merge did not outrank {MERGE_BACKEND_ENV}"
+        );
+        unsafe { std::env::remove_var(MERGE_BACKEND_ENV) };
+        assert_eq!(
+            resolve_merge_backend(None).unwrap(),
+            DEFAULT_MERGE_BACKEND,
+            "the resolver did not return to its unset value"
+        );
+
+        let third = MEMORY_BUDGET_BYTES / 3;
+        assert_eq!(
+            band_workers(third, 64).unwrap(),
+            3,
+            "the memory budget did not bound the worker count"
+        );
+        assert_eq!(
+            band_workers(third, 2).unwrap(),
+            2,
+            "the frame count did not bound the worker count"
+        );
+        assert_eq!(
+            band_workers(usize::MAX, 8).unwrap(),
+            1,
+            "a worker too large to fit must still leave one"
+        );
+        assert_eq!(
+            band_workers(1, 0).unwrap(),
+            1,
+            "zero frames must not give zero workers"
+        );
+        unsafe { std::env::set_var(BAND_WORKERS_ENV, "2") };
+        assert_eq!(
+            band_workers(third, 64).unwrap(),
+            2,
+            "{BAND_WORKERS_ENV} did not override the solved count"
+        );
+        unsafe { std::env::set_var(BAND_WORKERS_ENV, "999") };
+        assert_eq!(
+            band_workers(third, 5).unwrap(),
+            5,
+            "{BAND_WORKERS_ENV} was not clamped to the frame count"
+        );
+        for bad in ["0", "abc", "-1", "2.5"] {
+            unsafe { std::env::set_var(BAND_WORKERS_ENV, bad) };
+            assert!(
+                band_workers(third, 64).is_err(),
+                "{BAND_WORKERS_ENV}={bad} was not refused"
+            );
+        }
+        unsafe { std::env::remove_var(BAND_WORKERS_ENV) };
+        assert_eq!(
+            band_workers(third, 64).unwrap(),
+            3,
+            "band_workers did not return to its unset value"
+        );
     }
 }
