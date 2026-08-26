@@ -7244,3 +7244,195 @@ a measurement behind it.
 > **Assigning a priority is a claim, and it needs the same evidence as a
 > number.** I retracted two claims and then, in the same message, made a third
 > one of exactly the kind I had just apologised for.
+
+## 62. Four ways a number survives review, all found in one night
+
+Tonight produced four corrections and they are the same shape. In every case a
+number was correct, its label was wrong, and nobody caught it because the label
+and the number were read together by people who already believed the label.
+
+### 62.1 The backend trap: a flag that changes what you measured
+
+`strehl merge` infers the estimator backend from any estimator-only flag. So a
+harness passing `--gate 2` **without** `--merge` silently gets the estimator,
+prints `merge backend : estimator (inferred from --gate)`, and produces a number
+the author will file under whatever backend they meant. The binary reports this
+pattern at **338 call sites across 185 files**.
+
+Verified directly: `--merge pyramid --gate 2` exits 1 with *"--gate belongs to
+the estimator merge"*; `--gate 2` alone runs and infers.
+
+The consequence found: the README's central performance table — every `gate`
+row, plus argmax and plain mean — is an **estimator** measurement, and there is
+no row at all for the pyramid that actually ships. The likely reason is
+mechanical rather than careless: the pyramid *refuses* `--flat-roi`,
+`--detail-roi`, `--stats` and `--n-eff-map`, so **the tool cannot measure its own
+shipping backend with its own instrumentation.** A table gets written about the
+backend that answers questions.
+
+The rule: **infer a backend from a banner, never from an argv.** When I checked
+the detail-null arms this way they came back clean — all six print `merge backend
+: pyramid (default)`, argv was `stack <src> --out merge.tif` and nothing else,
+and the string `inferred from` appears nowhere in the render tree. The check is
+cheap and it is the only thing that distinguishes the two cases.
+
+### 62.2 A ceiling that could only return one number
+
+BUILD-SHARP published a 1.297x "oracle headroom" on demosaic reconstruction.
+V-DEMOSAIC called it a tautology. I confirmed it without running any of their
+code, from the six published rows alone:
+
+```
+f      malvar   1/malvar   published headroom   |d|
+0.20   1.0604    0.9430    0.943                0.00004
+0.25   1.0000    1.0000    1.000                0.00000
+0.30   0.9058    1.1040    1.104                0.00000
+0.35   0.7713    1.2965    1.297                0.00049
+0.40   0.6228    1.6057    1.606                0.00035
+0.45   0.5385    1.8570    1.857                0.00001
+```
+
+**The headroom column is `1/D_malvar` at every row.** The ceiling arm contributed
+the constant 1.0000 everywhere, so the table measures Malvar's loss and then
+*asserts* the recoverability that was the whole question. The oracle returns
+1.0000 even at `|fx|+|fy| = 0.70`, outside the quincunx support, and returns
+0.0000 on a spread case whose truth is 1.0000 — its output tracks whether a
+single tone is present, not whether information is recoverable.
+
+Two things worth keeping. First, **a ceiling arm that returns the same number at
+every operating point has not been commissioned** — it was never shown able to
+return anything else. That is the same defect class as the two focus statistics
+killed earlier by their own commissioning, and as `hullband.py`'s inverted
+weighting. Third instance this week.
+
+Second, and this is the part that matters for shipping: **the number was wrong
+and the direction was also wrong.** Measured on real data the gain is ~1.10x
+(mean 1.099 over 8 stacks, 1.045 over all orientations) — but Hamilton-Adams is
+*worse* than Malvar off-axis, 0.650 at fy=0.20, and loses outright on
+`lead-1-cpl` at 0.991. A wrong magnitude ships a disappointing picture. A wrong
+sign ships a worse one.
+
+### 62.3 The retraction I had to make about my own finding
+
+I read `foam`'s coloured highlight rims as a blue radial term the CA correction
+was leaving behind. BUILD-CHROMA refuted it with a magnitude argument: their
+mechanism predicts 0.55–0.85% centre-to-corner elevation and I had measured
+87.8%, a gap of 103–160x. I accepted it.
+
+**A direction agreement between two instruments is worth approximately nothing
+when one can predict a magnitude and the other has measured one.**
+
+The true cause turned out to be neither optics nor my term: **channel-asymmetric
+highlight saturation**. Green's ceiling is 38921 against blue's 52239, so green
+pins first and bright pixels acquire a one-sided blue excess. `B/G` climbs
+monotonically 1.0257 -> 1.2903 across nine level deciles, which a fixed
+white-balance gain cannot do. Dropping the top 0.76% of luminance collapses
+corner/centre 1.878 -> 1.031 while removing the same *count* at random leaves it
+at 1.856 ± 0.088 — 7.6 sd, so it is which pixels, not how many. The apparent
+radial pattern was **composition**: the corner band is 51.99% highlights against
+the centre's 0.68%. Two of us chased a sampling artifact as a field effect.
+
+BUILD-CHROMA also caught themselves: their first gate thresholded on fractions of
+65535 when the master's maximum is 52239, removed **zero** pixels, and printed
+*"the elevation survives"*. **A threshold expressed as a fraction of a nominal
+maximum is a trap when the real maximum is lower.** Two controls had already
+caught it and the verdict logic never read them.
+
+### 62.4 The claim that measured the other end of the range
+
+The README asserted **"Highlights are not clipped by the merge"** and supported it
+with three numbers, every one of them a count of exact-**zero** pixels. It proved
+the shadow end and claimed the highlight end. Nothing in it was false; only the
+sentence above the evidence was about a different quantity.
+
+Measurement points the other way: on the pyramid arm, pixels pinned at the
+container maximum run 4.65% frame-wide against the estimator's 1.87%, and 20.48%
+against 0.0952% within one band.
+
+And the tool cannot see it on the path that ships. `report_clip_census` is
+documented as *"Always reported, not hidden behind `--stats`, because a clipped
+pixel is a correctness question rather than a diagnostic one"* — and
+`run_pyramid` states *"No clip census, no outlier rejection, no halo
+correction"*, printing the same at runtime. Nothing is concealed. It is the gap
+between two individually correct decisions, which is the kind that survives
+review. But *"none of them is what this arm is"* is a good argument about
+**estimation stages** and a weak one about a **counter**: counting what you
+pinned is not an estimation stage.
+
+**So the one measurement this codebase singles out as a correctness question is
+the one the default path does not make.**
+
+### 62.5 What the null actually said, which was friendlier than it sounded
+
+The project's headline `~1.2–1.8x` detail gain is **not observed** — six
+subjects, 36 matched sites, two arms indistinguishable to within 0.5 px of
+equivalent blur, which is also the instrument's own floor. Selection wins
+outright on the planar subject.
+
+Then I opened the crops, and the null inverted. On `flowers-cpl` the merge
+renders smooth continuous defocus where argmax **shatters it into hard-edged
+plateaus** in a region containing no real structure; on `bee-3-cpl` argmax smears
+ghost-hairs into clean white ground. **A detail statistic scores invented edges
+as detail.** Argmax ties by manufacturing structure.
+
+Gradient kurtosis in low-detail regions, on sites chosen from the mean of both
+arms:
+
+| subject | merge | argmax | ratio | geometry |
+|---|---:|---:|---:|---|
+| `bee-3-cpl` | 5.83 | 16.26 | **2.79x** | deep, defocused ground |
+| `flowers-cpl` | 3.90 | 7.71 | 1.98x | 3D |
+| `bee-1-cpl` | 7.85 | 14.81 | 1.89x | 3D |
+| `leaf-2-cpl` | 3.52 | 5.54 | 1.57x | 3D |
+| `tweezers-cpl` | 4.25 | 4.97 | 1.17x | near-planar |
+| **`flat-on-ruler-cpl`** | 4.44 | 4.51 | **1.01x** | **planar** |
+
+**The table explains its own exception.** The single subject where argmax beat
+the merge on detail is exactly the one where it invents nothing — a plane, where
+selection is well-posed. Published as descriptive, not pre-registered: the
+per-subject cut was made after seeing per-tile data.
+
+The defensible claim is narrower than the one that was retracted, and it is
+true: **the merge's advantage is noise and the absence of invented structure,
+not fineness.**
+
+### 62.6 The print survey finished, and finishing made it weaker evidence
+
+All 26 subjects opened at 1:1. Twenty-four print-worthy, two limited by the
+capture rather than the stacker, **zero merge defects anywhere**. The category
+"not individually judged at 1:1" is now empty because the survey finished, not
+because the standard moved.
+
+That completion cuts the other way and the README now says so. **A complete zero
+is a larger claim resting on less support per subject.** Twenty-six inspections
+by a single non-blind observer who expected to find nothing is the exact shape of
+a result that should be distrusted. What would settle it — a second party opening
+the same tiles blind, or a defect planted in a render to prove the survey can
+return one — has not been done.
+
+The verifier had to change with it, and the change had to be a **stronger** rule.
+`verify_gallery.py` checked `opened == print-worthy`, which was right only while
+every examined subject passed. Now 26 != 24. The weak fix is to stop comparing
+them. Instead the difference must be discharged by **naming** every subject that
+was opened and did not pass, the stated opened count must equal the cards
+rendered, and a named non-pass may not also appear in the pass list. Then
+commissioned: null arm clean, **6 planted, 6 caught, 0 missed** — including the
+two new rules, so their green means something.
+
+`commission_counts.py` earned its keep before that: it **refused to run** rather
+than pass, hard-erroring `MUTATION TARGET NOT FOUND ... anchor matched 0 times`
+when the prose it plants into had changed. A commissioning harness that silently
+no-ops is worse than none, because it prints a green.
+
+### 62.7 The one sentence
+
+Every defect in this section is a **label attached to a real number**: a backend
+name, a ceiling column, a radial term, a heading about highlights, a comparative
+adverb in a shipped JSON that says "0.88x less pixel noise" where 0.88 means
+*more*. None was a computational error. **The arithmetic was right every time.**
+
+So the guard cannot be "check the maths". It has to be: *derive the sentence from
+the measurement rather than writing it alongside* — and when the two are
+separated by even eight lines of correct reasoning, as `triage.py`'s FLAT-only
+policy was from the all-sites average that violated it, they will drift.
+
