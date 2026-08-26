@@ -1995,3 +1995,109 @@ looks wrong:
 > has run.** A switch that prints an ON banner is not evidence that it did
 > anything, and a statistic printed before the pass is not evidence about the
 > pass.
+
+## 21 The two merges, measured against each other cleanly
+
+Section 20 established that `pyramid` is unreachable from the shipped binary.
+It did not establish that it is better. Those are different claims and only the
+first had evidence, so this section supplies the second — and the first attempt
+at it was wrong in a way worth recording.
+
+## 21.1 A confounded run, and the three things it conflated
+
+I staged the four matched `bm\<subject>-{ctrl,blend}.tif` pairs an implementer
+had produced and ran the acceptance gate on them. It reported the pyramid arm
+failing on all four subjects, clipping **3.01%** of `flower-bud-alone-cpl` and
+losing up to **26%** of acuity. Both figures were wrong, because that comparison
+varies **three** things and attributes all of them to the merge:
+
+1. **The merge.** `strehl.exe stack` — *"regularised winner + noise-gated
+   average (THE DEFAULT PATH, an estimator)"* — against `blend-render.exe` —
+   *"LAPLACIAN MULTI-BAND MERGE (an experiment, not the ship path)"*. The
+   intended variable.
+2. **Lateral CA.** The harness sets `STREHL_FIX_CA` globally, and **only
+   `blend-render` honours it.** The pyramid logs print `lateral CA: CORRECTING,
+   profile "a7c2-fe100gm-2xtc-x4cpl"`; the legacy logs print no CA line at all.
+3. **The tone curve.** Both arms are `--srgb` *viewing* renders whose fitted
+   curves **differ**: `black 0.009852, white 0.354584` against `black 0.000000,
+   white 0.366762`.
+
+Point 3 is this document's own standing rule — measure in linear, never on a
+viewing render — broken by me, in the same night that another lane caught the
+identical error in `trend.py`, where gradient RMS scaling with global contrast
+turned "20 of 26 softer" into 11. The confound is not exotic. It is the house
+error.
+
+## 21.2 The trap the correction then walked into
+
+Re-rendering with `STREHL_FIX_CA` and `STREHL_PHOTOMETRIC` explicitly unset and
+both arms camera-linear produced a legacy file of **47.2 MB** against a pyramid
+file of **188.8 MB** — exactly 4×, because dropping `--demosaic` gives the
+**binned** 3520x2344 CFA output while `blend-render` writes full-resolution
+7040x4688. A gradient statistic compared across a 4× resolution mismatch is
+meaningless. Adding `--demosaic` to the legacy arm alone — camera-linear is the
+absence of `--srgb`, not the absence of `--demosaic` — brought all four files to
+188.8 MB and shape `(4688, 7040, 3) uint16`, with both self-describing as
+*"Linear camera-native RGB … THIS IS NOT sRGB … This is the measurement
+output."*
+
+Two confounds, both introduced while fixing the previous one. Neither would have
+been visible in the output numbers.
+
+## 21.3 The clean comparison
+
+One pin (`tree-lin-0d9fd28`, `strehl E48853C0…`, `blend-render 19786CC7…`), CA
+and photometric explicitly unset, both arms camera-linear at matched resolution,
+`--gate 4` on both. Only the merge differs.
+
+| subject | arm | clip% | acuity | microC | p1 |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `couch-fibers-cpl` | legacy | 0.0000 | 290.3 | 274.76 | 3076 |
+| | **pyramid** | 0.0000 | **260.6 (89.8%)** | **299.35 (+8.9%)** | 3212 |
+| `flower-bud-alone-cpl` | legacy | 0.0001 | 108.7 | 43.67 | 1028 |
+| | **pyramid** | **1.4015** | **99.2 (91.3%)** | 44.42 (+1.7%) | 339 |
+
+**Cleanly attributable to the merge:**
+
+- **Clipping: 1.4015% against 0.0001%**, about 14,000×. Not the 3.01% I first
+  reported — over half of that was tone and CA. But 1.40% is the figure this
+  document has carried since 18.x, it now has a clean attribution, and it is the
+  defect.
+- **Acuity: about 10% lost on both subjects**, 89.8% and 91.3% — not 74-83%.
+  Roughly half the apparent loss was confound. The surviving half matters most
+  where it is cleanest: **`couch-fibers-cpl` has no silhouette and therefore no
+  artifact to inflate its reference, and the pyramid arm still loses 10.2%.**
+- **Micro-contrast rises on both**, +8.9% and +1.7% — a win the legacy path
+  cannot reach.
+- **`couch-fibers-cpl` clips exactly 0 in both arms.** The placebo holds under
+  the clean protocol, which is also the evidence that the protocol works.
+
+## 21.4 What the gate cannot see, and the rule that follows
+
+At 1:1 on the rim of `flower-bud-alone-cpl`, the legacy merge has replaced the
+subject's entire edge with a flat grey low-frequency smear with the hairs wiped
+out; the pyramid render is a dark saturated bud with clean hairs against a clean
+white field. One is a photograph. It is not close, and the gate scores the
+photograph as the failure.
+
+The gate is not malfunctioning. It is answering a frame-wide question about a
+local catastrophe: the smear covers a small fraction of the frame, so a
+frame-wide mean gradient barely moves, and the smear's own banding may raise it.
+That is now the **third** instance of one failure in a single night:
+
+- M122's high-frequency **energy** statistic cannot distinguish an election seam
+  from a feather — which is why H-SEAM is testable at all.
+- `trend.py`'s **gradient RMS** could not distinguish blur from global contrast.
+- `accept.py`'s **global acuity** cannot distinguish "10% softer everywhere"
+  from "one region annihilated".
+
+> **A global scalar cannot adjudicate a localised defect.** When a metric and the
+> eye disagree, and the defect under discussion is spatially confined, the metric
+> is answering a different question — resolve it spatially before believing
+> either.
+
+So `acuity 89.8%` does not mean the legacy merge is sharper. It means the pyramid
+merge is about 10% softer **on average**, and where has not been measured. That
+measurement is worth an hour, because a uniform softness is repayable by
+`restore.rs` — which is dark, and which attributes 18.6% of the merge's blur
+variance to the resampling kernel — while a structured loss is not.
