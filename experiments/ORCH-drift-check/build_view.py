@@ -80,7 +80,8 @@ VERDICTS = {
         "trichomes crossing a depth boundary -- the adversarial case for the gate"),
     "lavendar-cpl": (1, "clean", ""),
     "coffee-bean": (1, "clean", ""),
-    "lead-1-cpl": (1, "clean", ""),
+    "lead-1-cpl": (1, "clean", "Despite the folder name, this is a <b>backlit leaf</b>, not pencil lead \u2014 "
+                              "it sits beside two actual pencil subjects and is routinely misread as one."),
     "flower-inner-edge-cpl": (1, "clean", ""),
     "wrapped-text-2": (1, "clean", ""),
     "tweezers-cpl": (1, "clean", ""),

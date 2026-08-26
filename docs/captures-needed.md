@@ -3534,3 +3534,80 @@ in the project from unanswerable into routine.
   substitute for this.
 - §19's hard edge at three apertures would be **much** more informative shot on
   this chart. If you do both, do them in the same session.
+
+## 31. Your lab's paper profile -- REQUESTED 2026-08-26, a five-minute download, and it outranks any code change for print
+
+### Why you are being asked
+
+The masters were soft-proofed against a real press profile for the first time
+tonight, and the honest headline is good: **0 of 26 subjects crush in the
+shadows**, and the near-black subject everyone expected to fail (`coffee-bubbles`)
+actually scores **1.07** -- the press very slightly *expands* its shadow
+separation, because black-point compensation maps master black to paper black.
+The "it will print as a black rectangle" worry is dead, measured.
+
+**Five subjects would not be sent to a lab as they stand**, and they fall into
+exactly the two classes that four-colour process printing has always been
+weakest at:
+
+| class | subjects | out of gamut, saturated pixels only |
+|---|---|---|
+| yellow-greens going olive | `flower-inner-edge-cpl` | **34.1%** |
+| | `leaf-2-cpl` | **32.2%** |
+| | `lead-1-cpl` | **29.5%** |
+| blues going slate | `119MSDCF` | **25.7%** |
+| | `109MSDCF` | **25.1%** |
+
+**Sharpness is not implicated on any of them.** These are colour verdicts, and
+the stacker is not what would let them down.
+
+### The catch, and it is why this is a request rather than a finding
+
+That proof was run against **RSWOP -- web offset**, which is what magazines are
+printed on. It is the *narrowest* realistic target. **A fine-art pigment inkjet
+-- which is what a macro print would actually be made on -- is substantially
+wider in precisely these blues and greens.**
+
+> **Those five verdicts are almost certainly pessimistic, and the person who
+> measured them says so.** Their own top ask was the owner's real profile,
+> because it would change those five verdicts more than any code change
+> available to them.
+
+### What to get
+
+Whichever of these is easiest:
+
+1. **Your lab's ICC profile.** Nearly every print lab publishes them -- look for
+   "ICC profiles", "soft proofing", or "colour management" on their site. It
+   will be one `.icc` or `.icm` file per paper stock. Grab the stock you would
+   actually print a macro on: a smooth rag or a lustre.
+2. **If you print at home**, the profiles are already on the machine, installed
+   with the printer driver, under `C:\Windows\System32\spool\drivers\color`. The
+   filename usually contains the printer and paper names.
+3. **If you have no lab in mind yet**, any well-known fine-art profile is a far
+   better stand-in than RSWOP.
+
+Drop the file anywhere convenient and say where. Nothing needs to be shot, and
+nothing needs to be re-rendered to use it.
+
+### What it unblocks
+
+- **A truthful print verdict per subject**, instead of a deliberately
+  pessimistic one. On present evidence, several of the five above will simply
+  stop being problems.
+- **Knowing which subjects genuinely need attention before printing**, and
+  whether the answer is a soft-proofed render, a different paper, or nothing.
+- **A rendering-intent decision made on data.** Perceptual and relative
+  colorimetric differ most on exactly this kind of saturated, relief-heavy macro
+  subject, and choosing between them without the destination profile is
+  guessing.
+
+### Related
+
+- The `_ICC` variants of every master are verified genuinely correct -- not
+  merely present. Substituting a different profile moves the pixels by **92 DN**
+  and a round trip returns within **3 DN**, so the embedded profile is live and
+  a no-op through its own path. Whatever profile arrives will be applied on a
+  path already proven to work.
+- `lead-1-cpl` in the table above is a **backlit leaf**, not pencil lead. The
+  folder name misleads and the gallery now says so.
