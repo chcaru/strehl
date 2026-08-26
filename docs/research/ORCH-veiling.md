@@ -1414,3 +1414,151 @@ the linear 16-bit TIFF, `couch-fibers-cpl` unmoved at 0.0000, **and** the ink at
 (6136, 1360) at least as crisp and as dark as bands 6 renders it. The last clause
 exists because of 18.3.
 
+## 18.8 Where the clipped pixels live, and a hypothesis of mine that died on the way
+
+18.7 left the mechanism argued but its *location* unmeasured. Two instruments
+settled it, and the second one killed the reading I had taken from the first.
+
+### The masks
+
+`zeromap.py` marks every exactly-zero pixel in red over the render and rings the
+densest 64-px block, with the block chosen by a rule fixed before looking so that
+the crop site cannot become part of the finding. Four subjects, camera-linear
+where available:
+
+| subject | zeros | densest 64-px block | share in top 0.1% of blocks |
+| --- | ---: | ---: | ---: |
+| `foam` | 1.2197% | 2820/4096 | 4.1% |
+| `flower-bud-alone-cpl` | 1.4043% | **4096/4096** | 7.0% |
+| `bee-1-cpl` | 0.1565% | 3679/4096 | 33.9% |
+| `couch-fibers-cpl` | **0.0000%** | 0/4096 | 0.0% |
+
+`flower-bud-alone-cpl` contains a 64-px block that is *entirely* dead. And the
+placebo reads a clean zero out of 33 million pixels, which is worth more than it
+looks: it means every number in this section is being read against an arm where
+the instrument is known to be able to report nothing.
+
+Read by eye, the masks told a story. `flower-bud-alone-cpl`'s red appeared to
+trace the bud's silhouette; `foam`'s filled the pore interiors; `bee-1-cpl`'s sat
+only on the dark legs, antennae and wing edge while the bright fur stayed clean.
+So I proposed a two-factor mechanism: an **occluding edge** supplies the
+bimodal through-focus curve that makes coarse and fine bands elect different
+frames, and a **dark local pedestal** lets the resulting excursion cross zero.
+It explained all four subjects, including why the placebo is inert — a fibre
+tangle has no clean silhouette at the relevant scale.
+
+### The test that refuted it
+
+The story was built from looking at pictures, so it needed a measurement that
+could contradict it. `risk2d.py` bins every pixel on a 5×5 grid of local
+luminance × local gradient magnitude and reports the observed probability of
+being clamped in each cell, against the probability an independence model
+predicts from the two marginals. Equal-population quantile bins, so no cell can
+look risky merely by being rare.
+
+Both axes are measured on the **control** arm. Binning on the blend's own
+luminance would have been circular: a clamped pixel has luminance zero by
+construction, so the darkest bin would have been built out of the very pixels
+being counted. This is the same precaution `BUILD-HALO` took when it binned
+election jumps against a silhouette taken from a single-frame render rather than
+against a statistic of the election itself.
+
+Risk of being clamped, in %, *within the darkest luminance quintile*, as gradient
+rises left to right:
+
+| subject | grad 0 | grad 1 | grad 2 | grad 3 | grad 4 | corner obs/indep |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `dry-erase-marker-head-cpl` | 23.93 | 23.32 | 19.27 | 11.94 | **4.39** | 0.80× |
+| `flower-bud-alone-cpl` | 14.69 | 14.58 | 14.74 | 14.47 | **10.63** | 0.24× |
+| `bee-1-cpl` | 0.73 | 0.71 | 0.88 | 0.85 | 0.61 | 0.57× |
+| `foam` | 4.93 | 4.46 | 3.65 | 2.87 | 7.92 | 7.76× |
+| `flower-inner-edge-cpl` | 1.55 | 2.33 | 2.92 | 3.08 | 5.07 | 2.50× |
+
+On the two worst subjects the risk **falls** as the gradient rises — monotonically
+on `dry-erase-marker-head-cpl`, from 23.9% to 4.4%, a 5.5× decrease. Against the
+independence model the dark-and-edgy corner is *under*-represented on three of
+five subjects. **Edginess is not the second factor, and the occluding-edge story
+is withdrawn.** I had over-read the masks: what looked like a line tracing
+`flower-bud-alone-cpl`'s outline is a broad solid patch on the dark body of the
+bud near the boundary, and `dry-erase-marker-head-cpl`'s blocks sit in the
+*interior* of the ink rather than along its edge.
+
+### What survived, and why it is now more believable
+
+Darkness is necessary and very nearly sufficient, and it arrives as a cliff
+rather than a slope. On `bee-1-cpl`, luminance quintiles 2 through 4 read
+*exactly* 0.000 in every gradient bin and the step from quintile 0 to quintile 1
+is two orders of magnitude, 0.73% to 0.003%. The same collapse holds on
+`flower-bud-alone-cpl` and `dry-erase-marker-head-cpl`.
+
+So the excursion lives in dark, **flat** regions. That converges with 18.4 from a
+completely different direction: the 52× step arrived with the **coarsest**
+Laplacian band, and coarse bands are by construction low-frequency and carry
+flat-region content, so an inconsistency there produces exactly the broad
+low-frequency excursion the risk map measures and exactly the block shapes the
+crops show. Two instruments that knew nothing about each other now point at the
+same object. That is the reason to believe it, and it is a better reason than
+the one I had for the story it replaced.
+
+The consequence for the fix is concrete: **do not gate the bound on gradient.**
+An edge-targeted repair would miss the bulk of the defect and, on
+`dry-erase-marker-head-cpl`, would aim at the least affected fifth of the dark
+population.
+
+One caveat rather than a footnote: the `-after` arms in `ORCH-100\_tiff` are
+sRGB-developed, so some of their zeros come from the camera-to-sRGB matrix and
+not from the merge — `dry-erase-marker-head-cpl` reads 2.55% here against 1.29%
+in camera-linear. The absolute rates in that table are therefore mixed, and
+`flower-inner-edge-cpl`, whose risk peaks in the *mid-tone* quintiles at 19–32%
+unlike every other subject, is probably showing the matrix mechanism rather than
+this one. The contamination does not plausibly manufacture a 5.5× monotone
+decrease with gradient, which is the finding being acted on.
+
+## 18.9 The acceptance gate, and its commissioning
+
+18.3 recorded a candidate fix that scored a perfect 0.0000 on the clipping metric
+and produced a featureless grey smudge. The lesson should not depend on anyone
+remembering it, so it is now an instrument: `accept.py` refuses to print a
+quality column without printing, from the same render, the cost columns that
+destroying the subject would move.
+
+- **Quality, wanted down:** `clip%`, pixels with any channel exactly zero in
+  linear 16-bit.
+- **Cost, wanted not-down:** `acuity`, mean |Laplacian| of green over pixels
+  above the 20th luminance percentile, so it reports subject detail rather than
+  noise in the black; `microC`, median local standard deviation in 8×8 tiles over
+  the same lit population, an independent witness that a blur which preserved
+  gradient energy by ringing would still fail; and `p1`, the 1st percentile of
+  green, which must not *rise*, because that is ink going grey.
+
+The rule was fixed before any candidate was measured: `clip% ≤ 0.02` on every
+channel of every subject, `acuity` and `microC` at or above 98% of reference, and
+`p1` rising by no more than 2% of range.
+
+A gate is a claim about an instrument, so it was commissioned against a
+known-potent sabotage with the verdict written down first. The registered
+prediction was that arm C must fail, and must fail on the **cost** columns rather
+than on clipping, since it scores a perfect zero there.
+
+| arm | clip% | acuity | microC | p1 | verdict |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `A-shipped` (ref) | 1.6777 | 521.2 | 232.20 | 0 | reference |
+| `C-sharpen0` | **0.0000** | 205.7 | 144.06 | 715 | **FAIL: acuity 39.5%, micro 62.0%** |
+| `F-bands2` | 0.1066 | 371.0 | 193.09 | 1133 | FAIL: clip, acuity 71.2%, micro 83.2% |
+| `E-baseweighted` | 2.3951 | 428.1 | 208.95 | 0 | FAIL: clip 2.2442% |
+| `B-camlin` | 1.5212 | 430.7 | 208.38 | 0 | FAIL: clip 1.3815% |
+| `D-exposure3` | 1.5181 | 768.8 | **0.00** | 0 | FAIL: micro 0.0% |
+
+`C-sharpen0` was rejected on the cost columns alone, as registered. `D-exposure3`
+self-caught for a reason worth keeping: at +3 stops the lit population saturates,
+local variance collapses to zero, and the gate refuses an arm that is not
+comparable rather than scoring it. Five arms judged, none unjudgeable, five
+accounted for.
+
+Two limits are worth stating plainly. Passing the gate is necessary and not
+sufficient — the 100% crop at a rule-fixed site is held back from the authors and
+the photograph outranks the table. And the gate compares arms, so candidate and
+reference must be rendered with identical flags in the same colour space;
+`B-camlin` reading 82.6% acuity against an sRGB reference is the instrument
+detecting a colour-space mismatch, not a defect in the merge.
+
