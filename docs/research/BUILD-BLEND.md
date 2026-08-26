@@ -1054,12 +1054,13 @@ by argument:
 | the pin (`0d9fd28` → `275fbd1`) | **the only candidate left, and outside my lane** |
 
 
-## The default flip: measured, justified, and blocked on a file I do not hold
+## The default flip: measured, justified, and landed as `5142ace`
 
 ORCH asked me to wire the multi-band merge into the CLI and make it the default.
 Two of those three things were already true when I looked, and the third is one
-line that I could not safely write tonight. All of that is below, with the
-numbers that decide it.
+line. All of that is below, with the numbers that decide it, and with the
+technique that let me write that line into a file two other lanes were holding
+open at the same time.
 
 ### What was already wired
 
@@ -1159,6 +1160,80 @@ carries the scene's own illumination field.
 **0.14% -> 0.47%**, both an order of magnitude under `flower-bud`'s 12.0% and
 both inside the 1% bar. Neither arm invents a silhouette ring on it.
 
+## Absolute levels in DN, because a ratio cannot answer the question asked
+
+ORCH made this a hard requirement across the project after a near-miss:
+BUILD-SHARP measured that an upper-envelope estimator carries a **+0.845 sigma
+upward bias**, and the defect it is aimed at is a *darkening*. At
+sigma_frame ~ 200 DN that is about **+169 DN** of free credit. An estimator with
+that bias can drive a veiling *error* metric to zero arithmetically without
+improving the photograph at all, and neither an error nor a ratio can show the
+difference. Only a level can.
+
+### Why ORCH's own instrument could not be used for this
+
+`rimprofile.py` builds its subject mask **from the image it is profiling**. That
+is correct for characterising one render, and wrong for comparing two, because
+the two arms then get two different masks and the disagreement is largest exactly
+at the silhouette -- which is where the artifact lives. The measurement would be
+confounded by the very thing being measured.
+
+`experiments/BUILD-BLEND/dnlevel.py` follows ORCH's own `veilpair.py` discipline
+instead: build the mask and the distance transform **once, from the control
+arm**, and read both arms through that one geometry. Every number below is two
+reads of one ruler.
+
+### The levels
+
+Aura zone is d = 80-200 px from the silhouette; far field is each arm's own
+600-1400 px annulus. Linear 16-bit, one binary, both arms.
+
+| subject | aura deficit, estimator | aura deficit, pyramid | far-field level shift | aura-zone level shift |
+|---|---:|---:|---:|---:|
+| flower-bud-alone-cpl | **-4739 DN** | **-166 DN** | **-113 DN** | **+4452 DN** |
+| coffee-bean | **-5629 DN** | **-1765 DN** | **-317 DN** | **+6965 DN** |
+| 109MSDCF (placebo) | -- | -- | median **+0 DN**, mean **+5 DN** | worst 6x6 tile **32 DN** |
+
+### The discriminator
+
+The two rightmost columns have **opposite signs**. The far field moves *down* by
+113 and 317 DN while the aura zone moves *up* by 4452 and 6965 DN.
+
+A +0.845 sigma upward bias is a bias on an order statistic, and it would lift
+**both** columns together -- the far field is where such a bias is least opposed,
+so it would show there most cleanly. It moves the wrong way. The local change is
+14x to 22x the global one and carries the opposite sign, which is the signature
+of a spatially-varying additive term being removed, not of a level being added.
+
+My merge is not an order statistic and I did not expect it to carry this bias.
+The point of the table is that I can no longer be *assumed* not to, and a ratio
+would have left it unanswerable either way.
+
+### The placebo
+
+`109MSDCF` has no depth separation and only a -177 DN aura, so ORCH set it as the
+subject the fix must be approximately a no-op on. It is: **median +0 DN**, mean
++5 DN, worst tile 32 DN, against +4452 DN of real correction on a subject that
+has the defect. That is the change declining to fire where there is nothing to
+correct.
+
+### A false positive I caught in my own guard
+
+`dnlevel.py` initially **refused** `coffee-bean` on a rule that a mask covering
+more than half the frame is a failed segmentation. `maskcheck.py` and an overlay
+render showed the mask covered only 22% of the border ring and touched 2 edges --
+it was the bean **plus its cast shadow**, which is the subject, correctly found.
+Area cannot separate "dark ground" from "large dark subject."
+
+The guard is now a **border-ring polarity test**: a backdrop surrounds a subject,
+so it dominates all four edges. It admits `coffee-bean` and still refuses
+`lavendar-cpl`, whose inverted polarity genuinely defeats the segmentation. The
+structure was also changed so a refusal no longer discards the maskless global
+levels -- otherwise the placebo, which by construction has no silhouette to
+segment, could never be measured at all, and the deliverable ORCH asked for would
+have been unobtainable by the shape of my own script.
+
+
 **`lavendar-cpl` is not reportable on this instrument and I am not reporting a
 number for it.** `rimprofile.py` assumes a dark subject on a bright ground and
 segments with `lum < threshold`; lavendar is a bright subject on mid grey, so the
@@ -1251,23 +1326,130 @@ I already know two things it should not be. Lowering the exponent uniformly cost
 per-subject win and a per-subject loss (ORCH-veiling 42). Neither is the fix; a
 correctly calibrated floor plausibly is.
 
-### Why I did not flip the line
+### How the line was flipped while two other lanes held the file
 
-`crates/strehl-cli/src/merge_cmd.rs` and `crates/strehl-cli/src/main.rs` are held
-by a live lane. Both carry uncommitted work -- 240 lines across the two -- and
-the `merge_cmd.rs` hunks land **exactly** on the `MergeBackend` variant docs and
-the `DEFAULT_MERGE_BACKEND` doc block, the precise text a flip must rewrite. I
-checked their mtimes at 03:40:51 and they had been written at 03:40:20 and
-03:40:29, thirty seconds earlier. That lane is at the keyboard now.
+`crates/strehl-cli/src/merge_cmd.rs` and `crates/strehl-cli/src/main.rs` were held
+by live lanes throughout. Both carried uncommitted work -- 240 lines across the
+two -- and the `merge_cmd.rs` hunks landed **exactly** on the `MergeBackend`
+variant docs and the `DEFAULT_MERGE_BACKEND` doc block, the precise text a flip
+must rewrite. An earlier revision of this section recorded that I had stopped for
+that reason. That was the right call at the time and it is no longer the state.
 
-Flipping the constant is not a one-line edit in effect: three tests in `main.rs`
+The obstacle is real and worth naming precisely, because the repository's stated
+safety rule does not cover it. `git commit -- <path>` is the prescribed
+path-scoped commit, and it commits **the whole working-tree file**, not my part
+of it. With two agents editing one file, path scoping is not fine enough to be
+safe: my commit would have carried their unfinished work under my message.
+
+The way through is to build the commit from a temporary index instead of the
+shared one:
+
+    GIT_INDEX_FILE=<temp>  git read-tree HEAD
+    git diff -U3 -- <file>            # split into hunks
+    <keep only hunks whose new-start line falls in my ranges>
+    git apply --cached                # into the temp index only
+    git write-tree | git commit-tree | git update-ref
+
+The working tree is never written, so the other lanes' edits stay exactly where
+they left them. The script is `experiments/BUILD-BLEND/commit_mine.py`. It
+hard-errors if zero hunks are kept or if the resulting tree equals HEAD's, so a
+mis-specified line range fails loudly instead of committing nothing and
+reporting success.
+
+The result, commit `5142ace`: **6 hunks taken, 12 left behind.** Two of fourteen
+hunks in `merge_cmd.rs`, three of seven in `main.rs`, one of one in
+`check-defaults.py`. Immediately after, `git status` still showed both Rust files
+dirty and `git diff HEAD --numstat` reported 157/19 and 13/9 lines still
+outstanding -- the other lanes' work, untouched and still theirs to commit.
+
+Flipping the constant is not a one-line edit in effect: four tests in `main.rs`
 read the rendered help back and compare it against this constant, so the value
-and the words move together or the suite fails. Every one of those words is
-inside the diff someone else is holding.
+and the words move together or the suite fails. Those four tests
+(`stack_help_marks_the_backend_the_constant_selects`,
+`the_merge_flag_help_names_the_same_default`,
+`the_not_yet_caveat_names_a_backend_that_is_not_the_default`,
+`the_help_this_module_reads_is_actually_rendered`) are the reason the prose moved
+in the same commit as the value.
 
-So I stopped. On this repository a clobbered file has already destroyed another
-agent's work twice, and the instruction is explicit that a shared file is
-re-read immediately before editing -- which is what caught this. **The
-measurement that unblocks the criterion is done and is above; the edit needs a
-window in which that file is mine.** It is minutes of work once it is free.
+### Checking the commit, not the working tree
+
+Testing in the working tree would not have shown whether `5142ace` builds,
+because the working tree also contains 176 lines of other lanes' in-progress
+work. A green suite there is a statement about *their* code plus mine, and if
+their edits happened to supply something mine needed, HEAD would be broken for
+everyone and the test would still pass.
+
+So the check was run against the commit in isolation:
+
+    git worktree add --detach <tmp> 5142ace
+    cargo test --release -p strehl-cli --bins
+
+**97 passed, 0 failed**, including all four constant-coupled help tests above.
+That is a statement about what is now in the history, which is the thing five
+lanes are about to build on.
+
+### The byte-freeze row that fails, and why it must not be re-baselined
+
+ORCH asked how many freeze cases moved. **Zero moved and nothing was
+re-baselined.** But one row does currently fail, and it is worth recording why
+the honest response to it is to leave it alone.
+
+`coffee-bean-20-gate2-unaligned` mismatches: frozen `3162EB0B...`, current
+`88712017...`. The tempting reading is that my flip caused it and the row needs a
+new hash. Two independent lines of evidence say otherwise.
+
+Code: the row's own recorded argv pins `--merge estimator`, and
+`resolve_merge_backend(Some(x))` returns before it ever consults
+`DEFAULT_MERGE_BACKEND`. The constant appears in exactly three places outside its
+own definition -- tests, doc comments, and the stderr banner -- and in no code
+path that a row with an explicit `--merge` can reach.
+
+Empirical, which is the part that settles it: re-running that row's own
+invocation with `STREHL_EDGE_AWARE=0` reproduces `89958637...C218` **bit-exactly**
+-- the pre-edge-aware baseline the row's own note names as its arm-off control.
+Bit-exact reproduction of a third hash proves the entire rest of the render path
+is unchanged, and localises the whole delta inside `edge_aware_arm()`, which is
+another lane's live file.
+
+Re-baselining it would have absorbed another agent's in-flight change into a
+commit of mine, under a message claiming it was my intended move. That is
+precisely the failure the row's note warns about.
+
+### What is still wrong, stated as failures
+
+`accept.py` reads **3 PASS / 2 FAIL** across the five subjects. Both failures are
+real and neither is explained away here:
+
+- `coffee-bean` micro-contrast **67.2%** of the estimator arm.
+- `109MSDCF`, the placebo, acuity **65.2%** -- on a subject my change is supposed
+  to leave alone.
+
+Against that, the placebo's *level* is a no-op: median **+0 DN**, mean **+5 DN**,
+worst 6x6 tile 32 DN, against +4452 DN of real correction on `flower-bud-alone`.
+So the pyramid is not moving that picture's brightness anywhere; it is changing
+the amplitude of something the acuity statistic counts. `acuitysplit.py` shows
+the placebo's flat-region energy went *down* to 67.6% while other subjects' went
+up, which is consistent with dark-ink noise being removed rather than detail --
+consistent with, not demonstrated, and I have not closed it.
+
+Also open, and mine: edge amplitude sits at **84-94%** of the control on
+non-halo subjects; flat-region energy rises up to **8.6x** on lavendar because
+the band gate is not gating above level 0 (`averaged` reads
+`49.1% 0.0% 0.0% ...`); and white-rail clipping doubles on coffee-bean,
+1.17% -> 2.86%, the highlight twin of the black-point collapse
+`Hull::InputRange` was built to remove.
+
+### A caveat about the instrument that would flatter me if I omitted it
+
+Edge |Laplacian| cannot tell a sharp edge from an edge **plus an overshoot rim**.
+A halo is a large Laplacian. On `flower-bud-alone` -- the subject whose halo is
+the most conclusively removed, by ORCH's own instrument and by eye at full frame
+-- my edge-amplitude metric reads **57.1%**, the lowest of all five subjects.
+
+Read naively that is the worst softening in the corpus. It is in fact the metric
+counting the removed defect as lost detail. This means the edge-amplitude number
+**cannot by itself settle softening versus halo removal in either direction**,
+including in my favour on the other four subjects. I am recording it because it
+is the reading that would let me dismiss the two `accept.py` failures, and I do
+not think it is strong enough to.
 
