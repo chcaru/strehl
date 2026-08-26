@@ -8716,3 +8716,123 @@ Routed to BUILD-WIRE as a source read, not another measurement.
 else in the file is right -- 16-bit, `SampleFormat (1,1,1)`, a real 2716-byte
 ICC that names itself, an `ImageDescription` stating primaries and white point.
 A print master whose physical size is undefined is not a print master.
+
+## 75. The plant is not the commissioning arm, and the confound was in the variable
+
+Two lanes reported within an hour of each other. Between them they overturned
+two things this project thought it knew about how to commission an instrument.
+
+### The null is the sensitive arm, not the plant
+
+BUILD-SHARP redesigned the ringing detector and found **three** defects in the
+redesign. Every one was caught by the **null**. Every one had a **passing
+plant**.
+
+| defect | what it did | plant said |
+|---|---|---|
+| `max(q[-1]-q[0], 1e-12)` clamping a negative denominator | nulls at **4.3e11** | passed, at that scale |
+| excursion extrema at profile indices 0 and 28, **inside the samples defining the plateau** | strehl **0.0111**, fork **0.0097** | passed |
+| null blurred at 9 taps, plant at 13 | plant **non-monotone in blur** | passed |
+
+> **A passing plant does not commission an instrument.** The plant is large by
+> construction and will survive a broken instrument; the null is the sensitive
+> arm, and a null that is not exactly zero is the only thing that catches a
+> defect big enough to swallow the plant whole.
+
+The middle row is the one to be frightened of. `0.0111` against `0.0097` is a
+**tidy near-tie**: small, plausible, faintly in our favour, no dramatic claim
+attached — the exact shape a tired reader accepts without checking. It was
+produced by measuring extrema inside the very samples that defined the
+normalisation. Nothing about the number looks wrong. Only the null did.
+
+Third defect, restated because it is a general test: **heavier blur cannot ring
+more.** A plant that is non-monotone in blur is broken regardless of what it
+reports. Physical monotonicity is free commissioning and almost nobody checks it.
+
+### The confound was never in the statistic
+
+Section 73 recorded the ringing detector's sensitivity scaling with edge
+sharpness. BUILD-SHARP then built a genuinely different instrument to escape it:
+a **calibration-free shape test** -- does the plateau-normalised edge profile
+leave [0,1]? A non-negative kernel cannot push it out; ringing must. No
+amplitude reference anywhere, exact null at every blur level. It should have
+escaped.
+
+| | 10-90% edge width | shape test |
+|---|---:|---|
+| synthetic step | 1.89 px | sees ringing, **0.0636** |
+| step + blur 1.5 | 4.33 px | **blind, 0.000000** |
+| `wt1-strehl` | 13.52 px | 0.000000 |
+| `wt1-fork` | 17.86 px | 0.000000 |
+
+Both renders sit **more than 3x past the blindness threshold**. Their zeros
+would read zero whether or not ringing is present.
+
+> **The confound was not in the statistic, it was in the VARIABLE.** Any
+> instrument whose usable range is bounded by edge sharpness will fail this
+> comparison, because edge sharpness *is* the comparison. Redesigning the
+> statistic while staying on that variable reproduces the failure with a new
+> mechanism and the same direction.
+
+Two independent instruments, two different mechanisms -- amplitude sensitivity,
+then range blindness -- one consequence. That is why ISO 12233 is now the only
+live route: it recovers the transfer function from the edge's own spectrum
+rather than comparing an amplitude against an external reference. BUILD-RESAMP
+has been told to **verify** that immunity across 1.9-18 px of edge width rather
+than assume it, because *"I think it is immune"* is what produced both failures.
+
+### The claim that was refused for favouring us
+
+> *"13.52 vs 17.86 is not evidence our edges are sharper. Cross-image magnitude,
+> different populations (11,185 edges vs 4,436), inflated by subpixel phase
+> averaging. **It favours us, which is why I am not reporting it.**"*
+
+That is the standard. It would have gone straight onto the README, it is
+directionally what everyone here wants, and it was killed on methodology the
+author had derived two turns earlier.
+
+### A ship blocker, found in passing
+
+**`wt1-strehl.log` says 22 frames, against a directory named `h2h24`.** If our
+render consumed 22 frames of that bracket and the fork consumed 24, every
+head-to-head number from that pair is **void** -- not biased, void, because the
+two sides did not see the same photons and any sharpness difference is partly a
+difference in what was available to be sharp. Routed to BUILD-RESAMP, who owns
+the fork renders; the finder does not adjudicate their own discrepancy. The
+directory name is the weakest evidence in the room and does not arbitrate.
+
+### A false accusation is also an instrument failure
+
+BUILD-TRIAGE's mutation harness failed **by accusing working code**: the wording
+mutation left `noise_phrase` monkeypatched, so both later definition mutations
+tripped the *wording* gate, and the test reported "gate is blind" while both
+gates were fine.
+
+> **A mutation that is not undone silently invalidates every mutation after it,
+> and the symptom is a false accusation, not a false pass.**
+
+This is the tenth instrument failure catalogued in three days and the only one
+that runs the other way. Everything else in the family returns a comfortable
+green. A false accusation at least announces itself -- but it sends you hunting
+a defect that does not exist, and its second-order cost is that the next real
+accusation gets discounted.
+
+### Near-synonyms read as corroboration
+
+Applying "define every field at the point of display" to their own file,
+BUILD-TRIAGE found two more:
+
+- `merge_edge_dnpx / frame_edge_dnpx` **fails to reproduce** `edge_ratio_min` on
+  **13 of 25 rows**, worst `bee-2-cpl` at 1.92 against a true 1.43 -- **34%
+  out**. Invisible from the names: the DN/px figures are maxima over *possibly
+  different sites*, and only the ratio is gather-corrected. Dividing them looks
+  like arithmetic and is wrong.
+- The sheet read *"instrument floor 0.3 px"* against `BLUR_FLOOR_PX = 0.35`.
+  They **deleted the hardcoding** rather than correcting the digit -- making the
+  class impossible instead of the instance absent.
+
+And the direction of the gate they nearly did not build: **an orphaned
+definition is worse than a missing one**, because a reader who cannot find what
+it describes maps it onto the nearest surviving name. That is exactly how
+`noise_flat` and `noise_advantage` came to be read as one quantity while
+disagreeing by 17x in opposite directions.
