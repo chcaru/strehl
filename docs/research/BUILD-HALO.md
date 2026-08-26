@@ -1851,3 +1851,85 @@ freely across `couch-fibers`' texture, because it has no depth steps, while
 still stopping at a true silhouette. It is a signal swap at `merge_cmd.rs:1180`
 plus the plumbing to get the field there, and it is the frequency-selective --
 strictly, structure-selective -- move ORCH asked whether I could see.
+
+## 21. The 191-frame index jumps are anti-coincident with the rim
+
+BUILD-CHROMA found adjacent-pixel election-index jumps of up to 191 frames in a
+299-frame bracket and ORCH routed it here as a candidate rim mechanism, asking
+one falsifiable question: do the extreme jumps overlay the silhouette?
+
+**They do not. They are depleted to exactly zero at the silhouette and enriched
+in the open background.** Picture: `C:\dev\strehl-out\JUMP\JUMP-overlay.png`.
+
+### 21.1 The measurement, binned on an election-independent map
+
+The obvious binning map is wrong. `depth_profile.depth_mask` segments on the
+local standard deviation of the election map, and a large adjacent-pixel jump
+IS large local SD -- binning the jump field on that mask is binning a statistic
+on itself and would manufacture the coincidence. The silhouette here is
+therefore taken from `f221`, a `STREHL_ONLY_FRAME` render with **no election in
+it at all**, so it is independent of the election map by construction.
+
+The threshold is the plane's own 99.9th percentile, which fixes the extreme
+population at 0.1% by construction and leaves only its *location* free to vary.
+
+| band (px) | background px | extreme | enrichment |
+|---|---|---|---|
+| 1-6 | 69,201 | **0** | **0.00x** |
+| 6-12 | 68,716 | **0** | **0.00x** |
+| 12-20 | 93,693 | **0** | **0.00x** |
+| 20-28 | 92,183 | **0** | **0.00x** |
+| 28-40 | 138,623 | 49 | 0.24x |
+| 56-78 | 255,034 | **0** | **0.00x** |
+| 150-208 | 633,929 | 1,051 | 1.12x |
+| 288-400 | 871,086 | 2,086 | **1.62x** |
+
+Zero extreme jumps in 231,610 background pixels within 20 px of the silhouette.
+Not "few" -- zero.
+
+### 21.2 What the jumps actually are
+
+They are **dead ground**. A featureless backdrop has no focus signal, so the
+argmax is noise spanning the whole bracket and adjacent pixels elect unrelated
+frames. This is not a new finding here; it is the *defining property* section
+19.3's segmentation already relies on -- "dead ground elects noise, a real
+object elects coherently". BUILD-CHROMA measured the selector's noise floor on
+textureless regions, which is real and worth knowing, and it is not a cliff at
+depth boundaries.
+
+### 21.3 The consequence that matters, and it is a reframing
+
+Enrichment *below* base rate near the silhouette is not a null result, it is a
+positive one with the opposite sign. Near a real occluding edge there is
+genuine contrast, so the election is better determined than average: **the rim
+is not where the selector is uncertain. It is where the selector is confident
+and wrong.**
+
+That kills a whole family of approaches at once -- anything of the form "detect
+low-confidence or incoherent pixels and repair them" is aimed at a population
+that does not overlap the artefact. It also explains why the veto-gated
+collapse of section 18 could be correct in its logic and still do nothing: a
+confidence-shaped gate cannot find a defect that is not confidence-shaped.
+
+### 21.4 The averaged-index mechanism does not exist in this code
+
+ORCH's proposed mechanism was that a box filter on the index field averages 40
+and 231 to 135, landing a pixel between two depths. **The regulariser is a box
+on the FOCUS field, not on the index field** (`merge.rs::regularise` ->
+`box_mean(focus, ...)`); the winner is then an argmax over frames of the
+regularised focus field, so the elected index is always one some frame actually
+attained and an intermediate index can never be synthesised.
+
+Measured rather than merely read off the source: the subject elects 96 and the
+far background 210, and only **11.8%** of near-band pixels elect the middle 60%
+of that gap -- far below the 60% a filled distribution would give. The
+near-band election is bimodal, not averaged.
+
+Fact 86's non-monotonicity (width 3 worse than none) therefore still needs an
+explanation, but averaging across a bimodal index field is not it.
+
+### 21.5 Cost
+
+One hour, no renders -- it reused the `TRADE` ladder's `off` and `f221` arms and
+the existing election map. Either answer would have been progress; this one is
+a refutation, and the picture is the report.
