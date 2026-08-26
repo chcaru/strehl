@@ -8947,3 +8947,112 @@ per-channel focus-index offset. Recommendation accepted in full: **do not change
 `optics.rs`.** The correction is right in magnitude, its rescale is already
 rejected, its support limit governs 1.3%, and it demonstrably steadies the outer
 field.
+
+## 77. Three ways to be too generous to yourself
+
+### A threshold read off the first failing grid point flatters the instrument
+
+BUILD-SHARP was asked to write down their shape test's blindness threshold as a
+stated applicability range. Re-deriving it **corrected their own published
+number, in the narrowing direction.**
+
+Section 75 recorded 4.33 samples. That figure came from a three-point grid, so
+it was **the first width observed to fail** -- an upper bound on where the test
+still works, never a measurement of it. Swept finely:
+
+| width 10-90% | plant response | detectable |
+|---:|---:|---|
+| 1.89 | 0.063624 | yes |
+| 2.37 | 0.017203 | yes |
+| **2.69** | 0.000988 | **yes -- last** |
+| 3.18 | 0.000000 | no |
+| 4.33 | 0.000000 | no |
+
+**Detectability does not decay, it falls off a cliff**, and the usable window is
+under three samples wide. The two renders are therefore **5.0x and 6.6x** past
+the range, not 3.1x and 4.1x. The conclusion is unchanged and strengthened.
+
+> **A threshold read off the first failing grid point always flatters the
+> instrument.** You find the first point that fails, not the last that works,
+> and the gap between them is invisible unless you look for it.
+
+Theirs was **61% too generous**, and it was their own number in their own
+report. Any limit derived from a coarse sweep is biased toward optimism in
+exactly the direction that makes the instrument look more applicable than it is.
+
+### A check that always refuses is the same defect as a plant that always passes
+
+They then commissioned the *guard*, which is the step almost nobody takes:
+
+| fixture | width | verdict |
+|---|---:|---|
+| lanczos, no blur | 1.61 | **RINGING** (0.025239) |
+| linear, no blur | 2.02 | **NO RINGING** (0.000000) |
+| lanczos, blur 2.0 | 5.29 | **REFUSED** |
+
+Three inputs, three different verdicts. **Row three is the whole argument: a
+genuinely ringing image measuring exactly `0.000000`.** Without the guard it
+reads clean, with an exact null and a passing plant standing behind it.
+`APPLICABLE_MAX_WIDTH = 2.69` is now a module constant carrying its provenance,
+and the reporting function prints `VERDICT: REFUSED` with the raw numbers
+labelled `NOT A VERDICT` rather than a figure a reader could bank.
+
+### The mutation rule travels with a limit, and the limit inverts the intuition
+
+BUILD-TRIAGE amended their own rule from section 75 before it propagated:
+
+> **The `finally` protects only the state I knew to restore.** Each mutation
+> needs its own isolation, and the safest isolation is a **fresh process**, not
+> a `finally`.
+
+I had been about to send "use a `finally`" fleet-wide, which would have shipped
+the minimum as the pattern. Module-level caches, in-place mutation inside
+`main()`, and any mutation added later that forgets its own restore all sit
+outside what a hand-written `finally` can see.
+
+The second half is the part I would not have derived:
+
+> The failure was legible **because** the definition mutations were downstream
+> of the wording mutation. **A single-mutation harness with the same bug would
+> have shown nothing.**
+
+> **The bug's visibility scales with the number of mutations sharing a process,
+> so the harnesses most likely to be silently broken are the small ones.**
+
+A one-mutation harness looks simpler and easier to trust, and is the one
+configuration in which unrestored state produces no symptom at all.
+
+Checked against my own two instruments rather than assumed: `check-potency.py`
+and `commission_grade_guard.py` both run each arm as a **subprocess**, so they
+are on the recommended pattern rather than the minimum -- and arm B of the grade
+harness demonstrably loaded the mutant, proven by it emitting the
+mutant-specific diagnostic rather than a generic failure. Empirically isolated,
+not argued to be.
+
+### The eleventh instrument failure was mine, and it was a false accusation
+
+I gave BUILD-TRIAGE the closing task *"confirm every field has its definition
+available at the point of display"*, then ran it on my own shipping gallery.
+
+My detector looked for a definition by requiring `=`, an em dash, a colon or the
+word "means" between a term and its explanation. It reported **all seven**
+displayed terms undefined, including the four verdict badges -- which are in
+fact all properly defined, in a legend of the form `<span>showcase</span> the
+hardest geometry in the corpus and clean`. **Term, then definition, no separator
+at all.** My instrument demanded a syntax the data does not use and returned a
+confident, uniform, entirely wrong zero. I nearly "fixed" a correct legend.
+
+Second member of BUILD-TRIAGE's false-accusation class in a day, and the
+practical lesson is the same as the plant/null one: **a detector for the
+presence of prose must be commissioned against real prose**, because the space
+of ways humans write a definition is much larger than the space a regex covers.
+
+**The real hit was the drift they predicted.** The lede said *"Each card shows
+the full frame and a 100% crop of actual pixels"* -- and I had changed the full
+frame to a **graded** render hours earlier. One sentence restating what the code
+does, drifting the moment the code changed. Now corrected, and it states *why*
+the halves differ rather than only that they do.
+
+I could not delete the second copy the way BUILD-TRIAGE deleted `0.3 px`, because
+prose describing a design decision has no constant to source from. **Mine
+remains the weaker class of fix and saying so is part of the fix.**
