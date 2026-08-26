@@ -1,7 +1,9 @@
 # V-softness: independent verification of the library-wide sharpness regression
 
 Status: complete. Verifier: V-SOFTNESS. Subject: BUILD-RENDER.md sections 12.1-12.3,
-and the proposed revert of `57e4554`.
+and the proposed revert of `57e4554`. **Part II below answers the halo cost that
+Part I left open, and reports a defect in the blend measurement it was compared
+against.**
 
 I did not edit `crates/`, `SYNTHESIS.md`, `AGENTS.md`, `README.md` or
 `docs/captures-needed.md`. Everything below is measured from pinned `git archive`
@@ -224,14 +226,304 @@ BUILD-HALO, who owns that lane and has a commissioned aura instrument.
 
 ## 7. Gaps
 
-- The halo cost of restoring the shrink is **unmeasured**. This is the one thing
-  that could still make the revert wrong, and it needs BUILD-HALO.
+- ~~The halo cost of restoring the shrink is **unmeasured**.~~ **Closed by Part II
+  section 10**: measured on three subjects with dose. It is 0 DN on the band
+  merge, 48-92 DN on `coffee-bean` and `bee-1-cpl`, and +444 DN *favourable* on
+  `flower-bud-with-background-fern-cpl`.
 - I isolated the commit on two subjects, not 26. The other 24 rest on the gallery
   comparison, which is now corroborated by four statistics but is still a two-pin
   comparison spanning 18 commits.
-- Section 12.2's ladder reports 0.9376 for `859edac` on `couch-fibers-cpl` while
-  section 12.1's table reports 0.9604 for what is nominally the same comparison.
-  The report does not say which files the ladder was measured on. Unreconciled.
+- ~~Section 12.2's ladder reports 0.9376 ... Unreconciled.~~ **Closed by Part II
+  section 13**: it is a statistic-and-medium artifact, not a tone artifact. The
+  proposed tone explanation is refuted -- global contrast between the two runs
+  differs by 0.36% and mean level by 0.5 DN.
 - `foam`, `leaf-2` and `lead-1` read softer on the normalised statistic and
   *sharper* on the HF fraction. Two of my instruments disagree on three subjects
   and I did not chase it.
+
+---
+
+# Part II: the halo cost of restoring the shrink
+
+Status: complete. Second assignment, same verifier. Everything below is measured
+from a pinned `git archive` of HEAD `2981354` patched under
+`C:\dev\strehl-out\V-shrink\tree`. I did not edit the shared `crates/`.
+
+## 8. The one sentence you asked for
+
+**Restoring the shrink term costs no measurable aura on the multi-band merge at
+all -- the two arms are byte-identical there -- and on the shipped estimator path
+it moves the backdrop by at most +444 DN of 14617 (3.0%) on
+`flower-bud-with-background-fern-cpl`, 92 DN of 18362 (0.50%) on `bee-1-cpl` and
+48 DN of 55896 (0.086%) on `coffee-bean`, with the large `flower-bud` change
+POSITIVE, i.e. filling the veil in rather than deepening it.**
+
+The trade, one binary, two arms, paired geometry, full frame, 16-bit linear
+camera-native, gate 4:
+
+| subject | mean radius A -> B | r1 share A -> B | grad RMS B/A | HF power B/A | max abs aura change | as % of far field | ring prominence A -> B |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `bee-1-cpl` | 12.81 -> **6.10 px** | 0.06% -> 49.13% | **1.1618** | **1.3510** | 92 DN | 0.50% | 76 -> 76 DN |
+| `flower-bud-...-fern-cpl` | 12.98 -> **8.61 px** | 0.00% -> 31.69% | 1.1025 | 1.1150 | 444 DN | 3.04% | 1205 -> 1302 DN |
+| `coffee-bean` | 12.98 -> **5.91 px** | 0.00% -> 56.47% | 1.0292 | 1.0633 | 48 DN | 0.086% | 130 -> 134 DN |
+| `109MSDCF` | 13.00 -> 13.00 px | 0.00% -> 0.00% | 1.0000 | 1.0000 | 0 DN | 0% | 2173 -> 2173 DN |
+
+Read the last row as an instrument check, not as a placebo result. See 10.3.
+
+## 9. The premise of the assignment is false, and I measured that rather than arguing it
+
+The assignment says to measure the aura cost "on top of the multi-band merge, not
+on top of the old merge path". **The shrink term cannot execute on the multi-band
+merge.** `merge_cmd.rs` branches on the backend at 2203-2206; `run_estimator`
+begins at 2209 and `run_pyramid` at 3586, and the `from_silhouettes` call that
+elects the focus window is at 2548, inside `run_estimator`. The pyramid backend
+never reaches the election.
+
+Structure is not proof, so I executed it. One binary, one subject, 40 frames, the
+same `V_RESTORE_SHRINK` env var, four arms:
+
+```
+GATE LIVE on estimator : est-A sha256 9B777C0B90489602C312474D0B2111F52015F0D85A3D2630AE7EEF111F51139D
+                         est-B sha256 75AE09E053DC3FA3D4B93D0EDEA9B3AB5D640CD5D673D0336D31195474AF2009
+INERT on pyramid       : pyr-A sha256 F267BD8243BD7DE982B9A369315DCE7BD87C0E408318F7B26E19E798E39C13C9
+                         pyr-B sha256 F267BD8243BD7DE982B9A369315DCE7BD87C0E408318F7B26E19E798E39C13C9
+```
+
+The estimator arms differ. The pyramid arms are **byte-identical**. The pyramid
+logs contain no `pass zero: depth guide for the edge-aware election` section at
+all, so there is no radius histogram to move. This is the distinction your own
+broadcast drew -- "a structurally inert gate and a measurably useless gate produce
+the same number and mean opposite things" -- settled by having a live positive
+control in the same binary at the same moment.
+
+**Second false premise: the band merge is not the default and was not wired in
+tonight.** `a306982` made it default and **`c42cd75` reverted that flip**.
+`merge_cmd.rs:275` reads `pub const DEFAULT_MERGE_BACKEND: MergeBackend =
+MergeBackend::Estimator;`. Your own `38ad133` gives the reason: the pyramid clips
+2.9920% of pixels to exact zero on `flower-bud-alone-cpl` and 1.6777% on
+`dry-erase`, and "a clipped-to-zero pixel holds no recoverable information, which
+is strictly worse than a halo".
+
+So the decision-relevant measurement is on the estimator, which is what ships
+today, and that is what section 10 reports.
+
+## 10. Aura cost on the shipped path
+
+### 10.1 Method
+
+Eight full-frame renders, `--gate 4 --demosaic`, no `--srgb`, 16-bit linear
+camera-native, from one binary carrying both arms behind `V_RESTORE_SHRINK`.
+Arm A is HEAD as shipped; arm B restores the noise-driven shrink **only**,
+leaving `from_silhouettes`, the collapse veto, `FLOOR_Q`, `conf` and
+`regularise_guided` exactly as `57e4554` left them.
+
+I used your `rimprofile.py` for the headline numbers and reproduced your control
+column from it exactly (39402 / 54725 / 54871 / 55516 / 56706 / 57912, far field
+59630). I then added one paired variant, because `rimprofile.py` recomputes its
+subject mask from whichever image it is handed: an A/B through it is not strictly
+paired, since a treatment that moves the silhouette threshold moves the distance
+bins with it. `paired_rim.py` takes the mask and the signed-distance field from
+arm A and reads **both** arms through it. All section 10 numbers are absolute
+median DN, per your standing rule.
+
+### 10.2 `flower-bud-with-background-fern-cpl`, the subject you care about
+
+Far field 600-1400 px: arm A 14617 DN, arm B 14617 DN, **pedestal +0 DN** over
+5443150 px. The treatment is exactly null where it must be.
+
+| d (px) | A, no shrink | B, shrink | B - A |
+| --- | --- | --- | --- |
+| 0-4 | 9795 | 10027 | **+231** |
+| 4-8 | 11659 | 12103 | **+444** |
+| 8-12 | 12551 | 12800 | +249 |
+| 12-16 | 13011 | 13111 | +100 |
+| 25-30 | 13134 | 13417 | +282 |
+| 50-65 | 12097 | 12114 | +17 |
+| 80-100 | 12440 | 12441 | +1 |
+| 150-200 | 13888 | 13888 | +0 |
+| 500-600 | 14256 | 14256 | +0 |
+
+Every near-silhouette bin goes **up**. The veil deficit at d = 4-8 px is -2957 DN
+in arm A and the shrink returns +444 DN of it, about 15%. The effect is dead by
+d = 80 px and exactly zero past 150 px.
+
+The one adverse reading: the interior ring gets slightly stronger, prominence
+1205 -> 1302 DN (+8.0%), and moves outward one bin, from 20-25 px to 25-30 px.
+Against
+the band merge's effect on the same ring (section 12: 3739 -> 268 DN, -93%) this
+is small and in the opposite direction.
+
+### 10.3 The controls, and which one actually carries weight
+
+`coffee-bean` is the control that counts. Its dose is the **heaviest** of the four
+(mean radius 12.98 -> 5.91 px, 56.47% of pixels driven to r1) and its response is
+**48 DN, 0.086% of the 55896 DN far field**, with a +3 DN far-field pedestal. A
+heavy dose producing nothing is a real null.
+
+It also reproduces your own characterisation of the subject independently: veil
+34550/55896 = **-38.2%** at d = 0-4, ring prominence 130/55896 = **+0.23%** at
+d = 450 px. Both match the figures in your brief.
+
+**`109MSDCF` does not carry weight and I am not going to let it.** Its response is
+exactly 0 DN in every bin, but arm B's radius histogram there is r8 0.05%,
+r13 99.95%, mean radius 13.00 px, and the collapse veto admitted 0 px on both
+arms. **The treatment did not act, so the outcome could not move.** That is a null
+of the probe, not a null of the response, and it reads identically to a passing
+placebo. What it does establish is that the shrink is subject-gated: it does not
+fire on a stack with no depth separation. Its profile is also wildly non-monotone
+(7930 at d = 22, 6197 at d = 225, 8392 at d = 275), so `rimprofile.py`'s uniform
+backdrop assumption does not hold there either.
+
+`bee-1-cpl` is the third data point: 92 DN of 18362 (0.50%), ring prominence
+unchanged at 76 -> 76 DN, far-field pedestal +0 DN, and the sign is mostly
+negative in the 8-50 px band rather than positive.
+
+## 11. The other side of the trade, measured at HEAD
+
+The sharpness gain from restoring the shrink survives at HEAD and is **larger than
+the loss `57e4554` caused**:
+
+| subject | grad RMS B/A | contrast-normalised | HF power fraction B/A |
+| --- | --- | --- | --- |
+| `bee-1-cpl` | **1.1618** | 1.1654 | **1.3510** |
+| `flower-bud-...-fern-cpl` | 1.1025 | 1.1063 | 1.1150 |
+| `coffee-bean` | 1.0292 | 1.0296 | 1.0633 |
+| `109MSDCF` | 1.0000 | 1.0000 | 1.0000 |
+
+Part I measured the `57e4554` loss on `bee-1-cpl` as 0.8934, whose reciprocal is
+1.1193. The surgical restore returns **1.1618**, more than the whole original
+loss, because it now acts on top of `from_silhouettes` and the collapse veto
+rather than the older `from_acuity`.
+
+`109MSDCF` reading exactly 1.0000 on both sharpness statistics and exactly 0 DN
+on the aura statistic is the coherence check: the subject where the treatment did
+nothing shows nothing on every instrument, and the subjects where it acted show
+movement on all of them.
+
+## 12. DEFECT: the blend arms you measured are sRGB, not linear
+
+**Your brief states "Paired linear 16-bit TIFFs are on disk now at
+`C:\dev\strehl-out\BUILD-BLEND\ca-{ctrl,blend}-*.tiff`" and "I measured its paired
+linear output". Both files are sRGB-encoded.**
+
+At source, `blend-render.rs:543-549`:
+
+```rust
+let space = if camera_linear { image_out::OutputSpace::CameraLinear }
+            else if linear   { image_out::OutputSpace::LinearSrgb }
+            else             { image_out::OutputSpace::Srgb };
+```
+
+`run-bm.ps1`, which produced them, renders the control with `--srgb` explicitly
+and invokes `blend-render` with neither `--linear` nor `--camera-linear`, so it
+takes that `else` branch. `rimprofile.py`'s docstring says it "Measures on the
+LINEAR 16-bit render only", but its only guard is `assert img.dtype == np.uint16`.
+It accepted both files silently and printed the column header "linear DN".
+
+**Correcting the space inverts the instrument's own central verdict.** The script
+exists to separate "an interior local maximum in linear -> the merge emitted it,
+an election defect" from "a monotone veil -> one optical term, already owned":
+
+| control arm, same file | interior peaks (d px, prominence DN) |
+| --- | --- |
+| as measured, sRGB-encoded | `[(275, 403)]` |
+| sRGB-decoded to true linear | **`[(22, 3739), (275, 765)]`** |
+
+In the space you read, the control's only interior peak sits at d = 275 px with
+403 DN of prominence, far from the silhouette and easy to dismiss. In true linear
+a ring appears at **d = 22 px with 3739 DN of prominence**, 9.3x larger and right
+where the defect would be. The sRGB curve is nearly flat across 0.6-0.9 of full
+scale, which is exactly where this backdrop sits, so it compressed the bump below
+detectability while leaving the broad far-field trend visible.
+
+**Independently corroborated.** My own arm A render of the same subject is
+camera-native linear by a different route -- rendered, not decoded -- and finds
+the same ring at the same place: `[(22, 1205), (275, 224)]`, prominence
+1205/14617 = **8.2%** of far field against the decoded file's 3739/52945 =
+**7.1%**. Two routes to linear agree; the sRGB reading agrees with neither.
+
+Your magnitudes move accordingly, at d = 50-65 px:
+
+| | as you read it (sRGB) | true linear |
+| --- | --- | --- |
+| control veil vs its own far field | -4759 DN | **-8218 DN** |
+| blend veil vs its own far field | -2551 DN | -4255 DN |
+| blend - control, absolute | +2837 DN | **+5313 DN** |
+| far-field pedestal, blend - control | +630 DN | +1350 DN |
+| blend - control, pedestal-corrected | +2207 DN | **+3963 DN** |
+
+**Your conclusion survives and in fact strengthens.** The blend removes a ring
+that is real rather than a shoulder that was not, prominence 3739 -> 268 DN,
+**-93%**, and lifts the mid-field by 1.9x more than you measured on the absolute
+difference, 1.8x once the pedestal is removed. Nothing here
+argues against wiring it. But every DN figure in that table is in the wrong
+transfer space, and the "visible deficit at d = 90 px goes from -6.90 to -0.94 of
+255" line is computed by `rimprofile.py` applying a **second** sRGB encode on top
+of the first, so it is not what a viewer is shown.
+
+This is the hazard you broadcast tonight, landing in your own headline: you made
+absolute DN a hard requirement because an additive bias hides inside an error or a
+ratio, and the absolute DN were reported in a nonlinear space.
+
+**One prediction of mine, refuted.** I first suspected the two arms were in
+*different* spaces -- an sRGB control against a linear blend -- which would have
+broken the pairing outright. Measured: binning one arm against the other, the raw
+ratio has CV 0.0907 across the tone range while the sRGB-decoded ratio has CV
+0.5879. Decoding makes the mismatch **6.5x worse**, so the two are in the same
+space and the pairing is intact. The defect is the space, not the pairing.
+
+## 13. `couch-fibers-cpl`, 0.9376 vs 0.9604: it is not the tone change
+
+You asked me to chase this only if cheap, on the hypothesis that the two numbers
+reconcile via the tone fix, which would also explain BUILD-RENDER's guard firing
+on an intended change. It was cheap. **The hypothesis is refuted.**
+
+Measured on the two archived gallery runs of section 12.1's own pair:
+
+| statistic, run2 / run1 | value |
+| --- | --- |
+| raw gradient RMS | **0.9604** (reproduces section 12.1 exactly) |
+| contrast-normalised | 0.9569 |
+| HF power fraction | 0.9175 |
+| global contrast, sd ratio | **1.0036** |
+| mean level | **+0.5 DN** |
+
+Global contrast differs between the two runs by 0.36% and mean level by 0.5 DN on
+a 0-255 scale. **A tone difference that small cannot produce a 4% gradient-RMS
+move.** The section 12.1/12.2 gap is a statistic-and-medium artifact, not a tone
+artifact: the pinned-linear 0.9376 sits between the JPEG raw 0.9604 and the JPEG
+HF 0.9175, because gradient RMS and HF fraction weight the spectrum differently
+and 8-bit sRGB JPEG is not 16-bit linear TIFF.
+
+**Do not tell BUILD-RENDER the `couch-fibers-cpl` guard is firing on an intended
+tone change.** On this evidence it is firing on a real softening.
+
+## 14. Defects, part II
+
+6. **`ca-{ctrl,blend}-*.tiff` are sRGB-encoded, not linear** (section 12).
+   `rimprofile.py` labels its output "linear DN" while guarding only on dtype.
+   Every DN figure measured through it on those files is in the wrong space, and
+   its ring-versus-veil verdict inverts when the space is corrected.
+7. **`rimprofile.py` re-derives its subject mask per image**, so an A/B through it
+   is unpaired. On the sRGB control the mask is 33.68% of frame and on the linear
+   one 37.41%, from the same scene. Use one geometry for both arms.
+8. Mine: my 40-frame commissioning run under-dosed the treatment and I nearly
+   read it as weak. On `flower-bud-...-fern-cpl` the shrink moves the mean radius
+   12.54 px at 40 frames but **8.61 px at 299**, because the geometric cap
+   saturates when there are few depth steps. A commissioning subset can
+   misrepresent dose as well as response.
+
+## 15. Gaps, part II
+
+- **Aura measured on three subjects with dose, not 26.** `coffee-bean` and
+  `bee-1-cpl` are near-nulls at heavy dose and `flower-bud-...-fern-cpl` moves
+  +444 DN favourably. I did not test a subject where the veil is deep *and* the
+  ring is strong.
+- **`109MSDCF` did not test anything** (section 10.3). A placebo with a strong
+  dose and no depth separation does not exist in the corpus as far as I can tell.
+- **The ring at d = 22 px is now attributed to the merge rather than to tone, on
+  two independent linear routes, and nobody owns that finding.** It was invisible
+  in the space it was previously measured in.
+- I did not re-measure the band merge's own clipping after `2981354`'s hull-clamp
+  fix was routed to BUILD-BLEND, so section 9's 2.99%/1.68% figures are as of
+  `38ad133` and may already be stale.

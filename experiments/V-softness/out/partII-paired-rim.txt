@@ -1,0 +1,129 @@
+
+=== flower-bud-with-background-fern-cpl : arm A (shipped, no shrink) vs arm B (shrink restored) ===
+paired on (4688, 7040), geometry from noShrink
+subject fraction 27.68% (from noShrink, applied to BOTH)
+far-field 600-1400 px: noShrink 14617 DN   SHRINK 14617 DN   pedestal SHRINK-noShrink +0 DN over 5443150 px
+
+  d (px)      noShrink     SHRINK   SHRINK-noShrink   pedestal-corrected
+     0-4          9795      10027      +231        +231
+     4-8         11659      12103      +444        +444
+     8-12        12551      12800      +249        +248
+    12-16        13011      13111      +100        +100
+    16-20        13245      13258       +13         +13
+    20-25        13303      13364       +62         +61
+    25-30        13134      13417      +282        +282
+    30-40        12633      12781      +148        +148
+    40-50        12164      12192       +28         +27
+    50-65        12097      12114       +17         +17
+    65-80        12187      12193        +6          +6
+    80-100       12440      12441        +1          +1
+   100-125       12726      12727        +1          +1
+   125-150       13182      13182        -1          -1
+   150-200       13888      13888        +0          -0
+   200-250       14444      14444        +0          -0
+   250-300       14480      14480        +0          -0
+   300-400       14301      14301        +0          -0
+   400-500       14278      14278        -1          -1
+   500-600       14256      14256        +0          -0
+
+  noShrink: interior peak d=22 px, 13303 DN, prominence +1206 DN   all=[(22, 1205), (275, 224)]
+  SHRINK: interior peak d=28 px, 13417 DN, prominence +1302 DN   all=[(27, 1302), (275, 224)]
+
+  max |SHRINK-noShrink| across bins: 444 DN
+
+=== coffee-bean : arm A (shipped, no shrink) vs arm B (shrink restored) ===
+paired on (4688, 7032), geometry from noShrink
+subject fraction 59.55% (from noShrink, applied to BOTH)
+far-field 600-1400 px: noShrink 55896 DN   SHRINK 55899 DN   pedestal SHRINK-noShrink +3 DN over 5212288 px
+
+  d (px)      noShrink     SHRINK   SHRINK-noShrink   pedestal-corrected
+     0-4         34550      34598       +48         +45
+     4-8         36820      36847       +28         +25
+     8-12        37267      37312       +45         +42
+    12-16        37692      37721       +28         +26
+    16-20        38565      38599       +34         +31
+    20-25        39338      39358       +20         +18
+    25-30        39627      39642       +16         +13
+    30-40        40678      40683        +5          +3
+    40-50        41776      41785        +9          +6
+    50-65        42655      42665       +10          +7
+    65-80        43730      43735        +5          +3
+    80-100       46270      46287       +17         +14
+   100-125       49588      49586        -2          -4
+   125-150       52551      52505       -46         -49
+   150-200       53653      53656        +3          +0
+   200-250       55107      55115        +8          +5
+   250-300       56182      56185        +2          -0
+   300-400       56292      56305       +13         +10
+   400-500       56454      56461        +7          +5
+   500-600       56324      56328        +4          +1
+
+  noShrink: interior peak d=450 px, 56454 DN, prominence +130 DN   all=[(450, 130)]
+  SHRINK: interior peak d=450 px, 56461 DN, prominence +134 DN   all=[(450, 133)]
+
+  max |SHRINK-noShrink| across bins: 48 DN
+
+=== bee-1-cpl : arm A (shipped, no shrink) vs arm B (shrink restored) ===
+paired on (4688, 7032), geometry from noShrink
+subject fraction 49.50% (from noShrink, applied to BOTH)
+far-field 600-1400 px: noShrink 18362 DN   SHRINK 18362 DN   pedestal SHRINK-noShrink +0 DN over 3903569 px
+
+  d (px)      noShrink     SHRINK   SHRINK-noShrink   pedestal-corrected
+     0-4         11164      11242       +78         +78
+     4-8         12471      12465        -6          -6
+     8-12        12998      12945       -53         -53
+    12-16        13336      13243       -92         -92
+    16-20        13520      13448       -72         -72
+    20-25        13581      13576        -5          -5
+    25-30        13642      13644        +3          +3
+    30-40        13734      13728        -6          -6
+    40-50        13805      13752       -54         -54
+    50-65        13912      13903        -9          -9
+    65-80        14189      14191        +3          +3
+    80-100       14441      14443        +2          +2
+   100-125       14685      14697       +11         +11
+   125-150       14764      14768        +4          +4
+   150-200       15056      15044       -12         -12
+   200-250       15296      15294        -1          -1
+   250-300       15890      15886        -4          -4
+   300-400       15947      15946        -1          -1
+   400-500       16088      16088        +0          +0
+   500-600       16012      16012        +0          +0
+
+  noShrink: interior peak d=450 px, 16088 DN, prominence +76 DN   all=[(450, 76)]
+  SHRINK: interior peak d=450 px, 16088 DN, prominence +76 DN   all=[(450, 76)]
+
+  max |SHRINK-noShrink| across bins: 92 DN
+
+=== 109MSDCF : arm A (shipped, no shrink) vs arm B (shrink restored) ===
+paired on (4688, 7032), geometry from noShrink
+subject fraction 16.11% (from noShrink, applied to BOTH)
+far-field 600-1400 px: noShrink 8439 DN   SHRINK 8439 DN   pedestal SHRINK-noShrink +0 DN over 9042355 px
+
+  d (px)      noShrink     SHRINK   SHRINK-noShrink   pedestal-corrected
+     0-4          5432       5432        +0          +0
+     4-8          6801       6801        +0          +0
+     8-12         7483       7483        +0          +0
+    12-16         7758       7758        +0          +0
+    16-20         7886       7886        +0          +0
+    20-25         7930       7930        +0          +0
+    25-30         7922       7922        +0          +0
+    30-40         7925       7925        +0          +0
+    40-50         7750       7750        +0          +0
+    50-65         7936       7936        +0          +0
+    65-80         7819       7819        +0          +0
+    80-100        7633       7633        +0          +0
+   100-125        7300       7300        +0          +0
+   125-150        8370       8370        +0          +0
+   150-200        7010       7010        +0          +0
+   200-250        6197       6197        +0          +0
+   250-300        8392       8392        +0          +0
+   300-400        8575       8575        +0          +0
+   400-500        8531       8531        +0          +0
+   500-600        8485       8485        +0          +0
+
+  noShrink: interior peak d=138 px, 8370 DN, prominence +2174 DN   all=[(22, 1733), (35, 1728), (57, 1739), (137, 2173), (350, 90)]
+  SHRINK: interior peak d=138 px, 8370 DN, prominence +2174 DN   all=[(22, 1733), (35, 1728), (57, 1739), (137, 2173), (350, 90)]
+
+  max |SHRINK-noShrink| across bins: 0 DN
+
