@@ -154,6 +154,27 @@ def compare(a: pathlib.Path, b: pathlib.Path):
 # 1 DN peak is inert with a receipt, which is worse than inert.
 TOKEN_DN = 2
 
+# The audit's third structural flaw, and the one that took longest to find.
+#
+# M126 measured `STREHL_SMOOTH_HUBER=off` as DEAD at 22 frames (0 samples) and
+# LIVE at 299 frames (99.35% of samples, peak 24331 DN = 37.13% of full scale).
+# It also showed this is a DOSE-RESPONSE and not a cliff: `STREHL_SMOOTH=0`
+# moves peak 1306 DN at 22 frames and 16974 DN at 299.
+#
+# A gate whose input is pooled across frames CANNOT be exercised by a shallow
+# probe. This audit shipped with `--limit 8`. So its DEAD column was, for that
+# whole class of gate, a measurement of its own shallowness.
+#
+# This is the same failure shape as the `=1` trap, one level deeper: an
+# instrument whose failure mode resembles its intended output. A shallow probe
+# manufactures DEAD verdicts, and DEAD is the finding the audit exists to
+# produce, so breaking it reads as succeeding.
+#
+# Therefore a DEAD verdict below this depth is NOT a finding. It is reported
+# separately as SHALLOW and must be re-run on a deep stack before anyone may
+# call a flag dead.
+DEEP_FRAMES = 100
+
 
 def classify(ident: bool, n: int, mx: int, frac: float) -> str:
     if ident:
@@ -235,6 +256,15 @@ def main() -> int:
             verdict = "DEGEN"
             note = (note + "  banner unchanged: the value was the default "
                     "or the no-op").strip()
+        # The depth guard. A gate whose input is pooled across frames cannot be
+        # exercised by a shallow stack, so below DEEP_FRAMES a byte-identical
+        # result is a statement about the probe, not about the flag. Controls
+        # are exempt: their expected verdict is a property of the renderer's
+        # determinism, which does not depend on stack depth.
+        if verdict == "DEAD" and prior is None and len(frames) < DEEP_FRAMES:
+            verdict = "SHALLOW"
+            note = (note + f"  only {len(frames)} frames: too few to exercise "
+                    "a frame-pooled gate").strip()
         shown = "byte-identical" if ident else f"{n:,}"
         print(f"  {name:<32}{verdict:<9}{shown:>12} {mx:>8}  "
               f"{frac*100:>6.3f}%  {note}")
@@ -256,6 +286,7 @@ def main() -> int:
 
     unknown = [(n, v) for n, v, p in rows if p is None]
     dead = [n for n, v in unknown if v == "DEAD"]
+    shallow = [n for n, v in unknown if v == "SHALLOW"]
     degen = [n for n, v in unknown if v == "DEGEN"]
     token = [n for n, v in unknown if v == "TOKEN"]
     live = [n for n, v in unknown if v == "LIVE"]
@@ -263,7 +294,18 @@ def main() -> int:
 
     print(f"  probes {len(PROBES)}  =  commissioning {len(PROBES)-len(unknown)}"
           f"  +  live {len(live)}  +  token {len(token)}  +  inert {len(dead)}"
+          f"  +  unconfirmed {len(shallow)}"
           f"  +  untested {len(degen)}  +  errored {len(err)}")
+    if shallow:
+        print(f"\n  NO VERDICT -- byte-identical, but measured on only "
+              f"{len(frames)} frames:")
+        for n in shallow:
+            print(f"    - {n}")
+        print(f"  These are NOT findings and must not be reported as dead flags.\n"
+              f"  A gate whose input is pooled across frames cannot be exercised\n"
+              f"  by a shallow stack: STREHL_SMOOTH_HUBER=off reads 0 samples at\n"
+              f"  22 frames and 99.35% at 299. Re-run with --limit {DEEP_FRAMES}\n"
+              f"  or more, on a deep subject, before calling any of these dead.")
     if degen:
         print("\n  ARM NEVER TESTED -- the banner did not change, so the value was\n"
               "  the default or the documented no-op:")
