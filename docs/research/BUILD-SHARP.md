@@ -4206,3 +4206,115 @@ own.
 
 **Unchanged**: the binding constraint at the scales the owner calls soft remains
 the optics floor. Nothing measured here moves it.
+
+## 34. Commissioning the restore switch: the cap cannot answer the question
+
+ORCH read s33's null against a fact I did not have -- that `STREHL_RESTORE` is
+off by default on the shipping backend -- and asked the right question: **a
+stage that changes nothing when you switch it on is more likely unwired than
+truly null.** The demand was a potency arm: set an absurd gain cap, render, hash
+against the unset render.
+
+I ran it. **The proposed instrument is degenerate**, and it would have returned
+the wrong verdict. The reason is worth more than the result.
+
+### 34.1 Which backend, answered first
+
+Every number in s33 and s34 is the **pyramid** backend. From the render's own
+log, not from assumption:
+
+```
+merge backend   : pyramid (inferred from --pyramid-gate; pass --merge estimator to override)
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+```
+
+`DEFAULT_MERGE_BACKEND` is `MergeBackend::Pyramid` (`merge_cmd.rs:402`), the
+plan is built at `:5128` inside `run_pyramid` and applied by `restore_plane` at
+`:6488`. That is the guard ORCH named. All four planes emitted `restore` banner
+lines on every arm, so the stage was entered.
+
+### 34.2 The 2x2: does the cap move it, or only sigma?
+
+One binary `BD5EB013...109F`, `112MSDCF`, shared cache, `--resampler
+catmull-rom --demosaic --pyramid-gate 4.5`. OFF (flag unset) is
+`ED0F92649C19C97B2E93757979D80FE6`.
+
+| arm | gain cap | sigma^2 | result | max gain (1-D) | 2-D | recovered |
+|---|---:|---|---|---:|---:|---:|
+| A | 4.0 | calibrated | **IDENTICAL to OFF** | 1.0000 | 1.0000 | 0.0000 |
+| B | **1e6** | calibrated | **IDENTICAL to OFF** | 1.0000 | 1.0000 | 0.0000 |
+| C | **1e6** | x 1e-6 | **CHANGED** `0997FC08` | 1.5704 | 2.4660 | 0.9940 |
+| D | 4.0 | x 1e-6 | **CHANGED** `0997FC08` | 1.5704 | 2.4660 | 0.9940 |
+
+Read it by rows and by columns.
+
+**A vs B**: the cap moves by a factor of 250,000 and the output is
+byte-identical. **C vs D**: the cap moves by the same 250,000 and the output is
+byte-identical *to each other*, same MD5, same gain to four decimals. The cap is
+inert across its entire useful range at both noise levels.
+
+**B vs C** is the controlled pair that matters: identical absurd cap, only
+sigma^2 differs, and the picture changes. **sigma^2 alone controls the outcome.**
+
+### 34.3 Why the cap cannot respond, and why that is not a wiring defect
+
+The banner for arm B reads `cap 1000000.000`. The environment variable was
+parsed, reached `RestorePlan`, and was carried into `restore_plane`, which
+printed it. **The stage ran and produced byte-identical output**, which is
+precisely the outcome ORCH's protocol assigns to "not running".
+
+The mechanism is that `gain_cap` is an **upper clamp on a value that is already
+1.0000**. At the calibrated sigma^2 the Wiener expression returns unity before
+any clamp is consulted -- s24.2's budget algebra says gain exceeds 1 only where
+`sigma^2/S < h(1-h)`, and that condition fails everywhere on this subject. A
+clamp above a quantity that never rises cannot change it. Raising the ceiling of
+a room does not lift the floor.
+
+So the proposed test has a **false-negative mode on a correctly wired stage**,
+and this is not hypothetical: arm B *is* that false negative, measured. Had I
+run only ORCH's arm I would have reported a wiring defect that does not exist,
+and s33's genuine algorithmic negative would have been thrown away.
+
+**The switch is commissioned, by sigma^2 rather than by the cap.** Arms C and D
+respond. s33's positive control did the same before ORCH asked. The stage is
+wired on the shipping backend and **s33's null stands as an algorithmic result**,
+not a harness artifact.
+
+### 34.4 Two further findings that fall out of the 2x2
+
+**The cap is effectively dead on this path.** With sigma^2 driven to `0.0 DN^2`
+the gain saturates at **1.5704** (1-D) / **2.4660** (2-D). That is below the
+default cap of 4.0, so the cap does not bind even at zero noise. The ceiling on
+this restoration is set by the FIR basis, not by the cap and not by the noise.
+Whatever the cap is for, it is not limiting anything reachable.
+
+**The second clause of ORCH's pass criterion would also have been ambiguous.**
+The protocol says the potency arm "must visibly wreck the image (ringing,
+overshoot, obvious haloing)". Looked at, arm C is **subtly grainier and nothing
+more** -- no wrecking, no obvious halo, on the flat, sharp or edge crop. A
+correction whose maximum possible excursion is 1.57x per axis cannot wreck a
+picture. Only the hash was decisive. **A criterion that requires a visible
+catastrophe cannot commission a stage whose whole dynamic range is modest**, and
+requiring one would have produced the same false negative a second way.
+
+### 34.5 Routed, not fixed
+
+- **`merge_cmd.rs:419-422`** (BUILD-WIRE's file) tells the user, in a
+  user-facing error, that `estimator` is "the default". `DEFAULT_MERGE_BACKEND`
+  at `:402` is `Pyramid`, and the banner at `:481` says so. **The error message
+  names the wrong default.** Same family as the `roll_off` guard: a doc block
+  describing a configuration the default does not use.
+- The `gain_cap` non-binding result above is also BUILD-WIRE's call site.
+- I have **not** changed the default and do not recommend flipping it. s33.9's
+  reasoning is unaffected by anything here: the stage is wired, it is
+  subject-dependently inert, it is non-selective by construction, and it
+  delivers about 1.05x against a 1.20x-1.31x deficit.
+
+### 34.6 The rule this earns
+
+s32.2 said an arm that returns the same value on every input has not been
+commissioned. This is the dual, and it cost a false verdict to find:
+
+**A potency arm must move the knob the mechanism is actually sensitive to.
+Choosing the wrong knob produces a silent instrument, and a silent instrument
+reads exactly like a dead stage.**
