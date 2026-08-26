@@ -3955,3 +3955,254 @@ project needs, and with the ceiling retracted there is no longer even a
 synthetic number claiming it might be. The binding constraint at the scales the
 owner calls soft remains the **optics floor**, and the most valuable open thread
 remains s24's restoration measured **inert** at the sigma^2 it was given.
+
+## 33. s24 revisited: the restoration is not inert, it is subject-dependent
+
+ORCH's brief said the restoration is "shipped, enabled, and doing nothing" and
+asked me to establish or refute inertness on real subjects at the shipped
+configuration. Three of those four words turn out to be wrong, and the fourth is
+wrong on half the subjects tested.
+
+Everything below is one pinned binary,
+`BD5EB01318F98162998FCF0F0374EB344FC4AB0FAD19258B96A6ADEB60A6109F`, with a
+shared alignment cache per subject, rendered
+`--resampler catmull-rom --demosaic --pyramid-gate 4.5`.
+
+### 33.1 First correction: it is not enabled
+
+`restore.rs:1228` gates the whole path on `STREHL_RESTORE`, and
+`gain_cap_from_env` returns `None` when the variable is absent. **The shipped
+default is OFF.** Nothing in a default render reaches `restore_plane` at all, so
+"a correction that is shipped, enabled, and doing nothing" describes a
+configuration that does not exist. It is a flag that is off. That is a weaker
+problem than the one I was sent to fix, and it should be said before any number.
+
+### 33.2 The inertness replicates -- and the switch is proved live
+
+On `112MSDCF` (79 frames), restore ON at the calibrated sigma^2 is
+**byte-identical** to restore OFF:
+
+| arm | MD5 |
+|---|---|
+| restore OFF (shipped default) | `ED0F92649C19C97B2E93757979D80FE6` |
+| restore ON, cap 4.0, calibrated sigma^2 | `ED0F92649C19C97B2E93757979D80FE6` |
+
+s24 reached the same verdict on `flower-bud-alone-cpl`, so this is a
+replication on a second subject and a later tree.
+
+**But s24 proved the flag "fires" only from its own log, and a log line is not a
+pixel.** Byte-identity is equally consistent with a switch that is not wired at
+all, which is the exact failure `merge --help` warns about in its own text. So
+before reading the identity as a result I made the switch change the picture:
+
+| control | result |
+|---|---|
+| cap 4.0, `STREHL_RESTORE_SIGMA=0.000001` | MD5 `0997FC08...`, **changed** |
+
+The switch is live. The inertness is a property of the arithmetic, not of the
+wiring. Banner at the calibrated value, all four planes: `max gain 1.0000 (2-D
+1.0000), at Nyquist 1.0000, recovered 0.0000`.
+
+### 33.3 Second correction, and it refutes s24.4's own proposed fix
+
+s24.4 named the cause as sigma^2 -- a single frame's variance handed to a
+205-frame merge -- and proposed the merged plane's noise as the fix. The corpus
+records the gated mean at **0.534x noise in amplitude**, which is **0.285x in
+variance**. So s24.4's fix is worth a factor of about 3.5x.
+
+The sweep measures where inertness actually breaks. `STREHL_RESTORE_SIGMA`
+scales the variance linearly (banner: 221.1, 110.6, 55.3, 22.1 DN^2 at 1.0,
+0.5, 0.25, 0.1), so the scale column is directly comparable to 0.285:
+
+| sigma^2 scale | result | max gain (1-D) | 2-D | recovered |
+|---|---|---:|---:|---:|
+| 1.0 (shipped) | INERT, byte-identical | 1.0000 | 1.0000 | 0.0000 |
+| 0.5 | INERT, byte-identical | 1.0000 | 1.0000 | 0.0000 |
+| **0.285 (s24.4's fix)** | **falls between two measured-inert points** | -- | -- | -- |
+| 0.25 | INERT, byte-identical | 1.0000 | 1.0000 | 0.0000 |
+| 0.1 | changed | 1.0474 | 1.0970 | 0.1170 |
+| 0.05 | changed | 1.1868 | 1.4086 | 0.4805 |
+| 0.02 | changed | 1.4032 | 1.9689 | 0.7770 |
+| 0.01 | changed | 1.4842 | 2.2028 | 0.8834 |
+
+**The correct merged-plane sigma^2 does not wake the filter.** 0.285 is bracketed
+above and below by arms measured byte-identical to OFF. Inertness breaks between
+0.25 and 0.1, so the shipped sigma^2 is overstated by somewhere between **4x and
+10x**, and s24.4's 3.5x does not reach it.
+
+Worse for that fix: s24.4 wanted a per-pixel `n_eff` map, noting `n_eff`
+approaches 1 on detail pixels where the single-frame variance is already
+correct. A per-pixel map would therefore make the filter **more** inert exactly
+where detail is. The direction of that fix is wrong on its own reasoning.
+
+### 33.4 The other term is S, and the two corrections compose
+
+Wiener has two inputs and s24 only audited one. `design_fir` takes S from
+`power_at(r, f)`, a statistic of the **whole plane**. A macro frame is not
+homogeneous. Measured on the delivered green plane, 400 tiles of 256x256:
+
+| subject | band | plane mean | sharpest 5% | flattest 5% | sharp/mean |
+|---|---|---:|---:|---:|---:|
+| 112MSDCF | 0.19-0.29 | 1058.6 | 3880.1 | 15.2 | **3.67x** |
+| 112MSDCF | 0.29-0.39 | 335.1 | 1096.4 | 7.3 | **3.27x** |
+| tweezers-cpl | 0.19-0.29 | 29748.3 | 131950.4 | 8.2 | **4.44x** |
+| tweezers-cpl | 0.29-0.39 | 2996.1 | 13183.3 | 7.7 | **4.40x** |
+
+I have to correct my own framing here before using this. I first wrote that the
+whole-plane mean is "dominated by background". **It is not** -- the mean sits
+about 70x *above* the flattest 5%, not near it. The distribution is heavy-tailed
+and the defensible claim is narrower: **the whole-plane fit underestimates the
+detail population by 3.3x to 4.4x.**
+
+Composed with the sigma^2 error, that is `3.5 x 3.4 = 11.9x` on 112MSDCF --
+equivalent to a sigma^2 scale of about 0.084, which lands on the firing side of
+the measured 0.1 threshold. **Neither correction alone crosses it; together they
+do.** That is the answer to ORCH's question 2, and it is none of the four
+candidates offered: it is not miscalibration alone, not the wrong stage, and not
+correct-but-small. It is two compounding errors in the same criterion.
+
+The caveat that bounds this: these powers are measured on the delivered green
+plane, not the pre-restore CFA plane `power_at` actually sees, so the levels are
+not the levels. The quantity read is the **ratio between tile populations**,
+which is a property of the scene's layout. Instrumenting `power_at` directly
+needs a hook in a file I do not own.
+
+### 33.5 The finding that overturns the assignment: inertness is subject-dependent
+
+I registered this prediction before rendering it: if S is estimated over the
+whole plane, then a bright subject that fills the frame with in-focus structure
+should have a far larger whole-plane S and should be **less** inert at the
+shipped sigma^2. `tweezers-cpl` is that subject; `112MSDCF` is dendrites on
+black.
+
+**Confirmed.** Same binary, same flags, shipped sigma^2 scale 1.0:
+
+| subject | mean DN | sigma^2 DN^2 | shipped-sigma result | max gain | recovered |
+|---|---:|---:|---|---:|---:|
+| 112MSDCF | 191.4 | 221.1 | **INERT, byte-identical** | 1.0000 | 0.0000 |
+| tweezers-cpl | 2486.6 | 570.2 | **changed, 70.2% of pixels** | 1.0739 | 0.1868 |
+
+The mechanism is quantitative, not hand-waving: tweezers' whole-plane S in band
+1 is **28x** higher (29748 vs 1059) while its sigma^2 is only **2.6x** higher
+(570.2 vs 221.1), so `S/sigma^2` is about **11x** more favourable. The Wiener
+criterion is doing exactly what it should; the subjects differ.
+
+**So "the restoration is MEASURED INERT" is not a property of the restoration.**
+s24 measured one subject and I generalised it, ORCH inherited the
+generalisation, and it survived until a second subject was tried. This is the
+band rule again one level up, and I am recording it in that form: **a number is
+only valid on the subject population it was measured on.**
+
+### 33.6 What it buys where it fires, and why that closes nothing
+
+`tweezers-cpl` at the shipped sigma^2 is the only arm in this section that is
+both non-inert and honestly configured, so it is the only arm with a shipping
+claim. Amplitude ON/OFF, tiles ranked by the OFF arm:
+
+| population | 0.19-0.29 | 0.29-0.39 |
+|---|---:|---:|
+| flattest 5% (no detail present) | 1.0484 | **1.0550** |
+| median 10% | 1.0508 | 1.0483 |
+| sharpest 5% (detail sites) | 1.0496 | **1.0485** |
+
+Two things follow, and both are negative.
+
+**It is not detail-selective, and it cannot be.** `restore_plane` applies one
+symmetric FIR to the whole plane: it is linear and shift-invariant, so it has no
+way to know where detail is. The measurement agrees to within noise, and on this
+subject the flattest 5% gains **more** than the sharpest 5% in the upper band
+(1.0550 against 1.0485). Whatever it adds in defocus is noise, because there is
+nothing else there.
+
+**It does not close the head-to-head deficit.** That gap needs 1.20x-1.31x in
+these bands. This delivers about **1.05x**. Even the 50x-understated arm reaches
+only 1.36x while amplifying defocus by the same factor. **Restore is not the
+lever for the comparator deficit** and should not be sold to ORCH as one.
+
+### 33.7 Ringing: a paired detector, commissioned, and what it says
+
+`demosaic_ab.edge_overshoot` picks its edge population from the image handed to
+it. Run independently on two arms that is a confound -- a sharper arm produces
+different gradient peaks, so the two runs measure different edges. I built a
+paired variant (`restore_ring.py`) that chooses sites and the amplitude floor
+**once from the OFF arm** and measures the same profiles in every arm.
+
+New code, so it is commissioned before it is read:
+
+```
+NULL  (arm IS the reference)   max |d| = 0.000000   PASS
+PLANT a=0.05  recovered median = 0.0500   PASS
+PLANT a=0.15  recovered median = 0.1500   PASS
+PLANT a=0.30  recovered median = 0.3000   PASS
+```
+
+The plant is calibrated, not merely positive: `[-a, 1+2a, -a]` places exactly
+`a*A` beyond the plateau of an ideal step, so recovery of `a` itself is the
+demand.
+
+`tweezers-cpl`, the dark-groove-on-bright-metal geometry ORCH named:
+
+| arm | paired edges | worse | d p99 | max d |
+|---|---:|---:|---:|---:|
+| OFF (null) | 29382 | **0.0000** | 0.0000 | 0.0000 |
+| shipped sigma^2 | 29265 | 0.7036 | 0.0504 | 6.6534 |
+| sigma^2 x 0.05 | 28947 | 0.7131 | 0.0795 | 10.4219 |
+| sigma^2 x 0.02 | 28900 | 0.7107 | 0.1206 | 13.0766 |
+
+`worse` is the fraction of paired edges overshooting more than the reference; a
+pixel shuffle gives 0.5. **Every firing arm sits at 0.70-0.71**, and `d p99`
+rises monotonically with aggressiveness. The restoration does increase edge
+overshoot on the majority of real edges.
+
+**I am not reading the absolute p99 (14.7) as an overshoot fraction.** Real
+subjects have no true plateaux, so that denominator is unreliable -- a standing
+caveat in this document and the reason the detector was built paired. Only the
+paired columns are read.
+
+### 33.8 Looking at the pictures, which is the part that decides it
+
+s31 is why this section exists: there the statistic said +50% HF power and the
+picture said maze artifact, and the picture was right. Crop sites are chosen
+from the **OFF** arm so no arm picks the crop that flatters it, and both halves
+are stretched with the same window.
+
+- **Shipped sigma^2, tweezers grooves**: marginally crisper, grooves slightly
+  better separated. **No visible rim, no halo.** Consistent with gain 1.0739.
+- **Shipped sigma^2, defocused region**: essentially indistinguishable.
+- **sigma^2 x 0.05, grooves and 112MSDCF dendrites**: a real and visible acuity
+  gain. Filaments separate that were merged; speculars tighten. **No maze.**
+  This is not the s31 failure mode.
+- **sigma^2 x 0.05, defocused region**: **a pronounced pixel-level crosshatch**
+  that the OFF arm does not have. This is the hard finding of the section.
+
+That crosshatch is diagnostic, not cosmetic. The banner for that arm reads `at
+Nyquist 1.5189` -- **full gain at plane Nyquist with no taper** -- and a
+per-CFA-plane filter at full gain at plane Nyquist is precisely how a
+checkerboard is manufactured. It is the visible consequence of the `roll_off`
+finding already routed to BUILD-WIRE: at the shipped `grid_factor = 1.0`,
+`knee()` returns 0.5 and `roll_off` never engages, and the anti-folding guard
+that would catch it is written at gf = 2.0 and does not exercise what ships.
+
+**The picture found the same defect the code reading found, independently.**
+
+### 33.9 Recommendation
+
+**Default OFF stands, for a third reason.** It was unmeasured in 23.7; measured
+inert in 24.5; it is now measured to be **inconsistent** -- inert on one real
+subject and altering 70% of pixels on another at identical settings. A flag
+whose effect depends on subject brightness in a way no user can predict is not
+shippable even when its output is benign.
+
+**Do not pursue restore as the answer to the comparator deficit.** 1.05x
+delivered against 1.20x-1.31x needed, non-selective by construction, and the
+aggressive arms that reach the number pay for it in visible Nyquist noise.
+
+**If it is to be fixed, both terms must be fixed together**, and the S term is
+the one nobody has looked at. A detail-weighted or locally-fitted S plus the
+merged-plane sigma^2 reaches the firing threshold at an honest noise level
+rather than by understating it 20x. That is a real design and it needs the
+`n_eff` hook s24.4 already asked for plus a local S -- both in files I do not
+own.
+
+**Unchanged**: the binding constraint at the scales the owner calls soft remains
+the optics floor. Nothing measured here moves it.
