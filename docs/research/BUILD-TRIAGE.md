@@ -1690,12 +1690,33 @@ had shipped without noticing.
 
 **(a) Three edge fields that look mutually consistent and are not.** MEASURED:
 `merge_edge_dnpx / frame_edge_dnpx` fails to reproduce `edge_ratio_min` on **13
-of 25 rows**, worst case `bee-2-cpl` at **1.92 against a true 1.43, a 34%
-error**. Two independent reasons, neither visible from the names: the two DN/px
-figures are maxima taken over *possibly different sites*, and only the ratio is
+of 25 rows**.
+
+> **CORRECTED (verifier, after `e710a46d`).** This passage originally named
+> `bee-2-cpl` at "1.92 against a true 1.43, a 34% error" as the worst case, and
+> that figure shipped inside the `frame_edge_dnpx` definition in `triage.json`.
+> **`bee-2-cpl` is second, not worst, and the real maximum is 6x larger.** The
+> worst is **`dry-erase-marker-head-cpl` at 7.138 against a true 2.316, +208%**
+> — and it leads on *both* rankings, relative error and absolute difference
+> (4.822 vs 0.490). `bee-2-cpl`'s own numbers were reported correctly; its
+> *rank* was not. Nothing excluded the true worst case: same `GOOD` verdict,
+> same `n_sites_used: 2`.
+>
+> **Cause: I printed the first six subjects alphabetically and took the worst
+> of those.** I never sorted. That is the reduced-view error this report logs
+> against two of ORCH's own findings in §10 — a thumbnail reading overturned by
+> the actual pixels — committed by me, in prose, about my own data, four
+> sections after writing it down as a discipline. The information was already
+> in my hands: `BUILD-TRIAGE.md:369` quotes that same subject at 131% on a
+> related statistic.
+
+The mechanism is unchanged and was correctly described: the two DN/px figures
+are maxima over *possibly different sites*, and only the ratio is
 gather-corrected. A reader dividing them — the obvious thing to do — gets a
-wrong number with no warning. The definitions now say so explicitly and name
-`edge_ratio_min` as the field the verdict actually uses.
+wrong number with no warning. The definition now names the true maximum, quotes
+the runner-up, and **states the tolerance** that makes "disagrees" mean
+anything: `|m/f - edge_ratio_min| > 0.01` absolute **and** `> 1%` relative,
+which select the same 13 rows (at 0.5% it is 16, at 2% it is 10).
 
 **(b) A threshold retyped into prose, which then drifted.** The contact sheet
 header read **"instrument floor 0.3 px"** while `BLUR_FLOOR_PX = 0.35` and every
@@ -1727,3 +1748,73 @@ gates were working correctly. Restoring state between mutations in a `finally`
 fixed it. Worth recording because the failure mode is generic to mutation
 testing: **a mutation that is not undone silently invalidates every mutation
 after it**, and the symptom is a false accusation against working code.
+
+## 14. What a green gate certifies, and the definition that shipped wrong behind one
+
+The definition gate in §13.4 works. A verifier reproduced it independently, in
+both directions. And a wrong definition shipped past it anyway.
+
+### 14.1 The distinction the gate cannot make
+
+> **A gate that proves every field HAS a definition does not prove any
+> definition is TRUE. Existence is mechanically checkable; content is not.**
+
+`triage.json` emits 31 fields. All 31 have definitions; none is orphaned; the
+gate is green and correct. The verifier audited **3 of the 31** definitions for
+*content* — the three a deep check happened to name — and **one of the three
+was wrong**, understated by a factor of six. The remaining 28 are unverified.
+
+That is not a claim that the other 28 are wrong. It is a statement of what the
+green certifies, and it now says so **in the code and in its own output**
+rather than only here:
+
+```
+definition gate OK: 31 emitted fields, all defined; no orphaned definitions
+  (existence and reachability only -- this gate cannot check that a
+   definition is TRUE)
+```
+
+A gate whose green is louder than its scope invites exactly the reading that
+let this through: I saw "all defined" and read it as "all sound."
+
+### 14.2 The two smaller findings, both predicted by my own words
+
+**The `finally` was still leaking, on the third name.** MEASURED by the
+verifier: `commission_wording restored: False`. Two mutations patched it;
+neither restored it. Benign only because the process exited. I had written the
+diagnosis — *"the `finally` protects only the state I knew to restore"* — and
+then shipped a harness that demonstrated it. **Naming a limitation is not
+fixing it.**
+
+The harness now runs **each mutation in its own subprocess**, which is what I
+recommended and did not do. Nothing is load-bearing, nothing needs restoring,
+and a mutation added later by someone who does not know which names the harness
+assumed cannot contaminate one that runs after it. All three mutations still
+killed; the fail-safe anchor check is preserved, so a mutation that stops
+landing prints `MUTATION DID NOT LAND -- FAIL` rather than passing quietly.
+
+**"Disagrees" had no stated tolerance.** The count of 13 survives because two
+natural criteria coincide there — `abs > 0.01` and `rel > 1%` both select the
+same 13 rows — which is genuinely robust, but robustness discovered after the
+fact is not the same as a threshold that was stated. It is 16 rows at 0.5% and
+10 at 2%. The tolerance now ships inside the definition, with both numbers.
+
+> **DISCIPLINE.** An unstated threshold that happens to be robust is still
+> unstated. State it with the number it produces, and state what it would
+> produce one step either side, so a reader can see whether the finding is a
+> property of the data or of the cut.
+
+### 14.3 The error under the error
+
+The wrong worst case was not a slip of arithmetic. **I printed the first six
+subjects alphabetically and took the worst of those, and never sorted.**
+
+This report spends §10 on two of ORCH's findings overturned by looking at the
+actual pixels rather than a reduced view, and §12.4 on my own prose drifting
+from its number. Then I did the same thing again, to my own data, in the
+artifact whose entire purpose was to be trustworthy at the point of display.
+
+> **DISCIPLINE.** Any superlative -- worst, best, maximum, first -- is a claim
+> about a *whole set*, and it is only measured if the whole set was ordered.
+> A superlative taken from a sample is an anecdote wearing the grammar of a
+> maximum, and it will be believed at full strength.

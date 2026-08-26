@@ -1,118 +1,151 @@
-"""Mutation test for triage.py's noise-wording shipping gate.
+"""Mutation tests for triage.py's shipping gates.
 
 WHY THIS EXISTS
 ---------------
-`triage.py` gained two defences after the inverted-noise defect shipped:
+`triage.py` carries two gates:
 
-  1. `commission_wording()` -- plants the defect in isolation and requires the
-     auditor to catch it.
-  2. a corpus-wide gate in `main()` -- audits every emitted `why` string
-     against that row's own `noise_flat` before `triage.json` is written.
+  1. a WORDING gate -- every emitted `why` string is audited against that row's
+     own `noise_flat`, so a sentence cannot contradict its own number;
+  2. a DEFINITION gate -- every emitted field must have a definition and every
+     definition must correspond to an emitted field.
 
-Defence (1) proves the auditor works on a planted string. It does NOT prove the
-gate is wired to the real rows: a gate that computes the right answer and then
-never calls it would pass (1) and still ship the defect. That is close to the
-original failure -- a correct policy stated in a comment, eight lines above code
-that did the other thing.
+Unit commissioning inside `triage.py` proves the auditors work on planted
+strings. It does NOT prove either gate is wired to the real rows: a gate that
+computes the right answer and never calls it would pass commissioning and still
+ship the defect. That is close to the original failure -- a correct policy in a
+comment, eight lines above code that did the other thing.
 
-So this reintroduces the exact shipped defect (`_legacy_noise_phrase`) into the
-live render path and requires the corpus gate to stop the run on real data.
+So each mutation here reintroduces a real defect into the live path and requires
+the corresponding gate to stop the run on the actual 26 rows.
 
-A mutation that survives is a blind gate, and is reported as a failure.
+WHY EACH MUTATION GETS ITS OWN PROCESS
+--------------------------------------
+The first version of this file monkeypatched in-process and restored in a
+`finally`. That was the minimum, not the pattern, and it failed exactly as
+predicted: the wording mutation left `noise_phrase` patched, both later
+mutations tripped the WORDING gate instead of their own, and the harness
+reported "gate is blind" while both gates were working correctly.
+
+A `finally` protects only the state the author knew to restore. It cannot see
+module-level caches, in-place mutation inside `main()`, or a mutation added
+later by someone who does not know which names the harness assumed. Indeed even
+after that fix `commission_wording` was still being patched by two mutations and
+restored by neither -- benign only because the process happened to exit.
+
+A fresh process per mutation removes the whole class: nothing is load-bearing,
+nothing needs restoring, and a mutation added later cannot contaminate one that
+runs after it.
+
+Note also that contamination is only *visible* when a later mutation must pass a
+check an earlier one's residue breaks. A harness whose mutations share no
+checkpoint cannot detect its own leakage at any size -- so isolation must be
+structural, not inferred from the harness looking clean.
 
 Run:  python experiments/BUILD-TRIAGE/mutatetest.py
 """
 from __future__ import annotations
 import os
 import re
+import subprocess
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import triage  # noqa: E402
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
 
 
-def mutate_wording() -> int:
-    """Reintroduce the shipped noise-wording defect; the gate must stop it."""
+# name -> (human description, mutate(triage) -> bool landed, expected token)
+def _mutate_wording(triage) -> bool:
     triage.commission_wording = lambda: None
-    good_phrase = triage.noise_phrase
     triage.noise_phrase = triage._legacy_noise_phrase
+    return triage.noise_phrase is triage._legacy_noise_phrase
 
-    print("mutation 1: noise_phrase -> _legacy_noise_phrase (the shipped form)")
-    print("expecting: corpus gate refuses to write triage.json\n")
+
+def _mutate_undefined(triage) -> bool:
+    return triage.FIELD_DEFS.pop("noise_flat", None) is not None
+
+
+def _mutate_orphaned(triage) -> bool:
+    triage.FIELD_DEFS["snr_margin_db"] = "not emitted anywhere"
+    return "snr_margin_db" in triage.FIELD_DEFS
+
+
+MUTATIONS = {
+    "wording": ("noise_phrase -> _legacy_noise_phrase (the form that shipped)",
+                _mutate_wording, "noise wording disagrees"),
+    "undefined": ("drop a definition for a field that ships",
+                  _mutate_undefined, "UNDEFINED"),
+    "orphaned": ("define a field that does not ship",
+                 _mutate_orphaned, "ORPHANED"),
+}
+
+
+def run_child(name: str) -> int:
+    """Apply exactly one mutation in this process and require its gate to fire.
+
+    Fails SAFE by construction.  If the mutation does not land, or lands and
+    the run succeeds anyway, this prints MUTATION SURVIVED and returns 1.  A
+    harness whose anchors silently stop matching must get louder, not quieter.
+    """
+    import triage
+
+    desc, mutate, token = MUTATIONS[name]
+    print(f"[{name}] mutation: {desc}")
+
+    if not mutate(triage):
+        print(f"[{name}] MUTATION DID NOT LAND -- FAIL: the anchor no longer "
+              f"matches triage.py; this test is measuring nothing.")
+        return 1
 
     try:
         rc = triage.main()
     except SystemExit as exc:
         msg = str(exc)
-        if "noise wording disagrees" not in msg:
-            print(f"FAIL: run stopped, but not by the wording gate:\n{msg}")
+        if token not in msg:
+            print(f"[{name}] FAIL: run stopped, but not by the expected gate "
+                  f"(no {token!r} in the message):\n{msg[:400]}")
             return 1
-        n = len(re.findall(r"(?m)^ {2}\S[^\n]*: ", msg))
-        subj = sorted({m.split(":")[0].strip()
-                       for m in re.findall(r"(?m)^ {2}\S[^\n]*: ", msg)})
-        head = "\n".join(msg.splitlines()[:7])
-        print("MUTATION KILLED -- the wording gate fired on real rows.")
-        print(f"violations flagged: {n} across {len(subj)} subjects: "
-              f"{', '.join(subj)}")
-        print(head)
+        hits = re.findall(r"(?m)^ {2}\S[^\n]*: ", msg)
+        subj = sorted({h.split(":")[0].strip() for h in hits})
+        line = next((l.strip() for l in msg.splitlines() if token in l), "")
+        print(f"[{name}] MUTATION KILLED -- gate fired on the real rows.")
+        if len(subj) > 1:
+            print(f"[{name}]   {len(hits)} violations across {len(subj)} "
+                  f"subjects: {', '.join(subj)}")
+        else:
+            print(f"[{name}]   {line}")
         return 0
-    finally:
-        # Each mutation must be independent.  Leaving this patched made the
-        # later definition mutations trip the WORDING gate instead, and the
-        # test reported "gate is blind" when both gates were working.
-        triage.noise_phrase = good_phrase
 
-    print(f"MUTATION SURVIVED (main returned {rc}).")
-    print("FAIL: the wording gate is blind -- it did not audit the strings.")
+    print(f"[{name}] MUTATION SURVIVED (main returned {rc}) -- FAIL: the gate "
+          f"is blind; it did not act on the emitted output.")
     return 1
 
 
-def mutate_definitions() -> int:
-    """Break FIELD_DEFS both ways; the definition gate must catch each.
-
-    Both directions matter.  An undefined field is unreadable.  An orphaned
-    definition is worse: it describes something the reader cannot find, and the
-    reader will map it onto the nearest surviving name -- which is exactly the
-    `noise_flat` / `noise_ratio_all_sites_diag` confusion that shipped.
-    """
-    triage.commission_wording = lambda: None
-    ok = True
-
-    for label, mutate, expect in (
-            ("undefined field  (drop a definition that ships)",
-             lambda d: d.pop("noise_flat", None), "UNDEFINED"),
-            ("orphaned definition  (define a field that does not ship)",
-             lambda d: d.update({"snr_margin_db": "not emitted anywhere"}),
-             "ORPHANED")):
-        good = dict(triage.FIELD_DEFS)
-        broken = dict(good)
-        mutate(broken)
-        triage.FIELD_DEFS = broken
-        print(f"\nmutation: {label}")
-        try:
-            triage.main()
-            print(f"  MUTATION SURVIVED -- FAIL: gate missed {expect}.")
-            ok = False
-        except SystemExit as exc:
-            msg = str(exc)
-            if expect in msg:
-                line = next(l.strip() for l in msg.splitlines() if expect in l)
-                print(f"  MUTATION KILLED -- {line}")
-            else:
-                print(f"  FAIL: stopped, but not by the definition gate: {msg}")
-                ok = False
-        finally:
-            triage.FIELD_DEFS = good
-
-    return 0 if ok else 1
-
-
 def main() -> int:
-    rc = mutate_wording()
-    rc |= mutate_definitions()
-    print("\nOK: neither shipped defect can pass its gate." if not rc
-          else "\nFAIL: at least one gate is blind.")
-    return rc
+    if len(sys.argv) > 2 and sys.argv[1] == "--mutation":
+        return run_child(sys.argv[2])
+
+    print(f"running {len(MUTATIONS)} mutations, each in its own process\n")
+    failed = []
+    for name in MUTATIONS:
+        p = subprocess.run([sys.executable, os.path.abspath(__file__),
+                            "--mutation", name],
+                           capture_output=True, text=True)
+        for line in p.stdout.splitlines():
+            if line.startswith(f"[{name}]"):
+                print(line)
+        if p.returncode != 0:
+            failed.append(name)
+            if p.stderr.strip():
+                print(f"[{name}] stderr: {p.stderr.strip()[:400]}")
+        print()
+
+    if failed:
+        print(f"FAIL: {len(failed)} of {len(MUTATIONS)} mutations survived or "
+              f"errored: {', '.join(failed)}")
+        return 1
+    print(f"OK: all {len(MUTATIONS)} mutations killed by their own gate, each "
+          f"in an isolated process -- no restoration is load-bearing.")
+    return 0
 
 
 if __name__ == "__main__":

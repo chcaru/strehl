@@ -126,8 +126,13 @@ FIELD_DEFS = {
                        "camera-linear, NOT gather-corrected, MAXIMUM over "
                        "usable sites -- possibly a DIFFERENT site from "
                        "merge_edge_dnpx. Dividing the two does NOT give "
-                       "edge_ratio_min (it disagrees on 13 of 25 rows, worst "
-                       "1.92 vs 1.43 on bee-2-cpl). Use edge_ratio_min",
+                       "edge_ratio_min: it disagrees on 13 of 25 rows, where "
+                       "'disagrees' means |m/f - edge_ratio_min| > 0.01 "
+                       "absolute AND > 1% relative (both criteria select the "
+                       "same 13; at 0.5% it is 16 rows and at 2% it is 10). "
+                       "Worst is dry-erase-marker-head-cpl at 7.138 vs a true "
+                       "2.316 (+208%); bee-2-cpl is second at 1.918 vs 1.429 "
+                       "(+34%). Use edge_ratio_min",
     "worst_blur_px": f"largest merge-vs-best-frame softness across usable "
                      f"sites, as an equivalent Gaussian sigma in pixels. "
                      f"Instrument floor {BLUR_FLOOR_PX} px: a planted 0.30 px "
@@ -773,6 +778,16 @@ def main() -> int:
     # directions: an undefined field is unreadable, and a definition for a
     # field that no longer exists is worse than none, because it describes
     # something the reader cannot find and will map onto the nearest name.
+    #
+    # WHAT THIS GATE CERTIFIES, AND WHAT IT DOES NOT.  It proves every emitted
+    # field HAS a definition and that no definition is orphaned.  It does NOT
+    # and cannot prove any definition is TRUE -- existence is mechanically
+    # checkable, content is not.  This is not hypothetical: the definition of
+    # `frame_edge_dnpx` shipped past a green gate quoting the wrong worst case,
+    # understated 6x (34% where the real maximum is 208%), because the author
+    # sorted nothing and took the worst of the first six rows he printed.
+    # A green here means "readable", never "correct". Definition content needs
+    # a human or a verifier reading it against the data.
     emitted = set()
     for r in rows:
         emitted |= set(r.keys())
@@ -787,7 +802,8 @@ def main() -> int:
             + "".join(f"  ORPHANED (defined but never emitted): {k}\n"
                       for k in orphaned))
     print(f"definition gate OK: {len(emitted)} emitted fields, all defined; "
-          f"no orphaned definitions")
+          f"no orphaned definitions (existence and reachability only -- this "
+          f"gate cannot check that a definition is TRUE)")
 
     with open(os.path.join(tri.OUT, "triage.json"), "w", encoding="utf-8") as fh:
         json.dump({"rows": rows, "counts": counts, "fields": FIELD_DEFS,
