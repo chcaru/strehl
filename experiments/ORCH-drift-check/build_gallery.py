@@ -386,24 +386,53 @@ BUILD-TRIAGE's and is currently under independent re-test, because a count of
 zero looks identical whether nothing was wrong or the detector cannot fire.
 </div>
 <div class="note">
-<b>What is verified.</b> Eight subjects have been judged print-worthy by eye at
+<b>What is verified.</b> Thirteen subjects have been judged print-worthy by eye at
 1:1, and every subject examined so far has passed: <code>bee-1-cpl</code>,
 <code>bee-2-cpl</code>, <code>bee-3-cpl</code>, <code>leaf-2-cpl</code>,
-<code>tweezers-cpl</code>, <code>coffee-bean</code>, <code>112MSDCF</code> and
-<code>flower-bud-with-background-fern-cpl</code>. Compound-eye facets, plumose
+<code>tweezers-cpl</code>, <code>coffee-bean</code>, <code>112MSDCF</code>,
+<code>flower-bud-with-background-fern-cpl</code>, <code>119MSDCF</code>,
+<code>109MSDCF</code>, <code>wrapped-text-1</code>, <code>foam</code> and
+<code>highly-angled-ruler-mm-cpl</code>. Compound-eye facets, plumose
 hair barbules, chloroplast speckle, brushed-metal striations and crystal
 dendrites near single-pixel width all resolve. <b>The occlusion halo is
 gone</b> &mdash; not only where pale hairs cross a dark defocused eye, but in a
 dense multi-layer tangle of overlapping trichomes, bracts and pollen, which is
 a far harder test and the geometry that rims in every other stacker.
 <br><br>
-<b>Ten subjects have now been opened at 1:1 and none shows a merge defect.</b>
-The two most recent, <code>119MSDCF</code> and <code>109MSDCF</code>, were
+<b>Thirteen subjects have now been opened at 1:1 and none shows a merge defect.</b>
+Two of them, <code>119MSDCF</code> and <code>109MSDCF</code>, were
 <i>my</i> two worst-ranked subjects &mdash; I had labelled them "genuinely
 under-resolved, last of 26". Opening them refutes that: the olive band in
 <code>109MSDCF</code> resolves hundreds of individual bubbles as crisp points.
 Both are retracted, which leaves the <span class="tag t-bad">under-resolved</span>
 category with <b>no members at all</b>.
+<br><br>
+<b>The hardest halo geometry in the corpus is clean.</b>
+<code>highly-angled-ruler-mm-cpl</code> puts a steel rule across the frame at a
+steep angle, so a hard occluding edge runs diagonally through it with the
+background surface behind &mdash; the exact geometry that rims in every other
+stacker, and a steep angle means the deepest bracket and the most chances to get
+it wrong. The millimetre graduations terminate crisply at that edge with
+<b>no rim brightening on either side</b>. The only dark band below the rule is
+the rule's own shadow.
+<br><br>
+<b>An in-frame control beats a sharpness statistic.</b> <code>wrapped-text-1</code>
+is printed lettering on a speckled white surface, and the ink edges are visibly
+soft. That reads as a soft output until you notice the speckles beside them are
+individually crisp. Both were merged from the same frames by the same estimator,
+so the soft edges are the <i>ink</i>, which bleeds into the texture, not the
+stacker. This is the trap that produced three retracted verdicts here via a
+detail-ranking statistic; the cure is not a better statistic but a feature in the
+same frame you already know should be sharp.
+<br><br>
+<b>One subject shows colour worth chasing.</b> <code>foam</code> is dark cellular
+plastic with blown specular highlights &mdash; maximum contrast at a hard edge,
+the worst case for lateral chromatic aberration. Its highlight rims carry
+visible orange, cyan and magenta. Thin-film iridescence on foam is a real
+optical effect, so this is <i>not</i> proof of an aberration; but it is the right
+subject to settle it on, because whatever a CA correction removes was aberration
+and whatever survives is the iridescence. Relevant because
+<code>STREHL_FIX_CA</code> is <b>off</b> in the shipping render.
 <br><br>
 That empty category deserves the same suspicion I applied to BUILD-TRIAGE's
 zero above, and more, because these two verdicts are not independent: mine is

@@ -161,6 +161,54 @@ def main() -> int:
     except ImportError:
         pil = False
 
+    # A stated count must match the list printed beside it.
+    #
+    # This exists because the prose in this gallery has twice carried a number
+    # that no longer matched the subjects listed next to it -- "four subjects",
+    # then "eight" -- and nothing checked. A count in prose is a claim about
+    # data that sits three inches away; it should not be possible to change one
+    # without the other. Both sentences below must agree with the list AND with
+    # each other, so a partial edit fails rather than half-passing.
+    WORDS = {
+        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+        "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11,
+        "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15,
+        "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19,
+        "twenty": 20, "twenty-one": 21, "twenty-two": 22, "twenty-three": 23,
+        "twenty-four": 24, "twenty-five": 25, "twenty-six": 26,
+    }
+    count_bad = []
+
+    m_list = re.search(
+        r"(\w[\w-]*) subjects have been judged print-worthy.*?"
+        r"has passed:(.*?)Compound-eye",
+        doc, re.S | re.I)
+    if not m_list:
+        count_bad.append("could not find the print-worthy sentence at all")
+        listed = None
+    else:
+        stated = WORDS.get(m_list.group(1).lower())
+        listed = len(re.findall(r"<code>([^<]+)</code>", m_list.group(2)))
+        uniq = len(set(re.findall(r"<code>([^<]+)</code>", m_list.group(2))))
+        if stated is None:
+            count_bad.append(f"unparseable number word {m_list.group(1)!r}")
+        elif stated != listed:
+            count_bad.append(
+                f"says {m_list.group(1)} ({stated}) print-worthy but lists {listed}")
+        if uniq != listed:
+            count_bad.append(
+                f"print-worthy list repeats a subject ({listed} entries, {uniq} unique)")
+
+    m_open = re.search(r"(\w[\w-]*) subjects have now been opened at 1:1", doc, re.I)
+    if not m_open:
+        count_bad.append("could not find the 'opened at 1:1' sentence at all")
+    elif listed is not None:
+        opened = WORDS.get(m_open.group(1).lower())
+        if opened != listed:
+            count_bad.append(
+                f"'opened at 1:1' says {m_open.group(1)} ({opened}) "
+                f"but the print-worthy list has {listed}")
+
     print()
     print(f"broken image src              : {len(bad_src)}")
     print(f"broken master links           : {len(bad_href)}")
@@ -172,6 +220,8 @@ def main() -> int:
     print(f"malformed div/section nesting : {len(bal.errors)}")
     print(f"stated retouch/reshoot splits not borne out by tags : "
           f"{len(conflict_bad)}")
+    print(f"stated counts disagreeing with the list beside them : "
+          f"{len(count_bad)}")
     if pil:
         print(f"1:1 crops under {MIN_1TO1_EDGE}px long edge : {len(small)}")
     else:
@@ -186,6 +236,7 @@ def main() -> int:
         ("structure", bal.errors),
         ("duplicate tags", multitagged),
         ("split not borne out", conflict_bad),
+        ("count mismatch", count_bad),
     ):
         for it in items[:8]:
             print(f"  {label}: {it}")
@@ -193,7 +244,7 @@ def main() -> int:
     ok = (not bad_src and not bad_href and not missing_cards
           and not extra_cards and untagged == 0 and (not pil or not small)
           and uncaptioned == 0 and not bal.errors and not conflict_bad
-          and not multitagged)
+          and not multitagged and not count_bad)
     print()
     print("GALLERY VERIFIED" if ok else "GALLERY NOT VERIFIED")
     return 0 if ok else 1
