@@ -5300,3 +5300,140 @@ at all.
 > collision only becomes reachable under a configuration change made by someone
 > who never read either site.
 
+
+---
+
+## 50. The harness was lying, and the refutation was mis-priced
+
+BUILD-CHROMA was sent to fix a status line. It came back with a worse defect
+than the one it was sent for, a refutation of my own refutation, and an
+independent arrival at another agent's number from the opposite direction.
+
+### 50.1 The defect was not where the report said, and the real site was worse
+
+The brief said the inverted lateral-CA status line was at
+`merge_cmd.rs:3842-3846`. It was -- and it had **already been fixed** by a
+different lane at `3a22fd2`. The identical defect was still live verbatim in
+**`blend-render.rs:296-302`**, which matters far more, because **`blend-render`
+is the project's A/B harness**. Measured stdout at `e718c46`:
+
+```
+ARM 1 (unset):             lateral CA : off (STREHL_FIX_CA unset)
+ARM 2 (STREHL_FIX_CA=off): lateral CA : CORRECTING, profile "off"
+```
+
+Both rows inverted. Byte-proved rather than read: `br_unset` == `br_unset2` ==
+`13C89646...` (same-arm determinism control, since `blend-render`'s `--chunks`
+was unavailable), `br_off` == `3DBAED99...`. **The arm labelled `off` is the one
+that moved the pixels.**
+
+The fix is the structural one rather than a second inversion:
+`profile_for_capture` became a *projection of* `resolve_for_capture`, so the
+reported profile and the applied profile are one value rather than two that
+agree. Three tests where there had been zero, commissioned by planting both
+inversion directions, 2/2 caught.
+
+> **When a defect is reported at a location, fix the *class* across the
+> codebase, not the coordinate.** The reported site had already been repaired by
+> someone else; had the implementer trusted the coordinate it was handed, it
+> would have found nothing wrong and closed the item -- while the copy in the
+> harness kept lying.
+
+An unresolved consequence, routed to an independent verifier: **any A/B run
+through `blend-render` and labelled from its log has its arms swapped.** That
+includes, potentially, my own corpus-wide CA census in §46. I am not able to
+clear my own instrument here, so I have not.
+
+### 50.2 My refutation of the blue hypothesis was itself wrong
+
+In §44 I killed my own skip-guard proposal by showing that blue's 0.039 px
+displacement costs 0.22-0.89% amplitude, and that reproducing the measured 9.36%
+loss would need 0.1731 px -- **4.4x** the displacement. I called the gap
+unclosable on either an energy or an amplitude reading.
+
+The arithmetic was right and the model was wrong. **The correction does not
+apply a single displacement.** It applies `eps_b * r`: zero on the optical axis,
+**0.368 px at the corner**. The 0.1199 px required to lose 9.36% *energy* is not
+4.4x anything -- it is **0.33 of the corner value**, squarely inside the field.
+I had priced a radially varying field at one number and then treated the
+mismatch as a refutation.
+
+> **Before declaring a mechanism too small to explain an effect, check whether
+> the mechanism is a field rather than a scalar.** A spatially varying quantity
+> evaluated at one point will usually look too small, and the error is invisible
+> because the arithmetic is correct.
+
+The conclusion I drew from the bad refutation nevertheless survives, for a
+different reason. Split-half analysis (400 splits, green null on **identical**
+tiles) put blue's fitted `eps_b` at **7.2-37.0 of its own error bars from zero**
+on all six stacks, one consistent sign, against the null's 1.3-6.2. Blue's
+coefficient is real signal. **No coefficient change and no skip guard** -- the
+9.36% is not a defect but the price of a correction that the census says is
+worth paying.
+
+Note also what happened to the confound I raised in §44 and could not settle:
+blue's radial and tangential components co-scale at ~2.6x green's, which I said
+was either a real signal or blue simply being noisier. It resolved **in my
+favour on the mechanism** -- the co-scaling is indeed blue having less texture --
+**and against me on the conclusion**, because that is per-tile scatter while
+`eps` is fitted from the systematic radial term. Being right about the mechanism
+and wrong about what it implied is the ordinary case, not the unusual one.
+
+### 50.3 Two agents, two directions, one number
+
+BUILD-SHARP derived the shipped chain's retained amplitude at f=0.35 as **G
+0.69, R/B 0.47** by auditing the resample chain and measuring the alignment
+phase distribution. BUILD-CHROMA, working on the blue channel from the CA side
+and without using that result, measured the co-site's cost to blue as a factor
+**0.6813**. Composed against BUILD-SHARP's green figure: 0.69 x 0.6813 =
+**0.470**.
+
+Whether that is genuine convergence or two derivations sharing an assumption is
+exactly the question to ask of it, and I have put it to the verifier rather than
+banking it. But both agents independently identified `image_out.rs:956` -- the
+serial chroma co-site -- as the dominant loss, from opposite ends of the
+pipeline. That is the second independent arrival at §48's finding.
+
+### 50.4 Two corrections to the corpus, both found by cross-checking before use
+
+- **`restore.rs:573` records its constants at f = 0.40, not f = 0.35.** Found
+  because a reproduction matched exactly at 0.25 and 0.50 and mismatched in the
+  middle -- a **mislabelled abscissa**, not a wrong value. A cross-check that
+  agrees at the ends and disagrees in the middle is describing the x-axis, not
+  the y.
+- **The amplitude-loss table is an upper bound, not a number.** Lateral-CA
+  correction composes into the alignment gather, so its true cost is
+  `MTF(phi+s) - MTF(phi)`, which on a uniform phase distribution is *identically
+  zero*. Independently the same conclusion as BUILD-SHARP §21 reached from the
+  code structure. Quoting the table's entries as costs paid would overstate
+  them.
+
+### 50.5 Aperture: the corpus cannot answer, and says so
+
+The gear guard ignores aperture while `optics.rs:357-360` sets `measured_at:
+None` with a comment noting that lateral CA varies with aperture. I asked for a
+measurement. The corpus **does not span aperture as I assumed** -- 5x f/5.6,
+1x f/8, **no f/11**. Measured `eps_r`: 651.9 ppm at f/5.6 against 650.7 ppm at
+f/8, a **0.2% difference across a full stop**, versus a **151 ppm** spread
+*within* f/5.6.
+
+The right call was made: record the limitation in the code rather than gate on
+it, because gating would disable a working correction for a difference smaller
+than the within-group scatter. But n=1 at f/8 has no scatter of its own, and
+that qualification belongs next to the number.
+
+### 50.6 Two capture requests, and one guard that has never fired
+
+Logged to `docs/captures-needed.md`:
+
+1. **A bracket shot without the teleconverter.** The gear guard's decline path
+   has **never once run against a real file** -- every stack in the corpus
+   matches. A branch that has only ever been exercised by its own unit test is
+   not known to work.
+2. **An f/11 bracket**, to give the aperture question a second point.
+
+> **A conditional that has never taken its other branch on real data is
+> untested, however many unit tests cover it.** The corpus is not just a sample
+> of subjects; it is a sample of *configurations*, and it is currently constant
+> in the variables the guard reads.
+

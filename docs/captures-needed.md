@@ -3381,3 +3381,42 @@ estimate.
 **Nothing here should change how you shoot until capture 2 exists.** If a wider bracket
 looks worse to your eye, your eye wins.
 
+
+---
+
+## Added after the lateral-CA work (measured, not guessed)
+
+**4. A bracket shot WITHOUT the 2x teleconverter.** This is the one genuinely new
+request, and it is not about image quality -- it is about a branch of the code that has
+never run.
+
+`strehl` turns lateral-CA correction on automatically when it recognises your gear
+(body + lens). When it does *not* recognise the gear, it is supposed to quietly decline
+and leave the image alone. **That declining path has never once executed against a real
+file**, because every one of the 26 stacks in the corpus was shot on the same body and
+lens and matches the guard. It passes its unit tests, but a conditional that has never
+taken its other branch on real data is not known to work -- and the failure mode is
+silent: someone else's camera would get either no correction when it should have one, or
+a correction computed for the wrong optics.
+
+Anything at all will do: the same subject, same light, same settings, just the prime
+without the TC. Ten frames is plenty. It is a test fixture, not a photograph.
+
+**5. The f/11 half of capture 2, specifically.** Capture 2 above asks for f/5.6 / f/8 /
+f/11 on one subject and is still the request that matters. Recording here what the corpus
+actually contains, now that it has been counted rather than assumed: **5 stacks at f/5.6,
+1 at f/8, and none at f/11.**
+
+That census changed a decision. The lateral-CA profile is recorded with no aperture
+attached, even though the code notes that lateral CA varies with aperture, and the plan
+was to make the correction aperture-aware. Measured across the one stop the corpus does
+span, the red coefficient moves from 651.9 ppm at f/5.6 to 650.7 ppm at f/8 -- **0.2%**,
+against a spread of 151 ppm *between subjects at the same aperture*. So the aperture
+dependence is, on this evidence, far smaller than the noise, and gating on it would
+disable a working correction to chase something undetectable. The limitation is now
+written into the code rather than acted on.
+
+The qualification that belongs next to that number: **n = 1 at f/8.** A single stack has
+no spread of its own, so "0.2% across a full stop" is one comparison, not a trend. The
+f/11 point would make it two, and two is the difference between a measurement and an
+anecdote.
