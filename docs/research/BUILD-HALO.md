@@ -2262,3 +2262,80 @@ That is why this can be built without the section 20 trade. `couch-fibers` has
 genuine focus signal everywhere, and `bee-2`'s hairs have it in abundance; a
 validity gate is a no-op on both by construction. It only fires on dead ground,
 which is precisely and only where the aura lives.
+
+## 25. Neither the rim nor the surround is correct. The rim is a local maximum.
+
+ORCH proposed that the bright rim is not something added at the edge but the
+one band that is nearly right, standing against a wrongly dark surround --
+and therefore that raising the surround dissolves the rim without touching it.
+
+That is falsifiable against the per-pixel UPPER ENVELOPE across frames, which
+is the best available estimate of unveiled truth because veiling by a dark
+subject can only darken a bright backdrop. `envelope_profile.py` measures it,
+gain-normalising every frame to a common far field FIRST -- without that step a
+per-pixel max over a bracket drifting 18.3% returns the highest-exposure frame,
+not the least-veiled one, and would measure section 23's drift and call it truth.
+
+### 25.1 The merge is below unveiled truth EVERYWHERE
+
+| d (px) | 1-4 | 8-12 | 16-24 | 32-48 | 64-96 | 96-140 | 140-200 | 260-320 |
+|---|---|---|---|---|---|---|---|---|
+| merge | -10675 | -7381 | -5309 | -4579 | -4988 | -5209 | -4700 | -1466 |
+| envelope | -4998 | -3858 | -2425 | -1439 | -782 | -570 | -509 | -409 |
+| f102 (middle) | -9869 | -8145 | -6225 | -3182 | -1274 | -732 | -616 | -541 |
+| **merge - env** | **-5677** | **-3523** | **-2884** | **-3140** | **-4205** | **-4639** | **-4191** | **-1057** |
+
+**Rim d=1-16: -4114 DN. Surround d=32-260: -3837 DN.** The rim is not the
+correct band. It is 3000-4000 DN too dark, the same order as the surround.
+
+### 25.2 But the operational conclusion holds, for a different reason
+
+**The merge's profile is non-monotone and every honest reference is monotone.**
+The merge rises to a local maximum near d=20-40 (-4579), falls again to a
+trough at d=96-140 (-5209), then recovers. The envelope and all nine single
+frames rise smoothly and never reverse.
+
+**The rim is visible because it is a local maximum in a uniformly-too-dark
+field, not because it is bright.** It is ~1600 DN above the trough beside it
+and ~2600 DN above d=2. Nothing was added; a ridge was left standing.
+
+So raising the surround does dissolve the rim -- because what is seen is the
+step, not the level -- and ORCH's instruction is right while his reasoning is
+not. The rim band must be corrected too, and by a similar amount.
+
+### 25.3 The crossover is the focus measure's support radius, and it unifies both defects
+
+**`f102` crosses the merge at d ~ 20 px.** Inside that, the merge is BRIGHTER
+than the middle frame; outside it, far darker.
+
+`SOBEL_RADIUS(1) + WINDOW_RADIUS(13) + REGULARISER_RADIUS(8) = 22 px.`
+
+Inside the support radius the focus window still contains the subject's edge,
+so the election is driven by it and picks frames where the subject is SHARP --
+which are the frames where it spills least. Outside, the window contains
+nothing real, the election ramps into defocused frames (section 22.4), and the
+average is pulled dark. **The rim and the aura are one mechanism with a
+transition at the support radius**, which is why every attempt to treat them
+as two problems has failed.
+
+### 25.4 The bee-2 confound does not apply here, and that was checked not assumed
+
+Section 24 retracted a result because a merge below the hull of its inputs is
+CORRECT wherever fine dark structure resolves. The test is whether the frames
+agree: at d=96-140 the envelope is -570, the second-highest -640 and `f102`
+-732, so all nine frames agree within 160 DN. There is nothing to sharpen on a
+featureless white backdrop. On `bee-2` at the same test the frames differed by
+thousands, which is what a resolved hair looks like.
+
+That difference is the discriminator, and it is available at runtime.
+
+### 25.5 Design consequence: the fix must NOT be band-limited by distance
+
+ORCH proposed correcting d~15-300 px. **A spatially band-limited correction
+manufactures a new step at its own boundary -- that is, it creates a fresh
+rim.** Section 25.2 has just established that a step is the visible defect and
+the level is not.
+
+The gate must therefore be on **signal validity**, which varies smoothly and
+goes to zero on its own where the backdrop is textured, and never on distance.
+Headroom available: **3837 DN, 19.7% of backdrop.**
