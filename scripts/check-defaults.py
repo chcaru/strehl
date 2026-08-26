@@ -199,38 +199,72 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_EDGE_AWARE": Declared(
         kind="quality",
-        default="on",
-        evidence="merge_cmd.rs:1241; GUIDE_RADIUS at merge_cmd.rs:1256",
+        default="on (EdgeArm::Acuity)",
+        verified="code",
+        evidence=(
+            "edge_aware_arm() in merge_cmd.rs (:1848 at time of reading; cite "
+            "the symbol, the line drifts). The resolving match is "
+            "`None | Some('') | Some('1') | Some('on') | Some('true') | "
+            "Some('acuity') => EdgeArm::Acuity` -- unset falls in the FIRST "
+            "arm, so the default is ON in the Acuity arm, not merely 'not "
+            "off'. An unknown value panics rather than falling back."
+        ),
         note=(
-            "Adaptive-radius edge handling. Reported default-ON at pin-859edac. "
-            "The shipped merge's winner field has its depth step displaced "
-            "outward by exactly one window radius, and that displacement IS the "
-            "halo."
+            "Adaptive-radius edge handling. The shipped merge's winner field "
+            "has its depth step displaced outward by exactly one window "
+            "radius, and that displacement IS the halo. Three arms exist "
+            "(Off/Acuity/Layer) and only Acuity ships."
         ),
     ),
     "STREHL_EDGE_TAU": Declared(
         kind="quality",
-        default="built-in",
-        evidence="merge_cmd.rs:1243",
-        note="Depth-step tolerance override, in frames. Unset uses edge_tau().",
+        default="derived per image from the guide field (no constant)",
+        verified="code",
+        evidence=(
+            "edge_tau(guide) in merge_cmd.rs (:1901 at time of reading). When "
+            "the variable is absent it does NOT return a constant: it filters "
+            "the guide field for k != u16::MAX and derives tau from that "
+            "image's own distribution. A set value must parse and be > 0 or "
+            "it panics."
+        ),
+        note=(
+            "Depth-step tolerance, in frames. The previous declaration here "
+            "said 'built-in', which read as a fixed constant; it is not one. "
+            "This is data-derived per image, so it cannot drift with a "
+            "constant but it also cannot be quoted as a single number in any "
+            "report."
+        ),
     ),
     "STREHL_EDGE_CONF": Declared(
         kind="quality",
         default="2.0",
-        evidence="merge_cmd.rs:1246",
+        verified="code",
+        evidence=(
+            "edge_conf() in merge_cmd.rs (:1737 at time of reading) is "
+            "`env_num(EDGE_CONF_ENV, 2.0)`, and env_num returns its `default` "
+            "argument on Err(_). A set value that does not parse panics."
+        ),
         note="Confidence veto, in multiples of the plane's low-percentile guide response.",
     ),
     "STREHL_EDGE_FEATHER": Declared(
         kind="quality",
-        default="built-in",
-        evidence="edgeaware.rs:779",
+        default="the built-in FEATHER constant",
+        verified="code",
+        evidence=(
+            "feather() in edgeaware.rs, a OnceLock whose initialiser matches "
+            "env::var(FEATHER_ENV) and returns `Err(_) => FEATHER`."
+        ),
         note="Feather width for the edge-aware support.",
     ),
     "STREHL_FIX_HALO": Declared(
         kind="quality",
         default="off",
+        verified="code",
         backend="estimator",
         evidence="merge_cmd/halo.rs:69 (FIX_ENV), :71 (DELTA_ENV). "
+        "RESOLVING EXPRESSION READ (halo.rs:113): the match returns "
+        "`Err(_) => false`, so unset is off; a set value is on unless it "
+        "trims to ''/0/off/false/no. "
         "BACKEND CONFIRMED BY RUN: the default-path banner (pyramid, "
         "bee-3-cpl, --limit 3) says nothing about halo correction, and the "
         "pyramid arm's own report lists `halo correction` under `not "
@@ -247,7 +281,16 @@ REGISTRY: dict[str, Declared] = {
     "STREHL_WINDOW_RADIUS": Declared(
         kind="quality",
         default="13",
-        evidence="focus.rs:101 (WINDOW_RADIUS_ENV)",
+        verified="code",
+        evidence=(
+            "window_radius() in focus.rs (WINDOW_RADIUS_ENV at :101), a "
+            "OnceLock whose initialiser returns `Err(_) => WINDOW_RADIUS`. "
+            "The doc comment states the default is bit-identical when unset, "
+            "and that a malformed value PANICS rather than falling back to "
+            "13 -- deliberately, because a dose-response that silently "
+            "rendered every rung at the default would look like a flat curve "
+            "and refute the mechanism it was built to test."
+        ),
         note="Focus-measure window radius. Unset uses the shipped WINDOW_RADIUS=13.",
     ),
     "STREHL_MERGE": Declared(
@@ -297,7 +340,165 @@ REGISTRY: dict[str, Declared] = {
             "BUILD-BLEND's to fix in pyramid.rs."
         ),
     ),
+    "STREHL_ACUITY": Declared(
+        kind="quality",
+        default="on",
+        verified="code",
+        evidence=(
+            "merge_cmd.rs:1882 (ACUITY_ENV) and acuity_shrink() at :1884, "
+            "which returns true unless the value trims to one of "
+            "'0'/'off'/'no'/'false' -- so unset is ON. The doc comment above "
+            "it states 'Default ON.' in terms."
+        ),
+        note=(
+            "Exists only so both arms are renderable from ONE binary: 57e4554 "
+            "deleted the acuity term after measuring a single subject's "
+            "background noise, and a 26-subject gallery delta then charged "
+            "the deletion -6.6% gradient RMS. Keeping the switch is what "
+            "prevents that comparison re-acquiring the build-drift confound "
+            "that made the original deletion look free."
+        ),
+    ),
+    "STREHL_DEMOSAIC": Declared(
+        kind="quality",
+        default="malvar (non-directional)",
+        verified="code",
+        evidence=(
+            "demosaic.rs:321 (DEMOSAIC_ENV); use_directional() at :323 is a "
+            "OnceLock initialised to "
+            "env::var(..).map(|v| v.eq_ignore_ascii_case('directional'))"
+            ".unwrap_or(false) -- unset resolves to false, i.e. Malvar."
+        ),
+        note=(
+            "The directional arm is Hamilton-Adams. It was landed as the "
+            "default (d67fe13b) and REVERTED (0c236d85) after being rendered "
+            "on the owner's real stacks: it raised HF power 1.50x in the "
+            "FLATTEST 5% of tiles while returning 0.99x mean gradient at the "
+            "SHARPEST 5%, and the added energy was a correlated maze pattern "
+            "rather than noise. Correlated false texture reads as detail and "
+            "survives print, which is the same defect class as a halo. The "
+            "1.297x that motivated it was measured on a full-contrast grating "
+            "at f_out=0.35, a stimulus this rig cannot deliver. Keep this "
+            "switch: both arms must stay in one binary so the comparison "
+            "never needs two builds."
+        ),
+    ),
+    "STREHL_RESTORE": Declared(
+        kind="quality",
+        default="off",
+        verified="measured",
+        evidence=(
+            "restore.rs:1233 gain_cap_from_env() returns Option and yields "
+            "None when the variable is unset, empty, '0', 'off', or not "
+            "above 1.0. Both call sites guard the stage on it: "
+            "merge_cmd.rs:4006 inside fn run_estimator (defined :2680) and "
+            "merge_cmd.rs:4641 inside fn run_pyramid (defined :4341). "
+            "MEASURED, not only read: the shipping default banner from "
+            "`strehl stack D:/personal/macro/109MSDCF --srgb --auto-exposure` "
+            "on the pinned binary prints 'merge backend : pyramid (default)' "
+            "and lists 'not applied : photometric gain, clip census, outlier "
+            "rejection, halo correction, through-focus statistics' -- "
+            "restoration is not in that list because it is not mentioned at "
+            "all."
+        ),
+        note=(
+            "DARK, and on the DEFAULT backend -- run_pyramid calls it, so "
+            "this is not an absent stage that needs building. It is a "
+            "finished stage nobody switched on. That is the exact shape of "
+            "the three defects in this file's header, one of which produced "
+            "the gallery the owner called unusable. Its own doc comment says "
+            "the flag 'is meant to be temporary -- it exists to carry a "
+            "measured trade curve to whoever sets the default', and nobody "
+            "has set the default. Two things must be true before it can be "
+            "turned on and both are open: an independent head-to-head found "
+            "strehl 17-27% behind two external stackers at 3-5 px features, "
+            "which is the band restoration targets; and the same stage has "
+            "been measured INERT at the calibrated sigma^2 it is given, so "
+            "flipping it on today may change nothing. Do not flip it to "
+            "clear this check. Measure it, then set it."
+        ),
+    ),
+    "STREHL_VEIL": Declared(
+        kind="quality",
+        default="off",
+        verified="code",
+        backend="estimator",
+        evidence=(
+            "merge_cmd.rs:2513 `const DEFAULT_VEIL_ON: bool = false;`, "
+            "returned by veil_enabled() at :2525 when the variable is unset. "
+            "BACKEND: the only caller is merge_cmd.rs:3580, inside fn "
+            "run_estimator (defined :2680). run_pyramid (:4341) never calls "
+            "it, and the default-path banner does not mention a veil stage."
+        ),
+        note=(
+            "Absent on the shipping backend rather than dark on it, so the "
+            "remedy is to BUILD it on the pyramid, not to flip a flag. Worth "
+            "prioritising on evidence rather than taste: a corpus-wide "
+            "bimodality census found the veiling signature concentrated in a "
+            "subject class rather than spread thin -- multi-peak fraction "
+            "0.324 on bee-1-cpl and 0.199 on bee-3-cpl against a corpus "
+            "median of 0.007 -- and those are subjects the project holds up "
+            "as print-worthy. A correction that is absent on the default "
+            "backend is absent hardest exactly where it is most needed."
+        ),
+    ),
+    "STREHL_VEIL_MARGIN": Declared(
+        kind="quality",
+        default="3.0",
+        verified="code",
+        backend="estimator",
+        evidence=(
+            "merge_cmd.rs:2554 `const DEFAULT_VEIL_MARGIN: f32 = 3.0;`, "
+            "returned by veil_margin() at :2558 on Err(_). A non-numeric or "
+            "negative value warns on stderr and falls back rather than "
+            "failing."
+        ),
+        note=(
+            "How far above the gated mean the veil envelope must sit before "
+            "it is believed, in single-frame sigmas. Inert while STREHL_VEIL "
+            "is off and while the stage is absent from the default backend."
+        ),
+    ),
+    "STREHL_VEIL_FLOOR": Declared(
+        kind="quality",
+        default="0.5",
+        verified="code",
+        backend="estimator",
+        evidence=(
+            "merge_cmd.rs:2575 `const DEFAULT_VEIL_LUMA_FLOOR: f32 = 0.5;`, "
+            "returned by veil_luma_floor() at :2579 on Err(_). Values outside "
+            "[0,1] warn and fall back."
+        ),
+        note=(
+            "Fraction of the estimated backdrop level below which no pixel "
+            "may be raised. Inert while STREHL_VEIL is off and while the "
+            "stage is absent from the default backend."
+        ),
+    ),
     # ---------------- control ----------------
+    "STREHL_RESTORE_SIGMA": Declared(
+        kind="control",
+        default="1.0 (the calibrated sigma^2, unscaled)",
+        verified="code",
+        evidence=(
+            "restore.rs:1266 sigma_scale_from_env() returns 1.0 when the "
+            "variable is unset or empty; applied at :1313 as "
+            "`self.noise.variance(..) * scale * scale * sigma_scale_from_env()`."
+        ),
+        note=(
+            "Classified control rather than quality on the authority of its "
+            "own doc comment: 'This is not a quality knob and must not become "
+            "one.' It exists because RESTORE_ENV's gain cap is measured never "
+            "to bind, so sigma^2 is the only variable that actually changes "
+            "the filter's strength and a trade curve has to be swept along "
+            "it. Note the deliberate design: it PANICS on a non-finite or "
+            "non-positive value rather than silently substituting 1.0, "
+            "because an instrument that quietly repairs its own "
+            "misconfiguration produces a curve that is wrong in a way nobody "
+            "can see. If this switch ever acquires a shipped non-1.0 default "
+            "it has become a quality knob and must be reclassified here."
+        ),
+    ),
     "STREHL_SOFT_GATE": Declared(
         kind="control",
         default="off",
