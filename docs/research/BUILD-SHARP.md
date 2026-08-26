@@ -4446,3 +4446,218 @@ is the sharper form, and it cost a verdict at two levels to learn:
 **Before trusting a potency arm, confirm the value you set was accepted. A flag
 that silently rejects your input is indistinguishable from a stage that ignores
 it -- and the product's own banner usually already knows which.**
+
+## s36. The soft subject: the gate is exonerated, and the decision grid is half resolution
+
+ORCH routed `flower-bud-alone-cpl` to me as the largest open quality gap: worst
+in the corpus at a V-bestframe median merge-to-best-frame ratio of **0.82**, and
+independently the one subject of twenty-six that ORCH flagged by eye as visibly
+soft. Two cautions came with it -- a clipped highlight and a magenta fringe --
+and I was asked not to measure three things at once.
+
+I arrived with a hypothesis and it was wrong. This section records the
+refutation first, because it was mine.
+
+### s36.1 The hypothesis I brought, and the measurement that killed it
+
+The subject is high-key: a dark green bud on a large bright white field. That
+geometry produces veiling glare, glare lowers local contrast, and the render's
+own banner states the consequence of low contrast without ambiguity:
+
+    noise gate      : 4.50 x the modelled band-noise power. Below it, NO frame
+                      may win and the merge averages.
+
+A mean across 205 frames of differing focus is much softer than the best single
+frame. So: glare pushes band power under the gate, the gate forbids selection,
+the merge averages, and merge-to-best-frame lands at 0.82. It is a tidy chain
+and it connects ORCH's eye to V-bestframe's statistic.
+
+One pinned binary `ADECDAD8B92A528B0224D8E5B477E2A49306AD38DCB0C720DCDCFA3E867B63EB`,
+205 frames, one variable. Banner quoted on every arm rather than intent, and the
+gate value is echoed back so the arm cannot be degenerate in the way s35
+records:
+
+| arm | banner backend | banner gate | md5 |
+| --- | --- | --- | --- |
+| `--pyramid-gate 4.5` (shipped) | `pyramid (--merge)` | `4.50 x` | `0473E5E9` |
+| `--pyramid-gate 1.0` | `pyramid (--merge)` | `1.00 x` | `5349C2CE` |
+| `--pyramid-gate 0.0` | `pyramid (--merge)` | `0.00 x` | rendered |
+
+The flag is live and the arms differ. Band power ratios, tiles ranked once on
+the shipped arm so that no arm chooses its own tiles (s33.5), in cycles per
+output pixel:
+
+| population | 0.05-0.10 | 0.10-0.20 | 0.20-0.30 | 0.30-0.40 |
+| --- | ---: | ---: | ---: | ---: |
+| flattest 5% | 1.90 | 6.06 | **10.16** | 8.04 |
+| median 10% | 4.04 | 11.82 | **15.11** | 10.91 |
+| sharpest 5% | 1.00 | 1.02 | **1.27** | 1.61 |
+
+The flattest tiles gain ten times the power in the band where we are losing to
+the comparators; the sharpest gain 1.27x. By the standing s31 rule -- measuring
+in the right band is necessary but not sufficient, the stimulus must exist in
+the real data too -- this is not detail recovery.
+
+### s36.2 Why it is not, stated in a quantity the two hypotheses disagree about
+
+The ratio table alone cannot separate "recovered detail" from "the same noise
+measured against a smaller denominator". A uniform additive noise floor raises
+every tile by the same ABSOLUTE power, which reads as a huge ratio in a flat
+tile and a small one in a sharp tile -- exactly the observed 10.16 / 1.27 split.
+So the ratio is the wrong statistic and I replaced it with absolute delta, which
+the two hypotheses do disagree about: additive noise is constant across
+populations, recovered detail grows with the detail already present.
+
+Gate 1.0 minus gate 4.5, band 0.20-0.30, absolute delta power:
+
+| population | reference power | ABS delta | ratio |
+| --- | ---: | ---: | ---: |
+| flattest 20% | 8,352,762 | **146,590,200** | 18.55 |
+| 2nd quintile | 13,701,753 | 219,948,577 | 17.05 |
+| 3rd quintile | 18,072,611 | 254,690,058 | 15.09 |
+| 4th quintile | 22,624,956 | 234,255,012 | 11.35 |
+| sharpest 20% | 77,091,581 | **54,644,724** | 1.71 |
+
+The delta is largest where there is no detail and smallest where the detail is.
+It is not merely uncorrelated with content, it is anti-correlated with it.
+
+The mechanism is the interesting part and it is a defence of the gate rather
+than an indictment. **Where the detail is, band power already exceeds the gate
+at 4.50, so the gate was never binding there.** Lowering it cannot sharpen a
+region it was not acting on. All the gate ever did was protect the low-SNR
+field, and removing that protection floods the field with noise at 18.55x while
+moving the detail by 1.71x -- and even that 1.71x is delta 54.6M against the
+flat population's 146.6M, so it is the tail of the same flood.
+
+**The gate is correctly targeted. My hypothesis is refuted and the gate is not
+the softness lever.**
+
+### s36.3 The picture agrees, which is the standard I set in s31
+
+Three-way 1:1 crops, sites chosen once on the shipped arm so a change cannot
+also select where it is displayed. Across all three sites the hairs are
+indistinguishable between gate 4.50, 1.00 and 0.00 -- equally soft, equally
+resolved, no acuity gained anywhere. What visibly changes is the white field,
+which at gate 1.00 becomes plainly grainy and mottled where the shipped arm is
+clean. The eye and the delta table report the same thing, and neither reports
+recovered detail.
+
+### s36.4 The fringe is not lateral CA, and my own discriminator was too weak
+
+ORCH gave the correct discriminator: lateral CA is antisymmetric and radial,
+clipping asymmetry is neither. I measured the subpixel R-versus-B edge
+displacement against signed distance from the image centre, on 58,890 accepted
+vertical edges with 1,110 rejected for weak amplitude in one channel and both
+counts reported, so a rejected edge cannot read as a measured one.
+
+The null control -- the same statistic computed G against G -- returns exactly
+`0.0000` in every radius bin. The instrument does not manufacture a trend.
+
+The R-versus-B displacements are `+0.033, +0.011, -0.013, +0.006, -0.047,
+-0.021` px across the bins. **The bound is what matters: lateral R-B
+displacement is at most about 0.05 px, and a visible magenta fringe requires
+roughly 0.5 to 2 px.** The fringe is not lateral misregistration.
+
+I must also retract my own flag rather than let it stand. The script printed
+`ANTISYMMETRIC? YES` on the strength of `mean_left * mean_right < 0`, comparing
+`+0.0103` against `-0.0209`. **Two noisy numbers of no particular size satisfy
+that test half the time.** It is a discriminator that cannot fail, which is the
+same defect class as every uncommissioned instrument this report has caught, and
+it is not evidence. The defensible result here is the 0.05 px bound and the
+exact null, not the flag.
+
+Consequence for routing: `optics.rs:562` carries a lateral-CA profile named
+`a7c2-fe100gm-2xtc-x4cpl`, which is the owner's exact rig, and it is default off
+(`unset / "" / "0" -> Ok(None)`, a silent no-op). It is tempting to reach for
+it. **It would not fix this fringe**, because it is a radial term correcting a
+displacement that is measured here to be 0.05 px. Whatever the fringe is, it is
+chromatic in amplitude rather than in position -- longitudinal CA, defocus
+fringing, or a chroma artifact -- and none of those are lateral.
+
+### s36.5 A correction owed to ORCH: the render is not clipped
+
+ORCH's first caution was that this subject's highlight is clipped. Of the
+delivered render that is false: the clipping census returns **0.0000 per cent of
+pixels at the ceiling on all three channels**, with a maximum green of 64,516 of
+65,535. The caution may still be true of the raw frames, which I have not
+examined. It is not true of the picture that was looked at.
+
+### s36.6 The structural finding: strehl never makes a focus decision at the scale of the deficit
+
+Having exonerated the gate I read the render path, and the product's own banner
+says the thing that matters:
+
+    Full sensor resolution: every CFA site estimated, one focus
+    decision per quad. Interpolated -- do not measure resolution on it.
+
+Traced to the code (`merge_cmd.rs:6302` and `:6553-6565`). `merged.value(p, i,
+black)` reads one merged structure indexed by quad `i`, returning a value for
+each of R, G1, G2, B; the four planes are then woven into a mosaic of `mw = 2 *
+geom.width` by `mh = 2 * geom.height` and Malvar-He-Cutler demosaics last. So:
+
+1. The merge runs on **four planes at half the output dimensions in each axis**.
+2. Every per-plane operation -- the pyramid bands, the noise gate, the s33
+   restoration -- is therefore band-limited to **plane Nyquist, 0.5 cycles per
+   plane pixel, which is 0.25 cycles per OUTPUT pixel**.
+3. All four planes share **one focus decision per 2x2 quad**, so the decision
+   grid is half the output resolution. (This is a point in the design's favour:
+   G1 and G2 cannot select different frames, so the interleaved green is
+   coherent rather than a beat between two frames' focus.)
+4. Everything in the output above `f_out = 0.25` is produced by interpolation
+   from a mosaic whose every quad was chosen by a half-resolution sharpness
+   measurement.
+
+Set that against the head-to-head deficit, converted into `f_out` as s33 records
+(`V-HEADTOHEAD/spec.py:70` computes cycles per PRIOR pixel; strehl scale
+1.035063):
+
+| comparator band | as `f_out` | vs fork | vs Zerene | relative to plane Nyquist 0.25 |
+| --- | --- | ---: | ---: | --- |
+| 0.20-0.30 | 0.193-0.290 | 0.833 | 0.735 | **straddles it** |
+| 0.30-0.40 | 0.290-0.387 | 0.766 | 0.843 | **entirely above it** |
+
+**The two bands where we lose 17 to 27 per cent are the two bands at and above
+the frequency where our merge stops having any information.** A 3-pixel feature
+is 0.33 cyc/px_out; our focus decision grid has a 2-pixel pitch. We are being
+beaten precisely and only where we never made a decision. This also explains why
+every lever I have tested inside the merge -- restore in s33, the gate in s36.1
+-- moves the picture by a few per cent against a deficit of twenty: they all
+live below 0.25 and the deficit does not.
+
+It is consistent with the comparators' architecture. The fork demosaics each
+frame with OpenCV and then merges at full RGB resolution, so its focus decision
+is made at full resolution on data that already has a full-resolution estimate
+at every site. Zerene likewise operates on developed RGB.
+
+### s36.7 What I have NOT established, and the test that would decide it
+
+I will not let s36.6 become the answer on the strength of its own tidiness. It
+predicts the SHAPE of the deficit, which is not the same as being its cause, and
+there is a rival hypothesis that predicts the same shape and that this project
+has a specific obligation to test:
+
+> The comparators' extra power above `f_out = 0.25` is not resolution. It is
+> overshoot. `cv::INTER_LANCZOS4` rings, and Zerene PMax is a contrast-
+> maximising method with a known artifact signature. Both add high-frequency
+> power that a band-power statistic scores as a win and that a print scores as a
+> defect.
+
+This is the hypothesis ORCH explicitly invited, and it is the same failure mode
+I caught in myself in s31, when Hamilton-Adams delivered 1.5016x the HF power in
+the flattest five per cent and the picture was a maze. **A comparator that wins
+a band-power ratio by ringing looks identical, in that table, to one that wins by
+resolving.** The two are separated by the paired ringing detector commissioned in
+s33 -- null exactly `0.000000`, plants recovered at exactly `0.0500 / 0.1500 /
+0.3000` -- and by opening the comparator outputs at 1:1.
+
+I do not hold the comparator renders; they are V-HEADTOHEAD's. **This is the
+measurement I am asking ORCH to route**, and it is cheap for whoever has those
+files. Until it is done, the honest statement of the head-to-head is that we
+lose band power at 3-5 px features, not that we lose resolution there.
+
+Both hypotheses are worth the same effort and they have opposite consequences.
+If the comparators are genuinely resolving, the fix is architectural and large:
+the focus decision has to move to full resolution. If they are ringing, the
+finding is that this rig cannot deliver contrast at 0.30 cyc/px, nobody's
+software can, and we should stop chasing it -- and that is a result worth as
+much as a win.
