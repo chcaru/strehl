@@ -176,6 +176,350 @@ fn color_description(dev: &Develop) -> String {
     }
 }
 
+// ===========================================================================
+// ICC profile construction
+//
+// WHY THIS IS BUILT AND NOT VENDORED
+// ----------------------------------
+// A vendored profile is a binary blob with a licence attached, and this project
+// has strict licence hygiene. Every number below comes from published,
+// unencumbered colorimetry -- IEC 61966-2-1 for the sRGB primaries and transfer
+// curve, ICC.1 for the D50 PCS illuminant, and the Bradford cone response
+// matrix -- and the adaptation is performed here rather than copied, so the
+// profile is derived from stated constants instead of inherited from a file
+// nobody read. The unit tests check the derivation against the canonical
+// published columns, which is what makes that claim checkable rather than
+// merely asserted.
+//
+// WHY v2 AND NOT v4
+// -----------------
+// v2 (0x02100000) is honoured by every colour-managed reader in use, including
+// old print RIPs. v4 buys parametric curves and little else here; a v4 profile
+// that a RIP silently ignores is worse than a v2 one it honours, and this whole
+// exercise exists because a tag no reader reads is decoration.
+// ===========================================================================
+
+/// ICC profile bytes for TIFF tag 34675.
+///
+/// Written with TIFF type **UNDEFINED (7)**, which is what the ICC embedding
+/// technote specifies. The crate's blanket `[u8]` impl would write type BYTE
+/// (1); readers are mostly lenient about that, but "mostly lenient" is the
+/// posture that produced the defect this code exists to fix, so the spec type
+/// is written instead of the convenient one.
+struct IccBytes<'a>(&'a [u8]);
+
+impl tiff::encoder::TiffValue for IccBytes<'_> {
+    const BYTE_LEN: u8 = 1;
+    const FIELD_TYPE: tiff::tags::Type = tiff::tags::Type::UNDEFINED;
+
+    fn count(&self) -> usize {
+        self.0.len()
+    }
+
+    fn data(&self) -> std::borrow::Cow<'_, [u8]> {
+        std::borrow::Cow::Borrowed(self.0)
+    }
+}
+
+/// The ICC PCS illuminant, D50. ICC.1:2010 §7.2.16.
+///
+/// These exact values are chosen so the s15Fixed16 encoding lands on the
+/// canonical `0000F6D6 00010000 0000D32D` that every reader expects to see.
+const PCS_D50: [f64; 3] = [0.964_203, 1.0, 0.824_905];
+
+/// D65, the sRGB white point (IEC 61966-2-1).
+const WHITE_D65: [f64; 3] = [0.950_47, 1.0, 1.088_83];
+
+/// sRGB primaries as CIE xy chromaticities (IEC 61966-2-1).
+const SRGB_PRIMARIES_XY: [[f64; 2]; 3] =
+    [[0.6400, 0.3300], [0.3000, 0.6000], [0.1500, 0.0600]];
+
+/// Bradford cone response matrix, and its inverse.
+const BRADFORD: [[f64; 3]; 3] = [
+    [0.8951, 0.2664, -0.1614],
+    [-0.7502, 1.7135, 0.0367],
+    [0.0389, -0.0685, 1.0296],
+];
+
+fn mat3_mul(a: [[f64; 3]; 3], b: [[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    let mut o = [[0.0; 3]; 3];
+    for (i, row) in o.iter_mut().enumerate() {
+        for (j, cell) in row.iter_mut().enumerate() {
+            *cell = (0..3).map(|k| a[i][k] * b[k][j]).sum();
+        }
+    }
+    o
+}
+
+fn mat3_vec(a: [[f64; 3]; 3], v: [f64; 3]) -> [f64; 3] {
+    let mut o = [0.0; 3];
+    for (i, cell) in o.iter_mut().enumerate() {
+        *cell = (0..3).map(|k| a[i][k] * v[k]).sum();
+    }
+    o
+}
+
+fn mat3_inv(m: [[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    let det = m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
+        - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+        + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+    assert!(det.abs() > 1e-12, "singular matrix in ICC construction");
+    let c = |r: usize, col: usize| -> f64 {
+        let (r0, r1) = ((r + 1) % 3, (r + 2) % 3);
+        let (c0, c1) = ((col + 1) % 3, (col + 2) % 3);
+        m[r0][c0] * m[r1][c1] - m[r0][c1] * m[r1][c0]
+    };
+    let mut o = [[0.0; 3]; 3];
+    for (i, row) in o.iter_mut().enumerate() {
+        for (j, cell) in row.iter_mut().enumerate() {
+            // transpose of the cofactor matrix, divided by the determinant
+            *cell = c(j, i) / det;
+        }
+    }
+    o
+}
+
+/// The RGB-to-XYZ matrix for the sRGB primaries under their own white point,
+/// then Bradford-adapted to the D50 PCS. Columns are the `rXYZ`/`gXYZ`/`bXYZ`
+/// tag values.
+fn srgb_to_xyz_d50() -> [[f64; 3]; 3] {
+    // Each primary's XYZ at unit luminance, from its xy chromaticity.
+    let mut p = [[0.0; 3]; 3];
+    for (i, [x, y]) in SRGB_PRIMARIES_XY.iter().enumerate() {
+        p[0][i] = x / y;
+        p[1][i] = 1.0;
+        p[2][i] = (1.0 - x - y) / y;
+    }
+    // Scale the columns so the primaries sum to the white point.
+    let s = mat3_vec(mat3_inv(p), WHITE_D65);
+    let mut m = [[0.0; 3]; 3];
+    for i in 0..3 {
+        for j in 0..3 {
+            m[i][j] = p[i][j] * s[j];
+        }
+    }
+    // Bradford: convert both whites to cone space, scale, convert back.
+    let src = mat3_vec(BRADFORD, WHITE_D65);
+    let dst = mat3_vec(BRADFORD, PCS_D50);
+    let mut scale = [[0.0; 3]; 3];
+    for i in 0..3 {
+        scale[i][i] = dst[i] / src[i];
+    }
+    let adapt = mat3_mul(mat3_inv(BRADFORD), mat3_mul(scale, BRADFORD));
+    mat3_mul(adapt, m)
+}
+
+/// s15Fixed16Number, ICC.1 §4.2.
+fn s15(v: f64) -> [u8; 4] {
+    ((v * 65536.0).round() as i32).to_be_bytes()
+}
+
+/// The sRGB electro-optical transfer function: encoded value to linear light.
+///
+/// This is the direction an ICC `TRC` tag stores, because a matrix/TRC profile
+/// computes `PCS = Matrix * TRC(device)`. Storing the opposite direction is a
+/// classic and completely silent error -- the image simply renders with the
+/// wrong contrast -- so the direction is named here rather than left implied.
+fn srgb_eotf(v: f64) -> f64 {
+    if v <= 0.040_45 {
+        v / 12.92
+    } else {
+        ((v + 0.055) / 1.055).powf(2.4)
+    }
+}
+
+/// Build a v2 display profile for RGB data on sRGB primaries.
+///
+/// `linear` selects the transfer curve: `false` gives the sRGB curve, `true`
+/// gives an identity curve for data that is already linear light.
+///
+/// Deterministic by construction. The creation date is fixed rather than taken
+/// from the clock, because a profile that changes every run would make every
+/// output file's hash change every run, and this project's epistemics rest on
+/// byte-freezes.
+fn icc_srgb_v2(linear: bool) -> Vec<u8> {
+    let m = srgb_to_xyz_d50();
+
+    let desc = if linear {
+        "strehl linear sRGB (BT.709-6 primaries, D65, gamma 1.0)"
+    } else {
+        "strehl sRGB (IEC 61966-2-1)"
+    };
+    let cprt = "Constructed by strehl from published colorimetry \
+                (IEC 61966-2-1 primaries and transfer curve, ICC.1 D50 PCS, \
+                 Bradford adaptation). No rights reserved.";
+
+    // -- tag payloads ------------------------------------------------------
+    let xyz_tag = |c: usize| -> Vec<u8> {
+        let mut v = b"XYZ \0\0\0\0".to_vec();
+        for r in 0..3 {
+            v.extend_from_slice(&s15(m[r][c]));
+        }
+        v
+    };
+
+    let mut wtpt = b"XYZ \0\0\0\0".to_vec();
+    for v in PCS_D50 {
+        wtpt.extend_from_slice(&s15(v));
+    }
+
+    let trc = {
+        let mut v = b"curv\0\0\0\0".to_vec();
+        if linear {
+            // count 0 is the identity curve.
+            v.extend_from_slice(&0u32.to_be_bytes());
+        } else {
+            const N: usize = 1024;
+            v.extend_from_slice(&(N as u32).to_be_bytes());
+            for i in 0..N {
+                let y = srgb_eotf(i as f64 / (N - 1) as f64);
+                v.extend_from_slice(&((y * 65535.0).round() as u16).to_be_bytes());
+            }
+        }
+        v
+    };
+
+    // textDescriptionType, the v2 form of `desc`.
+    let desc_tag = {
+        let mut v = b"desc\0\0\0\0".to_vec();
+        v.extend_from_slice(&((desc.len() + 1) as u32).to_be_bytes());
+        v.extend_from_slice(desc.as_bytes());
+        v.push(0);
+        v.extend_from_slice(&[0u8; 4]); // unicode language code
+        v.extend_from_slice(&[0u8; 4]); // unicode count
+        v.extend_from_slice(&[0u8; 2]); // scriptcode code
+        v.push(0); // scriptcode count
+        v.extend_from_slice(&[0u8; 67]); // scriptcode description
+        v
+    };
+
+    let cprt_tag = {
+        let mut v = b"text\0\0\0\0".to_vec();
+        v.extend_from_slice(cprt.as_bytes());
+        v.push(0);
+        v
+    };
+
+    // The adaptation actually applied, recorded so a reader can undo it.
+    let chad_tag = {
+        let src = mat3_vec(BRADFORD, WHITE_D65);
+        let dst = mat3_vec(BRADFORD, PCS_D50);
+        let mut scale = [[0.0; 3]; 3];
+        for i in 0..3 {
+            scale[i][i] = dst[i] / src[i];
+        }
+        let adapt = mat3_mul(mat3_inv(BRADFORD), mat3_mul(scale, BRADFORD));
+        let mut v = b"sf32\0\0\0\0".to_vec();
+        for row in adapt {
+            for cell in row {
+                v.extend_from_slice(&s15(cell));
+            }
+        }
+        v
+    };
+
+    // `rTRC`, `gTRC` and `bTRC` share one payload: identical curves pointing at
+    // one offset is normal ICC practice and is what most shipping profiles do.
+    let tags: Vec<(&[u8; 4], Vec<u8>)> = vec![
+        (b"desc", desc_tag),
+        (b"wtpt", wtpt),
+        (b"rXYZ", xyz_tag(0)),
+        (b"gXYZ", xyz_tag(1)),
+        (b"bXYZ", xyz_tag(2)),
+        (b"rTRC", trc),
+        (b"cprt", cprt_tag),
+        (b"chad", chad_tag),
+    ];
+
+    // -- lay out ------------------------------------------------------------
+    // Tag count includes the two aliased TRC entries, which carry no payload of
+    // their own.
+    let n_entries = tags.len() as u32 + 2;
+    let table_bytes = 4 + 12 * n_entries as usize;
+    let mut offset = 128 + table_bytes;
+
+    let mut entries: Vec<([u8; 4], u32, u32)> = Vec::new();
+    let mut payload: Vec<u8> = Vec::new();
+    let mut trc_at = (0u32, 0u32);
+    for (sig, data) in &tags {
+        let at = offset as u32;
+        let size = data.len() as u32;
+        entries.push((**sig, at, size));
+        if *sig == b"rTRC" {
+            trc_at = (at, size);
+        }
+        payload.extend_from_slice(data);
+        // Tag data must start on a 4-byte boundary.
+        let pad = (4 - (data.len() % 4)) % 4;
+        payload.extend(std::iter::repeat_n(0u8, pad));
+        offset += data.len() + pad;
+    }
+    entries.push((*b"gTRC", trc_at.0, trc_at.1));
+    entries.push((*b"bTRC", trc_at.0, trc_at.1));
+
+    let total = 128 + table_bytes + payload.len();
+
+    let mut out = Vec::with_capacity(total);
+    out.extend_from_slice(&(total as u32).to_be_bytes()); // profile size
+    out.extend_from_slice(&[0u8; 4]); // preferred CMM: none
+    out.extend_from_slice(&0x0210_0000u32.to_be_bytes()); // v2.1
+    out.extend_from_slice(b"mntr");
+    out.extend_from_slice(b"RGB ");
+    out.extend_from_slice(b"XYZ ");
+    // Fixed creation date: 2026-01-01T00:00:00Z. See the determinism note above.
+    for v in [2026u16, 1, 1, 0, 0, 0] {
+        out.extend_from_slice(&v.to_be_bytes());
+    }
+    out.extend_from_slice(b"acsp");
+    out.extend_from_slice(&[0u8; 4]); // platform
+    out.extend_from_slice(&[0u8; 4]); // flags: not embedded, usable independently
+    out.extend_from_slice(&[0u8; 4]); // device manufacturer
+    out.extend_from_slice(&[0u8; 4]); // device model
+    out.extend_from_slice(&[0u8; 8]); // device attributes
+    out.extend_from_slice(&0u32.to_be_bytes()); // rendering intent: perceptual
+    for v in PCS_D50 {
+        out.extend_from_slice(&s15(v));
+    }
+    out.extend_from_slice(&[0u8; 4]); // profile creator
+    out.extend_from_slice(&[0u8; 16]); // profile ID (MD5); zero = not computed
+    out.extend_from_slice(&[0u8; 28]); // reserved
+    debug_assert_eq!(out.len(), 128);
+
+    out.extend_from_slice(&n_entries.to_be_bytes());
+    for (sig, at, size) in &entries {
+        out.extend_from_slice(sig);
+        out.extend_from_slice(&at.to_be_bytes());
+        out.extend_from_slice(&size.to_be_bytes());
+    }
+    out.extend_from_slice(&payload);
+    debug_assert_eq!(out.len(), total);
+    out
+}
+
+/// The profile to embed for a given development, or `None`.
+///
+/// **`None` is a deliberate answer, not a missing case.** When `dev.matrix` is
+/// `None` the pixels are camera-native, in the sensor's own primaries, and this
+/// code has no characterisation of them: `Develop::matrix`'s own documentation
+/// says `None` is also what happens "when the decoder has no characterisation
+/// for the body". There is therefore nothing to build a truthful profile from.
+///
+/// Writing an sRGB profile onto those pixels would be the worst option
+/// available. Today they are mislabelled loudly -- the description shouts THIS
+/// IS NOT sRGB -- and a human or a print shop can read it. An embedded sRGB
+/// profile would replace that shout with a machine-readable assertion that a
+/// colour-managed application would silently obey, converting a visible warning
+/// into an invisible corruption. So the camera-native paths keep the text and
+/// get no profile, and a reader that finds no profile falls back to exactly the
+/// behaviour it has today rather than to something new and wrong.
+fn icc_for(dev: &Develop) -> Option<Vec<u8>> {
+    match (dev.matrix.is_some(), dev.srgb) {
+        (true, true) => Some(icc_srgb_v2(false)),
+        (true, false) => Some(icc_srgb_v2(true)),
+        (false, _) => None,
+    }
+}
+
 /// Interleaved RGB, 16 bits per channel, with the colour space stated in the
 /// file.
 ///
@@ -201,6 +545,13 @@ pub fn write_rgb16_described(
     img.encoder()
         .write_tag(Tag::ImageDescription, desc.as_str())
         .with_context(|| format!("tagging {}", path.display()))?;
+    // The machine-readable half of the same statement. The description above is
+    // for a human; this is the only part a colour-managed application reads.
+    if let Some(profile) = icc_for(dev) {
+        img.encoder()
+            .write_tag(Tag::IccProfile, IccBytes(&profile))
+            .with_context(|| format!("embedding ICC profile in {}", path.display()))?;
+    }
     img.encoder()
         .write_tag(
             Tag::Software,
@@ -1755,5 +2106,133 @@ mod tests {
             [0, 0],
             "a measurement render gamut-mapped instead of clamping: {out:?}"
         );
+    }
+
+    // -- ICC ---------------------------------------------------------------
+
+    /// The derivation is checked against the columns published in the ICC's own
+    /// sRGB profile, NOT against itself.
+    ///
+    /// A test that re-ran my arithmetic and compared it to my arithmetic would
+    /// pass for any matrix at all, including a transposed or unadapted one.
+    /// These four numbers come from outside this file, so the derivation can
+    /// actually fail them.
+    #[test]
+    fn the_derived_primaries_match_the_published_srgb_icc_columns() {
+        let m = srgb_to_xyz_d50();
+        let want = [
+            [0.4360, 0.2225, 0.0139],
+            [0.3851, 0.7169, 0.0971],
+            [0.1431, 0.0606, 0.7141],
+        ];
+        for (c, col) in want.iter().enumerate() {
+            for (r, w) in col.iter().enumerate() {
+                assert!(
+                    (m[r][c] - w).abs() < 5e-4,
+                    "column {c} row {r}: derived {:.6}, published {w:.6}",
+                    m[r][c]
+                );
+            }
+        }
+    }
+
+    /// The defining property of a correctly adapted matrix: white in gives the
+    /// PCS white out. This catches an unadapted (D65) matrix, which the
+    /// published-columns test would also catch, but this one states *why*.
+    #[test]
+    fn the_primary_columns_sum_to_the_pcs_white() {
+        let m = srgb_to_xyz_d50();
+        for r in 0..3 {
+            let sum: f64 = (0..3).map(|c| m[r][c]).sum();
+            assert!(
+                (sum - PCS_D50[r]).abs() < 1e-3,
+                "row {r} sums to {sum:.6}, PCS D50 is {:.6}",
+                PCS_D50[r]
+            );
+        }
+    }
+
+    /// The TRC must store device-to-linear. Storing the inverse renders with
+    /// visibly wrong contrast and nothing else complains.
+    #[test]
+    fn the_transfer_curve_is_stored_in_the_decoding_direction() {
+        assert!((srgb_eotf(0.0)).abs() < 1e-9);
+        assert!((srgb_eotf(1.0) - 1.0).abs() < 1e-9);
+        // Mid-grey 0.5 encoded is ~0.214 linear. If this reads ~0.735 the
+        // curve has been stored backwards.
+        assert!(
+            (srgb_eotf(0.5) - 0.2140).abs() < 1e-3,
+            "srgb_eotf(0.5) = {:.4}",
+            srgb_eotf(0.5)
+        );
+    }
+
+    #[test]
+    fn the_profile_is_structurally_well_formed_and_deterministic() {
+        for linear in [false, true] {
+            let p = icc_srgb_v2(linear);
+            assert_eq!(
+                u32::from_be_bytes(p[0..4].try_into().unwrap()) as usize,
+                p.len(),
+                "header size field disagrees with the actual length"
+            );
+            assert_eq!(&p[36..40], b"acsp", "missing ICC file signature");
+            assert_eq!(&p[12..16], b"mntr");
+            assert_eq!(&p[16..20], b"RGB ");
+            assert_eq!(&p[20..24], b"XYZ ");
+            assert_eq!(
+                u32::from_be_bytes(p[8..12].try_into().unwrap()),
+                0x0210_0000,
+                "must stay v2 for reader compatibility"
+            );
+            // Canonical D50 encoding in the header's PCS illuminant field.
+            assert_eq!(&p[68..80], &[0, 0, 0xF6, 0xD6, 0, 1, 0, 0, 0, 0, 0xD3, 0x2D]);
+
+            // Every tag must lie inside the file and start 4-byte aligned.
+            let n = u32::from_be_bytes(p[128..132].try_into().unwrap()) as usize;
+            assert!(n >= 9, "too few tags: {n}");
+            let mut sigs = Vec::new();
+            for i in 0..n {
+                let e = 132 + 12 * i;
+                let sig = &p[e..e + 4];
+                let off = u32::from_be_bytes(p[e + 4..e + 8].try_into().unwrap()) as usize;
+                let len = u32::from_be_bytes(p[e + 8..e + 12].try_into().unwrap()) as usize;
+                assert!(off % 4 == 0, "tag {sig:?} is not 4-byte aligned");
+                assert!(off + len <= p.len(), "tag {sig:?} runs past the end");
+                sigs.push(std::str::from_utf8(sig).unwrap().to_string());
+            }
+            for req in ["desc", "wtpt", "rXYZ", "gXYZ", "bXYZ", "rTRC", "gTRC", "bTRC", "cprt"] {
+                assert!(sigs.contains(&req.to_string()), "missing required tag {req}");
+            }
+            // Determinism: a clock-derived date would break every byte-freeze.
+            assert_eq!(p, icc_srgb_v2(linear), "profile is not deterministic");
+        }
+    }
+
+    /// The camera-native paths must get NO profile.
+    ///
+    /// Embedding sRGB there would turn a loud, human-readable warning into a
+    /// machine-readable lie that a colour-managed reader obeys silently.
+    #[test]
+    fn only_the_colorimetric_paths_get_a_profile() {
+        let m = color::camera_to_srgb(A7C2).expect("invertible");
+        let with = |space: OutputSpace, mat| icc_for(&space.develop(mat)).is_some();
+
+        assert!(with(OutputSpace::Srgb, Some(m)), "sRGB must be labelled");
+        assert!(with(OutputSpace::LinearSrgb, Some(m)), "linear sRGB must be labelled");
+        assert!(
+            !with(OutputSpace::CameraLinear, Some(m)),
+            "camera-native must NOT claim to be sRGB, even when a matrix exists"
+        );
+        assert!(
+            !with(OutputSpace::CameraLinear, None),
+            "camera-native without a characterisation must not be labelled"
+        );
+
+        // The two colorimetric profiles must differ, or the transfer curve is
+        // not actually being varied and one of the two files is mislabelled.
+        let srgb = icc_for(&OutputSpace::Srgb.develop(Some(m))).unwrap();
+        let lin = icc_for(&OutputSpace::LinearSrgb.develop(Some(m))).unwrap();
+        assert_ne!(srgb, lin, "sRGB and linear sRGB got the same profile");
     }
 }
