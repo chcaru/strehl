@@ -4959,3 +4959,108 @@ ships on by default.
 > reported, so that a frame with no flat region says so instead of nominating
 > its quietest texture.
 
+
+---
+
+## 47. Does the patchwork generalise? Two subjects say yes, one says no, and the no matters
+
+Section 45 proved the polygonal patchwork is the estimator backend rather than
+the noise gate. It proved it on **one** subject, by eye, and §45 recorded that
+limitation as an explicit uncertainty rather than rounding it up to a general
+claim. This is the attempt to close it.
+
+### 47.1 The instrument, and the confound it had to kill
+
+Polygons are *structure in a region that should be smooth*. A defocused
+background is smooth by construction -- every input frame is out of focus there,
+so any fine structure in the output was manufactured by the merge. So restrict
+to blocks whose gradient **on the arm mean** is in the bottom percentile band,
+which means neither arm chooses its own ground, and compare the two arms on the
+same rectangles.
+
+Run that way, `coffee-bean` returns estimator/pyramid high-pass ratios of
+**4.167** on the worst background block and **2.904** across 21 random ones.
+
+That looks conclusive and it is not, because of a confound sitting in the
+comparison: the estimator arm renders at `--gate 2` and the pyramid arm at
+`--pyramid-gate 4.5`, so the estimator averages fewer frames. **Noise is
+high-pass energy too.** A uniform 2.9x excess is exactly what less averaging
+produces, and it would say nothing whatever about polygons.
+
+### 47.2 The discriminator: noise dies under averaging, facets do not
+
+Box-average the block by a factor `f` before measuring. White noise falls as
+`1/f`. A hard-edged facet boundary tens of pixels across survives essentially
+intact. So the ratio's **scale dependence** separates the two explanations
+without needing a matched-gate render:
+
+* if the excess is noise, the ratio stays **flat** while both columns fall;
+* if the excess is structure, the ratio **grows** with `f`.
+
+`coffee-bean`:
+
+| factor | estimator | pyramid | ratio |
+| --- | --- | --- | --- |
+| 1 | 0.000814 | 0.000353 | 2.304 |
+| 2 | 0.001105 | 0.000301 | 3.674 |
+| 4 | 0.001466 | 0.000431 | 3.399 |
+| 8 | 0.002330 | 0.000626 | 3.722 |
+| 16 | 0.003782 | 0.000902 | **4.194** |
+
+The ratio nearly doubles from 2.304 to 4.194 under 16x averaging. The excess is
+**structure that survives averaging**, and the noise explanation is refuted on
+this subject. The 1:1 crop agrees: soft mottled blotches across a white sweep in
+the estimator arm, a clean field in the pyramid arm at the same rectangle.
+
+**`coffee-bean` is the second subject.** The claim is no longer a single
+observation.
+
+### 47.3 The subject that says no
+
+`lavendar-cpl`, same instrument, same procedure:
+
+| factor | estimator | pyramid | ratio |
+| --- | --- | --- | --- |
+| 1 | 0.001102 | 0.000704 | 1.565 |
+| 2 | 0.001378 | 0.000596 | 2.311 |
+| 4 | 0.001826 | 0.000869 | 2.103 |
+| 8 | 0.002917 | 0.001546 | 1.887 |
+| 16 | 0.004530 | 0.002850 | **1.589** |
+
+The ratio rises and then **returns to its starting value**. Under the rule
+written above, that is not a facet signature. Most of `lavendar-cpl`'s excess is
+noise, and the small mid-scale bump is not enough to call it patchwork.
+
+`flower-bud-alone-cpl` produced **no qualifying blocks at all** -- its background
+carries enough sweep gradient that no 520 px block sits far enough below the
+threshold. It is counted as not-measured, not as a pass.
+
+### 47.4 What is actually established
+
+**The honest scope: the patchwork is real, it is the estimator, and it is
+subject-dependent rather than universal.** It appears where there is a large,
+genuinely smooth, deeply defocused background -- `bee-3-cpl` by eye,
+`coffee-bean` by a discriminator that survives its own confound -- and it does
+not clearly appear on a texture-dominated subject whose background is a near
+field grey sweep.
+
+The decision does not depend on which way that split falls, because of the one
+result that is uniform across every row of every table above: **the pyramid arm
+carries less background structure than the estimator arm at every scale on every
+subject measured, and is never worse on this statistic.** A backend that is
+sometimes much better and never worse is the one to ship, and the argument for
+the flip does not need the defect to be universal.
+
+### 47.5 Rules
+
+> **When two arms differ by more than the variable under test, find a statistic
+> whose SCALE DEPENDENCE separates the explanations, rather than re-rendering to
+> match.** The confound here was extra noise from a different gate; averaging
+> discriminates noise from structure directly, and costs one pass instead of a
+> second gallery.
+
+> **A generalisation attempt that returns one yes and one no has succeeded.** It
+> replaced a claim believed universal with a claim that is true in a stated
+> region, which is a better object than the one it started with. The failure to
+> reproduce is the most valuable row in the section and is reported as such.
+
