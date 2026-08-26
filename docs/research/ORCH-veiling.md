@@ -4562,3 +4562,83 @@ evidence), one of my supporting arguments was found to be one section away from 
 false-positive statistic, and the feature I recommended survived an audit that was actively
 trying to kill it. That is a good night. The corpus is shorter on capability and longer on
 things that cannot be true.
+
+## 44. I looked at all 26 at 1:1, and the product is closer than the record says
+
+Section 43 was subtraction. This one is the opposite: I went and looked at the delivered
+pixels, at full resolution, on the subjects most likely to embarrass us, and the honest
+finding is that **the output is substantially print-worthy already and the corpus has been
+under-claiming it.** The remaining visible defect is one I can name.
+
+### 44.1 The survey clears nothing, and it cleared nothing
+
+`contact.py` over all 26 renders of the gate-4.5 gallery. Its own header is right that a
+thumbnail can never establish sharpness, so this pass was looking only for the GLOBAL
+failures: a halo tracing a silhouette, a crushed region, a tone shift, a colour cast, an
+outright failed frame.
+
+**None of the 26 shows any of them.** No silhouette halo anywhere — which is the defect the
+user called "horrendous" and "entirely unusable", and it is gone. `dark<500` never exceeds
+0.03% on any subject. Two pairs in the corpus are the same scene shot twice
+(`109MSDCF`/`119MSDCF`, `112MSDCF`/`113MSDCF`) and they render consistently, which is a free
+repeatability check nobody designed.
+
+### 44.2 The instrument that looks at delivered pixels
+
+`experiments/ORCH-drift-check/printqa.py`. Three rules, all stated in the file so the
+selection can be disbelieved:
+
+- **No resampling.** A crop is lifted at 1:1 and pasted at 1:1. Scaling a crop would have
+  the instrument inventing or destroying the exact quantity under review.
+- **Sites are chosen on gradient percentile bands**, not on output sharpness. Selecting
+  crops by output sharpness guarantees a flattering result; this picks the highest-gradient
+  block (DETAIL), the p60 block (TRANSITION) and the lowest non-border block (FLAT), so
+  every sheet contains a site chosen to be hard and a site chosen to expose invention.
+- **Border blocks are excluded** because a crop cannot be lifted there, and each crop
+  carries its own measured statistics burned into the image, so a number and the pixels it
+  describes cannot drift apart.
+
+### 44.3 What 1:1 actually shows
+
+| subject | site | grad | what is resolved |
+|---|---|---|---|
+| `bee-3-cpl` | DETAIL | 0.03065 | individual hair strands, each with a specular running along it; pollen grains on the leg as discrete specks |
+| `bee-3-cpl` | FLAT | 0.00039 | clean, no patchwork, no mottle |
+| `wrapped-text-1` | DETAIL | 0.03501 | **individual ink particles** in the letterform, and paper fibre in the white |
+| `wrapped-text-1` | FLAT | 0.00753 | paper texture with a single fibre line, no invention |
+| `pencil-steep-angle-cpl` | DETAIL | 0.04435 | graphite crystal facets with individual speculars |
+| `pencil-steep-angle-cpl` | TRANSITION | 0.01106 | wood fibre structure through a steep depth gradient |
+| `pencil-steep-angle-cpl` | FLAT | 0.00031 | flat, and this is the halo-prone geometry |
+
+Resolving ink at the particle level on a printed label, and hair speculars on a bee, is not
+"soft". Whatever softness remains on some subjects is not global and is not the merge.
+
+### 44.4 The one defect I can see in every crop
+
+**Lateral chromatic aberration.** Dark hairs against the bright ground carry a cyan cast on
+one side and a warm cast on the other; letterforms carry a brown fringe on one edge. It is
+visible at 1:1 on every sheet I generated.
+
+We have a measured, independently audited fix for exactly this, and **the delivered gallery
+does not have it applied.** V-CA confirmed the correction improves the edge chroma metric on
+**6/6 subjects** including the opposite polarity and the low-contrast case (section 43.4),
+and confirmed the render path is byte-identical to the arm those numbers were measured on.
+It became default-ON at `96571ee`. The gallery predates that and I had deliberately held it
+back pending the audit.
+
+The audit has now reported. So the single highest-value action available tonight is not a
+new algorithm: it is **re-rendering the gallery with the correction that is already written,
+already measured and already the default.**
+
+> **When the record says a thing is unfinished and the pixels say otherwise, go and look.**
+> I priced defects for a day and a half without once opening the delivered file at 1:1. The
+> defect that survived every one of those numbers was visible in the first crop I looked at.
+
+### 44.5 Scope limit, written at the moment of the claim
+
+This is a **survey plus four 1:1 sheets**, not an acceptance test. It establishes that the
+global failures are absent and that fine detail is genuinely resolved on four subjects. It
+does **not** establish that the merge beats the best single frame (V-M116 owns that), it does
+not measure sharpness against any reference, and four subjects are not 26. The CA claim in
+44.4 is mine by eye and V-CA's by measurement; the re-render is the thing that will show
+whether the two agree on the delivered file.
