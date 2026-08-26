@@ -220,6 +220,35 @@ pub struct RestoreConfig {
 }
 
 impl RestoreConfig {
+    /// The highest image frequency at which the gather is still the limiter,
+    /// in the restored image's own units.
+    ///
+    /// The gather runs on half-resolution CFA planes -- `align_cmd.rs`
+    /// deinterleaves with stride 2 before gathering, so its taps are two output
+    /// pixels apart, and BUILD-SHARP's warpmap is 3516 x 2344 against the
+    /// 7032 x 4688 the gallery writes. `grid_factor` maps output frequency to
+    /// plane frequency, so the plane's Nyquist of 0.5 sits at `0.5 /
+    /// grid_factor` in output units: **0.25** for a demosaiced merge.
+    ///
+    /// Above it two separate things go wrong. Arithmetically, `f *
+    /// grid_factor` exceeds 0.5 and [`gather_mtf`] is read past the plane's
+    /// Nyquist, where its DTFT aliases and folds back **up** toward 1.0 --
+    /// measured to peak at 0.25 and return to 1.026 at Nyquist, moving the
+    /// dominant outer tap to `k = 2` and putting a 4-px-period ring into the
+    /// picture. Physically the statement is simpler: the gather plane cannot
+    /// represent that detail at all, so whatever is up there was manufactured
+    /// by the demosaic interpolator rather than attenuated by the resampler,
+    /// and correcting it corrects a loss that did not happen there.
+    ///
+    /// For a binned merge (`grid_factor <= 1.0`) the gather grid IS the output
+    /// grid, nothing folds, and this returns Nyquist so no taper applies.
+    fn knee(&self) -> f64 {
+        if !(self.grid_factor > 1.0) {
+            return 0.5;
+        }
+        0.5 / self.grid_factor
+    }
+
     /// The gain applied at one frequency, given the local signal power.
     ///
     /// `signal_power` is `S(f)`: the image's own power at this frequency, which
@@ -227,16 +256,22 @@ impl RestoreConfig {
     /// prior. Where the image has no signal left, `sigma^2/S` explodes and the
     /// gain returns to 1 — the estimator declining, on its own evidence, to
     /// amplify a frequency that is only noise.
+    ///
+    /// Above [`Self::knee`] the correction is rolled off rather than evaluated:
+    /// see [`roll_off`] for why a smooth taper and not a hard shelf.
     pub fn gain(&self, f: f64, signal_power: f64) -> f64 {
         if !(signal_power > 0.0) || !self.gain_cap.is_finite() {
             return 1.0;
         }
-        let h = gather_mtf(self.resampler, f * self.grid_factor);
+        let knee = self.knee();
+        let a = f.abs();
+        // Evaluated AT the knee, never past it: this is the clamp.
+        let h = gather_mtf(self.resampler, a.min(knee) * self.grid_factor);
         if h <= 1e-6 {
             return 1.0;
         }
-        let g = h / (h * h + self.sigma2 / signal_power);
-        g.clamp(1.0, self.gain_cap.max(1.0))
+        let g = (h / (h * h + self.sigma2 / signal_power)).clamp(1.0, self.gain_cap.max(1.0));
+        1.0 + (g - 1.0) * roll_off(a, knee)
     }
 
     /// Separable 2-D gain. The gather is separable, so its correction is too.
@@ -244,13 +279,42 @@ impl RestoreConfig {
         if !(signal_power > 0.0) {
             return 1.0;
         }
-        let h = gather_mtf(self.resampler, fx.abs() * self.grid_factor)
-            * gather_mtf(self.resampler, fy.abs() * self.grid_factor);
+        let knee = self.knee();
+        let (ax, ay) = (fx.abs(), fy.abs());
+        let h = gather_mtf(self.resampler, ax.min(knee) * self.grid_factor)
+            * gather_mtf(self.resampler, ay.min(knee) * self.grid_factor);
         if h <= 1e-6 {
             return 1.0;
         }
-        (h / (h * h + self.sigma2 / signal_power)).clamp(1.0, self.gain_cap.max(1.0))
+        let g = (h / (h * h + self.sigma2 / signal_power)).clamp(1.0, self.gain_cap.max(1.0));
+        1.0 + (g - 1.0) * roll_off(ax, knee) * roll_off(ay, knee)
     }
+}
+
+/// Raised-cosine taper of the EXCESS gain from the knee to Nyquist.
+///
+/// `1` at and below the knee, `0` at Nyquist, monotone non-increasing between,
+/// with zero slope at both ends so the target curve has no corner for the
+/// least-squares fit to ring on.
+///
+/// A hard shelf at the knee would be the obvious alternative and it is worse
+/// twice over: a step in the target is itself a filter with its own ringing,
+/// and holding the knee's boost flat to Nyquist would amplify demosaic
+/// interpolation artefacts exactly as hard as it amplifies real detail --
+/// which, above the knee, is all there is to amplify.
+///
+/// Because the excess is non-negative (`gain` clamps to `[1, cap]`), scaling it
+/// by a monotone non-increasing weight cannot make the response rise, which is
+/// the anti-folding property `the_response_never_rises_above_the_knee` pins.
+fn roll_off(f: f64, knee: f64) -> f64 {
+    if knee >= 0.5 || f <= knee {
+        return 1.0;
+    }
+    if f >= 0.5 {
+        return 0.0;
+    }
+    let t = (f - knee) / (0.5 - knee);
+    0.5 * (1.0 + (std::f64::consts::PI * t).cos())
 }
 
 /// What [`restore_plane`] actually did.
@@ -738,6 +802,131 @@ mod tests {
     #[test]
     fn kernels_are_interpolating_and_preserve_dc() {
         selftest().unwrap();
+    }
+
+    /// ORCH's acceptance criterion for the fold, with a positive control that
+    /// the fold it guards against is real. Nothing tested this before.
+    ///
+    /// The gather runs on half-resolution CFA planes, so for a demosaiced merge
+    /// the gather plane's Nyquist sits at `f = 0.25` in output units. Above it
+    /// [`gather_mtf`] was being read past its own Nyquist, where the DTFT is
+    /// periodic and folds back **up** toward 1.0. A target that rises with
+    /// frequency is an unsharp mask, and an unsharp mask at a silhouette is the
+    /// halo this project has just finished removing.
+    #[test]
+    fn the_response_never_rises_above_the_knee() {
+        let cfg = RestoreConfig {
+            resampler: Resampler::CatmullRom,
+            grid_factor: 2.0,
+            // The MERGED high-frequency noise floor measured on a real render,
+            // not the far larger single-frame figure the module docs were
+            // written against. The fold is worst where the filter is strongest.
+            sigma2: 82.15,
+            gain_cap: 4.0,
+        };
+        let knee = cfg.knee();
+        assert!(
+            (knee - 0.25).abs() < 1e-12,
+            "a demosaiced merge gathers on half-resolution planes, so the knee \
+             must be 0.25 in output units; got {knee}"
+        );
+
+        // POSITIVE CONTROL. If `gather_mtf` did not fold back up past the
+        // plane's Nyquist there would be nothing here to guard and every
+        // assertion below would pass vacuously.
+        let at_knee = gather_mtf(cfg.resampler, knee * cfg.grid_factor);
+        let folded = gather_mtf(cfg.resampler, 0.5 * cfg.grid_factor);
+        assert!(
+            folded > at_knee + 0.05,
+            "the fold this test guards against is absent: the gather MTF reads \
+             {at_knee:.6} at the knee and {folded:.6} an octave past it, so the \
+             clamp is guarding nothing"
+        );
+
+        // THE TARGET. Monotone non-increasing above the knee, never exceeding
+        // its value there, and all the way back to unity at Nyquist.
+        let s = 5.0e5;
+        let g_knee = cfg.gain(knee, s);
+        assert!(
+            g_knee > 1.001,
+            "this test needs an active correction to be meaningful; got {g_knee}"
+        );
+        let mut prev = g_knee;
+        for i in 0..=100 {
+            let f = knee + (0.5 - knee) * f64::from(i) / 100.0;
+            let g = cfg.gain(f, s);
+            assert!(
+                g <= g_knee + 1e-12 && g <= prev + 1e-12,
+                "target gain rose to {g:.6} at f={f:.4}; knee {g_knee:.6}, \
+                 previous {prev:.6}. The fold is back."
+            );
+            prev = g;
+        }
+        assert!(
+            (cfg.gain(0.5, s) - 1.0).abs() < 1e-9,
+            "above the knee the gather is not the limiter, so the correction \
+             must roll all the way back to 1 at Nyquist; got {}",
+            cfg.gain(0.5, s)
+        );
+
+        // THE DESIGNED RESPONSE, which is what the pixels actually receive.
+        //
+        // The target has a slope discontinuity at the knee -- rising steeply
+        // below it, flat at it -- and a four-tap least-squares fit cannot turn
+        // that corner, so it rounds it: measured, the designed peak is 1.4868
+        // at f = 0.28 against 1.4574 at the knee, 2.0% high and 0.03 wide.
+        // Demanding strict monotonicity from the knee itself would be demanding
+        // something no FIR of this length can do, so the property pinned here
+        // is the FOLD -- the response must come DOWN toward Nyquist and stay
+        // down, which is what it did not do before the clamp: V-RESTORE
+        // measured it peaking at 0.25 and returning to 1.026 at Nyquist.
+        let (w, h) = (96usize, 96usize);
+        let plane: Vec<f32> = (0..w * h)
+            .map(|i| {
+                let (x, y) = ((i % w) as f64, (i / w) as f64);
+                (2000.0
+                    + 400.0 * (x / 3.0).sin() * (y / 5.0).cos()
+                    + 150.0 * ((x * 7.0 + y * 3.0) % 11.0)) as f32
+            })
+            .collect();
+        let r = autocorrelation(&plane, w, h, 24);
+        let taps = design_fir(&cfg, &r, 4);
+        let r_knee = fir_response(&taps, knee);
+        let r_nyq = fir_response(&taps, 0.5);
+        assert!(
+            r_nyq < r_knee,
+            "the designed response is {r_nyq:.6} at Nyquist against {r_knee:.6} \
+             at the knee: it folds back up, which is the defect this clamp exists \
+             to remove"
+        );
+        assert!(
+            r_nyq < 1.02,
+            "above the knee there is nothing the gather attenuated, so the \
+             designed response must be back at unity by Nyquist; got {r_nyq:.6}"
+        );
+        // Allowance for the fit rounding the corner, and no more.
+        const FIT_ROUNDING: f64 = 1.05;
+        let mut prev = f64::INFINITY;
+        for i in 0..=100 {
+            let f = knee + (0.5 - knee) * f64::from(i) / 100.0;
+            let resp = fir_response(&taps, f);
+            assert!(
+                resp <= r_knee * FIT_ROUNDING,
+                "designed response {resp:.6} at f={f:.4} exceeds the knee value \
+                 {r_knee:.6} by more than the {:.0}% allowed for the fit rounding \
+                 the corner",
+                (FIT_ROUNDING - 1.0) * 100.0
+            );
+            // Past the rounded shoulder the decay must be strict.
+            if f >= knee + 0.2 * (0.5 - knee) {
+                assert!(
+                    resp <= prev + 1e-9,
+                    "designed response rose from {prev:.6} to {resp:.6} at \
+                     f={f:.4}, past the shoulder: the fold is back"
+                );
+                prev = resp;
+            }
+        }
     }
 
     #[test]
