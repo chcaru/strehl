@@ -2899,3 +2899,155 @@ when off -- which the table in 24.1 demonstrates rather than asserts.
   previous line and the shell had printed `lastbyte=125`; I read neither.
 - `restore.rs` still needs V-RESTORE. 24.2 is a defect in the wiring I wrote
   around the module, not in the module, and it does not substitute for that read.
+
+## 25. Handover to BUILD-WIRE: placement, and the landing-blocker that is not placement
+
+ORCH has moved the wiring to BUILD-WIRE. `restore.rs` stays mine. This section
+is the judgement BUILD-WIRE asked for, conclusions and citations only.
+
+### 25.0 Read this first: the wiring already exists, and sigma^2 is the blocker
+
+**The wiring is already in HEAD.** ORCH's grep reporting "zero references in
+`crates/strehl-cli/**`" is stale. `git grep -c strehl_core::restore HEAD --
+crates/strehl-cli/src/` returns `merge_cmd.rs:6`, and `git merge-base
+--is-ancestor 794e605 HEAD` returns 0. `write_merged` already takes
+`Option<RestorePlan>` and already restores the four CFA planes before
+interleaving, default off behind `STREHL_RESTORE`. **Do not build it again.**
+
+**The remaining work is not wiring, it is sigma^2, and it is a landing-blocker.**
+Measured in 24.1: with the flag on at caps 1.2 and 1.5, output is
+**byte-identical** to off (`20D67637515491F4`, 198023291 bytes, three arms, one
+binary). The module executes and every plane logs `max gain 1.0000, recovered
+0.0000`.
+
+The reason, from `RestoreConfig::gain` (`restore.rs:230`): gain exceeds 1 only where
+
+    sigma^2 / S(f)  <  h(1 - h)
+
+At f = 0.35, h = 0.82113, so the entire budget is **0.1476**. I passed
+`NoiseModel::variance(plane, mean_dn)` -- the **single-frame** variance -- to a
+plane that is a **205-frame merge**. Up to 205x too much regularisation; the
+gain never clears 1.0 anywhere in the frame.
+
+**If BUILD-WIRE keeps that sigma^2, the flag ships inert.** The correct input is
+the noise of the merged plane. `NoiseModel::averaged_green_luma_sigma(luma_dn,
+n, rho_warp)` (`noise.rs:343`) has the right shape and keeps the number inside
+the calibration, with `n` a fact of the render rather than a knob. The honest
+complication: the pyramid merge is a convex combination whose effective n varies
+per pixel -- near 205 in flat regions, near 1 on detail pixels where selection
+is winner-take-all -- so a scalar is wrong everywhere except at one extreme.
+**The right input is a per-pixel n_eff map, which lives in `pyramid.rs` /
+`merge.rs` and is neither mine nor BUILD-WIRE's.** ORCH has to route that.
+
+### 25.1 Placement: (b). MEASURED, and ORCH's reason for it is wrong.
+
+**(b) once on the merged CFA planes, before the demosaic, per plane
+(R, G1, G2, B).** That is where it is already wired.
+
+ORCH's reason -- "the operator is linear and shift-invariant, so applying it
+once at the end is very nearly equivalent" -- is the argument I made myself, and
+**it is false**. `experiments/BUILD-SHARP/src/restore_placement.py`, running the
+shipped Rust: at fixed equal weights, `max |R(mean) - mean(R)| = 4.408e+01 DN`
+on a 2600 DN signal where float precision would be `< 1e-3`. Restore is
+**data-adaptive**: `design_fir` fits the filter to the spectrum of the plane it
+is handed, so it does not commute with averaging. Placement is a real decision,
+not a near-equivalence.
+
+The decision still goes to (b), on the direct measurement (23.3), flat field,
+absolute DN:
+
+| arm | flat sd | flat mean |
+| --- | --- | --- |
+| unrestored merge | 11.074 DN | 400.01 DN |
+| **(b) merge then restore** | **12.205 DN** | 400.01 DN |
+| (a) restore then merge | 14.390 DN | 400.04 DN |
+
+Means agree to 0.03 DN, so this is not a black-point artefact. (b) is 18%
+quieter than (a) at equal operator, and costs one pass instead of N.
+
+**One API trap for BUILD-WIRE:** `RestoreConfig::grid_factor` is **1.0** on the
+CFA planes, because those planes *are* the gather grid -- one sample per quad
+per plane. If anyone moves the call after the demosaic it must become **2.0**.
+Getting it backwards halves or doubles the correction (`restore.rs:208`). And
+restoring after the interleave is simply wrong: neighbouring mosaic samples are
+different colours.
+
+### 25.2 `sharpen_per_octave` does not double-count. ARGUED, and the measurement is blocked.
+
+**ARGUED, not MEASURED.** From `pyramid.rs:772-825`: the ramp is an exponent on
+a **convex combination across frames within a band**, bounded by
+`Hull::InputRange`. A convex combination cannot exceed its largest input, so a
+band's output amplitude is bounded by the **best single frame's** amplitude in
+that band. The gather loss is **common-mode** -- every frame was resampled, so
+every frame has already paid it -- and a selectivity exponent redistributing
+weight among equally-degraded frames cannot restore an amplitude absent from all
+of them. Selectivity and amplitude are disjoint quantities. **Not a
+landing-blocker.**
+
+I could not promote this to MEASURED, and the reason is 25.0: the test is to
+vary `--pyramid-sharpen` and see whether restore's effect moves, and **restore's
+effect is currently zero**. It unblocks the moment sigma^2 is fixed, and it
+should be run then, because if I am wrong here the failure mode is ringing.
+
+### 25.3 `restore.rs:573` is not a defect. Fourth confirmation, now enforced in code.
+
+The brief has asked three times for a fix to constants "documented at f = 0.35
+but actually at f = 0.40". **There is nothing to fix.** The confusion is a
+conflation of two true claims in the same file: the module header's 0.35 is
+where the **Lanczos-3 / Catmull-Rom ratio** peaks (1.1300), a statement about
+two kernels; the test's 0.40 is a point on the **Catmull-Rom MTF itself**.
+
+Rather than change correct constants, I made the file refuse the misreading. The
+test now carries the 0.35 row explicitly and the full derived table, with the
+conflation spelled out:
+
+    0.25 -> 0.94024   0.35 -> 0.82113   0.40 -> 0.74255   0.50 -> 0.62500
+
+`cargo test -p strehl-core --lib restore` -> **10 passed, 0 failed**, including
+the new `0.35 -> 0.8211` row checked against the shipped `gather_mtf`. That is a
+fourth independent confirmation, after my re-derivation from the basis
+polynomials, ORCH's own, and `docs/research/V-chroma2.md:388-404`. **BUILD-WIRE
+should build against the file as it stands.**
+
+### 25.4 Strength range, and where it will ring
+
+The knob is `gain_cap`, and it has a **hard ceiling that is not arbitrary**: the
+Wiener gain cannot exceed the inverse filter, `1/h`. So
+
+| f | h | max achievable gain |
+| --- | --- | --- |
+| 0.25 | 0.94024 | 1.064 |
+| 0.35 | 0.82113 | 1.218 |
+| 0.50 | 0.62500 | 1.600 |
+
+**A cap above ~1.6 can never bind** -- it is not a stronger setting, it is an
+inoperative one, and a sweep that includes 2.0 and 3.0 is sweeping nothing. Mine
+did; that is partly why 24.1 read flat.
+
+Sweep **1.05, 1.15, 1.25, 1.40, 1.60**. Expect the useful operating point near
+**1.2-1.3**: that is where f = 0.35 saturates, and f = 0.35 is where the
+compounded loss actually lives (gather 0.82 x demosaic 0.767 on green, §22).
+
+**Where it will overshoot:** the gain is largest where `sigma^2/S` is smallest,
+i.e. in **high-SNR regions**, and the sharpest transitions in a high-SNR region
+are exactly the **silhouette edges** ORCH is guarding. A symmetric FIR with gain
+> 1 at high frequency has negative side lobes; that is the ring. So the guard
+must be read at the bright side of a dark silhouette on a bright ground --
+`flower-bud-alone-cpl` -- and it must be read from the **profile rows**, not a
+verdict line. Baseline to preserve: monotonic d = 1 to 275 px, no interior local
+maximum.
+
+**One prediction on record, so it can be scored:** because the cap binds first
+at the highest frequencies, I expect the ring to appear at **small d (2-6 px)**
+and to appear in **green before red or blue**, since green carries the most
+signal power and therefore the least regularisation. If it shows up first in
+chroma at large d instead, my model of this operator is wrong again and the
+strength question should come back to me before anyone ships it.
+
+### 25.5 What I am NOT claiming
+
+The overshoot guard is **NOT RUN**. 24.1 passed it trivially because an
+operator that does not execute cannot put a maximum into a profile, and I am not
+recording that as a pass. `restore.rs` still has no independent read; V-RESTORE
+is outstanding, and 24.2 was a defect in the wiring I wrote around the module,
+not evidence about the module.

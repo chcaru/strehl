@@ -570,7 +570,28 @@ mod tests {
     fn catmull_rom_matches_the_measured_mtf() {
         // The values BUILD-SHARP's diagnosis is quoted against. If a kernel
         // ever changes, this fails and the report's numbers are stale.
-        for (f, want) in [(0.25, 0.9402), (0.40, 0.7425), (0.50, 0.6251)] {
+        //
+        // THESE ABSCISSAE ARE CORRECT AND HAVE BEEN CHALLENGED THREE TIMES.
+        // The recurring report is that these constants are "documented at
+        // f = 0.35 but are actually at f = 0.40". They are not. The confusion
+        // is a conflation of two different claims in this file, both true:
+        //
+        //   * the MODULE HEADER's 0.35 is where the Lanczos-3 / Catmull-Rom
+        //     RATIO peaks (1.1300). That is a statement about two kernels.
+        //   * this test's 0.40 is a point on the Catmull-Rom MTF itself.
+        //
+        // 0.35 is carried below as well, so the two can no longer be swapped
+        // by eye. Phase-averaged Catmull-Rom, re-derived from the basis
+        // polynomials independently of this module and corroborated by
+        // `docs/research/V-chroma2.md:388-404`:
+        //
+        //   0.25 -> 0.94024   0.35 -> 0.82113   0.40 -> 0.74255   0.50 -> 0.62500
+        for (f, want) in [
+            (0.25, 0.9402),
+            (0.35, 0.8211),
+            (0.40, 0.7425),
+            (0.50, 0.6251),
+        ] {
             let got = gather_mtf(Resampler::CatmullRom, f);
             assert!(
                 (got - want).abs() < 5e-4,
