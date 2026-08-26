@@ -158,3 +158,37 @@ Two PowerShell traps cost renders here and are fixed in the driver:
 `$ErrorActionPreference = 'Stop'` turns a native tool's **stderr progress** into
 a terminating `NativeCommandError`, and `STREHL_WARPMAP` silently **beats
 `--resampler`**, so every driver clears it first.
+
+## The comparator renders exist, and the first thing they show is a raster mismatch
+
+22 identical ARW from `wrapped-text-1`, one staged directory, both tools linear:
+
+| | raster | wall | exit |
+|---|---|---|---|
+| fork `0ABA0CF0…` | **6748 x 4472** float32 Rec.2020 | 389.5 s | 0 |
+| strehl `0DEBD94E…`, `merge backend : pyramid (--merge)`, `resampler: CatmullRom`, `coverage 0.9476` | **7032 x 4688** uint16 linear camera-native | 21.2 s | 0 |
+
+The fork writes **0.9596x in x and 0.9539x in y** — not even the same factor on
+the two axes, so it crops asymmetrically. A band ratio in cycles per **pixel**
+is scale-sensitive, so this alone moves the statistic with no resampling
+involved. `scale_confound.py` measures it on the real render, nothing assumed
+about the spectrum's slope:
+
+| k | 0.20–0.40 band power vs k=1 | what |
+|---:|---:|---|
+| 1.0000 | **1.0000** | NULL — exact |
+| 0.9596 | 0.9530 | strehl resampled to the fork's raster |
+| 0.9476 | 0.8753 | strehl's own coverage k |
+| 0.5000 | **4.3506** | absurd-value arm |
+
+Two readings, both damaging to the statistic that produced the deficit:
+
+1. The raster mismatch is worth **4.7%** of the 0.20–0.40 band, about a fifth of
+   the reported 17–23% gap — and it runs the *flattering* way for strehl, so a
+   scale-corrected comparison would report a slightly **larger** deficit, not a
+   smaller one.
+2. A **0.5x downscale — an unambiguous, catastrophic loss of real resolution —
+   scores 4.35x BETTER.** Together with Phase 1's nearest-neighbour result
+   (+29%/+42%), the band statistic now demonstrably rewards two separate,
+   unambiguous degradations, one of them by more than four times the entire
+   effect under investigation.
