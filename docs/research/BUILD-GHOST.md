@@ -327,12 +327,18 @@ quiet with no hot cluster at any baseline, so there was no motion site to crop; 
 there would have to be one my detector missed entirely. That is a real residual risk and
 I am not claiming otherwise — it is the main thing an independent verifier should attack.
 
-### Does the default hull clamp change this verdict?
+### Does the default hull clamp change this verdict? No — and the reason got stronger
 
-Added in response to ORCH's second warning (BUILD-HULL: the default clamp costs
-97.7% microcontrast retention on `couch-fibers-cpl`, 84.6% on `coffee-bean`). Everything
-I viewed in Part 3 was viewed through that stage, so the question is fair. Two answers,
-and they point in different directions.
+**This section has been corrected.** It originally rested on a clamp cost of 15–19% of
+microcontrast, relayed by ORCH from BUILD-HULL. **That number is retracted** — by its own
+author (BUILD-HULL §17, `ba5f234`) and independently by V-HULLCOST (`6222142e`, ~3.1%).
+Measured against the merge's own noise floor at the finest octave, the clamp removes
+**0.42σ** on `flower-bud-alone`, **0.29σ** on `coffee-bean`, **0.10σ** on `couch-fibers`
+— less than the noise already present, at every scale where detail lives. A companion
+band-share figure was also inverted by a weighting bug; corrected, the clamp is a **tone**
+operation, 45.14% of its action in the residual and only 16.8% in bands 0–1. I did not
+re-derive any of this and was told not to; I am recording the corrected values because a
+retracted constant must not sit in a deliverable.
 
 **It cannot have hidden a ghost from me.** The hull is `[min_k, max_k]` over the aligned
 input frames at that pixel, accumulated from the frames as supplied, before any
@@ -345,18 +351,17 @@ least where frames disagree, and motion sites *are* disagreement sites. So the c
 not the reason I saw no ghosting, and relaxing it cannot reveal a ghost it was
 suppressing. **ARGUED — but from the accumulation code, not from prose.** I deliberately
 did not lean on the enum doc's adjacent argument at `pyramid.rs:740-747` ("why clamping
-cannot cost anything real"), because that is precisely the claim BUILD-HULL falsified;
-a doc that is wrong one paragraph down is not an authority.
+cannot cost anything real") because at the time that claim appeared to be falsified.
+The retraction has since restored it, but the argument here never depended on it.
 
-**It does condition the visual verdict, and I cannot fully discharge that.** If the
-clamp removes 15–19% of microcontrast, a ghost's contrast was attenuated along with
-everything else in the frames I viewed. I did not re-derive the clamp cost — it is owned
-by BUILD-HULL and duplicating it was explicitly ruled out — so this is **ARGUED**:
-recovering ~1.18× contrast does not usually turn an invisible smear into an obvious one,
-and what I saw was *no doubling at all* rather than faint doubling, so I do not expect
-the verdict to flip. But the cheap insurance is real: **when BUILD-BLEND lands the clamp
-change, re-run `verdictcrops.py` and re-view.** The sites are already nominated in
-`verdict.json`, so it is minutes, not a re-measurement.
+**It does not condition the visual verdict either.** I previously hedged that a ghost's
+contrast might have been attenuated along with everything else in the frames I viewed.
+That hedge is void: at detail scales the clamp removes less than the noise floor, so the
+crops in Part 3 were **not** viewed through a haircut, and the corrected band shares put
+the clamp's action in the residual and base octave — a smooth, large-scale shadow lift,
+which is not the scale a doubled edge lives at. The follow-up I proposed — re-view after
+BUILD-BLEND changes the clamp — is also moot, since the finding is **keep the clamp**.
+**Part 3's result is therefore cleaner than I claimed it was, not dirtier.**
 
 Parts 1 and 2 are untouched by this — they are on RAW, upstream of the merge entirely.
 
