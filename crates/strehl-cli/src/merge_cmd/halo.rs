@@ -51,9 +51,23 @@
 //!
 //! Treated pixels are re-elected, not re-averaged: each takes one frame's
 //! sample, so inside the yoke the gate's noise averaging is lost and the band
-//! is noisier than its surroundings. Every M87 measurement was made at gate 0,
+//! is noisier than its surroundings.
+//!
+//! M87's **ground-truth** measurements (§6, §16.1-§16.8) were made at gate 0,
 //! where that is also true of the uncorrected image, so the numbers above are
-//! like for like; against a gated merge it is an additional, unmeasured cost.
+//! like for like. It is **not** true that every M87 measurement was made at
+//! gate 0 -- an earlier version of this comment said so and it was wrong. The
+//! shipped-render arms ran at `--gate 2` (§16.9 and §31; the `72.9%` halo-metric
+//! reduction, the zoomnull arm's `82.8%`, and P125's alignment split are all
+//! gate-2 numbers). What no gate-2 arm measured is *this* cost specifically:
+//! those arms scored the halo metric and hair-tip contrast, not the treated
+//! band's noise. Against a gated merge that remains an additional, unmeasured
+//! cost.
+//!
+//! The structural repair is not to measure it but to stop incurring it: an
+//! estimator over frames keeps the gate's noise averaging by construction,
+//! where a second election cannot. That is what the veil does, and it is why
+//! the veil is not built on this module.
 //!
 //! Set `STREHL_FIX_HALO=1` to enable. It is an environment variable rather than
 //! a flag for the same reason `STREHL_ALIGN` is one: the subcommand definition

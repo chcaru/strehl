@@ -3838,6 +3838,31 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // corpus's frozen numbers cannot move. See `halo` for why it is off by
     // default: it is cosmetic, and against ground truth it makes the image
     // measurably more wrong.
+    //
+    // EVERY STATISTIC THIS COMMAND PRINTS HAS ALREADY BEEN PRINTED BY HERE.
+    // `report` and `report_statistics` ran above, so no number in the output
+    // above reflects this correction. That is not merely an ordering accident
+    // that could be repaired by moving this block earlier -- MOVING IT WOULD
+    // CHANGE NOTHING. The correction never touches `p2.est`; it is carried to
+    // `write_merged` in the `halo` side-channel and applied as the pixels are
+    // written. The reported statistics describe the accumulators, the gate and
+    // the election, not the pixels on disk.
+    //
+    // The same is true of the veil, which *does* mutate the estimator: it moved
+    // 18.57% of flower-bud's pixels and changed zero reported statistics
+    // (measured, section 31). So the rule generalises to every post-merge
+    // correction, present and future:
+    //
+    //     A/B-ING A POST-MERGE CORRECTION ON STREHL'S PRINTED NUMBERS RETURNS A
+    //     NULL WHETHER OR NOT IT WORKS. RE-READ THE OUTPUT TIFF INSTEAD.
+    if halo::enabled() && opts.out.is_none() {
+        eprintln!(
+            "halo fix        : REQUESTED ({}=1) BUT SKIPPED -- there is no --out, so there is no \
+             image to correct and nothing above or below reflects it.",
+            halo::FIX_ENV
+        );
+        eprintln!();
+    }
     let halo_fix = if halo::enabled() && opts.out.is_some() {
         let est = &p2.est[0];
         let t3 = Instant::now();
@@ -3895,6 +3920,19 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
             fix.treated,
             fix.undecided
         );
+        if fix.treated > 0 && fix.undecided == fix.treated {
+            // Measured on a 22-frame stack: 793,776 pixels treated, 0 re-elected.
+            // `|k - k_F| >= delta` is unsatisfiable when the stack is no deeper
+            // than `delta`, so the pass is a guaranteed no-op and the banner
+            // above would otherwise be the only thing the user reads.
+            eprintln!(
+                "halo fix        : WARNING -- ON but a COMPLETE NO-OP. No treated pixel had any \
+                 frame at least {} from k_F. A stack of {} frames cannot satisfy that; the output \
+                 is identical to the uncorrected merge.",
+                hplan.delta,
+                paths.len()
+            );
+        }
         eprintln!(
             "                  This is NOT a fidelity improvement. On a synthetic scene with known \
              truth it cuts the halo metric 79.8% and raises RMSE against truth 254.6%."
@@ -5914,10 +5952,51 @@ fn write_merged(
                 let scale = (gain * eg / range) as f64;
                 let cfg = plan.config(plan.sigma2(p, mean_dn, scale));
                 let rep = strehl_core::restore::restore_plane(&mut v, geom.width, geom.height, &cfg);
+                // `max_gain` is the ONE-dimensional response, and this report
+                // used to stop there. `restore_plane` convolves x and then y
+                // with the same taps, so the picture receives `G(fx) * G(fy)`
+                // and on the diagonal that is the square -- a filter reported
+                // at 1.43 delivers 2.05, and a `gain_cap` of 1.7 delivers 2.89.
+                // Both numbers are printed because the cap is expressed in the
+                // 1-D units the caller sets and the pixels are in the other.
+                //
+                // sigma^2 is reported in DN^2, NOT in the normalised units the
+                // filter runs in. Those units carry `scale^2` ~ 2.3e-10, so the
+                // working value prints as 0.0 at any sane precision and says
+                // nothing. DN^2 is also the unit every other noise number in
+                // this project is quoted in, so it is the one that can be
+                // compared against the calibration. The ratio sigma^2/S is
+                // scale-invariant, so this is a change of display only.
+                //
+                // It is printed at all because it, not `cap`, decides the
+                // strength: the cap is measured never to bind (see the module
+                // header), so a log showing only the cap shows only the guard
+                // that did not fire.
                 eprintln!(
-                    "restore {p:?}       : cap {:.3}, max gain {:.4}, at Nyquist {:.4}, \
-                     recovered {:.4}, mean {mean_dn:.1} DN",
-                    cfg.gain_cap, rep.max_gain, rep.gain_at_nyquist, rep.recovered_fraction
+                    "restore {p:?}       : cap {:.3}, max gain {:.4} (2-D {:.4}), at Nyquist \
+                     {:.4}, recovered {:.4}, mean {mean_dn:.1} DN, sigma2 {:.1} DN^2",
+                    cfg.gain_cap,
+                    rep.max_gain,
+                    rep.max_gain * rep.max_gain,
+                    rep.gain_at_nyquist,
+                    rep.recovered_fraction,
+                    plan.sigma2(p, mean_dn, 1.0)
+                );
+                // The cost column. A sharpening number without this beside it
+                // is exactly the evidence this project does not accept: the
+                // whole risk of a Wiener restoration is overshoot at an edge,
+                // and overshoot at a silhouette is the halo the pyramid merge
+                // was built to remove. `worst` is converted back to DN so it
+                // can be read against the step it sits on.
+                eprintln!(
+                    "                  overshoot {:.4}% of px outside their own support, \
+                     worst {:.1} DN",
+                    rep.outside_support * 100.0,
+                    if scale > 0.0 {
+                        rep.worst_excursion / scale
+                    } else {
+                        rep.worst_excursion
+                    }
                 );
             }
             planes.push(v);

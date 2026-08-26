@@ -2982,3 +2982,105 @@ This is exactly what ORCH's cleanest-third mean is for -- it averages ~68 frames
 instead of selecting 1, and ORCH predicts the noise floor falls away. That
 prediction now has a measured reason to be tested rather than a theoretical one.
 It is the next thing to build.
+
+---
+
+## 31. The instrument was blind, and it is blinder than the report said
+
+V-M111 read `merge_cmd.rs` and claimed `STREHL_FIX_HALO` cannot change any
+number strehl prints, because the correction runs after `report()` and
+`report_statistics()`. It labelled this unproven. I own the file, so I settled it
+by executing it.
+
+### 31.1 The first arm was degenerate and would have "confirmed" the wrong thing
+
+`109MSDCF`, 22 frames, correction ON: **793,776 pixels treated, 0 re-elected**,
+output SHA-256 **identical** to the OFF arm. That looks like a clean
+confirmation and it is worthless. The yoke re-elects from frames with
+`|k - k_F| >= delta` at `delta = 40`; a 22-frame stack has none, so the pass is a
+guaranteed no-op. **The image was unchanged because the correction did nothing,
+not because the reporting ran first.** A stack deeper than `delta` is required
+for the test to have any power at all.
+
+### 31.2 The deep arm confirms it
+
+`flower-bud-alone-cpl`, 205 frames, one pin, `--out` and `--stats` on both arms:
+
+| quantity | result |
+| --- | --- |
+| output pixels changed | **905,259 of 24,752,640 (3.657%)** |
+| max delta | **16,486 DN** of 65535 |
+| **reported statistics that moved** | **0** |
+
+Measured on the 16-bit TIFF with `tifffile`; PIL narrows strehl's output to 8
+bits (corpus P40) and would have reported this as nearly nothing.
+
+**The correction moves a sixth of the dynamic range on nearly a million pixels
+and moves no printed number at all.** V-M111's reading is correct.
+
+### 31.3 The obvious repair is a false repair
+
+ORCH offered "move the correction before the reporting". **That would change
+nothing and would look like a fix.** The pass never writes to `p2.est`. It
+returns a `Fix` that is carried into `write_merged` as a side-channel and applied
+as pixels are written. `report_statistics` reads the accumulators; reordering the
+two leaves it reading the same untouched accumulators.
+
+### 31.4 It is not an ordering bug, and it is not confined to halo
+
+The veil **does** mutate the estimator, and runs *before* both reporting calls.
+Diffing my own shipped acceptance logs, `fb-off.log` against `fb-on.log`, with
+timings and the veil's own banner excluded:
+
+> **non-timing differing lines: 0** -- while the veil changed **18.57%** of that
+> image's pixels.
+
+So the true statement is stronger and worse than the one V-M111 filed:
+
+> **Strehl's printed statistics describe the accumulators, the gate and the
+> election. They do not describe the pixels it writes. An A/B on printed numbers
+> is null for _any_ post-merge correction, before or after the reporting call,
+> whether or not it mutates the estimator.**
+
+That trap is set for every future correction, not just this one, so the warning
+belongs at the point of use in prose rather than in a commit message. It is now
+there.
+
+### 31.5 My own results are not void
+
+`veilz2_accept.py` reads the output TIFFs and never parses a log, and no
+acceptance arm ever set `STREHL_FIX_HALO`. Section 30's numbers stand as
+measured. I note without comfort that this was as much the construction's luck as
+my design: I chose TIFFs because the quantities I wanted are spatial, not because
+I knew the printed statistics were blind.
+
+### 31.6 The flag can no longer lie
+
+Two failures, both verified fixed by execution:
+
+- **Set but skipped.** `STREHL_FIX_HALO=1` with no `--out` produced **no mention
+  of halo anywhere** -- the banner is inside the same condition as the effect, so
+  the user got not even the misleading log line ORCH expected, but total silence.
+  Now: `REQUESTED ... BUT SKIPPED -- there is no --out`.
+- **On but inert.** The 22-frame case printed `ON` and corrected nothing. Now a
+  `WARNING -- ON but a COMPLETE NO-OP`, naming the frame count and the delta that
+  make it unsatisfiable.
+
+### 31.7 One factual error, corrected, and ORCH understated it
+
+`halo.rs` claimed "every M87 measurement was made at gate 0". False. The shipped
+renders in M87 §16.9 and §31 ran `--gate 2` (`M87-occlusion.md:1670,1674`), and
+the `72.9%` reduction, the zoomnull arm's `82.8%` and P125's alignment split are
+all gate-2 numbers. What no gate-2 arm measured is the treated band's *noise*
+specifically -- those arms scored the halo metric and hair-tip contrast. The
+comment now says which measurements were at which gate and what remains
+genuinely unmeasured.
+
+### 31.8 The re-election criticism does not apply to the veil
+
+ORCH asked me to change my implementation if it re-elects. It does not. The
+noise cost quoted from `halo.rs:52-56` is that module's, and `apply_veil` is an
+estimator over frames that keeps the gate's averaging by construction -- ORCH's
+specification, already built that way. The related-but-distinct cost I *do* carry
+is section 30.6's **+8.36%** backdrop gradient, which is the extremum choosing
+independently per pixel. The cleanest-third mean is the fix for that one.
