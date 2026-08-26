@@ -48,32 +48,31 @@ enum Command {
     ///
     /// TWO MERGES LIVE HERE AND --merge PICKS ONE.
     ///
-    ///   estimator (DEFAULT) The regularised-winner, noise-gated merge
-    ///             described below. It is what `strehl stack` has always done,
-    ///             and every quality number in the corpus was measured on it.
+    ///   pyramid (DEFAULT) A Laplacian multi-band merge. Selection happens per
+    ///             band and per coefficient, not per pixel, so a depth boundary
+    ///             is a transition inside each band's own frequency range
+    ///             instead of a step in the image. The selection exponent ramps
+    ///             with scale: near winner-take-all in the fine bands, where
+    ///             all the acuity is and where a wrong pick is one
+    ///             high-frequency coefficient nobody can see, and gently
+    ///             blended in the coarse bands, where a wrong pick IS the
+    ///             "cut-out sticker" rim. Every good render in this project's
+    ///             research corpus came from this merge; until it was wired
+    ///             here it was reachable only from an example binary.
     ///
-    ///   pyramid   A Laplacian multi-band merge. Selection happens per band
-    ///             and per coefficient, not per pixel, so a depth boundary is
-    ///             a transition inside each band's own frequency range instead
-    ///             of a step in the image. The selection exponent ramps with
-    ///             scale: near winner-take-all in the fine bands, where all
-    ///             the acuity is and where a wrong pick is one high-frequency
-    ///             coefficient nobody can see, and gently blended in the
-    ///             coarse bands, where a wrong pick IS the "cut-out sticker"
-    ///             rim. Every good render in this project's research corpus
-    ///             came from this merge; until it was wired here it was
-    ///             reachable only from an example binary that ships nothing.
+    ///   estimator The regularised-winner, noise-gated merge described below.
+    ///             It is what `strehl stack` did before the default moved, and
+    ///             the older quality numbers in the corpus were measured on it.
     ///
-    ///             `pyramid` is NOT the default yet, and that is a measurement
-    ///             rather than an opinion. It is the merge that does NOT draw
-    ///             the white halo the estimator draws around a dark subject on
-    ///             a bright ground, and it wins micro-contrast on every
-    ///             subject tested. Against that it hard-clips 1.4043% of a
-    ///             frame where the estimator clips 0.0001%, and every one of
-    ///             those numbers was measured at a band gate this command does
-    ///             not ship. The default moves when a pyramid arm at its own
-    ///             default gate passes the acceptance gate. Until then this
-    ///             flag is how you get the merge the corpus was made with.
+    ///             `estimator` is NOT the default any more, and that is a
+    ///             measurement rather than an opinion. It is the arm that draws
+    ///             the white halo around a dark subject on a bright ground.
+    ///             Measured on flower-bud-alone-cpl through one binary with
+    ///             both arms camera-linear and one mask, the estimator's
+    ///             backdrop sits 4739 DN below its own far field across the
+    ///             80-200 px aura zone; the pyramid sits 166 DN below. Pass
+    ///             `--merge estimator` to get the merge the older corpus was
+    ///             made with -- it is byte-identical to the pre-switch binary.
     ///
     /// STREHL_MERGE=pyramid|estimator does the same for a harness that cannot
     /// edit the command line; the flag wins. An unrecognised value in either
@@ -84,6 +83,14 @@ enum Command {
     /// REFUSED under the pyramid backend rather than accepted and ignored. A
     /// flag that parses and does nothing is indistinguishable from one that
     /// works, and this project has shipped that failure before.
+    ///
+    /// NOTE, now that the pyramid is the default: a harness that passes one of
+    /// those flags WITHOUT also passing `--merge estimator` now fails where it
+    /// used to run. That is the refusal working as designed, not a regression,
+    /// and it is loud rather than silent. Swept over this repository at the
+    /// time of the flip it is 338 call sites in 185 files, of which 189 are
+    /// executable; `--gate` alone accounts for 275. Add `--merge estimator` to
+    /// pin the old arm, or drop the flag to use the new one.
     ///
     /// WHAT THE ESTIMATOR BACKEND DOES, by noise-gated ESTIMATION:
     ///
@@ -148,8 +155,8 @@ enum Command {
         /// Stack at most this many frames, in filename order.
         #[arg(short, long)]
         limit: Option<usize>,
-        /// Which merge produces the pixels: `estimator` (the default) or
-        /// `pyramid`. See this subcommand's help for what each one is.
+        /// Which merge produces the pixels: `pyramid` (the default) or
+        /// `estimator`. See this subcommand's help for what each one is.
         ///
         /// STREHL_MERGE does the same for a harness that cannot edit the
         /// command line; this flag wins. An unrecognised value is an error in

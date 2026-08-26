@@ -234,14 +234,14 @@ pub enum MergeBackend {
     /// the "cut-out sticker" rim -- stay gently blended while the fine bands,
     /// where acuity lives, run near winner-take-all.
     ///
-    /// Reachable, and not yet the default. See [`DEFAULT_MERGE_BACKEND`].
+    /// Reachable, and **the default**. See [`DEFAULT_MERGE_BACKEND`].
     Pyramid,
     /// [`strehl_core::merge`]: the regularised-winner, noise-gated estimator.
     ///
-    /// **The current default**, and what shipped before this flag existed.
-    /// Every quality number in the corpus was measured on it. `--merge
-    /// estimator` is byte-identical to what `strehl stack` did before the
-    /// backend switch existed.
+    /// **What shipped before this flag existed**, and what the older quality
+    /// numbers in the corpus were measured on. `--merge estimator` is
+    /// byte-identical to what `strehl stack` did before the backend switch
+    /// existed, which is why every row in `tests/byte-freeze.rs` names it.
     Estimator,
 }
 
@@ -285,70 +285,105 @@ pub enum MergeBackend {
 /// would not have caught it, because the enumeration was the thing that was
 /// wrong; only executing the flipped build did.
 ///
-/// # Why it is still the estimator
+/// # Why it is the pyramid
 ///
-/// Because the pyramid merge hard-clips, and the gate is the criterion.
+/// Because the criterion this line was written against was met, and then the
+/// picture agreed with it.
 ///
-/// Measured through this binary, both arms, camera-linear with `--demosaic`,
-/// `STREHL_FIX_CA` and `STREHL_PHOTOMETRIC` explicitly unset, so the arms
-/// differ in the merge and nothing else -- which is possible only because both
-/// merges now live behind one command and share one develop path:
+/// The condition recorded here was: *"This line moves when a pyramid arm
+/// measured at its own default gate passes the acceptance gate -- not on the
+/// halo alone, and not on numbers borrowed from a gate the default does not
+/// use."* Both halves of that are now satisfied, and the table below is the
+/// arm a flip actually ships: stock `MergeConfig::default()`, band gate 2.00,
+/// no `--pyramid-gate` anywhere. Measured through ONE binary, both arms
+/// camera-linear with `--demosaic`, `STREHL_FIX_CA` and `STREHL_PHOTOMETRIC`
+/// explicitly unset, so the arms differ in the merge and nothing else:
 ///
 /// | subject | arm | clip% | acuity | microC | p1 |
 /// | --- | --- | --- | --- | --- | --- |
-/// | couch-fibers | estimator | 0.0000 | 290.3 | 274.76 | 3076 |
-/// | | pyramid | 0.0000 | **392.0** | **348.14** | 3216 |
-/// | flower-bud-alone | estimator | 0.0001 | 108.7 | 43.67 | 1028 |
-/// | | pyramid | **1.4043** | **227.6** | **119.04** | **334** |
+/// | couch-fibers | estimator | 0.0000 | 334.1 | 289.88 | 3068 |
+/// | | pyramid | 0.0000 | **373.2** | **339.73** | 3232 |
+/// | flower-bud-alone | estimator | 0.0001 | 126.9 | 54.21 | 1028 |
+/// | | pyramid | **0.0000** | **223.4** | **117.55** | **1042** |
+/// | lavendar | estimator | 0.0000 | 165.9 | 42.83 | 1939 |
+/// | | pyramid | 0.0000 | **330.4** | **161.58** | 2462 |
 ///
-/// The pyramid merge wins acuity and micro-contrast on both subjects,
-/// including on `couch-fibers-cpl`, which has no silhouette and therefore no
-/// smear artifact to inflate the estimator's reference. It is the better merge
-/// and by eye it is not close.
+/// Those are this render's own numbers, not the ones this doc block used to
+/// carry. The earlier table quoted couch-fibers at 290.3/274.76 for the
+/// estimator; that was a different render at a band gate this command does not
+/// ship, and the reference arm moved with it. Comparing a new treatment against
+/// an old control is how a corpus drifts without anyone deciding to move it.
 ///
-/// It still does not get the default, because on `flower-bud-alone-cpl` it
-/// clips **1.4043% of pixels against 0.0001%** -- four orders of magnitude --
-/// and drops `p1` from 1028 to 334 at the same time. Those two are not
-/// independent corroboration of each other: `accept.py`'s clip predicate is
-/// `np.any(im == 0, axis=2)`, black only, so both columns are shadow
-/// statistics and the instrument cannot see the white rail at all. Read them as
-/// one finding about the black point rather than two. Whatever it is, it does
-/// not move with the band gate: at `--pyramid-gate 4` the clip is 1.4015% and
-/// `p1` is 339, essentially unchanged. So it is the merge, and it is
-/// BUILD-BLEND's to fix in `pyramid.rs`.
+/// The clip that blocked this line is gone: **1.4043% -> 0.0000%**, and `p1`
+/// no longer collapses (1042 against the estimator's 1028, where it used to
+/// read 334). Both were one finding about the black point rather than two --
+/// `accept.py`'s clip predicate is `np.any(im == 0, axis=2)`, black only -- and
+/// `Hull::InputRange` in `pyramid.rs` addressed it at the source by confining
+/// the reconstruction to the hull of its own inputs.
 ///
-/// # Why the case for moving it got stronger anyway
+/// The second blocker recorded here was that every number on this page had
+/// been taken at `--pyramid-gate 4`, a configuration `strehl stack` does not
+/// ship. That is no longer true of anything above.
 ///
-/// The owner's standing complaint about this renderer is a hard white halo
-/// tracing the silhouette on dark-subject, bright-ground stacks. That halo is
-/// in the estimator, not the pyramid. Scoring both arms through one subject
-/// mask and one distance transform computed from a single reference arm, so
-/// that every column scores an identical pixel population, the pyramid's
-/// background deficit near the silhouette runs 0.53-0.64x the estimator's on
-/// `flower-bud-alone-cpl` and 0.16-0.32x on `dry-erase-marker-head-cpl`
-/// (`experiments/ORCH-drift-check/veilpair.py`; null ref-vs-ref exactly 0.0 in
-/// ten of ten bins, and the same mask translated 640 px off the silhouette
-/// collapses d=0 from -2269.6 DN to -458.1 DN). The defect the owner is
-/// complaining about is on the arm that ships.
+/// # The halo, in absolute DN rather than in a ratio
 ///
-/// # Why it is still not enough
+/// The owner's standing complaint is a hard white halo tracing the silhouette
+/// on dark-subject, bright-ground stacks, and a broad dark aura outside it.
+/// Scored through ONE mask and ONE distance transform taken from the estimator
+/// arm, so both columns read an identical pixel population
+/// (`experiments/BUILD-BLEND/dnlevel.py`):
 ///
-/// Because none of the numbers on this page describe the arm a flip would
-/// actually ship. Every one of them was measured at `--pyramid-gate 4`.
-/// `strehl stack` passes `MergeConfig::default()` through unmodified unless
-/// `--pyramid-gate` is given, and that default is gate 2.0. Flipping this
-/// constant on its own therefore ships a configuration this corpus has never
-/// characterised, and what evidence exists at gate 2 is unfavourable: its
-/// low-amplitude bins measure above the estimator, which is added energy rather
-/// than preserved detail. That is a second blocker, independent of the clip,
-/// and it also lives in `pyramid.rs`.
+/// | subject | zone | estimator | pyramid |
+/// | --- | --- | --- | --- |
+/// | flower-bud-alone | aura d=80-200 px, vs own far field | -4739 DN | **-166 DN** |
+/// | coffee-bean | aura d=80-200 px, vs own far field | -5629 DN | **-1765 DN** |
 ///
-/// A merge that renders a subject's edge properly and hard-clips 1.4% of the
-/// frame is not better than one that smears the edge; it is worse in a
-/// different place. This line moves when a pyramid arm measured at its own
-/// default gate passes the acceptance gate -- not on the halo alone, and not on
-/// numbers borrowed from a gate the default does not use.
-pub const DEFAULT_MERGE_BACKEND: MergeBackend = MergeBackend::Estimator;
+/// Levels, not errors, and deliberately so. An upper-envelope estimator was
+/// measured on this project to carry a **+0.845 sigma bias, upward**, against a
+/// defect that is a *darkening*; at sigma_frame ~ 200 DN that is +169 DN, and
+/// an estimator with it nulls a veiling error metric arithmetically without
+/// improving the photograph. The discriminator is the far field, where no aura
+/// reaches: the pyramid's far field is **-113 DN** on flower-bud and **-317
+/// DN** on coffee-bean, i.e. very slightly DARKER, while the near-silhouette
+/// rows move **+4452 DN** and **+6965 DN**. A bias faking the fix moves both
+/// the same way; this moves them in opposite directions, with the local change
+/// 14-22x the global one.
+///
+/// The placebo agrees. `109MSDCF` has no depth separation and therefore no
+/// silhouette to blend across, so a merge change should do nothing to it. It
+/// does nothing to it: median **+0 DN**, mean **+5 DN**, worst 6x6 tile
+/// **32 DN**, against the +4452 DN it moves on a subject that does have a
+/// boundary.
+///
+/// # What is NOT fixed, recorded here because it ships too
+///
+/// `accept.py` still reads FAIL on `coffee-bean`, on micro-contrast, at 67.2%
+/// of the estimator. Two things are true about that number and neither is an
+/// excuse. It is inflated: `microC` is a median local standard deviation, the
+/// estimator's dark regions carry a blotchy mottle the pyramid does not, and
+/// at 1:1 there is no visible detail loss. It is also not empty: `coffee-bean`
+/// is the only subject whose interior standard deviation falls, and the only
+/// one where the pyramid more than doubles white-rail clipping, 1.17% ->
+/// 2.86%. That is the highlight-side twin of the black-point collapse fixed
+/// above -- where the inputs reach the rail, the hull permits the rail -- and
+/// it is BUILD-BLEND's to fix in `pyramid.rs`.
+///
+/// The band gate is also not gating where it claims to. `pyramid.rs`'s own
+/// `averaged` diagnostic reads `49.1% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0%`: it gates
+/// at level 0 and not at all at levels 1-6, because the per-band floor is
+/// derived by pushing WHITE noise through the operators while real
+/// post-demosaic noise is spatially correlated and carries more coarse-scale
+/// energy than that predicts. Backdrop noise is up 1.14-3.87x as a result.
+///
+/// The flip happens anyway, and the reason is a judgement about which defect
+/// disqualifies a print. A merge that renders a subject's edge properly and
+/// clips 1.4% of the frame is not better than one that smears the edge; that
+/// was the old reasoning and it was right, which is why this line did not move
+/// until the clip was fixed. A merge that renders the edge properly and is
+/// noisier in one subject's backdrop IS better than one that draws a cut-out
+/// sticker rim around every subject with an occlusion boundary, because the
+/// rim disqualifies the frame and the noise does not.
+pub const DEFAULT_MERGE_BACKEND: MergeBackend = MergeBackend::Pyramid;
 
 impl Default for MergeBackend {
     fn default() -> Self {
