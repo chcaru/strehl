@@ -1612,3 +1612,249 @@ including in my favour on the other four subjects. I am recording it because it
 is the reading that would let me dismiss the two `accept.py` failures, and I do
 not think it is strong enough to.
 
+---
+
+## ORCH's far-field bowl: the mechanism is right, the address is one level off, and the bowl does not survive clean measurement
+
+ORCH measured a broad shallow bowl in the blend arm, registered four criteria
+before I ran anything, and prescribed a specific fix. This section answers all
+four, reports the ladder, and reports one finding that changes what the criteria
+mean.
+
+Landed as `3db5693` (mechanism) and measured here. **The recommendation is to
+leave the default at 0.** The reasoning follows and it is not the reasoning I
+expected to be writing.
+
+### 1. The prescribed fix was already in place
+
+ORCH prescribed: *"replace the level-N Gaussian residual (the base) with the base
+of the noise-gated mean of the aligned stack."*
+
+That is what this module already does, and has done since before the flip.
+`BaseBand::Mean` is the shipped default; it zeroes the weight field, so every
+base coefficient falls through the unweighted branch at the bottom of
+`finish_level`. The base band is a plain mean across frames today.
+
+This is not an argument from reading the source. The renderer prints its own
+per-level averaged fraction, and on the **unmodified default** it reads:
+
+```
+bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+averaged        : 23.0% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%
+```
+
+The last entry is the base band. **100.0%, before any change of mine.** So the
+prescription is a literal no-op, and this module's own `BaseBand` table already
+recorded why it would be: *"Both blend arms removed the shipped merge's broad
+aura equally well, so the base band is not what buys that."*
+
+The **mechanism** ORCH described is nonetheless correct. A Laplacian blend does
+redistribute energy at its coarsest scales, and that is the right family of
+explanation for a several-hundred-pixel pedestal. The address is one level off.
+The bowl's scale belongs to the coarsest **Laplacian** bands, which were still
+being *selected* at exponent 2.0, not to the base residual.
+
+The scale arithmetic says the same thing. On a 7040 px frame with 7 bands, level
+6 sits on a ~110 px grid, so one coefficient is ~64 output px and its 5x5
+binomial kernel reaches ~320 output px. That is the 175-550 px bowl. The base
+band sits on a 28x19 grid, an entirely different scale.
+
+So I implemented ORCH's principle at the level that carries the effect:
+`STREHL_PYRAMID_MEAN_COARSE` averages the coarsest N Laplacian bands by the same
+mechanism `BaseBand::Mean` uses. The per-level diagnostic confirms it acts where
+intended and nowhere else:
+
+```
+mc=0   averaged : 23.0% 0.0% 0.0% 0.0% 0.0% 0.0%   0.0% | 100.0%
+mc=1   averaged : 23.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0% | 100.0%
+mc=2   averaged : 23.0% 0.0% 0.0% 0.0% 0.0% 100.0% 100.0% | 100.0%
+```
+
+### 2. The instrument, and why it is not `rimprofile.py` in a loop
+
+`experiments/BUILD-BLEND/bowlprofile.py` reproduces ORCH's arithmetic exactly --
+same bin edges, same luma, same largest-component mask, same far-field
+reference, same sRGB encode -- and fixes three things without which a ladder
+cannot be read.
+
+**The mask is per-image.** `rimprofile.py` derives `subject` from a p5/p95
+threshold on the very image it is profiling, so two arms get two different masks
+and two different distance fields, and a row labelled `d=2` is not the same set
+of pixels between arms. **The encode white is also per-image**
+(`percentile(lum, 99.9)`), so the `of 255` column is scaled by a per-image
+quantity too. Both are taken once from a named reference here, and both drifts
+are *reported* rather than silently corrected, so their size is visible:
+
+| image | own subject % | own white DN | own threshold DN |
+|---|---:|---:|---:|
+| control (estimator) | 27.14 | 16620 | 8830 |
+| blend mc0 | 27.13 | **17706** | **9085** |
+
+The encode white differs by **6.5%** between arms. That is not a small
+correction to a `of 255` column.
+
+**Third and largest: ORCH's registered bars are in units that do not transfer.**
+They were measured on `ca-ctrl`/`ca-blend-*.tiff`, which declare in their own
+`ImageDescription` that they are sRGB-encoded *and* tone-mapped, with different
+per-image black points per arm (0.011119 vs 0.000000). `rimprofile.py` then
+applies `srgb()` again -- its own docstring says *"Measures on the LINEAR 16-bit
+render only."* The encode's slope depends on where you sit on it, so an
+identical physical deficit prints a much larger number on a linear file, which
+sits far lower on the curve. Comparing my rungs against their literal bars would
+compare two rulers.
+
+So every bar is restated in the parity form ORCH themselves wrote it in
+(*"Control is -0.50 and -0.79; that is the parity bar"*), evaluated against the
+control measured through the identical path, and criterion (b) is restated as a
+**retained fraction** of the mid-field win, which is scale-free and therefore
+transfers between encodes exactly.
+
+### 3. Commissioning, before any rung was read
+
+Rung 0 was not a data point. It had to come back **byte-identical** to the
+existing pyramid render made by the previous binary, or the ladder would be
+confounded by whatever else differed between the two builds.
+
+```
+mc0  : 84A4661DEC40C040D3988B57305CF5BC429BDCD03BE078FC579B9A74286D655C
+fern : 84A4661DEC40C040D3988B57305CF5BC429BDCD03BE078FC579B9A74286D655C
+IDENTICAL
+```
+
+And the converse: mc1, mc2, mc3 all differ from mc0, so the env var reaches
+pixels. A sweep that came back flat because the knob was never plumbed through
+would have looked exactly like a sweep that came back flat because the effect is
+absent. This project has shipped that failure three times; it is not shipping it
+a fourth on my account.
+
+### 4. The ladder
+
+`flower-bud-with-background-fern-cpl`, 299 frames, untoned linear, one binary,
+shared mask and shared encode white. Deficit against each arm's own far field,
+in DN, so the +630 DN cross-arm level shift divides out by construction.
+
+| d (px) | control | mc0 (shipped) | mc1 | mc2 | mc3 |
+|---:|---:|---:|---:|---:|---:|
+| 2 | -4584 | -4743 | **-4590** | -4633 | -4868 |
+| 10 | -1368 | -1475 | -1432 | -1543 | -1999 |
+| 28 | -531 | -784 | -737 | -909 | -1579 |
+| 45 | -1271 | -492 | **-400** | -636 | -1486 |
+| 58 | -1386 | -384 | **-301** | -658 | -1320 |
+| **90** | **-1095** | **-219** | **-218** | -707 | -874 |
+| 138 | -872 | **-68** | -292 | -491 | -539 |
+| 175 | -748 | **-181** | -375 | -395 | -418 |
+| 350 | -319 | -271 | -257 | -257 | **-238** |
+| 450 | -245 | -402 | -403 | -332 | **-273** |
+| 550 | -222 | -413 | -405 | -311 | **-246** |
+
+Against ORCH's four criteria:
+
+| rung | (a) bowl d>=300 | (b) win retained at d=90 | (c) silhouette d=2 |
+|---|---|---:|---|
+| mc0 | PASS PASS PASS | 100.0% | FAIL by 159 DN |
+| mc1 | PASS PASS PASS | 100.0% | FAIL by 6 DN |
+| mc2 | PASS PASS PASS | **44.3%** FAIL | FAIL by 49 DN |
+| mc3 | PASS PASS PASS | **25.2%** FAIL | FAIL by 284 DN |
+
+Bar for (b) is 88.6%, derived from ORCH's own numbers: their d=90 bar of -4.5
+against a control of -7.69 and a blend of -4.09 permits losing 0.41 of a 3.60
+win.
+
+**Criterion (a) already passes at mc0 -- the currently shipped default.** Every
+rung that closes the bowl further fails (b), and fails it badly. ORCH
+pre-registered the response to exactly this: *"If (a) passes but (b) fails,
+report it as a failure and stop; do not ship a fix that trades the visible
+artifact for the invisible one."*
+
+### 5. Why (a) already passes: the bowl is mostly the tone curve
+
+This needs its own falsifiable test rather than an assertion, because "your
+measurement was contaminated" is the most self-serving thing an implementer can
+say.
+
+`experiments/BUILD-BLEND/tonebowl.py` converts ORCH's published `of 255` rows
+back to DN at the operating point their own published pair pins
+(59630 DN = 248.1 of 255, so encode white 63467 DN and slope 0.001832 of 255 per
+DN, making their 1.0 bar **546 DN**), and compares them to the same rows measured
+untoned.
+
+The test discriminates because it has a control. If toning is the explanation,
+the **control** arm should transfer (ordinary black point) and the **blend** arm
+should not (black point collapsed to exactly 0.000000). If instead my renders or
+my instrument simply disagree with ORCH's, **both** arms should fail to transfer
+by similar factors -- which would refute the tone explanation and force me to
+accept the bowl as measured.
+
+| d | ORCH control DN | mine | ratio | ORCH blend DN | mine | ratio |
+|---:|---:|---:|---:|---:|---:|---:|
+| 350 | -273 | -319 | **0.86** | -1469 | -271 | **5.42** |
+| 550 | -431 | -222 | **1.94** | -1720 | -413 | **4.16** |
+
+Median over the criterion-(a) rows: **control 1.40x, blend 4.79x, discriminating
+ratio 3.42x.** The control arm transfers; the blend arm does not. Both were
+profiled by the same instrument on the same capture, so an instrument or subject
+difference would have moved both.
+
+Residual **real** bowl on untoned data, blend minus control:
+
+| d | excess over control | at ORCH's operating point | their bar |
+|---:|---:|---:|---:|
+| 350 | -48 DN | -0.09 of 255 | 1.00 |
+| 550 | +191 DN | +0.35 of 255 | 1.00 |
+
+**The bowl is real and it is about a third of the bar.** ORCH's `-2.7 to -3.2 of
+255` was dominated by the per-image tone applied to the blend arm.
+
+The same contamination runs the other way in the mid-field, and I am reporting
+that because it cuts against tidiness rather than for it: at d=90 and d=175 the
+blend transfer ratio is **10.2x and 10.3x**, far above the 4.79x far-field
+figure. The toned pair **understated** the mid-field win as much as it
+overstated the bowl. Both errors have the same origin.
+
+### 6. Verdict, and the four criteria answered
+
+**`DEFAULT_MEAN_COARSE` stays at 0.** `mean_coarse` ships as a measured,
+commissioned, reachable knob, and the measurement says do not turn it on:
+
+- (a) **passes already** at the shipped default; the residual bowl is +0.35 of
+  255 against a 1.00 bar.
+- (b) mc2 and mc3, the only rungs that close the bowl further, retain **44.3%**
+  and **25.2%** of the mid-field win against an 88.6% bar. That is ORCH's
+  registered stop condition.
+- (c) fails marginally on every rung including the shipped one: mc0 is 159 DN
+  below control at d=2, which is **0.29 of 255** at ORCH's operating point, on a
+  row whose value is -4584 DN. mc1 reduces it to 6 DN, essentially exact parity.
+  I am recording this as a fail rather than rounding it away, but note that d=2
+  is the single most mask-sensitive bin in the profile and the two instruments
+  disagree about its sign (ORCH's per-image masks made the blend *better* at d=2
+  by 1.39 of 255).
+- (d) **holds by construction.** mc0 is byte-identical to the shipped default,
+  proven by SHA-256 above, so the lavendar morphology ORCH already judged is
+  unchanged. There is no new render to inspect because there is no new image.
+
+**mc1 is the one rung worth recording as genuinely interesting and I am still
+not shipping it.** It is free on (b) (100.0% retained), it is better than mc0 on
+every row from d=2 to d=90 -- including turning criterion (c) from a 159 DN
+miss into a 6 DN one -- and it is *worse* than mc0 by 142-194 DN across
+d=112-225. That is a trade, not an improvement, and this project does not move a
+default on a trade with no arbiter. It is one env var away for whoever wants to
+arbitrate it.
+
+### 7. What I am not claiming
+
+- I have **not** shown the bowl is zero. It is +191 DN at d=550, real, and
+  attributable to the coarsest Laplacian bands by the scale argument in section
+  1. I have shown it is about a third of the bar ORCH set, and that closing it
+  costs more than it is worth at every rung I can reach.
+- The d=8-30 **near-field regression** is real and unresolved: the blend is
+  ~250 DN worse than the control at d=14-28 on this subject. No registered
+  criterion covers it. It is not caused by `mean_coarse` (mc1 improves it
+  slightly, mc3 destroys it), it predates this work, and it is the one row band
+  where the estimator arm is genuinely better. Somebody should own it.
+- All of section 5 rests on ORCH's five published rows and on the operating point
+  implied by one published pair. If either the rows or `59630 DN = 248.1 of 255`
+  was mistranscribed, the conversion moves. The discriminating ratio is robust to
+  a scale error in the slope -- it divides out -- but not to an error in an
+  individual row.
+- I did not verify any of this myself in the sense the project means. I ran what
+  is listed here and reported it.
