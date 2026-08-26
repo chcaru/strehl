@@ -191,16 +191,24 @@ reported dead in 16.8.
 the picture.** I reported that the blend *introduces* an arc at d~275 and that
 the control "has no arc there", on a SIGNAL/NULL ratio of 12.1x against 0.9x.
 **Backwards.** The control carries a dark aura averaging **-10.13% of far field
-(-1935 DN)** over d=100..500 and reaching **-25.48%** at d=112, negative in
-**all 19 sectors**, not recovering to within 1% until d=488. The blend over the
-same band is **+0.21% (+39 DN)** and recovers by d=112. My statistic scored a
-local **maximum** over its outward trough, so a monotonically recovering
-**depression** has no interior peak and returned exactly **0.00** -- a bump
-detector pointed at a hole -- and separately its null window (700..1050) sat
-**inside** its own reference window (600..1400). Either bug alone would have
-been fatal. What survives is the azimuthal point: per sector the blend's
-residual is a *localised bright* excursion of **+7.69%** in sector 2, which the
-whole-frame +0.21% understates exactly as 15.9 predicted averaging would.
+(-1935 DN)** over d=100..500 and reaching **-25.48%** at d=112, not recovering
+to within 1% until d=488. The blend over the same band is **+0.21% (+39 DN)**
+and recovers by d=112. Reference-free, in absolute DN on identical pixels, the
+arms differ by **-4606 DN** at d=112, and the control is darker in **24 of 24
+sectors**. My statistic scored a local **maximum** over its outward trough --
+a *local shape* statistic, blind to a defect defined by its offset from a
+distant reference -- so a 25% crater with a smooth floor returned a median of
+**0.50%**, and separately its null window (700..1050) sat **inside** its own
+reference window (600..1400). Either bug alone would have been fatal.
+
+**Two further claims of mine inside 17 were then refuted by verification and are
+retracted in 17.3 and 17.1.** The blend's "localised bright residual of +7.69%
+in sector 2" is an artifact of per-sector normalisation -- that sector's own
+backdrop is 10% darker than the frame's, and against a frame reference it is
+**-3.32%, dark**. And my account of the first bug (that it returned `None` and
+recorded 0.00) is contradicted by my own committed log, which shows **23 of 24
+sectors returned a peak**. The reversal holds; two of my explanations for it did
+not.
 
 ---
 
@@ -2684,29 +2692,53 @@ Re-measured with a rebuilt instrument, one pinned pair, shared mask,
 | --- | ---: | ---: |
 | aura band d=100-500, mean | **-10.13%** | **+0.21%** |
 | the same, absolute | **-1935 DN** | **+39 DN** |
-| per-sector median, 19 sectors | **-5.95%** | +1.35% |
-| worst single bin | **-25.48%** at d=112 | -0.87% |
+| worst single bin, whole profile | **-25.48%** at d=112 | -8.33% at d=12 |
+| worst bin inside the aura band | **-25.48%** | -0.87% |
 | recovers to within 1% of far field | d=**488** px | d=**112** px |
 | far-field level | 19100 DN | 19004 DN |
 | null floor, same backdrop | -3.35% | -3.02% |
 
-**The two arms differ in sign**, so no ratio between them is quoted.  The
-control's worst bin is **7.6x** its own null floor; the blend's aura-band worst
-is **0.29x** the floor, i.e. below it.  Every one of the control's 19 sectors is
-negative.
+**The robust statement is the gap, not either arm's own sign.**  The two arms
+differ by **10.3 points** of far field (**-1974 DN**) over the aura band, and
+that gap survives every reference window, mask source and statistic tried in
+17.5.  The blend's own value does *not*: it lands anywhere in -1.4% to +0.2%
+depending on the band cutoff, which is **indistinguishable from zero against a
+null floor of 3%**.  Say the control has a large aura and the blend has none
+measurable; do not say "opposite signs", which I did and which 17.5 shows is
+cutoff-fragile.
+
+The strongest form of the result needs **no reference at all**.  Comparing the
+two arms directly on the same pixels, the control is darker than the blend in
+the aura band in **24 of 24 sectors**, by a whole-band **-8.10%** and a
+per-sector median of **-3.10%**.
 
 ### 17.1 Why the old statistic said the reverse -- two separate bugs
 
-**Bug 1, structural blindness, and it is the larger one.**
-`peaksite.prominence_near` scores a **local maximum** over its outward trough.
-A dark aura is a **depression**, and one that recovers monotonically outward has
-**no interior local maximum at all** -- the test `vals[i] >= vals[i-1] and
-vals[i] > vals[i+1]` never fires, the function returns `None`, and the row
-records prominence **0.00**.  The control's profile rises monotonically from
-14233 DN at d=112 to 19183 DN at d=588.  **It was a bump detector pointed at a
-hole.**  It then scored the blend's one genuine small bump (+0.83% at d=262) as
-the larger defect.  The instrument did not measure the wrong amount of aura; it
-was structurally incapable of representing an aura as a nonzero number.
+**Bug 1, and my first account of it was also wrong.**  I wrote that
+`peaksite.prominence_near` returns `None` on a monotonically recovering
+depression and "the row records prominence 0.00".  **It does not, and my own
+committed log says so:** `peaksite-fb-ctrl.log` contains **zero** `monotone`
+rows, **zero** rows reading `0.00`, and `sectors with a peak near d=275: 23 of
+24`.  The `None` path is real -- fed a strictly monotone array the function does
+return `None` -- but it never fired on this image.  I reasoned from the source
+instead of reading the log I had already written.
+
+The true mechanism is more general and worse.  `prominence_near` scores a local
+maximum over its **outward trough**, which is a **local shape** statistic.  On
+the control's long gentle ramp -- 14233 DN at d=112 climbing to 19183 DN at
+d=588 -- every local maximum is a small wiggle whose adjacent bin is its trough,
+so the returned prominence is a small *nonzero* number: **median 0.50%, max
+3.19%** across sectors.  A 25% crater with a smooth floor has **near-zero local
+prominence everywhere inside it**.
+
+> **Prominence measures how far a point stands above its neighbours.  A defect
+> defined by its offset from a distant reference is invisible to it, at any
+> depth.**
+
+That is why the statistic ranked the blend's one genuine small bump (+0.83% at
+d=262, a real local maximum) above a crater 30x deeper.  It was not
+mis-calibrated; it was measuring a different quantity from the one the question
+required.
 
 **Bug 2, a null inside its own reference.**  `NULL_LO, NULL_HI = 700, 1050` lay
 entirely inside `ringprofile.FAR_LO, FAR_HI = 600, 1400`.  Signal and null were
@@ -2759,33 +2791,110 @@ category error as v1.**  The owner's "0.23%" for `coffee-bean` refers to a brigh
 living in a few sectors reports a number that occurs at no azimuth.  Per-sector
 reporting is right and the owner has kept it.
 
-**Corrected:** the direction.  Per sector, `arcprofile.py` gives
+**RETRACTED, and this one I routed to the owner as an action item before it was
+checked.**  I reported the blend's residual as a *localised bright* excursion of
+**+7.69% in sector 2 (30-45 deg)** and cut him a crop of it.  **It is an artifact
+of my own per-sector normalisation.**  `arcprofile.analyse` recomputes the far
+field *inside* each sector, so every sector is divided by its own backdrop level
+-- and the backdrop is not uniform round the subject.  MEASURED, pyramid arm,
+per-sector far fields against the frame's 19004 DN:
 
-- **CONTROL**: min **-12.97%** (sector 22, 330-345 deg), median -5.95%, max
-  -2.17%.  **All 19 sectors negative** -- a dark aura the whole way round.
-- **BLEND**: min -1.44%, median +1.35%, max **+7.69%** (sector 2, 30-45 deg) --
-  a *localised bright* excursion, which is the feature I originally found and
-  mislabelled.
+| sector | its own far field | vs frame | aura, per-sector ref | aura, **frame** ref |
+| ---: | ---: | ---: | ---: | ---: |
+| 2 | 17086 DN | **-10.09%** | **+7.53%** | **-3.32%** |
+| 9 | 16600 DN | -12.65% | +6.25% | -7.19% |
+| 17 | 20529 DN | +8.02% | +2.27% | **+10.48%** |
 
-So the blend's residual is real, is **positive**, and is **localised to a few
-sectors** -- whole-frame +0.21% understates it exactly as 15.9 said azimuthal
-averaging would.  Crops cut for the owner at exact 1:1, shared stretch:
-`pics/AURA-sector2-blend-residual--*--1to1.png` (crop 4294, 3363, 1200, 900) and
-`pics/AURA-sector22-control-worst--*--1to1.png` (crop 4579, 1546, 1200, 900).
+**The backdrop illumination spans 16600 to 20529 DN between sectors -- 23.7% --
+and that gradient, not the merge, sets the entire per-sector rank order.**
+Against one frame-wide reference sector 2 is **-3.32%, dark**, and the maximum
+moves to sector 17, which is the mirror of the same artifact.  Reference-free,
+sector 2's arm ratio is -3.22%, **rank 14 of 24**: the most ordinary sector in
+the frame.  **There is no bright excursion in sector 2 and the crop I cut shows
+the control's aura, not a blend defect.  Do not open it as evidence of a blend
+residual.**
+
+**What replaces it, and it needs no reference at all.**  `arcprofile.py` now
+divides the two arms by each other on identical pixels, so no normalisation is
+involved and none can manufacture the result.  **The control is darker than the
+blend in 24 of 24 sectors** -- whole-band **-8.10%**, per-sector median
+**-3.10%**, worst **-17.91%**, best **-0.47%**.  That is the per-sector claim 17
+is entitled to make, and it is stronger than the one I made because there is no
+reference in it to be wrong about.
+
+**So the blend's residual, on this evidence, is not localised and not bright --
+it is not resolvable above the floor at all.**  The open item is smaller than I
+reported, not larger.
 
 ### 17.4 What 17 does not settle
 
-- **I have not opened the sector-2 crop myself and should not be the one to
-  judge it.**  +7.69% in one sector is not small, and it is the blend's, not the
-  control's.  It is the open item.
-- The null floor is **-3.0 to -3.4%**, not zero, because the backdrop has a real
-  large-scale roll of ~2% peak-to-peak that appears identically in both arms.
-  Any aura claim below about 3% is inside that floor.
+- **The null floor is -3.0 to -3.4%**, not zero, because the backdrop has a real
+  large-scale roll.  I first described that roll as "~2% peak-to-peak"; that is
+  only its **radial average**.  Across the backdrop it is **23.5% peak-to-peak**
+  (p2 16158 to p98 20588 DN, 201 px smoothed), near-identical in both arms, and
+  per-sector far fields span 20%.  That non-uniformity is what manufactured the
+  sector-2 artifact in 17.3, so understating it was not cosmetic.
+- **`AURA_LO = 100` is not consistent with its own calibration.**  17.2 measures
+  the edge transition at 150-250 px wide, so a cutoff of 100 sits *inside* it.
+  The **ordering is unaffected** -- at `AURA_LO = 250` the blend is +0.08% and
+  the arm gap is unchanged -- but the **-10.13% headline is not**: at that
+  cutoff the control's aura reads **-3.32%**, level with the quoted null floor.
+  The 10-point *gap* is the durable number; the control's absolute depth depends
+  on where the band starts.
+- **The blend's "recovers by d=112" is one bin from failing** (-0.87% against a
+  -1.00% criterion), and the 1% criterion is **tighter than the instrument's own
+  null floor** of 2.3-3.4%.  Recovery distance should be read as a rank between
+  the arms (112 vs 488), not as a calibrated distance.
+- **Two of my commissioning checks cannot fail.**  NULL A compares
+  `median(constant)` with itself, and the PLANT's expectation is algebraically
+  the same identity as the measurement, since `median(0.85x) = 0.85 median(x)`.
+  They test bin alignment and NaN handling, which is worth something, but
+  neither is evidence the statistic localises a defect.  A real plant would put
+  a depression in **one sector** and require the others to stay put.
+- **The `coffee-bean` edge calibration is circular.**  Its mask (thr 33347 DN,
+  59.62% of frame, 2115 components) takes in a large shadow region, so half the
+  "silhouette" is a backdrop gradient; and the two arms recover at different
+  distances there too (262 vs 162), which means the frame used to calibrate the
+  defect away **carries the defect**.  The 150-250 px edge width should be
+  treated as provisional.
+- **One subject.**  Everything here is `flower-bud-alone-cpl` plus a compromised
+  `coffee-bean`.  `lavendar-cpl`, `couch-fibers-cpl` and `109MSDCF` pairs are on
+  disk in `flip/` and neither I nor the verifier measured them.
+- **Whether the control *creates* the aura or merely preserves real veiling
+  glare in the source frames is untested.**  17 shows only that the control has
+  it and the blend does not.
 - The `flip/` pair is still **not hash-verified** (16.1): the binary's mtime
-  postdates the renders.  Everything in 17 is measured on that pair, so it
-  inherits that gap.
-- `AURA_LO = 100` is set from the `coffee-bean` edge calibration.  A subject with
-  a wider edge transition would need a different cutoff, and the statistic does
-  not currently derive it per subject.
-- Nothing here is independently verified; a verifier was commissioned on 17
-  before it was reported.
+  postdates the renders.  Everything in 17 inherits that gap.
+- **No automated test covers any of this.**  `arcprofile.py` is a script with
+  printed commissioning, not a test; a regression in `ringprofile.subject_mask`
+  or `signed_distance` would silently move every number here.
+
+### 17.5 The verification, and the two things it caught that I had shipped
+
+17 was verified by an independent agent instructed to kill it, including to
+check whether I had **over-corrected** after being told twice I was wrong.  The
+headline survived every attack; two claims inside it did not.
+
+| claim | verdict | what changed |
+| --- | --- | --- |
+| control -10.13% / blend +0.21%, ordering reversed | **holds** | reproduced by independent code; and reference-free, in absolute DN, the arms differ by **-4606 DN** at d=112 |
+| "the two arms differ in sign" | **fragile** | signs differ in only **15 of 37** band cutoffs; the blend is negative at every `AURA_LO <= 75` |
+| "all 19 sectors negative" | **fragile** | 16 of 19 under a frame reference; replaced by the reference-free 24 of 24 in 17.3 |
+| bug 1 returns `None` -> 0.00 | **refuted** | 0 monotone rows, 0 zero rows, 23 of 24 sectors returned a peak; corrected in 17.1 |
+| blend residual +7.69%, sector 2 | **refuted** | per-sector normalisation artifact; retracted in 17.3 |
+
+The ordering was attacked from five directions and held each time: absolute DN
+with no reference; nine reference windows including one outside the aura
+entirely; the mask taken from the *pyramid* arm instead (-9.95% / +0.10%) and
+from Otsu (-10.27% / +0.01%); mean versus median; and luma weighting.  The
+committed `arcprofile.py` reproduces `arcprofile-fb.log` line for line.
+
+**The lesson, and it is the same shape as the one in 16.10.**  Both things the
+verifier caught were places where I **reasoned instead of reading something I
+already had**.  The `None` mechanism was refuted by my own committed log from
+the previous session, which recorded 23 of 24 sectors returning a peak.  The
+sector-2 artifact was visible in a column my own instrument prints -- each
+sector's far field -- which I did not look at before recommending a crop to the
+owner.  **A statistic that normalises by a locally measured reference must have
+that reference printed and nulled, or it will report the reference's structure
+as the signal's.**

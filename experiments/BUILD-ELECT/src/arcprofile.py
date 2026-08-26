@@ -197,23 +197,34 @@ def main():
             sa = analyse(luma(FLIP.format(subj, arm)), signed,
                          sel=(sect == s))
             if sa is not None and np.isfinite(sa["aura"]):
-                per.append((s, sa["aura"], sa["aura_worst"], sa["rim"]))
-        print(f"    per-sector AURA, all {len(per)} sectors with enough pixels,"
-              f" listed so a\n    summary can never stand alone:")
-        print(f"    {'sector':>7} {'deg':>9} {'aura %':>9} {'worst %':>9} "
-              f"{'rim %':>8}")
-        for s, au, wo, ri in per:
-            print(f"    {s:>7} {f'{s*360//NSECT}-{(s+1)*360//NSECT}':>9} "
-                  f"{au:>+9.2f} {wo:>+9.2f} {ri:>+8.2f}")
-        vals = np.array([r[1] for r in per])
-        lo_s = per[int(vals.argmin())]
-        hi_s = per[int(vals.argmax())]
-        print(f"    min sector {lo_s[0]} ({lo_s[0]*360//NSECT}-"
-              f"{(lo_s[0]+1)*360//NSECT} deg) {vals.min():+.2f}%   "
-              f"median {np.median(vals):+.2f}%   "
-              f"max sector {hi_s[0]} ({hi_s[0]*360//NSECT}-"
-              f"{(hi_s[0]+1)*360//NSECT} deg) {vals.max():+.2f}%")
-        res[arm]["per"] = vals
+                fr = 100.0 * (sa["ref"] - a["ref"]) / a["ref"]
+                band = (sa["ds"] >= AURA_LO) & (sa["ds"] <= AURA_HI)
+                au_fr = 100.0 * (sa["vs"][band].mean() - a["ref"]) / a["ref"]
+                per.append((s, sa["ref"], fr, sa["aura"], au_fr))
+        print(f"    per-sector AURA, all {len(per)} sectors with enough pixels."
+              f"  EACH SECTOR'S OWN\n    REFERENCE IS PRINTED, because "
+              f"normalising by it and not showing it is how\n    a 20% backdrop "
+              f"gradient got reported as a +7.69% blend residual:")
+        print(f"    {'sector':>7} {'own ref DN':>11} {'ref vs frame':>13} "
+              f"{'aura/own ref':>13} {'aura/FRAME ref':>15}")
+        for s, r_, fr, au, au_fr in per:
+            print(f"    {s:>7} {r_:>11.0f} {fr:>+12.2f}% {au:>+12.2f}% "
+                  f"{au_fr:>+14.2f}%")
+        own = np.array([r[3] for r in per])
+        frm = np.array([r[4] for r in per])
+        refs = np.array([r[1] for r in per])
+        print(f"    backdrop level spans {refs.min():.0f}-{refs.max():.0f} DN "
+              f"between sectors = {100*(refs.max()-refs.min())/refs.min():.1f}%"
+              f" -- this gradient, not the merge, sets the per-sector rank order")
+        print(f"    against OWN   refs: min {own.min():+.2f}%  "
+              f"median {np.median(own):+.2f}%  max {own.max():+.2f}% "
+              f"(sector {per[int(own.argmax())][0]})")
+        print(f"    against FRAME ref : min {frm.min():+.2f}%  "
+              f"median {np.median(frm):+.2f}%  max {frm.max():+.2f}% "
+              f"(sector {per[int(frm.argmax())][0]})  <- the max MOVES, so "
+              f"neither is a defect")
+        res[arm]["per"] = frm
+        res[arm]["per_own"] = own
         print()
 
     e, p = res["estimator"], res["pyramid"]
@@ -231,21 +242,41 @@ def main():
     print(f"    {'null floor (worst)':<26}"
           f"{nulls['estimator']['worst']:>+11.2f}%"
           f"{nulls['pyramid']['worst']:>+11.2f}%")
+    print(f"  ARM RATIO -- the reference-free comparison. No far field is used "
+          f"at all;\n  the two arms are divided by each other on identical "
+          f"pixels, so no\n  normalisation can manufacture the result.")
+    eL, pL = luma(FLIP.format(subj, "estimator")), luma(FLIP.format(subj, "pyramid"))
+    band = (signed >= AURA_LO) & (signed <= AURA_HI)
+    whole = 100.0 * (float(np.median(eL[band])) / float(np.median(pL[band])) - 1)
+    rr = []
+    for s in range(NSECT):
+        bm = band & (sect == s)
+        if int(bm.sum()) < MIN_PX:
+            continue
+        rr.append(100.0 * (float(np.median(eL[bm])) / float(np.median(pL[bm])) - 1))
+    rr = np.array(rr)
+    print(f"    CONTROL vs BLEND over the aura band, whole frame: "
+          f"{whole:+.2f}%")
+    print(f"    per sector: min {rr.min():+.2f}%  median {np.median(rr):+.2f}%"
+          f"  max {rr.max():+.2f}%")
+    print(f"    sectors where the CONTROL is DARKER than the BLEND: "
+          f"{int((rr < 0).sum())} of {len(rr)}")
     print()
     gap = e["aura"] - p["aura"]
     print(f"  The two arms differ by {gap:.2f} points of far field "
           f"({e['ref']*e['aura']/100 - p['ref']*p['aura']/100:+.0f} DN) over "
-          f"the aura band,")
-    print(f"  and they differ in SIGN, so no ratio between them is meaningful "
-          f"and none is quoted.")
-    print(f"  Against the null floor measured on the same backdrop: the "
-          f"control's worst bin")
-    print(f"  {e['worst']:+.2f}% is "
-          f"{abs(e['worst'] / nulls['estimator']['worst']):.1f}x the floor "
-          f"{nulls['estimator']['worst']:+.2f}%; the blend's aura-band worst "
+          f"the aura band.")
+    print(f"  The GAP is the durable number. Neither arm's own sign is: the "
+          f"blend lands\n  between -1.4% and +0.2% depending on the band "
+          f"cutoff, which is inside the\n  {abs(nulls['pyramid']['worst']):.1f}%"
+          f" null floor and therefore not distinguishable from zero.")
+    print(f"  Against the null floor on the same backdrop: the control's worst "
+          f"bin {e['worst']:+.2f}%")
+    print(f"  is {abs(e['worst'] / nulls['estimator']['worst']):.1f}x the floor"
+          f" {nulls['estimator']['worst']:+.2f}%; the blend's aura-band worst "
           f"{p['aura_worst']:+.2f}% is")
-    print(f"  {abs(p['aura_worst'] / nulls['pyramid']['worst']):.2f}x the floor"
-          f" {nulls['pyramid']['worst']:+.2f}%, i.e. below it.")
+    print(f"  {abs(p['aura_worst'] / nulls['pyramid']['worst']):.2f}x the floor,"
+          f" i.e. below it.")
     return 0
 
 
