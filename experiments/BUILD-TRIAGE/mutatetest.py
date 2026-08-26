@@ -31,15 +31,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import triage  # noqa: E402
 
 
-def main() -> int:
-    # Isolate the corpus gate: silence the unit-level commissioning so that a
-    # failure here can only have come from the gate running on real rows.
+def mutate_wording() -> int:
+    """Reintroduce the shipped noise-wording defect; the gate must stop it."""
     triage.commission_wording = lambda: None
-
-    # Reintroduce the defect exactly as it shipped.
+    good_phrase = triage.noise_phrase
     triage.noise_phrase = triage._legacy_noise_phrase
 
-    print("mutation: noise_phrase -> _legacy_noise_phrase (the shipped form)")
+    print("mutation 1: noise_phrase -> _legacy_noise_phrase (the shipped form)")
     print("expecting: corpus gate refuses to write triage.json\n")
 
     try:
@@ -53,16 +51,68 @@ def main() -> int:
         subj = sorted({m.split(":")[0].strip()
                        for m in re.findall(r"(?m)^ {2}\S[^\n]*: ", msg)})
         head = "\n".join(msg.splitlines()[:7])
-        print("MUTATION KILLED -- the gate fired on real rows.")
+        print("MUTATION KILLED -- the wording gate fired on real rows.")
         print(f"violations flagged: {n} across {len(subj)} subjects: "
               f"{', '.join(subj)}")
         print(head)
-        print("\nOK: the shipped defect cannot pass the gate.")
         return 0
+    finally:
+        # Each mutation must be independent.  Leaving this patched made the
+        # later definition mutations trip the WORDING gate instead, and the
+        # test reported "gate is blind" when both gates were working.
+        triage.noise_phrase = good_phrase
 
     print(f"MUTATION SURVIVED (main returned {rc}).")
-    print("FAIL: the gate is blind -- it did not audit the emitted strings.")
+    print("FAIL: the wording gate is blind -- it did not audit the strings.")
     return 1
+
+
+def mutate_definitions() -> int:
+    """Break FIELD_DEFS both ways; the definition gate must catch each.
+
+    Both directions matter.  An undefined field is unreadable.  An orphaned
+    definition is worse: it describes something the reader cannot find, and the
+    reader will map it onto the nearest surviving name -- which is exactly the
+    `noise_flat` / `noise_ratio_all_sites_diag` confusion that shipped.
+    """
+    triage.commission_wording = lambda: None
+    ok = True
+
+    for label, mutate, expect in (
+            ("undefined field  (drop a definition that ships)",
+             lambda d: d.pop("noise_flat", None), "UNDEFINED"),
+            ("orphaned definition  (define a field that does not ship)",
+             lambda d: d.update({"snr_margin_db": "not emitted anywhere"}),
+             "ORPHANED")):
+        good = dict(triage.FIELD_DEFS)
+        broken = dict(good)
+        mutate(broken)
+        triage.FIELD_DEFS = broken
+        print(f"\nmutation: {label}")
+        try:
+            triage.main()
+            print(f"  MUTATION SURVIVED -- FAIL: gate missed {expect}.")
+            ok = False
+        except SystemExit as exc:
+            msg = str(exc)
+            if expect in msg:
+                line = next(l.strip() for l in msg.splitlines() if expect in l)
+                print(f"  MUTATION KILLED -- {line}")
+            else:
+                print(f"  FAIL: stopped, but not by the definition gate: {msg}")
+                ok = False
+        finally:
+            triage.FIELD_DEFS = good
+
+    return 0 if ok else 1
+
+
+def main() -> int:
+    rc = mutate_wording()
+    rc |= mutate_definitions()
+    print("\nOK: neither shipped defect can pass its gate." if not rc
+          else "\nFAIL: at least one gate is blind.")
+    return rc
 
 
 if __name__ == "__main__":

@@ -91,12 +91,18 @@ COLOUR = {
 
 
 def load_triage(path: str | None):
-    """Verdicts keyed by subject, or ({}, {}) when running without them."""
+    """Verdicts keyed by subject, plus counts and constants.
+
+    The constants are read, never retyped.  This header printed "instrument
+    floor 0.3 px" against a real BLUR_FLOOR_PX of 0.35 for as long as both
+    existed, because a number was copied into prose and then the source moved.
+    """
     if not path:
-        return {}, {}
+        return {}, {}, {}
     with open(path, encoding="utf-8") as fh:
         doc = json.load(fh)
-    return {r["subject"]: r for r in doc["rows"]}, doc["counts"]
+    return ({r["subject"]: r for r in doc["rows"]}, doc["counts"],
+            doc.get("constants") or {})
 
 
 def load_fill(path: str | None):
@@ -273,7 +279,7 @@ def main() -> int:
     rows = (len(thumbs) + cols - 1) // cols
     cw = max(t.size[0] for _, t in thumbs)
     ch = max(t.size[1] for _, t in thumbs)
-    tri_rows, tri_counts = load_triage(args.triage)
+    tri_rows, tri_counts, tri_consts = load_triage(args.triage)
     fill_rows = load_fill(args.fill)
     if tri_rows:
         check_budgets(tri_rows, fill_rows)
@@ -311,7 +317,7 @@ def main() -> int:
                   f"{float(ev.get('merge_edge_dnpx') or 0.0):>8.1f} DN/px")
     lab = 30 if not tri_rows else 114
     pad = 14
-    head = 56 if not tri_rows else 148
+    head = 56 if not tri_rows else 192
     W = cols * (cw + pad) + pad
     H = rows * (ch + pad + lab) + pad + head
     sheet = Image.new("RGB", (W, H), (18, 18, 20))
@@ -344,17 +350,40 @@ def main() -> int:
             d.text((cx + 20, 72), txt, font=font(16),
                    fill=(225, 225, 232) if k else (128, 130, 140))
             cx += 26 + int(d.textlength(txt, font=font(16)))
+        floor_px = ((tri_consts.get("blur_floor_px") or {}).get("value"))
+        floor_txt = (f"instrument floor {floor_px} px" if floor_px is not None
+                     else "instrument floor not reported")
         d.text((pad, 98),
                f"{'  +  '.join(str(tri_counts.get(c, 0)) for c in CAT_ORDER)}"
                f"  =  {total} of {len(thumbs)} subjects."
                f"  Sharpness measured as edge slope in DN/px on camera-linear "
                f"renders of BOTH arms; blur quoted as an equivalent Gaussian "
-               f"sigma in pixels (instrument floor 0.3 px).",
+               f"sigma in pixels ({floor_txt}).",
                font=font(14), fill=(150, 152, 162))
         d.text((pad, 120),
                "Colour = who fixes it.  Green: nothing to fix.  Red: the merge "
                "lost detail the frames hold -- fix the software.  Amber/blue/"
                "violet: no frame ever held it -- fix the capture.",
+               font=font(14), fill=(150, 152, 162))
+        # The per-tile numbers are DEFINED HERE, on the artifact, not in a
+        # README or a docstring.  Two fields in this project's own output --
+        # `noise_flat` and `noise_ratio_all_sites_diag` -- are the same ratio
+        # over different site sets and disagree by 17x in opposite directions;
+        # near-synonymous names get read as corroborating unless the reader is
+        # handed the definition beside the number.
+        d.text((pad, 142),
+               "Per-tile numbers, defined here rather than elsewhere.  "
+               "\"Nx cleaner/noisier on flats\" = pixel noise of the best "
+               "single source frame divided by the merge's, measured at a FLAT "
+               "site ONLY -- at a detailed site the estimator counts resolved "
+               "structure as noise and the figure is not usable.",
+               font=font(14), fill=(150, 152, 162))
+        d.text((pad, 164),
+               "\"detail N DN at M% fill\" = mean |laplacian| over "
+               "detail-bearing pixels ONLY, so it is not diluted by flat area, "
+               "and the fraction of the tile those pixels were; \"rank k/26\" "
+               "ranks that DN figure across the corpus.  Every field is "
+               "defined in triage.json under \"fields\".",
                font=font(14), fill=(150, 152, 162))
 
     for i, (n, t) in enumerate(thumbs):

@@ -1643,3 +1643,87 @@ frame on a flat field?" belongs there, not here.
 > derive the sentence from the measurement, not write it alongside. And when a
 > number and its description disagree, the description is not the only thing
 > worth checking — the disagreement may be hiding a real result.
+
+## 13. Two shipped artifacts, two near-synonymous names, a 17x disagreement, and no reader who could have known
+
+This is the generalisable finding from the wording defect in §12, separated out
+because the wording bug was a symptom and this is the disease.
+
+### 13.1 The two fields
+
+For as long as both artifacts existed they printed **contradictory** figures for
+`bee-3-cpl`, and both were correct about what they computed:
+
+| artifact | printed | field | definition |
+| --- | --- | --- | --- |
+| `contact-triage.jpg` | **"2.08x noisier on flats"** | `noise_flat` | best source frame's pixel noise / the merge's, **at the FLAT site only** |
+| `triage.json` | **"0.88x less pixel noise"** | `noise_advantage` | the same ratio **averaged over all usable sites, DETAIL included** |
+
+Both are `frame_noise / merge_noise`. Both are about pixel noise on the same
+subject in the same merge. The names are near-synonyms. **They disagree by 17x
+and in opposite directions on `pencil-steep-angle-cpl`** — `noise_flat` = 10.31
+(merge decisively cleaner), all-sites = 0.60 (merge noisier).
+
+The divergence is not noise, it is mechanism: `tri.pixel_noise` is the residual
+after a 3x3 median, so at a detail-rich site it counts **resolved structure** as
+noise. Corpus medians are **1.47x at FLAT and 0.72x at DETAIL**. Averaging the
+two site classes produces a number that measures neither.
+
+### 13.2 Why nothing caught it
+
+Nothing ever put the two side by side. Each artifact was internally consistent;
+each was reviewed on its own; the definitions lived in a docstring and an
+agent's report, i.e. **not in either artifact**. A reader holding both
+documents had no way to discover that the two numbers were not the same
+quantity, and every incentive to read them as corroborating.
+
+> **DISCIPLINE.** Two metrics whose names are near-synonyms will be read as
+> corroborating even when they disagree by 17x in opposite directions. The only
+> defence is printing the definition beside the number, in the artifact, at the
+> point of display. A definition in a README, a docstring, or an agent's report
+> is a definition the reader of the artifact does not have.
+
+### 13.3 The same defect, twice more, found by applying the rule to my own file
+
+Auditing all 31 emitted fields against that rule turned up two more instances I
+had shipped without noticing.
+
+**(a) Three edge fields that look mutually consistent and are not.** MEASURED:
+`merge_edge_dnpx / frame_edge_dnpx` fails to reproduce `edge_ratio_min` on **13
+of 25 rows**, worst case `bee-2-cpl` at **1.92 against a true 1.43, a 34%
+error**. Two independent reasons, neither visible from the names: the two DN/px
+figures are maxima taken over *possibly different sites*, and only the ratio is
+gather-corrected. A reader dividing them — the obvious thing to do — gets a
+wrong number with no warning. The definitions now say so explicitly and name
+`edge_ratio_min` as the field the verdict actually uses.
+
+**(b) A threshold retyped into prose, which then drifted.** The contact sheet
+header read **"instrument floor 0.3 px"** while `BLUR_FLOOR_PX = 0.35` and every
+`why` string said 0.35. I found it by reading the sheet I had just regenerated.
+The fix was not to correct the digit but to **delete the hardcoding**: the
+thresholds now ship in `triage.json` under `constants`, and the header reads the
+value rather than restating it.
+
+### 13.4 What is now enforced
+
+- `triage.json` carries `fields` — a definition for **every** one of the 31
+  fields it emits — and `constants`, the six thresholds the verdicts are
+  computed with, each with its value and what it decides.
+- A **definition gate** in `main()` checks both directions before writing:
+  an emitted field with no definition is fatal, and so is a definition for a
+  field that no longer ships. The second direction matters more than it looks:
+  an orphaned definition describes something the reader cannot find, so they
+  map it onto the nearest surviving name — which is exactly how
+  `noise_flat` and `noise_ratio_all_sites_diag` came to be confused.
+- The contact sheet defines its three per-tile numbers **on the sheet**.
+- `mutatetest.py` now runs three mutations and requires all three to be caught:
+  the shipped wording defect (18 violations across 9 subjects), a dropped
+  definition, and an orphaned one.
+
+**The mutation test failed first, and it was the test that was wrong** — the
+wording mutation left `noise_phrase` monkeypatched, so the two definition
+mutations tripped the *wording* gate and reported "gate is blind" when both
+gates were working correctly. Restoring state between mutations in a `finally`
+fixed it. Worth recording because the failure mode is generic to mutation
+testing: **a mutation that is not undone silently invalidates every mutation
+after it**, and the symptom is a false accusation against working code.

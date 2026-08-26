@@ -68,6 +68,129 @@ GAP_BLOCKS_BAD = 12
 GAP_DETAIL_PCT = 2.0
 GAP_ENRICH = 1.0         # must target detail more than a random mask would
 
+# --- FIELD DEFINITIONS, SHIPPED WITH THE NUMBERS ----------------------------
+# Every field this tool emits is defined here, and `triage.json` carries this
+# dict verbatim under "fields".  The definition travels WITH the number.
+#
+# WHY THIS EXISTS.  `noise_flat` and `noise_ratio_all_sites_diag` are the same
+# ratio over different site sets.  They differ by 17x in opposite directions on
+# `pencil-steep-angle-cpl` (10.31 vs 0.60).  Nothing in the artifact said so,
+# and the wrong one shipped inside a user-facing sentence on 9 of 26 rows.
+#
+# Names that are near-synonyms get read as corroborating even when they
+# disagree wildly.  A definition kept anywhere other than beside the number --
+# a README, a docstring, an agent's report -- is a definition the reader of the
+# artifact does not have.
+FIELD_DEFS = {
+    # -- row level --
+    "subject": "master filename stem in SHIP-V1 (<subject>.tiff)",
+    "verdict": "classification; the full set with counts is in top-level "
+               "'counts', including categories with zero members",
+    "why": "the evidence sentences behind the verdict. Every number in them "
+           "is derived at render time from the fields in 'evidence'",
+    "remedy": "the action that would fix it, or 'none'",
+    "evidence": "the measurements the verdict rests on; keys defined here",
+    # -- capture: focus coverage --
+    "n_frames": "frames in the bracket",
+    "n_gap_blocks": "focus blocks whose sharpest frame is the first or last "
+                    "in the bracket = gap_far + gap_near",
+    "gap_far": "of n_gap_blocks, how many elected the FAR end",
+    "gap_near": "of n_gap_blocks, how many elected the NEAR end",
+    "boundary_pct": "% of ALL pixels electing the first or last frame",
+    "detail_gap_pct": "% of DETAIL-BEARING pixels (top 3 contrast deciles of "
+                      "this subject, a within-subject percentile -- never an "
+                      "absolute DN threshold) electing an end frame",
+    "detail_enrichment": "detail_gap_pct divided by the same statistic on a "
+                         "size-matched RANDOM mask. >1 means end-elections "
+                         "target detail; <1 means they are on blank areas and "
+                         "the gap is not costing resolved structure",
+    "end0_pct": "% of pixels electing the FIRST frame",
+    "endN_pct": "% of pixels electing the LAST frame",
+    # -- capture: motion --
+    "motion_med_ncc": "median normalised cross-correlation between adjacent "
+                      "frames. A static stack measures 0.9997 (bee-3-cpl)",
+    "motion_blocks": "of 24 blocks, how many have adjacent-frame NCC < 0.98",
+    # -- merge vs best source frame --
+    "n_sites_used": f"comparison sites passing the arm-SNR gate (>= "
+                    f"{4.0}); only these vote on the verdict",
+    "n_sites_dropped": "sites rejected by that gate. A site whose edges are "
+                       "not clear of its own pixel noise carries no evidence "
+                       "in either direction",
+    "edge_ratio_min": "LOWEST merge/frame edge-slope ratio across usable "
+                      "sites, gather-corrected. >1 means the merge is "
+                      "sharper. This is the field the verdict uses",
+    "merge_edge_dnpx": "merge edge slope, DN/px, camera-linear: the MAXIMUM "
+                       "over usable sites. NOT DIVISIBLE by frame_edge_dnpx "
+                       "-- see that field",
+    "frame_edge_dnpx": "best single source frame's edge slope, DN/px, "
+                       "camera-linear, NOT gather-corrected, MAXIMUM over "
+                       "usable sites -- possibly a DIFFERENT site from "
+                       "merge_edge_dnpx. Dividing the two does NOT give "
+                       "edge_ratio_min (it disagrees on 13 of 25 rows, worst "
+                       "1.92 vs 1.43 on bee-2-cpl). Use edge_ratio_min",
+    "worst_blur_px": f"largest merge-vs-best-frame softness across usable "
+                     f"sites, as an equivalent Gaussian sigma in pixels. "
+                     f"Instrument floor {BLUR_FLOOR_PX} px: a planted 0.30 px "
+                     f"blur reads as 0.21, so values at or below the floor "
+                     f"are not distinguishable from zero",
+    "worst_site": "which site produced worst_blur_px",
+    # -- noise: the pair that caused the shipped defect --
+    "noise_flat": "best source frame's pixel noise DIVIDED BY the merge's, at "
+                  "the FLAT site ONLY. >1 means the MERGE IS CLEANER; <1 "
+                  "means the merge is NOISIER. Flat-only because pixel_noise "
+                  "is the residual after a 3x3 median, which at a detail-rich "
+                  "site counts resolved structure as noise. THIS IS THE "
+                  "REPORTABLE FIGURE",
+    "noise_ratio_all_sites_diag": "the same ratio averaged over ALL usable "
+                                  "sites INCLUDING DETAIL, where the "
+                                  "estimator is confounded (corpus medians: "
+                                  "1.47x at FLAT, 0.72x at DETAIL). "
+                                  "DIAGNOSTIC ONLY, NOT REPORTABLE. Retained "
+                                  "because it shipped inside a user-facing "
+                                  "sentence and the audit trail needs it",
+    # -- ORCH's independently chosen site --
+    "orch_site_ratio": "merge/frame edge-slope ratio at ORCH's independently "
+                       "chosen best-resolved site, not mine",
+    "orch_site_merge_dnpx": "merge edge slope at that ORCH-chosen site, DN/px",
+    "orch_site_frame_dnpx": "best frame's edge slope at that site, DN/px",
+    "orch_site_frame_snr": "the frame arm's signal-to-noise at that site; "
+                           "below the gate it carries no evidence",
+    # -- provenance --
+    "master_w": "master width in pixels",
+    "master_h": "master height in pixels",
+}
+
+# Thresholds the verdicts are actually computed with, shipped alongside them so
+# a reader can see WHICH threshold produced a verdict without reading source.
+# Also so that no downstream renderer has to hardcode one: the contact sheet
+# printed "instrument floor 0.3 px" against a real floor of 0.35 for as long as
+# both existed, because the number was retyped into prose instead of read.
+CONSTANTS = {
+    "blur_floor_px": {
+        "value": BLUR_FLOOR_PX,
+        "meaning": "blur below this is not distinguishable from zero: a "
+                   "planted 0.30 px blur reads as 0.21 (commission E3b)"},
+    "arm_snr_min": {
+        "value": 4.0,
+        "meaning": "a comparison site must clear this on BOTH arms to vote; "
+                   "read off a corpus gap of 1.54-2.99 vs 5.59-43.46"},
+    "motion_median_ncc": {
+        "value": MOTION_MED,
+        "meaning": "adjacent-frame NCC median below this, AND at least "
+                   "motion_blocks blocks below 0.98, classifies as motion"},
+    "motion_blocks": {
+        "value": MOTION_BLOCKS,
+        "meaning": "of 24 blocks; both conditions required"},
+    "gap_detail_pct": {
+        "value": GAP_DETAIL_PCT,
+        "meaning": "% of detail-bearing pixels electing an end frame above "
+                   "which a coverage gap is called; corpus gap 0.803 -> 2.595"},
+    "gap_enrichment_min": {
+        "value": GAP_ENRICH,
+        "meaning": "end-elections must target detail at least this much more "
+                   "than a size-matched random mask would"},
+}
+
 # --- localised vs pervasive coverage gap ------------------------------------
 # A coverage gap that touches 6-7% of detail pixels and one that touches 55% are
 # not the same product problem, and collapsing them into one label is what let
@@ -645,8 +768,30 @@ def main() -> int:
     print(f"wording gate OK: {len(rows)} rows, every noise claim agrees with "
           f"its own noise_flat")
 
+    # DEFINITION GATE.  Every field that ships must carry its definition, and
+    # every definition must correspond to a field that ships.  Checked in BOTH
+    # directions: an undefined field is unreadable, and a definition for a
+    # field that no longer exists is worse than none, because it describes
+    # something the reader cannot find and will map onto the nearest name.
+    emitted = set()
+    for r in rows:
+        emitted |= set(r.keys())
+        emitted |= set((r.get("evidence") or {}).keys())
+    undefined = sorted(emitted - set(FIELD_DEFS))
+    orphaned = sorted(set(FIELD_DEFS) - emitted)
+    if undefined or orphaned:
+        raise SystemExit(
+            "field definitions out of step with the emitted fields:\n"
+            + "".join(f"  UNDEFINED (ships with no definition): {k}\n"
+                      for k in undefined)
+            + "".join(f"  ORPHANED (defined but never emitted): {k}\n"
+                      for k in orphaned))
+    print(f"definition gate OK: {len(emitted)} emitted fields, all defined; "
+          f"no orphaned definitions")
+
     with open(os.path.join(tri.OUT, "triage.json"), "w", encoding="utf-8") as fh:
-        json.dump({"rows": rows, "counts": counts}, fh, indent=1)
+        json.dump({"rows": rows, "counts": counts, "fields": FIELD_DEFS,
+                   "constants": CONSTANTS}, fh, indent=1)
     print(f"\n-> {os.path.join(tri.OUT, 'triage.json')}")
     return 0
 
