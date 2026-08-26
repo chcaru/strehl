@@ -2374,3 +2374,210 @@ arm. If it is the unwarped original, the instrument has the §20 disease --
 through the same gather before comparing. That is the same class of error as
 "our sharpness instrument has been measuring a path the photographer does not
 see", which ORCH is already promoting to a rule, and I think it is the same rule.
+
+## 22. Retraction, and the demosaic priced on the delivered pixels
+
+HEAD `a2582514044b9b7acea6a963d8ff7d784a86a87e`. New instruments:
+`crates/strehl-core/examples/demosaic-plane.rs` and
+`experiments/BUILD-SHARP/src/demosaic_price.py`.
+
+### 22.1 The retraction, verified from the artefact rather than accepted
+
+§20 stated that the co-site runs on the **viewable** path and that ESF numbers
+taken on `linear.tif` therefore excluded a cost the product paid. That is wrong.
+ORCH's correction is right and I checked the crux from the artefact rather than
+take a second report on trust, which is the whole lesson:
+
+    SHIP-V1/109MSDCF.tiff   (4688, 7032, 3) uint16
+    SHIP-V1/112MSDCF.tiff   (4688, 7032, 3) uint16
+    SHIP-V1/113MSDCF.tiff   (4688, 7032, 3) uint16
+
+A quad collapse is 2344 x 3516. That is full sensel resolution, so
+`write_binned` did not produce it, so the co-site never touched it.
+
+**The sign of my instrument-bias finding is inverted.** ESF on `--linear-srgb`
+does not miss a cost the product pays; it pays a cost the product does not, and
+therefore **understates** delivered R/B. The finding survives as a finding --
+the instrument and the product are on different paths -- but every consequence I
+drew from its direction was backwards.
+
+I want the proximate cause recorded, because it was not a reasoning error. The
+`image_out.rs` header called `write_binned` *"the 'for looking at' render"*. I
+read that sentence and treated it as a fact about the call graph. It was a claim
+by an absent author about code that had changed. The artefact was on disk the
+whole time and I never looked at its shape.
+
+### 22.2 What §20's prescription actually is
+
+The co-site fold is a **measurement-path-only** change. It does not touch a
+delivered pixel. Its 1.468x at f = 0.35 is real and was independently
+reproduced to within 1.8% with green bit-identical, but it improves the file the
+ESF instrument reads, not the file the photographer prints.
+
+That reclassifies it from "the largest single quality win available" to "a
+correction to an instrument". It is still worth having for exactly that reason,
+but it must not be sold as a product improvement and I sold it as one.
+
+### 22.3 The demosaic, priced -- and it is not COULD-NOT-INSTRUMENT
+
+ORCH offered that bucket. I declined it: the demosaic is drivable directly.
+`examples/demosaic-plane.rs` runs `strehl_core::demosaic` on a synthetic mosaic,
+so this is the **shipped Rust**, not a transcription. That is the gap §21 left
+on the pyramid and it is not left again.
+
+The information ceiling first, because it decides how to read everything below.
+Red is known at one site per quad, so in output coordinates red is sampled at
+period 2 and its Nyquist is **0.25 cyc/px**. Above that, no red was measured;
+anything delivered there is inferred from green under the slowly-varying-chroma
+assumption. Two scene families bracket that assumption instead of averaging over
+it: `neutral` (R = G = B, assumption exactly true) and `chroma` (R varies, G and
+B flat, assumption maximally violated).
+
+**Red, neutral scene.** `gain` is MTF at the signal frequency; `false` is the rms
+of everything else, which catches a demosaic that delivers amplitude in the
+wrong place.
+
+| f | malvar gain | false | bilinear gain | red lattice alone |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.10 | 1.0387 | 0.025 | 0.9044 | 0.9978 |
+| 0.15 | 1.0606 | 0.032 | 0.7935 | 0.9970 |
+| 0.20 | **1.0534** | 0.043 | **0.6567** | 0.9954 |
+| 0.25 | **0.8750** | 0.000 | **0.0000** | **0.0000** |
+| 0.35 | 0.7657 | 0.448 | 0.2047 | ambiguous |
+
+Three things, and none of them is "Malvar loses":
+
+1. **Below red's Nyquist it is essentially lossless.** Against the information
+   present in the merged red plane *before* re-interleaving (the last column,
+   ~0.995), Malvar delivers 1.00 to 1.06. It gives back what the red plane held.
+   ORCH's question (b) answers **no measurable loss**.
+2. **It beats the direct upsample by a wide margin** -- 1.0534 against 0.6567 at
+   f = 0.20, a factor of **1.60x**. Question (a) answers decisively for Malvar.
+3. **At exactly f = 0.25 the red lattice sees literally nothing.** A tone at
+   0.25 cyc/px sampled at period 2 lands on zero crossings, so red-only and
+   bilinear both deliver **0.0000** -- and Malvar delivers **0.8750**. Every bit
+   of that is borrowed from green. Blue, on the (1,1) lattice, delivers
+   **1.1250** at the same frequency; the two are phase-opposite about a mean of
+   exactly 1.0, which is the two lattices' offset showing up in the correction
+   term and is a nice internal check that this is real structure and not noise.
+
+**Red, chroma scene.** When green is flat, Malvar is not merely similar to
+bilinear, it **is** bilinear:
+
+    max |malvar - bilinear| = 0.0        np.array_equal = True
+
+The gradient correction is a term in green's Laplacian, so a flat green makes it
+identically zero and the algorithm degenerates exactly. This is the single most
+useful fact in this section: **Malvar's entire R/B advantage is borrowed from
+green, and it is worth precisely what green's detail is worth.**
+
+**Green.** Quincunx sampling, so green genuinely carries information above 0.25:
+
+| f | malvar gain | false | bilinear gain |
+| ---: | ---: | ---: | ---: |
+| 0.25 | 1.0000 | 0.000 | 0.7500 |
+| 0.30 | 0.8989 | 0.072 | 0.6727 |
+| 0.35 | **0.7667** | 0.165 | 0.6031 |
+| 0.40 | 0.6341 | 0.259 | 0.5477 |
+| 0.50 | 0.0000 | 0.000 | 0.0000 |
+
+Potency, 3 of 3. A separable `[t, 1-2t, t]` blur planted on the demosaiced red
+has closed-form response `1 - 2t(1 - cos 2*pi*f)`, and the measured ratio against
+the unplanted table matches it:
+
+| f | unplanted | planted | ratio | closed form |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.15 | 1.0606 | 0.8420 | **0.79389** | **0.79389** |
+| 0.25 | 0.8750 | 0.4375 | **0.50000** | **0.50000** |
+| 0.35 | 0.7657 | 0.1573 | 0.20543 | 0.20611 |
+
+One honest caveat on the last column of the red table. Above f = 0.25 the "red
+lattice alone" arm retains amplitude but **cannot assign it a frequency** -- the
+samples are equally consistent with the tone and with its alias. That is what
+aliasing is, and it is why I have written *ambiguous* rather than the 0.995 the
+arithmetic returns. The `false` column is where that ambiguity becomes visible
+as actual error: 0.45 at f = 0.35 for Malvar.
+
+### 22.4 The delivered chain, which is the number that was wanted
+
+Composing the alignment gather (§21), the pyramid (1.000000, §21) and the
+demosaic. Multiplying MTFs assumes shift-invariance; Malvar is linear and
+shift-invariant *within a CFA phase*, which is the condition, so this composes,
+but it is a composition of separately measured stages and not an end-to-end
+render.
+
+| f | align x pyramid | demosaic G | **delivered G** | demosaic R/B | **delivered R/B** |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.25 | 0.8924 | 1.0000 | **0.8924** | 1.0000 (R+B mean) | **0.8924** |
+| 0.35 | 0.6978 | 0.7667 | **0.5350** | 0.7657 | **0.5262** |
+| 0.50 | 0.4343 | 0.0000 | **0.0000** | 0.0000 | **0.0000** |
+
+**The demosaic costs 23.3% of green amplitude at f = 0.35.** That is the same
+order as the alignment gather's 30% and it was entirely unpriced. ORCH's instinct
+that it was the largest unpriced term on the delivered pixels is correct.
+
+It is also the *least* avoidable of the three in its current form, but not
+unavoidable: Malvar beats bilinear by 1.27x at f = 0.35 (0.7667 against 0.6031),
+and the published adaptive methods beat Malvar on exactly this axis. That is now
+a quantified target rather than a preference, and `demosaic.rs`'s own header
+already lists what it declined and why -- worth re-reading against a number it
+did not have.
+
+The deeper structural point: **delivered R/B detail is a function of green's
+chain, not of R/B's.** Malvar hands green's detail to red and blue, so the two
+delivered columns above are within 2% of each other on luma-textured content
+despite red carrying half the samples. Anything that sharpens green sharpens all
+three channels; anything that sharpens only R/B moves almost nothing.
+
+### 22.5 Why folding the co-site damaged the demosaic, as measured
+
+ORCH measured sd(R-G) x1.235 and HF(R-G) x1.313 when the fold was applied ahead
+of the demosaic. The mechanism follows directly from 22.3 and I would now
+predict the sign in advance.
+
+Malvar's stencils do not interpolate red in isolation. They reconstruct red
+through a **chroma difference against green**, and every stencil coefficient
+assumes red and green sit on their nominal CFA lattices. Co-siting moves red off
+that lattice by 0.25 px while the stencil keeps differencing it against green as
+though it had not moved. The difference is then taken between points that no
+longer coincide, so a real chroma difference is manufactured where the scene has
+none -- which is exactly an increase in sd(R-G) and in HF(R-G), in both channels,
+which is what was measured.
+
+This is not a rigid translation the demosaic could absorb, because Malvar is
+shift-invariant only *within* a CFA phase, and the fold moves a sample across
+phases by a fraction. ORCH's note that it is "sensitive to sample position in a
+way that is not a simple translation" is precisely that.
+
+And the conclusion that follows is stronger than "do not fold": **on the shipped
+path the co-site is redundant.** Its job is to move red and blue from their CFA
+corners to the quad centre. The demosaic already places red and blue at *every*
+output pixel, corners included. Co-siting is a pre-correction for a lattice
+offset that the next stage handles from first principles. It belongs on the
+binned measurement path, where there is no demosaic to do it, and nowhere else.
+
+### 22.6 Revised partition -- 9 sites, the shipped render path
+
+Two rows change from §20 and §21 and both are corrections; two rows are new.
+
+| outcome | n | sites |
+| --- | ---: | --- |
+| PRICED | 3 | alignment gather + CA; **demosaic (was NOT-ON-THIS-PATH -- wrong)**; pyramid |
+| NOT-ON-THIS-PATH | 3 | **chroma co-site (was PRICED/viewable -- wrong)**; 2x2 quad binning; align-solve downsample |
+| NOT-A-RESAMPLE | 2 | `edgeaware::gather_levels`; **re-interleave to mosaic** (data movement, no interpolation) |
+| COULD-NOT-INSTRUMENT | 1 | downstream output scaling, if any exists |
+| **TOTAL** | **9** | |
+
+The COULD-NOT-INSTRUMENT entry is unchanged and still honest: I have not found a
+downstream scaling step and I have not proved there is none.
+
+### 22.7 What I would not claim
+
+The chain in 22.4 composes three separately measured stages; I have not rendered
+a frame end to end and measured it. The demosaic numbers are from synthetic
+tones on a 512 x 512 grid, which is the right instrument for an MTF and the wrong
+one for artefact behaviour on real texture -- the `false` column says artefacts
+exist above red's Nyquist but not what they look like on a bee. And I did not
+measure the merge's own contribution at all; §21.6's question about whether the
+per-tile survey compares against a warped or unwarped reference is still open and
+still cheap, and it is the one I would spend the next hour on.
