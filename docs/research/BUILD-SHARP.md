@@ -4789,3 +4789,171 @@ time. The measured statement is the narrower one -- selection over these frames
 does no better than our merge -- which is enough to answer whether `flowers-cpl`
 counts against the tool, and not enough to explain why it is soft. The 18.5%
 exposure ramp is itself worth routing to whoever owns capture advice.
+
+## s38 -- The artifact question cannot be answered on these renders, and I can prove it
+
+Assignment: take the artifact half of the strehl-vs-comparator question on the
+same-subject pair, while BUILD-RESAMP takes the resolution half. Report whether
+the comparator wins by ringing or by resolving.
+
+**Verdict: NEITHER INSTRUMENT I HOLD CAN ANSWER IT ON THESE RENDERS.** That is
+the deliverable. It is a negative result about measurement, not about the
+renders, and it is load-bearing: it means the artifact half of the question
+should not be attempted this way at all, and the resolution half is the only
+route left standing.
+
+### s38.1 The inputs, and a frame-count mismatch to note first
+
+Same subject `wrapped-text-1`, toner on paper, from BUILD-RESAMP's `h2h24`.
+Stream-copied to my own directory; their tree was not touched.
+
+| arm | file | bytes |
+| --- | --- | ---: |
+| strehl | `wt1-strehl.tif` | 197,798,267 |
+| fork | `wt1-fork.tif` | 362,160,606 |
+
+`wt1-strehl.log` banner: `merge backend : pyramid (--merge)`, **22 frames**,
+`held-out err : NOT MEASURED`, `coverage: scaled to 0.9476 (5.2% of width
+dropped, then upsampled)`, `base band: plain mean across frames`.
+
+The subset directory is named `h2h24` and the strehl arm consumed **22**
+frames, not 24. Flagged, not resolved -- it does not affect the conclusion
+below, because that conclusion is that no comparison should be made.
+
+### s38.2 The shape test, and why I built it
+
+s37.1 established that the paired overshoot detector's sensitivity is a
+function of how step-like a render's edges are: 1.00x on ideal steps, 0.38x on
+the fork's render, 0.08x on ours. Edge sharpness is the disputed quantity, so
+any comparison of overshoot MAGNITUDES between two stackers is confounded at
+the root and no care in running it removes that.
+
+So I built a test whose answer is qualitative rather than quantitative:
+
+> **Does the mean normalised edge profile leave the interval [0, 1]?**
+
+Blur is a convolution with a non-negative kernel and cannot produce a value
+outside the local range of its input. However heavy the blur, the transition
+stays between its own two plateaus. Ringing is the opposite: a kernel with
+negative lobes deposits an extremum BEYOND the plateau. Normalise each profile
+by its own two plateaus and the question needs no calibration constant, no
+per-image sensitivity, and no division by anything.
+
+`experiments/BUILD-SHARP/src/edge_shape.py`. No resampling: the two renders
+have different rasters and registering them would resample one, changing edge
+blur -- the measured quantity. Each is measured at its own edges in its own
+geometry.
+
+### s38.3 Three defects in my own instrument, caught by commissioning
+
+**The null caught an absurdity the plant would have hidden.** First run
+returned excursions of 4.3e11 on the blur-only nulls. Cause: after
+`(p - la) / (lb - la)` a profile already runs 0 to 1 whatever the edge's
+polarity, but I additionally reversed dark-to-bright edges and renormalised by
+`max(q[-1] - q[0], 1e-12)`; for a reversed profile that denominator is about
+-1, the `max` clamped it to 1e-12, and the division exploded. **The plant
+"PASSED" at the same absurd scale.** A plant-only commissioning would have
+banked a broken instrument.
+
+**The excursion was reading back its own reference.** Fixed, the test reported
+overshoot 0.0111 on strehl and 0.0097 on the fork -- a tidy near-tie. But the
+extrema sat at profile indices 0 and 28, which are inside the five-sample
+windows used to ESTIMATE the plateaus. Genuine ringing lands 1-3 samples from
+the transition, never 14. The statistic was measuring the noise bias of its own
+plateau estimator. Restricted to samples outside the self-referential ones,
+both renders read exactly 0.000000.
+
+**The null and the plant were not blurred by the same thing.** Testing whether
+the restriction blinds the test on wide edges, the plant series came out
+non-monotone in blur -- 0.000001 at sigma 1.5 but 0.000222 at sigma 2.5.
+Heavier blur cannot produce more ringing. Cause: the blur-only null used a
+9-tap Gaussian and the plant pipeline a 13-tap one, so the two arms were
+blurred by different amounts. Replaced with a matched pair -- identical
+pipeline, the only difference being the sign of the shift kernel's lobes,
+`linear` [0.5, 0.5] against 6-tap `lanczos-3`.
+
+### s38.4 The matched-pair commissioning, and the finding
+
+| pipeline | NULL (linear, no negative lobes) | PLANT (lanczos, negative lobes) | |
+| --- | ---: | ---: | --- |
+| step, no blur | 0.000000 | **0.063624** | PASS |
+| step, blur 1.5 | 0.000000 | 0.000000 | FAIL |
+| step, blur 2.5 | 0.000000 | 0.000013 | FAIL |
+| step, blur 2.5 + noise | 0.000000 | 0.000000 | FAIL |
+
+The null is exact at every blur level -- the shape argument is sound, and a
+positive-lobe kernel never leaves [0, 1]. But **the plant is detectable only on
+an unblurred step.** Blur absorbs the excursion: the overshoot lobe is smeared
+into the still-rising transition, and the profile then approaches its plateau
+from below without ever exceeding it.
+
+So the calibration-free shape test, built specifically to escape s37.1's
+confound, **has the same confound**. Its sensitivity is once again a function
+of edge blur, which is the quantity in dispute. Different mechanism, identical
+consequence.
+
+### s38.5 The blindness threshold, in units both renders can be measured in
+
+Edge width is the discriminator, and unlike overshoot it is calibration-free:
+the profile is already normalised by its own plateaus, so 10-90% rise distance
+is directly readable on synthetic and real images alike.
+
+| image | 10-90% edge width | shape test |
+| --- | ---: | --- |
+| synthetic step, no blur | **1.89 samples** | SEES ringing, 0.063624 |
+| synthetic step, blur 1.5 | 4.33 samples | BLIND, 0.000000 |
+| synthetic step, blur 2.5 | 6.66 samples | BLIND, 0.000013 |
+| `wt1-strehl.tif` | **13.52 samples** | 0.000000 |
+| `wt1-fork.tif` | **17.86 samples** | 0.000000 |
+
+Both renders are more than 3x beyond the width at which the test demonstrably
+goes blind. **Their 0.000000 readings are not evidence of an absence of
+ringing. They are the instrument refusing to answer, and they would read
+0.000000 whether or not ringing is present.**
+
+Had I stopped at s38.3 I would have reported "neither render rings, on a
+calibration-free test with an exact null" -- and every control would have been
+green.
+
+### s38.6 What I will not claim
+
+**I will not report 13.52 against 17.86 as strehl having sharper edges.** It is
+a cross-image magnitude comparison of the kind s37.1 forbids, and it favours
+us, which is the direction that warrants the most suspicion. It is also
+measured on different populations: 11,185 edges retained on ours against 4,436
+on the fork, from different rejection counts, so the two numbers describe
+different subsets of the same subject. Both widths are additionally inflated by
+averaging edges of random subpixel phase and by neighbouring strokes in text.
+The number is sound for the one purpose it is used for above -- establishing
+that both renders sit far past a blindness threshold measured in the same units
+-- and unsound for comparing the renders to each other.
+
+### s38.7 What this routes
+
+- **The artifact half of the comparator question is not answerable by overshoot
+  amplitude (s37.1, sensitivity confound) nor by profile shape (s38.4,
+  blindness at the relevant edge width).** Both of my instruments are exhausted
+  and both failed in the same direction. I am not going to produce a third and
+  hope.
+- **The resolution half is now the only route.** ISO 12233 derives resolution
+  from the edge-spread function's own frequency content rather than comparing
+  an amplitude to an external reference, so it should not share this confound
+  -- but that is the same "I think it is immune" reasoning that produced two
+  failures above, and BUILD-RESAMP has been asked to check rather than assume.
+- **Frame parity is unconfirmed:** 22 frames on the strehl arm against a
+  directory named for 24. Worth settling before any head-to-head number from
+  this pair is published, whoever produces it.
+
+### s38.8 The rule
+
+> **A qualitative test can carry a quantitative blind spot.** Escaping a
+> sensitivity confound by asking a yes/no question does not escape it if the
+> yes/no answer is only obtainable in one region of the confounding variable's
+> range. Commission across that variable's range, not at one convenient point.
+
+And, from s38.3, the one that cost the least and saved the most:
+
+> **Commission the null before the plant.** A plant that fires proves only that
+> something moved. Both of this section's fatal defects -- a 4.3e11 division
+> blowup and a statistic reading back its own reference -- produced a PASSING
+> plant.
