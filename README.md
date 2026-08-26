@@ -230,11 +230,13 @@ and decode alone is 1.78 s cold, 0.91 s warm. See
 ```
 strehl probe <DIR> [--limit N]     # sensor geometry, levels, ISO, white balance
 strehl stack <DIR> [--out <PATH>]  # THE THESIS: noise-gated estimation
-                   [--gate T...] [--target-n-eff N] [--limit N]
+                   [--merge pyramid|estimator]   # default: pyramid
+                   [--gate T...] [--target-n-eff N] [--limit N]     # estimator only
+                   [--pyramid-gate G] [--pyramid-bands N]           # pyramid only
                    [--srgb] [--demosaic] [--binned]
                    [--exposure <STOPS>] [--auto-exposure]
-                   [--flat-roi X,Y,W,H] [--detail-roi X,Y,W,H]
-                   [--stats] [--stats-placebo] [--confidence-tail Q]
+                   [--flat-roi X,Y,W,H] [--detail-roi X,Y,W,H]      # estimator only
+                   [--stats] [--stats-placebo] [--confidence-tail Q] # estimator only
 strehl argmax-baseline <DIR> --out <PATH>   # the naive argmax, for comparison
                    [--srgb] [--index-map <PATH>] [--flat-roi X,Y,W,H]
                    [--memory-model <MODEL>]
@@ -242,8 +244,14 @@ strehl argmax-baseline <DIR> --out <PATH>   # the naive argmax, for comparison
 
 ### `stack` — the estimation path
 
+**`stack` runs the pyramid merge by default.** Everything in this section
+describes the *estimator*, which is now selected with `--merge estimator`.
+The flags below belong to it and are **refused, not ignored**, if you leave
+them on a pyramid run — the error names the pyramid counterpart, or says
+plainly that there isn't one.
+
 ```console
-$ strehl stack C:\dev\macro\test\109MSDCF --target-n-eff 3 --out merged.tif \
+$ strehl stack C:\dev\macro\test\109MSDCF --merge estimator --target-n-eff 3 --out merged.tif \
       --flat-roi 2272,1344,256,256 --detail-roi <X,Y,W,H>
 ```
 

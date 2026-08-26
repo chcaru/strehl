@@ -2764,7 +2764,7 @@ reason is not what it looks like.
 
 ### The number
 
-`strehl stack <DIR> --gate 2` already prints a `boundary %` column. It is the
+`strehl stack <DIR> --merge estimator --gate 2` already prints a `boundary %` column. It is the
 fraction of output pixels whose elected frame sits at the **first or last rung
 of the bracket** -- the structural signal for *no frame in this stack is in
 focus here*. Measured at `e47cf81`, full resolution, prediction registered
