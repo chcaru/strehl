@@ -98,6 +98,30 @@ my component test returned SEAMS at 137.92x a random null and was **wrong**,
 because the null was drawn from the whole frame while the excursions are confined
 to one region, so region membership scored as shape. The picture caught it.
 
+**Superseded by section 13. This lane is closed: the defect is solved by another
+route.** BUILD-BLEND's Laplacian multi-band merge was run against the owner's
+pre-registered acceptance test on one common mask. **The ring goes 12.47% (pinned
+gallery baseline) to 5.68% (BUILD-BLEND's own control) to 0.37% (blend), against a
+pre-registered bar of 1%** — and it is *absent*, not reduced, because the blend's
+profile no longer turns over between d=1 and d=205 px at all. The negative control
+holds: `coffee-bean` stays at or below 0.33% within 40 px in every arm. **The
+patches are gone too**, judged at 1:1 at the four *worst* places for the blend,
+where the control holds hard-edged flat plateaus cutting across plant material and
+the blend holds resolved trichomes. Section 12's mechanism predicts exactly this:
+the election's error is a **low-frequency** one committed by a **hard per-pixel
+selection**, and a band decomposition stops selecting the low bands per pixel, so
+it removes the mechanism rather than trimming its output. Two corrections against
+myself in 13.4: my do-no-harm estimator reported -23.1% "REAL SOFTENING" and was
+wrong twice, once by selecting on the control's own extremes (**the sign flips on
+all three subjects when the selection is reversed**) and once by using a
+level-dependent metric where the blend legitimately darkens a region **20710 DN to
+1417 DN**. Real costs do survive: `lavendar` loses 12.4% to 25.0% of subject
+contrast with a sign that survives reversal, and the blend reaches into
+BUILD-HALO's veiling term (-19.4% to -15.7%). What survives from this lane is not
+a merge change but the **coverage output** of 12.6: no frame in `flower-bud`'s
+bracket resolves the trichome fringe, so "the artifact is gone" and "the detail is
+there" are different claims and only the first is supported.
+
 ---
 
 ## 1. The picture, first
@@ -1462,3 +1486,229 @@ Pictures, in the order to look at them:
 - `pics/SEAM-where.png` (panel 3 is the finding: the coherent lobed collar)
 - `pics/SEAM-collar.png` (panel 3, and the monotonic roughness ramp)
 - `pics/SEAM-shape.png` (the instrument that was wrong, and the picture that caught it)
+## 13. Re-baselined onto BUILD-BLEND's multi-band merge
+
+The owner stopped this lane mid-investigation: BUILD-BLEND landed a Laplacian
+multi-band merge (`d4b8644`, `8585ee3`, `eb072d5`), it is going in as the default,
+and optimising the election on the path being replaced is discarded work. The
+instruction was to run the pre-registered acceptance test against the **blend**
+arm and report the residual honestly, including "there is not one".
+
+All measurements below are on linear 16-bit TIFFs from `C:\dev\strehl-out\BUILD-BLEND\bm\`.
+No JPEG, no `--srgb`. Absolute DN is reported alongside every ratio.
+
+### 13.1 The ring: the pre-registered target is met
+
+One subject mask, computed once from the pinned gallery arm and borrowed by all
+three, so that the coordinate origin cannot move when the artifact that draws it
+is removed. MEASURED:
+
+| arm | far field | veiling darkening at 0-2 px | ring |
+| --- | --- | --- | --- |
+| pin `1cacb61` (`accept/fb-mean.tiff`, the gallery baseline) | 19032 DN | -7684 DN = -40.4% | d=21 px, +2374 DN = **12.47%** |
+| `bm/flower-bud-alone-cpl-ctrl.tif` | 62170 DN | -12034 DN = -19.4% | d=21 px, +3528 DN = **5.68%** |
+| `bm/flower-bud-alone-cpl-blend.tif` | 61640 DN | -9649 DN = -15.7% | d=245 px, +231 DN = **0.37%** |
+
+**Pre-registered bar: 12.0% -> <= 1%. The blend arm reads 0.37%.**
+
+Read the rows, not the verdict. The control's profile turns over: it falls to
+-39% at the silhouette, rises to a local maximum at d=21-37 px, falls back to a
+trough at d=135 px, then climbs to the far field. That double turnover is the
+ring sitting inside the veil. The blend arm's profile **does not turn over at
+all** between d=1 and d=205: it rises monotonically from -37.55% to -0.00%. The
+d=21 px ring is not reduced, it is **absent**. Its only remaining interior peak is
++231 DN at d=245 px, which is far-field wobble of the same character and
+magnitude as `coffee-bean`'s clean 0.23% at d=450 px.
+
+**Attribution, which is not what the side-by-sides say.** The control arm is not
+the gallery baseline. On the common mask it already reads **5.68%** against the
+pinned binary's **12.47%**, so something that landed between `1cacb61` and
+BUILD-BLEND's control build - most plausibly BUILD-HALO's veiling work - had
+already removed a bit over half the ring in relative terms before the blend ran.
+The honest statement is **5.68% -> 0.37% is the blend**, and 12.47% -> 5.68% is
+somebody else's. The blend's step is the larger and the decisive one, but it is
+not 12.47% -> 0.37%.
+
+A caveat against the DN column, in the spirit of tonight's rule. The pin and
+BUILD-BLEND's build use different output scaling: far field 19032 DN against
+62170 DN, a factor of 3.27. Absolute DN is therefore **not** comparable across
+those two rows and the ratio is the safer statistic for that one comparison.
+Within the ctrl-to-blend pair, which shares a binary and agrees on far field to
+0.85%, DN is directly comparable and the ring falls **+3528 DN -> +231 DN**.
+
+### 13.2 The negative control holds, at the distance that matters
+
+`coffee-bean` is the free placebo: no ring to remove, so any arm that gives it one
+is doing something other than what it claims. MEASURED, mask borrowed from the
+pinned control:
+
+| arm | darkening | peaks within 40 px of the silhouette | headline peak |
+| --- | --- | --- | --- |
+| pin `cb-shipped.tiff` | -39.4% | 0.02% at d=9, 0.21% at d=25 | 1.92% at d=155 |
+| `flip/coffee-bean--pyramid.tiff` | -37.5% | 0.33% at d=37 | 1.44% at d=312 |
+| `flip/coffee-bean--estimator.tiff` | -39.6% | 0.01% at d=9, 0.19% at d=25 | 2.68% at d=165 |
+
+**At the distance where `flower-bud`'s ring lives (d <= 40 px) every arm is quiet,
+at or below 0.33%.** No arm manufactures a near-silhouette ring on a smooth
+convex subject. The larger far-field peaks at d=155-512 px are present in the
+**pinned baseline too**, they move between arms, and section 11 already recorded
+why they are untrustworthy: this mask covers 59.55% of the frame in 1994
+components, so "distance from the silhouette" is poorly defined at large d.
+
+**Incomplete, and I asked rather than guessed.** There is no `coffee-bean` control
+from BUILD-BLEND's own binary on disk, so the rows above compare **across
+binaries**, which section 13.1 has just shown is not a small effect. I have asked
+BUILD-BLEND for a blend-off render from the same binary and for the semantics of
+`--pyramid` versus `--estimator`; the filenames do not say and I did not assume.
+The two differ substantially from each other (1.44% against 2.68%, darkening
+-37.5% against -39.6%), so they are two blend variants rather than an arm and its
+control, and `pyramid` is the better behaved of the two.
+
+### 13.3 My assignment, looked at: the patches are gone
+
+The ring is a scalar. My actual commission was the hard-edged wrong-depth patches,
+and those have to be judged by eye.
+
+`pics/BLEND-interior.png` shows the four largest **local gradient decreases**
+inside `flower-bud`'s subject, eroded 60 px clear of the silhouette so the collar
+cannot contribute. These are selected as the places where the blend loses the most
+edge energy: the **least favourable** places to judge it, chosen adversarially.
+
+In all four, the control holds the artifact. Column 3 is the textbook case: a
+flat, white, hard-edged scalloped plateau with a razor boundary cutting straight
+across plant material. Column 1 has a vertical hard boundary against a flat grey
+plateau; column 4 has flat white lobes with hard edges; column 2 is a broad pale
+wash. **In all four the blend holds plant** - dark tissue with resolved hairs and
+trichomes and no seam anywhere.
+
+`pics/BLEND-fb.png` shows the same thing at full frame and at 1:1: the control is
+a cut-out sticker on a blotchy grey backdrop, the blend is a clean natural
+silhouette on an even sweep.
+
+**The defect this lane was commissioned to fix is not present in the blend arm.**
+
+### 13.4 An estimator of mine that failed, and the control that caught it
+
+The first do-no-harm pass reported **-19.1%** gradient energy on `flower-bud` and
+**-23.1%** in the deep subject interior, and printed `REAL SOFTENING`. That was
+wrong twice over, and both faults are mine.
+
+**Fault one: selection bias.** The pixels were the top decile of the **control's
+own** gradient. Selecting on one arm's extremes and then comparing arms is
+regression to the mean: any change at all, including a pure denoise, lowers the
+other arm in that set. `biascheck.py` runs the selection **both ways round**.
+MEASURED:
+
+| subject | select on ctrl | select on blend | symmetric | unselected |
+| --- | --- | --- | --- | --- |
+| `flower-bud` | -23.05% | **+5.00%** | -14.76% | -16.05% |
+| `lavendar` | -10.17% | **+4.60%** | -3.97% | +0.17% |
+| `couch-fibers` | -2.71% | **+8.37%** | +2.31% | +2.31% |
+
+**The sign flips on all three.** The forward number was an artifact of selection.
+This is the same shape as the +0.845 sigma upper-envelope bias that impeached a
+headline number elsewhere on this project tonight, and it is worth stating as a
+rule: *an A/B on a selected subset must be run with the selection taken from each
+arm in turn, and a sign that does not survive reversal is not a finding.*
+
+**Fault two: the metric was measuring brightness.** Gradient magnitude in DN
+scales with level. At the four crops in section 13.3 the level collapses because a
+spurious bright wash is being removed: **20710 DN -> 1417 DN** at one, **17009 DN
+-> 3952 DN** at another. A region 14.6x darker cannot carry the same absolute edge
+energy however sharp it is. The picture and the number disagreed, and the picture
+was right.
+
+### 13.5 The cost, stated with its uncertainty
+
+Switching to level-invariant local Weber contrast (`|grad|` over the local mean
+level) removes fault two. MEASURED on the deep interior:
+
+| subject | select on ctrl | select on blend | symmetric | unselected | reversal |
+| --- | --- | --- | --- | --- | --- |
+| `flower-bud` | -33.35% | +75.75% | **+20.93%** | **-7.20%** | sign flips |
+| `lavendar` | -32.00% | -12.00% | **-24.97%** | **-12.39%** | **sign survives** |
+| `couch-fibers` | -8.38% | +1.15% | **-4.07%** | **-1.51%** | sign flips |
+
+I am not going to pick the flattering number. What this table honestly supports:
+
+- **`couch-fibers`, the do-no-harm subject, passes.** Absolute gradient +2.31% by
+  two independent unbiased estimators that agree exactly; Weber contrast -1.5% to
+  -4.1% with a sign that does not survive reversal. Dense fine structure is not
+  wrecked. This was the guard that mattered most and it holds.
+- **`lavendar` shows a real contrast reduction**, -12.4% to -25.0%, and it is the
+  one number here that **survives its reversal control**. That is a genuine cost
+  of band blending and it should be treated as one.
+- **`flower-bud` is unmeasurable by this instrument.** Its estimators disagree in
+  sign (+20.93% against -7.20%) because its deep interior contains both the
+  artifact being removed and the plant being preserved, and no aggregate over that
+  mixture means anything. The pictures in section 13.3 are the evidence for
+  `flower-bud`, not this row.
+
+Absolute levels, which no ratio shows (`flower-bud`, same binary):
+
+| region | ctrl | blend | delta |
+| --- | --- | --- | --- |
+| deep interior | 13137 DN | 13723 DN | **+586 DN = +4.46%** |
+| collar 0-40 px | 54225 DN | 59384 DN | **+5159 DN = +9.51%** |
+| far backdrop > 400 px | 61964 DN | 61431 DN | **-533 DN = -0.86%** |
+
+Two of those are worth another lane's attention. The blend **reaches into the
+veiling term**: darkening -12034 DN -> -9649 DN, that is -19.4% -> -15.7%, on the
+same binary. That quantity is BUILD-HALO's and is specified. And the blend
+**darkens the whole far background by -533 DN**, which is small, barely moves any
+ratio, and is exactly the kind of additive shift that is invisible in both an
+error and a ratio.
+
+### 13.6 Does this lane still have a defect to fix? No, with one thing surviving
+
+**No.** The hard-edged wrong-depth patches are absent from the blend arm at 1:1 on
+linear data at the four worst places I could find, and the ring is at 0.37%
+against a pre-registered bar of 1%. Close the lane.
+
+Section 12's mechanism explains why the cure worked, and it was written before
+this test: the election's error in the collar is a **low-frequency** error - it
+ranks veil steepness, which is a smooth ramp - committed by a **hard per-pixel
+selection**. A Laplacian decomposition stops selecting the low bands per pixel and
+starts blending them, which removes the mechanism rather than trimming its output.
+That is why the ring nulls to 0.37% instead of merely shrinking.
+
+**What survives, and it is not an artifact fix.** Section 11.4 MEASURED that **no
+frame in `flower-bud`'s 205-frame bracket resolves the trichome fringe at all**:
+peak gradient flat to 1.32x across the bracket while brightness climbs
+monotonically 60.5% -> 103.5%. Section 9 MEASURED honest coverage gaps at 2 of 3
+bee ROIs, texture flat to 1.13x and 1.25x across 299 frames. Where the data has no
+answer, a blend produces something smooth and plausible instead of something
+scalloped and wrong. That is a large improvement and not a recovery.
+
+**"The artifact is gone" and "the detail is there" are different claims, and only
+the first is supported.** The recommendation that survives this re-baseline is
+therefore not a merge change at all: it is the **coverage output** from section
+12.6 - an abstention plane that records where the bracket had no answer, so a
+plausible reconstruction is never mistaken for a resolved one. That is cheap, it
+is orthogonal to the merge path, and it is the honest half of section 12's
+specification.
+
+### 13.7 What section 13 did not verify
+
+- **The `coffee-bean` negative control is cross-binary.** No same-binary control
+  exists on disk; requested from BUILD-BLEND, not yet received. The near-field
+  conclusion (<= 0.33% within 40 px in all arms) is robust to this because it
+  holds in every arm including the baseline, but the far-field rows are not.
+- **`lavendar`'s -12% to -25% contrast reduction was not looked at**, only
+  measured. It survives its reversal control, which is more than any other cost
+  number here, and it deserves the same 1:1 adversarial crops that section 13.3
+  gave `flower-bud`. I ran out of lane before doing it.
+- No claim is made about `bee-1-cpl` under the blend; not rendered.
+- The section 12.6 abstention specification remains **unimplemented and
+  unrendered**. Every target in it is still a target.
+- The attribution split in 13.1 identifies BUILD-HALO's veiling work as the most
+  plausible cause of 12.47% -> 5.68% by elimination and timing, not by bisection.
+  It is ARGUED. Bisecting it would need a render per candidate SHA.
+
+Pictures, in the order to look at them:
+
+- `pics/BLEND-interior.png` - the four adversarially chosen crops; the control
+  holds hard-edged plateaus, the blend holds plant
+- `pics/BLEND-fb.png` - full frame and 1:1, cut-out sticker against clean silhouette
+- `pics/BLEND-lavendar.png`
+- `pics/BLEND-residual.png`
