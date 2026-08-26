@@ -29,6 +29,33 @@ DETAIL = pathlib.Path(r"C:\dev\strehl-out\ORCH-DETAIL\detail")
 PRESENT = pathlib.Path(r"C:\dev\strehl-out\BUILD-RENDER-present")
 OUT = pathlib.Path(r"C:\dev\strehl-out\VIEW")
 
+# Side-by-side merge-vs-selection crops produced by BUILD-THESIS. These are the
+# only artifacts in this gallery that show what the tool is FOR rather than what
+# it produced, so they lead. Each is one PNG, merge on the left, per-pixel
+# argmax selection on the right, identical stretch, both arms from one binary.
+THESIS_CROPS = pathlib.Path(r"C:\dev\strehl-out\BUILD-THESIS\crops")
+
+# (subject, tile, what to look at). The planar counter-example is included
+# deliberately: a comparison that only shows wins is advertising.
+HEAD_TO_HEAD = [
+    ("bee-3-cpl", "tile0",
+     "Clean white ground on the left. On the right the same ground carries grey "
+     "blotching and faint ghost-hairs \u2014 hair structure from other focus "
+     "frames elected into background pixels. The hairs themselves are equally "
+     "sharp in both."),
+    ("flowers-cpl", "tile0",
+     "Smooth continuous defocus on the left, which is what out-of-focus ground "
+     "physically is. On the right it has shattered into hard-edged flat plateaus. "
+     "There is no real structure here in either image; the right-hand one "
+     "invented it, and a sharpness metric scores it as detail."),
+    ("flat-on-ruler-cpl", "tile0",
+     "The counter-example, and the reason to trust the other two. A flat planar "
+     "target is in focus somewhere in some frame for every pixel, so selection "
+     "is a well-posed problem and the two arms are indistinguishable "
+     "(kurtosis ratio 1.01x). This is also the one subject where selection "
+     "measured SHARPER than the merge."),
+]
+
 # Verdicts reached by looking at true 1:1 tiles, recorded in ORCH-veiling.md
 # sections 58 and 59. Anything not listed here has not been individually judged
 # at 1:1 and is labelled as such rather than given an implied pass.
@@ -154,6 +181,16 @@ main { padding:26px 40px 90px; }
         border-left:3px solid #4a7fd0; padding:14px 18px; margin:20px 0 30px;
         border-radius:4px; font-size:14px; }
 .note b { color:#fff; }
+.note.lead { border-color:#3a4a63; background:#161c26; max-width:1180px; }
+.vsgrid { display:grid; gap:22px; max-width:1180px; margin:0 auto 34px;
+          padding:0 18px; }
+figure.vs { margin:0; background:#121620; border:1px solid #262c36;
+            border-radius:8px; overflow:hidden; }
+figure.vs img { display:block; width:100%; height:auto; }
+figure.vs figcaption { font-size:12px; line-height:1.5; color:#8b939e;
+                       padding:10px 14px 13px; }
+.vsl { color:#7fd18b; font-weight:600; }
+.vsr { color:#e08f7f; font-weight:600; }
 .card { border:1px solid #23272e; border-radius:6px; margin:0 0 26px;
         overflow:hidden; background:#12151a; }
 .card > .head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
@@ -275,6 +312,61 @@ def classify(stem):
     )
 
 
+def build_head_to_head(assets: pathlib.Path) -> str:
+    """The merge against per-pixel selection, same frames, same binary.
+
+    Returns "" if the crops are absent, so the gallery still builds -- but says
+    so loudly in that case rather than silently dropping the section, because a
+    missing section and an unpersuasive one look identical to a reader.
+    """
+    figs, absent = [], []
+    for stem, tile, caption in HEAD_TO_HEAD:
+        src = (THESIS_CROPS / stem /
+               f"{tile}-SIDEBYSIDE-merge-left-argmax-right.png")
+        if not src.exists():
+            absent.append(f"{stem}/{tile}")
+            continue
+        dst = assets / f"vs--{stem}--{tile}.png"
+        if not dst.exists():
+            shutil.copy2(src, dst)
+        figs.append(
+            f'<figure class="vs"><img loading="lazy" src="assets/{dst.name}">'
+            f'<figcaption><b>{html.escape(stem)}</b> &mdash; '
+            f'<span class="vsl">left: strehl merge</span> &middot; '
+            f'<span class="vsr">right: per-pixel selection</span><br>'
+            f"{html.escape(caption)}</figcaption></figure>")
+
+    if not figs:
+        return ('<div class="note"><b>Head-to-head crops unavailable.</b> '
+                'Expected under ' + html.escape(str(THESIS_CROPS)) +
+                ' &mdash; none of ' + html.escape(", ".join(absent)) +
+                ' were found, so the comparison below is missing rather than '
+                'unfavourable.</div>')
+
+    warn = ""
+    if absent:
+        warn = ('<br><br><b>Note:</b> ' + html.escape(", ".join(absent)) +
+                " could not be found and are omitted.")
+
+    return f"""<div class="note lead">
+<b>What this tool does that a conventional stacker does not.</b> Every crop in
+this section is one image: <b>strehl's merge on the left, ordinary per-pixel
+&ldquo;sharpest wins&rdquo; selection on the right</b>. Same source frames, same
+binary, same stretch, both arms rendered from a single build so nothing but the
+merge differs.
+<br><br>
+Selection has no correct value to choose in genuinely out-of-focus ground &mdash;
+<i>no frame contains one</i> &mdash; so neighbouring pixels elect different
+source frames and the region breaks into flat plateaus with hard edges. Measured
+as gradient kurtosis in low-detail regions, selection runs
+<b>2.79x</b> higher than the merge on <code>bee-3-cpl</code> and
+<b>1.01x</b> &mdash; identical &mdash; on a flat planar target where selection is
+well posed. The exception is the evidence: this is a real mechanism with a
+predictable boundary, not a general claim of superiority.{warn}
+</div>
+<div class="vsgrid">{''.join(figs)}</div>"""
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(OUT))
@@ -359,6 +451,7 @@ def main() -> int:
 shipping pyramid merge &middot; every crop below is <b>true 1:1</b></div>
 </header>
 <main>
+{build_head_to_head(assets)}
 <div class="note">
 <b>How to read this.</b> The right-hand image in each pair is a true 1:1 crop:
 one image pixel per screen pixel, taken from the most detailed region of the
