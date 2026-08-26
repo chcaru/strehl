@@ -7748,3 +7748,103 @@ taken unilaterally: the measurement path's byte-frozen output is load-bearing
 for the entire corpus, and any change to what `strehl stack` writes by default
 must make the old path **missing rather than different**, so that a harness
 still expecting it fails loudly instead of silently measuring a tone curve.
+
+## 65. The halo, verified by someone who did not fix it [MEASURED]
+
+The owner's sharpest complaint about this project was not about noise or
+sharpness. It was: *"you must tackle the halo situation. it's horrendous as is
+-- the stacked photos are entirely unusable with them."*
+
+The shipped help text claims the problem is solved, and states a number:
+
+> Measured on `flower-bud-alone-cpl` through one binary with both arms
+> camera-linear and one mask, the estimator's backdrop sits 4739 DN below its
+> own far field across the 80-200 px aura zone; the pyramid sits 166 DN below.
+
+That is the implementing agent's measurement of its own fix. The standing rule
+is that an author does not verify their own work, so this is a separately
+written instrument run on separately produced renders, built so that it could
+fail to reproduce the claim.
+
+### 65.1 The first instrument was wrong, and its own control said so
+
+The first version controlled for lens vignetting by planting a fake disc of
+equal area at the background pixel furthest from the subject. That pixel is the
+frame **corner**, so the fake disc's far field is a different population from
+the real one -- 13,891 DN against 18,696 DN, because from the corner the "far
+field" contains the dark subject itself. The control read **+5,908 DN** where a
+sound one reads about zero, and the control-subtracted verdict it produced was
+meaningless. It is withdrawn.
+
+Recorded because the control is the only reason that verdict did not ship. An
+instrument whose control reads +5,908 DN is not a strict instrument; it is a
+broken one that happened to be caught.
+
+### 65.2 The corrected design needs no planted disc
+
+Both arms come from ONE binary, each at its OWN default -- `--merge estimator`
+with no `--gate`, `--merge pyramid` with no `--pyramid-gate` -- which is also
+the before/after a user experienced when the default flipped. Both are
+camera-linear default output; never `--srgb`.
+
+Both are measured through ONE shared mask and ONE shared distance transform,
+built from the MEAN of the two arms so it cannot be drawn to favour either.
+Therefore every geometric confound -- vignetting, illumination falloff, mask
+placement, band population -- is identical in the two arms and **cancels exactly
+in their difference.** The primary statistic is the paired difference per
+distance band, and it carries its own control: an aura is local, so the
+difference must decay to zero far from the subject. Vignetting does not decay
+with distance from the subject. A mask artefact does not. An aura does.
+
+| band (px) | estimator | pyramid | **difference** |
+|---|---|---|---|
+| 0-20 | -15240.5 | -15476.9 | +236.3 |
+| 20-40 | **-3168.0** | **-9.7** | **-3158.3** |
+| 40-80 | **-3014.2** | **+485.9** | **-3500.1** |
+| 80-200 | -428.7 | +645.8 | -1074.5 |
+| 200-400 | +412.2 | +487.3 | -75.1 |
+| **400-800** | +347.7 | +350.0 | **-2.3** |
+
+**The far-field difference is -2.3 DN.** The built-in control passes: the
+disturbance is local, by a ratio of **1497x** between the worst near band and
+the far field. The estimator depresses the background by about 3,000-3,500 DN
+in the 20-80 px annulus around the subject; the pyramid, in the same annulus
+through the same mask, reads -9.7 to +486 DN.
+
+A second control mirrored the distance transform horizontally, preserving every
+radial property of the lens while destroying the correspondence between mask and
+subject. It does **not** null cleanly -- it reads -508 to -740 DN in the near
+bands -- and the honest reason is that this subject occupies 21.5% of the frame
+and is roughly centred, so its mirror still substantially overlaps it. The
+mirror is therefore a floor rather than a null. **The aligned signal is 4.7x
+that floor**, and both decay to about zero at 400-800 px.
+
+### 65.3 And then the picture, because a profile is not a picture of a halo
+
+Both arms cropped at the same silhouette edge, through one identical linear
+stretch computed from the pooled range so that neither arm is flattered.
+
+The estimator shows a bright, blobby, **faceted white rim** tracing the
+silhouette -- the "cut-out sticker" artefact, plateaus and all. It is
+immediately obvious and it is disfiguring; it is what the owner saw, and
+"entirely unusable" is a fair description of it.
+
+The pyramid, same subject, same binary, same crop, same stretch: **no rim.**
+The trichomes along the bud's edge are individually resolved against a smooth
+background that simply continues to the frame edge.
+
+### 65.4 Verdict
+
+The claim is **reproduced in sign, in structure and in order of magnitude** by
+an independently written instrument on independently produced renders, and
+confirmed visually. The magnitudes differ from the help text's (-3,500 against
+-4,739; the annulus and the mask differ, and this render is on the binned grid)
+but the finding does not depend on them.
+
+**The halo is fixed, and the fix is not the author's word for it.**
+
+What this does not say: it is one subject, chosen because it is the one the
+claim names. Section 63's discipline applies -- this is a measurement of a
+configuration, and the configuration is `--merge pyramid` at its default gate,
+which is what ships. That much, at least, is now the product rather than a
+product.
