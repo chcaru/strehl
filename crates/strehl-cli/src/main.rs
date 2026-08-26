@@ -717,10 +717,12 @@ fn main() -> Result<()> {
             resampler,
         } => {
             // The lateral-CA profile is selected from the process environment
-            // by `strehl_core::optics::active_profile`, which the merge and the
-            // aligner both read. Publishing the flag into the environment here
-            // keeps that single source of truth and takes no colour decision
-            // inside the merge.
+            // by `strehl_core::optics::profile_for_capture_env`, which the
+            // aligner reads per frame and which the status line resolves the
+            // same way. Publishing the flag into the environment here keeps
+            // that single source of truth and takes no colour decision inside
+            // the merge. An absent flag is not "off": it means the gear guard
+            // decides, which is what makes the correction default-on.
             //
             // SAFETY: `set_var` requires that no other thread is touching the
             // environment concurrently. This is the CLI entry point: argument

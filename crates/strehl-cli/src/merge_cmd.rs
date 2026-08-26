@@ -3760,6 +3760,54 @@ fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
     Ok(by_memory.min(frames.max(1)))
 }
 
+/// The `lateral CA` prologue line, reporting the **resolved decision** rather
+/// than the switch.
+///
+/// Those used to be the same thing. They stopped being so when the correction
+/// was defaulted on: [`profile_for_capture_env`] returns a profile when the
+/// operator is silent and the gear matches, and returns `None` for `off` --
+/// which is non-empty and not `"0"`, so the previous check on the raw variable
+/// printed `CORRECTING` for a render that was not correcting, and `off` for one
+/// that was. **Wrong in both directions, on the one switch the default flip
+/// makes load-bearing.** Found by V-CA, who also noted that the recommendation
+/// to flip the default had cited this very line as evidence -- it happened to
+/// be true there only because the operator had set the variable explicitly.
+///
+/// Resolved through exactly the call the render makes, from the same first
+/// frame, so the line cannot drift from the behaviour it describes without the
+/// render drifting too. `optics.rs` calls a silent disagreement between switch
+/// and behaviour "the exact failure mode this whole milestone is trying to
+/// escape"; this line was an instance of it.
+///
+/// Shared by both merge prologues on purpose. The estimator -- the default path
+/// -- printed no CA line at all, so on the backend most renders actually use, a
+/// correction that is now always on was reported nowhere. Two copies of this
+/// logic would be free to disagree; one cannot.
+fn ca_status_line(first_frame: &Path) -> String {
+    let ident = strehl_raw::identity(first_frame);
+    let set = std::env::var(strehl_core::optics::CA_ENV).ok();
+    let asked = set.as_deref().filter(|k| !k.trim().is_empty());
+    match strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3) {
+        Ok(Some(p)) => match asked {
+            Some(k) => format!("CORRECTING, profile {:?} (operator asked for {k:?})", p.key),
+            None => format!("CORRECTING, profile {:?} (gear matched; default on)", p.key),
+        },
+        Ok(None) => match asked {
+            Some(k) => format!("off (operator asked for {k:?})"),
+            None => format!(
+                "off (no profile for body {:?} / lens {:?})",
+                ident.model.as_deref().unwrap_or("UNKNOWN"),
+                ident.lens_type3
+            ),
+        },
+        // Unreachable in practice -- an unparseable key fails argument handling
+        // long before a render starts -- but stated as `off` because that is
+        // what the render would do, and this line's whole purpose is to not
+        // guess.
+        Err(e) => format!("off (unusable setting: {e})"),
+    }
+}
+
 /// `strehl stack --merge pyramid`: the Laplacian multi-band merge, on the
 /// shipped path.
 ///
