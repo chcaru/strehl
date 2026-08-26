@@ -1420,6 +1420,76 @@ binary to report its own peak via `GetProcessMemoryInfo` before exit.
 
 ---
 
+## 17. Where the tone rendering puts each subject, and one number that was stale
+
+ORCH profiled the library and reported `coffee-bubbles` at median luma 0.016
+with 63.9% of pixels below 0.02, calling it "independent confirmation at full
+scale" of the black-point defect V-TONE found on a crop.
+
+It reproduces exactly — **on a file written 74 minutes before the fix**.
+
+| `coffee-bubbles` | median | <0.02 | zeroG | zeroB |
+|---|---|---|---|---|
+| `ORCH-tone\...-view.png`, 13:18 (**pre-fix**) | **0.0164** | **64.60%** | 56.17% | 82.89% |
+| `gallery\...jpg`, 16:43 (**post-fix**) | 0.0313 | **0.60%** | 0.11% | 13.47% |
+
+The chromaticity fix (`1cacb61`, 14:32) cut the crushed fraction **108×** and
+the dead-green fraction **511×**. ORCH's other figures (`foam` 0.105 vs my
+0.102, `fern` 0.875 vs 0.872, `flower-bud-alone` 0.935 vs 0.939) match the
+current gallery, so a single stale file was mixed into an otherwise current
+set — the same provenance failure §16 was written about, recurring in an
+analysis directory that has no stamping either. It is not a lapse of care; it
+is what happens to any directory of images that does not carry its own origin.
+
+### `scripts/tone_profile.py`
+
+Built as asked: median, p1/p99/p99.9, upper span and crushed fraction for every
+JPEG in a directory, sorted by median so both tails are visible at a glance. It
+**reports and never gates** (always exits 0) — a harness that fails the build on
+a legitimately bright subject gets switched off, and then it protects nothing.
+
+Live results across 26 subjects: 25 unflagged, one `WASHED`.
+
+### The one flag is a false positive, and the reason matters
+
+`flower-bud-alone-cpl`: median 0.939, upper span 0.040. My own tool flagged it
+independently of ORCH, which was mildly convincing. **Then I looked at the
+picture, and the picture disagrees.** The bud has near-black bract tips,
+saturated greens and crisp trichomes — full tonal range where the subject is.
+The compressed upper half is a white sweep, and a smooth white sweep occupying
+a narrow band near white is what a white sweep *is*.
+
+What actually reads wrong at viewing scale is two other things:
+
+| measurement on the viewing render | value |
+|---|---|
+| backdrop, three corners | 0.9625 / 0.9583 / **0.9123** |
+| dark veil outside the silhouette | ~0.10 display, over ~50 px |
+
+The corner spread is **vignetting, not tone**: 0.05 of display range across a
+plain white field, which is exactly the "dirty, uneven, chalky" impression, and
+no black/white placement can fix an error that varies across the frame. The
+outstanding **flat-field campaign is the fix for this**, and this is a concrete
+reason to raise its priority — it cleans the backdrop without touching the
+curve.
+
+### Why I did not raise the white point, which would have "fixed" it
+
+Lifting the sweep to clean white would remove the chalky look in one line. It
+would also compress the rim into the same few percent as the backdrop and make
+BUILD-HALO's defect substantially harder to see.
+
+ORCH measured the tone curve amplifying the rim ~4× (+984 DN linear at d=6
+against +3748 DN at d=10 in display), warned that shoulder shape trades
+directly against halo visibility on bright backdrops, and said explicitly *"I am
+not asking you to hide it."* Raising the white point on a white-backdrop subject
+is precisely that operation. **The cosmetic fix for the wash and the concealment
+of the halo are the same edit**, so the tone curve stays where it is until the
+rim is fixed in the merge. Noted here so that nobody later reads "washed" in a
+report and helpfully corrects it.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
