@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -194,6 +195,133 @@ def _orch_best(sub: str) -> dict | None:
             "votes": bool(min(msnr, fsnr) >= 4.0)}
 
 
+def noise_phrase(nr: float | None) -> str:
+    """Render a noise ratio into words, deriving the WORD from the NUMBER.
+
+    `nr` is frame_noise / merge_noise (`compare.py:131`, stated at
+    `noisesite.py:2`), so **nr > 1 means the merge is cleaner** and nr < 1 means
+    the merge is noisier.
+
+    This is the only place noise is turned into English, because a sentence
+    written *alongside* a number drifts from it. The shipped v1 hard-coded the
+    word "less" and rendered nr = 0.88 as "0.88x less pixel noise" -- asserting
+    an advantage where the measurement records a disadvantage, on 9 of 12 GOOD
+    rows, in an artifact a user reads. It survived review because a factor below
+    1 attached to "less" still skims as a gain. Two rules follow, and both are
+    enforced by `audit_noise_sentence` rather than by care:
+
+      1. the comparative is chosen by the number, never fixed in the format string
+      2. the magnitude quoted beside a comparative is always >= 1, because a
+         factor below 1 cannot modify "less" or "more" in English
+    """
+    if nr is None:
+        return ""
+    if nr > 1.0:
+        return (f" while carrying {nr:.2f}x less pixel noise than the best "
+                f"source frame")
+    if nr < 1.0:
+        return (f" while carrying {1.0 / nr:.2f}x more pixel noise than the "
+                f"best source frame")
+    return " with the same pixel noise as the best source frame"
+
+
+# Comparative -> the direction of `nr` that alone justifies it.
+_COMPARATIVES = {"less": "gt", "cleaner": "gt", "more": "lt", "noisier": "lt"}
+
+
+def audit_noise_sentence(text: str, nr: float | None) -> list[str]:
+    """Violations where a rendered noise claim disagrees with its own number.
+
+    Returns a list so a caller can gate the whole corpus at once. Checks both
+    failure modes of the shipped defect: a comparative pointing the wrong way,
+    and a sub-unit magnitude attached to a comparative at all.
+    """
+    if nr is None or not text:
+        return []
+    bad = []
+    words = [w for w in _COMPARATIVES if re.search(rf"\b{w}\b", text)]
+    for w in words:
+        want = _COMPARATIVES[w]
+        if want == "gt" and not nr > 1.0:
+            bad.append(f"says {w!r} but noise ratio is {nr} (merge is noisier)")
+        if want == "lt" and not nr < 1.0:
+            bad.append(f"says {w!r} but noise ratio is {nr} (merge is cleaner)")
+    if words:
+        for mag in re.findall(r"(\d+(?:\.\d+)?)x", text):
+            if float(mag) < 1.0:
+                bad.append(f"quotes {mag}x beside a comparative; a factor "
+                           f"below 1 cannot modify {words[0]!r}")
+    return bad
+
+
+def merge_limited_phrase(worst_site: str, worst_blur: float, ws: dict,
+                         floor_px: float) -> str:
+    """The MERGE-LIMITED sentence, quoting the site it names.
+
+    Kept separate so it can be commissioned. The corpus currently holds ZERO
+    MERGE-LIMITED rows, so this branch never executes on real data -- which is
+    exactly why it previously shipped quoting `edge_best`/`frame_best`, maxima
+    taken over EVERY usable site, in a sentence that names one specific site. A
+    reader checking the named crop would find numbers from a different one.
+    """
+    m = ws.get("merge_dnpx", float("nan"))
+    f = ws.get("frame_corr_dnpx", ws.get("frame_dnpx", float("nan")))
+    return (f"merge is {worst_blur:.2f} px-equivalent softer than the best "
+            f"source frame at {worst_site} ({m:.0f} vs {f:.0f} DN/px at that "
+            f"site, ratio {ws.get('ratio', float('nan')):.3f}); instrument "
+            f"floor is {floor_px} px")
+
+
+def _legacy_noise_phrase(nr: float) -> str:
+    """THE SHIPPED DEFECT, retained solely as a plant for the auditor.
+
+    Never called in anger. If `audit_noise_sentence` stops flagging this, the
+    guard has regressed and the bug can ship again.
+    """
+    return f" while carrying {nr}x less pixel noise"
+
+
+def commission_wording() -> None:
+    """Plant the defect the auditor must catch, and the null it must pass."""
+    # PLANT: the shipped form at the real corpus value. Must be caught twice --
+    # once for direction, once for the sub-unit magnitude.
+    v = audit_noise_sentence(_legacy_noise_phrase(0.88), 0.88)
+    assert len(v) >= 2, f"auditor missed the shipped defect at nr=0.88: {v}"
+    # PLANT: direction alone, with a legal magnitude.
+    v = audit_noise_sentence(" while carrying 1.14x less pixel noise", 0.88)
+    assert v, "auditor missed an inverted comparative at nr=0.88"
+    # NULL: the corrected renderer must be silent at BOTH branches.
+    for nr in (0.88, 1.47, 1.0):
+        v = audit_noise_sentence(noise_phrase(nr), nr)
+        assert not v, f"auditor fired on the corrected form at nr={nr}: {v}"
+    # The two branches must actually differ in word, not merely in number.
+    assert "more pixel noise" in noise_phrase(0.88), noise_phrase(0.88)
+    assert "less pixel noise" in noise_phrase(1.47), noise_phrase(1.47)
+    # And the magnitude must be reciprocated, not reprinted.
+    assert "1.14x" in noise_phrase(0.88), noise_phrase(0.88)
+
+    # MERGE-LIMITED sentence: it must quote the NAMED site, not a corpus max.
+    # This branch has no live row (0 MERGE-LIMITED in the corpus), so without a
+    # plant it would ship unexecuted -- which is how it acquired the defect.
+    named = {"merge_dnpx": 900.0, "frame_corr_dnpx": 1500.0, "ratio": 0.600}
+    other = {"merge_dnpx": 9999.0, "frame_corr_dnpx": 8888.0, "ratio": 1.125}
+    s = merge_limited_phrase("DETAIL", 1.23, named, 0.35)
+    assert "900 vs 1500" in s, s
+    assert "0.600" in s, s
+    assert "9999" not in s and "8888" not in s, \
+        f"MERGE-LIMITED sentence leaked a non-named site's numbers: {s}"
+    assert "DETAIL" in s, s
+    # The plant that proves the assertion above can fail: feeding the OTHER
+    # site's numbers must change the sentence.
+    assert merge_limited_phrase("DETAIL", 1.23, other, 0.35) != s
+
+    print("wording commissioning OK  (shipped defect caught on 2 counts; "
+          "inverted comparative caught;\n                          corrected "
+          "form silent at nr = 0.88 / 1.47 / 1.00; branches differ in word;\n"
+          "                          MERGE-LIMITED quotes its named site, not "
+          "a corpus maximum)")
+
+
 def classify(sub: str, ev: dict) -> dict:
     """Return a verdict dict.  Never raises; missing evidence -> UNRESOLVED."""
     r: dict = {"subject": sub, "why": [], "remedy": "", "evidence": {}}
@@ -284,6 +412,17 @@ def classify(sub: str, ev: dict) -> dict:
     # 109MSDCF's stroke edges -- show more resolved detail in the merge, not
     # more grain.  The statistic cannot separate the two, so it is only reported
     # where there is no detail for it to confuse itself with.
+    #
+    # `noise_gain` below averages over ALL usable sites, DETAIL included, and so
+    # violates the policy in the paragraph above it.  That is not hypothetical:
+    # the shipped GOOD sentence quoted it, the confounded DETAIL sites dragged
+    # the mean under 1, and the row then read "0.88x less pixel noise" -- an
+    # inverted claim caused by the wrong field, not by the wording alone.  It is
+    # kept as an all-sites diagnostic and named so it cannot be mistaken for a
+    # reportable figure.  ANY SENTENCE ABOUT NOISE MUST USE `flat_nr`.
+    #
+    # A comment stating a policy is not an implementation of it: this one was
+    # right and the code eight lines below it did the other thing.
     flat_site = sites.get("FLAT") or {}
     flat_nr = (flat_site.get("edge") or {}).get("noise_ratio")
 
@@ -295,7 +434,7 @@ def classify(sub: str, ev: dict) -> dict:
         "edge_ratio_min": round(min(ratio.values()), 4) if ratio else None,
         "merge_edge_dnpx": round(edge_best, 1),
         "frame_edge_dnpx": round(frame_best, 1),
-        "noise_advantage": round(sum(noise_gain) / len(noise_gain), 2)
+        "noise_ratio_all_sites_diag": round(sum(noise_gain) / len(noise_gain), 2)
         if noise_gain else None,
         "noise_flat": round(flat_nr, 2) if flat_nr else None,
         "n_sites_used": len(usable),
@@ -416,10 +555,13 @@ def classify(sub: str, ev: dict) -> dict:
 
     if worst_blur >= BLUR_BAD_PX:
         r["verdict"] = "MERGE-LIMITED"
+        # Quote the NAMED site's own numbers.  `edge_best`/`frame_best` are
+        # maxima over every usable site, so a sentence that names `worst_site`
+        # and then quotes them invites a reader to check the named crop against
+        # figures that came from a different one -- and they will not match.
+        ws = (usable.get(worst_site) or {}).get("edge") or {}
         r["why"].append(
-            f"merge is {worst_blur:.2f} px-equivalent softer than the best "
-            f"source frame at {worst_site} ({edge_best:.0f} vs {frame_best:.0f} "
-            f"DN/px); instrument floor is {BLUR_FLOOR_PX} px")
+            merge_limited_phrase(worst_site, worst_blur, ws, BLUR_FLOOR_PX))
         r["remedy"] = ("retouch: the source frames hold detail the merge did "
                        "not keep. Route to the merge, not to the camera.")
         return r
@@ -438,17 +580,18 @@ def classify(sub: str, ev: dict) -> dict:
 
     # 5. GOOD.
     r["verdict"] = "GOOD"
-    na = r["evidence"]["noise_advantage"]
+    # `noise_flat`, NOT the all-sites diagnostic: see the policy note above the
+    # flat_nr assignment.  Wording is derived from the number by noise_phrase().
     r["why"].append(
         f"merge matches the best source frame everywhere measured (worst "
         f"{worst_blur:.2f} px-equivalent, at/near the {BLUR_FLOOR_PX} px "
-        f"instrument floor)" + (f" while carrying {na}x less pixel noise"
-                                if na else ""))
+        f"instrument floor)" + noise_phrase(r["evidence"].get("noise_flat")))
     r["remedy"] = "none"
     return r
 
 
 def main() -> int:
+    commission_wording()
     subs = tri.SUBJECTS
     rows = [classify(s, load(s)) for s in subs]
 
@@ -485,6 +628,22 @@ def main() -> int:
     print(f"  {'---':>3}")
     print(f"  {tot:>3}  TOTAL   (must be 26: {'OK' if tot == 26 else 'MISMATCH'})")
     assert tot == len(subs) == 26, f"category counts sum to {tot}, not 26"
+
+    # SHIPPING GATE.  No row may leave with a sentence that disagrees with its
+    # own measurement.  This runs on the real emitted strings, not on samples --
+    # the inverted form shipped on 9 of 12 GOOD rows precisely because nothing
+    # ever compared the words against the number they were describing.
+    viol = []
+    for r in rows:
+        nr = (r.get("evidence") or {}).get("noise_flat")
+        for w in r.get("why") or []:
+            for v in audit_noise_sentence(w, nr):
+                viol.append(f"  {r['subject']}: {v}\n      {w!r}")
+    if viol:
+        raise SystemExit("noise wording disagrees with the measurement:\n"
+                         + "\n".join(viol))
+    print(f"wording gate OK: {len(rows)} rows, every noise claim agrees with "
+          f"its own noise_flat")
 
     with open(os.path.join(tri.OUT, "triage.json"), "w", encoding="utf-8") as fh:
         json.dump({"rows": rows, "counts": counts}, fh, indent=1)

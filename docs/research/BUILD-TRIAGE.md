@@ -1492,3 +1492,154 @@ I was lucky: the underlying evidence supported the conclusion anyway. Had it not
 this retraction would have flipped a headline finding rather than a footnote.
 
 **Partition unchanged: 19 + 2 + 0 + 0 + 1 + 0 + 4 + 0 = 26.**
+
+## 12. A sentence that contradicted its own number, and shipped
+
+ORCH found three defects in the `why` strings in `triage.json` — the field a
+user actually reads. All three are the same shape: **a measurement was rendered
+into prose, and the prose was written alongside the number instead of derived
+from it.** Once that gap exists, the two drift, and nothing in the pipeline is
+looking at both at once.
+
+### 12.1 The defect
+
+`nr = frame_noise / merge_noise` (`compare.py:131`, stated outright at
+`noisesite.py:2`), so **`nr > 1` means the merge is cleaner**. The shipped
+sentence was:
+
+```python
++ (f" while carrying {na}x less pixel noise" if na else "")
+```
+
+At `na = 0.88` that renders *"while carrying 0.88x less pixel noise"* — which
+claims a noise advantage where the measurement records a noise **disadvantage**.
+Two faults, not one:
+
+- **The direction inverts whenever `na < 1`.** MEASURED: this fired on **9 of
+  the 26 rows**, reproduced independently by mutation test (§12.4) before I
+  saw ORCH's count of 9.
+- **"0.88x less" is malformed in either direction.** A factor below 1 cannot
+  modify "less". It reads as a gain to anyone skimming, which is precisely how
+  it survived review.
+
+### 12.2 The second half: a comment that stated the right policy over code that did the other thing
+
+`triage.py:200-206` carries a correct, worked justification for quoting pixel
+noise from the FLAT site only — `tri.pixel_noise` is the residual after a 3x3
+median, so at a detail-rich site it counts *resolved structure* as noise
+(corpus medians: **1.47x at FLAT, 0.72x at DETAIL**). That reasoning is right.
+
+Eight lines below it, `noise_advantage` averaged `noise_ratio` over **all**
+usable sites, DETAIL included. The confounded sites dragged the mean under 1 —
+which is *why* the number was 0.88 rather than ~1.47, and therefore why the
+hard-coded "less" read backwards. **The inverted wording and the wrong field
+were one bug wearing two hats.** The correct quantity, `noise_flat`, was
+already computed at `:208` and then not used.
+
+How wide the gap was, MEASURED on the delivered rows:
+
+| subject | `noise_flat` (FLAT only, correct) | all-sites average (shipped) |
+| --- | ---: | ---: |
+| `pencil-steep-angle-cpl` | **10.31** (merge cleaner) | 0.60 (reads as noisier) |
+| `bee-3-cpl` | **0.48** (merge noisier) | 0.88 (reads as noisier) |
+
+On `pencil-steep-angle-cpl` the two disagree by **17x and in opposite
+directions**. The field I quoted was not a noisy version of the right answer;
+it was a different quantity.
+
+> **DISCIPLINE.** A comment that states the correct policy is not an
+> implementation of it. If a policy is worth writing down in prose, it is worth
+> asserting in code — prose cannot fail a test run.
+
+### 12.3 Two shipped artifacts disagreed with each other and nobody noticed
+
+MEASURED, and the part I find most uncomfortable: `makeviewable.py:163-169` was
+**already correct**. It read `noise_flat` and derived the comparative from the
+number:
+
+```python
+noise = f"{na:.2f}x cleaner on flats"  if na > 1 else f"{1.0/na:.2f}x noisier on flats"
+```
+
+So for `bee-3-cpl` the contact sheet has been printing **"2.08x noisier on
+flats"** while `triage.json` simultaneously claimed **"0.88x less pixel
+noise"** — same subject, same underlying measurement, two shipped artifacts,
+flatly contradictory. Neither I nor anyone reviewing spotted it, because
+nothing ever put the two side by side.
+
+> **DISCIPLINE.** When two artifacts render the same measurement, the fact that
+> one of them is right is not protection. Derive both from one function, or
+> cross-check them — a disagreement between your own outputs is free evidence
+> and it is being thrown away.
+
+### 12.4 The fix, and a gate that has seen the failing case
+
+Four changes, all in `triage.py`:
+
+1. **`noise_phrase(nr)`** — derives the comparative *from* the number and
+   reciprocates the magnitude so it is always >= 1. `nr = 0.88` now renders
+   **"1.14x more pixel noise than the best source frame"** (1/0.88 = 1.14),
+   where the shipped code said "0.88x less".
+2. **`audit_noise_sentence(text, nr)`** — flags a comparative pointing the
+   wrong way for its number, *and* any sub-unit magnitude attached to a
+   comparative.
+3. **`noise_advantage` renamed `noise_ratio_all_sites_diag`** so it cannot be
+   mistaken for a reportable figure. It is an all-sites diagnostic, not a claim.
+4. **A shipping gate in `main()`** — every emitted `why` string audited against
+   that row's own `noise_flat`, hard-failing before `triage.json` is written.
+   The GOOD sentence now sources `noise_flat`, not the all-sites mean, which is
+   why `bee-3-cpl` quotes 0.48 -> 2.08x rather than 0.88 -> 1.14x.
+
+**I made this same error writing this section**, and caught it only by reading
+the draft back against the arithmetic: I first wrote that `0.88` renders as
+"2.08x more", conflating the planted value with `bee-3-cpl`'s 0.48. The defect
+class is not a lapse of care by whoever wrote the original line — prose next to
+a number drifts from it by default.
+
+The MERGE-LIMITED sentence (defect 3) named `worst_site` but quoted
+`edge_best`/`frame_best`, which are maxima over *every* usable site. It now
+quotes the named site's own `merge_dnpx`/`frame_corr_dnpx`/`ratio`. **The corpus
+holds zero MERGE-LIMITED rows, so this branch never executes on real data —
+which is exactly how it acquired the defect.** It was therefore extracted into
+`merge_limited_phrase()` and commissioned against a planted two-site case that
+fails if the non-named site's numbers leak in.
+
+**Commissioning is not enough on its own.** A gate that computes the right
+answer and never calls it would pass every unit plant and still ship the
+defect — which is close to the original failure. So
+`experiments/BUILD-TRIAGE/mutatetest.py` reintroduces the exact shipped form
+(`_legacy_noise_phrase`) into the live render path, with unit commissioning
+silenced, and requires the corpus gate to stop the run on **real rows**:
+
+```
+MUTATION KILLED -- the gate fired on real rows.
+violations flagged: 18 across 9 subjects: 112MSDCF, 113MSDCF, bee-1-cpl,
+bee-2-cpl, bee-3-cpl, couch-fibers-cpl, dry-erase-marker-head-cpl,
+flat-on-ruler-cpl, wrapped-text-1
+```
+
+Both branches now render correctly on live data:
+
+- merge cleaner — `pencil-steep-angle-cpl`: *"...while carrying 10.31x less
+  pixel noise than the best source frame"*
+- merge noisier — `bee-3-cpl`: *"...while carrying 2.08x more pixel noise than
+  the best source frame"*
+
+### 12.5 What the honest wording immediately exposed
+
+MEASURED, and it was invisible while the sentence was inverted: of the 21 GOOD
+rows, **11 have the merge cleaner at the FLAT site and 10 have it noisier**.
+`bee-3-cpl` — the corpus reference for print-worthy output — is **2.08x noisier
+on flats than its own best source frame.**
+
+That is not a wording bug; it is a finding the wording bug was concealing. A
+select-and-blend merge inherits a single frame's noise rather than averaging it
+down, so this may be entirely expected. **I have not measured it and I am not
+claiming it is a defect.** ARGUED, and flagged for routing: `pyramid.rs` is
+BUILD-BLEND's, and the question "should a 30-frame merge be noisier than one
+frame on a flat field?" belongs there, not here.
+
+> **DISCIPLINE.** Everything that renders a measurement into a sentence must
+> derive the sentence from the measurement, not write it alongside. And when a
+> number and its description disagree, the description is not the only thing
+> worth checking — the disagreement may be hiding a real result.

@@ -63,3 +63,98 @@ inert — and the two renders are byte-identical, SHA256 `8AC0AB71…3698`.
 
 With `STREHL_COVER` unset the first two produce **byte-identical output** on all
 four checked pairs, so comparisons spanning them are single-binary in effect.
+
+---
+
+# Phase 2 — the slanted-edge instrument, and why it could not be commissioned
+
+Phase 1 showed the band-power ratio that produced the reported 17–27% deficit
+awards a **nearest-neighbour gather +29% / +42%** — more than the whole gap.
+Phase 2 was asked to re-price that deficit with a statistic that cannot be
+fooled that way: **slanted-edge MTF (ISO 12233)**, which measures resolution
+rather than energy.
+
+`slanted_edge.py` is that instrument. `commission_edge.py` commissions MTF50;
+`commission_curve.py` commissions the MTF **curve ratio** at fixed frequency.
+
+**Neither statistic passed its controls on this corpus.** Both are committed
+anyway, with their failing arms, because the failure is the result.
+
+## The controls, as run
+
+`python commission_edge.py <render.tiff>` — MTF50, 421 sites on
+`wrapped-text-1`, ESF support ±32 px, 4× bins, slant 2–10°:
+
+| arm | required | measured | |
+|---|---|---|---|
+| NULL — a render against itself | ratio 1.000 | `max|ΔMTF50| = 0.000e+00`, 1.000000 | **PASS** |
+| POTENCY — Gaussian σ=0.5 px, curve vs `exp(−2π²σ²f²)` | err < 0.05 | worst 0.0272 | **PASS** |
+| POTENCY — Gaussian σ=1.0 px | err < 0.05 | worst 0.0743 | **FAIL** |
+| SCALE — band-limited 1.2× enlargement | 0.8333 | 1.1672 | **FAIL** |
+| NOISE — band power ×46 | ratio 1.00 | 0.7327 | **FAIL** |
+
+`python commission_curve.py <render.tiff>` — curve ratio, 718 sites:
+
+| arm | required | measured | |
+|---|---|---|---|
+| NULL | 1.0000 at every f | 1.0000, worst err 0.0000 | **PASS** |
+| SCALE — 1.2×, predicted from the base's own curve as `M(1.2f)/M(f)` | err < 0.06 | worst 0.3241 | **FAIL** |
+| NOISE — band power ×1.45 | err < 0.05 | 0.1160 | **FAIL** |
+| NOISE — band power ×47 | err < 0.05 | 0.4016 | **FAIL** |
+
+## Why it fails, which is a fact about the corpus and not about the code
+
+**This corpus contains no ISO 12233-valid slanted-edge target**, including in
+the pair the original finding was computed on.
+
+* `flat-on-ruler-cpl`, `highly-angled-ruler-mm-cpl` — the graduations are
+  **engraved trenches** with ~20 px sloped walls and a bright specular rim, not
+  steps. Per-row edge-centroid scatter 1.95 px on an edge that is straight.
+* `C:\dev\macro\out\coffee-bean\stack.tif` — the fork render the original
+  finding used — has **no straight edge anywhere**, only the curved bean
+  silhouette.
+* `wrapped-text-1` — usable, and the best available, but at 1:1 the ink
+  boundary is a **stochastic dither** with several px of physical edge wander
+  and a wide soft skirt.
+
+The consequence is measurable and it is the whole story: the 50% crossing lands
+at **0.011–0.025 cyc/px**, a 40–90 px period inside a 64–128 px ESF support.
+Only 1.4–1.6 periods fit, so the **window, not the raster, sets the answer** —
+which is exactly what the SCALE arm reports when a 1.2× enlargement moves a
+*cycles-per-pixel* read-out by 1.04–1.17× instead of the required 0.833×.
+
+That matters far beyond MTF50: the deficit under investigation lives at
+**0.20–0.40 cyc/px**, and on this corpus the edges carry almost no modulation
+up there to measure with.
+
+## Four instrument bugs, all found by controls
+
+1. **Per-row centroids do not survive this corpus.** A row's edge gradient is
+   ~180 DN/px against dither speckle of several hundred — per-row SNR below 1.
+   Replaced with a global angle search minimising the weighted variance of the
+   gradient about the candidate line; verified on a synthetic edge to recover
+   slope exactly and intercept to 0.01 px.
+2. **ROIs must be re-centred on the located edge**, not rejected for landing
+   off-centre — that alone discarded ~70% of candidates.
+3. **The angle-search score was biased to slope 0 by bin count.** Scoring a
+   binned profile over its own natural support penalises shear mechanically.
+4. **The comb artefact.** At slope exactly 0 every row projects to the same
+   abscissae, so the histogram is a comb whose sum of squares beats anything a
+   sheared profile can reach. **3568 of 3570 ROIs fitted below 0.03°** and the
+   instrument silently reported that a page of text contains no slanted edge.
+
+## The comparator render
+
+`render7-h2h.ps1` stages one identical stride-6 ARW subset and renders **both**
+tools from it. The prior fork
+(`C:\dev\macro\focus-stack\dist\focus-stack.exe`, SHA256
+`0ABA0CF0936AF8B1CACE2681CA43D49729D253E8ED1F786F2A8960B7974CA45D`) holds every
+input frame as a full-raster float32 3-channel image, ~396 MB each. Measured on
+this machine: **6 / 12 / 24 frames succeed** (48 s / 86 s / 211 s); 33 frames
+dies `0xC0000005`; and it OOMs at 22 frames whenever anything else on the
+machine is using memory. It is renderable only when the box is otherwise idle.
+
+Two PowerShell traps cost renders here and are fixed in the driver:
+`$ErrorActionPreference = 'Stop'` turns a native tool's **stderr progress** into
+a terminating `NativeCommandError`, and `STREHL_WARPMAP` silently **beats
+`--resampler`**, so every driver clears it first.
