@@ -9,9 +9,10 @@ instrument in this report from scratch and did not open `V-veiling/r7_hull.py` o
 sha256 `DF209CE0...F97DC70F`, verified before first use. All measurement on linear
 16-bit TIFF. Nothing measured on an sRGB or JPEG render.
 **Instruments:** `C:\dev\strehl-out\BUILD-HULL\` — `hull.py` (the out-of-hull
-instrument), `exchange.py`, `residual.py`, `arms.py`, `strehlrun.py`,
-`commission_gate0.py`, `probe13.py`, `halodiff2.py`. No file under `crates/` was
-edited or read for its logic before the numbers were final.
+instrument), `rim.py` and `rimsens.py` (the election-record instrument of §12),
+`exchange.py`, `residual.py`, `arms.py`, `strehlrun.py`, `commission_gate0.py`,
+`probe13.py`, `halodiff2.py`. No file under `crates/` was edited or read for its logic
+before the numbers were final.
 
 ## Verdict
 
@@ -22,12 +23,23 @@ edited or read for its logic before the numbers were final.
 | 3 | Is any stage non-convex? | **YES — two, both named, both band-mean-neutral.** The MHC demosaic (measured, 0.171% of samples, net **-0.026 DN**) and the Catmull-Rom warp gather (arithmetic: two of four taps are negative) |
 | 4 | Which outcome is this? | **Outcome 2** — the merge is convex and the -805 DN comparison was not apples-to-apples. §7 gives the three independent reasons |
 | 5 | Scope limit | The **ALIGN=0** pipeline. The shipped *aligned* merge cannot be measured per-pixel by any route available from outside `crates/`. §4 proves why, rather than asserting it |
+| 6 | Is the artifact real anyway? | **YES, and it is large.** §12. Against V-RIM's ground-truth frame the merge is **-4232.9 DN** at `d = 30-60 px`. The hull test reads **0** on that row. Convexity was the wrong invariant, not merely a satisfied one |
+| 7 | Does ORCH's election mechanism hold? | **CONFIRMED from the election record.** At `d = 60-120 px`, **93.81%** of pixels elect a frame in which that pixel is covered by defocused subject, and the median elected frame is **6** — 104 frames from the in-focus silhouette |
 
 This report is a **correction of V-veiling and of the brief that commissioned me**, and
 I want to be exact about what it does and does not overturn. It does not touch
 V-veiling's claim 1: the halo is real and it is worse than its inputs look. It refutes
 only the arithmetic sub-claim that the excess is *larger than convexity permits*. That
 sub-claim rested on a test that is not a hull test.
+
+> **Amendment, added after V-RIM's frame-level measurement.** §12 is the most
+> important section of this report and it partly corrects §11. The artifact is real,
+> it is about **-4233 DN** against a measured ground truth, and **the hull invariant I
+> proposed in §11 is blind to it.** The merge elects frames in which the pixel is not
+> backdrop at all, so the offending value is inside the hull *by construction*. A
+> convexity assertion would have passed this bug silently, and shipping it alone would
+> have been worse than useless because it would have looked like a guarantee. §12.6
+> gives the invariant that does catch it.
 
 ---
 
@@ -492,6 +504,13 @@ are inside the hull; it is a curiosity, not a defect.
 **Proposal only. I have not implemented this, because `crates/` is contested.** It is
 specified below tightly enough to apply in one sitting.
 
+> **Read §12.6 before applying this.** This invariant is necessary and **not
+> sufficient**. It reads zero on the -4233 DN artifact that ORCH and V-RIM are
+> actually chasing, because that artifact is inside the hull by construction. Ship it
+> only together with §12.6's backdrop-deficit detector, or with a doc comment that
+> states in terms what it does not cover. A convexity check that passes is easily
+> misread as a guarantee of correctness, and here it is not one.
+
 **The invariant.** *The merge shall not produce a value outside the hull of the samples
 it elected at that pixel, except at named stages where non-convexity is intended and
 documented.*
@@ -547,7 +566,227 @@ first day instead of the third, and this report would not have needed writing.
 
 ---
 
-## 12. Reproducing this
+## 12. V-RIM's corroboration — the artifact is real, and convexity was the wrong invariant
+
+V-RIM measured the backdrop profile in **individual frames** rather than merges and
+found the frames flat where the merge sags. ORCH proposed the mechanism: in a smooth
+bright backdrop the focus measure has no real signal, so near a silhouette the
+defocused subject spills contrast *into* the backdrop, frames where that pixel is
+covered by defocused subject score highest, and the merge elects a frame in which the
+pixel is not backdrop at all.
+
+**I can test that directly, because `--index-map` records which frame won at every
+pixel.** All of the following is measured on the same ALIGN=0 205-frame render as §5,
+so it is directly comparable to the zero in §5 rather than to a different run.
+
+### 12.1 V-RIM's ground truth reproduces on an independent pipeline
+
+V-RIM used the pinned `1cacb61` binary, full resolution, green channel, its own
+segmentation. I used pin `859edac`, ALIGN=0, binned, Rec.709 luma. Frame 110's excess
+over **its own** far field (18974.5 DN):
+
+| band | 4-12 | 12-30 | 30-60 | **60-120** | 120-200 | 300-420 |
+|---|---|---|---|---|---|---|
+| excess DN | -3293.8 | -1196.8 | -166.6 | **-1.2** | +59.9 | +381.4 |
+| % of far | -17.36% | -6.31% | -0.88% | **-0.01%** | +0.32% | +2.01% |
+
+**The frame is flat to 0.01% from 60 px out.** V-RIM reported -0.22% for this frame;
+I measure -0.88% at 30-60 and -0.01% at 60-120 on a different binary, a different
+resolution and a different colour channel. That is corroboration, not agreement by
+construction. The two dark inner bands are the silhouette edge itself and are expected.
+
+### 12.2 The sag, against two ground truths. Absolute linear DN
+
+| band | pixels | MERGE | frame110 (GT) | all-frame mean | max_k | min_k | vs GT | vs mean | vs max_k |
+|---|---|---|---|---|---|---|---|---|---|
+| 4-12 | 58,432 | 15531.0 | 15680.7 | 13660.5 | 18807.5 | 7418.5 | -149.7 | **+1870.5** | -3276.5 |
+| 12-30 | 121,186 | 14999.5 | 17777.7 | 15560.9 | 19593.3 | 8768.5 | -2778.2 | -561.4 | -4593.9 |
+| **30-60** | 191,893 | 14575.0 | 18807.9 | 17288.1 | 20334.5 | 11136.7 | **-4232.9** | -2713.2 | -5759.5 |
+| 60-120 | 380,484 | 15907.9 | 18973.3 | 18456.7 | 20725.7 | 14528.4 | -3065.4 | -2548.8 | -4817.8 |
+| 120-200 | 513,618 | 18590.7 | 19034.4 | 18882.3 | 20811.0 | 16831.3 | -443.6 | -291.5 | -2220.3 |
+| 200-300 | 661,260 | 19007.9 | 19095.9 | 18967.3 | 20879.8 | 17168.6 | -88.0 | +40.7 | -1871.9 |
+| 300-420 | 724,247 | 19270.5 | 19355.9 | 19225.6 | 21178.6 | 17392.7 | -85.3 | +44.9 | -1908.1 |
+
+**The sag is confirmed at -4232.9 DN, or -22.3% of far field, at `d = 30-60 px`.**
+V-RIM reported -18.94% for this subject. Two independent instruments, same artifact.
+
+**And the `min_k` column is the whole story.** At `d = 30-60` the hull floor is
+11136.7 DN. The merge at 14575.0 sits 3438 DN above it. It is inside the hull with
+room to spare *while being 4233 DN below the correct value*, because frames exist in
+which that pixel is not backdrop. The hull is contaminated by the very frames the
+mechanism implicates.
+
+### 12.3 The mechanism, read off the election record
+
+A pixel is called COVERED when the elected frame's value sits more than half the hull
+width below the pointwise max — that is, the merge chose a frame that did not see the
+backdrop. Every pixel is partitioned and the partition is asserted in code:
+
+| band | pixels | saw backdrop | **COVERED** | % covered | median deficit DN |
+|---|---|---|---|---|---|
+| 4-12 | 58,432 | 52,317 | 6,115 | 10.47% | 3443.3 |
+| 12-30 | 121,186 | 86,813 | 34,373 | 28.36% | 4824.4 |
+| 30-60 | 191,893 | 37,520 | 154,373 | **80.45%** | 5656.8 |
+| **60-120** | 380,484 | 23,545 | 356,939 | **93.81%** | 5350.1 |
+| 120-200 | 513,618 | 213,928 | 299,690 | 58.35% | 2250.9 |
+| 200-300 | 661,260 | 372,171 | 289,089 | 43.72% | 1619.0 |
+
+**Commissioned against its own threshold.** Half the hull width is a choice, so it was
+swept. The peak at 30-120 px and the ordering across bands survive every column:
+
+| band | frac=0.20 | frac=0.35 | frac=0.50 | frac=0.65 | frac=0.80 |
+|---|---|---|---|---|---|
+| 4-12 | 64.08% | 41.53% | 10.47% | 2.21% | 0.67% |
+| 30-60 | 98.91% | 98.09% | 80.45% | 36.88% | 16.78% |
+| **60-120** | 97.48% | 95.71% | 93.81% | 85.46% | **67.18%** |
+| 200-300 | 77.50% | 59.75% | 43.72% | 28.61% | 15.03% |
+
+At the most conservative threshold the contaminated band still reads 67.18% against
+15.03% in the far field. The conclusion is not a property of the threshold.
+
+### 12.4 A falsifiable prediction of the mechanism, and it holds
+
+If defocus spill is the cause, the contaminated bands must elect frames **far** from
+the one in which the silhouette is in focus, because those are the frames whose
+subject has blurred wide enough to cover the pixel. If instead the elections clustered
+around frame 110, the mechanism would be wrong. Measured:
+
+| band | median elected frame | median &#124;k - 110&#124; | far-field baseline |
+|---|---|---|---|
+| 4-12 | 107 | 23 | 50 |
+| 12-30 | 83 | 32 | 50 |
+| 30-60 | 48 | 62 | 50 |
+| **60-120** | **6** | **104** | 50 |
+| 120-200 | 84 | 68 | 50 |
+| 200-300 | 119 | 52 | 50 |
+| 300-420 | 122 | 50 | 50 |
+
+At `d = 60-120 px` the median elected frame is **6** — the extreme end of a 205-frame
+bracket, 104 frames from the in-focus silhouette, with `p10 = 0` and `p90 = 57`. The
+far field elects at a median distance of 50, which is what an unstructured election
+over 205 frames gives. **The contaminated band is systematically electing the most
+defocused end of the bracket.** The prediction was specific, falsifiable and confirmed.
+
+### 12.5 Sign and spatial location, as asked
+
+ORCH asked for these rather than magnitude alone, and predicted undershoot on the
+bright side within about 300 px with a local recovery in the last ~20 px. The detector
+this artifact needs is not the hull but the **backdrop deficit excess**:
+
+```
+BDE(p) = ( max_k x_k(p) - merge(p) ) - D_far        D_far = the same, far field
+```
+
+`D_far = 1849.5 DN` here. That baseline is **not** an error: it is the bias of a
+max-over-205 estimator against a noise-averaged merge. The excess over it is.
+
+| band | 4-12 | 12-30 | **30-60** | 60-120 | 120-200 | 200-300 | 300-420 |
+|---|---|---|---|---|---|---|---|
+| BDE, DN | +1426.9 | +2744.3 | **+3909.9** | +2968.3 | +370.8 | +22.3 | +58.5 |
+| % of far | +7.56% | +14.53% | **+20.70%** | +15.72% | +1.96% | +0.12% | +0.31% |
+
+**Sign: undershoot, uniformly — the merge is darker than the backdrop everywhere in
+the band. Location: peaks at `d = 30-60 px`, essentially gone by `d = 200 px`
+(+0.12% at 200-300).** And the innermost band recovers: +1426.9 DN at 4-12 against
++2744.3 at 12-30. **That is ORCH's predicted local recovery in the last ~20 px, and it
+appears in the election record too** — only 10.47% of pixels are COVERED at 4-12,
+because right at the silhouette there is a genuine in-focus edge for the focus measure
+to lock onto. The artifact lives exactly where there is real spill and no real signal.
+
+The one correction to the prediction: the excursion dies by 200 px, not 300 px.
+
+### 12.6 The invariant that catches this, correcting §11
+
+**§11's hull assertion reads zero on every row of §12.5.** It is still worth having —
+it is cheap, it caught the photometric control, and it would catch a fractional frame
+index — but on its own it is **actively dangerous**, because a passing convexity check
+looks like a guarantee of exactly the property that is failing. If §11 ships, it must
+ship with §12.5's detector or with a doc comment saying in terms what it does not
+cover.
+
+The second invariant, proposed on the same terms as §11 and equally not implemented:
+
+> **In a region with no genuine focus signal, the merge shall not elect a frame that
+> did not see that region.**
+
+Machine-checkable form, needing only the index map and the per-frame samples that
+`hull.py` already folds:
+
+```
+BDE(p) = (max_k x_k(p) - merge(p)) - D_far   <=   TOL_BDE
+```
+
+evaluated over pixels classified as smooth backdrop, with `D_far` computed from the
+same render's own far field so the test is self-calibrating and needs no reference
+image. **Tolerance: 400 DN**, which is 2.1% of this subject's far field. Justified
+from the measurement rather than guessed: the far field itself reads +22.3 and +58.5
+DN in the two outermost bands, so the noise floor of the statistic is under 60 DN; the
+artifact reads +3909.9 DN. A 400 DN threshold sits about seven times above the noise
+floor and about ten times below the defect, which is the widest separation the data
+supports. `d = 120-200` reads +370.8 DN and would sit just inside it — correctly, since
+that band is where V-veiling's -805 DN was measured and where the artifact is already
+fading.
+
+This detector is strictly stronger than the hull test for this class of bug, and it
+is the one I would gate CI on.
+
+### 12.7 For BUILD-BLEND: the mean base band helps, and it is not a cure
+
+ORCH asked me to coordinate rather than duplicate. BUILD-BLEND is taking the
+low-frequency base band from a noise-gated mean instead of an election, on the grounds
+that a mean cannot leave the hull. **That reasoning is correct and insufficient, and
+the `all-frame mean` column of §12.2 says why: the contaminating frames are in the mean
+too.** Taking the mean's own sag against the same ground truth:
+
+| band | merge sag vs GT | mean sag vs GT | sag removed |
+|---|---|---|---|
+| **4-12** | **-149.7** | **-2020.2** | **-1249% (the mean is 1870.5 DN WORSE)** |
+| 12-30 | -2778.2 | -2216.8 | 20.2% |
+| 30-60 | -4232.9 | -1519.8 | 64.1% |
+| 60-120 | -3065.4 | -516.6 | 83.1% |
+| 120-200 | -443.6 | -152.1 | 65.7% |
+
+**Measured: a mean base band removes 64-83% of the sag at `d = 30-120 px`, which is
+where the artifact is worst, and is a real improvement there. It removes only 20% at
+`d = 12-30`. And at `d = 4-12` it is a regression of 1870.5 DN**, because right at the
+silhouette the election is doing the correct thing — locking onto the genuine in-focus
+edge — and a mean smears every defocused-subject frame back in.
+
+So the honest read for BUILD-BLEND: **land it, but check the innermost 12 px.** The
+same evidence that vindicates the fix in the mid-band predicts it will darken the rim.
+That is a testable prediction and §12.5's BDE detector will measure it in one render.
+
+**This is not the same event as my finding.** The excursion is not a hull violation at
+any frequency, so it does not go away merely because a mean cannot leave the hull. It
+goes away only to the extent that the mean happens to weight uncontaminated frames more
+heavily than the election does, which the table above quantifies band by band.
+
+### 12.8 What this does and does not change
+
+**Unchanged and still measured:** the merge is convex. 0 of 24,752,640 channel-samples
+outside their hull. §7's three defects in the published hull test stand. The -805 DN
+residual is not evidence of non-convexity, and §6's plant experiment stands.
+
+**Changed:** I framed §11 as the permanent gate this question needed. It is not, on its
+own. The artifact ORCH and V-RIM are chasing is real, is roughly five times the -805 DN
+that started this, and is **invisible to a convexity check**. Convexity was not merely
+satisfied here; it was the wrong question, and I should have noticed that a hull whose
+floor is 11136.7 DN in a backdrop band is a hull that cannot constrain anything.
+
+**On ORCH's suspect:** `regularise_guided` remains refuted as the cause (§8 — seven
+election-path arms, including two that radically change the election, all read exactly
+0). The affine `a*I + b` argument is sound in general, but the stage re-routes *which*
+frame wins and never touches a sample value. The mechanism is in **what the focus
+measure rewards**, not in the arithmetic that follows it. That is consistent with
+everything in §12: the elections are not corrupted values, they are confident
+elections of the wrong frame.
+
+**And do not clamp.** ORCH is right, and more strongly than stated: clamping to the
+hull would be a no-op here, since every offending pixel is already inside the hull.
+
+## 13. Reproducing this
+
+
 
 ```
 cd C:\dev\strehl-out\BUILD-HULL
@@ -561,6 +800,14 @@ python hull.py     ... --tag flower-PLANT-805  --plant-band "120,200,-805"    # 
 python exchange.py ... --tag flower-gate4-EXCHANGE
 python residual.py ... --stat median
 python arms.py     109MSDCF
+
+# section 12 -- the election record, the mechanism, and the BDE detector
+python rim.py      --subject flower-bud-alone-cpl \
+                   --merged commission-flower-bud-alone-cpl\merge_gate4.tiff \
+                   --index  commission-flower-bud-alone-cpl\merge_gate4.index.tiff \
+                   --frames commission-flower-bud-alone-cpl\frames --n 205 \
+                   --out outflower --tag flower-gate4
+python rimsens.py                                   # threshold sweep + prediction
 ```
 
 `strehlrun.py` clears all 25 `STREHL_*` variables before every render and applies only
