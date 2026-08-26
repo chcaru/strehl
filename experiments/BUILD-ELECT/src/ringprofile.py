@@ -52,6 +52,15 @@ def load_luma(path):
 
 
 def subject_mask(lum):
+    """Largest-connected-component subject mask, by a midpoint threshold.
+
+    Returns (mask, thr, kept, found).  `found` is how many components the
+    threshold produced; `kept` is how many survive in the returned mask, which
+    is 1 whenever anything was found.  Both are returned because reporting only
+    `found` invites the reader to believe the returned mask is fragmented when
+    it is a single blob -- a caveat this report published against its own number
+    in 14.4 and had to withdraw in 15.
+    """
     lo, hi = np.percentile(lum, [5, 95])
     thr = 0.5 * (lo + hi)
     m = lum < thr
@@ -59,18 +68,29 @@ def subject_mask(lum):
     if n > 1:
         sizes = ndimage.sum(m, lab, range(1, n + 1))
         m = lab == (1 + int(np.argmax(sizes)))
-    return m, thr, n
+    kept = int(ndimage.label(m)[1])
+    return m, thr, kept, n
 
 
 def signed_distance(mask):
-    # Zero-pad before the EDT: distance_transform_edt saturates at array borders
-    # because they are not zeros, and an unpadded transform puts spurious maxima
-    # in every corner. Harmless if you only read the first few hundred px, fatal
-    # if you ever argmax it.
+    # distance_transform_edt measures distance to the nearest ZERO, so only the
+    # transform whose zeros can be truncated by the frame edge needs padding.
+    #
+    #   d_in  = distance from a subject pixel to the nearest backdrop pixel.
+    #           A subject touching the border has no backdrop beyond it inside
+    #           the array, so this DOES saturate: on a border-touching blob a
+    #           corner whose true distance is 1 comes back as 12. Padding with
+    #           False supplies the missing backdrop and fixes it.
+    #   d_out = distance from a backdrop pixel to the nearest subject pixel.
+    #           Padding adds no subject, so it is a no-op here -- and correctly
+    #           so, since the frame edge should not cap a backdrop distance.
+    #
+    # The original version padded only d_out, which was the transform that did
+    # not need it, and left d_in unpadded. Caught by V-ELECT-15.
     pad = 8
     p = np.pad(mask, pad, mode="constant", constant_values=False)
     d_out = ndimage.distance_transform_edt(~p)[pad:-pad, pad:-pad]
-    d_in = ndimage.distance_transform_edt(mask)
+    d_in = ndimage.distance_transform_edt(p)[pad:-pad, pad:-pad]
     return d_out - d_in
 
 
@@ -104,10 +124,10 @@ def ring(ds, vals, ref):
 def analyse(path, mask_src=None):
     lum = load_luma(path)
     if mask_src is None:
-        mask, thr, ncomp = subject_mask(lum)
+        mask, thr, kept, found = subject_mask(lum)
         origin = "own"
     else:
-        mask, thr, ncomp = subject_mask(load_luma(mask_src))
+        mask, thr, kept, found = subject_mask(load_luma(mask_src))
         origin = f"borrowed from {pathlib.Path(mask_src).name}"
     signed = signed_distance(mask)
     far = (signed > FAR_LO) & (signed < FAR_HI)
@@ -116,7 +136,7 @@ def analyse(path, mask_src=None):
 
     print(f"\n{'=' * 74}\n{pathlib.Path(path).name}   {lum.shape}")
     print(f"  mask {origin}: thr={thr:.0f}, {mask.mean() * 100:.2f}% of frame, "
-          f"{ncomp} components")
+          f"{kept} component(s) kept of {found} found by the threshold")
     print(f"  far field {FAR_LO}-{FAR_HI} px = {ref:.0f} DN over {far.sum()} px")
     print(f"\n  {'d(px)':>7} {'median DN':>11} {'vs far':>9} {'% far':>8} {'n':>10}")
     for d, v, c in zip(ds, vals, counts):

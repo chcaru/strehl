@@ -141,6 +141,23 @@ blend, in 14.4: on `coffee-bean`, the pre-registered placebo, the blend introduc
 profile structure in the **47-93 px band** that the control does not have, **1.17%
 against 0.07%** at the same distance. At d <= 40 px the placebo still holds.
 
+**Amended by section 15, after looking at 14.4 and having the look verified.** I
+tried to withdraw 14.4 and got half of it. What is right: the control's bright
+stripe on the paper sweep is **invented** — it appears in **no source frame** —
+and the same holds on the subject, where three of six ground-truthed sites show
+the control carrying a hard-edged banded plateau no frame has. What is wrong: my
+exculpation. "The blend moved the placebo because it reduced the veil" relocates
+the violation to the veil rule instead of clearing it, and the veil is another
+lane's. My contrast number was also inflated three ways — naive Weber **-30.05%**
+becomes **-11.24%** once clipping is excluded and the veil ramp detrended, against
+**-8.18%** in the deep interior, so a 6x localisation is really **1.37x**. And I
+missed the largest fact about that band: **20.48% of it is clipped at 65535 in
+the blend arm against 0.0952% in the control, a 215x increase**, with `clip
+census` disabled in that path. **14.4 is reworded, not withdrawn.** Three defects
+in my own instruments are fixed in 15.7, including one caveat I had published
+against my own number and which was simply false. The lane still closes; three
+items are routed out of it, in 15.9.
+
 ---
 
 ## 1. The picture, first
@@ -1901,3 +1918,286 @@ which is small, real, and unexamined by eye.
   unimplemented and unrendered.
 - The verifier's own numbers are its own; where 14.5 cites them they are marked as
   its measurements, not mine. I re-derived 14.2, 14.3 and 14.4 myself.
+## 15. I tried to reverse 14.4 and got half of it. What the placebo motion is.
+
+Section 14.4 reported that the blend moves `coffee-bean`, the pre-registered
+placebo, and called it *"the one finding against the blend"*.  I then looked at
+it as a picture -- which 14.7 admitted I had never done -- and talked myself into
+withdrawing it.  Because the reversal ran in another lane's favour and I had
+already under-credited that lane once in 13.1, I sent it to an independent
+verifier before believing it, under the rule that an agent does not verify its
+own work.
+
+**The reversal is half right.**  The half that is right is right; the half that
+is wrong was an exculpation that moved the violation rather than removing it,
+and it rested on a statistic inflated three separate ways.  14.4 needs
+**rewording, not withdrawal**.
+
+### 15.1 Provenance, checked first this time
+
+MEASURED, from `flip-render.ps1` and both render logs:
+
+- one binary for both arms, `flip-render.ps1` line 15,
+  `$BIN = "...\target-flip\release\strehl.exe"`;
+- **no `--srgb` in either arm**; both logs `levels : black 512, white 15360`;
+- both TIFFs carry `ImageDescription = "Linear camera-native RGB (sensor
+  primaries), NO colour matrix, no transfer curve."`;
+- the estimator finished writing at 03:10:19 and the pyramid started the same
+  second, so no rebuild could intervene.
+
+So 15 and 14 do not repeat 13's failure.  Two caveats survive and both are new:
+
+**The binary cannot be hash-verified.** `strehl.exe` has mtime 04:55:56, after
+every render in `flip/` (03:05-03:37).  Provenance rests on the logs and the
+timing chain, not on a hash.
+
+**The `flip/` A/B is not merge-only, and its harness says otherwise.**
+`flip-render.ps1` states the arms *"differ in the merge and nothing else"*.  The
+pyramid's own log contradicts it:
+
+```
+not applied : photometric gain, clip census, outlier rejection, halo correction,
+              through-focus statistics
+```
+
+and the estimator additionally receives `--gate 2.0`, which the pyramid path
+refuses.  **This is merge-only pipeline against full estimator pipeline, five
+stages apart.**  Every difference in 14 and 15 is attributable to the merge
+*plus* five disabled stages, and neither section can separate them.  That is a
+limit on the instrument, not a defect in the blend.
+
+### 15.2 What was right
+
+**The stripe is not real scene content.  REFUTED, and this is the strongest
+result in the section.** At all four inspected sites the control shows a thin
+bright line hugging the bean silhouette followed by a darker gap; the blend
+shows a monotone ramp; and **none of four source frames** (00016, 00046, 00076
+which is sharp at these sites, 00106) shows any bright band -- every one ramps
+monotonically from dark bean to bright paper.  It is not a paper seam, a shadow
+or a specular gradient.  So the control's extra contrast there really is
+invented, and the same is true on the subject: at three of six ground-truthed
+`flower-bud` sites the control carries a hard-edged contour-banded plateau that
+**no source frame has**, and the blend renders those places as continuous plant.
+
+**The brightening is local, not a calibration difference.  CONFIRMED.** An affine
+null fitted on the interior and far field alone gives `blend = 1.02255*ctl -
+359.1 DN`.  There is a real global component -- **+2.3% gain and a -359 DN
+offset, which is invisible in any ratio and is reported here in DN because of
+that** -- but its residuals are interior +0.0, collar -175.0, **band +5044.6**,
+near backdrop +2968.1, mid +382.2, far +0.0.  The affine part explains about 11%
+of the band motion.  The rest is local.
+
+### 15.3 What was wrong: the number was inflated three ways
+
+I reported the band losing **30.05%** of local Weber contrast against 4.85% in
+the deep interior, a 6x localisation, and read that as the artifact being
+removed.  Each of the three following corrections is independently reproducible
+with `python placebo.py` on the `flip/` pair; I re-implemented them myself rather
+than copy the verifier's numbers, and land within about a point of it at every
+step.
+
+| statistic on the 47-93 band | change | what it still contains |
+| --- | ---: | --- |
+| naive Weber, as published in 14 | **-30.05%** | rising mean, veil ramp, clipping |
+| direct mean local sd, in DN | -31.70% | veil ramp, clipping |
+| saturation-excluded | -21.18% | veil ramp |
+| **ramp-detrended and saturation-excluded** | **-11.24%** | structure |
+
+against a deep interior that moves **-8.18%** on the same clean statistic.
+**The 6x localisation is really 1.37x.**  My own 14.7 suspicion that a 9 px
+window on a veiled backdrop measures the veil gradient rather than texture was
+correct and accounts for roughly ten of the thirty points.
+
+**An arithmetic error of mine, worth naming because it is a trap.** I converted
+Weber back to absolute DN as `mean(sd/mean) x mean(mean)` and reported the band
+as 1021 -> 805 DN.  `mean(sd/mean) x mean(mean)` is not `mean(sd)`.  Measured
+directly on the same population it is **973.0 -> 664.6 DN**.  My levels were
+5-14% wrong and my change was 10 points wrong -- **in the conservative
+direction**, so it understated my own case rather than flattering it, which is
+the only reason it did not become a fourth published error.
+
+**And the thing I missed entirely: a fifth of the band is clipped.**
+MEASURED, pixels with any channel `== 65535`:
+
+| zone | n px | estimator | pyramid | ratio |
+| --- | ---: | ---: | ---: | ---: |
+| deep interior (d <= -60) | 13013252 | 0.0000% | 0.0000% | - |
+| interior collar (-30..-5) | 2842602 | 0.0000% | 0.0000% | - |
+| **the 14.4 band (47..93)** | 575576 | **0.0952%** | **20.4824%** | **215x** |
+| near backdrop (1..20) | 549645 | 0.0619% | 1.6263% | 26.3x |
+| mid backdrop (120..250) | 1522130 | 7.8767% | 20.7315% | 2.6x |
+| far field (300..600) | 2795748 | 8.6106% | 14.6171% | 1.7x |
+
+Frame-wide **1.8673% -> 4.6508%**.  In the band the blend's **p90 is 65522.0 and
+p95 upward is pinned flat at 65535.0**, against a control p95 of 58387.7.  The
+pyramid log's `not applied : ... clip census ...` names a probable cause.  I
+argued for two sections about the contrast of a region a fifth of which has no
+headroom left, and never counted it.
+
+### 15.4 Why the reversal fails as an exculpation
+
+I wrote that the placebo motion is "(a) the veil being reduced and (b) the
+artifact being removed".  (b) survives 15.2.  **(a) is not a defence.**  The
+owner's constraint is that the veiling darkening belongs to BUILD-HALO and must
+not be moved.  MEASURED on the same-binary linear pair:
+
+| subject | darkening at the silhouette, control -> blend |
+| --- | --- |
+| `coffee-bean` | -39.3% -> -37.2% (2.1 points) |
+| `flower-bud-alone-cpl` | -40.3% -> -34.8% (5.5 points, 1101 DN) |
+
+*"The blend moved the placebo because it reduced the veil"* relocates the
+violation from the placebo rule to the veil rule.  It does not clear it.  ARGUED,
+on MEASURED numbers, and it is the reason 14.4 keeps its finding.
+
+### 15.5 Ground truth, from the source frames themselves
+
+The strongest instrument in this section is not a merge comparison at all.  All
+105 `coffee-bean` source frames were profiled, each using its own mask and its
+own far field, so no registration is needed; validated against the borrowed-mask
+run at -30.84% versus -30.88%.  MEASURED:
+
+| zone | frame min | frame max | frame mean | control | blend |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1..20 | -35.18% | -27.08% | -31.59% | **-30.88%** | -25.57% |
+| 21..46 | -26.78% | -15.52% | -20.23% | **-20.60%** | -13.39% |
+| 47..93 | -16.36% | -11.94% | -13.55% | -18.19% | -9.26% |
+| 120..250 | -7.03% | -5.70% | -6.40% | -4.35% | **-3.80%** |
+
+**The control's near-backdrop level sits inside the 105-frame envelope at
+d=1..46.  The blend's sits outside it at every distance measured, always too
+bright.**
+
+The counter-reading, which must be given: a merge that genuinely removed defocus
+bleed *should* be brighter than every frame at small d, so "outside the
+envelope" near the silhouette is not automatically wrong.  The discriminator is
+focus-dependence.  At d=1..20 the deficit swings 8 points across the bracket and
+is V-shaped with a plateau near -27.1% over frames 60-76 -- that is bleed, and it
+is removable.  At **d=120..250 it is nearly focus-invariant, -5.70 to -7.03, a
+1.3-point spread.  That is real shadow and cannot be bled away.**  There truth is
+about -6.4%, the control is 2.05 points too bright and the blend is **2.60 points
+too bright**.  On the one zone where ground truth is unambiguous, **both arms
+wash out about a third of a real shadow and the blend is the worse of the two.**
+
+### 15.6 One site where the blend genuinely over-smooths
+
+Found from a **random** null, not selected on the arm difference, so it is not a
+circular pick.  `flower-bud-alone-cpl` at (y=3728, x=4252), sigma=1 local
+modulation in DN:
+
+| | control | blend | sharpest source frame | bracket min/max |
+| --- | ---: | ---: | ---: | --- |
+| (3728,4252) | 28.11 | **5.84** | 13.12 | 7.84 / 13.12 |
+
+**The blend is below the minimum over all 26 sampled frames**, while frame 00065
+shows real mottled surface texture there, and the mean level drops 1839 -> 1050
+DN.  Both arms are wrong at that site in opposite directions: the control invents
+a banded plateau, the blend erases the texture.  At the other five ground-truthed
+sites the blend was equal to or closer to truth than the control.
+
+`couch-fibers-cpl` remains undamaged and this is now a second independent
+failure to find damage there.  Unselected, absolute DN, subject interior:
+sigma=1 **87.93 -> 96.26 (+9.48%)**, sigma=2 +4.64%, sigma=4 +2.40%, sigma=8
++2.12%; whole frame and backdrop all positive.  Selecting on the control gives
+-3.97% *relative* but **+2.99% in absolute DN**, the apparent loss being entirely
+the interior mean rising 5868 -> 6106 DN -- the same level trap as 13.5.
+Reversed selection +4.59% DN, random null +8.48% DN.
+
+### 15.7 Three defects in my own instruments, and they are fixed
+
+All three were found by the verifier, all three are in code this report has been
+citing, and all three are now corrected in
+`experiments/BUILD-ELECT/src/`:
+
+- **`annulus.py` measured spatial concentration on a 128 px smoothed field**,
+  which destroys concentration by construction, so it could only ever report
+  "diffuse".  Recomputed on the raw per-pixel difference the answer holds --
+  top 1% carry 2.68% and top 25% carry 56.29%, against a uniform 1% and 25% --
+  but **the published evidence for a correct conclusion was circular.**
+- **The four crop sites in 14's pictures do not lie in the band they
+  illustrate.**  Their signed distances are 21.0, 115.4, 24.7 and 23.9 px; the
+  band is 47-93.  They were also chosen as the argmax of the difference they
+  then report.  Both scripts now print each site's signed distance and label the
+  selection circular in its own output.
+- **`ringprofile.signed_distance` padded the wrong transform.**  `d_out` was
+  padded, where padding adds no zeros and is a no-op; `d_in` was not, and it is
+  the one that saturates -- on a border-touching blob a corner whose true
+  distance is 1 came back as **12**.  Fixed, and the deep-interior population
+  moved 13178401 -> 13013252 px as a result, so the bug was live.
+
+And one correction to a caveat I published **against my own number**:
+`subject_mask` keeps only the largest connected component, but returned and
+printed the count *before* that reduction.  So 14.4's *"59.62% of the frame in
+2115 connected components, so distance is an average over many unrelated
+silhouettes"* is **false**: the returned mask has **one** component.  Distance on
+`coffee-bean` is still awkward -- one blob covering 59.62% of the frame with a
+convoluted boundary -- but the stated reason was wrong, and it was the reason I
+used to discount my own finding.  Both the function and its callers now print
+`kept of found`.
+
+### 15.8 14.4, reworded
+
+The sentence *"the blend introduces profile structure the control does not
+have"* is not what the data say.  The blend's peaks at 0.61 / 0.57 / 0.72 /
+1.17% are bin-to-bin wiggles riding a **9.35% monotone rise** across the band,
+and the wiggle is a symptom of the 20.48% clipping, not new structure.  The
+honest statement:
+
+> **The placebo is moved, in absolute DN, in every zone.**  The motion is local,
+> not a calibration difference: +5696 DN in the 47-93 px band against +872 DN in
+> the far field, 6.53x, with only about 11% of it affine.  It is made of three
+> things -- the veil being reduced by 2.1 points, which is out of lane; a real
+> invented-contrast removal, worth about 11% of detrended local sd against 8% in
+> the interior, so barely localised; and **a 215x increase in clipped pixels,
+> reaching 20.48% of the band**.  The radial profile is about 17x noisier
+> bin-to-bin in this band as a result.
+
+### 15.9 The conclusion still does not change, and what to route
+
+**Close the lane.**  The commissioned defect is gone and 15.2 shows it was
+invented rather than removed: the silhouette-hugging ring goes from 12.65%
+prominence at d=21 px to no interior peak below d=275, the polygonal plateaus
+exist in no source frame, and `couch-fibers` is undamaged under two independent
+attempts to damage it.
+
+Three things leave this lane pointing elsewhere, none of them mine to fix:
+
+1. **The pyramid arm clips.** 20.48% of the near-backdrop band at the container
+   ceiling, `clip census` disabled in that path.  Sent to BUILD-BLEND ahead of
+   it becoming the default.  This is the one I would not ship without looking at.
+2. **The blend moves the veiling darkening**, 5.5 points on `flower-bud` and 2.1
+   on `coffee-bean`.  BUILD-HALO's term.
+3. **Both arms wash out about a third of a real, focus-invariant shadow** at
+   d=120..250, and the blend is the worse of the two.  That is a new defect
+   belonging to neither the election nor the blend specifically, and nobody owns
+   it.
+
+One adjudication for the owner rather than for me: the blend's largest surviving
+interior peak on `flower-bud` is **1.24% at d=275 px**.  Read as *"the ring at
+~21 px must fall below 1%"* it passes outright; read as *"no interior peak above
+1%"* it sits just the wrong side of the pre-registered line.  The two readings
+differ and the number is close enough that the choice matters.
+
+### 15.10 What section 15 did not verify
+
+- **The five disabled stages cannot be separated from the merge** on the `flip/`
+  pair, so no number in 14 or 15 is attributable to the multi-band merge alone.
+- **The producing binary is not hash-verified.**
+- **Whether "brighter than every source frame" at small d is an error or correct
+  bleed-free behaviour is unsettled.**  The envelope is MEASURED; the bleed
+  reading is ARGUED.  Only d=120..250 is a clean discriminator and both arms
+  fail it.
+- Six sites on `flower-bud` and four on `coffee-bean` were ground-truthed
+  against source frames; none on `couch-fibers`.  The zone statistics are
+  whole-frame and unselected, but the picture-level truth check is a small
+  sample.
+- The source frames were decoded rawpy AHD at `half_size` while both merged arms
+  are Malvar-He-Cutler, which inflates merged fine-scale numbers relative to the
+  frames.  The bias runs *against* 15.6's finding, so "blend below the bracket
+  minimum" is conservative; "control above every frame" is partly instrument.
+- **No regression test covers any of this** -- not the placebo profile, not the
+  clip census, not the veil darkening.  Every number in 14 and 15 is a one-off
+  measurement by hand and nothing will catch a re-break.
+- `lavendar` and `couch-fibers` still have no ring measurement on linear data,
+  as 14.7 said.
+- The 12.6 abstention plane is still unimplemented and unrendered.
