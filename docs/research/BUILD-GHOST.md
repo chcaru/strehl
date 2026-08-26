@@ -27,7 +27,7 @@ normalisation. That assertion was ARGUED. This report measures it.
 |---|---|---|
 | 1 | How many of 26 have residual motion large enough to matter? | **MEASURED: 10 of 26** clear a floor measured on a subject that cannot move; **5 of 26** at the control-validated K=1 baseline. Every one clears it by only 1.07×–1.90×. None is a large signal. |
 | 2 | How many have exposure drift large enough to mis-weight the gate? | **MEASURED: depends on the merge's focus window W, and I report the whole curve rather than guess it.** At W=2, **6 of 26**; at W=4–8, **10 of 26**; at W=32, **15 of 26**; across the whole bracket, **23 of 26**. The bracket-total figure is the misleading one. |
-| 3 | Is any of it visible in the delivered masters? | **MEASURED (by eye, 17 crops at 1:1 across 13 subjects): no. Not one instance of ghosting, doubling, or smear.** Including bee setae against flat white and printed text on paper, the two most ghost-revealing configurations in the corpus. |
+| 3 | Is any of it visible in the delivered masters? | **MEASURED (by eye, 22 crops at 1:1 across 15 subjects): no. Not one instance of ghosting, doubling, or smear.** Including bee setae against flat white and printed text on paper, the two most ghost-revealing configurations in the corpus. |
 | 4 | Does the port need to happen tonight? | **No — v2, with one carve-out.** See recommendation. |
 
 ---
@@ -264,9 +264,9 @@ check evidence about the wrong thing). Masters read with `tifffile`, **asserted
 hand-rolled lossless PNG writer so no JPEG artifact could masquerade as a ghost.
 The 16→8-bit path was itself smoke-tested and viewed first (`smoke_crops.py`).
 
-**17 crops viewed across 13 subjects**, covering every subject Part 1 flagged, the rigid
-null, and the three subjects most likely on physical grounds to have moved (drifting
-bubbles, foam, cut flowers).
+**22 distinct crops viewed across 15 subjects**, covering every subject Part 1 flagged,
+the rigid null, and the three subjects most likely on physical grounds to have moved
+(drifting bubbles, foam, cut flowers).
 
 | subject | what I actually see at 1:1 |
 |---|---|
@@ -282,15 +282,24 @@ bubbles, foam, cut flowers).
 | `coffee-bubbles` | Bubble rims with bright specular highlights — bubbles genuinely drift on a liquid surface. Rims **sharp and single**. No doubled rim. |
 | `foam` | Dark wet foam; bubble walls with speculars. Slightly mushy walls consistent with defocus and translucency. No doubling. |
 | `flat-on-ruler-cpl` (rigid null) | Paper fibre and rule markings, sharp. As expected. |
-| `bee-2-cpl`, `flowers-cpl`, `flower-bud-alone-cpl` | Clean; no artifact seen. |
+| `bee-2-cpl` (1.07×) | Wing membrane with veins and setae over pale cuticle. Veins sharp and single, hairs individually resolved. Soft in places from defocus; no doubling. |
+| `flowers-cpl` | Pale low-contrast surface, largely defocused. No structure present to ghost. |
+| `flower-bud-alone-cpl` | Bud with trichomes silhouetted against white; foreground soft from defocus, edge trichomes crisp and single. No doubling. |
 
-**Census: 13 subjects viewed → 13 with no visible ghosting, 0 with visible ghosting.
-Sums to 13.** Crops: `C:\dev\strehl-out\BUILD-GHOST\crops\` and `crops\verdict\`,
+**Census: 15 subjects viewed → 15 with no visible ghosting, 0 with visible ghosting.
+Sums to 15.** Crops: `C:\dev\strehl-out\BUILD-GHOST\crops\` and `crops\verdict\`,
 with `manifest.json` recording each site's master coordinates, K, frame index,
 coherence and excess so ORCH can re-cut any of them.
 
 **MEASURED: the residual motion in this corpus is measurable but not visible.**
 That is the honest answer and it changes the priority, exactly as the brief anticipated.
+
+**Coverage limit, stated plainly: 26 subjects → 15 viewed, 11 not viewed. Sums to 26.**
+The 15 were chosen as all 10 Part 1 flagged, the rigid null, and the four most likely
+on physical grounds to have moved. The 11 unviewed are subjects Part 1 measured as
+quiet with no hot cluster at any baseline, so there was no motion site to crop; a ghost
+there would have to be one my detector missed entirely. That is a real residual risk and
+I am not claiming otherwise — it is the main thing an independent verifier should attack.
 
 ---
 
@@ -303,8 +312,8 @@ Reasoning, with the tags:
 
 1. **MEASURED** — no delivered master shows visible ghosting, doubling or smear at 1:1,
    including in the two configurations (setae on white; black text on white) where a
-   ghost would be unmissable. Outlier rejection cannot improve a picture that has no
-   visible outlier artifact.
+   ghost would be unmissable, across 22 crops on 15 of the 26 subjects. Outlier
+   rejection cannot improve a picture that has no visible outlier artifact.
 2. **MEASURED** — residual motion is marginal everywhere. The largest detection in 26
    subjects clears its floor by 1.90×, and seven of ten by under 1.4×.
 3. **MEASURED** — the alarming half-stop exposure ramps are mostly magnification from
