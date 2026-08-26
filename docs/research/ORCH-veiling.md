@@ -9181,3 +9181,114 @@ axial-CA mechanism is **their hypothesis, generated to explain a residual, still
 untested**, backed by two confounded instruments with opposite signs. It goes
 forward to the election lane **"with a mechanism and a measurement-shaped hole
 where its evidence should be"** -- their phrase, and it travels with the fact.
+
+## 79. The print verdict, and a gate that certifies existence rather than truth
+
+### An unconditioned gamut statistic measures the bokeh
+
+Three subjects were predicted -- by me -- as where out-of-gamut greens would
+bite: `flowers-cpl`, `lavendar-cpl`, `flower-bud-with-background-fern-cpl`. All
+three refuted. Corrected figures: **`flowers-cpl` 0.25%**, **`lavendar-cpl`
+0.00%**. I reasoned from "saturated green macro subject" and never asked what
+fraction of those frames is saturated at all. **10 of 26 subjects have no
+saturated content whatsoever.**
+
+BUILD-RENDER's own table over-reported, and **looking** is what caught it: the
+`flowers-cpl` sheet scored a 90.5% window in which master and printable proof
+were indistinguishable by eye, because the crop had landed on background bokeh
+and 5 Lab units off a tinted grey is invisible.
+
+> **A gamut statistic not conditioned on saturation measures the background.**
+> Almost every macro frame is mostly defocused near-neutral, so an
+> unconditioned percentage reports how much bokeh the frame contains -- and
+> reports it as a colour problem.
+
+Conditioned on master C\* >= 20, commissioned on two arms *required to
+disagree*: tinted neutral **0.00%**, saturated green **100.00%**. Corrections
+were large: `flower-bud-alone-cpl` **15.49% -> 3.40%**.
+
+**A 90.5% that looks like nothing is the same near-tie as section 75's
+`0.0111 / 0.0097`.** Different lane, different statistic, same trap.
+
+### Deleting an assertion that passed for the wrong reason
+
+> A *sign* assertion I wrote agreed with the data for the wrong reason
+> (display-profile TRC, not gamut). **I removed it rather than inverting it to
+> fit.**
+
+An assertion that passes for the wrong reason is worse than one that fails: it
+keeps passing after the reason changes. Second deletion-over-correction call
+tonight, after BUILD-TRIAGE deleted a retyped threshold rather than correcting
+it, and both were right.
+
+### The near-black subject prints fine; the defect is upstream
+
+The expected failure did not occur. `coffee-bubbles` scores **1.07** -- the
+press slightly *expands* its shadow separation, because black-point
+compensation maps master black to paper black. **0 of 26 crushed**, worst 0.66,
+midtone control 0.97.
+
+What replaced the dead hypothesis is more useful: the subject carries only
+**1.89 L\*** of modulation across **94.67%** of the frame. **Never captured, not
+destroyed by print.** That reassigns the defect from output to capture, which is
+the distinction this project exists to draw.
+
+Five subjects would not go to a lab as they stand -- yellow-greens to olive
+(`flower-inner-edge-cpl` 34.1%, `leaf-2-cpl` 32.2%, `lead-1-cpl` 29.5%) and
+blues to slate (`119MSDCF` 25.7%, `109MSDCF` 25.1%) -- and **sharpness is
+implicated in none of them.** But the proof ran against **RSWOP, web offset**,
+the narrowest realistic target, and the measurer said so themselves:
+
+> **Those five verdicts are almost certainly pessimistic**, and the owner's real
+> paper profile would change them more than any available code change.
+
+Filed as `captures-needed.md` section 31. The ICC path is already proven live --
+**92 DN** under profile substitution, **3 DN** round trip -- so a real profile
+lands on verified machinery.
+
+### Existence is mechanically checkable; truth is not
+
+V-HIGHLIGHT verified BUILD-TRIAGE's definition gate: 31 fields, all defined, no
+orphans, reproduced independently off the JSON. Then refuted a number shipped
+**inside a field definition** by a factor of six.
+
+| subject | m/f | stated | rel. err |
+|---|---:|---:|---:|
+| **dry-erase-marker-head-cpl** | **7.138** | 2.316 | **208.2%** |
+| bee-2-cpl | 1.918 | 1.429 | 34.3% |
+
+The count of 13/25 holds under two independent criteria. The worst case does
+not: `bee-2-cpl` ranks **2 of 25**, and nothing excludes the true leader --
+same verdict, same site count. A reader who does the responsible thing and
+consults the definition is told the maximum damage is 34% when it is 208%.
+
+> **A gate that proves every field *has* a definition does not prove any
+> definition is *true*.** Existence is mechanically checkable; truth is not, and
+> the gate's green must say which.
+
+Three definitions were audited for content. **One of the three was wrong.** The
+remaining 28 are unverified -- not suspect, unverified, and the distinction is
+the whole point of section 75's partitioned-summary rule applied one level up.
+
+### The leak the diagnosis predicted and the fix missed
+
+BUILD-TRIAGE's own caveat was *"the `finally` protects only the state I knew to
+restore."* Measured by the verifier: **`commission_wording restored: False`** --
+monkeypatched by both mutations, restored by neither, benign only because the
+process exits. **The author diagnosed the class and their fix missed the
+remaining instance of it**, which is the strongest possible argument for their
+own preferred remedy: a subprocess per mutation, so that no `finally` is
+load-bearing at all.
+
+### Two verifier behaviours worth naming
+
+**A false positive caught before it landed.** Their first nested-field probe
+flagged `evidence` as uncovered; they traced it to their own probe, not to a
+defect, and published that they had. A verifier's false positive costs the
+author real time.
+
+**A finding in the author's favour, unasked for.** BUILD-TRIAGE's mutation
+anchors **fail safe** -- a non-landing anchor makes the run succeed and print
+`MUTATION SURVIVED -- FAIL`. That is this project's standing
+anti-`replace(x, y, 1)` rule satisfied by construction, found by someone hunting
+for the opposite.
