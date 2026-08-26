@@ -1,0 +1,10 @@
+=== C1: is the +0.35 correlation made by the demosaic? ===
+  frame 102 DEMOSAICED (Malvar-He-Cutler)    tiles   617  sigma  106.826  rho   0.3526  HF frac  0.5499
+  frame 102 BINNED (no interpolation)        tiles   151  sigma   82.786  rho   0.2025  HF frac  0.6917
+  -> binned is REAL sensor noise with no interpolator between it and the file.
+
+=== C2: how much of the backdrop residual reproduces between exposures? ===
+  corr(frame102 residual, frame103 residual) over 617 backdrop tiles:
+    median +0.1420   p10 +0.1133   p90 +0.1696
+  Two adjacent exposures of the SAME defocused backdrop. A residual that is
+  scene or fixed pattern reproduces; temporal noise does not.

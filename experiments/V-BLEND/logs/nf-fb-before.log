@@ -1,0 +1,21 @@
+C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\_core\fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\_core\_methods.py:142: RuntimeWarning: invalid value encountered in divide
+  ret = ret.dtype.type(ret / rcount)
+C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\_core\_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+file          : C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-before.tiff
+tiles         : 8030 of 64x64;  structureless 0 (0.00%)  rule: structure index < 1.5
+
+  signal bin (DN)     ntile   sigma_std   sigma_hf   std/hf   struct
+       0-   500         0   (too few)
+     500-  1000         0   (too few)
+    1000-  2000         0   (too few)
+    2000-  4000         0   (too few)
+    4000-  8000         0   (too few)
+    8000- 16000         0   (too few)
+   16000- 32000         0   (too few)
+   32000- 65536         0   (too few)
+
+OVERALL structureless: sigma_std nan  sigma_hf nan  std/hf nan
+saved -> C:\dev\strehl-out\V-BLEND\nf-fb-before.npz

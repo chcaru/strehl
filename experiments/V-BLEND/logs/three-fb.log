@@ -1,0 +1,15 @@
+FRAME102 = C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-FRAME102.tiff
+  BEFORE = C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-before.tiff
+   AFTER = C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-after.tiff
+
+selector: mean coarse structure across ALL 3 images; flattest 10% per bin
+   signal bin      ntile |    FRAME102      BEFORE       AFTER |BEFORE/FRAME102AFTER/FRAME102
+    1000-  2000      89 |      29.625      69.960      70.854 |         2.361         2.392
+    2000-  4000      65 |      36.029     103.893      87.388 |         2.884         2.426
+    4000-  8000      14 |      84.015     424.458     253.188 |         5.052         3.014
+    8000- 16000      19 |      96.710      40.136     129.734 |         0.415         1.341
+   16000- 32000     616 |     111.574      38.439      69.757 |         0.345         0.625
+       WEIGHTED     803 |      95.544      54.001      75.923 |         0.565         0.795
+
+    BEFORE / FRAME102: 0.565   BELOW the single-frame floor -- consistent with averaging/smoothing
+     AFTER / FRAME102: 0.795   BELOW the single-frame floor -- consistent with averaging/smoothing

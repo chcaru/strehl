@@ -1,0 +1,11 @@
+bright-backdrop tiles 16000-32000 DN, flattest 10%: 614 of 6138
+(defocused in every frame -- no recoverable detail lives here)
+
+  signal                                       sigma   rho_lag1   HF frac   std/hf
+  synthetic white (ORCH's reference)          49.961    -0.0013    0.8065    1.002
+  FRAME102                                   111.574     0.3512    0.5577    1.968
+  BEFORE                                      38.415     0.4636    0.4531    2.632
+  AFTER_275fbd1                               69.609     0.6653    0.2694    3.838
+  AFTER_275fbd1 MINUS BEFORE (the change)     48.619     0.6999    0.2407    6.362
+
+  white noise gives rho ~ 0.00 and HF frac ~ 0.75 by construction.

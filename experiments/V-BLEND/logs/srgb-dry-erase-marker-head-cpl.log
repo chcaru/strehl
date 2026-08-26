@@ -1,0 +1,44 @@
+
+--- dry-erase-marker-head-cpl-before.tiff   7040x4688  n=33,003,520 px/channel ---
+  R: count@0 =        100  =   0.0003% of frame
+     cumulative %<=lvl : 0:0.0003  1:0.0003  2:0.0003  3:0.0003  4:0.0003  8:0.0003  16:0.0003  32:0.0003  64:0.0004  128:0.0004  256:0.0006  512:0.0010  1024:0.0041
+     per-level counts  : 0:100  1:0  2:0  3:1  4:0  5:0  10:1  20:1  50:0  100:0  200:1
+     mean per-level density over levels 1..256 = 0.000001% per level
+     SPIKE RATIO p0/density = 272.3x
+  G: count@0 =          4  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0000  256:0.0001  512:0.0004  1024:0.0053
+     per-level counts  : 0:4  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:1
+     mean per-level density over levels 1..256 = 0.000000% per level
+     SPIKE RATIO p0/density = 48.8x
+  B: count@0 =        145  =   0.0004% of frame
+     cumulative %<=lvl : 0:0.0004  1:0.0004  2:0.0004  3:0.0004  4:0.0004  8:0.0004  16:0.0005  32:0.0005  64:0.0005  128:0.0006  256:0.0007  512:0.0010  1024:0.0649
+     per-level counts  : 0:145  1:2  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:0
+     mean per-level density over levels 1..256 = 0.000001% per level
+     SPIKE RATIO p0/density = 469.9x
+
+  VERDICT for dry-erase-marker-head-cpl-before.tiff:
+     R: no meaningful mass at zero (0.0003%)
+     G: no meaningful mass at zero (0.0000%)
+     B: no meaningful mass at zero (0.0004%)
+
+--- dry-erase-marker-head-cpl-after.tiff   7040x4688  n=33,003,520 px/channel ---
+  R: count@0 =    612,501  =   1.8559% of frame
+     cumulative %<=lvl : 0:1.8559  1:1.8613  2:1.8660  3:1.8706  4:1.8749  8:1.8899  16:1.9151  32:1.9540  64:2.0093  128:2.0895  256:2.2104  512:2.3989  1024:2.7289
+     per-level counts  : 0:612,501  1:1,780  2:1,568  3:1,511  4:1,432  5:1,264  10:1,091  20:856  50:571  100:413  200:292
+     mean per-level density over levels 1..256 = 0.001385% per level
+     SPIKE RATIO p0/density = 1,339.9x
+  G: count@0 =    646,485  =   1.9588% of frame
+     cumulative %<=lvl : 0:1.9588  1:1.9653  2:1.9717  3:1.9775  4:1.9832  8:2.0039  16:2.0386  32:2.0904  64:2.1583  128:2.2410  256:2.3602  512:2.5647  1024:2.9521
+     per-level counts  : 0:646,485  1:2,148  2:2,083  3:1,940  4:1,873  5:1,829  10:1,553  20:1,149  50:681  100:434  200:296
+     mean per-level density over levels 1..256 = 0.001568% per level
+     SPIKE RATIO p0/density = 1,249.4x
+  B: count@0 =    777,717  =   2.3565% of frame
+     cumulative %<=lvl : 0:2.3565  1:2.3704  2:2.3830  3:2.3943  4:2.4041  8:2.4363  16:2.4775  32:2.5237  64:2.5786  128:2.6582  256:2.7891  512:3.0161  1024:3.4239
+     per-level counts  : 0:777,717  1:4,584  2:4,165  3:3,739  4:3,226  5:3,016  10:2,044  20:1,103  50:494  100:375  200:304
+     mean per-level density over levels 1..256 = 0.001690% per level
+     SPIKE RATIO p0/density = 1,394.5x
+
+  VERDICT for dry-erase-marker-head-cpl-after.tiff:
+     R: CLAMP  (spike 1,340x, 1.8559% of frame)
+     G: CLAMP  (spike 1,249x, 1.9588% of frame)
+     B: CLAMP  (spike 1,394x, 2.3565% of frame)

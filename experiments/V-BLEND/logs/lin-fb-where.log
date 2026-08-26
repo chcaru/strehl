@@ -1,0 +1,31 @@
+AFTER  C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-after.tiff
+BEFORE C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-before.tiff
+shape 4688x7040  n=33,003,520
+
+1. CO-OCCURRENCE ACROSS CHANNELS (a genuinely black pixel is black in all three)
+   zeros: R=59,689  G=101,176  B=350,596
+   all three zero simultaneously: 59,604 (17.00% of the blue zeros)
+   R zero AND B zero: 59,626 (17.01% of blue zeros)
+   G zero AND B zero: 99,642 (28.42% of blue zeros)
+   -> at the BLUE zero sites, the other channels read:
+      R: median 471 DN   p90 976 DN   frac==0 17.01%
+      G: median 293 DN   p90 782 DN   frac==0 28.42%
+      B: median 0 DN   p90 0 DN   frac==0 100.00%
+
+2. BORDER TEST (packaging artifacts hug the frame edge)
+   border band of 8 px = 187,392 px (0.568% of frame)
+   R: 0 of 59,689 zeros on the border (0.000%); if uniform we would expect 0.568%
+   G: 0 of 101,176 zeros on the border (0.000%); if uniform we would expect 0.568%
+   B: 0 of 350,596 zeros on the border (0.000%); if uniform we would expect 0.568%
+
+3. NEIGHBOUR TEST (thin ringing sits next to something bright)
+   B: brightest 4-neighbour of a zero pixel -- median 10.0  p90 54  p99 115
+      fraction of zeros with ANY neighbour > 4000 DN: 0.000%
+      fraction whose brightest neighbour is itself 0: 32.01%
+
+4. WHAT THE BEFORE ARM READS AT THOSE EXACT LOCATIONS
+   R (59,689 sites): BEFORE median 3,040 DN  p10 1,110  p90 3,696  frac BEFORE==0 0.000%
+   G (101,176 sites): BEFORE median 2,862 DN  p10 834  p90 3,800  frac BEFORE==0 0.000%
+   B (350,596 sites): BEFORE median 2,162 DN  p10 644  p90 3,400  frac BEFORE==0 0.001%
+
+   (a genuinely black scene region would read ~0 in BOTH arms)

@@ -1,0 +1,11 @@
+sites the 0d9fd28 build clamped to exactly 0 (blue): 350,596
+
+  arm                              median        p10        p90    % at 0
+  0d9fd28 AFTER (clamped)               0          0          0  100.000%
+  275fbd1 AFTER (hull fix)            805        566       1063    0.000%
+  BEFORE (ship path)                 2162        644       3400    0.001%
+
+  275fbd1 minus BEFORE at those sites: median -1320 DN, p10 -2550, p90 -29
+  fraction where 275fbd1 now reads within +/-30% of BEFORE: 40.1%
+
+  whole-frame minimum, 275fbd1: R/G/B -> 444, 446, 332

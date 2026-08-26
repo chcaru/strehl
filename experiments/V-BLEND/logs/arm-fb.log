@@ -1,0 +1,31 @@
+=== flower-bud-alone-cpl  camera-linear ===
+BEFORE C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-before.tiff
+AFTER  C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-after.tiff
+alignment check: integer shift AFTER vs BEFORE = (0, 0)  OK
+
+--- selector: avg (ORCH's rule);  flattest 10% of tiles per signal bin ---
+   signal bin      ntile |  BEFORE std   AFTER std   ratio |  BEFORE hf    AFTER hf   ratio |  B std/hf  A std/hf
+    1000-  2000      88 |     72.099      71.219   0.988 |      8.673      8.643   0.997 |     8.313     8.240
+    2000-  4000      66 |     91.591      83.803   0.915 |     13.830     12.180   0.881 |     6.623     6.880
+    4000-  8000      13 |    578.862     505.861   0.874 |     35.652     32.421   0.909 |    16.236    15.603
+    8000- 16000      21 |     40.606     114.993   2.832 |     16.068     39.685   2.470 |     2.527     2.898
+   16000- 32000     613 |     38.274      67.191   1.756 |     14.433     17.505   1.213 |     2.652     3.838
+       WEIGHTED     801 |     55.218      77.375   1.401 |     14.138     16.916   1.197 |     3.906     4.574
+
+--- selector: before-only;  flattest 10% of tiles per signal bin ---
+   signal bin      ntile |  BEFORE std   AFTER std   ratio |  BEFORE hf    AFTER hf   ratio |  B std/hf  A std/hf
+    1000-  2000      88 |     72.099      73.252   1.016 |      8.573      9.014   1.051 |     8.410     8.126
+    2000-  4000      66 |     89.611      94.909   1.059 |     13.212     12.272   0.929 |     6.782     7.734
+    4000-  8000      13 |    573.382     586.569   1.023 |     35.652     32.877   0.922 |    16.083    17.842
+    8000- 16000      21 |     40.606     140.628   3.463 |     15.797     53.080   3.360 |     2.570     2.649
+   16000- 32000     613 |     40.510     111.707   2.758 |     15.955     35.267   2.210 |     2.539     3.167
+       WEIGHTED     801 |     56.677     114.564   2.021 |     15.234     30.916   2.029 |     3.720     3.706
+
+--- selector: after-only;  flattest 10% of tiles per signal bin ---
+   signal bin      ntile |  BEFORE std   AFTER std   ratio |  BEFORE hf    AFTER hf   ratio |  B std/hf  A std/hf
+    1000-  2000      88 |     72.914      67.282   0.923 |      9.115      7.423   0.814 |     7.999     9.064
+    2000-  4000      66 |    105.424      79.587   0.755 |     15.230     12.563   0.825 |     6.922     6.335
+    4000-  8000      13 |    578.862     459.969   0.795 |     36.388     32.421   0.891 |    15.908    14.187
+    8000- 16000      21 |     79.912      50.361   0.630 |     16.446     14.566   0.886 |     4.859     3.457
+   16000- 32000     613 |     41.173      64.518   1.567 |     14.868     16.832   1.132 |     2.769     3.833
+       WEIGHTED     801 |     59.696      72.110   1.208 |     14.657     15.640   1.067 |     4.073     4.611

@@ -1,0 +1,48 @@
+strehl BUILD-BLEND -- LAPLACIAN MULTI-BAND MERGE (an experiment, not the ship path)
+camera          : ILCE-7CM2
+lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl"
+iso             : 100
+levels          : black 512, white 15360
+noise model     : Profile
+frames          : 205 from D:\personal\macro\flower-bud-alone-cpl  (first decode 0.79 s)
+planes          : 3520 x 2344 per CFA plane
+--- the merge ---
+bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination
+                  WITHIN each band. That does NOT make the reconstruction convex: each band
+                  has its own weight field, so a sum of convex combinations taken under
+                  different weightings is not a convex combination of the inputs. The
+                  hull clamp is what confines the output to what the frames support.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim. So: near-argmax where acuity lives, gentle
+                  blending where the eye reads steps.
+base band       : plain mean across frames
+alignment       : ON (sidecar), reference 102, 205 placed / 0 refused, 0.0 s
+  coverage      : field of view scaled to 0.9971 so every frame covers every pixel
+memory plan     : 3 workers x (629 MB accumulator + 441 MB pyramid scratch + 252 MB frame)
+                  = 3.9 GB, CONSTANT in the frame count. The merge is a fold: every
+                  accumulator is a sum, so a frame is built, added and dropped.
+band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived. The
+                  derived value compounds an independence assumption that is false after
+                  the first reduction and is an order of magnitude low by level 3.)
+
+folded          : 205 / 205 frames in 522.0 s (2.55 s per frame, 3 workers)
+averaged        : 49.1% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+hull clamp      : 8.647% 10.106% 10.105% 10.986%
+                  per plane, the fraction of output pixels the reconstruction put outside
+                  the range its own input frames support, and which were clamped back
+                  into it. Per-band convexity does not imply reconstruction convexity.
+colour          : no characterisation; CAMERA-NATIVE RGB
+wrote           : C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-after-275fbd1.tiff (7040 x 4688, 16-bit RGB, Malvar-He-Cutler demosaic) in 8.0 s
+total           : 533.3 s

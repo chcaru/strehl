@@ -1,0 +1,15 @@
+file          : C:\dev\strehl-out\V-BLEND\lin\flower-bud-alone-cpl-after.tiff
+tiles         : 8030 of 64x64;  structureless 1 (0.01%)  rule: structure index < 1.5
+
+  signal bin (DN)     ntile   sigma_std   sigma_hf   std/hf   struct
+       0-   500         1   (too few)
+     500-  1000         0   (too few)
+    1000-  2000         0   (too few)
+    2000-  4000         0   (too few)
+    4000-  8000         0   (too few)
+    8000- 16000         0   (too few)
+   16000- 32000         0   (too few)
+   32000- 65536         0   (too few)
+
+OVERALL structureless: sigma_std 1.152  sigma_hf 0.128  std/hf 9.002
+saved -> C:\dev\strehl-out\V-BLEND\nf-fb-after.npz

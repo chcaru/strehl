@@ -1,0 +1,20 @@
+flower-bud-alone-cpl: shapes (4688, 7040, 3) (4688, 7040, 3)
+
+channel B: BEFORE value -> what AFTER reads there
+        BEFORE bin          npx  AFTER med  AFTER p10  AFTER p90  % AFTER==0
+        0-    250          124        549          0       2292     30.645%
+      250-    500      150,192        552        393        602      3.549%
+      500-   1000    2,538,534        704        259        994      3.991%
+     1000-   2000    2,562,599       1142        416       1732      2.410%
+     2000-   3000      789,712       1801          0       2946     10.571%
+     3000-   4000      701,334        927          0       3680     13.501%
+     4000-   6000      268,315       4216       1000       6284      1.486%
+     6000-   8000       89,636       7175       5206      11398      0.004%
+     8000-  12000      214,895      15754       8898      18305      0.000%
+    12000-  16000    2,814,932      18447      16002      20198      0.000%
+    16000-  24000   22,873,247      18659      16838      19900      0.000%
+
+  BEFORE in [2000,4000): AFTER spans p1=0 to p99=5387, and 11.95% sit at exactly 0.
+  A single-valued encoding curve cannot map one input level to both 0 and full signal.
+
+wrote C:\dev\strehl-out\V-BLEND\pics\flower-bud-alone-cpl-clamp-map.png

@@ -1,0 +1,11 @@
+backdrop tiles (no detail available) : 616
+subject tiles where merge is >3x sharper than frame 102 : 7
+  fallback: top 200 by sharpness ratio
+
+  signal                                           sigma   rho_lag1   HF frac
+  white (control)                                 50.001    -0.0013    0.8068
+  sensor noise: 1 frame, backdrop                111.574     0.3514    0.5576
+  added energy: AFTER-BEFORE, backdrop            48.647     0.6984    0.2409
+  recovered detail: BEFORE-frame102, subject    1311.104     0.9543    0.0274
+
+wrote C:\dev\strehl-out\V-BLEND\pics\fb-spectrum.png

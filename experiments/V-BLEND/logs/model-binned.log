@@ -1,0 +1,21 @@
+======================================================================
+COMMISSION
+======================================================================
+  PASS  synth shot+read S=    200  meas   6.6617  model   6.6579  ratio 1.0006
+  PASS  synth shot+read S=   1000  meas  14.9388  model  14.8734  ratio 1.0044
+  PASS  synth shot+read S=   4000  meas  29.6681  model  29.7415  ratio 0.9975
+  PASS  averaged n=  2  meas  21.0156  model  21.0304  ratio 0.9993
+  PASS  averaged n= 16  meas   7.4418  model   7.4354  ratio 1.0009
+  PASS  NULL noiseless field -> sigma 3.737e-11 (must be ~0)
+  PASS  TIFF-DN scaling round trip  (k=4.4137)
+  --> ALL PASS
+
+======================================================================
+fb-FRAME102-BINNED.tiff   nsamp=2.0   (3520x2344)
+======================================================================
+  126 tiles of 64x64
+        signal bin  ntile  meas sigma  model 1-frame  meas/model  implied n
+     1000-   2000     12      22.282         26.658      0.8358       1.43
+     2000-   4000     10      32.715         34.854      0.9386       1.14
+     4000-   8000      4     314.083         47.985      6.5454       0.02
+    16000-  32000     98      76.853         95.356      0.8060       1.54

@@ -1,0 +1,44 @@
+
+--- flower-bud-alone-cpl-before.tiff   7040x4688  n=33,003,520 px/channel ---
+  R: count@0 =         13  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0001  256:0.0010  512:0.0099  1024:0.0289
+     per-level counts  : 0:13  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:1
+     mean per-level density over levels 1..256 = 0.000004% per level
+     SPIKE RATIO p0/density = 10.3x
+  G: count@0 =          2  =   0.0000% of frame
+     cumulative %<=lvl : 0:0.0000  1:0.0000  2:0.0000  3:0.0000  4:0.0000  8:0.0000  16:0.0000  32:0.0000  64:0.0000  128:0.0000  256:0.0016  512:0.0129  1024:0.0352
+     per-level counts  : 0:2  1:0  2:0  3:0  4:0  5:0  10:0  20:0  50:0  100:0  200:5
+     mean per-level density over levels 1..256 = 0.000006% per level
+     SPIKE RATIO p0/density = 1.0x
+  B: count@0 =        174  =   0.0005% of frame
+     cumulative %<=lvl : 0:0.0005  1:0.0005  2:0.0005  3:0.0005  4:0.0005  8:0.0005  16:0.0005  32:0.0005  64:0.0005  128:0.0006  256:0.0081  512:0.0297  1024:0.0734
+     per-level counts  : 0:174  1:0  2:0  3:0  4:0  5:0  10:1  20:1  50:0  100:0  200:33
+     mean per-level density over levels 1..256 = 0.000029% per level
+     SPIKE RATIO p0/density = 17.9x
+
+  VERDICT for flower-bud-alone-cpl-before.tiff:
+     R: no meaningful mass at zero (0.0000%)
+     G: no meaningful mass at zero (0.0000%)
+     B: no meaningful mass at zero (0.0005%)
+
+--- flower-bud-alone-cpl-after.tiff   7040x4688  n=33,003,520 px/channel ---
+  R: count@0 =     60,769  =   0.1841% of frame
+     cumulative %<=lvl : 0:0.1841  1:0.1842  2:0.1843  3:0.1844  4:0.1845  8:0.1848  16:0.1853  32:0.1864  64:0.1885  128:0.1924  256:0.1990  512:0.2106  1024:0.2298
+     per-level counts  : 0:60,769  1:29  2:28  3:33  4:24  5:22  10:36  20:26  50:23  100:17  200:13
+     mean per-level density over levels 1..256 = 0.000058% per level
+     SPIKE RATIO p0/density = 3,159.4x
+  G: count@0 =     98,989  =   0.2999% of frame
+     cumulative %<=lvl : 0:0.2999  1:0.3003  2:0.3007  3:0.3011  4:0.3014  8:0.3027  16:0.3051  32:0.3084  64:0.3136  128:0.3219  256:0.3346  512:0.3527  1024:0.3782
+     per-level counts  : 0:98,989  1:130  2:124  3:115  4:101  5:117  10:92  20:71  50:48  100:45  200:37
+     mean per-level density over levels 1..256 = 0.000136% per level
+     SPIKE RATIO p0/density = 2,212.0x
+  B: count@0 =    723,429  =   2.1920% of frame
+     cumulative %<=lvl : 0:2.1920  1:2.1934  2:2.1948  3:2.1961  4:2.1974  8:2.2028  16:2.2122  32:2.2298  64:2.2609  128:2.3113  256:2.3837  512:2.4738  1024:2.6236
+     per-level counts  : 0:723,429  1:480  2:449  3:436  4:437  5:447  10:400  20:413  50:313  100:280  200:199
+     mean per-level density over levels 1..256 = 0.000749% per level
+     SPIKE RATIO p0/density = 2,927.1x
+
+  VERDICT for flower-bud-alone-cpl-after.tiff:
+     R: CLAMP  (spike 3,159x, 0.1841% of frame)
+     G: CLAMP  (spike 2,212x, 0.2999% of frame)
+     B: CLAMP  (spike 2,927x, 2.1920% of frame)

@@ -1,0 +1,22 @@
+
+--- bee-1-cpl-after.tiff   7032x4688  n=32,966,016 px/channel ---
+  R: count@0 =     18,170  =   0.0551% of frame
+     cumulative %<=lvl : 0:0.0551  1:0.0555  2:0.0560  3:0.0563  4:0.0568  8:0.0582  16:0.0610  32:0.0660  64:0.0747  128:0.0925  256:0.1348  512:0.4272  1024:4.6336
+     per-level counts  : 0:18,170  1:136  2:148  3:106  4:152  5:119  10:96  20:97  50:93  100:81  200:108
+     mean per-level density over levels 1..256 = 0.000311% per level
+     SPIKE RATIO p0/density = 177.2x
+  G: count@0 =     32,897  =   0.0998% of frame
+     cumulative %<=lvl : 0:0.0998  1:0.1003  2:0.1007  3:0.1011  4:0.1015  8:0.1032  16:0.1061  32:0.1114  64:0.1213  128:0.1421  256:0.2078  512:0.6831  1024:5.6690
+     per-level counts  : 0:32,897  1:154  2:133  3:153  4:133  5:146  10:134  20:121  50:101  100:90  200:164
+     mean per-level density over levels 1..256 = 0.000422% per level
+     SPIKE RATIO p0/density = 236.5x
+  B: count@0 =     40,343  =   0.1224% of frame
+     cumulative %<=lvl : 0:0.1224  1:0.1233  2:0.1242  3:0.1249  4:0.1257  8:0.1283  16:0.1327  32:0.1405  64:0.1541  128:0.1841  256:0.2858  512:0.9189  1024:6.7602
+     per-level counts  : 0:40,343  1:316  2:279  3:247  4:247  5:211  10:189  20:171  50:124  100:139  200:289
+     mean per-level density over levels 1..256 = 0.000639% per level
+     SPIKE RATIO p0/density = 191.6x
+
+  VERDICT for bee-1-cpl-after.tiff:
+     R: CLAMP  (spike 177x, 0.0551% of frame)
+     G: CLAMP  (spike 236x, 0.0998% of frame)
+     B: CLAMP  (spike 192x, 0.1224% of frame)

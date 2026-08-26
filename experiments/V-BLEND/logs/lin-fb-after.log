@@ -1,0 +1,22 @@
+
+--- flower-bud-alone-cpl-after.tiff   7040x4688  n=33,003,520 px/channel ---
+  R: count@0 =     59,689  =   0.1809% of frame
+     cumulative %<=lvl : 0:0.1809  1:0.1822  2:0.1834  3:0.1848  4:0.1859  8:0.1907  16:0.1991  32:0.2141  64:0.2412  128:0.2929  256:0.4107  512:0.7171  1024:2.3208
+     per-level counts  : 0:59,689  1:450  2:404  3:432  4:389  5:403  10:400  20:349  50:303  100:268  200:327
+     mean per-level density over levels 1..256 = 0.000898% per level
+     SPIKE RATIO p0/density = 201.5x
+  G: count@0 =    101,176  =   0.3066% of frame
+     cumulative %<=lvl : 0:0.3066  1:0.3090  2:0.3111  3:0.3133  4:0.3154  8:0.3230  16:0.3361  32:0.3581  64:0.3952  128:0.4676  256:0.6161  512:0.9444  1024:2.8223
+     per-level counts  : 0:101,176  1:790  2:719  3:728  4:679  5:653  10:555  20:459  50:376  100:383  200:368
+     mean per-level density over levels 1..256 = 0.001209% per level
+     SPIKE RATIO p0/density = 253.6x
+  B: count@0 =    350,596  =   1.0623% of frame
+     cumulative %<=lvl : 0:1.0623  1:1.0849  2:1.1064  3:1.1272  4:1.1465  8:1.2154  16:1.3170  32:1.4562  64:1.6242  128:1.8481  256:2.3534  512:4.1601  1024:12.4738
+     per-level counts  : 0:350,596  1:7,447  2:7,097  3:6,883  4:6,378  5:6,239  10:4,597  20:3,254  50:1,622  100:1,109  200:1,268
+     mean per-level density over levels 1..256 = 0.005043% per level
+     SPIKE RATIO p0/density = 210.6x
+
+  VERDICT for flower-bud-alone-cpl-after.tiff:
+     R: CLAMP  (spike 201x, 0.1809% of frame)
+     G: CLAMP  (spike 254x, 0.3066% of frame)
+     B: CLAMP  (spike 211x, 1.0623% of frame)

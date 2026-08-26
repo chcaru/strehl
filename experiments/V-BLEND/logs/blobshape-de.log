@@ -1,0 +1,22 @@
+==================================================================
+COMMISSION -- erosion must separate a rim from a blob
+==================================================================
+  PASS  2px rim    k1:0.095  k2:0.000  k3:0.000  k4:0.000  k5:0.000  k6:0.000   (must be <0.02 by k2)
+  PASS  4px rim    k1:0.543  k2:0.087  k3:0.000  k4:0.000  k5:0.000  k6:0.000   (must be <0.02 by k3)
+  PASS  r=30 blob  k1:0.940  k2:0.882  k3:0.826  k4:0.770  k5:0.716  k6:0.664   (must be >0.6 at k3)
+  PASS  NULL empty mask -> 0.000
+  --> ALL PASS
+
+==================================================================
+AFTER lin\dry-erase-marker-head-cpl-after.tiff
+BEFORE lin\dry-erase-marker-head-cpl-before.tiff   blue channel
+==================================================================
+  zeros: 748,371  (2.2675%)
+  control-arm |grad| at zeros median     35.2  image-wide     51.4  ratio   0.68x
+  erosion survival: k1:0.779  k2:0.644  k3:0.551  k4:0.475  k5:0.411  k6:0.357
+  connected components: 5,071   largest 301,633 px   median 1 px
+  fraction of zero mass in components >= 1000 px: 93.4%
+
+  INTERPRETATION (evidence is above this line):
+    a 2 px rim is gone by k2 and a 4 px rim by k3; a solid disc reads k3 = 0.83.
+    this mask reads k1 0.779, k2 0.644, k3 0.551, k6 0.357.

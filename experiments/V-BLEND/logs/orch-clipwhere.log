@@ -1,0 +1,33 @@
+flower-bud-alone-cpl, blue channel of the AFTER arm
+  pixels at exactly 0 : 723,429  (2.1920%)
+  same pixels in the BEFORE arm:
+    mean   13116.5 DN     median   10913.0 DN
+    min        0.0 DN     max      40264.0 DN
+
+  If the control is BRIGHT at these locations, the scene is not dark
+  there and the zeros are manufactured by the blend.
+
+  brightest 4-neighbour of a zero pixel, in the AFTER arm itself:
+    mean      98.9 DN     median       0.0 DN
+    fraction with a neighbour above 4000 DN: 0.1%
+
+  A pixel pinned at 0 whose immediate neighbour is bright is a dark
+  rim against a light edge. That is ringing, not scene content.
+
+  control-arm gradient magnitude (so the measure is independent of
+  the arm under test):
+    at the zero pixels : median    282.0 DN/px
+    image-wide         : median     48.6 DN/px
+    ratio              :      5.8x
+
+  signal discarded by the clamp, estimated as the control's value:
+    p50    10913.0 DN (16.65% of full scale)
+    p90    22720.0 DN (34.67% of full scale)
+    p99    26611.0 DN (40.61% of full scale)
+
+VERDICT
+  RINGING. The zeros sit at high-gradient sites where the control
+  arm is bright. The blend is undershooting below zero at edges
+  and the clamp is destroying the undershoot. This is a real
+  defect in the merge, it is upstream of the tone stage, and it
+  will print as dead black.
