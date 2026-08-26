@@ -8111,3 +8111,78 @@ instructions were sound and both were the reason the error surfaced within the
 hour. **I gave the correct method to someone else while failing to apply it
 myself**, which is its own finding about how this orchestration works: the
 briefs are more careful than the hands.
+
+
+## 69. Twenty of twenty-six, opened: what the corpus actually looks like
+
+Continuing §66's survey to twenty subjects at 1:1, chosen adversarially rather
+than representatively -- the defocused background, the stack that moved, the
+bubble motion, the deep stack, and high-contrast text.
+
+### The halo is dead, and `wrapped-text-1` is the proof I did not have
+
+Black laser text on white paper. **This is where every focus stacker in the
+world shows a halo** -- maximum contrast, a hard edge at a depth discontinuity,
+and a flat bright field on one side to show any rim against. It is the geometry
+that made the shipped output unusable three days ago.
+
+There is **no rim of any kind**. Not bright, not dark, not a glow. The paper's
+fibre texture runs continuously up to the letter boundary, and the individual
+toner particles inside each stroke are separately resolved.
+
+I have been treating the halo fix as verified since BUILD-HALO's report and
+§65's edge profiles. Those were measurements across a synthetic edge. **This is
+the artifact's own habitat, and it is empty.** A measurement says the rim's
+amplitude is below threshold; this says a reader looking at a print will not
+find it, which is the claim the project actually has to make.
+
+### The gate's adversarial case passes
+
+`flower-bud-with-background-fern-cpl` was the subject I named to BUILD-BLEND as
+the case that could still kill gate 4.5 -- a large defocused background is
+where a wider gate should drag out-of-focus content into the result. Individual
+white trichomes are resolved crossing *over each other* at different depths,
+pollen grains are crisp, the dark hairs carry no rim, and the defocused region
+stays smooth without contaminating the sharp one. It passes.
+
+### One new defect, and it is a colour defect, not a focus defect
+
+Two subjects show fringing on **small bright features against dark ground**:
+`coffee-bubbles` (green-yellow specular rings, some opposing magenta) and
+`foam` (rainbow speckle on sub-pixel speculars). Nothing else in the corpus
+shows it, and the subjects that *should* show it if it were an edge or depth
+problem -- the text, the trichomes -- are clean.
+
+Leading candidate: **green has 2x the sample density in an RGGB CFA**, so a
+1-2 px bright feature reconstructs green-biased. Textbook demosaic false
+colour. But I have deliberately not concluded that, because three other
+mechanisms fit the same pixels, and one of them matters enormously more than
+the rest:
+
+> **Does a single unstacked frame show it?** If yes, we inherited it from the
+> demosaic or the optics and the fix is a chroma stage. If a single frame is
+> clean and the stack is green, **the merge is manufacturing colour** -- per-
+> channel weights diverging where signal is sparse -- and that is a defect of
+> the estimator rather than a cosmetic one.
+
+Routed to BUILD-HIGHLIGHT with that ladder (single frame, CFA-native,
+demosaiced, shipping default) and an instruction to run it *before* proposing
+any fix. A false-colour suppressor bolted on top of a merge bug would hide the
+more important finding while appearing to succeed -- which is the same shape as
+the confirmatory-instrument failure in §68, one layer up.
+
+Note also that this fringe is **green**, while the channel-asymmetric clipping
+BUILD-HIGHLIGHT fixed predicts **magenta** (green has 1.53x less headroom and
+pins first). Same region of the image, opposite sign. Both can be present; the
+sign is what will separate them.
+
+### The standing score
+
+Twenty opened. **Eighteen print-worthy.** One soft (`flower-bud-alone-cpl`,
+which is also the worst on merge-vs-best-frame at 0.82 -- the metric and my eye
+agreeing independently, still the most useful event in this survey). Two
+carrying the specular fringe above, which is real but confined and does not
+touch the subjects a macro photographer would print.
+
+That is a materially different sentence from the one this project could write
+seventy-two hours ago, and the six unopened subjects are the remaining risk.
