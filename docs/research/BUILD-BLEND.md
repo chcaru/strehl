@@ -1188,22 +1188,37 @@ reads of one ruler.
 Aura zone is d = 80-200 px from the silhouette; far field is each arm's own
 600-1400 px annulus. Linear 16-bit, one binary, both arms.
 
-| subject | aura deficit, estimator | aura deficit, pyramid | far-field level shift | aura-zone level shift |
-|---|---:|---:|---:|---:|
-| flower-bud-alone-cpl | **-4739 DN** | **-166 DN** | **-113 DN** | **+4452 DN** |
-| coffee-bean | **-5629 DN** | **-1765 DN** | **-317 DN** | **+6965 DN** |
-| 109MSDCF (placebo) | -- | -- | median **+0 DN**, mean **+5 DN** | worst 6x6 tile **32 DN** |
+| subject | aura deficit, estimator | aura deficit, pyramid | far-field level shift | aura-zone level shift | peak row shift |
+|---|---:|---:|---:|---:|---:|
+| flower-bud-alone-cpl | **-4739 DN** | **-166 DN** | **-113 DN** | **+4459 DN** | +4647 @ d=125-150 |
+| coffee-bean | **-5629 DN** | **-1765 DN** | **-317 DN** | **+3547 DN** | +6965 @ d=65-80 |
+| 109MSDCF (placebo) | -- | -- | median **+0 DN**, mean **+5 DN** | -- | worst 6x6 tile **32 DN** |
+
+A correction to an earlier revision of this table, and to the commit message of
+`5943e16`, which was written before I re-ran the instrument to check my own
+transcription. That version gave one column headed "aura-zone shift" holding
+`+4452` for `flower-bud` and `+6965` for `coffee-bean`. Both are real readings
+off the printed table, but they are **different statistics**: `+4452` is the
+single d = 80-100 px row and `+6965` is the *peak* row, at d = 65-80. Neither is
+the aura-zone aggregate the header claimed, which is `+4459` and `+3547`. The
+error flattered nothing -- `coffee-bean`'s honest aggregate is smaller than the
+number I first published -- but a column in which two rows mean different things
+is not a measurement, so it is now split into two columns that each mean one
+thing. This is the reason the instrument was re-run rather than transcribed
+from notes.
 
 ### The discriminator
 
 The two rightmost columns have **opposite signs**. The far field moves *down* by
-113 and 317 DN while the aura zone moves *up* by 4452 and 6965 DN.
+113 and 317 DN while the aura zone moves *up* by 4459 and 3547 DN.
 
 A +0.845 sigma upward bias is a bias on an order statistic, and it would lift
 **both** columns together -- the far field is where such a bias is least opposed,
-so it would show there most cleanly. It moves the wrong way. The local change is
-14x to 22x the global one and carries the opposite sign, which is the signature
-of a spatially-varying additive term being removed, not of a level being added.
+so it would show there most cleanly. It moves the wrong way. On the corrected
+aggregates the local change is **39x** the global one on `flower-bud` and
+**11x** on `coffee-bean`, and carries the opposite sign, which is the signature
+of a spatially-varying additive term being removed rather than of a level being
+added.
 
 My merge is not an order statistic and I did not expect it to carry this bias.
 The point of the table is that I can no longer be *assumed* not to, and a ratio
@@ -1213,7 +1228,7 @@ would have left it unanswerable either way.
 
 `109MSDCF` has no depth separation and only a -177 DN aura, so ORCH set it as the
 subject the fix must be approximately a no-op on. It is: **median +0 DN**, mean
-+5 DN, worst tile 32 DN, against +4452 DN of real correction on a subject that
++5 DN, worst tile 32 DN, against +4459 DN of real correction on a subject that
 has the defect. That is the change declining to fire where there is nothing to
 correct.
 
@@ -1425,7 +1440,7 @@ real and neither is explained away here:
   to leave alone.
 
 Against that, the placebo's *level* is a no-op: median **+0 DN**, mean **+5 DN**,
-worst 6x6 tile 32 DN, against +4452 DN of real correction on `flower-bud-alone`.
+worst 6x6 tile 32 DN, against +4459 DN of real correction on `flower-bud-alone`.
 So the pyramid is not moving that picture's brightness anywhere; it is changing
 the amplitude of something the acuity statistic counts. `acuitysplit.py` shows
 the placebo's flat-region energy went *down* to 67.6% while other subjects' went
