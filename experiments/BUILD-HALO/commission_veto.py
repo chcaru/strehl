@@ -15,13 +15,13 @@ import shutil
 import subprocess
 import sys
 
-PIN = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else r"C:\dev\strehl-pin-1fbf95c")
+PIN = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else r"C:\dev\strehl-pin-ce2c793")
 SRC = PIN / "crates" / "strehl-core" / "src" / "edgeaware.rs"
-TEST = "a_guide_step_without_a_luma_step_is_dead_ground_and_must_not_collapse"
+TEST = "a_guide_step_the_veto_refuses_is_dead_ground_and_must_not_collapse"
 CARGO = pathlib.Path(os.environ["USERPROFILE"]) / ".cargo" / "bin" / "cargo.exe"
 
-ANCHOR = "            let noise_range = 2.0 * sigma * (2.0 * n.ln()).sqrt();\n"
-SABOTAGE = "            let noise_range = 0.0f32;\n"
+ANCHOR = "                if !capped[i] && may_collapse[i] && hi[i] - lo[i] > tau {\n"
+SABOTAGE = "                if !capped[i] && hi[i] - lo[i] > tau {\n"
 
 
 def run() -> subprocess.CompletedProcess:
