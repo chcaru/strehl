@@ -1543,3 +1543,268 @@ be re-rendered from a single pin built at BUILD-HALO's fix commit, and the basel
 re-rendered from that same commit with the fix disabled, so that BUILD-BLEND's
 multi-band default and BUILD-RENDER's lateral-CA default cannot enter the
 comparison.
+## 18. VERDICT: BUILD-HALO's veil envelope is right on the subject it was built for and destroys `coffee-bean`
+
+I am the independent verifier for `1b6f2fb`. The harness of section 17 was
+commissioned 6/6 **before the fix existed**, so nothing below was tuned to the
+thing it judges.
+
+**Headline. The fix passes its acceptance bar and passes the placebo, and it
+also pushes 13.8% of the `coffee-bean` frame into hard clipping. Both are true.
+It must stay opt-in, and it needs one guard that the codebase already has the
+machinery for.**
+
+### 18.1 Design: one binary, two arms, so no other lane can enter the comparison
+
+The fix is env-gated, which is better than a two-commit comparison and I used it.
+Both arms are the SAME binary, built at `5e320be`, SHA-256
+`64AEDD96B08282A5F973117DD5379F3DB5F65F01C13CC66CC183E082E3081C4F`:
+
+* **Arm A** `STREHL_PHOTOMETRIC=on`, veil unset. Confirmed inert: **0** `veil:`
+  lines in `run-A.log`.
+* **Arm B** `STREHL_PHOTOMETRIC=on STREHL_VEIL=1.5`, the shipped configuration
+  from BUILD-HALO section 26.1.
+
+Both carry photometric, because `STREHL_VEIL` refuses to run without it and an
+arm that differed in two things could not attribute anything. BUILD-BLEND's
+multi-band default and BUILD-RENDER's lateral-CA default are therefore
+irrelevant to every number here. `--linear-srgb --demosaic --gate 4.0`, no
+`--auto-exposure`. Potency was checked before spending the render budget: the
+two arms differ by SHA-256 on the cheapest subject.
+
+### 18.2 The debias constant was NOT fitted. That question is closed.
+
+ORCH's instruction was that "a debiasing constant fitted to null the veiling
+number *is* the artifact". It was not fitted. `merge.rs:2101` is
+
+```rust
+let debias = (2.0 * frames.max(2.0).ln()).sqrt() as f32;
+```
+
+with `frames` taken from `max_index`, the population being debiased, rather than
+from a caller. It has **no free parameter**. The engine printed 2.49 / 3.05 /
+3.26 / 3.38 on the 22 / 105 / 205 / 299 frame stacks, against
+`sqrt(2 ln n)` = 2.4864 / 3.0509 / 3.2628 / 3.3765. All four match.
+
+**But it is the wrong closed form, in the safe direction.** `sqrt(2 ln n)` is the
+*mode* of the maximum of n normals, not its *expectation*. Monte Carlo,
+400,000 trials per n:
+
+| n | `sqrt(2 ln n)` | measured `E[max]` | over-subtraction |
+|---|---|---|---|
+| 22 | 2.4864 | 1.9088 +/- 0.0008 | **0.578 sigma** |
+| 105 | 3.0509 | 2.5241 +/- 0.0007 | **0.527 sigma** |
+| 205 | 3.2628 | 2.7542 +/- 0.0006 | **0.509 sigma** |
+| 299 | 3.3765 | 2.8765 +/- 0.0006 | **0.500 sigma** |
+
+So every applied pixel has about half a single-frame sigma of real light
+subtracted from it. Against a *darkening* defect that is the conservative
+direction, and it means the fix under-corrects rather than adds light. It is not
+a bug to fix ahead of section 18.7, but it should be recorded rather than
+discovered later.
+
+### 18.3 The operator cannot add light by extreme-value bias. This is structural.
+
+The substitution test at `merge.rs:2174` is `est > current + margin * sigma`
+with `est = pmax - debias * sigma`, so the operator fires only where
+
+    pmax - mean > (debias + margin) * sigma  =  6.263 sigma at n = 205.
+
+Under i.i.d. normal noise `pmax - mean` has mean 3.26 and sd 0.42, so 6.263 is
+roughly a 7 sigma event. Monte Carlo, **2,000,000 trials per stack at the
+engine's own measured mean n_eff** of 4.87 / 27.24 / 138.72 / 2.73:
+
+| subject | n | n_eff | threshold | null firing rate | observed `applied` | ratio |
+|---|---|---|---|---|---|---|
+| `109MSDCF` | 22 | 4.87 | 5.486 | 8.5e-06 | 0.60% | 706x |
+| `coffee-bean` | 105 | 27.24 | 6.051 | < 5e-07 | 25.46% | > 5e5 |
+| `flower-bud-alone-cpl` | 205 | 138.72 | 6.263 | < 5e-07 | 12.49% | > 2e5 |
+| `couch-fibers-cpl` | 299 | 2.73 | 6.377 | 4.5e-06 | 13.08% | 2907x |
+
+This is a genuine exoneration of the worry I myself raised in section 16.10 and
+that ORCH escalated: **on clean Gaussian backdrop the envelope is not merely
+debiased, it is effectively inert**, the closest call being 706x. Any far-field
+shift observed below is therefore NOT extreme-value bias. It is either real veil
+or a non-Gaussian sample population, and section 18.7 shows it is the second.
+
+The same arithmetic inverts into a diagnostic. To fire at the observed rate by
+noise alone, the true per-frame spread would have to be **1.45x** the calibrated
+noise model on `109MSDCF`, **1.94x** on flower-bud, **2.16x** on `coffee-bean`
+and **1.73x** on `couch-fibers`. All are well above 1, so the operator is
+responding to real frame-to-frame content rather than to noise.
+
+**One correction to my own first pass here.** I originally ran this with
+`n_eff` guessed as most of the frame count and reported "zero firings
+everywhere". The engine prints the real mean n_eff and it is 4.87, not 18, on
+`109MSDCF`; a noisier gated mean makes `pmax - mean` wider and the null rate is
+then 8.5e-06 rather than zero. The conclusion is unchanged and the margin is
+still three orders of magnitude, but "zero" was an artefact of my input, not a
+property of the operator. `veilnull.py` now derives that sentence from its own
+table rather than asserting it alongside.
+
+### 18.4 Results, in absolute DN, nothing normalised to its own arm's far field
+
+| subject | role | applied | far-field shift | pedestal (outer band) | far-field noise sd ratio | output clipped A -> B |
+|---|---|---|---|---|---|---|
+| `flower-bud-alone-cpl` | target | 12.49% | **+8.6 +/- 1.3 DN** | +6.0 DN, flat | 1.13x | 0.000% -> 0.000% |
+| `109MSDCF` | placebo | 0.60% | **+1.4 +/- 0.4 DN** | +1.6 DN | 0.99x | 0.000% -> 0.000% |
+| `coffee-bean` | veil control, no ring | 25.46% | **+3656 +/- 117 DN** | **+3553 DN, RISING** | 0.59-0.77x | **1.41% -> 15.20%** |
+| `couch-fibers-cpl` | do-no-harm | 13.08% | harness REFUSES (no backdrop) | -- | -- | 0.000% -> 0.000% |
+
+### 18.5 `flower-bud-alone-cpl`: the bar is met, and it is met by removing veil rather than adding light
+
+| d (px) | A | B | delta |
+|---|---|---|---|
+| 30-60 | 15233.1 | 15644.2 | +411.0 |
+| 60-120 | 15446.2 | 17383.7 | **+1937.5** |
+| 120-200 | 16827.9 | 18560.8 | **+1733.0** |
+| 300-450 | 18714.8 | 18720.2 | +5.4 |
+| 700-1200 | 18920.1 | 18926.1 | +6.0 |
+
+**Acceptance.** At d=120-200 the deficit against far field goes **-1914.0 ->
+-189.7 DN**, beating the -247 DN bar. Against a *common* reference (arm A's far
+field, so the convention cannot flatter the fixed arm) it is **-181.1 DN**. The
+verdict does not depend on the convention.
+
+**And it is a repair, not a lift.** The near-field recovery is +1937 DN while the
+pedestal 1200 px away is **+6.0 DN**. That is a ratio of **323:1**, and the
+delta decays monotonically to it. An additive bias is flat to the frame edge by
+construction; this is not. Predicted undebiased-envelope bias on this stack was
++572 to +1668 DN and the measured pedestal is **0.4% of the lower endpoint**.
+
+The picture agrees: the difference map is a tight halo following the silhouette
+and decaying smoothly to black, and the grey aura visible on white paper in A is
+gone in B. **Subject-region gradient changes by +0.13%**, so nothing was done to
+the subject.
+
+**Decomposition, measured by me on one subject.** Section 17's baseline had
+photometric OFF and read -3066.7 DN at d=120-200. So of the total repair,
+photometric normalisation alone is **40.1%** and the envelope is **59.9%**.
+(Those two arms are from different pins, `b001f22` and `5e320be`, so treat the
+split as indicative.)
+
+### 18.6 `109MSDCF`: the placebo is genuinely inert
+
+Every band moves between **+0.1 and +1.6 DN** on a level of 8835 DN, that is
+0.016%. Gradient +0.49%. Noise ratio 0.99x. It is +3.5 sigma from zero because
+1153 tiles make the standard error small, and that is the harness working, not a
+defect: 1.4 DN is a no-op by any photographic standard. **This is the arm that
+could have caught added light and it did not.**
+
+Note, as flagged in section 17.7 before any of this was measured, that
+`109MSDCF` is a *veil* placebo and not an *aura* placebo, and that its -177 DN
+figure from the brief must not be used as a threshold.
+
+### 18.7 `coffee-bean`: FAIL. The maximum is the wrong statistic next to the sensor ceiling.
+
+The far field rises **+3656 DN**, and the shape is diagnostic in the opposite
+direction to flower-bud: the delta **grows** with distance, +2832 at d=300-450 to
+**+3553 at d=700-1200**, the outermost band being the largest. **A veil decays
+with distance from the subject. This does the reverse.** Output clipping goes
+**1.41% -> 15.20% of the frame**, 4.5 million pixels destroyed to pure white,
+and the whole-frame p95 goes 62532 -> 65535.
+
+**The mechanism, from the engine's own clipping census in `run-A.log`:**
+
+| subject | raw pixels clipped in >= 1 frame | clipped in EVERY frame | outcome |
+|---|---|---|---|
+| `flower-bud-alone-cpl` | 0.0000% | 0.0000% | clean repair |
+| `109MSDCF` | 0.0000% | 0.0000% | inert |
+| `couch-fibers-cpl` | 0.0000% | 0.0000% | mild, section 18.8 |
+| `coffee-bean` | **8.8283%** | **0.0000%** | **15.2% clipped output** |
+
+`pmax` is a per-pixel maximum over every frame. At a pixel that clips in some
+frames and not others, **the maximum is by definition the clipped sample**, and
+`always clipped = 0.0000%` says an unclipped, recoverable sample existed at
+every one of those pixels. The estimator selects the one value known to be
+wrong. The debias cannot help: it subtracts noise sigma, and clipping is not
+noise.
+
+This also explains the distance dependence. `coffee-bean`'s backdrop is a lit
+receding surface that brightens away from the bean, so the population near the
+ceiling grows with d, which is exactly the profile measured.
+
+**Strength of this claim.** The subject split is 4/4 with a mechanism stated in
+advance, correct in sign, and correct in order of magnitude, and the failing
+subject is the only one whose backdrop sits at 87% of full scale. I have **not**
+isolated it interventionally, because the change needed is in `merge.rs`, which
+is not my file. The test I am handing BUILD-HALO is one line of exclusion and one
+re-render, in section 18.11.
+
+**The near field on `coffee-bean` is a genuine success and I want that on the
+record too**: at 1:1 the grey aura along the bean's shoulder is removed cleanly.
+The defect is entirely in the far field.
+
+### 18.8 `couch-fibers-cpl`: applied at 13.08% on a subject that has no backdrop at all
+
+The harness refuses this subject, correctly: the backdrop mask covers 99.49% of
+the frame because `couch-fibers` is pure fibre texture edge to edge, and a
+"backdrop level near a subject" does not exist. The do-no-harm instruments give:
+median level **+1.94%**, p95 +0.49%, p1 and p5 unchanged, gradient **+6.12%**,
+no clipping. BUILD-HALO reported +2.33% level lift; I measure +1.94% at the
+median, so their number stands.
+
+**A rising gradient here is not detail and must not be read as one.** The
+difference map is scattered patches whose own boundaries add gradient, which is
+BUILD-HALO's section 25.5 warning about manufacturing a step, arriving on a
+subject they did not aim at. This is a real but modest harm, and it argues the
+focus ceiling admits pure texture.
+
+### 18.9 The noise cost is real, and it is larger in gradient than in level
+
+On flower-bud, far-field noise sd goes 44.88 -> 50.49 DN, **1.13x**. But mean
+absolute gradient in the same region goes **+32.0% at d=300-450 and +35.1%
+beyond 1200 px**, while the level there moved 6 DN. A 6 DN level change cannot
+raise gradient by a third: **the envelope injects high-frequency grain into the
+backdrop across the entire frame, including regions the veil never reached.**
+
+This is far below the 9.7x I predicted in section 16.10 for an undebiased
+envelope of 3, because the debias plus the 3 sigma margin fire on only 12.49% of
+pixels rather than everywhere. So the answer to "did they debias it" is yes, and
+the answer to "does it still cost noise" is also yes, at about a third more grain
+on a clean white backdrop. On a print that is visible.
+
+### 18.10 Two corrections to my own record
+
+* **Section 17.6's sigma_frame values are overestimates.** They used
+  `n_admit = frames`, documented at the time as an upper bound. The engine
+  prints the real mean n_eff at gate 4.0: **138.7 / 4.87 / 27.2 / 2.73** for
+  flower-bud / 109MSDCF / coffee-bean / couch, not 205 / 22 / 105 / 299.
+  Flower-bud's sigma_frame is 674.8 DN, not 1169 DN. Every predicted-bias
+  bracket built on it shrinks by the same factor. The verdicts above do not
+  use those predictions, which is why they were not the gate.
+* **Section 16.10's "+169 DN" remains wrong, and section 17.6's replacement
+  bracket was too alarming.** The correct statement is that the prediction is
+  worth about a factor of two and the model-free shape test is worth the verdict.
+
+### 18.11 Verdict and what I am asking for
+
+**PASS on the target subject and the placebo. FAIL on `coffee-bean`. Keep it
+default OFF.** It is currently default OFF, which is the correct state, and
+nothing here argues for flipping it.
+
+For BUILD-HALO, in priority order:
+
+1. **Exclude clipped samples from `pmax`.** The `Estimator` already carries
+   `censor`, `clip_w` and `fold_censored` for precisely this population, and the
+   clipping census is already computed and printed. A pixel with
+   `always clipped = 0%` has a valid sample; take the maximum over the valid
+   ones. **Acceptance for that change: `coffee-bean` output clipping returns to
+   1.41% and the far-field delta stops rising with distance.** That is the
+   interventional test I could not run in my own lane.
+2. **Consider `E[max]` rather than `sqrt(2 ln n)`** if the 0.5 sigma
+   over-subtraction ever matters. It currently helps, so this is a note, not a
+   request.
+3. **The focus ceiling admits pure texture** (`couch-fibers`, 13.08%). A
+   luminance floor cannot catch that case because the fibres are bright.
+
+**Pin.** Everything in section 18 comes from one binary,
+`C:\dev\strehl-out\BUILD-SHARP\pin-5e320be\target\release\strehl.exe`, SHA-256
+`64AEDD96B08282A5F973117DD5379F3DB5F65F01C13CC66CC183E082E3081C4F`, built at
+`5e320be`. Arm logs with per-arm SHA and argv are at
+`C:\dev\strehl-out\BUILD-SHARP\veil\run-{A,B}.log`.
+
+**Deconvolution stays deferred.** Section 18.7 is a live artefact that grows with
+distance and clips, and section 18.9 is a third more backdrop grain. Sharpening
+either would score as a win on any high-pass metric. The sequencing ORCH and I
+agreed still holds.
