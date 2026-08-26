@@ -44,7 +44,7 @@ foreach ($s in $subjects) {
   $n = (Get-ChildItem "$src\*.ARW" -EA SilentlyContinue).Count
   "`n=== $s ($n frames) ==="
   Run-Arm "ctrl  legacy camera-linear" "$out\$s-ctrl.log" `
-    { & $exe stack $src --out "$out\$s--ctrl.tiff" --gate 4 }
+    { & $exe stack $src --out "$out\$s--ctrl.tiff" --gate 4 --demosaic }
   Run-Arm "blend pyramid camera-linear" "$out\$s-blend.log" `
     { & $bex $src "$out\$s--blend.tiff" --gate 4 --base-mean --camera-linear }
 }
@@ -52,9 +52,21 @@ foreach ($s in $subjects) {
 "`n=== outputs ==="
 Get-ChildItem "$out\*.tiff" -EA SilentlyContinue | ForEach-Object { "  {0,-46} {1,8:N1} MB" -f $_.Name, ($_.Length/1MB) }
 
-"`n=== CA line present in either log? (must be absent in BOTH) ==="
-Get-ChildItem "$out\*.log" | ForEach-Object {
-  $hit = Select-String -Path $_.FullName -Pattern 'lateral CA' -SimpleMatch
-  "  {0,-40} {1}" -f $_.Name, $(if ($hit) { "PRESENT -- CONFOUNDED: $($hit[0].Line.Trim())" } else { "absent OK" })
+"`n=== confound guard: lateral CA must be OFF, not merely mentioned ==="
+# An earlier version of this guard matched the LABEL 'lateral CA' and fired on
+# `lateral CA : off (STREHL_FIX_CA unset)`, which is the state we want. A
+# presence check is not a state check. Outcomes are counted separately so that
+# a log which never reports CA at all cannot read as a log that reported OFF.
+$on = 0; $off = 0; $silent = 0
+Get-ChildItem "$out\*.log" -EA SilentlyContinue | ForEach-Object {
+  $l = Get-Content $_.FullName -Raw
+  if ($l -match 'lateral CA\s*:\s*on')      { $on++;  "  {0,-42} ON -- CONFOUNDED" -f $_.Name }
+  elseif ($l -match 'lateral CA\s*:\s*off') { $off++ }
+  else                                       { $silent++ }
 }
+"  off (explicitly reported) : $off"
+"  ON  (CONFOUNDED)          : $on"
+"  no CA line at all         : $silent   (legacy binary does not print one)"
+"  total logs                : $($off + $on + $silent)"
+if ($on -gt 0) { "  DO NOT READ THE RESULT" } else { "  CA off in every arm that reports it OK" }
 "DONE"
