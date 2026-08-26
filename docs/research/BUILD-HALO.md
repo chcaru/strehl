@@ -1737,3 +1737,117 @@ On `couch-fibers-cpl` identical hashes are the *correct* result, because the fix
 is meant to be a no-op there. On the halo subject they are a dead knob. Same
 observation, opposite meaning, which is why the ladder prints both subjects
 separately rather than one pass/fail.
+
+## 20. The trade, measured: there is no good setting, and the knob is not the cause
+
+ORCH asked for the trade quantitatively -- how much halo reduction at how much
+`couch-fibers` softening, across the range of the fix's strength -- and said a
+clean negative would be a result. It is a clean negative, and it is worse than
+a bad trade: **the dose-response is flat, the shipped arm is worse than no fix
+on BOTH axes, and the mechanism aimed at the halo is not what is causing it.**
+
+One binary, `C:\dev\strehl-pin-ce2c793\target\release\strehl.exe`, SHA256
+`17E5A234...9137`, all fifteen renders back to back. Measured by section 19.
+
+### 20.1 The ladder
+
+`STREHL_EDGE_TAU` is the strength knob: a pixel's support collapses when the
+guide winner field varies by more than tau frames across its box, so LOW tau =
+more pixels read as a silhouette = more collapse = stronger fix. Swept 64 -> 4,
+a 16x range, against a shipped default that solves to 36.8 on this bracket.
+
+| arm | halo (DN) | vs off | paired vs off | tiles worse | texture SD | px moved |
+|---|---|---|---|---|---|---|
+| `off` | **+129.5** | 100% | -- | -- | 1.0000 | 0.00% |
+| `default` (tau 36.8) | +146.1 | 113% | +28.9 `[+15.7,+64.0]` | 97% | 0.9902 | 54.24% |
+| tau 64 | +145.9 | 113% | +28.8 | 97% | 0.9903 | 54.21% |
+| tau 32 | +146.1 | 113% | +28.9 | 97% | 0.9902 | 54.22% |
+| tau 16 | +146.4 | 113% | +28.9 | 97% | 0.9902 | 54.29% |
+| tau 8 | +146.5 | 113% | +28.9 | 97% | 0.9900 | 54.47% |
+| tau 4 | **+146.6** | 113% | +28.8 | 97% | 0.9896 | 54.74% |
+
+**There is no setting where the halo is acceptable and the texture is intact,
+and there is no setting where the halo is even improved.** Every arm sits at
+113% of the unfixed baseline. The paired per-tile comparison makes that
+unambiguous: the arm is further from the no-election reference than `off` is on
+**97% of 37 tiles**, at every strength.
+
+Across the whole 16x sweep the halo moves by 0.7 DN out of 146 -- **0.5%**.
+
+### 20.2 The knob is live, so the flatness is a result and not a dead parameter
+
+This is exactly the failure section 19.7 exists to catch, so it was checked
+before the table was believed. All seven arms are byte-distinct on both
+subjects, and the collapse statistics move as designed on the halo subject:
+
+| arm | admitted | mean radius | at full r13 |
+|---|---|---|---|
+| `default` (tau 36.8) | 10.65% | 12.98 px | 99.66% |
+| tau 8 | 10.65% | 12.77 px | 96.83% |
+
+The radius collapse fires on **0.34%** of pixels at the shipped default and
+**3.17%** at tau 8 -- a **9x change in dose** -- and neither axis moves.
+
+### 20.3 What is actually causing it, isolated by the dose-response
+
+The `Acuity` arm bundles two changes, and the ladder separates them because
+only one of them depends on tau.
+
+1. **The adaptive radius collapse** -- the mechanism aimed at the halo. Depends
+   on tau. Fires on 0.07-3.17% of pixels. **Contributes ~0.5% of the arm's
+   effect.**
+2. **The luma-guided regulariser**, which replaces the shipped radius-8 box
+   with a domain transform at the same nominal scale. **Independent of tau.**
+
+Everything measured here is tau-independent, so **effectively 100% of both the
++13% halo regression and the texture damage comes from (2)**.
+
+`couch-fibers-cpl` settles it on its own, with no ladder at all. There the
+radius collapse touches **0.07%** of the plane (`mean radius 13.00 px`, i.e.
+the shipped flat radius to two decimals) -- and **54% of the frame's pixels
+move anyway**. A mechanism that touches 0.07% of pixels cannot move 54% of
+them. The only other thing that changed is the regulariser.
+
+### 20.4 Why luma is the wrong guide, in one line of source
+
+`merge_cmd.rs:1180` passes **`&scratch.luma`**: the domain transform is guided
+by each frame's own brightness. `merge.rs`'s own doc for `regularise_guided`
+says that away from a luma step this is the shipped operator -- which is true,
+and is precisely the problem, because **the two subjects that matter are
+nothing but luma steps.**
+
+- **At a halo rim there IS a luma step.** The guided filter therefore *stops
+  smoothing across it* and **preserves the rim** instead of averaging it away.
+  The regulariser was introduced to keep the narrow window's win from being
+  undone by the second cascade; on the actual artefact it protects the artefact.
+  That is the +13%.
+- **On `couch-fibers` luma steps are everywhere and depth steps are nowhere.**
+  The filter stops regularising across every fibre, so the plane gives up much
+  of fact 84's -35% absolute-error benefit exactly where there was no depth
+  discontinuity to respect. That is the 54% of pixels and the 1% softening.
+
+**The guide signal is brightness where the question is depth.** This is the same
+discrimination failure as sections 16-18: a luma edge is not an occluding edge,
+and a fibre tangle is the subject that separates them.
+
+### 20.5 What follows
+
+The immediate consequence is not a tuning change, because there is nothing to
+tune -- the curve is flat. It is that **the shipped default is net harmful on
+both axes** and, on this evidence, `EdgeArm::Acuity` should not be the default
+in its current form. Turning it off recovers the full 13% of halo and returns
+`couch-fibers` to byte-identical.
+
+That flip is **not** made here, and deliberately so: it moves the byte-freeze a
+third time in one day, and it moves the baseline BUILD-BLEND is currently being
+compared against, with five agents live in the tree. It is a coordination
+decision, and the measurement above is what ORCH needs to make it.
+
+The repair, if the arm is to stay, is to guide the regulariser by **depth**
+rather than luma. The guide winner field is already computed one pass earlier
+and is already handed to `SelectionScale::from_silhouettes`; a step in it is a
+genuine occluding silhouette rather than a brightness change. That would smooth
+freely across `couch-fibers`' texture, because it has no depth steps, while
+still stopping at a true silhouette. It is a signal swap at `merge_cmd.rs:1180`
+plus the plumbing to get the field there, and it is the frequency-selective --
+strictly, structure-selective -- move ORCH asked whether I could see.
