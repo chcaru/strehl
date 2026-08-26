@@ -4062,3 +4062,92 @@ recorded here. At full frame the boundary is clean — individual hairs project 
 white and stay individually resolved, with no dark rim and no bright rim. That is a visual
 observation, and it is consistent with the census in section 33 rather than a substitute
 for it.
+
+---
+
+## 39 — The patchwork, priced: 1.31x for the pyramid against 4.00x for pure selection
+
+The README lists two open defects. The halo is fixed and censused (section 33, and the
+hardest case by eye in 38.6). The other — a *polygonal patchwork in defocused backgrounds*
+— I had never measured, and I will not call a product finished with a named defect
+unchecked.
+
+### 39.1 The selection rule is the instrument
+
+`flatcrop.py` ranks tiles by flatness **of the output**. For this defect that rule is
+actively wrong: patchwork is what makes an output tile non-flat, so ranking on output
+flatness selects against the thing being looked for. `patchwork.py` inverts it — tiles are
+chosen because the **input frames** are featureless there, scored on the *worst* of the
+sampled frames, and the output never participates in choosing where it is measured.
+
+### 39.2 What the test can prove
+
+For a spatially **constant** convex weighting `w_k` (`w_k >= 0`, `sum w_k = 1`), filtering is
+linear and commutes with the weighting:
+
+```
+HF( sum_k w_k x_k ) = sum_k w_k HF( x_k )     =>     ||HF(out)|| <= max_k ||HF(x_k)||
+```
+
+So output high-frequency amplitude materially above the single-frame maximum, in a region
+featureless in every frame, cannot come from any constant convex weighting. It is invented,
+or the weights vary in space — which is the patchwork hypothesis.
+
+### 39.3 Two of my own errors, caught before they became a claim
+
+**A colour-space mismatch inflated the effect by 82%.** I first compared a `--srgb` output
+against inputs decoded at `gamma=(1,1)`. Gamma encoding amplifies high frequencies in dark
+regions, and the background is dark: the ratio read **2.38**. Re-rendering camera-linear so
+both arms share a space gave **1.31**. Most of the defect I was about to report was my own
+encoding.
+
+**My plant was inert and I nearly accepted it as commissioning.** A 60 DN polygonal plant
+moved the ratio 2.379 -> 2.393. That is not a potent disturbance; it is a plant swamped by
+the live signal, and had I stopped there I would have certified an instrument on a
+disturbance it could not feel.
+
+> **A plant that does not move the number has not commissioned anything.** Compare its
+> effect to the live signal before calling a response a response.
+
+### 39.4 The arm ladder, which commissions it properly
+
+Instead of a synthetic plant, drive the **real pipeline** to configurations whose answers
+are known, and measure all of them with the one instrument. Same subject, same frames, same
+demosaic, same warp, same 2x box downsample — every systematic is common to all arms.
+
+| arm | `mean n_eff` | HF / single-frame max | what it is |
+|---|---|---|---|
+| `--gate 100000` | **299.000** (`n_eff=1`: 0.00%) | **0.074** | a true global average: spatially constant convex. **The floor.** |
+| `--merge pyramid` | — | **1.305** | the flip candidate, the shipped default |
+| `--gate 0` | **1.000** (`n_eff=1`: 100.00%) | **3.996** | pure winner-take-all: what every other stacker does |
+
+The floor arm lands at **0.074** against a predicted `1/sqrt(299) = 0.058`, and the binary's
+own model independently printed a sigma gain of `0.0578x` for that configuration. The
+instrument therefore spans **54x** between a known-convex arm and a known-selective one,
+which is a far better commissioning than the plant that failed above.
+
+It also **eliminates every systematic I could name**: the floor arm passed through the same
+MHC demosaic, the same warp, the same white balance and the same downsample, and still read
+0.074. None of those can be the cause of 1.305.
+
+### 39.5 Verdict
+
+**The patchwork is real and it is 1.31x** — the pyramid does put more high-frequency
+structure into all-frames-featureless regions than any spatially constant convex weighting
+can. It is not invented from nothing; it is the spatial variation of the merge weights,
+exactly as M120 argued.
+
+**And it is 3.06x smaller than pure selection.** The 4.00x selector arm is close to M120's
+independently measured 3.4x, which is a cross-validation of both instruments — different
+code, different subject sampling, same conclusion about the selective path.
+
+This is the project's thesis measured directly on a real capture: selection invents
+background structure, estimation mostly does not, and the residual is now a number someone
+can be assigned to reduce rather than an adjective in a README.
+
+### 39.6 Scope, honestly
+
+One subject (`bee-1-cpl`), 8 of 299 frames sampled, 6 tiles, one spatial scale (a 4 px
+box high-pass at half resolution). The arm ordering is large and unambiguous, but the
+**absolute** 1.305 should not be quoted as a gallery-wide constant until it is run across
+subjects and scales. It is a floor-referenced ratio on one subject, and that is all.
