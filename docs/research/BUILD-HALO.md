@@ -1933,3 +1933,117 @@ explanation, but averaging across a bimodal index field is not it.
 One hour, no renders -- it reused the `TRADE` ladder's `off` and `f221` arms and
 the existing election map. Either answer would have been progress; this one is
 a refutation, and the picture is the report.
+
+## 22. The backdrop's election is a ramp driven by distance from the subject
+
+ORCH measured a broad dark aura on `flower-bud-alone-cpl` and proposed that
+focus breathing moves the silhouette so that backdrop pixels are OCCLUDED by
+the subject in many frames and those samples are averaged in. I proposed a
+rival: dead-ground pixels admit ~55 frames, most of which carry the subject's
+defocus veil, so the average is pulled dark.
+
+**Both are wrong, and the truth is worse than either.** Picture:
+`C:\dev\strehl-out\AURA\AURA-election.png`.
+
+### 22.1 The aura reproduces independently
+
+Measured with a different silhouette, a different far-field reference (d=500-900
+px rather than ORCH's 300-400, which is partly inside the feature it is meant to
+reference) and a different script: **merge - sharp frame = -3787 DN** over
+d=64-260 px. ORCH measured -4293 DN at d=117; this run gives -4478 DN at
+d=96-140. **Confirmed.**
+
+The control is the load-bearing part. In the subject-free field the merge and
+the sharp frame differ by **6 DN** against the aura's 3787 DN, a margin of
+**630x**. The instrument is silent where there is nothing to see.
+
+### 22.2 Breathing is dead, and its measurement had a specific defect
+
+The warp sidecar is inspectable text and prints `scale-1` per frame:
+
+| frame | `g` (scale-1) | dx | dy |
+|---|---|---|---|
+| 0 | `+5.58e-5` | +0.025 | -0.383 |
+| 204 | `+1.28e-8` | -0.005 | -0.045 |
+
+**Post-alignment silhouette motion between the ends of the bracket is ~0.4 px**,
+and the scale term is 0.0056%, not 13.7%. Independently: the solve reports
+`held-out err 0.352 px` over spans up to 128 frames, and a real 13.7% breathing
+would put a span-128 pair ~150 px apart at the frame edge. ORCH's "common to
+every edge" caveat does not cover a drift that is monotone in frame index.
+
+The 13.7% came from thresholding subject AREA. A dark subject that is defocused
+thresholds LARGER. ORCH anticipated this and ruled it out on monotonicity --
+blur should enlarge both ENDS of the bracket. That control fails here because
+**the subject's focus is near frame 153, not the middle**: the d=6 px spill runs
+f000 -11306, f051 -10868, f102 -8887, f153 -5327, f204 -5770. Blur is monotone
+across ~75% of the bracket, so a monotonicity test cannot discriminate.
+
+### 22.3 Uniform averaging explains only 31%
+
+Nine `STREHL_ONLY_FRAME` arms spanning the bracket were already on disk. Each is
+self-referenced and therefore IDENTITY-warped, so a reconstruction built from
+them contains no registration, and hence no breathing, **by construction**.
+Their uniform mean closes only **31.2%** of the gap between the sharp frame and
+the merge. Averaging contributes; it is not the driver.
+
+### 22.4 The actual mechanism, measured
+
+`STREHL_DUMP_ELECTION` on ORCH's own pin (`859edac`, `DF209CE0`). Median elected
+frame against distance from the silhouette:
+
+| d (px) | 1-8 | 16-32 | 64-96 | 96-140 | 140-200 | 200-260 | 260-320 | 320-400 | 400-500 | 500-700 | 700-1000 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| median frame | 111 | 105 | 91 | 78 | 61 | 43 | 25 | 5 | 1 | 10 | 106 |
+| IQR/bracket | .21 | .17 | .20 | .19 | .15 | .13 | .14 | .10 | .03 | **.54** | **.55** |
+
+**The backdrop's elected frame is a smooth monotone function of its distance
+from the subject, sweeping the entire 205-frame bracket, and tightly determined
+the whole way.** Past d~500 px it collapses into dead-ground noise, which is
+section 21's result appearing here as a built-in control on the same plane.
+
+A flat white card lies at one depth. It should elect one frame, or noise. Its
+selection is instead dictated by proximity to an object it does not touch.
+
+### 22.5 Why: Tenengrad counts a ramp as focus
+
+`focus.rs` line 6 is explicit:
+
+```text
+focus(p) = box_mean_13(|grad I|)(p) / sigma_L(p)
+```
+
+At a backdrop pixel the only structure in any frame is the subject's defocused
+edge ramp. **A ramp is a region of coherent, constant gradient.** The 27x27 box
+mean averages the random noise gradient down by sqrt(729) ~ 27 while preserving
+the coherent ramp in full, so the ramp beats the noise floor. The frame that
+maximises it is the one whose blur radius places its ramp at that exact
+distance -- which is why the elected index ramps with distance, and why the
+aura terminates at the subject's maximum blur radius rather than at any
+selection scale.
+
+The election is not tolerating the veil. **It is seeking it**, and each backdrop
+pixel elects the frame that veils it most.
+
+### 22.6 The consequence for the fix
+
+This is the frequency-selective move section 20 concluded was needed and could
+not find in the winner field, and it sits one level lower, in the measure
+itself. A ramp has CONSTANT gradient; genuine texture has VARYING gradient.
+High-passing at the window scale separates them exactly: a box mean of a linear
+ramp reproduces that ramp, so `I - box_mean_13(I)` is identically zero on a
+ramp while fine texture passes untouched.
+
+It is scale-selective by construction -- it rejects everything coarser than the
+window, where the veil lives, and keeps everything finer, where `couch-fibers`
+texture lives. That is the trade section 20 measured as unresolvable in the
+winner field, and it is resolvable here because a measure has a scale and a
+winner field does not.
+
+### 22.7 What is NOT yet explained
+
+The elected frame at d=96-140 is 78, whose own profile there is about -1044 DN,
+while the merge reads -5063 DN. Neither the winner alone nor a uniform mean
+accounts for that amplitude. The gate's admitted SET is not dumped and has not
+been measured, so the amplitude accounting is open. The distance-driven ramp in
+22.4 is measured directly and does not depend on resolving it.
