@@ -3192,3 +3192,111 @@ a diffuse one.
 Each was cheaper than the last. The most expensive instrument in this corpus
 found the least important defect, and the mechanism behind the most important
 one fell out of a toy model that never touched the codebase.
+
+## 30 — A metric with no spatial argument cannot tell an artifact edge from a subject edge
+
+This one is not mine. V-TONE established it under adversarial instruction and
+filed it as `docs/research/V-seam.md` (`07cc58f`); recorded here because the rule
+generalises and because the decision it unblocks is a product decision.
+
+### 30.1 The verdict that was blocking a free win
+
+`--photometric` recovers +1415 DN and removes 35–47% of the aura — part of the
+artifact the owner is objecting to. It was off by default, and not by oversight:
+M122 ran a pre-registered 14-stack promotion test and returned **KEEP-OFF** on
+K2, its no-harm criterion, finding that `--photometric` *"materially reduces
+real fine structure on `flower-bud-alone-cpl`"*, Theil-Sen slope 0.9444
+[0.9312, 0.9598].
+
+K2 is a high-frequency energy ratio over the whole frame. **It has no spatial
+argument.** So it cannot distinguish an artifact edge from a subject edge, and
+the question nobody asked was *where* the lost structure was.
+
+### 30.2 Partition the same statistic by location and the verdict inverts
+
+Thresholds and reading rule pre-registered before the slopes were computed:
+
+| partition | hf0 median | k | 95% CI |
+|---|---:|---:|---:|
+| SEAM, far background (d>200) | 106.6 DN | **0.6647** | [0.5431, 0.7899] |
+| SEAM, near subject | 418.4 | 0.9395 | [0.9089, 0.9689] |
+| SEAM, inside subject | 829.8 | 0.9941 | [0.9727, 1.0118] |
+| **SUBJECT, no seam** | **280.8** | **0.9957** | **[0.9888, 1.0022]** |
+| BACKGROUND, no seam | 382.6 | 1.0287 | [1.0021, 1.0622] |
+
+The partition holding the real fine structure — and it is the *most* textured
+partition in the frame, 280.8 DN against 127.3 at seams — **loses 0.4%, with a
+confidence interval including 1.00.**
+
+All the harm is in the content-free backdrop, where the election picks a
+near-random frame per pixel (elected-index p5–p95 spans 3..195 of 0..204; 49.7%
+of pixels have a ≥8-frame jump within a 3×3) out of frames whose levels span
+23.5%. That writes level speckle. `--photometric` removes it. **85.7% of the
+removed Laplacian energy is in the seam set**, and the removed-energy map forms
+closed loops that are pixel-for-pixel the election-map patch boundaries.
+
+**K2 was counting the artifact as signal, and the KEEP-OFF verdict rested on it.**
+
+### 30.3 What the verifier did not claim
+
+Two things it reported against its own interest, which is why the rest is
+trustworthy:
+
+- The rule-verbatim verdict is **MIXED, not CONFIRMED**. Its placebo partition —
+  pixels matched to the seam set in count, local gradient and local level but
+  with no index discontinuity — came in at k = 0.9886 against a registered bar
+  of 0.99, **missing by 0.0014**. Recorded, not relaxed. One sensitivity cell is
+  VOID by its own rule. Read as: ~1.1% residual sensitivity to gradient
+  magnitude, against a 33% seam-partition drop.
+- `k_background` = **1.0287** [1.0021, 1.0622], CI excluding 1.00 in 5 of 6
+  cells — the correction *increases* HF energy away from both subject and seams.
+  Unexplained, and explicitly not claimed. Nothing is to be built on that region
+  until it is understood.
+
+### 30.4 The root-level argument, which is stronger than the metric argument
+
+M122's harm mechanism requires the fitted gain to be able to absorb scene
+content — plausible, since a per-frame fitted gain over 205 frames is 205 free
+parameters. Testing whether the ramp is instead predicted by physics:
+
+- **The aligner's scale ladder is dead as a route.** Span 1.000233 against a
+  gain span of 1.2350 would need exponent 904, and the ladder is not monotone
+  (−0.513).
+- **EXIF lands it with zero free parameters.** Shutter, ISO and f-number are
+  constant across all 205 frames, but `SonyFNumber2` moves 13.50 → 12.60
+  monotonically (corr −0.9940), predicting a span of 1.1480 = **65.4% of the
+  fitted log-span**, residual 7.58% unattributed.
+- **Independent cross-check:** EXIF magnification span 13.24% against a
+  silhouette measurement of 12.60% — 0.64 pp apart by fully independent routes.
+
+Two thirds of the "205 free parameters" are not free. They are a physically
+predicted exposure ramp from effective aperture changing with magnification,
+`N_eff = N(1 + m/p)` with exposure as `1/N_eff²`. That dissolves M122's harm
+mechanism at the root, independently of how its metric is read.
+
+Pupil magnification `p` is **not identifiable** from this data and no number is
+reported: `N_eff/N` *is* `1 + m/p`, so the two are the same measurement. One
+bracket with a ruler in frame would make it identifiable — a capture request,
+not a result.
+
+A consequence to route rather than act on: the `SonyFNumber2` ramp implies a
+real per-frame magnification change that the aligner's ladder is **540× too
+small to contain**. That is a defect in the alignment model.
+
+### 30.5 The rule, and its third instance tonight
+
+> **A metric with no spatial argument cannot tell an artifact edge from a
+> subject edge. If a no-harm criterion is an energy statistic, it will score the
+> removal of an artifact as damage.**
+
+Three instances now, which is why this is a rule and not an anecdote:
+
+| # | metric | counted as signal what was actually |
+|---|---|---|
+| 1 | M122's K2 | election-seam level speckle |
+| 2 | my veiling estimator | its own +0.845σ upward bias |
+| 3 | BUILD-SHARP's dead band | ~3/4 real signal |
+
+And the older one from §26.2, the same failure in a different coat: a band
+amplitude ratio that reads 0.9918 while correlation reads 0.0946 — the right
+quantity restored, none of the right content.
