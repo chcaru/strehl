@@ -1119,16 +1119,16 @@ comparisons and is not evidence of resolution; do not read 1.511 as a win. The
 verifier tried to explain the deficit away and could not: it is **not** capture
 sharpening, because both subjects' XMP sidecars read `crs:Sharpness="0"`, and it
 is not an artifact of the grade, because removing the grade properly is what
-produced these numbers. About **half** is attributable to strehl's own 3.5%
-coverage upscale; the rest sits in the merge and the gather kernel, where strehl
-uses Catmull-Rom against the fork's `cv::INTER_LANCZOS4`. Work to close it is in
-flight.
+produced these numbers. About **half** was attributed to strehl's own 3.5%
+coverage upscale; the rest was placed in the merge and the gather kernel, where
+strehl uses Catmull-Rom against the fork's `cv::INTER_LANCZOS4`. **That
+attribution is now disputed by direct measurement — see the retraction below.**
 
 > ## ⚠ THE DEFICIT CLAIM IS UNDER RETRACTION — the instrument fails its own controls
 >
 > **Do not cite the 17-27% figure.** The ratios above are real measurements of
 > **band power**. What is now in doubt is the step from band power to
-> *resolution*, and three independent results say that step does not hold:
+> *resolution*, and five independent results say that step does not hold:
 >
 > 1. **A nearest-neighbour gather scores +29% / +42% on this statistic** — the
 >    worst resampling available to the program, rated better than everything
@@ -1140,6 +1140,17 @@ flight.
 >    runs on CFA planes at `3516 x 2344` against a `7032 x 4688` output, putting
 >    plane Nyquist at f = 0.25 cyc/output px. Content above it is reconstructed
 >    by the demosaic, not carried by the gather.
+> 4. **A 0.5x downscale scores 4.35x better on this statistic.** An unambiguous,
+>    catastrophic loss of real resolution, rated more than four times better
+>    than the original — a margin **larger than the entire effect under
+>    investigation**, and the second unambiguous degradation the statistic
+>    rewards.
+> 5. **The raster mismatch runs the other way.** The fork writes 0.9596x in x
+>    and 0.9539x in y, and that mismatch is worth **4.7% of the band** — about a
+>    fifth of the reported gap — but in the direction that **flatters strehl**.
+>    A scale-corrected comparison would report a slightly *larger* deficit, not
+>    a smaller one, which directly contradicts the "about half is the coverage
+>    upscale" attribution above.
 >
 > **The table was telling me this and I read past it.** The 0.40-0.48 row reads
 > **1.060 and 1.511 — strehl *ahead* at the finest scale** — while the adjacent
@@ -1156,11 +1167,37 @@ flight.
 > in one resample, and a *larger* upscale measures as *less* lossy, so
 > magnification is not the cost.
 >
-> Being re-measured by **slanted-edge MTF (ISO 12233)**, which returns a
-> resolution figure rather than an energy figure and which noise cannot inflate
-> — commissioned with an explicit arm requiring MTF50 to hold still while added
-> noise moves band power. Targets are already in the corpus
-> (`flat-on-ruler-cpl`, `highly-angled-ruler-mm-cpl`, `wrapped-text-1`).
+> **The replacement instrument was built, and it failed too — for the same
+> reason.** Slanted-edge MTF (ISO 12233) returns a resolution figure rather than
+> an energy figure, and noise cannot inflate it, so it was expected to escape.
+> It was checked against exact closed forms rather than assumed. **It does not
+> go blind. It goes wrong — monotonically, and toward the expected answer:**
+>
+> | 10-90% edge width, px | 1.90 | 2.56 | 3.85 | **5.13** | 7.69 | 12.82 | 17.99 |
+> | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+> | measured / true MTF50 | 0.998 | 1.005 | 1.020 | **1.038** | 1.087 | 1.232 | **1.446** |
+>
+> **Stated applicability limit: 5.13 px.** The two renders' edges measure
+> **13.52 px** and **17.86 px** — 2.6x and 3.5x outside it — and because they do
+> not share a width they do not share an inflation: **1.2593x against 1.4404x**,
+> a ratio of **1.1438**. **That is a 14.38% systematic bias from edge width
+> alone, running in the direction that makes the comparator look sharper,
+> against a claimed deficit of 17-23%.**
+>
+> **The general finding, and it is why a fourth instrument would not help:**
+> three unrelated statistics — a band-power ratio, a plateau-normalised shape
+> test, and a slanted-edge MTF — are each bounded by edge sharpness, and edge
+> sharpness *is* the quantity being compared. **The confound is in the variable,
+> not the statistic.**
+>
+> **The blocker is the corpus, not the code.** These captures contain no
+> ISO 12233-valid slanted edge: the "ruler" subjects are engraved trenches with
+> ~20 px sloped walls and a specular rim, and pointed at a page of text the
+> instrument reported **3568 of 3570** candidate edges flatter than 0.03
+> degrees. A proper slanted-edge chart lands at 2-3 px, inside every limit
+> above, and converts this from unanswerable into routine. It is requested as
+> [`docs/captures-needed.md`](docs/captures-needed.md) §30. **Until it exists
+> this headline stays retracted rather than replaced.**
 >
 > The lesson, which is the same one that cost this project a gradient-kurtosis
 > table three days earlier: **a statistic that has only ever been shown to
