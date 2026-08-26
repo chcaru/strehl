@@ -873,3 +873,132 @@ introduce. The gated mean is meanwhile the one estimator here with a measured bi
 That also makes the far field correct *by construction* rather than by tuning: away from
 the subject the mask is uniform, the gated mean is the mean, and the base band is
 whatever the background was. It cannot pedestal.
+
+---
+
+## 16. The artifact is not in the photographs
+
+This section retires the premise the veiling lane was built on, including my own
+sections 8 and 12. The correction did not come from me. V-RIM, an independent
+verifier working from its own code and forbidden from using `rimprofile.py`,
+measured the one thing none of us had measured.
+
+### 16.1 The measurement
+
+Everyone in this project, myself first, had been measuring the background profile
+near a silhouette **in merged output**. V-RIM measured it in **individual frames**.
+
+| | merge | sharpest single frame |
+|---|---|---|
+| coffee-bean | -13.61% | frame 58: **-0.81%** |
+| flower-bud | -18.94% | frame 110: **-0.22%** |
+
+Across 16 usable frames from both anchors' brackets, **every profile is monotone**,
+worst reversal 0.18% of far field. The picture is
+`C:\dev\strehl-out\V-RIM\pics\fb-merge-vs-frame110.png` and it is not subtle:
+
+- Frame 110, the frame in which flower-bud's silhouette is in focus, is **flat at
+  ~19100 DN** from 600 px out right up to the edge.
+- The merge over the same rows **sags to ~13800 DN**, recovering to ~15600 in the
+  last 20 px.
+
+Roughly 28% of the backdrop's brightness, removed by software, at a location where
+the stack contains a frame that saw the backdrop correctly.
+
+### 16.2 What is refuted, stated carefully
+
+The veiling is **real optics**. In a frame where the subject is defocused, the
+defocused subject genuinely spills light across the silhouette and that frame's
+backdrop genuinely is veiled. Nothing overturns that.
+
+What is refuted is that the veil is **inherited and irreducible** -- that the stack
+holds no clean view of that backdrop and the only remedy is to model the veil and
+subtract it. Frame 110 is a clean view. The information needed to render that
+backdrop correctly is present in the data, and the merge is failing to use it.
+
+That moves the defect out of optics and into **election**:
+
+> In a smooth bright backdrop the focus measure has no real signal. Near a
+> silhouette the defocused subject spills contrast INTO the backdrop region, so
+> frames in which that pixel is covered by defocused subject score HIGHEST there.
+> The merge elects a frame in which the pixel is not backdrop at all, and the
+> output lands darker than every frame that actually saw the backdrop.
+
+### 16.3 Three lanes, three routes, one mechanism
+
+The mechanism was not reached once. It was reached three times, independently,
+from measurements that share no code and no subject preparation:
+
+| lane | route | number |
+|---|---|---|
+| V-RIM | frame-level ground truth | merge -18.94% vs in-focus frame -0.22% |
+| V-TONE | convexity | merge reads **2499 DN outside its own input hull**; an honest 7-frame mean reads inside it |
+| BUILD-HULL | residual audit | **-805 DN** below every contributing input |
+
+A per-pixel convex combination cannot leave the hull of its inputs. Three
+independent instruments agreeing that the output does is not a coincidence, and it
+is a much stronger result than any of the three alone.
+
+### 16.4 Confirmed by eye, at 100%, where it had never been looked at
+
+The gallery is 2400 px from a 7032 px render, so it cannot show a defect 2 px from
+an edge; a verdict of "looks clean" drawn from it would be a statement about the
+downsampler. Cut at 100% (`C:\dev\strehl-out\ORCH-100\`), against the exact binary
+that produced the gallery the owner rejected, the election is directly visible:
+
+- **`bee-1-cpl` site 2:** the white backdrop in the control arm is a collage of
+  **hard-edged grey polygons** -- straight borders and sharp corners across what
+  is physically a smooth sheet -- with a scalloped dark band hugging the leg. The
+  multi-band arm is clean smooth white, with the fine translucent hairs that cross
+  the backdrop still present.
+- **`bee-1-cpl` site 1:** the control arm carries polygonal patches of
+  **wrong-focus content with visible seams**. The blend arm resolves every hair
+  continuously across the same region.
+- **`bee-1-cpl` site 0:** the control arm's ommatidia are mushy and a region at
+  lower left is a featureless smear. The blend arm resolves individual facets and
+  shows fine reddish hairs that are **entirely absent** from the control.
+
+The last of those is worth separating out, because it was not predicted. The
+multi-band merge is not only removing artifacts; it is **recovering detail the
+control merge was destroying**. That is consistent with the mechanism: a per-pixel
+election with a spatially regularised winner field is piecewise constant, so at
+fine scales it selects the wrong frame over whole patches and the patch boundaries
+show as seams. Selecting per frequency band lets high-frequency detail come from
+whichever frame actually carries it, independently of the base band.
+
+So three defects that had been tracked as separate problems -- the silhouette
+halo, the polygonal background patches, and the softness BUILD-SHARP was chasing
+-- are one defect with one cause.
+
+### 16.5 What follows
+
+1. **A post-hoc veiling subtraction must not ship on the default path.** Against a
+   defect the merge itself manufactures, a subtraction that cancels it is a
+   correction fitted to our own bug, and it is untestable in the way that matters:
+   it can be tuned until the number goes away without the picture being right.
+   This is section 13's lesson arriving from the opposite direction.
+2. **Take the base band from the noise-gated mean.** An election with a spatially
+   varying mask can leave the hull; **a mean cannot**. In a smooth backdrop the
+   mean of the frames simply is the backdrop, so this makes the artifact
+   structurally impossible at low frequencies rather than merely smaller.
+3. **The acceptance target is now ground truth rather than an argued threshold.**
+   Frame 110's backdrop profile is the correct output for flower-bud's backdrop;
+   frame 58's for coffee-bean. A fix should land the merged backdrop **on** the
+   in-focus frame's flat level, not merely reduce a delta against a number I
+   picked.
+4. Both acceptance tests I registered in section 12 are unsafe and V-RIM says so:
+   the target names a floor that does not exist, and the "free negative control"
+   would reject a genuine fix. They are withdrawn.
+
+### 16.6 The lesson, which is about where the instrument was pointed
+
+Every measurement in sections 8 through 13 was taken on merged output. The
+instrument was refined, its reference bug was found and fixed, a published sign
+was reversed, and a paired table was produced to decision grade. All of that work
+was real and none of it could have found this, because **the comparison that
+mattered was never between two merges. It was between a merge and a frame.**
+
+> **Before measuring how much an artifact moves, measure whether the input
+> contains it. An artifact absent from every input is not being reduced by a
+> better estimator; it is being manufactured by the pipeline, and the fix is
+> upstream of everything you are tuning.**
