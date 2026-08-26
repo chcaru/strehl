@@ -186,8 +186,43 @@ pass rate.
 > detail. **Cleaner is not better if it costs resolution.** Given the fine-detail
 > deficit in *Measured against other stackers* below, smoothing our way out of a
 > sharpness problem would register as a win on every noise metric this project
-> owns, which is exactly why the noise numbers cannot decide this. The per-gate
-> detail/flat split is the deciding instrument and it is in flight.
+> owns, which is exactly why the noise numbers cannot decide this.
+>
+> **So the split was measured, with a control.** Two 512-px crops from the same
+> pair — the block with the most gradient energy and the block with the least,
+> both chosen on the *mean* of the two arms so the selection cannot favour either
+> — and the radially averaged power spectrum of each. The control is what makes
+> it readable: in the flat crop any high-frequency difference is **noise by
+> construction**, because there is no structure there to lose. Crop separation
+> was **16.1x** in gradient energy, so the two are genuinely different
+> populations and the control is not vacuous.
+>
+> | band (cyc/px) | detail ratio 4.5/2.0 | flat ratio 4.5/2.0 |
+> |---|---|---|
+> | 0.05–0.10 | 1.0086 | 0.6080 |
+> | 0.10–0.20 | 1.0085 | 0.2068 |
+> | 0.20–0.30 | 0.9988 | 0.1052 |
+> | 0.30–0.40 | 0.9944 | 0.1365 |
+> | 0.40–0.50 (to Nyquist) | 0.9864 | 0.2930 |
+>
+> **Gate 4.5 retains 98.6–100.9% of the detail power at every frequency up to
+> Nyquist while carrying 10–30% of the noise power in the flats** — about a 10x
+> reduction in noise power at 0.20–0.30 cyc/px. Opened at 1:1 the two crops are
+> **equally crisp**; the dendritic fingers on the ink edge and the fine
+> striations are indistinguishable, and only the flat areas differ. The 1.4%
+> deficit in the top band is if anything an *under*-estimate of detail retention,
+> since the detail crop contains noise too and 4.5 holds only ~29% of it there.
+>
+> Three instruments that share no code now agree — this split, the detail-ROI
+> ratio of 0.9945 from a separate campaign, and the noise table's 0.746x against
+> 0.915x. On this subject the higher gate is **strictly better**.
+>
+> That is not yet a licence to move the default, for one specific reason: a
+> higher gate admits **more frames** into the average, which is why it denoises,
+> and the failure mode is admitting frames that are genuinely out of focus.
+> Whether that happens depends on focus-step size against depth of field, and a
+> 22-frame stack cannot answer it for a deep stack with coarse steps. That sweep
+> is in flight.
 >
 > **None of that rescues the scoping.** A survey of 26 subjects that describes a
 > configuration the user does not get by typing `strehl stack` is scoped to that
