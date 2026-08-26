@@ -49,6 +49,21 @@ import tifffile
 #   prior "live" -> we expect this to change the image (positive control)
 #   prior "dead" -> independently established as inert (negative control)
 #   prior None   -> unknown; this is what the audit is for
+#
+# ON CHOOSING THE VALUE, which is the whole difficulty. `=1` is NOT an absurd
+# value. It is the multiplicative identity, and for any numeric parameter -- a
+# cap, a gain, a lambda, a strength -- it is the single most likely value to be
+# either the default or the documented no-op. Probing every gate with `1` tests
+# whether the program responds to being told to do what it already does. This
+# audit's first run did exactly that and produced two false "dead flag"
+# findings:
+#   STREHL_RESTORE is a gain CAP whose guard is `cap > 1.0`, so `=1` returns the
+#     identical state to unset. For a cap, absurd means LARGE.
+#   STREHL_SMOOTH defaults to lambda = 1.0 and is ON, so `=1` set it to its own
+#     default. For a parameter with a live default, absurd means BOTH
+#     directions -- off, and far past sane.
+# Both errors are now caught structurally by the banner check below rather than
+# relying on whoever writes this table to know each flag's type.
 PROBES: list[tuple[str, list[str], dict[str, str], str | None]] = [
     # --- commissioning ------------------------------------------------------
     ("NULL baseline vs baseline", [], {}, "null"),
@@ -68,9 +83,13 @@ PROBES: list[tuple[str, list[str], dict[str, str], str | None]] = [
     # --- environment gates --------------------------------------------------
     ("STREHL_ALIGN=0", [], {"STREHL_ALIGN": "0"}, None),
     ("STREHL_HIGHLIGHT_KNEE=0.02", [], {"STREHL_HIGHLIGHT_KNEE": "0.02"}, None),
+    # =1 maps to Arm::Soft, a real non-default setting -- not a degenerate arm.
     ("STREHL_ROBUST_ELECTION=1", [], {"STREHL_ROBUST_ELECTION": "1"}, None),
-    ("STREHL_SMOOTH=1", [], {"STREHL_SMOOTH": "1"}, None),
-    ("STREHL_RESTORE=1", [], {"STREHL_RESTORE": "1"}, None),
+    # lambda defaults to 1.0 and is ON, so probe BOTH directions away from it.
+    ("STREHL_SMOOTH=off", [], {"STREHL_SMOOTH": "off"}, None),
+    ("STREHL_SMOOTH=400", [], {"STREHL_SMOOTH": "400"}, None),
+    # a gain cap: `1` is the documented no-op, so absurd means large.
+    ("STREHL_RESTORE=8.0", [], {"STREHL_RESTORE": "8.0"}, None),
 ]
 
 
@@ -97,6 +116,20 @@ def backend_of(banner: str) -> str:
         if "merge backend" in line:
             return line.split(":", 1)[1].strip()
     return "?"
+
+
+def normalise_banner(banner: str, out: pathlib.Path) -> str:
+    """Strip the parts of a banner that must differ between any two runs."""
+    keep = []
+    for line in banner.splitlines():
+        s = line.strip()
+        if out.name in s or out.stem in s:
+            continue
+        # elapsed times, throughput and memory figures move run to run
+        if any(k in s for k in ("elapsed", "wall ", " MB/s", "throughput", "s)")):
+            continue
+        keep.append(s)
+    return "\n".join(keep)
 
 
 def compare(a: pathlib.Path, b: pathlib.Path):
@@ -171,6 +204,7 @@ def main() -> int:
         print(f"  baseline render FAILED rc={rc}\n{banner[-1500:]}", file=sys.stderr)
         return 2
     ref_backend = backend_of(banner)
+    ref_banner = normalise_banner(banner, ref)
     print(f"  baseline rendered in {dt:.1f}s, banner backend = {ref_backend!r}\n")
 
     hdr = f"  {'probe':<32}{'verdict':<9}{'differing':>12} {'max|d|':>8}  {'%':>7}  note"
@@ -190,6 +224,17 @@ def main() -> int:
         note = "" if bk == ref_backend else f"BACKEND CHANGED -> {bk!r}"
         ident, n, mx, frac = compare(ref, out)
         verdict = classify(ident, n, mx, frac)
+        # The structural guard against a degenerate arm. If the program's own
+        # banner is unchanged, the setting was not merely ineffective -- it was
+        # never registered, because a value equal to the default or to the
+        # documented no-op leaves the program with nothing new to report. That
+        # is an untested arm, not a dead flag, and the two are indistinguishable
+        # from the pixels alone. Both false findings this audit's first run
+        # produced would have been caught here.
+        if verdict == "DEAD" and normalise_banner(banner, out) == ref_banner:
+            verdict = "DEGEN"
+            note = (note + "  banner unchanged: the value was the default "
+                    "or the no-op").strip()
         shown = "byte-identical" if ident else f"{n:,}"
         print(f"  {name:<32}{verdict:<9}{shown:>12} {mx:>8}  "
               f"{frac*100:>6.3f}%  {note}")
@@ -211,13 +256,22 @@ def main() -> int:
 
     unknown = [(n, v) for n, v, p in rows if p is None]
     dead = [n for n, v in unknown if v == "DEAD"]
+    degen = [n for n, v in unknown if v == "DEGEN"]
     token = [n for n, v in unknown if v == "TOKEN"]
     live = [n for n, v in unknown if v == "LIVE"]
     err = [n for n, v, p in rows if v == "ERROR"]
 
     print(f"  probes {len(PROBES)}  =  commissioning {len(PROBES)-len(unknown)}"
           f"  +  live {len(live)}  +  token {len(token)}  +  inert {len(dead)}"
-          f"  +  errored {len(err)}")
+          f"  +  untested {len(degen)}  +  errored {len(err)}")
+    if degen:
+        print("\n  ARM NEVER TESTED -- the banner did not change, so the value was\n"
+              "  the default or the documented no-op:")
+        for n in degen:
+            print(f"    - {n}")
+        print("  These are NOT findings. Re-probe with a value appropriate to the\n"
+              "  parameter's type: for a cap or a gain, large; for a live default,\n"
+              "  both off and far past sane. `=1` is the identity, not an absurdity.")
     if dead:
         print("\n  REACHED NO PIXEL under an absurd value:")
         for n in dead:

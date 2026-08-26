@@ -7911,6 +7911,17 @@ trusting your eye:
 
 ## 67. Which flags reach a pixel: the accident, made systematic
 
+> **CORRECTED, 2026-08-26, and the correction is larger than the finding.**
+> Three of the four gates this section reported as reaching no pixel were
+> **my instrument's failure, not the program's**. `STREHL_SMOOTH` moves
+> **96.39%** of samples at `off`; `STREHL_RESTORE` changes `tweezers-cpl`
+> outright and banners four gain lines. Only `STREHL_ROBUST_ELECTION` survives,
+> and it only corroborated M126. The corrected table and the mechanism are in
+> **§68**, which should be read as part of this section rather than after it.
+> `scripts/check-defaults.py` is **not** retracted: its subject is real,
+> reachable, and genuinely off by default.
+
+
 Three features of this tool have now been found to be documented, banner-reported,
 tested, and inert:
 
@@ -8021,3 +8032,82 @@ that is off. **They produce an identical null and mean opposite things**, and
 M126 has already been burned once attributing a byte-identity to a constant in
 code that never ran. Separating them requires reading the code, and the audit
 prints that warning next to its own results rather than in a footnote.
+
+
+## 68. `=1` is not an absurd value, and the banner was telling me so
+
+§67 built an instrument on one rule -- *a flag is not wired until an absurd
+value has changed the output* -- and then broke that rule in its own probe
+table. Every environment gate was probed with `=1`.
+
+**`1` is the multiplicative identity.** For any numeric parameter -- a cap, a
+gain, a lambda, a strength -- it is the single most likely value to be either
+the default or the documented no-op. Probing a gate with `1` tests whether the
+program responds to being told to do exactly what it is already doing.
+
+Two of the four findings died on that:
+
+| gate | what `=1` actually did | corrected probe | result |
+| --- | --- | --- | --- |
+| `STREHL_RESTORE` | it is a **gain cap** with guard `cap > 1.0`, so `1.0` returns the identical state to unset -- the module's own doc comment calls `1.0` "a documented no-op" | `=8.0` on `tweezers-cpl` | **LIVE**, output changes, banner reports `cap 8.000` and per-plane gains |
+| `STREHL_SMOOTH` | `DEFAULT_SMOOTH_LAMBDA = 1.0` and the prior is **ON by default**, so `=1` set it to its own default | `=off` / `=400` | **LIVE, 96.39% / 96.76%** of samples |
+
+A third, `STREHL_ROBUST_ELECTION`, was a fair probe -- `1` maps to `Arm::Soft`,
+a real non-default setting -- and its null stands, corroborating M126's
+independent code reading. The fourth, `STREHL_HIGHLIGHT_KNEE`, was correct in
+both directions.
+
+So the honest score is **one finding, not four**, and the one that survived was
+already known.
+
+### The banner was the tell, and my own rule said to read it
+
+This project's hardest-won rule is *quote the banner, not your intent*. I wrote
+that rule into three separate agent briefs this week. And `STREHL_RESTORE=1`
+emits **zero** restore banner lines, where a live setting emits four. **The
+program told me, on the stream I had instructed everyone else to read, that it
+had nothing to report -- and I read the pixels instead.**
+
+That is now structural rather than a matter of remembering. The audit
+normalises each probe's banner against the baseline's, and:
+
+> **If the program's own banner is unchanged, the arm was never tested.**
+
+A value equal to the default or to the no-op leaves the program with nothing
+new to say, and that silence is *distinguishable* from a real null -- but only
+by someone who looks at it. The verdict is now **DEGEN**, reported separately
+and explicitly not counted as a finding. Both false results above would have
+been caught by it without anyone knowing either flag's type.
+
+### What this cost, and the general form
+
+`restore.rs:1234-1241` now carries a doc comment describing this exact mistake,
+written by the implementer who caught me:
+
+> *"An orchestrator commissioning this flag set it to `1`, observed
+> byte-identical output, and concluded the stage was unreachable on the render
+> path; it is reachable, and `1` had merely selected the documented no-op."*
+
+That is the correct place for it. The rule that generalises:
+
+> An "absurd value" is **type-dependent, and the type is the whole problem**.
+> For a boolean, absurd is `on`. For a cap or a gain, absurd is *large*. For a
+> parameter with a live non-zero default, absurd is *both directions* -- off,
+> and far past sane. A single probe convention applied across differently-typed
+> parameters will silently generate nulls, and nulls are the finding this
+> instrument exists to produce, so its failure mode is to manufacture exactly
+> the result it is looking for.
+
+That last clause is the part worth keeping. An instrument whose failure mode
+resembles its intended output is not merely unreliable -- it is *confirmatory*,
+and it will read as a success every time it breaks.
+
+### One thing I got right by accident
+
+I told BUILD-SHARP, in the message that provoked this: *"Determine it by
+reading the code, not by inferring it from this null,"* and *"do not let my
+checker's RED bias you toward concluding the feature is merely disabled."* Both
+instructions were sound and both were the reason the error surfaced within the
+hour. **I gave the correct method to someone else while failing to apply it
+myself**, which is its own finding about how this orchestration works: the
+briefs are more careful than the hands.
