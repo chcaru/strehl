@@ -516,11 +516,41 @@ all**. It also survives the harder test, which is looking at it: at 1:1 across a
 dark hairy stem against a blown-white backdrop, the backdrop stays clean to the
 edge and the individual hairs resolve against it.
 
-**Highlights are not clipped by the merge.** A pyramid merge can leave the
+**Shadows are not crushed by the merge.** A pyramid merge can leave the
 output above or below the range of every input that fed it, which shows up as
 punched-out white or crushed black along high-contrast edges. The delivered
 renders carry **zero** exact-zero RGB pixels on subjects where an unclamped
 merge produces 0.371% and 1.048%. Dark is subject, not clipping.
+
+That paragraph used to be headed *"Highlights are not clipped by the merge"*.
+**Retracted, and the reason is worth stating plainly: every number in it is a
+count of exact-ZERO pixels.** It measured the shadow end and claimed the
+highlight end, and the claim stood for as long as it did because the heading and
+the evidence were read by the same people at the same time. The shadow result is
+real and is kept above; the highlight half was never measured.
+
+Measurement since then points the *other* way. On the pyramid arm, pixels pinned
+at the container maximum run **4.65% frame-wide against the estimator's 1.87%**,
+and **20.48% against 0.0952% inside one 47–93 px band** — with p90 already at
+65522 and everything above p95 pinned flat. Two caveats, both real: that
+comparison came from an A/B whose arms are now known to differ by more than the
+merge, so the *ratio* is not cleanly attributable; and the two arms carry a
+global affine difference of +2.3% gain and −359 DN offset. The *absolute* count
+on the shipping arm is a direct census of a delivered render and does not depend
+on either.
+
+**And the tool cannot presently see this on the path that ships.** The clip
+census is described in the source as *"always reported, not hidden behind
+`--stats`, because a clipped pixel is a correctness question rather than a
+diagnostic one"* — and the pyramid backend does not run it, which it discloses
+honestly in both its doc comment and its runtime banner (`not applied :
+photometric gain, clip census, ...`). Skipping photometric normalisation and
+outlier rejection on a merge that is not an estimator is defensible. Skipping a
+*counter* is a different thing: counting what you pinned is not an estimation
+stage. So the one measurement this codebase singles out as a correctness
+question is the one the default path does not make. That is being fixed, and
+until it is, **treat highlight behaviour on the default backend as unmeasured
+rather than as passing.**
 
 **On a good capture the result is print-worthy, and that judgement was made by
 looking at pixels rather than at a metric.** Three subjects were pulled to true
