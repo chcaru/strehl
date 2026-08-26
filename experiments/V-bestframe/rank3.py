@@ -12,13 +12,14 @@ unavailable on most subjects at this sampling depth:
            performance, not a best estimate. A subject that still looks bad in
            the capped column is bad.
 """
+import os
 import numpy as np, warnings
 from pathlib import Path
 from curve import arms
 from peaks import peaks_for
 
 warnings.filterwarnings("ignore")
-GAL = Path(r"C:\dev\strehl-out\GALLERY-FIXED-SRGB")
+GAL = Path(os.environ.get("VBF_GAL", r"C:\dev\strehl-out\GALLERY-FIXED-SRGB"))
 RAW = Path(r"D:\personal\macro")
 GATE, FLOOR_LO, FLOOR_HI, FM_TOL = 0.80, 5.0, 60.0, 1.5
 CALLED_OUT = {"highly-angled-ruler-mm-cpl", "lead-1-cpl", "flowers-cpl", "bee-1-cpl"}

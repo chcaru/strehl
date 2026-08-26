@@ -11,9 +11,10 @@ identically and every number is reported gated AND ungated.
 """
 import re
 from pathlib import Path
+import os
 import numpy as np
 
-OUT = Path(r"C:\dev\strehl-out\V-BESTFRAME")
+OUT = Path(os.environ.get("VBF_OUT", r"C:\dev\strehl-out\V-BESTFRAME"))
 HDR = re.compile(r"^(\S+): (\d+) frames on disk, probing (\d+) ADJACENT PAIRS")
 ROW = re.compile(r"^\s+k=\s*(\d+)/(\d+)\s+\S+\s+s=([\d.]+)/([\d.]+)\s+peak=([\d.]+)/([\d.]+)")
 

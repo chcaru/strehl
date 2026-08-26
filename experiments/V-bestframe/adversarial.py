@@ -5,6 +5,7 @@ best frame, put the merge and that frame side by side at native pixel scale. If
 H2 is true, at least one of these must show structure in the frame that is
 absent from the merge. If they all show sensor noise, H2 is dead on this subject.
 """
+import os
 import argparse
 import numpy as np
 from pathlib import Path
@@ -12,8 +13,8 @@ from PIL import Image, ImageDraw
 import bestframe as B
 from curve import arms
 
-OUT = Path(r"C:\dev\strehl-out\V-BESTFRAME"); IMG = OUT / "images"
-GAL = Path(r"C:\dev\strehl-out\GALLERY-FIXED-SRGB"); RAW = Path(r"D:\personal\macro")
+OUT = Path(os.environ.get("VBF_OUT", r"C:\dev\strehl-out\V-BESTFRAME")); IMG = OUT / "images"
+GAL = Path(os.environ.get("VBF_GAL", r"C:\dev\strehl-out\GALLERY-FIXED-SRGB")); RAW = Path(r"D:\personal\macro")
 
 ap = argparse.ArgumentParser()
 ap.add_argument("subject"); ap.add_argument("--snr", type=float, default=3.0)

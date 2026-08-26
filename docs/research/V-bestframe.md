@@ -24,6 +24,13 @@ mechanism in the merge's own log, and two defects in my own instrument that
 appeared only when it was extended past the two headline subjects. Both are
 reported in section 11.
 
+**Section 12 answers a separate question and carries a ship blocker.** Re-run on
+`SHIP-V1`, the deficits of section 11 **do not vanish**: `109MSDCF` holds at
+4.5%, `119MSDCF` at 23.1%, and the count of tiles below 0.8 summed across the 24
+ranked subjects moves **299 -> 338**, the wrong way. It also establishes that the
+comparison could not have tested the backend flip, because
+`GALLERY-FIXED-SRGB` was **already** a pyramid render.
+
 ---
 
 ## 1. What was asked and what would answer it
@@ -441,3 +448,184 @@ reads 12 frames of up to 299, it inspects one adversarial render on one subject,
 and 13 of its 24 ranked subjects carry only an upper bound on the merge arm. It
 is a screen for where to look next, not a verdict on any subject other than
 `flowers-cpl`.
+
+---
+
+## 12. SHIP-V1: the deficits do not vanish, and the backend was never the variable
+
+**Verdict on the acceptance invariant: `SHIP-V1` does NOT satisfy "merge >= best
+single frame" on detail tiles. The deficits persist essentially unchanged. This
+is a ship blocker.**
+
+### First, the premise of the comparison is false
+
+I was asked to test whether the section 11 deficits are an **estimator** defect
+that the **pyramid** backend already fixes. They cannot be, because
+`GALLERY-FIXED-SRGB` was already rendered by the pyramid backend.
+
+Its driver, `experiments/ORCH-drift-check/galleryfixed.ps1`, carries the comment
+`# Arm is the pyramid merge with the hull clamp (verified in ORCH-veiling 32)`,
+invokes `blend-render.exe ... --gate 4 --base-mean --chunks 5`, and prints into
+every per-subject log `merge : pyramid, hull clamp ON, gate 4, base-mean, sRGB`.
+The log header reads `strehl BUILD-BLEND -- LAPLACIAN MULTI-BAND MERGE`.
+
+So this comparison is **pyramid gate 4.0 against pyramid gate 4.5**, plus
+lateral-CA correction and `--auto-exposure` in the `SHIP-V1` arm. It does not
+test estimator against pyramid in either direction. **The near-identity of the
+two tables is what that predicts, and it is not evidence that the backend flip
+does nothing, because the backend never changed.**
+
+### Instrument comparability, since the previous numbers predate two fixes
+
+The `GALLERY-FIXED-SRGB` numbers in section 11 were **already** produced with
+both fixes in place. The registration-gate fix is visible in that table's `gt`
+column, which is non-zero on 11 subjects; under the UTF-16 defect it was zero on
+all 24. The merge-floor defect is handled by the `capped` column, which both
+sections use. So the two runs are like-for-like and no re-run was required.
+
+To point the instrument at a second gallery I added a `VBF_GAL` / `VBF_OUT`
+environment override defaulting to the existing literals. **That change was
+commissioned rather than assumed inert**: `ctrl_patch.py` re-measured `109MSDCF`
+from `GALLERY-FIXED-SRGB` with the patched code and compared every array in the
+output against the pre-patch file.
+
+| array | shape | result |
+| --- | --- | --- |
+| `S` | (6, 16, 22) | identical |
+| `N` | (6, 16, 22) | identical |
+| `merge_tiles` | (16, 22, 3) | identical |
+| `anchors`, `band`, `n_on_disk`, `ye`, `xe` | -- | identical |
+| **arrays differing** | | **0** |
+
+Both galleries are then read through the **same** `curve.arms`, reloaded under a
+swapped environment, so they cannot be measured by different code. Depths and
+control gaps were matched subject by subject.
+
+One change to a reporting gate was forced by the data. `SHIP-V1` uses
+`--auto-exposure` with per-subject gains from 0.807x to 13.548x, so an absolute
+floor band in DN is not comparable across galleries. The band is now taken
+relative to each gallery's own median floor. Those medians came out at
+**17.65 DN** and **17.62 DN**, so in practice the gate did not move.
+
+### A third silent fallback, found while doing this
+
+`arms()` abandons the registration gate when fewer than 2 pairs would survive,
+leaving `ngate = 0`. **That prints identically to "the gate found nothing to
+remove."** `flower-bud-with-background-fern-cpl` has 5 of its 6 pairs below the
+0.80 threshold and reported `gt = 0` in section 11. It is now printed as `SKIP5`
+and counted on its own line in both tables. It is the only subject affected, in
+either gallery.
+
+### B. SHIP-V1, worst first
+
+| subject | frames | read | floor | detail | merge >= frame | med ratio | p05 | tiles < 0.8 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| **109MSDCF** | 22 | 12 | 18.22 | 245/352 | **4.5%** | 0.86 | 0.436 | **84** |
+| **119MSDCF** | 33 | 12 | 16.88 | 221/352 | **23.1%** | 0.91 | 0.476 | **55** |
+| **flower-bud-alone-cpl** | 205 | 12 | 10.94 | 193/352 | **43.5%** | 0.82 | 0.609 | **91** |
+| flower-bud-with-background-fern-cpl | 299 | 12 | 13.77 | 202/352 | 70.3% | 1.90 | 0.321 | 52 |
+| **flowers-cpl** | 176 | 12 | 18.57 | 48/352 | 83.3% | 1.44 | 0.841 | 2 |
+| dry-erase-marker-head-cpl | 299 | 10 | 11.02 | 144/352 | 86.8% | 3.25 | 0.354 | 16 |
+| flat-on-ruler-cpl | 79 | 12 | 20.20 | 352/352 | 86.9% | 2.13 | 0.945 | 0 |
+| wrapped-text-2 | 120 | 12 | 20.06 | 272/352 | 88.2% | 2.52 | 0.833 | 11 |
+| pencil-steep-angle-cpl | 299 | 8 | 17.31 | 75/352 | 90.7% | 2.38 | 0.423 | 7 |
+| coffee-bubbles | 19 | 12 | 7.51 | 352/352 | 91.5% | 1.28 | 0.962 | 2 |
+| leaf-2-cpl | 182 | 10 | 28.79 | 195/352 | 91.8% | 2.31 | 0.947 | 4 |
+| tweezers-cpl | 100 | 12 | 18.86 | 204/352 | 92.2% | 3.26 | 0.945 | 1 |
+| lavendar-cpl | 299 | 8 | 20.48 | 105/352 | 95.2% | 4.14 | 1.342 | 5 |
+| **lead-1-cpl** | 123 | 20 | 20.77 | 329/352 | 95.7% | 1.75 | 1.033 | **0** |
+| pencil-flatter-angle-cpl | 299 | 8 | 17.62 | 72/352 | 95.8% | 2.86 | 1.018 | 3 |
+| wrapped-text-1 | 130 | 12 | 15.92 | 285/352 | 97.9% | 3.79 | 1.106 | 0 |
+| bee-2-cpl | 299 | 8 | 18.21 | 194/352 | 97.9% | 3.44 | 1.509 | 3 |
+| bee-3-cpl | 299 | 8 | 14.05 | 211/352 | 98.1% | 3.57 | 1.459 | 2 |
+| 113MSDCF | 63 | 12 | 20.63 | 351/352 | 98.9% | 1.54 | 1.095 | 0 |
+| flower-inner-edge-cpl | 299 | 6 | 10.73 | 168/352 | 99.4% | 3.20 | 1.474 | 0 |
+| 112MSDCF | 79 | 12 | 30.84 | 348/352 | 99.4% | 1.62 | 1.107 | 0 |
+| **bee-1-cpl** | 299 | 12 | 16.25 | 222/352 | 99.5% | 2.76 | 1.310 | 0 |
+| coffee-bean | 105 | 12 | 13.56 | 227/352 | 99.6% | 2.23 | 1.144 | 0 |
+| couch-fibers-cpl | 299 | 8 | 25.24 | 179/352 | 100.0% | 2.81 | 1.397 | 0 |
+
+Partition, identical in both galleries:
+
+| outcome | n |
+| --- | ---: |
+| rendered on disk | 26 |
+| measured and ranked | 24 |
+| NOT MEASURABLE | 2 |
+| **partition sums to** | **26** |
+
+### C. Paired diff, the three worst rows first
+
+| subject | >= frame G | >= frame S | delta | med G | med S | < 0.8 G | < 0.8 S |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| **109MSDCF** | 4.5% | 4.5% | **+0.0** | 0.86 | 0.86 | 84 | 84 |
+| **119MSDCF** | 22.6% | 23.1% | **+0.5** | 0.91 | 0.91 | 55 | 55 |
+| **flower-bud-alone-cpl** | 46.6% | 43.5% | **-3.1** | 0.93 | 0.82 | 50 | **91** |
+| flower-bud-with-background-fern-cpl | 68.8% | 70.3% | +1.5 | 1.84 | 1.90 | 52 | 52 |
+| flowers-cpl | 83.3% | 83.3% | +0.0 | 1.41 | 1.44 | 2 | 2 |
+| tweezers-cpl | 89.7% | 92.2% | +2.5 | 3.25 | 3.26 | 2 | 1 |
+| leaf-2-cpl | 93.3% | 91.8% | -1.5 | 2.24 | 2.31 | 4 | 4 |
+| lead-1-cpl | 97.0% | 95.7% | -1.2 | 1.80 | 1.75 | 0 | 0 |
+| bee-1-cpl | 99.5% | 99.5% | +0.0 | 2.72 | 2.76 | 0 | 0 |
+| couch-fibers-cpl | 100.0% | 100.0% | +0.0 | 2.82 | 2.81 | 0 | 0 |
+
+Across all 24 subjects ranked in both:
+
+| quantity | value |
+| --- | --- |
+| median delta in merge >= frame | **+0.0 pp** |
+| range of delta | -3.1 pp to +2.5 pp |
+| subjects improved | 10 of 24 |
+| subjects worsened | 5 of 24 |
+| subjects unchanged | 9 of 24 |
+| **tiles below 0.8, summed** | **299 -> 338** |
+
+**The total count of deficient tiles got worse, not better**, driven by
+`flower-bud-alone-cpl` going from 50 to 91. No subject that failed the invariant
+in `GALLERY-FIXED-SRGB` passes it in `SHIP-V1`.
+
+### The evidence, since the deficits persist
+
+`V-BESTFRAME-SHIP/images/FIG4-109MSDCF-all-H2-candidates.jpg` is the 100%
+side-by-side on `SHIP-V1`, merge against the frame that beat it, identical tile
+coordinates, display gain matched at 1.015. It selects the **same** tiles as the
+`GALLERY-FIXED-SRGB` render and the **same** frame.
+
+| tile | ratio | SNR | winning frame |
+| --- | ---: | ---: | --- |
+| (1,5) | 0.000 | 3.31 | `k=8` `DSC00017.ARW` |
+| (2,5) | 0.000 | 3.15 | `k=8` `DSC00017.ARW` |
+| (3,6) | 0.053 | 3.07 | `k=8` `DSC00017.ARW` |
+| (2,6) | 0.079 | 3.53 | `k=8` `DSC00017.ARW` |
+
+The merge panels are smooth gradients. The frame panels carry directional
+filamentary texture that **correlates with the merge's own large-scale
+structure**, so it is scene content and not sensor noise: the dark comma in tile
+(2,5) is present in both arms.
+
+### The two kept explicitly visible
+
+**`highly-angled-ruler-mm-cpl` -- still NOT MEASURABLE in `SHIP-V1`.** Predicted
+scene displacement is again identically 0.0 px across all 352 tiles, which
+reproduces the signature of an unregistered merge. `SHIP-V1` ships one merge
+built from unregistered frames.
+
+**`foam` -- still NOT MEASURABLE in `SHIP-V1`**, and slightly further out: its
+fixed-pattern floor reads 0.00 DN against a gallery median of 17.62 DN. Cause
+still not established.
+
+### What I did not test, and what must not be claimed
+
+**The backend flip is untested.** Nothing in this section compares estimator
+against pyramid, because neither directory contains an estimator render. **The
+sentence "the backend flip is the fix" is not supported by anything measured
+here**, and the persistence of every deficit across a gate, CA and exposure
+change makes it less likely rather than more. Testing it requires an estimator
+arm rendered on the same subjects.
+
+Three things also remain untested: whether the deficit survives at more than 12
+frames per subject; whether it is present on `109MSDCF` at a finer tile grid; and
+whether the section 11 mechanism, the finest-band averaging fraction, explains it
+in `SHIP-V1`, because the `SHIP-V1` render log records only exposure and does not
+report `averaged`, `coverage` or `alignment` per subject. **That missing
+per-subject provenance is itself worth fixing before ship.**

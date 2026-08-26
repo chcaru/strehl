@@ -20,14 +20,15 @@ these frame-signal numbers are a LOWER bound. --selftest measures how loose that
 bound is (C4) and checks the instrument can return both a null and a positive.
 """
 import argparse
+import os
 import numpy as np
 from pathlib import Path
 from scipy import ndimage, signal
 import bestframe as B
 
-GAL = Path(r"C:\dev\strehl-out\GALLERY-FIXED-SRGB")
+GAL = Path(os.environ.get("VBF_GAL", r"C:\dev\strehl-out\GALLERY-FIXED-SRGB"))
 RAW = Path(r"D:\personal\macro")
-OUT = Path(r"C:\dev\strehl-out\V-BESTFRAME")
+OUT = Path(os.environ.get("VBF_OUT", r"C:\dev\strehl-out\V-BESTFRAME"))
 SEARCH = 10          # +/- px, integer shift search per tile
 
 

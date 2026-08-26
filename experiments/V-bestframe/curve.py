@@ -16,13 +16,14 @@ that is a defect.
 only those, to move. A checker that has never gone red is not a checker.
 """
 import argparse
+import os
 import numpy as np
 from pathlib import Path
 from scipy import ndimage
 import bestframe as B
 
-OUT = Path(r"C:\dev\strehl-out\V-BESTFRAME")
-GAL = Path(r"C:\dev\strehl-out\GALLERY-FIXED-SRGB")
+OUT = Path(os.environ.get("VBF_OUT", r"C:\dev\strehl-out\V-BESTFRAME"))
+GAL = Path(os.environ.get("VBF_GAL", r"C:\dev\strehl-out\GALLERY-FIXED-SRGB"))
 SUBPIX = 0.8126
 DISP_MIN = 20.0
 EDGES = np.array([0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0, 8.0, 1e9])
