@@ -110,6 +110,48 @@ measured win, not inflating it. See §46 of
 [`ORCH-veiling.md`](docs/research/ORCH-veiling.md).
 
 
+## Looking at the output
+
+Before anything else, look at pictures. Build a self-contained gallery of every
+current stack — each subject's full frame paired with a **true 1:1 crop** of its
+most detailed region:
+
+```console
+$ python experiments/ORCH-drift-check/build_gallery.py
+$ python experiments/ORCH-drift-check/verify_gallery.py   # checks the page, not the log
+```
+
+Then open `C:\dev\strehl-out\VIEW\index.html`.
+
+The 1:1 crop is the point. **A reduced image cannot support a verdict about
+print quality** — it hides softness and it also hides the fine structure that
+separates a genuinely sharp low-contrast subject from a blurred one. Three
+separate wrong conclusions in this project came from judging pictures at
+thumbnail scale, including one that had already been sent to two contributors as
+an instruction before it was retracted.
+
+Judged that way, four subjects are print-worthy today: `bee-1-cpl`,
+`bee-3-cpl`, `leaf-2-cpl`, `112MSDCF`. Individual compound-eye facets, plumose
+hair barbules including their branched side-structure, chloroplast speckle, and
+crystal dendrites to near single-pixel width all resolve. **The occlusion halo
+is gone**, including where pale hairs cross a dark defocused compound eye —
+the geometry that rims in every other stacker.
+
+What is not fixed: a *veil* at occlusion boundaries. Its mechanism is measured
+rather than guessed — the merge selects the right frame, and the veiled detail
+is present at 0.85 correlation with the frame that resolved it, but the
+pyramid's base band is a plain unweighted mean across every frame, so at an
+occluded pixel it averages in the ~290 frames showing the defocused foreground
+and lifts the pedestal. Correct detail, wrong brightness. See §59.3 of
+[`ORCH-veiling.md`](docs/research/ORCH-veiling.md).
+
+`verify_gallery.py` exists because the generator's "nothing missing" line is
+printed from the same variables it used to build the page. The verifier re-reads
+the written HTML, resolves every `src` against the filesystem, and checks that
+each crop labelled 1:1 is actually large enough to be one — the failure a link
+checker passes.
+
+
 ## Quickstart
 
 ```console
