@@ -87,6 +87,42 @@ Display order only. It is NOT a quality gate, and it does not diagnose WHY a
 subject is weak -- a soft merge and an out-of-focus capture both score low, and
 telling those apart is BUILD-TRIAGE's job, not this file's. `--verdicts` is the
 hook for their answer; this file never invents one.
+
+TWO PROVENANCE FACTS THAT BOUND WHAT AN ORDERING FROM THIS FILE MEANS
+----------------------------------------------------------------------
+1. GREEN-ONLY, SO IT SURVIVES A CROSS-BUILD COMPARISON. `resolved` is computed
+   entirely from `a[:, :, 1]`. The all-channel `lum` feeds only the reported
+   `level`, which is informational and is not the sort key. This matters
+   because BUILD-HULL measured that two binaries built at different points in
+   one night's tree differ by a chromatic-aberration correction: green
+   bit-identical, max|d| = 0, while RED moved up to 3902 DN on 97.7% of
+   samples. An ordering computed on luminance or RGB across mixed builds would
+   partly be ranking that correction. This one cannot be. [MEASURED by
+   BUILD-HULL; channel usage verified here]
+
+2. IT RANKS CLAMPED RENDERS, WHICH IS RIGHT FOR ITS PURPOSE AND WRONG FOR
+   ANOTHER ONE. `pyramid.rs:1189` clamps to the hull on the default path, and
+   BUILD-HULL priced it at 84.6%-97.7% microcontrast retention -- a ~13 point
+   spread ACROSS SUBJECTS, binding hardest where it has least to fix.
+
+   For ordering the files we actually ship, that is correct: the shipped files
+   are clamped, so a ranking of clamped renders is a ranking of the thing being
+   displayed.
+
+   It is NOT a ranking of the tool's intrinsic resolving power per subject,
+   and its rank numbers are finer-grained than its real resolution. A
+   subject's true place is an INTERVAL: on the 26-subject corpus the max
+   plausible displacement under a different clamp policy is 6 places out of
+   26, concentrated in a dense mid-band. The bottom of the table is locked --
+   ranks 24-26 cannot move at all -- so a verdict drawn from the bottom
+   survives, and so does `bee-3-cpl`, which can only sit 3..10.
+
+   `RANKING-CAVEATS.txt`, emitted next to `ranking.tsv`, carries the
+   per-subject interval, because a caveat that lives only here is not attached
+   to the file someone copies into a report.
+
+   When BUILD-BLEND changes the clamp, this ranking and any contact sheet
+   built from it must be regenerated. [ARGUED from BUILD-HULL's measurement]
 """
 
 import argparse
@@ -102,6 +138,13 @@ LIT_PCT = 20.0
 TILE = 512
 TILE_PCT = 90.0
 IMMERKAER = np.array([[1.0, -2.0, 1.0], [-2.0, 4.0, -2.0], [1.0, -2.0, 1.0]])
+
+# Ratio of best to worst hull-clamp microcontrast retention measured by
+# BUILD-HULL (97.7% on couch-fibers-cpl, 84.6% on coffee-bean). Two subjects
+# closer together than this could exchange places under a different clamp
+# policy, so it is the width of the "do not trust this gap" window -- not a
+# tuning knob, and not to be adjusted to make an ordering look firmer.
+CLAMP_SWAP = 0.977 / 0.846
 
 
 def read_u16(p: Path) -> np.ndarray:
@@ -278,6 +321,63 @@ def main() -> int:
             json.dumps({"ranked": rows, "failed": failed, "encoded": args.encoded},
                        indent=2), encoding="utf-8")
         print(f"wrote {args.out / 'ranking.tsv'}")
+
+        # Provenance travels WITH the artifact. A caveat that lives only in a
+        # source docstring is not attached to the ranking.tsv someone copies
+        # into a report, and inferring an artifact's meaning from its filename
+        # has already produced wrong conclusions on this project.
+        vals = [r["resolved"] for r in rows]
+        # "within swap distance of a neighbour" is true of almost every row and
+        # reads as if the whole order were noise. The honest quantity is how far
+        # a subject could actually MOVE, so report that instead. Overstating a
+        # defect costs credibility the same way understating one does.
+        spans, worst = [], 0
+        for i, v in enumerate(vals):
+            j = [k for k, w in enumerate(vals)
+                 if v / CLAMP_SWAP <= w <= v * CLAMP_SWAP]
+            lo, hi = min(j) + 1, max(j) + 1
+            d = max(hi - (i + 1), (i + 1) - lo)
+            worst = max(worst, d)
+            spans.append((i + 1, rows[i]["subject"], lo, hi, d))
+        locked = [s for s in spans if s[4] == 0]
+        extremes = (vals[0] / vals[-1]) if vals and vals[-1] > 0 else float("inf")
+        (args.out / "RANKING-CAVEATS.txt").write_text("\n".join([
+            "WHAT THIS ORDERING IS, AND THE TWO LIMITS ON READING IT",
+            "=" * 56, "",
+            f"encoded input : {args.encoded} (curve INVERTED before measuring)",
+            f"subjects      : {len(rows)} ranked, {len(failed)} failed",
+            "statistic     : P90 over tiles of sqrt(max(0, mean|grad L|^2 - sigma^2))",
+            "", "1. GREEN-ONLY, so this survives a cross-build comparison.",
+            "   `resolved` uses the green plane alone. BUILD-HULL measured that",
+            "   binaries built at different points in one tree differ by a",
+            "   chromatic-aberration correction -- green bit-identical, max|d|=0,",
+            "   red moving up to 3902 DN on 97.7% of samples. A luminance or RGB",
+            "   ordering across mixed builds would partly rank that correction.",
+            "   This one does not.",
+            "", "2. THIS RANKS CLAMPED RENDERS, so its resolution is coarser than",
+            "   its rank numbers suggest.",
+            "   pyramid.rs:1189 clamps to the hull on the default path, priced by",
+            "   BUILD-HULL at 84.6%-97.7% microcontrast retention -- a spread that",
+            "   varies BY SUBJECT and binds hardest where it has least to fix.",
+            "   So a subject's true place is an interval, not a number:",
+            "",
+            f"     max plausible displacement : {worst} places out of {len(vals)}",
+            f"     ranks that cannot move     : "
+            f"{[s[0] for s in locked] if locked else 'none'}",
+            f"     rank 1 is {extremes:.1f}x rank {len(vals)}",
+            "",
+            "   Per-subject plausible interval (rank: lo..hi):",
+            *[f"     {a:3d} {b:<36} {lo:2d}..{hi:2d}" for a, b, lo, hi, _ in spans],
+            "",
+            "   Read a gap of more than that displacement as real, and a gap",
+            "   smaller than it as a tie. When the clamp policy changes,",
+            "   REGENERATE this ranking and any contact sheet built from it.",
+            "",
+            "3. NOT A GATE. Display order only. It does not say WHY a subject is",
+            "   weak; a soft merge and a defocused capture both score low.",
+        ]) + "\n", encoding="utf-8")
+        print(f"wrote {args.out / 'RANKING-CAVEATS.txt'}  "
+              f"(max plausible clamp displacement: {worst}/{len(vals)} places)")
     return 0
 
 
