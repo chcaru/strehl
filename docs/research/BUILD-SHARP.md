@@ -2214,3 +2214,163 @@ larger than anything above, but it is a decimation that defines the output
 lattice rather than an interpolation at a phase, so folding it into this table
 would be double counting a different quantity. It deserves its own section and
 does not have one yet.
+
+## 21. The two conditional sites have fired: CA and pyramid, priced
+
+HEAD `049589fc71d466ad303ef4164e3e937862414940`. Instrument:
+`experiments/BUILD-SHARP/src/resample_audit2.py` (new), reusing §20's
+`resample_audit.py` and `resample_price.py`.
+
+§20 classified the lateral-CA warp and the pyramid as NOT-ON-THIS-PATH
+*conditionally* and named the conditions. Both have now fired. Pricing them.
+
+### 21.0 A correction to §20 first, in the conservative direction
+
+§20 evaluated the gather coordinate as `a z + b`. `Similarity::apply_at`
+(`align.rs:290`) is **centre-relative**: `a (z - c) + b + c`. The difference is a
+constant offset `c - a c`, about 3.5 px here, and on a near-uniform phase
+distribution a constant offset should not move the mean amplitude. It barely
+does -- **+0.29% / +1.04% / +3.17%** at f = 0.25 / 0.35 / 0.50. §20's table
+stands and if anything slightly **overstated** the loss. The model is exact now
+regardless.
+
+### 21.1 Q1 and Q2 -- the CA warp is already folded, and it was designed that way
+
+ORCH asked whether the shipped default is a net sharpness loss, expecting the
+CA cost to be small against the co-site recovery. The answer is stronger than
+"small": **it is structurally zero**, and I did not need to measure it to find
+that out, only to read `optics.rs`.
+
+`OpticalProfile::compose` (`optics.rs:297`) returns **one** `Similarity` doing
+alignment and CA together, and `align_cmd.rs:1430` calls it per CFA plane and
+hands the result straight to `gather_checked`. The module's own header states
+the reasoning under the heading *"Why applying it is free"*: a radial
+magnification about a point is itself a similarity, similarities are closed
+under composition, so the correction rides the gather's existing interpolation.
+
+That is the same move I prescribed for the co-site in §20.5, already built, in
+this codebase, by someone else, for the neighbouring channel correction. So Q2's
+answer is: **it not only composes, it already does.**
+
+CA's real cost is therefore only what the composed scale does to the phase
+distribution of the one gather:
+
+| f | align only | + CA red | + CA blue | red cost |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.25 | 0.89241 | 0.88871 | 0.89276 | **-0.41%** |
+| 0.35 | 0.69776 | 0.68718 | 0.69914 | **-1.52%** |
+| 0.50 | 0.43431 | 0.41484 | 0.43844 | -4.48% |
+
+Blue is *positive* at two of three bands, which is not a result, it is the
+phase distribution being re-dealt. Treat both as zero.
+
+The counterfactual is the number that matters. Had CA been applied as its own
+pass at ORCH's measured displacements, red would have paid **0.94587 / 0.85720 /
+0.76637** -- a 14.3% amplitude loss at f = 0.35, which is nearly half the
+co-site's 31.87% and would have been a real question. **That cost is avoided,
+not paid.**
+
+**Q1 answer: the shipped CA default is not a net sharpness loss. It is
+amplitude-neutral, and the fringing removal on 25/26 subjects is free.**
+
+### 21.2 A latent collision I want on the record before BUILD-COSITE lands
+
+`A7C2_FE100GM_2XTC_X4CPL` carries `translation: (0.6294, -0.4240)` plane px, and
+its own field docs say the term is *"the same order as the ~0.5 px/axis that CFA
+co-siting predicts"* and is **unattributed** -- it may be lattice, may be
+optical, and the instrument cannot say which.
+
+That is the *same physical quantity* BUILD-COSITE is about to add to the gather.
+Today there is no collision, because `resolve_for_capture` returns the
+`_RADIAL` twin (`optics.rs:570` and `:597`) whose translation is exactly
+`(0.0, 0.0)`. So the co-site is genuinely uncorrected and §20's prescription is
+sound.
+
+But the two are one selection away from double-correcting, and the failure would
+be silent -- a sub-pixel red shift, in the direction that looks like slightly
+worse CA. **If anyone ever wires the non-radial profile, the co-site offset must
+be removed from one of the two.** Recording it here rather than in a comment
+because the profile and the gather are owned by different lanes.
+
+### 21.3 Q3 -- the pyramid costs exactly nothing, and that is provable
+
+The Laplacian is *defined* as the residual `L_i = G_i - expand(G_{i+1})`, so
+collapsing an unmodified pyramid is algebraically the identity. Measured on
+512x512 white noise, 7 bands:
+
+    max |collapse(analyse(x)) - x| = 4.441e-16      (float64 round-off)
+
+and per-band amplitude through analysis and synthesis is **1.000000** at all
+three of f = 0.25 / 0.35 / 0.50.
+
+This is the important structural point and it generalises: `reduce` and `expand`
+are heavily blurring operators individually -- `[1,4,6,4,1]/16` is a severe
+low-pass -- but they appear only in a **perfect-reconstruction filter bank**,
+where the blur that `expand` introduces is exactly the blur that was subtracted
+out to form the Laplacian. **A blurring kernel inside a PR filter bank is not a
+resampling loss.** Pricing it as one, by looking at the kernel alone, would have
+produced a large and entirely fictitious number.
+
+Potency, because a measurement that returns exactly 1.000000 three times is
+precisely the shape of an instrument that is not connected: scaling the finest
+Laplacian band by 0.80 returns **0.800000 / 0.800350 / 0.800128**, MOVED at all
+three bands. The instrument responds.
+
+So the pyramid contributes a factor of **1.000000** to every cell of the chain.
+Its sharpness behaviour is entirely in *which frame wins which band*, which is a
+merge question and belongs to BUILD-BLEND, not a resampling question.
+
+### 21.4 Revised partition, shipped configuration
+
+| outcome | n |
+| --- | ---: |
+| PRICED | 3 |
+| NOT-A-RESAMPLE | 2 |
+| NOT-ON-THIS-PATH | 2 |
+| COULD-NOT-INSTRUMENT | 1 |
+| **TOTAL** | **8** |
+
+The COULD-NOT-INSTRUMENT entry is new and it is honest: I looked for a
+downstream output-scaling step and did not find one, but "I did not find one"
+is not the same as "there is none", and §20's own rule says a site I could not
+clear must not be counted as cleared. It is one site and it is named.
+
+### 21.5 The shipped chain
+
+| f | G | R/B today | R/B folded | gain |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.25 | 0.89241 | 0.78326 | 0.88871 | 1.135x |
+| 0.35 | **0.69776** | **0.46820** | 0.68718 | **1.468x** |
+| 0.50 | 0.43431 | 0.19608 | 0.41484 | 2.116x |
+
+Unchanged in substance from §20 with both new sites priced in: **the co-site is
+still the only removable loss in the chain, and it is still the whole of it.**
+
+### 21.6 On the 4.5% tile deficit -- one decisive question, not an answer
+
+ORCH asks whether 47% R/B retention at f = 0.35 could explain a survey finding
+only 4.5% of detail tiles have merge >= best single frame. I will not adjudicate
+a result I have not seen, but there is a single question that decides whether my
+numbers are even relevant, and it is cheap:
+
+**Is the "best single frame" in that survey the aligned frame, or the original?**
+
+* If the comparison frame is taken **after** the alignment gather, then both
+  sides pay the same gather and it **cancels**. My numbers cannot explain the
+  deficit and it is a real merge finding.
+* If the comparison frame is the **original, unwarped** frame, then the single
+  frame pays **zero** resamples while the merge pays the full chain. On green
+  that alone hands the single frame a **1.43x** advantage at f = 0.35
+  (1 / 0.69776); on red and blue, **2.14x**. A survey built that way would
+  report the merge losing on the great majority of textured tiles **even if the
+  merge were perfect**, and 4.5% is entirely consistent with that.
+
+The second case would also explain why the deficit concentrates in *detail*
+tiles: the handicap is frequency-dependent and vanishes at low frequency.
+
+So this is testable without re-running anything: read the survey's reference
+arm. If it is the unwarped original, the instrument has the §20 disease --
+**comparing across a path boundary** -- and the fix is to warp the reference
+through the same gather before comparing. That is the same class of error as
+"our sharpness instrument has been measuring a path the photographer does not
+see", which ORCH is already promoting to a rule, and I think it is the same rule.
