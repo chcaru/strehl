@@ -814,3 +814,355 @@ python rimsens.py                                   # threshold sweep + predicti
 the requested ones, so no number here depends on the ambient shell of the five other
 agents working in this tree. Every render caches to a `.json` sidecar recording its
 exact argv, env and wall clock.
+
+## 14. There are two merge backends, and the answer is different for each
+
+Everything in sections 1 through 13 was measured with the pinned binary `859edac`.
+That binary **predates the `--merge` flag**. It can only run one of the two merges
+this project ships, and it is not the one the artifact lives in. That single fact
+reconciles my zero with ORCH's clamping, and it means neither of us was wrong.
+
+`crates/strehl-cli/src/merge_cmd.rs` declares two backends:
+
+- `MergeBackend::Estimator` -- the regularised-winner, noise-gated, elect-then-average
+  merge. This is what sections 1 through 13 measured.
+- `MergeBackend::Pyramid` -- a Laplacian multi-band merge where **selection happens per
+  band and per coefficient, not per pixel**. In the binary used below it is marked
+  `(DEFAULT)`.
+
+**MEASURED.** All numbers in this section come from
+`C:\dev\strehl-out\VERIFY-WIRE\target-a\release\strehl.exe`, sha256
+`6E4B369664F1E75321B669EDAADDDB9DC6B23A444F01DDBF41833C6E70B59419`, mtime
+2026-08-25 22:55:34, hash re-verified immediately before these numbers were written
+down. Shipped pyramid defaults read from `pyramid.rs:136` and `pyramid.rs:795-809`:
+`bands 7`, `gate 2.0`, `exponent 2.0`, `sharpen 1.4`, `base mean`, and
+`MAX_EXPONENT 8.0`, giving a per-octave exponent ramp of `2, 3, 4, 5, 8, 8, 8` from
+coarsest to finest.
+
+### 14.1 The hull basis transfers, and by how much
+
+A pyramid render decomposes and reconstructs, so it is not obliged to return a
+single frame unchanged. I checked rather than assumed. `pyrbasis.py` renders frames
+0, 110 and 204 through `--merge pyramid` at `STREHL_ALIGN=0` and compares them to the
+estimator-path single-frame renders that section 5 already folded:
+
+| frame | samples | identical | differing | worst abs |
+|---|---|---|---|---|
+| 0 | 24752640 | 24752636 | 4 | 1 DN |
+| 110 | 24752640 | 24752615 | 25 | 1 DN |
+| 204 | 24752640 | 24752630 | 10 | 1 DN |
+
+At most 25 samples in 24.7 million, never more than 1 DN. **MEASURED.** So the
+existing 205-frame co-registered basis is valid for the pyramid backend provided
+violations of 1 DN or less are not attributed. `pyrhull.py` therefore carries a
+`GUARD_DN = 1` band and counts guard-band samples as their own outcome rather than
+folding them into either verdict.
+
+### 14.2 Commissioning the detector on this backend
+
+A detector that reports zero is indistinguishable from a detector that is not
+looking, and a detector that reports 9% is indistinguishable from a detector that is
+miscounting. Planted +5000 DN into rows 150:350, columns 150:350 of the baseline
+pyramid output -- 40,000 pixels, 120,000 samples, sited inside the `420+ far` band
+which reads exactly 0.0000% clean:
+
+| quantity | clean | planted | delta |
+|---|---|---|---|
+| ABOVE hull, > 1 DN | 216338 | 336338 | **+120000** |
+| BELOW hull, > 1 DN | 2229804 | 2229804 | 0 |
+| violating pixels in `420+ far` | 0 | 40000 | +40000 |
+
+Exactly the planted sample count, in the right direction, at the right place, with
+zero spill into the opposite direction. **MEASURED.** The detector sees what it
+claims to see.
+
+### 14.3 The controlled A/B: only `--merge` differs
+
+`109MSDCF`, 22 frames, `STREHL_ALIGN=0`, one binary, one hull basis, one demosaic,
+one clip path, one output path. The two arms differ in exactly one CLI token.
+
+| arm | inside hull | guard +-1 DN | BELOW > 1 DN | ABOVE > 1 DN | total | net DN/sample |
+|---|---|---|---|---|---|---|
+| `--merge estimator` | 24724512 (100.000000%) | 0 | **0** | **0** | 24724512 | 0.000 |
+| `--merge pyramid` | 22844310 (92.395393%) | 41174 | **1178284 (4.765651%)** | **660744 (2.672425%)** | 24724512 | **-1.7248** |
+
+Pyramid BELOW: mean -65.49 DN, worst -1304 DN. Pyramid ABOVE: mean +52.24 DN, worst
++1020 DN. **MEASURED.**
+
+This is the whole answer to Deliverable 2. Demosaic, clip, pedestal subtraction, the
+camera-to-sRGB matrix, the Catmull-Rom resampler and the 16-bit output quantiser are
+byte-identical code in both arms. A stage common to both arms cannot explain a
+difference between them. **The non-convex stage is the pyramid merge itself.**
+
+On `flower-bud-alone-cpl`, 205 frames, same conditions, shipped pyramid defaults:
+
+| outcome | samples | fraction |
+|---|---|---|
+| inside hull (exactly) | 22300944 | 90.095214% |
+| below hull, <= 1 DN (guard) | 4323 | 0.017465% |
+| above hull, <= 1 DN (guard) | 1231 | 0.004973% |
+| **BELOW hull, > 1 DN** | **2229804** | **9.008348%** |
+| **ABOVE hull, > 1 DN** | **216338** | **0.874000%** |
+| TOTAL | 24752640 | 100.000000% |
+
+BELOW: mean -483.46 DN, p50 -358, p99 -1851, worst **-4362 DN**. ABOVE: mean +462.84
+DN, p50 +286, p99 +1857, worst **+2788 DN**. Net signed violation over every sample in
+the image: **-39.5067 DN/sample**. **MEASURED.**
+
+The merge is producing pixels up to 4362 DN below every one of the 205 frames it had
+to work with, on 9% of the image. This is the arithmetic impossibility the brief went
+looking for, and it is real.
+
+### 14.4 Which knob makes it: the band ladder
+
+**MEASURED.** `--pyramid-bands` swept 1 to 7, everything else at shipped defaults,
+each rung run through the commissioned detector against the same 205-frame basis.
+
+| rung | inside % | BELOW % | ABOVE % | below n | above n | worst- | worst+ | net DN/px |
+|---|---|---|---|---|---|---|---|---|
+| bands 1 | 99.9894 | 0.0092 | 0.0011 | 2287 | 267 | -1659 | +221 | **-0.011** |
+| bands 2 | 99.8709 | 0.0953 | 0.0315 | 23596 | 7800 | -2860 | +1364 | -0.112 |
+| bands 3 | 99.5956 | 0.2700 | 0.1282 | 66820 | 31731 | -3230 | +1568 | -0.365 |
+| bands 4 | 99.1222 | 0.6092 | 0.2585 | 150794 | 63980 | -3730 | +1798 | -1.248 |
+| bands 5 | 97.3233 | 2.1475 | 0.5126 | 531574 | 126881 | -3877 | +2435 | -5.915 |
+| bands 6 | 94.0554 | 5.1118 | 0.8114 | 1265305 | 200831 | -4273 | +2748 | -19.669 |
+| bands 7 (**shipped**) | 90.0952 | 9.0083 | 0.8740 | 2229804 | 216338 | -4362 | +2788 | **-39.507** |
+
+`bands 1` is a **structural-zero control**, not just a low rung. With one band there is
+no Laplacian detail band to select in: the output is the coarsest residual, and the
+coarsest residual is combined by `mean` (`--pyramid-base mean`, the shipped default).
+A mean cannot leave the hull. That rung runs through identical demosaic, clip and
+output code as every other rung and differs only in whether per-band selection
+happens. It reads -0.011 DN/sample against the shipped -39.507, a factor of 3592.
+
+**This overturns ORCH's "52x step on the seventh band alone."** The hull violation
+grows **smoothly and monotonically** with band count. Rung-to-rung multipliers on the
+BELOW fraction are 10.4x, 2.83x, 2.26x, 3.53x, 2.38x, 1.76x -- and the seventh band
+has the **smallest** multiplier of the six. There is no step. **ARGUED, from the
+measured ladder:** the 52x step is a property of the clamp counter, not of the
+violation. Clamping fires only where a smoothly growing excursion happens to cross
+zero, which is a threshold on top of a smooth curve, and a threshold manufactures a
+step out of a ramp.
+
+### 14.5 The 2x2: neither the ramp nor the coarse level is the cause
+
+ORCH could not separate "a new coarse level" from "a shifted exponent ramp" from
+outside the code. Both knobs exist: `--pyramid-bands` sets the level count, and
+`--pyramid-sharpen 1.0` disables the per-octave ramp and restores a single global
+exponent. **MEASURED**, flower-bud, 205 frames:
+
+| arm | bands | sharpen | inside % | BELOW % | ABOVE % | net DN/px | vs A |
+|---|---|---|---|---|---|---|---|
+| A (shipped) | 7 | 1.4 | 90.0952 | 9.0083 | 0.8740 | -39.507 | -- |
+| B | 7 | **1.0** | 92.0262 | 7.5174 | 0.4361 | -29.411 | -17% |
+| C | **6** | 1.4 | 94.0554 | 5.1118 | 0.8114 | -19.669 | -43% |
+| D | **6** | **1.0** | 95.2333 | 4.2965 | 0.4520 | -15.528 | -52% |
+
+**Neither knob eliminates it, and with both turned off the merge still leaves the
+hull on 4.3% of samples.** Both are dose amplifiers on one mechanism, not two rival
+causes. That is why they did not separate: there was nothing to separate.
+
+**A precision note against my own arm B.** `--pyramid-sharpen 1.0` flattens the
+*exponent* across bands. It does **not** make the *weights* band-independent, because
+the weights are a normalised function of each band's own energy and the band energies
+differ regardless of the exponent. ORCH's exact arithmetic claim -- that
+`sum_b convex_k(band_b,k)` need not equal `convex_k(sum_b band_b,k)` -- is therefore
+**not directly falsifiable from the CLI**, since no shipped flag makes the weights
+band-consistent. Arm B tests the dose, not the mechanism. **ARGUED, not measured.**
+
+### 14.6 The causal test: `hard-max`
+
+`--pyramid-select` changes **only** the per-band selection rule. `soft` is a convex
+combination weighted by excess band power; `hard-max` is textbook PMax argmax, which
+is the maximally band-varying selection available. Everything downstream is identical
+code. If the mechanism is per-band selection, hard-max must be worse. It was
+pre-registered as a falsification arm before rendering.
+
+| arm | inside % | BELOW % | ABOVE % | BELOW mean | ABOVE mean | worst- | worst+ | net DN/px |
+|---|---|---|---|---|---|---|---|---|
+| `soft` (shipped) | 90.0952 | 9.0083 | 0.8740 | -483.46 | +462.84 | -4362 | +2788 | -39.507 |
+| `hard-max` | 84.5905 | **13.4335** | **1.9577** | -716.94 | +626.37 | -4992 | +3829 | **-84.048** |
+
+**MEASURED.** 1.49x more below-hull, 2.24x more above-hull, 2.13x the net bias. The
+arm passed its pre-registered prediction. Combined with 14.3 and 14.4, per-band
+selection is isolated as the cause by three independent routes: removing it entirely
+(bands 1) takes the violation to near zero, replacing it with a pixel-wise election
+(the estimator) takes it to exactly zero, and making it more aggressive makes the
+violation worse in proportion.
+
+### 14.7 Two corrections to the spatial picture
+
+**The white rail is real and the clamp counter cannot see it.** `merge_cmd.rs` states
+that `accept.py`'s clip predicate is `np.any(im == 0, axis=2)`, black only. On
+flower-bud the pyramid merge puts **216,338 samples ABOVE the hull ceiling**, mean
++462.84 DN, worst +2788 DN; on 109MSDCF, **660,744 samples**, and there the ABOVE
+count is more than half the BELOW count. None of these have ever been counted.
+**MEASURED.**
+
+**"Darkness is a cliff" is partly the detector.** Binning every pixel on local
+luminance x local gradient, both axes measured on the **205-frame mean** so they are
+independent of every merge arm and the binning cannot be circular. Cell values are
+the percentage of pixels in that cell that leave the hull. Luminance quintile edges
+908 / 7237 / 17662 / 18853 / 19846 / 20912 DN; gradient edges 0.0 / 12.3 / 22.0 /
+32.1 / 46.3 / 530.1 DN.
+
+| lum quintile | g1 | g2 | g3 | g4 | g5 | row rate | row mean violation |
+|---|---|---|---|---|---|---|---|
+| q1 (darkest) | 49.969 | 56.830 | 64.278 | 61.629 | 47.445 | **52.434%** | -468.8 DN |
+| q2 | 0.011 | 0.019 | 0.046 | 0.187 | **13.735** | 4.542% | +126.2 DN |
+| q3 | 0.061 | 0.109 | 0.166 | 0.403 | **4.152** | 0.806% | **+744.7 DN** |
+| q4 | 0.331 | 0.414 | 0.487 | 0.712 | **1.668** | 0.710% | +370.1 DN |
+| q5 (brightest) | 0.002 | 0.002 | 0.001 | 0.002 | 0.001 | 0.002% | +71.4 DN |
+
+**MEASURED.** Three things follow.
+
+1. ORCH measured "luminance quintiles 2 through 4 read *exactly* 0.000." On a
+   level-independent detector those same quintiles read **4.542%, 0.806% and 0.710%**.
+   The exact zeros were the visibility threshold of an `im == 0` predicate, not an
+   absence of violation.
+2. The mean violation in q3 is **+744.7 DN**, larger in magnitude than q1's -468.8 DN.
+   Mid-tone excursions are **bigger per event**, merely rarer, and they never reach
+   zero so nothing counts them.
+3. Within q2, q3 and q4 the rate **rises steeply with gradient** -- q2 goes 0.011% to
+   13.735%, a factor of 1250 across the gradient axis. Outside the darkest quintile
+   this **is** an edge phenomenon. ORCH's "do not build an edge-gated anything" was
+   inferred from a detector blind to everything except black clipping, and on this
+   evidence it should be reconsidered rather than treated as settled.
+
+**Where it sits relative to the silhouette.** Radial partition of arm A, summing to
+all 8,250,880 pixels:
+
+| band | pixels | violating | rate | mean violation | worst |
+|---|---|---|---|---|---|
+| subject | 1785047 | 896774 | 50.2381% | -469.6 | -4362 |
+| 4-12 | 58550 | 15295 | 26.1230% | +676.9 | +2788 |
+| 12-30 | 122193 | 29124 | 23.8344% | +698.8 | +2617 |
+| 30-60 | 193917 | 21864 | 11.2749% | +409.0 | +1907 |
+| 60-120 | 383920 | 669 | 0.1743% | +79.9 | +371 |
+| 120-200 | 516697 | 0 | 0.0000% | 0.0 | 0 |
+| 200-300 | 664791 | 0 | 0.0000% | 0.0 | 0 |
+| 300-420 | 729323 | 0 | 0.0000% | 0.0 | 0 |
+| 420+ far | 3767084 | 0 | 0.0000% | 0.0 | 0 |
+| unbanded gap | 29358 | 1512 | 5.1502% | +491.9 | +2674 |
+
+**This is a partial negative for V-RIM's prediction, which ORCH explicitly asked for.**
+V-RIM predicted undershoot on the bright side within about 300 px of the silhouette.
+**MEASURED:** outside the subject the excursion is confined to within 60 px, it is
+**positive** (the backdrop side goes *above* its hull, not below), and from 120 px
+outward it is **exactly zero across 5,677,895 pixels**. The negative excursion lives
+**inside** the subject, which is the dark side. So the out-of-hull excursion is not the
+mechanism behind the far-field veiling measured in section 12; those remain two
+separate findings, and section 12's is still the one that explains the backdrop sag.
+
+### 14.8 It survives the mean base band
+
+ORCH asked whether this finding and BUILD-BLEND's are the same event. They are not.
+`--pyramid-base mean` is **already the shipped default** in the measured binary, so
+every number in this section was produced with a base band that is a mean and
+therefore convex by construction. The violations are what remains **after** that fix.
+**MEASURED.** Per ORCH's own framing, that makes this independent and important.
+
+### 14.9 Verdict
+
+The brief asked which of three statements is true. The answer is that it depends on
+the backend, and that is why the question was hard.
+
+- **`--merge estimator`: outcome 2.** The merge is convex, it was measured convex on
+  two stacks at 0 violations in 24,752,640 and 24,724,512 samples, and the -805 DN
+  comparison was not apples-to-apples. The flaw is in section 7: `r7_hull.py` built
+  its "hull" from a 7x8 array of per-band medians rather than from pixels.
+- **`--merge pyramid`: outcome 1.** The merge is genuinely non-convex. The stage is
+  the pyramid merge's own per-band coefficient selection, isolated by a
+  single-token A/B against the estimator, a monotone seven-rung dose-response in band
+  count with a structural-zero control at the bottom, and a pre-registered `hard-max`
+  arm that made it worse in the predicted direction and proportion.
+
+**ARGUED.** The reason both were true at once is that the pinned measurement binary
+`859edac` cannot express the flag that selects the backend. Every number this project
+produced with the pin describes a merge that is not the shipped default.
+
+### 14.10 Revised proposal for the permanent gate (supersedes section 11)
+
+Section 11 proposed a hull assertion. Section 12 showed it was necessary but not
+sufficient. Section 14 shows something section 11 got positively wrong: **a hard hull
+assertion would fail the shipped default on 9% of samples and could not be merged.**
+
+The honest reading of 14.4 and 14.6 is that **non-convexity is not incidental to the
+pyramid merge, it is the mechanism by which it buys acuity.** Per-band selection is
+what lets a depth boundary be a transition inside each band rather than a step in the
+image, and it is the same property that lets the reconstruction leave the hull. A gate
+that forbids it forbids the merge. The defect is not that the merge is non-convex; it
+is that its non-convexity is **unbudgeted, undirected and unmeasured**, so nothing
+notices when it grows.
+
+So the invariant should be a **budget with a named exception**, exactly as the brief
+phrased it. Proposed precisely enough to apply in one sitting:
+
+1. **Where.** Inside the pyramid merge, immediately after band reconstruction and
+   **before** the `max(0.0, ·)` clamp at `blend-render.rs:572`. The clamp is
+   downstream of the fault and destroys the evidence; measuring after it can only ever
+   see the black-only shadow that `accept.py` already sees.
+2. **What.** For each output sample, the interval `[min_k x_k, max_k x_k]` over the
+   frames that received **non-zero weight in any band** at that pixel. Not over all
+   frames -- over the frames actually combined. Report five counted outcomes that sum
+   to the sample total: inside, guard-below, guard-above, below, above. A count that
+   does not partition can hide a skipped region as a clean one.
+3. **Tolerance.** Two numbers, both measured here rather than chosen. The **guard band
+   is 1 DN**, the reconstruction round-trip floor from 14.1. The **budget** is a
+   fraction-of-samples ceiling and a net-bias ceiling, registered per subject from
+   the current shipped defaults so that regressions are visible immediately: on
+   `flower-bud-alone-cpl` the current state is 9.0083% below / 0.8740% above /
+   -39.5067 DN per sample, and on `109MSDCF` 4.7657% / 2.6724% / -1.7248 DN. The gate
+   should fail on an increase, not on a non-zero.
+4. **Both directions, always.** The above-hull count must be reported with equal
+   standing. It is currently 216,338 samples on flower-bud and 660,744 on 109MSDCF
+   and no existing instrument in this project can see any of it.
+5. **Do not clamp to the hull.** ORCH is right and 14.7 sharpens why: clamping would
+   alter 9% of samples, leave the wrong value at the clamp, and convert a measurable
+   excursion into an unmeasurable one.
+6. **Commission it before trusting it.** The plant in 14.2 is the pattern: a known
+   offset into a region that reads clean, checked for exact recovered count, correct
+   sign, correct location and zero spill.
+
+**For whoever owns the fix.** The direction 14.5 and 14.6 point at is making the
+selection weights **consistent across bands** -- deriving one per-pixel weight set
+from the pooled band evidence and applying it to every band -- which restores
+convexity by construction, because a single convex combination applied to all bands
+commutes with the reconstruction sum. **ARGUED, not measured.** I did not test it
+because no shipped flag expresses it and I am read-only in `crates/`. It is also not
+free: it moves the pyramid merge toward the estimator's behaviour, and the estimator
+is the arm that loses the acuity. That tradeoff is a real decision and should be made
+with a paired cost column, not assumed away.
+
+### 14.11 What section 14 did not measure
+
+- **`couch-fibers-cpl`, the placebo, is not in this section.** It is 299 frames and
+  its hull basis had not finished rendering when this was written. **This matters
+  more than it looks:** ORCH's constraint that "a proposal that moves couch-fibers is
+  wrong" rests on it reading exactly 0 clipped pixels in both arms, and 14.7 shows
+  that predicate is blind to above-hull excursions and to any below-hull excursion
+  that does not reach zero. Until couch-fibers is hull-tested, **it is unproven that
+  it is a placebo at all**, and it should not be used to reject a fix. Render is
+  running under `couch.ps1`.
+- **`dry-erase-marker-head-cpl` was not measured here**, so ORCH's attribution ladder
+  is neither confirmed nor contradicted on its own subject.
+- **The weights themselves were never observed.** Everything in 14.4 through 14.6 is
+  inferred from output pixels under knob changes. I never read a weight, because
+  doing so needs a change in `crates/` and that tree is contested.
+
+### 14.12 Reproducing section 14
+
+```
+cd C:\dev\strehl-out\BUILD-HULL
+python pyrbasis.py                                   # basis transfers, <= 1 DN
+python pyrhull.py fold --frames commission-flower-bud-alone-cpl\frames --n 205
+python pyrhull.py test --merged pyr\merge-A-default.tiff --tag A-default
+python pyrhull.py test --merged pyr\merge-A-default.tiff --tag PLANT-pos \
+                       --plant 5000 --plant-box "150,350,150,350"   # +120000 exactly
+powershell -File .\pyr_arms.ps1                      # the 2x2, hard-max, estimator
+powershell -File .\pyr_ladder.ps1 ; python pyr_ladder.py             # the dose curve
+```
+
+All renders use `STREHL_ALIGN=0` on both the merge and every single-frame render, so
+the merge and its hull basis are co-registered by construction -- route (a) of section
+3, unchanged.
