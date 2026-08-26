@@ -713,3 +713,163 @@ The failure mode available here is a **green result on every instrument either l
 owns**: an upward-biased estimator against a darkening artifact satisfies the veiling
 number, satisfies the aura number, and satisfies any ratio built from them. Only the
 absolute level, on a subject that has no veil to remove, can tell the difference.
+
+---
+
+## 14. A hypothesis of mine, killed by its own measurement, and the confound it exposed
+
+This section records a finding I did not make. I chased it for about forty minutes,
+measured it, and it was nothing. It is here because the *reason* it was nothing is a
+live confound for every A/B comparison in this project, and because the near-miss is
+instructive: I was one edit away from reporting the owner's central complaint addressed
+by a change that alters no pixel.
+
+### 14.1 The hypothesis
+
+`scripts/gallery.ps1` renders every subject with
+
+```
+strehl stack <DIR> --out <TIFF> --srgb --demosaic
+```
+
+and never passes `--auto-exposure`. The binary prints this on every such render, into a
+log file that is written and not read:
+
+```
+exposure : none -- this is a FAITHFUL render of the capture, which is not the
+           same thing as a flattering one. --auto-exposure would choose +2.62
+           stops (gain 6.148x). Nothing was applied.
+```
+
+The gallery manifest agreed: of 26 subjects, **21 recorded a white point below 0.55**,
+with `lead-1-cpl` at 0.0738 and `112MSDCF` at 0.0985. Read straight, that says the
+brightest content in most of the library renders in the bottom third of the tonal range.
+
+It was an attractive hypothesis. It was the fifth candidate "dark feature" of the night,
+it would have applied to **every pixel of every image the owner has ever judged**, and it
+would have explained his verdict completely, without implicating any algorithm.
+
+### 14.2 It is refuted
+
+Two full renders of `109MSDCF`, identical but for `--auto-exposure`
+(`C:\dev\strehl-out\ORCH-expo\`, `arms.ps1` and `expodiff.py`):
+
+| quantity | value |
+|---|---|
+| mean ratio B/A | **1.0000** |
+| what a real +2.62 stop difference would give | 6.148 |
+| max abs diff | **1 DN** |
+| samples identical | 98 560 892 of 98 898 048 (**99.659%**) |
+
+`--auto-exposure` does not change the picture.
+
+### 14.3 Why, and this is the part that matters
+
+The two tone lines were:
+
+```
+A:  tone : black 0.00582, white 0.16238 (linear)
+B:  tone : black 0.03580, white 0.99820 (linear)
+```
+
+B is A times 6.148 in **both** numbers, to five digits. **The tone stage maps its own
+measured `[black, white]` window onto `[0,1]`, per image.** An exposure gain scales the
+data and the window together and cancels exactly. The `white` column in the manifest is
+therefore not a statement about how bright the render is; it is the input level that the
+render maps to white.
+
+### 14.4 The confound this exposes, which is general
+
+**Every `--srgb` render in this project is independently normalised to its own measured
+black and white points.** Three consequences, none of them confined to this section:
+
+1. **Absolute DN is not comparable across arms on a tone-mapped render.** Two merges
+   differing only in their single brightest pixel get different tone windows and
+   therefore globally different output levels, for a reason that has nothing to do with
+   the merge.
+2. **An A/B on `--srgb` output is self-normalising**, so it can hide a real global
+   difference and it can manufacture an apparent one. The standing rule against
+   measuring on `--srgb` already existed because of the transfer curve. This is a
+   **second and independent reason**, and it is the worse of the two, because the
+   transfer curve at least applies equally to both arms while this normalisation is
+   *adaptive* and therefore differs between them.
+3. **A measurement normalised to an in-image reference survives it**, because a
+   per-image scale cancels in a ratio taken inside that same image. The paired tables in
+   §15 normalise each arm to its own 600-1400 px far field and are unaffected.
+
+### 14.5 The near-miss, stated plainly
+
+Had I not measured it, I would have added one flag to `gallery.ps1`, re-rendered, and
+reported that the owner's complaint was addressed. The pictures would have been
+byte-identical to within 1 DN. That is worse than doing nothing, because it *looks* like
+progress and it consumes the credibility that the real fixes need.
+
+> **A mechanism that would explain the complaint is not evidence that it does. Measure
+> the fix, not the mechanism.**
+
+The same standard applies to everything else claimed tonight, including the multi-band
+merge -- which is why that one was judged on paired full frames and a radial profile
+before it was believed, and not on the strength of its story.
+
+---
+
+## 15. The instrument had a two-reference bug, and fixing it reversed a published sign
+
+### 15.1 The defect
+
+`C:\dev\strehl-out\ORCH-rim\rimprofile.py` printed two tables under one heading. The
+linear table normalised to the far field, `ref`, the median over 600-1400 px. The encoded
+table normalised to `enc[-1]`, the **outermost bin at d=550 px** -- a bin that is itself
+inside the artifact being measured. Both columns were labelled "delta vs far-field".
+
+The consequence was not academic. On one A/B the linear table read **-272 DN** at
+d=300-400 while the encoded table read **+0.29 of 255** at d=350, and the two rows
+appeared to contradict each other. They did not; they were measured against different
+zeros. Anyone comparing them would have concluded the instrument was broken -- or
+believed whichever row suited them.
+
+Fixed: both tables now use the far field, and the script prints its reference on an
+explicit line so the two can never silently diverge again.
+
+### 15.2 The corrected paired result
+
+`ca-ctrl-` vs `ca-blend-flower-bud-with-background-fern-cpl.tiff`, background luminance
+by radial distance `d` from the subject silhouette, both arms against the same far-field
+zero (control 59630 DN = 248.1/255; blend 60260 DN = 249.1/255):
+
+| d (px) | CONTROL /255 | BLEND /255 | blend - control |
+|---|---|---|---|
+| 2 | -41.56 | -40.17 | +1.39 |
+| 90 | -7.69 | -4.09 | **+3.60** |
+| 175 | -3.17 | -3.42 | -0.25 |
+| 350 | -0.50 | **-2.69** | **-2.19** |
+| 550 | -0.79 | **-3.15** | **-2.36** |
+
+Two readings, one good and one bad, and the bad one is new:
+
+- **The multi-band merge more than halves the visible mid-field halo** at d=90. This is
+  the artifact that makes the control read as a cut-out sticker with a glowing outline,
+  and the paired full frames for `lavendar-cpl` show it plainly at viewing scale.
+- **The blend introduces a broad far-field pedestal the control does not have.** The
+  control converges to -0.50 by d=350 and -0.79 by d=550. The blend sits at -2.7 to
+  -3.2 from d=175 outward and does not converge anywhere inside the frame. That is the
+  Burt-Adelson coarse-level halo: a Laplacian blend redistributes energy at every level,
+  and at the coarsest levels the support is hundreds of pixels wide.
+
+Because both arms are referenced to their own far field, the +630 DN absolute level
+difference between them is divided out by construction. **The bowl is not that shift in
+costume.** An open question from earlier in the night is thereby closed.
+
+### 15.3 The consequence for the shipping configuration
+
+The prescribed fix is not to tune the pyramid depth. It is to **take the base band from
+the noise-gated mean and blend only the detail bands** -- which is this project's own
+thesis applied to the frequency axis. Low spatial frequencies do not need selecting:
+defocus is a low-pass, so every frame carries them at MTF near 1, and there is no
+information at the base band that selection can add. There is only bias it can
+introduce. The gated mean is meanwhile the one estimator here with a measured bias of
+**+0.0000 sigma**, against **+0.845 sigma** for the upper envelope of §13.
+
+That also makes the far field correct *by construction* rather than by tuning: away from
+the subject the mask is uniform, the gated mean is the mean, and the base band is
+whatever the background was. It cannot pedestal.
