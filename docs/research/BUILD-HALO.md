@@ -2165,3 +2165,100 @@ envelope. Delivered values on that band: merge **-4549**, best single frame
 **-474**, upper envelope **-379**. The unveiled backdrop IS recoverable from the
 stack, and the envelope beats the single-frame floor rather than merely matching
 it.
+
+## 24. The middle-frame arm: section 15 stands, and the defect is not general
+
+ORCH objected that section 15.2's four arms (`off`, `on`, `frame000`,
+`frame298`) used END frames as its only election-free references, and the end
+of a bracket is where the subject is furthest from focus and spilling hardest.
+A merge that elects end-like frames, compared against two end frames, would
+agree with them for the worst possible reason. The objection is correct and the
+missing arm is the MIDDLE frame.
+
+Rendered it: same pin `0BB7BCDD4A58`, same flags, same rows, one arm added.
+
+### 24.1 The objection is real -- and it strengthens section 15 rather than killing it
+
+`lavendar-cpl`, near-backdrop level as a ratio to each arm's own far backdrop
+(gain-invariant, which matters because the five arms span 24.3% in raw DN):
+
+| arm | f000 | off (merge) | f298 | f149 (middle) |
+|---|---|---|---|---|
+| near-backdrop ratio | 1.0164 | 1.0359 | 1.0404 | **1.0475** |
+
+ORCH's mechanism is confirmed in sign and ordering: the middle frame is the
+cleanest and `f000` -- the most defocused end -- is the most veiled, suppressing
+3.0% of the gradient.
+
+**But the conclusion it was supposed to overturn survives, because the
+least-veiled arm shows the feature MOST.** The backdrop brightening is 4.75% in
+the middle frame against 3.59% in the merge. An artefact of the merge cannot be
+larger in a single frame that contains no election at all. The ~4% gradient is
+scene. The merge's own penalty against the best available reference is 1.1%.
+
+### 24.2 A dramatic result on bee-2 that the picture killed in one look
+
+The same test on `bee-2-cpl` produced, on pixels the sharpest frame calls open
+backdrop: **the merge below EVERY single frame by up to 36.5%**, and its 50%
+edge crossing displaced **139 px** into the backdrop while the three single
+frames agreed among themselves within 64 px. In gain-invariant ratio space, so
+no exposure argument could reach it.
+
+**It is not a defect. It is the stacker working.** The crop
+(`bee2-smear.png`) shows the merge rendering the bee's hairs and legs sharply
+across exactly that band, where `f149` and `f298` show smooth blur. A thin dark
+hair spread over a large blur disc contributes almost nothing per pixel; sharp,
+it is a black line. A merge BELOW the hull of its inputs is the correct and
+desired outcome wherever fine dark structure is resolved.
+
+The rebuttal I had written for this confound was wrong in a specific, reusable
+way. I argued that a real object at x=650 would darken `f149` too, so `f149`
+reading 1.00 proved the object absent. That assumes `f149` is the sharpest view
+OF THAT OBJECT. On a subject with real depth it is not: the middle of the
+bracket is the middle of the bracket, not the focus of every feature in frame.
+
+### 24.3 The control that makes the retraction rigorous
+
+Same test, same rows, restricted to hair-free open backdrop (x=100..460):
+
+| row | 600 | 750 | 900 | 1050 |
+|---|---|---|---|---|
+| px where merge is below every frame | **0** | **0** | **0** | **0** |
+| worst deficit vs the brightest frame | 1.9% | 2.5% | 2.2% | 2.7% |
+
+**On genuinely open backdrop `bee-2`'s merge is clean.** The whole 36% signal
+came from resolved hairs.
+
+### 24.4 What this does to the scope of the defect
+
+| subject | backdrop | merge deficit on open backdrop |
+|---|---|---|
+| `bee-2-cpl` | textured, hairs throughout | **2.7%** |
+| `lavendar-cpl` | textured | **1.1%** |
+| `flower-bud-alone-cpl` | **featureless white** | **22.8%** |
+
+**Bracket depth is not the risk factor; a featureless backdrop is.** `bee-2` is
+a 299-frame stack, deeper than flower-bud's 205, and it is an order of
+magnitude cleaner. The proposal that all eleven 299-frame stacks carry a worse
+version of this is not supported by the one member of that list that has been
+measured.
+
+This is exactly what section 22's mechanism predicts and is the strongest
+confirmation of it so far. Where the backdrop carries real focus signal the
+election locks onto it and the merge is fine. Where the backdrop is featureless
+there is no signal, and the only coherent gradient available to a Tenengrad
+measure is the subject's own defocused edge ramp -- so the argmax chases the
+veil, monotonically with distance, exactly as section 22.4 measured.
+
+### 24.5 The fix this points to, and why it retires the trade
+
+The discriminator is not distance, not window support, and not jump size. It is
+**whether a pixel's through-focus response carries any real signal at all.**
+Where every frame's focus measure sits at the noise floor, the argmax is
+meaningless and must not be trusted; where it does not, the current selector is
+already doing the right thing and must not be touched.
+
+That is why this can be built without the section 20 trade. `couch-fibers` has
+genuine focus signal everywhere, and `bee-2`'s hairs have it in abundance; a
+validity gate is a no-op on both by construction. It only fires on dead ground,
+which is precisely and only where the aura lives.
