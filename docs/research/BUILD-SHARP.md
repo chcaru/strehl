@@ -1308,3 +1308,118 @@ the same order as the whole **-177 DN** aura on `109MSDCF`. **The placebo is
 therefore the discriminator**: 109MSDCF has no depth separation and so no veil, and
 any background LEVEL SHIFT there is bias, not repair. I will measure the level, not
 only the aura.
+
+## 17 -- Assignment 2: the veil-or-light harness, commissioned before the fix exists
+
+`experiments/BUILD-SHARP/src/veilorlight.py`, commissioned by
+`veilorlight_commission.py`, **6/6**.
+
+Written and commissioned before BUILD-HALO's fix exists, deliberately. An
+instrument built after seeing the result it must judge is an instrument fitted to
+that result.
+
+### 17.1 -- The one quantity that cannot lie
+
+The veiling defect is a **darkening** of the backdrop near the subject. The
+candidate fix replaces a gated mean with an order statistic across frames, and
+§16.10 predicts that an undebiased order statistic **brightens** the backdrop by
++0.845 sigma whether or not it removes any veil.
+
+So an undebiased envelope satisfies the veiling number, satisfies the aura number,
+and satisfies every ratio. ORCH put it exactly right: the failure mode here is a
+green result on every metric. Only one quantity separates the two explanations:
+
+> **the absolute backdrop level, in DN, on a subject that has no veil.**
+
+Every number this harness prints is therefore in absolute DN, and **nothing is
+normalised to its own arm's far field**. That convention -- which is the natural
+one, and the one my own earlier profiles used -- cancels a uniform brightening
+perfectly and is precisely how the bias would hide.
+
+### 17.2 -- Three signatures, measured together
+
+1. **Far-field level shift (DN)** -- the discriminator. A genuine repair does
+   nothing far from the subject; a biased estimator adds light everywhere.
+2. **Background noise sd ratio** -- the fingerprint of an order statistic *even if
+   someone debiased the level*. Predicted 9.7x for an envelope of 3.
+3. **Near-field recovery (DN)** -- the intended effect, reported last, because on
+   its own it cannot distinguish the two.
+
+Signature 2 also **closes the prediction with no free parameter**. If the shipped
+arm is a mean over `n_admit` frames then `sigma_frame = sd_baseline *
+sqrt(n_admit)`, so the bias an undebiased envelope *would* produce is computable
+from the baseline arm alone and is printed next to the measured shift.
+
+The subject mask is derived from the **baseline arm only**. Deriving it from the arm
+under test would let the fix move the geometry the measurement is defined against.
+
+### 17.3 -- Commissioning: six plants into a real render
+
+Source `bee-3-cpl` full-frame linear, plants applied outside the subject mask.
+
+| # | plant | far shift (want) | sd ratio mean/per-chan (want) | |
+|---|---|---|---|---|
+| 1 | null | +0.0 (+0.0) | 1.00 / 1.00 (1.00/1.00) | PASS |
+| 2 | pure bias +200 DN | **+200.0** (+200.0) | 1.00 / 1.00 | PASS |
+| 3 | pure repair, exp decay tau=90 px | +2.4 (+0.0) | 1.00 / 1.00 | PASS |
+| 4 | **repair + 120 DN** | **+122.4** (+120.0) | 1.00 / 1.00 | PASS |
+| 5a | 9.7x noise, chroma-correlated | -0.6 (+0.0) | **9.88 / 9.72** (9.70/9.70) | PASS |
+| 5b | 9.7x noise, per-channel independent | +0.0 (+0.0) | **5.76 / 9.71** (5.60/9.70) | PASS |
+
+**Cases 3 and 4 are the whole point.** They differ *only* by an additive 120 DN.
+Every self-normalised profile, every ratio, and every "percent of veil recovered"
+score rates them identically; the harness separates them to 2.4 DN.
+
+### 17.4 -- What the commissioning caught in the harness itself
+
+Case 5 failed on the first run: a planted 9.7x noise increase read **5.67x**.
+
+That was not a plant error, it was an instrument property. The harness measured
+noise on the **channel mean**, and averaging three channels attenuates noise that is
+uncorrelated between them by `sqrt(3)` while leaving chroma-correlated noise alone.
+Predicted `sqrt(1 + 9.648^2/3) = 5.660`; measured **5.662**. The monochrome control
+gave 9.713 against 9.700 predicted. The arithmetic is exact, so the mechanism is not
+in doubt.
+
+Two consequences, both fixed:
+
+- **The harness now reports both noise numbers**, channel-mean and per-channel. The
+  true ratio is bracketed by the pair, so the real measurement needs no assumption
+  about how the fix correlates noise between channels. Had only the channel mean
+  been kept, a genuine 9.7x noise increase would have been reported as 5.7x -- a
+  **42% under-read of the exact defect this instrument exists to catch**.
+- **The predicted bias now uses the per-channel sd.** A bias is a *level shift*, and
+  a level shift does not average down across channels the way noise does. Deriving
+  `sigma_frame` from the channel mean under-predicted the bias by `sqrt(3)`, which
+  would have made a real bias look like a smaller fraction of prediction than it is.
+
+Both errors pointed the same way: **toward declaring a biased fix acceptable.**
+That is failed instrument #5, and unlike the previous four it was caught by
+commissioning rather than after the fact.
+
+### 17.5 -- Acceptance bar and pin
+
+Bar, as set by ORCH and refined by §16.10:
+
+- `flower-bud-alone-cpl`, d = 120-200 px: must beat **-247 DN**, what frame 102
+  achieves alone. The merge currently gives -4066 DN.
+- `109MSDCF`: **placebo**. 22 frames, dark subject on a bright backdrop but no depth
+  separation and only a -177 DN aura. Any far-field level shift here is bias.
+- `coffee-bean`: **second control**. Carries the veil at -38.2% but has no ring
+  (+0.23% at d=450 px against flower-bud's +12.0% at d=18 px), so it separates the
+  two defects for free.
+- `couch-fibers-cpl`: do-no-harm guard, pure texture, no flat region anywhere.
+
+The **22-frame vs 205-frame** difference between 109MSDCF and flower-bud is a second
+discriminator for free: an order-statistic bias grows like `sqrt(2 ln n)`, so a
+percentile-based fix must show a *smaller* bias on 109MSDCF than on flower-bud, in a
+ratio the harness can predict in advance.
+
+**Pin.** All arms render from one binary, stated by SHA-256 in
+`veil/run-<arm>.log`, with `--linear-srgb --demosaic --gate 4.0` and **no
+`--auto-exposure`** -- a per-arm exposure choice would normalise away the additive
+bias under test. Baseline arms for this shakedown come from `pin-b001f22`. The
+verification arms will be re-rendered from a single pin built at BUILD-HALO's fix
+commit, and the baseline re-rendered from that same commit with the fix disabled, so
+that BUILD-BLEND's multi-band default and BUILD-RENDER's lateral-CA default cannot
+enter the comparison.
