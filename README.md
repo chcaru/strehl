@@ -188,41 +188,60 @@ pass rate.
 > sharpness problem would register as a win on every noise metric this project
 > owns, which is exactly why the noise numbers cannot decide this.
 >
-> **So the split was measured, with a control.** Two 512-px crops from the same
-> pair — the block with the most gradient energy and the block with the least,
-> both chosen on the *mean* of the two arms so the selection cannot favour either
-> — and the radially averaged power spectrum of each. The control is what makes
-> it readable: in the flat crop any high-frequency difference is **noise by
+> **So the split was measured, with a control — and the first attempt at it was
+> wrong, so read the retraction before the table.**
+>
+> <b>RETRACTED.</b> The first version of this measurement reported detail ratios
+> of 0.9864–1.0086 across every band and concluded the higher gate cost no
+> detail at all. **It was measured on the `--srgb` render**, which this tool's
+> own `--help` says twice not to do: *"Do not measure either file"*, and of the
+> full-resolution demosaic, *"Do not measure resolution on it."* The output
+> banner said so explicitly — `sRGB (BT.709 primaries, D65, sRGB transfer) — for
+> looking at, Malvar-He-Cutler demosaic` — and I did not read it before
+> measuring. The likely mechanism is exactly the one the warning exists for: the
+> Malvar demosaic **interpolates** high-frequency content, and the interpolated
+> content is common to both arms, so it dilutes the difference and pushes every
+> ratio toward 1. The numbers below replace it, measured on the linear,
+> camera-native, binned output that the corpus is measured on.
+>
+> Design: two 512-px crops from the same pinned pair of `109MSDCF` — the block
+> with the most gradient energy and the block with the least — both selected on
+> the *mean* of the two arms so the choice cannot favour the arm being judged,
+> then the radially averaged power spectrum of each. The control is what makes it
+> readable: in the flat crop, any high-frequency difference is **noise by
 > construction**, because there is no structure there to lose. Crop separation
-> was **16.1x** in gradient energy, so the two are genuinely different
-> populations and the control is not vacuous.
+> was **4.5x** in gradient energy.
 >
 > | band (cyc/px) | detail ratio 4.5/2.0 | flat ratio 4.5/2.0 |
 > |---|---|---|
-> | 0.05–0.10 | 1.0086 | 0.6080 |
-> | 0.10–0.20 | 1.0085 | 0.2068 |
-> | 0.20–0.30 | 0.9988 | 0.1052 |
-> | 0.30–0.40 | 0.9944 | 0.1365 |
-> | 0.40–0.50 (to Nyquist) | 0.9864 | 0.2930 |
+> | 0.05–0.10 | 0.9972 | 0.9483 |
+> | 0.10–0.20 | 0.9802 | 0.7806 |
+> | 0.20–0.30 | 0.8470 | 0.4849 |
+> | 0.30–0.40 | 0.4865 | 0.2262 |
+> | 0.40–0.50 (to Nyquist) | 0.2159 | 0.1267 |
 >
-> **Gate 4.5 retains 98.6–100.9% of the detail power at every frequency up to
-> Nyquist while carrying 10–30% of the noise power in the flats** — about a 10x
-> reduction in noise power at 0.20–0.30 cyc/px. Opened at 1:1 the two crops are
-> **equally crisp**; the dendritic fingers on the ink edge and the fine
-> striations are indistinguishable, and only the flat areas differ. The 1.4%
-> deficit in the top band is if anything an *under*-estimate of detail retention,
-> since the detail crop contains noise too and 4.5 holds only ~29% of it there.
+> The honest reading: **gate 4.5 removes a great deal of high-frequency power,
+> and it removes consistently more of it from flat regions than from detailed
+> ones** — 0.2159 against 0.1267 in the top band, 0.4865 against 0.2262 below
+> that. Structure is preferentially retained. **That is not the same as "no
+> detail is lost", and the earlier claim that nothing was lost is withdrawn.**
+> Opened at 1:1 the two crops are visually indistinguishable, which is evidence
+> but not proof at these frequencies.
 >
-> Three instruments that share no code now agree — this split, the detail-ROI
-> ratio of 0.9945 from a separate campaign, and the noise table's 0.746x against
-> 0.915x. On this subject the higher gate is **strictly better**.
+> Two limits of this instrument, stated because they bound what it can support.
+> The detail block is chosen by **gradient energy**, which favours a single
+> strong edge over fine texture — an edge has a 1/f spectrum, so the top bands
+> even of the "detail" crop are probably noise-dominated, and that alone could
+> explain why they track the flat control. And one subject cannot separate
+> "removes noise above the optical cutoff", which is correct behaviour given this
+> rig's measured MTF near Nyquist, from "removes real detail", which is not.
+> Distinguishing those is the open question.
 >
-> That is not yet a licence to move the default, for one specific reason: a
-> higher gate admits **more frames** into the average, which is why it denoises,
-> and the failure mode is admitting frames that are genuinely out of focus.
-> Whether that happens depends on focus-step size against depth of field, and a
-> 22-frame stack cannot answer it for a deep stack with coarse steps. That sweep
-> is in flight.
+> That is not a licence to move the default, for one further reason: a higher
+> gate admits **more frames** into the average, which is why it denoises, and the
+> failure mode is admitting frames that are genuinely out of focus. Whether that
+> happens depends on focus-step size against depth of field, and a 22-frame stack
+> cannot answer it for a deep stack with coarse steps. That sweep is in flight.
 >
 > **None of that rescues the scoping.** A survey of 26 subjects that describes a
 > configuration the user does not get by typing `strehl stack` is scoped to that
