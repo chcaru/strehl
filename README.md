@@ -166,9 +166,30 @@ pass rate.
 > On the one subject where both have been measured the two gates give the **same
 > detail** (detail-ROI ratio 0.9945) and differ in flat regions, where the
 > default carries **7.8x the gradient energy**; on noise against a single
-> unstacked frame the default reads **0.915x** where 4.5 reads **0.746x**. So
-> the difference is concentrated away from the edges this survey was looking at.
-> **That does not rescue it.** A survey of 26 subjects that describes a
+> unstacked frame the default reads **0.915x** where 4.5 reads **0.746x**.
+>
+> **The gap has since been rendered and looked at, and it is not small.** Both
+> gates of `109MSDCF`, same pinned binary, same source, nothing else changed:
+> **97.359% of samples differ**, peak difference **21.1% of full scale**, rms
+> **0.41%**. Taking the 256-px block where they disagree most (x=3056, y=3888),
+> cropping that same box from both at 800x800 with no resampling, and opening it
+> at 1:1: **gate 4.5 is visibly cleaner, and the shipped default is visibly
+> grainier** — plain grain across flat fields, no pixel-peeping required. Within
+> that crop **16.0% of samples differ by more than 0.5% of full scale**. Two
+> instruments that share no code now order the two gates the same way. So the
+> gallery **flatters the shipping product**, which is the direction that matters:
+> it is the one that makes this survey read better than the binary a reader runs.
+>
+> One caution against over-reading that crop. It was selected by *total*
+> disagreement, and total disagreement selects **flat** regions — so it can
+> establish that the gap is material and it cannot say what the gate does to
+> detail. **Cleaner is not better if it costs resolution.** Given the fine-detail
+> deficit in *Measured against other stackers* below, smoothing our way out of a
+> sharpness problem would register as a win on every noise metric this project
+> owns, which is exactly why the noise numbers cannot decide this. The per-gate
+> detail/flat split is the deciding instrument and it is in flight.
+>
+> **None of that rescues the scoping.** A survey of 26 subjects that describes a
 > configuration the user does not get by typing `strehl stack` is scoped to that
 > configuration, and saying so is cheaper than arguing the gap is small. Either
 > the default moves to 4.5 or the gallery is re-rendered at 2.0 and re-surveyed.
