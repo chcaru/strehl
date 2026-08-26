@@ -2720,3 +2720,140 @@ would mean putting back energy that is not the scene's, and would fail.
 
 The pyramid default stays where it is until that lands. Flipping today would ship
 the clamp and this together.
+
+## 26 — Three corrections to 25, and what the pictures actually show
+
+Section 25 was written from summary tables. Then I looked at the tiles, and at
+the images, and three of its claims need narrowing. None of them changes the
+mechanism; all of them change how much of the frame it is entitled to explain.
+
+### 26.1 The notch minimum is a corner of one frame, not a property of the scene
+
+`notchtiles.py` prints the tiles themselves. Of the 18 tweezers tiles in the
+31–53 DN bin, **16 sit at y ∈ {4224, 4352, 4480}** — three adjacent tile rows at
+the bottom of a 4688-px frame, in contiguous horizontal runs, nine consecutive at
+y = 4480. Median distance to a strong edge is 97.2 px against 64.9 px frame-wide,
+so they are not at the silhouette either; the occlusion-halo reading is refuted
+for them as well.
+
+A bin holding 1% of tiles, clustered in three scan-line bands, cannot carry the
+claim "up to 69% of mid-band amplitude lost" that 25.1 hung on it. tweezers'
+tile-amplitude distribution is bimodal — 725 tiles at 3–18 DN, 838 at 272–810,
+79 in the whole valley between — and 25 put its headline number in the sparsest
+part of that valley.
+
+**The finding that survives is the neighbouring band**, and it is much better
+evidenced:
+
+| band | n | mean ratio | mean r | tile rows | tile cols | p50 dist-to-edge |
+|---|---:|---:|---:|---:|---:|---:|
+| 6–10 DN | 393 | 0.9615 | 0.5762 | 19 of 36 | 55 of 55 | 1227.6 px |
+| **10–31 DN** | **188** | **0.6414** | **0.4262** | **17 of 36** | **53 of 55** | **893.7 px** |
+
+188 tiles spread over 17 rows and 53 columns of a 36 × 55 grid is the whole
+frame, not a corner. **A scene-wide 36% amplitude loss in low-detail regions,
+with correlation of only 0.43, is the real defect.** It is smaller than the
+number 25 led with and it is a great deal more real.
+
+### 26.2 Gate 2 does not fill the notch. It fills it with noise
+
+25 recorded that gate 2 restores the notch bin to 0.9846 and called the detail
+"essentially intact". The correlation column says otherwise: at gate 2 the notch
+bin's amplitude ratio is 0.9918 and its **r is 0.0946** — amplitude restored,
+correlation not restored. That is precisely the failure I had already
+pre-registered as disqualifying, and I applied it to a hypothetical fix while
+missing that the gate arm in front of me already failed it.
+
+The flat bins settle it. Lag-1 autocorrelation is inflated for everything,
+because the band-pass filter correlates adjacent samples by construction; at lag
+2 and 4 that imposed correlation has decayed and the populations separate:
+
+| band | ctrl L2 | pyramid L2 (gate 2) | synthetic noise L2 |
+|---|---:|---:|---:|
+| 6–10 | +0.1782 | **−0.0617** | −0.0810 |
+| 10–18 | +0.2796 | **−0.0597** | −0.0810 |
+| 18–31 | +0.3002 | **−0.0415** | −0.0810 |
+
+Gate 2's flat-region content sits **on the synthetic noise pole**, negative at
+lag 2 where real structure is strongly positive. Its 6.9x amplitude in flat
+regions is manufactured noise across 45% of the lit frame.
+
+> **Lag-1 cannot separate structure from noise through a band-pass filter,
+> because the filter puts the lag-1 correlation there itself. The first lag that
+> discriminates is the first one past the kernel's own support.**
+
+### 26.3 The wired pyramid path is the gate-2 build
+
+`main.rs:763` constructs `MergeConfig::default()`, whose `gate` is `2.0`, and
+only overrides it if `--pyramid-gate` is passed. Every measurement in 25 was
+taken at `--gate 4`, which is the `blend-render` protocol, not the shipped
+default. So `strehl stack --merge pyramid` today is the arm with the noisy flats
+— a different product from the one the corpus has been characterising.
+
+This is not an argument for changing the default to 4. Gate 4 has the detail
+loss and gate 2 has the noise; 25.3's conclusion stands that no gate value is
+correct and the sub-gate estimator is what has to change. It is an argument that
+**the number a measurement was taken at must be checked against the number the
+product ships**, which nobody had done for this knob.
+
+### 26.4 What the renders actually look like
+
+A 26-subject gallery exists at `C:\dev\strehl-out\gallery`, rendered from the
+shipped estimator path (`strehl stack --srgb --demosaic`, 2400 px long edge).
+Two subjects, and they disagree completely:
+
+- **`tweezers-cpl` is good.** Sharp, well-resolved ground-metal texture, clean
+  tonality, no visible rim. Dark background.
+- **`flower-bud-with-background-fern-cpl` is not.** A hard bright rim traces
+  every silhouette of the bud and the fern, with a grey aura outside it. Bright
+  background, dark subject, fine structure.
+
+That polarity split is itself information, and it is consistent with a veil:
+a defocused bright background veils a dark subject's surround, and the reverse
+does not happen. It also means single-subject verdicts on halo severity are
+worthless — tweezers, the subject most of this corpus's veil work used as its
+isolate, is the easy case.
+
+### 26.5 The aura is a veil, and its shape says so without a second arm
+
+Every comparison in sections 22–25 was two-armed and therefore vulnerable to the
+reference being the defective one. This one is not. A veil and ringing make
+opposite predictions about the *shape* of the profile, so one image decides it:
+a veil is largest against the edge and decays monotonically; ringing departs,
+reaches an extremum a few pixels out, and returns.
+
+`edgeprofile.py` on `flower-bud-alone-cpl--ctrl.tiff`, full resolution, shipped
+estimator path, far-field level 19366.9 DN from 16.0 M pixels beyond 300 px:
+
+| signed distance | n | median DN | vs far-field |
+|---|---:|---:|---:|
+| +0..+2 | 64772 | 17097.8 | **−2269.0** |
+| +4..+8 | 171035 | 17548.2 | −1818.6 |
+| +16..+32 | 337313 | 17501.4 | −1865.4 |
+| +64..+128 | 1204276 | 17825.5 | −1541.3 |
+| +200..+300 | 1584984 | 18510.8 | −856.0 |
+| +300..+400 | 1480392 | 18807.8 | −559.0 |
+
+Monotone from the edge outward, largest departure at d = 0. **Veil, not
+ringing** — and −2269 DN is −11.7% of the far-field level, which is why it reads
+as a grey aura rather than a subtle gradient. It is still −559 DN at 400 px.
+
+That the shape is optical does not make the magnitude optical. BUILD-HALO's
+paired measurement puts the merge at −4549 DN against a best single frame of
+−474 and an upper envelope of −379. **The merge is roughly an order of magnitude
+worse than the best frame it was given**, so most of what is on screen is not
+inherited from the optics but manufactured by the selection, and the project's
+own "never worse than a single frame" invariant is being violated by 10x in the
+region the eye goes to first.
+
+### 26.6 Where this leaves the ship decision
+
+The pyramid default stays put; 25.3's blocker is unchanged and 26.2 adds a
+second one. But the more useful conclusion is that **the pyramid was not the
+thing to fix first.** The notch is a defect in an experimental backend. The veil
+is a defect in the shipped one, it is 10x a single frame, and it is the thing
+that makes a picture look wrong to a person rather than to a metric.
+
+> **A defect measured on the arm you are developing is not automatically the
+> defect the product has. Check which arm ships before deciding what is
+> urgent.**
