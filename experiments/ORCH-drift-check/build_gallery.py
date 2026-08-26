@@ -109,14 +109,24 @@ NOTED = {
         "High contrast, little detail per unit of it. Same class as foam.",
     ),
     "119MSDCF": (
-        "under-resolved",
-        "Genuinely under-resolved -- last of 26 on both raw and "
-        "contrast-normalised detail. Under triage: capture limit or merge "
-        "defect is not yet settled.",
+        "sharp where the subject has structure",
+        "RETRACTED: I called this 'genuinely under-resolved, last of 26' on a "
+        "contrast-normalised detail ranking. Opening it at 1:1 refutes that. "
+        "The layered white/grey band resolves individual layer edges, dust "
+        "specks stay points rather than smears, and the saturated pink/white "
+        "and blue/white boundaries -- where a chromatic halo would show first "
+        "-- are clean. The subject is mostly smooth paint fields, which is what "
+        "the ranking actually measured. BUILD-TRIAGE independently classifies "
+        "it GOOD, worst merge deficit 0.65 px.",
     ),
     "109MSDCF": (
-        "under-resolved",
-        "Genuinely under-resolved -- 22nd raw, 25th normalised. Under triage.",
+        "sharp where the subject has structure",
+        "RETRACTED with 119MSDCF, and this one more clearly. The olive band "
+        "resolves hundreds of individual bubbles as crisp high-contrast points, "
+        "the layered band below resolves fine striations, and the pink shows "
+        "brush striations. That is abundant resolved fine detail in an image I "
+        "had ranked 25th of 26. BUILD-TRIAGE classifies it GOOD, worst merge "
+        "deficit 0.75 px.",
     ),
 }
 
@@ -254,6 +264,7 @@ def classify(stem):
         cls = {
             "under-resolved": "t-bad",
             "low detail, not a defect": "t-low",
+            "sharp where the subject has structure": "t-ok",
         }.get(kind, "t-ok")
         return cls, kind, text
     return (
@@ -385,6 +396,28 @@ dendrites near single-pixel width all resolve. <b>The occlusion halo is
 gone</b> &mdash; not only where pale hairs cross a dark defocused eye, but in a
 dense multi-layer tangle of overlapping trichomes, bracts and pollen, which is
 a far harder test and the geometry that rims in every other stacker.
+<br><br>
+<b>Ten subjects have now been opened at 1:1 and none shows a merge defect.</b>
+The two most recent, <code>119MSDCF</code> and <code>109MSDCF</code>, were
+<i>my</i> two worst-ranked subjects &mdash; I had labelled them "genuinely
+under-resolved, last of 26". Opening them refutes that: the olive band in
+<code>109MSDCF</code> resolves hundreds of individual bubbles as crisp points.
+Both are retracted, which leaves the <span class="tag t-bad">under-resolved</span>
+category with <b>no members at all</b>.
+<br><br>
+That empty category deserves the same suspicion I applied to BUILD-TRIAGE's
+zero above, and more, because these two verdicts are not independent: mine is
+by eye, TRIAGE's is numerical, but both were formed by people who expected the
+merge to be fine. The honest statement is that two methods that could have
+disagreed did not, and that neither has yet been shown capable of returning the
+other answer on this corpus. The planted-defect test in flight is what would
+settle it.
+<br><br>
+Three of my "soft" findings have now been retracted on inspection
+(<code>flowers-cpl</code>, <code>flower-inner-edge-cpl</code>, and this pair).
+All three came from a detail-ranking statistic, and all three turned out to be
+subjects with little structure rather than outputs with little sharpness. The
+statistic is measuring the subject.
 </div>
 <div class="note">
 <b>What is not fixed yet.</b> A <i>veil</i> remains at occlusion boundaries: a

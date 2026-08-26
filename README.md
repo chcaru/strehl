@@ -170,6 +170,27 @@ The remaining eighteen subjects are labelled **"not individually judged at
 deliberate: a subject nobody looked at and a subject that passed must not print
 the same way.
 
+**Ten subjects have now been opened at 1:1 and none shows a merge defect.** The
+two most recent were my own two *worst*-ranked: I had labelled `119MSDCF` and
+`109MSDCF` "genuinely under-resolved, last of 26" on a contrast-normalised
+detail ranking. Opening them refutes it — the olive band in `109MSDCF` resolves
+hundreds of individual bubbles as crisp high-contrast points, and `119MSDCF`
+keeps dust specks as points and shows no chromatic rim on saturated-colour
+edges. Both are retracted, which leaves the *under-resolved* category with **no
+members at all**.
+
+That empty category deserves the same suspicion as the zero above, and more,
+because the two verdicts are not independent — mine by eye, TRIAGE's numerical,
+but both formed by parties who expected the merge to be fine. Two methods that
+could have disagreed did not; neither has yet been shown able to return the
+other answer on this corpus.
+
+Three of my "soft" findings have now been retracted on inspection
+(`flowers-cpl`, `flower-inner-edge-cpl`, and this pair). All three came from a
+detail-ranking statistic, and all three turned out to be subjects with little
+structure rather than outputs with little sharpness. **The statistic was
+measuring the subject.**
+
 ### Two verdicts per subject: retouch this, or reshoot this
 
 Each subject in the gallery carries **two** tags, and they answer different

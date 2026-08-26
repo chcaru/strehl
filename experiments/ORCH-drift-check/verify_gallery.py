@@ -94,15 +94,35 @@ def main() -> int:
     extra_cards = [c for c in cards if c not in masters]
 
     # Every card must carry a tag, or a subject silently reads as endorsed.
+    #
+    # Counted PER CARD, not globally. The first version of this counted every
+    # tag span in the document and subtracted the card count, which meant a
+    # decorative tag anywhere in the prose could offset a card that had lost
+    # its tag and the total would still read 0. It was caught only because a
+    # tag added to a note made the count go negative -- had the same edit also
+    # dropped a card's tag, it would have read clean.
+    #
     # NOTE the [^>]* before the closing quote: the capture tags carry a title=
     # attribute, and the original pattern required '">' immediately after the
     # class, so it could not see them at all.
-    tags = re.findall(r'<span class="tag (t-[a-z-]+)"[^>]*>', doc)
-    untagged = len(cards) - len(tags)
-
-    # The capture/reshoot verdict is a second, independent tag per card.
-    cap_tags = re.findall(r'<span class="tag (g-[a-z-]+)"[^>]*>', doc)
-    uncaptioned = len(cards) - len(cap_tags)
+    card_blocks = re.findall(
+        r'<section class="card">(.*?)</section>', doc, re.S)
+    untagged, uncaptioned, multitagged = 0, 0, []
+    for blk in card_blocks:
+        head = blk.split("</div>", 1)[0]
+        q = re.findall(r'<span class="tag (t-[a-z-]+)"[^>]*>', head)
+        c = re.findall(r'<span class="tag (g-[a-z-]+)"[^>]*>', head)
+        name = re.search(r"<h2>([^<]+)</h2>", head)
+        name = name.group(1) if name else "?"
+        if len(q) == 0:
+            untagged += 1
+        if len(c) == 0:
+            uncaptioned += 1
+        if len(q) > 1 or len(c) > 1:
+            multitagged.append(f"{name}: {len(q)} quality, {len(c)} capture")
+    if len(card_blocks) != len(cards):
+        multitagged.append(
+            f"card section count {len(card_blocks)} != heading count {len(cards)}")
 
     # Structure: a truncated container renders fine and links fine.
     bal = Balance()
@@ -148,6 +168,7 @@ def main() -> int:
     print(f"cards with no master          : {len(extra_cards)}")
     print(f"cards missing a quality tag   : {untagged}")
     print(f"cards missing a capture tag   : {uncaptioned}")
+    print(f"cards with duplicate tags     : {len(multitagged)}")
     print(f"malformed div/section nesting : {len(bal.errors)}")
     print(f"stated retouch/reshoot splits not borne out by tags : "
           f"{len(conflict_bad)}")
@@ -163,6 +184,7 @@ def main() -> int:
         ("orphan card", extra_cards),
         ("too small", small),
         ("structure", bal.errors),
+        ("duplicate tags", multitagged),
         ("split not borne out", conflict_bad),
     ):
         for it in items[:8]:
@@ -170,7 +192,8 @@ def main() -> int:
 
     ok = (not bad_src and not bad_href and not missing_cards
           and not extra_cards and untagged == 0 and (not pil or not small)
-          and uncaptioned == 0 and not bal.errors and not conflict_bad)
+          and uncaptioned == 0 and not bal.errors and not conflict_bad
+          and not multitagged)
     print()
     print("GALLERY VERIFIED" if ok else "GALLERY NOT VERIFIED")
     return 0 if ok else 1
