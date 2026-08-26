@@ -9292,3 +9292,74 @@ anchors **fail safe** -- a non-landing anchor makes the run succeed and print
 `MUTATION SURVIVED -- FAIL`. That is this project's standing
 anti-`replace(x, y, 1)` rule satisfied by construction, found by someone hunting
 for the opposite.
+
+## 80. I opened the two subjects that decide the owner's complaint
+
+Two renders judged at 1:1 on the faithful master -- no grade, actual pixels.
+This is an eyeball, declared as such, and it is not a measurement.
+
+### The adversarial halo case is clean
+
+`flower-bud-with-background-fern-cpl` is the corpus's hardest geometry:
+trichomes crossing a depth boundary, which is precisely where a selection-based
+stacker deposits a rim. A hair that is sharp in frame 40 and defocused in frame
+41 gives the merge a per-pixel decision with no correct answer, and the classic
+failure is a bright halo tracing the hair against the background behind it.
+
+**There is no rim.** Hairs cross from the lit bud surface into the defocused
+ground and **fade**, rather than terminating at an edge or doubling into a
+ghost. Individual strands stay separable where they overlap. Dew speculars on
+the bud surface are clean points, not smeared discs. Pollen grains read as
+granular clumps rather than yellow blobs.
+
+The residual softness is real and it is **diffraction**, not merge: at 2x on
+f/5.6 behind a 2x teleconverter the effective aperture is far past critical
+sampling, and section 12's MTF figures say the finest scales are gone before
+any software runs. That is a capture property and no merge can return it.
+
+**The owner's original complaint -- "you must tackle the halo situation, it's
+horrendous" -- is answered on the subject most able to reproduce it.**
+
+### The specular fringe is real, visible, and looks field-wide
+
+`coffee-bubbles`, the worst of the three `minor` subjects, at 1:1. The
+green-yellow cast on the bright specular arcs around each bubble rim is
+**plainly visible** and the card's verdict is honest.
+
+Three things the picture shows:
+
+1. **The speculars are sharp.** The sub-pixel bright points along each rim are
+   individually resolved, not smeared. This is a **colour** artifact, not a
+   focus or merge-sharpness failure -- which is what the `minor` rank asserts.
+2. **The fringe does not strengthen with radius across the crop.** Bubbles at
+   different distances from frame centre carry it about equally. That is
+   consistent with the per-annulus measurement -- **74% of the deficit present
+   at r = 0.04** -- and inconsistent with lateral chromatic aberration, which is
+   identically zero on axis and grows monotonically outward.
+3. **No halo.** These are bright speculars on a near-black ground, which is the
+   bright-object-on-dark-ground geometry where halos are most visible and which
+   `captures-needed.md` section 26 exists to isolate. Beyond the genuine
+   specular there is no bright rim.
+
+> **This is corroboration, not evidence.** An eye cannot separate a field-wide
+> defocus term from a weak radial one, and the mechanism behind this fringe
+> remains untested with two instruments disagreeing in sign. What the picture
+> settles is only that the artifact is chromatic rather than geometric, and that
+> the `minor` rank is not flattering itself.
+
+### Corpus state, counted from the source of truth rather than the page
+
+| verdict | subjects |
+|---|---:|
+| showcase -- hardest geometry, clean | **7** |
+| clean -- no defect found at 1:1 | **14** |
+| minor -- small diagnosed defect, named | **3** |
+| capture-limited -- the bracket, not the stacker | **2** |
+| **total** | **26** |
+
+**21 of 26 carry no defect found at 1:1**, and all three `minor` subjects share
+a single unsettled cause. A small note on the count itself: the displayed badge
+totals read one higher in every class, because the legend renders one instance
+of each badge. My own earlier tally of my own gallery was inflated by exactly
+that, in all four classes -- **a legend is a row of examples, and counting the
+page counts the examples too.**
