@@ -342,6 +342,29 @@ precision the claim is made at**.
 | 6 | bin population and curvature | **landed, and superseded** | Replaced by per-ray selection on measured local straightness, which removes azimuthal mixing and curvature weighting together. That instrument produced the C2 refutation. |
 | 7 | demosaic bias near high-contrast edges | **landed as a precision limit, refuted as a cause** | Both artifacts survive in the un-interpolated binned render, so ORCH is right that they are not demosaic products. But the demosaic injects a subject-dependent luminance bias: **+0.02 pts on `coffee-bean` against +1.41 pts on `flower-bud-alone-cpl`** across ORCH's own 0–4 px band, rising to +4.6 pts at t = 20 px. The 1.39-point differential is of the same size as the 1.7-point agreement C1 rests on. |
 
+## Sections 13 and 15 landed while this was being measured
+
+This verification is pinned to section 12 at commit `eff23fb`. Sections 13, 14
+and 15 were committed to `ORCH-veiling.md` while the sweep was running. Two of
+them touch C1, and neither changes the verdict:
+
+- **Section 13** already impeaches the −36.5% / −38.2% target, by a completely
+  different route: an extremum estimator is biased upward by construction, and
+  a +169 DN additive bias is invisible to an error-and-ratio measurement. That
+  is an argument that the number may be *contaminated*. Mine is a measurement
+  that the number is *not a property of the scene*. They are independent and
+  they agree.
+- **Section 15** reports a two-reference bug in `rimprofile.py`: the encoded
+  table normalised to the outermost bin at d = 550 px, itself inside the
+  artifact, while the linear table used the far field. Section 12's numbers come
+  from the linear table, so they are not directly affected. But it is the same
+  failure mode as my attack 5 — the reported quantity moving with an unexamined
+  choice of zero — found twice in one instrument by two parties who were not
+  talking to each other. That is worth more than either finding alone.
+
+Nothing in 13, 14 or 15 withdraws C1 or C2, so section 12 still stands as
+written and this document is still the test of it.
+
 ## Defects found in my own instruments, disclosed
 
 An adversarial verifier that reports only the other party's errors is not
