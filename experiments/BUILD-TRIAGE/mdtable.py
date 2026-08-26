@@ -22,10 +22,13 @@ counts = doc["counts"]
 SH = {"GOOD": "GOOD",
       "MERGE-LIMITED": "MERGE-LIMITED",
       "CAPTURE-LIMITED - coverage gap": "CAP: coverage gap",
+      "CAPTURE-LIMITED - occlusion/geometry": "CAP: occluded geometry",
       "CAPTURE-LIMITED - diffraction/magnification": "CAP: diffraction",
       "CAPTURE-LIMITED - motion": "CAP: motion",
       "UNRESOLVED": "UNRESOLVED"}
 ORDER = list(SH)
+missing = sorted({r["verdict"] for r in doc["rows"]} - set(ORDER))
+assert not missing, f"verdict(s) absent from the table vocabulary: {missing}"
 
 L = ["## 3. Triage table", ""]
 L.append("All 26 subjects. `merge` and `best frame` are edge slope in **DN/px**,")
@@ -38,8 +41,8 @@ L.append("defect) and negative when **the merge beats every single source frame*
 L.append("`worst px` is the equivalent Gaussian softening; the instrument floor is")
 L.append("0.30 px, so any value at or below that is *no measurable difference*.")
 L.append("")
-L.append("| # | subject | verdict | merge DN/px | best frame DN/px | deficit DN/px | worst px | evidence |")
-L.append("|---:|---|---|---:|---:|---:|---:|---|")
+L.append("| # | subject | verdict | WxH | merge DN/px | best frame DN/px | deficit DN/px | worst px | evidence |")
+L.append("|---:|---|---|---|---:|---:|---:|---:|---|")
 
 n = 0
 for cat in ORDER:
@@ -66,14 +69,22 @@ for cat in ORDER:
         if cat == "GOOD":
             ev = at
         elif cat.endswith("coverage gap"):
-            ev = (f"{e['n_gap_blocks']}/24 blocks peak at a bracket end "
-                  f"({e['gap_far']} far, {e['gap_near']} near); {at}")
+            e0, eN = e.get("end0_pct") or 0.0, e.get("endN_pct") or 0.0
+            end = "first" if e0 >= eN else "last"
+            ev = (f"{e['detail_gap_pct']:.2f}% of detail-bearing pixels elect "
+                  f"the **{end}** frame ({e['detail_enrichment']:.2f}x its own "
+                  f"shuffled null; {e['boundary_pct']:.2f}% of all pixels); {at}")
+        elif cat.endswith("occlusion/geometry"):
+            ev = (f"{e['detail_gap_pct']:.2f}% of detail-bearing pixels at a "
+                  f"bracket end ({e['detail_enrichment']:.2f}x null), but on "
+                  f"occlusion edges, not a short bracket; {at}")
         elif cat.endswith("motion"):
             ev = (f"NCC {e['motion_med_ncc']:.5f}, {e['motion_blocks']}/24 "
                   f"blocks moving; {at}")
         else:
             ev = (r.get("why") or [at])[0].replace("|", "/")
-        L.append(f"| {n} | `{s}` | **{SH[cat]}** | {cells} | {ev} |")
+        dim = f"{e.get('master_w')}x{e.get('master_h')}"
+        L.append(f"| {n} | `{s}` | **{SH[cat]}** | {dim} | {cells} | {ev} |")
 
 L += ["", "### 3.1 The arithmetic", "", "```"]
 for cat in ORDER:
@@ -81,18 +92,24 @@ for cat in ORDER:
 tot = sum(counts.get(c, 0) for c in ORDER)
 L += ["  ---", f"{tot:>5}  TOTAL", "```", ""]
 L.append("    " + "  +  ".join(str(counts.get(c, 0)) for c in ORDER) + f"  =  {tot}")
-L += ["", "The two zero rows are printed on purpose. A count that does not move "
+L += ["", "The zero rows are printed on purpose. A count that does not move "
       "looks identical whether nothing was wrong or nothing was examined, so "
-      "`MERGE-LIMITED 0` and `UNRESOLVED 0` are stated rather than omitted.", ""]
+      "`MERGE-LIMITED 0`, `CAP: diffraction 0` and `UNRESOLVED 0` are stated "
+      "rather than omitted.", ""]
 L += ["### 3.2 What each class needs", "",
       "| verdict | n | who fixes it | action |", "|---|---:|---|---|"]
 ACT = {
  "GOOD": ("nobody", "ship as-is"),
  "MERGE-LIMITED": ("the software", "route to the merge; source frames hold "
                    "detail the merge discarded"),
- "CAPTURE-LIMITED - coverage gap": ("the camera", "reshoot with more frames at "
-   "the stated end of the bracket; per-subject percentages are on the contact "
-   "sheet. The merge cannot invent focus no frame captured."),
+ "CAPTURE-LIMITED - coverage gap": ("the camera", "reshoot extending the "
+   "bracket past the stated end. The end is named per subject in the table and "
+   "on the contact sheet, so this is actionable without re-measuring. The merge "
+   "cannot invent focus no frame captured."),
+ "CAPTURE-LIMITED - occlusion/geometry": ("nobody, with frames", "**more "
+   "frames will not help.** The unresolved pixels are occluded from the lens, "
+   "not out of focus, so extending the bracket changes nothing. Reshoot from "
+   "another angle or accept the subject's geometry."),
  "CAPTURE-LIMITED - diffraction/magnification": ("the camera", "reshoot at a "
    "wider marked aperture"),
  "CAPTURE-LIMITED - motion": ("the camera", "shorten the bracket or stabilise; "

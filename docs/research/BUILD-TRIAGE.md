@@ -1,10 +1,18 @@
 # BUILD-TRIAGE: which subjects are the merge's fault, and which are the camera's
 
 **Status:** complete. 26 of 26 subjects classified; instrument commissioned
-(C1-C8, E1-E5). **Headline: the merge is not losing detail on any subject.
-`MERGE-LIMITED = 0` over 64 evidence-bearing sites; the worst deficit anywhere
-is +462.6 DN/px (+5.2%, 0.49 px equivalent) on `bee-1-cpl`, below the 0.80 px
-threshold. All 14 defective subjects are capture-limited.** See section 4.
+(C1-C8, E1-E5, C9-C11). **Headline: the merge is not losing detail on any
+subject. `MERGE-LIMITED = 0` over 64 evidence-bearing sites; the worst deficit
+anywhere is +462.6 DN/px (+5.2%, 0.49 px equivalent) on `bee-1-cpl`, below the
+0.80 px threshold. 19 of 26 are GOOD; the 7 that are not are capture-limited,
+and only 3 of those have a focus problem at all.** See section 4.
+
+Section 6 replaces the coverage detector used in the first pass of this report.
+Adopting the per-pixel election map — the instrument recorded in
+`docs/captures-needed.md` section 23 — moved **7 subjects out of "coverage gap"
+and into GOOD**, because the previous 24-block aggregate was firing on
+featureless backdrop rather than on the subject. The counts in section 3 are the
+corrected ones.
 
 The owner looked at the shipped 26-subject gallery and called it horrible. The
 gallery is not uniformly bad — it is *inconsistent*, and it ships with no
@@ -257,41 +265,42 @@ defect) and negative when **the merge beats every single source frame**.
 `worst px` is the equivalent Gaussian softening; the instrument floor is
 0.30 px, so any value at or below that is *no measurable difference*.
 
-| # | subject | verdict | merge DN/px | best frame DN/px | deficit DN/px | worst px | evidence |
-|---:|---|---|---:|---:|---:|---:|---|
-| 1 | `109MSDCF` | **GOOD** | 824 | 836 | +12.0 | 0.75 | at DETAIL, +1.4% |
-| 2 | `112MSDCF` | **GOOD** | 920 | 916 | -4.4 | 0.00 | at DETAIL, -0.5% |
-| 3 | `113MSDCF` | **GOOD** | 1975 | 2013 | +37.2 | 0.40 | at DETAIL, +1.9% |
-| 4 | `119MSDCF` | **GOOD** | 2123 | 2222 | +99.3 | 0.65 | at DETAIL, +4.5% |
-| 5 | `bee-1-cpl` | **GOOD** | 8463 | 8926 | +462.6 | 0.49 | at DETAIL, +5.2% |
-| 6 | `bee-2-cpl` | **GOOD** | 1891 | 1324 | -567.4 | 0.00 | at DETAIL, -42.9% |
-| 7 | `bee-3-cpl` | **GOOD** | 2198 | 1368 | -830.8 | 0.00 | at SOURCE-BEST, -60.7% |
-| 8 | `coffee-bean` | **GOOD** | 5558 | 5310 | -247.9 | 0.00 | at DETAIL, -4.7% |
-| 9 | `couch-fibers-cpl` | **GOOD** | 1883 | 1124 | -758.5 | 0.00 | at DETAIL, -67.5% |
-| 10 | `flat-on-ruler-cpl` | **GOOD** | 2441 | 2407 | -33.4 | 0.00 | at SOURCE-BEST, -1.4% |
-| 11 | `wrapped-text-1` | **GOOD** | 804 | 750 | -53.5 | 0.00 | at DEFICIT, -7.1% |
-| 12 | `wrapped-text-2` | **GOOD** | 779 | 734 | -44.6 | 0.00 | at DEFICIT, -6.1% |
-| 13 | `dry-erase-marker-head-cpl` | **CAP: coverage gap** | 2225 | 961 | -1264.2 | 0.00 | 8/24 blocks peak at a bracket end (5 far, 3 near); at SOURCE-BEST, -131.6% |
-| 14 | `flower-bud-alone-cpl` | **CAP: coverage gap** | 1559 | 1400 | -158.7 | 0.00 | 13/24 blocks peak at a bracket end (13 far, 0 near); at DETAIL, -11.3% |
-| 15 | `flower-bud-with-background-fern-cpl` | **CAP: coverage gap** | 2143 | 1869 | -274.2 | 0.00 | 13/24 blocks peak at a bracket end (13 far, 0 near); at SOURCE-BEST, -14.7% |
-| 16 | `flower-inner-edge-cpl` | **CAP: coverage gap** | 284 | 73 | -211.0 | 0.00 | 7/24 blocks peak at a bracket end (6 far, 1 near); at DEFICIT, -287.5% |
-| 17 | `flowers-cpl` | **CAP: coverage gap** | -- | -- | -- | -- | 16/24 blocks peak at a bracket end (16 far, 0 near); no site had signal over noise in either arm |
-| 18 | `highly-angled-ruler-mm-cpl` | **CAP: coverage gap** | 2139 | 929 | -1210.0 | 0.00 | 18/24 blocks peak at a bracket end (18 far, 0 near); at DETAIL, -130.2% |
-| 19 | `lavendar-cpl` | **CAP: coverage gap** | 3191 | 1943 | -1248.4 | 0.00 | 10/24 blocks peak at a bracket end (10 far, 0 near); at DETAIL, -64.3% |
-| 20 | `pencil-flatter-angle-cpl` | **CAP: coverage gap** | 2738 | 1845 | -893.5 | 0.00 | 10/24 blocks peak at a bracket end (10 far, 0 near); at DETAIL, -48.4% |
-| 21 | `pencil-steep-angle-cpl` | **CAP: coverage gap** | 1399 | 1125 | -273.9 | 0.00 | 9/24 blocks peak at a bracket end (7 far, 2 near); at SOURCE-BEST, -24.3% |
-| 22 | `tweezers-cpl` | **CAP: coverage gap** | 3562 | 3475 | -86.7 | 0.00 | 6/24 blocks peak at a bracket end (6 far, 0 near); at DEFICIT, -2.5% |
-| 23 | `coffee-bubbles` | **CAP: motion** | 337 | 350 | +12.8 | 0.47 | NCC 0.94587, 20/24 blocks moving; at DEFICIT, +3.7% |
-| 24 | `foam` | **CAP: motion** | 10198 | 8087 | -2111.6 | 0.00 | NCC 0.97944, 20/24 blocks moving; at DEFICIT, -26.1% |
-| 25 | `lead-1-cpl` | **CAP: motion** | 220 | 205 | -15.7 | 0.00 | NCC 0.98563, 19/24 blocks moving; at SOURCE-BEST, -7.7% |
-| 26 | `leaf-2-cpl` | **CAP: motion** | 470 | 481 | +10.6 | 0.41 | NCC 0.98932, 11/24 blocks moving; at DETAIL, +2.2% |
+| # | subject | verdict | WxH | merge DN/px | best frame DN/px | deficit DN/px | worst px | evidence |
+|---:|---|---|---|---:|---:|---:|---:|---|
+| 1 | `109MSDCF` | **GOOD** | 7032x4688 | 824 | 836 | +12.0 | 0.75 | at DETAIL, +1.4% |
+| 2 | `112MSDCF` | **GOOD** | 7032x4688 | 920 | 916 | -4.4 | 0.00 | at DETAIL, -0.5% |
+| 3 | `113MSDCF` | **GOOD** | 7032x4688 | 1975 | 2013 | +37.2 | 0.40 | at DETAIL, +1.9% |
+| 4 | `119MSDCF` | **GOOD** | 7032x4688 | 2123 | 2222 | +99.3 | 0.65 | at DETAIL, +4.5% |
+| 5 | `bee-1-cpl` | **GOOD** | 7032x4688 | 8463 | 8926 | +462.6 | 0.49 | at DETAIL, +5.2% |
+| 6 | `bee-2-cpl` | **GOOD** | 7032x4688 | 1891 | 1324 | -567.4 | 0.00 | at DETAIL, -42.9% |
+| 7 | `bee-3-cpl` | **GOOD** | 7032x4688 | 2198 | 1368 | -830.8 | 0.00 | at SOURCE-BEST, -60.7% |
+| 8 | `coffee-bean` | **GOOD** | 7032x4688 | 5558 | 5310 | -247.9 | 0.00 | at DETAIL, -4.7% |
+| 9 | `couch-fibers-cpl` | **GOOD** | 7040x4688 | 1883 | 1124 | -758.5 | 0.00 | at DETAIL, -67.5% |
+| 10 | `dry-erase-marker-head-cpl` | **GOOD** | 7040x4688 | 2225 | 961 | -1264.2 | 0.00 | at SOURCE-BEST, -131.6% |
+| 11 | `flat-on-ruler-cpl` | **GOOD** | 7040x4688 | 2441 | 2407 | -33.4 | 0.00 | at SOURCE-BEST, -1.4% |
+| 12 | `flower-bud-alone-cpl` | **GOOD** | 7040x4688 | 1559 | 1400 | -158.7 | 0.00 | at DETAIL, -11.3% |
+| 13 | `flower-inner-edge-cpl` | **GOOD** | 7032x4688 | 284 | 73 | -211.0 | 0.00 | at DEFICIT, -287.5% |
+| 14 | `lavendar-cpl` | **GOOD** | 7040x4688 | 3191 | 1943 | -1248.4 | 0.00 | at DETAIL, -64.3% |
+| 15 | `pencil-flatter-angle-cpl` | **GOOD** | 7032x4688 | 2738 | 1845 | -893.5 | 0.00 | at DETAIL, -48.4% |
+| 16 | `pencil-steep-angle-cpl` | **GOOD** | 7032x4688 | 1399 | 1125 | -273.9 | 0.00 | at SOURCE-BEST, -24.3% |
+| 17 | `tweezers-cpl` | **GOOD** | 7040x4688 | 3562 | 3475 | -86.7 | 0.00 | at DEFICIT, -2.5% |
+| 18 | `wrapped-text-1` | **GOOD** | 7032x4688 | 804 | 750 | -53.5 | 0.00 | at DEFICIT, -7.1% |
+| 19 | `wrapped-text-2` | **GOOD** | 7032x4688 | 779 | 734 | -44.6 | 0.00 | at DEFICIT, -6.1% |
+| 20 | `flower-bud-with-background-fern-cpl` | **CAP: coverage gap** | 7040x4688 | 2143 | 1869 | -274.2 | 0.00 | 6.20% of detail-bearing pixels elect the **last** frame (1.19x its own shuffled null; 5.20% of all pixels); at SOURCE-BEST, -14.7% |
+| 21 | `highly-angled-ruler-mm-cpl` | **CAP: coverage gap** | 7040x4688 | 2139 | 929 | -1210.0 | 0.00 | 7.34% of detail-bearing pixels elect the **last** frame (1.50x its own shuffled null; 4.90% of all pixels); at DETAIL, -130.2% |
+| 22 | `flowers-cpl` | **CAP: occluded geometry** | 7040x4688 | -- | -- | -- | -- | 55.17% of detail-bearing pixels at a bracket end (1.57x null), but on occlusion edges, not a short bracket; no site had signal over noise in either arm |
+| 23 | `coffee-bubbles` | **CAP: motion** | 7032x4688 | 337 | 350 | +12.8 | 0.47 | NCC 0.94587, 20/24 blocks moving; at DEFICIT, +3.7% |
+| 24 | `foam` | **CAP: motion** | 7032x4688 | 10198 | 8087 | -2111.6 | 0.00 | NCC 0.97944, 20/24 blocks moving; at DEFICIT, -26.1% |
+| 25 | `lead-1-cpl` | **CAP: motion** | 7040x4688 | 220 | 205 | -15.7 | 0.00 | NCC 0.98563, 19/24 blocks moving; at SOURCE-BEST, -7.7% |
+| 26 | `leaf-2-cpl` | **CAP: motion** | 7040x4688 | 470 | 481 | +10.6 | 0.41 | NCC 0.98932, 11/24 blocks moving; at DETAIL, +2.2% |
 
 ### 3.1 The arithmetic
 
 ```
-   12  GOOD
+   19  GOOD
     0  MERGE-LIMITED
-   10  CAPTURE-LIMITED - coverage gap
+    2  CAPTURE-LIMITED - coverage gap
+    1  CAPTURE-LIMITED - occlusion/geometry
     0  CAPTURE-LIMITED - diffraction/magnification
     4  CAPTURE-LIMITED - motion
     0  UNRESOLVED
@@ -299,17 +308,18 @@ defect) and negative when **the merge beats every single source frame**.
    26  TOTAL
 ```
 
-    12  +  0  +  10  +  0  +  4  +  0  =  26
+    19  +  0  +  2  +  1  +  0  +  4  +  0  =  26
 
-The two zero rows are printed on purpose. A count that does not move looks identical whether nothing was wrong or nothing was examined, so `MERGE-LIMITED 0` and `UNRESOLVED 0` are stated rather than omitted.
+The zero rows are printed on purpose. A count that does not move looks identical whether nothing was wrong or nothing was examined, so `MERGE-LIMITED 0`, `CAP: diffraction 0` and `UNRESOLVED 0` are stated rather than omitted.
 
 ### 3.2 What each class needs
 
 | verdict | n | who fixes it | action |
 |---|---:|---|---|
-| GOOD | 12 | nobody | ship as-is |
+| GOOD | 19 | nobody | ship as-is |
 | MERGE-LIMITED | 0 | the software | route to the merge; source frames hold detail the merge discarded |
-| CAP: coverage gap | 10 | the camera | reshoot with more frames at the stated end of the bracket; per-subject percentages are on the contact sheet. The merge cannot invent focus no frame captured. |
+| CAP: coverage gap | 2 | the camera | reshoot extending the bracket past the stated end. The end is named per subject in the table and on the contact sheet, so this is actionable without re-measuring. The merge cannot invent focus no frame captured. |
+| CAP: occluded geometry | 1 | nobody, with frames | **more frames will not help.** The unresolved pixels are occluded from the lens, not out of focus, so extending the bracket changes nothing. Reshoot from another angle or accept the subject's geometry. |
 | CAP: diffraction | 0 | the camera | reshoot at a wider marked aperture |
 | CAP: motion | 4 | the camera | shorten the bracket or stabilise; no merge change recovers a subject that moved |
 | UNRESOLVED | 0 | nobody yet | re-site the comparison; not a statement about the image |
@@ -364,14 +374,33 @@ ahead of the best single frame at *every* site: DETAIL 3115 vs 1720 DN/px
 `blur_equiv = 0.00 px` throughout. The crop shows individually resolved leg
 hairs and a clean flat field. Confirmed, not merely consistent.
 
-**`flowers-cpl` is not a merge failure, and the reason is stronger than a
-ratio.** 16 of 24 blocks peak at the far end of the bracket. More decisive:
-after gating, **not one site on this subject has edges clear of pixel noise in
-*either* arm**. The crop shows why -- three of its four sites are featureless
-pale panels in both merge and frame. There is no detail there to lose, because
-none was captured. Its raw numbers looked like a catastrophic merge failure
-(`ratio 0.388`, `blur 3.00 px` at DEFICIT); the crop showed blank panels, and
-the source's 96.7 DN/px "edge" sitting on **46.7 DN of its own noise**. See 4.4.
+**`flowers-cpl` is not a merge failure, and three independent lines of evidence
+now say so.** First, after gating, **not one site on this subject has edges clear
+of pixel noise in *either* arm**. The crop shows why — three of its four sites
+are featureless pale panels in both merge and frame. Its raw numbers looked like
+a catastrophic merge failure (`ratio 0.388`, `blur 3.00 px` at DEFICIT); the crop
+showed blank panels, and the source's 96.7 DN/px "edge" sitting on **46.7 DN of
+its own noise**. See 4.4.
+
+Second, the per-pixel election map (section 6) puts **55.17% of its
+detail-bearing pixels at an end of the bracket** — by far the corpus maximum,
+against 0.00% on `bee-3-cpl`. So detail genuinely was not brought into focus.
+
+Third, and this is what changes the *advice*: that is **not a bracket that
+stopped short**. Section 23 of `docs/captures-needed.md` established
+per-pixel that the boundary pixels are thin ribbons tracing petal edges,
+concentrated 7.8x in the highest-contrast decile, and it **explicitly withdrew
+the "reshoot wider" recommendation**. My election map confirms it and adds a
+second component the earlier work did not name: broad interstitial shadow
+between overlapping petals, which is *occluded from the lens*, not merely out of
+focus. Neither component is recoverable with more frames.
+
+`flowers-cpl` is therefore classified **CAPTURE-LIMITED — occlusion/geometry**,
+and its remedy on the contact sheet reads *"not fixable by more frames: those
+regions are occluded, not merely defocused. Reshoot from another angle."* An
+earlier draft of this report and of the sheet told the owner to reshoot with
+~67% more frames at the far end. That advice was wrong, it had already been
+measured and withdrawn once, and it is corrected here.
 
 **`wrapped-text-2`: the lower-left region was measured directly, and the merge
 is not responsible.** Forcing a comparison site at focus-grid block (3,0) --
@@ -400,13 +429,20 @@ falloff is present and sufficient to explain what the eye sees at 1:8.
 
 ### 4.3 What is actually wrong with the gallery
 
-Fourteen of 26 subjects have a real, visible defect, and **every one of them is
-a capture limitation**:
+Seven of 26 subjects have a real defect, and **every one of them is a capture
+limitation**. Only three of the seven are a focus problem at all:
 
-* **10 coverage gap.** The bracket did not span the subject. Nine of the ten are
-  missing frames at the **far** end only; `dry-erase-marker-head-cpl` (5 far,
-  3 near) and `pencil-steep-angle-cpl` (7 far, 2 near) are missing both ends.
-  Per-subject frame counts are on the contact sheet.
+* **2 coverage gap**, both at the **last** frame of the bracket, both localised
+  to a nameable thing in the picture.
+  `flower-bud-with-background-fern-cpl` (6.20% of detail-bearing pixels, 1.19x
+  its own null) — the background fern sits entirely beyond the far end; the bud
+  itself is a smooth, fully-spanned depth map.
+  `highly-angled-ruler-mm-cpl` (7.34%, 1.50x) — a flat plane cannot occlude
+  itself, and its election map shows a clean monotonic depth ramp that
+  *saturates* at the last rung. Both are genuinely fixable by extending the
+  bracket, and both name the end to extend.
+* **1 occluded geometry.** `flowers-cpl`, 55.17% — see 4.2. More frames will not
+  help.
 * **4 motion.** `foam` and `coffee-bubbles` were known; the instrument found
   them at ranks 1 and 2 of 26 by adjacent-frame NCC, which is what earns the
   threshold. `lead-1-cpl` and `leaf-2-cpl` join them. The corpus separates
@@ -417,6 +453,16 @@ a capture limitation**:
   census in the brief), and at this magnification that is optically ~f/33 -- but
   no subject failed *because* of it. On every subject some site resolves detail
   well clear of noise.
+
+The remaining **19 are GOOD**. That number is 7 higher than this report's first
+pass, and the correction is entirely due to replacing the coverage detector
+(section 6): the old 24-block aggregate counted blocks whose *average* focus
+peaked at a bracket end, which on a subject with a large blown backdrop is a
+statement about the backdrop. `tweezers-cpl` is the clearest case — 4.76% of all
+its pixels elect a bracket end and **0.00%** of its detail-bearing pixels do.
+Its election map shows the tweezers as one uniform, fully-spanned depth field
+with every machining striation resolved, and all the end-elections out in the
+blown white surround.
 
 ### 4.4 The two verdicts this instrument reversed, and what they cost
 
@@ -477,9 +523,17 @@ python experiments/BUILD-TRIAGE/focuscurve.py  <subject>   # capture side
 python experiments/BUILD-TRIAGE/localmotion.py <subject>   # motion
 python experiments/BUILD-TRIAGE/compare.py     <subject>   # merge vs source
 python experiments/BUILD-TRIAGE/crops.py       <subject>   # the picture
+python experiments/BUILD-TRIAGE/dims.py                    # master dimensions
+python experiments/BUILD-TRIAGE/coverage.py                # C9-C11 + coverage
+python experiments/BUILD-TRIAGE/covermap.py    <subject>   # the coverage picture
 python experiments/BUILD-TRIAGE/triage.py                  # the table
 python experiments/ORCH-drift-check/makeviewable.py \
     --triage C:\dev\strehl-out\BUILD-TRIAGE\triage.json     # the honest gallery
+
+# the election maps coverage.py reads (about 2h for all 26; no --out, so no
+# 188 MB TIFF is written -- only pass-one state is needed):
+strehl stack D:\personal\macro\<subject> --merge estimator --gate 2 \
+    --index-map C:\dev\strehl-out\BUILD-TRIAGE\cover\<subject>.idx.tiff
 
 # interrogate a NAMED region rather than a percentile-selected one:
 python experiments/BUILD-TRIAGE/compare.py wrapped-text-2 --tag ".region" \
@@ -492,10 +546,128 @@ Artefacts:
 |---|---|
 | labelled contact sheet (deliverable 2) | `C:\dev\strehl-out\SHIP-V1\viewable\contact-triage.jpg` |
 | per-subject 1:1 crop sheets, all 26 | `C:\dev\strehl-out\BUILD-TRIAGE\crops\<subject>.jpg` |
+| per-subject election maps, all 26 | `C:\dev\strehl-out\BUILD-TRIAGE\covermaps\<subject>.jpg` |
+| raw election maps + estimator logs | `C:\dev\strehl-out\BUILD-TRIAGE\cover\<subject>.idx.tiff` |
 | machine-readable verdicts | `C:\dev\strehl-out\BUILD-TRIAGE\triage.json` |
+| coverage statistics, all 26 | `C:\dev\strehl-out\BUILD-TRIAGE\coverage.json` |
+| master dimensions | `C:\dev\strehl-out\BUILD-TRIAGE\dims.json` |
 | per-subject measurements | `C:\dev\strehl-out\BUILD-TRIAGE\compare\<subject>.json` |
 | matched tiles (re-score without re-rendering) | `C:\dev\strehl-out\BUILD-TRIAGE\tiles\<subject>.<site>.npz` |
 
 Scratch, renders and per-subject JSON live in `C:\dev\strehl-out\BUILD-TRIAGE\`.
+
+---
+
+## 6. The coverage instrument, and why raw `boundary %` is not it
+
+### 6.1 The statistic
+
+`docs/captures-needed.md` section 23 records the right primitive: the fraction of
+output pixels whose **elected frame is the first or last rung of the bracket**.
+A pixel whose best focus sits at a boundary is telling you its true optimum lies
+outside the bracket. It is merge-independent, it is cheap, and the shipped binary
+will dump the whole field with `--merge estimator --gate 2 --index-map <path>`.
+That map is on the plane grid at half sensor resolution and is *exactly* half the
+linear render in both axes, so the two overlay with a factor-2 block mean and no
+resampling. Election indices are frame numbers, not photometric values, so no
+tone curve can touch this measurement at all.
+
+### 6.2 Commissioning (C9-C11)
+
+* **C9 — null, against the binary itself.** My independent recomputation of
+  `boundary %` from the election map reproduces the figure the binary prints in
+  its own log, on **26 of 26 subjects**, worst disagreement **0.0047 percentage
+  points**. Any later disagreement is therefore between builds, not between me
+  and the binary.
+* **C10 — morphology positive control.** A 3 px-wide synthetic ring and a filled
+  disk of *identical area* must be separable by erosion survival. Measured:
+  contour **0.0000**, region **0.7947**.
+* **C11 — contrast null and plant.** A shuffled mask of matched size returns a
+  top/bottom decile ratio of **0.966** (flat, as it must be); a mask planted on
+  the top contrast decile is recovered at a ratio >50. The shuffled null is
+  carried per subject in every reported figure, not just at commissioning.
+* **Reproduction of the published values.** Section 23 measured, at `e47cf81`,
+  `flowers-cpl` 33.74%, `bee-3-cpl` 1.00%, `leaf-2-cpl` 0.12%. I measure
+  **35.07 / 1.10 / 0.13** on the shipped binary — a 281x dynamic range reproduced
+  within 10% on all three.
+
+### 6.3 The correction: restrict to detail-bearing pixels
+
+Raw `boundary %` is **not usable as a coverage verdict on this corpus**, and the
+failure is not subtle. `tweezers-cpl` has **4.76%** of its pixels at a bracket
+end and **0.00%** of its detail-bearing pixels there; `coffee-bean` falls
+**8.57% → 0.00%**. In both, the subject is a single smooth fully-spanned depth
+field and every end-election is out in a blown, featureless surround where the
+focus argmax has nothing to lock onto. Electing an end where there is no detail
+costs nothing, and no reshoot can change it. Taken at face value, raw
+`boundary %` would have sent the owner out to re-photograph two subjects that are
+correctly captured.
+
+So the reported statistic is the end-election rate **among pixels that carry
+resolvable detail** (top three contrast deciles), together with its own
+size-matched shuffled null. On the print-worthy reference `bee-3-cpl` this is
+**0.00%**; on `flowers-cpl` it is **55.17%**.
+
+One further correction was needed, and it is this project's signature error in
+miniature. Contrast was first measured as local standard deviation in DN, which
+scales with illumination — so a **dark** but richly detailed object ranks *below*
+a bright smooth one. On `flower-bud-with-background-fern-cpl` that put the
+background fern, which is manifestly detailed and manifestly beyond the bracket,
+at **0.90x** chance: the statistic reported it as carrying less detail than
+average purely because it is dark. Dividing by the local mean makes the measure
+illumination-invariant and the same subject reads **1.19x**, which is what its
+election map plainly shows.
+
+### 6.4 The threshold, read off the corpus
+
+The detail-bearing rate has an empty band in the measured data:
+
+```
+  ... 0.499 (119MSDCF)  0.517 (pencil-steep)  0.803 (lavendar)
+  |------------------ 3.2x, no subject inside ------------------|
+      2.595 (flower-bud-alone)  6.200 (fern)  7.336 (ruler)  55.167 (flowers)
+```
+
+`GAP_DETAIL_PCT = 2.0` sits inside that band. As with the motion threshold, it is
+read off the corpus rather than asserted. A second condition — the boundary set
+must target detail at least as much as a random mask of the same size would —
+is required because `flower-bud-alone-cpl` clears the rate at 2.595% but at
+**0.34x** its own null: its bud is fully spanned and its end-elections are on
+backdrop streaks.
+
+### 6.5 What this instrument cannot do
+
+**It does not separate a short bracket from an occlusion by itself.**
+`flowers-cpl` (occlusion) and `highly-angled-ruler-mm-cpl` (a genuine gap) sit at
+enrichment **1.57** and **1.50**, and at high-contrast mass fractions **0.472**
+and **0.449** — indistinguishable on every summary statistic I computed. The
+split in section 3 is therefore made by **inspecting each election map**, and the
+call is recorded in an explicit table in `triage.py` rather than hidden inside a
+threshold that does not actually separate the cases. The maps are in
+`covermaps\<subject>.jpg`; every subject above the threshold was opened and read.
+
+### 6.6 Two questions this settles
+
+**`119MSDCF` does not have a coverage gap on the shipped path.** The brief cites
+7.38% of its pixels peaking at a bracket edge, from an earlier milestone. On the
+shipped binary the figure is **0.78%** — below `bee-3-cpl`'s 1.10% — and my
+recomputation matches that binary's own printed value to **0.0001 pp**, so this
+is a difference between builds and not a measurement error. Its election map
+shows a smooth monotonic index ramp from lower-left to upper-right, the exact
+signature of a tilted plane properly spanned, with end-elections confined to
+specks in the extreme corners where the tilt just overruns. Classified **GOOD**.
+Note also that `119MSDCF` (33 frames) and `112MSDCF` (79) both fail the 2x
+density gate recorded in `captures-needed.md`, at 2.18x and 2.10x, so neither may
+be used as its own ground truth.
+
+**The master width variation is a packaging wart, not an alignment diagnostic.**
+The 26 masters are 7032x4688 (15 subjects) or 7040x4688 (11). Width tracks
+neither `coverage_k` (Mann-Whitney **p = 0.9586**; medians 0.9572 vs 0.9480 with
+almost completely overlapping ranges) nor frame count (**p = 0.2349**). Both
+widths are adjacent multiples of 8 — 8x879 and 8x880, against a constant height
+of 8x586 — which is consistent with the FOV crop being rounded to a pyramid
+level and landing one step apart. It is worth one line to whoever prints the set,
+and nothing more. Dimensions are now carried per row in section 3 and on every
+tile of the contact sheet.
 The RAW stacks under `D:\personal\macro\` were opened read-only and never
 written.

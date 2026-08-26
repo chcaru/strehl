@@ -64,12 +64,14 @@ def font(sz: int):
 
 # Verdict vocabulary, shared with experiments/BUILD-TRIAGE/triage.py.
 CAT_ORDER = ["GOOD", "MERGE-LIMITED", "CAPTURE-LIMITED - coverage gap",
+             "CAPTURE-LIMITED - occlusion/geometry",
              "CAPTURE-LIMITED - diffraction/magnification",
              "CAPTURE-LIMITED - motion", "UNRESOLVED"]
 SHORT = {
     "GOOD": "GOOD",
     "MERGE-LIMITED": "MERGE-LIMITED (fix the software)",
     "CAPTURE-LIMITED - coverage gap": "CAPTURE: coverage gap",
+    "CAPTURE-LIMITED - occlusion/geometry": "CAPTURE: occluded geometry",
     "CAPTURE-LIMITED - diffraction/magnification": "CAPTURE: diffraction",
     "CAPTURE-LIMITED - motion": "CAPTURE: subject moved",
     "UNRESOLVED": "UNRESOLVED (not examined)",
@@ -78,6 +80,7 @@ COLOUR = {
     "GOOD": (110, 205, 120),
     "MERGE-LIMITED": (226, 86, 74),
     "CAPTURE-LIMITED - coverage gap": (226, 168, 62),
+    "CAPTURE-LIMITED - occlusion/geometry": (214, 132, 92),
     "CAPTURE-LIMITED - diffraction/magnification": (96, 158, 226),
     "CAPTURE-LIMITED - motion": (176, 124, 220),
     "UNRESOLVED": (150, 150, 156),
@@ -101,8 +104,14 @@ def measure_line(row: dict) -> str:
         return (f"merge {e.get('worst_blur_px')} px softer than best frame "
                 f"({e.get('merge_edge_dnpx')} vs {e.get('frame_edge_dnpx')} DN/px)")
     if v == "CAPTURE-LIMITED - coverage gap":
-        return (f"{e.get('n_gap_blocks')}/24 blocks peak at a bracket end "
-                f"({e.get('gap_far')} far, {e.get('gap_near')} near)")
+        e0, eN = e.get("end0_pct") or 0.0, e.get("endN_pct") or 0.0
+        end = "first" if e0 >= eN else "last"
+        return (f"{float(e.get('detail_gap_pct') or 0):.1f}% of detail pixels "
+                f"elect the {end} frame "
+                f"({float(e.get('detail_enrichment') or 0):.2f}x chance)")
+    if v == "CAPTURE-LIMITED - occlusion/geometry":
+        return (f"{float(e.get('detail_gap_pct') or 0):.1f}% of detail pixels "
+                f"at a bracket end; occlusion-driven")
     if v == "CAPTURE-LIMITED - motion":
         return (f"adjacent-frame NCC {e.get('motion_med_ncc')}, "
                 f"{e.get('motion_blocks')}/24 blocks moving")
@@ -116,9 +125,9 @@ def measure_line(row: dict) -> str:
         if na is None:
             noise = "flat-site noise not measured"
         elif na >= 1.0:
-            noise = f"{na:.2f}x cleaner at flat site"
+            noise = f"{na:.2f}x cleaner on flats"
         else:
-            noise = f"{1.0 / na:.2f}x noisier at flat site"
+            noise = f"{1.0 / na:.2f}x noisier on flats"
         return (f"merge within {float(e.get('worst_blur_px') or 0.0):.2f} px "
                 f"of best frame; {noise}")
     return "; ".join(row.get("why") or []) or "no evidence"
@@ -135,6 +144,37 @@ def wrap(s: str, n: int) -> list[str]:
     if line:
         out.append(line)
     return out
+
+
+# Caption budgets, in wrapped lines of WRAP_COLS characters.
+WRAP_COLS = 62
+EVIDENCE_LINES = 1
+REMEDY_LINES = 2
+
+
+def check_budgets(tri_rows: dict) -> None:
+    """Hard-fail on any caption the sheet would silently truncate.
+
+    The tile draws a fixed number of wrapped lines and discards the rest with a
+    slice, so an over-long remedy loses its last clause without any visible
+    sign -- an earlier sheet shipped `flowers-cpl` reading "Reshoot at a" with
+    the rest of the sentence gone.  A caption that is cut off mid-instruction is
+    worse than no caption, because it still looks authoritative.
+    """
+    bad = []
+    for name, row in sorted(tri_rows.items()):
+        for what, text, budget in (
+                ("evidence", measure_line(row), EVIDENCE_LINES),
+                ("remedy", row.get("remedy") or "", REMEDY_LINES)):
+            lines = wrap(text, WRAP_COLS)
+            if len(lines) > budget:
+                bad.append(f"  {name} [{what}] needs {len(lines)} lines, "
+                           f"budget {budget}: {text!r}")
+    if bad:
+        raise SystemExit("caption budget exceeded; these would be truncated:\n"
+                         + "\n".join(bad))
+    print(f"caption budgets OK: {len(tri_rows)} tiles fit "
+          f"{EVIDENCE_LINES}+{REMEDY_LINES} lines at {WRAP_COLS} cols")
 
 
 def main() -> int:
@@ -185,6 +225,8 @@ def main() -> int:
     cw = max(t.size[0] for _, t in thumbs)
     ch = max(t.size[1] for _, t in thumbs)
     tri_rows, tri_counts = load_triage(args.triage)
+    if tri_rows:
+        check_budgets(tri_rows)
     lab = 30 if not tri_rows else 96
     pad = 14
     head = 56 if not tri_rows else 148
@@ -249,6 +291,13 @@ def main() -> int:
         d.rectangle([x + (cw - t.size[0]) // 2, y,
                      x + (cw + t.size[0]) // 2 - 1, y + 3], fill=col)
         d.text((x, y + ch + 5), n[:46], font=font(15), fill=(210, 210, 218))
+        # Dimensions on the tile: the masters are not all the same width (7032
+        # or 7040 at a common 4688), which matters to anyone printing the set.
+        ev = (row or {}).get("evidence") or {}
+        if ev.get("master_w"):
+            d.text((x + cw - 80, y + ch + 6),
+                   f"{ev['master_w']}x{ev['master_h']}", font=font(12),
+                   fill=(140, 142, 150))
         d.text((x, y + ch + 23), SHORT.get(cat, cat), font=font(15), fill=col)
         if row:
             for j, line in enumerate(wrap(measure_line(row), 62)[:1]):

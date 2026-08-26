@@ -47,9 +47,61 @@ MOTION_MED = 0.9900      # foam 0.9794 / bubbles 0.9459 vs bee-3 0.99967
 MOTION_BLOCKS = 6        # blocks below 0.98 out of 24
 GAP_BLOCKS = 6           # blocks of 24 whose focus peak sits at a bracket end
 GAP_BLOCKS_BAD = 12
+# --- coverage, per-pixel (supersedes the 24-block aggregate above) ----------
+# The primary coverage instrument is now the per-pixel election map: the share
+# of pixels whose elected frame is the first or last rung of the bracket.  A
+# pixel electing an end is telling you its true optimum lies outside the
+# bracket.  Raw `boundary %` is NOT usable on its own, because on this corpus
+# it is dominated by featureless backdrop -- `tweezers-cpl` has 4.761% of its
+# pixels at a bracket end and 0.000% of its DETAIL-bearing pixels there, and
+# `coffee-bean` likewise falls 8.570% -> 0.000%.  Electing an end where there
+# is nothing to resolve costs nothing and no reshoot can fix it.  So the gate
+# is the rate among detail-bearing pixels, and it must beat its own
+# size-matched shuffled null before it counts as targeting detail at all.
+#
+# 2.0% sits in an empty band in the measured corpus: the rates run
+#   ... 0.499 (119MSDCF), 0.517 (pencil-steep), 0.803 (lavendar)
+#   then 2.595 (flower-bud-alone), 6.200 (fern), 7.336 (ruler), 55.167 (flowers)
+# -- a 3.2x jump with no subject inside it.  Like the motion threshold, this is
+# read off the corpus rather than asserted.
+GAP_DETAIL_PCT = 2.0
+GAP_ENRICH = 1.0         # must target detail more than a random mask would
 # Diffraction: the source's own best frame never delivers a sharp edge anywhere.
 # Expressed against the corpus, not asserted a priori.
 DIFFRACTION_DNPX = 600.0
+
+# Which mechanism produces the end-elections is NOT reliably separable by the
+# summary statistics -- `flowers-cpl` (occlusion) and `highly-angled-ruler-mm-cpl`
+# (a genuine gap) sit at enrichment 1.57 and 1.50 and conHi3 0.472 and 0.449,
+# i.e. indistinguishable.  The split below is therefore made by INSPECTION of
+# each subject's election map, recorded here so the call is auditable rather
+# than hidden in a threshold that does not actually separate the cases.
+# See covermaps/<subject>.jpg for the picture each verdict was read from.
+OCCLUSION = {
+    # Sec 23 of docs/captures-needed.md established this per-pixel: the boundary
+    # pixels are thin ribbons tracing petal edges, concentrated 7.8x in the
+    # highest-contrast decile, and it explicitly WITHDREW the "reshoot wider"
+    # advice.  The election map confirms it and adds a second component -- broad
+    # interstitial shadow between overlapping petals, which is occluded from the
+    # lens, not merely out of focus.  Neither component is fixable with frames.
+    "flowers-cpl": (
+        "a dense mass of overlapping petals: the end-elections are rim ribbons "
+        "on petal edges plus deep interstitial shadow that no focus plane can "
+        "reach, not a bracket that stopped short"),
+}
+
+
+def _side_table(name: str) -> dict:
+    """Corpus-wide side tables keyed by subject, loaded once."""
+    p = os.path.join(tri.OUT, name)
+    if not os.path.exists(p):
+        return {}
+    with open(p, encoding="utf-8") as fh:
+        return {r["subject"]: r for r in json.load(fh)}
+
+
+COVERAGE = _side_table("coverage.json")
+DIMS = _side_table("dims.json")
 
 
 def load(sub: str) -> dict:
@@ -169,6 +221,8 @@ def classify(sub: str, ev: dict) -> dict:
         "n_sites_used": len(usable),
         "n_sites_dropped": len(dropped),
         "n_frames": foc["n_frames"],
+        "master_h": (DIMS.get(sub) or {}).get("h"),
+        "master_w": (DIMS.get(sub) or {}).get("w"),
     }
 
     # ---- ADJUDICATION ORDER MATTERS ----------------------------------------
@@ -190,19 +244,50 @@ def classify(sub: str, ev: dict) -> dict:
                        "bracket or stabilise; no merge change can recover this.")
         return r
 
-    # 2. Coverage gap: some region has no frame in focus at all.
-    if n_gap >= GAP_BLOCKS:
-        end = "far" if n_gap_far >= n_gap_near else "near"
-        n_end = max(n_gap_far, n_gap_near)
-        sev = "severe" if n_gap >= GAP_BLOCKS_BAD else "partial"
+    # 2. Coverage, from the per-pixel election map.  Two conditions, because
+    #    either alone misclassifies a subject in this corpus: the rate among
+    #    detail-bearing pixels must clear the corpus break, AND the boundary
+    #    set must target detail more than a size-matched random mask would.
+    #    `flower-bud-alone-cpl` is why the second is needed -- 2.595% of its
+    #    detail-bearing pixels elect an end, above the threshold, but at 0.34x
+    #    of its own null: the bud is a smooth fully-spanned depth map and every
+    #    end-election is on the blown backdrop behind it.  Reshooting it wider
+    #    would change nothing.
+    cov = COVERAGE.get(sub) or {}
+    dgap = cov.get("detail_gap_pct")
+    enr = cov.get("detail_enrichment")
+    if dgap is not None:
+        r["evidence"].update({
+            "boundary_pct": cov.get("boundary_pct"),
+            "detail_gap_pct": dgap,
+            "detail_enrichment": enr,
+            "end0_pct": cov.get("end0_pct"),
+            "endN_pct": cov.get("endN_pct"),
+        })
+    if dgap is not None and dgap >= GAP_DETAIL_PCT and (enr or 0) >= GAP_ENRICH:
+        e0, eN = cov.get("end0_pct", 0.0), cov.get("endN_pct", 0.0)
+        end = "first" if e0 >= eN else "last"
+        lop = max(e0, eN) / max(min(e0, eN), 1e-6)
+        loc = cov.get("location") or "across the frame"
+        if sub in OCCLUSION:
+            r["verdict"] = "CAPTURE-LIMITED - occlusion/geometry"
+            r["why"].append(
+                f"{dgap:.1f}% of detail-bearing pixels elect an end of the "
+                f"bracket ({enr:.2f}x its own shuffled null), but the geometry "
+                f"is the cause, not the bracket: {OCCLUSION[sub]}")
+            r["remedy"] = (
+                "not fixable by more frames: those regions are occluded, not "
+                "merely defocused. Reshoot from another angle.")
+            return r
         r["verdict"] = "CAPTURE-LIMITED - coverage gap"
         r["why"].append(
-            f"{n_gap}/24 blocks peak at a bracket end ({n_gap_far} far, "
-            f"{n_gap_near} near) -- the bracket did not span the subject")
-        extra = int(round(100.0 * n_end / len(blocks)))
-        r["remedy"] = (f"reshoot with ~{max(20, extra)}% more frames at the "
-                       f"{end} end ({sev} gap); the merge cannot invent focus "
-                       f"no frame captured.")
+            f"{dgap:.1f}% of detail-bearing pixels elect the {end} frame of "
+            f"the bracket ({enr:.2f}x its own shuffled null, {lop:.0f}x "
+            f"lopsided to that end); centred {loc}. Their true focus lies "
+            f"outside the bracket, so no frame ever held them sharp")
+        r["remedy"] = (
+            f"reshoot extending the bracket past the {end} frame; "
+            f"the merge cannot invent focus no frame captured.")
         return r
 
     # 3. Merge loss: only now, and only above the instrument's own floor.
@@ -263,8 +348,13 @@ def main() -> int:
     rows = [classify(s, load(s)) for s in subs]
 
     order = ["GOOD", "MERGE-LIMITED", "CAPTURE-LIMITED - coverage gap",
+             "CAPTURE-LIMITED - occlusion/geometry",
              "CAPTURE-LIMITED - diffraction/magnification",
              "CAPTURE-LIMITED - motion", "UNRESOLVED"]
+    unlisted = sorted({r["verdict"] for r in rows} - set(order))
+    assert not unlisted, (
+        f"verdict(s) not in the arithmetic: {unlisted}. A category missing from "
+        f"`order` is counted nowhere and the subject silently disappears.")
     print("=" * 118)
     print("BUILD-TRIAGE: all 26 subjects")
     print("=" * 118)
