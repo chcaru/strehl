@@ -2110,3 +2110,159 @@ decision, so it is flagged rather than taken.
 Near-duplicate captures also occupy adjacent prime slots (#9/#12 wrapped-text,
 #18/#19 pencil, #20/#21 MSDCF, #13/#17 leaf, #14/#24 flower-bud), spending the
 top of the sheet twice on the same subject.
+
+---
+
+# Colour management on the output path: real ICC profiles
+
+**Commit `96b7e119`. All MEASURED unless marked ARGUED.**
+
+## The defect, as the code itself had already stated it
+
+`image_out.rs:118-129` diagnosed this and never acted on it: the colour space
+was declared only in `ImageDescription`, a human-readable text tag that no
+colour-managed application reads. ORCH confirmed it on a shipped master --
+`bee-3-cpl.tiff`, `ICC profile present: False`. A correct sRGB render and a
+camera-native render were therefore **byte-indistinguishable to any tool that
+opened them**, and for the camera-native file every reader would assume sRGB
+and be completely wrong.
+
+## What was decided, per render path
+
+`color_description` has four cases. Two are colorimetric and two are not.
+
+| `(matrix, srgb)` | render | profile | why |
+| --- | --- | --- | --- |
+| `(Some, true)` | `--srgb` | sRGB v2, 2716 B | defined space, so state it machine-readably |
+| `(Some, false)` | `--linear-srgb` | sRGB primaries + identity TRC, 696 B | same primaries, gamma 1.0 |
+| `(None, true)` | camera + curve | **none** | no characterisation exists to be truthful about |
+| `(None, false)` | camera-native | **none** | ditto; this is the byte-frozen measurement file |
+
+**The camera-native `None` is a deliberate answer, not an unhandled case.**
+`Develop::matrix`'s own documentation says `None` also means "the decoder has no
+characterisation for the body", so there is nothing to build a truthful profile
+from. Writing sRGB there would replace a loud text warning that a human can read
+with a machine-readable assertion a RIP obeys silently -- converting a visible
+mislabel into an invisible corruption, which is strictly worse than today.
+
+Other decisions: **v2, not v4** -- a v4 profile a RIP silently ignores is worse
+than a v2 it honours. **Constructed, not vendored** -- published IEC 61966-2-1
+colorimetry, so there is no licence to check. **TIFF type UNDEFINED (7)**, per
+the ICC technote, not the BYTE that `[u8]` encodes as by default; this needed a
+`TiffValue` impl. **Creation date fixed at 2026-01-01**, not read from the
+clock, because this project's epistemics rest on byte-freezes.
+
+## Verification
+
+Both arms were built from **one `git archive` of one SHA**, differing by
+`image_out.rs` alone -- verified by hashing every file in both trees: **1 file
+differs, 0 others**. The diff is **479 insertions and 0 deletions**.
+
+- **Pixel null.** Decoded arrays, not file bytes -- adding a tag shifts every
+  data offset, so a byte comparison would fail for the wrong reason.
+  `--srgb`, `--linear-srgb` and camera-native all give **`max|A-B| = 0`** on a
+  4688x7032 render. Only metadata moved: **+2728 / +708 / +0 bytes**.
+- **Byte-freeze registry HOLDS**, both rows, identical size 49450019 B. Both are
+  `srgb = no` and route the untagged writer, so they could not have moved.
+- **Read back out of a real file** with `tifffile`, not asserted at write time.
+- **Independent tools.** `exiftool` reports `ProfileDescription`, `ProfileVersion
+  2.1.0` and the three matrix columns; Pillow/LittleCMS2 recovers the colorants
+  and white point. Camera-native: "(no ICC tags reported)" from exiftool.
+- **Potency control.** Same pixels, three embedded profiles, all transformed
+  through LittleCMS to a *stock* sRGB profile:
+
+  | embedded profile | mean shift | max | pixels moved |
+  | --- | --- | --- | --- |
+  | correct sRGB | **0.00 DN** | **0** | **0.0%** |
+  | wrong: linear TRC | 50.39 DN | 73 | 99.5% |
+  | wrong: R/B colorants swapped | 11.58 DN | 152 | 64.3% |
+
+  The correct arm is **the exact identity against LittleCMS's own sRGB profile**,
+  which independently validates the whole derivation: an implementation I did
+  not write agrees the constructed profile *is* sRGB, to zero DN.
+- **The unit tests are commissioned**: 6 planted defects (no chromatic
+  adaptation, transposed matrix, TRC stored backwards, sRGB profile on
+  camera-native, clock-derived date, stale size field) -- **6 caught, 0 missed**,
+  and a comment-only null stayed green. `experiments/BUILD-RENDER-icc/commission.py`.
+
+## Is sRGB the right MASTER space? A measurement.
+
+Method: the delivered `--srgb` masters are already clipped and cannot say what
+was lost, so camera-native and `--linear-srgb` were rendered **from one binary**
+and the colour matrix recovered by least squares from unclipped pixel pairs.
+The recovery is falsifiable against a prediction the *source* makes --
+`camera_to_srgb` documents that every row sums to 1.
+
+**The recovery is good to ~0.3%, not exact** (median residual ~1e-4, above the
+1.5e-5 quantisation floor), so it is cross-checked by a **model-free** route: a
+coloured pixel clamped to exactly 0 in the delivered `--linear-srgb` file *is*
+out of gamut by definition, no matrix involved. The two routes **agree 9/9**.
+
+Out-of-gamut share of coloured pixels:
+
+| subject | sRGB | Display P3 | Adobe RGB | ProPhoto | model-free sRGB |
+| --- | --- | --- | --- | --- | --- |
+| `flower-inner-edge-cpl` | **9.73%** | 0.000% | **0.165%** | 0.000% | **10.71%** |
+| `leaf-2-cpl` | 0.004% | 0.000% | 0.000% | 0.000% | 0.002% |
+| `flowers-cpl` | 0.003% | 0.000% | 0.000% | 0.000% | 0.003% |
+| other 6 incl. `bee-3-cpl`, `lavendar-cpl`, `flower-bud-alone-cpl` | 0.000% | 0.000% | 0.000% | 0.000% | 0.000% |
+
+Cost of the clipping, CIEDE2000 on the affected pixels only (the metric was
+validated against **Sharma et al.'s published vectors, max error 4.2e-5**,
+before being used): `flower-inner-edge-cpl` median **0.46**, p99 **1.58**, max
+**2.47**. Roughly one JND, on a contiguous tenth of the subject.
+
+**Subset control.** The census used 24-frame renders. Re-rendering the headline
+subject at full depth: **10.713% (24 frames) vs 10.608% (299 frames)** -- 0.105
+points. The subset did not bias it.
+
+**It is a picture, not a score.** `gamut-pictures/` flags the clipped pixels.
+They land **exactly on the olive-yellow anther bodies**, tracing individual
+structures, while the grey background and the green shadows between them are
+untouched. At 100% the clipped areas are solid with a stippled boundary -- the
+signature of a gamut wall. Mean clipped colour is R74 G71 **B0**: saturated
+yellow, blue driven negative. A dead blue channel would not respect anatomy.
+
+**Posterisation, the hazard ORCH named.** One 16-bit code step at mid-grey:
+
+| space | dE per 16-bit step | the same step at 8 bits |
+| --- | --- | --- |
+| sRGB | 0.0047 | 1.20 |
+| Display P3 | 0.0055 | 1.41 |
+| Adobe RGB | 0.0056 | 1.44 |
+| ProPhoto | 0.0076 | 1.96 |
+
+At 16 bits every candidate is **130-210x below a JND**, so the risk does not
+bite. At 8 bits ProPhoto is 2 dE per step and would visibly posterise.
+
+### Recommendation
+
+1. **Keep sRGB as the default master.** 8 of 9 subjects clip *zero* pixels, and
+   it is the most compatible thing to hand a print shop.
+2. **Add Display P3, not Adobe RGB, as the wide option.** This is the part that
+   contradicts the reflex: the excursion here is saturated **yellow**, and
+   measured, **P3 holds 100% of it while Adobe RGB still clips 0.165%**. Adobe
+   RGB's extension is toward green/cyan and is aimed at the wrong direction for
+   this corpus.
+3. **ProPhoto buys nothing here** -- identical 0.000% to P3, with the coarsest
+   quantisation. Not worth its hazards.
+4. **Any 8-bit derivative must stay sRGB.** The posterisation risk is real, just
+   not at 16 bits.
+5. Adding a P3 output path means a new `OutputSpace` variant, which touches
+   `main.rs` -- **BUILD-WIRE's file**. Routing decision is ORCH's.
+
+**Scope caveat.** 9 subjects, not 26, chosen as the most saturated plus
+controls. That biases the 1-in-9 rate **upward**, so the corpus-wide rate is
+lower, not higher. ARGUED, not measured.
+
+## Environment finding: `*>` corrupts `git archive | tar -x`
+
+The first launch of the SHIP-V2-ICC render died with `tar.exe: Damaged tar
+archive (bad header checksum)`, looping. Cause: wrapping the driver in
+`powershell -File ... *> log` puts PowerShell's redirection in the path of the
+**binary** stream between `git archive` and `tar`, and it re-encodes it. Same
+class as the known `git show HEAD:path > tmp` corruption on this machine.
+
+Measured both ways: with the redirect, endless bad-header retries; without it,
+`rc=0` and **6842 files extracted**. Any harness that builds a pin must not run
+under a global stream redirect.
