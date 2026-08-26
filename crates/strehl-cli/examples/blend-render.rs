@@ -123,6 +123,7 @@ fn parse_args() -> Result<Args> {
             // real stacks crushes dark pixels to exact zero. See `Hull`.
             "--unclamped" => a.cfg.hull = Hull::Unclamped,
             "--per-level" => a.cfg.hull = Hull::PerLevel,
+            "--hull-lambda" => a.cfg.hull_lambda = val()?.parse()?,
             "--linear" => a.linear = true,
             // Camera-native primaries, linear, no matrix and no transfer curve
             // -- `image_out::OutputSpace::CameraLinear`, the byte-frozen
@@ -625,3 +626,4 @@ fn write_frame(
     }
     image_out::write_demosaiced(path, mw, mh, &mosaic, &dev)
 }
+

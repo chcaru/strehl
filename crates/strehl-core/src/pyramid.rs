@@ -899,6 +899,28 @@ pub struct MergeConfig {
     pub mean_coarse: usize,
     /// See [`Hull`]. Confines the reconstruction to what the inputs support.
     pub hull: Hull,
+    /// Margin on the per-level hull, in units of the calibrated noise sigma at
+    /// that level. Only meaningful under [`Hull::PerLevel`].
+    ///
+    /// # Why a margin is required rather than optional
+    ///
+    /// Measured. A hard per-level projection (`hull_lambda = 0`) removes the
+    /// excursion but costs 4.7% of edge acuity and 8.3% of fine-band energy on
+    /// `dry-erase-marker-head-cpl` -- it confiscates genuine resolution along
+    /// with the artifact. That is the trade this project exists to refuse: the
+    /// merge is *supposed* to be able to beat any single frame, and a bound that
+    /// forbids it from leaving the frames' range at a coarse scale forbids the
+    /// deconvolution gain that makes stacking worth doing.
+    ///
+    /// # Why noise sets it, and not taste
+    ///
+    /// The excursion distribution is bimodal: the bulk sits near 1 sigma, which
+    /// is indistinguishable from recovered detail, and the destructive tail runs
+    /// 20-200 sigma. A threshold in sigma therefore separates the two
+    /// populations on their own scale, adapting to exposure, ISO and the local
+    /// signal level without a hand-tuned DN anywhere. An absolute epsilon would
+    /// have to be re-chosen per capture and would be wrong for both tails.
+    pub hull_lambda: f32,
 }
 
 impl MergeConfig {
@@ -969,6 +991,9 @@ impl Default for MergeConfig {
             // support. Per-band convexity does not imply reconstruction
             // convexity -- see `Hull`.
             hull: Hull::InputRange,
+            // See `MergeConfig::hull_lambda`. Chosen by the ladder in
+            // `docs/research/BUILD-BLEND.md`; inert unless `hull` is `PerLevel`.
+            hull_lambda: 2.0,
         }
     }
 }
@@ -1007,6 +1032,11 @@ pub struct BandMerge {
     /// Empty in every other mode.
     lo_lv: Vec<Vec<f32>>,
     hi_lv: Vec<Vec<f32>>,
+    /// Per-level noise sigma, same indexing as `lo_lv`. Held as a running
+    /// maximum over frames, which is the conservative direction: a wider margin
+    /// permits more genuine gain and clamps less, so an error here costs
+    /// artifact suppression rather than resolution.
+    sig_lv: Vec<Vec<f32>>,
     frames: u32,
     /// Frames whose contribution was entirely below the noise floor at every
     /// level. Reported, because a stack where this is large is one where the
@@ -1062,6 +1092,17 @@ impl BandMerge {
                 for k in 1..sizes.len() {
                     for _ in 0..planes {
                         v.push(vec![f32::NEG_INFINITY; sizes[k].pixels()]);
+                    }
+                }
+                v
+            } else {
+                Vec::new()
+            },
+            sig_lv: if cfg.hull.bounds_each_level() {
+                let mut v = Vec::with_capacity((sizes.len() - 1) * planes);
+                for k in 1..sizes.len() {
+                    for _ in 0..planes {
+                        v.push(vec![0.0f32; sizes[k].pixels()]);
                     }
                 }
                 v
@@ -1223,6 +1264,20 @@ impl BandMerge {
                         *l = l.min(*v);
                         *h = h.max(*v);
                     }
+                    // The margin's scale. `gain.beta(k) * var` is the module's
+                    // own calibrated statement of noise power at level `k` --
+                    // the identical quantity the selection gate thresholds on --
+                    // so the bound and the gate cannot disagree about what
+                    // counts as noise. Reusing it rather than deriving a second
+                    // estimate is deliberate: two noise models in one merge is
+                    // two things to keep in step.
+                    let beta = self.gain.beta(k.min(self.sizes.len() - 2));
+                    let vv = ws.var.level(k);
+                    let sig = &mut self.sig_lv[idx];
+                    for (s, v) in sig.iter_mut().zip(vv) {
+                        let cur = (beta * v.max(0.0)).sqrt();
+                        *s = s.max(cur);
+                    }
                 }
             }
         }
@@ -1320,6 +1375,9 @@ impl BandMerge {
                 {
                     *a = a.min(*b);
                     *x = x.max(*y);
+                }
+                for (a, b) in self.sig_lv[i].iter_mut().zip(&other.sig_lv[i]) {
+                    *a = a.max(*b);
                 }
             }
         }
@@ -1463,8 +1521,14 @@ impl BandMerge {
         // about.
         if n - 1 >= 1 {
             let idx = (n - 2) * self.planes + c;
-            for ((p, l), h) in acc.iter_mut().zip(&self.lo_lv[idx]).zip(&self.hi_lv[idx]) {
-                *p = p.clamp(*l, *h);
+            let lam = self.cfg.hull_lambda;
+            for (((p, l), h), s) in acc
+                .iter_mut()
+                .zip(&self.lo_lv[idx])
+                .zip(&self.hi_lv[idx])
+                .zip(&self.sig_lv[idx])
+            {
+                *p = p.clamp(l - lam * s, h + lam * s);
             }
         }
         for k in (0..n - 1).rev() {
@@ -1476,8 +1540,14 @@ impl BandMerge {
             }
             if k >= 1 {
                 let idx = (k - 1) * self.planes + c;
-                for ((p, l), h) in up.iter_mut().zip(&self.lo_lv[idx]).zip(&self.hi_lv[idx]) {
-                    *p = p.clamp(*l, *h);
+                let lam = self.cfg.hull_lambda;
+                for (((p, l), h), s) in up
+                    .iter_mut()
+                    .zip(&self.lo_lv[idx])
+                    .zip(&self.hi_lv[idx])
+                    .zip(&self.sig_lv[idx])
+                {
+                    *p = p.clamp(l - lam * s, h + lam * s);
                 }
             }
             acc = up;
