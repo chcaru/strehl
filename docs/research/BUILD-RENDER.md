@@ -1886,3 +1886,34 @@ copy at `C:\dev\strehl-out\verify-tree`, built from the live `image_out.rs`
 plus **HEAD** versions of BUILD-HALO's four in-flight files, so the numbers
 describe my change alone. No file outside my lane was modified to do this — the
 restore happened in the copy, never in the repo.
+
+## A/B: estimator vs pyramid, six subjects, one binary (gallery-ab)
+
+Output: `C:\dev\strehl-out\gallery-ab\` -- `index.html`, `RUN.txt`,
+`manifest.tsv`, `crops/` (48 composites), `fullframe/`.
+Binary `e42ab13`, sha256 `9CDD4AB2AE7BFC58...`, only `--merge` differs.
+12/12 renders ok, 3002 frames, ~31 min.
+
+The defect is structural, not a veil. At 100% the estimator stamps whole
+regions of a wrong frame in with hard straight geometric boundaries: a
+rectangular block on flower-bud-with-background-fern-cpl, a lumpy white blob
+that eats the bristles on dry-erase-marker-head-cpl, a ghosted double hair on
+lavendar-cpl, and polygonal tone-patches tiling the background. The pyramid arm
+has none of it, resolves the sharp site at least as well, leaves the
+tweezers-cpl placebo unchanged, and is ~25% faster on 12/12 renders.
+
+Two instrument defects were found by the rule failing on the subject that
+mattered most, and are fixed in `709b535`: an all-zero silhouette grid made
+`argmax` return the image CORNER and crops.py wrote that corner labelled
+`silhouette` -- it now refuses; and the texture-adjacency radius is now a
+fixed ascending ladder (7,15,31,63) reported in SITES.txt, because a single
+constant returned EXACTLY 0.000% overlap on that subject against 0.332% on
+bee-1-cpl, which `why_no_silhouette.py` attributed to a tolerance of 3579 vs
+14416 leaving the mask hugging the blown core of the sweep.
+
+`polarity.py` picks the subject list by rule rather than memory and
+CONTRADICTS the polarity hypothesis: tweezers-cpl is dark-on-bright (0.357) and
+is the good subject, flower-bud-with-background-fern-cpl is worst by eye yet
+ranks last of eleven (0.192), and couch-fibers-cpl measures 0.004. Global
+polarity does not rank this defect; silhouette perimeter against bright ground
+is the better candidate and is untested.
