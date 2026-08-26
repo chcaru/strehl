@@ -187,6 +187,21 @@ innocent. The d=120..250 row of 15.5's table is retracted; so is 16.4's bleed
 claim. Two further instruments of mine failed their own commissioning and are
 reported dead in 16.8.
 
+**Amended by section 17, which retracts my arc ordering after the owner opened
+the picture.** I reported that the blend *introduces* an arc at d~275 and that
+the control "has no arc there", on a SIGNAL/NULL ratio of 12.1x against 0.9x.
+**Backwards.** The control carries a dark aura averaging **-10.13% of far field
+(-1935 DN)** over d=100..500 and reaching **-25.48%** at d=112, negative in
+**all 19 sectors**, not recovering to within 1% until d=488. The blend over the
+same band is **+0.21% (+39 DN)** and recovers by d=112. My statistic scored a
+local **maximum** over its outward trough, so a monotonically recovering
+**depression** has no interior peak and returned exactly **0.00** -- a bump
+detector pointed at a hole -- and separately its null window (700..1050) sat
+**inside** its own reference window (600..1400). Either bug alone would have
+been fatal. What survives is the azimuthal point: per sector the blend's
+residual is a *localised bright* excursion of **+7.69%** in sector 2, which the
+whole-frame +0.21% understates exactly as 15.9 predicted averaging would.
+
 ---
 
 ## 1. The picture, first
@@ -2651,3 +2666,126 @@ in your own array is not caught by adding more subjects; the ruler agreed with m
 at +0.982 and was the *most* confounded of the two.  **Agreement between two
 measurements that share a confound is not corroboration, it is the confound
 speaking twice.**
+
+---
+
+## 17. The owner opened the picture and my arc statistic was backwards
+
+He asked for a crop box so he could look at the d~275 px feature himself.  He
+looked, saw a large grey aura hugging the silhouette in the **control** arm that
+my statistic had scored as clean, measured a within-crop profile, and sent back
+the opposite of my ordering.  **He is right.  15.9's and 16's "the control has
+no arc there, the feature is introduced by the blend" is RETRACTED.**
+
+Re-measured with a rebuilt instrument, one pinned pair, shared mask,
+`arcprofile.py`:
+
+| | CONTROL (estimator) | BLEND (pyramid) |
+| --- | ---: | ---: |
+| aura band d=100-500, mean | **-10.13%** | **+0.21%** |
+| the same, absolute | **-1935 DN** | **+39 DN** |
+| per-sector median, 19 sectors | **-5.95%** | +1.35% |
+| worst single bin | **-25.48%** at d=112 | -0.87% |
+| recovers to within 1% of far field | d=**488** px | d=**112** px |
+| far-field level | 19100 DN | 19004 DN |
+| null floor, same backdrop | -3.35% | -3.02% |
+
+**The two arms differ in sign**, so no ratio between them is quoted.  The
+control's worst bin is **7.6x** its own null floor; the blend's aura-band worst
+is **0.29x** the floor, i.e. below it.  Every one of the control's 19 sectors is
+negative.
+
+### 17.1 Why the old statistic said the reverse -- two separate bugs
+
+**Bug 1, structural blindness, and it is the larger one.**
+`peaksite.prominence_near` scores a **local maximum** over its outward trough.
+A dark aura is a **depression**, and one that recovers monotonically outward has
+**no interior local maximum at all** -- the test `vals[i] >= vals[i-1] and
+vals[i] > vals[i+1]` never fires, the function returns `None`, and the row
+records prominence **0.00**.  The control's profile rises monotonically from
+14233 DN at d=112 to 19183 DN at d=588.  **It was a bump detector pointed at a
+hole.**  It then scored the blend's one genuine small bump (+0.83% at d=262) as
+the larger defect.  The instrument did not measure the wrong amount of aura; it
+was structurally incapable of representing an aura as a nonzero number.
+
+**Bug 2, a null inside its own reference.**  `NULL_LO, NULL_HI = 700, 1050` lay
+entirely inside `ringprofile.FAR_LO, FAR_HI = 600, 1400`.  Signal and null were
+both normalised by the region the null was drawn from.
+
+> **A defect broader than the gap between the signal window and the null window
+> contaminates its own reference and reads as absent.**
+
+The owner's generalisation, and it is the fourth instrument this week to fail by
+resembling its own intended output.  Note the two bugs are independent: fixing
+the null alone would not have helped, because bug 1 returns 0.00 for the control
+whatever the reference is.  **I reported a 12.1x SIGNAL/NULL ratio as evidence
+the blend introduced the feature.  It was evidence that the blend's residual is
+localised enough to fit inside the window, and the control's is not.**
+
+### 17.2 The rebuilt instrument, and what its commissioning caught
+
+`arcprofile.py` replaces peak prominence with a **signed deviation from a far
+field**, prints the profile at every radius above any summary, and separates
+three things v1 conflated:
+
+- the **edge transition** -- every subject dips at its own silhouette because
+  defocus spreads a dark body outward.  Optics, present in both arms, not a
+  defect.
+- the **aura** -- a depression persisting well past the edge transition.
+- the **rim** -- a positive excursion, reported with its own sign so a bright rim
+  can never cancel a dark aura inside one number.
+
+| check | result | reading |
+| --- | --- | --- |
+| NULL A, constant 20000 DN frame | worst **+0.0000%** | PASS, no feature manufactured |
+| NULL B, real backdrop d=1500-2100 | -3.35% / -3.02% | the floor on real data, **outside** the reference and 3x beyond recovery |
+| PLANT, d=50-250 x0.85 | expected -15.36%, got **-15.36%** | PASS |
+| EDGE CAL, `coffee-bean` | recovers by d=262 / d=162 | the edge transition is ~150-250 px wide |
+
+**Two of these failed on the first run and the failures were the useful part.**
+The PLANT failed (-16.98% against an expected -22.08%) because my *expectation*
+was computed from the frame's worst bin, which sits at d=12, **outside** the
+planted band -- an error in the check, not the instrument.  And `coffee-bean`,
+which I had queued as a null on the owner's description of it as a free negative
+control, returned **-35.86%**.  That is not a null failing; it is
+`coffee-bean` having an ordinary **edge transition**, which every subject has.
+**It is a calibration, not a null, and calling it one would have been the same
+category error as v1.**  The owner's "0.23%" for `coffee-bean` refers to a bright
+*ring*; the two statistics measure different features and both are small there.
+
+### 17.3 What survives from 15.9, and what the blend's residual actually is
+
+**Survives:** the azimuthal-averaging point.  A profile mean over a feature
+living in a few sectors reports a number that occurs at no azimuth.  Per-sector
+reporting is right and the owner has kept it.
+
+**Corrected:** the direction.  Per sector, `arcprofile.py` gives
+
+- **CONTROL**: min **-12.97%** (sector 22, 330-345 deg), median -5.95%, max
+  -2.17%.  **All 19 sectors negative** -- a dark aura the whole way round.
+- **BLEND**: min -1.44%, median +1.35%, max **+7.69%** (sector 2, 30-45 deg) --
+  a *localised bright* excursion, which is the feature I originally found and
+  mislabelled.
+
+So the blend's residual is real, is **positive**, and is **localised to a few
+sectors** -- whole-frame +0.21% understates it exactly as 15.9 said azimuthal
+averaging would.  Crops cut for the owner at exact 1:1, shared stretch:
+`pics/AURA-sector2-blend-residual--*--1to1.png` (crop 4294, 3363, 1200, 900) and
+`pics/AURA-sector22-control-worst--*--1to1.png` (crop 4579, 1546, 1200, 900).
+
+### 17.4 What 17 does not settle
+
+- **I have not opened the sector-2 crop myself and should not be the one to
+  judge it.**  +7.69% in one sector is not small, and it is the blend's, not the
+  control's.  It is the open item.
+- The null floor is **-3.0 to -3.4%**, not zero, because the backdrop has a real
+  large-scale roll of ~2% peak-to-peak that appears identically in both arms.
+  Any aura claim below about 3% is inside that floor.
+- The `flip/` pair is still **not hash-verified** (16.1): the binary's mtime
+  postdates the renders.  Everything in 17 is measured on that pair, so it
+  inherits that gap.
+- `AURA_LO = 100` is set from the `coffee-bean` edge calibration.  A subject with
+  a wider edge transition would need a different cutoff, and the statistic does
+  not currently derive it per subject.
+- Nothing here is independently verified; a verifier was commissioned on 17
+  before it was reported.
