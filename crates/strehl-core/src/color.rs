@@ -236,6 +236,7 @@ pub fn camera_to_srgb(xyz_to_cam: [[f32; 3]; 3]) -> Option<Render> {
 pub struct Render {
     to_srgb: [[f32; 3]; 3],
     ceiling: [f32; 3],
+    top: f32,
 }
 
 impl Render {
@@ -245,14 +246,60 @@ impl Render {
         Self {
             to_srgb,
             ceiling: [f32::INFINITY; 3],
+            top: crate::highlight::CONTAINER_TOP,
         }
     }
 
     /// The same render, with a per-channel saturation ceiling in the render's
     /// own units. See [`saturation_ceiling`].
+    ///
+    /// The chroma roll-off's completion point is left at
+    /// [`crate::highlight::CONTAINER_TOP`], because a bare ceiling does not say
+    /// where the sensor's *usable* white sits. A caller holding the
+    /// [`Levels`] should prefer [`Render::with_saturation`], which states it.
     #[must_use]
     pub fn with_ceiling(self, ceiling: [f32; 3]) -> Self {
-        Self { ceiling, ..self }
+        Self {
+            ceiling,
+            top: crate::highlight::CONTAINER_TOP,
+            ..self
+        }
+    }
+
+    /// The same render, told the whole saturation story: the per-channel
+    /// ceiling *and* where usable white sits underneath it.
+    ///
+    /// This is [`with_ceiling`](Self::with_ceiling) plus one scalar the ceiling
+    /// alone cannot carry. `saturation_ceiling` returns `k0 * wb[c] * eg`, and
+    /// `k0` — the container expressed in units of the noise model's range,
+    /// 1.068898 on the reference body — cannot be recovered from that product
+    /// because `wb[c]` and `eg` are not separately visible in it. So it is
+    /// passed, and stored as its reciprocal: the fraction of the ceiling at
+    /// which `Levels::white` sits, 0.9355.
+    ///
+    /// It matters because the merged file does not reach the container.
+    /// `pyramid::Hull::InputRange` holds each reconstructed pixel to the range
+    /// of its contributing frames, so `foam`'s hottest pixel sits at `u =
+    /// 0.9355` and its top level decile averages `u = 0.7990`. With the
+    /// container as the endpoint that decile's measured `B/G` excess fell only
+    /// 29 %; see `docs/research/BUILD-HIGHLIGHT.md` for what stating `top`
+    /// buys.
+    #[must_use]
+    pub fn with_saturation(self, levels: Levels, wb_gains: [f32; 3], exposure_gain: f32) -> Self {
+        let range = levels.range();
+        let span = f32::from(clip::CONTAINER_MAX_DN) - levels.black;
+        // Refusing to state a `top` is the safe failure, as everywhere else in
+        // this file: the roll-off then behaves exactly as `with_ceiling`.
+        let top = if range.is_finite() && range > 0.0 && span.is_finite() && span >= range {
+            range / span
+        } else {
+            crate::highlight::CONTAINER_TOP
+        };
+        Self {
+            ceiling: saturation_ceiling(levels, wb_gains, exposure_gain),
+            top,
+            ..self
+        }
     }
 
     /// Camera RGB to linear sRGB. Every row sums to 1.
@@ -263,6 +310,11 @@ impl Render {
     /// The per-channel ceiling, `+inf` where none was stated.
     pub fn ceiling(&self) -> [f32; 3] {
         self.ceiling
+    }
+
+    /// Where the chroma roll-off completes, as a fraction of the ceiling.
+    pub fn top(&self) -> f32 {
+        self.top
     }
 
     /// Bring a white-balanced camera-RGB triple back under the ceiling, *before*
@@ -299,10 +351,24 @@ impl Render {
         [v[0].min(neutral), v[1].min(neutral), v[2].min(neutral)]
     }
 
-    /// Clip, then transform. The order is the point.
+    /// Clip, then roll the chroma off, then transform. The order is the point.
+    ///
+    /// [`clip_highlights`](Self::clip_highlights) owns the *pinned* case and is
+    /// unchanged; [`crate::highlight::desaturate`] owns the *approach*, which
+    /// M109 section 16 measured that guard cannot see because the merge averages
+    /// pinned and unpinned samples and the result lands strictly below the
+    /// ceiling. A blown neutral leaves `clip_highlights` already neutral, and a
+    /// neutral is a fixed point of the roll-off, so the two compose without
+    /// fighting. Below the roll-off's knee it is the identity, bit for bit.
     #[inline]
     pub fn develop(&self, v: [f32; 3]) -> [f32; 3] {
-        apply(&self.to_srgb, self.clip_highlights(v))
+        let v = crate::highlight::desaturate(
+            self.ceiling,
+            self.top,
+            &self.to_srgb,
+            self.clip_highlights(v),
+        );
+        apply(&self.to_srgb, v)
     }
 }
 

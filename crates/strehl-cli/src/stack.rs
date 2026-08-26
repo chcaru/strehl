@@ -1100,9 +1100,7 @@ fn write_outputs(
     // neutral white renders magenta. The ceiling scales with the exposure gain
     // for the same reason `norm` folds it: `clip_{K*g}(g*v) == g*clip_K(v)`.
     // See `docs/research/M109-highlights.md`.
-    let matrix = matrix.map(|render| {
-        render.with_ceiling(color::saturation_ceiling(levels, gains, applied.gain()))
-    });
+    let matrix = matrix.map(|render| render.with_saturation(levels, gains, applied.gain()));
     let eg = applied.gain();
 
     if opts.demosaic {

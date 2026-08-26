@@ -19,6 +19,7 @@ pub mod edgeaware;
 pub mod election_coherence;
 pub mod flat_ratio;
 pub mod focus;
+pub mod highlight;
 pub mod merge;
 pub mod noise;
 pub mod optics;

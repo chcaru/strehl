@@ -5949,10 +5949,10 @@ fn write_merged(
     // M109: the matrix must not be handed a triple in which one channel is
     // pinned at the container maximum while white balance has carried the
     // others past it -- that is what renders blown neutral white magenta.
-    // See `docs/research/M109-highlights.md`.
-    let dev = space.develop(
-        matrix.map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, applied.gain()))),
-    );
+    // See `docs/research/M109-highlights.md`. `with_saturation` additionally
+    // states where usable white sits, which is what the chroma roll-off in
+    // `strehl_core::highlight` needs; see `docs/research/BUILD-HIGHLIGHT.md`.
+    let dev = space.develop(matrix.map(|r| r.with_saturation(levels, gains, applied.gain())));
 
     if demosaic {
         // Full resolution. The merge already estimates all four CFA sites of
@@ -6097,8 +6097,7 @@ fn write_merged(
             px[1] = norm(gmean(i), gains[1]);
             px[2] = norm(val(CfaPlane::B, i), gains[2]);
         }
-        let dev = space
-            .develop(matrix.map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, eg))));
+        let dev = space.develop(matrix.map(|r| r.with_saturation(levels, gains, eg)));
         image_out::write_binned(path, geom.width, geom.height, &lin, &dev)?;
         eprintln!();
         eprintln!(
