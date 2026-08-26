@@ -216,3 +216,121 @@ which is the proof that no byte moved.
 - The fold binary is kept but the fold is **not** in the tree. Anyone re-running
   §3 must rebuild it; there is no `STREHL_COSITE_FOLD` at HEAD, and it was
   deliberately never added to `RENDER_ENV` because it was never meant to ship.
+
+---
+
+## 8. ORCH's cross-check, and the scope question settled by hash
+
+ORCH re-derived the prediction from the Catmull-Rom basis polynomials alone
+(`experiments/ORCH-drift-check/cositecheck.py`, not mine, not edited), reported
+1.1346 / 1.4677 / 2.1157, and read the gap to BUILD-SHARP's 1.128 / 1.438 /
+2.004 as a residual disagreement of +0.6 / +2.1 / +5.6 percent, with the script
+printing `DIVERGES` at f=0.50.
+
+### 8.1 There is no disagreement. The gap is the control.
+
+ORCH's script computes `1 / |H(f, 0.25)|^2`: the amplitude a **removed** co-site
+would recover. BUILD-SHARP's figure is that same quantity already netted against
+the gather-cost control. The two are different stages of one derivation, so the
+gap between them is not a discrepancy to be explained -- it is the control, and
+it can be recovered from ORCH's own numbers:
+
+| f | ORCH `rec` | BUILD-SHARP | `1 - pred/rec` | control BUILD-SHARP applied |
+|---:|---:|---:|---:|---:|
+| 0.25 | 1.1346 | 1.128 | 0.58% | 0.6% |
+| 0.35 | 1.4677 | 1.438 | 2.02% | 2.0% |
+| 0.50 | 2.1157 | 2.004 | 5.28% | 5.3% |
+
+Agreement at every band to the precision BUILD-SHARP reported. My own
+`cosite_mtf.py`, written before ORCH's message arrived, prints ORCH's three
+numbers to four decimals and then performs that multiplication explicitly.
+
+The `DIVERGES` verdict at f=0.50 is a false alarm of the same shape: it fires
+only there because the control is largest at Nyquist (5.3%) and that is the one
+band where it exceeds the script's 5% threshold. The check is comparing a
+pre-control number against a post-control number at all three bands and happens
+to clear the bar at two of them.
+
+So the theory is now derived three times and agrees three times. That was never
+where the risk was, and ORCH is right about that.
+
+### 8.2 The instruction to measure on the viewable render is inverted
+
+ORCH wrote: *"measure it on the viewable sRGB render, the one the co-site
+actually affects. Measuring on the linear path will show you nothing and you
+will wrongly conclude the fix did not work."*
+
+This is exactly backwards, and it is the same inverted-scope reading recorded in
+§1. I had already measured it, but because ORCH restated it as an instruction I
+settled it with hashes instead of an argument.
+
+`experiments/BUILD-COSITE/scope_2x2.ps1` runs one binary, with one switch that
+disables **only** the co-site inside `develop_binned`. The alignment gather is
+not touched, so the switch is a pure probe for "did this render call
+`write_binned` at all". Binary SHA-256 `8A90963F00C5BB53`, subject
+`coffee-bean`.
+
+| arm | flags | co-site ON | co-site OFF | |
+|---|---|---|---|---|
+| viewable | `--srgb --auto-exposure` | `C085A0569B9584EC96A30C4B21B60BE4` | `C085A0569B9584EC96A30C4B21B60BE4` | **identical** |
+| linear | `--linear-srgb` | `441F9EDF0CF06B0491519A75F26AEB35` | `3199ED7B7E157195D23F33B2C1AD21CA` | **differ** |
+
+Deleting the co-site outright changes not one byte of the shipped gallery
+render. It changes the linear render immediately. The banners agree: the
+viewable log reads `Order: black, as-shot WB, demosaic, matrix, clamp, sRGB
+curve`, the linear log reads `binned from one 2x2 quad per pixel`.
+
+The second row is the load-bearing half. Without it, "identical" would be
+indistinguishable from an env var that never reached the binary, and the whole
+table would be one frozen probe. It moved under the disturbance, so the first
+row means what it says.
+
+Measuring on the viewable render would have shown me nothing in the literal
+sense: the same thirty-two hex digits.
+
+### 8.3 ORCH's three implementation risks, answered by measurement
+
+Each was already checked before the message arrived, and each is checked by
+measurement rather than by reading, which is what ORCH asked for.
+
+1. **Sign.** Confirmed by phase correlation, not by reading the convention.
+   R-to-B separation is 0.234 px folded against 0.270 px serial. A sign error
+   puts R and B on opposite sides of green and would have given roughly 1.0 px.
+   It did not, and edge chroma on the binned path did not worsen.
+2. **Which planes.** The placebo was run, not reasoned about. G is SHA-256
+   `50aebee0c023dae6` on both arms, `np.array_equal` True, ratio exactly 1.0000
+   at all three bands -- and that statement is only meaningful on the
+   camera-native render, because the camera-to-sRGB matrix mixes channels and
+   made G appear to move by 0.960 / 0.938 / 0.959 on the first attempt (§3.2).
+3. **Replacement, not addition.** R and B got sharper by the predicted factors.
+   Addition would have applied a full extra 0.25 on both axes and softened
+   them. The positive control discriminates the two and it came back positive.
+
+### 8.4 Where my measurement sits against both predictions
+
+| f | R measured | B measured | mean | BUILD-SHARP | ORCH |
+|---:|---:|---:|---:|---:|---:|
+| 0.25 | 1.1294 | 1.1118 | 1.121 | 1.128 | 1.1346 |
+| 0.35 | 1.4325 | 1.3925 | 1.413 | 1.438 | 1.4677 |
+| 0.50 | 2.0806 | 1.8001 | 1.940 | 2.004 | 2.1157 |
+
+At or slightly below BUILD-SHARP at every band, and below ORCH at every band,
+which is the expected ordering given §8.1: ORCH's number is the pre-control
+bound and cannot be reached. At f=0.35 the mean is 1.7% below BUILD-SHARP and
+3.8% below ORCH. That is close, not the "well below" ORCH pre-registered as a
+finding.
+
+The exception is blue at Nyquist, 1.800 against 2.004 and 2.116. R lands at
+2.081, between the two predictions. The spread traces to the fold's own cost,
+which I measured per channel rather than as an ensemble: blue pays 0.851 and red
+0.984 at f=0.50. Both ensemble controls -- BUILD-SHARP's 0.947 on the real
+distribution and ORCH's 0.999 on a synthetic uniform one -- average that
+difference away. ORCH's synthetic control in particular reads the cost as
+0.03-0.10%, which is an order of magnitude cheaper than blue actually pays,
+because a perfectly uniform phase is invariant under a constant offset by
+construction and the real distribution is not perfectly uniform. BUILD-SHARP's
+figure is the better one, as ORCH said.
+
+None of this changes the conclusion in §4. The fold is arithmetically right,
+reproduces within 1.8% at the band that matters, and is on a render path the
+photographer never opens.
