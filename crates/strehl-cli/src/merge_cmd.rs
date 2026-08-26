@@ -161,6 +161,10 @@ pub struct MergeOptions {
     /// the partition that retired it, and for the two caveats that travel with
     /// it. Also settable via `STREHL_PHOTOMETRIC=off|on|auto`.
     pub photometric: PhotometricMode,
+    /// Which channel supplied [`MergeOptions::photometric`] -- flag, env, or the
+    /// compiled-in default -- so the run banner can report the mode without
+    /// claiming a request that nobody made.
+    pub photometric_source: SettingSource,
     /// Solve the ladder for the gate that achieves this mean `n_eff`.
     ///
     /// **This, not `gates`, is the parameter the project intends to ship.**
@@ -2439,6 +2443,64 @@ const PHOTOMETRIC_ENV: &str = "STREHL_PHOTOMETRIC";
 /// A default that has one greppable site can be checked by grepping it.
 pub const DEFAULT_PHOTOMETRIC_MODE: PhotometricMode = PhotometricMode::On;
 
+/// Where a resolved setting actually came from, so a banner can distinguish a
+/// value the caller ASKED for from one they merely GOT.
+///
+/// This exists because the photometric banner printed `on (unconditional, as
+/// asked)` on the branch where nothing asked: no flag, no environment variable,
+/// just the compiled-in default. "As asked" is a claim about the CALLER, and
+/// emitting it unconditionally makes the run's own record of itself false.
+///
+/// That matters more here than the wording suggests. A banner is the only
+/// durable record of what produced an artifact, and this project has already
+/// lost the provenance of a shipped gallery by trusting a log that recorded a
+/// setting without recording who chose it. An argv records what the caller
+/// SAID; only the run's own report can record what the program RESOLVED. The
+/// two differ exactly when a default is doing the work, which is the case a
+/// reader is least able to reconstruct later and most likely to get wrong --
+/// the `--fix-ca` banner says `(gear matched; default on)` for this reason and
+/// this type is that habit made reusable.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SettingSource {
+    /// A command-line flag named it. The caller asked, in the loudest channel.
+    Flag,
+    /// The environment twin named it and no flag was given. Setting an
+    /// environment variable is still ASKING -- it is a quieter channel, not an
+    /// absent one -- so this counts as asked, and is named so the reader knows
+    /// which channel to look in when the command line does not explain the run.
+    Env,
+    /// Nothing named it. This is the compiled-in product default, and it is the
+    /// one branch on which "as asked" is a lie.
+    Default,
+}
+
+impl SettingSource {
+    /// Did the caller actually ask, in either channel?
+    ///
+    /// Sole purpose: gate the phrase "as asked" so it cannot be printed on
+    /// [`SettingSource::Default`].
+    pub fn asked(self) -> bool {
+        !matches!(self, Self::Default)
+    }
+
+    /// How to say the provenance out loud, given the flag and environment
+    /// variable that carry this setting.
+    ///
+    /// Routed through [`SettingSource::asked`] deliberately, so that the phrase
+    /// "as asked" has exactly one guard in the codebase and cannot be restored
+    /// to the default branch by editing a match arm.
+    pub fn describe(self, flag: &str, env: &str) -> String {
+        if !self.asked() {
+            return "THE DEFAULT -- nothing asked for it".to_string();
+        }
+        match self {
+            Self::Flag => format!("as asked, {flag}"),
+            Self::Env => format!("as asked, {env}"),
+            Self::Default => unreachable!("the default is not asked, and returned above"),
+        }
+    }
+}
+
 /// Fraction of the reference frame admitted as "low detail".
 const PHOTOMETRIC_DETAIL_Q: f64 = 0.40;
 
@@ -2501,16 +2563,28 @@ const PHOTOMETRIC_MIN_PX: usize = 1024;
 /// meaning is the exact opposite of its effect. That mattered less while the
 /// default was off; with the default on, `off` is the only way to ask for the
 /// old pipeline, and it has to mean it.
-pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<PhotometricMode> {
+/// It also reports WHICH CHANNEL supplied the value -- flag, environment, or
+/// the compiled-in default -- because the banner has to be able to say whether
+/// anybody actually asked. Returning the two together, from one read, is what
+/// keeps the reported provenance honest: a second, independent read could
+/// disagree with the value in use, and a provenance line that disagrees with
+/// its own run is worse than none.
+pub fn resolve_photometric_mode(
+    flag: Option<&str>,
+) -> Result<(PhotometricMode, SettingSource)> {
     if let Some(v) = flag {
-        return PhotometricMode::parse(v).with_context(|| format!("reading --photometric {v:?}"));
+        let mode =
+            PhotometricMode::parse(v).with_context(|| format!("reading --photometric {v:?}"))?;
+        return Ok((mode, SettingSource::Flag));
     }
     match std::env::var(PHOTOMETRIC_ENV) {
         Ok(v) if !v.trim().is_empty() => {
-            PhotometricMode::parse(&v).with_context(|| format!("reading {PHOTOMETRIC_ENV}={v:?}"))
+            let mode = PhotometricMode::parse(&v)
+                .with_context(|| format!("reading {PHOTOMETRIC_ENV}={v:?}"))?;
+            Ok((mode, SettingSource::Env))
         }
-        // Unset, empty, or not valid UTF-8: the default.
-        _ => Ok(DEFAULT_PHOTOMETRIC_MODE),
+        // Unset, empty, or not valid UTF-8: the default, and nobody asked.
+        _ => Ok((DEFAULT_PHOTOMETRIC_MODE, SettingSource::Default)),
     }
 }
 
@@ -3216,6 +3290,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // 3.63% spurious gain on a flux-conserving blur sweep whose true answer is
     // zero, against a 2x bar -- 168x over. Erosion takes it to 0.0000%.
     let photometric_mode = opts.photometric;
+    let photometric_source = opts.photometric_source;
     // `auto` has to build the region and fold the flux as if the correction
     // were on, because the drift it decides on cannot be known until pass one
     // has read every frame. If it then declines, the map is dropped and pass
@@ -3241,14 +3316,16 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
         );
         let mut mask = vec![false; geom.pixels()];
         let kept = photometric::erode_mask(&raw, geom.width, PHOTOMETRIC_ERODE_PX, &mut mask);
-        eprintln!("--- photometric normalisation (M99, OPT-IN) ---");
+        eprintln!("--- photometric normalisation (M99, ON BY DEFAULT since V-TONE) ---");
         eprintln!(
-            "mode            : {}",
+            "mode            : {} ({})",
             match photometric_mode {
-                PhotometricMode::On => "on (unconditional, as asked)",
-                PhotometricMode::Auto => "auto (decides after pass one, from this stack's drift)",
+                PhotometricMode::On => "on, unconditional",
+                PhotometricMode::Auto =>
+                    "auto, decides after pass one from this stack's drift",
                 PhotometricMode::Off => unreachable!("off does not build a region"),
-            }
+            },
+            photometric_source.describe("--photometric", PHOTOMETRIC_ENV),
         );
         eprintln!(
             "region          : {picked} px low-detail on frame {middle}, {kept} px after \
@@ -8075,7 +8152,7 @@ mod tests {
         // disagreement because nothing ran the line.
         unsafe { std::env::remove_var(PHOTOMETRIC_ENV) };
         assert_eq!(
-            resolve_photometric_mode(None).unwrap(),
+            resolve_photometric_mode(None).unwrap().0,
             DEFAULT_PHOTOMETRIC_MODE,
             "an unset {PHOTOMETRIC_ENV} did not give the default"
         );
@@ -8095,7 +8172,7 @@ mod tests {
         ] {
             unsafe { std::env::set_var(PHOTOMETRIC_ENV, v) };
             assert_eq!(
-                resolve_photometric_mode(None).unwrap(),
+                resolve_photometric_mode(None).unwrap().0,
                 want,
                 "{PHOTOMETRIC_ENV}={v}"
             );
@@ -8107,15 +8184,79 @@ mod tests {
         );
         unsafe { std::env::set_var(PHOTOMETRIC_ENV, "on") };
         assert_eq!(
-            resolve_photometric_mode(Some("off")).unwrap(),
+            resolve_photometric_mode(Some("off")).unwrap().0,
             PhotometricMode::Off,
             "--photometric did not outrank {PHOTOMETRIC_ENV}"
         );
         unsafe { std::env::remove_var(PHOTOMETRIC_ENV) };
         assert_eq!(
-            resolve_photometric_mode(None).unwrap(),
+            resolve_photometric_mode(None).unwrap().0,
             DEFAULT_PHOTOMETRIC_MODE,
             "the resolver did not return to its unset value"
         );
+
+        // PROVENANCE. The banner printed `on (unconditional, as asked)` on
+        // THIS branch -- no flag, no environment variable, nothing but the
+        // compiled-in default. "As asked" is a claim about the CALLER, and a
+        // run banner is the only durable record of what produced an artifact,
+        // so emitting it unconditionally makes that record false in exactly
+        // the case a later reader cannot reconstruct: when a default did the
+        // work. These assertions live inside this test rather than in one of
+        // their own because they share `PHOTOMETRIC_ENV` with the block above,
+        // and two tests mutating one process-wide variable race.
+        unsafe { std::env::remove_var(PHOTOMETRIC_ENV) };
+        let (mode, source) = resolve_photometric_mode(None).unwrap();
+        assert_eq!(
+            mode, DEFAULT_PHOTOMETRIC_MODE,
+            "the source-reporting resolver disagreed with the mode-only one \
+             about the unset default"
+        );
+        assert_eq!(
+            source,
+            SettingSource::Default,
+            "nothing named a photometric mode, so the source must be the default"
+        );
+        assert!(
+            !source.asked(),
+            "the default branch reported that somebody asked"
+        );
+        let said = source.describe("--photometric", PHOTOMETRIC_ENV);
+        assert!(
+            !said.contains("as asked"),
+            "the photometric banner still claims consent it never got: {said:?}"
+        );
+
+        // The other direction, which is what stops the degenerate "fix" of
+        // deleting the phrase everywhere: when somebody DID ask, in either
+        // channel, the banner must still say so and must name the channel. A
+        // provenance line that reports every run identically has not recorded
+        // provenance, it has stopped recording anything.
+        unsafe { std::env::set_var(PHOTOMETRIC_ENV, "off") };
+        let (_, source) = resolve_photometric_mode(None).unwrap();
+        assert_eq!(
+            source,
+            SettingSource::Env,
+            "{PHOTOMETRIC_ENV} carried the mode but was not credited with it"
+        );
+        let said = source.describe("--photometric", PHOTOMETRIC_ENV);
+        assert!(
+            source.asked() && said.contains("as asked") && said.contains(PHOTOMETRIC_ENV),
+            "an environment-supplied mode must be reported as asked, and must \
+             name the variable a reader has to inspect: {said:?}"
+        );
+
+        let (_, source) = resolve_photometric_mode(Some("on")).unwrap();
+        assert_eq!(
+            source,
+            SettingSource::Flag,
+            "--photometric carried the mode but was not credited with it"
+        );
+        let said = source.describe("--photometric", PHOTOMETRIC_ENV);
+        assert!(
+            source.asked() && said.contains("as asked") && said.contains("--photometric"),
+            "a flag-supplied mode must be reported as asked, and must name the \
+             flag: {said:?}"
+        );
+        unsafe { std::env::remove_var(PHOTOMETRIC_ENV) };
     }
 }

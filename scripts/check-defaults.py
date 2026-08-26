@@ -177,34 +177,45 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_PHOTOMETRIC": Declared(
         kind="quality",
-        default="off",
-        verified="code",
+        default="on (correction applied)",
+        verified="measured",
         backend="estimator",
-        evidence="merge_cmd.rs:1965 (`_ => Ok(PhotometricMode::Off)`); "
-        "main.rs:325-354,648-650 (--photometric). BACKEND CONFIRMED BY RUN: "
-        "the default-path banner (pyramid, bee-3-cpl, --limit 3) prints merge "
-        "backend, lateral CA and alignment and says NOTHING about photometric "
-        "-- the stage is not on this path. The pyramid arm's own report lists "
-        "`photometric gain` under `not applied`.",
+        evidence="merge_cmd.rs, `pub const DEFAULT_PHOTOMETRIC_MODE: "
+        "PhotometricMode = PhotometricMode::On` -- cited by CONST NAME, not by "
+        "line number, for the reason in the note. Pinned from the other side by "
+        "merge_cmd.rs::the_merge_environment_channels_behave, which asserts "
+        "DEFAULT_PHOTOMETRIC_MODE == On and says out loud that moving it must "
+        "move this file too. MEASURED, two arms, one pinned binary, "
+        "109MSDCF, `--merge estimator --srgb`: with NOTHING set the banner "
+        "prints `mode : on`; against `--photometric off` the outputs differ by "
+        "SHA-256 (05BCF2FB84298B0F vs E8B97B559CD7C13B). BACKEND CONFIRMED BY "
+        "RUN: the default-path banner (pyramid) says nothing about photometric "
+        "and the pyramid arm's own report lists `photometric gain` under "
+        "`not applied` -- the stage is INAPPLICABLE there, not off.",
         note=(
             "Per-frame affine photometric normalisation. Three-valued "
             "off|on|auto; the flag wins over the env var and 'neither can mean "
-            "ON by accident'. THE DEFAULT IS OFF, not 'auto' as this entry "
-            "first claimed. "
-            "Off is DEFENDED, not neglected: M122 ran a pre-registered "
-            "14-stack promotion test and returned KEEP-OFF on its no-harm "
-            "criterion K2, whose worst harm subject was flower-bud-alone-cpl "
-            "(hf1-on-hf0 slope 0.9444). M125 then built `auto` and honestly "
-            "declined to promote it -- 104% of its margin is one stack, and "
-            "AUTO_FRAMES_DOMAIN=33..=100 makes it ABSTAIN (U1) on our 205- and "
-            "299-frame stacks, so `auto` cannot help this corpus at all. "
-            "OPEN AND CONTESTED: a verifier measured `on` recovering +1415 DN "
-            "of aura on flower-bud-alone-cpl -- M122's own worst-harm subject. "
-            "Both cannot be right about the same pixels. V-TONE is testing "
-            "H-SEAM: that M122's 'lost fine structure' is election-seam step "
-            "edges, i.e. the artifact, which an energy statistic with no "
-            "spatial argument cannot distinguish from signal. Revisit this "
-            "default when that lands."
+            "ON by accident'. "
+            "THE DEFAULT IS ON. It was declared `auto` here once and `off` "
+            "here later; both were wrong, and this is the THIRD time this one "
+            "entry has misreported its own default. "
+            "WHAT MOVED IT: V-TONE resolved the contest the previous note left "
+            "open. M122 returned KEEP-OFF on a 14-stack promotion test while a "
+            "verifier measured `on` recovering +1415 DN of aura on M122's own "
+            "worst-harm subject, flower-bud-alone-cpl. Both could not be right "
+            "about the same pixels, and V-TONE found M122's 'lost fine "
+            "structure' was election-seam step edges -- the artifact -- which "
+            "a whole-frame energy statistic with no spatial argument cannot "
+            "tell from signal. The default then moved to On. "
+            "HOW THE DECLARATION ROTTED, which is the transferable part: this "
+            "entry was marked verified='code' and cited `merge_cmd.rs:1965 "
+            "(_ => Ok(PhotometricMode::Off))`. That expression NO LONGER "
+            "EXISTS anywhere in the file, and line 1965 is now unrelated doc "
+            "prose. A citation to a bare line number rots silently when the "
+            "file moves, and 'code' then certifies a reading nobody can "
+            "reproduce -- which is indistinguishable from an unexamined guess "
+            "while looking stronger than one. Cite a const or a function name, "
+            "which grep can still find after the line number is wrong."
         ),
     ),
     "STREHL_EDGE_AWARE": Declared(

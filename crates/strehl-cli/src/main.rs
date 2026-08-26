@@ -942,6 +942,18 @@ fn main() -> Result<()> {
                 pyramid.base = merge_cmd::parse_base_band(v)?;
             }
 
+            // Resolved here, alongside `resampler`, so that an unrecognised
+            // spelling is one error in one place. `--photometric` wins over
+            // `STREHL_PHOTOMETRIC`; neither can mean a mode by accident, and
+            // since V-TONE the mode nobody names is ON.
+            //
+            // The SOURCE comes out of the same call as the mode, deliberately.
+            // A second, independent read could disagree with the value actually
+            // in use, and a provenance line that disagrees with the run is
+            // worse than no provenance line at all.
+            let (photometric_mode, photometric_source) =
+                merge_cmd::resolve_photometric_mode(photometric.as_deref())?;
+
             merge_cmd::run(&MergeOptions {
             dir,
             out,
@@ -975,11 +987,10 @@ fn main() -> Result<()> {
             index_map,
             n_eff_map,
             confidence_map,
-            // Resolved here, alongside `resampler`, so that an unrecognised
-            // spelling is one error in one place. `--photometric` wins over
-            // `STREHL_PHOTOMETRIC`; neither can mean a mode by accident, and
-            // since V-TONE the mode nobody names is ON.
-            photometric: merge_cmd::resolve_photometric_mode(photometric.as_deref())?,
+            // Resolved above, with its provenance, so the banner can name the
+            // channel that chose this mode.
+            photometric: photometric_mode,
+            photometric_source,
             target_n_eff,
             stats,
             stats_placebo,
@@ -1084,7 +1095,27 @@ fn probe(dir: &Path, limit: Option<usize>) -> Result<()> {
 mod tests {
     use clap::CommandFactory;
 
-    use super::merge_cmd::{DEFAULT_MERGE_BACKEND, MergeBackend};
+    use super::merge_cmd::{DEFAULT_MERGE_BACKEND, DEFAULT_PHOTOMETRIC_MODE, MergeBackend};
+    use strehl_core::photometric::PhotometricMode;
+
+    /// Every photometric mode with the spelling `--help` uses for it, so the
+    /// assertions below can check the modes that are *not* the default as well
+    /// as the one that is.
+    ///
+    /// Adding a variant breaks [`exhaustive_photometric`] below rather than
+    /// silently leaving the new mode unexamined here.
+    const ALL_PHOTOMETRIC: [(PhotometricMode, &str); 3] = [
+        (PhotometricMode::Off, "off"),
+        (PhotometricMode::On, "on"),
+        (PhotometricMode::Auto, "auto"),
+    ];
+
+    #[allow(dead_code)]
+    fn exhaustive_photometric(mode: PhotometricMode) {
+        match mode {
+            PhotometricMode::Off | PhotometricMode::On | PhotometricMode::Auto => {}
+        }
+    }
 
     /// Every backend, so the assertions below can check the ones that are *not*
     /// the default as well as the one that is. A test that only ever looks at
@@ -1223,8 +1254,47 @@ mod tests {
         );
     }
 
-    /// `--out` and `--n-eff-map` both constrain how many `--gate` values may be
-    /// given, and both used to state that constraint backwards.
+    /// `--photometric`'s help names a default, and it has to be the mode
+    /// [`DEFAULT_PHOTOMETRIC_MODE`] actually resolves to.
+    ///
+    /// This gate exists because the two disagreed in the field. The default
+    /// moved from `Off` to `On` at V-TONE and a reader reported the help as
+    /// still saying "`off` (the default)" -- which, had it been true, would
+    /// have meant every caller who trusted `--help` was wrong about what the
+    /// tool does to their pixels. The prose is a CLAIM about the constant, and
+    /// nothing was checking it. Now flipping the constant fails this test until
+    /// the prose follows, and the failure names the file to edit.
+    ///
+    /// Counting the claims, rather than asserting a single `contains`, is what
+    /// keeps a DELETED default marker from reading as a passed check: zero
+    /// claims is a failure here, not a silent success.
+    #[test]
+    fn the_photometric_flag_help_names_the_same_default() {
+        let help = stack_help();
+        let mut claims = 0usize;
+        for (mode, name) in ALL_PHOTOMETRIC {
+            let claim = format!("`{name}` (the default)");
+            if help.contains(&claim) {
+                claims += 1;
+                assert_eq!(
+                    mode, DEFAULT_PHOTOMETRIC_MODE,
+                    "`stack --help` says \"{claim}\" while DEFAULT_PHOTOMETRIC_MODE \
+                     resolves to `{:?}`. The marker is a claim about merge_cmd.rs's \
+                     constant; fix the `--photometric` doc comment in main.rs so the \
+                     two agree.",
+                    DEFAULT_PHOTOMETRIC_MODE,
+                );
+            }
+        }
+        assert_eq!(
+            claims, 1,
+            "expected exactly one photometric mode to be marked \"(the default)\" \
+             in `stack --help`, found {claims}. Zero means the help no longer tells \
+             a reader which mode they get when they pass nothing.",
+        );
+    }
+
+
     ///
     /// "Requires exactly one --gate" reads as "you must pass --gate". The
     /// enforcement says otherwise: `main.rs` fills an empty `gates` with
