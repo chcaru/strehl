@@ -4642,3 +4642,99 @@ does **not** establish that the merge beats the best single frame (V-M116 owns t
 not measure sharpness against any reference, and four subjects are not 26. The CA claim in
 44.4 is mine by eye and V-CA's by measurement; the re-render is the thing that will show
 whether the two agree on the delivered file.
+
+## 45. The shipped default draws the polygons. The flip is the product.
+
+Section 44 said the output is print-grade and the record was under-claiming it. That was
+true, and it was also **the wrong image**. Every crop in section 44 came from a render made
+with `--merge pyramid`. The merge that actually ships when a user types the command in our
+own README is the **estimator**, and it does not look like that at all.
+
+### 45.1 The single-variable comparison
+
+One pinned binary, built from a `git archive` snapshot of `3e5a03ea` so that nothing in a
+nine-agent tree can rebuild it mid-experiment. One subject, `bee-3-cpl`, 299 frames. Both
+arms `--srgb --auto-exposure`, same binary, same subject, same machine.
+
+| arm | command | file |
+|---|---|---|
+| **E** | `stack <DIR> --gate 2 --srgb --auto-exposure -o out.tif` | `ab/bee3-estimator.tiff` |
+| **P** | `--merge pyramid --pyramid-gate 4.5` | `ab/bee3-caON.tiff` |
+
+**Arm E is, verbatim, the command in this repository's own README quickstart.**
+
+I then ran `printqa.py` over each render **independently**. It picks its crop sites by a
+stated rule on the image itself — highest-gradient block, p60 block, lowest non-border block
+— lifts each at **1:1 with no resampling**, and burns each crop's measured statistics into
+the image. It does not select on output sharpness, which would guarantee a flattering
+result.
+
+**Run independently on the two files, it chose the same DETAIL site in both: `(1040, 2600)`.**
+That coincidence is worth more than an arranged comparison, because neither instrument run
+knew about the other.
+
+### 45.2 What is actually in the two files
+
+**Estimator** (`ab/qa-estimator.jpg`):
+
+| site | grad | what is there |
+|---|---|---|
+| DETAIL `(1040,2600)` | 0.03292 | a hard-edged **grey polygon** in the white background at bottom-right, with an abrupt straight boundary |
+| TRANSITION `(3640,520)` | 0.01989 | **multiple** angular grey polygons overlaying the hairs, abrupt tonal steps across their edges |
+| FLAT `(520,1560)` | 0.00079 | mostly clean, a faint patch bottom-right |
+
+**Pyramid** (`ab/qa-pyramid.jpg`):
+
+| site | grad | what is there |
+|---|---|---|
+| DETAIL `(1040,2600)` | 0.03072 | **no polygon**; clean white background, crisper hairs |
+| TRANSITION `(4680,1560)` | 0.02052 | an antenna segment with resolved micro-texture and discrete speculars, clean hairs behind, **no polygons** |
+| FLAT `(5720,3640)` | 0.00044 | clean |
+
+A third site, cropped directly from both at `(1560,1040)` (`ab/backend-ab-silhouette.jpg`),
+shows the same thing: the estimator gives angular grey plateaus and smeared hairs, the
+pyramid gives continuous tone with hairs as discrete strands.
+
+**This is the defect the user called "horrendous" and "entirely unusable", and it is in the
+default path today.** The README describes the patchwork as "still open"; it is open *on the
+backend that ships* and closed on the backend that does not.
+
+### 45.3 What I got wrong, and what it cost
+
+Section 44 opened by saying the record was under-claiming the product. The accurate statement
+is narrower and less comfortable: **the record was under-claiming the pyramid and correctly
+describing the estimator, and I had stopped distinguishing between them.** Every gallery I
+have delivered, every 1:1 crop I have praised, and the entire "print-worthy" judgement of
+section 44 were made on a merge reachable only by an explicit flag.
+
+The user has been looking at the other one.
+
+> **The thing you must render is the thing the user's command renders.** An A/B that never
+> includes the default path measures a product nobody has. I ran gallery after gallery with
+> an explicit `--merge pyramid` and never once typed our own quickstart line.
+
+### 45.4 The consequence for sequencing
+
+The backend flip has been sitting behind an F2 flag-migration question for a day. That
+ordering is now clearly wrong. The flip is not a tidying task that follows the quality work;
+**it is the quality work.** Everything else in flight tonight — the CA correction, the gate
+sweep, the resampling audit — is worth single-digit percentages against a defect that is
+visible from across a room.
+
+Escalated to BUILD-WIRE with the pixels, the pinned SHA, and an instruction not to
+gold-plate the migration.
+
+### 45.5 Scope limit, written at the moment of the claim
+
+- **One subject.** `bee-3-cpl` only. The polygons are unmistakable there and the corpus
+  contains prior measurements consistent with them (`M120`, and the 3.996 pure-selector
+  arm of section 39 against the pyramid's 1.305), but I have not swept this.
+- **The pyramid arm was rendered at `--pyramid-gate 4.5`, not at the shipped default of
+  2.0.** Section 42 withdrew the recommendation to move that default and BUILD-BLEND is
+  sweeping it now. I expect the polygons to be absent at gate 2.0 as well, because the
+  mechanism is the estimator's per-pixel winner field rather than the pyramid's band gate —
+  **but I have not measured that and it must not be asserted on my expectation.** BUILD-WIRE
+  was told the same.
+- The comparison is of *appearance*, adjudicated by eye against crops selected by a stated
+  rule. It is not a metric, and it does not need to be: a defect this size does not require
+  a statistic to establish, and the corpus already has the statistic.
