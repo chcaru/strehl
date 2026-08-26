@@ -4224,3 +4224,57 @@ One subject (`bee-1-cpl`), 8 of 299 frames, 6 tiles per probe, a single spatial 
 effect is an 87% change against detail nulls of 0.05%, which is not a marginal signal, but
 it is one subject and the default belongs to all of them. This needs the gallery before it
 ships, and it needs someone who did not measure it to measure it again.
+
+---
+
+## 41 — The finished configuration, seen at 100%
+
+Sections 37-40 each moved one number. This is what they look like together, on the subject
+the corpus has leaned on hardest.
+
+`strehl stack <dir> --merge pyramid --pyramid-gate 4.5 --fix-ca a7c2-fe100gm-2xtc-x4cpl
+--srgb --auto-exposure -o <tiff>`, 299 frames, 105 s.
+
+### 41.1 What a uniform 100% grid shows
+
+A uniform 3x3 grid at 1:1 — uniform on purpose, because feature-selected crops are how a
+merge gets judged flatteringly (discipline: never judge a merge from crops it chose).
+
+Resolved, at pixel level: individual hairs with specular highlights along their length;
+wing **microtrichia as discrete dots** with clean vein edges; compound-eye surface structure
+with the hairs between ommatidia separated. The four background tiles are smooth — no
+patchwork, which is section 40 visible rather than tabulated.
+
+### 41.2 The one defect the grid still showed, and its fix
+
+At gate 4.5 without CA correction, tile (1,0) — the foreleg, a dark limb against white at
+large field radius — carried obvious **purple/magenta speckling** along its edge. That is
+the lateral CA of section 36, and `--fix-ca` is still off by default.
+
+Re-rendered with the profile, the identical tile shows those speckles as **neutral silver
+highlights**. Hairs and wing dots are unchanged, so the correction is not buying this with
+blur at the scales that matter.
+
+This is the visual counterpart of the census in 36: red is a real radial shift
+(radial/tangential **9.94**, growing 0.041 -> 0.177 px with field radius), and a dark limb
+at large radius is exactly where that predicts the worst fringing. **The prediction and the
+picture agree**, which is worth more than either alone.
+
+### 41.3 What is deliberately NOT in the gallery render
+
+The gallery rebuild uses the gate change only. The CA profile is named for specific gear
+(`a7c2-fe100gm-2xtc-x4cpl`, including the 2x teleconverter), I have measured it on one
+subject, and not every subject in `D:\personal\macro` was necessarily shot on that
+configuration. Applying a gear-specific geometric correction to captures that may not share
+the gear would be exactly the transfer error fact 52 already refuted once in this project.
+It stays a measured demonstration on `bee-1-cpl` until the audit says otherwise.
+
+### 41.4 Status of the two named defects
+
+| defect | state |
+|---|---|
+| occlusion halo | **fixed** — `Hull::InputRange`, censused across 26 subjects (§33), hardest case clean by eye (§38.6) |
+| polygonal patchwork | **1.305 -> 0.165**, below the convexity bound, at −0.05% detail (§40) |
+
+Neither is closed by assertion. Both have a number, an instrument, and an arm that proves
+the instrument can still say no.
