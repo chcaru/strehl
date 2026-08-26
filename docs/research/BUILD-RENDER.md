@@ -2024,3 +2024,89 @@ award-quality. On this subject the render carries it, not the grade.
 Artifacts: `C:\dev\strehl-out\BUILD-RENDER-present\contactsheet-ranked.png`
 (26 tiles, graded, strongest-first), `ranking.tsv`,
 `BUILD-RENDER-rank\look\` (100% crops).
+
+---
+
+## SHIP-V2: the full 26-subject render, and what it proved
+
+Rendered 26/26 ok, 0 failed, 4,825 frames in **62.8 min** (0.78 s/frame), peak
+189 MB per subject. One binary, built by `git archive` from `b9b6921` so no
+other lane's uncommitted work could enter it: sha256
+`CF33AE080F438C6473034EC5078D0AB4C0AA9B53421747A3F765008DDDF0D6E6`. Flags
+identical on every subject: `--merge pyramid --pyramid-gate 4.5 --srgb
+--auto-exposure`. Output `C:\dev\strehl-out\SHIP-V2`.
+
+### The headline result: byte-identical to SHIP-V1 on all 26 [MEASURED]
+
+sha256 of every master against its SHIP-V1 counterpart: **identical 26,
+differs 0, missing 0.**
+
+This is not trivial, and I checked that before reporting it. **51 commits
+touched `crates/` in the preceding 24 hours**, across `main.rs`,
+`merge_cmd.rs`, `pyramid.rs`, `merge.rs`, `stack.rs`, `optics.rs`,
+`restore.rs`, `edgeaware.rs`, `halo.rs` and `image_out.rs` -- the whole shipped
+render path. The output did not move by one byte.
+
+Three consequences, in descending order of how much they should change
+somebody's plan:
+
+1. **The owner's verdict was formed on exactly these pixels, and no re-render
+   can address it.** Only the pending work -- restoration wiring, hull-clamp
+   policy -- can change what he is looking at. Re-rendering is not a lever.
+2. **SHIP-V1's provenance gap is now closed from the other end.** Its
+   single-binary claim rested on file mtimes (a contiguous 27.6-min pass, max
+   gap 2.5 min), which is consistent with one build but is not evidence of one.
+   All 26 of its masters are now shown to be bit-reproducible by one named
+   binary. Whatever built it was functionally identical on this path.
+3. The project's own `crates/strehl-cli/tests/byte-freeze.rs` exists to enforce
+   exactly this stability on one frozen stack. This is an independent instance
+   of the same check across 26 real subjects.
+
+### A bug that would have destroyed the gallery, found by smoke-testing first
+
+`finalpass` names masters `<subject>--<arm>.tiff` (so `accept.py` can group
+arms); presentation JPEGs are `<subject>.jpg`. The ranking key therefore
+carried the arm suffix and matched no image. The one-subject smoke reported
+`placed 0  missing 1`; at full scale that is **a 26-tile sheet of MISSING
+tiles**, delivered to the owner. SHIP-V1's masters have no arm suffix, which is
+why it had never surfaced.
+
+Fixed with `--strip-arm`, off by default so existing rankings keep their
+identities, with collisions fatal rather than last-write-wins. Commissioned:
+plant (`coffee-bean--ARMA` + `--ARMB`) fires and names both files, exit 1;
+null (two distinct subjects) does not fire and falls through to
+`ranked 0 / failed 2 / total 2`.
+
+**The transferable part is not the bug, it is that a 30-second smoke on the
+smallest subject caught a defect that a 63-minute run would have delivered.**
+
+### What I saw at 100%, as pictures [MEASURED by eye, on masters]
+
+- **`bee-3-cpl`** -- wing membrane and venation. Every microtrichion is a
+  distinct stroke; veins crisp. Critically, **no rim on the dark-vein against
+  bright-membrane boundaries**, which is precisely the geometry that produces
+  one. Print-worthy without qualification.
+- **`tweezers-cpl`** -- ground-metal striations individually resolved, tip
+  clean against dark ground, no rim. Print-worthy.
+- **`highly-angled-ruler-mm-cpl`** -- **confirms ORCH's caution independently.**
+  Sharp at 1:1, individual machining striations resolved, crisp graduation
+  edge. It reads poorly on every thumbnail only because it is grey-on-grey.
+  A contact sheet cannot carry a print verdict.
+- **`flower-inner-edge-cpl`** -- soft at its own best tile. But **no hard
+  bright rim on the silhouette**: the veil defect does look genuinely fixed.
+- **`flowers-cpl`** -- at its *own maximum-detail* tile it is a granular wash
+  with wholly unresolved pollen. Visibly mush even at thumbnail size.
+
+### The presentation problem I would not fix unilaterally
+
+The sheet opens with **`flat-on-ruler-cpl`, a calibration target**, and then
+`tweezers-cpl`. Both are correct rankings -- they genuinely carry the most
+resolved detail -- and both are *test targets*, so a photographer's first
+impression is of a machine-shop chart. The award-quality bees sit at #4-6,
+below the first row. The statistic ranks resolved detail, which is what it
+claims and not photographic interest; reconciling those two is a product
+decision, so it is flagged rather than taken.
+
+Near-duplicate captures also occupy adjacent prime slots (#9/#12 wrapped-text,
+#18/#19 pencil, #20/#21 MSDCF, #13/#17 leaf, #14/#24 flower-bud), spending the
+top of the sheet twice on the same subject.
