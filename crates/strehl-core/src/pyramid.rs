@@ -630,6 +630,79 @@ pub enum BaseBand {
     WeightedFromCoarsest,
 }
 
+/// Number of coarsest **Laplacian** bands merged as a plain mean across frames
+/// rather than by selection. The base residual is not counted here; it has its
+/// own control in [`BaseBand`].
+///
+/// # Why this exists, and why it is not the base band
+///
+/// ORCH measured a broad shallow depression in the background around the
+/// subject -- deeper than the control from `d ~ 175 px` out to `d ~ 550 px`,
+/// about 1.2% of level, never converging inside the frame -- and identified it
+/// as the Burt-Adelson coarse-level halo: blending at a level whose support is
+/// hundreds of pixels wide smears subject luminance into the surrounding
+/// background over exactly that support.
+///
+/// **The mechanism is right and the prescribed address was not.** The fix
+/// proposed was to take the base band from the mean instead of the blend.
+/// [`BaseBand::Mean`] is already the default, and it already routes every base
+/// coefficient through the unweighted fallback, so the base band is a plain
+/// mean across frames today. The `BaseBand` table records the measurement that
+/// settles it: *both* base arms removed the broad aura equally well, so the
+/// base band is not what carries it.
+///
+/// The level that does carry it is the coarsest few **Laplacian** bands. On a
+/// 7040 px frame with 7 bands, level 6 sits on a 110 px grid, so one coefficient
+/// spans 64 output pixels and the 5x5 binomial kernel that forms it reaches
+/// about 320 output pixels. That is the measured scale of the bowl. Those bands
+/// are still *selected* -- [`MergeConfig::exponent_at`] gives the coarsest band
+/// `exponent` itself, 2.0 by default, which is gentler than the fine bands but
+/// is not an average.
+///
+/// So this applies the principle at the level that shows the defect: at low
+/// spatial frequencies there is nothing for selection to add, because defocus is
+/// a low-pass and leaves the low frequencies of every frame near MTF 1.0. There
+/// is only position-dependent bias to introduce, which is what a bowl is.
+///
+/// Implemented with the same mechanism [`BaseBand::Mean`] uses -- zero the
+/// weight field for those bands, which routes every coefficient through the
+/// unweighted fallback in [`BandMerge::finish_level`]. It is therefore exactly a
+/// mean, not a very soft selection.
+///
+/// `0` restores the previous behaviour bit-for-bit.
+pub const DEFAULT_MEAN_COARSE: usize = 0;
+
+/// Environment override for [`DEFAULT_MEAN_COARSE`].
+///
+/// Exists so the ladder that chooses this value can be run without one build
+/// per rung. Read once per process.
+///
+/// **A malformed value panics rather than falling back.** A sweep that silently
+/// rendered every rung at the default would look like a flat curve and would
+/// refute the very effect it was built to measure -- the same reasoning as
+/// [`crate::focus::WINDOW_RADIUS_ENV`].
+pub const MEAN_COARSE_ENV: &str = "STREHL_PYRAMID_MEAN_COARSE";
+
+/// The number of coarsest Laplacian bands averaged, honouring
+/// [`MEAN_COARSE_ENV`].
+#[must_use]
+pub fn mean_coarse_default() -> usize {
+    static CACHED: std::sync::OnceLock<usize> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(MEAN_COARSE_ENV) {
+        Err(_) => DEFAULT_MEAN_COARSE,
+        Ok(raw) => {
+            let n: usize = raw.trim().parse().unwrap_or_else(|_| {
+                panic!("{MEAN_COARSE_ENV}={raw:?} is not a non-negative integer")
+            });
+            assert!(
+                n <= 16,
+                "{MEAN_COARSE_ENV}={n} is outside the supported range 0..=16"
+            );
+            n
+        }
+    })
+}
+
 /// Whether the reconstruction is confined to the range of values the input
 /// frames actually support at each pixel.
 ///
@@ -752,6 +825,9 @@ pub struct MergeConfig {
     pub sharpen_per_octave: f32,
     pub select: SelectMode,
     pub base: BaseBand,
+    /// See [`DEFAULT_MEAN_COARSE`]. Number of coarsest Laplacian bands merged
+    /// as a plain mean instead of by selection. The base residual is separate.
+    pub mean_coarse: usize,
     /// See [`Hull`]. Confines the reconstruction to what the inputs support.
     pub hull: Hull,
 }
@@ -817,6 +893,9 @@ impl Default for MergeConfig {
             // structure on flower-bud-alone-cpl, against +11 DN and 45 DN for
             // the mean, with no difference in aura removal between them.
             base: BaseBand::Mean,
+            // See `DEFAULT_MEAN_COARSE`. 0 until the ladder that chooses it has
+            // been run, so this field cannot move a byte until it is measured.
+            mean_coarse: mean_coarse_default(),
             // A merge has no basis for emitting a value none of its inputs
             // support. Per-band convexity does not imply reconstruction
             // convexity -- see `Hull`.
@@ -955,18 +1034,36 @@ impl BandMerge {
             // at the same scale. An unsmoothed |L| is a single noisy sample and
             // makes the weight field as noisy as the data.
             smooth5(sq, sz, &mut ws.smooth_scratch);
-            let beta = self.gain.beta(k);
-            let gate = self.cfg.gate;
-            // Sharper toward the fine bands: see `MergeConfig::sharpen_per_octave`.
-            let p = self.cfg.exponent_at(k, nb);
+            // The coarsest `mean_coarse` bands are averaged, not selected: see
+            // `DEFAULT_MEAN_COARSE`. Zeroing the weight routes every coefficient
+            // through the unweighted fallback in `finish_level`, which is the
+            // same mechanism `BaseBand::Mean` uses -- so this is exactly a mean,
+            // not a very soft selection.
+            //
+            // Interaction with `BaseBand::WeightedFromCoarsest`, stated because
+            // it is silent otherwise: that arm reduces `ws.weight` from band
+            // `nb - 1` onto the base grid, so if that band is averaged the base
+            // weight it derives is zero and the base becomes a mean too. That is
+            // the consistent reading -- a base weighted by a band that carries
+            // no selection is not weighted -- and it affects only the non-default
+            // arm.
+            let averaged = k + self.cfg.mean_coarse >= nb;
             let w = &mut ws.weight[..px];
-            let vv = ws.var.level(k);
-            for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
-                // The floor at this band's scale: the level-0 variance carried
-                // down to this grid, times the measured band gain.
-                let floor = gate * beta * v.max(0.0);
-                let excess = (*e - floor).max(0.0);
-                *w = select_weight(excess, floor, p);
+            if averaged {
+                w.fill(0.0);
+            } else {
+                let beta = self.gain.beta(k);
+                let gate = self.cfg.gate;
+                // Sharper toward the fine bands: see `MergeConfig::sharpen_per_octave`.
+                let p = self.cfg.exponent_at(k, nb);
+                let vv = ws.var.level(k);
+                for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
+                    // The floor at this band's scale: the level-0 variance
+                    // carried down to this grid, times the measured band gain.
+                    let floor = gate * beta * v.max(0.0);
+                    let excess = (*e - floor).max(0.0);
+                    *w = select_weight(excess, floor, p);
+                }
             }
             self.accumulate_level(k, planes, &mut ws.plane, w);
         }
@@ -2233,5 +2330,108 @@ mod tests {
             "the two base bands produced the same image (max |diff| = {diff}), \
              so the measurement that chose between them compared nothing"
         );
+    }
+
+    /// `mean_coarse` must ship at 0 until a ladder has chosen it, because any
+    /// other value changes every rendered byte.
+    #[test]
+    fn the_mean_coarse_default_cannot_move_a_byte_unmeasured() {
+        assert_eq!(MergeConfig::default().mean_coarse, DEFAULT_MEAN_COARSE);
+        assert_eq!(DEFAULT_MEAN_COARSE, 0);
+    }
+
+    /// A knob that does not change the picture is not a knob. Without this, a
+    /// sweep over `mean_coarse` that came back flat would be indistinguishable
+    /// from the setting never having been plumbed through at all -- which is
+    /// the exact failure this project has shipped three times.
+    #[test]
+    fn averaging_the_coarse_bands_is_not_the_same_merge() {
+        let (w, h, bands) = (64usize, 64usize, 3usize);
+        let (a, b) = two_frames_differing_in_level_and_detail(w, h);
+        let run = |mean_coarse: usize| {
+            run_merge(w, h, bands, &a, &b, MergeConfig {
+                bands,
+                mean_coarse,
+                ..Default::default()
+            })
+        };
+        let selected = run(0);
+        let averaged = run(2);
+        let diff: f32 = selected
+            .iter()
+            .zip(&averaged)
+            .map(|(s, a)| (s - a).abs())
+            .fold(0.0, f32::max);
+        assert!(
+            diff > 1.0,
+            "averaging the two coarsest bands produced the same image as \
+             selecting them (max |diff| = {diff}), so the knob is not wired"
+        );
+    }
+
+    /// The claim in `DEFAULT_MEAN_COARSE` is that zeroing the weight yields
+    /// *exactly* a mean rather than a very soft selection. That is a checkable
+    /// property, so check it: average every Laplacian band, leave the base at
+    /// its default `Mean`, and the reconstruction must be the arithmetic mean
+    /// of the input frames to within round-trip error.
+    ///
+    /// If this ever fails, the fallback is not the fallback it is documented to
+    /// be and every conclusion drawn from a `mean_coarse` sweep is void.
+    #[test]
+    fn averaging_every_band_reconstructs_the_plain_frame_mean() {
+        let (w, h, bands) = (64usize, 64usize, 3usize);
+        let (a, b) = two_frames_differing_in_level_and_detail(w, h);
+        let got = run_merge(w, h, bands, &a, &b, MergeConfig {
+            bands,
+            // Every Laplacian band averaged; the base is `Mean` by default.
+            mean_coarse: bands,
+            ..Default::default()
+        });
+        let worst = got
+            .iter()
+            .enumerate()
+            .map(|(i, g)| (g - 0.5 * (a[i] + b[i])).abs())
+            .fold(0.0, f32::max);
+        assert!(
+            worst < 1e-2,
+            "averaging every band did not reconstruct the frame mean \
+             (max |diff| = {worst}), so the unweighted fallback is not a mean"
+        );
+    }
+
+    /// Two frames that differ in overall LEVEL and carry detail on opposite
+    /// halves, so both a level-sensitive and a selection-sensitive difference
+    /// exist for a merge to get wrong.
+    fn two_frames_differing_in_level_and_detail(w: usize, h: usize) -> (Vec<f32>, Vec<f32>) {
+        let mut a = vec![500.0f32; w * h];
+        let mut b = vec![900.0f32; w * h];
+        for y in 0..h {
+            for x in 0..w / 2 {
+                a[y * w + x] += if (x + y) % 2 == 0 { 300.0 } else { -300.0 };
+            }
+            for x in w / 2..w {
+                b[y * w + x] += if (x + y) % 2 == 0 { 300.0 } else { -300.0 };
+            }
+        }
+        (a, b)
+    }
+
+    fn run_merge(
+        w: usize,
+        h: usize,
+        bands: usize,
+        a: &[f32],
+        b: &[f32],
+        cfg: MergeConfig,
+    ) -> Vec<f32> {
+        let sizes = level_sizes(w, h, bands);
+        let var = vec![1.0f32; w * h];
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        for f in [a, b] {
+            fws.next_frame();
+            merge.add_frame(&[f], f, &var, &mut fws);
+        }
+        merge.finish(&mut Workspace::new(&sizes))[0].clone()
     }
 }
