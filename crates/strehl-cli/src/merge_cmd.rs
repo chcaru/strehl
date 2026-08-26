@@ -471,12 +471,36 @@ pub fn merge_banner(backend: MergeBackend) -> &'static str {
 /// Env-var twin of `--merge`, for A/B harnesses that cannot edit argv.
 pub const MERGE_BACKEND_ENV: &str = "STREHL_MERGE";
 
-/// Resolve the merge backend from the flag and the environment.
+/// Where the merge backend came from, for the run log and for tests.
 ///
-/// Precedence: `--merge` wins, then [`MERGE_BACKEND_ENV`], then the default.
-/// **Neither channel may mean a backend by accident** -- an unrecognised
-/// spelling is an error and not a silent fall back, because the whole point of
-/// this switch is that which merge ran must be knowable.
+/// The distinction that matters is `Flag`/`Env` (the user STATED a backend)
+/// against `Inferred`/`Default` (they did not). Contradicting flags are refused
+/// only in the first case, because only there is there a contradiction: if the
+/// user never named a backend, a lone `--gate` is not a disagreement with
+/// anything, it is the only thing they said about which merge they want.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum MergeSource {
+    /// `--merge` on the command line.
+    Flag,
+    /// [`MERGE_BACKEND_ENV`].
+    Env,
+    /// Deduced from the flag family the caller used.
+    Inferred,
+    /// Nobody said anything: [`DEFAULT_MERGE_BACKEND`].
+    Default,
+}
+
+/// The backend the user STATED and where they stated it, or `None` for neither.
+///
+/// Split out of the choice so that inference can ask "did they say?" without
+/// having to ask "what is the default?" in the same breath -- those are
+/// different questions, and conflating them is what made a lone
+/// `--pyramid-gate` fail against a backend the caller never chose.
+///
+/// Precedence: `--merge` wins, then [`MERGE_BACKEND_ENV`]. **Neither channel
+/// may mean a backend by accident** -- an unrecognised spelling is an error and
+/// not a silent fall back, because the whole point of this switch is that which
+/// merge ran must be knowable.
 ///
 /// The environment is parsed on EVERY call, including the calls the flag wins.
 /// The obvious implementation returns on the flag before it ever looks at the
@@ -489,16 +513,16 @@ pub const MERGE_BACKEND_ENV: &str = "STREHL_MERGE";
 ///
 /// Empty, whitespace-only and non-UTF-8 values are NOT errors: they mean the
 /// variable carries no opinion, which is what an exported-but-cleared variable
-/// means in every shell. That asymmetry is the resolver's, not the parser's --
+/// means in every shell. That asymmetry is this function's, not the parser's --
 /// `MergeBackend::parse` refuses those spellings, and a test pins which of the
 /// two owns the decision.
 ///
 /// NOTE: [`resolve_photometric_mode`] still has the F5 hole this function no
-/// longer has. It is deliberately not fixed in the same change: `STREHL_PHOTOMETRIC`
-/// is in live use by another agent's measurements tonight, and widening its
-/// error surface mid-run would invalidate them. The divergence is recorded here
-/// so it is not mistaken for an oversight.
-pub fn resolve_merge_backend(flag: Option<&str>) -> Result<MergeBackend> {
+/// longer has. It is deliberately not fixed in the same change:
+/// `STREHL_PHOTOMETRIC` is in live use by another agent's measurements tonight,
+/// and widening its error surface mid-run would invalidate them. The divergence
+/// is recorded here so it is not mistaken for an oversight.
+pub fn stated_merge_backend(flag: Option<&str>) -> Result<Option<(MergeBackend, MergeSource)>> {
     let from_env = match std::env::var(MERGE_BACKEND_ENV) {
         Ok(v) if !v.trim().is_empty() => Some(
             MergeBackend::parse(&v)
@@ -507,9 +531,97 @@ pub fn resolve_merge_backend(flag: Option<&str>) -> Result<MergeBackend> {
         _ => None,
     };
     if let Some(v) = flag {
-        return MergeBackend::parse(v).with_context(|| format!("reading --merge {v:?}"));
+        let backend = MergeBackend::parse(v).with_context(|| format!("reading --merge {v:?}"))?;
+        return Ok(Some((backend, MergeSource::Flag)));
     }
-    Ok(from_env.unwrap_or_else(MergeBackend::default))
+    Ok(from_env.map(|b| (b, MergeSource::Env)))
+}
+
+/// A resolved backend, with the sentence the run log prints to say why.
+#[derive(Debug)]
+pub struct MergeChoice {
+    pub backend: MergeBackend,
+    pub source: MergeSource,
+    /// Ready to print, e.g. `estimator (inferred from --gate; pass --merge
+    /// pyramid to override)`.
+    pub why: String,
+}
+
+/// Choose the merge backend, inferring it from the flag families when -- and
+/// only when -- the caller did not state one.
+///
+/// This is the single entry point `strehl stack` uses. There is deliberately no
+/// no-inference twin: a second public resolver that nothing calls would be an
+/// unreachable function in the one file whose entire subject is reachability.
+/// Callers wanting the stated-only answer ask [`stated_merge_backend`], which
+/// this is built from and which returns `None` rather than inventing a default.
+///
+/// The rules, in order:
+///
+/// * stated (`--merge`, then [`MERGE_BACKEND_ENV`]) wins outright, and the
+///   caller's contradicting flags are refused exactly as before;
+/// * otherwise one family given, that family's backend;
+/// * otherwise both families given, a hard error -- genuinely ambiguous, and
+///   guessing here would be the silent choice this whole switch exists to
+///   prevent;
+/// * otherwise [`DEFAULT_MERGE_BACKEND`].
+///
+/// **This does not weaken the refusal.** The refusal exists so that a flag
+/// which parses, prints nothing and does nothing cannot be mistaken for one
+/// that works. Under inference the flag does precisely what it always did, on
+/// the backend that implements it, and whenever the user names a backend a
+/// contradicting flag is still refused with the same message. What changes is
+/// the false-positive rate: a lone `--pyramid-gate` used to fail against a
+/// default the caller never asked for.
+///
+/// `STREHL_MERGE` counts as STATED, deliberately. Were it not to count, then
+/// `STREHL_MERGE=pyramid` alongside `--gate` would infer the estimator and
+/// ignore the variable entirely -- an environment setting that parses, prints
+/// nothing and does nothing, which is the exact failure this module refuses to
+/// ship. Setting it is a deliberate act and it is treated as one.
+pub fn choose_merge_backend(
+    flag: Option<&str>,
+    estimator_flags: &[&str],
+    pyramid_flags: &[&str],
+) -> Result<MergeChoice> {
+    if let Some((backend, source)) = stated_merge_backend(flag)? {
+        let why = match source {
+            MergeSource::Flag => format!("{} (--merge)", backend.name()),
+            _ => format!("{} ({MERGE_BACKEND_ENV})", backend.name()),
+        };
+        return Ok(MergeChoice {
+            backend,
+            source,
+            why,
+        });
+    }
+    let infer = |backend: MergeBackend, from: &[&str]| MergeChoice {
+        backend,
+        source: MergeSource::Inferred,
+        why: format!(
+            "{} (inferred from {}; pass --merge {} to override)",
+            backend.name(),
+            from.join(", "),
+            backend.other().name()
+        ),
+    };
+    match (estimator_flags.is_empty(), pyramid_flags.is_empty()) {
+        (true, true) => Ok(MergeChoice {
+            backend: DEFAULT_MERGE_BACKEND,
+            source: MergeSource::Default,
+            why: format!("{} (default)", DEFAULT_MERGE_BACKEND.name()),
+        }),
+        (false, true) => Ok(infer(MergeBackend::Estimator, estimator_flags)),
+        (true, false) => Ok(infer(MergeBackend::Pyramid, pyramid_flags)),
+        (false, false) => bail!(
+            "{} names the estimator merge and {} names the pyramid, but no --merge was given, \
+             so there is nothing to arbitrate between them. Pass --merge estimator or \
+             --merge pyramid to say which you meant. This is refused rather than guessed \
+             because a merge chosen by tie-break is a merge nobody chose.",
+            estimator_flags.join(", "),
+            pyramid_flags.join(", "),
+        ),
+    }
 }
 
 /// Parse `--pyramid-select`. Unknown spellings are errors, not defaults.
@@ -6907,8 +7019,8 @@ mod tests {
     /// that did what was asked.
     ///
     /// The empty and whitespace cases are here deliberately. `parse` refuses
-    /// them; `resolve_merge_backend` never asks it about them, because its
-    /// `!v.trim().is_empty()` guard routes them to the default first. That
+    /// them; `stated_merge_backend` never asks it about them, because its
+    /// `!v.trim().is_empty()` guard routes them to "no opinion" first. That
     /// asymmetry is a property of the resolver, not of the parser, and this
     /// test pins which of the two owns it.
     #[test]
@@ -6966,6 +7078,15 @@ mod tests {
         }
     }
 
+    /// What [`choose_merge_backend`] answers when no backend-family flag was
+    /// given: the stated backend, or the default. This is the shape the old
+    /// `resolve_merge_backend` had, kept as a test helper rather than as a
+    /// public function so that the binary has exactly one entry point and this
+    /// file gains no unreachable code while removing some.
+    fn resolved(flag: Option<&str>) -> Result<MergeBackend> {
+        choose_merge_backend(flag, &[], &[]).map(|c| c.backend)
+    }
+
     /// Everything in this module that reads the environment, in one `#[test]`.
     ///
     /// Rust runs tests as threads sharing one process environment, so these
@@ -6983,7 +7104,7 @@ mod tests {
         unsafe { std::env::remove_var(BAND_WORKERS_ENV) };
 
         assert_eq!(
-            resolve_merge_backend(None).unwrap(),
+            resolved(None).unwrap(),
             DEFAULT_MERGE_BACKEND,
             "an unset {MERGE_BACKEND_ENV} did not give the default"
         );
@@ -6993,19 +7114,19 @@ mod tests {
         ] {
             unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
             assert_eq!(
-                resolve_merge_backend(None).unwrap(),
+                resolved(None).unwrap(),
                 want,
                 "{MERGE_BACKEND_ENV}={v}"
             );
         }
         unsafe { std::env::set_var(MERGE_BACKEND_ENV, "banana") };
         assert!(
-            resolve_merge_backend(None).is_err(),
+            resolved(None).is_err(),
             "an unrecognised {MERGE_BACKEND_ENV} was not an error"
         );
         unsafe { std::env::set_var(MERGE_BACKEND_ENV, "estimator") };
         assert_eq!(
-            resolve_merge_backend(Some("pyramid")).unwrap(),
+            resolved(Some("pyramid")).unwrap(),
             MergeBackend::Pyramid,
             "--merge did not outrank {MERGE_BACKEND_ENV}"
         );
@@ -7016,7 +7137,7 @@ mod tests {
         // unrelated argument. Measured before the fix: this combination exited
         // 0 and ran the estimator without a word about `banana`.
         unsafe { std::env::set_var(MERGE_BACKEND_ENV, "banana") };
-        let err = resolve_merge_backend(Some("estimator"))
+        let err = resolved(Some("estimator"))
             .expect_err("a malformed STREHL_MERGE was excused because --merge was present")
             .to_string();
         assert!(
@@ -7033,13 +7154,13 @@ mod tests {
             ("legacy", MergeBackend::Estimator),
         ] {
             assert_eq!(
-                resolve_merge_backend(Some(v)).unwrap(),
+                resolved(Some(v)).unwrap(),
                 want,
                 "--merge {v} did not resolve to {want:?}"
             );
         }
         assert!(
-            resolve_merge_backend(Some("banana")).is_err(),
+            resolved(Some("banana")).is_err(),
             "an unrecognised --merge value was not an error"
         );
         // Empty and whitespace-only are errors in the FLAG channel, where they
@@ -7048,22 +7169,82 @@ mod tests {
         // channels genuinely differ and that is easy to "tidy" into a bug.
         for v in ["", "   "] {
             assert!(
-                resolve_merge_backend(Some(v)).is_err(),
+                resolved(Some(v)).is_err(),
                 "--merge {v:?} was not an error"
             );
             unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
             assert_eq!(
-                resolve_merge_backend(None).unwrap(),
+                resolved(None).unwrap(),
                 DEFAULT_MERGE_BACKEND,
                 "{MERGE_BACKEND_ENV}={v:?} did not mean `no opinion`"
             );
         }
         unsafe { std::env::remove_var(MERGE_BACKEND_ENV) };
         assert_eq!(
-            resolve_merge_backend(None).unwrap(),
+            resolved(None).unwrap(),
             DEFAULT_MERGE_BACKEND,
             "the resolver did not return to its unset value"
         );
+
+        // ---- inference, when and only when the caller stated nothing -------
+        let est = ["--gate"];
+        let pyr = ["--pyramid-gate"];
+        let none: [&str; 0] = [];
+
+        let c = choose_merge_backend(None, &none, &none).unwrap();
+        assert_eq!(c.backend, DEFAULT_MERGE_BACKEND, "neither family");
+        assert_eq!(c.source, MergeSource::Default);
+        assert!(c.why.contains("default"), "{}", c.why);
+
+        let c = choose_merge_backend(None, &est, &none).unwrap();
+        assert_eq!(c.backend, MergeBackend::Estimator, "estimator-only family");
+        assert_eq!(c.source, MergeSource::Inferred);
+        assert!(
+            c.why.contains("--gate") && c.why.contains("--merge pyramid"),
+            "the inference does not say what decided it or how to override: {}",
+            c.why
+        );
+
+        let c = choose_merge_backend(None, &none, &pyr).unwrap();
+        assert_eq!(c.backend, MergeBackend::Pyramid, "pyramid-only family");
+        assert_eq!(c.source, MergeSource::Inferred);
+        assert!(
+            c.why.contains("--pyramid-gate") && c.why.contains("--merge estimator"),
+            "{}",
+            c.why
+        );
+
+        // Both families and no --merge is genuinely ambiguous. A merge chosen
+        // by tie-break is a merge nobody chose.
+        let err = choose_merge_backend(None, &est, &pyr)
+            .expect_err("both families with no --merge was not refused")
+            .to_string();
+        assert!(
+            err.contains("--gate") && err.contains("--pyramid-gate"),
+            "the ambiguity error does not name both offending flags: {err}"
+        );
+
+        // A STATED backend outranks inference in both channels. Stating it does
+        // NOT suppress the refusal: that is main.rs's table, which sees the
+        // same `given` booleans either way.
+        let c = choose_merge_backend(Some("pyramid"), &est, &none).unwrap();
+        assert_eq!(
+            c.backend,
+            MergeBackend::Pyramid,
+            "--merge did not outrank inference"
+        );
+        assert_eq!(c.source, MergeSource::Flag);
+
+        unsafe { std::env::set_var(MERGE_BACKEND_ENV, "pyramid") };
+        let c = choose_merge_backend(None, &est, &none).unwrap();
+        assert_eq!(
+            c.backend,
+            MergeBackend::Pyramid,
+            "{MERGE_BACKEND_ENV} did not outrank inference -- an env var that parses, prints \
+             nothing and does nothing is the failure this module refuses to ship"
+        );
+        assert_eq!(c.source, MergeSource::Env);
+        unsafe { std::env::remove_var(MERGE_BACKEND_ENV) };
 
         let third = MEMORY_BUDGET_BYTES / 3;
         assert_eq!(

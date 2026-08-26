@@ -742,24 +742,13 @@ fn main() -> Result<()> {
 
             // Resolved here, alongside `resampler` and `photometric`, so that
             // an unrecognised spelling is one error in one place.
-            let backend = merge_cmd::resolve_merge_backend(merge_backend.as_deref())?;
-
-            // A flag belonging to the other backend is REFUSED, not ignored.
-            // The failure this guards against is the one the whole switch
-            // exists to escape: a flag that parses, prints nothing, and does
-            // nothing is indistinguishable at the terminal from one that
-            // works. Each entry pairs the user's spelling with whether they
-            // actually passed it, so a default can never trip the refusal.
             //
-            // The fourth column is the migration. A bare refusal is correct but
-            // it strands the caller: `--gate` appears at 252 sites in 161
-            // executable files in this repository, and on the day the default
-            // moves every one of them needs an answer to "then what do I run?".
-            // Naming the counterpart -- and saying plainly when there ISN'T one
-            // -- is the difference between a refusal and a dead end. Where a
-            // counterpart exists but means something else, that is said too:
-            // silently carrying a number across two different quantities is the
-            // same class of defect as ignoring the flag.
+            // The refusal table is built FIRST, because the backend is now
+            // partly inferred from it: the same rows that say "this flag is
+            // refused under the pyramid" also say "this flag belongs to the
+            // estimator". Deriving both from one table is the point -- a
+            // separate list of family membership would be a second place to
+            // record the same fact, and the two would drift.
             let wrong_backend: &[(&str, bool, merge_cmd::MergeBackend, &str)] = &[
                 ("--gate", !gates.is_empty(), merge_cmd::MergeBackend::Pyramid,
                  "--pyramid-gate is the pyramid's noise gate, but it is a DIFFERENT QUANTITY: a \
@@ -806,6 +795,52 @@ fn main() -> Result<()> {
                 ("--pyramid-base", pyramid_base.is_some(), merge_cmd::MergeBackend::Estimator,
                  "no counterpart; it chooses how the base band is formed."),
             ];
+            // A flag belonging to the other backend is REFUSED, not ignored.
+            // The failure this guards against is the one the whole switch
+            // exists to escape: a flag that parses, prints nothing, and does
+            // nothing is indistinguishable at the terminal from one that
+            // works. Each entry pairs the user's spelling with whether they
+            // actually passed it, so a default can never trip the refusal.
+            //
+            // The fourth column is the migration. A bare refusal is correct but
+            // it strands the caller, so it names the counterpart -- and says
+            // plainly when there ISN'T one. Where a counterpart exists but
+            // means something else, that is said too: silently carrying a
+            // number across two different quantities is the same class of
+            // defect as ignoring the flag.
+            let given_of = |want: merge_cmd::MergeBackend| -> Vec<&str> {
+                wrong_backend
+                    .iter()
+                    .filter(|(_, given, refused_under, _)| *given && *refused_under == want)
+                    .map(|(flag, _, _, _)| *flag)
+                    .collect()
+            };
+            // "Refused under the pyramid" and "belongs to the estimator" are
+            // the same statement read from opposite ends.
+            let estimator_flags = given_of(merge_cmd::MergeBackend::Pyramid);
+            let pyramid_flags = given_of(merge_cmd::MergeBackend::Estimator);
+
+            let choice = merge_cmd::choose_merge_backend(
+                merge_backend.as_deref(),
+                &estimator_flags,
+                &pyramid_flags,
+            )?;
+            let backend = choice.backend;
+            // Inference must never be silent, or it reintroduces exactly the
+            // failure the refusal guards against. After the flip, a caller who
+            // passes --gate is opting out of the better merge; they are told so
+            // and told how to opt back in.
+            eprintln!("merge backend   : {}", choice.why);
+            if choice.source == merge_cmd::MergeSource::Inferred
+                && backend != merge_cmd::DEFAULT_MERGE_BACKEND
+            {
+                eprintln!(
+                    "                  NOTE: this is not the default merge. Your flags asked \
+                     for {}, so that is what runs.",
+                    backend.name()
+                );
+            }
+
             for (flag, given, refused_under, migration) in wrong_backend {
                 anyhow::ensure!(
                     !(*given && backend == *refused_under),
