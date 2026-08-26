@@ -1002,3 +1002,121 @@ mattered was never between two merges. It was between a merge and a frame.**
 > contains it. An artifact absent from every input is not being reduced by a
 > better estimator; it is being manufactured by the pipeline, and the fix is
 > upstream of everything you are tuning.**
+
+## 17. Two measurements on the blend arm: one exoneration and one real defect
+
+Sections 8 to 16 were about the artifact. This section is about the *candidate
+fix*, and it reaches opposite conclusions on the two charges standing against it.
+Both were measured with code the blend's author has never seen, which is the
+project's rule that an author does not verify their own work.
+
+### 17.1 The charge that dissolves: the "noise penalty" is recovered detail
+
+BUILD-BLEND self-reported that its multi-band merge is **+12.3% noisier in flat
+regions** on `couch-fibers`, and carried that forward as the cost of the fix.
+
+Measuring the same quantity independently made it worse, not better:
+
+| subject | sigma control | sigma blend | delta |
+| --- | ---: | ---: | ---: |
+| `bee-1-cpl` | 7.8 | 132.9 | **+1605%** |
+| `flower-bud-alone-cpl` | 37.1 | 75.5 | +105% |
+| `couch-fibers-cpl` | 565.2 | 747.8 | +32% |
+| `flower-inner-edge-cpl` | 347.0 | 372.3 | +7% |
+
+The `bee-1-cpl` row is what exposed the problem. **7.8 DN of high-frequency
+spread is 0.012% of full scale, and no real fourteen-bit photograph has a noise
+floor that clean.** That number is not cleanliness. It is blur: at 100% the
+control's "flat" regions there are hard-edged grey polygons -- patches of a single
+defocused frame -- and defocus is a low-pass filter.
+
+So a metric built on high-frequency **energy** cannot answer this question at
+all, because it counts noise and detail in one bin and therefore **rewards
+whichever arm destroys more detail.** Every such metric, including the one that
+produced the original +12.3%, scores a blurred arm as the quieter one.
+
+Noise and detail differ in *correlation*, not in energy. Photon and read noise
+are white; optical detail is band-limited by the lens and sensor MTF. The
+white-noise reference was measured by pushing a synthetic white field through the
+identical high-pass rather than asserted algebraically: **rho_lag1 = -0.0035**.
+Modelling each arm as structure plus white noise, the added component's own
+correlation follows from variance weighting with no assumption about what the
+structure is:
+
+    rho_add = (rho_A * V_A - rho_B * V_B) / (V_A - V_B)
+
+| subject | rho control | rho blend | **rho_add** | would read if noise |
+| --- | ---: | ---: | ---: | ---: |
+| `bee-1-cpl` | +0.469 | +0.450 | **+0.450** | +0.002 |
+| `couch-fibers-cpl` | +0.869 | +0.802 | **+0.712** | +0.497 |
+| `flower-bud-alone-cpl` | +0.458 | +0.517 | **+0.536** | +0.110 |
+| `flower-inner-edge-cpl` | +0.910 | +0.914 | **+0.943** | +0.791 |
+
+Every subject sits far above its own counterfactual. `bee-1-cpl` is cleanest:
+**+0.450 measured against +0.002 expected if the added energy were white.** White
+noise cannot produce a lag-1 correlation of 0.45.
+
+**The energy the blend adds is correlated structure. It is detail the control was
+destroying.** The +12.3% is not a cost, and reducing it would mean blurring the
+good arm. This does not prove the blend adds *zero* noise -- a real increase could
+ride underneath a larger detail increase -- but it does refute the charge as
+stated.
+
+### 17.2 The charge that stands: the blue channel is clamped to zero on the subject
+
+The same arm carries a defect nobody had measured, because everyone was looking
+at tone-mapped renders. In the **linear sixteen-bit output**, on
+`flower-bud-alone-cpl`:
+
+    blue pixels at exactly 0 : 723,429 = 2.192% of the frame
+    same pixels, control arm : median 10,913 DN
+
+It is a clamp, not a dark scene. Raising the threshold barely moves the count --
+2.192% at zero, 2.384% at 256 DN -- so 2.19% sit pinned at exactly zero and only
+0.19% lie anywhere above it. A genuinely dark scene produces a smooth ramp.
+
+Two attributions were tested and both failed:
+
+- **Not thin edge ringing.** The brightest four-neighbour of a zero pixel has a
+  **median of 0.0 DN**, and only 0.1% of zeros have any neighbour above 4000 DN.
+  A dark rim against a bright edge would put a bright neighbour beside nearly
+  every zero.
+- **Not coverage or packaging.** 24 of 23,456 border pixels (0.1%), so the
+  region never reaches the canvas edge.
+
+Drawing the mask over the picture settled it. The zeros sit **on the subject**,
+in the shadowed crevices between the bud's scales and along its dark right flank
+and bottom lobe -- simultaneously the darkest and the most textured regions, in
+the channel that is intrinsically weakest on green foliage. A Laplacian
+reconstruction sums band-pass layers; where the base band is already low and the
+coarse layers undershoot, the sum goes negative over a broad area and the clamp
+destroys it.
+
+**This blocks a print claim.** A dead blue channel over 2.19% of the frame is an
+irreversible colour shift toward yellow-green in exactly the shadows where a
+macro print shows depth, with no detail left to recover.
+
+It also forces a withdrawal. Section 16's field notes recorded that on
+`flower-bud-alone-cpl-100pct-site2` the blend "shows the bud's true colour where
+the control bleached it". Some of that extra green is this bug, because removing
+blue from green foliage makes it read greener. **The structural half of that
+comparison stands -- the control's hard-edged pale patches are plainly wrong and
+the blend resolves trichomes the control does not contain -- but the colour half
+is withdrawn.**
+
+### 17.3 Two disciplines, from the two ways this nearly went wrong
+
+The first verdict this analysis printed was "RINGING", and it was wrong. It was
+caught only because the script printed its evidence rows above its conclusion,
+and the neighbour statistic sitting three lines above the verdict contradicted
+it outright.
+
+> **A metric named for what you hope it measures will be believed as though it
+> measured that. "Noise" computed as high-frequency energy scores a blurred image
+> as the quiet one, so it ranks a detail-destroying pipeline first. Before
+> trusting any quality metric, check what it says about an arm you already know
+> is worse.**
+
+> **When statistics cannot separate two mechanisms, draw the picture. A mask
+> rendered over the photograph settled in one look what four summary statistics
+> had left ambiguous, and it overturned the verdict the statistics had produced.**
