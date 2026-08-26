@@ -585,21 +585,48 @@ pub enum SelectMode {
 }
 
 /// How the coarsest residual — the band that carries overall tone — is merged.
+///
+/// This was the one design decision here taken on argument rather than
+/// measurement, and the argument lost. Measured on `flower-bud-alone-cpl`
+/// (205 frames, linear camera-native, differenced against a `STREHL_ONLY_FRAME`
+/// render of the alignment reference, which performs no election at all):
+///
+/// | base band            | far-field offset | spatial structure, subject-free quadrant |
+/// |----------------------|------------------|------------------------------------------|
+/// | `WeightedFromCoarsest` | −475.0 DN      | 835.0 DN                                 |
+/// | `Mean`                 | **+11.0 DN**   | **45.0 DN**                              |
+/// | shipped selection merge (for scale) | +9.3 DN | 29.7 DN                     |
+///
+/// Both blend arms removed the shipped merge's broad aura equally well, so the
+/// base band is not what buys that. What it decides is whether the frame's
+/// overall level is allowed to drift, and weighting it let the level follow
+/// whichever frames won locally — a −2.5% global error with a further ~4% of
+/// position-dependent structure on top. `Mean` cannot do that, because it does
+/// not depend on position at all.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BaseBand {
     /// Plain mean across frames. The conservative choice: it cannot introduce a
     /// low-frequency discontinuity of any kind, because it does not depend on
     /// position at all.
+    ///
+    /// The default, on the measurement above.
     Mean,
     /// Weighted by the coarsest Laplacian band's weight, reduced once onto the
     /// base grid.
     ///
-    /// This is the better default. The base grid is 2^bands coarser than the
+    /// The argument for this was that the base grid is 2^bands coarser than the
     /// output, so even a hard mask on it is, after the collapse, a transition
-    /// spread over ~2^bands output pixels — smooth by construction. What it
-    /// buys is local tone: at a depth boundary the in-focus frame's low
+    /// spread over ~2^bands output pixels — smooth by construction — and that
+    /// what it buys is local tone: at a depth boundary the in-focus frame's low
     /// frequencies win locally instead of being averaged with every defocused
     /// frame's veil.
+    ///
+    /// The first half of that is true and the second half is the problem. The
+    /// weights are a function of position, so the merged level is too, and on a
+    /// featureless backdrop — where there is no focus signal to justify any
+    /// particular weighting — that shows up as the level wandering. Kept as a
+    /// control arm, because a default chosen by measurement needs the arm it
+    /// beat to remain reachable.
     WeightedFromCoarsest,
 }
 
@@ -717,7 +744,11 @@ impl Default for MergeConfig {
             // being traded against sits in the coarse bands.
             sharpen_per_octave: 1.4,
             select: SelectMode::SoftPower,
-            base: BaseBand::WeightedFromCoarsest,
+            // Measured, not argued -- see `BaseBand`. Weighting the base band
+            // cost -475 DN of global level and 835 DN of position-dependent
+            // structure on flower-bud-alone-cpl, against +11 DN and 45 DN for
+            // the mean, with no difference in aura removal between them.
+            base: BaseBand::Mean,
         }
     }
 }
@@ -1806,5 +1837,62 @@ mod tests {
         for (k, f) in frac.iter().enumerate().take(sizes.len() - 1) {
             assert!(*f > 0.999, "level {k} claims it selected on pure noise: {f}");
         }
+    }
+
+    /// The base band default is a measurement, so pin it.
+    ///
+    /// It was flipped from [`BaseBand::WeightedFromCoarsest`] to
+    /// [`BaseBand::Mean`] on `flower-bud-alone-cpl`: weighting cost −475 DN of
+    /// global level and 835 DN of position-dependent structure against +11 DN
+    /// and 45 DN for the mean, with no difference in aura removal. Nothing in
+    /// the suite noticed that change when it was made, which is exactly the
+    /// condition this test exists to remove.
+    #[test]
+    fn the_base_band_default_is_the_measured_one() {
+        assert_eq!(MergeConfig::default().base, BaseBand::Mean);
+    }
+
+    /// The arm the default was measured against has to stay reachable and has
+    /// to actually differ, or the comparison that chose the default was between
+    /// a thing and itself.
+    #[test]
+    fn the_two_base_bands_are_not_the_same_merge() {
+        let (w, h) = (64usize, 64usize);
+        let sizes = level_sizes(w, h, 3);
+        let var = vec![1.0f32; w * h];
+        // Two frames that differ in overall LEVEL, and a detail patch that
+        // gives the weighting something to prefer on one side of the frame.
+        let mut a = vec![500.0f32; w * h];
+        let mut b = vec![900.0f32; w * h];
+        for y in 0..h {
+            for x in 0..w / 2 {
+                a[y * w + x] += if (x + y) % 2 == 0 { 300.0 } else { -300.0 };
+            }
+            for x in w / 2..w {
+                b[y * w + x] += if (x + y) % 2 == 0 { 300.0 } else { -300.0 };
+            }
+        }
+        let run = |base: BaseBand| {
+            let cfg = MergeConfig { bands: 3, base, ..Default::default() };
+            let mut merge = BandMerge::new(w, h, 1, cfg);
+            let mut fws = FrameWorkspace::new(&sizes, 1);
+            for f in [&a, &b] {
+                fws.next_frame();
+                merge.add_frame(&[f.as_slice()], f, &var, &mut fws);
+            }
+            merge.finish(&mut Workspace::new(&sizes))[0].clone()
+        };
+        let mean = run(BaseBand::Mean);
+        let weighted = run(BaseBand::WeightedFromCoarsest);
+        let diff: f32 = mean
+            .iter()
+            .zip(&weighted)
+            .map(|(m, w)| (m - w).abs())
+            .fold(0.0, f32::max);
+        assert!(
+            diff > 1.0,
+            "the two base bands produced the same image (max |diff| = {diff}), \
+             so the measurement that chose between them compared nothing"
+        );
     }
 }

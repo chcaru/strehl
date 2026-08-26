@@ -85,8 +85,8 @@ fn parse_args() -> Result<Args> {
     let mut it = std::env::args().skip(1);
     let dir = it.next().context(
         "usage: blend-render <DIR> <OUT.tiff> [--limit N] [--bands N] [--gate F] \
-         [--exponent F] [--hard-max] [--base-mean] [--chunks N] [--linear] \
-         [--camera-linear] [--exposure S]",
+         [--exponent F] [--hard-max] [--base-mean] [--base-weighted] [--chunks N] \
+         [--linear] [--camera-linear] [--exposure S]",
     )?;
     let out = it.next().context("an output path is required")?;
     let mut a = Args {
@@ -114,6 +114,10 @@ fn parse_args() -> Result<Args> {
             "--exposure" => a.exposure_stops = val()?.parse()?,
             "--hard-max" => a.cfg.select = SelectMode::HardMax,
             "--base-mean" => a.cfg.base = BaseBand::Mean,
+            // The control arm the default was measured against. Keeping it
+            // reachable is what makes `BaseBand::Mean` a measurement rather
+            // than a preference.
+            "--base-weighted" => a.cfg.base = BaseBand::WeightedFromCoarsest,
             "--linear" => a.linear = true,
             // Camera-native primaries, linear, no matrix and no transfer curve
             // -- `image_out::OutputSpace::CameraLinear`, the byte-frozen
