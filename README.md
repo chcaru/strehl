@@ -518,7 +518,25 @@ seam but is deferred until there is hardware to test it against.
 ## The honest performance claim
 
 Not "N times less noise". The gain depends entirely on how many frames actually
-see a given point in focus. Measured on the 22-frame reference bracket, over a
+see a given point in focus.
+
+> **Scope, stated before the numbers: every `gate` row below is an ESTIMATOR
+> measurement, and the estimator is not what ships.** `--gate` is one of the nine
+> flags the default pyramid backend refuses outright — `strehl merge --merge
+> pyramid --gate 2` exits 1 with *"--gate belongs to the estimator merge, and
+> --merge selected pyramid."* The pyramid's own knob is `--pyramid-gate`, and the
+> binary is explicit that it is **a different quantity**: a multiple of the
+> modelled band-noise power, where `--gate` is a multiple of the focus-response
+> SD. *The number does not carry over.* So this table has no row for the backend
+> that runs out of the box, and until it does, **the shipping path's noise
+> performance is unquantified.** That measurement is in flight; this notice comes
+> down when the row lands, and not before. Note also the inference trap that
+> produced this gap: passing an estimator-only flag *without* `--merge` silently
+> selects the estimator — measured, `--gate 2` alone prints `merge backend :
+> estimator (inferred from --gate)`. Any harness quoting numbers below may have
+> been on the estimator without meaning to be.
+
+Measured on the 22-frame reference bracket, over a
 low-detail region, against a single unstacked frame:
 
 | gate | mean `n_eff` | flat-ROI noise | |
@@ -562,8 +580,8 @@ right; they describe different regions.
 On resolved detail the expected gain was **`ARGUED` at ~1.2-1.8x** — the
 reasoning being that at a sane focus step only about 1.3 to 1.5 frames have any
 given depth inside their depth of field. **That figure has now been measured,
-and it is not observed.** Six subjects rendered twice from one binary — the
-shipping merge and the shipping `argmax-baseline` selector — and compared green
+and it is not observed.** Six subjects rendered twice from one binary — a merge
+arm and the shipping `argmax-baseline` selector — and compared green
 plane, camera-linear, at 36 matched sites chosen on the mean of both arms, come
 out **indistinguishable to within 0.5 px of equivalent Gaussian blur**. That
 0.5 px is not a small number here: it is also what the same instrument reports
@@ -571,6 +589,16 @@ for the two arms' *noise gap alone* with zero blur planted, so it is the
 instrument's floor rather than a measured difference. Selection wins outright on
 one subject, `flat-on-ruler-cpl`, by about 0.4 px on three statistics that
 agree.
+
+> **Which merge arm that was is under active confirmation, and it matters.** The
+> measuring agent described it as the shipping default *and* reported a mean
+> `n_eff` for it — but `n_eff` is an estimator-only statistic that the pyramid
+> does not produce, so both descriptions cannot be true of one run. Given the
+> inference trap described above, the arm may have been the estimator. If it
+> was, this remains a real result about the estimator and will be published as
+> one, but it says nothing about the backend that ships. **This paragraph was
+> committed before that check was complete — that was my error, and this is the
+> correction standing in until the banners settle it.**
 
 **The merge's advantage on this corpus is noise and the absence of invented
 structure, not fineness.** That is a narrower claim than the one this paragraph
