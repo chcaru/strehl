@@ -588,6 +588,22 @@ capture-limited verdicts are also decided <i>before</i> the merge test, so a
 wrong routing there could hide a merge verdict underneath it.
 </div>
 <div class="note">
+<b>Scope &mdash; these renders are not what the shipping default produces.</b>
+Every master below was rendered with <code>--pyramid-gate 4.5</code>. The
+compiled default is <b>2.0</b>. This was established by byte-identity rather
+than inference, on two subjects, by two independent agents:
+<code>SHIP-V1/bee-3-cpl.tiff</code> and <code>SHIP-V1/109MSDCF.tiff</code> each
+reproduce with an identical SHA-256 when re-rendered at gate 4.5 through the
+pinned binary, and neither reproduces at the default. On the one subject where
+both gates have been measured they give the <i>same</i> detail (detail-ROI ratio
+0.9945) and differ in flat regions, where the default carries 7.8&times; the
+gradient energy &mdash; so the difference sits away from the edges this survey
+was looking at. That is a reason the edge findings may transfer, not a reason to
+assume they do. Either the default moves to 4.5 or these are re-rendered at 2.0
+and re-surveyed; that decision is in flight, and this notice comes down when the
+default and the gallery agree.
+</div>
+<div class="note">
 <b>What is verified.</b> Twenty-four subjects have been judged print-worthy by eye at
 1:1, and all 26 have now been examined: <code>bee-1-cpl</code>,
 <code>bee-2-cpl</code>, <code>bee-3-cpl</code>, <code>leaf-2-cpl</code>,

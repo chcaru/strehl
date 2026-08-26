@@ -154,6 +154,26 @@ print-worthy. Two are limited by the capture rather than by the stacker, which
 is a different verdict and is recorded as one below rather than folded into a
 pass rate.
 
+> **Scope, and it is a real limitation of this survey: these masters were not
+> rendered at the shipping default.** Every image in the gallery, and therefore
+> every judgement in this section, was produced with `--pyramid-gate 4.5`. The
+> compiled default is **2.0**. This was found *after* the survey finished, by
+> two agents independently, and established by byte-identity rather than by
+> inference: `SHIP-V1\bee-3-cpl.tiff` and `SHIP-V1\109MSDCF.tiff` each reproduce
+> **exactly** — same SHA-256 — when re-rendered at gate 4.5 through the pinned
+> binary, and do not reproduce at the default.
+>
+> On the one subject where both have been measured the two gates give the **same
+> detail** (detail-ROI ratio 0.9945) and differ in flat regions, where the
+> default carries **7.8x the gradient energy**; on noise against a single
+> unstacked frame the default reads **0.915x** where 4.5 reads **0.746x**. So
+> the difference is concentrated away from the edges this survey was looking at.
+> **That does not rescue it.** A survey of 26 subjects that describes a
+> configuration the user does not get by typing `strehl stack` is scoped to that
+> configuration, and saying so is cheaper than arguing the gap is small. Either
+> the default moves to 4.5 or the gallery is re-rendered at 2.0 and re-surveyed.
+> That decision is in flight, and this notice comes down when the two agree.
+
 The twenty-four: `bee-1-cpl`, `bee-2-cpl`, `bee-3-cpl`, `leaf-2-cpl`,
 `tweezers-cpl`, `coffee-bean`, `112MSDCF`,
 `flower-bud-with-background-fern-cpl`, `119MSDCF`, `109MSDCF`,
