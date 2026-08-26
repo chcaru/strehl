@@ -253,6 +253,282 @@ impl RestoreConfig {
     }
 }
 
+/// What [`restore_plane`] actually did.
+///
+/// Returned rather than logged, in the idiom of [`crate::merge::VeilReport`]: a
+/// correction that is a no-op and one that reshapes every edge both produce a
+/// picture, and only this tells them apart.
+#[derive(Clone, Debug, Default)]
+pub struct RestoreReport {
+    /// Half of the symmetric FIR, centre tap first. The full filter is
+    /// `[..taps[1..].rev(), taps[0], ..taps[1..]]`.
+    pub taps: Vec<f64>,
+    /// Response at DC. **Must be exactly 1.** The filter is a sharpener, not an
+    /// exposure change, and a DC gain of anything else is an additive level
+    /// shift wearing a restoration's clothes -- the same failure section 18 of
+    /// `docs/research/BUILD-SHARP.md` caught in the veil envelope.
+    pub dc_gain: f64,
+    /// Largest realised gain anywhere in `[0, 0.5]` cycles per pixel.
+    pub max_gain: f64,
+    /// Realised gain at Nyquist.
+    pub gain_at_nyquist: f64,
+    /// Fraction of the gather's own MTF loss the filter buys back, integrated
+    /// over frequency. `1.0` would be a perfect inverse; the noise term is what
+    /// stops it.
+    pub recovered_fraction: f64,
+    /// The noise variance the filter was given, in the plane's own units.
+    pub sigma2: f64,
+}
+
+/// Autocorrelation of a plane out to `max_lag`, averaged over both axes.
+///
+/// The signal power `S(f)` the Wiener form needs is the image's own, and this
+/// is how it is obtained without a Fourier transform: Wiener-Khinchin says the
+/// power spectrum is the transform of the autocorrelation, and an
+/// autocorrelation to a short lag is a few passes over the data with no
+/// dependency. `strehl-core` has exactly two dependencies and neither is an FFT.
+///
+/// Averaged over rows and columns because the gather is separable and is
+/// corrected separably; a single one-dimensional spectrum is the matching
+/// estimate.
+pub fn autocorrelation(plane: &[f32], w: usize, h: usize, max_lag: usize) -> Vec<f64> {
+    let mut r = vec![0.0f64; max_lag + 1];
+    let mut n = vec![0.0f64; max_lag + 1];
+    let mean = {
+        let s: f64 = plane.iter().map(|&v| f64::from(v)).sum();
+        s / (plane.len().max(1) as f64)
+    };
+    for y in 0..h {
+        let row = &plane[y * w..y * w + w];
+        for k in 0..=max_lag {
+            if k >= w {
+                break;
+            }
+            let mut acc = 0.0;
+            for x in 0..(w - k) {
+                acc += (f64::from(row[x]) - mean) * (f64::from(row[x + k]) - mean);
+            }
+            r[k] += acc;
+            n[k] += (w - k) as f64;
+        }
+    }
+    for x in 0..w {
+        for k in 0..=max_lag {
+            if k >= h {
+                break;
+            }
+            let mut acc = 0.0;
+            for y in 0..(h - k) {
+                acc += (f64::from(plane[y * w + x]) - mean)
+                    * (f64::from(plane[(y + k) * w + x]) - mean);
+            }
+            r[k] += acc;
+            n[k] += (h - k) as f64;
+        }
+    }
+    for k in 0..=max_lag {
+        if n[k] > 0.0 {
+            r[k] /= n[k];
+        }
+    }
+    r
+}
+
+/// Power at `f` cycles per pixel, from an autocorrelation.
+///
+/// A Hann lag window is applied. Without it the truncation at `max_lag` rings
+/// and the estimate goes negative at some frequencies, which would make
+/// `sigma^2 / S` negative and the gain unbounded -- an inverse filter with no
+/// noise term at all, which is precisely the runaway this project already
+/// destroyed one picture with.
+fn power_at(r: &[f64], f: f64) -> f64 {
+    let m = r.len() - 1;
+    let mut p = r[0];
+    for (k, &rk) in r.iter().enumerate().skip(1) {
+        let win = 0.5 * (1.0 + (std::f64::consts::PI * k as f64 / (m as f64 + 1.0)).cos());
+        p += 2.0 * win * rk * (2.0 * std::f64::consts::PI * f * k as f64).cos();
+    }
+    p.max(0.0)
+}
+
+/// Solve a small symmetric positive-definite system by Gaussian elimination.
+fn solve(mut a: Vec<Vec<f64>>, mut b: Vec<f64>) -> Option<Vec<f64>> {
+    let n = b.len();
+    for i in 0..n {
+        let mut piv = i;
+        for j in (i + 1)..n {
+            if a[j][i].abs() > a[piv][i].abs() {
+                piv = j;
+            }
+        }
+        if a[piv][i].abs() < 1e-12 {
+            return None;
+        }
+        a.swap(i, piv);
+        b.swap(i, piv);
+        for j in (i + 1)..n {
+            let f = a[j][i] / a[i][i];
+            for k in i..n {
+                a[j][k] -= f * a[i][k];
+            }
+            b[j] -= f * b[i];
+        }
+    }
+    let mut x = vec![0.0; n];
+    for i in (0..n).rev() {
+        let mut s = b[i];
+        for k in (i + 1)..n {
+            s -= a[i][k] * x[k];
+        }
+        x[i] = s / a[i][i];
+    }
+    Some(x)
+}
+
+/// Design the zero-phase FIR that realises this configuration's gain.
+///
+/// A symmetric filter `g[-m..m]` has the purely real response
+/// `G(f) = g0 + 2 * sum_k g[k] cos(2 pi f k)`, so it is **zero-phase by
+/// construction**: it cannot move an edge, only change its contrast. That is
+/// the property the module header calls non-negotiable, and building it into
+/// the filter's algebra is stronger than testing for it afterwards.
+///
+/// The DC constraint is likewise structural rather than fitted. Substituting
+/// `g0 = 1 - 2 sum_k g[k]` gives
+///
+/// ```text
+/// G(f) = 1 + 2 * sum_k g[k] * (cos(2 pi f k) - 1)
+/// ```
+///
+/// which is exactly 1 at `f = 0` for **any** `g[k]`. The least-squares fit
+/// therefore cannot trade DC accuracy for passband accuracy, and the filter
+/// cannot become an exposure change.
+pub fn design_fir(cfg: &RestoreConfig, r: &[f64], half_taps: usize) -> Vec<f64> {
+    const FIT_POINTS: usize = 128;
+    let m = half_taps.max(1);
+    let mut ata = vec![vec![0.0f64; m]; m];
+    let mut atb = vec![0.0f64; m];
+    for i in 0..FIT_POINTS {
+        let f = 0.5 * (i as f64 + 0.5) / FIT_POINTS as f64;
+        let s = (power_at(r, f) - cfg.sigma2).max(1e-12);
+        let target = cfg.gain(f, s) - 1.0;
+        let basis: Vec<f64> = (1..=m)
+            .map(|k| 2.0 * ((2.0 * std::f64::consts::PI * f * k as f64).cos() - 1.0))
+            .collect();
+        for a in 0..m {
+            for b in 0..m {
+                ata[a][b] += basis[a] * basis[b];
+            }
+            atb[a] += basis[a] * target;
+        }
+    }
+    let outer = solve(ata, atb).unwrap_or_else(|| vec![0.0; m]);
+    // The least-squares fit tracks the target at the fit points and may
+    // overshoot BETWEEN them, so the cap must be enforced on the REALISED
+    // response rather than on the target that was fitted. Measured: a cap of
+    // 1.1 was fitted and the designed filter realised 1.1107.
+    //
+    // Scaling every outer tap by lambda scales `G(f) - 1` by exactly lambda,
+    // because `G(f) - 1 = 2 sum_k g[k] (cos(2 pi f k) - 1)` is linear in them,
+    // and recomputing the centre tap restores `G(0) = 1` exactly. So the cap is
+    // enforced without disturbing either structural property.
+    let mut taps = vec![1.0 - 2.0 * outer.iter().sum::<f64>()];
+    taps.extend(outer);
+    let cap = cfg.gain_cap.max(1.0);
+    let mut realised: f64 = 1.0;
+    for i in 0..2048 {
+        let f = 0.5 * (i as f64 + 0.5) / 2048.0;
+        realised = realised.max(fir_response(&taps, f));
+    }
+    if realised > cap && realised > 1.0 {
+        let lambda = (cap - 1.0) / (realised - 1.0);
+        for t in taps.iter_mut().skip(1) {
+            *t *= lambda;
+        }
+        let s: f64 = taps.iter().skip(1).sum();
+        taps[0] = 1.0 - 2.0 * s;
+    }
+    taps
+}
+
+/// Response of a half-filter at `f` cycles per pixel.
+fn fir_response(taps: &[f64], f: f64) -> f64 {
+    let mut g = taps[0];
+    for (k, &t) in taps.iter().enumerate().skip(1) {
+        g += 2.0 * t * (2.0 * std::f64::consts::PI * f * k as f64).cos();
+    }
+    g
+}
+
+/// Apply the restoration to one plane, in place, separably.
+///
+/// Returns what it did. A `gain_cap` of `1.0` makes this **byte-identical to the
+/// input**, which is the "never worse than the input" fallback in its exact
+/// form: not a small change, no change.
+///
+/// Borders replicate. A restoration is a contrast change and replicating is the
+/// only border rule that cannot invent a step at the frame edge.
+pub fn restore_plane(plane: &mut [f32], w: usize, h: usize, cfg: &RestoreConfig) -> RestoreReport {
+    const MAX_LAG: usize = 24;
+    const HALF_TAPS: usize = 4;
+    let mut report = RestoreReport {
+        sigma2: cfg.sigma2,
+        dc_gain: 1.0,
+        max_gain: 1.0,
+        gain_at_nyquist: 1.0,
+        ..RestoreReport::default()
+    };
+    if plane.len() != w * h || w < 2 * HALF_TAPS + 1 || h < 2 * HALF_TAPS + 1 {
+        return report;
+    }
+    if !(cfg.gain_cap > 1.0) {
+        report.taps = vec![1.0];
+        return report;
+    }
+    let r = autocorrelation(plane, w, h, MAX_LAG.min(w.min(h) / 2));
+    let taps = design_fir(cfg, &r, HALF_TAPS);
+
+    report.dc_gain = fir_response(&taps, 0.0);
+    report.gain_at_nyquist = fir_response(&taps, 0.5);
+    let mut num = 0.0;
+    let mut den = 0.0;
+    for i in 0..256 {
+        let f = 0.5 * (i as f64 + 0.5) / 256.0;
+        let g = fir_response(&taps, f);
+        report.max_gain = report.max_gain.max(g);
+        let hh = gather_mtf(cfg.resampler, f * cfg.grid_factor);
+        num += hh * g - hh;
+        den += 1.0 - hh;
+    }
+    report.recovered_fraction = if den > 0.0 { num / den } else { 0.0 };
+    report.taps = taps.clone();
+
+    let mut tmp = vec![0.0f32; w * h];
+    for y in 0..h {
+        for x in 0..w {
+            let mut acc = f64::from(plane[y * w + x]) * taps[0];
+            for (k, &t) in taps.iter().enumerate().skip(1) {
+                let xl = x.saturating_sub(k);
+                let xr = (x + k).min(w - 1);
+                acc += t * (f64::from(plane[y * w + xl]) + f64::from(plane[y * w + xr]));
+            }
+            tmp[y * w + x] = acc as f32;
+        }
+    }
+    for y in 0..h {
+        for x in 0..w {
+            let mut acc = f64::from(tmp[y * w + x]) * taps[0];
+            for (k, &t) in taps.iter().enumerate().skip(1) {
+                let yu = y.saturating_sub(k);
+                let yd = (y + k).min(h - 1);
+                acc += t * (f64::from(tmp[yu * w + x]) + f64::from(tmp[yd * w + x]));
+            }
+            plane[y * w + x] = acc as f32;
+        }
+    }
+    report
+}
+
 /// The two facts that hold for **any** interpolating kernel, checked rather
 /// than assumed. Exposed so a caller can run it, not only the test harness.
 pub fn selftest() -> Result<(), String> {
@@ -353,5 +629,199 @@ mod tests {
             gain_cap: 4.0,
         };
         assert!(c.gain(0.5, 1e-6) < 1.0 + 1e-9);
+    }
+
+    /// Build a plane, gather it through a real Catmull-Rom resample at a fixed
+    /// sub-pixel phase, and hand back both. The attenuation the filter is meant
+    /// to undo is thereby real rather than modelled.
+    fn gathered_step(w: usize, h: usize, phi: f64) -> (Vec<f32>, Vec<f32>) {
+        let mut truth = vec![0.0f32; w * h];
+        for y in 0..h {
+            for x in 0..w {
+                truth[y * w + x] = if x >= w / 2 { 1000.0 } else { 100.0 };
+            }
+        }
+        let mut got = vec![0.0f32; w * h];
+        for y in 0..h {
+            for x in 0..w {
+                let mut acc = 0.0;
+                let mut sum = 0.0;
+                for n in -1i32..3 {
+                    let wt = super::tap(Resampler::CatmullRom, n as f64 - phi);
+                    let xs = (x as i32 + n).clamp(0, w as i32 - 1) as usize;
+                    acc += wt * f64::from(truth[y * w + xs]);
+                    sum += wt;
+                }
+                got[y * w + x] = (acc / sum) as f32;
+            }
+        }
+        (truth, got)
+    }
+
+    #[test]
+    fn the_dc_gain_is_exactly_one_so_this_cannot_become_an_exposure_change() {
+        // Section 18 of BUILD-SHARP.md caught a correction whose whole effect
+        // could have been an additive level shift. This filter is structurally
+        // incapable of that, and here is the check across a wide range of
+        // aggressiveness rather than at one setting.
+        let (_, mut img) = gathered_step(96, 96, 0.5);
+        for cap in [1.1, 1.4, 1.7, 2.5, 4.0] {
+            for sigma2 in [1.0, 100.0, 1e4, 1e6] {
+                let cfg = RestoreConfig {
+                    resampler: Resampler::CatmullRom,
+                    grid_factor: 1.0,
+                    sigma2,
+                    gain_cap: cap,
+                };
+                let mut plane = img.clone();
+                let rep = restore_plane(&mut plane, 96, 96, &cfg);
+                assert!(
+                    (rep.dc_gain - 1.0).abs() < 1e-12,
+                    "cap {cap} sigma2 {sigma2}: DC gain {} is not 1",
+                    rep.dc_gain
+                );
+                assert!(
+                    rep.max_gain <= cap + 1e-6,
+                    "cap {cap}: realised gain {} exceeds it",
+                    rep.max_gain
+                );
+            }
+        }
+        // And a flat plane must come back flat, to the last bit.
+        img.iter_mut().for_each(|v| *v = 4321.0);
+        let cfg = RestoreConfig {
+            resampler: Resampler::CatmullRom,
+            grid_factor: 1.0,
+            sigma2: 100.0,
+            gain_cap: 1.7,
+        };
+        restore_plane(&mut img, 96, 96, &cfg);
+        for v in &img {
+            assert!((v - 4321.0).abs() < 1e-2, "flat plane moved to {v}");
+        }
+    }
+
+    #[test]
+    fn a_gain_cap_of_one_is_byte_identical() {
+        let (_, img) = gathered_step(64, 64, 0.25);
+        let cfg = RestoreConfig {
+            resampler: Resampler::CatmullRom,
+            grid_factor: 1.0,
+            sigma2: 50.0,
+            gain_cap: 1.0,
+        };
+        let mut out = img.clone();
+        restore_plane(&mut out, 64, 64, &cfg);
+        assert_eq!(out, img, "gain_cap 1.0 must be the identity, not merely close");
+    }
+
+    #[test]
+    fn the_filter_sharpens_the_edge_without_moving_it() {
+        // The property the module header calls non-negotiable. The edge
+        // position is measured as the 50% crossing of the profile, to
+        // sub-pixel precision by linear interpolation, and it must not move.
+        let (_, img) = gathered_step(128, 128, 0.5);
+        let cfg = RestoreConfig {
+            resampler: Resampler::CatmullRom,
+            grid_factor: 1.0,
+            sigma2: 1.0,
+            gain_cap: 1.7,
+        };
+        let mut out = img.clone();
+        let rep = restore_plane(&mut out, 128, 128, &cfg);
+
+        let row = 64usize;
+        let crossing = |p: &[f32]| -> f64 {
+            let (lo, hi) = (100.0f64, 1000.0f64);
+            let half = 0.5 * (lo + hi);
+            for x in 1..128 {
+                let (a, b) = (f64::from(p[row * 128 + x - 1]), f64::from(p[row * 128 + x]));
+                if (a - half) * (b - half) <= 0.0 && (b - a).abs() > 1e-9 {
+                    return (x - 1) as f64 + (half - a) / (b - a);
+                }
+            }
+            f64::NAN
+        };
+        let before = crossing(&img);
+        let after = crossing(&out);
+        assert!(
+            (after - before).abs() < 1e-4,
+            "the edge moved {} px, from {before} to {after}; a zero-phase filter cannot do that",
+            after - before
+        );
+
+        // Potency: it must actually have done something, or "did not move" is
+        // the trivially true statement about an identity filter.
+        let slope = |p: &[f32]| {
+            (0..127)
+                .map(|x| (f64::from(p[row * 128 + x + 1]) - f64::from(p[row * 128 + x])).abs())
+                .fold(0.0f64, f64::max)
+        };
+        assert!(
+            slope(&out) > slope(&img) * 1.02,
+            "peak slope went {} -> {}, so the filter is inert and this test proves nothing",
+            slope(&img),
+            slope(&out)
+        );
+        assert!(rep.recovered_fraction > 0.0);
+    }
+
+    #[test]
+    fn a_real_gather_loss_is_partly_recovered_measured_as_10_90_edge_width() {
+        // End to end on the quantity the ESF instrument actually reports.
+        //
+        // Note what this test does NOT do: it does not compare against the
+        // un-gathered truth. A gather at phase 0.5 genuinely translates the
+        // image by half a pixel, and a zero-phase filter cannot undo a
+        // translation, so a distance-to-truth metric charges the restoration
+        // for a registration offset it is forbidden to touch. The first
+        // version of this test did exactly that and reported a regression.
+        // Edge WIDTH is the blur, is shift-invariant, and is the number the
+        // rest of this project is measured in.
+        let (truth, img) = gathered_step(128, 128, 0.5);
+        let cfg = RestoreConfig {
+            resampler: Resampler::CatmullRom,
+            grid_factor: 1.0,
+            sigma2: 1.0,
+            gain_cap: 1.7,
+        };
+        let mut out = img.clone();
+        restore_plane(&mut out, 128, 128, &cfg);
+
+        let row = 128usize * 64;
+        let width_10_90 = |p: &[f32]| -> f64 {
+            let (lo, hi) = (100.0f64, 1000.0f64);
+            let at = |frac: f64| -> f64 {
+                let level = lo + frac * (hi - lo);
+                for x in 1..128 {
+                    let (a, b) = (f64::from(p[row + x - 1]), f64::from(p[row + x]));
+                    if (a - level) * (b - level) <= 0.0 && (b - a).abs() > 1e-9 {
+                        return (x - 1) as f64 + (level - a) / (b - a);
+                    }
+                }
+                f64::NAN
+            };
+            at(0.9) - at(0.1)
+        };
+
+        let (w_truth, w_gathered, w_restored) =
+            (width_10_90(&truth), width_10_90(&img), width_10_90(&out));
+
+        // Potency of the apparatus: the gather must have actually blurred the
+        // edge, or "the filter narrowed it" is a claim about nothing.
+        assert!(
+            w_gathered > w_truth + 0.1,
+            "the gather did not blur the edge ({w_truth} -> {w_gathered}), so this test is vacuous"
+        );
+        assert!(
+            w_restored < w_gathered - 0.01,
+            "10-90 width {w_gathered} -> {w_restored}: the restoration did not narrow the edge"
+        );
+        // And it must not overshoot into being sharper than the signal that
+        // was gathered, which would mean it invented detail.
+        assert!(
+            w_restored >= w_truth - 1e-9,
+            "restored width {w_restored} is below the un-gathered truth {w_truth}"
+        );
     }
 }

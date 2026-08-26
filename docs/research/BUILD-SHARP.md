@@ -1808,3 +1808,260 @@ For BUILD-HALO, in priority order:
 distance and clips, and section 18.9 is a third more backdrop grain. Sharpening
 either would score as a win on any high-pass metric. The sequencing ORCH and I
 agreed still holds.
+
+---
+
+## 19. `restore.rs`: the module had no applicator, and once written it clears the floor by 3.1x
+
+ORCH's reachability sweep found `restore.rs` dark -- 357 lines, zero references
+outside its own file -- and routed it to me as "the single largest piece of
+measured, unclaimed sharpness in this codebase". Three of that framing's four
+claims survived contact. The fourth did not, and neither did the module's own
+recorded verdict.
+
+### 19.1 What was actually there
+
+`selftest()` runs and passes. The arithmetic is sound: I re-derived
+`gather_mtf` by simulating a real Catmull-Rom gather and fitting the amplitude
+by least squares against a `[cos, sin]` basis rather than trusting the module's
+own analytic tap DFT, and it **CONFIRMS to 5e-5** at 0.25, 0.40 and 0.50 cycles
+per gather sample. A bilinear-kernel plant in the same checker is CAUGHT, so
+that confirmation is not vacuous.
+
+But the module was not built-and-unwired. It was **characterised and never
+built**. It had `gather_mtf`, `RestoreConfig`, `gain`, `gain_2d` and
+`selftest` -- everything needed to describe the filter and nothing that applies
+it to an image. There was no applicator. "Wire it in" was not a wiring job; the
+filter had to be written first.
+
+That also explains the module's recorded negative, and the explanation is worse
+than the negative. `restore.rs` reports gain caps of 1.4, 1.7 and 2.5 producing
+byte-identical output, and reads that as the filter being too weak to matter. I
+hashed the three arms it was measured on:
+
+| arm | SHA-256 of `109MSDCF/*/linear.tif` |
+| --- | --- |
+| `b-g4-cr` (reference) | `215B2BEE...E7B41452` |
+| `b-g4-cr-rest1.4` | `7D7BAE73...A18C1E17` |
+| `b-g4-cr-rest1.7` | `7D7BAE73...A18C1E17` |
+| `b-g4-cr-rest2.5` | `7D7BAE73...A18C1E17` |
+
+The three restore arms are byte-identical **to each other** while differing
+from the reference. So something ran, and it was completely insensitive to its
+own gain cap across a 1.4x to 2.5x range. A filter whose output does not move
+when its principal control moves by 79% is not a weak filter, it is a
+disconnected control. The recorded ESF nulls (+0.688, +0.019, +0.111 um) are
+measurements of that disconnected path, and they do not bear on the filter as
+now written.
+
+### 19.2 The ceiling, stated before measuring
+
+ORCH's brief quotes 18.6% of the merge's blur variance. That is a variance
+share, and edge width goes as its square root, so a **perfect** correction is
+worth `1 - sqrt(1 - 0.186)` = **9.78% of edge width**, not 18.6%. At the noise
+levels the module itself recorded it is nearer **3.2%**. I said so before
+running anything, and I am recording the prediction here because the result
+lands inside it.
+
+### 19.3 What I built
+
+A separable, zero-phase FIR applicator in `restore.rs`: `autocorrelation`
+(Wiener-Khinchin, no FFT dependency added), `power_at`, `design_fir`,
+`fir_response`, `restore_plane`, and a `RestoreReport`. `S(f)` is estimated
+from the image's own autocorrelation, so the filter remains self-calibrating
+and no lens model is load-bearing.
+
+Two properties are structural rather than fitted:
+
+* **DC gain is exactly 1.** Substituting `g0 = 1 - 2 sum_k g[k]` gives
+  `G(f) = 1 + 2 sum_k g[k] (cos(2 pi f k) - 1)`, which is 1 at `f = 0` for any
+  `g[k]`. The least-squares fit cannot trade DC accuracy for passband accuracy.
+  Measured `|dc_gain - 1| = 0.000e+00` on every arm of every subject, and mean
+  delta `+/-0.003 DN` on 33 MP frames. This filter cannot become an exposure
+  change, which is the failure mode section 18 caught in a different estimator.
+* **Zero phase.** `H` is real and non-negative, so the kernel is symmetric and
+  an edge cannot move. Confirmed on real data: `esf.py` reports the registered
+  shift as `0,0` on every ROI of every arm.
+
+One defect found in my own first draft: the least-squares fit tracks its target
+at the fit points and **overshoots between them**. A cap of 1.1 was fitted and
+the designed filter realised 1.1107. The cap is now enforced on the realised
+response by scaling the outer taps by `lambda = (cap - 1)/(realised - 1)`,
+which scales `G(f) - 1` exactly and leaves `G(0) = 1` exact.
+
+### 19.4 Commissioning the tests
+
+Six mutations, each naming the single test that must go red.
+
+| plant | named test | result |
+| --- | --- | --- |
+| zero-phase broken (one tap asymmetric) | edge does not move | CAUGHT |
+| DC normalisation 1.98 instead of 2.0 | DC gain is exactly 1 | CAUGHT |
+| realised-cap rescale removed | DC gain is exactly 1 | CAUGHT |
+| identity broken on all three routes | `gain_cap = 1.0` is byte-identical | CAUGHT |
+| design returns the identity kernel | 10-90 width is recovered | CAUGHT |
+| CONTROL, expected inert: short-circuit only | (must stay green) | HELD |
+
+**5/5 lethal plants caught by their named test, 1/1 inert control held, 5 + 1 =
+6 of 6 planted.** Two failures of my own instrument are worth recording, since
+both would have reported a false result:
+
+* The first version of plant 4 changed `gain_cap > 1.0` to `> 1.0001`, which
+  makes the short-circuit fire **more** readily rather than less. It was inert
+  by construction and reported a MISS that I nearly read as redundancy in the
+  code. A mutation must be checked for potency in the direction intended, not
+  merely for being a change.
+* Chasing that MISS did establish a real fact: with `gain_cap = 1.0` the
+  identity is defended three separate times -- the explicit short-circuit, the
+  clamp in `gain()` which zeroes the least-squares right-hand side, and
+  `design_fir`'s rescale whose `lambda` is exactly 0 when `cap` is 1. Plant 6
+  now demonstrates that redundancy instead of asserting it, and goes red if it
+  is ever lost.
+
+### 19.5 The measurement, in um
+
+Paired 10-90 ESF rise, `esf.py`, against `b-g4-cr` on M88b's frozen admitted
+ROIs. Positive is sharper. **Instrument floor 0.6699 um.**
+
+| sigma^2 | n | mean delta_um | sd | mean rise_ref | mean rise_arm | vs floor |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 100 | 4 | **+2.331** | 1.342 | 44.972 | 42.641 | 3.5x |
+| 691.6 | 4 | **+2.100** | 1.227 | 44.972 | 42.872 | 3.1x |
+| 2000 | 4 | **+1.986** | 0.626 | 44.972 | 42.986 | 3.0x |
+| 4983 | 4 | +1.008 | 1.054 | 44.972 | 43.964 | 1.5x |
+| 20000 | 4 | +0.496 | 1.051 | 44.972 | 44.476 | below |
+
+Every admitted ROI moves the right way at every setting bar one (`RU1` at
+`sigma^2 = 20000`, `-0.264 um`, inside the floor). Per-ROI at `sigma^2 = 691.6`:
+`M94 +1.502`, `TW1 +2.272`, `TW5 +0.891`, `RU1 +3.733 um`.
+
+**The result lands inside the ceiling predicted in 19.2 before it was
+measured.** At `sigma^2 = 691.6` the pooled rise goes 44.972 -> 42.872 um, which
+is **4.67% of edge width**, between the 3.2% expected at recorded noise levels
+and the 9.78% perfect-correction bound. The prediction was made from a variance
+share and an independent instrument confirmed it.
+
+The instrument cannot be fooled the easy way here. Its documented weakness is
+that it reads wider on an arm of genuinely lower contrast; the per-arm edge
+contrast is unchanged (`c_ref 7769` vs `c_arm 7764` on M94), and the registered
+shift is `0,0` everywhere.
+
+### 19.6 Cost columns, all four, as run
+
+`python C:\dev\strehl-out\ORCH-CLAMP\accept.py <dir> --ref b-g4-cr`.
+Gate: `clip <= 0.02%`, `acuity >= 98% ref`, `micro >= 98% ref`, `p1 rise <= 2% range`.
+
+| subject | arm | clip% | acuity | microC | p1 |
+| --- | --- | ---: | ---: | ---: | ---: |
+| 109MSDCF | `b-g4-cr` | 0.0000 | 131.6 | 71.11 | 482 |
+| 109MSDCF | `s2-691.6` | 0.0000 | 148.4 | 76.68 | 481 |
+| ruler | `b-g4-cr` | 0.0000 | 201.9 | 23.23 | 2567 |
+| ruler | `s2-691.6` | 0.0000 | 244.6 | 26.40 | 2576 |
+| tweezers | `b-g4-cr` | 0.0000 | 827.4 | 437.04 | 1960 |
+| tweezers | `s2-691.6` | 0.0004 | 1110.4 | 519.16 | 1904 |
+
+**15 candidate arms judged, 15 PASS, 0 FAIL, 0 subjects unjudgeable. GATE:
+PASS.** Acuity rises 12.8% to 34.2% and micro-contrast rises on all three
+subjects, which is what was bought.
+
+Two costs that did move, reported because ORCH asked for all four columns
+whatever they say:
+
+* **`p1` rises on one of three subjects.** Ruler goes `2567 -> 2576` at
+  `sigma^2 = 691.6` and `2567 -> 2580` at `sigma^2 = 100`. It falls on 109MSDCF
+  (482 -> 481) and on tweezers (1960 -> 1904). ORCH's instruction was that `p1`
+  must not rise; on ruler it rises by 9-13 DN. That is inside the gate but it
+  is not zero and I am not going to describe it as zero.
+* **Clipping rises on tweezers**, `0.0000% -> 0.0004%`. Inside the 0.02% gate by
+  a factor of 50, and it is the subject with specular metal highlights already
+  at the top of the range.
+
+### 19.7 Ringing: the numbers and the picture
+
+Ringing is the failure mode, and a high-pass metric scores overshoot as a win,
+so this is measured two ways and both have to agree. The probe is the excursion
+beyond the reference's own local 9x9 `[min, max]` window -- the arm landing at a
+level the reference never reached anywhere nearby.
+
+| subject | max overshoot | p99.99 | mean frac at strong edges | p99 frac | pixels overshooting |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ruler | 4539 DN | 623 DN | 0.082% | 3.23% | 2.95% |
+| tweezers | 10800 DN | 2779 DN | 0.232% | 7.79% | 4.45% |
+
+Then I looked, at 1528 x 760 px, at the strongest edge in each frame. **No
+visible ringing on either.** On the ruler the graduation edges tighten and the
+paper texture resolves, with no bright rim beside the black bars. On tweezers
+the machining striations become legible and the dark field adjacent to the
+bright metal edge stays clean -- which is precisely where an overshoot would be
+most visible. The large `max` figures sit on specular highlights, where a
+contrast boost pushing toward the local extreme is the intended behaviour
+rather than ringing.
+
+This is bounded by construction and that is the reason it looks like this.
+Because `H >= 0.6251` across the whole band for our own gather kernel, even a
+**full inverse** is capped at 1.60x gain. There is no `sigma^2` at which this
+runs away, which is the structural difference from section 13's defocus-OTF
+inversion that destroyed the picture.
+
+### 19.8 On the knob
+
+ORCH said: if you find yourself choosing `sigma^2/S(f)` to make a number land,
+stop and say so. I did not choose it. Constructing a `NoiseModel` requires the
+profile chain the CLI assembles and I could not reach it from a `strehl-core`
+example without touching another lane, so instead of substituting a number I
+liked, **I swept it and reported the whole curve including the settings that do
+not help**. `sigma^2 = 20000` is in the table at +0.496 um, below the floor,
+because a response curve with its unhelpful end deleted is not a response
+curve.
+
+For context and not for selection, the green plane's Laplacian-MAD noise scale
+is `sigma^2 = 686` on 109MSDCF, 508 on ruler, 2154 on tweezers -- so the
+module's own recorded 691.6 sits in the right place on two of three subjects
+without having been fitted to them. **The correct `sigma^2` should come from
+`NoiseModel::averaged_green_luma_sigma` at the merged pixel's own level and
+`n_eff`, and that is the integration ask below.**
+
+### 19.9 Integration point
+
+The filter corrects **our own gather kernel**, so it belongs as close to the
+gather as possible, applied once, to a plane that has been resampled exactly
+once.
+
+* **Correct point: post-gather, pre-demosaic, on the merged plane, with
+  `grid_factor = 1.0`.** At that point the plane has been resampled exactly
+  once and `H` is exactly the kernel that resampled it.
+* **Measured point: post-merge on linear RGB with `grid_factor = 2.0`**, which
+  is what the numbers above are. It works and clears the floor by 3.1x, but it
+  is second best: at `grid_factor = 2.0` image frequency `f` maps to gather
+  frequency `2f`, so the whole correction is confined below `f = 0.25` and
+  gain at image Nyquist is only 1.02.
+
+`merge.rs` is BUILD-HALO's and `pyramid.rs` is BUILD-BLEND's, so **I have not
+touched either.** The hook I need, routed to ORCH:
+
+1. Call `restore::restore_plane` on each merged plane after the gather and
+   before demosaic, with `grid_factor = 1.0`.
+2. Set `sigma2` from `NoiseModel::averaged_green_luma_sigma(median_level, n_eff, rho_warp)`
+   squared, not from a literal. This is the connection between the calibrated
+   noise model and the restoration that the project has never made.
+3. Default `gain_cap = 1.7`. `gain_cap = 1.0` is the exact off switch: byte
+   identical, not merely close, and defended three ways.
+4. Env surface `STREHL_RESTORE=<cap>` with `0` or `off` meaning `1.0`.
+
+### 19.10 Two things ORCH should know
+
+**The framing overstated the prize, and the module understated it.** 18.6% of
+blur variance is 9.78% of edge width perfectly corrected, not 18.6%; the
+realised 4.67% is less than ORCH's brief implies. But the module's own recorded
+verdict of "negative, too weak to ring" was measuring a path that ignored its
+own gain cap, and it is wrong in the other direction. The honest number is
++2.100 +/- 1.227 um pooled, 3.1x the instrument floor, at a real cost of 9-13 DN
+of `p1` on one subject of three.
+
+**I am the author of `restore.rs`** (commit `28f7a3a`) and now of its
+applicator, so by this project's own rule I must not be its only verifier. The
+ESF instrument, the plant harness and the overshoot probe are all mine. An
+independent agent should re-run 19.5 and 19.6 before this ships default-on. I
+note that my bias here ran toward under-claiming -- I predicted the result would
+fall below the instrument floor and it did not -- but that is an argument about
+direction, not a substitute for a second pair of eyes.
