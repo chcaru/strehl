@@ -44,6 +44,19 @@ elects on veil strength alone, and section 4's remedy alone makes those regions
 **worse**. The specification is therefore two-part and the parts must ship
 together. See sections 9.6 to 9.9.
 
+**Amended by section 10, after H5.** The owner's fifth hypothesis — that the
+focus measure rewards edge *density* and a box `max` would fix it — is **dead**:
+0 of 1 defect ROIs on `flower-bud`, 0 of 3 on the bee, controls preserved. At the
+defect the veil ramp's own *peak* gradient (162.5) exceeds the texture's peak
+gradient (122.5), so no order statistic of `|grad|` on the full luma can elect the
+right frame. **The discriminating axis is spatial scale, not order statistic**,
+and the two are orthogonal. What survives is a refinement, not a mechanism:
+`max` is a better aggregate than `mean` wherever an answer exists, and `hp max|g|`
+gives the largest election margin measured anywhere (41.22x against 9.50x
+shipped), at the same asymptotic cost. Section 10 adopts it into the section 4
+specification. H5's instrument also **independently re-confirms H4**, killing the
+main open threat to section 9.6.
+
 ---
 
 ## 1. The picture, first
@@ -182,6 +195,12 @@ holds the detail. The stacker threw it away.
 `compute_layered`. **Not** `merge.rs`: the regulariser and the gate are downstream
 of the misranking and are exonerated in §3.
 
+**Amended by section 10.10.** Also `box_mean` in the same file: the window
+aggregate should become a running **max** (van Herk/Gil-Werman, O(1) per pixel, so
+no speed trade). The filter change and the aggregate change are independent and
+compose; the filter is what fixes the defect, the aggregate is what widens the
+margin.
+
 ### 4.2 The invariant
 
 > The focus response at a pixel must be invariant, to within the noise floor, to
@@ -203,6 +222,11 @@ instrument.
 
 Secondary, cheaper to watch during development: at the `pale-wash` ROI the elected
 index must fall inside the texture mode, `[24, 56]`, not `[110, 156]`.
+
+**Amended by section 10.10.** A third number, cheapest of the three and requiring
+no render: the dynamic range of `hp max|g|` at the bee's `leg-good` ROI must be
+`>= 30x`. Measured 41.22x with the specified operator; 9.50x with the shipped one.
+`src/h5.py` computes it from `.npz` crops already on disk.
 
 ### 4.4 The guard
 
@@ -592,3 +616,281 @@ python src/beedepth.py                                # whole-subject fingerprin
 python src/bee2.py --tag E-noalign                    # winner-field coincidence
 python src/bee3_orient.py                             # seam orientation
 ```
+
+---
+
+## 10. H5: "the focus measure rewards edge density, not edge sharpness"
+
+The owner ranked this first and asked for it to be tested before anything else.
+**It is not supported.** It fails at 0 of 1 defect ROIs on `flower-bud` and 0 of 3
+on the bee, with every control preserved. The reason it fails is more useful than
+the hypothesis would have been if it were true, so this section is mostly about
+the reason.
+
+### 10.1 The hypothesis, as stated
+
+A box **sum** of `|grad|` answers "how much edge energy is in this window", not
+"is this window in focus". Blur conserves total variation, so on a fringe of fine
+hairs a defocused frame can carry a *larger* window sum than the sharp one: each
+hair spreads into a wide low-contrast smear, the smears overlap, and more of them
+fall inside the window. A box **max** is not TV-conserving — peak gradient falls
+monotonically under blur — so the prediction is sharp:
+
+> At pixels inside the bright band, `mean|g|` elects a defocused frame and
+> `max|g|` elects the in-focus one.
+
+### 10.2 The instrument (MEASURED)
+
+`src/h5.py` computes six candidate statistics over the **same** `r = 13` window on
+the **same** ladder crops already used in sections 2 and 9, so nothing but the
+statistic changes: `mean|g|`, `mean|g|^2`, `mean|g|^4`, `max|g|`, `hp mean|g|`,
+`hp max|g|`, where `hp` is the high-pass `L - blur(L)` of section 4. It also
+carries two diagnostics that are not candidates: `_lp max|g|`, the peak gradient of
+the *low-pass* residual (the veil ramp alone), and `_hp max|g|` (the texture
+alone).
+
+Commissioning: the shipped statistic `mean|g|` must reproduce the frame the
+production merge actually elected at each ROI, to within the p5–p95 band of the
+elected index there. It does, **4/4 on `flower-bud` and 5/5 on the bee**. The
+replica is the same one commissioned in sections 2.2 and 9.6.
+
+The control criterion is band-based, not median-based. An earlier version compared
+against the median alone and produced a false "CONTROL BROKEN" at `subject-sharp`;
+that was an instrument defect and it is fixed.
+
+### 10.3 The result (MEASURED)
+
+`flower-bud`, elected frame per statistic (dynamic range in brackets):
+
+| roi | shipped | `mean\|g\|` | `max\|g\|` | `hp max\|g\|` |
+| --- | --- | --- | --- | --- |
+| **pale-wash** (the defect) | 133 | f136 (8.87x) | **f120** (4.92x) | **f40** (2.72x) |
+| leaf-infocus | 37 | f40 (1.94x) | f40 (2.43x) | f40 (2.56x) |
+| dark-patch | 22 | f24 (3.38x) | f24 (5.27x) | f24 (4.84x) |
+| subject-sharp | 66 | f40 (2.63x) | f40 (4.34x) | f40 (3.56x) |
+
+The texture mode at `pale-wash` is `[24, 56]` and the veil mode is `[110, 156]`
+(section 4.3). `max|g|` moves the election from f136 to f120 — **which is still
+inside the veil mode.** It moves by 16 frames along a 96-frame error. The
+high-pass moves it to f40, into the texture mode, as section 4 already specified.
+
+The bee, at its three defect ROIs:
+
+| roi | `mean\|g\|` | `max\|g\|` | `hp max\|g\|` |
+| --- | --- | --- | --- |
+| blob | f264 (1.93x) | f252 (1.44x) | f192 (1.34x) |
+| fringe | f298 (2.12x) | f298 (1.56x) | f36 (1.17x) |
+| fringe-ok | f264 (1.53x) | f264 (2.56x) | f264 (2.56x) |
+
+`max|g|` does not move `fringe` at all, moves `blob` by one rung, and leaves
+`fringe-ok` where it was. No control moves anywhere on either subject.
+
+**The decisive evidence is a picture, not the table.**
+`pics/H5-choice-flower-bud.png` renders the frame each statistic elects. At
+`pale-wash`, `mean|g|` elects f136 — a featureless bright-to-dark ramp with no
+botanical structure at all. `max|g|` elects f120 and renders **the same
+featureless ramp**. `hp mean|g|` elects f40 and the bud surface, its ridges and a
+diagonal structure are all plainly there. Three control rows below it are
+identical across all three statistics. Whatever H5 changes, it does not change
+what the picture shows.
+
+### 10.4 Why it fails, and the general statement (MEASURED)
+
+The `_lp max|g|` and `_hp max|g|` diagnostics answer this directly. They are the
+**peak** gradient of the veil ramp and the **peak** gradient of the texture — the
+exact quantity H5 argues falls monotonically under blur.
+
+| roi | ramp peak `_lp max\|g\|` | texture peak `_hp max\|g\|` | who wins |
+| --- | --- | --- | --- |
+| **pale-wash** (the defect) | **162.5** | 122.5 | **ramp, by 1.33x** |
+| leaf-infocus | 15.9 | 118.8 | texture, by 7.47x |
+| dark-patch | 32.4 | 188.6 | texture, by 5.82x |
+| subject-sharp | 24.2 | 134.5 | texture, by 5.56x |
+
+At the defect, and only at the defect, **the veil ramp's peak gradient exceeds the
+texture's peak gradient.** So the substitution H5 proposes cannot work: no order
+statistic of `|grad|` computed on the full luma — not the mean, not the max, not
+any percentile between them — can elect the texture frame at a pixel where the
+ramp's own maximum is the largest gradient present. The quantity being ranked is
+already larger for the wrong feature.
+
+The general statement, and it is the part worth keeping:
+
+> **H5 moves along the order-statistic axis. The defect lives on the spatial-scale
+> axis. They are orthogonal.**
+
+Mean to max is a change in *how the responses inside the window are pooled*. The
+veil and the texture are separated by *how fast they vary in space*, and no
+pooling rule can recover a distinction the pooled quantity never encoded. Only a
+scale-selective filter can, which is why the high-pass works and the max does not.
+The three power statistics `mean|g|`, `mean|g|^2`, `mean|g|^4` make the same point
+from the other end: raising the exponent from 1 to 4 walks the statistic from mean
+toward max and the elected frame at `pale-wash` never moves off f136.
+
+### 10.5 The stated premise is measurably false (MEASURED)
+
+H5 rests on the claim that a box mean of `|grad|` is "nearly blind to defocus" on
+this kind of structure. At `pale-wash` the shipped `mean|g|` has a dynamic range
+of **8.87x across the bracket — the largest of any ROI measured on that subject**,
+larger than at `dark-patch` (3.38x), `subject-sharp` (2.63x) or `leaf-infocus`
+(1.94x).
+
+The operator is not blind. It is **confidently peaked, on the wrong feature**.
+That distinction matters for the fix: a blind statistic would be rescued by making
+it more discriminating, which is what H5 proposes. A confidently wrong statistic
+is made *worse* by that, because sharpening the discrimination sharpens the error
+too. This is visible in the table above — `max|g|` at `pale-wash` produces a
+**cleaner** peak on the ramp, not a weaker one.
+
+### 10.6 What survives, and is worth taking (MEASURED)
+
+The instinct behind H5 is right about something real, just not about the defect.
+Where an answer **does** exist, peak-based statistics are strictly better
+discriminators than the shipped mean:
+
+| roi (all correctly elected) | `mean\|g\|` shipped | `max\|g\|` | `hp max\|g\|` |
+| --- | --- | --- | --- |
+| leg-good (bee) | 9.50x | 23.62x | **41.22x** |
+| bee-sharp | 3.77x | 5.90x | **7.10x** |
+| dark-patch | 3.38x | **5.27x** | 4.84x |
+| subject-sharp | 2.63x | **4.34x** | 3.56x |
+| leaf-infocus | 1.94x | 2.43x | **2.56x** |
+| fringe-ok (bee) | 1.53x | 2.56x | **2.69x** |
+
+`hp max|g|` gives the largest dynamic range measured anywhere in this
+investigation: **41.22x at `leg-good` against 9.50x for the shipped statistic, a
+4.3x improvement in the margin the election has to work with.** A larger margin is
+directly a lower probability that noise decides the argmax, which is the
+mechanism section 2.4 blames for the hard boundary.
+
+Two honesties about that table. `hp max|g|` wins at 4 of 6, not 6 of 6 — it loses
+to plain `max|g|` at `dark-patch` and `subject-sharp`. Both are `flower-bud` ROIs
+where the veil is present, and the diagnostic says why: `_lp max|g|` has a range of
+12.65x and 9.88x there, so part of plain `max|g|`'s extra margin at those two ROIs
+**is veil contribution that happens to peak on the right frame**. That is not a
+virtue. It is the same contribution that elects f120 at `pale-wash`, and it is
+luck that it points the right way at those two. `hp max|g|` gives up the luck along
+with the contamination.
+
+And a running max is O(1) per pixel by van Herk/Gil-Werman, the same cost class as
+the running box sum already in `focus.rs`, so **this is not a speed trade.** That
+matters given the project's mandate.
+
+### 10.7 H5's instrument independently re-confirms H4 (MEASURED)
+
+This was not the purpose of the experiment and it is the strongest incidental
+result in it. Section 9.6 accepted the null at two of three bee defect ROIs on the
+grounds that the texture response is flat across 299 frames. The obvious threat to
+that acceptance — logged as an open question in section 9.10 — is that flatness
+could be an artifact of the *mean*, a real peak washed out by averaging.
+
+`hp max|g|` is a maximum, not a mean, and it is computed on the high-pass, so it is
+the statistic least able to hide a narrow texture peak. Across the whole bracket it
+gives:
+
+| roi | `hp max\|g\|` dynamic range |
+| --- | --- |
+| blob | **1.34x** |
+| fringe | **1.17x** |
+| leg-good (control, same subject) | **41.22x** |
+
+A 31x separation between the defect ROIs and a good ROI on the same subject, from a
+statistic chosen by someone trying to prove a different point. **H4 stands, and it
+now stands on two statistics that fail in opposite directions.** It is not closed —
+the ladder is still 26 rungs of 299 and a peak narrower than ~12 frames would fall
+between them — but the mean-washout explanation is dead.
+
+### 10.8 The spilled-milk band, measured (MEASURED)
+
+The owner's first constraint was that the band is "brighter than the subject and
+about as bright as the far backdrop". `src/milk.py` profiles the merged luma and
+the elected index against signed distance from the silhouette on the align-off
+merge. `pics/MILK-profile.png`.
+
+| region | luma | / clean backdrop |
+| --- | --- | --- |
+| clean backdrop (frame corners) | 17893 DN | 1.00 |
+| **the band**, collar at d = -15 px | **19865 DN** | **1.11** |
+| deep subject, d > 150 px | 3320 DN | 0.19 |
+
+**The constraint is confirmed.** The band is 6.0x brighter than the deep subject
+and 1.11x the clean backdrop — the merge is producing better-than-clean-backdrop
+values in a zone that should be subject or veiled backdrop.
+
+Two things the profile shows that were not asked for:
+
+1. **The election is non-monotonic across the silhouette, and the shape is
+   diagnostic.** Far backdrop elects f137; a ring at d = -90 to -140 px collapses to
+   **f2**, the near end of the bracket, with luma dipping to 0.90 (this is the grey
+   veil, and it is BUILD-HALO's lane); then the collar at d = -15 px **bounces back
+   to f115** with luma at its 1.11 peak. A monotonic optical falloff cannot produce
+   a collapse and a bounce. An election can.
+2. **Brightness and election co-vary inside the subject: Spearman +0.888 over 40
+   distance bins.** Where the merge elects a far frame it is also bright, and both
+   decay together inward. This is the same coupling section 2.2 established at a
+   single ROI, now measured over the whole subject as a function of distance.
+
+A note on method that is itself a small finding. The subject mask is drawn by
+brightness, at 0.55x clean backdrop. The artifact *is* excess brightness. So the
+band lands just **outside** the mask, and only 0.5% of pixels inside the mask reach
+90% of clean backdrop. That is not a flaw to work around: a threshold that
+separates a dark green bud from a white sweep can only put the band on the backdrop
+side **if the band has been rendered at backdrop levels**. The mask failure is the
+measurement.
+
+### 10.9 The trichome claim is untested (ARGUED)
+
+The owner's third constraint — "its lobes and drips sit at the hair/trichome
+positions" — is the one clue I have **not** measured, and I am flagging it rather
+than quietly adopting it.
+
+My account is that veil reach depends on local silhouette geometry: a convoluted
+boundary admits ramps from several directions at once, they superpose, and the
+contour where the ramp stops winning bulges outward there. The trichome fringe is
+the most convoluted part of this silhouette, so lobes at trichome positions follow
+from geometry alone and do not require the hairs to be doing anything special.
+
+That is an argument, not a measurement, and it competes with the owner's reading
+that the hairs themselves are the cause. **The test that would settle it:** extract
+the local boundary convexity (or a windowed count of silhouette-crossing per unit
+arc length) along the contour, and rank-correlate it against the band's outward
+reach at the same arc position. If reach tracks convolutedness, geometry is
+sufficient. If it tracks hair density independently of convolutedness, it does not.
+Roughly an hour, no new renders. I did not run it.
+
+### 10.10 Amendment to section 4
+
+Section 4 specified the high-pass. This section adds the pooling rule, and the two
+are independent choices that compose:
+
+- **Section 4 stands unchanged as to the filter.** The high-pass is what fixes the
+  defect. The scale axis is the one that matters and nothing here weakens that.
+- **Adopt `max` rather than `mean` as the window aggregate**, i.e. `hp max|g|`
+  rather than `hp mean|g|`. This does not fix anything section 4 does not already
+  fix — both elect f40 at `pale-wash` — but it raises the election margin at
+  correctly-elected pixels from 9.50x to 41.22x at the best-measured ROI, at the
+  same asymptotic cost.
+- **New target number for the guard:** `hp max|g|` dynamic range at `leg-good` must
+  be >= 30x (measured 41.22x; shipped 9.50x). This is a cheap regression sentinel
+  that does not require a full render.
+- **The guard of section 4.4 is unchanged and is not optional.** Changing the
+  aggregate from a mean to a max changes the *distribution* of the focus response,
+  so `FOCUS_NOISE_SD = 0.015214` and `DEFAULT_GATE = 4.0` must be re-measured for
+  the new operator. Both are calibrated against a box mean. Shipping the max
+  without recalibrating the gate would change `n_eff` by an unknown factor.
+
+### 10.11 Reproduction
+
+```powershell
+cd experiments\BUILD-ELECT\src
+python h5.py            # both subjects, from the ladder .npz already on disk
+python milk.py          # flower-bud, from the align-off merge already on disk
+```
+
+Neither needs a render. `h5.py` reads
+`C:\dev\strehl-out\BUILD-ELECT\ladder-crops\` and
+`C:\dev\strehl-out\BUILD-ELECT\bee\ladder-crops\`.
+
+Pictures: `pics/H5-choice-flower-bud.png` (the decisive one),
+`pics/H5-curves-flower-bud.png`, `bee/pics/H5-choice-bee.png`,
+`bee/pics/H5-curves-bee.png`, `pics/MILK-profile.png`.
