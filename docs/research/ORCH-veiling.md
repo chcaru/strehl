@@ -4278,3 +4278,15 @@ It stays a measured demonstration on `bee-1-cpl` until the audit says otherwise.
 
 Neither is closed by assertion. Both have a number, an instrument, and an arm that proves
 the instrument can still say no.
+
+### 41.5 Withdrawn: the second `Hull::Unclamped` was never a hole
+
+I flagged `pyramid.rs:1216`'s `hull: Hull::Unclamped` as a possible unclamped path reachable
+from the shipped render, and carried it as an open worry across several sections. It is not
+one. It sits inside `clamped_fraction()`, which constructs a temporary unclamped `BandMerge`
+precisely so it can **count** how many output pixels the clamp moved, and returns
+`Vec<f64>` fractions rather than an image. It is a diagnostic and it is correct.
+
+Withdrawn, and worth saying plainly rather than letting it lapse: an open worry that is
+never resolved reads, months later, exactly like an open defect. **Retract flags as loudly
+as you raise them.**
