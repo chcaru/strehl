@@ -103,6 +103,66 @@ def write_u16_png(p: Path, rgb: np.ndarray) -> None:
     assert np.array_equal(back[:, :, ::-1], rgb), f"{p.name}: 16-bit PNG did not round-trip"
 
 
+def silhouette_score(img: np.ndarray) -> np.ndarray:
+    """Per-tile density of SUBJECT-AGAINST-BACKGROUND boundary.
+
+    `edge` finds the strongest coarse gradient in the frame, and on a subject
+    that fills the frame that is an INTERNAL boundary: on bee-1-cpl it landed in
+    the middle of the hair mass, which is the one place the cut-out artifact
+    cannot be. But the artifact -- the bright rim that reads as a badly cut-out
+    sticker -- lives specifically where the subject occludes the BACKGROUND, so
+    the site has to be defined by that relationship rather than by contrast.
+
+    Background is identified without assuming it is light or dark, because this
+    corpus has both (white sweeps for flowers and bees, black fields for frost
+    and foam): it is the luminance mode of the LOW-TEXTURE population. A sweep
+    is smooth, so it dominates the flat pixels; the subject does not. Pixels
+    near that level and locally smooth are background, and the morphological
+    gradient of that mask is exactly the occluding boundary.
+
+    Returns a tile grid, so it can be scored the same way as the others."""
+    lum = img.astype(np.float32).mean(2)
+    small = lum[::4, ::4]  # 4x decimation: the mask is a coarse structure
+
+    # Local roughness, and the "smooth" population that a sweep dominates.
+    rough = ndi.uniform_filter(small ** 2, 9) - ndi.uniform_filter(small, 9) ** 2
+    np.maximum(rough, 0, out=rough)
+    rough = np.sqrt(rough)
+    smooth = rough < np.percentile(rough, 40)
+    if smooth.sum() < smooth.size * 0.01:
+        return np.zeros_like(tile_stat(lum, lambda t: 0.0))
+
+    # Mode of the smooth population, taken as a histogram peak rather than a
+    # median: with a bimodal frame (bright sweep + large dark subject) a median
+    # can land between the two and describe neither.
+    vals = small[smooth]
+    hist, edges = np.histogram(vals, bins=128)
+    level = 0.5 * (edges[hist.argmax()] + edges[hist.argmax() + 1])
+    tol = max(float(vals.std()), 1.0) * 2.0
+
+    bg = (np.abs(small - level) < tol) & smooth
+    bg = ndi.binary_closing(bg, np.ones((5, 5)))
+    bg = ndi.binary_opening(bg, np.ones((5, 5)))
+    # Morphological gradient: 1 where the mask changes, i.e. the occluding edge.
+    boundary = ndi.binary_dilation(bg, np.ones((3, 3))) ^ ndi.binary_erosion(bg, np.ones((3, 3)))
+
+    # ...but "not background" is not the same as "subject". On bee-1-cpl the
+    # first version of this scored highest where the white sweep meets the
+    # table below it: two smooth regions at slightly different levels, a long
+    # clean line, and no occlusion anywhere near it. An OCCLUDING boundary has
+    # subject on one side, so the boundary only counts where textured pixels
+    # are adjacent to it. This is what makes the site the cut-out artifact's
+    # home rather than merely a place where the image changes.
+    textured = rough > np.percentile(rough, 75)
+    boundary = boundary & ndi.binary_dilation(textured, np.ones((7, 7)))
+
+    # Back to full-frame tile coordinates.
+    full = np.zeros(lum.shape, np.float32)
+    full[:small.shape[0] * 4:4, :small.shape[1] * 4:4] = boundary
+    full = ndi.uniform_filter(full, 9)
+    return tile_stat(full, lambda t: float(t.mean()))
+
+
 def site_all(img: np.ndarray) -> dict:
     """The three sites, as (y, x) top-left crop origins. Deterministic.
 
@@ -126,6 +186,7 @@ def site_all(img: np.ndarray) -> dict:
     lit = tile_stat(lum, lambda t: float(np.median(t)))
 
     plan = [
+        ("silhouette", silhouette_score(img), "max", None),
         ("edge", tile_stat(coarse, lambda t: float(t.mean())), "max", None),
         ("sharp", tile_stat(lap, lambda t: float(t.mean())), "max", None),
         ("flat", tile_stat(g, lambda t: float(t.std())), "min", lit_floor),
@@ -180,7 +241,7 @@ def main() -> int:
     ap.add_argument("dirs", nargs="+", type=Path, help="arm directories")
     ap.add_argument("--subject", required=True)
     ap.add_argument("--site-on", help="arm whose image fixes the crop sites (default: --ref)")
-    ap.add_argument("--ref", required=True, help="arm shown first in composites")
+    ap.add_argument("--ref", help="arm shown first in composites; inferred if only one")
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument("--display", default="linear-srgb", choices=["linear-srgb", "none"])
     ap.add_argument("--scale", type=float, default=1.0,
@@ -191,10 +252,21 @@ def main() -> int:
     for d in a.dirs:
         for t in d.glob(f"{a.subject}--*.tiff"):
             arms[t.name[len(a.subject) + 2:-5]] = t
+        # gallery.ps1 writes <subject>.tiff, one arm per directory, so fall back
+        # to naming the arm after the directory. Without this the instrument
+        # only works on its own harness's output, which is the wrong way round:
+        # the gallery is the thing that actually has to be judged.
+        plain = d / f"{a.subject}.tiff"
+        if plain.exists():
+            arms.setdefault(d.name.split(".")[0], plain)
     if not arms:
-        raise SystemExit(f"no {a.subject}--*.tiff under {', '.join(str(d) for d in a.dirs)}")
+        raise SystemExit(f"no {a.subject}[--arm].tiff under {', '.join(str(d) for d in a.dirs)}")
+    if a.ref is None:
+        if len(arms) != 1:
+            raise SystemExit(f"--ref is required with {len(arms)} arms: {', '.join(sorted(arms))}")
+        a.ref = next(iter(arms))
     if a.ref not in arms:
-        raise SystemExit(f"--ref {a.ref} not among arms: {', '.join(sorted(arms))}")
+        raise SystemExit(f"--ref {a.ref!r} not among arms: {', '.join(sorted(arms))}")
 
     site_arm = a.site_on or a.ref
     if site_arm not in arms:
