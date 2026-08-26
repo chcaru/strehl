@@ -750,29 +750,70 @@ fn main() -> Result<()> {
             // nothing is indistinguishable at the terminal from one that
             // works. Each entry pairs the user's spelling with whether they
             // actually passed it, so a default can never trip the refusal.
-            let wrong_backend: &[(&str, bool, merge_cmd::MergeBackend)] = &[
-                ("--gate", !gates.is_empty(), merge_cmd::MergeBackend::Pyramid),
-                ("--target-n-eff", target_n_eff.is_some(), merge_cmd::MergeBackend::Pyramid),
-                ("--index-map", index_map.is_some(), merge_cmd::MergeBackend::Pyramid),
-                ("--n-eff-map", n_eff_map.is_some(), merge_cmd::MergeBackend::Pyramid),
-                ("--photometric", photometric.is_some(), merge_cmd::MergeBackend::Pyramid),
-                ("--stats", stats, merge_cmd::MergeBackend::Pyramid),
-                ("--stats-placebo", stats_placebo, merge_cmd::MergeBackend::Pyramid),
-                ("--flat-roi", flat_roi.is_some(), merge_cmd::MergeBackend::Pyramid),
-                ("--detail-roi", detail_roi.is_some(), merge_cmd::MergeBackend::Pyramid),
-                ("--pyramid-bands", pyramid_bands.is_some(), merge_cmd::MergeBackend::Estimator),
-                ("--pyramid-gate", pyramid_gate.is_some(), merge_cmd::MergeBackend::Estimator),
-                ("--pyramid-exponent", pyramid_exponent.is_some(), merge_cmd::MergeBackend::Estimator),
-                ("--pyramid-sharpen", pyramid_sharpen.is_some(), merge_cmd::MergeBackend::Estimator),
-                ("--pyramid-select", pyramid_select.is_some(), merge_cmd::MergeBackend::Estimator),
-                ("--pyramid-base", pyramid_base.is_some(), merge_cmd::MergeBackend::Estimator),
+            //
+            // The fourth column is the migration. A bare refusal is correct but
+            // it strands the caller: `--gate` appears at 252 sites in 161
+            // executable files in this repository, and on the day the default
+            // moves every one of them needs an answer to "then what do I run?".
+            // Naming the counterpart -- and saying plainly when there ISN'T one
+            // -- is the difference between a refusal and a dead end. Where a
+            // counterpart exists but means something else, that is said too:
+            // silently carrying a number across two different quantities is the
+            // same class of defect as ignoring the flag.
+            let wrong_backend: &[(&str, bool, merge_cmd::MergeBackend, &str)] = &[
+                ("--gate", !gates.is_empty(), merge_cmd::MergeBackend::Pyramid,
+                 "--pyramid-gate is the pyramid's noise gate, but it is a DIFFERENT QUANTITY: a \
+                  multiple of the modelled band-noise power (default 2.0), where --gate is a \
+                  multiple of the focus-response SD (default 4.0). The number does NOT carry \
+                  over -- re-choose it, do not rename it."),
+                ("--target-n-eff", target_n_eff.is_some(), merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart. n_eff counts the frames the gated average admitted at a pixel; \
+                  the pyramid weights every frame per band coefficient, so there is no per-pixel \
+                  frame count to solve a gate against."),
+                ("--index-map", index_map.is_some(), merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart. The pyramid elects per band coefficient, not per pixel, so no \
+                  single frame index owns an output pixel."),
+                ("--n-eff-map", n_eff_map.is_some(), merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart, for the same reason as --target-n-eff."),
+                ("--photometric", photometric.is_some(), merge_cmd::MergeBackend::Pyramid,
+                 "NOT YET IMPLEMENTED on this backend, rather than inapplicable. The per-frame \
+                  affine gain would apply unchanged, but fitting it needs every frame's flux \
+                  before the first frame is folded, which the pyramid's single-pass fold does \
+                  not currently do."),
+                ("--stats", stats, merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart. Through-focus statistics describe the estimator's focus field, \
+                  which this backend does not compute."),
+                ("--stats-placebo", stats_placebo, merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart; it is a control for --stats."),
+                ("--flat-roi", flat_roi.is_some(), merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart. The ROI diagnostics report on the estimator's noise invariant."),
+                ("--detail-roi", detail_roi.is_some(), merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart, for the same reason as --flat-roi."),
+                ("--pyramid-bands", pyramid_bands.is_some(), merge_cmd::MergeBackend::Estimator,
+                 "no counterpart. The estimator has no band pyramid to set a depth on."),
+                ("--pyramid-gate", pyramid_gate.is_some(), merge_cmd::MergeBackend::Estimator,
+                 "--gate is the estimator's noise gate, but it is a DIFFERENT QUANTITY: a \
+                  multiple of the focus-response SD (default 4.0), where --pyramid-gate is a \
+                  multiple of the modelled band-noise power (default 2.0). The number does NOT \
+                  carry over."),
+                ("--pyramid-exponent", pyramid_exponent.is_some(), merge_cmd::MergeBackend::Estimator,
+                 "no counterpart. The estimator's selection is a gated average, not a weighted \
+                  combination with a tunable exponent."),
+                ("--pyramid-sharpen", pyramid_sharpen.is_some(), merge_cmd::MergeBackend::Estimator,
+                 "no counterpart; it ramps the exponent across bands."),
+                ("--pyramid-select", pyramid_select.is_some(), merge_cmd::MergeBackend::Estimator,
+                 "no counterpart; it chooses between soft and hard-max band selection."),
+                ("--pyramid-base", pyramid_base.is_some(), merge_cmd::MergeBackend::Estimator,
+                 "no counterpart; it chooses how the base band is formed."),
             ];
-            for (flag, given, refused_under) in wrong_backend {
+            for (flag, given, refused_under, migration) in wrong_backend {
                 anyhow::ensure!(
                     !(*given && backend == *refused_under),
-                    "{flag} belongs to the {} merge, and --merge selected {}. Pass --merge {} \
-                     to use it, or drop {flag}. It is refused rather than ignored because a \
-                     flag that silently does nothing looks exactly like one that works.",
+                    "{flag} belongs to the {} merge, and --merge selected {}.\n  \
+                     what to do  : {migration}\n  \
+                     or          : pass --merge {} to use {flag} as it stands.\n\
+                     Refused rather than ignored because a flag that silently does nothing looks \
+                     exactly like one that works.",
                     refused_under.other().name(),
                     backend.name(),
                     refused_under.other().name(),
