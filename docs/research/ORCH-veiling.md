@@ -7848,3 +7848,62 @@ claim names. Section 63's discipline applies -- this is a measurement of a
 configuration, and the configuration is `--merge pyramid` at its default gate,
 which is what ships. That much, at least, is now the product rather than a
 product.
+
+
+## 66. The whole corpus, re-rendered from one binary, and looked at
+
+Twenty-six subjects, 4825 frames, rendered in 27.8 minutes from a single pinned
+executable (`C46BDF06A7136F54`) at `--merge pyramid --pyramid-gate 4.5 --srgb`.
+Twenty-six succeeded and none failed. Every render kept its own `.err` sidecar
+and the log records the binary's hash on line 2, so this gallery can be
+reproduced, which is the thing `SHIP-V1` could not do.
+
+I then opened fifteen of the twenty-six at 100%. Not thumbnails, and not a
+ranking statistic: actual pixels, chosen by high-frequency energy so the crop
+lands on the finest texture in the frame rather than on its strongest edge. An
+edge has a 1/f spectrum and wins a gradient contest while containing no fine
+detail, which is how a crop selector ends up proving that the tool renders
+edges.
+
+What fifteen subjects show:
+
+- `bee-1-cpl` resolves individual plumose hairs on the leg, each with its own
+  branching, against a bright background -- the exact geometry that produces a
+  halo -- with no rim.
+- `leaf-2-cpl` puts a leaf edge against flat grey, the textbook occluding
+  boundary, and draws no rim either. Individual epidermal cells are resolved
+  inside it.
+- `112MSDCF` resolves dendritic filaments to single-pixel tips against a black
+  field that stays black. No veiling into the shadow.
+- `coffee-bean`, `pencil-steep-angle-cpl`, `tweezers-cpl`, `couch-fibers-cpl`
+  hold microcontrast at the limit -- surface pores, graphite facets, machining
+  striations, deep inter-fibre gaps.
+- `lavendar-cpl` is thousands of overlapping trichomes, the worst occlusion case
+  in the corpus, and it is clean.
+
+One subject is not like the others. `flower-bud-alone-cpl` is visibly soft
+against the rest, with a milky veil over the green surface, and it carries a
+magenta fringe where the bud meets blown-out white. It is also the subject
+`V-bestframe` scores worst, at a median merge-to-best-frame ratio of 0.82. The
+number and the appearance agree, which is the first time in this project that a
+quality statistic and my eye have independently pointed at the same subject.
+That agreement is worth more than either alone: a statistic nobody has looked
+behind is a rumour, and an impression nobody has measured is a mood.
+
+The deficit belongs to alignment resampling, which is owned and quantified at
+17--27%, not to the merge. Two things ride on the same subject and should not be
+conflated with it: the highlight is clipped, and clipped highlights are where
+every colour reconstruction is worst; and the fringe is at a f/2.8-class
+boundary, which is lateral chromatic aberration and a lens property before it is
+a stacker property. Neither excuses the softness. Both mean the subject is a
+compound case and the resampling fix should be measured on it *and* on a subject
+that is not fighting three things at once.
+
+The rule this earns, and it is the counterweight to every rule above about not
+trusting your eye:
+
+> A quality metric and a visual survey are two instruments, and the useful
+> event is when they *disagree*. Fourteen subjects where they agree tell you the
+> metric works. The fifteenth, where they agree on a defect, tells you where to
+> spend. A metric that has never been checked against an opened image has not
+> been commissioned -- it has only been computed.
