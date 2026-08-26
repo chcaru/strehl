@@ -8589,3 +8589,130 @@ The card now says so, including the words *the cause is NOT established*. Their
 route to it cost three instruments and two in-place retractions, including the
 observation that **two statistics both normalised by intensity are not
 independent when the same 18.5% exposure ramp moves both.**
+
+## 74. The instrument built to test for flatness was flattening the pictures
+
+Section 73 catalogued seven instruments whose failure mode resembled their
+intended output. Here is the eighth, and it is mine.
+
+### What I set out to check
+
+The user's complaint was about how the pictures *look*. The shipped masters are
+faithful renders -- camera matrix, sRGB curve, one honest gain, no grade -- and
+the project's own `DO-NOT-MEASURE.txt` says so in as many words:
+
+> *a faithful `--srgb` master is flat by construction and **reads as poor work
+> when it is not**.*
+
+So there is a `_presentation` set, graded, existing precisely so a photographer
+can judge the photographs. My hypothesis: the shipping gallery shows the
+faithful set, the user judged the tool on flat renders, and pointing the gallery
+at the graded set would fix a chunk of the impression.
+
+The first half is true -- `build_view.py` resizes and saves, nothing else.
+
+### The measurement, and my first instrument was blind
+
+I compared faithful against presentation on `p99 - p1` of luma. Median ratio
+**1.02x**, median luma shift **-1.6 of 255**. On that reading the grade does
+essentially nothing.
+
+**That reading was worthless.** The note claims three operations -- a percentile
+black point, a filmic S-curve, and a saturation lift -- and `p99 - p1` is blind
+to two of them. An S-curve moves the *midtone slope* and deliberately leaves the
+endpoints alone; a saturation lift does not touch luma at all. I had built a
+statistic that could only see the one operation I was least interested in.
+
+Rebuilt with one statistic per claimed operation, each commissioned against its
+own plant, and the cross-talk reported rather than assumed away:
+
+| claimed operation | statistic | corpus median | verdict |
+|---|---|---:|---|
+| percentile black point | p1 of luma | **+0.1 / 255** | inert |
+| filmic S-curve | p75 - p25 of luma | **0.939x** | **backwards** |
+| saturation lift | mean (max-min)/max | **1.106x** | works |
+
+### The defect
+
+```python
+c = 0.42
+out = out + c * out * (1.0 - out) * (2.0 * out - 1.0) * -1.0
+```
+
+That trailing `* -1.0` inverts the curve. `(2x-1)` is negative below the
+midpoint and positive above it, so **adding** the term pushes each half away
+from the centre, which is contrast; **negating** it pulls both halves toward the
+centre, which is the opposite. On a 1001-point ladder:
+
+| | midtone slope | shadow x=0.25 | highlight x=0.75 |
+|---|---:|---:|---:|
+| identity | 1.000 | 0.2500 | 0.7500 |
+| **as shipped** | **0.822** | 0.2894 **lifted** | 0.7106 **pulled down** |
+| sign removed | 1.178 | 0.2106 darkened | 0.7894 brightened |
+
+Both versions are monotonic, both hold their endpoints, both produce a
+perfectly plausible photograph, and nothing anywhere checked the *direction* of
+the contrast. **The script whose docstring asks "do these look bad because they
+are SOFT, or because they are FLAT?" was flattening them before anyone looked.**
+
+> **A tone curve has a sign, and a wrong sign is invisible in every structural
+> check: monotone, endpoint-preserving, non-clipping, and confidently wrong.**
+
+### The fix, and the subject that refused it
+
+Sign removed, then measured on six subjects against both the faithful master and
+the shipped inverted grade:
+
+| subject | faithful | shipped | fixed |
+|---|---:|---:|---:|
+| `leaf-2-cpl` | 58.9 | 54.7 | **72.0** |
+| `coffee-bean` | 156.9 | 145.4 | **177.0** |
+| `bee-3-cpl` | 126.6 | 118.6 | **141.7** |
+| `109MSDCF` | 125.2 | 124.9 | **140.7** |
+| `lavendar-cpl` | 57.3 | 57.3 | **63.5** |
+| `flower-bud-alone-cpl` | 13.0 | 17.6 | **9.2** |
+
+Five subjects gain 11-32%. The sixth goes **backwards, and below ungraded** --
+`flower-bud-alone-cpl` is a white bud on white at median luma 239/255, an
+S-curve brightens highlights, and this subject is already living in them. The
+cubic S is symmetric about 0.5 and has no real shoulder, so for a high-key
+subject it compresses exactly where all the tones are.
+
+I did not tune the constant until the anomaly disappeared. The grade now
+measures its own effect and **backs the strength off until it is not worse than
+no grade at all** -- 1.0, 0.5, 0.25, then off -- reporting which subjects were
+backed off instead of silently shipping them. `flower-bud-alone-cpl` goes to
+**0.000** and lands at 13.5, above the faithful 13.0. That is the merge's own
+*never worse than a single frame* invariant, applied to the grade: **a
+presentation render that degrades the picture is not a presentation render.**
+
+The guard is commissioned two-sided from a `$TEMP` pin, anchored on a unique
+full line that hard-errors if it fails to land: fixed **passes**, sign restored
+**fails with the diagnostic naming the inversion**, restored **passes**, and the
+restore is byte-verified against the pin.
+
+### What the gallery shows now
+
+Graded full frame for judging the photograph, faithful master at 1:1 for judging
+the defect, each labelled on its own caption. The split is the point: a grade is
+a tone curve, and nothing in this project judges a defect across one.
+
+### Two negatives worth keeping
+
+**The sRGB gamut ceiling is not costing anything measurable.** I expected a
+16-bit sRGB master to clip printable colour on saturated macro subjects. Probe
+commissioned two-sided -- planted out-of-gamut **100%**, in-gamut pastel ramp
+**0.0000%** -- and all 26 masters read **0.0000%** at both rails. Hypothesis
+refuted; do not add a wide-gamut output on my say-so.
+
+But the same run showed **`true-white 0.000%` on every subject**, so my probe's
+trigger condition never occurs in this data and the zero means *the signature is
+absent from the file*, not *no gamut was clipped*. If the pipeline clamps
+negatives and then adds a pedestal, the evidence is destroyed upstream of me.
+Routed to BUILD-WIRE as a source read, not another measurement.
+
+**The masters declare no print size.** `XResolution 1.0`, `YResolution 1.0`,
+`ResolutionUnit 1 (none)`, and `Software strehl 0.0.0`, on all 26. Everything
+else in the file is right -- 16-bit, `SampleFormat (1,1,1)`, a real 2716-byte
+ICC that names itself, an `ImageDescription` stating primaries and white point.
+A print master whose physical size is undefined is not a print master.

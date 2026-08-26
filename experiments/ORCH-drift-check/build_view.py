@@ -23,6 +23,9 @@ import numpy as np
 import tifffile
 from PIL import Image
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import grade  # noqa: E402  -- the presentation grade, tone-curve guard included
+
 CROP = 800
 
 
@@ -131,6 +134,7 @@ def main():
     ap.add_argument("out", nargs="?", default=r"C:\dev\strehl-out\VIEW-NOW")
     a = ap.parse_args()
     src, out = pathlib.Path(a.src), pathlib.Path(a.out)
+    grade.assert_is_an_s_curve()
     assets = out / "assets"
     assets.mkdir(parents=True, exist_ok=True)
 
@@ -151,8 +155,15 @@ def main():
         fw = 1400
         full_s = full.resize((fw, int(round(full.height * fw / full.width))),
                              Image.LANCZOS)
+        # The FULL-FRAME view is GRADED. A faithful --srgb master is flat by
+        # construction, and the project's own note says it "reads as poor work
+        # when it is not" -- which is exactly the judgement this gallery was
+        # getting. The 1:1 crop below stays faithful, because a grade is a
+        # tone curve and defects are not judged across one.
+        gr = grade.grade(np.asarray(full_s).astype(np.float64) / 255.0)
+        Image.fromarray((gr * 255.0 + 0.5).astype(np.uint8)).save(
+            assets / f"{stem}--full.jpg", quality=88, optimize=True)
         fp = assets / f"{stem}--full.jpg"
-        full_s.save(fp, quality=88, optimize=True)
 
         y0, x0, e = pick_crop(lum)
         crop = Image.fromarray(v8[y0:y0 + CROP, x0:x0 + CROP])
@@ -184,8 +195,8 @@ def main():
   <div class="meta">{shp[1]} x {shp[0]} &middot; 100% crop at ({xy[0]}, {xy[1]}),
      chosen by high-frequency energy{notehtml}</div>
   <div class="pair">
-    <figure><img src="assets/{fj}" loading="lazy"><figcaption>full frame</figcaption></figure>
-    <figure><img src="assets/{cpng}" loading="lazy"><figcaption>100% crop &mdash; actual pixels</figcaption></figure>
+    <figure><img src="assets/{fj}" loading="lazy"><figcaption>full frame &mdash; <b>graded for viewing</b> (black point, filmic S-curve, saturation)</figcaption></figure>
+    <figure><img src="assets/{cpng}" loading="lazy"><figcaption>100% crop &mdash; <b>faithful master, actual pixels</b>, no curve</figcaption></figure>
   </div>
   <pre class="cfg">{html.escape(cfg)}</pre>
 </section>""")
