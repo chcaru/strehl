@@ -2788,3 +2788,38 @@ combination rather than rendering a different pipeline quietly -- and that
 refusal is the only reason the omission did not produce a confident, wrong
 attribution. This file's own header defect, arriving inside the script written
 to honour it.
+
+### 28.8 The seven worst-affected subjects, all from one binary
+
+ORCH's new standing gate is a 26-subject gallery delta before any merge-path
+change lands. This is the **seven** BUILD-RENDER's delta charged most heavily,
+which is what fits; the full gallery goes to BUILD-RENDER as independent
+verifier rather than being claimed here. Every arm below comes from ONE pinned
+binary (`BB904D1744B5`), off and on, so no build can drift between them.
+
+| subject | charged by the deletion | sharp @view | sharp @1:1 | bg noise | r13 off -> on |
+| --- | --- | --- | --- | --- | --- |
+| `bee-1-cpl` | 0.9287 | **+9.94%** | +15.07% | +0.01% | 97.33% -> 40.26% |
+| `highly-angled-ruler-mm-cpl` | 0.9398 | **+10.36%** | +17.24% | -0.01% | 99.89% -> 69.30% |
+| `dry-erase-marker-head-cpl` | 0.9398 | **+4.06%** | +8.28% | -0.00% | 99.34% -> 52.20% |
+| `bee-2-cpl` | 0.9493 | **+6.00%** | +10.16% | -0.02% | 99.67% -> 34.80% |
+| `bee-3-cpl` | 0.9510 | **+5.38%** | +10.28% | -0.01% | 98.29% -> 33.51% |
+| `pencil-steep-angle-cpl` | 0.9578 | **+1.83%** | +3.62% | -0.07% | 99.99% -> 58.55% |
+| `couch-fibers-cpl` | 0.9342 (bisect) | **+6.56%** | +9.58% | +3.29% | 99.93% -> 3.42% |
+
+**Seven of seven improve. None regresses.** The ordering roughly tracks what was
+charged, and the two that recover more than the gallery table charged
+(`bee-1-cpl`, `highly-angled-ruler-mm-cpl`) are consistent with that table being
+a run-to-run ratio spanning several commits rather than an isolation of this one.
+
+**The noise cost is not what I priced it at.** I deleted this term partly for
+"+18.7% background noise". Measured now, on the shipped configuration, it is
+**within +/-0.07% on six of the seven subjects** and +3.29% on the seventh. The
++18.7% was measured on the pre-veto code, where the term fired in places the
+veto now vetoes -- so the number I generalised from did not survive the change I
+made immediately afterwards, and I never re-measured it before citing it as a
+reason to delete.
+
+`r13 off -> on` is the mechanism in one column: with the term deleted, between
+97% and **99.99%** of every one of these frames elected on the same fixed 13 px
+box. The geometric cap was not subsuming the noise term; it was barely running.

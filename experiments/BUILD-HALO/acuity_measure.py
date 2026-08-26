@@ -40,7 +40,15 @@ import numpy as np
 import tifffile
 
 OUT = Path(r"C:\dev\strehl-out\ACUITY")
-SUBJECTS = ["couch-fibers-cpl", "bee-2-cpl"]
+SUBJECTS = [
+    "couch-fibers-cpl",
+    "bee-2-cpl",
+    "bee-1-cpl",
+    "highly-angled-ruler-mm-cpl",
+    "dry-erase-marker-head-cpl",
+    "bee-3-cpl",
+    "pencil-steep-angle-cpl",
+]
 VIEW_BIN = 3
 TILE = 128
 N_FLAT = 24
