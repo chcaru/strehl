@@ -3245,3 +3245,117 @@ noise-amplifying denominator. Lower overshoot risk, not zero.
 Sizing it at 1/0.6913 = 1.45x would be correcting the demosaic term with a
 deconvolution as well, and that is double-counting into the halo. The gather
 term alone at sensor f = 0.35 asks for **1.15x**.
+
+## 28. Units of the f column, and what actually owns the top of the band
+
+ORCH relayed V-bestframe's question with a two-branch dichotomy: is my `f`
+column in output pixels (in which case I under-price the gather) or in
+gather-plane samples (in which case `f = 0.35` is really `0.175`)? **Neither.
+The answer is a third branch and it is settled by construction in my own
+harness, not by argument.**
+
+### 28.1 The units, with the lines that fix them
+
+**`f` is cycles per OUTPUT pixel.** Four lines of
+`experiments/BUILD-SHARP/src/compose_price.py` pin it, and they are the same
+four lines that make the half-resolution plane a modelled feature rather than
+an oversight:
+
+| line | what it fixes |
+|---|---|
+| `:114-117` | `truth()` builds the grating on `np.arange(N)` at **full** resolution: `f` is cycles per output pixel by construction, before any CFA structure exists |
+| `:120-127` | `cfa_planes()` takes `full[0::2, 0::2]` and siblings -- the four sub-lattices at **half** resolution, which is V-bestframe's stride-2 deinterleave |
+| `:91-100` | `resample_x()` rolls the **plane**, so gather taps sit one plane sample = **two output pixels** apart, which is V-bestframe's `2 * px` |
+| `:103-111` | `amp_at(..., step=2)` multiplies the sample index by 2 when reading a plane, converting plane indices back to output-pixel coordinates so one `f` means one thing throughout |
+
+So the `G` column of the s27 table **already contains** the half-resolution
+gather. It is not under-priced, and `f = 0.35` is genuinely 0.35 cycles per
+output pixel -- **2.86 output pixels per cycle**, not six.
+
+**Restated with units and dimensionality attached, as asked:** the shipped
+demosaic's green loss is **22.9% (D = 0.7713) at f = 0.35 cycles per OUTPUT
+pixel, per-axis horizontal**. The 23.3% I reported earlier is the same quantity
+from the earlier harness; the 0.4 pp is harness difference, not a unit change.
+Both were already output-pixel, per-axis. **The two-dimensional figure is not
+measured and cannot be obtained by squaring**, because Malvar is a
+non-separable 5x5 cross-channel filter.
+
+### 28.2 Independent corroboration of the half-resolution fact
+
+I did not know V-bestframe's result when s27 was measured, and the s27 table
+contains its fingerprint. `G` is non-monotone: it falls to a minimum of
+**0.6230 at f = 0.25** and rises again. `f_out = 0.25` is exactly the gather
+plane's Nyquist under `grid_factor = 2.0`, and Catmull-Rom's MTF at plane
+Nyquist is **0.62500**. Measured 0.6230 against predicted 0.62500, from a
+harness that was never told where the fold should land. Two routes, one number.
+
+### 28.3 Where I must correct ORCH -- MEASURED
+
+ORCH's framing: *"the plane cannot represent detail there; whatever exists
+above f_out = 0.25 was manufactured by the demosaic interpolator rather than
+attenuated by the resampler."*
+
+**Both halves are refuted by measurement already in s27.4, and the correction
+matters because it decides whether the headroom is real.**
+
+1. **Not manufactured.** G1 and G2 are two planes offset by one pixel -- a
+   quincunx, whose support is the diamond |fx| + |fy| <= 0.5. Their individual
+   aliases are in antiphase and cancel on recombination. The oracle fit to the
+   **green samples alone** returns exactly **1.0000 at f_out = 0.35, 0.40 and
+   0.45** (s27.4). If that band were manufactured by the interpolator, a fit to
+   the samples would return approximately zero. It returns unity. The
+   information is in the sensor data.
+2. **The gather is still a limiter up there, just at the folded frequency.**
+   Measured `G(0.35) = 0.8690`; Catmull-Rom at the folded plane frequency
+   (2 x 0.35 -> 0.30) is 0.8892. Agrees to 2%. A 13.1% attenuation is not
+   "not the limiter at all".
+
+**ORCH's operational conclusion is nonetheless correct, for a different and
+stronger reason.** Restoration as wired acts on the four CFA planes
+**separately** (R, G1, G2, B, before interleave -- `merge_cmd.rs`, `write_merged`).
+A per-plane filter is defined only up to that plane's own Nyquist,
+`f_out = 0.25`. It therefore **structurally cannot reach the quincunx
+recombination band at all**, whatever strength it is given. The top half of the
+output band is the demosaic's alone -- not because the detail up there is fake,
+but because no per-plane operator can address it.
+
+### 28.4 The interpolator, scoped to the band that is actually mine
+
+**What is available above f_out = 0.25** (s27.4, oracle vs shipped Malvar):
+1.104x at 0.30, **1.297x at 0.35**, 1.606x at 0.40, 1.857x at 0.45. Real, and
+rising exactly through the scales the owner calls soft.
+
+**What it costs in wall-clock -- MEASURED, and the 299-frame count is a red
+herring.** The demosaic runs **once, at write time, on the merged CFA planes**,
+not per frame. Timed at true gallery resolution 7032 x 4688 on the shipped
+`demosaic-plane` example, best of three: **Malvar 1.284 s, bilinear 0.860 s**,
+and both figures include 132 MB of read and 396 MB of write, so the kernel
+itself is a fraction of a second. A 299-frame stack spends minutes in alignment
+and merge. **A directional demosaic 20x the cost of Malvar would add ~25 s to a
+multi-minute render** -- under 1% of wall clock. Cost is not a consideration
+here and should not be treated as one.
+
+### 28.5 Reconciling my 1.30x with V-bestframe's 0.4-5.4% ladder
+
+These look incompatible and are not. V-bestframe scored LINEAR 0.946, VNG
+0.972, PPG 0.985, DCB 0.996 against AHD -- a spread of a few percent, against
+my 30% at f_out = 0.35. The reconciliation is **band dilution**, and it is
+quantitative rather than hand-waved: my measured bilinear/Malvar ratio at
+f_out = 0.35 is 0.6078 / 0.7713 = **0.788**, whereas V-bestframe's
+LINEAR-vs-AHD is **0.946**. A comparison of the same class, restricted to the
+top band, is 3.9x further from unity than the aggregate. That is the signature
+of a whole-image aggregate diluting a gain that lives only in the top of the
+spectrum.
+
+**Consequence, and it is the practical one: an aggregate demosaic score is the
+wrong selection metric for this project.** It will rank interpolators by their
+behaviour on the bulk of the spectrum, where they barely differ, and be nearly
+blind to the band the owner is complaining about. ARGUED, but it follows
+directly from the two measured numbers above. **Select on high-band response.**
+
+**Recommendation, unchanged in direction and now bounded on both sides:**
+directional green interpolation (AHD / DLMMSE / DCB class). Ceiling 1.297x at
+f_out = 0.35 (oracle, so an upper bound, and noise will cut it); cost under 1%
+of render wall-clock; no noise-amplifying denominator, hence not restore's
+failure mode -- against which V-RESTORE has measured 3.75% of pixels pushed
+outside their own input support by up to 7107 DN.
