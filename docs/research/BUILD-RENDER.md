@@ -1745,6 +1745,50 @@ planted mismatch. It is not a substitute — it guards the gallery script, not t
 binary — but the binary is no longer the only thing standing between a foreign
 lens and a misapplied coefficient.
 
+### The default flip broke my own guard, in the quietest possible way
+
+§15b added a per-subject optical-path check to `gallery.ps1`: read `Model` and
+`LensModel` from each subject's first frame, and disable CA for that subject
+alone on a mismatch. It expressed "disable" by **removing** `$env:STREHL_FIX_CA`.
+
+That was correct while unset meant off. After `96571ee` unset means *"let the
+binary's own gear guard decide"* — so a subject the script had just rejected
+would have been rendered **with** the correction and recorded `off:path` beside
+it in the manifest and in the JPEG's own provenance comment. Not a crash, not a
+wrong picture necessarily: a **provenance lie**, which is the exact failure the
+per-subject check was built to prevent. The guard would have gone on reporting
+that it was working.
+
+Worth naming as a pattern, because it is the mirror of the `RENDER_ENV` finding
+above and it landed within an hour of it: **flipping a default silently inverts
+every consumer that encodes "off" as absence.** Both defects are the same shape,
+and neither is visible in the diff that causes them. Grepping for the variable
+finds the sites; only knowing what absence *used* to mean tells you which ones
+are now wrong.
+
+Fixed by saying it out loud — `$env:STREHL_FIX_CA = 'off'` — and commissioned on
+a comparison that cannot be satisfied by a run that does nothing. Two subject
+directories hold **byte-identical frames**; only the first frame's EXIF
+`LensModel` differs, which is the one field the script probes and which the
+binary does not read at all (it reads maker-note `LensType3`, unchanged in both).
+Identical input, different label:
+
+| check | result |
+| --- | --- |
+| planted labelled `off:path`, genuine labelled with the profile | PASS |
+| `RUN.txt` names the rejected stack | PASS |
+| **outputs differ** ⇒ the off branch really disabled CA | PASS |
+
+5/5. Had the bug still been present, both arms would have received the
+correction and the two JPEGs would have been **identical** — so this is a
+positive and a negative control in a single comparison.
+
+It also documents the intended relationship between the two guards, which read
+different fields on purpose: the script reads the `LensModel` display string,
+the binary reads `LensType3`. They almost always agree; where they disagree the
+stricter must win, and an explicit `off` is how that is guaranteed rather than
+hoped for.
+
 ---
 
 ## 7. Not done

@@ -279,9 +279,14 @@ New-Item -ItemType Directory -Force -Path $raw | Out-Null
 # cannot tell a real improvement from a different binary.
 $exeInfo = Get-Item $Exe
 
-# Lateral-CA correction is selected by the environment, and it was unset -- and
-# therefore silently off -- in every gallery before this one. It is now set
-# PER SUBJECT inside the render loop, after the optical path has been checked.
+# Lateral-CA correction is selected by the environment. It is set PER SUBJECT
+# inside the render loop, after the optical path has been checked.
+#
+# Cleared here rather than left alone so a stale value from the calling shell
+# cannot leak into the first subject. NOTE that since 96571ee an unset variable
+# no longer means OFF -- it means "apply the profile if the binary's own gear
+# guard recognises the file". Clearing is therefore the right thing HERE, before
+# any subject is rendered, and the WRONG thing in the loop below.
 Remove-Item Env:\STREHL_FIX_CA -ErrorAction SilentlyContinue
 
 $run = @(
@@ -332,8 +337,20 @@ foreach ($s in $subjects) {
     # Set per subject, so a stack shot on a different optical path is rendered
     # without a coefficient that does not describe it.
     $caOn = $FixCa -and $caPath[$n]
+    # The subject's optical-path verdict, made EXPLICIT in both directions.
+    #
+    # This used to express "off" by removing the variable, which was correct
+    # while unset meant off. Since 96571ee unset means "let the binary's own
+    # gear guard decide", so removing it here would render a rejected subject
+    # WITH the correction and record `off:path` beside it -- a provenance lie,
+    # and the exact failure this per-subject check exists to prevent.
+    #
+    # The two guards read different fields on purpose: this one reads the EXIF
+    # `LensModel` display string, the binary reads Sony `LensType3`. They almost
+    # always agree, and where they disagree the stricter of the two must win.
+    # Saying `off` out loud is how that is guaranteed rather than hoped for.
     if ($caOn) { $env:STREHL_FIX_CA = $FixCa }
-    else { Remove-Item Env:\STREHL_FIX_CA -ErrorAction SilentlyContinue }
+    else       { $env:STREHL_FIX_CA = 'off' }
     $ca = if ($caOn) { $FixCa } elseif ($FixCa) { "off:path" } else { "off" }
     $frames = (Get-ChildItem -File $s.FullName |
         Where-Object { $_.Extension -match $RAW_EXT }).Count
