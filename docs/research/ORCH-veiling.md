@@ -3300,3 +3300,64 @@ Three instances now, which is why this is a rule and not an anecdote:
 And the older one from §26.2, the same failure in a different coat: a band
 amplitude ratio that reads 0.9918 while correlation reads 0.0946 — the right
 quantity restored, none of the right content.
+
+## 31 — `--photometric` and the pyramid remove different parts of the same veil
+
+Three arms, one shared silhouette mask and one shared distance transform computed
+once from the `ctrl` arm and applied unchanged to all three (`veilpair.py`;
+null 0.0 in 10/10 bins, 640-px translated-mask placebo collapses d=0 from −2269.6
+to −458.1). Subject `flower-bud-alone-cpl`, 205 frames, camera-linear, gate 4,
+lateral CA off in every arm. Far field agrees to 10 DN across the three
+(19364.8 / 19365.2 / 19375.3), so the arms are level-matched and the numbers
+below are not an exposure difference.
+
+| d (px) | n | ctrl DN | pyramid | ratio | estimator+photo | ratio |
+|---|---:|---:|---:|---:|---:|---:|
+| 0..2 | 64,597 | −2269.6 | −2000.8 | 0.882 | −2205.1 | 0.972 |
+| 2..4 | 109,702 | −2170.1 | −1665.0 | 0.767 | −1826.5 | **0.842** |
+| 4..8 | 169,532 | −1801.8 | −1288.6 | 0.715 | −1473.7 | **0.818** |
+| 8..16 | 252,212 | −1846.8 | −1151.0 | 0.623 | −1417.8 | **0.768** |
+| 16..32 | 337,579 | −1866.1 | −981.3 | **0.526** | −1625.0 | 0.871 |
+| 32..64 | 617,014 | −1679.6 | −1069.1 | 0.637 | −1599.6 | 0.952 |
+| 64..128 | 1,202,256 | −1533.8 | −1199.4 | 0.782 | −1527.6 | 0.996 |
+| 128..200 | 1,254,203 | −1216.7 | −1075.2 | 0.884 | −1216.4 | 1.000 |
+| 200..300 | 1,580,427 | −844.9 | −752.7 | 0.891 | −835.4 | 0.989 |
+| 300..400 | 1,475,465 | −548.0 | −500.7 | 0.914 | −538.9 | 0.983 |
+
+### 31.1 The two levers do not overlap
+
+`--photometric` does its work **close to the silhouette** — best ratio 0.768 at
+8–16 px — and is a measured **no-op beyond 64 px**, where it runs 0.99–1.00.
+The pyramid does its work in the **mid-field**, bottoming at 0.526 at 16–32 px,
+and is still returning 0.78–0.91 out at 64–400 px where photometric has stopped.
+
+Neither is a substitute for the other, and the failure direction matters for the
+product: photometric leaves 87% of the veil standing in the band the eye reads
+as the halo, so **turning it on does not fix the artefact the owner objected
+to.** It is a real improvement and it is not the fix.
+
+### 31.2 A product consequence, and it is not a small one
+
+`--photometric` is **REFUSED under the pyramid backend** (`main.rs:730-746`),
+so the two levers measured above cannot currently be used together. They act in
+disjoint distance bands, which is exactly the condition under which they would
+be expected to compose rather than compete. Nobody has measured the composition,
+because the binary will not run it.
+
+That refusal was the honest choice when the pyramid had no photometric path —
+a flag that parses and does nothing is worse than one that errors. But the
+refusal list is now load-bearing on image quality, not just on hygiene. Routed.
+
+### 31.3 What this arm cost, and the one thing it settles
+
+Two renders, 468.7 s and 685.6 s, both `exit=0`, both logs confirming the fit
+ran and was applied (`applied=2 trivial=0 absent=0`, a partition that sums).
+The `--photometric` state was checked by reading what the log said it *did*,
+not by observing that the flag was accepted.
+
+It settles §30's open product question. §30 showed M122's KEEP-OFF verdict does
+not survive spatial partitioning and that `--photometric` costs 0.4% of subject
+texture with a CI including 1.00. That argued the flag is **safe**. This section
+measures what it **buys**, which §30 never did: a fifth to a quarter of the veil
+in the first 16 px and nothing past 64. Safe and worth having is a different
+claim from safe, and only the pair of them justifies changing a default.
