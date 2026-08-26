@@ -829,17 +829,48 @@ violated. Both were fixed; see facts 428-431 in
 The honest claim is narrower: **averaging two or more frames is strictly better
 than one, and the gate is what decides when that is safe.**
 
-**On a whole photograph, measured.** `leaf-2-cpl`, 182 frames, both arms at a
-fixed `--exposure=3.19` so the merge is the only difference between them.
-`--gate 0` reports mean `n_eff` 1.000 with 100.00% of pixels at `n_eff` = 1 —
-pure selection, every output pixel exactly one frame's pixel. `--gate 2` reports
-mean `n_eff` 15.077. In a 200x200 flat patch chosen on the *mean of both arms*,
-so neither arm selected the view, noise falls **0.006381 → 0.000987**, a ratio
-of **0.1546x** — equivalent to averaging **41.8 frames** — and the matched
-detail crop is **visually indistinguishable**. That flat-patch figure is a best
-case and is quoted as one: the tool's own model predicts **0.4439x** image-wide
-at this gate, because 21.95% of pixels still average nothing. Both numbers are
-right; they describe different regions.
+**On a whole photograph, measured — and then substantially retracted.** This
+paragraph used to report `leaf-2-cpl`, 182 frames, with noise falling
+**0.006381 → 0.000987** in a 200x200 flat patch: a ratio of **0.1546x**,
+quoted as *"equivalent to averaging 41.8 frames"*. It was the most persuasive
+number in this file. Three things are wrong with it and only the first was
+suspected.
+
+**It measures a backend that no longer ships.** Both arms were selected with
+`--gate`, which chooses the estimator merge. The shipping default is the pyramid
+merge. Whatever this paragraph established, it did not establish it about the
+code a user runs.
+
+**It does not reproduce on the current binary.** Re-run on the shipping pin, the
+same script re-chooses its patch and reports **0.6196x** and **2.61 frames** —
+against 0.1546x and 41.8. Mean `n_eff` falls **15.077 → 5.229**, with 62.57% of
+pixels at `n_eff` = 1, and `--gate 0`'s "1.000 with 100.00% of pixels" now reads
+1.006 / 99.37%. Two pinned conditions agree with each other, so the merge
+changed, not the measurement.
+
+**The figure was mostly a choice of patch.** Holding the *inherited* ROI fixed
+on that same pin gives **0.1408x** and 50.4 frames — corroborated to 3.3% by the
+binary's own `--n-eff-map`. Re-choosing the patch by the same script on the same
+binary gives 0.6196x. **A 4.4x spread on one subject, one binary, one merge,
+decided entirely by which flat patch the search lands on.** The number was never
+a property of the merge alone.
+
+The honest whole-plane figure, which is the one a photograph actually receives,
+is the tool's own **0.8556x** predicted sigma gain. **"41.8 frames" is withdrawn
+as a framing**, not merely as a value: it is a best case by roughly fifty-fold
+against the plane, and quoting a best case beside the caveat that it is one
+turned out not to be enough, because the caveat travelled and the number was
+what people remembered.
+
+Measured and adjudicated by BUILD-PYRNOISE, whose admission test first flagged
+this subject for the *wrong* reason and who said so — see
+`docs/research/BUILD-PYRNOISE-ADJUDICATION.md`. I argued to them that a
+non-stationary subject would inflate an arm-versus-arm ratio. **They measured it
+and I was wrong**: the inflation is 1.02x, and thirteen windows that fail their
+admission test predict the measured ratio to under 3% (correlation between
+admission score and error: −0.002). The mechanism cancels between two merges of
+one bracket because both elect the same frames through the same spatially
+coherent winner field. The paragraph did not die of the disease I diagnosed.
 
 On resolved detail the expected gain was **`ARGUED` at ~1.2-1.8x** — the
 reasoning being that at a sane focus step only about 1.3 to 1.5 frames have any
