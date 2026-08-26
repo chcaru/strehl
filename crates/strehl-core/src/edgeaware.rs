@@ -568,6 +568,75 @@ impl SelectionScale {
         }
         Self { geom, level }
     }
+
+    /// Tighten each window to the **smallest radius the calibrated noise model
+    /// says can still elect at that pixel**, keeping whichever of that and the
+    /// current geometric level is smaller.
+    ///
+    /// # Why this exists again
+    ///
+    /// `57e4554` deleted this term on the argument that the geometric cap
+    /// subsumes it, having measured only **background noise** on one subject
+    /// (`bee-2-cpl`, up to +18.7%) and found no visible halo difference. That
+    /// measurement was one-sided: it never asked what the term bought in
+    /// *detail*. A dated gallery delta over all 26 subjects later put the
+    /// deletion at **-6.6% gradient RMS, seventeen subjects softer and nothing
+    /// gained**, with `couch-fibers-cpl` at 0.9342 against the audited
+    /// reference. The term is restored because the aggregate says so.
+    ///
+    /// # The scaling law
+    ///
+    /// The focus measure is a box mean of `|grad|` over `(2r+1)^2` samples, so
+    /// its noise falls as the square root of the sample count:
+    ///
+    /// ```text
+    /// sd(r) = FOCUS_NOISE_SD * (2 * WINDOW_RADIUS + 1) / (2r + 1)
+    /// ```
+    ///
+    /// [`FOCUS_NOISE_SD`](crate::merge::FOCUS_NOISE_SD) is calibrated *at*
+    /// `WINDOW_RADIUS`, so it appears against that reference rather than bare.
+    ///
+    /// `margin` is in the same units as the merge's significance gate —
+    /// multiples of the standard deviation of a *difference* of two independent
+    /// responses, hence the `sqrt(2)`.
+    ///
+    /// The signal `excess` reports is radius-independent to first order, since
+    /// a box mean of a locally homogeneous quantity does not depend on the box.
+    /// So the same excess is put to every candidate radius and the only
+    /// question is whether that radius' noise floor is low enough to resolve
+    /// it. Ascending order, first hit wins, so this is the SMALLEST sufficient
+    /// radius.
+    ///
+    /// Composed as a separate tightening step rather than folded into
+    /// [`Self::from_silhouettes`] on purpose: the geometric rule stays exactly
+    /// what its own monotonicity test asserts, and the noise term is `min`-ed
+    /// on top where it can be switched off and measured against.
+    pub fn tighten_by_acuity(&mut self, excess: &[f32], margin: f32) {
+        assert_eq!(
+            excess.len(),
+            self.level.len(),
+            "the acuity term must share the scale map's grid"
+        );
+        assert!(margin > 0.0, "margin must be positive, got {margin}");
+        let sd_at = |r: usize| {
+            crate::merge::FOCUS_NOISE_SD * (2 * WINDOW_RADIUS + 1) as f32 / (2 * r + 1) as f32
+        };
+        let need: Vec<f32> = LEVEL_RADII
+            .iter()
+            .map(|&r| margin * core::f32::consts::SQRT_2 * sd_at(r))
+            .collect();
+        for (i, lv) in self.level.iter_mut().enumerate() {
+            let mut noise_level = FULL_LEVEL;
+            for (l, n) in need.iter().enumerate() {
+                if excess[i] >= *n {
+                    noise_level = l as u8;
+                    break;
+                }
+            }
+            *lv = (*lv).min(noise_level);
+        }
+    }
+
     #[must_use]
     pub fn geometry(&self) -> PlaneGeometry {
         self.geom
@@ -2076,22 +2145,26 @@ mod tests {
         assert!(s.is_full_everywhere(), "histogram {:?}", s.histogram());
     }
 
-    /// **The deletion, pinned.** The radius must be a function of the DEPTH
-    /// GUIDE alone — specifically, of distance to the nearest depth step.
+    /// **The geometric rule's own property, pinned.** `from_silhouettes` must
+    /// be a function of the DEPTH GUIDE alone — specifically, of distance to
+    /// the nearest depth step.
     ///
-    /// An earlier arm of this rule also shrank the window wherever the
-    /// through-focus peak was strong enough to survive a smaller one. Measured
-    /// on `bee-2-cpl` that cost up to +18.7% background noise and changed the
-    /// halo not at all, because contamination needs a window spanning two
-    /// depths and that only happens where the geometric cap already binds.
+    /// # This test used to claim more than it does now, and the claim was wrong
     ///
-    /// Monotonicity is the property that pins the deletion. Distance to a step
-    /// increases monotonically as you walk away from it, so a radius that is a
-    /// function of distance alone must too. Signal strength does not: it varies
-    /// with whatever texture happens to be there. **Any term that reads the
-    /// image rather than the guide will break this walk**, which is what makes
-    /// this a guard against re-introduction rather than a restatement of the
-    /// code.
+    /// It was written by `57e4554` as a guard against *re-introducing* the
+    /// noise-driven shrink, on the reasoning that "any term that reads the
+    /// image rather than the guide breaks this walk". The reasoning about
+    /// monotonicity is correct. The conclusion drawn from it — that such a term
+    /// must therefore never exist — was not, and a 26-subject gallery delta
+    /// later charged the deletion **-6.6% gradient RMS with seventeen subjects
+    /// softer**. The term is back, as [`SelectionScale::tighten_by_acuity`].
+    ///
+    /// So the scope is narrowed rather than the test deleted. It pins what it
+    /// can actually prove: that the *geometric* term is monotone in distance,
+    /// which is the property [`Self::from_silhouettes`] is responsible for and
+    /// the reason it is safe to `min` a signal term on top of it. The composed
+    /// radius is deliberately NOT monotone, and
+    /// [`the_acuity_term_only_ever_tightens`] pins the composition instead.
     #[test]
     fn the_radius_is_monotone_in_the_distance_from_the_step() {
         let (w, h) = (128usize, 48usize);
@@ -2123,6 +2196,137 @@ mod tests {
             !s.is_full_everywhere(),
             "the fixture must contain a real step: {:?}",
             s.histogram()
+        );
+    }
+
+    /// The composition property that makes the restored acuity term safe to
+    /// stack on the geometric rule: it may only ever **tighten**.
+    ///
+    /// This is the whole reason the term is a separate `min`-ing pass rather
+    /// than a branch inside [`SelectionScale::from_silhouettes`]. The veto,
+    /// the dead-ground refusal and the silhouette cap all express themselves as
+    /// a level; if a signal term could RAISE one, it would silently overturn a
+    /// decision those rules had already made for reasons of their own. A pixel
+    /// the veto has protected must stay protected however strong its texture.
+    #[test]
+    fn the_acuity_term_only_ever_tightens() {
+        let (w, h) = (128usize, 48usize);
+        let g = geom(w, h);
+        let guide: Vec<u16> = (0..w * h)
+            .map(|i| if i % w < 64 { 200 } else { 20 })
+            .collect();
+        let base = SelectionScale::from_silhouettes(&guide, &vec![true; g.pixels()], g, 4.0);
+        let before = base.levels().to_vec();
+        let step = before
+            .iter()
+            .position(|&l| l < FULL_LEVEL)
+            .expect("fixture must contain a geometrically collapsed pixel");
+
+        // A WEAK peak, clearing no floor, so the acuity term's own answer is
+        // the widest window everywhere. This is the fixture that discriminates:
+        // where the geometry has already collapsed, `min` must keep the
+        // collapse while a bare assignment would raise it back to full.
+        //
+        // An all-strong excess does NOT discriminate -- it drives the acuity
+        // level to the minimum at every pixel, where `min` and assignment agree.
+        // The first version of this test did exactly that, and the sabotage
+        // harness caught it going green with the `min` deleted.
+        let mut s = base;
+        s.tighten_by_acuity(&vec![0.0f32; g.pixels()], 4.0);
+        for (i, (&a, &b)) in before.iter().zip(s.levels()).enumerate() {
+            assert!(
+                b <= a,
+                "acuity RAISED the radius at {i}: {} -> {}",
+                LEVEL_RADII[a as usize],
+                LEVEL_RADII[b as usize]
+            );
+        }
+        assert!(
+            s.levels()[step] < FULL_LEVEL,
+            "a geometrically collapsed pixel was released by a weak peak: {} -> {}",
+            LEVEL_RADII[before[step] as usize],
+            LEVEL_RADII[s.levels()[step] as usize]
+        );
+
+        // ...and the term is not merely inert: with unlimited signal it must
+        // actually tighten ground the geometry left alone. Without this, a
+        // `tighten_by_acuity` whose body was deleted entirely would pass.
+        let mut live = SelectionScale::from_silhouettes(&guide, &vec![true; g.pixels()], g, 4.0);
+        assert_eq!(
+            LEVEL_RADII[live.levels()[24 * w + 120] as usize],
+            WINDOW_RADIUS,
+            "fixture must start at the shipped radius far from the step"
+        );
+        live.tighten_by_acuity(&vec![1.0e6f32; g.pixels()], 4.0);
+        assert_eq!(
+            LEVEL_RADII[live.levels()[24 * w + 120] as usize],
+            LEVEL_RADII[0],
+            "with unlimited signal the smallest radius must win far from any step"
+        );
+    }
+
+    /// The term must be *silent* where the signal cannot support a smaller
+    /// window — which is the case the deletion never measured.
+    ///
+    /// `57e4554` justified deleting the shrink on background noise measured in
+    /// flat patches. That is precisely the regime this test covers, and the
+    /// rule's answer there is "change nothing": a pixel whose through-focus
+    /// peak does not clear even the widest window's noise floor keeps the
+    /// shipped radius. The noise the deletion measured therefore came from
+    /// pixels with REAL signal, i.e. from detail, which is the half that was
+    /// never weighed.
+    #[test]
+    fn a_peak_that_clears_no_noise_floor_keeps_the_shipped_window() {
+        let g = geom(64, 64);
+        let mut s =
+            SelectionScale::from_silhouettes(&vec![100u16; g.pixels()], &vec![true; g.pixels()], g, 4.0);
+        assert!(s.is_full_everywhere(), "fixture must start unconstrained");
+        s.tighten_by_acuity(&vec![0.0f32; g.pixels()], 4.0);
+        assert!(
+            s.is_full_everywhere(),
+            "a zero peak must not buy a smaller window: {:?}",
+            s.histogram()
+        );
+    }
+
+    /// The noise floor must fall with radius the way the box mean says it does,
+    /// so that a mid-strength peak lands on a MIDDLE radius rather than at
+    /// either extreme.
+    ///
+    /// Asserted as an ordering over three signal strengths rather than against
+    /// a hard-coded level, because the level a given excess buys depends on
+    /// [`crate::merge::FOCUS_NOISE_SD`], which is calibrated and may be
+    /// recalibrated. The ordering is the physics; the number is the epoch.
+    #[test]
+    fn a_stronger_peak_buys_a_smaller_window() {
+        let g = geom(32, 32);
+        let px = g.pixels();
+        let level_for = |excess: f32| {
+            let mut s =
+                SelectionScale::from_silhouettes(&vec![100u16; px], &vec![true; px], g, 4.0);
+            s.tighten_by_acuity(&vec![excess; px], 4.0);
+            s.levels()[0]
+        };
+        let sd_full = crate::merge::FOCUS_NOISE_SD;
+        // Floors are sd_full * (2*WINDOW_RADIUS+1)/(2r+1) * margin * sqrt(2);
+        // sample just above the requirement for r = 13, r = 4 and r = 1.
+        let weak = level_for(1.01 * 4.0 * core::f32::consts::SQRT_2 * sd_full);
+        let mid = level_for(
+            1.01 * 4.0 * core::f32::consts::SQRT_2 * sd_full * (2 * WINDOW_RADIUS + 1) as f32 / 9.0,
+        );
+        let strong = level_for(
+            1.01 * 4.0 * core::f32::consts::SQRT_2 * sd_full * (2 * WINDOW_RADIUS + 1) as f32 / 3.0,
+        );
+        assert_eq!(
+            LEVEL_RADII[weak as usize], WINDOW_RADIUS,
+            "a peak that only clears the widest floor must keep the widest window"
+        );
+        assert!(
+            strong < mid && mid < weak,
+            "radius must fall as the peak strengthens: {} -> {} -> {}",
+            LEVEL_RADII[weak as usize],
+            LEVEL_RADII[mid as usize],
+            LEVEL_RADII[strong as usize]
         );
     }
 

@@ -130,9 +130,8 @@ pub struct MergeOptions {
     ///
     /// See [`write_n_eff_map`] for the grid and the value convention.
     pub n_eff_map: Option<PathBuf>,
-    /// Fit and apply a per-frame affine photometric gain. **Opt-in, default
-    /// off** (M99 §9.2: land the wiring behind a flag until it has been run
-    /// across the whole corpus).
+    /// Fit and apply a per-frame affine photometric gain. **Default on**
+    /// since V-TONE; it was opt-in from M99 until then.
     ///
     /// M24 measured real per-frame drift that EXIF does not predict — 0.91%
     /// peak-to-peak on `109MSDCF`, 11.70% on `coffee-bean` — so a gated
@@ -140,10 +139,14 @@ pub struct MergeOptions {
     /// change.
     ///
     /// Three-valued since M125. [`PhotometricMode::Auto`] decides per stack
-    /// from that same measured drift, because M122 measured the unconditional
-    /// switch helping some stacks and harming others. The default is still
-    /// [`PhotometricMode::Off`] and M122's KEEP-OFF verdict stands.
-    /// Also settable via `STREHL_PHOTOMETRIC=off|on|auto`.
+    /// from that same measured drift. It is **not** the default and should not
+    /// be made one: `AUTO_FRAMES_DOMAIN` is `33..=100`, so `auto` abstains
+    /// with code U1 on every stack this rig actually shoots (205 and 299
+    /// frames), which makes it identical to `Off` in practice.
+    ///
+    /// M122's KEEP-OFF no longer stands: see [`resolve_photometric_mode`] for
+    /// the partition that retired it, and for the two caveats that travel with
+    /// it. Also settable via `STREHL_PHOTOMETRIC=off|on|auto`.
     pub photometric: PhotometricMode,
     /// Solve the ladder for the gate that achieves this mean `n_eff`.
     ///
@@ -1671,6 +1674,32 @@ enum EdgeArm {
 /// so it collapses nearly everywhere, and a 1 px focus measure on a noisy
 /// texture is a bad estimator.
 ///
+/// **SUPERSEDED BY MEASUREMENT — that is no longer what happens.** The veto
+/// added afterwards fixed it, and fixed it so thoroughly that the rule now has
+/// the opposite problem. Measured on this subject from one binary:
+///
+/// ```text
+/// collapse veto : 86101 px admitted (1.04% of plane)
+/// by radius     : r1 0.00%  r2 0.00%  r4 0.02%  r8 0.05%  r13 99.93%
+/// ```
+///
+/// The geometric rule is now very nearly **inert** here -- 99.93% of the frame
+/// elects at the shipped 13 px, because the veto refuses the collapse wherever
+/// no second layer is resolvable, which on a single-depth texture is almost
+/// everywhere. So the softening this section describes is real but its cause is
+/// the reverse of what is written above: not a 1 px window on noisy texture, but
+/// a 13 px window on ALL texture.
+///
+/// That is why deleting the noise-driven shrink cost the library 6.6% gradient
+/// RMS. With it gone there was nothing left to adapt the window on a subject
+/// without silhouettes. Restoring it moves this subject to r1 45.86% / r2 25.30%
+/// / r4 17.93% and recovers **+6.56%** at viewing scale, visibly at 1:1.
+/// See `experiments/BUILD-HALO/acuity_measure.py`.
+///
+/// The paragraph is kept rather than rewritten because the reasoning that
+/// follows it -- "collapse only where collapsing buys something" -- is what
+/// produced the veto and is still correct. Only its factual premise expired.
+///
 /// That is the same defect as the dead-ground over-collapse, from the other
 /// side. Over dead ground the guide is noise; over dense texture the steps are
 /// real. In both cases collapsing **buys nothing** and costs the estimator. The
@@ -1694,6 +1723,36 @@ fn edge_aware_arm() -> EdgeArm {
     }
 }
 
+
+/// Confidence the acuity term demands before it hands a pixel a smaller
+/// window, in standard deviations of a difference of two responses.
+///
+/// **Deliberately the same number as [`Gate::DEFAULT_GATE`], and for the same
+/// reason.** The gate asks "are these two frames distinguishable at this
+/// pixel?"; the radius rule asks "is this pixel's peak distinguishable from its
+/// own baseline at this radius?". Both are the same question about the same
+/// noise model, so a second, independently-tuned constant here would be a
+/// second calibration of one physical quantity — exactly the failure mode this
+/// project exists to avoid. It is not a free parameter and it should not be
+/// swept.
+const ACUITY_MARGIN: f32 = strehl_core::merge::DEFAULT_GATE;
+
+/// Whether the noise-driven window shrink runs on top of the geometric cap.
+///
+/// `STREHL_ACUITY=0` disables it, which is the ONLY reason this switch exists:
+/// `57e4554` deleted the term after measuring one subject's background noise,
+/// and a 26-subject gallery delta then charged the deletion **-6.6% gradient
+/// RMS**. Both arms have to be renderable **from one binary** or the comparison
+/// re-acquires the build-drift confound that made the original deletion look
+/// free. Default ON.
+const ACUITY_ENV: &str = "STREHL_ACUITY";
+
+fn acuity_shrink() -> bool {
+    !matches!(
+        std::env::var(ACUITY_ENV).ok().as_deref().map(str::trim),
+        Some("0" | "off" | "no" | "false")
+    )
+}
 
 /// How many frames of guide variation a support box may span before it is
 /// judged to cross a depth discontinuity.
@@ -2222,6 +2281,17 @@ const NEFF_ENV: &str = "STREHL_DUMP_NEFF";
 /// Env-var twin of `--photometric`, for A/B harnesses that cannot edit argv.
 const PHOTOMETRIC_ENV: &str = "STREHL_PHOTOMETRIC";
 
+/// What `strehl stack` does when nobody says. **`On` since V-TONE.**
+///
+/// Named, rather than left as a literal in the match arm of
+/// [`resolve_photometric_mode`], for the reason [`DEFAULT_MERGE_BACKEND`] is
+/// named: the previous arrangement is what let the switch registry declare
+/// this default `auto` while the code returned `Off`, a disagreement that hid
+/// a measured +1415 DN of recoverable background artifact for as long as it
+/// took someone to read the resolving line rather than the documentation.
+/// A default that has one greppable site can be checked by grepping it.
+pub const DEFAULT_PHOTOMETRIC_MODE: PhotometricMode = PhotometricMode::On;
+
 /// Fraction of the reference frame admitted as "low detail".
 const PHOTOMETRIC_DETAIL_Q: f64 = 0.40;
 
@@ -2247,13 +2317,43 @@ const PHOTOMETRIC_MIN_PX: usize = 1024;
 /// Resolve the photometric mode from the flag and the environment.
 ///
 /// Precedence: `--photometric MODE` wins, then [`PHOTOMETRIC_ENV`], then the
-/// default, which is off and did not move.
+/// default — which is **`On`**. It was `Off` until V-TONE.
+///
+/// M122 returned KEEP-OFF on K2, its no-harm criterion. K2 is a
+/// high-frequency energy ratio over whole windows: it has no spatial argument,
+/// so it cannot tell an artifact edge from a subject edge. V-TONE partitioned
+/// that same statistic by distance to the election-map discontinuities, with
+/// thresholds and reading rule registered before the slopes were computed, and
+/// the loss is not in the picture:
+///
+/// | partition | k | 95% CI |
+/// | --- | --- | --- |
+/// | SUBJECT, no seam | 0.9957 | [0.9888, 1.0022] |
+/// | SEAM, far background | 0.6647 | [0.5431, 0.7899] |
+///
+/// Subject texture away from seams is the *most* textured partition in the
+/// frame (hf0 280.8 DN against 127.3 at seams) and it loses 0.4%, with a CI
+/// spanning 1.00. 85.7% of the removed laplacian energy lies in the seam set,
+/// and the removed-energy map forms closed loops that are pixel-for-pixel the
+/// election patch boundaries. What the correction deletes is level speckle,
+/// written by an election that picks a near-random frame per pixel out of
+/// frames whose levels span 23.5%.
+///
+/// **Two caveats travel with this and must not be dropped.** V-TONE's
+/// rule-verbatim verdict is MIXED, not CONFIRMED: its gradient-matched placebo
+/// read k = 0.9886 against a registered bar of 0.99, missing by 0.0014, so the
+/// discriminator keeps ~1.1% residual sensitivity to gradient magnitude
+/// against a 33% seam effect. The substance holds; the margin was not earned.
+/// And `k_background` = 1.0287 [1.0021, 1.0622] is **unexplained** — the
+/// correction *raises* high-frequency energy away from both subject and seams.
+/// Nothing should be built on that region until it is understood.
 ///
 /// **An unrecognised spelling is an error in either channel.** The form this
 /// replaces read the environment as `!v.is_empty() && v != "0"`, so
 /// `STREHL_PHOTOMETRIC=off` turned the correction ON — a value whose plain
-/// meaning is the exact opposite of its effect. Nothing in the tree relied on
-/// that: the only script that sets the variable sets it to `1`.
+/// meaning is the exact opposite of its effect. That mattered less while the
+/// default was off; with the default on, `off` is the only way to ask for the
+/// old pipeline, and it has to mean it.
 pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<PhotometricMode> {
     if let Some(v) = flag {
         return PhotometricMode::parse(v).with_context(|| format!("reading --photometric {v:?}"));
@@ -2262,8 +2362,8 @@ pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<PhotometricMode> {
         Ok(v) if !v.trim().is_empty() => {
             PhotometricMode::parse(&v).with_context(|| format!("reading {PHOTOMETRIC_ENV}={v:?}"))
         }
-        // Unset, empty, or not valid UTF-8: the default, unchanged.
-        _ => Ok(PhotometricMode::Off),
+        // Unset, empty, or not valid UTF-8: the default.
+        _ => Ok(DEFAULT_PHOTOMETRIC_MODE),
     }
 }
 
@@ -2763,14 +2863,27 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                  because there is provably nothing there for a narrow window to separate",
                 100.0 * admitted as f64 / geom.pixels() as f64
             );
-            let scale = edgeaware::SelectionScale::from_silhouettes(&guide, &may, geom, tau);
+            let mut scale = edgeaware::SelectionScale::from_silhouettes(&guide, &may, geom, tau);
+            let shrink = acuity_shrink();
+            if shrink {
+                scale.tighten_by_acuity(&excess, ACUITY_MARGIN);
+            }
             let hist = scale.histogram();
-            eprintln!(
-                "radius rule     : distance to the nearest depth step, capped at the shipped {} px. \
-                 NO noise-driven shrink: measured at +18.7% background noise for no visible gain, \
-                 so that term is deleted rather than tuned",
-                strehl_core::focus::WINDOW_RADIUS
-            );
+            if shrink {
+                eprintln!(
+                    "radius rule     : min(r_noise, r_geom). r_geom is distance to the nearest \
+                     depth step; r_noise is the smallest radius whose noise floor still resolves \
+                     this pixel's own peak, margin {ACUITY_MARGIN:.1} sigma against \
+                     FOCUS_NOISE_SD scaled from radius {}",
+                    strehl_core::focus::WINDOW_RADIUS
+                );
+            } else {
+                eprintln!(
+                    "radius rule     : distance to the nearest depth step, capped at the shipped \
+                     {} px. NO noise-driven shrink ({ACUITY_ENV}=0)",
+                    strehl_core::focus::WINDOW_RADIUS
+                );
+            }
             eprintln!(
                 "  by radius     : {}",
                 hist.iter()
@@ -6926,6 +7039,57 @@ mod tests {
             band_workers(third, 64).unwrap(),
             3,
             "band_workers did not return to its unset value"
+        );
+
+        // The photometric channel, added when its default flipped from `Off`
+        // to `On`. What this resolver returns unset IS the product default,
+        // and the reason it is asserted by execution rather than by reading is
+        // that reading is what failed: the switch registry declared this
+        // default `auto` while the code returned `Off`, and nothing caught the
+        // disagreement because nothing ran the line.
+        unsafe { std::env::remove_var(PHOTOMETRIC_ENV) };
+        assert_eq!(
+            resolve_photometric_mode(None).unwrap(),
+            DEFAULT_PHOTOMETRIC_MODE,
+            "an unset {PHOTOMETRIC_ENV} did not give the default"
+        );
+        // Deliberately a change-detector, in the spirit of the byte freezes:
+        // the default is a shipped product decision backed by a corpus run, so
+        // moving it should require editing a test that says so out loud.
+        assert_eq!(
+            DEFAULT_PHOTOMETRIC_MODE,
+            PhotometricMode::On,
+            "the shipped photometric default moved; if that was deliberate, the byte-freeze rows \
+             and scripts/check-defaults.py both describe it and both must move with it"
+        );
+        for (v, want) in [
+            ("off", PhotometricMode::Off),
+            ("on", PhotometricMode::On),
+            ("auto", PhotometricMode::Auto),
+        ] {
+            unsafe { std::env::set_var(PHOTOMETRIC_ENV, v) };
+            assert_eq!(
+                resolve_photometric_mode(None).unwrap(),
+                want,
+                "{PHOTOMETRIC_ENV}={v}"
+            );
+        }
+        unsafe { std::env::set_var(PHOTOMETRIC_ENV, "banana") };
+        assert!(
+            resolve_photometric_mode(None).is_err(),
+            "an unrecognised {PHOTOMETRIC_ENV} was not an error"
+        );
+        unsafe { std::env::set_var(PHOTOMETRIC_ENV, "on") };
+        assert_eq!(
+            resolve_photometric_mode(Some("off")).unwrap(),
+            PhotometricMode::Off,
+            "--photometric did not outrank {PHOTOMETRIC_ENV}"
+        );
+        unsafe { std::env::remove_var(PHOTOMETRIC_ENV) };
+        assert_eq!(
+            resolve_photometric_mode(None).unwrap(),
+            DEFAULT_PHOTOMETRIC_MODE,
+            "the resolver did not return to its unset value"
         );
     }
 }

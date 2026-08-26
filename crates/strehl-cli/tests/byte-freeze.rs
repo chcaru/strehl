@@ -427,6 +427,13 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_EDGE_AWARE",
     "STREHL_EDGE_TAU",
     "STREHL_EDGE_CONF",
+    // The noise-driven window shrink. It sets the per-pixel election radius on
+    // 96.58% of `couch-fibers-cpl` (r13 99.93% with it off, 3.42% with it on),
+    // so an ambient `STREHL_ACUITY=0` would render a materially different
+    // election than every row here claims. It exists only so both arms of the
+    // restoration A/B can come from one binary; it must never leak into a
+    // freeze.
+    "STREHL_ACUITY",
     "STREHL_ONLY_FRAME",
     // Which merge runs, and how its fold is partitioned. `STREHL_MERGE` is the
     // most dangerous entry in this list: it selects the whole backend, so an
@@ -460,6 +467,18 @@ const RENDER_ENV: &[&str] = &[
     // changing. The list is not made safe by being complete on the day it was
     // written.
     "STREHL_FIX_CA",
+    // The photometric gain term, arriving by the same route as `STREHL_FIX_CA`
+    // above and one flip later. That comment ended: "a default flip can turn a
+    // dormant unrecorded input into a live one without anything in this file
+    // changing." This is that sentence coming true. The variable is old; it
+    // became able to move a hash the moment the default went from `off` to
+    // `on`, because unset now means the gain is fitted and applied, and `off`
+    // is a real and different render.
+    //
+    // Twice predicted, twice arrived. The list is not made safe by being
+    // complete on the day it was written -- and it is not made safe by having
+    // said so, either.
+    "STREHL_PHOTOMETRIC",
 ];
 
 impl Freeze {
@@ -488,6 +507,24 @@ impl Freeze {
             // this must become a registry column, exactly like `--gate` did.
             "--merge".to_string(),
             "estimator".to_string(),
+            // Every row in this registry was frozen while `--photometric`
+            // defaulted OFF. The default is now ON, so an unnamed row would
+            // render a pipeline it does not describe and every hash below
+            // would move at once -- not because the render regressed, but
+            // because the row stopped saying what it froze.
+            //
+            // Named for the same reason `--merge` is named directly above: the
+            // mode is an INPUT, and an input that is merely defaulted rather
+            // than recorded is the defect this file's header describes. This
+            // is the second entry in this function to be written for that
+            // reason, and the first one predicted the second.
+            //
+            // Hardcoded rather than a column because every existing row
+            // genuinely is a photometric-off freeze. The day a photometric-on
+            // row is added this must become a registry column, exactly like
+            // `--gate` did.
+            "--photometric".to_string(),
+            "off".to_string(),
             "--limit".to_string(),
             self.limit.clone(),
             "--gate".to_string(),
