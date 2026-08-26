@@ -24,6 +24,35 @@
       produced three different files because other agents landed builds in the
       middle of the run.
 
+  PROVENANCE AND ATOMICITY. Pinning the binary was necessary and it was not
+  sufficient. A run that died at subject 12 of 26 left `gallery\` holding 10
+  fresh JPEGs sitting on top of 16 from the previous binary, with a `RUN.txt`
+  that said "subjects: 26" and a `manifest.tsv` with 10 rows. It looked like one
+  coherent gallery and it was two, and the only reason anyone noticed was that
+  the row count did not match the file count. Real judgements were made on
+  stale frames and had to be thrown out.
+
+  So the directory is now built to fail loudly instead of degrade quietly:
+
+    * Every render goes to a private staging directory and `gallery\` is
+      replaced WHOLESALE at the end. Mixing is not detected, it is made
+      impossible -- staging only ever holds one binary's output.
+    * Provenance is PER FILE, not per run: the binary hash is a column in
+      `manifest.tsv` and is also written into each JPEG's comment, so a single
+      image taken out of the directory can still say what produced it.
+    * `RUN.txt` records subjects PLANNED and subjects RENDERED. It no longer
+      asserts a count it did not achieve.
+    * `COMPLETE.txt` is written last and only on success; `INCOMPLETE.txt`
+      names what failed. The absence of the sentinel is what marks a directory
+      as untrustworthy, which is the right polarity -- a killed run cannot write
+      anything, so it cannot accidentally claim to have succeeded.
+    * `-Only` renders a subset and is NEVER swapped in, because publishing a
+      subset would delete every subject it did not render.
+
+  What is enforced is COHERENCE, not completeness. A gallery missing a subject
+  is fine as long as it says so and nothing stale fills the gap. A gallery
+  holding two binaries' output with no way to tell them apart is never fine.
+
   Judge the result by looking at it. When the pictures and the number disagree,
   the pictures are right.
 
@@ -136,10 +165,63 @@ if ($Only.Count -gt 0) {
 }
 if ($subjects.Count -eq 0) { throw "no subjects matched" }
 
-$raw = Join-Path $OutDir "_tiff"
-New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
+# A directory with no RAW frames is not a subject, it is a stray folder. Left in
+# the plan it fails every run, so the gallery reports INCOMPLETE forever and the
+# marker stops meaning anything. Drop it from the plan and say so once.
+$RAW_EXT = '^\.(arw|raf|nef|cr[23]|dng)$'
+$empty = @($subjects | Where-Object {
+    @(Get-ChildItem -File $_.FullName | Where-Object { $_.Extension -match $RAW_EXT }).Count -eq 0
+})
+if ($empty.Count -gt 0) {
+    $subjects = @($subjects | Where-Object { $empty.Name -notcontains $_.Name })
+    foreach ($e in $empty) { Write-Host "skipping $($e.Name): no RAW frames" }
+}
+if ($subjects.Count -eq 0) { throw "no subjects with RAW frames" }
+
+# EVERY render goes into a private staging directory, and `gallery\` is only
+# ever replaced WHOLESALE at the end. This is not tidiness, it is the fix for a
+# real failure: a run that died at subject 12 of 26 left `gallery\` holding 10
+# fresh JPEGs on top of 16 from the previous binary, with a RUN.txt that
+# confidently said "subjects: 26" and a manifest with 10 rows. It looked like a
+# coherent gallery. It was two galleries. Judgements were made on it and had to
+# be thrown away.
+#
+# Rendering in place cannot be made safe by being careful, because the mixing
+# happens when the run does NOT reach its own cleanup code -- a crash, an OOM,
+# a Ctrl-C. Staging removes the failure mode instead of detecting it: the
+# staging directory only ever contains output from one binary, so whatever ends
+# up in `gallery\` is coherent even if the run died.
+#
+# The distinction being enforced is COHERENCE, not completeness. A gallery
+# missing a subject is fine as long as it says so and nothing stale fills the
+# gap. A gallery holding two binaries' output with no way to tell them apart is
+# never fine.
+$exeSha = (Get-FileHash $Exe -Algorithm SHA256).Hash
+$exeShort = $exeSha.Substring(0, 8)
+$stamp = Get-Date -Format "yyyy-MM-dd-HHmm"
+$isFull = ($Only.Count -eq 0)
+$work = "$OutDir.staging-$exeShort-$stamp"
+
+# A leftover staging directory is a previous crash. Say so rather than silently
+# reusing or silently deleting it.
+$stale = @(Get-ChildItem -Directory (Split-Path $OutDir -Parent) -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -like "$((Split-Path $OutDir -Leaf)).staging-*" })
+foreach ($s in $stale) {
+    Write-Warning "leftover staging dir from an earlier failed run: $($s.FullName)"
+}
+
+$raw = Join-Path $work "_tiff"
+New-Item -ItemType Directory -Force -Path $work | Out-Null
 New-Item -ItemType Directory -Force -Path $raw | Out-Null
 
+# Written FIRST, deleted only on success. The two sentinels have deliberately
+# opposite polarity and they cover different failures. COMPLETE.txt is written
+# last, so a run that dies cannot claim success. INCOMPLETE.txt is written
+# first, so a run that is KILLED -- the OOM abort that took down the 26-subject
+# run, a Ctrl-C, a reboot -- still leaves a directory that announces itself.
+# try/finally cannot do this; nothing in-process runs when the process is gone.
+[IO.File]::WriteAllText((Join-Path $work "INCOMPLETE.txt"),
+    "INCOMPLETE: this run has not finished. If this file is still here, it died.`n")
 # Record what made these pictures. Without this a gallery is unfalsifiable: you
 # cannot tell a real improvement from a different binary.
 $exeInfo = Get-Item $Exe
@@ -153,9 +235,11 @@ $run = @(
     "binary          : $Exe"
     "binary mtime    : $($exeInfo.LastWriteTime.ToString('o'))"
     "binary size     : $($exeInfo.Length)"
-    "binary sha256   : $((Get-FileHash $Exe -Algorithm SHA256).Hash)"
+    "binary sha256   : $exeSha"
     "library         : $Library"
-    "subjects        : $($subjects.Count)"
+    "subjects planned: $($subjects.Count)"
+    "subjects rendered: (run in progress -- if this line is still here, the run did not finish)"
+    $(if ($empty.Count -gt 0) { "skipped (no RAW frames): $($empty.Name -join ', ')" } else { "skipped          : (none)" })
     "long edge       : $LongEdge"
     "STREHL_FIX_CA   : $(if ($FixCa) { $FixCa } else { '(off)' })"
     "render command  : strehl stack <DIR> --out <TIFF> --srgb --demosaic"
@@ -163,23 +247,35 @@ $run = @(
     "--srgb is correct HERE and only here: this is a viewing render, and the"
     "tone rendering rides with it. Never measure on one of these files."
 )
-[IO.File]::WriteAllLines((Join-Path $OutDir "RUN.txt"), $run, (New-Object Text.UTF8Encoding $false))
+[IO.File]::WriteAllLines((Join-Path $work "RUN.txt"), $run, (New-Object Text.UTF8Encoding $false))
 $run | Write-Host
 
 $rows = New-Object System.Collections.Generic.List[string]
-$rows.Add("subject`tframes`tseconds`texit`tblack`twhite`tzeroRGB`tblownRGB`tjpeg`tguard")
+# `binary` is per ROW, not per run. The whole directory-level provenance story
+# failed exactly because it was per run: one hash at the top of RUN.txt cannot
+# describe a directory that ended up holding two binaries' work.
+$rows.Add("subject`tframes`tseconds`texit`tblack`twhite`tzeroRGB`tblownRGB`tjpeg`tguard`tbinary")
 $guardMoved = New-Object System.Collections.Generic.List[string]
+$failed = New-Object System.Collections.Generic.List[string]
 
 $i = 0
 foreach ($s in $subjects) {
     $i++
     $n = $s.Name
+    # Reset every iteration. PowerShell scopes these to the whole script, not to
+    # the loop body, so without this a subject that fails midway would inherit
+    # the PREVIOUS subject's numbers into its manifest row -- stale data wearing
+    # the right subject's name, which is the same class of lie as a mixed
+    # directory.
+    $frames = 0; $exit = $null; $black = ""; $white = ""
+    $zero = ""; $blown = ""; $jpg = ""; $guardState = ""
+    $sw = [Diagnostics.Stopwatch]::StartNew()
+  try {
     $frames = (Get-ChildItem -File $s.FullName |
-        Where-Object { $_.Extension -match '^\.(arw|ARW|raf|RAF|nef|NEF|cr[23]|CR[23]|dng|DNG)$' }).Count
+        Where-Object { $_.Extension -match $RAW_EXT }).Count
     Write-Host ("[{0,2}/{1}] {2} ({3} frames)" -f $i, $subjects.Count, $n, $frames)
 
     $tif = Join-Path $raw "$n.tiff"
-    $sw = [Diagnostics.Stopwatch]::StartNew()
     $log = Join-Path $raw "$n.log"
     $p = Start-Process -FilePath $Exe `
         -ArgumentList @("stack", "`"$($s.FullName)`"", "--out", "`"$tif`"", "--srgb", "--demosaic") `
@@ -202,10 +298,13 @@ foreach ($s in $subjects) {
     $jpg = ""
     $zero = ""; $blown = ""
     if ($exit -eq 0 -and (Test-Path $tif)) {
-        $jpg = Join-Path $OutDir "$n.jpg"
-        $viewOut = & python (Join-Path $PSScriptRoot "gallery_view.py") $tif $jpg $LongEdge 2>&1
+        $jpg = Join-Path $work "$n.jpg"
+        # Stamped into the JPEG itself, so one file taken out of the directory
+        # can still say what produced it.
+        $prov = "strehl gallery`nsubject $n`nbinary sha256 $exeSha`nSTREHL_FIX_CA $(if ($FixCa) { $FixCa } else { '(off)' })`nrendered $(Get-Date -Format o)`nlong edge $LongEdge"
+        $viewOut = & python (Join-Path $PSScriptRoot "gallery_view.py") $tif $jpg $LongEdge $prov 2>&1
         $viewOut | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Warning "$n : view conversion failed" ; $jpg = "" }
+        if ($LASTEXITCODE -ne 0) { Write-Warning "$n : view conversion failed" ; $jpg = "" ; $failed.Add("$n (view)") }
         # Per-channel, never combined. An all-three-channels count conceals
         # single-channel clipping completely, and that is the exact shape of
         # the tone defect that took coffee-bubbles to 88% zero-blue and
@@ -215,6 +314,7 @@ foreach ($s in $subjects) {
         if (-not $KeepTiff) { Remove-Item $tif -Force -ErrorAction SilentlyContinue }
     } else {
         Write-Warning "$n : exit $exit -- see $log"
+        $failed.Add("$n (exit $exit)")
     }
 
     # Guarded subjects are checked as they land, not at the end, so a run that
@@ -222,7 +322,7 @@ foreach ($s in $subjects) {
     $guardState = ""
     if ($Guard -contains $n) {
         & python (Join-Path $PSScriptRoot "guard.py") `
-            (Join-Path $OutDir "$n.jpg") (Join-Path $GuardDir "$n.jpg") (Join-Path $OutDir "_guard")
+            (Join-Path $work "$n.jpg") (Join-Path $GuardDir "$n.jpg") (Join-Path $work "_guard")
         $guardState = if ($LASTEXITCODE -eq 0) { "held" } else { "MOVED" }
         if ($guardState -eq "MOVED") { $guardMoved.Add($n) }
     }
@@ -242,14 +342,107 @@ foreach ($s in $subjects) {
     # exit, which is a code change, not a script change. Until then the honest
     # statement is that no render has ever run out of memory: 26/26 subjects,
     # up to 299 frames at 33 MP, all exit 0.
-    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}`t{9}" -f `
-        $n, $frames, [int]$sw.Elapsed.TotalSeconds, $exit, $black, $white, $zero, $blown, (Split-Path $jpg -Leaf), $guardState))
+  } catch {
+    # One subject throwing must not cost the other 25. Record it as a failure
+    # and carry on -- the run reaches its own reconciliation either way.
+    Write-Warning "$n : gallery.ps1 threw -- $($_.Exception.Message)"
+    $failed.Add("$n (script error: $($_.Exception.Message))")
+  }
+    $sw.Stop()
+    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}`t{9}`t{10}" -f `
+        $n, $frames, [int]$sw.Elapsed.TotalSeconds, $exit, $black, $white, $zero, $blown, `
+        $(if ($jpg) { Split-Path $jpg -Leaf } else { "" }), $guardState, $exeShort))
     # Written every iteration, not at the end: a run that dies at subject 19
     # should still leave 18 rows of evidence behind.
-    [IO.File]::WriteAllLines((Join-Path $OutDir "manifest.tsv"), $rows, (New-Object Text.UTF8Encoding $false))
+    [IO.File]::WriteAllLines((Join-Path $work "manifest.tsv"), $rows, (New-Object Text.UTF8Encoding $false))
 }
 
 if (-not $KeepTiff) { Remove-Item $raw -Recurse -Force -ErrorAction SilentlyContinue }
+
+# ---------------------------------------------------------------------------
+# Reconcile the record with what actually happened, then publish -- or refuse.
+# ---------------------------------------------------------------------------
+$rendered = @(Get-ChildItem (Join-Path $work "*.jpg") -ErrorAction SilentlyContinue).Count
+$complete = ($rendered -eq $subjects.Count) -and ($failed.Count -eq 0)
+
+# RUN.txt asserted a subject count before the run had earned it. Now it states
+# what was planned AND what was achieved, and the two are visibly different when
+# they differ. A file that reads as data has to be data.
+$run = $run | ForEach-Object {
+    if ($_ -like "subjects rendered:*") { "subjects rendered: $rendered of $($subjects.Count)" } else { $_ }
+}
+if (-not $complete) {
+    $run += ""
+    $run += "INCOMPLETE. $rendered of $($subjects.Count) subjects produced a JPEG."
+    if ($failed.Count -gt 0) { $run += "failed: $($failed -join ', ')" }
+}
+[IO.File]::WriteAllLines((Join-Path $work "RUN.txt"), $run, (New-Object Text.UTF8Encoding $false))
+
+if ($complete) {
+    # The sentinel is written LAST and only on success. Its absence is what
+    # marks a directory as untrustworthy, which is the right polarity: a run
+    # that is killed cannot write anything, so it cannot accidentally claim to
+    # have succeeded.
+    Remove-Item (Join-Path $work "INCOMPLETE.txt") -Force -ErrorAction SilentlyContinue
+    [IO.File]::WriteAllText((Join-Path $work "COMPLETE.txt"),
+        "$rendered of $($subjects.Count) subjects, binary $exeSha, $(Get-Date -Format o)`n")
+} else {
+    [IO.File]::WriteAllText((Join-Path $work "INCOMPLETE.txt"), (@(
+        "INCOMPLETE GALLERY RUN -- $(Get-Date -Format o)"
+        ""
+        "$rendered of $($subjects.Count) subjects produced a JPEG."
+        "failed: $(if ($failed.Count) { $failed -join ', ' } else { '(none reported; the run was cut short)' })"
+        ""
+        "Every JPEG here came from binary $exeSha, so this directory is"
+        "COHERENT but PARTIAL. That is the deliberate trade: a missing subject is"
+        "a missing subject, whereas a subject silently left over from a previous"
+        "binary is a wrong answer that looks like a right one."
+    ) -join "`n"))
+}
+
+if ($isFull -and $rendered -eq 0) {
+    # Nothing rendered. Publishing an empty directory over a good gallery is
+    # pure loss -- there is no sense in which zero coherent subjects beats the
+    # last full run. Leave the staging dir as the evidence and touch nothing.
+    $final = $work
+    Write-Host ""
+    Write-Warning "NOT PUBLISHED: 0 of $($subjects.Count) subjects rendered."
+    Write-Warning "$OutDir is untouched. Failure evidence is in $work"
+} elseif ($isFull) {
+    # Wholesale replacement. The previous gallery is moved aside first and only
+    # deleted once the new one is in place, so an interruption during the swap
+    # leaves a recoverable directory rather than none.
+    $prev = "$OutDir.prev-$stamp"
+    if (Test-Path $OutDir) { Move-Item $OutDir $prev -Force }
+    Move-Item $work $OutDir -Force
+    if ($complete) {
+        if (Test-Path $prev) { Remove-Item $prev -Recurse -Force -ErrorAction SilentlyContinue }
+    } elseif (Test-Path $prev) {
+        # An incomplete run still publishes, because coherent-and-partial beats
+        # entirely stale and it is labelled either way. But the last full
+        # gallery is KEPT rather than deleted, so there is always something
+        # complete to fall back to when the new run is missing subjects.
+        Write-Warning "previous gallery preserved at $prev (this run was incomplete)"
+    }
+    $final = $OutDir
+    Write-Host ""
+    Write-Host "gallery: $OutDir  ($rendered subjects, all from $exeShort)"
+} else {
+    # A -Only run renders a subset. Swapping it in would delete every subject it
+    # did not render, which is precisely the mixing this is meant to prevent --
+    # so a partial selection never becomes the canonical gallery.
+    $final = $work
+    Write-Host ""
+    Write-Host "PARTIAL SELECTION (-Only): left at $work"
+    Write-Host "It is deliberately NOT swapped into $OutDir, which still holds the last full run."
+}
+
+if (-not $complete) {
+    Write-Host ""
+    Write-Warning "RUN INCOMPLETE: $rendered of $($subjects.Count) subjects."
+    if ($failed.Count -gt 0) { Write-Warning "failed: $($failed -join ', ')" }
+    Write-Warning "See $(Join-Path $final 'INCOMPLETE.txt')"
+}
 
 # A dated copy of every run. `gallery/` stays the one path worth bookmarking, so
 # "open the gallery" never changes meaning, and the history is what shows the
@@ -257,12 +450,13 @@ if (-not $KeepTiff) { Remove-Item $raw -Recurse -Force -ErrorAction SilentlyCont
 # the product is getting better is to be able to put the runs side by side at
 # viewing scale.
 if (-not $NoHistory) {
-    $stamp = Get-Date -Format "yyyy-MM-dd-HHmm"
     $hist = Join-Path (Split-Path $OutDir -Parent) "gallery-history\$stamp"
     New-Item -ItemType Directory -Force -Path $hist | Out-Null
-    Copy-Item (Join-Path $OutDir "*.jpg") $hist -Force -ErrorAction SilentlyContinue
-    Copy-Item (Join-Path $OutDir "RUN.txt") $hist -Force -ErrorAction SilentlyContinue
-    Copy-Item (Join-Path $OutDir "manifest.tsv") $hist -Force -ErrorAction SilentlyContinue
+    Copy-Item (Join-Path $final "*.jpg") $hist -Force -ErrorAction SilentlyContinue
+    Copy-Item (Join-Path $final "RUN.txt") $hist -Force -ErrorAction SilentlyContinue
+    Copy-Item (Join-Path $final "manifest.tsv") $hist -Force -ErrorAction SilentlyContinue
+    Copy-Item (Join-Path $final "COMPLETE.txt") $hist -Force -ErrorAction SilentlyContinue
+    Copy-Item (Join-Path $final "INCOMPLETE.txt") $hist -Force -ErrorAction SilentlyContinue
     Write-Host "history: $hist"
 
     # Subtract this run from the previous one. The gallery answers "is this
@@ -286,10 +480,14 @@ Write-Host ""
 if ($guardMoved.Count -gt 0) {
     Write-Host ""
     Write-Host "  !! REGRESSION GUARD MOVED: $($guardMoved -join ', ')" -ForegroundColor Red
-    Write-Host "  !! Look at $OutDir\_guard\*-before-after.png BEFORE accepting this run." -ForegroundColor Red
+    Write-Host "  !! Look at $final\_guard\*-before-after.png BEFORE accepting this run." -ForegroundColor Red
     Write-Host "  !! These subjects were audited as good. If one moved, something aimed" -ForegroundColor Red
     Write-Host "  !! at a different picture reached them." -ForegroundColor Red
     Write-Host ""
 }
-Write-Host "gallery: $OutDir"
-Write-Host "open it and look at the pictures."
+Write-Host "gallery: $final"
+if ($complete) {
+    Write-Host "open it and look at the pictures."
+} else {
+    Write-Host "INCOMPLETE -- $rendered of $($subjects.Count). Read INCOMPLETE.txt before judging anything."
+}

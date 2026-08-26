@@ -1256,6 +1256,99 @@ guard working: the develop path changed on purpose.
 
 ---
 
+## 16. The gallery had no provenance and no atomicity
+
+ORCH found `gallery\` holding two binaries' output at once: 14 JPEGs from one
+pin and 12 from another, a `RUN.txt` asserting "subjects: 26", and a manifest
+with 11 rows. Judgements were made on it and had to be discarded, because
+nothing in the directory said which file came from which binary.
+
+My own detached run then reproduced it exactly, which is the useful part: it
+died at 11 of 26 on `dry-erase-marker-head-cpl` with
+`memory allocation of 33003520 bytes failed` → Rust abort → exit
+`0xC0000409`, and left `gallery\` holding 16 JPEGs from the pre-CA binary
+underneath 10 from the CA binary. So this is not a rare race. It is what
+happens *every* time a run does not reach its own cleanup code.
+
+**That is why "be careful when overwriting" is not a fix.** Rendering in place
+mixes precisely when the process is no longer there to tidy up. The failure has
+to be made impossible, not detected.
+
+### What changed
+
+Every render now goes to `<OutDir>.staging-<sha8>-<stamp>\` and `gallery\` is
+replaced **wholesale** at the end. A staging directory can only ever hold one
+binary's output, so whatever reaches `gallery\` is coherent even if the run
+died. The property being enforced is **coherence, not completeness**: a gallery
+missing a subject is fine as long as it says so and nothing stale fills the
+gap; a gallery holding two binaries with no way to tell them apart never is.
+
+- **Per-file provenance.** `manifest.tsv` gains a `binary` column per row, and
+  `gallery_view.py` writes the full binary SHA-256, the CA profile, the
+  timestamp and the complete tone/colour description into the JPEG's own
+  comment segment — then reads it back off disk and exits non-zero if it did
+  not survive. One JPEG carried out of the directory can still say what made
+  it. This also fixes V-TONE's "tone parameters are not in the file": `black`,
+  `white`, black fraction and contrast now ride in the deliverable.
+- **Two sentinels, opposite polarity.** `COMPLETE.txt` is written *last* and
+  only on success, so a run that dies cannot claim to have succeeded.
+  `INCOMPLETE.txt` is written *first* and deleted on success, so a run that is
+  **killed** still leaves a directory that announces itself. `try/finally`
+  cannot do the second one — nothing in-process runs when the process is gone,
+  which is exactly the OOM-abort case above.
+- **`RUN.txt` states what it achieved,** not what it intended: `subjects
+  planned` and `subjects rendered: N of M` as separate lines, plus the failure
+  list. The old file asserted a count it never reached.
+- **`-Only` never swaps.** A subset promoted to canonical would delete every
+  subject it did not render, which is the same mixing in a different order.
+- **A totally failed run does not publish.** Zero coherent subjects does not
+  beat the last full gallery.
+- **A partial run publishes but keeps the fallback.** The previous gallery is
+  moved to `<OutDir>.prev-<stamp>` and, when the new run is incomplete, is
+  *kept* rather than deleted.
+
+### Commissioned six ways, on a two-subject library
+
+A miniature library of directory junctions (`coffee-bubbles`, `109MSDCF`) makes
+the full swap path testable in ~2 minutes instead of ~50.
+
+| # | scenario | required behaviour | result |
+|---|---|---|---|
+| A | clean full run | swap in, `COMPLETE.txt`, per-row `binary` | pass |
+| B | `-Only coffee` | `gallery\` byte-identical, output left in staging | pass |
+| C | every subject fails | `gallery\` byte-identical, not published | pass |
+| D | 2 of 3 (corrupt RAW) | publish, `INCOMPLETE.txt`, `prev` preserved | pass |
+| E | + a frameless folder | skipped and named in `RUN.txt`, not a failure | pass |
+| F | clean run again | `COMPLETE`, `INCOMPLETE` gone, no leftover dirs | pass |
+
+Test C is the one that mattered: it caught a real bug rather than confirming a
+belief. `Split-Path $jpg -Leaf` throws on an empty string, so the **first**
+failing subject threw out of the render loop, skipped the remaining subjects,
+and never reached the reconciliation block — meaning the run that most needed
+to announce itself was the one that could not. Fixed two ways: the per-subject
+body is now wrapped so one bad subject costs only itself, and the loop-scoped
+variables are reset each iteration so a failed subject cannot inherit the
+previous subject's numbers into its own manifest row. That last one is the same
+class of defect as the mixed directory — stale data wearing the right name.
+
+A frameless directory is now skipped rather than failed (test E). Left in the
+plan it fails every run forever, and a marker that is always on means nothing.
+
+### Not fixed here
+
+The OOM itself. The planner budgets 6144 MB assuming it owns the machine, and
+four agents share it. `stack.rs` is my lane but a headroom check is a
+behavioural change to the planner, and ORCH has not called the re-render yet —
+flagged rather than done.
+
+`peak_mb` was already gone before ORCH asked (`80a12d5`), removed for the same
+reason: polled on identical work it reported 11, 16, 16, 84, 87, 163, 1180 and
+1658 MB, and once returned 0 for a live process. A column that reads as
+measurement and is not is worse than no column. Getting it right needs the
+binary to report its own peak via `GetProcessMemoryInfo` before exit.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
