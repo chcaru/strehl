@@ -196,49 +196,45 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_MERGE": Declared(
         kind="quality",
-        default="pyramid",
+        default="estimator",
         verified="measured",
         evidence="merge_cmd.rs (MERGE_BACKEND_ENV, resolve_merge_backend, "
-        "DEFAULT_MERGE_BACKEND = MergeBackend::Pyramid); "
+        "DEFAULT_MERGE_BACKEND = MergeBackend::Estimator); "
         "main.rs (--merge, and the wrong-backend refusal table)",
         note=(
-            "WHICH MERGE PRODUCES THE PIXELS. `pyramid` or `estimator`, and an "
+            "WHICH MERGE PRODUCES THE PIXELS. `estimator` or `pyramid`, and an "
             "unrecognised value is a hard error in BOTH the flag and the env "
-            "channel -- neither can mean a backend by accident. THE DEFAULT "
-            "MOVED to `pyramid`; `--merge estimator` still reproduces the "
-            "pre-switch bytes exactly, which is why every row in the "
-            "byte-freeze registry names it explicitly and why ZERO freeze rows "
-            "moved when the default flipped. "
+            "channel -- neither can mean a backend by accident. The default is "
+            "the estimator, unchanged, and `--merge estimator` is byte-"
+            "identical to the pre-switch binary on all three write branches; "
+            "the byte-freeze registry reproduces both of its recorded hashes "
+            "twice each through this switch. "
             "THIS IS NOT A DARK QUALITY SWITCH, and the distinction matters "
-            "for this script's purpose. `pyramid` was 1898 lines that no "
+            "for this script's purpose. `pyramid` is 1898 lines that no "
             "shipped binary could reach at all until it was wired -- every "
             "good render in the corpus came from it through an EXAMPLE. It is "
-            "now the default, on a measurement rather than by taste. Measured "
-            "through ONE binary with both arms camera-linear (--demosaic) and "
-            "CA and photometric explicitly unset, at the STOCK band gate 2.00 "
-            "with no --pyramid-gate anywhere, so the arms differ in the merge "
-            "and nothing else. On flower-bud-alone-cpl: clip 0.0001 -> 0.0000, "
-            "acuity 126.9 -> 223.4, microC 54.21 -> 117.55, p1 1028 -> 1042. "
-            "On couch-fibers-cpl, the do-no-harm guard with no silhouette at "
-            "all: clip 0.0000 both ways, acuity 290.3 -> 324.4, microC "
-            "274.76 -> 322.1. "
-            "The clip that blocked the flip was 1.4043% and is now 0.0000%; "
-            "Hull::InputRange in pyramid.rs fixed it at the source. The halo "
-            "the owner has complained about since the project started is the "
-            "estimator's: scored through ONE mask taken from the estimator arm "
-            "so both columns read identical pixels, its backdrop sits 4739 DN "
-            "below its own far field across the 80-200 px aura zone, against "
-            "the pyramid's 166 DN. Levels, not ratios, because an "
-            "upper-envelope estimator on this project was measured to carry a "
-            "+0.845 sigma upward bias that can null a veiling ERROR metric "
-            "without improving the picture; the discriminator is that the "
-            "pyramid's FAR FIELD moves -113 DN, opposite in sign to the "
-            "+4452 DN it moves near the silhouette. The 109MSDCF placebo, "
-            "which has no depth separation, moves +0 DN median and +5 DN mean. "
-            "NOT CLEAN: accept.py still fails coffee-bean on microC at 67.2%, "
-            "and the pyramid doubles white-rail clipping there, 1.17% -> "
-            "2.86%. Both are recorded against DEFAULT_MERGE_BACKEND and are "
-            "BUILD-BLEND's to fix in pyramid.rs."
+            "now reachable, and it is unselected on a measurement rather than "
+            "by neglect. Measured through ONE binary with both arms camera-"
+            "linear (--demosaic) and CA and photometric explicitly unset, so "
+            "the arms differ in the merge and nothing else -- an isolation "
+            "that is only possible because both merges now share one command "
+            "and one develop path. On couch-fibers-cpl the pyramid merge takes "
+            "acuity 290.3 -> 392.0 and microC 274.76 -> 348.14 at clip 0.0000 "
+            "both ways; on flower-bud-alone-cpl, acuity 108.7 -> 227.6 and "
+            "microC 43.67 -> 119.04. It is the better merge, including on the "
+            "subject with no silhouette and therefore no smear artifact to "
+            "inflate the estimator's reference. "
+            "It does not get the default because on that same subject it clips "
+            "1.4043% of pixels against the estimator's 0.0001% and drops p1 "
+            "from 1028 to 334. Neither figure moves with the band gate -- "
+            "1.4015% and 339 at --pyramid-gate 4 -- so both belong to the "
+            "merge rather than to its tuning. BUILD-BLEND's clamp fix in "
+            "pyramid.rs targets exactly that; when it passes the gate, "
+            "DEFAULT_MERGE_BACKEND is the one line that moves. MEASURED: "
+            "unset, `strehl stack --srgb` on flower-bud-alone-cpl reproduces "
+            "the pre-switch bytes on a full 205-frame stack; `--merge "
+            "pyramid` emits a different image on 99.9895% of pixels at a mean "
+            "of 1820 DN."
         ),
     ),
     # ---------------- control ----------------
@@ -291,39 +287,6 @@ REGISTRY: dict[str, Declared] = {
         default="platform default",
         evidence="align_cmd.rs:1058",
         note="Alignment sidecar cache location. Infrastructure, not quality.",
-    ),
-    "STREHL_PYRAMID_MEAN_COARSE": Declared(
-        kind="control",
-        default="0 (no Laplacian band averaged; base band is a mean regardless)",
-        verified="measured",
-        evidence="pyramid.rs (MEAN_COARSE_ENV, DEFAULT_MEAN_COARSE, "
-        "mean_coarse_default); applied in the band loop, tested by "
-        "averaging_the_coarse_bands_is_not_the_same_merge",
-        note=(
-            "How many of the COARSEST Laplacian bands the pyramid merge "
-            "averages instead of selecting. Built to answer ORCH's registered "
-            "criteria on the far-field bowl, measured on a 4-rung ladder over "
-            "flower-bud-with-background-fern-cpl, and DELIBERATELY LEFT AT 0. "
-            "Off is the right default and it was measured, not assumed: "
-            "criterion (a), the bowl, ALREADY PASSES at 0 -- the residual bowl "
-            "is +191 DN at d=550, which is +0.35 of 255 at ORCH's operating "
-            "point against their 1.00 bar -- while every rung that closes the "
-            "bowl further fails criterion (b), retaining only 44.3% (mc=2) and "
-            "25.2% (mc=3) of the mid-field win against an 88.6% bar. ORCH "
-            "pre-registered the response to exactly that outcome: report it as "
-            "a failure and do not ship. mc=1 is a genuine trade rather than an "
-            "improvement (better than mc=0 on every row from d=2 to d=90, "
-            "worse by 142-194 DN across d=112-225) and is left available. "
-            "ORCH's much larger measured bowl came from a toned+sRGB pair "
-            "whose blend arm carried a collapsed black point; on untoned "
-            "linear renders the control arm's rows transfer at 1.40x and the "
-            "blend arm's at 4.79x, a 3.42x discriminating ratio. "
-            "COMMISSIONED: rung 0 is byte-identical (SHA-256 84A4661D...D655C) "
-            "to the render made before this knob existed, so the default "
-            "cannot move a byte, and rungs 1-3 all differ from it, so the env "
-            "var demonstrably reaches pixels. Full ladder and both instruments "
-            "in docs/research/BUILD-BLEND.md and experiments/BUILD-BLEND/."
-        ),
     ),
     "STREHL_PYRAMID_WORKERS": Declared(
         kind="control",

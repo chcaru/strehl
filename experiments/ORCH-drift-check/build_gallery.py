@@ -157,6 +157,9 @@ main { padding:26px 40px 90px; }
 .t-low { background:#3a3320; color:#dbc07e; }
 .t-bad { background:#4a2020; color:#e39b9b; }
 .t-unjudged { background:#22262e; color:#7d858f; }
+.g-good { background:#1b3524; color:#7fc79a; }
+.g-gap { background:#3a2c1c; color:#d6a86a; }
+.g-move { background:#38243a; color:#c58fd0; }
 .desc { padding:12px 18px 0; color:#98a1ac; font-size:14px; max-width:1000px; }
 .imgs { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 18px 18px; }
 @media (max-width:1100px){ .imgs { grid-template-columns:1fr; } }
@@ -190,6 +193,56 @@ def find_full(stem):
             if hits:
                 return hits[0]
     return None
+
+
+# BUILD-TRIAGE's per-subject reshoot verdict (commit 1d8e673b). This answers a
+# DIFFERENT question from the 1:1 verdict above: it asks whether anything
+# anywhere in the frame was limited by the capture, whereas the 1:1 verdict asks
+# whether the detail actually examined holds up. A subject can be both
+# print-worthy where you looked and capture-limited somewhere else, and three
+# subjects in this set are exactly that. Keeping the two tags separate is the
+# point; collapsing them would lose the distinction the tool exists to draw.
+TRIAGE = {
+    "109MSDCF": ("good", ""),
+    "112MSDCF": ("good", ""),
+    "113MSDCF": ("good", ""),
+    "119MSDCF": ("good", ""),
+    "bee-1-cpl": ("good", ""),
+    "bee-2-cpl": ("good", ""),
+    "bee-3-cpl": ("good", ""),
+    "coffee-bean": ("good", ""),
+    "couch-fibers-cpl": ("good", ""),
+    "flat-on-ruler-cpl": ("good", ""),
+    "wrapped-text-1": ("good", ""),
+    "wrapped-text-2": ("good", ""),
+    "dry-erase-marker-head-cpl": ("reshoot: coverage gap", "8/24 blocks (5 far, 3 near)"),
+    "flower-bud-alone-cpl": ("reshoot: coverage gap", "13/24 blocks, all far"),
+    "flower-bud-with-background-fern-cpl": ("reshoot: coverage gap", "13/24 blocks, all far"),
+    "flower-inner-edge-cpl": ("reshoot: coverage gap", "7/24 blocks (6 far, 1 near)"),
+    "flowers-cpl": ("reshoot: coverage gap", "16/24 blocks, all far"),
+    "highly-angled-ruler-mm-cpl": ("reshoot: coverage gap", "18/24 blocks, all far"),
+    "lavendar-cpl": ("reshoot: coverage gap", "10/24 blocks, all far"),
+    "pencil-flatter-angle-cpl": ("reshoot: coverage gap", "10/24 blocks, all far"),
+    "pencil-steep-angle-cpl": ("reshoot: coverage gap", "9/24 blocks (7 far, 2 near)"),
+    "tweezers-cpl": ("reshoot: coverage gap", "6/24 blocks, all far"),
+    "coffee-bubbles": ("reshoot: subject moved", "NCC 0.946, 20/24 blocks moving"),
+    "foam": ("reshoot: subject moved", "NCC 0.979, 20/24 blocks moving"),
+    "lead-1-cpl": ("reshoot: subject moved", "NCC 0.986, 19/24 blocks moving"),
+    "leaf-2-cpl": ("reshoot: subject moved", "NCC 0.989, 11/24 blocks moving"),
+}
+
+
+def triage_tag(stem):
+    if stem not in TRIAGE:
+        return ""
+    kind, detail = TRIAGE[stem]
+    cls = "g-good" if kind == "good" else (
+        "g-gap" if "coverage" in kind else "g-move")
+    label = "capture: clean" if kind == "good" else kind
+    title = ("BUILD-TRIAGE classified the whole frame. "
+             + (detail or "No site in this frame was limited by the capture."))
+    return (f'<span class="tag {cls}" title="{html.escape(title)}">'
+            f'{html.escape(label)}</span>')
 
 
 def classify(stem):
@@ -272,6 +325,7 @@ def main() -> int:
         rows.append(
             f'<section class="card"><div class="head"><h2>{html.escape(stem)}</h2>'
             f'<span class="tag {cls}">{html.escape(kind)}</span>'
+            f'{triage_tag(stem)}'
             f'<a class="raw" href="file:///{tif.as_posix()}">open 16-bit master</a></div>'
             f'<div class="desc">{html.escape(text)}</div>{body}</section>'
         )
@@ -301,6 +355,24 @@ frame. That is the only scale at which print quality can be judged. The
 left-hand image is reduced and is for orientation only &mdash; three separate
 wrong conclusions in this project came from judging pictures at thumbnail scale,
 including one of mine that was retracted.
+</div>
+<div class="note">
+<b>Two tags per subject, answering two different questions.</b> The first is my
+verdict on <i>the detail actually examined at 1:1</i> &mdash; can you print
+this. The second is BUILD-TRIAGE's verdict on <i>the whole frame</i> &mdash;
+was anything anywhere in it limited by the capture rather than by the stacker.
+They are not the same question, and three subjects here are
+<b>print-worthy where I looked and capture-limited somewhere else</b>:
+<code>tweezers-cpl</code>, <code>leaf-2-cpl</code> and
+<code>flower-bud-with-background-fern-cpl</code>. That is not a contradiction,
+it is the distinction the tool exists to draw: retouch-this versus
+reshoot-this. Hover a capture tag for the number behind it.
+<br><br>
+Across all 26 subjects and 64 evidence-bearing sites, <b>zero</b> were limited
+by the merge; all 14 defective subjects are capture-limited &mdash; 10 by a
+bracket that ran out of focus travel, 4 by a subject that moved. That claim is
+BUILD-TRIAGE's and is currently under independent re-test, because a count of
+zero looks identical whether nothing was wrong or the detector cannot fire.
 </div>
 <div class="note">
 <b>What is verified.</b> Eight subjects have been judged print-worthy by eye at

@@ -170,6 +170,31 @@ The remaining eighteen subjects are labelled **"not individually judged at
 deliberate: a subject nobody looked at and a subject that passed must not print
 the same way.
 
+### Two verdicts per subject: retouch this, or reshoot this
+
+Each subject in the gallery carries **two** tags, and they answer different
+questions. The first is the 1:1 verdict above — *can you print the detail that
+was examined*. The second is a whole-frame capture verdict — *was anything
+anywhere in this frame limited by the capture rather than by the stacker*.
+
+Three subjects are **print-worthy where I looked and capture-limited somewhere
+else**: `tweezers-cpl`, `leaf-2-cpl` and `flower-bud-with-background-fern-cpl`.
+That is not a contradiction; it is the distinction the tool exists to draw. A
+gallery that showed only one of the two tags would be hiding it.
+
+Across all 26 subjects and 64 evidence-bearing sites, **zero were limited by the
+merge**. All 14 defective subjects are capture-limited — 10 by a bracket that
+ran out of focus travel before covering the subject, 4 by a subject that moved.
+The remedy for those is a different capture, not different software, and the
+gallery now says which and by how much (`13/24 blocks, all far` tells you the
+bracket needed to extend further, and in which direction).
+
+That claim is not yet mine to make. It is BUILD-TRIAGE's, and it is under
+independent re-test right now, because **a count of zero reads identically
+whether nothing was wrong or the detector cannot fire**. Until a planted merge
+defect is shown to flip a subject to merge-limited, the zero is unconfirmed and
+is labelled as such.
+
 What is not fixed: a *veil* at occlusion boundaries. Its mechanism is measured
 rather than guessed — the merge selects the right frame, and the veiled detail
 is present at 0.85 correlation with the frame that resolved it, but the
