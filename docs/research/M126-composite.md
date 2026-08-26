@@ -650,3 +650,182 @@ identity**. Both are correct statements about different questions, and the secon
 the one that decides whether anybody should go and fix it. **Nobody should.** The fit
 refuses because there is no headroom — which is ORCH's own deconvolution null
 (`1.0014 ± 0.0184`) arriving a second time, through a completely different door.
+
+---
+
+## 12. Addendum — ORCH's two new gates, and a frame-count floor in his instrument
+
+**Pre-registration:** `experiments/M126-default-audit/PREREG-POTENCY.md`, commit
+**`7ae00393`**, written and committed *before* any arm was rendered.
+
+ORCH's `check-potency.py` (`d8a44e9a`) reported three gates byte-identical on
+`109MSDCF`, **8 frames**, `--merge pyramid --srgb`, on two binaries. He asked me to
+separate *structurally unreachable* from *measurably useless* by reading code, and
+deliberately declined to guess. That was the right call, and the answer is a third
+thing he did not list.
+
+### 12.1 Both new gates were probed at their own default value
+
+| gate | ORCH's probe | what the source says | so the null means |
+|---|---|---|---|
+| `STREHL_SMOOTH=1` | byte-identical | `DEFAULT_SMOOTH_LAMBDA = 1.0` and `Err(_) => DEFAULT_SMOOTH_LAMBDA` (`align_cmd.rs:987, 585`) | **`1` *is* unset.** An arithmetic identity. |
+| `STREHL_RESTORE=1` | byte-identical | `gain_cap_from_env()` returns `None` unless **`> 1.0`** (`restore.rs:870`) | **`1` *is* off.** Documented no-op. |
+
+Neither is a structural null and neither is a dead gate. **Both are value traps.**
+
+The binary says so out loud, and reading its banner settles it without any pixel:
+
+```
+S_unset   align: track prior on, lambda=1 huber=Some(1.0) px
+S_1       align: track prior on, lambda=1 huber=Some(1.0) px      <- same lambda
+S_0       <prior silent>                                          <- lambda <= 0 early return
+S_1000    align: track prior on, lambda=1000 huber=Some(1.0) px
+```
+
+`STREHL_SMOOTH` is also **not** unreachable like veil and halo. It is reachable from the
+shipping backend: `merge_cmd.rs:2285` -> `align_cmd::load_or_solve` (L1186) ->
+`solve_map` (L1242) -> `apply_smooth_env` (L1143), and `run_pyramid` uses the same
+resolver (`merge_cmd.rs:4384`). I confirmed no sidecar exists beside the capture, so the
+solve genuinely runs rather than loading a cached map.
+
+**`STREHL_SMOOTH` is ON by default at `lambda = 1.0`.** The absurd value is `0`/`off`.
+
+### 12.2 The measurement
+
+`109MSDCF`, 22 frames, pin `b9b6921e`, **identical argv on every arm — only the
+environment differs**, private `STREHL_CACHE_DIR` per arm, banner confirmed
+`pyramid (--merge)` on all six, linear 16-bit, hard `tifffile` + `uint16` assert.
+
+| arm | env | SHA-256[16] | % differ | peak DN | rms DN | verdict |
+|---|---|---|---|---|---|---|
+| `S_unset` | *(none)* | `F4FDB145E882C3EC` | — | — | — | base |
+| `S_1` | `STREHL_SMOOTH=1` | `F4FDB145E882C3EC` | **0.0000** | **0** | 0.0000 | **DEAD** |
+| `S_0` | `STREHL_SMOOTH=0` | `6140003BDF50CA0D` | 92.8205 | 1306 | 35.8836 | **LIVE** |
+| `S_off` | `STREHL_SMOOTH=off` | `6140003BDF50CA0D` | 92.8205 | 1306 | 35.8836 | **LIVE** |
+| `S_1000` | `STREHL_SMOOTH=1000` | `7F5F9448E7671102` | 95.8178 | 1495 | 46.4720 | **LIVE** |
+| `S_h` | `STREHL_SMOOTH_HUBER=off` | `F4FDB145E882C3EC` | **0.0000** | **0** | 0.0000 | **DEAD** |
+
+`S_1` is a **load-bearing placebo**: a real variable, really set, provably equal to the
+default, rendered through a *different* cache directory. It read **exactly zero**. That
+licenses the harness and excludes the cache as a confound in one arm.
+
+The harness is also cross-validated against my composite run, which used a different
+script and a different cache root: composite arm `A` and potency `S_unset` are
+**byte-identical** (`F4FDB145E882C3EC`).
+
+### 12.3 Scoring the pre-registered predictions
+
+| # | prediction | result |
+|---|---|---|
+| P1 | `S_1` byte-identical to `S_unset` | **CONFIRMED** |
+| P2 | `S_0` differs from `S_unset` | **CONFIRMED** |
+| P3 | `S_off` identical to `S_0`, both differ from unset | **CONFIRMED** |
+| P4 | `S_1000` differs from both `S_unset` and `S_0` | **CONFIRMED** |
+| P5 | `S_0` LIVE but small: peak **tens to low hundreds** of DN, **< 50 %** of samples | **REFUTED, both halves** |
+| P6 | `S_h` differs from `S_unset` | **REFUTED at 22 frames, CONFIRMED at 299** |
+
+### 12.4 The number that does not fit: P5
+
+I predicted the effect would be small, and I had a reason — BUILD-SHARP's own doc
+disclaims a visible sharpening and describes a ~0.2 px residual at span 1. Measured:
+**peak 1306 DN across 92.82 % of samples**, roughly **13x** my stated upper bound in
+peak and about **double** my predicted differing fraction.
+
+I am not banking the favourable half. P1–P4 all confirmed and they make the comfortable
+story true ("ORCH mis-probed it"). P5 is the one that embarrasses my own model, and the
+correction runs *against* my prior, not with it: **turning the track prior off moves
+almost every pixel in the frame.** BUILD-SHARP's modesty is about an *ESF rise at
+edges*; it is not a statement about how many pixels the prior touches, and I conflated
+the two.
+
+**Potency is not merit.** Nothing here says the prior *improves* the render — only that
+it reaches pixels, hard. Whether `lambda = 1` is the right value is BUILD-SHARP's
+question and I am not adjudicating it.
+
+### 12.5 The finding that matters most: a frame-count floor in the probe subject
+
+`STREHL_SMOOTH_HUBER=off` reads **DEAD on 22 frames and LIVE on 299**:
+
+| subject | frames | % differ | peak DN | peak % FS | rms DN | verdict |
+|---|---|---|---|---|---|---|
+| `109MSDCF` | 22 | 0.0000 | 0 | 0.0000 | 0.0000 | **DEAD** |
+| `bee-3-cpl` | 299 | **99.3482** | **24331** | **37.1267** | 533.5722 | **LIVE** |
+
+That is not a marginal effect that crept over a threshold. It is **37 % of full scale
+across essentially the whole frame**, and the 22-frame subject reported it as a
+byte-identical no-op.
+
+**This is the second gate in this milestone with a frame-count floor.**
+`STREHL_FIX_HALO` is the first: byte-identical at 22 frames, 12.772 % of pixels at 299
+(§3b). Two independent gates, same shape, and both are gates whose input is a statistic
+pooled *across frames* — which is exactly the quantity a short stack does not have.
+
+**Consequence for `check-potency.py`: it runs on 8 frames.** My floor sits somewhere
+between 22 and 299, and 8 is further below it than 22 is. The instrument is sound — its
+self-licensing (null byte-identical, positive control 97.47 %, negative control 0
+samples) is better than most in this corpus, and the `STREHL_HIGHLIGHT_KNEE` DEAD ->
+LIVE transition is a genuine demonstration that it detects repairs. **The subject is the
+problem, not the instrument.** A DEAD verdict from an 8-frame stack is not evidence that
+a multi-frame gate is dead; it is evidence that 8 frames do not exercise it.
+
+I would re-run the DEAD column on `bee-3-cpl` before trusting any of it. The three
+current DEAD verdicts happen to survive — I have proved all three by code reading — but
+**two of the three are right for reasons that have nothing to do with potency**, and the
+one genuinely-inert case (`STREHL_ROBUST_ELECTION`) was established by reading
+`merge_cmd.rs:1871`, not by the null.
+
+### 12.6 TOKEN audit of my own matrix
+
+ORCH warned that arms scored purely on "did the output change" may be hiding TOKEN
+cases — a differing output whose peak is <= 2 DN, which issues a receipt for an effect no
+pixel carries. I re-scored every composite arm in linear DN.
+
+**No TOKEN cases.** The smallest LIVE effect in my matrix is **908 DN — 454x the TOKEN
+threshold**:
+
+| subject | arm vs base | % differ | peak DN | verdict |
+|---|---|---|---|---|
+| 109MSDCF | B/C/P vs A | 87.8133 | 908 | LIVE |
+| 109MSDCF | E vs A | 93.5470 | 913 | LIVE |
+| 109MSDCF | D/Dv vs D0 | 1.2833 | 5345 | LIVE |
+| 109MSDCF | Dh vs D0 | 0.0000 | 0 | DEAD *(frame floor; LIVE at 299)* |
+| bee-3-cpl | B/C/P vs A | 83.7945 | 2701 | LIVE |
+| bee-3-cpl | E vs A | 97.1611 | 2712 | LIVE |
+| bee-3-cpl | D vs D0 | 26.2944 | 34611 | LIVE |
+| bee-3-cpl | Dv vs D0 | 16.2118 | 7952 | LIVE |
+| bee-3-cpl | Dh vs D0 | 12.7606 | 34611 | LIVE |
+
+I adopt the DEAD / TOKEN / LIVE taxonomy. It is a real improvement over a binary
+differs-test and it costs one extra line of arithmetic.
+
+### 12.7 A correction to my own original brief
+
+My brief stated: *"`STREHL_SMOOTH` — the doc comment says 'Off by default:
+`STREHL_SMOOTH` unset reproduces the free solve bit-exactly'."* **That doc no longer
+exists.** BUILD-SHARP moved the default and rewrote the comment, which now reads *"ON by
+default at `lambda = 1.0` since BUILD-SHARP. `STREHL_SMOOTH=0` or `STREHL_SMOOTH=off`
+restores the free solve bit-exactly."*
+
+So `STREHL_SMOOTH` was **never a candidate for promotion** — it was already promoted
+before this milestone opened, and both my brief and ORCH's potency probe were working
+from the pre-BUILD-SHARP description. This is the same class of error as §4: a quoted
+description of the code outliving the code. **Read the crate's own statement first.**
+
+### 12.8 Reproduce
+
+```powershell
+# six arms, identical argv, only the environment differs
+& C:\dev\strehl-out\M126-POTENCY\run_potency.ps1 -Subject D:\personal\macro\109MSDCF -Tag 109MSDCF
+& C:\dev\strehl-out\M126-POTENCY\run_bee.ps1     -Subject D:\personal\macro\bee-3-cpl -Tag bee-3-cpl
+
+# magnitude + DEAD/TOKEN/LIVE, linear, hard tifffile + uint16 assert
+python mag.py C:\dev\strehl-out\M126-POTENCY\109MSDCF\lin  S_unset "S_1,S_0,S_off,S_1000,S_h"
+python mag.py C:\dev\strehl-out\M126-POTENCY\bee-3-cpl\lin S_unset "S_h"
+```
+
+**Known failure:** the `bee-3-cpl` `S_unset` and `S_0` arms aborted with
+`0xC0000409` and `memory allocation of 73400320 bytes failed` while eleven agents were
+rendering concurrently. Not a defect — an OOM. `S_unset` was recovered from the
+composite run, which used byte-identical argv and environment and is cross-validated
+byte-identical on `109MSDCF`. **`S_0` on 299 frames is still unrendered** and is the one
+gap in this addendum.
