@@ -276,6 +276,25 @@ pub struct RestoreReport {
     /// over frequency. `1.0` would be a perfect inverse; the noise term is what
     /// stops it.
     pub recovered_fraction: f64,
+    /// Fraction of pixels the filter drove outside the min/max of their own
+    /// 9x9 input support.
+    ///
+    /// This is the halo detector, and it is here rather than in a test because
+    /// it needs no reference image, no clean arm and no visual judgement: a
+    /// zero-phase sharpener may change an edge's contrast, but a pixel that
+    /// ends up outside the range of every input pixel that could reach it is
+    /// overshoot by definition, and overshoot at a silhouette is a rim.
+    ///
+    /// Reported rather than merely bounded because the useful strength and the
+    /// ringing strength are the same knob: the caller has to see the cost to
+    /// price it. `0.0` is the only value that means "no ringing anywhere".
+    pub outside_support: f64,
+    /// The largest such excursion, in the plane's own units. Pairs with
+    /// [`Self::outside_support`] for the reason this project requires a cost
+    /// column beside every quality number: a vanishing fraction of pixels each
+    /// blowing out by thousands of DN is not the same picture as a vanishing
+    /// fraction each off by one.
+    pub worst_excursion: f64,
     /// The noise variance the filter was given, in the plane's own units.
     pub sigma2: f64,
 }
@@ -503,6 +522,10 @@ pub fn restore_plane(plane: &mut [f32], w: usize, h: usize, cfg: &RestoreConfig)
     report.recovered_fraction = if den > 0.0 { num / den } else { 0.0 };
     report.taps = taps.clone();
 
+    // Kept so the overshoot guard can compare each output against the inputs
+    // that could actually reach it. One extra plane, once per plane, is a cheap
+    // price for the only number here that detects a halo.
+    let input = plane.to_vec();
     let mut tmp = vec![0.0f32; w * h];
     for y in 0..h {
         for x in 0..w {
@@ -525,6 +548,54 @@ pub fn restore_plane(plane: &mut [f32], w: usize, h: usize, cfg: &RestoreConfig)
             }
             plane[y * w + x] = acc as f32;
         }
+    }
+
+    // The overshoot guard. The filter's support is `taps.len() - 1` either side
+    // on each axis, applied separably, so the set of inputs that can reach one
+    // output is a square of that radius. A min/max over a square is separable
+    // the same way the filter is, so this costs two passes rather than r^2.
+    //
+    // Replicating borders are used here too, matching the convolution exactly:
+    // a guard that assumed a different border rule would report violations at
+    // the frame edge that the filter never committed.
+    let r = taps.len().saturating_sub(1);
+    if r > 0 {
+        let (mut lo, mut hi) = (vec![0.0f32; w * h], vec![0.0f32; w * h]);
+        for y in 0..h {
+            for x in 0..w {
+                let (mut a, mut b) = (f32::INFINITY, f32::NEG_INFINITY);
+                for k in x.saturating_sub(r)..=(x + r).min(w - 1) {
+                    a = a.min(input[y * w + k]);
+                    b = b.max(input[y * w + k]);
+                }
+                lo[y * w + x] = a;
+                hi[y * w + x] = b;
+            }
+        }
+        let (mut worst, mut n_out) = (0.0f64, 0usize);
+        for y in 0..h {
+            for x in 0..w {
+                let (mut a, mut b) = (f32::INFINITY, f32::NEG_INFINITY);
+                for k in y.saturating_sub(r)..=(y + r).min(h - 1) {
+                    a = a.min(lo[k * w + x]);
+                    b = b.max(hi[k * w + x]);
+                }
+                let v = plane[y * w + x];
+                let over = if v > b {
+                    f64::from(v) - f64::from(b)
+                } else if v < a {
+                    f64::from(a) - f64::from(v)
+                } else {
+                    0.0
+                };
+                if over > 0.0 {
+                    n_out += 1;
+                    worst = worst.max(over);
+                }
+            }
+        }
+        report.outside_support = n_out as f64 / (w * h) as f64;
+        report.worst_excursion = worst;
     }
     report
 }
@@ -560,6 +631,109 @@ pub fn selftest() -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A hard step, the shape a silhouette presents to the filter.
+    fn step_plane(w: usize, h: usize, lo: f32, hi: f32) -> Vec<f32> {
+        (0..w * h)
+            .map(|i| if i % w < w / 2 { lo } else { hi })
+            .collect()
+    }
+
+    /// Commissioning the overshoot guard: it must read zero when nothing
+    /// overshoots AND non-zero when something does.
+    ///
+    /// Both halves are required. A guard that is stuck at zero passes the null
+    /// and would have reported a clean picture for every strength ever tried,
+    /// which is precisely the "check that cannot fail" this project treats as
+    /// worse than no check. The positive arm is what proves the instrument can
+    /// respond at all.
+    #[test]
+    fn the_overshoot_guard_reads_zero_only_when_there_is_no_overshoot() {
+        let (w, h) = (64, 64);
+        let base = RestoreConfig {
+            resampler: Resampler::CatmullRom,
+            grid_factor: 1.0,
+            sigma2: 1.0,
+            gain_cap: 4.0,
+        };
+
+        // NULL: a cap of 1.0 is the documented no-op. Nothing may move, so
+        // nothing can leave its own support.
+        let mut p = step_plane(w, h, 100.0, 1000.0);
+        let off = restore_plane(
+            &mut p,
+            w,
+            h,
+            &RestoreConfig {
+                gain_cap: 1.0,
+                ..base
+            },
+        );
+        assert_eq!(
+            off.outside_support, 0.0,
+            "a no-op restoration reported {:.6} of pixels outside their own support",
+            off.outside_support
+        );
+
+        // POSITIVE: a near-zero noise floor is the regime D2 measured, where
+        // the Wiener form approaches a pure inverse and the FIR rings.
+        let mut p = step_plane(w, h, 100.0, 1000.0);
+        let on = restore_plane(
+            &mut p,
+            w,
+            h,
+            &RestoreConfig {
+                sigma2: 1e-6,
+                ..base
+            },
+        );
+        assert!(
+            on.outside_support > 0.0 && on.worst_excursion > 0.0,
+            "an aggressive restoration on a hard step reported NO overshoot \
+             ({:.6} of px, worst {:.3}); the guard cannot detect a halo and \
+             every clean reading it has ever given is worthless",
+            on.outside_support,
+            on.worst_excursion
+        );
+    }
+
+    /// The reported gain is one-dimensional; the picture gets two passes.
+    ///
+    /// V-RESTORE measured a filter reported at 1.4305 delivering 2.0465 on a
+    /// checkerboard, matching the square to five places. This pins the relation
+    /// so that a caller reading `max_gain` cannot keep believing it is what the
+    /// pixels receive.
+    #[test]
+    fn the_realised_two_dimensional_gain_is_the_square_of_the_reported_one() {
+        let (w, h) = (48, 48);
+        // Exactly fx = fy = 0.5: the frequency where a separable filter's two
+        // passes both act at their Nyquist response.
+        let mid = 500.0f32;
+        let amp = 200.0f32;
+        let mut p: Vec<f32> = (0..w * h)
+            .map(|i| {
+                let (x, y) = (i % w, i / w);
+                if (x + y) % 2 == 0 { mid + amp } else { mid - amp }
+            })
+            .collect();
+        let cfg = RestoreConfig {
+            resampler: Resampler::CatmullRom,
+            grid_factor: 1.0,
+            sigma2: 1e-6,
+            gain_cap: 4.0,
+        };
+        let rep = restore_plane(&mut p, w, h, &cfg);
+        // Read the realised amplitude in the interior, away from the borders.
+        let c = (h / 2) * w + w / 2;
+        let realised = (f64::from(p[c]) - f64::from(mid)).abs() / f64::from(amp);
+        let predicted = rep.gain_at_nyquist * rep.gain_at_nyquist;
+        assert!(
+            (realised - predicted).abs() < 1e-3,
+            "checkerboard realised {realised:.6} but the Nyquist response squared \
+             is {predicted:.6}; the 2-D gain is no longer the square of the 1-D one \
+             and the cap no longer bounds what the picture receives"
+        );
+    }
 
     #[test]
     fn kernels_are_interpolating_and_preserve_dc() {
@@ -881,6 +1055,44 @@ pub fn gain_cap_from_env() -> Option<f64> {
     }
 }
 
+/// Multiplier on the calibrated `sigma^2`, for **measurement only**.
+///
+/// This is not a quality knob and must not become one. [`RESTORE_ENV`]'s cap is
+/// measured never to bind, so `sigma^2` is the only variable that actually
+/// changes this filter's strength, and a trade curve therefore has to be swept
+/// along it. The calibrated value stays the default at `1.0`; this exists so
+/// the curve can be produced without editing the noise model, and so that the
+/// number which decides the behaviour is set in one obvious place rather than
+/// by a constant someone guessed.
+///
+/// Deliberately NOT a silent fallback on a bad value. A measurement instrument
+/// that quietly substitutes 1.0 when it is misconfigured produces a curve that
+/// is wrong in a way nobody can see, which is worse than no curve.
+pub const RESTORE_SIGMA_ENV: &str = "STREHL_RESTORE_SIGMA";
+
+/// The `sigma^2` multiplier from [`RESTORE_SIGMA_ENV`]; `1.0` when unset.
+///
+/// # Panics
+/// If the variable is set to something that is not a finite positive number.
+pub fn sigma_scale_from_env() -> f64 {
+    let Ok(raw) = std::env::var(RESTORE_SIGMA_ENV) else {
+        return 1.0;
+    };
+    let raw = raw.trim();
+    if raw.is_empty() {
+        return 1.0;
+    }
+    match raw.parse::<f64>() {
+        Ok(v) if v.is_finite() && v > 0.0 => v,
+        _ => panic!(
+            "{RESTORE_SIGMA_ENV}={raw:?} is not a finite positive number. It scales the \
+             calibrated noise variance and so decides how hard the restoration sharpens; \
+             refusing rather than assuming 1.0, because a mis-set instrument that reads \
+             plausibly is worse than one that stops."
+        ),
+    }
+}
+
 /// Everything the writer needs, bundled so that wiring costs the shared file
 /// exactly one parameter.
 ///
@@ -909,7 +1121,7 @@ impl RestorePlan<'_> {
     /// deliberate: the failure mode under guard is overshoot at an edge, and
     /// over-regularising cannot cause overshoot.
     pub fn sigma2(&self, p: crate::CfaPlane, mean_dn: f32, scale: f64) -> f64 {
-        self.noise.variance(p, mean_dn.max(0.0)) as f64 * scale * scale
+        self.noise.variance(p, mean_dn.max(0.0)) as f64 * scale * scale * sigma_scale_from_env()
     }
 
     /// `grid_factor` is 1.0 because the CFA planes ARE the gather grid: one
