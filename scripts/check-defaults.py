@@ -70,6 +70,24 @@ from pathlib import Path
 #                  infrastructure (cache location, test gating). Default-off is
 #                  correct, but the reason must be stated.
 #
+# BACKEND: which merge backend the switch actually reaches. This field exists
+#          because the script reported two switches as dark defaults of the
+#          shipping product when the shipping backend does not implement the
+#          stages they control at all. `STREHL_PHOTOMETRIC` and
+#          `STREHL_FIX_HALO` are ESTIMATOR-path stages; the default backend is
+#          the PYRAMID, whose own run banner lists "photometric gain, clip
+#          census, outlier rejection, halo correction, through-focus
+#          statistics" under `not applied`. A switch that cannot run on the
+#          default path is INAPPLICABLE there. That is a different fact from
+#          "off", it has a different remedy, and conflating the two sent two
+#          agents after a promotion that would have changed nothing.
+#
+#   "any"        - reaches pixels on whichever backend runs.
+#   "pyramid"    - only on the default backend.
+#   "estimator"  - only on `--merge estimator`. NOT dark when it is off on the
+#                  default path; it is simply not there. Report it, count it,
+#                  and do not call it a defect.
+#
 # DEFAULT: what the product does when the variable is unset, as a human read it
 #          from the code cited in `evidence`. Not inferred by this script.
 # --------------------------------------------------------------------------
@@ -105,27 +123,59 @@ class Declared:
     #                hard failure: you may not claim a quality default you
     #                have not looked at.
     verified: str = "assumed"
+    # Which backend the switch reaches. See the BACKEND note above. Defaults to
+    # "any" so an unclassified switch is still audited on the default path --
+    # the permissive value has to be the one that gets CHECKED, or forgetting
+    # the field would silently excuse a switch.
+    backend: str = "any"
 
 
 REGISTRY: dict[str, Declared] = {
     # ---------------- quality ----------------
     "STREHL_FIX_CA": Declared(
         kind="quality",
-        default="off",
-        evidence="optics.rs:470 (CA_ENV); main.rs:183-185,619 (--fix-ca)",
+        default="on (gear-matched)",
+        verified="measured",
+        evidence=(
+            "MEASURED, not read: ran the shipping binary "
+            "(target/release/strehl.exe, built 2026-08-26 09:34) as "
+            "`stack D:\\personal\\macro\\bee-3-cpl --srgb --auto-exposure "
+            "--limit 6`, i.e. the shipping flags with NO --fix-ca. rc=0 and "
+            "its own banner printed: `camera: ILCE-7CM2` / `lateral CA: "
+            "CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; "
+            "default on)`. `stack --help` agrees in prose: \"This is "
+            "DEFAULTED ON when the gear matches.\" "
+            "Also optics.rs:470 (CA_ENV); main.rs:183-185,619 (--fix-ca)"
+        ),
         note=(
             "Lateral-CA correction. Removes 61-67% of corner colour fringing "
             "(b914f31, R^2=0.9969) and 0.363px -> 0.059px of blue displacement "
-            "(283ccf4). THE ORIGINAL DARK FEATURE. Being made default-on behind "
-            "the EXIF gear guard by BUILD-RENDER."
+            "(283ccf4). "
+            "THIS ENTRY USED TO READ `default=off` AND CALL THIS 'THE ORIGINAL "
+            "DARK FEATURE'. THAT WAS WRONG, and it is the most consequential "
+            "wrong value this file has carried. The orchestrator inferred it "
+            "from a provenance argv that contained no --fix-ca and concluded "
+            "the shipping masters were rendered without the correction. An "
+            "argv records what the CALLER said; only the run's own banner "
+            "records what the PROGRAM did. Running the binary took one command "
+            "and printed the answer in one line. "
+            "It is default-ON behind the EXIF gear guard, which reads body and "
+            "composed lens id out of the file and declines on a mismatch -- "
+            "because applying this profile to a different optical path would "
+            "ADD an aberration. `--fix-ca off` is the supported escape hatch."
         ),
     ),
     "STREHL_PHOTOMETRIC": Declared(
         kind="quality",
         default="off",
         verified="code",
+        backend="estimator",
         evidence="merge_cmd.rs:1965 (`_ => Ok(PhotometricMode::Off)`); "
-        "main.rs:325-354,648-650 (--photometric)",
+        "main.rs:325-354,648-650 (--photometric). BACKEND CONFIRMED BY RUN: "
+        "the default-path banner (pyramid, bee-3-cpl, --limit 3) prints merge "
+        "backend, lateral CA and alignment and says NOTHING about photometric "
+        "-- the stage is not on this path. The pyramid arm's own report lists "
+        "`photometric gain` under `not applied`.",
         note=(
             "Per-frame affine photometric normalisation. Three-valued "
             "off|on|auto; the flag wins over the env var and 'neither can mean "
@@ -179,7 +229,13 @@ REGISTRY: dict[str, Declared] = {
     "STREHL_FIX_HALO": Declared(
         kind="quality",
         default="off",
-        evidence="merge_cmd/halo.rs:69 (FIX_ENV), :71 (DELTA_ENV)",
+        backend="estimator",
+        evidence="merge_cmd/halo.rs:69 (FIX_ENV), :71 (DELTA_ENV). "
+        "BACKEND CONFIRMED BY RUN: the default-path banner (pyramid, "
+        "bee-3-cpl, --limit 3) says nothing about halo correction, and the "
+        "pyramid arm's own report lists `halo correction` under `not "
+        "applied`. It is an ESTIMATOR stage. The shipping product does not "
+        "run it and cannot be fixed by turning it on.",
         note=(
             "Veiling-glare subtraction. DARK. Two instrument defects reported "
             "and unresolved: report()/report_statistics() at merge_cmd.rs:2083-2085 "
@@ -196,45 +252,49 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_MERGE": Declared(
         kind="quality",
-        default="estimator",
+        default="pyramid",
         verified="measured",
         evidence="merge_cmd.rs (MERGE_BACKEND_ENV, resolve_merge_backend, "
-        "DEFAULT_MERGE_BACKEND = MergeBackend::Estimator); "
+        "DEFAULT_MERGE_BACKEND = MergeBackend::Pyramid); "
         "main.rs (--merge, and the wrong-backend refusal table)",
         note=(
-            "WHICH MERGE PRODUCES THE PIXELS. `estimator` or `pyramid`, and an "
+            "WHICH MERGE PRODUCES THE PIXELS. `pyramid` or `estimator`, and an "
             "unrecognised value is a hard error in BOTH the flag and the env "
-            "channel -- neither can mean a backend by accident. The default is "
-            "the estimator, unchanged, and `--merge estimator` is byte-"
-            "identical to the pre-switch binary on all three write branches; "
-            "the byte-freeze registry reproduces both of its recorded hashes "
-            "twice each through this switch. "
+            "channel -- neither can mean a backend by accident. THE DEFAULT "
+            "MOVED to `pyramid`; `--merge estimator` still reproduces the "
+            "pre-switch bytes exactly, which is why every row in the "
+            "byte-freeze registry names it explicitly and why ZERO freeze rows "
+            "moved when the default flipped. "
             "THIS IS NOT A DARK QUALITY SWITCH, and the distinction matters "
-            "for this script's purpose. `pyramid` is 1898 lines that no "
+            "for this script's purpose. `pyramid` was 1898 lines that no "
             "shipped binary could reach at all until it was wired -- every "
             "good render in the corpus came from it through an EXAMPLE. It is "
-            "now reachable, and it is unselected on a measurement rather than "
-            "by neglect. Measured through ONE binary with both arms camera-"
-            "linear (--demosaic) and CA and photometric explicitly unset, so "
-            "the arms differ in the merge and nothing else -- an isolation "
-            "that is only possible because both merges now share one command "
-            "and one develop path. On couch-fibers-cpl the pyramid merge takes "
-            "acuity 290.3 -> 392.0 and microC 274.76 -> 348.14 at clip 0.0000 "
-            "both ways; on flower-bud-alone-cpl, acuity 108.7 -> 227.6 and "
-            "microC 43.67 -> 119.04. It is the better merge, including on the "
-            "subject with no silhouette and therefore no smear artifact to "
-            "inflate the estimator's reference. "
-            "It does not get the default because on that same subject it clips "
-            "1.4043% of pixels against the estimator's 0.0001% and drops p1 "
-            "from 1028 to 334. Neither figure moves with the band gate -- "
-            "1.4015% and 339 at --pyramid-gate 4 -- so both belong to the "
-            "merge rather than to its tuning. BUILD-BLEND's clamp fix in "
-            "pyramid.rs targets exactly that; when it passes the gate, "
-            "DEFAULT_MERGE_BACKEND is the one line that moves. MEASURED: "
-            "unset, `strehl stack --srgb` on flower-bud-alone-cpl reproduces "
-            "the pre-switch bytes on a full 205-frame stack; `--merge "
-            "pyramid` emits a different image on 99.9895% of pixels at a mean "
-            "of 1820 DN."
+            "now the default, on a measurement rather than by taste. Measured "
+            "through ONE binary with both arms camera-linear (--demosaic) and "
+            "CA and photometric explicitly unset, at the STOCK band gate 2.00 "
+            "with no --pyramid-gate anywhere, so the arms differ in the merge "
+            "and nothing else. On flower-bud-alone-cpl: clip 0.0001 -> 0.0000, "
+            "acuity 126.9 -> 223.4, microC 54.21 -> 117.55, p1 1028 -> 1042. "
+            "On couch-fibers-cpl, the do-no-harm guard with no silhouette at "
+            "all: clip 0.0000 both ways, acuity 290.3 -> 324.4, microC "
+            "274.76 -> 322.1. "
+            "The clip that blocked the flip was 1.4043% and is now 0.0000%; "
+            "Hull::InputRange in pyramid.rs fixed it at the source. The halo "
+            "the owner has complained about since the project started is the "
+            "estimator's: scored through ONE mask taken from the estimator arm "
+            "so both columns read identical pixels, its backdrop sits 4739 DN "
+            "below its own far field across the 80-200 px aura zone, against "
+            "the pyramid's 166 DN. Levels, not ratios, because an "
+            "upper-envelope estimator on this project was measured to carry a "
+            "+0.845 sigma upward bias that can null a veiling ERROR metric "
+            "without improving the picture; the discriminator is that the "
+            "pyramid's FAR FIELD moves -113 DN, opposite in sign to the "
+            "+4452 DN it moves near the silhouette. The 109MSDCF placebo, "
+            "which has no depth separation, moves +0 DN median and +5 DN mean. "
+            "NOT CLEAN: accept.py still fails coffee-bean on microC at 67.2%, "
+            "and the pyramid doubles white-rail clipping there, 1.17% -> "
+            "2.86%. Both are recorded against DEFAULT_MERGE_BACKEND and are "
+            "BUILD-BLEND's to fix in pyramid.rs."
         ),
     ),
     # ---------------- control ----------------
@@ -287,6 +347,39 @@ REGISTRY: dict[str, Declared] = {
         default="platform default",
         evidence="align_cmd.rs:1058",
         note="Alignment sidecar cache location. Infrastructure, not quality.",
+    ),
+    "STREHL_PYRAMID_MEAN_COARSE": Declared(
+        kind="control",
+        default="0 (no Laplacian band averaged; base band is a mean regardless)",
+        verified="measured",
+        evidence="pyramid.rs (MEAN_COARSE_ENV, DEFAULT_MEAN_COARSE, "
+        "mean_coarse_default); applied in the band loop, tested by "
+        "averaging_the_coarse_bands_is_not_the_same_merge",
+        note=(
+            "How many of the COARSEST Laplacian bands the pyramid merge "
+            "averages instead of selecting. Built to answer ORCH's registered "
+            "criteria on the far-field bowl, measured on a 4-rung ladder over "
+            "flower-bud-with-background-fern-cpl, and DELIBERATELY LEFT AT 0. "
+            "Off is the right default and it was measured, not assumed: "
+            "criterion (a), the bowl, ALREADY PASSES at 0 -- the residual bowl "
+            "is +191 DN at d=550, which is +0.35 of 255 at ORCH's operating "
+            "point against their 1.00 bar -- while every rung that closes the "
+            "bowl further fails criterion (b), retaining only 44.3% (mc=2) and "
+            "25.2% (mc=3) of the mid-field win against an 88.6% bar. ORCH "
+            "pre-registered the response to exactly that outcome: report it as "
+            "a failure and do not ship. mc=1 is a genuine trade rather than an "
+            "improvement (better than mc=0 on every row from d=2 to d=90, "
+            "worse by 142-194 DN across d=112-225) and is left available. "
+            "ORCH's much larger measured bowl came from a toned+sRGB pair "
+            "whose blend arm carried a collapsed black point; on untoned "
+            "linear renders the control arm's rows transfer at 1.40x and the "
+            "blend arm's at 4.79x, a 3.42x discriminating ratio. "
+            "COMMISSIONED: rung 0 is byte-identical (SHA-256 84A4661D...D655C) "
+            "to the render made before this knob existed, so the default "
+            "cannot move a byte, and rungs 1-3 all differ from it, so the env "
+            "var demonstrably reaches pixels. Full ladder and both instruments "
+            "in docs/research/BUILD-BLEND.md and experiments/BUILD-BLEND/."
+        ),
     ),
     "STREHL_PYRAMID_WORKERS": Declared(
         kind="control",
@@ -419,8 +512,30 @@ def main() -> int:
     stale = sorted(set(REGISTRY) - set(found))
     known = sorted(set(found) & set(REGISTRY))
 
+    # A quality switch that is off AND cannot run on the default backend is not
+    # dark -- it is absent. Both facts are "the product does not apply this",
+    # but they have different remedies: a dark switch is turned on, an absent
+    # stage has to be BUILT. Conflating them sent two agents after a promotion
+    # that would have changed no pixel, because the default backend is the
+    # pyramid and the stages in question are the estimator's.
+    DEFAULT_BACKEND = "pyramid"
+
+    def reaches_default_path(n: str) -> bool:
+        return REGISTRY[n].backend in ("any", DEFAULT_BACKEND)
+
     quality_dark = [
-        n for n in known if REGISTRY[n].kind == "quality" and REGISTRY[n].default == "off"
+        n
+        for n in known
+        if REGISTRY[n].kind == "quality"
+        and REGISTRY[n].default == "off"
+        and reaches_default_path(n)
+    ]
+    quality_inapplicable = [
+        n
+        for n in known
+        if REGISTRY[n].kind == "quality"
+        and REGISTRY[n].default == "off"
+        and not reaches_default_path(n)
     ]
     quality_on = [
         n for n in known if REGISTRY[n].kind == "quality" and REGISTRY[n].default != "off"
@@ -455,6 +570,17 @@ def main() -> int:
             print(f"      seen at : {', '.join(found[n])}")
             print(f"      {d.note}")
 
+    if quality_inapplicable:
+        print("\n--- QUALITY SWITCHES NOT ON THE DEFAULT BACKEND (absent, not dark) ---")
+        print(f"    The default backend is `{DEFAULT_BACKEND}`. These control stages")
+        print("    it does not implement, so turning them on changes nothing. The")
+        print("    remedy is to BUILD the stage on this backend, not to flip a flag.")
+        for n in quality_inapplicable:
+            d = REGISTRY[n]
+            print(f"  {n}")
+            print(f"      default : {d.default}   backend: {d.backend}")
+            print(f"      code    : {d.evidence}")
+
     if quality_on:
         print("\n--- QUALITY SWITCHES REACHABLE BY DEFAULT ---")
         for n in quality_on:
@@ -487,10 +613,18 @@ def main() -> int:
     # wrong or nothing was examined, so a skipped switch must never be able to
     # read as a passed one.
     total = len(found)
-    partition = len(quality_dark) + len(quality_on) + len(control) + len(diagnostic) + len(undeclared)
+    partition = (
+        len(quality_dark)
+        + len(quality_inapplicable)
+        + len(quality_on)
+        + len(control)
+        + len(diagnostic)
+        + len(undeclared)
+    )
 
     print("\n" + "=" * 74)
     print(f"  quality, dark (DEFECT)     {len(quality_dark):3d}")
+    print(f"  quality, not on default    {len(quality_inapplicable):3d}  (absent stage, not a dark flag)")
     print(f"  quality, reachable         {len(quality_on):3d}")
     print(f"  control / infrastructure   {len(control):3d}")
     print(f"  diagnostic                 {len(diagnostic):3d}")
