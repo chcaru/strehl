@@ -1789,6 +1789,58 @@ the binary reads `LensType3`. They almost always agree; where they disagree the
 stricter must win, and an explicit `off` is how that is guaranteed rather than
 hoped for.
 
+### V-CA caught a third instance of the same defect, in my own flip
+
+An independent auditor reviewed the flip within the hour and found that
+`merge_cmd.rs` reported CA status by reading the **raw environment variable**
+rather than the guard's decision. `"off"` is non-empty and not `"0"`, so it
+satisfied the old guard clause. Both directions wrong, on the one switch the
+flip makes load-bearing:
+
+| operator sets | what the render did | what the log printed |
+| --- | --- | --- |
+| nothing | **CORRECTING** | `off (--fix-ca / STREHL_FIX_CA unset)` |
+| `off` | **not correcting** | `CORRECTING, profile "off"` |
+
+This is not a cosmetic slip, and the reason is uncomfortable: **the
+recommendation to flip the default cited this very line as evidence that the
+correction was active.** It happened to be true there only because the operator
+had set the variable explicitly. Before default-on, switch state and behaviour
+were the same thing and reading either was correct; the flip decoupled them and
+left the reporting behind.
+
+That is now three instances in one night of a single shape — `RENDER_ENV`,
+`gallery.ps1`, and this — and they suggest a sharper statement of ORCH's defect
+class than "no consumer in the render path":
+
+> **Flipping a default silently invalidates every consumer that inferred
+> behaviour from the switch.** Absence used to mean off; now it means *ask the
+> guard*. Every site that read the variable to learn what the render was doing
+> became wrong at that instant, and none of them appear in the diff that caused
+> it.
+
+Fixed by resolving through exactly the call the render makes, from the same
+first frame.
+
+**A second gap surfaced while fixing the first**, and it was the worse of the
+two: only the **pyramid** prologue printed a CA line at all. The estimator — the
+default path, the one the gallery uses — printed none. So on the backend most
+renders actually use, a correction that is now always on was reported nowhere.
+Both prologues now call one shared helper, because two copies are free to
+disagree.
+
+Verified against the **pixels** rather than against its own logic, which is the
+thing that just failed. Three arms, two backends, one binary:
+
+| arm | status line | output |
+| --- | --- | --- |
+| default | `CORRECTING … (gear matched; default on)` | `783868835F50906E` |
+| `--fix-ca a7c2-…` | `CORRECTING … (operator asked for …)` | `783868835F50906E` |
+| `--fix-ca off` | `off (operator asked for "off")` | `0D97FCAEE3474454` |
+
+The two lines that claim to be correcting produce byte-identical output; the one
+that claims to be off does not.
+
 ---
 
 ## 7. Not done
