@@ -2378,3 +2378,49 @@ colour is untouched.
 
 Consequence: the shipped masters already carry this. Turning CA off would be a
 57% fringe regression at the corners of a 61 MP frame examined at 1:1.
+
+## Backend applicability in provenance: an absent stage is not a disabled one
+
+MEASURED. Same binary (0B3B6F19), same subject, two arms.
+
+ORCH read `STREHL_PHOTOMETRIC` and `STREHL_FIX_HALO` as quality switches
+defaulting OFF, and my own sidecar was printing exactly the string that
+supports that reading: `(unset) [built-in default: off]`. Both stages are
+estimator-path; the shipping backend is the pyramid, which never reaches them.
+"Off" and "not present on this path" are different facts and my provenance was
+collapsing them into one line.
+
+ORCH attributed this to the registry carrying no notion of backend. That is not
+what the file says. `scripts/check-defaults.py` declares `Declared.backend` at
+:130 (default `"any"`), populates `backend="estimator"` on five entries
+(:172, :263, :425, :449, :466), and its own comment at :81 already uses the word
+INAPPLICABLE. The field is consumed in exactly ONE place -- :782, which PRINTS
+it. No check branches on it. So the data is correct and the consumer is missing;
+that is a smaller fix than adding the notion, and it is ORCH's file.
+
+`finalpass.ps1` now parses `backend=` alongside `default=` and reports every
+switch against the backend the render actually ran.
+
+Potency control, because a marker that paints everything says nothing:
+
+| arm | flags | switches | set | INAPPLICABLE |
+|---|---|---:|---:|---:|
+| PROVTEST2 | `--merge pyramid` | 33 | 1 | **5** |
+| PROVTEST3 | `--merge estimator` | 33 | 0 | **0** |
+
+The five move to zero when the backend that can run them is the one that ran.
+Within the pyramid arm the marker also discriminates: `STREHL_FIX_CA` is
+`backend="any"` and is NOT marked, and still reads
+`built-in default: on (gear-matched)`.
+
+The set-and-inapplicable case is the one worth having: with
+`STREHL_PHOTOMETRIC=1` exported, the pyramid arm prints
+`= 1 [ENVIRONMENT -- and this harness does not clear it; INAPPLICABLE --
+estimator-only, this render was pyramid]`. Both facts survive. A reader learns
+the operator asked for it AND that it could not have acted, which is precisely
+the pair of facts whose conflation cost this project an evening.
+
+REGISTRY GAP, ORCH's file, not fixed by me: `STREHL_FIX_HALO` carries
+`backend="estimator"` but `STREHL_FIX_HALO_DELTA` does not, so the delta still
+prints as `built-in default: off` on a pyramid render. It is the same stage.
+Five entries are classified; at least a sixth belongs.

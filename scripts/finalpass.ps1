@@ -349,11 +349,15 @@ function Get-SwitchRegistry {
         if ($lines[$i] -match '^\s{4}"(STREHL_[A-Z_0-9]+)":\s*Declared\(') {
             $key = $Matches[1]
             $def = '(not declared)'
-            for ($j = $i + 1; $j -lt [Math]::Min($i + 40, $lines.Count); $j++) {
+            $bk = 'any'
+            for ($j = $i + 1; $j -lt [Math]::Min($i + 60, $lines.Count); $j++) {
                 if ($lines[$j] -match '^\s{4}"STREHL_') { break }
-                if ($lines[$j] -match '^\s*default\s*=\s*"([^"]*)"') { $def = $Matches[1]; break }
+                if ($def -eq '(not declared)' -and $lines[$j] -match '^\s*default\s*=\s*"([^"]*)"') {
+                    $def = $Matches[1]
+                }
+                if ($lines[$j] -match '^\s*backend\s*=\s*"([^"]*)"') { $bk = $Matches[1] }
             }
-            $reg[$key] = $def
+            $reg[$key] = [pscustomobject]@{ Default = $def; Backend = $bk }
         }
     }
     return $reg
@@ -471,10 +475,24 @@ function Invoke-Subject {
     else { $Flags }
 
     # Resolved state of every registry switch, set and unset alike.
+    #
+    # A switch is reported against THE BACKEND THIS RENDER ACTUALLY RAN. The
+    # registry classifies some switches as estimator-only, and the shipping
+    # backend is the pyramid, which never reaches them. Printing those as
+    # "default: off" invites exactly the inference that cost this project an
+    # evening: an absent stage read as a disabled one. They are marked
+    # INAPPLICABLE instead, which is a different fact from being switched off.
+    $renderBackend = if ($backend -match 'pyramid') { 'pyramid' }
+    elseif ($backend -match 'estimator') { 'estimator' }
+    else { 'unknown' }
     $switchSet = 0
+    $switchNA = 0
     $switchLines = @()
     foreach ($k in $RegistrySwitches.Keys) {
+        $d = $RegistrySwitches[$k]
+        $na = ($d.Backend -ne 'any' -and $renderBackend -ne 'unknown' -and $d.Backend -ne $renderBackend)
         $val = [Environment]::GetEnvironmentVariable($k)
+        if ($na) { $switchNA++ }
         if ($null -ne $val -and $val -ne '') {
             $switchSet++
             $src = if ($ClearedSwitches -contains $k) {
@@ -483,12 +501,17 @@ function Invoke-Subject {
             else {
                 'ENVIRONMENT -- and this harness does not clear it'
             }
+            if ($na) { $src += "; INAPPLICABLE -- $($d.Backend)-only, this render was $renderBackend" }
             $switchLines += ('  {0,-26} = {1,-18} [{2}]' -f $k, $val, $src)
+        }
+        elseif ($na) {
+            $switchLines += ('  {0,-26} = {1,-18} [INAPPLICABLE -- {2}-only stage; this render was {3}, which never reaches it]' -f
+                $k, '(n/a)', $d.Backend, $renderBackend)
         }
         else {
             $how = if ($ClearedSwitches -contains $k) { 'cleared by harness' } else { 'not set' }
             $switchLines += ('  {0,-26} = {1,-18} [{2}; built-in default: {3}]' -f
-                $k, '(unset)', $how, $RegistrySwitches[$k])
+                $k, '(unset)', $how, $d.Default)
         }
     }
 
@@ -521,10 +544,12 @@ function Invoke-Subject {
         "ARGV (verbatim, as executed -- NOT the whole switch state; see below):"
         "  $Exe $($argv -join ' ')"
         ""
-        "RESOLVED SWITCH STATE ($($RegistrySwitches.Count) registry switches, $switchSet set)"
+        "RESOLVED SWITCH STATE ($($RegistrySwitches.Count) registry switches, $switchSet set, $switchNA inapplicable to this backend)"
         "  Environment variables never appear in argv however they are set, so"
         "  the argv line above cannot show them. Unset switches are listed too:"
         "  an omitted line is indistinguishable from a switch nobody considered."
+        "  INAPPLICABLE means the stage does not exist on the backend that ran;"
+        "  that is NOT the same fact as a stage that exists and is switched off."
         $switchLines
         ""
         "BINARY-REPORTED RESOLVED STATE (the binary's own banner, not inferred)"
