@@ -2467,3 +2467,88 @@ Also MEASURED: my registry parser survives ORCH's 212-line rewrite of
 check-defaults.py in `ed607493` -- 33 switches parsed, 0 defaults unparsed,
 the same 5 estimator entries. The coupling held, but it is a coupling, and it is
 checked by probing the shipped parser rather than by reading the file.
+
+## The provenance whitelist was hiding a quality defect, not just metadata
+
+ORCH asked for lateral CA, alignment and the resampler in the sidecar. The CA
+line had shipped since `9b9e8cd4`; the other two had not, and finding out why
+turned up something worse than a metadata gap.
+
+MEASURED, on one real run (coffee-bean, 4 frames): the binary printed **27**
+banner settings and my capture kept **6**. The 21 dropped included
+
+    alignment       : ON (sidecar), reference frame 2, 4 placed / 0 refused
+      held-out err  : NOT MEASURED   resampler: CatmullRom
+    not applied     : photometric gain, clip census, outlier rejection,
+                      halo correction, through-focus statistics
+
+That last line is the binary stating its own ABSENT stages -- the exact fact the
+fleet spent an evening inferring wrongly from an argv, printed by the program,
+in the log, on disk, all along. A whitelist drops whatever nobody enumerated,
+which is the same defect as an omitted switch. The whole self-report is now
+carried VERBATIM and the key extract is labelled an index into it, so an
+incomplete index can no longer hide anything.
+
+FIDELITY NULL: the embedded copy is character-identical to the run log,
+71/71 lines, compared with `-cne` per line.
+
+### What the un-filtered record then showed
+
+Back-filled all 26 delivered SHIP-V2-ICC sidecars from their own logs.
+
+**One of the 26 shipped masters was merged with no alignment at all.** The
+binary said so and nobody could see it:
+
+    highly-angled-ruler-mm-cpl
+      alignment : REFUSED -- tilted subject; a global similarity cannot
+                  describe it (M86). Merging unregistered.
+      alignment : OFF -- frames are combined unregistered.
+                  M86 measured 232.7 px of drift on bee-3-cpl.
+
+MEASURED -- held-out alignment error across the shipped batch, partitioned so a
+skipped subject cannot read as a passed one:
+
+| outcome | n |
+|---|---:|
+| measured | 19 |
+| NOT MEASURED by the binary | 6 |
+| alignment REFUSED, merged unregistered | 1 |
+| **total** | **26** |
+
+| subject | held-out err |
+|---|---:|
+| pencil-steep-angle-cpl | 68.20 px |
+| pencil-flatter-angle-cpl | 55.79 px |
+| lavendar-cpl | 24.24 px |
+| dry-erase-marker-head-cpl | 23.18 px |
+| bee-1-cpl | 17.00 px |
+| ... | ... |
+| flower-bud-alone-cpl | 0.35 px |
+
+ARGUED, and deliberately not asserted: `held-out err` is the M86 protocol
+(`m86-align.rs:211,441`) -- predict a held-out edge's transform from the rest of
+the alignment graph and score it. It measures whether a global similarity
+COMPOSES consistently across the stack, not the residual of the placed frames,
+which are solved from the full graph. So a large value is evidence the model is
+inadequate for that subject, not a direct claim about output pixels. Three of
+the four subjects ORCH called print-worthy sit at 13-17 px, which on its own
+falsifies any simple reading of this number as output error.
+
+What is worth ORCH's attention: the refusal guard fired on the tilted ruler,
+and the two subjects with the WORST held-out errors in the corpus are the two
+named `pencil-steep-angle` and `pencil-flatter-angle` -- geometrically the same
+class of subject, 68 and 56 px, not refused. The guard and the metric disagree
+about the same failure mode. I own alignment as invoked, not the estimator, so
+this is a routing item.
+
+Also retracted the word FULL from `FULL ARGV (verbatim, as executed):` in all 26
+delivered sidecars. It is verbatim and it is argv; it was never full, because
+environment switches, gear guards and compiled defaults cannot appear in an argv.
+A header claiming completeness over an incomplete record is what invites a
+reader to stop looking, which is how this started.
+
+Commissioned the back-fill before running it on delivered files: a log whose
+`wrote :` line was altered to name another artifact gave `pairing-mismatch 1`
+and rc=1; a directory with the logs removed gave `no-log 26` and rc=1; re-runs
+gave `already-present 26` / `already-correct 26` and moved nothing.
+`verify_ship.py` after the edits: 26/26/26, SHIP-V2-ICC VERIFIED.

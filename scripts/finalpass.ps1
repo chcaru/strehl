@@ -522,10 +522,22 @@ function Invoke-Subject {
     # What the BINARY said it resolved to. The environment cannot answer this:
     # STREHL_FIX_CA is unset both when CA is corrected and when it is not, and
     # only the gear guard's own line distinguishes them.
-    $resolvedKeys = 'merge backend|camera|lateral CA|bands|selection|iso'
+    #
+    # This was a whitelist of six keys and it dropped 21 of the binary's 27
+    # reported settings, including `alignment : ON ... N placed / N refused`,
+    # the resampler, the colour transform, and -- worst -- `not applied : ...
+    # outlier rejection, halo correction`, which is the binary stating its own
+    # ABSENT stages. That last line is exactly the fact this project spent an
+    # evening inferring wrongly from an argv. A whitelist silently drops
+    # whatever nobody thought to enumerate, which is the same defect as an
+    # omitted switch, so the whole self-report is now carried VERBATIM and the
+    # extract below is only an index into it.
+    $resolvedKeys = 'merge backend|camera|lateral CA|alignment|not applied|base band|colour|noise model|bands|selection|iso'
     $binaryState = $binaryOut |
         Where-Object { $_ -match "^\s*($resolvedKeys)\s*:" } |
         ForEach-Object { '  ' + $_.Trim() }
+    $binaryVerbatim = @($binaryOut | ForEach-Object { '  | ' + $_ })
+    $binaryKeyCount = @($binaryOut | Where-Object { $_ -match '^\s*[a-z][a-z0-9 /_+-]{2,20}\s*:\s*\S' }).Count
 
     @(
         "strehl render provenance"
@@ -561,8 +573,15 @@ function Invoke-Subject {
         ""
         "BINARY-REPORTED RESOLVED STATE (the binary's own banner, not inferred)"
         "  A gear-guarded switch reads '(unset)' above whether or not it acted."
-        "  These are the lines where the binary states what it actually did:"
+        "  This is an INDEX of $binaryKeyCount reported settings, not a filter:"
+        "  the binary's complete self-report follows verbatim below, so a key"
+        "  missing from this index is still present in the record."
         $(if ($binaryState) { $binaryState } else { '  (binary printed no recognised state lines)' })
+        ""
+        "BINARY SELF-REPORT, VERBATIM ($($binaryOut.Count) lines, nothing filtered)"
+        "  The binary states its ABSENT stages here too (see 'not applied'),"
+        "  which no environment variable and no argv can express."
+        $binaryVerbatim
         ""
         "REPRODUCE THIS EXACT FILE:"
         "  $Exe stack `"$($S.Path)`" --out <OUT> $repro"
