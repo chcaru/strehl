@@ -304,3 +304,103 @@ plant is inert and the arm proves nothing; `NOISE-ABS` violates A1 on purpose
 and is checked against a computed prediction; `NOISE+DETAIL` must still recover
 0.70. **A commissioning failure blocks the verdict** — `fullhp.py` returns 1 and
 prints no reading.
+
+---
+
+## 10. The half-to-half discriminator (added 2026-08-27, before `incoh.py` existed)
+
+ORCH reports that fixing the merge exponent caps at **57% of the excess blotch
+on one subject**, so ~43% is unexplained, and names three candidate lanes:
+depth dilution, half-stack incoherence (mine), and alignment drift. It supplies
+the discriminator: **a noise-driven selection is not reproducible across two
+independent half-stacks, whereas alignment drift produces coherent error in
+both halves.**
+
+I cannot read the merge's per-pixel frame choice — `merge.rs` is owned by a
+build lane. I can read its **signature**, from rasters already on disk.
+
+### 10.1 The band, stated first because it changes what my prior result means
+
+The convicted plateau is **20-60 px**. As a period-to-frequency conversion that
+is **0.017-0.050 cyc/px**. My §9 reading, and the 2.017 it dissolved, sit at
+**0.20-0.25 cyc/px** = 4-5 px features.
+
+**These are an order of magnitude apart. §9's LEVEL verdict says nothing about
+the band where the second mechanism is suspected to live.** This lane has not
+previously measured the convicted band at all. `incoh.py` reads BOTH:
+
+| name | cyc/px | period | why |
+|---|---|---|---|
+| `COARSE` | 0.0167-0.0500 | 20-60 px | the convicted plateau band |
+| `FINE` | 0.2000-0.2500 | 4-5 px | §9's band, carried for continuity |
+
+### 10.2 The statistic
+
+For an arm with half-stacks A and B on a common canvas, per tile, per band:
+
+- `d = (A - B)/2` — the half-disagreement field
+- `m = (A + B)/2` — the merged-equivalent field
+- `P_d = bandpower(d)`, `P_m = bandpower(m)`, **both band-limited to the same
+  annulus**
+- **`phi = P_d / P_m`** — the incoherent fraction
+
+`P_coh = P_m - P_d` is the only derived combination and **both of its terms are
+band-limited to the same annulus**. There is no full-band quantity anywhere.
+
+### 10.3 phi is PERVERSE ALONE, and that is pre-registered, not discovered
+
+ORCH: *"On blotch alone the worst arm wins."* The same trap applies here. A
+**plain mean destroys detail and would score near-zero `phi`**, because
+averaging makes the two halves agree. **`phi` is minimised by the worst
+possible merge.** Therefore:
+
+**`phi` is never reported without band amplitude on the same pixels**, and
+arm `PERVERSE` below is a required commissioning arm: an equal blur of BOTH
+halves must LOWER `phi` while lowering amplitude. If it does not, the harness
+cannot see the trap and no reading is issued.
+
+### 10.4 Commissioning arms, answers fixed in advance
+
+| arm | mutation | `phi` must | amplitude must |
+|---|---|---|---|
+| `IDENT` | none, A vs A | be exactly 0 | be unchanged |
+| `NOISE-INC` | independent noise into A and B | RISE, by the predicted amount | ~unchanged |
+| `COH-PLANT` | the SAME structure into both halves | **NOT rise** | rise |
+| `SHIFT` | translate B by 1 px | rise | ~unchanged |
+| `BLOTCH` | blur blended into A and B under DIFFERENT 20-60 px masks | rise | fall |
+| `PERVERSE` | equal blur of BOTH halves | **FALL** | **FALL** |
+
+`COH-PLANT` is the specificity arm: a coherent change that reads as incoherence
+would invalidate the whole statistic. `PERVERSE` is ORCH's warning instantiated
+inside the harness. Plant potency is bounded at `a/S <= 2.2` per §9's lesson
+that a plant can be too potent to be informative.
+
+### 10.5 The signature separator, and its calibration
+
+Alignment drift concentrates error on **gradients**; selection disagreement
+concentrates it on **areas**. So the correlation of `|d|` with the scene
+gradient `|grad m|` separates them, and arms `SHIFT` and `BLOTCH` calibrate the
+two ends **by construction** rather than by argument.
+
+### 10.6 Branches, fixed now
+
+Let `R = phi_strehl / phi_enfuse` on DETAIL tiles in `COARSE`, both arms read on
+the same tiles, with FLAT tiles as the noise-only reference.
+
+- **SELECTION** — `R >= 1.5`, CI excludes 1.0, and the gradient correlation sits
+  at the `BLOTCH` end. My lane holds a real second mechanism.
+- **COMMON** — `R` within [0.67, 1.5]. The incoherence is not specific to our
+  merge; it is in the inputs both arms share, which points at the **alignment**
+  lane, not mine.
+- **CLEARED** — `R <= 0.67`. Our merge is MORE half-coherent than `enfuse`'s and
+  this lane is not the second mechanism.
+
+**Reported regardless of branch**, and `SELECTION` is the branch that costs this
+project most, so it will not be softened.
+
+### 10.7 Falsification
+
+`COH-PLANT` raising `phi`, or `PERVERSE` failing to lower it, voids the
+statistic. A `phi` difference smaller than the `IDENT`-to-`NOISE-INC` floor is
+not a difference. One subject, two bands, one comparator: nothing here
+generalises without being re-run.
