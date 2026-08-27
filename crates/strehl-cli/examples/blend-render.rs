@@ -65,6 +65,7 @@ use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource};
 use strehl_core::profile;
 use strehl_core::pyramid::{
+    Fallback,
     BandMerge, BaseBand, FrameWorkspace, Hull, MergeConfig, SelectMode, Workspace, level_sizes,
     luma_variance,
 };
@@ -135,6 +136,16 @@ fn parse_args() -> Result<Args> {
             // real stacks crushes dark pixels to exact zero. See `Hull`.
             "--unclamped" => a.cfg.hull = Hull::Unclamped,
             "--per-level" => a.cfg.hull = Hull::PerLevel,
+            // Which estimator answers where the gate refused every frame.
+            // Default `mean` is the shipped behaviour, so nothing shifts
+            // under anyone who does not pass this.
+            "--fallback" => {
+                a.cfg.fallback = match val()?.as_str() {
+                    "mean" => Fallback::Mean,
+                    "best" => Fallback::Best,
+                    other => anyhow::bail!("unknown --fallback {other:?}"),
+                }
+            }
             "--hull-lambda" => a.cfg.hull_lambda = val()?.parse()?,
             // The knob that decides whether the per-level bound can pay in
             // acuity. `--hull-from 5` confines it to levels coarser than any

@@ -756,6 +756,33 @@ pub fn mean_coarse_default() -> usize {
 /// The alternative fix — lowering the exponent until the violations stop —
 /// trades a localised artifact for a diffuse one, because loss is monotone in
 /// selectivity. That is the wrong trade and this is not it.
+/// What to emit where the gate refused every frame.
+///
+/// `den[j] <= 0.0` means no frame's smoothed band energy cleared
+/// `gate * beta * var`. The shipped answer is the unweighted mean over all
+/// frames. That is correct for the DC base band -- every frame carries the
+/// same DC -- and a far stronger claim for a BAND-PASS coefficient, where the
+/// detail exists only in the handful of frames that have that pixel in focus.
+/// A mean over `N` frames then returns roughly `n_focus / N` of it, an
+/// attenuation that worsens as the stack deepens.
+///
+/// Whether that is a defect turns on something not yet measured: whether a
+/// sub-gate coefficient is real signal or pure noise. If it is noise, the mean
+/// is the correct estimator and the only one that gets below single-frame
+/// noise. This enum exists so the two readings can be told apart by
+/// measurement instead of argued.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Fallback {
+    /// `usum[j] / frames`. The shipped behaviour and the control arm.
+    Mean,
+    /// The coefficient from the frame with the largest `|L|` at that location.
+    ///
+    /// Selected on the GREEN plane alone and then applied to every plane, for
+    /// the same reason `den` is: a per-plane decision would let chroma noise
+    /// elect itself into structure.
+    Best,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Hull {
     /// Clamp each output pixel to `[min_k, max_k]` over the aligned input
@@ -940,6 +967,9 @@ pub struct MergeConfig {
     /// 0.917 fine-band, so that result stays reproducible from defaults.
     pub hull_low_only: bool,
 
+    /// What to emit where the gate refused every frame. See [`Fallback`].
+    pub fallback: Fallback,
+
     /// Finest pyramid level at which the per-level bound acts. `1` bounds every
     /// level that has a hull (level 0 is handled by the final clamp).
     ///
@@ -1031,6 +1061,7 @@ impl Default for MergeConfig {
             // that the committed 0.953 / 0.917 figures remain reproducible from
             // defaults. The targeted forms are opt-in until they are measured.
             hull_low_only: false,
+            fallback: Fallback::Mean,
             hull_from_level: 1,
         }
     }
@@ -1057,6 +1088,16 @@ pub struct BandMerge {
     den: Vec<Vec<f32>>,
     /// For [`SelectMode::HardMax`]: the best weight seen so far, per level.
     best: Vec<Vec<f32>>,
+    /// For [`Fallback::Best`]: the largest `|L|` on the GREEN plane seen so
+    /// far, per level. Empty under [`Fallback::Mean`].
+    ///
+    /// This cannot reuse [`Self::best`]. That field maxes over the gated
+    /// weight `w[i]`, and the whole population this serves is the one where
+    /// every `w[i]` is zero, so `best` carries no ordering there at all.
+    fkey: Vec<Vec<f32>>,
+    /// For [`Fallback::Best`]: the coefficient of the frame elected by
+    /// [`Self::fkey`], per level and plane. Empty under [`Fallback::Mean`].
+    fval: Vec<Vec<f32>>,
     /// Running per-pixel minimum and maximum of the aligned inputs, indexed by
     /// plane, at level-0 size. Empty under [`Hull::Unclamped`].
     ///
@@ -1094,6 +1135,16 @@ impl BandMerge {
             num: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),
             usum: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),
             den: per_level(),
+            fkey: match cfg.fallback {
+                Fallback::Mean => Vec::new(),
+                Fallback::Best => per_level(),
+            },
+            fval: match cfg.fallback {
+                Fallback::Mean => Vec::new(),
+                Fallback::Best => {
+                    (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect()
+                }
+            },
             best: match cfg.select {
                 SelectMode::HardMax => per_level(),
                 SelectMode::SoftPower => Vec::new(),
@@ -1173,7 +1224,11 @@ impl BandMerge {
     /// report rather than a guess.
     pub fn accumulator_floats(&self) -> usize {
         let per_level: usize = self.sizes.iter().map(LevelSize::pixels).sum();
-        per_level * (2 * self.planes + 1 + usize::from(!self.best.is_empty()))
+        per_level
+            * (2 * self.planes
+                + 1
+                + usize::from(!self.best.is_empty())
+                + usize::from(!self.fkey.is_empty()) * (self.planes + 1))
             + self.lo.iter().chain(&self.hi).map(Vec::len).sum::<usize>()
     }
 
@@ -1371,6 +1426,34 @@ impl BandMerge {
                 }
             }
         }
+        if self.cfg.fallback == Fallback::Best {
+            // Elect on GREEN alone, then take that frame's coefficient in
+            // every plane. Deciding per plane would let chroma noise elect
+            // itself into structure -- the same reason `den` is luma-only.
+            let gp = usize::from(self.planes >= 3);
+            let hit = {
+                let gl = cache.pyramids[gp].level(k);
+                let key = &mut self.fkey[k][..px];
+                let mut hit = vec![false; px];
+                for i in 0..px {
+                    let m = gl[i].abs();
+                    if m > key[i] {
+                        key[i] = m;
+                        hit[i] = true;
+                    }
+                }
+                hit
+            };
+            for c in 0..self.planes {
+                let lv = cache.pyramids[c].level(k);
+                let val = &mut self.fval[k * self.planes + c][..px];
+                for i in 0..px {
+                    if hit[i] {
+                        val[i] = lv[i];
+                    }
+                }
+            }
+        }
     }
 
     /// Combine another accumulator's frames into this one.
@@ -1384,6 +1467,23 @@ impl BandMerge {
     pub fn absorb(&mut self, other: &BandMerge) {
         assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
         assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
+        if self.cfg.fallback == Fallback::Best {
+            assert_eq!(
+                other.cfg.fallback, self.cfg.fallback,
+                "cannot absorb a merge with a different fallback mode"
+            );
+            for k in 0..self.sizes.len() {
+                for j in 0..self.fkey[k].len() {
+                    if other.fkey[k][j] > self.fkey[k][j] {
+                        self.fkey[k][j] = other.fkey[k][j];
+                        for c in 0..self.planes {
+                            let i = k * self.planes + c;
+                            self.fval[i][j] = other.fval[i][j];
+                        }
+                    }
+                }
+            }
+        }
         if self.cfg.hull.bounds() {
             assert_eq!(
                 other.cfg.hull, self.cfg.hull,
@@ -1494,6 +1594,14 @@ impl BandMerge {
                     let den = &self.den[k];
                     let num = &self.num[i];
                     let usum = &self.usum[i];
+                    let fval = match self.cfg.fallback {
+                        Fallback::Mean => None,
+                        Fallback::Best => Some(&self.fval[i]),
+                    };
+                    let subgate = |j: usize| match fval {
+                        Some(v) => v[j],
+                        None => usum[j] * inv_n,
+                    };
                     let out = pyr.level_mut(k);
                     match self.cfg.select {
                         SelectMode::SoftPower => {
@@ -1501,13 +1609,13 @@ impl BandMerge {
                                 out[j] = if den[j] > 0.0 {
                                     num[j] / den[j]
                                 } else {
-                                    usum[j] * inv_n
+                                    subgate(j)
                                 };
                             }
                         }
                         SelectMode::HardMax => {
                             for j in 0..out.len() {
-                                out[j] = if den[j] > 0.0 { num[j] } else { usum[j] * inv_n };
+                                out[j] = if den[j] > 0.0 { num[j] } else { subgate(j) };
                             }
                         }
                     }
@@ -2335,6 +2443,65 @@ mod tests {
         let err = one.iter().zip(&three).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
         let scale = one.iter().fold(0.0f32, |a, v| a.max(v.abs()));
         assert!(err < 1e-3 * scale, "chunking changed the merge: {err} on a scale of {scale}");
+    }
+
+    #[test]
+    fn best_fallback_folds_exactly_and_is_not_inert() {
+        // `absorb` is how the parallel band workers combine, so a fallback
+        // that is not an associative, commutative fold would make the render
+        // depend on the worker count. A max over |L| is one. Assert it bit
+        // for bit, which is the contract `absorb` already carries.
+        let (w, h) = (64usize, 48usize);
+        let sizes = level_sizes(w, h, 3);
+        let var = vec![9.0f32; w * h];
+        let frames: Vec<Vec<f32>> = (0..6)
+            .map(|i| {
+                let mut v = split_focus(w, h, i % 2 == 0);
+                for (j, x) in v.iter_mut().enumerate() {
+                    *x += ((i * 31 + j * 17) % 13) as f32;
+                }
+                v
+            })
+            .collect();
+
+        let run = |cfg: MergeConfig, chunks: usize| -> Vec<f32> {
+            let per = frames.len().div_ceil(chunks);
+            let mut acc: Option<BandMerge> = None;
+            for c in frames.chunks(per) {
+                let mut m = BandMerge::new(w, h, 1, cfg);
+                let mut fws = FrameWorkspace::new(&sizes, 1);
+                for f in c {
+                    fws.next_frame();
+                    m.add_frame(&[f.as_slice()], f, &var, &mut fws);
+                }
+                match &mut acc {
+                    Some(a) => a.absorb(&m),
+                    None => acc = Some(m),
+                }
+            }
+            let mut ws = Workspace::new(&sizes);
+            acc.unwrap().finish(&mut ws)[0].clone()
+        };
+
+        // A gate nothing can clear puts every coefficient on the fallback
+        // path, so this measures the fallback rather than the weighted sum.
+        let base = MergeConfig { bands: 3, gate: 1e9, ..Default::default() };
+        let best = MergeConfig { fallback: Fallback::Best, ..base };
+
+        let one = run(best, 1);
+        let three = run(best, 3);
+        assert_eq!(one, three, "chunking changed the Best fallback");
+
+        // A negative control on the instrument: were `Best` silently doing
+        // what `Mean` does, the equality above would pass for the wrong
+        // reason and this test would be measuring nothing.
+        let mean = run(base, 1);
+        let differing = one.iter().zip(&mean).filter(|(a, b)| a != b).count();
+        assert!(
+            differing > 0,
+            "Fallback::Best is inert: it matched Mean on all {} coefficients",
+            one.len()
+        );
     }
 
     #[test]
