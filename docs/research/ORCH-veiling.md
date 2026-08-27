@@ -12990,3 +12990,97 @@ owed once the tree is clean, and it must not go to the author.
 
 > **Never run a test suite against a tree another lane has checked out modified.**
 > The result describes neither HEAD nor the finished change.
+
+## 123. The control that was a filename parse
+
+`V-REVIEW` closed the dust question with a verdict I can state in one sentence —
+*the sensor carries a real mote at photosite (6838, 4632), about 3 to 4.6 per
+cent deep, present with and without the polariser; it does not reach the
+delivered masters at any level this corpus can detect, and the corrector stays
+off* — and it got there by refuting three of its own prior claims. One of those
+refutations is the most instructive single finding of the night.
+
+### The finding
+
+`vd_flat.py`'s docstring asserted that its two flat-field ramps were **one shot
+with the CPL and one without**, and the lane had used that to claim its dust
+depth "reproduces across two independent ramps." Independence of that kind is
+load-bearing: with-CPL and without-CPL is an *optical* contrast that separates
+contamination on the filter surface from contamination on the sensor surface.
+
+The predicate actually implementing the split was:
+
+```python
+int(name[3:8]) < 300
+```
+
+**A number parsed out of the filename.** Measured, the two ramps are the same
+aperture (f/5.6), the same ISO (100), with *overlapping* shutter speeds
+(1/20,1/13 against 1/30,1/20), taken **four minutes apart** — 16:43:25 and
+16:47:58. Both are on the same side of the filter change. There is no optical
+independence between them and there never was; the claim of reproduction across
+independent conditions was a reproducibility check against a near-duplicate.
+
+The correct measurement, once made properly, **inverted the conclusion it was
+being used to support**: the mote reads −1.577% with the CPL and −1.858% without,
+so it is on the **sensor**, not the polariser.
+
+### Why this class is the hardest to catch
+
+Every other defect this project has caught was a disagreement between a number
+and reality. This was a disagreement between **the prose and the predicate**, and
+the prose is the part everyone reads. The docstring described a physical control;
+the code implemented a lexical one; both were internally consistent; and the
+result was a control that could never have failed, because filenames do not know
+what a polariser is.
+
+> **An experimental control is only as physical as the predicate that implements
+> it.** A control named in prose must be checked at the line that branches, not
+> at the line that describes.
+
+This generalises well past dust. Any arm labelled *with-X / without-X*,
+*before / after*, *treatment / placebo* is exposed to it the moment the label is
+derived from metadata — a filename, a directory, an index, a sort order — rather
+than from the physical quantity it claims to encode. The project already
+distrusts a null from an uncommissioned instrument. **A control whose predicate
+is lexical is an uncommissioned instrument that additionally looks rigorous.**
+
+### The other two self-refutations
+
+- **Window smaller than the feature.** The headline depth used a window narrower
+  than the mote, with a minimum-of-core statistic biased deep. Planted amplitudes
+  (2 / 5 / 8 / 13.3%) showed the narrow window under-reads by a consistent
+  **2.4×**. Two errors partly cancelling — the conclusion that another lane
+  over-reads survives, but at **1.8–2.7×**, not the 2.4× first written.
+- **A maximum dressed as a measurement.** `3.45%` had been quoted as a point
+  value from a 2.47–3.45% family. Calibrated, the depth is **3.0–4.6%**, with
+  three of four configurations agreeing at 3.0–3.1%.
+
+### Two refusals worth recording as precedent
+
+It **refused to backfill seals** on its own earlier `geom/halo2` renders: *"I
+cannot prove which binary made them, and stamping a guessed hash would
+manufacture the exact provenance the seal exists to establish."* A provenance
+record that is inferred rather than observed is worse than none, because it
+launders a guess into a certificate.
+
+It **dropped an unmeasured condition rather than leave an unmeasured gate.** Its
+recommendation had rested partly on a self-validation guard never measured on the
+real corpus; instead of shipping the verdict with an unverified precondition
+attached, it removed the precondition and let the recommendation stand on
+measured benefit alone. **An unmeasured condition is not a gate; it is a
+disclaimer that looks like one.**
+
+It also partitioned its nine arms as **6 measured / 2 refused / 1 failed** —
+outcomes summing to the total, so a refusal cannot be read as a pass. That is the
+discipline `check-defaults.py` enforces on switches, arriving independently in a
+different lane.
+
+### Defect B, closed in code rather than in prose
+
+The cross-gauge trap — `SHIP` and `EXE` coupled by convention with nothing
+asserting it — is now **unreachable rather than discouraged**: `EXE` is derived
+from the corpus `.ok` seal, so re-pointing `SHIP` at SHIP-V4 auto-selects pin
+`9b05d0b7`. Commissioned with three RED arms, each refusing for the right reason,
+plus two green arms. **A guard that has never refused anything is not known to be
+a guard**; this one has now refused three times on demand.
