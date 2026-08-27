@@ -248,3 +248,59 @@ to in dispatch as `coffee-bubbles`; that is a **different** subject on disk
 (`D:\personal\macro\coffee-bubbles`, 19 frames) with a different regime
 (V-EYES 13-frame scan: `113MSDCF` 1.651, `coffee-bubbles` 0.922). The M127
 result is `113MSDCF` and is labelled that way throughout this lane.
+
+---
+
+## 9. Route 1 — the full-render detail reading (added 2026-08-27, before `fullhp.py` was run)
+
+This section is written and committed **before** the statistic has been
+evaluated on any real pair. Its purpose is that the branch cannot be chosen
+after the number is seen.
+
+**The question.** On `119MSDCF`, the half-stack coherence statistic `C` reads
+`enfuse` at **2.017x** strehl's detail amplitude at 0.20–0.25 cyc/px. `C` counts
+only structure correlated across the two half-stacks. Detail that a
+selection-dominated merge delivers incoherently across its halves is therefore
+charged as absent. Route 1 removes the half-split entirely and reads total band
+amplitude on the **full** merges.
+
+**The statistic**, with every term's bandwidth stated before any two are
+combined, because this lane has already shipped one statistic that subtracted a
+full-band term from a high-pass total. Let `B = [0.20, 0.25)` cyc/px.
+
+| term | definition | bandwidth |
+| --- | --- | --- |
+| `D_X` | median band power over DETAIL tiles | **band-limited to `B`** |
+| `F_X` | median band power over FLAT tiles | **band-limited to `B`** |
+| `S_X` | `D_X − F_X` | **band-limited to `B`** |
+| reported | `sqrt(S_enfuse / S_strehl)` | amplitude ratio |
+
+No full-band quantity appears anywhere in it, and no half-stack is read.
+
+**Pre-registered branches.** Fixed now:
+
+- **LEVEL** — corrected ratio in `[0.90, 1.11]` **and** its 95% CI contains 1.0.
+  Reading: the 2.017 is not visible without the half-split, so it is half-stack
+  incoherence and the detail is present in the delivered image.
+- **CONFIRMED** — corrected ratio `>= 1.5`. Reading: the detail is genuinely
+  absent; the incoherence story is dead and the project is behind `enfuse` here.
+- **PARTIAL** — anything else. Reading: a real gap, smaller than `C` reports.
+
+**LEVEL is the branch that flatters this project**, so it carries an extra
+obligation that is registered here rather than invented afterwards: the
+**uncorrected** ratio is reported alongside the corrected one in every case, and
+if the correction carries most of the movement then the verdict rests on
+assumption A1 (noise power equal in the two tile populations) and must say so in
+those words.
+
+**Commissioning, all answers fixed in advance.** `IDENT-BITWISE` (1.000,
+determinism only, discounted); `IDENT-PATH` (1.000, potency proven on the
+`k != 1` rungs); `SCALE` (1.000, isolates the tile-size asymmetry); `k = 1.30`
+**sharper**, must return `> 1` so a parity-bounded statistic cannot pass
+trivially; `k = 0.95, 0.85, 0.70, 0.50` must recover `k`; **`NOISE-PROP`** —
+the arm ORCH required — plants Gaussian noise with **no** detail change, and the
+**corrected** statistic must not rise while the **uncorrected** one must, or the
+plant is inert and the arm proves nothing; `NOISE-ABS` violates A1 on purpose
+and is checked against a computed prediction; `NOISE+DETAIL` must still recover
+0.70. **A commissioning failure blocks the verdict** — `fullhp.py` returns 1 and
+prints no reading.
