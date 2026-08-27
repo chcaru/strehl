@@ -45,13 +45,25 @@ were already settled:
 So the genuinely open deliverable was **dust**, and the hot arm was a mechanism
 to build and ship OFF, not a defect to chase.
 
-### 0.3 Two corrections to the brief's facts
+### 0.3 Three corrections to the brief's facts
+
+The orchestrator asked that these be carried as corrections rather than quietly
+absorbed. The brief was wrong on all three.
 
 - **P1 (MEASURED).** `D:\macro-dark-frames` holds **242** frames in **11 ISO
   groups of 22**, ISO 50–2000, all 1/100 s — not "22 dark frames".
 - **P2 (MEASURED).** **20 of the 26 subject stacks are f/5.6**, the same
   aperture as the flats. M71's caveat that its mask is "a lower bound, the
   corpus shoots f/8–f/11" does not apply to most of the corpus.
+- **P2b (MEASURED, prior art).** The brief's central motivating claim — "a dust
+  mote smears into an arc/trail in the merged output, a defect the stacking
+  itself creates" — **is refuted for this body**, and was already refuted before
+  I started. M101 measured the elected trail at **0.931 px against a 0.937 px
+  shift null**: the stack is not spreading defects. The correction in this lane
+  is worth building because the mote is a *stationary −8.24% attenuation*, not
+  because it is smeared. The ordering requirement (§0.4) survives the
+  correction unchanged — a map addressed to photosites cannot be applied after
+  a resample regardless of how far the defect travels.
 
 ---
 
@@ -114,9 +126,12 @@ sites survive at the amplitude floor where split-half reproducibility is 1.000.
 M101 already measured the arm immaterial to the election. It ships OFF.
 
 **What ships:** a working, commissioned mechanism — map format, detectors,
-corrector, metric, CLI wiring — **off by default**, plus a photograph-derived
-map holding the two real motes. The default-off is now a *measured* decision:
-the map that a naive flats pipeline produces is actively wrong.
+corrector, metric, CLI wiring **in the shipping `pyramid` merge path, applied
+in sensor coordinates before the warp** (§6.2) — **off by default**, plus a
+photograph-derived map holding the two real motes. The default-off is now a
+*measured* decision twice over: the map that a naive flats pipeline produces is
+actively wrong (P3), and a map that is merely *stale* fails the same way one
+step later in time (§8 Q3).
 
 ---
 
@@ -261,6 +276,16 @@ linear light before the curve; the delivered contrast change is therefore real
 but smaller than the linear gain, and on a *dark* subject region it would be
 larger.
 
+**P20b (the limit of P20, stated so it is not read past).** The measured
+quantity is an **amplitude**: ×1.034 in delivered sRGB at the larger mote.
+**Visibility is not established.** Nobody has run the experiment that would
+establish it — no print was made, no observer was asked, no detection threshold
+for a soft low-contrast disc at this size and surround luminance was measured
+or cited. The honest form of this result is "measured amplitude, visibility not
+established", and this report does not claim, in either direction, what a print
+reviewer would notice. The brief's framing ("a defect a reviewer finds in five
+minutes") is a hypothesis this lane did not test.
+
 ### 4.6 The report partitions (B3)
 
 From the same run, with the dust arm on and the hot arm off:
@@ -324,21 +349,65 @@ hard error (B4).**
 - `experiments/BUILD-DEFECT/out/defect-map-ILCE-7CM2.txt` (the flats map, kept
   as the record of P3) and `-photo.txt` (**the one that is correct**).
 
-### 6.2 Not built, and why
+### 6.2 The shipping wire-up (added after the orchestrator took Q1)
 
-**P21.** `crates/strehl-cli/src/stack.rs` is the `argmax-baseline` negative
-control, **not** the shipping `strehl stack`. The shipping path is
-`main.rs:797 Command::Stack → merge_cmd::run`, with per-frame decode at
-`merge_cmd.rs:4297 fn load_frame`. **Both files are outside my lane.** The patch
-needed there is three lines — call `defect_plan_from_env` once in `run`, call
-`map.apply` on the decoded frame in `load_frame` **before**
-`warp_frame_in_place`, fold the report — and I am handing it to the orchestrator
-rather than reaching across lanes.
+**P21 (corrected — this was "not built", and now it is).**
+`crates/strehl-cli/src/stack.rs` is the `argmax-baseline` negative control,
+**not** the shipping `strehl stack`. The shipping path is `main.rs:797
+Command::Stack → merge_cmd::run → run_pyramid`, with per-frame decode at
+`merge_cmd.rs fn load_frame`. On the orchestrator's instruction I took that
+patch myself. What landed:
 
-`STREHL_DEFECT_MAP` is also not in `byte-freeze.rs`'s `RENDER_ENV`, which I
-cannot edit. Harmless today because both freeze rows render through `merge_cmd`,
-which is untouched — but once the shipping wire-up lands, the variable must be
-added to `RENDER_ENV` or the freeze stops being hermetic.
+- **`run_pyramid`** builds the plan **once** and prints a banner
+  (`defect map      : … arms dust …` or `none (set STREHL_DEFECT_MAP to
+  enable)`), then borrows it to the fold and to *both* confidence passes.
+- **`load_frame`** applies it **between the levels check and
+  `warp_frame_in_place`.** That ordering is the entire feature. The map's
+  coordinates name **photosites**; after the warp the sample at (x, y) is a
+  resampled blend of photosites from elsewhere, so the map addresses nothing
+  and the defect has already been spread by the per-frame similarity.
+  `dust_correction_must_precede_the_warp_to_land_on_the_defect` fails if those
+  lines move below the warp;
+  `with_an_identity_warp_the_two_orderings_are_bit_identical` proves that test
+  measures the *ordering* and not the resampler.
+- **`load_frame` is shared by the merge fold and the confidence pass
+  deliberately** (its own doc comment says so), so one insertion covers both
+  and the confidence map cannot end up measuring the correction instead of the
+  merge.
+- **The report** is folded across workers by a `DefectTally` of relaxed
+  atomics — `merge_cmd`'s fold has no per-worker accumulator to hang a `&mut`
+  on — then printed **and `ensure!`d** by the same
+  `stack::print_and_check_defects` both paths call.
+
+**P22 (MEASURED — the two call sites agree).** `stack.rs` and `merge_cmd.rs`
+call one shared `stack::apply_defects`, and on `coffee-bean --limit 20` with
+the photo map they return **identical** counts: `dust: examined 22700,
+corrected 22700, clipped 0, outside 0, no change 0`, `samples changed 89074`.
+Two independent paths through the same data reporting the same number is the
+cross-check that the wiring is not doing something different in one of them.
+(89,074 of a possible 90,800 = 98.10%; the 1,726 remainder are samples whose
+black-subtracted signal was small enough that ×1.03–1.06 rounded back to the
+same `u16`. `samples_changed` counts *samples that moved*, `corrected` counts
+*quads the correction was applied to* — they are separate counters for exactly
+this reason.)
+
+**P23 (a gap I am not hiding).** The `--merge estimator` arm (`run_estimator`)
+is **not** wired. It loads frames through its own `field_for`/`Scratch` path,
+not `load_frame`, so covering it is a different and larger patch than the one I
+was authorised to make. `strehl stack` defaults to `pyramid`, so the shipping
+default is covered; `--merge estimator` renders **uncorrected and says so**
+(the banner is absent, which is a weaker signal than I would like). Flagged to
+the orchestrator rather than fixed across a lane boundary.
+
+**`RENDER_ENV` was closed in the same commit.** `STREHL_DEFECT_MAP`,
+`STREHL_DEFECT_ARM` and `STREHL_DEFECT_HOT_FLOOR` are now cleared by
+`byte-freeze.rs` before each row renders. Off-by-default is a property of the
+*code*; it says nothing about an operator who has exported the variable in
+their shell, who would otherwise render a corrected stack and compare it to an
+uncorrected hash. Per the header of `byte-freezes.tsv` this is the
+`STREHL_ALIGN=0` defect, already committed twice in this repository; this is
+the first variable added to that list **in the same commit as the feature that
+reads it**.
 
 ### 6.3 My own defects, disclosed
 
@@ -407,9 +476,27 @@ added to `RENDER_ENV` or the freeze stops being hermetic.
 
 - **Q1.** Why do the flats mis-locate by 10–25 quads (T5)?
 - **Q2.** Does the (3434,2305) mote deepen at f/11, and by how much?
-- **Q3.** Is a −8.24% mote visible to a print-quality reviewer, or is P19's
-  ×1.034 in delivered sRGB below the threshold of notice? I measured the
-  amplitude; I did not measure the *noticing*.
+- **Q3 (ANSWERED by the orchestrator — the rationale for the default).** The
+  feature ships **opt-in**, and the reason is a *correctness* argument, not
+  caution. A defect map is a statement about the sensor **on a particular
+  date**. The two motes are real today. But if the owner cleans the sensor, a
+  default-on map applies a **+8% brightening to a spot where nothing is
+  wrong**: it manufactures the exact defect it was built to remove, and does it
+  **silently**, because nothing downstream can distinguish a corrected mote
+  from an invented one. An explicit `STREHL_DEFECT_MAP` sidecar keeps the
+  staleness visible at the call site, where somebody can notice the file is a
+  year old.
+
+  This is the same failure as §2 P3 — correcting at the *flats'* coordinates
+  would have brightened clean pixels beside a mote it missed — moved one step
+  later **in time** rather than in space. P3 was a map wrong about *where*;
+  a stale map is one wrong about *when*. Both fail the same way: they write a
+  confident correction onto pixels that did not need one, and the output cannot
+  be told apart from a correct one.
+
+  The *visibility* half of the original Q3 is **withdrawn as unanswerable from
+  what I measured** — see P20b. Amplitude ×1.034 in delivered sRGB is measured;
+  visibility is not established, and this report asserts nothing about it.
 
 ---
 
@@ -418,33 +505,41 @@ added to `RENDER_ENV` or the freeze stops being hermetic.
 | Rule | Where |
 |---|---|
 | 3 — inject, never derive | `DefectPlan.gain_dn_per_e` comes from the injected `NoiseModel`, not re-derived |
-| 28 — local fact numbering | P1–P21 |
+| 28 — local fact numbering | P1–P23 |
 | 33 — never `-q`; a run with no `Compiling` line is not evidence | §10 quotes the `Compiling` lines |
 | 40 — prior-art search first | §0.2; it reshaped the mission |
 | Nothing is true until measured | Every number here is quoted from a persisted log in `experiments/BUILD-DEFECT/out/` |
 | Commission every metric | §4.2, P15/P16/P17 — RED, GREEN **and** an improvement arm |
 | A search must be able to fail | P5, P13, and the two explicit refusals in scripts 12 and 14 |
-| Print, then TEST | §4.6 — `stack.rs` `ensure!`s the partition |
+| Print, then TEST | §4.6 — both paths `ensure!` the partition via `stack::print_and_check_defects` |
 | Partition into counted outcomes | §4.6; `check_partition`; `every_site_lands_in_exactly_one_counted_outcome` |
 | Typed errors over silent defaults | `DefectMapError`, 12 refusals; `a_typod_correction_arm_errors_rather_than_falling_back_to_the_default` |
-| Off by default | `Correction::default()` is both arms off; `the_default_correction_is_off_and_changes_no_byte` |
+| Off by default | `Correction::default()` is both arms off; `the_default_correction_is_off_and_changes_no_byte`; §8 Q3 is the correctness argument for the default |
+| 47 — record the environment beside the hash | `STREHL_DEFECT_MAP`/`_ARM`/`_HOT_FLOOR` added to `RENDER_ENV` in the same commit as the wire-up (§6.2) |
 
 ---
 
 ## 10. Verification
 
+**After the shipping wire-up** (`merge_cmd.rs` + `RENDER_ENV`), re-run in full:
+
 ```
 cargo test --release -p strehl-core -p strehl-cli
    Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
-   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
-    Finished `release` profile [optimized] target(s) in 47.91s
-
-running 110 tests   ... test result: ok. 110 passed; 0 failed
-running 5 tests     ... test result: ok.   5 passed; 0 failed
-running 510 tests   ... test result: ok. 510 passed; 0 failed
+     Running unittests src\main.rs
+running 110 tests
+test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s
+     Running tests\byte-freeze.rs
+running 5 tests
+test the_frozen_renders_still_produce_their_recorded_bytes has been running for over 60 seconds
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 170.42s
+     Running unittests src\lib.rs
+running 510 tests
+test result: ok. 510 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.21s
 ```
 
-**The byte-freeze HOLDS. Neither hash moved:**
+**625 tests, 0 failed. The byte-freeze HOLDS after the wire-up. Neither hash
+moved, and `byte-freezes.tsv` was not touched:**
 
 ```
 freeze `coffee-bean-20-gate2-unaligned` HOLDS:
@@ -465,3 +560,30 @@ Caused by:
     unknown defect correction arm "dsut"; the arms are "hot", "dust", "both" and "none"
 exit=1
 ```
+
+### 10.1 The command that applies the correction
+
+```powershell
+$env:STREHL_DEFECT_MAP = "experiments\BUILD-DEFECT\out\defect-map-ILCE-7CM2-photo.txt"
+$env:STREHL_DEFECT_ARM = "dust"
+strehl.exe stack D:\personal\macro\coffee-bean --out out.tiff --srgb --auto-exposure --limit 20
+```
+
+Real output from that run, through the **shipping** `pyramid` path:
+
+```
+merge backend   : pyramid (default)
+defect map      : 14626 hot, 1135 dust quads, arms dust (floor 8.0 e-, gain 0.22894 DN/e-)
+--- defect correction (MEASURED) ---
+hot             : examined 0, corrected 0, below floor 0, clipped 0, outside 0, no change 0
+dust            : examined 22700, corrected 22700, clipped 0, outside 0, no change 0
+samples changed : 89074 over 20 frame loads (4453.7 per frame)
+folded          : 20 / 20 frames in 22.1 s (1.11 s per frame, 4 workers)
+wrote           : ... (7032 x 4688, 16-bit RGB, sRGB ...)
+```
+
+`hot: examined 0` is the arm being **off**, and it is distinguishable from
+`corrected 0` with the arm on — which is the whole reason the outcomes are
+partitioned rather than summarised. Unset `STREHL_DEFECT_MAP` and the banner
+reads `defect map      : none (set STREHL_DEFECT_MAP to enable)` and no
+correction block is printed at all.

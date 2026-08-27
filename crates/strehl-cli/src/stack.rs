@@ -284,14 +284,7 @@ pub fn run(opts: &StackOptions) -> Result<()> {
     let peak_live = AtomicUsize::new(0);
     let defect = defect_plan_from_env(&noise)?;
     if let Some(plan) = &defect {
-        eprintln!(
-            "defect map      : {} hot, {} dust quads, arms {} (floor {:.1} e-, gain {:.5} DN/e-)",
-            plan.map.hot.len(),
-            plan.map.dust.len(),
-            plan.correction,
-            plan.floor.0,
-            plan.gain_dn_per_e
-        );
+        eprintln!("{}", plan.describe());
     } else {
         eprintln!("defect map      : none (set STREHL_DEFECT_MAP to enable)");
     }
@@ -627,21 +620,194 @@ struct FoldContext<'a> {
 /// from the injected [`NoiseModel`] rather than re-derived, so the electrons in
 /// the map are converted through the same calibration as everything else in
 /// the pipeline (`AGENTS.md` rule 3).
-struct DefectPlan {
-    map: DefectMap,
-    correction: Correction,
-    floor: HotFloor,
-    gain_dn_per_e: f32,
+pub(crate) struct DefectPlan {
+    pub(crate) map: DefectMap,
+    pub(crate) correction: Correction,
+    pub(crate) floor: HotFloor,
+    pub(crate) gain_dn_per_e: f32,
+}
+
+impl DefectPlan {
+    /// The banner line, shared by both fold paths so they cannot disagree.
+    pub(crate) fn describe(&self) -> String {
+        format!(
+            "defect map      : {} hot, {} dust quads, arms {} (floor {:.1} e-, gain {:.5} DN/e-)",
+            self.map.hot.len(),
+            self.map.dust.len(),
+            self.correction,
+            self.floor.0,
+            self.gain_dn_per_e
+        )
+    }
+}
+
+/// A [`CorrectionReport`] that many threads can fold into.
+///
+/// `merge_cmd`'s fold has no per-worker accumulator to hang a report on -- its
+/// `load_frame` is a free function shared by the merge pass and the confidence
+/// pass -- so the counters are atomics rather than a threaded `&mut`. They are
+/// `Relaxed`: nothing branches on a partial total, and the only read is after
+/// every worker has joined.
+#[derive(Default)]
+pub(crate) struct DefectTally {
+    hot_examined: AtomicUsize,
+    hot_corrected: AtomicUsize,
+    hot_below_floor: AtomicUsize,
+    hot_clipped: AtomicUsize,
+    hot_outside: AtomicUsize,
+    hot_no_change: AtomicUsize,
+    dust_examined: AtomicUsize,
+    dust_corrected: AtomicUsize,
+    dust_clipped: AtomicUsize,
+    dust_outside: AtomicUsize,
+    dust_no_change: AtomicUsize,
+    samples_changed: AtomicUsize,
+    frames: AtomicUsize,
+}
+
+impl DefectTally {
+    pub(crate) fn absorb(&self, r: &CorrectionReport) {
+        let a = |c: &AtomicUsize, v: usize| {
+            c.fetch_add(v, Ordering::Relaxed);
+        };
+        a(&self.hot_examined, r.hot_examined);
+        a(&self.hot_corrected, r.hot_corrected);
+        a(&self.hot_below_floor, r.hot_below_floor);
+        a(&self.hot_clipped, r.hot_clipped);
+        a(&self.hot_outside, r.hot_outside);
+        a(&self.hot_no_change, r.hot_no_change);
+        a(&self.dust_examined, r.dust_examined);
+        a(&self.dust_corrected, r.dust_corrected);
+        a(&self.dust_clipped, r.dust_clipped);
+        a(&self.dust_outside, r.dust_outside);
+        a(&self.dust_no_change, r.dust_no_change);
+        a(&self.samples_changed, r.samples_changed);
+        a(&self.frames, 1);
+    }
+
+    pub(crate) fn frames(&self) -> usize {
+        self.frames.load(Ordering::Relaxed)
+    }
+
+    pub(crate) fn report(&self) -> CorrectionReport {
+        let g = |c: &AtomicUsize| c.load(Ordering::Relaxed);
+        CorrectionReport {
+            hot_examined: g(&self.hot_examined),
+            hot_corrected: g(&self.hot_corrected),
+            hot_below_floor: g(&self.hot_below_floor),
+            hot_clipped: g(&self.hot_clipped),
+            hot_outside: g(&self.hot_outside),
+            hot_no_change: g(&self.hot_no_change),
+            dust_examined: g(&self.dust_examined),
+            dust_corrected: g(&self.dust_corrected),
+            dust_clipped: g(&self.dust_clipped),
+            dust_outside: g(&self.dust_outside),
+            dust_no_change: g(&self.dust_no_change),
+            samples_changed: g(&self.samples_changed),
+        }
+    }
+}
+
+/// Apply a defect plan to one decoded frame, in **sensor coordinates**.
+///
+/// The single call site for both the `argmax-baseline` fold and the shipping
+/// `merge` fold, so the two cannot drift. The caller's only responsibility is
+/// to call it **before any geometric warp** -- see the ordering note at each
+/// call site, and
+/// `strehl_core::defect_map::dust_correction_must_precede_the_warp_to_land_on_the_defect`
+/// for the planted control that fails if the ordering is reversed.
+pub(crate) fn apply_defects(
+    plan: &DefectPlan,
+    frame: &mut Frame,
+    tally: &DefectTally,
+    index: usize,
+) -> Result<()> {
+    let active = (
+        frame.active.x,
+        frame.active.y,
+        frame.active.width,
+        frame.active.height,
+    );
+    let report = plan
+        .map
+        .apply(
+            &mut frame.data,
+            frame.stride,
+            active,
+            frame.levels.black,
+            frame.levels.white,
+            plan.gain_dn_per_e,
+            plan.correction,
+            plan.floor,
+        )
+        .with_context(|| format!("defect correction on frame {index}"))?;
+    tally.absorb(&report);
+    Ok(())
+}
+
+/// Print a stack's total correction report, then **test it**.
+///
+/// A partition that is printed and not checked is the defect this project has
+/// shipped three times: "corrected: 0" and "examined: 0" are different failures
+/// with the same reassuring line. Returns an error when the counts do not sum.
+pub(crate) fn print_and_check_defects(tally: &DefectTally) -> Result<()> {
+    let d = tally.report();
+    let (hot_ok, dust_ok) = d.check_partition();
+    let frames = tally.frames().max(1);
+    eprintln!("--- defect correction (MEASURED) ---");
+    eprintln!(
+        "hot             : examined {}, corrected {}, below floor {}, clipped {}, outside {}, no change {}",
+        d.hot_examined,
+        d.hot_corrected,
+        d.hot_below_floor,
+        d.hot_clipped,
+        d.hot_outside,
+        d.hot_no_change
+    );
+    eprintln!(
+        "dust            : examined {}, corrected {}, clipped {}, outside {}, no change {}",
+        d.dust_examined, d.dust_corrected, d.dust_clipped, d.dust_outside, d.dust_no_change
+    );
+    eprintln!(
+        "samples changed : {} over {} frame loads ({:.1} per frame)",
+        d.samples_changed,
+        tally.frames(),
+        d.samples_changed as f64 / frames as f64
+    );
+    eprintln!();
+    ensure!(
+        hot_ok && dust_ok,
+        "defect correction report does not partition: hot {} vs {}+{}+{}+{}+{}, dust {} vs {}+{}+{}+{}",
+        d.hot_examined,
+        d.hot_corrected,
+        d.hot_below_floor,
+        d.hot_clipped,
+        d.hot_outside,
+        d.hot_no_change,
+        d.dust_examined,
+        d.dust_corrected,
+        d.dust_clipped,
+        d.dust_outside,
+        d.dust_no_change
+    );
+    Ok(())
 }
 
 /// Read the defect-map configuration from the environment.
 ///
-/// **`STREHL_DEFECT_MAP` unset means OFF, and off means byte-identical.** That
-/// is not timidity, it is the only defensible default: the map is a property of
-/// one camera body, this binary has no way to check that the frames it is
-/// stacking came from that body, and the two renders pinned in
-/// `crates/strehl-cli/tests/byte-freezes.tsv` must not move because a
-/// calibration file happened to be lying next to the binary.
+/// **`STREHL_DEFECT_MAP` unset means OFF, and off means byte-identical.** The
+/// reason is a correctness argument, not caution. A defect map is a statement
+/// about the sensor **on a particular date**. The two dust motes this body has
+/// are real -- quad (3202,121) at -3.63% and (3434,2305) at -8.24%, both at
+/// p = 0.0025 against a commissioned local null on twelve subject stacks
+/// (`docs/research/BUILD-DEFECT.md` §2) -- but if the owner cleans the sensor,
+/// a default-on map applies a +8% brightening to a spot where nothing is wrong.
+/// It **manufactures the exact defect it was built to remove**, and does it
+/// silently, because nothing downstream can distinguish a corrected mote from
+/// an invented one. That is the same failure as correcting at the flat-field
+/// coordinates -- brightening clean pixels beside an uncorrected mote -- moved
+/// one step later in time. An explicit sidecar keeps the staleness visible at
+/// the call site.
 ///
 /// - `STREHL_DEFECT_MAP=<path>` — load that map. A missing or malformed file is
 ///   a **hard error**, never a silent skip: the user asked for a correction and
@@ -653,7 +819,7 @@ struct DefectPlan {
 /// - `STREHL_DEFECT_HOT_FLOOR=<electrons>` — amplitude floor for the hot arm.
 ///   Defaults to [`HotFloor::REPRODUCIBLE`] (8 e-), the lowest stratum measured
 ///   to reproduce 1.000 across an independent half of the same darks.
-fn defect_plan_from_env(noise: &NoiseModel) -> Result<Option<DefectPlan>> {
+pub(crate) fn defect_plan_from_env(noise: &NoiseModel) -> Result<Option<DefectPlan>> {
     let Some(path) = std::env::var_os("STREHL_DEFECT_MAP") else {
         return Ok(None);
     };
@@ -725,26 +891,11 @@ impl FoldContext<'_> {
             // `strehl_core::defect_map` is the planted control for the claim.
             let mut frame = frame;
             if let Some(plan) = self.defect {
-                let active = (
-                    frame.active.x,
-                    frame.active.y,
-                    frame.active.width,
-                    frame.active.height,
-                );
-                let report = plan
-                    .map
-                    .apply(
-                        &mut frame.data,
-                        frame.stride,
-                        active,
-                        frame.levels.black as f32,
-                        frame.levels.white,
-                        plan.gain_dn_per_e,
-                        plan.correction,
-                        plan.floor,
-                    )
-                    .with_context(|| format!("defect correction on frame {index}"))?;
-                defect_total.absorb(&report);
+                let mut one = CorrectionReport::default();
+                let tally = DefectTally::default();
+                apply_defects(plan, &mut frame, &tally, index as usize)?;
+                one.absorb(&tally.report());
+                defect_total.absorb(&one);
             }
             let frame = frame;
 

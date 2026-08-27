@@ -2891,6 +2891,7 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
         levels.black, levels.white
     );
     eprintln!("{}", provenance_line(&noise));
+
     eprintln!(
         "regulariser     : {REGULARISER_WIDTH}x{REGULARISER_WIDTH} box on the focus field \
          (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)"
@@ -4249,6 +4250,7 @@ impl BandWorker {
         levels: Levels,
         noise: &NoiseModel,
         warps: Option<&WarpMap>,
+        defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     ) -> Result<bool> {
         if !load_frame(
             path,
@@ -4256,6 +4258,7 @@ impl BandWorker {
             geom,
             levels,
             warps,
+            defect,
             &mut self.warp,
             &mut self.planes,
             &mut self.luma,
@@ -4289,6 +4292,7 @@ fn load_frame(
     geom: PlaneGeometry,
     levels: Levels,
     warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     scratch: &mut WarpScratch,
     planes: &mut [Vec<f32>],
     luma: &mut [f32],
@@ -4304,6 +4308,32 @@ fn load_frame(
             levels.black,
             levels.white
         );
+        // ---- sensor defect correction, BEFORE THE WARP -------------------
+        //
+        // This ordering is the whole point of the feature and it is why these
+        // four lines sit above the `warps` block rather than below it. The
+        // map's coordinates name photosites. After `warp_frame_in_place` the
+        // sample at (x, y) is a resampled combination of several photosites
+        // from somewhere else, so the map no longer addresses anything: the
+        // correction would land beside the defect and brighten clean pixels,
+        // which is strictly worse than leaving it alone.
+        //
+        // Note that the justification is *mis-addressing*, not smearing. M101
+        // measured the elected trail at 0.931 px against a 0.937 px shift
+        // null, so on this body the stack does NOT spread a defect into an arc
+        // -- see BUILD-DEFECT.md P2b, which refutes that premise. The ordering
+        // requirement survives the refutation unchanged, because a map indexed
+        // by photosite cannot address a resampled buffer however far the
+        // defect did or did not travel.
+        //
+        // `strehl_core::defect_map`'s
+        // `dust_correction_must_precede_the_warp_to_land_on_the_defect` plants
+        // a mote and fails if these lines are moved below the warp;
+        // `with_an_identity_warp_the_two_orderings_are_bit_identical` proves
+        // that test is measuring the ordering and not the resampler.
+        if let Some((plan, tally)) = defect {
+            crate::stack::apply_defects(plan, &mut frame, tally, index)?;
+        }
         if let Some(map) = warps {
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
@@ -4414,6 +4444,7 @@ fn confidence_pass(
     geom: PlaneGeometry,
     levels: Levels,
     warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     merged_luma: &[f32],
     per_chunk: usize,
 ) -> Result<Centrality> {
@@ -4430,7 +4461,9 @@ fn confidence_pass(
                 seen: vec![0; px],
             };
             for (i, p) in chunk {
-                if !load_frame(p, *i, geom, levels, warps, &mut scratch, &mut planes, &mut luma)? {
+                if !load_frame(
+                    p, *i, geom, levels, warps, defect, &mut scratch, &mut planes, &mut luma,
+                )? {
                     continue;
                 }
                 for ((b, s), (l, m)) in c
@@ -4558,6 +4591,7 @@ fn confidence_debug_pass(
     geom: PlaneGeometry,
     levels: Levels,
     warps: Option<&WarpMap>,
+    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     merged_luma: &[f32],
     sigma: &[f32],
     per_chunk: usize,
@@ -4574,7 +4608,9 @@ fn confidence_debug_pass(
             let mut sharp = vec![0.0f32; px];
             let mut c = Candidates::new(px);
             for (i, p) in chunk {
-                if !load_frame(p, *i, geom, levels, warps, &mut scratch, &mut planes, &mut luma)? {
+                if !load_frame(
+                    p, *i, geom, levels, warps, defect, &mut scratch, &mut planes, &mut luma,
+                )? {
                     continue;
                 }
                 laplacian_abs(&luma, gw, gh, &mut sharp);
@@ -4929,6 +4965,22 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         levels.black, levels.white
     );
     eprintln!("{}", provenance_line(&noise));
+
+    // ---- sensor defect correction ----------------------------------------
+    //
+    // Built once here and borrowed by the fold and by both confidence passes,
+    // so all three see the identical frames. Off unless STREHL_DEFECT_MAP is
+    // set -- see stack::defect_plan_from_env for why a defect map must be
+    // opt-in rather than a default.
+    let defect_plan = crate::stack::defect_plan_from_env(&noise)?;
+    let defect_tally = crate::stack::DefectTally::default();
+    let defect = defect_plan
+        .as_ref()
+        .map(|p| (p, &defect_tally));
+    match &defect_plan {
+        Some(p) => eprintln!("{}", p.describe()),
+        None => eprintln!("defect map      : none (set STREHL_DEFECT_MAP to enable)"),
+    }
     eprintln!(
         "frames          : {} from {}  (first decode {prologue_secs:.2} s)",
         paths.len(),
@@ -5073,7 +5125,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
             let mut w = BandWorker::new(geom, cfg);
             let mut folded = 0usize;
             for (i, p) in chunk {
-                if w.fold(p, *i, geom, levels, &noise, warps)? {
+                if w.fold(p, *i, geom, levels, &noise, warps, defect)? {
                     folded += 1;
                 }
             }
@@ -5098,6 +5150,9 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     );
     let fold_secs = t_fold.elapsed().as_secs_f64();
     eprintln!();
+    if defect_plan.is_some() {
+        crate::stack::print_and_check_defects(&defect_tally)?;
+    }
     eprintln!(
         "folded          : {folded_total} / {} frames in {fold_secs:.1} s ({:.2} s per frame, \
          {workers} workers)",
@@ -5180,6 +5235,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                 geom,
                 levels,
                 warps,
+                defect,
                 &merged_luma,
                 &sigma,
                 per_chunk,
@@ -5190,7 +5246,15 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                 seen: c.seen,
             }
         } else {
-            confidence_pass(&paths, geom, levels, warps, &merged_luma, per_chunk)?
+            confidence_pass(
+                &paths,
+                geom,
+                levels,
+                warps,
+                defect,
+                &merged_luma,
+                per_chunk,
+            )?
         };
         if let Some(parent) = cpath.parent() {
             std::fs::create_dir_all(parent).ok();

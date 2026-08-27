@@ -413,6 +413,23 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_CACHE_DIR",
     "STREHL_FIX_HALO",
     "STREHL_FIX_HALO_DELTA",
+    // The sensor defect map. STREHL_DEFECT_MAP rewrites photosites BEFORE the
+    // warp, so a row rendered with it set is a different render of the same
+    // frames -- 16,039 of 32,966,016 delivered samples move on `coffee-bean`
+    // with the shipped map (BUILD-DEFECT.md sec 5). It is off by default and
+    // both hashes in the registry were measured with it unset, but "off by
+    // default" is a property of the code and not of the ambient environment:
+    // an operator who exported it in their shell would render a corrected
+    // stack and compare it against an uncorrected hash. `_ARM` and
+    // `_HOT_FLOOR` are only read when `_MAP` is set, so they are covered by
+    // that variable's clearing -- listed anyway, because the cost of a
+    // redundant entry is nothing and the cost of a missing one is a freeze
+    // that silently stops being hermetic. That is the STREHL_ALIGN=0 defect
+    // and it has now been committed twice; this is the first variable added
+    // to this file in the same commit as the feature that reads it.
+    "STREHL_DEFECT_MAP",
+    "STREHL_DEFECT_ARM",
+    "STREHL_DEFECT_HOT_FLOOR",
     // The edge-aware selection variables. Every one of these re-routes the
     // election, so a row rendered with one of them set is not the row it says
     // it is. STREHL_ONLY_FRAME is the extreme case: it renders a single frame

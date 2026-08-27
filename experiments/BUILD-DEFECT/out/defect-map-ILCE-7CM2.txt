@@ -3,6 +3,25 @@ camera ILCE-7CM2
 sensor 7032 4688
 covered 7028 4688
 aperture 5.6
+# =====================================================================
+# SUPERSEDED -- NOT THE SHIPPING MAP. DO NOT ADOPT THIS FILE.
+#
+# The canonical map is defect-map-ILCE-7CM2-photo.txt, beside this one.
+# The DUST arm below was derived from flat fields and is REFUTED as a
+# correction for photographs. See docs/research/BUILD-DEFECT.md section 2,
+# propositions P3 and P4:
+#
+#   Of the 4 motes nominated here, THREE read POSITIVE on 12 real subject
+#   stacks -- +0.2001% (p=0.9900), +0.1571% (p=0.9501), +0.5398%
+#   (p=1.0000). Correcting at these coordinates would BRIGHTEN pixels that
+#   are not dark, beside a mote it missed. Re-locating the same motes in
+#   the photographs moved them 10-25 quads and found the real pair:
+#   (3202,121) at -3.6303% and (3434,2305) at -8.2359%, both p=0.0025.
+#
+# Kept as committed EVIDENCE for that refutation, not as an input. The hot
+# arm below is unaffected by this and is a separate, independently
+# measured census (14626 sites) -- but it too ships OFF, see below.
+# =====================================================================
 # built 2026-08-27T00:57:00 by experiments/BUILD-DEFECT/src/08-final-map.py
 # hot: 242 darks, 11 ISO groups x 20 frames (2 stabilisation shots dropped),
 # hot: 1/100 s, ISO 50-2000, D:\macro-dark-frames. 6-sigma same-plane neighbour
