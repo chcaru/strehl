@@ -13995,3 +13995,142 @@ contrast, and the threshold carves the winner field into contiguous plateaus
 each rendering from a single frame. A patchwork of regions sourced from
 different frames is mid-scale mottle. It explains four null results at once,
 which mine explained none of.
+
+## §137 — The stale string that cost three lanes, and one hypothesis for two defects
+
+**Status: the code facts are VERIFIED at first hand. The unifying mechanism is ARGUED and untested.
+Read the second half as a target, not a result.**
+
+### 137.1 What ships
+
+Verified by me directly, not relayed:
+
+```
+git show 9b05d0b7:crates/strehl-cli/src/merge_cmd.rs
+  pub const DEFAULT_MERGE_BACKEND: MergeBackend = MergeBackend::Pyramid;
+```
+
+and all 26 SHIP-V4 provenance files read `backend       : pyramid (default)`,
+`gate          : (backend default)`.
+
+**The shipping merge is the Laplacian multi-band merge in `crates/strehl-core/src/pyramid.rs`.**
+
+Three separate investigations, and I myself, spent the night working on code that never
+executed:
+
+| path | why it was believed to ship | why it does not |
+|---|---|---|
+| `crates/strehl-core/src/softgate.rs` | named like the feature under investigation | gated on `STREHL_SOFT_GATE`, **unset on 26/26** shipped runs |
+| `crates/strehl-core/src/merge.rs` (top-hat `Gate`) | it *is* the default gate | it is the default **within the `Estimator` backend**, and `Estimator` does not ship |
+| `crates/strehl-core/src/pyramid.rs` | — | **this is the one** |
+
+**Root cause, and it is a single sentence.** `merge_cmd.rs:435` still tells the reader that
+`estimator` is "the default". That string was written in `c42cd7543` (08-25). The default
+moved to `Pyramid` in `5142ace5c` (08-26). The string was never updated. It has been
+misinforming every reader for the life of the project.
+
+> **Discipline 30 — a stale doc string is not a documentation defect, it is a research
+> defect.** It does not merely misinform a user; it silently redirects investigation, and
+> the redirect is invisible because the reader who follows it gets a plausible file with
+> plausible code in it. Two of tonight's lanes produced sound measurements of the wrong
+> thing. The measurements were not wasted because they were bad — they were wasted because
+> the map was. Verify the shipping path against the shipped artifact's own provenance
+> before assigning work to a file, every time, however obvious the file looks.
+
+Corollary, learned the same way: **the cost of a stale string scales with the number of
+agents reading it.** A lie in a comment that costs one developer an hour costs a fleet a
+night.
+
+### 137.2 The shipped weighting, from the pin
+
+`pyramid.rs:1078-1096` at `9b05d0b7`:
+
+```
+exponent:            2.0
+sharpen_per_octave:  1.4
+select:              SelectMode::SoftPower
+MAX_EXPONENT:        8.0        // cap
+```
+
+Per-band exponent `p_k = (exponent * sharpen_per_octave^steps).min(MAX_EXPONENT)`, where
+`steps = (bands-1) - min(k, bands-1)`. Selectivity therefore **climbs toward the fine
+bands**: at `bands = 6`, band 0 computes `2.0 * 1.4^5 = 10.8` and pins to the 8.0 cap,
+mid band 2 runs near 5.5, the coarsest runs at 2.0.
+
+Each frame's band coefficient is weighted `w_i = (snr_i / SNR_REF)^p` and normalised
+`w_i / sum_j w_j`. The file's own comment states the consequence without flinching:
+
+> *"`8` leaves real headroom and is already close to winner-take-all — a frame with twice
+> another's band energy gets 256 times the weight."*
+
+`SNR_REF = 64.0` is expected to cancel in the normalised weight, making it an overflow
+guard rather than a threshold. **That expectation is untested and is assigned.**
+
+### 137.3 Two measured defects
+
+| defect | measurement | lower bound? |
+|---|---|---|
+| mid-scale mottle, 20-60 px | convicted on 6 subjects: `coffee-bubbles` 1.4501x, `lead-1-cpl` 2.43x (chroma), `112MSDCF` 1.39x, `flat-on-ruler-cpl` 1.32x, `113MSDCF` 1.30x, `foam` 1.23x | yes — a subsampled minimum is a denominator, so every ratio is a floor |
+| softening with stack depth | at matched focus range and an **identical denominator**, N=63 is **0.114 softer at 0.30-0.35 cyc/px** than N=32 | not characterised beyond the pair |
+
+The second is not a band limit. A band limit is N-independent by construction; this is
+not. The band-limit hypothesis is separately dead on its own terms: the plane-gather wall
+was real, was already fixed (`STREHL_FULLRES_GATHER`, `4c99cc40`), and bought 9.4% at
+0.20-0.25 cyc/px (0.6894 -> 0.7540 of the per-site complete-bracket ceiling). **The
+remaining 25% is a tuning surface.** Kernel swaps, gather fixes and plane-resolution
+changes are retired; any resampling-kernel change is bounded at 1.32x power by an
+existing test in the tree.
+
+### 137.4 The hypothesis — ARGUED, NOT MEASURED
+
+A single property of the shipped weighting predicts both defects, in opposite directions.
+The property is that **`p` is fixed and absolute, while the reliability of the quantity it
+is applied to varies.**
+
+- **Flat regions.** There is no scene structure at that scale, so `snr_i` differences
+  between frames are noise. At `p ~ 5.5` a random 1.3x fluctuation buys a 4x weight
+  advantage; at `p = 8` a 2x fluctuation buys 256x. The effective frame count collapses
+  toward 1, the winner is chosen by noise, and the choice is spatially incoherent.
+  **Predicts: a patchwork at the scale of a pyramid band. That is the mottle.**
+- **Real detail in a deep stack.** Differences are meaningful, but many frames sit
+  near-tied, and the count of near-ties grows with N. The winner's normalised *share*
+  therefore falls as N rises and the reconstruction drifts toward an average.
+  **Predicts: softening with depth. That is the 0.114.**
+
+Same disease, opposite symptoms: the effective number of contributing frames is
+uncontrolled in both directions. The implied fix is a **confidence-dependent exponent** —
+collapse toward averaging where between-frame differences are inside the noise of their
+own estimate, stay sharp where they are significant against the calibrated noise. The
+noise model exists precisely so that this is computable rather than tuned, which is the
+project's own thesis applied to the one constant that never received it.
+
+**Three reasons to distrust the above, recorded now so they are not rationalised later:**
+
+1. It is arithmetic, not measurement. Nobody has looked at a weight map. If the winner's
+   share turns out stable in N, the second half is dead.
+2. It is *tidy*, and tidiness has been the reliable signature of tonight's errors. Three
+   structural claims died today, each of which was tidy.
+3. It was produced by the same person who assigned two lanes to dead files. The prior on
+   this document's structural claims is now poor, and it should be.
+
+Both halves are assigned to a falsification lane running concurrently with the build lane,
+per discipline 27 — a diagnosis lane dispatched *after* a build lane is implicitly asked
+to confirm it.
+
+### 137.5 The acceptance criterion this creates
+
+**N-invariance is now a first-class gate, alongside blotch and sharpness.** At matched
+focus range, N=63 must not be measurably softer than N=32; the standing baseline is
+0.114 at 0.30-0.35 cyc/px.
+
+This is worth more than a regression test. The deepest capture in the corpus is a
+**299-frame** bee, and `flower-bud-alone-cpl` at **N=205** is one of four subjects the
+print gate refuses. If depth costs sharpness, the tool is weakest on exactly the captures
+most likely to be printed — and depth is the whole reason a focus stacker exists.
+
+**The trap attached to every number above.** `focus-stack` measures **0.077** fine grain
+and **0.260** mid-band on `119MSDCF__worst-on-subject`, 10-25x below both other arms.
+That is a blurred image, not a clean one, and it is consistent with our resolving 1.326x
+more than it does. A shipping tool has already taken the trade that any of these three
+fixes can accidentally take. **Every blotch number and every N-invariance number is
+inadmissible without a sharpness number measured on the same pixels.**
