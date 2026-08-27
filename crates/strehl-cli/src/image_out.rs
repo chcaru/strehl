@@ -512,11 +512,30 @@ fn icc_srgb_v2(linear: bool) -> Vec<u8> {
 /// into an invisible corruption. So the camera-native paths keep the text and
 /// get no profile, and a reader that finds no profile falls back to exactly the
 /// behaviour it has today rather than to something new and wrong.
+///
+/// **The third `None` is the same policy applied one step further in.** A
+/// development that carries the colour matrix but *not* the transfer curve,
+/// and yet has a [`Tone`] resolved, has had [`s_curve`] applied to **linear**
+/// light -- see [`develop_pixel`], where the S-curve runs unconditionally and
+/// the sRGB encode does not. Those pixels are not linear sRGB, so the
+/// identity-TRC profile would describe them wrongly, and they are not sRGB
+/// either. Nothing in this module describes them, so nothing is claimed.
+///
+/// That arm is **not reachable from the CLI today** -- [`OutputSpace::develop`]
+/// sets `wants_tone` from `applies_curve`, so tone and curve arrive together --
+/// and it is written anyway because `Develop` is a public struct whose four
+/// fields are independently settable, and because the cost of getting this
+/// wrong is measured rather than imagined: `icc_potency.py` ARM B moved
+/// **92 DN** by substituting one profile for another on identical pixels, and
+/// `BUILD-RENDER-icc`'s potency table puts a linear-for-sRGB swap at **50.39 DN
+/// mean over 99.5% of pixels**. A wrong profile is not a cosmetic defect; it is
+/// a machine-readable instruction to transform every pixel.
 fn icc_for(dev: &Develop) -> Option<Vec<u8>> {
-    match (dev.matrix.is_some(), dev.srgb) {
-        (true, true) => Some(icc_srgb_v2(false)),
-        (true, false) => Some(icc_srgb_v2(true)),
-        (false, _) => None,
+    match (dev.matrix.is_some(), dev.srgb, dev.tone.is_some()) {
+        (true, true, _) => Some(icc_srgb_v2(false)),
+        (true, false, false) => Some(icc_srgb_v2(true)),
+        (true, false, true) => None,
+        (false, _, _) => None,
     }
 }
 
@@ -2421,11 +2440,231 @@ mod tests {
             !with(OutputSpace::CameraLinear, None),
             "camera-native without a characterisation must not be labelled"
         );
+        // The fourth row of the decision table, and the dangerous one: the
+        // body has no characterisation, so `--srgb` yields camera primaries
+        // carrying an sRGB transfer curve. It looks like sRGB in every way a
+        // reader can check except the primaries, which is exactly why it must
+        // not be told it is sRGB. Omitting this case left the suite passing
+        // for an `icc_for` that keyed on `dev.srgb` alone.
+        assert!(
+            !with(OutputSpace::Srgb, None),
+            "an uncharacterised body's --srgb render must NOT claim sRGB \
+             primaries it does not have"
+        );
 
         // The two colorimetric profiles must differ, or the transfer curve is
         // not actually being varied and one of the two files is mislabelled.
         let srgb = icc_for(&OutputSpace::Srgb.develop(Some(m))).unwrap();
         let lin = icc_for(&OutputSpace::LinearSrgb.develop(Some(m))).unwrap();
         assert_ne!(srgb, lin, "sRGB and linear sRGB got the same profile");
+    }
+
+    /// Locate one ICC tag's payload inside a profile, by signature.
+    ///
+    /// Deliberately a byte walk of the tag table rather than a field of a
+    /// parsed struct: the point of the test below is to read what **landed in
+    /// the file**, and a parser shared with the writer would agree with the
+    /// writer by construction.
+    fn icc_tag<'a>(p: &'a [u8], want: &[u8; 4]) -> Option<&'a [u8]> {
+        let n = u32::from_be_bytes(p[128..132].try_into().ok()?) as usize;
+        for i in 0..n {
+            let e = 132 + 12 * i;
+            if &p[e..e + 4] == want {
+                let off = u32::from_be_bytes(p[e + 4..e + 8].try_into().ok()?) as usize;
+                let len = u32::from_be_bytes(p[e + 8..e + 12].try_into().ok()?) as usize;
+                return p.get(off..off + len);
+            }
+        }
+        None
+    }
+
+    /// The embedded profile must state the transfer curve the pixels were
+    /// actually written with, read back **out of a real file**.
+    ///
+    /// **The hole this closes, and why the existing tests could not.**
+    /// [`only_the_colorimetric_paths_get_a_profile`] asserts that a profile is
+    /// present on the two colorimetric paths, absent on the camera-native ones,
+    /// and that the two colorimetric profiles are `assert_ne!` to each other.
+    /// **Every one of those passes if the two arms of [`icc_for`] are
+    /// exchanged** -- `--srgb` labelled linear and `--linear-srgb` labelled
+    /// sRGB -- because an inequality fixes no identity. Nothing else in the
+    /// crate could tell the two apart either, since
+    /// [`the_profile_is_structurally_well_formed_and_deterministic`] checks
+    /// each profile against itself and
+    /// [`the_derived_primaries_match_the_published_srgb_icc_columns`] checks
+    /// only the matrix, which the two profiles share.
+    ///
+    /// That swap is not a cosmetic defect. It is a machine-readable
+    /// instruction to transform every pixel, and the transform was measured:
+    /// `experiments/BUILD-RENDER-icc/potency.py` puts a linear-for-sRGB TRC
+    /// swap at **50.39 DN mean, 73 DN max, on 99.5% of pixels**, and
+    /// `experiments/BUILD-RENDER-print/icc_potency.py` ARM B moves **92 DN**
+    /// by substituting a different profile onto identical pixels. This project
+    /// has a standing rule that a wrong profile is worse than none; until this
+    /// test existed, only the *none* half of it was enforced.
+    ///
+    /// **What can make it fail** (rule 20): exchanging the two arms of
+    /// `icc_for`; storing the TRC in the encoding direction; giving `gTRC` or
+    /// `bTRC` a different curve from `rTRC`; handing a profile to a
+    /// camera-native or tone-in-linear render. The first of those is the one
+    /// that was live, and it is the commissioning arm recorded in
+    /// `docs/research/BUILD-OUTPUT.md`.
+    #[test]
+    fn the_embedded_profile_states_the_transfer_curve_the_pixels_carry() {
+        let m = color::camera_to_srgb(A7C2).expect("invertible");
+        // A resolved tone, as the writers fill in for a viewing render. The
+        // numbers are a plausible mid-corpus pair and nothing depends on them;
+        // what matters is that `tone` is `Some`, because that is the field the
+        // third `None` arm of `icc_for` keys on.
+        let toned = Tone {
+            black: 0.008_30,
+            white: 1.004_73,
+            contrast: TONE_CONTRAST,
+        };
+        let with_tone = |matrix, srgb| Develop {
+            matrix,
+            srgb,
+            tone: Some(toned),
+            wants_tone: true,
+        };
+
+        // `Some(true)` = a profile whose TRC is sRGB's; `Some(false)` = a
+        // profile whose TRC is the identity; `None` = no profile at all.
+        let cases: [(&str, Develop, Option<bool>); 6] = [
+            (
+                "--srgb, as the writer resolves it",
+                with_tone(Some(m), true),
+                Some(true),
+            ),
+            (
+                "--srgb with no tone rendering",
+                OutputSpace::Srgb.develop(Some(m)),
+                Some(true),
+            ),
+            (
+                "--linear-srgb",
+                OutputSpace::LinearSrgb.develop(Some(m)),
+                Some(false),
+            ),
+            ("camera-native linear", Develop::measurement(false), None),
+            (
+                "camera-native with an sRGB curve",
+                Develop::measurement(true),
+                None,
+            ),
+            (
+                "colorimetric, tone applied in LINEAR light",
+                with_tone(Some(m), false),
+                None,
+            ),
+        ];
+
+        let dir = std::env::temp_dir().join("strehl-icc-trc-test");
+        std::fs::create_dir_all(&dir).unwrap();
+        let (w, h) = (4u32, 3u32);
+
+        for (label, dev, want) in cases {
+            let path = dir.join(format!("{}.tif", label.replace(['-', ' ', ','], "_")));
+            write_rgb16_described(&path, w, h, &vec![1000u16; (w * h) as usize * 3], &dev).unwrap();
+            let file = std::fs::File::open(&path).unwrap();
+            let mut dec = tiff::decoder::Decoder::new(std::io::BufReader::new(file)).unwrap();
+            let got = dec.get_tag_u8_vec(Tag::IccProfile).ok();
+            drop(dec);
+            let _ = std::fs::remove_file(&path);
+
+            let Some(want_srgb_curve) = want else {
+                assert!(
+                    got.is_none(),
+                    "{label}: a profile reached a render no profile in this \
+                     module describes, which is the one outcome this policy \
+                     calls worse than an unlabelled file"
+                );
+                continue;
+            };
+            let p = got.unwrap_or_else(|| panic!("{label}: no ICC profile in the file"));
+
+            // The curve, read out of the file's own tag table.
+            let trc = icc_tag(&p, b"rTRC").unwrap_or_else(|| panic!("{label}: no rTRC"));
+            assert_eq!(&trc[0..4], b"curv", "{label}: rTRC is not a curveType");
+            let count = u32::from_be_bytes(trc[4 + 4..4 + 8].try_into().unwrap()) as usize;
+            if want_srgb_curve {
+                assert!(
+                    count > 1,
+                    "{label}: the pixels carry the sRGB transfer curve but the \
+                     profile stores an identity/gamma TRC (count {count}). A \
+                     reader obeying this will linearise data that is already \
+                     linear."
+                );
+                let at = |i: usize| -> f64 {
+                    let o = 12 + 2 * i;
+                    f64::from(u16::from_be_bytes(trc[o..o + 2].try_into().unwrap())) / 65535.0
+                };
+                assert!(at(0).abs() < 1e-6, "{label}: TRC(0) = {}", at(0));
+                assert!(
+                    (at(count - 1) - 1.0).abs() < 1e-6,
+                    "{label}: TRC(1) = {}",
+                    at(count - 1)
+                );
+                // Mid-point 0.5 encoded is 0.2140 linear. 0.735 is the same
+                // curve stored backwards, and renders with wrong contrast
+                // while every structural check still passes.
+                let mid = at(count / 2);
+                assert!(
+                    (mid - 0.2140).abs() < 5e-3,
+                    "{label}: TRC(0.5) = {mid:.4}, expected the sRGB decoding \
+                     direction 0.2140 (0.735 means it is stored backwards)"
+                );
+            } else {
+                assert_eq!(
+                    count, 0,
+                    "{label}: the pixels are LINEAR but the profile stores a \
+                     {count}-point transfer curve. A reader obeying this \
+                     applies a decode that was never encoded."
+                );
+            }
+
+            // One curve for three channels, or the file has a colour cast that
+            // only a colour-managed reader sees.
+            for sig in [b"gTRC", b"bTRC"] {
+                assert_eq!(
+                    icc_tag(&p, sig).unwrap(),
+                    trc,
+                    "{label}: {} differs from rTRC",
+                    std::str::from_utf8(sig).unwrap()
+                );
+            }
+
+            // The human-readable half must agree with the machine-readable
+            // half. A profile named "gamma 1.0" carrying the sRGB curve is a
+            // mislabel a person would act on.
+            let desc = icc_tag(&p, b"desc").unwrap();
+            let name = String::from_utf8_lossy(&desc[12..]);
+            assert_eq!(
+                name.contains("gamma 1.0"),
+                !want_srgb_curve,
+                "{label}: profile description and profile curve disagree: {}",
+                name.split('\0').next().unwrap_or("")
+            );
+
+            // The primaries that landed in the file, against the derivation
+            // this module publishes. Catches a garbled or transposed matrix
+            // that survives the in-memory tests.
+            let want_m = srgb_to_xyz_d50();
+            for (c, sig) in [b"rXYZ", b"gXYZ", b"bXYZ"].into_iter().enumerate() {
+                let t = icc_tag(&p, sig).unwrap();
+                for r in 0..3 {
+                    let o = 8 + 4 * r;
+                    let v =
+                        f64::from(i32::from_be_bytes(t[o..o + 4].try_into().unwrap())) / 65536.0;
+                    assert!(
+                        (v - want_m[r][c]).abs() < 2e-5,
+                        "{label}: column {c} row {r} landed at {v:.6}, derived \
+                         {:.6}",
+                        want_m[r][c]
+                    );
+                }
+            }
+        }
+        let _ = std::fs::remove_dir(&dir);
     }
 }

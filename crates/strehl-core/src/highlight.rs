@@ -127,6 +127,29 @@ pub const KNEE_ENV: &str = "STREHL_HIGHLIGHT_KNEE";
 /// a mid-stack `foam` frame while red and blue were pinned 5x and 137x less
 /// often, and it is those frames' contribution, averaged into the merge, that
 /// leaves the surviving green deficit.
+///
+/// **What the knee reaches, and what it does not** (BUILD-OUTPUT, measured on
+/// the shipping binary against pin `b9b6921e`, `--srgb --auto-exposure`).
+/// The roll-off is what removes `dry-erase-marker-head-cpl`'s top-of-scale
+/// failure. That master had **0.9541 %** of pixels with blue at exactly 65535
+/// while red and green sat near 0.964 of full scale -- a bright near-white
+/// highlight whose blue channel reached the ceiling first, taking the hue with
+/// it. With the roll-off the same stack renders **0.0000 %**; with
+/// `STREHL_HIGHLIGHT_KNEE=off` it renders **0.6109 %**, reproducing the pinned
+/// binary's number to four decimals. That is a planted-defect / planted-fix
+/// pair on the real subject, not a synthetic one.
+///
+/// It does **not** reach `flowers-cpl`, and the reason is structural rather
+/// than a matter of tuning. Knees of 0.60, 0.45 and 0.30 all produce the same
+/// **0.4488 %** blue-at-65535 -- bit identical, not merely close. This module
+/// works in **camera space against the container ceiling**, so it only sees
+/// pixels the *sensor* drove near saturation. `flowers-cpl`'s blue reaches the
+/// ceiling only after `--auto-exposure` adds +1.9 stops and the tone stage
+/// re-normalises p99.9 luminance to 0.90, both of which happen downstream of
+/// this function. Lowering the knee cannot help: there is nothing here for it
+/// to act on. Anything that bounds that population has to live in the tone
+/// stage, where a single luminance-derived gain is applied to all three
+/// channels and therefore does not bound any one of them.
 pub const DEFAULT_KNEE: f32 = 0.60;
 
 /// Where the roll-off completes for a caller that has not stated its usable

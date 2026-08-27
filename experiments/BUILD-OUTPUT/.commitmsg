@@ -1,0 +1,77 @@
+BUILD-OUTPUT: bind the embedded ICC profile to the render that produced it
+
+The delivered SHIP-V2 gallery was measured first, on real bytes, with a
+from-scratch IFD walker (tifffile normalises a missing resolution to 1/1 and so
+cannot tell absent from present-and-default). All 26 masters carry NO ICC
+profile (34675 absent) and ResolutionUnit = 1 (none). The code at HEAD is
+already correct on all three colour modes -- 96b7e119 landed ICC, c14284a8
+landed resolution -- and the gallery simply predates both by hours. Routed to
+ORCH: the artifacts are stale, the writer is not.
+
+What the ICC tests could not see, each verified by planting the defect and
+watching the suite stay green:
+
+  * only_the_colorimetric_paths_get_a_profile ends with assert_ne!(srgb, lin).
+    An inequality fixes no identity: exchange the two arms of icc_for and every
+    assertion in the crate still passes while --srgb files carry the linear
+    profile. Prior lanes measured that swap at 50.39 DN mean over 99.5% of
+    pixels (BUILD-RENDER-icc/potency.py) and 92 DN (icc_potency.py ARM B).
+  * OutputSpace::Srgb.develop(None) was never covered -- an uncharacterised
+    body rendered --srgb, camera primaries carrying an sRGB curve, the mode
+    that looks most like sRGB and is least like it.
+  * icc_for matched on (matrix, srgb) only, so a development with the matrix
+    and a tone but no transfer curve -- s_curve applied in linear light -- fell
+    into the linear arm and got a profile describing something else.
+
+icc_for is now a total match on (matrix, srgb, tone), the third state
+answering None: the same wrong-profile-is-worse-than-none policy the
+camera-native paths already followed, applied one step further in.
+
+the_embedded_profile_states_the_transfer_curve_the_pixels_carry is new and is
+deliberately file-level: it writes a TIFF per mode, reads tag 34675 back out,
+and walks the ICC tag table as raw bytes rather than through a parser shared
+with the writer, which would agree with the writer by construction. It asserts
+the TRC is identity iff no curve was applied and sampled-sRGB (TRC(0.5) =
+0.2140, not 0.735) iff it was, that gTRC/bTRC alias rTRC, that the desc string
+and the curve agree, that the colorants match srgb_to_xyz_d50(), and that the
+tag is absent on the three modes nothing here can describe.
+
+Commissioned in experiments/BUILD-OUTPUT/commission_icc.ps1, four arms:
+
+  CLEAN     -> new test OK,     30 passed
+  SWAP      -> new test FAILED, all five pre-existing ICC tests ok
+  THIRDARM  -> new test FAILED, all five pre-existing ICC tests ok
+  BACKWARDS -> new test FAILED, all five pre-existing ICC tests ok
+
+On all three planted defects every pre-existing ICC test stayed green, so the
+new test is the only thing in the crate with power over any of them. THIRDARM
+reverts the improvement this commit makes and reads RED, which is the planted-
+improvement direction rule 2 requires. BACKWARDS turned up an unplanned
+finding: the_transfer_curve_is_stored_in_the_decoding_direction tests the
+helper srgb_eotf, not what lands in the file, and stays green when the inverse
+is inlined at the call site.
+
+Highlights and shadows, measured rather than argued (docs/research):
+
+  * dry-erase-marker-head-cpl's 0.3265% clip was real and is already fixed at
+    HEAD by the highlight roll-off: pin b9b6921e 0.6109%, HEAD with
+    STREHL_HIGHLIGHT_KNEE=off 0.6109% (four decimals), HEAD default 0.0000%.
+    Under alignment, 0.3265% -> 0.0000%. Its clipALL3 was 0.0000%, the corpus
+    minimum -- the gate failed the one master with zero blown highlights.
+  * flowers-cpl is not a highlight failure. clipALL3 0.0131%, while sixteen
+    subjects that PASSED have more, up to 112MSDCF at 0.0693%. A single source
+    frame carries 90% of it, --exposure 1.76 and --auto-exposure (+1.91) give
+    bit-identical statistics, and knees of 0.60/0.45/0.30 are bit-identical --
+    the roll-off works in camera space and cannot reach it. Recorded in
+    DEFAULT_KNEE's doc comment so the sweep is not re-run.
+  * All three crush subjects are innocent. crushALL3 is 0.0000% for 25 of 26
+    masters; the flagged pixels have median luminance 0.24-0.33 with 33k-53k
+    distinct surviving levels, against 0.0011 and 122 levels for flowers-cpl's
+    genuine black. The statistic is anti-correlated with the property it names
+    and must not earn an absolute threshold.
+
+Verified: strehl-core 510 passed / 0 failed; strehl-cli 110 passed / 0 failed;
+byte-freeze 5 passed, both rows HOLD at their recorded hashes, reproduced
+twice. The byte-freeze was checked rather than assumed -- both rows render
+camera-native through the untagged write_rgb16, but "should not move" is not a
+measurement.
