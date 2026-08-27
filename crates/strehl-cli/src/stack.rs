@@ -33,6 +33,7 @@ use std::time::Instant;
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
 use strehl_core::color::{self, AppliedExposure, Exposure};
+use strehl_core::defect_map::{Correction, CorrectionReport, DefectMap, HotFloor};
 use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;
 use strehl_core::noise::{Levels, NoiseModel, Provenance};
@@ -42,9 +43,7 @@ use strehl_core::stack::{Selection, speckle_fraction};
 use strehl_core::{CfaPlane, Error};
 use strehl_raw::Frame;
 
-use crate::image_out;
-
-/// Working-set ceiling used to size the worker pool. SYNTHESIS §3.2 ratchets
+use crate::image_out;/// Working-set ceiling used to size the worker pool. SYNTHESIS §3.2 ratchets
 /// peak RSS at 8 GB independent of frame count; this leaves headroom for the
 /// decoder's own scratch and the output buffers.
 ///
@@ -283,6 +282,19 @@ pub fn run(opts: &StackOptions) -> Result<()> {
 
     let live = AtomicUsize::new(0);
     let peak_live = AtomicUsize::new(0);
+    let defect = defect_plan_from_env(&noise)?;
+    if let Some(plan) = &defect {
+        eprintln!(
+            "defect map      : {} hot, {} dust quads, arms {} (floor {:.1} e-, gain {:.5} DN/e-)",
+            plan.map.hot.len(),
+            plan.map.dust.len(),
+            plan.correction,
+            plan.floor.0,
+            plan.gain_dn_per_e
+        );
+    } else {
+        eprintln!("defect map      : none (set STREHL_DEFECT_MAP to enable)");
+    }
     let ctx = FoldContext {
         geom,
         levels,
@@ -291,6 +303,7 @@ pub fn run(opts: &StackOptions) -> Result<()> {
         roi: opts.flat_roi,
         live: &live,
         peak_live: &peak_live,
+        defect: defect.as_ref(),
     };
 
     let t0 = Instant::now();
@@ -307,6 +320,51 @@ pub fn run(opts: &StackOptions) -> Result<()> {
         })
         .expect("at least one chunk")?;
     let stack_secs = t0.elapsed().as_secs_f64();
+
+    // Rule: print, then TEST. This is not a decoration -- the partition is
+    // checked, and a report that does not sum is a hard error, because a
+    // correction count you cannot reconcile against the map size is exactly
+    // the "corrected: 0 vs examined: 0" ambiguity the rule exists to forbid.
+    if defect.is_some() {
+        let d = &merged.defect;
+        let (hot_ok, dust_ok) = d.check_partition();
+        eprintln!("--- defect correction (MEASURED) ---");
+        eprintln!(
+            "hot             : examined {}, corrected {}, below floor {}, clipped {}, outside {}, no change {}",
+            d.hot_examined,
+            d.hot_corrected,
+            d.hot_below_floor,
+            d.hot_clipped,
+            d.hot_outside,
+            d.hot_no_change
+        );
+        eprintln!(
+            "dust            : examined {}, corrected {}, clipped {}, outside {}, no change {}",
+            d.dust_examined, d.dust_corrected, d.dust_clipped, d.dust_outside, d.dust_no_change
+        );
+        eprintln!(
+            "samples changed : {} over {} frames ({:.1} per frame)",
+            d.samples_changed,
+            paths.len(),
+            d.samples_changed as f64 / paths.len() as f64
+        );
+        eprintln!();
+        ensure!(
+            hot_ok && dust_ok,
+            "defect correction report does not partition: hot {} vs {}+{}+{}+{}+{}, dust {} vs {}+{}+{}+{}",
+            d.hot_examined,
+            d.hot_corrected,
+            d.hot_below_floor,
+            d.hot_clipped,
+            d.hot_outside,
+            d.hot_no_change,
+            d.dust_examined,
+            d.dust_corrected,
+            d.dust_clipped,
+            d.dust_outside,
+            d.dust_no_change
+        );
+    }
 
     let n = merged.selection.frames_folded() as f64;
     ensure!(
@@ -527,6 +585,10 @@ struct Partial {
     flat_frames: Vec<(u16, FrameFlat)>,
     decode_secs: f64,
     fold_secs: f64,
+    /// Totalled over every frame this chunk decoded. All zero, and
+    /// `hot_examined == dust_examined == 0`, when no map was supplied — which
+    /// is what makes "no map" distinguishable from "map found nothing".
+    defect: CorrectionReport,
 }
 
 impl Partial {
@@ -538,6 +600,7 @@ impl Partial {
         self.flat_frames.extend(other.flat_frames);
         self.decode_secs += other.decode_secs;
         self.fold_secs += other.fold_secs;
+        self.defect.absorb(&other.defect);
         Ok(())
     }
 }
@@ -553,6 +616,76 @@ struct FoldContext<'a> {
     roi: Option<Roi>,
     live: &'a AtomicUsize,
     peak_live: &'a AtomicUsize,
+    /// The sensor defect map and which arms of it to run, or `None` when no
+    /// map was supplied. Borrowed like the noise model, for the same reason.
+    defect: Option<&'a DefectPlan>,
+}
+
+/// A loaded defect map plus the decisions about how to apply it.
+///
+/// Built once in [`run`] and borrowed by every worker. `gain_dn_per_e` is taken
+/// from the injected [`NoiseModel`] rather than re-derived, so the electrons in
+/// the map are converted through the same calibration as everything else in
+/// the pipeline (`AGENTS.md` rule 3).
+struct DefectPlan {
+    map: DefectMap,
+    correction: Correction,
+    floor: HotFloor,
+    gain_dn_per_e: f32,
+}
+
+/// Read the defect-map configuration from the environment.
+///
+/// **`STREHL_DEFECT_MAP` unset means OFF, and off means byte-identical.** That
+/// is not timidity, it is the only defensible default: the map is a property of
+/// one camera body, this binary has no way to check that the frames it is
+/// stacking came from that body, and the two renders pinned in
+/// `crates/strehl-cli/tests/byte-freezes.tsv` must not move because a
+/// calibration file happened to be lying next to the binary.
+///
+/// - `STREHL_DEFECT_MAP=<path>` — load that map. A missing or malformed file is
+///   a **hard error**, never a silent skip: the user asked for a correction and
+///   an uncorrected render that says nothing is the worst available outcome.
+/// - `STREHL_DEFECT_ARM=none|hot|dust|both` — which arms. Defaults to `dust`,
+///   because the hot arm is a measured null on this body (M101) and switching
+///   it on by default would spend 14,626 writes per frame to move nothing.
+///   **A typo is an error**, not a fallback.
+/// - `STREHL_DEFECT_HOT_FLOOR=<electrons>` — amplitude floor for the hot arm.
+///   Defaults to [`HotFloor::REPRODUCIBLE`] (8 e-), the lowest stratum measured
+///   to reproduce 1.000 across an independent half of the same darks.
+fn defect_plan_from_env(noise: &NoiseModel) -> Result<Option<DefectPlan>> {
+    let Some(path) = std::env::var_os("STREHL_DEFECT_MAP") else {
+        return Ok(None);
+    };
+    let path = PathBuf::from(path);
+    if path.as_os_str().is_empty() {
+        return Ok(None);
+    }
+    let map = DefectMap::load(&path)
+        .with_context(|| format!("loading the defect map {}", path.display()))?;
+
+    let arm = std::env::var("STREHL_DEFECT_ARM").unwrap_or_else(|_| "dust".into());
+    let correction = Correction::parse(&arm).with_context(|| {
+        format!("STREHL_DEFECT_ARM={arm:?} (the arms are \"none\", \"hot\", \"dust\", \"both\")")
+    })?;
+
+    let floor = match std::env::var("STREHL_DEFECT_HOT_FLOOR") {
+        Ok(s) => HotFloor(s.trim().parse::<f32>().with_context(|| {
+            format!("STREHL_DEFECT_HOT_FLOOR={s:?} is not a number of electrons")
+        })?),
+        Err(_) => HotFloor::default(),
+    };
+
+    // The hot arm's amplitudes are stored in electrons precisely so that this
+    // conversion happens once, here, against the injected model.
+    let gain_dn_per_e = noise.plane(CfaPlane::G1).gain_dn_per_e;
+
+    Ok(Some(DefectPlan {
+        map,
+        correction,
+        floor,
+        gain_dn_per_e,
+    }))
 }
 
 impl FoldContext<'_> {
@@ -563,6 +696,7 @@ impl FoldContext<'_> {
         let mut middle_roi = None;
         let mut flat_frames = Vec::with_capacity(chunk.len());
         let (mut decode_secs, mut fold_secs) = (0.0, 0.0);
+        let mut defect_total = CorrectionReport::default();
 
         for (offset, path) in chunk.iter().enumerate() {
             let index = first_index + offset as u16;
@@ -578,6 +712,41 @@ impl FoldContext<'_> {
                 }
             };
             decode_secs += t.elapsed().as_secs_f64();
+
+            // ---- sensor defect correction, in SENSOR coordinates ----------
+            //
+            // This is the whole ordering claim, and it is why the call sits
+            // here and not three stages later: the map's coordinates name
+            // photosites, and after any geometric warp they no longer do. This
+            // baseline applies no warp at all, so the ordering is trivially
+            // satisfied here; the shipping `merge` path must make the same call
+            // immediately after its own decode and before `warp_frame_in_place`.
+            // `dust_correction_must_precede_the_warp_to_land_on_the_defect` in
+            // `strehl_core::defect_map` is the planted control for the claim.
+            let mut frame = frame;
+            if let Some(plan) = self.defect {
+                let active = (
+                    frame.active.x,
+                    frame.active.y,
+                    frame.active.width,
+                    frame.active.height,
+                );
+                let report = plan
+                    .map
+                    .apply(
+                        &mut frame.data,
+                        frame.stride,
+                        active,
+                        frame.levels.black as f32,
+                        frame.levels.white,
+                        plan.gain_dn_per_e,
+                        plan.correction,
+                        plan.floor,
+                    )
+                    .with_context(|| format!("defect correction on frame {index}"))?;
+                defect_total.absorb(&report);
+            }
+            let frame = frame;
 
             let t = Instant::now();
             let result = self.fold_one(
@@ -603,6 +772,7 @@ impl FoldContext<'_> {
             flat_frames,
             decode_secs,
             fold_secs,
+            defect: defect_total,
         })
     }
 

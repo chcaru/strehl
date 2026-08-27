@@ -1,0 +1,72 @@
+[  10.0s]   bee-1-cpl: 8 frames, rms 4.2340%
+[  20.1s]   bee-3-cpl: 8 frames, rms 3.9306%
+[  30.8s]   coffee-bean: 8 frames, rms 8.7717%
+[  37.9s]   couch-fibers-cpl: 8 frames, rms 0.9612%
+[  45.0s]   dry-erase-marker-head-cpl: 8 frames, rms 3.3161%
+[  52.3s]   flower-bud-alone-cpl: 8 frames, rms 5.6378%
+[  62.0s]   flower-inner-edge-cpl: 8 frames, rms 3.9618%
+[  69.3s]   lavendar-cpl: 8 frames, rms 2.0932%
+[  76.5s]   leaf-2-cpl: 8 frames, rms 2.1494%
+[  86.7s]   pencil-steep-angle-cpl: 8 frames, rms 1.4058%
+[  94.5s]   tweezers-cpl: 8 frames, rms 8.3385%
+[ 104.0s]   wrapped-text-1: 8 frames, rms 9.3928%
+[ 105.5s] k=12 subjects, pooled rms 0.5600%, all-negative 21504 quads (0.2611%, chance 2^-12 = 0.0244%)
+[ 107.9s] null all-negative [1131, 1733, 1129] quads
+[ 114.6s]   seed  0.75% floor  0.50%: real 102, null [6, 22, 11], plant MISSED
+[ 114.6s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 114.6s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 114.6s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 114.6s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 114.6s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 114.6s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 121.0s]   seed  0.75% floor  0.75%: real  88, null [3, 18, 7], plant MISSED
+[ 121.0s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 121.0s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 121.0s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 121.0s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 121.0s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 121.0s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 125.8s]   seed  1.00% floor  0.50%: real  80, null [4, 18, 8], plant MISSED
+[ 125.8s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 125.8s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 125.8s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 125.8s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 125.8s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 125.8s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 130.6s]   seed  1.00% floor  0.75%: real  77, null [3, 17, 7], plant MISSED
+[ 130.6s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 130.6s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 130.6s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 130.6s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 130.6s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 130.6s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 133.8s]   seed  1.50% floor  0.50%: real  59, null [1, 4, 0], plant MISSED
+[ 133.8s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 133.8s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 133.8s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 133.8s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 133.8s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 133.8s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 137.1s]   seed  1.50% floor  0.75%: real  60, null [1, 4, 0], plant MISSED
+[ 137.1s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 137.1s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 137.1s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 137.1s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 137.1s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 137.1s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 139.6s]   seed  2.00% floor  0.50%: real  50, null [0, 0, 0], plant MISSED
+[ 139.6s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 139.6s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 139.6s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 139.6s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 139.6s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 139.6s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 142.1s]   seed  2.00% floor  0.75%: real  51, null [0, 0, 0], plant MISSED
+[ 142.1s]       area 1052 at (1431, 932) median -5.513% worst -8.151%
+[ 142.1s]       area   14 at (1390, 945) median -5.489% worst -5.711%
+[ 142.1s]       area  105 at (1387, 931) median -4.001% worst -4.540%
+[ 142.1s]       area   31 at (2690,1021) median -3.837% worst -4.335%
+[ 142.1s]       area   14 at (2666,1082) median -3.804% worst -4.652%
+[ 142.1s]       area   22 at (2233,1752) median -3.735% worst -4.608%
+[ 142.1s] SHIPPING SETTING: NONE -- no setting is both null-clean and not blind
+[ 142.1s] wrote data/11-photograph-dust-k12.json

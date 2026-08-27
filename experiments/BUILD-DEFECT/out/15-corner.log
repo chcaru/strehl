@@ -1,0 +1,52 @@
+[  50.2s]   bee-1-cpl: 8 frames
+[  96.5s]   bee-3-cpl: 8 frames
+[ 146.9s]   coffee-bean: 8 frames
+[ 196.8s]   couch-fibers-cpl: 8 frames
+[ 227.1s]   dry-erase-marker-head-cpl: 8 frames
+[ 259.3s]   flower-bud-alone-cpl: 8 frames
+[ 290.9s]   flower-inner-edge-cpl: 8 frames
+[ 308.6s]   lavendar-cpl: 8 frames
+[ 326.0s]   leaf-2-cpl: 8 frames
+[ 345.6s]   pencil-steep-angle-cpl: 8 frames
+[ 361.8s]   tweezers-cpl: 8 frames
+[ 380.5s]   wrapped-text-1: 8 frames
+[ 385.5s] k=12, pooled rms 0.5600%
+[ 385.5s] 
+[ 385.5s] COMMISSIONING, per location:
+[ 385.5s]   A-midframe PLANTED -2.5%  (want RED) core -1.8022%  null med -0.2178% p1 -5.0085%   47/400  p=0.1197
+[ 385.5s]   A-midframe unplanted     (want GREEN) core +0.5759%  null med -0.2524% p1 -5.0965%  375/400  p=0.9377
+[ 385.5s]   A-midframe BRIGHTENED +2.5%          core +3.0759%  null med -0.2635% p1 -5.0192%  400/400  p=1.0000
+[ 385.5s]   -> A-midframe: uncorrected FAIL, Bonferroni (green bar p > 0.0167) FAIL
+[ 385.5s] 
+[ 385.5s]   B-corner PLANTED -2.5%  (want RED)   core -2.5016%  null med +0.0519% p1 -0.4343%    0/400  p=0.0025
+[ 385.5s]   B-corner unplanted     (want GREEN)  core -0.1389%  null med +0.0458% p1 -0.3214%   16/400  p=0.0424
+[ 385.6s]   B-corner BRIGHTENED +2.5%            core +2.3611%  null med +0.0520% p1 -0.5050%  400/400  p=1.0000
+[ 385.6s]   -> B-corner: uncorrected FAIL, Bonferroni (green bar p > 0.0167) PASS
+[ 385.6s] 
+[ 385.6s]   C-corner PLANTED -2.5%  (want RED)   core -2.1785%  null med +0.0437% p1 -0.2260%    0/400  p=0.0025
+[ 385.6s]   C-corner unplanted     (want GREEN)  core +0.1909%  null med +0.0505% p1 -0.2415%  387/400  p=0.9676
+[ 385.6s]   C-corner BRIGHTENED +2.5%            core +2.6909%  null med +0.0531% p1 -0.3381%  400/400  p=1.0000
+[ 385.6s]   -> C-corner: uncorrected PASS, Bonferroni (green bar p > 0.0167) PASS
+[ 385.6s] 
+[ 385.6s]   E-corner PLANTED -2.5%  (want RED)   core -2.3959%  null med +0.0240% p1 -0.2943%    0/400  p=0.0025
+[ 385.6s]   E-corner unplanted     (want GREEN)  core -0.0303%  null med +0.0240% p1 -0.2689%  115/400  p=0.2893
+[ 385.7s]   E-corner BRIGHTENED +2.5%            core +2.4697%  null med +0.0255% p1 -0.2925%  400/400  p=1.0000
+[ 385.7s]   -> E-corner: uncorrected PASS, Bonferroni (green bar p > 0.0167) PASS
+[ 385.7s] 
+[ 385.7s] corner arms, uncorrected gate: False; Bonferroni gate: True   (mid-frame arm: False, kept as the evidence that this procedure has a scope)
+[ 385.7s] 
+[ 385.7s] THE FOUR FLATS-NOMINATED MOTES, scored in the PHOTOGRAPHS:
+[ 385.7s]   flats  396 quads at (3192,109)       core +0.2001%  null med +0.0370% p1 -0.3969%  396/400  p=0.9900
+[ 385.8s]     relocated to (3202,121)            core -3.6303%  null med +0.0449% p1 -0.2497%    0/400  p=0.0025
+[ 385.8s]       (moved 16 quads)
+[ 385.8s]   flats  127 quads at (3210,136)       core +0.1571%  null med +0.0312% p1 -0.2756%  380/400  p=0.9501
+[ 385.8s]     relocated to (3202,120)            core -3.6303%  null med +0.0413% p1 -0.3506%    0/400  p=0.0025
+[ 385.8s]       (moved 18 quads)
+[ 385.8s]   flats   66 quads at (3440,2281)      core +0.5398%  null med -0.0119% p1 -0.2736%  400/400  p=1.0000
+[ 385.9s]     relocated to (3434,2305)           core -8.2359%  null med -0.0111% p1 -0.4025%    0/400  p=0.0025
+[ 385.9s]       (moved 25 quads)
+[ 385.9s]   flats   29 quads at (3209,116)       core -3.1952%  null med +0.0451% p1 -0.5450%    0/400  p=0.0025
+[ 385.9s]     relocated to (3201,122)            core -3.6272%  null med +0.0310% p1 -0.3030%    0/400  p=0.0025
+[ 385.9s]       (moved 10 quads)
+[ 386.0s] 
+[ 386.0s] wrote data/15-corner.json

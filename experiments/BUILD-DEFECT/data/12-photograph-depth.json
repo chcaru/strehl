@@ -1,0 +1,241 @@
+{
+ "subjects": [
+  "bee-1-cpl",
+  "bee-3-cpl",
+  "coffee-bean",
+  "couch-fibers-cpl",
+  "dry-erase-marker-head-cpl",
+  "flower-bud-alone-cpl",
+  "flower-inner-edge-cpl",
+  "lavendar-cpl",
+  "leaf-2-cpl",
+  "pencil-steep-angle-cpl",
+  "tweezers-cpl",
+  "wrapped-text-1"
+ ],
+ "k": 12,
+ "sweep": [
+  {
+   "seed_pct": 1.0,
+   "floor_pct": 0.75,
+   "real": 826,
+   "null": [
+    363,
+    434,
+    423
+   ],
+   "plant_found": true,
+   "plant_area": 347,
+   "plant_median_pct": -1.6731834039092064
+  },
+  {
+   "seed_pct": 1.0,
+   "floor_pct": 1.0,
+   "real": 930,
+   "null": [
+    261,
+    360,
+    354
+   ],
+   "plant_found": true,
+   "plant_area": 317,
+   "plant_median_pct": -1.7025813460350037
+  },
+  {
+   "seed_pct": 1.5,
+   "floor_pct": 0.75,
+   "real": 213,
+   "null": [
+    66,
+    89,
+    90
+   ],
+   "plant_found": true,
+   "plant_area": 347,
+   "plant_median_pct": -1.6731834039092064
+  },
+  {
+   "seed_pct": 1.5,
+   "floor_pct": 1.0,
+   "real": 353,
+   "null": [
+    88,
+    109,
+    121
+   ],
+   "plant_found": true,
+   "plant_area": 317,
+   "plant_median_pct": -1.7025813460350037
+  },
+  {
+   "seed_pct": 1.5,
+   "floor_pct": 1.5,
+   "real": 550,
+   "null": [
+    104,
+    90,
+    134
+   ],
+   "plant_found": true,
+   "plant_area": 242,
+   "plant_median_pct": -1.7848014831542969
+  },
+  {
+   "seed_pct": 2.0,
+   "floor_pct": 0.75,
+   "real": 87,
+   "null": [
+    29,
+    22,
+    34
+   ],
+   "plant_found": true,
+   "plant_area": 347,
+   "plant_median_pct": -1.6731834039092064
+  },
+  {
+   "seed_pct": 2.0,
+   "floor_pct": 1.0,
+   "real": 126,
+   "null": [
+    34,
+    25,
+    36
+   ],
+   "plant_found": true,
+   "plant_area": 317,
+   "plant_median_pct": -1.7025813460350037
+  },
+  {
+   "seed_pct": 2.0,
+   "floor_pct": 1.5,
+   "real": 259,
+   "null": [
+    46,
+    38,
+    64
+   ],
+   "plant_found": true,
+   "plant_area": 242,
+   "plant_median_pct": -1.7848014831542969
+  },
+  {
+   "seed_pct": 2.5,
+   "floor_pct": 0.75,
+   "real": 41,
+   "null": [
+    14,
+    8,
+    19
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 2.5,
+   "floor_pct": 1.0,
+   "real": 55,
+   "null": [
+    15,
+    8,
+    20
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 2.5,
+   "floor_pct": 1.5,
+   "real": 87,
+   "null": [
+    17,
+    10,
+    27
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 3.0,
+   "floor_pct": 0.75,
+   "real": 27,
+   "null": [
+    3,
+    6,
+    11
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 3.0,
+   "floor_pct": 1.0,
+   "real": 36,
+   "null": [
+    3,
+    6,
+    12
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 3.0,
+   "floor_pct": 1.5,
+   "real": 49,
+   "null": [
+    3,
+    6,
+    15
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 4.0,
+   "floor_pct": 0.75,
+   "real": 14,
+   "null": [
+    1,
+    0,
+    4
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 4.0,
+   "floor_pct": 1.0,
+   "real": 19,
+   "null": [
+    1,
+    0,
+    4
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  },
+  {
+   "seed_pct": 4.0,
+   "floor_pct": 1.5,
+   "real": 24,
+   "null": [
+    1,
+    0,
+    4
+   ],
+   "plant_found": false,
+   "plant_area": 0,
+   "plant_median_pct": null
+  }
+ ],
+ "chosen": null
+}

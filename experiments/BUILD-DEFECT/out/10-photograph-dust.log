@@ -1,0 +1,24 @@
+[  12.7s]   bee-3-cpl: 10 frames
+[  24.6s]   flower-inner-edge-cpl: 10 frames
+[  37.4s]   wrapped-text-1: 10 frames
+[  46.2s]   dry-erase-marker-head-cpl: 10 frames
+[  56.5s]   lavendar-cpl: 10 frames
+[  66.7s]   couch-fibers-cpl: 10 frames
+[  69.1s] pooled rms 0.8570%, null rms 0.6870%
+[ 206.6s]   seed  0.50% floor  0.50%: real 102 components, null [23, 42, 20]
+[ 225.3s]   seed  0.75% floor  0.50%: real  46 components, null [13, 27, 8]
+[ 305.1s]   seed  0.75% floor  0.75%: real  65 components, null [25, 40, 24]
+[ 312.6s]   seed  1.00% floor  0.50%: real  26 components, null [8, 10, 4]
+[ 328.3s]   seed  1.00% floor  0.75%: real  43 components, null [15, 22, 11]
+[ 383.3s]   seed  1.00% floor  1.00%: real  60 components, null [27, 41, 12]
+[ 386.3s]   seed  1.50% floor  0.50%: real  10 components, null [3, 7, 2]
+[ 390.6s]   seed  1.50% floor  0.75%: real  16 components, null [6, 10, 2]
+[ 397.2s]   seed  1.50% floor  1.00%: real  22 components, null [10, 15, 5]
+[ 399.1s]   seed  2.00% floor  0.50%: real   9 components, null [3, 3, 1]
+[ 401.5s]   seed  2.00% floor  0.75%: real  14 components, null [4, 5, 2]
+[ 404.5s]   seed  2.00% floor  1.00%: real  16 components, null [8, 3, 4]
+[ 405.5s]   seed  3.00% floor  0.50%: real   5 components, null [3, 2, 1]
+[ 406.7s]   seed  3.00% floor  0.75%: real   8 components, null [3, 3, 1]
+[ 408.0s]   seed  3.00% floor  1.00%: real   8 components, null [4, 1, 2]
+[ 408.0s] SHIPPING SETTING: NONE -- no setting is both null-clean and not blind
+[ 408.0s] wrote data/10-photograph-dust.json and out/10-pooled.npy

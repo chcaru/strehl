@@ -14,6 +14,7 @@ pub mod align;
 pub mod boxfilter;
 pub mod clip;
 pub mod color;
+pub mod defect_map;
 pub mod demosaic;
 pub mod edgeaware;
 pub mod election_coherence;

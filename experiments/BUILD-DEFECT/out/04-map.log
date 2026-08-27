@@ -1,0 +1,32 @@
+[   0.0s] loading the per-capture high-passed residual stack
+[   0.2s]     18 captures, 3514 x 2344 quads
+[   0.2s] REAL arm
+[   2.1s]     [real] border-excluded 359352  recurrent 941  deep 936  components 17  too-small 16  kept 917
+[   2.1s] NULL arm (all 18 captures rolled independently)
+[   5.0s]     [null0] border-excluded 359352  recurrent 0  deep 0  components 0  too-small 0  kept 0
+[   7.9s]     [null1] border-excluded 359352  recurrent 0  deep 0  components 0  too-small 0  kept 0
+[   7.9s]     null kept quads: [0, 0]  vs real 917
+[   7.9s] plant calibration of the high-pass attenuation
+[   9.1s]     radius   5 quads (area     81)  planted  2.00%  recovered  1.98%  alpha 0.9881
+[   9.9s]     radius   5 quads (area     81)  planted  3.50%  recovered  3.46%  alpha 0.9882
+[  11.0s]     radius  10 quads (area    317)  planted  2.00%  recovered  1.91%  alpha 0.9541
+[  11.8s]     radius  10 quads (area    317)  planted  3.50%  recovered  3.34%  alpha 0.9547
+[  12.6s]     radius  22 quads (area   1517)  planted  2.00%  recovered  1.60%  alpha 0.7982
+[  13.5s]     radius  22 quads (area   1517)  planted  3.50%  recovered  2.80%  alpha 0.8007
+[  14.4s]     radius  44 quads (area   6077)  planted  2.00%  recovered  0.84%  alpha 0.4219
+[  15.3s]     radius  44 quads (area   6077)  planted  3.50%  recovered  1.49%  alpha 0.4257
+[  15.3s] building the dust site list
+[  15.3s]     917 dust quads in 1 components; 0 quads refused for an out-of-range gain
+[  15.3s]       comp area    917 (d~ 34.2 quads)  at (  3435,  2299)  median  -2.38%  worst  -3.07%  alpha 0.876  gain 1.0279
+[  15.3s] building the hot site list
+[  15.4s]     22 hot sites  {'R': 4, 'G1': 7, 'G2': 7, 'B': 4}
+[  15.4s]           0-    2 e- :      0
+[  15.4s]           2-    4 e- :     12
+[  15.4s]           4-    8 e- :     10
+[  15.4s]           8-   16 e- :      0
+[  15.4s]          16-1000000000 e- :      0
+[  15.4s]     at the reproducible floor (>= 8 e-): 0
+[  15.4s]     partition sums to 8236816 of 8236816  (OK)
+[  15.4s] writing C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\out\defect-map-ILCE-7CM2.txt
+[  15.4s]     0.02 MB
+[  15.4s] wrote data/04-map.json

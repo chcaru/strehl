@@ -1,0 +1,138 @@
+{
+ "roll": {
+  "real": 14073,
+  "full_roll_trials": [
+   0,
+   0,
+   0
+  ],
+  "full_roll_mean": 0.0,
+  "half_roll_reproduced": 9966,
+  "enrichment": 14073000000000.0
+ },
+ "components": {
+  "n": 1314,
+  "singletons": 885,
+  "px_in_singletons": 885,
+  "ge5": 90,
+  "px_in_ge5": 12343,
+  "largest": 3231
+ },
+ "bandpass_sweep": {
+  "0.005": {
+   "px": 121873,
+   "components": 132,
+   "components_ge25": 21,
+   "null_px": 0,
+   "null_components_ge25": 0
+  },
+  "0.0075": {
+   "px": 77297,
+   "components": 77,
+   "components_ge25": 22,
+   "null_px": 0,
+   "null_components_ge25": 0
+  },
+  "0.01": {
+   "px": 47419,
+   "components": 61,
+   "components_ge25": 7,
+   "null_px": 0,
+   "null_components_ge25": 0
+  },
+  "0.015": {
+   "px": 12737,
+   "components": 76,
+   "components_ge25": 11,
+   "null_px": 0,
+   "null_components_ge25": 0
+  },
+  "0.02": {
+   "px": 4180,
+   "components": 22,
+   "components_ge25": 9,
+   "null_px": 0,
+   "null_components_ge25": 0
+  }
+ },
+ "motes": [
+  {
+   "rank": 0,
+   "size_px": 35794,
+   "centre_plane_yx": [
+    1167,
+    20
+   ],
+   "centre_sensor_yx": [
+    2334,
+    40
+   ],
+   "min_band": -0.01433759555220604
+  },
+  {
+   "rank": 1,
+   "size_px": 35268,
+   "centre_plane_yx": [
+    1118,
+    3498
+   ],
+   "centre_sensor_yx": [
+    2236,
+    6996
+   ],
+   "min_band": -0.014142285101115704
+  },
+  {
+   "rank": 2,
+   "size_px": 1481,
+   "centre_plane_yx": [
+    2305,
+    3433
+   ],
+   "centre_sensor_yx": [
+    4610,
+    6866
+   ],
+   "min_band": -0.035058025270700455
+  },
+  {
+   "rank": 3,
+   "size_px": 1341,
+   "centre_plane_yx": [
+    2339,
+    3328
+   ],
+   "centre_sensor_yx": [
+    4678,
+    6656
+   ],
+   "min_band": -0.013036537915468216
+  },
+  {
+   "rank": 4,
+   "size_px": 544,
+   "centre_plane_yx": [
+    110,
+    3194
+   ],
+   "centre_sensor_yx": [
+    220,
+    6388
+   ],
+   "min_band": -0.010230984538793564
+  },
+  {
+   "rank": 5,
+   "size_px": 398,
+   "centre_plane_yx": [
+    2,
+    3219
+   ],
+   "centre_sensor_yx": [
+    4,
+    6438
+   ],
+   "min_band": -0.010969302617013454
+  }
+ ]
+}

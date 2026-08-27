@@ -1,0 +1,21 @@
+[   0.2s] 18 captures, 3514x2344 quads, border 60
+[   2.7s]     border 688560  recurrent 948  deep 886  components 101  too small 97  kept 618
+[   2.7s] plant calibration of the high-pass attenuation, by disc area
+[   3.9s]     radius   3  area     29  planted  2.50%  recovered  2.49%  alpha 0.9957
+[   4.9s]     radius   5  area     81  planted  2.50%  recovered  2.47%  alpha 0.9881
+[   5.6s]     radius   8  area    197  planted  2.50%  recovered  2.43%  alpha 0.9713
+[   6.8s]     radius  12  area    441  planted  2.50%  recovered  2.34%  alpha 0.9369
+[   8.0s]     radius  18  area   1009  planted  2.50%  recovered  2.15%  alpha 0.8613
+[   9.3s]     radius  25  area   1961  planted  2.50%  recovered  1.87%  alpha 0.7476
+[  10.7s]     radius  35  area   3853  planted  2.50%  recovered  1.43%  alpha 0.5705
+[  10.7s]     mote area   396 (d~ 22.5) at (  3192,   109) edge   98  median  -0.90%  worst  -1.41%  seen 15.0/18  alpha 0.943  gain med 1.0097 max 1.0152
+[  10.7s]     mote area   127 (d~ 12.7) at (  3210,   136) edge  128  median  -0.90%  worst  -1.48%  seen 15.0/18  alpha 0.981  gain med 1.0093 max 1.0154
+[  10.8s]     mote area    66 (d~  9.2) at (  3440,  2281) edge   60  median  -1.32%  worst  -2.66%  seen 18.0/18  alpha 0.990  gain med 1.0136 max 1.0276
+[  10.8s]     mote area    29 (d~  6.1) at (  3209,   116) edge  112  median  -0.87%  worst  -1.24%  seen 15.0/18  alpha 0.996  gain med 1.0088 max 1.0127
+[  10.8s]     618 dust quads, 0 refused for gain range
+[  11.0s]     14626 hot sites {'R': 111, 'G1': 125, 'G2': 8157, 'B': 6233}
+[  11.0s]     amplitude ladder (e-): {'0-2': 124, '2-4': 9532, '4-8': 4859, '8-16': 105, '16-1000000000': 6}
+[  11.0s]     at the reproducible floor (>= 8 e-): 111
+[  11.0s]     partition 8236816 of 8236816  OK
+[  11.1s] wrote C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\out\defect-map-ILCE-7CM2.txt  0.286 MB
+[  11.1s] wrote data/08-map.json

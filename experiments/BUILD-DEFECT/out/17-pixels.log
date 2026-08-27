@@ -1,0 +1,10 @@
+[   0.1s] off (4688, 7032, 3) uint16, on (4688, 7032, 3) uint16
+[   0.5s] pixels differing: 16039 of 32966016 (0.048653%)
+[   0.5s] changed bounding box: x 6350..6927, y 184..4667
+[   0.6s] max |delta| = 3974 DN of 65535
+[   0.6s]   mote (3202,121): core   62669.3 ->   63184.1 = x1.00821   surround   63315.9 ->   63325.6 = x1.00015
+[   0.6s]   mote (3434,2305): core   51764.7 ->   53522.4 = x1.03395   surround   53787.1 ->   53842.5 = x1.00103
+[   0.6s]   CONTROL (1600,1000):   26160.2 ->   26160.2, bit-identical: True
+[   0.6s] untouched: 99.9513% of the frame
+[   0.6s] VERDICT: PASS
+[   0.7s] wrote data/17-pixels.json

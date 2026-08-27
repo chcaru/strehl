@@ -1,0 +1,41 @@
+[   1.9s] 18 captures, 3514x2344, border 60, min component 25
+[   1.9s] building the independent-roll null stack
+[   3.9s] sweep: seed x recurrence x floor, real vs null
+[   4.3s]     seed 0.25%  recur 12/18  floor 0.50%  ->  real  9 comp /   2111 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   4.4s]     seed 0.25%  recur 12/18  floor 0.75%  ->  real  3 comp /    748 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   4.5s]     seed 0.25%  recur 15/18  floor 0.50%  ->  real  8 comp /   1790 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   4.6s]     seed 0.25%  recur 15/18  floor 0.75%  ->  real  3 comp /    737 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   4.7s]     seed 0.25%  recur 18/18  floor 0.50%  ->  real  2 comp /    116 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   4.7s]     seed 0.25%  recur 18/18  floor 0.75%  ->  real  2 comp /    109 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   5.1s]     seed 0.50%  recur 12/18  floor 0.50%  ->  real  2 comp /   1357 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   5.2s]     seed 0.50%  recur 12/18  floor 0.75%  ->  real  3 comp /    722 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   5.3s]     seed 0.50%  recur 15/18  floor 0.50%  ->  real  4 comp /    618 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   5.4s]     seed 0.50%  recur 15/18  floor 0.75%  ->  real  3 comp /    472 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   5.4s]     seed 0.50%  recur 18/18  floor 0.50%  ->  real  1 comp /     39 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   5.5s]     seed 0.50%  recur 18/18  floor 0.75%  ->  real  1 comp /     39 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   5.9s]     seed 0.75%  recur 12/18  floor 0.50%  ->  real  4 comp /    491 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.0s]     seed 0.75%  recur 12/18  floor 0.75%  ->  real  3 comp /    397 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.1s]     seed 0.75%  recur 15/18  floor 0.50%  ->  real  1 comp /     52 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.2s]     seed 0.75%  recur 15/18  floor 0.75%  ->  real  1 comp /     51 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.3s]     seed 0.75%  recur 18/18  floor 0.50%  ->  real  0 comp /      0 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.4s]     seed 0.75%  recur 18/18  floor 0.75%  ->  real  0 comp /      0 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.7s]     seed 1.00%  recur 12/18  floor 0.50%  ->  real  1 comp /     44 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.8s]     seed 1.00%  recur 12/18  floor 0.75%  ->  real  1 comp /     44 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   6.9s]     seed 1.00%  recur 15/18  floor 0.50%  ->  real  1 comp /     39 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   7.0s]     seed 1.00%  recur 15/18  floor 0.75%  ->  real  1 comp /     39 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   7.1s]     seed 1.00%  recur 18/18  floor 0.50%  ->  real  0 comp /      0 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   7.2s]     seed 1.00%  recur 18/18  floor 0.75%  ->  real  0 comp /      0 quads   null  0 comp /      0 quads   ADMISSIBLE
+[   7.2s]     24 of 24 settings admissible
+[   7.2s]     real component counts among admissible settings: [0, 1, 2, 3, 4, 8, 9]
+[   7.2s] most permissive admissible setting: seed 0.25%  recur 12/18  floor 0.50%
+[   7.5s]     area  1465 (d~ 43.2 quads) at (  3200,   119) edge   98  median  -0.77%  worst  -1.48%  seen 17.0/18 (min 12)
+[   7.5s]     area   168 (d~ 14.6 quads) at (  2448,   281) edge  269  median  -0.58%  worst  -1.02%  seen 16.0/18 (min 12)
+[   7.5s]     area   120 (d~ 12.4 quads) at (  2453,   256) edge  253  median  -0.59%  worst  -0.95%  seen 16.0/18 (min 12)
+[   7.5s]     area    93 (d~ 10.9 quads) at (   987,    98) edge   92  median  -0.59%  worst  -0.95%  seen 16.0/18 (min 12)
+[   7.5s]     area    75 (d~  9.8 quads) at (  2437,   280) edge  273  median  -0.58%  worst  -0.85%  seen 16.0/18 (min 12)
+[   7.5s]     area    74 (d~  9.7 quads) at (  3440,  2281) edge   60  median  -1.26%  worst  -2.66%  seen 18.0/18 (min 15)
+[   7.5s]     area    48 (d~  7.8 quads) at (  2437,   262) edge  256  median  -0.61%  worst  -0.98%  seen 16.0/18 (min 12)
+[   7.5s]     area    43 (d~  7.4 quads) at (  2460,   295) edge  293  median  -0.62%  worst  -0.89%  seen 16.0/18 (min 12)
+[   7.5s]     area    25 (d~  5.6 quads) at (   975,    77) edge   73  median  -0.57%  worst  -0.81%  seen 16.0/18 (min 12)
+[   7.5s] wrote cand-0..5.png (180x180 quad crops)
+[   7.5s] wrote data/07-bars.json

@@ -1,0 +1,31 @@
+[  13.8s]   bee-1-cpl: 8 frames, rms 4.2340%
+[  27.0s]   bee-3-cpl: 8 frames, rms 3.9306%
+[  40.1s]   coffee-bean: 8 frames, rms 8.7717%
+[  48.1s]   couch-fibers-cpl: 8 frames, rms 0.9612%
+[  55.1s]   dry-erase-marker-head-cpl: 8 frames, rms 3.3161%
+[  62.4s]   flower-bud-alone-cpl: 8 frames, rms 5.6378%
+[  71.9s]   flower-inner-edge-cpl: 8 frames, rms 3.9618%
+[  79.1s]   lavendar-cpl: 8 frames, rms 2.0932%
+[  86.1s]   leaf-2-cpl: 8 frames, rms 2.1494%
+[  97.5s]   pencil-steep-angle-cpl: 8 frames, rms 1.4058%
+[ 104.8s]   tweezers-cpl: 8 frames, rms 8.3385%
+[ 114.3s]   wrapped-text-1: 8 frames, rms 9.3928%
+[ 116.1s] k=12, pooled rms 0.5600%, plant-arm rms 0.5601%
+[ 159.7s]   seed  1.00% floor  0.75%: real  826, null [363, 434, 423], plant FOUND area  347 median -1.673%
+[ 257.7s]   seed  1.00% floor  1.00%: real  930, null [261, 360, 354], plant FOUND area  317 median -1.703%
+[ 277.0s]   seed  1.50% floor  0.75%: real  213, null [66, 89, 90], plant FOUND area  347 median -1.673%
+[ 307.4s]   seed  1.50% floor  1.00%: real  353, null [88, 109, 121], plant FOUND area  317 median -1.703%
+[ 385.4s]   seed  1.50% floor  1.50%: real  550, null [104, 90, 134], plant FOUND area  242 median -1.785%
+[ 393.3s]   seed  2.00% floor  0.75%: real   87, null [29, 22, 34], plant FOUND area  347 median -1.673%
+[ 403.3s]   seed  2.00% floor  1.00%: real  126, null [34, 25, 36], plant FOUND area  317 median -1.703%
+[ 420.5s]   seed  2.00% floor  1.50%: real  259, null [46, 38, 64], plant FOUND area  242 median -1.785%
+[ 424.1s]   seed  2.50% floor  0.75%: real   41, null [14, 8, 19], plant MISSED
+[ 428.7s]   seed  2.50% floor  1.00%: real   55, null [15, 8, 20], plant MISSED
+[ 435.0s]   seed  2.50% floor  1.50%: real   87, null [17, 10, 27], plant MISSED
+[ 437.4s]   seed  3.00% floor  0.75%: real   27, null [3, 6, 11], plant MISSED
+[ 440.0s]   seed  3.00% floor  1.00%: real   36, null [3, 6, 12], plant MISSED
+[ 443.7s]   seed  3.00% floor  1.50%: real   49, null [3, 6, 15], plant MISSED
+[ 444.9s]   seed  4.00% floor  0.75%: real   14, null [1, 0, 4], plant MISSED
+[ 446.3s]   seed  4.00% floor  1.00%: real   19, null [1, 0, 4], plant MISSED
+[ 448.1s]   seed  4.00% floor  1.50%: real   24, null [1, 0, 4], plant MISSED
+[ 448.1s] SHIPPING SETTING: NONE -- no setting is both null-clean and not blind

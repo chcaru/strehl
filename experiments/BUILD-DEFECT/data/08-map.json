@@ -1,0 +1,152 @@
+{
+ "params": {
+  "hp_radius": 30,
+  "hp_pass": 3,
+  "bp_radius": 2,
+  "seed": 0.005,
+  "recurrence": 15,
+  "floor": 0.005,
+  "border": 60,
+  "min_component": 25,
+  "hot_recurrence": 6
+ },
+ "partition": {
+  "total": 8236816,
+  "border_excluded": 688560,
+  "examined": 7548256,
+  "not_recurrent": 7547308,
+  "recurrent_but_shallow": 62,
+  "deep_but_too_small": 268,
+  "emitted": 618,
+  "refused_gain": 0
+ },
+ "components": [
+  {
+   "area": 396,
+   "alpha": 0.9432581297083871,
+   "cx": 3192.1136363636365,
+   "cy": 109.4090909090909,
+   "diam_quads": 22.45446191105733,
+   "depth_med_pct": -0.9025994539260864,
+   "depth_min_pct": -1.410368800163269,
+   "gain_med": 1.0096614360809326,
+   "gain_max": 1.0151790380477905,
+   "seen_med": 15.0,
+   "seen_min": 15,
+   "edge": 98
+  },
+  {
+   "area": 127,
+   "alpha": 0.9814683411752071,
+   "cx": 3209.6062992125985,
+   "cy": 136.09448818897638,
+   "diam_quads": 12.716187407449045,
+   "depth_med_pct": -0.903765857219696,
+   "depth_min_pct": -1.4849461317062378,
+   "gain_med": 1.0092939138412476,
+   "gain_max": 1.01536226272583,
+   "seen_med": 15.0,
+   "seen_min": 15,
+   "edge": 128
+  },
+  {
+   "area": 66,
+   "alpha": 0.9903159084448079,
+   "cx": 3439.651515151515,
+   "cy": 2281.2272727272725,
+   "diam_quads": 9.166995688475081,
+   "depth_med_pct": -1.3243060111999512,
+   "depth_min_pct": -2.6561460494995117,
+   "gain_med": 1.0135538578033447,
+   "gain_max": 1.0275603532791138,
+   "seen_med": 18.0,
+   "seen_min": 15,
+   "edge": 60
+  },
+  {
+   "area": 29,
+   "alpha": 0.995733174641158,
+   "cx": 3209.2758620689656,
+   "cy": 115.89655172413794,
+   "diam_quads": 6.076507779746499,
+   "depth_med_pct": -0.8708581328392029,
+   "depth_min_pct": -1.2447311878204346,
+   "gain_med": 1.008823037147522,
+   "gain_max": 1.0126588344573975,
+   "seen_med": 15.0,
+   "seen_min": 15,
+   "edge": 112
+  }
+ ],
+ "calibration": [
+  {
+   "radius": 3,
+   "area": 29,
+   "planted": 0.025,
+   "recovered": 0.02489332936602895,
+   "alpha": 0.995733174641158
+  },
+  {
+   "radius": 5,
+   "area": 81,
+   "planted": 0.025,
+   "recovered": 0.02470299298615719,
+   "alpha": 0.9881197194462876
+  },
+  {
+   "radius": 8,
+   "area": 197,
+   "planted": 0.025,
+   "recovered": 0.024283666964719508,
+   "alpha": 0.9713466785887803
+  },
+  {
+   "radius": 12,
+   "area": 441,
+   "planted": 0.025,
+   "recovered": 0.023422661195019012,
+   "alpha": 0.9369064478007605
+  },
+  {
+   "radius": 18,
+   "area": 1009,
+   "planted": 0.025,
+   "recovered": 0.02153272292350894,
+   "alpha": 0.8613089169403576
+  },
+  {
+   "radius": 25,
+   "area": 1961,
+   "planted": 0.025,
+   "recovered": 0.01869123132966588,
+   "alpha": 0.7476492531866352
+  },
+  {
+   "radius": 35,
+   "area": 3853,
+   "planted": 0.025,
+   "recovered": 0.01426245789850833,
+   "alpha": 0.5704983159403332
+  }
+ ],
+ "hot": {
+  "total": 14626,
+  "per_plane": {
+   "R": 111,
+   "G1": 125,
+   "G2": 8157,
+   "B": 6233
+  },
+  "ladder": {
+   "0-2": 124,
+   "2-4": 9532,
+   "4-8": 4859,
+   "8-16": 105,
+   "16-1000000000": 6
+  },
+  "at_reproducible_floor": 111
+ },
+ "map_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-DEFECT\\out\\defect-map-ILCE-7CM2.txt",
+ "map_bytes": 286416,
+ "dust_quads": 618
+}

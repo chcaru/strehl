@@ -1,0 +1,48 @@
+=== ISO groups
+    118MSDCF  ISO    100  exp 1/100
+    119MSDCF  ISO    400  exp 1/100
+    120MSDCF  ISO    800  exp 1/100
+    121MSDCF  ISO   1600  exp 1/100
+    122MSDCF  ISO     50  exp 1/100
+    123MSDCF  ISO    200  exp 1/100
+    124MSDCF  ISO    640  exp 1/100
+    125MSDCF  ISO    500  exp 1/100
+    126MSDCF  ISO    250  exp 1/100
+    127MSDCF  ISO   1000  exp 1/100
+    128MSDCF  ISO   2000  exp 1/100
+
+=== decoding 11 groups x 20 frames
+    118MSDCF  n=20  R sig=0.4447DN  G1 sig=0.4078DN  G2 sig=0.4077DN  B sig=0.4078DN   [ 42.7s]
+    119MSDCF  n=20  R sig=0.4077DN  G1 sig=0.4077DN  G2 sig=0.3707DN  B sig=0.3706DN   [ 45.5s]
+    120MSDCF  n=20  R sig=0.6301DN  G1 sig=0.6301DN  G2 sig=0.6301DN  B sig=0.5560DN   [ 47.4s]
+    121MSDCF  n=20  R sig=1.0007DN  G1 sig=1.0377DN  G2 sig=1.0749DN  B sig=1.0007DN   [ 49.8s]
+    122MSDCF  n=20  R sig=0.4078DN  G1 sig=0.4077DN  G2 sig=0.4077DN  B sig=0.4077DN   [ 51.9s]
+    123MSDCF  n=20  R sig=0.4448DN  G1 sig=0.4448DN  G2 sig=0.4448DN  B sig=0.4448DN   [ 54.1s]
+    124MSDCF  n=20  R sig=0.4818DN  G1 sig=0.4818DN  G2 sig=0.4819DN  B sig=0.4448DN   [ 72.2s]
+    125MSDCF  n=20  R sig=0.4818DN  G1 sig=0.4819DN  G2 sig=0.4448DN  B sig=0.4448DN   [ 74.1s]
+    126MSDCF  n=20  R sig=0.6301DN  G1 sig=0.6301DN  G2 sig=0.6301DN  B sig=0.5560DN   [ 76.4s]
+    127MSDCF  n=20  R sig=0.7042DN  G1 sig=0.7042DN  G2 sig=0.7042DN  B sig=0.6671DN   [ 78.4s]
+    128MSDCF  n=20  R sig=1.2602DN  G1 sig=1.2603DN  G2 sig=1.3343DN  B sig=1.2232DN   [ 80.3s]
+
+=== recurrence
+    >= 6/11 : R 111  G1 125  G2 8157  B 6233   total 14626  = 0.0444% of the sensor
+    all 11/11 : 462
+    vs M22    11393: +28.4%
+    vs M48c   13650: +7.2%
+    vs M101   14604: +0.2%
+    odd/even sensor-row asymmetry (G2+B)/(R+G1) = 61.0x   (M48c 68x, M101 61.1x)
+
+=== split-half reproducibility, per plane (M101 PD1)
+    R   Jaccard 0.1284   placebo 0.000000   |A| 122  |B| 124
+    G1  Jaccard 0.0929   placebo 0.000000   |A| 128  |B| 119
+    G2  Jaccard 0.3452   placebo 0.000359   |A| 4080  |B| 4287
+    B   Jaccard 0.3551   placebo 0.000000   |A| 3782  |B| 3862
+
+=== reproducibility by amplitude (the operating point)
+        1-    2 e- : n=    124  recovered in BOTH halves 0.000
+        2-    4 e- : n=   9532  recovered in BOTH halves 0.116
+        4-    8 e- : n=   4859  recovered in BOTH halves 0.607
+        8-   16 e- : n=    105  recovered in BOTH halves 1.000
+       16-  inf e- : n=      6  recovered in BOTH halves 1.000
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\data\03-hot.json   [88.1s]

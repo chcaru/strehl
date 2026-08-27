@@ -1,0 +1,118 @@
+{
+ "params": {
+  "hp_radius": 30,
+  "bp_radius": 2,
+  "seed_depth": 0.01,
+  "recurrence": 15,
+  "floor_depth": 0.0075,
+  "border": 31,
+  "min_component": 25,
+  "hot_recurrence": 6
+ },
+ "partition": {
+  "total": 8236816,
+  "border_excluded": 359352,
+  "examined": 7877464,
+  "not_recurrent": 7876523,
+  "recurrent_but_shallow": 5,
+  "deep_but_too_small": 19,
+  "emitted": 917,
+  "emitted_refused_gain": 0
+ },
+ "null_kept": [
+  0,
+  0
+ ],
+ "real_kept": 917,
+ "components": [
+  {
+   "id": 17,
+   "area": 917,
+   "alpha": 0.876477292941531,
+   "depth_med_pct": -2.382986307144165,
+   "depth_min_pct": -3.07189679145813,
+   "gain_med": 1.0279481410980225,
+   "cy": 2298.989094874591,
+   "cx": 3435.311886586696,
+   "diam_quads": 34.16958680642984
+  }
+ ],
+ "calibration": {
+  "r5_d0.02": {
+   "radius": 5,
+   "depth": 0.02,
+   "recovered": 0.019761190447967092,
+   "recovered_band": 0.01976153366267681,
+   "alpha": 0.9880595223983546,
+   "area": 81
+  },
+  "r5_d0.035": {
+   "radius": 5,
+   "depth": 0.035,
+   "recovered": 0.0345884047442333,
+   "recovered_band": 0.034588995873928066,
+   "alpha": 0.9882401355495228,
+   "area": 81
+  },
+  "r10_d0.02": {
+   "radius": 10,
+   "depth": 0.02,
+   "recovered": 0.01908100530206247,
+   "recovered_band": 0.019082338511943818,
+   "alpha": 0.9540502651031235,
+   "area": 317
+  },
+  "r10_d0.035": {
+   "radius": 10,
+   "depth": 0.035,
+   "recovered": 0.03341526064138478,
+   "recovered_band": 0.033417561203241346,
+   "alpha": 0.9547217326109937,
+   "area": 317
+  },
+  "r22_d0.02": {
+   "radius": 22,
+   "depth": 0.02,
+   "recovered": 0.015964657065441368,
+   "recovered_band": 0.015970797464251518,
+   "alpha": 0.7982328532720684,
+   "area": 1517
+  },
+  "r22_d0.035": {
+   "radius": 22,
+   "depth": 0.035,
+   "recovered": 0.02802469777229044,
+   "recovered_band": 0.028035343289375302,
+   "alpha": 0.8007056506368697,
+   "area": 1517
+  },
+  "r44_d0.02": {
+   "radius": 44,
+   "depth": 0.02,
+   "recovered": 0.008438012173450748,
+   "recovered_band": 0.008451257981359952,
+   "alpha": 0.4219006086725374,
+   "area": 6077
+  },
+  "r44_d0.035": {
+   "radius": 44,
+   "depth": 0.035,
+   "recovered": 0.014898348747565127,
+   "recovered_band": 0.014921550825238222,
+   "alpha": 0.4256671070732893,
+   "area": 6077
+  }
+ },
+ "hot": {
+  "total": 22,
+  "per_plane": {
+   "R": 4,
+   "G1": 7,
+   "G2": 7,
+   "B": 4
+  },
+  "at_reproducible_floor": 0
+ },
+ "map_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-DEFECT\\out\\defect-map-ILCE-7CM2.txt",
+ "map_bytes": 20513
+}

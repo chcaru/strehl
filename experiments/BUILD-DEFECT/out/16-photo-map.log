@@ -1,0 +1,10 @@
+[   0.8s] pooled photograph residual: k=12, 2344x3514, rms 0.5600%
+[   0.8s]   (3192,109) -> (3202,121) -3.6303%  new core
+[   0.9s]   (3210,136) -> (3202,120) -3.6303%  MERGED into (3202,121)
+[   0.9s]   (3440,2281) -> (3434,2305) -8.2359%  new core
+[   0.9s]   (3209,116) -> (3201,122) -3.6272%  MERGED into (3202,121)
+[   1.0s]   core (3202,121): area 483, core -3.6303%, p=0.0025, gain median 1.033478 max 1.044579  KEPT
+[   1.0s]   core (3434,2305): area 652, core -8.2359%, p=0.0025, gain median 1.060764 max 1.099405  KEPT
+[   1.0s] partition: {'nominated': 4, 'cores': 2, 'too_small': 0, 'failed_null': 0, 'kept': 2}; 1135 dust quads emitted
+[   1.0s] wrote defect-map-ILCE-7CM2-photo.txt (0.313 MB)
+[   1.0s] wrote data/16-photo-map.json

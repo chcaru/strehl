@@ -1,0 +1,36 @@
+[   0.3s] M71 mask: C:\dev\blog\death-of-software\projects\strehl\experiments\M71-flat-fields\out\cache\dust-mask.npy  exists=True
+[   0.3s]     shape (2344, 3514) dtype bool sum 2898
+[   0.3s]     distance-from-edge percentiles [0, 0, 1, 2, 5, 8, 42]
+[   0.3s]     fraction within 40 quads of an edge: 99.93%
+[   0.3s]     fraction within 90 quads of an edge: 100.00%
+[   0.3s]     null (area fraction) within 40: 5.61%   within 90: 12.41%
+[   0.3s]     ENRICHMENT toward the border: 17.8x (40)  8.1x (90)
+[   0.3s] deepest structure by distance band, NO threshold
+[   0.4s]     d in [   0,     40) n=  462240  median -0.2292%  0.1pct  -2.904%  min  -3.813%  |  band min  -3.585%  band 0.01pct  -3.344%
+[   0.4s]     d in [  40,     90) n=  559800  median +0.0500%  0.1pct  -1.397%  min  -3.072%  |  band min  -2.685%  band 0.01pct  -2.536%
+[   0.5s]     d in [  90,    200) n= 1161160  median +0.0548%  0.1pct  -0.668%  min  -1.485%  |  band min  -1.023%  band 0.01pct  -0.902%
+[   0.6s]     d in [ 200,    500) n= 2674800  median +0.0273%  0.1pct  -0.468%  min  -1.632%  |  band min  -0.652%  band 0.01pct  -0.538%
+[   0.7s]     d in [ 500,1000000) n= 3378816  median +0.0095%  0.1pct  -0.429%  min  -2.162%  |  band min  -0.483%  band 0.01pct  -0.342%
+[   0.7s] the 20 deepest interior (d>=60) band-passed spots
+[   0.8s]     # 0 ( 3439, 2283) edge   60  band -2.350%  med -2.539%  seen 18/18  half-depth area  1344
+[   0.8s]     # 1 ( 3190,  101) edge  101  band -1.023%  med -1.025%  seen 10/18  half-depth area  1461
+[   0.8s]     # 2 ( 3206,  142) edge  142  band -0.882%  med -1.010%  seen 10/18  half-depth area  1523
+[   0.8s]     # 3 ( 2448,  255) edge  255  band -0.652%  med -0.749%  seen  0/18  half-depth area  1756
+[   0.8s]     # 4 (  988,  100) edge  100  band -0.636%  med -0.690%  seen  0/18  half-depth area  1650
+[   0.8s]     # 5 ( 2461,  296) edge  296  band -0.590%  med -0.559%  seen  0/18  half-depth area  1819
+[   0.8s]     # 6 (  214,  802) edge  214  band -0.541%  med -0.709%  seen  0/18  half-depth area  1226
+[   0.8s]     # 7 ( 1458, 1742) edge  601  band -0.483%  med -0.418%  seen  0/18  half-depth area  1171
+[   0.8s]     # 8 (  124, 2036) edge  124  band -0.475%  med -0.388%  seen  0/18  half-depth area  1133
+[   0.8s]     # 9 (  142, 1267) edge  142  band -0.473%  med -0.507%  seen  1/18  half-depth area   973
+[   0.8s]     #10 ( 2573,  558) edge  558  band -0.451%  med -0.428%  seen  0/18  half-depth area   403
+[   0.8s]     #11 ( 2329, 2130) edge  213  band -0.425%  med -0.653%  seen  0/18  half-depth area   743
+[   0.8s]     #12 ( 2640,  662) edge  662  band -0.424%  med -0.507%  seen  0/18  half-depth area   768
+[   0.8s]     #13 ( 2815,  343) edge  343  band -0.413%  med -0.401%  seen  0/18  half-depth area   418
+[   0.8s]     #14 ( 2814,  808) edge  699  band -0.384%  med -0.077%  seen  0/18  half-depth area   342
+[   0.8s]     #15 (  345,  317) edge  317  band -0.367%  med -0.377%  seen  1/18  half-depth area   505
+[   0.8s]     #16 (  331, 1576) edge  331  band -0.360%  med -0.549%  seen  0/18  half-depth area   364
+[   0.8s]     #17 ( 1289,   89) edge   89  band -0.356%  med -0.122%  seen  0/18  half-depth area  1260
+[   0.8s]     #18 (  109,  339) edge  109  band -0.352%  med -0.259%  seen  0/18  half-depth area   758
+[   0.8s]     #19 ( 2751,  970) edge  762  band -0.343%  med -0.231%  seen  0/18  half-depth area   387
+[   1.0s] wrote interior-band.png, interior-med.png, whole-band.png (interior 1697 x 1112)
+[   1.0s] wrote data/06-dust-reality.json

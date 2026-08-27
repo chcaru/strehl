@@ -1,0 +1,8 @@
+[   2.9s] k=12, pooled rms 0.5600%
+[   2.9s] COMMISSIONING the local-null procedure:
+[   2.9s]   PLANTED 2.5% disc (must be RED)    core -1.8022%  local null median -0.3733% p1 -4.9313%   69/400 at least as deep  p=0.1746
+[   3.0s]   same place, UNPLANTED (must be GREEN) core +0.5759%  local null median -0.2310% p1 -4.1388%  370/400 at least as deep  p=0.9252
+[   3.0s]   arbitrary clean spot (must be GREEN) core -0.6579%  local null median -0.1570% p1 -2.2639%   55/400 at least as deep  p=0.1397
+[   3.1s]   same place, BRIGHTENED +2.5%       core +3.0759%  local null median -0.4125% p1 -4.5550%  400/400 at least as deep  p=1.0000
+[   3.1s]   commissioning: FAIL
+[   3.1s]   REFUSING to report candidates: the procedure is not commissioned.

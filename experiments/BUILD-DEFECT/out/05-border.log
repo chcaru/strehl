@@ -1,0 +1,32 @@
+[   0.1s] 3514 x 2344 quads
+[   0.5s] ring median of the median residual, by distance from the nearest edge
+[   0.5s]     d=   0  ring median -0.9340%   1st pct  -2.779%   recurrent  32.90%
+[   0.6s]     d=   2  ring median -0.8407%   1st pct  -2.577%   recurrent  27.65%
+[   0.6s]     d=   5  ring median -0.7016%   1st pct  -2.270%   recurrent  18.69%
+[   0.6s]     d=  10  ring median -0.5194%   1st pct  -1.735%   recurrent   7.62%
+[   0.6s]     d=  20  ring median -0.2307%   1st pct  -1.019%   recurrent   0.61%
+[   0.6s]     d=  30  ring median -0.0975%   1st pct  -0.597%   recurrent   0.32%
+[   0.7s]     d=  40  ring median -0.0030%   1st pct  -0.414%   recurrent   0.32%
+[   0.7s]     d=  50  ring median +0.0657%   1st pct  -0.315%   recurrent   0.26%
+[   0.7s]     d=  60  ring median +0.0410%   1st pct  -0.332%   recurrent   0.12%
+[   0.7s]     d=  70  ring median +0.0665%   1st pct  -0.310%   recurrent   0.00%
+[   0.8s]     d=  80  ring median +0.0627%   1st pct  -0.299%   recurrent   0.00%
+[   0.8s]     d=  90  ring median +0.0236%   1st pct  -0.347%   recurrent   0.00%
+[   0.8s]     d= 100  ring median +0.0451%   1st pct  -0.340%   recurrent   0.03%
+[   0.9s]     d= 120  ring median +0.0356%   1st pct  -0.400%   recurrent   0.00%
+[   0.9s]     d= 150  ring median +0.0463%   1st pct  -0.292%   recurrent   0.00%
+[   0.9s]     d= 200  ring median +0.0582%   1st pct  -0.303%   recurrent   0.00%
+[   0.9s]     d= 300  ring median +0.0164%   1st pct  -0.302%   recurrent   0.00%
+[   0.9s]     d= 500  ring median +0.0238%   1st pct  -0.295%   recurrent   0.00%
+[   0.9s]     interior level +0.02010% (sd 0.01823); first ring within 5sd at d=40
+[   1.2s]     border   31: recurrent     941  deep    1734  both     936  |  components(both)   1/  17  components(depth only)   3/   7
+[   1.5s]     border   60: recurrent      64  deep     795  both      59  |  components(both)   1/  18  components(depth only)   3/   7
+[   1.8s]     border   90: recurrent      24  deep     738  both      19  |  components(both)   0/  16  components(depth only)   2/   6
+[   2.0s]     border  120: recurrent      12  deep     274  both       7  |  components(both)   0/   5  components(depth only)   2/   6
+[   2.3s]     border  150: recurrent       4  deep       0  both       0  |  components(both)   0/   0  components(depth only)   0/   0
+[   2.5s] depth-only components at border 90: 2 of 6 pass the 25-quad floor
+[   2.6s]     area   544 at (  3194,   111)  edge   99  median  -0.86%  worst  -1.41%  seen med  2.5 max 15
+[   2.6s]     area   148 at (  3209,   136)  edge  129  median  -0.88%  worst  -1.48%  seen med  3.0 max 15
+[   2.6s]     ... 2 components total; areas [544, 148]
+[   2.6s]     seen-median distribution over components: [2.5, 2.625, 2.75, 2.875, 3.0]
+[   2.6s] wrote data/05-border.json

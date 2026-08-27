@@ -1,0 +1,25 @@
+[   0.0s] map: 618 dust quads
+[  12.1s]   bee-3-cpl: 10 frames, rms 3.9587%
+[  24.3s]   flower-inner-edge-cpl: 10 frames, rms 4.0435%
+[  36.2s]   wrapped-text-1: 10 frames, rms 8.9209%
+[  45.3s]   dry-erase-marker-head-cpl: 10 frames, rms 3.3648%
+[  54.5s]   lavendar-cpl: 10 frames, rms 2.1152%
+[  63.5s]   couch-fibers-cpl: 10 frames, rms 0.9653%
+[  64.2s] pooled over 6 subjects, 2344x3514 quads, rms 0.8570%
+[  64.7s] roll null rms 0.6771%
+[  64.7s] 4 motes in the map
+[  64.7s]   mote  396 quads at (3192, 109): real +0.3938% p10 -2.9467%  roll-null +0.1280%
+[  64.7s]       per subject: +0.206% +1.849% +1.468% +0.344% +0.224% +0.430%
+[  64.7s]   mote  127 quads at (3210, 136): real +0.4127% p10 +0.2055%  roll-null +0.0379%
+[  64.7s]       per subject: +0.181% +0.636% +1.090% +0.209% +0.176% +1.005%
+[  64.7s]   mote   66 quads at (3440,2281): real +0.5356% p10 +0.4373%  roll-null +0.0766%
+[  64.7s]       per subject: +0.351% +0.927% +0.615% +0.515% +0.504% +0.587%
+[  64.7s]   mote   29 quads at (3209, 116): real -2.3895% p10 -2.5718%  roll-null +0.3560%
+[  64.7s]       per subject: -3.311% -1.473% -2.099% -3.665% -1.044% -2.561%
+[  64.7s] location null: 200 random footprints of matched area, deep interior
+[  64.7s]   mote  396: real +0.3938%  null median +0.0443%  null 1st pct -3.1463%  169/200 nulls at least as deep  p=0.8458
+[  64.8s]   mote  127: real +0.4127%  null median +0.0581%  null 1st pct -5.4031%  169/200 nulls at least as deep  p=0.8458
+[  64.8s]   mote   66: real +0.5356%  null median +0.0672%  null 1st pct -3.4310%  165/200 nulls at least as deep  p=0.8259
+[  64.8s]   mote   29: real -2.3895%  null median +0.0444%  null 1st pct -2.6937%  5/200 nulls at least as deep  p=0.0299
+[  64.8s] plant arm: 2.5% disc r=11 at (1200, 1400): unplanted +0.4247%, planted -1.8606%, delta -2.2853%
+[  64.8s] wrote data/09-real.json
