@@ -1,0 +1,37 @@
+rows: 8  arms: 3  sum 8 = 8 OK
+exits: zero 8 + nonzero 0 = 8 of 8
+
+arm            n  wall s: min      med      max  spread  s/frame(med)    CPU s  thr-eq peak GiB
+-----------------------------------------------------------------------------------------------
+STREHL-SOLVE   3        36.72    38.39    38.40    1.05        0.3656    592.9    15.5     7.64
+STREHL-CACHED  3        28.29    38.42    46.62    1.65        0.3659    327.1     8.3     7.34
+FORK-MERGE     2      1320.64  1462.39  1604.15    1.21       13.9276   6839.6     4.7    47.37
+
+=== derived, all from the table above ===
+strehl end-to-end (solve)   0.3656 s/frame   90.2 MP(out)/s
+strehl re-render (cached)   0.2694 s/frame at its best rep, 0.3659 at its median
+fork  end-to-end            13.928 s/frame   2.35 MP(out)/s
+
+fork / strehl-solve, median:median      38.1x
+fork / strehl-solve, best:best          36.0x
+fork / strehl-solve, worst:worst        41.8x
+  -> the ratio is >= 36.0x under every pairing of the measured reps
+
+CPU seconds burned: fork 6840 vs strehl-solve 593  = 11.5x more CPU for the same stack
+parallel efficiency (CPU s / wall s, 32 logical): strehl 15.5/32 = 48%, fork 4.7/32 = 15%
+peak working set: strehl 7.64 GiB, fork 47.37 GiB = 6.2x
+
+the alignment solve costs, by difference of the two strehl arms:
+  wall  -0.03 s (medians; the cached arm's reps are contention-spread, so prefer CPU)
+  CPU   +265.8 s  (45% of the end-to-end CPU)
+
+Zerene align+PMax, from ITS OWN log: 26.912 s / 33 frames = 0.8155 s/frame
+  strehl-solve is 2.23x faster per frame than that number
+  (different subject, and that number EXCLUDES Zerene's own load and save)
+
+owner's corpus figure: 4825 frames / 972 s = 0.2015 s/frame
+  this measurement is 1.81x slower per frame end-to-end, 1.34x at the cached arm's best rep
+
+=== input asymmetry, NOT normalised away ===
+strehl reads 105 ARW = 3.88 GB; the fork reads 105 TIFF = 38.42 GB = 9.9x the bytes
+and those TIFFs are Lightroom developments of those same ARW, timed by neither tool.

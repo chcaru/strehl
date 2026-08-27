@@ -1,0 +1,40 @@
+[842/860] Construct depthmap layer 99             
+[842/860] Merge 8 images                          
+[843/860] Construct depthmap layer 4              
+[843/860] Merge 8 images                          
+[844/860] Construct depthmap layer 100            
+[844/860] Merge 8 images                          
+[845/860] Construct depthmap layer 3              
+[845/860] Merge 8 images                          
+[846/860] Construct depthmap layer 101            
+[846/860] Merge 8 images                          
+[847/860] Construct depthmap layer 2              
+[847/860] Merge 8 images                          
+[848/860] Construct depthmap layer 102            
+[848/860] Merge 8 images                          
+[849/860] Construct depthmap layer 1              
+[849/860] Merge 8 images                          
+[850/860] Construct depthmap layer 103            
+[850/860] Merge 8 images                          
+[851/860] Construct depthmap layer 0              
+[851/860] Merge 8 images                          
+[852/860] Construct depthmap layer 104            
+[852/860] Merge 8 images                          
+[853/860] Construct depthmap layer -1             
+[853/860] Construct depthmap layer -1             
+[854/860] Merge 8 images                          
+[854/860] Merge 8 images                          
+[855/860] Merge 8 images                          
+[856/860] Merge 1 images                          
+[857/860] Denoise merge_result.jpg                
+[858/860] Inverse-wavelet denoised_merge_result.jp
+[859/860] Compose color (winner-copy)             
+[860/860] Save C:\dev\strehl-out\V-H2H2\timing\for
+Saved Linear Rec.2020 (D65, gamma 1.0) TIFF: C:\dev\strehl-out\V-H2H2\timing\fork-cb.tif
+  Tip: embed the colour profile so Lightroom auto-detects it:
+       python scripts\embed_icc.py "C:\dev\strehl-out\V-H2H2\timing\fork-cb.tif"
+  Note: Lightroom treats this as HDR/linear and only offers "Color" /
+        "Monochrome" profiles. For full Adobe profile selection use
+        --output-colorspace=rec2020 (16-bit gamma-encoded wide gamut).
+
+Saved to C:\dev\strehl-out\V-H2H2\timing\fork-cb.tif

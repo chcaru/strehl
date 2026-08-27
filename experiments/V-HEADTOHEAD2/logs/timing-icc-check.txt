@@ -1,0 +1,14 @@
+file          : C:\dev\macro\out\coffee-bean\stack.tif
+bytes         : 393,326,272
+geometry      : 7008 x 4672, 3 samples, 32 bits
+pixel payload : 392,896,512
+overhead      : 429,760 bytes
+compression   : 1
+
+ICC profile   : PRESENT, 472 bytes
+VERDICT       : consistent with the archived log being this file's
+                run, followed by the embed_icc.py step the log
+                itself recommends, which rewrites the file and
+                moves its mtime. Consistent with, not proof of.
+
+overhead partition: icc 472 + other tags/headers 429,288 = 429,760 of 429,760

@@ -1,0 +1,149 @@
+Application data directory = C:\Users\chris\AppData\Roaming\ZereneStacker
+Look and feel = null
+-Dlogging=null
+0.276: Date: Thu Aug 27 03:17:03 PDT 2026
+0.278: Load path url = file:/C:/Program%20Files/ZereneStacker/ZereneStacker.jar!/com/zerenesystems/stacker/gui/MainFrame.class
+0.290: Application root directory = C:\Program Files\ZereneStacker
+0.291: Zerene Stacker 1.04 Build T2026-05-04-0750
+0.293: args:
+0.293:    -noSplashScreen
+0.293:    -exitOnBatchScriptCompletion
+0.295:    -runMinimized
+0.296:    -batchScript
+0.297:    C:\dev\blog\death-of-software\projects\strehl\experiments\V-HEADTOHEAD2\zerene-probe.zbs
+0.308: gd = D3DGraphicsDevice[screen=0]
+0.310: gc[i] = D3DGraphicsConfig[dev=D3DGraphicsDevice[screen=0],pixfmt=0]
+0.312: defaultTransform = AffineTransform[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]
+0.313: getBounds = java.awt.Rectangle[x=0,y=0,width=3440,height=1440]
+0.314:   bounds=java.awt.Rectangle[x=0,y=0,width=3440,height=1440]  defaultTx=[1.000 0.000 0.000 1.000]  normTx=[1.333 0.000 0.000 1.333]
+--------------------------- helper exec'd --------------------------
+0.379: --- helper exec finished ---
+0.380: trial.info=1.0,1778210014628,9b39f19827d162b7a3dc867110f8777a
+0.398: license 83ced522295099724b84c81abbb79f3199726fd7 expires on Sat Jun 06 20:13:34 PDT 2026
+0.399: now = Thu Aug 27 03:17:03 PDT 2026
+0.401: relevant = false
+0.401: Using default license key
+0.401: License category = EXPIREDLICENSE
+0.402: ID = 83ced522295099724b84c81abbb79f3199726fd7
+0.720: -- listing properties --
+0.721: javaBits=64bitJava
+0.721: java.specification.version=25
+0.721: sun.cpu.isalist=amd64
+0.722: sun.jnu.encoding=Cp1252
+0.722: java.class.path=C:\Program Files\ZereneStacker\Zerene...
+0.722: sun.awt.enableExtraMouseButtons=true
+0.723: java.vm.vendor=Azul Systems, Inc.
+0.723: sun.arch.data.model=64
+0.723: user.variant=
+0.724: java.vendor.url=http://www.azul.com/
+0.724: user.timezone=America/Los_Angeles
+0.725: java.vm.specification.version=25
+0.725: os.name=Windows 11
+0.726: sun.java.launcher=SUN_STANDARD
+0.727: user.country=US
+0.727: sun.boot.library.path=C:\Program Files\ZereneStacker\jre\bin
+0.727: sun.java.command=com.zerenesystems.stacker.gui.MainFra...
+0.728: jdk.debug=release
+0.728: sun.cpu.endian=little
+0.728: user.home=C:\Users\chris
+0.728: user.language=en
+0.729: java.specification.vendor=Oracle Corporation
+0.729: java.version.date=2025-10-21
+0.729: java.home=C:\Program Files\ZereneStacker\jre
+0.730: file.separator=\
+0.730: java.vm.compressedOopsMode=Zero based
+0.730: line.separator=
+
+0.731: java.vm.specification.vendor=Oracle Corporation
+0.731: java.specification.name=Java Platform API Specification
+0.731: user.script=
+0.732: sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+0.732: java.runtime.version=25.0.1+8-LTS
+0.732: user.name=chris
+0.733: launchcmddir=C:\Users\chris\AppData\Roaming\Zerene...
+0.733: stdout.encoding=Cp1252
+0.733: path.separator=;
+0.734: os.version=10.0
+0.734: java.runtime.name=OpenJDK Runtime Environment
+0.735: file.encoding=UTF-8
+0.735: java.vm.name=OpenJDK 64-Bit Server VM
+0.735: java.vendor.version=Zulu25.30+17-CA
+0.735: java.vendor.url.bug=http://www.azul.com/support/
+0.736: java.io.tmpdir=C:\Users\chris\AppData\Local\Temp\
+0.736: java.version=25.0.1
+0.737: user.dir=C:\dev\blog\death-of-software
+0.737: os.arch=amd64
+0.737: java.vm.specification.name=Java Virtual Machine Specification
+0.737: sun.os.patch.level=
+0.738: native.encoding=Cp1252
+0.738: java.library.path=C:\Program Files\ZereneStacker\jre\bi...
+0.738: java.vm.info=mixed mode
+0.739: stderr.encoding=Cp1252
+0.739: java.vendor=Azul Systems, Inc.
+0.739: java.vm.version=25.0.1+8-LTS
+0.740: stdin.encoding=cp437
+0.741: sun.io.unicode.encoding=UnicodeLittle
+0.741: java.class.version=69.0
+0.744: #Preferences at initialization
+0.745: #Thu Aug 27 03:17:03 PDT 2026
+0.745: AutoUpdateCheck.IntervalInDays=0.0
+0.745: AutoUpdateCheck.LastKnownBuild=1.04 Build T2026-05-04-0750
+0.745: ColorManagement.InputOption.AssumedProfile=sRGB IEC61966-2.1
+0.745: ColorManagement.InputOption=Use_EXIF_and_DCF_rules
+0.745: ColorManagement.OutputOption=CopyInput
+0.746: ComputerConfiguration.PhysicalMemory=63032
+0.746: DepthMapControl.CachePass1Info=false
+0.746: DepthMapControl.ContrastThresholdLevel=8.177664E-6
+0.746: DepthMapControl.ContrastThresholdPercentile=12.4
+0.746: DepthMapControl.EstimationRadius=10
+0.747: DepthMapControl.SaveDepthMapImageDirectory={project}\\DepthMaps
+0.747: DepthMapControl.SmoothingRadius=5
+0.749: DepthMapControl.UsedPixelFractionThreshold=0.5
+0.749: IOControl.OverlapIOIfPossible=true
+0.749: LaunchConfiguration.HeapSize.64bitJava=56516
+0.749: LightroomPlugin.CreatedByZSVersion=1.04 Build T2026-05-04-0750
+0.749: LightroomPlugin.CurrentInstallationFolder=C\:\\Users\\chris\\AppData\\Roaming\\Adobe\\Lightroom\\Modules
+0.749: LightroomPlugin.DefaultColorSpace=AdobeRGB
+0.750: NewProject.PlacementStrategy=InApplicationDefaultDirectory
+0.750: PyramidControl.RetainOnlyUDRImage=false
+0.750: PyramidControl.RetainUDRImage=true
+0.750: PyramidControl.UseAllChannels=true
+0.750: RetouchingBrush.ShowBrushes=false
+0.750: RetouchingBrush.Type=Details
+0.751: RetouchingBrush.Width=1345.4344
+0.751: SaveImage.BitsPerColor=16
+0.751: SaveImage.CompressionQuality=1.0
+0.752: SaveImage.CompressionType=none
+0.752: SaveImage.FileType=tif
+0.752: SaveImage.FolderPathLastUsed=D\:\\edited\\macro\\marker2
+0.753: SaveImage.RescaleImageToAvoidOverflow=true
+0.753: ScreenLayout.Bounds=0,0,3778,2098
+0.753: ScreenLayout.ContrastThresholdDialogSize=625,151
+0.754: ScreenLayout.ExtendedState=0
+0.754: ScreenLayout.FilesDivider.Location=1383
+0.754: ScreenLayout.FontsScale=1.0
+0.754: ScreenLayout.MainDivider.Location=331
+0.755: ScreenLayout.OutputImageWindow.Bounds=1710,0,1710,1981
+0.755: ScreenLayout.OutputImageWindow.ImageScale=0.2407962328767123
+0.755: ScreenLayout.OutputImageWindow.ImageScaleFitToWindow=true
+0.755: ScreenLayout.OutputImageWindow.Maximized=false
+0.756: ScreenLayout.ResetLayoutForEachProject=true
+0.756: ScreenLayout.SaveImageFileChooser.Size=500,750
+0.756: ScreenLayout.SourceFileChooser.Size=500,750
+0.756: ScreenLayout.SourceImageWindow.Bounds=0,0,1710,1981
+0.756: ScreenLayout.SourceImageWindow.ImageScale=0.2407962328767123
+0.756: ScreenLayout.SourceImageWindow.ImageScaleFitToWindow=true
+0.757: ScreenLayout.SourceImageWindow.Maximized=false
+0.757: SkewSequence.NumberOfOutputImages=3
+0.758: SkewSequence.ShiftXPct.Limit1=-3.0
+0.758: SkewSequence.ShiftXPct.Limit2=3.0
+0.758: SkewSequence.ShiftYPct.Limit1=0.0
+0.758: SkewSequence.ShiftYPct.Limit2=0.0
+0.759: Slabbing.FramesPerOverlap=3
+0.759: SourceFileChooser.LastDirectory=D\:/edited/macro/marker2
+0.759: UIStyle.ShowIntermediateOutputInterval=0.0
+0.760: Look and feel = SystemNative
+0.776: Is multiple selection mode supported by FileDialog: true
+0.777: Glasspane isFocusable = true
+0.799: hard expiration date = null
+0.825: Desktop class found

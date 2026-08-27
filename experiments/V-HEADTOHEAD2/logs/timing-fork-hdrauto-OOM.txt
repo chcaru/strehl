@@ -1,0 +1,1435 @@
+--noise-model=auto: loaded C:/dev/macro/presets/noise_profile.json (source=preset:iso_50, iso_hint=50)
+[  1/  2] Load D:\edited\macro\coffee-bean\DSC0006
+[  2/ 11] Load D:\edited\macro\coffee-bean\DSC0006
+[  3/ 18] Load D:\edited\macro\coffee-bean\DSC0006
+[  4/ 25] Load D:\edited\macro\coffee-bean\DSC0006
+[  5/ 35] Load D:\edited\macro\coffee-bean\DSC0007
+[  6/ 42] Load D:\edited\macro\coffee-bean\DSC0006
+[  7/ 50] Load D:\edited\macro\coffee-bean\DSC0007
+[  8/ 58] Load D:\edited\macro\coffee-bean\DSC0006
+[  9/ 66] Load D:\edited\macro\coffee-bean\DSC0007
+[ 10/ 74] Load D:\edited\macro\coffee-bean\DSC0006
+[ 11/ 82] Load D:\edited\macro\coffee-bean\DSC0007
+[ 12/ 90] Load D:\edited\macro\coffee-bean\DSC0006
+[ 13/ 99] Load D:\edited\macro\coffee-bean\DSC0007
+[ 14/107] Load D:\edited\macro\coffee-bean\DSC0006
+[ 15/114] Load D:\edited\macro\coffee-bean\DSC0007
+[ 16/123] Load D:\edited\macro\coffee-bean\DSC0006
+[ 17/131] Load D:\edited\macro\coffee-bean\DSC0007
+[ 18/139] Load D:\edited\macro\coffee-bean\DSC0005
+[ 19/147] Load D:\edited\macro\coffee-bean\DSC0007
+[ 20/156] Load D:\edited\macro\coffee-bean\DSC0005
+[ 21/163] Load D:\edited\macro\coffee-bean\DSC0007
+[ 22/171] Load D:\edited\macro\coffee-bean\DSC0005
+[ 23/181] Load D:\edited\macro\coffee-bean\DSC0007
+[ 24/187] Load D:\edited\macro\coffee-bean\DSC0005
+[ 25/196] Load D:\edited\macro\coffee-bean\DSC0008
+[ 26/204] Load D:\edited\macro\coffee-bean\DSC0005
+[ 27/212] Load D:\edited\macro\coffee-bean\DSC0008
+[ 28/220] Load D:\edited\macro\coffee-bean\DSC0005
+[ 29/228] Load D:\edited\macro\coffee-bean\DSC0008
+[ 30/236] Load D:\edited\macro\coffee-bean\DSC0005
+[ 31/244] Load D:\edited\macro\coffee-bean\DSC0008
+[ 32/257] Load D:\edited\macro\coffee-bean\DSC0005
+[ 33/265] Load D:\edited\macro\coffee-bean\DSC0008
+[ WARN:4@19.624] global matrix_expressions.cpp:1334 cv::MatOp_AddEx::assign OpenCV/MatExpr: processing of multi-channel arrays might be changed in the future: https://github.com/opencv/opencv/issues/16739
+[ 33/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 34/860] Load D:\edited\macro\coffee-bean\DSC0005
+[ 34/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 35/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 35/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 36/860] Load D:\edited\macro\coffee-bean\DSC0005
+[ 36/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 37/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 37/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 38/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 38/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 39/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 39/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 40/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 40/860] Load D:\edited\macro\coffee-bean\DSC0007
+[ 41/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 41/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 42/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 42/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 43/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 43/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 44/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 44/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 45/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 45/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 46/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 46/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 47/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 47/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 48/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 48/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 49/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 49/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 50/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 50/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 51/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 51/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 52/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 52/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 53/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 53/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 54/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 54/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 55/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 55/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 56/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 56/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 57/860] Load D:\edited\macro\coffee-bean\DSC0004
+[ 57/860] Load D:\edited\macro\coffee-bean\DSC0006
+[ 58/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 58/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 59/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 59/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 60/860] Load D:\edited\macro\coffee-bean\DSC0009
+[ 60/860] Load D:\edited\macro\coffee-bean\DSC0008
+[ 61/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 61/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 62/860] Align DSC00068.tif to DSC00068.tif      
+[ 62/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 63/860] Grayscale aligned_DSC00068.tif          
+[ 63/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 64/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 64/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 65/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 65/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 66/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 66/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 67/860] Forward-wavelet aligned_DSC00068.tif    
+[ 67/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 68/860] Align-residual aligned_DSC00068.tif     
+[ 68/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 69/860] Align DSC00069.tif to DSC00068.tif      
+[ 69/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 70/860] WAVS focus measure for aligned_DSC00068.
+[ 70/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 71/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 71/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 72/860] Align DSC00067.tif to DSC00068.tif      
+[ 72/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 73/860] Align DSC00066.tif to DSC00067.tif      
+[ 73/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 74/860] Align DSC00070.tif to DSC00069.tif      
+[ 74/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 75/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 75/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 76/860] Construct depthmap layer 52             
+[ 76/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 77/860] Grayscale aligned_DSC00069.tif          
+[ 77/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 78/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 78/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 79/860] Grayscale aligned_DSC00067.tif          
+[ 79/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 80/860] Align DSC00065.tif to DSC00066.tif      
+[ 80/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 81/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 81/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 82/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 82/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 83/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 83/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 84/860] Grayscale aligned_DSC00066.tif          
+[ 84/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 85/860] Forward-wavelet aligned_DSC00069.tif    
+[ 85/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 86/860] Align-residual aligned_DSC00069.tif     
+[ 86/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 87/860] Align-residual aligned_DSC00066.tif     
+[ 87/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 88/860] Align-residual aligned_DSC00067.tif     
+[ 88/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 89/860] Grayscale aligned_DSC00070.tif          
+[ 89/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 90/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 90/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 91/860] Forward-wavelet aligned_DSC00067.tif    
+[ 91/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 92/860] WAVS focus measure for aligned_DSC00069.
+[ 92/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 93/860] Grayscale aligned_DSC00065.tif          
+[ 93/860] Grayscale aligned_DSC00065.tif          
+[ 94/860] Align-residual aligned_DSC00070.tif     
+[ 94/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 95/860] Align-residual aligned_DSC00065.tif     
+[ 95/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 96/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 96/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 97/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 97/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 98/860] Grayscale D:\edited\macro\coffee-bean\DS
+[ 98/860] Load D:\edited\macro\coffee-bean\DSC0003
+[ 99/860] WAVS focus measure for aligned_DSC00067.
+[ 99/860] Load D:\edited\macro\coffee-bean\DSC0003
+[100/860] Forward-wavelet aligned_DSC00066.tif    
+[100/860] Load D:\edited\macro\coffee-bean\DSC0003
+[101/860] Grayscale D:\edited\macro\coffee-bean\DS
+[101/860] Load D:\edited\macro\coffee-bean\DSC0003
+[102/860] Grayscale D:\edited\macro\coffee-bean\DS
+[102/860] Load D:\edited\macro\coffee-bean\DSC0003
+[103/860] Grayscale D:\edited\macro\coffee-bean\DS
+[103/860] Load D:\edited\macro\coffee-bean\DSC0003
+[104/860] Grayscale D:\edited\macro\coffee-bean\DS
+[104/860] Load D:\edited\macro\coffee-bean\DSC0003
+[105/860] Grayscale D:\edited\macro\coffee-bean\DS
+[105/860] Load D:\edited\macro\coffee-bean\DSC0003
+[106/860] Grayscale D:\edited\macro\coffee-bean\DS
+[106/860] Load D:\edited\macro\coffee-bean\DSC0003
+[107/860] Grayscale D:\edited\macro\coffee-bean\DS
+[107/860] Load D:\edited\macro\coffee-bean\DSC0003
+[108/860] Grayscale D:\edited\macro\coffee-bean\DS
+[108/860] Load D:\edited\macro\coffee-bean\DSC0003
+[109/860] Grayscale D:\edited\macro\coffee-bean\DS
+[109/860] Load D:\edited\macro\coffee-bean\DSC0003
+[110/860] Grayscale D:\edited\macro\coffee-bean\DS
+[110/860] Load D:\edited\macro\coffee-bean\DSC0003
+[111/860] Grayscale D:\edited\macro\coffee-bean\DS
+[111/860] Load D:\edited\macro\coffee-bean\DSC0003
+[112/860] WAVS focus measure for aligned_DSC00066.
+[112/860] Load D:\edited\macro\coffee-bean\DSC0003
+[113/860] Forward-wavelet aligned_DSC00070.tif    
+[113/860] Load D:\edited\macro\coffee-bean\DSC0003
+[114/860] Grayscale D:\edited\macro\coffee-bean\DS
+[114/860] Load D:\edited\macro\coffee-bean\DSC0003
+[115/860] Grayscale D:\edited\macro\coffee-bean\DS
+[115/860] Load D:\edited\macro\coffee-bean\DSC0003
+[116/860] Align DSC00074.tif to DSC00073.tif      
+[116/860] Load D:\edited\macro\coffee-bean\DSC0003
+[117/860] Grayscale D:\edited\macro\coffee-bean\DS
+[117/860] Load D:\edited\macro\coffee-bean\DSC0003
+[118/860] Grayscale D:\edited\macro\coffee-bean\DS
+[118/860] Load D:\edited\macro\coffee-bean\DSC0003
+[119/860] Align DSC00062.tif to DSC00063.tif      
+[119/860] Load D:\edited\macro\coffee-bean\DSC0003
+[120/860] Grayscale D:\edited\macro\coffee-bean\DS
+[120/860] Load D:\edited\macro\coffee-bean\DSC0003
+[121/860] WAVS focus measure for aligned_DSC00070.
+[121/860] Load D:\edited\macro\coffee-bean\DSC0003
+[122/860] Forward-wavelet aligned_DSC00065.tif    
+[122/860] Load D:\edited\macro\coffee-bean\DSC0003
+[123/860] Grayscale D:\edited\macro\coffee-bean\DS
+[123/860] Load D:\edited\macro\coffee-bean\DSC0003
+[124/860] Grayscale D:\edited\macro\coffee-bean\DS
+[124/860] Load D:\edited\macro\coffee-bean\DSC0003
+[125/860] Align DSC00073.tif to DSC00072.tif      
+[125/860] Load D:\edited\macro\coffee-bean\DSC0003
+[126/860] Grayscale D:\edited\macro\coffee-bean\DS
+[126/860] Load D:\edited\macro\coffee-bean\DSC0003
+[127/860] Align DSC00064.tif to DSC00065.tif      
+[127/860] Load D:\edited\macro\coffee-bean\DSC0003
+[128/860] Align DSC00063.tif to DSC00064.tif      
+[128/860] Load D:\edited\macro\coffee-bean\DSC0003
+[129/860] Grayscale D:\edited\macro\coffee-bean\DS
+[129/860] Load D:\edited\macro\coffee-bean\DSC0003
+[130/860] Grayscale D:\edited\macro\coffee-bean\DS
+[130/860] Load D:\edited\macro\coffee-bean\DSC0003
+[131/860] WAVS focus measure for aligned_DSC00065.
+[131/860] Load D:\edited\macro\coffee-bean\DSC0003
+[132/860] Align DSC00071.tif to DSC00070.tif      
+[132/860] Load D:\edited\macro\coffee-bean\DSC0003
+[133/860] Align DSC00072.tif to DSC00071.tif      
+[133/860] Load D:\edited\macro\coffee-bean\DSC0003
+[134/860] Grayscale D:\edited\macro\coffee-bean\DS
+[134/860] Load D:\edited\macro\coffee-bean\DSC0003
+[135/860] Align DSC00082.tif to DSC00081.tif      
+[135/860] Load D:\edited\macro\coffee-bean\DSC0003
+[136/860] Align DSC00061.tif to DSC00062.tif      
+[136/860] Load D:\edited\macro\coffee-bean\DSC0003
+[137/860] Align DSC00060.tif to DSC00061.tif      
+[137/860] Load D:\edited\macro\coffee-bean\DSC0003
+[138/860] Align DSC00055.tif to DSC00056.tif      
+[138/860] Load D:\edited\macro\coffee-bean\DSC0003
+[139/860] Align DSC00054.tif to DSC00055.tif      
+[139/860] Load D:\edited\macro\coffee-bean\DSC0003
+[140/860] Align DSC00057.tif to DSC00058.tif      
+[140/860] Load D:\edited\macro\coffee-bean\DSC0003
+[141/860] Align DSC00077.tif to DSC00076.tif      
+[141/860] Align DSC00077.tif to DSC00076.tif      
+[142/860] Align DSC00056.tif to DSC00057.tif      
+[142/860] Align DSC00077.tif to DSC00076.tif      
+[143/860] Align DSC00053.tif to DSC00054.tif      
+[143/860] Align DSC00077.tif to DSC00076.tif      
+[144/860] Align DSC00078.tif to DSC00077.tif      
+[144/860] Align DSC00077.tif to DSC00076.tif      
+[145/860] Align DSC00079.tif to DSC00078.tif      
+[145/860] Align DSC00077.tif to DSC00076.tif      
+[146/860] Align DSC00075.tif to DSC00074.tif      
+[146/860] Align DSC00077.tif to DSC00076.tif      
+[147/860] Align DSC00076.tif to DSC00075.tif      
+[147/860] Align DSC00077.tif to DSC00076.tif      
+[148/860] Align DSC00085.tif to DSC00084.tif      
+[148/860] Align DSC00077.tif to DSC00076.tif      
+[149/860] Align DSC00052.tif to DSC00053.tif      
+[149/860] Align DSC00077.tif to DSC00076.tif      
+[150/860] Align DSC00080.tif to DSC00079.tif      
+[150/860] Align DSC00077.tif to DSC00076.tif      
+[151/860] Align DSC00059.tif to DSC00060.tif      
+[151/860] Align DSC00077.tif to DSC00076.tif      
+[152/860] Construct depthmap layer 51             
+[152/860] Align DSC00077.tif to DSC00076.tif      
+[153/860] Align DSC00058.tif to DSC00059.tif      
+[153/860] Align DSC00077.tif to DSC00076.tif      
+[154/860] Align DSC00081.tif to DSC00080.tif      
+[154/860] Align DSC00077.tif to DSC00076.tif      
+[155/860] Align DSC00083.tif to DSC00082.tif      
+[155/860] Align DSC00077.tif to DSC00076.tif      
+[156/860] Align DSC00084.tif to DSC00083.tif      
+[156/860] Align DSC00077.tif to DSC00076.tif      
+[157/860] Align DSC00051.tif to DSC00052.tif      
+[157/860] Align DSC00077.tif to DSC00076.tif      
+[158/860] Align DSC00050.tif to DSC00051.tif      
+[158/860] Align DSC00077.tif to DSC00076.tif      
+[159/860] Grayscale D:\edited\macro\coffee-bean\DS
+[159/860] Align DSC00077.tif to DSC00076.tif      
+[160/860] Align DSC00086.tif to DSC00085.tif      
+[160/860] Align DSC00077.tif to DSC00076.tif      
+[161/860] Grayscale D:\edited\macro\coffee-bean\DS
+[161/860] Align DSC00077.tif to DSC00076.tif      
+[162/860] Align DSC00049.tif to DSC00050.tif      
+[162/860] Align DSC00077.tif to DSC00076.tif      
+[163/860] Construct depthmap layer 53             
+[163/860] Align DSC00077.tif to DSC00076.tif      
+[164/860] Grayscale aligned_DSC00064.tif          
+[164/860] Align DSC00077.tif to DSC00076.tif      
+[165/860] Forward-wavelet aligned_DSC00064.tif    
+[165/860] Align DSC00077.tif to DSC00076.tif      
+[166/860] Align-residual aligned_DSC00064.tif     
+[166/860] Align DSC00077.tif to DSC00076.tif      
+[167/860] WAVS focus measure for aligned_DSC00064.
+[167/860] Align DSC00077.tif to DSC00076.tif      
+[168/860] Grayscale aligned_DSC00071.tif          
+[168/860] Align DSC00077.tif to DSC00076.tif      
+[169/860] Grayscale aligned_DSC00072.tif          
+[169/860] Align DSC00077.tif to DSC00076.tif      
+[170/860] Forward-wavelet aligned_DSC00071.tif    
+[170/860] Align DSC00077.tif to DSC00076.tif      
+[171/860] Construct depthmap layer 50             
+[171/860] Align DSC00077.tif to DSC00076.tif      
+[172/860] Align-residual aligned_DSC00071.tif     
+[172/860] Align DSC00077.tif to DSC00076.tif      
+[173/860] WAVS focus measure for aligned_DSC00071.
+[173/860] Align DSC00077.tif to DSC00076.tif      
+[174/860] Merge 8 images                          
+[174/860] Align DSC00077.tif to DSC00076.tif      
+[175/860] Forward-wavelet aligned_DSC00072.tif    
+[175/860] Align DSC00077.tif to DSC00076.tif      
+[176/860] Align-residual aligned_DSC00072.tif     
+[176/860] Align DSC00077.tif to DSC00076.tif      
+[177/860] WAVS focus measure for aligned_DSC00072.
+[177/860] Align DSC00077.tif to DSC00076.tif      
+[178/860] Grayscale aligned_DSC00063.tif          
+[178/860] Align DSC00077.tif to DSC00076.tif      
+[179/860] Forward-wavelet aligned_DSC00063.tif    
+[179/860] Align DSC00077.tif to DSC00076.tif      
+[180/860] Align-residual aligned_DSC00063.tif     
+[180/860] Align DSC00077.tif to DSC00076.tif      
+[181/860] WAVS focus measure for aligned_DSC00063.
+[181/860] Align DSC00077.tif to DSC00076.tif      
+[182/860] Grayscale D:\edited\macro\coffee-bean\DS
+[182/860] Align DSC00077.tif to DSC00076.tif      
+[183/860] Grayscale aligned_DSC00073.tif          
+[183/860] Align DSC00077.tif to DSC00076.tif      
+[184/860] Grayscale aligned_DSC00062.tif          
+[184/860] Align DSC00077.tif to DSC00076.tif      
+[185/860] Grayscale aligned_DSC00074.tif          
+[185/860] Align DSC00077.tif to DSC00076.tif      
+[186/860] Grayscale D:\edited\macro\coffee-bean\DS
+[186/860] Align DSC00077.tif to DSC00076.tif      
+[187/860] Forward-wavelet aligned_DSC00073.tif    
+[187/860] Align DSC00077.tif to DSC00076.tif      
+[188/860] Align-residual aligned_DSC00073.tif     
+[188/860] Align DSC00077.tif to DSC00076.tif      
+[189/860] Align-residual aligned_DSC00062.tif     
+[189/860] Align DSC00077.tif to DSC00076.tif      
+[190/860] Align-residual aligned_DSC00074.tif     
+[190/860] Align DSC00077.tif to DSC00076.tif      
+[191/860] Align DSC00087.tif to DSC00086.tif      
+[191/860] Align DSC00077.tif to DSC00076.tif      
+[192/860] Align DSC00048.tif to DSC00049.tif      
+[192/860] Align DSC00077.tif to DSC00076.tif      
+[193/860] WAVS focus measure for aligned_DSC00073.
+[193/860] Align DSC00077.tif to DSC00076.tif      
+[194/860] Forward-wavelet aligned_DSC00062.tif    
+[194/860] Align DSC00077.tif to DSC00076.tif      
+[195/860] Grayscale aligned_DSC00061.tif          
+[195/860] Align DSC00077.tif to DSC00076.tif      
+[196/860] Grayscale aligned_DSC00075.tif          
+[196/860] Align DSC00077.tif to DSC00076.tif      
+[197/860] WAVS focus measure for aligned_DSC00062.
+[197/860] Align DSC00077.tif to DSC00076.tif      
+[198/860] Forward-wavelet aligned_DSC00074.tif    
+[198/860] Align DSC00077.tif to DSC00076.tif      
+[199/860] Align-residual aligned_DSC00061.tif     
+[199/860] Align-residual aligned_DSC00061.tif     
+[200/860] Grayscale D:\edited\macro\coffee-bean\DS
+[200/860] Align-residual aligned_DSC00061.tif     
+[201/860] Align-residual aligned_DSC00075.tif     
+[201/860] Align-residual aligned_DSC00061.tif     
+[202/860] WAVS focus measure for aligned_DSC00074.
+[202/860] Align-residual aligned_DSC00061.tif     
+[203/860] Forward-wavelet aligned_DSC00061.tif    
+[203/860] Align-residual aligned_DSC00061.tif     
+[204/860] Align DSC00088.tif to DSC00087.tif      
+[204/860] Align-residual aligned_DSC00061.tif     
+[205/860] Construct depthmap layer 54             
+[205/860] Align-residual aligned_DSC00061.tif     
+[206/860] Grayscale aligned_DSC00060.tif          
+[206/860] Align-residual aligned_DSC00061.tif     
+[207/860] Grayscale aligned_DSC00076.tif          
+[207/860] Align-residual aligned_DSC00061.tif     
+[208/860] WAVS focus measure for aligned_DSC00061.
+[208/860] Align-residual aligned_DSC00061.tif     
+[209/860] Forward-wavelet aligned_DSC00075.tif    
+[209/860] Align-residual aligned_DSC00061.tif     
+[210/860] Grayscale D:\edited\macro\coffee-bean\DS
+[210/860] Align-residual aligned_DSC00061.tif     
+[211/860] Grayscale D:\edited\macro\coffee-bean\DS
+[211/860] Align-residual aligned_DSC00061.tif     
+[212/860] Align-residual aligned_DSC00060.tif     
+[212/860] Align-residual aligned_DSC00061.tif     
+[213/860] WAVS focus measure for aligned_DSC00075.
+[213/860] Align-residual aligned_DSC00061.tif     
+[214/860] Forward-wavelet aligned_DSC00060.tif    
+[214/860] Align-residual aligned_DSC00061.tif     
+[215/860] Align-residual aligned_DSC00076.tif     
+[215/860] Align DSC00077.tif to DSC00076.tif      
+[216/860] Align DSC00047.tif to DSC00048.tif      
+[216/860] Align DSC00077.tif to DSC00076.tif      
+[217/860] WAVS focus measure for aligned_DSC00060.
+[217/860] Align DSC00077.tif to DSC00076.tif      
+[218/860] Forward-wavelet aligned_DSC00076.tif    
+[218/860] Align DSC00077.tif to DSC00076.tif      
+[219/860] Grayscale aligned_DSC00059.tif          
+[219/860] Align DSC00085.tif to DSC00084.tif      
+[220/860] Grayscale aligned_DSC00077.tif          
+[220/860] Align DSC00085.tif to DSC00084.tif      
+[221/860] Grayscale D:\edited\macro\coffee-bean\DS
+[221/860] Align DSC00085.tif to DSC00084.tif      
+[222/860] Grayscale D:\edited\macro\coffee-bean\DS
+[222/860] Align DSC00085.tif to DSC00084.tif      
+[223/860] Align-residual aligned_DSC00077.tif     
+[223/860] Align DSC00085.tif to DSC00084.tif      
+[224/860] Align-residual aligned_DSC00059.tif     
+[224/860] Align DSC00085.tif to DSC00084.tif      
+[225/860] Align DSC00089.tif to DSC00088.tif      
+[225/860] Align DSC00085.tif to DSC00084.tif      
+[226/860] WAVS focus measure for aligned_DSC00076.
+[226/860] Align DSC00085.tif to DSC00084.tif      
+[227/860] Forward-wavelet aligned_DSC00059.tif    
+[227/860] Align DSC00085.tif to DSC00084.tif      
+[228/860] Grayscale D:\edited\macro\coffee-bean\DS
+[228/860] Align DSC00085.tif to DSC00084.tif      
+[229/860] WAVS focus measure for aligned_DSC00059.
+[229/860] Align DSC00085.tif to DSC00084.tif      
+[230/860] Forward-wavelet aligned_DSC00077.tif    
+[230/860] Align DSC00085.tif to DSC00084.tif      
+[231/860] Grayscale aligned_DSC00058.tif          
+[231/860] Align DSC00085.tif to DSC00084.tif      
+[232/860] Align DSC00046.tif to DSC00047.tif      
+[232/860] Align DSC00085.tif to DSC00084.tif      
+[233/860] Grayscale D:\edited\macro\coffee-bean\DS
+[233/860] Align DSC00085.tif to DSC00084.tif      
+[234/860] WAVS focus measure for aligned_DSC00077.
+[234/860] Align DSC00085.tif to DSC00084.tif      
+[235/860] Forward-wavelet aligned_DSC00058.tif    
+[235/860] Align DSC00085.tif to DSC00084.tif      
+[236/860] Align-residual aligned_DSC00058.tif     
+[236/860] Align DSC00085.tif to DSC00084.tif      
+[237/860] Grayscale aligned_DSC00078.tif          
+[237/860] Align DSC00085.tif to DSC00084.tif      
+[238/860] Align DSC00090.tif to DSC00089.tif      
+[238/860] Align DSC00085.tif to DSC00084.tif      
+[239/860] WAVS focus measure for aligned_DSC00058.
+[239/860] Align DSC00085.tif to DSC00084.tif      
+[240/860] Grayscale D:\edited\macro\coffee-bean\DS
+[240/860] Align DSC00085.tif to DSC00084.tif      
+[241/860] Forward-wavelet aligned_DSC00078.tif    
+[241/860] Align DSC00085.tif to DSC00084.tif      
+[242/860] Align-residual aligned_DSC00078.tif     
+[242/860] Align DSC00085.tif to DSC00084.tif      
+[243/860] Align DSC00045.tif to DSC00046.tif      
+[243/860] Align DSC00085.tif to DSC00084.tif      
+[244/860] Align DSC00091.tif to DSC00090.tif      
+[244/860] Align DSC00085.tif to DSC00084.tif      
+[245/860] Grayscale D:\edited\macro\coffee-bean\DS
+[245/860] Align DSC00085.tif to DSC00084.tif      
+[246/860] WAVS focus measure for aligned_DSC00078.
+[246/860] Align DSC00085.tif to DSC00084.tif      
+[247/860] Grayscale aligned_DSC00057.tif          
+[247/860] Align DSC00085.tif to DSC00084.tif      
+[248/860] Grayscale aligned_DSC00079.tif          
+[248/860] Align DSC00085.tif to DSC00084.tif      
+[249/860] Forward-wavelet aligned_DSC00057.tif    
+[249/860] Align DSC00085.tif to DSC00084.tif      
+[250/860] Align-residual aligned_DSC00057.tif     
+[250/860] Align DSC00085.tif to DSC00084.tif      
+[251/860] Grayscale D:\edited\macro\coffee-bean\DS
+[251/860] Align DSC00085.tif to DSC00084.tif      
+[252/860] Align DSC00044.tif to DSC00045.tif      
+[252/860] Align DSC00085.tif to DSC00084.tif      
+[253/860] Align DSC00092.tif to DSC00091.tif      
+[253/860] Align DSC00085.tif to DSC00084.tif      
+[254/860] WAVS focus measure for aligned_DSC00057.
+[254/860] Align DSC00085.tif to DSC00084.tif      
+[255/860] Grayscale D:\edited\macro\coffee-bean\DS
+[255/860] Align DSC00085.tif to DSC00084.tif      
+[256/860] Grayscale D:\edited\macro\coffee-bean\DS
+[256/860] Align DSC00085.tif to DSC00084.tif      
+[257/860] Forward-wavelet aligned_DSC00079.tif    
+[257/860] Align DSC00085.tif to DSC00084.tif      
+[258/860] Align-residual aligned_DSC00079.tif     
+[258/860] Align DSC00085.tif to DSC00084.tif      
+[259/860] Grayscale aligned_DSC00056.tif          
+[259/860] Align DSC00085.tif to DSC00084.tif      
+[260/860] WAVS focus measure for aligned_DSC00079.
+[260/860] Align DSC00085.tif to DSC00084.tif      
+[261/860] Align DSC00043.tif to DSC00044.tif      
+[261/860] Align DSC00085.tif to DSC00084.tif      
+[262/860] Align DSC00042.tif to DSC00043.tif      
+[262/860] Align DSC00085.tif to DSC00084.tif      
+[263/860] Align DSC00093.tif to DSC00092.tif      
+[263/860] Align DSC00085.tif to DSC00084.tif      
+[264/860] Forward-wavelet aligned_DSC00056.tif    
+[264/860] Align DSC00085.tif to DSC00084.tif      
+[265/860] Align-residual aligned_DSC00056.tif     
+[265/860] Align DSC00085.tif to DSC00084.tif      
+[266/860] Grayscale aligned_DSC00080.tif          
+[266/860] Align DSC00085.tif to DSC00084.tif      
+[267/860] WAVS focus measure for aligned_DSC00056.
+[267/860] Align DSC00085.tif to DSC00084.tif      
+[268/860] Grayscale D:\edited\macro\coffee-bean\DS
+[268/860] Align DSC00085.tif to DSC00084.tif      
+[269/860] Grayscale D:\edited\macro\coffee-bean\DS
+[269/860] Align DSC00085.tif to DSC00084.tif      
+[270/860] Grayscale aligned_DSC00055.tif          
+[270/860] Align DSC00085.tif to DSC00084.tif      
+[271/860] Construct depthmap layer 49             
+[271/860] Align DSC00085.tif to DSC00084.tif      
+[272/860] Grayscale D:\edited\macro\coffee-bean\DS
+[272/860] Align DSC00085.tif to DSC00084.tif      
+[273/860] Forward-wavelet aligned_DSC00080.tif    
+[273/860] Align DSC00085.tif to DSC00084.tif      
+[274/860] Align-residual aligned_DSC00080.tif     
+[274/860] Align DSC00085.tif to DSC00084.tif      
+[275/860] Align-residual aligned_DSC00055.tif     
+[275/860] Align DSC00085.tif to DSC00084.tif      
+[276/860] Grayscale aligned_DSC00081.tif          
+[276/860] Align DSC00085.tif to DSC00084.tif      
+[277/860] WAVS focus measure for aligned_DSC00080.
+[277/860] Align DSC00085.tif to DSC00084.tif      
+[278/860] Forward-wavelet aligned_DSC00055.tif    
+[278/860] Align DSC00085.tif to DSC00084.tif      
+[279/860] Align-residual aligned_DSC00081.tif     
+[279/860] Align DSC00085.tif to DSC00084.tif      
+[280/860] Align DSC00094.tif to DSC00093.tif      
+[280/860] Align DSC00085.tif to DSC00084.tif      
+[281/860] Align DSC00041.tif to DSC00042.tif      
+[281/860] Align DSC00085.tif to DSC00084.tif      
+[282/860] Align DSC00095.tif to DSC00094.tif      
+[282/860] Align DSC00085.tif to DSC00084.tif      
+[283/860] WAVS focus measure for aligned_DSC00055.
+[283/860] Align DSC00085.tif to DSC00084.tif      
+[284/860] Forward-wavelet aligned_DSC00081.tif    
+[284/860] Align DSC00085.tif to DSC00084.tif      
+[285/860] Grayscale D:\edited\macro\coffee-bean\DS
+[285/860] Align DSC00085.tif to DSC00084.tif      
+[286/860] Grayscale aligned_DSC00054.tif          
+[286/860] Align DSC00085.tif to DSC00084.tif      
+[287/860] Grayscale D:\edited\macro\coffee-bean\DS
+[287/860] Align DSC00085.tif to DSC00084.tif      
+[288/860] WAVS focus measure for aligned_DSC00081.
+[288/860] Align DSC00085.tif to DSC00084.tif      
+[289/860] Grayscale aligned_DSC00082.tif          
+[289/860] Align DSC00085.tif to DSC00084.tif      
+[290/860] Forward-wavelet aligned_DSC00054.tif    
+[290/860] Align DSC00085.tif to DSC00084.tif      
+[291/860] Align-residual aligned_DSC00054.tif     
+[291/860] Align DSC00085.tif to DSC00084.tif      
+[292/860] WAVS focus measure for aligned_DSC00054.
+[292/860] Align DSC00085.tif to DSC00084.tif      
+[293/860] Forward-wavelet aligned_DSC00082.tif    
+[293/860] Align DSC00085.tif to DSC00084.tif      
+[294/860] Align-residual aligned_DSC00082.tif     
+[294/860] Align DSC00085.tif to DSC00084.tif      
+[295/860] Grayscale aligned_DSC00053.tif          
+[295/860] Grayscale aligned_DSC00053.tif          
+[296/860] Grayscale aligned_DSC00083.tif          
+[296/860] Grayscale aligned_DSC00053.tif          
+[297/860] Align DSC00040.tif to DSC00041.tif      
+[297/860] Grayscale aligned_DSC00053.tif          
+[298/860] Align DSC00096.tif to DSC00095.tif      
+[298/860] Grayscale aligned_DSC00053.tif          
+[299/860] WAVS focus measure for aligned_DSC00082.
+[299/860] Grayscale aligned_DSC00053.tif          
+[300/860] Grayscale D:\edited\macro\coffee-bean\DS
+[300/860] Grayscale aligned_DSC00053.tif          
+[301/860] Grayscale D:\edited\macro\coffee-bean\DS
+[301/860] Grayscale aligned_DSC00053.tif          
+[302/860] Merge 8 images                          
+[302/860] Align DSC00085.tif to DSC00084.tif      
+[303/860] Forward-wavelet aligned_DSC00053.tif    
+[303/860] Align DSC00085.tif to DSC00084.tif      
+[304/860] Align-residual aligned_DSC00053.tif     
+[304/860] Align DSC00085.tif to DSC00084.tif      
+[305/860] Align-residual aligned_DSC00083.tif     
+[305/860] Align DSC00085.tif to DSC00084.tif      
+[306/860] Align DSC00039.tif to DSC00040.tif      
+[306/860] Align DSC00085.tif to DSC00084.tif      
+[307/860] WAVS focus measure for aligned_DSC00053.
+[307/860] Align DSC00085.tif to DSC00084.tif      
+[308/860] Forward-wavelet aligned_DSC00083.tif    
+[308/860] Align DSC00085.tif to DSC00084.tif      
+[309/860] Grayscale aligned_DSC00052.tif          
+[309/860] Align DSC00085.tif to DSC00084.tif      
+[310/860] Grayscale aligned_DSC00084.tif          
+[310/860] Align DSC00085.tif to DSC00084.tif      
+[311/860] Grayscale D:\edited\macro\coffee-bean\DS
+[311/860] Align DSC00085.tif to DSC00084.tif      
+[312/860] Align DSC00097.tif to DSC00096.tif      
+[312/860] Align DSC00085.tif to DSC00084.tif      
+[313/860] Align-residual aligned_DSC00052.tif     
+[313/860] Align DSC00085.tif to DSC00084.tif      
+[314/860] WAVS focus measure for aligned_DSC00083.
+[314/860] Align DSC00085.tif to DSC00084.tif      
+[315/860] Forward-wavelet aligned_DSC00052.tif    
+[315/860] Align DSC00085.tif to DSC00084.tif      
+[316/860] Align-residual aligned_DSC00084.tif     
+[316/860] Align DSC00085.tif to DSC00084.tif      
+[317/860] Align DSC00038.tif to DSC00039.tif      
+[317/860] Align DSC00085.tif to DSC00084.tif      
+[318/860] Load D:\edited\macro\coffee-bean\DSC0009
+[318/860] Align DSC00085.tif to DSC00084.tif      
+[319/860] Load D:\edited\macro\coffee-bean\DSC0003
+[319/860] Align DSC00085.tif to DSC00084.tif      
+[320/860] Load D:\edited\macro\coffee-bean\DSC0009
+[320/860] Align DSC00085.tif to DSC00084.tif      
+[321/860] WAVS focus measure for aligned_DSC00052.
+[321/860] Align DSC00085.tif to DSC00084.tif      
+[322/860] Forward-wavelet aligned_DSC00084.tif    
+[322/860] Align DSC00091.tif to DSC00090.tif      
+[323/860] Grayscale aligned_DSC00051.tif          
+[323/860] Align DSC00091.tif to DSC00090.tif      
+[324/860] WAVS focus measure for aligned_DSC00084.
+[324/860] Align DSC00091.tif to DSC00090.tif      
+[325/860] Forward-wavelet aligned_DSC00051.tif    
+[325/860] Align DSC00091.tif to DSC00090.tif      
+[326/860] Align-residual aligned_DSC00051.tif     
+[326/860] Align DSC00091.tif to DSC00090.tif      
+[327/860] WAVS focus measure for aligned_DSC00051.
+[327/860] Align DSC00091.tif to DSC00090.tif      
+[328/860] Grayscale aligned_DSC00085.tif          
+[328/860] Align DSC00091.tif to DSC00090.tif      
+[329/860] Load D:\edited\macro\coffee-bean\DSC0003
+[329/860] Align DSC00091.tif to DSC00090.tif      
+[330/860] Forward-wavelet aligned_DSC00085.tif    
+[330/860] Align DSC00091.tif to DSC00090.tif      
+[331/860] Align-residual aligned_DSC00085.tif     
+[331/860] Align DSC00091.tif to DSC00090.tif      
+[332/860] Grayscale aligned_DSC00086.tif          
+[332/860] Align DSC00091.tif to DSC00090.tif      
+[333/860] Grayscale aligned_DSC00050.tif          
+[333/860] Align DSC00091.tif to DSC00090.tif      
+[334/860] WAVS focus measure for aligned_DSC00085.
+[334/860] Align DSC00091.tif to DSC00090.tif      
+[335/860] Forward-wavelet aligned_DSC00086.tif    
+[335/860] Align DSC00091.tif to DSC00090.tif      
+[336/860] Align-residual aligned_DSC00050.tif     
+[336/860] Align DSC00091.tif to DSC00090.tif      
+[337/860] Forward-wavelet aligned_DSC00050.tif    
+[337/860] Align DSC00091.tif to DSC00090.tif      
+[338/860] Align-residual aligned_DSC00086.tif     
+[338/860] Align DSC00091.tif to DSC00090.tif      
+[339/860] WAVS focus measure for aligned_DSC00050.
+[339/860] Align DSC00091.tif to DSC00090.tif      
+[340/860] WAVS focus measure for aligned_DSC00086.
+[340/860] Align DSC00091.tif to DSC00090.tif      
+[341/860] Load D:\edited\macro\coffee-bean\DSC0010
+[341/860] Align DSC00091.tif to DSC00090.tif      
+[342/860] Load D:\edited\macro\coffee-bean\DSC0003
+[342/860] Align DSC00091.tif to DSC00090.tif      
+[343/860] Grayscale aligned_DSC00087.tif          
+[343/860] Align DSC00091.tif to DSC00090.tif      
+[344/860] Grayscale aligned_DSC00049.tif          
+[344/860] Align DSC00091.tif to DSC00090.tif      
+[345/860] Load D:\edited\macro\coffee-bean\DSC0010
+[345/860] Load D:\edited\macro\coffee-bean\DSC0010
+[346/860] Load D:\edited\macro\coffee-bean\DSC0003
+[346/860] Load D:\edited\macro\coffee-bean\DSC0010
+[347/860] Forward-wavelet aligned_DSC00087.tif    
+[347/860] Load D:\edited\macro\coffee-bean\DSC0010
+[348/860] Align-residual aligned_DSC00087.tif     
+[348/860] Load D:\edited\macro\coffee-bean\DSC0010
+[349/860] Grayscale D:\edited\macro\coffee-bean\DS
+[349/860] Load D:\edited\macro\coffee-bean\DSC0010
+[350/860] Grayscale D:\edited\macro\coffee-bean\DS
+[350/860] Load D:\edited\macro\coffee-bean\DSC0010
+[351/860] Align-residual aligned_DSC00049.tif     
+[351/860] Load D:\edited\macro\coffee-bean\DSC0010
+[352/860] Grayscale aligned_DSC00088.tif          
+[352/860] Load D:\edited\macro\coffee-bean\DSC0010
+[353/860] Grayscale aligned_DSC00048.tif          
+[353/860] Load D:\edited\macro\coffee-bean\DSC0010
+[354/860] Forward-wavelet aligned_DSC00049.tif    
+[354/860] Load D:\edited\macro\coffee-bean\DSC0010
+[355/860] WAVS focus measure for aligned_DSC00087.
+[355/860] Load D:\edited\macro\coffee-bean\DSC0010
+[356/860] Align DSC00098.tif to DSC00097.tif      
+[356/860] Load D:\edited\macro\coffee-bean\DSC0010
+[357/860] Grayscale aligned_DSC00089.tif          
+[357/860] Load D:\edited\macro\coffee-bean\DSC0010
+[358/860] Align DSC00037.tif to DSC00038.tif      
+[358/860] Load D:\edited\macro\coffee-bean\DSC0010
+[359/860] Align-residual aligned_DSC00048.tif     
+[359/860] Load D:\edited\macro\coffee-bean\DSC0010
+[360/860] WAVS focus measure for aligned_DSC00049.
+[360/860] Load D:\edited\macro\coffee-bean\DSC0010
+[361/860] Forward-wavelet aligned_DSC00048.tif    
+[361/860] Load D:\edited\macro\coffee-bean\DSC0010
+[362/860] Grayscale D:\edited\macro\coffee-bean\DS
+[362/860] Load D:\edited\macro\coffee-bean\DSC0010
+[363/860] WAVS focus measure for aligned_DSC00048.
+[363/860] Load D:\edited\macro\coffee-bean\DSC0010
+[364/860] Align DSC00099.tif to DSC00098.tif      
+[364/860] Load D:\edited\macro\coffee-bean\DSC0010
+[365/860] Grayscale D:\edited\macro\coffee-bean\DS
+[365/860] Load D:\edited\macro\coffee-bean\DSC0010
+[366/860] Forward-wavelet aligned_DSC00089.tif    
+[366/860] Load D:\edited\macro\coffee-bean\DSC0010
+[367/860] Align-residual aligned_DSC00089.tif     
+[367/860] Load D:\edited\macro\coffee-bean\DSC0010
+[368/860] Grayscale aligned_DSC00047.tif          
+[368/860] Load D:\edited\macro\coffee-bean\DSC0010
+[369/860] Load D:\edited\macro\coffee-bean\DSC0010
+[369/860] Load D:\edited\macro\coffee-bean\DSC0010
+[370/860] Align-residual aligned_DSC00088.tif     
+[370/860] Load D:\edited\macro\coffee-bean\DSC0010
+[371/860] Grayscale aligned_DSC00090.tif          
+[371/860] Load D:\edited\macro\coffee-bean\DSC0010
+[372/860] Align DSC00036.tif to DSC00037.tif      
+[372/860] Load D:\edited\macro\coffee-bean\DSC0010
+[373/860] Forward-wavelet aligned_DSC00088.tif    
+[373/860] Load D:\edited\macro\coffee-bean\DSC0010
+[374/860] Align-residual aligned_DSC00047.tif     
+[374/860] Load D:\edited\macro\coffee-bean\DSC0010
+[375/860] WAVS focus measure for aligned_DSC00089.
+[375/860] Load D:\edited\macro\coffee-bean\DSC0010
+[376/860] Align-residual aligned_DSC00090.tif     
+[376/860] Load D:\edited\macro\coffee-bean\DSC0010
+[377/860] WAVS focus measure for aligned_DSC00088.
+[377/860] Load D:\edited\macro\coffee-bean\DSC0010
+[378/860] Forward-wavelet aligned_DSC00047.tif    
+[378/860] Load D:\edited\macro\coffee-bean\DSC0010
+[379/860] Load D:\edited\macro\coffee-bean\DSC0003
+[379/860] Load D:\edited\macro\coffee-bean\DSC0010
+[380/860] Load D:\edited\macro\coffee-bean\DSC0010
+[380/860] Load D:\edited\macro\coffee-bean\DSC0010
+[381/860] Construct depthmap layer 55             
+[381/860] Load D:\edited\macro\coffee-bean\DSC0010
+[382/860] Load D:\edited\macro\coffee-bean\DSC0003
+[382/860] Load D:\edited\macro\coffee-bean\DSC0010
+[383/860] Load D:\edited\macro\coffee-bean\DSC0010
+[383/860] Load D:\edited\macro\coffee-bean\DSC0010
+[384/860] WAVS focus measure for aligned_DSC00047.
+[384/860] Load D:\edited\macro\coffee-bean\DSC0010
+[385/860] Grayscale aligned_DSC00046.tif          
+[385/860] Load D:\edited\macro\coffee-bean\DSC0010
+[386/860] Forward-wavelet aligned_DSC00090.tif    
+[386/860] Load D:\edited\macro\coffee-bean\DSC0010
+[387/860] WAVS focus measure for aligned_DSC00090.
+[387/860] Load D:\edited\macro\coffee-bean\DSC0010
+[388/860] Grayscale aligned_DSC00091.tif          
+[388/860] Load D:\edited\macro\coffee-bean\DSC0010
+[389/860] Grayscale D:\edited\macro\coffee-bean\DS
+[389/860] Load D:\edited\macro\coffee-bean\DSC0010
+[390/860] Forward-wavelet aligned_DSC00046.tif    
+[390/860] Load D:\edited\macro\coffee-bean\DSC0010
+[391/860] Align-residual aligned_DSC00046.tif     
+[391/860] Load D:\edited\macro\coffee-bean\DSC0010
+[392/860] Align-residual aligned_DSC00091.tif     
+[392/860] Load D:\edited\macro\coffee-bean\DSC0010
+[393/860] WAVS focus measure for aligned_DSC00046.
+[393/860] Load D:\edited\macro\coffee-bean\DSC0010
+[394/860] Forward-wavelet aligned_DSC00091.tif    
+[394/860] Align DSC00094.tif to DSC00093.tif      
+[395/860] Align DSC00100.tif to DSC00099.tif      
+[395/860] Align DSC00094.tif to DSC00093.tif      
+[396/860] Grayscale D:\edited\macro\coffee-bean\DS
+[396/860] Align DSC00094.tif to DSC00093.tif      
+[397/860] Grayscale D:\edited\macro\coffee-bean\DS
+[397/860] Align DSC00094.tif to DSC00093.tif      
+[398/860] Grayscale D:\edited\macro\coffee-bean\DS
+[398/860] Align DSC00094.tif to DSC00093.tif      
+[399/860] WAVS focus measure for aligned_DSC00091.
+[399/860] Align DSC00094.tif to DSC00093.tif      
+[400/860] Align DSC00035.tif to DSC00036.tif      
+[400/860] Align DSC00094.tif to DSC00093.tif      
+[401/860] Load D:\edited\macro\coffee-bean\DSC0003
+[401/860] Align DSC00094.tif to DSC00093.tif      
+[402/860] Align DSC00101.tif to DSC00100.tif      
+[402/860] Align DSC00094.tif to DSC00093.tif      
+[403/860] Align DSC00034.tif to DSC00035.tif      
+[403/860] Align DSC00094.tif to DSC00093.tif      
+[404/860] Grayscale aligned_DSC00092.tif          
+[404/860] Align DSC00094.tif to DSC00093.tif      
+[405/860] Load D:\edited\macro\coffee-bean\DSC0010
+[405/860] Align DSC00094.tif to DSC00093.tif      
+[406/860] Grayscale aligned_DSC00093.tif          
+[406/860] Align DSC00094.tif to DSC00093.tif      
+[407/860] Load D:\edited\macro\coffee-bean\DSC0003
+[407/860] Align DSC00094.tif to DSC00093.tif      
+[408/860] Forward-wavelet aligned_DSC00092.tif    
+[408/860] Align DSC00094.tif to DSC00093.tif      
+[409/860] Grayscale aligned_DSC00045.tif          
+[409/860] Align DSC00094.tif to DSC00093.tif      
+[410/860] Align-residual aligned_DSC00092.tif     
+[410/860] Align DSC00094.tif to DSC00093.tif      
+[411/860] Align-residual aligned_DSC00093.tif     
+[411/860] Align-residual aligned_DSC00093.tif     
+[412/860] WAVS focus measure for aligned_DSC00092.
+[412/860] Align-residual aligned_DSC00093.tif     
+[413/860] Forward-wavelet aligned_DSC00045.tif    
+[413/860] Align-residual aligned_DSC00093.tif     
+[414/860] Align-residual aligned_DSC00045.tif     
+[414/860] Align DSC00094.tif to DSC00093.tif      
+[415/860] Load D:\edited\macro\coffee-bean\DSC0010
+[415/860] Align DSC00094.tif to DSC00093.tif      
+[416/860] WAVS focus measure for aligned_DSC00045.
+[416/860] Align DSC00094.tif to DSC00093.tif      
+[417/860] Forward-wavelet aligned_DSC00093.tif    
+[417/860] Align DSC00036.tif to DSC00037.tif      
+[418/860] Grayscale aligned_DSC00094.tif          
+[418/860] Align DSC00036.tif to DSC00037.tif      
+[419/860] Grayscale D:\edited\macro\coffee-bean\DS
+[419/860] Align DSC00036.tif to DSC00037.tif      
+[420/860] Load D:\edited\macro\coffee-bean\DSC0002
+[420/860] Align DSC00036.tif to DSC00037.tif      
+[421/860] Grayscale aligned_DSC00044.tif          
+[421/860] Align DSC00036.tif to DSC00037.tif      
+[422/860] WAVS focus measure for aligned_DSC00093.
+[422/860] Align DSC00036.tif to DSC00037.tif      
+[423/860] Align DSC00102.tif to DSC00101.tif      
+[423/860] Align DSC00036.tif to DSC00037.tif      
+[424/860] Forward-wavelet aligned_DSC00094.tif    
+[424/860] Align DSC00036.tif to DSC00037.tif      
+[425/860] Align-residual aligned_DSC00044.tif     
+[425/860] Align DSC00036.tif to DSC00037.tif      
+[426/860] Align-residual aligned_DSC00094.tif     
+[426/860] Align DSC00036.tif to DSC00037.tif      
+[427/860] Forward-wavelet aligned_DSC00044.tif    
+[427/860] Align DSC00036.tif to DSC00037.tif      
+[428/860] WAVS focus measure for aligned_DSC00094.
+[428/860] Align DSC00036.tif to DSC00037.tif      
+[429/860] Grayscale D:\edited\macro\coffee-bean\DS
+[429/860] Align DSC00036.tif to DSC00037.tif      
+[430/860] WAVS focus measure for aligned_DSC00044.
+[430/860] Align DSC00036.tif to DSC00037.tif      
+[431/860] Grayscale D:\edited\macro\coffee-bean\DS
+[431/860] Align DSC00036.tif to DSC00037.tif      
+[432/860] Grayscale D:\edited\macro\coffee-bean\DS
+[432/860] Grayscale D:\edited\macro\coffee-bean\DS
+[433/860] Grayscale aligned_DSC00095.tif          
+[433/860] Grayscale D:\edited\macro\coffee-bean\DS
+[434/860] Align DSC00033.tif to DSC00034.tif      
+[434/860] Grayscale D:\edited\macro\coffee-bean\DS
+[435/860] Grayscale D:\edited\macro\coffee-bean\DS
+[435/860] Grayscale D:\edited\macro\coffee-bean\DS
+[436/860] Load D:\edited\macro\coffee-bean\DSC0010
+[436/860] Grayscale D:\edited\macro\coffee-bean\DS
+[437/860] Load D:\edited\macro\coffee-bean\DSC0002
+[437/860] Grayscale D:\edited\macro\coffee-bean\DS
+[438/860] Grayscale aligned_DSC00043.tif          
+[438/860] Grayscale D:\edited\macro\coffee-bean\DS
+[439/860] Align DSC00103.tif to DSC00102.tif      
+[439/860] Align DSC00036.tif to DSC00037.tif      
+[440/860] Align DSC00032.tif to DSC00033.tif      
+[440/860] Align DSC00036.tif to DSC00037.tif      
+[441/860] Forward-wavelet aligned_DSC00095.tif    
+[441/860] Align DSC00036.tif to DSC00037.tif      
+[442/860] Align-residual aligned_DSC00095.tif     
+[442/860] Align DSC00036.tif to DSC00037.tif      
+[443/860] Align DSC00104.tif to DSC00103.tif      
+[443/860] Align DSC00036.tif to DSC00037.tif      
+[444/860] Align-residual aligned_DSC00043.tif     
+[444/860] Align DSC00036.tif to DSC00037.tif      
+[445/860] Forward-wavelet aligned_DSC00043.tif    
+[445/860] Align DSC00036.tif to DSC00037.tif      
+[446/860] WAVS focus measure for aligned_DSC00095.
+[446/860] Align DSC00036.tif to DSC00037.tif      
+[447/860] WAVS focus measure for aligned_DSC00043.
+[447/860] Align DSC00036.tif to DSC00037.tif      
+[448/860] Load D:\edited\macro\coffee-bean\DSC0010
+[448/860] Align DSC00036.tif to DSC00037.tif      
+[449/860] Load D:\edited\macro\coffee-bean\DSC0002
+[449/860] Align DSC00036.tif to DSC00037.tif      
+[450/860] Grayscale D:\edited\macro\coffee-bean\DS
+[450/860] Align DSC00036.tif to DSC00037.tif      
+[451/860] Grayscale D:\edited\macro\coffee-bean\DS
+[451/860] Align DSC00036.tif to DSC00037.tif      
+[452/860] Grayscale D:\edited\macro\coffee-bean\DS
+[452/860] Align DSC00036.tif to DSC00037.tif      
+[453/860] Load D:\edited\macro\coffee-bean\DSC0010
+[453/860] Align DSC00036.tif to DSC00037.tif      
+[454/860] Grayscale aligned_DSC00042.tif          
+[454/860] Align DSC00036.tif to DSC00037.tif      
+[455/860] Load D:\edited\macro\coffee-bean\DSC0002
+[455/860] Align DSC00036.tif to DSC00037.tif      
+[456/860] Align DSC00105.tif to DSC00104.tif      
+[456/860] Align DSC00036.tif to DSC00037.tif      
+[457/860] Load D:\edited\macro\coffee-bean\DSC0011
+[457/860] Align DSC00036.tif to DSC00037.tif      
+[458/860] Align DSC00031.tif to DSC00032.tif      
+[458/860] Align DSC00036.tif to DSC00037.tif      
+[459/860] Forward-wavelet aligned_DSC00042.tif    
+[459/860] Align DSC00036.tif to DSC00037.tif      
+[460/860] Align-residual aligned_DSC00042.tif     
+[460/860] Align DSC00036.tif to DSC00037.tif      
+[461/860] WAVS focus measure for aligned_DSC00042.
+[461/860] Align DSC00036.tif to DSC00037.tif      
+[462/860] Grayscale aligned_DSC00041.tif          
+[462/860] Align DSC00036.tif to DSC00037.tif      
+[463/860] Grayscale aligned_DSC00096.tif          
+[463/860] Align DSC00036.tif to DSC00037.tif      
+[464/860] Forward-wavelet aligned_DSC00041.tif    
+[464/860] Align DSC00036.tif to DSC00037.tif      
+[465/860] Align-residual aligned_DSC00041.tif     
+[465/860] Align DSC00036.tif to DSC00037.tif      
+[466/860] Align-residual aligned_DSC00096.tif     
+[466/860] Align DSC00036.tif to DSC00037.tif      
+[467/860] WAVS focus measure for aligned_DSC00041.
+[467/860] Align DSC00036.tif to DSC00037.tif      
+[468/860] Forward-wavelet aligned_DSC00096.tif    
+[468/860] Align DSC00036.tif to DSC00037.tif      
+[469/860] WAVS focus measure for aligned_DSC00096.
+[469/860] Align DSC00036.tif to DSC00037.tif      
+[470/860] Grayscale aligned_DSC00097.tif          
+[470/860] Grayscale aligned_DSC00097.tif          
+[471/860] Grayscale aligned_DSC00040.tif          
+[471/860] Align DSC00036.tif to DSC00037.tif      
+[472/860] Forward-wavelet aligned_DSC00097.tif    
+[472/860] Align DSC00036.tif to DSC00037.tif      
+[473/860] Align-residual aligned_DSC00040.tif     
+[473/860] Align DSC00036.tif to DSC00037.tif      
+[474/860] Align-residual aligned_DSC00097.tif     
+[474/860] Align DSC00036.tif to DSC00037.tif      
+[475/860] Forward-wavelet aligned_DSC00040.tif    
+[475/860] Align DSC00036.tif to DSC00037.tif      
+[476/860] WAVS focus measure for aligned_DSC00097.
+[476/860] Align DSC00036.tif to DSC00037.tif      
+[477/860] Grayscale aligned_DSC00098.tif          
+[477/860] Align DSC00036.tif to DSC00037.tif      
+[478/860] Align DSC00030.tif to DSC00031.tif      
+[478/860] Align DSC00036.tif to DSC00037.tif      
+[479/860] Grayscale D:\edited\macro\coffee-bean\DS
+[479/860] Align DSC00036.tif to DSC00037.tif      
+[480/860] Grayscale D:\edited\macro\coffee-bean\DS
+[480/860] Align DSC00036.tif to DSC00037.tif      
+[481/860] Grayscale D:\edited\macro\coffee-bean\DS
+[481/860] Align DSC00036.tif to DSC00037.tif      
+[482/860] WAVS focus measure for aligned_DSC00040.
+[482/860] Align DSC00036.tif to DSC00037.tif      
+[483/860] Load D:\edited\macro\coffee-bean\DSC0002
+[483/860] Align DSC00036.tif to DSC00037.tif      
+[484/860] Grayscale aligned_DSC00039.tif          
+[484/860] Align DSC00036.tif to DSC00037.tif      
+[485/860] Load D:\edited\macro\coffee-bean\DSC0011
+[485/860] Align DSC00036.tif to DSC00037.tif      
+[486/860] Forward-wavelet aligned_DSC00098.tif    
+[486/860] Align DSC00036.tif to DSC00037.tif      
+[487/860] Align-residual aligned_DSC00098.tif     
+[487/860] Align DSC00036.tif to DSC00037.tif      
+[488/860] Grayscale D:\edited\macro\coffee-bean\DS
+[488/860] Align DSC00036.tif to DSC00037.tif      
+[489/860] Load D:\edited\macro\coffee-bean\DSC0002
+[489/860] Align DSC00036.tif to DSC00037.tif      
+[490/860] Align DSC00027.tif to DSC00028.tif      
+[490/860] Align DSC00036.tif to DSC00037.tif      
+[491/860] Grayscale aligned_DSC00099.tif          
+[491/860] Align DSC00036.tif to DSC00037.tif      
+[492/860] Grayscale D:\edited\macro\coffee-bean\DS
+[492/860] Align DSC00036.tif to DSC00037.tif      
+[493/860] Align DSC00106.tif to DSC00105.tif      
+[493/860] Align DSC00036.tif to DSC00037.tif      
+[494/860] Align DSC00107.tif to DSC00106.tif      
+[494/860] Align DSC00036.tif to DSC00037.tif      
+[495/860] Load D:\edited\macro\coffee-bean\DSC0011
+[495/860] Align DSC00036.tif to DSC00037.tif      
+[496/860] Grayscale D:\edited\macro\coffee-bean\DS
+[496/860] Align DSC00036.tif to DSC00037.tif      
+[497/860] WAVS focus measure for aligned_DSC00098.
+[497/860] Align DSC00036.tif to DSC00037.tif      
+[498/860] Align DSC00029.tif to DSC00030.tif      
+[498/860] Align DSC00036.tif to DSC00037.tif      
+[499/860] Forward-wavelet aligned_DSC00099.tif    
+[499/860] Align DSC00036.tif to DSC00037.tif      
+[500/860] Align-residual aligned_DSC00039.tif     
+[500/860] Align DSC00036.tif to DSC00037.tif      
+[501/860] Grayscale aligned_DSC00038.tif          
+[501/860] Align DSC00036.tif to DSC00037.tif      
+[502/860] Align-residual aligned_DSC00099.tif     
+[502/860] Align DSC00036.tif to DSC00037.tif      
+[503/860] Align DSC00028.tif to DSC00029.tif      
+[503/860] Align DSC00036.tif to DSC00037.tif      
+[504/860] Forward-wavelet aligned_DSC00039.tif    
+[504/860] Align DSC00036.tif to DSC00037.tif      
+[505/860] WAVS focus measure for aligned_DSC00099.
+[505/860] Align DSC00036.tif to DSC00037.tif      
+[506/860] Align DSC00108.tif to DSC00107.tif      
+[506/860] Align DSC00036.tif to DSC00037.tif      
+[507/860] Align-residual aligned_DSC00038.tif     
+[507/860] Align DSC00036.tif to DSC00037.tif      
+[508/860] WAVS focus measure for aligned_DSC00039.
+[508/860] Align DSC00036.tif to DSC00037.tif      
+[509/860] Forward-wavelet aligned_DSC00038.tif    
+[509/860] Align DSC00036.tif to DSC00037.tif      
+[510/860] Grayscale D:\edited\macro\coffee-bean\DS
+[510/860] Align DSC00036.tif to DSC00037.tif      
+[511/860] Grayscale aligned_DSC00100.tif          
+[511/860] Align DSC00036.tif to DSC00037.tif      
+[512/860] Grayscale D:\edited\macro\coffee-bean\DS
+[512/860] Align DSC00036.tif to DSC00037.tif      
+[513/860] Grayscale D:\edited\macro\coffee-bean\DS
+[513/860] Align DSC00036.tif to DSC00037.tif      
+[514/860] WAVS focus measure for aligned_DSC00038.
+[514/860] Align DSC00036.tif to DSC00037.tif      
+[515/860] Load D:\edited\macro\coffee-bean\DSC0002
+[515/860] Align DSC00036.tif to DSC00037.tif      
+[516/860] Align DSC00109.tif to DSC00108.tif      
+[516/860] Align DSC00036.tif to DSC00037.tif      
+[517/860] Load D:\edited\macro\coffee-bean\DSC0011
+[517/860] Align DSC00036.tif to DSC00037.tif      
+[518/860] Align DSC00110.tif to DSC00109.tif      
+[518/860] Align DSC00036.tif to DSC00037.tif      
+[519/860] Load D:\edited\macro\coffee-bean\DSC0002
+[519/860] Align DSC00036.tif to DSC00037.tif      
+[520/860] Grayscale aligned_DSC00037.tif          
+[520/860] Align DSC00036.tif to DSC00037.tif      
+[521/860] Construct depthmap layer 48             
+[521/860] Align DSC00036.tif to DSC00037.tif      
+[522/860] Grayscale aligned_DSC00101.tif          
+[522/860] Align DSC00036.tif to DSC00037.tif      
+[523/860] Forward-wavelet aligned_DSC00037.tif    
+[523/860] Align DSC00036.tif to DSC00037.tif      
+[524/860] Align-residual aligned_DSC00037.tif     
+[524/860] Align DSC00036.tif to DSC00037.tif      
+[525/860] Align-residual aligned_DSC00100.tif     
+[525/860] Align-residual aligned_DSC00100.tif     
+[526/860] Align-residual aligned_DSC00101.tif     
+[526/860] Align-residual aligned_DSC00100.tif     
+[527/860] WAVS focus measure for aligned_DSC00037.
+[527/860] Align-residual aligned_DSC00100.tif     
+[528/860] Forward-wavelet aligned_DSC00100.tif    
+[528/860] Align-residual aligned_DSC00100.tif     
+[529/860] Align DSC00026.tif to DSC00027.tif      
+[529/860] Align DSC00036.tif to DSC00037.tif      
+[530/860] Load D:\edited\macro\coffee-bean\DSC0011
+[530/860] Align DSC00036.tif to DSC00037.tif      
+[531/860] Load D:\edited\macro\coffee-bean\DSC0002
+[531/860] Align DSC00036.tif to DSC00037.tif      
+[532/860] WAVS focus measure for aligned_DSC00100.
+[532/860] Align DSC00036.tif to DSC00037.tif      
+[533/860] Forward-wavelet aligned_DSC00101.tif    
+[533/860] Align DSC00036.tif to DSC00037.tif      
+[534/860] Grayscale aligned_DSC00102.tif          
+[534/860] Align DSC00105.tif to DSC00104.tif      
+[535/860] Grayscale aligned_DSC00036.tif          
+[535/860] Align DSC00105.tif to DSC00104.tif      
+[536/860] WAVS focus measure for aligned_DSC00101.
+[536/860] Align DSC00105.tif to DSC00104.tif      
+[537/860] Forward-wavelet aligned_DSC00036.tif    
+[537/860] Align DSC00105.tif to DSC00104.tif      
+[538/860] Align-residual aligned_DSC00036.tif     
+[538/860] Align DSC00105.tif to DSC00104.tif      
+[539/860] Align-residual aligned_DSC00102.tif     
+[539/860] Align DSC00105.tif to DSC00104.tif      
+[540/860] WAVS focus measure for aligned_DSC00036.
+[540/860] Align DSC00105.tif to DSC00104.tif      
+[541/860] Forward-wavelet aligned_DSC00102.tif    
+[541/860] Align DSC00105.tif to DSC00104.tif      
+[542/860] Grayscale D:\edited\macro\coffee-bean\DS
+[542/860] Align DSC00105.tif to DSC00104.tif      
+[543/860] Grayscale D:\edited\macro\coffee-bean\DS
+[543/860] Align DSC00105.tif to DSC00104.tif      
+[544/860] Grayscale D:\edited\macro\coffee-bean\DS
+[544/860] Align DSC00105.tif to DSC00104.tif      
+[545/860] Grayscale aligned_DSC00103.tif          
+[545/860] Align DSC00105.tif to DSC00104.tif      
+[546/860] Grayscale aligned_DSC00035.tif          
+[546/860] Align DSC00105.tif to DSC00104.tif      
+[547/860] Align DSC00025.tif to DSC00026.tif      
+[547/860] Align DSC00105.tif to DSC00104.tif      
+[548/860] Align DSC00024.tif to DSC00025.tif      
+[548/860] Align DSC00105.tif to DSC00104.tif      
+[549/860] Align DSC00111.tif to DSC00110.tif      
+[549/860] Align DSC00105.tif to DSC00104.tif      
+[550/860] Align-residual aligned_DSC00103.tif     
+[550/860] Align DSC00105.tif to DSC00104.tif      
+[551/860] Align-residual aligned_DSC00035.tif     
+[551/860] Align DSC00105.tif to DSC00104.tif      
+[552/860] Load D:\edited\macro\coffee-bean\DSC0011
+[552/860] Align DSC00105.tif to DSC00104.tif      
+[553/860] Load D:\edited\macro\coffee-bean\DSC0002
+[553/860] Align DSC00105.tif to DSC00104.tif      
+[554/860] Grayscale aligned_DSC00104.tif          
+[554/860] Align DSC00105.tif to DSC00104.tif      
+[555/860] Grayscale aligned_DSC00034.tif          
+[555/860] Align DSC00105.tif to DSC00104.tif      
+[556/860] Forward-wavelet aligned_DSC00035.tif    
+[556/860] Align DSC00105.tif to DSC00104.tif      
+[557/860] Align-residual aligned_DSC00034.tif     
+[557/860] Align DSC00105.tif to DSC00104.tif      
+[558/860] WAVS focus measure for aligned_DSC00102.
+[558/860] Align DSC00105.tif to DSC00104.tif      
+[559/860] Load D:\edited\macro\coffee-bean\DSC0011
+[559/860] Align DSC00105.tif to DSC00104.tif      
+[560/860] Load D:\edited\macro\coffee-bean\DSC0001
+[560/860] Align DSC00105.tif to DSC00104.tif      
+[561/860] Load D:\edited\macro\coffee-bean\DSC0011
+[561/860] Merge 8 images                          
+[562/860] Grayscale aligned_DSC00105.tif          
+[562/860] Merge 8 images                          
+[563/860] Align-residual aligned_DSC00104.tif     
+[563/860] Merge 8 images                          
+[564/860] WAVS focus measure for aligned_DSC00035.
+[564/860] Merge 8 images                          
+[565/860] Forward-wavelet aligned_DSC00034.tif    
+[565/860] Merge 8 images                          
+[566/860] Align-residual aligned_DSC00105.tif     
+[566/860] Merge 8 images                          
+[567/860] Grayscale D:\edited\macro\coffee-bean\DS
+[567/860] Merge 8 images                          
+[568/860] Grayscale D:\edited\macro\coffee-bean\DS
+[568/860] Merge 8 images                          
+[569/860] WAVS focus measure for aligned_DSC00034.
+[569/860] Merge 8 images                          
+[570/860] Forward-wavelet aligned_DSC00103.tif    
+[570/860] Merge 8 images                          
+[571/860] Grayscale aligned_DSC00033.tif          
+[571/860] Merge 8 images                          
+[572/860] Load D:\edited\macro\coffee-bean\DSC0001
+[572/860] Merge 8 images                          
+[573/860] Load D:\edited\macro\coffee-bean\DSC0011
+[573/860] Merge 8 images                          
+[574/860] Align DSC00112.tif to DSC00111.tif      
+[574/860] Merge 8 images                          
+[575/860] Load D:\edited\macro\coffee-bean\DSC0001
+[575/860] Merge 8 images                          
+[576/860] WAVS focus measure for aligned_DSC00103.
+[576/860] Merge 8 images                          
+[577/860] Forward-wavelet aligned_DSC00104.tif    
+[577/860] Merge 8 images                          
+[578/860] Grayscale aligned_DSC00106.tif          
+[578/860] Merge 8 images                          
+[579/860] Grayscale D:\edited\macro\coffee-bean\DS
+[579/860] Merge 8 images                          
+[580/860] Align-residual aligned_DSC00033.tif     
+[580/860] Merge 8 images                          
+[581/860] Grayscale D:\edited\macro\coffee-bean\DS
+[581/860] Merge 8 images                          
+[582/860] Grayscale D:\edited\macro\coffee-bean\DS
+[582/860] Grayscale D:\edited\macro\coffee-bean\DS
+[583/860] Forward-wavelet aligned_DSC00033.tif    
+[583/860] Grayscale D:\edited\macro\coffee-bean\DS
+[584/860] WAVS focus measure for aligned_DSC00104.
+[584/860] Grayscale D:\edited\macro\coffee-bean\DS
+[585/860] Align-residual aligned_DSC00106.tif     
+[585/860] Grayscale D:\edited\macro\coffee-bean\DS
+[586/860] Align DSC00113.tif to DSC00112.tif      
+[586/860] Grayscale D:\edited\macro\coffee-bean\DS
+[587/860] Grayscale aligned_DSC00107.tif          
+[587/860] Grayscale D:\edited\macro\coffee-bean\DS
+[588/860] WAVS focus measure for aligned_DSC00033.
+[588/860] Merge 8 images                          
+[589/860] Forward-wavelet aligned_DSC00105.tif    
+[589/860] Merge 8 images                          
+[590/860] Align DSC00023.tif to DSC00024.tif      
+[590/860] Merge 8 images                          
+[591/860] Align-residual aligned_DSC00107.tif     
+[591/860] Merge 8 images                          
+[592/860] WAVS focus measure for aligned_DSC00105.
+[592/860] Merge 8 images                          
+[593/860] Forward-wavelet aligned_DSC00106.tif    
+[593/860] Merge 8 images                          
+[594/860] Grayscale aligned_DSC00032.tif          
+[594/860] Merge 8 images                          
+[595/860] Align DSC00022.tif to DSC00023.tif      
+[595/860] Merge 8 images                          
+[596/860] Grayscale D:\edited\macro\coffee-bean\DS
+[596/860] Merge 8 images                          
+[597/860] WAVS focus measure for aligned_DSC00106.
+[597/860] Merge 8 images                          
+[598/860] Forward-wavelet aligned_DSC00032.tif    
+[598/860] Merge 8 images                          
+[599/860] Align-residual aligned_DSC00032.tif     
+[599/860] Merge 8 images                          
+[600/860] Align DSC00114.tif to DSC00113.tif      
+[600/860] Merge 8 images                          
+[601/860] Grayscale aligned_DSC00108.tif          
+[601/860] Merge 8 images                          
+[602/860] Align-residual aligned_DSC00108.tif     
+[602/860] Merge 8 images                          
+[603/860] Align DSC00021.tif to DSC00022.tif      
+[603/860] Merge 8 images                          
+[604/860] Load D:\edited\macro\coffee-bean\DSC0011
+[604/860] Merge 8 images                          
+[605/860] Load D:\edited\macro\coffee-bean\DSC0001
+[605/860] Merge 8 images                          
+[606/860] Grayscale D:\edited\macro\coffee-bean\DS
+[606/860] Merge 8 images                          
+[607/860] Load D:\edited\macro\coffee-bean\DSC0012
+[607/860] Merge 8 images                          
+[608/860] WAVS focus measure for aligned_DSC00032.
+[608/860] Merge 8 images                          
+[609/860] Forward-wavelet aligned_DSC00107.tif    
+[609/860] Merge 8 images                          
+[610/860] Align DSC00115.tif to DSC00114.tif      
+[610/860] Merge 8 images                          
+[611/860] Grayscale D:\edited\macro\coffee-bean\DS
+[611/860] Merge 8 images                          
+[611/860] Merge 8 images                          
+[612/860] WAVS focus measure for aligned_DSC00107.
+[613/860] Forward-wavelet aligned_DSC00108.tif    
+[613/860] Merge 8 images                          
+[614/860] Grayscale aligned_DSC00031.tif          
+[614/860] Merge 8 images                          
+[615/860] Align DSC00020.tif to DSC00021.tif      
+[615/860] Merge 8 images                          
+[616/860] Grayscale aligned_DSC00109.tif          
+[616/860] Merge 8 images                          
+[617/860] WAVS focus measure for aligned_DSC00108.
+[617/860] Merge 8 images                          
+[617/860] Merge 8 images                          
+[618/860] Forward-wavelet aligned_DSC00031.tif    
+[619/860] Align-residual aligned_DSC00031.tif     
+[619/860] Merge 8 images                          
+[620/860] Grayscale D:\edited\macro\coffee-bean\DS
+[620/860] Merge 8 images                          
+[621/860] Grayscale D:\edited\macro\coffee-bean\DS
+[621/860] Merge 8 images                          
+[622/860] Grayscale D:\edited\macro\coffee-bean\DS
+[622/860] Merge 8 images                          
+[623/860] Align-residual aligned_DSC00109.tif     
+[623/860] Merge 8 images                          
+[624/860] WAVS focus measure for aligned_DSC00031.
+[624/860] Merge 8 images                          
+[625/860] Forward-wavelet aligned_DSC00109.tif    
+[625/860] Merge 8 images                          
+[626/860] Align DSC00116.tif to DSC00115.tif      
+[626/860] Merge 8 images                          
+[627/860] Align DSC00019.tif to DSC00020.tif      
+[627/860] Align DSC00019.tif to DSC00020.tif      
+[627/860] Align DSC00019.tif to DSC00020.tif      
+[627/860] Align DSC00019.tif to DSC00020.tif      
+[627/860] Align DSC00019.tif to DSC00020.tif      
+[627/860] Align DSC00019.tif to DSC00020.tif      
+[627/860] Align DSC00019.tif to DSC00020.tif      
+[628/860] Grayscale aligned_DSC00110.tif          
+[628/860] Align DSC00019.tif to DSC00020.tif      
+[629/860] Grayscale aligned_DSC00030.tif          
+[629/860] Align DSC00019.tif to DSC00020.tif      
+[630/860] WAVS focus measure for aligned_DSC00109.
+[630/860] Align DSC00019.tif to DSC00020.tif      
+[631/860] Forward-wavelet aligned_DSC00110.tif    
+[632/860] Align-residual aligned_DSC00110.tif     
+[632/860] Align DSC00019.tif to DSC00020.tif      
+[633/860] Align-residual aligned_DSC00030.tif     
+[633/860] Align DSC00019.tif to DSC00020.tif      
+[634/860] Grayscale D:\edited\macro\coffee-bean\DS
+[634/860] Align DSC00019.tif to DSC00020.tif      
+[635/860] Grayscale D:\edited\macro\coffee-bean\DS
+[635/860] Align DSC00019.tif to DSC00020.tif      
+[635/860] Align DSC00019.tif to DSC00020.tif      
+[636/860] Grayscale aligned_DSC00111.tif          
+[636/860] Align DSC00019.tif to DSC00020.tif      
+[637/860] Align DSC00117.tif to DSC00116.tif      
+[637/860] Align DSC00019.tif to DSC00020.tif      
+[637/860] Align DSC00019.tif to DSC00020.tif      
+[638/860] Align DSC00017.tif to DSC00018.tif      
+[639/860] Align DSC00018.tif to DSC00019.tif      
+[639/860] Align DSC00019.tif to DSC00020.tif      
+[639/860] Align DSC00019.tif to DSC00020.tif      
+[640/860] Forward-wavelet aligned_DSC00030.tif    
+[641/860] WAVS focus measure for aligned_DSC00110.
+[641/860] Align DSC00019.tif to DSC00020.tif      
+[642/860] Grayscale D:\edited\macro\coffee-bean\DS
+[642/860] Align DSC00019.tif to DSC00020.tif      
+[643/860] Grayscale aligned_DSC00029.tif          
+[643/860] Align DSC00019.tif to DSC00020.tif      
+[644/860] Align-residual aligned_DSC00111.tif     
+[644/860] Align DSC00019.tif to DSC00020.tif      
+[645/860] Construct depthmap layer 56             
+[645/860] Align DSC00019.tif to DSC00020.tif      
+[646/860] Align-residual aligned_DSC00029.tif     
+[646/860] Align DSC00019.tif to DSC00020.tif      
+[647/860] Grayscale D:\edited\macro\coffee-bean\DS
+[647/860] Align DSC00019.tif to DSC00020.tif      
+[648/860] Grayscale D:\edited\macro\coffee-bean\DS
+[648/860] Align DSC00019.tif to DSC00020.tif      
+[648/860] Align DSC00019.tif to DSC00020.tif      
+[649/860] Grayscale D:\edited\macro\coffee-bean\DS
+[649/860] Align DSC00019.tif to DSC00020.tif      
+[650/860] WAVS focus measure for aligned_DSC00030.
+[651/860] Forward-wavelet aligned_DSC00029.tif    
+[651/860] Align DSC00019.tif to DSC00020.tif      
+[652/860] Align DSC00118.tif to DSC00117.tif      
+[653/860] Align DSC00119.tif to DSC00118.tif      
+[653/860] Align DSC00019.tif to DSC00020.tif      
+[653/860] Align DSC00019.tif to DSC00020.tif      
+[654/860] Align DSC00120.tif to DSC00119.tif      
+[654/860] Align DSC00019.tif to DSC00020.tif      
+[655/860] Align DSC00016.tif to DSC00017.tif      
+[655/860] Align DSC00019.tif to DSC00020.tif      
+[655/860] Align DSC00019.tif to DSC00020.tif      
+[655/860] Align DSC00019.tif to DSC00020.tif      
+[656/860] Grayscale aligned_DSC00028.tif          
+[656/860] Align DSC00019.tif to DSC00020.tif      
+[657/860] Align-residual aligned_DSC00028.tif     
+[657/860] Align DSC00019.tif to DSC00020.tif      
+[658/860] Grayscale aligned_DSC00112.tif          
+[658/860] Align DSC00019.tif to DSC00020.tif      
+[658/860] Align DSC00019.tif to DSC00020.tif      
+[658/860] Align DSC00019.tif to DSC00020.tif      
+[659/860] WAVS focus measure for aligned_DSC00029.
+[660/860] Forward-wavelet aligned_DSC00028.tif    
+[660/860] Align DSC00019.tif to DSC00020.tif      
+[661/860] Align-residual aligned_DSC00112.tif     
+[661/860] Align DSC00019.tif to DSC00020.tif      
+[661/860] Align DSC00019.tif to DSC00020.tif      
+[661/860] Align DSC00019.tif to DSC00020.tif      
+[662/860] Forward-wavelet aligned_DSC00111.tif    
+[663/860] WAVS focus measure for aligned_DSC00028.
+[663/860] Align DSC00019.tif to DSC00020.tif      
+[664/860] Grayscale aligned_DSC00027.tif          
+[664/860] Align DSC00019.tif to DSC00020.tif      
+[665/860] Grayscale aligned_DSC00026.tif          
+[665/860] Align DSC00019.tif to DSC00020.tif      
+[666/860] Grayscale aligned_DSC00025.tif          
+[666/860] Align DSC00019.tif to DSC00020.tif      
+[667/860] Grayscale aligned_DSC00024.tif          
+[667/860] Align DSC00019.tif to DSC00020.tif      
+[668/860] WAVS focus measure for aligned_DSC00111.
+[669/860] Forward-wavelet aligned_DSC00112.tif    
+[669/860] Align DSC00019.tif to DSC00020.tif      
+[670/860] Align-residual aligned_DSC00027.tif     
+[670/860] Align DSC00019.tif to DSC00020.tif      
+[671/860] Align-residual aligned_DSC00026.tif     
+[671/860] Align DSC00019.tif to DSC00020.tif      
+[672/860] Grayscale aligned_DSC00113.tif          
+[672/860] Align DSC00019.tif to DSC00020.tif      
+[673/860] Align-residual aligned_DSC00025.tif     
+[673/860] Align DSC00019.tif to DSC00020.tif      
+[674/860] Align-residual aligned_DSC00024.tif     
+[674/860] Align DSC00019.tif to DSC00020.tif      
+[675/860] Forward-wavelet aligned_DSC00027.tif    
+[676/860] WAVS focus measure for aligned_DSC00112.
+[676/860] Align DSC00019.tif to DSC00020.tif      
+[677/860] Align-residual aligned_DSC00113.tif     
+[677/860] Align DSC00019.tif to DSC00020.tif      
+[677/860] Align DSC00019.tif to DSC00020.tif      
+[677/860] Align DSC00019.tif to DSC00020.tif      
+[677/860] Align DSC00019.tif to DSC00020.tif      
+[677/860] Align DSC00019.tif to DSC00020.tif      
+[678/860] Forward-wavelet aligned_DSC00026.tif    
+[679/860] WAVS focus measure for aligned_DSC00027.
+[679/860] Align DSC00019.tif to DSC00020.tif      
+[680/860] Grayscale aligned_DSC00023.tif          
+[680/860] Align DSC00019.tif to DSC00020.tif      
+[680/860] Align DSC00019.tif to DSC00020.tif      
+[681/860] Forward-wavelet aligned_DSC00025.tif    
+[682/860] WAVS focus measure for aligned_DSC00026.
+[682/860] Align DSC00019.tif to DSC00020.tif      
+[682/860] Align DSC00019.tif to DSC00020.tif      
+[682/860] Align DSC00019.tif to DSC00020.tif      
+[683/860] Align-residual aligned_DSC00023.tif     
+[683/860] Align DSC00019.tif to DSC00020.tif      
+[684/860] WAVS focus measure for aligned_DSC00025.
+[685/860] Forward-wavelet aligned_DSC00024.tif    
+[685/860] Align DSC00019.tif to DSC00020.tif      
+[686/860] Grayscale aligned_DSC00114.tif          
+[686/860] Align DSC00019.tif to DSC00020.tif      
+[686/860] Align DSC00019.tif to DSC00020.tif      
+[687/860] WAVS focus measure for aligned_DSC00024.
+[688/860] Forward-wavelet aligned_DSC00023.tif    
+[688/860] Align DSC00019.tif to DSC00020.tif      
+[689/860] Align-residual aligned_DSC00114.tif     
+[689/860] Align DSC00019.tif to DSC00020.tif      
+[689/860] Align DSC00019.tif to DSC00020.tif      
+[689/860] Align DSC00019.tif to DSC00020.tif      
+[690/860] WAVS focus measure for aligned_DSC00023.
+[691/860] Forward-wavelet aligned_DSC00113.tif    
+[691/860] Align DSC00019.tif to DSC00020.tif      
+[691/860] Align DSC00019.tif to DSC00020.tif      
+[692/860] WAVS focus measure for aligned_DSC00113.
+[693/860] Forward-wavelet aligned_DSC00114.tif    
+[693/860] Align DSC00019.tif to DSC00020.tif      
+[693/860] Align DSC00019.tif to DSC00020.tif      
+[693/860] Align DSC00019.tif to DSC00020.tif      
+[694/860] Grayscale aligned_DSC00022.tif          
+[694/860] Align DSC00019.tif to DSC00020.tif      
+[694/860] Align DSC00019.tif to DSC00020.tif      
+[695/860] WAVS focus measure for aligned_DSC00114.
+[695/860] Align DSC00019.tif to DSC00020.tif      
+[696/860] Forward-wavelet aligned_DSC00022.tif    
+[697/860] Align-residual aligned_DSC00022.tif     
+[697/860] Align DSC00019.tif to DSC00020.tif      
+[697/860] Align DSC00019.tif to DSC00020.tif      
+[698/860] Grayscale aligned_DSC00115.tif          
+[698/860] Align DSC00019.tif to DSC00020.tif      
+[699/860] WAVS focus measure for aligned_DSC00022.
+[699/860] Align DSC00019.tif to DSC00020.tif      
+[699/860] Align DSC00019.tif to DSC00020.tif      
+[700/860] Forward-wavelet aligned_DSC00115.tif    
+[701/860] Align-residual aligned_DSC00115.tif     
+[701/860] Align DSC00019.tif to DSC00020.tif      
+[701/860] Align DSC00019.tif to DSC00020.tif      
+[701/860] Align DSC00019.tif to DSC00020.tif      
+[702/860] Grayscale aligned_DSC00021.tif          
+[702/860] Align DSC00019.tif to DSC00020.tif      
+[702/860] Align DSC00019.tif to DSC00020.tif      
+[703/860] Grayscale aligned_DSC00116.tif          
+[703/860] Align DSC00019.tif to DSC00020.tif      
+[704/860] Align-residual aligned_DSC00021.tif     
+[704/860] Align DSC00019.tif to DSC00020.tif      
+[705/860] Forward-wavelet aligned_DSC00021.tif    
+[706/860] WAVS focus measure for aligned_DSC00115.
+[706/860] Align DSC00019.tif to DSC00020.tif      
+[707/860] Align-residual aligned_DSC00116.tif     
+[707/860] Align DSC00019.tif to DSC00020.tif      
+[708/860] WAVS focus measure for aligned_DSC00021.
+[709/860] Forward-wavelet aligned_DSC00116.tif    
+[709/860] Align DSC00019.tif to DSC00020.tif      
+[709/860] Align DSC00019.tif to DSC00020.tif      
+[709/860] Align DSC00019.tif to DSC00020.tif      
+[710/860] Construct depthmap layer 47             
+[710/860] Align DSC00019.tif to DSC00020.tif      
+[711/860] WAVS focus measure for aligned_DSC00116.
+[711/860] Align DSC00019.tif to DSC00020.tif      
+[712/860] Grayscale aligned_DSC00020.tif          
+[712/860] Align DSC00019.tif to DSC00020.tif      
+[712/860] Align DSC00019.tif to DSC00020.tif      
+[713/860] Grayscale aligned_DSC00117.tif          
+[713/860] Align DSC00019.tif to DSC00020.tif      
+[714/860] Forward-wavelet aligned_DSC00020.tif    
+[715/860] Align-residual aligned_DSC00020.tif     
+[716/860] WAVS focus measure for aligned_DSC00020.
+
+
+Task Grayscale aligned_DSC00020.tif on thread 4 failed with exception:
+OpenCV(4.13.0) C:\GHA-OCV-3\_work\ci-gha-workflow\ci-gha-workflow\opencv\modules\core\src\alloc.cpp:73: error: (-4:Insufficient memory) Failed to allocate 146800640 bytes in function 'cv::OutOfMemoryError'
+
+
+Error exit due to failed steps
+[716/860] Align DSC00019.tif to DSC00020.tif      
+[716/860] Align DSC00019.tif to DSC00020.tif      
+[716/860] Merge 8 images                          
+[716/860] Merge 8 images                          
+[716/860] Merge 8 images                          
+[716/860] Merge 8 images                          
+[716/860] Merge 8 images                          
+[716/860] Merge 8 images                          
+[716/860] Merge 8 images                          
+[716/860] Merge 8 images                          

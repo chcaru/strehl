@@ -1,0 +1,8 @@
+"arm","rep","seconds","exit","peakWS_GB","cpu_s","freeGB_before","freeGB_after","stem"
+"STREHL-SOLVE","1","36.72","0","7.34","592.9","39.6","45.4","v2-strehl-solve-1"
+"STREHL-SOLVE","2","38.4","0","7.64","595.8","45.4","49.4","v2-strehl-solve-2"
+"STREHL-SOLVE","3","38.39","0","7.22","592.7","49.2","45.7","v2-strehl-solve-3"
+"STREHL-CACHED","1","28.29","0","7.21","327.1","45.6","50.5","v2-strehl-cached-1"
+"STREHL-CACHED","2","38.42","0","7.34","318.9","50.5","47.9","v2-strehl-cached-2"
+"STREHL-CACHED","3","46.62","0","7.34","335","48.8","40.4","v2-strehl-cached-3"
+"FORK-MERGE","2","1320.64","0","47.37","7248.6","40.3","46.7","v2-fork-merge-2"

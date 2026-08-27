@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- V-H2H2 timing probe: can Zerene Stacker PMax be timed HONESTLY, headless,
+     on the same 105-frame coffee-bean stack the other two tools were timed on?
+     This is a probe, not a result.  Whatever it does is reported verbatim. -->
+<ZereneStackerBatchScript>
+  <BatchQueue>
+    <Batches length="1">
+      <Batch>
+        <Sources length="1">
+          <Source value="D:\edited\macro\coffee-bean" />
+        </Sources>
+        <ProjectDispositionCode value="102" />
+        <Tasks length="1">
+          <Task>
+            <Specification>
+              <OutputImageDispositionCode value="102" />
+              <OutputImagesDesignatedFolder value="C:\dev\strehl-out\V-H2H2\timing\zerene" />
+            </Specification>
+            <Descriptor value="AlignAndStackAll" />
+          </Task>
+        </Tasks>
+      </Batch>
+    </Batches>
+  </BatchQueue>
+</ZereneStackerBatchScript>
