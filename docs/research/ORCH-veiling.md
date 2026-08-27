@@ -12608,3 +12608,93 @@ that does not clear the same variables differs from the master by more than the
 thing being measured. That is four more ways for two arms to disagree about
 something other than the question, and they are listed in a file that has been
 sitting next to every master all night.
+
+## 118. I nearly dispatched a lane to build something that already ships
+
+Chasing the softness deficit I found `restore.rs`'s closing line: *"The right fix
+for the resampling loss is still to not incur it — see BUILD-SHARP.md §'routed to
+other lanes' for the gather-order change that would remove it outright."*
+
+That led to §5.1, which prices demosaic-before-gather at **1.50x more contrast at
+the top of the real detail band**, calls it *"larger than every merge-side change
+in the corpus combined"*, and ends **"ORCH: please route."** Addressed to me.
+
+Then to §100, which is far worse than §5.1 estimated. V-NYQUIST measured the
+shipped per-CFA-plane gather against a full-resolution gather, common-mode — both
+arms running the real `gather_checked` on real displacements, differing only in
+lattice:
+
+| band (cyc/output px) | shipped | full-res | ratio |
+|---|---|---|---|
+| 0.10–0.20 | 0.8687 | 0.9889 | 1.14x |
+| 0.20–0.30 | **0.4881** | 0.9358 | **1.92x** |
+| 0.30–0.40 | **0.1183** | 0.8075 | **6.83x** |
+| 0.40–0.48 | **−0.0022** | 0.6322 | anti-correlated |
+
+I searched the crates for `GatherOrder|gather_order|demosaic_first|plane_first`
+and got **No matches found**. I was one action away from dispatching a build lane
+onto the largest quality defect in the project.
+
+It ships. It has shipped for some time. The switch is `STREHL_FULLRES_GATHER`,
+`fullres_gather_enabled()` defaults **on**, and `warp_frame_in_place_fullres` is
+described in its own doc comment as "the shipping path". My pattern list simply
+did not contain the word the author chose.
+
+> **A grep that returns nothing has told you about your pattern, not about the
+> tree.** "No matches found" is the same glyph for "this does not exist" and "you
+> guessed the wrong noun", and only one of those is a fact about the code.
+
+This is the same failure recorded against a truncated recursive search earlier in
+this project's history, in a new costume. The cure is the same: before concluding
+absence, search for the *thing* by a second, independent handle — here, reading
+the file the citation named would have found it in one call.
+
+### Verifying it on the render rather than in the source
+
+Source says on-by-default; that is not evidence about a binary built at 01:21. So
+I read the pins as bytes and looked for the literal switch name, with
+`STREHL_ALIGN` as a positive control for the search method:
+
+| pin | `STREHL_FULLRES_GATHER` | `STREHL_ALIGN` (control) |
+|---|---|---|
+| `9b05d0b7` (rendered SHIP-V4) | **present** | present |
+| `740e7056` | present | present |
+| `96b7e119`, `b9b6921e`, `e42ab13` | absent | present |
+
+The control fires on all five and the target discriminates three from two, so the
+method can say no. **SHIP-V4 was rendered with the full-resolution gather.** The
+largest quality defect in the project is fixed and in the images.
+
+### The gap that let me doubt it
+
+**None of the 26 provenance files mentions `STREHL_FULLRES_GATHER`** — while
+explicitly enumerating unset switches, including `STREHL_ALIGN`, `STREHL_COVER`,
+`STREHL_SMOOTH`, `STREHL_SMOOTH_HUBER`, `STREHL_FIX_CA`, `STREHL_EDGE_AWARE`,
+`STREHL_EDGE_TAU` and `STREHL_EDGE_CONF`. The file's own promise is *"Unset
+switches are listed too"*.
+
+> **A provenance file that omits the most consequential switch in the build is
+> worse than one that omits everything**, because the completeness of the rest is
+> what licenses the reader to treat an absence as evidence. I read the absence as
+> evidence, and it took a byte search of five binaries to unread it.
+
+### What it does to the softness result
+
+The 5–19% deficit measured against the per-site complete-bracket ceiling is
+therefore **not** the 51% defect. It is the residual *after* the big fix landed —
+and it maps closely onto the Catmull-Rom gather's own remaining phase-averaged
+MTF: 0.9402 at 0.25 cyc/sample, 0.8211 at 0.35, 0.7425 at 0.40.
+
+Which makes `restore.rs` — the Wiener filter whose `H` is that very kernel,
+already wired, `STREHL_RESTORE=<cap>`, off by default — the aimed lever. It was
+parked on a three-ROI paired ESF rise (one marginal, two nulls) with floors of
+0.25–0.36 um. Its published achievable gain is 1.096–1.298 max, 1.021–1.059 at
+0.25 cyc/px, limited by calibrated noise rather than by its cap (caps of 1.4, 1.7
+and 2.5 give byte-identical output).
+
+> **A fix parked on a weak instrument is not a fix that failed; it is a fix that
+> was never scored.** Routed for a clean A/B on the frozen ceiling instrument,
+> with the prediction registered first — and I told the lane the honest prediction
+> is a small effect, possibly below its resolution, because the gain at the low end
+> of the band is only 1.02–1.06. Routing something worth measuring is not the same
+> as expecting it to win.
