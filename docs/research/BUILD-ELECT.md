@@ -3030,3 +3030,67 @@ no reference, so there is no denominator for a broad defect to contaminate.
 **Not established.**  I did not test whether such a broad pedestal is actually
 present; that needs an absolute reference, not a radial one, and the arm ratio
 only compares two arms that could share it.
+
+## 20. No broad backdrop pedestal -- 19's open item, closed negative
+
+Section 19 proved `arcprofile.py` cannot see a darkening wider than ~750 px and
+left the obvious worry open: a uniform veiling pedestal across the whole backdrop
+would read as zero and I would have called it absent.  Closing it with an
+**absolute, external** reference instead of a radial one -- a single frame of the
+same subject through the same binary.  n=1 has no election and no multi-frame
+merge, so it cannot carry a merge-induced pedestal.
+
+Binary `16EB215F6264DB692A7D95356A5462CE19F606394BD627039549412DD45F0187`.
+Reference is `flower-bud-alone-cpl/DSC00103.ARW`, mid-bracket of 205, copied to
+local disk and **hash-verified against the library original** before use,
+rendered `--merge pyramid --demosaic`.  The single frame is 7040 px wide, the
+merged pair 7040; nothing below differences pixels, because both statistics are
+medians over 6-16 Mpx regions that an 8 px boundary shift cannot move.
+
+Two independent constructions, so that agreement is the check:
+
+| | A. border (outer 300 px, **no mask, no registration**) | B. own mask, far field d>=750 |
+| --- | ---: | ---: |
+| single frame n=1 | 18126 DN | 18807 DN |
+| merged BLEND | 18115 DN | 18792 DN |
+| merged CONTROL | 18162 DN | 18893 DN |
+| **BLEND - single** | **-11 DN (-0.06%)** | **-15 DN (-0.08%)** |
+| **CONTROL - single** | **+36 DN (+0.20%)** | **+86 DN (+0.46%)** |
+
+**The two constructions differ by 681 DN on the reference itself, and that is
+the floor below which nothing here means anything.**  Every difference measured
+is a small fraction of it -- the blend's -15 DN is 2% of the floor.
+
+**MEASURED: there is no broad backdrop pedestal.  Neither arm renders the
+backdrop materially darker than a single frame of the same scene.**  The honest
+bound is `|pedestal| < ~681 DN`, i.e. **< 3.6% of an 18800 DN backdrop**; a
+pedestal smaller than that is not excluded and this method cannot exclude it.
+The control sits slightly *brighter* in the far field, which agrees with 17's
+independent far-field figures (control 19100 DN, blend 19004 DN, +96 DN).
+
+So 19's most-bounded claim survives contact with an instrument that could have
+falsified it.  17's null on the blend is not hiding a pedestal.
+
+### 20.1 The measurement was void the first time and a magnitude caught it
+
+My first run of this used `one-pyramid.tiff`, an n=1 render sitting in my own
+output directory from section 16.  It returned **-62%**, and a 62% pedestal is
+not a defect, it is a different photograph.
+
+It was.  The source frame was `DSC00068.ARW`, and **that filename exists in 19
+of the 21 subject directories** -- camera filenames are reused across shoots, so
+the name identifies nothing.  Hashing the file against every candidate returned
+exactly one match: **`coffee-bean`**.  Section 16 was a coffee-bean
+investigation, the frame was correct for that work, and I reached for it here
+because it was in my directory and had the right shape of name.
+
+**A presence check -- "is there an n=1 render of the right kind?" -- passes.  It
+was the magnitude that failed, and it failed so implausibly that it indicted my
+identification rather than my subject.**  This is the fleet's own finding of
+today arriving in my lane within the hour of being sent it, from an unrelated
+direction, and I am recording it because I had just read the rule and still made
+the error.  The guard that caught the first symptom was a shape assertion I
+wrote defensively (7032 vs 7040) and did not expect to fire.
+
+**Identify by content, not by filename, whenever the filename is issued by a
+device rather than chosen.**
