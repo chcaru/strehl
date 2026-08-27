@@ -25,6 +25,29 @@ name the same build. Everything here uses `9b05d0b7`, copied to
 `C:\dev\strehl-out\V-NEVERWORSE\bin\strehl.exe` and sha-verified on every render
 (`vn_lib.check_pin`).
 
+This lane found the discrepancy independently, before rendering anything, and the brief
+later confirmed it. That is worth stating precisely, because the two builds are **the same
+size to the byte** and a size check would have passed:
+
+| build | bytes | sha256 |
+| --- | --- | --- |
+| `9b05d0b7` (**used here**) | 9,568,768 | `44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490` |
+| `740e7056` (in the brief) | 9,568,768 | `15EA73461905EA2D44B2F8242D578CD9330454450F61269AE1B1FBA71682A7B0` |
+
+**The check that makes it a measurement, not an assumption.** Each master carries a
+`<subject>--SHIP-V4.tiff.ok` file whose entire content is the sha256 of the binary that
+rendered it. Reading all 26 and hashing my own copy:
+
+- all 26 `.ok` files carry the **identical** hash `44C2F2CD…F490` — one build rendered the
+  whole corpus, so there is no per-subject binary drift to control for;
+- `C:\dev\strehl-out\V-NEVERWORSE\bin\strehl.exe` hashes to exactly that value.
+
+Had the source arm been rendered by `740e7056`, every one of the 26 ratios would have
+carried an uncontrolled binary difference between numerator and denominator — the same
+mismatched-gauge defect §1 reports in the existing statistics, arriving by a different
+door. Provenance is a gauge input, and a build is identified by its hash, never by its
+size or its path.
+
 **The label.** The `master/best-source` line at `orch_printready.py:223` is not computed by
 the gate. It is read verbatim out of `experiments/V-REVIEW/vr_baseline.json`, which records
 
@@ -35,6 +58,36 @@ the gate. It is read verbatim out of `experiments/V-REVIEW/vr_baseline.json`, wh
 For a statistic where low is good, `max` is the **worst** frame. The nine existing
 acquittals therefore establish *"the master is no worse than the worst frame it was built
 from"* — not the best. The string printed to the operator says `best-source`.
+
+### 0.1 Switch-state audit — what the source arm matched, and what it could not
+
+The masters' verbatim argv is
+`strehl.exe stack "D:\personal\macro\<subject>" --out <...>.tiff --srgb --auto-exposure`.
+Reading a full provenance file rather than only its `binary :` line
+(`bee-1-cpl--SHIP-V4.tiff.provenance.txt`) gives the resolved switch state:
+
+```
+RESOLVED SWITCH STATE (39 registry switches; 0 set)
+```
+
+Eleven switches are annotated `cleared by harness` — `STREHL_FIX_CA`, `STREHL_EDGE_AWARE`,
+`STREHL_EDGE_TAU`, `STREHL_EDGE_CONF`, `STREHL_MERGE`, `STREHL_ALIGN`, `STREHL_CACHE_DIR`,
+`STREHL_PYRAMID_WORKERS`, `STREHL_ONLY_FRAME`, `STREHL_WARPMAP`, `STREHL_FIX_HALO_DELTA` —
+and the remaining twenty-eight `not set`. **Both annotations resolve to `(unset)`**, so
+`vn_lib.render()`'s blanket clear of every `STREHL_*` variable reproduces the shipping
+switch state exactly rather than merely approximately. Six of the thirty-nine are marked
+`INAPPLICABLE`: estimator-only stages the pyramid backend never reaches.
+
+**Matched:** all 39 switches, and the binary.
+**Deliberately not matched:** two, both load-bearing and both stated.
+
+- `STREHL_ONLY_FRAME` is set in the source arm and unset in the master. That switch *is*
+  the source arm — it is the independent variable, not a confound.
+- `--srgb --auto-exposure` is replaced by `--linear-srgb --demosaic`. This is the subject of
+  §1: the shipping flags apply a per-image content-derived tone curve, and measuring a
+  ratio across it measures exposure. §1.6 and G2 show the substitution is sound — the pin
+  reproduces a shipped master **byte-identically** under the shipping flags, so the two
+  paths are confirmed to differ only in the output transform.
 
 ---
 
@@ -170,7 +223,8 @@ source blotch **1.4495x**, chroma **1.0871x**.
 | **X1a** chromatic plant | blotch still, chroma up | blotch x0.993, chroma **x1.251** | PASS |
 | **X1b** achromatic *multiplicative* plant | blotch up, chroma still | blotch **x1.254**, chroma x1.000 (cancels exactly in `(R−Y)/Y`) | PASS |
 | **X1c** achromatic *additive* plant | **fooling direction** | blotch x1.472, chroma **x1.420** | PASS (documented) |
-| **W1** resampling null | must not move | identity x1.0000; shift 0.37,0.61 px x1.0006/x0.9988; scale+shift x1.0094/x1.0049; rotate 0.05° x1.0005/x0.9997 — worst departure **0.94%** | PASS |
+| **W1** resampling null | must not move | identity x1.0000; shift 0.37,0.61 px x1.0006/x0.9988; scale+shift x1.0094/x1.0049; rotate 0.05° x1.0005/x0.9997 — worst departure **0.94%** | PASS, but **under-scoped — see §2.3** |
+| **W2** resampling null *at the magnification actually used* | must not move | round trip at each subject's own fitted scale, all 26 subjects: blotch **0.9991–1.0005**, chroma **0.9931–1.0000**; identity and round-trip-identity both exactly x1.0000 | PASS |
 | **Q1** quantisation floor | must have headroom | master band 54.352 DN vs uint16 quantisation band 0.0149 DN = **3644x**; chroma-window luma p1 1134 DN vs the statistic's hard floor of 1.0 | PASS |
 
 **Verdict: COMMISSIONED.** Both signs move, the denominator is load-bearing, the placebo has
@@ -195,7 +249,8 @@ the argmin, reporting a stability the estimator does not have.
 - **W1's `relhf` column.** The 3 px term falls to **x0.710–x0.818** under a sub-pixel warp
   while `band/mean` holds to 0.94%. That is why this lane ratios `band/mean` and never
   `band/noise` — and it is also why the `relhf` focus proxy in §5 carries a stated bound
-  rather than a claim.
+  rather than a claim. W2 reproduces this at the real magnification (`relhf` x0.66–x0.90)
+  and it doubles as W2's own positive control: see §2.3.
 - **Clipping reads as *perfect* chroma.** A window clipped to 65535 has R=G=B, so
   `relative_chroma` collapses toward zero and a destroyed frame scores as a flawless
   denominator. Caught on real data (§3) and now guarded.
@@ -235,6 +290,115 @@ lower bound on its own size. A subject that passes on the sample has passed only
 the sampled reference, and may fail against the full stack.** The three subjects with the
 smallest measured excess (`119MSDCF` 1.0108x, `109MSDCF` 1.0120x, `pencil-steep-angle-cpl`
 1.0172x) are within that uncertainty and their *sign* is the only thing established.
+
+---
+
+### 2.3 W1 was under-scoped by 17.5x — found after the fact, chased, and closed
+
+`vn_warpnull.py`. Full transcript: `report\warpnull.txt`.
+
+**How it was found.** Re-reading a master's provenance file in full — prompted by the
+switch-state audit in §0.1, not by anything in my own instrument — surfaced a line I had
+not used:
+
+```
+coverage : field of view scaled to 0.9236 so that EVERY frame covers every pixel
+           (7.6% of width dropped, then upsampled to keep the output dimensions)
+```
+
+A single-frame render covers 0.9974 uniformly. Measuring the fitted registration scale that
+the source arm actually applies, over all **510** admitted frames across the 26 subjects:
+**0.7745 … 0.9996, median 0.9566** — source windows are magnified by up to **1.29x**. W1
+certified the resampler at `1 + 1.66e-2` = **1.7%**. That is a **17.5x under-coverage**, and
+it is the same class of defect as an arm that never perturbs its reference: the null was
+real, it just was not run where the instrument operates.
+
+**The failure direction was specific and stated in advance.** If the warp *lowers* blotch,
+every source frame reads artificially low, the min reads low, and every `vs_min` in §6 is
+inflated. So the question was not "does the warp move things" but "does it move them in the
+direction that would manufacture my result".
+
+**Four defects in W2 itself before it could answer.** Each is recorded in the file.
+
+1. The first affines scaled about the image **origin**, which translates a window at
+   x = 5840 by ~900 px. That fetches different content; it does not resample the same
+   content. Three of four subjects reported *window falls outside* — `warp_window` was
+   doing its job and my transform was wrong.
+2. With the centre fixed, the identity control still could not run on three subjects, whose
+   windows sit 14–38 px from the image edge: a synthetic transform carries none of the
+   inward translation a real registration matrix does, so there is no margin for the
+   interpolation footprint. Fixed with an integer-only inward clamp applied identically to
+   the baseline and every arm. **The script now hard-errors if any identity arm moves by
+   more than 1e-6, or if a subject produces no identity control at all** — a null without
+   its own control is not a null. Measured: both identity arms return 1.0 on all 26
+   subjects and both statistics, worst departure **3.5e-7**.
+3. **The arm I nearly reported was measuring the wrong thing.** Applying the fitted affine
+   once to the master gave blotch factors from **0.2114x to 1.1095x** — a 373% "correction"
+   that would have re-stated every number in this document. It is an artefact of the null.
+   The pipeline's affine maps master → frame and `warp_window` pulls with
+   `WARP_INVERSE_MAP`, so a real source frame's content arrives **in master space** and
+   `orch_blotch`'s fixed 50–400 px band is applied at the scale it was designed for. My
+   single application left the master's content at the *frame's* scale while the band still
+   ran in master pixels — so it charged for a band shift the pipeline never incurs. A
+   **round trip** (warp and unwarp) restores the geometry exactly and leaves only the
+   interpolator behind, applying *two* interpolations where the pipeline applies one, which
+   overstates the loss in the conservative direction.
+4. **The arm labelled "worst scale" was the least warped frame, not the most.** It was
+   `min(|s − 1|)` — the scale *closest* to unity. Caught by a checker that recomputed the
+   quoted scale range from the measurement records and disagreed with the prose. Replaced
+   by an *extreme scale* arm using the single most magnified frame each subject actually
+   contributed, which is the true worst case; the table below reports it.
+
+A 0.21x reading is not a resampler. Bilinear interpolation attenuates structure near
+Nyquist, one to two pixels; the band under test is 50–400 px, three orders of magnitude
+away. The extreme reading was implausible on its face and that is what prompted the check.
+
+**The answer, all 26 subjects, round trip at each subject's own fitted scales.** Two arms
+per subject — its median frame and its most magnified frame (down to 0.7745, a 1.29x
+magnification) — and each row is scored at whichever of the two is worse:
+
+| | min | median | max |
+| --- | --- | --- | --- |
+| blotch factor | 0.9870 (`leaf-2-cpl`) | 0.9996 | 1.0049 (`lavendar-cpl`) |
+| chroma factor | 0.9847 (`wrapped-text-1`) | 0.9990 | 1.0000 |
+
+Worst departure from unity on any subject, either statistic, either arm: **1.53%**. **The
+failure direction is absent on all 26.** No subject's `vs_min` is inflated by more than
+1.6%, so the resampler cannot account for any excursion in §6 — not the 3.8089x, and not
+the 1.0108x either.
+
+**The null is not inert, and it proves so itself.** In the same arms, `relhf` — a 3 px
+proxy, i.e. one that lives exactly where bilinear interpolation does its damage — falls to
+**x0.66–x0.90**. The round trip demonstrably moves the quantity that should move and leaves
+alone the quantity that should not. Without that, "everything came back 1.0000x" would be
+indistinguishable from a probe that never ran.
+
+**Net effect on this document: none.** No ratio, partition, or verdict changes. W1's
+conclusion was correct, but W1 had not established it — it was right at 1.7% and the
+instrument runs at 29%. The distinction matters, because had the round trip come back at
+0.81x, §6 would have needed re-stating and W1 would have certified it clean.
+
+**The prose above is itself checked, and the checker is itself commissioned.**
+`vn_verify23.py` re-derives all 26 numbers quoted in this section from the measurement
+records — the W2 output, the per-subject ratio records, and a master's provenance file —
+and pins each to its own contextual anchor rather than to bare presence. Its first run
+found five wrong numbers I had typed, one of which was not a typo but the mislabelled arm
+in defect 4 above. `vn_negctl23.py` then plants fourteen defects one at a time, plus a
+placebo edit outside the checked span, and requires **RED on all fourteen and GREEN on the
+placebo**; it copies the file to `$env:TEMP` first and restores from that copy, and it
+hard-errors if any anchor does not land exactly once. Two rounds of that found two more
+defects, both in the checking apparatus rather than the prose:
+
+- **A presence test is satisfied by a duplicate.** Mutating the fitted scale range's upper
+  bound still read GREEN, because the same four digits are the blotch median in the table
+  below. Same for the magnification, repeated in the sentence under the table. Fixed by
+  requiring each literal within 90 characters of its own anchor phrase.
+- **The failure detector matched the word for "no failures".** The harness scanned for
+  lines containing `MISMATCH`, which also matches the checker's own summary line
+  *"N claims checked, 0 MISMATCH"* — so the placebo read as a false positive on every green
+  run. Fixed by keying on the `FAILED:` block.
+
+Final state: **15/15**, and the file restores byte-identically afterwards.
 
 ---
 
@@ -462,6 +626,12 @@ Stated separately per statistic and per denominator, as required.
 Both are **lower bounds** on the full-stack figure (§2.2), and the chroma column is not
 independent of the blotch column (X1c).
 
+**The source arm's own resampling is not the cause.** That was the obvious innocent
+explanation and it is measured and excluded in §2.3: pushing each master through a round
+trip at its own fitted registration scale moves blotch by at most **1.3%** on any of the 26
+subjects, and the direction that would manufacture these results is absent. It cannot
+explain the 3.8089x and it cannot explain the 1.0108x either.
+
 **This invariant should not be shipped as written.** It asks a per-region *selection*
 stacker to beat the extremum of N draws on a smoothness statistic, at a window where most of
 those draws are out of focus. §5.1 shows the merge is often losing because it resolved
@@ -524,5 +694,8 @@ that names another.
 | `vn_damage.py` | sRGB vs linear gauge at fixed windows and fixed frames (§1.5) |
 | `vn_report.py` | the table and the partition (§3) |
 | `vn_visual.py` | true-1:1 crops (§5.1) |
+| `vn_warpnull.py` | the resampling null at the magnification actually used (§2.3) |
+| `vn_verify23.py` | re-derives every number quoted in §2.3 from the records |
+| `vn_negctl23.py` | negative control for that checker: 14 plants + 1 placebo, 15/15 |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
