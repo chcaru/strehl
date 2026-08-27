@@ -12287,3 +12287,86 @@ publication**, and it was caught because the previous two were not.
 Nothing in that sequence entitles anyone to say the merge has no halos. All of it
 together says the complaint was real, was largely addressed by a default change,
 and was then amplified by a presentation kernel nobody had audited.
+
+---
+
+## 113. The same claim, overstated twice in one night, both times toward good news
+
+Section 112 corrected my claim that the gallery downscale manufactured the halo
+"and not the stacker". Within the hour I put a second number in front of the
+owner — the estimator's **28.5x** aura advantage for the pyramid — and a verifier
+has now taken that one apart too.
+
+Two overstatements, same subject, **both in the direction of the product looking
+better**. That is the part worth recording. Neither was a fabrication; both were
+real measurements quoted past the limit of what they supported.
+
+### 113.1 What survives
+
+The direction is robust. The estimator's aura depression exceeds the pyramid's in
+**all eight** mask/zone configurations tried on `flower-bud-alone-cpl`. The units
+reconcile against the original claim from an independent mask: the claim's
+80-200 px zone is full-resolution, so the binned equivalent 40-100 px gives
+pyramid **212.3 DN** and estimator **3757.9 DN** against the claimed 166 and
+4739 — same order, different instrument. A photometric check ran first: level
+ratio **0.9831**, so the self-referenced form is appropriate rather than merely
+convenient.
+
+Absolute estimator excess, which keeps its sign throughout: **208-3546 DN**.
+
+### 113.2 What kills the multiplier
+
+**The denominator crosses zero.** Pyramid depression runs **+904.6 DN to
+−137.2 DN** across defensible mask and zone choices — at one setting the
+pyramid's aura is *brighter* than its own far field. The ratio therefore spans
+**−9.53x to 17.70x**, and **28.5x is a reading near the pole.**
+
+A ratio built on a term that changes sign is not imprecise. It is undefined near
+its pole, and quoting a single value from it is quoting the mask.
+
+> **RULE.** Any report of a ratio whose denominator is a difference must print
+> the denominator. One row here reads **33.32x on a denominator of 0.2 DN** —
+> not a large effect, a small number in the wrong place.
+
+### 113.3 What kills the generality
+
+On `lead-1-cpl` the two merges differ by **1.02x** at seven of eight settings,
+with **both** showing the same ~600 DN depression.
+
+**A feature both merges reproduce equally is inherited from the optics, not
+manufactured by either.** That is the identical logic that acquitted nine
+subjects in the print gate, applied here against a conclusion I wanted.
+
+Estimator excess: **208-3546 DN** on `flower-bud-alone-cpl` against
+**4.5-10.8 DN** on `lead-1-cpl`. Two orders of magnitude apart.
+
+### 113.4 The instruction that produced the refutation
+
+I asked for the denominator to be commissioned. It was, and it **disqualified the
+statistic rather than calibrating it**. No quantity of additional numerator arms
+would have reached that: every one of them would have measured a real change in
+the aura against a reference that was itself free to change sign.
+
+This is the third time in two sections that the decisive arm was on the term the
+verdict divides by rather than the term it measures. Section 112.3 caught a
+ringing statistic by adding a kernel that cannot ring; another lane caught a
+sharpness statistic reporting a master at 0.108 of its best frame because the
+*reference* envelope was selecting the most defocused frame in nearly every
+block. Same shape, three times.
+
+### 113.5 What may be said
+
+> On `flower-bud-alone-cpl` the estimator does put a markedly stronger dark aura
+> around the subject than the pyramid does, and the pyramid is the current
+> default, so that specific complaint is addressed. The 28.5x multiplier is not a
+> number to quote: it is specific to that subject and to one choice of mask and
+> zone. On a second subject the two merges differ by 1.02x, and on the original
+> subject the ratio moves between 1.24x and 17.70x as the mask and zone are
+> varied, because the quantity it divides by passes through zero.
+
+An open gap, stated rather than buried: it is **not** established that
+`lead-1-cpl` presents the dark-subject-on-bright-ground geometry the original
+claim names. If it does, 1.02x refutes the general claim. If it does not, the
+mechanism stands untested outside one subject and the second reading is a
+near-miss rather than a refutation. Those are materially different reports and
+the check is in flight.
