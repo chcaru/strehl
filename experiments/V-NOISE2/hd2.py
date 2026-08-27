@@ -446,21 +446,52 @@ def run(key, nboot, rng):
         scene[k] = [f, n, sc_t, min((n / f) ** 2, 1.0)]
         print(f"  {k:10s} {f:14.6f} {n:12.5f} {sc_t:12.5f} "
               f"{min((n / f) ** 2, 1.0) * 100:10.1f}%")
-    best_scene = max(scene, key=lambda k: scene[k][2])
-    print(f"  highest scene term: {best_scene}"
-          f"{'  <- strehl carries the MOST scene content AND the least noise'
-             if best_scene == 'strehl' else
-             '  <- NOT strehl: the blur objection is LIVE on this subject'}")
+
+    # ---- CONSISTENCY GATE.  flat-ROI sigma contains noise AND scene; the
+    # half-difference is meant to contain noise ALONE.  So n < f is not a
+    # nicety, it is an ARITHMETIC REQUIREMENT of the decomposition.  n >= f
+    # says the half-difference holds something the single image does not,
+    # i.e. A and B are not two noisy draws of ONE latent image -- they are
+    # reconstructing DIFFERENT images.  When that happens the ratio above is
+    # not a noise ratio and must not be reported as one, however flattering.
+    degenerate = [k for k in scene if scene[k][1] >= scene[k][0]]
+    scene_ok = not degenerate
+    if not scene_ok:
+        out["scene_degenerate"] = degenerate
+        print(f"\n  *** DECOMPOSITION DEGENERATE on {len(degenerate)} of "
+              f"{len(scene)} arms: {', '.join(degenerate)}")
+        print("      For these arms the half-difference sigma EXCEEDS the "
+              "flat-ROI sigma of the same")
+        print("      tiles, so the scene term clamps to zero by subtraction "
+              "and every arm ties at 0.00000.")
+        print("      A 'highest scene term' read off tied zeros is vacuous, "
+              "so it is WITHHELD.")
+        print("      Mechanism to rule in or out before believing any ratio "
+              "on this subject: the half-")
+        print("      stack proxy assumes A and B reconstruct the SAME latent "
+              "image.  A selection-dominated")
+        print("      merge can pick DIFFERENT source frames per half, putting "
+              "real focus difference into")
+        print("      A-B.  That inflates measured 'noise' for whichever arm "
+              "selects hardest.")
+    else:
+        best_scene = max(scene, key=lambda k: scene[k][2])
+        print(f"  highest scene term: {best_scene}"
+              f"{'  <- strehl carries the MOST scene content AND the least noise'
+                 if best_scene == 'strehl' else
+                 '  <- NOT strehl: the blur objection is LIVE on this subject'}")
+    out["scene_ok"] = bool(scene_ok)
     out["scene"] = scene
 
-    allok = comm["NULL"][1] and okp and okq and okt
+    allok = comm["NULL"][1] and okp and okq and okt and scene_ok
     print(f"\n  COMMISSIONING {key}: "
           f"{'ALL PASS' if allok else 'FAILED -- ratios withdrawn'}"
           f"   (CGAIN-DC magnitude "
           f"{'PASS' if okc_mag else 'FAIL -- chroma withdrawn'}, "
-          f"straddle {'level' if okc else 'significant but see explained%'})")
+          f"straddle {'level' if okc else 'significant but see explained%'}"
+          f"{'' if scene_ok else ', SCENE DECOMPOSITION DEGENERATE'})")
     out["commissioning"] = {"null": comm["NULL"][1], "potency_pass": okp,
-                            "quant8": okq, "tone": okt,
+                            "quant8": okq, "tone": okt, "scene_ok": bool(scene_ok),
                             "cgain_straddle": okc, "cgain_magnitude": okc_mag,
                             "tone_explained": {k: v[0] for k, v in tone.items()},
                             "quant8_ratio": qr,
