@@ -844,7 +844,263 @@ the exception before the README admits it.
 
 ---
 
-## 7. Files
+## 7. `coffee-bubbles` — adjudicated. CONVICTED.
+
+ORCH asked for one subject to be settled properly: the only one of the four in
+§6.5 whose reference is the complete stack, so the objection that sank the other
+three — a `min` over a subsample standing in for a `min` over the stack — does not
+apply. It is convicted. The excess is real, it is mid-scale, and no frame in the
+stack contains it.
+
+### 7.1 First, a correction I owe, because ORCH adopted the wrong version of it
+
+Reporting §6.5 upward I wrote that `bee-2-cpl`'s +16% was the least trustworthy of
+the four because *"a minimum over a small sample is biased high, which manufactures
+excess."* ORCH quoted that reasoning back and acted on it. **The first clause is
+true and the second is backwards.** A minimum biased *high* is a *larger*
+denominator, and `master / min` therefore comes out *smaller*. Subsampling
+**suppresses** measured excess; it cannot manufacture it.
+
+§6.1 of this document already said so, which makes the error mine in the summary
+rather than in the work — but a correct document does not repair a wrong briefing,
+and the briefing is what was acted on.
+
+Measured rather than argued, on the only stack that was taken entire
+(`vn_subsample.py`, 4000 draws per row):
+
+| frames drawn | median ratio | p10 | p90 | vs the full-19 answer |
+|---|---|---|---|---|
+| 3 | 1.4102x | 1.3698x | 1.4501x | 0.972 |
+| 6 | 1.4167x | 1.3999x | 1.4501x | 0.977 |
+| 12 | 1.4501x | 1.4154x | 1.4501x | 1.000 |
+| 17 | 1.4501x | 1.4167x | 1.4501x | 1.000 |
+| 19 | 1.4501x | 1.4501x | 1.4501x | 1.000 |
+
+The p90 column is pinned at the full-stack value in **every** row and no percentile
+of any row exceeds it, which is the whole point: a minimum over a subset can only
+be greater than or equal to the minimum over the set, so the ratio can only come
+out lower. **Every subsampled ratio in §3 and §6.5 is a lower bound.**
+`bee-2-cpl`'s +16% is if anything understated.
+
+The operational conclusion — do `coffee-bubbles` first — survives, but for the
+opposite reason to the one I gave. It is not the least-inflated of the four. It is
+the one whose number is **exact**, because all 19 frames were sampled and all 19
+admitted, so there is no sampling argument to have.
+
+### 7.2 Re-measured against all 19 sources
+
+| quantity | value |
+|---|---|
+| frames in stack, sampled, admitted | 19, 19, 19 - all of them |
+| window (master coords, 900x900) | y=38, x=14, cover 0.9887 |
+| master blotch | 0.045810 |
+| best (lowest) source frame | f0, 0.031591 |
+| **master / best source** | **1.4501x** |
+| per-frame blotch reproduced against the recorded values to | 3.873e-09 |
+
+Writing that table I gave the frame-count row the same cell text as the one
+in §6.5, and `vn_negctl65.py` refused to run: it reported that the frame-count cell
+occurred twice where it needed to occur exactly once. It is the check ORCH asked for after the last round's
+duplicate-satisfies-presence near-miss, it fired on the first document edit made
+under it, and it stopped rather than mutating whichever copy it found first.
+`vn_anchors.py` now reports every collision in one pass instead of one per run.
+
+That last line is the gauge check for this section: the pipeline that renders and
+registers the 19 frames here reproduces the recorded per-frame numbers to nine
+decimal places, so the numerator and denominator are on the same gauge and the
+`--linear-srgb --demosaic` correction of §1 is carried through.
+
+### 7.3 The three hypotheses, distinguished — not weighed
+
+ORCH asked for these to be separated rather than balanced. Each was given a test
+that could have come out the other way.
+
+**(c) An artifact of the blotch statistic on this subject's content — REFUTED.**
+If `blotch` simply reads high on bubble imagery, the frames should read high too.
+They do not. Every comparison below is candidate-count matched: the master's `min`
+is over 19 frames, and each frame's null `min` is over the other 18, so neither
+side gets a wider draw than the other.
+
+| | master | frames, median | frames, max |
+|---|---|---|---|
+| whole window | **1.4501x** | 1.0586x | 1.1748x |
+| worst tile (y=300, x=150) | **2.7202x** | 1.2816x | 1.4928x |
+
+**0 of 19 frames score at or above the master, on either scale.** The statistic is
+not reading the subject; it is reading the master.
+
+**(b) The merge being charged for resolved fine structure no frame contains —
+REFUTED.** This is the explanation that covered 20 of the 24 subjects in §5.2, so
+it had to be tested rather than assumed absent. `vn_mech.py` removes structure
+below a scale `k` from both sides and re-measures; a fine-detail mechanism dies as
+`k` grows, a mid-scale one survives. Both signatures were planted and the
+instrument was required to *separate* them, not merely to notice them:
+
+| planted mechanism | survival at k=33 |
+|---|---|
+| fine (specular-highlight-like points) | 0.014 |
+| mid-scale | 0.897 |
+| **measured on `coffee-bubbles`** | **0.995** |
+
+Separation between the two planted signatures is **62.1x**, and the real subject
+sits at the mid-scale end of it, past the planted mid-scale arm. The excess over
+the frames' own null is **37.0% at k=1 and 36.8% at k=33** — despeckling the image
+does not touch it.
+
+This also refuted a hypothesis of my own. The 1:1 contact sheet appeared to show
+hard-edged rectangular blocks in the master's band field, and `boxblur(lum,
+LO_R//2)` is a **square 51 px kernel**, so I suspected the blocks were the
+statistic's own kernel ringing on resolved point highlights. `vn_diag_spec.py`
+measured the band's step profile: it peaks at **49.8 px** with a harmonic at 99.7
+px, which matched the kernel exactly and looked like a confirmation — but there is
+**no lattice in the luminance at all**, and the mechanism sweep put survival at
+0.995 where a kernel artifact on fine highlights would have been near 0.014. The
+appearance was real and the explanation was wrong.
+
+**(a) Genuine mid-scale structure the merge introduced — SUPPORTED**, as what is
+left once (b) and (c) are excluded, and independently corroborated:
+
+| evidence | value | reference |
+|---|---|---|
+| inter-frame motion / structure | **0.452** | static baseline 0.0287 — 15.7x |
+| frame-to-frame band correlation at the worst tile | r = 0.178 | frames barely agree with each other there |
+| master's correlation to the frame family | 0.4103 | matched null (each frame's best *other* frame) **0.5418** |
+
+That last row is the sharpest of the three, and it reversed an earlier reading of
+mine. I first compared the master's 0.4103 against the *median* pair correlation
+0.1771 and concluded the master matched the family well. That was wrong:
+`attr_best_corr` is a **max over 19**, and comparing a max to a median is not a
+comparison. Against the correct matched null — each frame's *best other frame* —
+the master matches the family **worse than the frames match each other**. The
+master's band structure is not any frame's band structure.
+
+**One robustness point in the merge's favour, worth stating because it removes an
+obvious objection:** `blotch` is a standard deviation over a window, and a rigid
+displacement does not change a standard deviation. **Misregistration cannot inflate
+this ratio.** The conviction does not rest on registration quality.
+
+### 7.4 The mechanism, stated only as far as it is measured
+
+What is established: **the SHIP-V4 master carries band-scale (50-400 px) structure
+that is present in no source frame, on a subject whose frames disagree with each
+other 15.7x more than a static subject's do.** Mid-scale structure absent from
+every frame, on a stack that moved.
+
+The leading candidate is that inter-frame motion is being merged rather than
+rejected — bubble content that moved between frames combining into structure that
+no single frame contains. ORCH is right that this would be the more useful result:
+it is a robustness defect, not a statistic disagreement. **I could not establish
+it**, and it is not claimed. See §7.5.
+
+Amplitude, for scale: at the worst tile the master's band std is 0.02669 against
+0.010-0.019 for the frames, but `p99|band|` is comparable (0.064 against
+0.046-0.065). **The master's band is elevated in bulk, not in its extremes** — this
+is not a few hot pixels or a localised blow-out but a raised floor of mid-scale
+modulation across the tile, which is consistent with merged motion and
+inconsistent with an outlier spike.
+
+Crops at native 1:1 are at `C:\dev\strehl-out\V-NEVERWORSE\bubbles\`
+(`tile-master.png`, `tile-f00-lowest-blotch.png`, `tile-f16-best-match.png`, and
+the three `band-*.png` at a shared scale). Nothing was written to `crops-1to1/`.
+
+### 7.5 What I refused, and why each refusal is counted
+
+Four instruments were built for this subject. Two certified and were used; two did
+not certify and were **not** used. Both refusals ship in their own counted category
+with the measurement that disqualified them, and both `vn_select.py` and
+`vn_where.py` exit non-zero on their real-data path so neither can be run for a
+number by accident.
+
+| instrument | commissioning | status |
+|---|---|---|
+| `vn_bubbles.py` | 13 ok + 0 failed, 1 statistic refused | **used** |
+| `vn_mech.py` | 6 ok + 0 failed | **used** |
+| `vn_where.py` — is the excess where the motion is? | 3 ok + 3 failed | **REFUSED** |
+| `vn_select.py` — did the merge select or blend? | 2 ok + 3 failed | **REFUSED** |
+
+**`ghost_peak` (inside `vn_bubbles`) — refused.** Duplication detector. v1 was
+*inverted*: the band's own autocorrelation is 0.91 at lag 12, so the max outside an
+exclusion radius pins near the radius and the planted duplicate read **0.9468**
+against a placebo of **0.9521** — the defect scored *better* than the control. v2
+moved the right way but still failed, because a 50-400 px band in a 900 px window
+holds only ~10-80 independent cells and chance anisotropy matches a planted
+duplicate.
+
+**The rigid-shift estimate — refused, and it must not be quoted.** My own
+`shift_capped` flag fired: the estimate hit 167 px against a 140 px cap, so the
+number is a boundary, not a measurement.
+
+**`vn_where.py` — refused.** This is the one I most wanted, because it is ORCH's
+robustness question. Five designs, each rejected on a measurement:
+
+| design | why it failed |
+|---|---|
+| rank correlation across tiles | null spread 0.183; no plant clears it |
+| the same, tiles overlapped | null spread 0.190 — **overlapping tiles are not independent, so 121 of them bought no power over 36** |
+| averaging-master fixture | baseline pinned at -0.695; the LOW arm had nowhere to fall |
+| two-group permutation z | 5 of 6 arms, but baseline +3.36: **motion inflates any `min`-based excess**, because a wider spread of frame band-std pushes the `min` denominator down |
+| z referenced to the frames' own z | baseline -0.60 — the structural term does cancel — but asymmetric, below |
+
+The final design's disqualifying table:
+
+| plant | reading |
+|---|---|
+| injected where motion is LOW | **-4.26 sd** — detected |
+| injected at random sites (placebo) | -2.68 sd — also moves |
+| injected where motion is HIGH | **-0.44 sd — not detected** |
+
+It reads de-localisation well and localisation barely, and localisation is the
+direction the question needs. A green reading from it would have been unearned.
+Root cause is the same wall that refused `ghost_peak`: **the band scale and the
+window size jointly cap what any spatial analysis of `blotch` can resolve at 900
+px.** Fixing it needs a larger window or a narrower band, and both change the
+statistic under test.
+
+**`vn_select.py` — refused**, with a negative result worth keeping. The two
+endpoints of its scale — a master that *is* a frame, and a master that is an
+outright average — sit **0.000 and 0.046** apart. Blur conserves flux, so at
+50-400 px every frame of a focus stack is nearly the same image and choosing one is
+nearly the same as averaging them. The recovered selection map's median run length
+was 2 px against a planted 100 px patch, because wherever two frames agree the
+per-pixel `argmin` is arbitrary. **Whether this merge selected or blended is not
+recoverable from the master alone**, so the mechanism in §7.4 stops where it does.
+One directional result survived and is recorded as suggestive only: with an
+identical planted selection map, moving frames gave 1.1125x against static frames'
+1.0571x, so selection over a moving subject does produce mid-scale excess. It did
+not reach the 1.25x bar set before the run and is not counted as evidence.
+
+### 7.6 Verdict, and what can be done about it
+
+**CONVICTED.** On `coffee-bubbles` the merge is genuinely worse than every one of
+the 19 frames it was built from, on `blotch`, at **1.4501x** over the best frame and
+**37%** over the frames' own leave-one-out null. It is not a sampling artifact —
+the whole stack was used. It is not the statistic reading the subject — no frame
+reads high. It is not the merge being charged for resolved fine detail — the excess
+survives despeckling at 0.995 against a 0.014 fine-detail signature.
+
+**Fixability: cannot be stated, and the reason is specific.** Naming a fix requires
+knowing whether the merge selected or blended at those pixels, and §7.5 shows that
+is not recoverable from the master. What *can* be said is where to look: this is a
+19-frame stack of a subject with heavy inter-frame motion, and the excess is
+mid-scale structure matching no frame. **The instrumented test that would settle it
+is inside the merge, not outside it** — log the per-pixel contribution weights for
+this subject and check whether moving content was down-weighted. That is a lane
+with source access, not this one.
+
+**For the owner, in plain language, quotable as-is:**
+
+> On one subject out of twenty-six — the coffee bubbles, where the bubbles visibly
+> move between shots — the stacked result has more fine mottling than any of the
+> nineteen individual frames it was made from, about 45% more than the cleanest one.
+> This is not the stacker being blamed for picking up extra detail; we tested that
+> and it is not the explanation. It is most likely the bubbles' movement being
+> blended together instead of thrown away. On the other twenty-five subjects we
+> found nothing of the kind. If you are printing the coffee bubbles, check the
+> smooth areas at full size before you commit to paper.
+
+---
+
+## 8. Files
 
 | file | what it does |
 |---|---|
@@ -863,6 +1119,12 @@ the exception before the README admits it.
 | `vn_negctl23.py` | negative control for that checker: 14 plants + 1 placebo, 15/15 |
 | `vn_verify65.py` | re-derives every number in §6.5 from `null.json` and the ratio records |
 | `vn_negctl65.py` | negative control for that checker: 17 plants + 1 placebo, 17/17 |
+| `vn_bubbles.py` | the 19-frame re-measurement, motion and tile statistics (§7.2, §7.3) |
+| `vn_mech.py` | separates fine from mid-scale mechanisms; the decisive instrument (§7.3) |
+| `vn_subsample.py` | measures which way subsampling moves the ratio (§7.1) |
+| `vn_where.py` | spatial localisation — **refused**, five designs, see §7.5 |
+| `vn_select.py` | select-or-blend recovery — **refused**, see §7.5 |
+| `vn_diag_spec.py` | band step-profile spectrum; refuted my own box-kernel hypothesis (§7.3) |
 | `vn_seals.py` | hashes every `strehl*.exe` and every `.tiff.ok` seal; reproduces §0. Plants decoys it must find, so reach is measured rather than assumed. |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
