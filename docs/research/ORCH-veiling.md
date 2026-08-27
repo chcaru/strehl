@@ -13084,3 +13084,89 @@ from the corpus `.ok` seal, so re-pointing `SHIP` at SHIP-V4 auto-selects pin
 `9b05d0b7`. Commissioned with three RED arms, each refusing for the right reason,
 plus two green arms. **A guard that has never refused anything is not known to be
 a guard**; this one has now refused three times on demand.
+
+## 124. The speed figure that spent the night pretending to be a noise figure
+
+The owner-facing README carried this sentence, and I wrote it:
+
+> *"The case rests on sharpness being comparable while noise is **2.4× better**,
+> clipping is four orders of magnitude better, occlusion rims are lower on all
+> four measures, and it runs **2.4× faster**."*
+
+The same number, twice, in one sentence, in two different roles. That is the
+tell, and I walked past it for hours because each half read plausibly on its own.
+
+### Tracing it
+
+Searched every research document for a sentence pairing `2.4×` with noise —
+**with a positive control first**, per §122, because an empty search proves
+nothing about the tree:
+
+| probe | count |
+|---|---:|
+| sentences containing `2.4×` | 35 |
+| sentences containing `nois` | 5,899 |
+| **joint, same sentence** | **4** |
+
+The pattern class matches freely, so the small joint set is a fact about the
+corpus rather than about my regex. Of those four, one is about amplified gradient
+in a flat ROI, two are incidental, and **the only one asserting the claim is in
+`ORCH-veiling.md` — my own log.**
+
+No measurement document supports it. The figure is *2.4× the prior
+implementation's speed*, which migrated into the noise slot and then propagated
+because one summary copied another summary. **Nothing measured it, and at no
+point did anything have to go wrong for it to spread** — copying is lossless
+about text and silent about provenance.
+
+### The larger error, which the small one was hiding
+
+Chasing the number exposed something worse than the number. Every measured
+noise, clipping and occlusion-rim advantage this project holds was measured
+**against its own predecessor, or against single input frames.** Against `enfuse`
+and `focus-stack` — the actual open-source field — we have measured **sharpness
+and nothing else.**
+
+So the sentence was not merely quoting an unsourced figure. It was importing a
+result measured against comparator A into a paragraph whose comparator was B,
+which is §120's lesson recurring in a new costume: *a fact about one corpus,
+stated without naming the corpus, becomes a false claim about all of them.* Here
+it is a fact about one **comparator**. The structure is identical and I wrote it
+anyway, two sections after recording it.
+
+The honest position, now in the README:
+
+> Level with `enfuse`, ahead of `focus-stack`, **on sharpness**. Against those
+> two comparators that is the whole of what has been measured.
+
+### Why this is the most valuable finding of the segment despite being an error
+
+**"Level on sharpness" is not a state-of-the-art claim**, and it is currently the
+only claim the free-field measurements license. But the missing measurement is
+cheap and one lane already holds every asset it needs: `enfuse` and
+`focus-stack` outputs built from strehl's *own linear TIFFs*, so demosaic and
+white balance are byte-identical across the comparison and the only difference
+left is the stacking algorithm.
+
+If strehl is level on sharpness and materially cleaner on noise **against the
+same comparator on the same inputs**, that is a real SOTA case and it has been
+sitting unmeasured all night behind a number that was already asserting it.
+**A fabricated claim suppresses the experiment that would have established the
+true one** — nobody measures what the summary says is already known. That is the
+cost, and it is larger than the error itself.
+
+Dispatched to `V-LINEAR` with pre-registration, an identity floor, a potent
+planted-noise control, and separate luma/chroma statistics.
+
+### Rules
+
+> **When one number appears twice in a sentence in two different roles, one of
+> them is wrong.** Repetition of a value across unrelated quantities is a
+> provenance smell, not a coincidence.
+
+> **A claim's danger is proportional to how little work it demands.** An
+> unsourced advantage is not merely unsupported — it is actively load-bearing
+> against the measurement that would replace it.
+
+> **Name the comparator in the claim, not in the paragraph heading.** A ratio
+> without its denominator attached travels, and it travels wrong.
