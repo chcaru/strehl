@@ -43,6 +43,19 @@ at each site, by **1.87×** (CI 1.73–2.01) on `flower-bud-alone-cpl` and **1.5
 (CI 1.42–1.73) on `lead-1-cpl`, confirmed by eye at 400 px 1:1. The stacker is
 doing its one job. Two instruments had to fail first, and §5.2 records why.
 
+**Update, after the corpus run: that withdrawal was itself premature, and §5.5
+supersedes it.** Both numbers above were measured against the best of a
+**13-frame subsample** — 6% and 11% of those brackets. Developing *every* frame
+and comparing against the true per-site best reverses the result: on the four
+subjects whose brackets are short enough to do exhaustively, the master is
+**softer** by 5–19%, significantly so on three (`119MSDCF` 0.815, `109MSDCF`
+0.886, `coffee-bubbles` 0.902; `flower-bud-alone-cpl` 0.953, CI spanning parity).
+The ratio falls monotonically as the ceiling densifies — 3.173 → 1.294 → 1.021 →
+0.939 at n = 13, 52, 104, 205 on one subject at a fixed tile — and a null built
+from noised copies of the master shows the max-over-n order statistic accounts
+for only 0.1–1.6% of that. **Across a complete bracket, strehl's output is not
+sharper than the best frame it was given.**
+
 ## 1. Commission the viewer before trusting anything seen through it
 
 This audit exists because a verdict was returned on a gallery that had been
@@ -197,7 +210,7 @@ I did not chase it.
 stated complaint. It also means the re-render was the right call for a reason
 beyond softness.
 
-## 5. Defect 3 — RETRACTED: the master is sharper than its best frame, not softer
+## 5. Defect 3 — the master is SOFTER than a complete bracket's per-site best
 
 I formed the hypothesis that the masters are secretly half-resolution. The
 provenance supports it on its face: `planes : 3516 x 2344 per CFA plane`, one
@@ -373,6 +386,118 @@ SHIP-V4 contains the restore. That line of inquiry is closed.
 
 **Attribution: none required. There is no softness defect to attribute.**
 
+### 5.5 CORPUS RUN — and the reversal: the sharpness win was a sparse-ceiling artifact
+
+§5.1 was measured against the best of a **13-frame subsample** of each bracket. I
+noted that bias and said its direction "runs against my conclusion, not for it".
+**The direction was right and the magnitude was wrong by enough to flip the
+sign.** Adding frames can only raise a maximum, so a denser ceiling can only lower
+the ratio; I treated that as a small conservative margin. It is not small. It is
+the dominant term in every number in §5.1.
+
+**The corpus scan, 26 of 26, no refusals.** Partition, which sums to the corpus:
+
+```
+measured  26    refused  0    failed  0    not-examined  0     TOTAL 26
+```
+
+Every subject, 13 frames sampled across the full bracket, auto-selected
+2048 px tile at the master's highest-contrast window, all seven arms re-run per
+subject and passing on all 26:
+
+```
+flower-bud-with-background-fern 16.515  bee-1-cpl        13.851  bee-3-cpl  13.623
+dry-erase-marker-head-cpl        8.392  flat-on-ruler-cpl 7.790  foam        6.747
+lavendar-cpl                     6.414  bee-2-cpl         5.155  pencil-flatter 4.627
+pencil-steep-angle-cpl           4.558  highly-angled-ruler 4.149  coffee-bean 3.042
+flower-inner-edge-cpl            2.903  wrapped-text-1    2.493  couch-fibers 2.315
+leaf-2-cpl                       2.141  lead-1-cpl        1.933  flower-bud-alone 1.906
+tweezers-cpl                     1.752  113MSDCF          1.651  wrapped-text-2 1.521
+flowers-cpl                      1.467  112MSDCF          1.252  coffee-bubbles 0.922
+119MSDCF                         0.902  109MSDCF          0.886
+  23 of 26 above 1.0; median 2.698; geometric mean 3.156; range 0.886 .. 16.515
+```
+
+**That table is an upper bound, not a result.** The ratio tracks how much of the
+bracket the reference saw, not how sharp the master is: `bee-1-cpl` at 13/299
+sampled reads 13.85, `109MSDCF` at 13/22 reads 0.886. Sampling fraction and merge
+regime and stack depth are mutually collinear across this corpus, so no
+per-subject number here can be attributed to the merge.
+
+**Density sweep — the ratio does not converge, it collapses.** Same subject, same
+tile, same instrument, only the reference density changing:
+
+```
+flower-bud-alone-cpl (N=205, 2048 px)   n=13 1.906  n=26 1.369  n=52 1.147  n=104 0.974
+bee-1-cpl            (N=299, 2048 px)   n=13 13.851 n=26 7.352  n=52 4.035  n=104 3.203
+flower-bud-alone-cpl (N=205, 1024 px)   n=13 3.173  n=52 1.294  n=104 1.021  n=205 0.939
+```
+
+**The order statistic is not the cause, and that had to be shown separately**
+(`envelope_null.py`), because "the master is soft" and "a max over n draws grows
+with n" predict the same falling curve. Reference built from n noised copies of
+the master, so the true ratio is 1.000 by construction:
+
+```
+flower-bud-alone-cpl  n=13 0.9914  n=26 0.9884  n=52 0.9876  n=104 0.9851
+109MSDCF              n=13 0.9889  n=22 0.9865  n=33 0.9845
+119MSDCF              n=13 0.9962  n=22 0.9959  n=33 0.9955
+coffee-bubbles        n=13 0.9989  n=22 0.9987  n=33 0.9986
+```
+
+Inflation is **0.1%–1.6%**. It cannot produce a fall from 3.173 to 0.939.
+
+**The exact ceilings.** Four subjects have brackets short enough to develop every
+frame, giving the true per-site best with **zero** subsample bias:
+
+```
+subject                 n/N      raw      95% CI          null    corrected
+coffee-bubbles        19/19   0.9007  [0.880, 0.919]    0.9988      0.9018
+109MSDCF              22/22   0.8735  [0.860, 0.893]    0.9865      0.8855
+119MSDCF              33/33   0.8110  [0.787, 0.831]    0.9955      0.8147
+flower-bud-alone-cpl 205/205  0.9389  [0.886, 1.013]    0.9851      0.9531
+```
+
+**Three of four are significantly softer — 10%, 11% and 19% — and the fourth sits
+at parity with a CI spanning 1.0. Not one subject measured against a complete
+bracket shows the master sharper.**
+
+**The deficit is not the noise-floor term** (`floor_sensitivity.py`). On three of
+four subjects the master's own noise floor exceeds its frames' (119MSDCF 908.7 vs
+663.6), so the per-image subtraction removes more from the master and could have
+manufactured this. Switching the subtraction off tilts the estimator *towards* the
+master, since unsubtracted noise counts as detail and the master has more of it:
+
+```
+                      subtracted   no subtraction
+coffee-bubbles            0.9007          0.9011   deficit survives [0.880,0.920]
+109MSDCF                  0.8735          0.8755   deficit survives [0.864,0.896]
+119MSDCF                  0.8110          0.8146   deficit survives [0.793,0.836]
+flower-bud-alone-cpl      0.9389          0.9848   not significant  [0.942,1.052]
+```
+
+**So §5.1's verdict is superseded. The correct answer to "is the master softer
+than the per-site best frame" is: against a complete bracket, yes — by 5–19% on
+the four subjects where that comparison is affordable, significantly so on three.
+The 1.87×/1.54× figures were measured against a ceiling that had seen 6% and 11%
+of the frames.**
+
+**The estimation thesis is not supported, and is not refuted either.** The
+prediction was that the gain is largest where the merge averages. Across the
+26-subject scan the rank correlation is **−0.729** — the opposite sign — and it
+holds at **−0.599** with sampling fraction partialled out. But sampling fraction,
+stack depth and `avg_index` are collinear here (Spearman 0.52–0.64 among
+themselves), and every subject with an exact ceiling is a shallow, heavy-averaging
+one. **There is no exact-ceiling measurement of a selection-dominated subject in
+this corpus**, so the mechanism is untested rather than disproved. What can be
+said: the three subjects that are significantly soft are the three that average
+most (`avg_index` 7.54, 4.40, 2.21), which is consistent with averaging costing
+fine detail — the opposite of the thesis — but consistent is not measured.
+
+**Attribution, revised: this is ours, not physics.** A per-site comparison already
+controls for defocus — the reference is the sharpest frame *at that site*, so
+"no frame was in focus there" cannot explain a deficit. What remains is the merge.
+
 ## 6. What I looked for and did not find
 
 Negative results, each from tiles I actually viewed at 400 px 1:1, never resized.
@@ -406,9 +531,11 @@ frames, so I cannot say whether that is the tone path or the subject.
 1. **Dust motes, up to −13.3%, in 18 of 26.** On a smooth background at A3 there
    is nothing to distract from them. Trivially fixable — the correction exists.
    Fix: enable static-defect correction by default.
-2. **Softness — REMOVED from this list.** Measured cleanly on `--linear-srgb`
-   against a per-site best-frame reference, the master is 1.54×–1.87× *sharper*
-   than the best frame at each site. There is no softness defect. See §5.
+2. **Softness against a complete bracket, 5–19%, three subjects significant.**
+   Restored to this list and now the top open defect. At A3 this is the
+   difference between "sharp" and "nearly sharp" across the whole frame. A
+   per-site reference already controls for defocus, so this is the merge, not
+   physics. See §5.5.
 3. **Chroma fringing on the `109MSDCF` debris streak.** Small, local, and moot if
    the mote correction removes the streak.
 4. **Blocked shadows on `dry-erase-marker-head-cpl`.** Not adjudicated.
@@ -421,13 +548,16 @@ I inspected 8 of 26 subjects at honest 1:1 magnification, not all 26. The mote
 census and the halo comparison are the only measurements that cover the corpus
 broadly (26 and 10 subjects). I did not adjudicate the shadow question.
 
-The softness re-measurement covers **two subjects** (`flower-bud-alone-cpl`,
-`lead-1-cpl`) chosen to sit in opposite merge regimes, not all 26. It uses a
-**13–14 frame subsample** at stride 10–16, not every frame, so the per-site
-reference is the best of a sampled bracket; a denser sample could only raise the
-ceiling, and the direction of that bias is against my conclusion, not for it.
-The residual 15–29% soft tail is measured but **not explained** (§5.3). I did not
-re-derive the mote or halo findings on `--linear-srgb`; those rest on
+The softness re-measurement covers **all 26 subjects** at a 13-frame reference
+(§5.5) and **four subjects at a complete bracket**. The four exhaustive ones are
+`coffee-bubbles` (19), `109MSDCF` (22), `119MSDCF` (33) and `flower-bud-alone-cpl`
+(205). **Three of them are shallow, heavy-averaging stacks**, and no
+selection-dominated subject was measured against a complete bracket — `bee-1-cpl`
+at 299 frames was swept only to n=104, where it still read 3.20 and was still
+falling by ~45% per doubling. **So the corpus-wide magnitude of the deficit is
+not established; only its sign, on the subjects where it could be measured at
+all.** The residual 15–29% soft tail from §5.3 is measured but not explained. I
+did not re-derive the mote or halo findings on `--linear-srgb`; those rest on
 `--srgb` renders and are directional claims, not magnitudes.
 
 Lineage of the DELIVER-V4 JPEGs is now settled and was not my doing: the
@@ -441,10 +571,18 @@ correct ones.
   through it at 1000 px is measuring the viewer. **Now written up as `AGENTS.md`
   rule 48**, with the grating commissioning and the halo-from-downscale numbers
   as its evidence.
-- **The softness defect is withdrawn** — the master is 1.54×–1.87× sharper than
-  the per-site best frame. Anyone chasing softness downstream of my first report
-  should stop. `V-softness.md`'s regression `57e4554` is **already reverted** in
-  SHIP-V4 by `6430fb28`, so it explains nothing about the shipped render either.
+- **The softness defect is REAL and is the top open item.** Against a complete
+  bracket the master is 5–19% softer than the per-site best frame, significant on
+  three of four subjects, and no subject reads sharper. My own two earlier
+  verdicts on this question were both wrong, in opposite directions, and both
+  because of the reference rather than the master.
+- **A per-site maximum over a SUBSAMPLED bracket is not a ceiling, it is a
+  sampling statistic.** It moved `flower-bud-alone-cpl` from 3.17 to 0.94 — a
+  factor of 3.4 — with the master unchanged. Any future metric that compares
+  against "the best frame" must state what fraction of the bracket it saw, and
+  must not be compared across subjects of different stack depth. `V-softness.md`
+  and any other document using a best-frame reference should be re-read with
+  this in mind.
 - **A commissioning suite must perturb the reference, not only the subject.** My
   instrument v2 passed five arms while its envelope was selecting the most
   *defocused* frame in every block, because every arm perturbed the master and
