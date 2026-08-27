@@ -397,6 +397,29 @@ the arm with the worst defect scored the cleanest. What survives, honestly
 sized: the blend's backdrop does carry faint broad mottling, far-field rms
 **0.708%**. That is a minor open item with a number attached, not a halo.
 
+**How far this generalises, measured on four subjects rather than one.** An
+independent pass re-ran both merges on subjects screened for the geometry the
+claim needs — a dark subject on a bright ground, well under a third of frame,
+with untextured surroundings — and conditioned every reading on a mask anchored
+to each subject's own measured extent. The direction holds in **all seventeen**
+conditioned readings. The size does not travel at all: the estimator's excess
+is **294–3446 DN** on `flower-bud-alone-cpl`, **334–1127 DN** on `bee-2-cpl`,
+**40–205 DN** on `tweezers-cpl`, and **5 DN** on `lead-1-cpl`.
+
+So the honest form of the claim is directional. **No multiplier from this
+comparison may be quoted**, for two independent reasons. Across those subjects
+the ratio runs **0.98× to 7.89×**, and the largest value sits on the smallest
+surviving denominator. And a common-mode change in overall level moves the
+ratio **1.333 → 1.179** while leaving the physical excess bit-identical at
+**+777.6 DN** — so two merges differing slightly in level report different
+ratios for identical behaviour. A multiple whose denominator is a difference is
+not a measurement of the difference.
+
+Screening the corpus for this geometry also found that **no subject here
+presents it at the strength of the one the claim was born on** — best available
+is 2.80 against 4.52 on the same scale. The headline subject was the corpus
+extreme, which is itself the reason a single-subject multiplier was never safe.
+
 The hardest case of all is `highly-angled-ruler-mm-cpl`: a steel rule crossing
 the frame at a steep angle, so a hard occluding edge runs diagonally through it
 with the background surface behind, and the steep angle forces the deepest

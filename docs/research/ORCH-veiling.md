@@ -12370,3 +12370,107 @@ claim names. If it does, 1.02x refutes the general claim. If it does not, the
 mechanism stands untested outside one subject and the second reading is a
 near-miss rather than a refutation. Those are materially different reports and
 the check is in flight.
+
+## 114. The rule I enforced on six lanes, broken in my own file, for the whole campaign
+
+`true11.py` cuts the 380 px true-1:1 crops. It is the instrument every visual
+verdict in this project has been made through, including the ones where I told
+the owner a subject was excellent. Another lane found two defects in it while
+building a gallery. Both are mine.
+
+**The first is small and was sitting on top of the evidence.** The 16→8
+conversion is `((c + 128) >> 8).astype(np.uint8)` with no clip. For `c >= 65408`
+the shift yields 256 and the cast wraps it to **0**, so pure white rendered
+black. Priced against the shipping masters before repair: 308 px in
+`tweezers-cpl` (0.0711%), 507 px in `lavendar-cpl` (0.1170%), 0 in `bee-3-cpl`.
+Scattered across 30 and 59 distinct rows — not a region, a speckle. And it
+lands on **specular highlights**, which is exactly where the eye goes when
+asking whether fine detail survived a merge. A tenth of a percent, in the worst
+possible place, in the images used to decide whether the product works.
+
+**The second is not small.** The site list named `wrapped-text-1-cpl`. The
+master is `wrapped-text-1`. That row printed
+
+```
+wrapped-text-1-cpl       MISSING  no master found
+```
+
+in the same table as the successes, and the script returned **0**. So the one
+subject in the corpus with known geometry, known curvature and printed type —
+the single easiest thing to adjudicate by eye — was **never cut once**, and I
+read past that line every time I ran it. When it was finally cut after the
+repair it turned out to be among the best images in the corpus.
+
+I have spent this campaign telling lanes that a partition must sum, that a
+skipped check must never read as a passed one, that a count which does not move
+is the same glyph whether nothing was wrong or nothing was examined. I wrote
+that rule into the print gate. I sent it to five agents. And my own instrument
+printed a skipped site in the results table and exited clean.
+
+> **The rule you enforce on others is not evidence you have applied it to
+> yourself. It is evidence you know it — which is exactly what stops you
+> looking.**
+
+The repair: clip before the cast; missing sites hard-error with `cut + missing
+= total` printed; and a clamped hand-given coordinate now reports its
+displacement, because a crop that slides to stay inside the master is no longer
+the site that was asked for — another lane put a probe 104 px off site that way
+and got a wrong verdict from it.
+
+`commission_true11.py` holds all three in both directions, 3 of 3. The
+mutations are anchored on unique full lines and the harness hard-errors if an
+anchor does not land, so a green there is a claim about the instrument rather
+than about the file. `true11_impact.py` commissions its own probe first, 5 of 5,
+because a damage figure from an uncommissioned probe is unreadable: zero
+corrupted pixels and a dead probe print the same glyph.
+
+**What I cannot recover.** Every 1:1 verdict recorded before `4876accd` was
+made through a converter that blacked out blown highlights and a site list one
+entry short. The crops have been recut. The verdicts have not been re-made.
+
+---
+
+## 115. The aura claim, third statement, and this time the correction was not mine
+
+Recorded because the shape is now a pattern and the pattern is the finding.
+
+A verifier I sent to bound the aura claim came back having **refuted its own
+prior deliverable**. It had told the owner that a second subject showed the two
+merges differing by 1.02×, presented as killing the general form. It then
+measured whether that subject even presents the geometry the claim names —
+`dark_ratio 1.57` against the reference subject's **4.52**, `ground_iqr 0.11`
+against **0.03** — and found it does not. On its own commissioned scale, 1.57
+sits nearer the planted negative control (1.18) than the on-geometry regime.
+
+So the 1.02× **bounded** the claim's generality and never refuted its
+mechanism, and the sentence that went to the owner did not disclose that the
+subject was off-geometry. It went and found two subjects that do present the
+geometry, rendered both, and the claim now fails to generalise for a different
+and better-supported reason: across four subjects the ratio runs **0.98× to
+7.89×**, while the *direction* holds in **all seventeen** conditioned readings.
+
+Two mechanisms came out of it that outlive the claim:
+
+> **A depression cannot exceed the level it is measured against.** A fixed
+> percentile mask built for a subject occupying 21% of frame, applied to one
+> occupying 60%, put the aura annulus on unmasked subject and reported a
+> depression of **16557.7 DN** on an image whose median is **8171.1 DN**. That
+> number is not large, it is impossible — and impossibility is a check a range
+> test cannot make.
+
+> **A ratio moves under a change that leaves the physical difference
+> bit-identical.** A common-mode level shift took the ratio from 1.333 to 1.179
+> while the excess stayed at **+777.6 DN** exactly. Two merges differing
+> slightly in overall level report different ratios for identical behaviour.
+
+And one about instrument failure, which is the reason it found any of this: its
+Otsu threshold returned the *lower* mode of a two-valued histogram, so a strict
+comparison excluded the very disc it had found, and **all seven commissioning
+arms refused, including the one that had to pass.** Seven refusals is a louder
+failure than a wrong number. Had a single arm passed, the instrument would have
+shipped.
+
+I have now stated this one claim three times — 28.5×, then 1.02× as a
+refutation, now directional-only — and been corrected on all three. The first
+two corrections were mine to make. This one a verifier made against itself,
+which is the only reason it surfaced at all.
