@@ -1,0 +1,14 @@
+stack coffee-bean: 105 frames, digest bb9a2b40eefb65a9
+  reference frame 52 (middle, default)
+  decoded 105 frames in 4.2 s, plane 3516x2344
+  measured 590/617 edges in 11.1 s (4.4% refused)
+align: track prior on, lambda=1 huber=Some(1.0) px
+
+  placed 105/105 frames, refused 0
+  total corner drift frame 0 -> 104: 120.957 plane px
+  held-out corner error (median): 6.671 plane px
+  cycle-consistency floor: 2.208 plane px
+  wrote C:\dev\strehl-out\V-H2H2\warpmaps\coffee-bean.warpmap.txt
+
+  NOTE: held-out error 6.671 px is above M86's T_usable of 4.0 px. The sidecar is still a large improvement on no registration at all, but it is not a precise solve.
+

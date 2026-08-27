@@ -1,0 +1,65 @@
+========================================================================================================
+HEAD-TO-HEAD v2 (grade-invariant) : 113  strehl vs Zerene Stacker PMax
+========================================================================================================
+  scale 1.0020 (measured by geom.py, interior maximum) -> strehl box 256px, comparator box 255px: same scene area
+  reference band = 0.05-0.10 cyc/strehl-px.  Every arm is divided by its OWN value there, inside each ROI.
+ROI census on 113-full-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 10
+      FLAT   (bottom 10%)     44
+      mid                    258
+      DETAIL (top 30%)       130
+  median local contrast: DETAIL 0.8773  FLAT 0.3013  ratio 2.9x
+
+--- per-ROI integer registration (nothing resampled) ---
+  NULL control (24 deliberately mismatched ROI pairs): peak median 0.1199, 95th pct 0.3194, max 0.7037
+  gate PEAK_MIN = 0.30  (NOT ABOVE the null max -> a passing ROI is MAYBE explicable as chance)
+
+  ROI partition (must sum to 48):
+    used                                   47
+    dropped, strehl clipped                1
+    dropped, comparator clipped/off-frame  0
+    dropped, registration below gate       0
+    dropped, FFT degenerate                0
+    ---- total                             48   OK
+  registration peak on used ROIs: median 0.8284 min 0.4569  (null max 0.7037)
+
+                                      0.02-0.05   0.05-0.10   0.10-0.20   0.20-0.25   0.25-0.30   0.30-0.40   0.40-0.48 
+
+=== GRADE ARM: the statistic must not move under a contrast curve ===
+  strehl P, normalised                1.4262e+00  1.0000e+00  5.3985e-01  4.7522e-02  1.5983e-02  1.3498e-02  5.4220e-03
+  strehl P after S-curve grade        1.5897e+00  1.0000e+00  5.6800e-01  6.8684e-02  3.4584e-02  3.7711e-02  1.5718e-02
+  ratio (1.0000 == grade-invariant)       1.1146      1.0000      1.0521      1.4453      2.1639      2.7938      2.8990
+  worst deviation 189.90%.  Absolute band power under the same grade moves by 62.8% in the reference band alone, so the disturbance is real.
+  VERDICT: FAIL (pass = under 10% in every band)
+
+=== normalised spectra (each divided by its own 0.05-0.10 band) ===
+  strehl Cn  POST-flip (noise-free)   1.5557e+00  1.0000e+00  4.4160e-01  2.7385e-02  5.6319e-03  1.9920e-03  8.9464e-04
+  strehl Cn  PRE-flip  (noise-free)   1.6253e+00  1.0000e+00  3.7524e-01  1.4774e-02  2.2573e-03  9.4714e-04  5.6959e-04
+  strehl Pn  POST-flip (with noise)   1.4262e+00  1.0000e+00  5.3985e-01  4.7522e-02  1.5983e-02  1.3498e-02  5.4220e-03
+  strehl Pn  PRE-flip  (with noise)   1.4893e+00  1.0000e+00  4.7266e-01  3.1599e-02  9.6869e-03  8.8634e-03  4.9825e-03
+  Zerene Stacker PMax Pn              1.1288e+00  1.0000e+00  7.2078e-01  9.7701e-02  3.7778e-02  1.9345e-02  3.2292e-03
+
+=== THE RIGOROUS ONE-SIDED BOUND (grade-invariant) ===
+  Cn_strehl_postflip / Pn_comp            1.3782      1.0000      0.6127      0.2803      0.1491      0.1030      0.2770
+  Cn_strehl_preflip  / Pn_comp            1.4399      1.0000      0.5206      0.1512      0.0598      0.0490      0.1764
+  rigorous strehl wins (>1): ['0.02-0.05']
+  <=1 is INCONCLUSIVE, not a loss: the comparator's fine-band power
+  has its own noise in it and this cannot separate them.
+
+=== best-effort (NOT rigorous: both sides carry their own noise) ===
+  Pn_strehl_postflip / Pn_comp            1.2635      1.0000      0.7490      0.4864      0.4231      0.6977      1.6791
+  Pn_strehl_preflip  / Pn_comp            1.3194      1.0000      0.6558      0.3234      0.2564      0.4582      1.5430
+  what the flip did: post/pre             0.9577      1.0000      1.1422      1.5039      1.6499      1.5229      1.0882
+
+=== the flip, on the statistic that cannot be fooled by noise ===
+      0.02-0.05  Cn_post/Cn_pre =   0.957 [ 0.953, 0.961]*
+      0.05-0.10  Cn_post/Cn_pre =   1.000 [ 1.000, 1.000] 
+      0.10-0.20  Cn_post/Cn_pre =   1.177 [ 1.162, 1.192]*
+      0.20-0.25  Cn_post/Cn_pre =   1.854 [ 1.758, 1.953]*
+      0.25-0.30  Cn_post/Cn_pre =   2.495 [ 2.255, 2.797]*
+      0.30-0.40  Cn_post/Cn_pre =   2.103 [ 1.826, 2.463]*
+      0.40-0.48  Cn_post/Cn_pre =   1.571 [ 1.351, 1.854]*
+    * = 95% CI excludes 1

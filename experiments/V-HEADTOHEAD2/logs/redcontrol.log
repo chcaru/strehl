@@ -1,0 +1,73 @@
+﻿strehl.exe : build           : strehl 0.0.0 (unknown)
+At C:\dev\blog\death-of-software\projects\strehl\experiments\V-HEADTOHEAD2\controls.ps1:50 char:1
++ & $exe stack $src --out "$out\renders\redcontrol.tiff" `
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (build           : strehl 0.0.0 (unknown):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+merge backend   : pyramid (--merge)
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+iso             : 500
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 500. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+frames          : 32 from C:\dev\strehl-out\V-H2H2\halves\113-A  (first decode 0.12 s)
+planes          : 3516 x 2344 per CFA plane
+--- the merge ---
+bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 4.50 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (sidecar-override), reference frame 16, 32 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : field of view scaled to 0.9802 so that EVERY frame covers every pixel (2.0% of width dropped, then 
+upsampled to keep the output dimensions).
+memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in
+                  the frame count. The merge is a fold: every accumulator is a sum, so a
+                  frame is built, added and dropped. STREHL_PYRAMID_WORKERS=N overrides.
+
+thread '<unnamed>' (97088) panicked at crates\strehl-cli\src\align_cmd.rs:1009:18:
+STREHL_FULLRES_GATHER="bogus-not-a-valid-value" is neither on (1/on/true/yes) nor off (0/off/false/no). Refusing to 
+guess: this switch selects which resolution every pixel is gathered at, and a typo that silently took the default 
+would be an unattributed measurement.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (98604) panicked at crates\strehl-cli\src\align_cmd.rs:1009:18:
+STREHL_FULLRES_GATHER="bogus-not-a-valid-value" is neither on (1/on/true/yes) nor off (0/off/false/no). Refusing to 
+guess: this switch selects which resolution every pixel is gathered at, and a typo that silently took the default 
+would be an unattributed measurement.
+
+thread '<unnamed>' (97776) panicked at crates\strehl-cli\src\align_cmd.rs:1009:18:
+STREHL_FULLRES_GATHER="bogus-not-a-valid-value" is neither on (1/on/true/yes) nor off (0/off/false/no). Refusing to 
+guess: this switch selects which resolution every pixel is gathered at, and a typo that silently took the default 
+would be an unattributed measurement.
+
+thread '<unnamed>' (96824) panicked at crates\strehl-cli\src\align_cmd.rs:1009:18:
+STREHL_FULLRES_GATHER="bogus-not-a-valid-value" is neither on (1/on/true/yes) nor off (0/off/false/no). Refusing to 
+guess: this switch selects which resolution every pixel is gathered at, and a typo that silently took the default 
+would be an unattributed measurement.

@@ -1,0 +1,18 @@
+stack 113-A: 32 frames, digest ddb05b6a6a46c0e9
+  reference frame 16 (middle, default)
+  decoded 32 frames in 1.3 s, plane 3516x2344
+  measured 129/129 edges in 1.9 s (0.0% refused)
+strehl.exe : align: track prior on, lambda=1 huber=Some(1.0) px
+At C:\dev\blog\death-of-software\projects\strehl\experiments\V-HEADTOHEAD2\render_all.ps1:84 char:12
++       $o = & $exe align $dir --out $hmap 2>&1
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (align: track pr...er=Some(1.0) px:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+  placed 32/32 frames, refused 0
+  total corner drift frame 0 -> 31: 66.248 plane px
+  held-out corner error: NOT MEASURED (too few edges)
+  cycle-consistency floor: 0.253 plane px
+  wrote C:\dev\strehl-out\V-H2H2\warpmaps\113-A.warpmap.txt
+

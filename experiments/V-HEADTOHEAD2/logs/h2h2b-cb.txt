@@ -1,0 +1,28 @@
+========================================================================================================
+HEAD-TO-HEAD v2 (grade-invariant) : cb  strehl vs focus-stack fork
+========================================================================================================
+  scale 1.0340 (measured by geom.py, interior maximum) -> strehl box 256px, comparator box 248px: same scene area
+  reference band = 0.05-0.10 cyc/strehl-px.  Every arm is divided by its OWN value there, inside each ROI.
+ROI census on cb-full-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 132
+      FLAT   (bottom 10%)     31
+      mid                    186
+      DETAIL (top 30%)       93
+  median local contrast: DETAIL 0.8041  FLAT 0.0030  ratio 267.7x
+
+--- per-ROI integer registration (nothing resampled) ---
+  NULL control (24 deliberately mismatched ROI pairs): peak median 0.1408, 95th pct 0.3531, max 0.4292
+  gate PEAK_MIN = 0.30  (NOT ABOVE the null max -> a passing ROI is MAYBE explicable as chance)
+
+  ROI partition (must sum to 64):
+    used                                   2
+    dropped, strehl clipped                16
+    dropped, comparator clipped/off-frame  5
+    dropped, registration below gate       41
+    dropped, FFT degenerate                0
+    ---- total                             64   OK
+
+  FEWER THAN 8 USABLE ROIs -- this pairing is ABANDONED, not reported as a result.

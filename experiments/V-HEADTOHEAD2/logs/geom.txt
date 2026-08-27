@@ -1,0 +1,72 @@
+
+=== cb: strehl vs focus-stack fork ===
+  strehl     7032 x 4688 -> /8 (586, 879)
+  comparator 7008 x 4672 -> /8 (584, 876)
+    scale 0.9800: median tile peak 0.1483 over 36 tiles
+    scale 0.9900: median tile peak 0.1858 over 36 tiles
+    scale 1.0000: median tile peak 0.2530 over 36 tiles
+    scale 1.0100: median tile peak 0.3470 over 36 tiles
+    scale 1.0200: median tile peak 0.4483 over 36 tiles
+    scale 1.0300: median tile peak 0.5063 over 36 tiles
+    scale 1.0400: median tile peak 0.4933 over 36 tiles
+    scale 1.0500: median tile peak 0.3678 over 36 tiles
+    scale 1.0600: median tile peak 0.2528 over 36 tiles
+    scale 1.0700: median tile peak 0.1567 over 36 tiles
+    scale 1.0800: median tile peak 0.1113 over 36 tiles
+  best scale 1.0300 score 0.5063  INTERIOR MAXIMUM (fit is real)
+  strehl     7032 x 4688 -> /8 (586, 879)
+  comparator 7008 x 4672 -> /8 (584, 876)
+    scale 1.0180: median tile peak 0.4488 over 36 tiles
+    scale 1.0200: median tile peak 0.4483 over 36 tiles
+    scale 1.0220: median tile peak 0.4471 over 36 tiles
+    scale 1.0240: median tile peak 0.4705 over 36 tiles
+    scale 1.0260: median tile peak 0.4970 over 36 tiles
+    scale 1.0280: median tile peak 0.4840 over 36 tiles
+    scale 1.0300: median tile peak 0.5063 over 36 tiles
+    scale 1.0320: median tile peak 0.4667 over 36 tiles
+    scale 1.0340: median tile peak 0.5212 over 36 tiles
+    scale 1.0360: median tile peak 0.5201 over 36 tiles
+    scale 1.0380: median tile peak 0.4043 over 36 tiles
+    scale 1.0400: median tile peak 0.4933 over 36 tiles
+    scale 1.0420: median tile peak 0.4076 over 36 tiles
+  best scale 1.0340 score 0.5212  INTERIOR MAXIMUM (fit is real)
+  REFINED scale 1.0340 score 0.5212
+  per-tile offsets at that scale (64 tiles):
+    dy median -72.0 [-80,-72]  dx median -104.0 [-112,-104]  peak median 0.5162
+    residual after a single global integer shift: 5.3 px rms   -> a single integer shift is NOT globally satisfiable; per-ROI offsets required
+
+=== 113: strehl vs Zerene Stacker PMax ===
+  strehl     7032 x 4688 -> /8 (586, 879)
+  comparator 7008 x 4672 -> /8 (584, 876)
+    scale 0.9800: median tile peak 0.3432 over 36 tiles
+    scale 0.9900: median tile peak 0.4763 over 36 tiles
+    scale 1.0000: median tile peak 0.5108 over 36 tiles
+    scale 1.0100: median tile peak 0.4778 over 36 tiles
+    scale 1.0200: median tile peak 0.3697 over 36 tiles
+    scale 1.0300: median tile peak 0.2936 over 36 tiles
+    scale 1.0400: median tile peak 0.2350 over 36 tiles
+    scale 1.0500: median tile peak 0.1827 over 36 tiles
+    scale 1.0600: median tile peak 0.1380 over 36 tiles
+    scale 1.0700: median tile peak 0.1089 over 36 tiles
+    scale 1.0800: median tile peak 0.0894 over 36 tiles
+  best scale 1.0000 score 0.5108  INTERIOR MAXIMUM (fit is real)
+  strehl     7032 x 4688 -> /8 (586, 879)
+  comparator 7008 x 4672 -> /8 (584, 876)
+    scale 0.9880: median tile peak 0.3913 over 36 tiles
+    scale 0.9900: median tile peak 0.4763 over 36 tiles
+    scale 0.9920: median tile peak 0.4831 over 36 tiles
+    scale 0.9940: median tile peak 0.4888 over 36 tiles
+    scale 0.9960: median tile peak 0.5187 over 36 tiles
+    scale 0.9980: median tile peak 0.4829 over 36 tiles
+    scale 1.0000: median tile peak 0.5108 over 36 tiles
+    scale 1.0020: median tile peak 0.5811 over 36 tiles
+    scale 1.0040: median tile peak 0.4572 over 36 tiles
+    scale 1.0060: median tile peak 0.5182 over 36 tiles
+    scale 1.0080: median tile peak 0.4817 over 36 tiles
+    scale 1.0100: median tile peak 0.4778 over 36 tiles
+    scale 1.0120: median tile peak 0.4604 over 36 tiles
+  best scale 1.0020 score 0.5811  INTERIOR MAXIMUM (fit is real)
+  REFINED scale 1.0020 score 0.5811
+  per-tile offsets at that scale (64 tiles):
+    dy median +8.0 [+8,+8]  dx median +8.0 [+8,+8]  peak median 0.5915
+    residual after a single global integer shift: 0.0 px rms   -> one shift is enough

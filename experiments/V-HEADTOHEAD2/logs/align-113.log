@@ -1,0 +1,12 @@
+stack 113MSDCF: 63 frames, digest e5929b024e2a9a70
+  reference frame 31 (middle, default)
+  decoded 63 frames in 1.6 s, plane 3516x2344
+  measured 315/315 edges in 5.4 s (0.0% refused)
+align: track prior on, lambda=1 huber=Some(1.0) px
+
+  placed 63/63 frames, refused 0
+  total corner drift frame 0 -> 62: 66.250 plane px
+  held-out corner error: NOT MEASURED (too few edges)
+  cycle-consistency floor: 0.181 plane px
+  wrote C:\dev\strehl-out\V-H2H2\warpmaps\113MSDCF.warpmap.txt
+

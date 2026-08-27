@@ -1,0 +1,41 @@
+========================================================================================================
+TONE-SUFFICIENCY TEST : 113  strehl vs Zerene Stacker PMax
+========================================================================================================
+ROI census on 113-full-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 10
+      FLAT   (bottom 10%)     44
+      mid                    258
+      DETAIL (top 30%)       130
+  median local contrast: DETAIL 0.8773  FLAT 0.3013  ratio 2.9x
+  48 ROIs offered = 48 registered + 0 dropped
+
+  empirical tone map strehl->comparator, fitted on 4x4 BLOCK MEANS (no access to any fine band):
+    d(log comp)/d(log strehl): median 0.177  10-90% [0.077,1.514]   (1.000 == identical tone)
+
+                                      0.02-0.05   0.05-0.10   0.10-0.20   0.20-0.25   0.25-0.30   0.30-0.40   0.40-0.48 
+
+=== coarse-normalised spectra (each / its own 0.05-0.10 band) ===
+  strehl, as rendered                 1.4351e+00  1.0000e+00  5.3636e-01  4.6935e-02  1.5778e-02  1.3366e-02  5.3743e-03
+  strehl, UNDER THE FITTED MAP        1.1439e+00  1.0000e+00  6.8565e-01  9.0779e-02  3.7147e-02  2.5385e-02  7.6137e-03
+  Zerene Stacker PMax, as rendered    1.1410e+00  1.0000e+00  7.1418e-01  9.6158e-02  3.7138e-02  1.9024e-02  3.1898e-03
+
+=== does tone alone account for the gap? ===
+  gap to explain   comp/strehl            0.7951      1.0000      1.3315      2.0488      2.3537      1.4233      0.5935
+  tone alone       M(strehl)/strehl       0.7971      1.0000      1.2783      1.9342      2.3543      1.8992      1.4167
+  fraction of gap explained                  nan         nan      0.8395      0.8907      1.0004      2.1243         nan
+      0.20-0.25  gap  2.049  tone  1.934   tone explains most of the gap -> undecidable
+      0.25-0.30  gap  2.354  tone  2.354   TONE ALONE OVER-EXPLAINS THE GAP -> undecidable
+      0.30-0.40  gap  1.423  tone  1.899   TONE ALONE OVER-EXPLAINS THE GAP -> undecidable
+      0.40-0.48  gap  0.594  tone  1.417   no gap to explain
+
+=== sensitivity ladder: pure gamma, the mildest monotone curve ===
+  gamma                               0.02-0.05   0.05-0.10   0.10-0.20   0.20-0.25   0.25-0.30   0.30-0.40   0.40-0.48 
+    x^1.10  ratio to ungraded             0.9742      1.0000      1.0177      1.0294      1.0142      0.9629      0.9446
+    x^1.25  ratio to ungraded             0.9347      1.0000      1.0479      1.0850      1.0547      0.9265      0.8770
+    x^1.50  ratio to ungraded             0.8685      1.0000      1.1085      1.2110      1.1772      0.9201      0.8065
+    x^2.00  ratio to ungraded             0.7428      1.0000      1.2690      1.6043      1.6560      1.1313      0.8261
+  A pure gamma changes NO resolution whatsoever.  Whatever these
+  rows are not equal to 1.0000 by is pure confound.

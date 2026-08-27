@@ -1,0 +1,100 @@
+COMMISSIONING on 113-A-g1 / 113-B-g1  (7032x4688, linear sRGB, no transfer curve)
+ROI census on 113-A-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 5
+      FLAT   (bottom 25%)     110
+      mid                    196
+      DETAIL (top 30%)       131
+  median local contrast: DETAIL 0.8673  FLAT 0.4322  ratio 2.0x
+
+DETAIL ROIs: 16 = used 16 + clipped 0
+
+=== statistic C : ratio to NULL, by band ===
+  arm          0.02-0.05  0.05-0.10  0.10-0.20  0.20-0.25  0.25-0.30  0.30-0.40  0.40-0.48
+  NULL            1.0000     1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+  BLUR03          0.9997     0.9985     0.9950     0.9871     0.9817     0.9746     0.9676
+  BLUR08          0.9719     0.8818     0.6521     0.3021     0.1663     0.0571     0.0111
+  BLUR10          0.9565     0.8225     0.5184     0.1553     0.0611     0.0120     0.0007 (DISCLOSE)
+  DECONV          0.9958     0.9950     0.9916     0.9732     0.9329     0.6423     0.0654
+  DOWN2           0.9891     0.9524     0.8249     0.4652     0.3327     0.2740     0.0033
+  NN              0.9866     0.9609     0.9453     0.9413     1.2136     1.8637     2.0264
+  CR              0.9936     0.9751     0.9343     0.8296     0.7612     0.8284     0.6267 (DISCLOSE)
+  NOISE_IND       0.9998     0.9999     1.0008     1.0020     1.0072     0.9643     1.0027
+  NOISE_COM       0.9995     1.0002     1.0063     1.0778     1.4921     3.8659     6.0520 (DISCLOSE)
+  SHARP           1.1780     1.7515     2.9594     3.9004     3.9848     3.9998     4.0004 (DISCLOSE)
+  SCALE_FORK      1.0000     0.9998     0.9967     0.9758     0.9396     0.7536     0.3883 (DISCLOSE)
+  LOWPASS20       0.9998     0.9999     0.9997     0.0402    -0.0030    -0.0017     0.0280
+
+=== statistic P : ratio to NULL, by band ===
+  arm          0.02-0.05  0.05-0.10  0.10-0.20  0.20-0.25  0.25-0.30  0.30-0.40  0.40-0.48
+  NULL            1.0000     1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+  BLUR03          0.9997     0.9985     0.9948     0.9870     0.9815     0.9734     0.9643
+  BLUR08          0.9717     0.8802     0.6419     0.2970     0.1587     0.0559     0.0106
+  BLUR10          0.9563     0.8202     0.5065     0.1513     0.0570     0.0117     0.0007 (DISCLOSE)
+  DECONV          0.9958     0.9950     0.9913     0.9724     0.9273     0.6395     0.0731
+  DOWN2           0.9890     0.9518     0.8213     0.4896     0.3086     0.0914     0.0011
+  NN              0.9880     0.9650     0.9476     0.9412     1.0546     1.0889     1.1529
+  CR              0.9947     0.9791     0.9447     0.8714     0.8772     0.8521     0.6352 (DISCLOSE)
+  NOISE_IND       0.9999     1.0002     1.0039     1.0363     1.1266     1.3266     1.7263
+  NOISE_COM       0.9995     1.0002     1.0047     1.0392     1.1315     1.3238     1.7256 (DISCLOSE)
+  SHARP           1.1790     1.7617     2.9984     3.9047     3.9863     3.9995     4.0002 (DISCLOSE)
+  SCALE_FORK      1.0000     0.9997     0.9963     0.9744     0.9341     0.7939     0.5117 (DISCLOSE)
+  LOWPASS20       0.9999     1.0002     1.0021     0.0689     0.1249     0.3275     0.7275
+
+=== statistic g : ratio to NULL, by band ===
+  arm          0.02-0.05  0.05-0.10  0.10-0.20  0.20-0.25  0.25-0.30  0.30-0.40  0.40-0.48
+  NULL            1.0000     1.0000     1.0000     1.0000     1.0000     1.0000     1.0000
+  BLUR03          1.0000     1.0000     1.0002     1.0001     1.0003     1.0012     1.0035
+  BLUR08          1.0002     1.0019     1.0159     1.0173     1.0478     1.0209     1.0519
+  BLUR10          1.0002     1.0029     1.0236     1.0263     1.0733     1.0245     0.9227 (DISCLOSE)
+  DECONV          1.0000     1.0000     1.0002     1.0008     1.0061     1.0044     0.8945
+  DOWN2           1.0000     1.0006     1.0043     0.9497     1.0781     2.9964     3.0241
+  NN              0.9986     0.9958     0.9975     1.0003     1.1508     1.7119     1.7574
+  CR              0.9989     0.9959     0.9890     0.9520     0.8677     0.9722     0.9866 (DISCLOSE)
+  NOISE_IND       0.9999     0.9997     0.9969     0.9669     0.8941     0.7269     0.5808
+  NOISE_COM       1.0000     1.0000     1.0016     1.0371     1.3187     2.9203     3.5070 (DISCLOSE)
+  SHARP           0.9992     0.9942     0.9870     0.9989     0.9996     1.0001     1.0000 (DISCLOSE)
+  SCALE_FORK      1.0000     1.0000     1.0003     1.0014     1.0059     0.9492     0.7589 (DISCLOSE)
+  LOWPASS20       0.9999     0.9997     0.9977     0.5840    -0.0244    -0.0050     0.0385
+
+=== derived arms ===
+  DECONV         C     1.0410     1.2097     1.9127     6.2685    15.2582    53.4071   100.2404
+  DECONV         P     1.0413     1.2132     1.9573     6.4283    16.2763    54.4795   103.4062
+  DECONV_V_NULL  C     0.9958     0.9950     0.9916     0.9732     0.9329     0.6423     0.0654
+  DECONV_V_NULL  P     0.9958     0.9950     0.9913     0.9724     0.9273     0.6395     0.0731
+  NN_V_CR        C     0.9929     0.9855     1.0117     1.1347     1.5942     2.2498     3.2336
+  NN_V_CR        P     0.9932     0.9857     1.0030     1.0801     1.2023     1.2778     1.8150
+
+=== PRE-REGISTERED VERDICTS ===
+  [PASS] C  NULL           == 1 exactly (floor)                   worst=1.0000
+  [PASS] C  BLUR08         < 0.98 above 0.10                      worst=0.6521
+  [FAIL] C  BLUR03         < 0.98 above 0.25 (POTENCY)            worst=0.9817
+  [PASS] C  DOWN2          < 0.50 above 0.20                      worst=0.4652
+  [PASS] C  NOISE_IND      < 1.05 (noise must not pay)            worst=0.9998
+  [PASS] C  DECONV         > 1.05 vs BLUR10 (improvement)         worst=1.2097
+  [PASS] C  DECONV_V_NULL  < 1.05 vs NULL (cannot create)         worst=0.9950
+  [PASS] C  LOWPASS20      < 0.05 above 0.20 (nothing there)      worst=-0.0030
+  [FAIL] C  NN_V_CR        < 1.05 (NN must not beat bicubic)      worst=3.2336
+  [FAIL] P  NOISE_IND      < 1.05 -- P IS EXPECTED TO FAIL        worst=1.7263
+  [PASS] P  DOWN2          < 0.50 above 0.20                      worst=0.4896
+  [FAIL] P  LOWPASS20      < 0.05 above 0.20                      worst=0.7275
+  [FAIL] P  NN_V_CR        < 1.05                                 worst=1.8150
+  [PASS] g  NULL           == 1 exactly (floor)                   worst=1.0000
+  [FAIL] g  BLUR08         INVARIANT to a filter on both          worst=1.0519
+  [PASS] g  SHARP          INVARIANT to a sharpen                 worst=0.9942
+  [FAIL] g  NOISE_IND      < 0.98 (noise must cost)               worst=0.9997
+  10 pass + 7 fail = 17 pre-registered checks
+
+=== FLAT vs DETAIL: NOISE_IND ratio (flat ROIs: 16 = used 16 + clipped 0) ===
+  A statistic that measures noise power gains MORE on flat ROIs.
+  C: detail  0.9998  0.9999  1.0008  1.0020  1.0072  0.9643  1.0027
+  C: flat    0.9998  1.0013  0.9993  1.0056  1.0120  1.0089  0.9471
+     bands where FLAT gains more than DETAIL: 1 of 7  
+  P: detail  0.9999  1.0002  1.0039  1.0363  1.1266  1.3266  1.7263
+  P: flat    1.0002  1.0032  1.0243  1.1681  1.4017  1.8868  2.9821
+     bands where FLAT gains more than DETAIL: 5 of 7  <-- measures noise
+  g: detail  0.9999  0.9997  0.9969  0.9669  0.8941  0.7269  0.5808
+  g: flat    0.9997  0.9981  0.9756  0.8609  0.7220  0.5347  0.3176
+     bands where FLAT gains more than DETAIL: 0 of 7  
