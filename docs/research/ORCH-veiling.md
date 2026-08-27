@@ -12183,3 +12183,107 @@ support.
 > channel medians refuted the mechanism, but it was the crop that ended it, and
 > the crop cost one tool call. Every instrument in this section was cheaper to
 > build than the single look that would have made two of them unnecessary.
+
+---
+
+## 112. The halo, assembled — four lanes, one answer, and it is not the one I gave
+
+The owner's loudest complaint about this product was halos. Twice. Tonight four
+lanes converged on it from different directions and the answer is compound. I
+gave him a simpler one and it was wrong in a specific, correctable way.
+
+### 112.1 What I said, and what was actually established
+
+I told him: *"the halos were manufactured by the gallery downscale, not by the
+stacker."*
+
+The first half is measured. The second half is a claim nobody made a measurement
+for, and an independent lane — writing its own code, having never read the
+other's — returned **CONFIRMED-BUT-WEAKER** and named the overreach precisely.
+
+**What is proven.** Reducing the 26 masters 5x and measuring injected rim
+against each master's own local range:
+
+| kernel | negative lobes | injected rim, 26 masters x 3 channels |
+|---|---|---|
+| box (area average) | no | **0.000000** |
+| bilinear | no | **0.000000** |
+| Lanczos (what the gallery used) | yes | **min 1.962, median 13.424, max 36.997 DN** |
+
+`0.000` even on adversarial sign-matched input where Lanczos reaches **44.265**.
+A rim planted *into* a master still scores box `0.000`, so the instrument cannot
+confuse an injected rim with a real one.
+
+**What is not proven.** The master's own rim content. The full-resolution
+instrument refused to seat — `0 of 1176` candidate sites on `lead-1-cpl`,
+plateau `sd/step p10 = 0.121` against a floor of `0.060` — because macro edges
+have no flat plateaus. Four routes were tried and three were refused for
+measured reasons.
+
+**And my headline example was the weakest one available.** `lead-1-cpl` carries
+**30** provably-manufactured gallery pixels out of 1.3M — **23.0 ppm**. `foam`
+carries 2686 px at **2056.3 ppm**, nearly two orders of magnitude more. I put
+the wrong subject at the top of a table in front of the owner.
+
+### 112.2 The thing that was actually his halo, and it was fixed before he asked
+
+The lane's closing pointer was worth more than its task, and I verified it in the
+shipping binary's own help rather than take it on report:
+
+> the estimator's backdrop sits **4739 DN** below its own far field across the
+> 80-200 px aura zone; the pyramid sits **166 DN** below
+
+One binary, both arms camera-linear, one mask, `flower-bud-alone-cpl`. **28.5x.**
+
+The estimator was the default when the corpus he judged was made. The pyramid is
+the default now. That is very probably the answer he wanted, and no lane was sent
+to find it — it fell out of a verifier reading `--help` while explaining why it
+could not answer the question it *was* sent to answer.
+
+It is now under verification on a second subject, because one subject is where
+this project's last three retractions started.
+
+### 112.3 The rule this cost, and it is the sharpest one yet
+
+The lane built a ringing statistic, ran it on the shipping Catmull-Rom
+resampler, and got a conviction: catmull-rom exceeding bilinear by 9262 DN on
+10.0% of pixels. It was one row away from sending it.
+
+| arm | negative lobes | p99.99 DN | vs floor |
+|---|---|---|---|
+| bilinear vs itself | — | 0.0 | identity control |
+| **nearest** | **no** | **3655.0** | **1.00 (floor)** |
+| catmull-rom (shipping) | yes | 1797.0 | **0.49x** |
+| lanczos3 | yes | 2378.0 | 0.65x |
+
+**Both negative-lobe kernels score below the kernel that physically cannot
+ring.** The statistic was measuring aliasing and sharpness, not ringing. Nothing
+about the numerator would have revealed it; the only thing that did was an arm
+whose *physics* bounds the answer.
+
+> **DISCIPLINE.** When a statistic ranks candidates, include a candidate whose
+> physics fixes its true score in advance. An arm that cannot exhibit the defect
+> is not a control on the measurement — it is a control on the *meaning* of the
+> measurement, and it is the only arm that can catch a statistic measuring the
+> wrong quantity entirely.
+
+That is the third instrument caught reading backwards in this project, after one
+whose error was bounded below by zero and one that was amplitude-invariant to six
+significant figures. It is the **first caught by its own author before
+publication**, and it was caught because the previous two were not.
+
+### 112.4 The honest account, in the order it happened
+
+1. The **estimator merge genuinely drew a large halo** — 4739 DN. It was the
+   default when the complained-about output was made.
+2. The **pyramid merge reduced it 28.5x** to 166 DN, and is the default now.
+   Under verification on a second subject.
+3. The **gallery's 5x Lanczos reduction injects rims up to 37 DN of 255** that
+   are not in the master, at exactly the edges being judged. Being rebuilt with
+   a box kernel measured at 0.000000.
+4. Whether the pyramid's residual 166 DN is zero is **unmeasured**, and four
+   routes to measure it were tried and refused for stated reasons.
+
+Nothing in that sequence entitles anyone to say the merge has no halos. All of it
+together says the complaint was real, was largely addressed by a default change,
+and was then amplified by a presentation kernel nobody had audited.
