@@ -493,10 +493,15 @@ anything, it needs a full-density envelope; that is a stated gap, not a result.*
    rests on the measured correlation table, not on that control.
 6. **The envelope test needs a full-density envelope** (section 8) before it can
    be relied on for anything.
-7. **No test exists in the repo for any of this.** These nine verdicts are
-   established by scripts written for this adjudication; nothing here is covered
-   by a checked-in regression test, so a future merge change could move these
-   numbers without any gate noticing until `orch_printready.py` is re-run.
+7. **Partially closed — see section 12.** `vr_baseline.json` +
+   `vr_recheck.py` now freeze the ruling and re-derive it on demand, commissioned
+   with three RED cases and one GREEN. **What remains open:** the checker
+   re-derives only the MASTER half (the source-frame comparison is frozen), and
+   its measured detection floor is coarse — reliable only at >= 3200 DN of planted
+   mid-scale mottle, with detection at 400-800 DN a coin flip decided by a
+   cross-term whose sampling sd is ~0.22. It will catch a rebuilt or altered
+   master; it will not catch a subtle one. It is not wired into
+   `orch_printready.py` (that file belongs to another agent).
 
 ---
 
@@ -523,4 +528,119 @@ throughout), and the masters under `acceptance\SHIP-V3\` are dated 27 Aug 00:04.
 Neither is the working-tree build the other agents are changing.
 
 
+
+
+---
+
+## 12. The standing check (closes gap 7, partially)
+
+Gap 7 said these nine verdicts were perishable — they lived only in scripts and
+nothing would notice if a merge change moved them. Three artifacts now stand:
+
+* **`vr_baseline.json`** — the frozen ruling. Per subject: the adjudicated master
+  statistics, the source-frame value each was ruled against, the ratio, and the
+  one-line acquittal reason. 10 subjects (the 9 REVIEW rows plus the `109MSDCF`
+  PASS control, which is the load-bearing evidence and must not rot either).
+  Schema `vr-baseline/1`.
+* **`vr_freeze.py`** — regenerates it from the measured `source_*.json`.
+* **`vr_recheck.py`** — re-derives the master half from any masters directory and
+  partitions every baseline subject into **HELD / MOVED / MISSING / NOT-EXAMINED**.
+  The partition is asserted to sum to the baseline count before anything prints.
+
+**GREEN requires `held == total AND total > 0`.** An empty directory, an empty
+baseline, or a filter that matches nothing all exit RED — a count that did not
+move is not a pass.
+
+**Scope limit, printed on every run:** this re-derives the **master** half only.
+The source-frame comparison is frozen. GREEN means "the masters still read what
+was adjudicated", **not** "the merge is still innocent". If the merge changes,
+`vr_source.py` must be re-run.
+
+### Commissioning — the RED runs
+
+An uncommissioned checker is one green light of unknown meaning.
+
+| case | setup | expected | MEASURED |
+|---|---|---|---|
+| C1 | real `SHIP-V3\`, all 10 | GREEN | `held 10 moved 0 missing 0 not-examined 0`, every delta **0.000%**, exit **0** |
+| C2 | 1 perturbed + 1 clean copy + 8 absent | RED, naming both | `held 1 moved 1 missing 8 not-examined 0`, exit **2** |
+| C4 | empty directory | RED | `held 0 moved 0 missing 10`, exit **2** |
+| C5 | `--only no-such-subject` | RED | `held 0 ... = 0 subjects`, `RED no subjects examined`, exit **2** |
+
+C2 verbatim — the case that matters, because a missing master must not read as a
+held one:
+
+```
+112MSDCF               MOVED           0.14169   0.033877   3.399%  blotch 0.14667 -> 0.14169 (-3.40%); chroma 0.034851 -> 0.033877 (-2.80%)
+leaf-2-cpl             HELD            0.00448   0.019727   0.000%  r_blotch 1.138 r_chroma 0.883 vs frozen source max
+...8 MISSING...
+PARTITION  held 1  moved 1  missing 8  not-examined 0  = 10 subjects in baseline
+RED    MOVED: 112MSDCF -- acquittal is STALE, re-adjudicate
+       MISSING: 109MSDCF, 113MSDCF, coffee-bubbles, couch-fibers-cpl, flat-on-ruler-cpl, flower-inner-edge-cpl, foam, lead-1-cpl
+```
+
+### The detection floor, and the seed-luck trap I walked into
+
+The first ladder (`vr_perturb.py`, seed 7) planted mid-scale mottle into
+112MSDCF and the checker went RED at 400 DN. **That number was luck and I nearly
+reported it.** Two things were wrong with it.
+
+First, the reading moved the **wrong way** — planting *energy* at 800 DN
+*lowered* blotch 0.14667 -> 0.14169. Mechanism, MEASURED (`vr_whydown.py`,
+`vr_whydown2.py`): not window relocation (the picker moved 16 px), not clipping
+(**0.000%** of the window clipped, and clipped and unclipped results are
+identical to 8 significant figures). It is the **cross-term**. At the frozen
+window:
+
+```
+clean                  band  2064.80    PLANT ALONE  band 444.20
+clean+plant            band  2014.82    quadrature would predict 2112.04
+=> corr(plant, existing band) = -0.219
+```
+
+Second, that correlation is **sampling noise**, and seed 7 was its worst draw. A
+900 px window band-passed at 50-400 px holds only ~20 independent blobs, so the
+expected sampling sd of that correlation is ~1/sqrt(20) = 0.22. MEASURED over 8
+seeds: corr ranges **-0.219 to +0.132**, and seed 7 is the most negative of the
+eight.
+
+Detection rate, MEASURED across 8 seeds at 112MSDCF, tol = 2%:
+
+| plant sd | resulting blotch, min .. max | \|delta\| min .. max | **fires** |
+|---|---|---|---|
+| 400 DN | 0.14353 .. 0.15061 | 0.15% .. 2.69% | **3 of 8** |
+| 800 DN | 0.14209 .. 0.15685 | 0.26% .. 6.94% | **3 of 8** |
+| 1600 DN | 0.14435 .. 0.17533 | 1.59% .. 19.54% | **7 of 8** |
+| 3200 DN | 0.16646 .. 0.22940 | 13.49% .. 56.40% | **8 of 8** |
+| 6400 DN | 0.24830 .. 0.37196 | 69.29% .. 153.59% | **8 of 8** |
+
+**Honest floor: reliable (8/8) only at >= 3200 DN of planted mid-scale mottle** —
+which is 23% of that window's mean and 1.55x its entire band energy. At 400-800
+DN detection is a coin flip whose outcome is decided by the cross-term, not by
+the plant's own power. This is a coarse instrument and it is stated as one.
+
+Two consequences I am obliged to carry back:
+
+1. **It qualifies my own ARM D ladder** in `vr_commission.py`, which used a
+   single fixed seed. Its monotone 1.004 -> 1.794x is real but its low rungs
+   inherit this +-2-3% seed scatter; only the high rungs are seed-independent.
+2. **It is a property of the gate's statistic, not just of my checker.** Any
+   single-realisation plant against a 900 px / 50-400 px window carries ~+-0.22 of
+   cross-term correlation with whatever is already there. Anyone commissioning an
+   instrument on this statistic with one seed will get a number they cannot
+   reproduce.
+
+### Format, if the gate should consume it
+
+`vr_baseline.json` is `{"schema","arm","gate_rule","provenance","subjects":{...}}`;
+each subject carries `flagged_for`, `verdict`, `reason`,
+`n_source_frames_registered`, `master{blotch, blotch_band_dn, blotch_mean_dn,
+blotch_window_yx, chroma, chroma_window_yx}`, `source_frame_max{blotch, chroma,
+blotch_band_dn}` and `ratio{blotch, chroma, blotch_band_dn}`. `orch_printready.py`
+was **not** modified — it is yours and you are editing it. If you want the gate to
+read this, the smallest wiring is: on a REVIEW row, look up `subjects[<name>]`,
+and if `master.blotch` still matches within tolerance, print `reason` and
+`ratio.blotch` beside the REVIEW instead of re-deriving anything. Tell me if you
+want a different shape and I will re-emit it; nothing depends on the current one
+but `vr_recheck.py`.
 

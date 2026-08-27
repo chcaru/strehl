@@ -1,0 +1,317 @@
+{
+ "arm": "SHIP-V3",
+ "gate_rule": {
+  "blotch_review": 0.02,
+  "chroma_review": 0.015,
+  "elevated_multiple": 1.3,
+  "source_baseline": "max over registered source frames"
+ },
+ "provenance": {
+  "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+  "report": "experiments/V-REVIEW/report.md",
+  "statistics": "imported unmodified from orch_blotch.py / orch_chroma.py"
+ },
+ "schema": "vr-baseline/1",
+ "subjects": {
+  "109MSDCF": {
+   "flagged_for": "none (gate PASS control)",
+   "master": {
+    "blotch": 0.00169451,
+    "blotch_band_dn": 107.3672,
+    "blotch_mean_dn": 63361.8047,
+    "blotch_window_yx": [
+     2806,
+     134
+    ],
+    "chroma": 0.000505783,
+    "chroma_window_yx": [
+     2616,
+     4374
+    ]
+   },
+   "n_source_frames_registered": 13,
+   "ratio": {
+    "blotch": 1.13247,
+    "blotch_band_dn": 1.13124,
+    "chroma": 0.91121
+   },
+   "reason": "control subject: gate PASSED it, yet its master reads 1.132x its own best source frame -- which is why the ratio is not a defect marker",
+   "source_frame_max": {
+    "blotch": 0.0014963,
+    "blotch_band_dn": 94.9108,
+    "chroma": 0.00055507
+   },
+   "verdict": "ACQUIT"
+  },
+  "112MSDCF": {
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.14667335,
+    "blotch_band_dn": 2064.7993,
+    "blotch_mean_dn": 14077.5361,
+    "blotch_window_yx": [
+     2254,
+     5926
+    ],
+    "chroma": 0.034850854,
+    "chroma_window_yx": [
+     2616,
+     1458
+    ]
+   },
+   "n_source_frames_registered": 18,
+   "ratio": {
+    "blotch": 1.0445,
+    "blotch_band_dn": 0.94647,
+    "chroma": 1.16762
+   },
+   "reason": "band DN 0.946x source max; excess is the denominator (mean 0.922x); chroma absolute DN 0.919x, excess confined to darkest luminance decile",
+   "source_frame_max": {
+    "blotch": 0.14042495,
+    "blotch_band_dn": 2181.5813,
+    "chroma": 0.029847806
+   },
+   "verdict": "ACQUIT"
+  },
+  "113MSDCF": {
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.25167988,
+    "blotch_band_dn": 2170.8538,
+    "blotch_mean_dn": 8625.4561,
+    "blotch_window_yx": [
+     14,
+     1558
+    ],
+    "chroma": 0.025378803,
+    "chroma_window_yx": [
+     1744,
+     1458
+    ]
+   },
+   "n_source_frames_registered": 16,
+   "ratio": {
+    "blotch": 1.06853,
+    "blotch_band_dn": 0.90497,
+    "chroma": 1.09358
+   },
+   "reason": "band DN 0.905x source max (mean 0.917x); chroma absolute DN 0.907x, d1 carries 31.8% of the excess",
+   "source_frame_max": {
+    "blotch": 0.23553746,
+    "blotch_band_dn": 2398.8149,
+    "chroma": 0.023207158
+   },
+   "verdict": "ACQUIT"
+  },
+  "coffee-bubbles": {
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.09891994,
+    "blotch_band_dn": 233.8072,
+    "blotch_mean_dn": 2363.6003,
+    "blotch_window_yx": [
+     38,
+     14
+    ],
+    "chroma": 0.054596189,
+    "chroma_window_yx": [
+     0,
+     1458
+    ]
+   },
+   "n_source_frames_registered": 12,
+   "ratio": {
+    "blotch": 1.06917,
+    "blotch_band_dn": 0.99373,
+    "chroma": 0.90146
+   },
+   "reason": "band DN 0.994x source max -- inside the +-17% frame-to-frame band spread; chroma 0.901x source max outright",
+   "source_frame_max": {
+    "blotch": 0.09252059,
+    "blotch_band_dn": 235.2833,
+    "chroma": 0.060564088
+   },
+   "verdict": "ACQUIT"
+  },
+  "couch-fibers-cpl": {
+   "flagged_for": "blotch",
+   "master": {
+    "blotch": 0.0451148,
+    "blotch_band_dn": 2069.3059,
+    "blotch_mean_dn": 45867.5625,
+    "blotch_window_yx": [
+     558,
+     6110
+    ],
+    "chroma": 0.00418283,
+    "chroma_window_yx": [
+     1744,
+     2920
+    ]
+   },
+   "n_source_frames_registered": 17,
+   "ratio": {
+    "blotch": 0.81135,
+    "blotch_band_dn": 0.82962,
+    "chroma": 0.79564
+   },
+   "reason": "master reads below the worst source frame outright (0.811x); band 0.830x",
+   "source_frame_max": {
+    "blotch": 0.05560462,
+    "blotch_band_dn": 2494.2864,
+    "chroma": 0.005257173
+   },
+   "verdict": "ACQUIT"
+  },
+  "flat-on-ruler-cpl": {
+   "flagged_for": "blotch",
+   "master": {
+    "blotch": 0.18363008,
+    "blotch_band_dn": 8725.7441,
+    "blotch_mean_dn": 47518.0547,
+    "blotch_window_yx": [
+     3758,
+     2238
+    ],
+    "chroma": 0.002768892,
+    "chroma_window_yx": [
+     1744,
+     1460
+    ]
+   },
+   "n_source_frames_registered": 20,
+   "ratio": {
+    "blotch": 0.92081,
+    "blotch_band_dn": 0.84235,
+    "chroma": 0.81485
+   },
+   "reason": "master reads below the worst source frame outright (0.921x); band 0.842x",
+   "source_frame_max": {
+    "blotch": 0.19942168,
+    "blotch_band_dn": 10358.75,
+    "chroma": 0.003398043
+   },
+   "verdict": "ACQUIT"
+  },
+  "flower-inner-edge-cpl": {
+   "flagged_for": "blotch",
+   "master": {
+    "blotch": 0.0992144,
+    "blotch_band_dn": 1254.1598,
+    "blotch_mean_dn": 12640.9043,
+    "blotch_window_yx": [
+     3670,
+     3150
+    ],
+    "chroma": 0.01226053,
+    "chroma_window_yx": [
+     1744,
+     0
+    ]
+   },
+   "n_source_frames_registered": 20,
+   "ratio": {
+    "blotch": 1.0886,
+    "blotch_band_dn": 0.97213,
+    "chroma": 0.82741
+   },
+   "reason": "band 0.972x; an independent all-in-focus composite of the same frames reads 0.12097, 1.22x the master",
+   "source_frame_max": {
+    "blotch": 0.09113976,
+    "blotch_band_dn": 1290.1161,
+    "chroma": 0.014817942
+   },
+   "verdict": "ACQUIT"
+  },
+  "foam": {
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.46074508,
+    "blotch_band_dn": 3663.7317,
+    "blotch_mean_dn": 7951.7544,
+    "blotch_window_yx": [
+     518,
+     2054
+    ],
+    "chroma": 0.032503272,
+    "chroma_window_yx": [
+     872,
+     2916
+    ]
+   },
+   "n_source_frames_registered": 12,
+   "ratio": {
+    "blotch": 0.88522,
+    "blotch_band_dn": 0.52709,
+    "chroma": 0.88041
+   },
+   "reason": "band DN 0.527x source max -- the merge halved it; chroma 0.880x outright",
+   "source_frame_max": {
+    "blotch": 0.52048773,
+    "blotch_band_dn": 6950.8252,
+    "chroma": 0.036918127
+   },
+   "verdict": "ACQUIT"
+  },
+  "lead-1-cpl": {
+   "flagged_for": "chroma",
+   "master": {
+    "blotch": 0.00555391,
+    "blotch_band_dn": 254.9792,
+    "blotch_mean_dn": 45909.8594,
+    "blotch_window_yx": [
+     150,
+     22
+    ],
+    "chroma": 0.020207564,
+    "chroma_window_yx": [
+     872,
+     5840
+    ]
+   },
+   "n_source_frames_registered": 20,
+   "ratio": {
+    "blotch": 1.25757,
+    "blotch_band_dn": 1.17409,
+    "chroma": 0.90316
+   },
+   "reason": "chroma 0.903x source max outright",
+   "source_frame_max": {
+    "blotch": 0.00441637,
+    "blotch_band_dn": 217.1723,
+    "chroma": 0.022374278
+   },
+   "verdict": "ACQUIT"
+  },
+  "leaf-2-cpl": {
+   "flagged_for": "chroma",
+   "master": {
+    "blotch": 0.00447883,
+    "blotch_band_dn": 202.3584,
+    "blotch_mean_dn": 45181.1211,
+    "blotch_window_yx": [
+     22,
+     14
+    ],
+    "chroma": 0.019726677,
+    "chroma_window_yx": [
+     872,
+     5840
+    ]
+   },
+   "n_source_frames_registered": 20,
+   "ratio": {
+    "blotch": 1.13781,
+    "blotch_band_dn": 1.02676,
+    "chroma": 0.88328
+   },
+   "reason": "chroma 0.883x source max outright",
+   "source_frame_max": {
+    "blotch": 0.00393637,
+    "blotch_band_dn": 197.0838,
+    "chroma": 0.022333556
+   },
+   "verdict": "ACQUIT"
+  }
+ }
+}
