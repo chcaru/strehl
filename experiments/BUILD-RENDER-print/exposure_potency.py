@@ -73,21 +73,34 @@ def main() -> int:
     print(f"    differ by more than 1 DN  {real:12,}  {100.0 * real / n:8.4f}%")
     print(f"    {'':<26}{same + rounding + real:12,}  {100.0 * (same + rounding + real) / n:8.4f}%  = total")
 
-    # Where does the surviving difference live? If it is confined to samples
-    # that clip at one gain and not the other, then the gain did not expose the
-    # picture -- it only decided how much of the highlight it destroyed.
+    # Where does the surviving difference live? The obvious hypothesis is that
+    # the higher gain clipped highlights the lower one kept. Both polarities
+    # are tested, because testing only the expected one returns zero here and
+    # zero reads as "not clipping" -- the true answer is that the LOWER gain is
+    # the one that clips. One-sided controls are how that gets missed.
     hi_clip = (hi >= 65535) & (lo < 65535)
+    lo_clip = (lo >= 65535) & (hi < 65535)
     big = d > 1
-    in_clip = int((big & hi_clip).sum())
-    print(f"\n    of the {real:,} samples that really differ, {in_clip:,} "
-          f"({100.0 * in_clip / max(real, 1):.1f}%) are samples the higher gain CLIPPED")
+    print(f"\n    of the {real:,} samples that really differ:")
+    print(f"      clipped by the HIGHER gain only : {int((big & hi_clip).sum()):,}")
+    print(f"      clipped by the LOWER  gain only : {int((big & lo_clip).sum()):,}")
+    # Locate them on the tone curve instead. `TONE_TOE` and the s-curve
+    # strength are ABSOLUTE constants that do not scale with the gain, so they
+    # are where the cancellation is expected to break.
+    lvl = lo[big].astype(np.float64) / 65535.0
+    if lvl.size:
+        print(f"      their level in the -0.21 render : p5 {np.percentile(lvl, 5):.4f}  "
+              f"median {np.median(lvl):.4f}  p95 {np.percentile(lvl, 95):.4f}")
 
     scale = 100.0 * d.mean() / 65535.0
     print(f"\n  A {8.0 / 0.865:.1f}x exposure change moved the master by {scale:.4f}% of full scale,")
     print(f"  leaving {100.0 * same / n:.2f}% of it byte-identical.")
     print("  --exposure is INERT as an exposure control: Tone::from_luminance takes its")
-    print("  percentiles AFTER the multiply, so the gain cancels out of the mapping. What")
-    print("  survives is not brightness -- it is highlight clipping, which is damage.")
+    print("  percentiles AFTER the multiply, so the gain cancels out of the mapping.")
+    print(f"  The residue of {real:,} samples ({100.0 * real / n:.4f}%) sits entirely in the extreme")
+    print("  highlights and is a white-point wobble, not an exposure change: it decides")
+    print("  which few samples clip, and it does so in the direction OPPOSITE to intuition")
+    print("  -- the LOWER gain is the one that clips more.")
     return 0
 
 
