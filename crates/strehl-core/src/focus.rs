@@ -158,7 +158,13 @@ pub const SUPPORT_RADIUS: usize = SOBEL_RADIUS + WINDOW_RADIUS;
 
 /// Divisor floor, in DN. Guards the case where the noise model returns zero or
 /// something denormal; it is far below any real sensor's read-noise floor.
-const SIGMA_EPS: f32 = 1e-3;
+///
+/// **Public because it is part of the operator contract.** It used to be
+/// private, and `strehl-plugin`'s `measure.rs` carried a copy with a comment
+/// admitting the copy. A contributed operator that normalises itself has to
+/// divide by the same floor the shipped one does, or its calibrated constant
+/// describes a different pipeline from the one the merge runs.
+pub const SIGMA_EPS: f32 = 1e-3;
 
 /// 3x3 Sobel gradient magnitude, `sqrt(Gx^2 + Gy^2)`, replicate-clamped at the
 /// border.
@@ -268,16 +274,37 @@ impl FocusField {
     /// has to avoid. Measured: the rim cutoff tracks the window radius 1:1 over
     /// radii 9-26, slope 1.07, intercept 1.08.
     pub fn compute_at_radius(&mut self, luma: &[f32], noise: &NoiseModel, radius: usize) {
-        assert_eq!(luma.len(), self.geom.pixels());
-        gradient_magnitude(luma, self.geom, &mut self.grad);
-        box_mean(
-            &self.grad,
+        self.compute_with_measure(&Tenengrad::at_radius(radius), luma, noise);
+    }
+
+    /// Compute the focus field with a **contributed** operator, through the
+    /// same three buffers and the same pipeline the shipped one uses.
+    ///
+    /// This is the method that makes the plugin seam real: `strehl stack
+    /// --focus <id>` reaches the merge through here, and
+    /// [`compute_at_radius`](Self::compute_at_radius) reaches it through here
+    /// too, with [`Tenengrad`]. There is one pipeline, so a contributed
+    /// operator cannot be running through a second copy of the stage order that
+    /// `FOCUS_NOISE_SD` was measured against.
+    ///
+    /// The host's regulariser is **not** applied here, exactly as for
+    /// [`compute`](Self::compute) — `merge::regularise` is the next stage and
+    /// the merge owns it.
+    pub fn compute_with_measure(
+        &mut self,
+        op: &dyn FocusMeasure,
+        luma: &[f32],
+        noise: &NoiseModel,
+    ) {
+        run_measure(
+            op,
             self.geom,
-            radius,
+            luma,
+            noise,
+            &mut self.grad,
             &mut self.scratch,
             &mut self.focus,
         );
-        normalise_by_luma_sigma(&mut self.focus, luma, noise);
     }
 
     /// Compute the selection field **and** a second, finer field from the same
@@ -352,9 +379,61 @@ impl FocusField {
         noise: &NoiseModel,
         scale: &crate::edgeaware::SelectionScale,
     ) {
+        self.compute_scaled_with_measure(&Tenengrad::shipped(), luma, noise, scale);
+    }
+
+    /// [`compute_scaled`](Self::compute_scaled) with a **contributed**
+    /// operator supplying the response and the normaliser.
+    ///
+    /// Delegated to by `compute_scaled` so there is one implementation, and
+    /// bit-identical for [`Tenengrad::shipped`] because
+    /// [`Tenengrad::respond`](FocusMeasure::respond) *is* [`gradient_magnitude`]
+    /// and [`Tenengrad::normalise`](FocusMeasure::normalise) *is*
+    /// [`normalise_by_luma_sigma`] — no second copy of either.
+    ///
+    /// # What this does to the operator's own window, and what that costs
+    ///
+    /// The operator's [`window`](FocusMeasure::window) is **overridden**: the
+    /// per-pixel level replaces it, exactly as it already replaces
+    /// [`WINDOW_RADIUS`] on the shipped path. That is not free and it is not
+    /// hidden. A calibrated response SD is measured at a *fixed* window (fact
+    /// 500 — the scale is a property of the operator AND its window AND the
+    /// host regulariser), so wherever `scale` asks for a level below
+    /// [`FULL_LEVEL`](crate::edgeaware::FULL_LEVEL) the field's true SD is
+    /// larger than the measured one and the gate there is effectively looser
+    /// than its nominal value.
+    ///
+    /// This is a **pre-existing** property of the shipped path, not something
+    /// the plugin seam introduces: `FOCUS_NOISE_SD` is likewise measured at
+    /// radius 13 and likewise applied to a field whose radius varies. The
+    /// plugin seam inherits the approximation with the operator's OWN measured
+    /// scale rather than a foreign one, which is strictly better than the
+    /// alternative of refusing to run and strictly worse than a per-level
+    /// calibration ladder, which nothing in this repository has yet.
+    ///
+    /// # Panics
+    ///
+    /// As [`compute_scaled`](Self::compute_scaled), plus on an operator whose
+    /// [`support_radius`](FocusMeasure::support_radius) the levels cannot
+    /// express — [`Window::Custom`] has no radius to ladder over, so it is
+    /// refused here rather than silently run at its own fixed window while the
+    /// caller believes the election adapted.
+    pub fn compute_scaled_with_measure(
+        &mut self,
+        op: &dyn FocusMeasure,
+        luma: &[f32],
+        noise: &NoiseModel,
+        scale: &crate::edgeaware::SelectionScale,
+    ) {
         assert_eq!(luma.len(), self.geom.pixels());
         assert_eq!(scale.geometry(), self.geom);
-        gradient_magnitude(luma, self.geom, &mut self.grad);
+        assert!(
+            !matches!(op.window(), Window::Custom { .. }),
+            "focus operator `{}` has a custom window, which the per-pixel \
+             selection scale cannot ladder over; run it with STREHL_EDGE_AWARE=0",
+            op.id()
+        );
+        op.respond(luma, self.geom, &mut self.grad);
         let levels = scale.levels();
         let px = self.geom.pixels();
         if self.level_buf.len() != crate::edgeaware::LEVEL_RADII.len() * px {
@@ -373,8 +452,9 @@ impl FocusField {
         for (i, f) in self.focus.iter_mut().enumerate() {
             *f = self.level_buf[levels[i] as usize * px + i];
         }
-        normalise_by_luma_sigma(&mut self.focus, luma, noise);
+        op.normalise(&mut self.focus, luma, noise);
     }
+
 
     /// Bytes the multi-scale ladder adds once [`compute_scaled`](Self::compute_scaled)
     /// has been called, for the memory report.
@@ -437,6 +517,477 @@ fn normalise_by_luma_sigma(field: &mut [f32], luma: &[f32], noise: &NoiseModel) 
     }
 }
 
+// ---------------------------------------------------------------------------
+// The contribution surface: one operator abstraction, one pipeline.
+// ---------------------------------------------------------------------------
+
+/// Replicate-clamped tap. Every stencil in the ecosystem reads through this.
+///
+/// Replicate rather than zero-pad: a zero-padded gradient manufactures a bright
+/// rim one stencil in from the edge and hands it to the merge as detail.
+/// [`box_mean`] clamps for the same reason.
+#[inline]
+#[must_use]
+pub fn tap(luma: &[f32], w: usize, h: usize, x: isize, y: isize) -> f32 {
+    let sx = x.clamp(0, w as isize - 1) as usize;
+    let sy = y.clamp(0, h as isize - 1) as usize;
+    luma[sy * w + sx]
+}
+
+/// The operator's own aggregation window — the stage between the stencil and
+/// the normaliser.
+///
+/// This is **not** the host's regulariser. The two are separate boxes applied
+/// in sequence, and conflating them is the fault fact 500 records: the
+/// project's two published noise constants differ in whether the second box was
+/// present, and were then divided by one another.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Window {
+    /// The stencil response is the field.
+    None,
+    /// Separable running-sum box mean of the given radius, via [`box_mean`].
+    /// **O(1) in the radius**, which is what makes M13's window ruling valid
+    /// (cost flat to 2.53% over w1-w40).
+    Box { radius: usize },
+    /// The operator aggregates itself over a `radius`-wide support and **must**
+    /// override [`FocusMeasure::aggregate`]. The host cannot assume the cost is
+    /// O(1) in the radius here.
+    Custom { radius: usize },
+}
+
+impl Window {
+    /// Half-width of the aggregation support, in plane pixels.
+    #[must_use]
+    pub const fn radius(self) -> usize {
+        match self {
+            Window::None => 0,
+            Window::Box { radius } | Window::Custom { radius } => radius,
+        }
+    }
+
+    /// Whether the host may assume the aggregation is a separable running sum,
+    /// and therefore free in the radius.
+    #[must_use]
+    pub const fn is_separable(self) -> bool {
+        matches!(self, Window::None | Window::Box { .. })
+    }
+}
+
+/// How a windowed response is put into units.
+///
+/// The shipped operator divides by the injected noise model's per-pixel luma
+/// sigma. This module's header is explicit that the divisor is a **proxy** — it
+/// is the sigma of a single luma sample, not of the windowed response — and it
+/// is kept because it is what M11 scored. Nothing here is entitled to improve
+/// on it silently.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Normalisation {
+    /// Leave the response as it is. M11's `Norm::None` arm.
+    None,
+    /// Divide pointwise by `max(sigma_L(p), SIGMA_EPS)^degree`.
+    ///
+    /// `degree` follows M11's parameterisation: a response homogeneous of
+    /// degree `d` in the luma divides by `sigma^d`, so `|grad|` uses 1 and
+    /// `|grad|^2` uses 2. **This is a convention, not a measurement** — M11
+    /// scored the `degree = 1` arm and that is the only one with a published
+    /// number behind it.
+    LumaSigma { degree: u32 },
+    /// The operator normalises itself and **must** override
+    /// [`FocusMeasure::normalise`].
+    Custom,
+}
+
+/// A focus measure: the replaceable component the merge elects on.
+///
+/// Implementors supply the three stages and the two radii. They do **not**
+/// supply a noise constant, a tolerance, or a gate — see
+/// `strehl_plugin::calibrate`, where the host measures it instead. There is no
+/// `fn noise_sd`, no field to put one in, and no default to fall back to.
+///
+/// # Why this lives in `strehl-core` and not in the plugin crate
+///
+/// Because the *host* is the thing that has to run it. This trait used to sit
+/// in `strehl-plugin`, which meant the shipped merge could not accept a
+/// contributed operator without the pipeline being written a second time — and
+/// it was: `FocusField::compute` and `strehl_plugin::FieldWorkspace::run` were
+/// two spellings of `respond -> aggregate -> normalise` whose agreement was
+/// held together by a test rather than by construction. Both now call
+/// [`run_measure`].
+///
+/// `Send + Sync` because the merge folds frames across a rayon worker pool and
+/// every worker holds the same operator.
+pub trait FocusMeasure: Send + Sync {
+    /// Stable identity, used as the registry key and printed in reports.
+    ///
+    /// Include the window radius. Fact 152: the operator and its window are one
+    /// object, and fact 510 measured a **12.5% gate shift** from a radius
+    /// change alone, so `tenengrad` and `tenengrad-w11` are different things
+    /// and must not share a name.
+    fn id(&self) -> &str;
+
+    /// Half-width of the pointwise stencil, in plane pixels. A 3x3 Sobel is 1;
+    /// Brenner's `|I(x+2) - I(x)|` is 2; `ring(1,3)` is 3.
+    fn stencil_radius(&self) -> usize;
+
+    /// The operator's own aggregation window.
+    fn window(&self) -> Window;
+
+    /// How the windowed response is put into units.
+    fn normalisation(&self) -> Normalisation;
+
+    /// Pointwise stencil response over a whole plane, **replicate-clamped** at
+    /// the border.
+    ///
+    /// `out` is `geom.pixels()` long and may contain anything on entry.
+    fn respond(&self, luma: &[f32], geom: PlaneGeometry, out: &mut [f32]);
+
+    /// Apply the operator's own window. Defaulted for [`Window::None`] and
+    /// [`Window::Box`].
+    ///
+    /// # Panics
+    ///
+    /// The default implementation panics for [`Window::Custom`], which is the
+    /// contract: declaring a custom window and not overriding this is a
+    /// programming error, and a silent identity here would be a silently
+    /// mis-scaled gate.
+    fn aggregate(
+        &self,
+        response: &[f32],
+        geom: PlaneGeometry,
+        scratch: &mut [f32],
+        out: &mut [f32],
+    ) {
+        match self.window() {
+            Window::None => out.copy_from_slice(response),
+            Window::Box { radius } => box_mean(response, geom, radius, scratch, out),
+            Window::Custom { .. } => panic!(
+                "focus measure `{}` declares Window::Custom but does not override \
+                 FocusMeasure::aggregate",
+                self.id()
+            ),
+        }
+    }
+
+    /// Put the windowed response into units. Defaulted for
+    /// [`Normalisation::None`] and [`Normalisation::LumaSigma`].
+    ///
+    /// # Panics
+    ///
+    /// As [`FocusMeasure::aggregate`], for [`Normalisation::Custom`].
+    fn normalise(&self, field: &mut [f32], luma: &[f32], noise: &NoiseModel) {
+        match self.normalisation() {
+            Normalisation::None => {}
+            // `degree == 1` routes through the module's own
+            // `normalise_by_luma_sigma` rather than through `powi(1)`, so the
+            // shipped operator and every degree-1 contribution divide by
+            // literally the same code.
+            Normalisation::LumaSigma { degree: 1 } => normalise_by_luma_sigma(field, luma, noise),
+            Normalisation::LumaSigma { degree } => {
+                for (f, l) in field.iter_mut().zip(luma) {
+                    let sigma = noise.green_luma_sigma(*l).max(SIGMA_EPS);
+                    *f /= sigma.powi(degree as i32);
+                }
+            }
+            Normalisation::Custom => panic!(
+                "focus measure `{}` declares Normalisation::Custom but does not \
+                 override FocusMeasure::normalise",
+                self.id()
+            ),
+        }
+    }
+
+    /// Furthest luma sample the response at a pixel reads, in plane pixels:
+    /// `stencil_radius + window radius`. For the shipped operator this is
+    /// `1 + 13 = 14`, which is [`SUPPORT_RADIUS`].
+    ///
+    /// This is **not** the plugin halo — the host's regulariser adds to it. See
+    /// [`FieldConfig::plugin_halo`]. (Rule 15: "plugin halo", the rectangle
+    /// expansion, never the bare word.)
+    fn support_radius(&self) -> usize {
+        self.stencil_radius() + self.window().radius()
+    }
+}
+
+/// **The one implementation of the focus pipeline**, `respond -> aggregate ->
+/// normalise`, over caller-supplied buffers.
+///
+/// Every field in this project is produced by this function:
+/// [`FocusField::compute_at_radius`] calls it with [`Tenengrad`], and
+/// [`FieldWorkspace::run`] calls it with whatever was contributed. That is not
+/// tidiness — the order of the stages is what `FOCUS_NOISE_SD` is a measurement
+/// *of*, and two spellings of it are two constants waiting to disagree.
+///
+/// `response` and `scratch` are working space; the finished field lands in
+/// `out`. All four slices must be `geom.pixels()` long.
+///
+/// # Panics
+///
+/// If any slice is the wrong length.
+pub fn run_measure(
+    op: &dyn FocusMeasure,
+    geom: PlaneGeometry,
+    luma: &[f32],
+    noise: &NoiseModel,
+    response: &mut [f32],
+    scratch: &mut [f32],
+    out: &mut [f32],
+) {
+    let px = geom.pixels();
+    assert_eq!(luma.len(), px, "luma plane is not {px} samples");
+    assert_eq!(response.len(), px, "response plane is not {px} samples");
+    assert_eq!(scratch.len(), px, "scratch plane is not {px} samples");
+    assert_eq!(out.len(), px, "out plane is not {px} samples");
+    op.respond(luma, geom, response);
+    op.aggregate(response, geom, scratch, out);
+    op.normalise(out, luma, noise);
+}
+
+/// `sqrt(Gx^2 + Gy^2)` under a box window, divided by the luma sigma — **the
+/// shipped operator**, as a [`FocusMeasure`].
+///
+/// [`respond`](FocusMeasure::respond) calls [`gradient_magnitude`] and
+/// [`aggregate`](FocusMeasure::aggregate) calls [`box_mean`], so this is not a
+/// re-implementation of the shipped operator: it *is* the shipped operator,
+/// named so the merge can be handed a different one.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Tenengrad {
+    id: std::borrow::Cow<'static, str>,
+    radius: usize,
+}
+
+impl Tenengrad {
+    /// `|grad|` at the radius actually in force — [`window_radius`], not the
+    /// [`WINDOW_RADIUS`] constant.
+    ///
+    /// The distinction is load-bearing and was previously wrong. `strehl-plugin`
+    /// built its "shipped" operator from the constant while
+    /// [`FocusField::compute`] resolved [`WINDOW_RADIUS_ENV`], so under an
+    /// override the two were different operators and the crate's bit-identity
+    /// test would have failed for a reason neither crate mentions.
+    #[must_use]
+    pub fn shipped() -> Self {
+        Self::at_radius(window_radius())
+    }
+
+    /// `|grad|` at an arbitrary window radius.
+    ///
+    /// Fact 510: a radius change alone is a **12.5% gate shift** (w13 -> w11
+    /// gives `k` = 1.125), so the radius is part of the identity, not a
+    /// decoration on it.
+    #[must_use]
+    pub fn at_radius(radius: usize) -> Self {
+        // The two radii the shipped binary actually uses are borrowed, so the
+        // per-frame path allocates nothing.
+        let id = match radius {
+            WINDOW_RADIUS => std::borrow::Cow::Borrowed("tenengrad-w13"),
+            FINE_WINDOW_RADIUS => std::borrow::Cow::Borrowed("tenengrad-w2"),
+            r => std::borrow::Cow::Owned(format!("tenengrad-w{r}")),
+        };
+        Self { id, radius }
+    }
+
+    /// The window radius this instance aggregates over.
+    #[must_use]
+    pub fn radius(&self) -> usize {
+        self.radius
+    }
+}
+
+impl FocusMeasure for Tenengrad {
+    fn id(&self) -> &str {
+        &self.id
+    }
+    fn stencil_radius(&self) -> usize {
+        SOBEL_RADIUS
+    }
+    fn window(&self) -> Window {
+        Window::Box {
+            radius: self.radius,
+        }
+    }
+    fn normalisation(&self) -> Normalisation {
+        Normalisation::LumaSigma { degree: 1 }
+    }
+    fn respond(&self, luma: &[f32], geom: PlaneGeometry, out: &mut [f32]) {
+        gradient_magnitude(luma, geom, out);
+    }
+}
+
+/// The half of the field configuration that belongs to the **host**: whether
+/// the merge's regulariser is in the path, and at what radius.
+///
+/// `Copy`, and carried inside every calibrated registry entry, so a calibrated
+/// operator cannot be run under a configuration it was not calibrated for.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FieldConfig {
+    /// Radius of the host's regulariser box, or `None` for no regulariser.
+    ///
+    /// `Some(8)` is the shipped merge (fact 84: -35% absolute reconstruction
+    /// error at width 17). `None` is the statistics scale, which is
+    /// deliberately *not* regularised.
+    pub regulariser_radius: Option<usize>,
+}
+
+impl FieldConfig {
+    /// What [`crate::merge`] does: a 17x17 box over the focus field before a
+    /// winner is elected.
+    pub const SHIPPED: FieldConfig = FieldConfig {
+        regulariser_radius: Some(crate::merge::REGULARISER_RADIUS),
+    };
+
+    /// No regulariser. What `through_focus.rs`'s fine field does, and the
+    /// second of the two calibration targets in `strehl_plugin::self_check`.
+    pub const BARE: FieldConfig = FieldConfig {
+        regulariser_radius: None,
+    };
+
+    /// The regulariser radius as a number, with `None` reading 0.
+    #[must_use]
+    pub const fn regulariser_radius(self) -> usize {
+        match self.regulariser_radius {
+            Some(r) => r,
+            None => 0,
+        }
+    }
+
+    /// The **plugin halo**: the rectangle expansion, in plane pixels, that a
+    /// tile of output needs beyond its own bounds under this operator and this
+    /// regulariser.
+    ///
+    /// Rule 15 — this is the SYNTHESIS fact 32 sense of the word (a margin),
+    /// never the occlusion-halo sense (an artifact at an occluding edge).
+    #[must_use]
+    pub fn plugin_halo(self, op: &dyn FocusMeasure) -> usize {
+        op.support_radius() + self.regulariser_radius()
+    }
+
+    /// Margin discarded from every edge before a calibration SD is taken.
+    ///
+    /// `max(stencil_radius + 1, 2) + window_radius + regulariser_radius`.
+    ///
+    /// The box filter is **replicate-clamped**, so pixels within one combined
+    /// support of the edge see a smaller, differently-weighted window and are
+    /// not stationary. Including them biases the SD, and the bias moves with
+    /// the plane size.
+    ///
+    /// For a 3x3 stencil this is `window_radius + 2 + regulariser_radius` — 23
+    /// for the shipped configuration, 4 for the fine one.
+    #[must_use]
+    pub fn calibration_margin(self, op: &dyn FocusMeasure) -> usize {
+        let stencil = (op.stencil_radius() + 1).max(2);
+        stencil + op.window().radius() + self.regulariser_radius()
+    }
+}
+
+/// Reusable buffers for one plane, so a contributed operator's field can be
+/// computed per frame without allocating.
+///
+/// **Three f32 planes**, the same footprint as [`FocusField`]. That is
+/// deliberate: M8's measured memory ratchet prices the per-worker term, and a
+/// fourth plane here would move it by 33% for nothing.
+pub struct FieldWorkspace {
+    geom: PlaneGeometry,
+    response: Vec<f32>,
+    windowed: Vec<f32>,
+    scratch: Vec<f32>,
+    /// Which of `response` / `windowed` holds the finished field.
+    out_in_response: bool,
+}
+
+impl FieldWorkspace {
+    #[must_use]
+    pub fn new(geom: PlaneGeometry) -> Self {
+        Self {
+            geom,
+            response: vec![0.0; geom.pixels()],
+            windowed: vec![0.0; geom.pixels()],
+            scratch: vec![0.0; geom.pixels()],
+            out_in_response: false,
+        }
+    }
+
+    #[must_use]
+    pub fn geometry(&self) -> PlaneGeometry {
+        self.geom
+    }
+
+    /// Bytes of scratch held, for the memory budget report.
+    #[must_use]
+    pub fn allocated_bytes(&self) -> usize {
+        3 * self.geom.pixels() * std::mem::size_of::<f32>()
+    }
+
+    /// Run one operator over one plane, through the host's own configuration,
+    /// and return the finished field.
+    ///
+    /// # Panics
+    ///
+    /// If `luma` is not `geom.pixels()` long.
+    pub fn run(
+        &mut self,
+        op: &dyn FocusMeasure,
+        cfg: FieldConfig,
+        luma: &[f32],
+        noise: &NoiseModel,
+    ) -> &[f32] {
+        run_measure(
+            op,
+            self.geom,
+            luma,
+            noise,
+            &mut self.response,
+            &mut self.scratch,
+            &mut self.windowed,
+        );
+        match cfg.regulariser_radius {
+            Some(r) => {
+                box_mean(
+                    &self.windowed,
+                    self.geom,
+                    r,
+                    &mut self.scratch,
+                    &mut self.response,
+                );
+                self.out_in_response = true;
+            }
+            None => self.out_in_response = false,
+        }
+        self.values()
+    }
+
+    /// The field produced by the last [`run`](Self::run).
+    #[must_use]
+    pub fn values(&self) -> &[f32] {
+        if self.out_in_response {
+            &self.response
+        } else {
+            &self.windowed
+        }
+    }
+
+    /// Multiply the field in place — the one operation a *pre-normalised* field
+    /// needs beyond [`run`](Self::run).
+    ///
+    /// Kept here rather than in the registry so the buffer never leaves the
+    /// workspace: a caller cannot hold a `&mut [f32]` into the field and
+    /// rescale it twice.
+    pub fn scale_in_place(&mut self, scale: f32) -> &[f32] {
+        let buf = if self.out_in_response {
+            &mut self.response
+        } else {
+            &mut self.windowed
+        };
+        for v in buf.iter_mut() {
+            *v *= scale;
+        }
+        if self.out_in_response {
+            &self.response
+        } else {
+            &self.windowed
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -459,6 +1010,67 @@ mod tests {
             width: w,
             height: h,
         }
+    }
+
+    /// **The plugin seam does not fork the pipeline.**
+    ///
+    /// Both entry points a contributed operator can reach --
+    /// [`FocusField::compute_with_measure`] and
+    /// [`FocusField::compute_scaled_with_measure`] -- must reproduce their
+    /// shipped counterparts bit-for-bit when handed [`Tenengrad::shipped`].
+    /// That is not a courtesy: it is the reason `--focus` can exist at all
+    /// without re-baselining `crates/strehl-cli/tests/byte-freezes.tsv`. If
+    /// this test can fail, the default path has TWO implementations and one of
+    /// them is unmeasured.
+    ///
+    /// The plane deliberately carries a hard luma step, because the step is
+    /// what makes the normaliser's divisor vary across the window and is the
+    /// input under which an off-by-one in the aggregate/normalise ORDER would
+    /// show up. A flat plane cannot fail this.
+    #[test]
+    fn the_shipped_operator_through_the_plugin_entry_points_is_bit_identical() {
+        use crate::edgeaware::SelectionScale;
+        let (w, h) = (101, 83);
+        let g = geometry(w, h);
+        let luma: Vec<f32> = (0..w * h)
+            .map(|i| {
+                let (x, y) = (i % w, i / w);
+                700.0 + 250.0 * ((x * 7 + y * 3) % 13) as f32 + if y > 40 { 3000.0 } else { 0.0 }
+            })
+            .collect();
+        let noise = model();
+
+        let mut a = FocusField::new(g);
+        a.compute(&luma, &noise);
+        let want = a.values().to_vec();
+        let mut b = FocusField::new(g);
+        b.compute_with_measure(&Tenengrad::shipped(), &luma, &noise);
+        assert_eq!(
+            b.values().iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+            want.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+            "compute_with_measure(Tenengrad::shipped()) is not compute()"
+        );
+
+        // And the same for the per-pixel-radius path, at a level BELOW the
+        // full window, so the ladder's gather is actually exercised rather
+        // than collapsing to the case above. `assert_ne!` at the end is what
+        // makes that claim rather than assuming it.
+        let scale = SelectionScale::uniform(g, 1);
+        let mut c = FocusField::new(g);
+        c.compute_scaled(&luma, &noise, &scale);
+        let want_scaled = c.values().to_vec();
+        let mut d = FocusField::new(g);
+        d.compute_scaled_with_measure(&Tenengrad::shipped(), &luma, &noise, &scale);
+        assert_eq!(
+            d.values().iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+            want_scaled.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+            "compute_scaled_with_measure(Tenengrad::shipped()) is not compute_scaled()"
+        );
+        assert_ne!(
+            want_scaled.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+            want.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+            "the non-uniform scale collapsed to the full window; this test proves nothing"
+        );
     }
 
     /// The edge-aware path must be the shipped operator when it is asked for

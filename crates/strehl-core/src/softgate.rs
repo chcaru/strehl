@@ -115,6 +115,15 @@ pub fn cutoff_tolerances() -> f32 {
 pub struct SoftGate {
     /// Admission scale, in standard deviations of the response difference.
     pub threshold: f32,
+    /// The response noise scale the threshold is denominated in, mirroring
+    /// [`crate::merge::Gate::noise_sd`].
+    ///
+    /// It is carried here for the same reason it is carried there: under
+    /// `--focus <id>` the field is a *different operator's*, and a soft kernel
+    /// that kept the compiled-in constant would run at a silently different
+    /// temperature from the hard gate beside it. `merge.rs` builds this from
+    /// the `Gate` it already holds, so the two cannot disagree.
+    noise_sd: f32,
 }
 
 impl SoftGate {
@@ -123,11 +132,27 @@ impl SoftGate {
     /// If `threshold` is negative or non-finite, matching
     /// [`Gate::new`](crate::merge::Gate::new) rather than silently inverting.
     pub fn new(threshold: f32) -> Self {
+        Self::with_noise_sd(threshold, FOCUS_NOISE_SD)
+    }
+
+    /// As [`new`](Self::new), on a field whose noise scale the host measured.
+    ///
+    /// # Panics
+    ///
+    /// As [`crate::merge::Gate::with_noise_sd`].
+    pub fn with_noise_sd(threshold: f32, noise_sd: f32) -> Self {
         assert!(
             threshold >= 0.0 && threshold.is_finite(),
             "soft gate threshold must be finite and non-negative, got {threshold}"
         );
-        Self { threshold }
+        assert!(
+            noise_sd > 0.0 && noise_sd.is_finite(),
+            "soft gate noise sd must be finite and strictly positive, got {noise_sd}"
+        );
+        Self {
+            threshold,
+            noise_sd,
+        }
     }
 
     /// The admission scale in response units.
@@ -135,7 +160,7 @@ impl SoftGate {
     /// Identical by construction to [`Gate::tolerance`](crate::merge::Gate::tolerance).
     #[inline]
     pub fn tolerance(&self) -> f32 {
-        self.threshold * std::f32::consts::SQRT_2 * FOCUS_NOISE_SD
+        self.threshold * std::f32::consts::SQRT_2 * self.noise_sd
     }
 
     /// The weight a frame with response `focus` earns against a winner at `best`.

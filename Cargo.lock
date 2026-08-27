@@ -1181,6 +1181,7 @@ dependencies = [
  "clap",
  "rayon",
  "strehl-core",
+ "strehl-plugin",
  "strehl-raw",
  "tiff",
  "tracing",

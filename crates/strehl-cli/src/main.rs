@@ -1,6 +1,7 @@
 //! `strehl` command line.
 
 mod align_cmd;
+mod focus_plugin;
 mod image_out;
 mod merge_cmd;
 mod stack;
@@ -61,6 +62,27 @@ const SOFTWARE: &str = concat!(
 struct Cli {
     #[command(subcommand)]
     command: Command,
+}
+
+/// What `strehl focus` can do.
+///
+/// A subcommand rather than a bare `--list` flag because listing and selecting
+/// are different acts: one runs the calibrator and writes to stdout, the other
+/// runs a merge. Folding them into one flag would make `strehl stack --focus
+/// list` ambiguous with an operator that someone named `list`.
+#[derive(Subcommand)]
+enum FocusAction {
+    /// Print every registered operator with its host-measured noise scale.
+    List {
+        /// Gate to price the tolerance column at.
+        ///
+        /// It changes no measurement -- the noise SD column is the same
+        /// whatever this is -- it only reports what `--gate T` would mean in
+        /// response units for each operator, which is the number that is
+        /// actually incomparable across them.
+        #[arg(long, default_value_t = DEFAULT_GATE, value_name = "T")]
+        gate: f32,
+    },
 }
 
 #[derive(Subcommand)]
@@ -455,6 +477,38 @@ enum Command {
         /// ignored. Omitting it entirely means DEFAULT_GATE, exactly as before.
         #[arg(long = "gate", value_name = "T", num_args = 1..)]
         gates: Vec<f32>,
+        /// Focus operator, by registered id. Run `strehl focus list` for the
+        /// names and their HOST-MEASURED noise scales.
+        ///
+        /// This is the plugin seam. `crates/strehl-plugin` is a contribution
+        /// surface for focus measures whose central idea is that an operator
+        /// CANNOT declare its own noise scale -- the trait has no method for it
+        /// -- so the host measures it at registration. Before this flag existed
+        /// the surface was unreachable: `strehl-cli` did not depend on the
+        /// crate (facts 583, 632, 662), so a contributed operator could be
+        /// written, registered and correctly calibrated, and `strehl stack`
+        /// would never call it.
+        ///
+        /// Passing it changes TWO things together, and they must move together:
+        /// the field is computed by the named operator, AND the gate is
+        /// denominated in that operator's MEASURED response SD instead of the
+        /// compiled-in FOCUS_NOISE_SD. Fact 631 is why the pair is indivisible
+        /// -- across the reference operators the measured scale spans 10.3x,
+        /// and rescaling the gate does NOT reproduce a different operator's
+        /// decisions (the winner map moves on up to 71.5% of pixels). So `t/k`
+        /// prices a miscalibration; it cannot undo one.
+        ///
+        /// OMITTING IT IS NOT THE SAME AS PASSING THE DEFAULT'S NAME. The
+        /// default path keeps the compiled-in constant 0.015214 exactly, and
+        /// the host measures tenengrad-w13 at 0.0152113 -- a k of 0.9998, which
+        /// is close and is not equal. Byte-identical output is the default's,
+        /// not a name's.
+        ///
+        /// ESTIMATOR BACKEND ONLY, and refused rather than ignored alongside
+        /// --stats, --guide-radius, --scale and --support, each of which
+        /// reaches a Tenengrad-specific entry point that takes no operator.
+        #[arg(long = "focus", value_name = "ID")]
+        focus: Option<String>,
         /// Low-detail region for the noise invariant, in PLANE coordinates
         /// (half sensor resolution).
         #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
@@ -656,7 +710,26 @@ enum Command {
         resampler: String,
     },
 
-    /// Stack by plain per-pixel argmax. THE NAIVE BASELINE, NOT THE DEFAULT.
+    /// List the focus operators `--focus` can select, with the noise scale the
+    /// HOST MEASURED for each at registration.
+    ///
+    /// The scales are measured here and now -- this command runs the
+    /// calibrator, it does not print a table of literals. That is the whole
+    /// design of `crates/strehl-plugin`: `FocusMeasure` has no method that
+    /// could report a noise SD, and `Calibration` has no public constructor, so
+    /// an operator carrying a wrong constant is unrepresentable rather than
+    /// merely detectable. The numbers below therefore cost about half a second
+    /// to produce and cannot be stale.
+    ///
+    /// Read the spread, not just the names. It is roughly 10x from end to end,
+    /// and fact 631 says a gate cannot be rescaled across it: two operators run
+    /// at the same nominal gate disagree about which frame wins on up to 71.5%
+    /// of pixels.
+    Focus {
+        #[command(subcommand)]
+        action: FocusAction,
+    },
+
     ///
     /// THIS IS A REFERENCE ARTIFACT, ON PURPOSE, AND YOU SHOULD NOT SHIP ITS
     /// OUTPUT. It selects, per pixel, the single frame with the highest
@@ -765,6 +838,9 @@ fn main() -> Result<()> {
     match Cli::parse().command {
         Command::Align(args) => align_cmd::run(&args),
         Command::Probe { dir, limit } => probe(&dir, limit),
+        Command::Focus { action } => match action {
+            FocusAction::List { gate } => focus_plugin::list(gate),
+        },
         Command::ArgmaxBaseline {
             dir,
             out,
@@ -797,6 +873,7 @@ fn main() -> Result<()> {
         Command::Stack {
             dir,
             out,
+            focus,
             limit,
             merge_backend,
             pyramid_bands,
@@ -857,6 +934,10 @@ fn main() -> Result<()> {
                   multiple of the modelled band-noise power (default 2.0), where --gate is a \
                   multiple of the focus-response SD (default 4.0). The number does NOT carry \
                   over -- re-choose it, do not rename it."),
+                ("--focus", focus.is_some(), merge_cmd::MergeBackend::Pyramid,
+                 "no counterpart. --focus names a focus MEASURE, and the pyramid does not compute \
+                  a focus field at all: it elects per band coefficient from band energy, so there \
+                  is no operator to swap and no response SD to calibrate a gate against."),
                 ("--target-n-eff", target_n_eff.is_some(), merge_cmd::MergeBackend::Pyramid,
                  "no counterpart. n_eff counts the frames the gated average admitted at a pixel; \
                   the pyramid weights every frame per band coefficient, so there is no per-pixel \
@@ -1028,6 +1109,13 @@ fn main() -> Result<()> {
             } else {
                 gates
             },
+            // Passed through as the raw name. Resolution -- and the
+            // CALIBRATION it triggers -- happens inside run_estimator, where
+            // the run banner can report the measured scale next to the gate it
+            // denominates. Resolving it here would calibrate before the
+            // backend refusals had run, which would make a rejected
+            // `--merge pyramid --focus x` pay half a second to be told no.
+            focus,
             flat_roi,
             detail_roi,
             index_map,
@@ -1144,6 +1232,51 @@ mod tests {
     use super::merge_cmd::{DEFAULT_MERGE_BACKEND, DEFAULT_PHOTOMETRIC_MODE, MergeBackend};
     use super::{SOFTWARE, VERSION};
     use strehl_core::photometric::PhotometricMode;
+
+    /// **`--focus` exists, is spelled the way the docs say, and belongs to the
+    /// estimator.**
+    ///
+    /// The failure this guards is the one the whole plugin seam exists to
+    /// remove: a flag that parses, prints nothing and does nothing. A rename
+    /// or a dropped `#[arg]` would be invisible at the terminal, because clap
+    /// would simply reject the flag and a scripted sweep would report the
+    /// error as "arm failed" rather than "surface gone".
+    #[test]
+    fn the_focus_selector_is_on_stack_and_is_refused_under_the_pyramid() {
+        let stack = super::Cli::command()
+            .get_subcommands()
+            .find(|c| c.get_name() == "stack")
+            .expect("stack subcommand")
+            .clone();
+        let focus = stack
+            .get_arguments()
+            .find(|a| a.get_id() == "focus")
+            .expect("--focus is missing from `strehl stack`");
+        assert_eq!(focus.get_long(), Some("focus"));
+
+        // And the refusal table names it, so `--merge pyramid --focus x` is an
+        // error rather than a silently ignored operator.
+        let src = include_str!("main.rs");
+        assert!(
+            src.contains("(\"--focus\", focus.is_some(), merge_cmd::MergeBackend::Pyramid,"),
+            "--focus dropped out of the wrong-backend refusal table"
+        );
+    }
+
+    /// `strehl focus list` is reachable, because an operator nobody can
+    /// enumerate is not a contribution surface.
+    #[test]
+    fn the_focus_listing_surface_is_reachable() {
+        let focus = super::Cli::command()
+            .get_subcommands()
+            .find(|c| c.get_name() == "focus")
+            .expect("`strehl focus` is missing")
+            .clone();
+        assert!(
+            focus.get_subcommands().any(|c| c.get_name() == "list"),
+            "`strehl focus list` is missing"
+        );
+    }
 
     /// Every photometric mode with the spelling `--help` uses for it, so the
     /// assertions below can check the modes that are *not* the default as well

@@ -388,6 +388,26 @@ pub fn regularise_guided(
 pub struct Gate {
     /// Admission half-width, in standard deviations of the response difference.
     pub threshold: f32,
+    /// **The noise scale the threshold is denominated in**: the standard
+    /// deviation of the focus operator's response to unit-variance noise, after
+    /// the operator's own window and after this module's regulariser.
+    ///
+    /// Private, and there is no way to set it except through
+    /// [`Gate::with_noise_sd`], which the CLI only calls with a *host-measured*
+    /// value from `strehl_plugin::Calibration` — a type with no public
+    /// constructor. [`Gate::new`] fills it with [`FOCUS_NOISE_SD`], so the
+    /// default path is arithmetically the expression this field replaced and is
+    /// bit-identical to it.
+    ///
+    /// It is a field rather than a constant because it belongs to the
+    /// **replaceable** component. Fact 631 is why it cannot be a correction
+    /// applied to `threshold` instead: rescaling the gate is exact for the same
+    /// operator rescaled (18 pixels in 8,236,816 move at a factor of 7) and
+    /// false across genuinely different operators, which move the winner map on
+    /// up to 71.5% of pixels. `t/k` prices a mis-calibration; it does not undo
+    /// one. So the scale has to arrive from a real measurement of the real
+    /// operator, and this is where it lands.
+    noise_sd: f32,
 }
 
 /// The gate the shipped default path runs at (M64).
@@ -443,18 +463,52 @@ pub struct Gate {
 pub const DEFAULT_GATE: f32 = 4.0;
 
 impl Gate {
+    /// A gate on the **shipped** operator's field, denominated in
+    /// [`FOCUS_NOISE_SD`].
     pub fn new(threshold: f32) -> Self {
+        Self::with_noise_sd(threshold, FOCUS_NOISE_SD)
+    }
+
+    /// A gate on a field produced by an operator whose noise scale the host
+    /// **measured**.
+    ///
+    /// `noise_sd` is `strehl_plugin::Calibration::response_sd` — the standard
+    /// deviation of that operator's response to unit-variance noise through
+    /// this host's own regulariser. It is not a correction factor and it is not
+    /// a declaration: the plugin trait has no method that could supply one.
+    ///
+    /// # Panics
+    ///
+    /// If `threshold` is negative or non-finite, or `noise_sd` is not strictly
+    /// positive and finite. A zero or negative scale would invert or annihilate
+    /// the tolerance silently, which is the failure this whole seam exists to
+    /// make unrepresentable.
+    pub fn with_noise_sd(threshold: f32, noise_sd: f32) -> Self {
         assert!(
             threshold >= 0.0 && threshold.is_finite(),
             "gate threshold must be finite and non-negative, got {threshold}"
         );
-        Self { threshold }
+        assert!(
+            noise_sd > 0.0 && noise_sd.is_finite(),
+            "gate noise sd must be finite and strictly positive, got {noise_sd}"
+        );
+        Self {
+            threshold,
+            noise_sd,
+        }
+    }
+
+    /// The response noise scale this gate is denominated in.
+    #[inline]
+    #[must_use]
+    pub fn noise_sd(&self) -> f32 {
+        self.noise_sd
     }
 
     /// The admission half-width in response units.
     #[inline]
     pub fn tolerance(&self) -> f32 {
-        self.threshold * std::f32::consts::SQRT_2 * FOCUS_NOISE_SD
+        self.threshold * std::f32::consts::SQRT_2 * self.noise_sd
     }
 
     /// Is a frame with response `focus` admitted against a winner at `best`?
@@ -1807,8 +1861,10 @@ impl Estimator {
         let w = self.geom.width;
         // Constructed once per fold, not per pixel. `Gate::new` has already
         // proved the threshold finite and non-negative, so this cannot trip
-        // `SoftGate::new`'s assert. Shares `Gate::tolerance` bit-for-bit.
-        let soft = SoftGate::new(self.gate.threshold);
+        // `SoftGate::new`'s assert. Shares `Gate::tolerance` bit-for-bit --
+        // including the noise scale, which under `--focus <id>` is the
+        // host-measured one rather than the compiled-in constant.
+        let soft = SoftGate::with_noise_sd(self.gate.threshold, self.gate.noise_sd());
 
         for py in 0..self.geom.height {
             let (row0, row1) = src.quad_rows(py);
@@ -2673,6 +2729,84 @@ mod tests {
     use crate::focus::FocusField;
     use crate::noise::{Levels, NoiseModel, PlaneNoise, Provenance};
     use crate::plane::testing::QuadGrid;
+
+    /// **The default path's gate constant, pinned bit-for-bit.**
+    ///
+    /// `Gate` acquired a `noise_sd` field so that `strehl stack --focus <id>`
+    /// could denominate the threshold in the scale the host MEASURED for a
+    /// contributed operator. That change is only safe if the default is
+    /// untouched, and "untouched" here means the same `f32` bits out of
+    /// `tolerance()` -- not a value that rounds the same when printed.
+    ///
+    /// The association order is asserted too. `(t * SQRT_2) * sd` and
+    /// `t * (SQRT_2 * sd)` are not the same `f32`, and the byte-freezes were
+    /// baselined on the former.
+    #[test]
+    fn the_default_gate_is_the_compiled_in_constant_bit_for_bit() {
+        for t in [0.0f32, 0.5, 1.0, 2.0, DEFAULT_GATE, 7.5, 100.0] {
+            let g = Gate::new(t);
+            assert_eq!(
+                g.noise_sd().to_bits(),
+                FOCUS_NOISE_SD.to_bits(),
+                "Gate::new({t}) must carry the compiled-in constant"
+            );
+            assert_eq!(
+                g.tolerance().to_bits(),
+                ((t * std::f32::consts::SQRT_2) * FOCUS_NOISE_SD).to_bits(),
+                "Gate::new({t}).tolerance() changed bits or association order"
+            );
+            assert_eq!(
+                g.tolerance().to_bits(),
+                Gate::with_noise_sd(t, FOCUS_NOISE_SD).tolerance().to_bits(),
+                "with_noise_sd at the default constant must reproduce new()"
+            );
+            // And the soft kernel beside it, which merge.rs builds from the
+            // gate's own scale so the two cannot run at different temperatures.
+            assert_eq!(
+                crate::softgate::SoftGate::new(t).tolerance().to_bits(),
+                g.tolerance().to_bits(),
+                "SoftGate::new({t}) drifted from Gate::new({t})"
+            );
+            assert_eq!(
+                crate::softgate::SoftGate::with_noise_sd(t, g.noise_sd())
+                    .tolerance()
+                    .to_bits(),
+                g.tolerance().to_bits(),
+                "the SoftGate merge.rs actually constructs drifted from its Gate"
+            );
+        }
+    }
+
+    /// A measured scale reaches the tolerance, and `t/k` does not stand in for
+    /// it.
+    ///
+    /// Fact 631: rescaling a gate does not reproduce a different operator's
+    /// decisions -- the winner map moves on up to 71.5% of pixels -- so the
+    /// scale has to come from calibrating the real operator. This pins the
+    /// mechanism that lets it: a `Gate` built at a measured sd is a DIFFERENT
+    /// tolerance, and one built at the shipped sd with a scaled threshold is
+    /// not a substitute for it even when the products agree, because the
+    /// threshold is also what the estimator reports and solves against.
+    #[test]
+    fn a_measured_scale_reaches_the_tolerance() {
+        // sml-w13, as `strehl focus list` measures it.
+        let measured = 1.005_925_1e-1_f32;
+        let g = Gate::with_noise_sd(DEFAULT_GATE, measured);
+        assert_eq!(g.noise_sd().to_bits(), measured.to_bits());
+        assert_eq!(g.threshold, DEFAULT_GATE);
+        assert!(
+            g.tolerance() > Gate::new(DEFAULT_GATE).tolerance() * 6.0,
+            "a 6.6x noise scale must widen the tolerance by ~6.6x, got {} vs {}",
+            g.tolerance(),
+            Gate::new(DEFAULT_GATE).tolerance()
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "gate noise sd must be finite and strictly positive")]
+    fn a_zero_noise_scale_is_refused_rather_than_dividing_by_nothing() {
+        let _ = Gate::with_noise_sd(DEFAULT_GATE, 0.0);
+    }
 
     fn geom(w: usize, h: usize) -> PlaneGeometry {
         PlaneGeometry {

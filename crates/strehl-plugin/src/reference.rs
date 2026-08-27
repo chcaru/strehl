@@ -62,6 +62,7 @@
 //! ```
 
 use strehl_core::boxfilter::box_mean;
+#[cfg(test)]
 use strehl_core::focus::{WINDOW_RADIUS, gradient_magnitude};
 use strehl_core::plane::PlaneGeometry;
 
@@ -85,56 +86,16 @@ fn sobel(luma: &[f32], geom: PlaneGeometry, out: &mut [f32], f: impl Fn(f32, f32
 
 /// `sqrt(Gx^2 + Gy^2)` under a box window, divided by the luma sigma.
 ///
-/// **The shipped operator.** [`Tenengrad::respond`] calls
-/// [`strehl_core::focus::gradient_magnitude`] directly, so there is exactly one
-/// implementation of the Sobel in this repository and the calibration measures
-/// the real one.
-#[derive(Debug, Clone)]
-pub struct Tenengrad {
-    id: String,
-    radius: usize,
-}
-
-impl Tenengrad {
-    /// `|grad|` at [`WINDOW_RADIUS`] — the operator at `HEAD`.
-    #[must_use]
-    pub fn shipped() -> Self {
-        Self::at_radius(WINDOW_RADIUS)
-    }
-
-    /// `|grad|` at an arbitrary window radius.
-    ///
-    /// Fact 510: a radius change alone is a **12.5% gate shift** (w13 -> w11
-    /// gives `k` = 1.125), so the radius is part of the identity, not a
-    /// decoration on it.
-    #[must_use]
-    pub fn at_radius(radius: usize) -> Self {
-        Self {
-            id: format!("tenengrad-w{radius}"),
-            radius,
-        }
-    }
-}
-
-impl FocusMeasure for Tenengrad {
-    fn id(&self) -> &str {
-        &self.id
-    }
-    fn stencil_radius(&self) -> usize {
-        strehl_core::focus::SOBEL_RADIUS
-    }
-    fn window(&self) -> Window {
-        Window::Box {
-            radius: self.radius,
-        }
-    }
-    fn normalisation(&self) -> Normalisation {
-        Normalisation::LumaSigma { degree: 1 }
-    }
-    fn respond(&self, luma: &[f32], geom: PlaneGeometry, out: &mut [f32]) {
-        gradient_magnitude(luma, geom, out);
-    }
-}
+/// **The shipped operator, and it is re-exported from
+/// [`strehl_core::focus`] rather than defined here.** It moved into the core
+/// crate in BUILD-PLUGIN so that `strehl stack --focus <id>` and the default
+/// path run the same object: while this crate owned the type, "the shipped
+/// operator" existed twice — once as `FocusField::compute`'s inlined stages and
+/// once as this struct — and the two agreed only by test. The core type also
+/// resolves [`shipped`](strehl_core::focus::Tenengrad::shipped) through
+/// `window_radius()` rather than the `WINDOW_RADIUS` constant, so
+/// `STREHL_WINDOW_RADIUS` cannot make them different operators.
+pub use strehl_core::focus::Tenengrad;
 
 /// `Gx^2 + Gy^2` — "Tenengrad" as the literature usually means it.
 ///

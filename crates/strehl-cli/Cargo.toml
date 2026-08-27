@@ -14,6 +14,7 @@ path = "src/main.rs"
 
 [dependencies]
 strehl-core.workspace = true
+strehl-plugin.workspace = true
 strehl-raw.workspace = true
 clap.workspace = true
 anyhow.workspace = true

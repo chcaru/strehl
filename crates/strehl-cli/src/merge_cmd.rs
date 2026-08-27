@@ -116,6 +116,16 @@ pub struct MergeOptions {
     /// One or more gate thresholds, in units of the combined focus noise. Every
     /// one is folded in the same pass two.
     pub gates: Vec<f32>,
+    /// Registered id of the focus operator to elect on, or `None` for the
+    /// shipped one.
+    ///
+    /// `None` and `Some("tenengrad-w13")` are NOT the same run and must not be
+    /// collapsed into one. `None` takes `FOCUS_NOISE_SD` -- the compiled-in
+    /// 0.015214 the byte-freezes were baselined against -- while any `Some`
+    /// takes the scale the host MEASURES at registration, which for that same
+    /// operator is 0.0152113. The two differ in the fourth significant figure,
+    /// and a gate is a multiplier on exactly that number.
+    pub focus: Option<String>,
     pub flat_roi: Option<Roi>,
     pub detail_roi: Option<Roi>,
     /// Also write the **election map**: the per-pixel index of the frame that
@@ -1366,6 +1376,16 @@ struct Ctx<'a> {
     /// `support`. Set only by the depth-guide pass, which needs a narrow
     /// window; `None` everywhere else.
     guide_radius: Option<usize>,
+    /// The contributed focus operator `--focus` selected, already calibrated by
+    /// the host, or `None` for the shipped path.
+    ///
+    /// It is a `&Registered` and not an `&dyn FocusMeasure` on purpose. A
+    /// `Registered` cannot be obtained without the registry having MEASURED the
+    /// operator's response SD -- `Calibration` has no public constructor -- so
+    /// there is no way to reach this field holding an operator whose gate has
+    /// not been calibrated. That is the plugin crate's whole design, carried
+    /// intact across the crate boundary rather than re-stated as a convention.
+    focus_op: Option<&'a strehl_plugin::registry::Registered>,
 }
 
 /// Per-worker scratch, allocated once per chunk and reused across frames.
@@ -1601,8 +1621,37 @@ impl Ctx<'_> {
         if scratch.fine.is_empty() {
             match (self.guide_radius, self.scale, self.support) {
                 (Some(r), _, _) => scratch.field.compute_at_radius(&scratch.luma, noise, r),
-                (None, Some(s), _) => scratch.field.compute_scaled(&scratch.luma, noise, s),
-                (None, None, None) => scratch.field.compute(&scratch.luma, noise),
+                (None, Some(s), _) => match self.focus_op {
+                    // The DEFAULT estimator arm (acuity is on unless
+                    // STREHL_EDGE_AWARE=0), so this is the one that has to
+                    // carry --focus for the flag to mean anything in the
+                    // shipping configuration.
+                    Some(op) => {
+                        scratch
+                            .field
+                            .compute_scaled_with_measure(op.measure(), &scratch.luma, noise, s);
+                    }
+                    None => scratch.field.compute_scaled(&scratch.luma, noise, s),
+                },
+                // The plugin seam, and the ONLY arm that has one. The other
+                // three reach Tenengrad-specific entry points -- a scaled
+                // window, a layered support, a fixed guide radius -- that take
+                // no operator, so `run_estimator` refuses `--focus` in
+                // combination with them rather than accepting the flag and
+                // electing on the shipped operator anyway.
+                //
+                // `compute_with_measure` is the same `run_measure` the shipped
+                // path goes through: `compute` -> `compute_at_radius` ->
+                // `compute_with_measure(&Tenengrad::at_radius(r))`. There is
+                // one pipeline, not two that agree.
+                (None, None, None) => match self.focus_op {
+                    Some(op) => {
+                        scratch
+                            .field
+                            .compute_with_measure(op.measure(), &scratch.luma, noise);
+                    }
+                    None => scratch.field.compute(&scratch.luma, noise),
+                },
                 (None, None, Some(s)) => scratch.field.compute_layered(&scratch.luma, noise, s),
             }
         } else {
@@ -2799,6 +2848,68 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // measurement file and did not has no way to find out.
     let exposure = Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
 
+    // ---- the plugin seam ---------------------------------------------------
+    //
+    // Resolved here: after the cheap validations, before a frame is read.
+    // Registration CALIBRATES -- twelve 512x512 noise planes per operator --
+    // so it is a measurement and costs about half a second for the reference
+    // set. That is why it is behind `is_some()`: the default path never
+    // constructs a registry, never draws a seed, and pays nothing. It is also
+    // why the byte-freezes are safe. The default keeps the compiled-in
+    // FOCUS_NOISE_SD, which is what they were baselined against.
+    //
+    // --stats is refused rather than ignored: `compute_with_fine` computes the
+    // selection field and a second fine-radius field from ONE gradient pass,
+    // and that pass is Tenengrad's. Running it under --focus would elect on
+    // the shipped operator while the banner named a different one, which is
+    // precisely the "flag accepted and silently ignored" failure this seam
+    // exists to remove.
+    let focus_registry = match &opts.focus {
+        Some(_) => Some(crate::focus_plugin::reference_registry()?),
+        None => None,
+    };
+    let focus_op = match (&opts.focus, &focus_registry) {
+        (Some(name), Some(reg)) => {
+            ensure!(
+                !opts.stats,
+                "--focus {name} cannot be combined with --stats: through-focus statistics share \
+                 one gradient pass with the selection field, and that pass is the shipped \
+                 operator's. Refused rather than ignored -- the alternative is a run that \
+                 reports one operator and elects with another."
+            );
+            ensure!(
+                edge_aware_arm() != EdgeArm::Layer,
+                "--focus {name} cannot be combined with {EDGE_AWARE_ENV}=layer: the layered \
+                 support path elects through a Tenengrad-specific entry point that takes no \
+                 operator. Use the default acuity arm or {EDGE_AWARE_ENV}=0."
+            );
+            let entry = crate::focus_plugin::resolve(reg, name)?;
+            let cal = entry.calibration();
+            eprintln!(
+                "focus operator  : {} (contributed, via strehl-plugin)",
+                entry.id()
+            );
+            eprintln!(
+                "  noise sd      : {:.7e} MEASURED by the host at registration \
+                 ({} seeds, rel sem {:.3}%), k = {:.4} vs the compiled-in {:.6}",
+                cal.response_sd(),
+                cal.seeds(),
+                100.0 * cal.relative_sem(),
+                cal.k_against_host_constant(),
+                strehl_core::merge::FOCUS_NOISE_SD,
+            );
+            eprintln!(
+                "  gate           : --gate T means T*sqrt(2)*{:.7e} in THIS operator's response \
+                 units, not the shipped one's. Fact 631: the two are not related by rescaling \
+                 -- operators disagree about the winner on up to 71.5% of pixels at a matched \
+                 gate, so a k-corrected gate does NOT reproduce the other operator's decisions.",
+                cal.response_sd()
+            );
+            Some(entry)
+        }
+        _ => None,
+    };
+
     let paths = crate::raw_paths(&opts.dir, opts.limit)?;
     let paths = only_frame(paths);
     ensure!(
@@ -2896,10 +3007,23 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
         "regulariser     : {REGULARISER_WIDTH}x{REGULARISER_WIDTH} box on the focus field \
          (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)"
     );
-    eprintln!(
-        "focus noise sd  : {FOCUS_NOISE_SD:.6} on the regularised field, MEASURED in-crate \
-         (facts 310-313)"
-    );
+    // The scale the gate is ACTUALLY denominated in on this run. Printing the
+    // compiled-in constant unconditionally would have been a provenance line
+    // that disagrees with the run, which this file elsewhere calls worse than
+    // no provenance line at all -- and under --focus it would be wrong by up
+    // to 6.6x.
+    match focus_op {
+        None => eprintln!(
+            "focus noise sd  : {FOCUS_NOISE_SD:.6} on the regularised field, MEASURED in-crate \
+             (facts 310-313)"
+        ),
+        Some(op) => eprintln!(
+            "focus noise sd  : {:.6} on the regularised field, MEASURED by the host for \
+             `{}` at registration (NOT the compiled-in {FOCUS_NOISE_SD:.6})",
+            op.calibration().response_sd(),
+            op.id()
+        ),
+    }
     eprintln!(
         "gates           : {}  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)",
         opts.gates
@@ -3038,6 +3162,15 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
         support: None,
         scale: None,
         guide_radius: None,
+        // Pass zero -- the depth guide -- deliberately keeps the SHIPPED
+        // operator even under --focus. The guide is not the election: it
+        // solves a per-pixel selection RADIUS from a deliberately narrow
+        // window, and that solve was calibrated against Tenengrad's response.
+        // Substituting an operator whose scale is 6.6x different would move
+        // the radius map for reasons that have nothing to do with the
+        // contributed measure. `ctx_guide` below therefore inherits this
+        // `None` and cannot pick the operator up by accident.
+        focus_op: None,
     };
 
     // ---- pass zero: the depth guide, and the adaptive radius it solves -----
@@ -3233,9 +3366,13 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     } else {
         None
     };
+    // Pass two is the election, and this is where the contributed operator
+    // enters. Both `compute` and `compute_scaled` have a `_with_measure`
+    // sibling that `Ctx::field_for` dispatches to when this is `Some`.
     let ctx = Ctx {
         support: layer_support.as_ref(),
         scale: acuity.as_ref(),
+        focus_op,
         ..ctx
     };
 
@@ -3778,7 +3915,22 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 .gates
                 .iter()
                 .map(|g| {
-                    let mut e = Estimator::new(&p1.stats, Gate::new(*g));
+                    // THE CRUX. `Gate::new` denominates the threshold in the
+                    // compiled-in FOCUS_NOISE_SD; under --focus it must be
+                    // denominated in the scale the host MEASURED for the
+                    // operator that actually produced this field. The default
+                    // arm is `Gate::new` verbatim, so the byte-freezes see the
+                    // same constant they were baselined against.
+                    //
+                    // Fact 631 is why this is a substitution and not a
+                    // correction: t/k prices a miscalibration, it does not undo
+                    // one. The number below comes from calibrating the real
+                    // operator, never from scaling the shipped constant.
+                    let gate = match ctx.focus_op {
+                        Some(op) => Gate::with_noise_sd(*g, op.calibration().response_sd()),
+                        None => Gate::new(*g),
+                    };
+                    let mut e = Estimator::new(&p1.stats, gate);
                     if veil_on {
                         e.enable_veil_from_incoherence(
                             veil_incoherence.as_deref().expect("refused above if absent"),
@@ -3974,7 +4126,17 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     );
     eprintln!();
 
-    report(opts, &p2, &p1, geom, levels, &noise, middle)?;
+    report(
+        opts,
+        &p2,
+        &p1,
+        geom,
+        levels,
+        &noise,
+        middle,
+        ctx.focus_op
+            .map_or(FOCUS_NOISE_SD, |op| op.calibration().response_sd()),
+    )?;
     if opts.stats {
         report_statistics(opts, &p2, &p1.clip, geom, levels, &noise, &perm)?;
     }
@@ -5307,6 +5469,10 @@ fn report(
     levels: Levels,
     noise: &NoiseModel,
     middle: u16,
+    // The response noise scale the gate was actually denominated in on this
+    // run: the compiled-in constant by default, the host-measured scale of the
+    // contributed operator under `--focus`.
+    focus_noise_sd: f32,
 ) -> Result<()> {
     eprintln!("--- gate calibration (MEASURED) ---");
     eprintln!(
@@ -5347,7 +5513,14 @@ fn report(
     eprintln!();
     report_clip_census(&p1.clip);
     eprintln!();
-    report_photometric_sensitivity(p1.stats.best_focus());
+    report_photometric_sensitivity(
+        p1.stats.best_focus(),
+        // The gate unit belongs to the operator that produced this field, not
+        // to the shipped constant. Under --focus sml-w13 the two differ by
+        // 6.6x, and a sensitivity quoted in the wrong unit is a number that
+        // reads as evidence and is not.
+        focus_noise_sd,
+    );
     eprintln!();
 
     let Some(roi) = opts.flat_roi else {
@@ -5864,7 +6037,7 @@ fn report_clip_census(clip: &ClipCensus) {
 /// Expressed in gate units, because that is the only scale on which "does this
 /// matter" has an answer: one gate unit is `sqrt(2) * FOCUS_NOISE_SD`, the SD of
 /// a *difference* of two regularised responses.
-fn report_photometric_sensitivity(best_focus: &[f32]) {
+fn report_photometric_sensitivity(best_focus: &[f32], noise_sd: f32) {
     let mut f: Vec<f32> = best_focus
         .iter()
         .copied()
@@ -5876,7 +6049,7 @@ fn report_photometric_sensitivity(best_focus: &[f32]) {
     f.sort_by(|a, b| a.partial_cmp(b).unwrap());
     let q = |p: f64| -> f64 { f[((p * (f.len() - 1) as f64) as usize).min(f.len() - 1)] as f64 };
     let (med, p10, p90) = (q(0.5), q(0.10), q(0.90));
-    let unit = (2.0f64).sqrt() * strehl_core::merge::FOCUS_NOISE_SD as f64;
+    let unit = (2.0f64).sqrt() * noise_sd as f64;
     // Gate units moved per 1% of level drift: (d/2) * F / unit, with d = 0.01.
     let per_pct = |focus: f64| 0.5 * 0.01 * focus / unit;
     eprintln!("--- PHOTOMETRIC DRIFT SENSITIVITY (DERIVED from a MEASURED response) ---");
@@ -5884,7 +6057,10 @@ fn report_photometric_sensitivity(best_focus: &[f32]) {
         "winner response : median {med:.4}, p10 {p10:.4}, p90 {p90:.4}  (regularised, \
          DN-normalised)"
     );
-    eprintln!("gate unit       : {unit:.6}  = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference");
+    eprintln!(
+        "gate unit       : {unit:.6}  = sqrt(2) * the focus noise sd IN FORCE, the SD of a \
+         difference"
+    );
     eprintln!(
         "sensitivity     : {:.3} gate units per 1% of per-frame level drift (median pixel),",
         per_pct(med)
