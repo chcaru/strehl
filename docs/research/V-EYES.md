@@ -56,6 +56,30 @@ from noised copies of the master shows the max-over-n order statistic accounts
 for only 0.1–1.6% of that. **Across a complete bracket, strehl's output is not
 sharper than the best frame it was given.**
 
+**Update, after the regime test and the visibility test — two qualifications that
+change what the deficit means, without changing that it is there.**
+
+**It is confined to subjects where the merge averages heavily (§5.6).** The four
+exact ceilings above were all shallow, averaging-dominated subjects, so the trend
+could not be separated from "these subjects are soft". Taking the adversarial
+case — `bee-1-cpl`, 299 frames, `avg_index` 0.06, the most selection-dominated
+subject in the corpus — to a **complete** 299/299 bracket gives **1.4375** (CI
+0.99–2.00, so above parity but not significantly). Against
+`flower-bud-alone-cpl`'s **0.9389** at the *same* 1024 px tile and also a complete
+bracket, the only difference is the regime. Where the merge selects it beats the
+per-site ceiling; where it averages it loses. The estimator is not the problem —
+the averaging is.
+
+**It is not visible (§5.7).** On the worst subject at its median site, cut at
+380 px and viewed unresampled, the master and the per-site best frame are
+indistinguishable — and so is a planted control blurred to *exactly* the measured
+deficit. That made the negative unfalsifiable, so I walked a staircase down until
+it broke: **0.40 is visibly softer, 0.60 is marginal, 0.80 is not visible.** The
+measured deficit is 0.81, σ 0.53 px against a threshold of σ 0.83–1.27 px — a
+factor of 1.6–2.4 below what I can see, on the *worst* subject. **It is a fidelity
+note, not a shipping defect.** That bounds my discrimination through this view
+path, not a human's at A3 on paper.
+
 ## 1. Commission the viewer before trusting anything seen through it
 
 This audit exists because a verdict was returned on a gallery that had been
@@ -498,6 +522,103 @@ fine detail — the opposite of the thesis — but consistent is not measured.
 controls for defocus — the reference is the sharpest frame *at that site*, so
 "no frame was in focus there" cannot explain a deficit. What remains is the merge.
 
+### 5.6 The collinearity is broken: a selection-dominated deep stack reads SHARP
+
+The objection above was mine and it was the right one: all four exact ceilings
+were shallow, heavy-averaging subjects, so `Spearman(ratio, avg_index) = −0.729`
+could not separate "averaging costs detail" from "these particular subjects are
+soft". The test that separates them is one **deep, selection-dominated** subject
+at a **complete** bracket. `bee-1-cpl` is the adversarial candidate: 299 frames,
+`avg_index` **0.06** — the merge barely averages at all — and at n=104 it still
+read 3.20 while falling ~45% per doubling, so its true ceiling was unbounded and
+could plausibly have landed anywhere, including below 1.0.
+
+It was affordable. All 299 frames developed and measured, at a fixed 1024 px tile
+so the rungs are comparable within the subject:
+
+| n / 299 | ratio | 95% CI | sites | sites softer | arms |
+| --- | --- | --- | --- | --- | --- |
+| 13 | 19.0604 | 12.08–31.21 | 46 | 0.0% | all-pass |
+| 52 | 3.7612 | 2.44–5.92 | 81 | 17.3% | all-pass |
+| 104 | 2.1402 | 1.64–4.00 | 84 | 25.0% | all-pass |
+| **299 (complete)** | **1.4375** | **0.99–2.00** | 88 | 39.8% | all-pass |
+
+**It lands sharp.** The point estimate is 1.44 at zero subsample bias, far above
+every averaging-dominated subject's exact ceiling (0.811–0.939). The comparison
+that carries the least baggage is against `flower-bud-alone-cpl`, because both
+were measured at **the same 1024 px tile** and both at **complete** brackets, so
+neither tile size nor sampling density can be the difference:
+
+| subject | avg_index | n / N | ratio |
+| --- | --- | --- | --- |
+| `flower-bud-alone-cpl` | 1.80 (averages) | 205/205 | **0.9389** |
+| `bee-1-cpl` | 0.06 (selects) | 299/299 | **1.4375** |
+
+**The regime trend survives an adversarial test, and the engineering conclusion
+changes with it.** The deficit is not a property of the estimator; it is confined
+to the subjects where the merge averages heavily. Where it degenerates to
+selection it beats the per-site ceiling — which a pure selector cannot do, since
+a selector is bounded above by the frame it picks.
+
+**Two caveats, both against me.** The CI is `[0.9927, 1.9969]`: the lower bound
+touches parity, so 1.4375 is *not* significantly above 1.0 at 95%, and I am not
+claiming it is. The width is a site-count problem — 88 live sites at 1024 px,
+against 358 for `119MSDCF` at 2048 — not a noisy estimate. And 39.8% of sites are
+still individually softer than their own best frame, so even here the merge loses
+locally about two times in five. What is established is the *direction* and the
+*regime*, not a significant win.
+
+### 5.7 Is the deficit VISIBLE? No — and the negative is commissioned
+
+A 19% band-energy deficit and a visible loss of detail are different claims. The
+test: `119MSDCF`, the worst subject, at its **median-ratio** site — the site that
+tests the headline, not the 0.3rd-percentile outlier — cut at 380 px so the
+viewer shows it unresampled (rule 48), master against the per-site best frame,
+identical stated encode (`/scale`, gamma 2.2, `scale` from the master crop and
+reused verbatim; per-panel autoscaling would fabricate the difference).
+
+The first run of this test picked the *worst* block and that was a mistake worth
+recording: it scored 0.0216 — the master holding 2% of the frame's detail — while
+over the whole 380 px crop containing it the master **led** at 1.0433. One 64 px
+block at that extreme is an alignment residual or a moved element, not the effect
+the headline describes. The bisection could not even reach it, bottoming out at
+0.0806 against its 4.0 px ceiling, so the control was not a control.
+
+At the median site (block 3,26, ratio 0.7956, master (3938,2146)):
+
+- **A master vs B best frame — I cannot tell them apart on sharpness.**
+- **C, the planted control at exactly 0.7956 (σ 0.533 px solved by bisection,
+  landing on 0.7956) — also indistinguishable from A.**
+
+That second line is the important one. It means "not visible" was, at that point,
+**unfalsifiable**: it could not separate "the effect is below threshold" from
+"this viewing path has no power". So I walked the effect size down until it *was*
+visible — same crop, same encode, blur solved to hit each rung:
+
+| planted ratio | σ | verdict by eye at 380 px 1:1 |
+| --- | --- | --- |
+| 0.80 (≈ the measured deficit) | 0.533 px | indistinguishable from master |
+| 0.60 | 0.833 px | at most marginal |
+| **0.40** | **1.270 px** | **visibly softer** — speckle smoothed, striations lose crispness |
+| 0.25 | 1.788 px | unmistakably mushy |
+
+**My discrimination threshold on this path is between 0.60 and 0.40. The measured
+deficit is 0.81.** The ladder is monotone, and the null panel (the master against
+itself) was correctly indistinguishable — so the instrument is commissioned in
+both directions: it can see 0.40, it cannot see 0.80, and it does not confabulate
+on identical panels.
+
+**Verdict: MEASURABLE BUT NOT VISIBLE. It is a fidelity note, not a shipping
+defect.** In blur-equivalent terms the deficit is σ 0.53 px against a threshold of
+roughly σ 0.83–1.27 px — a factor of 1.6–2.4 below what I can see — and this is
+the **worst** subject in the corpus, so every other subject sits further below.
+
+**The bound this does and does not support.** It bounds *my* discrimination
+through a PNG view path, not a human's at A3 with a loupe on a print. I did not
+test a human observer and cannot speak for one. What it does establish is that
+the deficit is not the thing the owner reacted to: he was shown a 5× downscale
+(§4), whose damage is far above this threshold.
+
 ## 6. What I looked for and did not find
 
 Negative results, each from tiles I actually viewed at 400 px 1:1, never resized.
@@ -593,3 +714,115 @@ correct ones.
   cross-validation residual of the warp model rather than a misregistration, or
   it is not measuring what its name suggests. Worth one sentence of
   documentation from whoever owns the aligner.
+
+## 10. The instrument is pinned, for the merge before/after
+
+Another lane is changing the merge's noise gate, and its own finding is that the
+floor sits at ~3.7× actual noise power while a too-high floor **averages more
+pixels** — which is a mechanism for exactly the deficit in §5.5, and, given §5.6,
+for exactly the regime it appears in. That gives a clean before/after in which the
+only thing that changed is the merge, *if and only if* the instrument is frozen
+first. `pin_instrument.py create|verify` does that.
+
+**Pin hashes (SHA-256), git `1e98dafc`:**
+
+| file | SHA-256 |
+| --- | --- |
+| `softness_verdict3.py` | `A6CA9E4ACCA88169491D6B3ADA891996F7B31BD7CB9F688220576E63E3FA6039` |
+| `corpus_softness.py` | `B3CBDACDB1468F363A071618FF64E9711E99827612FDF139A1973B9A4A2D67D9` |
+| `envelope_null.py` | `E3E8D695445B1C372D225852E00CFD6B6EE5E88FEEEC753F79458BDC9B7A439B` |
+| `density_check.py` | `66F7F70D29A377A46E281685E1B81005B63EF78AC1C100DA1A548607E1DAA8F9` |
+| `floor_sensitivity.py` | `567E2D17FD9CCE984DF3E7A84A76CB784B368E2E799DA1DB5DFD8C1E1BE06C5A` |
+| `strehl.exe` (the developing binary) | `44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490` |
+
+Also pinned, because each of them can move a ratio silently: `python 3.12.10`,
+`numpy 2.4.4`, `cv2 4.13.0`, `tifffile 2026.5.2`. Authoritative copies live
+outside the working tree at `C:\dev\strehl-out\V-EYES\PIN\`, because six lanes
+can edit this repository and a pin editable by the thing it is meant to detect is
+not a pin. `verify` checks live, pinned and manifest hashes agree and exits
+non-zero if any moved.
+
+**Build provenance, checked not assumed.** All 26 `SHIP-V4` masters carry a
+`.tiff.ok` whose entire content is `44C2F2CD…B59F490` — the binary above. The
+`740e7056` build that was circulated is `15EA7346…`, a **different hash at
+identical size (9,568,768 bytes)**. Size and timestamp identify nothing here.
+None of the four ceilings is suspect.
+
+**The before-reading** (complete brackets, n = N, zero subsample bias):
+
+| subject | n/N | tile | raw ratio | 95% CI | null | corrected |
+| --- | --- | --- | --- | --- | --- | --- |
+| `coffee-bubbles` | 19/19 | 2048 | 0.9007 | 0.880–0.919 | 0.9988 | 0.9018 |
+| `109MSDCF` | 22/22 | 2048 | 0.8735 | 0.860–0.893 | 0.9865 | 0.8855 |
+| `119MSDCF` | 33/33 | 2048 | 0.8110 | 0.787–0.831 | 0.9955 | 0.8147 |
+| `flower-bud-alone-cpl` | 205/205 | 1024 | 0.9389 | 0.886–1.013 | 0.9851 | 0.9531 |
+| `bee-1-cpl` (§5.6) | 299/299 | 1024 | 1.4375 | 0.993–1.997 | — | — |
+
+**The pin reproduces its own reading.** Re-running `119MSDCF` at 33/33, 2048 px
+from the pinned copy returned `ratio=0.811`, matching the frozen `0.8110` to four
+decimals. The instrument is deterministic, which is what the comparison rests on.
+
+**A pre-registered hazard, recorded now rather than discovered in the numbers.**
+The reference frames are developed by the *same* binary as the master — that is
+what makes the demosaic common-mode and lets it cancel. So if the gate fix also
+changes single-frame develops, **the ceiling moves too** and a change in the
+ratio is no longer attributable to the master. A convex-combination merge over
+one frame *should* be an identity, but "should" is not a measurement. The
+after-run must hash the `frame-*.tiff` files and compare them to the before-run's
+before interpreting any delta. Identical frames ⇒ the ratio change is the merge.
+Different frames ⇒ the reading must be decomposed, and said so, not averaged over.
+
+## 11. The "best frame" audit, carried out rather than filed
+
+§9 routed a lesson — *a per-site maximum over a subsampled bracket is not a
+ceiling, it is a sampling statistic* — and recommended re-reading the documents
+that use a best-frame reference. Filing it as advice would repeat the failure this
+project has already had tonight: a correct diagnosis written as a comment above
+the line that still contained the defect. So here is the audit, with the fraction
+of the bracket each reference actually saw.
+
+| document | reference used | bracket seen | verdict |
+| --- | --- | --- | --- |
+| `V-softness.md` | the *same subject rendered by a different commit* | n/a | **CLEAN — does not use a best-frame reference at all** |
+| `BUILD-SHARP.md` §1(a) | `b-g0-cr`, the merge at `--gate 0`, byte-identical to the elected frame | **100%** (per-pixel election over the whole bracket) | **CLEAN, and corroborating** |
+| `BUILD-TRIAGE.md` §2.5 | coarse ladder, then `refine_best_frame()` | 40 of up to 299, **then refined** | **CLEAN — caught and corrected the error itself** |
+| `M116-promotion.md` P9 | modal winner of the election map, one global frame | **33.4%** on `bee-3-cpl`; 100% on the other two | **AFFECTED — annotated in place** |
+
+**`V-softness.md` is clean and the premise that it needed auditing was wrong.** It
+compares two *builds* on identical inputs — a paired A/B whose reference is a
+render, not a frame. Grepping it for `sharpest frame`, `best frame`, `ceiling`,
+`stride`, `subsample` returns nothing. Nothing in it moves.
+
+**`BUILD-SHARP.md` §1(a) is clean and points the same way I do.** Its reference is
+`--gate 0`, which M95 established is byte-identical to the elected frame at
+100.0000% of pixels — a per-pixel selection over the full bracket, in the merge's
+own geometry, so no subsample and no resampling gauge argument. Its headline is
+that **"the shipped merge is softer than its own best input frame by 0.586 µm,
+1.2% of the rise."** That is an independent instrument (paired ESF in µm, not band
+energy) reaching the **same sign** as §5.5. It reads smaller than my 5–19% because
+its ceiling is the merge's *own election*, not the true per-site max — a ceiling
+the merge cannot beat by construction, and a lower one than mine wherever the
+election is imperfect. Two different references, two magnitudes, one direction.
+
+**`BUILD-TRIAGE.md` §2.5 found this error in itself before I did, and its number
+is the best corroboration in the corpus.** It noticed that stage 1 picked from a
+coarse ladder of 40 of up to 299 frames, reasoned that an under-selected best
+frame "biases toward certifying the merge GOOD", and added `refine_best_frame()`.
+Refining moved `bee-1-cpl` DETAIL from frame 46 → 44, the source's measured
+sharpness from 136.3 → 250.7 DN, and **`ratio` from 1.90 to 1.04** — a 45% fall
+in the ratio from nothing but a better ceiling, the same direction and roughly the
+same magnitude as my density collapse. It is an independent replication.
+
+**`M116-promotion.md` P9 is the one that carries the error, in its strongest
+form.** `pick_single.py` takes `sorted(...)[:LIMIT]` with `LIMIT = 100` — the same
+prefix-truncation I committed in `frames[::N//n][:n]`, shortening the focus range
+rather than thinning it — and then collapses the ceiling to the *modal winner of
+the election map*, one global frame for the whole image. Measured cost, same
+master and sites, only the ceiling changed (`119MSDCF`): **1.1458 against one
+global frame, 0.8110 against the per-site max — ×1.41, and the sign inverts.**
+Annotated in three places, because the claim was load-bearing in all of them: the
+second headline (line ~15), the supporting-verdicts table (line ~116), and P9
+itself. The M85 concern P9 reports as closed should be treated as **still open**.
+
+Three independent instances of one mistake — mine, `BUILD-TRIAGE`'s, and
+`M116`'s — is enough to call it a family rather than an accident.

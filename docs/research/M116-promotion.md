@@ -18,6 +18,16 @@ the owner's renders are waxy tonal plateaus and edge halos, and **not one of the
 four instruments in this milestone's brief targets either of them.** A fifth,
 undocumented instrument does: `STREHL_FIX_HALO`.
 
+> **Amended by V-EYES — the first clause of this headline is not established.**
+> "Beats the sharpest single source frame by `+0.152` to `+0.333` dex" is
+> measured against *one global frame* chosen from a *100-frame prefix*
+> (`pick_single.py`, `LIMIT = 100`); on `bee-3-cpl` that prefix is 33.4% of a
+> 299-frame bracket. Swapping that ceiling for a per-site best frame on
+> independent data (`119MSDCF`) moves the same statistic from **1.1458 to
+> 0.8110** — ×1.41, and the sign of the verdict inverts. See P9 for the full
+> amendment. The rest of this headline — the selection comparison, the halo and
+> plateau diagnosis — is untouched by this and stands.
+
 **Third headline, added after ORCH prioritised that fifth instrument above
 everything else in the workstream (section 5d).** `STREHL_FIX_HALO` has now been
 measured on four stacks, including both of M87's own. **It fails its deciding
@@ -113,7 +123,7 @@ Supporting verdicts, not instruments:
 
 | comparison | bee-3-cpl | foam | tweezers-cpl | reading |
 | --- | --- | --- | --- | --- |
-| merge vs sharpest single frame (M85 question) | `+0.15207` | `+0.16661` | `+0.33319` | merge wins decisively on all three |
+| merge vs sharpest single frame (M85 question) | `+0.15207` | `+0.16661` | `+0.33319` | **amended by V-EYES: ceiling is one global frame from a 100-frame prefix; per-site ceiling inverts the sign (1.1458 -> 0.8110 on 119MSDCF). Not established; M85 still open.** |
 | metric power (mask separation) | `1.1176` dex | `0.1249` dex | `0.8506` dex | foam has no power and can only return INCONCLUSIVE |
 | noise share of detail-band variance | `0.58%` | `56.27%` | `1.99%` | foam's detail mask is more than half noise |
 
@@ -299,6 +309,45 @@ and reproduces in the opposite direction by an order of magnitude more than any
 instrument effect measured tonight. Measured with `STREHL_ALIGN=0` on both
 sides so that one pixel-exact grid is shared and no resampling enters the
 sharpness measurement.
+
+**Amended by V-EYES: the reference is a single global frame drawn from a
+truncated prefix, and on independent data that choice inverts the sign of this
+comparison.** `experiments/M116-promotion/pick_single.py` defines "the sharpest
+single source frame" as the modal winner of the A0 election map — one frame for
+the whole image — selected from `sorted(...)[:LIMIT]` with `LIMIT = 100`. Two
+separate problems follow, and only the second is universal.
+
+The truncation bites one subject. `bee-3-cpl` has **299 frames, so `[:100]` sees
+33.4%** of the bracket, and because it is a *prefix* rather than a subsample the
+deepest 199 focus positions never enter the election map or the pick at all —
+the focus range is shortened, not merely thinned. `foam` and `tweezers-cpl` have
+exactly 100 frames each and are unaffected (100.0%).
+
+The global pick bites all three, and it is the larger effect. A per-pixel
+estimator should be measured against the sharpest frame *at each site*, which is
+what it is trying to reproduce; a single global frame is defocused over most of
+the subject's depth by construction. Measured on `119MSDCF` with the V-EYES
+instrument — same master, same sites, same statistic, the only change being the
+ceiling — the two references give:
+
+| ceiling | ratio | reading |
+| --- | --- | --- |
+| one global frame (M116's definition) | **1.1458** | merge is sharper |
+| per-site best frame | **0.8110** | merge is softer |
+
+**×1.41 inflation, and the sign of the verdict flips.** So `+0.15207 / +0.16661 /
++0.33319` are not evidence that the merge beats its best input; they are
+consistent with a merge that loses to a per-site ceiling while beating a globally
+defocused one. P9's direction is not established by this measurement, and the
+M85 concern it reports as closed should be treated as **still open**.
+
+This is not a criticism unique to M116 — it is the same error V-EYES committed in
+its own first corpus run (`frames[::N//n][:n]`, which truncated the range
+identically) and the same one `BUILD-TRIAGE` §2.5 caught in itself, where
+refining an under-selected pick moved a ratio from **1.90 to 1.04**. Three
+independent instances of one mistake. The general rule, recorded in `V-EYES.md`
+§9: *a per-site maximum over a subsampled bracket is not a ceiling, it is a
+sampling statistic* — and a single global frame is its degenerate worst case.
 
 **P10 — MEASURED, visual. Pure per-pixel selection produces gross visible
 patchwork that the shipped gate removes.** At 1:1 on bee-3-cpl, the `--gate 0`
