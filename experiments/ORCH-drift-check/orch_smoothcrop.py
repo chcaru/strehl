@@ -26,6 +26,18 @@ from PIL import Image
 
 CROP = 900
 STEP = 300
+FIXED_W = 250.0
+HP_WIN = 201
+
+
+def boxblur(a, win):
+    """Separable box blur via cumulative sums, edge-replicated. No SciPy dependency."""
+    r = win // 2
+    pad = np.pad(a, ((r + 1, r), (r + 1, r)), mode="edge")
+    c = np.cumsum(pad, axis=0)
+    a = (c[win:, :] - c[:-win, :]) / win
+    c = np.cumsum(a, axis=1)
+    return (c[:, win:] - c[:, :-win]) / win
 
 
 def hf_energy(blk):
@@ -60,8 +72,15 @@ def pick_smooth(lum):
 def main(paths, outdir):
     out = pathlib.Path(outdir)
     out.mkdir(parents=True, exist_ok=True)
-    print(f"{'subject':30s} {'crop':>16s} {'mean':>8s} {'p1..p99 DN':>16s} {'gain':>6s}")
-    print("-" * 84)
+    adaptive = "--adaptive" in sys.argv
+    mode = "ADAPTIVE per-block percentiles" if adaptive else f"FIXED +/-{FIXED_W:.0f} DN"
+    print(f"stretch mode: {mode}")
+    if adaptive:
+        print("  WARNING: per-block gain. Valid WITHIN one master; invalid for ranking "
+              "masters against each other, because a flatter -- cleaner -- field is "
+              "amplified more and therefore looks dirtiest.")
+    print(f"{'subject':30s} {'crop':>16s} {'mean':>8s} {'gain/DN':>9s} {'clipped':>9s}")
+    print("-" * 80)
     for p in paths:
         p = pathlib.Path(p)
         a = tifffile.imread(str(p))
@@ -72,22 +91,43 @@ def main(paths, outdir):
             print(f"{p.stem[:30]:30s} {'no eligible block':>16s}")
             continue
         blk = rgb[y0:y0 + CROP, x0:x0 + CROP]
-        lo = np.percentile(blk, 1.0)
-        hi = np.percentile(blk, 99.0)
-        span = max(hi - lo, 1.0)
-        gain = 65535.0 / span
-        v = np.clip((blk - lo) * (255.0 / span), 0, 255).astype(np.uint8)
-        name = f"{p.stem}--smooth-{x0}x{y0}--stretch{gain:.0f}x.png"
+        if adaptive:
+            lo = float(np.percentile(blk, 1.0))
+            hi = float(np.percentile(blk, 99.0))
+            span = max(hi - lo, 1.0)
+            scaled = (blk - lo) * (255.0 / span)
+            tag = f"adaptive{65535.0 / span:.0f}x"
+        else:
+            # Dust is a LOCAL defect; the background gradient is not the thing being
+            # judged, and at a fixed gain wide enough not to clip that gradient, the
+            # defect is too small to see. Subtracting a heavily blurred copy removes
+            # scene-scale tone and leaves anything smaller than HP_WIN intact, so a
+            # fixed window on the RESIDUAL is both comparable across masters and
+            # actually legible. The high-pass is linear and cannot create an edge.
+            res = np.stack([blk[:, :, c] - boxblur(blk[:, :, c], HP_WIN)
+                            for c in range(3)], axis=2)
+            span = 2 * FIXED_W
+            scaled = (res + FIXED_W) * (255.0 / span)
+            tag = f"hp{HP_WIN}-fixed{FIXED_W:.0f}DN"
+        clipped = float(((scaled < 0) | (scaled > 255)).mean())
+        v = np.clip(scaled, 0, 255).astype(np.uint8)
+        name = f"{p.stem}--smooth-{x0}x{y0}--{tag}.png"
         Image.fromarray(v).save(out / name)
         print(f"{p.stem[:30]:30s} {f'({x0},{y0})':>16s} {m/65535:8.3f} "
-              f"{f'{lo:.0f}..{hi:.0f}':>16s} {gain:5.1f}x")
-        del a, rgb, lum, blk, v
+              f"{255.0/span:9.4f} {clipped*100:8.2f}%")
+        del a, rgb, lum, blk, scaled, v
     print(f"\nwrote to {out}")
-    print("A blocky seam appears here as straight horizontal or vertical steps on a "
-          "regular pitch. Texture cannot hide it and the stretch is linear, so any "
-          "straight edge on a lattice is real.")
+    print("A blocky seam appears here as straight steps on a regular pitch; dust as "
+          "discs, or as dashes where the stack moved under the warp.")
+    if not adaptive:
+        print(f"High-passed at {HP_WIN}px, then a FIXED +/-{FIXED_W:.0f} DN window: "
+              f"gain is {255.0 / (2 * FIXED_W):.4f} levels per DN for every master, so "
+              f"apparent severity IS comparable across subjects. A 40 DN defect reads "
+              f"as {40 * 255.0 / (2 * FIXED_W):.1f} of 255 everywhere, and 128 is the "
+              f"zero level.")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:-1], sys.argv[-1]))
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    sys.exit(main(args[:-1], args[-1]))

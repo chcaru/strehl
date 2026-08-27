@@ -10201,3 +10201,100 @@ in *sensor* coordinates, before any warp, leaves the subject averaged away and t
 standing exactly still. Deep stacks make this stronger, not weaker; `bee-3-cpl` has 299
 frames. Pre-registered: a stated DN reduction at the two named crops, an unflagged subject
 that must come back unchanged within noise, and a kill on any loss of real texture.
+
+## §91 — "wrong by a constant factor" is the most dangerous description of a lossy conversion
+
+I broadcast the PIL truncation to the fleet and told them the damage was that magnitudes
+were "wrong by a factor of 256". BUILD-RESAMP measured that sentence and it is harmful,
+because **it names a repair, and the repair does not work**:
+
+```
+tifffile : uint16   distinct 10440   min 202   max 14439
+PIL      : uint8    distinct    57   min   0   max    56
+PIL x256 : float    distinct    57   min 0.0   max 14336.0
+```
+
+The multiplication restores the scale to within 0.7% and **none of the information**.
+Ten thousand distinct values become fifty-seven and *stay* fifty-seven; every recovered
+value is a multiple of 256, so true DN is known only to +/-128. The floor is destroyed
+as well: `min 202 -> 0`. BUILD-SHARP confirmed it independently on a different file —
+11,902 distinct values via tifffile against 57 via PIL, floor 239 -> 0.
+
+> **A scale error is invertible and preserves the count of distinct values. Quantisation
+> destroys the count.** So the diagnostic and the disproof are the same statistic, and
+> `len(np.unique(arr))` needs **no reference image and no knowledge of what the number
+> should be** — which is exactly why "wrong by 256x" required a reference to be caught
+> and the unique-count does not.
+
+A lane that applied my repair would hold right-magnitude numbers with 183x too little
+tonal resolution, produced by arithmetic that looks like a fix. And it composes with §90:
+the dust sits a few levels deep on a crop spanning twelve 8-bit levels, so a PIL-based
+dust survey carries one or two levels of signal at a 256 DN quantisation step and would
+report **clean on a defect plainly visible to the eye**. The first hazard manufactures a
+false negative on the second hazard's subject.
+
+BUILD-SHARP's generalisation, which is the sharpest form of it:
+
+> **A check that certifies the input rather than the output.** They cleared their lane
+> with "no `Image.open` anywhere" — a true statement about their *source code*, which
+> would not have caught the hazard arriving through a dependency, a cached array, or a
+> file another lane wrote. Counting uniques interrogates the array actually measured.
+> Structural arguments are cheap and belong first; they do not substitute for reading the
+> artifact.
+
+### My own tool had the defect I was warning about
+
+BUILD-RESAMP also measured a real bias in `orch_smoothcrop.py` — the tool I told the
+fleet to run "before you call anything clean". Its stretch used **per-block percentiles**,
+so display gain varied per crop and identical 40 DN dust read up to 29x differently
+between fields, with the bias running the wrong way: the **flatter, cleaner** field was
+amplified more and therefore looked dirtiest. My instruction invited precisely the
+cross-master ranking that bias invalidates.
+
+Fixed: high-pass at 201 px — dust is local and the scene gradient is not, and at a fixed
+gain wide enough not to clip the gradient the defect is too small to see — then a fixed
++/-250 DN window, so gain is a stated constant (0.5100 levels/DN) and clip% is printed
+per crop.
+
+**The first commissioning run said NOT COMMISSIONED, and it was right about my harness.**
+Severity came back *negative* for the busy field: my "clean" reference was a fixed distant
+patch that landed on a trough of the synthetic sinusoid. A defect's depth is local by
+definition; measuring each disc against its own annulus fixed it. Fifth time tonight that
+a repair introduced a fresh defect (§75, §78, §88, §89, here).
+
+Then the mechanism test, with the prediction registered **before** the run — that the
+residual difference was clipping, and must therefore vanish as the window widens:
+
+| window | busy sev | busy clip | flat sev | flat clip | ratio |
+|---|---|---|---|---|---|
+| 250 | 14.12 | 36.84% | 20.75 | 0.00% | 1.47x |
+| 500 | 9.75 | 7.13% | 10.37 | 0.00% | 1.06x |
+| 1000 | 5.18 | 0.03% | 5.19 | 0.00% | 1.00x |
+| 2000 | 2.59 | 0.00% | 2.59 | 0.00% | 1.00x |
+
+Confirmed exactly. The residual is clipping and nothing else.
+
+> **Do not move a gate you failed; find the mechanism and predict its signature in
+> advance.** I could have relaxed the 1.3x threshold to 1.5x and shipped. Registering
+> "if this is clipping, widening the window must collapse it to 1.0" converted an
+> uncomfortable number into a measurement, and the tool now reports clip% so the
+> comparison's validity condition is visible in its output rather than in a caveat
+> someone has to remember.
+
+### What the corrected render then showed
+
+At the comparable gain, the `coffee-bean` crop is unambiguous and carries **two**
+defects, not one:
+
+- **Dozens of dust trails, all uniformly horizontal**, in loose diagonal rows. The
+  uniformity of orientation is the diagnostic: independent debris would vary in shape and
+  angle, whereas one shared elongation direction means one shared displacement — the
+  aligner's inter-frame translation. This yields a free falsifiable prediction handed to
+  BUILD-BLEND: **trail direction and length must match that stack's fitted per-frame
+  translation**, or the sensor-coordinate model is wrong.
+- **Isolated single coloured pixels** throughout — hot/stuck pixels surviving into the
+  shipped master, and the half of the brief the dark frames answer.
+
+They want opposite treatments and must not be merged: dust is a multiplicative
+obscuration spread over tens of pixels, corrected by division; a hot pixel is an additive
+single-pixel outlier, corrected by exclusion from the gather.
