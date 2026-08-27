@@ -1476,8 +1476,28 @@ pub fn cover_or_explain(map: WarpMap) -> (WarpMap, Option<f64>) {
     )
 }
 
-/// Reusable buffers for [`warp_frame_in_place`], so a merge does not allocate
-/// four planes per frame.
+/// Reusable buffers for [`warp_frame_in_place`], sized to the **quad** grid.
+///
+/// # What this does and does not save
+///
+/// It saves the four `gw x gh` quad-plane allocations that
+/// [`warp_frame_in_place_plane`] would otherwise make per frame. It does
+/// **not** make a merge allocation-free per frame, and an earlier version of
+/// this doc said it did ("so a merge does not allocate four planes per
+/// frame"), which stopped being true when the full-res gather became the
+/// default.
+///
+/// [`warp_frame_in_place_fullres`] -- the shipping path, since
+/// [`fullres_gather_enabled`] defaults on -- allocates four *full-resolution*
+/// planes per call that this scratch does not cover: `mos`, `rp`, `gp` and
+/// `bp`. Each is `fw * fh` `f32`, and `fw * fh == 4 * gw * gh`, so the
+/// per-warp transient is `4 planes * 4 bytes * 4 * gw * gh` = **64 bytes per
+/// quad pixel**, which is 16x the 4 bytes per quad pixel a single scratch
+/// plane costs. Measured at 503.0 MiB per warp on the reference stack, times
+/// the worker count -- +2.0 GiB at four workers. Neither the align planner nor
+/// the merge planner prices it, so the printed budget understates the peak;
+/// the measured fold peak on the deepest real stack is 12.5-13.4 GiB against a
+/// printed 5.2 GB plan (1.51x), with no OOM risk against 61.6 GB of RAM.
 pub struct WarpScratch {
     src: Vec<f32>,
     dst: Vec<f32>,

@@ -382,11 +382,15 @@ pub fn demosaic_directional_row(m: &Mosaic, y: usize, out: &mut [f32]) {
     }
 }
 
-/// The Malvar-He-Cutler stencils, **a reference arm, not the shipping path**.
+/// The Malvar-He-Cutler stencils, **the shipping default**.
 ///
-/// This was the default until the directional green in [`demosaic_row`]
-/// replaced it. It is kept because it is the closed form the false-colour test
-/// predicts, and because a headline needs something to be scored against.
+/// The directional green in [`demosaic_row`] is the alternative arm, not the
+/// other way round: [`use_directional`] reads `STREHL_DEMOSAIC` and returns
+/// `false` when it is unset, so every default render lands here. An earlier
+/// version of this doc claimed the opposite -- "a reference arm, not the
+/// shipping path ... replaced by the directional green" -- which was false for
+/// as long as the env var stayed opt-in. It is also the closed form the
+/// false-colour test predicts, which is why it doubles as the reference arm.
 pub fn demosaic_malvar_row(m: &Mosaic, y: usize, out: &mut [f32]) {
     assert_eq!(out.len(), m.width * 3, "output row is the wrong width");
     assert!(y < m.height, "row {y} is outside the mosaic");
