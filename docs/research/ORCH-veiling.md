@@ -13452,3 +13452,76 @@ comparator, records the 3.67× re-measurement while leaving the published 2.4×
 in place, and says plainly that the free-field speed comparison does not exist.
 Speed is half of what the owner asked for and it had been carried in a single
 unsourced clause.
+
+## 128. Six lanes, six instruments, one defect: the query stood in for the world
+
+Tonight produced six independent instances of a single failure, in six different
+lanes, written by six different agents, in six unrelated instruments. I did not
+go looking for the pattern; it assembled itself out of the incident reports.
+
+| # | lane | the instrument | what it could not reach | what it reported |
+|---|---|---|---|---|
+| 1 | flat-field | a "with CPL / without CPL" control | the optical configuration — the split was `int(name[3:8]) < 300` | a physical control |
+| 2 | V-REVIEW | a build audit filtering `strehl.exe` | 102 of 165 builds present | binary `066A87AB` **NOT FOUND** |
+| 3 | BUILD-DEFECT | a byte-run scan capped at 24 runs | the entire pixel region of the file | `runs beyond byte 1,000,000: 0` |
+| 4 | V-H2H2 | `arms_share_flags`, reading invocation lines | arms declared in a hashtable | BUILD-HIGHLIGHT "consistent" |
+| 5 | V-NEVERWORSE | `vn_seals.py` hashing `strehl.exe` | `strehl-pinned.exe` | `066A87AB` absent from 160 copies |
+| 6 | ORCH (mine) | a whole-file hash | the distinction between banner and pixels | "the exposure flag is LIVE" |
+
+**Every one of them returned a clean, confident, *specific* result.** Not one
+crashed, hung, or emitted a warning. Four of the six were caught by the lane that
+wrote them, which is the only reason this is a list of repairs rather than a list
+of shipped claims.
+
+### The shape
+
+In each case an instrument answered a question about **its own reach** and the
+answer was read as a question about **the world**. `0` incidents, `NOT FOUND`,
+`consistent`, `absent` — these are the same glyph whether the world is clean or
+the query is blind, and nothing in the output distinguishes them. A count that
+does not move looks identical either way.
+
+This is *not* carelessness, and treating it as carelessness is why it recurs. It
+is the default failure mode of **evidence gathered by filter**. Any instrument
+that selects a population before measuring it inherits the boundary of that
+selection as an unstated premise, and the premise never appears in the result.
+
+### The asymmetry that makes it dangerous
+
+A *positive* finding carries its own proof of reach: if the scan found the build,
+the scan could reach the build. A *negative* finding carries nothing. This is why
+absence claims are structurally more expensive than presence claims and why they
+are, in practice, audited less. The cheap direction is the one that lies.
+
+### The remedy, which is not "look harder"
+
+Three of tonight's repairs converged on the same fix without coordinating, and it
+is not vigilance:
+
+- **BUILD-DEFECT** replaced its cap with a census that *cannot truncate*, and a
+  verdict that **refuses** when a listing is capped.
+- **V-H2H2** built `lattice_assert.py` with **two** assertions — `announced ==
+  actual` *and* `actual == requested` — because the first alone would pass a build
+  that halved every output and reported it faithfully.
+- **V-NEVERWORSE** commissioned `vn_seals.py` against a root holding **no
+  binaries** and required it to go red, on the explicit ground that otherwise
+  `0 incidents` is indistinguishable from a check that cannot fail.
+
+> **Rule. An instrument that can report absence must first demonstrate reach.**
+> Give it a decoy it is required to find. If it cannot find the decoy, its silence
+> is about itself. And prefer instruments that **refuse** over instruments that
+> return a clean value they did not earn — a refusal is legible, a false zero is
+> not.
+
+### Why it belongs in this log rather than in six separate reports
+
+Because the six reports each read as an isolated slip, and the aggregate does not.
+Six instruments, built independently, by capable authors, all failed the same way
+in one night. That is a property of the *method*, not of the authors — and the
+method is the thing this project is actually building. A stacker that ships is
+one artifact; an evidence discipline that catches its own blind instruments is
+the thing that made the stacker's numbers worth quoting.
+
+The corollary I have to accept personally: **instance 6 is mine**, and I found it
+only because a lane contradicted me and I checked which of us was wrong instead of
+restating my position. The orchestrator is not outside the population.
