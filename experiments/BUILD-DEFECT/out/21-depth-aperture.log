@@ -1,0 +1,42 @@
+A. MEASURED DEPTH vs APERTURE.  map nominal mote2 = -8.236%
+subject                         f/    mote2 %        p     vs map   mote1 %
+----------------------------------------------------------------------------
+highly-angled-ruler-mm-cpl     5.6    -8.585%   0.0025      1.04x   -4.069%
+pencil-steep-angle-cpl         5.6    -8.814%   0.0025      1.07x   -2.149%
+coffee-bean                    8.0   -14.758%   0.0025      1.79x   -6.790%
+tweezers-cpl                   5.6    -5.726%   0.3192      0.70x   -2.969%
+couch-fibers-cpl               5.6    -8.467%   0.0025      1.03x   -1.735%
+flower-bud-alone-cpl           5.6    -9.380%   0.0025      1.14x   -3.938%
+bee-3-cpl                      5.6    -7.994%   0.0025      0.97x   -3.523%
+wrapped-text-1                 5.6    -6.959%   0.2519      0.84x   -0.725%
+lavendar-cpl                   5.6    -8.387%   0.0025      1.02x   -4.405%
+leaf-2-cpl                     5.6    -7.737%   0.0025      0.94x   -4.658%
+
+among the 8 stacks where mote2 FIRES:
+  apertures present: [5.6, 8.0]
+  depth range -14.758% .. -7.737%  (1.91x spread)
+  corr(f-number, depth) = -0.9758
+    f/5.6   n=7  mean depth -8.481%
+    f/8.0   n=1  mean depth -14.758%
+
+========================================================================================
+B. IMPROVEMENT ARM, corrected: remove the MEASURED depth, not the map's
+subject                       before %    after %        p  fires
+------------------------------------------------------------------
+highly-angled-ruler-mm-cpl     -8.585%    -1.011%   0.0025  False
+pencil-steep-angle-cpl         -8.814%    -1.053%   0.0025  False
+coffee-bean                   -14.758%    -2.624%   0.0025   True
+tweezers-cpl                   -5.726%          -        - skipped
+couch-fibers-cpl               -8.467%    -0.986%   0.0549  False
+
+========================================================================================
+C. COST: full-frame residual vs cropped-window residual
+  quad frame 2344x3514 ; window 599x640 around each site
+  full-frame residual  0.370 s/frame
+  cropped   residual   0.016 s/frame  (23.5x cheaper)
+  two sites            0.032 s/frame
+  agreement full vs cropped at mote2: -9.4444% vs -9.4444%  (delta 0.0000 pp)
+
+========================================================================================
+FAILURES (1):
+   coffee-bean improvement still fires (-2.624%)

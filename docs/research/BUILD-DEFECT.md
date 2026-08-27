@@ -741,3 +741,217 @@ wrote           : ... (7032 x 4688, 16-bit RGB, sRGB ...)
 partitioned rather than summarised. Unset `STREHL_DEFECT_MAP` and the banner
 reads `defect map      : none (set STREHL_DEFECT_MAP to enable)` and no
 correction block is printed at all.
+
+---
+
+## 11. The self-validating map: the design holds, and it overturns my own default
+
+Added after `V-EYES` measured the delivered corpus and the orchestrator
+withdrew the opt-in decision. Scripts `20`–`23`, logs in `out/`.
+
+### 11.1 What changed my mind, and what did not
+
+The orchestrator's staleness argument — *a stale map applies a brightening to a
+spot where nothing is wrong, and nothing downstream can tell a corrected mote
+from an invented one* — is **still correct, and §11.5 measures its cost at
++8.6 to +16.4 percentage points.** What was wrong was the premise it was
+attached to: that the amplitude was too small to matter. `V-EYES` measured mote 2
+at **−13.28%** on `highly-angled-ruler-mm-cpl`, present in **18 of 26** delivered
+images, and *saw* it unstretched as a ~45 px grey disc on near-white.
+
+Both positions being correct at once is the signature of a wrong framing, and
+the orchestrator's proposed reframing is right: **make the map self-validating at
+the point of use.** A stale map cannot manufacture a defect it is required to
+observe first. I set out to find the flaw in it and instead found a stronger
+version of it (§11.4).
+
+### 11.2 The one thing that could have sunk it, and did not
+
+**P25 (MEASURED).** Per-stack detection has sufficient power. Over 10 stacks,
+8 frames each, reading raw Bayer via `quad_mean(raw_image_visible)` — sensor
+coordinates, before any warp — scored against a 400-draw local null
+(`src/20-selfvalidate.py`):
+
+```
+FIRES  mote1 6/10   mote2 8/10   CONTROLS 0/40  (controls must be 0)
+```
+
+The committed map established these motes at `p = 0.0025` by **pooling 12
+stacks**. The concern was that one stack has a twelfth of that evidence and would
+silently no-op. It does not: a single stack reaches the same `p = 0.0025` floor,
+because the bar is a *local spatial* null within one frame rather than a
+cross-subject recurrence test, and one frame already contains 400 independent
+control draws.
+
+**P26 (MEASURED).** Where it declines, it declines for the right reason.
+`tweezers-cpl` (`p = 0.3092`) and `wrapped-text-1` (`p = 0.2519`) are exactly the
+two stacks whose control sites read −8.4% and −15.3% — busy background, wide
+null, no detection. **This is the requirement working, not failing.** V-EYES
+independently notes *"Subjects with no smooth background at that spot cannot show
+it"*. The test's power and the defect's visibility are governed by the *same*
+quantity — local background smoothness — so **where the check cannot see the
+mote, neither can a viewer.** That correlation is what makes skipping safe rather
+than merely cheap.
+
+### 11.3 A coordinate bug of mine, disclosed
+
+The first run of `20-selfvalidate.py` read `raw.raw_image`; the map was built on
+`raw.raw_image_visible`. `raw_image` includes the masked optical-black border, so
+every site was offset and mote 2 read **+54.8%, +22.2%, +44.3%** on four stacks —
+absurd values for a high-pass residual, which is what exposed it. Fixed in
+`out/20-selfvalidate.log`. **Any per-stack check must read the same array the map
+was written against**, and the map format does not currently record which one.
+See Q5.
+
+### 11.4 The map must nominate the location and must NOT dictate the amplitude
+
+This is the part I did not expect and it strengthens the design.
+
+**P27 (MEASURED).** Depth at the *same* sensor site varies **1.91×** across
+stacks (`src/21-depth-aperture.py`):
+
+| subject | f/ | measured | vs map −8.236% |
+|---|---|---|---|
+| coffee-bean | **8.0** | **−14.758%** | **1.79×** |
+| flower-bud-alone-cpl | 5.6 | −9.380% | 1.14× |
+| pencil-steep-angle-cpl | 5.6 | −8.814% | 1.07× |
+| highly-angled-ruler-mm-cpl | 5.6 | −8.585% | 1.04× |
+| couch-fibers-cpl | 5.6 | −8.467% | 1.03× |
+| lavendar-cpl | 5.6 | −8.387% | 1.02× |
+| bee-3-cpl | 5.6 | −7.994% | 0.97× |
+| leaf-2-cpl | 5.6 | −7.737% | 0.94× |
+
+The seven f/5.6 stacks span **0.94×–1.14×** — tight. The one f/8 stack is
+**1.79×**. This is the direction Q2 predicted (*"a smaller aperture makes a mote
+smaller and deeper"*) and it is the first measurement of it.
+
+**P28 (ARGUED, and the caveat is load-bearing).** The printed
+`corr(f-number, depth) = −0.9758` **is not a correlation and must not be quoted
+as one.** It is a two-group comparison with **n = 1** in the f/8 group; a
+correlation across seven points at one x-value and one point at another is
+determined entirely by the single outlier. The *direction* is consistent with the
+physics and with Q2's prediction; the *slope* is one stack. Q4 stays open.
+
+**P29 (DERIVED).** The design consequence does not depend on the cause. A
+correction that applied the **map's** gain would, on `coffee-bean`, remove 8.2
+points of a 14.8-point defect and leave a 6.6-point mote; on a shallower stack it
+would over-correct into a bright spot — **the inverse defect, manufactured**. So:
+**shape from the map, amplitude from the frames in front of us.** Scaling in
+log-gain space, `g' = exp(ln(g) · s)` with
+`s = ln(1/(1−|d_meas|)) / ln(1/(1−|d_map|))`.
+
+**P30 (MEASURED).** With amplitude taken from the data
+(`src/22-selfvalidating.py`), all five firing stacks correct to under 0.7%
+residual — **including the f/8 stack at 1.79× the map's nominal**:
+
+| subject | measured | after correction |
+|---|---|---|
+| highly-angled-ruler-mm-cpl | −8.585% | **−0.476%** |
+| pencil-steep-angle-cpl | −8.814% | **−0.606%** |
+| coffee-bean (f/8) | −14.758% | **−0.672%** |
+| couch-fibers-cpl | −8.467% | **−0.478%** |
+| lavendar-cpl | −8.387% | **−0.518%** |
+
+**94–96% of the defect removed**, uniformly across a 1.79× amplitude range.
+**Taking amplitude from the data makes the aperture-transfer question (Q4) moot
+for the correction path** — the correction no longer needs to know the aperture,
+because it measures the depth it is about to remove. Q4 remains open as a
+question about the *map*, but it no longer gates shipping.
+
+### 11.5 The arm that decides the design
+
+**P31 (MEASURED). The STALENESS arm.** Divide the real mote out of the frames —
+simulating a sensor that has since been cleaned — then run the check completely
+unmodified. It must decline to correct.
+
+```
+subject                       measured        p  action  after corr     STALE->     MANUF
+highly-angled-ruler-mm-cpl     -8.585%   0.0025 CORRECT     -0.476%       SKIP    +8.93%
+pencil-steep-angle-cpl         -8.814%   0.0025 CORRECT     -0.606%       SKIP    +9.18%
+coffee-bean                   -14.758%   0.0025 CORRECT     -0.672%       SKIP   +16.44%
+couch-fibers-cpl               -8.467%   0.0025 CORRECT     -0.478%       SKIP    +8.93%
+lavendar-cpl                   -8.387%   0.0025 CORRECT     -0.518%       SKIP    +8.64%
+tweezers-cpl                   -5.726%   0.3092    SKIP           -          -         -
+examined 6   corrected 5   skipped 1   (sums to total)
+all arms PASS -- self-validation blocks the stale-map failure mode
+```
+
+**Five of five cleaned-sensor cases SKIP.** The failure mode the opt-in default
+existed to prevent is **unreachable**, not merely unlikely.
+
+**P32 (MEASURED). The MANUFACTURE arm** quantifies what the guard is worth:
+applying the correction at a site with no mote injects **+8.64% to +16.44%**
+brightening. That is the defect an unguarded default-on map would create, and it
+is the same order as the defect it removes. **The guard is load-bearing, not
+decorative** — which is the measured form of the orchestrator's original
+objection, and the reason it should be recorded as vindicated rather than
+withdrawn.
+
+**P33 (MEASURED). Commissioned in both directions**, per rule and per the two
+instruments this project has already caught reading backwards:
+
+| arm | expected | measured |
+|---|---|---|
+| planted −4% disc | FIRE | fires 4/4, `p = 0.0025`, depth −3.79% to −5.03% |
+| planted **+4% bright** disc | NO FIRE | 0/4 fire, `p = 0.9975–1.0000` |
+| **improvement**: mote divided out | NO FIRE | 5/5 skip (P31) |
+| clean control sites | NO FIRE | 0/40 fire |
+
+The perverse arm reads `p ≈ 1.0` rather than merely "below the bar" — the
+statistic moves the *right way* on a brightening, so it is not blind to sign.
+
+### 11.6 Cost, measured
+
+**P34 (MEASURED).** The null draws reach 400 quads, so a 560-quad half-window
+around each site is sufficient:
+
+```
+full-frame residual  0.370 s/frame
+cropped   residual   0.016 s/frame  (23.5x cheaper)
+two sites            0.032 s/frame
+agreement full vs cropped at mote2: -9.4444% vs -9.4444%  (delta 0.0000 pp)
+```
+
+**Exact agreement, 23.5× cheaper.** Total per stack at 8 frames: **0.26 s of
+compute** — one frame's worth of the 0.26 s/frame budget, for the whole stack —
+plus **~2.5 s of decode** if the check runs as a separate preflight pass
+(0.308 s/frame × 8). On a 105–299 frame stack that is under 1%; on a 20-frame
+stack it is closer to 10%, and folding the sample into an existing decode pass
+would remove it entirely.
+
+**P35 (DERIVED).** Where it reads: `quad_mean(raw_image_visible)` is the raw
+Bayer array, black-subtracted, 2×2 averaged — the same coordinate system the map
+is written in and the same one the correction is applied in, strictly **before**
+the aligner. **There is no interaction with the warp**, by construction, and that
+is the same ordering argument that justified the original wire-up.
+
+### 11.7 My recommendation, and the decision that is not mine
+
+**The design holds. I recommend building it and defaulting it ON**, with
+amplitude taken from the frames (P29) rather than from the map.
+
+**But default-ON moves both byte-freezes, and that is the orchestrator's call.**
+
+**P36 (MEASURED).** `coffee-bean` is a byte-freeze subject, and it fires under
+the freeze's exact configuration (`src/23-freeze-check.py`):
+
+```
+coffee-bean total frames: 105
+  first 20 (freeze config) depth  -14.859%  p 0.0025  FIRES True
+  all 105                  depth  -14.758%  p 0.0025  FIRES True
+```
+
+So enabling the correction by default **will** change the rendered bytes of both
+`coffee-bean-20-gate2-unaligned` and `coffee-bean-20-gate2-sidecar`. Unlike every
+previous freeze movement I have reported, this one is **intended** — it is the
+feature working. `byte-freezes.tsv` is the orchestrator's file and I will not
+re-baseline it, so this needs an explicit decision before the default flips.
+
+### 11.8 New open question
+
+- **Q5 (OPEN).** The map format records `sensor` and `covered` geometry but not
+  **which raw array its coordinates are indexed against**
+  (`raw_image` vs `raw_image_visible`). That ambiguity cost me a full run (§11.3)
+  and would silently mis-register any future consumer. A `frame raw_image_visible`
+  key in the header would close it. **Not added: the format is versioned and
+  changing it is a compatibility decision, not a lane decision.**

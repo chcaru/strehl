@@ -1,0 +1,40 @@
+PER-STACK SELF-VALIDATION.  bars: p <= 0.0025 AND depth <= -1.5%
+reads raw Bayer via quad_mean, sensor coords, BEFORE any warp.  8 frames/stack
+
+subject                       n   mote1 %      p1   mote2 %      p2  ctrl worst %      pC  decode s
+--------------------------------------------------------------------------------------------------------
+highly-angled-ruler-mm-cpl  299   -4.069%  0.0025   -8.585%  0.0025       -0.244%  0.6060   1.31+2.98
+pencil-steep-angle-cpl      299   -2.149%  0.0648   -8.814%  0.0025       -1.823%  0.1746   4.73+3.18
+coffee-bean                 105   -6.790%  0.0025  -14.758%  0.0025        0.009%  0.4239   4.10+2.69
+tweezers-cpl                100   -2.969%  0.0050   -5.726%  0.3117       -8.409%  0.3791   1.26+2.62
+couch-fibers-cpl            299   -1.735%  0.0873   -8.467%  0.0025       -5.577%  0.0798   1.26+2.55
+flower-bud-alone-cpl        205   -3.938%  0.0025   -9.380%  0.0025       -0.010%  0.3367   1.22+2.75
+bee-3-cpl                   299   -3.523%  0.0025   -7.994%  0.0025       -0.164%  0.1671   3.91+2.70
+wrapped-text-1              130   -0.725%  0.2544   -6.959%  0.2269      -15.264%  0.2120   3.83+2.68
+lavendar-cpl                299   -4.405%  0.0025   -8.387%  0.0025       -0.162%  0.4539   1.52+3.02
+leaf-2-cpl                  182   -4.658%  0.0025   -7.737%  0.0025       -1.177%  0.1920   1.54+3.17
+
+FIRES  mote1 6/10   mote2 8/10   CONTROLS 0/40  (controls must be 0)
+decode 2.47 s/stack mean (8 frames) = 0.308 s/frame; residual 2.83 s/stack
+
+========================================================================================================
+COMMISSIONING both directions, on the first 4 stacks
+subject                     arm                            depth       p  fires
+----------------------------------------------------------------------------------
+highly-angled-ruler-mm-cpl  DEFECT planted -4%           -3.967%  0.0025   True
+                            PERVERSE planted +4%          3.759%  1.0000  False
+                            IMPROVE mote2 removed        -1.315%  0.0025  False   (was True)
+pencil-steep-angle-cpl      DEFECT planted -4%           -3.792%  0.0025   True
+                            PERVERSE planted +4%          3.949%  1.0000  False
+                            IMPROVE mote2 removed        -1.557%  0.0025   True   (was True)
+coffee-bean                 DEFECT planted -4%           -3.783%  0.0025   True
+                            PERVERSE planted +4%          3.957%  0.9975  False
+                            IMPROVE mote2 removed        -7.969%  0.0025   True   (was True)
+tweezers-cpl                DEFECT planted -4%           -5.027%  0.0025   True
+                            PERVERSE planted +4%          2.620%  0.9975  False
+                            IMPROVE mote2 removed         1.772%  0.5511  False   (was False)
+
+========================================================================================================
+COMMISSIONING FAILURES (2):
+   pencil-steep-angle-cpl IMPROVEMENT still fired
+   coffee-bean IMPROVEMENT still fired

@@ -1,0 +1,18 @@
+map profile: mote1 483 quads, peak gain 1.0446, mote2 652 quads, peak gain 1.0994
+
+subject                       measured        p  action  after corr     STALE->    MANUF
+--------------------------------------------------------------------------------------------
+highly-angled-ruler-mm-cpl     -8.585%   0.0025 CORRECT     -0.476%       SKIP   +8.93%
+pencil-steep-angle-cpl         -8.814%   0.0025 CORRECT     -0.606%       SKIP   +9.18%
+coffee-bean                   -14.758%   0.0025 CORRECT     -0.672%       SKIP  +16.44%
+couch-fibers-cpl               -8.467%   0.0025 CORRECT     -0.478%       SKIP   +8.93%
+lavendar-cpl                   -8.387%   0.0025 CORRECT     -0.518%       SKIP   +8.64%
+tweezers-cpl                   -5.726%   0.3092    SKIP           -           -        -
+--------------------------------------------------------------------------------------------
+examined 6   corrected 5   skipped 1   (sums to total)
+
+STALE->  = decision after the mote is divided out (a cleaned sensor). Must be SKIP.
+MANUF    = brightening the correction would inject at a CLEAN site if unguarded.
+
+============================================================================================
+all arms PASS -- self-validation blocks the stale-map failure mode
