@@ -13862,3 +13862,136 @@ both. Nothing else in the process compares those two documents to each other:
 verifiers check the analysis against the data, and orchestrators read the
 briefing. **The gap between a lane's summary and a lane's work is unaudited by
 construction**, and it is exactly where a sign error survives.
+
+---
+
+## §135 — a self-consistency residual denominated in the signal's own units will pay for the defect, not charge for it
+
+A lane pre-registered the prediction that a certain gauge would be *unchanged*
+under a planted estimator bias — that it would fail to charge for the defect.
+The measurement came back worse than that, in the most useful possible way. The
+gauge did not sit still. **It improved.**
+
+`E*` is a held-out residual: fit a warp on some edges, predict the others,
+report the disagreement. Under a planted bias of exactly the kind already
+measured on real pairs, the true placement error rose **+5004.8%** while `E*`
+fell **35.9%**. On the very subject whose `E*` is quoted throughout the corpus,
+the gauge reported a **28.2% improvement for a measurably worse estimator**. A
+lane that had *introduced* this defect would have been congratulated.
+
+The mechanism is general and worth stating in its own right. **`E*` is a
+residual expressed in the same units as the quantity being estimated.** A bias
+that attenuates the estimated increment attenuates the disagreements between
+estimates by the same factor. Consistency and correctness are not merely
+uncorrelated here — they are pulled in *opposite* directions, because an
+estimator that reports less of everything is necessarily more self-consistent
+about it. Shrink the signal to zero and the residual goes to zero with it, and
+the gauge certifies perfection.
+
+Three consequences.
+
+**A self-consistency metric cannot bound accuracy, and the two get used
+interchangeably.** `E*` survives as a fine detector of incoherence *between*
+measurements — its null arm reads 1.04, so it is not broken. What it cannot do
+is bound placement error, which is what it had been quoted for. The distinction
+is invisible in the number itself; both readings are "6.758 px".
+
+**The commissioning arm that catches this is an attenuation, not a
+degradation.** The project's rule is already to plant an improvement as well as
+a defect, because a defect-only commissioning cannot separate a blind gauge from
+a perverse one. This is the sharper form for self-consistency gauges
+specifically: **plant a scaling of the estimated quantity and require the metric
+to worsen.** Most planted defects add error; this one *removes signal*, and it
+is a different arm.
+
+**The strongest evidence here was a null the lane did not have to build.** The
+planted bias touches only the scale degree of freedom; translation is copied
+through untouched. So `E*_scale` tracked the bias proportionally while
+`E*_trans` sat at `0.1345 ± 0.0002` on **every** rung of the ladder. That
+localises the effect to exactly the planted degree of freedom and rules out a
+whole class of alternative explanation at zero extra cost. When a plant has a
+natural untouched companion, the companion is free and it is usually the
+strongest arm available.
+
+A closing note on what this retires upstream. A gate written against this
+gauge — including one I wrote — is void, and so is a prior lane's report that a
+correction left the held-out number "unchanged": that gate **could not have
+detected the correction working**. The kill still stands on its other evidence,
+but one of its two legs was never load-bearing. **Retiring a gauge invalidates
+every verdict that leaned on it, in both directions**, and the acquittals go
+with the convictions.
+
+---
+
+## §136 — I turned an unverified structural claim into a work order, and the only reason it was cheap is that I had dispatched its falsifier in parallel
+
+Tonight I sent a build lane to fix a file that never ran.
+
+The sequence is worth writing out exactly, because every individual step looked
+like good practice. Two lanes convicted the merge of manufacturing mid-scale
+mottle. I formed a mechanism hypothesis. I found a module, `softgate.rs`, whose
+documented behaviour matched the hypothesis — a Gaussian admission weight with a
+`WEIGHT_FLOOR` truncation at `z = sqrt(32 ln 2) = 4.7096`. I wrote a briefing
+that named the mechanism, named the file, quoted the constant, and prescribed
+the fix. Then, separately, I sent a second lane to try to kill the hypothesis.
+
+The second lane killed it in under an hour, and the first finding was not about
+my mechanism at all: **`STREHL_SOFT_GATE` is unset on 26 of 26 shipped
+masters.** The default is a different gate entirely. The Gaussian weight, the
+floor and the constant I had quoted at a build lane as if they were shipping
+behaviour **have never executed on any delivered image**. My mechanism was also
+inverted — I claimed flat regions get the *least* averaging, and `n_eff`
+actually falls from 285 to 1 as the response *rises*, so flat regions get the
+most.
+
+Three things to extract.
+
+**1. A module's self-description can be wrong in two directions at once, and
+neither reading is the operative fact.** `softgate.rs` carries a status comment
+saying it is *not wired*. It is wired: `merge.rs` imports it at line 76 and
+constructs it at line 1811. So the comment is wrong. But the correction is *also*
+not the answer, because **wired is not the same as default**, and what decides
+whether code shaped the images is neither of those — it is what the shipping
+invocation actually selected. Three distinct facts (documented, reachable,
+default) collapse into one word, "used", and a reader picks whichever they were
+already expecting. For the question *did this code make the pixels*, the only
+admissible evidence is the environment as actually set on the run, plus the
+constructed default. Not the comment, and not the call graph.
+
+**2. The escalation from hypothesis to work order is the moment the rule stops
+being applied.** I know the rule — a claim about the shape of the code is a
+claim about a commit — and I wrote it down four sections ago. What defeated it
+was the *form* my claim took. Inside my own reasoning it was a hypothesis, and I
+labelled it as one. By the time it reached the lane it was a file path, a
+constant and a prescription, and a briefing shaped like an instruction does not
+read as a hypothesis to the agent receiving it. **A hypothesis loses its
+epistemic status by being formatted as a task.** The remedy is not more caution
+in thinking; it is a check at the boundary: *before a structural claim leaves my
+context as an instruction, it gets pinned to a commit and to evidence from the
+shipping artifact.*
+
+**3. What made this cheap was parallel falsification, and that is a scheduling
+decision rather than an insight.** I did not catch this by re-reading my own
+briefing. I caught it because I had spent one lane on trying to kill the
+hypothesis at the same time as spending another on building the fix for it. Had
+I sequenced them — diagnose, then build — the diagnosis would have been correct
+and nothing would have been lost either; but had I built first and diagnosed
+after, a lane would have shipped a spatial regulariser aimed at a mechanism that
+is not operating, and it would have been *measured to do nothing*, which is a
+much more confusing result to debug than a wrong file.
+
+The general form: **when a build order rests on a hypothesis, dispatch the
+falsifier concurrently, not afterwards.** The cost is one lane. The saving is
+that the builder's premise is under attack while the builder works, so the
+correction arrives while the work is still cheap to redirect. It also inverts
+the incentive that makes this failure common — a diagnosis lane sent *after* a
+build lane is implicitly asked to confirm, whereas one sent alongside is asked
+to compete.
+
+The replacement mechanism, for the record, is better than mine: the admission
+tolerance is an absolute `0.086063` response units while the focus response
+spans `0.43` to `84`, so effective strictness varies tenfold with local
+contrast, and the threshold carves the winner field into contiguous plateaus
+each rendering from a single frame. A patchwork of regions sourced from
+different frames is mid-scale mottle. It explains four null results at once,
+which mine explained none of.
