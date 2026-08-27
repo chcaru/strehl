@@ -45,6 +45,7 @@ WHAT THIS GATE CANNOT SEE, stated up front rather than discovered later:
   - Dust is not screened. It is a known, located, unfixed defect (BUILD-BLEND).
 """
 
+import json
 import os
 import pathlib
 import sys
@@ -116,12 +117,108 @@ BLOTCH_REVIEW = 0.02  # veil 98 commissioning: a 4-sigma planted blotch reads
 CHROMA_REVIEW = 0.015  # veil 101: null exactly 0.000000; the acquitted-by-render
                        # subjects run 0.0200-0.0557
 
+# ---------------------------------------------------------------------------
+# ADJUDICATED BASELINE (wired from V-REVIEW's source-frame arm)
+#
+# Nine subjects read REVIEW on the two subject-dependent statistics above and
+# all nine were adjudicated ACQUIT by an independent lane, which registered each
+# master against its own source frames and measured the SAME statistic on both.
+# The finding that matters: on the acquitted subjects the master reads at or
+# BELOW the worst source frame, so the statistic is reading a property the
+# optics delivered rather than a defect the merge introduced.
+#
+# WHY AN ACQUITTAL IS PINNED TO A MEASUREMENT AND NOT TO A SUBJECT NAME.
+# A gate that remembers "109MSDCF was acquitted" will pass 109MSDCF forever,
+# including the render in which it finally breaks. That is a gate that has been
+# switched off one subject at a time, and it would be indistinguishable from one
+# that is working. So the acquittal is keyed to the VALUE that was adjudicated:
+# if the statistic moves, the acquittal EXPIRES and the subject returns to
+# REVIEW automatically, because nobody has looked at the new number.
+#
+# THE TOLERANCE, AND WHERE IT COMES FROM. The same lane measured this gate's own
+# reproducibility and found it wanting: a 900 px window band-passed at 50-400 px
+# holds only ~20 independent blobs, so a single-draw measurement carries +/-2-3%
+# scatter that no re-run reproduces. ACQUIT_TOL is set just above that floor --
+# tight enough that a real movement expires the acquittal, loose enough that the
+# gate's own known scatter does not. It is NOT a claim that 5% is insignificant.
+#
+# The window is checked too. `flattest()` chooses where to measure, and two runs
+# that pick different windows are not measuring the same thing -- comparing their
+# values would be a category error, so a moved window expires the acquittal
+# regardless of how close the numbers happen to land.
+ACQUIT_TOL = 0.05
+ACQUIT_WINDOW_TOL = 8  # px; flattest() ties can shift the window a few px
+BASELINE_PATH = pathlib.Path(__file__).resolve().parents[1] / "V-REVIEW" / "vr_baseline.json"
+
+
+def load_baseline():
+    """Return (subjects_dict, provenance_str). Missing baseline is not fatal."""
+    if not BASELINE_PATH.is_file():
+        return {}, "NO BASELINE FILE at %s -- every REVIEW stands unadjudicated" % BASELINE_PATH
+    try:
+        with open(BASELINE_PATH, encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except Exception as exc:                                      # noqa: BLE001
+        return {}, "BASELINE UNREADABLE (%s: %s) -- every REVIEW stands" % (type(exc).__name__, exc)
+    subs = doc.get("subjects") or {}
+    prov = doc.get("provenance") or "(baseline carries no provenance string)"
+    if isinstance(prov, dict):
+        prov = "; ".join("%s=%s" % kv for kv in sorted(prov.items()))
+    return subs, "%d adjudicated subject(s); %s" % (len(subs), prov)
+
+
+def check_acquittal(name, meas, subs):
+    """Does an adjudicated ACQUIT still apply to the numbers measured today?
+
+    Returns (applies, note). `applies` False means the subject stays in REVIEW.
+    """
+    rec = subs.get(name)
+    if rec is None:
+        return False, "no adjudication on record"
+    if str(rec.get("verdict", "")).upper() != "ACQUIT":
+        return False, "on record as %s, not ACQUIT" % rec.get("verdict")
+    master = rec.get("master") or {}
+    drift = []
+    for key in ("blotch", "chroma"):
+        was, now = master.get(key), meas.get(key)
+        if was is None or now is None:
+            continue
+        # Only the statistic that TRIPPED the review has to still agree. A
+        # subject reviewed for chroma may drift in blotch below its own
+        # threshold without that saying anything about the chroma adjudication.
+        if now <= (BLOTCH_REVIEW if key == "blotch" else CHROMA_REVIEW):
+            continue
+        if was <= 0:
+            drift.append("%s baseline is %.6g, cannot form a ratio" % (key, was))
+            continue
+        rel = abs(now - was) / was
+        if rel > ACQUIT_TOL:
+            drift.append("%s %.5f -> %.5f (%.1f%% > %.0f%%)"
+                         % (key, was, now, rel * 100, ACQUIT_TOL * 100))
+        wkey = key + "_window_yx"
+        wwas, wnow = master.get(wkey), meas.get(wkey)
+        if wwas and wnow and max(abs(a - b) for a, b in zip(wwas, wnow)) > ACQUIT_WINDOW_TOL:
+            drift.append("%s window %s -> %s (measured somewhere else)" % (key, list(wwas), list(wnow)))
+    if drift:
+        return False, "ACQUITTAL EXPIRED: " + "; ".join(drift)
+    ratio = rec.get("ratio") or {}
+    rtxt = " ".join("%s %.3fx" % (k, v) for k, v in sorted(ratio.items())
+                    if isinstance(v, (int, float)))
+    return True, "%s [vs %d source frames%s]" % (
+        rec.get("reason", "(no reason recorded)"),
+        rec.get("n_source_frames_registered", 0),
+        ("; master/best-source " + rtxt) if rtxt else "")
+
 
 def verdict(path):
-    """Return (state, detail). state is 'PASS', 'FAIL', 'REVIEW' or 'SKIP'."""
+    """Return (state, detail, meas). state is 'PASS', 'FAIL', 'REVIEW' or 'SKIP'.
+
+    `meas` carries the measured values an adjudication can be pinned to. It is
+    empty on SKIP, because a subject nobody measured cannot be acquitted.
+    """
     a = tifffile.imread(str(path))
     if a.ndim != 3 or a.shape[2] < 3:
-        return "SKIP", "not a 3-channel image (shape %s)" % (a.shape,)
+        return "SKIP", "not a 3-channel image (shape %s)" % (a.shape,), {}
     rgb = a[:, :, :3].astype(np.float32)
 
     # CORRECTED after BUILD-OUTPUT. The old statistic was
@@ -173,15 +270,18 @@ def verdict(path):
     ch = chroma_blotch(rgb)
     bd = banding(rgb)
     if ch is None or bd is None:
-        return "SKIP", "orch_chroma abstained (no eligible window)"
+        return "SKIP", "orch_chroma abstained (no eligible window)", {}
     chroma = float(ch[0])
     run, step = float(bd[0]), float(bd[4])
+
+    meas = {"blotch": br, "chroma": chroma, "blotch_window_yx": [int(y), int(x)],
+            "clip": clip, "crush": crush, "band_run": run, "band_step": step}
 
     detail = "blotch %.5f  chroma %.4f  run %.1fpx step %.1fDN  clip %.4f%% (gamut %.3f%%)  crush %.3f%%" % (
         br, chroma, run, step, clip * 100, clip_ch * 100, crush * 100)
 
     if not np.isfinite(br):
-        return "SKIP", "blotch ratio non-finite"
+        return "SKIP", "blotch ratio non-finite", {}
 
     fails = []
     if run >= BAND_RUN_MIN and step >= BAND_STEP_MIN:
@@ -190,7 +290,7 @@ def verdict(path):
         fails.append("clipped %.4f%% > %.1f%% (all-3-channel, neutral blown)"
                      % (clip * 100, CLIP_MAX * 100))
     if fails:
-        return "FAIL", detail + "   <== " + "; ".join(fails)
+        return "FAIL", detail + "   <== " + "; ".join(fails), meas
 
     review = []
     if br > BLOTCH_REVIEW:
@@ -198,8 +298,8 @@ def verdict(path):
     if chroma > CHROMA_REVIEW:
         review.append("chroma %.4f (orch_chromapair.py)" % chroma)
     if review:
-        return "REVIEW", detail + "   <== " + "; ".join(review)
-    return "PASS", detail
+        return "REVIEW", detail + "   <== " + "; ".join(review), meas
+    return "PASS", detail, meas
 
 
 def main():
@@ -221,25 +321,51 @@ def main():
     if not paths:
         raise SystemExit("no masters in %s" % SHIP)
     print("ORCH print-readiness gate over %d master(s) in %s\n" % (len(paths), SHIP))
+    subs, prov = load_baseline()
     print("thresholds: banding NOT(run>=%.0fpx AND step>=%.0fDN)  clip<=%.1f%%   "
           "| review: blotch>%.2f  chroma>%.3f"
           % (BAND_RUN_MIN, BAND_STEP_MIN, CLIP_MAX * 100, BLOTCH_REVIEW,
              CHROMA_REVIEW))
+    print("adjudications: %s" % prov)
     print("-" * 116)
-    n_pass = n_fail = n_skip = n_rev = 0
-    failed, skipped, review = [], [], []
+    n_pass = n_fail = n_skip = n_rev = n_acq = n_exp = 0
+    failed, skipped, review, acquitted, expired = [], [], [], [], []
     for p in paths:
         try:
-            state, detail = verdict(p)
+            state, detail, meas = verdict(p)
         except Exception as exc:                                  # noqa: BLE001
-            state, detail = "SKIP", "%s: %s" % (type(exc).__name__, exc)
-        name = p.stem.replace("--SHIP-V2", "")
-        print("%-6s %-34s %s" % (state, name[:34], detail))
+            state, detail, meas = "SKIP", "%s: %s" % (type(exc).__name__, exc), {}
+        # The subject key must match the adjudication file, which records BARE
+        # subject names. The first wiring stripped only "--SHIP-V2" and every
+        # lookup missed -- and the gate printed "no adjudication on record" nine
+        # times rather than passing them, which is the direction a lookup miss
+        # must fail in. Derive it from the arm instead of hard-coding a version.
+        name = p.stem
+        for suffix in ("--%s" % arm, "--SHIP-V4", "--SHIP-V3", "--SHIP-V2"):
+            if name.endswith(suffix):
+                name = name[: -len(suffix)]
+                break
+        note = ""
+        if state == "REVIEW":
+            applies, note = check_acquittal(name, meas, subs)
+            if applies:
+                state = "ACQUIT"
+            elif note.startswith("ACQUITTAL EXPIRED"):
+                state = "EXPIRED"
+        print("%-7s %-34s %s" % (state, name[:34], detail))
+        if note and state in ("ACQUIT", "EXPIRED", "REVIEW"):
+            print("%-7s %-34s   %s" % ("", "", note))
         if state == "PASS":
             n_pass += 1
         elif state == "FAIL":
             n_fail += 1
             failed.append(name)
+        elif state == "ACQUIT":
+            n_acq += 1
+            acquitted.append(name)
+        elif state == "EXPIRED":
+            n_exp += 1
+            expired.append(name)
         elif state == "REVIEW":
             n_rev += 1
             review.append(name)
@@ -247,20 +373,33 @@ def main():
             n_skip += 1
             skipped.append(name)
 
-    total = n_pass + n_fail + n_rev + n_skip
+    total = n_pass + n_fail + n_rev + n_acq + n_exp + n_skip
     print("-" * 116)
-    print("partition: %d PASS, %d FAIL, %d REVIEW, %d NOT EXAMINED, %d total (found %d)"
-          % (n_pass, n_fail, n_rev, n_skip, total, len(paths)))
+    print("partition: %d PASS, %d FAIL, %d ACQUITTED, %d ACQUITTAL EXPIRED, "
+          "%d REVIEW, %d NOT EXAMINED, %d total (found %d)"
+          % (n_pass, n_fail, n_acq, n_exp, n_rev, n_skip, total, len(paths)))
     if total != len(paths):
         print("*** PARTITION DOES NOT SUM. The gate has lost track of its own "
               "inputs and no verdict above can be trusted. ***")
         return 2
     print("A NOT EXAMINED master is not a clean master, and a REVIEW is not a")
     print("failure -- it is a subject this gate has no standing to judge alone.")
+    print("An ACQUITTED master read high on a subject-dependent statistic and was")
+    print("then measured against its OWN source frames and found no worse. That")
+    print("acquittal is pinned to the number that was adjudicated: if the render")
+    print("moves more than %.0f%%, it EXPIRES and the subject returns to REVIEW."
+          % (ACQUIT_TOL * 100))
     if failed:
         print("\nFAILED: %s" % ", ".join(failed))
         print("Run orch_halosrc.py on each before calling it a merge defect: a")
         print("master can inherit a defect the optics delivered (section 96).")
+    if expired:
+        print("\nACQUITTAL EXPIRED: %s" % ", ".join(expired))
+        print("These carry an ACQUIT on record, but the statistic has moved since")
+        print("it was adjudicated. THIS IS NOT A PASS. Nobody has looked at the")
+        print("new number. Re-run the source-frame arm and re-adjudicate, or find")
+        print("out what changed in the render -- do not widen ACQUIT_TOL to make")
+        print("it go away, which converts the gate into a record of past opinions.")
     if review:
         print("\nREVIEW: %s" % ", ".join(review))
         print("These read high on a SUBJECT-DEPENDENT statistic. Section 98 and")
