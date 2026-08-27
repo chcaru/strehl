@@ -54,11 +54,42 @@ def edge_energy(y):
 
 
 def overshoot_frac(y):
-    """Fraction of pixels outside the local 15px min/max envelope of a 5px blur.
+    """REFUTED -- NOT A RINGING METRIC. Do not use it as one. See below.
 
-    Ringing is the excursion an edge makes BEYOND what its neighbourhood
-    supports. This does not distinguish a sharp edge from a ringing one on its
-    own -- it is reported beside the picture, not instead of it.
+    V-GATHER commissioned this statistic against planted defects and it fails
+    in the worst possible way: it moves in the WRONG DIRECTION. Measured:
+
+      - amplitude-invariant to SIX significant figures;
+      - reads a planted 2 px ring at 40% of step as an IMPROVEMENT;
+      - reads an unsharp mask as an IMPROVEMENT;
+      - rises MONOTONICALLY with blur;
+      - read the gather flip's own claimed de-aliasing as a REGRESSION.
+
+    The mechanism is visible in the last two lines of the body. `d` is a
+    high-pass, and the threshold is `3.0 * s` where `s = d.std()` -- derived
+    from the same data. Scaling `y` by any constant scales `d` and `s`
+    identically, so the ratio, and therefore the returned fraction, cannot
+    move. **This measures the TAIL SHAPE of the high-pass distribution, not
+    the amplitude of any excursion.** Sharpening lifts `s` faster than it
+    lifts the tail, so the fraction falls; blur collapses `s` around a few
+    surviving edges, so it rises.
+
+    **Any conclusion resting on this number is unsupported**, including one of
+    mine. `740e7056` cited "did not move (1.086%->1.053%, 1.744%->1.744%)" as
+    evidence of no added ringing. On this statistic's own commissioning a
+    1.086 -> 1.053 move is the signature of ADDED SHARPENING, so the commit
+    read its most reassuring number backwards -- and read it that way BECAUSE
+    it was reassuring.
+
+    > A statistic that is amplitude-invariant to six significant figures is
+    > not measuring an amplitude, and the comfort it gave was the tell.
+
+    Retained, not deleted, so the numbers in the prior commit remain
+    reproducible. For an actual ringing reading use V-GATHER's statistic C,
+    which passes narrow-ring, unsharp, clean-edge and planted-improvement
+    commissioning. Note also that statistic A (`orch_halo.py`) does not
+    substitute: its BAND=(8,90) at DS=2 is 16-180 full-res px, while a
+    Catmull-Rom / Malvar lobe lives at 1-4 px.
     """
     k = 5
     c = np.cumsum(np.pad(y, ((0, 0), (k, k)), mode="edge"), axis=1)
@@ -111,7 +142,7 @@ def main():
     th = CROP + LABEL_H
     canvas = np.zeros((2 * th, len(chosen) * CROP, 3), dtype=np.uint8)
     print("\n%-9s %14s %10s %10s   %10s %10s" %
-          ("site", "(x,y)", la + " edge", lb + " edge", la + " ring%", lb + " ring%"))
+          ("site", "(x,y)", la + " edge", lb + " edge", "REFUTED", "REFUTED"))
     rep = []
     for cx, (kind, (y, x, _d, _e)) in enumerate(chosen):
         ca, cb = a[y:y + CROP, x:x + CROP], b[y:y + CROP, x:x + CROP]
@@ -150,9 +181,16 @@ def main():
         print("No row saturates above %.0f%%; all three columns are fair pairs."
               % (CLIP_MAX * 100))
     print("\nedge = mean |grad|, higher is sharper OR ringier -- it cannot tell you")
-    print("which. ring%% = pixels beyond 3 sigma of a 15px local envelope. Read the")
-    print("PICTURE: real detail gains texture inside flat areas; ringing gains a")
-    print("bright line hugging the dark side of every edge and nothing elsewhere.")
+    print("which. Read the PICTURE: real detail gains texture inside flat areas;")
+    print("ringing gains a bright line hugging the dark side of every edge and")
+    print("nothing elsewhere.")
+    print("\n*** The two REFUTED columns are overshoot_frac and ARE NOT A RINGING")
+    print("*** METRIC. V-GATHER commissioned them: amplitude-invariant to six")
+    print("*** significant figures, rising with blur, scoring a planted 2px ring")
+    print("*** AND an unsharp mask as IMPROVEMENTS. They move the wrong way. The")
+    print("*** threshold is 3*sigma of the same high-pass it thresholds, so the")
+    print("*** amplitude cancels and only tail SHAPE survives. Printed solely so")
+    print("*** the numbers quoted in 740e7056 stay reproducible. Do not read them.")
     return 0
 
 
