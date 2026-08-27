@@ -279,11 +279,72 @@ so it is not free; I did not price it.
 
 ---
 
-## 6. Freezes
+## 6. Freezes — they do NOT move, and the reason is a finding
 
 `byte-freezes.tsv` is ORCH-owned and **was not touched by this lane**.
 `STREHL_GATE_FLOOR` was added to `RENDER_ENV` in `byte-freeze.rs` in the same
 commit, and declared in `scripts/check-defaults.py` with `verified="measured"`.
+
+**Both freezes HOLD.** `cargo test --workspace` at this change:
+
+```
+freeze `coffee-bean-20-gate2-unaligned` HOLDS: 88712017FE31362F...154A8620
+  (49450019 bytes, alignment off, 10 chunks of <= 2 frames) -- reproduced twice
+freeze `coffee-bean-20-gate2-sidecar` HOLDS: 52517FF8AE245F23...837EC206
+  (49450019 bytes, alignment on-sidecar-override, 10 chunks of <= 2 frames,
+   20 placed / 0 refused) -- reproduced twice
+```
+
+**F5 (MEASURED). That is not because the change is inert. It is because the
+registry does not cover the shipping merge backend.** Both rows hardcode
+`--merge estimator` (`byte-freeze.rs:536`), and
+
+```
+crates/strehl-cli/src/merge_cmd.rs:417:
+pub const DEFAULT_MERGE_BACKEND: MergeBackend = MergeBackend::Pyramid;
+```
+
+The comment above the hardcode says *"The estimator is still the default, so
+these rows would run correctly without this"* — **that sentence is now false** —
+and then predicts this exact situation: *"It is hardcoded rather than a column
+because every existing row genuinely is an estimator freeze. The day a pyramid
+row is added this must become a registry column, exactly like `--gate` did."*
+The default moved and no pyramid row was added, so **the shipping default merge
+path is unfrozen**. `20 placed / 0 refused` proves the sidecar row does warp, so
+it is backend coverage that is missing, not warp coverage.
+
+### 6.1 The numbers ORCH needs, measured at a pinned commit in a detached worktree
+
+Rendered at `78fed9a1` in `C:\dev\strehl-out\BUILD-GATE\wt\fix`, each row's own
+recorded invocation and environment
+(`experiments/BUILD-GATE/src/freeze_arms.ps1`). `--gate` and `--photometric` are
+estimator-only and the tool **refuses** them under `--merge pyramid` rather than
+ignoring them, so the pyramid arms use `--pyramid-gate 2.0` and no photometric
+stage.
+
+| row | backend | floor | sha256 |
+|---|---|---|---|
+| `…-unaligned` | estimator | — | `88712017FE31362F…` **= frozen, reproduced** |
+| `…-unaligned` | pyramid | white | `C6765BFA0D2FD203F65A7B02FE36920902B26A6706CCEAA8E87B76AC1CE5CD65` |
+| `…-unaligned` | pyramid | **measured** | `C6765BFA0D2FD203F65A7B02FE36920902B26A6706CCEAA8E87B76AC1CE5CD65` |
+| `…-sidecar` | estimator | — | `52517FF8AE245F23…` **= frozen, reproduced** |
+| `…-sidecar` | pyramid | white | `D28428A12601DA9EC388F1A02416C1E24E6BE8AF30A179F24ACD4FA8E7A38054` |
+| `…-sidecar` | pyramid | **measured** | `ECF4390CC5DD90AE065D064339E59BDE35CA603C99CCCF46D8095749E657D090` |
+
+**This is a specificity control pair, not two results.** The unaligned pyramid
+arms are **byte-identical** — no warp runs, so `measure` is never called and the
+floor is the constant, exactly as §3.3 says it must be. The sidecar pyramid arms
+**differ**. The change moves precisely the render where a warp exists and moves
+nothing else, which is the signature predicted from the call site before the
+render: the probe is invoked in one place, the `FrameWarp::Placed` arm of
+`load_frame`.
+
+**Instrument bug caught by its own control.** The first version of
+`freeze_arms.ps1` compared two empty strings when a render had failed and
+printed `IDENTICAL` — a null that passes by not happening. It is now an explicit
+`UNMEASURED` arm. Both frozen estimator hashes reproducing bit-exactly is what
+licenses the pyramid rows above: it shows the harness rebuilds the registry's
+own invocation correctly.
 
 ---
 
@@ -298,3 +359,17 @@ commit, and declared in `scripts/check-defaults.py` with `verified="measured"`.
 | `scripts/check-defaults.py` | `STREHL_GATE_FLOOR` declared, `verified="measured"` |
 | `experiments/BUILD-GATE/src/acuity.py` | the Q1 instrument, commissioned |
 | `experiments/BUILD-GATE/src/matrix.ps1` | the arm matrix |
+| `experiments/BUILD-GATE/src/freeze_arms.ps1` | the byte-level arms at a pinned commit |
+
+---
+
+## 8. Verification
+
+| check | result |
+|---|---|
+| `cargo test --workspace` | **711 passed, 0 failed** (113 + 5 + 531 + 35 + 26 + 1) |
+| both byte-freezes | **HOLD**, reproduced twice each |
+| `cargo clippy --workspace --all-targets` | **81 warnings against an 81 baseline** measured at `e017c0bf` in a detached worktree — net zero introduced |
+| `python scripts/corpus_lint.py --root .` | **OK — no violations** (also fixed a pre-existing `S4` mixed-line-ending violation on `merge_cmd.rs`) |
+| `python scripts/check-defaults.py` | `STREHL_GATE_FLOOR` declared, `verified="measured"` |
+
