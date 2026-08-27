@@ -10298,3 +10298,103 @@ defects, not one:
 They want opposite treatments and must not be merged: dust is a multiplicative
 obscuration spread over tens of pixels, corrected by division; a hot pixel is an additive
 single-pixel outlier, corrected by exclusion from the gather.
+
+## §92 — a commissioning plant certifies only against the confound it resembles
+
+I tried to turn §90's eye-level dust finding into a corpus-wide number. Two instruments,
+and the second one **passed its own commissioning and was still wrong**.
+
+### First instrument: deaf on row one
+
+Per-master statistic — high-pass the smoothest block, measure the dark-tail excess past
+`k*MAD`. It died on the first master it saw:
+
+```
+109MSDCF   real 1.578%   planted 1.579%   gain 0.001   MAD thr 1571 DN
+```
+
+A 60 DN plant moved the statistic by 0.001 against a threshold of 1571 DN. The reason is
+structural, not a tuning miss: a 900 px block high-passed at 201 px is dominated by
+**scene** structure, so MAD measured subject contrast and both the threshold and the tail
+scaled with the subject. The `real 1.578%` reading was a number about composition wearing
+the units of a defect. Had I not planted, I would have published it.
+
+### Second instrument: the right physics, commissioned, and still wrong
+
+Dust is fixed in sensor coordinates; subjects are independent between shoots. So take the
+**median across masters**: a feature in 1 of 15 cannot survive a median, a feature in 15 of
+15 is reinforced. Fifteen masters share the 7032-wide frame exactly. Commissioning had
+three arms and the middle one was the point:
+
+| arm | plant | depth |
+|---|---|---|
+| COMMON | same coordinates in all 15 | 1.5609 |
+| INDEP | random coordinates per master | 0.0809 |
+| NULL | unplanted, same sites | −0.0391 |
+
+Sensitivity 1.60, discrimination 0.05 — INDEP is 5% of COMMON. **COMMISSIONED.** It then
+reported 1319 connected blobs, 1.63% of pixels past median−6σ, the strongest at −7.7σ.
+
+That is a dust map, and it is a lie.
+
+### The discriminator that killed it
+
+The blobs clustered at y≈1500–3300 of 4688 — the vertical middle. **Every macro subject is
+centred**, so "appears in the middle of every frame" is a property dust and subject texture
+*share*. My INDEP arm planted at random coordinates, so it tested rejection of
+**independent** structure; the confound that actually defeated the instrument is
+**common**, exactly like the signal. No randomly placed plant can express it.
+
+Dust is a *fixed physical pattern*, so it must reproduce across disjoint subsets. Split the
+15 into 8 and 7:
+
+| split | correlation | blobs | top-60 overlap |
+|---|---|---|---|
+| REGISTERED | 0.0922 | 683 / 1286 | **0.0%** |
+| SHIFTED (roll 137) | 0.0143 | 683 / 1286 | 0.0% |
+| SHIFTED (roll 311) | 0.0030 | 683 / 1286 | 1.7% |
+| SHIFTED (roll 613) | 0.0149 | 683 / 1294 | 1.7% |
+
+**Zero blob overlap between disjoint halves** — the registered split does no better than
+one deliberately knocked out of registration. The radial profile settles it:
+
+| radius band | share of blob px | share of area | enrichment |
+|---|---|---|---|
+| 0.00–0.25 | 26.39% | 4.91% | **5.38x** |
+| 0.25–0.50 | 45.48% | 14.72% | 3.09x |
+| 0.50–0.75 | 22.35% | 24.55% | 0.91x |
+| 0.75–1.00 | 5.66% | 34.35% | 0.16x |
+| 1.00–1.50 | 0.12% | 21.47% | **0.01x** |
+
+Five-fold enriched at the centre, five-hundred-fold depleted at the corners. Dust is
+spatially uniform — if anything edge-favoured, since central texture hides it. This is a
+map of **where macro photographers put the subject**.
+
+> **Commissioning is not a general warrant. It is a warrant against the specific
+> alternative the plant embodies.** A plant proves the instrument can tell the signal from
+> *that* plant's absence, and nothing more. Before trusting a passed commissioning, name
+> the confound you actually fear and ask whether the plant resembles it. Mine did not: I
+> controlled for independent structure and was defeated by common structure.
+
+> **Prefer a control that varies the property the physics depends on, over one that varies
+> amplitude.** The amplitude ladder said COMMISSIONED. The registration ladder — the same
+> data with sensor alignment destroyed — said the registered answer was no better than
+> noise, and it cost three `np.roll` calls.
+
+### What survives, and what it means for the build
+
+§90's dust stands: it was **seen at 1:1 at a stated, fixed display gain**, which is a
+different and stronger kind of evidence than a summary statistic. What §92 removes is the
+*cross-master shortcut*, and the reason is instructive — the masters do not share an array
+origin (the corpus splits 15/11 across two widths, 8 px apart, and per-stack alignment
+crops need not agree), and the CPL joined the kit partway through, so a common sensor
+coordinate is not a common array coordinate.
+
+Which lands exactly where BUILD-BLEND is already building: **the correct level is
+within-stack, not across-masters**. A stack's own frames share an origin by construction,
+dust is fixed while the subject moves under the warp, and none of §92's confounds apply.
+The negative result confirms their level and refutes only my shortcut.
+
+One residual: registered correlation 0.0922 against a shifted control of 0.0108 — 8x, so a
+weak genuinely-registered term exists. Given the radial profile it is most likely a
+vignetting or warp-boundary residual, not dust. Unresolved and logged, not claimed.
