@@ -404,3 +404,95 @@ project most, so it will not be softened.
 statistic. A `phi` difference smaller than the `IDENT`-to-`NOISE-INC` floor is
 not a difference. One subject, two bands, one comparator: nothing here
 generalises without being re-run.
+
+---
+
+## §11 — Pre-registration: R as a function of frame count (M115 ladder)
+
+Committed **before** the ladder builder or any rung exists. ORCH derives from
+the shipped weight law (`pyramid.rs` L1351-1362, L2092-2110) that
+`share_winner = 1/(1 + SUM_{k != winner} (e_k/e_winner)^p)`, in which **`N`
+appears nowhere but the sum carries `N-1` terms**, predicting the winner's
+share falls from 0.45 at N=22 to 0.055 at N=299. A winner holding 5% of the
+share is a coin toss between near-ties, and a coin toss does not reproduce
+across two independent half-stacks. **So the mechanism predicts `R` rises
+with `N`.**
+
+### 11.1 Design — within-subject, and why that is not what was asked for
+
+ORCH proposed a **cross-subject** ladder (119=33, 113=63, coffee-bean=105,
+bee=299). §9 measured `R` = 12.4 on DETAIL tiles against 1.06 on FLAT tiles of
+the *same* image: **`R` depends strongly on scene structure**, so across
+subjects the scene would vary with `N` and no reading could be attributed to
+`N`. This lane's whole finding is that this cell is structure-sensitive.
+
+The ladder is therefore **within-subject on `bee-1-cpl`**, using `-Stride`,
+which `run_subject.ps1` §2 already pre-registers as a uniform subsample applied
+identically to every arm:
+
+| rung | stride | N | halves |
+|---|---:|---:|---|
+| L1 | 9 | ~34 | ~17 / ~17 |
+| L2 | 5 | ~60 | ~30 / ~30 |
+| L3 | 3 | ~100 | ~50 / ~50 |
+| L4 | 1 | 299 | 150 / 149 |
+
+Exact counts are reported as built. The cross-subject ladder is reported
+**secondarily** from `119` (N=33) and `113` (N=63), which already exist, and is
+labelled confounded.
+
+**Alignment is held constant across rungs.** `align_image_stack` ran once over
+all 299 frames; every rung subsamples that one aligned set rather than
+re-aligning. Re-aligning per rung would let alignment quality vary with `N` and
+confound the merge effect with a registration effect. ORCH's mechanism is a
+claim about the **merge**, so the merge is what varies.
+
+### 11.2 Declared in advance: `N` is confounded with near-tie density
+
+A uniform subsample over a fixed depth range makes neighbouring frames more
+defocused at low `N`. So `e_k/e_winner` falls **and** the sum loses terms — the
+share rises for two reasons at once, and **this design cannot separate them.**
+They are arguably one mechanism, but that is an argument, not a measurement.
+Declared now so it cannot be presented later as a clean isolation of `N`.
+
+### 11.3 Branches, fixed now
+
+`R` is COARSE/DETAIL as in §9. Let `Q = R(L4)/R(L1)`.
+
+- **RISING** — `Q >= 2.0` and no rung falls below its predecessor by more than
+  its CI. ORCH's dilution mechanism is corroborated by pixels.
+- **FLAT** — `Q` in [0.67, 1.5] with L1 and L4 CIs overlapping. **The dilution
+  mechanism is badly wounded and I say so plainly**, whatever it costs the
+  three lanes acting on it.
+- **FALLING** — `Q <= 0.5`. Actively contradicts the prediction.
+- Anything else is **MIXED** and is reported as MIXED, not rounded to whichever
+  neighbour is convenient.
+
+**The branch is stated before any table**, per ORCH.
+
+### 11.4 Controls, per rung, none carried across
+
+- **Commissioning is re-run per rung and per band.** §9.6 established that a
+  fixed plant amplitude is wrong across bands (β moved 11×). A statistic
+  commissioned at one frame count is not commissioned at another either:
+  β is re-derived at every rung from that rung's own `phi_base`/`pm_base`.
+- **FLAT control per rung.** If COARSE/FLAT leaves [0.8, 1.25] at a rung, that
+  rung's DETAIL reading is **reported as suspect**, because the arms are then
+  differing where there is nothing to select over.
+- **Alignment residual per rung.** strehl self-aligns each half while enfuse
+  consumes the fixed aligned set, so strehl's registration could vary with `N`
+  and mimic the prediction. The integer-shift search is run per rung on both
+  arms; a residual that grows with `N` voids the reading.
+- **Binary held constant.** All four rungs' strehl arms are rebuilt with pin
+  `9b05d0b7` (sha16 `44C2F2CD2E5B2894`) per ORCH. `bee`'s existing arms were
+  built with `740e7056`; mixing them would confound binary with `N`. The two
+  binaries are compared on **decoded arrays, never file hashes**.
+
+### 11.5 What would falsify the reading rather than the mechanism
+
+`R` rising with `N` is also what a rising **noise floor** would produce if the
+half-difference grew for reasons unrelated to selection. The FLAT control is
+the guard: noise unrelated to structure lands in FLAT as well. A rung showing
+DETAIL up **and** FLAT up is not evidence of selection, and will not be read as
+such.
+
