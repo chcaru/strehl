@@ -93,24 +93,122 @@ CFA plane Nyquist the flip was aimed at. When I aimed the tone test that
 destroyed the head-to-head at my own result, tone explained **6.4% / 11.9% /
 15.3%** of it — and the same code, on the same ROIs, still fired at **89% /
 100% / 212%** on the Zerene pair, so that negative means something.
+**Read 3b′ before quoting any of these three numbers: only the 2.10× is a
+resolution claim, and the 3.46× is withdrawn.**
 
 **3b. Added after the fact, from `V-LINEAR`, and it cuts against finding 3.**
-A later lane measured, on strehl's own linear develops, that a tile *in focus*
-carries the same 0.20–0.48 cyc/px power as the same tile **20 frames out of
-focus** — ratio **1.015, 1.043, 1.004, 1.138** across four independent frame
-pairs, against 2.1–3.0 per band for the Lightroom develops the comparators ate.
-**Focusing the lens does not measurably change the bands finding 3 reports in.**
-That is a third and stronger reason the retracted 17–27% claim is dead — it was
-computed in a band with essentially no signal in it — and the same blade cuts
-my own result, so I am applying it here rather than leaving it for a reader.
-`C` rejects *independent* noise by construction, so the flip's 2.10×/3.58×/3.46×
-is a real, reproducible gain in **coherent** content; what is **not**
-established is that the coherent content is scene detail rather than
-sensor-common structure. My own worst control says the same thing from the
-other side: NOISE_COM inflates `C` by **1.078 / 1.492 / 3.866** in exactly
-these three bands. **Finding 3 stands as "the flip changed what is in those
-bands, measurably and in the place it was aimed"; it does not stand as "the
-flip recovered scene resolution",** and this corpus cannot promote it.
+`[SUPERSEDED 2026-08-27 — the imported measurement was corrected by the lane
+that produced it. The original text is kept below with its correction, per
+this corpus's treatment of every other refuted instrument. The revised reading
+is 3b′.]`
+
+> A later lane measured, on strehl's own linear develops, that a tile *in focus*
+> carries the same 0.20–0.48 cyc/px power as the same tile **20 frames out of
+> focus** — ratio **1.015, 1.043, 1.004, 1.138** across four independent frame
+> pairs, against 2.1–3.0 per band for the Lightroom develops the comparators ate.
+> **Focusing the lens does not measurably change the bands finding 3 reports in.**
+> That is a third and stronger reason the retracted 17–27% claim is dead — it was
+> computed in a band with essentially no signal in it — and the same blade cuts
+> my own result, so I am applying it here rather than leaving it for a reader.
+> `C` rejects *independent* noise by construction, so the flip's 2.10×/3.58×/3.46×
+> is a real, reproducible gain in **coherent** content; what is **not**
+> established is that the coherent content is scene detail rather than
+> sensor-common structure. My own worst control says the same thing from the
+> other side: NOISE_COM inflates `C` by **1.078 / 1.492 / 3.866** in exactly
+> these three bands. **Finding 3 stands as "the flip changed what is in those
+> bands, measurably and in the place it was aimed"; it does not stand as "the
+> flip recovered scene resolution",** and this corpus cannot promote it.
+
+**3b′. The correction, and the per-band answer it forces.**
+`V-LINEAR2.md` §2 supersedes the ratios above. They came from four hand-picked
+**whole-frame** pairs, and at this magnification only a fraction of any frame
+is in focus, so a whole-frame ratio averages the sharp part together with parts
+that were never sharp in either. Re-run letting each of 29 tiles choose its own
+best-focus frame, **0.20–0.25 cyc/px carries R = 2.419** (CI [1.961, 3.063]),
+where the whole-frame estimate had said 1.0. Method, not data.
+
+**I checked the correction rather than importing it, because it moves a number
+in my favour and that is when import is least safe.** Three things had to hold
+and do:
+
+- **Selection bias.** "Each tile picks its own best frame" is an argmax over
+  frames, which scores above 1 on pure noise. `bandsignal.py` selects on
+  **0.05–0.20** and reports from **0.20** — disjoint bands, so for approximately
+  white noise the argmax cannot bias the reported band, and the selection band
+  is explicitly ineligible to be the comparison band. The defocused side is a
+  *fixed* 20-step offset, not an argmin, so it is not a max/min-over-N at all.
+- **Favourable subset.** ALL and CONFIRMED populations are identical, 29 of 29.
+- **Subject transfer — and this is the one that surprised me.** `bandsignal.py`
+  runs on `D:\personal\macro\113MSDCF`, **the same stack all three of my flip
+  numbers were measured on**. I expected to have to caveat a cross-subject
+  import and there is none to make. (It does *not* transfer to coffee-bean; that
+  subject's 1.95×/2.70× remain unbanded and are reported as corroborating only.)
+
+Set against my three numbers, with my own worst control and a third instrument:
+
+| band | flip `C_g1/C_g0` | CI low | focus signal R | my NOISE_COM | DISJOINT non-scene | flip ÷ NOISE_COM |
+|---|---:|---:|---:|---:|---:|---:|
+| **0.20–0.25** | 2.103 | 1.945 | **2.419 PASS** | 1.0778 | 0.24% | **1.95** |
+| 0.25–0.30 | **3.580** | 3.049 | 1.387 MARGINAL | 1.4921 | 0.46% | 2.40 |
+| 0.30–0.40 | 3.462 | 2.852 | 1.149 **FAIL** | **3.8659** | 5.09% | **0.90** |
+
+**0.20–0.25 — promoted. This one is a resolution claim.** The band carries
+measured, per-tile, focus-dependent scene signal on this exact subject
+(R = 2.419, passing V-LINEAR2's pre-registered gate of R ≥ 2.0 with lower CI
+≥ 1.5). `physfloor.py`'s DISJOINT arm — half-stacks sharing sensor, optics and
+pipeline but **no scene**, where C ≡ 0 by construction — finds only **0.24%**
+of the coherent power is scene-free here. And charging my *entire* adversarial
+common-noise inflation against the result still leaves **1.95×**, with the CI
+lower bound at **1.80×**. Three instruments with no shared assumptions.
+
+**The weakest arm under that promotion, stated rather than left to be found.**
+§5's flat-ROI specificity check is closest to failing at exactly this band:
+flat ROIs gain **1.945** against detail's **2.103**, only 8% apart, where at
+0.25–0.30 the gap is 2.968 against 3.580. The promotion therefore does not
+rest on flat-vs-detail *ratio* at all — it rests on absolute level, and there
+the margin is intact: flat ROIs carry **8.3%** of detail ROIs' coherent power
+in this band, so even if the entire flat gain were spurious it can account for
+about a tenth of the result. A reader who wants to attack the 2.10× should
+attack it there, and that is where I would attack it.
+
+**0.25–0.30 — stays demoted, and this is my headline number.** It survives my
+noise control comfortably (3.580 ÷ 1.492 = 2.40×) and DISJOINT is only 0.46%,
+so this is not the statistic inventing coherence: something real and
+scene-locked changed. But focusing the lens changes power in this band by only
+**1.387×**, below the pre-registered gate. A coherent change in a band where
+the lens barely matters is not demonstrable resolution. It stands exactly where
+3b put it — *"the flip changed what is in this band"* — and no further.
+
+**0.30–0.40 — withdrawn outright, which is more than 3b did.** The band fails
+the focus gate at 1.149, DISJOINT is 5.09%, and decisively: **my own NOISE_COM
+control inflates `C` by 3.866 in this band, which is larger than the 3.462 the
+flip scored.** An adversarial injection of common-mode noise moves this
+statistic *further than the flip did*. I cannot separate the two here at all,
+so this number should not be quoted as evidence of anything, in either
+direction.
+
+**A corroborating argument of mine that does not survive, and I am retracting
+it too.** Finding 3 offers that the gain "rises monotonically through
+f = 0.25 cyc/output px, which is exactly the CFA plane Nyquist the flip was
+aimed at". But my noise inflation rises monotonically in the same direction
+(1.078 → 1.492 → 3.866), as does DISJOINT (0.24% → 0.46% → 5.09%). Corrected
+for noise the sequence is **1.95 → 2.40 → 0.90**: it peaks and collapses. The
+monotone rise is degenerate between "the flip worked where it was aimed" and
+"the instrument degrades with frequency", so it is not corroboration and I
+withdraw it as such. What survives is narrower and still consistent with the
+mechanism: the one band that passes, 0.20–0.25, sits immediately *below* the
+0.25 cyc/output px plane Nyquist the flip targeted.
+
+**Net effect on finding 3: one of three numbers is promoted, one holds, one is
+withdrawn.** The promoted one is the *smallest*. That is the shape an honest
+correction usually has, and it is worth saying plainly that 3b was too severe
+in one band and not severe enough in another — it declined to promote 2.10×
+that had earned it, and it left 3.46× standing as "a real coherent gain" when
+my own control already said otherwise.
+
+**What does not change: the retraction of "17–27% behind" is firmer, not
+weaker.** That claim was measured at **0.25–0.30**, the band that still does
+not pass. A band-signal correction that rescues 0.20–0.25 does nothing for it.
 
 **So: "state of the art" remains undefensible, but for a different and better
 reason than the README currently gives.** It is not that strehl was measured
@@ -323,6 +421,14 @@ builds.
 | **0.25–0.30** | **3.580** | [3.049, 4.364] | * |
 | **0.30–0.40** | **3.462** | [2.852, 4.726] | * |
 | 0.40–0.48 | 1.581 | | * |
+
+> `[CORRECTED 2026-08-27 — see §0 finding 3b′.` The measurements above are
+> unchanged; their *interpretation* is now per-band. **0.20–0.25 (2.103)** is
+> the only row that stands as a resolution claim. **0.25–0.30 (3.580)** stands
+> only as a coherent change. **0.30–0.40 (3.462)** is withdrawn: it is smaller
+> than this lane's own NOISE_COM inflation of 3.866 in the same band.
+> 0.40–0.48 (1.581) was never quoted and is doubly unsafe — NOISE_COM there is
+> 6.052 and DISJOINT reads 40.2%. `]`
 
 γ moved 0.3932→0.5183, 0.1514→0.3050, 0.0632→0.1327 in the three fine bands.
 
@@ -688,6 +794,16 @@ drafted, kept so the diff between proposal and landing is visible.*
 > comparator comparison explains only **6.4% / 11.9% / 15.3%** of this one,
 > while still firing at **89–212%** on the comparator pair in the same run.
 >
+> `[CORRECTED 2026-08-27 — see §0 finding 3b′.` Read this table per band, not
+> as a block. Only **0.20–0.25** is a resolution claim: it is the sole band
+> with measured focus-dependent signal on this stack (R = 2.419). 0.25–0.30
+> holds only as "the flip changed what is in this band" (R = 1.387), and
+> **0.30–0.40 is withdrawn** — NOISE_COM inflates the statistic by 3.866
+> there, more than the 3.462 the flip scored. The "rises monotonically
+> through 0.25" argument is **also withdrawn**: noise inflation rises in the
+> same direction, and noise-corrected the sequence is 1.95 → 2.40 → 0.90,
+> which peaks and collapses. `]`
+>
 > **So the honest position is unchanged in its conclusion and changed in its
 > reason.** "State of the art" is still not a defensible claim for this tool
 > today — not because strehl was measured against the field and found behind,
@@ -797,6 +913,20 @@ signal into 0.20–0.48 cyc/px at this magnification. Until then, "does the flip
 recover scene resolution?" is not a question this corpus can be asked, and my
 answer to it is withdrawn to "the flip changed these bands, coherently, where
 it was aimed".
+
+> `[CORRECTED 2026-08-27 — see §0 finding 3b′.` `V-LINEAR2.md` §2 supersedes
+> the four ratios above; they were whole-frame pairs, and per-tile focus
+> selection on **the same 113MSDCF stack** recovers **R = 2.419** at
+> 0.20–0.25 cyc/px. So this paragraph is now wrong in one band and right in
+> the other two. The withdrawal above holds for **0.25–0.30** (R = 1.387,
+> marginal) and **0.30–0.40** (R = 1.149, fail); at **0.20–0.25** it is
+> **lifted**, and the 2.10× stands as a resolution claim on the strength of
+> three instruments — R = 2.419, DISJOINT at 0.24%, and 1.95× of headroom over
+> my own NOISE_COM control. The 0.30–0.40 figure is withdrawn *further* than
+> this paragraph withdrew it: NOISE_COM inflates `C` by 3.866 there against
+> the flip's 3.462, so it is not merely uninterpretable, it is inside my own
+> noise control. The capture request stands, narrowed: what is still missing
+> is signal **above 0.25**, not above 0.20. `]`
 
 **Could not determine, on speed.** Five items, listed in full at **§9.9**: a
 certified cold-cache run (Windows has no scriptable page-cache drop; what I have
@@ -1411,3 +1541,16 @@ movement table lives in 0.20–0.40. The corrections are real and the direction
 is right, but the band they live in carries little subject signal, so none of
 them — moved or unmoved — should be read as a resolution claim. That applies
 to the corrected 5.6% exactly as it applied to the 0.02%.
+
+> `[CORRECTED 2026-08-27 — see §0 finding 3b′.` `V-LINEAR2.md` §2 supersedes
+> the four ratios, on this same 113MSDCF stack: **0.20–0.25 is not a noise
+> band** (R = 2.419), 0.25–0.30 is marginal (1.387) and 0.30–0.40 fails
+> (1.149). The paragraph above is therefore too broad. The narrowed reading
+> **strengthens §8.4 rather than weakening it**: the tone finding at
+> 0.20–0.25 — that a 4×4-block fit with no information above 0.125 cyc/px
+> explains **94.8%** of the strehl-vs-Zerene gap — now stands in a band that
+> demonstrably *does* carry focus-dependent resolution signal. A confound that
+> big in a band that real is a stronger result than the same confound in a
+> band of noise. The "not a resolution claim" caveat still applies in full to
+> the 0.25–0.30 and 0.30–0.40 rows, which is where the retracted "17–27%
+> behind" was measured. `]`
