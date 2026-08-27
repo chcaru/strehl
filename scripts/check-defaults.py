@@ -1102,6 +1102,186 @@ REGISTRY: dict[str, Declared] = {
             "the comparison instead of taking that on trust."
         ),
     ),
+    "STREHL_DEFECT": Declared(
+        kind="control",
+        default="off",
+        verified="measured",
+        backend="pyramid",
+        evidence=(
+            "RESOLVING EXPRESSION READ AND THREE ARMS MEASURED ON ONE PINNED "
+            "BINARY. stack.rs:884 `match std::env::var(\"STREHL_DEFECT\")` "
+            "closes on `Err(_) => false` at :895, and that false falls through "
+            "to `Ok(DefectRequest::Off)` at :906, so unset is OFF by an "
+            "explicit branch rather than by a fallback. `\"off\"` returns early "
+            "at :886 and beats everything else that may be set; `\"on\"` at "
+            ":887; ANY OTHER VALUE bails at :888 rather than degrading to off. "
+            "MEASURED by experiments/BUILD-DEFECT/src/44-default-arms.ps1 "
+            "against pin f30ffdf8, coffee-bean --limit 10, pyramid backend, "
+            "identical flags, the variable the only difference: unset rendered "
+            "E15D9ED90A1C36B4 and `on` rendered 8E4D18ED4A4E9B7F -- same length "
+            "(197801290 bytes), different bytes, so the switch moves pixels and "
+            "unset is demonstrably not `on`. POSITIVE CONTROL FOR THE READ "
+            "ITSELF: STREHL_DEFECT=bogus exits 1 with 'is not a setting; it is "
+            "\"on\" or \"off\"', which is what makes the pair interpretable -- "
+            "without it, two differing renders still could not separate 'unset "
+            "is off' from 'unset is some third thing'. The unset arm's own "
+            "banner reads `defect map      : off (STREHL_DEFECT=off)`; the `on` "
+            "arm reads 2/2 sites confirmed from 8 frames (not significant 0, "
+            "too shallow 0, not stationary 0, unmeasurable 0) and corrects "
+            "(3434, 2305) at -14.945% depth, p 0.0025. BACKEND: the correction "
+            "is applied by stack.rs's `load_frame`, the PYRAMID loader; the "
+            "estimator loads through `field_for`/`Scratch` and "
+            "`merge_cmd::preflight_defect_backend_support` refuses an estimator "
+            "run with a map configured rather than silently dropping it."
+        ),
+        note=(
+            "DECLARED `control` UNDER PROTEST, AND THE PROTEST IS THE POINT. "
+            "This is a measured quality correction -- it is not `control` "
+            "because off is intrinsically right, it is `control` because ORCH "
+            "has ruled it must not default on while its COORDINATE IS "
+            "DISPUTED, and this file's own contract is that a switch held off "
+            "must say out loud why. WHY OFF IS RIGHT TODAY: a second lane "
+            "hunting the same mote read -0.78% at 1:1 where this lane reads "
+            "-13.28% to -14.945%, a 17x disagreement, and THREE coordinates "
+            "for one mote are in circulation ((3434,2305) quad, (7008,4450) "
+            "master, 6776_4322). If the coordinate is wrong, default-on does "
+            "not merely fail to correct -- this lane's own MANUFACTURE "
+            "commissioning arm injects +8.64% to +16.44% at a clean site, i.e. "
+            "it would stamp a defect into every frame on the default path, in "
+            "a product whose owner has already rejected one round of output. "
+            "WHAT MAKES IT SAFE ENOUGH TO SHIP AT ALL: the map only NOMINATES "
+            "a site; the amplitude is fitted from the stack's own frames and "
+            "the site must be confirmed there first, so a stale map cannot "
+            "manufacture a defect it is required to observe. That guard has a "
+            "measured zero -- 26 masters examined = 17 corrected + 9 skipped + "
+            "0 failed, every skip 'not significant', never 'too shallow'. "
+            "SUPPORTING MEASUREMENT ON DATA THAT NEEDS NO STATISTIC: on 256 "
+            "usable flat fields the site reads -3.483% over its core (odd "
+            "-3.470% / even -3.590% split-half) as a resolved ~30-quad disc "
+            "against a +0.5% background, and the shipping SiteValidator reads "
+            "-3.235% of that, ratio 0.93, so the instrument does not "
+            "over-read. RETRACTION KEPT DELIBERATELY: this lane earlier "
+            "asserted the sensor coordinate indexes a specific master pixel; "
+            "it withdrew that, because the master domain is underpowered "
+            "(local residual sd 2.2-4.7% against the effect sought). WHAT "
+            "WOULD MOVE THIS TO `quality`: V-REVIEW confirming the coordinate "
+            "against the flats, plus a powered master-domain measurement. Do "
+            "not flip it to clear this check; the reason it is off is written "
+            "above and it is not a scheduling problem. CONSISTENCY WITH THE "
+            "FREEZE HARNESS, CHECKED RATHER THAN ASSUMED: byte-freeze.rs "
+            "hardcodes STREHL_DEFECT=off in `Freeze::env()`, but every "
+            "registry row also hardcodes `--merge estimator` in `argv`, so no "
+            "freeze row can reach this code path at all -- the hardcode spells "
+            "out the value those rows already render under (the RENDER_ENV "
+            "header requires unset be a spelled-out VALUE, never an empty "
+            "field) rather than suppressing a feature to keep a hash still. "
+            "Harness and product therefore agree that unset means off. The day "
+            "a pyramid row is added, that hardcode must become a registry "
+            "column and that row WILL differ from today's bytes."
+        ),
+    ),
+    "STREHL_DEFECT_MAP": Declared(
+        kind="control",
+        default="unset (no sidecar; the embedded per-body map is used)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "RESOLVING EXPRESSION READ: stack.rs:897 "
+            "`std::env::var_os(\"STREHL_DEFECT_MAP\")`, returning "
+            "`DefectRequest::Sidecar(path)` at :900 for a non-empty path and "
+            "otherwise falling through to `Embedded` (:904) or `Off` (:906). "
+            "NOT GATED THE WAY ITS SIBLINGS ARE, AND THE ASYMMETRY IS "
+            "DELIBERATE: this read sits inside `defect_request_from_env` "
+            "BEFORE the `if requested` test, so naming a sidecar IMPLIES `on` "
+            "-- setting only this variable turns the correction on. The one "
+            "thing that suppresses the read is an explicit STREHL_DEFECT=off, "
+            "which returns at :886 before line 897 is reached. So `off` beats "
+            "a named map, but unset does not."
+        ),
+        note=(
+            "Overrides the embedded per-body defect map with a sidecar file. "
+            "Reason it implies `on`: requiring both STREHL_DEFECT=on AND a map "
+            "path would make the single most likely invocation -- naming a map "
+            "-- a SILENT NO-OP, which is the failure mode this project keeps "
+            "shipping. A path that does not exist or does not parse is a hard "
+            "error, not a fall back to the embedded map, on the same reasoning "
+            "as `a_typod_override_errors_rather_than_falling_back_to_the_"
+            "default`: falling back would leave the caller believing a "
+            "different map was applied. FORMAT VERSION IS ENFORCED: the reader "
+            "REJECTS a map that does not record which raw array its "
+            "coordinates index, rather than guessing -- a guess already cost "
+            "this lane a +54.8% misreading from an optical-black offset, and a "
+            "loud failure on an old map is cheaper than a silent 54.8% error. "
+            "Unset is the right default because the embedded map is the one "
+            "that was commissioned; a sidecar is by construction unreviewed."
+        ),
+    ),
+    "STREHL_DEFECT_ARM": Declared(
+        kind="control",
+        default="dust",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "RESOLVING EXPRESSION READ: stack.rs:911 `let arm = "
+            "std::env::var(\"STREHL_DEFECT_ARM\").unwrap_or_else(|_| "
+            "\"dust\".into())`, so unset is the string \"dust\", parsed at :912 "
+            "by `Correction::parse`. An unrecognised arm is an error at :913 "
+            "naming the four legal values, not a fall back to dust. NOT "
+            "INDEPENDENT OF STREHL_DEFECT: the only call to "
+            "`defect_arms_from_env` is stack.rs:959, which sits AFTER the "
+            "`if !req.wants_correction()` early return at :955-957, so with "
+            "STREHL_DEFECT unset or off THIS VARIABLE IS NEVER READ AT ALL. "
+            "Same shape as STREHL_SMOOTH_HUBER behind STREHL_SMOOTH."
+        ),
+        note=(
+            "Selects which defect classes are corrected: \"none\", \"hot\", "
+            "\"dust\", \"both\". Default `dust` and not `both` because the hot "
+            "arm is the weaker evidence -- the dust site is confirmed on flat "
+            "fields where it needs no statistic to be seen, while the hot-pixel "
+            "population is inferred from darks and has never been shown to "
+            "change a delivered master. READ THE GATING ABOVE BEFORE SETTING "
+            "THIS: because the master switch defaults OFF, setting only "
+            "STREHL_DEFECT_ARM changes NOTHING and produces no diagnostic, so "
+            "a caller who sets it alone will believe they moved something. "
+            "`none` is honoured rather than treated as a mistake -- it returns "
+            "at stack.rs:961-962 with `no arms selected`, which is a counted, "
+            "named outcome and not a silent skip."
+        ),
+    ),
+    "STREHL_DEFECT_HOT_FLOOR": Declared(
+        kind="control",
+        default="8 e- (HotFloor::default())",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "RESOLVING EXPRESSION READ: stack.rs:915 `match "
+            "std::env::var(\"STREHL_DEFECT_HOT_FLOOR\")` closes on `Err(_) => "
+            "HotFloor::default()` at :919, which is 8 electrons -- CONFIRMED "
+            "BY BANNER, the measured `on` arm of 44-default-arms.ps1 printed "
+            "`arms dust (floor 8.0 e-, gain 0.22894 DN/e-)`. A set value that "
+            "does not parse as f32 is an error at :917, not a fall back. "
+            "DOUBLY GATED, so unset is doubly unreachable by default: (1) it "
+            "is read inside `defect_arms_from_env`, called only at stack.rs:959 "
+            "AFTER the early return at :955-957, so STREHL_DEFECT unset means "
+            "it is never read; and (2) even when read, it parameterises the "
+            "HOT arm only, which the default STREHL_DEFECT_ARM=dust does not "
+            "select."
+        ),
+        note=(
+            "Electron floor above which a dark-frame pixel counts as hot. 8 e- "
+            "is the reproducibility floor -- the level at which a candidate "
+            "recurs across dark frames rather than appearing once -- so it is a "
+            "statement about what the darks can support, not a taste setting. "
+            "READ THE DOUBLE GATING ABOVE BEFORE SETTING THIS: on the shipped "
+            "default path this variable is inert twice over, and lowering it "
+            "alone will change no output and print no diagnostic saying so. To "
+            "make it do anything a caller needs STREHL_DEFECT=on AND "
+            "STREHL_DEFECT_ARM=hot or =both. Lowering it is not free: the hot "
+            "arm's population grows fast below the reproducibility floor, and "
+            "correcting a pixel that is not reliably hot spends the same "
+            "interpolation on a good pixel as on a bad one."
+        ),
+    ),
 }
 
 # Matches a STREHL_* literal anywhere in the crates. Deliberately broad: the

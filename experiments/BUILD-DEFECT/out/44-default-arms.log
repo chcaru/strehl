@@ -1,0 +1,23 @@
+=== STREHL_DEFECT three-arm default probe ===
+binary  : C:\dev\strehl-wt-defect4\.cargo-target\release\strehl.exe
+commit  : f30ffdf8e19e0773f664380755c6051950295a11
+stack   : D:\personal\macro\coffee-bean (--limit 10, pyramid backend)
+
+
+arm     exit     bytes sha256                                                          
+---     ----     ----- ------                                                          
+A-unset    0 197801290 E15D9ED90A1C36B451909C663090982640ECFDCD8633520B63EAB6EBBA9D77E1
+B-on       0 197801290 8E4D18ED4A4E9B7F008F01472A91B3413C9C8B943F4A1D63E5DA3671792D5ECB
+C-bogus    1         0 (no output file)                                                
+
+
+
+--- verdicts ---
+READ       : PROVEN -- bogus exits 1; message names STREHL_DEFECT: True
+DEFAULT    : unset != on. The switch changes the render, so unset
+             does NOT resolve to on. With stack.rs:894 (Err(_) =>
+             false) that pins unset == OFF.
+
+--- what each arm reported about the map ---
+A-unset  : defect map      : off (STREHL_DEFECT=off)
+B-on     : defect map      : 0 hot, 1135 dust quads, arms dust (floor 8.0 e-, gain 0.22894 DN/e-) | --- defect correction (MEASURED) ---
