@@ -1074,9 +1074,10 @@ clearing the same gate. It is reading what the harness read, and
   rungs of a pair share half-A bit-identically, so the geometry fitted on the A
   rasters is identical by construction. The fitter returned bit-identical
   results on bit-identical inputs.
-- **Placer window sensitivity** is **−3.1% to +2.0%** across all rungs, so
-  widening `incoh`'s ±32 px search is not what produced any number. Both
-  windows are run and both are printed.
+- **Placer window sensitivity** is **−4.9% to +2.0%** across all seven rungs
+  and both bands, so widening `incoh`'s ±32 px search is not what produced any
+  number. Both windows are run and both are printed. The largest excursion is
+  `bee-L2P`/FINE at −4.9%, and that rung is excluded on other grounds anyway.
 
 ### 10.6 What this licenses and what it does not
 
