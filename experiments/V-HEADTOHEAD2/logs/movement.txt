@@ -1,0 +1,28 @@
+==============================================================================
+PUBLISHED NUMBERS THAT MOVE UNDER THE SIGN REPAIR
+==============================================================================
+  h2h2-113         1.2465e-01   printed as 1.2465e-01             in V-HEADTOHEAD2.md
+  h2h2-113         0.7149       printed as 0.7149                 in V-HEADTOHEAD2.md
+  toneparity-113   100.0        printed as 100.0/100.00           in README.md,V-HEADTOHEAD2.md
+  toneparity-113   212.4        printed as 212.4                  in V-HEADTOHEAD2.md
+  toneparity-cb    1.006        printed as 1.006                  in README.md
+  toneparity-cb    1.606        printed as 1.606                  in V-HEADTOHEAD2.md
+  grade-113        1.9024e-02   printed as 1.9024e-02             in V-HEADTOHEAD2.md
+  grade-113        2.5385e-02   printed as 2.5385e-02             in V-HEADTOHEAD2.md
+  grade-113        3.7138e-02   printed as 0.037138/3.7138e-02    in README.md,V-HEADTOHEAD2.md
+  grade-113        3.7147e-02   printed as 0.037147/3.7147e-02    in README.md,V-HEADTOHEAD2.md
+  grade-113        9.0779e-02   printed as 9.0779e-02             in V-HEADTOHEAD2.md
+  grade-113        9.6158e-02   printed as 9.6158e-02             in V-HEADTOHEAD2.md
+  grade-113        6.8565e-01   printed as 6.8565e-01             in V-HEADTOHEAD2.md
+  grade-113        7.1418e-01   printed as 7.1418e-01             in V-HEADTOHEAD2.md
+  grade-113        1.1410e+00   printed as 1.1410e+00             in V-HEADTOHEAD2.md
+  grade-113        1.1439e+00   printed as 1.1439e+00             in V-HEADTOHEAD2.md
+  grade-113        1.423        printed as 1.423                  in V-HEADTOHEAD2.md
+  grade-113        1.514        printed as 1.514                  in V-HEADTOHEAD2.md
+  grade-113        1.899        printed as 1.899                  in V-HEADTOHEAD2.md
+  grade-113        1.934        printed as 1.934                  in V-HEADTOHEAD2.md
+  grade-113        2.049        printed as 2.049                  in V-HEADTOHEAD2.md
+  grade-113        2.354        printed as 2.354                  in V-HEADTOHEAD2.md
+
+  206 further values changed but are cited in neither document (internal to the logs)
+  partition: 22 cited + 206 internal = 228 changed values

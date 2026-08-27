@@ -1,0 +1,11 @@
+==============================================================================
+SIGN CONVENTION ON REAL DATA: cb  strehl vs focus-stack fork
+==============================================================================
+  24 probe ROIs, coarse block means (integer, no resampling)
+  re-crop comparator at ORIGIN + returned shift : 0.066438
+  re-crop comparator at ORIGIN - returned shift : 0.012738
+  unregistered (origin as-is) baseline          : 0.010230
+
+  the aligned crop is ORIGIN + returned shift (0.066438 vs 0.012738)
+  registration beats no registration: 0.066438 > 0.010230  [OK]
+  and the WRONG sign is worse than doing nothing: 0.012738 < 0.010230  [UNEXPECTED]

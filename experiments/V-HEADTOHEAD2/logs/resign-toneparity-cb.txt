@@ -1,0 +1,42 @@
+========================================================================================================
+IS THE FLIP RESULT A TONE ARTEFACT?  subject cb
+========================================================================================================
+ROI census on cb-full-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 132
+      FLAT   (bottom 10%)     31
+      mid                    186
+      DETAIL (top 30%)       93
+  median local contrast: DETAIL 0.8041  FLAT 0.0030  ratio 267.7x
+  48 ROIs offered = 34 used + 14 dropped (clipped)
+
+--- ARM 1: level parity between the two gather modes ---
+     pct     g0(pre)      g1(post)     ratio
+      1       2469.46      2467.88    0.9994
+      5       3776.98      3737.15    0.9895
+     25       5560.26      5500.13    0.9892
+     50       7397.82      7354.93    0.9942
+     75      10015.59      9991.75    0.9976
+     95      16342.18     16530.49    1.0115
+     99      22972.84     23576.01    1.0263
+  worst percentile deviation 2.626%  -> TONE DIFFERS
+
+--- ARM 2: can a block-mean tone map turn g0 into g1's spectrum? ---
+
+                                      0.02-0.05   0.05-0.10   0.10-0.20   0.20-0.25   0.25-0.30   0.30-0.40   0.40-0.48 
+  g0 (pre-flip), normalised           9.4863e-01  1.0000e+00  6.3671e-01  5.5375e-02  1.5612e-02  8.6596e-03  3.2362e-03
+  g0 UNDER THE FITTED g0->g1 MAP      9.6721e-01  1.0000e+00  6.2786e-01  5.5419e-02  1.6473e-02  9.9084e-03  3.7274e-03
+  g1 (post-flip), normalised          9.0746e-01  1.0000e+00  7.4711e-01  8.9785e-02  2.8127e-02  1.3235e-02  3.7964e-03
+  gap to explain  g1/g0                   0.9566      1.0000      1.1734      1.6214      1.8016      1.5284      1.1731
+  tone alone      M(g0)/g0                1.0196      1.0000      0.9861      1.0008      1.0551      1.1442      1.1518
+
+      0.20-0.25  gap  1.621  tone  1.001  tone explains    0.1% of it   -> NOT a tone artefact
+      0.25-0.30  gap  1.802  tone  1.055  tone explains    6.9% of it   -> NOT a tone artefact
+      0.30-0.40  gap  1.528  tone  1.144  tone explains   27.3% of it   -> TONE MAY EXPLAIN IT
+      0.40-0.48  gap  1.173  tone  1.152  tone explains   87.7% of it   -> TONE MAY EXPLAIN IT
+  ARM 2 VERDICT: FAIL (2/4 fine bands under 25%)
+
+--- ARM 3: potency. The same code, on the pair it is KNOWN to explain ---
+  only 4 registered pairs -- POTENCY NOT ESTABLISHED, so ARM 2's negative is not trustworthy on this subject

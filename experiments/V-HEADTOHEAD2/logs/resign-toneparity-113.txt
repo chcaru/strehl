@@ -1,0 +1,48 @@
+========================================================================================================
+IS THE FLIP RESULT A TONE ARTEFACT?  subject 113
+========================================================================================================
+ROI census on 113-full-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 10
+      FLAT   (bottom 10%)     44
+      mid                    258
+      DETAIL (top 30%)       130
+  median local contrast: DETAIL 0.8773  FLAT 0.3013  ratio 2.9x
+  48 ROIs offered = 47 used + 1 dropped (clipped)
+
+--- ARM 1: level parity between the two gather modes ---
+     pct     g0(pre)      g1(post)     ratio
+      1        469.32       468.00    0.9972
+      5        527.63       527.07    0.9989
+     25        711.82       709.28    0.9964
+     50        920.51       914.59    0.9936
+     75       1523.76      1522.73    0.9993
+     95       3774.49      3787.91    1.0036
+     99       6388.65      6425.60    1.0058
+  worst percentile deviation 0.642%  -> the two arms share a tone curve
+
+--- ARM 2: can a block-mean tone map turn g0 into g1's spectrum? ---
+
+                                      0.02-0.05   0.05-0.10   0.10-0.20   0.20-0.25   0.25-0.30   0.30-0.40   0.40-0.48 
+  g0 (pre-flip), normalised           1.4893e+00  1.0000e+00  4.7266e-01  3.1599e-02  9.6869e-03  8.8634e-03  4.9825e-03
+  g0 UNDER THE FITTED g0->g1 MAP      1.5407e+00  1.0000e+00  4.6759e-01  3.2623e-02  1.0434e-02  9.5747e-03  5.2663e-03
+  g1 (post-flip), normalised          1.4262e+00  1.0000e+00  5.3985e-01  4.7522e-02  1.5983e-02  1.3498e-02  5.4220e-03
+  gap to explain  g1/g0                   0.9577      1.0000      1.1422      1.5039      1.6499      1.5229      1.0882
+  tone alone      M(g0)/g0                1.0346      1.0000      0.9893      1.0324      1.0771      1.0802      1.0570
+
+      0.20-0.25  gap  1.504  tone  1.032  tone explains    6.4% of it   -> NOT a tone artefact
+      0.25-0.30  gap  1.650  tone  1.077  tone explains   11.9% of it   -> NOT a tone artefact
+      0.30-0.40  gap  1.523  tone  1.080  tone explains   15.3% of it   -> NOT a tone artefact
+      0.40-0.48  gap  1.088  tone  1.057  tone explains   64.6% of it   -> TONE MAY EXPLAIN IT
+  ARM 2 VERDICT: FAIL (3/4 fine bands under 25%)
+
+--- ARM 3: potency. The same code, on the pair it is KNOWN to explain ---
+  48 registered pairs, strehl vs Zerene Stacker PMax
+  gap to explain  comp/strehl             0.7793      1.0000      1.3346      2.0233      2.2876      1.3567      0.5578
+  tone alone      M(strehl)/strehl        0.7920      1.0000      1.2877      1.9702      2.4151      1.9528      1.4513
+      0.20-0.25  tone explains   94.8% of the comparator gap
+      0.25-0.30  tone explains  109.9% of the comparator gap
+      0.30-0.40  tone explains  267.1% of the comparator gap
+  ARM 3 VERDICT: PASS -- the procedure does still fire where it should, so ARM 2's negative means something

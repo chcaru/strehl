@@ -59,6 +59,8 @@ import re
 import numpy as np
 import tifffile
 
+import physics
+
 TONE_TOE = 0.004          # image_out.rs const TONE_TOE
 U16 = 65535.0
 
@@ -248,16 +250,29 @@ def band_masks(t, bands=BANDS):
     return [(r >= a) & (r < b) for (a, b) in bands]
 
 
-def pair_bands(fa, fb, masks, t):
+def pair_bands(fa, fb, masks, t, tag=""):
     """Per-band (P_A, P_B, C) for one ROI.  Parseval-normalised so the numbers
-    are the variance carried by that band, comparable across ROI sizes."""
+    are the variance carried by that band, comparable across ROI sizes.
+
+    Every triple leaving this function is checked against the physics that
+    constrains it -- |C| <= sqrt(P_A P_B), powers non-negative -- and an
+    ImpossibleMeasurement is RAISED, not returned as a flag.  The reason is a
+    reading elsewhere in this project of an aura depression of 16557.7 DN on an
+    image whose median was 8171.1 DN: a quantity deeper than the thing it is
+    measured against.  That class of defect passes every range check and every
+    plausibility glance, and is caught instantly by asking whether the number
+    is physically possible.  See physics.py and commission_physics.py.
+    """
     norm = (t * t) ** 2 * (window(t) ** 2).mean()
     pa = (np.abs(fa) ** 2) / norm
     pb = (np.abs(fb) ** 2) / norm
     cc = np.real(fa * np.conj(fb)) / norm
-    return (np.array([pa[m].sum() for m in masks]),
-            np.array([pb[m].sum() for m in masks]),
-            np.array([cc[m].sum() for m in masks]))
+    PA = np.array([pa[m].sum() for m in masks])
+    PB = np.array([pb[m].sum() for m in masks])
+    C = np.array([cc[m].sum() for m in masks])
+    physics.coherence_ok(PA, PB, C, tag or "pair_bands")
+    physics.band_partition_ok(PA, PB, C, tag or "pair_bands")
+    return PA, PB, C
 
 
 def bootstrap_ratio(num, den, reps=4000, seed=5):
@@ -298,7 +313,18 @@ def integer_shift(ref, mov, maxshift=8):
     fell from 1.0000 to 0.9971, which is impossible for a correct alignment).
     Plain cross-correlation weights each frequency by its own power, so the
     scene decides the peak and the noise does not.  `commission_shift` below
-    is the test that this version actually recovers a planted shift."""
+    is the test that this version actually recovers a planted shift.
+
+    SIGN.  The cross-correlation peak is the DISPLACEMENT of mov relative to
+    ref; what every caller wants is the CORRECTION, which is its negative, and
+    that is what this returns -- as the first line of this docstring has always
+    said.  It did not, until measured: commission_shift scored `planted (2,3)
+    got (2,3)` as a MISS because it (correctly) required -(dy,dx), while every
+    consumer added the returned value to its crop origin.  signconv.py settles
+    it by measurement rather than by reading -- re-cropping at +g scores 0.6186
+    mean residual correlation against 1.0000 at -g, and on a 1 px plant the
+    wrong sign takes gamma at 0.25-0.30 cyc/px from +1.0000 to -0.4234.
+    """
     a = ref - ref.mean()
     b = mov - mov.mean()
     w = window(ref.shape[0])
@@ -310,7 +336,7 @@ def integer_shift(ref, mov, maxshift=8):
     off = np.arange(-maxshift, maxshift + 1)
     sub = c[np.ix_(off % t, off % t)] / n
     i = np.unravel_index(np.argmax(sub), sub.shape)
-    return int(off[i[0]]), int(off[i[1]]), float(sub[i])
+    return -int(off[i[0]]), -int(off[i[1]]), float(sub[i])
 
 
 def commission_shift(render, y, x, t=256, pad=32, plants=((0, 0), (1, 0),

@@ -1,0 +1,53 @@
+=== foam specular fringing: subject or artifact? ===
+
+------------------------------------------------------------------------------
+foam  (3466,1698)  crema bubble rims
+------------------------------------------------------------------------------
+  MASTER  shoulder px  7184   median sat 0.1230   >0.25  24.8%
+  SOURCE  DSC00043.ARW   px  1727   median sat 0.2498   >0.25  50.0%
+  SOURCE  DSC00050.ARW   px  1729   median sat 0.1735   >0.25  25.5%
+  SOURCE  DSC00036.ARW   px  1732   median sat 0.1557   >0.25   8.6%
+  --> master 0.1230   source photosites 0.1735
+
+------------------------------------------------------------------------------
+tweezers-cpl  (3724,2082)  CONTROL: polished steel, no thin film
+------------------------------------------------------------------------------
+  MASTER  shoulder px  6928   median sat 0.0287   >0.25   0.1%
+  SOURCE  DSC00036.ARW   px  1732   median sat 0.1934   >0.25   2.0%
+  SOURCE  DSC00043.ARW   px  1732   median sat 0.1801   >0.25   0.0%
+  SOURCE  DSC00050.ARW   px  1732   median sat 0.1634   >0.25   0.5%
+  --> master 0.0287   source photosites 0.1801
+
+------------------------------------------------------------------------------
+lead-1-cpl  (3212,802)  CONTROL: graphite, no thin film
+------------------------------------------------------------------------------
+  MASTER  shoulder px  6931   median sat 0.6772   >0.25 100.0%
+  SOURCE  DSC00057.ARW   px  1732   median sat 0.5917   >0.25 100.0%
+  SOURCE  DSC00064.ARW   px  1732   median sat 0.5924   >0.25 100.0%
+  SOURCE  DSC00050.ARW   px  1732   median sat 0.5952   >0.25 100.0%
+  --> master 0.6772   source photosites 0.5924
+
+==============================================================================
+VERDICT
+==============================================================================
+  site               master sat  photosite sat  reading
+  foam                   0.1230         0.1735  crema bubble rims
+  tweezers-cpl           0.0287         0.1801  CONTROL: polished steel, no thin film
+  lead-1-cpl             0.6772         0.5924  CONTROL: graphite, no thin film
+
+  foam photosite chroma 0.1735 vs no-thin-film controls 0.3863 = 0.45x
+  [PASS] colour-is-in-the-scene foam's colour is present in the RAW photosites (0.1735), before any demosaic exists to invent it
+  [PASS] not-merge-invented     source photosites (0.1735) carry MORE chroma than the merged master (0.1230) -- the pipeline reduced it, did not create it
+  [FAIL] exceeds-gradient-control foam 0.1735 vs steep speculars with no film 0.3863 -- NOT separable from gradient aliasing on this evidence
+
+  RETENTION THROUGH THE MERGE (master chroma / photosite chroma)
+  Bayer gradient aliasing is phase-random per frame and must
+  average away; scene-locked colour must survive.
+  site              photosite       master   retained  reading
+  foam                 0.1735       0.1230      70.9%  crema bubble rims
+  tweezers-cpl         0.1801       0.0287      15.9%  CONTROL: polished steel, no thin film
+  lead-1-cpl           0.5924       0.6772     114.3%  CONTROL: graphite, no thin film
+  [PASS] survives-the-merge     foam retains 70.9% of its photosite chroma through a 100-frame merge; polished steel with no film retains 15.9% -- 4.4x, which phase-random aliasing cannot do
+
+  pass 3 + fail 1 = 4 of 4
+  FAILED: exceeds-gradient-control

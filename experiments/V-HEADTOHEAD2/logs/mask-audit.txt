@@ -1,0 +1,85 @@
+=== A. every published figure, classified by spatial selection ===
+  fixed-percentile-mask     0 figure(s)
+  roi-adaptive             11 figure(s)
+        C_g1/C_g0 DETAIL, 7 bands (113 and cb)         flip.py
+        C_g1/C_g0 FLAT, 7 bands                        flip.py
+        P_g1/P_g0 DETAIL, 7 bands                      flip.py
+        absolute C per ROI, FLAT/DETAIL ratio          flip.py
+        C vs Zerene / fork, per band                   h2h2.py
+        null peak distribution                         h2h2b.py
+        NN-resample degradation arm (P vs C)           commission.py
+        SHARP arm, C -> 4.0 under 4x unsharp           commission.py
+        FLAT vs DETAIL noise-specificity census        commission.py
+        coherence gamma vs frequency                   coherence.py
+        integer registration peak / planted shifts     h2.py
+  whole-frame               3 figure(s)
+        tone reproduction 0.037147 vs 0.037138         toneparity.py
+        tone percentile deviation                      toneparity.py
+        grade-removal quantile transfer                gradetest.py
+  no-image-stat             4 figure(s)
+        wall-clock timing, s/frame, 2.4x               timing_derive.py
+        fork OOM at task 716 of 860                    timing2.ps1
+        input-bytes asymmetry 9.9x                     timing_derive.py
+        ICC / comparator geometry checks               check_icc.py
+  ---
+  fixed-percentile 0 + roi-adaptive 11 + whole-frame 3 + non-image 4 = 18 of 18   OK
+  [PASS] no-fixed-percentile      no published figure is built on a fixed percentile subject mask, an annulus, or a depression
+  (scanned 16 lane sources; excluded the audit's own mask_audit.py, physics.py, commission_physics.py)
+  [PASS] no-annulus-in-source     no lane source calls distanceTransform / connectedComponents / MORPH_CLOSE or mentions aura|depression: none found
+
+=== B1. the extent estimator, against planted subjects ===
+  [PASS] extent-0.05              planted 5.0% -> raw 6.9% (bias +1.9 pp) -> debiased 5.2% (bias +0.2 pp), selected-class contrast 0.2401
+  [PASS] extent-0.21              planted 21.0% -> raw 24.3% (bias +3.3 pp) -> debiased 21.1% (bias +0.1 pp), selected-class contrast 0.2488
+  [PASS] extent-0.60              planted 60.0% -> raw 65.8% (bias +5.8 pp) -> debiased 62.9% (bias +2.9 pp), selected-class contrast 0.2478
+  [PASS] extent-empty             no subject planted at all -> measured 0.00% (selected-class contrast 0.0006, below the 0.02 floor), so the estimator is not simply returning zero or one
+  [PASS] extent-bias-bounded      worst debiased error over 5/21/60% planted = 2.9 pp; direction of the RAW bias is always positive (dilating), so an uncorrected extent OVERSTATES how much of an annulus lands on subject
+
+=== B2. frame occupancy of the two head-to-head subjects ===
+  113MSDCF         (113) subject occupies  48.1% of frame  (selected-class contrast 0.6574, 33x the 0.02 floor)
+  coffee-bubbles   (cb) subject occupies  41.5% of frame  (selected-class contrast 0.5147, 26x the 0.02 floor)
+  the vh2 mask's design point was 21%%; it failed at 60%%.
+
+=== C. the vh2-style fixed percentile mask, applied HERE ===
+  subj  pctl      mask%    n aura   aura on aura:grnd  verdict
+  113   20         9.23     21611     65.6%      0.34  BELOW the 0.70 floor
+  113   30        14.79     33712     68.4%      0.32  BELOW the 0.70 floor
+  113   40        20.18     44307     71.8%      0.28  BELOW the 0.70 floor
+  113   50        25.18     45469     76.9%      0.23  BELOW the 0.70 floor
+  cb    20         6.66     17495     92.5%      0.07  BELOW the 0.70 floor
+  cb    30        16.96     38284     85.4%      0.15  BELOW the 0.70 floor
+  cb    40        39.57     23505     41.0%      0.59  BELOW the 0.70 floor
+  cb    50        50.33     18688      0.0%      1.00  ok
+  [PASS] vh2-mask-113             113MSDCF: worst aura:ground over 20/30/40/50 pctl = 0.23 (occupancy 48.1%) -- would trip the 0.70 floor
+  [PASS] vh2-mask-cb              coffee-bubbles: worst aura:ground over 20/30/40/50 pctl = 0.07 (occupancy 41.5%) -- would trip the 0.70 floor
+
+  C2. sensitivity: shrink the subject extent until the mask passes
+  subj  erode px   extent%  aura:grnd  verdict
+  113   0            48.1%       0.23  still below floor
+  113   5            43.9%       0.28  still below floor
+  113   11           38.0%       0.37  still below floor
+  113   21           29.7%       0.55  still below floor
+  113   41           17.8%       0.77  CLEARS floor
+  cb    0            41.5%       1.00  CLEARS floor
+  cb    5            40.3%       1.00  CLEARS floor
+  cb    11           38.6%       1.00  CLEARS floor
+  cb    21           36.3%       1.00  CLEARS floor
+  cb    41           32.2%       1.00  CLEARS floor
+
+=== D. do rois.census FLAT control ROIs land on subject? ===
+  113   flat_frac=0.25 (commission.py): FLAT n=110,  20.6% on subject | DETAIL n=131,  71.4% on subject
+  113   flat_frac=0.10 (flip.py): FLAT n= 44,   9.3% on subject | DETAIL n=131,  71.4% on subject
+  cb    flat_frac=0.25 (commission.py): FLAT n= 77,   0.0% on subject | DETAIL n= 92,  98.6% on subject
+  cb    flat_frac=0.10 (flip.py): FLAT n= 31,   0.0% on subject | DETAIL n= 92,  98.6% on subject
+
+  The published defence does not rest on FLAT being pure background.
+  flip-113.txt reports ABSOLUTE coherent power, FLAT/DETAIL = 0.0645 0.0636
+  0.0821 0.0831 0.0740 0.0556 0.0999 -- flat ROIs carry 5.6-10.0%% of
+  detail's coherent power in every band, so contamination of the FLAT
+  control cannot manufacture the DETAIL result.
+  [PASS] flat-below-detail-113-0.25 113 flat_frac=0.25: FLAT 20.6% on subject < DETAIL 71.4%
+  [PASS] flat-below-detail-113-0.10 113 flat_frac=0.10: FLAT 9.3% on subject < DETAIL 71.4%
+  [PASS] flat-below-detail-cb-0.25 cb flat_frac=0.25: FLAT 0.0% on subject < DETAIL 98.6%
+  [PASS] flat-below-detail-cb-0.10 cb flat_frac=0.10: FLAT 0.0% on subject < DETAIL 98.6%
+
+=== counted partition of audit checks ===
+  pass 13 + fail 0 = 13 of 13

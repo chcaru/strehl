@@ -1,0 +1,28 @@
+=== MUST FIRE: the readings that motivated this guard ===
+  [PASS] aura-16557-vs-8171         fired as required: vg_aura2 tweezers-cpl: depression 16557.7000 EXCEEDS the level 8171.1000 it is measured against (2.03x). A depression cannot be deeper than the thing 
+  [PASS] negative-level             fired as required: negative level: level -1.0000 is not positive, so a depression against it has no meaning
+  [PASS] nan-depression             fired as required: nan: non-finite depression nan against level 100.0
+
+=== MUST FIRE: this lane's own invariant ===
+  [PASS] gamma-gt-1                 fired as required: planted: |gamma| = 1.500000 > 1 in band 1 (C=1.5, sqrt(PA*PB)=1). Coherent power cannot exceed the geometric mean of the two powers it was formed from
+  [PASS] negative-power             fired as required: planted: negative band POWER (min -0.5 / 1). |A|^2 cannot be negative.
+  [PASS] partition-broken           fired as required: planted: symmetrised incoherent power (P_A+P_B)/2 - C is negative in band 1 (P_A=1, P_B=1, C=1.2, N=-0.2). Coherent power cannot exceed the arithmetic
+
+=== MUST PASS: the boundary, exactly ===
+  [PASS] gamma-exactly-1            C = sqrt(2*8) = 4 is |gamma| = 1 exactly and is legal
+  [PASS] depression-equals-level    a depression all the way to zero is legal
+  [PASS] anticorrelated             gamma = -1 is legal: structure can be inverted, not impossible
+  [PASS] C-may-exceed-PA            113-g0 detail (352,3680) band 0: C=0.170789 EXCEEDS P_A=0.170000 and is legal, because sqrt(P_A*P_B)=0.170791 >= C
+
+=== MUST PASS: every band triple this lane published ===
+  [PASS] published-triples          181 published (P_A, P_B, C) band triples recomputed from the renders: every one satisfies |gamma| <= 1 (worst 0.998473323) and (P_A+P_B)/2 - C >= 0
+  [PASS] asymmetric-not-invariant   19 band(s) across those triples have C > P_A -- legal, and the reason the asymmetric form is not asserted
+
+=== MUST FIRE: the guard is wired into h2.pair_bands ===
+  [PASS] wired-clean                a consistently-derived triple passes through the wired guard
+  [PASS] wired-C-inflated           fired as required: wired-defect: |gamma| = 1.050000 > 1 in band 3 (C=0.0664605, sqrt(PA*PB)=0.0632957). Coherent power cannot exceed the geometric mean of the two powers
+
+=== counted partition ===
+  pass 14 + fail 0 = 14 of 14   OK
+
+VERDICT: the guards fire on every known-bad reading, pass at the exact boundary, and pass every band triple this lane published

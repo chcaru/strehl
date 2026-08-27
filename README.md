@@ -1219,16 +1219,29 @@ resolution — was applied to strehl's pixels and compared against Zerene at
 
 | at 0.25-0.30 cyc/px | band power |
 | --- | ---: |
-| strehl under a **block-average tone map** | **0.037147** |
-| Zerene Stacker PMax, as rendered | **0.037138** |
+| strehl under a **block-average tone map** | **0.038106** |
+| Zerene Stacker PMax, as rendered | **0.036095** |
 
-**A match to 0.02%, from a transformation that carries no resolution
-information at all.** Tone alone accounts for **89%** of the apparent gap at
-0.20-0.25, **100%** at 0.25-0.30 and **212%** at 0.30-0.40. For scale: a bare
+**A match to 5.6%, from a transformation that carries no resolution
+information at all.** Tone alone accounts for **95%** of the apparent gap at
+0.20-0.25, **110%** at 0.25-0.30 and **267%** at 0.30-0.40. For scale: a bare
 **gamma of 1.25**, the mildest monotone curve there is and one that changes no
 resolution whatsoever, moves the same statistic by **+8.5%**. The comparators'
 inputs were developed in Lightroom with `Contrast2012=+100`, which is very much
 stronger than that.
+
+> **These four numbers were corrected on re-audit and the correction is the
+> point.** They first read 0.037147 / 0.037138 — a match to 0.02% — with tone
+> accounting for 89% / 100% / 212%. That run registered strehl against Zerene
+> with the *sign of the alignment shift reversed*, which on this pair aligned
+> the two crops **worse than not aligning them at all** (0.235 correlation
+> against 0.347 for doing nothing, and 0.791 once repaired). The defect was
+> found because the lane's own registration self-test had been printing
+> `planted (2,3) got (2,3)` and scoring it a **failure**: the test was right
+> and the code was wrong, and nobody had read it. Repaired, the match loosens
+> from 0.02% to 5.6% and **every tone percentage rises** — the conclusion is
+> not weakened by the correction, it is strengthened. The 0.02% was too good,
+> and it was too good because it was wrong.
 
 **3. The band contains no focus-dependent signal on this corpus.** This is
 [`V-LINEAR`](docs/research/V-LINEAR.md)'s measurement, and it is the strongest

@@ -1,0 +1,63 @@
+========================================================================================================
+HEAD-TO-HEAD (post-flip) : cb  strehl vs focus-stack fork
+========================================================================================================
+  scale 1.0340 (measured, geom.py) -> strehl box 256px, comparator box 248px, same scene area
+  band edges are PHYSICAL: band [a,b] cyc/strehl-px is read at [1.0340a,1.0340b] cyc/comparator-px
+  strehl 7032x4688   comparator 7008x4672
+ROI census on cb-full-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 132
+      FLAT   (bottom 10%)     31
+      mid                    186
+      DETAIL (top 30%)       93
+  median local contrast: DETAIL 0.8041  FLAT 0.0030  ratio 267.7x
+
+--- registration (integer only; nothing is resampled) ---
+  12 probe ROIs -> median comparator offset (dy,dx) = (+6,+10) comparator px, peak median 0.1634, spread dy [-12,+20] dx [-24,+24]
+
+--- tone: comparator is already linear (float32, linear Rec.2020); no inversion applied ---
+
+  DETAIL ROIs: 40 offered = 25 used + 12 dropped (strehl clipped) + 3 dropped (comparator clipped/out of frame)
+
+  FLAT (noise floor) ROIs: 31 offered = 3 used + 0 dropped (strehl clipped) + 28 dropped (comparator clipped/out of frame)
+
+                                  0.02-0.05   0.05-0.10   0.10-0.20   0.20-0.25   0.25-0.30   0.30-0.40   0.40-0.48 
+
+=== raw contrast variance per band, DETAIL ROIs (mean over ROIs) ===
+  strehl C  (coherent, post-flip)  3.7974e-02  3.9995e-02  2.5820e-02  2.1678e-03  4.8361e-04  1.5805e-04  5.0864e-05
+  strehl P  (total, post-flip)    3.8933e-02  4.2835e-02  3.1895e-02  3.7470e-03  1.1710e-03  5.4774e-04  1.5849e-04
+  strehl P  (total, PRE-flip)     3.8638e-02  4.0675e-02  2.5785e-02  2.1808e-03  6.2083e-04  3.4256e-04  1.2770e-04
+  focus-stack fork P (total)      8.1634e-02  8.6709e-02  5.7548e-02  6.2763e-03  1.9656e-03  7.5972e-04  1.8992e-04
+
+=== noise floor from each arm's own FLAT ROIs ===
+  strehl  N                       7.2098e-07  2.1015e-07  1.6675e-07  7.1381e-08  6.9646e-08  1.1119e-07  6.0850e-08
+  comparator N                    2.1559e-06  3.1615e-06  8.6160e-06  4.2475e-06  3.3365e-06  5.2426e-06  3.6791e-06
+  (flat-ROI band power is signal+noise too, so these are UPPER bounds on the noise; subtracting them is conservative for the arm being corrected)
+
+=== CALIBRATION: does P - N reproduce C on the arm where C is known? ===
+  strehl P - N                    3.8932e-02  4.2835e-02  3.1895e-02  3.7469e-03  1.1709e-03  5.4762e-04  1.5843e-04
+  strehl C  (truth)               3.7974e-02  3.9995e-02  2.5820e-02  2.1678e-03  4.8361e-04  1.5805e-04  5.0864e-05
+  ratio (P-N)/C                       1.0252      1.0710      1.2353      1.7285      2.4211      3.4648      3.1148
+  estimator NOT USABLE (pass = within 2x of the truth in every band)
+
+=== THE RIGOROUS ONE-SIDED BOUND ===
+  C_strehl / P_comp                   0.4652      0.4613      0.4487      0.3454      0.2460      0.2080      0.2678
+  > 1 : strehl carries MORE REAL STRUCTURE there, rigorously.
+  < 1 : INCONCLUSIVE -- the comparator's excess may be its own noise.
+  rigorous strehl wins: none
+
+=== THE ESTIMATE (assumes noise stationarity; can be wrong) ===
+  comparator P - N                8.1632e-02  8.6706e-02  5.7539e-02  6.2720e-03  1.9622e-03  7.5448e-04  1.8624e-04
+  C_strehl / (P-N)_comp               0.4652      0.4613      0.4487      0.3456      0.2465      0.2095      0.2731
+  (P-N)_strehl / (P-N)_comp           0.4769      0.4940      0.5543      0.5974      0.5967      0.7258      0.8507
+
+=== the RETRACTED statistic, for the record ===
+  P_strehl_postflip / P_comp          0.4769      0.4940      0.5542      0.5970      0.5957      0.7210      0.8345
+  P_strehl_PREflip  / P_comp          0.4733      0.4691      0.4481      0.3475      0.3159      0.4509      0.6724
+  This is the number the README's retracted table reports.  It is
+  reproduced here ONLY to show what the flip did to it; the same
+  statistic rates a real nearest-neighbour gather up to 88% BETTER
+  than catmull-rom on this very corpus (flip.py), so it decides
+  nothing.

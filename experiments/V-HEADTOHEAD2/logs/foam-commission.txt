@@ -1,0 +1,7 @@
+=== COMMISSIONING: does the CFA chroma probe separate the cases? ===
+  [PASS] null-grey              grey scene, no colour planted: median CFA saturation 0.0000 (must be near zero, or the probe fires on everything)
+  [PASS] real-in-cfa            ordered colour planted INTO the photosites: median CFA saturation 0.2968, 62.9% strongly coloured
+  [PASS] artifact-not-in-cfa    neutral photosites, colour added only downstream: median CFA saturation 0.0000 -- probe correctly finds nothing in the scene
+  [PASS] separation             real 0.2968 vs artifact 0.0000 = 296847523x separation
+
+  pass 4 + fail 0 = 4

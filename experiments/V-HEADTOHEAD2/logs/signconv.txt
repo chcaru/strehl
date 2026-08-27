@@ -1,0 +1,22 @@
+For each plant, MOV is the SAME image cropped at (y+dy, x+dx), so
+the true content displacement is known exactly and the perfectly
+aligned answer scores residual 1.000000.
+
+  plant    returned  | consumer recipe (+g)   | commission (-g)       
+  (1,0)    (-1,0)    | 1.000000               | 0.880819              
+  (0,-1)   (0,1)     | 1.000000               | 0.873854              
+  (2,3)    (-2,-3)   | 1.000000               | 0.598909              
+  (-3,2)   (3,-2)    | 1.000000               | 0.443234              
+  (5,-5)   (-5,5)    | 1.000000               | 0.295982              
+
+  mean over 30 trials:  consumer recipe 1.000000   commission 0.618560
+  -> the correct convention is the one used by consumers
+  control: zero displacement -> returned {(0, 0)}, peak 1.000000  [OK]
+
+  cost of the wrong convention, in the statistic that is published:
+    plant ( 0, 0) correct  gamma by band: +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000
+    plant ( 0, 0) wrong    gamma by band: +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000
+    plant ( 1, 0) correct  gamma by band: +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000
+    plant ( 1, 0) wrong    gamma by band: +0.9488 +0.7918 +0.4015 -0.2203 -0.4234 -0.3995 -0.1327
+    plant ( 2, 3) correct  gamma by band: +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000 +1.0000
+    plant ( 2, 3) wrong    gamma by band: +0.6624 +0.0347 +0.0540 -0.1963 +0.1387 -0.0455 +0.1547

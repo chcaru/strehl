@@ -1,0 +1,14 @@
+========================================================================================================
+TONE-SUFFICIENCY TEST : cb  strehl vs focus-stack fork
+========================================================================================================
+ROI census on cb-full-g1 at 256x256 (+32 pad):
+  grid cells in image        486
+  - dropped for margin/pad   44
+  = considered               442
+      clipped (u16 0 or max) 132
+      FLAT   (bottom 10%)     31
+      mid                    186
+      DETAIL (top 30%)       93
+  median local contrast: DETAIL 0.8041  FLAT 0.0030  ratio 267.7x
+  48 ROIs offered = 4 registered + 44 dropped
+  too few; abandoned

@@ -1,5 +1,47 @@
 # V-HEADTOHEAD2 — the head-to-head, re-run after the full-resolution gather flip
 
+> ## ⚠ CORRECTED 2026-08-28 — registration sign defect, figures moved
+>
+> **Every figure in this document that was computed by registering two
+> *different* renders against each other has been recomputed and has moved.**
+> `h2.integer_shift` returned the cross-correlation peak — the *displacement*
+> of the moving image — while its own docstring, its own commissioning test,
+> and all five of its callers wanted the *correction*, which is the negative.
+> The lane's registration self-test had been reporting this the whole time,
+> printing `planted (2,3) got (2,3)` and scoring it a **MISS**; the test was
+> right and the code was wrong.
+>
+> Measured on the real pairs (`logs/signconv-real-*.txt`): re-cropping Zerene
+> at the reversed shift scored **0.235** mean correlation against strehl,
+> *worse than not registering at all* (**0.347**), and **0.791** once repaired.
+>
+> **What moved** (`logs/movement.txt`, 22 cited values):
+>
+> | figure | published | corrected |
+> | --- | ---: | ---: |
+> | strehl-under-block-map @ 0.25–0.30 | 0.037147 | **0.038106** |
+> | Zerene as rendered @ 0.25–0.30 | 0.037138 | **0.036095** |
+> | agreement between them | 0.02% | **5.6%** |
+> | tone explains, 0.20–0.25 | 89.1% | **94.8%** |
+> | tone explains, 0.25–0.30 | 100.0% | **109.9%** |
+> | tone explains, 0.30–0.40 | 212.4% | **267.1%** |
+>
+> **What did not move, and why that matters.** The headline flip result
+> (`C_g1/C_g0`, the 3.58× at 0.25–0.30) and every commissioning arm — the NN
+> degradation arm, the SHARP arm, the FLAT-vs-DETAIL noise census — are
+> **byte-identical**, because `flip.py` and `commission.py` compare two renders
+> on the *same* pixel grid and never call the registration at all. So is
+> `toneparity.py` ARM 2, the tone gun aimed at this lane's own result: still
+> **6.4% / 11.9% / 15.3%**. Only the arms that align strehl against a
+> *comparator* were affected.
+>
+> **Direction.** Every corrected value strengthens the conclusion rather than
+> weakening it: tone now explains *more* of the apparent comparator gap, not
+> less. The 0.02% agreement was too good, and it was too good because it was
+> wrong. Figures below are left at their original values with `[CORRECTED]`
+> markers so the movement stays auditable; the corrected run is in
+> `logs/resign-*.txt`.
+
 *Lane V-H2H2. Every number below was produced by code in `experiments/V-HEADTOHEAD2/`
 and is quoted from a log in `C:\dev\strehl-out\V-H2H2\logs\`. Nothing here is
 carried over from `V-HEADTOHEAD` except the comparator files themselves and the
@@ -18,8 +60,10 @@ A tone curve fitted to strehl's own pixels **using only 4×4 block averages** �
 a fit that has no access to any spatial frequency above 0.125 cyc/px, and
 therefore contains literally zero information about resolution — reproduces
 Zerene's 0.25–0.30 cyc/px band power from strehl's pixels to **0.02%**
-(0.037147 vs 0.037138). It accounts for **100.0%** of the gap there, **89.1%**
-at 0.20–0.25, and **212%** at 0.30–0.40. The "17–27% behind at 3–5 px features"
+(0.037147 vs 0.037138) `[CORRECTED: 5.6%, 0.038106 vs 0.036095]`. It accounts
+for **100.0%** `[CORRECTED: 109.9%]` of the gap there, **89.1%**
+`[CORRECTED: 94.8%]`
+at 0.20–0.25, and **212%** `[CORRECTED: 267.1%]` at 0.30–0.40. The "17–27% behind at 3–5 px features"
 that the README retracts on instrument grounds is retracted again on
 *variable* grounds: it is a measurement of Lightroom's `Contrast2012=+100`, not
 of either program's resolution. The README's existing caveat — that the
@@ -465,6 +509,11 @@ At 0.25–0.30 cyc/px — the band the retracted deficit lives in — strehl und
 **0.037138**. That is a match to **0.02%**, from a transformation that carries
 no resolution information whatsoever.
 
+> `[CORRECTED 2026-08-28 — see §8.4.` The registration sign defect moves these
+> to **0.038106** and **0.036095**, a match to **5.6%**, not 0.02%. The
+> conclusion is unchanged and the mechanism is the same; the agreement is
+> merely less spectacular than the misregistration made it look. `]`
+
 The sensitivity ladder shows the mechanism at strengths nobody would call
 aggressive:
 
@@ -541,6 +590,12 @@ coffee-bean: 0.9% / 7.0% / 27.1% / 93.0%, same pattern, same caveat.
   ARM 2's negative means something
 ```
 
+> `[CORRECTED 2026-08-28 — see §8.4.` Log retained verbatim. The corrected
+> figures are **94.8% / 109.9% / 267.1%** — all further from zero, so ARM 3's
+> PASS verdict is strengthened. **ARM 2, the tone gun aimed at my own flip
+> result, is byte-identical at 6.4/11.9/15.3%** and does not depend on the
+> defect. `]`
+
 Same code, same ROI set, same run. A "no change" result is worth nothing unless
 the probe is shown to move under a real disturbance; this one moves by 89–212%
 on a real disturbance twenty lines earlier in its own log.
@@ -597,6 +652,8 @@ drafted, kept so the diff between proposal and landing is visible.*
 >   Zerene's band power at **0.25–0.30 cyc/px to within 0.02%** (0.037147 vs
 >   0.037138) when applied to strehl's pixels. It accounts for **100%** of the
 >   apparent gap there, **89%** at 0.20–0.25, and **212%** at 0.30–0.40.
+>   `[CORRECTED 2026-08-28 — see §8.4: 5.6% (0.038106 vs 0.036095); 110% /`
+>   `95% / 267%. Same conclusion, moved further from zero.]`
 > - A bare **gamma of 1.25**, the mildest monotone curve there is and one that
 >   changes no resolution at all, moves the same statistic by **+8.5%**. The
 >   comparators' inputs were developed in Lightroom with `Contrast2012=+100`.
@@ -1162,3 +1219,195 @@ existed and that predicted this outcome.**
   decode and output buffers. The fork's peak scaled with the stack. I measured
   the peaks; I did not measure their slope in frame count, which is the
   experiment that would turn "6.2× more memory" into "O(n) versus O(1)".
+
+---
+
+# §8 Mask audit, a registration sign defect, and the `foam` speculars (2026-08-28)
+
+Commissioned by the owner after an independent lane found `vh2_sweep.py`'s
+fixed-percentile mask producing an **arithmetically impossible** result: an
+"aura depression" of 16557.7 DN on an image whose median is 8171.1 DN.
+
+## 8.1 Provenance, stated plainly
+
+`vh2_sweep.py` lives at `experiments/V-REVIEW/vh2_sweep.py` (commit
+`bfd7cfbd`), not in this lane. The `vh2_` prefix names this lane's *subject*,
+not its author. I state that as a fact, not as a defence: the construct was
+audited here regardless, because the question asked — *is that mask under any
+published head-to-head number* — is a fair question about my numbers whoever
+wrote the script.
+
+## 8.2 Audit result: no published figure uses a fixed percentile mask
+
+A partition that sums, over all 18 published figures in this document:
+
+| mask class | figures |
+|---|---:|
+| fixed percentile (the defective construct) | **0** |
+| ROI-adaptive (`rois.census`, per-ROI, content-derived) | 11 |
+| whole-frame (no mask at all) | 3 |
+| non-image (timing, memory, byte counts) | 4 |
+| **total** | **18** |
+
+A source scan across all 16 lane sources found no `distanceTransform`,
+`connectedComponents`, `MORPH_CLOSE`, `aura` or `depression` anywhere except
+in the audit's own three files, which are named in the output so the exclusion
+is visible rather than silent.
+
+**Subject frame-occupancy** (debiased; the estimator is eroded by its own blur
+radius because local-contrast segmentation provably dilates):
+
+| subject | occupancy | vh2 mask design point |
+|---|---:|---|
+| `113MSDCF` | **48.1%** | built at 21%, failed at 60% |
+| `coffee-bubbles` | **41.5%** | built at 21%, failed at 60% |
+
+Both sit between the design point and the failure point. **The mask would have
+bitten here had it been used.** Applying its own construction to my subjects,
+its aura:ground ratio at 20/30/40/50 percentile is 0.34/0.32/0.28/0.23 on
+`113MSDCF` and 0.07/0.15/0.59/1.00 on `coffee-bubbles` — all but one below the
+other lane's 0.70 ground floor. `113MSDCF` needs its extent eroded to 17.8%
+before any configuration clears. That is why the audit is worth its cost even
+though the answer is zero: the absence is a property of which statistics were
+chosen, not of the subjects being safe.
+
+**No published number moves for this reason.**
+
+## 8.3 The standing assertion
+
+`physics.py` raises `ImpossibleMeasurement` on three classes:
+
+- a depression exceeding the level it is measured against;
+- `|gamma| > 1`;
+- a band partition violating `N = (P_A+P_B)/2 - C >= 0`.
+
+It is **wired into `h2.pair_bands`**, so it is standing rather than a one-off.
+Commissioned 14/14, in both directions: the wiring arm monkeypatches a 5%
+normalisation error into the real `pair_bands` and confirms it is caught.
+
+**The guard was wrong on its first draft and real data caught it.** I had
+bounded `C` by `P_A`. Cauchy–Schwarz bounds it by `sqrt(P_A*P_B)`, so `C > P_A`
+is legal when the other half carries more power, and 19 of 181 published band
+triples legally do. That is also a **correction to `h2.py`'s own docstring**,
+which called `P_A - C` "the INCOHERENT power" and implied a non-negativity
+that does not hold. The measured counterexample
+(`113-g0 detail (352,3680) band 0: P_A=0.170000, C=0.170789`) is now a
+MUST-PASS commissioning arm so the wrong version cannot return.
+
+## 8.4 The finding the audit was not looking for: `integer_shift` had the wrong sign
+
+While checking that nothing downstream had broken, this lane's own
+`test_instrument.py` TEST 2 printed:
+
+```
+MISS ... planted (2,3) got (2,3)
+```
+
+Planted and recovered **identical**, scored as a failure, at correlation peaks
+above 0.99. That is a sign convention, not a registration failure — and it had
+been failing correctly, in the tree, unread.
+
+`integer_shift` returned the cross-correlation peak (the **displacement** of
+the moving crop) while its docstring, its commissioning check, and all five
+callers wanted the **correction** (the negative). Decided by measurement, not
+by reading:
+
+| test | at `-g` (repaired) | at `+g` (as published) |
+|---|---:|---:|
+| synthetic self-crop, mean residual correlation | **1.000000** | 0.618560 |
+| real 113/Zerene comparator pair | **0.7909** | 0.2346 |
+| real cb/fork comparator pair | **0.0664** | 0.0127 |
+
+The 113 unregistered baseline is **0.3470** — so the published run had aligned
+the crops *worse than not aligning them at all*. TEST 2 went 0/48 to 48/48.
+
+The repair is one line: negate the return in `h2.integer_shift`. That makes
+the docstring, the commissioning check and all five callers correct
+simultaneously.
+
+### What moved
+
+`flip.py` and `commission.py` **never call `integer_shift`** (verified by
+grep), so the headline flip figures and every commissioning arm are
+structurally immune and are byte-identical before and after.
+
+| figure | published | corrected |
+|---|---:|---:|
+| strehl under block-map @ 0.25–0.30 | 0.037147 | **0.038106** |
+| Zerene as rendered @ 0.25–0.30 | 0.037138 | **0.036095** |
+| agreement between them | 0.02% | **5.6%** |
+| tone explains, 0.20–0.25 | 89.1% | **94.8%** |
+| tone explains, 0.25–0.30 | 100.0% | **109.9%** |
+| tone explains, 0.30–0.40 | 212.4% | **267.1%** |
+
+22 cited values move; 206 internal values move. Found **mechanically**, by a
+numeric comparator — the first version of that detector matched literal text
+and would have missed the single most important number, because the log prints
+`3.7147e-02` and the README prints `0.037147`.
+
+**The 0.02% was too good because it was wrong.** I quoted it as the load-
+bearing figure for "undecidable in either direction" and it was the product of
+a misregistration. The corrected 5.6% still carries that conclusion — a
+transform with zero information above 0.125 cyc/px still reproduces the band
+to 5.6% — but it carries it honestly, and the tone-explains figures all move
+*further* against the deficit claim, so the conclusion is strengthened rather
+than rescued.
+
+**`toneparity.py` ARM 2 — the tone gun aimed at my own result — is unmoved at
+6.4/11.9/15.3%.** Both ARM verdicts are unchanged. The self-application that
+made the Zerene verdict credible does not depend on the defect.
+
+## 8.5 `foam`: the specular fringing is REAL
+
+Measured on the **raw CFA photosites**, so no demosaic exists that could have
+invented the colour, at the rim *shoulder* (95–99.8 percentile, clipped
+photosites excluded — the first draft sampled the blown white core and read
+saturation 0.0000).
+
+| site | photosite chroma | master chroma | retained |
+|---|---:|---:|---:|
+| `foam` crema bubble rims | 0.1735 | 0.1230 | **70.9%** |
+| `tweezers-cpl` polished steel, no film | 0.1801 | 0.0287 | **15.9%** |
+| `lead-1-cpl` graphite, no film | 0.5924 | 0.6772 | 114.3% |
+
+**One arm failed, and the failure is why the verdict is trustworthy.** Foam's
+raw photosite chroma (0.1735) is *not* elevated above steep speculars on
+subjects that physically cannot show interference (0.1801 on polished steel).
+Raw chroma alone therefore cannot separate thin-film interference from
+**Bayer-cell gradient aliasing**, which a steep specular edge produces on any
+subject. Had I run only the two arms that pass, I would have convicted on
+evidence that a no-film control matches exactly.
+
+The discriminator the failure forces is **survival through the merge**. Bayer
+gradient aliasing depends on where the edge falls within the 2×2 cell, so it
+is phase-random frame to frame and must average away across 100 frames.
+Colour locked to a film must survive. Foam retains 70.9%; polished steel with
+statistically identical raw chroma retains 15.9% — **4.4×**. Foam behaves like
+the genuinely-coloured control (114.3%), not like the aliasing control.
+
+**Verdict: subject, not defect.** Three independent facts: the colour is in
+the photosites before any demosaic; the pipeline *reduced* it (0.1735 to
+0.1230) rather than creating it; and it survives frame averaging 4.4× better
+than a no-film specular with the same raw chroma.
+
+**What this does not establish.** It does not prove the mechanism is thin-film
+interference specifically — only that the colour is scene-locked and
+pipeline-honest. A lateral-CA contribution would also be scene-locked and
+would also survive averaging. Two things would separate them and neither needs
+a new subject: CA scales with field radius, so measuring rim chroma against
+distance from the optical centre across the frame would expose it; and
+interference hue should follow film thickness in ordered sequences along a
+rim, where CA is radially oriented. The master crop shows 46.7%
+single-pixel-area coloured components (median area 2 px), a speckle signature
+rather than ordered fringes — which is consistent with a fine, thin film at
+this magnification but is not positive evidence for ordering.
+
+## 8.6 Applying V-LINEAR to this section
+
+V-LINEAR measured the in-focus/defocused fine-band power ratio at 1.015,
+1.043, 1.004, 1.138 on linear develops, against 2.1–3.0 for Lightroom's. The
+0.20–0.48 cyc/px band is a **noise band on this corpus**. Everything in §8.4's
+movement table lives in 0.20–0.40. The corrections are real and the direction
+is right, but the band they live in carries little subject signal, so none of
+them — moved or unmoved — should be read as a resolution claim. That applies
+to the corrected 5.6% exactly as it applied to the 0.02%.

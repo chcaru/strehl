@@ -1,0 +1,11 @@
+==============================================================================
+SIGN CONVENTION ON REAL DATA: 113  strehl vs Zerene Stacker PMax
+==============================================================================
+  24 probe ROIs, coarse block means (integer, no resampling)
+  re-crop comparator at ORIGIN + returned shift : 0.790907
+  re-crop comparator at ORIGIN - returned shift : 0.234616
+  unregistered (origin as-is) baseline          : 0.346954
+
+  the aligned crop is ORIGIN + returned shift (0.790907 vs 0.234616)
+  registration beats no registration: 0.790907 > 0.346954  [OK]
+  and the WRONG sign is worse than doing nothing: 0.234616 < 0.346954  [as expected]
