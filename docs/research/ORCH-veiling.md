@@ -12073,3 +12073,113 @@ This is now the third instrument in this project caught reading backwards, after
 `tri.blur_equiv`, whose error was bounded below by zero so that no input could
 make it charge for a halo. The pattern is not bad luck. It is what happens when
 commissioning is designed by the same person who wants the answer.
+
+## 111. I convicted a pink subject, and three instruments died proving it
+
+Section 110 closed on a rule: an instrument shown only degradations cannot tell
+"blind" from "correct". Three commits later I broke the same rule in its other
+direction, on my own work, and came within one look at the picture of reporting
+a severe defect that does not exist.
+
+### 111.1 What I saw, and it was real
+
+V-EYES had just established that the image viewer resolves 1 px detail only up
+to about 400 px and collapses it to a flat wash by 600 -- which means every
+visual verdict I had reported, on 1000 x 1000 crops, went through a resampler I
+did not know was there. I cut fresh crops at **380 px, true 1:1**, and looked
+again.
+
+`bee-3-cpl` resolves individual ommatidia as a regular lattice across the full
+curvature of the eye, near side and far side, with a clean eye/head boundary and
+no rim. That is depth-of-field extension working, and it is the first time I have
+seen this stacker's output at its own resolution.
+
+On `tweezers-cpl` and `lavendar-cpl` there are **isolated magenta pixels on
+achromatic material** -- brushed steel, and white trichomes on dark tissue.
+That observation still stands. It is what I did with it that failed.
+
+### 111.2 The false conviction
+
+I built a detector -- `R - G > t` and `B - G > t` -- commissioned it against an
+achromatic ramp and a planted mid-tone magenta band, and both arms passed. Then
+I ran it on the corpus:
+
+| subject | magenta | rate at saturation | shape |
+|---|---:|---:|---|
+| `109MSDCF` | **11.76%** | **84.21%** | rises monotonically with luma |
+| `tweezers-cpl` | 1.73% | 0.43% | falls with luma |
+| `lavendar-cpl` | 0.16% | 0.22% | falls with luma |
+
+The `109MSDCF` row is the signature of channel-dependent highlight clipping, in a
+master that had **passed the print gate**. I had the write-up half-composed.
+
+Two things killed it, in this order. The channel medians at the flagged pixels
+were R 63231, G 22081, B 26574 with **0.0% of every channel at the ceiling** --
+nothing was clipping, so the mechanism I had already named was impossible. And
+then I looked at the crop.
+
+**`109MSDCF` is a photograph of pink fabric.** The 11.76% is the subject.
+
+### 111.3 Why the commissioning certified it anyway
+
+The negative arm was an achromatic ramp, `R = G = B`. It proved the detector
+ignores **grey**. The confound that actually existed was a legitimately
+**coloured** subject, and no arm ever presented one.
+
+> **A negative arm that cannot express the failure mode certifies nothing. This
+> one was chosen because it was easy to build, and easy to build is what made it
+> silent.**
+
+Section 110.6 states the rule for the other direction and I had committed it that
+same hour. Plant an improvement, so a blind metric cannot pose as a correct one.
+Its mirror is: **present a healthy subject that superficially resembles the
+defect**, so a confounded metric cannot pose as a detector. I wrote one half and
+walked into the other.
+
+### 111.4 Two more instruments, both killed by the arm that was added to catch this
+
+`magspeckle.py` replaced the question with "is this pixel magenta while its
+neighbourhood is not", and added the saturated pink patch as arm N2. It passed
+N2 -- and arm **P2**, a defect planted *inside* the pink patch, reported
+`SPECKLE 0.0000%, fired=False`. It had passed the negative arm **by going blind
+inside coloured regions**, which is how any negative arm can be passed. P2
+existed only because I expected exactly that cheat, and it caught it on the
+first run.
+
+`chromaspeckle.py` moved to the continuous opponent axis, `c = (R-G) + (B-G)`,
+requiring a chroma excursion *without* a matching luma excursion -- physically
+motivated, since green is sampled at twice the density of red and blue, so
+demosaic error is chroma-dominant while edges, coloured objects and chromatic
+aberration all move luma too. It died on **N2 and N3** at 1.80% and 4.58%.
+
+The reason is arithmetic and it is the real finding: with independent per-channel
+noise of sd 400 DN, `c = R + B - 2G` carries `sd = sqrt(6) * 400 = 980 DN`, and
+after subtracting a 5x5 box mean roughly 960 DN survives. Against a 2000 DN
+threshold that is 2.08 sigma, or about 1.9% of pixels one-sided -- **1.80%
+measured**. The instrument was firing on ordinary photon noise.
+
+That is not a bug in the arm. **It is the answer to whether this statistic can
+work: it cannot separate demosaic chroma error from ordinary chroma noise,
+because at these levels they are the same size.** Three instruments were enough
+to establish that the question needs a different discriminator, and all three
+refused to report a corpus number rather than reporting one they could not
+support.
+
+### 111.5 What survives
+
+- The **observation** stands: isolated magenta pixels on achromatic material at
+  true 1:1, on at least two subjects.
+- The **mechanism** is already measured elsewhere and did not need re-measuring:
+  V-GATHER traced chroma (R-B) high-pass up **25.2% to 48.6%** to a **double
+  demosaic** on the shipping path -- a warp-time demosaic feeding the final
+  Malvar. That is a defect with a known cause and a known fix, and the fix is
+  worth more than a fourth instrument.
+- The **`109MSDCF` reading is retracted in full.** There is no highlight defect
+  on that master and no evidence of one anywhere in the corpus.
+
+### 111.6 The rule
+
+> **Before believing an instrument's alarming number, look at the picture.** The
+> channel medians refuted the mechanism, but it was the crop that ended it, and
+> the crop cost one tool call. Every instrument in this section was cheaper to
+> build than the single look that would have made two of them unnecessary.
