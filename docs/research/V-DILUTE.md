@@ -153,18 +153,62 @@ not survive scrutiny:**
 
 | test | result |
 | --- | --- |
-| paired per-tile, 32 tiles, bootstrap | mean **1.0506**, 95% CI **[0.8866, 1.2488]** — **includes 1.0** |
-| sign test | **19 of 32** tiles favour x2 (p ≈ 0.38) |
-| **magnification correction OFF** | ratio **flips to 0.8736** |
-| confidence | x2 **243.5** vs x1 **224.1** — x2 is *less* committed, **against** the model |
+| paired per-tile, 32 tiles, bootstrap | mean **1.1144**, 95% CI **[0.9442, 1.3140]** — **includes 1.0** |
+| sign test | **20 of 32** tiles favour x2 (p ≈ 0.30) |
+| **magnification correction OFF** | ratio **flips to 0.9268** |
+| confidence | x2 **417.7** vs x1 **380.2** — the *denser*-sampled arm is **more** committed, **against** the model |
 
-**Experiment B cannot be made decisive on this data.** Equal N forces the two arms to differ in
-focus range, which forces different alignment drift, which forces both differential
-magnification *and* differential interpolation blur — artifacts the same size as the effect.
-The one number that mildly favoured the model is carried by a 4% geometry correction and fails
-its own significance test. It is not evidence, in either direction.
+### 5c. The replicate null — B's own noise floor, which B was never measured against
 
-### 5c. The duplication null — the control that *does* isolate N (my addition)
+A ratio of 1.11 means nothing without knowing what this design produces when *nothing* differs.
+Even-phase (`DSC00001,3,…,299`; N=150) versus **odd-phase** (`DSC00002,4,…,298`; N=149): same
+subject, same focus range, same focus step, therefore the same number of frames near focus at
+every pixel — the quantity the model actually names. It carries every nuisance of the contrast
+(its own alignment solve, its own FOV shrink, its own resample blur) and none of its signal.
+Identical tiles, bands, correction and bootstrap.
+
+| band | CONTRAST x2 vs x1 | **REPLICATE x2 vs odd (null)** |
+| --- | --- | --- |
+| detail 0.30–0.35 | 1.1144, CI [0.944, 1.314] | **1.0158, CI [0.987, 1.045]** |
+| detail 0.20–0.25 | 1.1097, CI [0.917, 1.325] | **1.0229, CI [0.994, 1.053]** |
+| noise 0.40–0.50 | 1.1750, CI [1.014, 1.370] | **1.0222, CI [0.978, 1.068]** |
+| confidence | 417.7 vs 380.2 | **417.7 vs 422.0** (agree to 1.0%) |
+
+**Two things follow, and they point opposite ways.**
+
+*The machinery is sound.* The replicate lands at 1.016 with a tight interval, and the two arms'
+confidence agrees to 1%. The magnification correction is also **validated and necessary**: with
+it switched off the replicate reads **0.9485, CI [0.920, 0.976], excluding 1.0** — a 5.2%
+artifact conjured out of two arms that differ only in which alternate frame they took, because
+alignment hands them different FOV scales (0.9228 vs 0.9359) even at identical density.
+
+*The contrast still fails.* Its interval includes 1.0 while the replicate's is tight, so the
+contrast's dispersion is not measurement noise — it is genuine tile-to-tile heterogeneity from
+the residual focus-range confound the ROI could not fully remove.
+
+### 5d. And then rule 3 reverses it
+
+Detail was never allowed to be quoted alone. Paired with noise on the **same tiles, same bands,
+same ROI**:
+
+| | detail 0.30–0.35 | noise 0.40–0.50 | **detail/noise** |
+| --- | --- | --- | --- |
+| CONTRAST x2/full vs x1/half | 1.1144 | 1.1750 | **0.9484** |
+| REPLICATE x2 vs odd | 1.0158 | 1.0222 | 0.9937 |
+
+**The x2 arm's apparent 11% detail gain is more than accounted for by an 18% noise gain.** On a
+noise-matched basis the contrast **reverses to 0.948** — the wrong direction for the model.
+Rule 3 exists precisely to catch this, and it fires on the experiment ORCH ranked first.
+
+### 5e. Scale — B cannot rescue the hypothesis even if the effect were real
+
+The hypothesis predicts a 299/22 winner-share ratio of **0.083–0.122**, an **8.2×–12.0× collapse**.
+B's contrast, taken at face value and noise-paired, offers **0.948×**. Even reading it
+generously as the uncorrected 1.11×, it is **9–13× short** of the effect the mechanism requires.
+A confounded, non-significant, noise-explained 11% cannot stand in for an order of magnitude.
+
+### 5f. The duplication null — the control that *does* isolate N cleanly (my addition)
+
 
 Merge the first 150 frames; then merge those same 150 frames **each present twice** (N=300).
 Focus sampling, range and subject identical; only the frame count doubles. Run with
@@ -218,11 +262,30 @@ nothing else.
 3. **The exponent axis is saturated.** Half the tuning surface (`--pyramid-exponent` from 1.0 to
    8.0) is inert on measured detail.
 4. **Deeper is sharper at fixed range** (3.4× from N=22 to N=299), contradicting fact 1789.
-5. **Alignment is not invariant to duplicating frames** — reference frame and FOV scale both
-   move. Any future harness comparing frame subsets must read `field of view scaled to …` out of
-   each run's own log; two arms with different frame sets are at different magnifications, and
-   comparing a spectral band across them without correcting is wrong. This nearly inverted my
-   Experiment B result.
+5. **Alignment is not invariant to the frame subset — even at identical density.** Two arms
+   differing only in which alternate frame they took get FOV scales 0.9228 vs 0.9359, worth a
+   **5.2% spurious detail difference** if uncorrected. Any future harness comparing frame
+   subsets must read `field of view scaled to …` from each run's own log and correct in the
+   frequency domain; resampling to match would blur the arms unequally and bias the very
+   quantity under test. This nearly inverted Experiment B.
+6. **Experiment B's one pro-model number is a noise artifact.** Its 11% detail gain comes with
+   an 18% noise gain on the same tiles; noise-matched it reverses to 0.948. Judged on detail
+   alone it would have read as support for the hypothesis.
+
+### Two corrections to the brief's flag list, found by running `--help` before rendering
+
+- **`--pyramid-confidence-map` does not exist**; the flag is **`--confidence-map`**. I hit this
+  before any render and used the correct name throughout — no run is affected.
+- The gating table's third column names the backend where a flag is **refused**, not where it is
+  accepted. `--confidence-map` is pyramid-only; `--index-map`/`--n-eff-map` are refused under
+  `--merge pyramid`. I misread this once in the other direction; stating it plainly here.
+- `--confidence-tail <Q>` (default 0.05) is a **per-channel tail fraction for the confidence
+  union mask**, not a reporting threshold for the confidence map — there was no house cut for my
+  ≥800/≥900 fractions to have overridden. Nothing here depends on that cut regardless: the
+  primary statistics are the bracketed CI and `n_eff`.
+- `--exposure`/`--auto-exposure` are inert on this binary; **no arm in this lane used either**,
+  and no arm needed brightness matching because every comparison is a within-arm band ratio.
+
 
 ## 8. Where the real failure is not excluded
 
@@ -245,5 +308,7 @@ experiments/V-DILUTE/run_queue.ps1        every render, pin binary, --merge pyra
 experiments/V-DILUTE/vd_metrics.py        spectra, tiles, FOV-scale correction, analytic null
 experiments/V-DILUTE/analyze.py           A | B | BROI | C
 experiments/V-DILUTE/broi_robust.py       paired per-tile bootstrap + correction-off sensitivity
+experiments/V-DILUTE/b2_replicate.ps1     odd-phase replicate render (B's noise floor)
+experiments/V-DILUTE/b2_analyze.py        contrast vs replicate, same tiles, rule-3 paired
 experiments/V-DILUTE/commission.py        null arm, potency arm, analytic rank bias
 ```
