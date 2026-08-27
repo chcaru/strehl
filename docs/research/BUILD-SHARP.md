@@ -16,13 +16,39 @@ was not touched; the develop path is BUILD-RENDER's and was not touched.
 
 **The merge is not the reason the pictures are soft.** A blur budget that closes to
 **2.6%** puts **76.6% of the blur variance in the optics**, measured on a *printed
-mm ruler* — a subject that cannot itself be soft — at **2.16x the diffraction limit
-at f/5.6**. Of that, only 16.5% is diffraction; **60.1% is an aperture-independent
-term** which is almost certainly the 2x teleconverter operating at 2:1, far outside
-its design envelope. The software terms I can reach total **23.4% of the variance**,
-which is **12% of the rise**: killing both of them outright moves the 10-90 edge rise
-from 35.0 um to 30.7 um. That is real and worth having, and it is not "these look
-horrible".
+mm ruler* at **2.16x the diffraction limit at f/5.6**. Of that, only 16.5% is
+diffraction; **60.1% is a non-diffraction optical term**. The software terms I can
+reach total **23.4% of the variance**, which is **12% of the rise**: killing both of
+them outright moves the 10-90 edge rise from 35.0 um to 30.7 um. That is real and
+worth having, and it is not "these look horrible".
+
+> **CORRECTION 2026-08-26 (ORCH).** This paragraph originally called the 60.1% term
+> **"aperture-independent"** and named **"almost certainly the 2x teleconverter"** as
+> its cause. Neither is supported, and both are withdrawn:
+>
+> 1. **The term was never measured across apertures.** It is the quadrature remainder
+>    `sqrt(30.44^2 - 14.11^2) = 26.97`, which reproduces the table's 26.98 to four
+>    significant figures. That arithmetic is "total optical blur minus *theoretical*
+>    diffraction at one aperture" -- it is a statement about what is **not
+>    diffraction**, and it carries no information whatever about what happens when the
+>    aperture changes. Relabelling a residual as "aperture-independent" asserts the
+>    one property no one observed.
+> 2. **`docs/captures-needed.md` section 29 had already withdrawn exactly this
+>    inference** on 2026-08-25 -- *"'Aperture-independent' was an inference drawn only
+>    from the confounded ratio"* -- and this report reintroduced it. Section 29 also
+>    notes the direction may be **backwards**: spherical aberration, coma, astigmatism
+>    and field curvature all *improve* on stopping down, so a large aberration term
+>    argues for stopping down **more**.
+> 3. **The teleconverter is a suspect, not a finding.** Every stack in the library was
+>    shot through the 2x TC, so it cannot be isolated from existing captures. Section
+>    29 request 1 is the capture that would settle it.
+> 4. **"a subject that cannot itself be soft" is false** and has been deleted. The
+>    target was *printed*; section 29 records that ink spread at a ~3 px rise is real,
+>    unbounded and never subtracted, so an unknown share of the 76.6% belongs to the
+>    paper. The 76.6% is an **upper bound at n = 1**, not a point estimate.
+>
+> What survives unchanged: the budget closes to 2.6%, the software terms total 23.4%
+> of the variance, and the merge is not the reason the pictures are soft.
 
 I found and fixed one genuine defect — **the alignment solve was worse than not
 aligning at all between adjacent frames**, which are precisely the frames the merge
@@ -45,7 +71,7 @@ All numbers are **10-90 ESF rise in micrometres** on the merge's binned grid (pi
 |---|---|---|---|
 | system optics, on a **printed ruler**, no align, no resample (RU1) | 30.44 um | **76.6%** | not software |
 | — of which diffraction at f/5.6 (M88) | 14.11 um | 16.5% | physics |
-| — of which **aperture-independent** (2x TC aberration etc.) | 26.98 um | **60.1%** | **route to owner** |
+| — of which **non-diffraction optical** (quadrature remainder; NOT measured to be aperture-independent -- see the correction in section 0) | 26.98 um | **60.1%** | **route to owner** |
 | **resampling kernel** (Catmull-Rom gather) | 14.97 um | **18.6%** | mine (see §5) |
 | **gated-mean over-averaging** | 7.61 um | **4.8%** | my number, BUILD-HALO's file |
 | **predicted total** | **34.78 um** | | |
@@ -407,20 +433,40 @@ band this whole build is about. Worth fixing before the next grading round.
 
 ### 5.5 To the owner, directly — the biggest available win is not software
 
-Given that **60% of the blur variance is aperture-independent optics** and 16.5% is
-diffraction:
+> **CORRECTION 2026-08-26 (ORCH). The shooting advice in this section is WITHDRAWN.**
+> Section 15.3 of this same report recommends withdrawing it, and
+> `docs/captures-needed.md` section 29 withdrew it on 2026-08-25, before this section
+> was written. It survived here because a correction filed in section 15 never reached
+> section 5. **Do not shoot to this section.** What replaces it is below.
 
-- **Shoot at marked f/5.6, not marked f/11.** At magnification 2.0 the marked f/11
-  is effectively **f/33**, where MTF at Nyquist is **0.000**. At f/5.6 it is 0.036 —
-  small, but not zero, and zero cannot be recovered by anything.
-- M20 measured the payoff: **9.6x** best-frame contrast at 4-px detail, **13.5x**
-  matched-filter SNR at fixed total time, at the cost of roughly 2x the frames.
-- **Suspect the 2x teleconverter.** A printed knife edge reading 2.16x the
-  diffraction limit, with an edge width that does *not* change with aperture, is an
-  aberration signature. The FE 100mm GM at 1:1 without the TC would be the
-  controlled test, and it costs one capture session.
+Given that **60% of the blur variance is a non-diffraction optical term** and 16.5%
+is diffraction:
 
-**This dwarfs every merge-side gain in the corpus and requires no code.**
+- ~~**Shoot at marked f/5.6, not marked f/11.**~~ **WITHDRAWN.** The evidence for
+  aperture-independence is a single confounded 1.025x ratio between two stacks that
+  differ by **1.91x in contrast, 2.15 degrees in edge angle, and 8 days**. Propagated,
+  it is **0.8-1.4 sigma** from "aperture makes no difference" -- indistinguishable from
+  having made no measurement. And the sign may be **backwards**: spherical aberration,
+  coma, astigmatism and field curvature all *improve* on stopping down, so a large
+  aberration term argues for stopping down **more**. The diffraction arithmetic below
+  is correct in isolation but does not survive being weighed against an aberration
+  term whose aperture behaviour is unmeasured.
+  - *(Retained for the record: at magnification 2.0 the marked f/11 is effectively
+    **f/33**, where MTF at Nyquist is **0.000**; at f/5.6 it is 0.036. M20 measured
+    **9.6x** best-frame contrast at 4-px detail and **13.5x** matched-filter SNR at
+    fixed total time, at roughly 2x the frames. This is what the aperture bracket in
+    captures-needed section 29 request 2 is designed to weigh against aberration.)*
+- **Suspect the 2x teleconverter -- as a suspect.** The 2.16x-diffraction reading is
+  on a **printed ruler, not a knife edge**, so the target's own ink spread is in the
+  number and is never subtracted (section 15.4). The edge width "does not change with
+  aperture" only in the confounded comparison above. The FE 100mm GM without the TC at
+  matched magnification is the controlled test and it costs one capture session --
+  captures-needed section 29 request 1.
+
+**The one thing here that is both solid and actionable: the system is ~2.2x softer
+than diffraction alone predicts (two independent measurements, 4% apart), the cause is
+in the rig rather than the software, and two captures would identify it. Neither
+requires code.**
 
 ---
 
@@ -428,13 +474,15 @@ diffraction:
 
 Plainly:
 
-**77% of the blur variance is optics, and I cannot reach it.** The majority of it —
-60% of variance — is an aperture-independent term measured on a *printed knife edge*
-at 2.16x the diffraction limit. It is in the rig, not in the software and not in the
-subject. Very plausibly the 2x teleconverter at 2:1, far outside its envelope. No
-merge-side change recovers it, and the SNR is too low for deconvolution to buy it
-back — proven above by a filter that cannot even undo a blur whose transfer function
-we know exactly.
+**77% of the blur variance is optics, and I cannot reach it** -- as an **upper bound
+at n = 1**, not a point estimate (section 15.4). The majority of it — 60% of variance
+— is a **non-diffraction** term measured on a *printed ruler* (not a knife edge; no
+proper edge exists in the corpus) at 2.16x the diffraction limit. It is in the rig,
+not in the software and not in the merge. The 2x teleconverter at 2:1 is the leading
+**suspect**, not a finding, and whether the term is aperture-independent was inferred
+rather than measured (section 15.3). No merge-side change recovers it, and the SNR is
+too low for deconvolution to buy it back — proven above by a filter that cannot even
+undo a blur whose transfer function we know exactly.
 
 **The software terms I can reach total 12% of the rise.** Of that, the resampling
 kernel is 18.6% of variance and is **not** removable by choosing a better kernel
@@ -939,7 +987,7 @@ pixel. No photometric correction can fix a wrong-content choice.
 
 ORCH is right that section 4's negative was too narrow. That arm set `H` to the
 **resampling kernel** MTF, which is nearly perfect, so there was nothing to
-invert. The optics are a different matter: aperture-independent aberration is
+invert. The optics are a different matter: **non-diffraction** aberration is
 **60.1% of the blur variance**, and at the merged image's measured 35.69 um rise
 (sigma = 2.72 px on the 5.12 um full-res grid) the modelled MTF is **0.232 at
 f=0.10 and 0.037 at f=0.15 c/px**. There is real contrast to buy back.
@@ -996,24 +1044,44 @@ would run next.
 
 ## 14. The optics floor, as capture advice for the owner
 
-Passing these up as requested; they are measurements, not opinions.
+Passing these up as requested. **Two of the four items below were later withdrawn by
+section 15.3 of this same report and by `docs/captures-needed.md` section 29; they are
+struck through rather than deleted so the withdrawal is visible.** What is labelled
+MEASURED below is measured; what was inferred is now labelled as inference.
 
-- On a **printed ruler** (target RU1) the system's 10-90 edge rise is **30.44 um**
-  against a **14.11 um** diffraction limit at f/5.6 -- the rig is **2.16x**
-  worse than diffraction-limited. This independently matches M88's 2.25x.
-- **Stopping down does not help.** The measured f/11 : f/5.6 edge-width ratio is
-  **1.025x**, where diffraction alone predicts **1.964x**. A system whose blur
-  is unchanged by aperture is aberration-limited, not diffraction-limited.
-- Apportioned by variance, **76.6%** of the total blur is optics, of which
-  **60.1% is the aperture-independent part** and only 16.5% is diffraction.
+- **MEASURED.** On a **printed ruler** (target RU1) the system's 10-90 edge rise is
+  **30.44 um** against a **14.11 um** diffraction limit at f/5.6 -- the rig is
+  **2.16x** worse than diffraction-limited. This independently matches M88's 2.25x.
+  **This is the solid result and it is worth acting on.**
+- ~~**Stopping down does not help.**~~ **WITHDRAWN.** The measured f/11 : f/5.6
+  edge-width ratio of **1.025x** against **1.964x** predicted does establish
+  *not-diffraction-limited* overwhelmingly (31-54 sigma). But against **1.000** --
+  "aperture makes no difference" -- it is **0.8-1.4 sigma**, and the two stacks were
+  **unpaired**: 1.91x apart in contrast, 2.15 degrees in edge angle, shot 8 days
+  apart. The corpus had already recorded that comparison as *"FAILs weakly rather
+  than cleanly"*.
+- **MEASURED, with a correction to the label.** Apportioned by variance, **76.6%** of
+  the total blur is optics -- an **upper bound at n = 1** on a *printed* target whose
+  own ink spread is never subtracted (section 15.4). Of that, **60.1% is the
+  non-diffraction remainder** (`sqrt(30.44^2 - 14.11^2)`) and 16.5% is diffraction.
+  "Non-diffraction" is measured; "aperture-independent" was inferred and does not
+  follow from a quadrature remainder.
+- ~~The sharpest aperture on this rig is the widest one that still gives the depth
+  step needed.~~ **WITHDRAWN, and possibly backwards.** Spherical aberration, coma,
+  astigmatism and field curvature all *improve* on stopping down, so a large
+  aberration term argues for stopping down **more**, until diffraction overtakes it.
+  Only the confounded ratio said otherwise.
 
-The practical readings: closing the aperture further is spending light and
-diffraction for nothing, so the sharpest aperture on this rig is the widest one
-that still gives the depth step needed. And since the aberration term is
-**2.16x diffraction and does not respond to aperture**, the 2x teleconverter is
-the first thing to test by removal -- a bare-lens bracket of target RU1 at the
-same magnification would separate the converter's contribution from the prime's
-in a single afternoon. I would want that measurement before advising a purchase.
+**What still stands, and what would settle it.** The rig is ~2.2x softer than
+diffraction alone predicts, by two independent measurements 4% apart; the cause is in
+the rig rather than in the software or the merge. The 2x teleconverter is the leading
+**suspect** because every stack in the library was shot through it and it therefore
+cannot be isolated from existing captures. Two sessions settle both open questions:
+a bare-lens bracket of RU1 at matched magnification (captures-needed section 29
+request 1), and a single-session aperture bracket at f/5.6 / f/8 / f/11 on a fixed
+subject with the light unmoved (request 2), whose pre-registered prediction is that
+edge rise **falls** across those three if aberration-limited and **climbs** if
+diffraction dominates. I would want both before advising a purchase.
 
 ---
 
