@@ -844,3 +844,136 @@ itself. The M85 concern P9 reports as closed should be treated as **still open**
 
 Three independent instances of one mistake — mine, `BUILD-TRIAGE`'s, and
 `M116`'s — is enough to call it a family rather than an accident.
+
+---
+
+# 12. `STREHL_RESTORE` -- pre-registration (written and committed BEFORE the run)
+
+ORCH routed a second before/after on the frozen instrument: `restore.rs`, a
+single-image Wiener restoration whose `H` is strehl's own resampling kernel,
+built and wired into the merge and **off by default**, parked on a three-ROI
+edge-rise measurement with one marginal ROI and two nulls. The routing argument
+was that a three-edge instrument and a per-site band-energy ceiling over a
+complete bracket are not the same class of instrument, so the change may never
+have been scored rather than having failed. That argument is correct in general.
+This section tests whether it applies here.
+
+The instruction was **"prediction first, number second."** What follows was
+committed before `restore_ab_run.py` was run on either arm.
+
+## 12.1 The band the ratio actually integrates over
+
+`band_probe.py`. Two earlier versions of this probe were **rejected by their own
+commissioning arm**, and the second failure is worth recording because it is a
+trap anyone repeating this will fall into. I estimated the high-pass response
+`|H|^2` as a ratio of two noisy spectra and multiplied it by the image PSD. At
+low `f` the true response is `~1e-8`, so that ratio was measuring float rounding
+noise, and multiplying rounding noise by an enormous low-frequency PSD parked the
+band median at **0.0020 cyc/px** -- a physically absurd answer that would have
+predicted the restoration could not possibly matter.
+
+`H` never needed estimating: **the high-pass output already contains it.** Taking
+the radial energy of `hp` directly, in float64, removes the ratio, the
+cancellation and the separate noise probe in one step.
+
+The commissioning arm is a planted blur of known sigma, predicted from the band
+and measured directly. It failed the second version at **240.7%** and passes the
+third at **4.4% worst error** over four blur levels spanning 0.70 to 0.21
+retention:
+
+| sigma | predicted retention | measured | ratio |
+|---|---|---|---|
+| 0.53 | 0.6997 | 0.7315 | 0.956 |
+| 0.83 | 0.5124 | 0.5201 | 0.985 |
+| 1.27 | 0.3328 | 0.3403 | 0.978 |
+| 1.79 | 0.2097 | 0.2150 | 0.975 |
+
+**Band (`119MSDCF`, 2048 px): centroid 0.1750 cyc/px, median 0.1453, P25-P75
+0.089-0.238, and 76.9% of the energy at or below the 0.25 cyc/px knee.**
+
+## 12.2 The gain curve at that band
+
+`restore.rs` sets `knee = 0.5 / grid_factor`, which for a demosaiced merge is
+**0.25 cyc/output px**, and tapers the excess gain to zero between the knee and
+output Nyquist. ORCH's prior -- that a band centred at or below 0.25 would see
+little -- rests on that taper.
+
+**The taper is vacuous for a demosaiced merge, and this changes the prediction.**
+The filter runs on the CFA quad plane, whose own Nyquist is 0.5 plane-cycles =
+**0.25 output cycles = exactly the knee**. The entire band the filter can
+represent maps to `f <= knee`, where `roll_off == 1`. The roll-off region lives
+above what the CFA-plane filter can express, so it never engages. The gain is
+flat-topped across the whole plane band and does *not* decay toward the top of
+the statistic's range. That is confirmed in the binary's own log, where `max
+gain` and `at Nyquist` are the same number on the green planes.
+
+`merge_cmd.rs` applies the filter separably x then y, so the picture receives
+`G(fx)*G(fy)`; the log's `2-D` column is that product at the peak.
+
+## 12.3 The intervention is subject-dependent, and two of my four subjects are hard no-ops
+
+`restore_ab.py`, pinned binary `9b05d0b7` (`44C2F2CD...`), each subject rendered
+twice, `STREHL_RESTORE` **deleted** from the environment for arm A rather than
+set to `0`, so the arms differ only in the variable's presence.
+
+| subject | frozen ratio | peak 2-D gain | recovered | arms byte-identical? |
+|---|---|---|---|---|
+| `119MSDCF` | 0.8147 | **1.0000** | 0.0000 | **YES** |
+| `109MSDCF` | 0.8855 | **1.0000** | 0.0000 | **YES** |
+| `coffee-bubbles` | 0.9018 | **1.6682** | 0.6388 | no |
+| `tweezers-cpl` | -- | 1.2749 | 0.3709 | no |
+
+`cap 1.700` appears in every log, so the switch was honoured in all four; on the
+two no-op subjects the estimator then *declined*. That is not a failure. The gain
+is `clamp(h / (h^2 + sigma2/S(f)), 1, cap)` with `S` the measured power **minus**
+`sigma2`, and its lower clamp at 1 makes the filter structurally incapable of
+blurring. It returns exactly 1 when what the gather attenuated is, on the
+estimator's own evidence, noise.
+
+**On `119MSDCF` and `109MSDCF` the two arms are SHA-256 identical files.** For
+those subjects the A/B needs no instrument: the ratio cannot move, because the
+pixels are the same. `119MSDCF` is my *worst* subject at 0.8147, so the lever
+ORCH hoped might close the gap is not merely small there -- it is exactly, provably
+zero.
+
+## 12.4 The registered prediction for `coffee-bubbles`
+
+`restore_predict.py`, two independent routes.
+
+Route A integrates the **realised** end-to-end transfer `T(f) =
+P_restored/P_plain` against the commissioned band density. It is commissioned
+against a Parseval identity it must satisfy -- the same number computed in the
+spatial domain with no spectra in it -- and reproduces it to **0.00%**.
+
+    f=0.10  T=1.008     f=0.20  T=1.278     f=0.30  T=1.443
+    f=0.15  T=1.113     f=0.25  T=1.407     f=0.40  T=1.393
+
+Route B runs the pinned `detail()` on both masters, so it sees the
+5th-percentile floor subtraction that route A cannot.
+
+    ROUTE A  band-weighted energy gain   1.1645
+    ROUTE B  per-site median, 972 sites  1.1906   [P25 1.1547, P75 1.2699]
+
+They agree to 2.2%.
+
+> **REGISTERED PREDICTION.** On `coffee-bubbles` the raw ratio moves by
+> **x1.19**, from 0.9007 to **~1.072**; corrected, from 0.9018 to **~1.073**,
+> crossing 1.0. On `119MSDCF` and `109MSDCF` the move is **exactly x1.000**.
+> The order-statistic null is common-mode -- it depends only on the reference
+> set, which is one shared set of hardlinked files -- so it divides out.
+>
+> **The prediction that this is a small effect is registered as WRONG on
+> `coffee-bubbles` and RIGHT on the two no-op subjects.** ORCH would have bet on
+> "no detectable move"; on a third of my exact-ceiling subjects that bet loses,
+> and it loses because the knee taper does not engage on a demosaiced merge.
+
+## 12.5 The cost, registered at the same time
+
+The noise floor rises **+46.8%** (8381 -> 12307 DN^2) for a **+19.1%** detail
+gain. Linear filtering cannot change SNR at any single frequency; the asymmetry
+is spectral. Noise is white and therefore sits where the gain is largest, signal
+is red and sits where the gain is ~1.0. In amplitude that is **+21% noise for
++9% detail**. Any recommendation to flip the default has to carry that number,
+and a band-energy ratio that improves while visible noise rises faster is
+exactly the kind of statistic this project has been burned by.
+
