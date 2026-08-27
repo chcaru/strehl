@@ -1116,3 +1116,91 @@ half-A is the 17 **even-indexed** frames of the 33 in `D:\personal\macro\119MSDC
 It is. `--out` is mandatory on that call -- `align`'s default target is the
 shared warp-map cache that every other lane's `stack` reads, and a verification
 step must not write into the input of nine concurrent runs.
+
+## 10.8 The null re-certification, and the number ORCH asked for
+
+The harness was run end to end with **the shipping pin as the candidate**. This
+is simultaneously the end-to-end test and the strongest available self-test: the
+correct answer is that nothing moved anywhere, so any movement is the harness's
+own noise rather than a property of a candidate.
+
+```
+identity  0.0s      44C2F2CD2E5B2894... == the shipping pin
+render    2682.6s   26 master(s), COMPLETE.txt present
+gate      472.2s    baseline  17 PASS, 0 FAIL, 9 ACQUITTED ... 26 total (found 26)
+                    candidate 17 PASS, 0 FAIL, 9 ACQUITTED ... 26 total (found 26)
+                    no subject changed state
+pair      110.9s    390 cells; all three bands d_floor +0.0000  d_structure +0.0000
+h2h        15.0s    half-A verified: 17 frames, digest 5e1f4bf433effb2c == published
+TOTAL     3280.8s
+VERDICT: PROMOTABLE
+```
+
+**A full re-certification takes 54.7 minutes**, of which 82% is the render, on
+this machine with between two and five other lanes rendering concurrently. The
+render sustained **105.5 frames/min** over 4,825 frames -- `finalpass.ps1`'s own
+`-WhatIfTiming` projects 119 min at 1.48 s/frame, so the projection is **2.7x
+pessimistic** and should not be used to plan against.
+
+The null is exact rather than merely small, and it was confirmed independently
+of the metric:
+
+```
+26 byte-identical / 0 differing / 0 missing   (SHA-256, RECERT-NULL vs SHIP-V4)
+```
+
+All 26 masters reproduce the shipped bytes, **including all 26 `--auto-exposure`
+choices** -- the confound the provenance file explicitly warns about ("may
+choose differently") does not fire for an identical binary. The pairing stage's
+`+0.0000` is therefore not a metric too dull to see a difference; there is no
+difference to see, and the two facts were established by different instruments.
+
+## 10.9 How many attempts the fix lane can afford
+
+54.7 minutes per full pass answers ORCH's question pessimistically, because a
+candidate does not need a full pass to be triaged. Measured, not projected, on
+the six mottle-convicted subjects via `--only`:
+
+```
+render 576.7s   gate 93.6s   pair 35.1s   TOTAL 705.4s = 11.8 min
+VERDICT: PARTIAL (6/26 subjects: ...) -- PROMOTABLE ... NOT a full certification
+90 cells, all three bands d_floor +0.0000  d_structure +0.0000
+```
+
+**11.8 minutes to score a candidate against the subjects it was built to
+change.** So the fix lane can afford roughly **five triage attempts per hour**,
+and needs the 54.7-minute full pass only once, before promotion. That is the
+difference between one attempt and five, which was the point of the exercise.
+
+The targeted run also produced the empirical confirmation of 10.2. The gate on
+those six subjects alone reads:
+
+```
+candidate : 0 PASS, 0 FAIL, 6 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 6 total (found 6)
+```
+
+**Zero of the six are passes. All six are acquittals.** The subjects the fix
+exists to repair contribute nothing to the headline `17 PASS`, and the moment a
+candidate moves their renders by more than 5% they become EXPIRED -- still not
+failures, still not passes, simply unadjudicated. A harness that watched only
+`PASS` and `FAIL` would report a perfect score for a candidate whose entire
+effect had vanished into a third category.
+
+## 10.10 What I did not verify
+
+- **That the harness detects a real regression in a real candidate.** Every arm
+  here is either the shipping pin or a synthetic perturbation of its output. The
+  degradation and improvement arms are commissioned (10.5) but they are planted,
+  not merged. Nothing has yet been scored on a genuinely different binary.
+- **The `h2h` stage on more than one subject.** It measures `119MSDCF` at the
+  three published sites because those are the sites whose fits are recorded in
+  the manifest. Its comparator arms are fixed 17-frame artifacts and are not
+  rebuilt; a second subject would need its own published manifest.
+- **`PAID_MAX = 0.25` beyond its commissioning range.** It is subject-invariant
+  across the 6 subjects x 4 crops of arm F, with planted denoise at `paid` max
+  0.000 and planted blur at min 0.406. That is a gap, not a proof, and a
+  candidate landing between 0.25 and 0.406 is in territory this threshold has
+  not been tested in. It should be re-commissioned if one ever does.
+- **Wall clock on an idle machine.** 54.7 min was measured with two to five
+  other lanes rendering. It is an upper bound for a quiet machine, and I did not
+  have one to measure.
