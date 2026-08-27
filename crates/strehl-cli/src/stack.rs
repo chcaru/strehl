@@ -817,38 +817,54 @@ impl DefectRequest {
 
 /// Read the defect-map configuration from the environment.
 ///
-/// # Why this is ON by default, and why that is safe
+/// # Why this is OFF by default, and what would move it
 ///
-/// It was opt-in until an adversarial audit of all 26 delivered masters
-/// measured what shipping it off had cost: mote 2 present in **18 of 26**
-/// images, worst reading **-13.28%**, and *visible unstretched* as a soft grey
-/// disc about 45 px across on near-white background. The correction was built,
-/// commissioned and then not applied.
+/// **It is off because two lanes hunting the same mote disagree by 17x and the
+/// contradiction is unadjudicated.** BUILD-DEFECT reads mote 2 at
+/// `(3434, 2305)` at **-13.28%**; a second lane hunting independently reads
+/// **-0.78%** at 1:1 on 14 of 26 flat-and-bright masters and shipped its
+/// artifact labelled `NOT-REPRODUCED`. At least one of those numbers is wrong,
+/// and a default-on corrector is the wrong place to find out which.
 ///
-/// The argument for opt-in was not wrong, though — it was attached to the wrong
-/// premise. A dust map is a statement about the sensor **on a particular
-/// date**; if the owner cleans the sensor, a default-on map brightens a spot
-/// where nothing is wrong and **manufactures the exact defect it was built to
-/// remove**, silently, because nothing downstream can tell a corrected mote
-/// from an invented one.
+/// The most likely explanation is arithmetic rather than physical: **three
+/// coordinate pairs are in circulation for one mote** -- `(3434, 2305)`,
+/// `(7008, 4450)` and `6776_4322` -- and they do not reconcile by any single
+/// factor of two. See `docs/research/BUILD-DEFECT.md` for what each one is.
+/// Until they do, the honest position is that the *location* is disputed even
+/// though the *design* is not.
 ///
-/// What dissolves that is not caution, it is [`SiteValidator`]: the map
-/// nominates a location, and the correction then has to **observe the darkening
-/// in the frames in front of it** before it is allowed to touch them. A stale
-/// map cannot manufacture a defect it is required to measure first — the
-/// failure mode is unreachable rather than merely unlikely. MEASURED: on five
-/// simulated cleaned-sensor cases the check skipped **5 of 5**, and the
-/// unguarded correction it declined to apply would have planted a **+8.64% to
-/// +16.44%** bright spot (`docs/research/BUILD-DEFECT.md` §11).
+/// # The design argument for on-by-default, which still stands
 ///
-/// - `STREHL_DEFECT=off` — correct nothing. `on` is the default and is
-///   accepted for symmetry; **a typo is an error**, not a silent fallback,
-///   because `STREHL_DEFECT=0` quietly meaning "on" is how a user ends up
-///   reading a correction banner over an image they thought was untouched.
+/// It was briefly on. An adversarial audit of all 26 delivered masters had
+/// measured what shipping it off cost -- mote 2 in **18 of 26** images, worst
+/// reading **-13.28%**, *visible unstretched* as a soft grey disc about 45 px
+/// across on near-white -- and the objection it had to clear was staleness: a
+/// dust map is a statement about the sensor **on a particular date**, so if the
+/// owner cleans the sensor a default-on map brightens a spot where nothing is
+/// wrong and **manufactures the exact defect it was built to remove**.
+///
+/// [`SiteValidator`] answers that structurally rather than by caution: the map
+/// nominates a location and the correction must **observe the darkening in the
+/// frames in front of it** before touching them. A stale map cannot manufacture
+/// a defect it is required to measure first. MEASURED, on five simulated
+/// cleaned-sensor cases, the check skipped **5 of 5**, declining a correction
+/// that would have planted a **+8.64% to +16.44%** bright spot; and MEASURED on
+/// the real corpus it skips **9 of 26** stacks outright (§12.9).
+///
+/// **That guard is exactly what makes a wrong coordinate survivable rather than
+/// catastrophic** -- a corrector that reads its amplitude from the frames has a
+/// natural zero when the frames show nothing. It is not, however, a reason to
+/// default on while the coordinate is in dispute: the guard bounds the damage,
+/// it does not adjudicate the disagreement.
+///
+/// - `STREHL_DEFECT=on` — apply the correction. **Off is the default**; a typo
+///   is an error, not a silent fallback, because `STREHL_DEFECT=1` quietly
+///   meaning "off" is how a user ends up believing an image was corrected when
+///   it was not.
 /// - `STREHL_DEFECT_MAP=<path>` — use that sidecar instead of the embedded
-///   map. A missing or malformed file is a **hard error**, never a silent
-///   fallback to the embedded one: the user named a file and an uncorrected
-///   render that says nothing is the worst available outcome.
+///   map, and **imply `on`**: naming a map is asking for it. A missing or
+///   malformed file is a **hard error**, never a silent fallback to the
+///   embedded one.
 /// - `STREHL_DEFECT_ARM=none|hot|dust|both` — which arms. Defaults to `dust`,
 ///   because the hot arm is a measured null on this body (M101) and switching
 ///   it on by default would spend 14,626 writes per frame to move nothing.
@@ -860,25 +876,34 @@ impl DefectRequest {
 /// there would reopen exactly the hole the validation closes, and it would be
 /// reached for by whoever was most confident their map was current.
 pub(crate) fn defect_request_from_env() -> Result<DefectRequest> {
-    match std::env::var("STREHL_DEFECT") {
+    // `_MAP` is read FIRST and implies `on`. A user who names a sidecar has
+    // asked for a correction as plainly as one who writes `on`, and requiring
+    // both would produce a silent no-op for the single most likely invocation.
+    // An explicit `STREHL_DEFECT=off` still wins, below, because "off" must
+    // mean off no matter what else is set.
+    let requested = match std::env::var("STREHL_DEFECT") {
         Ok(v) => match v.trim() {
             "off" => return Ok(DefectRequest::Off),
-            "on" => {}
+            "on" => true,
             other => bail!(
                 "STREHL_DEFECT={other:?} is not a setting; it is \"on\" or \"off\". \
-                 Refusing rather than assuming, because a misspelled \"off\" that \
-                 silently means \"on\" corrects an image the user believes untouched"
+                 Refusing rather than assuming, because a misspelled \"on\" that \
+                 silently means \"off\" leaves an image uncorrected while the \
+                 caller believes it was corrected"
             ),
         },
-        Err(_) => {}
-    }
+        Err(_) => false,
+    };
     if let Some(path) = std::env::var_os("STREHL_DEFECT_MAP") {
         let path = PathBuf::from(path);
         if !path.as_os_str().is_empty() {
             return Ok(DefectRequest::Sidecar(path));
         }
     }
-    Ok(DefectRequest::Embedded)
+    if requested {
+        return Ok(DefectRequest::Embedded);
+    }
+    Ok(DefectRequest::Off)
 }
 
 /// Which arms and what floor, read once so both fold paths agree.

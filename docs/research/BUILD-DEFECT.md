@@ -959,7 +959,13 @@ re-baseline it, so this needs an explicit decision before the default flips.
 
 ---
 
-## 12. BUILT AND SHIPPED — the self-validating map, default ON
+## 12. BUILT AND SHIPPED — the self-validating map (shipped default ON; **reverted to opt-in in §13.1**)
+
+> **Read §13 first.** Everything measured in this section stands, but its
+> *default* does not: a second lane could not reproduce mote 2, and the
+> correction was returned to opt-in pending adjudication. Every "default ON"
+> and "on by default" phrase below describes the state of the tree between
+> commits `49227061` and the §13 revert, not the shipping default.
 
 §11 recommended the design and asked for a decision. The orchestrator took it and
 added one requirement before default-ON: a **stationarity arm** proving the check
@@ -1473,3 +1479,300 @@ is worse than one that argues:
   `(3434, 2305)` and the subject held still.
 
 
+
+
+## 13. The adjudication: the flats, the coordinate, and the default reverted
+
+Another lane hunted mote 2 independently and could not reproduce it — **−0.78%**
+at 1:1 where I read **−13.28%** — and shipped its artifact labelled
+`NOT-REPRODUCED`. That is the correct thing to have done. The orchestrator's
+hypothesis was that **three coordinates are in circulation for one mote** and the
+lanes have been measuring different places.
+
+**The hypothesis is right, and it does not simply vindicate me.** Two of my own
+claims survive the check and one does not.
+
+### 13.1 First, the default is back to OFF
+
+Before any analysis. `STREHL_DEFECT` now defaults to `Off`; `on` or naming a map
+with `STREHL_DEFECT_MAP` turns it on, a typo is still an error, and there is
+still no switch to skip validation. The `byte-freeze.rs` `RENDER_ENV` comment
+that described the inverted polarity has been rewritten in the same commit,
+because a comment asserting "on by default" over code that is off by default is
+worse than no comment.
+
+A correction whose *site* is disputed must not run on the default path, and the
+argument is not symmetric: the cost of being off is a blemish the owner can see;
+the cost of being on with a wrong coordinate is my own `MANUFACTURE` arm's
+**+8.64% to +16.44%** bright spot stamped into every frame. The guard bounds
+that (§13.5) but bounding is not adjudicating.
+
+### 13.2 What `(3434, 2305)` is — stated so it can be checked
+
+`DustQuad.px/py` index the grid produced by `quad_mean`, which averages each
+2×2 CFA quad **of the active area**. Therefore:
+
+| | |
+|---|---|
+| coordinate space | **CFA quad**, not photosite, not output pixel |
+| origin | **active area**, whose origin is (0,0) on all 26 stacks (§12.8) |
+| warp | **pre-warp**. The validator reads the decoder's output directly. |
+| photosite | **(6868, 4610)** = 2 × (3434, 2305) |
+| in a master | 7032×4688 **or 7040×4688** masters are one output pixel per **photosite** — so an *unwarped* master would show it at (6868, 4610) |
+
+The master width is not constant across the corpus: `highly-angled-ruler-mm-cpl`
+delivers **7040×4688** and `coffee-bean` and `bee-3-cpl` deliver **7032×4688**
+(P42, measured). So **no single sensor→master mapping exists across the corpus
+even before the warp is applied.**
+
+The two other coordinates are not mine:
+
+- **V-EYES `(7008, 4450)`** is `(+140, −160)` from my photosite. It is not
+  `(3434, 2305) × 2` and it is not a similarity transform of it about the image
+  centre. It is a *post-warp master* coordinate for one specific stack.
+- **`6776_4322`** is `(−92, −288)` from mine. Read in three masters it gives
+  **+4.808%, −2.790%, +0.823%** — noise in both signs. Whatever that coordinate
+  names, it is not this mote.
+
+### 13.3 The flats: the mote is real, and no statistic was needed
+
+`D:\personal\macro\flat-fields` — 360 frames, and the orchestrator is right that
+the strongest evidence available was sitting unused for *this* question. They are
+**200 mm, f/5.6, ISO 100, FE 100mm F2.8 Macro GM + 2× Teleconverter, focus at ∞**,
+in 9 exposure sets of 40.
+
+`crates/strehl-cli/examples/defect-flat-census.rs`, log
+`experiments/BUILD-DEFECT/out/41-flat-census.log`:
+
+```
+active area   : 7040x4688 at (0,0)  ->  quad grid 3520x2344
+frames        : examined 360 = used 256 (odd 128 / even 128) + rejected 104
+residual null : p50 +0.025%   p01 -2.061%   p0.1 -3.783%   min -6.709%
+
+mote 2   quad (3434,2305) = photosite (6868,4610)
+         depth at centre -3.530%   over r=8 core -3.483%   odd -3.470%   even -3.590%
+```
+
+and the neighbourhood, in percent below local background, dy down the side and
+dx across in steps of 5 quads:
+
+```
+   -30 |   0.51   0.71   0.73   0.57   0.71   0.25   0.48   0.04   0.51   0.26   0.57
+   -20 |   0.18   0.21   0.19   0.17   0.26  -1.06  -2.89  -3.28  -2.55  -1.02   0.23
+   -10 |  -0.43  -0.28  -0.24  -0.54  -2.90  -3.24  -3.32  -3.28  -3.24  -3.06  -1.05
+    +0 |  -0.51  -0.22  -1.24  -3.52  -3.65  -3.33  -3.53  -3.40  -3.55  -3.67  -1.30
+   +10 |  -0.91  -1.03  -3.65  -4.37  -4.16  -3.98  -3.89  -3.86  -3.91  -1.73  -1.10
+```
+
+**That is a resolved disc, about 30 quads across, sitting −3.5% below a
+background that reads +0.5% twenty quads above it.** The odd and even halves of
+the capture order — an arbitrary partition that cloud cannot respect and dust
+cannot violate — agree to **0.12 percentage points**. The separation the brief
+demanded was proved, not asserted.
+
+**The sensor is not clean, and mote 2 is at my coordinate.**
+
+Mote 1 does not fare as well. It reads **−0.841%** over its core at
+`(3202, 119)`, and the open search finds a −1.53% blob 22 quads away at
+`(3201, 141)`. Its map coordinate is off in `y` and its true depth on a flat
+field is at the floor. It fires on real stacks (§12.9) but the flats do not
+independently confirm its position.
+
+The open search over all 8.25 M quads returned **3 blobs, all split-confirmed,
+all ≤ −1.57%** — so apart from mote 2, this sensor is close to clean.
+
+**Its blind zone is stated rather than hidden.** With a border of 8 quads the
+search returned 100,467 quads below the floor and **37 of the 40 deepest "blobs"
+were on the frame edge** — optical falloff and a truncated box mean, not dust. At
+a border of 64 it returns 3. Mote 2 is 39 quads from the bottom edge, i.e.
+*inside* that blind zone, so the open search decides nothing about it in either
+direction; the targeted read above is what bears on it. Widening the border to
+reach mote 2 would have bought its discovery at the price of 37 false ones.
+
+### 13.4 The calibration arm: my instrument reads the flats correctly
+
+A script agreeing with itself proves nothing about the code that ships. So the
+same 24 flat frames were fed to the shipping `SiteValidator`:
+
+```
+frames 24   examined 2 = confirmed 0 + not-significant 2 + too-shallow 0
+                       + not-stationary 0 + unmeasurable 0
+
+  quad(x,y)     validator   division   ratio   p        presence  outcome
+  (3202, 119)    -0.840%    -0.841%    1.00   0.0524   0.00      NotSignificant
+  (3434,2305)    -3.235%    -3.483%    0.93   0.0150   1.00      NotSignificant
+```
+
+Three readings, and the middle one is the answer to "is your instrument
+over-reading":
+
+1. **The shipping validator reads −3.235% where plain division reads −3.483%:
+   ratio 0.93 and 1.00.** On a smooth white wall where the true answer is
+   visible in the ASCII picture, the instrument is calibrated. **It does not
+   over-read.** This is a known-input commissioning arm and it passes.
+2. **presence 1.00** — all 24 frames individually show it. Stationary, as dust
+   must be.
+3. **But `NotSignificant`, p = 0.0150 against a bar of 0.0025 — the shipping
+   guard would SKIP on the flats.** The null annulus (60–400 quads) at this site
+   reaches into the bottom-edge falloff, so null offsets read as deep as the
+   mote. A limitation of the p-model near a frame edge, reported because it is
+   the arm that most nearly refutes me: the guard is *conservative* at this
+   site, which is the safe direction, but it means p is doing less work near an
+   edge than its bar implies.
+
+### 13.5 Does the guard have a natural zero? Yes, and here it is on real data
+
+Plainly: **yes.** A corrector that fits its amplitude from the frames reads zero
+when the frames show nothing, and it is measured twice.
+
+- **Simulated clean sensor, 5/5 SKIP** (§11).
+- **Real corpus, P40, `28-corpus-render.ps1`: 26 examined = 17 corrected + 9
+  skipped + 0 failed.** The 9: `112MSDCF`, `113MSDCF`, `coffee-bubbles`,
+  `flat-on-ruler-cpl`, `flower-inner-edge-cpl`, `flowers-cpl`, `foam`,
+  `wrapped-text-1`, `wrapped-text-2`.
+
+The verdict on every skip is **`not significant`, never `too shallow`** — e.g.
+`wrapped-text-1` site 2 reads **−5.100% depth**, clearing the depth bar
+comfortably, and is refused at **p = 0.2618**. The stack's own data declined it.
+
+This is per-**stack** (raw brackets), not per-**master**. V-EYES counted mote 2
+in 18 of 26 *delivered masters*; I correct 17 of 26 *raw brackets*. Those are
+corroborating counts, not the same measurement, and neither is evidence for the
+other.
+
+### 13.6 The magnitude gap has a mechanism, and it is not the sensor
+
+The flats read −3.5%. My raw-frame readings run −5.1% to −14.9%. Same sensor,
+same site, calibrated instrument. That gap needed a mechanism rather than a
+shrug, and the EXIF supplies one.
+
+| capture | f | focus dist | m ≈ f/(s−f) | N_eff = N(1+m) | depth |
+|---|---|---|---|---|---|
+| flats | 5.6 | **∞** | ~0 | **5.6** | **−3.48%** |
+| `wrapped-text-1` | 5.6 | 0.2958 m | 2.09 | 17.3 | −5.10% |
+| `bee-3-cpl` | 5.6 | 0.2771 m | 2.60 | 20.2 | −9.12% |
+| `leaf-2-cpl` | 5.6 | 0.2707 m | 2.83 | 21.4 | −8.16% |
+| `lavendar-cpl` | 5.6 | 0.2707 m | 2.83 | 21.4 | −8.77% |
+| `highly-angled-ruler-mm-cpl` | 5.6 | 0.2707 m | 2.83 | 21.4 | −9.47% |
+| `coffee-bean` | **8.0** | 0.2738 m | 2.71 | **29.7** | **−14.86%** |
+
+Every capture is the same body, same lens, same 2× teleconverter. **The depth
+ordering is monotone in effective f-number across all seven**, with the three
+21.4 entries tied within their own spread, and **the flats are an out-of-sample
+point at the extreme of the range** — the only capture at infinity, and the
+shallowest reading.
+
+A dust particle sits above the photosites; its shadow depth is set by how much
+of the converging cone it blocks, and the cone's half-angle is set by the
+*image-side* f-number `N(1+m)`, not by `N`. At m ≈ 0 the cone is wide and the
+shadow is washed out; at m ≈ 2.8 it is three to four times narrower.
+
+**So the flats do not contradict my subject readings. They are the
+low-magnification end of the same relationship, and they land exactly where it
+puts them.**
+
+Two consequences that outlive this dispute:
+
+1. **A dust map's depth is not a property of the sensor.** It is a property of
+   the sensor *and the capture geometry*. Any map storing a fixed depth and
+   applying a fixed gain is wrong by up to **4.3×** on this corpus alone. The
+   design already accepted — *the map nominates the location, the frames dictate
+   the amplitude* — is not a refinement. It is the only correct design, and this
+   is the mechanism that says so. A map-gain corrector calibrated on these flats
+   would have removed a quarter of the mote on `coffee-bean`; calibrated on
+   `coffee-bean` it would have over-corrected the flats into a bright spot.
+2. **The barred `corr(f-number, depth) = −0.9758` stays barred, and is now also
+   *wrong in its variable*.** The predictor is `N(1+m)`, and the corpus varies
+   `m` as much as it varies `N`. n is still 7 and no slope is quoted here
+   either — only the ordering, and the fact that the out-of-sample point obeys it.
+
+### 13.7 Where my claim does NOT survive: the master domain
+
+P42 (`experiments/BUILD-DEFECT/src/42-master-coord.py`) read all three
+circulating coordinates in three delivered masters, gating on 3 sd of the local
+residual rather than tabling numbers:
+
+```
+=== highly-angled-ruler-mm-cpl ===   (7040x4688)   residual sd 4.715%
+    BUILD-DEFECT (6868, 4610)   -7.841%   (-1.66 sd)
+    V-EYES (7008,4450)         -16.263%   (-3.45 sd)
+    third lane 6776_4322        +4.808%   (+1.02 sd)
+  VERDICT: DETECTED at -16.263% = 3.45 sd.
+
+=== coffee-bean ===              (7032x4688)   residual sd 2.793%
+    BUILD-DEFECT (6868, 4610)   +0.925%   (+0.33 sd)
+  VERDICT: UNDERPOWERED ... decides nothing in either direction.
+
+=== bee-3-cpl ===                (7032x4688)   residual sd 2.180%
+    BUILD-DEFECT (6868, 4610)   +0.073%   (+0.03 sd)
+  VERDICT: UNDERPOWERED ... decides nothing in either direction.
+```
+
+**On the one master where anything clears 3 sd, it clears at V-EYES's coordinate
+and not at mine** (−16.26% vs −7.84%). On the other two, my sensor coordinate
+reads **+0.9%** and **+0.07%** — nothing at all — in stacks whose *raw frames*
+read −14.86% and −9.12% at that same sensor site.
+
+That is not a contradiction; it is the warp, and it was in my brief from the
+first line: *a mote fixed in sensor coordinates is displaced by the per-frame
+similarity, so it does not land at its sensor coordinate in an aligned master.*
+The deepest points found near the prediction are displaced by (−237, −145),
+(−104, −272) and (−39, −65) in the three masters — different displacements, as
+different warps require — but at 1.7–3.0 sd none of them clears the bar either,
+so I claim no location for them.
+
+**Three things follow, and the third is a retraction:**
+
+- The corrector operates in **sensor space, pre-warp**, which is the only place a
+  sensor-fixed defect can correctly be removed. Its coordinate is right there,
+  proved by the flats. Nothing about §13.7 touches the correction itself.
+- **The master domain is underpowered for this measurement**, by my own
+  instrument as much as anyone's: the local residual sd at that corner is
+  2.2–4.7%, and a mote that reads −3.5% on a blank wall cannot be resolved
+  against it by a point read. The other lane's first two arms were underpowered
+  and it said so; **so is mine, and I say so.**
+- **I withdraw any implication that my sensor coordinate indexes a master pixel.**
+  It does not, and 7032 versus 7040 masters mean it could not have done so
+  uniformly even without a warp. V-EYES's `(7008, 4450)` and my `(3434, 2305)`
+  can both be correct — they are in different spaces, for different stacks, and
+  the transform between them is per-stack and I have not measured it.
+
+### 13.8 What this leaves for V-REVIEW
+
+Not adjudicated by me, and I cannot adjudicate it: **V-EYES read −13.28% and the
+other lane read −0.78%, both in the master domain.** Those two are directly
+comparable to each other and to neither of my numbers. My contribution is that
+the master domain has a 2.2–4.7% noise floor at that corner, which is large
+enough that a method difference could produce either reading.
+
+What I hand over as settled:
+
+| claim | status | evidence |
+|---|---|---|
+| the sensor has a mote at quad (3434,2305) | **established** | 256 flats, −3.483%, odd/even −3.470/−3.590, resolved disc |
+| my coordinate is a CFA quad, active area, pre-warp | **established** | `quad_mean` + P42 arithmetic |
+| the shipping validator is calibrated | **established** | reads −3.235% where division reads −3.483%, ratio 0.93 |
+| the guard skips when frames show nothing | **established** | 5/5 simulated, 9/26 real corpus, all `not significant` |
+| depth is governed by N(1+m), not by the sensor | **established, n=7, no slope quoted** | monotone ordering, flats out-of-sample |
+| my coordinate indexes a master pixel | **RETRACTED** | +0.9% / +0.07% at 0.03–0.33 sd |
+| master-domain amplitude of this mote | **not measurable by me** | sd 2.2–4.7% at that corner |
+
+Raw per-stack numbers remain in `experiments/BUILD-DEFECT/out/` (P40 corpus
+sweep, 41-flat-census.log, 42-master-coord.log) and in §12.9.
+
+### 13.9 New open questions
+
+- **Q9 (NEW, OPEN).** Mote 1's map coordinate `(3202, 119)` is ~22 quads off the
+  −1.53% blob the flats find at `(3201, 141)`, and reads only −0.841% at its
+  nominated centre. It fires on real stacks but the flats do not confirm its
+  position. *Settled by:* re-deriving mote 1's centroid from the flats and
+  re-measuring the corpus at the corrected coordinate.
+- **Q10 (NEW, OPEN).** `p` is inflated near a frame edge because the null
+  annulus reaches into optical falloff — mote 2 reads p=0.0150 on the flats and
+  would be skipped there. Conservative, but the bar is doing less work than its
+  value implies within ~64 quads of an edge. *Settled by:* a falloff-flattened
+  null, commissioned against a planted mote at matched radius.
+- **Q11 (NEW, OPEN).** The per-stack sensor→master transform is unmeasured, so
+  no sensor-space finding in this document can be quoted as a master-space
+  amplitude. *Settled by:* emitting the reference frame's warp alongside the
+  master.

@@ -1,0 +1,68 @@
+  80/360 frames
+  120/360 frames
+  160/360 frames
+  240/360 frames
+  280/360 frames
+  320/360 frames
+== P41 flat-field dust census ==
+source        : D:\personal\macro\flat-fields\flat-fields
+active area   : 7040x4688 at (0,0)  ->  quad grid 3520x2344
+frames        : examined 360 = used 256 (odd 128 / even 128) + rejected 104
+                rejected   15  exposure 1% outside [6%, 90%]
+                rejected   17  exposure 100% outside [6%, 90%]
+                rejected    1  exposure 102% outside [6%, 90%]
+                rejected    2  exposure 103% outside [6%, 90%]
+                rejected    2  exposure 104% outside [6%, 90%]
+                rejected   14  exposure 105% outside [6%, 90%]
+                rejected    1  exposure 106% outside [6%, 90%]
+                rejected    5  exposure 2% outside [6%, 90%]
+                rejected    3  exposure 3% outside [6%, 90%]
+                rejected   12  exposure 4% outside [6%, 90%]
+                rejected    5  exposure 5% outside [6%, 90%]
+                rejected    4  exposure 6% outside [6%, 90%]
+                rejected   19  exposure 91% outside [6%, 90%]
+                rejected    1  exposure 92% outside [6%, 90%]
+                rejected    3  exposure 99% outside [6%, 90%]
+
+residual null : p50 +0.025%   p01 -2.061%   p0.1 -3.783%   min -6.709%   (n=330176)
+floors        : depth <= -1.5%   split agreement within 35%
+
+-- the embedded map's nominated sites, read off the flats --
+mote 1   quad (3202,119) = photosite (6404,238)
+         depth at centre -0.710%   over r=8 core -0.841%   odd -0.738%   even -0.682%
+         neighbourhood, 5-quad steps, percent below local background:
+            -30 |  -0.06  -0.15   0.32   0.30   0.28   0.24   0.17   0.19   0.24   0.44   0.17   0.15   0.26
+            -20 |   0.26   0.20  -0.45  -0.84  -1.21  -0.89  -0.79  -0.27   0.25   0.24   0.35   0.02   0.12
+            -10 |  -0.07  -0.60  -1.09  -0.74  -0.88  -0.71  -0.99  -0.73  -1.02  -0.43   0.24   0.19   0.15
+             +0 |   0.33  -0.21  -1.08  -0.92  -1.04  -0.75  -0.71  -0.73  -0.94  -0.70  -0.07   0.13  -0.22
+            +10 |  -0.11   0.31  -0.26  -0.69  -1.07  -0.88  -1.05  -0.95  -1.09  -1.05  -0.32  -0.11   0.07
+            +20 |   0.54   0.36   0.25   0.51  -0.11  -0.80  -0.66  -1.01  -1.31  -0.21   0.11  -0.26  -0.06
+            +30 |   0.22  -0.18   0.16   0.38   0.21   0.39  -0.08   0.20   0.24   0.25   0.43   0.14   0.15
+mote 2   quad (3434,2305) = photosite (6868,4610)
+         depth at centre -3.530%   over r=8 core -3.483%   odd -3.470%   even -3.590%
+         neighbourhood, 5-quad steps, percent below local background:
+            -30 |   0.51   0.71   0.73   0.57   0.71   0.25   0.48   0.04   0.51   0.26   0.57   0.36  -0.02
+            -20 |   0.18   0.21   0.19   0.17   0.26  -1.06  -2.89  -3.28  -2.55  -1.02   0.23   0.13  -0.50
+            -10 |  -0.43  -0.28  -0.24  -0.54  -2.90  -3.24  -3.32  -3.28  -3.24  -3.06  -1.05  -0.13  -0.85
+             +0 |  -0.51  -0.22  -1.24  -3.52  -3.65  -3.33  -3.53  -3.40  -3.55  -3.67  -1.30  -0.81  -1.50
+            +10 |  -0.91  -1.03  -3.65  -4.37  -4.16  -3.98  -3.89  -3.86  -3.91  -1.73  -1.10  -0.88  -1.52
+            +20 |  -1.55  -1.37  -2.49  -2.61  -3.34  -3.31  -3.06  -1.92  -1.56  -1.29  -1.52  -1.61  -2.18
+            +30 |  -2.02  -1.70  -1.67  -2.07  -1.74  -2.10  -1.83  -1.66  -2.01  -1.82  -2.04  -2.01  -2.41
+
+-- open search over all 8250880 quads --
+quads below -1.5%: 3   distinct blobs after r=24 suppression: 3
+blind zone    : 64 quads at every edge, which CONTAINS mote 2 at (3434,2305), 39 quads from the bottom. The open search decides nothing about it; the targeted read above does.
+
+  quad(x,y)      photosite      depth     odd      even    split   verdict
+  (1442,1676)  ( 2884, 3352)    -1.57%   -1.56%   -1.57%    0.01   DUST
+  (3201, 141)  ( 6402,  282)    -1.53%   -1.52%   -1.54%    0.01   DUST
+  (1088, 525)  ( 2176, 1050)    -1.52%   -1.56%   -1.48%    0.05   DUST
+
+blobs: 3 = 3 DUST + 0 split-rejected
+
+-- calibration: the SHIPPING SiteValidator, on these same flats --
+frames 24   examined 2 = confirmed 0 + not-significant 2 + too-shallow 0 + not-stationary 0 + unmeasurable 0
+
+  quad(x,y)     validator   division   ratio   p        presence  outcome
+  (3202, 119)    -0.840%    -0.841%    1.00   0.0524   0.00      NotSignificant
+  (3434,2305)    -3.235%    -3.483%    0.93   0.0150   1.00      NotSignificant

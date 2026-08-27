@@ -1,0 +1,34 @@
+
+=== highly-angled-ruler-mm-cpl ===
+master        : 7040 x 4688 x 3 uint16
+quad (3434, 2305) -> photosite (6868, 4610) -> predicted master pixel (6868, 4610)
+  NOTE: master is 7040x4688, not the 7032x4688 the map assumes
+residual sd   : 4.715% over the (350, 444) search box
+deepest       : master (6631, 4465)  -8.388%  displaced (-237, -145) from prediction
+  reading each circulating coordinate at r=16:
+    BUILD-DEFECT (6868, 4610)   -7.841%   (-1.66 sd of local residual)  [within 128px of the frame edge: background box is truncated]
+    V-EYES (7008,4450)         -16.263%   (-3.45 sd of local residual)  [within 128px of the frame edge: background box is truncated]
+    third lane 6776_4322        +4.808%   (+1.02 sd of local residual)
+  VERDICT: DETECTED at -16.263% = 3.45 sd.
+
+=== coffee-bean ===
+master        : 7032 x 4688 x 3 uint16
+quad (3434, 2305) -> photosite (6868, 4610) -> predicted master pixel (6868, 4610)
+residual sd   : 2.793% over the (350, 436) search box
+deepest       : master (6764, 4338)  -5.777%  displaced (-104, -272) from prediction
+  reading each circulating coordinate at r=16:
+    BUILD-DEFECT (6868, 4610)   +0.925%   (+0.33 sd of local residual)  [within 128px of the frame edge: background box is truncated]
+    V-EYES (7008,4450)          +0.625%   (+0.22 sd of local residual)  [within 128px of the frame edge: background box is truncated]
+    third lane 6776_4322        -2.790%   (-1.00 sd of local residual)
+  VERDICT: UNDERPOWERED. The deepest circulating coordinate reads -2.790%, which is 1.00 sd of a residual whose sd is 2.793%. This master cannot decide whether a ~3.5% mote is present; it decides nothing in either direction.
+
+=== bee-3-cpl ===
+master        : 7032 x 4688 x 3 uint16
+quad (3434, 2305) -> photosite (6868, 4610) -> predicted master pixel (6868, 4610)
+residual sd   : 2.180% over the (350, 436) search box
+deepest       : master (6829, 4545)  -5.771%  displaced (-39, -65) from prediction
+  reading each circulating coordinate at r=16:
+    BUILD-DEFECT (6868, 4610)   +0.073%   (+0.03 sd of local residual)  [within 128px of the frame edge: background box is truncated]
+    V-EYES (7008,4450)          -0.077%   (-0.04 sd of local residual)  [within 128px of the frame edge: background box is truncated]
+    third lane 6776_4322        +0.823%   (+0.38 sd of local residual)
+  VERDICT: UNDERPOWERED. The deepest circulating coordinate reads -0.077%, which is 0.04 sd of a residual whose sd is 2.180%. This master cannot decide whether a ~3.5% mote is present; it decides nothing in either direction.

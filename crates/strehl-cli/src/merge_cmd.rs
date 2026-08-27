@@ -8603,26 +8603,35 @@ mod tests {
         unsafe { std::env::remove_var("STREHL_DEFECT_ARM") };
         unsafe { std::env::remove_var("STREHL_DEFECT_MAP") };
 
-        // 1. Fires. Default configuration is now "on with the embedded map",
-        //    so an unset environment is the shipping case, not a special one.
-        let err = preflight_defect_backend_support(MergeBackend::Estimator)
-            .expect_err(
-                "the estimator accepted a configured defect correction it does not apply",
-            )
-            .to_string();
-        let lower = err.to_ascii_lowercase();
-        for needle in ["estimator", "pyramid", "not applied"] {
+        // 1. Fires. The correction is OFF by default, so the firing arm has to
+        //    configure one -- and the two ways of configuring one are `on` and
+        //    naming a map, so both are exercised. A refusal that only caught
+        //    `STREHL_DEFECT=on` would miss the more likely invocation.
+        for (k, v) in [("STREHL_DEFECT", "on"), ("STREHL_DEFECT_MAP", "some-map.txt")] {
+            unsafe { std::env::remove_var("STREHL_DEFECT") };
+            unsafe { std::env::remove_var("STREHL_DEFECT_MAP") };
+            unsafe { std::env::set_var(k, v) };
+            let err = preflight_defect_backend_support(MergeBackend::Estimator)
+                .expect_err(&format!(
+                    "the estimator accepted a correction configured by {k}={v}"
+                ))
+                .to_string();
+            let lower = err.to_ascii_lowercase();
+            for needle in ["estimator", "pyramid", "not applied"] {
+                assert!(
+                    lower.contains(needle),
+                    "the refusal for {k}={v} does not contain {needle:?}, so a reader \
+                     cannot tell what was dropped or what to run instead: {err}"
+                );
+            }
             assert!(
-                lower.contains(needle),
-                "the refusal does not contain {needle:?}, so a reader cannot tell \
-                 what was dropped or what to run instead: {err}"
+                lower.contains("refusing") && lower.contains("not a warning"),
+                "the refusal does not say it refused, so it is readable as advice \
+                 about a render that nevertheless happened: {err}"
             );
         }
-        assert!(
-            lower.contains("refusing") && lower.contains("not a warning"),
-            "the refusal does not say it refused, so it is readable as advice \
-             about a render that nevertheless happened: {err}"
-        );
+        unsafe { std::env::remove_var("STREHL_DEFECT_MAP") };
+        unsafe { std::env::set_var("STREHL_DEFECT", "on") };
 
         // 2. Negative control across the backend axis.
         preflight_defect_backend_support(MergeBackend::Pyramid).expect(
@@ -8630,10 +8639,15 @@ mod tests {
              the correction -- it is refusing a correct configuration",
         );
 
-        // 3. Negative control across the configuration axis.
+        // 3. Negative control across the configuration axis. This is also the
+        //    DEFAULT, so it is the arm that says an ordinary render is not
+        //    disturbed by a feature nobody asked for.
         unsafe { std::env::set_var("STREHL_DEFECT", "off") };
         preflight_defect_backend_support(MergeBackend::Estimator)
-            .expect("the estimator was refused with no correction configured");
+            .expect("the estimator was refused with the correction explicitly off");
+        unsafe { std::env::remove_var("STREHL_DEFECT") };
+        preflight_defect_backend_support(MergeBackend::Estimator)
+            .expect("the estimator was refused with NOTHING configured, i.e. by default");
 
         // 4. Negative control across the arm axis.
         unsafe { std::env::set_var("STREHL_DEFECT", "on") };
@@ -8647,21 +8661,20 @@ mod tests {
         // rather than being swallowed into either verdict. This is the
         // `a_typod_override_errors_rather_than_falling_back_to_the_default`
         // shape, applied at the point the refusal reads the environment.
-        unsafe { std::env::set_var("STREHL_DEFECT", "0") };
+        unsafe { std::env::set_var("STREHL_DEFECT", "1") };
         let err = preflight_defect_backend_support(MergeBackend::Estimator)
-            .expect_err("STREHL_DEFECT=0 was accepted as a setting")
+            .expect_err("STREHL_DEFECT=1 was accepted as a setting")
             .to_string();
         assert!(
-            err.contains("STREHL_DEFECT") && err.contains("\"0\""),
+            err.contains("STREHL_DEFECT") && err.contains("\"1\""),
             "the parse error does not name the variable and the offending value: {err}"
         );
 
         unsafe { std::env::remove_var("STREHL_DEFECT") };
         unsafe { std::env::remove_var("STREHL_DEFECT_ARM") };
-        assert!(
-            preflight_defect_backend_support(MergeBackend::Estimator).is_err(),
-            "the environment leaked out of this test: the default configuration \
-             must refuse on the estimator"
+        preflight_defect_backend_support(MergeBackend::Estimator).expect(
+            "the environment leaked out of this test: with nothing set the \
+             estimator must run",
         );
     }
 }

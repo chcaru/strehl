@@ -418,20 +418,19 @@ const RENDER_ENV: &[&str] = &[
     // render of the same frames -- 16,039 of 32,966,016 delivered samples move
     // on `coffee-bean` with the shipped map (BUILD-DEFECT.md sec 5).
     //
-    // **STREHL_DEFECT is the one that matters now.** The correction became ON
-    // by default when it was made self-validating (BUILD-DEFECT.md sec 12), so
-    // the polarity of this entry is inverted from when it was written: the
-    // hashes in the registry are measured with the correction APPLIED, and an
-    // operator with `STREHL_DEFECT=off` exported in their shell would render an
-    // uncorrected stack and compare it against a corrected hash. That is the
-    // same defect as before with the sign flipped, which is exactly why the
-    // variable is cleared rather than assumed.
+    // **STREHL_DEFECT is the one that matters now.** The correction is off by
+    // default, and both hashes here are measured with it off -- but "off by
+    // default" is a property of the code, not of the ambient environment. An
+    // operator with `STREHL_DEFECT=on` exported in their shell would render a
+    // corrected stack and compare it against an uncorrected hash. The default
+    // has already moved once in each direction in this file's lifetime, which
+    // is exactly why the variable is cleared rather than assumed.
     //
-    // `_MAP` substitutes a different map for the embedded one; `_ARM` and
-    // `_HOT_FLOOR` change what is applied. All four are listed: the cost of a
-    // redundant entry is nothing and the cost of a missing one is a freeze that
-    // silently stops being hermetic. That is the STREHL_ALIGN=0 defect and it
-    // has now been committed twice.
+    // `_MAP` substitutes a different map for the embedded one AND implies
+    // `on`; `_ARM` and `_HOT_FLOOR` change what is applied. All four are
+    // listed: the cost of a redundant entry is nothing and the cost of a
+    // missing one is a freeze that silently stops being hermetic. That is the
+    // STREHL_ALIGN=0 defect and it has now been committed twice.
     "STREHL_DEFECT",
     "STREHL_DEFECT_MAP",
     "STREHL_DEFECT_ARM",
