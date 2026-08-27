@@ -3094,3 +3094,46 @@ wrote defensively (7032 vs 7040) and did not expect to fire.
 
 **Identify by content, not by filename, whenever the filename is issued by a
 device rather than chosen.**
+
+### 20.2 The mechanism I had stopped measuring, measured
+
+20 rests on an argued mechanism: *n=1 has no election, so it cannot carry a
+merge-induced pedestal.*  That is precisely a mechanism explaining why a
+measurement must hold, so I measured it instead of trusting it.
+
+The specific worry is concrete.  My n=1 reference still went through
+`--merge pyramid`, which contains the **hull clamp** -- established on this
+project as a base-octave *pedestal correction* that lifts dark pixels
+(p1 +137 DN, p25 +208 DN).  If it runs at n=1 as well as at n=205 it sits on
+**both** sides of 20's comparison and cancels -- which is 19's failure mode
+exactly, one level up.
+
+`argmax-baseline` is an independent path: it does not align, denoise,
+regularise or blend, and never enters the Laplacian pyramid.  Same frame
+(`DSC00103.ARW`), same binary, `--demosaic` both, full resolution both.  The
+pyramid run applied 0.9974 coverage scaling and argmax does not align at all, so
+the two are **not pixel-registered** and nothing here differences pixels.
+
+| | border DN | far field | p1 dark | mask % |
+| --- | ---: | ---: | ---: | ---: |
+| n=1 argmax (**no pyramid**) | 18108 | 18802 | 1420 | 21.49% |
+| n=1 pyramid | 18126 | 18807 | 1417 | 21.59% |
+| n=205 merged BLEND | 18115 | 18792 | 1271 | 21.62% |
+
+**pyramid - argmax at n=1: +18 DN border, +5 DN far field, -4 DN at p1.**
+Worst channel 18 DN against 20's 681 DN floor -- **2.6% of it.**  The pyramid
+path applies no level shift at n=1 that 20 could have been blind to.
+**20's reference is clean and 20 stands.**
+
+**And the check was not a formality, which is the part that makes it worth
+having run.**  The same statistic *does* move when something real changes: at
+p1 the n=205 merge sits **146 DN below both n=1 renders**.  So the comparison
+was capable of returning a difference and did not return one where I claimed
+none.  A null from a statistic that never moves is worth nothing; this one moves.
+
+**Open, and deliberately not folded into the conclusion above.**  That 146 DN
+p1 gap between n=1 and n=205 is unexplained.  It is in the dark tail, not the
+backdrop median 20 measures, and the border region evidently contains dark
+content I have not identified.  It is not a pedestal on the backdrop and it does
+not bear on 20, but it is a real difference with a magnitude attached and
+nobody has looked at it.
