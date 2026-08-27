@@ -5034,3 +5034,125 @@ it is now impossible to reach without the code saying so.
 > **An instrument should name the region where it is blind, in code.** A report
 > saying so protects the reader who reads the report. A constant and a refusal
 > protect the reader who does not.
+
+## s39 -- Threshold audit: the thresholds are innocent, and the audit found a bigger hole
+
+Assignment (ORCH): the shape test's **amplitude floor** and its **plateau
+flatness rejection** are thresholds I picked rather than swept, and by s38.11
+they are owed a grid. Report the grid, not just revised numbers.
+
+The specific worry, which is sharper than "unswept constants are bad": **both
+thresholds REJECT edges.** A rejection threshold can buy a clean null by
+discarding the very edges that would have shown an excursion. That would make
+the nulls look exact and the applicable range look wide -- flattering in
+exactly the direction s38.11 predicts, and invisible unless swept.
+
+Both were parameterised as module constants (`AMP_MULT`, `FLAT_MULT`) so the
+audit varies the values the instrument actually uses. An audit that sweeps a
+private copy is measuring a different instrument. Regression check: after
+parameterisation, `--commission` returned 0.063624 / 0.000000 / 0.000013 /
+0.000000, byte-identical to the pre-refactor run.
+
+### s39.1 The grid, noise=0
+
+| AMP_MULT | null | plant | edges | range | real edges |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.02 | 0.000000 | 0.066262 | 2946 | 2.69 | 8504 |
+| 0.05 | 0.000000 | 0.065810 | 2747 | 2.69 | 8423 |
+| 0.10 | 0.000000 | 0.064907 | 2457 | 2.69 | 7858 |
+| **0.15 shipped** | 0.000000 | 0.063624 | 2138 | **2.69** | 7244 |
+| 0.25 | 0.000000 | 0.062401 | 1594 | 2.69 | 6453 |
+| 0.40 | 0.000000 | 0.060303 | 856 | 2.69 | 3255 |
+| 0.60 | 0.000000 | 0.060909 | 304 | 2.70 | 33 |
+
+**The null is exactly 0.000000 at every value.** Across a 30x span of the
+threshold and a 10x span of retained edge count, the applicable range moves by
+0.01 samples. The exact nulls of s38 were **not** bought by rejection, and
+`AMP_MULT` is not load-bearing for any s38 conclusion.
+
+### s39.2 The audit contained an arm that was never tested
+
+The `FLAT_MULT` sweep at noise=0 returned **identical numbers in every row** --
+plant 0.063624, edges 2138, range 2.69, at all seven values from 0.02 to 0.60.
+
+That is not seven passes. Synthetic plateaus at blur 0 are perfectly flat, so
+the flatness test rejected nothing at any setting: **the arm was never
+exercised.** It is the same signature as the byte-identical probe failures
+ORCH catalogued -- a degenerate arm reading as a clean result -- and it was in
+my own audit of my own instrument, one section after I wrote the rule about it.
+
+Only the real-render column responded at all (309 to 9673 edges, a 31x span),
+which is the tell I should have read immediately: a threshold that visibly
+governs real data and provably governs nothing synthetic is not being tested by
+the synthetic arm. The harness now detects this itself and prints
+`DEGENERATE -- rejected nothing at any value; these rows were never tested,
+not passed.`
+
+Re-run with `--grid 150` so the plateaus have something to be non-flat about,
+`FLAT_MULT` moves edge counts from 721 to 14263 and is genuinely exercised.
+**The null remains exactly 0.000000 at every value.** Both thresholds are
+innocent.
+
+### s39.3 The lead I chased and retired
+
+At `FLAT_MULT=0.02`, noise=150, the grid reported an applicable range of
+**14.98 samples** -- which would cover the real renders at 13.52 and 17.86 and
+reopen the entire comparator question. A threshold change that hands back the
+measurement everyone wants is the result that most deserves a control.
+
+Blur sweep at that setting:
+
+| blur | width | edges | null | plant | detectable |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 0.00 | 15.01 | 721 | 0.000000 | 0.003979 | yes |
+| 0.25 | 14.98 | 721 | 0.000000 | 0.003967 | yes |
+| 0.50 | 14.21 | 646 | 0.000000 | 0.000000 | NO |
+| 1.00 | 13.73 | 570 | 0.000000 | 0.000000 | NO |
+| 2.50 | 11.03 | 467 | 0.000000 | 0.000000 | NO |
+
+Detection occurs **only at blur 0.00 and 0.25** -- an unblurred step, whose
+true 10-90% width is 1.89 samples. The width column reports **15.01**. The
+width estimator is wrong by 8x at that setting, and the "extended range" was a
+corrupted readout, not extra reach.
+
+Mechanism: requiring plateau std below 0.02x amplitude in the presence of noise
+does not select cleaner edges, it selects **edges whose ten plateau samples
+happened to be quiet.** That is selection on noise realisation, and the mean
+profile of such a biased subset is distorted along with every statistic derived
+from it.
+
+Control, because a detection criterion that fires on noise would explain the
+same table: plant replaced by a second independent null at four blur levels,
+all four **clean**, no false positives. The criterion is sound; the width was
+not.
+
+### s39.4 The hole the audit actually found: applicability is two-dimensional
+
+At noise=150 the plant is undetectable at **every** width and **every**
+threshold value -- the range column reads `none` in 13 of 14 rows, against 2.69
+throughout at noise=0.
+
+**`APPLICABLE_MAX_WIDTH = 2.69` is a zero-noise figure.** I characterised the
+instrument along one axis, blur, and published a one-dimensional bound for an
+instrument whose applicability is at least two-dimensional. ORCH's standing
+question -- *what property of the input decides whether this check can see
+anything, and have I varied it?* -- I asked about blur, answered it, wrote the
+rule, and then did not ask it about noise.
+
+This does not change s38. The renders were excluded by width alone, 13.52 and
+17.86 against 2.69, before noise is considered at all; a second axis can only
+narrow applicability further. **The conclusion is strengthened a third time,
+and the guard is now known to be necessary rather than sufficient** -- it will
+pass an image that noise has already blinded it on. Documented on the constant
+and in the refusal message rather than left for the next reader to discover.
+
+### s39.5 The rule
+
+> **A rejection threshold must be audited on the axis it rejects along.** Sweep
+> it against an input that actually triggers rejection, or every row returns
+> the same number and the sweep certifies nothing. Identical rows are the
+> signature -- read them as "never tested", never as "robust".
+
+> **A stated applicability bound is only stated along the axes you varied.** A
+> bound published on one axis reads as a complete specification and is not one.
+> Name the axes you did NOT vary, next to the bound.

@@ -54,14 +54,28 @@ HALF = 14
 N_EDGES = 60000
 PLATEAU = 5
 
-# STATED APPLICABILITY RANGE. This instrument cannot answer on edges wider than
-# this, and says so rather than returning a number. Derived by `--range`, which
-# sweeps blur and reports the widest edge at which a matched lanczos plant is
-# still distinguishable from a matched linear null. Both renders in the
-# strehl-vs-fork comparison measured 13.52 and 17.86 samples, several times past
-# it, so their excursions of exactly 0.000000 were the test refusing -- not an
-# absence of ringing. Re-derive with `--range` if HALF or PLATEAU change.
+# STATED APPLICABILITY RANGE, ALONG ONE AXIS ONLY. This instrument cannot
+# answer on edges wider than this, and says so rather than returning a number.
+# Derived by `--range`, which sweeps blur and reports the widest edge at which a
+# matched lanczos plant is still distinguishable from a matched linear null.
+#
+# NECESSARY, NOT SUFFICIENT (s39.4). This bound was measured at ZERO NOISE. The
+# `--grid 150` audit shows the plant is undetectable at EVERY width once noise
+# is present, so an image can pass this width check and still be one the test
+# is blind on. Noise is a second applicability axis and is NOT guarded here.
+#
+# Both renders in the strehl-vs-fork comparison measured 13.52 and 17.86
+# samples, several times past this bound, so their excursions of exactly
+# 0.000000 were the test refusing -- not an absence of ringing.
+# Re-derive with `--range` if HALF or PLATEAU change.
 APPLICABLE_MAX_WIDTH = 2.69
+
+# Two thresholds that were PICKED rather than swept, audited by `--grid`
+# (s39). Kept as named constants so the audit varies the same values the
+# instrument actually uses -- an audit that sweeps a private copy is measuring
+# a different instrument.
+AMP_MULT = 0.15    # an edge must span >= this fraction of the image's range
+FLAT_MULT = 0.15   # each plateau's std must be <= this fraction of the edge amp
 
 
 def luma(path: Path) -> np.ndarray:
@@ -71,11 +85,13 @@ def luma(path: Path) -> np.ndarray:
     return 0.2126 * a[:, :, 0] + 0.7152 * a[:, :, 1] + 0.0722 * a[:, :, 2]
 
 
-def profiles(y: np.ndarray, label: str, verbose: bool = True):
+def profiles(y: np.ndarray, label: str, verbose: bool = True,
+             amp_mult: float = None, flat_mult: float = None):
     """Mean normalised, consistently oriented edge profile for one image."""
     h, w = y.shape
     lo, hi = np.quantile(y[::7, ::7], [0.005, 0.995])
-    amp_floor = 0.15 * (hi - lo)
+    amp_floor = (AMP_MULT if amp_mult is None else amp_mult) * (hi - lo)
+    fmult = FLAT_MULT if flat_mult is None else flat_mult
     gx = np.abs(np.diff(y, axis=1))
     peak = (gx[:, 1:-1] >= gx[:, :-2]) & (gx[:, 1:-1] > gx[:, 2:])
     ys, xs = np.nonzero(peak)
@@ -98,7 +114,7 @@ def profiles(y: np.ndarray, label: str, verbose: bool = True):
             continue
         # Both ends must actually BE plateaus, or "exceeds the plateau" is
         # meaningless. Rejected edges are counted, never silently dropped.
-        if max(a.std(), b.std()) > 0.15 * amp:
+        if max(a.std(), b.std()) > fmult * amp:
             rej_flat += 1
             continue
         # `(p - la) / (lb - la)` already maps the left plateau to 0 and the
@@ -138,6 +154,9 @@ def profiles(y: np.ndarray, label: str, verbose: bool = True):
         print(f"    edge width 10-90%               : {wid:.2f} samples "
               f"(applicable range: <= {APPLICABLE_MAX_WIDTH})")
         if answerable:
+            print("    NOTE: the width bound is a ZERO-NOISE bound (s39.4);")
+            print("      noise is a second applicability axis and is not"
+                  " guarded here.")
             print(f"    OVERSHOOT beyond bright plateau : {max(over, 0.0):.6f}")
             print(f"    UNDERSHOOT below dark plateau   : {max(under, 0.0):.6f}")
             print("    VERDICT: RINGING" if max(over, under) > 1e-4
@@ -148,8 +167,8 @@ def profiles(y: np.ndarray, label: str, verbose: bool = True):
             # returns ~0.000000 whether or not ringing is present, so the
             # number is not merely imprecise -- it is uninterpretable.
             print(f"    VERDICT: REFUSED -- edge width {wid:.2f} exceeds the")
-            print(f"      applicable range {APPLICABLE_MAX_WIDTH}. Blur absorbs"
-                  " the excursion into a")
+            print("      applicable range " + str(APPLICABLE_MAX_WIDTH)
+                  + ". Blur absorbs the excursion into a")
             print("      transition that is still rising, so this test reads"
                   " ~0 with or")
             print("      without ringing present. Use a method that does not"
@@ -159,7 +178,7 @@ def profiles(y: np.ndarray, label: str, verbose: bool = True):
             print(f"    (raw, NOT A VERDICT: over {max(over, 0.0):.6f}, "
                   f"under {max(under, 0.0):.6f})")
         print("    profile: " + " ".join(f"{v:.3f}" for v in mean))
-    return mean, over, under
+    return mean, over, under, len(acc)
 
 
 def synth(shift: str, noise: float = 0.0, then_blur: float = 0.0) -> np.ndarray:
@@ -276,6 +295,77 @@ def applicable_range() -> int:
     return 0
 
 
+def _range_at(amp_mult, flat_mult, noise=0.0):
+    """Widest answerable edge width, under a given pair of thresholds."""
+    last = None
+    for blur in [0.0, 0.25, 0.5, 0.75, 1.0, 1.25]:
+        n = profiles(synth("linear", noise, blur), "n", False, amp_mult, flat_mult)
+        p = profiles(synth("lanczos", noise, blur), "p", False, amp_mult, flat_mult)
+        if n is None or p is None:
+            continue
+        null = max(n[1], n[2], 0.0)
+        plant = max(p[1], p[2], 0.0)
+        if plant > max(20.0 * null, 1e-4):
+            last = width_10_90(n[0])
+    return last
+
+
+def grid(noise: float = 0.0) -> int:
+    """s39 -- audit the two PICKED thresholds against the rule from s38.11.
+
+    The worry that motivates this is specific, not generic: both thresholds
+    REJECT edges, and a rejection threshold can buy a clean null by discarding
+    the edges that would have shown an excursion. That would make the nulls
+    look exact and the applicable range look wide -- flattering in exactly the
+    direction s38.11 predicts.
+
+    NOTE the `noise` argument. Run at noise=0 the FLAT_MULT sweep is DEGENERATE
+    -- synthetic plateaus are perfectly flat, so the flatness test rejects
+    nothing and every row returns identical numbers. That is an arm that was
+    never tested, not an arm that passed. FLAT_MULT can only be exercised on
+    plateaus that have something to be non-flat about.
+    """
+    real = None
+    try:
+        r = luma(Path(r"C:\dev\strehl-out\BUILD-SHARP\ring\wt1-strehl.tif"))
+        real = r[2000:4000, 2000:4000]
+    except Exception as e:
+        print(f"(real-render arm unavailable: {e})\n")
+
+    print(f"synthetic arms at noise={noise:.0f}\n")
+    for name, fixed in [("AMP_MULT", "FLAT_MULT=0.15"),
+                        ("FLAT_MULT", "AMP_MULT=0.15")]:
+        print(f"=== {name} swept, {fixed} held ===")
+        print(f"  {'value':>7}  {'null':>9}  {'plant':>9}  {'edges':>7}  "
+              f"{'range':>6}  {'real edges':>10}")
+        seen = set()
+        for v in [0.02, 0.05, 0.10, 0.15, 0.25, 0.40, 0.60]:
+            am, fm = (v, 0.15) if name == "AMP_MULT" else (0.15, v)
+            n = profiles(synth("linear", noise, 0.0), "n", False, am, fm)
+            p = profiles(synth("lanczos", noise, 0.0), "p", False, am, fm)
+            if n is None or p is None:
+                print(f"  {v:7.2f}  VACUOUS -- no edges survive")
+                continue
+            rng = _range_at(am, fm, noise)
+            re_n = ""
+            if real is not None:
+                rr = profiles(real, "r", False, am, fm)
+                re_n = f"{rr[3]}" if rr is not None else "VACUOUS"
+            star = "  <- shipped" if abs(v - 0.15) < 1e-9 else ""
+            seen.add(n[3])
+            print(f"  {v:7.2f}  {max(n[1], n[2], 0.0):9.6f}  "
+                  f"{max(p[1], p[2], 0.0):9.6f}  {n[3]:7d}  "
+                  f"{(f'{rng:.2f}' if rng else 'none'):>6}  {re_n:>10}{star}")
+        if len(seen) == 1:
+            print(f"  DEGENERATE -- {name} rejected nothing at any value on the")
+            print("  synthetic arm. These rows were never tested, not passed.")
+        print()
+    print("Read the NULL column first. If it is exactly 0.000000 at every")
+    print("value, the exact nulls were NOT bought by rejection, and the")
+    print("thresholds are not load-bearing for the s38 conclusion.")
+    return 0
+
+
 def commission() -> int:
     print("COMMISSIONING the shape test")
     print("  Matched pairs: identical pipeline, only the sign of the shift")
@@ -307,6 +397,10 @@ def commission() -> int:
 def main() -> int:
     if len(sys.argv) == 2 and sys.argv[1] == "--commission":
         return commission()
+    if len(sys.argv) == 2 and sys.argv[1] == "--grid":
+        return grid(0.0)
+    if len(sys.argv) == 3 and sys.argv[1] == "--grid":
+        return grid(float(sys.argv[2]))
     if len(sys.argv) == 2 and sys.argv[1] == "--range":
         return applicable_range()
     if len(sys.argv) == 2 and sys.argv[1] == "--widths":
