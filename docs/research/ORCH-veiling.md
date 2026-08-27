@@ -10642,3 +10642,86 @@ and is excluded rather than ranked.
 geometry where occlusion veiling is worst, and a rim reaching **198% of the step height**.
 That is what "horrendous" measures to. Any halo fix must move that number, measured by an
 instrument its author did not write.
+
+---
+
+## §96 — I withdraw §95's target: the one certified halo is mostly specular rim light
+
+§95 ended with a sentence I now have to take back: *"`tweezers-cpl` is the reference case
+... That is what 'horrendous' measures to."* It is not established that it measures
+anything of the sort, and I had already broadcast it to five build lanes as the number to
+beat before I checked.
+
+### The question I should have asked before broadcasting
+
+Twenty-six masters. Exactly **one** certified. That one is polished stainless steel — the
+most specular subject in the corpus. A metal edge against a dark background is precisely
+where a *genuine* rim highlight is physically expected, and in a profile that has been
+normalised to a 0 -> 1 step, **a real specular rim and a merge overshoot are the same
+shape**. `orch_halo.py` cannot separate them, and nothing in its three commissioning arms
+ever asked it to.
+
+I did not catch this from the number. I caught it from the picture: I rendered the four
+worst individual sites with `orch_halosite.py`, looked at the crop, and saw shiny metal.
+
+### The control
+
+`orch_halosrc.py`. Decode the source frames with rawpy at stated settings
+(`no_auto_bright=True`, `use_camera_wb=True`, `gamma=(1,1)`, `output_bps=16`) and run the
+identical profile geometry, gates and normalisation on each. Structure the merge
+manufactured is absent from the individual exposures; structure the optics delivered is
+present in them. Twelve frames spanning the 100-frame stack:
+
+| frame | halo | | frame | halo |
+|---|---|---|---|---|
+| 0 | 0.0388 | | 45 | **1.3440** |
+| 9 | 0.0510 | | 54 | **1.3450** |
+| 18 | 0.0542 | | 63 | 0.2509 |
+| 27 | 0.0491 | | 72 | 0.1971 |
+| 36 | 0.0684 | | 81 | 0.1906 |
+| | | | 99 | 0.0944 |
+
+Shipped master **0.8725**. Single-frame median **0.1280**, range **0.0388..1.3450**.
+
+### The wrong verdict I printed first, and why it was wrong
+
+My first pass sampled five frames, took the median (0.0925), and printed
+`VERDICT the merge AMPLIFIES an existing rim by 9.43x`. Widening to twelve moved it to
+6.82x. Both are meaningless, and the reason is structural rather than statistical.
+
+**A focus stacker selects the sharpest frame at each edge. At a specular boundary the
+sharpest frame is also the one carrying the strongest rim**, because the highlight is only
+tight while that edge is in focus. Frames 45-54 are where the tweezer edge comes into
+focus; they read 1.34. The frames reading 0.04 are the ones whose edges are defocused
+there, which is exactly why the merge does not select them at those pixels. Averaging over
+them builds a baseline out of candidates the algorithm correctly rejected.
+
+Against the right baseline the master is **below the strongest frame it could have
+chosen** — 0.8725 against 1.3450.
+
+> **When you benchmark a selector's output against its inputs, the baseline is the input
+> the selector would have chosen, not the average input.** An average over correctly
+> rejected candidates is not a control; it is a strawman that reports an artifact whenever
+> the selection is working.
+
+### Standing
+
+**NOT ESTABLISHED as a stacking artifact.** There may still be an artifact component, and
+resolving that needs the per-pixel election map at those edges, which I do not have. But
+the framing "one subject has a halo and it is 0.945" is not evidence of a merge defect,
+the target is withdrawn from all five lanes, and `README.md` must not carry it.
+
+### The pattern, third instance tonight
+
+The dark-tail census, the cross-master median, and now the halo target all passed their own
+commissioning and still returned a wrong answer, and all three failed identically: **the
+plant tested the amplitude of the effect rather than the alternative explanation for it.**
+My synthetic arm planted an overshoot and proved the tool recovers overshoots. It never
+asked what else makes that shape.
+
+> **Before trusting a positive reading, name the most plausible innocent explanation for it
+> and go measure that specific cause.** Not a null, not a shuffle, not an amplitude ladder.
+> A control that varies only amplitude cannot separate two mechanisms that share a shape.
+
+One consolation, and it is not small: if the corpus contains no certified halo, that is bad
+news about my metric's value as a regression gate and *good* news about the product.
