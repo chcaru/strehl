@@ -2898,3 +2898,73 @@ sector's far field -- which I did not look at before recommending a crop to the
 owner.  **A statistic that normalises by a locally measured reference must have
 that reference printed and nulled, or it will report the reference's structure
 as the signal's.**
+
+## 18. Which arm ships: the pyramid, proven by byte identity
+
+**ANSWER: the pyramid is the default. The estimator does not ship.**  The aura
+arm measured in 17 is NOT what the owner has been looking at.  This is therefore
+an argument against a change nobody was going to make; recorded and left.
+
+Binary `target\release\strehl.exe`, SHA-256
+`16EB215F6264DB692A7D95356A5462CE19F606394BD627039549412DD45F0187`, banner
+`strehl 0.0.0 (c082a9860c66-dirty)`, mtime 2026-08-26T16:30:41, newer than every
+`.rs` under `crates/` (newest `main.rs` 16:23:37) so it is not stale.  Subject
+`coffee-bubbles` (19 frames).  One binary, unchanged across all runs, re-hashed
+after each.
+
+**Evidence 1 -- the runtime banner at plain defaults, no flags at all:**
+
+```
+merge backend   : pyramid (default)
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+noise gate      : 2.00 x the modelled band-noise power
+exponent        : 2.00
+```
+
+The gate of 2.00 matches `pyramid.rs:944 gate: 2.0`, recorded independently in
+16.1 as the pyramid's parameter, distinct from the estimator's 4.00.
+
+**Evidence 2 -- byte identity, which is why this is MEASURED and not argued.**
+The owner asked how I know the default and my `--merge pyramid` arm are one code
+path rather than two similar names.  Rendered both, argv differing only by
+`+--merge +pyramid`:
+
+| argv | output SHA-256 |
+| --- | --- |
+| `stack DIR -o X.tif` | `414331E605A9C829E6962E8A72F176AB4EF97F374305A94658E927B55ED0CBB8` |
+| `stack DIR --merge pyramid -o X.tif` | `414331E605A9C829E6962E8A72F176AB4EF97F374305A94658E927B55ED0CBB8` |
+
+**Byte-identical.**  The default path IS the arm 17 measured at +0.21%.
+
+**Evidence 3 -- the estimator is a genuinely different path, not a label.**  A
+run inferring the estimator died inside `photometric normalisation`, a stage the
+pyramid banner explicitly lists under `not applied`.  Disjoint stage sets,
+exercised.
+
+### 18.1 The live hazard: the backend is INFERRED from flags
+
+Measured, same binary, argv differing only by the added flag:
+
+| added flag | banner |
+| --- | --- |
+| `--gate 4.0` | `estimator (inferred from --gate; pass --merge pyramid to override)` |
+| `--pyramid-gate 4.5` | `pyramid (inferred from --pyramid-gate)` |
+
+`--gate` selects the **estimator** -- the aura arm -- when `--merge` is absent.
+The binary's own help puts the sweep at **338 call sites in 185 files, 189
+executable, `--gate` alone accounting for 275**.  Any harness passing a bare
+`--gate` is rendering on the arm that measures -10.13% over the aura band and is
+darker than the pyramid in 24 of 24 sectors.
+
+Two things keep this from being a silent defect, and both are measured:
+
+- It **announces itself**: `NOTE: this is not the default merge. Your flags
+  asked for estimator, so that is what runs.`
+- **`--pyramid-gate` infers the pyramid**, so the gallery masters rendered at
+  `--pyramid-gate 4.5` were on the good arm.  I checked this specifically
+  because if that flag had inferred the estimator it would have reversed the
+  answer above.
+
+**Not established.**  I did not sweep the repository's harnesses for bare
+`--gate`; the count above is the binary's own, not mine.  Whether any *live*
+render path passes it is the checkable next question and I did not answer it.
