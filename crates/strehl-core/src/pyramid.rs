@@ -683,6 +683,41 @@ pub const DEFAULT_MEAN_COARSE: usize = 0;
 /// [`crate::focus::WINDOW_RADIUS_ENV`].
 pub const MEAN_COARSE_ENV: &str = "STREHL_PYRAMID_MEAN_COARSE";
 
+/// Diagnostic switch: dump the per-band selection weight maps to this path
+/// prefix.
+///
+/// Unset, every field it drives is empty and the merge is bit-identical — the
+/// dump arms are all guarded on `dmax.is_empty()`, which is a property of the
+/// allocation and not of a flag read per pixel.
+///
+/// This exists because the claim "in a flat region the weight collapses onto
+/// one frame, chosen by noise, independently at each pixel" is a claim about a
+/// quantity the merge never emits. It was argued from the exponent ladder for
+/// two briefings running, against two code paths that turned out not to
+/// execute. An argued mechanism and a measured one are not the same evidence,
+/// and this is the cheapest way to make it measurable rather than arguable.
+///
+/// A set-but-unusable value panics rather than silently skipping the dump, for
+/// [`MEAN_COARSE_ENV`]'s reason: a diagnostic that quietly writes nothing is
+/// indistinguishable at the terminal from one that found nothing to report.
+pub const WEIGHT_DUMP_ENV: &str = "STREHL_PYRAMID_WEIGHT_DUMP";
+
+/// The dump prefix, if [`WEIGHT_DUMP_ENV`] is set to a non-empty value.
+#[must_use]
+pub fn weight_dump_prefix() -> Option<String> {
+    match std::env::var(WEIGHT_DUMP_ENV) {
+        Err(_) => None,
+        Ok(raw) => {
+            let t = raw.trim();
+            assert!(
+                !t.is_empty(),
+                "{WEIGHT_DUMP_ENV} is set but empty; unset it or give a path prefix"
+            );
+            Some(t.to_string())
+        }
+    }
+}
+
 /// The number of coarsest Laplacian bands averaged, honouring
 /// [`MEAN_COARSE_ENV`].
 #[must_use]
@@ -1175,6 +1210,21 @@ pub struct BandMerge {
     /// level. Reported, because a stack where this is large is one where the
     /// gate is wrong.
     gain: BandGain,
+    /// DIAGNOSTIC ONLY, and empty unless [`WEIGHT_DUMP_ENV`] is set: the
+    /// largest weight seen so far at each coefficient, and the index of the
+    /// frame that achieved it.
+    ///
+    /// This cannot reuse [`Self::best`], which is populated only under
+    /// [`SelectMode::HardMax`] — the arm that does *not* ship — and carries no
+    /// frame index at all.
+    ///
+    /// Held as a running max rather than a full per-frame history because the
+    /// merge is a single-pass fold and storing every frame's weight at every
+    /// coefficient is `frames * pixels` floats. The two questions this exists
+    /// to answer — is the weight concentrated on one frame, and is that choice
+    /// spatially coherent — are both answerable from the max and its argument.
+    dmax: Vec<Vec<f32>>,
+    darg: Vec<Vec<i32>>,
 }
 
 impl BandMerge {
@@ -1264,6 +1314,14 @@ impl BandMerge {
             // gain vector measured for the requested depth would then be longer
             // or shorter than the pyramid it gates.
             gain: BandGain::measure(sizes.len() - 1),
+            dmax: match weight_dump_prefix() {
+                None => Vec::new(),
+                Some(_) => sizes.iter().map(|s| vec![0.0f32; s.pixels()]).collect(),
+            },
+            darg: match weight_dump_prefix() {
+                None => Vec::new(),
+                Some(_) => sizes.iter().map(|s| vec![-1i32; s.pixels()]).collect(),
+            },
             sizes,
         }
     }
@@ -1531,6 +1589,20 @@ impl BandMerge {
     fn accumulate_level(&mut self, k: usize, planes: &[&[f32]], cache: &mut PlaneCache, w: &[f32]) {
         cache.ensure(planes, &self.sizes);
         let px = self.sizes[k].pixels();
+        // Diagnostic, and deliberately before the accumulators are borrowed:
+        // `self.frames` is still this frame's 0-based index here, because it is
+        // incremented at the end of `add_frame`.
+        if !self.dmax.is_empty() {
+            let fr = self.frames as i32;
+            let dm = &mut self.dmax[k][..px];
+            let da = &mut self.darg[k][..px];
+            for i in 0..px {
+                if w[i] > dm[i] {
+                    dm[i] = w[i];
+                    da[i] = fr;
+                }
+            }
+        }
         let den = &mut self.den[k][..px];
         match self.cfg.select {
             SelectMode::SoftPower => {
@@ -1801,6 +1873,27 @@ impl BandMerge {
                 }
             }
         }
+        // Diagnostic, and it must run BEFORE `self.frames` is updated: the
+        // absorbed merge numbered its frames 0-based within its own chunk, so
+        // its winner labels are only meaningful once offset by the number of
+        // frames already folded here. The resulting global numbering need not
+        // match the order the frames were supplied in, but it is *consistent*
+        // across the image, which is the only property the spatial-coherence
+        // question depends on. The concentration map needs no such care: a max
+        // absorbed by max and a sum by sum are both exact.
+        if !self.dmax.is_empty() && !other.dmax.is_empty() {
+            let base = self.frames as i32;
+            for k in 0..self.sizes.len() {
+                let px = self.sizes[k].pixels();
+                for i in 0..px {
+                    if other.dmax[k][i] > self.dmax[k][i] {
+                        self.dmax[k][i] = other.dmax[k][i];
+                        self.darg[k][i] =
+                            if other.darg[k][i] < 0 { -1 } else { other.darg[k][i] + base };
+                    }
+                }
+            }
+        }
         self.frames += other.frames;
     }
 
@@ -1818,6 +1911,67 @@ impl BandMerge {
             .collect()
     }
 
+    /// Write the per-band selection weight diagnostics, if [`WEIGHT_DUMP_ENV`]
+    /// asked for them.
+    ///
+    /// Emits, per Laplacian band `k`, at that band's own grid size:
+    ///
+    /// - `<prefix>-b<k>-conc.f32` — `max_i(w_i) / sum_i(w_i)`, the share of the
+    ///   total weight held by the single most-favoured frame. `1.0` is
+    ///   winner-take-all; `1/frames` is a plain mean. Written as `NaN` where
+    ///   `sum(w) == 0`, which is the population the gate refused outright and
+    ///   which averaged instead — those coefficients have no winner and must
+    ///   not be counted as unanimous ones.
+    /// - `<prefix>-b<k>-arg.i32` — the index of that frame, or `-1` where the
+    ///   gate admitted nothing.
+    ///
+    /// Raw little-endian arrays with a sidecar `<prefix>-dims.json`, rather than
+    /// an image format, because these are measurements and any image writer
+    /// would tone-map or quantise them.
+    fn dump_weights(&self) {
+        let Some(prefix) = weight_dump_prefix() else {
+            return;
+        };
+        if self.dmax.is_empty() {
+            return;
+        }
+        let mut dims = String::from("{\"frames\":");
+        dims.push_str(&self.frames.to_string());
+        dims.push_str(",\"bands\":[");
+        for (k, sz) in self.sizes.iter().enumerate() {
+            if k > 0 {
+                dims.push(',');
+            }
+            dims.push_str(&format!(
+                "{{\"k\":{},\"w\":{},\"h\":{},\"exponent\":{}}}",
+                k,
+                sz.width,
+                sz.height,
+                self.cfg.exponent_at(k, self.sizes.len() - 1)
+            ));
+            let px = sz.pixels();
+            let mut conc: Vec<u8> = Vec::with_capacity(px * 4);
+            let mut arg: Vec<u8> = Vec::with_capacity(px * 4);
+            for i in 0..px {
+                let d = self.den[k][i];
+                let share = if d > 0.0 { self.dmax[k][i] / d } else { f32::NAN };
+                conc.extend_from_slice(&share.to_le_bytes());
+                arg.extend_from_slice(&self.darg[k][i].to_le_bytes());
+            }
+            let write = |suffix: &str, bytes: &[u8]| {
+                let path = format!("{prefix}-b{k}-{suffix}");
+                std::fs::write(&path, bytes)
+                    .unwrap_or_else(|e| panic!("{WEIGHT_DUMP_ENV}: cannot write {path}: {e}"));
+            };
+            write("conc.f32", &conc);
+            write("arg.i32", &arg);
+        }
+        dims.push_str("]}");
+        let path = format!("{prefix}-dims.json");
+        std::fs::write(&path, dims.as_bytes())
+            .unwrap_or_else(|e| panic!("{WEIGHT_DUMP_ENV}: cannot write {path}: {e}"));
+    }
+
     /// Resolve the accumulators into one merged Laplacian pyramid per plane and
     /// collapse each to a level-0 image.
     ///
@@ -1825,6 +1979,7 @@ impl BandMerge {
     /// to [`add_frame`](Self::add_frame).
     pub fn finish(&self, ws: &mut Workspace) -> Vec<Vec<f32>> {
         assert!(self.frames > 0, "cannot finish a merge with no frames");
+        self.dump_weights();
         let inv_n = 1.0 / self.frames as f32;
         (0..self.planes)
             .map(|c| {
