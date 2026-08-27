@@ -12823,3 +12823,87 @@ master-vs-frame number cross-gauge, with no symptom.
 > written in a comment was not a repair in §116. Routed back with the fix
 > specified: derive the pin *from* the corpus seal so the mismatch is
 > unrepresentable, and commission the guard by making it RED before trusting it.
+
+## 121. The number that survived was the smallest of the three
+
+`V-H2H2` was asked to re-adjudicate its gather-flip band claims after I sent it a
+correction that moved a number **in its favour**: the free-field lane had found
+that per-tile focus selection recovers `R = 2.419` at 0.20–0.25 cyc/px, where the
+whole-frame construction had found `1.015` and concluded "noise band". Its
+promotion arm was therefore re-openable.
+
+It came back having promoted one band, demoted another, and **withdrawn its own
+largest headline number**. The sequence, noise-corrected:
+
+| band (cyc/px) | flip effect | `NOISE_COM` control | effect ÷ control | verdict |
+|---|---:|---:|---:|---|
+| 0.20–0.25 | 2.103 | 1.078 | **1.95** | PROMOTED |
+| 0.25–0.30 | 3.580 | 1.492 | 2.40 | holds, demoted |
+| 0.30–0.40 | 3.462 | **3.866** | 0.90 | **WITHDRAWN** |
+
+### The sentence
+
+> An adversarial noise injection moved this statistic **further than the real
+> change did**.
+
+At 0.30–0.40 the flip measured 3.462 and the lane's own injected-common-noise
+control measured 3.866. That band is not weakly supported or hard to read. It is
+**inside its own control**, and it had been the lane's headline.
+
+### Three things this segment did right, in order of rarity
+
+**It checked the correction before importing it, because the correction helped
+it.** It tested for selection bias (the selecting band 0.05–0.20 and the reporting
+band 0.20+ are disjoint, so the argmax cannot bias the report), for a favourable
+subset (ALL and CONFIRMED populations are identical, 29/29), and for subject
+transfer — and found the free-field measurement runs on `113MSDCF`, *the same
+stack all three of its flip numbers came from*, so there was no transfer
+assumption at all. It then flagged that `coffee-bean` **is** a transfer and
+caveated only that one. Verifying a gift is harder discipline than verifying a
+threat.
+
+**It corrected my paraphrase, and I was wrong.** I had written that each tile
+"picks its own best-focus and worst-focus frame." The construction selects on
+0.05–0.20 and reports from 0.20 — disjoint — and the defocused side is a **fixed
+20-step offset, not an argmin**. It is not a max-minus-min over N. My phrasing
+described a *weaker* instrument than the one that exists; a lane taking it on
+trust would have caveated a result needing no caveat. **A paraphrase that
+understates an instrument is as damaging as one that overstates it, and it is
+harder to catch, because it looks like caution.**
+
+**It retired its own corroborating argument.** It had offered a monotone rise
+across bands as evidence the flip worked. Noise-corrected, the sequence is
+1.95 → 2.40 → **0.90**: it peaks and collapses. So the rise was degenerate between
+"the flip worked where aimed" and "the instrument degrades with frequency" — and
+it said so, unprompted, while withdrawing it.
+
+### What this costs and what it buys
+
+The lane ends the segment with a **smaller** claim than it started with. That is
+the correct direction of travel for a result under adversarial self-examination,
+and it is why the surviving 1.95× is worth putting in front of the owner: it is
+the number left after its author spent a session trying to kill it, with the
+entire noise inflation charged against it rather than subtracted from it.
+
+Its `§3b` was **too severe in one band and not severe enough in another** — an
+error in both directions at once, which is the signature of a threshold applied
+uniformly to a statistic whose noise floor is not uniform.
+
+### Rule
+
+> **Band-limited statistics need band-limited controls.** One control evaluated
+> at one frequency cannot license a claim at another; the same injection that is
+> negligible at 0.20 cyc/px dominates at 0.35.
+
+> **A monotone trend across a swept parameter is evidence for the effect only if
+> the instrument's noise floor is flat across the sweep.** Otherwise it is
+> equally evidence about the instrument.
+
+### Corpus action
+
+- `1.95×` at 0.20–0.25 is now the README's stated gather-flip benefit, with the
+  withdrawal beside it and labelled as the smallest of the three.
+- The `51%` / `88%` common-mode figures are **removed** from the owner-facing
+  document: 88% sat at 0.30–0.40, which no longer supports a benefit claim.
+- My paraphrase is corrected to `BUILD-OUTPUT` and `V-SOFTCHECK`, which both
+  received it.
