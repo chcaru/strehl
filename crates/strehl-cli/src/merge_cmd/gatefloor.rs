@@ -98,6 +98,51 @@ pub fn enabled() -> bool {
     })
 }
 
+/// Per-band multiplier on the floor, comma separated, e.g.
+/// `STREHL_GATE_FLOOR_SCALE=1,4,4,4,4,4,4`. Unset means no scaling and is a
+/// byte-exact no-op.
+///
+/// This exists because `--pyramid-gate` is a single number by construction and
+/// the measurement that motivated the knob wants opposite moves at opposite
+/// ends of the pyramid: at band 0 the gate already averages 54.4% of the finest
+/// band, while bands 1..6 average 0.0% at the shipping `k` and only reach
+/// 8.1/4.7/3.1/1.3/0.0/0.0% at `k=8` -- by which point band 0 is at 97.2% and
+/// the fine detail is gone. Scaling `k` per band and scaling the floor per band
+/// are the same operation, so this is the cheaper seam: it needs no change to
+/// the merge, and the merge's own `is_finite` fallback keeps a shorter list
+/// valid.
+///
+/// Above the certified range the floor is extended with the white value before
+/// scaling, because the merge would otherwise fall back to white and the knob
+/// would have no authority at exactly the coarse bands it is aimed at. Passing
+/// all ones therefore reproduces the unset render exactly, which is the
+/// negative control this knob is commissioned with.
+pub const GATE_FLOOR_SCALE_ENV: &str = "STREHL_GATE_FLOOR_SCALE";
+
+/// The parsed per-band scale, empty when unset.
+fn scale() -> &'static [f32] {
+    static CHOICE: std::sync::OnceLock<Vec<f32>> = std::sync::OnceLock::new();
+    CHOICE.get_or_init(|| {
+        let Ok(raw) = std::env::var(GATE_FLOOR_SCALE_ENV) else {
+            return Vec::new();
+        };
+        let parsed: Vec<f32> = raw
+            .split(',')
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+            .map(|s| {
+                s.parse::<f32>()
+                    .unwrap_or_else(|_| panic!("{GATE_FLOOR_SCALE_ENV}: {s:?} is not a number"))
+            })
+            .collect();
+        assert!(
+            parsed.iter().all(|v| v.is_finite() && *v > 0.0),
+            "{GATE_FLOOR_SCALE_ENV}: every entry must be finite and positive, got {parsed:?}"
+        );
+        parsed
+    })
+}
+
 /// `STREHL_GATE_FLOOR=debug` additionally reports every frame's measured floor
 /// against the white model it replaces.
 ///
@@ -198,6 +243,7 @@ impl Probe {
             );
             self.beta = got;
         }
+        self.apply_scale();
         Ok(&self.beta)
     }
 
@@ -298,6 +344,38 @@ impl Probe {
             self.report(index, t);
         }
         Ok(())
+    }
+
+    /// Apply [`GATE_FLOOR_SCALE_ENV`], extending to every Laplacian band first.
+    ///
+    /// Called from `measure` rather than `run`, and after the debug block, so
+    /// that neither the per-frame `report` nor the identity-warp commissioning
+    /// null ever sees a scaled floor. Both of those compare the measured floor
+    /// against white to detect *probe* error; a knob applied before them would
+    /// be reported as exactly the instrument fault they exist to catch.
+    ///
+    /// It extends before it scales, so a band above the certified range is
+    /// scaled relative to white instead of being left to the merge's white
+    /// fallback, where the multiplier would silently do nothing.
+    fn apply_scale(&mut self) {
+        let s = scale();
+        if s.is_empty() {
+            return;
+        }
+        let white = strehl_core::pyramid::BandGain::measure(self.sizes.len() - 1);
+        let bands = self.sizes.len().saturating_sub(1);
+        while self.beta.len() < bands {
+            let k = self.beta.len();
+            self.beta.push(white.beta(k));
+        }
+        for (k, b) in self.beta.iter_mut().enumerate() {
+            // A band the probe could not certify stays NaN: the merge drops it
+            // back to white, and scaling a number nobody measured would be
+            // inventing one.
+            if b.is_finite() {
+                *b *= s.get(k).copied().unwrap_or(1.0);
+            }
+        }
     }
 
     /// Report this frame's measured floor beside the white model it replaces.
