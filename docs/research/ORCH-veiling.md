@@ -13730,3 +13730,135 @@ a ruler made of the thing it scores. That is why I redirected the lane onto the
 ruler instead of the solver. **When the gauge and the subject of measurement
 share an error, no amount of measurement discipline downstream can recover; the
 discipline has to move upstream to the gauge.**
+
+---
+
+## §133 — a fit that cannot express a defect cannot exonerate its cause
+
+I published a finding tonight that was wrong, and the interesting part is not
+that it was wrong but that I had built an argument for it that felt like
+evidence and was not.
+
+The comparison put our render and `enfuse`'s side by side at 1:1. Before
+comparing, I fitted a per-channel linear gain to remove any white-balance
+difference between the two renderers — a real and necessary correction, and one
+I had already improved once after measuring 4.6% spread between channels. On one
+crop the residual showed a warm fringe along one side of a band and a cool cast
+along the other. I wrote:
+
+> That colour error **survives the per-channel gain fit**, so it is not a
+> white-balance difference.
+
+The panels were misregistered by 11 px.
+
+The sentence commits a specific error, and it is worth naming precisely because
+it will recur in any lane that normalises before comparing. **I treated "the fit
+did not remove it" as "the fit ruled out its cause."** Those are different
+claims, and the gap between them is the *shape* of what the fit can express. A
+per-channel gain is three scalars. It can express a global cast. It cannot
+express anything that varies across the frame, and a misregistration produces a
+colour error that is *antisymmetric across every edge* — warm on one side, cool
+on the other, precisely the pattern I observed. My evidence that the defect was
+not white balance was therefore evidence for nothing at all: no possible value
+of those three scalars could have removed it, whatever its cause. I had proved
+that the defect was not in the fit's span, and then reported that as having
+identified what it was.
+
+The rule: **before reading a residual as a finding, write down the space the
+nuisance fit spans, and check the residual against at least one defect from
+outside that space.** If the residual's shape is orthogonal to the fit by
+construction, the fit's failure to remove it carries no information.
+
+There is a sharper corollary, because the fit did not merely fail to help — it
+actively made the error *harder* to see. A three-scalar gain fitted on a
+misregistered pair does not sit idle; it finds the gains that best reconcile two
+different pieces of content, and it succeeds well enough to make the panels look
+comparable. The normalisation that was supposed to clear the ground for the
+comparison is the thing that made a broken comparison presentable.
+
+**What actually caught it** was not more looking. It was replacing the argument
+with a measurement: re-running the registration *per crop* rather than once per
+frame, and refusing the crop when the local shift disagreed with the global
+shift by more than a few pixels. The same guard, run on a second subject,
+refused all three of its sites — one of them at a fitted gain of **-0.077**, a
+negative gain, which is not a tone difference under any interpretation and is
+the signature of anti-correlated content. The absurd number is what makes the
+guard trustworthy: an instrument that can only fail *plausibly* is one you will
+argue with.
+
+Two further notes, both from applying it:
+
+- **The refusals are the result, and they must be reported as such.** The
+  comparison now rests on two sheets rather than six. Retrying until a site
+  passes is how a comparison gets chosen for its answer, so the count is
+  published as `sites = written + refused` and the refused ones are named.
+- **The withdrawal is not the end of the enquiry.** Two explanations for the
+  11 px survive and neither is tested: correlation aliasing on a periodic
+  subject, or a real local displacement in our own render — the second being
+  the more serious, since both comparators agree with each other and disagree
+  only with us. Withdrawing a claim converts it into a question. It does not
+  discharge it.
+
+---
+
+## §134 — derive which way a sampling bias pushes before you publish the number, because it decides whether you have a floor or a ceiling
+
+A lane reported a conviction to me and attached a caveat, in good faith, that
+inverted the meaning of its own result. The caveat was that a small-sample
+minimum is *"biased high, which manufactures excess."* The first clause is
+correct. The second is backwards, and the lane found it itself a turn later.
+
+The statistic was `master / min(source frames)` — how much blotchier the merged
+result is than the least blotchy frame that went into it. When the minimum is
+taken over a subsample rather than the whole stack, it lands higher than the
+true minimum, because a subsample is less likely to contain the extreme. But
+that minimum is the **denominator**. A denominator biased high makes the ratio
+come out **small**. Subsampling does not manufacture the excess; it *suppresses*
+it. Measured on the one stack taken entire, at 4000 draws per row, the p90 sat
+pinned at the full-stack value in every row and no percentile exceeded it.
+
+So every subsampled ratio in the corpus is a **lower bound**, and the excesses
+we have been publishing are floors. The `+16%` on one subject is at least 16%.
+The five convictions on another lane's certification are at least what they say.
+
+Three things make this worth its own entry rather than a footnote.
+
+**1. The error was in the briefing, not in the work.** The lane's own analysis
+had the direction right in an earlier section. What went out to me — the summary
+I actually made decisions on — had it backwards. In a fleet, the briefing *is*
+the artifact for everyone downstream of it, and it is the one part of a lane's
+output that nobody verifies, because it is prose and it agrees with numbers that
+are themselves correct. A verifier pointed at the analysis would have passed it.
+
+**2. My decision survived, for the opposite reason to the one I was given.** I
+had ordered "do this subject first" on the strength of it being the *least
+inflated* number available. The right reason was that its number is **exact**
+rather than subsampled. Same instruction, same outcome, reasoning fully
+inverted. This is the most dangerous shape an error can take, because nothing
+downstream misbehaves and there is no symptom to notice. Had the surrounding
+facts been slightly different, the same inverted premise would have chosen the
+wrong subject with equal confidence, and I would have had equally little to
+alert me.
+
+**3. A bias whose direction is unknown cannot support a conviction *or* an
+acquittal.** It is tempting to treat "there is some sampling bias here" as a
+uniform reason for caution. It is not. If the bias is downward, a measured
+excess is conservative and a conviction is safe, while an acquittal is worthless
+— the acquitted subject may simply have been suppressed below the threshold. If
+the bias is upward, exactly the reverse. **The direction, not the magnitude,
+determines which of the two verdicts the instrument is entitled to reach.** A
+lane that knows only that a bias exists knows less than it thinks.
+
+The rule: **for any statistic computed on a subsample, derive the sign of the
+sampling bias before publishing, state whether the reported number is a floor or
+a ceiling, and say which verdict the instrument is therefore licensed to
+return.** Where it is cheap — and here it was, one stack taken entire against
+4000 draws — measure the direction rather than arguing it. The argument is one
+line long and I have now seen it get the sign wrong.
+
+A closing observation about why this was caught at all. It was caught because
+the lane wrote its briefing and its analysis at different times and then read
+both. Nothing else in the process compares those two documents to each other:
+verifiers check the analysis against the data, and orchestrators read the
+briefing. **The gap between a lane's summary and a lane's work is unaudited by
+construction**, and it is exactly where a sign error survives.
