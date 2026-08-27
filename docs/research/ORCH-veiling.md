@@ -12907,3 +12907,86 @@ uniformly to a statistic whose noise floor is not uniform.
   document: 88% sat at 0.30–0.40, which no longer supports a benefit claim.
 - My paraphrase is corrected to `BUILD-OUTPUT` and `V-SOFTCHECK`, which both
   received it.
+
+## 122. The same grep failure twice in one session, and the procedure that ends it
+
+Two hours after writing §118 — *"a grep that returns nothing has told you about
+your pattern, not about the tree"* — I made the identical error again, on a
+different question.
+
+Asking whether the plugin dispatch had a regression guard, I searched
+`crates/**/tests/**` for `fn .*(plugin|dispatch|unreach|contribut).*\(\)` and got
+**"No matches found."** The honest reading available to me at that moment was
+"the user's headline architectural requirement ships with no test guarding it."
+
+That reading was **false**, and two guards exist:
+
+| file:line | test |
+|---|---|
+| `strehl-core/src/focus.rs:1031` | `the_shipped_operator_through_the_plugin_entry_points_is_bit_identical()` |
+| `strehl-plugin/src/measure.rs:147` | `a_declared_custom_window_that_is_not_overridden_panics_rather_than_passing_through()` |
+
+Both were invisible to my search for two compounding reasons: they are **inline
+`#[cfg(test)]` modules in `src/`, not files under `tests/`**, so my path glob
+excluded them; and they are named for **what they assert** rather than for the
+subsystem they protect, so my noun list missed them. The second guard is
+precisely the one covering the defect `e1bf09e0` was written to fix — a declared
+custom window that silently passed through instead of panicking.
+
+### Why awareness was not enough
+
+§118 recorded the lesson and I still repeated it, which means **the lesson was
+stated as a caution rather than as a procedure.** A caution is something you must
+remember at the moment of maximum confidence, which is exactly the moment you
+will not remember it. The fix has to be mechanical:
+
+> **An empty search result is not reportable until a positive control proves the
+> search could have matched something.**
+
+Concretely, on the re-run I asked the tree a question I already knew the answer
+to: *do inline `#[test]` blocks exist in these crates at all?* Answer: **702**.
+That single number converts "no matches" from an ambiguous result into an
+interpretable one — the corpus is richly tested, therefore my empty result is a
+statement about my pattern. Had it returned 0, the empty result would have been a
+statement about my *paths*, and I would have known to widen those instead.
+
+This is the same structure as every other control in the project: `NOISE_COM`
+tells you whether a band statistic can be moved by noise; the bogus-value arm in
+`fullres_default.py` tells you whether the harness can distinguish "unset" from
+"off"; the potent-disturbance check tells you whether a null A/B was measuring a
+live stage or a dead one. **A search is an instrument, and an uncommissioned
+instrument reporting nothing is indistinguishable from a broken one.** The
+project already knew this everywhere except at the command line.
+
+### The substantive finding
+
+The plugin surface is in better shape than §118's near-miss suggested. Per
+`e1bf09e0`, the default render path does not merely *permit* plugin dispatch, it
+**runs through it**: `compute → compute_at_radius →
+compute_with_measure(&Tenengrad::at_radius(r))`, with the trait moved into
+`strehl-core::focus` and the old modules reduced to re-export shims. Byte
+identity is therefore **structural rather than coincidental** — if the
+contribution surface regresses, the product regresses with it, which is the
+strongest form of the guarantee the owner asked for. It also closed a real
+silent-divergence defect: `FocusField::compute` honoured `STREHL_WINDOW_RADIUS`
+while `Tenengrad::shipped()` read the constant, so the two agreed **only while
+the override was unset**.
+
+Not yet established, and deliberately not run here: whether those tests
+currently **pass**. `merge_cmd.rs` is checked out modified by another lane, so any
+`cargo test` right now would compile that lane's in-progress source rather than
+the shipped tree, and a red or green result would be uninterpretable — a test run
+against a working tree nobody has finished is a measurement of a moving target.
+**Existence of a guard is not evidence the guard holds.** That certification is
+owed once the tree is clean, and it must not go to the author.
+
+### Rules
+
+> **An empty search is uninterpretable without a positive control.** Ask the tree
+> a question you already know the answer to, in the same call.
+
+> **A lesson recorded as a caution will be re-learned; a lesson recorded as a
+> procedure will not.** §118 was a caution. This is the procedure.
+
+> **Never run a test suite against a tree another lane has checked out modified.**
+> The result describes neither HEAD nor the finished change.
