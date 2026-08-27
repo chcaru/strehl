@@ -776,3 +776,126 @@ noise than the alternatives; those two pull against each other.  The measured
 floor across 2,391 tiles is sigma = 0.28 codes against a zero-banding threshold
 of 0.30 -- a 7% margin, spent by the very improvement the project is chasing.
 Shipping 16-bit masters removes the question instead of managing it.
+
+# 9. The CFA per-plane admission hypothesis: refuted twice, and no patch written
+
+ORCH proposed a mechanism for a chroma-versus-luma asymmetry: that the CFA-native
+merge takes its admission decision **independently per plane**, so the four
+planes at one photosite can admit different frame sets; luma sums and cancels the
+disagreement, chroma differences and amplifies it.  The instruction was to
+establish what the code does, measure the mechanism before changing anything, and
+**stop and say so if the mechanism could not be detected**.
+
+It could not be detected, for two independent reasons.  No Rust was changed and
+none should be.
+
+## 9.1 The path I first read was not the shipped path
+
+`Estimator::fold_inner` in `merge.rs` takes exactly one gate decision per quad
+and applies it to all four planes.  That is true and it is **not the answer**,
+because the estimator is not what shipped.
+
+`DEFAULT_MERGE_BACKEND` is `MergeBackend::Pyramid` (`merge_cmd.rs:417`,
+`5142ace5c`), and all 26 SHIP-V4 logs carry one banner:
+
+    strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+
+26 of 26, no other value.  **A structural claim about the wrong path is worth
+nothing**, and I nearly filed one: `merge_cmd.rs:435` still tells the user
+`estimator` is "the default".  That string was written in `c42cd7543` on
+2026-08-25, one day before `5142ace5c` moved the default to pyramid on 08-26 and
+did not update it.  It is a live defect in a file this lane does not own, and it
+is reported to BUILD-PLUGIN rather than touched.
+
+## 9.2 In the shipped merge the decision is already joint, by construction
+
+`pyramid.rs`, `BandMerge` (`1bb1f0f54`):
+
+| field | indexing | meaning |
+|---|---|---|
+| `num` | `[level * planes + plane]` | `sum(w * L)`, per plane |
+| `usum` | `[level * planes + plane]` | `sum(L)`, per plane |
+| **`den`** | **`per_level()` -- level only, NO plane index** | **`sum(w)`, shared by every plane** |
+
+`den` is built by `let per_level = || sizes.iter().map(|s| vec![0.0; s.pixels()])`
+at `pyramid.rs:1185` -- one vector per level, no plane term.  In `accumulate_level`
+the denominator is fetched *outside* the plane loop (`let den = &mut self.den[k]`,
+1534) and the same weight field `w` multiplies every plane (`num[i] += w[i] *
+lv[i]`, 1545).  At output, `out[j] = num[j] / den[j]` (1870) divides every plane
+by the same number.
+
+The weights come from green luma alone: `add_frame` takes `planes: &[&[f32]]` and
+a **separate** `luma` argument documented at 1316 as "the plane the selection is
+made on -- green luma".
+
+So the four planes cannot admit different frame sets.  There is one weight field
+per (level, pixel) and every plane is normalised by it.
+
+**The design anticipated ORCH's mechanism and rejected it, in ORCH's own terms.**
+`pyramid.rs:1138-1141`: "Shared by every plane, because the selection is made on
+green luma only ... letting a colour plane's own noise drive the decision is how
+chroma noise becomes structure."  And `f8b99f27a` at 798: "Selected on the GREEN
+plane alone and then applied to every plane ... a per-plane decision would let
+chroma noise elect itself into structure."  **The proposed fix is the shipped
+architecture.**  The estimator path carries the same rule independently --
+`merge.rs:1640` says a per-plane admitted count is something "the estimator
+deliberately does not carry".
+
+## 9.3 The premise is inverted, on the table it was drawn from
+
+The mechanism exists to explain "chroma is worse than luma in all four chroma
+cells".  The cells come from `V-REVIEW-noise-verification.md` section "The
+cells", whose section 8 states the convention explicitly: **"Ratio of medians,
+comparator over strehl"** -- above 1.0 means strehl is quieter, so a *higher*
+ratio is *better* and "chroma worse" means the chroma ratio sits *below* the luma
+ratio for the same comparator.
+
+`chroma_premise.py`, each chroma cell against its **own** comparator's luma cell:
+
+| comparator | channel | ratio | its luma | delta | verdict |
+|---|---|---:|---:|---:|---|
+| `enfuse` | B-Y | 1.606 | 1.618 | -0.7% | not distinguishable (intervals overlap) |
+| `enfuse` | R-Y | 1.813 | 1.618 | **+12.1%** | **BETTER than luma**, intervals disjoint |
+| `focus-stack` | B-Y | 1.640 | 1.475 | **+11.2%** | **BETTER than luma**, intervals disjoint |
+| `focus-stack` | R-Y | 1.661 | 1.475 | **+12.6%** | **BETTER than luma**, intervals disjoint |
+
+worse 0 / better 3 / not distinguishable 1 = 4 chroma cells.  **PREMISE REFUTED.**
+
+The test is potent: planting a corpus where chroma really is worse convicts 4 of
+4.  A checker that could only ever print "refuted" would be worthless.
+
+**Honest limit.** The two intervals share a denominator -- same strehl render,
+same tiles -- so they are positively correlated and comparing them for overlap is
+*conservative*.  Disjointness proves a difference; the overlapping `enfuse` B-Y
+cell proves nothing either way and is not claimed as evidence in either
+direction.  A paired tile-level resample would be sharper and that data is not in
+the published table.
+
+## 9.4 Where the flat-field observation probably belongs
+
+ORCH saw `enfuse` look cleaner in a large flat field while the gauge says strehl
+is 1.618x quieter in luma there.  Both can be true: **the gauge measures noise
+amplitude and the eye in a flat field responds to its spatial spectrum.**  A
+per-tile sigma is blind to low-frequency mottle.
+
+That is not speculation about an unexamined axis -- it is already convicted.
+`orch_mottle_visual.py` names `lead-1-cpl` at **2.43x (chroma)**, `coffee-bubbles`
+at 1.4501x, `113MSDCF` at 1.30x, and points at the two instruments whose
+construction is admissible because they **ratio the master against the frames
+that made it**: `experiments/V-GATHER/` and `experiments/V-NEVERWORSE/`.  ORCH's
+own visual check was refuted for lacking exactly that ratio.
+
+So the chroma defect that does exist is subject-specific mid-scale mottle
+measured against source, not a corpus-wide luma/chroma asymmetry, and not a gate
+that never existed.  **That is where the effort should go**, and this lane did
+not take it because `V-GATHER` and `V-NEVERWORSE` belong to other lanes.
+
+## 9.5 What I did not do, deliberately
+
+- **No correlation measurement between per-plane admitted sets.** Its precondition
+  is false: there is one admitted set, so the disagreement is identically zero by
+  construction and a correlation against it is undefined, not merely null.
+- **No patch.** The requested fix -- one decision per photosite applied to all
+  four planes -- is what `pyramid.rs` already does. Implementing it would have
+  been a no-op dressed as a repair.
+- **No sharpness arm.** Nothing changed, so there is nothing to hold.
