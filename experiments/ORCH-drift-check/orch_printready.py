@@ -59,6 +59,16 @@ from orch_blotch import blotch_ratio, flattest, lum_of  # noqa: E402
 
 SHIP = pathlib.Path(r"C:\dev\strehl-out\SHIP-V2")
 
+# The arm to score is an ARGUMENT, not a constant. It was hard-coded to SHIP-V2
+# and the first re-render made that a silent trap: the gate ran, printed a full
+# 26-row table and a verdict, and every number in it described a fourteen-hour-old
+# corpus rendered by a superseded binary. A gate that cannot fail to find input
+# will happily certify the wrong input.
+if len(sys.argv) > 1:
+    SHIP = pathlib.Path(sys.argv[1])
+if not SHIP.is_dir():
+    sys.exit(f"no such arm directory: {SHIP}")
+
 # WHICH STATISTICS MAY ISSUE A VERDICT, AND WHICH MAY ONLY REPORT
 #
 # This distinction is the whole design, and getting it wrong is how the chroma
@@ -149,15 +159,19 @@ def verdict(path):
 def main():
     if not SHIP.is_dir():
         raise SystemExit("no such directory: %s" % SHIP)
-    paths = sorted(SHIP.glob("*--SHIP-V2.tiff"))
+    # The arm suffix is derived from the directory rather than frozen, so this
+    # gate scores whatever arm it was pointed at instead of silently finding
+    # nothing and falling through to the sidecar-sweeping wildcard below.
+    arm = sys.argv[2] if len(sys.argv) > 2 else SHIP.name
+    paths = sorted(SHIP.glob("*--%s.tiff" % arm))
     if not paths:
         # The first run globbed "*.tif*" and swept in 52 sidecars -- each master
         # carries a ".tiff.ok" and a ".tiff.provenance.txt", so 26 masters glob to
         # 78 paths -- which the partition then honestly reported as NOT EXAMINED.
         # The partition was doing its job; the trailing wildcard was the defect.
         paths = sorted(SHIP.glob("*.tif*"))
-        print("WARNING: no *--SHIP-V2.tiff masters; falling back to *.tif* and "
-              "the NOT EXAMINED count will include sidecars.\n")
+        print("WARNING: no *--%s.tiff masters; falling back to *.tif* and "
+              "the NOT EXAMINED count will include sidecars.\n" % arm)
     if not paths:
         raise SystemExit("no masters in %s" % SHIP)
     print("ORCH print-readiness gate over %d master(s) in %s\n" % (len(paths), SHIP))

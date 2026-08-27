@@ -35,6 +35,7 @@ import tifffile
 import orch_contact
 
 SHIP = pathlib.Path(r"C:\dev\strehl-out\SHIP-V2")
+ARM = "SHIP-V2"
 OUT = pathlib.Path(r"C:\dev\strehl-out\ORCH-CONTACT")
 TARGET_W = 1400
 
@@ -75,7 +76,7 @@ def one(path, target_w=TARGET_W):
     k = max(1, int(round(a.shape[1] / float(target_w))))
     small = box_down(a, k)
     a8, lo, hi = to8(small)
-    name = path.stem.replace("--SHIP-V2", "")
+    name = path.stem.replace("--%s" % ARM, "")
     dst = OUT / ("whole-%s.png" % name)
     orch_contact.png_rgb(a8, str(dst))
     p = np.percentile(small, [1, 50, 99])
@@ -101,7 +102,7 @@ def sheet(paths, cols=5, cell_w=460):
         a = load_master(p)
         k = max(1, int(round(a.shape[1] / float(cell_w))))
         a8, _, _ = to8(box_down(a, k))
-        cells.append((p.stem.replace("--SHIP-V2", ""), a8))
+        cells.append((p.stem.replace("--%s" % ARM, ""), a8))
     ch = max(c.shape[0] for _, c in cells)
     cw = max(c.shape[1] for _, c in cells)
     rows = (len(cells) + cols - 1) // cols
@@ -120,15 +121,34 @@ def sheet(paths, cols=5, cell_w=460):
 
 
 def main():
-    argv = [a for a in sys.argv[1:] if a != "--sheet"]
+    # Same hard-coded-arm defect that orch_printready.py carried: the directory
+    # and the "--SHIP-V2" suffix were constants, so pointing this at a newer
+    # render silently found nothing. Both are now flags, and the suffix is
+    # derived from the directory name unless overridden.
+    global SHIP
+    argv = []
+    arm = None
+    for a in sys.argv[1:]:
+        if a == "--sheet":
+            continue
+        if a.startswith("--dir="):
+            SHIP = pathlib.Path(a[6:])
+        elif a.startswith("--arm="):
+            arm = a[6:]
+        else:
+            argv.append(a)
     want_sheet = "--sheet" in sys.argv[1:]
     if not SHIP.is_dir():
         raise SystemExit("no such directory: %s" % SHIP)
-    paths = sorted(SHIP.glob("*--SHIP-V2.tiff"))
+    if arm is None:
+        arm = SHIP.name
+    global ARM
+    ARM = arm
+    paths = sorted(SHIP.glob("*--%s.tiff" % arm))
     if argv:
         want = set(argv)
-        paths = [p for p in paths if p.stem.replace("--SHIP-V2", "") in want]
-        missing = want - {p.stem.replace("--SHIP-V2", "") for p in paths}
+        paths = [p for p in paths if p.stem.replace("--%s" % arm, "") in want]
+        missing = want - {p.stem.replace("--%s" % arm, "") for p in paths}
         if missing:
             raise SystemExit("no master for: %s" % ", ".join(sorted(missing)))
     if not paths:
