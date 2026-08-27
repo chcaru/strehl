@@ -1,0 +1,20 @@
+========================================================================
+53 -- delivered exposure gain, measured in LINEAR light
+========================================================================
+arms      : --exposure +0.25  vs  --exposure -0.25
+commanded : 0.7071068  (F/E linear ratio)
+PREDICTION: the regression returns the commanded ratio, because the
+            fix applies g on the far side of the normalisation.
+
+-- commissioning the inversion + regression chain --
+  planted 2.0   -> recovered 2.000000  OK
+  planted 0.5   -> recovered 0.500000  OK
+  planted 1.0   -> recovered 1.000000  OK
+
+  usable (unclipped) : 71,245,125 of 98,898,048
+  clipped/excluded   : 27,652,923
+  commanded          : 0.7071068
+  DELIVERED          : 0.7067677
+  error              : -0.048%
+
+VERDICT: GREEN -- the commanded exposure is DELIVERED in linear light

@@ -1,0 +1,90 @@
+diff --git a/crates/strehl-cli/src/merge_cmd.rs b/crates/strehl-cli/src/merge_cmd.rs
+index 38481cee..f54cf1e4 100644
+--- a/crates/strehl-cli/src/merge_cmd.rs
++++ b/crates/strehl-cli/src/merge_cmd.rs
+@@ -6959,7 +6959,15 @@ fn write_merged(
+     // See `docs/research/M109-highlights.md`. `with_saturation` additionally
+     // states where usable white sits, which is what the chroma roll-off in
+     // `strehl_core::highlight` needs; see `docs/research/BUILD-HIGHLIGHT.md`.
+-    let dev = space.develop(matrix.map(|r| r.with_saturation(levels, gains, applied.gain())));
++    // `.with_exposure_gain` is what carries the commanded exposure past the
++    // tone normalisation. Without it the gain folded into `norm` below is
++    // divided straight back out by `--srgb`'s auto-tone, because both tone
++    // anchors are linear in the data (measured: a commanded 64x span
++    // delivered 1.0000000, bit-identical across 98,898,048 samples).
++    // See `Develop::exposure_gain` and docs/research/BUILD-DEFECT.md S14.
++    let dev = space
++        .develop(matrix.map(|r| r.with_saturation(levels, gains, applied.gain())))
++        .with_exposure_gain(applied.gain());
+ 
+     if demosaic {
+         // Full resolution. The merge already estimates all four CFA sites of
+@@ -7104,7 +7112,14 @@ fn write_merged(
+             px[1] = norm(gmean(i), gains[1]);
+             px[2] = norm(val(CfaPlane::B, i), gains[2]);
+         }
+-        let dev = space.develop(matrix.map(|r| r.with_saturation(levels, gains, eg)));
++        // Same reason as the demosaic branch above: the gain in `norm` is
++        // cancelled by the tone stage, so it must also be applied on the far
++        // side of that normalisation. This is the identity when no exposure
++        // was asked for -- `exp2(0)` is exactly 1.0 and `x * 1.0` is `x`
++        // bit-for-bit -- so the byte-frozen linear renders cannot move.
++        let dev = space
++            .develop(matrix.map(|r| r.with_saturation(levels, gains, eg)))
++            .with_exposure_gain(eg);
+         image_out::write_binned(path, geom.width, geom.height, &lin, &dev)?;
+         eprintln!();
+         eprintln!(
+@@ -8798,4 +8813,52 @@ mod tests {
+              estimator must run",
+         );
+     }
++    /// Every `Develop` handed to a writer must carry the exposure gain.
++    ///
++    /// This is a WIRING guard, and it exists because the wiring is exactly what
++    /// failed. The behavioural claim -- that a commanded exposure reaches the
++    /// pixels -- is asserted by
++    /// `image_out::tests::an_exposure_request_changes_the_pixels_and_not_only_the_banner`,
++    /// which regresses the LSQ slope against the unexposed arm and was
++    /// commissioned RED by planting the original defect. That test passes
++    /// happily while this file forgets to pass the gain in, because it never
++    /// sees this file.
++    ///
++    /// The defect being guarded: `--exposure` was applied upstream in `norm`
++    /// and then divided straight back out by `--srgb`'s auto-tone, whose two
++    /// anchors are both linear in the data. MEASURED before the fix: a
++    /// commanded 64x span between `--exposure 3` and `--exposure -3` delivered
++    /// a regression slope of 1.0000000 with all 98,898,048 samples
++    /// bit-identical. The only bytes that moved were the banner inside
++    /// `ImageDescription`, which is why a whole-file hash read it as working.
++    ///
++    /// This COUNTS and PARTITIONS rather than searching. A substring check is
++    /// satisfied by any one occurrence, so it would still pass on the day a
++    /// third writer is added without the builder -- the same class of blind
++    /// spot that let the original defect ship. Requiring the two counts to be
++    /// equal makes an unchained site fail loudly.
++    #[test]
++    fn every_writer_develop_carries_the_exposure_gain() {
++        let src = include_str!("merge_cmd.rs");
++        // The needles are assembled at runtime so that this test cannot match
++        // its OWN source text. Spelled as literals, each needle would occur
++        // inside this function and inflate the count it is used to take -- the
++        // guard would then pass or fail for reasons having nothing to do with
++        // the writers it is watching. A self-counting check is not a check.
++        let needle_dev = [".", "develop("].concat();
++        let needle_gain = [".", "with_exposure_gain("].concat();
++        let developed = src.matches(needle_dev.as_str()).count();
++        let carried = src.matches(needle_gain.as_str()).count();
++        assert!(
++            developed > 0,
++            "no develop site was found at all -- this guard has lost its \
++             target and is asserting nothing"
++        );
++        assert_eq!(
++            developed, carried,
++            "{developed} writer develop site(s) but only {carried} carry the \
++             exposure gain builder. An unchained writer silently cancels the \
++             commanded exposure -- see docs/research/BUILD-DEFECT.md S14."
++        );
++    }
+ }

@@ -1904,3 +1904,124 @@ One-line statement for the README:
 > images are unaffected — renders with and without it differ by at most one
 > count in 65,535 on 0.3% of samples.
 
+
+## 15. The commanded quantity, measured where it is defined
+
+Section 14 shipped the engine fix and proved the default render does not move.
+Two things were still open: the fix was in `stack.rs`, which does **not**
+implement `strehl stack`; and the only calibrated magnitude claim rested on a
+unit test rather than on a rendered file.
+
+### 15.1 `stack.rs` is not `strehl stack` — a filename sits *below* argv
+
+`main.rs:223` declares `Stack` with `#[command(alias = "merge")]` and
+dispatches it to **`merge_cmd::run`** at `:1084`. `stack::run` at `:856` serves
+`argmax-baseline`, declared at `:757`. The two files hold near-duplicate
+exposure and writer implementations carrying **identical banner strings**,
+which is why the confusion survived so long: the fixed binary printed
+*"ONE multiply in linear light, before the curve"* and that string greps to
+`merge_cmd.rs:6929`, not to the file I had edited.
+
+This is a new rung *below* the ladder in §14.5. An argv records what the caller
+said; a banner records what the program claims; a **filename records neither**
+— it is not even a request, only a name someone chose, and a name can be shared
+by two implementations of which only one runs. I found it by grepping the
+running binary's own output back to its source, which is the only channel here
+that is causally downstream of execution.
+
+`merge_cmd.rs` is live under another lane, so §15.3 prepares the wiring as a
+patch rather than applying it.
+
+### 15.2 A display-space slope cannot be compared with a commanded linear gain
+
+The first regression of the patched binary gave a slope of `0.0447894` on
+`--exposure 3` against `--exposure -3`, against a commanded `0.015625`. Read
+naively that is "the flag over-delivers by 2.9x". It is not a result at all.
+`--srgb` applies, **after** the gain, the sRGB transfer curve (`srgb_encode`, a
+~1/2.4 power law) and then `s_curve(x, 0.55)` in display space; and at ±3 stops
+87.5% of samples clip. A ratio of linear quantities is not preserved through a
+power law, and a clipped sample has had its gain removed by the ceiling rather
+than by the pipeline — which drags any slope toward `1.0`, toward the very null
+the measurement exists to exclude. Comparing the two numbers would have been a
+**units error dressed as a result**, the same shape of substitution as hashing
+a file and calling it the pixels.
+
+`experiments/BUILD-DEFECT/src/53-linear-delivered-gain.py` measures where the
+quantity is defined instead. Both display stages are monotone on `[0,1]`, so
+both invert: `srgb_encode` analytically, `s_curve` by bisection. The renderer
+emits `u16`, so the inverse has exactly 65,536 possible inputs and is built
+once as a lookup table — the same arithmetic, evaluated on every value it can
+ever be asked for.
+
+The arms are `--exposure +0.25` and `--exposure -0.25`, chosen so that almost
+nothing clips. **Prediction, written before the result was read:** the fix
+multiplies the placed value by `g` on the far side of a normalisation that has
+already cancelled the upstream `g`, so the pre-encode linear output is
+proportional to `g` and the regression must return `2^-0.5 = 0.7071068`.
+
+**Commissioned first, on this very data.** Arm E's decoded linear values were
+multiplied by an exactly known factor, pushed forward through the same encode,
+s-curve and quantisation the renderer uses, then inverted and regressed:
+
+| planted | recovered |
+|---|---|
+| `2.0` | `2.000000` |
+| `0.5` | `0.500000` |
+| `1.0` | `1.000000` |
+
+The `0.5` arm is not decoration. An estimator bounded below at `1.0`, or an
+"inverse" that is subtly not one, passes the `2.0` arm on its own.
+
+**Result.**
+
+| quantity | value |
+|---|---|
+| usable (unclipped) samples | 71,245,125 of 98,898,048 |
+| excluded (clipped or black) | 27,652,923 |
+| commanded linear ratio | `0.7071068` |
+| **delivered** | **`0.7067677`** |
+| error | **−0.048%** |
+
+The residual is a quantisation story: least-squares through the origin is
+dominated by bright samples, the s-curve compresses hardest there, and one
+count of `u16` rounding inverts into a larger relative step. It is 0.05% on a
+commanded 41% change.
+
+That completes the ladder for this flag on real rendered files, not in a unit
+test: **argv → banner → bytes moved → the commanded quantity was delivered.**
+
+### 15.3 The `merge_cmd.rs` wiring, prepared and verified without applying it
+
+`experiments/BUILD-DEFECT/patches/merge_cmd-exposure-wiring.patch` — 3 hunks,
++65/−2. It chains `.with_exposure_gain(applied.gain())` onto the two `Develop`
+builders at `merge_cmd.rs:6962` (demosaiced) and `:7107` (binned), and adds a
+guard test.
+
+The patch is **generated mechanically** by
+`src/51-prepare-merge-cmd-patch.py`: the script copies the file to `$TEMP`,
+edits the copy, produces the diff with `git diff --no-index`, rewrites the
+paths to repo-relative, and validates with `git apply --check`. It writes
+nothing under `crates/` and asserts the source file is byte-unchanged when it
+finishes.
+
+"It applies cleanly" is a statement about `git`, not about the fix, so the
+patch was verified in a **disposable worktree** at `C:\dev\strehl-wt-bdpatch`
+— which honours the ownership constraint, since the hazard is a silent clobber
+in the *shared* tree:
+
+| check | result |
+|---|---|
+| `git apply --check` | clean |
+| `cargo build --release` | compiles |
+| guard test | passes |
+| guard test **commissioned RED** | `2 writer develop site(s) but only 1 carry the exposure gain builder` |
+| shipping path, `--exposure ±3` | **98,891,642 of 98,898,048 samples differ** |
+| same arms, **before** the patch | **0 samples differ** |
+
+The guard test counts writer `develop(` sites and requires every one of them to
+carry the gain builder, so a **third** writer added later fails it rather than
+silently shipping uncorrected. Writing it exposed a self-reference bug worth
+recording: the first draft's assertion messages contained the literals the test
+was counting, so each needle would have inflated its own count and the test
+would have passed by describing itself. The needles are now assembled at
+runtime from fragments.
