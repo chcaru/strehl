@@ -14134,3 +14134,93 @@ That is a blurred image, not a clean one, and it is consistent with our resolvin
 more than it does. A shipping tool has already taken the trade that any of these three
 fixes can accidentally take. **Every blotch number and every N-invariance number is
 inadmissible without a sharpness number measured on the same pixels.**
+
+## §138 — I nearly convicted all 26 masters on a claim that was true of the wrong path
+
+**Status: VERIFIED by running the shipping binary. This section exists because the
+verification was nearly skipped.**
+
+### 138.1 What I was about to publish
+
+I had carried a note forward for hours: *"`--exposure` is a verified no-op; patch
+ready, blocked."* Combined with a fresh reading of the shipped provenance files —
+all 26 of which record
+
+```
+exposure      : +2.60 stops (gain 6.063x), chosen from the image
+```
+
+— the conclusion assembled itself in about ten seconds: **every shipping master
+states an exposure that never reached the pixels, and the deliverable's provenance
+is false on all 26 counts.** The supporting evidence looked overwhelming. The
+tree's own bug note records a commanded `--auto-exposure` gain of **6.105x**
+delivering **1.0000000**, and 6.105 against our 6.063 is the same number to within
+a rounding of the same rule. `with_exposure_gain` has **zero** occurrences at pin
+`9b05d0b7`; the fix commit `9cb7f5d9` is *not* an ancestor of the pin.
+
+Every one of those facts is true. The conclusion is false.
+
+### 138.2 What the binary actually does
+
+Pin binary `44C2F2CD2E5B2894`, subject `109MSDCF` (22 frames), end to end from RAW:
+
+| command | banner | sha16 |
+|---|---|---|
+| `stack ... --srgb --exposure=3` | `+3.00 stops (gain 8.000x), as asked` | `D749F1FDCD07355F` |
+| `stack ... --srgb --exposure=-3` | `-3.00 stops (gain 0.125x), as asked` | `A5846DD2B0ACDC3A` |
+
+Different files. A 64x commanded span moved the pixels. **`--exposure` works on
+the shipping path.** Structurally confirmed afterwards: pin `stack.rs` folds the
+gain into the normalisation multiply at L1121 and L1154,
+`((raw - black).max(0.0)) * gain * eg / range`.
+
+The no-op is real, but it belongs to the **`merge` path in the working tree**,
+where an auto-tone stage added *after* the pin divided the exposure straight back
+out. It was fixed in `9cb7f5d9`, and its regression test —
+`an_exposure_request_changes_the_pixels_and_not_only_the_banner` — passes today.
+**The pin never had the bug. The masters are correctly exposed and their
+provenance is honest.**
+
+### 138.3 The pattern, which is now three for three
+
+Tonight's three most expensive errors have one shape:
+
+| the claim | true of | asserted about |
+|---|---|---|
+| "`estimator` is the default" (`merge_cmd.rs:435`) | the string's own commit, one day before the default moved | the shipping binary |
+| "the top-hat `Gate` is the default gate" | the `Estimator` backend | the shipping merge, which is `Pyramid` |
+| "`--exposure` is a verified no-op" | the working tree's `merge` path | the shipping `stack` path |
+
+> **Discipline 31 — in a codebase with more than one path, a claim about behaviour
+> is not true or false, it is true *of a path*.** Every one of the three above is
+> an accurate statement that becomes a falsehood on contact with the shipping
+> artifact. They are indistinguishable from correct claims by reading, and
+> distinguishable in one command by running. The audit question is therefore never
+> "is this statement false" but **"which path is this statement true of, and is
+> that the path that ships"** — because *"it's true of the estimator backend"* is
+> exactly how a wrong sentence survives review.
+
+The corollary is uncomfortable and should be stated plainly: **the reason this one
+did not ship is not that I was careful, it is that I had been burned twice already
+that night.** The first two cost a lane each. This one would have cost the
+deliverable's credibility on all 26 outputs, and it would have been a *false
+self-accusation* — the rarest and most expensive kind, because nobody audits a
+claim that makes you look worse. An error that flatters you is the one nobody
+checks; an error that indicts you is the one nobody *doubts*.
+
+### 138.4 What it turned up on the way
+
+The near-miss produced a real, untested contract. `image_out.rs:617`:
+
+> *"The contract is that `--auto-exposure` prints a number the user can hand back
+> to `--exposure` and get the **same file**."*
+
+Every shipped provenance file offers that reproduce line, with `--auto-exposure`
+textually replaced by the gain it chose. **Nobody has ever run it.** Two renders
+and a hash comparison settle whether 26 deliverable files carry a reproduce
+command that does not reproduce. Assigned.
+
+The general form is worth keeping: **a false alarm investigated properly leaves a
+test behind.** The wrong hypothesis was cheap because chasing it required running
+the shipping binary, and running the shipping binary is what the right question
+needed anyway.
