@@ -10966,3 +10966,111 @@ neither of which exists yet.
 > **A withdrawn number is better left withdrawn than replaced by a second number from the
 > same defective instrument.** The pressure to publish a correction is the pressure that
 > produced the error.
+
+## §100 — the gather runs at half resolution, and it costs 51% of contrast at 0.20-0.30
+
+**Status: MEASURED by V-NYQUIST, not by me. I read the report, checked its controls, and routed it. I have not reproduced it.**
+
+This is the largest quality defect measured in the project, and unlike every finding
+in §95-§99 it survived its own control.
+
+### What was measured
+
+`align_cmd.rs:1387-1492` gathers each CFA phase on the **plane** grid: 3516x2344
+against a 7032x4688 output. `align_enabled()` defaults true and `fit_to_cover` puts
+a non-unit scale on every placement, so the default path always resamples, and it
+always resamples at half the output's lattice.
+
+Broadband scene, CatmullRom, 16 frames registered and averaged with sub-plane-pixel
+drift. The arms differ **only** in whether the gather runs per-CFA-plane or at full
+output resolution:
+
+| band (cyc/output px) | shipped (plane gather) | full-res gather | ratio |
+|---|---|---|---|
+| 0.10-0.20 | 0.8687 | 0.9889 | 1.14x |
+| 0.20-0.30 | 0.4881 | 0.9358 | **1.92x** |
+| 0.30-0.40 | 0.1183 | 0.8075 | **6.83x** |
+| 0.40-0.48 | -0.0022 | 0.6322 | - |
+
+**51% of true contrast lost at 0.20-0.30. 88% at 0.30-0.40.** At 0.40-0.48 coherent
+fidelity is **negative** — the gather does not merely fail to carry that content, it
+returns it anti-correlated.
+
+### Why I believe it, when I disbelieved five of my own instruments tonight
+
+The control is a **common-mode** one, which is the property §96 taught me to demand.
+Both arms run the real `gather_checked` on real non-zero displacements with real CFA
+gains through a real 16-frame average in the same window. The single difference is
+lattice alignment. That is the discipline I failed in §95: I compared a master against
+a *median* source frame and called a working selector an artifact.
+
+Their anchors also fire and are not degenerate:
+- zero-drift full-res reads **1.0000 in all six bands**
+- whole-plane-pixel drift reads **1.0000** with uniform luma *and* with Bayer R/G/B gains
+- two earlier anchors caught real errors in their own harness, so the instrument has
+  been shown capable of saying no
+
+And the positive controls behind the related NO-GO fired at large amplitude against an
+exact null: `nearest` at +29%/+42%, an absurd-value arm at 4.3506 against NULL 1.0000.
+
+### Three documents were wrong about this, in three different directions
+
+1. **BUILD-RESAMP's Turn-8 self-correction** — *"the 0.25 bound constrains the election,
+   not the deliverable detail"* — is **refuted**. It constrains the deliverable detail,
+   via the alignment gather, on the default path. Their *original* `spectrum.py` premise
+   in `52cb4c4d` was correct. Turn 8 withdrew a true statement. §93 said a retraction is
+   the least-audited artifact a rigorous project produces; here is one that took back
+   something right.
+
+2. **`BUILD-SHARP.md` §s36.6 point 4** blames the **election** grid. P1b showed elected
+   sensel values pass through **bit-exactly** (32768/32768). The gather filters the
+   detail, and it does so *before* any election runs. Right recommendation, wrong
+   mechanism — which is fragile to the next reader, so it is being fixed.
+
+3. **`BUILD-SHARP.md` §s36.7's dichotomy** — *"if the comparators are ringing we should
+   stop chasing it"* — is false as a gate. strehl loses 51% of true contrast to its own
+   lattice whether or not Zerene rings. A competitor's defect does not price ours.
+
+4. **V-NYQUIST corrected itself**, and this is the part that earns the rest. It had
+   earlier reported the sub-0.25 band *"holds at 94.2%"* — from a **single tone**. A
+   single tone is a plant that does not resemble the thing it stands in for. On a
+   broadband scene the same path reads 0.4881. The instrument that catches its own
+   plant is the instrument worth reading.
+
+### What it does not cover, stated because a report without gaps gets sent back
+
+- The full-res arm prices **demosaic-first**. You cannot interpolate across R/G/B sites
+  on a mosaic. Their uniform-luma scene models a world where every site already carries
+  a full-resolution estimate, and **it does not include the demosaic's own cost.**
+- **No end-to-end run on real ARW exists.** Every arm is synthetic input through the
+  real library. Real macro brackets are magnification-dominated with rotation their
+  linear 0.37 px/frame drift model omits.
+- **No test in the repo covers the gather above 0.25 cyc/output px.** Gate W8a pins only
+  identity and inverse-scale. Four documents reason about an untested behaviour.
+
+### Routing
+
+- **BUILD-RESAMP** implements the full-resolution gather in `align_cmd.rs` behind a flag,
+  defaulted off, with a byte-identical default path as gate 1. They hold the file's last
+  commit and no other lane is in it. Known cost from §9.4 is 549 ms/frame, 216 s over 299
+  frames — to be measured, not assumed.
+- **BUILD-SHARP** builds the real-ARW measurement, in a different tree, so an instrument
+  exists the moment the flag lands. They must not touch `align_cmd.rs`.
+- **I score the renders** with `orch_halo.py`, `orch_blotch.py`, `orch_worst.py` — none of
+  which either author wrote or may edit. A fix scored by an instrument its author tuned
+  is not scored.
+
+The default flip is mine to make, on measured quality and measured time together.
+
+### The rule
+
+> **A single tone is not a scene.** A plant with one frequency, one orientation and one
+> phase cannot stand in for broadband content, and an instrument calibrated on it will
+> report a number that is true of the plant and false of the subject. V-NYQUIST's own
+> 94.2% and its own 0.4881 are the same code on the same path, differing only in what
+> was fed to it.
+
+> **A correct recommendation resting on a wrong mechanism is fragile to the next reader.**
+> BUILD-SHARP's gather-order call was right for three months of document-time while its
+> stated cause was wrong. The next person to touch it would have "fixed" the election.
+
