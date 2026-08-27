@@ -4618,11 +4618,30 @@ Set that against the head-to-head deficit, converted into `f_out` as s33 records
 
 **The two bands where we lose 17 to 27 per cent are the two bands at and above
 the frequency where our merge stops having any information.** A 3-pixel feature
-is 0.33 cyc/px_out; our focus decision grid has a 2-pixel pitch. We are being
-beaten precisely and only where we never made a decision. This also explains why
+is 0.33 cyc/px_out; the merge's whole raster -- gather, planes, election -- has
+a 2-pixel pitch relative to the output.
+
+> **CORRECTION (s40), and it is a correction to the MECHANISM, not the
+> conclusion.** This paragraph originally read "our focus decision grid has a
+> 2-pixel pitch. We are being beaten precisely and only where we never made a
+> decision", attributing the loss to the ELECTION being taken on a
+> half-resolution sharpness measurement. V-NYQUIST measured it against the real
+> library and that attribution is wrong. Their P1b shows the elected frame's
+> sensel values pass through the election **bit-exactly** -- 32768 of 32768
+> samples match the elected frame's own sample. The election does not filter
+> anything. **The filtering happens earlier, in the gather:** each frame is
+> resampled onto the reference grid at CFA-plane resolution, which is half the
+> output raster in each axis, and the detail is gone before any election is
+> reached. The recommendation in s36.8 is unchanged and the priority is
+> unchanged -- but a correct fix resting on a wrong cause is fragile to the next
+> reader, so the cause is restated here rather than footnoted.
+
+This also explains why
 every lever I have tested inside the merge -- restore in s33, the gate in s36.1
 -- moves the picture by a few per cent against a deficit of twenty: they all
-live below 0.25 and the deficit does not.
+live below 0.25 and the deficit does not. Under the corrected mechanism that
+explanation is stronger, not weaker: those levers all operate on planes that
+were band-limited by the gather before the levers ever saw them.
 
 It is consistent with the comparators' architecture. The fork demosaics each
 frame with OpenCV and then merges at full RGB resolution, so its focus decision
@@ -4630,6 +4649,20 @@ is made at full resolution on data that already has a full-resolution estimate
 at every site. Zerene likewise operates on developed RGB.
 
 ### s36.7 What I have NOT established, and the test that would decide it
+
+> **CORRECTION (s40): the dichotomy below is FALSE, and it must not gate the
+> gather decision.** This section framed the comparator ringing test as
+> deciding between "the fix is architectural" and "we should stop chasing it".
+> V-NYQUIST's P7 measures strehl's own loss against synthetic ground truth
+> through the real `gather_checked`: 51 per cent of true contrast lost at
+> 0.20-0.30 and 88 per cent at 0.30-0.40, with the 0.40-0.48 band returned
+> **anti-correlated** at -0.0022. That loss is ours and it is present **whether
+> or not the comparators ring.** The comparator measurement remains worth doing
+> for the head-to-head claim; it is not a precondition for pricing our own
+> defect, and reading it as one would have stalled the fix behind a question
+> about somebody else's software. The two paragraphs beginning "Both hypotheses
+> are worth the same effort" are withdrawn as a decision rule and retained as a
+> record of what I believed.
 
 I will not let s36.6 become the answer on the strength of its own tidiness. It
 predicts the SHAPE of the deficit, which is not the same as being its cause, and
@@ -5156,3 +5189,267 @@ and in the refusal message rather than left for the next reader to discover.
 > **A stated applicability bound is only stated along the axes you varied.** A
 > bound published on one axis reads as a complete specification and is not one.
 > Name the axes you did NOT vary, next to the bound.
+
+## s40. Does real macro content carry energy above plane Nyquist? Yes, and it is measured on the sensor
+
+ORCH routed me the gap V-NYQUIST stated about their own work: every arm of the
+gather measurement ran SYNTHETIC content through the real library. Broadband
+synthetic content is not a macro subject. If real captures carry no energy above
+`f_out = 0.25`, then a gather that destroys content above 0.25 destroys nothing,
+and the full-resolution rewrite is worth zero however large its fidelity number
+is. That is s31's rule turned on my own recommendation: measuring in the right
+band is necessary but not sufficient, the stimulus has to exist in the real data
+too.
+
+This section answers that. It needs no ground truth, no render, no merge and no
+comparator, and it is the half of the gap that could actually overturn the
+decision.
+
+**Answer, ahead of the method.** Real captures carry **4.12x the noise floor at
+0.25-0.30 cyc/px and 2.73x at 0.30-0.354 cyc/px**, both entirely above the
+shipped merge raster's Nyquist of 0.25. The energy is optical: it rises and
+falls smoothly with focus and is at the floor five frames either side. **The
+stimulus exists.** It is also strongly subject-dependent, and one of the owner's
+three subjects carries none of it -- which is a result in its own right and is
+reported in s40.5.
+
+### s40.1 The first instrument was wrong, and it said so itself
+
+The obvious way to read supra-Nyquist content off a Bayer sensor is the green
+quincunx. Within one row, green is sampled at spacing 2, so a single row cannot
+speak above 0.25 -- exactly the band in dispute. But green in row `y+1` sits at
+the opposite column parity, so interleaving two adjacent rows gives a green
+signal at spacing 1 and Nyquist 0.5. That looked like a free doubling.
+
+Before running it I wrote down the confound and a readout for it. The interleave
+assumes the scene is constant in `y` across one sensel row; where it is not,
+vertical detail lands as a `(-1)^x` modulation, which is energy at `f = 0.5`.
+Bayer G1/G2 gain imbalance does the same. So the power at `f = 0.5` is a direct
+readout of the interleave's own dishonesty, and I printed it next to every
+number.
+
+It fired immediately:
+
+| subject | 0.30-0.40 band | comb at f=0.5 | comb / band |
+| --- | ---: | ---: | ---: |
+| `wrapped-text-1` | 195129 | 1094139 | **5.6x** |
+| `flat-on-ruler-cpl` | 208895 | 15738697 | **75x** |
+
+The confound was five to seventy-five times the quantity I would have claimed.
+Without that readout I would have published the table -- it is well-formed, the
+noise floor in it is flat and sane, and nothing else in the output looks wrong.
+
+**The innocent explanation, named and then refuted.** G1/G2 imbalance is
+multiplicative, so it modulates the scene by `(1 + a*(-1)^x)` and folds content
+at frequency `f` into `0.5 - f`. That would fake exactly the elevated 0.40-0.48
+band I was seeing. It is the most plausible innocent cause and it is cheap to
+test, so I measured it rather than assuming it:
+
+```
+G1/G2 gain ratio   1.0011   0.9987   0.9998   1.0005
+```
+
+Balanced to unity. Correcting it removed about 30 per cent of the comb and left
+10.7 million against a 209k band. **My own preferred explanation was wrong**,
+and the correction I had just written was treating a symptom.
+
+What the comb actually tracks is scene detail: 1.35x the floor on flat tone,
+75x on the ruler. That identifies it as the vertical-leak term, and it is not a
+defect I can patch out. The green quincunx supports `fx` up to 0.5 **only for
+content with `fy` near zero**; content at `(0.05, 0.45)` and `(0.45, 0.05)` are
+the same samples. That is intrinsic aliasing of the lattice. The interleave was
+not a free doubling, it was an assumption about the scene that the scene does
+not honour.
+
+### s40.2 The instrument that needs no assumption: the main diagonal
+
+Green sensels sit where `(x + y)` has a fixed parity -- read from the CFA
+pattern, not assumed, because on this sensor's RGGB (`[[0,1],[3,2]]`) that
+parity is ODD and my first version hard-coded EVEN and stopped with
+`diagonal start is not a green sensel`. The parity is **invariant along a main
+diagonal**: if `(y0, x0)` is green then every `(y0+k, x0+k)` is green too.
+
+So a diagonal is a uniformly sampled one-dimensional green signal at spacing
+`sqrt(2)` px, obtained by indexing the sensor and doing nothing else. No
+interleave, no demosaic, no interpolation, no assumption about the scene.
+
+- Diagonal green Nyquist: `1/(2*sqrt(2))` = **0.3536 cyc/px**
+- Shipped CFA-plane raster: spacing 2 px, Nyquist **0.25 cyc/px**
+
+Everything this instrument sees between 0.25 and 0.3536 is content the **sensor
+captured** and the **merge raster cannot represent**. That is the whole question,
+answerable with an array index.
+
+The band it reaches covers the 0.20-0.30 band where V-NYQUIST measured a 51 per
+cent loss in full, and most of 0.30-0.40 where they measured 88 per cent.
+
+### s40.3 The noise floor is flat, which is the machinery's own check
+
+Measured on the flattest eligible 1024x1024 region of each frame, by the same
+code path:
+
+| subject | 0.10-0.20 | 0.20-0.25 | 0.25-0.30 | 0.30-0.354 |
+| --- | ---: | ---: | ---: | ---: |
+| `wrapped-text-1` | 76251 | 74841 | 78463 | 74697 |
+| `flat-on-ruler-cpl` | 54581 | 50589 | 52865 | 51182 |
+| `bee-1-cpl` | 81234 | 80295 | 82944 | 83460 |
+
+White, to within 5 per cent, across every band on all three subjects. Sensor
+noise is white and this is what white looks like, so the spectral machinery,
+the windowing, the diagonal indexing and the frequency mapping are all doing
+what they claim. A sloped or lumpy floor here would have condemned the
+instrument before any subject was read.
+
+### s40.4 Commissioning: the energy responds to focus, smoothly
+
+A number above the floor is not yet evidence of optical detail. Fixed-pattern
+noise, a hot column, a lattice-indexing bug and read noise all sit above a floor
+measured elsewhere, and all are **indifferent to focus**. Real optical detail is
+not: defocus is continuous, so genuine content must rise and fall smoothly
+across a bracket.
+
+I ran one FIXED region across `wrapped-text-1` at stride 6 and got a 12x spike
+at a single frame with all 21 others at the floor. **That is not yet a focus
+peak.** A one-frame spike out of 22 is equally consistent with an anomaly, and
+the frame in question was the one the region had been SELECTED from. The two are
+separated only by sampling finely enough to see whether shoulders exist:
+
+```
+    frame   mean DN     0.20-0.25     0.25-0.30    0.30-0.354
+ DSC00055      1345       59157.8       54053.1       52618.9
+ DSC00056      1342       77020.8       60620.7       55707.0
+ DSC00057      1342      177887.2      108719.6       82575.1
+ DSC00058      1343      320959.6      167779.7      103915.4
+ DSC00059      1339      596483.8      271858.3      178010.8
+ DSC00060      1339      686984.2      323444.0      203894.5   <- peak
+ DSC00061      1340      602618.6      293565.1      198080.3
+ DSC00062      1333      387212.4      203163.4      144976.6
+ DSC00063      1334      186174.2      106825.3       87827.8
+ DSC00064      1339       89087.8       66951.9       60704.4
+ DSC00066      1339       61964.3       53301.4       52453.9
+ DSC00068      1337       52829.9       49431.7       49000.3
+```
+
+Monotone rise, single peak, monotone fall, in **all three bands at the same
+frame**, with mean DN constant at 1333-1345 so it is not an exposure effect. The
+shoulders are four frames wide on each side. The isolated-spike hypothesis is
+refuted, and every focus-indifferent mechanism is refuted with it.
+
+**Headline, at the peak frame against that frame's own floor:**
+
+| band | peak power | floor | ratio | vs plane Nyquist |
+| --- | ---: | ---: | ---: | --- |
+| 0.20-0.25 | 686984 | 74841 | **9.18x** | below |
+| 0.25-0.30 | 323444 | 78463 | **4.12x** | **above** |
+| 0.30-0.354 | 203894 | 74697 | **2.73x** | **above** |
+
+And defocused by eight frames, same region: 0.71x, 0.63x, 0.66x -- at or below
+the floor in every band. The content is entirely optical.
+
+The falloff with frequency is smooth and monotone (9.18 -> 4.12 -> 2.73), which
+is what an MTF rolloff looks like. A bump near Nyquist would have been the
+signature of aliasing; there is not one. That is consistent with real content,
+and it is not proof of it -- see s40.6.
+
+### s40.5 The picture, because the number is never the finding
+
+I rendered the exact array the band powers were computed from -- rows are
+successive diagonals, columns are position along the diagonal, so it is sheared
+and anisotropically scaled and is not a photograph. That is the point: there is
+no demosaic, no interpolation and no resampling between the sensor and those
+pixels.
+
+- `C:\dev\strehl-out\BUILD-SHARP\stim\diag-f59.png` (peak, DSC00060)
+- `C:\dev\strehl-out\BUILD-SHARP\stim\diag-f67.png` (DSC00068)
+- `C:\dev\strehl-out\BUILD-SHARP\stim\diag-f75.png` (DSC00076)
+
+At the peak the letterforms have hard edges and the paper fibre speckle is
+plainly visible. Eight frames off, the same letterforms are soft-edged and the
+speckle is entirely gone. The paper grain IS the supra-Nyquist content, and you
+can watch it leave.
+
+**Subject dependence, and it is large.** The same measurement on the owner's
+other subjects:
+
+| subject | 0.25-0.30 | 0.30-0.354 |
+| --- | ---: | ---: |
+| `wrapped-text-1` (peak frame) | **4.12x** | **2.73x** |
+| `flat-on-ruler-cpl` | **2.84x** | **1.78x** |
+| `bee-1-cpl` | **0.80x** | **0.76x** |
+
+The bee carries LESS energy above plane Nyquist than its own flat region does,
+in a region that is 1.8x brighter and therefore has MORE shot noise. There is
+nothing above 0.25 on that subject at that frame to lose. Two honest readings
+of the same instrument: the gather fix will visibly help printed text and
+machined metal, and on this bee frame it will do nothing at all. Anyone quoting
+a single figure for what the rewrite buys should quote the range instead.
+
+### s40.6 What this measurement CANNOT see
+
+1. **It cannot separate real content at 0.30-0.354 from content aliased down
+   from above 0.3536.** Aliased energy is also focus-dependent, so s40.4's
+   commissioning does not discriminate it. The monotone falloff argues against a
+   large aliased component and does not exclude one. The 0.25-0.30 band is
+   further from the diagonal Nyquist and correspondingly safer than 0.30-0.354.
+2. **It is measured along ONE direction, the main diagonal.** Lens MTF is
+   anisotropic (sagittal vs tangential) and so is subject structure. I have not
+   varied azimuth. The anti-diagonal is a free second sample and I did not take
+   it.
+3. **It is measured at ONE region per subject, chosen by maximum coarse
+   gradient.** That is the texture-biased selector ORCH warned about. It is the
+   correct bias for this question -- I am asking whether the stimulus exists
+   anywhere, not how much of the frame carries it -- but it means these numbers
+   are an upper bound on the typical region, not a frame average. **The fraction
+   of the frame carrying supra-Nyquist content is NOT measured here** and it is
+   what converts this into a print-visible benefit.
+4. **Three subjects, one frame region each, one bracket swept finely.** The
+   `bee-1-cpl` reading is one frame of one stack and I did not sweep focus on
+   it, so I cannot say whether the bee has no supra-Nyquist content or whether
+   frame 31 simply is not the frame where that region is in focus. **The bee
+   result is much weaker than the text result and must not be quoted as
+   symmetric with it.**
+5. **It says nothing about what the gather does.** This is a measurement of the
+   SENSOR, upstream of every line of strehl. It establishes that there is
+   something to lose. V-NYQUIST measured that we lose it. Neither measurement is
+   the other.
+6. **It does not touch the fidelity question on real data.** That is Part 2 of
+   ORCH's assignment and it is not in this section.
+7. **`raw_image_visible` is the sensor's own DN.** No tone scale is anywhere in
+   this path, so the DN-comparability hazard does not apply -- but every number
+   here is a RATIO against a floor measured through the identical code path, and
+   only ratios should be carried out of this section.
+
+### s40.7 What this changes
+
+The decision to move the gather to full resolution was priced by V-NYQUIST on
+synthetic content. **That pricing survives contact with real data**, on printed
+text and machined metal, at 4.12x and 2.73x the noise floor in the two bands
+above the shipped raster's Nyquist. The recommendation in s36.8 stands and the
+mechanism behind it is now corrected in s36.6.
+
+It also acquires a caveat the synthetic measurement could not have produced: the
+benefit is **subject-dependent by at least 5x between the owner's own
+subjects**, and on smooth organic subjects it may be nil.
+
+### s40.8 The rules
+
+> **A confound readout must be printed next to every number, not consulted when
+> a result looks wrong.** Mine fired at 75x on the second subject I tried. A
+> result that looks clean is exactly the one that will not prompt the check.
+
+> **Refuting your own preferred innocent explanation is progress, not a
+> setback.** G1/G2 imbalance was plausible, cheap and wrong; measuring it cost
+> one run and stopped me from shipping a correction that treated a symptom while
+> the real cause -- an assumption about the scene that the scene does not honour
+> -- went on contaminating every number.
+
+> **A spike is not a peak until you have seen its shoulders.** Coarse sampling
+> cannot distinguish a physical response from an anomaly, and the frame a region
+> was SELECTED from is the frame most likely to spike. Resample finely enough
+> that the shape, not the magnitude, carries the claim.
+
+> **Read the lattice, do not assume it.** Hard-coding the green parity produced
+> an immediate stop rather than a plausible wrong number, only because the
+> assertion was there. The same code with a silent fallback would have measured
+> the red and blue sensels and reported a flat spectrum -- "no supra-Nyquist
+> content", confidently, from an instrument pointed at the wrong pixels.
