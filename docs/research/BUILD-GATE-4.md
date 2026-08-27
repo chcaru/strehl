@@ -461,20 +461,213 @@ arms already on disk — **mismatches = 0**.
 
 ## 11. Open, and honestly so
 
-- **The absolute levels disagree with V-EYES and this is unresolved.** V-EYES
+- **The absolute levels disagree with V-EYES. §12.3 RETIRES THIS ITEM'S
+  DIAGNOSIS AND WITHDRAWS THE NUMBERS BELOW.** V-EYES
   reads `coffee-bubbles 0.9018 / 109MSDCF 0.8855 / 119MSDCF 0.8147`; I read
   `1.1668 / 2.8206 / 1.8590` **on the same pixels** (§3 proves `WHITE200` is
   `SHIP-V4` byte for byte) with a statistic C1 proves is `patch_gain` exactly.
   So the difference is **neither the master nor a transcription error — it is
-  the two lanes' instruments.** The likeliest cause is population: `patch_gain`
-  scores the three most textured 560px sites; V-EYES appears to tile the whole
-  frame, which includes flat regions where a merge cannot beat its best frame.
-  **The rankings agree** — `bee-1` most beats its ceiling in both lanes — and my
-  comparison is paired, so every delta here is valid regardless. But **the two
-  absolute numbers must not be quoted side by side until this is reconciled.**
+  the two lanes' instruments.** The guess recorded here was population:
+  `patch_gain` scores the three most textured 560px sites; V-EYES appears to
+  tile the whole frame, which includes flat regions where a merge cannot beat
+  its best frame. **That guess was wrong.** §12.3 measures the actual cause — a
+  0.59×–3.31× brightness mismatch between the master and the ceiling frames, to
+  which `patch_gain` is exactly linearly sensitive — and withdraws the absolute
+  levels. **The rankings agree** — `bee-1` most beats its ceiling in both lanes —
+  and my comparison is paired, so every delta here is valid regardless.
 - **P2 and P6 remain untested** (§7).
 - The noise axis uses one statistic on one tile class. It is commissioned, but a
   second independent noise instrument would strengthen §4.
 - `bee-1-cpl` and `flower-bud-alone-cpl` resolved **2 sites**, not 3, and
   `bee-1` refused 3 of 299 registrations at one site. Both are recorded in the
   ceiling artifacts.
+
+## 12. ORCH's three added requirements: complying, and what complying changed
+
+ORCH added three requirements after §0–§11 were written: score against a
+per-site ceiling, use a selection-immune construction or commission a forced
+null and refuse on high leak, and confine the reported band to ≤0.25 cyc/px.
+Requirement 1 was already met. Requirements 2 and 3 were **not**, and meeting
+them changed several numbers and retired one open item. New instrument:
+`experiments/BUILD-GATE/src/bandceiling.py`, driven by `bandsweep.py`, with
+intervals from `bandboot.py`.
+
+### 12.1 The requirements are violated by ORCH's own numerator
+
+Both violations are in `orch_sharp1to1.patch_gain`, which is the numerator every
+number in §4 was computed with. This is a property of the shared instrument, not
+a defect in this lane's use of it.
+
+- **REQ 2.** `patch_gain` computes `sf = max((detail(c[sl])[0] for _, c in reg))`
+  — a max taken directly over the reported quantity. That is the inflated
+  construction ORCH now asks to replace.
+- **REQ 3.** `patch_gain` reports `detail(...)[0]`, a full-resolution first
+  difference whose power response `4 sin²(πf)` rises monotonically to Nyquist.
+
+**REQ 3, measured rather than assumed.** For white input the analytic fraction of
+that statistic's energy above 0.25 cyc/px is 0.8183. I quoted that figure as my
+expectation. On real tiles it is **much lower**, because real spectra fall:
+
+| subject | fraction of `fine` energy above 0.25 cyc/px |
+|---|---:|
+| `bee-1-cpl` | 0.1199 |
+| `119MSDCF` | 0.1858 |
+| `109MSDCF` | 0.3209 |
+| `flower-bud-alone-cpl` | 0.3614 |
+| `coffee-bubbles` | 0.4931 |
+
+Mean 0.2962. **My analytic expectation over-predicted by 2.76×** and is
+withdrawn.
+The honest statement is that 12–49% of §4's statistic sits in withdrawn
+territory, and that the contamination varies **4× across subjects**, so it is not
+a constant that cancels in cross-subject comparison.
+
+### 12.2 The disjoint construction, and its commissioning
+
+Select the reference frame per tile on band A (0.05–0.20); report band B
+(0.20–0.25) from that frame; never take a max over B. The bands share no Fourier
+bins, so the noise that wins the selection is independent of what is reported.
+Tiles are Hann-windowed first — without it the tile edge is a discontinuity
+whose spectrum contaminates every band.
+
+Immunity by construction is still a claim, so it is commissioned with a forced
+null: n = 24 statistically identical noised copies of the master, true ratio
+1.000 by construction, so any departure is the construction's own leak.
+
+| subject | null `max` | null `disj` | leak `max` | leak `disj` | verdict at 2% |
+|---|---:|---:|---:|---:|---|
+| `bee-1-cpl` | 0.9892 | 0.9961 | 1.08% | 0.39% | both OK |
+| `flower-bud-alone-cpl` | 0.9722 | 0.9876 | 2.78% | 1.24% | **REFUSE `max`** |
+| `119MSDCF` | 0.9855 | 0.9994 | 1.45% | 0.06% | both OK |
+| `coffee-bubbles` | 0.9726 | 0.9858 | 2.74% | 1.42% | **REFUSE `max`** |
+| `109MSDCF` | 0.9755 | 0.9893 | 2.45% | 1.07% | **REFUSE `max`** |
+
+**The max construction is refused on 3 of 5 subjects.** `disj` passes on all
+five. Adopting ORCH's refusal discipline therefore withdraws the construction
+`patch_gain` uses, on the majority of this corpus.
+
+The leak also behaves the way immunity predicts. Doubling the planted noise
+scales `max`'s leak roughly linearly (119MSDCF: 0.72% → 1.45% → 2.89% at
+0.5×/1×/2×) while `disj`'s stays flat (0.05% → 0.06% → 0.14%). A leak
+proportional to noise power is selection inflation; a leak that ignores it is
+not.
+
+**One attempted fix was tested and rejected.** A gain-invariant variant
+(`share` = band-B's share of band-W, which cancels any exposure gain exactly)
+leaked **1.46–1.80%** and in the *opposite* direction, above 1.000 — dividing by
+W reintroduces the selection through the denominator. It buys gain invariance by
+giving back selection immunity, and it leaks in strehl's favour, which is the
+dangerous direction. Not used.
+
+### 12.3 The absolute levels are confounded, and §11's open item is retired
+
+§11 recorded that my absolute levels disagreed with V-EYES and guessed the cause
+was tile population. **That guess was wrong.** The cause is a brightness
+mismatch between the master and the ceiling frames:
+
+| subject | median luma, master | median luma, frame | gain |
+|---|---:|---:|---:|
+| `coffee-bubbles` | 3819.7 | 6439.0 | **0.5932** |
+| `119MSDCF` | 19058.8 | 10091.0 | **1.8887** |
+| `109MSDCF` | 18673.7 | 5640.6 | **3.3106** |
+
+A planted gain establishes the sensitivity exactly. Multiplying only the master
+crop by g moves the band ratio by precisely g² (1.5 → 2.250, 2.0 → 4.000) and
+ORCH's `fine` by precisely g¹ (1.500, 2.000), on all three subjects. So
+**`patch_gain` is exactly linearly sensitive to a mismatch measured here at
+0.59×–3.31×** — enough to move a subject across the 1.0 threshold its docstring
+uses to separate "the merge SELECTS" from "the merge RECONSTRUCTS, that is this
+project's actual claim".
+
+Correcting §11's numbers by the measured gain:
+
+| subject | §11 | gain | corrected | V-EYES | ratio |
+|---|---:|---:|---:|---:|---:|
+| `coffee-bubbles` | 1.1668 | 0.5932 | 1.9670 | 0.9018 | 2.181 |
+| `119MSDCF` | 1.8590 | 1.8887 | **0.9843** | 0.8147 | 1.208 |
+| `109MSDCF` | 2.8206 | 3.3106 | **0.8520** | 0.8855 | **0.962** |
+
+Two of three move from "reconstructs" to V-EYES' side of 1.0, one to within
+3.8%. `coffee-bubbles` does not. **So the confound is a major contributor and
+not a complete explanation, and I do not claim reconciliation.**
+
+**I attributed the mismatch to `--auto-exposure` and an intervention refuted
+that.** Re-rendering the three masters with the flag removed and nothing else
+changed gave a median-luma ratio of **1.0000** and ratios identical to four
+decimals (`coffee-bubbles` 1.7065 both ways). Auto-exposure is a no-op on these
+subjects. The mismatch is structural to comparing a strehl `--srgb` master
+against `rawpy.postprocess(gamma=(2.222,4.5), no_auto_bright=True,
+use_camera_wb=True)` frames — and **`orch_sharp1to1.py:394` develops its frames
+with byte-identical parameters**, so the confound is shared.
+
+**Consequence: the absolute ceiling ratios in §4 and §11 are withdrawn.** The
+arm-to-arm deltas are not, and that is measured rather than argued: across-arm
+master luma varies by ≤0.4% on `119MSDCF` and `109MSDCF` and ≤3.4% on
+`coffee-bubbles`' most extreme arm, i.e. ≤1% in energy except G400 at ≤6.8%,
+against deltas of 5–80%. The ceiling is built once per subject and held fixed
+across all seven arms, so it is a common denominator that cancels in every
+delta. This is the argument made in BUILD-GATE-3 §3 against my own interest,
+now measured.
+
+### 12.4 The sweep re-scored on the compliant statistic, with intervals
+
+Paired tile bootstrap, 2000 resamples, resampling tiles because tiles are the
+replicated unit. `*` marks a 95% CI excluding zero. Δ% against `WHITE200`, the
+arm the product actually ships.
+
+| subject | G100 | G140 | G170 | G200 | G300 | G400 |
+|---|---:|---:|---:|---:|---:|---:|
+| `bee-1-cpl` | −0.02 | −0.00 | +0.01 | −0.71 | −1.19 | −0.84 |
+| `flower-bud-alone-cpl` | −12.43\* | −2.24 | +1.82 | −17.41\* | −79.98\* | −87.30\* |
+| `119MSDCF` | +9.68\* | +16.57\* | +0.97 | −26.79\* | −55.52\* | −69.12\* |
+| `coffee-bubbles` | +7.46\* | +11.74\* | +6.47\* | −9.87\* | −46.65\* | −59.20\* |
+| `109MSDCF` | +87.27\* | +43.80\* | −10.52\* | −39.93\* | −70.13\* | −82.02\* |
+
+**What survives, what changes:**
+
+- **`bee-1-cpl` is null across the entire sweep — not one arm on either
+  construction has a CI excluding zero.** The pooled point estimate read −7.32%
+  at G100; the paired median is −0.02% with CI [−7.06, +0.18]. That difference
+  is the disjoint statistic's noise floor: band B is a thin annulus holding ~2.7×
+  fewer Fourier bins than band W, so on a 2-site/128-tile subject its floor is
+  ±7–14%. **Any single-subject `disj` delta smaller than that is not a
+  measurement**, which is why §12.4 is reported with intervals and §4 should
+  not be read without them.
+- **The ranking is unchanged** from §4 on all five subjects, and **the direction
+  of every significant arm agrees** with §4. The conclusion does not depend on
+  the non-compliant instrument.
+- **The losses at high gate are systematically larger** on the compliant
+  statistic: `119MSDCF` G200 −26.79% vs §4's −11.19%, `109MSDCF` G400 −82.02%
+  vs −45.22%. Restricting to the supportable band makes the gate look **worse**,
+  not better, because averaging destroys the finest supportable detail first and
+  the wideband statistic dilutes that with Nyquist energy the merge barely
+  touches.
+- **G200, the nominal default, is significantly worse than what ships today on 4
+  of 5 subjects** (−17.41, −26.79, −9.87, −39.93, all CIs excluding zero; bee-1
+  null). This is the §9 recommendation's central claim and it is now
+  significant rather than merely pointwise.
+- **G170 is indistinguishable from the shipped arm on 3 of 5** (bee-1
+  [−0.29,+0.26], flower-bud [−1.09,+3.64], 119MSDCF [−1.23,+3.25]),
+  significantly **better** on `coffee-bubbles` (+6.47 [+2.94,+10.21]) and
+  significantly **worse** on `109MSDCF` (−10.52 [−15.82,−3.70]).
+
+**§4(b)'s "G170 is neutral within ±6% on all five" is corrected: on the
+compliant statistic it is −10.52% on `109MSDCF`, and that CI excludes zero.**
+The recommendation survives because the comparison that matters is against G200,
+not against zero — but the cost is larger than §4 stated and is stated here.
+
+### 12.5 The recommendation under ORCH's pre-registered rule, unchanged
+
+- **Branch 1 (sharper at equal-or-better noise on averaging-dominated subjects)
+  qualifies on no arm.** `coffee-bubbles` G170 is +6.47% sharper but +6.74%
+  noisier; G100 is +7.46% sharper but +12.72% noisier. The exchange rate
+  reported in §5 holds on the compliant statistic. **There is no free lunch in
+  this parameter**, and that is a real result rather than a failure to find one.
+- **Branch 2 (correct but costs sharpness) is what the floor fix is, if shipped
+  at the nominal gate.** G200 is significantly softer than today's product on
+  4 of 5 subjects.
+- Therefore §9's recommendation stands and is now better evidenced: **ship the
+  floor fix and 2.0 → 1.7 as one change.** Shipping the fix alone is a
+  significant, measured sharpness regression on 4 of 5 subjects. `k = 1.7` is
+  not fitted to these data — it equals the independently measured `k_eff =
+  1.731` of §6.
