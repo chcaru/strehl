@@ -137,6 +137,66 @@ def band_energy(tile, mask):
     return blocks(b * b, BLOCK, lambda r: r.mean(axis=(1, 3)))
 
 
+def selection_ab(full, bands, label):
+    """Per-site selection against whole-frame selection, one code path.
+
+    ORCH's routed mechanism for why V-LINEAR read ~1.0 where V-LINEAR2 reads
+    2.419 is that a whole-frame reference averages over tiles whose best frame
+    is different:
+
+        "In a focus stack, 'in focus' is not a property of a frame -- it is a
+         property of a tile IN a frame. Any control that picks one frame and
+         calls it sharp has already lost most of the effect it was built to
+         detect."
+
+    That is a claim about method, so it is testable on ANY focus bracket
+    including mine, and it has never been tested on mine. Everything here is
+    identical to the per-site arm -- same tiles, same alignment, same bands,
+    same statistic -- except the single line that chooses which frame is the
+    reference. If the mechanism is real the whole-frame arm must collapse
+    toward 1.0; if it does not, then either my subjects are unusually flat in
+    depth or the mechanism is not what is driving the disagreement, and either
+    would be worth knowing.
+
+    PRE-REGISTERED before running: per-site reads x2.24 on 119MSDCF, and
+    V-LINEAR2 puts the method gap at ~2.4x, so whole-frame should land near
+    1.0-1.5 on the full statistic. A whole-frame reading that stays above 2.0
+    refutes the mechanism on this data.
+    """
+    nf, ny, nx = full.shape
+    # Whole-frame: ONE frame is declared sharpest for the entire tile, by the
+    # same statistic, exactly as a whole-frame control would do it.
+    gscore = np.array([float(np.median(full[k])) for k in range(nf)])
+    kb, kw = int(gscore.argmax()), int(gscore.argmin())
+
+    def ratio(arr, pick, worst):
+        a = arr[pick, np.arange(ny)[:, None], np.arange(nx)[None, :]]
+        b = arr[worst, np.arange(ny)[:, None], np.arange(nx)[None, :]]
+        m = b > 0
+        return float(np.median(a[m] / b[m]))
+
+    ps_pick, ps_worst = full.argmax(axis=0), full.argmin(axis=0)
+    wf_pick = np.full((ny, nx), kb)
+    wf_worst = np.full((ny, nx), kw)
+
+    print(f"\nSELECTION A/B  {label}   (best frame vs worst frame, uncorrected)")
+    print(f"  whole-frame arm declares frame {kb} sharpest and frame {kw} "
+          f"worst for all {ny * nx} sites")
+    print(f"  per-site arm uses {len(np.unique(ps_pick))} distinct best frames "
+          f"and {len(np.unique(ps_worst))} distinct worst frames")
+    print(f"    {'band':<28} {'per-site':>10} {'whole-frame':>12} {'lost':>8}")
+    names = ["full statistic"] + [f"  {s}" for s in COLS[:len(BANDS)]] \
+        + [f"  {nm}" for nm, _ in AGG]
+    arrs = [full] + list(bands)
+    out = []
+    for nm, arr in zip(names, arrs):
+        ps = ratio(arr, ps_pick, ps_worst)
+        wf = ratio(arr, wf_pick, wf_worst)
+        out.append((ps, wf))
+        print(f"    {nm:<28} {ps:>10.4f} {wf:>12.4f} {ps / wf:>8.2f}x")
+    return out
+
+
 def measure_stack(tiles, masks):
     """(full, [per-band]) per site per frame.
 
@@ -341,6 +401,11 @@ def main():
         print("     Same ordering, same crossover, independent code and a "
               "different subject: the lanes AGREE once the superseded "
               "whole-frame version is set aside.")
+
+    # ------------------------------------------------------------------
+    # ORCH's routed mechanism, tested on my own bracket rather than assumed.
+    # ------------------------------------------------------------------
+    selection_ab(full, bands, a.subject)
 
     # ------------------------------------------------------------------
     # THE PAYOFF: decompose the published verdict itself by band.

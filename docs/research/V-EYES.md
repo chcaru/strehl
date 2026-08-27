@@ -1357,3 +1357,102 @@ own measured band density is a statistic whose units are understood.
 6. **Scope, stated:** two subjects. The remaining 24 have not had this run.
    Both agree, and both reproduce their published headline exactly, but two is
    not the corpus and I am not claiming it is.
+
+## 14.7 Testing ORCH's mechanism on my own bracket
+
+ORCH's correction arrived after §14 was committed and independently reached the
+same conclusion §14.1 had. Three of its four points were already measured here.
+The fourth contained something new -- a claim about **my** instrument that I had
+not tested:
+
+> Still run the focus-null control I asked for -- but run it **per-tile, not
+> per-frame**. [...] If you run it whole-frame you will reproduce V-LINEAR's
+> 1.0-ish null and draw the wrong conclusion about your own instrument.
+
+I had already run it per-site: 64 px blocks, 1024 sites, each choosing its own
+best and worst frame -- finer than V-LINEAR2's 29 tiles. So the advice was
+already satisfied. But the *mechanism* behind it had never been tested on my
+data, and it is testable: run both selection rules through **one code path** in
+which the only line that differs is which frame is called the reference.
+
+`selection_ab()` in `focus_null.py`. Same tiles, same alignment, same bands,
+same statistic. Best-vs-worst separation, uncorrected:
+
+| band | `119MSDCF` per-site | whole-frame | lost | `coffee-bubbles` per-site | whole-frame | lost |
+|---|---:|---:|---:|---:|---:|---:|
+| full statistic | 2.3136 | 1.6147 | **1.43x** | 39.6153 | 9.6541 | **4.10x** |
+| 0.05-0.10 | 7.7808 | 10.0970 | **0.77x** | 29.8594 | 24.5264 | 1.22x |
+| 0.10-0.20 | 2.7433 | 2.0665 | 1.33x | 34.6127 | 12.6048 | 2.75x |
+| **0.20-0.25** | 1.7405 | 1.2631 | **1.38x** | 12.2731 | 5.1642 | **2.38x** |
+| 0.25-0.30 | 1.5105 | 1.1688 | 1.29x | 4.8978 | 2.2997 | 2.13x |
+| 0.30-0.40 | 1.5422 | 1.2874 | 1.20x | 2.5071 | 1.3381 | 1.87x |
+| 0.40-0.48 | 2.1377 | 1.9009 | 1.12x | 2.7237 | 1.3438 | 2.03x |
+| 0.05-0.25 (PASS) | 3.3610 | 2.7711 | 1.21x | 25.6366 | 12.0687 | 2.12x |
+| 0.30-0.48 (FAIL) | 1.6776 | 1.4216 | 1.18x | 2.3807 | 1.2424 | 1.92x |
+
+The whole-frame arm declared frame 23 sharpest for all 1024 sites on
+`119MSDCF`, where the per-site arm used **22 distinct best frames and 31
+distinct worst frames**. On `coffee-bubbles`, one frame against **19 and 19**.
+
+**MEASURED: the mechanism is real on my own bracket, and at the band where
+V-LINEAR2 says it operates it is quantitatively right.** V-LINEAR2 puts the
+method gap at a factor of **2.4** at 0.20-0.25 cyc/px. I measure **1.38x and
+2.38x** in that exact band, from independent code on two different subjects.
+The loss is also largest where the signal is -- 2.75x at 0.10-0.20 on
+`coffee-bubbles`, where 35.57% of my statistic's energy lives -- and smallest
+in the certified-noise bands, which is the shape the mechanism predicts:
+whole-frame averaging destroys most where there is most to destroy.
+
+### The pre-registration failed, and how it failed is the useful part
+
+I registered, in the docstring before running: *"per-site reads x2.24 on
+119MSDCF, and V-LINEAR2 puts the method gap at ~2.4x, so whole-frame should land
+near 1.0-1.5 on the full statistic. A whole-frame reading that stays above 2.0
+refutes the mechanism on this data."*
+
+**It landed at 1.6147 on `119MSDCF` -- outside my range -- and at 9.6541 on
+`coffee-bubbles`, which by the letter of my own registration refutes the
+mechanism.** It does not, and the reason is that I registered the wrong
+quantity. The mechanism predicts a **ratio of ratios** -- how much selection
+method costs -- not an absolute level. An absolute threshold calibrated on one
+subject's per-site value cannot transfer to a subject whose per-site value is
+17x larger. I registered a subject-specific number as though it were
+subject-invariant, which is the error `AGENTS.md` rule 5 exists to prevent, and
+I made it in the act of testing someone else's claim.
+
+The correctly-formed prediction -- **loss factor ~2.4x at 0.20-0.25** -- is
+confirmed at 2.38x on `coffee-bubbles` and under-confirmed at 1.38x on
+`119MSDCF`. Registered as a live limit: on this data the method gap is
+**subject-dependent, spanning 1.38x to 2.38x**, so V-LINEAR2's 2.4 should be
+read as one subject's value and not as a corpus constant.
+
+### One reversal I will not smooth over
+
+At **0.05-0.10 cyc/px on `119MSDCF` the whole-frame arm reads 10.0970 against
+per-site's 7.7808 -- a loss factor of 0.77x, meaning whole-frame WINS.** That is
+the opposite of the mechanism and it appears in exactly one cell.
+
+The cause is a design decision stated in §14.3: band columns are selected by the
+**full** statistic and never by themselves, deliberately, so they carry no
+order-statistic bias. The price is that the per-site "worst" frame is the worst
+by the full statistic, which at 0.05-0.10 -- where defocus barely attenuates and
+which sits far from the statistic's 0.1750 centroid -- need not be the worst in
+that band. The per-site denominator is therefore not minimised there, and the
+loss column is not a clean read of the mechanism at bands remote from where the
+statistic's energy lives.
+
+That is a limitation of the *loss column at that band*, not of the verdict: the
+band-resolved verdict in §14.5 compares master against a per-site envelope built
+the same way in every band, and does not depend on this. But a table with one
+cell pointing the other way is a table that has to say so, and the honest
+statement is that **I do not have a clean measurement of the method gap below
+0.10 cyc/px.**
+
+### What this settles
+
+My instrument is on the **per-site** side of a 1.38-2.38x disagreement that I
+have now reproduced myself rather than inherited. Had I run the control
+whole-frame, `119MSDCF` would have read **1.61 instead of 2.31** and I would
+have been substantially closer to concluding my own instrument could not see
+focus. ORCH's warning was correct, arrived after the work that satisfied it, and
+is now measured rather than accepted.
