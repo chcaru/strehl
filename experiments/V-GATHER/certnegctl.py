@@ -48,13 +48,25 @@ ARMS = [
      "a short population must be caught by the independent seal census, not "
      "quietly re-normalised so that 20 of 20 reads complete."),
 
+    # This anchor went stale when printcert grew the coverage branch, and the
+    # run stopped with MUTATION TARGET NOT FOUND rather than reporting four
+    # green arms and a silent skip. That is the behaviour being paid for: a
+    # mutation that fails to apply must be louder than one that fails to catch.
     ("PERMIT   unmeasured treated as passing",
-     '            bucket, why = "REFUSED", "visible (%s) but no matched-gauge attribution measured" % "; ".join(vis)',
-     '            bucket, why = "PASS", "visible (%s) but no matched-gauge attribution measured" % "; ".join(vis)',
+     '            bucket, why = "REFUSED", "visible (%s) but %s" % (',
+     '            bucket, why = "PASS", "visible (%s) but %s" % (',
      None,
      "a subject that is visibly mottled and has NO attribution evidence must "
      "not be certified. This arm requires the REFUSED count to fall and PASS "
      "to rise -- i.e. that the refusal is load-bearing."),
+
+    ("COVERAGE gate disabled",
+     "COVERAGE_MIN = 0.60",
+     "COVERAGE_MIN = 0.0",
+     None,
+     "with the coverage floor removed, subjects whose candidate set spans one "
+     "focus regime are scored anyway. FAIL must RISE -- if it does not, the "
+     "floor is refusing nothing and the four refusals are decoration."),
 
     ("MARGIN   margin raised beyond reach",
      "    margin, bias_rows = price_sampling_bias(cert)",
@@ -115,6 +127,10 @@ def main():
             if expect is not None:
                 good = expect in out
                 detail = "found %r" % expect if good else "expected %r, absent" % expect
+            elif name.startswith("COVERAGE"):
+                good = c.get("FAIL", -1) > c0.get("FAIL", 0)
+                detail = "FAIL %s->%s  REFUSED %s->%s" % (
+                    c0.get("FAIL"), c.get("FAIL"), c0.get("REFUSED"), c.get("REFUSED"))
             elif name.startswith("PERMIT"):
                 good = c.get("REFUSED", -1) < c0.get("REFUSED", 0) and \
                     c.get("PASS", -1) > c0.get("PASS", 0)

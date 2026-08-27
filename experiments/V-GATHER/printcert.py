@@ -89,6 +89,35 @@ def label_for(rule):
     raise SystemExit("cannot derive a label from rule %r -- refusing to guess" % rule)
 
 
+COVERAGE_MIN = 0.60
+
+
+def coverage(v):
+    """How much of the bracket does the surviving candidate set actually span?
+
+    Source frames are emitted in their own geometry, so the master's window has
+    to be re-found in each one by an integer shift; where focus breathing has
+    carried that content off the sensor there is no data and the frame is
+    refused. Those refusals are not uniform. Measured: coffee-bubbles keeps
+    frames 0-4 of 19, leaf-2-cpl keeps 0-65 of 182, and couch-fibers-cpl keeps
+    162-270 of 299 -- each a single focus regime rather than the stack.
+
+    A minimum over five frames from one end of a bracket is not "the best source
+    frame", it is the best frame of one focus regime, and it sits systematically
+    HIGH because a minimum over a smaller set can only be larger. That inflates
+    the ratio exactly where coverage is worst, and coverage is worst on the
+    deepest stacks -- which is why the ratio still tracked stack depth at
+    rho +0.87 after registration. Refuse those rather than report them.
+    """
+    src = [x for x in v.get("sources", []) if "blotch" in x]
+    sampled = max(1, len(v.get("sampled", [])))
+    if not src:
+        return 0.0, 0.0, 0, sampled
+    ks = [x["k"] for x in src]
+    span = (max(ks) - min(ks)) / max(1, v["n_frames"] - 1)
+    return len(src) / sampled, span, len(src), sampled
+
+
 def best_index(blotch, focus):
     hi = max(focus)
     keep = [i for i in range(len(blotch)) if focus[i] >= FOCUS_FLOOR * hi]
@@ -179,7 +208,15 @@ def main():
             vis.append("clip %.4f%% > %.2f%%" % (d["clip"] * 100, CLIP_MAX * 100))
 
         rw = rb = None
+        cov_note = None
         v = cert.get(s)
+        if v and v.get("done"):
+            uf, sf, used, samp = coverage(v)
+            if uf < COVERAGE_MIN or sf < COVERAGE_MIN:
+                cov_note = ("candidate set covers %.0f%% of sampled frames and "
+                            "%.0f%% of the bracket (%d of %d usable) -- below %.0f%%"
+                            % (100 * uf, 100 * sf, used, samp, 100 * COVERAGE_MIN))
+                v = None
         if v and v.get("done"):
             src = [x for x in v["sources"] if "blotch" in x]
             if src:
@@ -192,7 +229,9 @@ def main():
         if not vis:
             bucket, why = "PASS", "below visibility on the delivered file"
         elif rb is None:
-            bucket, why = "REFUSED", "visible (%s) but no matched-gauge attribution measured" % "; ".join(vis)
+            bucket, why = "REFUSED", "visible (%s) but %s" % (
+                "; ".join(vis),
+                cov_note or "no matched-gauge attribution measured")
         elif rb > margin:
             bucket, why = "FAIL", "visible (%s) and %s = %.3f > %.3f" % ("; ".join(vis), lab_best, rb, margin)
         else:

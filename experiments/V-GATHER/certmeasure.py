@@ -104,6 +104,51 @@ def read_rgb(path, expect=None):
     return a[:, :, :3].astype(np.float32), (w, h)
 
 
+def est_shift(a, b):
+    """Integer-only shift by FFT cross-correlation. Sign is COMMISSIONED, not derived.
+
+    Sub-pixel resampling is deliberately not used: it would add blur to the very
+    band energy being measured. Returns (dy, dx, confidence), where confidence is
+    the peak height in units of the correlation surface's own standard deviation
+    -- a flat window has no localisable peak and must be refused rather than
+    silently assigned (0, 0).
+    """
+    a = a - a.mean()
+    b = b - b.mean()
+    c = np.fft.irfft2(np.fft.rfft2(a) * np.conj(np.fft.rfft2(b)), s=a.shape)
+    pk = np.unravel_index(int(np.argmax(c)), c.shape)
+    h, w = a.shape
+    dy = pk[0] if pk[0] <= h // 2 else pk[0] - h
+    dx = pk[1] if pk[1] <= w // 2 else pk[1] - w
+    conf = float((c.max() - c.mean()) / (c.std() + 1e-12))
+    return int(dy), int(dx), conf
+
+
+def window_shift(m_lum, s_lum, at, half=768, win=900):
+    """Where has the master's window moved to in this source frame?
+
+    MEASURED, BECAUSE IT IS NOT ZERO. STREHL_ONLY_FRAME emits a frame in its own
+    geometry, not warped into the reference grid: regcheck.py measures a drift of
+    about 0.9px per frame, so on a 299-frame bracket the last frame's content has
+    walked ~270px across a 900px window. Comparing the same COORDINATES in master
+    and source therefore compares different scene content, and the contamination
+    grows with stack depth -- which is exactly the artifact that made the ratio
+    correlate with frame count at rho = 0.764 before this was applied.
+
+    The estimate is LOCAL to the window because the per-frame transform is a
+    similarity: focus breathing changes magnification, so the displacement is
+    position-dependent and a single global translation would be wrong away from
+    wherever it was measured.
+    """
+    y, x = at
+    cy, cx = y + win // 2, x + win // 2
+    h, wd = m_lum.shape
+    y0, x0 = max(0, cy - half), max(0, cx - half)
+    y1, x1 = min(h, cy + half), min(wd, cx + half)
+    dy, dx, conf = est_shift(m_lum[y0:y1, x0:x1], s_lum[y0:y1, x0:x1])
+    return dy, dx, conf
+
+
 def sharpness(lum):
     """Mean |gradient|. A defocus proxy, decimated for speed."""
     d = lum[::4, ::4]
@@ -185,8 +230,23 @@ def main():
         rec["lattice"] = list(lat)
         m = measure(rgb)
         rec["master"] = m
+        m_lum = lum_of(rgb)
         del rgb
         os.remove(mp)
+
+        # PER-RUN POSITIVE CONTROL on the shift estimator. A registration that
+        # cannot recover a shift it was just given would return (0,0) for every
+        # frame and present as "already registered" -- the failure mode this
+        # whole correction exists to remove. Refuse the subject rather than
+        # measure it with an instrument that has not answered.
+        yb, xb = m["at_blotch"]
+        ctl = m_lum[max(0, yb - 300):yb + 1200, max(0, xb - 300):xb + 1200]
+        for wnt in ((9, -13), (-6, 4)):
+            gy, gx, gc = est_shift(ctl, np.roll(np.roll(ctl, wnt[0], 0), wnt[1], 1))
+            if (gy, gx) != (-wnt[0], -wnt[1]):
+                raise SystemExit("SHIFT ESTIMATOR FAILED CONTROL on %s: planted %s got %s"
+                                 % (s, wnt, (gy, gx)))
+        rec["shift_control"] = "recovered (9,-13) and (-6,4)"
 
         # COUNT FRAMES, NOT FILES. The first version counted directory entries.
         # Three subjects carry an .xmp sidecar per raw, so the count came out at
@@ -224,8 +284,26 @@ def main():
                 srcs.append({"k": k, "refused": str(ex)[:160]})
                 os.remove(sp)
                 continue
-            sm = measure(srgb, at_blotch=m["at_blotch"], at_chroma=m["at_chroma"])
+            s_lum = lum_of(srgb)
+            dyb, dxb, cb = window_shift(m_lum, s_lum, m["at_blotch"])
+            ab = (m["at_blotch"][0] + dyb, m["at_blotch"][1] + dxb)
+            ac = m["at_chroma"]
+            dyc = dxc = 0
+            cc = float("nan")
+            if ac:
+                dyc, dxc, cc = window_shift(m_lum, s_lum, ac)
+                ac = (ac[0] + dyc, ac[1] + dxc)
+            del s_lum
+            hgt, wid = m_lum.shape
+            if not (0 <= ab[0] <= hgt - 900 and 0 <= ab[1] <= wid - 900):
+                srcs.append({"k": k, "refused": "registered window falls outside the frame"})
+                del srgb
+                os.remove(sp)
+                continue
+            sm = measure(srgb, at_blotch=ab, at_chroma=ac)
             sm["k"] = k
+            sm["shift_blotch"] = [dyb, dxb, round(cb, 2)]
+            sm["shift_chroma"] = [dyc, dxc, None if cc != cc else round(cc, 2)]
             srcs.append(sm)
             del srgb
             os.remove(sp)
