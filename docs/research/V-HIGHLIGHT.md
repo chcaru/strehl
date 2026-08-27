@@ -705,3 +705,95 @@ reading *"commit never landed"* (I stripped the line before testing for the
 `"   Compiling"` prefix), and a hardcoded sentence said *"4 of 7"* where the
 computation returned **3 of 7**. The first would have cost two lanes a search for
 a commit that never existed.
+
+---
+
+# Measurement-hazard notice: PIL audit clean, my "no seam" was under-qualified
+
+## §1 PIL — independently confirmed, and my own numbers are clean
+
+Reproduced on one of my own camera-linear renders:
+
+```
+PIL version      : 12.2.0
+tifffile -> dtype uint16   max  23224
+PIL      -> dtype uint8    max     90
+ratio of maxima  : 258.04     PIL raised? no exception, no warning
+```
+
+One refinement worth carrying: it is a **right-shift, not a rescale**. 23224 >> 8
+= 90, and the ratio is 258.04 rather than a clean 256, so the loss is *not*
+recoverable by multiplying back. Anyone tempted to repair a PIL-read number by
+scaling it will get a second wrong answer that looks arithmetically defensible.
+
+Audited all 33 of my scripts:
+
+```
+ZERO hits -- no measurement of mine was read through PIL
+```
+
+Four scripts import both PIL and tifffile (`ca_ab`, `demosaic`, `fringe_map`,
+`seam`), but in every one PIL appears only as `Image.fromarray(...).save(...)`
+writing a PNG for my eyes. Every magnitude I have reported came through
+`tifffile.imread`. No V-HIGHLIGHT or V-TRIAGE number needs revising.
+
+## §3 applied to my own "no seam" — the claim was real but under-qualified
+
+Phase 1 section 6 opens **"There is no seam."** That is exactly the unqualified
+silence the notice warns about, and I published it.
+
+In my defence the evidence was not only a PNG: I had a level-binned response
+table on 16-bit data showing the correction entering at 1 DN and growing
+`0 -> 1 -> 9 -> 35 -> 75 -> 251 -> 590`, which is a genuine continuity
+measurement. What I never did was state **what size step it could have caught**.
+
+Commissioned now, on the same `foam` pair, planting a step at the knee locus:
+
+```
+natural jump AT the plant boundary (43000 DN) : 0.00 DN
+95th pct of other adjacent-bin jumps          : 27.60 DN
+largest natural jump anywhere                 : 60.00 DN
+
+    A (DN)   jump@plant       excess  detected?
+      0.25         0.25         0.25         no
+      1.00         1.00         1.00         no
+      8.00         8.00         8.00         no
+     16.00        16.00        16.00         no
+     32.00        32.00        32.00        YES
+plant lands: excess tracks A one-for-one (1.00 DN per DN)
+```
+
+**Correct form of the claim: "no seam at or above 32 DN in the level-binned
+response on `foam`."** Not "there is no seam."
+
+Two things that survive and one that does not. The natural jump *at* the knee
+boundary is **exactly 0.00 DN** — the response really is continuous there, which
+is the substance of the original finding. The floor of 32 DN is coarse, about
+0.05% of full scale, and it is set by the roll-off's own steep growth in that
+level range rather than by sensor noise; a seam of 10 DN would have passed my
+statistic unseen. What does not survive is the unqualified wording.
+
+## My first commissioning was broken, and it failed in the dangerous direction
+
+v1 scored the **global** maximum adjacent-bin jump. A natural 60 DN feature
+elsewhere in the curve dominated it, so a planted step never became the maximum:
+
+```
+    A (DN)     max jump  detected?
+      0.25        60.00         no
+     16.00        60.00         no        <- a 16 DN plant, invisible
+NOTHING DETECTED UP TO 16 DN -- the statistic is deaf and the claim
+must be withdrawn, not merely qualified.
+```
+
+A constant statistic across a 64x change in the plant is the tell, and it is the
+same tell as a boolean with zero variance. Had I trusted it I would have
+**withdrawn a sound finding** because my test of the test was wrong.
+
+Every instrument error I have caught in myself tonight until now was a false
+positive — accusing working code. This one is the mirror: a false negative that
+would have destroyed a correct result rather than manufacturing a wrong one. The
+asymmetry matters. A false positive costs the author time and gets argued down; a
+false negative that retracts a true claim is *self-ratifying*, because the
+retraction looks like rigour. Anchoring the plant is what caught it: once I
+required the excess to track `A` one-for-one, v1 could not have passed.
