@@ -131,6 +131,45 @@ class Declared:
 
 
 REGISTRY: dict[str, Declared] = {
+    # ---------------- control / infrastructure ----------------
+    "STREHL_BUILD_ID": Declared(
+        kind="control",
+        default="unset (build.rs derives the stamp from git)",
+        verified="measured",
+        backend="any",
+        evidence=(
+            "RESOLVING EXPRESSION READ, AND MEASURED. build.rs:101, `if let "
+            "Ok(forced) = std::env::var(\"STREHL_BUILD_ID\")` -- a non-empty "
+            "explicit stamp is emitted verbatim and build.rs returns early "
+            "(:103-104). UNSET falls through to build.rs:108, `git rev-parse "
+            "--short=12 HEAD` plus a `-dirty` suffix, and to the literal "
+            "\"unknown\" (:110) when git is unavailable, so the variable can "
+            "never resolve to nothing. Consumed at main.rs:34 and main.rs:55 "
+            "by `env!(\"STREHL_BUILD_ID\")`, which is a COMPILE-TIME read and "
+            "fails the build outright if the value is absent. MEASURED: the "
+            "stamp moved 6e8c3898b2da-dirty -> fd02b6e063e8-dirty across two "
+            "builds of this tree, and `--version` and TIFF tag 305 both "
+            "carried the new value."
+        ),
+        note=(
+            "BUILD-TIME, NOT RUNTIME -- the one entry in this registry that is "
+            "not a switch on a render. Setting it in the environment of the "
+            "shipped binary does nothing at all; it is read by the build "
+            "script and baked in by `env!`, so it is fixed at compile time. It "
+            "is declared here anyway because this script scans for STREHL_* "
+            "literals and finding one undeclared is a FAIL by design, and "
+            "because leaving it undeclared would have made the count of "
+            "undeclared switches read 1 forever -- a permanently red check is "
+            "one nobody reads. The override exists so a build outside a git "
+            "checkout (release tarball, container) can still name its source; "
+            "unset is correct for every ordinary build because the derived "
+            "value is the trustworthy one. DECLARED BY THE LANE THAT SHIPPED "
+            "IT, LATE: this variable landed in 02564395 nineteen minutes after "
+            "this registry was committed, and the author did not re-run this "
+            "script before committing. The check was red from 15:51 and said "
+            "so; nobody was looking."
+        ),
+    ),
     # ---------------- quality ----------------
     "STREHL_FIX_CA": Declared(
         kind="quality",
@@ -998,6 +1037,48 @@ def find_switches(crates: Path) -> dict[str, list[str]]:
     return found
 
 
+# The clap-derive flag surface, which SWITCH_RE cannot see by construction: no
+# `--flag` is spelled `STREHL_*`, so every partition above sums over env
+# switches ONLY and reads exactly the same whether the flag surface is fully
+# declared or entirely unexamined.
+#
+# That blind spot is not hypothetical. `--exposure` and `--auto-exposure` reach
+# no pixel while the banner announces `+2.61 stops (gain 6.105x)`, and
+# `--photometric` shipped with its help text and its default disagreeing. All
+# three are the defect this script was written to catch, and all three were
+# invisible to it, because the property that decides whether it can see a
+# switch -- being spelled as a quoted STREHL_ literal -- was never varied.
+#
+# Most flags are derived from the field name (`pub auto_exposure` gives
+# `--auto-exposure`); a few name themselves with `long = "..."`. Both forms
+# count, because the whole point is to find the ones nobody tidied.
+CLI_ARG_RE = re.compile(
+    r"#\[arg\((?P<attr>[^\]]*)\)\]"  # the clap attribute
+    r"(?:\s*#\[[^\]]*\])*"  # any further attributes between it and the field
+    r"\s*(?:pub\s+)?(?P<field>[a-z0-9_]+)\s*:"
+)
+CLI_LONG_NAME_RE = re.compile(r'long\s*=\s*"([a-z0-9\-]+)"')
+
+
+def find_cli_flags(crates: Path) -> dict[str, list[str]]:
+    """Every derived or explicit `--flag`, mapped to where it is declared."""
+    flags: dict[str, list[str]] = {}
+    for rs in sorted(crates.rglob("*.rs")):
+        try:
+            text = rs.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        for m in CLI_ARG_RE.finditer(text):
+            attr = m.group("attr")
+            if "long" not in attr:
+                continue  # a positional or short-only argument is not a --flag
+            explicit = CLI_LONG_NAME_RE.search(attr)
+            name = explicit.group(1) if explicit else m.group("field").replace("_", "-")
+            lineno = text.count("\n", 0, m.start()) + 1
+            flags.setdefault(f"--{name}", []).append(f"{rs.name}:{lineno}")
+    return flags
+
+
 def main() -> int:
     root = Path(__file__).resolve().parent.parent
     crates = root / "crates"
@@ -1006,6 +1087,7 @@ def main() -> int:
         return 1
 
     found = find_switches(crates)
+    cli_flags = find_cli_flags(crates)
 
     undeclared = sorted(set(found) - set(REGISTRY))
     stale = sorted(set(REGISTRY) - set(found))
@@ -1145,6 +1227,32 @@ def main() -> int:
     print(f"    {'-' * 38}")
     print(f"    sums to                    {sum(len(v) for v in by_v.values()):3d}")
 
+    # ---- the THIRD accounting: the DOMAIN. -------------------------------
+    # The two partitions above are rigorous, and both sum over `found`, which
+    # is every STREHL_* env literal and nothing else. Neither one states what
+    # it excluded, so a clean run has always been able to mean "I examined the
+    # whole switch surface" or "I examined half of it and the half I skipped
+    # is the half your defects are in" -- printing the identical glyph.
+    #
+    # The governing question, which cost this fleet three separate findings
+    # tonight before anyone asked it: WHAT PROPERTY OF THE INPUT DECIDES
+    # WHETHER THIS CHECK CAN SEE ANYTHING, AND HAVE I VARIED IT? Here that
+    # property is the spelling of the switch, and varying it -- from env
+    # literal to clap flag -- takes coverage from complete to half.
+    declared_flags = sorted(n for n in REGISTRY if n.startswith("--"))
+    unaudited = sorted(set(cli_flags) - set(declared_flags))
+    print()
+    print("  DOMAIN -- what this script does NOT look at")
+    print(f"    env switches audited       {len(found):3d}")
+    print(f"    CLI --flags declared       {len(declared_flags):3d}")
+    print(f"    CLI --flags in the source  {len(cli_flags):3d}")
+    print(f"    CLI --flags UNAUDITED      {len(unaudited):3d}  <- outside every count above")
+    if unaudited:
+        for i in range(0, len(unaudited), 4):
+            print("      " + "  ".join(f"{n:22s}" for n in unaudited[i : i + 4]).rstrip())
+        print("    These are not passing. They are unexamined. A dead --flag")
+        print("    cannot be reported by this script in its present form.")
+
     if partition != total:
         print("\nFAIL: the partition does not sum to the total found.")
         print("      This script's own bookkeeping is broken; fix it before")
@@ -1180,7 +1288,12 @@ def main() -> int:
         print("      the code returned Off, so it was never counted as dark.")
         rc = 1
     if rc == 0:
-        print("\nPASS: every switch accounted for, no quality switch dark.")
+        print("\nPASS: every ENV switch accounted for, no quality switch dark.")
+        if unaudited:
+            print(
+                f"      Scope: this verdict covers {len(found)} env switches and "
+                f"says NOTHING about {len(unaudited)} CLI --flags."
+            )
     return rc
 
 
