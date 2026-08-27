@@ -61,15 +61,24 @@ def flattest(lum, win=WIN):
 
 
 def blotch_ratio(blk):
-    """Mid-scale power over noise power. Dimensionless, gain-independent."""
+    """Mid-scale structure as a CONTRAST, plus the two raw terms.
+
+    Returns (contrast, band_dn, noise_dn, mean_dn). Contrast = band/mean is invariant to
+    the tone scaling the pipeline applies (masters run 4.7-6.4x brighter than a rawpy
+    decode with no_auto_bright), so it is the only one of these safe to compare between a
+    master and a source frame. Comparing band_dn directly indicts the merge for being
+    brighter; dividing band by NOISE indicts it for being quieter. Both were measured.
+    """
     lo = boxblur(blk, LO_R // 2)
     hi = boxblur(blk, HI_R // 2)
     band = lo - hi
     noise = blk - boxblur(blk, NOISE_R)
+    m = float(np.mean(blk))
     nr = float(np.std(noise))
-    if nr <= 0:
-        return float("nan"), 0.0, 0.0
-    return float(np.std(band)) / nr, float(np.std(band)), nr
+    bd = float(np.std(band))
+    if m <= 0:
+        return float("nan"), bd, nr, m
+    return bd / m, bd, nr, m
 
 
 def lum_of(rgb):
@@ -82,7 +91,7 @@ def commission(rng):
     n = np.zeros((WIN, WIN), np.float32)
     base = 8000.0
     noise = rng.normal(0, 40, (WIN, WIN)).astype(np.float32)
-    r0, _, _ = blotch_ratio(base + noise)
+    r0, _, _, _ = blotch_ratio(base + noise)
     print(f"  ARM NULL   pure noise, no blotch        ratio {r0:8.4f}")
 
     print("  ARM SYNTH  planted blotch field, amplitude ladder in units of noise sigma")
@@ -101,7 +110,7 @@ def commission(rng):
     ok = True
     prev = r0
     for amp in (0.25, 0.5, 1.0, 2.0, 4.0):
-        r, _, _ = blotch_ratio(base + noise + blot * amp * 40.0)
+        r, _, _, _ = blotch_ratio(base + noise + blot * amp * 40.0)
         mono = r > prev
         print(f"    amp {amp:5.2f} sigma   ratio {r:8.4f}   rises {mono}")
         ok = ok and mono
@@ -125,8 +134,8 @@ def main(argv):
         paths = [p for p in paths if any(w in p.stem for w in want)]
 
     print(f"\nARM MASTER  flattest {WIN}x{WIN} window, band {LO_R}-{HI_R} px")
-    print(f"{'master':40s} {'ratio':>8s} {'vs floor':>9s} {'band DN':>9s} "
-          f"{'noise DN':>9s} {'x':>6s} {'y':>6s}")
+    print(f"{'master':40s} {'contrast':>9s} {'vs floor':>9s} {'band DN':>9s} "
+          f"{'noise DN':>9s} {'mean DN':>9s} {'x':>6s} {'y':>6s}")
     rows = []
     bands = {}
     for p in paths:
@@ -134,12 +143,13 @@ def main(argv):
         lum = lum_of(a[:, :, :3])
         del a
         y, x = flattest(lum)
-        r, bd, nd = blotch_ratio(lum[y:y + WIN, x:x + WIN])
+        r, bd, nd, md = blotch_ratio(lum[y:y + WIN, x:x + WIN])
         del lum
         nm = p.stem.replace("--SHIP-V2", "")
         rows.append((nm, r, y, x))
-        bands[nm] = (bd, nd)
-        print(f"{nm:40s} {r:8.3f} {r / floor:9.2f} {bd:9.1f} {nd:9.1f} {x:6d} {y:6d}")
+        bands[nm] = (bd, nd, md)
+        print(f"{nm:40s} {r:9.5f} {r / floor:9.2f} {bd:9.1f} {nd:9.1f} {md:9.1f} "
+              f"{x:6d} {y:6d}")
 
     rows.sort(key=lambda t: -t[1])
     print(f"\nworst three by ratio: " + ", ".join(f"{n} {v:.2f}" for n, v, _, _ in rows[:3]))
@@ -164,38 +174,33 @@ def main(argv):
             del rgb
             if sl.shape[0] < y + WIN or sl.shape[1] < x + WIN:
                 continue
-            sr, sb, sn = blotch_ratio(sl[y:y + WIN, x:x + WIN])
+            sr, sb, sn, sm = blotch_ratio(sl[y:y + WIN, x:x + WIN])
             del sl
-            vals.append((sr, sb, sn))
+            vals.append((sr, sb, sn, sm))
         if not vals:
             print(f"  {nm:38s} no usable source window")
             continue
         mx = max(v[0] for v in vals)
         sb_mx = max(v[1] for v in vals)
         sn_med = float(np.median([v[2] for v in vals]))
-        mb, mn = bands[nm]
+        sm_med = float(np.median([v[3] for v in vals]))
+        mb, mn, md = bands[nm]
         print(f"  {nm}")
-        print(f"    ratio    master {r:7.3f}   source max {mx:7.3f}   "
-              f"({r / max(mx, 1e-9):.2f}x)")
-        print(f"    band DN  master {mb:7.1f}   source max {sb_mx:7.1f}   "
-              f"({mb / max(sb_mx, 1e-9):.2f}x)  <-- the term that matters")
-        print(f"    noise DN master {mn:7.1f}   source med {sn_med:7.1f}   "
-              f"({sn_med / max(mn, 1e-9):.2f}x quieter)")
-        # A clean merge of N frames divides noise by ~sqrt(N) and leaves subject
-        # structure alone, so the RATIO rises even with no blotching whatsoever.
-        # Only an excess in the numerator can indict the merge.
-        pred = mx * (sn_med / max(mn, 1e-9))
-        if mb <= 1.3 * sb_mx:
-            print(f"    VERDICT  band power is NOT elevated. The ratio excess is "
-                  f"noise reduction,")
-            print(f"             which is the merge working. Predicted ratio from "
-                  f"noise alone {pred:.3f}")
-            print(f"             against measured {r:.3f}. NOT a blotch defect.")
+        print(f"    mean DN   master {md:8.1f}  source med {sm_med:8.1f}  "
+              f"({md / max(sm_med, 1e-9):.2f}x brighter -- the pipeline tone-scales)")
+        print(f"    band DN   master {mb:8.1f}  source max {sb_mx:8.1f}  "
+              f"({mb / max(sb_mx, 1e-9):.2f}x)  raw, NOT comparable")
+        print(f"    noise DN  master {mn:8.1f}  source med {sn_med:8.1f}  "
+              f"({mn / max(sn_med, 1e-9):.2f}x)  raw, NOT comparable")
+        print(f"    CONTRAST  master {r:8.5f}  source max {mx:8.5f}  "
+              f"({r / max(mx, 1e-9):.2f}x)  <-- tone-invariant, the one that counts")
+        if r <= 1.3 * mx:
+            print(f"    VERDICT  mid-scale contrast is NOT elevated ({r / max(mx, 1e-9):.2f}x).")
+            print( "             NOT a blotch defect.")
         else:
-            print(f"    VERDICT  band power elevated {mb / sb_mx:.2f}x beyond any source "
-                  f"frame. This is")
-            print(f"             mid-scale structure no input contains -- a genuine "
-                  f"merge defect.")
+            print(f"    VERDICT  mid-scale contrast elevated {r / mx:.2f}x beyond any "
+                  f"source frame --")
+            print( "             structure no input contains. A genuine merge defect.")
     return 0
 
 

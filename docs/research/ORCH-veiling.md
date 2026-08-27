@@ -10862,3 +10862,79 @@ alignment warp, but not exactly.
 **No blotch defect is present on the three subjects tested.** The corpus-wide run is not
 done; these were the three with the highest ratios, which is where a defect would have shown
 first.
+
+---
+
+## §99 — raw DN is not comparable between a master and a source frame, and §98 assumed it was
+
+§98 fixed a ratio by separating its terms, then compared the numerator -- **band DN** -- between
+master and source frame. The corpus-wide run flagged three subjects on that basis:
+
+```
+  flowers-cpl            band DN master  590.9  source max  342.9   1.72x  "genuine merge defect"
+  flower-inner-edge-cpl  band DN master 1251.9  source max  637.2   1.96x  "genuine merge defect"
+  flat-on-ruler-cpl      band DN master 8747.1  source max 1809.1   4.84x  "genuine merge defect"
+```
+
+Two of those three also reported the master **noisier** than a single source frame -- `flat-on-ruler-cpl`
+by 14x. A merge of a hundred frames cannot add noise. **A reading that requires an impossible
+mechanism is a reading to look at, not to publish.**
+
+### What the picture showed
+
+`orch_blotchpair.py` renders each flagged window, master beside source frame, one stated
+display gain for the pair. The means came out:
+
+```
+  flowers-cpl            master 56983.5   source 10684.3   5.33x
+  flower-inner-edge-cpl  master  9765.2   source  2079.6   4.70x
+  flat-on-ruler-cpl      master 47513.9   source  7475.0   6.36x
+```
+
+**The pipeline tone-scales.** A rawpy decode with `no_auto_bright=True, gamma=(1,1)` is not on
+the master's tone scale and never was. Band DN and noise DN both scale with brightness, so
+every raw-DN comparison in §98 spanned a 5x factor that had nothing to do with the merge.
+Corrected, all three "defects" invert: 1.72/5.33 = 0.32x, 1.96/4.70 = 0.42x, 4.84/6.36 = 0.76x.
+**The masters carry less mid-scale structure than their own inputs.**
+
+Across the full corpus the factor reaches **25x** (`112MSDCF`: master mean 8524 DN, source
+340 DN). At that separation raw DN carries no information about the merge at all.
+
+### The corrected statistic and the corrected result
+
+Contrast -- band divided by the window mean -- is invariant to tone scaling. Recommissioned
+(monotone across the same 0.25-4.0 sigma ladder, null floor 0.0002), the three worst subjects
+in the corpus read:
+
+```
+  foam       contrast master 0.46019   source max 0.70873   0.65x   NOT a defect
+  112MSDCF   contrast master 0.24933   source max 0.26846   0.93x   NOT a defect
+  113MSDCF   contrast master 0.24306   source max 0.19263   1.26x   NOT a defect
+```
+
+Nothing exceeds the 1.3x threshold. **No blotch defect is present in the shipped corpus.**
+
+The eye agrees and agrees emphatically. In all three flagged windows the master is sharp --
+pollen grains, dust specks, a hair, brushed-metal texture, a crisp ruler edge -- while the
+source frame at the same coordinates is defocused mush. There is no mottling in any of them.
+
+### §98's noise claim is withdrawn
+
+§98 reported "noise reduced 3.3x to 7.3x" as the first direct measurement of the merge's
+benefit. That number was computed from **raw noise DN across the same uncorrected tone
+difference** and is not valid as published. The direction of the finding survives -- relative
+noise still favours the master, and by more than was claimed rather than less -- but the
+figure was arrived at wrongly and must be re-derived on relative noise before it is quoted
+anywhere. It has been broadcast to six lanes and the correction has gone after it.
+
+> **Two quantities measured in DN are comparable only if they sit on the same tone scale.
+> Across a pipeline stage they generally do not, and the violation is silent: both numbers
+> are honest, both units match, and the ratio is meaningless.** Normalise by something the
+> stage preserves -- contrast, not amplitude -- or measure the scale factor explicitly and
+> divide it out.
+
+This is the fifth instrument tonight to produce a wrong answer, and the second to do it by
+dividing by the wrong thing. §98 diagnosed exactly this failure in the denominator and then
+committed it in the numerator, in the same script, within the same hour.
+
+> **Fixing one term of a ratio does not license trusting the other.**
