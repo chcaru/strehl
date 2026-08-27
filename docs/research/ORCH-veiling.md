@@ -10786,3 +10786,79 @@ Caveat, stated rather than buried: this sweep is adversarial with respect to **e
 overshoot** and nothing else. It has no power against defects that are not edge-localised --
 tonal breaks in smooth gradients, chroma error, low-frequency blotching. Those need their
 own instruments and do not have them yet.
+
+---
+
+## §98 — the blotch detector indicted the merge for reducing noise
+
+§97 closed by naming its own blind spot: the adversarial sweep is powerful against edge
+overshoot and blind to everything else, and the classic non-edge failure of a focus stacker
+is **blotching** -- in a smooth region the focus measure has no signal, the winner field goes
+arbitrary, and the merge stitches a patchwork that is invisible as an edge and plainly
+visible as mottling. So I built the instrument (`orch_blotch.py`).
+
+Statistic: in the flattest 900x900 window of the frame, band-pass at 50-400 px and divide by
+the high-frequency residual. Commissioned on a planted blotch field, monotone across a
+0.25-4.0 sigma ladder (0.219 -> 0.429 -> 0.851 -> 1.698 -> 3.390) against a pure-noise floor
+of 0.0426.
+
+Having learned §96, I built ARM SOURCE in from the start: the same statistic on decoded
+source frames, so that structure belonging to the subject could not be charged to the merge.
+
+### It found a large excess, and the excess was mine
+
+```
+  bee-1-cpl                 master 2.137   source max 0.867   2.46x
+  pencil-flatter-angle-cpl  master 1.517   source max 0.405   3.74x
+  coffee-bean               master 1.355   source max 0.492   2.76x
+```
+
+A 2.5-3.7x excess over any input, on a commissioned instrument with the source control
+already fitted. I nearly reported it.
+
+**The statistic is band power divided by noise power, and merging N frames divides the noise
+by about the square root of N while leaving subject structure alone.** A perfectly clean
+merge therefore raises this ratio by exactly sqrt(N_eff), with no blotching whatsoever. The
+instrument was not measuring a defect. It was measuring the merge working, and dividing by
+the very quantity the merge exists to reduce.
+
+### Separating the terms settles it
+
+```
+  bee-1-cpl                band DN  master  81.9   source max 118.7   0.69x
+                           noise DN master  38.3   source med 133.1   3.47x quieter
+  pencil-flatter-angle-cpl band DN  master  42.7   source max  35.0   1.22x
+                           noise DN master  28.2   source med  93.8   3.33x quieter
+  coffee-bean              band DN  master  50.7   source max 129.5   0.39x
+                           noise DN master  37.4   source med 272.0   7.26x quieter
+```
+
+Mid-scale structure in the master is **lower** than in the source frames on two subjects and
+flat on the third. Only the denominator moved.
+
+> **When a statistic is a ratio, an improvement in the denominator is indistinguishable from
+> a defect in the numerator. Report both terms, always, or the instrument will indict the
+> system for getting better.**
+
+This is the fourth instrument tonight that would have published a wrong answer, and it is a
+new failure mode: the previous three were blind to the thing sought, whereas this one was
+**correctly sensitive to the wrong variable**. Its commissioning could not have caught it,
+because the planted blotch raised the numerator exactly as intended -- the ladder was
+faithful and the conclusion still false.
+
+### The finding underneath
+
+Read the other way, the table is the first direct measurement of the merge's noise benefit
+on real captures: **noise reduced 3.3x to 7.3x** while mid-scale structure is not added.
+That is the project's thesis -- estimation rather than selection, averaging wherever frames
+agree -- measured on the owner's own subjects.
+
+Two caveats, stated rather than buried. The source noise figure is an **upper bound**: the
+window is chosen as the flattest region *of the master*, and any residual texture at those
+coordinates in an unaligned source frame inflates its noise estimate. And masters are
+7032 px wide against a 7040 px sensor, so the windows correspond to better than 99% before
+alignment warp, but not exactly.
+
+**No blotch defect is present on the three subjects tested.** The corpus-wide run is not
+done; these were the three with the highest ratios, which is where a defect would have shown
+first.
