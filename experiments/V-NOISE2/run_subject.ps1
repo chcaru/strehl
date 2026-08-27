@@ -45,12 +45,28 @@
 # -Stride is the PRE-REGISTERED uniform-subsample deviation (sec.2).  It is
 # applied IDENTICALLY to all three arms, so it cannot bias a ratio between
 # them; it changes the absolute noise level and is reported when != 1.
+#
+# -Tdist is align_image_stack's control-point pruning distance (Hugin's -t,
+# default 3).  MEASURED NEED: on `fba` (205 frames) the default aborted after
+# 308s with "After control points pruning reference images has no control
+# points ... Increase error distance (-t parameter)" and produced 0 of 205
+# files.  It is a PRUNING parameter -- it changes which control points are
+# discarded as outliers, applied to every frame alike -- so it cannot prefer an
+# arm, but a looser prune could leave a worse alignment, and a worse alignment
+# degrades the COMPARATORS only (strehl aligns itself).  That error runs in
+# strehl's favour, so it must be checked, not assumed: the integer-shift search
+# in hd2.py is the diagnostic.  On 113 and 119 it moved strehl by -15.5% and
+# the comparators by +0.2%, i.e. it found nothing left to fix on an arm that
+# align_image_stack had already registered.  If it moves the comparators on a
+# subject built with a raised -t, that subject's alignment is suspect and the
+# subject is reported as such.  Any value != 3 is reported per subject.
 # Resumable: every step skips if its output already exists.
 
 param(
   [Parameter(Mandatory=$true)][string]$Key,
   [Parameter(Mandatory=$true)][string]$Src,
-  [int]$Stride = 1
+  [int]$Stride = 1,
+  [int]$Tdist = 3
 )
 
 $ErrorActionPreference = 'Stop'
@@ -163,11 +179,11 @@ if ($have -ne $need) {
   Remove-Item "$ali\al_*.tif" -Force -ErrorAction SilentlyContinue
   $inp = $frames | ForEach-Object { "$lin\" + [IO.Path]::GetFileNameWithoutExtension($_.Name) + ".tif" }
   $t0 = Get-Date
-  & "$hb\align_image_stack.exe" -l -m -C --use-given-order -a "$ali\al_" @inp 2>&1 |
+  & "$hb\align_image_stack.exe" -l -m -C -t $Tdist --use-given-order -a "$ali\al_" @inp 2>&1 |
       Out-File "$logs\ais.log" -Encoding utf8
   $c = $LASTEXITCODE
   $have = (Get-ChildItem "$ali\al_*.tif" -ErrorAction SilentlyContinue).Count
-  Say ("  align_image_stack exit=$c {0}s -> $have files" -f [math]::Round(((Get-Date)-$t0).TotalSeconds,1))
+  Say ("  align_image_stack -t $Tdist exit=$c {0}s -> $have files" -f [math]::Round(((Get-Date)-$t0).TotalSeconds,1))
   if ($have -ne $need) { throw "align_image_stack produced $have of $need" }
 } else { Say "aligned set exists ($have files), skipped" }
 
