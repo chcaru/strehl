@@ -797,3 +797,82 @@ asymmetry matters. A false positive costs the author time and gets argued down; 
 false negative that retracts a true claim is *self-ratifying*, because the
 retraction looks like rigour. Anchoring the plant is what caught it: once I
 required the excess to track `A` one-for-one, v1 could not have passed.
+
+## 12. The corrected PIL audit question has a blind spot on the exact tool it was issued with
+
+ORCH's correction is right and I confirm it on my own render (`u-bee-3-cpl.tiff`,
+`pilquant.py`). It is worse than "wrong by 256x":
+
+| reader | dtype | distinct | min | max |
+|---|---|---|---|---|
+| tifffile | uint16 | 22181 | 805 | 23224 |
+| PIL | uint8 | 88 | 3 | 90 |
+| PIL x256 | float64 | **88** | 768 | 23040 |
+
+Scale restored to 0.79%, distinct values **unchanged at 88**, every recovered value a
+multiple of 256, so true DN known only to +/-128. Tonal resolution lost 252x.
+
+One refinement: ORCH reports the floor "destroyed, min 202 -> 0". That is the
+`min < 256` special case. Mine went 805 -> 768. The general statement is that the
+floor is *quantised like everything else*; it only collapses to zero on dark data.
+
+### The defect: `len(np.unique(arr))` does not survive a filter
+
+ORCH proposes `len(np.unique(arr))` and states it "needs no reference image and no
+knowledge of what the number should be". I swept the property that governs its
+sensitivity. Two failure modes, one harmless and one not.
+
+**Harmless — a size floor.** Below 64x64 a perfectly clean 16-bit crop has fewer than
+300 distinct values and is misread as damaged (`uqsweep.py`). Over-reporting, safe.
+
+**Not harmless — smoothing restores the count without restoring the information.**
+1024x1024 crop, damaged array (`uqops.py`):
+
+| operation applied | clean uq | PIL-x256 uq | verdict on DAMAGED array |
+|---|---|---|---|
+| identity | 13874 | 56 | CAUGHT |
+| /65535 -> float | 13874 | 56 | CAUGHT |
+| 3x3 box mean | 741896 | 11651 | **PASSES AS CLEAN** |
+| downsample 2x mean | 44134 | 218 | CAUGHT |
+| high-pass r=201 | 1048098 | **949976** | **PASSES AS CLEAN** |
+
+`high-pass r=201` is precisely what `orch_smoothcrop.py` does. The damaged array
+reaches 91% of the clean array's distinct count and passes the audit outright. The
+information is not back: RMS(damaged - clean) after the high-pass is **73.73 DN**,
+against a dust signal ORCH measures at ~3 DN, i.e. **SNR 0.041**.
+
+So the audit question, applied to the output of the tool issued in the same notice to
+certify cleanliness, reports the damaged array as fine — on the very defect the other
+half of the notice was about.
+
+This is not specific to ORCH's statistic. I tried two of my own (`uqdet.py`); all three
+die the same way, with a clean negative control:
+
+| detector | identity | 3x3 box mean | high-pass r=201 |
+|---|---|---|---|
+| ORCH `len(unique)<=300` | FIRES | silent | silent |
+| all values multiple of 256 | FIRES | silent | silent |
+| median level gap > 8 DN | FIRES | silent | silent |
+| *(same three on CLEAN data)* | silent | silent | silent |
+
+**No post-hoc test on the array can see the damage once a filter has run**, because a
+filter maps a coarse lattice onto a dense one. The generalisation:
+
+> **Quantisation damage is only visible while the lattice is intact. Any averaging step
+> erases the evidence while preserving the harm, so an artifact-level audit must run on
+> the array as read, not on anything computed from it.**
+
+The audit that does survive is the one on the **source**, not the array: grep the reader.
+That is size-invariant, operation-invariant, and needs no threshold. My own audit was
+this kind — 22 read sites, all `tifffile.imread`, PIL only ever `Image.fromarray(...).save`,
+no PNG ever read back — which is why it holds. I got the stronger audit by luck of habit,
+not by choosing it, and would have adopted the weaker one on request.
+
+### `orch_smoothcrop.py` itself is clean, and the fix is as described
+
+Read-only check: reader is `tifffile.imread` (line 86), PIL appears only as
+`Image.fromarray(v).save` (line 115). `FIXED_W = 250.0`, `HP_WIN = 201`, `span = 2*FIXED_W`,
+gain `255.0/500 = 0.5100` exactly as claimed, and `adaptive = "--adaptive" in sys.argv`
+so **fixed is the default** and the adaptive path prints its own warning. The output
+filename encodes the mode (`hp201-fixed250DN` vs `adaptive###x`), so anyone holding old
+crops can tell which stretch produced them without re-running. That is worth keeping.
