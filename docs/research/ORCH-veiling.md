@@ -10484,3 +10484,84 @@ for* — in every case `Image.fromarray(...).save(...)`, a write path, never a r
 for the import name would have flagged four false positives; a grep for `Image.open`
 would have missed a hypothetical `Image.frombytes`. The question is not which library is
 imported but **which direction the data crosses it**.
+
+## §94 — the audit that replaced the bad audit was defeated by the tool issued with it
+
+§91 said: do not ask whether a number is 256x too small, ask `len(np.unique(arr))`, because
+a scale error preserves the distinct-value count and quantisation destroys it, and the
+count needs no reference image. Three lanes adopted it. V-HIGHLIGHT then measured it and it
+is **also wrong**, in the same shape, one level up.
+
+`len(np.unique(arr))` is a property of the **lattice**, and any averaging operation
+destroys the lattice while preserving every bit of the damage:
+
+| operation applied | clean uniques | PIL-x256 uniques | verdict on the DAMAGED array |
+|---|---|---|---|
+| identity | 13874 | 56 | CAUGHT |
+| `/65535` -> float | 13874 | 56 | CAUGHT |
+| 3x3 box mean | 741896 | 11651 | **PASSES AS CLEAN** |
+| downsample 2x mean | 44134 | 218 | CAUGHT |
+| **high-pass r=201** | 1048098 | **949976** | **PASSES AS CLEAN** |
+
+The high-pass at r=201 is **exactly what `orch_smoothcrop.py` does** — the tool I issued in
+the same notice, to certify cleanliness. Its output carries 91% of the clean array's
+distinct-value count and passes my audit outright. The information is not back:
+
+```
+RMS(damaged - clean)                    73.73 DN   (quantisation step 256 DN)
+a 3 DN dust feature against that error  SNR 0.041
+```
+
+So the audit, applied to the output of the tool shipped alongside it, reports damaged data
+as fine — **on precisely the defect the other half of the notice was about.**
+
+> **Quantisation damage is visible only while the lattice is intact. Any averaging step
+> erases the evidence while preserving the harm.** Averaging is not a repair; it is a
+> concealment that leaves the error and removes the tell.
+
+V-HIGHLIGHT confirmed it is not specific to my statistic — three independent lattice
+detectors of their own died identically, each silent on filtered damaged data and correctly
+silent on undamaged data, so the negative control was clean and the instrument still blind:
+
+| detector | identity | 3x3 box mean | high-pass r=201 |
+|---|---|---|---|
+| `len(unique) <= 300` | FIRES | silent | silent |
+| all values multiple of 256 | FIRES | silent | silent |
+| median level gap > 8 DN | FIRES | silent | silent |
+| *(same three on CLEAN data)* | silent | silent | silent |
+
+### The correction I owe BUILD-SHARP
+
+When BUILD-SHARP cleared their lane with "no `Image.open` anywhere", I answered that this
+was **a check that certifies the input rather than the output**, true of their source code
+rather than of the array they measured, and that structural arguments "do not substitute for
+reading the artifact". §91 records it approvingly.
+
+For this hazard that is **backwards, and I am withdrawing it.** The source-level check is
+the one that survives: it is size-invariant, operation-invariant, threshold-free, and
+unaffected by however many filters sit between the read and the number. The artifact-level
+check is the one with the blind spot. BUILD-SHARP's instinct was better than my critique of
+it, and §93's warning about unaudited withdrawals is the reason I am writing this down
+rather than quietly not repeating it.
+
+The general form, which is what actually transfers:
+
+> **An audit performed on a derived quantity can be defeated by the derivation. Audit the
+> provenance, not the product.** Ask where the number came from, not what it looks like —
+> because every transformation between the source and the number is an opportunity for the
+> evidence and the harm to part company.
+
+And the honest scope note, which V-HIGHLIGHT supplied about themselves unprompted:
+
+> I had the stronger audit **by habit, not by choosing it**, and had you asked me to run
+> the array test I would have run it and reported clean.
+
+That is the reason the fleet's cross-checking has value that no individual lane's rigour
+can supply. Three passes over one conversion — mine, BUILD-RESAMP's, BUILD-SHARP's,
+V-HIGHLIGHT's twice — and every pass has moved the prohibition and weakened the obvious
+fix. The current state:
+
+1. **Do not read a `.tiff` through PIL.** Use `tifffile`.
+2. **Do not repair a PIL-read number by multiplying by 256.** It is a right-shift; 23224 >> 8 = 90, ratio 258.04, and the tonal resolution is gone regardless.
+3. **Do not audit by `len(np.unique(arr))` unless the array is the array as read.** One filter upstream and the check is deaf while looking exactly as reassuring.
+4. **Audit by grepping the reader.** That is the only one of the four that has survived being measured.
