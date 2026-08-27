@@ -162,7 +162,8 @@ def main() -> int:
     ap.add_argument("src")
     ap.add_argument("dst")
     ap.add_argument("--label", default="")
-    ap.add_argument("--maxw", type=int, default=1400)
+    ap.add_argument("--maxw", type=int, default=1400,
+                    help="0 means full resolution, no resize")
     ap.add_argument(
         "--single",
         action="store_true",
@@ -173,7 +174,11 @@ def main() -> int:
     assert_is_an_s_curve()
 
     im = Image.open(args.src).convert("RGB")
-    if im.width > args.maxw:
+    # `and` is load-bearing: 0 is the "no resize" sentinel finalpass.ps1 now
+    # passes, and `im.width > 0` is true for every image ever made, so without
+    # the guard this resizes to zero width. viewable.py has always had it; this
+    # file did not, and the two are called from the same variable.
+    if args.maxw and im.width > args.maxw:
         h = round(im.height * args.maxw / im.width)
         im = im.resize((args.maxw, h), Image.LANCZOS)
 

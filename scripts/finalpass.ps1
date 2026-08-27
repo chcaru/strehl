@@ -114,7 +114,23 @@ param(
     [switch]$NoPresent,
 
     # Long edge of the presentation JPEGs.
-    [int]$PresentWidth = 1400
+    #
+    # THIS DEFAULT WAS 1400 AND THAT WAS A DELIVERY DEFECT. The masters are
+    # 7032x4688, so a 1400px gallery is 19.9% of master width -- a 1.3 MP
+    # thumbnail of a 33 MP focus stack, and the only file a viewer naturally
+    # double-clicks. Every property this project is judged on lives above that
+    # resolution: reconstruction gain is measured on 1:1 patches, the blur
+    # budget closes to 2.6% at full scale, and halo absence was confirmed on
+    # 1:1 grids. A 5x downscale puts all of it inside the resampling kernel.
+    #
+    # It is worse than merely uninformative. A 5x box-down of a correctly sharp
+    # image looks SOFTER than a 5x box-down of an oversharpened one, so the
+    # thumbnail inverts the very judgement it was being used to make.
+    #
+    # 0 means "full resolution, no resize", which is what a deliverable should
+    # be. `scripts/deliver.py` writes the full-resolution gallery plus measured
+    # 1:1 crops and is the thing to hand a viewer.
+    [int]$PresentWidth = 0
 )
 
 $ErrorActionPreference = 'Stop'
