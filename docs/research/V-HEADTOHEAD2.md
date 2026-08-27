@@ -1913,3 +1913,414 @@ tends to acquire a viewing path's compromises. But the first run of a new user
 is a picture they cannot use, and the mitigation is one line of output they
 have no reason to read yet. If it were mine I would add a hint when `--out` is
 given without `--srgb` or `--demosaic` — not change the default.
+
+## 8.10 The `--linear-srgb` fix, as ruled: recorded, not implemented (2026-08-28)
+
+ORCH declined the change and the reason is timing rather than merit. Nine lanes
+are measuring right now, several of them in `--linear-srgb`. Changing what that
+flag means mid-flight would silently re-lattice measurements in progress, which
+is exactly the failure §8.9 was commissioned to rule out, reintroduced by the
+fix for it. Recorded here while it is fresh, for after delivery.
+
+**The recommendation is not "make `--linear-srgb` imply `--demosaic`".** An
+implication silently changes the meaning of every script that already exists —
+including `render_linear.ps1`, whose author already passes `--demosaic`
+explicitly alongside it, and `BUILD-HALO`'s fourteen renders, which are pinned
+to the current semantics by their own scripts and would move from 3520 to 7040
+wide with nothing reporting the change.
+
+**The recommendation is to make the combination refuse to be implicit.**
+Require the caller to state `--demosaic` or `--binned` alongside
+`--linear-srgb`, and error otherwise.
+
+Three things make that the right shape rather than a matter of taste:
+
+1. **It is already this tool's own idiom.** `--demosaic --binned` together is a
+   hard error, exit 2 — the opposite of silent. A mode that cannot decide its
+   own lattice should fail the same way, not pick one.
+2. **It matches the principle in the tool's own help text**, that a flag which
+   parses and does nothing is indistinguishable from one that works. A flag
+   which parses and silently selects a lattice is the same defect with a
+   larger blast radius, because the Nyquist frequency itself moves.
+3. **Unlike an implication, it cannot silently change an existing script.** A
+   script that already states its lattice keeps working unchanged. A script
+   that does not gets an error at the point of decision, which is where the
+   information is needed — not at the point of output, where the `wrote:`
+   announcement already tells the truth and is already ignored.
+
+**Freeze analysis, attached as asked.** `freeze_impact.py`, read-only against
+the ORCH-owned registry: **2 data rows, both BINNED**; the columns are
+`… gate, srgb, env_align …` and there is **no `--linear-srgb` column at all**,
+so no frozen row can pass the flag. **0 rows move under either the implication
+or the refusal.** The change is safe with respect to the freezes; the objection
+to the implication is not a freeze objection.
+
+**Not implemented here.** `BUILD-DEFECT` owns the CLI flag path.
+
+# §9 Clipping and occlusion rims against `enfuse` and `focus-stack` (free field)
+
+The last unmeasured axis of the free-field comparison. Before tonight, clipping
+and rim behaviour had only ever been measured against this project's own
+predecessor, which establishes progress, not position.
+
+Same apparatus as §§5-7: the byte-identical linear TIFFs that strehl itself
+writes under `--linear-srgb --demosaic`, fused three ways. Demosaic and white
+balance are therefore identical on every arm and only the stacking algorithm
+differs. Arms are resolved through `hd2.paths_for`, never by filename.
+
+| arm | build | subject 113 | subject 119 |
+| --- | --- | --- | --- |
+| strehl | this project | 7032x4688 16-bit | 7032x4688 16-bit |
+| enfuse | Hugin + `enfuse --hard-mask` (GPL) | 7029x4688 16-bit | 7032x4688 16-bit |
+| fs15-coh | `focus-stack` merge on Hugin-aligned frames (MIT) | 7029x4688 **8-bit** | 7032x4688 **8-bit** |
+
+## 9.1 Headline
+
+**Clipping: a null. Nobody clips, and the 32% figure does not transfer to the
+free field.** That is a retraction of a comparison, not a loss on one.
+
+**Rims: strehl is ahead on 3 of 8 comparisons, level on 5, and behind on none.**
+Every rim number below carries its zone in pixels.
+
+**Two results are withheld as inadmissible, and both would have flattered this
+project.** The clipping gauge is *perverse* on one arm of subject 119 -- a
+planted hard clip made the number go **down** -- and the run that reported
+strehl losing to `enfuse` on 113's dark axis was measured on an edge population
+the instrument could not read. Details in §9.4 and §9.6.
+
+## 9.2 Clipping proper: measured, null, and the 32% does not transfer
+
+The tone-immune gauge ORCH asked for is the one that needs no matching at all:
+the fraction of the frame sitting at the container ceiling or floor, measured on
+the linear file. A tone curve cannot move it, because a clipped pixel is clipped
+in every grade.
+
+| subject | arm | at ceiling | at floor |
+| --- | --- | ---: | ---: |
+| 113 | strehl | 0.00026% | 0.00000% |
+| 113 | enfuse | 0.00023% | 0.00000% |
+| 113 | fs15-coh | 0.00022% | 0.00000% |
+| 119 | strehl | 0.00000% | 0.00002% |
+| 119 | enfuse | 0.00000% | 0.00000% |
+| 119 | fs15-coh | 0.00000% | 0.00000% |
+
+All six readings lie within **0.00004 percentage points** of each other. No arm
+clips. There is nothing here to win.
+
+**This retracts a transfer, and the retraction is the useful part.** The
+README's "the fork clips 32% of the frame on one subject; strehl clips 4e-6"
+is a real measurement, but it is a measurement of the *predecessor's* patched
+fork fed by a Lightroom pipeline. `focus-stack`'s merge, run in the free field
+on strehl's own linear TIFFs, clips **0.00022%**. The 32% was a property of the
+pipeline in front of the merge, not of the merge. It should not appear in a
+free-field comparison and this lane does not carry it forward.
+
+## 9.3 The escalation to extreme-zone detail, and why it decides almost nothing
+
+"Nobody clips" answers the container question but not the interesting one: does
+a merge *destroy* highlight or shadow detail short of the rail? I escalated to a
+rank-zone plateau statistic -- take the top and bottom 1% of pixels by the arm's
+own order, and measure the fraction sitting in a 3x3 neighbourhood of zero
+range. A strictly monotone map preserves rank order *and* equality, so the
+statistic is tone-invariant by construction rather than by test.
+
+Two confounds are in the variable, not the statistic, and both are matched:
+
+- **Container.** `fs15-coh` writes 8-bit. The quantisation ladder on
+  strehl/113's shadow zone reads 16-bit 0.000% -> 12-bit 3.814% -> 10-bit
+  61.650% -> 8-bit 83.254%. The container is worth vastly more than any
+  plausible arm difference, so an unmatched comparison measures the container.
+- **Noise.** Noise *breaks* ties, so a noisier arm scores **better**. Noise can
+  only be added, never removed, so matching raises everyone to the noisiest --
+  the direction that **discards this project's own measured noise advantage**.
+  On 119 strehl is quietest at sigma 0.001123 against fs15's 0.002641, so
+  strehl is handicapped by 0.002391 of injected noise before it is scored.
+
+Both fooling directions are stated and sized: the container flatters whichever
+arm has more bits, and the noise match runs **against** strehl.
+
+**Result on 113, all three arms commissioned, both confounds matched:**
+
+| comparator | axis | difference (comparator - strehl) | noise bar | verdict |
+| --- | --- | ---: | ---: | --- |
+| enfuse | highlight | -0.361 pts | 0.371 pts | UNRESOLVED |
+| enfuse | shadow | -23.70 pts | 54.67 pts | UNRESOLVED |
+| fs15-coh | highlight | -0.366 pts | 0.371 pts | UNRESOLVED |
+| fs15-coh | shadow | -14.06 pts | 54.67 pts | UNRESOLVED |
+
+The bootstrap intervals are disjoint on all four. They are still UNRESOLVED,
+because a disjoint interval only says the difference is repeatable, not that it
+exceeds what a confound can manufacture. **The statistic sits on a cliff.**
+After matching, sigma is 1.007 of an 8-bit level -- almost exactly the tie
+threshold -- so a 25% error in the sigma estimate moves strehl's shadow reading
+from 54.671% to 0.004%, a 54.7-point swing against arm differences of 14 to 24
+points. The gauge has power only in a regime where it is hypersensitive to the
+exact quantity that has to be estimated to get there.
+
+**The honest conclusion is that this statistic cannot decide extreme-zone detail
+preservation on this corpus**, and it is reported as a refusal rather than as
+four narrow intervals that happen to point the right way.
+
+## 9.4 The clipping gauge is perverse on one arm, and it convicted itself
+
+Subject 119 reports **ALL ARMS COMMISSIONED: False**. The strehl arm fails on the
+planted-degradation line:
+
+```
+hard-clipped   highlight 0.032%   shadow 0.649%   rose: False
+   (base:      highlight 0.245%   shadow 0.347%)
+```
+
+A hard clip was planted into the arm and the highlight statistic **fell**, from
+0.245% to 0.032%. That is not blindness -- a blind gauge returns the same
+number. It is a gauge whose error sign is *reversed* on that arm and axis: it
+scores a planted degradation as an improvement. This is the same failure class
+this project has already shipped once, in a sharpness statistic bounded below by
+zero that could never charge for a halo, and it is only detectable because the
+suite plants a degradation **per arm** and requires the number to rise.
+
+**The withheld numbers are the flattering ones.** Had commissioning been run
+once on a single representative arm, or not at all, subject 119 would have
+reported:
+
+| comparator | axis | difference | noise bar | would have read |
+| --- | --- | ---: | ---: | --- |
+| enfuse | shadow | +5.41 pts | 0.287 pts | RESOLVED, comparator worse |
+| fs15-coh | shadow | +59.42 pts | 0.287 pts | RESOLVED, comparator worse |
+
+Two clean wins for strehl, on an instrument that had just been shown to run
+backwards on strehl's own arm. They are not reported as results anywhere in this
+document. `enfuse` and `fs15-coh` both PASS commissioning on 119; strehl does
+not, and a comparison is only as admissible as its worst arm.
+
+## 9.5 The rim instrument: six versions, five of them failures
+
+Full lineage is in `experiments/V-H2H2-RIMCLIP/rimv6.py`'s docstring with the
+measured evidence for each. In brief:
+
+| version | outcome |
+| --- | --- |
+| v1 | read **+428%** on a clean, rim-free image |
+| v2 | no power: a planted rim did not move it |
+| v3 = `V-HEADTOHEAD/rimcmp.py`, the inherited instrument | **inadmissible on this corpus**: +14.85% on a rim-free image |
+| v4 | refused to report: a 40-sigma planted rim moved it +2.43% |
+| v5 | **gated out the measurand** -- USM 100/200 both classified NONE, because a rim *is* shoulder structure and the admissibility test was correlated with the thing being measured |
+| v6 | `select()` on a rim-free reference, `measure()` at those fixed pixels, no acceptance test at measurement time |
+| v6.1 | + isolation criterion (§9.6) |
+
+**The inherited instrument is inadmissible here.** v3 reads +14.85% on an image
+with no rim in it. This has a consequence beyond this lane, offered as a lead
+and not claimed: **V-HEADTOHEAD §4's +19.05% resample figure may be largely v3's
+own artifact.** Tonight's independent v6 measurement of the same resample
+diagnostic reads +19.088%, which is a striking agreement -- but v6 also shows
+the sign is source-dependent (+1.410% on a sharp source, +0.030% as-is, -0.323%
+on a blurred one), so it is a diagnostic, not a pass/fail. Someone who owns that
+section should re-derive it.
+
+Three properties that make v6 reportable:
+
+- **The structural null is not zero.** A monotone edge of finite width reads
+  negative by construction, because its profile plateaus later. Each arm is
+  corrected by the null at its *own* measured 10-90 width, and the residual
+  difference between those nulls is carried into the bar as a systematic term.
+  The widths are **not** within 0.5 px of each other on either subject, so this
+  correction is doing real work rather than cancelling.
+- **The selection cut is chosen by *minimising* the negative control's departure
+  from its null**, so no tolerance exists that could be chosen favourably. The
+  residual at that minimum is declared as the instrument floor and spent in the
+  bar.
+- **The interval is unpaired.** The arms cannot share edges: a 1.005x raster
+  scale drifts 1.3 px across a 256 px tile, and correcting it would mean
+  resampling, which adds blur to the very quantity being measured. All
+  registration is integer-only for the same reason.
+
+Bar = `max(noise ladder, instrument floor, |null gap|)`.
+
+**The rim fooling direction runs toward the answer this project wants**, and is
+stated for that reason: noise inflates a max-based excursion (self-test 2:
++0.642% / +1.816% / +3.728% at sigma 0.002 / 0.005 / 0.010) and V-NOISE2
+measured the comparators noisier. The noise ladder is in the bar precisely so
+that this bias has to be paid for.
+
+## 9.6 The isolation criterion, and a loss that did not survive it
+
+The first rim run **failed to commission on subject 119** -- all three arms, on
+one line: the rim-free negative control read -4.107% against a +/-3.0%
+tolerance. Rather than relax the tolerance, `rimdiag119.py` tested a falsifiable
+explanation with an explicit acquitting branch, and confirmed it:
+
+| | 113 | 119 |
+| --- | ---: | ---: |
+| features plateaued by t=+7 px | 70.91% | **24.65%** |
+| median q(+7) | 0.9794 | 0.9277 |
+| median edge step | 0.070 | **0.204** |
+
+119's edges are *higher* contrast, not lower -- they are simply not **isolated**
+at the +/-7 px zone. Since the bright reading is `max(q[+2..+7]) - 1`, an edge
+still climbing at t=+7 reads negative for reasons that have nothing to do with a
+rim. The fix is a `MIN_REACH = 0.95` isolation criterion evaluated **on the
+rim-free reference**, so it is a scene property and cannot correlate with the
+measurand -- which is the exact rule v5 broke. With it, both subjects commission
+and 119's floor improves from -4.107% to +0.116%.
+
+**The criterion also removed a loss I would otherwise have published.** The
+pre-criterion 113 run reported:
+
+> `enfuse dark  -1.189% [-1.605, -0.832]`, bar 0.657% => **RESOLVED, STREHL WORSE**
+
+Post-criterion, on the isolated population, the same comparison reads
+`-0.616% [-1.409, +0.207]` => **UNRESOLVED**. The superseding run is the one
+whose negative control commissions on both subjects; the superseded one did not
+commission on 119 at all. **But the verdict was not robust to a change in the
+edge population, and that is a standing caveat on every rim number in §9.7.**
+The populations differ by more than noise -- n falls from 2396 to 1026 on 113
+and the absolute readings roughly double -- so these are measurements of
+*isolated* occlusion edges, and that is the claim's domain.
+
+## 9.7 Rim results, per comparator, with intervals
+
+**Zone, quoted on every number below: bright = t +2..+7 px from edge centre,
+dark = t -7..-2 px.** Values are the plateau excursion in percent.
+
+All three arms are fused from the same demosaiced linear TIFFs, so any rim
+present in the source optics is **common-mode**. Only the difference between
+arms is attributable to the merge, which is why the absolute levels differ so
+much between subjects and the differences do not.
+
+### Subject 113MSDCF -- 63 frames, cut 0.03, floor bright +1.509% / dark -0.557%
+
+| arm | n | bright (+2..+7 px) | dark (-7..-2 px) | 10-90 width |
+| --- | ---: | ---: | ---: | ---: |
+| strehl | 1026 | +16.745% [+14.966, +18.867] | +2.034% [+1.507, +2.505] | 4.46 px |
+| enfuse | 628 | +19.069% [+15.914, +22.987] | +1.392% [+0.774, +2.068] | 4.30 px |
+| fs15-coh | 953 | +20.833% [+17.500, +23.404] | +5.263% [+4.762, +5.747] | 5.08 px |
+
+| comparator | axis | difference, null-corrected | bar | verdict |
+| --- | --- | ---: | ---: | --- |
+| enfuse | bright | +2.287% [-1.527, +6.675] | 1.509% | UNRESOLVED |
+| enfuse | dark | -0.651% [-1.409, +0.207] | 0.557% | UNRESOLVED |
+| fs15-coh | bright | +4.086% [+0.040, +7.239] | 1.509% | UNRESOLVED |
+| fs15-coh | dark | **+3.562%** [+2.524, +3.958] | 0.557% | **RESOLVED, comparator worse** |
+
+### Subject 119MSDCF -- 33 frames, cut 0.08, floor bright +0.116% / dark +0.390%
+
+| arm | n | bright (+2..+7 px) | dark (-7..-2 px) | 10-90 width |
+| --- | ---: | ---: | ---: | ---: |
+| strehl | 4845 | +0.358% [+0.102, +0.567] | +0.801% [+0.722, +0.883] | 4.43 px |
+| enfuse | 2271 | +3.043% [+2.345, +3.809] | +4.764% [+3.867, +5.693] | 4.08 px |
+| fs15-coh | 4840 | +0.463% [+0.418, +0.664] | +0.390% [+0.000, +0.435] | 4.77 px |
+
+| comparator | axis | difference, null-corrected | bar | verdict |
+| --- | --- | ---: | ---: | --- |
+| enfuse | bright | **+2.620%** [+1.943, +3.522] | 0.292% | **RESOLVED, comparator worse** |
+| enfuse | dark | **+3.955%** [+3.066, +4.871] | 0.787% | **RESOLVED, comparator worse** |
+| fs15-coh | bright | +0.137% [-0.126, +0.446] | 0.359% | UNRESOLVED |
+| fs15-coh | dark | -0.305% [-0.874, -0.315] | 1.150% | UNRESOLVED |
+
+### Score
+
+Eight comparisons -- 2 subjects x 2 comparators x 2 axes:
+
+- **strehl ahead: 3** (fs15-coh dark on 113; enfuse on both axes of 119)
+- **level: 5**
+- **strehl behind: 0**
+
+The single strongest statement the data supports: **strehl is not behind any
+free-field comparator on occlusion-rim overshoot or undershoot on either
+subject, and is measurably ahead of `enfuse` on both axes of 119 and of
+`focus-stack` on the dark axis of 113.** It is a modest result and it should be
+stated modestly -- five of eight comparisons are level, and the instrument floor
+on 113 (1.509% bright) is large enough that only a big difference could clear
+it.
+
+## 9.8 What the harness got wrong, found by its own controls
+
+Four defects in instruments this lane wrote tonight, all caught before
+publication and all recorded because the pattern matters more than the
+instances.
+
+1. **A regime mismatch, found three separate times in one file.** The noise
+   ladder, the tone-invariance test and the solarise power test all ran at
+   native 16-bit float, where the clipping statistic is identically 0.000% and
+   nothing can move it -- while the *verdict* was computed on 8-bit data where
+   it reads tens of percent. `exact: True` was comparing 0.000 with 0.000;
+   `moved: False` was a false negative for a gauge that works. **A control run
+   where the statistic has no power, then used as a bar for a measurement made
+   somewhere else.** The first version of the clipping report charged strehl
+   **41.760% vs 0.315%** and read "RESOLVED, STREHL WORSE" on three of four
+   axes; raising strehl to enfuse's sigma and *then* quantising collapsed it to
+   0.902%. The entire loss was noise breaking ties -- the gauge was charging
+   strehl for being the quietest arm, on precisely the axis V-NOISE2 measured it
+   winning. Fix: one `prep` regime applied identically to every commissioning arm
+   and to the measurement.
+
+2. **A silent narrowing, in the same shape this lane routed to the CLI.**
+   `null_table` skipped rows where selection failed and `structural_null` used
+   `np.interp`, which **clamps** outside its grid -- so it answered confidently,
+   with plausible numbers, for edge widths it had never evaluated. Now a hard
+   `ValueError` with an explicit covered range (1.93-8.05 px, 5 dropped blurs
+   recorded), plus a `try_null` so callers must handle out-of-domain **by name**
+   rather than by clamping.
+
+3. **Two improvement arms that passed by construction, discarded.**
+   `0.5*clipped + 0.5*original` is strictly monotone in the original, so a
+   rank-invariant statistic is *obliged* to return to base -- it cannot fail.
+   Worse, under 8-bit quantisation it halves the slope and ties *more* pixels
+   than it frees, so it read 6.373% against a clipped 5.7%: a restoration
+   scoring as a degradation. Replaced with a five-rung restoration ladder over
+   0/25/50/75/100% of blocks, restoring **original amplitudes**, requiring both a
+   monotone trend and a strictly-below endpoint.
+
+4. **The commissioning suite was itself commissioned.** A deliberately blind
+   gauge returning a constant 0.5 was monkeypatched in, and **fails** the suite
+   -- caught by `solarise moved: False`, `rose: False` and `strict: False` --
+   while sailing through tone invariance and monotonicity exactly as predicted.
+   An all-clear from a suite with no demonstrated reach is worth nothing.
+
+**Known, unfixed, and stated:** the null table is built from a synthetic edge at
+a single fixed sub-pixel phase, while real edges land at random phases. This
+makes it non-monotone in width (-1.93 at w=6.56, -1.25 at 6.94, -3.14 at 7.32),
+a wobble of about +/-1 point. The null *gaps* entering the bars above are 0.003%
+to 0.333%, so the wobble is smaller than the bars it feeds but not negligible
+against them. The intended fix is an analytic erf-based synthetic edge averaged
+over phases 0 / 0.25 / 0.5 / 0.75. Not done.
+
+## 9.9 What is still not decided, and what would decide it
+
+**Extreme-zone detail preservation is undecided** and §9.3 argues no rank-based
+statistic can decide it on this corpus, because the only regime with power is
+the one where noise sensitivity dominates. What would decide it is not a better
+statistic but a subject with genuine near-rail structure: a specular or
+transmitted highlight that *approaches* the ceiling without reaching it, so
+there is real detail in the top 1% to preserve or destroy. Every subject
+measured here has an essentially empty extreme zone -- ceiling occupancy of
+2.6e-4 percent -- which is why ties dominate and noise decides.
+
+**Rim measurement is limited to isolated edges** (§9.6). On 119, 75% of
+high-contrast features are not isolated at the +/-7 px zone and are excluded. A
+rim claim on dense texture is not supported by this instrument and is not made.
+
+`docs/captures-needed.md` §30 already requests a razor blade tilted ~5 degrees
+for the fine-scale resolution question. **The same capture serves the rim
+question and would be strictly better for it**, and it is worth saying why: a
+razor edge is a true knife edge far sharper than the optical PSF, so it is
+isolated by construction, its 10-90 width lands inside the instrument's
+validated range, and -- the part that matters here -- **a knife edge has no rim
+of its own**, so any overshoot measured on it is attributable to the merge
+rather than shared common-mode with the optics. That removes the largest caveat
+in §9.7 in a single frame. If the blade is placed against a **dark, matte
+background with a bright field behind it**, the same capture also creates a
+near-rail highlight adjacent to a near-floor shadow, which is the missing
+extreme-zone content above. One subject, three open questions.
+
+## 9.10 Reproduction
+
+```
+python experiments\V-H2H2-RIMCLIP\rim.py  113 119     # rim, 4 stages
+python experiments\V-H2H2-RIMCLIP\clip.py 113 119     # clipping
+python experiments\V-H2H2-RIMCLIP\rimv6.py            # 4 self-tests
+python experiments\V-H2H2-RIMCLIP\rimdiag119.py       # the 119 plateau diagnostic
+```
+
+Logs `C:\dev\strehl-out\V-H2H2\logs\{rim-v6iso,clip-v2,rimdiag119}.txt`;
+JSON `C:\dev\strehl-out\V-H2H2\rimclip\{rim,clip}-{113,119}.json`.
