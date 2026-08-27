@@ -1353,12 +1353,40 @@ def find_switches(crates: Path) -> dict[str, list[str]]:
 # switches ONLY and reads exactly the same whether the flag surface is fully
 # declared or entirely unexamined.
 #
-# That blind spot is not hypothetical. `--exposure` and `--auto-exposure` reach
-# no pixel while the banner announces `+2.61 stops (gain 6.105x)`, and
-# `--photometric` shipped with its help text and its default disagreeing. All
-# three are the defect this script was written to catch, and all three were
-# invisible to it, because the property that decides whether it can see a
-# switch -- being spelled as a quoted STREHL_ literal -- was never varied.
+# That blind spot is not hypothetical: `--photometric` shipped with its help
+# text and its default disagreeing, which is the defect this script was written
+# to catch and which was invisible to it, because the property that decides
+# whether it can see a switch -- being spelled as a quoted STREHL_ literal --
+# was never varied.
+#
+# THIS COMMENT USED TO ALSO CLAIM THAT "`--exposure` and `--auto-exposure`
+# reach no pixel while the banner announces `+2.61 stops (gain 6.105x)`". THAT
+# WAS FALSE, it stood here unsourced long enough to be cited as background for
+# a shipping-path investigation, and it is retained as a retraction rather than
+# deleted because the way it was manufactured is the lesson. MEASURED at pin
+# 7c3df34d, 109MSDCF --limit 4, five arms, otherwise identical flags
+# (experiments/BUILD-DEFECT/src/47-exposure-liveness.ps1):
+#
+#     --srgb --auto-exposure   93B4F2D8691E8D1F   "+2.61 stops, chosen"
+#     --srgb                   BBF12CF0C8E421B3   "none ... Nothing was applied."
+#     --srgb --exposure 3      85820E6D873E1014   "+3.00 stops, as asked"
+#     --srgb --exposure -3     DD9F3D3220856D22   "-3.00 stops, as asked"
+#     --exposure 3 (no --srgb) exit 1             refused
+#
+# Four distinct hashes. A 64x span between +3 and -3 stops moved the bytes, so
+# the disturbance was potent rather than merely applied; the refusal arm proves
+# the flag parses and reaches a decision, so a null would have been a statement
+# about pixels rather than about parsing. The path is LIVE.
+#
+# WHERE THE FALSE CLAIM CAME FROM. The quoted string `+2.61 stops (gain
+# 6.105x)` is real, but it occurs in the banner of the arm with NO exposure
+# flag, inside a CONDITIONAL: "--auto-exposure *would* choose +2.61 stops (gain
+# 6.105x). Nothing was applied." A hypothetical was read as an assertion, and
+# the banner that got called misleading is in fact the most scrupulous surface
+# in the product -- it volunteers the gain it DECLINED to apply and says so in
+# the same sentence. An argv records the request and a banner records the
+# claim; a conditional inside a banner records neither, and only the pixels
+# record the behaviour.
 #
 # Most flags are derived from the field name (`pub auto_exposure` gives
 # `--auto-exposure`); a few name themselves with `long = "..."`. Both forms
