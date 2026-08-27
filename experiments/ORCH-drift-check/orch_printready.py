@@ -102,6 +102,14 @@ def verdict(path):
     rgb = a[:, :, :3].astype(np.float32)
 
     clip = float((rgb >= 65500).mean())
+    # A clipping gate that tests one end of the tone scale has tested half the
+    # tone scale, and until this was added the half it skipped was the half
+    # this corpus actually clips in: the whole-frame survey found 2.5-3.7% of
+    # the frame crushed to black on three subjects, against a highlight norm of
+    # 0.00-0.02%. No threshold is attached yet -- black crush is legitimate
+    # against a deliberately black backdrop, so it has not earned one until the
+    # corpus distribution says what is unusual. Reported, not gated.
+    crush = float((rgb <= 35).mean())
 
     lum = lum_of(rgb)
     y, x = flattest(lum)
@@ -114,8 +122,8 @@ def verdict(path):
     chroma = float(ch[0])
     run, step = float(bd[0]), float(bd[4])
 
-    detail = "blotch %.5f  chroma %.4f  run %.1fpx step %.1fDN  clip %.3f%%" % (
-        br, chroma, run, step, clip * 100)
+    detail = "blotch %.5f  chroma %.4f  run %.1fpx step %.1fDN  clip %.3f%%  crush %.3f%%" % (
+        br, chroma, run, step, clip * 100, crush * 100)
 
     if not np.isfinite(br):
         return "SKIP", "blotch ratio non-finite"
