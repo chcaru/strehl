@@ -140,3 +140,45 @@ if __name__ == "__main__":
         print("  %s" % " ".join(sig))
         for (t, h, i, lab) in g:
             print("     line %-5d [%s] '%s'" % (i, h[:52], lab))
+
+# ---------------------------------------------------------------------------
+# MAGNITUDE FORM. ORCH: "A boolean pass carries no scale, so it cannot
+# self-check." The exact-signature test above answers match / no-match, and in
+# 14.3 I declared its blind spot: the same run reported at different roundings
+# evades it completely. That blind spot is a property of the BOOLEAN, not of
+# the question. Asked as "how close are these two rows?" the same data returns
+# a number, and an implausibly small number on rows that should differ is
+# visible in a way that no boolean can be.
+# ---------------------------------------------------------------------------
+def closeness(a, b):
+    """Median relative difference between two numeric row signatures.
+
+    0.0 == identical. Returns None when the rows are not comparable, rather
+    than a number that would silently mean "very different".
+    """
+    if len(a) != len(b) or not a:
+        return None
+    d = []
+    for x, y in zip(a, b):
+        try:
+            x, y = float(x), float(y)
+        except ValueError:
+            return None
+        s = max(abs(x), abs(y))
+        d.append(0.0 if s == 0 else abs(x - y) / s)
+    d.sort()
+    return d[len(d) // 2]
+
+def scan_near(text, thresh=0.02):
+    """Row PAIRS that are suspiciously close without being identical."""
+    rs, out = rows_of(text), []
+    for i in range(len(rs)):
+        for j in range(i + 1, len(rs)):
+            (t1, h1, l1, lab1, s1), (t2, h2, l2, lab2, s2) = rs[i], rs[j]
+            if s1 == s2:
+                continue                     # exact: the boolean already has it
+            c = closeness(s1, s2)
+            if c is not None and c <= thresh and len(s1) >= 3:
+                out.append((c, h1, l1, lab1, h2, l2, lab2))
+    out.sort()
+    return out

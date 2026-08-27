@@ -1059,3 +1059,59 @@ centres on both subjects, which would have "cleared" the null for entirely the w
 It was caught only because `n_mask` came back at 32.8 M against the saved run's 165018.
 **Reproducing a stored value from the run being audited is what caught it**, and an audit
 instrument that cannot reproduce its target's numbers is not auditing it.
+
+### 14.5 The magnitude form found a sign error in section 11, and it is mine
+
+Section 14.3 declared this instrument's blind spot: *"the same run reported twice at
+different roundings would evade it entirely."* That blind spot belongs to the **boolean**,
+not to the question. Re-asked as *how close are these two rows*, the same scan returns a
+number — and on my own report it returns exactly one pair under 2 %:
+
+| | H | L | H/L |
+|---|---:|---:|---:|
+| K2 stack, binned, never demosaiced | 0.2928 | 0.3660 | 0.7999 |
+| K5 stack, demosaiced, `--fix-ca off` | 0.2920 | 0.3663 | 0.7971 |
+
+**closeness 0.00082.** Two arms differing in *two* processing stages, landing 0.08 % apart.
+Verified against `l4-resfair.json` — not a transcription error, and `n_mask` differs (14553
+vs 18534), so they are genuinely separate renders. The boolean scan reported **zero** flags
+on this pair and could not have done otherwise.
+
+Following it into the JSONs exposed something I had not seen:
+
+| arms | single | stack | direction |
+|---|---:|---:|---:|
+| **L** (analysed at 4688x7032) | 0.1712 | 0.1875 | stack **+9.5 %** |
+| **K** (analysed at 2344x3516) | 0.2955 | 0.2558 | stack **-13.4 %** |
+
+**The two arm sets disagree in sign**, and section 11's P1 rests on the K row. Isolated by
+holding the FILES fixed and varying only the bin — the one thing that can answer it:
+
+```
+native : single 0.1891 -> stack 0.2017   +6.7%   stack WORSE
+binned : single 0.2472 -> stack 0.2315   -6.3%   stack BETTER
+```
+
+Same two files. **The 2x2 mean is a low-pass and `H` measures high-frequency chroma, so the
+resolution-fair transform changes the quantity being compared.** My absolute values differ
+from the stored run by ~10 % (parameters not identified — stated, not hidden), but both
+directions reproduce.
+
+**What this does and does not overturn.**
+
+* **P1's measurement is withdrawn as stated.** *"The stack has 15.5 % LESS high-frequency
+  chroma"* holds only after binning; at native resolution the stack reads **worse**. The
+  claim needed a scale qualifier and did not carry one.
+* **P2 is unaffected.** It compares K2 against K3, and K2 is natively half-resolution, so
+  that comparison *requires* the bin. It is legitimately binned.
+* The code argument for P1 (`pyramid.rs:990-993`) is untouched by this — and ORCH has
+  already corrected its inference separately.
+
+**The error underneath it is a single sentence.** I applied `--bin2` because **one**
+comparison needed it — K2 is half-resolution and cannot otherwise be compared — and then
+applied it to **every** arm, including K1-vs-K3, which are both full-resolution demosaiced
+and never needed it. *A transform introduced to make one pair comparable was applied to a
+pair that was already comparable, and reversed its sign.*
+
+That is ORCH's standing question a second time: the property deciding what `H` can see is
+the spatial-frequency content of the input, and I varied it — while measuring it.
