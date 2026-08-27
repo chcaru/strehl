@@ -1,6 +1,6 @@
 # V-NOISE2 — does M127's noise advantage generalise across subjects?
 
-**Status: IN PROGRESS.** Two of four subjects measured, two building. A
+**Status: IN PROGRESS.** Three of four subjects measured, one still building. A
 milestone number has been **requested from the orchestrator and not yet
 allocated**, so this file lives in `experiments/V-NOISE2/` and is not a record.
 Nothing here should be cited from `docs/research/` until it moves.
@@ -22,8 +22,96 @@ scene content. The orchestrator named the sample size as the binding
 constraint: *a reviewer will not attack the estimator; they will ask whether
 1.54–1.76× is a property of `strehl` or a property of the scene.*
 
-Two things are settled so far, and one of them was nearly lost to an
-instrument defect of my own making.
+**The answer is that it is a property of the scene.** The noise ratio itself
+generalises and grows; what does **not** generalise is the pairing M127's
+verdict actually rests on.
+
+### 0.1 The headline, and it is unflattering
+
+M127's verdict does not rest on the noise ratio alone. It rests on the
+**pairing** — strehl holding the *lowest noise* and the *highest scene content*
+in the same tiles — because that, and only that, forecloses "cleaner because
+blurrier" from inside the measurement rather than by appeal to a separate
+sharpness run. The orchestrator put that pairing in front of everything else
+and published it.
+
+Re-read at matched bandwidth (§0.2) on every subject, over six subject-arm
+pairs, it is **strictly monotone**:
+
+| subject | arm | noise ratio (strehl cleaner ×) | scene ratio (strehl ÷ comparator) | reading |
+|---|---|---:|---:|---|
+| `113` | `enfuse` | 1.657 | **1.134** | strict gain |
+| `113` | `fs15-coh` | 1.949 | **1.286** | strict gain |
+| `119` | `enfuse` | 2.365 | 0.577 | **trade** |
+| `119` | `fs15-coh` | 2.230 | 0.605 | **trade** |
+| `bee` | `enfuse` | 11.929 | 0.180 | **trade** |
+| `bee` | `fs15-coh` | 15.619 | 0.060 | **trade** |
+
+**Strict gain on 2 of 6 — and both are on `113`, M127's own subject.** On the
+two subjects M127 never saw, strehl is cleaner *and carries materially less
+scene content in the same tiles*. The two quantities move together and the
+ordering is perfect: sort by noise ratio and the scene ratio falls
+monotonically, 1.13 → 1.29 → 0.61 → 0.58 → 0.18 → 0.06.
+
+That is the signature of a **blur–noise trade**, not of a strict improvement.
+
+MEASURED (`banddiag.py`, `C:\dev\strehl-out\V-NOISE2\banddiag.json`). What is
+withdrawn is the *generalisation* of M127's pairing, not M127 itself: on `113`
+the pairing survives the corrected statistic (scene 0.1224 vs enfuse 0.1080,
+against M127's published 0.12151 — agreeing to 0.7%). **M127's verdict stands
+on M127's subject.** The claim that it is a property of `strehl` does not.
+
+The practical consequence for the owner-facing README: *"equal detail at
+materially lower noise is a strict improvement"* is supported on
+`coffee-bubbles` and **contradicted on both new subjects**. It should not be
+stated as a property of the stacker until the flat-tile scene deficit is
+explained.
+
+### 0.2 The defect that had to be fixed before any of that could be read
+
+Running the pre-registered §4 battery on `bee` returned a **6–8× noise win** —
+and its scene decomposition was **degenerate on 3 of 3 arms**: the
+half-difference sigma *exceeded* the flat-ROI sigma of the same tiles, which
+additive independent noise cannot do. The scene term clamped to zero on every
+arm and the code still printed `highest scene term: strehl` off three tied
+zeros. A 6–8× "we win" from a comparison whose own internal consistency check
+had failed.
+
+The cause is in the shared statistic, and it reaches M127:
+
+| quantity | function | filter |
+|---|---|---|
+| flat-ROI sigma `f` | `noisefree.sigmas` | `ch - uniform_filter(ch, HP)` — **high-pass** |
+| noise sigma `n` | `halfdiff.half_sigma` | `u - v` — **full band** |
+
+`scene = sqrt(f² − n²)` therefore subtracts a **full-band** noise term from a
+**high-pass-band** total. The identity `total² = scene² + noise²` that the
+subtraction assumes holds only when both terms are measured over the same band.
+
+`banddiag.py` tests that diagnosis rather than asserting it, by re-reading the
+half-difference through the *same* high-pass, with `113` and `119` as controls:
+
+| subject | strehl | `enfuse` | `fs15-coh` | degenerate, full band → matched |
+|---|---:|---:|---:|---|
+| `113` | 95.9% | 98.2% | 97.4% | 0/3 → 0/3 |
+| `119` | 94.5% | 98.8% | 97.6% | 0/3 → 0/3 |
+| `bee` | **61.5%** | 98.6% | 87.7% | **3/3 → 0/3** |
+
+(percentage of the full-band half-difference sigma that survives the high-pass)
+
+On the two subjects that already decomposed cleanly, matching the bandwidth
+changes nothing — **a rewrite that altered a working subject's answer would be
+a rewrite, not a diagnosis.** On `bee`, **38.5% of strehl's measured "noise"
+was a low-frequency half-to-half difference**, not noise, and matching the
+bandwidth restores the decomposition on all three arms.
+
+A second defect surfaced inside the first: `half_sigma` applies the
+integer-shift search for strehl, which *minimises* variance, and my high-pass
+variant initially did not — comparing a minimised statistic against an
+unminimised one. The tell was strehl "keeping" **132.7%** of its sigma under a
+high-pass, which is impossible for noise. Fixed; 132.7% → 95.9%.
+
+**Two things are therefore settled and one is withdrawn.**
 
 **1. M127 reproduces exactly, through a re-implemented instrument.** `hd2.py`
 reads M127's subject (`113MSDCF`) through the new per-subject code path and
@@ -33,13 +121,18 @@ with M127's scene decomposition (noise 0.05187, scene 0.12151, 15.4%)
 unchanged. Keeping the already-answered subject inside the closed list is what
 made that check possible.
 
-**2. The second subject is cleaner still, and by roughly double.** On
-`119MSDCF` (33 frames, shallow, averaging-dominated), `enfuse` reads **3.041 /
-2.807 / 2.594** and `focus-stack` **3.540 / 3.858 / 3.714**. Both extremes have
-non-overlapping CIs on two of three channels, so **the subjects are already
-measurably heterogeneous** and §6's split test — written before the numbers
-arrived — makes pooling illegitimate unless the remaining two subjects close
-the gap. A regime-dependent advantage is a real finding, not a failure.
+**2. The noise ratio generalises and grows.** On `119MSDCF` (33 frames,
+shallow, averaging-dominated), `enfuse` reads **3.041 / 2.807 / 2.594** and
+`focus-stack` **3.540 / 3.858 / 3.714**. Both extremes have non-overlapping CIs
+on two of three channels, so **the subjects are already measurably
+heterogeneous** and §6's split test — written before the numbers arrived —
+makes pooling illegitimate unless the remaining subject closes the gap. A
+regime-dependent advantage is a real finding, not a failure.
+
+**3. The pairing does not generalise, per §0.1, and `bee`'s ratio is
+withdrawn** pending an explanation of its scene deficit. `hd2.py` now fails
+commissioning on any subject whose decomposition goes degenerate, so `bee`'s
+6–8× number is not reported as a result.
 
 ---
 
