@@ -12698,3 +12698,78 @@ and 2.5 give byte-identical output).
 > is a small effect, possibly below its resolution, because the gain at the low end
 > of the band is only 1.02–1.06. Routing something worth measuring is not the same
 > as expecting it to win.
+
+## 119. I published a superseded finding, in the document the owner reads
+
+Within twenty minutes tonight I did all three of these:
+
+1. Read `V-LINEAR.md` §5.3 — in-focus and defocused tiles carry the same
+   0.20–0.48 cyc/px power (1.015, 1.043, 1.004, 1.138), so that band is noise.
+2. Judged it important enough to put in the owner-facing README, and to send to
+   two working lanes as a reason to doubt their instruments.
+3. Read `V-LINEAR2.md` §1, which **explicitly supersedes §5.3**, and found the
+   finding had already been overturned by the same lane.
+
+| band (cyc/px) | whole-frame pairs | per-tile own best/worst | verdict |
+|---|---:|---:|---|
+| 0.20–0.25 | ~1.0 | **2.419** (CI 1.961–3.063) | real signal |
+| 0.25–0.30 | ~1.0 | 1.387 | marginal |
+| >0.30 | ~1.0 | — | noise |
+
+**The difference is method, not data.** `noisefloor.py` compared four hand-picked
+*whole-frame* pairs. `bandsignal.py` let each of 29 tiles choose **its own**
+best-focus and worst-focus frame. Per-tile selection recovered a factor of 2.4
+that whole-frame averaging had destroyed.
+
+> **In a focus stack, "in focus" is a property of a tile in a frame, not of a
+> frame.** Any control that picks one frame and calls it sharp has already
+> averaged away most of the effect it was built to detect. This is not a subtlety
+> of this corpus — it is what a focus stack *is*, and a control that ignores it
+> will return a confident null.
+
+The process failure is separate from the physics and it is mine:
+
+> **A finding is not current because you just read it. Before citing a lane's
+> result, check whether that lane has a successor document.** `V-LINEAR2.md`
+> existed, was 47 kB, and its §1 opened by naming the section it corrected.
+
+This is the same defect as §116's expired acquittals — scoring a superseded
+corpus — and as §117's wrong pin. Three shapes of one error in one night: **I
+keep reading artifacts without asking what replaced them.** The gauge check for
+this is cheap and I did not run it: `V-LINEAR` had a `2` next to it.
+
+The retraction of "17–27% behind" is *unaffected* and now rests on firmer
+ground: that claim was measured at **0.25–0.30**, the band that still fails.
+
+### What was in the successor, which is the result the project has been missing
+
+`V-LINEAR2` ran the head-to-head the licence wall had blocked, against the free
+field, feeding every comparator **strehl's own linear develops** so that demosaic
+and white balance are identical on both sides and only the stacking algorithm
+differs:
+
+| comparator | licence | strehl ÷ comp @ 0.20–0.25 | 95% CI | verdict |
+|---|---|---:|---|---|
+| Hugin `align_image_stack` + `enfuse --hard-mask` | GPL | **0.977** | 0.810–1.181 | level |
+| `focus-stack` 1.5, same aligned frames | MIT | **1.326** | 1.089–1.625 | strehl ahead |
+
+Identity-bias floor 1.0–1.4%; the falsifier is armed (a real 0.6 px blur gives a
+gap of 0.527 of which tone explains 3.3%); the tone confound is measured dead on
+these inputs (slope 0.992, −0.81% explained, against 0.177 and 89.1% on the
+Lightroom-developed comparator inputs).
+
+**Level with `enfuse`, ahead of `focus-stack` by ~33%.** Level is not state of
+the art on sharpness alone, and the README now says so in those words. The claim
+that survives is narrower and true: comparable sharpness, 2.4× the noise
+performance, four orders of magnitude less clipping, lower on all four occlusion
+rim measures, 2.4× faster, from RAW rather than from developed TIFFs.
+
+### The trap the lane named, which we were one licence away from falling into
+
+> *"Had the licence been valid, PMax would have selected on a noise floor, come
+> out worse, and the natural reading would have been 'strehl beats Zerene on
+> tone-matched inputs' — wrong, in strehl's favour, and a third retraction."*
+
+An expired licence prevented a false win. The lane refused to circumvent it — no
+clock change, no decompilation, `zerenstk.cfg` verified byte-identical after —
+and that refusal is the reason the result is worth anything.
