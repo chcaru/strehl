@@ -11477,3 +11477,112 @@ boundary across the frame with no rim on either side.
 This is the first time in this project's history that the whole-frame appearance
 of the corpus and its statistics have agreed with each other.
 
+
+---
+
+## 105. Nine subjects instead of one -- and the number went past the arm that defines perfection
+
+Section 103 measured the reconstruction ratio honestly and then stated its own
+limitation in bold: **"One subject, two sites, 30 of 299 frames. `bee-1-cpl`
+only."** It also warned that the 126/128 win rate was "subject to that
+selection". Section 105 removes the selection and reports what happened,
+including the part that is a problem.
+
+### 105.1 The sweep
+
+`orch_sharp1to1.py`, unchanged in its metric, run over **nine subjects** of the
+26-master SHIP-V3 corpus, full stacks rather than a 30-frame subset, on the
+post-gather-flip binary `740e7056`. The arm is now an argument (`STREHL_ARM`)
+rather than the frozen `SHIP-V2` string -- the same hard-coded-arm defect fixed
+in `643b719d` for the two gates was present here too, and would have made this
+sweep silently score a fourteen-hour-old corpus.
+
+| subject | median ratio | patches |
+| --- | ---: | ---: |
+| `wrapped-text-1` | **4.767x** | 192 |
+| `tweezers-cpl` | **4.648x** | 192 |
+| `leaf-2-cpl` | **4.565x** | 128 |
+| `bee-3-cpl` | **4.139x** | 192 |
+| `lavendar-cpl` | **4.120x** | 128 |
+| `pencil-steep-angle-cpl` | **3.149x** | 192 |
+| `dry-erase-marker-head-cpl` | **1.674x** | 128 |
+| `coffee-bean` | **1.598x** | 192 |
+| `flower-bud-alone-cpl` | **1.405x** | 128 |
+
+**Median across subjects 4.120x; every subject above 1.0; range 1.405-4.767x.**
+On `bee-3-cpl` the master is sharper on **191 of 192** patches. MEASURED.
+
+Section 103's single-subject figure was **2.756x**. This is not a like-for-like
+comparison and must not be quoted as an improvement: different subjects,
+different frame counts, different binary. What it *does* establish is that the
+verdict does not depend on `bee-1-cpl`.
+
+### 105.2 The USM control, which is the only reason the number means anything
+
+The innocent explanation for "the master has more fine detail than any source
+frame" is not reconstruction -- it is that **something in the pipeline sharpened
+the master**, and a sharpened frame and a reconstructed frame produce the *same
+number* here. `usm_match` is the control: unsharp-mask the best source frame
+until its fine-detail energy *equals* the master's, then look at the two
+pictures.
+
+On `bee-3-cpl` the control needed **USM x3.40, x4.63 and x4.83** at the three
+sites. Inspected at 1:1 in
+`C:\dev\strehl-out\ORCH-CONTACT\sharp-1to1-bee-3-cpl.png`: the control **rings
+and craters visibly** -- dark rims around every hair, blotched inter-hair
+texture, chewed wing venation -- while the master at the same detail energy is
+clean. The control fails to explain the number away, which is the most any
+control does.
+
+> **This is also the clearest answer in the corpus to "the halos are
+> horrendous": row 3 of that figure is what a halo looks like, and row 1 is what
+> this tool now produces from the same photons.**
+
+### 105.3 The problem, stated rather than buried
+
+Section 103.2's commissioning arms are:
+
+| arm | median | meaning |
+| --- | ---: | --- |
+| SELECTION (master == sharpest source) | 1.0000 | the anchor |
+| DEFECT (master blurred past every source) | 0.1717 | responds downward |
+| **RECONSTRUCT (master == unblurred latent)** | **3.4867** | **the arm that defines a perfect answer** |
+
+**Five of the nine subjects read ABOVE 3.4867.** `wrapped-text-1` reads 4.767x
+against a perfect-reconstruction arm of 3.4867x.
+
+A real master cannot out-reconstruct the latent image the commission defined as
+perfection. So one of these is true, and I do not know which:
+
+1. **The commission's RECONSTRUCT arm is not an upper bound.** Its "latent" is
+   whatever synthetic blur that arm removed; a real subject with different blur
+   and different contrast is simply not on the same scale, and 3.4867 was never
+   a ceiling -- only a demonstration that the metric can read high. If so the
+   arm is doing less work than section 103.2's table implies and should be
+   relabelled.
+2. **The ratio is inflated by contrast, not detail.** The sweep's own clip
+   report shows the master clipping **4.00%** where the source clips **0.00%**
+   under the shared window at `bee-3-cpl` site 0. A wider master histogram
+   inflates any gradient-magnitude ratio. The USM control argues against this
+   being the whole story -- matching *energy* still rang -- but it does not
+   exclude a contrast component in the size of the number.
+3. **Both.**
+
+> **A metric whose perfection arm reads 3.4867 and whose real data reads 4.767
+> is not measuring what its own commissioning says it measures.** The direction
+> of the verdict survives -- every subject is above 1.0, the DEFECT arm proves
+> the instrument responds downward, and the USM control proves the detail is not
+> sharpening. **The magnitude does not survive, and no "4.1x sharper" claim
+> should be made outside this file until item 1 is settled.**
+
+This is exactly the failure this corpus keeps re-learning: a commissioned metric
+is trustworthy only within the range its commission spans, and every arm above
+3.4867 here is extrapolation. Recorded as a question rather than a fact.
+
+### 105.4 Status
+
+- **MEASURED and safe to state:** the merge reconstructs rather than selects, on
+  nine subjects spanning text, metal, fur, foliage, graphite and a coffee bean;
+  every subject above 1.0; the effect is not sharpening, by the USM control.
+- **NOT safe to state:** any specific multiple. Pending resolution of 105.3.
+- **Removed:** section 103's single-subject caveat.

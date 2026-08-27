@@ -330,10 +330,20 @@ def main():
     nsrc = int(sys.argv[2]) if len(sys.argv) > 2 else 10
     import rawpy
 
-    cand = [p for p in glob.glob(os.path.join(OUT_ROOT, "SHIP-V2", "*.tiff"))
+    # The arm was frozen as "SHIP-V2" here too. Same defect as the two gates
+    # fixed in 643b719d: this one at least raises SystemExit rather than
+    # certifying the wrong corpus, but it still cannot be pointed at a newer
+    # render. STREHL_ARM names the subdirectory under OUT_ROOT.
+    arm = os.environ.get("STREHL_ARM", "SHIP-V2")
+    armdir = os.path.join(OUT_ROOT, arm)
+    if not os.path.isdir(armdir):
+        armdir = os.path.join(OUT_ROOT, "acceptance", arm)
+    if not os.path.isdir(armdir):
+        raise SystemExit("no such arm directory for STREHL_ARM=%s" % arm)
+    cand = [p for p in glob.glob(os.path.join(armdir, "*.tiff"))
             if os.path.basename(p).startswith(subject)]
     if not cand:
-        raise SystemExit("no master for %s" % subject)
+        raise SystemExit("no master for %s in %s" % (subject, armdir))
     m = tifffile.imread(cand[0])[..., :3].astype(np.float64)   # tifffile, not PIL
     my = luma(m)
     sites = best_site(my)
