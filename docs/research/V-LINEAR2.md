@@ -773,6 +773,20 @@ column.
    compared at the same sensor coordinates — a 25-minute develop, 12.5 GB, or
    equivalently a dark frame and a flat field for this body and lens, which is a
    five-minute capture.
+
+   **UPDATE 2026-08-27 — the capture already existed and the calibration is
+   now measured.** `D:\macro-dark-frames` (242 frames, 11 ISOs) and
+   `D:\personal\macro\flat-fields` (484 frames) were delivered on 2026-08-22/23
+   and are recorded as DELIVERED in `docs/captures-needed.md` §1 and §4. This
+   lane did not need to ask. `experiments/V-CALIB/` measures, on this body:
+   black **512.10** DN against a nominal 512; gain **0.2232** DN/e⁻ by
+   drift-robust photon transfer against the corpus model's 0.2289 (**0.975**);
+   read noise **0.887** DN = **3.974** e⁻ against the model's 4.200
+   (**0.946**); **DSNU 0.389 DN** and **PRNU 0.286%** of signal, neither of
+   which appears in any noise model in this project. What remains open is the
+   *band-resolved* split of that structure, which needs the flats developed
+   through the same linear path as the subject; the scalar magnitudes above do
+   not by themselves say how much lands at 0.40–0.48 cyc/px.
 5. **Zerene Stacker.** Still unrunnable, still a purchase. Nothing in this lane
    changes that, and nothing in this lane should be read as a comparison against
    it.
