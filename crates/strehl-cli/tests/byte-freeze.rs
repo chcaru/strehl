@@ -434,6 +434,13 @@ const RENDER_ENV: &[&str] = &[
     // restoration A/B can come from one binary; it must never leak into a
     // freeze.
     "STREHL_ACUITY",
+    // The full-resolution gather. It selects what every output pixel is
+    // interpolated *from* -- a full-resolution demosaic of the whole frame, or
+    // that pixel's own half-resolution phase plane -- so an ambient
+    // `STREHL_FULLRES_GATHER=0` renders a different image than every row here
+    // claims. It moved these rows when its default flipped on, which is how it
+    // came to be in this list.
+    "STREHL_FULLRES_GATHER",
     "STREHL_ONLY_FRAME",
     // Which merge runs, and how its fold is partitioned. `STREHL_MERGE` is the
     // most dangerous entry in this list: it selects the whole backend, so an

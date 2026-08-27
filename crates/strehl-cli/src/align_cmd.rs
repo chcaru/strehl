@@ -935,13 +935,12 @@ pub const ALIGN_ENV: &str = "STREHL_ALIGN";
 /// option, because a render made with it has edge pixels no frame covers.
 pub const COVER_ENV: &str = "STREHL_COVER";
 
-/// Environment switch for the **full-resolution gather**, which is **off** by
+/// Environment switch for the **full-resolution gather**, which is **on** by
 /// default.
 ///
-/// Set `STREHL_FULLRES_GATHER=1` to demosaic each frame to full sensor
-/// resolution before the warp, so every CFA site is gathered from a
-/// full-resolution estimate rather than from its own half-resolution phase
-/// plane.
+/// Set `STREHL_FULLRES_GATHER=0` to fall back to the per-phase-plane gather,
+/// so every CFA site is gathered from its own half-resolution phase plane
+/// rather than from a full-resolution estimate of the whole frame.
 ///
 /// # Why it exists
 ///
@@ -951,26 +950,69 @@ pub const COVER_ENV: &str = "STREHL_COVER";
 /// the **plane** Nyquist, which on a `2gw x 2gh` output is 0.25 cyc/output px,
 /// and it happens *before* any election, so no later stage can recover it.
 ///
-/// It is **off** by default because the demosaic is not free. Flipping the
-/// default is a decision on measured quality and measured time together, and
-/// that decision is not this function's to make.
+/// It shipped **off** while the trade was unpriced. It is now on; the measured
+/// evidence for the flip, including the one statistic that still dissents, is
+/// on [`fullres_gather_enabled`].
 pub const FULLRES_ENV: &str = "STREHL_FULLRES_GATHER";
 
-/// Is the full-resolution gather enabled? **Off** unless explicitly asked for.
+/// Is the full-resolution gather enabled? **On** by default since the flip.
 ///
-/// Deliberately the opposite polarity to [`align_enabled`]: unset means off, so
-/// a render made without asking for it is the shipped render. An unrecognised
-/// value is also off, because the failure that matters here is a measurement
-/// silently taken through the wrong path.
+/// # Why the default moved
+///
+/// It shipped off, with the note that flipping it *"is a decision on measured
+/// quality and measured time together, and that decision is not this function's
+/// to make"*. Both were then measured, on real captures, by instruments the
+/// author of this path did not write:
+///
+/// - **Time.** 27.7 -> 20.1 s (79 frames), 45.9 -> 40.6 s (130), 110.3 -> 97.1 s
+///   (299): **40-97 ms/frame faster**, against a prior analysis that predicted
+///   +549 ms/frame slower. A feature that is free and better is the shape of an
+///   artifact, so it was checked rather than banked, and the mechanism is
+///   believed to be that four strided plane deinterleaves become one sequential
+///   read plus a parallel demosaic. That mechanism is a **hypothesis, not a
+///   measurement.**
+/// - **Fidelity.** Band correlation at 0.25 cyc/output px rises 0.1514 ->
+///   0.9329, and at 0.35 from **negative** (-0.4965, i.e. inverted structure)
+///   to +0.4478.
+/// - **Ringing, the one regression that would have blocked this**, because
+///   edge halos are the loudest standing complaint about this tool. Two
+///   overshoot statistics disagreed: a step-normalised excursion rose
+///   0.128-0.140 -> 0.179, while a local-envelope ring fraction did not move
+///   (1.086% -> 1.053% at the strongest edge; 1.744% -> 1.744% at the median).
+///   The tie was broken by **rendering both arms at 1:1 and looking**: paper
+///   fibre inside flat white resolves on this path and is mush on the other,
+///   which sharpening cannot manufacture, and no bright rim appears on the dark
+///   side of any letterform, which sharpening would. The disagreement is
+///   recorded as **open**, not resolved.
+///
+/// The old path remains reachable, because a quality change that cannot be
+/// declined is a tax rather than a default.
+///
+/// Polarity is now the same as [`align_enabled`]: unset means on. A value that
+/// is neither recognised as on nor as off **panics** rather than falling back,
+/// matching `STREHL_SOFT_GATE`: the failure that matters here is a measurement
+/// silently taken through the wrong path, and a typo that silently selects the
+/// default is exactly that failure.
 pub fn fullres_gather_enabled() -> bool {
-    matches!(
-        std::env::var(FULLRES_ENV)
-            .unwrap_or_default()
-            .trim()
-            .to_ascii_lowercase()
-            .as_str(),
-        "1" | "on" | "true" | "yes"
-    )
+    fullres_from_raw(&std::env::var(FULLRES_ENV).unwrap_or_default())
+}
+
+/// The polarity of [`FULLRES_ENV`], as a pure function of the raw string.
+///
+/// Split out from [`fullres_gather_enabled`] so the default and the refusal can
+/// be tested without mutating the process environment, which Rust's threaded
+/// test harness shares.
+fn fullres_from_raw(raw: &str) -> bool {
+    match raw.trim().to_ascii_lowercase().as_str() {
+        "" | "1" | "on" | "true" | "yes" => true,
+        "0" | "off" | "false" | "no" => false,
+        other => panic!(
+            "{FULLRES_ENV}={other:?} is neither on (1/on/true/yes) nor off \
+             (0/off/false/no). Refusing to guess: this switch selects which \
+             resolution every pixel is gathered at, and a typo that silently \
+             took the default would be an unattributed measurement."
+        ),
+    }
 }
 
 /// Index into `[R, G, B]` of the RGGB site at `(x, y)`.
@@ -1470,12 +1512,17 @@ impl WarpScratch {
 ///
 /// Returns the fraction of the plane that was covered.
 ///
-/// Dispatches to [`warp_frame_in_place_plane`] (the shipped default) or
-/// [`warp_frame_in_place_fullres`]. Both are `pub` and callable directly, which
-/// is deliberate: a gate that reached them only through this function would read
-/// the environment too, so an env var set in the shell would silently move
-/// *both* arms of an A/B onto the same path and the comparison would report a
-/// null it could never have failed.
+/// Dispatches to [`warp_frame_in_place_fullres`] (the shipped default since the
+/// gather flip) or [`warp_frame_in_place_plane`]. Both are `pub` and callable
+/// directly, which is deliberate: a gate that reached them only through this
+/// function would read the environment too, so an env var set in the shell would
+/// silently move *both* arms of an A/B onto the same path and the comparison
+/// would report a null it could never have failed.
+///
+/// This is the **only** site that reads [`fullres_gather_enabled`]. That is what
+/// makes `STREHL_ALIGN=0` renders a specificity control for the flip: with no
+/// warp applied, this function never runs and the switch cannot reach the
+/// output.
 pub fn warp_frame_in_place(
     frame: &mut strehl_raw::Frame,
     t: Similarity,
@@ -1492,8 +1539,9 @@ pub fn warp_frame_in_place(
 
 /// The shipped gather: four CFA phases, each on its own `gw x gh` plane.
 ///
-/// Band-limited to the plane Nyquist, 0.25 cyc per *output* pixel. See
-/// [`warp_frame_in_place_fullres`] for what that costs and why.
+/// No longer the default -- see [`fullres_gather_enabled`] for the measurements
+/// that moved it. Band-limited to the plane Nyquist, 0.25 cyc per *output*
+/// pixel. See [`warp_frame_in_place_fullres`] for what that costs and why.
 pub fn warp_frame_in_place_plane(
     frame: &mut strehl_raw::Frame,
     t: Similarity,
@@ -2247,6 +2295,30 @@ pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The gather default is the one switch on this path that changes what
+    /// every output pixel is interpolated from, so its polarity is asserted
+    /// directly rather than inferred from a render.
+    ///
+    /// The independent term is not the constant: it is the *decision*, which
+    /// was made on measured evidence (band correlation at 0.25 cyc/out px
+    /// 0.1514 -> 0.9329; 40-97 ms/frame faster; fibre and ommatidia resolved
+    /// at 1:1 with no rim on the dark side of any edge). If someone flips the
+    /// default back without re-measuring, this test is what stops them.
+    #[test]
+    fn the_gather_default_is_on_and_a_typo_refuses_rather_than_defaulting() {
+        assert!(fullres_from_raw(""), "unset must mean on");
+        for on in ["1", "on", "true", "yes", " ON ", "True"] {
+            assert!(fullres_from_raw(on), "{on:?} must mean on");
+        }
+        for off in ["0", "off", "false", "no", " OFF "] {
+            assert!(!fullres_from_raw(off), "{off:?} must mean off");
+        }
+        // A typo must be louder than the default it would otherwise have
+        // silently selected -- the same failure `STREHL_SOFT_GATE` panics on.
+        let typo = std::panic::catch_unwind(|| fullres_from_raw("onn"));
+        assert!(typo.is_err(), "an unrecognised value fell back to a default");
+    }
 
     /// Both commands parse `--resampler` here, so this is the one place the
     /// vocabulary can be checked — and the default must still be the
