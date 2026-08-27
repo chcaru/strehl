@@ -202,10 +202,11 @@ pass rate.
 > One caution against over-reading that crop. It was selected by *total*
 > disagreement, and total disagreement selects **flat** regions — so it can
 > establish that the gap is material and it cannot say what the gate does to
-> detail. **Cleaner is not better if it costs resolution.** Given the fine-detail
-> deficit in *Measured against other stackers* below, smoothing our way out of a
-> sharpness problem would register as a win on every noise metric this project
-> owns, which is exactly why the noise numbers cannot decide this.
+> detail. **Cleaner is not better if it costs resolution.** Given that the
+> fine-detail question in *Measured against other stackers* below is **open in
+> either direction**, smoothing our way out of a sharpness problem would
+> register as a win on every noise metric this project owns, which is exactly
+> why the noise numbers cannot decide this.
 >
 > > **That caution has now been answered, by an instrument that was not looking
 > > for flat regions.** On `bee-3-cpl` — 299 frames, the deepest stack in the
@@ -1090,121 +1091,27 @@ O(N)** — and decode alone is 1.78 s cold, 0.91 s warm. See
 ## Measured against other stackers
 
 **This is the section that decides whether the project's ambition has been met,
-and today it has not been.** An independent verification pass compared strehl
-against two external comparators on identical frame sets
-([`V-HEADTOHEAD`](docs/research/V-HEADTOHEAD.md)): the patched `focus-stack`
-fork this project's owner used before, and **Zerene Stacker PMax**. Frame-set
-equivalence was confirmed for both subjects (105 and 63 identical exposures),
-and every comparison below has the tone grade removed. Without that step the
-numbers are meaningless — the first attempt at them read 0.349 where the correct
-answer was 0.735, and a naive microcontrast comparison would have handed the win
-to the wrong arm outright.
+and today it has not been.** Two external comparators, two subjects, confirmed
+frame-set equivalence (105 and 63 identical exposures): the patched
+`focus-stack` fork this project's owner used before, and **Zerene Stacker
+PMax**. The first pass is [`V-HEADTOHEAD`](docs/research/V-HEADTOHEAD.md); the
+re-examination that retracts its headline is
+[`V-HEADTOHEAD2`](docs/research/V-HEADTOHEAD2.md); the lane that removed the
+last excuse is [`V-LINEAR`](docs/research/V-LINEAR.md).
 
-Contrast ratios by spatial frequency, strehl over comparator, **grade-removed**,
-626 ROIs against the fork and 576 against Zerene. **Below 1.0 means strehl is
-behind:**
+**In plain terms, before the arithmetic.** An earlier version of this section
+said strehl was noticeably softer than Zerene at the finest detail scales. That
+claim is withdrawn. It is not withdrawn because strehl improved and caught up.
+It is withdrawn because the measurement was never able to answer the question,
+and three independent lines of evidence now say so. Two of the three original
+findings are unchanged and still in strehl's favour: **strehl's output is far
+cleaner, and it does not blow out highlights.** The third — fine detail — is
+**unknown**, in either direction. If you are choosing on noise or on retained
+highlights, the measurements support strehl. If you are choosing on the last
+two or three pixels of resolvable detail, nobody here has a number, **including
+one in strehl's favour**, and this document will not invent one.
 
-| band (cyc/px) | feature size | vs the fork | vs Zerene PMax |
-| --- | --- | ---: | ---: |
-| 0.05-0.10 | ~10-20 px | 1.063 | 1.007 |
-| 0.10-0.20 | ~5-10 px | 1.079 | 0.936 |
-| **0.20-0.30** | **~3-5 px** | **0.833** | **0.735** |
-| **0.30-0.40** | **~2-3 px** | **0.766** | **0.843** |
-| 0.40-0.48 | ~2 px | 1.060 | 1.511 |
-
-**strehl is at parity or ahead at coarse scales and 17-27% behind at 3-5 pixel
-features — against both comparators independently, on two subjects, with tight
-confidence intervals.** The 0.40-0.48 band is noise-dominated in both
-comparisons and is not evidence of resolution; do not read 1.511 as a win. The
-verifier tried to explain the deficit away and could not: it is **not** capture
-sharpening, because both subjects' XMP sidecars read `crs:Sharpness="0"`, and it
-is not an artifact of the grade, because removing the grade properly is what
-produced these numbers. About **half** was attributed to strehl's own 3.5%
-coverage upscale; the rest was placed in the merge and the gather kernel, where
-strehl uses Catmull-Rom against the fork's `cv::INTER_LANCZOS4`. **That
-attribution is now disputed by direct measurement — see the retraction below.**
-
-> ## ⚠ THE DEFICIT CLAIM IS UNDER RETRACTION — the instrument fails its own controls
->
-> **Do not cite the 17-27% figure.** The ratios above are real measurements of
-> **band power**. What is now in doubt is the step from band power to
-> *resolution*, and five independent results say that step does not hold:
->
-> 1. **A nearest-neighbour gather scores +29% / +42% on this statistic** — the
->    worst resampling available to the program, rated better than everything
->    else, by a margin **larger than the entire deficit under investigation**.
-> 2. **The flat-region control fails on every subject.** Lanczos-3's apparent
->    gain is *larger* on featureless ROIs (1.173 / 1.220) than on detail ROIs
->    (1.071 / 1.078). The statistic rewards added noise power.
-> 3. **The 0.30-0.40 band sits above the merge lattice's Nyquist.** The gather
->    runs on CFA planes at `3516 x 2344` against a `7032 x 4688` output, putting
->    plane Nyquist at f = 0.25 cyc/output px. Content above it is reconstructed
->    by the demosaic, not carried by the gather.
-> 4. **A 0.5x downscale scores 4.35x better on this statistic.** An unambiguous,
->    catastrophic loss of real resolution, rated more than four times better
->    than the original — a margin **larger than the entire effect under
->    investigation**, and the second unambiguous degradation the statistic
->    rewards.
-> 5. **The raster mismatch runs the other way.** The fork writes 0.9596x in x
->    and 0.9539x in y, and that mismatch is worth **4.7% of the band** — about a
->    fifth of the reported gap — but in the direction that **flatters strehl**.
->    A scale-corrected comparison would report a slightly *larger* deficit, not
->    a smaller one, which directly contradicts the "about half is the coverage
->    upscale" attribution above.
->
-> **The table was telling me this and I read past it.** The 0.40-0.48 row reads
-> **1.060 and 1.511 — strehl *ahead* at the finest scale** — while the adjacent
-> band claims 23-27% behind. **A resolution deficit is monotonic in frequency:**
-> if a tool is behind at 3-5 px it is further behind at 2 px, never ahead. I
-> resolved that contradiction by annotating one row as "noise-dominated" and
-> reading the row beside it as signal, with nothing to justify the boundary. An
-> escape hatch used on one row is a confession about the whole statistic.
->
-> **What survives:** strehl is ahead at coarse scales, and the qualitative
-> finding that fine-scale performance needs measuring. **What does not:** the
-> size, the attribution to the gather kernel, and the "about half is the
-> coverage upscale" split — the upscale and the warp are one fused matrix paid
-> in one resample, and a *larger* upscale measures as *less* lossy, so
-> magnification is not the cost.
->
-> **The replacement instrument was built, and it failed too — for the same
-> reason.** Slanted-edge MTF (ISO 12233) returns a resolution figure rather than
-> an energy figure, and noise cannot inflate it, so it was expected to escape.
-> It was checked against exact closed forms rather than assumed. **It does not
-> go blind. It goes wrong — monotonically, and toward the expected answer:**
->
-> | 10-90% edge width, px | 1.90 | 2.56 | 3.85 | **5.13** | 7.69 | 12.82 | 17.99 |
-> | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-> | measured / true MTF50 | 0.998 | 1.005 | 1.020 | **1.038** | 1.087 | 1.232 | **1.446** |
->
-> **Stated applicability limit: 5.13 px.** The two renders' edges measure
-> **13.52 px** and **17.86 px** — 2.6x and 3.5x outside it — and because they do
-> not share a width they do not share an inflation: **1.2593x against 1.4404x**,
-> a ratio of **1.1438**. **That is a 14.38% systematic bias from edge width
-> alone, running in the direction that makes the comparator look sharper,
-> against a claimed deficit of 17-23%.**
->
-> **The general finding, and it is why a fourth instrument would not help:**
-> three unrelated statistics — a band-power ratio, a plateau-normalised shape
-> test, and a slanted-edge MTF — are each bounded by edge sharpness, and edge
-> sharpness *is* the quantity being compared. **The confound is in the variable,
-> not the statistic.**
->
-> **The blocker is the corpus, not the code.** These captures contain no
-> ISO 12233-valid slanted edge: the "ruler" subjects are engraved trenches with
-> ~20 px sloped walls and a specular rim, and pointed at a page of text the
-> instrument reported **3568 of 3570** candidate edges flatter than 0.03
-> degrees. A proper slanted-edge chart lands at 2-3 px, inside every limit
-> above, and converts this from unanswerable into routine. It is requested as
-> [`docs/captures-needed.md`](docs/captures-needed.md) §30. **Until it exists
-> this headline stays retracted rather than replaced.**
->
-> The lesson, which is the same one that cost this project a gradient-kurtosis
-> table three days earlier: **a statistic that has only ever been shown to
-> succeed is not evidence.** Both numbers were published without anyone having
-> demonstrated the instrument could fail.
-
-**What strehl wins, and these are not close:**
+### What strehl wins, and these are not close
 
 - **Noise.** On flat defocused ground, high-pass rms **0.5025% → 0.1125%** — a
   **4.5x** reduction against the fork, of which at least **2.4x** survives a
@@ -1216,22 +1123,241 @@ attribution is now disputed by direct measurement — see the retraction below.*
   neither arm's median edge profile exceeds 1.0. Bounded honestly: the
   instrument only resolves rims above roughly strong-unsharp-mask strength.
 
-**So "state of the art" is not a defensible claim for this tool today, and is
-not made anywhere in this document.** What the measurements support is that
-strehl is competitive with both comparators, decisively better on noise and on
-clipping, and measurably behind on fine microcontrast. Three caveats bound even
-that: both subjects were Lightroom-developed for the comparators and RAW for
-strehl, a confound that cannot be removed without abandoning the comparator the
-owner actually uses; Zerene's **DMap** mode never rendered, so this is only
-against PMax, its contrast-and-noise-raising mode, which flatters it on exactly
-the axis strehl loses; and two subjects against two comparators is a floor under
-*competitive*, not a foundation for *state of the art*.
+None of these three require registering two renders against each other, which
+is why none of them is touched by anything below.
 
-The same pass reported that **three of its own instruments failed their
-controls** — a 10-90% rise metric with no power, and two rim measures reading
-+428% on a clean image and +0.02% on a real unsharp mask. They are recorded in
-the report rather than quietly dropped. The numbers above are the ones that
-survived commissioning.
+### Fine-scale resolution: undecidable on this corpus, in either direction
+
+The earlier claim — *"at parity or ahead at coarse scales and 17-27% behind at
+3-5 pixel features"* — is **retracted, and is not replaced by a claim in the
+opposite direction.** It has now failed three separate ways, and each was found
+by an instrument built to be capable of failing.
+
+**1. The instrument that produced it fails its own controls, five ways.** A
+nearest-neighbour gather — the worst resampling available to the program —
+scored **+29% / +42%** on that statistic. A **0.5x downscale**, an unambiguous
+catastrophic loss of real resolution, scored **4.35x better**. Flat featureless
+regions gained *more* than detail regions, which is what a noise-power meter
+does. The 0.30-0.40 band sat above the merge lattice's Nyquist. And the fork's
+raster mismatch — it writes 0.9596x in x and 0.9539x in y — is worth **4.7% of
+the band** in the direction that **flatters strehl**. A replacement
+slanted-edge MTF instrument failed too: it is valid to a 10-90% edge width of
+**5.13 px**, the two renders' edges measure **13.52 px** and **17.86 px**, and
+they do not share a width, so they do not share an inflation — **14.38%
+systematic bias** from edge width alone, running in the direction that makes
+the comparator look sharper, and of the same order as the gap it was measuring.
+
+**2. The gap is the grade, and that is measured, not argued.** A monotone tone
+map fitted from **4x4 block averages of strehl's own output** — a fit that
+contains no information whatsoever above 0.125 cyc/px, and therefore carries no
+resolution — was applied to strehl's pixels and compared against Zerene at
+0.25-0.30 cyc/px, the exact band the deficit lived in:
+
+| at 0.25-0.30 cyc/px | band power |
+| --- | ---: |
+| strehl under a **block-average tone map** | **0.037147** |
+| Zerene Stacker PMax, as rendered | **0.037138** |
+
+**A match to 0.02%, from a transformation that carries no resolution
+information at all.** Tone alone accounts for **89%** of the apparent gap at
+0.20-0.25, **100%** at 0.25-0.30 and **212%** at 0.30-0.40. For scale: a bare
+**gamma of 1.25**, the mildest monotone curve there is and one that changes no
+resolution whatsoever, moves the same statistic by **+8.5%**. The comparators'
+inputs were developed in Lightroom with `Contrast2012=+100`, which is very much
+stronger than that.
+
+**3. The band contains no focus-dependent signal on this corpus.** This is
+[`V-LINEAR`](docs/research/V-LINEAR.md)'s measurement, and it is the strongest
+of the three because no licence, re-export or better comparator fixes it.
+Defocus is a low-pass filter, so whatever fine-band power survives in a badly
+defocused tile *is* the noise floor. In strehl's own linear develops, a tile
+that is **in focus** carries the same 0.20-0.48 cyc/px power as the same tile
+**20 frames out of focus**: ratio **1.015, 1.043, 1.004, 1.138** across four
+independent frame pairs, against **2.1-3.0 per band** for the Lightroom
+develops the comparators were fed. **Focusing the lens does not measurably
+change the band the entire dispute was conducted in.** The 17-27% figure was
+not merely confounded by tone — it was computed in a band that holds
+essentially nothing but noise.
+
+**Against the fork, the comparison is not merely confounded — it is not
+computable.** **41 of 64** candidate regions fail to register between the two
+renders against a gate calibrated on a null control, because after the best
+global similarity fit there remains **5.3 px rms** of local disagreement
+between the two programs' alignment models. Fewer than 8 usable regions
+survive, so that pairing is abandoned rather than reported.
+
+**The previous version of this section said the Lightroom-versus-RAW confound
+"cannot be removed without abandoning the comparator the owner actually uses".
+That was false, and it is worth saying why plainly.** The linear develops were
+produced — 63 frames, from strehl's own decoder, zero contrast, zero curve,
+zero clarity, zero texture, zero sharpening. Two things then happened. Zerene
+**refuses to save output**: its trial licence expired on 2026-06-06, and it
+loads the frames, aligns them, runs PMax to completion and then writes **zero
+bytes**. And separately, the linear develops turn out not to isolate the
+algorithm anyway — against the graded TIFFs Zerene actually ate they carry
+**49x less** fine-band contrast, and the tone estimator that explained 89-212%
+of the output-side gap explains only **17.2%** of that. Re-developing linearly
+trades one confound for another. The blocker is a purchase and a capture, not
+an argument.
+
+### What did change, measurably
+
+Commit `740e7056` made `STREHL_FULLRES_GATHER` default on: each frame is now
+demosaiced to full sensor resolution before the warp, instead of being gathered
+from its own half-resolution CFA phase plane. Measured with a **cross-spectrum
+between two disjoint half-stacks** — odd frames against even frames, so that
+added noise contributes zero in expectation — from **one binary**, with the
+environment variable as the only difference:
+
+| band (cyc/output px) | 113MSDCF | coffee-bean |
+| --- | ---: | ---: |
+| 0.20-0.25 | **2.10x** [1.95, 2.25] | **1.95x** [1.82, 2.09] |
+| 0.25-0.30 | **3.58x** [3.05, 4.36] | **2.70x** [1.99, 4.42] |
+| 0.30-0.40 | **3.46x** [2.85, 4.73] | inconclusive |
+
+The gain is band-specific rather than a global sharpen: the 0.02-0.05 band goes
+*down* slightly (0.957), and the gain rises monotonically through
+**f = 0.25 cyc/output px**, which is exactly the CFA plane Nyquist the change
+was aimed at. The statistic was commissioned against a real nearest-neighbour
+gather through the actual pipeline — sidecar-edited so the two renders are
+byte-identical but for `catmull-rom` -> `nearest` — which it charges in every
+band on both subjects while the retracted statistic rates the same real
+degradation **up to 88% better**. It also charges a 4x unsharp mask (to 4.0),
+and it credits a correctly-applied deconvolution while refusing to credit one
+applied to an already-sharp image. Seven of its seventeen pre-registered
+control arms failed and are published.
+
+**And the same caveat that killed the comparison applies to this result, so it
+is stated here rather than left for a reader to find.** Two of those three
+bands — 0.25-0.30 and 0.30-0.40 — are the bands `V-LINEAR` measured as carrying
+no focus-dependent signal. A cross-spectrum across disjoint half-stacks rejects
+*independent* noise, so this is a real, reproducible, coherent change; what is
+**not** established is that the coherent content it gained is scene detail
+rather than sensor-common structure, and the instrument's own worst control
+(noise common to both halves, inflating it by up to 3.9x in these bands) points
+the same way. The tone test that destroyed the comparator comparison explains
+only **6.4% / 11.9% / 15.3%** of this one, while still firing at **89-212%** on
+the comparator pair in the same run — so the flip is not a grade artefact. It
+is a measured change in the bands it was aimed at, of a magnitude the corpus
+cannot attribute.
+
+### Speed
+
+Quality is the half of "state of the art" that this corpus cannot settle.
+Speed can be, and until now this project had **no comparator timing of any
+kind**. Same 105-frame stack, same machine (Ryzen 9 9950X3D, 32 logical,
+61.6 GiB), same night, **wall clock around the process** — not CPU time, not a
+self-reported internal figure. strehl on the shipping pyramid path at
+`--pyramid-gate 4.5`, writing full-resolution linear-sRGB RGB; the fork writing
+its merged 32-bit TIFF:
+
+| | wall | s/frame | peak RSS | CPU |
+| --- | ---: | ---: | ---: | ---: |
+| **strehl**, decode + align + focus + merge + write | **36.72 / 38.39 / 38.40 s** | **0.366** | 7.64 GiB | 593 s |
+| `focus-stack` fork, merged TIFF only | 1320.64 / 1604.15 s | 13.93 | 47.37 GiB | 6840 s |
+
+**strehl is 36.0x-41.8x faster on this stack** — the range is every pairing of
+the measured reps, best:best through worst:worst — on **11.5x less CPU** and
+**6.2x less peak memory**, and **with no GPU**, while the fork is running
+OpenCL on an RTX 5090. Five things that number is not:
+
+- **The fork on disk today is not the build that produced the comparator
+  above**, and against the one that did, the honest figure is **2.4x**. That
+  build's own log stacked these same 105 frames to a merged TIFF in **93.739
+  s**; strehl's 38.39 s is 2.4x faster to a comparable output. The 36-42x
+  includes a 14-17x performance regression in someone else's tree between its
+  2026-05-10 and 2026-05-17 builds, which this project did not isolate and will
+  not take credit for. **2.4x is the number to quote.**
+- **The input asymmetry is not normalised away, and it makes the gap a lower
+  bound.** strehl reads 105 ARW = **3.88 GB**. The fork reads 105 TIFF =
+  **38.42 GB** — 9.9x the bytes — and those TIFFs are Lightroom developments of
+  those same ARW: work the fork's route requires, strehl's does not, and
+  neither tool's clock includes. Every fork number here is an under-count.
+- **The fork's default configuration does not complete at all.** At
+  `--output-colorspace=linear-rec2020 --output-bitdepth=32` its
+  `--hdr-preserve=auto` resolves *on* — its own help warns "~3.6 GB extra peak
+  RAM per 32 MP frame" — and the run died after **521.52 s** at task 716 of 860
+  with `Failed to allocate 146800640 bytes`, with ~40 GiB free at launch. The
+  1320-1604 s figures above are the `--hdr-preserve=off` path, which is the
+  configuration that finishes.
+- **Zerene Stacker PMax is UNTIMEABLE here, and is reported as untimeable
+  rather than estimated.** Its licence has expired (`License category =
+  EXPIREDLICENSE`) and its batch entry point stalls in GUI initialisation —
+  300.5 s of wall clock for 9 s of CPU and no output file. Its own archived
+  session log contains one comparable internal number, **26.912 s to align and
+  stack 33 frames = 0.8155 s/frame**, against strehl's **0.3656 s/frame** end
+  to end. Roughly twice — on a Zerene number that excludes its own load, its
+  own save, the Lightroom export upstream of it, and every second of the human
+  driving it, of which that log records a 5.9 s file dialog and 33.5 s between
+  a finished stack and a chosen filename.
+- **strehl has no GPU path, and that is measured not to be the gap it looks
+  like.** [`M7`](docs/research/M7-gpu-focus-measured.md) puts GPU acceleration
+  of the focus measure at **173x on that stage** but **0.40-0.57% of pipeline
+  wall time**. The pipeline is decode and alignment, which is exactly what
+  these runs' stage breakdown shows: alignment 10.5-12.8 s, fold 23.2-25.3 s,
+  collapse and write 0.3-0.4 s.
+
+**Cold versus warm is not certified**, and is stated as such: Windows has no
+scriptable page-cache drop. What exists is one *observed* eviction — an
+identical strehl run took **26.71 s**, the fork then streamed 38.42 GB through
+the cache, and the next identical strehl run took **46.68 s**, a factor of
+**1.75x**. One observation, not a series.
+
+The harness's first job was catching its own author: its first version timed
+strehl runs whose alignment reported `ON (sidecar) ... 0.0 s` from a warpmap
+cached in `%LOCALAPPDATA%`, which would have credited strehl with **45% of the
+CPU it had not spent**. The corrected harness wipes a private cache directory
+and asserts `ON (solved)` on every run before accepting its time. The failed
+version is kept in the tree.
+
+**This is also the first end-to-end wall-clock figure measured on the shipping
+pyramid path**, which the caution at the top of this README notes had never
+been timed since it became the default. That caution stands as written — the
+51.6 s headline was measured on the estimator path and does not transfer — and
+this does not replace it, because it is a different stack. What it supplies is
+a pyramid-path number that exists: **0.366 s/frame at 105 frames of 33 MP**,
+with a full alignment solve on every run and a full-resolution demosaiced
+output. For calibration, the whole 26-subject corpus renders at **0.2015
+s/frame** (4,825 frames in 16.2 minutes wall, measured by the corpus run, not
+by this harness); the difference is the per-run re-solve, the 4x output pixels,
+and three other jobs contending for the machine. Neither number is a regression
+against the other, and this project does not yet own the controlled run that
+would make either of them one.
+
+### So where that leaves the claim
+
+**"State of the art" is not a defensible claim for this tool today, and is not
+made anywhere in this document.** The two axes are in genuinely different
+states, and the speed result does not license softening the quality one:
+
+- On **speed**, there is a measured comparator number for the first time and it
+  is not close — 2.4x against the build that produced the comparator artefact,
+  36-42x against the fork as it stands today, with the input asymmetry making
+  both a lower bound.
+- On **quality**, strehl is decisively better on noise and on clipping, and the
+  fine-scale question is **unanswered** — not lost, not won. It will stay
+  unanswered until the corpus contains a target whose edge is sharp enough to
+  measure and a band that carries signal to measure it in. Both are requested
+  in [`docs/captures-needed.md`](docs/captures-needed.md) §30 and §32; the
+  Zerene half additionally requires buying a licence, since the trial writes
+  zero bytes.
+
+Two further caveats bound even the parts that stand: Zerene's **DMap** mode
+never rendered, so this is only against PMax — its contrast-and-noise-raising
+mode, which flatters it on exactly the axis in dispute — and two subjects
+against two comparators is a floor under *competitive*, not a foundation for
+*state of the art*.
+
+Across the three passes, **three instruments from the first, seven control arms
+from the second, and one timing harness** failed their own checks and are
+recorded in the reports rather than quietly dropped: a 10-90% rise metric with
+no power, two rim measures reading +428% on a clean image and +0.02% on a real
+unsharp mask, a band-power statistic that rewards nearest-neighbour resampling,
+a slanted-edge MTF used 2.6x outside its own validity limit, and a timing rig
+that read a cached warpmap as work performed. The numbers above are the ones
+that survived commissioning. The lesson is the same one that cost this project
+a gradient-kurtosis table: **a statistic that has only ever been shown to
+succeed is not evidence.**
 
 ## Usage
 

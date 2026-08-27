@@ -50,6 +50,24 @@ destroyed the head-to-head at my own result, tone explained **6.4% / 11.9% /
 15.3%** of it — and the same code, on the same ROIs, still fired at **89% /
 100% / 212%** on the Zerene pair, so that negative means something.
 
+**3b. Added after the fact, from `V-LINEAR`, and it cuts against finding 3.**
+A later lane measured, on strehl's own linear develops, that a tile *in focus*
+carries the same 0.20–0.48 cyc/px power as the same tile **20 frames out of
+focus** — ratio **1.015, 1.043, 1.004, 1.138** across four independent frame
+pairs, against 2.1–3.0 per band for the Lightroom develops the comparators ate.
+**Focusing the lens does not measurably change the bands finding 3 reports in.**
+That is a third and stronger reason the retracted 17–27% claim is dead — it was
+computed in a band with essentially no signal in it — and the same blade cuts
+my own result, so I am applying it here rather than leaving it for a reader.
+`C` rejects *independent* noise by construction, so the flip's 2.10×/3.58×/3.46×
+is a real, reproducible gain in **coherent** content; what is **not**
+established is that the coherent content is scene detail rather than
+sensor-common structure. My own worst control says the same thing from the
+other side: NOISE_COM inflates `C` by **1.078 / 1.492 / 3.866** in exactly
+these three bands. **Finding 3 stands as "the flip changed what is in those
+bands, measurably and in the place it was aimed"; it does not stand as "the
+flip recovered scene resolution",** and this corpus cannot promote it.
+
 **So: "state of the art" remains undefensible, but for a different and better
 reason than the README currently gives.** It is not that strehl was measured
 and found behind. It is that on this corpus the fine-scale question cannot be
@@ -536,6 +554,15 @@ is corroborating, not load-bearing. 113MSDCF carries the claim.
 
 ## 6. Proposed replacement for the README's "Measured against other stackers"
 
+*Landed. This section was applied to `README.md` (now lines 1091–1361), with
+three additions made at the time of landing: `V-LINEAR`'s noise-band finding as
+a third independent reason the deficit claim is dead, the same finding applied
+back against my own flip result, and a correction of the README's false claim
+that the Lightroom-versus-RAW confound "cannot be removed without abandoning
+the comparator the owner actually uses" — `V-LINEAR` removed it, and found that
+doing so trades one confound for another. The text below is the version as
+drafted, kept so the diff between proposal and landing is visible.*
+
 > ## Measured against other stackers
 >
 > strehl has been compared against two other stackers on two subjects with
@@ -701,6 +728,18 @@ half-stacks* — the NOISE_COM arm scores 6.05. Fixed-pattern noise and PRNU are
 common to every frame and therefore to both halves. This is disclosed, not
 solved, and it is the one route by which the flip result could still be
 overstated. A dark-frame/PRNU-corrected render pair would close it.
+
+**Closed by another lane, against me.** `V-LINEAR` supplied the measurement I
+did not think to make: whether the bands I report in contain any
+focus-dependent signal at all. On this corpus they do not — in-focus /
+defocused = 1.015, 1.043, 1.004, 1.138 over 0.20–0.48 cyc/px. That does not
+make the flip result wrong, but it removes the interpretation I would have
+preferred for it, and §0 finding 3b now carries the correction. **The capture
+that fixes this is the same one §32 asks for**: a subject that actually puts
+signal into 0.20–0.48 cyc/px at this magnification. Until then, "does the flip
+recover scene resolution?" is not a question this corpus can be asked, and my
+answer to it is withdrawn to "the flip changed these bands, coherently, where
+it was aimed".
 
 **Could not determine, on speed.** Five items, listed in full at **§9.9**: a
 certified cold-cache run (Windows has no scriptable page-cache drop; what I have
