@@ -455,3 +455,194 @@ but "should not" is not a measurement.
    is the gamut wall plus an in-family genuine highlight. Bounding it means
    changing the tone stage to bound per-channel rather than per-luminance —
    corpus-wide, needs corpus-wide commissioning, and is not this lane's call.
+
+---
+
+# 7. Is the DELIVERED file print-correct? (ORCH's four questions)
+
+Sections 1-6 measured the **TIFF writer**.  This section measures the **26 files
+we actually hand over**, which turn out not to be the same artefact at all.
+
+## 7.1 The instrument, commissioned before any verdict
+
+`png_probe.py` parses PNG chunks directly rather than asking an imaging library,
+because the state that had to be distinguished is *absent* from *present and
+equal to the library's default*, and a normaliser cannot express that
+difference.  It keeps three states apart by construction: `ICCP` (a real
+embedded profile), `SRGB` (the 1-byte sRGB chunk -- an intent flag, not a
+profile) and `ABSENT`.
+
+ORCH set the bar: *"a profile reader that returns 'sRGB' for a file with no
+profile at all is the same failure -- give it a file you have stripped and
+require it to report absent, not a default."*
+
+`commission_png_probe.py`, **5/5 PASS**.  The load-bearing arm is not the strip,
+it is the **plant**: the reader reported ABSENT on 26/26 delivered files, and a
+reader with a broken `iCCP` branch prints exactly that, on every input, forever.
+Only an input that certainly *has* a profile can separate those.
+
+    ARM1  plant a real ICC (Windows sRGB, 3144 B)  -> ICCP, md5 1d3fda2edb4a,
+                                                     desc "sRGB IEC61966-2.1",
+                                                     space "RGB "        PASS
+    ARM2  plant only the sRGB chunk               -> SRGB, icc is None    PASS
+    ARM3  plant pHYs at 11811 px/m                -> reads 300.0x300.0    PASS
+    ARM4  strip the iCCP back out                 -> ABSENT, no default   PASS
+    ARM5  corrupt a CRC                           -> reported, not eaten  PASS
+
+## 7.2 Q1 -- is a profile embedded, and is it the right one?
+
+**Two different answers, because there are two different artefacts.**
+
+| artefact | n | depth | ICC | XRes/Unit |
+|---|---:|---:|---|---|
+| `acceptance\SHIP-V4\*.tiff` (the masters) | 26 | 16 | **26/26**, one profile, `strehl sRGB (IEC 61966-2-1)`, md5 `d79b117b6798` | **300 / inch** |
+| `DELIVER-V5\full-resolution\*.png` (**what we ship**) | 26 | 8 | **0/26 -- ABSENT** | **absent** |
+
+The 16-bit masters are **correct**, and correct in the strong sense the brief
+demanded: one profile across all 26, and it is sRGB because those masters were
+rendered `--srgb`.  The three-way rule from section 1 still holds -- camera-native
+gets no profile rather than a wrong one.
+
+**The delivered PNGs carry nothing at all.**  Not a profile, not even the 1-byte
+sRGB chunk.  Every consumer -- Photoshop, Lightroom, a print shop, a browser --
+assigns its own working space and the colour silently shifts.  The metadata is
+manufactured correctly by `image_out.rs` and then **discarded at the delivery
+step**: `experiments/DELIVER-V5/build.py` reads the master with `tifffile`,
+converts to `uint8`, and saves through PIL without passing any of it on.
+
+**So the defect is not in the writer.  It is that the delivery throws the
+writer's work away.**
+
+## 7.3 Q4 -- DPI
+
+- Masters: `XResolution` (tag 282) `= 300/1`, `YResolution` (283) `= 300/1`,
+  `ResolutionUnit` (296) `= 2 (inch)`, on 26/26.
+  At 7040x4688 that declares a **23.5 x 15.6 inch** print.  A DPI tag is a
+  statement of intended print size, not a measurement, and 300/inch is the
+  conventional choice for photographic print; it is honest and meaningful.
+- Delivered PNGs: **no `pHYs` chunk on any of the 26.**  No declared print size.
+
+## 7.4 Q2 -- is 8-bit sRGB actually costing us anything?
+
+Measured, not asserted, and measured **paired**: we hold both the 16-bit master
+and the 8-bit file derived from it, so this is the exact gradation the 8-bit
+step destroyed, against the file that still contains it.
+
+### The instrument, and the two defects commissioning found in it
+
+`commission_banding.py`, **7/7 PASS** -- but only after it failed twice, and both
+failures were real defects in my own detector:
+
+1. **An absolute threshold that nothing could reach.**  I gated at `dL* >= 0.5`.
+   Measured over the whole scale (`dl_range.py`), dL* per 8-bit sRGB code spans
+   **0.274 to 0.509** -- only **5 codes of 254** clear 0.50.  Planted ramps with
+   8 px and 40 px treads, textbook visible banding, fired on 3 of 9 tiles because
+   the ramp walked out of that 5-code window.  **A gate nothing can satisfy
+   certifies everything.**
+   The deeper point is why: dL*/code varies by a factor of only **1.86 across the
+   entire tone range**.  That is the sRGB transfer curve doing its job -- it
+   exists to make one code step perceptually near-uniform.  So dL* is a property
+   of the *encoding*, not of the image, and it cannot be the discriminating
+   variable.  **Tread width is the only free one.**  The gate moved to tread,
+   with dL* retained at 0.30 where it binds on exactly the 11 deepest codes.
+2. **A perverse response to a planted degradation.**  Arm Q6 quantised a banded
+   ramp *harder*, to 6 bits.  Treads got 4x wider -- and the banded fraction
+   **fell from 100% to 66.7%**.  Tiles crushed to a single flat code scored
+   `dL* = 0` and were certified clean, so the worse the damage the better the
+   score.  Total gradation loss is the most severe banding available, not the
+   least.  **A degradation-only suite cannot see this**; it is visible only
+   because the ladder plants in both directions.
+
+Final arms, all passing:
+
+    NULL  real tweezers-cpl              0.0%    must stay quiet
+    R1    noise-free, tread ~3 px        0.0%    0.25 mm: correctly invisible
+    R2    noise-free, tread ~8 px      100.0%    must fire
+    R3    noise-free, tread ~40 px     100.0%    must fire
+    Q6    R3 at 6 bits                 100.0%    coarser must not score better
+    DITH  R3 + 0.6-code noise            0.0%    IMPROVEMENT: dither must quiet it
+
+### The corpus result
+
+78 strata are possible (26 subjects x 3 tone strata).  **50 measured + 28 EMPTY
+= 78**, an exact partition -- an empty stratum prints `EMPTY -- no tiles, NOT a
+pass` and can never be read as a clean one.
+
+Quantisation *is* severe: in smooth tiles the 16-bit master carries **850-4,700
+distinct levels** where the 8-bit file carries **5-37**.  And it does not matter,
+because the treads are **1-2 px** (0.085-0.169 mm at 300 dpi) rather than the
+wide plateaux banding needs.
+
+**49 of 50 strata read 0.0% banded.  One does not:**
+
+    6.7%   dry-erase-marker-head-cpl [high]   tread 0.169 mm   sigma 0.28 code
+
+**That subject is tied for the lowest noise in the corpus.**  Across all 50
+strata (`corpus_sigma.py`, 2,391 tiles) sigma runs **0.28 to 3.84 codes**, and
+the two strata at the 0.28 floor are `dry-erase-marker-head-cpl [high]` and
+`coffee-bean [high]`.
+
+**One of those two bands and the other does not, so low noise is necessary and
+not sufficient.**  The mechanism ranks correctly -- the only banded stratum in
+the corpus sits at the noise floor, and nothing above 0.31 bands at all -- but it
+does not uniquely predict, and the honest statement is the weaker one.  What
+separates the pair is the tread distribution: `dry-erase` is a smooth white
+plastic barrel whose highlight ramps run further before turning over.  A claim
+that the mechanism "predicted the failing subject" would have been a story
+fitted to one cell after the fact.
+
+### The margin is thin, and strehl's own headline win is what eats it
+
+`dither_margin.py` sweeps dither on a 40-px-tread ramp (180 tiles/rung, 5 seeds;
+monotone non-increasing within 3 binomial SE -- the worst rung rises 3.3 pp
+against a 5.4 pp tolerance, and an exact-monotonicity test failed on sampling
+noise before that tolerance was made principled):
+
+    banded < 50%  at sigma ~ 0.05 codes
+    banded <  1%  at sigma ~ 0.25 codes
+    banded ==  0% at sigma ~ 0.30 codes
+
+    corpus minimum sigma        0.28 codes
+      margin vs 1% crossover    1.12x   consumed by 1.3x more frame averaging
+      margin vs 0% crossover    0.93x   -- already below it
+
+**Noise is the only thing making 8 bits safe here, and reducing noise is
+strehl's headline result (2.4x over the fork).**  A merge averages frames and
+sigma falls as 1/sqrt(N), so the quality axis the project leads on is the axis
+that removes the dither.  A 1.3x increase in effective averaging puts the
+quietest subjects under the threshold.  This is a real coupling and it is not
+currently gated anywhere.
+
+## 7.5 Q3 -- should a 16-bit path be added?
+
+**No, because it already exists, and it is already correct.**  Not a plan, not a
+prototype: 26/26 shipped masters carry the right profile and 300 dpi/inch today,
+verified end to end by `ship_census.py` on all 26 -- stronger than the three
+subjects the brief asked for.
+
+**No Rust was changed.  `git status -- crates/` is empty, so no byte-freeze can
+have moved by my hand.**  The correct fix costs no compiler:
+
+1. **Ship the existing 16-bit TIFF masters as the print deliverable.**  They are
+   correct now.
+2. **The 8-bit PNGs are web previews, and even as previews they are wrong** --
+   an untagged PNG is guessed at by every consumer.  They need at minimum the
+   1-byte `sRGB` chunk and a `pHYs` at 300 dpi.  That is a change to
+   `experiments/DELIVER-V5/build.py`, which is not mine; routed, not taken.
+
+On the evidence, 8-bit is *adequate today* for 25 of 26 subjects and marginal on
+the 26th -- but it is adequate by an accident of sensor noise that the project is
+actively working to remove, and the masters that do not depend on that accident
+already exist.
+
+## 7.6 What I did not verify
+
+- I did not re-run the Rust byte-freeze suite.  I did not need to and could not
+  attribute a failure if I had: nine lanes are editing `crates/` concurrently and
+  I changed none of it.  The claim is the stronger one -- **zero Rust diff**.
+- The 6.7% stratum on `dry-erase-marker-head-cpl` is a *detector* verdict at
+  0.169 mm treads.  I have not viewed it at 1:1 on a calibrated display, and per
+  rule 48 the `view` tool resamples above ~400 px so I could not have.  Whether
+  that 6.7% is visible in a print is untested.
+- `MIN_TREAD_MM = 0.5` is a literature acuity threshold, not one this project
+  measured.  It is stated so it can be moved, and every raw tread is printed.
