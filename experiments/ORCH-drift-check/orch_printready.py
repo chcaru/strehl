@@ -97,6 +97,19 @@ if not SHIP.is_dir():
 BAND_RUN_MIN = 4.0    # veil 101 v3: a band must be WIDE...
 BAND_STEP_MIN = 4.0   # ...AND its step visible. 1 DN over 12 px is not banding.
 CLIP_MAX = 0.001      # veil 102: measured corpus clipping is 0.00-0.02%
+# THRESHOLD PROVENANCE. The 0.1% above was calibrated against the OLD channel-
+# sample statistic, which BUILD-OUTPUT then showed was measuring the sRGB gamut
+# wall. A threshold keeps no authority across a change of the statistic it
+# guards, so here is the corpus distribution under the CORRECTED statistic,
+# measured on SHIP-V3, 26/26 masters:
+#
+#   all-3-channel clip:  min 0.0000%   max 0.0691% (112MSDCF)   0 masters over
+#   old channel count :  min 0.0000%   max 0.1430% (flowers-cpl)  1 master over
+#
+# 0.1% still sits above the corrected corpus and below the planted blow the
+# commission uses, so it is retained -- but it is retained on this measurement,
+# not on the older one, and it has never been tested against a master that
+# genuinely deserved to fail. `commission_clip.py` is what keeps it honest.
 BLOTCH_REVIEW = 0.02  # veil 98 commissioning: a 4-sigma planted blotch reads
                       # 0.0169 against a 0.0002 null. Above this, LOOK -- do not
                       # conclude. Seven corpus subjects sit above it innocently.
@@ -111,7 +124,28 @@ def verdict(path):
         return "SKIP", "not a 3-channel image (shape %s)" % (a.shape,)
     rgb = a[:, :, :3].astype(np.float32)
 
-    clip = float((rgb >= 65500).mean())
+    # CORRECTED after BUILD-OUTPUT. The old statistic was
+    #   clip = (rgb >= 65500).mean()
+    # taken over the FLATTENED three-channel array, i.e. a count of CHANNEL
+    # samples. That is not a measure of blown highlights, and BUILD-OUTPUT
+    # showed it by mechanism rather than by argument: `image_out::gamut_map`
+    # blends an out-of-gamut triple toward the neutral of equal luminance and
+    # takes the SMALLEST blend that works, which lands the offending channel on
+    # EXACTLY 65535. So every out-of-gamut COLOUR pixel contributed to `clip`
+    # BY CONSTRUCTION with nothing blown at all -- the gate was reading the
+    # sRGB gamut wall and calling it highlight clipping.
+    #
+    # What it cost: the gate FAILED `dry-erase-marker-head-cpl`, the corpus's
+    # ONLY master with zero blown highlights (clipALL3 = 0.0000%), and PASSED
+    # sixteen subjects carrying more genuine clipping than the one it failed
+    # (112MSDCF at 0.0693% against flowers-cpl's 0.0131%).
+    #
+    # A neutral highlight -- all three channels at the ceiling together -- is a
+    # specular or a blown white, and no renderer can recover it. That is the
+    # thing worth gating, so that is what is gated.
+    hi = rgb >= 65500
+    clip = float((hi.sum(axis=2) == 3).mean())          # ALL THREE channels
+    clip_ch = float(hi.mean())                          # the old number, kept
     # A clipping gate that tests one end of the tone scale has tested half the
     # tone scale, and until this was added the half it skipped was the half
     # this corpus actually clips in: the whole-frame survey found 2.5-3.7% of
@@ -119,6 +153,17 @@ def verdict(path):
     # 0.00-0.02%. No threshold is attached yet -- black crush is legitimate
     # against a deliberately black backdrop, so it has not earned one until the
     # corpus distribution says what is unusual. Reported, not gated.
+    #
+    # AND IT MUST STAY UNGATED. BUILD-OUTPUT adjudicated all three flagged
+    # subjects and found them innocent, with a mechanism: the flagged pixels sit
+    # at median luma 0.2406 / 0.2463 / 0.3306 across 33k-53k distinct surviving
+    # levels, against `flowers-cpl`'s genuine black at luma 0.0011 across 122
+    # levels. The source frames carry 93-112% of the effect -- on
+    # `flower-inner-edge-cpl` the merge REDUCES it. So this statistic is
+    # anti-correlated with the property its name claims: it reads high on
+    # subjects whose shadows are open and well-separated, and low on the one
+    # subject with a genuinely crushed black. Gating it would fail the good
+    # masters and pass the bad one.
     crush = float((rgb <= 35).mean())
 
     lum = lum_of(rgb)
@@ -132,8 +177,8 @@ def verdict(path):
     chroma = float(ch[0])
     run, step = float(bd[0]), float(bd[4])
 
-    detail = "blotch %.5f  chroma %.4f  run %.1fpx step %.1fDN  clip %.3f%%  crush %.3f%%" % (
-        br, chroma, run, step, clip * 100, crush * 100)
+    detail = "blotch %.5f  chroma %.4f  run %.1fpx step %.1fDN  clip %.4f%% (gamut %.3f%%)  crush %.3f%%" % (
+        br, chroma, run, step, clip * 100, clip_ch * 100, crush * 100)
 
     if not np.isfinite(br):
         return "SKIP", "blotch ratio non-finite"
@@ -142,7 +187,8 @@ def verdict(path):
     if run >= BAND_RUN_MIN and step >= BAND_STEP_MIN:
         fails.append("banding run %.1f px step %.1f DN" % (run, step))
     if clip > CLIP_MAX:
-        fails.append("clipped %.3f%% > %.1f%%" % (clip * 100, CLIP_MAX * 100))
+        fails.append("clipped %.4f%% > %.1f%% (all-3-channel, neutral blown)"
+                     % (clip * 100, CLIP_MAX * 100))
     if fails:
         return "FAIL", detail + "   <== " + "; ".join(fails)
 
