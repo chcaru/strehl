@@ -10565,3 +10565,80 @@ fix. The current state:
 2. **Do not repair a PIL-read number by multiplying by 256.** It is a right-shift; 23224 >> 8 = 90, ratio 258.04, and the tonal resolution is gone regardless.
 3. **Do not audit by `len(np.unique(arr))` unless the array is the array as read.** One filter upstream and the check is deaf while looking exactly as reassuring.
 4. **Audit by grepping the reader.** That is the only one of the four that has survived being measured.
+
+## §95 — an objective halo number, and four defects found by reading plots rather than numbers
+
+The user's judgement on the shipped masters — the halo is "horrendous", the output
+"entirely unusable" — is correct and is an eyeball one. Before any lane can claim to have
+fixed it, the project needs a number that is comparable across renders and produced by
+someone other than the author of the fix. `experiments/ORCH-drift-check/orch_halo.py`.
+
+**The measurement.** A focus-stack halo is an overshoot ring at an occluding edge. Blur
+heavily, take the gradient magnitude to find object boundaries rather than texture, walk
+the gradient normal +/-200 master px at sampled edge points, normalise each profile to a
+0->1 step from its two far ends, aggregate, and measure the excursion outside [0,1] in the
+16-180 px band. That excursion **is** the halo, in units of the step height.
+
+Four defects, each found by looking at something other than the headline number.
+
+**1. 359 step units.** The first run passed a synthetic commissioning at 97% recovery and
+then reported overshoots of 35,900% on real masters. Per-profile normalisation divides by
+the step height, and sample points on ridges rather than steps have near-zero denominators.
+The synthetic arm could not express this because a synthetic step image **contains no
+degenerate edges by construction**. Fixed with a minimum-step gate set from each image's
+own 1st-99th percentile range, and by aggregating with a **median** rather than a mean so
+no minority of survivors can dominate. Then an ARM DEGEN was added — equal-sided ridges
+mixed into the synthetic — and it holds to 0.0162.
+
+**2. A control that could only say zero.** The shuffled control read exactly `0.00000` on
+all 26 masters, giving `inf` ratios everywhere. It had genuinely run — 528 to 2692
+profiles each — but `overshoot()` clamped at zero, so the control could only ever report
+"0 or more". Unclamped it reports how far **inside** the step it sits (0.02 to 0.50), which
+is a margin rather than a floor. A clamped control and an absent control print the same
+glyph.
+
+**3. Thin lines are not steps.** The plotted profiles showed `lead-1-cpl` at **1.94 at
++12px, 0.33 at +48px, and 0.62 at +180px** — where the normalisation guarantees 1.0. Those
+profiles were crossing thin bright lines, which clear a minimum-step gate by chance and
+never reach a plateau. **The number gave no sign of this; only the shape did.** Fixed with a
+plateau-flatness gate requiring each side's inner and outer quarter to agree.
+
+**4. A control that planted the signal.** ARM SPIKE was then added and failed: clutter with
+*zero* planted halo read 0.1197. Tightening the plateau gate did nothing between 0.18 and
+0.05 and only collapsed at 0.03, where 17 profiles survived. Making the lines wavy to
+decorrelate them made it worse — 0.58, and saturated, because the lines had become the
+strongest gradients in the frame and the edge finder selected them instead of the step.
+
+The diagnosis is the useful part. **A thin line parallel to an edge sits at a fixed offset
+from that edge in every profile — which is exactly the geometry a halo has.** No
+aggregation can separate them, because the plant and the signal are the same object.
+
+> **A control that plants the signal is not a hard control, it is a broken one, and no
+> amount of tuning will pass it.** When a control cannot be passed even in principle, stop
+> adjusting the instrument and ask whether the control is measuring the thing it names.
+
+The honest resolution is §91's own rule turned on my own gate: **report the floor rather
+than tune until the number looks acceptable.** ARM SPIKE now states a sensitivity floor of
+**0.1197 step units** and readings at or below it are reported UNDETERMINED — neither
+clean nor defective.
+
+### The result
+
+Commissioned: ARM SYNTH recovers a planted overshoot at 0.978 / 0.991 / 0.993 / 0.995 over
+a 0.05-0.40 ladder with a floor of 0.0002; ARM DEGEN deviates 0.0162; ARM SPIKE floor
+0.1197.
+
+| master | halo | side | profiles | note |
+|---|---|---|---|---|
+| **`tweezers-cpl`** | **0.9452** | bright | 910 | rim peaks at **1.98x the step** at +12px, decaying to 1.0 by ~+85px |
+| `lead-1-cpl` | 0.3944 | bright | 106 | 97.3% rejected; weak sample, treat as indicative |
+| `wrapped-text-1` | 0.1369 | dark | 643 | just above floor |
+
+Nineteen masters read at or below the floor, three yielded too few surviving profiles, and
+`coffee-bubbles` produced only 35 control profiles so its number carries no control at all
+and is excluded rather than ranked.
+
+**`tweezers-cpl` is the reference case**: a metal subject against a background, the
+geometry where occlusion veiling is worst, and a rim reaching **198% of the step height**.
+That is what "horrendous" measures to. Any halo fix must move that number, measured by an
+instrument its author did not write.
