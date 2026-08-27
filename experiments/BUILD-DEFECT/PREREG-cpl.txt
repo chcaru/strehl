@@ -1,0 +1,245 @@
+PRE-REGISTRATION -- the CPL discriminator on the flat fields
+BUILD-DEFECT lane.  Written before any depth was measured in either block.
+
+=====================================================================
+0.  WHY THIS EXISTS, AND WHY IT IS NOT ALREADY DONE
+=====================================================================
+
+My brief for this block asserted that sensor defect correction was an
+unassigned gap.  It is not: I built it earlier in this same session
+(commits 0dd3d3f9, 49227061, 439563ff, eb5145d4) and it is documented in
+BUILD-DEFECT.md sections 0-13.  I am recording that as a premise check
+and reporting it, not executing the brief as written.
+
+But the brief names one control that my prior work DID flag and never
+ran.  BUILD-DEFECT.md:327 says, of the flats:
+
+    "CPL is a rotating element, and the flats were shot ~4.5 h after
+     bee-3-cpl."
+
+I wrote the concern down and then pooled all 360 frames anyway.
+defect-flat-census.rs splits the flats by ODD/EVEN CAPTURE ORDER, which
+is a null against cloud drift.  It is not a null against the filter.
+Nothing in this lane has ever separated the with-CPL flats from the
+without-CPL flats.  That is the open item and it is what this measures.
+
+=====================================================================
+1.  THE STRUCTURE OF THE DATA (established before predicting anything)
+=====================================================================
+
+D:\personal\macro\flat-fields\flat-fields : 360 ARW, DSC00083..DSC00442,
+contiguous, one session 2026-08-23 from 16:41.
+
+EXIF over all 360 (exiftool, read-only extraction):
+  ISO 100, f/5.6, 200.0 mm, FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+  ExposureTime takes exactly 9 values, 40 frames each.
+
+Sorted by filename, ExposureTime forms exactly 18 constant runs of 20:
+
+    1/250 1/125 1/60 1/30 1/20 1/13 1/10 1/8 1/5      <- DSC00083..00262
+    1/250 1/125 1/60 1/30 1/20 1/13 1/10 1/8 1/5      <- DSC00263..00442
+
+The 9-step ladder is run TWICE, 20 frames per step.  The owner's account
+is "flat fields shot twice, with and without CPL, ~8 exposure sets of 20
+shots each".  The data says 9 sets, and it says the two passes are
+exposure-matched step for step.
+
+    BLOCK 1 = DSC00083..DSC00262   (180 frames, first pass)
+    BLOCK 2 = DSC00263..DSC00442   (180 frames, second pass)
+
+One block has the CPL fitted and the other does not.  Same target, same
+lens, same session, same nine exposure settings, twenty frames each.
+The filter is the only intended difference.
+
+=====================================================================
+2.  WHICH BLOCK IS THE CPL BLOCK -- and the gate on deciding
+=====================================================================
+
+A circular polariser costs light (nominally 1.3-2.5 stops).  The two
+passes use IDENTICAL shutter speeds, so no compensation was applied, so
+the CPL block must be systematically darker at every matched step.
+
+DISCRIMINATOR: for each of the 9 exposure times, ratio of median raw
+level (black-subtracted, white-normalised) block2/block1.
+
+GATE C1 -- the labelling is only claimed if BOTH hold:
+  (a) the ratio lies on the same side of 1.0 at all 9 of 9 steps, and
+  (b) the spread of log2(ratio) across the 9 steps is < 0.5 stop.
+If either fails I report the blocks as "1" and "2" and DO NOT claim
+which carries the filter.  The main result below does not depend on the
+labelling -- only its physical interpretation does.
+
+Moving cloud is the confounder.  Cloud is why (a) and (b) are both
+required: drifting illumination over a multi-minute capture will not
+hold a constant sign and a tight magnitude across nine separated steps.
+
+=====================================================================
+3.  THE PREDICTION -- committed now, from optics, before measuring
+=====================================================================
+
+A particle at height z above the photosites casts a shadow blurred by
+roughly z / N_eff, where N_eff is the image-side f-number.  The flats are
+focused at infinity, so m ~ 0 and N_eff ~ 5.6.
+
+Sensor geometry: A7C II, active 7040x4688 over ~35.9 mm, so 5.10 um per
+photosite and 10.2 um per CFA quad.
+
+The mote 2 profile already published (BUILD-DEFECT.md:1465-1474) is a
+disc ~30 quads = ~306 um across, and its edge falls from -1.03% to
+-3.65% over 5 quads = ~51 um.
+
+    blur ~ 51 um  =>  z ~ 51 um * 5.6 ~ 286 um ~ 0.29 mm
+
+That is the sensor cover glass.  A mote on the CPL -- a FRONT filter,
+screwed to the front of a 100 mm macro with a 2x teleconverter, so of
+order 150-250 mm from the sensor and sitting where each image point's
+beam is wide -- would blur by of order 200000/5.6 = 36 mm.  It would not
+be a disc at all; it would be invisible.
+
+    PREDICTION P-A: mote 2 at quad (3434,2305) is present in BOTH
+    blocks, at fractional depths agreeing within the block-difference
+    null.  It is not on the filter.  I expect NO block effect.
+
+I am predicting a null.  A null is exactly what a broken instrument
+returns for free.  Section 5 exists because of that and the result is
+void if section 5 does not pass.
+
+    PREDICTION P-B (weaker, genuinely open): mote 1 at quad (3202,119)
+    reads only -0.841% on the pooled flats and its open-search blob sits
+    22 quads away (BUILD-DEFECT.md Q9).  If mote 1 is block-specific it
+    is on the filter and Q9 is answered.  I do not predict which way.
+
+=====================================================================
+4.  THE STATISTIC
+=====================================================================
+
+Per block b, per site s:
+  field_b   = mean over used frames of (quad_mean / frame median)
+  resid_b   = field_b / boxblur(field_b, BG_RADIUS)     [the same
+              high-pass the shipping census uses: dust is small and
+              sharp, illumination is large and slow]
+  d_b(s)    = mean of resid_b over the r<=8 quad core, minus 1
+              (fraction; negative = darker than local background)
+
+  DELTA(s)  = d_2(s) - d_1(s)          in percentage points
+
+NULL for DELTA: the same DELTA evaluated at every clean site on a
+decimated grid, excluding a border of BG_RADIUS and excluding discs
+around known sites.  p is the two-sided rank of |DELTA(s)| in that null.
+
+An UNDEFINED outcome is defined and counted separately from a PASS:
+a site whose core leaves the grid, or whose null has fewer than 200
+members, is UNDEFINED.  Sites are partitioned
+      examined = common + block-specific + undefined + underpowered
+and the four must sum.  "Underpowered" is its own outcome: if the null
+spread exceeds the measured |DELTA| the site decides nothing, and that
+is reported as deciding nothing rather than as "common".
+
+=====================================================================
+5.  COMMISSIONING -- the result is VOID unless all four pass
+=====================================================================
+
+G0  GAUGE / PLACEBO.  Split BLOCK 1 alone into odd and even frames and
+    run the identical discriminator.  Those two halves cannot differ by
+    filter.  Requires |DELTA| at mote 2 below the 95th percentile of its
+    own null, i.e. NOT block-specific.  This is the built-in placebo and
+    it is reported whether or not it passes.
+
+G1  PLANTED BLOCK-SPECIFIC DEFECT (commissions RED).  Multiply block 2's
+    frames by a synthetic -4% disc of radius 8 at a clean site.  The
+    discriminator MUST return block-specific at that site with p below
+    the same bar the real sites are judged at.  A discriminator that
+    cannot see a defect in one block only cannot report P-A's null.
+
+G2  PLANTED COMMON DEFECT.  Apply the SAME synthetic -4% disc to BOTH
+    blocks.  MUST return common, not block-specific.  This is what
+    stops G1 being passed by a statistic that calls everything
+    block-specific.
+
+G3  PLANTED IMPROVEMENT (required by the project standard; a
+    degradation-only suite cannot tell a blind statistic from a
+    perverse one).  Take the REAL mote 2 and divide it out of block 2
+    only, by dividing block 2's frames by the measured mote profile.
+    DELTA must move in the correct direction -- block 2 becomes
+    RELATIVELY BRIGHTER at that site, so DELTA must go POSITIVE -- and
+    by a magnitude consistent with the removed depth.  A statistic that
+    only ever grows under change fails here.
+
+    G3 is the arm I most expect to expose a mistake of mine, because it
+    is the only one whose correct answer has a sign.
+
+=====================================================================
+6.  THE DISCOVERY ARM, AND ITS FLOOR
+=====================================================================
+
+Open search for sites present in one block and not the other -- i.e.
+filter dust, which the shipping map does not model at all and which
+would matter because 17 of the 26 corpus stacks are CPL captures.
+
+This search MUST be able to return nothing.  Floors, fixed now:
+  - |DELTA| >= 1.0 percentage point, AND
+  - p <= 0.0025 against the DELTA null, AND
+  - the site must be >= SEARCH_BORDER quads from every frame edge
+    (the pooled census already showed 37 of its 40 deepest "blobs" were
+    edge falloff at a smaller border), AND
+  - the deficit must appear in BOTH odd and even halves of the block it
+    is present in, agreeing within SPLIT_TOL.
+
+If nothing clears all four, the reported answer is "no filter-specific
+defect found at this sensitivity", together with the sensitivity that
+statement is made at -- established by G1's planted disc, not asserted.
+
+=====================================================================
+7.  DECISION RULE, WRITTEN BEFORE THE NUMBERS
+=====================================================================
+
+If P-A holds (mote 2 common to both blocks):
+    the sensor-space, pre-warp correction site is confirmed against a
+    control my prior work flagged and never ran.  No code change.
+    The map's framing as a SENSOR defect map is upheld for mote 2.
+
+If P-A fails (mote 2 present in one block only):
+    mote 2 is on the CPL.  Then the shipping map is wrong in kind, not
+    just in default: a filter mote moves when the filter is rotated or
+    removed, so a fixed map coordinate is valid only for captures
+    sharing a filter orientation.  I would report that to the
+    orchestrator as a correctness bug in the map's premise and NOT
+    attempt to fix it in this block.
+
+If the discovery arm finds filter-specific dust:
+    report it as a NEW defect class with its measured amplitude; do not
+    add it to the sensor map, because it is not sensor-fixed.
+
+Either way the default stays OFF.  Nothing in this experiment is an
+argument for changing the default; the default was set by section 13.1
+on a different question and this experiment does not bear on it.
+
+=====================================================================
+8.  HOW I COULD BE WRONG
+=====================================================================
+
+- The two blocks might not be a filter pair at all.  They might be two
+  passes with the same filter state (e.g. both with CPL, the "without"
+  set being one of the subject-focus-sweep directories instead).  GATE
+  C1 is what detects this: no consistent level offset means no filter
+  change, and then this experiment measures only repeatability and I
+  must say so rather than reporting a filter result.
+
+- The CPL rotates.  If the owner rotated it between the two passes the
+  polarisation state of the illumination changes and the two blocks
+  differ in overall transmission AND possibly in falloff.  The residual
+  high-pass removes smooth falloff, but a strong gradient change could
+  leak.  The clean-site DELTA null measures that leak directly, and it
+  is what every site is judged against, so leak inflates the null and
+  makes me CONSERVATIVE rather than wrong.
+
+- Mote 2 sits 39 quads from the bottom edge, inside the zone where
+  BUILD-DEFECT.md:1494 already showed the null annulus reaches into
+  optical falloff.  If that inflates the DELTA null too, the site
+  becomes underpowered and I must report UNDERPOWERED, not "common".
+  Section 4's partition exists so that outcome cannot be read as a pass.
+
+- My optics argument in section 3 assumes the CPL is a front filter.  If
+  it is a drop-in or rear filter the distance is smaller and the
+  prediction weakens.  Stated so a reader can check the assumption
+  rather than inherit it.
