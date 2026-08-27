@@ -899,3 +899,220 @@ not take it because `V-GATHER` and `V-NEVERWORSE` belong to other lanes.
   four planes -- is what `pyramid.rs` already does. Implementing it would have
   been a no-op dressed as a repair.
 - **No sharpness arm.** Nothing changed, so there is nothing to hold.
+
+# 10. A single re-certification harness
+
+ORCH's problem, stated exactly: promoting a candidate binary means re-rendering
+26 masters, re-running the print gate, re-running the head-to-heads and updating
+the README by hand, and **if that takes hours the fix lane can only afford one
+attempt.** The ask was one entry point that turns promotion into a decision
+rather than an interpretation, plus the one number nobody had -- how long a full
+re-certification actually takes on this machine.
+
+`experiments/BUILD-RECERT/recert.py` is that entry point. Six timed stages:
+`identity` (SHA-256, and a refusal list), `render` (26 masters through the
+existing `scripts/finalpass.ps1`), `gate` (`orch_printready.py` through its own
+entry point, so it may gain checks without this file changing), `pair` (every
+noise number paired with a sharpness number on the same pixels), `h2h` (both
+comparators on the published sites), `verdict`.
+
+**Three findings below change the task rather than merely reporting on it, and
+two of them are about the instrument I was told to trust.**
+
+## 10.1 The baseline I was given does not reproduce
+
+ORCH's brief states the print gate reads **17 PASS / 5 FAIL / 4 REFUSED**. I ran
+it before building anything against it:
+
+```
+python experiments/ORCH-drift-check/orch_printready.py C:\dev\strehl-out\acceptance\SHIP-V4
+  -> 17 PASS / 0 FAIL / 9 ACQUITTED / 0 EXPIRED / 0 REVIEW / 0 NOT EXAMINED
+     exit 0, wall 180.2 s
+```
+
+**17 / 0 / 9, not 17 / 5 / 4.** The five failures and four refusals have since
+been adjudicated into nine acquittals. Had the harness diffed against the quoted
+numbers it would have reported **five spurious "FAIL -> PASS" improvements** on
+the first candidate -- a harness manufacturing a win for a fix that had not
+landed yet. A baseline is a measurement with an expiry date, so `recert.py`
+measures its own and caches it (`logs/baseline-gate.json`) rather than carrying
+a number in a docstring.
+
+## 10.2 The gate cannot certify the subjects the fix is aimed at
+
+The nine acquittals are `112MSDCF`, `113MSDCF`, `coffee-bubbles`,
+`couch-fibers-cpl`, `flat-on-ruler-cpl`, `flower-inner-edge-cpl`, `foam`,
+`lead-1-cpl`, `leaf-2-cpl`.
+
+Cross them against the six subjects convicted of mid-scale mottle -- the defect
+the pyramid fix exists to remove -- `coffee-bubbles`, `lead-1-cpl`, `113MSDCF`,
+`flat-on-ruler-cpl`, `112MSDCF`, `foam`. **All six are inside the nine.**
+
+An acquittal is pinned to a rendered value and expires when the render moves by
+more than `ACQUIT_TOL` (5%). So a candidate that changes exactly the subjects it
+was built to change **expires its own acquittals by construction**, and an
+expired acquittal is not a pass -- it is an unadjudicated subject. The headline
+`17 PASS` would be unchanged while the six subjects under test quietly left the
+counted set. `recert.py` therefore separates two things the gate reports as one:
+`PASS -> FAIL` regressions, and `ACQUIT -> EXPIRED`, and refuses promotion on
+either. **The gate is sound; it simply was never built to adjudicate a change to
+its own pinned subjects, and nothing in its output says so.**
+
+## 10.3 Every noise number is paired with a sharpness number, or it is not reported
+
+This is the property ORCH called non-optional, and the reason is on the record:
+`focus-stack` reads 0.077 fine grain and 0.260 mid-band on
+`119MSDCF__worst-on-subject`, 10-25x below both other arms, **because it is
+blurred, not because it is clean.** A candidate can win every blotch number the
+same way.
+
+`recertlib.py` measures three bands, defined by importing `boxblur` and `srgb`
+**from `orch_eye_check.py`** so they cannot drift from ORCH's:
+
+| band | filter | scale | cyc/px | sharpness admissible |
+|---|---|---|---|---|
+| `grain` | `p - box(1)` | <= 3 px | >= 0.33 | **no** |
+| `struct` | `box(2) - box(6)` | 5-13 px | 0.077-0.20 | yes |
+| `mottle` | `box(10) - box(30)` | 21-61 px | 0.016-0.048 | yes |
+
+`grain` carries no sharpness verdict on purpose: it sits above the 0.30 cyc/px
+band this project has already withdrawn its resolution claims above. A statistic
+is not admissible merely because it is computable.
+
+Each cell reports a noise `floor` (MAD) and a `structure` amplitude, and the
+verdict is driven by
+
+```
+paid = d_structure / d_floor      (computed ONLY where the candidate is quieter)
+```
+
+-- how much structure the candidate spent per unit of noise it removed.
+`PAID_MAX = 0.25` is the harness's single absolute threshold and it is the only
+number here that had to earn one.
+
+## 10.4 Commissioning the measurement: three failures, and each was the metric
+
+`commission_bands.py` (8 arms: null, narrow blur, wide blur, band-confined
+denoise, blur ladder, heavier-blur non-reward, threshold invariance, degenerate
+crop). It failed three times before passing, and every failure was a real defect
+in my metric rather than a mis-set expectation:
+
+1. **A broken measurement read as a clean result.** The MAD floor collapses to
+   exactly 0 on crops more than half clipped black; `ratio` becomes `nan`; and
+   `nan` fails every comparison, so the cell classified as **HELD**. A
+   degenerate crop must **REFUSE**, never pass.
+2. **`peak` is not a pure structure statistic.** p99.5 carries a noise term
+   proportional to the floor, so *removing* planted band noise scored as a blur
+   with `paid` = 1.06. The noise term is now measured per band from a pure-noise
+   residual (`NOISE_PEAK`: 2.82 `struct`, 2.88 `mottle` -- not the Gaussian
+   2.807, because box-difference filters correlate their input) and removed in
+   quadrature.
+3. **A plant must live in the band it tests, and must be shown to have landed.**
+   White noise cannot move a 21-61 px band and a sigma=1.5 blur cannot move a
+   crop whose floor is already 4.24 codes. An unlanded plant leaves a cell
+   UNTESTED, and an untested cell is not a passed one.
+
+It passes at **59 PASS / 0 FAIL / 7 REFUSED = 66 cells**, the partition sums,
+every arm has at least 3 genuinely tested cells (`MIN_TESTED`, so an arm that
+refuses everything cannot certify itself), and planted denoise (`paid` max
+**0.000**) is cleanly disjoint from planted blur (`paid` min **0.406**) with
+`PAID_MAX` = 0.25 between them.
+
+## 10.5 Commissioning the harness is not the same test as commissioning the metric
+
+A sound metric can still sit under a harness that promotes a blurred arm,
+because aggregation is exactly where a trade goes missing.
+`commission_recert.py` builds fake candidate arms out of the shipping masters
+and runs the **real** pairing stage and the **real** verdict function over them.
+4 / 4 arms:
+
+| arm | what it is | required | got |
+|---|---|---|---|
+| NULL | byte-copy of the baseline | PROMOTABLE, all HELD | 45 cells, `d_floor` and `d_structure` both +0.0000 |
+| DEGRADED | baseline blurred | NOT PROMOTABLE, naming structure | 12/12 `struct` cells BLUR_TRADE |
+| IMPROVED | baseline noised, arm is the clean master | scored as an improvement | 12/12 `struct` cells CLEANER |
+| INCOMPLETE | arm missing masters | INCONCLUSIVE | INCONCLUSIVE |
+
+The load-bearing row is DEGRADED, and the reason is in its own numbers:
+
+```
+grain   median d_floor -0.7301 (quieter)   median d_structure -0.6026 (softer)
+struct  median d_floor -0.1701 (quieter)   median d_structure -0.1539 (softer)
+mottle  median d_floor -0.0108 (quieter)   median d_structure -0.0133 (softer)
+```
+
+**The blurred arm is quieter in all three bands.** Every noise statistic in the
+project improves on it. A harness that scored noise alone would have promoted
+it. This one refuses it and says why. And IMPROVED is the arm that stops the
+opposite failure: it is quieter *and* structure **rises** (+0.0149), which is
+what separates a metric that is merely conservative from one that can recognise
+a genuine win. A suite of degradations alone cannot tell those apart.
+
+## 10.6 A fix that was inert, and a control that shared its bug
+
+The first full run rendered **zero masters**. `finalpass.ps1` died on
+`Get-FileHash : The term ... is not recognized` -- a core cmdlet missing from a
+shell that was otherwise working, which reads as a broken install and is not
+one. This process runs under `pwsh` (PowerShell 7) and exports PowerShell 7's
+`PSModulePath`; Python inherits it; `powershell.exe` (5.1) inherits it in turn
+and cannot autoload `Microsoft.PowerShell.Utility` from 7's directories.
+
+Two things are worth recording, and the second is the useful one.
+
+**The verdict function certified this run.** Invoked with the render stage
+producing nothing, the first version printed `VERDICT: PROMOTABLE`, because it
+searched for reasons to refuse and an empty result set supplies none. Absence of
+evidence was being read as evidence of absence. A verdict now requires its
+evidence to exist and names the stage that is missing.
+
+**The fix I wrote for the module path was inert, and my control said so.** It was
+`dict(os.environ).pop("PSModulePath")`. On Windows `os.environ` is
+case-insensitive with keys stored UPPER-CASED, so `dict()` of it yields a plain
+dict keyed `PSMODULEPATH` and the pop matched nothing. `control_launcher.py`
+then printed `PSModulePath: <unset>` for a variable that was plainly set, and
+**refused to run** -- the right outcome reached through the identical bug, since
+its diagnostic read the same plain dict. A fix and its own check sharing a defect
+is precisely how an inert repair certifies itself. The refusal is what saved it:
+had that control been written to pass on a clean arm rather than to demand a
+reproduced failure, it would have gone green against a fix that did nothing.
+
+Measured, three arms, one probe:
+
+```
+powershell, env as-is             exit 1   Get-FileHash not recognized
+powershell, PSModulePath = 5.1's  exit 0   8DD1EBB0
+pwsh,       env as-is             exit 0   8DD1EBB0
+```
+
+and end to end through the real launcher:
+
+```
+A  powershell 5.1, PS7 module path inherited : 0 master(s), 'is not recognized' PRESENT
+B  pwsh + _ps_env()                          : 1 master(s), 'is not recognized' absent
+CONTROL PASSED
+```
+
+## 10.7 The head-to-head digest check could never have passed
+
+The published half-bracket is verified by a frame digest, `5e1f4bf433effb2c`,
+recorded in `V-NOISE2\119\logs\align-A.log`. My first `h2h` stage scraped it
+from `strehl stack`'s output -- and **`stack` does not print it; `align` does.**
+The stage refused on every run, with a message that reads like a finding about
+the frame set rather than what it was: a check nothing could satisfy. It is the
+same shape as ORCH's inert cap sweep and as the `dL* >= 0.5` gate that 5 codes of
+254 could reach, and it is the third instance tonight of a threshold placed
+outside its own reachable range.
+
+Asking the command that actually emits it, against the reconstructed bracket:
+
+```
+strehl align <half-A> --out <scratch>
+  stack half-A: 17 frames, digest 5e1f4bf433effb2c        (5.2 s)
+  published                     5e1f4bf433effb2c          MATCH
+```
+
+This also settles an assumption the harness had been carrying untested: that
+half-A is the 17 **even-indexed** frames of the 33 in `D:\personal\macro\119MSDCF`.
+It is. `--out` is mandatory on that call -- `align`'s default target is the
+shared warp-map cache that every other lane's `stack` reads, and a verification
+step must not write into the input of nine concurrent runs.
