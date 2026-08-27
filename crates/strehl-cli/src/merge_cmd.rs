@@ -6905,6 +6905,50 @@ fn write_merged(
             AppliedExposure::IDENTITY
         }),
     };
+    // M100/M109 REGRESSION GUARD, ported from the identical argument already
+    // written out in `stack.rs`. THE TONE STAGE SUPERSEDES `--auto-exposure` on
+    // the `--srgb` path, so the gain is computed, reported and NOT applied.
+    // This is a declared no-op, not a silent one.
+    //
+    // The two are the SAME RULE written twice: `color::AUTO_EXPOSURE_PERCENTILE`
+    // is 99.9 and `image_out::TONE_WHITE_PCT` is 99.9;
+    // `color::AUTO_EXPOSURE_TARGET` is 0.90 and `image_out::TONE_WHITE_TARGET`
+    // is 0.90. `stack.rs` carries the full derivation. This path -- the one the
+    // `stack` subcommand actually runs -- was simply never given the same guard,
+    // so the tone stage landed here without it.
+    //
+    // MEASURED on `stack D:\personal\macro\109MSDCF --srgb`, 22 frames:
+    //   with    --auto-exposure : 92.03% of pixels clipped at 65535, median 65535
+    //   without --auto-exposure :  0.00% clipped,                    median 61063
+    // and the acceptance pin 9b05d0b7, which predates the tone stage, renders
+    // the same recipe at 0.00% clipped / median 60918. The pin's auto-exposure
+    // and HEAD's tone stage therefore land in the SAME place, and applying both
+    // multiplies an already-normalised image by its own chosen gain a second
+    // time. Across the corpus that blew 11 of 18 masters to a white median.
+    //
+    // Without `--srgb` there is no tone placement, so the flag stays
+    // load-bearing there; that is the one case this guard must not steal.
+    let superseded = (srgb && applied.automatic).then_some(applied);
+    let applied = if superseded.is_some() {
+        AppliedExposure::IDENTITY
+    } else {
+        applied
+    };
+    if let Some(auto) = superseded {
+        eprintln!("exposure        : --auto-exposure is SUPERSEDED and applies NOTHING.");
+        eprintln!(
+            "                  It would have chosen {auto}, but --srgb's tone rendering\n\
+             \x20                 already places luminance p{} at {:.2} -- the identical rule.\n\
+             \x20                 Applying both double-normalises and blows the highlights\n\
+             \x20                 (measured: 92% of pixels clipped). This render is\n\
+             \x20                 byte-for-byte a plain --srgb render.",
+            color::AUTO_EXPOSURE_PERCENTILE,
+            color::AUTO_EXPOSURE_TARGET
+        );
+        eprintln!(
+            "                  To deviate deliberately from that rendering, use --exposure."
+        );
+    }
     if !applied.is_identity() || applied.automatic {
         eprintln!(
             "exposure        : {applied}, {}",
@@ -6929,7 +6973,7 @@ fn write_merged(
             "                  ONE multiply in linear light, before the curve. No tone curve, no"
         );
         eprintln!("                  saturation, no roll-off: every unclipped ratio is unchanged.");
-    } else if srgb {
+    } else if srgb && superseded.is_none() {
         // ADVISORY ONLY. Nothing is applied and no byte moves; this exists so
         // that "--srgb looks grey" is answered by the tool rather than by a
         // bug report. M100 recommends against making --auto-exposure the
@@ -6947,7 +6991,9 @@ fn write_merged(
                 would
             );
             eprintln!(
-                "                  Nothing was applied. Pass {} or --auto-exposure to apply it.",
+                "                  Nothing was applied. Pass {} to apply it. (--auto-exposure is\n\
+                 \x20                 superseded by the tone rendering on this path and applies\n\
+                 \x20                 nothing -- see the M100/M109 guard above.)",
                 would.reproduce_flag()
             );
         }
