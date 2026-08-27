@@ -39,6 +39,23 @@ interpreted:
          ratio must come back exactly 1.0.  A probe that reports a transfer
          error between a tile and itself is measuring its own margin handling.
 
+RETRACTED AS AN AUDIT -- see transferctl.py (ORCH §92).  Both controls above
+pass and NEITHER CAN FAIL IN THE WAY THAT MATTERS.  NULL feeds the statistic
+the same tile twice, which is the maximally correlated case; the confound
+actually to be feared is that `ecost_on` cannot tell two tiles apart, and a
+same-tile control is silent about precisely that.  Measured: cross-subject
+transfer deviates 0.0041 against 0.0045 matched, DISCRIMINATION 0.92x.  The
+edge transfer number below could not have exhibited a transfer failure at any
+magnitude, so it is not evidence that the transfer is sound.
+
+The CONCLUSION survives on other grounds, established in transferctl.py by
+breaking the depended-upon property rather than resembling it: the edge cost
+declines monotonically under k=1,2,4,8 successive gathers (0.9954 -> 0.9701),
+so its near-unity value is a measurement and not a pinned statistic; and it
+spans only 0.9859..1.0036 across all 26 subjects, which bounds cost_B/cost_A
+tightly enough that no verdict can move.  Read the numbers below as a
+MAGNITUDE BOUND on the correction, never as a validation of its transfer.
+
 Read-only.  Touches no shipped artifact.
 """
 from __future__ import annotations
