@@ -1340,3 +1340,99 @@ so a print cannot be traced to the build that made it.
   string still passes.
 - `format` encodes a policy that a print master is 16-bit UINT RGB. A float32 master would
   FAIL while arguably being better; the actual tuple is printed so a reader can judge.
+
+---
+
+## 16. Ratio-metric audit under ORCH §98 — is `H` measuring the merge getting better?
+
+ORCH §98: *a statistic of the form signal ÷ noise indicts the system for improving,
+because merging divides the denominator by ~√N.* Every lane was asked to audit its own
+metrics. Mine is exposed in form, and the audit is not a formality: **§11 compared a SINGLE
+frame against a STACK**, which is exactly the comparison that hazard corrupts.
+
+### 16.1 Exposure, by statistic
+
+| statistic | form | exposed? |
+|---|---|---|
+| `H_highfreq_chroma` | RMS of **high-pass** chroma | **structurally yes** — high-pass + RMS *is* the standard construction of a noise estimator |
+| `HL_ratio` | `H / L` | **structurally yes** — noise-dominated numerator over signal-dominated denominator, ORCH's exact shape |
+| `L_lowfreq_chroma` | RMS of 7-px-box chroma | partly; the box suppresses noise ~7x but does not remove it |
+| `RAD_corner_over_centre` | ratio of band medians | partly; noise inflates a magnitude more where signal is small, biasing the ratio toward 1 |
+| `cr_med`, `cb_med` | **signed** medians | no — a median of a signed quantity is robust to symmetric noise |
+| §14.6 floor | corner−centre of signed `cr` | no — signed, and differenced within one image |
+
+**§11's ladder statistic is `H`.** My own §14.5 text says so: *"`H` measures high-frequency
+chroma."* So the hazard is not hypothetical for this lane; it is pointed directly at the
+section.
+
+Note also what could *not* have caught this: `l2_falsecolour`'s selftest plants false colour
+and asserts `H` responds by >20x. That test is faithful and blind to this — it establishes
+that `H` is **sensitive to chroma**, never that `H` is **insensitive to noise**. ORCH's
+sharpest line tonight: *a correct commissioning does not establish that you measured the
+right quantity.*
+
+### 16.2 Measured, not argued (`n8_noisecoupling.py`)
+
+Real noise floor of the two §11 arms, and a ladder that injects noise back into the stack:
+
+```
+    K1 single      105.88 DN        single/stack ratio 1.91x
+    K3 stack        55.56 DN        merge removed ~90.1 DN in quadrature
+
+    sigma_DN  meas_DN   H         L         H/L       cr_med     RAD c/c
+    0.0       55.56     0.18368   0.36565   0.50234   -0.18978   1.26972
+    90.1      125.80    0.18368   0.36555   0.50247   -0.18983   1.26365
+    240.0     274.67    0.18391   0.36551   0.50316   -0.18959   1.26125
+
+    fractional move at 240 DN:  H +0.1%   L -0.0%   H/L +0.2%   cr -0.2%   RAD -0.7%
+```
+
+At the ~90 DN the merge actually removes, **H moves −0.0 %**. At 240 DN — more than twice
+the *total* noise present in the single frame — it moves +0.1 %. Against §11's ±6.7 %.
+
+### 16.3 The null has an amplitude, because the ladder was made to speak
+
+§16.2 is a null, and a null from an instrument never shown to move is worth nothing. The
+mechanism was registered **before** the run: the mask selects **specular** pixels, and
+`cr = (R−G)/Y` divides by a large `Y` there, so sensor noise enters chroma as `σ√2/Y` and
+vanishes in quadrature against an H of 0.18.
+
+```
+    sigma_DN  meas_DN   H         move
+    500       518.94    0.18674   +1.66%
+    1000      854.41    0.19312   +5.14%
+    2000     1362.86    0.21378   +16.38%
+    4000     2255.01    0.28520   +55.27%
+    8000     3960.69    0.51984   +183.01%
+```
+
+Monotone over 5 rungs and two decades. **H crosses §11's 6.7 % between 1000 and 2000 DN** —
+at least **11x** the noise the merge removed and **≥9x** the total noise in the single frame.
+Fitting quadrature to the top rung recovers an effective mask luminance of `Y ≈ 0.35`, which
+is consistent with a specular population and confirms the registered mechanism.
+
+### 16.4 Verdict, and what it does NOT say
+
+**§11's effect is not explained by noise reduction.** The coupling is two orders of magnitude
+too small at the relevant amplitude. ORCH's §98 hazard applies to `H` *in form* but does not
+bite *in fact*, for a reason specific to the population: the mask is bright.
+
+**This does not reinstate P1.** §14.5 withdrew P1 because the 2×2 resolution-fair bin reverses
+its sign, and that withdrawal stands entirely on its own grounds. This audit removes one
+candidate confound; it does not restore a measurement withdrawn for a different one.
+
+`HL_ratio` is the statistic in this lane that most deserves ORCH's warning, and it is
+**not used in any published claim here** — it is emitted by `stats()` and never cited. It
+should stay that way, or be reported as two terms.
+
+### 16.5 Limits
+
+- The noise estimator differences pixels **4 apart** (decimated), so it is contaminated by
+  structure at that scale and every DN figure above is an **upper bound**; the measured
+  1.91x single/stack ratio is correspondingly a **lower bound** on the true noise reduction.
+  This does not weaken the conclusion — the ladder was carried to 240 DN, well beyond the
+  single frame's entire measured noise, and still found nothing.
+- Injected noise is independent per pixel, the most high-frequency-rich form. Real
+  post-demosaic noise is spatially correlated and would move `H` **less** per DN, so the
+  coupling reported here is an over-estimate.
+- The 6.7 % crossing is bracketed by ladder rungs, not solved for. Stated as a bracket.
