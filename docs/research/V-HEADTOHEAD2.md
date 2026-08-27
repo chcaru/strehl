@@ -238,10 +238,13 @@ statistical power.
 
 ### It is mechanism-shaped, not a uniform gain
 
-Fine spectrum on 113: 1.004 at f = 0.027 → 2.05 at 0.215 → **3.12 at 0.254** →
-3.59 at 0.270. Flat below, rising through **f = 0.25**, the CFA plane Nyquist
-that the commit message names. A tone change, an exposure change or a sharpen
-would not have that shape.
+Fine spectrum on 113: **1.0042** at f = 0.027 → **2.0457** at 0.215 →
+**3.1190 at 0.254** → **3.5891** at 0.270. Flat below, rising through
+**f = 0.25**, the CFA plane Nyquist that the commit message names. A tone
+change, an exposure change or a sharpen would not have that shape. The
+nearest-neighbour column of the same table stays below 1 at *every* frequency
+in that range (0.78–0.95), so the degradation is charged continuously and not
+merely on a band average.
 
 ### The retracted statistic understates it
 
@@ -252,10 +255,17 @@ wrong about the direction of its own error.
 
 ### Flat-ROI specificity — the arm that killed the prior instrument
 
-- **113**: flat ROIs carry **6–10% of detail ROIs' absolute coherent power in
-  every band** (0.0645 / 0.0636 / 0.0821 / 0.0831 / 0.0740 / 0.0556 / 0.0999).
-  113's flat ROIs are only 2.9× flatter than its detail ROIs, so this is a
-  bound rather than a clean separation — but the bound is ≤10%.
+- **113**: the flat ROIs **also gain** — `C_g1/C_g0` on flat ROIs is 1.945 /
+  2.968 / 2.224 in the three fine bands, against detail's 2.103 / 3.580 /
+  3.462. That is the failure mode that killed the prior instrument and I am not
+  going to bury it. What defends the result here is not the ratio but the
+  *level*: flat ROIs carry only **6–10% of detail ROIs' absolute coherent power
+  in every band** (0.0645 / 0.0636 / 0.0821 / 0.0831 / 0.0740 / 0.0556 /
+  0.0999). Even if every scrap of the flat-ROI gain were spurious, it can
+  account for at most a tenth of the detail result. 113's flat ROIs are only
+  2.9× flatter than its detail ROIs, so this is a **bound, not a clean
+  separation** — the bound is ≤10%, and coffee-bean is what turns it into a
+  separation.
 - **coffee-bean**: flat ROIs are genuinely featureless (median local contrast
   **0.0030 vs 0.8041**, a **268×** separation) and show **no coherent gain** —
   `C_g1/C_g0` on flat ROIs is 1.137 [−0.63, 2.61] at 0.25–0.30 and **−0.113**
