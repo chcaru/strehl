@@ -5,7 +5,12 @@ milestone number has been **requested from the orchestrator and not yet
 allocated**, so this file lives in `experiments/V-NOISE2/` and is not a record.
 Nothing here should be cited from `docs/research/` until it moves.
 
-> **Newest result: §8.** `119MSDCF`'s 2.017× detail deficit against `enfuse` is
+> **Newest result: §9.** The half-to-half discriminator reads **R = 12.4×** in
+> the **convicted 20–60 px band** — a band §8 never measured and which sits an
+> order of magnitude coarser than §8's. Branch **SELECTION**: this lane holds a
+> real second mechanism.
+
+> **§8** — `119MSDCF`'s 2.017× detail deficit against `enfuse` is
 > **half-stack incoherence, not absent detail** — the full renders read 1.003
 > [0.670, 1.570] in the same band on the same pixels, and 2.017 lies outside
 > that interval. This closes the question §7.4 left open, and it implies our
@@ -766,3 +771,145 @@ Added by §8:
   `fba`'s 1.10× census separation; `bee`'s weak 0.2205 geometry peak; and the
   `crosspop` vs `banddiag` scene-ratio discrepancy (1.273 vs 1.733), which
   **remains unreconciled**.
+
+---
+
+## 9. The half-to-half discriminator — SELECTION, and the band changes what §8 meant
+
+ORCH reports that fixing the merge exponent caps at **57% of the excess blotch
+on one subject**, leaving ~43% unexplained across three candidate lanes, and
+supplies the discriminator: **a noise-driven selection is not reproducible
+across two independent half-stacks, whereas alignment drift produces coherent
+error in both halves.**
+
+`merge.rs` is closed to me, so I cannot read the per-pixel frame choice. I read
+its **signature** instead, and — this is the design — I read the *same*
+signature off `enfuse` built from the *same* linear TIFFs with the *same* half
+splits. Incoherence specific to our merge shows as an excess over `enfuse`;
+incoherence shared with it lives in the inputs both arms consume, which is the
+**alignment** lane's territory, not mine.
+
+### 9.1 The band, stated first, because it qualifies §8
+
+| band | cyc/px | period | |
+|---|---|---|---|
+| `COARSE` | 0.0167–0.0500 | **20–60 px** | the convicted plateau |
+| `FINE` | 0.2000–0.2500 | 4–5 px | §8's band |
+
+**These are an order of magnitude apart. §8's LEVEL verdict says nothing about
+the band where the second mechanism is suspected to live**, and this lane had
+never measured that band. Both are read here and always reported together.
+
+### 9.2 The statistic, and its band limitation
+
+Per tile: `d = (A−B)/2`, `m = (A+B)/2`, **`phi = P_d / P_m`**. **Both terms are
+band-limited to the same annulus**; `P_coh = P_m − P_d` is the only derived
+combination and both of its terms live in that one annulus. There is **no
+full-band quantity anywhere in `incoh.py`** — M127's published defect cannot
+recur by construction.
+
+A normalisation trap was met and handled: `h2.contrast_fft` divides a crop by
+its **own** mean, which is meaningless for a half-difference whose mean is ~0.
+Both terms are normalised by the **same** supplied level, which is what makes
+their ratio a fraction rather than an artifact of two normalisations.
+
+### 9.3 The verdict
+
+MEASURED, `python incoh.py 119`:
+
+| band | pop | strehl `phi` | `enfuse` `phi` | **R** |
+|---|---|---:|---:|---:|
+| **COARSE** | **DETAIL** | 0.00357 | 0.00029 | **12.424 [6.067, 19.468]** |
+| COARSE | FLAT | 0.00902 | 0.00849 | 1.062 |
+| FINE | DETAIL | 0.4106 | 0.3029 | 1.355 [1.010, 2.252] |
+| FINE | FLAT | 0.7612 | 0.7243 | 1.051 |
+
+**Branch SELECTION**, against thresholds registered as `2ada7413` before
+`incoh.py` existed. In the convicted band our merge's halves disagree **12×**
+more than `enfuse`'s on the same tiles. **This lane holds a real second
+mechanism.**
+
+### 9.4 Four hostile checks, because the number is large
+
+`incohcheck.py`. The result convicts this lane, but a 12× is exactly the sort
+of number that is wrong.
+
+- **C1 — are `enfuse`'s halves genuinely different?** If the build had handed
+  both halves the same frames, `phi_enfuse ≈ 0` by construction and R would be
+  an artifact of the *build*. MEASURED: `mean|A−B|/level` is **0.01141** for
+  `enfuse` against **0.00451** for strehl, zero bit-identical tiles. **`enfuse`'s
+  halves differ 2.5× *more* than strehl's in absolute terms** and still carry
+  12× *less* band-limited coarse disagreement. C1 does not void the result; it
+  strengthens it.
+- **C2 — is it just perversity?** `phi` is minimised by the worst merge, and
+  `enfuse` is 9.1% lower in coarse amplitude. Answered **quantitatively off the
+  `PERVERSE` arm** rather than by assertion: that arm measures the slope
+  `d_phi/d_amp = 1.05`, which predicts `phi_enfuse/phi_strehl = 0.905` from the
+  amplitude gap alone. Observed is **0.0805**. **Perversity accounts for 10.3%
+  of the gap** — real, and nowhere near sufficient.
+- **C3 — a few tiles?** n = 110 per arm, 2000 bootstraps, **both CIs exclude
+  1.0**. No tiles were dropped in either arm in either band, so unlike §8 there
+  is no population question here at all.
+- **C4 — the control that actually discriminated.** FLAT tiles have no scene
+  structure, so selection has nothing to select over *and* alignment has nothing
+  to displace. The arms should not differ there, and **they do not: 1.062 and
+  1.051.** The excess appears **only where scene structure exists**, which rules
+  out "strehl is simply noisier" as the cause.
+
+**C4 was not the instrument designed for this job.** The signature separator
+was, and it failed (§9.6). The discriminating evidence came from a control
+population that was already there.
+
+### 9.5 §7 and §8 reconciled, by a statistic built independently of both
+
+| what is counted | reading |
+|---|---:|
+| half-stack `C`, published (coherent only) | 2.017 |
+| **FINE coherent-only amplitude, this file** | **1.651** |
+| §8 total amplitude, noise-corrected | 1.003 [0.670, 1.570] |
+
+The coherent-only reading reproduces `C`'s **direction and rough magnitude**
+from an instrument built without reference to it, while the total reading is
+level. **The gap between 1.651 and 1.003 *is* the incoherent detail**, and it
+is now a measured quantity rather than the hypothesis §8 left it as.
+
+### 9.6 Two instrument failures, reported rather than repaired quietly
+
+**A fixed plant amplitude is wrong by construction across two bands.** The
+first run failed `NOISE-INC` at +4.7% against a >5% gate. The cause is not the
+estimator: white noise spreads over the whole frequency plane and an annulus
+captures only its area fraction — **0.00698 for COARSE against 0.0707 for
+FINE, a factor of 10**. The plant was simply too weak in the coarse band. Plant
+amplitude is now **derived per band** to land at `a/S = 1.0` (β = 0.1389 COARSE,
+0.0124 FINE — an 11× difference). **§8.6 established that a plant can be too
+potent; this is the mirror image, and together they say the same thing: potency
+must be chosen against the regime being measured, and it is band-dependent.**
+Commissioning now runs **per band**, because a statistic commissioned in one
+band is not commissioned in another.
+
+**My signature separator did not separate.** It was designed to attribute the
+mechanism — alignment drift lands error on gradients, selection lands it in
+areas. MEASURED: `SHIFT` +0.490, `BLOTCH` +0.426, **unmutated baseline +0.457**.
+The calibration arms **straddled** the thing they were meant to bracket, because
+`|d|` tracks `|∇m|` under every mechanism. Replaced by an edge/area
+concentration ratio, which is better posed but still spans only **0.86×** —
+`BLOTCH` reads *more* edge-concentrated than `SHIFT`, the reverse of the
+prediction, because blending a *blurred* copy also perturbs edges most. **The
+signature is therefore reported as UNDETERMINED** and `incoh.py` prints it that
+way rather than reading it in whichever direction suits. R stands on its own.
+
+### 9.7 What this does and does not license
+
+**MEASURED:** in the convicted band, our merge's per-half output disagrees 12×
+more than `enfuse`'s, only where there is scene structure, and not explicable
+by perversity or by noise.
+
+**ARGUED, not measured:** that this *is* the missing 43% of the blotch excess.
+I have measured **selection instability**, not blotch. The link is ORCH's
+discriminator applied to my number, and it is an inference. **57% must not be
+quoted as a corpus ceiling and 12.4× must not be quoted as a share of the
+blotch.**
+
+**Still one subject, two bands, one comparator.** `bee-1-cpl` at N=299 is where
+this should be strongest and it has not been run.
+
