@@ -8,7 +8,7 @@ claim is unfounded and should be read as such.
 
 **Source revision at start:** `d2ee3831` (`V-REVIEW halo: gallery Lanczos
 provably manufactures edge rims; box does not`). One commit from another lane
-landed underneath this work while it ran — `c0cb236c`, `V-GATHER: the chroma
+landed underneath this work while it ran — `eba1c6e1`, `V-GATHER: the chroma
 cost is not the demosaic, it is a stale noise gate` — and it reaches the same
 verdict by three independent routes. §7 states what that does and does not do to
 this file's contribution.
@@ -291,7 +291,7 @@ is a reason not to *steer* by that statistic.
 
 ## 8. Independent corroboration, and what this file adds
 
-`c0cb236c` landed mid-run and exonerates the double demosaic three ways: an exact
+`eba1c6e1` landed mid-run and exonerates the double demosaic three ways: an exact
 identity-warp no-op; a ported simulation reproducing the luma excess (×1.16–1.86)
 but refusing the chroma excess (**new/old = 0.80–1.03**); and a `--gate 0` render
 showing the gather *reducing* chroma noise. It locates the real cause: **a stale
@@ -303,7 +303,7 @@ taken by different means, one by simulation and one by the shipping functions.
 
 What this file adds that a differential method structurally cannot:
 
-1. **Ground truth (D2).** Every arm in `c0cb236c` is compared to another arm. That
+1. **Ground truth (D2).** Every arm in `eba1c6e1` is compared to another arm. That
    can show the double demosaic is not the *source of a difference*; it cannot
    show whether it is *right*. Against truth it is not: **+128 to +455 DN**.
    "EXONERATED" is therefore too strong. Exonerated of the chroma-HP excess, yes.
