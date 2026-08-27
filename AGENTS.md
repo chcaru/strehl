@@ -798,6 +798,49 @@ monolithic binary and ship only that binary.
     724. Harnesses: `experiments/ORCH-drift-check/exit_code_trap{2,3}.ps1`,
     `exit_code_host.ps1` + `producer_n.cmd` for the cross-edition table.)
 
+48. **A visual verdict is only valid on an image the viewer can show without
+    resampling -- measured, that is about 400 px. Above it you are judging a
+    resampler's output and calling it the render.** Commission the viewer before
+    you trust your eyes through it, exactly as you would commission a metric:
+    render a known fine grating at several sizes and look at it. Measured on
+    this box, a grating at the Nyquist-adjacent frequency **resolves at 400 px
+    and washes out to flat grey at 600 px and at 1000 px**. The detail does not
+    degrade gradually; it is simply gone, and nothing on screen announces that
+    it went.
+
+    **This is not a theoretical exposure.** The corpus gallery was delivered at
+    1400 px, 19.9% of master width -- a 5x downscale of a 33 MP stack -- and the
+    owner's verdict on it, twice, was that the output looked horrible and
+    unusable. The headline defect he was reacting to was **manufactured by that
+    downscale**: `lead-1-cpl` measures **-2.85 DN** of edge overshoot at full
+    resolution and **+33.21 DN** through a 5x Lanczos, with **two subjects
+    flipping the sign of their halo** and **7 of 10 gaining overshoot** that the
+    master does not contain. The resampler invented the halo, and everyone in
+    the loop -- owner and agent -- attributed it to the stacker.
+
+    **The trap is worse than it looks, because it also corrupts the audit.** An
+    agent then reported a clean "1:1 inspection" of the full-resolution
+    deliverable, and that inspection was itself conducted on 1000 px crops
+    through the same viewer -- above the resampling floor. **Every visual
+    verdict in that report, including the ones certified as clean, had been
+    through a resampler.** A downscale is a low-pass filter: it destroys exactly
+    the softness, zippering, ghosting and fine-structure smearing you are
+    looking for, while adding ringing that mimics the halo you are looking for.
+    It produces false negatives on the real defects and false positives on the
+    invented one, simultaneously.
+
+    So: **cut crops at 1:1 from the master, at 400 px or smaller, and never
+    resize an image on its way to your eye.** If a region of interest is larger
+    than 400 px, tile it -- several unresampled crops are evidence, one resized
+    overview is not. State the crop origin and size in the report so the claim
+    can be re-cut. If you must show a whole-frame overview for orientation, say
+    in the text that it is an overview and that **no defect claim rests on it**.
+    Applies equally to display encoding: convert linear data for viewing with a
+    stated, identical transform on every arm, because per-arm autoscaling
+    fabricates differences between images that do not differ.
+    (V-EYES task 1: `experiments/V-EYES/viewer_commission.py`, `halo_scale.py`;
+    `docs/research/V-EYES.md`.)
+
 ### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
 
 A milestone number is an identifier. Allocate here **before** the agent starts, and

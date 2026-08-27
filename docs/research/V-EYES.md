@@ -35,6 +35,14 @@ found that is unambiguously dirt rather than physics, and it is the defect a
 print viewer's eye finds first because it sits on smooth empty background where
 nothing else competes for attention.
 
+**Update, after a second pass: the softness finding in §5 is withdrawn.** On a
+clean measurement — both arms `--linear-srgb` from the same pinned SHIP-V4
+binary, reference frames developed by strehl's own decoder, compared against the
+*per-site* best frame — the master is **sharper** than the best frame available
+at each site, by **1.87×** (CI 1.73–2.01) on `flower-bud-alone-cpl` and **1.54×**
+(CI 1.42–1.73) on `lead-1-cpl`, confirmed by eye at 400 px 1:1. The stacker is
+doing its one job. Two instruments had to fail first, and §5.2 records why.
+
 ## 1. Commission the viewer before trusting anything seen through it
 
 This audit exists because a verdict was returned on a gallery that had been
@@ -189,7 +197,7 @@ I did not chase it.
 stated complaint. It also means the re-render was the right call for a reason
 beyond softness.
 
-## 5. Defect 3 — softness is real but modest, and my measurement is confounded
+## 5. Defect 3 — RETRACTED: the master is sharper than its best frame, not softer
 
 I formed the hypothesis that the masters are secretly half-resolution. The
 provenance supports it on its face: `planes : 3516 x 2344 per CFA plane`, one
@@ -219,44 +227,151 @@ flower-bud-alone-cpl--SHIP-V4.tiff  tile (3400,900) 1024x1024  green channel
 not a disguised half-resolution image.** The same test at tile (3000,1000) gave
 ratio 4.96 with both arms passing. The nominal 33 MP is not a lie.
 
-But the master sits *below* the sharpest single frames of the same region:
-0.007% against 0.009–0.011%, a deficit of 35–55% in the top octave. The frames
-were chosen by a focus ranking that behaves properly — a clean unimodal sweep
-with a 17.70× ratio between sharpest (DSC00091) and softest (DSC00001), which is
-what a focus bracket should look like.
+### 5.1 RETRACTED — the 35–55% deficit was an artifact of a confounded instrument
 
-**What I SAW**, at 400 px 1:1 on `flower-bud-alone-cpl`, the control subject —
-coverage 1.00, held-out error 0.35 px, the best-aligned stack in the corpus, so
-neither upsample nor misregistration can be blamed. Master tile at (3600,1050):
-the trichomes at the bud edge are soft and blended, thick-edged, with a waxy
-quality. The sharpest source frame at the same region shows the same hairs as
-**thin, dark, cleanly separated filaments**. The difference is visible.
+The first version of this section reported the master sitting *below* the
+sharpest single frames, 0.007% against 0.009–0.011%, a deficit of 35–55% in the
+top octave, and recorded it as suspected rather than proven because of three
+confounds: the `--srgb` transfer curve plus `--auto-exposure` gain on one arm
+only, rawpy's demosaicer standing in for the tool's own, and an uncorrected
+registration and brightness offset in the visual comparison. **All three have now
+been removed, and the deficit does not survive. It is withdrawn.** The measured
+result is the opposite sign.
 
-**Three confounds I could not remove, and they matter.**
+**The clean measurement.** Both arms rendered by the *same* pinned binary that
+produced SHIP-V4 — `acceptance-pins\9b05d0b7\target\release\strehl.exe`, SHA-256
+`44C2F2CD…B59F490`, matched against the SHIP-V4 provenance — with
+`--linear-srgb --demosaic` and no `--auto-exposure` (the binary refuses that flag
+outside `--srgb`, so both arms sit on a common linear scale by construction).
+Reference frames were developed by strehl itself, one ARW per otherwise-empty
+directory, so demosaic, black level, as-shot white balance, colour matrix and the
+coverage rescale are common-mode and cancel. `--demosaic` is mandatory here:
+full sensor resolution is default only under `--srgb`, and omitting it silently
+yields a binned half-resolution comparison.
 
-1. `docs/research/V-softness.md` records a standing project rule that quality is
-   never judged on an `--srgb` render, because the transfer curve moves every
-   ratio a metric computes, and that results have been retracted for exactly
-   this. The SHIP-V4 masters are `--srgb`. Both sides of my comparison are
-   gamma-encoded, but the master carries `--auto-exposure` gain and the frames do
-   not, so the two sit at different points on the curve. **This measurement
-   violates that rule and should be repeated on `--linear-srgb` before anyone
-   acts on the magnitude.**
-2. rawpy's demosaicer is not the tool's Malvar-He-Cutler. A 35–55% gap between
-   two different reconstructions is within the range a demosaicer difference can
-   produce on its own.
-3. The visual comparison had a brightness and a registration offset between the
-   two tiles that I did not correct.
+The reference is the **per-site** best frame — the sharpest frame *at that block*
+— not a global sharpest frame, which would read soft everywhere that frame was
+defocused.
 
-So: **softness is real to my eye and directionally confirmed by a commissioned
-metric, but the magnitude is not established.** I record it as suspected, not
-proven. It is independently corroborated by `docs/research/V-softness.md`, which
-bisects a library-wide sharpness regression to `57e4554` and gives the mechanism
-— the focus-election window growing 3.6×–4.0× — and that is a far better-founded
-account than mine. I did not verify whether that revert had landed in SHIP-V4.
+```
+flower-bud-alone-cpl  tile (2600,700) 2560x2560, 14 frames, block 64
+  master mean 7948.2  frames mean 7886.1   master/frames = 1.0079  parity OK
+  NULL     master vs itself            1.0000   PASS
+  DEFECT   master blurred              0.7551   PASS   (<base)
+  IMPROVE  master unsharp              4.0583   PASS   (>base)
+  NOISE    master + noise              1.8685   PASS   (~base)
+  CEILING  best frame as subject       1.0000   PASS   (>=1)
+  REF-BLUR every frame blurred         5.5280   PASS   (>base)
+  REF-SHARP every frame sharpened      0.7810   PASS   (<base)
+  median master / per-site-best = 1.8658   CI [1.7285, 2.0129]  n=541
+  => master is SHARPER than the per-site best frame, by 86.6%
 
-**Attribution: merge, probably.** Not upsample, not misregistration — those are
-excluded by the control subject.
+lead-1-cpl            tile (2600,1400) 2048x2048, 13 frames, block 64
+  master/frames = 0.9960  parity OK; all seven arms PASS
+  median master / per-site-best = 1.5357   CI [1.4162, 1.7261]  n=249
+  => master is SHARPER than the per-site best frame, by 53.6%
+```
+
+**Verdict: no. The master is not softer than the per-site best frame. It is
+sharper — by 1.87× (CI 1.73–2.01) on `flower-bud-alone-cpl` and 1.54× (CI
+1.42–1.73) on `lead-1-cpl`.** The two subjects are deliberately opposite: the
+flower bud's merge averages heavily at coarse bands (`averaged: 97.2% 83.7%
+56.7% …`), the lead's is almost pure selection (`13.3% 0.1% 0.0% …`), and the
+result holds in both regimes. On `lead-1-cpl` a single frame wins 195 of 249
+sites, which makes the ceiling *harder* to beat, and the master beats it anyway.
+
+**Confirmed by eye, at 400 px 1:1, both arms identically display-encoded** (a
+stated linear→gamma-2.2 transform, never per-arm autoscaling, which would
+fabricate the difference). On `lead-1-cpl` at (3912,2968) the master resolves
+granular structure along the bright ridge and crisp crazing across the surface;
+the frame that won that site smears both into soft blobs. On
+`flower-bud-alone-cpl` at (4104,1500) the master shows cleanly separated
+filaments where the winning frame has haze. This reverses the visual claim in the
+first draft of this section, which was made through a resampler — see rule 48.
+
+**Block-size sweep, which is how the per-site reference validates itself.** A
+finer site is a stronger ceiling, so the ratio must fall as blocks shrink. It
+does, monotonically, and the master still leads at the finest granularity tested:
+
+```
+block  16  ratio 1.5758  CI [1.5425,1.6144]  n=8244  softer 28.9%
+block  32  ratio 1.7809  CI [1.6987,1.8598]  n=2082  softer 21.6%
+block  64  ratio 1.8658  CI [1.7285,2.0129]  n= 541  softer 16.3%
+block 128  ratio 2.1333  CI [1.8659,2.3680]  n= 134  softer  9.7%
+block 256  ratio 2.2388  CI [1.8459,2.5313]  n=  35  softer  2.9%
+```
+
+### 5.2 Two instruments failed before this one, and both failures are the finding
+
+**Instrument v1** (`softness_verdict.py`) normalised each block by its own total
+variance for amplitude invariance. That quantity is **non-monotone in sharpness**
+— unsharp masking raises the denominator faster than the numerator — so the
+IMPROVE arm failed on a large tile: sharpening the master *lowered* its score.
+Caught by the arm, as designed. No number from it is usable.
+
+**Instrument v2** (`softness_verdict2.py`) fixed that, added per-image noise-floor
+subtraction and a fifth NOISE arm, **passed all five arms**, and reported the
+master at **0.108** of the per-site best — a ninth of the best frame's detail.
+`compare_tiles.py` put that verdict in front of an eye, and the frame that "won"
+the median block was a **featureless flat grey**, completely defocused, while the
+master at the same coordinates showed hairs and texture. The denominator divided
+by the block's low-frequency variance, which is near zero on a defocused frame,
+so the quotient exploded and **the envelope selected the most defocused frame in
+almost every block.** The reference was upside down.
+
+**Why five passing arms did not catch it: every arm perturbed the MASTER and
+compared against a fixed envelope. Not one perturbed the REFERENCE.** A suite
+that validates only the numerator cannot see a broken reference, however many
+arms it has. This is the same family as `tri.blur_equiv` bounding its own error
+below at zero and `overshoot_frac` reading backwards. Instrument v3 therefore
+carries three reference-side arms — CEILING, REF-BLUR, REF-SHARP — plus a printed
+winner distribution, so a degenerate reference is visible rather than silent.
+
+**The general rule this earns: commission every term the verdict divides by, not
+just the one you are measuring.**
+
+### 5.3 The residual soft tail is not misregistration, and is not explained
+
+15–29% of sites still read softer than the per-site best. I hypothesised focus
+breathing — magnification changes with focus position, and the registration is a
+single global translation over a 2560 px tile — and the worst site did show
+master and frame displaying different subject content at the same coordinates.
+**The test refuted the hypothesis as a general explanation** (`breathing_check.py`):
+
+```
+sites reading SOFT  : median residual  0.72 px   90th pct 30.07 px
+sites reading SHARP : median residual  0.71 px   90th pct  9.48 px
+soft sites carry 1.02x the residual displacement
+Pearson r(radius, residual) = +0.021
+recomputed with per-site local registration:
+  global translation only   median 1.8786  CI [1.7326, 2.0530]  softer 15.9%
+  local per-site            median 1.9550  CI [1.7710, 2.0901]  softer 15.3%
+```
+
+At the median, soft sites carry **1.02×** the displacement of sharp sites — no
+difference. Only the extreme tail differs (90th percentile 30.07 px vs 9.48 px),
+so the one site I eyeballed was real but unrepresentative. Correcting
+registration per site moves the verdict *in the master's favour*, 1.879 → 1.955,
+and barely touches the soft fraction. **Breathing costs about 4% of the ratio and
+does not explain the tail. The tail remains open.** It does not change the sign
+of the verdict, but it is the honest residual and I am not claiming otherwise.
+
+### 5.4 The known sharpness regression is already reverted in SHIP-V4
+
+The first draft suggested `docs/research/V-softness.md`'s bisected regression
+`57e4554` might account for the softness. **It cannot, because its revert is in
+the shipped tree.**
+
+```
+git merge-base --is-ancestor 57e45542 9b05d0b7   -> 0   (regression present)
+git merge-base --is-ancestor 6430fb28 9b05d0b7   -> 0   (RESTORE also present)
+57e45542  halo: delete the noise-driven window shrink; the geometric cap is the fix
+6430fb28  halo: restore the noise-driven window shrink; the cap does not subsume it
+```
+
+SHIP-V4 contains the restore. That line of inquiry is closed.
+
+**Attribution: none required. There is no softness defect to attribute.**
 
 ## 6. What I looked for and did not find
 
@@ -291,9 +406,9 @@ frames, so I cannot say whether that is the tone path or the subject.
 1. **Dust motes, up to −13.3%, in 18 of 26.** On a smooth background at A3 there
    is nothing to distract from them. Trivially fixable — the correction exists.
    Fix: enable static-defect correction by default.
-2. **Softness relative to the sharpest frame, 35–55% of top-octave energy,
-   magnitude unproven.** At A3 this is the difference between "sharp" and
-   "nearly sharp". Already diagnosed with a better mechanism in `V-softness.md`.
+2. **Softness — REMOVED from this list.** Measured cleanly on `--linear-srgb`
+   against a per-site best-frame reference, the master is 1.54×–1.87× *sharper*
+   than the best frame at each site. There is no softness defect. See §5.
 3. **Chroma fringing on the `109MSDCF` debris streak.** Small, local, and moot if
    the mote correction removes the streak.
 4. **Blocked shadows on `dry-erase-marker-head-cpl`.** Not adjudicated.
@@ -304,19 +419,37 @@ frames, so I cannot say whether that is the tone path or the subject.
 
 I inspected 8 of 26 subjects at honest 1:1 magnification, not all 26. The mote
 census and the halo comparison are the only measurements that cover the corpus
-broadly (26 and 10 subjects). I did not verify that the DELIVER-V4 JPEGs derive
-from SHIP-V4 rather than SHIP-V3 — the delivery README points at `SHIP-V3`, and
-the timestamps are merely consistent with V4. I did not adjudicate the shadow
-question. I did not repeat the HF measurement on `--linear-srgb`, which the
-project's own standing rule requires before the softness magnitude is trusted.
+broadly (26 and 10 subjects). I did not adjudicate the shadow question.
+
+The softness re-measurement covers **two subjects** (`flower-bud-alone-cpl`,
+`lead-1-cpl`) chosen to sit in opposite merge regimes, not all 26. It uses a
+**13–14 frame subsample** at stride 10–16, not every frame, so the per-site
+reference is the best of a sampled bracket; a denser sample could only raise the
+ceiling, and the direction of that bias is against my conclusion, not for it.
+The residual 15–29% soft tail is measured but **not explained** (§5.3). I did not
+re-derive the mote or halo findings on `--linear-srgb`; those rest on
+`--srgb` renders and are directional claims, not magnitudes.
+
+Lineage of the DELIVER-V4 JPEGs is now settled and was not my doing: the
+requester verified SHA-256 over all 26 masters in both arms, 26/26 byte-identical,
+so `SHIP-V3` and `SHIP-V4` differ only in label and the inspected images are the
+correct ones.
 
 ## 9. For the orchestrator
 
 - The `view` tool resamples above ~400 px. Any agent judging image quality
-  through it at 1000 px is measuring the viewer. This is worth a line in
-  `AGENTS.md` — it is the same failure that produced the original complaint.
-- The delivery README references `../acceptance/SHIP-V3/` while the shipped
-  masters are in `SHIP-V4`. One of the two is wrong; lineage is unverified.
+  through it at 1000 px is measuring the viewer. **Now written up as `AGENTS.md`
+  rule 48**, with the grating commissioning and the halo-from-downscale numbers
+  as its evidence.
+- **The softness defect is withdrawn** — the master is 1.54×–1.87× sharper than
+  the per-site best frame. Anyone chasing softness downstream of my first report
+  should stop. `V-softness.md`'s regression `57e4554` is **already reverted** in
+  SHIP-V4 by `6430fb28`, so it explains nothing about the shipped render either.
+- **A commissioning suite must perturb the reference, not only the subject.** My
+  instrument v2 passed five arms while its envelope was selecting the most
+  *defocused* frame in every block, because every arm perturbed the master and
+  none perturbed the reference. That is a third instance of the family that
+  produced `tri.blur_equiv` and `overshoot_frac`. Worth promoting to a rule.
 - `held-out err` reaching 68.2 px with `0 refused` on every subject looks
   alarming but produced no visible ghosting. Either the statistic is a
   cross-validation residual of the warp model rather than a misregistration, or
