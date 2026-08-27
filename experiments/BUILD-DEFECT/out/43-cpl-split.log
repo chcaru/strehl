@@ -1,0 +1,58 @@
+== P43 -- sensor or CPL? the flats, split by filter block ==
+source        : D:\personal\macro\flat-fields\flat-fields
+active area   : 7040x4688 at (0,0)  ->  quad grid 3520x2344
+frames        : examined 360 = used 256 + rejected 104
+  block 1 (..DSC00263) : used 120 (odd 60 / even 60)  rejected 60
+  block 2 (DSC00263..) : used 136 (odd 68 / even 68)  rejected 44
+                rejected  104  exposure outside [6%, 90%]
+plant equivalence: |median shift| = 1.414e-4
+
+-- C1: which block wears the CPL --
+   1/250   block1  0.0136   block2  0.0623   ratio  4.593   +2.20 stops
+   1/125   block1  0.0406   block2  0.1158   ratio  2.854   +1.51 stops
+    1/60   block1  0.1111   block2  0.2154   ratio  1.939   +0.96 stops
+    1/30   block1  0.2518   block2  0.3638   ratio  1.445   +0.53 stops
+    1/20   block1  0.3961   block2  0.5478   ratio  1.383   +0.47 stops
+    1/13   block1  0.6231   block2  0.8515   ratio  1.367   +0.45 stops
+    1/10   block1  0.7766   block2  0.8663   ratio  1.115   +0.16 stops
+     1/8   block1  0.8574   block2  0.9110   ratio  1.063   +0.09 stops
+     1/5   block1  0.9971   block2  1.0466   ratio  1.050   +0.07 stops
+  C1: 9 of 9 steps finite, same side true, spread 2.130 stops, mean +0.71 stops
+  C1 FAILS -> blocks reported as 1 and 2; NO filter label claimed.
+
+-- plant sites must be clean before they can commission anything --
+  G1 site  (1760,1172)  block1 +0.033%  block2 +0.036%  clean
+  G2 site  (2600,800)  block1 +0.049%  block2 +0.047%  clean
+
+-- commissioning: the verdict is VOID unless all four pass --
+  G0 placebo    mote 2, block1 odd vs even   DELTA +0.001 pp  p 0.7900  Common  PASS
+  G1 planted    -4% in block 2 only        DELTA -3.953 pp  p 0.0000  BlockSpecific  PASS
+  G2 common     -4% in BOTH blocks         DELTA -0.002 pp  p 0.7776  Common  PASS
+  G3 improved   mote 2 divided out of block 2
+                block 2 depth -3.486% -> -0.052%   DELTA -0.006 -> +3.428 pp  p 0.0000  BlockSpecific  PASS
+  all four arms PASS -- the discriminator can tell the cases apart.
+
+-- the map's sites, block 1 vs block 2 --
+   DELTA null: n 29432   p50 0.005 pp   p95 0.025 pp   p99.75 0.068 pp
+   site        block 1    block 2      DELTA        p  outcome
+   mote 1      -0.865%    -0.820%     +0.045   0.0183  Underpowered
+   mote 2      -3.480%    -3.486%     -0.006   0.4487  Common
+   partition: examined 2 = 1 Common + 1 Underpowered
+
+-- edge-matched null: PREREG section 8's threat, measured not argued --
+   mote 2 is 38 quads from the nearest edge; SEARCH_BORDER is 64, so the
+   interior null above describes noise somewhere mote 2 is not.
+   mote 1   edge-dist  119  matched null n=10704 p95 0.056 pp   DELTA +0.045 pp  p 0.1119  Common
+            depth 0.865%; a wholly filter-borne mote would give DELTA 0.865 pp.
+            hiding under this null bounds the filter-borne share at <= 6.52%
+   mote 2   edge-dist   38  matched null n=12765 p95 0.052 pp   DELTA -0.006 pp  p 0.8507  Common
+            depth 3.486%; a wholly filter-borne mote would give DELTA 3.486 pp.
+            hiding under this null bounds the filter-borne share at <= 1.50%
+
+-- open search for FILTER-specific dust (present in one block only) --
+   floors: |DELTA| >= 1.0 pp AND p <= 0.0025 AND >= 64 quads from every edge
+   effective bar = max(absolute 1.0 pp, rank 0.0025 = 0.068 pp) = 1.000 pp
+   scanned 469792 sites -> 0 above the bar -> 0 after suppression
+   NO filter-specific defect found at this sensitivity.
+   Sensitivity is not asserted: G1 planted -4% and it was
+   detected, so the search resolves a disc of that depth and radius.

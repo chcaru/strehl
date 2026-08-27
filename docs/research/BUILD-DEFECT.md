@@ -2341,3 +2341,279 @@ Only two constructions in reach avoid the self-reference:
    **the bar is that it rises monotonically as ρ falls.** That ladder is now a
    reusable commissioning suite for any future alignment metric, and it is the
    durable output of this lane.
+
+## 18. Sensor or filter? The control that was in the data all along
+
+### 18.1 A premise check first, because the brief was wrong
+
+The brief for this block opened: *"Build sensor defect correction — hot/stuck
+pixels and dust ... This is currently a total gap: there is no `defect_map.rs`
+anywhere in the tree."*
+
+There is. I wrote it earlier in this same session:
+
+| | |
+|---|---|
+| `crates/strehl-core/src/defect_map.rs` | **4,165 lines** |
+| `crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt` | 1,150 lines |
+| commits | `0dd3d3f9`, `49227061`, `439563ff`, `eb5145d4` |
+| report | §§0–13 of this document |
+| wiring | `merge_cmd.rs` 79 lines, `stack.rs` 95 lines |
+
+Hot pixels came from all 242 darks (§3.1); dust came from the flats (§13.3);
+the corrector runs in sensor coordinates before the warp (§6.2); it is off by
+default and §13.1 says why. One command shows it: `git log --follow --
+crates/strehl-core/src/defect_map.rs`.
+
+This is the same shape of error the alignment brief carried in §16, and it is
+the third time tonight a lane has been sent after something already built.
+**Checking a brief costs one command and I will keep spending it.**
+
+### 18.2 The one thing the brief named that I genuinely had not done
+
+The brief said to use the with/without-CPL pair as a control:
+
+> *"dust on the sensor is in both; anything present in only one belongs to the
+> filter or the light."*
+
+**That is correct, it matters, and I had not done it.** Worse, I had seen it.
+Line 327 of this document says:
+
+> *"CPL is a rotating element, and the flats were shot ~4.5 h after
+> `bee-3-cpl`."*
+
+I wrote the concern down and then pooled all 360 frames anyway.
+`defect-flat-census.rs` splits the flats **odd/even by capture order**, which is
+a null against *cloud* — illumination cannot respect an arbitrary partition of
+capture order. It is not a null against the *filter*. So nothing in this lane
+had ever established that what it calls a **sensor** defect map is not partly a
+**filter** defect map, and the distinction is not cosmetic:
+
+- a mote on the sensor is in every frame this body will ever take;
+- a mote on the CPL appears only in CPL captures — **17 of the 26 corpus
+  stacks** — and a CPL *rotates*, so its position depends on a filter
+  orientation that is recorded nowhere and changes between sessions. A fixed
+  map coordinate would then be right only by luck.
+
+### 18.3 The controlled pair was already in the data
+
+No new capture was needed. `exiftool` over the 360 flats: ISO 100, f/5.6,
+200 mm, one session, and `ExposureTime` takes exactly nine values, forty frames
+each. Sorted by filename it forms exactly **eighteen** constant runs of twenty:
+
+```text
+  1/250 1/125 1/60 1/30 1/20 1/13 1/10 1/8 1/5     DSC00083..00262
+  1/250 1/125 1/60 1/30 1/20 1/13 1/10 1/8 1/5     DSC00263..00442
+```
+
+**The nine-step ladder runs twice, exposure-matched step for step.** Same paper,
+same lens, same session, twenty frames per step. Two blocks of 180 whose only
+intended difference is the filter. A defect in both is in the fixed optical
+path; a defect in one is on the filter. Someone only had to notice the ladder
+repeats.
+
+Pre-registered in `experiments/BUILD-DEFECT/PREREG-cpl.txt` (commit `9353ecdc`)
+before any depth was measured in either block, including the prediction and the
+arms below.
+
+### 18.4 This experiment predicts a null, which is when a blind instrument wins
+
+From optics, before measuring. A particle at height `z` blurs its shadow by
+roughly `z / N_eff`. The flats focus at infinity so `N_eff ≈ 5.6`. §13.3's
+published profile is a disc ~306 µm across whose edge falls from −1.03% to
+−3.65% over ~51 µm, so
+
+```text
+  z ≈ 51 µm × 5.6 ≈ 286 µm ≈ 0.29 mm
+```
+
+— the cover glass. A front filter 150–250 mm away would blur by tens of
+millimetres and would not be a disc at all. **So I predicted no block effect.**
+
+A blind instrument returns "no difference" for free, so the verdict is void
+unless the discriminator is first shown able to say otherwise:
+
+| arm | plants | requires | measured | |
+|---|---|---|---|---|
+| `G0` | nothing; block 1 odd vs even | not block-specific | Δ **+0.001 pp**, p 0.7900 | **PASS** |
+| `G1` | −4% disc in block 2 only | block-specific | Δ **−3.953 pp**, p 0.0000 | **PASS** |
+| `G2` | −4% disc in **both** blocks | common | Δ **−0.002 pp**, p 0.7776 | **PASS** |
+| `G3` | divides the **real** mote out of block 2 | Δ moves **positive** | Δ −0.006 → **+3.428 pp** | **PASS** |
+
+`G2` is what stops `G1` being passed by a statistic that calls everything
+block-specific. **`G3` is the improvement arm this project requires** — a suite
+of degradations cannot separate a metric that is *blind* to a defect from one
+that scores the defect *better*. `G3`'s correct answer has a sign, and the
+magnitude checks too: removing 3.434 pp of depth moved Δ by 3.434 pp.
+
+Planting is applied to the accumulated field rather than to 360 frames per arm,
+which is exact rather than approximate because a mask over ~200 of 8.25 M quads
+leaves the frame median alone — and that is **measured**, not asserted:
+`|median shift| = 1.414e-4`.
+
+### 18.5 The answer: both motes are on the sensor side, with a bound
+
+```text
+   site      block 1    block 2      DELTA        p     outcome
+   mote 1    -0.865%    -0.820%     +0.045   0.0183   Underpowered
+   mote 2    -3.480%    -3.486%     -0.006   0.4487   Common
+   partition: examined 2 = 1 Common + 1 Underpowered
+```
+
+**Mote 2 — the deepest defect on this sensor, the one that reaches −8% to −15%
+in real subjects — reads −3.480% and −3.486% in the two blocks. It is in both.
+It is not on the filter.**
+
+And a null deserves a bound rather than a shrug. A *wholly* filter-borne mote
+would put its entire depth into Δ, so the largest filter-borne share that could
+hide under the null is `p95(null) / depth`:
+
+| site | depth | matched null p95 | Δ | **filter-borne share** |
+|---|---|---|---|---|
+| mote 1 | 0.865% | 0.056 pp | +0.045 pp | **≤ 6.52%** |
+| mote 2 | **3.486%** | 0.052 pp | −0.006 pp | **≤ 1.50%** |
+
+At least **98.5%** of mote 2 is in the fixed optical path. The sensor-space,
+pre-warp correction site is confirmed against the control §13.3 never ran.
+
+### 18.6 I checked my own threat and it was real
+
+`PREREG-cpl.txt` §8 raised this against itself: mote 2 sits **38 quads** from
+the nearest edge while `SEARCH_BORDER` is **64**, so mote 2 lies *inside* the
+band the interior null excludes. An interior null describes noise somewhere the
+mote is not, and near an edge a truncated box mean and steep falloff can widen
+the block-to-block difference — which would make p optimistic.
+
+Measured, by sampling clean sites at the **same distance from an edge**:
+
+```text
+  interior null           p95  0.025 pp
+  edge-matched at 38      p95  0.052 pp     2.1x wider
+```
+
+**The threat was real: the interior null is optimistic by 2.1× at mote 2's
+position.** The verdict survives — Δ −0.006 pp gives p 0.8507, still `Common` —
+but the check was not free, because **it changed an outcome**: mote 1 reads
+`Underpowered` against the interior null and `Common` against the matched one.
+The matched null is the correct control for a site's position, so mote 1 is
+common to both blocks too; had I only run the interior null I would have
+reported an inconclusive result as if the instrument had been asked properly.
+
+This resembles **Q10** (p inflated near a frame edge because the null annulus
+reaches into optical falloff) and puts a number on the edge effect for the first
+time — 2.1× at 38 quads. It is a different null from the shipping validator's,
+so it quantifies the effect Q10 names without closing Q10.
+
+### 18.7 The open search found no filter dust, and says at what sensitivity
+
+```text
+   floors: |DELTA| >= 1.0 pp AND p <= 0.0025 AND >= 64 quads from every edge
+   scanned 469792 sites -> 0 above the bar -> 0 after suppression
+   NO filter-specific defect found at this sensitivity.
+```
+
+The search can return nothing and did. Its sensitivity is **established rather
+than asserted**: `G1` planted a −4% disc of the same radius and it was detected
+at p = 0.0000, so the search resolves a defect of that depth and size. **The CPL
+carries no dust this instrument can see.**
+
+### 18.8 The photometric gate refused, and the timeline answered instead
+
+Gate `C1` was to label the blocks by transmission: a CPL costs light, the
+shutter speeds are identical, so the CPL block must be consistently darker. It
+required one side of unity at all nine steps **and** spread below 0.5 stop.
+
+**`C1` FAILED.** Same side at 9 of 9, but spread **2.130 stops**, so per the
+pre-registration the program printed blocks "1" and "2" and claimed no label.
+`44-cpl-label.py` diagnoses why, post-hoc and labelled as such: a ratio of
+medians is a ratio of transmissions only where the sensor is linear, and the
+ladder's ends are not — 1/5 s reads **1.0466 of range in block 2**, i.e.
+clipped, and 1/250 s reads **0.0136 in block 1**, i.e. on the black floor. Only
+**3 of 9** steps have both blocks inside `[0.08, 0.80]`, and there the spread is
+**0.488 stops** — just inside the bar `C1` was given. That explains the failure;
+it does not overturn it, and I did not re-run `C1` on a window chosen after
+seeing the data.
+
+The label came instead from evidence that cloud cannot touch — **the clock**:
+
+| strand | reading |
+|---|---|
+| largest pause inside the 360 flats | **58 s, before `DSC00263`** |
+| next largest of the other 358 | 11 s → **5.3×** |
+| block boundary from the exposure ladder | `DSC00263` — derived **independently** |
+| labelled sweeps | `WITH cpl` 16:31:55 → flats → `NO cpl` 16:51:17 |
+| block 2 brighter | 9 of 9 steps |
+
+A 58-second pause, five times any other, landing exactly on a boundary derived
+from a different column entirely, is a filter being unscrewed. With the labelled
+sweeps bracketing the flats CPL-first, **block 1 wears the CPL and block 2 is
+bare**. Partition: 4 strands = 3 supporting + 1 refusing + 0 silent.
+
+**One tension, stated rather than buried.** Removing a CPL should brighten by
+1.3–2.5 stops; the in-window measurement is **+0.65 stops**. Cloud between
+16:45:35 and 16:46:33 is unmeasured and is the obvious candidate, but I cannot
+measure it, so the discrepancy stands unexplained. It is also why `C1` could not
+hold a constant ratio, and why the label rests on the clock and not on the light.
+
+**None of §18.8 matters to §18.5.** Mote 2 is in both blocks whichever wears the
+filter. The labelling only decides what to *call* them.
+
+### 18.9 What this changes, and what it does not
+
+- **Changes:** the map's framing as a *sensor* defect map is now measured rather
+  than assumed, for both of its sites, with a bound (≤1.50% and ≤6.52%
+  filter-borne). Mote 1's status improves from inconclusive to common. The edge
+  effect Q10 names has a number: 2.1× at 38 quads.
+- **Does not change:** the default. `STREHL_DEFECT` stays **OFF**. §13.1 set it
+  off because the correction *site* was disputed, and nothing here bears on
+  that — this experiment asks which optical element the mote sits on, not
+  whether the map should run. No code in `crates/strehl-core/src/` was touched.
+- **Does not change:** Q9. Mote 1 is common to both blocks, but its centroid is
+  still ~22 quads off the −1.53% blob the flats find at `(3201, 141)`. Being on
+  the sensor is not the same as being in the right place.
+
+### 18.10 Artifacts
+
+| | |
+|---|---|
+| pre-registration | `experiments/BUILD-DEFECT/PREREG-cpl.txt` (`9353ecdc`) |
+| discriminator | `crates/strehl-cli/examples/defect-cpl-split.rs` |
+| labelling | `experiments/BUILD-DEFECT/src/44-cpl-label.py` |
+| logs | `out/43-cpl-split.log`, `out/44-cpl-label.log` |
+| runtime | 2.3 min for 360 raw decodes |
+
+### 18.11 The verifier caught itself being blind, which is the point of having one
+
+`experiments/BUILD-DEFECT/src/45-verify-s18.py` checks every number in §18
+against `43-cpl-split.log` and `44-cpl-label.log`. **It contains no measured
+value.** Both sides of every comparison are parsed — the document under test on
+one side, the log on the other — because a checker holding its own expected
+values verifies the checker. Another lane this session ran 37/37 green and then
+caught 5 of 13 planted defects for exactly that reason.
+
+It is commissioned by planting six defects into a scratch copy of this document
+and requiring RED on each. Every mutation is anchored on a unique full-line
+string and hard-errors if the anchor does not land, because a `replace()` that
+silently matches nothing produces a green run that means nothing.
+
+**The first commissioning run caught 5 of 6.** The miss is worth recording:
+
+> plant: `edge-matched at 38  p95 0.052 pp` → `0.025 pp` in §18.6.
+> Result: **GREEN. Defect missed.**
+
+`0.052` appears **twice** in §18 — once in §18.5's bound table and once in
+§18.6's code block — and the check was pinned to the first. A presence-based
+check is satisfied by any duplicate of the value, so §18.6 was being verified by
+a copy of a number it was not testing. The repair is one anchor per site plus
+two **derived** checks that recompute rather than string-match (the 2.1×
+widening is recomputed as the quotient of the two logged p95s). Final state:
+
+```text
+   partition: 34 checks = 34 agreed + 0 disagreed + 0 doc-not-found + 0 log-not-found
+   selftest: 6 plants = 6 caught + 0 missed
+   == verdict: live GREEN, commissioning PASSED ==
+```
+
+Had I shipped the verifier on its live GREEN alone, it would have been a
+regression check that had never been shown to fail — a hypothesis wearing the
+costume of a test.

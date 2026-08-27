@@ -1,0 +1,75 @@
+== P45 -- section 18 numbers vs the logs ==
+   no measured value is written in this file; both sides are parsed.
+
+  ok             mote1 block1 depth     -0.865
+  ok             mote1 block2 depth     -0.820
+  ok             mote2 block1 depth     -3.480
+  ok             mote2 block2 depth     -3.486
+  ok             G0 delta pp            0.001
+  ok             G0 p                   0.7900
+  ok             G1 delta pp            3.953
+  ok             G2 delta pp            0.002
+  ok             G2 p                   0.7776
+  ok             G3 delta after         3.428
+  ok             median shift           1.414e-4
+  ok             interior null p95      0.025
+  ok             mote2 matched p95      0.052
+  ok             mote1 matched p95      0.056
+  ok             mote2 filter share     1.50
+  ok             mote1 filter share     6.52
+  ok             mote2 edge dist        38
+  ok             search border          64
+  ok             sites scanned          469792
+  ok             C1 spread              2.130
+  ok             in-window count        3
+  ok             in-window spread       0.488
+  ok             in-window stops        0.65
+  ok             largest pause          58
+  ok             next pause             11
+  ok             pause ratio            5.3
+  ok             clip level             1.0466
+  ok             floor level            0.0136
+  ok             sweep cpl time         16:31:55
+  ok             sweep nocpl time       16:51:17
+  ok             s18.6 interior p95     0.025
+  ok             s18.6 matched p95      0.052
+  ok (derived)   s18.6 widening ratio   2.1
+  ok (derived)   mote2 filter-borne bound 3.486
+
+  partition: 34 checks = 34 agreed + 0 disagreed + 0 doc-not-found + 0 log-not-found
+
+== commissioning: plant defects, require RED ==
+
+--- planted: mote2 depth flipped ---
+
+  partition: 34 checks = 33 agreed + 1 disagreed + 0 doc-not-found + 0 log-not-found
+  RED as required (1 disagreement(s))
+
+--- planted: G1 magnitude softened ---
+
+  partition: 34 checks = 33 agreed + 1 disagreed + 0 doc-not-found + 0 log-not-found
+  RED as required (1 disagreement(s))
+
+--- planted: pause exaggerated ---
+
+  partition: 34 checks = 33 agreed + 1 disagreed + 0 doc-not-found + 0 log-not-found
+  RED as required (1 disagreement(s))
+
+--- planted: edge null understated ---
+
+  partition: 34 checks = 33 agreed + 1 disagreed + 0 doc-not-found + 0 log-not-found
+  RED as required (1 disagreement(s))
+
+--- planted: scan count inflated ---
+
+  partition: 34 checks = 33 agreed + 1 disagreed + 0 doc-not-found + 0 log-not-found
+  RED as required (1 disagreement(s))
+
+--- planted: C1 spread hidden ---
+
+  partition: 34 checks = 33 agreed + 1 disagreed + 0 doc-not-found + 0 log-not-found
+  RED as required (1 disagreement(s))
+
+  selftest: 6 plants = 6 caught + 0 missed
+
+== verdict: live GREEN, commissioning PASSED ==
