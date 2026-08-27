@@ -96,9 +96,21 @@ def tile_fine(crop):
     return out
 
 
-def build_ceiling(subject, ref_master, nsrc=None, verbose=True):
-    """Stream the bracket; return per-site per-tile MAX source detail + shifts."""
+def build_ceiling(subject, ref_master, nsrc=None, verbose=True, validate_n=3):
+    """Stream the bracket; return per-site per-tile MAX source detail + shifts.
+
+    Registration uses the FFT path from `regcheck.py`, which is 108x faster and
+    was measured to return byte-identical shifts. That measurement was taken on
+    one subject, so it is REPEATED HERE on every build: `validate_n` frames,
+    evenly spaced across the bracket so the largest warps are included, are
+    registered BOTH ways and any disagreement aborts the build. A speedup
+    validated once elsewhere is an assumption; validated per-build it is a
+    control. If the two paths ever disagree they are cropping different pixels,
+    and every number downstream would be measured on different content.
+    """
     import rawpy
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from regcheck import register_fft
     m = tifffile.imread(ref_master)[..., :3].astype(np.float64)
     sites, rejected = pick_sites(m)
     if not sites:
@@ -110,6 +122,7 @@ def build_ceiling(subject, ref_master, nsrc=None, verbose=True):
         idx = np.linspace(0, len(arw) - 1, nsrc).astype(int)
     else:
         idx = np.arange(len(arw))
+    check = set(np.linspace(0, len(idx) - 1, min(validate_n, len(idx))).astype(int).tolist())
     if verbose:
         print("%s: %d sites %r, %d of %d frames (COMPLETE)"
               % (subject, len(sites), sites, len(idx), len(arw)))
@@ -120,6 +133,7 @@ def build_ceiling(subject, ref_master, nsrc=None, verbose=True):
     nok = [0] * len(sites)
     nbad = [0] * len(sites)
     shifts = [dict() for _ in sites]
+    nchecked = 0
     for n, i in enumerate(idx):
         with rawpy.imread(arw[i]) as r:
             s = r.postprocess(gamma=(2.222, 4.5), no_auto_bright=True,
@@ -131,7 +145,18 @@ def build_ceiling(subject, ref_master, nsrc=None, verbose=True):
             pad = sy[y - SEARCH:y + CROP + SEARCH, x - SEARCH:x + CROP + SEARCH]
             if pad.shape != (CROP + 2 * SEARCH, CROP + 2 * SEARCH):
                 continue
-            (dy, dx), c = register(my[y:y + CROP, x:x + CROP], pad)
+            ref = my[y:y + CROP, x:x + CROP]
+            (dy, dx), c = register_fft(ref, pad)
+            if n in check:
+                (sdy, sdx), sc = register(ref, pad)
+                nchecked += 1
+                if (sdy, sdx) != (dy, dx):
+                    raise SystemExit(
+                        "REGISTRATION PATHS DISAGREE on frame %d site (%d,%d): "
+                        "ORCH %r corr %.6f vs FFT %r corr %.6f. The fast path "
+                        "would crop different pixels; build ABORTED rather than "
+                        "reporting a number measured on different content."
+                        % (i, y, x, (sdy, sdx), sc, (dy, dx), c))
             if c < CORR_MIN:
                 nbad[si] += 1
                 continue
@@ -141,10 +166,13 @@ def build_ceiling(subject, ref_master, nsrc=None, verbose=True):
                                              x + dx:x + dx + CROP]), out=ceil[si])
         if verbose and (n + 1) % 25 == 0:
             print("    %d/%d frames" % (n + 1, len(idx)), flush=True)
+    if verbose:
+        print("    registration cross-check: %d shift(s) agreed with ORCH's "
+              "register(), 0 disagreed" % nchecked)
     return {"sites": np.array(sites), "ceil": np.array(ceil),
             "nok": np.array(nok), "nbad": np.array(nbad),
             "ref_master": ref_master, "subject": subject,
-            "nframes": len(idx), "ntotal": len(arw)}
+            "nframes": len(idx), "ntotal": len(arw), "regchecked": nchecked}
 
 
 def score(master_path, cz, arr=None):

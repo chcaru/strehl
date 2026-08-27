@@ -134,4 +134,5 @@ def main():
               f"{100 * (f / base[0] - 1):11.2f}{100 * (s / base[1] - 1):11.2f}")
 
 
-main()
+if __name__ == "__main__":
+    main()
