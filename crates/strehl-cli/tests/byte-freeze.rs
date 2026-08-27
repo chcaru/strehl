@@ -413,6 +413,13 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_CACHE_DIR",
     "STREHL_FIX_HALO",
     "STREHL_FIX_HALO_DELTA",
+    // The per-frame measured noise floor. `STREHL_GATE_FLOOR=white` restores
+    // the compile-time white-noise constant everywhere, which is a DIFFERENT
+    // merge -- it moves the gate by up to 1.85x on a warped frame and so moves
+    // which coefficients are averaged rather than selected. An operator with
+    // this exported would render a different image from the frozen one and the
+    // failure would look like a code regression.
+    "STREHL_GATE_FLOOR",
     // The sensor defect map. The correction rewrites photosites BEFORE the
     // warp, so a row rendered with it in a different state is a different
     // render of the same frames -- 16,039 of 32,966,016 delivered samples move

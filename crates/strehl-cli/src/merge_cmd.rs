@@ -70,6 +70,7 @@ use crate::align_cmd::{self, WarpScratch};
 use crate::image_out;
 
 pub(crate) mod dump;
+pub(crate) mod gatefloor;
 pub(crate) mod halo;
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
@@ -4444,6 +4445,21 @@ impl Merged<'_> {
 }
 
 /// One worker's per-frame buffers for the band merge, allocated once per chunk.
+/// One chunk's contribution to the fold: its partial merge, how many frames it
+/// actually folded, and the running sum of the per-frame MEASURED noise floors
+/// so the banner can report the floor the gate really used.
+///
+/// A struct rather than a tuple because the floor accumulator made the tuple
+/// four-wide and unreadable, and because a caller that swapped `folded` and
+/// `beta_n` -- both `usize` -- would compile and silently report a wrong frame
+/// count beside a wrong floor.
+struct FoldPart {
+    merge: BandMerge,
+    folded: usize,
+    beta_sum: Vec<f64>,
+    beta_n: usize,
+}
+
 struct BandWorker {
     merge: BandMerge,
     fws: FrameWorkspace,
@@ -4451,6 +4467,17 @@ struct BandWorker {
     planes: Vec<Vec<f32>>,
     luma: Vec<f32>,
     var: Vec<f32>,
+    /// `None` when the measured floor is switched off, restoring the shipping
+    /// white-noise gate exactly.
+    floor: Option<gatefloor::Probe>,
+    /// This frame's measured floor, filtered to the bands that are usable.
+    beta: Vec<f32>,
+    /// Running sum of the per-frame measured floors, so the banner can report
+    /// the floor the merge ACTUALLY used rather than the compile-time constant
+    /// it used to print. A banner that reports a number the code did not use is
+    /// the failure mode this project exists to catch.
+    beta_sum: Vec<f64>,
+    beta_n: usize,
 }
 
 impl BandWorker {
@@ -4464,6 +4491,10 @@ impl BandWorker {
             planes: (0..BAND_PLANES).map(|_| vec![0.0; px]).collect(),
             luma: vec![0.0; px],
             var: vec![0.0; px],
+            floor: gatefloor::enabled().then(|| gatefloor::Probe::new(geom, cfg.bands)),
+            beta: Vec::new(),
+            beta_sum: Vec::new(),
+            beta_n: 0,
         }
     }
 
@@ -4479,6 +4510,10 @@ impl BandWorker {
         warps: Option<&WarpMap>,
         defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     ) -> Result<bool> {
+        self.beta.clear();
+        if let Some(p) = self.floor.as_mut() {
+            p.invalidate();
+        }
         if !load_frame(
             path,
             index,
@@ -4487,6 +4522,7 @@ impl BandWorker {
             warps,
             defect,
             &mut self.warp,
+            self.floor.as_mut(),
             &mut self.planes,
             &mut self.luma,
         )? {
@@ -4494,10 +4530,31 @@ impl BandWorker {
         }
         luma_variance(&self.luma, noise, &mut self.var);
 
+        // The measured floor, truncated at the first band the probe could not
+        // speak for rather than skipping past it. `add_frame_with_gain` falls
+        // back to the white value beyond the slice's end, so truncating is how
+        // a partial measurement is expressed; substituting white *inside* the
+        // slice and continuing would silently mix two noise models across
+        // adjacent bands.
+        if let Some(p) = self.floor.as_ref() {
+            self.beta
+                .extend(p.last().iter().copied().take_while(|b| b.is_finite()));
+        }
+        let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
+        if let Some(b) = frame_beta {
+            if self.beta_sum.len() < b.len() {
+                self.beta_sum.resize(b.len(), 0.0);
+            }
+            for (acc, v) in self.beta_sum.iter_mut().zip(b) {
+                *acc += f64::from(*v);
+            }
+            self.beta_n += 1;
+        }
+
         let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
         self.fws.next_frame();
         self.merge
-            .add_frame(&refs, &self.luma, &self.var, &mut self.fws);
+            .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
         Ok(true)
     }
 }
@@ -4521,6 +4578,7 @@ fn load_frame(
     warps: Option<&WarpMap>,
     defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     scratch: &mut WarpScratch,
+    floor: Option<&mut gatefloor::Probe>,
     planes: &mut [Vec<f32>],
     luma: &mut [f32],
 ) -> Result<bool> {
@@ -4565,6 +4623,21 @@ fn load_frame(
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
                     align_cmd::warp_frame_in_place(&mut frame, *t, geom, map.resampler(), scratch)?;
+                    // This frame's own band-noise floor, at this frame's own
+                    // sub-pixel phase, measured here because this is the only
+                    // place the decoded frame and the transform that was
+                    // actually applied to it are both in scope. See
+                    // `gatefloor` for why neither a constant nor a formula can
+                    // stand in for it.
+                    //
+                    // An unwarped frame -- `warps` is `None`, or the solve
+                    // refused this one -- never reaches this line, so it keeps
+                    // the shipping white-noise floor and its output is
+                    // bit-identical. That is a property of the control flow,
+                    // not of a tolerance.
+                    if let Some(p) = floor {
+                        p.measure(&frame, index, *t, geom, map.resampler(), scratch)?;
+                    }
                 }
                 // The solve could not connect this frame to the bracket, so its
                 // geometry is unknown and folding it would put mis-registered
@@ -4689,7 +4762,8 @@ fn confidence_pass(
             };
             for (i, p) in chunk {
                 if !load_frame(
-                    p, *i, geom, levels, warps, defect, &mut scratch, &mut planes, &mut luma,
+                    p, *i, geom, levels, warps, defect, &mut scratch, None, &mut planes,
+                    &mut luma,
                 )? {
                     continue;
                 }
@@ -4836,7 +4910,8 @@ fn confidence_debug_pass(
             let mut c = Candidates::new(px);
             for (i, p) in chunk {
                 if !load_frame(
-                    p, *i, geom, levels, warps, defect, &mut scratch, &mut planes, &mut luma,
+                    p, *i, geom, levels, warps, defect, &mut scratch, None, &mut planes,
+                    &mut luma,
                 )? {
                     continue;
                 }
@@ -5347,7 +5422,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let warps = alignment.as_ref().map(|(m, _, _)| m);
     let t_fold = Instant::now();
     let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
-    let parts: Vec<Result<(BandMerge, usize)>> = indexed
+    let parts: Vec<Result<FoldPart>> = indexed
         .par_chunks(per_chunk)
         .map(|chunk| {
             let mut w = BandWorker::new(geom, cfg);
@@ -5357,15 +5432,34 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                     folded += 1;
                 }
             }
-            Ok((w.merge, folded))
+            Ok(FoldPart {
+                merge: w.merge,
+                folded,
+                beta_sum: w.beta_sum,
+                beta_n: w.beta_n,
+            })
         })
         .collect();
 
     let mut merged: Option<BandMerge> = None;
     let mut folded_total = 0usize;
+    let mut beta_sum: Vec<f64> = Vec::new();
+    let mut beta_n = 0usize;
     for part in parts {
-        let (m, n) = part?;
+        let FoldPart {
+            merge: m,
+            folded: n,
+            beta_sum: bs,
+            beta_n: bn,
+        } = part?;
         folded_total += n;
+        if beta_sum.len() < bs.len() {
+            beta_sum.resize(bs.len(), 0.0);
+        }
+        for (acc, v) in beta_sum.iter_mut().zip(&bs) {
+            *acc += v;
+        }
+        beta_n += bn;
         match &mut merged {
             Some(a) => a.absorb(&m),
             None => merged = Some(m),
@@ -5398,8 +5492,35 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
             .join(" ")
     );
     eprintln!(
-        "                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)"
-    );
+        "                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)"    );
+    if beta_n > 0 {
+        let white = merge.band_gain().all();
+        let gate_floor_env = gatefloor::GATE_FLOOR_ENV;
+        eprintln!(
+            "measured floor  : {}",
+            beta_sum
+                .iter()
+                .map(|s| format!("{:.4}", s / beta_n as f64))
+                .collect::<Vec<_>>()
+                .join(" ")
+        );
+        eprintln!(
+            "                  x white       : {}",
+            beta_sum
+                .iter()
+                .zip(white)
+                .map(|(s, w)| format!("{:.4}", (s / beta_n as f64) / f64::from(*w)))
+                .collect::<Vec<_>>()
+                .join(" ")
+        );
+        eprintln!(
+            "                  THE FLOOR THE GATE ACTUALLY USED, averaged over {beta_n} warped\n  \
+                                frames. The line above it is the white-noise constant, which is\n  \
+                                exact only for an UNWARPED frame; resampling correlates \
+             neighbours\n                  and moves the per-band split. Bands past this list \
+             kept the constant.\n                  {gate_floor_env}=white restores it everywhere."
+        );
+    }
     eprintln!(
         "averaged        : {}",
         merge

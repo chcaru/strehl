@@ -1294,17 +1294,87 @@ impl BandMerge {
             + self.lo.iter().chain(&self.hi).map(Vec::len).sum::<usize>()
     }
 
+    /// The band-noise floor to use at level `k`: the caller's measured value if
+    /// it supplied one for that band, else the white-noise model.
+    ///
+    /// The length fallback is load-bearing, not defensive. BUILD-GATE measured
+    /// the warp's effect as **-35% to -46% at band 0, -4% to -12% at band 1 and
+    /// under 2% at bands 2-3**, so a caller correcting only the bands where the
+    /// effect is real passes a short slice and the rest stay white. Silently
+    /// extending a short slice with its last element would instead push a
+    /// band-0-sized correction into bands that measurably do not have one.
+    fn beta_for(gain: &BandGain, frame_beta: Option<&[f32]>, k: usize) -> f32 {
+        match frame_beta {
+            Some(fb) if k < fb.len() => fb[k],
+            _ => gain.beta(k),
+        }
+    }
+
     /// Fold one frame in.
     ///
     /// `planes` are the frame's colour planes, black-subtracted, all at level-0
     /// size. `luma` is the plane the selection is made on — green luma, so that
     /// the decision is the same one the shipped election makes. `variance` is
     /// the per-pixel level-0 noise variance of `luma`, from [`luma_variance`].
+    ///
+    /// Exactly [`add_frame_with_gain`](Self::add_frame_with_gain) with
+    /// `frame_beta: None`. Kept as a separate entry point rather than adding a
+    /// parameter to two dozen call sites: `None` restores the shipping
+    /// white-noise floor, so every caller that has not opted in is bit-identical
+    /// *by construction* and not by a test that each `None` was typed correctly.
     pub fn add_frame(
         &mut self,
         planes: &[&[f32]],
         luma: &[f32],
         variance: &[f32],
+        ws: &mut FrameWorkspace,
+    ) {
+        self.add_frame_with_gain(planes, luma, variance, None, ws);
+    }
+
+    /// Fold one frame in, with an optional **measured** band-noise floor for
+    /// *this frame*.
+    ///
+    /// # Why this exists
+    ///
+    /// [`BandGain`] measures `beta[k]` by pushing white noise through the
+    /// pyramid, so it is the noise transfer of a frame whose samples are
+    /// independent. That describes an **unwarped** frame and nothing else. Once
+    /// a frame has been resampled onto the reference grid its noise is
+    /// correlated by the interpolation kernel, its band-0 power falls, and the
+    /// white-noise `beta` over-states the floor — so the gate averages pixels it
+    /// should have let select.
+    ///
+    /// BUILD-GATE measured that over-statement at band 0 as
+    /// `beta_actual / beta_white` in **0.3432 … 0.9981** over eight
+    /// representative warps, in **both** gather arms, every entry below 1.0.
+    /// With `gate = 2.0` that puts the bar at up to **3.7x** the true noise
+    /// power rather than the intended 2.0x. It is not a property of the gather
+    /// arm and it is not a constant: the two arms are different *periodic
+    /// functions* of sub-pixel warp phase, with periods of one plane-pixel and
+    /// one full-res pixel respectively, and their curves cross. No scalar
+    /// correction can be right for both, which is why this takes a measurement
+    /// and not a factor.
+    ///
+    /// # Contract
+    ///
+    /// `frame_beta[k]` is the measured `E[L_k^2] / sigma_0^2` for this frame's
+    /// actual warp, on the same grid and through the same operators
+    /// [`BandGain`] uses. Bands beyond its length fall back to the white value,
+    /// which is what lets a caller correct only the bands where the effect is
+    /// real. `None` is the shipping white-noise floor, unchanged.
+    ///
+    /// An **unwarped** frame must pass `None` or a slice equal to
+    /// [`BandGain::all`]; BUILD-GATE's C1 and C4 controls both return the white
+    /// value to 0.00% and +0.000% for the identity warp, so an unwarped frame
+    /// is bit-identical either way. That is what keeps an align-refused stack,
+    /// and a `--no-align` render, byte-frozen.
+    pub fn add_frame_with_gain(
+        &mut self,
+        planes: &[&[f32]],
+        luma: &[f32],
+        variance: &[f32],
+        frame_beta: Option<&[f32]>,
         ws: &mut FrameWorkspace,
     ) {
         assert_eq!(planes.len(), self.planes, "wrong number of planes");
@@ -1348,7 +1418,7 @@ impl BandMerge {
             if averaged {
                 w.fill(0.0);
             } else {
-                let beta = self.gain.beta(k);
+                let beta = Self::beta_for(&self.gain, frame_beta, k);
                 let gate = self.cfg.gate;
                 // Sharper toward the fine bands: see `MergeConfig::sharpen_per_octave`.
                 let p = self.cfg.exponent_at(k, nb);
@@ -1419,14 +1489,26 @@ impl BandMerge {
                         *l = l.min(*v);
                         *h = h.max(*v);
                     }
-                    // The margin's scale. `gain.beta(k) * var` is the module's
-                    // own calibrated statement of noise power at level `k` --
-                    // the identical quantity the selection gate thresholds on --
-                    // so the bound and the gate cannot disagree about what
-                    // counts as noise. Reusing it rather than deriving a second
+                    // The margin's scale. `beta * var` is the module's own
+                    // calibrated statement of noise power at level `k` -- the
+                    // identical quantity the selection gate thresholds on -- so
+                    // the bound and the gate cannot disagree about what counts
+                    // as noise. Reusing it rather than deriving a second
                     // estimate is deliberate: two noise models in one merge is
                     // two things to keep in step.
-                    let beta = self.gain.beta(k.min(self.sizes.len() - 2));
+                    //
+                    // **That is now enforced rather than merely intended.** Both
+                    // sites read through `beta_for`, so a caller that supplies a
+                    // measured per-frame floor moves the hull margin with the
+                    // gate in the same call. Correcting one and not the other
+                    // would have the hull calling a pixel noise at a scale the
+                    // gate had already decided was signal -- the exact
+                    // divergence this comment was written to warn about.
+                    let beta = Self::beta_for(
+                        &self.gain,
+                        frame_beta,
+                        k.min(self.sizes.len() - 2),
+                    );
                     let vv = ws.var.level(k);
                     let sig = &mut self.sig_lv[idx];
                     for (s, v) in sig.iter_mut().zip(vv) {

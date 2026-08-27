@@ -513,6 +513,48 @@ REGISTRY: dict[str, Declared] = {
             "this check. Measure it, then set it."
         ),
     ),
+    "STREHL_GATE_FLOOR": Declared(
+        kind="quality",
+        default="on (the merge gate's per-band noise floor is MEASURED per frame)",
+        verified="measured",
+        backend="pyramid",
+        evidence=(
+            "RESOLVING EXPRESSION READ AND BOTH ARMS MEASURED. GATE_FLOOR_ENV "
+            "at merge_cmd/gatefloor.rs:89; enabled() returns false only for "
+            "the literal `white`, so UNSET is ON by falling through the same "
+            "arm as any other value. MEASURED on wrapped-text-1 --limit 10: "
+            "the banner's new `measured floor` line reads 1.0215-1.0224 at "
+            "band 0 against the compile-time 0.88980, i.e. 1.149x, and "
+            "STREHL_GATE_FLOOR=white restores 0.88980 exactly. The two render "
+            "differently, so unset is demonstrably not `white`. IDENTITY NULL "
+            "as the positive control for the probe itself: run on a REAL frame "
+            "with its real white balance and real CA profile but an identity "
+            "transform, the probe returns 1.0000x/0.9995x/0.9998x white at "
+            "band 0 and at worst +0.583% across bands 0-3 -- so the correction "
+            "is measuring the warp and not the instrument."
+        ),
+        note=(
+            "WHAT IT CONTROLS: the constant 0.88980 in BandGain is E[L_0^2]/"
+            "sigma_0^2 for a frame of INDEPENDENT per-photosite noise. A warped "
+            "frame does not have that: resampling correlates neighbours and "
+            "moves power between bands, so the constant is exact only for an "
+            "unwarped frame. The error is not small and it is not one-signed -- "
+            "on the shipping fullres-gather arm the true floor measures 1.149x "
+            "white (gate too LOW, noise clears it and selects) and on the plane "
+            "arm 0.620x (gate too HIGH, real detail is averaged away). It is "
+            "also NOT correctable by a closed-form kernel ratio: the transfer "
+            "is a function of per-frame warp PHASE, with period 1 plane-px on "
+            "the plane arm against 1/2 plane-px on fullres, and the two curves "
+            "CROSS -- so any single analytic factor is fitted to one phase and "
+            "wrong at the others. Hence a probe: real noise pushed through the "
+            "real warp with the frame's own transform. SCOPE OF THE "
+            "CORRECTION: bands 0-3 only (CERTIFIED_BANDS), because the identity "
+            "null's own error at bands 4-5 is the same size as the effect there "
+            "and band 6 on this sensor is reconstructed across a level-size "
+            "truncation seam (49 -> 24) that reads 12.6x. Beyond band 3 the "
+            "white constant is kept, deliberately and visibly."
+        ),
+    ),
     "STREHL_FULLRES_GATHER": Declared(
         kind="quality",
         default="on (frames are gathered on the full output lattice)",
