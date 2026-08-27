@@ -204,16 +204,58 @@ if ($Exe) {
         if (Test-Path $pin) { Remove-Item $pin -Recurse -Force }
         New-Item -ItemType Directory -Force -Path $pin | Out-Null
         Push-Location $repo
-        git archive $pinSha | tar -x -C $pin
+        # `git archive $sha | tar -x` CORRUPTS THE ARCHIVE on this machine.
+        # PowerShell pipelines are streams of .NET objects, not bytes: the tar
+        # is decoded to text and re-encoded on its way to tar.exe, so every
+        # byte >= 0x80 is mangled. It fails as ~100 lines of "Damaged tar
+        # archive (bad header checksum)" followed by cargo reporting no
+        # Cargo.toml -- which reads like a git problem and is not one.
+        #
+        # Same defect class as `git show HEAD:path > tmp`, which silently
+        # re-encodes and has already produced a false measurement here. The
+        # rule is: NEVER move binary data through a PowerShell pipeline or
+        # redirect. Write a real file with -o and let tar read it.
+        $tarPath = Join-Path $PinRoot "$pinSha.tar"
+        git archive --format=tar -o $tarPath $pinSha
         if ($LASTEXITCODE -ne 0) { Pop-Location; throw "git archive failed for $pinSha" }
         Pop-Location
+        tar -x -f $tarPath -C $pin
+        if ($LASTEXITCODE -ne 0) { throw "tar extract failed for $pinSha" }
+        Remove-Item $tarPath -Force
+        # An extraction that silently produced nothing usable must fail HERE,
+        # where the cause is legible, and not four steps later inside cargo.
+        if (-not (Test-Path (Join-Path $pin 'Cargo.toml'))) {
+            throw "pin $pinSha extracted no Cargo.toml -- the archive did not land"
+        }
         Push-Location $pin
         $env:CARGO_TARGET_DIR = Join-Path $pin 'target'
-        & "$env:USERPROFILE\.cargo\bin\cargo.exe" build --release -p strehl-cli --bin strehl 2>&1 |
-            Select-Object -Last 3 | Out-Host
+        # cargo writes its progress to STDERR, and `2>&1 |` turns every one of
+        # those lines into a PowerShell ERROR RECORD. With the file-level
+        # $ErrorActionPreference = 'Stop' in force, the very first "Compiling
+        # proc-macro2" then ABORTS the pass -- and it aborts with the compile
+        # line as the message, so it reads as a compiler failure rather than as
+        # the redirect it actually is. This only ever surfaced on a COLD pin,
+        # because a warm one is reused and never runs cargo at all, which is
+        # why a working harness could carry the bug for its whole life.
+        #
+        # Log to a file instead of a pipeline: no error records, and a cold
+        # build's output survives for diagnosis instead of being truncated to
+        # its last three lines.
+        $buildLog = Join-Path $PinRoot "$pinSha.build.log"
+        $prevEAP = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        & "$env:USERPROFILE\.cargo\bin\cargo.exe" build --release -p strehl-cli --bin strehl `
+            > $buildLog 2>&1
+        $buildExit = $LASTEXITCODE
+        $ErrorActionPreference = $prevEAP
         Pop-Location
         Remove-Item Env:\CARGO_TARGET_DIR -ErrorAction SilentlyContinue
+        if ($buildExit -ne 0) {
+            Get-Content $buildLog -Tail 25 | Out-Host
+            throw "pin build for $pinSha failed (exit $buildExit); full log at $buildLog"
+        }
         if (-not (Test-Path $Exe)) { throw "pin build produced no binary at $Exe" }
+        Write-Host "pin             : built, log at $buildLog"
     }
     $pinDesc = "$pinSha (git archive + clean release build)"
 }
