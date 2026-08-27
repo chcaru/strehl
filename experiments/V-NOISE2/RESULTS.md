@@ -5,6 +5,13 @@ milestone number has been **requested from the orchestrator and not yet
 allocated**, so this file lives in `experiments/V-NOISE2/` and is not a record.
 Nothing here should be cited from `docs/research/` until it moves.
 
+> **Newest result: §8.** `119MSDCF`'s 2.017× detail deficit against `enfuse` is
+> **half-stack incoherence, not absent detail** — the full renders read 1.003
+> [0.670, 1.570] in the same band on the same pixels, and 2.017 lies outside
+> that interval. This closes the question §7.4 left open, and it implies our
+> own published noise figures are biased *against* us on selection-dominated
+> merges.
+
 **The subject list was fixed in advance.** `PREREGISTRATION.md` was committed
 as `49a49b44` **before any of the three new subjects existed on disk**, and it
 closes the list, the statistic, the commissioning arms, the verdict vocabulary,
@@ -232,6 +239,262 @@ halves choose different source frames, and is the same mechanism that made
 `bee`'s decomposition degenerate (§0.2, 38.5% of strehl's "noise" there was a
 low-frequency half-to-half difference). **That is the open question this lane
 leaves**, and it is stated rather than resolved.
+
+> **RESOLVED in §8.** The sentence above is answered by a measurement that
+> reads no half-stack at all. Keep §7.4 as the statement of the mechanism;
+> take §8 as the verdict on which branch is true.
+
+---
+
+## 8. The 2.017 is half-stack incoherence, not absent detail
+
+ORCH set the question: is `119MSDCF`'s 2.017× detail deficit against `enfuse`
+**true detail loss**, in which case the project's central quality claim is
+broken, or **half-stack incoherence**, in which case the detail is present in
+the delivered image, the instrument cannot see it, and the published noise
+figures are biased *against* this project.
+
+The second branch flatters us. It therefore gets the hostile handling.
+
+### 8.1 Route 1 — sidestep the half-stack entirely
+
+ORCH's route 1: measure total high-pass amplitude on the **full** merges, in
+the same band, on the same pixels. That counts detail whether or not it is
+coherent across halves. `build_full.ps1` built both full renders with the
+byte-identical pinned binary and flags used for the half-stacks (`strehl.exe`
+verified by SHA256 `15EA7346…A7B0`); `fullhp.py` reads them. **No half-stack is
+read anywhere in `fullhp.py`**, which is the whole point of the design.
+
+**The criterion was registered before the data existed.** `PREREGISTRATION.md`
+§9 — committed as `91150f56` together with `fullhp.py` **unrun** — fixes three
+branches with numeric thresholds: LEVEL (ratio ∈ [0.90, 1.11] and CI contains
+1.0), CONFIRMED (≥ 1.5), PARTIAL (anything else). The branch could not be
+chosen after the number was seen.
+
+### 8.2 Band limitation, stated before any two terms are combined
+
+ORCH required this explicitly, because M127's published defect was a *full-band*
+noise term subtracted from a *high-pass* total. Let `B` = [0.20, 0.25) cyc/px
+and `B_c = s·B` = [0.2008, 0.2510) with `s = 1.0040`.
+
+| term | band-limited? | to what |
+|---|---|---|
+| `bp(tile)` | yes | `B` on strehl, `B_c` on `enfuse` |
+| `F(L)` — noise from FLAT tiles at level `L` | yes | same annulus as its arm |
+| `S_d = bp(d) − F(level of d)` | yes | difference of two terms in the same annulus |
+| `S_X = median S_d` | yes | as above |
+
+**Every term is band-limited to the same annulus. There is no full-band
+quantity anywhere in the file.** The M127 defect cannot recur by construction.
+
+### 8.3 The verdict
+
+MEASURED, `python fullhp.py 119 4000`:
+
+| quantity | value |
+|---|---:|
+| half-stack `C`, same subject / band / arm | **2.017** |
+| full-render band amplitude, `enfuse` / strehl, **uncorrected** | 1.330 |
+| full-render band amplitude, **corrected** | **1.003** [0.670, 1.570] |
+
+**LEVEL.** The 2.017 is not present once the half-split is removed, and it lies
+**outside the 95% CI of the full-render reading**. On this subject the deficit
+is half-stack incoherence, not absent detail: **the detail is in the delivered
+image and the coherence statistic cannot see it.**
+
+That has a consequence this lane does not get to enjoy quietly — it means
+**our own published noise figures are biased against us** on selection-dominated
+merges, because incoherent detail lands in the half-difference and is scored as
+noise. That is a correction owed in our favour and it is stated as an
+implication, not as a new measurement.
+
+### 8.4 Commissioning — 10 arms, every answer fixed in advance
+
+`strehl-full` against a mutated copy of **itself**:
+
+| arm | true | reads | err | uncorrected |
+|---|---:|---:|---:|---:|
+| IDENT-BITWISE | 1.000 | 1.0000 | +0.0% | 1.0000 |
+| IDENT-PATH | 1.000 | 1.0000 | −0.0% | 1.0000 |
+| **SHARPER k=1.30** | **1.300** | **1.3157** | **+1.2%** | 1.2982 |
+| k=0.95 / 0.85 / 0.70 / 0.50 | — | — | ≤ 2.2% | — |
+| NOISE-PROP (8 seeds) | 1.000 | 0.9921 | −0.8% | **1.4789** |
+| NOISE-ABS (8 seeds) | 1.000 | 1.0419 | +4.2% | **1.6740** |
+| NOISE+DETAIL (8 seeds) | 0.700 | 0.7222 | +3.2% | 1.2926 |
+| SCALE-PATH | 1.000 | 1.0133 | +1.3% | — |
+
+The **SHARPER** rung is there because a statistic bounded below at parity would
+pass a degradation-only ladder trivially, and this project has already shipped
+one gauge that was perverse on its own arm.
+
+**The noise arms are ORCH's required control** — noise planted without detail,
+which the statistic must not reward. The uncorrected reading rises to 1.48–1.67
+and the correction removes it. Each is read over 8 realisations with a standard
+error, not one draw against a fixed gate: *a point estimate with no notion of
+its own sampling spread cannot distinguish a broken instrument from a noisy
+one*, and this lane spent three estimator rewrites learning that (§8.6).
+
+### 8.5 Three defects, each caught by an arm whose answer was known in advance
+
+None of these was found by reading the code. Each was found by an arm that
+returned an impossible number, and each was **diagnosed before anything was
+changed**.
+
+**D1 — crossed axes in the placement bounds test.** `xb + b > self.mb.shape[0]`
+tests an *x* index against a *row* count. With `rb.shape = (1172, 1758)` at 4×
+block means this rejects every tile with x > 4432 (DERIVED) in a 7032-px-wide
+frame — the right ~37%. MEASURED, it dropped 35 of 110 tiles with x ∈ [4480,
+6528] against a kept maximum of 4224. It **changed the tile population instead
+of raising**. Caught because the placer at s=1.0000 returned
+correlation peak *exactly* 1.0000 and offset *exactly* 0/0 — literally the
+identical pixels the baseline read — and S still moved 12%. Identical pixels
+cannot give a different answer, so the population had to have changed.
+`scalediag.py` reproduces it against the code as committed at `91150f56`:
+
+| placer | s | ratio | tiles kept |
+|---|---:|---:|---|
+| BUGGY | 1.0000 | 0.8808 | 75/110 (35 dropped, x ∈ [4480, 6528]) |
+| BUGGY | 1.0040 | 0.8845 | 75/110 |
+| **FIXED** | **1.0000** | **1.0000** | **110/110** |
+| FIXED | 1.0040 | 1.0008 | 110/110 |
+
+**D2 — the arms were read at different tile sizes.** Matching scene *area* gave
+strehl t=256 and the comparator t=round(256/1.0040)=255. The annulus is a
+discrete bin set whose membership is not stable under tile size. MEASURED on
+strehl against itself: **t=255 → +4.5%, t=250 → +10.0%, t=128 → −11.6%.** The
+comparator was the arm read at 255, inflating it ~4.5%. Repair: read **both**
+arms at t=256 and scale the comparator's *band* instead, which resamples no
+measured pixel. BANDSHIFT magnitude MEASURED at **+0.52% power / +0.26%
+amplitude**.
+
+**D3 — the assumption of equal noise power in both tile populations was false,
+and catastrophically so.** `leveldiag.py` fits `bp ~ L^p` over FLAT tiles:
+**p = −1.145 [−1.346, −0.947]** (strehl) and **−0.920 [−0.984, −0.863]**
+(`enfuse`) — both consistent with **p = −1, exactly shot-noise-limited in
+contrast units**, which is what a linear sensor image must give. The fit landed
+on the physically predicted value without being told it. Under the assumed
+p = 0, `enfuse`'s scene term collapsed to 1.10e-07 against a total of 4.42e-05
+and the ratio would have printed **0.089** — an absurdly flattering number this
+lane came within one failed arm of reporting. The repair is **non-parametric
+level matching**, which assumes no `p` at all.
+
+### 8.6 A plant can be too potent to be informative — a new general lesson
+
+Three successive noise estimators failed the noise arms by −4.9%, +15.1% and
++20.3%. Each rewrite was refuted by an arm rather than by taste, and the second
+pair — two arms erring in *opposite* directions — correctly identified the
+estimator's *basis* as the fault rather than its tuning.
+
+The fourth attempt was to stop guessing. `noisediag.py` separates bias from
+variance by sweeping the plant amplitude with 12–20 seeds per cell, reporting
+`a/S` — how many times the plant exceeds the signal it is planted on:
+
+| a/S | NOISE-PROP | NOISE-ABS |
+|---:|---:|---:|
+| 0.14 | 0.9928 | 0.9927 |
+| 0.54 | 0.9874 | 0.9939 |
+| 2.16 | 0.9870 | 1.0273 |
+| 2.43 | 0.9972 | 1.0415 |
+| 3.11 | 1.0040 | **1.0748** |
+| 4.24 | 1.0235 | **1.1093** |
+| 5.53 | **1.0548** | **1.1314** |
+| 8.65 | **1.1157** | **1.1553** |
+
+**The estimator was unbiased all along.** The three "failures" were the tail of
+a wide sampling distribution at a plant 8.65× the signal. Past a few times the
+signal, the scene term becomes a difference of two large nearly-equal numbers;
+the arm then measures the estimator's *variance* instead of its *correctness*,
+and inflates that variance ~10× without testing it any harder.
+
+**Stated as a general lesson, alongside QUANT8 and the inert control:** a
+commissioning plant has an upper useful bound as well as a lower one. Too weak
+and it proves nothing; **too strong and it fails a working instrument.** The
+plant must *bracket the regime the real measurement occupies*, not exceed it.
+
+Lowering `BETA` from 0.040 to 0.020 is **not** tuning-to-pass, for two reasons
+that must be stated together: the change is justified by an independent
+measurement showing the estimator unbiased across a 16× range of potency, and
+**both** noise arms are checked on every run, so no repair can be adopted on the
+strength of the arm it was designed to pass.
+
+The lesson was then turned into a **gate**. `fullhp.py` computes `a/S` for the
+real reading and **refuses to print a verdict outside the range actually
+commissioned**. It fired on the first attempt: `enfuse` reads 2.22 against a
+then-commissioned 2.16. The response was to *extend the commissioning by
+measurement* to 2.43 — which is what the refusal message itself prescribed —
+not to lower the gate to admit the number.
+
+**The residual systematic is disclosed rather than corrected**, with its
+direction: at a/S = 2.43 it is [−0.3%, +4.1%], and it inflates the scene term of
+whichever arm carries more noise. That is `enfuse` (2.22 against strehl's 0.84).
+**The bias therefore acts against strehl**, so the true position is if anything
+better for us than 1.003.
+
+### 8.7 Hostile reading
+
+1. **The correction carries the answer**: 1.330 uncorrected → 1.003 corrected.
+   The noise subtraction, not the raw band power, produces this verdict. If the
+   noise model is wrong the answer is wrong.
+2. **S is a difference of comparable numbers.** FLAT/DETAIL band power is 0.425
+   for strehl but **1.056** for `enfuse` — `enfuse` is 3.04× noisier here, so
+   most of its DETAIL-tile band power is its own noise and the estimate is
+   correspondingly fragile.
+3. **The known failure mode of a total-band statistic is that it counts noise as
+   detail**, so a noisier merge scores higher. `enfuse` is the noisier arm, so
+   the *uncorrected* reading is biased toward `enfuse` and **the correction moves
+   in strehl's favour — the flattering direction.** Both are printed, always.
+4. **FLAT tiles are the bottom quartile of high-pass energy, not zero**, so S
+   under-states scene power in *both* arms.
+5. **What is established is that the full render does not show the 2.017.** What
+   is *not* established is that the two are precisely equal: the CI [0.670,
+   1.570] is wide.
+6. **One subject, one band, one comparator.** Nothing here generalises without
+   being re-run.
+
+### 8.8 Two assumptions tested rather than asserted
+
+`popcheck.py` was written because the reading prints "86 matched / 24 dropped"
+for both arms, and **equal counts are not equal sets**.
+
+- **Q1 — same tiles in both arms? PASS.** strehl keeps 86, `enfuse` keeps 86,
+  intersection **86**; zero kept by either alone. The arms are read on the same
+  scene. This was worth verifying rather than assuming: at KMIN=5 the arms keep
+  84 and 83, so population identity is a property of the as-run setting, not a
+  guarantee of the rule.
+- **Q2 — is the drop a biased subset? YES, p = 0.000.** The 24 dropped tiles are
+  *brighter* (median level 15058 vs 10095) and much *lower* in band power
+  (2.09e-06 vs 3.08e-05); 13 of 24 lie outside the FLAT level range entirely, so
+  they cannot be level-matched. **This is a real limitation and it is reported as
+  one.** It is not a *differential* bias — Q1 shows both arms drop the same
+  tiles — so it restricts what the reading *describes* (the level-matchable 86)
+  without biasing the ratio between arms. It does mean the comparison excludes
+  the brightest regions, which is exactly where `enfuse --hard-mask` is
+  structurally most different.
+- **Q3 — does the verdict depend on the matching rule's own parameters?**
+
+  | LOGTOL | KMIN | n | ratio |
+  |---:|---:|---:|---:|
+  | 0.15 | 3 | 86 | **1.003** ← as run |
+  | 0.25 | 3 | 104 | 0.804 |
+  | 0.40 | 3 | 110 | 0.903 |
+  | 0.15 | 2 | 87 | 1.011 |
+
+  The ratio moves over **0.804–1.011**, and **no setting comes near 2.017** —
+  including LOGTOL=0.40, which drops nothing at all. The verdict "not 2.017" is
+  robust to the rule; the exact digit is not. Note the wider windows put strehl
+  **ahead**, so the as-run 1.003 is the *least* flattering of the stable
+  settings.
+
+### 8.9 What would falsify this
+
+A full-render reading near 2.0 on another selection-dominated subject; or a
+demonstration that the FLAT population carries materially different scene power
+in the two arms, which would break the noise subtraction that carries the
+result. Route 2 — measuring the per-half selection-field disagreement rate
+directly — would settle the mechanism rather than its consequence, but it needs
+a winner field emitted from `merge.rs`, which is **owned by a build lane and
+closed to this one**. That is a request for ORCH to route, not a file for me to
+take.
 
 ---
 
@@ -479,3 +742,27 @@ the two agree to the digit.
 - §7's chroma falsification condition (≥2 of 4 subjects reading LEVEL or
   NOISIER) is **not met** on the two measured: both read NOISIER with CIs far
   above 1.0.
+
+Added by §8:
+
+- **`fba` (`flower-bud-alone-cpl`) is build-FAILED, not absent.** 189 minutes in
+  `align_image_stack` with **0 output files**. Per `PREREGISTRATION.md` it is
+  recorded as a failed subject; it is not silently dropped from the subject
+  list, because a subject that disappears without a disposition is how a
+  flattering subject set gets built by accident.
+- **§8 is one subject.** The full-render reading should be repeated on
+  `bee-1-cpl`, the selection-dominated deep stack, where the incoherence
+  mechanism should be *strongest* — §8.9's falsification condition is a
+  full-render reading near 2.0 there.
+- **Route 2 is unbuilt and needs ORCH to route it.** Measuring the per-half
+  selection-field disagreement rate directly would settle the *mechanism*
+  rather than its consequence, but it requires a winner field emitted from
+  `crates/strehl-core/src/merge.rs`, which is owned by a build lane.
+- **The correction owed in our favour is stated, not measured.** §8.3 argues
+  that incoherent detail is scored as noise on selection-dominated merges; the
+  size of that bias in the published M127 figures has not been quantified.
+- Still owed as standing reporting obligations: CGAIN straddle-vs-magnitude
+  with both numbers; `Arm.rgb` scale-only-no-offset; `119`'s weak 1.29× and
+  `fba`'s 1.10× census separation; `bee`'s weak 0.2205 geometry peak; and the
+  `crosspop` vs `banddiag` scene-ratio discrepancy (1.273 vs 1.733), which
+  **remains unreconciled**.
