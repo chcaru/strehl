@@ -2617,3 +2617,150 @@ widening is recomputed as the quotient of the two logged p95s). Final state:
 Had I shipped the verifier on its live GREEN alone, it would have been a
 regression check that had never been shown to fail — a hypothesis wearing the
 costume of a test.
+
+---
+
+## 19. THE EXPOSURE FLAG, AND WHAT THE DEFECT MAP ALREADY COVERS
+
+### 19.1 The premise check: two files differed, one image did not
+
+The orchestrator reported verifying `--exposure=3` against `--exposure=-3` on
+the pin binary and observing **two different file hashes**, and read that as the
+flag working. It is the same inference §14 was written to refute, one step
+further along. A 16-bit TIFF from this renderer carries an `ImageDescription`
+holding the tone anchors and the requested exposure, and §14 measured those
+anchors scaling by *exactly* the commanded gain — `8.0000 / 0.1250 / 6.1050` —
+while the pixel array stayed bit-identical across all 98,898,048 samples. Two
+renders can therefore differ in hash, differ in banner, and be the same picture.
+
+> An argv records the request and a banner records the claim; **a hash records
+> the file.** Only the pixels record behaviour.
+
+So `58-stack-path-exposure.py` reads the pixel arrays and nothing else. It does
+not consult `ImageDescription`, because that is the surface already known to
+move when the image does not.
+
+### 19.2 The two paths, and which one `stack` takes
+
+**P58 (MEASURED).** `main.rs` declares both `mod merge_cmd` and `mod stack`, and
+dispatches them to different subcommands:
+
+```text
+crates\strehl-cli\src\main.rs:856    } => stack::run(&StackOptions {
+crates\strehl-cli\src\main.rs:873      Command::Stack {
+crates\strehl-cli\src\main.rs:1084       merge_cmd::run(&MergeOptions {
+```
+
+`Command::Stack` reaches **`merge_cmd::run`**, not `stack::run`. Commit
+`9cb7f5d9` added `Develop::exposure_gain` in `image_out.rs` and wired it in
+`stack.rs` — a real fix on a path the `stack` subcommand does not take. The
+run banner confirms the destination independently: `merge backend : pyramid
+(default)`.
+
+### 19.3 The measurement
+
+Subject `coffee-bubbles`, 19 frames, 7032 × 4688, `--srgb`, three arms.
+
+| arm | binary | samples moved | delivered |
+| --- | --- | --- | --- |
+| A `--exposure=1` vs none | before patch | **0 of 98,898,048** | 1.0 (bit-identical) |
+| B `--exposure=1` vs none | after patch | **98,821,621 of 98,898,048** | **2.0132800×** |
+| C default `--srgb` only | before vs after | **0 of 98,898,048** | unchanged |
+
+Arm A: `max |delta| 0 DN`, while the banner read `exposure : +1.00 stops (gain
+2.000x), as asked` and the two hashes differed (`A9F7D7DC…` vs `51164D7A…`).
+That is the whole defect in one line — the request reached the banner and the
+header and did not reach the image.
+
+Arm B against a commanded `2.0000000×` is **+0.664%**, n = 43,001,570.
+**This is not as clean as §15's ±0.25-stop measurement, which returned
+−0.048%, and the difference is not diagnosed.** Two non-linearities are active
+at +1 stop and absent at ±0.25: 76,427 samples are pinned at an endpoint, and
+the highlight chroma roll-off is in play (`highlight::tests::
+the_rolloff_commutes_with_the_exposure_gain` asserts commutation, not
+identity). Clipping drags a slope *toward* 1.0 and so cannot explain an
+overshoot; the roll-off can, but I have not measured that it does. The
+low-exposure figure is the trustworthy one; **+0.664% is reported, not
+explained.**
+
+### 19.4 Requirement 4, restated and re-measured
+
+Arm C is the one that protects the 26 delivered masters: the default `--srgb`
+render is **bit-identical before and after the patch**, 0 of 98,898,048 samples
+moved, `max |delta| 0 DN`. `exp2(0)` is exactly `1.0` and `x * 1.0` is `x`
+bit-for-bit, so this is a property of the arithmetic rather than a lucky
+rounding. **Both byte-freezes HOLD** — the `strehl-cli` integration bucket
+passes 5/5 including the freeze test, and `byte-freezes.tsv` is untouched.
+
+Suite: **713 pass / 0 fail**, up one from 712 for the new guard.
+
+### 19.5 The guard was commissioned RED, in the tree it will live in
+
+`every_writer_develop_carries_the_exposure_gain` counts `.develop(` sites
+against `.with_exposure_gain(` sites and requires them **equal**. A presence
+check would be satisfied by any one occurrence and would still pass the day a
+third writer is added unchained — the exact blind spot that let the original
+defect ship. The needles are assembled at runtime so the test cannot count its
+own source text.
+
+Planting the original defect — deleting the demosaic branch's wiring — gives:
+
+```text
+2 writer develop site(s) but only 1 carry the exposure gain builder.
+test result: FAILED. 0 passed; 1 failed
+```
+
+Restored: `test result: ok. 1 passed`. The guard has been shown to fail on the
+defect it exists to catch.
+
+### 19.6 The restore read a false RED, and the reason generalises
+
+Restoring the file from `$env:TEMP` and re-running returned **FAILED** again,
+with the wiring demonstrably back in the source (`Select-String` found both
+sites) and the restored file hashing equal to the backup. The cause is that
+`Copy-Item` **preserves the backup's `LastWriteTime`**, which was older than the
+mutated build, so cargo's mtime fingerprint judged the crate up to date and the
+test ran the stale mutated binary. `include_str!("merge_cmd.rs")` bakes the
+content in at compile time, so a skipped rebuild is a skipped mutation.
+Setting the mtime to now produced `Compiling strehl-cli` and `1 passed`.
+
+The false-RED direction cost a cycle. **The false-GREEN direction is the one to
+fear:** a mutation written with an older timestamp would not rebuild either, the
+guard would report GREEN with the defect present, and the commissioning would
+bank a blind metric as proven. A restore is not complete until the build system
+has been made to notice it.
+
+### 19.7 What `defect_map.rs` already covers — the hot-pixel answer
+
+Asked plainly, so it is not assumed wrong again. **Hot pixels are built, not
+outstanding.** `crates/strehl-core/src/defect_map.rs` carries `HotSite`,
+`HotParams`, `HotCensus`, `HotFloor`, `detect_hot`, `hot_residual`,
+`hot_area_fraction` and `Correction::HOT`.
+
+- **Identified from the darks (§3.1).** 6σ same-plane neighbour excess with
+  recurrence ≥ 6/11 ISO groups — recurrence across independent groups, not a
+  sigma threshold, because that is the correct discriminator (M22). Census
+  **14,626**: R 111 / G1 125 / G2 8,157 / B 6,233. Row asymmetry
+  `(G2+B)/(R+G1)` = **60.97×** against M101's **61.1×**. External agreement:
+  M101 14,604 (+0.2%), M48c 13,650 (+7.2%), M22 11,393 (+28.4%); 462 sites
+  recur at 11/11.
+- **Behaviour under the warp: identical to dust, and handled identically.**
+  Both classes are fixed in sensor coordinates, so both smear along the
+  per-frame similarity if corrected late.
+- **The ordering is measured, not chosen (§6.2).** `load_frame` applies the map
+  **between the levels check and `warp_frame_in_place`**, and two tests hold it
+  there: `dust_correction_must_precede_the_warp_to_land_on_the_defect` fails if
+  those lines move below the warp, and
+  `with_an_identity_warp_the_two_orderings_are_bit_identical` is its null —
+  it proves the first test measures the *ordering* rather than the resampler.
+- **It ships OFF, and that is a measured decision.** Split-half reproducibility
+  by amplitude stratum is 0.000 / 0.116 / 0.607 / **1.000** / **1.000**, and
+  **only 111 of 14,626 sites** lie at or above the 8 e⁻ floor where
+  reproducibility reaches 1.000. M101 already measured the arm immaterial to
+  the election. The hot arm is **a working mechanism whose population is
+  mostly noise** — that is a different claim from "unbuilt", and the honest
+  summary is that it is built, commissioned, and not worth turning on.
+
+So of the original brief's two classes, dust is the live question and hot
+pixels are closed with a null. §19.7 exists because the null was previously
+legible only by reading §3.1 and §6.2 together.

@@ -1,0 +1,22 @@
+========================================================================
+58 -- does the `stack` subcommand deliver a commanded exposure?
+========================================================================
+plain     : C:\dev\strehl-out\BUILD-DEFECT\exposure-q2\plain.tiff
+exposed   : C:\dev\strehl-out\BUILD-DEFECT\exposure-q2\exp1.tiff
+commanded : 2.0000000x  (--exposure=+1 stops)
+dispatch  : main.rs Command::Stack -> merge_cmd::run  (NOT stack::run)
+
+samples   : 98,898,048
+partition : 98,898,048 samples = 0 moved + 98,898,048 unmoved
+max |delta| : 0 DN
+
+-- commissioning the inversion + regression chain --
+   planted 2.0   -> recovered 2.0000003  (+0.000%)  n=43,010,990  PASS
+   planted 0.5   -> recovered 0.4999981  (+0.000%)  n=43,155,337  PASS
+   planted 1.0   -> recovered 1.0000000  (+0.000%)  n=43,155,337  PASS
+   commissioning PASSED
+
+VERDICT: the pixels are BIT-IDENTICAL. The commanded exposure
+  reached the banner and the file header and did NOT reach the
+  image. Any hash difference is the ImageDescription tone
+  anchors; the picture is unchanged.

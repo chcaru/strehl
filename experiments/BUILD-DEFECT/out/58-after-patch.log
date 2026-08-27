@@ -1,0 +1,21 @@
+========================================================================
+58 -- does the `stack` subcommand deliver a commanded exposure?
+========================================================================
+plain     : C:\dev\strehl-out\BUILD-DEFECT\exposure-q2\plain2.tiff
+exposed   : C:\dev\strehl-out\BUILD-DEFECT\exposure-q2\exp1b.tiff
+commanded : 2.0000000x  (--exposure=+1 stops)
+dispatch  : main.rs Command::Stack -> merge_cmd::run  (NOT stack::run)
+
+samples   : 98,898,048
+partition : 98,898,048 samples = 98,821,621 moved + 76,427 unmoved
+max |delta| : 58408 DN
+
+-- commissioning the inversion + regression chain --
+   planted 2.0   -> recovered 2.0000003  (+0.000%)  n=43,010,990  PASS
+   planted 0.5   -> recovered 0.4999981  (+0.000%)  n=43,155,337  PASS
+   planted 1.0   -> recovered 1.0000000  (+0.000%)  n=43,155,337  PASS
+   commissioning PASSED
+
+delivered : 2.0132800x against commanded 2.0000000x
+error     : +0.664%   n=43,001,570
+VERDICT: the pixels move and the delivered gain is CORRECT.
