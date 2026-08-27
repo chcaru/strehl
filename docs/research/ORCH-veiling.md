@@ -11970,3 +11970,106 @@ across commits, hardware, or thread counts — only across two runs of one binar
 on one machine. A byte-identical repeat is the weakest useful reproducibility
 claim; it is recorded because it was measured, and because it was measured at a
 scale the test suite cannot reach.
+
+## 110. Four retractions, and the shape they share
+
+V-GATHER was asked to verify the gather flip (`740e7056`). It upheld the flip and
+refuted **three of the four arguments offered in support of it**. Several of those
+arguments were mine. This section withdraws them, because a conclusion that
+survives its own evidence being wrong is a conclusion held for the wrong reason,
+and the next person to lean on it will not know that.
+
+### 110.1 Statistic B was never a ringing metric
+
+`overshoot_frac` in `experiments/ORCH-drift-check/orch_abpair.py` high-passes the
+image and counts pixels beyond `3 * sigma` -- where `sigma` is the standard
+deviation of that same high-pass. Scaling the image scales the residual and the
+threshold identically. **The amplitude cancels algebraically.** What survives is
+the tail shape of the distribution, which is not a quantity anyone wanted.
+
+Commissioned, it is worse than useless -- it is inverted:
+
+| arm | expected | measured |
+|---|---|---|
+| amplitude scaled | rises | invariant to **six significant figures** |
+| planted 2 px ring at 40% of step | rises | reads an **improvement** |
+| unsharp mask applied | rises | reads an **improvement** |
+| blur applied | falls | **rises monotonically** |
+
+`740e7056` cited this statistic as its evidence of no added ringing: *"did not
+move (1.086% -> 1.053%, 1.744% -> 1.744%)"*. On the statistic's own commissioning
+a fall from 1.086 to 1.053 is the signature of **added sharpening**. The commit
+read its most reassuring number backwards.
+
+The tell was available the whole time and it was the reassurance itself. A
+statistic that does not move when the image is scaled is not measuring anything
+about the image's amplitudes, and ringing is an amplitude. The function is marked
+REFUTED in place rather than deleted, so the numbers in `740e7056` stay
+reproducible, and its printed columns now read `REFUTED`.
+
+> **A statistic that is amplitude-invariant to six significant figures is not
+> measuring an amplitude. The comfort it gave was the tell.**
+
+### 110.2 Statistic A was aimed where ringing does not live
+
+`orch_halo.py` runs `BAND=(8,90)` at `DS=2`, which is **16 to 180 full-resolution
+pixels**. A Catmull-Rom or Malvar reconstruction lobe lives at **1 to 4 px**. The
+instrument was not weak on the question; it was not pointed at it. Its silence
+was mistaken for an answer.
+
+This compounds an error in my own framing. I wrote that the two statistics
+disagreed and that a visual tie-break was therefore needed. They did not
+disagree -- one was inverted and the other was blind. And the visual tie-break
+examined `over_hi` when **100% of the excursion was in `over_lo`**. Three
+independent ways of being wrong, arranged so that they agreed.
+
+Ringing was eventually settled by a third instrument that passes narrow-ring,
+unsharp, clean-edge **and planted-improvement** commissioning. There is no
+ringing regression. That conclusion stands; the two arguments previously offered
+for it do not.
+
+### 110.3 The speedup is a harvest of idle cores, not less work
+
+The gather flip was reported as faster. It performs **+1.5 s/frame of additional
+CPU work** and is faster only because this machine has cores that were otherwise
+idle. That is a real wall-clock gain on this box and a real gain on any box with
+spare parallelism, but it is **not an algorithmic throughput property** and must
+never be quoted as one. On a core-starved machine the same change is a
+regression.
+
+### 110.4 The sharpness budget does not close
+
+`BUILD-SHARP` section 1 reported the budget closing to **2.6%**. Re-measured, the
+gap is **+12.09%**, with **17.01 um unattributed**. Retracted. Related: `--gate 0`
+is not the exact paired reference it was used as -- the election moves **32.8% to
+34.1% of pixels** between the two arms, so the comparison was never holding the
+merge fixed.
+
+### 110.5 Costs that were not reported
+
+Upheld does not mean free. The flip carries two costs that no summary mentioned:
+
+- flat-region high-pass rms up **x1.267 to x1.870**, mostly consistent with noise
+  *restoration* against a floor of about x2.0;
+- **chroma (R-B) high-pass up 25.2% to 48.6%**, traced to a **double demosaic** --
+  a warp-time demosaic feeding the final Malvar. Whether that chroma excess is
+  restored or manufactured is open, and it decides whether this is honest noise
+  or a defect in the shipping path.
+- the memory budget is **blown by 29%** on the default path, which makes the
+  `WarpScratch` documentation at `align_cmd.rs:1481` false as written.
+
+### 110.6 The rule this earns
+
+Every failure above is the same failure. An instrument was trusted outside the
+range its commissioning spanned, or was never commissioned in the direction that
+mattered. Both refuted statistics had only ever been shown things that made the
+image *worse*.
+
+> **Commission with a planted improvement as well as a planted defect. A metric
+> shown only degradations cannot distinguish "blind" from "correct" -- both
+> produce the same reassuring flat line.**
+
+This is now the third instrument in this project caught reading backwards, after
+`tri.blur_equiv`, whose error was bounded below by zero so that no input could
+make it charge for a halo. The pattern is not bad luck. It is what happens when
+commissioning is designed by the same person who wants the answer.
