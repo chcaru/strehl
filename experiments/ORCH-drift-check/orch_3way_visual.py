@@ -31,8 +31,11 @@ import numpy as np
 import tifffile
 from PIL import Image, ImageDraw
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "DELIVER-V5"))
+from build import tag_png  # noqa: E402
+
 ARMS = Path(r"C:\dev\strehl-out\V-NOISE2\119\arms")
-OUT = Path(r"C:\dev\strehl-out\ORCH-3WAY")
+OUT = Path(r"C:\dev\strehl-out\DELIVER-V5\vs-the-field")
 CROP = 400          # <= 400 px: a visual verdict above this is not 1:1
 TILE = 256          # site-selection grid
 SEED = 20260827
@@ -114,25 +117,49 @@ def to8(a: np.ndarray) -> np.ndarray:
     return a.astype(np.float32)
 
 
-def display(a: np.ndarray, exposure: float, gamma: float = 2.2) -> np.ndarray:
+def display(a: np.ndarray, exposure: float) -> np.ndarray:
     """Identical viewing transform for every panel.
 
     The arms are LINEAR renders and are far too dark to judge by eye. This is a
-    display transform, not a correction: the same exposure and the same gamma
-    are applied to all three panels, so it cannot change their ordering. It is
-    applied AFTER the photometric fit so the fit stays linear.
+    display transform, not a correction: the same exposure and the same transfer
+    function are applied to all three panels, so it cannot change their
+    ordering. It is applied AFTER the photometric fit so the fit stays linear.
+
+    The transfer is the real sRGB curve rather than a 2.2 power law, so the
+    montage is genuinely in the space its ICC tag will claim. A gamma-2.2 image
+    tagged as sRGB is a small lie, and the delivery audit would have accepted it
+    silently -- it checks that a profile is present, not that it is true.
     """
     x = np.clip(a / 65535.0 * exposure, 0.0, 1.0)
-    return np.clip(np.power(x, 1.0 / gamma) * 255.0, 0, 255).astype(np.uint8)
+    lo = x * 12.92
+    hi = 1.055 * np.power(np.maximum(x, 1e-8), 1.0 / 2.4) - 0.055
+    s = np.where(x <= 0.0031308, lo, hi)
+    return np.clip(s * 255.0 + 0.5, 0, 255).astype(np.uint8)
 
 
 def photometric_fit(src: np.ndarray, ref: np.ndarray):
-    """Least-squares gain+offset mapping src -> ref, fitted on this crop."""
-    s = src.reshape(-1).astype(np.float64)
-    r = ref.reshape(-1).astype(np.float64)
-    A = np.stack([s, np.ones_like(s)], axis=1)
-    coef, *_ = np.linalg.lstsq(A, r, rcond=None)
-    return float(coef[0]), float(coef[1])
+    """Least-squares gain+offset mapping src -> ref, fitted PER CHANNEL.
+
+    Per channel, not joint, and the distinction decides what the montage means.
+    A joint fit leaves any white-balance difference between the two pipelines
+    standing in the image, where it reads as a colour cast -- and a colour cast
+    is indistinguishable by eye from chroma noise, which is exactly the quantity
+    this montage exists to judge. Fitting each channel separately removes the
+    cast (a low-frequency, per-channel scale) while leaving coloured speckle (a
+    high-frequency, per-pixel disagreement) completely untouched, so the two
+    causes separate instead of being confused.
+
+    Returns (gains, offsets) as 3-vectors.
+    """
+    gains, offs = [], []
+    for c in range(3):
+        s = src[:, :, c].reshape(-1).astype(np.float64)
+        r = ref[:, :, c].reshape(-1).astype(np.float64)
+        A = np.stack([s, np.ones_like(s)], axis=1)
+        coef, *_ = np.linalg.lstsq(A, r, rcond=None)
+        gains.append(float(coef[0]))
+        offs.append(float(coef[1]))
+    return np.array(gains), np.array(offs)
 
 
 def main():
@@ -185,13 +212,16 @@ def main():
             xx = max(0, min(im[k].shape[1] - CROP, xx))
             c = to8(im[k][yy:yy + CROP, xx:xx + CROP])
             if k == "strehl":
-                gain, off = 1.0, 0.0
+                gain, off = np.ones(3), np.zeros(3)
             else:
                 gain, off = photometric_fit(c, base)
-                c = c * gain + off
-            rec["fits"][k] = {"gain": round(gain, 5), "offset": round(off, 2)}
+                c = c * gain[None, None, :] + off[None, None, :]
+            rec["fits"][k] = {"gain": [round(float(v), 5) for v in gain],
+                              "offset": [round(float(v), 2) for v in off]}
             panels.append(display(c, expo))
-            labels.append(f"{k}  (gain {gain:.3f})" if k != "strehl" else "strehl")
+            labels.append(
+                f"{k}  (RGB gain {gain[0]:.3f}/{gain[1]:.3f}/{gain[2]:.3f})"
+                if k != "strehl" else "strehl  (reference)")
 
         pad = 8
         W = CROP * 3 + pad * 4
@@ -200,12 +230,14 @@ def main():
         for i, (p, lab) in enumerate(zip(panels, labels)):
             sheet.paste(Image.fromarray(p), (pad + i * (CROP + pad), pad + 22))
             ImageDraw.Draw(sheet).text((pad + i * (CROP + pad), 5), lab, fill=(235, 235, 235))
-        ImageDraw.Draw(sheet).text((W - 210, 5), f"display x{expo:.1f} g2.2 (all panels)",
+        ImageDraw.Draw(sheet).text((W - 230, 5), f"display x{expo:.1f} sRGB (all panels)",
                                    fill=(150, 150, 150))
         name = f"119MSDCF__{label}.png"
         sheet.save(OUT / name)
+        tag_png(str(OUT / name))
         print(f"  wrote {name}  expo x{expo:.1f}  " + "  ".join(
-            f"{k}:g={rec['fits'][k]['gain']:.3f}" for k in rec["fits"]))
+            f"{k}:g={'/'.join(f'{v:.3f}' for v in rec['fits'][k]['gain'])}"
+            for k in rec["fits"]))
         manifest["sites"].append(rec)
 
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2))
