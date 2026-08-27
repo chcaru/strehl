@@ -1,0 +1,73 @@
+PRE-REGISTRATION -- how loose is E*?
+BUILD-DEFECT, written before any outcome number for this question existed.
+
+QUESTION
+  E* (heldout_error, align_cmd.rs:618) trains a global solve on SHORT edges
+  (span < 40 or used < 12) and scores it on LONG ones. Both sides are produced
+  by the SAME estimator. It is therefore a CONSISTENCY statistic. It is
+  reported, and was used as gate (c) for M23 and M78, as though it were an
+  ACCURACY statistic. How far apart are those two things?
+
+DEFINITIONS
+  E*      median worst-corner disagreement, plane px, between the poses solved
+          from train edges and the measured transforms of test edges.
+  E_true  median worst-corner distance, plane px, between solved poses and the
+          PLANTED truth poses, gauge-aligned so frame 0 is identity.
+  Lambda  = E_true / E*.  This is the looseness. E* is only a usable ruler if
+          Lambda is bounded and stable.
+
+WHY P4 CAN ANSWER IT
+  experiments/m10-deep-align/data/p4-warp-{edges,truth}.csv. P4 is 105 frames
+  synthesised from ONE real coffee-bean frame by a KNOWN smooth similarity
+  sequence plus a growing depth-dependent blur, planted total drift 98.6 plane
+  px (-4.574% scale, matched to M6's real coffee-bean drift). The truth is the
+  plant. It is not a product of the estimator, which is exactly the property
+  the real-stack held-out set lacks. 761 measured edges, same estimator, same
+  code path.
+
+THE STRUCTURAL CLAIM I AM TESTING (stated before measuring)
+  Because prediction and target are both estimator outputs, E* is identically
+  blind to any error COMMON to train and test edges. Specifically: if each
+  edge's scale increment g is attenuated by a common factor rho, the solve
+  absorbs it as pose_k -> rho*pose_k, and the test edges -- carrying the same
+  attenuation -- agree with that solve exactly. Algebraically the residual is
+  zero to first order in g.
+  PREDICTION: planting a uniform scale-increment bias moves E_true a long way
+  and leaves E* essentially unchanged.
+
+PRE-REGISTERED ARMS
+  A  null          nothing planted            E_true base   E* base
+  B  bias          g -> rho*g on EVERY edge,  E_true RISES  E* UNCHANGED
+                   rho = 0.526, M23's                       (< 25% move)
+                   measured real span-1 R
+  C  noise         zero-mean noise on g, b    E_true rises  E* RISES
+  D  improvement   each edge's deviation      E_true FALLS  E* FALLS
+                   from truth halved
+  C exists so a null in B cannot be blamed on a dead instrument.
+  D exists so a metric bounded below, or perverse, cannot pass: a genuine
+  IMPROVEMENT must move it the right way. Planting only degradations cannot
+  tell a blind metric from a perverse one.
+
+COMMISSIONING GATE G0 -- refuse to report if this fails
+  Solving with ALL 761 edges, unweighted, and scoring against truth must
+  reproduce M10's published S3-ba-unit median of 0.622 corner px to within
+  0.05 px. That is M10's own number from a different implementation, and the
+  same 0.05 px bar the Rust G0 gate in m86-align.rs uses. If my solver cannot
+  reproduce it, nothing downstream of it is readable and I report nothing.
+
+PRE-REGISTERED CRITERION -- "tight enough to grade with"
+  E* is usable as a ruler iff Lambda is stable across arms: |log2 Lambda| <= 1
+  (i.e. E_true within 2x of E*) on every arm. Any arm outside that band means
+  E* cannot grade a change of that kind, and Lambda's value there IS the
+  looseness for that class of error.
+
+HOW I CAN BE WRONG
+  If arm B moves E* by more than 25%, the structural claim is FALSE and I say
+  so. If arm C fails to move E*, my instrument is dead and arm B's null means
+  nothing. If arm D fails to move E* downward, E* is perverse and no arm is
+  readable. Any of these is reported as the result.
+
+NOT MEASURED HERE
+  Whether the real (non-synthetic) estimator actually carries rho = 0.526.
+  M23 measured that; this experiment uses it only to set a realistic MAGNITUDE
+  for arm B. The claim under test is about E*, not about the estimator.
