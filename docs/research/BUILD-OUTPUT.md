@@ -646,3 +646,133 @@ already exist.
   that 6.7% is visible in a print is untested.
 - `MIN_TREAD_MM = 0.5` is a literature acuity threshold, not one this project
   measured.  It is stated so it can be moved, and every raw tread is printed.
+
+# 8. Making the delivery print-correct
+
+Section 7 established the defect: `image_out.rs` was embedding
+`strehl sRGB (IEC 61966-2-1)` and 300 dpi on 26 of 26 masters, and the delivery
+step was casting to uint8 through PIL and passing none of it on -- 0 of 26
+shipped PNGs declared a colour space or a print size.  This section is the
+repair, and it is deliberately a *delivery* repair: the Rust writer was never
+wrong, so the Rust diff here is again **zero**.
+
+## 8.1 Why chunk splicing and not a re-save
+
+The binding constraint was that **pixels must not change** -- ORCH's
+`verify_delivery_all26.py` compares decoded pixels against the masters and had
+to still read 26 exact / 0 differing afterwards.
+
+Re-saving through PIL to attach metadata would re-run the deflate compressor
+over the samples.  The output *should* be pixel-identical, and "should be" is
+not the standard this project works to.  Splicing chunks into the byte stream
+instead cannot alter image data because it never touches IDAT: the guarantee is
+**structural rather than tested**, and the test then confirms a property that
+was already true by construction rather than being the only thing standing
+between the deliverable and a silent re-encode.
+
+`tag_png()` in `experiments/DELIVER-V5/build.py` parses the chunk stream,
+verifies every CRC on the way in, drops any pre-existing
+`iCCP`/`sRGB`/`gAMA`/`cHRM`/`pHYs`, and inserts `iCCP` + `pHYs` immediately
+after IHDR -- a position that satisfies the ordering rules for both.  The write
+is atomic via `os.replace`, so an interruption cannot leave a torn 60 MB file in
+a deliverable.
+
+**The profile is copied out of a shipped master rather than synthesised.**  That
+is the difference between the preview *claiming* the same colour space as the
+print master and being *checkably* the same: the md5 of the profile read back
+out of the PNG equals the md5 read out of the TIFF.  A synthesised profile would
+have made the same claim untestably.  `iCCP` alone, not the 1-byte `sRGB` chunk,
+and not both -- the PNG spec says a file should not carry both.
+
+## 8.2 Commissioning the tagger before running it on 1.2 GB
+
+The whole change rests on "pixels did not change".  **A comparison that cannot
+detect a change confirms that claim on any input**, so arm A2 is not decoration;
+it is what gives A1 meaning.  `commission_tagger.py`, 6 of 6 PASS on a real
+delivered crop:
+
+| arm | claim | result |
+|---|---|---|
+| A1 | decoded pixels identical after tagging | PASS, `(398, 380, 3)` both sides |
+| A2 | **NEG CONTROL** -- `+1` in one channel of one pixel is detected | PASS, 1 differing pixel |
+| A3 | profile read back equals the **master's**, by md5 | PASS, `d79b117b6798` both sides |
+| A4 | `pHYs` reads 300 dpi | PASS, 300.0 x 300.0 |
+| A5 | idempotent -- second tagging is byte-identical | PASS, 227287 bytes |
+| A6 | IDAT bytes literally untouched | PASS, `26205c824ecfe437` unchanged |
+
+A5 matters because the retag pass runs over a tree that may already be partly
+tagged; A6 is the structural claim of section 8.1 stated as a measurement.
+
+## 8.3 What landed
+
+`python build.py --retag` tagged **185 of 185 PNGs in 10.1 s, 0 failed**, with
+the profile taken from the master (2716 bytes, md5 `d79b117b6798`).
+
+`delivery_audit.py` then re-read every file and partitioned it.  The partition is
+exhaustive by construction and the script asserts it sums, because a summary that
+counts only successes cannot distinguish a file that passed from a file that was
+never examined:
+
+| directory | n | outcome |
+|---|---:|---|
+| `crops-1to1/` | 78 | profile+dpi OK x78 |
+| `crops-worst-case/` | 52 | profile+dpi OK x52 |
+| `full-resolution/` | 26 | profile+dpi OK x26 |
+| `known-defects/` | 1 | profile+dpi OK x1 |
+| `overview/` | 26 | profile+dpi OK x26 |
+| `what-stacking-does/` | 2 | profile+dpi OK x2 |
+| **partition** | **185** | OK 185 / no profile 0 / wrong profile 0 / no-or-wrong dpi 0 = **185 == 185 found** |
+
+One distinct profile across all 185: `d79b117b6798  strehl sRGB (IEC 61966-2-1)`.
+
+The 16-bit print deliverable was copied to `DELIVER-V5\print-masters\` (26 files,
+4.79 GB) and censused **on the copies, not the sources** -- a copy is not a
+verification.  26 of 26, 16-bit, `strehl sRGB (IEC 61966-2-1)` md5
+`d79b117b6798`, `(300.0, 'inch')`, 0 not at 300 dpi.
+
+## 8.4 The gates, before and after
+
+| verifier | owner | before | after |
+|---|---|---|---|
+| `verify_delivery_all26.py` | ORCH | 26 exact / 0 differing, GREEN | **26 exact / 0 differing, GREEN** |
+| `check_readme.py` | DELIVER-V5 | pass 24 + fail 0, exit 0 | **pass 24 + fail 0, exit 0** |
+| `verify.py` | DELIVER-V5 | corruption caught 104 + missed 0, exit 0 | **corruption caught 104 + missed 0, exit 0** |
+
+No count moved, so `manifest.json` did not need to move either.  Adding a
+top-level `print-masters/` directory tripped nothing: `check_readme.py` asserts
+counts *within* named directories and does not enumerate the tree root.
+
+`delivery_audit.py` exits non-zero unless all 185 are green, so the metadata is
+now a **gated** property of the deliverable rather than a number in a log.
+
+## 8.5 Two things that are still wrong, and one is not mine to fix
+
+- **The upstream writers still emit untagged PNGs.**  `build.py` writes only
+  `overview/` and `crops-1to1/`, and those two now tag at the point of save.  The
+  other 81 files -- `full-resolution/`, `crops-worst-case/`, `known-defects/`,
+  `what-stacking-does/` -- are written by scripts under
+  `experiments/ORCH-drift-check/`, which this lane does not own.  `--retag` fixes
+  the artefact; it does not fix the source.  **A fresh run of those scripts will
+  re-emit untagged files**, and that is routed to the orchestrator rather than
+  silently patched in another lane's code.
+- **The delivered README's directory table omits `full-resolution/` and
+  `crops-worst-case/`.**  Pre-existing, in ORCH's half of the deliverable, and
+  reported rather than fixed.  I added the `print-masters/` row because I created
+  that directory.
+
+## 8.6 The product statement
+
+> **Print from `print-masters/`. The PNGs are previews.**  The 8-bit previews are
+> safe to print from for 49 of the 50 tone regions measured across all 26
+> subjects, but `dry-erase-marker-head-cpl` bands across 6.7% of its highlights,
+> and the corpus as a whole sits at 0.93x the noise level at which banding
+> disappears entirely -- so 8 bits is clean here only because sensor noise
+> happens to dither it, and a subject smoother or cleaner than the ones measured
+> has no margin left.
+
+The second clause is the one with a future in it.  Banding in a smooth ramp is
+suppressed by noise; this stacker's headline result is that it produces *less*
+noise than the alternatives; those two pull against each other.  The measured
+floor across 2,391 tiles is sigma = 0.28 codes against a zero-banding threshold
+of 0.30 -- a 7% margin, spent by the very improvement the project is chasing.
+Shipping 16-bit masters removes the question instead of managing it.

@@ -36,10 +36,16 @@ def icc_desc(blob: bytes) -> str:
 
 
 def main():
-    files = sorted(SRC.glob("*--SHIP-V4.tiff"))
+    # Optional root override so the DELIVERED copies can be censused, not just
+    # the build outputs.  A copy is not a verification: the only way to know the
+    # 26 print-masters carry their profile and DPI is to read it back out of the
+    # files that were actually delivered.
+    root = Path(sys.argv[1]) if len(sys.argv) > 1 else SRC
+    files = sorted(root.glob("*--SHIP-V4.tiff"))
     if not files:
-        print(f"no masters under {SRC}")
+        print(f"no masters under {root}")
         return 2
+    print(f"censusing {len(files)} file(s) under {root}")
     print(f"{'master':<40}{'bits':>5}{'ICC':>5} {'icc-md5':<13}"
           f"{'profile description':<56}{'xres':>6}{'unit':>6}")
     print("-" * 132)

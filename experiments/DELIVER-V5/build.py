@@ -45,6 +45,152 @@ BAR_CROP = 18
 BAR_OVER = 30
 N_SITES = 3
 
+# ---------------------------------------------------------------------------
+# COLOUR AND PRINT-SIZE METADATA ON THE DELIVERED PNGs
+#
+# BUILD-OUTPUT measured the delivered tree and found 0 of 26 full-resolution
+# PNGs carried an ICC profile, an sRGB chunk, or a pHYs chunk -- while the
+# 16-bit masters they came from carried "strehl sRGB (IEC 61966-2-1)" and
+# 300 dpi/inch on 26 of 26.  image_out.rs was making the metadata correctly and
+# the delivery was casting to uint8 through PIL and dropping all of it.  An
+# untagged PNG is assigned the consumer's working space: Photoshop, a browser
+# and a print lab will each guess, usually guess sRGB, and usually be right,
+# which is the kind of defect that survives until the once it does not.
+#
+# WHY RAW CHUNK SPLICING RATHER THAN RE-SAVING THROUGH PIL
+#
+# The requirement is that PIXELS MUST NOT CHANGE -- ORCH's
+# verify_delivery_all26.py compares decoded pixels against the masters and must
+# still read 26 exact / 0 differing afterwards.  Re-encoding through PIL would
+# re-run the compressor over the samples; the output should be pixel-identical
+# but nothing about that is guaranteed by construction, and "should be" is not
+# the standard here.  Splicing chunks into the byte stream cannot alter image
+# data because it never touches IDAT: the guarantee is structural, not tested.
+#
+# WHY iCCP AND NOT THE 1-BYTE sRGB CHUNK
+#
+# The sRGB chunk is a rendering-intent flag that names a space by reference.
+# Embedding the master's OWN profile bytes instead makes the two deliverables
+# provably the same colour space -- the PNG's profile md5 equals the TIFF's, and
+# that is checkable rather than asserted.  The PNG spec says a file should not
+# carry both, so any pre-existing sRGB/gAMA/cHRM is removed first, which also
+# makes the operation idempotent.
+PRINT_DPI = 300
+PPM = int(round(PRINT_DPI / 0.0254))     # pHYs is pixels per METRE, unit code 1
+PNG_SIG = b"\x89PNG\r\n\x1a\n"
+COLOUR_CHUNKS = (b"iCCP", b"sRGB", b"gAMA", b"cHRM", b"pHYs")
+_ICC_CACHE = []
+
+
+def master_icc():
+    """The ICC profile bytes taken from a shipped master, read once.
+
+    Taken from the master rather than synthesised here so the two deliverables
+    cannot drift apart: whatever image_out.rs embedded is what the preview
+    declares, and ship_census.py can compare the two md5s.
+    """
+    if not _ICC_CACHE:
+        import struct as _s
+        name, path = masters()[0]
+        with open(path, "rb") as fh:
+            buf = fh.read()
+        (off,) = _s.unpack("<I", buf[4:8])
+        (n,) = _s.unpack("<H", buf[off:off + 2])
+        prof = None
+        for i in range(n):
+            p = off + 2 + 12 * i
+            tag, typ, cnt = _s.unpack("<HHI", buf[p:p + 8])
+            if tag == 34675:
+                (vo,) = _s.unpack("<I", buf[p + 8:p + 12])
+                prof = buf[vo:vo + cnt]
+                break
+        if prof is None:
+            raise SystemExit("master %s carries no ICC profile to copy" % name)
+        _ICC_CACHE.append(prof)
+    return _ICC_CACHE[0]
+
+
+def _chunks(raw):
+    """Split a PNG into [(type, data)], verifying every CRC on the way in."""
+    import binascii
+    import struct as _s
+    if raw[:8] != PNG_SIG:
+        raise ValueError("not a PNG")
+    out, off = [], 8
+    while off + 8 <= len(raw):
+        (ln,) = _s.unpack(">I", raw[off:off + 4])
+        typ = raw[off + 4:off + 8]
+        data = raw[off + 8:off + 8 + ln]
+        (crc,) = _s.unpack(">I", raw[off + 8 + ln:off + 12 + ln])
+        if binascii.crc32(typ + data) & 0xFFFFFFFF != crc:
+            raise ValueError("CRC failure in %s chunk" % typ.decode("latin-1"))
+        out.append((typ, data))
+        off += 12 + ln
+        if typ == b"IEND":
+            break
+    return out
+
+
+def _assemble(parts):
+    import binascii
+    import struct as _s
+    o = bytearray(PNG_SIG)
+    for typ, data in parts:
+        o += _s.pack(">I", len(data)) + typ + data
+        o += _s.pack(">I", binascii.crc32(typ + data) & 0xFFFFFFFF)
+    return bytes(o)
+
+
+def tag_png(path):
+    """Give one PNG the master's ICC profile and a 300 dpi pHYs, in place.
+
+    Returns True if the file was rewritten.  IDAT is copied across untouched, so
+    the decoded image cannot change.  Both chunks are inserted immediately after
+    IHDR, which satisfies the ordering rules for iCCP (before PLTE and IDAT) and
+    pHYs (before IDAT).
+    """
+    import struct as _s
+    import zlib
+    with open(path, "rb") as fh:
+        raw = fh.read()
+    parts = _chunks(raw)
+    kept = [(t, d) for t, d in parts if t not in COLOUR_CHUNKS]
+    icc = (b"strehl\x00\x00" + zlib.compress(master_icc(), 9))
+    phys = _s.pack(">IIB", PPM, PPM, 1)
+    i = next(k for k, (t, _) in enumerate(kept) if t == b"IHDR")
+    out = kept[:i + 1] + [(b"iCCP", icc), (b"pHYs", phys)] + kept[i + 1:]
+    blob = _assemble(out)
+    tmp = path + ".tagging"
+    with open(tmp, "wb") as fh:
+        fh.write(blob)
+    os.replace(tmp, path)                       # atomic: never a torn 60 MB file
+    return True
+
+
+def retag_tree(root):
+    """Tag every PNG under `root`, including those written by other lanes.
+
+    build.py writes overview/ and crops-1to1/.  full-resolution/,
+    crops-worst-case/, known-defects/ and what-stacking-does/ are written by
+    scripts under experiments/ORCH-drift-check/, which this lane does not own.
+    Tagging the tree here fixes the delivered artefact without editing another
+    lane's code; the upstream writers still emit untagged PNGs on a fresh run
+    and that is routed to the orchestrator, not silently patched.
+    """
+    n, failed = 0, []
+    for dirpath, _dirnames, filenames in os.walk(root):
+        for fn in sorted(filenames):
+            if not fn.lower().endswith(".png"):
+                continue
+            p = os.path.join(dirpath, fn)
+            try:
+                tag_png(p)
+                n += 1
+            except Exception as e:              # noqa: BLE001
+                failed.append((p, "%s: %s" % (type(e).__name__, e)))
+    return n, failed
+
+
 
 def font(size):
     for cand in ("consola.ttf", "arial.ttf", "DejaVuSans.ttf"):
@@ -94,6 +240,25 @@ def sites(y):
 def main():
     limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else None
 
+    if "--retag" in sys.argv:
+        # Metadata-only pass over an already-built tree.  Kept separate from the
+        # build because rebuilding would re-derive crop sites and rewrite the
+        # manifest, and the deliverable's own verifiers assert exact counts
+        # against both.  Fixing metadata must not move a count.
+        import hashlib
+        prof = master_icc()
+        print("master ICC: %d bytes  md5 %s"
+              % (len(prof), hashlib.md5(prof).hexdigest()[:12]))
+        print("tagging every PNG under %s with that profile and %d dpi"
+              % (DST, PRINT_DPI))
+        t0 = time.time()
+        n, failed = retag_tree(DST)
+        print("  tagged %d PNG(s) in %.1f s, %d failed" % (n, time.time() - t0,
+                                                           len(failed)))
+        for p, why in failed:
+            print("  FAILED %s  %s" % (p, why))
+        return 0 if not failed else 1
+
     assert CROP + BAR_CROP <= VIEWER_LIMIT, (
         "a labelled crop must stay inside the viewer's measured resolve limit: "
         "%d + %d > %d" % (CROP, BAR_CROP, VIEWER_LIMIT))
@@ -135,8 +300,9 @@ def main():
                    "your viewer shrinks this further that reduction is the "
                    "VIEWER'S and it may ring; judge halos in crops-1to1/"
                    % (K, rim, name, w, h, ow, oh))
-            Image.fromarray(label_below(red8, txt, BAR_OVER, 18)).save(
-                os.path.join(DST, "overview", "%s__reduced-%dx-box.png" % (name, K)))
+            op = os.path.join(DST, "overview", "%s__reduced-%dx-box.png" % (name, K))
+            Image.fromarray(label_below(red8, txt, BAR_OVER, 18)).save(op)
+            tag_png(op)
 
             y = a8[..., 1].astype(np.float32)
             crops = []
@@ -144,8 +310,9 @@ def main():
                 c = a8[y0:y0 + CROP, x0:x0 + CROP]        # integer slice, nothing else
                 ct = "TRUE 1:1  no resampling  %s (%d,%d)" % (name, x0, y0)
                 fn = "%s__1to1_%d_%d.png" % (name, x0, y0)
-                Image.fromarray(label_below(c, ct, BAR_CROP, 12)).save(
-                    os.path.join(DST, "crops-1to1", fn))
+                cp = os.path.join(DST, "crops-1to1", fn)
+                Image.fromarray(label_below(c, ct, BAR_CROP, 12)).save(cp)
+                tag_png(cp)
                 crops.append({"file": fn, "x0": x0, "y0": y0, "n": CROP})
             del y, a8, red, red8
 
