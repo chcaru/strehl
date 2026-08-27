@@ -382,6 +382,39 @@ estimator suppresses a spatially-fixed component on the real stack, which
 would mean my N1 operator is partly blind to exactly the thing fact 612 says
 matters most. **Anything that depends on FPN must not use this simulator.**
 
+#### 6.4.1 Addendum 2026-08-27 — the missing terms are now measured, and the decision is to EXTEND rather than rebuild
+
+When §6.4 was written, no dark frame or flat field existed for this body, so
+the generator could not have modelled the fixed-pattern terms even in
+principle. Both captures have since been delivered and reduced.
+`experiments/V-CALIB/`, reported in `docs/research/V-LINEAR2.md` §12 item 4,
+measures on this body: black 512.10 DN against a nominal 512; gain 0.2232
+DN/e⁻ against the corpus model's 0.2289; read noise 0.887 DN = 3.974 e⁻
+against the model's 4.200; and the two terms this simulator lacks — **DSNU
+0.389 DN and PRNU 0.286% of signal**.
+
+The decision, taken with the orchestrator and recorded here so it is not
+re-argued: **extend this generator with those two terms and cite V-CALIB;
+do not rebuild it.** A rebuild would re-derive numbers that already exist at
+full cost for the same content, and it would discard §6's own honest
+accounting of where the generator is circular, which is the most useful part
+of this document.
+
+What the addendum does **not** license. §6.4's tension is unresolved and
+adding a DSNU term does not resolve it: the synthetic N1 ratio sits *above*
+the real one where a missing variance component predicts *below*, and the
+likeliest reading remains that the 9×9-median-residual MAD estimator is partly
+blind to a spatially-fixed component. Adding FPN to the generator and watching
+that gap close would be evidence; asserting it will close is not. Until it is
+measured, §6.4's prohibition stands as written.
+
+What is still open after V-CALIB is the **band-resolved** split of the
+fixed-pattern structure. The scalar magnitudes above do not say how much of it
+lands at 0.40–0.48 cyc/px, which is precisely the band where
+`docs/research/V-LINEAR2.md` §10.1's `DISJOINT` arm reads 40.2% and where a
+noise measurement therefore has the most at stake. That needs the flats
+developed through the same linear path as the subject frames.
+
 ### 6.5 The scale track is linear; the corpus only says smooth and monotonic
 
 Fact 1177 MEASURED the drift as smooth and monotonic over 299 frames. Linear
