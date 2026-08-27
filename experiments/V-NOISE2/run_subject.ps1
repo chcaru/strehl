@@ -85,6 +85,33 @@ foreach ($d in $lin,$ali,$arm,$logs,$wrk) { New-Item -ItemType Directory -Force 
 
 function Say($m) { Write-Host ("[{0}] {1}" -f (Get-Date -Format HH:mm:ss), $m) }
 
+# ------------------------------------------------------- SINGLE-WRITER LOCK
+# This script is RESUMABLE BY FILE EXISTENCE -- every step is `if (Test-Path
+# $dst) { skip }`.  That makes it safe to re-run and UNSAFE to run twice at
+# once: a second instance seeing a half-written strehl-A.tiff skips it as done,
+# and two align_image_stack processes sharing $ali interleave their al_*.tif
+# output.  Neither failure announces itself; both produce a file of the right
+# name and the wrong contents, which is the exact class of defect this lane
+# exists to catch.  So concurrency is refused rather than detected afterwards.
+# The lock records the PID, and a lock whose PID is gone is treated as stale
+# (a killed run must not block the retry that fixes it).  There is deliberately
+# no try/finally release: "$PID is alive" IS the release condition, so a run
+# that dies -- crash, Ctrl-C, killed shell -- frees its own lock without
+# needing to have handled the exit.  The cost is that a lock outlives the
+# script for as long as its *shell* lives, so re-running the same key from the
+# same long-lived shell needs the lock removed by hand.  That is the safe
+# direction to be wrong in.
+$lock = "$root\.build.lock"
+if (Test-Path $lock) {
+  $old = (Get-Content $lock -First 1 -ErrorAction SilentlyContinue) -as [int]
+  if ($old -and (Get-Process -Id $old -ErrorAction SilentlyContinue)) {
+    throw "another instance (pid $old) is already building '$Key' -- refusing to run concurrently"
+  }
+  Say "stale lock from dead pid $old removed"
+  Remove-Item $lock -Force
+}
+"$PID" | Out-File $lock -Encoding ascii
+
 $clear = @('STREHL_FULLRES_GATHER','STREHL_WARPMAP','STREHL_ALIGN','STREHL_MERGE',
            'STREHL_DEBUG','STREHL_LOG','STREHL_THREADS','STREHL_MEM_BUDGET_MB',
            'STREHL_NO_HALO','STREHL_SEED','STREHL_RESAMPLER','STREHL_FIX_HALO',
