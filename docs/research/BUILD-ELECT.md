@@ -2968,3 +2968,65 @@ Two things keep this from being a silent defect, and both are measured:
 **Not established.**  I did not sweep the repository's harnesses for bare
 `--gate`; the count above is the binary's own, not mine.  Whether any *live*
 render path passes it is the checkable next question and I did not answer it.
+
+## 19. My own instrument is blind to a wide defect, and I never tested for it
+
+Answering the fleet's standing question -- *what property of the input decides
+whether this check can see anything, and have I varied it?* -- against
+`arcprofile.py`, the instrument section 17 rests on.
+
+**The property is the defect's radial WIDTH. I never varied it.**
+`PLANT_BAND = (50, 250)` is narrow and fixed, entirely inside the reference
+annulus at `REF_LO, REF_HI = 750, 1400`. Every commissioning run in 17 tested
+the instrument only in the regime where it works.
+
+Swept it. Plant is a multiply by 0.85 over `d in [50, W)`; only the outer edge
+`W` moves, so **the truth is identical in every row** and a correct instrument
+prints one column. `widthsweep.py`, same pinned pair, same mask:
+
+| W px | reference DN | reference moved | RECOVERED | truth | error | verdict | arm ratio |
+| ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| 250 | 19004 | +0.00% | **-15.36%** | -15.36% | +0.00 | ok | +17.65% |
+| 500 | 19004 | +0.00% | -15.36% | -15.36% | +0.00 | ok | +17.65% |
+| 750 | 19004 | +0.00% | -15.36% | -15.36% | +0.00 | ok | +17.65% |
+| 900 | 18344 | -3.47% | -12.32% | -15.36% | +3.04 | DEGRADED | +17.65% |
+| 1100 | 17134 | -9.84% | -6.12% | -15.36% | +9.24 | **BLIND** | +17.65% |
+| 1400 | 16153 | -15.00% | **-0.42%** | -15.36% | +14.94 | **BLIND** | +17.65% |
+| 2100 | 16153 | -15.00% | -0.42% | -15.36% | +14.94 | **BLIND** | +17.65% |
+| 4000 | 16153 | -15.00% | -0.42% | -15.36% | +14.94 | **BLIND** | +17.65% |
+
+**A real 15.4% darkening is reported as -0.42%.**  The mechanism is in the
+`reference moved` column and needs no interpretation: at W=1400 the reference
+itself falls 15.00%, the same factor as the plant, so numerator and denominator
+cancel.  The shipped `PLANT_BAND` sits in the `ok` rows -- **my commissioning was
+green in precisely the regime where the instrument is sound, and silent about
+the regime where it fails.**
+
+This is the second time this exact class has bitten this lane.  In 17.1 the
+retracted `peaksite.py` had its *null* inside the defect.  I fixed the null and
+left the *reference* with the identical vulnerability.  **Fixing one instance of
+a defect class is not fixing the class.**
+
+### 19.1 What this bounds, and what it does not
+
+The reference-free arm ratio was run under the same plants as a control and is
+**exact in every row -- 0.00 points of error across the whole sweep.**  It uses
+no reference, so there is no denominator for a broad defect to contaminate.
+
+- **UNAFFECTED: the 24-of-24 arm comparison and the whole-band -8.10%.**  This is
+  the form I told the owner I would put in front of anyone, and the sweep is
+  positive evidence for that choice rather than a hope.
+- **BOUNDED: every per-arm percentage in 17** -- the control's -10.13% and the
+  blend's +0.21% -- is valid only for features narrower than ~750 px.  The
+  measured recovery distances are 488 px (control) and 112 px (blend), both
+  inside that, so **the numbers in 17 stand.**
+- **MOST BOUNDED: the null.**  "No measurable residual on the blend, below the
+  -3.0% floor" is a statement about *narrow* residuals only.  A broad uniform
+  pedestal -- a veiling lift across the entire backdrop, which is exactly the
+  physical form veiling glare takes -- would read as zero here and I would have
+  reported it as absent.  **That null is now explicitly limited, and it is the
+  claim in 17 a reader should trust least.**
+
+**Not established.**  I did not test whether such a broad pedestal is actually
+present; that needs an absolute reference, not a radial one, and the arm ratio
+only compares two arms that could share it.
