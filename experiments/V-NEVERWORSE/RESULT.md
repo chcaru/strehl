@@ -58,22 +58,60 @@ this machine it is reached only by a commissioning fixture under `V-GATHER\pinco
 so it is not currently mis-scoring anything — but a lane reaching for "PIN-V3" by name, or
 checking size, would be off-gauge and would see nothing wrong.
 
-For the record, the build ORCH flagged as `066A87AB…0437B` is **not present** in any copy of
-`strehl.exe` under `C:\dev` — 160 copies at the time of writing, **65 distinct builds**.
-(The copy count drifts upward as other lanes rebuild; the distinct-build count is the
-load-bearing figure, and re-running `vn_seals.py` re-derives both.) Nothing in this lane
-could have used it. That is a scoped negative — `C:\dev` was the whole search — not a claim
-about the machine.
+**RETRACTED — the absence claim in this section's first version was false.** It read:
+"`066A87AB` is not present in any of the 160 copies of `strehl.exe` under `C:\dev`". ORCH
+refuted it by holding the file. It is at
+`C:\dev\strehl-out\V-REVIEW\bin\strehl-pinned.exe`, and it is there now.
 
-`vn_seals.py` reproduces this whole section: it hashes every `strehl.exe` under a root,
-reads every `.tiff.ok` on disk, and fails on a corpus carrying more than one seal, a seal
-with no binary behind it, or a path whose *name* claims a corpus its hash does not seal.
-It classifies `V-GATHER\pincommission\*`, `V-REVIEW\pinguard\*` and `acceptance\PINTEST` as
-other lanes' deliberate fixtures, so their intentionally mixed and synthetic seals are not
-reported as incidents. Current state: **0 incidents**, three shipping corpora all
-26/26 consistent, one name-vs-hash hazard (`PIN-V3` above). Commissioned by running it
-against a root holding no binaries at all, which must and does go red (4 incidents, rc=1) —
-without that, "0 incidents" would be indistinguishable from a check that cannot fail.
+The mechanism is in the retracted sentence itself. The scan filtered `fn.lower() ==
+"strehl.exe"`; the file is named `strehl-pinned.exe`. **162 files match `strehl.exe` where
+307 match `strehl*.exe`** — the query could reach barely half the population, and the build
+I declared absent was in the half it could not see. I scoped the negative to the root,
+honestly, and the root was not the binding scope: **the filename pattern was.** An absence
+result is a statement about the query until the query's reach is measured.
+
+So `vn_seals.py` no longer widens the pattern and calls it fixed — widening is unfalsifiable
+on its own, because a wider query that still misses something looks exactly like a complete
+one. It now **plants decoys it is required to find**, under names straddling each pattern
+boundary, and hard-fails if a decoy inside the pattern is missed:
+
+| planted build | `strehl.exe` | `strehl*.exe` | `*.exe` |
+| --- | --- | --- | --- |
+| `strehl.exe` | FOUND | FOUND | FOUND |
+| `strehl-pinned-decoy.exe` — *the v1 miss* | **miss** | FOUND | FOUND |
+| `strehl2.exe` | **miss** | FOUND | FOUND |
+| `zz-renamed-build.exe` | **miss** | **miss** | FOUND |
+| `renamed-build-no-ext` | **miss** | **miss** | **miss** |
+
+v1's pattern misses **4 of the 5**. The last row is unreachable by design and is the
+**measured residual blind spot** — a build renamed without an `.exe` extension would still
+escape, and that is now a stated number rather than an assumed zero.
+
+Corrected census, `C:\dev`, both scopes:
+
+| scope | files walked | matched | hashed | distinct builds | `066A87AB` |
+| --- | --- | --- | --- | --- | --- |
+| `strehl*.exe` | 1,171,076 | 307 | 2.2 GB | 170 | **PRESENT, 1 copy** |
+| `*.exe` (absence-grade) | 1,161,785 | 7,699 | 11.5 GB | 2,515 | **PRESENT, 1 copy** |
+
+Both scopes find it. The `strehl*.exe` figures agree with ORCH's independent 301 paths / 165
+builds to within the drift of six lanes rebuilding during the scan.
+
+**One thing the corrected census surfaces that is worth acting on:** `066A87AB`'s single
+copy is not a stray — it is `V-REVIEW\bin\strehl-pinned.exe`, i.e. a lane's *pinned working
+binary*. That lane is pinned, deliberately and correctly by its own lights, to a build that
+reproduces neither SHIP-V3 nor SHIP-V4. Its measurements are sound arm-versus-arm and may
+not be quoted as shipping behaviour. Same class as the `PIN-V3` hazard below, but live.
+
+`vn_seals.py` reproduces this whole section: it hashes every file matching a pattern under a
+root, reads every `.tiff.ok` on disk, and fails on a corpus carrying more than one seal, a
+seal with no binary within reach, or a path whose *name* claims a corpus its hash does not
+seal. It classifies `V-GATHER\pincommission\*`, `V-REVIEW\pinguard\*` and `acceptance\PINTEST`
+as other lanes' deliberate fixtures, so their intentionally mixed and synthetic seals are not
+reported as incidents. Current state: **0 incidents**, three shipping corpora all 26/26
+consistent, one name-vs-hash hazard (`PIN-V3` above). It refuses to imply an absence unless
+the reach arm has run: `--skip-reach` prints "no absence claim may be drawn from this run",
+and a decoy that should have been found is a fatal error, not a warning.
 
 **The check that makes it a measurement, not an assumption.** Each master carries a
 `<subject>--SHIP-V4.tiff.ok` file whose entire content is the sha256 of the binary that
@@ -721,6 +759,91 @@ that names another.
 
 ---
 
+## 6.5 The four unadjudicated subjects, named
+
+These are the only genuine regression candidates in the corpus: the subjects where the
+merge-attributable band excess is **not** covered by the conservatively bounded detail gain
+at the same window (§5.2). Everything else is either within the bound or holds outright.
+
+| subject | abs blotch | blotch vs min | band vs min | excess over null | detail bound ×0.82 | **excess over bound** | sampled / admitted / stack depth |
+|---|---|---|---|---|---|---|---|
+| `bee-2-cpl` | 0.00133 | 2.7897x | 2.6685x | 1.948 | 1.675 | **+16%** | 21 / 12 / 299 |
+| `flowers-cpl` | 0.01090 | 2.5300x | 2.0688x | 1.456 | 1.302 | **+12%** | 21 / 17 / 176 |
+| `coffee-bubbles` | 0.09892 | 1.4501x | 1.4950x | 1.370 | 1.270 | **+8%** | 19 / 19 / 19 |
+| `coffee-bean` | 0.00082 | 1.6312x | 1.6395x | 1.544 | 1.504 | **+3%** | 21 / 18 / 105 |
+
+Three things about this list that matter before anyone acts on it.
+
+**The bound is weak in the merge's favour, and the residual is small against its own error
+bars.** The `relhf` detail proxy failed its own commissioning as a sharpness statistic
+(§5.1) and the ×0.82 warp correction is borrowed from a different subject's registration.
+A 3% residual on `coffee-bean` is well inside that; a 16% residual on `bee-2-cpl` is the
+only one I would call suggestive, and even it is not established.
+
+**Three of the four are the same picture, and it is a picture about my instrument.** This
+lane samples at most **21 frames per stack** (§2.2), so on `bee-2-cpl`, `flowers-cpl` and
+`coffee-bean` — stacks of 299, 176 and 105 — the reference is a 21-frame subsample, of which
+registration then admitted only **12, 17 and 18**. The `min` in "no worse than the best
+single frame" is therefore a minimum over 12 to 18 draws standing in for a minimum over
+105 to 299. That is a much weaker bound and it is biased in the merge's favour on the
+absolute question, but it also means these three are the subjects **my measurement**
+resolves worst, not demonstrably the subjects the merge handles worst.
+
+**`coffee-bubbles` is the exception and is the one to look at first.** Its stack is 19 frames
+deep, all **19 were sampled and all 19 admitted** — the only subject among the four whose
+reference is the complete stack, with no subsampling and nothing dropped — and it still
+shows +8%. It also carries a high absolute blotch (0.09892) at a window that is genuinely
+flat. If there is a real merge regression anywhere in these four, `coffee-bubbles` is where
+it is cleanest to prove and cheapest to re-measure. I did not adjudicate it because doing so
+needs a warp-stable sharpness statistic, which is another lane's instrument.
+
+**Every number in the table above is re-derived, not transcribed.** `vn_verify65.py` recomputes
+each from `report\null.json` and the per-subject `ratio\*.json` records (`excess = vs_min /
+loo_med`; `bound = relhf_ratio × 0.82`) and matches it against the document: 45 claims, all
+green. Writing this section I misread the section 3 `beat` column as an admitted-frame count
+and then misread `n_total` as a registered count; the checker caught both before this text
+was committed, which is the whole reason it exists.
+
+`vn_negctl65.py` commissions it with **17 planted defects and a placebo — 17/17 caught, placebo
+clean, restore byte-identical.** Two of those plants failed on the first run, and both were
+defects in the checking apparatus rather than in the prose:
+
+- **A duplicate satisfied a presence test.** Mutating the `+8%` cell of `coffee-bubbles` read
+  green, because the same `+8%` also appears in the prose a hundred characters away and the
+  proximity window found that instead. Table-cell claims are now checked against the cell's
+  own table row and nothing else. This is the second time this lane has been bitten by
+  duplicate-satisfies-presence (§2.3); it is not a one-off.
+- **A crash scored as a pass.** Substituting a subject in the table made the checker raise
+  `IndexError` before printing anything, and the control — which keyed only on the `FAILED:`
+  block — recorded that silence as green. The control now distinguishes three states, and any
+  traceback is its own verdict. A checker that dies is not a checker that agreed.
+
+---
+
+## 6.6 For the owner's README — plain language, quotable as-is
+
+> **What stacking gives you, and what it does not.** Strehl merges a run of frames into one
+> image that is sharp front to back, and on every subject we tested it resolves detail that
+> no single frame in the stack resolved — that is the win, and it is not in doubt. What it
+> does **not** do is give you cleaner smooth areas than your best single frame. We checked
+> this the hard way on all 26 test stacks, comparing each finished image against the actual
+> frames it was built from: in flat, out-of-focus regions the merged file carries slightly
+> more fine mottling than the cleanest frame that went into it, on 21 of the 24 subjects we
+> could measure, and faint colour speckle behaves the same way. Most of that is not damage.
+> The merge is largely being charged for texture it genuinely resolved — on 20 of those 24
+> the extra mottling is fully accounted for by the extra real detail at the same spot, and
+> at 100% on screen what you are looking at is hair, fibre and speckle that is really there.
+> On four subjects it is not fully accounted for, by at most 16%. So: judge a stack on
+> detail and depth of field, where it wins outright. If you are printing large and your
+> subject has broad smooth backgrounds, look at those backgrounds at 100% before you commit
+> — stacking is not a noise-reduction step, and we have never measured it to be one.
+
+Written for someone judging prints. It concedes the finding in the first three sentences
+rather than burying it, because the failure mode of a claim like this is a reviewer finding
+the exception before the README admits it.
+
+---
+
 ## 7. Files
 
 | file | what it does |
@@ -738,6 +861,8 @@ that names another.
 | `vn_warpnull.py` | the resampling null at the magnification actually used (§2.3) |
 | `vn_verify23.py` | re-derives every number quoted in §2.3 from the records |
 | `vn_negctl23.py` | negative control for that checker: 14 plants + 1 placebo, 15/15 |
-| `vn_seals.py` | hashes every `strehl.exe` and every `.tiff.ok` seal; reproduces §0 |
+| `vn_verify65.py` | re-derives every number in §6.5 from `null.json` and the ratio records |
+| `vn_negctl65.py` | negative control for that checker: 17 plants + 1 placebo, 17/17 |
+| `vn_seals.py` | hashes every `strehl*.exe` and every `.tiff.ok` seal; reproduces §0. Plants decoys it must find, so reach is measured rather than assumed. |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
