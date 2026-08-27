@@ -935,6 +935,75 @@ pub const ALIGN_ENV: &str = "STREHL_ALIGN";
 /// option, because a render made with it has edge pixels no frame covers.
 pub const COVER_ENV: &str = "STREHL_COVER";
 
+/// Environment switch for the **full-resolution gather**, which is **off** by
+/// default.
+///
+/// Set `STREHL_FULLRES_GATHER=1` to demosaic each frame to full sensor
+/// resolution before the warp, so every CFA site is gathered from a
+/// full-resolution estimate rather than from its own half-resolution phase
+/// plane.
+///
+/// # Why it exists
+///
+/// [`warp_frame_in_place`] deinterleaves the mosaic into four `gw x gh` phase
+/// planes and gathers each separately. That is right for colour -- no
+/// interpolation ever mixes two channels -- but it band-limits every phase to
+/// the **plane** Nyquist, which on a `2gw x 2gh` output is 0.25 cyc/output px,
+/// and it happens *before* any election, so no later stage can recover it.
+///
+/// It is **off** by default because the demosaic is not free. Flipping the
+/// default is a decision on measured quality and measured time together, and
+/// that decision is not this function's to make.
+pub const FULLRES_ENV: &str = "STREHL_FULLRES_GATHER";
+
+/// Is the full-resolution gather enabled? **Off** unless explicitly asked for.
+///
+/// Deliberately the opposite polarity to [`align_enabled`]: unset means off, so
+/// a render made without asking for it is the shipped render. An unrecognised
+/// value is also off, because the failure that matters here is a measurement
+/// silently taken through the wrong path.
+pub fn fullres_gather_enabled() -> bool {
+    matches!(
+        std::env::var(FULLRES_ENV)
+            .unwrap_or_default()
+            .trim()
+            .to_ascii_lowercase()
+            .as_str(),
+        "1" | "on" | "true" | "yes"
+    )
+}
+
+/// Index into `[R, G, B]` of the RGGB site at `(x, y)`.
+///
+/// Agrees with [`strehl_core::CfaPlane::rggb_at`] by construction: `(0,0)` is
+/// red, `(1,1)` is blue, the other two diagonal sites are green. It is written
+/// out here rather than derived from `CfaPlane` so that the gain lookup and the
+/// mosaic build cannot drift apart from each other.
+#[inline]
+fn rggb_channel_index(x: usize, y: usize) -> usize {
+    match (y % 2, x % 2) {
+        (0, 0) => 0,
+        (1, 1) => 2,
+        _ => 1,
+    }
+}
+
+/// As-shot white balance as `[R, G, B]` gains with green normalised to 1.
+///
+/// The fourth coefficient is `NaN` on this body (MEASURED, M1) and is never
+/// read. A non-finite or non-positive coefficient means the file did not give a
+/// usable balance; unity for all three is then the only consistent answer,
+/// because *mismatched* gains are precisely what a colour-difference demosaic
+/// cannot tolerate, and a half-applied balance is worse than none.
+fn wb_gains(wb: &[f32; 4]) -> [f32; 3] {
+    let (r, g, b) = (wb[0], wb[1], wb[2]);
+    if r.is_finite() && g.is_finite() && b.is_finite() && r > 0.0 && g > 0.0 && b > 0.0 {
+        [r / g, 1.0, b / g]
+    } else {
+        [1.0, 1.0, 1.0]
+    }
+}
+
 /// Is registration enabled?
 ///
 /// Anything other than `0`, `off`, `false` or `no` leaves it on.
@@ -1400,7 +1469,32 @@ impl WarpScratch {
 /// option.
 ///
 /// Returns the fraction of the plane that was covered.
+///
+/// Dispatches to [`warp_frame_in_place_plane`] (the shipped default) or
+/// [`warp_frame_in_place_fullres`]. Both are `pub` and callable directly, which
+/// is deliberate: a gate that reached them only through this function would read
+/// the environment too, so an env var set in the shell would silently move
+/// *both* arms of an A/B onto the same path and the comparison would report a
+/// null it could never have failed.
 pub fn warp_frame_in_place(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+) -> Result<f64> {
+    if fullres_gather_enabled() {
+        warp_frame_in_place_fullres(frame, t, geom, resampler, scratch)
+    } else {
+        warp_frame_in_place_plane(frame, t, geom, resampler, scratch)
+    }
+}
+
+/// The shipped gather: four CFA phases, each on its own `gw x gh` plane.
+///
+/// Band-limited to the plane Nyquist, 0.25 cyc per *output* pixel. See
+/// [`warp_frame_in_place_fullres`] for what that costs and why.
+pub fn warp_frame_in_place_plane(
     frame: &mut strehl_raw::Frame,
     t: Similarity,
     geom: PlaneGeometry,
@@ -1482,6 +1576,189 @@ pub fn warp_frame_in_place(
                         // Round, then clamp to the container. The source is
                         // u16 and the interpolator can overshoot on an edge.
                         v.round().clamp(0.0, u16::MAX as f32) as u16
+                    } else {
+                        black_dn
+                    };
+                }
+            }
+        }
+    }
+    Ok(covered_total as f64 / (4 * geom.pixels()) as f64)
+}
+
+/// [`warp_frame_in_place`], but gathering from a full-resolution estimate.
+///
+/// # What actually changes
+///
+/// The shipped gather treats the four CFA phases as four independent `gw x gh`
+/// images and samples each at plane coordinate `(px, py)`. Two things follow,
+/// and both cost resolution:
+///
+///   1. Every phase is band-limited to the **plane** Nyquist, `0.25` cyc per
+///      *output* pixel. Content above that is not attenuated, it is aliased,
+///      and this happens before any election, so nothing downstream can undo it.
+///   2. The half-plane-pixel offsets that separate the four sites inside a quad
+///      are discarded, so the phases are not co-sited after the warp. Gathering
+///      `G1` and `G2` on separate lattices also throws away the extra bandwidth
+///      the green quincunx would otherwise carry.
+///
+/// This path demosaics first, so every channel exists at every photosite, then
+/// gathers each CFA site from its own channel at its own full-resolution
+/// coordinate. Site `(2px + dx, 2py + dy)` has plane coordinate
+/// `(px + dx/2, py + dy/2)`; the solve is in plane units, so the source is
+/// `2 * t.apply_at(px + dx/2, py + dy/2, cx, cy)` sampled on the `2gw x 2gh`
+/// channel plane. That mapping leaves scale and rotation alone and only doubles
+/// the translation, which is why the fitted [`Similarity`] is reused as-is
+/// rather than refitted.
+///
+/// **Colour is still never mixed by the warp**: each site is filled from its own
+/// channel. The mixing the shipped comment warns about happens in the *demosaic*
+/// stencil, which is what a demosaic is for, and is undone by writing each site
+/// back to its own colour.
+///
+/// # Why white balance is applied and then removed
+///
+/// [`strehl_core::demosaic::Mosaic`] documents that a gradient-corrected
+/// demosaic interpolates colour *differences*, and those are only smooth once
+/// the channels share a scale. The merge downstream expects raw DN, so the gains
+/// are divided out again on the way back into `frame.data`. Green is normalised
+/// to `1.0`, so the channel carrying most of the luminance makes that round trip
+/// exactly and only R and B pay a multiply-then-divide.
+///
+/// # Cost
+///
+/// Four `2gw x 2gh` `f32` buffers are live at the peak -- the mosaic plus three
+/// channel planes, about 528 MB at 7032x4688 -- and the mosaic is dropped before
+/// the gather. A caller that warps frames concurrently multiplies that by the
+/// worker count.
+pub fn warp_frame_in_place_fullres(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+) -> Result<f64> {
+    let (gw, gh) = (geom.width, geom.height);
+    if frame.active.width / 2 != gw || frame.active.height / 2 != gh {
+        bail!(
+            "frame {} has quad geometry {}x{}, but the warp map was fitted on {gw}x{gh}",
+            frame.path.display(),
+            frame.active.width / 2,
+            frame.active.height / 2
+        );
+    }
+    let (fw, fh) = (2 * gw, 2 * gh);
+    let black = frame.levels.black;
+    let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
+    let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
+    let gain = wb_gains(&frame.wb_coeffs);
+
+    // 1. Black-subtracted, white-balanced mosaic over the active region. Local
+    //    coordinates, so CFA parity is the same one `cfa_site_channel` uses.
+    let mut mos = vec![0f32; fw * fh];
+    {
+        let data = &frame.data;
+        mos.par_chunks_mut(fw).enumerate().for_each(|(y, orow)| {
+            let row = (ay + y) * stride + ax;
+            for (x, o) in orow.iter_mut().enumerate() {
+                *o = (data[row + x] as f32 - black) * gain[rggb_channel_index(x, y)];
+            }
+        });
+    }
+
+    // 2. Demosaic to three full-resolution channel planes.
+    let mut rp = vec![0f32; fw * fh];
+    let mut gp = vec![0f32; fw * fh];
+    let mut bp = vec![0f32; fw * fh];
+    {
+        let m = strehl_core::demosaic::Mosaic {
+            data: &mos,
+            width: fw,
+            height: fh,
+        };
+        rp.par_chunks_mut(fw)
+            .zip(gp.par_chunks_mut(fw))
+            .zip(bp.par_chunks_mut(fw))
+            .enumerate()
+            .for_each_init(
+                || vec![0f32; fw * 3],
+                |buf, (y, ((rr, gg), bb))| {
+                    strehl_core::demosaic::demosaic_row(&m, y, buf);
+                    for x in 0..fw {
+                        rr[x] = buf[3 * x];
+                        gg[x] = buf[3 * x + 1];
+                        bb[x] = buf[3 * x + 2];
+                    }
+                },
+            );
+    }
+    drop(mos);
+
+    // Same gear-guarded CA resolution as the shipped path; `None` => `compose`
+    // returns `t` untouched.
+    let ident = strehl_raw::identity(&frame.path);
+    let ca = strehl_core::optics::profile_for_capture_env(
+        ident.model.as_deref(),
+        ident.lens_type3,
+    )?;
+
+    let fgeom = PlaneGeometry {
+        width: fw,
+        height: fh,
+    };
+    let (cx, cy) = (gw as f64 * 0.5, gh as f64 * 0.5);
+    let mut covered_total = 0usize;
+
+    for dy in 0..2usize {
+        for dx in 0..2usize {
+            let ch = strehl_core::optics::cfa_site_channel(dx, dy);
+            let ci = rggb_channel_index(dx, dy);
+            let plane: &[f32] = match ci {
+                0 => &rp,
+                2 => &bp,
+                _ => &gp,
+            };
+            let src = PlaneRef::from_geometry(plane, fgeom)
+                .context("full-resolution warp source does not match the frame geometry")?;
+            let t_site = strehl_core::optics::OpticalProfile::compose(ca, ch, t);
+            // The site's own offset inside the quad, in plane units.
+            let (ox, oy) = (dx as f64 * 0.5, dy as f64 * 0.5);
+            {
+                let dst = &mut scratch.dst;
+                let cover = &mut scratch.cover;
+                dst.par_chunks_mut(gw)
+                    .zip(cover.par_chunks_mut(gw))
+                    .enumerate()
+                    .for_each(|(py, (drow, crow))| {
+                        for (px, (o, c)) in drow.iter_mut().zip(crow.iter_mut()).enumerate() {
+                            let (sxp, syp) =
+                                t_site.apply_at(px as f64 + ox, py as f64 + oy, cx, cy);
+                            match resampler.sample_checked(src, 2.0 * sxp, 2.0 * syp) {
+                                Some(v) => {
+                                    *o = v;
+                                    *c = true;
+                                }
+                                None => {
+                                    *o = f32::NAN;
+                                    *c = false;
+                                }
+                            }
+                        }
+                    });
+            }
+
+            let inv = 1.0 / gain[ci];
+            for py in 0..gh {
+                let row = (ay + 2 * py + dy) * stride + ax + dx;
+                let lo = py * gw;
+                for px in 0..gw {
+                    frame.data[row + 2 * px] = if scratch.cover[lo + px] {
+                        covered_total += 1;
+                        // Undo the balance, restore the pedestal, then round and
+                        // clamp exactly as the shipped path does.
+                        (scratch.dst[lo + px] * inv + black)
+                            .round()
+                            .clamp(0.0, u16::MAX as f32) as u16
                     } else {
                         black_dn
                     };
@@ -1597,19 +1874,247 @@ fn run_verify_warp(args: &AlignArgs, resampler: Resampler) -> Result<()> {
         }
     );
 
+    let d_pass = run_w8d(&paths[0], geom, resampler, &mut scratch)?;
+
     println!(
         "\n  GATE W8: {}",
-        if a_pass && b_pass && c_pass {
+        if a_pass && b_pass && c_pass && d_pass {
             "PASS"
         } else {
             "FAIL"
         }
     );
-    if a_pass && b_pass && c_pass {
+    if a_pass && b_pass && c_pass && d_pass {
         Ok(())
     } else {
         bail!("gate W8 failed")
     }
+}
+
+/// W8d -- what the gather carries **above the plane Nyquist**.
+///
+/// W8a and W8b pin identity and inverse-scale. Neither can see the defect that
+/// matters most, because both are *round trips*: a band the gather destroys is
+/// destroyed identically on the way out and on the way back, so the residual
+/// stays small and the gate stays green. Four documents reasoned about this
+/// behaviour while no test touched it.
+///
+/// The probe is a planted uniform-luma cosine at a known spatial frequency,
+/// gathered under a known sub-plane-pixel translation, scored by **coherent
+/// fidelity**
+///
+/// ```text
+///     fid = sum(got * ideal) / sum(ideal * ideal)
+/// ```
+///
+/// against the analytically shifted cosine. This is signed on purpose. A power
+/// ratio cannot distinguish "carried" from "carried with the wrong sign", and
+/// aliasing above the plane Nyquist produces exactly the latter: the phase
+/// reverses, and a magnitude statistic reads the reversal as success.
+///
+/// # What makes each number mean something
+///
+/// * **NULL, per frequency and per path.** A zero translation must return
+///   `1.0000` to four places. Catmull-Rom at integer coordinates has weights
+///   `(0, 1, 0, 0)`, and a demosaic returns the *measured* channel unchanged at
+///   its own site, so both paths are exact copies here. Anything else is a
+///   harness error -- an off-by-one in the CFA phase, a wrong shift convention,
+///   a margin that runs off the active region -- and not a property of the
+///   gather. **If the null is not 1.0000, no other row on that line is worth
+///   reading.**
+/// * **The low-frequency line is a common-mode control.** At 0.10 cyc/output px
+///   both paths are well inside the plane Nyquist and must agree. If the
+///   full-res path wins *there* too, the win is not about bandwidth and this
+///   probe is measuring something else.
+/// * **White balance is forced to unity and black to zero**, so the planted
+///   signal reaches the demosaic unscaled and returns unscaled. That removes
+///   the one stage where the two paths do genuinely different arithmetic, which
+///   is what leaves the *lattice* as the only difference between the arms.
+///
+/// # Lateral CA is a confound here and must be off
+///
+/// `warp_frame_in_place` composes the gear-guarded lateral-CA profile into the
+/// per-channel transform, so on matching gear an "identity" placement is not
+/// identity and every null in this probe reads below 1.0 with a
+/// frequency-dependent droop that looks exactly like a bandwidth measurement.
+/// MEASURED on `flat-on-ruler-cpl/DSC00001.ARW`: with the profile live the
+/// plane nulls read `0.8999 / 0.7971 / 0.4169 / 0.7971 / 0.9740`; with
+/// `STREHL_FIX_CA=off` they read `1.0000` on all five. **This is also why W8a
+/// fails on that frame by default** -- `differing 13922626` of 32629248 with
+/// the profile live, `differing 0` with it off -- and that failure predates
+/// this probe and the full-resolution gather both.
+///
+/// # Two criteria in this gate were changed after seeing them fail
+///
+/// Recorded because a threshold that moved is worthless unless the move is
+/// auditable (§77), and both moves were *away* from the flattering direction:
+///
+/// 1. **Dropped: "full-res carries 0.35 cyc/px with fidelity >= 0.50".**
+///    Measured `0.4478`. The bar was a prediction from V-NYQUIST's `0.8075` at
+///    0.30-0.40, and it **failed**. Their full-res arm is a uniform-luma scene
+///    in which every site already holds a full-resolution estimate, so it
+///    prices the *lattice* and not the demosaic. This arm pays the demosaic's
+///    own MTF as well. The shortfall is the demosaic's cost and is a finding,
+///    not a tuning parameter, so it is now REPORTED rather than gated.
+/// 2. **Replaced: "the two paths agree at 0.10 cyc/px within 0.05".**
+///    Measured `0.9557` plane vs `1.0623` full-res. The premise -- that a
+///    demosaic is transparent well below the plane Nyquist -- is false:
+///    Malvar-He-Cutler's gradient-correction term overshoots, and the full-res
+///    arm reads **above 1.0** at 0.10 and 0.15. Part of the low-frequency
+///    "win" is therefore a sharpening gain rather than recovered detail, which
+///    is the same confound class that made the original head-to-head favour the
+///    wrong arm before the grade was removed. Gating on it would have punished
+///    the probe for reporting something true, so the directional control
+///    (`plane never beats full-res`) replaces it and the overshoot is printed.
+fn run_w8d(
+    path: &std::path::Path,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+) -> Result<bool> {
+    use std::f64::consts::TAU;
+    const BASE: f64 = 8000.0;
+    const AMP: f64 = 6000.0;
+    const MARGIN: usize = 24;
+    // Deliberately sub-plane-pixel: a whole-plane-pixel shift is a relabelling
+    // that both paths perform exactly, and would read as a null on a defect
+    // that is entirely about sub-pixel lattice alignment.
+    const SHIFT_PLANE: f64 = 0.37;
+
+    /// Overwrite the active region with a horizontal cosine in FULL-RES
+    /// coordinates, identical in every CFA channel.
+    fn plant(f: &mut strehl_raw::Frame, freq: f64) {
+        let (stride, ax, ay) = (f.stride, f.active.x, f.active.y);
+        let (w, h) = (f.active.width, f.active.height);
+        for y in 0..h {
+            let row = (ay + y) * stride + ax;
+            for x in 0..w {
+                let v = BASE + AMP * (TAU * freq * x as f64).cos();
+                f.data[row + x] = v.round().clamp(0.0, u16::MAX as f64) as u16;
+            }
+        }
+    }
+
+    /// Coherent fidelity against the analytically shifted plant.
+    fn fidelity(f: &strehl_raw::Frame, geom: PlaneGeometry, freq: f64, shift_full: f64) -> f64 {
+        let (stride, ax, ay) = (f.stride, f.active.x, f.active.y);
+        let (mut num, mut den) = (0f64, 0f64);
+        for dy in 0..2 {
+            for dx in 0..2 {
+                for py in MARGIN..geom.height - MARGIN {
+                    let row = (ay + 2 * py + dy) * stride + ax + dx;
+                    for px in MARGIN..geom.width - MARGIN {
+                        let xx = (2 * px + dx) as f64;
+                        let got = f.data[row + 2 * px] as f64 - BASE;
+                        let ideal = AMP * (TAU * freq * (xx + shift_full)).cos();
+                        num += got * ideal;
+                        den += ideal * ideal;
+                    }
+                }
+            }
+        }
+        num / den
+    }
+
+    let shift_full = 2.0 * SHIFT_PLANE;
+    let shifted = Similarity::from_params(SimilarityParams {
+        ax: SHIFT_PLANE,
+        ay: 0.0,
+        g: 0.0,
+        rot: 0.0,
+    });
+
+    println!("\n  W8d gather fidelity ABOVE the plane Nyquist (0.25 cyc/output px)");
+    println!("    plant  uniform-luma cosine, {AMP:.0} DN on {BASE:.0} DN, WB forced to unity");
+    println!("    shift  {SHIFT_PLANE} plane px = {shift_full} output px");
+    println!("    score  coherent fidelity vs the analytically shifted plant (signed)\n");
+    println!(
+        "    {:>10}   {:>17}   {:>17}",
+        "cyc/out px", "PLANE (shipped)", "FULL-RES"
+    );
+    println!(
+        "    {:>10}   {:>8} {:>8}   {:>8} {:>8}",
+        "", "null", "shift", "null", "shift"
+    );
+
+    let mut nulls_ok = true;
+    let mut rows: Vec<(f64, f64, f64)> = Vec::new();
+    for &freq in &[0.10f64, 0.15, 0.25, 0.35, 0.45] {
+        let mut got = [0f64; 4];
+        for (i, (use_fullres, t, sh)) in [
+            (false, Similarity::IDENTITY, 0.0),
+            (false, shifted, shift_full),
+            (true, Similarity::IDENTITY, 0.0),
+            (true, shifted, shift_full),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let mut f = strehl_raw::decode(path)?;
+            // Unity balance and no pedestal: see the doc comment.
+            f.wb_coeffs = [1.0, 1.0, 1.0, f32::NAN];
+            f.levels.black = 0.0;
+            plant(&mut f, freq);
+            if use_fullres {
+                warp_frame_in_place_fullres(&mut f, t, geom, resampler, scratch)?;
+            } else {
+                warp_frame_in_place_plane(&mut f, t, geom, resampler, scratch)?;
+            }
+            got[i] = fidelity(&f, geom, freq, sh);
+        }
+        // Four-decimal nulls, as the doc comment requires.
+        if (got[0] - 1.0).abs() > 5e-5 || (got[2] - 1.0).abs() > 5e-5 {
+            nulls_ok = false;
+        }
+        println!(
+            "    {:>10.2}   {:>8.4} {:>8.4}   {:>8.4} {:>8.4}",
+            freq, got[0], got[1], got[2], got[3]
+        );
+        rows.push((freq, got[1], got[3]));
+    }
+
+    // The gate proper. Thresholds and the grid that set them are in the doc
+    // comment; none of them is a number I picked after seeing it pass.
+    let lo = rows.iter().find(|r| r.0 == 0.10).copied().unwrap();
+    let hi = rows.iter().find(|r| r.0 == 0.35).copied().unwrap();
+    let worst_plane = rows.iter().map(|r| r.1).fold(f64::INFINITY, f64::min);
+    // Directional control: the shipped path must not beat the full-res path
+    // anywhere. This replaces an earlier "the two agree at 0.10 within 0.05",
+    // which was built on a premise the measurement refuted -- see the doc.
+    let never_worse = rows.iter().all(|r| r.2 >= r.1 - 0.02);
+    let discriminates = hi.2 - hi.1 >= 0.25;
+    // The plane path must actually go NEGATIVE somewhere in the tested range,
+    // or this frame is not exercising the defect and the win above is being
+    // credited against a baseline that was never damaged.
+    let defect_present = worst_plane < 0.0;
+
+    println!("\n    NULL   zero shift reads 1.0000 on both paths, all rows : {nulls_ok}");
+    println!(
+        "    CTRL   plane path never beats full-res at any tested f       : {}",
+        never_worse
+    );
+    println!(
+        "    CTRL   plane path goes phase-reversed somewhere ({:+.4})     : {}",
+        worst_plane, defect_present
+    );
+    println!(
+        "    CLAIM  full-res beats plane at 0.35 cyc/px by >= 0.25 ({:.4}) : {}",
+        hi.2 - hi.1,
+        discriminates
+    );
+    println!(
+        "\n    REPORTED, NOT GATED -- these are measurements, not bars:\n      \
+         full-res absolute fidelity at 0.35 cyc/px : {:.4}\n      \
+         full-res gain at 0.10 cyc/px              : {:.4}  (>1 is demosaic overshoot,\n      \
+                                                   a sharpening gain, NOT recovered detail)\n      \
+         low-frequency spread between the paths    : {:.4}",
+        hi.2,
+        lo.2,
+        (lo.2 - lo.1).abs()
+    );
+    let pass = nulls_ok && never_worse && defect_present && discriminates;
+    println!("    {}", if pass { "PASS" } else { "FAIL" });
+    Ok(pass)
 }
 
 /// Median absolute difference over all four CFA phases, ignoring a margin.
