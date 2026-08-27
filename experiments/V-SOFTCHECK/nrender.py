@@ -56,7 +56,7 @@ def run(subject, ns, exposure):
         r=subprocess.run([BIN,"stack",d,"--out",dst,"--srgb","--exposure",exposure],
                          capture_output=True,env=env)
         el=time.time()-t0
-        log=r.stdout.decode("utf-8",errors="replace")
+        log=r.stdout.decode("utf-8",errors="replace")+r.stderr.decode("utf-8",errors="replace")
         open(dst+".log","w",encoding="utf-8").write(log)
         exists=os.path.exists(dst)
         placed=[l.strip() for l in log.splitlines() if "placed" in l]
@@ -71,3 +71,4 @@ def run(subject, ns, exposure):
 
 if __name__=="__main__":
     run(sys.argv[1],[int(x) for x in sys.argv[2].split(",")],sys.argv[3])
+

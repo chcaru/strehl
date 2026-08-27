@@ -60,6 +60,13 @@ are not grounds for failing a build.
 | subject | N | primary band 0.20-0.25 | CI | verdict today |
 |---|---:|---:|---|---|
 | `bee-1-cpl` | 299 vs 200 | **1.0564** | [1.0294, 1.0742] | **FAIL** |
+**Amendment, recorded after measuring.** The table above used the nearest
+subsets already rendered, not the exact `N//2` arms this document specifies. The
+exact `N//2` arms were then rendered and the criterion evaluated on them; the
+DECISION RULE above is unchanged and was not touched after seeing data. Measured
+on the specified arms: `bee-1-cpl` 299 vs 149 R = 1.1037 [1.0754, 1.1376] FAIL;
+`113MSDCF` 63 vs 31 R = 0.9623 [0.9546, 0.9744] PASS; `flower-bud-alone-cpl` 205
+vs 102 R = 0.9018 [0.8562, 0.9253] PASS.
 | `113MSDCF` | 63 vs 32 | 1.0025 | [0.9911, 1.0114] | PASS |
 | `flower-bud-alone-cpl` | 205 vs 150 | 0.9717 | -- | PASS |
 
@@ -94,3 +101,4 @@ It does not show the depth cost is universal. It is measured absent on
 `flower-bud-alone-cpl`, whose curve rises monotonically to N=205 with no falling
 limb at any band. Any claim that "the merge gets worse as stacks get deeper"
 stated without qualification is contradicted by that subject and must not be made.
+
