@@ -1456,3 +1456,153 @@ whole-frame, `119MSDCF` would have read **1.61 instead of 2.31** and I would
 have been substantially closer to concluding my own instrument could not see
 focus. ORCH's warning was correct, arrived after the work that satisfied it, and
 is now measured rather than accepted.
+
+---
+
+# 15. Restating the headline at <= 0.25 cyc/px
+
+ORCH's band map withdraws 0.30-0.40 outright (its noise control, 3.866, exceeds
+the measured effect, 3.462 -- the effect is inside its own control), demotes
+0.25-0.30, and leaves **0.20-0.25 as the only promotable band**. The instruction:
+
+> **State your band, and stay at or below ~0.25 cyc/px.** Any sharpness number
+> either of you reports above 0.30 is currently unsupportable regardless of how
+> large it is.
+
+My published headline is the **full** statistic, and §14.2 measured where its
+energy sits: **14.46% of it is in bands now withdrawn.** So the headline has to
+be restated, and the number to restate it with was already measured in §14.5.
+
+## 15.1 My own per-band null independently reproduces ORCH's band map
+
+Before restating anything: the failure mode ORCH names -- *"one noise control,
+evaluated at one frequency, was assumed to license claims at every frequency"* --
+is one this instrument does not have. The order-statistic null is computed
+**per band**, so it is already the band-limited control ORCH prescribes. What it
+says, expressed as inflation (1 / null) on `119MSDCF`:
+
+| band | order-statistic inflation |
+|---|---:|
+| 0.05-0.10 | **0.4%** |
+| 0.10-0.20 | 0.8% |
+| 0.20-0.25 | 4.3% |
+| 0.25-0.30 | 8.3% |
+| 0.30-0.40 | 15.9% |
+| 0.40-0.48 | **31.5%** |
+
+**MEASURED: selection inflation rises monotonically by a factor of ~80 across
+the band, and it is worst exactly where ORCH's third instrument withdrew the
+claim.** That is an independent, already-committed corroboration of the band map
+from a different control on different data. The published per-band figures
+already charge this -- the 0.40-0.48 cell had a 31.5% inflation deducted before
+it was printed -- which is why they can be quoted at all.
+
+## 15.2 The restated headline
+
+| subject | full statistic (published) | **<= 0.25 cyc/px** | move |
+|---|---:|---:|---:|
+| `119MSDCF` | 0.8147 | **0.8053** | -1.2% |
+| `109MSDCF` | 0.8855 | **0.8860** | +0.1% |
+| `coffee-bubbles` | 0.9018 | **0.8847** | -1.9% |
+
+All three reproduce their published full-statistic value through this
+independent code path -- 0.8147, 0.8855 and 0.9022 against a published 0.9018 --
+so these are reproductions, not restatements.
+
+**MEASURED: restricted to the band ORCH certifies, the deficit is 11.4-19.5%,
+against 9.8-18.5% for the unrestricted headline. Confining the claim to the
+supportable band makes strehl look slightly WORSE, not better.**
+
+## 15.3 Adopting the disjoint-band construction rather than citing it
+
+ORCH's corrected description of `bandsignal.py` is that its **selecting** band
+(0.05-0.20) and its **reporting** band (0.20+) are disjoint, and the defocused
+side is a fixed offset rather than an argmin, so selection cannot bias the
+reported number.
+
+My construction does not have that property. It selects by the full statistic --
+66% of whose energy is below 0.20 -- and the per-site ceiling is a **max over
+the reported quantity itself**. I have always charged that with a measured
+per-band null. But *measured and charged* is strictly weaker than *cannot
+happen*, and the stronger construction was available for free, so I built it:
+choose each site's frame by 0.05-0.20 energy, then read **that** frame's
+0.20-0.25 energy. No maximisation over the reported quantity anywhere.
+
+Its commissioning arm is forced: the null **must** return ~1.000, because there
+is no extremum left to inflate. A null that is not 1.000 means disjointness has
+leaked and the number is unusable.
+
+| subject | disjoint ratio | null | leak | verdict |
+|---|---:|---:|---:|---|
+| `coffee-bubbles` | 0.8935 | 0.9998 | **0.02%** | CLEAN -> **0.8938** |
+| `119MSDCF` | 0.7863 | 0.9870 | **1.30%** | CLEAN -> **0.7967** |
+| `109MSDCF` | 0.7892 | 0.9579 | **4.21%** | **REFUSED** |
+
+**The gate fired and refused a subject.** `109MSDCF`'s disjoint number is not
+reported and is not used below.
+
+Where it commissions clean, the selection-immune ratio is **0.7967** and
+**0.8938**, against max-based ratios of 0.6980 and 0.8694 in the same band --
+differences of **14.1% and 2.8%, both in strehl's favour**. So the max-based
+construction was *understating* the master even after its null correction, and
+the published deficit is conservative. **It is still a deficit: both
+selection-immune numbers are below 1.0.**
+
+## 15.4 Why 109MSDCF leaked, and the regime it exposes
+
+The leak is not random. Ordered against how well the selector separates focus
+(SIGNAL band, best-vs-worst, from §14.3):
+
+| subject | selector separation | leak |
+|---|---:|---:|
+| `coffee-bubbles` | x25.58 | 0.02% |
+| `119MSDCF` | x3.34 | 1.30% |
+| `109MSDCF` | **x1.40** | **4.21%** |
+
+**Perfectly monotone.** The mechanism: spectral disjointness does not survive a
+weak selector. When frames barely differ in focus, the argmax over 0.05-0.20
+energy is selecting **noise**, and photon/read noise is broadband -- so the draw
+that wins the low band tends also to be high in the reported band. The bands are
+disjoint in frequency but coupled through the shared random draw.
+
+`109MSDCF` sits in that regime for a reason visible in the published data: it is
+the most heavily averaged subject measured, `avg_index` **7.54** against 4.40 and
+2.21. Two further results point the same way and were measured before this
+question was asked:
+
+- its whole-frame/per-site loss in the SIGNAL band is **0.84x** -- whole-frame
+  *wins*, the second instance of the §14.7 reversal;
+- the band restriction moves its headline by **+0.1%**, essentially not at all.
+
+**Registered: per-site selection needs frames that actually differ in focus at a
+site. Where the merge averages heavily, the selector degenerates and every
+per-site construction built on it -- mine and `bandsignal.py`'s alike -- weakens
+together.** That is a regime limit on the instrument, not on strehl, and it is
+the sharpest statement of the instrument's domain of validity produced so far.
+
+## 15.5 Partition
+
+Five subjects have exact ceilings (n == N). Of those:
+
+    measured at <= 0.25 cyc/px            3   (119MSDCF, 109MSDCF, coffee-bubbles)
+    of those, disjoint arm CLEAN          2   (119MSDCF, coffee-bubbles)
+    of those, disjoint arm REFUSED        1   (109MSDCF, leak 4.21%)
+    not examined at <= 0.25               2   (flower-bud-alone-cpl 205 frames,
+                                               bee-1-cpl 299 frames -- frames not
+                                               on disk, cost not paid)
+                                          -
+    total                                 5
+
+A refusal is not a pass and is not counted as one.
+
+## 15.6 The line
+
+**At or below 0.25 cyc/px -- the only band currently supportable -- strehl's
+master reads 0.8053, 0.8860 and 0.8847 against its own per-site ceiling on three
+subjects with complete focus brackets. On the two where a
+selection-inflation-immune construction commissions clean, it reads 0.7967 and
+0.8938. The deficit survives every restriction applied to it, and every
+restriction so far has moved it against strehl rather than for it.**
+
+Nothing above 0.30 cyc/px is quoted here or anywhere in my headline from this
+point.

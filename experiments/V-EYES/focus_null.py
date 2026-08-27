@@ -197,6 +197,53 @@ def selection_ab(full, bands, label):
     return out
 
 
+def disjoint_verdict(tiles, master, masks_sel_rep, live, label):
+    """The verdict rebuilt on bandsignal.py's disjoint-band discipline.
+
+    ORCH's corrected description of `bandsignal.py` is that its SELECTING band
+    (0.05-0.20) and its REPORTING band (0.20+) are disjoint, so the argmax that
+    chooses the in-focus frame cannot bias the number that gets reported.
+
+    My published construction does not have that property. It selects by the
+    FULL statistic -- whose energy is 66% below 0.20 cyc/px -- and reports per
+    band, so selector and reporter overlap, and the per-site ceiling is a MAX
+    over the reported quantity itself. I have always charged that with a
+    measured per-band order-statistic null rather than designing it out. That
+    is defensible, but "measured and charged" is strictly weaker than "cannot
+    happen", and the stronger construction is available for free.
+
+    So: choose each site's frame by 0.05-0.20 energy, then read that frame's
+    0.20-0.25 energy. There is NO maximisation over the reported quantity
+    anywhere. The reference is whichever frame the low band called focused, and
+    it is read blind.
+
+    COMMISSIONING: the null for this construction must come back at ~1.000 by
+    construction, because there is no extremum over the reported quantity to
+    inflate. A null that is not ~1.000 means the disjointness has leaked --
+    through the raised-cosine mask taper, or through correlation between the
+    bands -- and the number must not be used.
+    """
+    msel, mrep = masks_sel_rep
+    sel = np.array([band_energy(t, msel) for t in tiles])
+    rep = np.array([band_energy(t, mrep) for t in tiles])
+    ny, nx = sel.shape[1], sel.shape[2]
+    iy, ix = np.mgrid[0:ny, 0:nx]
+
+    pick = sel.argmax(axis=0)
+    env = rep[pick, iy, ix]
+    mrep_master = band_energy(master, mrep)
+    m = live & (env > 0)
+    raw = float(np.median(mrep_master[m] / env[m]))
+
+    print(f"\nDISJOINT-BAND VERDICT  {label}")
+    print(f"  select on 0.05-0.20, report on 0.20-0.25, no max over the "
+          f"reported quantity")
+    print(f"  {len(np.unique(pick))} distinct frames chosen across "
+          f"{ny * nx} sites")
+    print(f"  raw ratio (master / selected frame, 0.20-0.25): {raw:.4f}")
+    return raw, sel, rep, pick
+
+
 def measure_stack(tiles, masks):
     """(full, [per-band]) per site per frame.
 
@@ -480,6 +527,34 @@ def main():
         print(f"     the master still reads {csigv:.4f} against its own "
               f"per-site ceiling. The 5-19% is not an artefact of a "
               f"focus-blind band.")
+
+    # ------------------------------------------------------------------
+    # ORCH's band map restricts supportable claims to <= ~0.25 cyc/px, and its
+    # corrected description of bandsignal.py supplies a construction that is
+    # immune to selection inflation rather than corrected for it. Both are
+    # adopted here.
+    # ------------------------------------------------------------------
+    msel = band_mask(a.size, 0.05, 0.20)
+    mrep = band_mask(a.size, 0.20, 0.25)
+    dj, _, _, _ = disjoint_verdict(tiles, master, (msel, mrep), live, a.subject)
+
+    # The null this construction demands: n noised copies of the MASTER, whose
+    # true ratio is 1.000. Unlike the max-based verdict there is no extremum
+    # over the reported quantity, so this must come back at ~1.000 -- and if it
+    # does not, the disjointness has leaked and the number is unusable.
+    djn, _, _, _ = disjoint_verdict(nmt, master, (msel, mrep), live,
+                                    f"{a.subject} NULL (noised master copies)")
+    leak = abs(djn - 1.0)
+    print(f"  null: {djn:.4f}  (must be ~1.000 by construction; "
+          f"leak {100 * leak:.2f}%)")
+    if leak > 0.02:
+        print("  -> DISJOINTNESS LEAKED. Not using this number.")
+    else:
+        print(f"  -> CLEAN. Selection-inflation-immune ratio at 0.20-0.25: "
+              f"{dj / djn:.4f}")
+        print(f"     max-based ratio in the same band: {corr[3]:.4f}  "
+              f"(difference {100 * abs(dj / djn - corr[3]) / corr[3]:.1f}%)")
+
     return 0
 
 
