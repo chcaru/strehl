@@ -1,0 +1,137 @@
+"""Commission vn_verify9.py: plant defects in section 9 and require RED.
+
+Every anchor's occurrence count is verified to be exactly 1 before it is used,
+and a plant that does not land is a hard error rather than a silent pass.
+
+Arms: PLANT must give rc=1, PLACEBO rc=0, CRASH rc=2. The crash arm exists
+because a checker that dies and a checker that passes must never agree.
+"""
+import io
+import os
+import shutil
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+DOC = os.path.join(HERE, "RESULT.md")
+CHK = os.path.join(HERE, "vn_verify9.py")
+BAK = os.path.join(os.environ["TEMP"], "vn_negctl9_RESULT.md")
+CBAK = os.path.join(os.environ["TEMP"], "vn_negctl9_verify9.py")
+
+PLANTS = [
+    ("| L3 | 8 | 5.49 | 2.42 | 2.02 | 0.371 | 13.9 px | **0.543** |",
+     "| L3 | 8 | 5.49 | 2.42 | 2.02 | 0.371 | 13.9 px | **0.443** |",
+     "L3 frac 20-60px"),
+    ("| L1 | 2 | 8.00 | 1.36 | 1.16 | **0.680** | 3.5 px | 0.026 |",
+     "| L1 | 2 | 8.00 | 1.36 | 1.16 | **0.580** | 3.5 px | 0.026 |",
+     "L1 single-winner"),
+    ("| L0 | 1 | 8.00 | 17.75 | 19.00 | 0.065 | 1.7 px | 0.000 |",
+     "| L0 | 1 | 8.00 | 16.75 | 19.00 | 0.065 | 1.7 px | 0.000 |",
+     "L0 n_eff"),
+    ("| a. shipping (`2 3 4 5 8 8 8`) | 0.06716 | **1.354x** | 0.06905 | 0.755 |",
+     "| a. shipping (`2 3 4 5 8 8 8`) | 0.06716 | **1.254x** | 0.06905 | 0.755 |",
+     "shipping ratio"),
+    ("| b. plain unweighted mean | 0.04874 | **0.983x** | 0.01986 | **0.217** |",
+     "| b. plain unweighted mean | 0.04874 | **0.983x** | 0.01986 | **0.317** |",
+     "plain-mean sharpness"),
+    ("| c. exponent 1, flat ramp | 0.05714 | **1.152x** | 0.06269 | 0.685 |",
+     "| c. exponent 1, flat ramp | 0.05714 | **1.152x** | 0.06269 | 0.785 |",
+     "exp1 sharpness"),
+    ("= **57%** of the merge-attributable excess", 
+     "= **67%** of the merge-attributable excess", "derived 57%"),
+    ("a **9.3%** relative sharpness cost", "a **7.3%** relative sharpness cost",
+     "derived sharpness cost"),
+    ("destroys\n**78% of the sharpness**", "destroys\n**68% of the sharpness**",
+     "derived mean loss"),
+    ("| x0.5 | 1.327x | 1.141x | exp-1 lower |",
+     "| x0.5 | 1.327x | 1.241x | exp-1 lower |", "varscale x0.5"),
+    ("scores `coffee-bubbles` at **1.354x**",
+     "scores `coffee-bubbles` at **1.454x**", "reimplementation fidelity"),
+    ("shipped master scores **1.444x**", "shipped master scores **1.544x**",
+     "shipped master fidelity"),
+    ("but **min 300, max 2700, overall std 61.87**",
+     "but **min 300, max 2700, overall std 71.87**", "expand bug std"),
+    ("> The rate is driven by the selection exponent, not the gate: 0 violations at",
+     "> The rate is driven by the selection exponent, not the gate: 9 violations at",
+     "quote fidelity (word changed)"),
+    ("**3 requested = 1 measured + 2 not attempted + 0 failed.**",
+     "**3 requested = 2 measured + 2 not attempted + 0 failed.**",
+     "subject partition"),
+]
+
+PLACEBO = ("So the counterfactual below is run on the exponent, not on a tolerance.",
+           "The counterfactual below is therefore run on the exponent, not a tolerance.")
+
+
+def run():
+    p = subprocess.run([sys.executable, CHK], capture_output=True)
+    return p.returncode, p.stdout.decode("utf-8", "replace")
+
+
+def apply(old, new, label):
+    t = io.open(DOC, encoding="utf-8").read()
+    n = t.count(old)
+    if n != 1:
+        raise SystemExit("PLANT ANCHOR NOT UNIQUE (%s): %r occurs %d times"
+                         % (label, old[:70], n))
+    io.open(DOC, "w", encoding="utf-8", newline="\n").write(t.replace(old, new))
+
+
+def main():
+    shutil.copyfile(DOC, BAK)
+    shutil.copyfile(CHK, CBAK)
+    caught = missed = crashes = 0
+    placebo_ok = crash_ok = False
+    try:
+        rc, out = run()
+        if rc != 0:
+            raise SystemExit("baseline is not green (rc=%d):\n%s" % (rc, out))
+        print("baseline GREEN")
+
+        for old, new, label in PLANTS:
+            apply(old, new, label)
+            rc, out = run()
+            shutil.copyfile(BAK, DOC)
+            if rc == 2:
+                crashes += 1
+                print("  CRASH   %-30s (a crash is not a catch)" % label)
+            elif rc == 1:
+                caught += 1
+                print("  caught  %s" % label)
+            else:
+                missed += 1
+                print("  MISSED  %-30s rc=%d" % (label, rc))
+
+        apply(PLACEBO[0], PLACEBO[1], "placebo")
+        rc, _ = run()
+        shutil.copyfile(BAK, DOC)
+        placebo_ok = (rc == 0)
+        print("  placebo %s (rc=%d)" % ("clean" if placebo_ok else "DIRTY", rc))
+
+        t = io.open(CHK, encoding="utf-8").read()
+        anchor = "    d = json.load(io.open(PLAT, encoding=\"utf-8\"))"
+        if t.count(anchor) != 1:
+            raise SystemExit("crash-arm anchor not unique")
+        io.open(CHK, "w", encoding="utf-8", newline="\n").write(
+            t.replace(anchor, "    raise RuntimeError('planted crash')\n" + anchor))
+        rc, out = run()
+        shutil.copyfile(CBAK, CHK)
+        crash_ok = (rc == 2 and "REFUSED" in out)
+        print("  crash arm %s (rc=%d, expected 2)"
+              % ("distinguishes refusal from pass" if crash_ok else "BROKEN", rc))
+    finally:
+        shutil.copyfile(BAK, DOC)
+        shutil.copyfile(CBAK, CHK)
+
+    same = (io.open(DOC, encoding="utf-8").read()
+            == io.open(BAK, encoding="utf-8").read())
+    print("\n%d/%d plants caught; placebo %s; %d crash(es); restore %s"
+          % (caught, len(PLANTS), "clean" if placebo_ok else "DIRTY", crashes,
+             "verified byte-identical" if same else "DIFFERS"))
+    ok = (caught == len(PLANTS) and placebo_ok and crashes == 0
+          and crash_ok and same)
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

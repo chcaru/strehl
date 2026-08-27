@@ -1297,9 +1297,204 @@ byte-identical.** The harness also carries a **crash arm** — the checker is
 deliberately broken and required to return 2, not 0 and not 1 — because a
 checker that dies and a checker that passes must never produce the same verdict.
 
+## 9. Falsifying the fix before it ships
+
+ORCH commissioned this lane to try to kill a **response-relative tolerance**
+replacing an **absolute tolerance of 0.086063 response units**. The first thing
+to report is that neither of those exists on the path that rendered the corpus.
+
+### 9.1 The fix is aimed at the wrong module, again
+
+`0.086063`, `FOCUS_NOISE_SD` and the whole focus-response tolerance occur
+**zero times** in `pyramid.rs`, which is the shipping merge. The three hits for
+the word `tolerance` in that file are assertion tolerances in unit tests. The
+shipping selection, at `9b05d0b7:crates/strehl-core/src/pyramid.rs` lines
+1351-1362 and 2092-2110, is:
+
+```
+floor  = gate * beta_k * var                       gate = 2.0
+excess = max(smoothed L^2 - floor, 0)
+w      = (excess / max(floor, 1) / SNR_REF)^p      SNR_REF = 64
+```
+
+**The shipping threshold is already relative** — it is a signal-to-noise ratio
+against the locally modelled noise floor, raised to a per-band exponent. There
+is no absolute constant to rescale. A response-relative tolerance would change
+the `--merge` estimator path, which the provenance of all 26 masters lists
+under `not applied`, and would leave every delivered image byte-identical.
+
+This is the same class of error as the `softgate.rs` one in section 8, one
+level down, and it is worth naming precisely: **the estimator path and the
+pyramid path both contain something called a gate, and they are different
+gates.** The disambiguating evidence is the binary's own self-report, which
+names `--merge pyramid; THE DEFAULT PATH` and prints `noise gate : 2.00 x the
+modelled band-noise power`.
+
+**The knob that does exist** is the selection exponent, and `pyramid.rs` says
+so itself, quantified, in the doc comment on `Hull`:
+
+> The rate is driven by the selection exponent, not the gate: 0 violations at
+> exponent ≤ 1, 72 at exponent 8, 511 at 16. The shipped per-band ramp is
+> `2 3 4 5 8 8 8`, so **the three finest bands sit exactly where this turns
+> severe**.
+
+and it gives the structural reason a merge can be worse than its own inputs:
+
+> **each band computes its own weight field**. Band 0 may be dominated by frame
+> 12 while band 5 is dominated by frame 80, and a sum of convex combinations
+> taken under *different* weightings is not a convex combination of the
+> original pixels. Per-band convexity is true and does not imply reconstruction
+> convexity.
+
+So the counterfactual below is run on the exponent, not on a tolerance.
+
+### 9.2 The instrument, and what it had to guess
+
+`vn_pyr.py` reimplements the shipping merge offline in Python from the pinned
+source: binomial `[1,4,6,4,1]/16` kernel, Laplacian pyramid of green luma,
+`sq = smooth5(L^2)`, Gaussian pyramid of the variance, the weight above, base
+band a plain mean, unweighted-mean fallback where nothing clears the floor, and
+the `Hull::InputRange` clamp to the per-pixel range of the inputs.
+
+`beta_k` is **not** guessed — it is taken from the binary's own self-report
+(`0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000`, finest first).
+
+**The one guess is the calibrated noise variance**, which is not in the crate.
+It is fitted by photon transfer from the frames. Its sensitivity is measured
+rather than assumed, and the ranking below survives a 4x sweep of it.
+
+Fidelity, measured three ways: a constant survives smooth/reduce/expand exactly,
+the pyramid reconstructs its input to `<1e-6 DN`, and a single-frame merge is
+the identity. Then the strongest check available — **the reimplementation
+reproduces the shipped result**: it scores `coffee-bubbles` at **1.354x** the
+best source frame where the actual shipped master scores **1.444x**, a 6%
+agreement between an independent Python reimplementation and the Rust binary.
+
+### 9.3 Two defects I planted nothing to find, and found anyway
+
+Both were caught by commissioning arms failing, and both would have produced
+confident wrong numbers.
+
+**The expand border bug.** `expand` was `4 * smooth5(zero_inserted)`, which is
+exact in the interior and wrong at the border, because `mode="nearest"`
+replicates the edge sample of the zero-inserted lattice and destroys the
+even/odd tap balance. Expanding a constant `1200` gave interior std `0.0000`
+but **min 300, max 2700, overall std 61.87**. That border ring then dominated
+the finest Laplacian level, so the sharpness statistic moved **0.94x under a
+sigma=5 blur** when it should have collapsed. My own self-test missed it
+because it asserted only that `expand` preserved the **mean** of a constant —
+and a spatially varying error with zero mean passes a mean test. Fixed by
+normalising by the identically-smoothed lattice mask; sharpness now falls
+**63x** under that blur, and every shape assertion checks spread as well as
+level.
+
+**The unphysical noise fit.** The first photon-transfer fit returned
+`var = 10354.9 - 3.6972*S`, a **negative photon gain**. Shot noise cannot fall
+with signal. The cause is that bright bins on this subject are bright because
+they contain sharp detail, so a median `|L0|` there measures structure. A
+negative slope drives `floor` to its clamp at bright pixels and makes every
+weight there extreme. Fixed with a low quantile per bin and a non-negativity
+constraint, and the harness now refuses outright rather than reporting.
+
+### 9.4 The plateau structure is REAL, and it sits in the 20-60 px band
+
+Winner field and `n_eff` per level, `coffee-bubbles`, all 19 frames, shipping
+configuration. `level_px` is the native size of one cell at that level.
+
+| level | cell px | exponent | mean `n_eff` | median | frac single-winner | median plateau | **frac area 20-60 px** |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| L0 | 1 | 8.00 | 17.75 | 19.00 | 0.065 | 1.7 px | 0.000 |
+| L1 | 2 | 8.00 | 1.36 | 1.16 | **0.680** | 3.5 px | 0.026 |
+| L2 | 4 | 7.68 | 1.79 | 1.53 | 0.488 | 6.9 px | 0.276 |
+| L3 | 8 | 5.49 | 2.42 | 2.02 | 0.371 | 13.9 px | **0.543** |
+| L4 | 16 | 3.92 | 3.59 | 2.17 | 0.358 | 32.0 px | **0.365** |
+| L5 | 32 | 2.80 | 5.34 | 2.86 | 0.195 | 64.0 px | 0.112 |
+| L6 | 64 | 2.00 | 8.50 | 6.66 | 0.018 | 110.9 px | 0.000 |
+
+**Answering ORCH's question directly: yes.** At L3, **54.3%** of the frame's
+area sits in winner-plateaus of 20-60 px diameter, and 37.1% of coefficients
+have effectively a single winner. At L4 it is 36.5%. The plateau structure is
+concentrated exactly where the blotch convictions live.
+
+Note the shape of `n_eff` across the ramp, because it corrects section 8.4's
+borrowed account. `n_eff` is **not** monotone in response — it is **lowest at
+L1-L4 and high at both ends**. L0 averages 17.75 of 19 frames because almost
+nothing clears the noise floor at 1 px; L6 averages 8.50 because its exponent
+is 2.0. The election happens in the middle, and it is the **exponent ramp**
+that puts it there. This is a different mechanism from M111's absolute-tolerance
+collapse, it is on the shipping path, and it is measured here rather than cited.
+
+### 9.5 The counterfactual, with sharpness on the same pixels
+
+Every row is the same 19 frames, the same tile, the same statistics.
+
+| arm | blotch | **vs best source** | sharpness | **vs best source** |
+|---|---:|---:|---:|---:|
+| a. shipping (`2 3 4 5 8 8 8`) | 0.06716 | **1.354x** | 0.06905 | 0.755 |
+| b. plain unweighted mean | 0.04874 | **0.983x** | 0.01986 | **0.217** |
+| c. exponent 1, flat ramp | 0.05714 | **1.152x** | 0.06269 | 0.685 |
+| d. exponent 2, no ramp | 0.06479 | 1.306x | 0.06561 | 0.717 |
+| *the shipped master itself* | 0.07165 | *1.444x* | — | — |
+
+**Arm (b) is the trap, and it is inadmissible.** A plain mean satisfies the
+never-worse invariant outright — 0.983x, the only arm that does — and destroys
+**78% of the sharpness**. That is the exact trade ORCH measured in
+`focus-stack` at 0.077 fine grain and called "not a clean image, a smoothed
+one". An independent reimplementation reproduces that failure mode here, which
+is the strongest possible argument for carrying sharpness alongside every
+blotch number: **on blotch alone, the worst arm wins.**
+
+**Arm (c) is the real candidate.** Dropping the exponent to 1 removes
+`(1.354 - 1.152) / (1.354 - 1.000)` = **57%** of the merge-attributable excess
+for a **9.3%** relative sharpness cost (0.685 vs 0.755).
+
+The guessed noise model does not carry this result:
+
+| variance scale | shipping | exponent 1 | |
+|---|---:|---:|---|
+| x0.5 | 1.327x | 1.141x | exp-1 lower |
+| x1.0 | 1.354x | 1.152x | exp-1 lower |
+| x2.0 | 1.355x | 1.135x | exp-1 lower |
+
+### 9.6 The ceiling, and it is not "most of it"
+
+**On the one subject measured, the selection exponent accounts for 57% of the
+merge-attributable blotch excess.** Not most of it. Arm (c) still leaves
+`coffee-bubbles` at 1.152x — **still a violation of the invariant**, still
+worse than the best frame that went into it.
+
+So the answer to "is the fix sufficient" is **no**, and ORCH should plan for a
+second mechanism now rather than after the re-render. The residual 43% is
+consistent with the structural reason `pyramid.rs` states and which lowering
+the exponent does not remove: **each band computes its own weight field**, so
+the reconstruction is a sum of convex combinations taken under different
+weightings and is not itself convex in the inputs. Flattening the ramp reduces
+how sharply each band elects; it does not make the bands agree with each other.
+The counterfactual that would test *that* is one shared weight field across all
+bands, which `pyramid.rs` reports as `0 / 102,400` violations against `7 /
+102,400` for independent fields — and which I did not run.
+
+### 9.7 What I did not measure
+
+| item | status |
+|---|---|
+| plateau structure, `coffee-bubbles`, all 19 frames | **measured** |
+| counterfactual arms with paired sharpness | **measured**, 4 arms |
+| sensitivity to the guessed noise model | **measured**, 4x sweep |
+| plateau structure on 2 of V-GATHER's five | **NOT MEASURED** |
+| shared-weight-field counterfactual | **NOT MEASURED** |
+| corpus-wide ceiling | **REFUSED** — one subject cannot support it |
+
+Partition, subjects: **3 requested = 1 measured + 2 not attempted + 0 failed.**
+The two not attempted are a resource statement, not a finding: only
+`coffee-bubbles` has a registered aligned source bundle on this machine, and
+the others need their source stacks re-rendered and re-aligned first. The 57%
+figure is therefore **a single-subject measurement and must not be quoted as a
+corpus ceiling.**
+
 ---
 
-## 9. Files
+## 10. Files
 
 | file | what it does |
 |---|---|
@@ -1327,6 +1522,9 @@ checker that dies and a checker that passes must never produce the same verdict.
 | `vn_admit.py` | extracts the shipping admission record from all 26 provenance files (§8.2) |
 | `vn_mechtest.py` | admission vs measured excess, commissioned both ways (§8.3) |
 | `pin9b05/` | gate source at the BUILD commit, not HEAD — the source drifts (§8.1) |
+| `vn_pyr.py` | offline reimplementation of the SHIPPING pyramid merge (§9.2) |
+| `vn_plateau.py` | winner-field plateaus, counterfactual arms, sensitivity (§9.4-9.6) |
+| `vn_bungauge.py` | proves the reused source bundle is not the sRGB master (§9.2) |
 | `vn_seals.py` | hashes every `strehl*.exe` and every `.tiff.ok` seal; reproduces §0. Plants decoys it must find, so reach is measured rather than assumed. |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.

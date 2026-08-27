@@ -81,7 +81,9 @@ def grab(body, pat, what):
 def main():
     global checked
     doc = io.open(DOC, encoding="utf-8").read()
-    s8 = doc[doc.index("## 8. The mechanism"):doc.index("## 9. Files")]
+    i8 = doc.index("## 8. The mechanism")
+    j8 = doc.index("\n## ", i8 + 1)
+    s8 = doc[i8:j8]
 
     # ---- 8.3 correlations: cell-exact, against the harness output ----
     try:
