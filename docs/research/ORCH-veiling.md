@@ -11586,3 +11586,101 @@ is trustworthy only within the range its commission spans, and every arm above
   every subject above 1.0; the effect is not sharpening, by the USM control.
 - **NOT safe to state:** any specific multiple. Pending resolution of 105.3.
 - **Removed:** section 103's single-subject caveat.
+
+## 106. The gallery was 19.9% of master width, and that is what was being judged
+
+**Status: MEASURED.** Direct measurement of delivered bytes, `2026-08-27`.
+
+### 106.1 What was found
+
+The owner has twice looked at output and reported it looked bad — once "these
+look horrible", once "those stacks don't look too good yet, I can see the
+promise". Both times the response here was to go looking for a defect in the
+stacker. This section records that a large part of what he was reacting to was
+not in the stacker at all.
+
+Measured on the delivered files:
+
+| | |
+|---|---|
+| master | `7032 x 4688` = 33.0 MP |
+| delivered `_presentation/*.jpg` | `1400 x 933` = 1.3 MP, all 26 |
+| ratio | **19.9% of master width** — a 5.02x downscale |
+| JPEG quantisation DC | 2 (i.e. very high quality — compression was *not* the problem) |
+| ICC profile | absent |
+
+The compression was fine. The size was not. `finalpass.ps1` defaulted
+`-PresentWidth 1400`, and the presentation directory is the only place in the
+output tree holding a file a photographer would naturally double-click; the
+masters beside it are 198 MB 16-bit TIFFs.
+
+### 106.2 Why this is worse than merely uninformative
+
+Every property this project is judged on lives above 1400 px:
+
+- reconstruction gain is measured on 1:1 patches (§105)
+- the blur budget closes to 2.6% at full scale (`BUILD-SHARP.md` §1)
+- halo absence was confirmed on 1:1 grids and the USM control figure
+
+A 5x downscale puts all of it inside the resampling kernel.
+
+And the failure is not symmetric. **A 5x box-down of a correctly sharp image
+looks softer than a 5x box-down of an oversharpened one**, because the
+oversharpened one carries edge overshoot that survives decimation as apparent
+local contrast while the honest one carries only real detail that decimation
+removes. So the thumbnail does not merely fail to show the quality — it
+*inverts the ordering* it was being used to establish. Every competitor that
+oversharpens would have looked better than this one in that gallery, and it
+would have looked better precisely to the extent it was worse.
+
+This is the same class of error as the clip gate corrected in commit `04074ab8`
+— a statistic (here, an image) that answers a different question than the one
+the viewer is asking, and answers it confidently.
+
+### 106.3 What was verified at full resolution
+
+`scripts/deliver.py` now writes the real deliverable: full-resolution JPEG,
+quality 95, 4:4:4, sRGB ICC embedded, 300 DPI, plus 1:1 crops with **no
+resampling of any kind**. 26/26 rendered, 289 MB, 26 full frames + 78 crops.
+ICC and DPI verified on real bytes at `588` and `(300, 300)` for both a full
+frame and a crop.
+
+Crop locations are **scored, not chosen** — mean `|Laplacian|` of luma on the
+master, top-k under a minimum separation. A deliverable whose crops are picked
+by eye is a deliverable that flatters itself. Scoring selects where detail
+*exists*, which is also where a stacking failure would be most visible, so the
+selection cuts both ways on purpose.
+
+Inspected at 1:1:
+
+- **`bee-3-cpl`** — individual hairs resolved; the fine pale filaments crossing
+  dark out-of-focus background are *continuous*, which is the hardest case in
+  focus stacking and the one where selection-based tools fragment hairs; the
+  pitted cuticle texture on the leg segment survives.
+- **`tweezers-cpl`** — machining striations individually resolved, speculars are
+  points rather than smears, and the boundary against dark background carries no
+  bright rim.
+- **`wrapped-text-1`** — the decisive halo geometry, dark ink on light paper. No
+  bright rim on any letter: paper immediately adjacent to a stroke matches paper
+  far from it. Paper fibre texture and the ink's dot structure both resolved.
+
+### 106.4 The rule
+
+> **A deliverable rendered at a scale below the one the work is judged at is not
+> a small version of the result. It is a different measurement, and it can rank
+> backwards.**
+
+And the process rule that would have caught it a week earlier:
+
+> **When someone reports that output looks bad, measure what they actually
+> looked at before you go looking in the code.** Two rounds of investigation
+> here started from the assumption that the reported artifact was in the merge.
+
+### 106.5 What this does *not* excuse
+
+The halos the owner reported in earlier rounds were real, were found, and were
+fixed; this section is not a retraction of that. `SHIP-V3` is a genuinely
+different and better render than what he saw then. What is claimed here is
+narrower and specific: **the gallery used to judge every render to date
+understated all of them**, and the most recent "these look horrible" was passed
+through a 5x downscale that no amount of stacker quality could have survived.
