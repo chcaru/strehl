@@ -8,6 +8,36 @@ strehl-arm renders, which are not used for any number here.*
 
 ---
 
+> ## ⚠ PARTIALLY SUPERSEDED — read this before §0.3, §5.3 or P7
+>
+> **`docs/research/V-LINEAR2.md` §1 overturns this document's reading of the
+> 0.20–0.25 cyc/px band, and this file's title restates the superseded
+> version.** The four ratios below — **1.015, 1.043, 1.004, 1.138** — come from
+> four hand-picked **whole-frame** pairs. Letting each of 29 tiles choose its
+> *own* best-focus and worst-focus frame, on these same linear develops, gives
+> **R = 2.419, CI [1.961, 3.063]** at 0.20–0.25 cyc/px; **1.387 MARGINAL** at
+> 0.25–0.30; and failing above 0.30. Whole-frame pairs average sharp and
+> never-sharp regions together and report ~1.0 where per-tile selection
+> recovers a factor of 2.4.
+>
+> **What is withdrawn:** the conclusion that 0.20–0.48 cyc/px is uniformly a
+> noise band, *for 0.20–0.25 only*. It stands at 0.25–0.30 and above.
+>
+> **What survives, and it is this lane's headline:** the "17–27% behind Zerene"
+> claim was made in a band with no focus-dependent signal. That claim was made
+> at **0.25–0.30**, which still does not pass. The retraction this lane
+> supported is unaffected.
+>
+> **Every original number is retained below, unedited.** The measurement is
+> reproducible and the correction is auditable; nothing here is deleted.
+>
+> **Known dependency, not fixed here.** `docs/research/V-HEADTOHEAD2.md` §3b
+> imports these whole-frame ratios and uses them *against its own* headline
+> result. That lane is still running and is being routed separately, so this
+> lane has deliberately not edited it. Whoever picks it up should start there.
+
+---
+
 ## 0. The verdict, first
 
 I was sent to close V-HEADTOHEAD2 §7's Blocker 1 — re-develop the comparator's
@@ -38,7 +68,10 @@ develop**, so re-developing linearly does not isolate the stacking algorithm;
 it trades one confound for another.
 
 **3. The band the whole dispute lives in contains no focus-dependent signal on
-this corpus.** Defocus is a low-pass filter, so in a badly defocused tile
+this corpus.** *(Superseded in part — see the banner at the head of this file.
+Per-tile focus selection recovers R = 2.419 at 0.20–0.25 cyc/px; this finding
+stands at 0.25–0.30, which is where the retracted claim was made, so the
+conclusion drawn from it below is unaffected.)* Defocus is a low-pass filter, so in a badly defocused tile
 whatever fine-band power remains is the noise floor. In strehl's linear
 develops, a tile that is *in focus* has the same 0.20–0.48 cyc/px power as the
 same tile 20 frames out of focus: ratio **1.015, 1.004, 1.043, 1.138** across
@@ -331,6 +364,15 @@ tone fit accounts for this fraction of the whole input-side difference".
 
 ### 5.3 Why: the fine bands of a linear frame are noise
 
+> **SUPERSEDED IN PART by `docs/research/V-LINEAR2.md` §1.** The per-band table
+> and the four aggregate ratios below are from **whole-frame** pairs. Per-tile
+> focus selection over 29 tiles on the same develops gives **R = 2.419**,
+> CI [1.961, 3.063], at 0.20–0.25 cyc/px — so **the 0.20–0.25 row below is
+> withdrawn**. 0.25–0.30 (1.387, MARGINAL) and everything above 0.30 stand, and
+> with them this section's use in §6. Numbers retained unedited; see the banner
+> at the head of this file for the full statement and for the
+> `V-HEADTOHEAD2.md` §3b dependency.
+
 `noisefloor.py`. Defocus is a low-pass filter, so a badly defocused tile
 contains no real detail at fine scale and whatever power is there is the noise
 floor. Compare, at the same position, an in-focus frame against one 20 frames
@@ -468,6 +510,13 @@ between graded and linear is not tone.**
 the Lightroom development of the same frames. **This corpus is noise-limited in
 the band every strehl-versus-anything fine-scale claim has been made in.**
 
+> **P7 IS AMENDED by `docs/research/V-LINEAR2.md` §1 / Q2.** The four ratios
+> are whole-frame; per-tile selection gives **R = 2.419 [1.961, 3.063]** at
+> 0.20–0.25 cyc/px. **P7 should be registered for 0.25–0.48 cyc/px only.** The
+> sentence in bold is true as written for 0.25–0.48 and false at 0.20–0.25.
+> Because every fine-scale claim it refers to was made at 0.25–0.30, the
+> consequence P7 was registered to support is unchanged.
+
 **P8 (discipline).** A GUI-hosted batch application fails by **hanging on a
 modal dialog**, not by exiting non-zero. Any harness that drives one must poll
 the process's visible top-level windows against an allow-list and abort on
@@ -491,6 +540,22 @@ This is one script and it should run *before* the head-to-head, not after.
 and does not quote members containing spaces. Use
 `ProcessStartInfo.ArgumentList`, which applies the Win32 quoting rules per
 element.
+
+**P12 (discipline).** **A correction that only points backwards is invisible
+from the place where the error is read.** A successor document that opens by
+naming the section it corrects is necessary and not sufficient: the superseded
+section has no idea anything came after it, and a reader arriving there
+directly — by citation, by search, or by following a link from a third
+document — has no way to discover the correction short of noticing a later
+directory entry. **The retraction has to live where the mistake is, not only
+where the fix is.** Cost of learning this: §5.3's whole-frame ratios were read
+as current after `V-LINEAR2.md` §1 had already overturned them, and were
+published to the owner-facing README and sent to two working lanes as grounds
+to doubt their instruments. Forward banners are cheap; the original numbers
+stay, unedited, so the file remains reproducible and the correction auditable.
+The banner must also name any **third-party dependants** it knows of — here
+`V-HEADTOHEAD2.md` §3b — because the agent who can fix the dependant is
+usually not the agent who owns the corrected file.
 
 ---
 
