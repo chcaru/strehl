@@ -56,6 +56,9 @@ import numpy as np
 
 K = np.array([1.0, 4.0, 6.0, 4.0, 1.0]) / 16.0
 SNR_REF = 64.0
+# The Rust clamp bound on `p * ln(r)`. Overridable ONLY so the positive
+# control can force it to bind; the shipping value is 80.0.
+_CLAMP = 80.0
 MAX_EXPONENT = 8.0
 BUNDLE = r"C:\dev\strehl-out\V-NEVERWORSE\bundle"
 OUT = r"C:\dev\strehl-out\V-NEVERWORSE\plateau"
@@ -129,13 +132,38 @@ def exponent_at(k, nb, exponent, sharpen):
     return min(exponent * (sharpen ** (nb - 1 - k)), MAX_EXPONENT)
 
 
-def select_weight(excess, floor, p):
+def select_weight(excess, floor, p, count=None):
+    """Faithful to `9b05d0b7:crates/strehl-core/src/pyramid.rs:2092-2110`.
+
+    The Rust has two UNCLAMPED fast paths that the first version of this
+    function did not reproduce:
+
+        if p == 1.0 { r } else if p == 2.0 { r * r }
+        else { (p * r.ln()).clamp(-80.0, 80.0).exp() }
+
+    `exponent_at` returns exactly 2.0 at the coarsest band under the shipping
+    ramp, so the coarsest band really does take the unclamped path on every
+    delivered image. Reproducing it matters for the SNR_REF question, because
+    the clamp is the ONLY reason SNR_REF fails to cancel.
+
+    `count`, if given, is a dict that accumulates how often the clamp binds.
+    """
     r = excess / np.maximum(floor, 1.0) / SNR_REF
     w = np.zeros_like(r)
     m = excess > 0.0
     if not np.any(m):
         return w
-    w[m] = np.exp(np.clip(p * np.log(r[m]), -80.0, 80.0))
+    if p == 1.0:
+        w[m] = r[m]
+    elif p == 2.0:
+        w[m] = r[m] * r[m]
+    else:
+        t = p * np.log(r[m])
+        if count is not None:
+            count["binding"] = count.get("binding", 0) + int(
+                np.count_nonzero((t < -_CLAMP) | (t > _CLAMP)))
+            count["total"] = count.get("total", 0) + int(t.size)
+        w[m] = np.exp(np.clip(t, -_CLAMP, _CLAMP))
     return w
 
 
@@ -222,7 +250,7 @@ def merge(frames, cfg, beta, var0, nb=7):
             sq = smooth5(laps[i][k] ** 2)
             floor = gate * beta[k] * np.maximum(vv, 0.0)
             excess = np.maximum(sq - floor, 0.0)
-            ws.append(select_weight(excess, floor, p))
+            ws.append(select_weight(excess, floor, p, count=cfg.get("_clamp")))
         W = np.stack(ws)
         if mode == "mean":
             W = np.zeros_like(W)

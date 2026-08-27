@@ -1635,6 +1635,350 @@ the two new subjects recovered a positive photon gain (`180.1 + 1.6498*S` and
 there remains this lane's weakest input -- covered, but not removed, by the
 4x sweep.
 
+### 9.11 ASK 1 -- `SNR_REF` does NOT cancel, and the source says it does
+
+ORCH asked me to settle whether `SNR_REF = 64.0` cancels in the normalised
+weight `w_i / sum_j w_j`, believing it does and that it is therefore an
+overflow guard rather than a threshold. **It does not cancel. The belief is
+correct about intent and wrong about effect, and the file states the wrong
+one as fact.**
+
+The algebra first, because it says exactly where the belief comes from.
+Without the clamp, `w_i = (r_i / S)^p = r_i^p * S^-p`, and `S^-p` is common to
+every frame at a level, so it divides out of the normalised weight exactly.
+`pyramid.rs:2055-2059` says so in as many words: *"since every weight at a
+level is divided by the same constant, the merge is mathematically unchanged
+by it"*. That is true of the expression as written in the comment. It is not
+true of the code beneath it, because `select_weight` clamps the log-domain
+product to +/-80 before exponentiating, and **a clamp does not commute with a
+scaling**. `pyramid.rs:2092` calls that clamp *"an overflow guard that never
+binds in practice"*.
+
+Measured on `coffee-bubbles`, 19 frames, shipping configuration:
+
+| `SNR_REF` | fraction of coefficients where the clamp binds | max abs pixel change | max abs change in normalised weight |
+|---|---:|---:|---:|
+| 64.0 (shipping) | 0.002793 | 0 (reference) | 0 |
+| 1.0 | 0.000041 | **606.3 DN** | **0.4666** |
+| 4096.0 | 0.163599 | **1060 DN** | 0.8075 |
+
+The clamp binds on **1 coefficient in 358** at the shipping value, not never.
+A 606 DN pixel change on a 16-bit image is not a rounding artefact.
+
+**Which end binds, and what it does.** `|p * ln r| > 80` at `p = 8` needs
+`r < 4.5e-05`, i.e. `excess / floor < 0.0029`. The clamp therefore binds at
+the **low** end, on coefficients barely above the noise floor. Every such
+coefficient floors to `exp(-80) = 1.8e-35` and they all become **equal**, so
+the merge averages them instead of ranking them. That is the opposite of the
+overflow the comment describes, and its effect is benign in isolation --
+averaging is the right thing to do down there. It is still an undocumented
+behavioural switch sitting in a constant the file describes as inert.
+
+**Commissioning, both directions.** The claim "changing `SNR_REF` changes
+nothing" is a null result, and a null result from a blind instrument looks
+identical to a null result from a sound one. So the run carries a **positive
+control**: with the clamp bound forced from 80 to 1.0, so that it binds on
+0.995 of coefficients, the same comparison reads **max abs pixel change
+1236**. The instrument can see a difference when there is one. The **null
+control**, rerunning the identical `SNR_REF`, reads **exactly 0**.
+
+**Does this change the diagnosis? No.** `SNR_REF` is not a selectivity
+threshold and is not the mottle mechanism. Reported because the file's own
+description of it is contradicted on real data, and because a lane that reads
+those two comments and reasons from them will reason wrongly, which is the
+same trap that cost this project three re-aims tonight.
+
+### 9.12 ASK 2 -- the weights are concentrated, but the field is COHERENT, not a patchwork
+
+ORCH's stated mechanism was that at `p ~ 5.5` the per-pixel choice is
+"chosen independently per pixel", producing "a spatially incoherent patchwork
+at the scale of a pyramid band". Measured at level 3 on `coffee-bubbles`,
+stratified by a through-focus flatness computed **from the source frames
+without the gate**, so it cannot inherit the gate's own decisions:
+
+| stratum | pixels | `n_eff` | mean top weight | fraction single-winner |
+|---|---:|---:|---:|---:|
+| 0 (most structured) | 2554 | 2.50 | 0.652 | 0.256 |
+| 1 | 2554 | 2.54 | 0.646 | 0.244 |
+| 2 | 2553 | 2.45 | 0.669 | 0.293 |
+| 3 | 2554 | 2.32 | 0.690 | 0.309 |
+| 4 (flattest) | 2554 | **2.28** | 0.695 | **0.316** |
+
+The weights **are** concentrated: `n_eff` around 2.4 out of 19 frames, and a
+top weight near 0.67. So the "already close to winner-take-all" half of
+ORCH's reading is confirmed. The **flatness dependence is real but far too
+small to be a mechanism**: `n_eff` moves 2.50 to 2.28 across the whole range,
+a 9% change, and the single-winner fraction 25.6% to 31.6%.
+
+The "incoherent" half is **refuted**:
+
+| | 4-neighbour agreement | chance from marginals | excess | admitted pixels |
+|---|---:|---:|---:|---:|
+| shipping merge | 0.6385 | 0.0717 | **+0.5668** | 1.000 |
+| null: same scene, no focus signal | 0.4928 | 0.0535 | +0.4392 | 0.992 |
+| **attributable to real focus differences** | | | **+0.1275** | |
+
+64% of neighbouring pixels choose the same frame where chance is 7%. The
+winner field is not a patchwork, it is a **plateau field**, consistent with
+the median plateau diameter of 13.9 px measured independently in section 9.4.
+
+**The null is what makes that number mean anything, and it moved it a long
+way.** `sq = smooth5(lap^2)` mixes neighbouring coefficients before the
+selection ever sees them, so adjacent pixels share input and their winners
+would agree even with nothing to agree about. The null keeps the scene, so
+the gate admits at the same rate, and destroys only the between-frame focus
+signal: every frame becomes the mean image plus independent noise at the
+fitted level. **77.5% of the coherence excess survives that**, so it is
+manufactured by the pipeline rather than found in the subject. The honest
+figure attributable to real focus differences is **+0.1275, not +0.5668**.
+
+### 9.13 ASK 3 -- the confidence-dependent exponent, measured before it ships
+
+ORCH described the fix in words, not code, and the build lane's constants do
+not exist yet, so I implemented the most defensible reading and then swept its
+one free parameter, so that the conclusion does not rest on my choice of it:
+
+    confidence c = 1 - exp(-kappa * spread / sd_est)
+    p_eff        = p_lo + (p - p_lo) * c
+
+with `spread` the range of smoothed band energies across frames and `sd_est`
+their own estimation noise, `sqrt(2/keff)` times the measured local mean band
+energy, `keff = 1/(sum K^2)^2` for the separable 5-tap kernel. `p_lo = 1` is
+ORCH's rule as stated. **Everything in that paragraph is a guess except the
+endpoints**, which are pinned by commissioning:
+
+| commissioning arm | requirement | measured |
+|---|---|---:|
+| `kappa = 0` reproduces the flat-exponent arm | exact identity | max abs pixel delta **0** |
+| `kappa = inf` reproduces the shipping merge | exact identity | max abs pixel delta **0** |
+| the two limits are not the same image | must be large | **1720 DN** apart |
+
+Both limits are **exact**, not approximate, which is why the sweep between
+them can be read as the fix's whole reachable range rather than as one guess
+about it.
+
+**The result: the fix reaches no point that the existing scalar knobs do not.**
+
+| arm | knob | blotch vs best source | sharpness vs best source | vs scalar frontier |
+|---|---|---:|---:|---:|
+| scalar | `exponent` 2.0 (shipping) | 1.354x | 0.755x | -- |
+| scalar | `exponent` 1.8 | 1.332x | 0.757x | -- |
+| scalar | `exponent` 1.6 | 1.305x | 0.756x | -- |
+| scalar | `exponent` 1.4 | 1.265x | 0.749x | -- |
+| scalar | `exponent` 1.2 | 1.214x | 0.725x | -- |
+| scalar | `exponent` 1.0 | 1.152x | 0.685x | -- |
+| confidence | `kappa` 0.005 | 1.196x | 0.709x | **-0.0067** |
+| confidence | `kappa` 0.010 | 1.219x | 0.720x | **-0.0113** |
+| confidence | `kappa` 0.050 | 1.286x | 0.746x | **-0.0282** |
+| confidence | `kappa` 0.100 | 1.313x | 0.752x | +0.0008 |
+| confidence | `kappa` 0.500 | 1.348x | 0.755x | +0.0033 |
+| confidence | `kappa` 1.000 | 1.352x | 0.755x | +0.0007 |
+
+The last column is the blotch of the scalar frontier interpolated to the same
+sharpness, minus the confidence arm's blotch. Positive means the fix bought
+something no scalar buys. **The largest gain anywhere is +0.0033 blotch, and
+three of the six points are strictly worse than simply turning `exponent`
+down.** On this subject the confidence rule is a more complicated way to
+reach a curve that already exists.
+
+**The oracle bound, which makes that implementation-independent.** My
+implementation is one reading of ORCH's words; the build lane's will differ.
+So I also measured an oracle that chooses, per pixel and **in image space
+with both finished reconstructions in hand**, whether to take the shipping or
+the flat-exponent result. It is strictly stronger than any confidence rule,
+which must decide per band from noisy evidence:
+
+| oracle, fraction of frame flattened | blotch | sharpness |
+|---:|---:|---:|
+| 0.10 | 1.288x | 0.723x |
+| 0.25 | 1.253x | 0.734x |
+| 0.50 | 1.210x | 0.741x |
+| 0.75 | 1.177x | 0.729x |
+| 0.90 | **1.160x** | 0.708x |
+
+**Commissioned:** an oracle that did not dominate the scalar frontier would
+not bound anything, and the run refuses if it does not. It dominates by
+**+0.0478** blotch at matched sharpness.
+
+| | blotch | share of the excess over 1.000x removed |
+|---|---:|---:|
+| shipping | 1.354x | -- |
+| best confidence arm | 1.196x | **44.6%** |
+| **oracle, any per-pixel exponent rule** | **1.160x** | **54.8%** |
+
+**Even the oracle still violates the never-worse bound.** No per-pixel
+exponent rule clears `coffee-bubbles`, whatever the build lane writes.
+
+### 9.14 The decisive experiment -- a stack with nothing to resolve
+
+Every blotch conviction in this document has one standing defence: that the
+merge is being charged for resolved structure no single frame contains. On
+real data that defence is untestable, because real frames really do differ in
+focus. **This removes it by construction.**
+
+Build a stack whose frames carry identical scene content and differ only by
+independent noise at the fitted sensor level. No frame is better focused than
+any other. There is nothing to resolve and nothing the merge can legitimately
+add. Measure the **residual against the known base**, so the scene's own
+mid-band content -- common to every arm -- cannot dominate the statistic.
+
+**Commissioning, both directions.** A null that is not null would make any
+excess legitimate and collapse the whole argument, so the construction is
+checked in three ways:
+
+| arm | requirement | measured |
+|---|---|---:|
+| the null is null | sharpness spread across synthetic frames ~ 0 | **0.0026** of the mean |
+| planted focus advantage on one frame | must be detected | **0.5752** |
+| planted blur on one frame | must be detected | **1.0672** |
+
+and the statistic carries a **positive control on its own sensitivity**:
+averaging 19 independent noise fields must cut the band energy to
+`1/sqrt(19) = 0.229x`, and the run **refuses** if the plain mean does not
+read that. It reads **0.249x**.
+
+| arm | band (50-400 px) | fine | band vs best frame | fine vs best frame |
+|---|---:|---:|---:|---:|
+| shipping, as delivered | 2.08466 | 99.46558 | **1.840x** | 1.149x |
+| exponent ladder alone, no admission gate | 1.79285 | 102.71260 | 1.582x | 1.186x |
+| flat exponent, `p = 1` everywhere | 1.61676 | 98.68014 | 1.427x | 1.140x |
+| confidence rule collapsing to `p = 1` | 1.66444 | 99.27505 | 1.469x | 1.147x |
+| confidence rule collapsing to a true average | 1.49007 | 97.07336 | 1.315x | 1.121x |
+| hard admission threshold alone, uniform weights | 1.43264 | 96.06861 | 1.264x | 1.110x |
+| plain unweighted mean | 0.28218 | 19.86664 | **0.249x** | 0.229x |
+
+**The shipping merge reads 1.840x the best frame it was built from, at mid
+scale, on a stack where every frame is the same image.** That excess cannot
+be resolved detail. It is manufactured. Against the plain mean the
+manufacture factor is **7.39x**.
+
+**Attribution, and this is the part that decides the fix.** Two noise-driven
+decisions are stacked in this merge: **which** frames are admitted
+(`excess = max(sq - floor, 0)` is a hard per-pixel threshold) and **how** they
+are weighted once admitted (the exponent ladder). Turning each off separately:
+
+| mechanism left running alone | band vs best frame | share of the excess over a plain mean |
+|---|---:|---:|
+| hard admission threshold only | 1.264x | **63.8%** |
+| exponent ladder only | 1.582x | **83.8%** |
+
+Those do not sum to 100%; they sum to 148%. **The two mechanisms are
+redundant, not complementary.** Either one alone reproduces most of the
+defect, so removing one alone leaves most of it standing. The exponent fix's
+best case -- flat `p = 1` everywhere, which is more than the build lane
+intends -- removes **26.0%**.
+
+**The predicted ceiling ORCH asked for is therefore about a quarter, not
+most, and there is a second mechanism.** It is the admission threshold, and
+it is in the same file. A confidence rule applied only to the exponent will
+land near 1.5x on this null. A confidence rule that also collapses to a
+**true average** rather than to `p = 1` reads 1.315x, better but still six
+times the mean's 0.249x, because the admission decision it leaves in place is
+itself noise-driven.
+
+**Sharpness on the same pixels, as required.** The fine column is the price
+list. The plain mean reads **0.229x** of the best frame's fine grain -- it is
+the cleanest arm at mid scale and by far the most destroyed at fine scale,
+exactly the trade ORCH measured `focus-stack` taking at 0.077 and 0.260. Every
+other arm sits between 1.110x and 1.186x, so on this null the mechanisms cost
+essentially nothing in fine grain and buy nothing either: they are moving
+noise from fine scales to mid scales, which is the worst direction available,
+because mid-scale noise is what the eye reads as mottle.
+
+### 9.14b The same on a second subject, and it gets worse with depth
+
+`112MSDCF`, 79 frames, identical construction. Commissioned the same way:
+the synthetic frames' sharpness spread is **0.0020** of the mean, a planted
+focus advantage reads **2.0293** and a planted blur reads **1.0585**, so the
+null is null and the check that says so can fail. The sensitivity control
+passes: 79 averaged noise fields must read `1/sqrt(79) = 0.113x` and the
+plain mean reads **0.115x**.
+
+| arm | band (50-400 px) | fine | band vs best frame | fine vs best frame |
+|---|---:|---:|---:|---:|
+| shipping, as delivered | 1.06870 | 45.85142 | **3.160x** | 1.755x |
+| exponent ladder alone, no admission gate | 0.94974 | 30.14141 | 2.808x | 1.153x |
+| flat exponent, `p = 1` everywhere | 0.71432 | 40.34111 | 2.112x | 1.544x |
+| confidence rule collapsing to `p = 1` | 0.76195 | 41.68305 | 2.253x | 1.595x |
+| confidence rule collapsing to a true average | 0.61526 | 37.84826 | 1.819x | 1.448x |
+| hard admission threshold alone, uniform weights | 0.54652 | 35.85899 | 1.616x | 1.372x |
+| plain unweighted mean | 0.03892 | 2.93397 | **0.115x** | 0.112x |
+
+| mechanism left running alone | band vs best frame | share of the excess over a plain mean |
+|---|---:|---:|
+| hard admission threshold only, 79 frames | 1.616x | **49.3%** |
+| exponent ladder only, 79 frames | 2.808x | **88.4%** |
+
+Every conclusion from section 9.14 reproduces. The shares again exceed 100%,
+at 138%, so the two mechanisms are again redundant. The exponent fix's best
+case removes **34.4%**.
+
+**And one new thing, which is the worst number in this document.** The
+manufacture factor -- shipping divided by the plain mean on a stack with
+nothing to resolve -- is **7.39x on 19 frames and 27.46x on 79**. It rises
+with stack depth. A plain mean improves as `1/sqrt(n)`; the shipping merge
+does not follow it down, so the gap widens with every frame added. **Giving
+this merge more frames buys more mottle relative to what those frames could
+have given you.** That is the opposite of the property a stacker is for, and
+it is consistent with section 9.6's independent finding on real data that the
+selection-attributable share collapses as stacks deepen -- the same effect
+seen from the other side.
+
+---
+
+### 9.15 Two more instrument defects, both caught by controls I nearly did not write
+
+**The synthetic null measured the wrong quantity, and the `sqrt(n)` control
+caught it.** The first version scored the merged image rather than the
+residual. Every arm shares the same base, whose mid-band content is large, so
+the statistic read **1.001x for shipping, 1.006x for the plain mean and
+1.001x for the flat exponent** -- three arms indistinguishable, and a clean
+acquittal of the merge. The `1/sqrt(19) = 0.229x` expectation is what showed
+it was wrong: 19 averaged noise fields **cannot** read 1.006x. Scoring the
+residual instead, the same arms read 1.840x, 0.249x and 1.427x. **A
+responsiveness control is the only thing standing between "no effect" and "no
+sensitivity", and those two produce the same three-digit number.**
+
+**The coherence null was contaminated by abstention.** The first null used
+pure noise with no scene. Nothing cleared the admission floor, so every weight
+was zero, and `argmax` of an all-zero column returns frame 0 by convention --
+not by selection. The null read **0.6023 agreement against a chance of
+0.2784**, which would have destroyed the finding it was written to protect.
+The marginal chance level was the tell: 19 symmetric frames must give
+`1/19 = 0.053`, and 0.2784 means about 3.6 frames were winning everything.
+Fixed by masking to pixels where some frame is actually admitted, and by
+building the null from the real scene so that admission behaves the same way.
+The corrected null reads 0.4928 agreement, chance 0.0535, on 0.992 of pixels.
+
+**Both are the same defect as the one ORCH named earlier tonight: an absence
+of signal being read as a pass.** A statistic that cannot respond and a
+statistic that responded with zero are the same glyph.
+
+### 9.16 What I did not measure, this round
+
+| item | status |
+|---|---|
+| `SNR_REF` cancellation, with positive and null controls | **measured** |
+| weight concentration by flatness, gate-free stratification | **measured** |
+| winner-field coherence with a like-for-like null | **measured** |
+| the confidence-dependent exponent, swept, against a scalar frontier | **measured** |
+| oracle bound on any per-pixel exponent rule | **measured** |
+| synthetic null with a passing `sqrt(n)` sensitivity control | **measured** |
+| attribution between admission and exponent | **measured** |
+| the same on a second subject | **measured**, `112MSDCF` |
+| the same on the remaining convicted subjects | **NOT MEASURED** |
+| the build lane's actual implementation | **NOT MEASURED** -- it does not exist yet |
+| chroma under any of these arms | **NOT MEASURED** -- BUILD-OUTPUT holds that half |
+
+Partition, ORCH's asks: **4 requested = 4 measured + 0 refused + 0 failed.**
+Partition, subjects for the manufacture test: **2 attempted = 2 measured +
+0 refused + 0 failed.**
+
+The standing qualifier applies unchanged: where a subject's best-source
+minimum is taken over fewer frames than the stack holds, the ratio is a
+**lower** bound on the true excess. It does not apply to section 9.14 at all,
+because the synthetic stack has no dropped frames and no registration step.
+
 ---
 
 ## 10. Files
@@ -1668,6 +2012,9 @@ there remains this lane's weakest input -- covered, but not removed, by the
 | `vn_pyr.py` | offline reimplementation of the SHIPPING pyramid merge (§9.2) |
 | `vn_plateau.py` | winner-field plateaus, counterfactual arms, sensitivity (§9.4-9.6) |
 | `vn_bungauge.py` | proves the reused source bundle is not the sRGB master (§9.2) |
+| `vn_snrref.py` | ASK 1 and ASK 2: `SNR_REF` cancellation with a positive control, weight concentration by flatness, winner-field coherence with a like-for-like null (S9.11, S9.12) |
+| `vn_confexp.py` | the confidence-dependent exponent implemented offline, swept against a scalar frontier, with an oracle bound (S9.13) |
+| `vn_manuf.py` | the synthetic null: a stack with nothing to resolve, and the attribution between admission and exponent (S9.14) |
 | `vn_seals.py` | hashes every `strehl*.exe` and every `.tiff.ok` seal; reproduces §0. Plants decoys it must find, so reach is measured rather than assumed. |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.

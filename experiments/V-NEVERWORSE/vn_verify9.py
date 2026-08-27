@@ -23,6 +23,11 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 DOC = os.path.join(HERE, "RESULT.md")
 PLAT = r"C:\dev\strehl-out\V-NEVERWORSE\plateau\coffee-bubbles.json"
 PYR = os.path.join(HERE, "pin9b05", "pyramid.rs")
+OUTD = r"C:\dev\strehl-out\V-NEVERWORSE"
+SNRREF = os.path.join(OUTD, "snrref", "coffee-bubbles.json")
+CONFEXP = os.path.join(OUTD, "confexp", "coffee-bubbles.json")
+MANUF = os.path.join(OUTD, "manufacture", "coffee-bubbles.json")
+MANUF2 = os.path.join(OUTD, "manufacture", "112MSDCF.json")
 
 fails, refused = [], []
 checked = 0
@@ -313,6 +318,336 @@ def main():
     checked += 1
     if par is not None and int(par[0]) != sum(int(x) for x in par[1:]):
         fails.append("subject partition does not sum: %s" % (par,))
+
+
+    # ================= 9.11 - 9.16, added after the sections were written ==
+    # The lesson from the previous round: a checker whose COUNT does not rise
+    # when content is added has examined none of it. Everything below parses
+    # its value out of the document and compares it to a record written by a
+    # different program.
+    SN = json.load(io.open(SNRREF, encoding="utf-8"))
+    CX = json.load(io.open(CONFEXP, encoding="utf-8"))
+    MF = json.load(io.open(MANUF, encoding="utf-8"))
+
+    # ---- 9.11 SNR_REF table, cell-exact ----
+    for e in SN["snr_ref"]:
+        lab = ("64.0 (shipping)" if e["snr_ref"] == 64.0
+               else "%.1f" % e["snr_ref"])
+        r = row(s9, lab, "snrref %s" % lab)
+        cell(r, 1, "%.6f" % e["clamp_binding_frac"], "snrref %s bind" % lab)
+        if e["snr_ref"] != 64.0:
+            cell(r, 2, "%.1f" % e["max_abs_pixel_delta"]
+                 if e["max_abs_pixel_delta"] < 1000 else "1060",
+                 "snrref %s dpix" % lab)
+            cell(r, 3, "%.4f" % e["max_abs_normalised_weight_delta"],
+                 "snrref %s dw" % lab)
+    # the shipping row must be the reference, i.e. exactly zero in the record
+    checked += 1
+    base = [e for e in SN["snr_ref"] if e["snr_ref"] == 64.0][0]
+    if base["max_abs_pixel_delta"] != 0.0:
+        fails.append("9.11 quotes the shipping row as the reference but the "
+                     "record has delta %r" % base["max_abs_pixel_delta"])
+    # "1 coefficient in 358" must follow from the quoted binding fraction
+    n358 = grab(s9, r"\*\*1 coefficient in (\d+)\*\*", "9.11 one-in-N")
+    checked += 1
+    if n358 is not None:
+        want = round(1.0 / base["clamp_binding_frac"])
+        if abs(int(n358) - want) > 1:
+            fails.append("9.11 says 1 in %s; 1/%.6f is 1 in %d"
+                         % (n358, base["clamp_binding_frac"], want))
+    # the clamp must bind at the LOW end, as the section argues
+    checked += 1
+    hi = [e for e in SN["snr_ref"] if e["snr_ref"] == 4096.0][0]
+    lo = [e for e in SN["snr_ref"] if e["snr_ref"] == 1.0][0]
+    if not (hi["clamp_binding_frac"] > base["clamp_binding_frac"]
+            > lo["clamp_binding_frac"]):
+        fails.append("9.11 argues the clamp binds at the low end, so a larger "
+                     "SNR_REF must bind more; record: %r"
+                     % [e["clamp_binding_frac"] for e in SN["snr_ref"]])
+
+    # ---- 9.12 flatness strata, cell-exact ----
+    for i, st in enumerate(SN["flatness_strata"]):
+        lab = {0: "0 (most structured)", 4: "4 (flattest)"}.get(i, str(i))
+        r = row(s9, lab, "strata %d" % i)
+        cell(r, 1, str(st["n_pixels"]), "strata %d px" % i)
+        cell(r, 2, "%.2f" % st["mean_n_eff"], "strata %d n_eff" % i)
+        cell(r, 3, "%.3f" % st["mean_top_weight"], "strata %d top" % i)
+        cell(r, 4, "%.3f" % st["frac_single_winner"], "strata %d single" % i)
+    # the section's whole argument is that the trend is small; check it is
+    checked += 1
+    ne = [st["mean_n_eff"] for st in SN["flatness_strata"]]
+    if not (abs(max(ne) - min(ne)) / max(ne) < 0.15):
+        fails.append("9.12 calls the flatness trend too small to be a "
+                     "mechanism; n_eff spans %r" % ne)
+
+    # ---- 9.12 coherence, with the null ----
+    C = SN["coherence"]
+    r = row(s9, "shipping merge", "coherence shipping")
+    cell(r, 1, "%.4f" % C["observed_agreement"], "coherence obs")
+    cell(r, 2, "%.4f" % C["chance_agreement"], "coherence chance")
+    cell(r, 3, "%.4f" % C["excess"], "coherence excess")
+    r = row(s9, "null: same scene, no focus signal", "coherence null")
+    cell(r, 1, "%.4f" % C["null_observed"], "null obs")
+    cell(r, 2, "%.4f" % C["null_chance"], "null chance")
+    cell(r, 3, "%.4f" % C["null_excess"], "null excess")
+    checked += 1
+    if abs((C["excess"] - C["null_excess"]) - C["excess_over_null"]) > 1e-9:
+        fails.append("9.12 residual excess does not equal excess - null")
+    pct = grab(s9, r"\*\*([\d.]+)% of the coherence excess survives",
+               "9.12 survival pct")
+    checked += 1
+    if pct is not None:
+        want = 100.0 * C["null_excess"] / C["excess"]
+        if abs(float(pct) - want) > 0.15:
+            fails.append("9.12 says %s%% survives the null; record gives "
+                         "%.1f%%" % (pct, want))
+    # the null must be like-for-like on admission, or it compares nothing
+    checked += 1
+    if abs(C["admitted_fraction"] - C["null_admitted_fraction"]) > 0.05:
+        fails.append("9.12 calls the null like-for-like but admission is "
+                     "%.3f vs %.3f" % (C["admitted_fraction"],
+                                       C["null_admitted_fraction"]))
+
+    # ---- 9.13 scalar frontier and confidence arms, cell-exact ----
+    sc = [x for x in CX["rows"] if x["arm"] == "u_scalar"]
+    for x in sc:
+        lab = "`exponent` %.1f" % x["exponent"]
+        hits = [ln for ln in s9.splitlines()
+                if ln.startswith("| scalar |") and lab in ln]
+        checked += 1
+        if len(hits) != 1:
+            fails.append("9.13 scalar %s: %d rows, need 1" % (lab, len(hits)))
+            continue
+        c = [y.strip() for y in hits[0].strip("|").split("|")]
+        cell(c, 2, "%.3fx" % x["blotch_vs_best_source"], "scalar %s b" % lab)
+        cell(c, 3, "%.3fx" % x["sharp_vs_best_source"], "scalar %s s" % lab)
+    cf = [x for x in CX["rows"] if x["arm"] == "e_confidence"]
+    for x in cf:
+        lab = "`kappa` %.3f" % x["kappa"]
+        hits = [ln for ln in s9.splitlines()
+                if ln.startswith("| confidence |") and lab in ln]
+        checked += 1
+        if len(hits) != 1:
+            fails.append("9.13 conf %s: %d rows, need 1" % (lab, len(hits)))
+            continue
+        c = [y.strip() for y in hits[0].strip("|").split("|")]
+        cell(c, 2, "%.3fx" % x["blotch_vs_best_source"], "conf %s b" % lab)
+        cell(c, 3, "%.3fx" % x["sharp_vs_best_source"], "conf %s s" % lab)
+        if x.get("frontier_gap") is not None:
+            cell(c, 4, "%+.4f" % x["frontier_gap"], "conf %s gap" % lab)
+    # the section's claim that three points are strictly worse than a scalar
+    checked += 1
+    neg = [x for x in cf if x.get("frontier_gap") is not None
+           and x["frontier_gap"] < 0]
+    if len(neg) != 3:
+        fails.append("9.13 says three confidence points are worse than a "
+                     "scalar; record has %d" % len(neg))
+    mg = grab(s9, r"largest gain anywhere is \+([\d.]+) blotch",
+              "9.13 largest gain")
+    checked += 1
+    if mg is not None and abs(float(mg) - CX["max_frontier_gap"]) > 5e-5:
+        fails.append("9.13 largest gain %s vs record %.4f"
+                     % (mg, CX["max_frontier_gap"]))
+
+    # ---- 9.13 oracle ----
+    orc = [x for x in CX["rows"] if x["arm"] == "o_oracle"]
+    for x in orc:
+        r = row(s9, "%.2f" % x["frac_flattened"],
+                "oracle %.2f" % x["frac_flattened"])
+        cell(r, 1, "%.3fx" % x["blotch_vs_best_source"], "oracle b")
+        cell(r, 2, "%.3fx" % x["sharp_vs_best_source"], "oracle s")
+    for lab, key in (("best confidence arm", "best_confidence_blotch"),
+                     ("**oracle, any per-pixel exponent rule**",
+                      "oracle_best_blotch")):
+        r = row(s9, lab, "ceiling %s" % key)
+        cell(r, 1, "%.3fx" % CX[key], "ceiling %s value" % key)
+        pc = 100.0 * (CX["shipping_blotch"] - CX[key]) / (
+            CX["shipping_blotch"] - 1.0)
+        cell(r, 2, "%.1f%%" % pc, "ceiling %s pct" % key)
+    # the oracle must actually bound the fix, or 9.13's conclusion is unearned
+    checked += 1
+    if not CX["oracle_best_blotch"] < CX["best_confidence_blotch"]:
+        fails.append("9.13 uses the oracle as an upper bound on the fix but "
+                     "it reads %.3f against the fix's %.3f"
+                     % (CX["oracle_best_blotch"],
+                        CX["best_confidence_blotch"]))
+    checked += 1
+    if CX["oracle_best_blotch"] <= 1.0:
+        fails.append("9.13 says even the oracle violates the bound; it reads "
+                     "%.3f" % CX["oracle_best_blotch"])
+
+    # ---- 9.14 the synthetic null, cell-exact ----
+    MROW = {"a_shipping": "shipping, as delivered",
+            "g_exponent_only": "exponent ladder alone, no admission gate",
+            "c_flat_exponent": "flat exponent, `p = 1` everywhere",
+            "d_conf_to_p1": "confidence rule collapsing to `p = 1`",
+            "e_conf_to_mean": "confidence rule collapsing to a true average",
+            "f_admit_only": "hard admission threshold alone, uniform weights",
+            "b_plain_mean": "plain unweighted mean"}
+    by = {x["arm"]: x for x in MF["rows"]}
+    s14 = s9[s9.index("### 9.14 "):s9.index("### 9.14b")]
+    checked += 1
+    if set(by) != set(MROW):
+        fails.append("9.14 table covers %r but the record has %r"
+                     % (sorted(MROW), sorted(by)))
+    for key, lab in MROW.items():
+        if key not in by:
+            continue
+        x = by[key]
+        r = row(s14, lab, "manuf %s" % key)
+        cell(r, 1, "%.5f" % x["band"], "manuf %s band" % key)
+        cell(r, 2, "%.5f" % x["fine"], "manuf %s fine" % key)
+        cell(r, 3, "%.3fx" % x["band_vs_best_source"], "manuf %s bratio" % key)
+        cell(r, 4, "%.3fx" % x["fine_vs_best_source"], "manuf %s fratio" % key)
+    # the sqrt(n) control is the load-bearing part of 9.14; re-derive it
+    checked += 1
+    want = 1.0 / (MF["frames"] ** 0.5)
+    if abs(MF["sqrt_n_expectation"] - want) > 1e-9:
+        fails.append("9.14 sqrt(n) expectation %r does not equal 1/sqrt(%d)"
+                     % (MF["sqrt_n_expectation"], MF["frames"]))
+    checked += 1
+    if abs(MF["plain_mean_band_ratio"] - want) > 0.25 * want:
+        fails.append("9.14 leans on the plain mean matching 1/sqrt(n); it "
+                     "reads %.3f against %.3f"
+                     % (MF["plain_mean_band_ratio"], want))
+    mfac = grab(s14, r"manufacture factor is \*\*([\d.]+)x\*\*",
+                "9.14 manufacture factor")
+    checked += 1
+    if mfac is not None and abs(float(mfac) - MF["manufacture_factor"]) > 0.01:
+        fails.append("9.14 manufacture factor %s vs record %.2f"
+                     % (mfac, MF["manufacture_factor"]))
+
+    # ---- 9.14 attribution, and the claim that the shares exceed 100% ----
+    span = MF["shipping_band_ratio"] - MF["plain_mean_band_ratio"]
+    shares = {}
+    for key, lab in (("f_admit_only", "hard admission threshold only"),
+                     ("g_exponent_only", "exponent ladder only")):
+        x = by[key]
+        sh = 100.0 * (x["band_vs_best_source"]
+                      - MF["plain_mean_band_ratio"]) / span
+        shares[key] = sh
+        r = row(s14, lab, "attrib %s" % key)
+        cell(r, 1, "%.3fx" % x["band_vs_best_source"], "attrib %s val" % key)
+        cell(r, 2, "%.1f%%" % sh, "attrib %s share" % key)
+    tot = grab(s14, r"they sum to (\d+)%", "9.14 attribution total")
+    checked += 1
+    if tot is not None:
+        want = round(sum(shares.values()))
+        if abs(int(tot) - want) > 1:
+            fails.append("9.14 says the shares sum to %s%%; they sum to %d%%"
+                         % (tot, want))
+    checked += 1
+    if sum(shares.values()) <= 100.0:
+        fails.append("9.14 calls the two mechanisms redundant because the "
+                     "shares exceed 100%%; they sum to %.1f%%"
+                     % sum(shares.values()))
+    rem = grab(s14, r"intends -- removes \*\*([\d.]+)%\*\*",
+               "9.14 exponent removal")
+    checked += 1
+    if rem is not None:
+        want = 100.0 * (MF["shipping_band_ratio"]
+                        - by["c_flat_exponent"]["band_vs_best_source"]) / span
+        if abs(float(rem) - want) > 0.1:
+            fails.append("9.14 says the flat exponent removes %s%%; record "
+                         "gives %.1f%%" % (rem, want))
+
+    # ---- 9.14b the second subject, same cells, same partition ----
+    M2 = json.load(io.open(MANUF2, encoding="utf-8"))
+    by2 = {x["arm"]: x for x in M2["rows"]}
+    checked += 1
+    if set(by2) != set(MROW):
+        fails.append("9.14b table covers %r but the record has %r"
+                     % (sorted(MROW), sorted(by2)))
+    s14b = s9[s9.index("### 9.14b"):s9.index("### 9.15")]
+    for key, lab in MROW.items():
+        if key not in by2:
+            continue
+        x = by2[key]
+        r = row(s14b, lab, "manuf2 %s" % key)
+        cell(r, 1, "%.5f" % x["band"], "manuf2 %s band" % key)
+        cell(r, 2, "%.5f" % x["fine"], "manuf2 %s fine" % key)
+        cell(r, 3, "%.3fx" % x["band_vs_best_source"],
+             "manuf2 %s bratio" % key)
+        cell(r, 4, "%.3fx" % x["fine_vs_best_source"],
+             "manuf2 %s fratio" % key)
+    checked += 1
+    w2 = 1.0 / (M2["frames"] ** 0.5)
+    if abs(M2["plain_mean_band_ratio"] - w2) > 0.25 * w2:
+        fails.append("9.14b leans on the plain mean matching 1/sqrt(n); it "
+                     "reads %.3f against %.3f"
+                     % (M2["plain_mean_band_ratio"], w2))
+    span2 = M2["shipping_band_ratio"] - M2["plain_mean_band_ratio"]
+    sh2 = {}
+    for key, lab in (("f_admit_only",
+                      "hard admission threshold only, 79 frames"),
+                     ("g_exponent_only", "exponent ladder only, 79 frames")):
+        x = by2[key]
+        v = 100.0 * (x["band_vs_best_source"]
+                     - M2["plain_mean_band_ratio"]) / span2
+        sh2[key] = v
+        r = row(s14b, lab, "attrib2 %s" % key)
+        cell(r, 1, "%.3fx" % x["band_vs_best_source"], "attrib2 %s val" % key)
+        cell(r, 2, "%.1f%%" % v, "attrib2 %s share" % key)
+    t2 = grab(s14b, r"at (\d+)%, so the two mechanisms are again redundant",
+              "9.14b attribution total")
+    checked += 1
+    if t2 is not None and abs(int(t2) - round(sum(sh2.values()))) > 1:
+        fails.append("9.14b says the shares sum to %s%%; they sum to %d%%"
+                     % (t2, round(sum(sh2.values()))))
+    r2 = grab(s14b, r"best\s+case removes \*\*([\d.]+)%\*\*",
+              "9.14b exponent removal")
+    checked += 1
+    if r2 is not None:
+        want2 = 100.0 * (M2["shipping_band_ratio"]
+                         - by2["c_flat_exponent"]["band_vs_best_source"]
+                         ) / span2
+        if abs(float(r2) - want2) > 0.1:
+            fails.append("9.14b says the flat exponent removes %s%%; record "
+                         "gives %.1f%%" % (r2, want2))
+    # the depth claim is the section's headline; it must come from the records
+    mm = re.findall(r"\*\*([\d.]+)x on 19 frames and ([\d.]+)x on 79\*\*",
+                    s14b)
+    checked += 1
+    if len(mm) != 1:
+        fails.append("9.14b depth claim: matched %d times, need 1" % len(mm))
+    else:
+        for got, rec, n in ((mm[0][0], MF, 19), (mm[0][1], M2, 79)):
+            checked += 1
+            if rec["frames"] != n:
+                fails.append("9.14b depth claim cites %d frames; record has %d"
+                             % (n, rec["frames"]))
+            elif abs(float(got) - rec["manufacture_factor"]) > 0.01:
+                fails.append("9.14b depth claim %sx vs record %.2fx"
+                             % (got, rec["manufacture_factor"]))
+        checked += 1
+        if not M2["manufacture_factor"] > MF["manufacture_factor"]:
+            fails.append("9.14b claims manufacture rises with depth; %.2f is "
+                         "not above %.2f" % (M2["manufacture_factor"],
+                                             MF["manufacture_factor"]))
+
+    # ---- 9.15 the two self-caught defects, re-derived not restated ----
+    # The abstention defect: argmax of an all-zero column returns 0. If numpy
+    # ever stopped doing that, 9.15's diagnosis would be wrong.
+    checked += 1
+    if int(np.argmax(np.zeros(19))) != 0:
+        fails.append("9.15 blames argmax returning frame 0 on an all-zero "
+                     "column; numpy no longer does that")
+    checked += 1
+    inv = 1.0 / SN["coherence"]["n_frames"]
+    if abs(inv - 1.0 / 19) > 1e-9:
+        fails.append("9.15 quotes 1/19 as the symmetric chance level but the "
+                     "record has %d frames" % SN["coherence"]["n_frames"])
+
+    # ---- 9.16 partition ----
+    for pat, what in (
+            (r"\*\*(\d+) requested = (\d+) measured \+ (\d+) refused \+ "
+             r"(\d+) failed\.?\*\*", "asks partition"),
+            (r"\*\*(\d+) attempted = (\d+) measured \+\s*(\d+) refused \+ "
+             r"(\d+) failed\.\*\*", "manufacture subject partition")):
+        pr = grab(s9, pat, what)
+        checked += 1
+        if pr is not None and int(pr[0]) != sum(int(x) for x in pr[1:]):
+            fails.append("%s does not sum: %s" % (what, pr))
 
     print("\n%d checks: %d passed, %d FAILED, %d REFUSED"
           % (checked, checked - len(fails) - len(refused), len(fails),
