@@ -651,7 +651,9 @@ The effect is **red-versus-green** and **grows 2.1x-3.0x from centre to corner**
 on every arm under every selector. That is the signature of **lateral chromatic aberration**,
 which is a red-vs-green magnification error. It also explains the population specificity ORCH
 noticed: a radial displacement of the red plane of order 1-3 px barely dents an *extended*
-edge (`wrapped-text-1`, clean) but is comparable to the **entire width of a 1-2 px specular**,
+edge (`wrapped-text-1`, no rim — ORCH's characterisation, not my measurement, and see 14.6
+on what a high-frequency-selected crop can and cannot certify) but is comparable to the
+**entire width of a 1-2 px specular**,
 so the red image of a tiny feature only partly overlaps the green one - a large fractional red
 deficit exactly where ORCH sees rims.
 
@@ -1115,3 +1117,47 @@ pair that was already comparable, and reversed its sign.*
 
 That is ORCH's standing question a second time: the property deciding what `H` can see is
 the spatial-frequency content of the input, and I varied it — while measuring it.
+
+### 14.6 Putting an amplitude on section 12's null
+
+> ORCH: *"A detector's silence is worth nothing until it has been made to speak at a stated
+> amplitude. Unqualified, 'clean' and 'deaf' are the same word."*
+
+Section 12 reported `flower-bud-alone-cpl` **flat**. The instrument had been calibrated — a
+planted radial was detected, a flat colour cast correctly was not (12.1) — but **calibration
+is not a floor**, and I never said *flat above what*. Ladder, planting a lateral-CA-shaped
+red deficit `R' = R * (1 - A*r)` into the real subject:
+
+| A (plant) | cr centre | cr corner | corner-centre | vs baseline |
+|---:|---:|---:|---:|---:|
+| **0.00** | -0.0316 | -0.0414 | **-0.0098** | *(baseline)* |
+| 0.01 | -0.0336 | -0.0514 | -0.0178 | -0.0081 |
+| 0.02 | -0.0352 | -0.0614 | -0.0262 | -0.0165 |
+| 0.05 | -0.0402 | -0.0917 | -0.0515 | -0.0417 |
+| 0.10 | -0.0488 | -0.1430 | -0.0942 | -0.0844 |
+
+**The A = 0 rung reproduces section 12's published numbers exactly** (-0.0316, -0.0414). That
+is the anchor: a harness whose null rung does not land on the measurement it claims to
+audit is not auditing it, and every rung above it would be meaningless. Response is linear
+at **~0.84 x A** across a 10x span.
+
+**The qualified statement, replacing "flat":**
+
+> `flower-bud-alone-cpl` shows no radial red deficit at or above a plant of **A = 0.01** — a
+> 1.1 % red reduction at the corner — which this statistic registers as a corner-centre shift
+> of **-0.0081**. The effect measured on `coffee-bubbles` is **-0.1394**, i.e. **17x larger
+> than the smallest plant demonstrated detectable.**
+
+That is what makes the null load-bearing: the instrument was shown to see something **17x
+smaller** than the effect it was being asked to rule out. Without the ladder, "flat" and
+"deaf" were the same word, exactly as ORCH says.
+
+**Limit, stated:** I did not probe below A = 0.01, so the true floor may be lower. The claim
+is a bound, not a threshold — the smallest amplitude *demonstrated* detectable, not the
+smallest detectable.
+
+**And one correction upstream.** Section 11.4 called `wrapped-text-1` "clean". That was
+ORCH's characterisation of a 1:1 crop, inherited by me and not measured — and `build_view.py`
+selects crops by **maximum high-frequency energy**, which by construction cannot speak to
+smooth-tone defects on the white paper that dominates that subject. Reworded to "no rim",
+which is the claim the evidence actually supports.
