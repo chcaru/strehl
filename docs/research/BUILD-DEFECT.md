@@ -2025,3 +2025,131 @@ recording: the first draft's assertion messages contained the literals the test
 was counting, so each needle would have inflated its own count and the test
 would have passed by describing itself. The needles are now assembled at
 runtime from fragments.
+
+## 16. The deep-stack alignment lane: refused on prior art, with the search that establishes it
+
+I was handed *"deep-stack alignment, 6.76 px held-out"* with two candidate
+approaches and three pre-registered gates. Before measuring anything I searched
+the corpus, because rule 43 requires that an assertion of absence — including
+"nobody has tried this" — be **established** rather than assumed. Both
+approaches have already been built, measured and killed by name, and the
+brief's description of current behaviour is false. This section is the search,
+not an opinion about the search.
+
+### 16.1 Both candidate approaches are already dead
+
+**Candidate 1, per-edge self-calibration, is M23.** The proposed estimator is
+verbatim M23's: plant ±δ on the measured pair, form
+`R = (m(+δ) − m(−δ)) / 2δ`, divide that edge's log-scale by its own `R`.
+M23's verdict:
+
+> *"The answer is no, and the reason kills the premise rather than the
+> implementation. R4 ships nothing."*
+
+Two results do the killing, and neither is about implementation quality:
+
+- The **shuffled-`R` null reproduces 93.3%** of the correction's movement *with
+  zero per-edge information*. Whatever `R` carries, it is not 93% about the
+  edge it was measured on.
+- **Held-out error is unchanged at 6.758 px** — gate (c), the only gate that
+  ships anything, fails.
+
+M23 also registers the hazard that makes this approach worse than inert:
+`E[1/R] > 1/E[R]` by Jensen, so a **noisy `R` inflates a corrected magnitude
+even when it carries no information at all**. That is a metric whose error sign
+is not centred on zero — the same shape of defect as the sharpness statistic
+bounded below by zero that this project shipped. A correction built on it can
+appear to do work while doing none.
+
+The brief anticipated the objection — *"this is not the scalar correction this
+project already killed"* — and it is right that per-edge ≠ scalar. But M23 ran
+the scalar as its own null arm N2 (*"constant `R` = group median — this is
+literally the scalar M12 refuted"*) precisely so the two could be told apart,
+and the per-edge arm still failed gate (c).
+
+**Candidate 2, blur equalisation, is M78.** Both arms moved held-out the wrong
+way:
+
+| arm | held-out before | after |
+|---|---|---|
+| A | 7.241426 px | **7.266073 px** (worse) |
+| B | 7.241426 px | **7.244330 px** (worse) |
+
+M78's mechanism probe is the part that matters: `Q(1e-4) = 0.987588` against a
+firing threshold of `0.10`. **The blur-asymmetry mechanism does not fire.** The
+approach is not badly implemented; the effect it corrects is not present at a
+magnitude that matters. That agrees with four independent findings —
+M6 (*"no evidence of one"*), `F-camera-lens-optics.md:1015` (*"within 0.4% of
+truth, so defocus difference does not bias phase correlation"*), `M103:33`
+(*"The cause is not blur asymmetry"*), and SYNTHESIS fact 31 (*"symmetric peak
+**degradation**, not directed peak **displacement** … null on all three
+stacks"*).
+
+### 16.2 The brief's premise is false, and I checked it rather than repeating it
+
+The brief states *"the current response is to discard spans 1–2 entirely — which
+throws away the most numerous, best-overlapped, most tile-rich measurements."*
+Read at the working tree, `align_cmd.rs`:
+
+```
+DEFAULT_SPANS = [1, 2, 4, 8, 16, 32, 64, 96, 128]
+```
+
+Spans 1 and 2 **are shipped**. The discard was withdrawn in M103 §16.10b and is
+measured *harmful*: max per-frame placement error **628.1 px**. So the proposed
+remedy — "re-admit corrected short edges" — is a remedy for a condition the
+product does not have. There is nothing to re-admit.
+
+### 16.3 Gate (c) uses a gauge that is structurally blind to what the merge consumes
+
+Even had the mechanism been live, criterion (c) — *"must beat 6.76 px
+held-out"* — rests on a gauge `BUILD-SHARP.md:208-217` has already indicted:
+
+> *"the merge does not consume end-to-end error … **The relevant gauge is
+> span-1 residual, and the end-to-end gauge is structurally blind to it.**"*
+
+And `M86:451-454` records that `E*` is **not portable between stacks** and is
+**an upper bound of unknown tightness, because the held-out edges are
+themselves products of the biased estimator** — the gauge is contaminated by
+the thing it is grading. `6.76 px` is additionally a **`coffee-bean`** number;
+`bee-3-cpl`'s correct baseline is `13.578 px`. Comparing a `bee-3-cpl`
+improvement against a `coffee-bean` bar would have satisfied gate (c) by
+changing subject, which is exactly the failure mode the brief warned against
+(*"a held-out number that improved because the held-out set changed"*).
+
+### 16.4 The file is contended, and I found that only after a capped listing lied to me
+
+`align_cmd.rs` has taken **four commits from at least three other lanes in the
+last 24 hours** (`8457dfc2` BUILD-GATE, `740e7056` V-GATHER, `e41ee5d3` and
+`52cb4c4d` BUILD-RESAMP). By the same reasoning that withheld `merge_cmd.rs`
+from me, it is not free to take. The one lead I thought was live — M23's
+observation that the `R` deficit tracks the **resampler** rather than defocus
+(self-pair `R = 0.372`, resampler-free `R = 0.965`) — belongs to **BUILD-RESAMP**,
+and the surrounding question is already covered by M95, M104, M113 and M118.
+
+**How I nearly missed that, recorded because the shape recurs.** I listed
+recently-modified experiment directories with `Select-Object -First 20`, saw no
+`BUILD-RESAMP`, and was one step from reporting the lead as unowned. There are
+**192** experiment directories; the listing was capped and `BUILD-RESAMP` was
+below the cut. A truncated search prints the *same glyph* as an exhaustive one
+— absence and "I stopped looking" are indistinguishable in the output. The
+targeted re-check (`Test-Path` on the exact name) found it immediately. This is
+the fourth instance of the absence defect in this lane's history and the second
+I caught in myself.
+
+### 16.5 What I recommend instead
+
+This lane ships nothing on the brief as written, and that is the result. If the
+deficit is to be attacked, the two things not already dead are:
+
+1. **Change the gauge before changing the solver.** Adopt span-1 residual as
+   the reported alignment number. The instrument exists —
+   `experiments/BUILD-SHARP/src/bs_residual.rs`, self-control **0.0014 plane
+   px** — and it measures what the merge actually consumes. Every alignment
+   verdict in the corpus is currently written in a unit `BUILD-SHARP` says is
+   blind to the defect.
+2. **Re-examine the bar, not the estimator.** `E*` is an upper bound of unknown
+   tightness computed from edges the biased estimator produced. Until its
+   tightness is established, "6.76 px held-out" cannot tell an improved solver
+   from a differently-biased one, and any future arm will be graded by a ruler
+   made of the thing it is grading.
