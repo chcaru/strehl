@@ -37,7 +37,7 @@ import tifffile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from commission_bands import blur_rgb, plant_band_noise  # noqa: E402
-from recert import BASELINE_DIR, CROPS, stage_pair, verdict  # noqa: E402
+from recert import BASELINE_DIR, CROPS, diff_gate, stage_pair, verdict  # noqa: E402
 
 WORK = Path(r"C:\dev\strehl-out\BUILD-RECERT\commission")
 SUBJECTS = ["119MSDCF", "coffee-bean", "tweezers-cpl"]
@@ -98,6 +98,46 @@ def score(label, base_dir, arm_dir, arm, expect_promotable, want_reason=None):
     return good, pair
 
 
+def commission_gate_diff():
+    """The gate-diff rule, on synthetic states, with a plant at each end.
+
+    This is a unit arm and not a render arm because the property under test is
+    the RULE, not the renderer: which state transitions count as a regression.
+    Running it against real masters would cost 370 s of gate time and would
+    exercise only the transitions that corpus happens to contain -- and the one
+    that mattered (PASS->SKIP) was absent from every arm until a real candidate
+    produced twelve of them at once.
+    """
+    print("\n=== ARM: the gate-diff regression rule ===")
+    base = {"states": {"a": "PASS", "b": "PASS", "c": "ACQUIT", "d": "PASS", "e": "ACQUIT"},
+            "partition": "synthetic"}
+    cases = [
+        # (label, candidate states, subjects that MUST be named regressions)
+        ("null -- nothing moved", dict(base["states"]), []),
+        ("planted PASS->FAIL", {**base["states"], "a": "FAIL"}, ["a"]),
+        ("planted PASS->SKIP (the gate crashed on it)",
+         {**base["states"], "b": "SKIP"}, ["b"]),
+        ("planted ACQUIT->FAIL", {**base["states"], "c": "FAIL"}, ["c"]),
+        ("planted improvement ACQUIT->PASS", {**base["states"], "e": "PASS"}, []),
+        ("all three damaging moves at once",
+         {**base["states"], "a": "FAIL", "b": "SKIP", "c": "FAIL"}, ["a", "b", "c"]),
+    ]
+    ok = True
+    for label, cand_states, want in cases:
+        r = diff_gate({"states": base["states"], "partition": "synthetic"},
+                      {"states": cand_states, "partition": "synthetic"})
+        got = sorted(r[1])
+        good = got == sorted(want)
+        ok &= good
+        print(f"  {label:46s} -> regressions {got}  want {sorted(want)}   "
+              f"{'PASS' if good else 'FAIL'}")
+    # The improvement arm is not decoration: a rule that named every move a
+    # regression would pass all four damaging cases above and still be useless,
+    # because it could never report that a candidate had FIXED something.
+    print(f"  gate-diff rule {'PASSED' if ok else 'FAILED'}")
+    return ok
+
+
 def main():
     WORK.mkdir(parents=True, exist_ok=True)
     base = WORK / "BASE"
@@ -107,6 +147,7 @@ def main():
         if not dst.exists():
             shutil.copy2(BASELINE_DIR / f"{s}--SHIP-V4.tiff", dst)
     results = []
+    results.append(commission_gate_diff())
 
     a = make_arm("CNULL", None)
     results.append(score("NULL: arm is a byte-copy of the baseline", base, a, "CNULL", True)[0])

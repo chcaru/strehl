@@ -1204,3 +1204,257 @@ effect had vanished into a third category.
 - **Wall clock on an idle machine.** 54.7 min was measured with two to five
   other lanes rendering. It is an upper bound for a quiet machine, and I did not
   have one to measure.
+
+# 11. The HEAD baseline: the shipping recipe blows the highlights
+
+ORCH asked for a HEAD baseline rendered *before* the pyramid merge fix lands, so
+that a future regression would be attributable to one change rather than to
+twelve at once. The insurance paid immediately: the baseline is not a quiet
+control, it is a stop-the-line defect.
+
+## 11.1 It is fourteen commits, not eleven, and two of them are the merge
+
+ORCH's brief listed 11 commits touching `crates/` since pin `9b05d0b7`. Measured
+at the moment the pin was cut:
+
+```
+git log --oneline 9b05d0b7..HEAD -- crates/    ->  14
+git diff --stat 9b05d0b7..HEAD -- crates/strehl-core/src/pyramid.rs crates/strehl-core/src/merge.rs
+    crates/strehl-core/src/merge.rs   | 142 ++++++++++++-
+    crates/strehl-core/src/pyramid.rs | 251 +++++++++++++++++++++--
+```
+
+Three commits landed while the brief was being written, and `pyramid.rs` and
+`merge.rs` -- the two files the brief said a build lane owns and the baseline was
+meant to precede -- had **already changed by 382 lines inside the delta**. The
+baseline is therefore not "pin plus eleven unrelated commits"; it already
+contains part of the merge work.
+
+HEAD pin cut at `f190a0ea`, binary sha256 `332FA6AE8B8DA54C2BD90D8EA13683F736A0B68F7C4191C0F193BCE8938FD9C9`
+(sha16 `332FA6AE8B8DA54C`), built to the same layout as `9b05d0b7`. Render: 26
+masters, 4,825 frames, 46.9 min, 0.58 s/frame.
+
+## 11.2 The measurement
+
+Rendered with the byte-identical shipping ARGV -- `--srgb --auto-exposure`, same
+source directories -- so the only variable is the binary.
+
+| subject | frames | SHIP-V4 clip | HEAD clip | mean x |
+| --- | ---: | ---: | ---: | ---: |
+| `lead-1-cpl` | 123 | 0.0230% | **98.4836%** | 2.056 |
+| `leaf-2-cpl` | 182 | 0.0326% | **95.2152%** | 2.075 |
+| `couch-fibers-cpl` | 299 | 0.0721% | **88.5476%** | 1.427 |
+| `109MSDCF` | 22 | 0.0012% | **85.5716%** | 1.296 |
+| `wrapped-text-1` | 130 | 0.0329% | **81.6986%** | 1.348 |
+| `119MSDCF` | 33 | 0.0007% | **72.4665%** | 1.249 |
+| ... 16 more | | | | |
+| `coffee-bean` | 105 | 0.0000% | 0.0000% | 0.932 |
+| `coffee-bubbles` | 19 | 0.0007% | 0.0000% | 0.874 |
+| `dry-erase-marker-head-cpl` | 299 | 0.0000% | 0.0000% | 0.916 |
+| `foam` | 100 | 0.0020% | 0.0001% | 0.851 |
+
+`clip` is the fraction of *samples* at or above 65500 of 65535. **22 of 26
+subjects regressed; 4 held; the partition sums to 26.**
+
+The four that held are exactly the four whose chosen exposure is **negative**
+(mean ratio 0.851-0.932). That is not a coincidence and it is the mechanism
+stated as a prediction: the damage tracks the sign of the gain.
+
+## 11.3 The mechanism, measured rather than assumed
+
+The tone path already fills the scale before auto-exposure is applied at all.
+SHIP-V4's p99.9, as a fraction of full scale:
+
+```
+bee-1-cpl                  65294 / 65535 = 99.63%
+pencil-steep-angle-cpl     65303 / 65535 = 99.65%
+bee-2-cpl                  64709 / 65535 = 98.74%
+pencil-flatter-angle-cpl   64520 / 65535 = 98.45%
+```
+
+There is no headroom. A positive gain applied after that point cannot brighten
+anything; it can only push values into the rail. The chooser selects +0.88 to
++2.60 stops on these subjects -- `109MSDCF` picks **+2.60 stops, a 6.063x linear
+gain**, applied to an image already at 99% of scale.
+
+The encoded ratio corroborates the placement. On `pencil-steep-angle-cpl` the
+chosen gain is 2.445x linear and the measured mean ratio is 1.513; `2.445^(1/2.2)
+= 1.50`. The gain is being applied **before** the sRGB curve, and the curve is
+the only reason the visible change looks like 1.5x rather than 2.4x.
+
+## 11.4 Isolated to one flag, by a controlled two-binary run
+
+The corpus render cannot separate `--auto-exposure` from the other thirteen
+commits, because every master used both. So both binaries were run on
+`coffee-bubbles` (19 frames) with `--srgb` and **without** `--auto-exposure`:
+
+| | SHIP-V4 `44C2F2CD` | HEAD `332FA6AE` |
+| --- | ---: | ---: |
+| clip >= 65500 | 0.0007% | 0.0007% |
+| crush <= 35 | 0.1261% | 0.1072% |
+| mean | 3976.2 | 3984.3 (ratio 1.00205) |
+
+and the band gauge over 5 content-selected sites x 3 bands reads **HELD in 15 of
+15 cells**, every `|d_floor| <= 0.0184` and every `|d_peak| <= 0.0010`, both
+inside the 0.02 tolerance.
+
+**So the answer to ORCH's question is: the other thirteen commits did nothing
+measurable, and `9cb7f5d9` did all of it.** The formal census agrees on the
+chooser's innocence -- 24 of 26 subjects choose the *same* exposure at HEAD as at
+the pin, and the two that differ do so by 0.01 stops. The chosen value did not
+change. Its application did.
+
+Sites were selected on the **base** arm only. Choosing them on the candidate
+would have let the candidate pick the ground it was judged on.
+
+## 11.5 Two instruments, independently, name the same 22 subjects
+
+`tone_census.py` (mine, commissioned below) and `orch_printready.py` (ORCH's,
+which I only call) share no code and measure different things. Their verdicts:
+
+```
+tone census WORSE      : 22
+print gate REGRESSIONS : 22
+identical sets         : True
+in gate not tone: []      in tone not gate: []
+```
+
+and neither touches `coffee-bean`, `coffee-bubbles`, `dry-erase-marker-head-cpl`
+or `foam`. Agreement between two instruments that could have disagreed is worth
+more than either number alone.
+
+## 11.6 The candidate escaped judgement by breaking the judge
+
+The gate partition moved `17 PASS / 0 FAIL / 9 ACQUITTED / 0 NOT EXAMINED` ->
+`2 PASS / 8 FAIL / 2 ACQUITTED / 14 NOT EXAMINED`.
+
+Fourteen subjects were **not examined**, and the reason is not a considered
+refusal:
+
+```
+SKIP  119MSDCF   ValueError: could not convert string to float: 'REJECT-FLAT'
+```
+
+`orch_chroma.py:180` documents `REJECT-FLAT` as the sentinel its banding measure
+returns when the analysis window spans less than 64 DN. A window blown to white
+spans nothing, so the sentinel fires; `orch_printready.py` then calls `float()`
+on it and raises. The clipping is severe enough to break the instrument that
+would have reported it.
+
+**My harness scored that as a 3-subject regression.** Its rule counted only
+`PASS->FAIL`, so twelve `PASS->SKIP` moves and five `ACQUIT->FAIL` moves passed
+through unnamed. The worse the candidate, the more subjects fell out of the
+count -- a candidate could have escaped by damaging the corpus enough to crash
+the gate on all 26. That is the same failure shape as a summary in which a
+skipped check and a passed check print as the same glyph.
+
+The rule is now: leaving `{PASS, ACQUIT}` for any of `{FAIL, SKIP, MISSING}`
+blocks promotion. Corrected, the same cached gate output reads
+
+```
+moves 22   REGRESSIONS 22   expiries 0
+  PASS   -> SKIP    x12  BLOCKS
+  ACQUIT -> FAIL    x 5  BLOCKS
+  PASS   -> FAIL    x 3  BLOCKS
+  ACQUIT -> SKIP    x 2  BLOCKS
+```
+
+The verdict line now prints that transition mix, because the earlier line said
+"PASS->FAIL" for moves that were nothing of the kind -- a verdict misdescribing
+its own evidence.
+
+`diff_gate` was extracted as a pure function so the rule could be commissioned
+on synthetic states in milliseconds instead of 370 s of gate time. Six arms, all
+passing: a null that must stay silent, planted `PASS->FAIL`, planted
+`PASS->SKIP`, planted `ACQUIT->FAIL`, all three at once, and a planted
+**improvement** (`ACQUIT->PASS`) that must *not* be named a regression. The
+improvement arm is what separates this rule from one that calls every move a
+regression, which would have passed all four damaging cases and still been
+useless.
+
+## 11.7 Commissioning the tone census
+
+Three arms, all passing, run before every census:
+
+- **known-clean** -- values confined to 8000-40000 read exactly `0.0000%` at
+  both ends. A census that manufactures clipping fails here.
+- **planted defect with a known count** -- 1234 samples forced to 65535 and 567
+  to 0 in a 786,432-sample image are recovered as `0.15691%` and `0.07210%`,
+  matching the predicted fractions to nine decimal places. Not "detects
+  something": recovers the number that was planted.
+- **planted improvement** -- a genuinely blown image pulled back down reads
+  `41.3033% -> 0.0000%`. A statistic bounded below by zero would pass the first
+  two arms and still be unable to score a repair, which is the bug this project
+  has already shipped once.
+
+Both ends are reported and both participate in the verdict, because a gate that
+tests one end of the tone scale has tested half the tone scale.
+
+The threshold is a **movement** against the same subject (`MOVE_PCT = 0.20`),
+never an absolute level. Clipping is emphatically not subject-invariant -- a
+specular highlight legitimately clips where a diffuse subject does not -- so it
+has not earned an absolute threshold and is not given one.
+
+## 11.8 What the shadow end says
+
+The crush figures *improve* on the regressed subjects -- `109MSDCF` 2.4703% ->
+0.0400%, `119MSDCF` 3.2596% -> 1.6479%, `leaf-2-cpl` 0.6155% -> 0.0117% -- for
+the same reason the highlights are destroyed: everything moved up. That is not a
+shadow-detail win and it should not be read as one. Trading 3.26% of crushed
+shadow for 72.47% of blown highlight is not a trade.
+
+One subject is worth naming separately. `flower-inner-edge-cpl` carries crush
+inside the subject rather than in a backdrop, and a 1.168x brightening moved it
+only 3.6395% -> 3.6062%. Its crush does not respond to exposure, which is
+evidence that it is established before the tone path rather than by it.
+
+## 11.9 The band numbers on this arm, and why they do not mean what they look like
+
+The paired stage reports, across 26 subjects x 5 crops x 3 bands:
+
+```
+grain   tested 72  refused 58   d_floor -0.1047  d_struct +0.3152
+struct  tested 64  refused 66   cleaner 18  blur_trade 23   d_floor -0.1024
+mottle  tested 83  refused 47   cleaner 21  blur_trade 30   d_floor -0.0944
+```
+
+Half the cells refused, and the refusals are the defect: a crop blown to a
+constant white has a degenerate noise floor, which is exactly the condition the
+refusal exists to catch. The surviving cells read "quieter, paid for out of
+structure" for the same reason -- a clipped region has no noise and no detail.
+
+**These numbers are a consequence of the clipping, not an independent finding
+about the merge.** The clean merge-quality comparison is 11.4, and it is HELD.
+Reporting the blur-trade counts as a merge result would be reading the damage
+and calling it a measurement.
+
+## 11.10 Consequence for sequencing
+
+`--auto-exposure` was inert on `9b05d0b7`, so the SHIP-V4 masters are what the
+recipe produces when the gain is chosen and discarded. The correct baseline for
+the merge-fix lane is therefore HEAD rendered **without** `--auto-exposure`,
+which is exposure-matched to SHIP-V4 (ratio 1.00205) and differs from it by
+nothing this gauge can resolve.
+
+The chooser has never been validated against an applied result. It was written,
+tuned and shipped while its output was discarded, and the first render that
+applied it blew 22 of 26 subjects. Whatever the remedy -- clamp the gain to the
+available headroom, choose against the post-normalisation histogram, or apply it
+before the normalisation rather than after -- it is a decision for the lane that
+owns the exposure path, not for this one.
+
+## 11.11 What I did not verify
+
+- **That reverting `9cb7f5d9` restores SHIP-V4 exactly.** I isolated the flag,
+  not the commit; the no-flag run shows the other thirteen commits are quiet,
+  which is a weaker statement than a revert would give.
+- **Whether the byte-freeze registry still holds at HEAD.** 26 of 26 masters
+  differ from SHIP-V4 and none is pixel-identical, so a freeze pinned to these
+  renders cannot still match -- but `byte-freezes.tsv` is ORCH's file, its
+  fixtures are not these masters, and I did not run it.
+- **The four held subjects at the band level.** They held on tone and on the
+  gate; I did not pair them, because the arm's verdict was already decided by
+  the 22.
+- **Any subject but `coffee-bubbles` without `--auto-exposure`.** The isolation
+  rests on one 19-frame subject. It is a controlled comparison and the mechanism
+  predicts the rest, but it is one subject.

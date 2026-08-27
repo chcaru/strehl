@@ -81,6 +81,11 @@ CROPS = [(1200, 1200), (2400, 3600), (3600, 2000), (1600, 4800), (2800, 2400)]
 STATE_RE = re.compile(r"^([A-Z]+)\s+(\S+)")
 PARTITION_RE = re.compile(r"^partition:\s*(.+)$")
 
+# The gate states that mean "this subject was examined and its standing is not
+# an objection". Everything else -- FAIL, SKIP, EXPIRED, REVIEW, MISSING -- is a
+# subject we cannot ship on the strength of. Leaving this set is a regression.
+GOOD_STATES = ("PASS", "ACQUIT")
+
 # Head-to-head: the comparator arms are FIXED artifacts and are never rebuilt.
 H2H_SUBJECT = "119MSDCF"
 H2H_ROOT = Path(r"C:\dev\strehl-out\V-NOISE2\119")
@@ -212,12 +217,13 @@ def run_gate(target):
             "gate_sha": gate_fingerprint(), "stdout": r.stdout}
 
 
-def stage_gate(arm_dir, baseline, only=None):
-    cand = run_gate(arm_dir)
-    (OUT_ROOT / "logs").mkdir(parents=True, exist_ok=True)
-    (OUT_ROOT / "logs" / "gate-candidate.txt").write_text(cand["stdout"], encoding="utf-8")
-    print(f"  baseline  : {baseline['partition']}")
-    print(f"  candidate : {cand['partition']}")
+def diff_gate(baseline, cand, only=None):
+    """Which subjects moved, and which of those moves block promotion.
+
+    Pure: it takes two parsed gate results and returns the verdict material, so
+    the rule can be commissioned on synthetic states without a 370 s gate run.
+    `commission_recert.commission_gate_diff` is that commissioning.
+    """
     moves, regressions, expiries = [], [], []
     for subj in sorted(set(baseline["states"]) | set(cand["states"])):
         # A targeted run rendered a subset. The 20 subjects it never rendered are
@@ -230,10 +236,36 @@ def stage_gate(arm_dir, baseline, only=None):
         if b == c:
             continue
         moves.append({"subject": subj, "from": b, "to": c})
-        if b == "PASS" and c in ("FAIL", "MISSING"):
+        # WHICH MOVES ARE REGRESSIONS, AND WHY SKIP IS ONE OF THEM.
+        # A first version counted only PASS->FAIL. Measured against the HEAD
+        # candidate f190a0ea it called that arm a 3-subject regression while
+        # TWELVE subjects moved PASS->SKIP, because the gate crashed on them
+        # (`ValueError: could not convert string to float: 'REJECT-FLAT'`, the
+        # sentinel `orch_chroma.py` returns when its analysis window is flatter
+        # than 64 DN -- which is what a blown highlight looks like).
+        #
+        # A subject the gate could not examine has not passed. Counting only
+        # PASS->FAIL let a candidate escape judgement by breaking the judge, and
+        # the more damage it did the more subjects fell out of the count. That
+        # is the same failure shape as a summary in which a skipped check and a
+        # passed check print as the same glyph.
+        #
+        # ACQUIT is likewise a state the gate reached by examining the subject,
+        # so leaving it for FAIL or SKIP is a loss of standing and blocks too.
+        if b in GOOD_STATES and c in ("FAIL", "MISSING", "SKIP"):
             regressions.append(subj)
         elif b == "ACQUIT" and c in ("EXPIRED", "REVIEW"):
             expiries.append(subj)
+    return moves, regressions, expiries
+
+
+def stage_gate(arm_dir, baseline, only=None):
+    cand = run_gate(arm_dir)
+    (OUT_ROOT / "logs").mkdir(parents=True, exist_ok=True)
+    (OUT_ROOT / "logs" / "gate-candidate.txt").write_text(cand["stdout"], encoding="utf-8")
+    print(f"  baseline  : {baseline['partition']}")
+    print(f"  candidate : {cand['partition']}")
+    moves, regressions, expiries = diff_gate(baseline, cand, only)
     if not moves:
         print("  no subject changed state")
     for m in moves:
@@ -419,7 +451,18 @@ def verdict(res, stages):
     reasons = []
     g = res.get("gate", {})
     if g.get("regressions"):
-        reasons.append(f"gate regression PASS->FAIL on {', '.join(g['regressions'])}")
+        # Name the transitions, not one of them. An earlier version wrote
+        # "PASS->FAIL" for every blocking move; measured on candidate f190a0ea
+        # that mislabelled 12 PASS->SKIP and 5 ACQUIT->FAIL as PASS->FAIL, which
+        # is a verdict line misdescribing its own evidence. The transition mix is
+        # diagnostic: PASS->SKIP means the gate crashed rather than judged.
+        kinds = {}
+        for m in g.get("moves", []):
+            if m["subject"] in g["regressions"]:
+                kinds[f"{m['from']}->{m['to']}"] = kinds.get(f"{m['from']}->{m['to']}", 0) + 1
+        mix = ", ".join(f"{n}x {k}" for k, n in sorted(kinds.items(), key=lambda kv: -kv[1]))
+        reasons.append(f"gate regression on {len(g['regressions'])} subject(s) [{mix}]: "
+                       f"{', '.join(g['regressions'])}")
     if g.get("expiries"):
         reasons.append(f"{len(g['expiries'])} acquittal(s) expired and are unadjudicated "
                        f"({', '.join(g['expiries'])})")
