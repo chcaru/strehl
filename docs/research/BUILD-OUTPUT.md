@@ -1262,7 +1262,7 @@ stated as a prediction: the damage tracks the sign of the gain.
 
 ## 11.3 The mechanism, measured rather than assumed
 
-The tone path already fills the scale before auto-exposure is applied at all.
+The image is already at the top of the scale before auto-exposure is applied.
 SHIP-V4's p99.9, as a fraction of full scale:
 
 ```
@@ -1281,6 +1281,15 @@ The encoded ratio corroborates the placement. On `pencil-steep-angle-cpl` the
 chosen gain is 2.445x linear and the measured mean ratio is 1.513; `2.445^(1/2.2)
 = 1.50`. The gain is being applied **before** the sRGB curve, and the curve is
 the only reason the visible change looks like 1.5x rather than 2.4x.
+
+I inferred "something has already normalised the image" from output alone, which
+is as far as pixels can take you. The code-level account is `5f367a94`'s and it
+is more specific: `strehl stack` routes through `merge_cmd::run`, which gained a
+tone stage but not the guard `stack.rs` already carried, and **the tone placement
+and `--auto-exposure` are the same rule** (`p99.9 -> 0.90`). Applying both
+multiplies an already-normalised image by its own chosen gain. That names the
+duplication my measurement could only show the consequence of, and it is the
+better statement of the mechanism.
 
 ## 11.4 Isolated to one flag, by a controlled two-binary run
 
@@ -1458,3 +1467,66 @@ owns the exposure path, not for this one.
 - **Any subject but `coffee-bubbles` without `--auto-exposure`.** The isolation
   rests on one 19-frame subject. It is a controlled comparison and the mechanism
   predicts the rest, but it is one subject.
+
+## 11.12 The fix landed while this was being written, and it holds
+
+`5f367a94 fix(exposure): stop --auto-exposure double-normalising the srgb
+render` was committed by another lane during this work, from an independent
+diagnosis. Rather than assume it, I cut a pin at `2f858c62` (binary sha16
+`A058F737DFE695F7`) and put it on the same gauge.
+
+Its own claim first -- that `--srgb --auto-exposure` is now byte-identical to
+`--srgb` -- on `coffee-bubbles`, 19 frames:
+
+```
+np.array_equal(fixed --srgb --auto-exposure, fixed --srgb)  = True
+np.array_equal(fixed --srgb,                 HEAD  --srgb)  = True
+mean(fixed --srgb) / mean(SHIP-V4-pin --srgb)               = 1.00205
+```
+
+The second line matters as much as the first: the fix changed nothing on the
+path that was already correct, so it is targeted rather than a broad revert.
+
+But `coffee-bubbles` was one of the four subjects that **held**, so it cannot
+show the blowout is gone. The decisive test is a subject that was destroyed,
+rendered with the shipping recipe:
+
+| subject | SHIP-V4 `9b05d0b7` | HEAD `f190a0ea` | fixed `2f858c62` |
+| --- | ---: | ---: | ---: |
+| `109MSDCF` (22 fr) | 0.0012% | **85.5716%** | **0.0013%** |
+| `lead-1-cpl` (123 fr) | 0.0230% | **98.4836%** | **0.0231%** |
+
+Restored to the pin's behaviour to four decimal places on both. The crush end
+moves back with it -- `109MSDCF` 0.0400% -> 2.5191% against the pin's 2.4703% --
+which confirms 11.8: the shadow "improvement" at `f190a0ea` was the brightening
+and nothing else, and it reverses when the brightening does.
+
+The binary now says so itself, in the render log:
+
+```
+exposure : --auto-exposure is SUPERSEDED and applies NOTHING.
+           ... already places luminance p99.9 at 0.90 -- the identical rule.
+           Applying both double-normalises and blows the highlights.
+```
+
+**A verification is not a re-certification.** Two subjects on the tone axis is
+not 26 subjects on the gate and the band gauge. The corpus at `2f858c62` has not
+been rendered, and until it is, the standing corpus evidence remains the pin's.
+
+## 11.13 What this baseline was for, and what it turned out to be
+
+ORCH commissioned this render as insurance: take a baseline before the merge fix
+so a later regression is attributable to one change rather than twelve. It was
+expected to read "did nothing".
+
+It found a defect that had already reached the shipping recipe, on 22 of 26
+subjects, at severities up to 98.4836% of the frame. The insurance paid before
+the risk it was bought against ever materialised -- and the argument for taking
+it was not that a defect was likely, but that attribution is cheap beforehand
+and expensive afterwards.
+
+It also found a defect in the instrument doing the finding, which is the part
+worth keeping: the harness scored a catastrophically damaged arm as a
+3-subject regression because twelve subjects had crashed the gate and fallen out
+of the count entirely. **A candidate that breaks the judge must not thereby
+escape judgement.**
