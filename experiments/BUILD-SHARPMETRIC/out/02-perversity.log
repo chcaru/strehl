@@ -1,0 +1,37 @@
+anchors:  SELECTION 1.0000   RECONSTRUCT(published ceiling) 3.4867
+
+IMPROVEMENT ARM -- a reconstruction that gets genuinely better.
+Each row mixes the sharpest source toward the true latent. t=0 is
+the source itself (must read 1.0), t=1 is the latent (must read the
+RECONSTRUCT value). A correct metric must be MONOTONIC in t.
+  t               ratio   monotonic?
+  ------------------------------------
+  0.00           1.0000            -
+  0.25           1.3177          yes
+  0.50           1.9531          yes
+  0.75           2.6994          yes
+  1.00           3.4867          yes
+  improvement arm monotonic: YES  PASS
+
+arm                                                       ratio    required  verdict
+--------------------------------------------------------------------------------------------
+DEGRADE  blur master to k=8 (published DEFECT arm)       0.1717   must FALL  PASS
+DEGRADE  blur master slightly (k=3)                      0.8207   must FALL  PASS
+IMPROVE  half-deblurred master (t=0.5)                   1.9531   must RISE  PASS
+NEUTRAL  master x1.20 gain (pure exposure)               1.2000   must HOLD  INFLATED (moved on zero new detail)
+NEUTRAL  master x1.50 gain (pure exposure)               1.5000   must HOLD  INFLATED (moved on zero new detail)
+NEUTRAL  master contrast about its mean (x1.3)           1.3000   must HOLD  INFLATED (moved on zero new detail)
+DEGRADE  master + N(0, 200) sensor-like noise            1.1180   must FALL  PERVERSE (rose on a degradation)
+DEGRADE  master + N(0, 600) sensor-like noise            1.7018   must FALL  PERVERSE (rose on a degradation)
+DEGRADE  master + N(0,1500) sensor-like noise            3.4855   must FALL  PERVERSE (rose on a degradation)
+DEGRADE  master unsharp-masked x0.5 (rings)              1.1784   must FALL  PERVERSE (rose on a degradation)
+DEGRADE  master unsharp-masked x1.5 (rings)              1.5599   must FALL  PERVERSE (rose on a degradation)
+DEGRADE  master unsharp-masked x3.0 (rings)              2.1662   must FALL  PERVERSE (rose on a degradation)
+
+============================================================================================
+9 of 12 arms failed.
+
+Read the NEUTRAL rows first. mean|grad(a*y)| == a*mean|grad(y)|
+exactly, so the ratio is LINEAR in any gain applied to the master.
+A master rendered 20%% brighter than its sources scores 20%% 'sharper'
+while containing not one extra photon of detail.

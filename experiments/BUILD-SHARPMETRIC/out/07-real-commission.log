@@ -1,0 +1,33 @@
+REAL-CONTENT COMMISSION. source synthesised from the master, answer known.
+subject                arm                               S0        S2      n unmeas
+--------------------------------------------------------------------------------------
+wrapped-text-1         sigma=158.3 fine=2096396 coarse=4829489  after-sub fine=1996146 coarse=4804427
+                       IDENTITY  (must be 1.000)     1.0000    1.0000     64      0
+                       source=blur(master,2)         1.9492    1.1551     64      0
+                       source=blur(master,4)         4.3031    1.2200     64      0
+                       source=master+N(0,400)        0.7768    1.0012     64      0
+                       master=blur(4) (must be <1)    0.2324    0.8197     64      0
+
+bee-3-cpl              sigma=182.3 fine=4432056 coarse=12792302  after-sub fine=4299094 coarse=12759061
+                       IDENTITY  (must be 1.000)     1.0000    1.0000     64      0
+                       source=blur(master,2)         1.4087    1.0945     64      0
+                       source=blur(master,4)         2.0744    1.1344     64      0
+                       source=master+N(0,400)        0.8732    1.0024     64      0
+                       master=blur(4) (must be <1)    0.4821    0.8815     64      0
+
+coffee-bean            sigma=173.9 fine=3998080 coarse=10834620  after-sub fine=3877068 coarse=10804367
+                       IDENTITY  (must be 1.000)     1.0000    1.0000     64      0
+                       source=blur(master,2)         1.4883    1.1037     64      0
+                       source=blur(master,4)         2.3463    1.1576     64      0
+                       source=master+N(0,400)        0.8537    1.0034     64      0
+                       master=blur(4) (must be <1)    0.4262    0.8639     64      0
+
+lavendar-cpl           sigma=202.1 fine=2230177 coarse=6009075  after-sub fine=2066776 coarse=5968225
+                       IDENTITY  (must be 1.000)     1.0000    1.0000     64      0
+                       source=blur(master,2)         1.5173    1.0947     64      0
+                       source=blur(master,4)         2.4382    1.1357     64      0
+                       source=master+N(0,400)        0.8495    1.0031     64      0
+                       master=blur(4) (must be <1)    0.4101    0.8805     64      0
+
+======================================================================================
+all real-content arms PASS

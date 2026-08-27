@@ -1,0 +1,71 @@
+================================================================================================
+CANDIDATE S0 = fine band only  (THE SHIPPED STATISTIC)
+================================================================================================
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 3.4867
+
+  kind      arm                                                 value  verdict
+  ------------------------------------------------------------------------------------------
+  DEGRADE   master blurred to k=8                              0.1717  PASS
+  DEGRADE   master blurred to k=3                              0.8207  PASS
+  DEGRADE   master + N(0,200) noise                            1.1180  PERVERSE  (rose on a degradation)
+  DEGRADE   master + N(0,600) noise                            1.7018  PERVERSE  (rose on a degradation)
+  DEGRADE   master + N(0,1500) noise                           3.4855  PERVERSE  (rose on a degradation)
+  DEGRADE   master USM x0.5 (rings)                            1.1784  PERVERSE  (rose on a degradation)
+  DEGRADE   master USM x1.5 (rings)                            1.5599  PERVERSE  (rose on a degradation)
+  DEGRADE   master USM x3.0 (rings)                            2.1662  PERVERSE  (rose on a degradation)
+  NEUTRAL   master x1.20 gain                                  1.2000  INFLATED  (1.200x on zero new detail)
+  NEUTRAL   master x1.50 gain                                  1.5000  INFLATED  (1.500x on zero new detail)
+  NEUTRAL   master x1.85 gain (measured med_x, script 03)      1.8540  INFLATED  (1.854x on zero new detail)
+  NEUTRAL   master +3000 offset                                1.0000  PASS
+  NEUTRAL   master contrast x1.3 about mean                    1.3000  INFLATED  (1.300x on zero new detail)
+  IMPROVE   half-deblurred (t=0.50)                            1.9531  PASS
+
+  IMPROVEMENT SWEEP -- must be monotonic
+  t               value     monotonic?
+  ------------------------------------
+  0.00           1.0000              -
+  0.25           1.3177            yes
+  0.50           1.9531            yes
+  0.75           2.6994            yes
+  1.00           3.4867            yes
+  monotonic: YES
+
+  RESULT: 10 arm(s) failed. NOT COMMISSIONED
+
+================================================================================================
+CANDIDATE S1 = fine/coarse band ratio  (dimensionless)
+================================================================================================
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 2.3633
+
+  kind      arm                                                 value  verdict
+  ------------------------------------------------------------------------------------------
+  DEGRADE   master blurred to k=8                              0.9636  PASS
+  DEGRADE   master blurred to k=3                              0.9589  PASS
+  DEGRADE   master + N(0,200) noise                            1.1010  PERVERSE  (rose on a degradation)
+  DEGRADE   master + N(0,600) noise                            1.5307  PERVERSE  (rose on a degradation)
+  DEGRADE   master + N(0,1500) noise                           2.4126  PERVERSE  (rose on a degradation)
+  DEGRADE   master USM x0.5 (rings)                            1.0420  PERVERSE  (rose on a degradation)
+  DEGRADE   master USM x1.5 (rings)                            1.1071  PERVERSE  (rose on a degradation)
+  DEGRADE   master USM x3.0 (rings)                            1.1727  PERVERSE  (rose on a degradation)
+  NEUTRAL   master x1.20 gain                                  1.0000  PASS
+  NEUTRAL   master x1.50 gain                                  1.0000  PASS
+  NEUTRAL   master x1.85 gain (measured med_x, script 03)      1.0000  PASS
+  NEUTRAL   master +3000 offset                                1.0000  PASS
+  NEUTRAL   master contrast x1.3 about mean                    1.0000  PASS
+  IMPROVE   half-deblurred (t=0.50)                            1.6469  PASS
+
+  IMPROVEMENT SWEEP -- must be monotonic
+  t               value     monotonic?
+  ------------------------------------
+  0.00           1.0000              -
+  0.25           1.2308            yes
+  0.50           1.6469            yes
+  0.75           2.0390            yes
+  1.00           2.3633            yes
+  monotonic: YES
+
+  RESULT: 6 arm(s) failed. NOT COMMISSIONED
+
+================================================================================================
+SUMMARY   S0 failed 10 arms.   S1 failed 6 arms.
+================================================================================================

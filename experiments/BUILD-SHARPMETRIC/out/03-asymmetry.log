@@ -1,0 +1,39 @@
+Master vs source RENDERING ASYMMETRY at the metric's own sites.
+ARM=SHIP-V4   sources: rawpy gamma=(2.222,4.5) no_auto_bright=True
+
+subject/site                   ratio     M_med     S_med   med_x     M_std     S_std   std_x   corr
+--------------------------------------------------------------------------------------------------------
+wrapped-text-1 1728            7.193   26987.3    8688.9   3.106   14991.1    5979.3   2.507  0.938
+wrapped-text-1 1728            7.168   36280.7   14202.6   2.555   13441.7    5431.4   2.475  0.546
+wrapped-text-1 1728            7.350   31165.2   11617.7   2.683   16154.2    6025.7   2.681  0.967
+tweezers-cpl 2288              8.096   31657.4   19124.0   1.655   10442.3    2667.4   3.915  0.663
+tweezers-cpl 2288              8.778   31137.2   18912.0   1.646    9724.8    2717.8   3.578  0.614
+leaf-2-cpl 1728                5.829   31446.6    8713.9   3.609    7401.6    1211.9   6.107  0.686
+leaf-2-cpl 608                 5.785   28113.6    7871.4   3.572    8870.0    1682.1   5.273  0.631
+bee-3-cpl 2288                 7.163   32421.2   15921.7   2.036   16167.6    8348.2   1.937  0.893
+bee-3-cpl 1728                 7.400   25092.7   13535.1   1.854   11115.2    4733.8   2.348  0.867
+lavendar-cpl 2848              6.166   36409.3   18252.6   1.995   13048.5    5546.3   2.353  0.737
+lavendar-cpl 1728              3.615   43764.2   20819.2   2.102   13014.1    6334.1   2.055  0.829
+lavendar-cpl 3408              4.295   31286.6   17311.5   1.807   11613.0    4222.4   2.750  0.717
+pencil-steep-angle-cpl 2288    6.256   17467.4   10984.1   1.590    6848.1    2760.6   2.481  0.703
+pencil-steep-angle-cpl 1168    3.943   36484.4   19726.7   1.849    6745.9    3449.2   1.956  0.768
+pencil-steep-angle-cpl 1728    3.755   44117.7   24448.3   1.805    8391.8    4788.3   1.753  0.942
+dry-erase-marker-head-cpl     (no usable site)
+coffee-bean 1168               3.875   21493.6   25280.8   0.850    8114.7    5602.6   1.448  0.754
+coffee-bean 1728               5.158   17751.5   20478.4   0.867    6534.9    3570.9   1.830  0.621
+coffee-bean 3408               5.566   22311.6   23660.1   0.943    7469.1    4850.1   1.540  0.762
+flower-bud-alone-cpl 1168      2.766   19566.9   10933.0   1.790   13018.2    6361.1   2.047  0.964
+flower-bud-alone-cpl 1168      2.461   30067.6   14424.5   2.084   18923.2    9884.6   1.914  0.961
+flower-bud-alone-cpl 3968      2.425   28553.7   15355.8   1.859   21586.0   11359.7   1.900  0.995
+
+========================================================================================================
+sites 21 over 8 subjects
+gradient ratio   median 5.785   range 2.425 .. 8.778
+median-level x   median 1.854   range 0.850 .. 3.609
+std (contrast) x median 2.348   range 1.448 .. 6.107
+
+If med_x or std_x sits far from 1.000, the master and the source are
+not on the same photometric scale, and by script 02 that difference
+multiplies the gradient ratio DIRECTLY -- it is not a second-order
+effect and it is not noise. A std_x of X alone would account for a
+factor X of the reported 'sharpness'.

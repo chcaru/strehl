@@ -1,0 +1,18 @@
+A. PLANTED NOISE, white vs correlated, identical true sigma=400
+   source = master + noise. A sharpness statistic should read ~1.000.
+subject                  S2 white   S2 corr2   S2 corr3   S0 corr2
+--------------------------------------------------------------------
+wrapped-text-1             1.0030     0.9777     0.9835     0.9255
+bee-3-cpl                  1.0012     0.9919     0.9942     0.9610
+coffee-bean                1.0035     0.9901     0.9931     0.9545
+lavendar-cpl               1.0021     0.9833     0.9887     0.9524
+MEDIAN                     1.0025     0.9867     0.9909     0.9534
+
+B. MEASURED NOISE AUTOCORRELATION of a real demosaiced source
+   lag-1 correlation of the high-pass residual. 0.0 => white.
+subject                    lag1 x     lag1 y  sigma_imm
+----------------------------------------------------------
+wrapped-text-1            -0.4630    -0.4514       70.8
+  (white ref)             -0.6641    -0.6674          -
+bee-3-cpl                 -0.4556    -0.4594       67.4
+  (white ref)             -0.6641    -0.6674          -

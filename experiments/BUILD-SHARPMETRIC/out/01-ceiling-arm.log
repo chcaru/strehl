@@ -1,0 +1,59 @@
+==============================================================================
+ARM 1 -- reproduce the published commission exactly (sources k=2,3,4,5)
+==============================================================================
+  SELECTION   (master == sharpest source)      1.0000   published 1.0000
+  DEFECT      (master blurred past all)        0.1717   published 0.1717
+  RECONSTRUCT (master == unblurred latent)     3.4867   published 3.4867
+
+  reproduces the published arms: YES
+
+==============================================================================
+ARM 2 -- THE TEST: hold the master at PERFECT, move only the SOURCES
+==============================================================================
+The master is `lat` in every row: a literally perfect reconstruction,
+identical pixels, unchanged. ONLY the source blur changes. If 3.4867
+is a ceiling on perfection, every row must read 3.4867.
+
+  sources (box half-width)    RECONSTRUCT    vs 3.4867
+  ----------------------------------------------------
+  (1, 2, 3, 4)                     1.0000        0.29x
+  (2, 3, 4, 5)                     3.4867        1.00x
+  (3, 4, 5, 6)                     4.2479        1.22x
+  (4, 5, 6, 7)                     5.1014        1.46x
+  (5, 6, 7, 8)                     6.3216        1.81x
+  (6, 7, 8, 9)                     8.3201        2.39x
+  (8, 9, 10, 11)                  20.2615        5.81x
+  (10, 11, 12, 13)                18.3969        5.28x
+
+  RECONSTRUCT ranges 1.0000 .. 20.2615 over an UNCHANGED, perfect master.
+  spread 20.26x
+
+  VERDICT: 3.4867 is NOT A CEILING. The master is byte-identical in
+  every row above -- it is the same perfect reconstruction -- and the
+  number moves by 20.26x purely because the SOURCES changed. The arm
+  measures how blurred the best source is, not how good the master is.
+  A real subject scoring above 3.4867 is therefore NOT out-performing
+  perfection; it has source frames blurred by more than a k=2 box.
+
+==============================================================================
+ARM 3 -- what does the published k=2 arm correspond to physically?
+==============================================================================
+If the ceiling is set by the sharpest source's blur, then the published
+3.4867 is the answer for ONE specific source blur. Invert it: for a
+perfect master, what source blur does each observed subject ratio imply?
+
+  RECONSTRUCT  implied sharpest-source box half-width
+  ----------------------------------------------------
+  k=1                1.0000
+  k=2                3.4867
+  k=3                4.2479
+  k=4                5.1014
+  k=5                6.3216
+  k=6                8.3201
+  k=7               11.9210
+  k=8               20.2615
+  k=9               53.3900
+  k=10              50.2794
+  k=11              26.6679
+  k=12              20.4649
+  k=13              18.3969

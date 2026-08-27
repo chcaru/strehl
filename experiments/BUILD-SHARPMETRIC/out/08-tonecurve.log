@@ -1,0 +1,13 @@
+TONE-CURVE CONTROL. 'matched' = source histogram-matched to master first.
+script07 blur(k=4) floor for reference: 0.8197 0.8815 0.8639 0.8805
+
+subject                  S0 raw S0 match   S2 raw S2 match      n
+--------------------------------------------------------------------------
+wrapped-text-1            7.039    1.883   0.5914   0.5660    192
+bee-3-cpl                 7.198    1.189   0.5012   0.4944    128
+coffee-bean               5.160    3.118   0.6242   0.6092    192
+lavendar-cpl              4.848    1.000   0.5041   0.4971    192
+
+==========================================================================
+median   S0 raw 6.099 -> matched 1.536   (x0.24)
+median   S2 raw 0.5477 -> matched 0.5316   (x0.98)

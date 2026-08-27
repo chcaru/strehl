@@ -1,0 +1,127 @@
+================================================================================================
+THREE CANDIDATES x TWO TARGETS. A candidate must pass BOTH targets.
+================================================================================================
+------------------------------------------------------------------------------------------------
+S0 fine-only (SHIPPED)   on target: white noise + sinusoid (the commission's own)
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 3.4867
+    DEGRADE  blur master k=8                0.1717  PASS
+    DEGRADE  blur master k=3                0.8207  PASS
+    DEGRADE  master + N(0,200)              1.1179  PERVERSE 1.118x
+    DEGRADE  master + N(0,600)              1.6985  PERVERSE 1.699x
+    DEGRADE  master + N(0,1500)             3.4960  PERVERSE 3.496x
+    DEGRADE  master USM x0.5                1.1784  PERVERSE 1.178x
+    DEGRADE  master USM x1.5                1.5599  PERVERSE 1.560x
+    DEGRADE  master USM x3.0                2.1662  PERVERSE 2.166x
+    NEUTRAL  master x1.200 gain             1.2000  INFLATED 1.200x
+    NEUTRAL  master x1.500 gain             1.5000  INFLATED 1.500x
+    NEUTRAL  master x1.854 gain             1.8540  INFLATED 1.854x
+    NEUTRAL  master +3000 offset            1.0000  PASS
+    NEUTRAL  contrast x1.3 about mean       1.3000  INFLATED 1.300x
+    IMPROVE  half-deblurred t=0.50          1.9531  PASS
+    IMPROVE  sweep t=0..1            1.000 1.318 1.953 2.699 3.487  monotonic PASS
+    -> 10 arm(s) failed   NOT COMMISSIONED
+------------------------------------------------------------------------------------------------
+S0 fine-only (SHIPPED)   on target: 1/f spectrum + edges (photograph-like)
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 3.3119
+    DEGRADE  blur master k=8                0.2704  PASS
+    DEGRADE  blur master k=3                0.6806  PASS
+    DEGRADE  master + N(0,200)              1.0311  PERVERSE 1.031x
+    DEGRADE  master + N(0,600)              1.2459  PERVERSE 1.246x
+    DEGRADE  master + N(0,1500)             2.0952  PERVERSE 2.095x
+    DEGRADE  master USM x0.5                1.3012  PERVERSE 1.301x
+    DEGRADE  master USM x1.5                1.9411  PERVERSE 1.941x
+    DEGRADE  master USM x3.0                2.9309  PERVERSE 2.931x
+    NEUTRAL  master x1.200 gain             1.2000  INFLATED 1.200x
+    NEUTRAL  master x1.500 gain             1.5000  INFLATED 1.500x
+    NEUTRAL  master x1.854 gain             1.8540  INFLATED 1.854x
+    NEUTRAL  master +3000 offset            1.0000  PASS
+    NEUTRAL  contrast x1.3 about mean       1.3000  INFLATED 1.300x
+    IMPROVE  half-deblurred t=0.50          1.8834  PASS
+    IMPROVE  sweep t=0..1            1.000 1.291 1.883 2.578 3.312  monotonic PASS
+    -> 10 arm(s) failed   NOT COMMISSIONED
+
+------------------------------------------------------------------------------------------------
+S1 fine/coarse   on target: white noise + sinusoid (the commission's own)
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 2.3633
+    DEGRADE  blur master k=8                0.9636  PASS
+    DEGRADE  blur master k=3                0.9589  PASS
+    DEGRADE  master + N(0,200)              1.1005  PERVERSE 1.100x
+    DEGRADE  master + N(0,600)              1.5303  PERVERSE 1.530x
+    DEGRADE  master + N(0,1500)             2.4137  PERVERSE 2.414x
+    DEGRADE  master USM x0.5                1.0420  PERVERSE 1.042x
+    DEGRADE  master USM x1.5                1.1071  PERVERSE 1.107x
+    DEGRADE  master USM x3.0                1.1727  PERVERSE 1.173x
+    NEUTRAL  master x1.200 gain             1.0000  PASS
+    NEUTRAL  master x1.500 gain             1.0000  PASS
+    NEUTRAL  master x1.854 gain             1.0000  PASS
+    NEUTRAL  master +3000 offset            1.0000  PASS
+    NEUTRAL  contrast x1.3 about mean       1.0000  PASS
+    IMPROVE  half-deblurred t=0.50          1.6469  PASS
+    IMPROVE  sweep t=0..1            1.000 1.231 1.647 2.039 2.363  monotonic PASS
+    -> 6 arm(s) failed   NOT COMMISSIONED
+------------------------------------------------------------------------------------------------
+S1 fine/coarse   on target: 1/f spectrum + edges (photograph-like)
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 1.8288
+    DEGRADE  blur master k=8                0.8838  PASS
+    DEGRADE  blur master k=3                0.9448  PASS
+    DEGRADE  master + N(0,200)              1.0287  PERVERSE 1.029x
+    DEGRADE  master + N(0,600)              1.2146  PERVERSE 1.215x
+    DEGRADE  master + N(0,1500)             1.8414  PERVERSE 1.841x
+    DEGRADE  master USM x0.5                1.0421  PERVERSE 1.042x
+    DEGRADE  master USM x1.5                1.0867  PERVERSE 1.087x
+    DEGRADE  master USM x3.0                1.1155  PERVERSE 1.116x
+    NEUTRAL  master x1.200 gain             1.0000  PASS
+    NEUTRAL  master x1.500 gain             1.0000  PASS
+    NEUTRAL  master x1.854 gain             1.0000  PASS
+    NEUTRAL  master +3000 offset            1.0000  PASS
+    NEUTRAL  contrast x1.3 about mean       1.0000  PASS
+    IMPROVE  half-deblurred t=0.50          1.4365  PASS
+    IMPROVE  sweep t=0..1            1.000 1.153 1.436 1.664 1.829  monotonic PASS
+    -> 6 arm(s) failed   NOT COMMISSIONED
+
+------------------------------------------------------------------------------------------------
+S2 energy, gain-inv + noise-corrected   on target: white noise + sinusoid (the commission's own)
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 0.9595
+    DEGRADE  blur master k=8                0.9785  PASS
+    DEGRADE  blur master k=3                0.9729  PASS
+    DEGRADE  master + N(0,200)              0.9995  PERVERSE 1.000x
+    DEGRADE  master + N(0,600)              1.0032  PERVERSE 1.003x
+    DEGRADE  master + N(0,1500)             0.9860  PERVERSE 0.986x
+    DEGRADE  master USM x0.5                1.0345  PERVERSE 1.035x
+    DEGRADE  master USM x1.5                1.0987  PERVERSE 1.099x
+    DEGRADE  master USM x3.0                1.1697  PERVERSE 1.170x
+    NEUTRAL  master x1.200 gain             1.0000  PASS
+    NEUTRAL  master x1.500 gain             1.0000  PASS
+    NEUTRAL  master x1.854 gain             1.0000  PASS
+    NEUTRAL  master +3000 offset            1.0000  PASS
+    NEUTRAL  contrast x1.3 about mean       1.0000  PASS
+    IMPROVE  half-deblurred t=0.50          0.9424  FAIL
+    IMPROVE  sweep t=0..1            1.000 0.961 0.942 0.941 0.959  NOT MONOTONIC
+    -> 8 arm(s) failed   NOT COMMISSIONED
+------------------------------------------------------------------------------------------------
+S2 energy, gain-inv + noise-corrected   on target: 1/f spectrum + edges (photograph-like)
+  SELECTION anchor 1.0000   RECONSTRUCT(perfect) 1.4136
+    DEGRADE  blur master k=8                0.8941  PASS
+    DEGRADE  blur master k=3                0.9481  PASS
+    DEGRADE  master + N(0,200)              1.0001  PERVERSE 1.000x
+    DEGRADE  master + N(0,600)              1.0007  PERVERSE 1.001x
+    DEGRADE  master + N(0,1500)             0.9947  PERVERSE 0.995x
+    DEGRADE  master USM x0.5                1.0386  PERVERSE 1.039x
+    DEGRADE  master USM x1.5                1.0808  PERVERSE 1.081x
+    DEGRADE  master USM x3.0                1.1084  PERVERSE 1.108x
+    NEUTRAL  master x1.200 gain             1.0000  PASS
+    NEUTRAL  master x1.500 gain             1.0000  PASS
+    NEUTRAL  master x1.854 gain             1.0000  PASS
+    NEUTRAL  master +3000 offset            1.0000  PASS
+    NEUTRAL  contrast x1.3 about mean       1.0000  PASS
+    IMPROVE  half-deblurred t=0.50          1.1756  PASS
+    IMPROVE  sweep t=0..1            1.000 1.043 1.176 1.308 1.414  monotonic PASS
+    -> 6 arm(s) failed   NOT COMMISSIONED
+
+================================================================================================
+candidate                                    white target   natural target
+------------------------------------------------------------------------------------------------
+S0 fine-only (SHIPPED)                             10 fail           10 fail
+S1 fine/coarse                                      6 fail            6 fail
+S2 energy, gain-inv + noise-corrected               8 fail            6 fail
+================================================================================================

@@ -1,0 +1,90 @@
+[
+ {
+  "subject": "wrapped-text-1",
+  "sites": 3,
+  "registered": 3,
+  "s0": 7.26872743571502,
+  "s2": 0.5880808167108775,
+  "n0": 192,
+  "n2": 192,
+  "skipped": 0,
+  "unmeasurable": 0
+ },
+ {
+  "subject": "tweezers-cpl",
+  "sites": 3,
+  "registered": 2,
+  "s0": 8.49641448228795,
+  "s2": 0.9344968828098321,
+  "n0": 128,
+  "n2": 128,
+  "skipped": 0,
+  "unmeasurable": 0
+ },
+ {
+  "subject": "leaf-2-cpl",
+  "sites": 3,
+  "registered": 2,
+  "s0": 5.74574988099463,
+  "s2": 0.5936413886864835,
+  "n0": 128,
+  "n2": 128,
+  "skipped": 0,
+  "unmeasurable": 0
+ },
+ {
+  "subject": "bee-3-cpl",
+  "sites": 3,
+  "registered": 2,
+  "s0": 7.241039840999946,
+  "s2": 0.5013814774463106,
+  "n0": 128,
+  "n2": 128,
+  "skipped": 0,
+  "unmeasurable": 0
+ },
+ {
+  "subject": "lavendar-cpl",
+  "sites": 3,
+  "registered": 3,
+  "s0": 4.946035694282967,
+  "s2": 0.5023217893400831,
+  "n0": 192,
+  "n2": 192,
+  "skipped": 0,
+  "unmeasurable": 0
+ },
+ {
+  "subject": "pencil-steep-angle-cpl",
+  "sites": 3,
+  "registered": 3,
+  "s0": 4.329815429292195,
+  "s2": 0.49573813957911994,
+  "n0": 192,
+  "n2": 192,
+  "skipped": 0,
+  "unmeasurable": 0
+ },
+ {
+  "subject": "coffee-bean",
+  "sites": 3,
+  "registered": 3,
+  "s0": 5.119495406057224,
+  "s2": 0.6304505507161058,
+  "n0": 192,
+  "n2": 192,
+  "skipped": 0,
+  "unmeasurable": 0
+ },
+ {
+  "subject": "flower-bud-alone-cpl",
+  "sites": 3,
+  "registered": 3,
+  "s0": 2.3575680119484606,
+  "s2": 0.5254974503473768,
+  "n0": 192,
+  "n2": 192,
+  "skipped": 0,
+  "unmeasurable": 0
+ }
+]

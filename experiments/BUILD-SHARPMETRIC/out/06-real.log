@@ -1,0 +1,22 @@
+S0 (shipped, fine-band magnitude) vs S2 (gain-invariant, noise-corrected)
+arm SHIP-V4   sources rawpy gamma=(2.222,4.5) no_auto_bright=True
+
+subject                             S0        S2    S0/S2   n(S0)   n(S2)    skip  unmeas
+--------------------------------------------------------------------------------------------
+wrapped-text-1                   7.269     0.588    12.36     192     192       0       0
+tweezers-cpl                     8.496     0.934     9.09     128     128       0       0
+leaf-2-cpl                       5.746     0.594     9.68     128     128       0       0
+bee-3-cpl                        7.241     0.501    14.44     128     128       0       0
+lavendar-cpl                     4.946     0.502     9.85     192     192       0       0
+pencil-steep-angle-cpl           4.330     0.496     8.73     192     192       0       0
+dry-erase-marker-head-cpl     (no usable site)
+coffee-bean                      5.119     0.630     8.12     192     192       0       0
+flower-bud-alone-cpl             2.358     0.525     4.49     192     192       0       0
+
+============================================================================================
+S0  median 5.433   range 2.358 .. 8.496   (published sec105 median 4.120)
+S2  median 0.557   range 0.496 .. 0.934
+inflation factor S0/S2, median 9.39x
+
+subjects with S2 > 1.0 (merge RECONSTRUCTS): 0 of 8
+subjects with S2 < 1.0 (merge loses detail): 8 of 8
