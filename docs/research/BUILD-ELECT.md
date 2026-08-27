@@ -3137,3 +3137,144 @@ backdrop median 20 measures, and the border region evidently contains dark
 content I have not identified.  It is not a pedestal on the backdrop and it does
 not bear on 20, but it is a real difference with a magnitude attached and
 nobody has looked at it.
+
+## 21. ORCH's bud rim: not clipping, not lateral CA, and it needs the merge
+
+ORCH measured a chromatic overshoot on the `flower-bud-alone-cpl` silhouette --
+`R-G` peaking at +22 against an interior of +11 and a backdrop of -4 -- and
+argued that since a mixture cannot exceed both endpoints it must be a
+reconstruction artifact in chroma. They asked three things: does the default
+shipping arm produce it, does forcing a common elected frame collapse it, and
+pre-register the failure.
+
+### 21.1 What ORCH was actually looking at
+
+Their master's provenance, read off disk rather than assumed:
+
+| | ORCH's master | my first arms |
+| --- | --- | --- |
+| binary | pin `b9b6921e`, `CF33AE08...` | current `16EB215F...` |
+| argv | `--merge pyramid --pyramid-gate 4.5 --srgb --auto-exposure` | `--demosaic`, linear |
+| exposure | **+1.45 stops** | none |
+| lateral CA | **CORRECTING**, gear matched | correcting |
+
+Three variables at once, so nothing could be attributed until they were split.
+
+**The binary is not one of them.** Rendering their exact argv on the current
+binary and differencing:
+
+```
+differing samples : 0 of 99,010,560 (0.0000%)   max delta 0 DN
+```
+
+The files are *not* byte-identical -- `C9312ACB...` vs `CF4DDAD2...`, and they
+differ in size, 198023555 vs 198026320 bytes -- but every pixel agrees. The
+difference is metadata. Worth stating precisely, because my first evidence for
+this was a readout table agreeing to one decimal *at one site*, and agreement at
+one address is not agreement. The census is what settled it.
+
+### 21.2 Two explanations killed, one of them mine
+
+**Clipping: dead.** A per-channel ceiling can manufacture an overshoot with no
+reconstruction anywhere -- once R pins at 255 while G still climbs, `R-G` must
+fall, so it necessarily peaks just before the clip. Measured on ORCH's own
+asset: **0.00% of the region at >= 250 in every channel**, max R 244, G 248,
+B 245, backdrop 239/243/239. Nothing is pinned. ORCH's "cannot exceed both
+endpoints" survives.
+
+**Lateral CA: dead, and it was my hypothesis.** The default banner says
+`lateral CA : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl"`, and a lateral-CA
+correction is a radial per-channel resample -- rescaling R against a stationary
+G by `eps_R = -704.5 ppm`. Any negative-lobe kernel rings, and a channel
+resampled against one that is not rings differentially. That predicts exactly
+ORCH's signature on exactly this kind of diffuse edge, with no election
+involved. It is wrong twice over: ORCH's master is **already CA-corrected**, and
+turning the correction off does not remove the overshoot -- at a single row it
+goes **up**, 278 DN against the default's 233 DN.
+
+### 21.3 The answers
+
+**Does the default shipping arm produce it? YES.** Plain `stack <dir>
+--demosaic`, banner `merge backend : pyramid (default)`, measured in linear:
+positive overshoot at every setting of the averaging sweep, 233.2 DN against a
+61.3 DN control at one row. It is present in **linear**, so it is not an artifact
+of the sRGB path. The gate is not the variable either: `--pyramid-gate 4.5`
+against the 2.00 default gives 27.3 vs 32.4 DN at matched averaging, both
+positive.
+
+**Does removing the election collapse it? YES -- and I ran the strong form.**
+Rather than force a common elected frame, a one-frame render has no election at
+all. Sweeping the averaging window, the overshoot in n=1:
+
+```
+N rows          1      5     11     21     41     81
+n=1 pyramid  -57.0 -111.7  -90.9  -82.8  -62.9  +12.4
+default     +233.2 +129.7 +165.2  +69.0   +2.4  +32.4
+```
+
+Negative at five of six settings, against a positive default at every small N.
+
+**The obvious confound is dead.** A single frame from a 205-frame bracket might
+simply be defocused here, and a soft edge cannot ring. Measuring the green
+edge-spread function at the same address:
+
+| arm | 10-90% rise |
+| --- | ---: |
+| n=205 default | 105.0 px |
+| n=205 `--fix-ca off` | 106.0 px |
+| n=1 pyramid | **76.0 px** |
+| n=1 argmax | **75.0 px** |
+
+The single frame is **sharper**, not softer. It could have rung and did not.
+
+**Pre-registered, and the register was against ORCH:** I wrote before looking
+that *if the overshoot survives at n=1, the election hypothesis is dead.* It did
+not survive. **ORCH's hypothesis is not refuted; it is the surviving candidate.**
+
+### 21.4 Not asked for, and possibly worth more
+
+At this edge the merge is **~40% softer than a single frame** -- 105 px against
+75 px of 10-90% rise. That is the merge losing acuity to a single arbitrary
+frame at a real silhouette. **Caveat, and it is not small:** the 10-90 span is
+measured on a profile that is non-monotonic in exactly the arms that carry the
+overshoot, so some of that 105 px may be the overshoot inflating its own
+sharpness measure. It needs a monotonic-fit rise before it is quoted.
+
+### 21.5 Four instruments discarded, and what each one printed while wrong
+
+- **take 1** located the site by argmax on the default arm, then scored every
+  other arm at those coordinates -- an argmax on one arm against arms that did
+  not choose it. It also compared arms that were **misregistered by ~22 px**.
+- **take 2** walked a fixed column down a **curved** boundary, so most rows
+  sampled empty sky. Its own control convicted it: 384-471 DN in backdrop
+  against 499 DN on-edge. `peak - shoulder` is a max over noise minus a median,
+  so its expectation is strictly positive and **a null was not expressible in
+  it**.
+- **take 3** masked its search region with `gx[:512] = gx[-512:] = 0` on an
+  **800**-row tile. The slices overlap; the whole array went to zero;
+  `np.argmax` of an all-zero array returns 0 without complaint; the "site chosen
+  on green gradient" was the tile **origin**. It printed a full four-arm table
+  of rim amplitudes, including +1104 DN, **entirely measured on flat sky, with
+  nothing in the output saying "failed"**.
+- **take 6** averaged 81 edge-aligned rows and turned ORCH's +11 into +2.2 --
+  **ORCH's own failure #1**, reproduced in my instrument after reading their
+  warning about it. Neither number is wrong; the averaging is the variable, so
+  it is now swept rather than chosen.
+
+A fifth error worth its own line: take 5's "G dip" was green-at-peak minus green
+30-60 px into the interior. Green ramps steadily toward the bright backdrop over
+that span, so the statistic measured the ramp, came out **positive in every
+arm**, and reported "no dip" for a feature ORCH's own transect shows plainly --
+`... 145 143 142 141 140 137 137 139 144 155 ...`, a local minimum of 137 exactly
+where `R-G` peaks. **The rim is made by green falling, not by red rising**, and
+my statistic was pointed the wrong way to see it.
+
+### 21.6 Open
+
+- The mechanism is not identified. Election survives; it is not proven.
+- `CTL` is not a clean `1/sqrt(N)` floor at every N, so the sweep discriminates
+  by sign and small-N magnitude rather than by a calibrated ratio.
+- I did not reproduce ORCH's +22 exactly (I read ~+17 in 8-bit at their stated
+  address), most likely a small address offset. Not chased.
+- The **estimator** arm was never tested here; CA on/off and n=1 turned out to
+  discriminate better, so that is what the renders were spent on.
