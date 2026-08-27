@@ -13525,3 +13525,75 @@ the thing that made the stacker's numbers worth quoting.
 The corollary I have to accept personally: **instance 6 is mine**, and I found it
 only because a lane contradicted me and I checked which of us was wrong instead of
 restating my position. The orchestrator is not outside the population.
+
+## 129. A crop chosen for detail answers "how good is the best part"
+
+**ORCH, at HEAD `54583a4b`.** The owner's acceptance criterion for this project
+is visual and always has been — *"print worthy"*, *"award/print ready"*. Every
+verdict I had formed on it was secondhand, assembled out of lane statistics. So
+I went and looked, at 1:1, which is the only scale at which a sharpness verdict
+is valid.
+
+To avoid steering the crop toward a flattering patch, I picked the crop location
+**by measured local gradient energy** rather than by eye — `orch_crops.py`,
+a coarse 24x24 window search returning the window of maximum mean `|grad|`.
+I recorded that as the safeguard.
+
+**It is the opposite of a safeguard.** The window of maximum gradient energy is,
+by construction, the place where the stack most nearly *succeeded*: it is where
+the subject had the most contrast for the focus measure to lock onto and where a
+correct frame selection produces the most visible detail. Asking that site how
+the image looks is asking the best part of the image how the image looks. The
+instrument answered exactly the question I posed to it, and the question was
+wrong.
+
+This is §128's defect wearing a lab coat. There, a query's *reach* stood in for
+the world. Here, a query's *choice of sample* stands in for the world — and it is
+harder to see, because the sampling rule was mechanical, reproducible, and
+content-driven, which is precisely what makes a selection rule look objective.
+**Mechanical is not the same as unbiased.** A deterministic rule with a
+systematic preference is a bias that reproduces perfectly.
+
+The correction, `orch_crops_unbiased.py`, draws sites *without reference to the
+outcome*: `random` (fixed seed, no content term at all) and `worst` (the lowest
+energy window that is still on the subject).
+
+And the correction immediately caught its own second-order version. `worst` with
+a 20th-percentile floor landed on **empty backdrop** for both `bee-1-cpl` and
+`tweezers-cpl` — a featureless white field, which proves nothing about stacking
+and would have been reported as "the worst case looks fine". Raising the floor to
+the 55th percentile put it back on the subject. *The rule that excludes the
+flattering sample can also exclude the informative one.*
+
+### What the corrected look actually found
+
+At the **maximum-detail** sites: `wrapped-text-1` crisp with paper fibre resolved
+and no rim on the letterforms; `bee-1-cpl` with the ommatidia lattice resolved
+edge to edge across the eye's curvature; `tweezers-cpl` resolving machining
+striations at near-pixel scale; `dry-erase-marker-head-cpl` — the subject that
+launched the halo complaint — clean fibres and speculars with no rim.
+
+At the **worst on-subject** site, which is the one that counts: `bee-1-cpl` at
+`(1841,1064)` is plumose branched body hair — fine, translucent, overlapping,
+at many depths, against defocused background, which is the single hardest case a
+focus stacker faces and the canonical halo generator. Individual barbules are
+resolved, the hairs are distinct rather than smeared, and there is **no rim, no
+doubling, no dark halo**.
+
+One subject shows the known deficit plainly: `flower-bud-alone-cpl` is soft on the
+bud surface. That is the averaging-dominated regime that reads 0.9389 against the
+per-site ceiling. **The eye and the instrument agree**, which is the most
+reassuring thing in this entry — the softness statistic is measuring something a
+person would also call softness, and it is confined to where the statistic said
+it was.
+
+### The rule
+
+> **A sample chosen by a content-dependent rule inherits that rule's preference.
+> Before reporting what a sample shows, state what the sampling rule preferred,
+> and draw at least one sample that could not have been preferred.**
+
+Corollary, from the second-order catch: an exclusion rule written to remove the
+flattering case will, at some threshold, remove the informative case too. Check
+what the exclusion actually landed on rather than trusting that it excluded the
+right thing.
