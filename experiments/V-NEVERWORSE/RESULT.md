@@ -26,13 +26,54 @@ name the same build. Everything here uses `9b05d0b7`, copied to
 (`vn_lib.check_pin`).
 
 This lane found the discrepancy independently, before rendering anything, and the brief
-later confirmed it. That is worth stating precisely, because the two builds are **the same
-size to the byte** and a size check would have passed:
+later confirmed it. Note the scope carefully: `740e7056` is not a *wrong* build, it is the
+**correct** build for a different corpus. It is wrong only as a pin for SHIP-V4. Verified
+by hashing every sealed corpus on this machine against every pinned binary:
 
-| build | bytes | sha256 |
+| corpus | seals | agree? | build sha256 | pin |
+| --- | --- | --- | --- | --- |
+| `acceptance\SHIP-V4` (**scored here**) | 26 | 26/26 | `44C2F2CD…F490` | `9b05d0b7` |
+| `acceptance\SHIP-V3` | 26 | 26/26 | `15EA7346…A7B0` | `740e7056` |
+| `SHIP-V2` | 26 | 26/26 | `CF33AE08…` | `b9b6921e` |
+
+All three shipping corpora are internally consistent — one build each, every seal agreeing
+— and each has its matching pin on disk. The check is one command and it is authoritative:
+
+```powershell
+(Get-FileHash <pinned exe> -Algorithm SHA256).Hash -eq (Get-Content <subject>.tiff.ok).Trim()
+```
+
+**Two builds here are the same size to the byte, and a third joins them.** Size and
+timestamp identify nothing:
+
+| build | bytes | provenance |
 | --- | --- | --- |
-| `9b05d0b7` (**used here**) | 9,568,768 | `44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490` |
-| `740e7056` (in the brief) | 9,568,768 | `15EA73461905EA2D44B2F8242D578CD9330454450F61269AE1B1FBA71682A7B0` |
+| `44C2F2CD…F490` | 9,568,768 | seals SHIP-V4 |
+| `15EA7346…A7B0` | 9,568,768 | seals SHIP-V3 |
+| `B50EABC1…` | 9,568,768 | **seals neither**, and it sits at `strehl-out\PIN-V3\strehl.exe` |
+
+That third one is the rule in the wild: a directory whose *name* claims to be the V3 pin,
+holding a binary that is not the V3 pin, at a byte size identical to both real ones. On
+this machine it is reached only by a commissioning fixture under `V-GATHER\pincommission`,
+so it is not currently mis-scoring anything — but a lane reaching for "PIN-V3" by name, or
+checking size, would be off-gauge and would see nothing wrong.
+
+For the record, the build ORCH flagged as `066A87AB…0437B` is **not present** in any copy of
+`strehl.exe` under `C:\dev` — 160 copies at the time of writing, **65 distinct builds**.
+(The copy count drifts upward as other lanes rebuild; the distinct-build count is the
+load-bearing figure, and re-running `vn_seals.py` re-derives both.) Nothing in this lane
+could have used it. That is a scoped negative — `C:\dev` was the whole search — not a claim
+about the machine.
+
+`vn_seals.py` reproduces this whole section: it hashes every `strehl.exe` under a root,
+reads every `.tiff.ok` on disk, and fails on a corpus carrying more than one seal, a seal
+with no binary behind it, or a path whose *name* claims a corpus its hash does not seal.
+It classifies `V-GATHER\pincommission\*`, `V-REVIEW\pinguard\*` and `acceptance\PINTEST` as
+other lanes' deliberate fixtures, so their intentionally mixed and synthetic seals are not
+reported as incidents. Current state: **0 incidents**, three shipping corpora all
+26/26 consistent, one name-vs-hash hazard (`PIN-V3` above). Commissioned by running it
+against a root holding no binaries at all, which must and does go red (4 incidents, rc=1) —
+without that, "0 incidents" would be indistinguishable from a check that cannot fail.
 
 **The check that makes it a measurement, not an assumption.** Each master carries a
 `<subject>--SHIP-V4.tiff.ok` file whose entire content is the sha256 of the binary that
@@ -45,8 +86,8 @@ rendered it. Reading all 26 and hashing my own copy:
 Had the source arm been rendered by `740e7056`, every one of the 26 ratios would have
 carried an uncontrolled binary difference between numerator and denominator — the same
 mismatched-gauge defect §1 reports in the existing statistics, arriving by a different
-door. Provenance is a gauge input, and a build is identified by its hash, never by its
-size or its path.
+door. Provenance is a gauge input, and a build is identified by its hash against the seal
+of the corpus being compared to, never by its size, its path or its name.
 
 **The label.** The `master/best-source` line at `orch_printready.py:223` is not computed by
 the gate. It is read verbatim out of `experiments/V-REVIEW/vr_baseline.json`, which records
@@ -697,5 +738,6 @@ that names another.
 | `vn_warpnull.py` | the resampling null at the magnification actually used (§2.3) |
 | `vn_verify23.py` | re-derives every number quoted in §2.3 from the records |
 | `vn_negctl23.py` | negative control for that checker: 14 plants + 1 placebo, 15/15 |
+| `vn_seals.py` | hashes every `strehl.exe` and every `.tiff.ok` seal; reproduces §0 |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
