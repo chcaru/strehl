@@ -1,0 +1,17 @@
+==============================================================================
+56 -- the SHIPPED solver on the same biased ladder
+==============================================================================
+     rho    E*_med   E*_scale   E*_trans  E*_robust     numpy      |d|
+   1.000     0.599      0.461      0.134      0.660    0.5987   0.0003
+   0.800     0.515      0.371      0.135      0.552    0.5151   0.0001
+   0.526     0.384      0.247      0.135      0.419    0.3837   0.0003
+   0.300     0.276      0.142      0.135      0.308    0.2757   0.0003
+
+  worst |shipped - numpy| = 0.0003 px
+  AGREES (bar 0.01 px): 54's ladder describes the SHIPPED gate.
+
+  shipped E* median falls monotonically with the bias : True
+  shipped E* robust falls monotonically with the bias : True
+
+  The shipped gate rewards a scale-attenuation defect, on both the
+  median it reports and the robust figure its decision rule uses.

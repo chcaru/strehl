@@ -1,0 +1,60 @@
+==============================================================================
+54 -- HOW LOOSE IS E*?   (prereg e732cfb8, written before any result)
+==============================================================================
+  case      : P4 planted-warp, truth independent of the estimator
+  frames    : 105
+  edge rows : 761 total = 761 ok + 0 not-ok
+  plane     : 3516x2344, corner radius 2112.9 px
+  gauge chk : frame 0 truth-vs-identity = 0.000e+00 px (must be 0)
+
+------------------------------------------------------------------------------
+GATE G0 -- my re-derived solver vs M10's published S3-ba-unit
+  all 761 edges, unweighted, scored against truth
+  mine 0.6203 px   M10 0.622 px   |delta| 0.0017 px
+  G0 PASS (bar 0.05 px)
+
+------------------------------------------------------------------------------
+PRE-REGISTERED ARMS
+  arm                          E*       E_true     Lambda    train/test
+  A null                   0.5987       0.6203       1.04    600/161   
+  B bias rho=0.526         0.3837      31.6665      82.54    600/161   
+  C noise 1.0x             0.8065       0.6225       0.77    600/161   
+  D improve 50%            0.2993       0.3102       1.04    600/161   
+
+------------------------------------------------------------------------------
+MOVEMENT vs the null arm
+  B bias rho=0.526     E*     -35.9%    E_true   +5004.8%
+  C noise 1.0x         E*     +34.7%    E_true      +0.3%
+  D improve 50%        E*     -50.0%    E_true     -50.0%
+
+------------------------------------------------------------------------------
+PRE-REGISTERED CHECKS
+  C: E* rises on a defect it CAN see          : PASS
+  D: E* falls on a genuine IMPROVEMENT        : PASS
+  B: E* unchanged (<=25%) under a real bias   : FAIL
+  B: E_true moved a long way (>2x)            : PASS
+
+  worst |log2 Lambda| across arms = 6.37  (bar 1.0)
+  VERDICT: E* is NOT a usable ruler. On 'B bias rho=0.526' the true
+           error is 82.5x what E* reports.
+
+==============================================================================
+THE LADDER -- sweep the bias and watch the two statistics diverge
+A single point could be a coincidence. A monotone ladder cannot.
+==============================================================================
+     rho        E*   E*_scale   E*_trans     E_true    Lambda
+   1.000    0.5987     0.4607     0.1344     0.6203      1.04
+   0.900    0.5523     0.4162     0.1345     6.9651     12.61
+   0.800    0.5151     0.3714     0.1346    13.5344     26.27
+   0.700    0.4660     0.3262     0.1345    20.1322     43.20
+   0.600    0.4233     0.2807     0.1346    26.7529     63.20
+   0.526    0.3837     0.2467     0.1346    31.6665     82.54  <- M23's measured real span-1 R
+   0.400    0.3230     0.1885     0.1347    40.0600    124.02
+   0.300    0.2757     0.1419     0.1347    46.7459    169.54
+
+  E* falls monotonically as the estimator gets worse : True
+  E_true rises monotonically as it gets worse        : True
+
+  E* is not merely blind to a scale-attenuation bias. It is
+  PERVERSE on it: the worse the estimator, the better the gate reads.
+  A lane shipping this defect would be congratulated by the gate.

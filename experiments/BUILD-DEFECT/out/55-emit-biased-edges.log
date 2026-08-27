@@ -1,0 +1,9 @@
+emitting biased P4 edge tables for the SHIPPED solver to read
+  rho 1.000 -> experiments\BUILD-DEFECT\out\p4-bias-1000.csv  (761 rows transformed)
+  rho 0.800 -> experiments\BUILD-DEFECT\out\p4-bias-0800.csv  (761 rows transformed)
+  rho 0.526 -> experiments\BUILD-DEFECT\out\p4-bias-0526.csv  (761 rows transformed)
+  rho 0.300 -> experiments\BUILD-DEFECT\out\p4-bias-0300.csv  (761 rows transformed)
+
+  identity check: 0 untouched-column mismatches (must be 0)
+  identity check: max |dg| at rho=1 = 0.000e+00 (must be ~0)
+  emitter is clean

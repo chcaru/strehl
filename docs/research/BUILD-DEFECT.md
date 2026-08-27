@@ -2153,3 +2153,191 @@ deficit is to be attacked, the two things not already dead are:
    tightness is established, "6.76 px held-out" cannot tell an improved solver
    from a differently-biased one, and any future arm will be graded by a ruler
    made of the thing it is grading.
+
+## 17. E* is not a loose ruler. It is a ruler that runs backwards.
+
+ORCH's redirect: establish `E*`'s tightness before touching the solver, on the
+argument that until it is known, every alignment result this project has
+produced is ungradable. The pre-registration is
+`experiments/BUILD-DEFECT/PREREG-estar.txt`, committed at **`e732cfb8`** before
+any outcome number for this question existed.
+
+The answer is worse than "loose". On the class of error alignment is actually
+suspected of, **`E*` moves the wrong way**: the worse the estimator, the better
+the gate reads.
+
+### 17.1 The ruler that is not self-referential
+
+`E*` (`heldout_error`, `align_cmd.rs:618`) trains a global solve on **short**
+edges and scores it against **long** ones. Both sides are outputs of the same
+estimator, which is why `M86:451-454` calls it an upper bound of unknown
+tightness. To measure the gap I needed truth that the estimator did not produce.
+
+It already exists: **`experiments/m10-deep-align/data/p4-warp-{edges,truth}.csv`**.
+M10's P4 is 105 frames synthesised from one real coffee-bean frame by a *known*
+smooth similarity sequence plus a growing depth-dependent blur — planted total
+drift 98.6 plane px, −4.574% scale, deliberately matched to M6's measured real
+coffee-bean drift. **The truth is the plant.** 761 real measured edges, same
+estimator, same code path.
+
+Definitions used throughout: `E_true` is the median worst-corner distance
+between solved and planted poses, gauge-aligned so frame 0 is identity;
+`Λ = E_true / E*` is the looseness.
+
+### 17.2 Commissioning: the solver, the gauge, and the shipped statistic
+
+I re-derived the solve in numpy from the algebra in `align.rs` rather than
+calling the Rust, because a sympathetic re-reading of source cannot catch a
+misunderstanding of it. Three gates before any verdict:
+
+| gate | bar | result |
+|---|---|---|
+| gauge check: frame 0 truth vs identity | `0` | `0.000e+00 px` |
+| **G0**: reproduce M10's published S3-ba-unit median against truth | ±0.05 px | **`0.6203` vs M10's `0.622`, Δ `0.0017`** |
+| the shipped Rust solver on the same tables | ±0.01 px | **worst Δ `0.0003 px`** |
+
+G0 scores my arithmetic against a number M10 published from a *different
+implementation*. The third gate matters more: `56-shipped-estar-ladder.py` runs
+the identical ladder through `m86-align solve-csv` — shipped weighting, shipped
+IRLS, shipped robust reduction, shipped decision rule, none of which my numpy
+solve reproduces — and it agrees to `0.0003 px`. **Everything below is a
+statement about the product's own gate, not about my re-derivation.**
+
+### 17.3 The arms, and the prediction that was wrong in the dangerous direction
+
+| arm | `E*` | `E_true` | `Λ` |
+|---|---|---|---|
+| A null | `0.5987` | `0.6203` | `1.04` |
+| **B bias ρ=0.526** | **`0.3837`** | **`31.6665`** | **`82.54`** |
+| C noise | `0.8065` | `0.6225` | `0.77` |
+| D improvement | `0.2993` | `0.3102` | `1.04` |
+
+Arm C moves `E*` **+34.7%** — the instrument is not dead, so arm B's reading is
+attributable. Arm D moves both **−50.0%** — `E*` is not bounded below and not
+perverse on a *genuine* improvement, so a null in B is not an artefact of a
+statistic that only ever falls. Without both of those arms, B says nothing.
+
+**My pre-registered prediction failed, and the truth is worse than what I
+predicted.** I predicted `E*` would be *unchanged* under arm B (bar: ≤25%
+movement). It moved **−35.9%**. It did not fail to charge for the defect; it
+*paid* for it, while `E_true` rose **+5004.8%**, from `0.62` px to `31.67` px.
+
+ρ = 0.526 is not a hypothetical. It is **M23's own measured response on real
+span-1 edges**.
+
+### 17.4 The ladder, and the internal null that proves the mechanism
+
+A single point could be coincidence. The full sweep cannot:
+
+| ρ | `E*` | `E*_scale` | `E*_trans` | `E_true` | `Λ` |
+|---|---|---|---|---|---|
+| 1.000 | `0.5987` | `0.4607` | `0.1344` | `0.6203` | `1.04` |
+| 0.900 | `0.5523` | `0.4162` | `0.1345` | `6.9651` | `12.61` |
+| 0.800 | `0.5151` | `0.3714` | `0.1346` | `13.5344` | `26.27` |
+| 0.700 | `0.4660` | `0.3262` | `0.1345` | `20.1322` | `43.20` |
+| 0.600 | `0.4233` | `0.2807` | `0.1346` | `26.7529` | `63.20` |
+| **0.526** | `0.3837` | `0.2467` | `0.1346` | `31.6665` | **`82.54`** |
+| 0.400 | `0.3230` | `0.1885` | `0.1347` | `40.0600` | `124.02` |
+| 0.300 | `0.2757` | `0.1419` | `0.1347` | `46.7459` | `169.54` |
+
+Both columns are **strictly monotone, in opposite directions**, across the whole
+sweep.
+
+**The `E*_trans` column is the proof.** The planted bias touches only the
+scale/rotation part `a`; translation is copied through untouched. `E*_scale`
+falls with ρ almost exactly proportionally, while `E*_trans` sits at `0.1345 ±
+0.0002` on **every rung**. That is a null control I did not have to construct —
+it was inside the measurement. It rules out a global artefact of my pipeline and
+localises the effect to precisely the degree of freedom the bias was planted in.
+
+The mechanism follows: `E*` is a residual **in the same units as the signal**.
+Attenuating the log-scale increment shrinks the disagreement between edges by
+the same factor it shrinks the quantity being measured. The estimator becomes
+*more self-consistent* as it becomes *less correct*. That is not a bug in the
+implementation of `heldout_error`; it is what a consistency statistic does.
+
+### 17.5 It is not an artefact of the synthetic case
+
+`57-estar-per-subject.py` plants the same bias on **real measured edges**:
+
+| subject | `E*` at ρ=1.000 | `E*` at ρ=0.526 | move |
+|---|---|---|---|
+| **coffee-bean** | **`6.758`** | **`4.849`** | **−28.2%** |
+| stack-112 | `1.462` | `0.986` | −32.6% |
+| p4-warp | `0.660` | `0.419` | −36.5% |
+| coffee-bean-m6 | `5.177` | `3.400` | −34.3% |
+
+**4 of 4 subjects: a worse estimator reads better.** On `coffee-bean` — the
+stack whose `6.758 px` *is* the project's headline alignment number and ORCH's
+gate (c) — planting M23's own measured attenuation makes the gate report a
+**28% improvement**. A lane that *introduced* this defect would have been
+congratulated by the gate and shipped.
+
+### 17.6 `E*` per subject, and the two subjects where it does not exist
+
+| subject | frames | ok edges | test edges | `E*` |
+|---|---|---|---|---|
+| coffee-bean | 105 | 1461 | 125 | `6.758` |
+| coffee-bean-m6 | 105 | 204 | 38 | `5.177` |
+| stack-112 | 79 | 1017 | 107 | `1.462` |
+| p4-warp | 105 | 761 | 161 | `0.660` |
+| shallow-119 | 33 | 244 | **0** | **UNDEFINED** |
+| shallow-109 | 22 | 137 | **0** | **UNDEFINED** |
+
+Partition: **6 examined = 4 computed + 2 undefined + 0 refused.**
+
+Two findings. First, the spread among computed subjects is **10.24×**, and
+correlation with stack depth is only `r = +0.468` — **depth does not explain
+it**, so a single pooled "6.76 px" hides which subjects are actually broken.
+`6.758` is a `coffee-bean` number and nothing else's.
+
+Second, `MIN_SPAN = 40` exceeds the entire depth of both shallow stacks, so
+**no edge can ever be a test edge** and `heldout_error` returns `None`. An
+entire class of subject has **no gate at all**. That outcome is reported as
+`UNDEFINED` here specifically so it cannot be read as a small error — the
+distinction between "measured and fine" and "never examined" is the one this
+lane has now been caught by four times.
+
+### 17.7 What this retires, and what it does not
+
+**Retired: `E*` as an accuracy gate.** It cannot grade any change that alters
+the estimator's scale response — which is the entire class M23 and M78 were
+built to address. Gate (c) as ORCH wrote it (*"must beat 6.76 px held-out"*) is
+satisfiable by making the estimator worse in a specific, plausible, already-
+measured way.
+
+**This retroactively re-reads M23.** Its gate (c) reported held-out *unchanged*
+at 6.758 px. On this evidence that gate could not have detected the correction
+working, because a change to the scale response is the one thing `E*` cannot
+see. **M23's kill still stands** — but it stands on its *shuffled-`R` null*
+(93.3% of the movement reproduced with zero per-edge information), which is a
+sound and independent argument. The held-out number contributed nothing.
+
+**Not retired: `E*` as a consistency check.** Arm A gives `Λ = 1.04`; on a
+clean case `E*` tracks truth well. It is a fine detector of *incoherence*
+between edges. It is simply not a bound on placement error, and the two have
+been used interchangeably.
+
+**Not established here:** whether the shipped estimator actually carries
+ρ ≈ 0.526. M23 measured that response, and M23 also found it tracks the
+*resampler* rather than defocus, so it may be an artefact of the probe rather
+than an attenuation of the measurement. This section's claim is about **the
+gate's ability to detect such a bias**, not about whether one is present. Those
+are different questions and only the first one is answered here.
+
+### 17.8 What a real ruler would need
+
+Only two constructions in reach avoid the self-reference:
+
+1. **Planted truth, as P4 does.** It is the only place in this corpus where
+   `E_true` is computable at all, and it is already built. Any alignment change
+   should be scored there *in addition to* on real stacks — cheaply, since the
+   edges are committed and the whole ladder above runs in seconds.
+2. **A statistic in units that do not shrink with the bias.** `E*` fails
+   because it is a residual measured in the same quantity the bias attenuates.
+   A gauge normalised by the stack's own total drift — or the span-1 residual
+   `BUILD-SHARP.md:208-217` argues for — does not share that defect by
+   construction. Either must be commissioned on the ladder in §17.4 before use:
+   **the bar is that it rises monotonically as ρ falls.** That ladder is now a
+   reusable commissioning suite for any future alignment metric, and it is the
+   durable output of this lane.

@@ -1,0 +1,34 @@
+====================================================================================
+57 -- E* PER SUBJECT (it is quoted as one number; it is not one number)
+====================================================================================
+  subject                 frames     ok   test    E* robust
+  coffee-bean                105   1461    125        6.758
+  stack-112                   79   1017    107        1.462
+  p4-warp (synthetic)        105    761    161        0.660
+  coffee-bean-m6             105    204     38        5.177
+  shallow-119                 33    244      0    UNDEFINED   <- no edge reaches span 40
+  shallow-109                 22    137      0    UNDEFINED   <- no edge reaches span 40
+
+  partition: 6 subjects examined = 4 computed + 2 undefined_no_test + 0 solver_refused
+
+  spread: 0.660 px (p4-warp (synthetic)) .. 6.758 px (coffee-bean)
+          = 10.24x across subjects
+  correlation of E* with stack depth: r = +0.468
+  -> depth does NOT explain the spread; a pooled number hides subject-to-subject variation
+
+====================================================================================
+THE BIAS RESPONSE ON REAL EDGES (not synthesised)
+====================================================================================
+  Truth is unknown on real subjects, so this shows only the direction
+  E* moves. P4 and the algebra supply the true error.
+  subject                  E* rho=1.000   E* rho=0.526       move   rows biased
+  coffee-bean                     6.758          4.849     -28.2%          1461
+  stack-112                       1.462          0.986     -32.6%          1017
+  p4-warp (synthetic)             0.660          0.419     -36.5%           761
+  coffee-bean-m6                  5.177          3.400     -34.3%           204
+
+  subjects where a WORSE estimator read BETTER: 4 of 4
+
+  The perversity is not an artefact of the synthetic case. On every
+  real subject with a computable E*, attenuating the scale response
+  by M23's own measured factor makes the gate read BETTER.
