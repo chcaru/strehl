@@ -118,7 +118,28 @@ def read_master(path: Path) -> np.ndarray:
     return a
 
 
-def printable_rgb8(rgb8: np.ndarray, swop, srgb) -> np.ndarray:
+def profile_mode(profile) -> str:
+    """The PIL image mode matching a profile's own colour space.
+
+    Not assumed. The first version hardcoded CMYK, which is right for a press
+    profile like RSWOP and wrong for a great many fine-art inkjet profiles,
+    which are RGB because the printer driver presents an RGB interface. Passing
+    an RGB output profile to a CMYK-typed transform does not mis-measure, it
+    raises `cannot build transform` -- so the failure is loud, but it would
+    have arrived at exactly the moment the owner's real profile did.
+    """
+    space = str(getattr(profile.profile, "xcolor_space", "")).strip().upper()
+    if space == "CMYK":
+        return "CMYK"
+    if space in ("RGB", "GRAY"):
+        return "RGB" if space == "RGB" else "L"
+    raise SystemExit(
+        f"REFUSED: profile colour space {space!r} is not one this tool can "
+        "round-trip; add it deliberately rather than guessing a mode."
+    )
+
+
+def printable_rgb8(rgb8: np.ndarray, dest, srgb) -> np.ndarray:
     """Send 8-bit sRGB through the print profile and back: what the press can do.
 
     Black point compensation is ON.  Without it the press's black, which is far
@@ -128,12 +149,13 @@ def printable_rgb8(rgb8: np.ndarray, swop, srgb) -> np.ndarray:
     compression rather than folded into a gamut number.
     """
     flags = ImageCms.Flags.BLACKPOINTCOMPENSATION | ImageCms.Flags.HIGHRESPRECALC
+    mode = profile_mode(dest)
     im = Image.fromarray(rgb8, "RGB")
     fwd = ImageCms.buildTransform(
-        srgb, swop, "RGB", "CMYK", renderingIntent=1, flags=flags
+        srgb, dest, "RGB", mode, renderingIntent=1, flags=flags
     )
     back = ImageCms.buildTransform(
-        swop, srgb, "CMYK", "RGB", renderingIntent=1, flags=flags
+        dest, srgb, mode, "RGB", renderingIntent=1, flags=flags
     )
     return np.asarray(ImageCms.applyTransform(ImageCms.applyTransform(im, fwd), back))
 

@@ -2683,3 +2683,71 @@ the full frame, which is why it sits beside `leaf-2-cpl` in every colour
 statistic. The source folder `D:\personal\macro\lead-1-cpl` (123 files) is
 named that way, so this is a capture-time label, not a render defect. It
 will read as an error to anyone browsing the gallery.
+
+## Profile comparison, and the five verdicts were the measuring stick
+
+ORCH asked for `--profile` on `gamut_corrected.py` and `softproof.py` as a
+COMPARISON rather than a substitution, so a verdict decomposes into how much
+was the image and how much was the profile. Landed, with RSWOP kept as the
+default and as the reference column, so nothing about the existing numbers
+changes silently. The reference profile also selects the crop window, so
+adding a second profile cannot move a crop and make two runs incomparable --
+verified: `leaf-2-cpl` still crops at (3200,600) and `119MSDCF` at (3000,0).
+
+### The wiring exposed a defect that would have landed on the owner's profile
+
+`printable_rgb8` hardcoded a CMYK destination. That is right for RSWOP and
+WRONG for a great many fine-art inkjet profiles, which are RGB because the
+driver presents an RGB interface. The failure is not a mis-measurement, it is
+`PIL.ImageCms.PyCMSError: cannot build transform` -- loud, but it would have
+arrived at the exact moment the owner's real profile did, which is the worst
+time to debug it. Now derived from the profile's own `xcolor_space`, and a
+space this tool cannot round-trip is REFUSED rather than guessed.
+
+MEASURED regression after the change: `coffee-bubbles` shadow ratio 1.07 and
+the midtone control 0.97, both identical to before.
+
+### Commissioned two-sidedly, and one arm is NOT MEASURED
+
+* IDENTITY -- the same profile against itself is byte-identical, so a zero
+  delta means the papers agree rather than the wiring having failed.
+* DIFFERENCE -- passing RSWOP twice is REFUSED (rc=1, "either they are the
+  same profile or only one reaches the transform"). RSWOP against DCI-P3
+  moves the probe 34 DN and proceeds.
+
+### The result, and the reason it is a ceiling and not a verdict
+
+| outcome | subjects |
+| --- | --- |
+| RESCUED by the wider profile | 5 |
+| loses colour on BOTH | 0 |
+| held on both | 11 |
+| no saturated content | 10 |
+| **total** | **26** |
+
+Every subject I disqualified -- `flower-inner-edge-cpl`, `leaf-2-cpl`,
+`lead-1-cpl`, `119MSDCF`, `109MSDCF` -- is RESCUED, and NONE loses colour on
+both. Visible in the sheet: `119MSDCF`'s DCI-P3 panel is indistinguishable
+from the master while its RSWOP panel is a dull slate-purple.
+
+**But DCI-P3 scored 0.00% on every subject, and that number is arithmetic
+rather than evidence.** The masters are sRGB-encoded and sRGB is a strict
+subset of DCI-P3, so the comparison CANNOT FAIL against it. A clean sweep of
+zeros looks exactly like a paper that holds every colour. The tool now
+detects this case and says so unprompted, because the next person to run it
+with a wide RGB profile will otherwise read a guaranteed zero as a pass.
+
+So the defensible claim is bounded: the five verdicts are **attributable to
+RSWOP's narrowness, not to anything intrinsic in the pixels**. It does NOT
+follow that a real fine-art inkjet holds them -- an inkjet gamut is not a
+superset of sRGB, being wider in some greens and narrower in some saturated
+blues. The true answer lies between the two columns, and §31 remains the
+thing that resolves it.
+
+NOT MEASURED, stated because a missing arm must not read as a passed one: the
+superset guard has no negative arm. Demonstrating that it stays silent when a
+comparison profile genuinely loses colour needs a second narrow-gamut profile,
+and this machine has exactly one. Reversing the order instead (DCI-P3 as
+reference) does not supply it -- the run aborts earlier and correctly, because
+the potency control cannot detect loss against a superset and refuses to
+produce a table at all.
