@@ -1778,3 +1778,138 @@ sensor padding. Measured on the green plane, last 8 columns against interior:
 
 Real image in all six, and the control convicts planted padding, so the probe
 can say PADDING and chose not to. **No padding is being shipped.**
+
+---
+
+## 8.9 Did the `--linear-srgb` asymmetry bite a published number? (2026-08-27)
+
+`--srgb` implies `--demosaic`; `--linear-srgb` does not — and `--linear-srgb`
+is what the help calls "THE MODE TO MEASURE IN". A number measured at half
+resolution while claimed at full is not cosmetic: **binning moves Nyquist**, so
+every spatial-frequency quantity in the project is defined against a lattice.
+
+**Answer: no published claim moves. One live hazard found and routed.**
+
+### The enumeration
+
+`linsrgb_audit.py` reconstructs **logical commands** before matching — joining
+PowerShell backtick continuations and Python bracket spans — because both flags
+routinely sit on different source lines of one command. A line-oriented grep
+convicts every such site falsely.
+
+| bucket | n |
+|---|---:|
+| **INVOCATION, no `--demosaic` (HALF RES)** | **13** |
+| INVOCATION + `--demosaic` (full res) | 11 |
+| TEXT (comment / label / `--help` quote) | 38 |
+| DOC (prose, `.md`/`.rs`) | 177 |
+| **total** | **239** |
+
+The partition sums, and the assertion that it sums is in the script. The 13 are
+**12 in `BUILD-HALO`** (`veto`, `veilz`, `veilgate`, `twomech`, `polarity`,
+`incoh`, `guard`, `acuity`, `trade_ladder`) and **1 in `BUILD-HIGHLIGHT`**
+(`h5_render.ps1:64`).
+
+### The lattice could NOT be measured from the files, and that is reported as a gap
+
+The owner asked for the lattice measured from the file rather than inferred
+from the flags. **The artifacts are gone** — `VETO`, `BUILD-HALO`,
+`BUILD-HIGHLIGHT` and `V-HIGHLIGHT` output roots are all absent from this
+machine, and no render log survives with a `wrote:` line for them.
+
+**An absent file is not an all-clear.** So the question was re-posed as two the
+surviving evidence *can* answer: does the lane publish anything with a spatial
+scale in it, and do its arms share a lattice?
+
+### `BUILD-HALO`: one lattice, no frequency claim, nothing moves
+
+All **14** of its renders classify BINNED — a single lattice, so every
+comparison is internally consistent whatever that lattice is. Its document has
+**4** lattice-dependent term hits in 3332 lines and all four are `PSF` inside a
+*model equation* (`I_k = a(F conv PSF_k) + …`); §15.1 is titled "The
+measurement needs no PSF model". Its published quantity is a DN level across an
+aura annulus. **Nothing to retract.**
+
+### `BUILD-HIGHLIGHT`: MIXED lattices — a live hazard, but not a published one
+
+**5 BINNED, 18 FULL across 23 renders.** The lane declares arms in hashtable
+tables and *names them by lattice*: `L1-single-demo` (FULL) sits beside
+`L2-stack-binned` (BINNED) in one ladder, as do `S1-single-srgb` /
+`S2-stack-srgbbin` / `S3-stack-srgb` and `K1` / `K2`.
+
+Nothing needs retracting, and the reason is specific rather than reassuring:
+`BUILD-HIGHLIGHT.md` carries **zero** lattice-dependent terms in 1438 lines,
+and the binned arms are almost unpublished — `L2-stack-binned` and
+`S2-stack-srgbbin` appear **0 times** in it, and `K2-stack-binned` appears
+**once**, in a uint16 level census (`60811 | 0 | 65535`), which is a saturation
+level and is lattice-robust. **The hazard is for its next comparison, not its
+last one**, and it belongs to that lane.
+
+Two lanes already knew. `render_linear.ps1` passes `--demosaic` explicitly
+beside `--linear-srgb`, which is only necessary if the implication does not
+hold; and `V-HIGHLIGHT/demosaic.py` labels its arms
+`"--linear-srgb (BINNED, NO demosaic, 3520px)"` against
+`"--srgb (… DEMOSAIC, 7040px)"` and passes a compensating 2.0 against 1.0.
+
+### The audit's own all-clear was worthless in its first form, and that is the proof
+
+The owner required that an all-clear be backed by demonstrated reach. It was
+needed. **The first `arms_share_flags` reported `BUILD-HIGHLIGHT` as "1
+invocation, one lattice, consistent"** — because it only read logical lines
+matching `$exe stack`, and this lane declares its flags in tables where they
+never touch an invocation line. It returned "consistent" because it could not
+see. The gap surfaced from a cross-check: the static audit named 6
+`BUILD-HIGHLIGHT` files, the impact probe found 1.
+
+Repaired, it reports **MIXED across 23 renders**. Commissioning now includes a
+planted mixed lane (must report MIXED) and a planted uniform lane (must not).
+
+| instrument | commissioned |
+|---|---|
+| `linsrgb_audit.py` | **10/10** — incl. P3/P5 continuation arms a grep fails, and P7-P10, its own first-run false convictions, kept as arms |
+| `linsrgb_impact.py` | **6/6** frequency detector, **8/8** lattice detector incl. the MIXED arm |
+| `lattice_scan.py` | **6/6**, with an `UNKNOWN` bucket so an odd width is never rounded into a verdict |
+| `freeze_impact.py` | **9/9**, incl. an affected row whose *note* discusses `--demosaic` — the note must not acquit it |
+
+The first run of `linsrgb_audit.py` convicted 18 sites; 5 were text (a Rust
+`assert!`, this script's own header comment, a log string, a lattice label, a
+docstring citing `--help`). Those five are now commissioning arms.
+
+### The fix: no freeze moves, but I recommend AGAINST the implication
+
+`freeze_impact.py`, read-only against the ORCH-owned registry: **2 data rows,
+both BINNED** (bytes 49450019 = 3516·2344·3·2 plus header). The columns are
+`… gate, srgb, env_align …` — **there is no `--linear-srgb` column at all**, so
+no frozen row can pass it. **0 rows affected. No freeze moves.**
+
+So the owner's instinct is free with respect to the freeze registry. I still
+recommend against it, for two reasons that are not about freezes:
+
+1. **It would silently relattice `BUILD-HALO`.** Those 14 renders are pinned to
+   the current semantics by their scripts. Re-running them after the change
+   yields 7040-wide output where their published numbers were measured at 3520,
+   and nothing in those scripts would report the change.
+2. **It contradicts the measurement doctrine.** `--demosaic`'s own help says
+   "Do not measure resolution on it", because the extra samples carry
+   *interpolated* colour. The binned output is one real sensor quad per pixel
+   with no interpolation. Making the mode named "THE MODE TO MEASURE IN" default
+   to interpolated samples inverts that.
+
+**What I would do instead:** state the lattice in `--linear-srgb`'s own help
+text. It is currently the only output-affecting flag whose help says nothing
+about resolution, and every lane that got this right learned it somewhere else.
+The `wrote:` announcement already exists and is correct; the gap is at the
+point of decision, not the point of output.
+
+That is a recommendation on CLI source, which is `BUILD-DEFECT`'s. **Not
+actioned here.**
+
+### On the bare default, as asked — my read, not a decision
+
+`strehl stack <dir> --out x.tiff` writing a dark, grey-green, half-resolution
+file is defensible and I would keep it: it is the byte-frozen measurement
+output, and a tool whose measurement path is also its default viewing path
+tends to acquire a viewing path's compromises. But the first run of a new user
+is a picture they cannot use, and the mitigation is one line of output they
+have no reason to read yet. If it were mine I would add a hint when `--out` is
+given without `--srgb` or `--demosaic` — not change the default.
