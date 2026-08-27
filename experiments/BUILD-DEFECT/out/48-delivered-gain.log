@@ -21,17 +21,19 @@ CHANNEL 1 -- COMMISSIONING the estimator (must pass before any null
 --------------------------------------------------------------------------
 CHANNEL 2 -- DELIVERED gain at the pixels, LSQ through origin
 --------------------------------------------------------------------------
-              y  vs  x   commanded     delivered  95% CI half              n
-   D-minus3 vs C-plus3    64.00000     1.0000000     0.00e+00     98,898,048
-D-minus3 vs C-plus3 (unsat)    64.00000     1.0000000     0.00e+00     98,897,326
-     A-auto vs B-plain     0.16380     1.0000000     2.17e-10     98,898,048
-A-auto vs B-plain (unsat)     0.16380     1.0000000     2.17e-10     98,897,326
+                    y  vs  x   commanded     delivered  95% CI half              n
+         D-minus3 vs C-plus3    0.015625     1.0000000     0.00e+00     98,898,048
+ D-minus3 vs C-plus3 (unsat)    0.015625     1.0000000     0.00e+00     98,897,326
+           A-auto vs B-plain    6.105000     1.0000000     2.17e-10     98,898,048
+   A-auto vs B-plain (unsat)    6.105000     1.0000000     2.17e-10     98,897,326
 
 --------------------------------------------------------------------------
 CHANNEL 2b -- residual CHARACTER (is the difference a gain, or noise?)
 --------------------------------------------------------------------------
   D-minus3 vs C-plus3: samples differing 0/98,898,048 (0.0000%), max |delta| 0 counts of 65535
+      -> 0 differing BYTES in the pixel region (0 samples changed both bytes, i.e. carried). 49's independent census must match this exactly.
   A-auto vs B-plain: samples differing 325,297/98,898,048 (0.3289%), max |delta| 1 counts of 65535
+      -> 326,612 differing BYTES in the pixel region (1,315 samples changed both bytes, i.e. carried). 49's independent census must match this exactly.
 
 --------------------------------------------------------------------------
 CHANNEL 3 -- did the TONE STAGE see the gain? (from the arms' own
@@ -43,8 +45,8 @@ CHANNEL 3 -- did the TONE STAGE see the gain? (from the arms' own
 ==========================================================================
 VERDICTS  (every number printed above that matters is tested here)
 ==========================================================================
-  D vs C  commanded  64.00000  delivered 1.0000000  -> CANCELLED
-  A vs B  commanded   0.16380  delivered 1.0000000  -> CANCELLED
+  D vs C  commanded   0.01562  delivered 1.0000000  -> CANCELLED
+  A vs B  commanded   6.10500  delivered 1.0000000  -> CANCELLED
 
   OVERALL: the commanded exposure is CANCELLED before it reaches
            the file. The flag is not inert -- it is undone.

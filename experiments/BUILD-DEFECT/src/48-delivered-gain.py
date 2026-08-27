@@ -162,22 +162,32 @@ def main():
     print("CHANNEL 2 -- DELIVERED gain at the pixels, LSQ through origin")
     print("-" * 74)
     pairs = [
-        ("D-minus3", "C-plus3", COMMANDED["C-plus3"] / COMMANDED["D-minus3"]),
-        ("A-auto", "B-plain", COMMANDED["B-plain"] / COMMANDED["A-auto"]),
+        ("D-minus3", "C-plus3"),
+        ("A-auto", "B-plain"),
     ]
     results = {}
     print(
-        f"{'y  vs  x':>22} {'commanded':>11} {'delivered':>13} "
+        f"{'y  vs  x':>28} {'commanded':>11} {'delivered':>13} "
         f"{'95% CI half':>12} {'n':>14}"
     )
-    for ynm, xnm, commanded in pairs:
+    for ynm, xnm in pairs:
+        # DEFECT, FIXED HERE, KEPT VISIBLE. The first version computed this as
+        # COMMANDED[xnm]/COMMANDED[ynm] while the regression fits y against x,
+        # so the printed "commanded" was the RECIPROCAL of the quantity the
+        # slope should have been compared against: 64.000 was printed for a
+        # D/C slope whose commanded value is 0.015625. The delivered slopes and
+        # the CANCELLED verdicts are unaffected -- 1.0 is equally far from 64
+        # and from 1/64 -- but a mislabelled number is a wrong claim even when
+        # it is a harmless one, and this file's whole subject is a program
+        # reporting a quantity it did not deliver.
+        commanded = COMMANDED[ynm] / COMMANDED[xnm]
         for masked in (False, True):
             slope, se, n, _ = lsq_through_origin(
                 chunk_pair(imgs[xnm], imgs[ynm], mask_saturated=masked)
             )
             tag = f"{ynm} vs {xnm}" + (" (unsat)" if masked else "")
             print(
-                f"{tag:>22} {commanded:>11.5f} {slope:>13.7f} "
+                f"{tag:>28} {commanded:>11.6f} {slope:>13.7f} "
                 f"{1.96 * se:>12.2e} {n:>14,}"
             )
             if not masked:
@@ -187,10 +197,11 @@ def main():
     print("\n" + "-" * 74)
     print("CHANNEL 2b -- residual CHARACTER (is the difference a gain, or noise?)")
     print("-" * 74)
-    for ynm, xnm, _ in pairs:
+    for ynm, xnm in pairs:
         a = imgs[xnm]
         b = imgs[ynm]
         ndiff = 0
+        nbytes = 0
         maxabs = 0
         tot = 0
         for r0 in range(0, a.shape[0], ROWS_PER_CHUNK):
@@ -198,12 +209,27 @@ def main():
             y = np.asarray(b[r0 : r0 + ROWS_PER_CHUNK], dtype=np.int32)
             d = np.abs(y - x)
             ndiff += int(np.count_nonzero(d))
+            # Cross-check against 49-where-the-hash-moved.py, which censuses
+            # differing BYTES, not samples. A uint16 that moves by 1 usually
+            # changes one byte, but changes both when the low byte carries
+            # (0x0100 -> 0x00FF). Counting the carries here lets the two
+            # scripts' totals be reconciled exactly instead of eyeballed as
+            # "about the same" -- two numbers in different units agreeing to
+            # within a plausible margin is not agreement.
+            xb = np.asarray(a[r0 : r0 + ROWS_PER_CHUNK]).view(np.uint8).reshape(-1, 2)
+            yb = np.asarray(b[r0 : r0 + ROWS_PER_CHUNK]).view(np.uint8).reshape(-1, 2)
+            nbytes += int(np.count_nonzero(xb != yb))
             m = int(d.max()) if d.size else 0
             maxabs = max(maxabs, m)
             tot += d.size
         print(
             f"  {ynm} vs {xnm}: samples differing {ndiff:,}/{tot:,} "
             f"({100.0*ndiff/tot:.4f}%), max |delta| {maxabs} counts of {FULL}"
+        )
+        print(
+            f"      -> {nbytes:,} differing BYTES in the pixel region "
+            f"({nbytes - ndiff:,} samples changed both bytes, i.e. carried). "
+            f"49's independent census must match this exactly."
         )
 
     # ---- CHANNEL 3: TONE ANCHORS -------------------------------------------
