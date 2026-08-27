@@ -281,11 +281,16 @@ def main(argv):
     print("  COMMISSIONED, with a stated floor")
 
     d = pathlib.Path(r"C:\dev\strehl-out\SHIP-V2")
+    argv = list(argv)
+    if argv and argv[0].startswith("--dir="):
+        d = pathlib.Path(argv[0][6:])
+        argv = argv[1:]
     paths = [p for p in sorted(d.iterdir()) if p.suffix.lower() == ".tiff"]
     if argv:
         want = set(argv)
         paths = [p for p in paths if any(w in p.stem for w in want)]
-    print(f"\nmeasuring {len(paths)} masters "
+    print(f"\nsource: {d}")
+    print(f"measuring {len(paths)} masters "
           f"(DS={DS}, half-width {HALF}px -> {HALF * DS}px in master coords)\n")
     print(f"{'subject':38s} {'halo+':>8s} {'halo-':>8s} {'shuffle':>8s} "
           f"{'ratio':>7s} {'used':>6s} {'rej%':>6s} {'ctrlN':>6s}")
