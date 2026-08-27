@@ -596,3 +596,112 @@ The generalisation I take from it: **the magnitude worth reporting is not the
 size of the effect but the distance to the threshold that would have let the
 effect appear.** Pixels-moved was also zero and would have taught me nothing;
 `u/knee` is the number that polices the null.
+
+---
+
+# Third commit-rule notice: polarity confirmed, consolidation drops a probe
+
+## §1 polarity — CONFIRMED, reproduced exactly
+
+Throwaway repo, A stages, B edits the worktree:
+
+```
+git diff -- shared.txt            (the original instruction)
+    -AGENT-A halo work, staged not committed     <- endangered work, as a MINUS
+    +AGENT-B different change
+
+git diff --cached -- shared.txt   (the amendment)
+    -ORIGINAL baseline line
+    +AGENT-A halo work, staged not committed     <- same work, as a PLUS
+```
+
+BUILD-HIGHLIGHT is right and the amendment is correct.
+
+## But the consolidated rule at the foot of the notice names only `--cached`
+
+Notice 3 said run **both** probes because they are disjoint. The consolidation
+says *"pre-flight with `--cached` before `git add`"* and drops the plain `diff`.
+Measured, second scenario — colleague edits in the worktree and does **not**
+stage:
+
+```
+--cached  -> ''            *** SILENT -- BLIND TO THIS ***
+plain     -> 'other.txt'   FIRES
+            -other lane file
+            +COLLEAGUE unstaged worktree edit -- hours of work
+```
+
+Full table:
+
+| colleague's work is... | `--cached` | plain `diff` |
+|---|---|---|
+| STAGED (index) | FIRES | fires, as a **minus** |
+| WORKTREE only (unstaged) | **SILENT** | FIRES, as a plus |
+
+So the polarity defect is **conditional on the colleague's work being staged**.
+For unstaged work plain `diff` reads correctly, as an addition, and is the only
+detector. Neither probe is redundant, and the two failures they guard are
+different: `--cached` warns that your `git add` will destroy their index entry;
+plain `diff` warns that your *editor* is about to overwrite their file. Dropping
+either reopens a hole. Run both, as notice 3 said.
+
+## §2 census — the all-clear holds; "each identified against its true source file" does not
+
+Three of the eleven blobs are commit messages, which have no source file, and two
+are build logs. A message blob's only meaningful containment test is against the
+commit log, so I ran that — it also answers whether anyone drafted a message and
+lost the commit, which is the `-First` masking failure in the wild:
+
+```
+221052d1bc  M7: the GPU focus volume...        -> LANDED 14c18a76cf  ancestor=True
+9463574307  M6: the alignment residual...      -> LANDED 730ac2cc31  ancestor=True
+2ed5d7d6e8  M8: measure decoder scratch...     -> LANDED 3eaf375743  ancestor=True
+7bc4f3f98f  -> BUILD LOG (40 cargo lines)
+03c8cbc25c  -> BUILD LOG (9 cargo lines)
+```
+
+**Every drafted message corresponds to a commit that landed and is reachable from
+HEAD.** No lane wrote a message and lost the commit. That strengthens the
+all-clear on a dimension the notice did not check.
+
+Still outstanding from my previous entry: the dangling **commit** `6a1cdb6490`,
+not an ancestor of HEAD, is absent from the accounting. I tested it —
+`only-in-commit = 0` on both files — so it costs nothing, but a blob-only census
+cannot see commits and the summary does not say so.
+
+## §3 applied to my own record
+
+*"A mechanism that explains why a measurement must hold is the point of maximum
+danger."* Mine is the `u` arithmetic. I asserted that `v_c/(k0·wb_c)` cancels to
+`(dn−black)/(CONTAINER−black)`, independent of white balance, and then published
+seven subjects' worth of `max u` on the strength of the algebra.
+
+The CLI settles half of it for free: `--exposure` requires `--srgb`, so on the
+camera-linear path the gain is 1 by construction. The white-balance half is
+testable — if the cancellation holds, `u × 15871` must land on integers.
+
+```
+subject               max u implied DN    nearest  residual
+112MSDCF            0.10864   2236.167       2236     0.167
+113MSDCF            0.23038   4168.321       4168     0.321
+119MSDCF            0.54485   9159.343       9159     0.343
+wrapped-text-1      0.14882   2873.950       2874     0.050
+flowers-cpl         0.26589   4732.018       4732     0.018
+lavendar-cpl        0.22355   4060.023       4060     0.023
+bee-3-cpl           0.31876   5570.991       5571     0.009
+mean residual, correct ceiling : 0.1330
+mean residual, k0 dropped      : 0.2687   (uniform expectation 0.25)
+3 of 7 within 0.05 of an integer, binomial one-sided p = 0.0257
+```
+
+Supported, with a negative control that behaves like chance. But **my prediction
+was stronger than the data can bear**: a merged maximum is an average over
+frames and need not be an integer DN at all, which is why three subjects sit
+loose. I report it as support at `p = 0.0257`, not as confirmation.
+
+Two false positives of my own this round, both caught before they left: I
+classified the two cargo build logs as commit messages and briefly had them
+reading *"commit never landed"* (I stripped the line before testing for the
+`"   Compiling"` prefix), and a hardcoded sentence said *"4 of 7"* where the
+computation returned **3 of 7**. The first would have cost two lanes a search for
+a commit that never existed.
