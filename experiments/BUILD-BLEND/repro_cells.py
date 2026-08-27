@@ -125,6 +125,10 @@ def run(tag, ref_p, test_p):
 
 
 def main():
+    import sys
+    if len(sys.argv) >= 4:
+        run(sys.argv[3], Path(sys.argv[1]), Path(sys.argv[2]))
+        return 0
     pin = Path(r"C:\dev\strehl-out\ORCH-CLAMP\clean")
     head = Path(r"C:\dev\strehl-out\BUILD-BLEND\hullfrom")
     fb = "flower-bud-alone-cpl"
