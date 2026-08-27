@@ -12474,3 +12474,76 @@ I have now stated this one claim three times — 28.5×, then 1.02× as a
 refutation, now directional-only — and been corrected on all three. The first
 two corrections were mine to make. This one a verifier made against itself,
 which is the only reason it surfaced at all.
+
+## 116. The trap that survived its own post-mortem
+
+The print gate is the artifact that says whether this project's output is fit
+to print. Tonight it told me **17 PASS, 0 FAIL** and expired four acquittals
+with lines like
+
+```
+ACQUITTAL EXPIRED: blotch 0.14667 -> 0.24933 (70.0% > 5%);
+blotch window [2254, 5926] -> [14, 1558] (measured somewhere else)
+```
+
+I read that as drift in the product and spent six tool calls on forensics:
+confirmed the statistic is deterministic (0.24933 twice, byte-identical),
+confirmed all 26 masters were written in one batch between 01:24 and 01:44 and
+none had changed since the baseline at 02:49, confirmed `orch_blotch.py` had not
+been edited since before the adjudication. Same instrument, same input,
+different answer. I was one step from telling a verifier its baseline was
+corrupt.
+
+`which_render.py` settles it. **The baseline matches `SHIP-V4` on 10 of 10
+subjects, to five decimal places.** The gate was reading `SHIP-V2` — a
+fourteen-hour-old corpus rendered by a superseded binary. Invoked against the
+render that actually ships, the same gate returns **17 PASS, 0 FAIL, 9
+ACQUITTED, 0 EXPIRED, 0 REVIEW, 26 of 26**.
+
+The drift was in `argv`, not in the product.
+
+**The part that makes this worth a section.** The trap was not undiscovered. It
+had already been found once, and the file carried this comment above the
+offending line:
+
+> *"The arm to score is an ARGUMENT, not a constant. It was hard-coded to
+> SHIP-V2 and the first re-render made that a silent trap: the gate ran, printed
+> a full 26-row table and a verdict, and every number in it described a
+> fourteen-hour-old corpus rendered by a superseded binary. A gate that cannot
+> fail to find input will happily certify the wrong input."*
+
+Every word of that is correct, it names this exact failure, and it was written
+*after the failure had already happened once*. The repair applied underneath it
+was to make the argument **optional** — `if len(sys.argv) > 1` — while leaving
+`SHIP = SHIP-V2` in place as the default.
+
+> **A diagnosis written in a comment is not a repair.** The post-mortem was
+> accurate, complete, and sitting directly above the line that reproduced the
+> failure. Understanding a trap is not the same as removing it, and prose in the
+> file is the most convincing possible evidence that it was removed.
+
+And the second half:
+
+> **There is no safe stale default, because the default is by definition the
+> thing nobody looked at.** The argument is now required; bare invocation exits
+> 1 and says so. The verdict block now prints `SCORED: <path>` above the
+> partition, because "17 PASS, 0 FAIL" is byte-identical whichever render
+> produced it — which is precisely how a superseded corpus got certified and
+> reported upward.
+
+**What this cost.** Every print-gate figure I have quoted tonight, including
+upward, described `SHIP-V2`. The true figures on the shipping render are the
+same headline — 17/0 — which is luck, not vindication; the four subjects that
+differ are the ones that happened to move between renders, and had a *defect*
+landed in V4 rather than an improvement, the gate would have certified it clean
+while reading the older, better images.
+
+Three of my own instruments failed tonight in the same shape: `true11.py`
+printing a skipped site in the results table at exit 0 (§114), the acquittal
+lookup silently missing all nine keys, and now a certification gate scoring a
+render nobody asked for. All three failed **quietly and plausibly**, and all
+three were mine while I was enforcing partition discipline on six other lanes.
+
+> **The instruments that judge the work need the same adversarial treatment as
+> the work.** Nobody was commissioning the gate. Nobody plants a defect in the
+> ruler.

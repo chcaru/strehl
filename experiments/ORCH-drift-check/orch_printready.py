@@ -58,15 +58,28 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from orch_chroma import banding, chroma_blotch          # noqa: E402
 from orch_blotch import blotch_ratio, flattest, lum_of  # noqa: E402
 
-SHIP = pathlib.Path(r"C:\dev\strehl-out\SHIP-V2")
-
-# The arm to score is an ARGUMENT, not a constant. It was hard-coded to SHIP-V2
-# and the first re-render made that a silent trap: the gate ran, printed a full
-# 26-row table and a verdict, and every number in it described a fourteen-hour-old
-# corpus rendered by a superseded binary. A gate that cannot fail to find input
-# will happily certify the wrong input.
-if len(sys.argv) > 1:
-    SHIP = pathlib.Path(sys.argv[1])
+# The arm to score is a REQUIRED ARGUMENT, not a constant and not a default.
+#
+# It was hard-coded to SHIP-V2 and the first re-render made that a silent trap:
+# the gate ran, printed a full 26-row table and a verdict, and every number in
+# it described a fourteen-hour-old corpus rendered by a superseded binary.
+#
+# That was diagnosed once already, in this comment, and the repair applied was
+# to make the argument OPTIONAL while leaving the stale default in place. The
+# trap therefore survived its own post-mortem, and sprang again: invoked bare,
+# the gate scored SHIP-V2, reported 17 PASS, and expired four acquittals that
+# had been adjudicated against SHIP-V4 -- printing "blotch 0.14667 -> 0.24933
+# (70.0%)", which reads as drift in the product and was drift in the argv.
+# which_render.py settles it: the baseline matches SHIP-V4 on 10 of 10 subjects.
+#
+# A default target is the trap. There is no safe stale default, because the
+# default is by definition the thing nobody looked at.
+if len(sys.argv) < 2:
+    sys.exit("usage: orch_printready.py <arm-directory>\n"
+             "  The arm is required. This gate refuses to guess which render\n"
+             "  it is certifying -- a print-readiness verdict that names no\n"
+             "  render certifies nothing.")
+SHIP = pathlib.Path(sys.argv[1])
 if not SHIP.is_dir():
     sys.exit(f"no such arm directory: {SHIP}")
 
@@ -375,6 +388,10 @@ def main():
 
     total = n_pass + n_fail + n_rev + n_acq + n_exp + n_skip
     print("-" * 116)
+    # The verdict must name what it scored. A partition line that reads
+    # "17 PASS, 0 FAIL" is identical whichever render produced it, which is
+    # exactly how a superseded corpus got certified and reported upward.
+    print("SCORED: %s" % SHIP)
     print("partition: %d PASS, %d FAIL, %d ACQUITTED, %d ACQUITTAL EXPIRED, "
           "%d REVIEW, %d NOT EXAMINED, %d total (found %d)"
           % (n_pass, n_fail, n_acq, n_exp, n_rev, n_skip, total, len(paths)))
