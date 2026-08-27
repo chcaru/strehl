@@ -9,13 +9,32 @@ Both are emitted deliberately. Veiling 129: showing only the BEST crop answers
 honest unit. A viewer who sees only one of these is being sold something.
 """
 from pathlib import Path
+import sys
+
 import numpy as np
 from PIL import Image
+
+# Reuse the delivery tagger rather than writing a second one. PIL cannot write
+# an iCCP chunk from a crop, so a fresh run of this script used to emit crops
+# with no ICC profile and no DPI while `build.py`'s own outputs carried both --
+# the artefact was repaired once by hand and would have silently regressed on
+# the next run. This is the source fix.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "DELIVER-V5"))
+from build import tag_png  # noqa: E402
 
 Image.MAX_IMAGE_PIXELS = None
 
 SRC = Path(r"C:\dev\strehl-out\DELIVER-V5\full-resolution")
-DST = Path(r"C:\dev\strehl-out\DELIVER-V5\crops-1to1")
+
+# NOT `crops-1to1`. That folder is under a verified 78-file contract asserted by
+# `experiments/DELIVER-V5/check_readme.py` (`ncrop == 78`) and enumerated by its
+# `manifest.json`. This script emits 52 files; pointing it there takes the folder
+# to 130 and fails the deliverable's own verifier. That happened -- twice -- and
+# the second time was a re-run of this script after the first repair, because
+# the repair moved the FILES and left the PATH here alone.
+DST = Path(r"C:\dev\strehl-out\DELIVER-V5\crops-worst-case")
+if DST.name == "crops-1to1":
+    raise SystemExit("refusing to write into the 78-file contract folder")
 DST.mkdir(parents=True, exist_ok=True)
 
 CROP = 400
@@ -48,6 +67,7 @@ def main() -> int:
         for tag, (y, x, v) in (("BEST", best), ("WORST", worst)):
             out = DST / f"{name}__{tag}.png"
             im.crop((x + m, y + m, x + m + CROP, y + m + CROP)).save(out)
+            tag_png(str(out))
         rows.append((name, best[2], worst[2], best[2] / max(worst[2], 1e-9)))
         print(f"{name:42s} best={best[2]:8.3f}  worst={worst[2]:8.3f}")
 
