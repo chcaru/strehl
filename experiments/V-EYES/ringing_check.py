@@ -68,6 +68,7 @@ Usage:
     python ringing_check.py <subject> [--edges N]
 """
 import argparse
+import hashlib
 import pathlib
 import sys
 
@@ -229,18 +230,32 @@ def stratify(A, B, edges):
     return float(k[0])
 
 
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for c in iter(lambda: f.read(1 << 20), b''):
+            h.update(c)
+    return h.hexdigest().upper()
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("subject")
     p.add_argument("--edges", type=int, default=200)
+    # The cap is in the filename because restore_ab.py now tags renders by cap,
+    # after finding that a shared "MASTER-restore.tiff" name would have served
+    # a cached render from a DIFFERENT cap to the absurd-cap potency probe.
+    p.add_argument("--cap", default="1.7")
     a = p.parse_args()
 
     pa = AB / a.subject / "MASTER-plain.tiff"
-    pb = AB / a.subject / "MASTER-restore.tiff"
+    pb = AB / a.subject / f"MASTER-restore-{a.cap}.tiff"
     for q in (pa, pb):
         if not q.exists():
             print(f"missing {q}")
             return 1
+    print(f"A {pa.name}  sha {sha256(pa)[:16]}")
+    print(f"B {pb.name}  sha {sha256(pb)[:16]}")
     A = luma_linear(tifffile.imread(str(pa))).astype(np.float64)
     B = luma_linear(tifffile.imread(str(pb))).astype(np.float64)
 
@@ -306,3 +321,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

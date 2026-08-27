@@ -1606,3 +1606,137 @@ restriction so far has moved it against strehl rather than for it.**
 
 Nothing above 0.30 cyc/px is quoted here or anywhere in my headline from this
 point.
+
+---
+
+# 16. Does `restore.rs` execute? (ORCH's dead-stage hypothesis)
+
+ORCH's inference: *"A stage whose principal knob spans a 79% range without
+moving a single byte is not weakly-tuned -- it is not wired."* The requested
+probe: plant an absurd cap and require the bytes to change.
+
+**The stage executes. It was proved before the question was asked, and the
+proposed probe is inert.**
+
+## 16.1 (a) The potency evidence
+
+The A/B committed in §13 already carried its own positive control, in the same
+run, from the same binary:
+
+| subject | 2-D gain | bytes |
+|---|---:|---|
+| `119MSDCF` | 1.0000 | SHA-256 identical |
+| `109MSDCF` | 1.0000 | SHA-256 identical |
+| `flower-bud-alone-cpl` | 1.0000 | SHA-256 identical |
+| **`coffee-bubbles`** | **1.6682** | **DIFFER** |
+
+A stage that is not wired cannot produce 1.6682 on one subject and change the
+file. §13 also measured the consequence: the ratio moved x1.1539 against an
+analytic prediction of x1.1645, a 0.9% error. Dead code does not agree with a
+Parseval-commissioned prediction to 0.9%.
+
+I ran ORCH's absurd-cap probe anyway, at **cap 50**:
+
+    119MSDCF        gain 1.0000 on all four planes   BYTE-IDENTICAL
+    coffee-bubbles  gain 1.2916/1.2934/1.2285        BYTES DIFFER
+
+and the decisive cell: **coffee-bubbles at cap 50 produced SHA-256
+`2B67359B...`, byte-identical to the same subject at cap 1.7.** A 29x cap range,
+identical output, on the subject where the stage demonstrably runs.
+
+## 16.2 Why the cap is an inert plant
+
+`design_fir` computes `gain = clamp(h / (h^2 + sigma2/S(f)), 1, cap)`. The cap
+is an **upper** clamp on a quantity the **calibrated noise already bounds**. On
+a subject whose noise-limited gain tops out at 1.0000, every cap from 1.4 to 50
+is unreachable. The knob does not move the output because the safety ceiling
+sits above the physics ceiling -- which is the design working, not plumbing that
+is broken.
+
+The `recov` column says why `119MSDCF` is at 1.0000: **0.0000 recovered, on
+every plane, against 0.6379 for `coffee-bubbles`.** `restore.rs` inverts
+**strehl's own resampling kernel**. On `119MSDCF` that kernel was near-identity,
+so `h ~= 1`, so `gain = clamp(<=1, 1, cap) = 1`. **There was nothing to invert.**
+That is a principled null with a measured mechanism, not an empty code path.
+
+**Registered, because it generalises:** using a **cap** as a potency probe tests
+a knob that is structurally incapable of moving the output whenever another term
+binds first. It reads exactly like a dead stage and is not one -- the textbook
+inert plant. The potent disturbance is the one that changes the **binding**
+constraint. Here that is `sigma2`, and the subject that supplies it is
+`coffee-bubbles`.
+
+## 16.3 (b) No repair is owed
+
+The stage is alive, correctly gated, and produces a measured, predicted,
+byte-visible effect where the physics allows one. ORCH's conditional --
+*"if it is dead, repairing it is your new priority and it outranks the ICC/DPI
+work"* -- **does not trigger.**
+
+## 16.4 (c) The band-stated gain, with its ringing counterpart
+
+§13 reported the restore move as **x1.1539 on the full statistic**. Under
+ORCH's band guard that number is no longer quotable, because the full statistic
+draws 14.46% of its energy from withdrawn bands. Re-measured on the same two
+arms, same frames (hardlinked, one inode set, so only the master differs):
+
+| quantity | A: plain | B: `STREHL_RESTORE=1.7` | move | never-worse-than-best-frame |
+|---|---:|---:|---:|---|
+| full statistic *(withdrawn as a headline)* | 0.9022 | 1.0420 | x1.155 | -- |
+| **<= 0.25 (0.05-0.25)** | 0.8847 | **0.9209** | **x1.041** | **still FAILS** |
+| 0.20-0.25, max-based | 0.8694 | 1.1801 | x1.357 | passes |
+| **0.20-0.25, disjoint** (null 0.9999, leak 0.01%) | 0.8938 | **1.2181** | **x1.363** | **PASSES** |
+
+**MEASURED: in the only promotable band, restoration takes the master from
+0.8938 to 1.2181 -- from below the best single frame to above it. The acceptance
+invariant goes from FAIL to PASS.** On the wider `<= 0.25` aggregate it reaches
+only 0.9209 and **still fails the invariant**, because 0.05-0.20 carries most of
+that aggregate's energy and restoration does almost nothing there.
+
+**The headline move was band-inflated.** x1.155 on the full statistic against
+**x1.041** on the supportable aggregate: most of §13's apparent gain was in
+bands now withdrawn. Quoting x1.155 would have been exactly the error ORCH's
+guard exists to prevent, and it was my number.
+
+### Ringing, on the same render, as required
+
+`ringing_check.py` on the identical file pair (`MASTER-plain` vs
+`MASTER-restore-1.7`, hashes printed in the log):
+
+    null floor (A vs A)              0.0000 of step, exact at every percentile
+    restoration, typical edge (P50)  +0.0004
+    restoration, worst of 200 edges  +0.0234
+    fraction of edges over 0.0035    16.0%
+    module's published claim         0.0035  -> worst edge exceeds it x6.7
+
+Commissioning: NULL exact **0.0000**, planted rings monotone **0.0862 ->
+0.2171**, both 200/200 detected. PASS.
+
+**Both reported, as required. The gain is real in the promotable band and the
+module's own no-ringing bound is false in the tail on the same render that
+produced the gain.** Those are the same knob, exactly as ORCH says.
+
+## 16.5 A correction to ORCH's prior
+
+ORCH predicted *"a small effect -- its predicted gain at 0.25 cyc/px is only
+1.021-1.059"*, reading `restore.rs`'s published table where **max gain** (1.298)
+and **gain @0.25 cyc/px** (1.059) are different numbers.
+
+**On a demosaiced merge they are the same number.** §12 measured why: the filter
+runs on the CFA plane, whose own Nyquist **is** the knee at 0.25 output cyc/px,
+so `roll_off == 1` across the filter's entire expressible band. The cap-50 log
+shows it directly -- `max gain 1.2916 ... at Nyquist 1.2916`, identical. The
+gain curve should be read at its maximum, not at its taper, and the measured
+x1.363 at 0.20-0.25 is consistent with that rather than with 1.059.
+
+## 16.6 Recommendation, unchanged in direction and now band-stated
+
+**Do not flip the default.** Restoration is real, but: it is a byte-exact no-op
+on **three subjects of four including both worst**; where it acts it exceeds the
+module's own ringing bound on 16% of edges; and on the `<= 0.25` aggregate it
+still leaves the master below the best single frame. A stage that helps one
+subject in four, in one band, while breaking its own published safety claim, is
+correctly shipped **built, wired and opt-in**.
+
+Per ORCH's instruction I am the author here and do **not** certify it. This is
+the measurement and the mechanism; an independent lane scores it.

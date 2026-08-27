@@ -86,8 +86,16 @@ def sha256(p):
 
 
 def render(subject, restore):
-    """Render one master. `restore` is None (arm A) or the gain cap (arm B)."""
-    tag = "restore" if restore else "plain"
+    """Render one master. `restore` is None (arm A) or the gain cap (arm B).
+
+    The cap is part of the filename. It must be: the first version tagged only
+    "restore"/"plain", so a second arm at a different cap would have found the
+    FIRST cap's file already on disk and returned it unrendered. The absurd-cap
+    potency probe would then have reported "byte-identical at cap 50" from
+    bytes produced at cap 1.7 -- a no-op measured on a render that never
+    happened, and indistinguishable in the output from a genuine null.
+    """
+    tag = f"restore-{restore}" if restore else "plain"
     d = OUT / subject
     d.mkdir(parents=True, exist_ok=True)
     tif = d / f"MASTER-{tag}.tiff"
@@ -114,6 +122,28 @@ def render(subject, restore):
 
 
 def main(argv):
+    # ORCH proposed the gain cap as the potency probe for "does the stage run
+    # at all": plant an absurd cap and require the bytes to change. That probe
+    # is INERT here, and knowing why is the whole answer to the question.
+    #
+    # `design_fir` computes gain = clamp(h / (h^2 + sigma2/S(f)), 1, cap). The
+    # cap is an UPPER clamp on a quantity the CALIBRATED NOISE already bounds.
+    # On a subject whose noise-limited gain tops out near 1.0, every cap from
+    # 1.4 to 50 is unreachable and the output is byte-identical -- not because
+    # nothing ran, but because the safety ceiling is above the physics ceiling.
+    # Using the cap as a potency probe therefore tests a knob that is
+    # structurally incapable of moving the output, which is the textbook inert
+    # plant: it reads exactly like a dead stage and is not one.
+    #
+    # --cap N runs the absurd-cap arm anyway, because the prediction is
+    # falsifiable and cheap: byte-identical on 119MSDCF at ANY cap, and NOT
+    # byte-identical on coffee-bubbles at cap 1.7. One subject supplies the
+    # negative, the other supplies the positive control, same binary, same run.
+    cap = CAP
+    if "--cap" in argv:
+        i = argv.index("--cap")
+        cap = argv[i + 1]
+        argv = argv[:i] + argv[i + 2:]
     subjects = argv[1:]
     if not subjects:
         print(__doc__)
@@ -121,11 +151,12 @@ def main(argv):
 
     print(f"pin {EXE}")
     print(f"pin sha256 {sha256(EXE)}")
+    print(f"cap under test: {cap}")
     print()
     hdr = f"{'subject':<22} {'plane':<4} {'cap':>6} {'gain':>7} {'2-D':>7} {'Nyq':>7} {'recov':>7} {'sigma2':>10}"
     for s in subjects:
         ta, la = render(s, None)
-        tb, lb = render(s, CAP)
+        tb, lb = render(s, cap)
         print(f"--- {s} " + "-" * (60 - len(s)))
         if ta is None or tb is None:
             print("  RENDER FAILED")
