@@ -1660,6 +1660,121 @@ merge defect to fix.
 These A/B renders come out at CFA-plane resolution (3516×2344) where
 `foam--SHIP-V4.tiff` is 7032×4688, so the A/B certifies *the gather lattice
 does not make the colour* rather than certifying the shipped master
-pixel-for-pixel. Every other render in this lane is 7032×4688 from the same
-invocation, so the difference is a property of this subject's decode, not of
-the script; it is not chased here because it does not bear on the question.
+pixel-for-pixel.
+
+> `[CORRECTED 2026-08-27 — see §8.8.` The sentence that stood here said "every
+> other render in this lane is 7032×4688 from the same invocation, so the
+> difference is a property of this subject's decode, not of the script." **That
+> was false and I had not measured it.** `113-g0.tiff` and `cb-g0.tiff`, from
+> `render_ab.ps1` — the same invocation as `foam` — are **also 3516×2344**. The
+> 7032×4688 renders I was comparing against came from *different scripts*
+> passing different flags. `foam` is not anomalous in any way. The limitation
+> above is real and unchanged; the explanation attached to it was wrong. `]`
+
+---
+
+## 8.8 The half-resolution "oddity" was my own reporting error (2026-08-27)
+
+I told the owner that `render_foam_ab.ps1` produced 3516×2344 "from the same
+script that yields 7032×4688 for `113`/`cb`", and called the cause
+undetermined. **The premise was false and I had not measured it.** He built a
+Tier-1 defect investigation on it, correctly, because if true it would have
+been one.
+
+Measuring every render in the lane instead of trusting one log line:
+
+| render | script | flags | dimensions |
+|---|---|---|---|
+| `foam-g0/g1` | `render_foam_ab.ps1` | *(none)* | **3516 × 2344** |
+| `113-g0/g1`, `cb-g0/g1` | `render_ab.ps1` | *(none)* | **3516 × 2344** |
+| `113-A/B/full`, `cb-A/B/full` | `render_all.ps1` | `--srgb --exposure` | 7032 × 4688 |
+| `lin-*` | `render_linear.ps1` | `--linear-srgb --demosaic` | 7032 × 4688 |
+
+**`foam` is not anomalous.** The two scripts I claimed differed are
+byte-identical in their invocation, and they produce identical lattices. I had
+compared `foam`'s render against renders from *two other scripts* passing
+different flags, and reported the difference as a property of the subject.
+
+**The error is worth more than the correction.** Both of the files I compared
+sat in one directory under names that encode the subject and the arm but not
+the output mode. `113-A-g0.tiff` and `113-g0.tiff` differ by a factor of two in
+linear resolution and their names differ by two characters. I read a filename
+as if it were a measurement — the same class as the silent numpy clip in §8.7,
+where a well-formed object stood in for one I never checked.
+
+### What actually selects it: the documented default, announced every time
+
+Not the subject, not a fallback, not memory. `strehl stack --help` states it:
+
+> "By DEFAULT the output is BINNED, LINEAR, CAMERA-NATIVE RGB … at half the
+> sensor's linear resolution … it is the file every number in this project's
+> corpus was measured on. **It is byte-frozen.**"
+
+`--demosaic` emits full resolution, and is **on by default whenever `--srgb`
+is given** (M95: binning destroys 10-32% of top-octave green power). My A/B
+scripts pass neither, deliberately — the standing rule is that quality is never
+judged on an `--srgb` render.
+
+### The lattice matrix, and a checker that can convict
+
+`lattice_assert.py` renders one binary through seven flag combinations and
+makes **two different assertions**, because either alone is insufficient:
+**announced == actual** (catches a log that lies, the failure a user cannot
+see) and **actual == requested** (catches a tool that is honest about doing the
+wrong thing). A harness checking only the first would pass a build that halved
+every output and faithfully reported it.
+
+| flags | exit | announced | actual | |
+|---|---:|---|---|---|
+| *(none)* | 0 | 3516×2344 | 3516×2344 | PASS |
+| `--demosaic` | 0 | 7032×4688 | 7032×4688 | PASS |
+| `--srgb` | 0 | 7032×4688 | 7032×4688 | PASS |
+| `--srgb --binned` | 0 | 3516×2344 | 3516×2344 | PASS |
+| `--linear-srgb` | 0 | 3516×2344 | 3516×2344 | *measured, see below* |
+| `--linear-srgb --demosaic` | 0 | 7032×4688 | 7032×4688 | PASS |
+| `--demosaic --binned` | **2** | — | no file | PASS (hard error) |
+
+6 pass + 0 fail + 1 measured-only = 7. Commissioned 4/4 against planted
+defects — a lying log, a silently halved output, an unannounced lattice, and an
+error case that silently succeeded — with a negative control that must be
+acquitted, so the checker is not one that convicts everything.
+
+**Verdict on the Tier-1 question: the shipping path cannot silently reach half
+resolution.** Every render announces its lattice in the `wrote:` line and the
+announcement matched the file in 7 of 7 cases. Contradictory flags are a **hard
+error (exit 2)**, not a silent narrowing — the opposite of the failure mode the
+owner asked me to look for. None of the eight documented `STREHL_*` channels
+touches binning, so there is no env-var back door. All 26 shipped masters are
+full resolution.
+
+**One asymmetry, defensible but a genuine trap.** `--srgb` implies
+`--demosaic`; **`--linear-srgb` does not** — and `--linear-srgb` is the mode
+the help calls "THE MODE TO MEASURE IN". A user who reads that `--srgb` emits
+full resolution since M95 may reasonably expect the same of `--linear-srgb`.
+It is consistent with the byte-frozen measurement output always being binned,
+so it is not a bug; the evidence that it is nonetheless a trap is that
+`render_linear.ps1`'s author passed `--demosaic` explicitly alongside
+`--linear-srgb`, which is only necessary if the implication does not hold.
+**It is announced, so nobody is told nothing.**
+
+### The 7032 / 7040 split is legitimate, and not the same class
+
+Same camera (`ILCE-7CM2`) and same lens profile in both groups. The difference
+is present at the **CFA plane** — 3516 vs 3520 — which is decode time, *before*
+alignment, so it is not crop-to-valid-overlap. Output is exactly 2× plane width
+in **26 of 26** masters, log and file agreeing in every one.
+
+It traces to the source RAWs: the 7032 group's frames are 40-46 MB and the 7040
+group's are 67-68 MB, two different recording modes off one body.
+
+The consequential question is whether the extra 8 columns are image or shipped
+sensor padding. Measured on the green plane, last 8 columns against interior:
+
+| | ratio to interior | std |
+|---|---:|---:|
+| `tweezers-cpl`, `lavendar-cpl`, `lead-1-cpl` (7040) | 0.676, 1.251, 0.826 | 15932, 3056, 9686 |
+| `foam`, `coffee-bean`, `113MSDCF` (7032) | 1.127, 1.872, 1.110 | 10660, 1913, 12471 |
+| **control**: same file, last 8 columns zeroed | **0.000** | **0.0** |
+
+Real image in all six, and the control convicts planted padding, so the probe
+can say PADDING and chose not to. **No padding is being shipped.**
