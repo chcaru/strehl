@@ -496,3 +496,100 @@ the guard: noise unrelated to structure lands in FLAT as well. A rung showing
 DETAIL up **and** FLAT up is not evidence of selection, and will not be read as
 such.
 
+
+## §12 — Pre-registration: the CORRECTED ladder, at constant half-split offset
+
+Committed **before `bee-L2P` or `bee-L3P` exists**. `ladderdiag.py` shows §11's
+ladder cannot be read, and the reason is a defect in **my own builder**, not in
+the instrument.
+
+### 12.1 The defect
+
+`ladder_build.ps1` defaults `-BOffset` to the stride, so half-B's focus offset
+from half-A **fell monotonically as `N` rose**:
+
+| rung | N | half-B offset | R (COARSE/DETAIL) |
+|---|---:|---:|---:|
+| L1 | 34 | 9 | 2.316 |
+| L2 | 60 | 5 | 5.185 |
+| L3 | 100 | 3 | 95.404 |
+| L4 | 299 | 1 | 12.313 |
+
+`R` rising across that ladder is **exactly what a falling offset alone would
+produce**, so the design cannot separate it from `N`. `bee-L1P` prices the
+offset at constant `N` = 34 with half-A bit-identical: offset 9 gives 2.316,
+offset 1 gives 14.364, a **6.20x** move — larger than the whole L1-to-L4 range
+of 5.32x. The mechanism is measured, not assumed: `phi_enfuse` collapses 23.8x
+(0.22286 to 0.00936) against only 3.8x in strehl, because at offset 9 the two
+halves are different **scenes** and enfuse, blending by local contrast,
+reproduces that depth difference faithfully.
+
+Two rival explanations were tested and are **not** the driver:
+
+- **Misregistration between halves (H1).** Real — `incoh.pairs` is called with
+  `placer=None` for the half comparison and does not register A to B, so a
+  displacement lands straight in `d`. But it **predicts the wrong direction**
+  here: `bee-L1P` has twice the A-B shift (8 px vs 4 px) and 3.8x *lower* phi.
+- **phi saturation (H2).** Real and disqualifying **where it occurs** — see
+  12.4 — but it does not explain the controlled pair, neither of whose COARSE
+  arms is near 1.
+
+### 12.2 The correction
+
+Hold the half-split offset at **1 frame on every rung**, varying only `N`:
+
+| rung | stride | offset | N | status |
+|---|---:|---:|---:|---|
+| L1P | 9 | 1 | 34 | **already built and measured** |
+| L2P | 5 | 1 | ~60 | to build |
+| L3P | 3 | 1 | ~100 | to build |
+| L4 | 1 | 1 | 299 | **already built and measured** |
+
+§11.2's declared confound still stands unchanged: a uniform subsample over a
+fixed depth range varies near-tie density along with `N`, and this design does
+not separate them.
+
+### 12.3 Full disclosure — this is not a blind pre-registration of the endpoints
+
+**Both endpoints were measured before this section was written.** `R`(L1P) =
+14.364 and `R`(L4) = 12.313, so `Q' = R(L4)/R(L1P) = 0.857` **is already
+known** and I am not entitled to present it as a prediction. What is
+pre-registered here is (a) the branch rule applied to the *completed* corrected
+ladder, fixed before the interior exists, and (b) the following genuine
+prediction about data I do not have:
+
+> **Under H3, `bee-L2P` and `bee-L3P` land between `R` = 12.3 and `R` = 14.4
+> rather than exploding as `bee-L3` did to 95.4.** If an interior rung again
+> departs by more than 3x from both endpoints at constant offset, H3 is
+> insufficient and a further mechanism is live.
+
+### 12.4 Saturation gate, fixed now
+
+`phi = P_d/P_m` tends to 1 as halves decorrelate, so it is bounded in practice
+and `R` between two saturated arms is a ratio of two ceilings carrying no
+information about degree. Fixed rule, before the rungs exist:
+
+- A rung whose `phi_s` **or** `phi_e` exceeds **0.90** in a band is
+  **UNREADABLE in that band** and is excluded from the branch.
+- If fewer than **three** readable rungs remain, **no branch is declared** and
+  the corrected ladder is reported as unable to answer the question.
+
+This gate would already exclude `bee-L3` COARSE (`phi_s` = 0.953) and the whole
+FINE band at L1/L1P/L2/L3.
+
+### 12.5 Branches, fixed now
+
+Let `Q' = R(L4)/R(L1P)` over readable rungs only.
+
+- **RISING** — `Q' >= 2.0` and no readable rung falls below its predecessor by
+  more than its CI. ORCH's dilution mechanism survives correction.
+- **FLAT** — `Q'` in [0.67, 1.5] with L1P and L4 CIs overlapping. **The
+  dilution mechanism is badly wounded on this subject and I say so plainly.**
+- **FALLING** — `Q' <= 0.5`.
+- Anything else is **MIXED**, reported as MIXED.
+
+§11.4's per-rung controls carry over unchanged, including the FLAT control and
+per-rung re-derivation of the plant amplitude. **Known in advance: the FLAT
+control fails on `bee` at every rung already built** (0.460 to 1.252 against a
+required [0.80, 1.25]), so every `bee` reading is already flagged suspect by
+§11.4 and the corrected ladder inherits that flag.
