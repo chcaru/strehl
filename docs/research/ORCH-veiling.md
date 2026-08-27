@@ -10725,3 +10725,64 @@ asked what else makes that shape.
 
 One consolation, and it is not small: if the corpus contains no certified halo, that is bad
 news about my metric's value as a regression gate and *good* news about the product.
+
+---
+
+## §97 — the adversarial sweep: no halo anywhere, and dust is now the top visible defect
+
+§96 withdrew the halo target. That left an obvious hole: I had judged the product on three
+subjects I chose, which is exactly the favourable sample I have spent all night refusing to
+accept from anyone else.
+
+### Three sweeps, increasing in adversarial strength
+
+**1. Full-frame contact sheet** (`orch_contact.py`, 26 masters, 380 px cells). No gross
+failure anywhere: no halos, no seams, no colour casts, no misregistration. Two subjects
+carry large soft regions -- `flower-inner-edge-cpl` and `flowers-cpl` -- consistent with the
+focus bracket not covering the full subject depth, which is a capture-coverage matter and
+not a merge defect. **But an 18x downsample can only exclude gross failure.** Halos and
+seams live at the pixel scale and cannot appear in this view at all.
+
+**2. 1:1 crops from the gallery.** Sharp and clean across all 26. Still not sufficient: the
+gallery picks its crops for interest, so a clean sweep over them is a favourable sample.
+
+**3. The adversarial sweep** (`orch_worst.py`). Per master, take the single edge site with
+the **largest** normalised overshoot -- the most artifact-like location in that image, on
+the metric's own terms -- and crop it. Worst-site overshoots ranged 2.44 (`flower-bud-alone`)
+to 24.12 (`coffee-bubbles`), with a median near 6.
+
+**Every one of the twenty-six looks clean.** The high scorers are legible as physics on
+inspection: `coffee-bubbles` at 24.12 is the specular ring of a bubble; `bee-3-cpl` at 10.08
+is a lit hair against white; `112MSDCF` at 8.70 is a bright fibre on black. These are the
+brightest genuine structures in the corpus, which is precisely what an edge-overshoot
+statistic is expected to rank first once no artifact outranks them.
+
+> **A metric with no artifact left to find returns the subject's own brightest structure.
+> A ranked list is never empty, so the top of it means nothing until you look at it.**
+
+### What the sweep did find
+
+Two crops carry a small dark speck on a light, otherwise featureless field:
+`flower-inner-edge-cpl` near (1988, 3960) and `pencil-flatter-angle-cpl` near (628, 2272).
+That is **dust**, and it independently confirms §90 from a completely different direction --
+this instrument was built to find halos, knows nothing about sensor defects, and surfaced
+dust anyway because it went looking for the worst place in each frame.
+
+It also closes out §92 properly. My cross-master median dust map was wrong, and the correct
+reading is the one BUILD-BLEND had: dust must be found **within** a stack, not across
+masters. This sweep finds it within single masters, at named coordinates, visible to the
+eye.
+
+### Standing
+
+**No halo artifact is present in the shipped corpus at any site the metric can find.** The
+user's "horrendous" complaint predates SHIP-V2 and I can find no evidence it still applies.
+
+**Dust is now the top remaining visible defect**, which makes `defect_map.rs` the highest-value
+outstanding item rather than any halo work. Two capture-coverage cases (`flower-inner-edge-cpl`,
+`flowers-cpl`) are a matter for the capture advisor, not the merge.
+
+Caveat, stated rather than buried: this sweep is adversarial with respect to **edge
+overshoot** and nothing else. It has no power against defects that are not edge-localised --
+tonal breaks in smooth gradients, chroma error, low-frequency blotching. Those need their
+own instruments and do not have them yet.
