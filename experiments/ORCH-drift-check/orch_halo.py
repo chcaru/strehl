@@ -29,6 +29,7 @@ COMMISSIONING has three arms and, per SS92, only one of them varies amplitude:
 
 A real halo must beat SHUFFLE. A number that does not is measuring the image, not the edge.
 """
+import hashlib
 import pathlib
 import sys
 
@@ -40,6 +41,8 @@ HALF = 100
 BLUR = 9
 EDGE_PCT = 99.5
 MAX_PROFILES = 4000
+SEED_REPS = 4       # extra subsamples per subject; their range is the instrument's
+                    # own resolution, printed so no one compares below it again
 BAND = (8, 90)
 MIN_STEP_FRAC = 0.08
 PLATEAU_FRAC = 0.18
@@ -293,7 +296,7 @@ def main(argv):
     print(f"measuring {len(paths)} masters "
           f"(DS={DS}, half-width {HALF}px -> {HALF * DS}px in master coords)\n")
     print(f"{'subject':38s} {'halo+':>8s} {'halo-':>8s} {'shuffle':>8s} "
-          f"{'ratio':>7s} {'used':>6s} {'rej%':>6s} {'ctrlN':>6s}")
+          f"{'ratio':>7s} {'used':>6s} {'rej%':>6s} {'ctrlN':>6s} {'spread':>7s}")
     print("-" * 98)
     rows = []
     for p in paths:
@@ -305,6 +308,23 @@ def main(argv):
         img = downsample(lum, DS).astype(np.float32)
         del lum
         ms = robust_step(img)
+        # THE SUBSAMPLE MUST NOT DEPEND ON WHAT RAN BEFORE IT.
+        #
+        # This loop used to draw from one generator seeded once for the whole
+        # run, so edge_points' choice of MAX_PROFILES sites depended on how many
+        # subjects preceded this one and how many draws each consumed. Measured
+        # cost: two BYTE-IDENTICAL renders (verified equal SHA256) scored 0.139
+        # and 0.169 -- a 0.030 spread on the same bytes, which is as large as the
+        # 0.035 difference I was about to use to decide a default flip.
+        #
+        # Seeding from the file name makes each subject reproducible and
+        # independent of corpus order and composition.
+        #
+        #   A statistic that is not reproducible on identical input has no
+        #   resolution, and every difference it has ever reported is
+        #   unattributed until its own spread is measured.
+        seed = int(hashlib.sha256(p.stem.encode("utf-8")).hexdigest()[:8], 16)
+        rng = np.random.default_rng(seed)
         pts, gy, gx, _ = edge_points(img, rng)
         if len(pts) < 200:
             print(f"{p.stem[:38]:38s} {'too few edges':>50s}")
@@ -316,6 +336,19 @@ def main(argv):
             del img
             continue
         oh, ol = overshoot(mp)
+        # The seed-spread: re-measure with different subsamples of the SAME
+        # edges, so the printed number carries the instrument's own resolution.
+        # A difference smaller than this spread is not a difference.
+        reps = []
+        for rep in range(SEED_REPS):
+            r2 = np.random.default_rng(seed + 1 + rep)
+            p2, _gy2, _gx2, _t2 = edge_points(img, r2)
+            if len(p2) < 200:
+                continue
+            m2, nn2, _ = profiles(img, p2, gy, gx, r2, ms)
+            if nn2 >= 100:
+                reps.append(max(overshoot(m2)))
+        spread = (max(reps) - min(reps)) if len(reps) > 1 else float("nan")
         sp, sn, srej = profiles(img, pts, gy, gx, rng, ms, shuffle=True)
         if sn < 100:
             sh = None
@@ -329,7 +362,8 @@ def main(argv):
         rtxt = ("  N/A  " if ratio is None
                 else ("    inf" if not np.isfinite(ratio) else f"{ratio:7.2f}"))
         print(f"{p.stem.replace('--SHIP-V2','')[:38]:38s} {oh:8.4f} {ol:8.4f} "
-              f"{shtxt} {rtxt} {n:6d} {100.0 * rej / (n + rej):5.1f}% {sn:6d}")
+              f"{shtxt} {rtxt} {n:6d} {100.0 * rej / (n + rej):5.1f}% {sn:6d}"
+              f" {spread:7.4f}")
         del img
 
     print()
