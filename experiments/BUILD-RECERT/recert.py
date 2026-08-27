@@ -178,6 +178,22 @@ def stage_render(cand, arm, only=None):
             "only": list(only) if only else None, "exit": r.returncode}
 
 
+def gate_fingerprint():
+    """SHA-256 of the gate script, so a cached baseline cannot outlive it.
+
+    ANOTHER LANE IS EXTENDING THIS GATE RIGHT NOW, to halos, sharpness and dust.
+    A baseline scored by yesterday's gate, diffed against a candidate scored by
+    today's, manufactures state changes out of the checks that were added -- and
+    they would appear as subjects moving, attributed to the candidate. That is a
+    regression report invented entirely by a cache.
+
+    The baseline is therefore stamped with this value and re-measured whenever it
+    moves. Re-running costs 472 s; reading a stale one costs a wrong verdict on
+    a promotion decision.
+    """
+    return hashlib.sha256(GATE.read_bytes()).hexdigest()[:16].upper()
+
+
 def run_gate(target):
     r = subprocess.run([sys.executable, str(GATE), str(target)],
                        capture_output=True, text=True, cwd=str(GATE.parent))
@@ -193,7 +209,7 @@ def run_gate(target):
         if m and m.group(1) in ("PASS", "FAIL", "ACQUIT", "EXPIRED", "REVIEW", "SKIP"):
             states[m.group(2)] = m.group(1)
     return {"states": states, "partition": partition, "exit": r.returncode,
-            "stdout": r.stdout}
+            "gate_sha": gate_fingerprint(), "stdout": r.stdout}
 
 
 def stage_gate(arm_dir, baseline, only=None):
@@ -444,6 +460,11 @@ def main():
                          "the subjects it was built to change for a tenth of a full pass. "
                          "The result is marked partial and can never read as a 26-subject run.")
     ap.add_argument("--baseline-gate", default=str(OUT_ROOT / "logs" / "baseline-gate.json"))
+    ap.add_argument("--adopt-render", action="store_true",
+                    help="The arm is already rendered (e.g. by `finalpass.ps1 -Sha ...`, which "
+                         "cuts the pin and writes PINNED provenance). Verify and adopt the "
+                         "directory rather than re-invoking the renderer, which would pass -Exe "
+                         "and rewrite that provenance as UNPINNED.")
     a = ap.parse_args()
     stages = a.stages.split(",")
     only = [s for s in a.only.split(",") if s] if a.only else None
@@ -467,15 +488,47 @@ def main():
         if st == "identity":
             res["identity"] = stage_identity(cand)
         elif st == "render":
-            res["render"] = stage_render(cand, a.arm, only=only)
+            if a.adopt_render:
+                # The arm was rendered by `finalpass.ps1 -Sha ...` directly, so the
+                # pin's provenance is already written. Re-invoking finalpass here
+                # would find every master present and render nothing, but it would
+                # pass `-Exe`, and a second pass must not overwrite a PINNED
+                # provenance with one that says UNPINNED. Adopt the directory and
+                # verify it instead -- COMPLETE.txt and a master count, the same
+                # two things stage_render checks.
+                d = OUT_ROOT / "arms" / a.arm
+                tiffs = sorted(d.glob(f"*--{a.arm}.tiff"))
+                comp = (d / "COMPLETE.txt").exists()
+                print(f"  adopted {d}")
+                print(f"  {len(tiffs)} master(s); COMPLETE.txt "
+                      f"{'present' if comp else 'ABSENT'}")
+                if not comp:
+                    print("  *** ARM IS INCOMPLETE -- a partial arm must never be "
+                          "scored as a full one ***")
+                res["render"] = {"dir": str(d), "n_masters": len(tiffs),
+                                 "complete": comp and len(tiffs) == 26,
+                                 "only": list(only) if only else None, "adopted": True}
+            else:
+                res["render"] = stage_render(cand, a.arm, only=only)
         elif st == "gate":
             bp = Path(a.baseline_gate)
+            now = gate_fingerprint()
+            baseline = None
             if bp.exists():
                 baseline = json.loads(bp.read_text())
-            else:
+                was = baseline.get("gate_sha")
+                if was != now:
+                    print(f"  the gate has CHANGED since the baseline was cached "
+                          f"({was} -> {now}).")
+                    print("  re-measuring the baseline: diffing two different gates would "
+                          "report their difference as the candidate's.")
+                    baseline = None
+            if baseline is None:
                 print("  scoring the baseline corpus (cached after this run)")
                 baseline = run_gate(BASELINE_DIR)
                 bp.write_text(json.dumps(baseline), encoding="utf-8")
+            else:
+                print(f"  baseline cache valid (gate {now})")
             res["gate"] = stage_gate(res.get("render", {}).get("dir",
                                      str(OUT_ROOT / "arms" / a.arm)), baseline, only=only)
         elif st == "pair":
