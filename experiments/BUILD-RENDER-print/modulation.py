@@ -79,8 +79,23 @@ BLOCK = 16
 # highlights that set the tone rule's white point.
 DARK_PCT = 90.0
 
-# structure_ratio at or below this is consistent with noise alone.
-NOISE_LIKE = 2.0
+# The verdict threshold, as a FUNCTION of the block size rather than a constant.
+#
+# This was `NOISE_LIKE = 2.0`, a number I picked and never swept, and sweeping
+# it showed the constant was unusable. `structure_ratio`'s ceiling is `block`:
+# perfectly correlated structure survives the average untouched, so
+# `sigma_coarse == sigma_fine` and the ratio equals `block` exactly. A fixed
+# threshold of 2.0 therefore means completely different things at different
+# block sizes, and at `block = 2` it EQUALS the ceiling -- the check cannot fire
+# for any input at all, including a noiseless test pattern. It would have
+# reported NOISE ONLY for the commissioned control.
+#
+# The geometric midpoint between the noise floor (1, by construction) and the
+# structural ceiling (`block`) is `sqrt(block)`, which is the same distance
+# from each on the log axis the ratio actually lives on.
+def noise_like(block: int) -> float:
+    """Verdict threshold: the geometric midpoint of floor 1 and ceiling `block`."""
+    return float(np.sqrt(block))
 
 
 def read_linear(path: Path) -> np.ndarray:
@@ -119,6 +134,10 @@ def structure(y: np.ndarray, block: int = BLOCK) -> dict:
         "sigma_fine": s_fine,
         "sigma_coarse": s_coarse,
         "structure_ratio": ratio,
+        # Scale-free: 1.0 means structure survived the average intact, 1/block
+        # means it was pure noise. Comparable ACROSS block sizes, which the raw
+        # ratio is not.
+        "retained": ratio / block,
     }
 
 
@@ -195,31 +214,38 @@ def stretch_crop(y: np.ndarray, out: Path, size: int = 900) -> dict:
     return {"centre": (cx, cy), "lo": float(lo), "hi": float(hi)}
 
 
-def commission(seed: int = 20260826) -> bool:
+def commission(block: int = BLOCK, seed: int = 20260826) -> bool:
     """Two arms required to disagree. Returns True if the statistic works."""
     rng = np.random.default_rng(seed)
     h = w = 1024
     noise = rng.normal(0.0, 0.01, size=(h, w))
 
     # NULL: grain only. Must look like noise.
-    null = structure(0.05 + noise)
+    null = structure(0.05 + noise, block)
 
     # PLANT: a smooth ramp far larger than BLOCK, plus the SAME grain, so the
     # only difference between the arms is the presence of structure.
     ramp = np.linspace(0.0, 0.04, w)[None, :] * np.ones((h, 1))
-    plant = structure(0.05 + ramp + noise)
+    plant = structure(0.05 + ramp + noise, block)
 
-    print("  commissioning the structure statistic (two arms, must disagree)")
+    thr = noise_like(block)
+    print(f"  commissioning at block {block}: floor 1.00, threshold {thr:.2f}, ceiling {block}")
     print(f"    NULL   grain only          structure_ratio = {null['structure_ratio']:8.2f}")
     print(f"    PLANT  ramp + same grain   structure_ratio = {plant['structure_ratio']:8.2f}")
 
-    ok_null = null["structure_ratio"] < NOISE_LIKE
-    ok_plant = plant["structure_ratio"] > 10.0 * null["structure_ratio"]
+    ok_null = null["structure_ratio"] < thr
+    ok_plant = plant["structure_ratio"] > thr
+    # The ceiling must be reachable, or the threshold cannot be crossed by ANY
+    # input and a green null means only that the test is inert. This is the arm
+    # the original fixed threshold of 2.0 failed at block 2.
+    ok_head = thr < block
     if not ok_null:
         print(f"    FAILED: the null scored {null['structure_ratio']:.2f}, it reads grain as signal")
     if not ok_plant:
-        print("    FAILED: the plant did not separate from the null, the statistic is blind")
-    if ok_null and ok_plant:
+        print("    FAILED: the plant did not clear the threshold, the statistic is blind")
+    if not ok_head:
+        print(f"    FAILED: threshold {thr:.2f} >= ceiling {block}; nothing can ever pass")
+    if ok_null and ok_plant and ok_head:
         print(f"    COMMISSIONED: separation {plant['structure_ratio'] / null['structure_ratio']:.0f}x\n")
         return True
     return False
@@ -230,9 +256,40 @@ def main() -> int:
     ap.add_argument("tiffs", nargs="+", type=Path, help="linear-sRGB renders to measure")
     ap.add_argument("--block", type=int, default=BLOCK)
     ap.add_argument("--crops", type=Path, default=None, help="write stretched dark-field crops here")
+    ap.add_argument(
+        "--sweep",
+        type=int,
+        nargs="+",
+        default=None,
+        help="sweep the block size; the parameter that governs sensitivity, so a "
+        "verdict quoted at one value is not auditable (report the grid, not the number)",
+    )
     args = ap.parse_args()
 
-    if not commission():
+    if args.sweep:
+        print("  BLOCK SWEEP -- the property that decides whether this check can see anything\n")
+        hdr = (
+            f"  {'block':>5} {'thresh':>7} {'ceil':>5}   {'subject':<20} "
+            f"{'struct':>7} {'detrend':>8} {'retained':>9}  verdict"
+        )
+        print(hdr)
+        print("  " + "-" * (len(hdr) - 2))
+        for blk in args.sweep:
+            thr = noise_like(blk)
+            for path in args.tiffs:
+                y = read_linear(path)
+                dk = dark_field(y)
+                dt = structure(detrend(dk), blk)
+                v = "NOISE ONLY" if dt["structure_ratio"] < thr else "has detail"
+                st = structure(dk, blk)
+                print(
+                    f"  {blk:5d} {thr:7.2f} {blk:5d}   {path.stem.replace('--LINEAR', ''):<20} "
+                    f"{st['structure_ratio']:7.2f} {dt['structure_ratio']:8.2f} "
+                    f"{dt['retained']:9.1%}  {v}"
+                )
+        return 0
+
+    if not commission(args.block):
         print("REFUSING to report subject numbers: the instrument is not commissioned.")
         return 1
 
@@ -258,7 +315,7 @@ def main() -> int:
         rel = st["sigma_fine"] / st["mean"] if st["mean"] > 0 else 0.0
         cr = contrast_ratio(y[y <= np.percentile(y, DARK_PCT)])
         stops = float(np.log2(cr)) if np.isfinite(cr) and cr > 0 else float("nan")
-        verdict = "NOISE ONLY" if dt["structure_ratio"] < NOISE_LIKE else "has detail"
+        verdict = "NOISE ONLY" if dt["structure_ratio"] < noise_like(args.block) else "has detail"
         name = path.stem.replace("--LINEAR", "")
         print(
             f"  {name:<24} {st['mean']:9.5f} {rel:8.1%} {cr:7.2f} {stops:6.2f} "
