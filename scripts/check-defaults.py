@@ -1052,9 +1052,22 @@ def find_switches(crates: Path) -> dict[str, list[str]]:
 # Most flags are derived from the field name (`pub auto_exposure` gives
 # `--auto-exposure`); a few name themselves with `long = "..."`. Both forms
 # count, because the whole point is to find the ones nobody tidied.
+#
+# THE ATTRIBUTE BODY MUST TOLERATE ONE LEVEL OF NESTING. The first version of
+# this pattern used `[^\]]*` and its comment said nested brackets were rare, so
+# it dismissed them without checking. `align_cmd.rs:109` is
+# `#[arg(long, value_delimiter = ',', default_values_t = [1usize, 2, 4, ...])]`
+# -- the ARRAY LITERAL closes before the attribute does, the class stopped
+# early, and `--spans` was invisible. It occurs exactly once in the crates, and
+# once is enough to make a coverage number wrong by one in the direction that
+# flatters it. Caught by asking the shipped binary how many flags it has and
+# differencing the two sets, which is a magnitude; the commissioning harness
+# that scored this scanner 5/5 could not catch it, because it only ever tested
+# forms its author had already thought of.
+_ATTR_BODY = r"(?:[^\[\]]|\[[^\[\]]*\])*?"
 CLI_ARG_RE = re.compile(
-    r"#\[arg\((?P<attr>[^\]]*)\)\]"  # the clap attribute
-    r"(?:\s*#\[[^\]]*\])*"  # any further attributes between it and the field
+    rf"#\[arg\((?P<attr>{_ATTR_BODY})\)\]"  # the clap attribute
+    rf"(?:\s*#\[{_ATTR_BODY}\])*"  # further attributes between it and the field
     r"\s*(?:pub\s+)?(?P<field>[a-z0-9_]+)\s*:"
 )
 CLI_LONG_NAME_RE = re.compile(r'long\s*=\s*"([a-z0-9\-]+)"')
