@@ -11684,3 +11684,130 @@ different and better render than what he saw then. What is claimed here is
 narrower and specific: **the gallery used to judge every render to date
 understated all of them**, and the most recent "these look horrible" was passed
 through a 5x downscale that no amount of stacker quality could have survived.
+
+## 107. A halo detector that had to be commissioned three times, and what it cost each time
+
+**Status: MEASURED.** `experiments/ORCH-drift-check/halo_profile.py` and its
+commission, `2026-08-27`.
+
+### 107.1 Why build it
+
+Every halo claim this project has made about the *shipping pyramid path* has
+been made by eye on 1:1 crops. `veil_accept.py` and `veil_absolute.py` are both
+COMPARATORS — they need an on/off pair from the same stack and they answer "did
+this operator help". Neither answers the question a reader of a finished master
+asks: *does this picture have a halo, and how big*.
+
+### 107.2 The measurement
+
+Segment the subject as the dark region against a bright backdrop (Otsu, then
+morphological open/close), Euclidean distance transform outward, median
+background luma per distance band, referenced to a far-field band.
+
+- `overshoot` — the most any near band rises **above** the far field.
+- `bump` — the largest **decrease** walking outward. A clean edge's profile
+  rises monotonically to the far field, so `bump == 0` by construction; a halo
+  is a local maximum, which forces a decrease on its outer flank.
+
+Two statistics with different failure modes, so a halo has to defeat both.
+Median not mean, because near bands contain the subject's own stray hairs and
+dust and a mean is dragged by them.
+
+### 107.3 The commission killed three versions, and each death was informative
+
+**Death 1 — `veil = min(band)` was measuring optics, not stacking.** The first
+version reported a large negative band value as "veiling, the dark aura". On a
+clean master the profile is
+
+```
+d      2-6    6-12   12-20   20-32   32-50   50-80   80-120   far
+    -19951  -11512   -5044   -2033   -1193    -758     -432      0
+```
+
+a smooth monotone ramp with no overshoot anywhere — the signature of a *clean*
+edge. `min(band)` reads −19951 on it and would have declared the cleanest
+subject in the corpus severely defective. That deficit is the subject's own
+**out-of-focus penumbra**: the distance transform starts at a thresholded
+silhouette and immediately outside any real subject the subject's own blurred
+edge still darkens the background. Every photograph ever taken has one.
+Penumbra depth is still printed because it describes the picture, but it
+carries no verdict.
+
+**Death 2 — the test was wrong, not the instrument.** The second commission
+compared the *absolute* overshoot against the planted amplitude and marked a
++600 plant WRONG at +168.3. But the clean baseline is −431.5, so −431.5 + 600 =
++168.5. Measured deltas were **+599.8 and +2000.0 against plants of 600 and
+2000** — the statistic was recovering the plant to within 0.03% while being
+scored as broken. Recovery is now scored on the delta from the clean baseline,
+the only quantity a plant controls.
+
+> **A commission that fails can be indicting the test rather than the
+> instrument, and the two look identical from the summary line.**
+
+**Death 3 — narrowing the bands to where a halo lives made it blind.** The
+first corpus run flagged six subjects; two checked were confounds
+(`tweezers-cpl`, whose bump sat at d=50–80 px crossing the gap between its two
+arms; `flat-on-ruler-cpl`, whose background brightens away from the markings —
+illumination falloff read as a rim). The physical fix looked obvious: a halo's
+width is set by the defocus blur diameter, ~27 µm ≈ 7 px at this sensor's
+3.76 µm pitch, so stop the bands at 24 px and use a local far field.
+
+Commissioned, that version reported **bump = 0.0 and Δoveshoot = 0.1 DN for
+planted rims of 500, 1500 *and* 4000 DN.** The reason is in the profile: near
+the edge the penumbra rises ~4000–5000 DN *per band*, so a rim of a few
+thousand DN never breaks monotonicity. **A radial-profile detector cannot see a
+rim close to a steep penumbra**, and no band tuning changes that. The
+commissioned configuration was restored and the *assumptions were guarded*
+instead.
+
+### 107.4 What it measures now, and the floor
+
+Commission passes on six arms with verdicts pre-registered: `bump` exactly 0.0
+on the clean monotone ramp; overshoot recovering 100.0% of both planted lifts;
+a local ring caught by `bump` that overshoot alone misses (Δoveshoot −0.3 DN
+against bump 391.7); and a strictly ordered responsiveness ladder
+500:0.0 → 1500:391.7 → 4000:2674.4.
+
+The 500 DN arm is a **pre-registered miss** that brackets the sensitivity
+floor between 500 and 1500 DN, set by the steepness of the subject's own
+penumbra rather than by the code.
+
+> **A `clean` verdict means no rim above that floor. It does not mean no rim.**
+
+### 107.5 The corpus result, stated honestly
+
+On SHIP-V4, 26 masters: **7 clean, 4 flagged, 15 skipped.** The skips are the
+regime guards working — text (79 components, largest 8% of mass), couch fibres
+(910 components), flowers (31 components) are not one compact subject on a
+uniform field and the commission never covered them.
+
+**All four flags were adjudicated and all four are segmentation confounds, not
+halos:**
+
+| subject | reading | what it actually is |
+|---|---|---|
+| `tweezers-cpl` | bump 1573.7 | non-monotonicity at d=50–80 px, crossing the gap between the two arms. Inspected at 1:1: boundary clean. |
+| `flat-on-ruler-cpl` | overshoot +4477 | profile monotone to d=80–120 then lower by 400–900: illumination falloff across a flat card. |
+| `lavendar-cpl` | overshoot +526 | the bud is covered in dense white trichomes; Otsu splits *hairs from tissue*, so there is no silhouette. Measures hair density. |
+| `dry-erase-marker-head-cpl` | overshoot +232 | "subject" is ink specks, "background" is a curved plastic barrel. Measures the barrel's shading gradient. |
+
+The common failure mode: **Otsu segmentation on subjects with no true
+figure/ground separation.** The instrument reports a rim wherever the image has
+a large-scale luminance structure that the distance transform happens to order.
+
+### 107.6 What this does and does not establish
+
+**Verified:** on the 7 subjects inside the instrument's commissioned regime,
+there is no rim above ~1500 DN. Direct 1:1 inspection of the hardest available
+geometries — pale bee hairs crossing dark out-of-focus background, dark ink on
+light paper, machined metal against dark ground — shows no rim.
+
+**Not established:** a visibility threshold. The 200 DN gate was chosen, not
+commissioned against what a viewer can see, so "+232 DN" carries no claim about
+whether anyone could detect it. Linking DN of overshoot to visibility needs a
+separate experiment and has not been done.
+
+**Therefore the primary halo evidence remains direct 1:1 inspection**, with
+this instrument as a corroborating check on 7 subjects and an honest SKIPPED on
+15. That is a weaker claim than "measured halo-free across the corpus" and it
+is the one the evidence supports.
