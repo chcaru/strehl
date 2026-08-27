@@ -1,0 +1,4 @@
+header: {'camera': 'ILCE-7CM2', 'sensor': '7032 4688', 'covered': '7028 4688', 'aperture': '5.6'}
+dust records: 1135
+gain range: 1.010129 .. 1.099405
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\src\..\out\embedded-dust-map.rs.txt: 23797 bytes, 1150 lines

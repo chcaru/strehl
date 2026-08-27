@@ -33,7 +33,9 @@ use std::time::Instant;
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
 use strehl_core::color::{self, AppliedExposure, Exposure};
-use strehl_core::defect_map::{Correction, CorrectionReport, DefectMap, HotFloor};
+use strehl_core::defect_map::{
+    Correction, CorrectionReport, DefectMap, HotFloor, SiteOutcome, SiteValidator, ValidateParams,
+};
 use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;
 use strehl_core::noise::{Levels, NoiseModel, Provenance};
@@ -282,11 +284,9 @@ pub fn run(opts: &StackOptions) -> Result<()> {
 
     let live = AtomicUsize::new(0);
     let peak_live = AtomicUsize::new(0);
-    let defect = defect_plan_from_env(&noise)?;
+    let defect = defect_preflight(&defect_request_from_env()?, &noise, &paths)?;
     if let Some(plan) = &defect {
         eprintln!("{}", plan.describe());
-    } else {
-        eprintln!("defect map      : none (set STREHL_DEFECT_MAP to enable)");
     }
     let ctx = FoldContext {
         geom,
@@ -793,59 +793,265 @@ pub(crate) fn print_and_check_defects(tally: &DefectTally) -> Result<()> {
     Ok(())
 }
 
+/// What the environment asked for, before any frame has been seen.
+///
+/// Resolving a map needs the body's model string, and the model string comes
+/// out of a decoded frame, so the request and the plan are different objects
+/// separated by a decode. Keeping them separate is what lets the refusal in
+/// [`crate::merge_cmd`] fire at preflight rather than 53 s into a render.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum DefectRequest {
+    /// Correct nothing. `STREHL_DEFECT=off`.
+    Off,
+    /// Use the map compiled into this build, if it matches the body.
+    Embedded,
+    /// Use this sidecar instead of the embedded map.
+    Sidecar(PathBuf),
+}
+
+impl DefectRequest {
+    pub(crate) fn wants_correction(&self) -> bool {
+        !matches!(self, DefectRequest::Off)
+    }
+}
+
 /// Read the defect-map configuration from the environment.
 ///
-/// **`STREHL_DEFECT_MAP` unset means OFF, and off means byte-identical.** The
-/// reason is a correctness argument, not caution. A defect map is a statement
-/// about the sensor **on a particular date**. The two dust motes this body has
-/// are real -- quad (3202,121) at -3.63% and (3434,2305) at -8.24%, both at
-/// p = 0.0025 against a commissioned local null on twelve subject stacks
-/// (`docs/research/BUILD-DEFECT.md` §2) -- but if the owner cleans the sensor,
-/// a default-on map applies a +8% brightening to a spot where nothing is wrong.
-/// It **manufactures the exact defect it was built to remove**, and does it
-/// silently, because nothing downstream can distinguish a corrected mote from
-/// an invented one. That is the same failure as correcting at the flat-field
-/// coordinates -- brightening clean pixels beside an uncorrected mote -- moved
-/// one step later in time. An explicit sidecar keeps the staleness visible at
-/// the call site.
+/// # Why this is ON by default, and why that is safe
 ///
-/// - `STREHL_DEFECT_MAP=<path>` — load that map. A missing or malformed file is
-///   a **hard error**, never a silent skip: the user asked for a correction and
-///   an uncorrected render that says nothing is the worst available outcome.
+/// It was opt-in until an adversarial audit of all 26 delivered masters
+/// measured what shipping it off had cost: mote 2 present in **18 of 26**
+/// images, worst reading **-13.28%**, and *visible unstretched* as a soft grey
+/// disc about 45 px across on near-white background. The correction was built,
+/// commissioned and then not applied.
+///
+/// The argument for opt-in was not wrong, though — it was attached to the wrong
+/// premise. A dust map is a statement about the sensor **on a particular
+/// date**; if the owner cleans the sensor, a default-on map brightens a spot
+/// where nothing is wrong and **manufactures the exact defect it was built to
+/// remove**, silently, because nothing downstream can tell a corrected mote
+/// from an invented one.
+///
+/// What dissolves that is not caution, it is [`SiteValidator`]: the map
+/// nominates a location, and the correction then has to **observe the darkening
+/// in the frames in front of it** before it is allowed to touch them. A stale
+/// map cannot manufacture a defect it is required to measure first — the
+/// failure mode is unreachable rather than merely unlikely. MEASURED: on five
+/// simulated cleaned-sensor cases the check skipped **5 of 5**, and the
+/// unguarded correction it declined to apply would have planted a **+8.64% to
+/// +16.44%** bright spot (`docs/research/BUILD-DEFECT.md` §11).
+///
+/// - `STREHL_DEFECT=off` — correct nothing. `on` is the default and is
+///   accepted for symmetry; **a typo is an error**, not a silent fallback,
+///   because `STREHL_DEFECT=0` quietly meaning "on" is how a user ends up
+///   reading a correction banner over an image they thought was untouched.
+/// - `STREHL_DEFECT_MAP=<path>` — use that sidecar instead of the embedded
+///   map. A missing or malformed file is a **hard error**, never a silent
+///   fallback to the embedded one: the user named a file and an uncorrected
+///   render that says nothing is the worst available outcome.
 /// - `STREHL_DEFECT_ARM=none|hot|dust|both` — which arms. Defaults to `dust`,
 ///   because the hot arm is a measured null on this body (M101) and switching
 ///   it on by default would spend 14,626 writes per frame to move nothing.
-///   **A typo is an error**, not a fallback.
 /// - `STREHL_DEFECT_HOT_FLOOR=<electrons>` — amplitude floor for the hot arm.
 ///   Defaults to [`HotFloor::REPRODUCIBLE`] (8 e-), the lowest stratum measured
 ///   to reproduce 1.000 across an independent half of the same darks.
-pub(crate) fn defect_plan_from_env(noise: &NoiseModel) -> Result<Option<DefectPlan>> {
-    let Some(path) = std::env::var_os("STREHL_DEFECT_MAP") else {
-        return Ok(None);
-    };
-    let path = PathBuf::from(path);
-    if path.as_os_str().is_empty() {
-        return Ok(None);
+///
+/// There is deliberately **no switch to skip validation**. An escape hatch
+/// there would reopen exactly the hole the validation closes, and it would be
+/// reached for by whoever was most confident their map was current.
+pub(crate) fn defect_request_from_env() -> Result<DefectRequest> {
+    match std::env::var("STREHL_DEFECT") {
+        Ok(v) => match v.trim() {
+            "off" => return Ok(DefectRequest::Off),
+            "on" => {}
+            other => bail!(
+                "STREHL_DEFECT={other:?} is not a setting; it is \"on\" or \"off\". \
+                 Refusing rather than assuming, because a misspelled \"off\" that \
+                 silently means \"on\" corrects an image the user believes untouched"
+            ),
+        },
+        Err(_) => {}
     }
-    let map = DefectMap::load(&path)
-        .with_context(|| format!("loading the defect map {}", path.display()))?;
+    if let Some(path) = std::env::var_os("STREHL_DEFECT_MAP") {
+        let path = PathBuf::from(path);
+        if !path.as_os_str().is_empty() {
+            return Ok(DefectRequest::Sidecar(path));
+        }
+    }
+    Ok(DefectRequest::Embedded)
+}
 
+/// Which arms and what floor, read once so both fold paths agree.
+pub(crate) fn defect_arms_from_env() -> Result<(Correction, HotFloor)> {
     let arm = std::env::var("STREHL_DEFECT_ARM").unwrap_or_else(|_| "dust".into());
     let correction = Correction::parse(&arm).with_context(|| {
         format!("STREHL_DEFECT_ARM={arm:?} (the arms are \"none\", \"hot\", \"dust\", \"both\")")
     })?;
-
     let floor = match std::env::var("STREHL_DEFECT_HOT_FLOOR") {
         Ok(s) => HotFloor(s.trim().parse::<f32>().with_context(|| {
             format!("STREHL_DEFECT_HOT_FLOOR={s:?} is not a number of electrons")
         })?),
         Err(_) => HotFloor::default(),
     };
+    Ok((correction, floor))
+}
+
+/// How many frames the self-validation samples.
+///
+/// Fixed rather than configurable. The decode is the dominant cost — MEASURED
+/// at ~0.31 s/frame against 0.016 s/frame/site of arithmetic — so this number
+/// is a time budget, and a knob on it would be a knob on how much evidence the
+/// gate is allowed to see. 8 frames over a 20-frame bracket put mote 2 at
+/// p = 0.0025, the floor a 400-sample null can express.
+pub(crate) const VALIDATION_FRAMES: usize = 8;
+
+/// Resolve a [`DefectRequest`] against the actual frames, and correct only what
+/// they confirm.
+///
+/// # Where this reads in the pipeline
+///
+/// On the **raw, black-subtracted, quad-averaged active area, straight from the
+/// decoder and before any geometric transform**. The map is in sensor
+/// coordinates, the check is in sensor coordinates, and the correction is
+/// applied in sensor coordinates, all before the aligner runs. There is no warp
+/// on this path to interact with.
+///
+/// # What it returns
+///
+/// `None` when nothing is to be corrected, and it is **not** the same `None` in
+/// every case — the banner distinguishes "switched off", "no map for this body"
+/// and "the frames do not show the defect this map names", because those are
+/// three different situations and one of them means the sensor is clean.
+pub(crate) fn defect_preflight(
+    req: &DefectRequest,
+    noise: &NoiseModel,
+    paths: &[PathBuf],
+) -> Result<Option<DefectPlan>> {
+    if !req.wants_correction() {
+        eprintln!("defect map      : off (STREHL_DEFECT=off)");
+        return Ok(None);
+    }
+    let (correction, floor) = defect_arms_from_env()?;
+    if correction.is_noop() {
+        eprintln!("defect map      : no arms selected (STREHL_DEFECT_ARM=none)");
+        return Ok(None);
+    }
+    ensure!(
+        !paths.is_empty(),
+        "defect preflight needs at least one frame to validate against"
+    );
+
+    // Evenly spaced across the bracket, deterministically, so two runs of the
+    // same input reach the same verdict. A depth bracket is not homogeneous --
+    // the near end and the far end look nothing alike -- and sampling the first
+    // 8 would judge the mote on one end of it.
+    let n = paths.len().min(VALIDATION_FRAMES);
+    let idx: Vec<usize> = (0..n)
+        .map(|k| {
+            if n == 1 {
+                0
+            } else {
+                (k * (paths.len() - 1) + (n - 1) / 2) / (n - 1)
+            }
+        })
+        .collect();
+
+    let t0 = Instant::now();
+    let first = strehl_raw::decode(&paths[idx[0]])
+        .with_context(|| format!("defect preflight decoding {}", paths[idx[0]].display()))?;
+
+    let raw_map = match req {
+        DefectRequest::Off => unreachable!("handled above"),
+        DefectRequest::Sidecar(p) => DefectMap::load(p)
+            .with_context(|| format!("loading the defect map {}", p.display()))?,
+        DefectRequest::Embedded => match DefectMap::embedded_for(&first.camera) {
+            Some(m) => m,
+            None => {
+                // Not an error. This build simply has no calibration for this
+                // body, which is a fact about the build and not a mistake by
+                // the user, and it is distinguishable in the banner from a
+                // map that loaded and found nothing.
+                eprintln!(
+                    "defect map      : none embedded for {:?} (set STREHL_DEFECT_MAP to supply one)",
+                    first.camera
+                );
+                return Ok(None);
+            }
+        },
+    };
+
+    let params = ValidateParams::default();
+    let mut validator = SiteValidator::new(&raw_map, params);
+    let active = (
+        first.active.x,
+        first.active.y,
+        first.active.width,
+        first.active.height,
+    );
+    let (q, qw, qh) = strehl_core::defect_map::quad_mean(
+        &first.data,
+        first.stride,
+        active,
+        first.levels.black,
+    );
+    validator.observe(&q, qw, qh);
+    drop(first);
+    for &i in &idx[1..] {
+        let f = strehl_raw::decode(&paths[i])
+            .with_context(|| format!("defect preflight decoding {}", paths[i].display()))?;
+        let active = (f.active.x, f.active.y, f.active.width, f.active.height);
+        let (q, qw, qh) =
+            strehl_core::defect_map::quad_mean(&f.data, f.stride, active, f.levels.black);
+        validator.observe(&q, qw, qh);
+    }
+    let (verdicts, report) = validator.finish();
+    ensure!(
+        report.check_partition(),
+        "defect validation does not partition: examined {} vs {}+{}+{}+{}+{}",
+        report.examined,
+        report.confirmed,
+        report.not_significant,
+        report.too_shallow,
+        report.not_stationary,
+        report.unmeasurable
+    );
+
+    eprintln!("--- defect self-validation (MEASURED) ---");
+    eprintln!("sites           : {}", report.describe());
+    for v in &verdicts {
+        eprintln!(
+            "site ({:5},{:5}): depth {:+.3}% (map {:+.3}%), p {:.4}, present {:.2} -> {}",
+            v.cx,
+            v.cy,
+            v.depth * 100.0,
+            v.map_depth * 100.0,
+            v.p,
+            v.presence,
+            match v.outcome {
+                SiteOutcome::Confirmed => format!("CORRECT at scale {:.3}", v.scale),
+                SiteOutcome::NotSignificant => "skip: not significant here".into(),
+                SiteOutcome::TooShallow => "skip: too shallow".into(),
+                SiteOutcome::NotStationary => "skip: moves with the subject".into(),
+                SiteOutcome::Unmeasurable => "skip: too near the edge to test".into(),
+            }
+        );
+    }
+    eprintln!(
+        "preflight       : {} frames in {:.2} s",
+        report.frames,
+        t0.elapsed().as_secs_f64()
+    );
+    eprintln!();
+
+    let map = raw_map.validated(&verdicts, params.core_radius)?;
+    if map.dust.is_empty() && map.hot.is_empty() {
+        eprintln!("defect map      : nothing confirmed in these frames; correcting nothing");
+        return Ok(None);
+    }
 
     // The hot arm's amplitudes are stored in electrons precisely so that this
     // conversion happens once, here, against the injected model.
     let gain_dn_per_e = noise.plane(CfaPlane::G1).gain_dn_per_e;
-
     Ok(Some(DefectPlan {
         map,
         correction,

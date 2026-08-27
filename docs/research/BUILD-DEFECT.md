@@ -949,9 +949,366 @@ re-baseline it, so this needs an explicit decision before the default flips.
 
 ### 11.8 New open question
 
-- **Q5 (OPEN).** The map format records `sensor` and `covered` geometry but not
+- **Q5 (CLOSED at §12.6).** The map format records `sensor` and `covered` geometry but not
   **which raw array its coordinates are indexed against**
   (`raw_image` vs `raw_image_visible`). That ambiguity cost me a full run (§11.3)
   and would silently mis-register any future consumer. A `frame raw_image_visible`
   key in the header would close it. **Not added: the format is versioned and
   changing it is a compatibility decision, not a lane decision.**
+  *(Update: the orchestrator took the decision. Closed in §12.6.)*
+
+---
+
+## 12. BUILT AND SHIPPED — the self-validating map, default ON
+
+§11 recommended the design and asked for a decision. The orchestrator took it and
+added one requirement before default-ON: a **stationarity arm** proving the check
+can distinguish sensor dust from genuine dark subject detail that happens to land
+on the mote's coordinates. That arm is §12.1. It passed, and it changed the design
+in a way I did not expect (§12.2).
+
+This section is what was built, what it measures, and the one prediction in my own
+§11.7 that turned out to be **wrong** (§12.4).
+
+### 12.1 The stationarity arm (the one the orchestrator required)
+
+**The threat.** An eye, a dark hair, a shadow edge at `(3434, 2305)`. The check
+reads a local darkening, fires *correctly by its own definition*, and the
+correction then brightens real image content. On near-white background this is
+unlikely; across 27 subjects it is a matter of time.
+
+**The discriminator the orchestrator named, and it is the right one.** A mote is
+fixed in sensor coordinates. The subject is not — the bracket drifts and breathes,
+and the aligner's entire existence is the proof. So a mote's darkening is
+stationary in raw sensor coordinates; subject detail at the same raw coordinate
+varies as the feature translates through it.
+
+**Implemented as `presence`**: the fraction of individually-examined frames in
+which the site reads at least 1.0% deep. A stationary mote is present in every
+frame; a feature drifting through the site is present in some and absent in
+others, *even when the pooled depth still looks convincing*.
+
+`src/24-stationarity.py`, 4 stacks, 5 arms each — including both a planted
+**defect** and a planted **improvement**, per standing policy:
+
+```
+bars: p <= 0.0025  AND  pooled depth <= -1.5%  AND  presence >= 0.75
+
+subject                   arm                        depth        p  presence  fires
+highly-angled-ruler-mm-cp REAL mote2               -8.585%   0.0025      1.00   True
+                          FIXED planted -8%        -7.847%   0.0025      1.00   True
+                          MOVING planted -8%       -0.044%   0.3766      0.25  False   (moved 126 quads)
+                          PERVERSE planted +8%      7.608%   1.0000      0.00  False
+                          IMPROVE mote removed     -0.099%   0.3142      0.00  False
+lavendar-cpl              REAL mote2               -8.387%   0.0025      1.00   True
+                          FIXED planted -8%        -7.759%   0.0025      1.00   True
+                          MOVING planted -8%       -0.033%   0.3142      0.25  False
+                          PERVERSE planted +8%      7.710%   1.0000      0.00  False
+                          IMPROVE mote removed     -0.005%   0.3192      0.00  False
+couch-fibers-cpl          REAL mote2               -8.467%   0.0025      1.00   True
+                          FIXED planted -8%        -7.639%   0.0025      0.88   True
+                          MOVING planted -8%       -0.423%   0.5536      0.50  False
+                          PERVERSE planted +8%      7.854%   1.0000      0.00  False
+                          IMPROVE mote removed      0.129%   0.6459      0.38  False
+leaf-2-cpl                REAL mote2               -7.737%   0.0025      1.00   True
+                          FIXED planted -8%        -6.862%   0.0025      1.00   True
+                          MOVING planted -8%       -1.141%   0.3466      0.62  False
+                          PERVERSE planted +8%      8.753%   1.0000      0.25  False
+                          IMPROVE mote removed      0.964%   0.8678      0.38  False
+
+examined 4 stacks; all arms PASS
+```
+
+Read the arms as a matrix rather than a list:
+
+- **REAL / FIXED** — fires 4/4 and 4/4. The check is not blind.
+- **MOVING** — fires 0/4. Subject detail of *identical depth and size* that moves
+  is rejected. This is the arm the orchestrator asked for.
+- **PERVERSE** — a planted **+8% bright** disc, i.e. the inverse defect. `p` pins
+  at exactly **1.0000**, the ceiling of a one-sided 400-sample null. This is the
+  arm that would have caught `tri.blur_equiv` and `overshoot_frac`: a statistic
+  bounded below at zero cannot produce a 1.0000, and one that scored a planted
+  gain as a defect would have fired here.
+- **IMPROVE** — the real mote **divided out** of the real frames before the check
+  runs, i.e. a genuine improvement to a genuine defect at a real site. Fires 0/4,
+  depths −0.10% to +0.96%. The check does not fire on a site that has been fixed,
+  which is precisely the cleaned-sensor case §11 was built around.
+
+### 12.2 `presence` is load-bearing — and I nearly shipped it as dead weight
+
+**A defect I found in my own result.** In every MOVING arm above, the pooled depth
+also collapsed (−0.03% to −1.14%), which fails the −1.5% depth bar *on its own*.
+So on this evidence `presence` never actually decided anything. Per rule — a gate
+condition nothing has been shown to decide is dead weight that can only produce
+false SKIPs — I had to either show it earns its place or delete it.
+
+`src/25-drift-sweep.py` sweeps the drift scale from 1.000 (stationary) to 1.070
+(the fitted scale another lane measured between a middle frame and its master on
+`bee-3-cpl`) and records **which bar rejects first**:
+
+```
+leaf-2-cpl  (site is 1529 quads off centre)
+  scale      shift     depth        p  presence   p ok    dep ok  pres ok   FIRES
+  1.000       0.0q   -6.862%   0.0050      1.00   False   True    True      False
+  1.004       5.1q   -6.864%   0.0025      1.00   True    True    True      True
+  1.008      11.2q   -6.792%   0.0025      1.00   True    True    True      True
+  1.012      17.3q   -6.784%   0.0025      0.62   True    True    False     False
+  1.016      23.5q   -6.760%   0.0025      0.62   True    True    False     False
+  1.020      29.6q   -6.718%   0.0025      0.62   True    True    False     False
+  1.030      44.9q   -5.633%   0.0125      0.62   False   True    False     False
+  1.050      75.7q   -3.063%   0.0599      0.62   False   True    False     False
+  1.070     106.3q   -1.141%   0.2494      0.62   False   False   False     False
+
+WHERE EACH BAR FIRST REJECTS
+  lavendar-cpl         depth bar: scale 1.030 (45 quads)    presence bar: scale 1.016 (24 quads)
+  leaf-2-cpl           depth bar: scale 1.070 (106 quads)   presence bar: scale 1.012 (17 quads)
+```
+
+**P37 (MEASURED). `presence` is decisively load-bearing.** On `leaf-2-cpl` at
+scale 1.020 — 30 quads of travel, well inside the drift a real bracket has — a
+**moving** −8% disc reads depth **−6.718% at p 0.0025**. Both other bars pass. It
+is only `presence` (0.62) that rejects it. Without that bar the correction would
+have brightened moving subject content at a −6.7% amplitude and reported it as a
+confirmed mote. The 126-quad displacement in §12.1 was simply too generous to the
+check; the sweep is the arm that actually tests it.
+
+**The honest limit, stated rather than hidden.** Below roughly **11 quads** of
+travel all three bars fire on moving content, and at scale 1.000 they fire by
+construction. **A genuinely motionless dark subject feature is not separable from
+dust by a motion-based test.** That is a property of the discriminator, not a bug
+in it: at zero travel the two hypotheses are observationally identical. What
+bounds the damage is that the correction is a **multiplicative brightening capped
+at ×1.25 over a ~45 px disc**, applied only where the site also clears p ≤ 0.0025
+and −1.5%.
+
+**One false SKIP, disclosed.** `leaf-2-cpl` at scale 1.000 did **not** fire
+(p = 0.0050) — one null sample landed as deep as the planted mote on that busy
+background. A genuine planted mote was declined. That is a miss in the **safe**
+direction and it is the price of a 0.0025 bar; it is not corrected for.
+
+### 12.3 Commissioned in Rust, not only in Python
+
+The Python above is the design evidence. The shipping code is Rust, and a
+commissioning suite that only ever ran against the prototype proves nothing about
+what renders. `crates/strehl-core/src/defect_map.rs` carries **17 new tests**
+mirroring every arm on a 600×600 synthetic sensor, including:
+
+- the planted **improvement** arm and the **perverse** (inverted-sign) arm;
+- a test asserting the `NotStationary` verdict specifically — tuned to 12 quads of
+  travel so it lands in the presence-only band from §12.2. Because the three bars
+  are checked **in order** (`NotSignificant` → `TooShallow` → `NotStationary`), a
+  `NotStationary` verdict is *proof* that p and depth both passed. That is the
+  §12.2 finding pinned as an executable assertion: if someone deletes the presence
+  bar, this test fails rather than the correction quietly widening;
+- `depth_scale` recovering the published −3.63% / −8.24% nominal depths from the
+  gains that encode them, so `Mote::map_depth` cannot disagree with the map;
+- the `coords` header key (§12.6) rejecting an absent value and a typo'd one.
+
+```
+cargo test --release -p strehl-core
+test result: ok. 531 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+```
+
+### 12.4 THE BYTE-FREEZE DOES NOT MOVE — my §11.7 prediction was wrong
+
+§11.7 predicted that default-ON "**will** change the rendered bytes of both
+`coffee-bean` rows", and the orchestrator authorised a re-baseline on that basis.
+
+**That prediction was wrong, and the reason is the §6.2.1 seam.**
+
+**P38 (MEASURED).** Every row in `byte-freezes.tsv` is rendered with
+`--merge estimator`, hardcoded in `byte-freeze.rs::argv` (line 538). The defect
+correction lives in `stack.rs`'s `load_frame`, which is the **pyramid** loader.
+The estimator loads through `field_for`/`Scratch`. **No row in that registry has
+ever been rendered with the correction, and none can be.** Flipping the default
+therefore cannot move those bytes — it makes those rows **exit non-zero**, because
+`preflight_defect_backend_support` (§12.5) refuses to render an estimator stack
+with a correction configured.
+
+So the harness now sets `STREHL_DEFECT=off` explicitly, hardcoded beside
+`--merge estimator` and for the same stated reason, with the same expiry
+condition: *the day a pyramid row is added, this must become a registry column.*
+This is not the harness suppressing a feature to keep a hash still. It is the
+harness **spelling out the value these rows already render under**, which the
+registry header demands of every variable: "`unset` is a VALUE, spelled out, never
+an empty field."
+
+**Measured result — both rows reproduce bit-exactly. No re-baseline is required.**
+
+Verified in a **detached `git worktree` at pinned commit `7eea5f6e`** containing
+exactly five changed files, all mine — six other agents are writing to the working
+tree and "the tests pass" there is not a statement about my code:
+
+```
+freeze `coffee-bean-20-gate2-unaligned` HOLDS: 88712017FE31362F35FF2FF5D4B98727CDEFCBAC489D9A7827F21EE0154A8620
+    (49450019 bytes, alignment off, 10 chunks of <= 2 frames) -- reproduced twice
+freeze `coffee-bean-20-gate2-sidecar`   HOLDS: 52517FF8AE245F238C29F64A29E601C2D5C064CB4D86E93006512993837EC206
+    (49450019 bytes, alignment on-sidecar-override, 10 chunks of <= 2 frames, 20 placed / 0 refused) -- reproduced twice
+
+byte-freeze     : 5 passed; 0 failed   (STREHL_FREEZE_REQUIRE=1, so a skip would have failed)
+strehl-cli      : 113 passed; 0 failed
+strehl-core     : 531 passed; 0 failed
+```
+
+**This is a result, not the absence of one.** The prediction written *before* the
+render was that they could not move, because the correction is unreachable from
+this backend — and the freeze is now a **specificity control** on that claim. If a
+row had moved, the correction would have been reaching a code path it is not wired
+into.
+
+**And it means the corpus has no byte-frozen evidence of the correction at all.**
+The registry cannot acquire any until it grows a pyramid row. Logged as **Q7**.
+
+`STREHL_DEFECT` is in `RENDER_ENV` in the same commit, alongside `_MAP`, `_ARM`
+and `_HOT_FLOOR`. Its polarity is now **inverted** from when those were added: the
+hashes are measured with the correction *deliberately off*, so an operator with
+`STREHL_DEFECT=on` exported in their shell would… still get the refusal, not a
+wrong hash. The clear is kept anyway, because relying on that is relying on a
+second feature to cover for a missing entry.
+
+### 12.5 The estimator refusal, landed (§6.2.2 discharged)
+
+Parked in §6.2.2 for a lane collision; the seam opened and it is in.
+
+`merge_cmd::preflight_defect_backend_support(backend)` fires **at command setup,
+before any frame is decoded** — a refusal surfacing after 53.4 s of decoding reads
+as a slow arm in a matrix rather than as a configuration error. Verified live:
+
+```
+$ strehl stack D:\personal\macro\coffee-bean --limit 20 --gate 2.0 --out ...
+build           : strehl 0.0.0
+merge backend   : estimator (inferred from --gate; pass --merge pyramid to override)
+Error: REFUSING TO RENDER: the sensor defect correction was NOT applied.
+
+A correction is configured (the map embedded in this build, arms `dust`), but the
+`estimator` merge backend does not apply it. The estimator loads frames through a
+different path from the one the correction is wired into, so this render would
+silently contain the uncorrected dust.
+
+This is an error, not a warning; nothing was rendered. Either:
+  - run the `pyramid` backend, which applies the correction, or
+  - set STREHL_DEFECT=off to render without it deliberately.
+```
+
+Exit code 1, **before the first decode**.
+
+**It takes the backend, not the options, so that it has a negative control.** A
+refusal tested only in the arm where it fires cannot be distinguished from a
+refusal that fires always. `the_estimator_refuses_a_configured_defect_correction_it_cannot_apply`
+has four arms:
+
+| arm | input | expected |
+|---|---|---|
+| fires | estimator + default (on) | `Err`, naming `estimator`, `pyramid`, "not applied", "refusing", "not a warning" |
+| control (backend axis) | **pyramid** + same correction | `Ok` — pyramid is the backend that *does* apply it |
+| control (config axis) | estimator + `STREHL_DEFECT=off` | `Ok` — the arm the brief asked for |
+| control (arm axis) | estimator + `STREHL_DEFECT_ARM=none` | `Ok` — a map that corrects nothing drops nothing |
+| typo | `STREHL_DEFECT=0` | `Err` naming the variable **and** the value |
+
+```
+test merge_cmd::tests::the_estimator_refuses_a_configured_defect_correction_it_cannot_apply ... ok
+test result: ok. 113 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+```
+
+**The refusal is a guard OVER the seam, not a fix OF it.** `strehl-cli` still has
+two independent frame loaders and the next per-frame correction anyone adds will
+hit the same seam silently. That finding stands as §6.2.1.
+
+### 12.6 Q5 closed — the map format now names its coordinate space
+
+Format `VERSION` **1 → 2**. New required header key:
+
+```
+coords active
+```
+
+`active` = coordinates index the **visible/active** array (`raw_image_visible`);
+`full` = the full array including the optical-black border. The reader **rejects a
+map that lacks the key** rather than guessing — `MissingKey { key: "coords" }` —
+and a typo is `UnknownCoordSpace`, not a fallback. `apply()` branches on it.
+
+A loud failure on an old map is correct. The silent alternative is the **+54.8%**
+and **+22.2%** readings I produced for myself in §11.3 by reading the wrong array,
+which looked exactly like a real measurement.
+
+### 12.7 What runs, end to end
+
+Live on the real `coffee-bean` bracket, correction on by default, no flags:
+
+```
+--- defect self-validation (MEASURED) ---
+sites           : 2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 0)
+site ( 3202,  119): depth  -6.967% (map -3.606%), p 0.0025, present 1.00 -> CORRECT at scale 1.967
+site ( 3434, 2305): depth -14.860% (map -8.236%), p 0.0025, present 1.00 -> CORRECT at scale 1.872
+preflight       : 8 frames in 4.25 s
+
+defect map      : 0 hot, 1135 dust quads, arms dust (floor 8.0 e-, gain 0.22894 DN/e-)
+
+--- defect correction (MEASURED) ---
+hot             : examined 0, corrected 0, below floor 0, clipped 0, outside 0, no change 0
+dust            : examined 22700, corrected 22700, clipped 0, outside 0, no change 0
+samples changed : 81584 over 20 frame loads (4079.2 per frame)
+```
+
+Three things to read there:
+
+1. **The scale factors are the whole P29 argument, measured.** The map nominates
+   −3.61% and −8.24%; the frames say −6.97% and −14.86%. A map-gain correction
+   would have left 6.6 points on the table at the deep site. The frames dictate
+   the amplitude; the map only nominates the location.
+2. **`samples changed 81584` against `corrected 22700 × 4 = 90800`.** 9,216
+   samples where a ×1.03–1.06 gain rounded back to the same `u16`. **A correction
+   can be correctly computed and still not move the stored value.** That is a real
+   quantisation floor near the black point, not a shortfall — which is exactly why
+   `corrected` and `samples_changed` are separate counters. A single merged
+   counter would have hidden it.
+3. **The banner distinguishes its zeroes.** "switched off", "no map for this
+   body", "the frames do not show it" and "0 sites confirmed" are four different
+   statements, and one of them means the sensor is clean.
+
+The preflight costs **4.25 s** for 8 decodes on a 20-frame bracket — dominated by
+I/O, about **0.016 s/site/frame** of arithmetic. Against a 0.28 s/frame fold it is
+a one-off ~7% surcharge on a 20-frame stack and proportionally less on a long one.
+
+**The check reads on the raw, black-subtracted, quad-averaged active area,
+straight from the decoder, before any geometric transform.** Map, check and
+correction are all in sensor coordinates, all upstream of the aligner. There is no
+warp on this path to interact with.
+
+### 12.8 Corrections to the brief, restated because they were not retracted
+
+Carried forward from §0.3 because a report that quietly agrees with a wrong brief
+is worse than one that argues:
+
+1. **242 darks in 11 ISO groups**, not 22 frames. The brief's "22" is the count in
+   one ISO group.
+2. **20 of 26 stacks are f/5.6**, so M71's lower-bound caveat does not apply to the
+   bulk of the corpus.
+3. **The "dust smears into an arc/trail" premise is refuted** (§4.3, P2b). The
+   per-frame similarity is small enough at the mote's radius that the mote stays a
+   compact disc in the merged output. It is a **blemish**, not a trail. The
+   correction was justified on the wrong mechanism in my own first doc comment and
+   that comment was rewritten.
+
+### 12.9 Open questions
+
+- **Q4 (OPEN, narrowed).** Aperture transfer. Retired from the *correction* path
+  entirely — the amplitude is now measured per stack, so an f/8 stack gets an f/8
+  amplitude without the map knowing anything about aperture. It remains open for
+  the map's **nominal** depths. *Settled by:* a flat-field set at f/5.6, f/8 and
+  f/11 on the same day without touching the sensor. Note the barred statistic:
+  `corr(f-number, depth)` from the current corpus is **n=1 in the f/8 group** and
+  must not be quoted.
+- **Q5 (CLOSED).** §12.6.
+- **Q7 (NEW, OPEN).** The byte-freeze registry has **no row that exercises the
+  defect correction**, and cannot until it grows a pyramid row (§12.4). The
+  correction's rendered output is therefore covered by unit tests and by live
+  measurement, but not by a byte freeze. *Settled by:* adding a pyramid row, which
+  requires `--merge` to become a registry column.
+- **Q8 (NEW, OPEN).** Below ~11 quads of subject travel the stationarity test
+  cannot separate dust from a motionless dark feature (§12.2). No corpus subject
+  has been found where this fires wrongly, but none has been searched for either.
+  *Settled by:* a deliberate capture with a small dark feature parked on
+  `(3434, 2305)` and the subject held still.
+
+

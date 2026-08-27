@@ -1,0 +1,32 @@
+STATIONARITY.  presence = fraction of individual frames showing >= 1.0% depth
+bars: p <= 0.0025  AND  pooled depth <= -1.5%  AND  presence >= 0.75
+
+subject                   arm                        depth        p  presence  fires
+------------------------------------------------------------------------------------
+highly-angled-ruler-mm-cp REAL mote2               -8.585%   0.0025      1.00   True
+                          FIXED planted -8%        -7.847%   0.0025      1.00   True
+                          MOVING planted -8%       -0.044%   0.3766      0.25  False   (moved 126 quads)
+                          PERVERSE planted +8%      7.608%   1.0000      0.00  False
+                          IMPROVE mote removed     -0.099%   0.3142      0.00  False
+
+lavendar-cpl              REAL mote2               -8.387%   0.0025      1.00   True
+                          FIXED planted -8%        -7.759%   0.0025      1.00   True
+                          MOVING planted -8%       -0.033%   0.3142      0.25  False   (moved 126 quads)
+                          PERVERSE planted +8%      7.710%   1.0000      0.00  False
+                          IMPROVE mote removed     -0.005%   0.3192      0.00  False
+
+couch-fibers-cpl          REAL mote2               -8.467%   0.0025      1.00   True
+                          FIXED planted -8%        -7.639%   0.0025      0.88   True
+                          MOVING planted -8%       -0.423%   0.5536      0.50  False   (moved 126 quads)
+                          PERVERSE planted +8%      7.854%   1.0000      0.00  False
+                          IMPROVE mote removed      0.129%   0.6459      0.38  False
+
+leaf-2-cpl                REAL mote2               -7.737%   0.0025      1.00   True
+                          FIXED planted -8%        -6.862%   0.0025      1.00   True
+                          MOVING planted -8%       -1.141%   0.3466      0.62  False   (moved 126 quads)
+                          PERVERSE planted +8%      8.753%   1.0000      0.25  False
+                          IMPROVE mote removed      0.964%   0.8678      0.38  False
+
+====================================================================================
+examined 4 stacks
+all arms PASS -- stationarity separates a mote from moving subject detail

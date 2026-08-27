@@ -413,20 +413,26 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_CACHE_DIR",
     "STREHL_FIX_HALO",
     "STREHL_FIX_HALO_DELTA",
-    // The sensor defect map. STREHL_DEFECT_MAP rewrites photosites BEFORE the
-    // warp, so a row rendered with it set is a different render of the same
-    // frames -- 16,039 of 32,966,016 delivered samples move on `coffee-bean`
-    // with the shipped map (BUILD-DEFECT.md sec 5). It is off by default and
-    // both hashes in the registry were measured with it unset, but "off by
-    // default" is a property of the code and not of the ambient environment:
-    // an operator who exported it in their shell would render a corrected
-    // stack and compare it against an uncorrected hash. `_ARM` and
-    // `_HOT_FLOOR` are only read when `_MAP` is set, so they are covered by
-    // that variable's clearing -- listed anyway, because the cost of a
-    // redundant entry is nothing and the cost of a missing one is a freeze
-    // that silently stops being hermetic. That is the STREHL_ALIGN=0 defect
-    // and it has now been committed twice; this is the first variable added
-    // to this file in the same commit as the feature that reads it.
+    // The sensor defect map. The correction rewrites photosites BEFORE the
+    // warp, so a row rendered with it in a different state is a different
+    // render of the same frames -- 16,039 of 32,966,016 delivered samples move
+    // on `coffee-bean` with the shipped map (BUILD-DEFECT.md sec 5).
+    //
+    // **STREHL_DEFECT is the one that matters now.** The correction became ON
+    // by default when it was made self-validating (BUILD-DEFECT.md sec 12), so
+    // the polarity of this entry is inverted from when it was written: the
+    // hashes in the registry are measured with the correction APPLIED, and an
+    // operator with `STREHL_DEFECT=off` exported in their shell would render an
+    // uncorrected stack and compare it against a corrected hash. That is the
+    // same defect as before with the sign flipped, which is exactly why the
+    // variable is cleared rather than assumed.
+    //
+    // `_MAP` substitutes a different map for the embedded one; `_ARM` and
+    // `_HOT_FLOOR` change what is applied. All four are listed: the cost of a
+    // redundant entry is nothing and the cost of a missing one is a freeze that
+    // silently stops being hermetic. That is the STREHL_ALIGN=0 defect and it
+    // has now been committed twice.
+    "STREHL_DEFECT",
     "STREHL_DEFECT_MAP",
     "STREHL_DEFECT_ARM",
     "STREHL_DEFECT_HOT_FLOOR",
@@ -594,6 +600,37 @@ impl Freeze {
                 s.to_string()
             }
         });
+        // STREHL_DEFECT=off, hardcoded, for the same reason `--merge estimator`
+        // is hardcoded in `argv` and with the same expiry condition.
+        //
+        // Sensor defect correction is now ON by default. It is applied by
+        // `stack.rs`'s `load_frame`, which is the PYRAMID backend's loader;
+        // the estimator loads frames through `field_for`/`Scratch` and does
+        // not apply it. Every row in this registry is an estimator row, so
+        // **no row here has ever been rendered with the correction, and none
+        // can be** -- `merge_cmd::preflight_defect_backend_support` refuses to
+        // render an estimator stack with a correction configured rather than
+        // silently dropping it.
+        //
+        // So this is not the harness suppressing a feature to keep a hash
+        // still. It is the harness spelling out the value these rows already
+        // render under, which the registry header requires of every other
+        // variable: "`unset` is a VALUE, spelled out, never an empty field".
+        // Without it, RENDER_ENV clears the variable, the clear means
+        // "default", the default means "on", and every row exits non-zero.
+        //
+        // MEASURED: with this line, both `coffee-bean` hashes reproduce
+        // bit-exactly (BUILD-DEFECT.md sec 12.4). The freeze does not move,
+        // and that is the result rather than the absence of one -- the
+        // prediction written before the render was that it could not move,
+        // because the correction is unreachable from this backend.
+        //
+        // Hardcoded rather than a column because every existing row genuinely
+        // is an uncorrected freeze. **The day a pyramid row is added this must
+        // become a registry column**, exactly like `--gate` did -- and that
+        // row WILL differ from these bytes, because on `coffee-bean` the
+        // correction fires at -14.859% (p 0.0025).
+        v.push(("STREHL_DEFECT".to_string(), "off".to_string()));
         v
     }
 

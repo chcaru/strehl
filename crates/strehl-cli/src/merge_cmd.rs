@@ -2813,11 +2813,76 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     }
 }
 
+/// Refuse to run a backend that would silently drop a configured defect
+/// correction.
+///
+/// # The seam this guards
+///
+/// `strehl-cli` has **two independent frame loaders**: [`load_frame`], which
+/// the pyramid merge uses, and `field_for`/`Scratch`, which the estimator uses.
+/// The defect correction was added to the first. It is therefore *absent* from
+/// the second, and absent silently — the estimator would print the same
+/// "defect map" banner, decode the same frames, and produce an uncorrected
+/// render.
+///
+/// **This is a guard over the seam, not a fix of it.** The seam is
+/// architectural and the next per-frame correction anyone adds will hit it too;
+/// it is recorded as a finding in its own right in
+/// `docs/research/BUILD-DEFECT.md` §6.2.2. What this function buys is that the
+/// failure is loud.
+///
+/// # Why here
+///
+/// A configured-but-unapplied correction is the precise failure this project
+/// exists to catch, so it must not be reachable, and the refusal must not be
+/// mistakable for a warning: it returns `Err` and the process exits non-zero.
+/// It fires **before any frame is decoded**, because a refusal that surfaced
+/// after 53.4 s of decoding reads as a slow arm in a matrix rather than as a
+/// configuration error.
+///
+/// # Why it takes the backend rather than the options
+///
+/// So that the *supporting* backend is inside the function's domain and can be
+/// asserted on. A refusal tested only in the arm where it fires is a refusal
+/// with no negative control: it cannot distinguish "refuses when the correction
+/// would be dropped" from "refuses always". Passing `Pyramid` here must return
+/// `Ok` with a map configured, and that is a `#[test]`.
+fn preflight_defect_backend_support(backend: MergeBackend) -> Result<()> {
+    if backend != MergeBackend::Estimator {
+        return Ok(());
+    }
+    let req = crate::stack::defect_request_from_env()?;
+    if !req.wants_correction() {
+        return Ok(());
+    }
+    let (correction, _) = crate::stack::defect_arms_from_env()?;
+    if correction.is_noop() {
+        return Ok(());
+    }
+    let source = match &req {
+        crate::stack::DefectRequest::Sidecar(p) => format!("STREHL_DEFECT_MAP={}", p.display()),
+        _ => "the map embedded in this build".to_string(),
+    };
+    bail!(
+        "REFUSING TO RENDER: the sensor defect correction was NOT applied.\n\
+         \n\
+         A correction is configured ({source}, arms `{correction}`), but the \
+         `estimator` merge backend does not apply it. The estimator loads frames \
+         through a different path from the one the correction is wired into, so \
+         this render would silently contain the uncorrected dust.\n\
+         \n\
+         This is an error, not a warning; nothing was rendered. Either:\n\
+         \x20 - run the `pyramid` backend, which applies the correction, or\n\
+         \x20 - set STREHL_DEFECT=off to render without it deliberately."
+    )
+}
+
 fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // Same reason as the --n-eff-map refusal below: fail on configuration
     // before a frame is read. An invalid STREHL_FIX_CA otherwise surfaces only
     // after the first decode (53.4 s), which reads as a slow arm in a matrix.
     align_cmd::preflight_ca_profile()?;
+    preflight_defect_backend_support(opts.backend)?;
     ensure!(!opts.gates.is_empty(), "at least one --gate is required");
     ensure!(
         opts.gates.iter().all(|g| g.is_finite() && *g >= 0.0),
@@ -5131,17 +5196,18 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // ---- sensor defect correction ----------------------------------------
     //
     // Built once here and borrowed by the fold and by both confidence passes,
-    // so all three see the identical frames. Off unless STREHL_DEFECT_MAP is
-    // set -- see stack::defect_plan_from_env for why a defect map must be
-    // opt-in rather than a default.
-    let defect_plan = crate::stack::defect_plan_from_env(&noise)?;
+    // so all three see the identical frames. **On by default**, and safe to be
+    // on by default only because `defect_preflight` requires the frames
+    // themselves to show the darkening before any site is corrected -- see
+    // `stack::defect_request_from_env` for the staleness argument this answers.
+    let defect_request = crate::stack::defect_request_from_env()?;
+    let defect_plan = crate::stack::defect_preflight(&defect_request, &noise, &paths)?;
     let defect_tally = crate::stack::DefectTally::default();
     let defect = defect_plan
         .as_ref()
         .map(|p| (p, &defect_tally));
-    match &defect_plan {
-        Some(p) => eprintln!("{}", p.describe()),
-        None => eprintln!("defect map      : none (set STREHL_DEFECT_MAP to enable)"),
+    if let Some(p) = &defect_plan {
+        eprintln!("{}", p.describe());
     }
     eprintln!(
         "frames          : {} from {}  (first decode {prologue_secs:.2} s)",
@@ -8498,5 +8564,104 @@ mod tests {
              flag: {said:?}"
         );
         unsafe { std::env::remove_var(PHOTOMETRIC_ENV) };
+    }
+
+    /// The estimator refusal, both arms.
+    ///
+    /// # Why this is one `#[test]` with four assertions rather than four tests
+    ///
+    /// The same reason as `the_merge_environment_channels_behave`: these read
+    /// and write the process environment, which Rust's test harness shares
+    /// across threads. Split, they would pass or fail depending on scheduling.
+    ///
+    /// # What each arm is for
+    ///
+    /// The project's standing rule is that a metric — or here, a refusal —
+    /// shown only inputs it is supposed to reject cannot be distinguished from
+    /// one that rejects everything. So:
+    ///
+    /// 1. **Fires**: estimator + correction configured → `Err`, and the text
+    ///    must name the backend that cannot apply it, the backend that can, and
+    ///    must say the correction was *not applied*. A user must not be able to
+    ///    read it as a warning.
+    /// 2. **Negative control, across the backend axis**: pyramid + the *same*
+    ///    correction configured → `Ok`. Pyramid is the backend the correction
+    ///    is wired into; refusing there would be the refusal firing on a
+    ///    correctly-configured render.
+    /// 3. **Negative control, across the configuration axis**: estimator +
+    ///    `STREHL_DEFECT=off` → `Ok`. This is the arm the brief asked for: the
+    ///    estimator still runs normally when no correction is configured.
+    /// 4. **Negative control, across the arm axis**: estimator +
+    ///    `STREHL_DEFECT_ARM=none` → `Ok`. A map that is loaded but corrects
+    ///    nothing drops nothing, so there is nothing to refuse. This arm exists
+    ///    because it is the one place the refusal could plausibly be too eager,
+    ///    and "configured" is easy to conflate with "would change pixels".
+    #[test]
+    fn the_estimator_refuses_a_configured_defect_correction_it_cannot_apply() {
+        // SAFETY: single-threaded within this test; see the doc comment.
+        unsafe { std::env::remove_var("STREHL_DEFECT") };
+        unsafe { std::env::remove_var("STREHL_DEFECT_ARM") };
+        unsafe { std::env::remove_var("STREHL_DEFECT_MAP") };
+
+        // 1. Fires. Default configuration is now "on with the embedded map",
+        //    so an unset environment is the shipping case, not a special one.
+        let err = preflight_defect_backend_support(MergeBackend::Estimator)
+            .expect_err(
+                "the estimator accepted a configured defect correction it does not apply",
+            )
+            .to_string();
+        let lower = err.to_ascii_lowercase();
+        for needle in ["estimator", "pyramid", "not applied"] {
+            assert!(
+                lower.contains(needle),
+                "the refusal does not contain {needle:?}, so a reader cannot tell \
+                 what was dropped or what to run instead: {err}"
+            );
+        }
+        assert!(
+            lower.contains("refusing") && lower.contains("not a warning"),
+            "the refusal does not say it refused, so it is readable as advice \
+             about a render that nevertheless happened: {err}"
+        );
+
+        // 2. Negative control across the backend axis.
+        preflight_defect_backend_support(MergeBackend::Pyramid).expect(
+            "the refusal fired on `pyramid`, which is the backend that DOES apply \
+             the correction -- it is refusing a correct configuration",
+        );
+
+        // 3. Negative control across the configuration axis.
+        unsafe { std::env::set_var("STREHL_DEFECT", "off") };
+        preflight_defect_backend_support(MergeBackend::Estimator)
+            .expect("the estimator was refused with no correction configured");
+
+        // 4. Negative control across the arm axis.
+        unsafe { std::env::set_var("STREHL_DEFECT", "on") };
+        unsafe { std::env::set_var("STREHL_DEFECT_ARM", "none") };
+        preflight_defect_backend_support(MergeBackend::Estimator).expect(
+            "the estimator was refused for a correction with no arms selected, \
+             which would not have changed a pixel",
+        );
+
+        // A malformed value must reach the caller as the parse error it is,
+        // rather than being swallowed into either verdict. This is the
+        // `a_typod_override_errors_rather_than_falling_back_to_the_default`
+        // shape, applied at the point the refusal reads the environment.
+        unsafe { std::env::set_var("STREHL_DEFECT", "0") };
+        let err = preflight_defect_backend_support(MergeBackend::Estimator)
+            .expect_err("STREHL_DEFECT=0 was accepted as a setting")
+            .to_string();
+        assert!(
+            err.contains("STREHL_DEFECT") && err.contains("\"0\""),
+            "the parse error does not name the variable and the offending value: {err}"
+        );
+
+        unsafe { std::env::remove_var("STREHL_DEFECT") };
+        unsafe { std::env::remove_var("STREHL_DEFECT_ARM") };
+        assert!(
+            preflight_defect_backend_support(MergeBackend::Estimator).is_err(),
+            "the environment leaked out of this test: the default configuration \
+             must refuse on the estimator"
+        );
     }
 }

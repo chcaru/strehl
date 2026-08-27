@@ -90,7 +90,79 @@ use std::path::{Path, PathBuf};
 /// Format magic. Bumping the version is a breaking change to the text format.
 pub const MAGIC: &str = "strehl-defect-map";
 /// Current sidecar format version.
-pub const VERSION: u32 = 1;
+///
+/// **2 because v1 did not say which array its coordinates index.** A v1 map
+/// records `sensor` and `covered` geometry, which is enough to check that a map
+/// is being applied to the right *size* of frame and not enough to check that
+/// it is being applied at the right *origin*. Those are different facts and the
+/// difference is 32 columns of optical black.
+///
+/// This is not hypothetical. Building this module's own self-validation, a
+/// script read `raw_image` where the map had been measured on
+/// `raw_image_visible`; every coordinate was offset by the optical-black
+/// border, and the readings that came back were **+54.8%** and **+22.2%** — a
+/// dust mote reported as a bright spot. It was caught only because the sign was
+/// absurd. A 4-column offset instead of a 32-column one would have produced
+/// readings that were merely wrong.
+///
+/// v2 therefore carries a required [`CoordSpace`] key, and a map that lacks it
+/// is **refused**. Refusing a v1 map is a loud failure on a file that is
+/// probably fine; guessing its origin is a silent 54.8% error on a file that is
+/// not. The project takes the loud one.
+pub const VERSION: u32 = 2;
+
+/// Which raw array a map's coordinates index.
+///
+/// A decoder hands back one buffer and two rectangles: the whole `data`
+/// allocation, and the `active` sub-rectangle inside it that holds real sensor
+/// readings. A coordinate pair is meaningless until you say which of those it
+/// is relative to, and the two differ by the optical-black border — 4 columns
+/// on the A7C II as `rawpy` crops it, 32 in the buffer `rawler` returns.
+///
+/// This key is **load-bearing and not decorative**: [`DefectMap::apply`]
+/// branches on it to choose the origin. A key that is written, parsed, and then
+/// never conditioned on is the "print, then TEST" defect this project has
+/// shipped three times, and it would be especially useless here because the
+/// whole reason the key exists is that the wrong origin is undetectable
+/// downstream.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CoordSpace {
+    /// Origin at the top-left of the **active area**. This is what
+    /// `rawpy.raw_image_visible` returns and what every map this project has
+    /// measured is written in.
+    Active,
+    /// Origin at the top-left of the **whole decoded buffer**, optical black
+    /// included. This is what `rawpy.raw_image` and `rawler`'s raw buffer
+    /// return.
+    Full,
+}
+
+impl CoordSpace {
+    /// Parse the `coords` header value.
+    ///
+    /// **A typo is an error, never a fallback**, for the same reason the key
+    /// exists at all: a map that silently defaulted to `active` when it meant
+    /// `full` would correct 4 columns to the left of every defect it names, and
+    /// nothing downstream can see that.
+    pub fn parse(s: &str) -> Result<CoordSpace, DefectMapError> {
+        match s.trim() {
+            "active" => Ok(CoordSpace::Active),
+            "full" => Ok(CoordSpace::Full),
+            other => Err(DefectMapError::UnknownCoordSpace {
+                found: other.to_string(),
+            }),
+        }
+    }
+}
+
+impl std::fmt::Display for CoordSpace {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            CoordSpace::Active => "active",
+            CoordSpace::Full => "full",
+        })
+    }
+}
 
 /// Everything that can go wrong reading, building or applying a defect map.
 ///
@@ -181,6 +253,13 @@ pub enum DefectMapError {
          \"both\" and \"none\""
     )]
     UnknownArm { found: String },
+
+    #[error(
+        "defect map declares coords {found:?}; the coordinate spaces are \"active\" \
+         (origin at the active area, what rawpy's raw_image_visible returns) and \
+         \"full\" (origin at the whole decoder buffer, optical black included)"
+    )]
+    UnknownCoordSpace { found: String },
 }
 
 /// The largest dust gain the format will carry.
@@ -477,6 +556,10 @@ pub struct DefectMap {
     /// cover them would be asserting a calibration it does not have.
     pub covered_w: usize,
     pub covered_h: usize,
+    /// Which raw array [`DefectMap::hot`] and [`DefectMap::dust`] coordinates
+    /// index. Required in the file; see [`CoordSpace`] for the 54.8% error that
+    /// made it required.
+    pub coords: CoordSpace,
     /// `clean_model` of the body the map was measured on.
     pub camera: String,
     /// The aperture the dust arm was measured at, when known. See the module
@@ -500,6 +583,7 @@ impl DefectMap {
             sensor_h,
             covered_w: sensor_w,
             covered_h: sensor_h,
+            coords: CoordSpace::Active,
             camera: camera.to_string(),
             aperture_f: None,
             hot: Vec::new(),
@@ -526,6 +610,7 @@ impl DefectMap {
         let _ = writeln!(s, "camera {}", self.camera);
         let _ = writeln!(s, "sensor {} {}", self.sensor_w, self.sensor_h);
         let _ = writeln!(s, "covered {} {}", self.covered_w, self.covered_h);
+        let _ = writeln!(s, "coords {}", self.coords);
         match self.aperture_f {
             Some(f) => {
                 let _ = writeln!(s, "aperture {f}");
@@ -554,6 +639,7 @@ impl DefectMap {
         let mut camera: Option<String> = None;
         let mut sensor: Option<(usize, usize)> = None;
         let mut covered: Option<(usize, usize)> = None;
+        let mut coords: Option<CoordSpace> = None;
         let mut aperture: Option<Option<f32>> = None;
         let mut declared_hot: Option<usize> = None;
         let mut declared_dust: Option<usize> = None;
@@ -609,6 +695,9 @@ impl DefectMap {
                     } else {
                         covered = Some((w, h));
                     }
+                }
+                "coords" => {
+                    coords = Some(CoordSpace::parse(it.next().unwrap_or_default())?);
                 }
                 "aperture" => {
                     let v = it.next().unwrap_or_default();
@@ -668,6 +757,11 @@ impl DefectMap {
         }
         let (sensor_w, sensor_h) = sensor.ok_or(DefectMapError::MissingKey { key: "sensor" })?;
         let (covered_w, covered_h) = covered.unwrap_or((sensor_w, sensor_h));
+        // REQUIRED, and deliberately not defaulted. Every map this project has
+        // ever written is `active`, so defaulting to it would be right almost
+        // always and silently wrong for the one file that mattered. See
+        // `CoordSpace` for the +54.8% reading that a guessed origin produced.
+        let coords = coords.ok_or(DefectMapError::MissingKey { key: "coords" })?;
         let declared_hot = declared_hot.ok_or(DefectMapError::MissingKey { key: "hot" })?;
         let declared_dust = declared_dust.ok_or(DefectMapError::MissingKey { key: "dust" })?;
         if !saw_end || declared_hot != hot.len() || declared_dust != dust.len() {
@@ -726,6 +820,7 @@ impl DefectMap {
             sensor_h,
             covered_w,
             covered_h,
+            coords,
             camera: camera.unwrap_or_default(),
             aperture_f: aperture.flatten(),
             hot,
@@ -772,6 +867,11 @@ impl DefectMap {
     ///   patch where there was a gradient.
     /// - **A geometry mismatch is an error.** See
     ///   [`DefectMapError::SensorMismatch`].
+    /// - **The map's [`CoordSpace`] chooses the origin.** An `active` map is
+    ///   offset by `(ax, ay)`; a `full` map is not. This is the only place the
+    ///   key is consumed, and it is consumed rather than merely carried
+    ///   because a coordinate space that is recorded and ignored is worth
+    ///   exactly as much as one that was never recorded.
     #[allow(clippy::too_many_arguments)]
     pub fn apply(
         &self,
@@ -793,6 +893,11 @@ impl DefectMap {
                 got_h: ah,
             });
         }
+        // The whole content of the `coords` key: where does (0, 0) live.
+        let (ox, oy) = match self.coords {
+            CoordSpace::Active => (ax, ay),
+            CoordSpace::Full => (0, 0),
+        };
         let mut r = CorrectionReport::default();
 
         if cfg.hot {
@@ -807,7 +912,7 @@ impl DefectMap {
                     r.hot_below_floor += 1;
                     continue;
                 }
-                let idx = (ay + y) * stride + ax + x;
+                let idx = (oy + y) * stride + ox + x;
                 let v = samples[idx];
                 if f32::from(v) >= white {
                     r.hot_clipped += 1;
@@ -837,7 +942,7 @@ impl DefectMap {
                 let mut clipped = 0usize;
                 for dy in 0..2 {
                     for dx in 0..2 {
-                        let idx = (ay + py + dy) * stride + ax + px + dx;
+                        let idx = (oy + py + dy) * stride + ox + px + dx;
                         let v = samples[idx];
                         if f32::from(v) >= white {
                             clipped += 1;
@@ -1624,6 +1729,718 @@ pub fn hot_residual(
 }
 
 // ---------------------------------------------------------------------------
+// Self-validation: does this stack's own data show the defect the map names?
+// ---------------------------------------------------------------------------
+
+/// One connected mote: the quads of a single dust particle's shadow.
+///
+/// The map stores 1,135 loose quads. A *particle* is a connected group of them,
+/// and it is the particle, not the quad, that self-validation reasons about —
+/// a quad is a 30th of a mote's diameter and has no independent existence.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Mote {
+    /// Indices into [`DefectMap::dust`].
+    pub quads: Vec<usize>,
+    /// Centroid, in quad coordinates, rounded.
+    pub cx: u32,
+    pub cy: u32,
+    /// The deepest gain in the group.
+    pub peak_gain: f32,
+    /// Median fractional depth over the core disc, as the **map** states it:
+    /// `median(1/gain - 1)` over quads within [`ValidateParams::core_radius`]
+    /// of the centroid. Negative.
+    ///
+    /// This is the map's own claim about the mote, in the same units the
+    /// frames are measured in, and it is the denominator of the amplitude
+    /// rescale. It is derived from the gains rather than stored beside them so
+    /// that it cannot disagree with the gains it describes.
+    pub map_depth: f64,
+}
+
+/// Thresholds for the self-validation check.
+///
+/// Every constant here is inherited from the commissioned Python in
+/// `experiments/BUILD-DEFECT/src/20-selfvalidate.py` and
+/// `24-stationarity.py` rather than re-chosen, so the Rust's verdicts are
+/// comparable with the measurements in `docs/research/BUILD-DEFECT.md` §11
+/// rather than merely similar to them.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ValidateParams {
+    /// Radius of the low-pass that defines "local background". 64 quads is
+    /// ~4x the largest mote radius, so a mote cannot flatten its own reference.
+    pub hp_radius: usize,
+    /// Passes of that low-pass. Two box passes approximate a Gaussian well
+    /// enough that the residual has no box artefacts at the core.
+    pub hp_pass: usize,
+    /// Radius of the mild smoothing applied to the residual, to stop a single
+    /// noisy quad from setting the core median.
+    pub bp_radius: usize,
+    /// Radius of the disc whose median is the reading.
+    pub core_radius: usize,
+    /// Inner and outer radius of the annulus the null is drawn from. Inner is
+    /// outside any mote; outer is inside the region whose illumination and
+    /// texture resemble the site's.
+    pub annulus_in: usize,
+    pub annulus_out: usize,
+    /// Null sample size. `p` is quantised at `1/(n+1)`, so 400 gives a floor
+    /// of 0.0025 and [`Self::p_bar`] sits exactly on it: the test can only
+    /// pass when **no** null sample was as deep as the site.
+    pub n_null: usize,
+    /// Significance bar. See [`Self::n_null`].
+    pub p_bar: f64,
+    /// Depth bar, as a positive fraction. A site must read at least this dark.
+    ///
+    /// **Both bars, not either.** In one improvement arm the corrected site
+    /// still had the lowest reading in its neighbourhood — `p` alone would have
+    /// been perverse and re-fired on an already-corrected mote — and the depth
+    /// floor is what stopped it.
+    pub depth_floor: f64,
+    /// Fraction of individual frames that must show the darkening.
+    ///
+    /// **MEASURED load-bearing** (`experiments/BUILD-DEFECT/out/25-drift-sweep.log`).
+    /// A planted -8% disc *moving* with the bracket's own magnification drift
+    /// still cleared `p` **and** `depth_floor` at scales 1.012–1.020 on
+    /// `leaf-2-cpl` (30 quads of travel, depth -6.718%, p 0.0025) and 1.016–1.020
+    /// on `lavendar-cpl`. Only this bar rejected it. Without it the correction
+    /// would have brightened real moving subject detail.
+    pub presence_bar: f64,
+    /// Depth, as a positive fraction, at which a single frame counts as
+    /// "showing" the darkening.
+    pub frame_floor: f64,
+    /// Half-width of the window cropped around each site.
+    ///
+    /// The statistic is local — nothing outside `annulus_out` plus the
+    /// low-pass support can influence it — so it is computed on a crop.
+    /// MEASURED: a 560-quad half-window agrees with the full frame to
+    /// **0.0000 pp** and is **23.5x** cheaper
+    /// (`experiments/BUILD-DEFECT/out/21-depth-aperture.log`).
+    pub window: usize,
+    /// Seed for the null's offset sampler.
+    ///
+    /// Fixed, because the byte-freeze registry pins two renders to the byte
+    /// and a correction whose gate consulted an unseeded RNG would render
+    /// differently on consecutive runs of identical input.
+    pub seed: u64,
+}
+
+impl Default for ValidateParams {
+    fn default() -> Self {
+        ValidateParams {
+            hp_radius: 64,
+            hp_pass: 2,
+            bp_radius: 3,
+            core_radius: 8,
+            annulus_in: 60,
+            annulus_out: 400,
+            n_null: 400,
+            p_bar: 0.0025,
+            depth_floor: 0.015,
+            presence_bar: 0.75,
+            frame_floor: 0.010,
+            window: 560,
+            seed: 0x5445_5354_4d4f_5445,
+        }
+    }
+}
+
+/// Why a site was or was not corrected. Exactly one applies.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SiteOutcome {
+    /// All three bars cleared. The site is corrected, at the depth measured
+    /// here rather than the depth the map remembers.
+    Confirmed,
+    /// The darkening is not significant against the local null. Either the
+    /// sensor was cleaned, or the background is too busy for the site to be
+    /// measurable — and the second case is also the case where the mote cannot
+    /// be seen, so skipping is right in both.
+    NotSignificant,
+    /// Significant but shallower than [`ValidateParams::depth_floor`].
+    TooShallow,
+    /// Deep and significant in the pooled median but absent from too many
+    /// individual frames: it moves, so it is subject detail and not dust.
+    NotStationary,
+    /// The site is too near the frame edge for the annulus to be sampled, so
+    /// the null could not be formed. Refusing to guess.
+    Unmeasurable,
+}
+
+impl SiteOutcome {
+    /// Only [`SiteOutcome::Confirmed`] corrects.
+    pub fn corrects(self) -> bool {
+        matches!(self, SiteOutcome::Confirmed)
+    }
+}
+
+/// What the check read at one nominated site.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SiteVerdict {
+    /// Quad centroid of the mote this verdict is about.
+    pub cx: u32,
+    pub cy: u32,
+    /// Pooled (across-frame median) fractional depth at the core. Negative.
+    pub depth: f64,
+    /// What the map claimed the depth was. Negative.
+    pub map_depth: f64,
+    /// Fraction of the null that was at least as dark as the site.
+    pub p: f64,
+    /// Fraction of frames that individually showed the darkening.
+    pub presence: f64,
+    /// The decision.
+    pub outcome: SiteOutcome,
+    /// Exponent applied to every gain in the mote, `ln(1-|d_meas|) /
+    /// ln(1-|d_map|)`. 1.0 means the frames agreed with the map exactly.
+    pub scale: f64,
+}
+
+/// A counted partition of every nominated site. The buckets sum to `examined`.
+///
+/// Same discipline as [`CorrectionReport`], for the same reason: "0 sites
+/// corrected" and "0 sites examined" are different failures, and on a
+/// default-ON correction the difference is "your sensor is clean" versus "the
+/// feature silently did nothing".
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ValidationReport {
+    pub examined: usize,
+    pub confirmed: usize,
+    pub not_significant: usize,
+    pub too_shallow: usize,
+    pub not_stationary: usize,
+    pub unmeasurable: usize,
+    /// Frames the verdicts were formed from.
+    pub frames: usize,
+}
+
+impl ValidationReport {
+    /// Every site landed in exactly one bucket.
+    pub fn check_partition(&self) -> bool {
+        self.confirmed
+            + self.not_significant
+            + self.too_shallow
+            + self.not_stationary
+            + self.unmeasurable
+            == self.examined
+    }
+
+    /// One line for a run banner.
+    pub fn describe(&self) -> String {
+        format!(
+            "{}/{} sites confirmed from {} frames (not significant {}, too shallow {}, \
+             not stationary {}, unmeasurable {})",
+            self.confirmed,
+            self.examined,
+            self.frames,
+            self.not_significant,
+            self.too_shallow,
+            self.not_stationary,
+            self.unmeasurable
+        )
+    }
+}
+
+/// A small deterministic PRNG for the null's offset sampler.
+///
+/// Deterministic because the byte-freeze registry pins renders to the byte, and
+/// a gate that consulted `thread_rng` would make two runs of identical input
+/// disagree about whether to correct. `SplitMix64`, which is four lines and has
+/// no dependency.
+struct SplitMix64(u64);
+
+impl SplitMix64 {
+    fn next_u64(&mut self) -> u64 {
+        self.0 = self.0.wrapping_add(0x9E37_79B9_7F4A_7C15);
+        let mut z = self.0;
+        z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+        z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+        z ^ (z >> 31)
+    }
+
+    /// Uniform in `[0, 1)`.
+    fn next_f64(&mut self) -> f64 {
+        (self.next_u64() >> 11) as f64 / (1u64 << 53) as f64
+    }
+}
+
+/// Accumulates the evidence for a map's motes over a sample of frames.
+///
+/// # Where this reads, and why the warp cannot touch it
+///
+/// [`SiteValidator::observe`] takes a **quad-mean of the black-subtracted raw
+/// active area** — the same lattice the map is written on and the same lattice
+/// [`DefectMap::apply`] corrects on — and it is fed from the decoder directly,
+/// **before any geometric transform**. So the question "does the check read
+/// before or after the warp?" has a structural answer rather than a careful
+/// one: there is no warp on this path at all. The aligner cannot move a site
+/// out from under its own verdict because the aligner has not run.
+///
+/// # Cost
+///
+/// MEASURED at **0.016 s/frame/site** on a 560-quad window against 0.370 s for
+/// the full frame (`experiments/BUILD-DEFECT/out/21-depth-aperture.log`). Two
+/// sites over 8 frames is **0.26 s of compute** — one frame's share of a
+/// 0.26 s/frame budget — plus the ~2.5 s to decode the 8 frames, which is the
+/// dominant term and is why the sample is 8 frames and not the whole bracket.
+pub struct SiteValidator {
+    params: ValidateParams,
+    motes: Vec<Mote>,
+    /// Per site, per frame: the residual crop around the site.
+    crops: Vec<Vec<Vec<f32>>>,
+    /// Per site: crop origin and size in quad coordinates.
+    windows: Vec<(usize, usize, usize, usize)>,
+    frames: usize,
+}
+
+impl SiteValidator {
+    /// Prepare to validate every mote in `map`.
+    pub fn new(map: &DefectMap, params: ValidateParams) -> SiteValidator {
+        let motes = map.motes(params.core_radius);
+        SiteValidator {
+            params,
+            crops: vec![Vec::new(); motes.len()],
+            windows: vec![(0, 0, 0, 0); motes.len()],
+            motes,
+            frames: 0,
+        }
+    }
+
+    /// The motes this validator will rule on.
+    pub fn motes(&self) -> &[Mote] {
+        &self.motes
+    }
+
+    /// Observe one frame.
+    ///
+    /// `quad` is `qw * qh` black-subtracted quad means; build it with
+    /// [`quad_mean`].
+    pub fn observe(&mut self, quad: &[f32], qw: usize, qh: usize) {
+        let p = self.params;
+        for (i, m) in self.motes.iter().enumerate() {
+            let x0 = (m.cx as usize).saturating_sub(p.window);
+            let y0 = (m.cy as usize).saturating_sub(p.window);
+            let x1 = (m.cx as usize + p.window + 1).min(qw);
+            let y1 = (m.cy as usize + p.window + 1).min(qh);
+            let (cw, ch) = (x1 - x0, y1 - y0);
+            let mut crop = vec![0f32; cw * ch];
+            for y in 0..ch {
+                crop[y * cw..y * cw + cw]
+                    .copy_from_slice(&quad[(y0 + y) * qw + x0..(y0 + y) * qw + x0 + cw]);
+            }
+            self.windows[i] = (x0, y0, cw, ch);
+            self.crops[i].push(residual_field(&crop, cw, ch, p));
+        }
+        self.frames += 1;
+    }
+
+    /// Rule on every site.
+    ///
+    /// Returns one verdict per mote, in mote order, plus the partitioned count.
+    pub fn finish(&self) -> (Vec<SiteVerdict>, ValidationReport) {
+        let p = self.params;
+        let mut out = Vec::with_capacity(self.motes.len());
+        let mut rep = ValidationReport {
+            examined: self.motes.len(),
+            frames: self.frames,
+            ..Default::default()
+        };
+        for (i, m) in self.motes.iter().enumerate() {
+            let (x0, y0, cw, ch) = self.windows[i];
+            let (lx, ly) = (m.cx as usize - x0, m.cy as usize - y0);
+            let frames = &self.crops[i];
+
+            // Per-frame depth -> presence. This is the only statistic that
+            // needs the frames kept apart rather than pooled, and it is the
+            // one that separates a mote from moving subject detail.
+            let per: Vec<f64> = frames
+                .iter()
+                .map(|f| core_median(f, cw, ch, lx, ly, p.core_radius))
+                .collect();
+            let presence = if per.is_empty() {
+                0.0
+            } else {
+                per.iter().filter(|d| **d <= -p.frame_floor).count() as f64 / per.len() as f64
+            };
+
+            // Pooled: the per-pixel median across frames. Rejects a single
+            // frame's cosmic ray or a subject feature that visits once.
+            let pooled = pixelwise_median(frames, cw * ch);
+            let depth = core_median(&pooled, cw, ch, lx, ly, p.core_radius);
+            let (pv, n_null) = local_null_p(&pooled, cw, ch, lx, ly, depth, p);
+
+            let outcome = if frames.is_empty() || n_null < p.n_null {
+                // The annulus could not be filled: the site is too near an
+                // edge for a null to exist. A p-value from 40 samples is not
+                // the p-value this was commissioned at, so it is refused
+                // rather than reported at reduced confidence.
+                SiteOutcome::Unmeasurable
+            } else if pv > p.p_bar {
+                SiteOutcome::NotSignificant
+            } else if depth > -p.depth_floor {
+                SiteOutcome::TooShallow
+            } else if presence < p.presence_bar {
+                SiteOutcome::NotStationary
+            } else {
+                SiteOutcome::Confirmed
+            };
+            match outcome {
+                SiteOutcome::Confirmed => rep.confirmed += 1,
+                SiteOutcome::NotSignificant => rep.not_significant += 1,
+                SiteOutcome::TooShallow => rep.too_shallow += 1,
+                SiteOutcome::NotStationary => rep.not_stationary += 1,
+                SiteOutcome::Unmeasurable => rep.unmeasurable += 1,
+            }
+            out.push(SiteVerdict {
+                cx: m.cx,
+                cy: m.cy,
+                depth,
+                map_depth: m.map_depth,
+                p: pv,
+                presence,
+                outcome,
+                scale: depth_scale(depth, m.map_depth),
+            });
+        }
+        (out, rep)
+    }
+}
+
+/// The exponent that takes the map's profile to the measured amplitude.
+///
+/// # Why the amplitude comes from the frames and not from the map
+///
+/// A dust map records the depth of a mote **at the aperture and on the date it
+/// was measured**. MEASURED across ten subject stacks, the depth at one fixed
+/// sensor site varies **1.91x** — from -7.737% on `leaf-2-cpl` to -14.758% on
+/// `coffee-bean` — because a smaller aperture projects a sharper, deeper shadow
+/// of the same particle
+/// (`experiments/BUILD-DEFECT/out/21-depth-aperture.log`).
+///
+/// So a map-gain correction is wrong in **both** directions. On the deepest
+/// stack it leaves 6.6 points of mote uncorrected; on a shallower one it
+/// over-corrects and **manufactures a bright spot** where the mote was, which
+/// is the same failure as manufacturing the mote, inverted. Scaling to the
+/// depth measured in the frames in front of it lands all five firing stacks
+/// under **0.7% residual, including the f/8 one**.
+///
+/// The scaling is in log-gain space because attenuation composes
+/// multiplicatively: a particle whose shadow is `t` deep at one aperture and
+/// `t^s` deep at another has its whole profile raised to `s`, so the shape the
+/// map measured is preserved and only the amplitude moves.
+///
+/// A degenerate `map_depth` (a mote the map says is not dark) returns 1.0
+/// rather than dividing by zero, which leaves the map's gains untouched — the
+/// conservative direction.
+pub fn depth_scale(measured: f64, map_depth: f64) -> f64 {
+    let dm = measured.abs().min(0.95);
+    let d0 = map_depth.abs().min(0.95);
+    if d0 <= 1e-9 || dm <= 1e-9 {
+        return 1.0;
+    }
+    let s = (1.0 / (1.0 - dm)).ln() / (1.0 / (1.0 - d0)).ln();
+    if s.is_finite() {
+        s.clamp(0.0, 8.0)
+    } else {
+        1.0
+    }
+}
+
+/// Black-subtracted 2x2 quad means of a frame's active area.
+///
+/// The lattice the map, the check and the correction all share. Reading the
+/// **active area** and not the whole decoder buffer is the entire content of
+/// [`CoordSpace`], and getting it wrong once produced a +54.8% reading.
+pub fn quad_mean(
+    samples: &[u16],
+    stride: usize,
+    active: (usize, usize, usize, usize),
+    black: f32,
+) -> (Vec<f32>, usize, usize) {
+    let (ax, ay, aw, ah) = active;
+    let (qw, qh) = (aw / 2, ah / 2);
+    let mut out = vec![0f32; qw * qh];
+    for qy in 0..qh {
+        let r0 = (ay + 2 * qy) * stride + ax;
+        let r1 = r0 + stride;
+        for qx in 0..qw {
+            let i = 2 * qx;
+            let s = f32::from(samples[r0 + i])
+                + f32::from(samples[r0 + i + 1])
+                + f32::from(samples[r1 + i])
+                + f32::from(samples[r1 + i + 1]);
+            out[qy * qw + qx] = 0.25 * s - black;
+        }
+    }
+    (out, qw, qh)
+}
+
+/// `q / lowpass(q) - 1`, mildly smoothed: the local multiplicative residual.
+///
+/// Quads whose local background is at or below zero signal are set to 0 rather
+/// than to a ratio against a floor, because a ratio there is arbitrarily large
+/// and would dominate a median it has no information about.
+fn residual_field(q: &[f32], w: usize, h: usize, p: ValidateParams) -> Vec<f32> {
+    let lo = box_smooth(q, w, h, p.hp_radius, p.hp_pass);
+    let mut r = vec![0f32; w * h];
+    for i in 0..w * h {
+        r[i] = if lo[i] > 1.0 { q[i] / lo[i] - 1.0 } else { 0.0 };
+    }
+    box_smooth(&r, w, h, p.bp_radius, 1)
+}
+
+/// Median of the residual over a disc. The reading.
+fn core_median(f: &[f32], w: usize, h: usize, cx: usize, cy: usize, r: usize) -> f64 {
+    let mut v: Vec<f32> = Vec::with_capacity((2 * r + 1) * (2 * r + 1));
+    let y0 = cy.saturating_sub(r);
+    let x0 = cx.saturating_sub(r);
+    let y1 = (cy + r + 1).min(h);
+    let x1 = (cx + r + 1).min(w);
+    for y in y0..y1 {
+        for x in x0..x1 {
+            let (dy, dx) = (y as i64 - cy as i64, x as i64 - cx as i64);
+            if dy * dy + dx * dx <= (r * r) as i64 {
+                v.push(f[y * w + x]);
+            }
+        }
+    }
+    if v.is_empty() {
+        return 0.0;
+    }
+    f64::from(median(&mut v))
+}
+
+/// Per-pixel median across frames.
+fn pixelwise_median(frames: &[Vec<f32>], n: usize) -> Vec<f32> {
+    let mut out = vec![0f32; n];
+    let mut col = vec![0f32; frames.len()];
+    for (i, o) in out.iter_mut().enumerate() {
+        for (k, f) in frames.iter().enumerate() {
+            col[k] = f[i];
+        }
+        *o = median(&mut col);
+    }
+    out
+}
+
+/// How often a disc drawn from the surrounding annulus is at least as dark as
+/// the site.
+///
+/// # This search is able to return nothing
+///
+/// AGENTS.md rule 12. The null is drawn from the site's **own neighbourhood**,
+/// not from a global model, so a busy or textured background produces a wide
+/// null and the site fails to clear it — which is exactly what happened on
+/// `tweezers-cpl` (p = 0.3092) and `wrapped-text-1` (p = 0.2519), whose control
+/// sites read -8.4% and -15.3% of ordinary subject structure. Those stacks are
+/// not corrected, and they are the stacks in which V-EYES independently reports
+/// the mote **cannot be seen**. Power and visibility are governed by the same
+/// quantity, so the check declines precisely where declining costs nothing.
+///
+/// Returns `(p, n)`. A caller that gets `n < n_null` did not get a p-value it
+/// can use; see [`SiteOutcome::Unmeasurable`].
+fn local_null_p(
+    f: &[f32],
+    w: usize,
+    h: usize,
+    cx: usize,
+    cy: usize,
+    v: f64,
+    p: ValidateParams,
+) -> (f64, usize) {
+    let mut rng = SplitMix64(p.seed);
+    let mut at_least = 0usize;
+    let mut got = 0usize;
+    let mut tries = 0usize;
+    let r = p.core_radius as i64;
+    while got < p.n_null && tries < 40 * p.n_null {
+        tries += 1;
+        let a = rng.next_f64() * std::f64::consts::TAU;
+        let d = p.annulus_in as f64 + rng.next_f64() * (p.annulus_out - p.annulus_in) as f64;
+        let oy = cy as f64 + d * a.sin();
+        let ox = cx as f64 + d * a.cos();
+        if oy < r as f64 || ox < r as f64 || oy >= (h as i64 - r) as f64 || ox >= (w as i64 - r) as f64
+        {
+            continue;
+        }
+        let m = core_median(f, w, h, ox as usize, oy as usize, p.core_radius);
+        if m <= v {
+            at_least += 1;
+        }
+        got += 1;
+    }
+    ((1.0 + at_least as f64) / (1.0 + got as f64), got)
+}
+
+impl DefectMap {
+    /// Group the dust quads into connected motes (8-connectivity).
+    ///
+    /// `core_radius` is the disc the [`Mote::map_depth`] median is taken over,
+    /// and must match the one the check will use, or the map's claim and the
+    /// frames' measurement would be medians of different things.
+    pub fn motes(&self, core_radius: usize) -> Vec<Mote> {
+        let n = self.dust.len();
+        let mut parent: Vec<usize> = (0..n).collect();
+        fn find(p: &mut [usize], mut a: usize) -> usize {
+            while p[a] != a {
+                p[a] = p[p[a]];
+                a = p[a];
+            }
+            a
+        }
+        // The quads are sorted by (py, px), so an index by coordinate makes
+        // the neighbour lookup a binary search rather than an n^2 scan.
+        let key: Vec<(u32, u32)> = self.dust.iter().map(|d| (d.py, d.px)).collect();
+        for (i, d) in self.dust.iter().enumerate() {
+            for dy in 0..=1u32 {
+                for dx in [-1i64, 0, 1] {
+                    if dy == 0 && dx <= 0 {
+                        continue;
+                    }
+                    let ny = d.py + dy;
+                    let nx = d.px as i64 + dx;
+                    if nx < 0 {
+                        continue;
+                    }
+                    if let Ok(j) = key.binary_search(&(ny, nx as u32)) {
+                        let (a, b) = (find(&mut parent, i), find(&mut parent, j));
+                        if a != b {
+                            parent[a] = b;
+                        }
+                    }
+                }
+            }
+        }
+        let mut groups: std::collections::BTreeMap<usize, Vec<usize>> = Default::default();
+        for i in 0..n {
+            let root = find(&mut parent, i);
+            groups.entry(root).or_default().push(i);
+        }
+        let mut out = Vec::with_capacity(groups.len());
+        for quads in groups.into_values() {
+            let (mut sx, mut sy) = (0f64, 0f64);
+            let mut peak = 1f32;
+            for &i in &quads {
+                sx += f64::from(self.dust[i].px);
+                sy += f64::from(self.dust[i].py);
+                peak = peak.max(self.dust[i].gain);
+            }
+            let cx = (sx / quads.len() as f64).round() as u32;
+            let cy = (sy / quads.len() as f64).round() as u32;
+            // The map's own claim about this mote's core, in depth units.
+            let mut core: Vec<f32> = quads
+                .iter()
+                .filter(|&&i| {
+                    let dx = self.dust[i].px as i64 - cx as i64;
+                    let dy = self.dust[i].py as i64 - cy as i64;
+                    dx * dx + dy * dy <= (core_radius * core_radius) as i64
+                })
+                .map(|&i| 1.0 / self.dust[i].gain - 1.0)
+                .collect();
+            let map_depth = if core.is_empty() {
+                0.0
+            } else {
+                f64::from(median(&mut core))
+            };
+            out.push(Mote {
+                quads,
+                cx,
+                cy,
+                peak_gain: peak,
+                map_depth,
+            });
+        }
+        out.sort_by_key(|m| (m.cy, m.cx));
+        out
+    }
+
+    /// A copy of this map carrying only the motes the frames confirmed, with
+    /// every gain rescaled to the depth those frames measured.
+    ///
+    /// **Shape from the map, amplitude from the data.** The map knows the
+    /// profile of the particle — which quads, and how the depth falls off
+    /// across them — because it was built from 160 flat fields and a subject
+    /// stack cannot see that. The frames know how deep the shadow is *today, at
+    /// this aperture*, which the map cannot. Each supplies the half it is
+    /// entitled to.
+    ///
+    /// Verdicts must be the ones [`SiteValidator::finish`] returned for **this**
+    /// map, in mote order; anything else is a programming error and is caught
+    /// by the length check rather than silently mis-applied.
+    pub fn validated(
+        &self,
+        verdicts: &[SiteVerdict],
+        core_radius: usize,
+    ) -> Result<DefectMap, DefectMapError> {
+        let motes = self.motes(core_radius);
+        if verdicts.len() != motes.len() {
+            return Err(DefectMapError::BadValue {
+                key: "verdicts".into(),
+                value: format!(
+                    "{} verdicts for a map with {} motes",
+                    verdicts.len(),
+                    motes.len()
+                ),
+            });
+        }
+        let mut dust = Vec::new();
+        for (m, v) in motes.iter().zip(verdicts) {
+            if !v.outcome.corrects() {
+                continue;
+            }
+            for &i in &m.quads {
+                let d = &self.dust[i];
+                // exp(ln(g) * s): the profile raised to the measured exponent.
+                let g = (f64::from(d.gain).ln() * v.scale).exp() as f32;
+                // The format's plausibility bar still applies to a computed
+                // gain. A frame that measured an absurd depth must not be able
+                // to write a gain the parser would have refused from a file.
+                let g = g.clamp(1.0, MAX_DUST_GAIN);
+                if g > 1.0 {
+                    dust.push(DustQuad {
+                        px: d.px,
+                        py: d.py,
+                        gain: g,
+                    });
+                }
+            }
+        }
+        dust.sort_by_key(|d| (d.py, d.px));
+        Ok(DefectMap {
+            dust,
+            ..self.clone()
+        })
+    }
+}
+
+/// The canonical dust map for the body this project was built on.
+///
+/// Embedded rather than shipped beside the binary because the correction is
+/// **default-ON**, and a default-on correction that depends on a file the user
+/// has to find is not on by default. Only the dust arm is here: the hot arm is
+/// 14,626 sites that M101 measured to be an immaterial null on this body, so
+/// compiling it in would spend 300 KB to move nothing.
+///
+/// Applying it to another body is prevented twice over — by the `camera` match
+/// in [`DefectMap::embedded_for`], and, if some other body ever shares both the
+/// model string and the geometry, by self-validation, which will not find these
+/// motes in frames that do not contain them.
+pub const EMBEDDED_DUST_MAP: &str = include_str!("defect-map-ILCE-7CM2-dust.txt");
+
+impl DefectMap {
+    /// The embedded map for `camera`, or `None` if this build has none.
+    ///
+    /// The match is exact. A near-miss returns `None` and the render is
+    /// uncorrected, which is the safe direction: a map is a statement about one
+    /// piece of silicon, and "probably the same sensor" is not a measurement.
+    pub fn embedded_for(camera: &str) -> Option<DefectMap> {
+        let m = DefectMap::from_text(EMBEDDED_DUST_MAP)
+            .expect("the embedded defect map is parsed by a unit test");
+        if m.camera == camera.trim() {
+            Some(m)
+        } else {
+            None
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Commissioning
 // ---------------------------------------------------------------------------
 
@@ -1776,7 +2593,7 @@ mod tests {
     #[test]
     fn a_typod_record_errors_rather_than_falling_back_to_the_default() {
         let text = format!(
-            "{MAGIC} {VERSION}\ncamera x\nsensor 4 4\ncovered 4 4\naperture unknown\n\
+            "{MAGIC} {VERSION}\ncamera x\nsensor 4 4\ncovered 4 4\ncoords active\naperture unknown\n\
              hott 0\ndust 0\nend\n"
         );
         match DefectMap::from_text(&text) {
@@ -1802,7 +2619,7 @@ mod tests {
     #[test]
     fn an_implausible_gain_is_refused_rather_than_clamped() {
         let text = format!(
-            "{MAGIC} {VERSION}\ncamera x\nsensor 40 40\ncovered 40 40\naperture 5.6\n\
+            "{MAGIC} {VERSION}\ncamera x\nsensor 40 40\ncovered 40 40\ncoords active\naperture 5.6\n\
              hot 0\ndust 1\nd 3 3 2.5\nend\n"
         );
         match DefectMap::from_text(&text) {
@@ -2711,6 +3528,696 @@ mod tests {
             f
         };
         assert_eq!(go(&sensor), go(&sensor.clone()));
+    }
+
+    // -----------------------------------------------------------------
+    // Self-validation
+    // -----------------------------------------------------------------
+    //
+    // A larger synthetic sensor than the correction tests use, because the
+    // check is a *spatial* statistic: it needs room for a 100-quad annulus
+    // around the site and a low-pass whose support does not reach the frame
+    // edge. 600x600 samples is 300x300 quads.
+
+    const VW: usize = 600;
+    const VH: usize = 600;
+    const VSITE: (usize, usize) = (150, 150); // quad coordinates
+    const VRAD: usize = 7; // planted mote radius, in quads
+    const VDEPTH: f64 = 0.08;
+
+    /// The check's thresholds, scaled to the synthetic sensor.
+    ///
+    /// Every ratio that matters is preserved: the annulus is 5x-25x the core
+    /// radius (real: 7.5x-50x), the low-pass is ~2.3x the mote radius (real:
+    /// 4.6x), and `p_bar` sits exactly on the null's quantisation floor
+    /// `1/(n+1)`, so the site must beat **every** null sample, as it must in
+    /// the field.
+    fn vparams() -> ValidateParams {
+        ValidateParams {
+            hp_radius: 16,
+            hp_pass: 2,
+            bp_radius: 1,
+            core_radius: 4,
+            annulus_in: 20,
+            annulus_out: 100,
+            n_null: 200,
+            p_bar: 1.0 / 201.0,
+            depth_floor: 0.015,
+            presence_bar: 0.75,
+            frame_floor: 0.010,
+            window: 140,
+            seed: 20_250_101,
+        }
+    }
+
+    /// A frame with a **smooth illumination gradient** and shot-like noise.
+    ///
+    /// The gradient is deliberate. The flats this project's dust map came from
+    /// were shot under moving cloud, so the standing risk is reading an
+    /// illumination drift as a defect. A 15% ramp across the frame is far
+    /// larger than any mote, and every arm below runs on top of it: if the
+    /// high-pass did not separate the two, the clean arm would fire.
+    fn vframe(seed: u64, sd: f32) -> Vec<u16> {
+        let mut r = Lcg(seed);
+        let mut out = vec![0u16; VW * VH];
+        for y in 0..VH {
+            for x in 0..VW {
+                let ramp = 1.0 + 0.15 * (x as f32 / VW as f32) + 0.07 * (y as f32 / VH as f32);
+                let v = BLACK + (f32::from(LEVEL) - BLACK) * ramp + r.noise(sd);
+                out[y * VW + x] = v.round().clamp(0.0, 65535.0) as u16;
+            }
+        }
+        out
+    }
+
+    /// Multiplicatively attenuate a disc of quads, as dust does.
+    fn vplant(f: &mut [u16], cx: usize, cy: usize, rad: usize, depth: f64) {
+        for qy in cy.saturating_sub(rad)..(cy + rad + 1).min(VH / 2) {
+            for qx in cx.saturating_sub(rad)..(cx + rad + 1).min(VW / 2) {
+                let dx = qx as f64 - cx as f64;
+                let dy = qy as f64 - cy as f64;
+                if dx * dx + dy * dy > (rad * rad) as f64 {
+                    continue;
+                }
+                for dy2 in 0..2 {
+                    for dx2 in 0..2 {
+                        let i = (2 * qy + dy2) * VW + 2 * qx + dx2;
+                        let s = (f32::from(f[i]) - BLACK).max(0.0);
+                        f[i] = (s * (1.0 - depth as f32) + BLACK).round() as u16;
+                    }
+                }
+            }
+        }
+    }
+
+    /// A map naming exactly the planted mote, at the depth it was planted.
+    fn vmap(depth: f64) -> DefectMap {
+        let mut m = DefectMap::empty(VW, VH, "x");
+        let (cx, cy) = VSITE;
+        for qy in cy - VRAD..=cy + VRAD {
+            for qx in cx - VRAD..=cx + VRAD {
+                let dx = qx as f64 - cx as f64;
+                let dy = qy as f64 - cy as f64;
+                if dx * dx + dy * dy <= (VRAD * VRAD) as f64 {
+                    m.dust.push(DustQuad {
+                        px: qx as u32,
+                        py: qy as u32,
+                        gain: (1.0 / (1.0 - depth)) as f32,
+                    });
+                }
+            }
+        }
+        m.dust.sort_by_key(|d| (d.py, d.px));
+        m
+    }
+
+    /// Run the check over a set of frames and return the single site's verdict.
+    fn vjudge(map: &DefectMap, frames: &[Vec<u16>]) -> (SiteVerdict, ValidationReport) {
+        let p = vparams();
+        let mut v = SiteValidator::new(map, p);
+        for f in frames {
+            let (q, qw, qh) = quad_mean(f, VW, (0, 0, VW, VH), BLACK);
+            v.observe(&q, qw, qh);
+        }
+        let (verdicts, rep) = v.finish();
+        assert_eq!(verdicts.len(), 1, "one planted mote, one verdict");
+        assert!(rep.check_partition(), "verdict buckets must sum: {rep:?}");
+        (verdicts.into_iter().next().unwrap(), rep)
+    }
+
+    /// 8 frames with the mote pinned in sensor coordinates: real dust.
+    fn vframes_fixed(depth: f64) -> Vec<Vec<u16>> {
+        (0..8)
+            .map(|k| {
+                let mut f = vframe(700 + k, 18.0);
+                vplant(&mut f, VSITE.0, VSITE.1, VRAD, depth);
+                f
+            })
+            .collect()
+    }
+
+    /// 8 frames with a feature of the *same depth and size* translating across
+    /// the site: subject detail under the bracket's magnification drift.
+    fn vframes_moving(depth: f64, travel: usize) -> Vec<Vec<u16>> {
+        (0..8)
+            .map(|k| {
+                let mut f = vframe(700 + k, 18.0);
+                let off = (travel * k as usize) / 7;
+                vplant(&mut f, VSITE.0 + off, VSITE.1, VRAD, depth);
+                f
+            })
+            .collect()
+    }
+
+    /// RED. A mote that is really there, under a 15% illumination gradient,
+    /// is confirmed -- and the depth it reports is the depth that was planted.
+    #[test]
+    fn self_validation_confirms_a_planted_mote_under_an_illumination_gradient() {
+        let map = vmap(VDEPTH);
+        let (v, rep) = vjudge(&map, &vframes_fixed(VDEPTH));
+        assert_eq!(
+            v.outcome,
+            SiteOutcome::Confirmed,
+            "planted mote must be confirmed, got {:?} (depth {:.4}, p {:.4}, presence {:.2})",
+            v.outcome,
+            v.depth,
+            v.p,
+            v.presence
+        );
+        assert_eq!(rep.confirmed, 1);
+        assert!(
+            (v.depth + VDEPTH).abs() < 0.02,
+            "measured depth {:.4} should be near the planted -{:.4}",
+            v.depth,
+            VDEPTH
+        );
+        assert!(
+            (v.scale - 1.0).abs() < 0.35,
+            "map and frames agree, so the amplitude scale should be ~1, got {:.3}",
+            v.scale
+        );
+    }
+
+    /// GREEN, and the whole reason this feature can ship default-ON: a map that
+    /// names a site the frames do not confirm corrects **nothing**.
+    ///
+    /// This is the staleness arm. The objection to a default-on dust map is
+    /// that the sensor may have been cleaned since it was measured, in which
+    /// case the correction brightens a spot where nothing is wrong and
+    /// manufactures the exact defect it exists to remove. A map that is
+    /// *required to observe the darkening first* cannot do that -- the failure
+    /// mode becomes unreachable rather than merely unlikely.
+    #[test]
+    fn self_validation_skips_a_site_the_frames_do_not_confirm() {
+        let map = vmap(VDEPTH);
+        let clean: Vec<Vec<u16>> = (0..8).map(|k| vframe(700 + k, 18.0)).collect();
+        let (v, rep) = vjudge(&map, &clean);
+        assert!(
+            !v.outcome.corrects(),
+            "a cleaned sensor must not be corrected, got {:?} (depth {:.4}, p {:.4})",
+            v.outcome,
+            v.depth,
+            v.p
+        );
+        assert_eq!(rep.confirmed, 0);
+        assert_eq!(rep.examined, 1, "examined 0 and confirmed 0 are different");
+        let validated = map.validated(&[v], vparams().core_radius).unwrap();
+        assert!(
+            validated.dust.is_empty(),
+            "a skipped site must leave no quads to correct"
+        );
+    }
+
+    /// The counterfactual that makes the arm above mean something.
+    ///
+    /// Without the guard, applying the map to clean frames does not do nothing
+    /// -- it plants a **bright** spot of very nearly the depth it was trying to
+    /// remove. Measured here, and measured at +8.64% to +16.44% on real stacks
+    /// (`experiments/BUILD-DEFECT/out/22-selfvalidating.log`).
+    #[test]
+    fn an_unguarded_map_manufactures_a_bright_spot_on_a_clean_sensor() {
+        let map = vmap(VDEPTH);
+        let p = vparams();
+        let mut clean = vframe(4242, 18.0);
+        let read = |f: &[u16]| -> f64 {
+            let (q, qw, qh) = quad_mean(f, VW, (0, 0, VW, VH), BLACK);
+            let r = residual_field(&q, qw, qh, p);
+            core_median(&r, qw, qh, VSITE.0, VSITE.1, p.core_radius)
+        };
+        let before = read(&clean);
+        map.apply(
+            &mut clean,
+            VW,
+            (0, 0, VW, VH),
+            BLACK,
+            f32::from(WHITE),
+            1.0,
+            Correction::DUST,
+            HotFloor::CENSUS,
+        )
+        .unwrap();
+        let after = read(&clean);
+        assert!(
+            after - before > 0.05,
+            "an unguarded map on a clean sensor must manufacture a bright spot: \
+             {before:.4} -> {after:.4}"
+        );
+    }
+
+    /// RIGHT WAY. Plant a known **improvement** and require the check to stop
+    /// firing -- and require the residual to actually shrink.
+    ///
+    /// AGENTS.md rule 24. A battery of degradations cannot tell a blind check
+    /// from a perverse one. This is the arm that would fail if the check
+    /// scored a corrected mote as *more* defective, which is not hypothetical:
+    /// on the real corpus the corrected site was still the darkest thing in its
+    /// own neighbourhood, so `p` alone re-fired on it and only the depth floor
+    /// stopped a second correction being stacked on the first.
+    #[test]
+    fn self_validation_stops_firing_once_the_mote_has_been_corrected() {
+        let map = vmap(VDEPTH);
+        let p = vparams();
+        let mut frames = vframes_fixed(VDEPTH);
+        let (v, _) = vjudge(&map, &frames);
+        assert_eq!(v.outcome, SiteOutcome::Confirmed, "arm needs a firing site");
+
+        let before = v.depth;
+        let corrected = map.validated(&[v], p.core_radius).unwrap();
+        assert!(!corrected.dust.is_empty());
+        for f in frames.iter_mut() {
+            corrected
+                .apply(
+                    f,
+                    VW,
+                    (0, 0, VW, VH),
+                    BLACK,
+                    f32::from(WHITE),
+                    1.0,
+                    Correction::DUST,
+                    HotFloor::CENSUS,
+                )
+                .unwrap();
+        }
+        let (after, _) = vjudge(&map, &frames);
+        assert!(
+            after.depth.abs() < before.abs() * 0.35,
+            "the correction must shrink the residual: {:.4} -> {:.4}",
+            before,
+            after.depth
+        );
+        assert!(
+            !after.outcome.corrects(),
+            "an already-corrected mote must not fire again, got {:?} at {:.4}",
+            after.outcome,
+            after.depth
+        );
+    }
+
+    /// PERVERSE. A **bright** blemish of the same size and amplitude must not
+    /// read as a mote.
+    ///
+    /// The check is a signed statistic and this is the arm that proves it. A
+    /// version bounded below at zero, or one scored on `|residual|`, would fire
+    /// here and brighten a spot that was already too bright -- the failure this
+    /// project has now caught twice, in `tri.blur_equiv` and `overshoot_frac`.
+    #[test]
+    fn self_validation_does_not_fire_on_a_bright_blemish() {
+        let map = vmap(VDEPTH);
+        let frames: Vec<Vec<u16>> = (0..8)
+            .map(|k| {
+                let mut f = vframe(700 + k, 18.0);
+                vplant(&mut f, VSITE.0, VSITE.1, VRAD, -VDEPTH);
+                f
+            })
+            .collect();
+        let (v, _) = vjudge(&map, &frames);
+        assert!(
+            !v.outcome.corrects(),
+            "a BRIGHT spot must not be read as dust, got {:?} at depth {:.4}",
+            v.outcome,
+            v.depth
+        );
+        assert!(
+            v.depth > 0.0,
+            "the reading must be signed and positive here, got {:.4}",
+            v.depth
+        );
+    }
+
+    /// STATIONARITY, and the arm that earns the `presence` bar its place.
+    ///
+    /// A dark feature of the **same depth and the same radius** as the mote,
+    /// translating across the site as the bracket breathes, must not be
+    /// corrected -- otherwise the correction brightens real subject detail: an
+    /// eye, a dark hair, a shadow edge that happens to land on the mote's
+    /// coordinates.
+    ///
+    /// The assertion is `NotStationary` **specifically**, not merely "did not
+    /// fire", and that is the point of the test. [`SiteValidator::finish`]
+    /// checks the bars in order, so a `NotStationary` verdict is proof that
+    /// `p` and `depth_floor` both **passed** and only presence rejected. If a
+    /// future edit made presence a no-op this test would report `Confirmed`;
+    /// if it made the travel large enough that any bar would do, it would
+    /// report `NotSignificant` and the test would also fail.
+    ///
+    /// MEASURED on real frames the same way: at 30 quads of travel on
+    /// `leaf-2-cpl` a moving -8% disc read depth -6.718% at p = 0.0025 --
+    /// clearing both other bars -- and presence 0.62 rejected it
+    /// (`experiments/BUILD-DEFECT/out/25-drift-sweep.log`).
+    #[test]
+    fn self_validation_rejects_a_dark_feature_that_moves_with_the_subject() {
+        let map = vmap(VDEPTH);
+        let (v, rep) = vjudge(&map, &vframes_moving(VDEPTH, 12));
+        assert_eq!(
+            v.outcome,
+            SiteOutcome::NotStationary,
+            "a moving dark feature must be rejected BY THE PRESENCE BAR \
+             (depth {:.4}, p {:.4}, presence {:.2}); Confirmed means presence \
+             is a no-op, NotSignificant means the fixture moved too far to be \
+             testing presence at all",
+            v.depth,
+            v.p,
+            v.presence
+        );
+        assert_eq!(rep.not_stationary, 1);
+        assert!(
+            v.presence < vparams().presence_bar,
+            "presence {:.2} must be under the bar",
+            v.presence
+        );
+    }
+
+    /// The positive control for the arm above: identical depth, identical
+    /// radius, identical frames, **zero travel**. Only motion differs.
+    ///
+    /// Without this, "the moving arm did not fire" could mean the fixture is
+    /// simply undetectable.
+    #[test]
+    fn the_same_feature_held_still_is_confirmed_so_only_motion_separates_them() {
+        let map = vmap(VDEPTH);
+        let (still, _) = vjudge(&map, &vframes_moving(VDEPTH, 0));
+        assert_eq!(
+            still.outcome,
+            SiteOutcome::Confirmed,
+            "zero-travel control must fire (depth {:.4}, p {:.4}, presence {:.2})",
+            still.depth,
+            still.p,
+            still.presence
+        );
+        assert!(still.presence >= vparams().presence_bar);
+    }
+
+    /// The amplitude comes from the frames, not from the map.
+    ///
+    /// A mote **twice as deep** as the map remembers -- which is what a smaller
+    /// aperture does, MEASURED at 1.91x across ten real stacks -- must produce a
+    /// stronger correction than the map alone would have applied, and must land
+    /// near zero residual rather than 6.6 points short of it.
+    #[test]
+    fn the_correction_scales_to_the_depth_the_frames_show_not_the_map() {
+        let p = vparams();
+        let map = vmap(VDEPTH);
+        let deep = 0.145; // ~1.8x the map's depth, as f/8 reads against an f/5.6 map
+        let mut frames = vframes_fixed(deep);
+        let (v, _) = vjudge(&map, &frames);
+        assert_eq!(v.outcome, SiteOutcome::Confirmed);
+        assert!(
+            v.scale > 1.3,
+            "a deeper mote must scale the profile up, got {:.3}",
+            v.scale
+        );
+        let scaled = map.validated(&[v], p.core_radius).unwrap();
+        let map_peak = map.dust.iter().fold(1f32, |a, d| a.max(d.gain));
+        let new_peak = scaled.dust.iter().fold(1f32, |a, d| a.max(d.gain));
+        assert!(
+            new_peak > map_peak * 1.05,
+            "scaled peak gain {new_peak:.4} must exceed the map's {map_peak:.4}"
+        );
+        for f in frames.iter_mut() {
+            scaled
+                .apply(
+                    f,
+                    VW,
+                    (0, 0, VW, VH),
+                    BLACK,
+                    f32::from(WHITE),
+                    1.0,
+                    Correction::DUST,
+                    HotFloor::CENSUS,
+                )
+                .unwrap();
+        }
+        let (after, _) = vjudge(&map, &frames);
+        assert!(
+            after.depth.abs() < 0.03,
+            "scaling to the measured depth must clear the mote, left {:.4}",
+            after.depth
+        );
+
+        // And the counterfactual: the map's own gains leave most of it behind.
+        let mut unscaled = vframes_fixed(deep);
+        for f in unscaled.iter_mut() {
+            map.apply(
+                f,
+                VW,
+                (0, 0, VW, VH),
+                BLACK,
+                f32::from(WHITE),
+                1.0,
+                Correction::DUST,
+                HotFloor::CENSUS,
+            )
+            .unwrap();
+        }
+        let (map_gain_only, _) = vjudge(&map, &unscaled);
+        assert!(
+            map_gain_only.depth.abs() > after.depth.abs() * 2.0,
+            "map-gain correction should leave much more behind ({:.4}) than \
+             frame-scaled ({:.4})",
+            map_gain_only.depth,
+            after.depth
+        );
+    }
+
+    /// A depth the frames read as *shallower* than the map must scale the
+    /// correction **down**, not apply the map's gain and overshoot into a
+    /// bright spot. Manufacturing the inverse defect is the same failure as
+    /// manufacturing the defect.
+    #[test]
+    fn a_shallower_mote_than_the_map_remembers_scales_the_correction_down() {
+        let p = vparams();
+        let map = vmap(VDEPTH);
+        let shallow = 0.035;
+        let mut frames = vframes_fixed(shallow);
+        let (v, _) = vjudge(&map, &frames);
+        assert_eq!(v.outcome, SiteOutcome::Confirmed);
+        assert!(v.scale < 0.75, "must scale down, got {:.3}", v.scale);
+        let scaled = map.validated(&[v], p.core_radius).unwrap();
+        for f in frames.iter_mut() {
+            scaled
+                .apply(
+                    f,
+                    VW,
+                    (0, 0, VW, VH),
+                    BLACK,
+                    f32::from(WHITE),
+                    1.0,
+                    Correction::DUST,
+                    HotFloor::CENSUS,
+                )
+                .unwrap();
+        }
+        let (after, _) = vjudge(&map, &frames);
+        assert!(
+            after.depth < 0.02,
+            "scaling down must not overshoot into a bright spot, left {:.4}",
+            after.depth
+        );
+    }
+
+    /// The verdicts partition, and the buckets are distinguishable.
+    #[test]
+    fn every_nominated_site_lands_in_exactly_one_counted_bucket() {
+        let map = vmap(VDEPTH);
+        let clean: Vec<Vec<u16>> = (0..8).map(|k| vframe(700 + k, 18.0)).collect();
+        for (name, frames) in [
+            ("fixed", vframes_fixed(VDEPTH)),
+            ("clean", clean),
+            ("moving", vframes_moving(VDEPTH, 12)),
+        ] {
+            let (_, rep) = vjudge(&map, &frames);
+            assert!(rep.check_partition(), "{name}: {rep:?}");
+            assert_eq!(rep.examined, 1, "{name}");
+            assert_eq!(rep.frames, 8, "{name}");
+        }
+    }
+
+    /// Motes are the unit of decision, not quads.
+    #[test]
+    fn dust_quads_group_into_connected_motes() {
+        let mut m = DefectMap::empty(VW, VH, "x");
+        for (cx, cy) in [(40usize, 40usize), (200usize, 200usize)] {
+            for qy in cy - 3..=cy + 3 {
+                for qx in cx - 3..=cx + 3 {
+                    m.dust.push(DustQuad {
+                        px: qx as u32,
+                        py: qy as u32,
+                        gain: 1.05,
+                    });
+                }
+            }
+        }
+        m.dust.sort_by_key(|d| (d.py, d.px));
+        let motes = m.motes(4);
+        assert_eq!(motes.len(), 2, "two separated blobs are two motes");
+        assert_eq!((motes[0].cx, motes[0].cy), (40, 40));
+        assert_eq!((motes[1].cx, motes[1].cy), (200, 200));
+        assert_eq!(
+            motes.iter().map(|x| x.quads.len()).sum::<usize>(),
+            m.dust.len(),
+            "every quad belongs to exactly one mote"
+        );
+        let want = 1.0 / 1.05f64 - 1.0;
+        assert!(
+            (motes[0].map_depth - want).abs() < 1e-6,
+            "map_depth must agree with the gains it describes: {:.6} vs {want:.6}",
+            motes[0].map_depth
+        );
+    }
+
+    /// The embedded canonical map parses, and is gated on the body.
+    #[test]
+    fn the_embedded_map_parses_and_only_matches_the_body_it_was_measured_on() {
+        let m = DefectMap::from_text(EMBEDDED_DUST_MAP).expect("embedded map must parse");
+        assert_eq!(m.camera, "ILCE-7CM2");
+        assert_eq!(m.coords, CoordSpace::Active);
+        assert_eq!(m.hot.len(), 0, "the hot arm is a measured null on this body");
+        assert_eq!(m.dust.len(), 1135);
+        assert_eq!((m.sensor_w, m.sensor_h), (7032, 4688));
+        let motes = m.motes(8);
+        assert_eq!(motes.len(), 2, "this body has two confirmed motes");
+        // Against the depths BUILD-DEFECT.md S2 published from the flats:
+        // -3.63% and -8.24%.
+        let depths: Vec<f64> = motes.iter().map(|x| x.map_depth).collect();
+        assert!(
+            depths.iter().any(|d| (d + 0.0363).abs() < 0.005),
+            "mote 1 should read near -3.63%, got {depths:?}"
+        );
+        assert!(
+            depths.iter().any(|d| (d + 0.0824).abs() < 0.005),
+            "mote 2 should read near -8.24%, got {depths:?}"
+        );
+        assert!(DefectMap::embedded_for("ILCE-7CM2").is_some());
+        assert!(
+            DefectMap::embedded_for("ILCE-7M4").is_none(),
+            "a map is a statement about one piece of silicon"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // The coordinate-space key
+    // -----------------------------------------------------------------
+
+    /// A map that does not say which array its coordinates index is REFUSED.
+    ///
+    /// The alternative is guessing, and guessing wrong produced a +54.8%
+    /// reading -- a dust mote reported as a bright spot -- when this module's
+    /// own self-validation was built. A loud failure on a v1 map that was
+    /// probably fine is cheaper than a silent 54.8% error on one that was not.
+    #[test]
+    fn a_map_without_a_coords_key_errors_rather_than_guessing_the_origin() {
+        let m = DefectMap::empty(4, 4, "x");
+        let text = m.to_text();
+        let cut: String = text
+            .lines()
+            .filter(|l| !l.starts_with("coords"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        match DefectMap::from_text(&cut) {
+            Err(DefectMapError::MissingKey { key }) => assert_eq!(key, "coords"),
+            other => panic!("expected MissingKey coords, got {other:?}"),
+        }
+    }
+
+    /// And a typo in it is an error, not a fallback to the common case.
+    #[test]
+    fn a_typod_coords_value_errors_rather_than_falling_back_to_the_default() {
+        for bad in ["visible", "Active", "raw_image", ""] {
+            let text = format!(
+                "{MAGIC} {VERSION}\ncamera x\nsensor 4 4\ncovered 4 4\ncoords {bad}\n\
+                 aperture unknown\nhot 0\ndust 0\nend\n"
+            );
+            match DefectMap::from_text(&text) {
+                Err(DefectMapError::UnknownCoordSpace { found }) => assert_eq!(found, bad),
+                other => panic!("coords {bad:?} should be refused, got {other:?}"),
+            }
+        }
+    }
+
+    /// The key is **consumed**, not merely carried: the two spaces correct
+    /// different photosites.
+    ///
+    /// A `coords` key that parsed and was then ignored would be worth exactly
+    /// as much as no key at all, and would read as a fix in the diff. This is
+    /// the test that fails if [`DefectMap::apply`] stops branching on it.
+    #[test]
+    fn the_coords_key_changes_which_photosites_are_corrected() {
+        const S: usize = 24; // stride, wider than the active area
+        const A: usize = 16; // active width and height
+        const OFF: usize = 4; // optical-black border
+        let base = vec![LEVEL; S * S];
+
+        let mut active_map = DefectMap::empty(A, A, "x");
+        active_map.dust.push(DustQuad {
+            px: 1,
+            py: 1,
+            gain: 1.2,
+        });
+        let mut full_map = active_map.clone();
+        full_map.coords = CoordSpace::Full;
+
+        let go = |m: &DefectMap| -> Vec<u16> {
+            let mut v = base.clone();
+            m.apply(
+                &mut v,
+                S,
+                (OFF, OFF, A, A),
+                BLACK,
+                f32::from(WHITE),
+                1.0,
+                Correction::DUST,
+                HotFloor::CENSUS,
+            )
+            .unwrap();
+            v
+        };
+        let (a, b) = (go(&active_map), go(&full_map));
+        let moved = |v: &[u16]| -> Vec<usize> {
+            v.iter()
+                .enumerate()
+                .filter(|(i, x)| **x != base[*i])
+                .map(|(i, _)| i)
+                .collect()
+        };
+        let (ma, mb) = (moved(&a), moved(&b));
+        assert_eq!(ma.len(), 4, "one quad, four samples");
+        assert_eq!(mb.len(), 4);
+        assert_ne!(
+            ma, mb,
+            "active and full coordinate spaces must correct different samples"
+        );
+        assert_eq!(ma[0], (OFF + 2) * S + OFF + 2, "active: offset by the origin");
+        assert_eq!(mb[0], 2 * S + 2, "full: not offset");
+    }
+
+    /// Round-tripping preserves the key.
+    #[test]
+    fn the_coords_key_round_trips() {
+        for space in [CoordSpace::Active, CoordSpace::Full] {
+            let mut m = DefectMap::empty(8, 8, "x");
+            m.coords = space;
+            let back = DefectMap::from_text(&m.to_text()).expect("round trip");
+            assert_eq!(back.coords, space);
+            assert_eq!(back, m);
+        }
+    }
+
+    /// `depth_scale` is the identity when the frames agree with the map, and is
+    /// monotone in the measured depth. A degenerate map depth returns 1.0
+    /// rather than dividing by zero.
+    #[test]
+    fn the_amplitude_scale_is_the_identity_when_map_and_frames_agree() {
+        assert!((depth_scale(-0.08, -0.08) - 1.0).abs() < 1e-9);
+        assert!(depth_scale(-0.16, -0.08) > 1.0);
+        assert!(depth_scale(-0.04, -0.08) < 1.0);
+        assert_eq!(depth_scale(-0.08, 0.0), 1.0, "no divide by zero");
+        assert_eq!(depth_scale(0.0, -0.08), 1.0);
+        let mut last = 0.0;
+        for k in 1..20 {
+            let s = depth_scale(-(k as f64) * 0.01, -0.08);
+            assert!(s > last, "must increase with measured depth");
+            last = s;
+        }
     }
 }
 

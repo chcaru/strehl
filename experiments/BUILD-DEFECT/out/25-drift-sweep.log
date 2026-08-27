@@ -1,0 +1,39 @@
+DRIFT SWEEP.  planted -8% disc, radius 14 quads, at quad (1500,3250)
+bars: p <= 0.0025  AND  depth <= -1.5%  AND  presence >= 0.75
+question: which bar rejects first as the feature starts to move?
+
+lavendar-cpl  (site is 1529 quads off centre)
+  scale      shift     depth        p  presence   p ok    dep ok  pres ok   FIRES
+  1.000       0.0q   -7.759%   0.0025      1.00   True    True    True      True
+  1.004       5.1q   -7.752%   0.0025      1.00   True    True    True      True
+  1.008      11.2q   -7.683%   0.0025      1.00   True    True    True      True
+  1.012      17.3q   -7.116%   0.0025      0.88   True    True    True      True
+  1.016      23.5q   -4.923%   0.0025      0.62   True    True    False     False
+  1.020      29.6q   -2.354%   0.0025      0.50   True    True    False     False
+  1.030      44.9q   -0.212%   0.0823      0.38   False   False   False     False
+  1.050      75.7q   -0.084%   0.2145      0.25   False   False   False     False
+  1.070     106.3q   -0.033%   0.2843      0.25   False   False   False     False
+
+leaf-2-cpl  (site is 1529 quads off centre)
+  scale      shift     depth        p  presence   p ok    dep ok  pres ok   FIRES
+  1.000       0.0q   -6.862%   0.0050      1.00   False   True    True      False
+  1.004       5.1q   -6.864%   0.0025      1.00   True    True    True      True
+  1.008      11.2q   -6.792%   0.0025      1.00   True    True    True      True
+  1.012      17.3q   -6.784%   0.0025      0.62   True    True    False     False
+  1.016      23.5q   -6.760%   0.0025      0.62   True    True    False     False
+  1.020      29.6q   -6.718%   0.0025      0.62   True    True    False     False
+  1.030      44.9q   -5.633%   0.0125      0.62   False   True    False     False
+  1.050      75.7q   -3.063%   0.0599      0.62   False   True    False     False
+  1.070     106.3q   -1.141%   0.2494      0.62   False   False   False     False
+
+============================================================================================
+WHERE EACH BAR FIRST REJECTS
+  lavendar-cpl         depth bar: scale 1.030 (45 quads)       presence bar: scale 1.016 (24 quads)
+  leaf-2-cpl           depth bar: scale 1.070 (106 quads)      presence bar: scale 1.012 (17 quads)
+
+VERDICT: presence is LOAD-BEARING -- it rejects moving content at drifts
+         where the depth bar alone would still have fired. Ship all three.
+
+NOTE: scale 1.000 is the stationary control. It MUST fire -- a dark subject
+      feature that never moves is doing exactly what dust does, and that is
+      the stated limit of a motion-based discriminator, not a defect in it.
