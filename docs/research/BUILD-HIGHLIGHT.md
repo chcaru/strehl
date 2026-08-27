@@ -1161,3 +1161,31 @@ ORCH's characterisation of a 1:1 crop, inherited by me and not measured — and 
 selects crops by **maximum high-frequency energy**, which by construction cannot speak to
 smooth-tone defects on the white paper that dominates that subject. Reworded to "no rim",
 which is the claim the evidence actually supports.
+
+#### 14.6.1 Is that floor instrument-limited or quantisation-limited?
+
+ORCH's corrected PIL audit — *count distinct values, do not check for a 256x scale error* —
+lands directly on 14.6, because a **detection floor is a small-amplitude claim and
+quantisation is exactly what destroys those.** A floor of -0.0081 means nothing if the input
+could not represent it.
+
+My first audit was **static**: grep every script for `PIL` / `Image.open`, found none, all
+twelve read via `tifffile`. That is necessary and **not sufficient** — `tifffile` on a
+genuinely 8-bit file returns `uint8` honestly, and a grep of my reader cannot see loss that
+happened upstream of it. The dynamic check is the one that certifies the data:
+
+| file | dtype | distinct values | min | max |
+|---|---|---:|---:|---:|
+| `M1-caon-kneeoff` (the 14.6 ladder input) | uint16 | **22376** | 36 | 22668 |
+| `K3-stack-demo` | uint16 | 65500 | 0 | 65535 |
+| `K5-stack-caoff` | uint16 | 65510 | 0 | 65535 |
+| `K2-stack-binned` | uint16 | 60811 | 0 | 65535 |
+
+**Margin:** the `A = 0.01` plant reduces red by 1.1 % at the corner — on a 22668-max image
+that is ~250 DN against a quantisation step of 1 DN. **The floor sits ~250x above the
+quantisation limit**, so it is a property of the statistic and not of the file's tonal
+resolution.
+
+**The transferable part:** a static check on the *reader* and a dynamic check on the *array*
+answer different questions, and only the second certifies a magnitude. I ran the static one
+first and would have stopped there.
