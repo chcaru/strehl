@@ -13273,3 +13273,105 @@ numbers. It did not have it for names.
 
 > **Verify names the way you verify numbers.** A name is an unmeasured claim that
 > has been formatted to look like a fact.
+
+## 126. The bytes that moved were the banner
+
+Section 125 closed on a ladder, and I thought it was complete:
+
+> An argv is the request. A banner is the claim. Only the pixels are the
+> behaviour.
+
+Two lanes measured the same flag tonight, reached opposite verdicts, and both
+were right. The reconciliation adds a rung I had not seen, in the gap I thought
+was solid — between *the claim* and *the behaviour*.
+
+### The two readings
+
+`BUILD-DEFECT` was sent to settle whether `--auto-exposure` reaches any pixel, an
+allegation standing at `check-defaults.py:1355` against a flag that is in the
+shipping command line for all twenty-six delivered masters. It built a careful
+instrument. Arm E ran `--exposure 3` without `--srgb` and got exit 1, which
+proves the flag is *parsed* and reaches a decision — so a null in the other arms
+would be a statement about pixels rather than about argument handling. That
+separation is the part most liveness tests skip, and it was correct. Then it ran
+`--exposure 3` against `--exposure -3`, a **64x** commanded span, hashed the
+output files, got different hashes, and concluded:
+
+> `POTENCY : +3 stops and -3 stops DIFFER (64x span moved the bytes).`
+> `OVERALL : exposure path is LIVE`
+
+I accepted it and recorded the allegation as stale.
+
+`V-NEVERWORSE`, working on an unrelated question, needed a gain-matched pair and
+measured the same flag differently: it regressed each render against the
+unmodified arm, least squares through the origin, all pixels, and read the
+**slope**. Across **153x** of commanded range:
+
+| commanded gain | delivered pixel gain |
+|---|---|
+| 1.0x | 1.00000x |
+| 0.5x | 1.00000x |
+| 0.3x | 1.00000x |
+| 4.0x | 1.00000x |
+| **38.3x** | **1.00000x** |
+
+Worst departure from unity: **0.000%**. The arms are *pixel-identical*.
+
+### The reconciliation, which is better than either verdict
+
+A commanded 2x gain changes **eleven bytes, all at offsets 339 to 359** — below
+the first pixel strip at 3399. They are inside the TIFF's `ImageDescription`
+tag. `strehl` writes its own exposure banner into the file's metadata, and that
+banner contains the commanded stops.
+
+**The bytes that moved were the banner.**
+
+A whole-file hash cannot sit on one rung of the ladder, because a modern image
+file *contains its own banner*. The hash reports "changed" for a metadata string
+and for a pixel revolution with equal confidence and in the same word. So the
+instrument that looked like it had climbed to the pixels had in fact read the
+claim again, one layer down, wearing a format that felt like ground truth
+because it was measured in bytes.
+
+> **argv -> banner -> bytes moved -> the commanded quantity was delivered.**
+>
+> "The bytes moved" proves *not inert*. It does not prove *it did what it said*.
+> Only a calibrated measurement — regress the output against the unmodified arm
+> and read the slope — distinguishes a flag that works from a flag that merely
+> disturbs. **Hash the pixels, never the file.**
+
+### Why this one is worth more than the four in section 125
+
+Those four were legible tokens standing in for things: a filename for a
+polariser, a path for a build, an argv for a program's behaviour, a banner for
+an applied transform. Each was caught by asking what the token was *made of*.
+
+This one survives that question. Bytes are not a legible token. They are the
+artifact itself, at the lowest level anyone normally goes, and a byte-level
+disagreement feels like the end of the line. The defect is that the artifact
+**embeds its own description**, so "the artifact changed" is ambiguous between
+two rungs of the very ladder the byte check was invoked to resolve.
+
+The general form, which I expect to recur well outside images:
+
+> **A hash over a container answers a question about the container.** Whenever
+> the container carries provenance — EXIF, `ImageDescription`, a PDF `/Producer`,
+> a build stamp, an embedded command line — a whole-artifact digest cannot
+> distinguish "the content changed" from "the record of what we asked for
+> changed". Digest the payload, or the strongest-looking evidence in the chain
+> is the weakest.
+
+### The standing consequence
+
+`check-defaults.py:1355` alleged that `--exposure` and `--auto-exposure` reach no
+pixel while the banner announces `+2.61 stops (gain 6.105x)`. I ruled that stale
+on the hash evidence. **On the pixel evidence the allegation looks correct, and
+my ruling was wrong.** It is re-opened, `--auto-exposure` specifically is under
+pixel comparison now, and the owner's README carries the caveat rather than
+waiting for the verdict — because the command line printed in that document is
+the one that produced his images.
+
+If it holds, the twenty-six masters are the *faithful* render rather than the
+brightened one. That does not make them wrong. It makes the documented command
+line describe something that did not happen, which is the same defect this
+project keeps finding in its own instruments, now in its own product.
