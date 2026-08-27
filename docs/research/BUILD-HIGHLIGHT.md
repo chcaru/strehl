@@ -1189,3 +1189,154 @@ resolution.
 **The transferable part:** a static check on the *reader* and a dynamic check on the *array*
 answer different questions, and only the second certifies a magnitude. I ran the static one
 first and would have stopped there.
+
+---
+
+## 15. A print-readiness gate (`print_ready.py`)
+
+Assigned by ORCH after they hand-read one master's tags and found no ICC profile and a
+placeholder resolution. The point of the task was not the two known defects — it was that
+**nothing in the project would have caught them, and nothing would catch the next one.**
+This is the instrument, not the repair. BUILD-RENDER owns `image_out.rs`.
+
+### 15.1 What it checks, and the partition
+
+Six checks: `icc`, `resolution`, `format`, `pixels`, `levels`, `metadata`. Every
+file x check lands in exactly one of PASS / FAIL / NOT-CHECKED, and the tool **asserts**
+the three counts sum to `n_files * n_checks`. A skipped check therefore cannot be read as a
+passed one — `n/c` is a visible glyph, not an absence.
+
+The tool **commissions itself before it will scan**, and refuses to report if commissioning
+fails. A clean result from an uncommissioned checker is indistinguishable from a deaf one.
+
+### 15.2 Why the distinct-value check is a LATTICE test, not a count
+
+ORCH's corrected PIL audit suggests `len(np.unique(arr))` to catch an 8-bit-laundered
+master. The count works, but it has an innocent explanation: **a genuinely simple image —
+flat field, synthetic chart — also has few distinct values.** Gating on the count fails such
+a file for being simple.
+
+The gate is therefore `gcd(values - min)`. Laundered data lies on a regular grid (stride 256
+or 257); real sensor data has stride 1 no matter how few values it holds. Control `c_simple`
+is a 16-bit image with ~40 distinct values at arbitrary positions: **a count gate fails it,
+the stride gate passes it.** That control is the reason the check is believable.
+
+The count is still reported. It is not gated.
+
+*(The stride test is valid only on the array AS READ. Any averaging regenerates values off
+the lattice — this is ORCH's own finding that a high-pass launders a damaged array into
+passing an `np.unique` audit while it still carries the harm. Never run this on a derived
+quantity.)*
+
+### 15.3 Commissioning
+
+Ten samples: an anchor that must pass everything, seven plants that must each be caught by
+**exactly one** check, and a false-positive control.
+
+```
+  sample          expect      icc        resolution format     pixels     levels     metadata
+  clean           (all pass)  pass       pass       pass       pass       pass       pass
+  p_icc_absent    icc         FAIL       pass       pass       pass       pass       pass
+  p_icc_corrupt   icc         FAIL       pass       pass       pass       pass       pass
+  p_res_none      resolution  pass       FAIL       pass       pass       pass       pass
+  p_8bit          format      pass       pass       FAIL       n/c        n/c        pass
+  p_laundered     pixels      pass       pass       pass       FAIL       pass       pass
+  p_clip          levels      pass       pass       pass       pass       FAIL       pass
+  p_meta_absent   metadata    pass       pass       pass       pass       pass       FAIL
+  p_meta_stub     metadata    pass       pass       pass       pass       pass       FAIL
+  c_simple        (all pass)  pass       pass       pass       pass       pass       pass
+
+  COMMISSIONING: PASS
+```
+
+`p_icc_corrupt` is the plant that matters most: a **non-empty** blob with a bad `acsp`
+signature. Without it, the `icc` check could be a byte-presence test and every real FAIL
+could be blamed on a reader looking in the wrong place. The anchor carries a real ICC and
+passes, which closes that explanation from the other side.
+
+`p_8bit` yields `n/c` on `pixels` and `levels` because both are scoped to uint16 — for an
+8-bit file, few distinct values is *correct*, and 65535 is not its ceiling. Testing them
+would be a category error. Only `format` fires. Orthogonality holds by abstention, visibly.
+
+### 15.4 Two defects commissioning found in my own instrument
+
+**(a) The plant that could not apply — and the check it exposed.** `p_meta_absent` passed
+the `metadata` check. `tifffile.imwrite` **backfills its own tags**: `Software='tifffile.py'`
+and `ImageDescription='{"shape": [192, 256, 3]}'`. So the plant never applied — and worse,
+the check would have **passed a real master carrying a machine stub as its description**.
+That is precisely the error ORCH told me to design against (`HAS DPI: True` for `(1,1)`),
+committed in the one check where I had not thought about it. Presence is not meaning.
+
+Fixed two ways: the check now rejects known placeholders, and the accident was promoted to a
+deliberate second plant, `p_meta_stub`. Note `software=None` does **not** suppress the tag,
+so a file with `Software` genuinely absent cannot be produced by this writer at all; that
+branch is commissioned at **unit level** and labelled as such rather than being left
+untested and implied.
+
+**(b) A display width that deleted rows.** The per-file table used `%-34s`. Six of the 26
+names are longer, so they were silently truncated — and vanished from my own filter of the
+output. The column is now sized from the data. A formatting choice that removes information
+is the same defect class as every other failure this project has had tonight.
+
+### 15.5 Result on `C:\dev\strehl-out\SHIP-V2` (26 files, extension exactly `.tiff`)
+
+```
+    files 26  x  checks 6  =  156 cells
+    PASS 101   FAIL 55   NOT-CHECKED 0   sum 156
+    partition verified: sum == total
+
+    icc          pass   0   FAIL  26      resolution   pass   0   FAIL  26
+    format       pass  26   FAIL   0      pixels       pass  26   FAIL   0
+    levels       pass  23   FAIL   3      metadata     pass  26   FAIL   0
+
+    PER-FILE VERDICT:  PASS 0   FAIL 26   NOT-CHECKED 0
+```
+
+- **`icc` 26/26 FAIL** — `no InterColorProfile tag (34675)`. ORCH's finding, now corpus-wide.
+  The innocent explanation is live and worth stating: `ImageDescription` **does** document
+  the colour space in prose (`"sRGB (IEC 61966-2-1): BT.709-6 primaries, D65 white point..."`).
+  The intent is recorded; it is simply not machine-readable, and a lab's software parses the
+  profile, not the English.
+- **`resolution` 26/26 FAIL** — `ResolutionUnit=NONE, res=(1,1)`.
+- **`format`, `pixels`, `metadata` 26/26 pass** — all genuinely 16-bit RGB UINT, all stride 1
+  (no laundering anywhere in the corpus), all carrying real Software and Description tags.
+
+### 15.6 An unasked-for finding: three masters have clipped BLACKS
+
+Not part of the assignment; the `levels` check surfaced it.
+
+| file | exact 0 | shoulder 1..255 | ratio | p0.01 | p99.99 |
+|---|---:|---:|---:|---:|---:|
+| `109MSDCF` | 3.2614 % | 0.0185 % | 176x | 0 | 64472 |
+| `119MSDCF` | 2.5381 % | 0.0425 % | 60x | 0 | 64752 |
+| `flower-inner-edge-cpl` | 3.5509 % | 0.6337 % | 5.6x | 0 | 65372 |
+
+All three are **black** clip; white clip is ~0.001 % everywhere. This **contradicts the
+masters' own `ImageDescription`**, which asserts *"the toe is soft, so no channel is clamped
+to zero."* Three of 26 files falsify that claim about themselves.
+
+The shoulder ratio is the reason I think this is clamping rather than a dark subject: a
+genuinely dark region still carries noise, so values scatter and exact-0 should be
+*comparable* to the 1..255 band. At 176x it is a floor, not a distribution.
+
+**Stated as a limit:** I did **not** commission that discriminator — there is no
+"genuinely dark subject" plant — so the shoulder ratio is *supporting evidence*, not a
+verdict. The clip fraction is measured; the interpretation is flagged for BUILD-RENDER.
+The `levels` gate is a POLICY cap (0.5 %), and a `levels` **PASS** is trustworthy in a way a
+`levels` **FAIL** is not: low clipping is low clipping regardless of subject, whereas high
+clipping has a live innocent explanation.
+
+Separately, and reported rather than gated: `Software` is `strehl 0.0.0` on all 26 masters,
+so a print cannot be traced to the build that made it.
+
+### 15.7 Limits
+
+- ICC validation covers the **128-byte header** a lab parses first, not profile semantics.
+  A structurally valid header wrapping nonsense curves would pass.
+- `MIN_RESOLUTION`, `MAX_RESOLUTION` and `MAX_CLIP_FRAC` are **policy**, chosen not swept.
+  Sec.77 does not apply to them for that reason — but it would the moment anyone quoted one
+  as a detection limit. Do not.
+- The `metadata` check catches only **known** placeholders. An arbitrary uninformative
+  string still passes.
+- `format` encodes a policy that a print master is 16-bit UINT RGB. A float32 master would
+  FAIL while arguably being better; the actual tuple is printed so a reader can judge.
