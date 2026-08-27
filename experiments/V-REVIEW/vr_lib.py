@@ -26,6 +26,8 @@ while a one-frame render is cropped about itself, so the two do not share pixel
 coordinates. Every source window is located by registering the render to the
 master and warping the master's own window out of it.
 """
+import glob
+import hashlib
 import os
 import subprocess
 import sys
@@ -46,8 +48,66 @@ from orch_chroma import WIN as CWIN                      # noqa: E402
 SHIP = r"C:\dev\strehl-out\acceptance\SHIP-V3"
 ARM = "SHIP-V3"
 OUT = r"C:\dev\strehl-out\V-REVIEW"
-EXE = r"C:\dev\strehl-out\acceptance-pins\740e7056\target\release\strehl.exe"
 SRC = r"D:\personal\macro"
+PINS = r"C:\dev\strehl-out\acceptance-pins"
+
+
+def _sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for blk in iter(lambda: f.read(1 << 20), b""):
+            h.update(blk)
+    return h.hexdigest().upper()
+
+
+def corpus_seal(ship=None, arm=None):
+    """The SHA256 every master in this corpus records as its renderer.
+
+    Hard-fails if the corpus is unsealed or the seals disagree. Never
+    returns a value that has not been read off the masters themselves.
+    """
+    ship = SHIP if ship is None else ship
+    arm = ARM if arm is None else arm
+    oks = sorted(glob.glob(os.path.join(ship, "*--%s.tiff.ok" % arm)))
+    if not oks:
+        raise RuntimeError("PIN GUARD: no .ok seals in %s" % ship)
+    seals = set()
+    for q in oks:
+        with open(q) as f:
+            seals.add(f.read().strip().upper())
+    if len(seals) != 1:
+        raise RuntimeError(
+            "PIN GUARD: corpus %s is not internally sealed; %d distinct "
+            "renderer hashes across %d masters: %s"
+            % (ship, len(seals), len(oks), sorted(seals)))
+    return seals.pop(), len(oks)
+
+
+def pin_for(seal):
+    """Select the pin whose binary hashes to the corpus seal.
+
+    Derivation, not declaration: re-pointing SHIP/ARM at another corpus
+    automatically selects that corpus's renderer. A cross-gauge render is
+    therefore not merely discouraged, it is unreachable.
+    """
+    found = {}
+    for name in sorted(os.listdir(PINS)):
+        cand = os.path.join(PINS, name, "target", "release", "strehl.exe")
+        if os.path.isfile(cand):
+            found[name] = _sha256(cand)
+    for name, h in found.items():
+        if h == seal:
+            return os.path.join(PINS, name, "target", "release",
+                                "strehl.exe"), name
+    raise RuntimeError(
+        "PIN GUARD: no pin matches the corpus seal.\n"
+        "  corpus seal : %s\n"
+        "  pins present: %s"
+        % (seal, ", ".join("%s=%s" % kv for kv in sorted(found.items()))))
+
+
+CORPUS_SEAL, N_SEALED = corpus_seal()
+EXE, EXE_PIN = pin_for(CORPUS_SEAL)
 
 # Stops read verbatim from each master's own render log ("reproduce this exact
 # file with --exposure=..."). Forcing them is what keeps the transfer curve
@@ -102,6 +162,31 @@ def frames_of(subj):
                   if f.lower().endswith(".arw"))
 
 
+def seal_render(out_tiff, cmd=None, env=None):
+    """Write the same seal the acceptance harness writes on a master.
+
+    A render without a seal cannot be audited the way a shipped master
+    can. The seal is the whole reason a cross-gauge comparison is
+    detectable after the fact rather than merely suspected.
+    """
+    h = _sha256(EXE)
+    with open(out_tiff + ".ok", "w") as f:
+        f.write(h)
+    with open(out_tiff + ".provenance.txt", "w") as f:
+        f.write("binary   %s\n" % EXE)
+        f.write("pin      %s\n" % EXE_PIN)
+        f.write("sha256   %s\n" % h)
+        f.write("corpus   %s (seal %s)\n" % (ARM, CORPUS_SEAL))
+        if cmd is not None:
+            f.write("command  %s\n" % " ".join(cmd))
+        for k in ("STREHL_FIX_CA", "STREHL_EDGE_AWARE",
+                  "STREHL_EDGE_TAU", "STREHL_EDGE_CONF",
+                  "STREHL_ONLY_FRAME"):
+            v = "<cleared>" if env is None else env.get(k, "<cleared>")
+            f.write("%-18s %s\n" % (k, v))
+    return out_tiff + ".ok"
+
+
 def render_frame(subj, k, out_tiff, timeout=900):
     """One frame of the bracket through the pinned binary, master's exposure."""
     env = {kk: v for kk, v in os.environ.items() if not kk.startswith("STREHL_")}
@@ -112,6 +197,7 @@ def render_frame(subj, k, out_tiff, timeout=900):
     log = p.stderr.decode("utf-8", "replace")
     if p.returncode != 0:
         raise RuntimeError("render failed rc=%d\n%s" % (p.returncode, log[-2000:]))
+    seal_render(out_tiff, cmd, env)
     return log
 
 
