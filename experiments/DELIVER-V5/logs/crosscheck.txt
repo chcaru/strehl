@@ -1,0 +1,43 @@
+ 1/26 109MSDCF                               box   0.0000  bilinear   0.0000  bicubic  12.0524  lanczos  16.0001
+ 2/26 112MSDCF                               box   0.0000  bilinear   0.0000  bicubic   8.8054  lanczos  15.6351
+ 3/26 113MSDCF                               box   0.0000  bilinear   0.0000  bicubic  12.4661  lanczos  24.1592
+ 4/26 119MSDCF                               box   0.0000  bilinear   0.0000  bicubic   7.3165  lanczos  12.6520
+ 5/26 bee-1-cpl                              box   0.0000  bilinear   0.0000  bicubic  12.9591  lanczos  36.9970
+ 6/26 bee-2-cpl                              box   0.0000  bilinear   0.0000  bicubic   6.2585  lanczos  17.8185
+ 7/26 bee-3-cpl                              box   0.0000  bilinear   0.0000  bicubic   3.5702  lanczos  13.6877
+ 8/26 coffee-bean                            box   0.0000  bilinear   0.0000  bicubic   2.0301  lanczos  10.0065
+ 9/26 coffee-bubbles                         box   0.0000  bilinear   0.0000  bicubic  17.1256  lanczos  34.5480
+10/26 couch-fibers-cpl                       box   0.0000  bilinear   0.0000  bicubic   6.3509  lanczos  11.1553
+11/26 dry-erase-marker-head-cpl              box   0.0000  bilinear   0.0000  bicubic   3.3822  lanczos   8.9279
+12/26 flat-on-ruler-cpl                      box   0.0000  bilinear   0.0000  bicubic   9.6276  lanczos  21.7637
+13/26 flower-bud-alone-cpl                   box   0.0000  bilinear   0.0000  bicubic   0.9833  lanczos   4.2239
+14/26 flower-bud-with-background-fern-cpl    box   0.0000  bilinear   0.0000  bicubic   7.4917  lanczos  13.1598
+15/26 flower-inner-edge-cpl                  box   0.0000  bilinear   0.0000  bicubic   2.1120  lanczos   4.6752
+16/26 flowers-cpl                            box   0.0000  bilinear   0.0000  bicubic   1.8044  lanczos   3.6714
+17/26 foam                                   box   0.0000  bilinear   0.0000  bicubic  17.0314  lanczos  34.4583
+18/26 highly-angled-ruler-mm-cpl             box   0.0000  bilinear   0.0000  bicubic   4.7946  lanczos   7.5194
+19/26 lavendar-cpl                           box   0.0000  bilinear   0.0000  bicubic  10.3691  lanczos  22.8481
+20/26 lead-1-cpl                             box   0.0000  bilinear   0.0000  bicubic  10.0349  lanczos  16.5424
+21/26 leaf-2-cpl                             box   0.0000  bilinear   0.0000  bicubic  12.0742  lanczos  20.8002
+22/26 pencil-flatter-angle-cpl               box   0.0000  bilinear   0.0000  bicubic   4.5099  lanczos   7.2516
+23/26 pencil-steep-angle-cpl                 box   0.0000  bilinear   0.0000  bicubic   3.8308  lanczos   9.5067
+24/26 tweezers-cpl                           box   0.0000  bilinear   0.0000  bicubic   8.5822  lanczos  19.6021
+25/26 wrapped-text-1                         box   0.0000  bilinear   0.0000  bicubic   2.5016  lanczos   5.4014
+26/26 wrapped-text-2                         box   0.0000  bilinear   0.0000  bicubic   2.6267  lanczos   6.2064
+
+=== corpus summary, 26 masters, 111.2 s ===
+kernel            max     median        min   published max
+box            0.0000     0.0000     0.0000        0.000
+bilinear       0.0000     0.0000     0.0000        0.000
+bicubic       17.1256     6.8337     0.9833       17.126
+lanczos       36.9970    13.4237     3.6714       36.997
+  [PASS] box       max 0.0000 vs published 0.000
+  [PASS] bilinear  max 0.0000 vs published 0.000
+  [PASS] bicubic   max 17.1256 vs published 17.126
+  [PASS] lanczos   max 36.9970 vs published 36.997
+  [PASS] lanczos median 13.4237 vs published 13.424
+  [FAIL] lanczos min    3.6714 vs published 1.962
+
+  agreement: 5 pass + 1 fail = 6 of 6
+
+VERDICT: DISAGREEMENT -- one of the two implementations is wrong and it must be resolved before any DELIVER-V5 number is trusted

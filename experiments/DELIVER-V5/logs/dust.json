@@ -1,0 +1,160 @@
+[
+ {
+  "shape": [
+   1172,
+   1758
+  ],
+  "n": 15,
+  "agg": "median",
+  "overview_xy": [
+   984,
+   603
+  ],
+  "full_res_xy": [
+   3936,
+   2412
+  ],
+  "field_depth_pct": -37.19007968902588,
+  "null_floor_pct": 27.848100662231445,
+  "ratio_to_null": 1.3354619814149247,
+  "detected": false,
+  "n_over_3pct": 9,
+  "worst": [
+   "bee-1-cpl",
+   -73.9130437374115
+  ],
+  "per_image": [
+   [
+    "bee-1-cpl",
+    -73.9130437374115
+   ],
+   [
+    "foam",
+    -67.64705777168274
+   ],
+   [
+    "109MSDCF",
+    -57.251906394958496
+   ],
+   [
+    "113MSDCF",
+    -53.09734344482422
+   ],
+   [
+    "112MSDCF",
+    -52.72727012634277
+   ],
+   [
+    "coffee-bean",
+    -50.0
+   ],
+   [
+    "bee-2-cpl",
+    -39.37007784843445
+   ],
+   [
+    "bee-3-cpl",
+    -37.19007968902588
+   ],
+   [
+    "wrapped-text-2",
+    -8.064514398574829
+   ],
+   [
+    "pencil-steep-angle-cpl",
+    -2.2935807704925537
+   ],
+   [
+    "119MSDCF",
+    0.0
+   ],
+   [
+    "coffee-bubbles",
+    0.0
+   ],
+   [
+    "wrapped-text-1",
+    2.2321462631225586
+   ],
+   [
+    "flower-inner-edge-cpl",
+    2.898550033569336
+   ],
+   [
+    "pencil-flatter-angle-cpl",
+    3.478264808654785
+   ]
+  ]
+ },
+ {
+  "shape": [
+   1172,
+   1760
+  ],
+  "n": 11,
+  "agg": "median",
+  "overview_xy": [
+   940,
+   327
+  ],
+  "full_res_xy": [
+   3760,
+   1308
+  ],
+  "field_depth_pct": -29.2682945728302,
+  "null_floor_pct": 21.95122241973877,
+  "ratio_to_null": 1.3333332428225884,
+  "detected": false,
+  "n_over_3pct": 7,
+  "worst": [
+   "leaf-2-cpl",
+   -39.5061731338501
+  ],
+  "per_image": [
+   [
+    "leaf-2-cpl",
+    -39.5061731338501
+   ],
+   [
+    "highly-angled-ruler-mm-cpl",
+    -37.037038803100586
+   ],
+   [
+    "flower-bud-alone-cpl",
+    -36.78160905838013
+   ],
+   [
+    "lavendar-cpl",
+    -31.85185194015503
+   ],
+   [
+    "couch-fibers-cpl",
+    -29.936307668685913
+   ],
+   [
+    "lead-1-cpl",
+    -29.2682945728302
+   ],
+   [
+    "dry-erase-marker-head-cpl",
+    -7.692307233810425
+   ],
+   [
+    "flowers-cpl",
+    -2.5641024112701416
+   ],
+   [
+    "flat-on-ruler-cpl",
+    -0.78125
+   ],
+   [
+    "tweezers-cpl",
+    0.6060600280761719
+   ],
+   [
+    "flower-bud-with-background-fern-cpl",
+    17.204296588897705
+   ]
+  ]
+ }
+]

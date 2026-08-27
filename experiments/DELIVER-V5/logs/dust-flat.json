@@ -1,0 +1,48 @@
+{
+ "groups": [
+  {
+   "shape": [
+    1172,
+    1758
+   ],
+   "n": 15,
+   "status": "scored",
+   "xy": [
+    774,
+    390
+   ],
+   "full_res_xy": [
+    3096,
+    1560
+   ],
+   "depth_pct": -45.63106894493103,
+   "null_pct": -38.947367668151855,
+   "ratio": 1.1716085496130868,
+   "detected": false,
+   "contributors": 5
+  },
+  {
+   "shape": [
+    1172,
+    1760
+   ],
+   "n": 11,
+   "status": "scored",
+   "xy": [
+    933,
+    323
+   ],
+   "full_res_xy": [
+    3732,
+    1292
+   ],
+   "depth_pct": -33.858269453048706,
+   "null_pct": -21.11111283302307,
+   "ratio": 1.6038126327516893,
+   "detected": false,
+   "contributors": 7
+  }
+ ],
+ "claimed_pct": 13.28,
+ "underpowered": true
+}

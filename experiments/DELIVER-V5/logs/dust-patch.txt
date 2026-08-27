@@ -1,0 +1,53 @@
+ 1/26 109MSDCF                           slice (6776,4322) disc@(232,128)   -0.26%  bg 237.5 DN  bg sd   1.6 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+ 2/26 112MSDCF                           slice (6776,4322) disc@(232,128)  +29.50%  bg 117.6 DN  bg sd  43.8 DN
+ 3/26 113MSDCF                           slice (6776,4322) disc@(232,128)  +29.65%  bg 122.6 DN  bg sd  45.5 DN
+ 4/26 119MSDCF                           slice (6776,4322) disc@(232,128)   +0.07%  bg 245.9 DN  bg sd   1.1 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+ 5/26 bee-1-cpl                          slice (6776,4322) disc@(232,128)   +0.06%  bg 206.9 DN  bg sd   4.7 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+ 6/26 bee-2-cpl                          slice (6776,4322) disc@(232,128)   +1.52%  bg 215.5 DN  bg sd   5.9 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+ 7/26 bee-3-cpl                          slice (6776,4322) disc@(232,128)   -0.63%  bg 211.4 DN  bg sd   4.7 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+ 8/26 coffee-bean                        slice (6776,4322) disc@(232,128)   +1.43%  bg 213.9 DN  bg sd   5.8 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+ 9/26 coffee-bubbles                     slice (6776,4322) disc@(232,128)  -12.61%  bg   5.4 DN  bg sd   2.4 DN
+10/26 couch-fibers-cpl                   slice (6784,4322) disc@(224,128)   +0.25%  bg 212.4 DN  bg sd   7.2 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+11/26 dry-erase-marker-head-cpl          slice (6784,4322) disc@(224,128)   -0.04%  bg 149.7 DN  bg sd   1.2 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+12/26 flat-on-ruler-cpl                  slice (6784,4322) disc@(224,128)  -16.38%  bg 170.1 DN  bg sd  56.5 DN
+13/26 flower-bud-alone-cpl               slice (6784,4322) disc@(224,128)   -0.16%  bg 224.2 DN  bg sd   1.5 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+14/26 flower-bud-with-background-fern-cpl slice (6784,4322) disc@(224,128)   -0.05%  bg 219.2 DN  bg sd   1.6 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+15/26 flower-inner-edge-cpl              slice (6776,4322) disc@(232,128)  -38.68%  bg  10.2 DN  bg sd   6.5 DN
+16/26 flowers-cpl                        slice (6784,4322) disc@(224,128)   +3.23%  bg 202.8 DN  bg sd   9.6 DN
+17/26 foam                               slice (6776,4322) disc@(232,128)  -43.04%  bg  51.8 DN  bg sd  47.7 DN
+18/26 highly-angled-ruler-mm-cpl         slice (6784,4322) disc@(224,128)  -13.88%  bg 232.7 DN  bg sd  11.5 DN
+19/26 lavendar-cpl                       slice (6784,4322) disc@(224,128)   +0.36%  bg 187.1 DN  bg sd   2.7 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+20/26 lead-1-cpl                         slice (6784,4322) disc@(224,128)   -0.36%  bg 114.4 DN  bg sd   4.8 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+21/26 leaf-2-cpl                         slice (6784,4322) disc@(224,128)   +0.62%  bg 107.1 DN  bg sd   8.1 DN
+22/26 pencil-flatter-angle-cpl           slice (6776,4322) disc@(232,128)   -0.78%  bg  91.3 DN  bg sd   1.8 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+23/26 pencil-steep-angle-cpl             slice (6776,4322) disc@(232,128)   -0.26%  bg 142.1 DN  bg sd   2.0 DN  <- FLAT+BRIGHT, a mote would be unmistakable
+24/26 tweezers-cpl                       slice (6784,4322) disc@(224,128)  -63.26%  bg  65.1 DN  bg sd  52.3 DN
+25/26 wrapped-text-1                     slice (6776,4322) disc@(232,128)   +3.10%  bg 215.2 DN  bg sd  18.3 DN
+26/26 wrapped-text-2                     slice (6776,4322) disc@(232,128)  +16.56%  bg 193.5 DN  bg sd  46.9 DN
+
+  distinct slice coordinates used across 26 masters: 2 (NOT identical: the two geometries clamp differently, stated below)
+
+=== counted partition, all 26 masters ===
+  <=-3% 6 + -3..-1% 0 + >-1% 20 = 26 of 26   OK
+  worst overall -0.26% (109MSDCF), median -0.05%
+
+=== the only regime that can adjudicate: flat AND bright ===
+  flat+bright subjects at this site: 14 of 26
+      pencil-flatter-angle-cpl             -0.78%  bg  91.3 DN  sd  1.8
+      bee-3-cpl                            -0.63%  bg 211.4 DN  sd  4.7
+      lead-1-cpl                           -0.36%  bg 114.4 DN  sd  4.8
+      109MSDCF                             -0.26%  bg 237.5 DN  sd  1.6
+      pencil-steep-angle-cpl               -0.26%  bg 142.1 DN  sd  2.0
+      flower-bud-alone-cpl                 -0.16%  bg 224.2 DN  sd  1.5
+      flower-bud-with-background-fern-cpl   -0.05%  bg 219.2 DN  sd  1.6
+      dry-erase-marker-head-cpl            -0.04%  bg 149.7 DN  sd  1.2
+      bee-1-cpl                            +0.06%  bg 206.9 DN  sd  4.7
+      119MSDCF                             +0.07%  bg 245.9 DN  sd  1.1
+      couch-fibers-cpl                     +0.25%  bg 212.4 DN  sd  7.2
+      lavendar-cpl                         +0.36%  bg 187.1 DN  sd  2.7
+      coffee-bean                          +1.43%  bg 213.9 DN  sd  5.8
+      bee-2-cpl                            +1.52%  bg 215.5 DN  sd  5.9
+
+  wrote C:\dev\strehl-out\DELIVER-V5\known-defects\sensor-dust_mote2_6776_4322_NOT-REPRODUCED.png
+
+VERDICT: NOT REPRODUCED. On the 14 subjects where the background at this site is flat and bright -- the only regime in which a grey disc is visible at all -- the worst reading is -0.78%, and nothing is visible in the tile. My first draft ranked the WHOLE corpus, put dark scene content at the top, and called it the sensor; that verdict was wrong and the ranking that produced it was measuring scene brightness. DELIVER-V4's mote may be real at coordinates I did not search, but it is not at (7008,4450) in SHIP-V4.

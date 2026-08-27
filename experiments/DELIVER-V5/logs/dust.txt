@@ -1,0 +1,44 @@
+=== commissioning the dust field statistic ===
+      MEASURED noise floor, clean corpus, N=12: 5.4061%
+  [PASS] D1-floor-measured  the floor is measured, not assumed: 5.4061%. Every arm below is judged against it, not against a threshold I chose.
+  [PASS] D2-recovered       planted -12.0% mote at (401,233) r=11.2 px -> read -12.51% at (401,233), 2.3x the floor
+  [PASS] D3-not-a-blob-finder the SAME mote moved every frame reads 5.41% = 1.0x the floor, i.e. NOT DETECTED, against 2.3x when fixed: the statistic requires a fixed sensor position and is not finding dark blobs
+  [PASS] D4-window-limit    a mote 164 px wide -- beyond the 41 px median window -- reads 5.91% = 1.1x the floor, i.e. NOT DETECTED: THIS INSTRUMENT IS BLIND TO DEFECTS WIDER THAN ITS WINDOW (41 px overview = 164 px full res)
+  [PASS] D5-null-kills-it   the SAME planted stack, residuals rolled to break position coherence, reads 6.20% vs 12.51% coherent (2.0x): the null control removes the signal it is supposed to remove
+
+=== geometry groups on the shipped overviews ===
+  (1172, 1758) : 15 images
+  (1172, 1760) : 11 images
+
+=== fixed-position defect, 15 images at (1172, 1758) ===
+  median: strongest  -37.19% at overview ( 984, 603) = full-res ( 3936, 2412) | null  27.85% | 1.34x -> NOT DETECTED
+  mean  : strongest  -28.86% at overview ( 984, 603) = full-res ( 3936, 2412) | null  23.25% | 1.24x -> NOT DETECTED
+  best arm median: 1.34x null -> NOT DETECTED at 4x reduction -- does not clear its own null, so this location is NOT evidence of a defect
+  images reading worse than -3% at that site: 9 of 15
+  worst single image: bee-1-cpl                          -73.91%
+      bee-1-cpl                          -73.91%
+      foam                               -67.65%
+      109MSDCF                           -57.25%
+      113MSDCF                           -53.10%
+      112MSDCF                           -52.73%
+      coffee-bean                        -50.00%
+
+=== fixed-position defect, 11 images at (1172, 1760) ===
+  median: strongest  -29.27% at overview ( 940, 327) = full-res ( 3760, 1308) | null  21.95% | 1.33x -> NOT DETECTED
+  mean  : strongest  -28.92% at overview (1070, 536) = full-res ( 4280, 2144) | null  24.58% | 1.18x -> NOT DETECTED
+  best arm median: 1.33x null -> NOT DETECTED at 4x reduction -- does not clear its own null, so this location is NOT evidence of a defect
+  images reading worse than -3% at that site: 7 of 11
+  worst single image: leaf-2-cpl                         -39.51%
+      leaf-2-cpl                         -39.51%
+      highly-angled-ruler-mm-cpl         -37.04%
+      flower-bud-alone-cpl               -36.78%
+      lavendar-cpl                       -31.85%
+      couch-fibers-cpl                   -29.94%
+      lead-1-cpl                         -29.27%
+
+=== counted partition ===
+  measured 26 + skipped 0 = 26 of 26   OK
+
+  commissioning: 5 pass + 0 fail = 5 of 5
+
+VERDICT: NOT DETECTED. No candidate site clears this corpus's own null on the 4x overviews, so this instrument CANNOT CONFIRM the dust defect at this scale and its deepest reading is not evidence of one. That is a limit of the instrument and of the reduction, NOT a finding that the sensor is clean -- DELIVER-V4 measured the motes at FULL resolution with a different method. The defect is stated in the gallery README on that basis and on direct visual confirmation (see dust_patch.py), not on this statistic.

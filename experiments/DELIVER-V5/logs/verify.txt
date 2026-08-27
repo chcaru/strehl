@@ -1,0 +1,38 @@
+109MSDCF                               OK
+112MSDCF                               OK
+113MSDCF                               OK
+119MSDCF                               OK
+bee-1-cpl                              OK
+bee-2-cpl                              OK
+bee-3-cpl                              OK
+coffee-bean                            OK
+coffee-bubbles                         OK
+couch-fibers-cpl                       OK
+dry-erase-marker-head-cpl              OK
+flat-on-ruler-cpl                      OK
+flower-bud-alone-cpl                   OK
+flower-bud-with-background-fern-cpl    OK
+flower-inner-edge-cpl                  OK
+flowers-cpl                            OK
+foam                                   OK
+highly-angled-ruler-mm-cpl             OK
+lavendar-cpl                           OK
+lead-1-cpl                             OK
+leaf-2-cpl                             OK
+pencil-flatter-angle-cpl               OK
+pencil-steep-angle-cpl                 OK
+tweezers-cpl                           OK
+wrapped-text-1                         OK
+wrapped-text-2                         OK
+
+=== counted partition of manifest entries ===
+  verified 26 + bad 0 + unreadable 0 = 26 of 26   OK
+
+=== the shipped gallery's own injected rim ===
+  hull_block over 26 shipped overviews: max 0.000000000  median 0.000000000 DN
+  area_err  over 26 shipped overviews: max 0.500000000 DN (bound 0.5 = uint8 rounding of an exact area average)
+
+=== negative control: the checker must be able to fail ===
+  corruption caught 104 + missed 0 = 104 of 104
+
+VERDICT: every shipped file is re-derivable from its master, injected rim is exactly 0.000000000 DN, and the checker demonstrably fails on corrupted input

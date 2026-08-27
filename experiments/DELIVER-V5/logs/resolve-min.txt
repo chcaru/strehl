@@ -1,0 +1,9 @@
+flowers-cpl  lanczos:
+   max_excess  (bright rim, ABOVE the hull)   1.9619 DN   <- their column
+   max_deficit (dark rim,   BELOW the hull)   3.6714 DN   <- also manufactured
+   max of both                                3.6714 DN   <- my column
+
+  [PASS] prediction A: my max_excess 1.9619 == their published min 1.962
+  [PASS] prediction B: my reported 3.6714 is the DEFICIT, not the excess
+
+VERDICT: the disagreement is DEFINITIONAL, not an implementation error: they publish bright rim, I publish bright-or-dark. Both implementations are correct and agree on the quantity they share.

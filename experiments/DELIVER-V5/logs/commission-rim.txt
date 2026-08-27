@@ -1,0 +1,86 @@
+COMMISSIONING THE INJECTED-RIM STATISTIC
+pass/fail rules are in this source file, written before any corpus number was computed
+
+=== C1  hard step 40->200 DN, edge phase swept over one output px ===
+      nearest      0.000 DN
+      box          0.000 DN
+      bilinear     0.000 DN
+      bicubic      6.454 DN
+      lanczos     11.331 DN
+  [PASS] C1-nearest no negative lobes, must be 0: 0.000000
+  [PASS] C1-box no negative lobes, must be 0: 0.000000
+  [PASS] C1-bilinear no negative lobes, must be 0: 0.000000
+  [PASS] C1-bicubic negative lobes must fire: 6.454 DN
+  [PASS] C1-lanczos negative lobes must fire: 11.331 DN
+
+=== C2  nothing to ring: constant field, and a linear ramp ===
+  [PASS] C2-flat-nearest flat under nearest = 0.000000 DN (tol 0.00)
+  [PASS] C2-flat-box flat under box = 0.000000 DN (tol 0.00)
+  [PASS] C2-flat-bilinear flat under bilinear = 0.000000 DN (tol 0.00)
+  [PASS] C2-flat-bicubic flat under bicubic = 0.000000 DN (tol 0.00)
+  [PASS] C2-flat-lanczos flat under lanczos = 0.000000 DN (tol 0.00)
+  [PASS] C2-ramp-nearest ramp under nearest = 0.000000 DN (tol 0.25)
+  [PASS] C2-ramp-box ramp under box = 0.000000 DN (tol 0.25)
+  [PASS] C2-ramp-bilinear ramp under bilinear = 0.000000 DN (tol 0.25)
+  [PASS] C2-ramp-bicubic ramp under bicubic = 0.000000 DN (tol 0.25)
+  [PASS] C2-ramp-lanczos ramp under lanczos = 0.000000 DN (tol 0.25)
+
+=== C3  a REAL 40 DN rim, planted in the master ===
+  [PASS] C3-nearest a real rim must NOT read as manufactured: 0.000000
+  [PASS] C3-box a real rim must NOT read as manufactured: 0.000000
+  [PASS] C3-bilinear a real rim must NOT read as manufactured: 0.000000
+  [PASS] C3-bicubic may fire on its own ringing: 2.559
+  [PASS] C3-lanczos may fire on its own ringing: 3.439
+
+=== C4  the reading must track step amplitude, not saturate ===
+      amps 20/40/80/160 -> 0.344 0.688 1.376 2.751
+      ratios 2.000 2.000 2.000
+  [PASS] C4     ratios 2.000, 2.000, 2.000 (want 2.000)
+
+=== C5  adversarial sign-matched input vs the derived envelope ===
+      taps=31  negative weight mass N=0.1732  envelope=44.164 DN
+      nearest      0.000 DN
+      box          0.000 DN
+      bilinear     0.000 DN
+      bicubic     20.480 DN
+      lanczos     44.164 DN
+  [PASS] C5-envelope lanczos 44.164 must not exceed the derived envelope 44.164
+  [PASS] C5-reach lanczos 44.164 reaches 100.0% of the envelope
+  [PASS] C5-box box on adversarial input must stay 0: 0.000000
+  [PASS] C5-bilinear bilinear on adversarial input must stay 0: 0.000000
+  [PASS] C5-nearest nearest on adversarial input must stay 0: 0.000000
+
+=== C6  nearest-neighbour: cannot ring, but IS a degradation ===
+      nearest   rim 0.000000   area_err  182.312 DN
+      box       rim 0.000000   area_err    0.000 DN
+      bilinear  rim 0.000000   area_err   42.692 DN
+      bicubic   rim 0.000000   area_err   39.217 DN
+      lanczos   rim 0.000000   area_err   40.763 DN
+  [PASS] C6-rim-zero nearest rim = 0.000000000 -- if this were >0 the statistic would be measuring aliasing, not ringing
+  [PASS] C6-alias-caught nearest area_err = 182.312 DN: the second axis DOES charge it
+  [PASS] C6-box-both-zero box: rim 0.000000000, area_err 0.000000000 -- clean on both axes
+
+=== C7  blindness, declared, at two disturbance scales ===
+      fine disturbance at full res : max 187.0 DN, rms 64.0 DN
+  [PASS] C7-disturbance-real half the resolution is genuinely gone: max 187.0 DN, rms 64.0 DN
+  [PASS] C7-blind rim scores 0.000000000 on a master with half its resolution destroyed -- THIS STATISTIC IS BLIND TO BLUR BY DESIGN and a 0 is not a quality claim
+      the same disturbance AFTER 4x reduction: 1.000 DN
+  [PASS] C7-overview-limit a 187 DN sub-2px disturbance survives the 4x reduction as 1.000 DN: THE OVERVIEW CANNOT ADJUDICATE DETAIL FINER THAN THE REDUCTION -- that is what the 1:1 crops are for
+      a 16px-scale disturbance after the same reduction: 68.062 DN
+  [PASS] C7-overview-not-dead the same probe moves by 68.062 DN on a coarse disturbance, so the 1.000 DN above is a resolution limit and not a dead probe
+
+=== P1  PIL's Image.BOX is verified, not assumed ===
+      shape (1172, 1760, 3), factor 4
+      max |numpy block mean - PIL BOX| = 0.000e+00 DN
+  [PASS] P1     PIL BOX agrees with an independent numpy block mean to 0.000e+00 DN
+  [PASS] P1-independence DELIVER-V5 ships the numpy block mean regardless; PIL is only checked
+
+=== W1  the 16->8 converter DELIVER-V5 refuses to reuse ===
+      true11.py's converter on 65535 -> 0
+      rimlib.to8       on 65535 -> 255
+  [PASS] W1     unclipped >>8 wraps pure white to 0; rimlib.to8 gives 255
+
+=== counted partition of commissioning arms ===
+  pass 36 + fail 0 = 36 of 36   OK
+
+VERDICT: the statistic may be used

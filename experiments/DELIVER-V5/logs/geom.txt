@@ -1,0 +1,32 @@
+109MSDCF                               (4688, 7032, 3)        uint16   icc  1
+112MSDCF                               (4688, 7032, 3)        uint16   icc  1
+113MSDCF                               (4688, 7032, 3)        uint16   icc  1
+119MSDCF                               (4688, 7032, 3)        uint16   icc  1
+bee-1-cpl                              (4688, 7032, 3)        uint16   icc  1
+bee-2-cpl                              (4688, 7032, 3)        uint16   icc  1
+bee-3-cpl                              (4688, 7032, 3)        uint16   icc  1
+coffee-bean                            (4688, 7032, 3)        uint16   icc  1
+coffee-bubbles                         (4688, 7032, 3)        uint16   icc  1
+couch-fibers-cpl                       (4688, 7040, 3)        uint16   icc  1
+dry-erase-marker-head-cpl              (4688, 7040, 3)        uint16   icc  1
+flat-on-ruler-cpl                      (4688, 7040, 3)        uint16   icc  1
+flower-bud-alone-cpl                   (4688, 7040, 3)        uint16   icc  1
+flower-bud-with-background-fern-cpl    (4688, 7040, 3)        uint16   icc  1
+flower-inner-edge-cpl                  (4688, 7032, 3)        uint16   icc  1
+flowers-cpl                            (4688, 7040, 3)        uint16   icc  1
+foam                                   (4688, 7032, 3)        uint16   icc  1
+highly-angled-ruler-mm-cpl             (4688, 7040, 3)        uint16   icc  1
+lavendar-cpl                           (4688, 7040, 3)        uint16   icc  1
+lead-1-cpl                             (4688, 7040, 3)        uint16   icc  1
+leaf-2-cpl                             (4688, 7040, 3)        uint16   icc  1
+pencil-flatter-angle-cpl               (4688, 7032, 3)        uint16   icc  1
+pencil-steep-angle-cpl                 (4688, 7032, 3)        uint16   icc  1
+tweezers-cpl                           (4688, 7040, 3)        uint16   icc  1
+wrapped-text-1                         (4688, 7032, 3)        uint16   icc  1
+wrapped-text-2                         (4688, 7032, 3)        uint16   icc  1
+
+distinct (shape,dtype): 2
+  ((4688, 7032, 3), 'uint16')    15  e.g. 109MSDCF
+  ((4688, 7040, 3), 'uint16')    11  e.g. couch-fibers-cpl
+
+total masters: 26

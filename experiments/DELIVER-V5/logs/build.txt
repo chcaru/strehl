@@ -1,0 +1,33 @@
+crop 380 px + 18 px label bar = 398 px, inside the 400 px the viewer was measured to resolve
+ 1/26 109MSDCF                               rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 2/26 112MSDCF                               rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 3/26 113MSDCF                               rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 4/26 119MSDCF                               rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 5/26 bee-1-cpl                              rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 6/26 bee-2-cpl                              rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 7/26 bee-3-cpl                              rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 8/26 coffee-bean                            rim 0.000000  area_err 0.500000  1758x1172  3 crops
+ 9/26 coffee-bubbles                         rim 0.000000  area_err 0.500000  1758x1172  3 crops
+10/26 couch-fibers-cpl                       rim 0.000000  area_err 0.500000  1760x1172  3 crops
+11/26 dry-erase-marker-head-cpl              rim 0.000000  area_err 0.500000  1760x1172  3 crops
+12/26 flat-on-ruler-cpl                      rim 0.000000  area_err 0.500000  1760x1172  3 crops
+13/26 flower-bud-alone-cpl                   rim 0.000000  area_err 0.500000  1760x1172  3 crops
+14/26 flower-bud-with-background-fern-cpl    rim 0.000000  area_err 0.500000  1760x1172  3 crops
+15/26 flower-inner-edge-cpl                  rim 0.000000  area_err 0.500000  1758x1172  3 crops
+16/26 flowers-cpl                            rim 0.000000  area_err 0.500000  1760x1172  3 crops
+17/26 foam                                   rim 0.000000  area_err 0.500000  1758x1172  3 crops
+18/26 highly-angled-ruler-mm-cpl             rim 0.000000  area_err 0.500000  1760x1172  3 crops
+19/26 lavendar-cpl                           rim 0.000000  area_err 0.500000  1760x1172  3 crops
+20/26 lead-1-cpl                             rim 0.000000  area_err 0.500000  1760x1172  3 crops
+21/26 leaf-2-cpl                             rim 0.000000  area_err 0.500000  1760x1172  3 crops
+22/26 pencil-flatter-angle-cpl               rim 0.000000  area_err 0.500000  1758x1172  3 crops
+23/26 pencil-steep-angle-cpl                 rim 0.000000  area_err 0.500000  1758x1172  3 crops
+24/26 tweezers-cpl                           rim 0.000000  area_err 0.500000  1760x1172  3 crops
+25/26 wrapped-text-1                         rim 0.000000  area_err 0.500000  1758x1172  3 crops
+26/26 wrapped-text-2                         rim 0.000000  area_err 0.500000  1758x1172  3 crops
+
+=== counted partition of masters ===
+  rendered 26 + refused 0 + failed 0 = 26 of 26   OK
+
+  injected rim over 26 rendered masters: max 0.000000  median 0.000000 DN
+  145.2 s, 26 overview + 78 crop files

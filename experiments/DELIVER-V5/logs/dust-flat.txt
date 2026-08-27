@@ -1,0 +1,48 @@
+=== flat/bright mask coverage per image ===
+  109MSDCF                           flat+bright  80.1% of frame
+  112MSDCF                           flat+bright  20.5% of frame
+  113MSDCF                           flat+bright  20.0% of frame
+  119MSDCF                           flat+bright  79.2% of frame
+  bee-1-cpl                          flat+bright  75.7% of frame
+  bee-2-cpl                          flat+bright  74.2% of frame
+  bee-3-cpl                          flat+bright  75.6% of frame
+  coffee-bean                        flat+bright  59.9% of frame
+  coffee-bubbles                     flat+bright   0.0% of frame
+  couch-fibers-cpl                   flat+bright  99.8% of frame
+  dry-erase-marker-head-cpl          flat+bright  59.8% of frame
+  flat-on-ruler-cpl                  flat+bright  79.2% of frame
+  flower-bud-alone-cpl               flat+bright  78.8% of frame
+  flower-bud-with-background-fern-cpl flat+bright  82.6% of frame
+  flower-inner-edge-cpl              flat+bright  52.9% of frame
+  flowers-cpl                        flat+bright  94.8% of frame
+  foam                               flat+bright   0.0% of frame
+  highly-angled-ruler-mm-cpl         flat+bright  98.6% of frame
+  lavendar-cpl                       flat+bright  93.6% of frame
+  lead-1-cpl                         flat+bright  92.6% of frame
+  leaf-2-cpl                         flat+bright  92.2% of frame
+  pencil-flatter-angle-cpl           flat+bright  95.2% of frame
+  pencil-steep-angle-cpl             flat+bright  53.0% of frame
+  tweezers-cpl                       flat+bright  74.0% of frame
+  wrapped-text-1                     flat+bright  80.5% of frame
+  wrapped-text-2                     flat+bright  78.4% of frame
+
+=== 15 images at (1172, 1758), flat+bright pixels only ===
+  scoreable pixels (>=5 contributors): 1992081 of 2060376
+  deepest fixed attenuation -45.63% at overview (774,390) = full-res (3096,1560), 5 contributing images
+  rolled null on the same masked data: -38.95%
+  ratio 1.17x -> NOT DETECTED
+
+=== 11 images at (1172, 1760), flat+bright pixels only ===
+  scoreable pixels (>=5 contributors): 2062704 of 2062720
+  deepest fixed attenuation -33.86% at overview (933,323) = full-res (3732,1292), 7 contributing images
+  rolled null on the same masked data: -21.11%
+  ratio 1.60x -> NOT DETECTED
+
+=== counted partition ===
+  scored 26 + refused 0 = 26 of 26   OK
+
+=== power of this arm against the claim it is testing ===
+  (1172, 1758): null floor 38.95% vs DELIVER-V4's claimed 13.28% -> UNDERPOWERED, could not have found it
+  (1172, 1760): null floor 21.11% vs DELIVER-V4's claimed 13.28% -> UNDERPOWERED, could not have found it
+
+VERDICT: UNDERPOWERED, NOT 'ABSENT'. Every whole-frame arm's own null floor (21.11%+) is LARGER than the 13.28% defect it is looking for, so a real mote of that depth could not have cleared it. This arm decides nothing and must not be quoted as evidence of absence. The arm that DOES have power is dust_patch.py: at 1:1 on the 14 subjects whose background at the stated site is flat and bright (sd 1.1-7.2 DN on 91-246 DN), sensitivity is well under 1% and the worst reading is -0.78%. That test is decisive AT THAT COORDINATE ONLY.
