@@ -5,7 +5,14 @@ milestone number has been **requested from the orchestrator and not yet
 allocated**, so this file lives in `experiments/V-NOISE2/` and is not a record.
 Nothing here should be cited from `docs/research/` until it moves.
 
-> **Newest result: §9.** The half-to-half discriminator reads **R = 12.4×** in
+> **Newest result: §10.** The frame-count ladder returns **NO BRANCH** in both
+> bands. The naive reading would have **corroborated** ORCH's dilution
+> mechanism (`Q` = 5.3, RISING); it is refused by this lane's own controls. A
+> nuisance parameter moves `R` **6.20×** at constant `N`, and the instrument's
+> BLOTCH arm **cannot respond at any potency** on most rungs. §9's subject
+> `119` is cleared.
+
+> **§9.** The half-to-half discriminator reads **R = 12.4×** in
 > the **convicted 20–60 px band** — a band §8 never measured and which sits an
 > order of magnitude coarser than §8's. Branch **SELECTION**: this lane holds a
 > real second mechanism.
@@ -913,3 +920,190 @@ blotch.**
 **Still one subject, two bands, one comparator.** `bee-1-cpl` at N=299 is where
 this should be strongest and it has not been run.
 
+> **FORWARD BANNER, added by §10.** The sentence above is now stale. `bee` has
+> since been run at N=299 and across a frame-count ladder. It is **not** where
+> this is strongest: `bee`'s FLAT control fails at every rung (0.460–1.252
+> against [0.80, 1.25]) and its BLOTCH commissioning arm cannot respond at any
+> potency below N=100, so most of `bee` is **uncommissioned** for this
+> statistic. §9's own subject `119` is unaffected and is cleared by direct
+> measurement in §10.3.
+
+
+---
+
+## 10. The frame-count ladder — NO BRANCH, and the instrument is the reason
+
+> **VERDICT: the ladder cannot answer whether `R` rises with `N`.** Both bands
+> return **NO BRANCH** under §12.4's gate. The naive reading — first rung 2.316,
+> last rung 12.313, `Q` = 5.3, **RISING**, ORCH's dilution mechanism
+> corroborated — is **refused by my own controls**, and it is refused twice
+> over: once because the design confounded `N` with a nuisance parameter, and
+> once because the instrument is **uncommissioned at most rungs of the ladder**.
+>
+> **§9 is not affected.** Its subject `119` passes the same check with the
+> largest margin of any key measured (**+95.5%** COARSE, **+92.2%** FINE).
+
+`ladder_run.py` exits **1**. `PREREGISTRATION.md` §11 was committed as
+`7497c353` before `ladder_build.ps1` existed, and §12 as `81e3843c` before
+`bee-L2P` or `bee-L3P` existed.
+
+### 10.1 The design defect, which was mine
+
+`ladder_build.ps1` defaults `-BOffset` to the stride, so the number of frames
+between half-A's and half-B's focus planes **fell monotonically as `N` rose**:
+9, 5, 3, 1. `R` rising across that ladder is exactly what a falling offset
+alone would produce.
+
+`bee-L1P` prices it at **constant `N` = 34**, with half-A **bit-identical**
+between the two rungs (sha16 `7600B160797D4446`):
+
+| rung | N | offset | R (COARSE/DETAIL) |
+|---|---:|---:|---:|
+| `bee-L1` | 34 | 9 | 2.316 |
+| `bee-L1P` | 34 | 1 | **14.364** |
+
+**6.20×, from a parameter that is not `N`** — larger than the whole L1→L4 range
+of 5.32×. The mechanism is measured, not assumed: `phi_enfuse` collapses
+**23.8×** (0.22286 → 0.00936) against only 3.8× in strehl. At offset 9 the two
+halves are different **scenes**, and `enfuse`, which blends by local contrast,
+reproduces that depth difference faithfully.
+
+Holding the offset at 1 lowers the baseline half-disagreement at **every** `N`
+where it could be tested — three for three:
+
+| N | offset | baseline `phi` COARSE |
+|---:|---:|---|
+| 34 | 9 → 1 | 0.51612 → 0.13441 |
+| 60 | 5 → 1 | 0.18374 → 0.14678 |
+| 100 | 3 → 1 | 0.95322 → **0.05503** |
+
+At `N` = 100 that is a **17× drop in baseline `phi`** from changing nothing but
+the split, and it removes the ladder's wildest number: `R` 95.404 → 16.770.
+
+### 10.2 The corrected ladder
+
+Offset held at 1 frame on every rung, so only `N` varies. COARSE/DETAIL:
+
+| rung | N | R | 95% CI | R FLAT | readable? |
+|---|---:|---:|---|---:|---|
+| `bee-L1P` | 34 | 14.364 | [12.081, 18.282] | 0.674 | **no** — COARSE/BLOTCH |
+| `bee-L2P` | 60 | 26.883 | [18.334, 45.065] | 0.894 | **no** — COARSE/BLOTCH |
+| `bee-L3P` | 100 | 16.770 | [12.021, 21.417] | 0.560 | yes |
+| `bee-L4` | 299 | 12.313 | [8.638, 15.071] | 0.460 | yes |
+
+Two of four rungs readable and the low endpoint excluded, so **NO BRANCH**.
+FINE is worse: **zero** of four readable.
+
+**A pre-registered prediction was violated and I am not rounding it away.**
+§12.3 predicted the interior rungs would land between 12.3 and 14.4. `bee-L3P`
+reads 16.770, 17% above that interval; **`bee-L2P` reads 26.883, 87% above
+it.** The separately pre-registered falsifier — an interior rung departing
+from *both* endpoints by more than 3× — was **not** crossed (1.87× and 2.18×).
+So H3 is not declared insufficient, but its interval was wrong, and `R` at
+constant offset is **non-monotone in `N`**.
+
+### 10.3 The decisive finding — the instrument is uncommissioned across most of the ladder
+
+`blotchsweep.py`. The **BLOTCH** arm plants the very mechanism `R` claims to
+detect: each half blends a blurred copy under its **own** coarse random mask,
+so the halves disagree over 20–60 px patches. `incoh.py` commissions it at a
+**fixed** `BETA` = 0.020, while §9.6 had already established that a fixed plant
+amplitude is wrong and derived it per band for the **NOISE-INC** arm. The same
+defect was fixed on one arm and not the other; the ladder is the first thing
+that moved the baseline far enough to expose it.
+
+Sweeping the plant amplitude over **160×** (0.02 → 3.20) separates *too weak*
+from *cannot respond*. COARSE, response at the committed amplitude, ordered by
+baseline `phi`:
+
+| key | baseline `phi` | d_phi at beta 0.02 | best over the whole sweep | |
+|---|---:|---:|---:|---|
+| `119` | 0.00357 | **+95.5%** | +124.2% | PASSES |
+| `bee-L4` | 0.00997 | **+91.3%** | +114.3% | PASSES |
+| `bee-L3P` | 0.05503 | +10.2% | +14.3% | PASSES |
+| `bee-L1P` | 0.13441 | −3.3% | −1.8% | **CEILING** |
+| `bee-L2P` | 0.14678 | +0.3% | +0.3% | **CEILING** |
+| `bee-L2` | 0.18374 | +1.7% | +4.9% | **CEILING** |
+| `bee-L1` | 0.51612 | −4.5% | −4.0% | **CEILING** |
+| `bee-L3` | 0.95322 | −6.1% | −6.1% | **CEILING** |
+
+**The failure is a ceiling, not a potency.** On five of eight COARSE cells the
+plant cannot move `phi` by 5% **at any amplitude**, and on three of them it
+moves `phi` the **wrong way** — planting selection disagreement makes the
+statistic read *less* selection disagreement. FINE behaves the same way:
+`119` +92.2% and `bee-L4` +34.5% pass, while `bee-L2`, `bee-L2P` and `bee-L3`
+sit at +0.6%, +0.7% and +0.6% against baselines of 0.99.
+
+**Within each band the response falls monotonically as the baseline `phi`
+rises**, across nine keys. The gate is crossed between `phi` 0.055 and 0.134 in
+COARSE and between 0.597 and 0.988 in FINE. That is a **sensitivity envelope
+for §9's statistic, measured rather than assumed**: `R` is only commissioned
+where the halves already agree well.
+
+Which is fatal for *this* ladder specifically, because the ladder's whole
+purpose is to walk the baseline disagreement up and down. **A statistic that is
+only commissioned at one end of the axis cannot measure a trend along it.**
+
+**Commissioning of the sweep itself.** A sweep that always found a response
+would prove nothing. `bee-L4`/COARSE is the cell where the committed BLOTCH arm
+**passed**; the sweep reproduces **+91.3%** there at the committed amplitude,
+clearing the same gate. It is reading what the harness read, and
+`blotchsweep.py` exits non-zero if it is not.
+
+### 10.4 Two rival explanations, tested and rejected as drivers
+
+- **H1, misregistration between halves.** The mechanism is **real**:
+  `incoh.pairs` is called with `placer=None` for the half comparison, so it
+  crops the same `(y, x)` from both halves and never registers A to B — a
+  displacement lands straight in `d`. But it **predicts the wrong direction**
+  on the controlled pair: `bee-L1P` has **twice** the A–B shift (8 px vs 4 px)
+  and **3.8× lower** `phi`. Rejected as the driver, retained as a caveat.
+- **H2, `phi` saturation.** Real and disqualifying **where it occurs** — it is
+  why `bee-L3` COARSE (0.953) and most of FINE are excluded — but it does not
+  explain the controlled pair, neither of whose COARSE arms is near 1.
+
+### 10.5 Controls that came back clean
+
+- **Two pins produce bit-identical decoded pixels.** `pincheck.py`:
+  32,966,016 of 32,966,016 pixels identical on both strehl-A and strehl-B for
+  `740e7056` against `9b05d0b7`. §9's reading and the ladder sit on one binary.
+  Compared as **decoded arrays**, per ORCH; the file hashes happened to agree
+  too and are reported as the weaker check.
+- **strehl raster drift across rungs** never exceeds **12 px** with peak
+  0.96–0.97, and is identical within each L*/L*P pair, as it must be — the two
+  rungs of a pair share half-A bit-identically, so the geometry fitted on the A
+  rasters is identical by construction. The fitter returned bit-identical
+  results on bit-identical inputs.
+- **Placer window sensitivity** is **−3.1% to +2.0%** across all rungs, so
+  widening `incoh`'s ±32 px search is not what produced any number. Both
+  windows are run and both are printed.
+
+### 10.6 What this licenses and what it does not
+
+**MEASURED:** at constant `N` = 34 with half-A bit-identical, a nuisance
+parameter moves `R` by 6.20×. Holding the offset lowers the baseline `phi` at
+all three testable `N`. The BLOTCH arm cannot be made to respond at any
+potency on five of eight COARSE cells and three of five readable FINE cells.
+`119` passes both bands with the largest margins measured.
+
+**NOT MEASURED, and specifically refused:** any statement of the form "`R`
+rises with `N`" or "`R` is flat in `N`". **ORCH's dilution mechanism is neither
+corroborated nor wounded by this lane.** The run that would have corroborated
+it produced a number in the predicted direction, and I am discarding it because
+my own controls say it is not a reading of `N`.
+
+**What this qualifies about §9:** nothing on `119`, which is cleared by direct
+measurement rather than by pointing at the earlier pass. What it adds is the
+**envelope**: `R` should not be quoted on any pair whose baseline `phi` exceeds
+roughly 0.05 in COARSE, and any future use of `incoh.py` on a new subject must
+run the BLOTCH arm and read it before quoting `R`. §9's `bee` FLAT control
+already failed at **every** rung (0.460–1.252 against a required [0.80, 1.25]),
+so §9's key discriminator is **subject-specific** and does not transfer to
+`bee`.
+
+**A cheap repair exists and is not applied here.** `mut_blotch`'s amplitude
+should be derived per band and per baseline exactly as `plant_beta` derives
+`NOISE-INC`'s. That would fix the *amplitude*, but the sweep shows the failure
+is a **ceiling**, so it would not by itself recommission the low rungs;
+detecting selection disagreement against a large baseline needs a different
+plant, not a bigger one. `incoh.py` is left untouched because §9 depends on it.
