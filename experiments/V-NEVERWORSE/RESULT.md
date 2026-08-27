@@ -1100,7 +1100,206 @@ with source access, not this one.
 
 ---
 
-## 8. Files
+## 8. The mechanism — ORCH's hypothesis is REFUTED, and the direction is backwards
+
+Reporting the refutation first, as instructed.
+
+### 8.1 The gauge finding: the module I was aimed at did not run
+
+`softgate.rs` is not the shipping gate. Its Gaussian admission weight, its
+`WEIGHT_FLOOR` and the `z = sqrt(32 ln 2) = 4.7096` truncation were all
+unexecuted for every SHIP-V4 master. Three independent readings, at the build
+commit `9b05d0b7` rather than at HEAD:
+
+| check | result |
+|---|---|
+| `merge.rs` `SOFT_GATE_ENV` | `STREHL_SOFT_GATE`, and `None` — the top-hat `Gate` — "**must remain the default**" |
+| the 26 masters' provenance | `STREHL_SOFT_GATE = (unset)` on **26 of 26** |
+| the binary's own self-report | `selection : SOFT -- weight = (band power above the noise floor)^exponent` — the **pyramid** path, not the focus-response gate |
+
+Two traps here, both of which would have produced a confident wrong answer.
+
+**The source drifts from the binary.** `softgate.rs` differs by **29 lines**
+between the build commit and HEAD, `merge.rs` by 142 and `focus.rs` by 630.
+Reading the gate at HEAD and describing the shipping masters with it is the same
+mismatched-gauge defect as measuring a master against a differently-rendered
+frame. Every line quoted in this section is from `git show 9b05d0b7:`.
+
+**The module's own status comment is stale and says the opposite of the truth.**
+At `9b05d0b7` it reads *"Opt-in and not wired. Nothing in this module is
+reachable from the default merge path"* — while `merge.rs` line 76 imports
+`SoftGate` and line 1811 constructs it. It **is** reachable; it is merely not
+*selected* by default. A structural claim taken from a doc comment would have
+been wrong in both directions at once. The load-bearing evidence is the switch
+default plus the 26 provenance files, not the prose.
+
+### 8.2 What the shipping merge actually does
+
+The default `stack` path is a Laplacian pyramid merge: 7 Laplacian levels plus a
+base. Per coefficient the weight is `(band power above the noise floor)^exponent`
+with a noise gate at **2.00x** the modelled band-noise power; below it no frame
+may win and the merge averages. The base band is a plain mean. The selection is
+made on green luma only.
+
+The binary reports the admission decision per level, and the coarse levels land
+inside the band `orch_blotch` measures — the master is 7032 px wide, so a
+coefficient at the two coarsest Laplacian levels spans roughly **125 px and
+63 px**, against the statistic's 50-400 px window.
+
+### 8.3 The corpus test, commissioned in both directions — and it is NULL
+
+If mottle came from a spatially varying mixture of *averaged* and *selected*
+coefficients, the mixture should matter most where it is most mixed. The
+mixedness `4p(1-p)` of the coarsest level's averaged fraction is 0 when every
+coefficient goes the same way and 1 at `p = 0.5`.
+
+`vn_mechtest.py`, commissioned **5 ok + 0 failed** on the real 24-subject
+population with plants in both directions (excess replaced by a rising function
+of mixedness must give rho > +0.8; by a falling function, rho < -0.8; labels
+shuffled and mixedness shuffled must give ~0; and the placebo spread must be
+resolvable). It also carries a **population guard**: the first run of this
+harness certified three arms on **zero** subjects, because the loader read a key
+that did not exist and "shuffled labels give rho ~ 0" is trivially true of
+nothing at all. It now refuses to commission on fewer than 20 subjects.
+
+| test | rho | permutation p |
+|---|---|---|
+| excess vs mixedness `4p(1-p)` | **+0.174** | 0.41 |
+| excess vs raw averaged fraction | **+0.174** | 0.41 |
+| excess vs frame count | **-0.028** | 0.90 |
+| excess vs the master's own measured noise | **-0.031** | 0.89 |
+
+All four null; the placebo spread is sd 0.203, so +0.174 is inside the noise of
+the test. The corpus extremes are outright counterexamples:
+
+| subject | mixedness | excess | |
+|---|---|---|---|
+| `109MSDCF` | **0.997** — the most mixed in the corpus | **0.996** | no excess at all |
+| `bee-2-cpl` | 0.086 | **1.948** — the worst in the corpus | nearly unmixed |
+| `flat-on-ruler-cpl` | **0.000** — nothing averaged | 1.065 | convicted by V-GATHER at 1.32x |
+
+The frame-count null is the strongest of the four and it is worth stating alone.
+A 299-frame stack averages residual noise down by `1/sqrt(299)`, a 19-frame
+stack by `1/sqrt(19)` — a **4x** difference in noise amplitude. It buys **no**
+reduction in excess (rho -0.028, p 0.90), and 299-frame stacks sit at both the
+top and the bottom of the excess ranking. **The mottle is not unaveraged noise.**
+
+That agrees with the independent evidence from §7.3: on `coffee-bubbles` the
+excess survives despeckling at **0.995**, and the master's band is elevated in
+bulk while its `p99|band|` is comparable to the frames'. Noise removed by a 33 px
+opening-closing would not do that. **It is structure.**
+
+### 8.4 Why the hypothesis is backwards, with the number that shows it
+
+ORCH's premise was that in flat regions the gate has nothing but noise to
+compare, so admission there is noise-driven. **The measurement says admission in
+flat regions is not noise-driven; it is nearly complete.**
+
+`docs/research/M111-waxy-blobs.md` §2 measured `n_eff` directly on a shipped
+render, stratified by the winner's focus response — which is exactly the
+conditional test ORCH asked for in point 3, already run:
+
+| winner response | % of plane | mean `n_eff` | median `n_eff` |
+|---|---|---|---|
+| 0.60 – 0.65 | 18.55 | **275.5** | 285 |
+| 1.00 – 1.50 | 6.96 | 22.5 | 17 |
+| 3.00 – 5.00 | 9.17 | 3.0 | 2 |
+| above 20 | 15.18 | **1.1** | 1 |
+
+Admission falls **285 to 1** while the response rises about 8x. The flattest
+regions are the *most* averaged, not the least. ORCH's step 2 — "its admission
+decision in flat regions is driven by noise" — is the opposite of what the
+shipped merge does, and steps 3 and 4 inherit the error: the predicted signature
+was "excess worst where the response is flattest", and the flattest regions are
+where `n_eff` approaches N.
+
+**The mechanism that survives** is M111's, and it is not about noise at all:
+
+> The merge stops averaging and starts electing wherever the winner's focus
+> response rises out of the noise floor, because the gate's tolerance is an
+> absolute constant in response units while the response itself is a
+> contrast-scaled quantity spanning 0.43 to 84 on this stack.
+
+The tolerance is fixed at `4.0 * sqrt(2) * FOCUS_NOISE_SD` = **0.086063**
+response units. That is 14% of a response of 0.62 and 1.7% of a response of 5.
+So the *effective* strictness of the gate varies by an order of magnitude with
+local contrast, and regions carrying weak defocused structure fall into a
+collapse band where `n_eff` drops toward 1 and each plateau is rendered from a
+single frame. **The plateau seams are the mottle** — mid-scale structure present
+in no single frame, which is precisely what §7.3 measured on `coffee-bubbles`
+and what V-GATHER convicted on five more.
+
+This explains all four nulls in §8.3 at once. A single-frame plateau is not
+noise, so it does not scale with the noise level; averaging more frames does not
+remove it, so it does not scale with frame count; and it lives in the
+*transition* band, which the averaged-fraction proxy cannot see by construction —
+that proxy fires only where **no** frame cleared the floor, which is the
+`n_eff ≈ 285` case, the cleanest one. I flagged that blindness before running the
+test and it is why the null is reported as a refutation of the *stated* mechanism
+rather than of every possible admission mechanism.
+
+### 8.5 The shape of the fix, and one caution about it
+
+`softgate.rs` is a written, tested, unwired remedy pointing at this defect. It is
+**not** the cause, and I would caution against reading it as the whole fix: a
+Gaussian kernel softens the *edge* of the admission decision, but the defect
+M111 measured is that the tolerance is on the **wrong scale**, not that it has a
+hard edge. Softening a mis-scaled threshold moves the seam without removing the
+collapse. **The fix indicated by the measurement is a tolerance that scales with
+the local response** — a relative rather than absolute admission criterion — and
+the soft kernel is complementary to that, not a substitute for it.
+
+### 8.6 What I did not measure, counted
+
+| item | status |
+|---|---|
+| corpus admission record, 26 subjects | **measured** — 24 correlated, 2 refused |
+| `n_eff` stratified by response | **cited, not re-derived** — M111 §2, on a shipped render |
+| my own per-pixel `n_eff` map | **NOT MEASURED** |
+| counterfactual renders (plain mean; smoothed admission) | **NOT MEASURED** |
+| sharpness alongside blotch for those counterfactuals | **NOT MEASURED** |
+
+Partition: 26 examined = **24 measured + 2 refused + 0 failed**. The two refused
+are `dry-erase-marker-head-cpl` and `highly-angled-ruler-mm-cpl`, which carry no
+entry in `report/null.json` — they were never in the 24-subject null population,
+so they have no excess to correlate.
+
+The four counterfactual numbers ORCH asked for are not in this report. Producing
+them means re-rendering the convicted subjects under three merge configurations
+and carrying a sharpness statistic on the same pixels, and I did not get there.
+I am not going to estimate them. What replaces them is the direction: the
+conditional test ORCH wanted was already run by M111 and it points at a
+tolerance-scaling defect, so the counterfactual worth spending the renders on is
+**a response-relative tolerance**, not a plain mean.
+
+### 8.7 The checker for this section failed its own commissioning first
+
+Reporting this because it nearly cost the section its numbers, and because it is
+the same defect class twice more.
+
+`vn_verify8.py` ran **37 checks, 0 failed** on its first version and then caught
+**5 of 13** planted defects. A green run and a blind run are the same glyph. Two
+causes:
+
+1. **Eight checks compared git and M111 against constants written in the
+   checker.** Mutating the report could not fail them, because the report was
+   never read; the checker was verifying its own copy of the answer. Fixed by
+   parsing every value out of `RESULT.md` and treating the document as the
+   claim and git / M111 as the oracle.
+2. **The presence window was 220 characters,** wide enough that the adjacent
+   table row's identical correlation value satisfied a mutated cell. This is the
+   duplicate-satisfies-presence defect, and it is the second time this lane has
+   hit it. Fixed by matching table claims per row on the exact cell, so nothing
+   outside the cell counts.
+
+Re-commissioned: **13 of 13 plants caught, placebo clean, restore verified
+byte-identical.** The harness also carries a **crash arm** — the checker is
+deliberately broken and required to return 2, not 0 and not 1 — because a
+checker that dies and a checker that passes must never produce the same verdict.
+
+---
+
+## 9. Files
 
 | file | what it does |
 |---|---|
@@ -1125,6 +1324,9 @@ with source access, not this one.
 | `vn_where.py` | spatial localisation — **refused**, five designs, see §7.5 |
 | `vn_select.py` | select-or-blend recovery — **refused**, see §7.5 |
 | `vn_diag_spec.py` | band step-profile spectrum; refuted my own box-kernel hypothesis (§7.3) |
+| `vn_admit.py` | extracts the shipping admission record from all 26 provenance files (§8.2) |
+| `vn_mechtest.py` | admission vs measured excess, commissioned both ways (§8.3) |
+| `pin9b05/` | gate source at the BUILD commit, not HEAD — the source drifts (§8.1) |
 | `vn_seals.py` | hashes every `strehl*.exe` and every `.tiff.ok` seal; reproduces §0. Plants decoys it must find, so reach is measured rather than assumed. |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
