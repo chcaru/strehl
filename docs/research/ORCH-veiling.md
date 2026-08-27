@@ -11361,3 +11361,119 @@ by inspection of their own code; that is the difference between an argument and
 an example.
 
 
+
+## 104. Four instruments were wrong, the pin could not build, and the gather flip landed anyway
+
+Written after a crash cleared the entire build fleet. Everything below is
+measured; where it is argued I say so.
+
+### 104.1 The gather flip, and the one statistic still dissenting
+
+`STREHL_FULLRES_GATHER` now defaults ON (`740e7056`). The old path deinterleaved
+the mosaic into four half-resolution phase planes and gathered each separately --
+right for colour, since no interpolation ever mixes two channels, but it
+band-limits every phase to the PLANE Nyquist, 0.25 cyc per output pixel, and it
+does so BEFORE the election, where no later stage can recover it.
+
+Measured, both arms from one binary:
+
+| quantity | plane gather | full-res gather |
+| --- | ---: | ---: |
+| band corr @ 0.25 cyc/out px | 0.1514 | 0.9329 |
+| band corr @ 0.35 | -0.4965 | +0.4478 |
+| 79 frames | 27.7 s | 20.1 s |
+| 130 frames | 45.9 s | 40.6 s |
+| 299 frames | 110.3 s | 97.1 s |
+
+The 0.35 row is the one worth pausing on: the old path was not merely
+attenuating that band, it was returning **inverted structure**. That is aliasing,
+not softness.
+
+The timing is 40-97 ms/frame FASTER against a prior analysis that predicted +549
+ms/frame SLOWER from the added demosaic -- a 600 ms swing in the flattering
+direction, which is the shape of an artifact rather than of a win. The proposed
+mechanism, four strided plane deinterleaves collapsing into one sequential read
+plus a parallel demosaic, is a HYPOTHESIS and has never been measured. It is
+routed to V-GATHER rather than banked.
+
+**The dissent, recorded because it has not been resolved.** Two overshoot
+statistics disagree. A step-normalised excursion reads the full-res arm as
+ringing MORE (0.179 against 0.128 and 0.140), which is past that instrument's own
+0.0122 byte-identical floor and therefore not noise. A local-envelope ring
+fraction did not move at all (1.086% -> 1.053% at the strongest edge, 1.744% ->
+1.744% at the median). I broke the tie by rendering both arms at 1:1 and looking:
+paper fibre inside flat white resolves on the new path and is mush on the old,
+which sharpening cannot manufacture, and no bright rim appears on the dark side
+of any letterform, which sharpening would. **I sided with the statistic that
+agreed with my eyes, which is exactly the move this corpus distrusts**, so the
+disagreement is logged as open and handed to an independent verifier.
+
+### 104.2 The specificity control I nearly mistook for a failed attribution
+
+The byte-freeze caught the flip, as designed. The attribution script demanded
+that BOTH frozen rows move and printed `ATTRIBUTION FAILED` when only one did.
+
+That gate was wrong, and the registry had already said so. `fullres_gather_enabled()`
+is read in exactly one place, `warp_frame_in_place`, which is warp application.
+The `STREHL_ALIGN=0` row applies no warp, so the flag is **unreachable** there and
+must not move. The `6430fb2` note wrote this down in advance and against itself:
+*"a change that moved only the sidecar row would have been in warp application and
+would not have been this one."* This is that change.
+
+So the unaligned row is a **specificity control**, not an inert arm -- but only
+because the prediction was derived from the call site BEFORE the number came
+back. The script now carries a per-row expectation and fails on a violation in
+**either** direction, so "did not move" could not have been excused after the
+fact. Both rows reproduce their standing baseline bit-exactly under
+`STREHL_FULLRES_GATHER=0`, which clears the five files left uncommitted in
+`crates/` by dead agents -- and every commit since `6430fb2` -- of touching these
+bytes. `byte-freeze.rs` had independently measured the new hash and printed it as
+`actual` before the script ran; two instruments sharing no code agree to the byte.
+
+**The rule:** a gate that demands every arm move cannot express a change with a
+bounded blast radius, and will report a correct localisation as a failure.
+
+### 104.3 The acceptance harness could not build a pin at all
+
+`scripts/finalpass.ps1` is the mechanism the entire acceptance corpus rests on for
+provenance -- "ONE BINARY, built from `git archive` so it cannot contain another
+agent's uncommitted work." It was broken, in two places, and had been for its
+whole life.
+
+1. `git archive $sha | tar -x` **corrupts the archive**. A PowerShell pipeline
+   carries .NET objects, not bytes: the tar is decoded to text and re-encoded on
+   its way to `tar.exe`, mangling every byte >= 0x80. It presents as ~100 lines of
+   `Damaged tar archive (bad header checksum)` followed by cargo reporting no
+   `Cargo.toml`, which reads as a git problem and is not one. Same defect class as
+   `git show HEAD:path > tmp`, which has already produced a false measurement in
+   this project.
+2. The cold build then **aborted on its own progress output**. cargo writes
+   `Compiling ...` to stderr, `2>&1 |` turns each line into a PowerShell error
+   record, and the file-level `$ErrorActionPreference = 'Stop'` kills the pass on
+   the first one -- reporting the compile line as the failure, so it reads as a
+   compiler error.
+
+**Both defects only fire on a COLD pin.** Every prior run reused a warm one and
+never executed either line. A harness can be load-bearing, exercised daily, and
+still have never once run the branch that makes it trustworthy.
+
+Fixed by writing a real `.tar` with `-o` and extracting from the file, asserting
+`Cargo.toml` landed, and logging the build rather than piping it. Verified end to
+end from a cold pin at `740e7056`: 19 frames in 5 s, **0.34 s/frame** against the
+1.48 s/frame the header projects under five-agent load.
+
+### 104.4 What the corpus actually looks like now
+
+Rendered from that pin, `--srgb --auto-exposure`, and inspected as whole frames
+rather than as crops a statistic chose. On `bee-3-cpl` (299 frames), individual
+hairs are separated across the entire thorax, wing venation is crisp, and **there
+is no white halo around a dark subject on a bright ground** -- the estimator's
+signature defect, which the pyramid merge was built to remove and which is now
+absent by inspection as well as by the 4739 DN -> 166 DN aura measurement.
+`flower-bud-with-background-fern-cpl` resolves individual trichomes against white
+with no rim, and `dry-erase-marker-head-cpl` carries a hard black-to-white
+boundary across the frame with no rim on either side.
+
+This is the first time in this project's history that the whole-frame appearance
+of the corpus and its statistics have agreed with each other.
+
