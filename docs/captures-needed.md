@@ -3713,3 +3713,90 @@ comparable.
 - `docs/research/V-HEADTOHEAD2.md` §4.5 has the full derivation, including the
   sensitivity ladder that puts a number on how mild a curve has to be before it
   stops mattering. The answer is: milder than gamma 1.10.
+
+## 33. A subject with real contrast above 0.25 cyc/px -- REQUESTED 2026-08-27, one subject and one stack, and it is what would let a resolution claim reach past a quarter of Nyquist
+
+### Why you are being asked
+
+Every fine-scale comparison this project has attempted has been decided, in the
+end, by whether the *corpus* carries signal at the frequency being argued about.
+On 113MSDCF it mostly does not. `experiments/V-LINEAR2/bandsignal.py` measures
+in-focus band power against defocused band power, per tile, on the linear
+develops, and the answer is a cliff:
+
+| band, cyc/px | 0.10-0.20 | 0.20-0.25 | 0.25-0.30 | 0.30-0.40 | 0.40-0.48 |
+|---|---:|---:|---:|---:|---:|
+| in-focus / defocused | 6.28 | **2.42** | 1.39 | 1.15 | 1.10 |
+| verdict | PASS | **PASS** | MARGINAL | FAIL | FAIL |
+
+A ratio near 1.0 means focusing the lens does not change the power in that band,
+which means the band is not showing you the subject. Above 0.25 cyc/px this
+corpus is showing you sensor noise. **No stacker can be shown to resolve better
+than another in a band where the subject contributes nothing**, and no amount of
+better code or better statistics fixes that -- it is a property of the photons.
+
+That is why the comparison in `docs/research/V-LINEAR2.md` is reported at
+0.20-0.25 cyc/px and nowhere finer, and it is why the answer there is *level*
+with the best of the open-source field rather than a number with a margin. At
+0.20-0.25 the in-focus/defocused ratio is 2.42; two good stackers separated by
+5% cannot be told apart at that ratio without far more regions than one subject
+provides.
+
+### What to shoot
+
+A subject with **genuine, high-contrast structure at a period of 2-4 output
+pixels** -- which at this magnification means structure a few micrometres
+across. Candidates, cheapest first:
+
+- **Diatom test slide** (8-form or 20-form). These exist precisely because they
+  are a resolution standard, the finest forms are well below a micrometre, and
+  they cost less than a filter.
+- **Insect wing scales** -- butterfly or moth. Ridge spacing is around a
+  micrometre and the contrast is high.
+- **A cleaved silicon wafer or a grating of known pitch**, if you have one --
+  the pitch is then known independently and doubles as a scale check.
+
+Shoot it the same way as 113MSDCF otherwise: same step, same lens, same constant
+exposure, RAW, enough frames to cover the depth.
+
+### The acceptance test, so this does not have to be argued about afterwards
+
+Run it before anything else is claimed:
+
+```
+python experiments/V-LINEAR2/bandsignal.py 5 6 20
+```
+
+**A band is usable if in-focus/defocused power is at least 2.0 with the lower
+end of its 95% CI at or above 1.5.** That threshold was fixed in
+`experiments/V-LINEAR2/PREREGISTRATION.md` and committed before any comparator
+output existed, so it is not a number chosen to suit an answer. If the new
+subject passes at 0.30-0.40 cyc/px, the resolution question can finally be asked
+at a frequency where the differences between stackers are large. If it fails
+there too, that is worth knowing as well -- it would say the limit is the optics
+and the sensor, not the software, and the project should stop framing fine-scale
+resolution as a differentiator at all.
+
+### What it unblocks
+
+- **A resolution verdict with a margin instead of a tie.**
+  `docs/research/V-LINEAR2.md` puts strehl level with `enfuse` (0.977, CI
+  [0.810, 1.181]) and ahead of `focus-stack` (1.326, CI [1.089, 1.625]) in
+  coherent fine-scale structure at 0.20-0.25. Those intervals are wide because
+  the band is only 2.4x above noise.
+- **The 0.25-0.48 bands, which are currently unusable.** Four of the seven bands
+  this project measures carry no verdict at all on the present corpus.
+- **Sections 30 and 32.** A slanted edge answers a different question -- whether
+  fine-scale power is real detail or sharpening overshoot -- and the two
+  together would close the fine-scale question completely. Neither closes it
+  alone.
+
+### Related
+
+- `docs/research/V-LINEAR2.md` -- the measurement this would strengthen, and the
+  reason its comparison band is 0.20-0.25.
+- `docs/research/V-LINEAR.md` section 5.3 -- the earlier and *too pessimistic*
+  reading that 0.20-0.48 was all noise. It is 0.25-0.48 that is noise; 0.20-0.25
+  does carry signal when best focus is chosen per tile.
+- Section 30 (slanted edge) -- orthogonal, still wanted, and no substitute for
+  this.
