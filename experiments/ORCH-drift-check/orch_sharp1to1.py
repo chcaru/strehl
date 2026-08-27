@@ -43,6 +43,16 @@ SHARE_CLIP_MAX = 0.15   # a source row saturating past this is a display artifac
 PATCH = 70          # small enough that ONE frame is in focus across all of it
 PATCH_FLOOR = 50.0  # below this in BOTH arms the patch is featureless; skip, count
 SEARCH = 48         # integer registration half-range, px
+CORR_MIN = 0.50     # below this the crop pair is NOT THE SAME CONTENT; see below
+SITE_SHARE = 0.25   # a site below this share of the subject's best site is not
+                    # a site: best_site() takes the top N blocks with no floor,
+                    # so on a subject with one textured region picks 2 and 3
+                    # land in background and the tool scores blown-white master
+                    # against read noise. Relative, therefore subject-invariant
+                    # by construction -- an absolute floor would just measure
+                    # how textured the subject is.
+SITE_CLIP_MAX = 0.05  # saturated data has no gradient; a clipped crop cannot be
+                      # a sharpness test site at all. Physical, so absolute.
 
 
 def luma(rgb):
@@ -185,6 +195,89 @@ def register(ref, mov):
     return at, best
 
 
+def commission_reg():
+    """Earn CORR_MIN instead of choosing it.
+
+    The gate must reject one thing and accept another, and the two must be far
+    enough apart that a single constant separates them:
+
+      REJECT  different content -- the failure that produced the phantom defect
+      ACCEPT  the same content, heavily defocused -- the legitimate case, since
+              comparing a sharp master against a blurred frame is the entire
+              point of this tool and a gate that rejected it would delete the
+              measurement it exists to make
+
+    If the accept arm sits below the reject arm, no threshold works and the
+    registration gate is the wrong instrument.
+    """
+    rng = np.random.default_rng(11)
+    n = CROP + 900
+    # The first version of this arm used sums of sinusoids and the commissioning
+    # correctly REFUSED it: a periodic field displaced by 250 px lands on a near
+    # repeat of itself and correlated 0.9189, so the reject arm scored like an
+    # accept arm and no constant could separate the classes. The field has to be
+    # non-periodic to test displacement at all. Multi-scale blurred noise is,
+    # and it also keeps the strong low-frequency content that real subjects have
+    # -- which is what lets correlation survive heavy defocus, the case the gate
+    # must not reject.
+    big = np.zeros((n, n))
+    for s in (4, 16, 64):
+        w = rng.normal(0, 1, (n, n))
+        f = np.ones(s) / s
+        w = np.apply_along_axis(lambda v: np.convolve(v, f, "same"), 0, w)
+        w = np.apply_along_axis(lambda v: np.convolve(v, f, "same"), 1, w)
+        big += w * s
+    big = np.clip(8000 + 3000 * big / (big.std() + 1e-9), 0, 65535)
+    ref = big[450:450 + CROP, 450:450 + CROP]
+
+    def pad_at(oy, ox):
+        return big[450 + oy - SEARCH:450 + oy + CROP + SEARCH,
+                   450 + ox - SEARCH:450 + ox + CROP + SEARCH]
+
+    def blur(a, k):
+        f = np.ones(k) / k
+        b = np.apply_along_axis(lambda v: np.convolve(v, f, "same"), 0, a)
+        return np.apply_along_axis(lambda v: np.convolve(v, f, "same"), 1, b)
+
+    arms = []
+    _, c = register(ref, pad_at(0, 0))
+    arms.append(("identical", c, "accept"))
+    _, c = register(ref, pad_at(12, -9))
+    arms.append(("shifted %d px, inside SEARCH" % 12, c, "accept"))
+    _, c = register(blur(ref, 9), pad_at(0, 0))
+    arms.append(("defocused 9 px", c, "accept"))
+    _, c = register(blur(ref, 21), pad_at(0, 0))
+    arms.append(("defocused 21 px", c, "accept"))
+    _, c = register(ref, pad_at(250, 250))
+    arms.append(("displaced %d px, beyond SEARCH" % 250, c, "reject"))
+    _, c = register(ref, rng.normal(8000, 1500, (CROP + 2 * SEARCH,
+                                                 CROP + 2 * SEARCH)))
+    arms.append(("unrelated content", c, "reject"))
+
+    print("commissioning CORR_MIN = %.2f   (SEARCH = %d px)\n" % (CORR_MIN, SEARCH))
+    print("%-34s %8s %8s %s" % ("arm", "corr", "want", "verdict"))
+    ok = True
+    acc, rej = [], []
+    for name, c, want in arms:
+        got = "accept" if c >= CORR_MIN else "reject"
+        good = got == want
+        ok = ok and good
+        (acc if want == "accept" else rej).append(c)
+        print("%-34s %8.4f %8s %s" % (name, c, want, "ok" if good else "WRONG"))
+    print("\naccept arms span %.4f-%.4f; reject arms span %.4f-%.4f"
+          % (min(acc), max(acc), min(rej), max(rej)))
+    margin = min(acc) - max(rej)
+    print("margin between the closest accept and the closest reject: %.4f" % margin)
+    if margin <= 0:
+        print("NOT COMMISSIONED: the two classes overlap, so no constant "
+              "separates them and CORR_MIN cannot be earned by this design.")
+        return 1
+    print("%s" % ("COMMISSIONED: CORR_MIN sits inside a %.4f-wide gap and "
+                 "every arm lands on its intended side." % margin if ok else
+                 "NOT COMMISSIONED: an arm landed on the wrong side."))
+    return 0 if ok else 1
+
+
 def commission():
     """Prove the patch statistic can say SELECTION, DEFECT and RECONSTRUCTION.
 
@@ -244,7 +337,41 @@ def main():
     m = tifffile.imread(cand[0])[..., :3].astype(np.float64)   # tifffile, not PIL
     my = luma(m)
     sites = best_site(my)
-    print("master %s  sites %r" % (os.path.basename(cand[0]), [(y, x) for _, y, x in sites]))
+    # Reject sites the picker had no business returning. best_site() takes the
+    # top N blocks by detail and returns them unconditionally; on a subject
+    # whose textured area is smaller than N blocks it therefore returns
+    # background. That is the same failure this lane fixed in orch_smoothcrop.py
+    # earlier tonight -- a search that cannot fail returns its least-bad
+    # candidate and calls it a find -- and here it manufactured two phantom
+    # DEFECT verdicts (flower-bud-alone-cpl 0.285x, pencil-steep-angle-cpl
+    # 0.157x) by scoring a blown-white master crop against source read noise.
+    scored = []
+    for s, y, x in sites:
+        crop = my[y:y + CROP, x:x + CROP]
+        d = detail(crop)[0]
+        clipf = float((m[y:y + CROP, x:x + CROP] >= 65000).mean())
+        scored.append((d, clipf, y, x))
+    top = max(d for d, _, _, _ in scored) if scored else 0.0
+    sites, rejected = [], []
+    for d, clipf, y, x in scored:
+        share = d / top if top else 0.0
+        if clipf > SITE_CLIP_MAX:
+            rejected.append((y, x, "clipped %.1f%% > %.0f%%"
+                             % (100 * clipf, 100 * SITE_CLIP_MAX)))
+        elif share < SITE_SHARE:
+            rejected.append((y, x, "detail %.0f is %.0f%% of the best site's %.0f"
+                             % (d, 100 * share, top)))
+        else:
+            sites.append((d, y, x))
+    print("master %s  sites %r" % (os.path.basename(cand[0]),
+                                   [(y, x) for _, y, x in sites]))
+    for y, x, why in rejected:
+        print("  site (%d,%d) NOT A SITE: %s" % (y, x, why))
+    if not sites:
+        raise SystemExit(
+            "every candidate site was rejected -- this subject has no region "
+            "textured enough to test sharpness, and that is a finding, not a "
+            "reason to lower the floor")
 
     arw = sorted(glob.glob(os.path.join(SRC_ROOT, subject, "*.ARW")))
     idx = np.linspace(0, len(arw) - 1, min(nsrc, len(arw))).astype(int)
@@ -260,6 +387,7 @@ def main():
 
     rows = []
     patchstats = []
+    unregistered = []
     print("%-8s %-14s %10s %10s   %10s %10s   %s"
           % ("site", "best frame", "M_fine", "S_fine", "M_coarse", "S_coarse", "corr"))
     for si, (_, y, x) in enumerate(sites):
@@ -267,6 +395,8 @@ def main():
         mf, mc = detail(ref)
         best = None
         reg = []
+        nok = 0
+        nbad = 0
         for name, sy, s in srcs:
             if (y + CROP + SEARCH > sy.shape[0]) or (x + CROP + SEARCH > sy.shape[1]):
                 continue
@@ -274,18 +404,43 @@ def main():
             if pad.shape[0] < CROP + 2 * SEARCH or pad.shape[1] < CROP + 2 * SEARCH:
                 continue
             (dy, dx), c = register(ref, pad)
+            # The registration correlation was printed by this tool from the
+            # start and NOTHING EVER CONDITIONED ON IT. That is the same defect
+            # -- a number reported but not tested -- that this lane flagged in
+            # its own print-readiness gate an hour earlier, so it is a habit and
+            # not an accident.
+            #
+            # It matters here because focus breathing scales each frame about
+            # the optical centre, so displacement grows with radius. Near a
+            # frame edge it can exceed SEARCH, registration then fails, and the
+            # crop that comes back is DIFFERENT CONTENT. On flower-bud-alone-cpl
+            # that put blown-white background in the master row against
+            # near-black bud in the source row, and the source's read noise --
+            # amplified by the gamma the raw path applies and the master's
+            # highlight does not -- scored as "detail", handing the site a
+            # 0.283x DEFECT verdict that the merge had no part in.
+            #
+            # A crop that fails this gate is not a bad measurement. It is not a
+            # measurement.
+            if c < CORR_MIN:
+                nbad += 1
+                continue
+            nok += 1
             crop = sy[y + dy:y + dy + CROP, x + dx:x + dx + CROP]
             reg.append((name, crop))
             sf, sc = detail(crop)
             if best is None or sf > best[1]:
                 best = (name, sf, sc, dy, dx, c, s)
         if best is None:
-            print("site %d: no usable source crop" % si)
+            unregistered.append((si, nbad))
+            print("site %-3d UNREGISTERED  %d of %d source frames correlated "
+                  "below %.2f -- NOT MEASURED, not scored"
+                  % (si, nbad, nbad + nok, CORR_MIN))
             continue
         patchstats.append((si, patch_gain(ref, reg)))
         name, sf, sc, dy, dx, c, s = best
-        print("%-8d %-14s %10.2f %10.2f   %10.2f %10.2f   %.3f"
-              % (si, name[:14], mf, sf, mc, sc, c))
+        print("%-8d %-14s %10.2f %10.2f   %10.2f %10.2f   %.3f  (%d/%d frames "
+              "registered)" % (si, name[:14], mf, sf, mc, sc, c, nok, nok + nbad))
         rows.append((si, y, x, m[y:y + CROP, x:x + CROP],
                      s[y + dy:y + dy + CROP, x + dx:x + dx + CROP],
                      name, mf, sf, mc, sc))
@@ -319,6 +474,15 @@ def main():
                  float(np.percentile(finite, 90)), won, finite.size, skipped))
     allg = np.array([v for _, (gs, _) in patchstats for v in gs], dtype=np.float64)
     allg = allg[np.isfinite(allg)]
+    nmeas = sum(1 for _, (gs, _) in patchstats if gs)
+    nfloor = sum(1 for _, (gs, _) in patchstats if not gs)
+    print("\n  sites: %d measured, %d unregistered, %d below the detail floor, "
+          "%d total" % (nmeas, len(unregistered), nfloor,
+                        nmeas + len(unregistered) + nfloor))
+    if len(unregistered) + nfloor:
+        print("  An unregistered site is NOT a soft site. It is a site where the")
+        print("  master and the source were not shown the same content, and no")
+        print("  verdict below covers it.")
     if allg.size:
         med = float(np.median(allg))
         print("\n  ALL SITES  median %.3fx over %d measured patches" % (med, allg.size))
@@ -393,4 +557,6 @@ def main():
 if __name__ == "__main__":
     if "commission" in sys.argv:
         sys.exit(commission())
+    if "commission-reg" in sys.argv:
+        sys.exit(commission_reg())
     main()
