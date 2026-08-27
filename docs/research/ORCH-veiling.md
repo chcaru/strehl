@@ -14224,3 +14224,226 @@ The general form is worth keeping: **a false alarm investigated properly leaves 
 test behind.** The wrong hypothesis was cheap because chasing it required running
 the shipping binary, and running the shipping binary is what the right question
 needed anyway.
+
+## §139 — The dilution arithmetic: one line of algebra that predicts three measurements nobody aimed at it
+
+Three lanes were hunting a second mechanism behind the merge's depth failure.
+V-NEVERWORSE had priced the exponent fix at **57% of the mottle excess for a
+9.3% sharpness cost** and said outright that something else remained. The
+something else turns out to be visible in the weight law itself, with no
+experiment required, and I should have looked there first.
+
+### What the source says
+
+At pin `9b05d0b7`, `crates/strehl-core/src/pyramid.rs` L1351-1362:
+
+```rust
+let floor  = gate * beta * v.max(0.0);          // gate = 2.0
+let excess = (*e - floor).max(0.0);
+*w = select_weight(excess, floor, p);
+```
+
+and L2092-2110:
+
+```rust
+fn select_weight(excess: f32, floor: f32, p: f32) -> f32 {
+    if excess <= 0.0 { return 0.0; }
+    let r = excess / floor.max(1.0) / SNR_REF;   // SNR_REF = 64.0
+    ... r.powf(p)
+}
+```
+
+Two properties follow, and the second is the finding:
+
+1. **The zero-clamp is real.** A frame whose smoothed band energy sits below
+   `2 * beta * var` contributes **exactly zero**, not a small number. The naive
+   story — "in a deep stack all N frames dilute the winner" — is false, and I
+   nearly relayed it as fact. It was worth reading the file to find that out.
+2. **`SNR_REF` cancels in the normalised weight**, as two lanes had already
+   said. What survives is
+   ```
+   share_winner = 1 / (1 + SUM_{k != winner} (e_k / e_winner)^p)
+   ```
+   **`N` does not appear in that expression. The sum has `N-1` terms.**
+
+That is the whole mechanism. Every frame that clears the gate contributes a
+term, and every term takes share from the winner. A *fixed absolute exponent*
+therefore delivers **less selection the deeper the stack gets** — with no band
+limit involved, no alignment error involved, and nothing in the code that looks
+like a dependence on frame count.
+
+### The arithmetic, commissioned
+
+`experiments/ORCH-drift-check/orch_dilution.py`. It computes nothing about real
+pixels; it evaluates the published law. Two commissioning controls run first and
+the script exits non-zero if either fails, because an arithmetic model that is
+not the arithmetic in the source is worse than no model:
+
+- `p -> inf` must give share `-> 1` (pure winner-take-all): measured
+  **1.000000**.
+- `p = 0` must give share `= 1/N` exactly (pure mean): measured **0.003344** at
+  N=299, which is 1/299 to the printed precision.
+
+Winner's normalised share, one winner at energy 1.0 against `N-1` competitors at
+ratio `r`:
+
+| p | r | N=22 | N=32 | N=63 | N=105 | N=299 |
+|---|---|---|---|---|---|---|
+| 8 | 0.5 | 0.9242 | 0.8920 | 0.8050 | 0.7111 | **0.4621** |
+| 8 | 0.7 | 0.4524 | 0.3588 | 0.2186 | 0.1430 | **0.0550** |
+| 4 | 0.5 | 0.4324 | 0.3404 | 0.2051 | 0.1333 | **0.0510** |
+| 4 | 0.3 | 0.8546 | 0.7993 | 0.6657 | 0.5428 | **0.2929** |
+| 2 | 0.3 | 0.3460 | 0.2639 | 0.1520 | 0.0965 | **0.0359** |
+
+### Three corroborations, none of which was aimed at this
+
+This is the part that made me stop and write it down rather than act on it.
+
+**V-SOFTCHECK**, measuring softness: *63 frames merge 0.114 softer at 0.30-0.35
+cyc/px than 32 frames of the same range.* Matched range with twice the frames is
+a **finer step**, which puts competitors at **higher** `r`. Predicted share
+ratios 63/32: **0.609** at (p=8, r=0.7), **0.603** at (p=4, r=0.5), **0.530** at
+(p=2, r=0.5). The winner keeps about half the share it kept at N=32. That lane
+had argued — correctly — that a band limit is N-independent so this could not be
+one. It is not one.
+
+**V-LINEAR**, measuring detail against comparators: *`bee` at N=299 retains
+**0.180** of `enfuse`'s and **0.060** of `focus-stack`'s coherent detail.*
+Predicted share ratios 299/22: **0.122** (p=8, r=0.7), **0.118** (p=4, r=0.5),
+**0.104** (p=2, r=0.3), **0.083** (p=4, r=0.7). **The two measured values
+bracket the predicted band from opposite sides.**
+
+**V-NEVERWORSE**, measuring participation: *`n_eff` is lowest at L1-L4.* The
+model's `n_eff` table has its minimum at p=8 for r <= 0.3 — value **1.00** —
+and p=8 is carried by levels 0, 1 and 2, with level 3 at p=5. The minimum sits
+where that lane measured it, computed from the law alone.
+
+Three lanes, three instruments, three questions, none of them this one.
+
+### The fix, and why the obvious one is a trap
+
+Holding `n_eff` at a constant target as `N` grows requires `p` to grow like
+`log N`. Solved numerically for target `n_eff = 6`:
+
+| r | N=22 | N=32 | N=63 | N=105 | N=299 |
+|---|---|---|---|---|---|
+| 0.3 | 2.14 | 2.49 | 3.09 | 3.53 | 4.42 |
+| 0.5 | 3.72 | 4.33 | 5.38 | 6.14 | 7.67 |
+| 0.7 | 7.23 | 8.41 | 10.45 | 11.93 | 14.92 |
+
+**No single fixed `p` sits on any row.** The one-line fix suggests itself —
+`p_eff = exponent_at(k, nb) + log2(N / 22)` — and it walks straight into
+V-NEVERWORSE's wall: `MAX_EXPONENT = 8.0` already binds at the fine levels, and
+that lane priced hull violations at **0 / 72 / 511** for exponents **1 / 8 / 16**.
+Buying depth back by raising the exponent buys ringing with it. **The falsifier's
+result forbids the fix the arithmetic first suggests, which is exactly what a
+falsifier is for.**
+
+The N-invariant fix that does not touch `p`: measure each frame against the
+**winner** rather than against an absolute reference,
+
+```
+w_k = max(0, r_k - theta * r_max)^p
+```
+
+so participation is bounded by *how many frames are genuinely competitive*, a
+quantity set by the optics and the focus step and **not by the stack's length**.
+Its cost is architectural: `r_max` does not exist in a single-pass bounded fold
+over frames. Either the fold carries per-pixel sufficient statistics or the merge
+goes two-pass. A warm decode is **0.91 s** against a **22.58x** speed margin, so
+the project can afford to spend speed on being right — and this seam was named in
+advance, with the warning that deciding it late means rewriting the merge once.
+
+### The unifying claim, stated so it can be killed
+
+A fixed absolute exponent applied to a variably-reliable ratio produces **two
+opposite symptoms from one cause**: in flat regions the competitors are near-tied
+and noise picks the winner, giving **mottle**; in deep stacks the competitors are
+numerous and the winner's share is divided among them, giving **softening**. If
+that is right, a fix aimed at either must move the other, and the two must not be
+built as two fixes.
+
+**The discriminator I gave V-SOFTCHECK**, because it is the cheapest way to kill
+this and it removes `N` from the question entirely: decimate one deep stack two
+ways at **equal N** — every second frame of `bee` (N=150, step x2) against the
+first 150 frames (N=150, step x1, half the range). Same merge, same subject, same
+frame count; only the number of frames simultaneously near focus at a pixel
+differs. The model says the **x2-step arm is sharper**. No story that counts
+frames can produce that, including this one if it is wrong.
+
+---
+
+## §140 — A file hash is not a pixel gauge, and I used one to overturn a correct finding
+
+V-REVIEW reported that `--exposure` and `--auto-exposure` are inert. I checked
+it, found that `--exposure=3` and `--exposure=-3` produce files with different
+SHA-1s, and told the lane its finding was refuted. I was wrong, and the manner of
+being wrong is worth more than the fact.
+
+V-REVIEW reproduced my experiment exactly — same binary, same subject, same flags
+— **got my two hashes**, and then decoded both files:
+
+```
+np.array_equal(A, B) : True
+samples differing    : 0  of 98,898,048
+commanded gain ratio : 64.000x    observed mean ratio : 1.0000000
+```
+
+The only differing TIFF tag is `ImageDescription`. **The bytes moved because the
+tool writes the gain down, not because it applies it.**
+
+The mechanism is in the provenance file, which states both halves of its own
+cancellation without noticing: the exposure is *"ONE multiply in linear light,
+before the curve"*, and the tone rule is *"linear-sRGB luma p99.9 -> 0.90"*. **A
+percentile-anchored rule is scale-invariant.** Multiply the data by `g` and both
+percentiles scale by `g`; the normalised result is unchanged. There is no gain
+that could have survived it.
+
+The lane then did what a pair of files can never do: **swept eight settings from
+-6 to +6 stops, a 4096x commanded range, and got one bit-identical image.** The
+single exception, `+2.60`, differs by 0.0035 DN in the mean and is the **only
+gain in the sweep that is not a power of two** — float rounding in an otherwise
+exact cancellation, which confirms the mechanism rather than denting it. Both
+commissioning arms were green first: determinism (identical flags twice give
+identical pixels) and potency (`--pyramid-exponent 4.0` moves 90.98% of samples),
+so the null was readable before it was read.
+
+Three things I am keeping:
+
+**1. A file hash answers a question about the container, not the picture.** Every
+format worth shipping records its own parameters — TIFF `ImageDescription`, EXIF,
+timestamps, ICC. A parameter that changed nothing still changes the file. The
+hash is a perfectly good gauge for "did the file change" and we keep asking it
+"did the image change". The gauge for that is the decoded array.
+
+**2. A sweep beats a pair.** Two files can differ for one uninteresting reason. A
+monotone range cannot, and its outliers are informative — the `+2.60` rounding
+tell is worth more than any of the exact rows.
+
+**3. I overturned a correct finding using a gauge the lane had already retracted,
+in a report I had read.** This is the second time in one hour that the thing
+which flattered me was the thing I did not audit, and I had already written that
+sentence into §138. Writing a discipline down does not install it. The install is
+a command you run before you speak.
+
+The consequence for the deliverable is small and the lane called it correctly:
+**the 26 masters are correctly exposed**, because `--srgb` already normalises
+from the image's own percentiles, which is what auto-exposure was asking for. The
+credit belongs to the tone rule, not to the flag. What is refuted is the sentence
+"that gain really did reach the pixels" — and the README had already published
+the lane's original finding, including the rebuke of hash-based checking, so my
+false correction never reached a reader. That is luck, not process.
+
+One further note the lane made and I want preserved in its own words: the
+untested contract `--auto-exposure` prints a number you can hand back to
+`--exposure` to get the same file **holds** — the two renders are byte-identical,
+sha `18E6EDA98DEC9930`. **It would also hold on a completely dead flag.** A
+contract satisfied by a corpse is not evidence of a pulse, and "the test passes"
+was never the same claim as "the feature works".
+
+### Discipline 32
+
+**Verify with the instrument that reads the quantity in dispute.** A hash reads
+bytes; a claim about pixels needs pixels; a claim about a range needs a sweep. And
+when a lane retracts a gauge, the retraction binds *everyone who read it* —
+including the person who assigned the work.
