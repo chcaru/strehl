@@ -722,6 +722,63 @@ pub struct Develop {
     /// space -- where it belongs, since it is a rendering intent -- while the
     /// *numbers* are measured later from the pixels.
     pub wants_tone: bool,
+    /// The exposure gain the user asked for, applied **on top of** the tone
+    /// placement rather than underneath it. `1.0` for "none".
+    ///
+    /// # Why this field has to exist, and why the obvious place was wrong
+    ///
+    /// The pipeline folds `--exposure` into the normalisation multiply the
+    /// writers already perform, i.e. **upstream of the tone measurement**. That
+    /// is the natural place for an exposure -- it is a photon count times a
+    /// constant, and it belongs in linear light before the curve -- and for the
+    /// untoned measurement render it is still exactly right.
+    ///
+    /// On a **toned** render it is exactly wrong, and not approximately so.
+    /// [`Tone::from_luminance`] takes order statistics of the very data the
+    /// gain has just scaled, so an upstream gain `g` gives `black -> g*black`
+    /// and `white -> g*white`, hence `s -> s/g` while the normalised
+    /// `y = (l - black) * s` is INVARIANT. [`TONE_TOE`] is a constant in that
+    /// same normalised space, so the toe is invariant too, and the `min(., s)`
+    /// cap cancels because both of its branches carry `1/g`. The output is
+    /// `(g*v) * (gain/g) = v * gain`: the original pixel, exactly, term by term.
+    /// **The auto-tone divides the exposure straight back out.**
+    ///
+    /// MEASURED before the fix, at pin 7c3df34d on `109MSDCF --limit 4`, LSQ
+    /// through the origin over all 98,898,048 samples, with the slope estimator
+    /// commissioned first on planted 2.0x / 0.5x / 1.0x gains and returning each
+    /// to nine decimals -- the 0.5x arm present so that an estimator bounded
+    /// below at 1.0 could not pass:
+    ///
+    /// | pair | commanded | delivered |
+    /// |---|---|---|
+    /// | `--exposure -3` vs `--exposure 3` | 0.015625 | **1.0000000** |
+    /// | `--auto-exposure` vs none | 6.105000 | **1.0000000** |
+    ///
+    /// A commanded **64x** span left every one of 98,898,048 samples
+    /// **bit-identical**. The two files still had different SHA-256s, which is
+    /// how this survived so long: they differ in **ten bytes, all of them before
+    /// the pixel data begins at offset 3,404**, in the `ImageDescription` that
+    /// records the tone rendering. A whole-file hash was reporting the render's
+    /// own account of itself as evidence about the image.
+    ///
+    /// # Why multiplying the tone gain is the whole fix
+    ///
+    /// Wanted: `out = g * L * gain_u(L)`, where `gain_u` uses anchors measured
+    /// from the UNGAINED `L`. What arrives here is `L' = g*L`. Substituting,
+    /// `gain_u(L'/g) = min(soft_u/(L'/g), s_u) = g * min(soft'/L', s')`, because
+    /// `y` and therefore `soft` are invariant and `s_u = g*s'`. So
+    /// `out = L' * g * gain'(L')` -- **the already-measured tone gain, times
+    /// `g`.** No second pass over the pixels, no re-measured anchors, and the
+    /// cancellation is undone by construction rather than by compensation.
+    ///
+    /// # Why the default renders cannot move
+    ///
+    /// `AppliedExposure::gain()` is `stops.exp2()`, which IEEE-754 requires to
+    /// be exactly `1.0` at zero stops, and `x * 1.0 == x` bit-for-bit for every
+    /// finite `x`. A render with no exposure flag therefore takes the same
+    /// arithmetic it always did. Both byte-freeze rows are `srgb=no`, so
+    /// `wants_tone` is false and this branch is not even reached for them.
+    pub exposure_gain: f32,
 }
 
 impl Develop {
@@ -743,6 +800,22 @@ impl Develop {
             srgb,
             tone: None,
             wants_tone: false,
+            exposure_gain: 1.0,
+        }
+    }
+
+    /// Attach the user's exposure gain, to be applied **after** the tone
+    /// placement. See [`Develop::exposure_gain`] for why it cannot be applied
+    /// before it and survive.
+    ///
+    /// A builder rather than a parameter on [`OutputSpace::develop`] so that
+    /// the callers which have no exposure to declare -- the measurement writers
+    /// and `examples/blend-render.rs` -- keep compiling and keep the identity.
+    #[must_use]
+    pub fn with_exposure_gain(self, gain: f32) -> Self {
+        Self {
+            exposure_gain: gain,
+            ..self
         }
     }
 
@@ -841,6 +914,7 @@ impl OutputSpace {
             srgb: self.applies_curve(),
             tone: None,
             wants_tone: self.applies_curve(),
+            exposure_gain: 1.0,
         }
     }
 }
@@ -1175,7 +1249,13 @@ fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
     // collapsed `coffee-bubbles` to a one-channel image.
     let v = match &dev.tone {
         Some(t) => {
-            let g = t.gain(luma709(v));
+            // `* dev.exposure_gain` is the whole of the exposure fix. The gain
+            // folded in upstream is cancelled exactly by this stage's own
+            // normalisation (see `Develop::exposure_gain`); re-applying it to
+            // the placed value puts it on the far side of the cancellation,
+            // where nothing divides it out again. It is `1.0` -- and therefore
+            // bit-exact -- on every render that did not ask for an exposure.
+            let g = t.gain(luma709(v)) * dev.exposure_gain;
             [v[0] * g, v[1] * g, v[2] * g]
         }
         None => v,
@@ -2016,6 +2096,7 @@ mod tests {
             srgb: true,
             tone: Some(t),
             wants_tone: true,
+            exposure_gain: 1.0,
         };
         let at_floor = develop_pixel([t.black, t.black, t.black], &dev);
         // NOT `== [0, 0, 0]`. That assertion encoded the hard clamp, and the
@@ -2045,6 +2126,7 @@ mod tests {
             srgb: true,
             tone: Some(real),
             wants_tone: true,
+            exposure_gain: 1.0,
         };
         let real_floor = develop_pixel([real.black, real.black, real.black], &real_dev);
         assert!(
@@ -2086,6 +2168,7 @@ mod tests {
             srgb: true,
             tone: Some(Tone::from_luminance(&mut lum)),
             wants_tone: true,
+            exposure_gain: 1.0,
         };
         for v in [0.05f32, 0.2, 0.5, 0.9] {
             let out = develop_pixel([v, v, v], &dev);
@@ -2134,6 +2217,7 @@ mod tests {
             srgb: false,
             tone: Some(tone),
             wants_tone: true,
+            exposure_gain: 1.0,
         };
 
         // Dark, strongly saturated colours whose weak channels are BELOW the
@@ -2178,6 +2262,7 @@ mod tests {
             srgb: true,
             tone: Some(Tone::from_luminance(&mut lum)),
             wants_tone: true,
+            exposure_gain: 1.0,
         };
         for v in [
             [0.30f32, 0.004, 0.002],
@@ -2216,6 +2301,149 @@ mod tests {
             prev = cur;
         }
         assert_eq!(placed(0.0), 0.0, "true black must stay black");
+    }
+
+    /// An exposure request must reach the PIXELS, not only the banner.
+    ///
+    /// # Why this asserts a slope and not a hash
+    ///
+    /// `--exposure` shipped applying a gain the tone stage divided straight
+    /// back out. MEASURED at pin 7c3df34d on `109MSDCF --limit 4`: a commanded
+    /// **64x** span between `--exposure 3` and `--exposure -3` delivered a
+    /// regression slope of **1.0000000** and left all 98,898,048 samples
+    /// **bit-identical**.
+    ///
+    /// It survived because the two files' SHA-256s *did* differ, so a
+    /// whole-file hash read as "the flag works". They differ in ten bytes, all
+    /// of them before the pixel data begins at offset 3,404, inside the
+    /// `ImageDescription` that records the tone rendering. **The bytes being
+    /// hashed contained the banner.** A hash is sensitive to any change and
+    /// specific to none; nothing in this crate asserted that the commanded
+    /// quantity was *delivered*, so nothing failed.
+    ///
+    /// The estimator is commissioned inside the test, on this same data, before
+    /// any verdict from it is read. The `0.5x` arm is not decoration: an
+    /// estimator bounded below at 1.0, or blind to direction, passes a planted
+    /// `2.0x` and fails only that one.
+    #[test]
+    fn an_exposure_request_changes_the_pixels_and_not_only_the_banner() {
+        const N: usize = 8_192;
+        // A squared ramp, so the luminance percentiles are not uniform, plus a
+        // floor so nothing sits at exactly zero where the toe dominates.
+        let base: Vec<[f32; 3]> = (0..N)
+            .map(|i| {
+                let t = i as f32 / N as f32;
+                [
+                    0.30 * t * t + 0.002,
+                    0.55 * t * t + 0.002,
+                    0.20 * t * t + 0.002,
+                ]
+            })
+            .collect();
+
+        let slope = |pairs: &[(f64, f64)]| -> f64 {
+            let sxx: f64 = pairs.iter().map(|(x, _)| x * x).sum();
+            let sxy: f64 = pairs.iter().map(|(x, y)| x * y).sum();
+            assert!(sxx > 0.0, "degenerate regression: no signal in x");
+            sxy / sxx
+        };
+
+        for planted in [2.0_f64, 0.5, 1.0] {
+            let arm: Vec<(f64, f64)> = base
+                .iter()
+                .map(|v| (v[1] as f64, v[1] as f64 * planted))
+                .collect();
+            let got = slope(&arm);
+            assert!(
+                (got - planted).abs() < 1e-12,
+                "slope estimator not commissioned: planted {planted}, recovered {got}"
+            );
+        }
+
+        // Render as the writers do: the tone is measured from the data AFTER
+        // the upstream gain fold, which is what made the cancellation exact.
+        // `srgb: false` with `contrast: 0` keeps the comparison in linear light,
+        // where an exposure is a straight multiply and a slope means what it says.
+        let render = |g: f32| -> Vec<[u16; 3]> {
+            let gained: Vec<[f32; 3]> =
+                base.iter().map(|v| [v[0] * g, v[1] * g, v[2] * g]).collect();
+            let mut lum: Vec<f32> = gained.iter().map(|&v| luma709(v)).collect();
+            let measured = Tone::from_luminance(&mut lum);
+            let dev = Develop {
+                matrix: None,
+                srgb: false,
+                tone: Some(Tone {
+                    contrast: 0.0,
+                    ..measured
+                }),
+                wants_tone: true,
+                exposure_gain: g,
+            };
+            gained.iter().map(|&v| develop_pixel(v, &dev)).collect()
+        };
+
+        let plain = render(1.0);
+        let doubled = render(2.0);
+
+        // Only unclipped samples carry the slope. A pixel pinned at u16::MAX has
+        // had its gain removed by the ceiling rather than by the tone stage, and
+        // including it drags the estimate toward 1.0 -- toward the very failure
+        // this test exists to catch.
+        let pairs: Vec<(f64, f64)> = plain
+            .iter()
+            .zip(&doubled)
+            .map(|(a, b)| (a[1] as f64, b[1] as f64))
+            .filter(|&(x, y)| x > 0.0 && x < u16::MAX as f64 && y < u16::MAX as f64)
+            .collect();
+
+        // A test that can pass on three surviving samples is not a test. This
+        // floor makes "nothing was examined" fail instead of reading as green.
+        assert!(
+            pairs.len() > N / 4,
+            "only {} of {N} samples were usable; the arms clipped away the evidence",
+            pairs.len()
+        );
+
+        let delivered = slope(&pairs);
+        assert!(
+            (delivered - 2.0).abs() < 0.01,
+            "a commanded 2.0x exposure delivered {delivered}x to the pixels ({} samples). \
+             1.0 means the tone stage is dividing the exposure back out again -- see \
+             Develop::exposure_gain.",
+            pairs.len()
+        );
+
+        // THE NULL ARM, and it is what protects every default render in the
+        // corpus: with no exposure asked for, `develop_pixel` must produce
+        // exactly what it produced before this fix existed -- the tone gain
+        // alone. `x * 1.0 == x` bit-for-bit, so this is an equality and not a
+        // tolerance.
+        let mut lum: Vec<f32> = base.iter().map(|&v| luma709(v)).collect();
+        let t0 = Tone {
+            contrast: 0.0,
+            ..Tone::from_luminance(&mut lum)
+        };
+        let dev0 = Develop {
+            matrix: None,
+            srgb: false,
+            tone: Some(t0),
+            wants_tone: true,
+            exposure_gain: 1.0,
+        };
+        for &v in &base {
+            let g = t0.gain(luma709(v));
+            let pre_fix = gamut_map([v[0] * g, v[1] * g, v[2] * g]);
+            let want = [
+                (pre_fix[0] * u16::MAX as f32 + 0.5) as u16,
+                (pre_fix[1] * u16::MAX as f32 + 0.5) as u16,
+                (pre_fix[2] * u16::MAX as f32 + 0.5) as u16,
+            ];
+            assert_eq!(
+                develop_pixel(v, &dev0),
+                want,
+                "an unexposed render moved at linear {v:?}; the default output is not stable"
+            );
+        }
     }
 
     /// The gamut map is the identity on everything already inside the gamut.
@@ -2307,6 +2535,7 @@ mod tests {
             srgb: false,
             tone: None,
             wants_tone: false,
+            exposure_gain: 1.0,
         };
         // A colour the matrix sends out of gamut on two channels at once.
         let saturated_green = [0.2f32, 1.0, 0.15];
@@ -2526,6 +2755,7 @@ mod tests {
             srgb,
             tone: Some(toned),
             wants_tone: true,
+            exposure_gain: 1.0,
         };
 
         // `Some(true)` = a profile whose TRC is sRGB's; `Some(false)` = a

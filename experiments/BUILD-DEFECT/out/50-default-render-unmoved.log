@@ -1,0 +1,54 @@
+C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\src\50-default-render-unmoved.py:16: SyntaxWarning: invalid escape sequence '\B'
+  The obvious cheap measurement -- compare against `47-expo\B-plain.tif`, which
+==========================================================================
+50 -- does the exposure fix move the default render?
+==========================================================================
+HEAD        : 3bfdee4b
+stack       : D:\personal\macro\109MSDCF (--limit 4)
+scratch     : C:\dev\strehl-out\BUILD-DEFECT\50-fix
+
+-- commissioning the slope estimator --
+  planted 2.0    -> recovered 2.000000000  OK
+  planted 0.5    -> recovered 0.500000000  OK
+  planted 1.0    -> recovered 1.000000000  OK
+
+-- --analyse-only: reusing the renders already on disk --
+
+-- commissioning the swap itself --
+  crates/strehl-cli/src/image_out.rs       DIFFERS from HEAD
+  crates/strehl-cli/src/stack.rs           DIFFERS from HEAD
+
+==========================================================================
+REQUIREMENT 4 -- default render must not move
+==========================================================================
+  file sha256 baseline : 055f54e7fdf78d22358f53586bda7051ff53fc8b4bd14e894ba0749cae7a6e1a
+  file sha256 fixed    : 7b1047711b8b98c96b486a56d8d4d60c4827e781c20ece6b85ac6cfac3684583
+  whole-file identical : NO
+  samples differing    : 0 of 98,898,048   max |delta| 0 DN
+  delivered slope      : 1.0000000
+  first strip offset   : 3,410
+  differing bytes      : 11 total = 11 header + 0 pixel
+  provenance baseline  : strehl 0.0.0 (42e2d95ec94c-dirty)
+  provenance fixed     : strehl 0.0.0 (438ab78c65c1-dirty)
+  header bytes explained by the build stamp: 11 of 11
+  VERDICT: UNMOVED -- 0 of 98,898,048 samples differ; the only
+           difference is the build's own source-tree stamp, which
+           moves for any edit and reaches no pixel.
+
+==========================================================================
+DELIVERED GAIN -- the fix must now deliver what was commanded
+==========================================================================
+  pair                        commanded    delivered   diff samples
+  D/C baseline                0.015625    1.0000000              0   (max |d| 0 DN, +/- 0.00e+00)
+  D/C fixed                   0.015625    1.0000000              0   (max |d| 0 DN, +/- 0.00e+00)
+
+==========================================================================
+--auto-exposure -- declared no-op must be EXACT, not near
+==========================================================================
+  A vs B baseline   slope 1.0000000  differing 325,297 of 98,898,048  max |delta| 1 DN
+  A vs B fixed      slope 1.0000000  differing 325,297 of 98,898,048  max |delta| 1 DN
+
+==========================================================================
+FAIL: the fixed arm delivered 1.000000, not the commanded 0.015625
+FAIL: --auto-exposure still moves 325297 samples after supersession
+VERDICT: 2 failure(s)

@@ -1641,26 +1641,52 @@ fn write_outputs(
             })
         }
     };
-    if !applied.is_identity() || applied.automatic {
+    // THE TONE STAGE SUPERSEDES `--auto-exposure`, so it is computed, reported
+    // and NOT applied. This is a declared no-op, not a silent one.
+    //
+    // The two are not merely redundant, they are the SAME RULE, written twice:
+    // `color::AUTO_EXPOSURE_PERCENTILE` is 99.9 and `image_out::TONE_WHITE_PCT`
+    // is 99.9; `color::AUTO_EXPOSURE_TARGET` is 0.90 and
+    // `image_out::TONE_WHITE_TARGET` is 0.90. `image_out.rs` says so at the
+    // constant itself -- "The same percentile `--auto-exposure` uses, on
+    // purpose". Whoever added the tone rendering knew they were reimplementing
+    // auto-exposure and matched it deliberately; the flag was simply never
+    // retired. That identity is *why* the cancellation measured on this path is
+    // exact rather than approximate.
+    //
+    // So once `--exposure` is applied on the far side of the tone placement
+    // (see `image_out::Develop::exposure_gain`), letting `--auto-exposure`
+    // through the same door would normalise an already-normalised image and
+    // blow every highlight by its own chosen gain -- 6.105x on the corpus. The
+    // flag delivered nothing before this change and it delivers nothing now;
+    // the difference is that it now SAYS so, and that the bytes are exactly
+    // those of a plain `--srgb` render rather than within a count of them.
+    let superseded = applied.automatic.then_some(applied);
+    let applied = if superseded.is_some() {
+        AppliedExposure::IDENTITY
+    } else {
+        applied
+    };
+    if let Some(auto) = superseded {
+        eprintln!("exposure        : --auto-exposure is SUPERSEDED and applies NOTHING.");
         eprintln!(
-            "exposure        : {applied}, {}",
-            if applied.automatic {
-                "chosen from the image"
-            } else {
-                "as asked"
-            }
+            "                  It would have chosen {auto}, but --srgb's tone rendering\n\
+             \x20                 already places luminance p{} at {:.2} -- the identical rule.\n\
+             \x20                 Applying both would double-normalise. This render is\n\
+             \x20                 byte-for-byte a plain --srgb render.",
+            color::AUTO_EXPOSURE_PERCENTILE,
+            color::AUTO_EXPOSURE_TARGET
         );
-        if applied.automatic {
-            eprintln!(
-                "                  rule: linear-sRGB luma p{} -> {:.2} on the binned grid (M100).",
-                color::AUTO_EXPOSURE_PERCENTILE,
-                color::AUTO_EXPOSURE_TARGET
-            );
-            eprintln!(
-                "                  reproduce this exact file with {}",
-                applied.reproduce_flag()
-            );
-        }
+        eprintln!(
+            "                  To deviate deliberately from that rendering, use --exposure."
+        );
+    }
+    if !applied.is_identity() {
+        eprintln!("exposure        : {applied}, as asked");
+        eprintln!(
+            "                  Applied AFTER the tone placement, so it is not divided out\n\
+             \x20                 by the tone stage's own normalisation."
+        );
     }
 
     // The matrix now carries the sensor's saturation ceiling (M109). Without it
@@ -1706,7 +1732,9 @@ fn write_outputs(
         // so that `stack --srgb` gets the same photographic tone rendering as
         // `merge --srgb`. `matrix` is already `None` off the `--srgb` path
         // (L1008), so this is the identity for the byte-frozen linear output.
-        let dev = image_out::OutputSpace::from_flags(opts.srgb, false)?.develop(matrix);
+        let dev = image_out::OutputSpace::from_flags(opts.srgb, false)?
+            .develop(matrix)
+            .with_exposure_gain(eg);
         image_out::write_demosaiced(&opts.out, mw, mh, &mosaic, &dev)?;
         eprintln!(
             "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, Malvar-He-Cutler demosaic)",
@@ -1730,7 +1758,9 @@ fn write_outputs(
         }
         // As above: `matrix` is `Some` only on the `--srgb` path, so the space
         // this resolves to is always `Srgb` here.
-        let dev = image_out::OutputSpace::from_flags(opts.srgb, false)?.develop(Some(m));
+        let dev = image_out::OutputSpace::from_flags(opts.srgb, false)?
+            .develop(Some(m))
+            .with_exposure_gain(eg);
         image_out::write_binned(&opts.out, geom.width, geom.height, &lin, &dev)?;
         eprintln!(
             "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel -- NOT demosaiced)",

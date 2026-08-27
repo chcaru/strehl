@@ -1776,3 +1776,131 @@ sweep, 41-flat-census.log, 42-master-coord.log) and in §12.9.
   no sensor-space finding in this document can be quoted as a master-space
   amplitude. *Settled by:* emitting the reference frame's warp alongside the
   master.
+
+## 14. The exposure fix: built, proven inert-by-default, and BLOCKED on a file I do not own
+
+§13 closed the defect-map work. This section is the exposure lane ORCH assigned
+after it, and it ends with a blocker rather than a fix, because the last
+measurement overturned where the fix belongs.
+
+### 14.1 What was built
+
+The cancellation proved in the earlier sections is exact: an upstream gain `g`
+scales both tone anchors, `s -> s/g`, the normalised `y` is invariant, and the
+output is `(g*v) * (gain/g) = v*gain`. Every term carries a compensating `1/g`.
+The fix therefore has to sit on the **far side** of the normalisation:
+
+- `crates/strehl-cli/src/image_out.rs` — new `Develop::exposure_gain: f32` and
+  a `with_exposure_gain` builder; `develop_pixel` becomes
+  `let g = t.gain(luma709(v)) * dev.exposure_gain;`. `resolve_tone` propagates
+  it through `..*dev`, so the measured-tone round trip preserves it.
+- `crates/strehl-cli/src/stack.rs` — `--auto-exposure` is superseded and says
+  so; explicit stops flow through as `eg`.
+
+### 14.2 The test, and the negative control that makes it worth having
+
+`an_exposure_request_changes_the_pixels_and_not_only_the_banner` asserts the
+**LSQ-through-origin slope**, not a hash, commissions its own estimator on
+planted `2.0x`/`0.5x`/`1.0x` first, and floors the usable-sample count so it
+cannot pass vacuously. It passed on first run — which is exactly when a test is
+least trustworthy, so it was commissioned RED by planting the original defect
+(removing `* dev.exposure_gain`):
+
+```
+FAILED ... a commanded 2.0x exposure delivered 1x to the pixels (7990 samples).
+```
+
+The planted defect reproduces the shipped symptom *in the shipped words*. The
+file was restored from a `$env:TEMP` copy, never `git checkout --`.
+
+### 14.3 Requirement 4 — the default render does not move (MEASURED)
+
+`experiments/BUILD-DEFECT/src/50-default-render-unmoved.py` builds **both** arms
+from the same tree in the same session, differing only in the two owned files
+(baseline = their HEAD blobs, fixed = the working tree). Comparing against the
+older `47-expo` renders would have been invalid: those came from a worktree
+pinned at `7c3df34d` and HEAD has moved many times under eight other lanes, so
+a difference across that gap is unattributable. **A control that cannot
+attribute its own result is not a control.**
+
+| | |
+|---|---|
+| samples differing | **0 of 98,898,048**, max &#124;Δ&#124; **0 DN** |
+| differing bytes | 11 total = **11 header + 0 pixel** (first strip at 3,410) |
+| those 11 bytes | `strehl 0.0.0 (42e2d95ec94c-dirty)` → `(438ab78c65c1-dirty)` |
+
+All 11 are the build's own source-tree stamp, which moves for any edit
+including a comment. **Requirement 4 is green**, and the count is partitioned
+so that "explained" cannot be confused with "waved away": 11 of 11 named.
+
+Both byte-freezes also HOLD, hashes printed and reproduced twice — not skipped.
+
+### 14.4 THE BLOCKER — `stack.rs` is `argmax-baseline`, not `strehl stack`
+
+The same run measured the fixed arm still delivering `1.0000000` against a
+commanded `0.015625`. The fix changed nothing on the shipping path. The reason
+is in the banner of the *fixed* arm, which still printed the **old** text:
+
+```
+exposure : +3.00 stops (gain 8.000x), as asked
+           ONE multiply in linear light, before the curve. ...
+```
+
+That string is `merge_cmd.rs:6929`. Tracing `main.rs`: the `Stack` variant at
+`:223` carries `#[command(alias = "merge")]` and dispatches to
+**`merge_cmd::run`** at `:1084`; `stack::run` at `:856` serves the
+`argmax-baseline` subcommand declared at `:757`. **The file named `stack.rs`
+does not implement `strehl stack`.** It implements the comparator that
+`strehl stack` is measured against, and the two hold near-duplicate exposure
+and writer implementations.
+
+So the engine fix in `image_out.rs` is correct and shared, but the wiring must
+also land in `merge_cmd.rs` (~2 lines: `.with_exposure_gain(eg)` at the two
+writer sites near `:6962` and `:7107`). **`merge_cmd.rs` is not mine.** ORCH
+required being told before entry; the fix is parked at that boundary.
+
+I record the error plainly: I read a filename as a routing fact for several
+hours. A filename is a claim about intent by whoever typed it, and it sits
+*below* argv on the ladder — it is not even a record of a request.
+
+### 14.5 A whole-file hash straddles the ladder
+
+ORCH asked me to record this in my own words, because my own instrument was the
+one it caught.
+
+> **argv → banner → bytes moved → the commanded quantity was delivered.**
+
+My `47` arms hashed whole files and read four distinct SHA-256s as "the flag is
+live". They were distinct. They were distinct **because the file records what
+was asked for**: these TIFFs carry their own banner in `ImageDescription`, and
+the ten bytes that moved between a commanded `8x` and a commanded `0.125x` all
+sat below the first strip offset. The hash was reading the claim and I reported
+it as the behaviour.
+
+The general form is worse than "hashes are coarse". A hash is **sensitive to
+any change and specific to none**, so it cannot sit on one rung of that ladder
+— it straddles all of them and reports a metadata string and a pixel revolution
+with identical confidence. Where the artifact embeds a description of itself,
+the hash is *correlated with the claim* rather than independent of it. **Hash
+the pixels, never the file.** §14.3 above shows the same effect from the other
+direction: 11 bytes moved, and every one of them was the build describing
+itself.
+
+### 14.6 Recommendation on `--auto-exposure`: remove it
+
+`AUTO_EXPOSURE_PERCENTILE = 99.9` equals `TONE_WHITE_PCT = 99.9`, and
+`AUTO_EXPOSURE_TARGET = 0.90` equals `TONE_WHITE_TARGET = 0.90`;
+`image_out.rs:915` says outright *"The same percentile `--auto-exposure` uses,
+on purpose"*. They are **one rule written twice**, which is why the
+cancellation is exact rather than approximate — and why making the gain live
+would double-normalise and blow every highlight by ~6.105x. `--srgb` already
+*is* auto-exposure. Measured: `--srgb --auto-exposure` vs `--srgb` delivers
+`1.0000000` differing on 325,297 of 98,898,048 samples by at most **1 DN**.
+
+One-line statement for the README:
+
+> `--auto-exposure` was redundant with `--srgb`, which already normalises from
+> the image's own luminance percentiles; it has been removed. The delivered
+> images are unaffected — renders with and without it differ by at most one
+> count in 65,535 on 0.3% of samples.
+
