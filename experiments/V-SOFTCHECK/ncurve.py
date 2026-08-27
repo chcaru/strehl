@@ -57,14 +57,21 @@ def align_int(A,B):
     cc=np.fft.ifft2(np.fft.fft2(a)*np.conj(np.fft.fft2(b))).real
     sy,sx=np.unravel_index(np.argmax(cc),cc.shape)
     sy=int(sy)-w if sy>w//2 else int(sy); sx=int(sx)-w if sx>w//2 else int(sx)
-    return sy,sx
+    # Return the ADDITIVE offset, i.e. the value callers add to tile coordinates to
+    # sample B at the content A holds.  The raw correlation peak carries the opposite
+    # sign; returning it unnegated made every caller sample the wrong pixels whenever
+    # the shift was non-zero.  Verified against planted rolls in nullhard.py.
+    return -sy,-sx
 
 def boot(v,B_=1500,seed=23):
     r=np.random.default_rng(seed); n=len(v)
     return np.percentile([np.median(v[r.integers(0,n,n)]) for _ in range(B_)],[2.5,97.5])
 
 def gauss(img,sig):
-    r=int(3*sig); k=np.exp(-0.5*(np.arange(-r,r+1)/sig)**2); k/=k.sum()
+    # radius must never round to 0: int(3*0.3)==0 gives a ONE-TAP kernel, i.e. the
+    # identity, and any control built on it reads exactly 1.0000 while applying no
+    # perturbation at all.  That is how a short-circuited control looks from outside.
+    r=max(1,int(np.ceil(3*sig))); k=np.exp(-0.5*(np.arange(-r,r+1)/sig)**2); k/=k.sum()
     o=np.apply_along_axis(lambda m:np.convolve(m,k,"same"),0,img.astype(np.float32))
     return np.apply_along_axis(lambda m:np.convolve(m,k,"same"),1,o)
 
@@ -96,3 +103,4 @@ if __name__=="__main__" and sys.argv[1]=="commission":
     print(f"\n  COMMISSIONING {'PASSED' if ok else 'FAILED'} -- the estimator moves in BOTH")
     print( "  directions and is inert under a null, so a fall it reports is a measurement.")
     sys.exit(0 if ok else 1)
+
