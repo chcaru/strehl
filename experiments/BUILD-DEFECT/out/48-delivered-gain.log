@@ -1,0 +1,56 @@
+==========================================================================
+DELIVERED exposure gain -- regression, not hash
+==========================================================================
+
+shape (4688, 7032, 3)  dtype uint16  samples/arm 98,898,048
+
+--------------------------------------------------------------------------
+CHANNEL 1 -- COMMISSIONING the estimator (must pass before any null
+             below is worth reading)
+--------------------------------------------------------------------------
+   planted      recovered      abs err   verdict
+    2.0000    2.000000000     0.00e+00   PASS
+    0.5000    0.500000000     0.00e+00   PASS
+    1.0000    1.000000000     0.00e+00   PASS
+
+  0.5x is the perverse-metric arm: an estimator bounded below at 1.0,
+  or blind to direction, passes the 2.0x arm and fails this one.
+
+  COMMISSIONED: the estimator returns planted gains in both directions.
+
+--------------------------------------------------------------------------
+CHANNEL 2 -- DELIVERED gain at the pixels, LSQ through origin
+--------------------------------------------------------------------------
+              y  vs  x   commanded     delivered  95% CI half              n
+   D-minus3 vs C-plus3    64.00000     1.0000000     0.00e+00     98,898,048
+D-minus3 vs C-plus3 (unsat)    64.00000     1.0000000     0.00e+00     98,897,326
+     A-auto vs B-plain     0.16380     1.0000000     2.17e-10     98,898,048
+A-auto vs B-plain (unsat)     0.16380     1.0000000     2.17e-10     98,897,326
+
+--------------------------------------------------------------------------
+CHANNEL 2b -- residual CHARACTER (is the difference a gain, or noise?)
+--------------------------------------------------------------------------
+  D-minus3 vs C-plus3: samples differing 0/98,898,048 (0.0000%), max |delta| 0 counts of 65535
+  A-auto vs B-plain: samples differing 325,297/98,898,048 (0.3289%), max |delta| 1 counts of 65535
+
+--------------------------------------------------------------------------
+CHANNEL 3 -- did the TONE STAGE see the gain? (from the arms' own
+             banners; independent of the pixel regression)
+--------------------------------------------------------------------------
+  NOT AVAILABLE: at least one arm's log has no tone line.
+  This channel is SKIPPED, not passed.
+
+==========================================================================
+VERDICTS  (every number printed above that matters is tested here)
+==========================================================================
+  D vs C  commanded  64.00000  delivered 1.0000000  -> CANCELLED
+  A vs B  commanded   0.16380  delivered 1.0000000  -> CANCELLED
+
+  OVERALL: the commanded exposure is CANCELLED before it reaches
+           the file. The flag is not inert -- it is undone.
+           Localisation SKIPPED (no tone line); not established.
+
+  Therefore 47-exposure-liveness's verdict 'the path is LIVE' is
+  WITHDRAWN. It measured f32 rounding and reported it as liveness.
+
+exit 2  (0=delivered, 2=cancelled, 3=mixed)

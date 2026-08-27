@@ -1359,34 +1359,68 @@ def find_switches(crates: Path) -> dict[str, list[str]]:
 # whether it can see a switch -- being spelled as a quoted STREHL_ literal --
 # was never varied.
 #
-# THIS COMMENT USED TO ALSO CLAIM THAT "`--exposure` and `--auto-exposure`
-# reach no pixel while the banner announces `+2.61 stops (gain 6.105x)`". THAT
-# WAS FALSE, it stood here unsourced long enough to be cited as background for
-# a shipping-path investigation, and it is retained as a retraction rather than
-# deleted because the way it was manufactured is the lesson. MEASURED at pin
-# 7c3df34d, 109MSDCF --limit 4, five arms, otherwise identical flags
-# (experiments/BUILD-DEFECT/src/47-exposure-liveness.ps1):
+# THE HISTORY OF THIS COMMENT IS ITSELF THE LESSON, AND IT HAS TWO RETRACTIONS
+# IN IT. Both are kept.
 #
-#     --srgb --auto-exposure   93B4F2D8691E8D1F   "+2.61 stops, chosen"
-#     --srgb                   BBF12CF0C8E421B3   "none ... Nothing was applied."
-#     --srgb --exposure 3      85820E6D873E1014   "+3.00 stops, as asked"
-#     --srgb --exposure -3     DD9F3D3220856D22   "-3.00 stops, as asked"
-#     --exposure 3 (no --srgb) exit 1             refused
+# ROUND 1. This comment claimed, unsourced, that "`--exposure` and
+# `--auto-exposure` reach no pixel while the banner announces `+2.61 stops
+# (gain 6.105x)`".
 #
-# Four distinct hashes. A 64x span between +3 and -3 stops moved the bytes, so
-# the disturbance was potent rather than merely applied; the refusal arm proves
-# the flag parses and reaches a decision, so a null would have been a statement
-# about pixels rather than about parsing. The path is LIVE.
+# ROUND 2 (commit 4f2633bb) WITHDREW THAT CLAIM. I rendered five arms, found
+# four distinct SHA-256s, and wrote a long retraction here concluding "The path
+# is LIVE". THAT WITHDRAWAL WAS WRONG AND IS ITSELF NOW WITHDRAWN. Round 1 was
+# substantively correct.
 #
-# WHERE THE FALSE CLAIM CAME FROM. The quoted string `+2.61 stops (gain
-# 6.105x)` is real, but it occurs in the banner of the arm with NO exposure
-# flag, inside a CONDITIONAL: "--auto-exposure *would* choose +2.61 stops (gain
-# 6.105x). Nothing was applied." A hypothetical was read as an assertion, and
-# the banner that got called misleading is in fact the most scrupulous surface
-# in the product -- it volunteers the gain it DECLINED to apply and says so in
-# the same sentence. An argv records the request and a banner records the
-# claim; a conditional inside a banner records neither, and only the pixels
-# record the behaviour.
+# ROUND 3, MEASURED, and the one to believe. Same four renders, but regressed
+# instead of hashed: LSQ through the origin, all pixels, estimator commissioned
+# first on planted 2.0x / 0.5x / 1.0x and returning each to nine decimals -- the
+# 0.5x arm present specifically so an estimator bounded below at 1.0 could not
+# pass. (experiments/BUILD-DEFECT/src/48-delivered-gain.py, /49-*.py.)
+#
+#     pair                       commanded      DELIVERED   samples differing
+#     -3 stops vs +3 stops          64.000      1.0000000   0 of 98,898,048
+#     --auto-exposure vs none        6.105      1.0000000   326,612, max 1 count
+#
+# A commanded 64x span delivers 1.0000000 and leaves every one of 98,898,048
+# samples BIT-IDENTICAL. The flags are not ignored -- they are CANCELLED, and
+# the cancellation is localised to the tone stage by a third, independent
+# channel: the tone anchors each file embeds in its own ImageDescription scale
+# by exactly the commanded gain (8.0000, 0.1250, 6.1050) while the pixels do
+# not move. The tone stage receives the exposure in full and then divides it
+# straight back out.
+#
+# WHY, ALGEBRAICALLY, from image_out.rs Tone::from_luminance and Tone::gain
+# (read-only, not this lane's file). Both tone percentiles are linear in the
+# data, so an upstream gain g gives black -> g*black and white -> g*white, hence
+# s -> s/g while the normalised y = (l-black)*s is INVARIANT. TONE_TOE is a
+# constant in that same normalised space, so the toe is invariant too, and the
+# min(., s) cap cancels because both branches carry 1/g. Output is
+# (g*v)*(gain/g) = v*gain: the original pixel, exactly, term by term.
+#
+# WHY THE HASH TEST LIED, which is the part worth carrying elsewhere. The +3
+# and -3 files differ in TEN bytes, every one of them BEFORE the pixel data
+# begins at offset 3,404. The differing run is 21 bytes at offset 339 and it is
+# the ImageDescription's own record of the tone rendering. The instrument
+# reported the file's SELF-DESCRIPTION as evidence about the file's CONTENT.
+# The bytes being hashed contained the banner.
+#
+#     argv -> banner -> bytes moved -> the commanded quantity was delivered
+#
+# "The bytes moved" proves NOT INERT. It does not prove IT DID WHAT IT SAID.
+# An argv records the request, a banner records the claim, a hash records that
+# something somewhere is different, and only a calibrated measurement against
+# an unmodified arm records the behaviour. Round 1's error was asserting
+# without measuring; round 2's error was measuring the wrong quantity and
+# mistaking sensitivity for specificity. Round 2 was the more dangerous, because
+# it came with numbers.
+#
+# STATUS FOR THE PRODUCT: `--exposure` and `--auto-exposure` are INOPERATIVE
+# controls. They are refused without `--srgb` (measured: exit 1), and `--srgb`
+# is precisely the path that installs the tone stage that cancels them, so no
+# combination tested can make either flag change the delivered image. This is
+# not "the masters are under-exposed" -- the tone stage exposes them. It is
+# that the exposure knob does nothing and says otherwise. Do not clear this by
+# flipping anything; the fix re-renders the deliverable and is ORCH-sequenced.
 #
 # Most flags are derived from the field name (`pub auto_exposure` gives
 # `--auto-exposure`); a few name themselves with `long = "..."`. Both forms

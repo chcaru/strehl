@@ -1,0 +1,69 @@
+==========================================================================
+WHERE THE HASH MOVED -- raw byte localisation
+==========================================================================
+
+--------------------------------------------------------------------------
+C-plus3.tif  vs  D-minus3.tif
+  sizes 197,801,290 / 197,801,290   EQUAL
+  pixel data begins at byte 3,404 (read from the TIFF, not guessed)
+  FULL census (no cap): 10 differing bytes BEFORE pixel data, 0 WITHIN it
+  -> METADATA-ONLY
+  run listing (illustrative only, capped): 1 complete
+
+    offset 339..360  (21 bytes)
+        C-plus3: DN before any gain. Tone rendering: black 0.041234, white 1.301378 (linear, luminance percentiles 0.1/99.9 with
+       D-minus3: DN before any gain. Tone rendering: black 0.000644, white 0.020334 (linear, luminance percentiles 0.1/99.9 with
+
+--------------------------------------------------------------------------
+A-auto.tif  vs  B-plain.tif
+  sizes 197,801,290 / 197,801,290   EQUAL
+  pixel data begins at byte 3,404 (read from the TIFF, not guessed)
+  FULL census (no cap): 11 differing bytes BEFORE pixel data, 326,612 WITHIN it
+  -> BOTH
+  run listing (illustrative only, capped): 24+ TRUNCATED
+
+    offset 339..360  (21 bytes)
+         A-auto: DN before any gain. Tone rendering: black 0.031467, white 0.993120 (linear, luminance percentiles 0.1/99.9 with
+        B-plain: DN before any gain. Tone rendering: black 0.005154, white 0.162672 (linear, luminance percentiles 0.1/99.9 with
+
+    offset 3,484..3,485  (1 bytes)
+         A-auto: .._....mao.`..e.....du...%f.....e<.:..e.....e.....c.....g3...yf .r.@b....e_..m..`.....d....
+        B-plain: .._....mao.`..e.....du...%f.....e<.:..e.....e.....c.....g3...yf .r.@b....e_..m..`.....d....
+
+    offset 3,910..3,911  (1 bytes)
+         A-auto: ..f#...Hd.....g..,..f.....`..^..ZE....\..n.._8....`..x..a.....a.....a....._.....a?....e....
+        B-plain: ..f#...Hd.....g..,..f.....`..^..ZE....\..n.._9....`..x..a.....a.....a....._.....a?....e....
+
+==========================================================================
+CHANNEL 3 (RECOVERED) -- did the TONE STAGE receive the gain?
+  Not in the logs. It is embedded in each file's ImageDescription.
+==========================================================================
+
+       arm        black        white   blk ratio   wht ratio   commanded  verdict
+   B-plain     0.005154     0.162672      1.0000      1.0000      1.0000  TRACKS
+   C-plus3     0.041234     1.301378      8.0004      8.0000      8.0000  TRACKS
+  D-minus3     0.000644     0.020334      0.1250      0.1250      0.1250  TRACKS
+    A-auto     0.031467     0.993120      6.1054      6.1050      6.1050  TRACKS
+
+  The tone anchors scale by the COMMANDED gain. The tone stage
+  therefore received the exposure in full. Channel 2 showed the
+  pixels did not move. That is cancellation, localised.
+
+==========================================================================
+VERDICT
+==========================================================================
+  C(+3) vs D(-3), commanded 64x span : METADATA-ONLY
+  A(auto 6.105x) vs B(none)          : BOTH
+
+  C vs D differ ONLY in the file's own account of what it did.
+  Every one of 98,898,048 samples is identical across a commanded
+  64x exposure span. 47-exposure-liveness read those 21 description
+  bytes as evidence about the image and called the path LIVE.
+
+  A/B differs in BOTH regions: 1-count rounding in the pixels
+  (6.105x is not a power of two, so the round trip does not land
+  on the same bits) plus the same description bytes. C/D is
+  exactly identical because 8.0 and 0.125 ARE powers of two and
+  the f32 round trip through them is exact.
+
+  LOCALISED to the tone stage by channel 3.
