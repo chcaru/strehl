@@ -977,3 +977,150 @@ is red and sits where the gain is ~1.0. In amplitude that is **+21% noise for
 and a band-energy ratio that improves while visible noise rises faster is
 exactly the kind of statistic this project has been burned by.
 
+
+---
+
+# 13. `STREHL_RESTORE` -- the measured result
+
+Run after §12 was committed. The pin verified **CLEAN** before and after
+(`pin_instrument.py verify`, all five scripts and the binary matching
+`44C2F2CD...`), so nothing in the instrument moved between the readings.
+
+## 13.1 Arm A reproduces the frozen number exactly
+
+    ARM A (STREHL_RESTORE unset)   ratio 0.9007  CI [0.8796, 0.9194]  19/19 frames
+    frozen reading (section 5)     ratio 0.9007  CI [0.880,  0.919]   19/19 frames
+
+Every published digit. This matters beyond housekeeping: `coffee-bubbles` is one
+of the three subjects whose renders were freed and which `PIN/frame-hashes.tsv`
+records as `NOT-COVERED`, so I could not prove the reference frames were
+byte-identical to the original run. Re-rendering them from the read-only source
+with the pinned binary reproduced the reading anyway. **The coverage gap in the
+frame-hash pin is closed by demonstration rather than by hash for this subject.**
+
+## 13.2 The registered prediction held
+
+| | predicted (committed at `16e026ee`) | measured | error |
+|---|---|---|---|
+| route A, band-weighted spectral | **x1.1645** | x1.1539 | **0.9%** |
+| route B, pinned `detail()` | x1.1906 | x1.1539 | 3.2% |
+
+    ratio        0.9007  ->  1.0393     (corrected 0.9018 -> 1.0405)
+    sites softer  72.0%  ->   41.7%
+
+The registered qualitative call -- **that it crosses 1.0** -- is correct. The
+spectral route, the one that had to model the band and the transfer, was
+accurate to 0.9%.
+
+## 13.3 And it does not matter, because on three subjects of four the filter does nothing at all
+
+| subject | frozen ratio | peak 2-D gain | new ratio | move |
+|---|---|---|---|---|
+| `119MSDCF` | 0.8147 | 1.0000 | 0.8147 | **x1.0000** SHA-256 identical |
+| `109MSDCF` | 0.8855 | 1.0000 | 0.8855 | **x1.0000** SHA-256 identical |
+| `flower-bud-alone-cpl` | 0.9531 | 1.0000 | 0.9531 | **x1.0000** SHA-256 identical |
+| `coffee-bubbles` | 0.9018 | 1.6682 | **1.0405** | x1.1539 |
+
+> **The lever fires on one subject in four, and it is not one of the two that
+> need it.** `119MSDCF` at 0.8147 and `109MSDCF` at 0.8855 are the worst
+> readings in the corpus and both produce byte-identical files with the switch
+> on. This is not a small effect on those subjects. It is exactly, provably,
+> bit-for-bit zero.
+
+The mechanism is the estimator declining on its own evidence. Gain is
+`clamp(h / (h^2 + sigma2/S(f)), 1, cap)` with `S` the measured power **minus**
+`sigma2`; it returns 1 wherever what the gather attenuated is indistinguishable
+from noise. The subject it fired on is the one with by far the hardest edges --
+median edge step **60,165 DN** on `coffee-bubbles` against 13,082 on
+`tweezers-cpl`. So the filter engages where high-frequency signal is already
+strong and abstains where it is not, which is the opposite of the direction a
+rescue would need.
+
+## 13.4 The no-ringing claim, re-checked independently -- it is false as written
+
+`ringing_check.py`, on the two real rendered masters, not on the module's own
+self-test. Edges found in the picture: step >= 2000 DN, both approaches flat to
+under 6% of the step, 12 px clear run. The plateau level is taken from the FAR
+half of each approach, so the region a ring would occupy cannot define the level
+it is measured against.
+
+Commissioned both ways. **NULL** (arm A against itself) reads `+0.0000` at P50,
+P90, P99 and max -- an exact zero, so the detector has no floor of its own.
+**PLANTED RING** at two amplitudes reads `+0.0862` then `+0.2171`, monotone, 100%
+of edges detected. It is neither blind nor perverse.
+
+    restore.rs:87   "largest profile change anywhere is 0.0035 of the step"
+
+| | `coffee-bubbles` | `tweezers-cpl` |
+|---|---|---|
+| typical edge (P50) | +0.0004 | **+0.0047** |
+| P99 | +0.0189 | +0.0451 |
+| worst edge | **+0.0234 (x6.7)** | **+0.0571 (x16)** |
+| edges above 0.0035 | 32/200 (16%) | 74/130 (57%) |
+
+**"Anywhere" is a universal quantifier and it is falsified.** The claim is right
+about the typical edge on `coffee-bubbles` -- P50 is eight times *below* it --
+and wrong about the tail on both subjects and about the typical edge on
+`tweezers-cpl`. On a 60,165 DN step, +0.0234 is roughly **1,400 DN**.
+
+The module's argument for the claim is "it does not ring because it is too weak
+to ring." That argument is sound in form; its premise is what the A/B removed.
+On the subject where the filter is strong enough to deliver +15%, it is also
+strong enough to exceed its own published bound by 6.7x. ORCH's instinct that
+"a filter strong enough to help is strong enough to ring, and those are the same
+knob" is the correct reading of this data.
+
+## 13.5 Ringing or amplified noise? Separated, and it is both
+
+The two are different defects and the delta conflates them. Ringing is a step
+response, so as a fraction of the step it is scale-free; amplified noise is a
+fixed DN excursion, so as a fraction of the step it falls as `1/step`. Fitting
+`log(delta)` against `log(step)` separates them by slope. `coffee-bubbles` edges
+are all near full scale (span 1.1x) and the test is **refused** there rather
+than fitted to a 1.1x span and believed. `tweezers-cpl` spans **27x**:
+
+    log-log slope  -0.49        (0 = ringing, -1 = amplified noise)
+    small edges (med  8,867 DN)   P50 0.0060 of step
+    large edges (med 17,588 DN)   P50 0.0036 of step
+
+**Both mechanisms are present in roughly equal measure**, which is consistent
+with §12.5: the filter raises the noise floor **+46.8%** in energy for a
+**+19.1%** detail gain, because noise is white and sits where the gain is while
+signal is red and sits where it is not. In amplitude that is +21% noise for +9%
+detail.
+
+## 13.6 Recommendation: do NOT flip the default
+
+ORCH's condition was "if it moves the ratios and does not ring, recommend the
+default flip." It moves one ratio in four, and it rings. Both halves of the
+condition fail.
+
+1. **It cannot address the problem.** The two worst subjects produce identical
+   files. No threshold, no cap and no tuning changes that, because the estimator
+   is declining on a measurement, not hitting a limit.
+2. **Its published safety bound is wrong by 6.7x**, and that bound is what the
+   decision to ship it off was originally weighed against.
+3. **The gain is below the visibility threshold this project already measured.**
+   The commissioned staircase in section 5.7 located discrimination between
+   ratios of 0.60 and 0.40. A x1.15 change is far below that, so flipping the
+   default trades an **invisible** improvement against an edge excursion of
+   ~1,400 DN whose visibility I have *not* tested. That is the wrong side of an
+   untested risk.
+
+**It should stay built, stay wired, and stay opt-in.** Where it fires it is a
+real +15% and the self-declining behaviour is good engineering -- a filter whose
+lower clamp is 1 cannot blur, and it abstains rather than inventing detail. The
+correct fix to `restore.rs` is not to its default but to its documentation:
+**line 87's 0.0035 claim should be corrected or scoped to the regime in which it
+was measured.** I have not edited it; `crates/` is another lane's.
+
+## 13.7 What this redirects
+
+The routing hypothesis was that the residual 5-19% softness might be the
+resampling kernel, recoverable by inverting a filter we ourselves applied. On
+three subjects of four, including both worst, **the answer is a measured null of
+the strongest available kind -- identical bytes.** The residual softness on
+`119MSDCF` and `109MSDCF` is not the resampling kernel, and the search should go
+elsewhere. That is exactly the outcome ORCH flagged as "genuinely valuable", and
+it is the one that arrived.
+
