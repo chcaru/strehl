@@ -2,15 +2,42 @@ import io
 P = r"C:\dev\blog\death-of-software\projects\strehl\experiments\V-REVIEW\AUDIT-user-surface.md"
 T = """# Audit: where the user-facing surface diverges from the shipping binary
 
-Read-only. Nothing was fixed. Every source quotation is from the shipping pin
-`9b05d0b7`, extracted through Python `subprocess` as bytes and **verified by
-re-hashing each extracted file to git's own blob id (400 checked, 0
-mismatched)**, so the redirect-corruption trap is not merely avoided but proved
-avoided. Every behavioural claim was run against
-`acceptance-pins/9b05d0b7/target/release/strehl.exe`, sha
-`44C2F2CD2E5B2894...F490`, confirmed equal to the SHIP-V4 seal.
+Read-only. Nothing was fixed. Source quotations come from the shipping pin
+`9b05d0b7`, read through Python `subprocess` as bytes and verified by re-hashing
+each extracted file to git's own blob id (400 checked, 0 mismatched). Behaviour
+was measured against `acceptance-pins/9b05d0b7/target/release/strehl.exe`, sha
+`44C2F2CD2E5B289491AB81C2...`, confirmed equal to the SHIP-V4 seal.
 
-Subject for all renders: `coffee-bubbles`, 19 frames available, `--limit 3`.
+---
+
+## 0. A correction I was asked to make, which the measurement refuses
+
+I was told to strike `--exposure` from the findings, on the evidence that two
+renders of subject `109MSDCF` at `+3` and `-3` stops produced different SHA-256
+values. **I reproduced that experiment exactly -- same binary, same subject,
+same flags -- and obtained the same two hashes, `D749F1FDCD07355F` and
+`A5846DD2B0ACDC3A`. The pixels are bit-identical.**
+
+```
+np.array_equal(A, B) : True
+samples              : 98898048
+samples differing    : 0  (0.0000%)
+mean DN  +3 / -3     : 47719.0880 / 47719.0880
+commanded gain ratio : 8.000 / 0.125 = 64.000x
+observed  mean ratio : 1.0000000
+```
+
+**The hash difference is one TIFF tag.** Enumerating every tag in both files,
+the only one that differs is `ImageDescription` -- the banner text recording the
+gain. The bytes move because the tool *writes down* the exposure, not because it
+*applies* it.
+
+This is the same unsound gauge I disclosed further down as my own instrument
+defect: **file hashing cannot answer "did this flag change the image", because
+metadata rides in the hash.** The correction and the original error share one
+root cause.
+
+**The finding stands and is now stronger.** See item 2.
 
 ---
 
@@ -18,195 +45,173 @@ Subject for all renders: `coffee-bubbles`, 19 frames available, `--limit 3`.
 
 ### 1. The stale "default" is not a doc string. It is a runtime error message.
 
-**File:** `crates/strehl-cli/src/merge_cmd.rs:420-429` (the `bail!` inside
-`MergeBackend::parse`), at pin `9b05d0b7`.
+**File:** `crates/strehl-cli/src/merge_cmd.rs:420-429`, the `bail!` in
+`MergeBackend::parse`, at pin `9b05d0b7`.
 
-**Claim as written, reaching the terminal verbatim:**
-
-```
-Error: reading --merge "bogus"
-Caused by:
-    unknown merge backend "bogus"; valid values are `estimator` (the default,
-    the regularised-winner noise-gated merge) and `pyramid` (the Laplacian
-    multi-band merge)
-```
-
-**What the binary does:** `DEFAULT_MERGE_BACKEND = MergeBackend::Pyramid`
-(`merge_cmd.rs:406`). All 26 shipped provenance files read
-`merge backend   : pyramid (default)` (MEASURED: 26 files name a backend, all
-26 identical).
-
-**Evidence:** run, not read. `strehl stack <dir> --merge bogus` returns rc=1 and
-prints the text above.
-
-**Severity: HIGHEST of anything found.** This is worse than the brief describes.
-A doc comment is read by someone browsing; **this string is printed at the exact
-moment a user is already confused about `--merge`**, and it tells them the wrong
-answer with authority. It is the only place in the shipping surface that still
-asserts it. A reviewer would reach it inside five minutes by typing one wrong
-flag value, and would conclude the tool does not know its own default.
-
-**Mitigating, and it matters for triage:** `stack --help` is **correct** --
-it says `pyramid (DEFAULT)` and "`pyramid` (the default)". The falsehood lives
-only on the error path.
-
-### 2. `--exposure` changes no pixel, while the log says it was applied
-
-**File:** gain resolved correctly at `strehl-core/src/color.rs:682`; consumed at
-`merge_cmd.rs:6550` and `merge_cmd.rs:6671`.
-
-**Claim as written:** `exposure        : +2.00 stops (gain 4.000x), as asked`.
-
-**What the binary does:** nothing to the image. MEASURED, `--srgb`,
-`np.array_equal` on the decoded arrays:
-
-| commanded | gain | pixels differing | mean DN |
-| --- | --- | --- | --- |
-| baseline | 1.000x | -- | 4142.3638 |
-| `--exposure -2.0` | 0.250x | 0 | 4142.3638 |
-| `--exposure 2.0` | 4.000x | 0 | 4142.3638 |
-| `--auto-exposure` | 0.927x | 74,463 (0.0753%) | 4142.3634 |
-
-A 16x span of commanded gain moves **zero pixels**, which rules out "the gain
-was too small to see". `--auto-exposure` is **not inert but nearly so**: it
-moves 0.0753% of pixels, and a real 0.927x gain would move essentially all of
-them and drop the mean by 7.3%; the mean moved by one part in ten million.
-
-**Mechanism, partially localised.** The gain reaches
-`Render::with_saturation` (`color.rs:288`), where it sets **only the highlight
-ceiling**, and `clip_highlights` is documented as "the identity, bit for bit"
-below the knee (`color.rs:362`). That predicts exactly what was measured: a
-handful of near-highlight pixels move and nothing else does. **I did not isolate
-the line that cancels the normalisation multiply**, so the fix owner still has
-that to find.
-
-**Severity: HIGH, but already known and already disclosed.** The shipping README
-states it at line 163 -- "`--exposure` and `--auto-exposure` are **cancelled by
-the tone stage**" -- and line 745 tracks it as settled. This audit is
-independent confirmation on a different gauge, plus the quantified
-`--auto-exposure` residual, which I did not find stated anywhere.
-
-### 3. The README hands the user a command line containing the broken flag
-
-**File:** `DELIVER-V5/full-resolution/README.md:157`
+**Reaching the terminal verbatim:**
 
 ```
-strehl stack "D:\\personal\\macro\\<subject>" --out <out>.tiff --srgb --auto-exposure
+unknown merge backend "bogus"; valid values are `estimator` (the default,
+the regularised-winner noise-gated merge) and `pyramid` (the Laplacian
+multi-band merge)
 ```
 
-Six lines later the same document says that flag is cancelled by the tone stage.
-Line 191 explains the 26 delivered images are unaffected, so this is an
-inconsistency in the instructions rather than in the corpus.
+**Actual:** `DEFAULT_MERGE_BACKEND = MergeBackend::Pyramid` (`merge_cmd.rs:406`).
+All 26 shipped provenance files read `merge backend   : pyramid (default)`.
 
-**Severity: MEDIUM.** A reviewer who copies the quoted command and then reads on
-finds the document contradicting itself within one screen.
+**Evidence:** run, not read -- `strehl stack <dir> --merge bogus`, rc=1.
+
+**Severity: HIGHEST.** The string is printed at the exact moment the user is
+already confused about `--merge`, and it tells them the wrong answer with
+authority. `stack --help` is correct; the falsehood survives only on the error
+path, which is why it outlived every review.
+
+### 2. `--exposure` is accepted on exactly one path and does nothing there
+
+**Log line:** `exposure        : +3.00 stops (gain 8.000x), as asked`
+
+**Measured, subject `109MSDCF`, 22 frames, `--srgb`, pin binary:**
+
+| commanded | 8 settings from -6 to +6 stops | +2.60 stops |
+| --- | --- | --- |
+| distinct images produced | 1 | 1 |
+| mean DN | 47719.0880 | 47719.0845 |
+
+**A commanded range of 4096x produces one bit-identical image.** Only `+2.60`
+differs, by 0.0035 DN in the mean -- 7 parts in 100 million, and it is the one
+value in the sweep whose gain (6.063x) is not a power of two. That is float
+rounding residue in a cancellation that is otherwise exact, and it matches the
+0.0753%-of-pixels residual I measured on a second subject at gain 0.927x.
+
+**There is no other path to check.** The linear path refuses the flag outright:
+
+```
+Error: --exposure and --auto-exposure are viewing controls and need --srgb;
+the default output is the linear measurement file and must not be rescaled
+```
+
+So the flag is **accepted on one path and inert on it**.
+
+**Mechanism, from the shipped provenance itself.** The provenance describes the
+exposure as "ONE multiply in linear light, before the curve" and then names the
+tone rule as "linear-sRGB luma p99.9 -> 0.90 on the binned grid (M100)". A
+percentile-anchored rule is scale-invariant, so it divides the multiply straight
+back out. **The provenance contains both halves of its own cancellation.**
+
+**Both commissioning arms passed on these exact files**, so the null is
+readable: the renderer is deterministic (identical flags twice -> identical
+pixels), and `--pyramid-exponent 4.0` moves 90.98% of samples.
+
+**What this does and does not mean for the 26 masters.** They are **correctly
+exposed**, and no self-accusation is warranted -- but the credit belongs to the
+tone rule, not to the flag. The claim that the chosen gain "really did reach the
+pixels" is refuted. Any gain yields the same master.
+
+### 3. The README hands the user a command containing the inert flag
+
+`DELIVER-V5/full-resolution/README.md:157` quotes a command line ending
+`--srgb --auto-exposure`; line 163 says that flag is cancelled by the tone
+stage. **Severity: MEDIUM** -- the document contradicts itself within one
+screen, and the README's own account of the mechanism is confirmed correct by
+item 2.
 
 ### 4. `STREHL_SOFT_GATE` panics instead of erroring
 
-**File:** `crates/strehl-core/src/merge.rs:1403`
-
-MEASURED: values `1`, `4.0` and `on` each return **rc=101** with
-`thread '<unnamed>' panicked at crates\\strehl-core\\src\\merge.rs:1403:23`.
-The message itself is good and names the valid kernels, but it arrives as a
-**panic with a thread name and a source path**, where every other bad input in
-this tool returns rc=1 and a clean `Error:`.
-
-**Severity: MEDIUM.** A shipping product that panics on a typo reads as
-unfinished. Not a false statement: the variable is absent from `--help` and the
-README mentions no soft gate at all.
+`crates/strehl-core/src/merge.rs:1403`. Values `1`, `4.0`, `on` each return
+**rc=101** with `thread '<unnamed>' panicked at ...merge.rs:1403:23`, where
+every other bad input returns rc=1 and a clean `Error:`. Not a false statement --
+the variable is absent from `--help` and the README -- but a product that panics
+on a typo reads as unfinished. **Severity: MEDIUM.**
 
 ### 5. One README quantitative claim carries no subject and no frame count
 
-**File:** `README.md:366` -- `- **Noise: 4.5x better** than the single-frame input.`
-
-Direction and comparator are present; **subject and frame count are absent**,
-and both are required by house rule. Confirmed by reading the full enclosing
-section, not by a window heuristic.
-
-**Severity: LOW-MEDIUM**, and it is the one I am confident in -- see the
-suspected section for why I am not forwarding the rest.
+`README.md:366` -- `- **Noise: 4.5x better** than the single-frame input.`
+Direction and comparator present, subject and frame count absent. Confirmed by
+reading the full enclosing section. **Severity: LOW-MEDIUM.**
 
 ---
 
-## Clean negatives: things checked that are NOT defects
+## Clean negatives
 
-Stated so the absence is on the record rather than assumed.
-
-- **Every one of the 28 `stack` flags was A/B-tested on decoded pixels.** Only
-  `--exposure` is a no-op. `--stats`, `--target-n-eff` and `--confidence-tail`
-  also leave pixels untouched, which is **correct** -- they are diagnostics.
-- **`--pyramid-exponent` is NOT a no-op.** My first pass flagged it. A sweep
-  showed `0.5`, `1.0`, `4.0`, `8.0` and `64.0` all change the image and only
-  `2.0` does not, because **2.0 is its default**. Reporting it would have been a
-  phantom.
-- **No environment variable is documented but dead.** All eight named in
-  `stack --help` are read by shipping code. The reverse gap is large -- 31 are
-  read but undocumented -- which is under-documentation, not false statement.
-- **`STREHL_MERGE` works.** The log prints
-  `merge backend   : estimator (STREHL_MERGE)`. My first test said "no effect"
-  and was wrong: its baseline passed `--photometric off`, which *infers* the
-  estimator, so both arms were already the estimator.
-- **The 26 provenance files agree with the constant** and record every
-  `STREHL_*` variable with its built-in default.
-- **The README does not present the soft gate as a working feature** -- zero
-  mentions -- so `STREHL_SOFT_GATE` never having run on the shipped corpus is
-  not a false statement.
+- **The `--auto-exposure` reproduce contract HOLDS.** `image_out.rs:617`
+  promises that handing the printed number back to `--exposure` yields the same
+  file. Measured: `--auto-exposure` and `--exposure=+2.60` are **byte-identical**,
+  sha `18E6EDA98DEC9930`. **But the test is vacuous** -- it would pass on a
+  completely dead flag, because nearly every exposure yields one image. It is
+  satisfied, and it is not evidence the flag works.
+- **All 28 `stack` flags A/B-tested on decoded pixels**; only `--exposure` is
+  inert. `--stats`, `--target-n-eff`, `--confidence-tail` leave pixels untouched
+  by design.
+- **`--pyramid-exponent` is not a no-op.** My harness flagged it; a sweep showed
+  2.0 is simply its default. Phantom avoided.
+- **No environment variable is documented but dead.** All eight in `stack --help`
+  are read by shipping code.
+- **`STREHL_MERGE` works** -- log prints `estimator (STREHL_MERGE)`.
+- **The README never advertises the soft gate**, so `softgate.rs` never having
+  executed is not a false statement.
 
 ---
 
-## SUSPECTED, and deliberately not forwarded as findings
+## SUSPECTED -- deliberately not promoted
 
-A window heuristic flagged 36 README ratio lines as missing a comparator,
-subject or frame count. **I calibrated it before reporting and it is mostly
-wrong**: of four flagged lines read in full context, **three were correctly
-attributed** and only line 366 was a real gap. The attributions live in the
-surrounding prose, outside a two-line window.
-
-Forwarding the raw 36 would have manufactured phantom violations, which is the
-failure this project has been bitten by before. **The house-rule sweep needs a
-section-scoped reader, not a line-scoped one**, and until it has one the only
-README item I stand behind is item 5.
-
----
-
-## Defects in my own instruments, disclosed
-
-Four, and two of them produced wrong answers I had to retract.
-
-1. **A false null from a broken search.** `Select-String -Path 'crates\\**\\*.rs'`
-   does not recurse. It reported no denoise function and only one `STREHL_*`
-   variable. **Its positive control caught it** -- a search for a function known
-   to exist returned zero. Re-run under ripgrep the control returns eleven.
-2. **A false ACQUITTAL of `--exposure`.** My first differential hashed whole
-   output files. TIFF metadata rides in that hash, so a flag that records itself
-   in the header while never touching the image read as "changes output
-   (works)". I published that verdict to myself and had to withdraw it. The tell
-   was that the **mean DN was identical to six figures** on files whose hashes
-   differed. **File hashing is the wrong gauge for "does this flag change the
-   image."** Everything above is re-measured on decoded pixel arrays.
-3. **A commissioning gate that fired on me.** The pixel harness passed `--limit`
-   twice; the potency arm failed and the run refused to proceed rather than
-   reporting a table built on a broken baseline.
-4. **Two false "no effect" env results** caused by baselines that had already
-   inferred the estimator backend, retracted above.
+- **`BUILD-SHARP.md:4666-4669`** (supplied to me as confirmed). Both citations
+  exist: the document describes the merge as band-limited to plane Nyquist, and
+  `align_cmd.rs` records "**On** by default since the flip." **I did not promote
+  it, because the two citations name different stages** -- the align gather
+  versus the merge plane geometry from `merge_cmd.rs:6302` -- and I have not
+  established that flipping the first falsifies the second. Needs the owner of
+  that file.
+- **36 README ratio lines** flagged by a window heuristic as missing attribution.
+  **I calibrated before reporting: three of four flagged lines were correctly
+  attributed** in prose outside the window. Forwarding the raw set would have
+  manufactured phantom violations. Only item 5 survives.
 
 ---
 
-## Gaps: what remains unverified
+## The pattern behind three of these
 
-- **The exact line that cancels the exposure multiply is not isolated.** The
-  ceiling path explains the `--auto-exposure` residual; it does not by itself
-  explain why the normalisation multiply at `merge_cmd.rs:6550` has no effect.
-- **Flags were tested on one subject at three frames.** A flag that acts only on
-  deep stacks, or only on a subject with different content, would read as
-  working here. `--fix-ca` was **not** tested: the profile name I passed was
-  rejected and I did not retry with a valid one.
-- **Only the `stack` subcommand was swept.** `align`, `probe` and
-  `argmax-baseline` were not flag-audited.
-- **The README was audited for internal consistency and house rules, not for
-  whether its measurements are true.** Its numbers are other lanes' work.
-- **No test exists for any of this.** There is no test asserting that a flag
-  which claims to apply a gain applies one, which is why item 2 shipped.
+`merge_cmd.rs:426` says `estimator` is the default; it is, of the estimator's
+own era. `--exposure` was described to me as a no-op on a path that does not
+ship; it is inert on the path that does. `BUILD-SHARP` describes a band limit
+that is true of one stage while another was flipped.
+
+**Every one is a true statement about the wrong path or the wrong stage, and
+none is distinguishable from a lie without running the shipping binary.** Two
+of the three were believed by the people closest to the code. The audit
+therefore records, per item, *which path or stage the statement is true of* --
+because "it is true of the estimator backend" is exactly how a wrong sentence
+survives review.
+
+---
+
+## Defects in my own instruments
+
+1. **A false acquittal of `--exposure`** from hashing whole files; metadata rides
+   in the hash. Retracted, re-measured on pixels. The correction in section 0
+   arrived on that same gauge, so the defect cost this audit twice.
+2. **A false null from a broken search** -- `Select-String -Path 'crates\\**\\*.rs'`
+   does not recurse. Its positive control caught it.
+3. **A commissioning gate that fired on me** -- the pixel harness passed `--limit`
+   twice; the run refused to proceed.
+4. **Two false "no effect" env results** from baselines that had already inferred
+   the estimator backend via `--photometric off`.
+5. **A control render I read before checking its exit code**, which crashed the
+   run rather than silently reporting a null against a missing file.
+
+---
+
+## Gaps
+
+- **The cancelling line is still not isolated.** The mechanism is established
+  (percentile-anchored tone rule) and now corroborated by the provenance text,
+  but I did not point at the statement that divides the gain out.
+- **`--fix-ca` remains untested** -- the profile name I passed was rejected.
+- **Only the `stack` subcommand was swept**; `align`, `probe` and
+  `argmax-baseline` were not.
+- **The README was audited for internal consistency, not for whether its
+  measurements are true.**
+- **No test exists** asserting that a flag which claims to apply a gain applies
+  one, which is why item 2 shipped and why it was reported to me as fixed.
 """
 io.open(P,"w",encoding="utf-8",newline="\n").write(T)
 print("wrote", P)
