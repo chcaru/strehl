@@ -13657,3 +13657,76 @@ what range of inputs it can actually discriminate over, and confirm the phenomen
 lives inside that range.** Reach is not only *can the query find things* — it is
 *can the query find things of the kind that would refute me, in the range where
 they occur.*
+
+## 131. A structural claim is the least-audited sentence in a corpus
+
+I found `BUILD-SHARP.md:4665-4669` and very nearly acted on it as fact:
+
+> The merge runs on four planes at half the output dimensions in each axis.
+> Every per-plane operation ... is therefore band-limited to plane Nyquist,
+> 0.5 cycles per plane pixel, which is 0.25 cycles per OUTPUT pixel.
+
+If true it bounds V-SOFTCHECK's entire confirmed result, because its headline
+band is 0.20-0.25 cyc/px on that same grid — the top fifth of the merge's own
+representable range, running into a wall at exactly the upper edge. It would
+retire every proposed tuning fix at once.
+
+I did not check it. I read it, believed it, and was one step from redirecting
+the build on it.
+
+**The failure mode: numbers get re-derived, shapes do not.** This corpus
+re-measures its own figures obsessively — the noise cells have been through
+three gauges, the softness deficit through two independent authors. But a
+sentence describing *how the code is arranged* reads as settled architecture
+rather than as a measurement, so nothing in the discipline points at it. It
+enters as an observation, hardens into a premise, and is then cited by lanes
+that never look at the code. There is no equivalent of a decoy for it.
+
+It is worse than that here: **BUILD-SHARP is a dead lane.** Its intermediates
+were deleted hours ago in the disk cleanup. The doc is a description of a
+pipeline as it stood at an unnamed commit, and the pipeline has taken tens of
+commits since. A structural claim has no pin attached because it does not look
+like the kind of thing that needs one.
+
+The rule, in this project's own idiom: **a claim about the shape of the code is
+a claim about a commit, and inherits every rule that applies to a number.** It
+needs a pin, and it needs re-verification against the code before it can bound
+anyone's result. Handed to V-SOFTCHECK as a hypothesis to falsify against the
+shipping binary, with instructions to treat the prose as a suspect and quote
+what is actually true if it differs.
+
+Corollary: **the more load-bearing a structural claim is, the more likely it is
+to be stale**, because load-bearing claims are the ones written early, when the
+architecture was young enough to describe in a sentence.
+
+## 132. A gate denominated in one subject's baseline is passed by changing subject
+
+BUILD-DEFECT refused a task I gave it and, in refusing, took my acceptance gate
+apart. I had written: re-admitting the corrected edges must beat **6.76 px**
+held-out, else it ships nothing. That reads like a falsifiable pre-registered
+criterion. It is not one.
+
+**6.76 px is a `coffee-bean` number.** `bee-3-cpl` baselines at **13.578 px**.
+A lane could have passed my gate by running on a different subject, with an
+estimator that did nothing at all — a 2x margin handed over for free, in the
+direction of success, with no improvement anywhere in it.
+
+This is distinct from the failure in §130 and from the inert cap I handed
+BUILD-OUTPUT. Those were gates *nothing* could reach, which certify everything
+by never firing. This is a gate that **fires readily and for the wrong reason**.
+It is not too tight or too loose; it is denominated in a unit that varies more
+across the population than the effect it is trying to detect.
+
+The test, and it is cheap: **before writing a threshold, measure the spread of
+the baseline across the population the arm is free to choose from.** If the
+between-subject spread exceeds the effect size, the threshold is measuring
+subject selection. Either pin the subject in the gate text, or state the
+criterion as a paired within-subject delta so the baseline cancels.
+
+And the second half of BUILD-DEFECT's finding is worse than the first:
+`E*` — the held-out error the gate is denominated in — **is a product of the
+biased estimator it is grading.** Every future alignment arm would be scored by
+a ruler made of the thing it scores. That is why I redirected the lane onto the
+ruler instead of the solver. **When the gauge and the subject of measurement
+share an error, no amount of measurement discipline downstream can recover; the
+discipline has to move upstream to the gauge.**
