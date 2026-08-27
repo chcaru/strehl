@@ -10398,3 +10398,89 @@ The negative result confirms their level and refutes only my shortcut.
 One residual: registered correlation 0.0922 against a shifted control of 0.0108 — 8x, so a
 weak genuinely-registered term exists. Given the radial profile it is most likely a
 vignetting or warp-boundary residual, not dust. Unresolved and logged, not claimed.
+
+## §93 — nobody audits a withdrawal
+
+V-HIGHLIGHT returned the sharpest single observation of the night, and it is about a
+failure mode this log has not named in ninety-two sections, because every instrument error
+catalogued so far has run in the opposite direction.
+
+They built a ladder to test whether the highlight roll-off knee left a seam. Version one
+scored the **global** maximum adjacent-bin jump, which a natural 60 DN scene feature
+dominated, so the statistic never moved:
+
+```
+      0.25        60.00         no
+     16.00        60.00         no        <- a 16 DN plant, invisible
+```
+
+A 64x change in plant amplitude, one constant reading — the same zero-variance signature as
+§86's boolean. Their conclusion had they trusted it:
+
+> **NOTHING DETECTED UP TO 16 DN — the statistic is deaf and the claim must be withdrawn.**
+
+The claim was **true**. The instrument was deaf. And then the part that matters:
+
+> Every instrument error I caught in myself tonight until now was a false positive —
+> accusing working code. This one is the mirror, and the asymmetry matters: a false
+> positive costs an author time and gets argued down, but **a false negative that retracts
+> a true claim is self-ratifying, because the retraction looks like rigour. Nobody audits
+> a withdrawal.**
+
+> **A retraction is the least-audited artifact a rigorous project produces.** A false
+> positive has a defendant — the author whose code was accused will push back, and the
+> error surfaces. A false negative that withdraws a true result has no defendant: the
+> author is the one withdrawing, the reviewers see conservatism, and conservatism is not
+> the thing anybody checks. **The very culture that makes this project's claims
+> trustworthy is what makes its withdrawals invisible.**
+
+The corrective is symmetry, and it is cheap: **hold a withdrawal to the same standard as a
+claim.** Before retracting, require the instrument that produced the null to have been
+shown to speak at a stated amplitude — the same ladder §91 demands before reporting clean.
+If it has not, the honest outcome is neither the claim nor its retraction, but an open
+question with a named missing measurement.
+
+This bears immediately on live work. `README.md:1090` carries a five-result retraction, and
+V-NYQUIST is adjudicating whether a NO-GO and that retraction should re-open. I have
+forwarded the rule with an explicit instruction *not* to treat it as a thumb on the scale:
+it says where to point scepticism, not which way to rule. A confirmed retraction is a fine
+outcome; an unexamined one is not.
+
+### What V-HIGHLIGHT did after fixing the ladder
+
+Requiring the excess to track the plant one-for-one (1.00 DN per DN) made v1 unpassable.
+The repaired instrument then **confirmed the original finding** and qualified it:
+
+- natural jump at the plant boundary (43000 DN): **0.00 DN**
+- 95th percentile of other adjacent-bin jumps: **27.60 DN**
+- detection threshold: A=16 no, A=32 yes
+
+So Phase 1 §6's unqualified *"There is no seam"* becomes **"no seam at or above 32 DN in
+the level-binned response on `foam`"** — the continuity result survives intact, and the
+floor is now stated: ~0.05% of full scale, set by the roll-off's own steep growth rather
+than by sensor noise. **A 10 DN seam would have passed unseen.** That is what a qualified
+all-clear looks like, and it is strictly more useful than the unqualified one it replaces.
+
+### A refinement to §91 that matters more than it looks
+
+V-HIGHLIGHT re-measured the PIL truncation on their own file and found the mechanism is a
+**right-shift, not a rescale**:
+
+```
+tifffile -> uint16 max 23224 | PIL -> uint8 max 90 | ratio 258.04
+```
+
+Not 256. `23224 >> 8 = 90`, and 23224/90 = 258.04. So §91's warning gets sharper: a number
+read through PIL and then "repaired" by multiplying by 256 is wrong **twice** — once by
+the destroyed 183x tonal resolution, and again by up to a percent of scale — and the second
+error is the more insidious, because it makes the repaired figure look arithmetically
+principled rather than merely rounded. Three independent lanes have now measured this
+conversion (ORCH, BUILD-RESAMP, BUILD-SHARP, V-HIGHLIGHT) and each pass has made the
+prohibition stronger and the "obvious fix" less defensible.
+
+Their audit method is also better than mine and worth adopting: they checked **all 33** of
+their scripts, found four importing PIL, and cleared each by inspecting *what PIL was used
+for* — in every case `Image.fromarray(...).save(...)`, a write path, never a read. A grep
+for the import name would have flagged four false positives; a grep for `Image.open`
+would have missed a hypothetical `Image.frombytes`. The question is not which library is
+imported but **which direction the data crosses it**.
