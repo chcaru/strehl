@@ -789,3 +789,345 @@ about 500 DN in master units. All 26 subjects read at or below **1.0203**
 against a 1.05 threshold. That result should be read as *"no trails at or above
 this axis's power limit"*, which is what the certificate prints, and not as
 *"no dust"*.
+
+### 11.6 Independent re-derivation of the rim finding
+
+`rimaxis.py` imports `rimv6`. If `rimv6` has a systematic fault my axis inherits
+it whole, **and so do all eleven of my commissioning arms**, because they
+exercise the same code. Green arms around a shared instrument are not
+independence. So I rewrote the measurement from scratch — `rimindep.py` shares
+no code with `rimv6`, only the input file.
+
+The first two attempts were both inadmissible, and saying how they failed is
+more useful than the final number:
+
+1. **n = 0 to 10 usable edges, and the null control also returned n = 0.** The
+   dominance test compared each gradient against its *immediate* neighbours, but
+   a real step is 2-3 px wide, so its own shoulders always disqualify it. A NaN
+   control licenses no reading of the master whatsoever.
+2. **The null read +8.61% against a master of +7.19%** — a blurred, rim-free
+   image reading as ringing *more* than the picture. The cause was population
+   mismatch: I was reselecting edges per arm, and blurring removes weak edges
+   from the qualifying set (n = 6000 against n = 2788), so the difference carried
+   the change in population rather than the change in rim. Sites are now selected
+   once on the rim-free reference and every arm measures those same sites.
+
+**Commissioned on synthetic edges before being pointed at any picture**, because
+a real photograph has no known rim value to check against:
+
+```
+SHARP-CLEAN  (ideal step, no overshoot)  reads   +0.16%
+RINGING      (same step, planted rim)    reads   +5.28%
+separation                                       +5.12 points
+```
+
+A third defect surfaced only after this. The instrument passed on synthetic
+edges yet read **+27%** on `119MSDCF`, which `rimv6` calls clean. On a synthetic
+edge the plateau is flat; on a photograph the `t = +2..+7 px` band is full of
+ordinary texture, and a maximum over a textured band is not an overshoot. Adding
+an **isolation criterion** — the profile must actually settle before the
+instrument is allowed to ask whether it overshot — is what reconciles them. That
+is the same criterion V-HEADTOHEAD2 reports excluding about 75% of
+high-contrast features, and this is independent confirmation that it is
+load-bearing rather than conservative housekeeping.
+
+**The two instruments then agree on the finding, having been built separately:**
+
+| subject | `rimindep` (independent) | `rimaxis` (via `rimv6`) |
+| --- | ---: | ---: |
+| `wrapped-text-2` | **+9.27%** | **+10.93%** |
+| `leaf-2-cpl` | +7.12% | +37.07% (n=112) |
+| `lavendar-cpl` | +3.73% | +8.01% |
+| `pencil-flatter-angle-cpl` | +2.97% (n=16) | clean |
+| `119MSDCF` | **-0.19%** | **-1.75%** |
+
+They agree on sign for every subject that either has enough edges to speak
+about, they agree that `wrapped-text-2` is among the worst, and they agree that
+`119MSDCF` is clean. The magnitudes diverge where the sample is small, which is
+where they should diverge. **The rim finding is corroborated: the masters carry
+real overshoot at occluding edges, and it is not an artifact of `rimv6`.**
+
+### 11.7 Two axes, independently, convict the same subjects
+
+The sharpness axis **refuses** `wrapped-text-1` and `wrapped-text-2`, and the
+reason it refuses is itself a result:
+
+```
+wrapped-text-1   median deficit -28.3%  the master exceeds the best source frame
+wrapped-text-2   median deficit -16.9%  the master exceeds the best source frame
+```
+
+A stack cannot be optically sharper than the sharpest frame that went into it.
+When a band-energy statistic says it is, the extra band energy was manufactured
+rather than photographed — and edge overshoot is precisely a mechanism that
+manufactures mid-band energy.
+
+These are the same two subjects the rim axis reads as the loudest overshoot, and
+the rim reading was corroborated in 11.6 by an instrument sharing no code. The
+refusal is not a gap in the sharpness axis; it is the sharpness axis detecting
+the ringing from the other side. This is not universal — `109MSDCF` reads a
+clean +5.5% deficit and `coffee-bubbles` +1.6% — so it is a property of those
+subjects, not a bias in the instrument.
+
+### 11.8 The warp kernel is refuted as the source of the overshoot
+
+The obvious mechanism for edge overshoot is the resampler. Every frame is warped
+by a per-frame similarity, and the shipped default is **catmull-rom, which has
+negative lobes**. A kernel with negative lobes produces overshoot at a step by
+construction. `nearest` has no negative lobes and **cannot ring**.
+
+So the prediction is sharp and falsifiable: if the warp kernel makes the halos,
+swapping to `nearest` must largely remove them.
+
+`kerneltest.py` renders `wrapped-text-2` three ways from the same sealed binary,
+on a linear gauge so no per-image tone fit can distort an edge profile, with
+edge sites selected once and every arm measured at those same sites:
+
+```
+MINSTEP derived on this gauge: 0.0180 (99.5th pct of |grad|)
+4218 edge sites, frozen, measured identically on every arm
+null (blurred shipped arm): +3.93%   <- the instrument floor
+
+  kernel        overshoot    corrected
+  catmull-rom     +12.81%       +8.89%
+  nearest         +13.77%       +9.85%
+  lanczos3        +14.57%      +10.64%
+```
+
+**The overshoot does not fall. It rises.** The hypothesis predicted that
+`nearest` would read near zero; it reads **+9.85%**, which is not near zero by
+any reading of the instrument's +3.93% floor. The conclusion is robust to the
+noise floor because the predicted effect is a collapse and the observed effect
+is an increase.
+
+**The warp resampler is not the source of the overshoot.** Whatever
+manufactures it survives the removal of every negative lobe in the
+interpolation, which points at the merge and the election rather than the
+gather, and is consistent with V-NEVERWORSE's independent finding that the merge
+manufactures mid-scale structure.
+
+Two notes against over-reading this. `nearest` aliases badly, and a jagged edge
+can present local maxima in the measurement band that are not ringing, so its
++9.85% should not be taken as a *quality* ranking. And this is one subject; the
+refutation of the kernel hypothesis is what it establishes, not a kernel
+recommendation.
+
+A defect in this script is worth recording because it is the same one this
+report keeps finding. Its first run selected **zero** edges — `MINSTEP` had been
+calibrated on tone-mapped output and linear light puts the same visual edge at a
+much lower normalised amplitude — **and it printed a conclusion anyway**, from
+`n=0`. A threshold carried across a gauge change is the same defect as a ratio
+carried across one. `MINSTEP` is now derived on the gauge in use, and every
+empty arm hard-errors rather than reporting.
+
+### 11.9 Negative controls on the certificate itself
+
+The certificate is a program, and an unfalsified program is an unverified one.
+`cert4negctl.py` plants defects that *should* change the printed partition and
+requires the change to appear. Every mutation is anchored on a unique full line
+and **hard-errors if the anchor does not land**, because a mutation that
+silently fails to apply produces a green that means nothing.
+
+```
+  RIM-THRESH         CAUGHT   a rim threshold of 90% cannot be exceeded
+  RIM-CI             CAUGHT   FAIL conjunction weakened to a disjunction
+  RIM-SMALLN         CAUGHT   a 50-point small-sample allowance excuses everything
+  SHARP-THRESH       CAUGHT   a 90% softness threshold cannot be exceeded
+  DUST-THRESH        CAUGHT   a threshold below every measured ratio
+  REFUSED-AS-PASS    CAUGHT   a refusal reported as a pass
+  PARTITION-TRUNCATE CAUGHT   a verdict outside the declared partition
+  PARTITION-GUARD    CONFIRMED load-bearing: with the check removed the same
+                              truncation exits 0 undetected
+restore verified by SHA256: all 4 mutated files byte-identical to their
+pre-mutation contents
+```
+
+Four defects surfaced in the controls themselves, and they are worth naming
+because each is a way a commissioning suite can lie:
+
+1. **An anchor that did not land.** `REFUSED-AS-PASS` matched zero times. The
+   harness hard-errored instead of reporting a green, which is the behaviour
+   that makes the other seven readable.
+2. **A mutation planted on a branch that never executes.** The first
+   `PARTITION` arm mutated `dust_verdict`'s REFUSED return — but **no subject is
+   REFUSED on the dust axis**, so the plant was inert and the arm reported
+   MISSED against a certificate that was in fact guarded. An inert plant and a
+   blind instrument produce the identical glyph.
+3. **A guard commissioned by breaking the guard.** The same arm disabled the sum
+   check while the partition was still correct, so there was nothing to catch. A
+   guard is commissioned by breaking **the data it protects**, then shown to be
+   load-bearing by removing it and watching the same break survive.
+4. **A restore loop that reinstated a mutant.** Both paired edits target one
+   file; the loop restored backups **in order**, putting the clean copy back
+   first and the once-mutated copy back on top of it, twice leaving a mutation
+   in the tree. Restores must unwind in reverse, and the restore is now verified
+   by SHA256 against pre-mutation copies rather than by re-reading the output —
+   an output check would have conflated "the harness corrupted the tree" with "a
+   sweep advanced the data underneath it", and only the first is a defect.
+
+### 11.10 What the sharpness axis found, and the mechanism the source already names
+
+The sharpness axis asks a question with a physical answer: **is the shipped
+master as sharp, at each location, as the best frame that went into it?** A
+stack cannot be optically sharper than its sharpest input. The axis therefore
+treats a *negative* deficit not as an excellent result but as a refusal — the
+instrument saying it has not found the ceiling, or that something is wrong.
+
+Of the subjects measured, **two returned a positive deficit and thirteen
+refused**, and the refusals are overwhelmingly of one kind:
+
+| subject | median deficit | renders spent on the ceiling |
+| --- | ---: | ---: |
+| `pencil-steep-angle-cpl` | **-96.4%** | 12 + 44 |
+| `wrapped-text-1` | -28.3% | 12 + 43 |
+| `leaf-2-cpl` | -24.1% | 12 + 30 |
+| `foam` | -23.2% | 12 + 11 |
+| `112MSDCF` | -17.0% | 12 + 18 |
+| `wrapped-text-2` | -16.9% | 12 + 41 |
+| `113MSDCF` | -16.4% | 12 + 15 |
+| `lead-1-cpl` | -5.8% | 12 + 28 |
+| `flat-on-ruler-cpl` | -5.6% | 12 + 24 |
+| `109MSDCF` | **+5.5%** | 12 + 2 |
+| `coffee-bubbles` | **+1.6%** | 12 + 3 |
+
+These are not shallow searches. The refinement loop spent up to 44 additional
+renders climbing the focus curve, and the excess survived. `pencil-steep-angle-cpl`
+carries roughly **twice** the mid-band energy of the best frame that went into
+it.
+
+**This is on a sound gauge.** Both sides are rendered `--linear-srgb --demosaic`
+by the sealed binary, the lattice is verified from the file, and
+`certmeasure.read_rgb` refuses outright any file whose description carries a
+tone stage. The statistic is a bandpass contrast normalised by local mean, so it
+is invariant to a linear gain. This is not the two-gauge defect this report
+convicted elsewhere.
+
+**The mechanism is documented in this project's own source.** The merge is a
+per-pixel election, and `crates/strehl-core/src/stack.rs` states the defect
+plainly:
+
+> argmax over N noisy frames systematically electing noise
+
+with `pyramid.rs` adding that in such a region the merge "reliably selects the
+frame whose noise happened to be largest". A per-pixel maximum over noisy
+candidates is **biased upward by construction**, whether or not any real detail
+exists at that pixel. The gate and the regularisation in `merge.rs` exist
+precisely to suppress this. What these measurements say is that in the shipped
+configuration **the suppression is incomplete**: the output carries more
+mid-band energy than any input frame supplies at the same location.
+
+I have not isolated that experimentally — the merge belongs to a build lane and
+I am measuring output, not changing how it is made. What I can state is bounded
+and measured: the excess is real, it is large, it survives 56 renders of ceiling
+search, it is not a gauge artifact, it is **not** produced by the warp
+resampler's negative lobes (11.8), and it coincides subject-for-subject with the
+independently corroborated edge overshoot (11.6, 11.7).
+
+**A caution that cuts against my own numbers.** The ceiling is a maximum over
+*sampled* frames, so the true ceiling is at or above the measured one, and the
+true excess is therefore at or below what is tabulated. The magnitudes above are
+upper bounds on the excess. The *sign* is what the refusals rest on, and the
+sign is not affected.
+
+### 11.11 The four-axis certificate
+
+```
+               BLOTCH    RIM  SHARP   DUST
+  PASS             17      9      2     26
+  FAIL              8     13      1      0
+  SUBJECT           1      0      0      0
+  REFUSED           0      4     16      0
+  NOT EXAMINED      0      0      7      0
+  TOTAL            26     26     26     26
+
+COMBINED -- a print is only as good as its worst axis
+  clean on all four axes        1
+  FAIL on at least one axis    17
+  no FAIL, some axis silent     8
+  no FAIL, source-attributed    0
+  TOTAL                        26
+```
+
+Every column sums to the seal census independently, and the guard that enforces
+that was commissioned by truncating the data it protects and shown load-bearing
+by removing it (11.9). The seven NOT EXAMINED on the sharpness axis are honest
+absence: those are 299-frame stacks whose ceiling search did not fit in the
+time available. **They are counted, and they are not PASSes.**
+
+**ORCH asked whether the PASS count would fall. It did.** Nine subjects change
+verdict, all of them from clean to failing, and eight of the nine on the rim
+axis the previous certificate could not see:
+
+```
+109MSDCF                 now FAIL on sharp
+bee-1-cpl                now FAIL on rim
+coffee-bean              now FAIL on rim
+flat-on-ruler-cpl        now FAIL on rim
+flowers-cpl              now FAIL on rim
+lavendar-cpl             now FAIL on rim
+pencil-steep-angle-cpl   now FAIL on rim
+wrapped-text-1           now FAIL on rim
+wrapped-text-2           now FAIL on rim
+```
+
+Combined with the four subjects that moved from REFUSED to FAIL on the blotch
+axis once the registration sign was corrected (11.1), **the number of masters
+clean on every axis the certificate can measure is one: `119MSDCF`.**
+
+The earlier headline, "17 PASS / 9 ACQUITTED / 0 FAIL", came from a gate
+comparing against the worst frame in the bracket, on a gauge that could not
+carry the statistic, defended by a flag that reached no pixel, and blind to
+halos, softness and dust. The corrected four-axis figure is **1 clean, 17
+failing, 8 unexamined on at least one axis.**
+
+### 11.12 What a PASS still does not cover
+
+- **RIM** speaks only to edges isolated enough to plateau within 7 px. The
+  isolated fraction runs from **12% to 72%** across subjects and is printed for
+  each one. On `wrapped-text-2` the axis speaks to 12% of the high-contrast
+  features present.
+- **SHARP** resolves softness down to about blur sigma 0.6 and is silent below
+  it. Every deficit is a lower bound. Sixteen subjects refused and seven were
+  not examined, so this axis speaks to three of twenty-six.
+- **DUST** detected planted defects at 2000 DN and missed them at 500 DN, while
+  this sensor's worst site carries 331 DN of mean excess. Its 26 PASSes mean
+  "no trails at or above this axis's power limit", not "no dust".
+- **None of the four** measures colour accuracy, tonal rendering, composition or
+  the print medium.
+
+### 11.13 For the owner, in plain English
+
+Of the twenty-six files, **one — `119MSDCF` — comes through every check I can
+run without a mark against it.** Seventeen have something measurably wrong, and
+the problems fall into two families.
+
+The first you already know about, because it is the complaint you started with:
+**halos.** Thirteen of the twenty-six show real bright overshoot hugging their
+high-contrast edges, and I confirmed this with two instruments built separately
+that share no code, so it is not an artifact of one measurement. The worst are
+`leaf-2-cpl`, `coffee-bean`, `113MSDCF`, `flat-on-ruler-cpl`, `112MSDCF` and
+both `wrapped-text` sheets. On a large print this reads as a thin bright fringe
+outlining edges, and it is the thing that makes an image look processed.
+
+The second is worse and it is new: **the stacker is inventing fine detail that
+was never photographed.** On most subjects I checked, the finished file contains
+*more* fine structure than the sharpest single frame that went into it — on
+`pencil-steep-angle-cpl`, about twice as much. That is not possible optically. A
+stack can at best keep what the best frame had. The extra comes from how the
+merge picks a winner for each pixel: picking the highest of many noisy
+measurements tends to pick the noisiest, and the project's own source code says
+so in as many words. In a print this shows up as crunchy, slightly artificial
+texture in areas that should be smooth, and as the mottling you can already see
+in `foam`.
+
+**Do not print `foam`, `112MSDCF`, `113MSDCF`, `couch-fibers-cpl`,
+`flower-inner-edge-cpl`, `lead-1-cpl`, `leaf-2-cpl` or `coffee-bubbles`** — those
+are mottled beyond the best frame that went into them, and several are also
+haloed. **`119MSDCF` is safe to print.** The remainder sit in between: haloed but
+not mottled, which may still be acceptable at smaller sizes, and you are the
+right judge of that with a proof in your hand. What I would not do is call any
+of this print-worthy on the strength of the earlier clean sheet, because that
+sheet was produced by a gate that could not see either of the two problems above.
+
+One honest limit: I could not finish the sharpness check on seven of the deepest
+stacks, and I have counted them as unexamined rather than passed.
