@@ -1124,3 +1124,236 @@ the strongest available kind -- identical bytes.** The residual softness on
 elsewhere. That is exactly the outcome ORCH flagged as "genuinely valuable", and
 it is the one that arrived.
 
+
+---
+
+# 14. Is my band a band defocus can move? (ORCH's STOP message)
+
+ORCH halted the `STREHL_RESTORE` A/B mid-flight with an objection aimed one
+level below every number I have published: not at a result, at the instrument's
+**units**. `V-HEADTOHEAD2` §3b, importing `V-LINEAR` §5.3, measured that on
+strehl's own linear develops a tile *in focus* carries the same 0.20-0.48 cyc/px
+power as the same tile **20 frames out of focus** -- ratios 1.015, 1.043, 1.004,
+1.138. If my per-site ceiling integrates in that band, then the quantity I have
+been ranking merges by is one **defocus itself cannot move on this corpus**, and
+the 5-19% "softness deficit" is not fake but *misnamed*.
+
+That is the correct objection and it was worth stopping for. The standard it
+invokes is the project's own:
+
+> **a metric that cannot distinguish in-focus from twenty-frames-out-of-focus is
+> not a sharpness metric, whatever it is named.**
+
+Three answers below, in the order ORCH asked for them. **Sequencing note, stated
+plainly rather than buried: I had already run the A/B before the STOP arrived.**
+§13 stands as written. It is not invalidated by anything here, and §14.5 explains
+why its analytic prediction holding to 0.9% is itself evidence about what my
+statistic responds to.
+
+## 14.1 The claim I was asked to test against is already retracted -- by its own document
+
+Before measuring anything I read the source rather than the quotation. The first
+line of `docs/research/V-LINEAR.md` is a banner:
+
+> **`docs/research/V-LINEAR2.md` §1 overturns this document's reading of the
+> 0.20-0.25 cyc/px band, and this file's title restates the superseded version.**
+> The four ratios below -- **1.015, 1.043, 1.004, 1.138** -- come from four
+> hand-picked **whole-frame** pairs. Letting each of 29 tiles choose its *own*
+> best-focus and worst-focus frame, on these same linear develops, gives
+> **R = 2.419, CI [1.961, 3.063]** at 0.20-0.25 cyc/px [...] Whole-frame pairs
+> average sharp and never-sharp regions together and report ~1.0 where per-tile
+> selection recovers a factor of 2.4.
+
+`V-LINEAR` P7 carries the same amendment and narrows itself: **"P7 should be
+registered for 0.25-0.48 cyc/px only."** `V-LINEAR2` Q2 states the mechanism:
+
+> at this magnification only a fraction of any frame is in focus, so a
+> whole-frame in-focus/defocused ratio averages the sharp part of the frame
+> together with the parts that were never sharp in either.
+
+**The objection routed to me was built on an artefact of a whole-frame reference,
+and that is the fourth independent instance of one error family tonight.** The
+others: my own `frames[::N//n][:n]`, which shortened the focus range while
+claiming to thin it; `M116` P9, where one global best frame read 1.1458 against a
+per-site maximum of 0.8110 -- a factor of 1.41 *and an inversion of the verdict's
+sign*; and `BUILD-TRIAGE`'s ladder. Every one is the same shape: **a reference
+chosen globally where the quantity varies locally reports the average of a sharp
+region and a never-sharp one, and that average is not a ceiling.**
+
+I did not have to argue this. Another lane had already found it, published the
+correction, and amended its own headline. What I have to do is measure on my own
+instrument, because a lane agreeing with me is not evidence that I am right.
+
+## 14.2 Where my statistic's energy actually is, allocated against V-LINEAR2's verdicts
+
+`band_probe.py` -- commissioned at **4.4% worst error** against direct
+measurement of four known Gaussian blurs, so it can predict what a filter does to
+the statistic rather than merely describe it.
+
+Answering the question as it was **asked**, against the superseded 0.20-0.48
+block:
+
+    inside 0.20-0.48    33.14%
+    below  0.20         66.14%
+    above  0.48          0.72%
+
+But `V-LINEAR2` resolves that span and finds it is **not uniform**, so the honest
+allocation is against its per-band verdicts, not against one block that averages
+a passing band with a failing one:
+
+| band | my energy | V-LINEAR2 per-tile in/out of focus |
+|---|---:|---|
+| 0.00-0.05 | 7.58% | below its probe |
+| 0.05-0.10 | 22.99% | 18.193 **PASS** |
+| 0.10-0.20 | **35.57%** | 10.083 **PASS** |
+| 0.20-0.25 | 10.77% | 2.419 **PASS** |
+| 0.25-0.30 | 7.92% | 1.387 MARGINAL |
+| 0.30-0.40 | 10.06% | 1.149 FAIL (noise) |
+| 0.40-0.48 | 4.40% | 1.105 FAIL (noise) |
+| 0.48-0.51 | 0.72% | above its probe |
+
+    carries focus-dependent signal (PASS)   69.33%
+    marginal                                 7.92%
+    certified noise (FAIL)                  14.46%
+    outside the probe's 0.05-0.48 span       8.29%
+    partition sums to                      100.00%   <- asserted in code
+
+**MEASURED: 69.33% of my statistic's energy sits in bands another lane
+independently certifies as carrying focus-dependent signal; 14.46% sits in bands
+it certifies as noise.** The partition is asserted to sum to 100.00% in the
+script, because a set of band fractions that does not partition the energy can
+hide the band that matters in the gap.
+
+## 14.3 The focus null on my own instrument -- it sees focus
+
+Description is not evidence. `focus_null.py` takes real frames, aligns them to
+the master with the instrument's **own** `shift_of`/`warp`, lets each of 1024
+sites choose its own best frame **by the full statistic only**, and reads every
+band at that frame and at frames delta away. Choosing by the full statistic and
+never by a band is deliberate: the band columns then carry no order-statistic
+bias of their own.
+
+Best frame against worst frame at the same site, null-corrected:
+
+| | `119MSDCF` (33 frames) | `coffee-bubbles` (19 frames) | V-LINEAR2 per-tile |
+|---|---:|---:|---|
+| full statistic | **x2.24** | **x39.04** | -- |
+| 0.05-0.10 | x7.77 | x29.85 | 18.193 PASS |
+| 0.10-0.20 | x2.72 | x34.48 | 10.083 PASS |
+| 0.20-0.25 | x1.71 | x12.17 | 2.419 PASS |
+| 0.25-0.30 | x1.47 | x4.82 | 1.387 MARGINAL |
+| 0.30-0.40 | x1.50 | x2.46 | 1.149 FAIL |
+| 0.40-0.48 | x2.08 | x2.68 | 1.105 FAIL |
+| **0.05-0.25 (VL2 PASS)** | **x3.34** | **x25.58** | -- |
+| **0.30-0.48 (VL2 FAIL)** | **x1.63** | **x2.33** | -- |
+
+**MEASURED: my statistic separates in-focus from worst-focus by x2.24 and
+x39.04. It is a sharpness metric on these files.** At delta=20 specifically
+-- V-LINEAR's exact comparison -- it reads x1.60 on `119MSDCF`.
+
+**The shape matches V-LINEAR2's and the crossover is in the same place.** Both
+tables are band-pass: separation peaks low, then collapses at 0.25 and is nearly
+gone by 0.30. The magnitudes are not comparable -- different subjects, different
+block sizes, 64 px sites against 29 tiles -- and I make no claim on them. The
+*ordering and the crossover* are the comparison, and they agree, from
+independently written code on different data. **The lanes do not disagree; the
+superseded whole-frame version disagreed with both of us.**
+
+One anomaly I will not smooth over: on `119MSDCF` the 0.40-0.48 bin reads x2.08,
+*higher* than the two bins below it, breaking an otherwise monotone fall. Near
+the demosaic's reconstruction limit that is most likely aliasing folding
+focus-dependent energy back down, but I have not measured it and I am recording
+it as unexplained rather than explaining it. `coffee-bubbles` shows a much
+weaker version of the same uptick (x2.68 against x2.46).
+
+## 14.4 The null caught a bug in itself, which is the only reason I trust it
+
+The first run's NULL arm -- *n* noised copies of one frame, true ratio **1.000 by
+construction** -- read **2.06**. A null that is wrong by 106% invalidates every
+ratio measured beside it.
+
+The cause was mine and it is worth recording. I estimated the noise amplitude
+from differences on every 7th pixel, which at that spacing measures **signal**
+variation, not noise: it planted sigma = 1099 DN against a real floor near 27.
+The fix was not to write a better estimator but to stop writing one -- the pinned
+`envelope_null.py` already calibrates an amplitude so the noise's own block
+high-pass energy lands on the real frames' measured detail floor, which is the
+quantity the instrument actually responds to. Importing that function put the
+null at **1.016-1.034** across every row, matching the 0.1-1.6% order-statistic
+null published in §5.
+
+A second bug in the same file: a `worst` block landed **inside** the delta loop
+after an edit, so `report()` returned on the first iteration and only delta=1
+ever printed. Both were caught by reading output that disagreed with a
+construction whose answer was known in advance. That is what the arm is for.
+
+Commissioning of the full run, all arms green: NULL **1.016-1.034**; DEFECT a
+blur ladder **monotone** across ten rungs; IMPROVEMENT arm **x1092.73**
+(`119MSDCF`) and **x49.65** (`coffee-bubbles`) sharp-over-blurred, required
+`> 1`.
+
+## 14.5 The payoff: decomposing the published verdict itself
+
+Knowing the instrument can see focus is necessary and not sufficient. The
+question ORCH needs answered is whether **the deficit** -- the number, not the
+instrument -- is carried by bands where focus lives or by bands where V-LINEAR2
+found nothing. Same construction as the published ratio: per-site max over the
+complete bracket as the ceiling, median over live sites, live = top 35% by
+low-frequency contrast.
+
+| band | `119MSDCF` corrected | `coffee-bubbles` corrected |
+|---|---:|---:|
+| **full (published)** | **0.8147** | **0.9022** |
+| 0.05-0.10 | 0.7979 | 0.8684 |
+| 0.10-0.20 | 0.8116 | 0.8808 |
+| 0.20-0.25 | 0.6980 | 0.8694 |
+| 0.25-0.30 | 0.6166 | 0.9033 |
+| 0.30-0.40 | 0.5751 | 0.9536 |
+| 0.40-0.48 | 0.8680 | 1.1984 |
+| **0.05-0.25 (VL2 PASS)** | **0.8053** | **0.8847** |
+| 0.30-0.48 (VL2 FAIL) | 0.6590 | 1.0233 |
+
+The full row reproduces the published **0.8147** exactly and the published
+**0.9018** to 0.04%, through a code path written for a different purpose --
+which is a reproduction of the headline, not a restatement of it.
+
+**MEASURED: THE DEFICIT SURVIVES.** Restricted to 0.05-0.25 cyc/px -- the bands
+V-LINEAR2 certifies as carrying focus-dependent signal, and where my own
+instrument separates focus by x3.34 and x25.58 -- the master still reads
+**0.8053** and **0.8847** against its own per-site ceiling. Against published
+headlines of 0.8147 and 0.9018 the restriction moves the verdict by **-1.2% and
+-1.9%**: slightly *worse*, not better. **The 5-19% is not an artefact of a
+focus-blind band and it is not misnamed.**
+
+And the certified-noise band behaves exactly as a band with no scene signal
+should: **0.6590 on one subject and 1.0233 on the other.** It is the only row in
+the table whose *sign flips* between subjects. That is a stronger result than
+"it drags the headline a little" -- it is the noise band failing to agree with
+itself, which is what V-LINEAR2 says it is, measured here independently.
+
+Finally, §13's A/B is evidence on the same question and it arrived before the
+objection. `restore.rs` has an **exactly known** transfer function, so §12
+predicted its effect on my statistic analytically -- **x1.19**, by two
+independent routes agreeing to 2.2%, one commissioned to 0.00% against a Parseval
+identity. The measurement came back **x1.1539**, a 0.9% error. A statistic
+responding to a known filter within 1% of an analytic prediction derived from its
+own measured band density is a statistic whose units are understood.
+
+## 14.6 What I am telling ORCH
+
+1. **The band, as asked:** 33.14% of my statistic's energy is inside 0.20-0.48,
+   66.14% below it. **Against V-LINEAR2's resolved verdicts: 69.33% PASS, 7.92%
+   MARGINAL, 14.46% certified noise.**
+2. **The claim I was asked to test against is already retracted in its own
+   document**, by the same whole-frame-reference error this project has now been
+   bitten by four times.
+3. **My instrument sees focus:** x2.24 and x39.04 best-vs-worst, x1.60 at
+   V-LINEAR's exact delta=20, blur ladder monotone, null 1.016-1.034.
+4. **The lanes agree**, per-tile against per-tile, on ordering and crossover,
+   from independent code on different subjects.
+5. **The deficit survives** restriction to the certified-signal band, at 0.8053
+   and 0.8847 against published 0.8147 and 0.9018 -- moving *against* my
+   interest, not for it.
+6. **Scope, stated:** two subjects. The remaining 24 have not had this run.
+   Both agree, and both reproduce their published headline exactly, but two is
+   not the corpus and I am not claiming it is.

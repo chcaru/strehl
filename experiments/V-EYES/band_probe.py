@@ -111,6 +111,51 @@ def main():
     frac_knee = float(w[f <= 0.25].sum())
     print(f"    energy AT OR BELOW the 0.25 knee  {100 * frac_knee:6.2f}%")
 
+    # ORCH's question (a), answered as a number rather than a description.
+    # V-HEADTOHEAD2 §3b / V-LINEAR measured that a tile IN FOCUS carries the
+    # same 0.20-0.48 cyc/px power as the same tile TWENTY FRAMES OUT OF FOCUS
+    # (ratios 1.015, 1.043, 1.004, 1.138). If my statistic lives inside that
+    # band, then the quantity I have been ranking merges by is one that defocus
+    # itself cannot move on this corpus, and the deficit is misnamed.
+    lo, hi = 0.20, 0.48
+    inside = float(w[(f >= lo) & (f <= hi)].sum())
+    below = float(w[f < lo].sum())
+    above = float(w[f > hi].sum())
+    print(f"\n  OVERLAP WITH V-LINEAR'S DISPUTED BAND {lo:.2f}-{hi:.2f} cyc/px:")
+    print(f"    inside it          {100 * inside:6.2f}%")
+    print(f"    below {lo:.2f}         {100 * below:6.2f}%")
+    print(f"    above {hi:.2f}         {100 * above:6.2f}%")
+
+    # The 0.20-0.48 block above answers the question as it was ASKED, but that
+    # framing is already superseded. V-LINEAR2 §1/Q2 resolves the same span into
+    # sub-bands and finds it is NOT uniform: per-tile focus selection recovers
+    # 2.419 at 0.20-0.25 where V-LINEAR's four whole-frame pairs reported 1.0,
+    # and only 0.25 upward actually fails. So the honest allocation of my
+    # statistic is against V-LINEAR2's PASS/MARGINAL/FAIL verdicts, not against
+    # a single 0.20-0.48 block that averages a passing band with a failing one.
+    vl2 = [((0.00, 0.05), "below probe"), ((0.05, 0.10), "18.193 PASS"),
+           ((0.10, 0.20), "10.083 PASS"), ((0.20, 0.25), "2.419 PASS"),
+           ((0.25, 0.30), "1.387 MARGINAL"), ((0.30, 0.40), "1.149 FAIL"),
+           ((0.40, 0.48), "1.105 FAIL"), ((0.48, 0.51), "above probe")]
+    print("\n  ALLOCATION AGAINST V-LINEAR2 §1's PER-TILE VERDICTS:")
+    print(f"    {'band':<14} {'my energy':>10}   {'V-LINEAR2 in/out of focus':<26}")
+    acc = {"PASS": 0.0, "MARGINAL": 0.0, "FAIL": 0.0, "probe": 0.0}
+    for (a_, b_), verdict in vl2:
+        e = float(w[(f >= a_) & (f < b_)].sum())
+        print(f"    {a_:.2f}-{b_:.2f}    {100 * e:9.2f}%   {verdict:<26}")
+        for k in acc:
+            if k in verdict:
+                acc[k] += e
+    print(f"    {'':14} {'':10}   {'':26}")
+    print(f"    carries focus-dependent signal (PASS)   {100 * acc['PASS']:6.2f}%")
+    print(f"    marginal                                {100 * acc['MARGINAL']:6.2f}%")
+    print(f"    certified noise (FAIL)                  {100 * acc['FAIL']:6.2f}%")
+    print(f"    outside the probe's own 0.05-0.48 span  {100 * acc['probe']:6.2f}%")
+    tot_chk = sum(acc.values())
+    print(f"    partition sums to                       {100 * tot_chk:6.2f}%"
+          f"  (must be 100.00)")
+    assert abs(tot_chk - 1.0) < 1e-6, "allocation does not partition the energy"
+
     # ---- COMMISSION THE BAND, or it cannot be used to predict ---------------
     # A density that says where the statistic's energy lives must be able to
     # predict what a KNOWN filter does to that statistic. Gaussian blur is the
