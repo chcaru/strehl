@@ -1,0 +1,228 @@
+warning: field `name` is never read
+   --> crates\strehl-cli\examples\build-demosaic-truth.rs:136:5
+    |
+135 | struct Scene {
+    |        ----- field in this struct
+136 |     name: &'static str,
+    |     ^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+BUILD-DEMOSAIC -- is the gather flip's chroma excess restored or created?
+  synthetic scenes 768x768 full-res, quad plane 384x384, margin 24 plane px, CatmullRom
+  warp: translation (0.37, 0.23) plane px, scale +0.0400%, rotation +0.0006 rad
+  chroma is R-B in white-balanced DN; the high pass is V-GATHER's 7x7 box
+
+== commissioning ==
+  C0 CFA parity          : rggb() agrees with cfa_site_channel at all four sites   PASS
+  C0 CA isolation        : profile_for_capture_env declines the synthetic frame     PASS
+  C1 identity null       : fullres at IDENTITY = nowarp floor, 492.4752 DN both            PASS
+
+== part B: synthetic scenes, error measured against a KNOWN truth ==
+
+  FLAT + noise sd 400 DN -- V-GATHER's regime (flattest tiles) and the owner's
+  (magenta pixels on brushed steel). True R-B is EXACTLY 0 everywhere.
+    arm         chroma err    chroma HP      true HP  chroma max   luma err
+    nowarp          356.26       308.69         0.00      2063.3     354.29
+    plane           303.85       241.57         0.00      1778.0     266.73
+    fullres         281.05       210.91         0.00      1826.0     296.15
+    oracle            0.50         0.00         0.00         0.5       0.00
+    oracle+100        36.47        35.72         0.00        78.5      72.93
+    oracle+300       109.39       107.16         0.00       234.5     218.78
+    bilin           246.97       178.42         0.00      1416.9     234.26
+    once            331.17       278.77         0.00      1700.9     305.32
+
+  ACHROMATIC detail, noiseless -- luma to 0.45 cyc/px, true R-B EXACTLY 0 everywhere
+    arm         chroma err    chroma HP      true HP  chroma max   luma err
+    nowarp          492.48       385.04         0.00      1585.1     218.58
+    plane           441.92       322.60         0.00      1430.6     645.08
+    fullres         447.66       274.72         0.00      1214.7     359.63
+    oracle          319.40       281.57         0.00      1364.5     272.63
+    oracle+100       321.48       283.83         0.00      1364.5     282.22
+    oracle+300       337.62       301.27         0.00      1364.5     349.56
+    bilin           349.99       239.71         0.00      1191.6     492.79
+    once            464.08       348.48         0.00      1489.9     280.49
+
+  COLOURED -- real chroma detail inside the R/B Nyquist
+    arm         chroma err    chroma HP      true HP  chroma max   luma err
+    nowarp          549.17       500.83       503.87      1895.8     235.72
+    plane           529.30       429.64       503.97      1818.8     649.67
+    fullres         595.28       351.60       503.97      2140.2     366.48
+    oracle          403.25       424.38       503.97      1627.5     286.21
+    oracle+100       404.89       425.88       503.97      1628.5     295.35
+    oracle+300       417.82       437.70       503.97      1637.1     360.25
+    bilin           495.54       333.16       503.97      1893.8     496.71
+    once            520.73       466.60       503.97      1863.8     287.73
+
+  VIVID -- healthy control (111.3): 3x the chroma, wears the defect's signature
+    arm         chroma err    chroma HP      true HP  chroma max   luma err
+    nowarp          879.86      1035.04      1511.62      3146.0     343.36
+    plane           979.33       910.32      1511.92      3288.7     685.26
+    fullres        1259.49       713.27      1511.92      4319.1     417.23
+    oracle          804.52       993.29      1511.92      2915.8     377.64
+    oracle+100       805.35       993.94      1511.92      2873.7     384.62
+    oracle+300       811.92       999.06      1511.92      3011.0     436.44
+    bilin          1109.17       734.31      1511.92      3560.8     527.06
+    once            847.07       993.90      1511.92      2944.9     340.19
+
+== commissioning, on the arms above ==
+  C2 planted defect  flat       : oracle     0.50 -> +100 DN    36.47 -> +300 DN   109.39   PASS
+  C2 planted defect  achromatic : oracle   319.40 -> +100 DN   321.48 -> +300 DN   337.62   PASS
+  C2 planted defect  coloured   : oracle   403.25 -> +100 DN   404.89 -> +300 DN   417.82   PASS
+  C2 planted defect  vivid      : oracle   804.52 -> +100 DN   805.35 -> +300 DN   811.92   PASS
+  C3 planted improve flat       : oracle     0.50 < shipping fullres   281.05            PASS
+  C3 planted improve achromatic : oracle   319.40 < shipping fullres   447.66            PASS
+  C3 planted improve coloured   : oracle   403.25 < shipping fullres   595.28            PASS
+  C3 planted improve vivid      : oracle   804.52 < shipping fullres  1259.49            PASS
+  C4 healthy control        : vivid TRUE chroma HP 1511.6 DN is 3.9x the achromatic
+                               scene's MANUFACTURED HP 385.0 DN, and the metric still
+                               ranks the oracle best on it (804.5 DN)             PASS
+  C5 harness fidelity       : re-gather == warp_frame_in_place_fullres to the byte
+                              (checked inside every run above; a mismatch aborts)  PASS
+
+== part C: does this harness see the phenomenon on REAL sensor data? ==
+  V-GATHER measured chroma (R-B) high-pass rising 25.2% to 48.6% plane -> fullres,
+  on rendered masters, restricted to the flattest tiles. Same statistic here, on a
+  window of a real capture, one frame, no merge and no render:
+  window 1536x1536 at (1024, 1024) of DSC00001.ARW   ISO 100   black 512
+
+  camera-native RGB -- the space the demosaic and the merge work in
+  q=0.05  chroma HP  nowarp    18.69   plane    16.00   fullres    14.52   plane->fullres   -9.3%   fullres/nowarp 0.777   luma p->f  +11.8%   chroma/luma 0.8120
+          rho(R_hp,B_hp)  nowarp +0.6446   plane +0.6034   fullres +0.6938   once +0.6248      once: chroma    17.19 luma    14.98  chroma/luma vs plane 0.9900
+  q=0.1   chroma HP  nowarp    18.52   plane    15.76   fullres    13.94   plane->fullres  -11.5%   fullres/nowarp 0.753   luma p->f  +11.3%   chroma/luma 0.7950
+          rho(R_hp,B_hp)  nowarp +0.6490   plane +0.6087   fullres +0.7121   once +0.6272      once: chroma    16.86 luma    14.67  chroma/luma vs plane 0.9992
+  q=0.25  chroma HP  nowarp    18.11   plane    14.78   fullres    13.00   plane->fullres  -12.0%   fullres/nowarp 0.718   luma p->f  +21.2%   chroma/luma 0.7258
+          rho(R_hp,B_hp)  nowarp +0.6517   plane +0.6003   fullres +0.7479   once +0.6354      once: chroma    16.71 luma    14.86  chroma/luma vs plane 0.9646
+  q=1     chroma HP  nowarp    14.96   plane    12.02   fullres    10.56   plane->fullres  -12.2%   fullres/nowarp 0.706   luma p->f  +25.2%   chroma/luma 0.7016
+          rho(R_hp,B_hp)  nowarp +0.6508   plane +0.5961   fullres +0.7598   once +0.6356      once: chroma    13.88 luma    12.35  chroma/luma vs plane 0.9539
+
+  warp sweep, camera-native, q=0.10 -- is the sign a property of one warp?
+      trans  scale%    nowarp     plane   fullres       p->f
+       0.06    0.00     18.52     18.41     18.29      -0.6%
+       0.29    0.00     18.52     16.28     14.35     -11.8%
+       0.71    0.00     18.52     12.36     11.91      -3.7%
+       1.60    0.00     18.52     15.07     12.99     -13.8%
+       3.92    0.00     18.52     15.44     15.00      -2.9%
+       0.44    0.50     18.52     15.08     13.29     -11.9%
+       0.44    2.30     18.52     15.41     14.27      -7.4%
+       0.44    0.00     18.52     15.55     14.01      -9.9%
+       3.05    1.20     18.52     15.63     14.45      -7.6%
+
+  linear sRGB -- the space V-GATHER's statistic was taken in
+  camera->sRGB matrix rows: [1.636 -0.449 -0.187] [-0.115 1.489 -0.374] [-0.005 -0.324 1.328]
+  q=0.05  chroma HP  nowarp    29.98   plane    25.68   fullres    23.18   plane->fullres   -9.7%   fullres/nowarp 0.773   luma p->f  +10.2%   chroma/luma 0.8188
+          rho(R_hp,B_hp)  nowarp +0.4351   plane +0.3908   fullres +0.4719   once +0.4302   once: chroma    27.62 luma    15.57  chroma/luma vs plane 0.9904
+  q=0.1   chroma HP  nowarp    29.70   plane    25.28   fullres    22.27   plane->fullres  -11.9%   fullres/nowarp 0.750   luma p->f   +9.6%   chroma/luma 0.8039
+          rho(R_hp,B_hp)  nowarp +0.4410   plane +0.3974   fullres +0.5019   once +0.4360   once: chroma    27.09 luma    15.27  chroma/luma vs plane 0.9985
+  q=0.25  chroma HP  nowarp    29.05   plane    23.71   fullres    20.73   plane->fullres  -12.6%   fullres/nowarp 0.714   luma p->f  +18.8%   chroma/luma 0.7363
+          rho(R_hp,B_hp)  nowarp +0.4442   plane +0.3887   fullres +0.5550   once +0.4423   once: chroma    26.85 luma    15.43  chroma/luma vs plane 0.9682
+  q=1     chroma HP  nowarp    23.99   plane    19.29   fullres    16.83   plane->fullres  -12.8%   fullres/nowarp 0.701   luma p->f  +22.5%   chroma/luma 0.7117
+          rho(R_hp,B_hp)  nowarp +0.4432   plane +0.3845   fullres +0.5749   once +0.4411   once: chroma    22.29 luma    12.81  chroma/luma vs plane 0.9588
+
+  window 1536x1536 at (1024, 1024) of DSC00001.ARW   ISO 100   black 512
+
+  camera-native RGB -- the space the demosaic and the merge work in
+  q=0.05  chroma HP  nowarp    19.43   plane    15.84   fullres    13.44   plane->fullres  -15.2%   fullres/nowarp 0.691   luma p->f  +21.5%   chroma/luma 0.6981
+          rho(R_hp,B_hp)  nowarp +0.6466   plane +0.5956   fullres +0.7636   once +0.6293      once: chroma    17.78 luma    15.36  chroma/luma vs plane 0.9709
+  q=0.1   chroma HP  nowarp    19.23   plane    15.48   fullres    12.96   plane->fullres  -16.3%   fullres/nowarp 0.674   luma p->f  +23.8%   chroma/luma 0.6758
+          rho(R_hp,B_hp)  nowarp +0.6469   plane +0.5921   fullres +0.7755   once +0.6287      once: chroma    17.58 luma    15.15  chroma/luma vs plane 0.9670
+  q=0.25  chroma HP  nowarp    18.93   plane    15.74   fullres    13.51   plane->fullres  -14.2%   fullres/nowarp 0.714   luma p->f  +16.9%   chroma/luma 0.7345
+          rho(R_hp,B_hp)  nowarp +0.6500   plane +0.6059   fullres +0.7530   once +0.6303      once: chroma    17.26 luma    14.95  chroma/luma vs plane 0.9899
+  q=1     chroma HP  nowarp    22.46   plane    18.10   fullres    15.96   plane->fullres  -11.9%   fullres/nowarp 0.711   luma p->f  +25.2%   chroma/luma 0.7040
+          rho(R_hp,B_hp)  nowarp +0.6527   plane +0.5976   fullres +0.7561   once +0.6385      once: chroma    20.89 luma    18.60  chroma/luma vs plane 0.9506
+
+  warp sweep, camera-native, q=0.10 -- is the sign a property of one warp?
+      trans  scale%    nowarp     plane   fullres       p->f
+       0.06    0.00     19.23     19.11     19.00      -0.6%
+       0.29    0.00     19.23     16.92     14.91     -11.9%
+       0.71    0.00     19.23     12.91     12.25      -5.1%
+       1.60    0.00     19.23     15.70     13.44     -14.4%
+       3.92    0.00     19.23     16.06     15.51      -3.4%
+       0.44    0.50     19.23     15.27     13.17     -13.7%
+       0.44    2.30     19.23     16.01     14.73      -8.0%
+       0.44    0.00     19.23     15.66     13.65     -12.9%
+       3.05    1.20     19.23     16.13     14.81      -8.2%
+
+  linear sRGB -- the space V-GATHER's statistic was taken in
+  camera->sRGB matrix rows: [1.636 -0.449 -0.187] [-0.115 1.489 -0.374] [-0.005 -0.324 1.328]
+  q=0.05  chroma HP  nowarp    31.20   plane    25.45   fullres    21.48   plane->fullres  -15.6%   fullres/nowarp 0.688   luma p->f  +18.8%   chroma/luma 0.7105
+          rho(R_hp,B_hp)  nowarp +0.4407   plane +0.3868   fullres +0.5866   once +0.4404   once: chroma    28.61 luma    15.93  chroma/luma vs plane 0.9735
+  q=0.1   chroma HP  nowarp    30.88   plane    24.87   fullres    20.70   plane->fullres  -16.8%   fullres/nowarp 0.670   luma p->f  +20.8%   chroma/luma 0.6887
+          rho(R_hp,B_hp)  nowarp +0.4414   plane +0.3836   fullres +0.6062   once +0.4406   once: chroma    28.30 luma    15.73  chroma/luma vs plane 0.9701
+  q=0.25  chroma HP  nowarp    30.40   plane    25.28   fullres    21.60   plane->fullres  -14.6%   fullres/nowarp 0.711   luma p->f  +14.5%   chroma/luma 0.7461
+          rho(R_hp,B_hp)  nowarp +0.4447   plane +0.3975   fullres +0.5732   once +0.4423   once: chroma    27.77 luma    15.54  chroma/luma vs plane 0.9903
+  q=1     chroma HP  nowarp    36.04   plane    29.07   fullres    25.42   plane->fullres  -12.5%   fullres/nowarp 0.705   luma p->f  +22.7%   chroma/luma 0.7130
+          rho(R_hp,B_hp)  nowarp +0.4466   plane +0.3877   fullres +0.5674   once +0.4451   once: chroma    33.57 luma    19.26  chroma/luma vs plane 0.9560
+
+  window 1536x1536 at (1024, 1024) of DSC00001.ARW   ISO 200   black 512
+
+  camera-native RGB -- the space the demosaic and the merge work in
+  q=0.05  chroma HP  nowarp    37.79   plane    33.46   fullres    32.55   plane->fullres   -2.7%   fullres/nowarp 0.861   luma p->f   +9.5%   chroma/luma 0.8880
+          rho(R_hp,B_hp)  nowarp +0.6518   plane +0.6214   fullres +0.6559   once +0.6415      once: chroma    35.45 luma    31.93  chroma/luma vs plane 0.9824
+  q=0.1   chroma HP  nowarp    37.78   plane    32.94   fullres    32.43   plane->fullres   -1.5%   fullres/nowarp 0.858   luma p->f  +13.8%   chroma/luma 0.8649
+          rho(R_hp,B_hp)  nowarp +0.6509   plane +0.6145   fullres +0.6569   once +0.6427      once: chroma    35.92 luma    32.49  chroma/luma vs plane 0.9633
+  q=0.25  chroma HP  nowarp    36.73   plane    31.90   fullres    30.13   plane->fullres   -5.6%   fullres/nowarp 0.820   luma p->f  +12.3%   chroma/luma 0.8410
+          rho(R_hp,B_hp)  nowarp +0.6503   plane +0.6146   fullres +0.6804   once +0.6383      once: chroma    34.39 luma    30.59  chroma/luma vs plane 0.9781
+  q=1     chroma HP  nowarp    34.43   plane    27.83   fullres    24.60   plane->fullres  -11.6%   fullres/nowarp 0.714   luma p->f  +24.6%   chroma/luma 0.7091
+          rho(R_hp,B_hp)  nowarp +0.6513   plane +0.5978   fullres +0.7546   once +0.6375      once: chroma    31.97 luma    28.29  chroma/luma vs plane 0.9538
+
+  warp sweep, camera-native, q=0.10 -- is the sign a property of one warp?
+      trans  scale%    nowarp     plane   fullres       p->f
+       0.06    0.00     37.78     37.54     37.33      -0.6%
+       0.29    0.00     37.78     33.19     29.32     -11.7%
+       0.71    0.00     37.78     25.14     24.29      -3.4%
+       1.60    0.00     37.78     30.70     26.48     -13.7%
+       3.92    0.00     37.78     31.44     30.49      -3.0%
+       0.44    0.50     37.78     33.27     31.34      -5.8%
+       0.44    2.30     37.78     31.63     29.32      -7.3%
+       0.44    0.00     37.78     32.15     30.01      -6.7%
+       3.05    1.20     37.78     31.53     28.87      -8.4%
+
+  linear sRGB -- the space V-GATHER's statistic was taken in
+  camera->sRGB matrix rows: [1.636 -0.449 -0.187] [-0.115 1.489 -0.374] [-0.005 -0.324 1.328]
+  q=0.05  chroma HP  nowarp    60.93   plane    53.84   fullres    52.03   plane->fullres   -3.4%   fullres/nowarp 0.854   luma p->f  +10.0%   chroma/luma 0.8783
+          rho(R_hp,B_hp)  nowarp +0.4465   plane +0.4137   fullres +0.4161   once +0.4474   once: chroma    57.43 luma    33.17  chroma/luma vs plane 0.9816
+  q=0.1   chroma HP  nowarp    60.67   plane    53.13   fullres    52.32   plane->fullres   -1.5%   fullres/nowarp 0.862   luma p->f  +13.2%   chroma/luma 0.8697
+          rho(R_hp,B_hp)  nowarp +0.4468   plane +0.4088   fullres +0.4043   once +0.4474   once: chroma    57.89 luma    33.90  chroma/luma vs plane 0.9652
+  q=0.25  chroma HP  nowarp    58.96   plane    51.24   fullres    48.09   plane->fullres   -6.1%   fullres/nowarp 0.816   luma p->f  +11.4%   chroma/luma 0.8425
+          rho(R_hp,B_hp)  nowarp +0.4461   plane +0.4083   fullres +0.4542   once +0.4461   once: chroma    55.28 luma    31.70  chroma/luma vs plane 0.9800
+  q=1     chroma HP  nowarp    55.26   plane    44.69   fullres    39.20   plane->fullres  -12.3%   fullres/nowarp 0.709   luma p->f  +22.1%   chroma/luma 0.7185
+          rho(R_hp,B_hp)  nowarp +0.4471   plane +0.3903   fullres +0.5688   once +0.4467   once: chroma    51.39 luma    29.34  chroma/luma vs plane 0.9588
+
+== the reading ==
+  flat+noise  chroma err vs truth: nowarp   356.26  plane   303.85  fullres   281.05  oracle     0.50  once   331.17
+              fullres - plane   -22.80 DN     fullres - oracle  +280.55 DN (the warp-time demosaic's own)     fullres - once   -50.13 DN
+  achromatic  chroma err vs truth: nowarp   492.48  plane   441.92  fullres   447.66  oracle   319.40  once   464.08
+              fullres - plane    +5.74 DN     fullres - oracle  +128.25 DN (the warp-time demosaic's own)     fullres - once   -16.42 DN
+  coloured    chroma err vs truth: nowarp   549.17  plane   529.30  fullres   595.28  oracle   403.25  once   520.73
+              fullres - plane   +65.98 DN     fullres - oracle  +192.04 DN (the warp-time demosaic's own)     fullres - once   +74.55 DN
+  vivid       chroma err vs truth: nowarp   879.86  plane   979.33  fullres  1259.49  oracle   804.52  once   847.07
+              fullres - plane  +280.16 DN     fullres - oracle  +454.97 DN (the warp-time demosaic's own)     fullres - once  +412.41 DN
+
+== V-GATHER's own ceiling argument, restated with a truth behind it ==
+  `chroma.py`: NOGATHER (mosaic -> Malvar, no resampling) is the CEILING on restored
+  noise -- resampling can only attenuate, so an arm ABOVE it manufactured the excess.
+  flat+noise  chroma HP: nowarp   308.69  plane   241.57 (0.783x)  fullres   210.91 (0.683x)
+  achromatic  chroma HP: nowarp   385.04  plane   322.60 (0.838x)  fullres   274.72 (0.713x)
+  coloured    chroma HP: nowarp   500.83  plane   429.64 (0.858x)  fullres   351.60 (0.702x)
+  vivid       chroma HP: nowarp  1035.04  plane   910.32 (0.880x)  fullres   713.27 (0.689x)
+
+== 111.4's arithmetic, checked independently ==
+  111.4: per-channel sd 400 DN puts sqrt(2)*400 = 566 DN on R-B before any high pass.
+  Measured on the FLAT scene, whose true chroma is zero, so every DN below is error:
+  nowarp chroma err 356.26 DN, chroma HP 308.69 DN.
+
+== white balance control ==
+
+  ACHROMATIC, unity white balance -- isolates the WB round trip
+    arm         chroma err    chroma HP      true HP  chroma max   luma err
+    nowarp          492.47       385.04         0.00      1585.6     218.58
+    plane           441.92       322.60         0.00      1430.1     645.08
+    fullres         447.65       274.72         0.00      1214.4     359.63
+    oracle          319.40       281.57         0.00      1364.5     272.63
+    oracle+100       321.48       283.83         0.00      1364.0     282.22
+    oracle+300       337.62       301.27         0.00      1364.5     349.56
+    bilin           349.98       239.72         0.00      1191.6     492.79
+    once            464.07       348.49         0.00      1490.3     280.49
+
+  n = 451584 interior pixels per synthetic arm
