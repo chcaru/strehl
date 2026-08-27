@@ -12773,3 +12773,53 @@ rim measures, 2.4× faster, from RAW rather than from developed TIFFs.
 An expired licence prevented a false win. The lane refused to circumvent it — no
 clock change, no decompilation, `zerenstk.cfg` verified byte-identical after —
 and that refusal is the reason the result is worth anything.
+
+## 120. My broadcast was true of one corpus and I sent it about all of them
+
+I told three lanes that `740e7056` was "the wrong pin". A lane checked it
+against the seals instead of believing me:
+
+| corpus | all 26 `.tiff.ok` seals | pin |
+|---|---|---|
+| SHIP-V4 | `44C2F2CD…F490` | `9b05d0b7` |
+| **SHIP-V3** | **`15EA7346…A7B0`** | **`740e7056`** |
+
+`740e7056` is the **correct, matching pin for SHIP-V3**. The lane's nine-subject
+adjudication had numerator and denominator on one gauge and needed no
+retraction — which it established by measurement, against a claim from the
+orchestrator, and reported as *"refuted"* in its own table.
+
+> **A fact about one corpus, stated without naming the corpus, becomes a false
+> claim about all of them.** "The wrong pin" was shorthand for "the wrong pin
+> for SHIP-V4", and shorthand is where the qualifier goes to die.
+
+This is the second time in a night I have generalised a scoped fact. The first
+was citing a superseded finding (§119). Both were caught by lanes measuring
+rather than complying, which is the only reason either is recoverable — and it
+is worth noting that the instruction that let them do it was mine: *check the
+seal, do not take my word.* An orchestrator's broadcasts are the least reviewed
+statements in the project and should carry the most scope.
+
+### There is a third build
+
+The same audit found a pinned copy hashing `066A87AB…0437B` — neither shipping
+pin. So at least three builds are in circulation, **two of them byte-identical
+in size** (9,568,768). Size, timestamp and name identify nothing.
+
+Consequence, disclosed by the lane against its own result: its aura, merge-rim
+and geometry renders are valid *arm against arm* but **reproduce neither
+shipping corpus**, so the aura finding may not be read as shipping-pipeline
+behaviour. That claim was in the owner-facing README as a defect of the shipping
+product; it now carries the scope limit.
+
+### The trap that is diagnosed and still armed
+
+`experiments/V-REVIEW/vr_lib.py` couples `SHIP = SHIP-V3` to `EXE = 740e7056`
+**by convention only — nothing asserts they match**. Re-pointing `SHIP` at
+SHIP-V4 is a one-line edit that looks harmless and silently puts every
+master-vs-frame number cross-gauge, with no symptom.
+
+> **A diagnosis written in a report is not a repair**, exactly as a diagnosis
+> written in a comment was not a repair in §116. Routed back with the fix
+> specified: derive the pin *from* the corpus seal so the mismatch is
+> unrepresentable, and commission the guard by making it RED before trusting it.
