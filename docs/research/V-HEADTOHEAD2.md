@@ -2324,3 +2324,400 @@ python experiments\V-H2H2-RIMCLIP\rimdiag119.py       # the 119 plateau diagnost
 
 Logs `C:\dev\strehl-out\V-H2H2\logs\{rim-v6iso,clip-v2,rimdiag119}.txt`;
 JSON `C:\dev\strehl-out\V-H2H2\rimclip\{rim,clip}-{113,119}.json`.
+
+# §10 The mid-scale mottle: locating the defect and bounding the proposed fix (2026-08-28)
+
+ORCH assigned this lane the mottle fix, with a working hypothesis — the noise-gated
+average selects on noise where there is no signal, and the spatial structure of those
+admission decisions is the mottle — and three candidate fixes: regularise the
+admission map, collapse to the mean where the response is flat, floor the admitted
+count. The files assigned were `crates/strehl-core/src/softgate.rs` and
+`crates/strehl-core/src/merge.rs`.
+
+**No file under `crates/` has been edited.** This section is measurement and it
+reaches a conclusion that makes the assigned edit unnecessary, so the mandatory
+message before a first core edit is a message asking for the edit to be cancelled
+rather than sequenced.
+
+Three findings, in descending order of consequence:
+
+1. The assigned files are estimator-only and **cannot** be the mechanism. Every
+   shipped master was rendered by the pyramid merge.
+2. Two of ORCH's three candidate fixes are **already implemented** in the shipping
+   code, one of them reachable as an environment switch, so the fix family can be
+   measured with zero code edits from the sealed binary.
+3. Measured that way, the entire fix family is **bounded**, and on the convicted
+   subject the bound does not clear the conviction. A change to the selection rule
+   cannot fix `coffee-bubbles`.
+
+## 10.1 The assigned files are not in the shipping path
+
+`softgate.rs` documents a Gaussian admission weight truncated at
+`z = sqrt(32 ln 2) = 4.7096`, and `merge.rs` carries the rule ORCH quoted. Pinned to
+`e1bf09e0`, the last commit to touch either file:
+
+```rust
+// crates/strehl-core/src/merge.rs:519-521
+pub fn admits(&self, focus: f32, best: f32) -> bool { best - focus <= self.tolerance() }
+// crates/strehl-core/src/merge.rs:510-512
+pub fn tolerance(&self) -> f32 { self.threshold * std::f32::consts::SQRT_2 * self.noise_sd }
+```
+
+That rule belongs to `Estimator`. `strehl stack --help` states plainly that
+**"TWO MERGES LIVE HERE AND `--merge` PICKS ONE. pyramid (DEFAULT) ... estimator is
+NOT the default any more."**
+
+Which merge produced the convicted images is settled from the artifacts rather than
+from a script, because this lane has already read a filename as if it were a
+measurement once tonight. Each master carries a provenance sidecar:
+
+```
+C:\dev\strehl-out\acceptance\SHIP-V4\coffee-bubbles--SHIP-V4.tiff.provenance.txt
+    backend : pyramid (default)
+```
+
+and the estimator-only stages are recorded in it as
+`INAPPLICABLE -- estimator-only stage; this render was pyramid, which never reaches it`.
+
+Swept across the corpus: **26 of 26 masters record `pyramid (default)`. Not one
+estimator render.** V-GATHER's `certmeasure.py`, which produced five of the
+convictions, invokes the sealed pin with `--linear-srgb --demosaic` and no estimator
+flag, so it too measured the pyramid.
+
+`Gate::admits`, `SoftKernel` and `STREHL_SOFT_GATE` are therefore unreachable from
+every image either convicting lane measured. Editing them would have changed nothing
+and the change would have passed its own tests.
+
+*A defect in this file's own documentation, found while confirming the above and
+reported but not fixed, since the file is not this lane's:* `softgate.rs`'s docstring
+says "Opt-in and not wired ... Nothing in this module is reachable from the default
+merge path", while `merge.rs:530` declares `SOFT_GATE_ENV = "STREHL_SOFT_GATE"` and
+`Estimator::new` (`merge.rs:1454`) resolves it from the process environment and panics
+on an unknown value. Both statements cannot be true.
+
+## 10.2 What the shipping merge actually does, quoted and pinned
+
+`crates/strehl-core/src/pyramid.rs`, per band `k`, at `HEAD = f365e569`:
+
+```rust
+// pyramid.rs:1389-1431
+smooth5(sq, sz, &mut ws.smooth_scratch);   // smooth SQUARED coefficients at band scale
+let averaged = k + self.cfg.mean_coarse >= nb;
+if averaged { w.fill(0.0); }               // routes to the unweighted-mean fallback
+else {
+    let floor  = gate * beta * v.max(0.0);
+    let excess = (*e - floor).max(0.0);
+    *w = select_weight(excess, floor, p);
+}
+```
+
+```rust
+// pyramid.rs:2174-2192
+fn select_weight(excess: f32, floor: f32, p: f32) -> f32 {
+    if excess <= 0.0 { return 0.0; }
+    let r = excess / floor.max(1.0) / SNR_REF;
+    if p == 1.0 { r } else if p == 2.0 { r * r }
+    else { (p * r.ln()).clamp(-80.0, 80.0).exp() }
+}
+```
+
+Defaults: `gate: 2.0`, `exponent: 2.0`, `sharpen_per_octave: 1.4`, `MAX_EXPONENT: 8.0`,
+`DEFAULT_BANDS: usize = 7` (`pyramid.rs:136`), `DEFAULT_MEAN_COARSE: usize = 0`.
+
+The mechanism ORCH described is present, in a different form. `excess = (e - floor).max(0.0)`
+is a **rectifier**: in a flat region every frame's smoothed band energy sits at the
+noise floor, so roughly half the frames are clipped to weight zero and the rest carry
+small positive weights decided by noise. The number of contributing frames therefore
+varies spatially, and spatially varying noise amplitude on a 20-60 px scale is mottle.
+
+**Two of ORCH's three candidate fixes are already in this code.**
+
+- Fix 1, *regularise the admission map*: `smooth5` on the squared coefficients, with
+  an in-code rationale — "An unsmoothed `|L|` is a single noisy sample and makes the
+  weight field as noisy as the data". Note the prediction this licenses, which runs
+  **against** the proposal: smoothing does not remove selection-on-noise, it low-pass
+  filters it, converting white admission noise into blob-shaped admission noise. More
+  smoothing may enlarge the blobs rather than remove them.
+- Fix 2, *collapse to the mean where the response is flat*: `mean_coarse`, reachable
+  as `STREHL_PYRAMID_MEAN_COARSE` (`pyramid.rs:684`), default `0` = off, range
+  `0..=16`, panicking on a bad value.
+
+Fix 2 being an environment switch is what makes the rest of this section possible: the
+whole fix family can be measured **from the sealed binary with no code edit at all**,
+which removes every risk that two builds are mistaken for an A/B.
+
+## 10.3 The acceptance instrument, and the six defects it found in itself
+
+`experiments/V-H2H2-MOTTLE/mottle.py`. It **imports** `orch_blotch.blotch_ratio`'s
+band definition rather than reimplementing it, so a candidate fix is scored on the
+statistic that convicted the subject. Three terms are carried **on the same pixels**:
+
+| term | definition | reading |
+| --- | --- | --- |
+| `blotch` | `std(boxblur(25) - boxblur(200)) / mean` | headline, LOW is good |
+| `noise` | `std(blk - boxblur(3)) / mean` | must not fall with blotch |
+| `sharp` | `mean(abs(grad)) / mean` | must not fall |
+
+and `blotch` is additionally carried on the **most textured** tiles, where the subject
+genuinely has 50-400 px structure. Windows are pinned on the reference arm and reused
+unchanged; all arms come from one binary with one alignment, so they are pixel-aligned
+by construction and no inter-arm registration is performed. Tiles are audited for
+being real image before use — `tiles_audit.py` reports per-tile mean, min, max and std,
+and refuses on a near-black or uniform-fill tile. All 12 flat tiles on `coffee-bubbles`
+are real image (means 1184-1339 DN).
+
+Commissioning arms, the last two of which are cheats that must be convicted:
+
+| arm | construction | required verdict |
+| --- | --- | --- |
+| `clone` | identical copy | nothing moves |
+| `gain x1.5` | linear scaling | nothing moves |
+| `mottle+` | planted mid-scale blobs | blotch UP |
+| `mottle+ repair` | 75% of that plant removed | **blotch DOWN vs the defect** |
+| `band- global` | band removed everywhere | blotch DOWN, **detail LOST** |
+| `blur s2` | Gaussian sigma 2 | sharp DOWN |
+
+The improvement arm is a **ladder with known ground truth**: the suite degrades the
+image by an amount it chose, then removes three quarters of exactly that degradation.
+A gauge blind to the defect cannot show the ladder; a gauge perverse on it shows the
+ladder running backwards. This project has shipped exactly the perverse case — a
+sharpness statistic whose error sign was bounded below by zero, so it could ignore a
+halo but never charge for one — and a defect-only suite passes that trivially.
+
+**The instrument refused four times before it was fit to answer anything, and each
+refusal was a real construction defect, not a threshold to relax:**
+
+1. *The cheat could not reach the headline number.* The first cheat was a sigma-2
+   Gaussian. Measured, sigma 2 px moves the 50-400 px band by **0.7%** while destroying
+   85% of the gradient — so that arm never threatened the statistic it was supposed to
+   threaten. The cheat was rebuilt as a **band-scale** subtraction, which scores a
+   perfect headline number and must be convicted on detail instead.
+2. *The plant was outside the band it was testing.* `_blobs` used boxblur radii 90/360
+   while `terms` measures 25/200. A plant sized at 0.6x the base band moved the
+   statistic 7.6% instead of the 16.6% that `sqrt(1 + 0.6^2)` predicts, and only 3.1%
+   on `foam`, which failed the gate.
+3. *The "selective fix" plant degenerated into the cheat.* Its flatness weight was
+   normalised by `median(texture)` over the image — a subject-relative quantity. On
+   `foam` the weight was ~1 everywhere and the improvement arm **was** the cheat
+   (selectivity 0.956 against the cheat's 0.975: no separation, so the pair tested
+   nothing). Re-referencing it to the noise floor did not save it either: estimated as
+   `std(lum - boxblur(3))` over the whole image the "noise" read **967 DN** on
+   `coffee-bubbles` where the flat tiles' own noise is ~118 DN, because that residual
+   is dominated by real fine detail. The threshold sat eight times too high and
+   admitted every pixel on all four subjects.
+   A plant audit was added that reports flat-weight coverage on both tile sets, so a
+   degenerate plant is **visible as a degenerate plant** rather than inferred from a
+   mysteriously failing verdict downstream. It then showed coverage 0.999 on flat tiles
+   against 0.864 on detail tiles — and that is a fact about the corpus, not a bug: a
+   macro "detail" tile is ~86% smooth bokeh with sparse structure, so **no flatness
+   mask can separate the tile classes on this corpus**. The image-space selective plant
+   was abandoned for the ground-truthed ladder rather than tuned until it passed.
+4. *A gate that convicted the repair for repairing.* The gate required the repair not
+   to lower `sharp` relative to the defect. But the planted field is not spectrally
+   pure — box filters have a poor stopband — so the plant **raises** `sharp` by 21-30%
+   on the cleaner subjects, and undoing that inflation is the repair working. Ground
+   truth is known here exactly, so the gate was replaced by the correct statement:
+   every term must move **toward base**. That is stricter, not laxer: it must hold in
+   all four terms at once.
+
+Final state: **9 of 9 verdicts PASS on all four subjects.** Representative ladder,
+`coffee-bubbles`, repair measured against the defect it repairs:
+
+| | blotch(flat) | noise(flat) | sharp(flat) | blotch(detail) |
+| --- | --- | --- | --- | --- |
+| `mottle+` vs base | 1.1825 [1.1068, 1.2837] | 1.0042 | 1.0065 | 1.0000 |
+| `mottle+ repair` vs base | 1.0143 [1.0054, 1.0229] | 1.0003 | 1.0004 | 1.0000 |
+| repair / defect | **0.8529 [0.8031, 0.9131]** | 0.9960 | 0.9940 | 1.0000 |
+| `band- global` vs base | 0.4661 [0.4364, 0.4811] | 1.0001 | 1.0001 | **0.4586 [0.4488, 0.4839]** |
+| `blur s2` vs base | 0.9931 | 0.2310 | **0.1457 [0.1376, 0.1531]** | 0.9947 |
+
+The cheat scores a **better headline number than any real fix achieves** (0.4661) and
+is convicted only on detail (0.4586). That row is the reason the suite exists.
+
+**The verifier for this section was commissioned too, and it found two defects in
+itself.** `verify10.py` re-derives all 89 numeric claims in section 10 from the
+authoritative logs and requires each to appear in the shipped text; seven planted
+defects must each turn it RED.
+
+1. *An anchor that could match in the wrong section.* Each per-subject claim was
+   anchored on a row pattern such as `\| mc=5 \|` and searched against the whole
+   document. After whitespace collapsing, the end of the `coffee-bubbles` mc=4 row
+   followed by the start of its mc=5 row spells exactly `| | mc=5 |`, so every claim
+   about the three other subjects matched the **first** table and was checked against
+   `coffee-bubbles` numbers. Thirty-two claims failed for that reason; had the values
+   happened to coincide, the same fault would have produced thirty-two false passes.
+   Each claim now carries a span key naming the region it belongs to, and the search
+   is scoped before it is anchored. A second, quieter instance sat beside it: the row
+   anchor demanded five pipe-terminated cells where the table has four, so every row
+   except the **last** silently borrowed the next row's leading pipe and ran one row
+   long. Only the final row of the table failed, which is why it read as a formatting
+   problem rather than as an anchor that was checking the wrong span in all seven
+   other rows.
+2. *A check that never read the document.* The five derived claims -- the two
+   conviction products, the two ceiling percentages and the free-dose gain -- computed
+   the value from the logs and compared it to a string constant typed into the
+   verifier. Both planted defects in those numbers were **MISSED** while all five
+   table plants were caught, and the suite still reported a majority pass. The value
+   is now read out of the document and compared to the computed one, which also let
+   the ceiling confidence intervals and the detail cost be checked rather than
+   asserted. Commissioning went 5/7 to 7/7 on that change alone.
+
+Both are the same class the fleet has hit repeatedly tonight: an instrument whose
+reach does not cover the claim it is asked to support, returning a clean result that
+is really a statement about the query. The first was found only because the plants
+were scattered across subjects rather than concentrated in the headline table; the
+second only because a plant was aimed at a derived number rather than a tabulated one.
+
+## 10.4 The dose-response, from one binary
+
+`render_mc.ps1`: sealed pin `44C2F2CD2E5B2894` verified by `Get-FileHash`, one
+environment variable differing between arms, `--linear-srgb --demosaic` passed
+explicitly (§8.9), lattice read back from the file on every arm. Liveness is asserted
+before any arm is trusted: a value naming no integer must be **rejected** and the
+error must **name the switch** — measured `rc=101`, message names it. No `STREHL_*`
+variable was set in the environment, so the arms differ in exactly one input.
+
+Potency was asserted before the probe was asked anything: against `mc=0`, arm `mc=1`
+differs on 51.06% of samples, `mc=2` on 76.41%, `mc=3` on 88.86%, mean |delta| 3.3,
+9.5 and 17.9 DN. All arms 7032x4688 except `lead-1-cpl` at 7040x4688, read from the
+files.
+
+Ratios to `mc=0`, paired over the pinned tiles, 2000 bootstrap resamples:
+
+**`coffee-bubbles`** (19 frames; flat-tile absolute blotch 0.0522)
+
+| arm | blotch(flat) | noise(flat) | sharp(flat) | blotch(detail) |
+| --- | --- | --- | --- | --- |
+| mc=1 | 0.9990 [0.9962, 0.9994] | 1.0001 | 1.0001 | 0.9987 |
+| mc=2 | 0.9785 [0.9506, 0.9841] | 1.0021 | 1.0018 | 0.9954 |
+| mc=3 | 0.9271 [0.8832, 0.9474] | 1.0060 | 1.0053 | 0.9888 |
+| mc=4 | 0.8899 [0.8538, 0.9152] | 1.0097 | 1.0088 | 0.9838 |
+| mc=5 | **0.8622 [0.8203, 0.9112]** | 1.0125 | **1.0128** | 0.9904 |
+| mc=6 | 0.8473 [0.7958, 0.8961] | 0.9864 | 1.0055 | 1.0126 |
+| mc=8 | **0.8025 [0.7423, 0.8603]** | 0.2120 | **0.2354** | 1.0256 |
+
+**The other three, at the same three doses**
+
+| subject | arm | blotch(flat) | sharp(flat) | blotch(detail) |
+| --- | --- | --- | --- | --- |
+| `lead-1-cpl` (123 fr) | mc=3 | 0.8294 [0.8079, 0.8594] | 0.9952 | 0.8246 |
+| | mc=5 | 0.6499 [0.5604, 0.7231] | 0.9639 | **0.5031** |
+| | mc=7 | 0.6143 [0.5243, 0.7066] | **0.1019** | 0.4466 |
+| `foam` (100 fr) | mc=3 | 0.8348 [0.8329, 0.8381] | 0.9582 | 0.8340 |
+| | mc=5 | 0.5873 [0.5684, 0.5993] | 0.8632 | **0.5811** |
+| | mc=7 | 0.5345 [0.5201, 0.5472] | **0.1036** | 0.5321 |
+| `113MSDCF` (63 fr) | mc=3 | 0.9811 [0.9787, 0.9847] | 1.0008 | 0.9820 |
+| | mc=5 | 0.9381 [0.9278, 0.9416] | 0.9863 | 0.9485 |
+| | mc=7 | 0.8980 [0.8864, 0.9143] | **0.1720** | 0.9325 |
+
+`mc >= 7` sets every band to the unweighted mean, since `DEFAULT_BANDS = 7`. That is
+why `mc=8` and `mc=16` on `coffee-bubbles` agree to every digit printed — the
+saturation is explained from the code, not observed and rationalised.
+
+**The all-mean arm is verified to be the all-mean arm.** If it is the unweighted mean
+of `n` frames, its fine-scale noise must fall as `1/sqrt(n)`:
+
+| subject | n | `1/sqrt(n)` | measured noise ratio | flat-tile absolute blotch |
+| --- | ---: | ---: | ---: | ---: |
+| `coffee-bubbles` | 19 | 0.2294 | **0.2120** | 0.052 |
+| `113MSDCF` | 63 | 0.1260 | **0.1220** | 0.336 |
+| `lead-1-cpl` | 123 | 0.0902 | 0.0685 | 0.144 |
+| `foam` | 100 | 0.1000 | 0.0469 | 0.792 |
+
+On the two subjects whose flat tiles genuinely are flat it agrees to 3-8%. The two that
+fall well below prediction are the two whose "flattest" tiles are not flat — `foam`'s
+carry 15x more band contrast than `coffee-bubbles`' — where a plain mean of frames at
+different focus blurs real texture as well as averaging noise. The disagreement is
+therefore evidence about those subjects, and it is why the ceiling below is quoted
+from the two clean subjects and the other two are reported as bounds only.
+
+## 10.5 The ceiling on ORCH's fix family
+
+`mc >= 7` is **zero focus selection anywhere, at any scale**. Any fix that only changes
+the selection rule must land between it and `mc=0`. So the entire proposed family —
+regularise the admission map, collapse to the mean where flat, floor the admitted
+count — is bounded by that column:
+
+| subject | maximum blotch reduction available | sharpness remaining at that point |
+| --- | ---: | ---: |
+| `foam` | 46.6% | 10.4% |
+| `lead-1-cpl` | 38.6% | 10.2% |
+| `coffee-bubbles` | **19.8% [14.0, 25.8]** | 23.5% |
+| `113MSDCF` | **10.2% [8.6, 11.4]** | 17.2% |
+
+The ceiling costs 76-90% of the image's sharpness, because it abolishes focus stacking.
+It is a bound, not a candidate.
+
+At doses that keep sharpness, the switch behaves in two clearly distinguishable ways,
+and the instrument's own cheat signature is what separates them. On `coffee-bubbles`,
+`mc=5` lowers blotch **13.8%** while detail falls only **1.0%** and `sharp` **rises**
+1.28% — concentrated where there is no signal, which is what a fix looks like. On
+`lead-1-cpl` and `foam`, `mc=5` moves blotch and detail together (0.6499/0.5031 and
+0.5873/0.5811) — the exact signature of the `band- global` cheat arm. **On those two
+subjects `mean_coarse` is not repairing mottle; it is blurring the image at mid-scale**,
+and it is only distinguishable from a repair because a cheat arm was built that scores
+well on the headline number.
+
+## 10.6 Verdict: the fix cannot come from the selection rule
+
+V-NEVERWORSE convicted `coffee-bubbles` at **1.4501x** the best input frame. Applying
+this section's measured factors to that conviction:
+
+| | blotch ratio to best frame | still convicted? |
+| --- | ---: | --- |
+| shipped, `mc=0` | 1.4501 | yes |
+| best free dose, `mc=5` | 1.4501 x 0.8622 = **1.250** | yes |
+| absolute ceiling, `mc>=7` | 1.4501 x 0.8025 = **1.164** | **yes** |
+
+**Abolishing focus selection entirely still leaves `coffee-bubbles` 16.4% blotchier
+than the best frame that went into it.** At least 80% of the measured excess is
+manufactured somewhere other than the selection rule, or is in the scene. No smoothing
+of the admission map, no flat-region collapse and no admitted-count floor can close
+that gap, because all three are strictly weaker than the arm that removes selection
+altogether.
+
+Recommendation, for ORCH to rule on:
+
+1. **Do not implement candidate fixes 1-3 as the mottle fix.** They are bounded above
+   by a factor that does not clear the conviction, and two of them are already in the
+   shipping code.
+2. **Do not change `DEFAULT_MEAN_COARSE`** either. On two of four subjects a non-zero
+   value is indistinguishable from a mid-scale blur by this lane's own cheat signature,
+   and the default is a byte-frozen deliverable.
+3. **Re-point the search** at the stages between the frames and the merge — the warp and
+   its resampler, the demosaic, and the per-frame exposure normalisation — since the
+   defect survives the removal of the merge's entire selection stage. This lane has not
+   measured those and makes no claim about them.
+4. `pyramid.rs` was not assigned to this lane and has been **read only**. If the search
+   is re-pointed, ownership needs stating.
+
+## 10.7 What would settle the residual
+
+The 80% that survives zero selection is not attributed by this section. The cheapest
+discriminating measurement is a **single-frame arm through the identical pipeline**:
+`STREHL_ONLY_FRAME` renders one source frame through the same decode, warp and output
+stages, so a blotch ratio of master to single-frame-through-pipeline separates
+"manufactured by the merge" from "manufactured upstream of the merge" without needing
+a second decoder. It requires `window_shift` integer-only registration, because
+`STREHL_ONLY_FRAME` emits a frame in its own geometry rather than warped to the
+reference, and sub-pixel resampling would add blur to the measured quantity.
+
+## 10.8 Provenance
+
+Sealed pin `44C2F2CD2E5B2894`, git `9b05d0b7a475a69b264469c7ea014cedb798cc63`, verified
+by `Get-FileHash` on every render, never by path or size. `cargo test --workspace
+--release`: **712 passed, 0 failed, 1 ignored, 8 suites, exit 0** — no file under
+`crates/` was modified by this lane.
+
+```
+powershell -ExecutionPolicy Bypass -File experiments\V-H2H2-MOTTLE\render_mc.ps1 coffee-bubbles 0 1 2 3 4 5 6 8
+python experiments\V-H2H2-MOTTLE\dose.py        coffee-bubbles 0 1 2 3 4 5 6 8
+python experiments\V-H2H2-MOTTLE\dose.py        lead-1-cpl 0 3 5 7
+python experiments\V-H2H2-MOTTLE\tiles_audit.py coffee-bubbles
+python experiments\V-H2H2-MOTTLE\verify10.py
+```
+
+Logs `C:\dev\strehl-out\V-H2H2\logs\dose5-*.txt`, `tiles-cb.txt`; arms
+`C:\dev\strehl-out\V-H2H2\mottle\*--mc*.tiff`. `verify10.py` re-derives every number
+in this section from those logs: **commissioned 7/7, 89/89 claims verified, exit 0.**
+It is the check to re-run if any of these figures is ever quoted elsewhere.
