@@ -11205,3 +11205,159 @@ number computed from it.
 > The explanatory reach of this one is exactly what made it attractive, and it
 > survived about an hour.
 
+---
+
+## 103. The merge reconstructs. It does not merely select, and it is not sharpening
+
+Every instrument in this log so far asks whether the product has a *defect*.
+None of them asked whether it is *good*, which is the only question a focus
+stacker exists to answer. Section 103 asks it and the answer is the strongest
+result in the corpus.
+
+### 103.1 Why the 560 px figure was not honest, and I published it anyway
+
+Section 102 closed with a 1:1 render showing the master resolving ommatidia
+across a bee's compound eye where the source frames were mush. The number beside
+it was master-over-best-single-frame at 1 px scale: **4.42x** and **3.09x** on a
+30-frame baseline.
+
+That number is not what it appears to be. Across a 560 px crop of a curved eye,
+**no single frame can be in focus everywhere**, so the comparison rewards
+*coverage* -- and a pure selector that never sharpened one pixel scores well on
+it. Coverage is a real product of stacking and it is worth having. It is not
+evidence for this project's thesis, which is that estimation beats selection.
+
+> **A ratio measured over a region larger than one depth of field is a coverage
+> measurement wearing a sharpness measurement's clothes.** It reads well above
+> 1.0 for the behaviour this project exists to improve on.
+
+### 103.2 The honest measurement: patches small enough to be one depth
+
+`orch_sharp1to1.py` now subdivides each site into 70 px patches. At that size
+some frame is genuinely in focus across the whole patch, so the best single
+frame is a fair and hard baseline, and the ratio means what it says:
+
+| reading | meaning |
+| --- | --- |
+| ~1.0 | the merge SELECTS -- correct, and what every competitor already does |
+| > 1.0 | the merge RECONSTRUCTS -- detail no single frame contains |
+| < 1.0 | the merge DESTROYS detail its inputs had |
+
+Commissioned before use, on data built so the answer is known in advance:
+
+```
+arm                                                median     expect   verdict
+SELECTION   (master == sharpest source)            1.0000       ~1.0   PASS
+DEFECT      (master blurred past every source)     0.1717       <1.0   PASS
+RECONSTRUCT (master == unblurred latent)           3.4867       >1.0   PASS
+COMMISSIONED: all three verdicts are reachable.
+```
+
+The identity arm returning exactly `1.0000` is the anchor. The third arm exists
+because of BUILD-TRIAGE's finding in the same night's work, below.
+
+Measured on `bee-1-cpl`, 30 source frames, two sites, 128 patches:
+
+```
+  site 0   median 2.823x   p10 2.112x   p90 4.442x   master sharper on 64/64
+  site 1   median 2.535x   p10 1.257x   p90 4.406x   master sharper on 62/64
+  ALL SITES  median 2.756x over 128 measured patches
+  -> RECONSTRUCTION: the master carries detail no single frame has.
+```
+
+**Median 2.756x, and the master is sharper on 126 of 128 patches.** The p10 of
+1.257 matters more than the median: even the tenth-percentile patch, the ones
+where the merge does worst, still beats the best single frame.
+
+### 103.3 The innocent explanation, named in advance and then killed
+
+A merge that is simply **sharpened** produces exactly this number. Sharpening and
+reconstruction are indistinguishable in any gradient-energy statistic, so the
+statistic cannot settle it and no amount of ladder-building will.
+
+The control: unsharp-mask the best source frame until its fine-detail energy
+**equals the master's**, then look at all three. The USM arm has the master's
+number by construction. The question is whether it has the master's picture.
+
+It needed **x4.64** and **x3.04** to get there, and it does not:
+
+- heavy magenta/green fringing on every ommatidium,
+- dark ringing outlines on the hairs,
+- display clipping at **11.88%** against the master's 2.21% -- overshoot pushing
+  pixels out of range is itself a signature,
+- and the defocused regions **stay defocused**. Sharpening amplifies what a
+  frame has. It cannot supply what the frame never recorded.
+
+The master has none of the three artifacts and is sharp across the full
+curvature. `C:\dev\strehl-out\ORCH-CONTACT\sharp-1to1-bee-1-cpl.png`.
+
+> **A control does not prove the claim. It fails to explain the claim away, and
+> that is the most any control does.** This one was built to succeed -- matching
+> the number was a binary search, not a fit -- and it still could not produce the
+> image.
+
+### 103.4 The display window was crushing the source, and my own new gate caught it
+
+The first run of the three-row render took the display window from the master's
+1--99 percentile and applied it to both rows. Shared window, no per-row gain --
+section 91's rule, correctly followed. It was still wrong: the source rows
+saturated at **19.82%** and **20.24%**, so the source looked softer for a display
+reason on top of the optical one, and the picture flattered the master.
+
+The clip-fraction gate I had added an hour earlier -- because V-POTENCY proved
+the same defect in `orch_smoothcrop.py` -- fired on my own render immediately.
+A **union** window over both arms is still one linear map, so the contrast ratio
+between rows is preserved exactly, and saturation fell to **1.79%** and 1.91%.
+
+The patch statistic was never affected: it runs on the registered luma before any
+display stretch. **The number was clean and the picture was not**, which is the
+reverse of this project's usual failure and worth recording as such.
+
+### 103.5 What this does not establish
+
+- **One subject, two sites, 30 of 299 frames.** `bee-1-cpl` only.
+- **The gain is not attributed.** Merge estimation, demosaic differences between
+  `strehl` and `rawpy`, and output-path processing are not separated. The USM
+  control rules out one specific mechanism, not all of them.
+- **`detail()` counts noise as detail.** This runs *against* the finding -- a
+  cleaner master scores lower -- so it cannot manufacture the result, but it
+  means 2.756x is a floor on the effect only if the master is not noisier.
+- **The 70 px patch size is asserted, not measured.** It is claimed to be within
+  one depth of field at this magnification; that claim is untested.
+- Sites are chosen for high detail *in the master*, which selects for regions the
+  merge did well on. The 126/128 win rate is subject to that selection.
+
+### 103.6 BUILD-TRIAGE's rule, and why the third commissioning arm exists
+
+BUILD-TRIAGE (`d6e5a809`) found by inspection that the print-readiness verdict
+statistic could not charge for a halo: `edge_slope` is a p99.5 magnitude and
+`blur_equiv` floors at 0.0 for any ratio >= 1.0, so the sign of the error is
+bounded below by zero. A haloed merge can only ever score at or above a clean
+one.
+
+> **A metric can be BLIND to a defect (reads nothing) or PERVERSE on it (reads
+> better). Commissioning that plants only degradations cannot tell those apart,
+> because both present as a pass.**
+
+Every plant in this log until tonight made the image worse. That is why
+`patch_gain`'s commissioning has an *improvement* arm, and it is now the rule for
+every instrument here.
+
+Their premise was wrong -- they cited `tweezers-cpl` as "the worst halo in the
+corpus", which section 96 withdrew. Re-measured to be certain I was not defending
+an old conclusion:
+
+```
+ARM MASTER   tweezers-cpl SHIP-V2      halo  0.8725
+ARM SINGLE   frame 54 DSC00055.ARW     halo  1.3450   median over 12 frames 0.1280
+VERDICT  the master's 0.8725 is BELOW the strongest single frame's 1.3450.
+```
+
+The master's rim is **weaker** than the rim of the frame the selector chooses
+there. Comparing against the median frame instead would have indicted the merge
+at 6.82x, because the median averages in defocused frames the merge never selects
+at that edge. The finding survives the wrong premise because it was established
+by inspection of their own code; that is the difference between an argument and
+an example.
+
+
