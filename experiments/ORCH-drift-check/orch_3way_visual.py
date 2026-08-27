@@ -23,6 +23,7 @@ Two confounds are handled explicitly and both are stated in the output:
 Site selection is deliberately NOT "where it looks best" (see veiling 129).
 """
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -34,11 +35,41 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "DELIVER-V5"))
 from build import tag_png  # noqa: E402
 
-ARMS = Path(r"C:\dev\strehl-out\V-NOISE2\119\arms")
+# Each entry is one subject for which all three mergers have been run over the
+# SAME frames. `linear` says whether the arms are linear renders (which need a
+# display transform to be judged at all) or already tone-mapped.
+SETS = {
+    "119MSDCF": {
+        "dir": Path(r"C:\dev\strehl-out\V-NOISE2\119\arms"),
+        "arms": {"strehl": "strehl-A.tiff", "enfuse": "coh-enfuse-A.tif",
+                 "focus-stack": "coh-fs15-A.tif"},
+        "linear": True,
+        "note": "one half-bracket, linear noise-measurement arms",
+    },
+    "coffee-bean": {
+        "dir": Path(r"C:\dev\strehl-out\V-SPEED\coffee-bean\out"),
+        "arms": {"strehl": "r0-strehl.tif", "enfuse": "r0-srgb-enfuse.tif",
+                 "focus-stack": "r0-srgb-fs.tif"},
+        "linear": False,
+        "note": "full 105-frame stack, sRGB end-to-end arms",
+    },
+}
+
 OUT = Path(r"C:\dev\strehl-out\DELIVER-V5\vs-the-field")
 CROP = 400          # <= 400 px: a visual verdict above this is not 1:1
 TILE = 256          # site-selection grid
 SEED = 20260827
+
+# Two guards, both of which fired on real data and both of which stop a
+# misregistered pair being published as a quality comparison.
+#
+# A tone difference between two renderers is a smooth global property, so on
+# any one crop the fitted gain should sit close to the whole frame's. A crop
+# that needs a very different gain is not showing the same content. The band is
+# generous for tone and still refuses content mismatch.
+GAIN_BAND = (0.7, 1.4)
+# A genuine local residual after a global alignment is a few pixels.
+MAX_LOCAL_RESIDUAL = 8
 
 
 def green(path: Path) -> np.ndarray:
@@ -53,11 +84,23 @@ def rgb(path: Path) -> np.ndarray:
     return a[:, :, :3]
 
 
-def phase_shift(ref: np.ndarray, mov: np.ndarray, win: int = 2048):
-    """Integer (dy, dx) that best aligns `mov` onto `ref`, by phase correlation."""
+def phase_shift(ref: np.ndarray, mov: np.ndarray, win: int = 2048,
+                cy: int | None = None, cx: int | None = None):
+    """Integer (dy, dx) that best aligns `mov` onto `ref`, by phase correlation.
+
+    `cy`/`cx` select the window centre. Called once globally and then again per
+    crop: the arms do not share a canvas (measured 7032 vs 7028 px wide on
+    `coffee-bean`) and different aligners leave different residual distortion,
+    so a single global shift does not hold across a 33 MP frame. A crop
+    registered by the global shift alone landed on different content and the
+    photometric fit reported a gain of 0.094 -- which is how this was found.
+    """
     h, w = ref.shape
-    cy, cx = h // 2, w // 2
+    cy = h // 2 if cy is None else cy
+    cx = w // 2 if cx is None else cx
     half = win // 2
+    cy = int(np.clip(cy, half, h - half))
+    cx = int(np.clip(cx, half, w - half))
     a = ref[cy - half:cy + half, cx - half:cx + half].astype(np.float64)
     b = mov[cy - half:cy + half, cx - half:cx + half].astype(np.float64)
     a = a - a.mean()
@@ -163,16 +206,24 @@ def photometric_fit(src: np.ndarray, ref: np.ndarray):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("subject", choices=sorted(SETS), nargs="?", default="119MSDCF")
+    args = ap.parse_args()
+    spec = SETS[args.subject]
+    subject = args.subject
+
     OUT.mkdir(parents=True, exist_ok=True)
-    paths = {
-        "strehl": ARMS / "strehl-A.tiff",
-        "enfuse": ARMS / "coh-enfuse-A.tif",
-        "focus-stack": ARMS / "coh-fs15-A.tif",
-    }
+    paths = {k: spec["dir"] / v for k, v in spec["arms"].items()}
     for k, p in paths.items():
         if not p.exists():
             sys.exit(f"missing arm {k}: {p}")
+        if p.stat().st_size < 1_000_000:
+            # A live lane is writing in some of these trees; a zero-length or
+            # truncated arm would silently become a black panel.
+            sys.exit(f"arm {k} is only {p.stat().st_size} bytes -- truncated or "
+                     f"mid-write, refusing: {p}")
 
+    print(f"subject {subject} -- {spec['note']}")
     print("loading green planes for registration ...")
     g = {k: green(p) for k, p in paths.items()}
     ref = g["strehl"]
@@ -190,23 +241,62 @@ def main():
 
     print("loading RGB ...")
     im = {k: rgb(p) for k, p in paths.items()}
-    del g
 
-    manifest = {"subject": "119MSDCF", "arms": {k: str(v) for k, v in paths.items()},
+    # Global per-channel scale implied by the whole frame, used only as the
+    # expectation the per-crop fit is checked against. A crop that needs a very
+    # different scale from the whole image is not looking at the same content.
+    gscale = {}
+    for k in ("enfuse", "focus-stack"):
+        gs = []
+        for c in range(3):
+            a = np.median(to8(im["strehl"][::16, ::16, c]))
+            b = np.median(to8(im[k][::16, ::16, c]))
+            gs.append(float(a / max(b, 1e-6)))
+        gscale[k] = np.array(gs)
+        print(f"  {k:12s} whole-frame scale {gs[0]:.3f}/{gs[1]:.3f}/{gs[2]:.3f}")
+
+    manifest = {"subject": subject, "linear_arms": spec["linear"], "note": spec["note"],
+                "arms": {k: str(v) for k, v in paths.items()},
                 "crop_px": CROP, "shifts": {k: [v[0], v[1]] for k, v in shifts.items()},
-                "sites": [], "note": "integer-shift registration only; per-crop "
-                                     "linear gain+offset to strehl"}
+                "sites": [], "method": "integer-shift registration only; per-channel "
+                                       "linear gain+offset to strehl"}
 
+    nrefused = [0]
     for label, y, x in sites:
         panels, labels = [], []
         base = to8(im["strehl"][y:y + CROP, x:x + CROP])
-        # One exposure per SITE, derived from the strehl panel and reused for
-        # every arm, so no arm gets its own stretch.
-        p99 = float(np.percentile(base / 65535.0, 99.5))
-        expo = float(np.clip(0.9 / max(p99, 1e-4), 1.0, 64.0))
+        if spec["linear"]:
+            # One exposure per SITE, derived from the strehl panel and reused
+            # for every arm, so no arm gets its own stretch.
+            p99 = float(np.percentile(base / 65535.0, 99.5))
+            expo = float(np.clip(0.9 / max(p99, 1e-4), 1.0, 64.0))
+        else:
+            # Already tone-mapped. Applying an sRGB curve to an sRGB image would
+            # encode it twice and lift the shadows into a false rendition, so
+            # these arms are shown exactly as the pipelines produced them.
+            expo = 1.0
         rec = {"label": label, "y": y, "x": x, "exposure": round(expo, 3), "fits": {}}
+        refused = []
         for k in ("strehl", "enfuse", "focus-stack"):
-            dy, dx, _ = shifts[k]
+            if k == "strehl":
+                dy, dx = 0, 0
+            else:
+                # Refine the shift on THIS crop's neighbourhood, not the frame's.
+                dy, dx, pk = phase_shift(g["strehl"], g[k], win=1024,
+                                         cy=y + CROP // 2, cx=x + CROP // 2)
+                gy, gx, _ = shifts[k]
+                # A genuine local residual after a global alignment is small. A
+                # large disagreement is not a residual, it is a correlation
+                # failure -- measured at dx=+74 on one coffee-bean site, which
+                # then produced a NEGATIVE fitted gain because the patch was
+                # anti-correlated content.
+                if abs(dy - gy) > MAX_LOCAL_RESIDUAL or abs(dx - gx) > MAX_LOCAL_RESIDUAL:
+                    refused.append(
+                        f"{k}: per-crop shift dy={dy:+d} dx={dx:+d} disagrees with "
+                        f"global dy={gy:+d} dx={gx:+d} by more than "
+                        f"{MAX_LOCAL_RESIDUAL} px (peak {pk:.4f}) -- registration "
+                        f"failed on this crop")
+                    dy, dx = gy, gx
             yy, xx = y - dy, x - dx
             yy = max(0, min(im[k].shape[0] - CROP, yy))
             xx = max(0, min(im[k].shape[1] - CROP, xx))
@@ -215,10 +305,22 @@ def main():
                 gain, off = np.ones(3), np.zeros(3)
             else:
                 gain, off = photometric_fit(c, base)
+                # GUARD. The fitted gain must be near the whole-frame scale. A
+                # crop that needs a wildly different scale is not on the same
+                # content, and publishing it would be publishing a misregistered
+                # pair as if it were a quality comparison.
+                ratio = gain / np.maximum(gscale[k], 1e-6)
+                if np.any(ratio < GAIN_BAND[0]) or np.any(ratio > GAIN_BAND[1]):
+                    refused.append(
+                        f"{k}: fitted gain {gain[0]:.3f}/{gain[1]:.3f}/{gain[2]:.3f} "
+                        f"vs whole-frame {gscale[k][0]:.3f}/{gscale[k][1]:.3f}/"
+                        f"{gscale[k][2]:.3f} (shift dy={dy:+d} dx={dx:+d})")
                 c = c * gain[None, None, :] + off[None, None, :]
             rec["fits"][k] = {"gain": [round(float(v), 5) for v in gain],
-                              "offset": [round(float(v), 2) for v in off]}
-            panels.append(display(c, expo))
+                              "offset": [round(float(v), 2) for v in off],
+                              "shift": [dy, dx]}
+            panels.append(display(c, expo) if spec["linear"]
+                          else np.clip(c / 257.0 + 0.5, 0, 255).astype(np.uint8))
             labels.append(
                 f"{k}  (RGB gain {gain[0]:.3f}/{gain[1]:.3f}/{gain[2]:.3f})"
                 if k != "strehl" else "strehl  (reference)")
@@ -230,9 +332,20 @@ def main():
         for i, (p, lab) in enumerate(zip(panels, labels)):
             sheet.paste(Image.fromarray(p), (pad + i * (CROP + pad), pad + 22))
             ImageDraw.Draw(sheet).text((pad + i * (CROP + pad), 5), lab, fill=(235, 235, 235))
-        ImageDraw.Draw(sheet).text((W - 230, 5), f"display x{expo:.1f} sRGB (all panels)",
-                                   fill=(150, 150, 150))
-        name = f"119MSDCF__{label}.png"
+        ImageDraw.Draw(sheet).text(
+            (W - 250, 5),
+            f"display x{expo:.1f} sRGB (all panels)" if spec["linear"]
+            else "as-rendered, no display transform",
+            fill=(150, 150, 150))
+        name = f"{subject}__{label}.png"
+        if refused:
+            rec["refused"] = refused
+            nrefused[0] += 1
+            print(f"  REFUSED {name}")
+            for r in refused:
+                print(f"      {r}")
+            manifest["sites"].append(rec)
+            continue
         sheet.save(OUT / name)
         tag_png(str(OUT / name))
         print(f"  wrote {name}  expo x{expo:.1f}  " + "  ".join(
@@ -240,8 +353,9 @@ def main():
             for k in rec["fits"]))
         manifest["sites"].append(rec)
 
-    (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2))
-    print(f"\n{len(sites)} montages -> {OUT}")
+    manifest["refused"] = nrefused[0]
+    (OUT / f"manifest-{subject}.json").write_text(json.dumps(manifest, indent=2))
+    print(f"\n{subject}: {len(sites)} sites = {len(sites)-nrefused[0]} written + {nrefused[0]} refused -> {OUT}")
 
 
 if __name__ == "__main__":
