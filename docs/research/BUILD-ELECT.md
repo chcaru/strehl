@@ -3404,3 +3404,133 @@ conclusion stands on the 34x ratio alone.
 - Nothing in this lane has been re-examined on a complementary low-texture crop.
   Until it has, no BUILD-ELECT statement about a smooth region should be read as
   a certification.
+
+## 23. Sections 21 and 22 measured 336 px from ORCH's rim
+
+The quantisation correction sent me back to the loader, the loader audit sent me
+to the address, and the address was wrong. Section 21.6 carried it as an open
+item and misjudged its size:
+
+> I did not reproduce ORCH's +22 exactly (I read ~+17 in 8-bit at their stated
+> address), most likely a **small** address offset. Not chased.
+
+It was 336 px, and the address was not ORCH's at all.
+
+### 23.1 Two artifacts with the same name
+
+Section 21 assumed the 1:1 asset is the 800x800 tile at origin (2864,864), taken
+from BUILD-TRIAGE's `ORCH_DETAIL` site table. But the `ORCH-DETAIL` png and the
+`VIEW-SHIP` asset are **different files** -- 874643 bytes hashing `3989A967...`
+against 698373 bytes hashing `A30A9E1A...`. Same subject name, same 800x800
+shape, different pictures.
+
+The producer settles it without a search. `build_view.pick_crop` steps by
+`CROP = 800`, so every origin it can emit is a multiple of 800 and **(2864,864)
+is not one** -- the assumed value was refutable from the code alone, before any
+correlation. The gallery index records the real one per card:
+
+```
+flower-bud-alone-cpl--    (3200, 800)
+```
+
+ORCH's peak at region (row 40, x 114) is asset (60,464), so the true address is
+**(3664, 860)**, control row **940**. Offset from what sections 21 and 22 used:
+**(+336, -64)**.
+
+I did try to find this by cross-correlating the asset against the master. It
+returned 0.150 and the guard refused to quote an origin, which is the instrument
+behaving correctly -- but a correlation that declines tells you nothing about
+where the crop is. **The producer's own recorded output did in one read what the
+clever measurement could not do at all.**
+
+### 23.2 The address, verified on ORCH's numbers rather than mine
+
+ORCH published the pixel and the transect. Before re-measuring anything:
+
+```
+asset(60,464) reads  R=159 G=137 B=128
+ORCH published       R=159 G=137 B=128
+green 458..467 : [145, 143, 142, 141, 140, 137, 137, 139, 144, 155]
+ORCH's transect: [145, 143, 142, 141, 140, 137, 137, 139, 144, 155]
+```
+
+Exact on all eleven values. The control is ORCH's data, not mine, and the script
+refuses to continue without it.
+
+### 23.3 Re-measured, and every number moves toward ORCH
+
+`OVER` at the true address, with the section 21 value beside it:
+
+| arm | N=0 | N=5 | N=20 | N=40 | sec 21 at N=0 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ORCH master (8-bit) | **12.2** | 11.0 | 6.7 | 5.0 | 6.8 |
+| g2.0 LINEAR default | **515.0** | 409.3 | 287.4 | 269.9 | 233.2 |
+| g2.0 LINEAR `--fix-ca off` | 499.7 | 456.6 | 430.7 | 342.2 | 278.0 |
+| n=1 pyramid (no election) | **16.3** | 54.2 | -84.7 | -53.1 | -57.0 |
+
+**ORCH's amplitude is reproduced.** 12.2 in 8-bit against their ~+11 excess over
+interior. Section 21.6's open item is closed, and the answer was the address.
+
+**The default arm carries it decisively** -- 515 DN, positive at every setting,
+against a control that is cleanly negative at every setting. Not the marginal
+result section 21 reported.
+
+**Lateral CA is still refuted**, now at the right place: 499.7 against 515.0.
+My hypothesis stays dead.
+
+**The n=1 arm is 10-30x smaller than the default at every setting.**
+
+### 23.4 Section 22.2's downgrade is withdrawn
+
+The ladder, re-run at the verified address:
+
+| N | floor | signal | **margin** | sec 22 margin |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | <= 50 | 515.0 | **10.30** | 1.11 |
+| 2 | <= 50 | 459.4 | **9.19** | 1.30 |
+| 5 | <= 50 | 409.3 | **8.19** | 1.10 |
+| 10 | <= 50 | 364.9 | **7.30** | 1.38 |
+| 20 | <= 50 | 287.4 | **5.75** | 0.05 |
+| 40 | <= 50 | 269.9 | **5.40** | 0.32 |
+
+**No blind settings.** Worst margin 5.40 where section 22 had 0.05. The floor is
+quoted as `<= 50` because 50 is the smallest non-zero rung on the grid and it
+passed at every N, so the true floor is below it and the margins are **lower
+bounds** -- section 77 again, this time in the conservative direction.
+
+So section 22.2's careful downgrade of section 21 was itself measured at the
+wrong place. Both are withdrawn and replaced by this. **The n=1 evidence is
+about five to ten times stronger than section 21 claimed, not weaker.**
+
+### 23.5 What survived the address error, and why
+
+Not everything went through the address, and it is worth being exact about which
+did not:
+
+- the **reproduction census** (0 of 99,010,560 samples) -- frame-wide;
+- the **clipping census** -- measured on ORCH's asset region directly;
+- the **loader audit** -- container metadata;
+- the **edge-sharpness ratio**. The absolute numbers were wrong (105/75 px at my
+  address, 40/28 px at ORCH's) but the ratio is **1.40 against 1.43**. The merge
+  is about 43% softer than a single frame at this silhouette, and that held
+  across a 336 px relocation.
+
+The arm-to-arm comparisons in section 21 were internally valid -- one address,
+one statistic, all arms -- so they did establish that *something* at (3328,924)
+behaves that way. What they could not establish is that it was **ORCH's rim**,
+which is what section 21 claimed. That gap is the whole defect.
+
+### 23.6 The generalisation I owe
+
+Section 21's address came from a lookup table keyed by subject name, and there
+were two tables and two artifacts under that one name. Every downstream number
+inherited the choice, and none of them could see it: the arms all disagreed with
+each other in a self-consistent way, the controls behaved, the sweep was orderly.
+**A wrong address produces a fully well-formed experiment.**
+
+The escape was not a better statistic. It was that ORCH had published a raw
+pixel and ten consecutive values, so their claim carried its own address control.
+
+> **Quote a raw sample, not only a summary. A published number that can be
+> looked up in the file is an address control for everyone who reads it, and it
+> is the only thing that caught this.**

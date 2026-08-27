@@ -61,8 +61,13 @@ def png_depth(path):
 
 def main():
     print("=" * 78)
-    print("LOADER AUDIT -- is any BUILD-ELECT magnitude 256x wrong?")
+    print("LOADER AUDIT -- was any BUILD-ELECT magnitude read through PIL?")
     print("=" * 78)
+    print("  NOTE: this banner used to read '256x wrong', which was ORCH's")
+    print("  original framing and is retracted. The loss is QUANTISATION, not")
+    print("  scale: 10440 distinct values become 57 and multiplying by 256")
+    print("  restores the scale and none of the information. Affected numbers")
+    print("  must be RE-READ, never rescaled. See pilaudit2.py.")
 
     print("\n  [1] tifffile vs PIL on the 16-bit masters this lane measured")
     print(f"    {'file':<34} {'tifffile':>18} {'PIL':>14}")
