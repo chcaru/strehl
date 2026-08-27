@@ -64,7 +64,9 @@ are not grounds for failing a build.
 subsets already rendered, not the exact `N//2` arms this document specifies. The
 exact `N//2` arms were then rendered and the criterion evaluated on them; the
 DECISION RULE above is unchanged and was not touched after seeing data. Measured
-on the specified arms: `bee-1-cpl` 299 vs 149 R = 1.1037 [1.0754, 1.1376] FAIL;
+on the specified arms: `bee-1-cpl` 299 vs 149 R = 1.0795 [1.0554, 1.1153]
+FAIL (corrected from 1.1037 after an instrument defect was found and fixed; see
+the findings doc -- the correction moved the number AGAINST the finding);
 `113MSDCF` 63 vs 31 R = 0.9623 [0.9546, 0.9744] PASS; `flower-bud-alone-cpl` 205
 vs 102 R = 0.9018 [0.8562, 0.9253] PASS.
 | `113MSDCF` | 63 vs 32 | 1.0025 | [0.9911, 1.0114] | PASS |
