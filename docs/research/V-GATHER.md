@@ -561,3 +561,231 @@ in most of the originals, so I cannot honestly say whether the merge caused it;
 they need re-checking, not shipping. And one caution that applies to all
 twenty-six: none of this looks at halos around edges, at sharpness, or at dust,
 so a pass here means "not blotchy", not "print-ready".
+
+---
+
+## Part 11 — the three blind axes
+
+My previous report closed with the sentence ORCH sent back to me:
+
+> Nothing here measures halos, sharpness, or dust; a PASS is silence on those,
+> covering roughly a third of what ruins a print.
+
+This part closes that gap. It adds a rim axis, a sharpness axis and a dust axis
+to the certificate, each built to the standard the blotch axis was held to: a
+planted defect *and* a planted improvement, a demonstrated ability to FAIL, and
+a partition that sums to the seal census.
+
+It also retracts two pieces of my own committed work. Both were found by
+controls rather than by reading, which is the argument for the controls.
+
+### 11.1 Retraction: the registration sign was inverted
+
+`certmeasure.py` registers a source frame against the master by integer FFT
+cross-correlation before comparing windows. The estimator was commissioned and
+its sign is not in doubt: `est_shift(a, roll(a, k))` returns `-k`, and the
+control at `certmeasure.py:246` asserts exactly that.
+
+The consuming code then wrote `ab = (y + dy, x + dx)`. Since the estimator
+returns the negated displacement, **every window was displaced away from the
+matching content by twice the drift.**
+
+`signcheck.py` settles it without appeal to the estimator's docstring. It plants
+a known `(23, -17)` displacement and asks which candidate window actually
+matches the content:
+
+```
+plant (dy,dx) = (23,-17)
+  y - dy  wins 8 of 8 sites   residual 0.0 DN
+  y + dy          0 of 8      residual 339 - 1648 DN
+```
+
+The fix is one line, applied inside `window_shift` so that all call sites are
+correct as written. `signcheck.py` is kept as a standing regression control.
+
+**What the defect cost, and what it hid.** With registration corrected, the
+windows land on the content:
+
+| subject | usable windows before | after |
+| --- | ---: | ---: |
+| `flower-inner-edge-cpl` | 0 of 12 | 12 of 12 |
+| `couch-fibers-cpl` | 5 of 12 | 9 of 12 |
+
+The four subjects the previous certificate REFUSED for insufficient coverage
+were refused **because of this defect**, not because the data could not support
+a verdict. All four now resolve, and all four resolve to FAIL. The retracted
+data is preserved at `cert-wrongsign.json` rather than deleted, because a
+retraction that erases its own evidence leaves the next reader unable to check
+the correction.
+
+This also supplies the missing explanation for a result I reported earlier and
+could not account for: adding registration made the depth confound *worse*
+(rho +0.764 to +0.867). It did, because the registration was pushing windows
+off the content by an amount proportional to the drift, and the drift is itself
+depth-dependent.
+
+**Independent corroboration.** With the sign corrected, `coffee-bubbles` reads
+**1.428x** the best source frame. V-NEVERWORSE, a different lane using a
+different instrument, convicted the same subject at **1.4501x**. Two
+independently written instruments agreeing to within 1.5% on a subject that my
+own certificate had previously declined to score is the strongest evidence in
+this report that the merge manufactures mid-scale structure.
+
+### 11.2 Retraction: a NaN reached the data
+
+`certmeasure.py` bounds-checked the blotch window against the frame and did not
+bounds-check the chroma window four lines later. When the chroma window
+registered off the frame the slice was empty, and `chroma` came back `NaN`. One
+such value reached `cert.json`, at `bee-2-cpl/sources[11]/chroma`.
+
+It did not change a verdict, because the blotch ratio does not consume chroma.
+That is luck, not design. **`NaN` compares False against every relational
+operator**, so a missing measurement flowing into `if x > threshold` produces a
+PASS. The failure mode is identical to the one this whole certificate exists to
+prevent: an absence reading as a clean result.
+
+Two repairs, because one of them is not enough:
+
+1. `certmeasure.py` now applies the same bounds check to the chroma window, and
+   **refuses to write any non-finite measurement at all**. Note that passing
+   `at_chroma=None` would *not* have been the repair: `measure()` falls back to
+   `pick_window()`, which would have silently measured a different region of the
+   source than the master window it is compared against.
+2. Every verdict function now refuses a non-finite statistic.
+
+The second is commissioned by `nanguard.py` with both arms, because the first
+arm alone proves nothing:
+
+```
+with the guard in place
+  rim    NaN   -> REFUSED
+  sharp  NaN   -> REFUSED
+  dust   NaN   -> REFUSED
+
+with the guard removed -- the same records must become PASS
+  rim    NaN   -> PASS: the guard was load-bearing
+  sharp  NaN   -> PASS: the guard was load-bearing
+  dust   NaN   -> PASS: the guard was load-bearing
+```
+
+Without the guard, a NaN reads as a clean print on all three new axes. The
+hazard was real and is now closed at both ends.
+
+### 11.3 The rim axis — halos
+
+**Instrument.** Overshoot in a band adjacent to a high-contrast occluding edge,
+measured as a fraction of the edge step. I did not write a new one. The v3 rim
+instrument is inadmissible — V-HEADTOHEAD2 measured it reading **+14.85% on a
+rim-free image** — so `rimaxis.py` imports `V-H2H2-RIMCLIP/rimv6.py` unmodified
+and adds only the subject-level policy around it.
+
+**The floor is measured per subject, not assumed.** The first smoke test read
+**+5.014%** on `foam` against a *smoothed, rim-free* control image. The
+instrument was reporting a large halo on an image that has no halo in it. The
+cause was mine: I had hardcoded the flatness cut at 0.10, where `rimv6` sweeps
+it. `select_for()` now sweeps `rimv6.FLAT_CANDIDATES` and picks the cut that
+minimises the control's departure from its structural null, and **refuses any
+subject whose floor still exceeds 2%**. `foam` refuses honestly rather than
+reporting a halo that is not there.
+
+**The threshold is derived, not typed.** `RIM_MAX` was initially typed at 3.0%,
+and the FIRE arm of the commissioning caught that **no planted rim ever reached
+it** — the inert-threshold mode, the same defect I had convicted `banding()` of.
+It is now *derived*: `RIM_MAX = FLOOR_MAX = 0.02`. An axis may not claim to
+resolve an excursion smaller than the largest floor it tolerates.
+
+**Commissioning: 11 arms, 11 pass.** FLOOR, BOUND, LADDER, SENSITIVE, FIRE,
+NOTALWAYS, REPAIR, RESTORE, BLIND-GAIN, BLIND-OFF, ISOLATION. Two of them found
+defects in the axis. FIRE found the inert threshold above. FLOOR found that my
+own floor arm was **tautological** — `score(ref)` subtracted the floor measured
+on `ref` itself and therefore returned `+0.0000%` by construction, a green that
+could not have been anything else. It is re-anchored on the raw residual.
+
+**The confound, and its refutation.** The largest rim readings landed on the
+subjects with the fewest usable edges: `rho(corrected, n_sel) = -0.716`. That is
+exactly the shape of a small-sample artifact, so I tested it rather than
+arguing about it. `rimsubsample.py` draws random subsets of a *single subject's
+own* edges, holding subject type fixed and varying only n:
+
+```
+119MSDCF    n=4572  ->  -1.750%
+119MSDCF    n=  72  ->  -1.747%
+worst drift over all subjects, n=72:  +1.315 points
+```
+
+Sample size alone cannot manufacture +37%. But `P(reading > +5%) = 33%` at
+n=72, so the FAIL conjunction requires **both** the point estimate and the 95%
+bootstrap lower bound to clear the threshold, plus a measured `+1.5` point
+allowance for subjects under 200 edges.
+
+**What this axis cannot see.** It speaks only to edges isolated enough to
+plateau within 7 px. That fraction is **12% to 72%** depending on subject, and
+it is printed per subject in the certificate. On `wrapped-text-2` the axis
+speaks to 12% of the high-contrast features present. An axis that can see a
+quarter of the edges must say so, and it does.
+
+### 11.4 The sharpness axis
+
+**Instrument.** Not a comparison against another render. Each site is compared
+against **the best any input frame achieves at that location** — the per-site
+focus ceiling. The statistic is `band = std(gauss(1.0) - gauss(2.5)) / mean`,
+which is invariant to gain; the 1.0-2.5 octave was chosen because it excludes
+photon noise, measured: injecting sigma = 60 DN of noise moves it by 0.03%.
+
+Four successive defects, each caught by a control rather than by inspection:
+
+1. **`MIN_CONF = 6.0` was typed** and refused 16 of 16 sites on a subject whose
+   registration was demonstrably working. `confderive.py` then asked whether the
+   confidence statistic can gate *at all*: RECOVERABLE sites median **3.20**,
+   UNLOCALISABLE sites median **3.21**. It does not separate, so it cannot be a
+   gate. Replaced with a direct per-site planted-shift recovery test.
+2. Diagnosing that produced the **registration sign defect** in section 11.1.
+3. **`bee-1-cpl` read a -317.8% deficit** — the master four times "sharper" than
+   its own ceiling, which is impossible and therefore an instrument fault. The
+   ceiling had been built from a set of defocused frames. Adding an interior
+   local-maximum requirement (the focus peak must be *bracketed*) moved it to
+   -100.9%, still wrong; windowed `memmap` reads plus an iterative refinement
+   loop with an explicit convergence criterion fixed it. The subject now
+   **REFUSES** rather than reporting a number.
+4. The **SENSITIVE** arm demanded detection of a sigma = 0.3 blur, which is
+   0.129% on this statistic — *below the axis's own measured 0.771% floor*. That
+   arm was asking the instrument to resolve something it had already been shown
+   unable to resolve. Replaced by a RESOLUTION arm that measures and reports the
+   limit instead of asserting one.
+
+`SHARP_MAX = 0.032`, derived as 4x the measured floor. **11 arms, 11 pass.**
+
+**Every deficit is a lower bound.** The ceiling is a max over *sampled* frames,
+and a max over a subsample can only sit at or below the true max. A larger
+denominator makes the deficit look smaller. This is the same correction
+V-NEVERWORSE applied to itself, and it points the same way: the softness
+reported here is the least it can be.
+
+### 11.5 The dust axis
+
+**The detector, not the corrector.** The question is whether a shipped master
+still carries warp-smeared trails from fixed-pattern sensor defects.
+
+**The defect map had to be built twice, and the first empty result was not
+believed.** Selecting on per-frame excess over 48 darks returned **0 sites**. An
+absence is a statement about the query until the query's reach is measured, so
+`dustreach.py` swept the threshold rather than accepting the zero: this sensor
+has roughly **2-3 persistent hot photosites**, and the single-frame 99.99th
+percentile of excess is 78 DN. Three sites cannot support a statistical
+detector. A first pivot to flat fields drew frames sitting 171 DN above black,
+where shot noise is 7.6% against a 2% depth cut, and **174 of 178 detections
+were 1-3 px PRNU**. The working design selects on **mean excess across darks**,
+where averaging suppresses noise by sqrt(48), with the cut derived at 8 robust
+sigmas: **600 sites, 10.1 to 330.9 DN**.
+
+**Commissioned with a power curve and an improvement arm.** Planted defects are
+detected at 2000 DN and missed at 500 DN. The improvement arm — a master with
+its defect sites *repaired* — drops the statistic from 3.41 to 0.94, confirming
+the axis is not merely bounded below.
+
+**Its power limit is stated, because it matters.** The strongest defect this
+sensor has is 331 DN of mean excess in raw, and the axis becomes blind below
+about 500 DN in master units. All 26 subjects read at or below **1.0203**
+against a 1.05 threshold. That result should be read as *"no trails at or above
+this axis's power limit"*, which is what the certificate prints, and not as
+*"no dust"*.

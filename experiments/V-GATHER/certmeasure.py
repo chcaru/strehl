@@ -139,6 +139,29 @@ def window_shift(m_lum, s_lum, at, half=768, win=900):
     similarity: focus breathing changes magnification, so the displacement is
     position-dependent and a single global translation would be wrong away from
     wherever it was measured.
+
+    SIGN IS NEGATED HERE, AND IT WAS WRONG UNTIL signcheck.py MEASURED IT.
+    est_shift's own control (below, "SHIFT ESTIMATOR FAILED CONTROL") fixes its
+    convention as est_shift(a, roll(a, k)) == -k, i.e. it returns the negative of
+    the displacement. Every call site consumes the result as `y + dy` to locate
+    the master's window inside the source, so the raw return value moved the
+    window AWAY from the matching content by twice the drift.
+
+    A convention is not a usage, and the sign could not be settled by reading it.
+    signcheck.py plants a displacement of (23, -17) and asks which candidate
+    window actually matches: `y - dy` won on 8 of 8 sites, with a residual of
+    exactly 0.0 DN at the two sites where the estimate was exact, against 339 and
+    1648 DN for `y + dy`. The negation is applied here, once, so that the
+    docstring above -- "where has the master's window moved to" -- is true of the
+    returned value and every call site is correct as written.
+
+    THIS INVALIDATES THE REGISTERED ARM OF THE PREVIOUS RUN, preserved beside
+    this file as cert-wrongsign.json. It also supplies the missing explanation
+    for a result reported earlier: adding registration made the ratio-vs-depth
+    correlation RISE from rho +0.764 to +0.867, which was attributed to
+    depth-dependent refusals. A registration applied backwards doubles the
+    misregistration it was introduced to remove, and drift grows with stack
+    depth, so it would produce exactly that.
     """
     y, x = at
     cy, cx = y + win // 2, x + win // 2
@@ -146,7 +169,7 @@ def window_shift(m_lum, s_lum, at, half=768, win=900):
     y0, x0 = max(0, cy - half), max(0, cx - half)
     y1, x1 = min(h, cy + half), min(wd, cx + half)
     dy, dx, conf = est_shift(m_lum[y0:y1, x0:x1], s_lum[y0:y1, x0:x1])
-    return dy, dx, conf
+    return -dy, -dx, conf
 
 
 def sharpness(lum):
@@ -300,7 +323,33 @@ def main():
                 del srgb
                 os.remove(sp)
                 continue
+            # The chroma window needs the SAME bounds check the blotch window
+            # gets four lines up. Without it an off-frame window slices to an
+            # empty array and chroma returns NaN -- and NaN is False against
+            # every `>` comparison, so a MISSING measurement reads as a CLEAN
+            # one. One such value reached cert.json (bee-2-cpl frame 11).
+            #
+            # Passing at_chroma=None is NOT the repair: measure() falls back to
+            # pick_window() and would silently measure a DIFFERENT region of the
+            # source than the master window it is compared against. So the
+            # window is nulled AFTER measurement, and the frame carries an
+            # explicit refusal rather than a number nobody can trace.
+            chroma_bad = None
+            if ac is not None and not (0 <= ac[0] <= hgt - 900
+                                       and 0 <= ac[1] <= wid - 900):
+                chroma_bad = "registered chroma window falls outside the frame"
+                ac = None
             sm = measure(srgb, at_blotch=ab, at_chroma=ac)
+            if chroma_bad:
+                sm["chroma"] = None
+                sm["at_chroma"] = None
+                sm["chroma_refused"] = chroma_bad
+            for _k, _v in sm.items():
+                if isinstance(_v, float) and _v != _v:
+                    raise SystemExit(
+                        "NON-FINITE MEASUREMENT %s on %s frame %d -- refusing to "
+                        "write a value that would compare False against every "
+                        "threshold" % (_k, s, k))
             sm["k"] = k
             sm["shift_blotch"] = [dyb, dxb, round(cb, 2)]
             sm["shift_chroma"] = [dyc, dxc, None if cc != cc else round(cc, 2)]
