@@ -13170,3 +13170,106 @@ planted-noise control, and separate luma/chroma statistics.
 
 > **Name the comparator in the claim, not in the paragraph heading.** A ratio
 > without its denominator attached travels, and it travels wrong.
+
+## 125. Five defects in one night, all the same defect: a legible name standing in for the thing it names
+
+Tonight produced five findings from four independent lanes that looked unrelated
+and are not. Listed as found:
+
+| # | the token | the thing it stood in for | how it was believed |
+|---|---|---|---|
+| 1 | `int(name[3:8]) < 300` | whether the polariser was fitted | a docstring said the ramps were with/without CPL |
+| 2 | `PIN-V3\strehl.exe` | which binary produced a render | the directory name asserted the pin |
+| 3 | `--fix-ca` absent from an argv | whether CA correction ran | argv read as a record of behaviour |
+| 4 | banner `+2.61 stops (gain 6.105×)` | whether any pixel was scaled | the program's own report believed |
+| 5 | `corpus_lint: OK` | whether the history is clean | the gate read the index, not `HEAD` |
+
+Each is a **legible token substituted for the physical fact it names**, and in
+every case the token was believed *because it was legible*. None of these is a
+calculation error. Not one would be caught by re-deriving a number, which is the
+project's default remedy and was useless against all five.
+
+### The hierarchy that the third and fourth make explicit
+
+`BUILD-DEFECT` stated the rule that `check-defaults.py:187` had already recorded
+as a retraction of an earlier orchestrator's claim — and which **I then re-broke
+tonight**, proposing the identical inference from the identical evidence:
+
+> **An argv records what the CALLER said; only the run's own banner records what
+> the PROGRAM did.**
+
+Finding 4 shows the ladder has a third rung, because a banner is still only a
+claim:
+
+> **An argv is the request. A banner is the claim. Only the pixels are the
+> behaviour.** Each rung is evidence about the rung above it, never about the
+> rung below.
+
+`--fix-ca` was settled by dropping from argv to banner. `--auto-exposure` is
+alleged — by a comment, which is rung zero — to announce `+2.61 stops` while
+reaching no pixel; that can only be settled by dropping from banner to bytes.
+**The remedy for each finding is the same move: descend one rung and stop
+arguing.**
+
+### My error, and why it is the same error as §119
+
+I instructed a lane to audit `--fix-ca` first, reasoning that CA correction
+defaulting off would explain the fringing on `foam`. That inference was already
+in the codebase **as a labelled retraction of exactly itself**, and the lane
+quoted it back to me. I had written §119 four sections earlier about publishing a
+superseded finding without checking for a successor. The recurrence is the point:
+**checking for a successor is not a habit I have, it is a step I keep
+rediscovering.** A retraction stored where the claim lives — as
+`check-defaults.py:187` is — is the only form that reaches the person about to
+repeat it. It worked. It just worked on a lane rather than on me.
+
+### The gate that failed open
+
+Finding 5 deserves its own note because it inverts a gate rather than weakening
+one. Commissioned in four arms, the last is:
+
+| HEAD blob | index blob | `ls-files --eol` | corpus_lint | exit |
+|---|---|---|---|---|
+| **39 CRLF** | 0 CRLF | `i/lf` | **OK — no violations** | **0** |
+
+And the discriminating arm needs no argument about staleness: the message changed
+from `MIXED` to `CRLF` **while `HEAD` was never touched**. Only the index moved,
+so the read target is isolated by construction. `git_index_eol()` at
+`corpus_lint.py:406` opens *"Line endings **as committed**"* and then parses
+`i/`, which is the index. **The docstring's reasoning is correct — the working
+tree is meaningless under `autocrlf`, so ask git — and its question is wrong.**
+
+This is `lint ; commit` one level down. That defect ran the gate beside the
+action; this one runs the gate against a *different tree* than the action. Both
+produce a green that means nothing.
+
+> **A gate must read the artifact the action will produce.** Not the neighbouring
+> one, not the staged one, not the one that was there when you started.
+
+### The mislabelled binary, and why it outranks the unlabelled one
+
+`PIN-V3\strehl.exe` hashes `B50EABC1…7C99`, matches **no seal in any acceptance
+corpus**, and is `9,568,768` bytes — the same size as *both* shipping pins. A
+third build, `066A87AB`, is worse in one respect (it cannot be found at all,
+across 78 distinct binaries at 160 paths) but better in another:
+
+> **An unlabelled stray claims nothing. A mislabelled artifact asserts a
+> provenance its bytes refute, and is dangerous in proportion to how helpful it
+> looks.**
+
+Swept the repository and `C:\dev\strehl-out` recursively for references, with a
+positive control on the same sweep so an empty result was interpretable:
+**0 references**, against **38** for `acceptance-pins`. The trap is armed and
+nothing has stepped on it. Left in place, with a derived manifest and a
+commissioned refusal dispatched, because deletion is not mine to do.
+
+### What actually caught all five
+
+Not review, and not re-derivation. In every case: **someone went and looked at
+the physical layer** — EXIF timestamps instead of filenames, `Get-FileHash`
+instead of a directory name, a render banner instead of an argv, a four-arm
+commissioned harness instead of a docstring. The corpus already had the rule for
+numbers. It did not have it for names.
+
+> **Verify names the way you verify numbers.** A name is an unmeasured claim that
+> has been formatted to look like a fact.
