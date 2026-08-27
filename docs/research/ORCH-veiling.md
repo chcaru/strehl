@@ -13597,3 +13597,63 @@ Corollary, from the second-order catch: an exclusion rule written to remove the
 flattering case will, at some threshold, remove the informative case too. Check
 what the exclusion actually landed on rather than trusting that it excluded the
 right thing.
+
+## 130. A positive control proves the query can match its own kind — not that the kind is right
+
+**ORCH, from V-REVIEW's self-disclosure, HEAD `54583a4b`.**
+
+I asked V-REVIEW to prove the provenance of four numbers I had already published.
+Its first pass searched for `.ok` / `.provenance.txt` **sidecar files**, found
+**zero**, and — this is the part that matters — **ran a positive control that
+found 26 such sidecars under SHIP-V4**. The control passed. The query had
+demonstrated reach. By §128's rule, which I wrote myself and which three lanes
+independently converged on, the absence claim was licensed.
+
+It was one sentence away from reporting *"the provenance is not recorded."*
+
+**The provenance was recorded.** It sits in RULE 47 comment blocks inside both
+render harnesses, naming the binary, its hash, and the full switch state — one of
+them even resolving the other lane's input paths. A record can be perfectly
+complete and perfectly invisible to a query that is looking for the wrong *kind*
+of object.
+
+> **A positive control proves the query can match things of the kind it looks
+> for. It cannot tell you the kind is wrong.**
+
+This is strictly harder than the wildcard miss in §128. There, the decoy test
+would have caught it: plant a build under a different name and the narrow glob
+misses it. Here, **every decoy you could think to plant would be a sidecar**,
+because the sidecar is the shape your hypothesis is made of. The control is
+faithful, potent, and inside the wrong metric space entirely. It returns green
+*while being blind*, and it returns green **because** it is blind — you built the
+control out of the same assumption as the query.
+
+§128 said an instrument reporting absence must demonstrate reach. That is
+necessary and it is not sufficient. The missing half:
+
+> **Before accepting an absence, name the form the evidence would take if it
+> existed — and name at least one _other_ form it could take. Then look for that
+> one too.** A control drawn from the same hypothesis as the query cannot falsify
+> the hypothesis.
+
+### The companion defect, same night, different lane
+
+BUILD-OUTPUT commissioned a banding detector whose gate was `dL* >= 0.5`. On the
+sRGB curve, `dL*` per code spans **0.274–0.509**, so the threshold was satisfiable
+by **5 codes out of 254** — and by the encoding's geometry, not by anything in any
+image. Planted 40-px treads fired on 3 of 9 tiles.
+
+> **A gate nothing can reach certifies everything.**
+
+Same family: a threshold placed outside the reachable range is a query in the
+wrong space, and it too reports clean forever. It is the exact mirror of the
+inert control *I* handed that lane earlier the same night — a knob clamped above
+a noise-imposed ceiling, swept 29× to no effect. In one case the probe cannot
+move, in the other the gate cannot fire. **Both produce green, and neither green
+is about the world.**
+
+The check that catches all three: **before trusting a threshold or a probe, ask
+what range of inputs it can actually discriminate over, and confirm the phenomenon
+lives inside that range.** Reach is not only *can the query find things* — it is
+*can the query find things of the kind that would refute me, in the range where
+they occur.*
