@@ -136,7 +136,107 @@ commissioning on any subject whose decomposition goes degenerate, so `bee`'s
 
 ---
 
+## 7. Adjudicating C against the scene term — the disagreement was a subject mismatch
+
+*(Placed here for prominence rather than at the end of the file; it is the
+lane's most recent work and it qualifies §0.)*
+
+ORCH asked me to settle a 1.7× disagreement on `119MSDCF` between the coherence
+statistic `C` (0.977, "level with `enfuse`") and my matched-bandwidth scene
+ratio (0.577, "we retain 58% of its detail"), noting correctly that **I built
+one of the two and may not adjudicate by arguing mine is sound.**
+
+### 7.1 The ladder: neither instrument is broken
+
+`ladder.py` builds companions from `119`'s real strehl half-stacks with a
+**planted, known detail ratio** — `companion = lp + k·(img − lp)` with
+`lp = uniform_filter(64)`, so the true amplitude ratio is exactly `k` in every
+band above ~0.016 cyc/px, which is far below both readers. Both instruments are
+run over the ladder, on **both** tile populations.
+
+| rung | true k | C recovers | scene recovers |
+|---|---:|---:|---:|
+| IDENT-PATH | 1.000 | 1.0000 | 1.0000 |
+| **SHARPER** | **1.300** | **1.2999** | **1.2993** |
+| k=0.95 | 0.950 | 0.9500 | 0.9501 |
+| k=0.85 | 0.850 | 0.8500 | 0.8505 |
+| k=0.70 | 0.700 | 0.7000 | 0.7009 |
+| k=0.50 | 0.500 | 0.5000 | 0.5016 |
+
+(DETAIL population; FLAT is tighter still, worst error 0.0%.)
+
+**Worst error over 6 graded rungs: C 0.0%, scene term 0.3%.** Both recover the
+sharper rung, so neither is bounded below at parity — the perverse-gauge failure
+mode this project has already shipped once. **Both instruments are sound as
+detail measures under a coherent detail change.**
+
+The identity rung is a prediction, not a short-circuit: the script asserts the
+plant actually altered the array before believing the reading. On FLAT tiles
+`k=1.0` *is* bit-identical by exact floating-point arithmetic, so potency is
+carried by the `k≠1` rungs, which do change it — and the script says so rather
+than silently passing.
+
+### 7.2 The disagreement does not exist, because the two numbers are different subjects
+
+**MEASURED.** `experiments/V-LINEAR2/cohfree.py` hardcodes its strehl inputs as
+`C:\dev\strehl-out\V-H2H2\lin\113-{full,A,B}-g1.tiff`, and that directory
+contains only `113-*` and `cb-*` rasters. **The 0.977 is subject `113`
+(`coffee-bubbles`).** My 0.577 is subject `119`. They were never the same
+subject, the same masters, or the same stack.
+
+Measured on the **same** subject and the **same** population, the two agree far
+better than 1.7×:
+
+| subject | population | C (enfuse/strehl) | scene (enfuse/strehl) | ratio |
+|---|---|---:|---:|---:|
+| `113` | DETAIL | 1.159 | 0.974 | 1.19× |
+| `113` | FLAT | 1.679 | 1.033 | 1.63× |
+| `119` | DETAIL | **2.017** | 0.996 | 2.02× |
+| `119` | FLAT | **2.420** | 1.273 | 1.90× |
+
+(`crosspop.py`, reported as the comparator's detail amplitude relative to
+strehl's, so >1 means `enfuse` holds more.)
+
+### 7.3 The finding that matters, and it is against us
+
+**On `119`, C — the README's own instrument — reads `enfuse` at 2.017× strehl's
+detail amplitude at 0.20–0.25 cyc/px.** The published "LEVEL" was established on
+`113` alone. On the second subject the README's own statistic says strehl is
+behind, and the direction agrees with §0.1's scene deficit and with the other
+lane's depth-dilution result.
+
+**Caveat, stated because it bounds the claim.** My port of C reproduces the
+published verdict on `113` but not the digit: 1.159 against the published
+equivalent of 1.012, a 14% gap attributable to tile selection (top-`emax`
+tiles versus `rois.census` detail tiles), content scale (1.0040 versus
+`geomfree.py`'s 1.0050) and loader normalisation. The `119` reading of 2.017 is
+far outside that gap, so **the direction and rough magnitude are robust; the
+digit is not.** A digit-exact `119` number needs `cohfree.py` run on `119`
+inputs by its own lane, which I have not done.
+
+### 7.4 What each instrument actually measures
+
+The ladder says both track a coherent detail change identically, so their
+residual disagreement on real data (2.02× on `119` DETAIL) is **not** an
+instrument defect. It is the one thing the plant deliberately does not contain:
+the plant applies the *same* transform to both halves, so planted detail is
+perfectly coherent between A and B. Real arms are not.
+
+- **C** counts only structure **correlated between the two half-stacks**.
+- **the scene term** counts total high-pass content **minus** an incoherent
+  noise estimate.
+
+They diverge exactly when an arm holds real detail that is *not* coherent across
+its halves — which is what a selection-dominated merge produces when the two
+halves choose different source frames, and is the same mechanism that made
+`bee`'s decomposition degenerate (§0.2, 38.5% of strehl's "noise" there was a
+low-frequency half-to-half difference). **That is the open question this lane
+leaves**, and it is stated rather than resolved.
+
+---
+
 ## 1. The guard that nearly withdrew a correct headline
+
 
 This is the most important thing in this document so far, and it is a lesson
 about instruments rather than about stackers.
@@ -185,7 +285,16 @@ its keep.
 
 ---
 
-## 2. The blur objection, which was live on 119 and is now closed
+## 2. The blur objection on 119 — SUPERSEDED, see §0.1 and §7
+
+> **This section's title and conclusion are withdrawn.** It was written when
+> `119` was the only subject showing a scene deficit and the deficit looked
+> closable. It is not closed. §0.1 measures the same deficit on `bee` (scene
+> ratio 0.180 and 0.060) and shows the pairing M127 rests on holds on **2 of 6**
+> subject-arm pairs, both on `113`. §7.3 then measures `enfuse` at **2.017×**
+> strehl's detail amplitude on `119` using **C, the README's own instrument**.
+> The numbers below are retained and reproducible; the reading "now closed" is
+> not. **The blur objection is LIVE on `119`.**
 
 M127 foreclosed *"cleaner because blurrier"* from inside the measurement:
 strehl held the lowest noise **and** the highest scene term. On 119 the same
