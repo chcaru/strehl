@@ -11074,3 +11074,134 @@ The default flip is mine to make, on measured quality and measured time together
 > BUILD-SHARP's gather-order call was right for three months of document-time while its
 > stated cause was wrong. The next person to touch it would have "fixed" the election.
 
+
+## §101 — colour and banding: the last declared blind spot, and it is clean
+
+§97 stated the blind spot plainly: no instrument in this tree could see chroma
+error or tonal breaks. Every one of them -- `orch_halo.py`, `orch_blotch.py`,
+`orch_worst.py` -- reads a luma statistic. A master could carry gross colour
+mottling in a smooth background and all three would certify it.
+
+Two instruments now close it. Both are in `orch_chroma.py`.
+
+### Chroma blotch: band-passed RELATIVE chroma, and it acquits the merge
+
+`a/Y` and `b/Y` band-passed at 50-300 px in the window with the flattest chroma.
+Dividing by luma is what makes it survive the 2.5x-25x tone scaling that
+invalidated two published numbers in §99. Commissioned: null **exactly 0.000000**
+on a neutral scene, and a 0.0005-0.016 amplitude ladder linear to within 0.1%
+across a 32x span.
+
+Corpus: 22 of 26 masters read below 0.001. Four read high -- `coffee-bubbles`
+0.0557, `foam` 0.0311, `lead-1-cpl` 0.0203, `leaf-2-cpl` 0.0200 -- and those are
+precisely the four most colourful subjects, which is the innocent explanation
+I wrote into the file **before** the first reading.
+
+The source control read min 0.0321, max 0.0481 on `coffee-bubbles`. Master above
+every input again -- the §96 shape exactly. And again it is not a defect:
+
+1. **The first render exposed a fatal confound.** Each arm chose its own window.
+   The master's landed at (0, 1458); the source's at (2616, 5828). **I had
+   compared two different parts of the subject.** The window is now forced to
+   the master's, and that is stated in the file rather than fixed silently.
+2. **The band-pass render acquits it.** The source frames carry the same
+   orange/blue blobs at the same scale -- that structure is the subject's own
+   colour, not merge mottling. The master is in fact *cleaner*: both source
+   tiles show a CFA checker the master does not have.
+
+**No chroma defect.** The excess is a sharper merge resolving real colour edges.
+
+### Banding: three statistics, two killed on the bench
+
+- **v1, zero-fraction of first differences.** A CONTINUOUS gradient read 0.4996,
+  because a 0.5 DN/px slope gives ~50% zero differences by rounding alone. It
+  measured gradient steepness. The 0.02 threshold built on it would have flagged
+  **all 26**.
+- **v2, level occupancy.** Correct in principle -- tracked the predicted N/range
+  to within 0.6% -- but ceilinged at WIN/range on a 1-D ramp, so its gate read
+  **REJECT-STEEP on 23 of 26**. An instrument that declines to examine 88% of
+  its inputs has not measured them, and a partition that large is a result about
+  the instrument, not the corpus.
+- **v3, spatial run length.** Median run of constant value, plus its step height.
+  This is what an eye objects to: banding is visible when a value occupies a wide
+  band. Commissioned exact -- 7.0 px predicted 7.0, 112.0 predicted 112.5 -- and
+  **invariant at every slope and every range**, which is what killed v1 and v2
+  respectively. Noise correctly breaks the bands.
+
+**Corpus: 26 examined, 26 clean, 0 rejected.** Median run 1.0 px on every master.
+
+### The rule
+
+> **A statistic that rejects most of its inputs has reported on itself, not on
+> them.** v2's 23-of-26 REJECT was not a clean sheet and must never be read as
+> one. The partition is the finding.
+
+## §102 — I raised a tone defect and the picture killed it inside an hour
+
+**RAISED, then WITHDRAWN. Never broadcast. This is the fourth of my own findings
+to die tonight and the fourth killed by rendering the image.**
+
+### What I claimed
+
+`orch_tone.py` fits `master = k * source^g` on matched quantiles, alignment-free
+because quantiles do not care about the warp. Reference exponents, computed in
+the file rather than quoted: **linear 1.0000, sRGB 0.4743, gamma 2.2 0.4546.**
+
+`coffee-bubbles` returned **1.04-1.31** and its median sits at **2517 DN, 3.84%
+of a 16-bit scale**. `bee-1-cpl` returned **0.90**. Both near linear, neither near
+sRGB, in files whose `ImageDescription` declares sRGB. I concluded the pipeline
+writes linear data under an sRGB label -- which would render near-black in every
+viewer and would have explained "horrible" completely.
+
+### Why it is false
+
+`orch_tonerender.py` renders the same data two ways at one stated gain, no
+autoscaling: **AS SHIPPED** (straight to 8-bit, what a viewer does) and **sRGB
+APPLIED** (treat as linear, encode properly).
+
+**AS SHIPPED is right.** The bee is a photograph -- tonality in the fur, a clean
+dark eye, white background holding detail. **sRGB APPLIED is washed out.** Even
+`coffee-bubbles`, the darkest master and my strongest evidence, is correct as
+shipped and a muddy brown mess with the curve applied.
+
+### Three errors, each nameable
+
+1. **I generalised from a subject I had selected for being extreme.**
+   `coffee-bubbles` was in front of me because it topped the chroma table. Of 26
+   masters, 22 read ENCODED on the corpus sweep. My "this is it" rested on one
+   subject chosen for an unrelated reason.
+2. **My verdict column measured brightness, not encoding.** `p50 < 0.5*srgb(p50)`
+   reduces to `p50 < ~0.25`, because `srgb(x) > x` everywhere. A dark encoded
+   image reads LINEAR; a bright linear one reads ENCODED. **The test had no
+   dependence on the transfer function it claimed to detect.**
+3. **The power-law model does not fit, and running the second arm proved it.**
+   Against a linear source the exponent is 0.90; against an sRGB-decoded source
+   it is 1.41 -- implying 0.587. Those are mutually inconsistent, so no single
+   transfer function explains both, whatever the r2 of 0.96-0.99 suggests. I was
+   comparing quantiles across two different **colour pipelines** -- different
+   white balance, matrix and highlight handling -- and charging the entire
+   difference to the transfer curve.
+
+I also asserted "crushed highlights" from `bee-1-cpl`'s p90. Measured clipping is
+**0.02%**. Withdrawn in the same breath as the rest.
+
+### What survives, and it is the most useful thing measured tonight
+
+The renders are good. Not "clean on a metric" -- good photographs, at a size
+where softness would show. That is the first evidence in this log bearing on
+"print worthy" that comes from looking at the deliverable rather than at a
+number computed from it.
+
+### The rules
+
+> **A test whose verdict does not depend on the property it names is not a test
+> of that property.** Check the algebra of the threshold before the data.
+
+> **Fit the same model against two different references. If they disagree, the
+> model is wrong** -- and a high r2 will not tell you, because a power law fits
+> most monotone data over a limited range.
+
+> **When a finding would explain everything, that is the moment to render it.**
+> The explanatory reach of this one is exactly what made it attractive, and it
+> survived about an hour.
+
