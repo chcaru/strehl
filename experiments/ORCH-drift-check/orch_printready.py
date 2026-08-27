@@ -180,6 +180,44 @@ def load_baseline():
     return subs, "%d adjudicated subject(s); %s" % (len(subs), prov)
 
 
+_SOURCE_BASELINE_LABEL = None
+
+
+def source_baseline_label():
+    """How the source-frame baseline was ACTUALLY formed, as a printable label.
+
+    Derived from the frozen baseline, never typed. This line printed
+    `master/best-source` for the whole life of the gate while the recorded
+    rule was `max over registered source frames` -- and for blotch and chroma,
+    where LOW is good, the max over sources is the WORST frame. The label
+    asserted the exact opposite of the number it labelled, so nine acquittals
+    read as "no worse than the best frame" when they established only "no
+    worse than the worst frame", which is very nearly free.
+
+    A typed label can drift from the thing it names. A derived one cannot.
+    An unrecognised rule prints itself rather than being given a friendly
+    name, because guessing here is how the first defect happened.
+    """
+    global _SOURCE_BASELINE_LABEL
+    if _SOURCE_BASELINE_LABEL is not None:
+        return _SOURCE_BASELINE_LABEL
+    try:
+        with open(BASELINE_PATH, encoding="utf-8") as fh:
+            rule = str((json.load(fh).get("gate_rule") or {}).get("source_baseline", ""))
+    except Exception:                                             # noqa: BLE001
+        rule = ""
+    low = rule.strip().lower()
+    if low.startswith("max"):
+        _SOURCE_BASELINE_LABEL = "master/worst-source"
+    elif low.startswith("min"):
+        _SOURCE_BASELINE_LABEL = "master/best-source"
+    elif rule:
+        _SOURCE_BASELINE_LABEL = "master/source[%s]" % rule
+    else:
+        _SOURCE_BASELINE_LABEL = "master/source[BASELINE RULE UNRECORDED]"
+    return _SOURCE_BASELINE_LABEL
+
+
 def check_acquittal(name, meas, subs):
     """Does an adjudicated ACQUIT still apply to the numbers measured today?
 
@@ -220,7 +258,7 @@ def check_acquittal(name, meas, subs):
     return True, "%s [vs %d source frames%s]" % (
         rec.get("reason", "(no reason recorded)"),
         rec.get("n_source_frames_registered", 0),
-        ("; master/best-source " + rtxt) if rtxt else "")
+        ("; " + source_baseline_label() + " " + rtxt) if rtxt else "")
 
 
 def verdict(path):
