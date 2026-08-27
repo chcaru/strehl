@@ -225,9 +225,16 @@ def main():
 
     z = np.load(os.path.join(BUNDLE, "%s.npz" % subj))
     keys = sorted(k for k in z.files if k.startswith("b") and k != "bw")
+    meta = json.load(io.open(os.path.join(BUNDLE, "%s.json" % subj),
+                             encoding="utf-8"))
+    ok = {r["frame"] for r in meta["rows"] if r["state"] == "OK"}
+    allk = sorted(k for k in z.files if k.startswith("b") and k != "bw")
+    keys = [k for k in allk if int(k[1:]) in ok]
+    dropped = len(allk) - len(keys)
     frames = [z[k].astype(np.float64) for k in keys]
     master = z["mb"].astype(np.float64)
-    print("%s: %d source frames, tile %s" % (subj, len(frames), frames[0].shape))
+    print("%s: %d bundled = %d OK source frames + %d not-OK dropped, tile %s"
+          % (subj, len(allk), len(frames), dropped, frames[0].shape))
 
     var0, read2, gph = VP.fit_variance(frames[0][:, :, 1])
     print("noise model FITTED (the one guess): var = %.1f + %.4f*S DN^2"
@@ -255,8 +262,17 @@ def main():
     res["arms"] = {}
     srcb = [blotch(f)[0] for f in frames]
     srcs = [sharpness(f) for f in frames]
+    # A frame that scores exactly zero is degenerate, not "the best source".
+    # Dividing by it would report an infinite excess as a number, so refuse.
+    bad = [keys[i] for i, v in enumerate(srcb) if not (v > 0.0)]
+    bad += [keys[i] for i, v in enumerate(srcs) if not (v > 0.0)]
+    if bad:
+        print("REFUSED: %d source frame(s) score zero and cannot bound a "
+              "minimum: %s" % (len(bad), ", ".join(sorted(set(bad)))))
+        return 2
     res["source"] = {"blotch_min": min(srcb), "blotch_med": float(np.median(srcb)),
-                     "sharp_max": max(srcs), "sharp_med": float(np.median(srcs))}
+                     "sharp_max": max(srcs), "sharp_med": float(np.median(srcs)),
+                     "n_ok": len(frames), "n_dropped_not_ok": dropped}
     for name, cfg in arms.items():
         r, Wa = VP.merge(frames, cfg, BETA, var0, nb=nb)
         b, _ = blotch(r)

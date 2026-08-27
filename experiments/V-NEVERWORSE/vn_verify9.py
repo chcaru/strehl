@@ -215,6 +215,98 @@ def main():
     except Exception as e:
         refused.append("expand re-derivation: %s" % e)
 
+    # ---- 9.6-9.8 three-subject tables, every cell re-derived from JSON ----
+    SUBJ = ["coffee-bubbles", "112MSDCF", "flat-on-ruler-cpl"]
+    J = {}
+    for s in SUBJ:
+        p = os.path.join(os.path.dirname(PLAT), "%s.json" % s)
+        J[s] = json.load(io.open(p, encoding="utf-8"))
+
+    def tbl(header):
+        """Slice one table by its unique header row, so a subject name that
+        appears in four tables can still be addressed unambiguously."""
+        global checked
+        checked += 1
+        if s9.count(header) != 1:
+            fails.append("table header %r occurs %d times, need 1"
+                         % (header[:50], s9.count(header)))
+            return ""
+        i = s9.index(header)
+        j = s9.index("\n\n", i)
+        return s9[i:j]
+
+    t_arms = tbl("| subject | OK frames | shipping | plain mean |")
+    t_shar = tbl("| subject | selection-attributable, at most |")
+    t_plat = tbl("| subject | L0 | L1 | L2 | L3 | L4 | L5 | L6 | L3+L4 |")
+    t_shrp = tbl("| sharpness vs best source frame | shipping |")
+
+    for s in SUBJ:
+        a = J[s]["arms"]
+        sh = a["a_shipping"]["blotch_vs_best_source"]
+        pm = a["b_plain_mean"]["blotch_vs_best_source"]
+        c1 = a["c_exponent_1_flat"]["blotch_vs_best_source"]
+        ss = a["a_shipping"]["sharp_vs_best_source"]
+        sc = a["c_exponent_1_flat"]["sharp_vs_best_source"]
+
+        r = row(t_arms, "`%s`" % s, "9.6 arms %s" % s)
+        cell(r, 1, str(J[s]["frames"]), "%s OK frames" % s)
+        cell(r, 2, "%.3fx" % sh, "%s shipping" % s)
+        cell(r, 3, "%.3fx" % pm, "%s plain mean" % s)
+        cell(r, 4, "%.3fx" % c1, "%s exponent 1" % s)
+        cell(r, 5, "%.3fx" % J[s]["shipped_master"]["blotch_vs_best_source"],
+             "%s shipped master" % s)
+
+        # derived shares: recomputed here from the arms, never read as given
+        r = row(t_shar, "`%s`" % s, "9.6 shares %s" % s)
+        cell(r, 1, "%.1f%%" % (100 * (sh - pm) / (sh - 1.0)),
+             "%s selection-attributable" % s)
+        cell(r, 2, "%.1f%%" % (100 * (sh - c1) / (sh - 1.0)),
+             "%s exponent ceiling" % s)
+        cell(r, 3, "%.1f%%" % (100 * (1 - sc / ss)), "%s sharpness cost" % s)
+
+        r = row(t_shrp, "`%s`" % s, "9.8 sharpness %s" % s)
+        cell(r, 1, "%.3f" % ss, "%s shipping sharpness" % s)
+        cell(r, 2, "%.3f" % a["b_plain_mean"]["sharp_vs_best_source"],
+             "%s plain-mean sharpness" % s)
+        cell(r, 3, "%.3f" % sc, "%s exponent-1 sharpness" % s)
+
+        pl = J[s]["plateaus"]
+        f = [pl["L%d" % k]["frac_area_20_60px"] for k in range(7)]
+        r = row(t_plat, "`%s`" % s, "9.8 plateau %s" % s)
+        for k in range(7):
+            cell(r, k + 1, "%.3f" % f[k], "%s frac20-60 L%d" % (s, k))
+        cell(r, 8, "%.3f" % (f[3] + f[4]), "%s L3+L4" % s)
+
+    # the "violates on 2 of 3" claim must match the arms, not the prose
+    nviol = sum(1 for s in SUBJ
+                if J[s]["arms"]["b_plain_mean"]["blotch_vs_best_source"] > 1.0)
+    checked += 1
+    if nviol != 2:
+        fails.append("9.7 says the plain mean violates on 2 of 3; the arms "
+                     "say %d of 3" % nviol)
+
+    # the median-of-three ceiling quoted in 9.6
+    ceil = sorted(100 * (J[s]["arms"]["a_shipping"]["blotch_vs_best_source"]
+                         - J[s]["arms"]["c_exponent_1_flat"]
+                         ["blotch_vs_best_source"])
+                  / (J[s]["arms"]["a_shipping"]["blotch_vs_best_source"] - 1.0)
+                  for s in SUBJ)[1]
+    checked += 1
+    if "median of the three is %.1f%%" % ceil not in _flat(s9):
+        fails.append("9.6 median ceiling is %.1f%%, not as stated" % ceil)
+
+    # frame partition on the subject that lost frames
+    fp = grab(_flat(s9), r"\*\*(\d+) in the stack = (\d+) admitted \+ (\d+) "
+                         r"unregistered \+ (\d+) poor-registration",
+              "frame partition")
+    checked += 1
+    if fp is not None:
+        if int(fp[0]) != sum(int(x) for x in fp[1:]):
+            fails.append("frame partition does not sum: %s" % (fp,))
+        elif int(fp[1]) != J["flat-on-ruler-cpl"]["frames"]:
+            fails.append("frame partition admits %s but the record has %d"
+                         % (fp[1], J["flat-on-ruler-cpl"]["frames"]))
+
     # ---- partition must sum ----
     par = grab(s9, r"\*\*(\d+) requested = (\d+) measured \+ (\d+) not "
                    r"attempted \+ (\d+) failed", "subject partition")

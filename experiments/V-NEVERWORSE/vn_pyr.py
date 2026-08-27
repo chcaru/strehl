@@ -197,12 +197,8 @@ def merge(frames, cfg, beta, var0, nb=7):
     mode = cfg.get("mode", "shipping")
 
     h, w = frames[0].shape[:2]
-    lum = [f[:, :, 1].astype(np.float64) for f in frames]
     laps, bases, plane_laps, plane_bases = [], [], [], []
     for f in frames:
-        L, B = lap_pyr(f[:, :, 1].astype(np.float64), nb)
-        laps.append(L)
-        bases.append(B)
         pl, pb = [], []
         for c in range(3):
             Lc, Bc = lap_pyr(f[:, :, c].astype(np.float64), nb)
@@ -210,6 +206,9 @@ def merge(frames, cfg, beta, var0, nb=7):
             pb.append(Bc)
         plane_laps.append(pl)
         plane_bases.append(pb)
+        # Channel 1 IS the luma plane, so this aliases rather than recomputing.
+        laps.append(pl[1])
+        bases.append(pb[1])
 
     varp = gauss_pyr(var0, nb)
     n = len(frames)
@@ -248,6 +247,13 @@ def merge(frames, cfg, beta, var0, nb=7):
         rec[:, :, c] = R
 
     if cfg.get("hull", True):
-        st = np.stack([f.astype(np.float64) for f in frames])
-        rec = np.clip(rec, st.min(axis=0), st.max(axis=0))
+        # Running min/max, exactly equal to stacking every frame but without
+        # holding n x H x W x 3 float64 at once (1.5 GB at n=79).
+        lo = frames[0].astype(np.float64)
+        hi = lo.copy()
+        for f in frames[1:]:
+            ff = f.astype(np.float64)
+            np.minimum(lo, ff, out=lo)
+            np.maximum(hi, ff, out=hi)
+        rec = np.clip(rec, lo, hi)
     return rec, wstack_lv

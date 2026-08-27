@@ -1456,41 +1456,184 @@ The guessed noise model does not carry this result:
 | x1.0 | 1.354x | 1.152x | exp-1 lower |
 | x2.0 | 1.355x | 1.135x | exp-1 lower |
 
-### 9.6 The ceiling, and it is not "most of it"
+### 9.6 The ceiling, measured on three subjects, and it collapses as the stack deepens
 
-**On the one subject measured, the selection exponent accounts for 57% of the
-merge-attributable blotch excess.** Not most of it. Arm (c) still leaves
-`coffee-bubbles` at 1.152x — **still a violation of the invariant**, still
-worse than the best frame that went into it.
+The first report gave 57% from `coffee-bubbles` alone and refused to call it a
+corpus number. Two more subjects from V-GATHER's convicted five now exist, and
+the refusal was justified: **57% is the best case, it is the shallowest stack,
+and the figure falls to 9% on the deepest one.**
 
-So the answer to "is the fix sufficient" is **no**, and ORCH should plan for a
-second mechanism now rather than after the re-render. The residual 43% is
-consistent with the structural reason `pyramid.rs` states and which lowering
-the exponent does not remove: **each band computes its own weight field**, so
-the reconstruction is a sum of convex combinations taken under different
-weightings and is not itself convex in the inputs. Flattening the ramp reduces
-how sharply each band elects; it does not make the bands agree with each other.
-The counterfactual that would test *that* is one shared weight field across all
-bands, which `pyramid.rs` reports as `0 / 102,400` violations against `7 /
-102,400` for independent fields — and which I did not run.
+| subject | OK frames | shipping | plain mean | exponent 1 flat | shipped master |
+|---|---:|---:|---:|---:|---:|
+| `coffee-bubbles` | 19 | 1.354x | **0.983x** | 1.152x | 1.444x |
+| `112MSDCF` | 79 | 1.122x | **1.053x** | 1.099x | 1.260x |
+| `flat-on-ruler-cpl` | 73 | 1.287x | **1.229x** | 1.261x | 1.297x |
 
-### 9.7 What I did not measure
+Two derived quantities follow from those columns. The first is how much of the
+excess is attributable to selection **at all** -- the gap from shipping to the
+plain mean, which performs no selection whatsoever. The second is how much of
+it the exponent knob can actually reach.
+
+| subject | selection-attributable, at most | reachable by the exponent | sharpness cost of doing so |
+|---|---:|---:|---:|
+| `coffee-bubbles` | 104.9% | **57.1%** | 9.2% |
+| `112MSDCF` | 56.3% | **19.1%** | 25.3% |
+| `flat-on-ruler-cpl` | 20.3% | **9.1%** | 30.2% |
+
+**The benefit falls and the cost rises, in the same direction, across all
+three.** Flattening the exponent buys 57% of the excess for a 9% sharpness loss
+on the 19-frame stack, and 9% of the excess for a 30% sharpness loss on the
+73-frame one. That is the trade going the wrong way exactly where the tool is
+supposed to earn its keep: deep stacks are what a focus stacker is for.
+
+**Predicted ceiling for the corpus: about a fifth, not most of it.** The median
+of the three is 19.1%. I will not give a frame-weighted corpus number from
+three subjects, but the direction is consistent and it is the wrong direction
+for the fix under test.
+
+### 9.7 The plain mean still violates on 2 of 3, so a selection-independent floor exists
+
+This is the finding that decides the question, and it does not depend on any
+reimplementation detail of the gate.
+
+**Arm (b) deletes the selection entirely** -- a plain unweighted mean over every
+admitted frame, no weights, no exponent, no gate, nothing to mis-scale. On
+`112MSDCF` it reads **1.053x** and on `flat-on-ruler-cpl` **1.229x**. Both are
+violations of the invariant.
+
+A merge with no selection in it cannot have a selection artifact. Therefore on
+those two subjects **most of the blotch excess is not caused by the selection
+rule, and no change to the selection rule -- exponent, tolerance, gate, or
+weighting -- can remove it.** On `flat-on-ruler-cpl`, deleting selection
+altogether removes 20.3% of the excess and **79.7% survives**.
+
+What the floor is instead: both surviving subjects are deep sweeps whose
+registration correlation against the master runs from 0.973 up to 0.9999 and
+back down to 0.970 (`112MSDCF`) and 0.990 (`flat-on-ruler-cpl`). Averaging
+frames across a focus sweep sums defocus halos, and a defocus halo is
+mid-scale structure by construction. `blotch` is band-limited to 50-400 px and
+divided by the mean, so it reads that halo as mottle. No single frame contains
+it, because no single frame is an average. This is the same "charged for
+structure no single frame contains" account that covered 20 of 24 subjects in
+section 6, arriving through a different door -- and here it is demonstrated by
+construction rather than argued, because the arm that isolates it is a plain
+mean.
+
+`coffee-bubbles` is the exception and it is the shallowest stack: its plain
+mean reads 0.983x and **satisfies** the invariant. So the selection story is
+true where the stack is shallow and false where it is deep.
+
+### 9.8 Verdict on the prediction ORCH stated
+
+ORCH set the test in falsifiable form: the fix should (a) break up the plateau
+structure, (b) reduce the mid-scale excess on the convicted subjects, and (c)
+leave fine grain and sharpness substantially unchanged -- and "if (a) happens
+and (b) does not, the plateau story is wrong".
+
+**(a) CONFIRMED.** The plateau structure is real, on all three subjects, and it
+sits at the scales where the convictions live. Fraction of frame area in
+connected winner-regions of 20-60 px diameter, by pyramid level:
+
+| subject | L0 | L1 | L2 | L3 | L4 | L5 | L6 | L3+L4 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `coffee-bubbles` | 0.000 | 0.026 | 0.276 | 0.543 | 0.365 | 0.112 | 0.000 | **0.908** |
+| `112MSDCF` | 0.002 | 0.017 | 0.125 | 0.460 | 0.669 | 0.354 | 0.000 | **1.129** |
+| `flat-on-ruler-cpl` | 0.156 | 0.083 | 0.154 | 0.366 | 0.327 | 0.215 | 0.000 | **0.693** |
+
+**(b) HAPPENS, BUT WEAKLY, AND IT SHRINKS WITH STACK DEPTH.** 57% / 19% / 9%.
+On two of three subjects the excess that survives the change is larger than the
+excess it removes, and on all three the result remains a violation: arm (c)
+leaves 1.152x, 1.099x and 1.261x.
+
+**(c) FAILS.** Sharpness on the same pixels falls 9.2%, 25.3% and 30.2%
+relative to the shipping arm. On the two deep stacks that is a quarter to a
+third of the resolved detail, paid for a single-digit-to-19% reduction in a
+statistic that arm (b) shows is mostly not caused by selection at all.
+
+By ORCH's own stated rule the plateau story is not refuted -- (b) does happen --
+but it is **demoted from mechanism to contributing term**, and the fix under
+test is not sufficient. The honest summary is: the plateaus are real, they are
+mid-scale, they cost something, and they are the smaller half of the problem on
+every subject except the shallowest.
+
+**What this means for the build lane:** shipping the response-relative
+tolerance will not deliver the invariant on `112MSDCF` or `flat-on-ruler-cpl`,
+because the plain mean does not deliver it either. If the tolerance change also
+sharpens the election it will cost resolved detail on exactly the deep stacks
+where it buys least. This is the trade ORCH warned about with `focus-stack`,
+and arm (b) is the extreme case of it in our own code: **the plain mean is the
+only arm anywhere in this work that satisfies the invariant on `coffee-bubbles`,
+and it destroys 78% / 87% / 92% of the sharpness relative to the best source
+frame.**
+
+| sharpness vs best source frame | shipping | plain mean | exponent 1 flat |
+|---|---:|---:|---:|
+| `coffee-bubbles` | 0.755 | **0.217** | 0.685 |
+| `112MSDCF` | 1.814 | **0.131** | 1.355 |
+| `flat-on-ruler-cpl` | 1.328 | **0.085** | 0.927 |
+
+Note the shipping row: on `112MSDCF` and `flat-on-ruler-cpl` the merge is
+**1.814x and 1.328x sharper** than the best single frame that went into it.
+That is the positive half of the quality claim showing up in this lane's own
+instrument, and it is what arm (b) throws away.
+
+### 9.9 A third instrument defect, caught by the refusal path
+
+`flat-on-ruler-cpl` is the first subject in this lane whose stack contains
+frames that failed registration, and it broke the driver:
+
+    79 in the stack = 73 OK + 5 UNREGISTERED + 1 POOR-REG
+
+The bundle builder writes POOR-REG frames into the bundle; only UNREGISTERED
+frames are omitted. The driver selected source frames by array-key prefix
+rather than by state, so it read 74 frames, and the POOR-REG frame (`b0003`,
+registration correlation `-4.7e-08`) scores `blotch` **exactly 0.0**. The
+"best source frame" is a minimum, so the run divided by zero.
+
+It exited **rc=2, REFUSED**, printing no ratio. That is the behaviour the crash
+arm exists to guarantee: a checker that dies and a checker that passes must not
+produce the same verdict. Had the degenerate frame scored `0.001` instead of
+`0.0` there would have been no exception and the run would have reported a
+plausible, badly wrong number -- so the fix is two parts, not one:
+
+1. select source frames by `state == "OK"`, not by key prefix; and
+2. **refuse explicitly** if any admitted frame scores zero on either statistic,
+   rather than letting an infinite excess arrive as a float.
+
+Part 2 is the one that matters, because part 1 alone would have gone green.
+
+Regression evidence that the fix changed nothing else: re-running
+`coffee-bubbles` after the change leaves `arms`, `plateaus`, `shipped_master`,
+`exponents`, `noise_fit`, `varscale` and `frames` **identical**, and the only
+delta is two new accounting keys in `source`. The memory refactor made in the
+same session to let the merge run at 79 frames (aliasing the luma pyramid
+instead of recomputing it, and a running min/max hull instead of an n-frame
+stack) was verified the same way and is **bit-identical**, SHA256
+`A126EB683147412ADD1DF8FD9B1335F08778F23529DFDDCD58D5057BC62613A8`.
+
+### 9.10 What I did not measure
 
 | item | status |
 |---|---|
-| plateau structure, `coffee-bubbles`, all 19 frames | **measured** |
-| counterfactual arms with paired sharpness | **measured**, 4 arms |
-| sensitivity to the guessed noise model | **measured**, 4x sweep |
-| plateau structure on 2 of V-GATHER's five | **NOT MEASURED** |
+| plateau structure, 3 subjects, every OK frame | **measured** |
+| counterfactual arms with paired sharpness, 3 subjects | **measured**, 4 arms each |
+| sensitivity to the guessed noise model, 3 subjects | **measured**, 4x sweep |
+| plateau structure on the other 3 of V-GATHER's five | **NOT MEASURED** |
 | shared-weight-field counterfactual | **NOT MEASURED** |
-| corpus-wide ceiling | **REFUSED** — one subject cannot support it |
+| corpus-wide ceiling | **REFUSED** -- three subjects cannot support it |
 
-Partition, subjects: **3 requested = 1 measured + 2 not attempted + 0 failed.**
-The two not attempted are a resource statement, not a finding: only
-`coffee-bubbles` has a registered aligned source bundle on this machine, and
-the others need their source stacks re-rendered and re-aligned first. The 57%
-figure is therefore **a single-subject measurement and must not be quoted as a
-corpus ceiling.**
+Partition, subjects: **3 requested = 3 measured + 0 not attempted + 0 failed.**
+Partition, frames on the subject that lost some: **79 in the stack = 73
+admitted + 5 unregistered + 1 poor-registration.**
+
+Two scope limits stand. **`flat-on-ruler-cpl`'s minimum is taken over 73 of 79
+frames**, so by this lane's standing correction its 1.287x is a **lower bound**
+on the true excess, and so is the 20.3% selection-attributable share derived
+from it. And the noise model is still fitted rather than read from the code:
+the two new subjects recovered a positive photon gain (`180.1 + 1.6498*S` and
+`1.0 + 0.3699*S` DN^2), which `coffee-bubbles` did not, so the zero-gain fit
+there remains this lane's weakest input -- covered, but not removed, by the
+4x sweep.
 
 ---
 
