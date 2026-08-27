@@ -772,6 +772,24 @@ after-run must hash the `frame-*.tiff` files and compare them to the before-run'
 before interpreting any delta. Identical frames ⇒ the ratio change is the merge.
 Different frames ⇒ the reading must be decomposed, and said so, not averaged over.
 
+`frame_hashes.py` makes that testable without retaining ~50 GB of TIFFs: the
+reference arm's per-frame SHA-256s are recorded in
+`C:\dev\strehl-out\V-EYES\PIN\frame-hashes.tsv` now, and the after-run re-runs it
+and diffs. **The coverage is partial and is stated as a partition, because a
+baseline that quietly covers two subjects and is read as covering five is the
+exact failure this lane has spent the night documenting:**
+
+| | subjects | hazard testable? |
+| --- | --- | --- |
+| covered (332 frame hashes + 2 masters) | `119MSDCF` (33), `bee-1-cpl` (299) | yes |
+| not covered (renders already freed) | `coffee-bubbles`, `109MSDCF`, `flower-bud-alone-cpl` | **no** |
+| | **2 + 3 = 5 of 5** | |
+
+A not-covered subject is **not** a subject that passed. The two covered ones are
+the two that matter most — the worst subject and the regime-breaker — but if the
+hazard needs checking on the other three they must first be re-developed with the
+*old* pinned binary, which is still on disk and hashed above.
+
 ## 11. The "best frame" audit, carried out rather than filed
 
 §9 routed a lesson — *a per-site maximum over a subsampled bracket is not a
