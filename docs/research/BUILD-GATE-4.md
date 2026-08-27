@@ -59,11 +59,26 @@ render at **complete bracket depth**, no subsampling. A 13-frame reference once
 made the merge look 1.25x–16.5x better than its input, and that was pure sampling
 artifact.
 
-**The pin is HEAD on the merge path.** The pin was built at 08:30:50 and HEAD is
-09:40:06, so this was checked rather than assumed:
+**The pin is HEAD on the merge path, and this was proved rather than argued.**
+The pin was built at 08:30:50 and HEAD is later, so:
 `git log --since=08:25 -- crates/strehl-core/src/pyramid.rs crates/strehl-cli/src/merge_cmd.rs crates/strehl-cli/src/merge_cmd/ crates/strehl-core/src/focus.rs`
-returns **empty**. Nothing on the merge path changed after the pin, so `G200` is
-what `strehl stack` does today.
+returns **empty**. That is necessary but not sufficient: the pin reports itself
+as `42e2d95ec94c-dirty`, i.e. built from a tree with uncommitted changes, so it
+might correspond to no commit at all. The check that settles it is direct
+reproduction — a clean release build at HEAD (`0832dfc12b2f`, `crates/` verified
+clean) re-rendered the `G200` arm:
+
+```
+pixels differing : 0.0000%     max |diff| : 0     mean ratio 1.000000
+ceiling score    : 1.0924 vs 1.0924, per-site 1.035 1.103 1.111 both
+```
+
+The **file hashes differ** and the pixels do not, because the build identifier is
+embedded in the TIFF metadata — the same mechanism behind the registry's
+`ImageDescription` re-baseline, and the same reason `SHIP-V4` and `WHITE200`
+differ by 11 bytes in §3 while being pixel-identical. **`G200` is what
+`strehl stack` does today**, and a `-dirty` pin turned out to be harmless here
+only because it was checked.
 
 ---
 
@@ -115,11 +130,23 @@ that is bit-identical, `max abs diff 0.0`**. `build_ceiling` re-validates on 3
 evenly-spaced frames **per build** and hard-exits on disagreement: a speedup
 validated once elsewhere is an assumption; validated per build it is a control.
 
-**The renders are reproducible.** 21 arms were re-rendered from the pin and
+**The renders are reproducible.** 23 arms were re-rendered from the pin and
 hashed against the arms already on disk: **determinism mismatches = 0**
-(`banner_capture.ps1`). That re-render also recovered the `averaged` banner,
-because the stratification variable had otherwise survived only in a console
-transcript, and a number transcribed from a transcript has no provenance.
+(`banner_capture.ps1`, covering all seven arms on the three shallow subjects and
+the stratification arm on both deep ones). That re-render also recovered the
+`averaged` banner, because the stratification variable had otherwise survived
+only in a console transcript, and a number transcribed from a transcript has no
+provenance.
+
+**A bug in that harness, found because it was backgrounded.** `banner_capture.ps1`
+originally set `$ErrorActionPreference = "Stop"`. `strehl` writes its banner to
+**stderr**, and `2>&1` on a native command turns stderr into a PowerShell error
+record, which under `Stop` is terminating. The in-session run completed all 21
+arms; the backgrounded run via `Start-Process powershell -File` died on the
+first render and wrote **zero** logs while leaving a `NativeCommandError` in its
+stderr. A script that works when watched and fails when backgrounded is worse
+than one that always fails. Fixed, and the render is now judged by its **output**
+— the hash comparison — rather than by the absence of an error record.
 
 ---
 

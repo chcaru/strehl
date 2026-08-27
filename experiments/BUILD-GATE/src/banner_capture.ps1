@@ -11,7 +11,17 @@
 # was not reproducible and every number in it is suspect. So this is a
 # determinism control that happens to also yield the banner. The scratch file is
 # deleted after hashing; only the log is kept.
-$ErrorActionPreference = "Stop"
+# The banner goes to STDERR, and `2>&1` on a native command turns that into a
+# PowerShell error record. Under `$ErrorActionPreference = "Stop"` that is a
+# TERMINATING error, so the script dies on the first render -- but only when
+# launched via `Start-Process powershell -File`, which is how this was found:
+# the in-session run of the same script completed all 21 arms while the
+# backgrounded run produced zero logs and a NativeCommandError in its stderr.
+# A script that works when watched and fails when backgrounded is worse than one
+# that always fails, so the preference is set to Continue deliberately and the
+# render is checked by its OUTPUT (the hash comparison below) rather than by the
+# absence of an error record.
+$ErrorActionPreference = "Continue"
 $PIN = "C:\dev\strehl-out\BUILD-GATE\pin\strehl.exe"
 $ROOT = "C:\dev\strehl-out\BUILD-GATE\sweep"
 $LOGS = "C:\dev\strehl-out\BUILD-GATE\banner"
