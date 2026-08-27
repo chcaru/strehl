@@ -11811,3 +11811,83 @@ separate experiment and has not been done.
 this instrument as a corroborating check on 7 subjects and an honest SKIPPED on
 15. That is a weaker claim than "measured halo-free across the corpus" and it
 is the one the evidence supports.
+
+## 108. Both merges measure clean for a bright rim, and what that does and does not say
+
+**Status: MEASURED.** `C:\dev\strehl-out\ORCH-HALOAB`, `2026-08-27`, one binary
+(pin `740e7056`), one subject, identical flags, differing only in `--merge`.
+
+### 108.1 Why run it
+
+`strehl stack --help` states that the estimator backend "is the arm that draws
+the white halo around a dark subject on a bright ground", and prices it: *"the
+estimator's backdrop sits 4739 DN below its own far field across the 80-200 px
+aura zone; the pyramid sits 166 DN below."* That claim is the justification for
+the default having moved to `pyramid`, and it is the direct answer to the
+owner's complaint. **It had never been checked by an instrument built
+independently of the lane that made it.**
+
+### 108.2 The arms
+
+```
+strehl stack D:\personal\macro\flower-bud-alone-cpl --out <arm>.tiff \
+    --srgb --exposure 1.0 --merge {pyramid|estimator} --limit 60
+```
+
+Same binary, same 60 frames, same exposure, same colour path. Measured with
+`halo_profile.py` (section 107), which is an **absolute single-image** detector
+commissioned on six arms and blind to which file came from which merge.
+
+### 108.3 The result
+
+| arm | overshoot | bump | penumbra | far field | verdict |
+|---|---:|---:|---:|---:|---|
+| `estimator` | −6845.8 | **0.0** | −22676.6 | 62597 | clean |
+| `pyramid` | −5890.9 | **0.0** | −22893.1 | 62385 | clean |
+
+Both profiles are **strictly monotone outward** — `bump` is exactly 0.0 on each,
+which is the no-rim signature section 107 established. **Neither merge draws a
+bright rim on this subject at this depth.**
+
+The near-subject backdrop is measurably darker on the estimator: at d = 80–120 px
+it sits **955 DN** further below its own far field than the pyramid does. That
+is the **same direction** as the help text's claim.
+
+### 108.4 What this does NOT establish, stated because the numbers invite it
+
+**It does not reproduce 4739 / 166, and must not be quoted as confirming them.**
+Three differences make the magnitudes incomparable, and all three are mine:
+
+1. The corpus measurement was made **camera-linear**; this one is `--srgb` with
+   `--exposure 1.0` (which is **+1 stop, gain 2.000x**, not unity — the flag
+   names stops). A transfer curve and a gain both rescale a DN difference.
+2. The corpus measurement used **one mask for both arms**. `halo_profile.py`
+   segments **each image independently**, and it did: n = 4340 vs 4336 in the
+   innermost band, and the far fields differ by 212 DN. Two arms measured
+   against two different silhouettes are not a difference of 955 DN in the
+   aura; they are a difference of 955 DN plus an unmeasured mask term.
+3. 60 frames, not 205. Aura depth may vary with bracket depth; nobody has
+   measured that.
+
+**The right instrument for an arm-vs-arm aura depth is the comparator**
+(`veil_accept.py` / `veil_absolute.py`), which takes an on/off pair and one
+mask. `halo_profile.py` was built for a different question — *does this finished
+master have a rim* — and section 107.4's own rule applies to me here: a
+commissioned metric is trustworthy only within the range its commission spans,
+and its commission spanned single images, not paired arms.
+
+### 108.5 What it does establish
+
+> **The shipping default produces no bright rim on this subject, measured by an
+> instrument built independently of the lane that chose the default, and the
+> older arm does not either at this depth — the estimator's defect on this
+> subject is a dark aura, not a white halo.**
+
+That last clause matters for how the defect is described to users. The help text
+calls it "the white halo"; on this subject, at this depth, what is measurable is
+a **darkening of the backdrop near the subject**, and both arms have it (−22.7k
+and −22.9k DN at d = 2–6 px), with the estimator's decaying more slowly. Against
+a bright ground a slowly-decaying dark aura reads to the eye as a halo, so the
+word is defensible as description — but the sign of the measured quantity is
+negative, and a reader who goes looking for a positive overshoot will not find
+one and may wrongly conclude the claim was false.
