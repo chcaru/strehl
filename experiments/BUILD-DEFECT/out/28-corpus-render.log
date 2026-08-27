@@ -1,0 +1,32 @@
+
+stack                                  verdict    samples   sites
+----------------------------------------------------------------------------------------------------------------------------------
+109MSDCF                               CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+112MSDCF                               skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+113MSDCF                               skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+119MSDCF                               CORRECTED  20864     1/2 sites confirmed from 8 frames (not significant 1, too shallow 0, not stationary 0, unmeasurable 
+bee-1-cpl                              CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+bee-2-cpl                              CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+bee-3-cpl                              CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+coffee-bean                            CORRECTED  32020     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+coffee-bubbles                         skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+couch-fibers-cpl                       CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+dry-erase-marker-head-cpl              CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+flat-on-ruler-cpl                      skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+flower-bud-alone-cpl                   CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+flower-bud-with-background-fern-cpl    CORRECTED  20864     1/2 sites confirmed from 8 frames (not significant 1, too shallow 0, not stationary 0, unmeasurable 
+flower-inner-edge-cpl                  skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+flowers-cpl                            skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+foam                                   skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+highly-angled-ruler-mm-cpl             CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+lavendar-cpl                           CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+lead-1-cpl                             CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+leaf-2-cpl                             CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+pencil-flatter-angle-cpl               CORRECTED  36320     2/2 sites confirmed from 8 frames (not significant 0, too shallow 0, not stationary 0, unmeasurable 
+pencil-steep-angle-cpl                 CORRECTED  20864     1/2 sites confirmed from 8 frames (not significant 1, too shallow 0, not stationary 0, unmeasurable 
+tweezers-cpl                           CORRECTED  15456     1/2 sites confirmed from 8 frames (not significant 1, too shallow 0, not stationary 0, unmeasurable 
+wrapped-text-1                         skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+wrapped-text-2                         skipped    0         0/2 sites confirmed from 8 frames (not significant 2, too shallow 0, not stationary 0, unmeasurable 
+
+examined 26 = corrected 17 + skipped 9 + failed 0
+VERDICT: GREEN -- every corpus stack renders with the correction on by default

@@ -1150,6 +1150,11 @@ strehl-cli      : 113 passed; 0 failed
 strehl-core     : 531 passed; 0 failed
 ```
 
+Re-measured a second time after the P39 geometry fix, in a fresh worktree at
+pinned `25313471`: both hashes hold, reproduced twice, same suite counts. A
+verification that is not repeated after the next change is a verification of the
+previous change.
+
 **This is a result, not the absence of one.** The prediction written *before* the
 render was that they could not move, because the correction is unreachable from
 this backend — and the freeze is now a **specificity control** on that claim. If a
@@ -1275,7 +1280,163 @@ straight from the decoder, before any geometric transform.** Map, check and
 correction are all in sensor coordinates, all upstream of the aligner. There is no
 warp on this path to interact with.
 
-### 12.8 Corrections to the brief, restated because they were not retracted
+### 12.8 P39 — the guard that broke 11 of 26 renders, found by running the binary
+
+**This is the most important thing in this section and it was nearly shipped.**
+
+After everything above was green — 531 core tests, 113 CLI tests, both byte-freezes
+holding — I ran the shipping binary on three arbitrary corpus stacks as a
+real-data control. Two rendered. The third did not:
+
+```
+$ strehl stack D:\personal\macro\leaf-2-cpl --merge pyramid --limit 8 --out ...
+Error: defect correction on frame 0
+Caused by:
+    defect map was measured on a 7032x4688 active area but is being applied to a
+    7040x4688 one; a sensor-coordinate map applied to a different geometry
+    corrects the wrong photosites
+```
+
+**P39 (MEASURED).** A census with the **shipping decoder**
+(`crates/strehl-cli/examples/defect-geometry-census.rs`) found two active-area
+widths on one body, both anchored at `(0,0)`, both 4688 rows tall:
+
+```
+7032x4688 at (0,0)   15 stacks  MATCHES the map
+7040x4688 at (0,0)   11 stacks  DOES NOT MATCH -> the correction refuses
+     no raw frames    1 stacks  not applicable
+examined 27, bucketed 27
+matching 15 / 27   refused 12 / 27
+```
+
+**An exact-equality geometry guard hard-failed 11 of 26 renders** — including
+`highly-angled-ruler-mm-cpl`, which carries the corpus's deepest mote at −13.28%.
+Every test the guard had planted a mismatch, so every test passed. It is the
+halosens lesson in a different costume: *a guard shown only inputs it should
+reject cannot be distinguished from a guard that rejects everything.*
+
+**A methodological note worth keeping.** A Python census using
+`rawpy.raw_image_visible` reported **7028×4688 for all 26 stacks** — a single
+bucket, agreeing with neither number the Rust reports. It would have said there
+was no problem. rawpy is a different library with different crop logic and **is
+not the decoder that ships**. The census was rewritten as a Rust example against
+`strehl_raw::decode`. Prototype instruments do not measure shipping code.
+
+**Why the two widths are one lattice — measured, not assumed.** Both origins are
+`(0,0)`, so the wider readout simply extends 8 columns further right. The claim
+that matters is that a map coordinate names the same photosite in both, and that
+is directly measured **in both buckets at the same coordinates**:
+
+| stack | bucket | site `(3434, 2305)` | p |
+|---|---|---|---|
+| `coffee-bean` | 7032 | −14.860% | 0.0025 |
+| `bee-3-cpl` | 7032 | −9.117% | 0.0025 |
+| `leaf-2-cpl` | **7040** | −8.157% | 0.0025 |
+| `lavendar-cpl` | **7040** | −8.387% | 0.0025 |
+| `couch-fibers-cpl` | **7040** | −8.467% | 0.0025 |
+| `highly-angled-ruler-mm-cpl` | **7040** | −9.470% | 0.0025 |
+
+**The fix, and where its bar comes from.** The guard's real job is to catch a
+**readout mode change** — an APS-C crop moves where `(0,0)` sits on the sensor,
+so every coordinate names a different photosite. `MAX_ACTIVE_MISMATCH_FRAC` is
+**1%**, and both margins are measured rather than chosen: the difference it must
+**admit** is 0.11% (8 of 7032) and the difference it must **reject** is ~34% (the
+A7C II's APS-C crop). The bar sits 9× above one and 30× below the other, and this
+body has no readout mode in between. The refusal now prints the measured
+percentage and the bar, so it justifies itself.
+
+It also now fires **at preflight, against the first decoded frame**, not inside
+the fold. The old error surfaced as "defect correction on frame 0" *after* the
+entire merge banner had printed, which reads as a merge fault rather than as a
+map that does not belong to this body.
+
+**And the declarative guard is not what actually protects the pixels.** It
+compares two numbers in a header. `SiteValidator` requires the darkening to be
+*observed at the map's coordinates in the frames in front of it*. A map that
+passed the header check while being genuinely mis-registered would find nothing
+and correct nothing. The two are independent and the empirical one is stronger —
+which is the same argument that made default-ON defensible in the first place.
+
+The test is now `a_map_for_another_readout_mode_is_refused_but_a_wider_active_area_is_not`,
+with an **admit** arm (7032 → 7040 on the real geometry), a **reject** arm
+(APS-C scale, asserting the reported percentage exceeds the reported bar), and a
+third arm driving the reject through `apply` so the guard is known to be reached
+from the path that writes pixels rather than merely to exist.
+
+### 12.9 P40 — every corpus stack, rendered
+
+Fixing a default-ON feature on the one stack that exposed it is not a
+measurement. `src/28-corpus-render.ps1` renders **all 26** stacks through the
+shipping binary with the correction at its default, partitioning every stack into
+exactly one of *corrected*, *skipped* or *failed*:
+
+<!-- P40-RESULT -->
+**P40 (MEASURED). 26 examined = 17 corrected + 9 skipped + 0 failed.**
+
+```
+stack                                  verdict    samples   sites
+109MSDCF                               CORRECTED  36320     2/2 confirmed
+112MSDCF                               skipped    0         0/2 (not significant 2)
+113MSDCF                               skipped    0         0/2 (not significant 2)
+119MSDCF                               CORRECTED  20864     1/2 (not significant 1)
+bee-1-cpl                              CORRECTED  36320     2/2 confirmed
+bee-2-cpl                              CORRECTED  36320     2/2 confirmed
+bee-3-cpl                              CORRECTED  36320     2/2 confirmed
+coffee-bean                            CORRECTED  32020     2/2 confirmed
+coffee-bubbles                         skipped    0         0/2 (not significant 2)
+couch-fibers-cpl                       CORRECTED  36320     2/2 confirmed
+dry-erase-marker-head-cpl              CORRECTED  36320     2/2 confirmed
+flat-on-ruler-cpl                      skipped    0         0/2 (not significant 2)
+flower-bud-alone-cpl                   CORRECTED  36320     2/2 confirmed
+flower-bud-with-background-fern-cpl    CORRECTED  20864     1/2 (not significant 1)
+flower-inner-edge-cpl                  skipped    0         0/2 (not significant 2)
+flowers-cpl                            skipped    0         0/2 (not significant 2)
+foam                                   skipped    0         0/2 (not significant 2)
+highly-angled-ruler-mm-cpl             CORRECTED  36320     2/2 confirmed
+lavendar-cpl                           CORRECTED  36320     2/2 confirmed
+lead-1-cpl                             CORRECTED  36320     2/2 confirmed
+leaf-2-cpl                             CORRECTED  36320     2/2 confirmed
+pencil-flatter-angle-cpl               CORRECTED  36320     2/2 confirmed
+pencil-steep-angle-cpl                 CORRECTED  20864     1/2 (not significant 1)
+tweezers-cpl                           CORRECTED  15456     1/2 (not significant 1)
+wrapped-text-1                         skipped    0         0/2 (not significant 2)
+wrapped-text-2                         skipped    0         0/2 (not significant 2)
+
+examined 26 = corrected 17 + skipped 9 + failed 0
+VERDICT: GREEN -- every corpus stack renders with the correction on by default
+```
+
+Three things this measures that nothing before it did.
+
+**1. No stack hard-fails.** That is the claim a default-ON feature has to make, and
+before P39 it was false for 11 of 26.
+
+**2. The skips are the right skips, and they are the orchestrator's "busy texture"
+question answered on real data.** Every skipped stack is one with a dark or
+textured field at the mote's coordinates — `wrapped-text-1/2`, `foam`,
+`flowers-cpl`, `coffee-bubbles`, `flat-on-ruler-cpl`, `flower-inner-edge-cpl`. The
+verdict is always `not significant`, never `too shallow`: on `wrapped-text-1` site
+2 reads **−5.100% depth**, which clears the depth bar comfortably, and is rejected
+at **p = 0.2618** because a −5.1% dip is unremarkable against that background's own
+null. **The test does not fire where the mote is invisible.** It is not that the
+correction would be harmless there; it is that the evidence is absent, and absent
+evidence produces a skip.
+
+**3. It cross-checks V-EYES with an independent instrument.** V-EYES measured mote 2
+in **18 of 26 delivered masters**; this reads at least one site as present in **17 of
+26 raw brackets**. Different instrument, different data (raw frames before the warp
+vs. delivered sRGB masters), different statistic — agreeing to within one stack.
+That is corroboration, not identity, and it should not be quoted as though the two
+numbers were the same measurement.
+
+**A caveat on this sweep, stated because it bounds the claim.** It renders
+`--limit 8`, the same count the preflight samples. The geometry guard, the
+validator and the correction all execute identically at 8 frames as at 105; what
+is *not* exercised is the long-bracket fold, which this sweep does not measure and
+does not claim to.
+
+
+### 12.10 Corrections to the brief, restated because they were not retracted
 
 Carried forward from §0.3 because a report that quietly agrees with a wrong brief
 is worse than one that argues:
@@ -1290,7 +1451,7 @@ is worse than one that argues:
    correction was justified on the wrong mechanism in my own first doc comment and
    that comment was rewritten.
 
-### 12.9 Open questions
+### 12.11 Open questions
 
 - **Q4 (OPEN, narrowed).** Aperture transfer. Retired from the *correction* path
   entirely — the amplitude is now measured per stack, so an f/8 stack gets an f/8

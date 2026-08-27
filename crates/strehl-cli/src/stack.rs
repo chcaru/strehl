@@ -980,6 +980,23 @@ pub(crate) fn defect_preflight(
         },
     };
 
+    // P39. Fail on geometry HERE, against the first decoded frame, rather than
+    // inside the fold. The exact-equality version of this check surfaced as
+    // "defect correction on frame 0" after the whole merge banner had printed,
+    // which reads as a merge fault rather than as a map that does not belong to
+    // this body. It also hard-failed 11 of 26 corpus stacks; see
+    // `DefectMap::check_geometry` for why the bar is a fraction and where its
+    // two margins were measured.
+    raw_map
+        .check_geometry(first.active.width, first.active.height)
+        .with_context(|| {
+            format!(
+                "the defect map does not belong to {}; set STREHL_DEFECT=off to \
+                 render without it",
+                paths[idx[0]].display()
+            )
+        })?;
+
     let params = ValidateParams::default();
     let mut validator = SiteValidator::new(&raw_map, params);
     let active = (

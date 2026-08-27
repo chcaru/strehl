@@ -224,14 +224,17 @@ pub enum DefectMapError {
 
     #[error(
         "defect map was measured on a {want_w}x{want_h} active area but is being applied \
-         to a {got_w}x{got_h} one; a sensor-coordinate map applied to a different \
-         geometry corrects the wrong photosites"
+         to a {got_w}x{got_h} one, a {frac:.1}% difference; the tolerated difference is \
+         {bar:.1}%. A sensor-coordinate map applied to a different READOUT MODE indexes \
+         different photosites, because the crop moves where (0, 0) sits on the sensor"
     )]
     SensorMismatch {
         want_w: usize,
         want_h: usize,
         got_w: usize,
         got_h: usize,
+        frac: f64,
+        bar: f64,
     },
 
     #[error(
@@ -574,6 +577,21 @@ pub struct DefectMap {
 }
 
 impl DefectMap {
+    /// How far a frame's active area may differ from the map's before the map
+    /// is refused, as a fraction of each dimension.
+    ///
+    /// **1%, and both margins are measured.** See [`DefectMap::check_geometry`]
+    /// for the derivation: the difference this must ADMIT is 0.11% (the corpus
+    /// carries two full-frame active widths, 7032 and 7040, on one body) and
+    /// the difference it must REJECT is ~34% (the A7C II's APS-C crop, which
+    /// moves the origin and invalidates every coordinate). 9x above one, 30x
+    /// below the other, and no readout mode of this body in between.
+    ///
+    /// It is a fraction rather than a pixel count because the quantity that
+    /// matters is "is this the same readout mode", which scales with the
+    /// sensor.
+    pub const MAX_ACTIVE_MISMATCH_FRAC: f64 = 0.01;
+
     /// An empty map for a given geometry. Applying it is a no-op that reports
     /// `examined: 0` in both arms, which is the point — a body with no
     /// calibration is distinguishable from a body with a clean one.
@@ -846,6 +864,90 @@ impl DefectMap {
         })
     }
 
+    /// Check that this map's coordinates address the same photosites as a frame
+    /// whose active area is `aw x ah`.
+    ///
+    /// # This was an exact-equality check, and exact equality was WRONG
+    ///
+    /// P39 (MEASURED). A census of the 26-stack corpus with the shipping
+    /// decoder (`crates/strehl-cli/examples/defect-geometry-census.rs`) found
+    /// **two** active-area widths on one body, both anchored at `(0, 0)` and
+    /// both 4688 rows tall:
+    ///
+    /// ```text
+    /// 7032x4688 at (0,0)   15 stacks   MATCHES the map
+    /// 7040x4688 at (0,0)   11 stacks   refused by exact equality
+    /// ```
+    ///
+    /// An exact-equality guard therefore **hard-failed 11 of 26 renders**,
+    /// including `highly-angled-ruler-mm-cpl`, which carries the deepest mote
+    /// reading in the corpus at -13.28%. That is not a safe default; it is a
+    /// broken one. It was found by running the shipping binary on real stacks,
+    /// not by reading the code.
+    ///
+    /// # Why the two widths are the same lattice, measured rather than assumed
+    ///
+    /// Both origins are `(0, 0)`, so the two active areas share every column
+    /// they both declare and the wider one simply extends 8 columns further
+    /// right. The claim that matters is that a map coordinate names the same
+    /// photosite in both, and that was **measured, in both buckets, at the same
+    /// coordinates**:
+    ///
+    /// | stack | bucket | site `(3434, 2305)` | p |
+    /// |---|---|---|---|
+    /// | `coffee-bean` | 7032 | -14.860% | 0.0025 |
+    /// | `bee-3-cpl` | 7032 | -9.117% | 0.0025 |
+    /// | `leaf-2-cpl` | **7040** | -8.157% | 0.0025 |
+    /// | `lavendar-cpl` | **7040** | -8.387% | 0.0025 |
+    /// | `couch-fibers-cpl` | **7040** | -8.467% | 0.0025 |
+    /// | `highly-angled-ruler-mm-cpl` | **7040** | -8.585% | 0.0025 |
+    ///
+    /// The same mote reads at the same coordinate on both geometries. The
+    /// lattices are co-registered at the origin.
+    ///
+    /// # What the guard is actually for, and where the bar comes from
+    ///
+    /// The failure it must catch is a **readout mode change** -- APS-C crop, or
+    /// a different body -- because a crop moves where `(0, 0)` sits on the
+    /// sensor and every coordinate then names a different photosite. That is a
+    /// *large* change: the A7C II's APS-C crop is about **34%** narrower than
+    /// its full-frame readout.
+    ///
+    /// So the bar is [`DefectMap::MAX_ACTIVE_MISMATCH_FRAC`], and its margin is
+    /// stated rather than assumed: the difference it must **admit** is 0.11%
+    /// (8 of 7032) and the difference it must **reject** is 34%. The bar sits
+    /// 9x above the former and 30x below the latter. There is no readout mode
+    /// of this body in between.
+    ///
+    /// # It is not the only thing between a stale map and a wrong correction
+    ///
+    /// This guard is declarative -- it compares two numbers in a header.
+    /// [`SiteValidator`] is empirical: it requires the darkening to be
+    /// **observed at the map's coordinates in the frames in front of it**
+    /// before anything is corrected. A map that survived this check but was in
+    /// fact mis-registered would find nothing at its sites and correct nothing.
+    /// The two are independent, and the empirical one is the stronger.
+    pub fn check_geometry(&self, aw: usize, ah: usize) -> Result<(), DefectMapError> {
+        let frac = |want: usize, got: usize| -> f64 {
+            if want == 0 {
+                return f64::INFINITY;
+            }
+            (want as f64 - got as f64).abs() / want as f64
+        };
+        let worst = frac(self.sensor_w, aw).max(frac(self.sensor_h, ah));
+        if worst > Self::MAX_ACTIVE_MISMATCH_FRAC {
+            return Err(DefectMapError::SensorMismatch {
+                want_w: self.sensor_w,
+                want_h: self.sensor_h,
+                got_w: aw,
+                got_h: ah,
+                frac: worst * 100.0,
+                bar: Self::MAX_ACTIVE_MISMATCH_FRAC * 100.0,
+            });
+        }
+        Ok(())
+    }
+
     /// Apply the correction to one frame's samples, **in sensor coordinates**.
     ///
     /// `samples` is the decoder's whole buffer, `stride` its row pitch, and
@@ -866,6 +968,7 @@ impl DefectMap {
     ///   rather than silently clamped, because a clamped dust quad is a flat
     ///   patch where there was a gradient.
     /// - **A geometry mismatch is an error.** See
+    ///   [`DefectMap::check_geometry`] and
     ///   [`DefectMapError::SensorMismatch`].
     /// - **The map's [`CoordSpace`] chooses the origin.** An `active` map is
     ///   offset by `(ax, ay)`; a `full` map is not. This is the only place the
@@ -885,14 +988,7 @@ impl DefectMap {
         floor: HotFloor,
     ) -> Result<CorrectionReport, DefectMapError> {
         let (ax, ay, aw, ah) = active;
-        if aw != self.sensor_w || ah != self.sensor_h {
-            return Err(DefectMapError::SensorMismatch {
-                want_w: self.sensor_w,
-                want_h: self.sensor_h,
-                got_w: aw,
-                got_h: ah,
-            });
-        }
+        self.check_geometry(aw, ah)?;
         // The whole content of the `coords` key: where does (0, 0) live.
         let (ox, oy) = match self.coords {
             CoordSpace::Active => (ax, ay),
@@ -2635,14 +2731,65 @@ mod tests {
     }
 
     #[test]
-    fn a_map_for_another_sensor_geometry_is_refused_rather_than_applied() {
+    fn a_map_for_another_readout_mode_is_refused_but_a_wider_active_area_is_not() {
+        // P39. This test used to demand EXACT equality, and exact equality was
+        // wrong: the shipping decoder reports two full-frame active widths on
+        // one body (7032 for 15 corpus stacks, 7040 for 11), both at origin
+        // (0, 0), and the same motes read at the same coordinates in both. An
+        // exact-equality guard hard-failed 11 of 26 renders. See
+        // `DefectMap::check_geometry`.
+        //
+        // Both arms are here on purpose. A guard tested only where it fires
+        // cannot be distinguished from a guard that fires always -- which is
+        // exactly the state this one was in when it broke 11 renders, because
+        // every test it had planted a mismatch.
         let m = DefectMap::empty(W, H, "x");
+
+        // ARM 1: ADMIT. The corpus difference, scaled -- 0.11% of 7032 is
+        // sub-pixel at 240, so use the largest width still inside the bar.
+        let admit_w = W + (W as f64 * DefectMap::MAX_ACTIVE_MISMATCH_FRAC) as usize;
+        assert!(admit_w > W, "the tolerance must admit SOMETHING wider");
+        m.check_geometry(admit_w, H).unwrap_or_else(|e| {
+            panic!("a {admit_w}x{H} frame was refused against a {W}x{H} map: {e}")
+        });
+
+        // The real corpus geometries, unscaled, against the real map size.
+        let real = DefectMap::empty(7032, 4688, "ILCE-7CM2");
+        real.check_geometry(7032, 4688)
+            .expect("the map's own geometry was refused");
+        real.check_geometry(7040, 4688).expect(
+            "7040x4688 was refused -- this is 11 of 26 corpus stacks and the \
+             motes are measured at the same coordinates there",
+        );
+
+        // ARM 2: REJECT. An APS-C crop moves the origin, so every coordinate
+        // names a different photosite. ~34% narrower on this body.
+        let err = real
+            .check_geometry(4616, 3080)
+            .expect_err("an APS-C-scale readout was accepted");
+        match err {
+            DefectMapError::SensorMismatch { frac, bar, .. } => {
+                assert!(
+                    frac > bar,
+                    "the refusal reports {frac:.2}% against a {bar:.2}% bar, which \
+                     does not justify itself"
+                );
+                assert!(
+                    frac > 30.0,
+                    "an APS-C crop should be tens of percent, not {frac:.2}%"
+                );
+            }
+            other => panic!("expected SensorMismatch, got {other:?}"),
+        }
+
+        // ARM 3: REJECT, through `apply`, so the guard is known to be reached
+        // from the path that writes pixels and not merely to exist.
         let mut f = clean_frame(1, 8.0);
         let err = m
             .apply(
                 &mut f,
                 W,
-                (0, 0, W - 2, H),
+                (0, 0, W / 2, H),
                 BLACK,
                 f32::from(WHITE),
                 0.229,
