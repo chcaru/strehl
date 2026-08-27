@@ -385,19 +385,145 @@ the photo map they return **identical** counts: `dust: examined 22700,
 corrected 22700, clipped 0, outside 0, no change 0`, `samples changed 89074`.
 Two independent paths through the same data reporting the same number is the
 cross-check that the wiring is not doing something different in one of them.
-(89,074 of a possible 90,800 = 98.10%; the 1,726 remainder are samples whose
-black-subtracted signal was small enough that ×1.03–1.06 rounded back to the
-same `u16`. `samples_changed` counts *samples that moved*, `corrected` counts
-*quads the correction was applied to* — they are separate counters for exactly
-this reason.)
+**P22b (MEASURED — a correction can be right and still move nothing).** 89,074
+of a possible 90,800 samples moved (98.10%). The 1,726-sample shortfall is
+**not a bug and not a partial failure**: those are samples whose
+black-subtracted signal was small enough that multiplying by 1.03–1.06 rounded
+back to the *same* `u16`. A gain correction on a value of 20 DN at ×1.034 asks
+for 20.7 and stores 21; at 8 DN it asks for 8.27 and stores 8. **There is a
+quantisation floor on any multiplicative correction**, and near the black point
+the correction is arithmetically correct and physically inert.
 
-**P23 (a gap I am not hiding).** The `--merge estimator` arm (`run_estimator`)
-is **not** wired. It loads frames through its own `field_for`/`Scratch` path,
-not `load_frame`, so covering it is a different and larger patch than the one I
-was authorised to make. `strehl stack` defaults to `pyramid`, so the shipping
-default is covered; `--merge estimator` renders **uncorrected and says so**
-(the banner is absent, which is a weaker signal than I would like). Flagged to
-the orchestrator rather than fixed across a lane boundary.
+This is why `samples_changed` and `corrected` are **separate counters** and must
+stay separate. `corrected` counts *quads the correction was applied to*;
+`samples_changed` counts *stored values that actually moved*. A single merged
+counter would have reported 89,074 "corrections" and quietly redefined the word
+— and the 1.90% gap, which is a real property of the correction at low signal,
+would have been invisible. Nobody reading a future shortfall should file it as a
+defect without first checking the signal level: **the shortfall is the expected
+reading, and equality would be the surprise.**
+
+### 6.2.1 P23 — an architectural seam, and a guard over it
+
+**P23 (MEASURED — the finding, which outlives this patch).**
+`strehl-cli` has **two independent frame loaders**:
+
+| loader | used by | defect correction |
+|---|---|---|
+| `merge_cmd.rs fn load_frame` | `run_pyramid` fold **and** both confidence passes | **applied** (§6.2) |
+| `field_for` / `Scratch` | `run_estimator` | **absent** |
+
+A per-frame correction added to one is **silently absent from the other**. That
+is the fact, and it is not about dust: it is a property of the command surface
+that the next per-frame correction anyone adds — a bad-column map, a per-frame
+flat, a linearity LUT — will hit in exactly the same way, and will hit it
+silently, because neither loader knows the other exists.
+
+The observable failure is not "one backend lacks a feature". It is **"a
+configured correction is silently not applied"** — the user exports
+`STREHL_DEFECT_MAP`, passes `--merge estimator`, gets a clean exit and a
+finished TIFF, and has no way to learn that the map was ignored. An
+uncorrected render that *says nothing* is the worst available outcome, which is
+the same principle that makes a malformed map file a hard error rather than a
+skip.
+
+**The remedy is a refusal, not a second wiring.** When a defect map is
+configured *and* the estimator backend is selected, the command must
+hard-error before any frame is decoded. Wiring the second loader would double
+the number of places a correction must be maintained and would leave the seam
+itself intact for the next feature; a refusal converts a silent wrong answer
+into a loud stop, which is the outcome this project prefers whenever the two
+are on offer.
+
+**State plainly what that buys: the refusal is a *guard over* the seam, not a
+*fix of* it.** After it lands, `strehl-cli` still has two loaders and they still
+disagree about what a frame is. What changes is only that this *particular*
+divergence can no longer be reached silently. The next correction added to
+`load_frame` will be absent from `field_for` again, and will need its own guard,
+because nothing structural prevents it. Closing the seam properly means one
+loader — a larger change than this lane, and one that touches files owned by
+other lanes.
+
+**Status: BLOCKED, not done.** See §6.2.2.
+
+### 6.2.2 P24 — the refusal is written but NOT applied: lane collision
+
+**P24 (OBSERVED).** The orchestrator authorised the refusal on 2026-08-27. The
+lane-safety check it required ran **first**, and it stopped the work:
+
+```
+> git --no-pager status --porcelain -- crates/strehl-cli/
+ M crates/strehl-cli/Cargo.toml
+ M crates/strehl-cli/src/main.rs
+ M crates/strehl-cli/src/merge_cmd.rs      <-- the file the refusal needs
+?? crates/strehl-cli/examples/build-plugin-field.rs
+?? crates/strehl-cli/src/focus_plugin.rs
+```
+
+`merge_cmd.rs` carries **145 uncommitted lines** that are not mine (0 of them
+mention `defect`; the new `focus_plugin.rs` and `examples/build-plugin-field.rs`
+identify them as BUILD-PLUGIN's live work). `main.rs` carries 90 more.
+
+The refusal has **no in-lane alternative**. `merge_cmd::run` dispatches
+`MergeBackend::Estimator => run_estimator(opts)` at `merge_cmd.rs:2812`, and
+`run_estimator` calls nothing I own — it never constructs a `DefectPlan`, which
+is precisely *why* the correction is silently absent. Nothing in `stack.rs` or
+`defect_map.rs` can observe that the estimator was selected. The check must be
+inserted into the dirty file or it cannot exist.
+
+Per the standing instruction — *"if BUILD-PLUGIN has committed to the file you
+need, or has it dirty, stop and report — do not resolve a conflict yourself"* —
+I stopped. **My committed work at `107b37e0` was verified intact and
+unclobbered** (all eight `defect` sites still present in the working file).
+
+**The patch, ready to apply.** It belongs at `merge_cmd.rs:2820`, immediately
+after `align_cmd::preflight_ca_profile()?`, which is already the house idiom for
+this exact situation — *"fail on configuration before a frame is read. An
+invalid `STREHL_FIX_CA` otherwise surfaces only after the first decode
+(53.4 s), which reads as a slow arm in a matrix."* The refusal is the same
+argument with a different input:
+
+```rust
+    // A configured defect map that is SILENTLY NOT APPLIED is worse than no
+    // map: the render finishes, exits zero, and the uncorrected motes are
+    // indistinguishable from corrected ones. This arm loads frames through
+    // `field_for`/`Scratch`, not `load_frame`, so the correction wired in
+    // BUILD-DEFECT.md sec 6.2 does not reach it -- see P23, the seam this
+    // guards. Refused at setup, before any decode, for the same reason
+    // `preflight_ca_profile` is: a failure that costs 53 s of render first
+    // reads as a slow arm rather than a misconfiguration.
+    if let Some(plan) = crate::stack::defect_plan_from_env(&noise_free_probe())? {
+        anyhow::bail!(
+            "STREHL_DEFECT_MAP is set ({} hot sites, {} dust quads, arms {}) but \
+             the `estimator` merge backend DOES NOT APPLY defect correction, and \
+             this render would silently ignore it. The `pyramid` backend applies \
+             it in sensor coordinates before the warp. Re-run without \
+             `--merge estimator` (pyramid is the default), or unset \
+             STREHL_DEFECT_MAP to render deliberately uncorrected.",
+            plan.map.hot.len(),
+            plan.map.dust.len(),
+            plan.correction
+        );
+    }
+```
+
+Two tests, both required — *a refusal with no negative control is untested*:
+
+1. `a_defect_map_with_the_estimator_backend_refuses_rather_than_ignoring_it` —
+   set `STREHL_DEFECT_MAP`, select `MergeBackend::Estimator`, assert non-zero
+   exit and that stderr names `estimator`, `pyramid`, and "not appl".
+2. `the_estimator_backend_runs_normally_with_no_defect_map_configured` — the
+   negative control, asserting the guard is not universal.
+
+**One open design point for whoever applies it**, stated rather than guessed:
+the snippet above needs a `NoiseModel` to call `defect_plan_from_env`, but at
+`run_estimator`'s preflight no frame has been decoded, so no `NoiseModel`
+exists yet — that is the *point* of refusing there. The clean fix is to split
+the env *parse* from the plan *build* (`defect_map_configured() -> Result<bool>`
+reading only `STREHL_DEFECT_MAP`), so the guard needs no calibration. That is a
+small addition to `stack.rs`, which is in my lane; I have not made it because
+it would be dead code until the `merge_cmd.rs` half can land, and committing a
+`pub(crate)` function with no caller invites someone to wire it wrongly.
 
 **`RENDER_ENV` was closed in the same commit.** `STREHL_DEFECT_MAP`,
 `STREHL_DEFECT_ARM` and `STREHL_DEFECT_HOT_FLOOR` are now cleared by
@@ -439,13 +565,15 @@ reads it**.
 
 ## 7. What I would do next
 
-1. **Wire `merge_cmd::load_frame`** (§6.2) and add `STREHL_DEFECT_MAP` to
-   `RENDER_ENV`.
-2. **Settle T5** — re-shoot flats immediately after a subject stack, without
+1. ~~**Wire `merge_cmd::load_frame`**~~ — **DONE**, §6.2, commit `107b37e0`.
+   `RENDER_ENV` closed in the same commit.
+2. **Apply the estimator refusal** (§6.2.2 P24) once `merge_cmd.rs` is free.
+   Blocked on a lane collision, not on a question.
+3. **Settle T5** — re-shoot flats immediately after a subject stack, without
    touching the CPL, and see whether the 25-quad offset persists.
-3. **Aperture transfer (T1)** — the map at f/8 and f/11 from the three stacks at
-   each.
-4. **Run the Rust `detect_dust` on the real flats** to close T2, via a small
+4. **Aperture transfer (T1)** — see Q4 below; this is an **open question, not a
+   caveat I have retired**.
+5. **Run the Rust `detect_dust` on the real flats** to close T2, via a small
    `strehl defect-map build` subcommand.
 5. **The hot arm remains a null.** Do not spend more on it without a body whose
    in-situ amplitude exceeds M101's 1.5 DN.
@@ -476,6 +604,32 @@ reads it**.
 
 - **Q1.** Why do the flats mis-locate by 10–25 quads (T5)?
 - **Q2.** Does the (3434,2305) mote deepen at f/11, and by how much?
+- **Q4 (OPEN — the aperture transfer, unclaimed).** **The shipped map is
+  measured at f/5.6 only, and I do not claim it transfers.** What is
+  established is *coverage*, not transfer: P2 measured 20 of the 26 subject
+  stacks at f/5.6, so the map is calibrated at the aperture most of the corpus
+  was shot at. Those are different statements and the difference matters,
+  because dust sits a small distance above the sensor and its shadow **sharpens
+  and deepens as the aperture closes** — the same mote should read *more*
+  negative at f/11 than the −8.24% measured at f/5.6, and the correction map
+  would then be an under-correction of unknown size. Applying an f/5.6 map to
+  an f/11 frame is a partial fix whose residual nobody has measured.
+
+  **The capture that would settle it**, stated specifically so it can be shot
+  rather than debated: a single subject, tripod-locked and untouched between
+  frames, **20 frames at f/5.6 and 20 at f/11 with nothing else changed** —
+  same focus point, same CPL orientation, same session, exposure compensated to
+  match the histogram. Run the §4.1 discriminator at the two known cores
+  (3202,121) and (3434,2305) on each set. That yields the depth ratio
+  `d(f/11) / d(f/5.6)` directly, with the same commissioned local null and the
+  same p-values, and it is the *only* comparison that isolates aperture,
+  because both sets come from one sensor state and one session. The 26-stack
+  corpus **cannot** answer it: its f/8 and f/11 stacks are different subjects
+  shot on different days, so a depth difference there confounds aperture with
+  every other thing that changed.
+
+  Until that is shot, the honest scope of the map is **f/5.6**, and §5 T1
+  stands.
 - **Q3 (ANSWERED by the orchestrator — the rationale for the default).** The
   feature ships **opt-in**, and the reason is a *correctness* argument, not
   caution. A defect map is a statement about the sensor **on a particular
@@ -505,7 +659,7 @@ reads it**.
 | Rule | Where |
 |---|---|
 | 3 — inject, never derive | `DefectPlan.gain_dn_per_e` comes from the injected `NoiseModel`, not re-derived |
-| 28 — local fact numbering | P1–P23 |
+| 28 — local fact numbering | P1–P24 |
 | 33 — never `-q`; a run with no `Compiling` line is not evidence | §10 quotes the `Compiling` lines |
 | 40 — prior-art search first | §0.2; it reshaped the mission |
 | Nothing is true until measured | Every number here is quoted from a persisted log in `experiments/BUILD-DEFECT/out/` |
