@@ -13375,3 +13375,80 @@ If it holds, the twenty-six masters are the *faithful* render rather than the
 brightened one. That does not make them wrong. It makes the documented command
 line describe something that did not happen, which is the same defect this
 project keeps finding in its own instruments, now in its own product.
+
+## 127. The speed claim had no comparator, and re-measuring it made it *worse* to state
+
+`§124` caught the number `2.4×` appearing twice in one sentence in two different
+roles and correctly convicted the *noise* instance as fabricated. It left the
+*speed* instance standing, because that is where the number came from. What it
+did not do — what I did not ask it to do — is check whether the surviving
+instance names what it is faster **than**.
+
+It did not. The owner-facing README read:
+
+> Speed: 0.366 s/frame at 33 MP, **2.4× a comparable existing implementation**,
+> CPU only.
+
+"A comparable existing implementation" is the speed-axis form of the defect this
+log has spent the night prosecuting on the quality axis: **a ratio quoted without
+its comparator**. I have refused that phrasing from three lanes. It was sitting
+unchallenged in the document I hand to the owner, in my own prose.
+
+### Sourced, then re-measured
+
+The figure is real and traces to `V-HEADTOHEAD2.md:838`. The comparator is **the
+predecessor fork this project replaced** — not `enfuse`, not `focus-stack`, both
+of which appear elsewhere in the same document as quality comparators, which is
+exactly why the unnamed phrasing was dangerous: the two nearest antecedents in
+the reader's mind are both wrong.
+
+Re-timed on the shipping pin `9b05d0b7` (sha `44C2F2CD2E5B2894`), warm, this box:
+
+| subject | frames | wall clock | s/frame |
+|---|---:|---:|---:|
+| `109MSDCF` | 22 | 7.83 s | 0.356 |
+| `coffee-bean` | 105 | 25.53 s | 0.243 |
+| *predecessor, its own log, same 105 frames* | 105 | 93.70 s | 0.892 |
+
+So on the same subject the shipping build is **3.67× faster**, not 2.4×.
+
+### Why I did not raise the number
+
+Because I measured one side of it. The 93.7 s is a logged figure from another
+tree under conditions I did not control, and my 25.5 s is warm-cache on an
+otherwise-busy box running nine lanes. A ratio is worth what its weaker half is
+worth, and its weaker half here is a number I did not take. **The conservative
+figure stays; the comparator gets named.** Raising a claim on the strength of the
+half you measured is the same error as lowering one on the strength of the half
+you didn't.
+
+There is a second reason, and it is the better one: the lane that produced 2.4×
+had already rejected a **36–42×** span because it contained a 14–17× regression
+in someone else's tree that this project did not cause. That lane declined free
+credit. Overturning its number using a measurement it would have rejected on the
+same grounds would undo the judgement, not improve it.
+
+### The part that is genuinely missing, now stated as missing
+
+**Speed against `enfuse` and `focus-stack` is not measured, and the obvious
+measurement would be rigged.** Both were fed *pre-aligned* TIFFs for the quality
+head-to-head. Timing them as they were run compares their **merge alone** against
+strehl's **decode + align + merge**. That comparison would flatter us by a wide
+margin and it would be worthless — the same shape as the flat-field "control"
+that was a filename parse, and the build audit that could not reach 102 of 165
+binaries: an instrument whose reach does not cover the claim it is asked to
+support. I would rather ship "not measured" than ship a number I know is bent in
+my favour.
+
+> **Rule.** A performance ratio names its comparator, its subject, and its frame
+> count, or it is not a measurement — it is a mood. And the direction a
+> re-measurement moves a claim does not license restating it: a ratio inherits the
+> rigour of its *weaker* half, not its more recent one.
+
+### Standing correction to the deliverable
+
+The README now states the range with both subjects, names the predecessor as the
+comparator, records the 3.67× re-measurement while leaving the published 2.4×
+in place, and says plainly that the free-field speed comparison does not exist.
+Speed is half of what the owner asked for and it had been carried in a single
+unsourced clause.
