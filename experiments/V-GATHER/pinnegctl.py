@@ -1,23 +1,18 @@
-"""Negative control on the guard: break it on purpose, require the suite to notice.
+r"""Sabotage the guard three ways and require it to notice each one.
 
-A commissioning suite that has only ever returned COMMISSIONED is in exactly the
-position of the guard it commissions -- it has never been observed to refuse.
+FROZEN and PERMIT were the original two. The third, NARROW, exists because this
+lane's own scan was the thing that failed tonight: it reverts find_binaries to
+the exact-name query that produced the false negative. If the commissioning's
+reach arms are real, NARROW must turn them RED. If they stay green, the decoys
+are decoration.
 
-Two sabotages, each aimed at a different arm group:
-
-  FROZEN   corpora() stops scanning and returns a hand-written snapshot. This is
-           the decay mode the derived manifest exists to prevent, and it must be
-           caught by the seal-perturbation arms specifically -- arms 1-8 keep
-           passing under it, which is the whole point.
-  PERMIT   refuse() returns OK instead of REFUSE, turning every refusal into a
-           warning. Must be caught by the RED arms.
-
-Each mutation is anchored on a full line asserted to occur EXACTLY ONCE, and
-hard-errors if it does not land. A negative control that silently failed to
-apply is a green that means nothing.
-
-The file is restored from a $env:TEMP copy, never from git.
+Every mutation is anchored on a full line asserted to occur EXACTLY ONCE and
+hard-errors otherwise -- a sabotage that silently fails to land reads as a clean
+pass, which is the failure mode this whole exercise exists to prevent. Files are
+restored from a %TEMP% copy, never from git.
 """
+import hashlib
+import io
 import os
 import shutil
 import subprocess
@@ -25,63 +20,105 @@ import sys
 import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SUITE = os.path.join(HERE, "pincommission.py")
+COMMISSION = os.path.join(HERE, "pincommission.py")
 
-FROZEN = ("pinmanifest.py",
-          '    root = root or os.path.join(OUT_ROOT, "acceptance")',
-          '    return {"SHIP-V3": {"15EA73461905EA2D44B2F8242D578CD9330454450F61269AE1B1FBA71682A7B0": 26},\n'
-          '            "SHIP-V4": {"44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490": 26}}')
-PERMIT = ("pincheck.py",
-          '    print("REFUSED: " + msg)',
-          '    return OK')
+SABOTAGE = {
+    "FROZEN": (
+        os.path.join(HERE, "pinmanifest.py"),
+        '    """Pass-through by default. pinnegctl.py\'s FROZEN sabotage rebinds this."""\n'
+        '    return _ORIG_CORPORA(root)',
+        '    """FROZEN: cache the derived manifest to disk and never refresh it."""\n'
+        '    import json as _j, tempfile as _t\n'
+        '    c = os.path.join(_t.gettempdir(), "pin-frozen-manifest.json")\n'
+        '    key = os.path.normcase(root or "(default)")\n'
+        '    d = {}\n'
+        '    if os.path.exists(c):\n'
+        '        d = _j.load(open(c, encoding="utf-8"))\n'
+        '        if key in d:\n'
+        '            return d[key]\n'
+        '    v = _ORIG_CORPORA(root)\n'
+        '    d[key] = v\n'
+        '    _j.dump(d, open(c, "w", encoding="utf-8"))\n'
+        '    return v',
+        "the manifest is derived ONCE and cached; every later call reads the cache.\n"
+        "         Values start CORRECT, so nothing about any binary looks wrong"),
+    "PERMIT": (
+        os.path.join(HERE, "pincheck.py"),
+        '    print("REFUSED: " + msg)',
+        '    print("REFUSED: " + msg)\n    return 0',
+        "every refusal downgrades to a warning that still exits 0"),
+    "NARROW": (
+        os.path.join(HERE, "pinmanifest.py"),
+        "def find_binaries(root, pattern=PIN_PATTERN):",
+        "def find_binaries(root, pattern=PIN_PATTERN):\n"
+        "    import glob as _g\n"
+        "    return [p for p in _g.glob(os.path.join(root, '**', 'strehl.exe'),\n"
+        "                               recursive=True) if os.path.isfile(p)]",
+        "the scan reverts to the exact-name query that produced the false negative"),
+}
 
 
-def run_suite():
-    p = subprocess.run([sys.executable, SUITE], capture_output=True, text=True)
-    return p.returncode, p.stdout
+def run_commission():
+    p = subprocess.run([sys.executable, COMMISSION], capture_output=True, text=True)
+    return p.returncode, p.stdout + p.stderr
 
 
-def sabotage(fname, anchor, inject):
-    path = os.path.join(HERE, fname)
-    lines = open(path, encoding="utf-8").read().split("\n")
-    hits = [i for i, l in enumerate(lines) if l == anchor]
-    if len(hits) != 1:
-        raise SystemExit("MUTATION TARGET NOT FOUND: %r occurs %d times in %s"
-                         % (anchor, len(hits), fname))
-    lines.insert(hits[0] + 1, inject)
-    open(path, "w", encoding="utf-8").write("\n".join(lines))
-    return path
+def arms(out):
+    """Split the suite's arms into the two families a sabotage can hit."""
+    binary = seals = reach = 0
+    for line in out.splitlines():
+        if "WRONG" not in line:
+            continue
+        if line.startswith("REACH"):
+            reach += 1
+        elif "re-seal" in line or "RESEALED" in line or "seals perturbed" in line:
+            seals += 1
+        else:
+            binary += 1
+    return binary, seals, reach
 
 
 if __name__ == "__main__":
-    rc, out = run_suite()
-    print("BASELINE                     exit %d  %s"
-          % (rc, "COMMISSIONED" if rc == 0 else "not commissioned"))
+    rc, out = run_commission()
+    print("BASELINE  exit=%d  %s" % (rc, "COMMISSIONED" if rc == 0 else "NOT COMMISSIONED"))
     if rc != 0:
-        raise SystemExit("baseline is already red; nothing to control")
+        raise SystemExit("baseline is not green; sabotage results would be unreadable")
 
-    tmp = tempfile.mkdtemp(prefix="vg-pin-")
-    for fname, anchor, inject in (FROZEN, PERMIT):
-        path = os.path.join(HERE, fname)
-        backup = os.path.join(tmp, fname)
-        shutil.copy2(path, backup)
-        try:
-            sabotage(fname, anchor, inject)
-            rc, out = run_suite()
-            wrong = [l for l in out.split("\n") if "WRONG" in l]
-            tag = "FROZEN" if fname == "pinmanifest.py" else "PERMIT"
-            print("SABOTAGE %-20s exit %d  %s  (%d arms caught it)"
-                  % (tag, rc, "RED -- caught" if rc != 0 else "GREEN -- BLIND",
-                     len(wrong)))
-            for l in wrong[:6]:
-                print("     " + l.strip())
-        finally:
-            shutil.copy2(backup, path)
+    stale = os.path.join(tempfile.gettempdir(), "pin-frozen-manifest.json")
+    if os.path.exists(stale):
+        os.remove(stale)
+    tmp = tempfile.mkdtemp(prefix="pinnegctl-")
+    originals = {}
+    try:
+        for name, (path, anchor, repl, why) in SABOTAGE.items():
+            back = os.path.join(tmp, "%s-%s" % (name, os.path.basename(path)))
+            shutil.copy2(path, back)
+            originals[back] = path
+            s = io.open(path, encoding="utf-8").read()
+            if s.count(anchor) != 1:
+                raise SystemExit("MUTATION TARGET NOT FOUND: %r occurs %d times in %s"
+                                 % (anchor[:50], s.count(anchor), path))
+            io.open(path, "w", encoding="utf-8", newline="\n").write(
+                s.replace(anchor, repl))
+            rc2, out2 = run_commission()
+            b, sl, r = arms(out2)
+            print("\n%-8s %s" % (name, why))
+            print("         exit=%d   arms that went RED: binary %d, seals %d, reach %d"
+                  % (rc2, b, sl, r))
+            print("         %s" % ("CAUGHT" if rc2 != 0 else
+                                   "*** NOT CAUGHT -- the suite is blind to this ***"))
+            shutil.copy2(back, path)
+            if os.path.exists(stale):
+                os.remove(stale)
+    finally:
+        for back, path in originals.items():
+            shutil.copy2(back, path)
+        for back, path in originals.items():
+            a = hashlib.sha256(open(back, "rb").read()).hexdigest()
+            b = hashlib.sha256(open(path, "rb").read()).hexdigest()
+            print("restored %-18s %s" % (os.path.basename(path),
+                                         "byte-identical" if a == b else "*** DIFFERS ***"))
+        shutil.rmtree(tmp, ignore_errors=True)
 
-    rc, out = run_suite()
-    same = all(open(os.path.join(HERE, f), "rb").read()
-               == open(os.path.join(tmp, f), "rb").read()
-               for f, _, _ in (FROZEN, PERMIT))
-    print("RESTORED                     exit %d  %s   files byte-identical to backup: %s"
-          % (rc, "COMMISSIONED" if rc == 0 else "STILL RED", same))
-    shutil.rmtree(tmp, ignore_errors=True)
+    rc3, _ = run_commission()
+    print("\nAFTER RESTORE  exit=%d  %s" % (rc3, "green again" if rc3 == 0 else "STILL RED"))
