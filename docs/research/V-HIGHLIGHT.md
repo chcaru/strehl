@@ -495,3 +495,104 @@ corpus subject that comes nearest the knee remains the author's own `109MSDCF` a
 `0.5707`. Finding a corpus subject that genuinely crosses the knee, other than
 the saturating ones already known (`coffee-bubbles`, `coffee-bean`, `foam`,
 `tweezers-cpl`), remains open.
+
+---
+
+# Independent check of ORCH's all-clear (fleet notice, dangling-object audit)
+
+The notice said no action required. But it made three claims about the shared
+repo I work in — a config change, a "nobody lost work" verdict, and a safe-list —
+so I checked the two that are falsifiable.
+
+## The protection is real
+
+```
+gc.auto  --local : '0'   --global : ''   --system : ''   effective: '0'
+.git/config      : [gc] / auto = 0
+```
+
+Set at local scope, present in the file, unshadowed. `gc.pruneExpire` and the
+reflog-expiry knobs remain at defaults, which is harmless while auto-gc is off,
+but they mean an **explicit** `git gc` would still prune. ORCH's "do not run
+`git gc --prune=now`" is therefore load-bearing, not a formality.
+
+## The verdict is right; the census that produced it was one object short
+
+I reproduced the count — 11 dangling blobs. But the itemisation in the notice is
+`3 commitmsg + 2 buildlog + 5 substantive = 10`. Cross-referencing every SHA they
+named against my own census leaves one unaccounted:
+
+```
+  [*** NOT IN ORCH'S BREAKDOWN ***] d4f2395d56
+  == A6 control-square, real texture (H2) ==
+  stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360 ...
+```
+
+114 lines of A6 control-square measurement output — neither a commit message nor
+a build log, so it falls in the "substantive" class that was supposed to get the
+containment test. It did not get one. I ran it:
+
+```
+blob d4f2395d56 -> experiments/m16-orientation-fpn/data/run-log-c.txt
+  blob vs HEAD       blob=114 HEAD=424      only-in-blob=0
+  blob vs worktree   blob=114 worktree=424  only-in-blob=0
+```
+
+Contained. Nothing lost. **The conclusion survives; the coverage did not.**
+
+## There is also a dangling *commit*, which the audit never had in scope
+
+`git fsck` reports one, and it is **not** an ancestor of HEAD:
+
+```
+6a1cdb6490  Mon Aug 24 20:28:12 2026
+  M120: PIL 16-bit-RGB hazard audit; harden INV-PATCHWORK with a dtype assert
+  2 files changed, 152 insertions(+)
+  ancestor of HEAD? NO
+```
+
+A dangling commit carries a whole tree, so it is the larger exposure of the two.
+Same test, per file:
+
+```
+  docs/research/M120-patchwork.md             commit=485 HEAD=1462 only-in-commit=0
+  experiments/M120-patchwork/13_pil_audit.py  commit=93  HEAD=93   only-in-commit=0
+```
+
+Also fully contained — the work was re-landed by another route. So the all-clear
+holds across 11/11 blobs **and** the commit, which is a wider basis than the
+notice claimed. Both gaps were coverage, not casualties.
+
+Worth stating plainly because it is the notice's own lesson pointed back at it: a
+census whose parts do not sum to its total has already told you it is incomplete,
+and `3 + 2 + 5 = 10` against a stated 11 is that signal in arithmetic.
+
+## The boolean/magnitude rule, applied to my own null
+
+ORCH asks whether any of our yes/no checks can be made to answer *how much*. Mine
+can, and it is the check that already failed me. My seven-subject null rested on
+**byte-identity — a boolean**. Same seven subjects, same runs, two questions:
+
+```
+subject               BOOLEAN      max u     approach   what it tells me
+                   (identical)                (u/knee)
+112MSDCF                 True     0.1086        0.18x   CANNOT FIRE
+113MSDCF                 True     0.2304        0.38x   CANNOT FIRE
+119MSDCF                 True     0.5449        0.91x   weakly informative
+wrapped-text-1           True     0.1488        0.25x   CANNOT FIRE
+flowers-cpl              True     0.2659        0.44x   CANNOT FIRE
+lavendar-cpl             True     0.2236        0.37x   CANNOT FIRE
+bee-3-cpl                True     0.3188        0.53x   CANNOT FIRE
+BOOLEAN   spread: True for 7 of 7 -- variance zero, no self-check possible
+MAGNITUDE spread: 0.18x to 0.91x -- a 5.0x range the boolean hid entirely
+```
+
+The boolean is constant across a fivefold spread in the property that governs
+whether it could vary at all. It said "pass" seven times and could not have said
+anything else. The magnitude says the instrument was never in range, and it says
+so without my having to already suspect it — which is the whole value.
+
+The generalisation I take from it: **the magnitude worth reporting is not the
+size of the effect but the distance to the threshold that would have let the
+effect appear.** Pixels-moved was also zero and would have taught me nothing;
+`u/knee` is the number that polices the null.
