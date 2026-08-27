@@ -31,7 +31,8 @@ The falsifier is armed: on a *real* 0.6 px Gaussian blur the BLUR arm shows a
 gap of 0.527 at this band of which a 4×4-block tone fit explains **3.3%**, so
 the estimator cannot manufacture a resolution difference out of tone.
 
-Four things stand behind that table, and three of them are corrections.
+Four things stand behind that table, and three of them are corrections. A fifth
+was added afterwards and is reported as **5** below.
 
 **1. The band question was settled before any comparator ran, and V-LINEAR was
 too pessimistic.** `bandsignal.py` measures in-focus against defocused band
@@ -72,6 +73,22 @@ abandoned itself**. §11 gives both framings and the three mechanism arms that
 narrow but do not settle it. The headline above uses absolute power, for the
 reason given in §11.3 — and it is corroborated by a statistic that needs no
 cross-arm normalisation at all (§11.4).
+
+**5. Two arms whose score is fixed by construction were added afterwards, and
+they closed an open limitation.** The verdict statistic *fits* a sub-pixel shift
+per ROI, and a fit can lock onto noise and invent coherence — which would
+flatter strehl most, since strehl is the only arm with a real offset to fit.
+`physfloor.py` (§10.1) bounds it from both ends. **SELF** — a crop against
+itself, where C ≡ P by construction — returns **1.0000 in every band**, so the
+machinery loses nothing. **DISJOINT** — half-stack A at one ROI against
+half-stack B at a *different* ROI, sharing sensor, optics and pipeline but no
+scene, so C ≡ 0 by construction — was refused outright by the fitter on all 64
+pairs, and with the fit disabled reads **0.24% of strehl's coherent power** at
+0.20–0.25 against a pre-registered ceiling of 10%. That converts §12's "noise
+common to both half-stacks" from undetermined to bounded. It also corroborates
+the band selection from an unrelated direction: the same arm reads **40.2% at
+0.40–0.48 cyc/px**, so in the bands §2 rejected, a large part of what the
+instrument calls "coherent" is the sensor.
 
 ---
 
@@ -548,6 +565,69 @@ difference.** The `enfuse` verdict's 2.3% sits just above it, which is a second
 and independent reason to read that comparison as LEVEL rather than as a narrow
 win for `enfuse`.
 
+### 10.1 Two arms whose score is fixed by construction
+
+The NULL and BLUR arms falsify the *tone* estimator. They say nothing about the
+statistic that actually produces the verdict, and that statistic has a specific
+exposure: `cohfix.pair_cross` **fits** a sub-pixel shift per ROI before forming
+the cross term. A fitted alignment could in principle lock onto noise and
+*manufacture* coherence — which would inflate every arm, and inflate strehl
+most, because strehl is the only arm with a real 1.32 px offset for the fitter
+to work on. `cohfix.py`'s own self-test cannot exclude this: it shifts an image
+by a *known* amount and checks the shift is recovered, so it proves the
+estimator works when there **is** something to align, and says nothing about
+what it does when there is nothing.
+
+`physfloor.py` adds two arms whose true score is fixed in advance by physics,
+bracketing the measurement from both ends. Thresholds were written into the
+file's docstring before it was first run.
+
+| arm | what fixes its score | pre-registered threshold | MEASURED |
+|---|---|---|---|
+| **SELF** | a crop against *itself*: every bin has zero phase difference, so C ≡ P | C/P ≥ 0.990 in every band up to 0.20–0.25 | **1.0000 in all seven bands** — PASS |
+| **DISJOINT** | half-stack A at one ROI against half-stack B at a *different* ROI: same sensor, same optics, same pipeline, **no shared scene**, so the scene cross-term is 0 | \|C\|/C_strehl < 0.10 at 0.20–0.25 | see below — PASS |
+
+**SELF returns exactly 1.0000 in every band**, so the shared code path loses no
+coherence and no `C` in §9 is depressed by the machinery itself.
+
+**DISJOINT produced a stronger result than the threshold anticipated: the
+shift fitter refused all 64 pairs.** `refine_shift` declined to return a fit on
+every scene-free pair. So the fitter cannot invent coherence on content that has
+none, because it does not operate on it at all. That leaves the pre-registered
+threshold unevaluable as written, so it was applied instead to the
+**DISJOINT-NOFIT** arm — the same disjoint pairs with the fit disabled, which
+needs no fit and therefore cannot be refused. The substitution is recorded here
+and printed by the instrument rather than made silently.
+
+| band | 0.02–0.05 | 0.05–0.10 | 0.10–0.20 | **0.20–0.25** | 0.25–0.30 | 0.30–0.40 | 0.40–0.48 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| \|C_disjoint\| ÷ C_strehl | 0.0111 | 0.0012 | 0.0013 | **0.0024** | 0.0046 | 0.0509 | **0.4015** |
+
+**At the comparison band the scene-free floor is 0.24% of the verdict
+statistic** — against a threshold of 10%, and two orders of magnitude below it.
+
+**This closes a limitation §12 previously listed as undetermined.** Common-mode
+sensor structure — fixed-pattern noise, PRNU, deterministic pipeline artefacts —
+was disclosed as contaminating every `C` in this project by an unknown amount.
+It is now bounded at **under 0.25% at 0.20–0.25**.
+
+And the last column is an independent corroboration of the band selection that
+arrives from a completely different direction. At **0.40–0.48 cyc/px, 40% of
+what the coherence statistic calls "coherent" is not scene at all**; at
+0.30–0.40 it is 5.1%; at the comparison band it is 0.24%. §2 rejected those
+bands because the *subject* contributes nothing there. §10.1 shows that what
+does contribute there is the sensor. Two instruments, no shared assumptions,
+same conclusion.
+
+**What this does not do.** The disjoint pair is drawn from different *sensor
+positions*, so column- and row-locked fixed-pattern structure is not shared
+between the two crops the way it is between two half-stacks of the same ROI.
+The arm therefore bounds the estimator's invented coherence tightly, and bounds
+site-locked FPN only loosely. A tight bound on that needs a second subject stack
+developed identically and compared at the *same* sensor coordinates — a 25-minute
+develop and 12.5 GB, not done here. It is stated so the result is not read as
+stronger than it is.
+
 ---
 
 ## 11. The one thing I could not adjudicate: the coarse band
@@ -679,13 +759,20 @@ column.
    ground truth — on which every arm's coarse-band error can be measured against
    the truth rather than against each other. That is a build, not a capture, and
    it is the single highest-value instrument this project does not have.
-4. **Noise common to both half-stacks.** Fixed-pattern noise and PRNU are
-   identical in every frame and survive on both arms; V-HEADTOHEAD2's NOISE_COM
-   arm scores 6.05. The correction of §8 does not touch this. It is now shared
-   by both arms rather than favouring one, but it inflates all three coherent
-   fractions in §9 by an unknown common factor. *What would fix it:* a dark
-   frame and a flat field for this body and lens, which is a five-minute
-   capture.
+4. **Noise common to both half-stacks — now bounded, no longer open.** Fixed-
+   pattern noise and PRNU are identical in every frame and survive on both arms;
+   V-HEADTOHEAD2's NOISE_COM arm scores 6.05. The correction of §8 does not
+   touch this. §10.1's DISJOINT arm now bounds it: on pairs that share sensor,
+   optics and pipeline but share **no scene**, the coherent term is **0.24% of
+   strehl's at 0.20–0.25**, against a pre-registered ceiling of 10%. The §9
+   verdict is not meaningfully inflated by non-scene structure at the comparison
+   band. Two residual gaps: the bound is loose for *site-locked* FPN, because
+   the disjoint crops come from different sensor positions; and it is not a
+   bound at all above 0.30 cyc/px, where the same arm reads 5.1% and **40.2%**.
+   *What would fix the first:* a second subject stack developed identically and
+   compared at the same sensor coordinates — a 25-minute develop, 12.5 GB, or
+   equivalently a dark frame and a flat field for this body and lens, which is a
+   five-minute capture.
 5. **Zerene Stacker.** Still unrunnable, still a purchase. Nothing in this lane
    changes that, and nothing in this lane should be read as a comparison against
    it.
@@ -806,6 +893,34 @@ refutation in the file if it comes. Here the prediction was that coherent power
 is bit-depth-neutral; the measurement said +17.9%, because quantisation error
 is deterministic in the pixel value and two stacks of one scene share it.
 
+**Q19 (fact).** The per-ROI sub-pixel shift fit in `cohfix.pair_cross` does not
+manufacture coherence. On 64 disjoint pairs — half-stack A at one ROI against
+half-stack B at a different ROI, sharing sensor, optics and pipeline but sharing
+no scene — **the fitter refused all 64**, and with the fit disabled the residual
+coherent term is **0.24% of strehl's at 0.20–0.25 cyc/px**. The same statistic
+reads **5.1% at 0.30–0.40 and 40.2% at 0.40–0.48**, so above 0.30 cyc/px a large
+fraction of what this instrument calls coherent is sensor, not scene.
+
+**Q20 (discipline).** **A statistic needs an arm whose true score is fixed by
+construction — at *both* ends of its range.** One that physically cannot score
+(here DISJOINT: no shared scene, so C ≡ 0) bounds what the machinery invents;
+one that must score perfectly (here SELF: a crop against itself, so C ≡ P)
+proves the machinery loses nothing. A self-test that recovers a *known* shift
+proves only that the estimator works when there is something to find, and says
+nothing about what it does when there is nothing — which is the failure mode
+that produces a false positive. Both arms are cheap, and their expected values
+are known before the run, so neither can be rationalised after the fact.
+
+**Q21 (discipline).** **When a fixed-score arm passes by a route the
+pre-registration did not anticipate, say so and re-aim the threshold in the
+open.** DISJOINT was pre-registered as `|C|/C_strehl < 0.10`; it instead
+returned no value at all, because the estimator declined to fit any scene-free
+pair. That is a stronger outcome than a small number, but it is not the
+registered one, so the threshold was applied to a fit-disabled variant of the
+same arm and the substitution was printed by the instrument and recorded in the
+report. A pre-registration that is quietly reinterpreted to fit what happened is
+worth less than none.
+
 ---
 
 ## 14. Reproducing this
@@ -821,6 +936,7 @@ python gradefree.py enfuse              # THE ACCEPTANCE GATE
 python noisesplit.py enfuse 48          # DETAIL vs FLAT
 python abshift.py                       # half-stack registration per arm
 python cohfix.py 130                    # the verdict; self-test runs first
+python physfloor.py 64                  # SELF and DISJOINT fixed-score arms
 python quantcoh.py 64                   # the 8-bit floor against COHERENT power
 cd ..\V-LINEAR
 python gradeatsource.py 10,15,20,25,30,35,40,45,50 4   # NULL / BLUR / GRADE
