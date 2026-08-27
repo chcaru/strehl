@@ -2751,3 +2751,76 @@ and this machine has exactly one. Reversing the order instead (DCI-P3 as
 reference) does not supply it -- the run aborts earlier and correctly, because
 the potency control cannot detect loss against a superset and refuses to
 produce a table at all.
+
+## `coffee-bubbles` is a RE-RENDER, not a reshoot -- measured pre-tone
+
+ORCH asked the discriminating question: is the 1.89 L* of modulation absent
+because the scene never had any (reshoot) or because the tone rule flattened it
+(re-render)? The two imply opposite actions and telling the owner to re-shoot
+something a code change fixes costs him a shoot and returns the same picture.
+
+**Answer: RE-RENDER. The owner shoots nothing.**
+
+The tap is `--linear-srgb`. Verified in code before use rather than assumed:
+`image_out.rs:824` sets `wants_tone: self.applies_curve()`, and the test at
+`:1924-1934` asserts `Srgb -> true`, `LinearSrgb -> false`, `CameraLinear ->
+false`. `:2279` adds that the gamut map rides with the tone rendering, so the
+measurement paths are "arithmetically untouched". The banner agrees: *"black,
+as-shot WB, 2x2 bin, matrix, clamp -- NO transfer curve, safe to measure on."*
+
+### The statistic, and why a standard deviation could not have answered this
+
+A flat region and a noisy region both have small spread, and a noisy region can
+have a large one, so `sigma` cannot separate "no structure" from "grain" -- it
+would have produced a confident number answering neither hypothesis. The
+statistic is therefore a RATIO ACROSS SCALE: box-average by 16 and compare.
+Uncorrelated noise falls by 16x; structure larger than 16 px does not.
+
+Commissioned two-sidedly, arms required to disagree:
+
+| arm | content | structure_ratio |
+| --- | --- | --- |
+| NULL | grain only | **1.00** |
+| PLANT | ramp + the same grain | **12.12** |
+
+### Result, all MEASURED, linear, pinned binary `96b7e119`
+
+| subject | sig/mean | p99/p1 | stops | struct | detrended |
+| --- | --- | --- | --- | --- | --- |
+| `coffee-bubbles` | 8.2% | 1.49 | 0.58 | 10.77 | **8.84** |
+| `foam` (control) | 60.7% | 14.74 | 3.88 | 9.57 | 9.28 |
+
+Detrending barely moves `coffee-bubbles` (10.77 -> 8.84), so it is subject
+detail and not lens falloff -- a vignette is spatially correlated too and would
+otherwise have scored as structure.
+
+**And the picture agrees with the number.** The dark field stretched to its own
+linear range `[0.01656, 0.02745]` is a dense mat of sharply resolved filaments
+with specular pinpoints. It is in focus and it is detailed.
+
+### Where it goes
+
+Same pixels, carried to the toned arm as a spatial mask so both arms score the
+same population:
+
+| | p1..p99 linear | stops | L* spread | 8-bit levels |
+| --- | --- | --- | --- | --- |
+| linear arm | 0.01682 .. 0.02514 | 0.58 | -- | -- |
+| toned arm | 0.00187 .. 0.00537 | 1.52 | **3.16** | **11 of 256** |
+
+The tone rule does not crush it -- it *expands* contrast 0.58 -> 1.52 stops.
+The defect is PLACEMENT: 90% of the frame is delivered at L* 1.69..4.85, inside
+11 of the 256 levels an 8-bit print pipeline offers. That is the extreme case of
+the gap already measured across the corpus, where p99.9 is pinned to within 2.1%
+while median L* spans 91.6 units: both anchors sit in the tails and nothing
+places the midtone.
+
+### A tautology I published to myself and removed
+
+The first version of `paired_tone.py` reported "DELIVERED 80.25 L* of an
+AVAILABLE 100.00 L*". The ceiling was computed by normalising the region to its
+own p1..p99 and then measuring p1..p99 of the result, which returns exactly 100
+for ANY input including a constant field. Arithmetic, not measurement -- the
+same defect as the DCI-P3 column scoring 0.00% because sRGB is a subset of it,
+committed by me an hour after I flagged it. Replaced with the 8-bit level
+census, which is a fact about the delivered file that a lab has to live with.
