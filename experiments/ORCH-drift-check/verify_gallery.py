@@ -20,6 +20,27 @@ OUT = pathlib.Path(r"C:\dev\strehl-out\VIEW")
 SHIP = pathlib.Path(r"C:\dev\strehl-out\SHIP-V1")
 IDX = OUT / "index.html"
 
+# These three were module constants pinned to ONE gallery. Passing an index path
+# on the command line overrode only `idx`, so asset existence and master coverage
+# were still resolved against C:\dev\strehl-out\VIEW and SHIP-V1 -- a different
+# gallery and a superseded master set. The tool therefore printed GALLERY VERIFIED
+# for a page nobody was looking at, which is the exact failure this file's own
+# docstring is about. Paths are now derived from the index actually being checked.
+def resolve(idx_path: pathlib.Path, ship_arg: str | None):
+    """Derive the asset root and master set from the index under test."""
+    out = idx_path.parent
+    if ship_arg:
+        return out, pathlib.Path(ship_arg)
+    # Gallery asset names are '<master-stem>--<full|1to1>.<ext>'; recover the
+    # master directory from the stems rather than assuming a version.
+    stems = {p.name.split("--")[1] for p in (out / "assets").glob("*--*--*.*")
+             if len(p.name.split("--")) >= 3}
+    for s in sorted(stems):
+        cand = pathlib.Path(r"C:\dev\strehl-out") / s
+        if cand.is_dir():
+            return out, cand
+    return out, SHIP
+
 # A "true 1:1" crop that is smaller than this on its long edge is either a
 # reduced image or a crop so small it cannot support a print verdict.
 MIN_1TO1_EDGE = 700
@@ -77,19 +98,38 @@ def main() -> int:
     if not idx.exists():
         print(f"REFUSE: {idx} does not exist")
         return 1
+    out, ship = resolve(idx, sys.argv[2] if len(sys.argv) > 2 else None)
+    print(f"index   : {idx}")
+    print(f"assets  : {out}")
+    print(f"masters : {ship}")
+    if not ship.is_dir():
+        print(f"REFUSE: master directory {ship} does not exist")
+        return 1
     doc = idx.read_text(encoding="utf-8")
 
     srcs = re.findall(r'<img[^>]*\bsrc="([^"]+)"', doc)
     hrefs = re.findall(r'href="file:///([^"]+)"', doc)
-    cards = re.findall(r'<section class="card">.*?<h2>([^<]+)</h2>', doc, re.S)
+    # Headings gained an inline badge span -- '<h2>name <span class="badge">...' --
+    # so the original `<h2>([^<]+)</h2>` matched nothing and reported 0 cards while
+    # 26 sections were present. Capture the whole heading and strip inline tags.
+    raw_heads = re.findall(r'<section class="card">.*?<h2>(.*?)</h2>', doc, re.S)
+    # Drop the badge span and its TEXT, not just its tags -- stripping tags alone
+    # leaves 'bee-1-cpl--SHIP-V2 showcase' and every card reads as an orphan.
+    cards = [re.sub(r"<[^>]+>", "",
+                    re.sub(r"<span\b[^>]*>.*?</span>", "", h, flags=re.S)).strip()
+             for h in raw_heads]
+    if len(raw_heads) != doc.count('<section class="card">'):
+        print(f"REFUSE: {doc.count('<section class=\"card\">')} card sections but "
+              f"{len(raw_heads)} headings matched -- the heading pattern is stale")
+        return 1
 
     print(f"cards: {len(cards)}   img src: {len(srcs)}   master links: {len(hrefs)}")
 
-    bad_src = [s for s in srcs if not (OUT / urllib.parse.unquote(s)).exists()]
+    bad_src = [s for s in srcs if not (out / urllib.parse.unquote(s)).exists()]
     bad_href = [h for h in hrefs
                 if not pathlib.Path(urllib.parse.unquote(h)).exists()]
 
-    masters = sorted(p.stem for p in SHIP.glob("*.tiff"))
+    masters = sorted(p.stem for p in ship.glob("*.tiff"))
     missing_cards = [m for m in masters if m not in cards]
     extra_cards = [c for c in cards if c not in masters]
 
@@ -105,6 +145,18 @@ def main() -> int:
     # NOTE the [^>]* before the closing quote: the capture tags carry a title=
     # attribute, and the original pattern required '">' immediately after the
     # class, so it could not see them at all.
+    # PAGE FORMAT. Two generators have produced this page: a legacy one using a
+    # 't-*/g-*' tag taxonomy, and build_view.py using 'badge b-*' verdicts. The
+    # tag/prose checks below are written for the former. Run against the latter
+    # they reported '26 cards missing a quality tag' -- which is not a failure of
+    # the page, it is a check that does not apply. Report those as N/A explicitly:
+    # a skipped check must never be counted alongside a passing one.
+    fmt_tags = 'class="tag t-' in doc or 'class="tag g-' in doc
+    fmt_badges = 'class="badge b-' in doc
+    fmt = "legacy tag taxonomy" if fmt_tags else (
+        "build_view badges" if fmt_badges else "UNRECOGNISED")
+    print(f"format  : {fmt}")
+
     card_blocks = re.findall(
         r'<section class="card">(.*?)</section>', doc, re.S)
     untagged, uncaptioned, multitagged = 0, 0, []
@@ -114,10 +166,11 @@ def main() -> int:
         c = re.findall(r'<span class="tag (g-[a-z-]+)"[^>]*>', head)
         name = re.search(r"<h2>([^<]+)</h2>", head)
         name = name.group(1) if name else "?"
-        if len(q) == 0:
-            untagged += 1
-        if len(c) == 0:
-            uncaptioned += 1
+        if fmt_tags:
+            if len(q) == 0:
+                untagged += 1
+            if len(c) == 0:
+                uncaptioned += 1
         if len(q) > 1 or len(c) > 1:
             multitagged.append(f"{name}: {len(q)} quality, {len(c)} capture")
     if len(card_blocks) != len(cards):
@@ -134,18 +187,22 @@ def main() -> int:
     # The page claims three subjects are print-worthy where examined and
     # capture-limited elsewhere. Check the tags actually say both.
     conflict_bad = []
-    for stem in CONFLICT:
-        m = re.search(
-            r'<h2>' + re.escape(stem) + r'</h2>(.*?)</div>', doc, re.S)
-        if not m:
-            conflict_bad.append(f"{stem}: no card head found")
-            continue
-        head = m.group(1)
-        has_print = 't-print' in head or 't-flagship' in head
-        has_reshoot = 'g-gap' in head or 'g-move' in head
-        if not (has_print and has_reshoot):
-            conflict_bad.append(
-                f"{stem}: print={has_print} reshoot={has_reshoot}")
+    if fmt_tags:
+        for stem in CONFLICT:
+            # Card headings may carry a render-set suffix ('leaf-2-cpl--SHIP-V2')
+            # and an inline badge span, so anchor on the stem as a prefix.
+            m = re.search(
+                r'<h2>' + re.escape(stem) + r'(?:--[^<\s]+)?[^<]*(?:<span.*?</span>)?'
+                r'</h2>(.*?)</div>', doc, re.S)
+            if not m:
+                conflict_bad.append(f"{stem}: no card head found")
+                continue
+            head = m.group(1)
+            has_print = 't-print' in head or 't-flagship' in head
+            has_reshoot = 'g-gap' in head or 'g-move' in head
+            if not (has_print and has_reshoot):
+                conflict_bad.append(
+                    f"{stem}: print={has_print} reshoot={has_reshoot}")
 
     small = []
     try:
@@ -153,7 +210,7 @@ def main() -> int:
         for s in srcs:
             if "--1to1" not in s:
                 continue
-            p = OUT / urllib.parse.unquote(s)
+            p = out / urllib.parse.unquote(s)
             with Image.open(p) as im:
                 if max(im.size) < MIN_1TO1_EDGE:
                     small.append((p.name, im.size))
@@ -178,13 +235,19 @@ def main() -> int:
         "twenty-four": 24, "twenty-five": 25, "twenty-six": 26,
     }
     count_bad = []
+    # The narrative summary sentences ("N subjects have been judged print-worthy",
+    # "All N subjects have now been opened at 1:1") exist only on the legacy page.
+    # Their absence there is a real regression and must fail; their absence on the
+    # badge-format page means the check does not apply. Do not conflate the two.
+    prose_na = not fmt_tags
 
     m_list = re.search(
         r"(\w[\w-]*) subjects have been judged print-worthy.*?"
         r"examined:(.*?)Compound-eye",
         doc, re.S | re.I)
     if not m_list:
-        count_bad.append("could not find the print-worthy sentence at all")
+        if not prose_na:
+            count_bad.append("could not find the print-worthy sentence at all")
         listed = None
         stated = None
     else:
@@ -211,7 +274,8 @@ def main() -> int:
         r"(?:All\s+)?([\w-]+) subjects have now been opened at 1:1", doc, re.I)
     opened = None
     if not m_open:
-        count_bad.append("could not find the 'opened at 1:1' sentence at all")
+        if not prose_na:
+            count_bad.append("could not find the 'opened at 1:1' sentence at all")
     else:
         tok = m_open.group(1).lower()
         opened = WORDS.get(tok, int(tok) if tok.isdigit() else None)
@@ -254,14 +318,15 @@ def main() -> int:
     print(f"broken master links           : {len(bad_href)}")
     print(f"masters with no card          : {len(missing_cards)}")
     print(f"cards with no master          : {len(extra_cards)}")
-    print(f"cards missing a quality tag   : {untagged}")
-    print(f"cards missing a capture tag   : {uncaptioned}")
+    na = "n/a (badge-format page; check belongs to the legacy tag taxonomy)"
+    print(f"cards missing a quality tag   : {untagged if fmt_tags else na}")
+    print(f"cards missing a capture tag   : {uncaptioned if fmt_tags else na}")
     print(f"cards with duplicate tags     : {len(multitagged)}")
     print(f"malformed div/section nesting : {len(bal.errors)}")
     print(f"stated retouch/reshoot splits not borne out by tags : "
-          f"{len(conflict_bad)}")
+          f"{len(conflict_bad) if fmt_tags else na}")
     print(f"stated counts disagreeing with the list beside them : "
-          f"{len(count_bad)}")
+          f"{len(count_bad) if not prose_na else na}")
     if pil:
         print(f"1:1 crops under {MIN_1TO1_EDGE}px long edge : {len(small)}")
     else:

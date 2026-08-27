@@ -9933,3 +9933,162 @@ reported loudly. That is the correct design and worth naming, because the tempti
 deliver to the ten valid ones and warn — would have produced a fleet in two different states with
 a warning nobody re-read. **Partial success is the failure mode that hides; all-or-nothing is a
 kindness.**
+
+## §88 — three probes said no fringe, the fringe was visible, and each said no for a different reason
+
+The remaining defects on the 26-subject corpus are three specular fringes and two soft
+subjects. I went to check the two "capture-limited" verdicts, because *capture-limited*
+is a self-exculpating conclusion and BUILD-HIGHLIGHT had just handed me the warning that
+fits it exactly: **a mechanism that explains why a measurement must hold is the point of
+maximum danger.**
+
+`flowers-cpl` survives inspection: trichomes crisp and individually separable, tips clean
+against the bright field, pollen textured, no rim. The soft regions are genuine fore- and
+background bokeh outside the bracket's depth range.
+
+`flower-bud-alone-cpl` does not. At 1:1 I read a pink rim on the bud silhouette. Three
+probes then told me it was not there.
+
+**Probe 1 — silhouette average.** Mean `(R-G, B-G)` over the whole subject/background
+boundary: −3.98 / −3.06, both negative, no magenta. *Failure mode: dilution.* The rim is
+confined to a few edges and the boundary is mostly green-bud-to-white; the average is
+dominated by the population that has no defect. Both of its controls **skipped** for lack
+of a blown background, so it was also uncommissioned — a verdict from an instrument that
+had failed to demonstrate it could produce any other verdict.
+
+**Probe 2 — local extremes, gated on `|grad luma| >= 60`.** Returned **`edge px = 0`** on
+the suspect region *and* on the interior control. *Failure mode: the gate excluded the
+defect before the statistic ran.* The rim sits on a **pale bud against white** — a
+low-luma-contrast, **high-chroma-contrast** boundary. A luma-gradient gate is structurally
+blind to precisely the class of defect it was built to hunt. The shuffle control did fire
+(30,393 edges), which is how I knew the zero was real and not a crash.
+
+**Probe 3 — `min(R-G, B-G) > 6 DN` on a chroma-gradient gate.** Scored `flower-bud-alone`
+at **0.00%, the lowest of all eight subjects tested.** *Failure mode: the operator encoded
+an assumption about the fringe's hue.* `min(R-G,B-G)` demands magenta — both channels above
+green. The rim is **red-dominant with blue still below green**.
+
+Three negatives, three different mechanisms, one plainly visible defect. The 3× blowup
+(`ORCH-budtip-3x.png`) settles it by eye, and reading the raw pixels settles it by number:
+
+```
+row 40   interior              rim band                background
+  R-G    +11 +11 +13 +12 +14   +18 +21 +22 +20 +21   +9 +5 +3 +2 -1 -4
+                                       ^^^ peak
+```
+
+**A mixture of two endpoints cannot exceed both endpoints.** `+22 > +11` and `+22 > −4`,
+so this is a chromatic **overshoot** — a reconstruction artifact — not an alpha blend and
+not simultaneous contrast, which was the live alternative hypothesis and is hereby refuted.
+Reproduced at rows 40/60/90 (+22/+16/+13 against interiors of +11/+11/+8). Row 120 lies
+entirely in background and stays flat at −3..−7: the negative control is inside the same
+measurement.
+
+Two findings follow, and the second one is the reason the first was worth chasing:
+
+1. **It is a different defect from the specular fringe.** Probe 3's statistic, which fails
+   here, *is* commissioned for the other family: `4.19 / 4.30 / 3.98 %` for the three
+   reported specular subjects against `1.37 / 1.07 / 0.14 / 0.01 %` for four showcase
+   subjects — a clean gap. The gallery card had grouped them as one "unattributed edge
+   fringe"; that grouping is now measured to be wrong and the card is corrected.
+2. **It discriminates a hypothesis the specular subjects cannot.** This is a diffuse edge.
+   Specular clipping has no reason to act here; per-channel focus election does. The two
+   instruments that returned opposite signs (−85% / +42%) were both aimed at speculars,
+   where both mechanisms are live — which is a candidate explanation for the disagreement
+   itself. Routed to BUILD-ELECT with a pre-registered kill condition.
+
+The rule, which is the sharpest form of the standing question yet:
+
+> **An operator encodes a hypothesis about the defect.** A gate encodes one about where it
+> lives, an average encodes one about how widely it is spread, and a colour score encodes
+> one about its hue. All three of mine were wrong in different directions, and each
+> returned a confident, quiet negative. **When a detector disagrees with your eyes on a
+> visible artifact, the detector is the thing to doubt first** — and the useful question is
+> not "is it broken" but *"which assumption did I compile into it?"*
+
+A corollary I want on the record because it nearly cost me the finding: I built probe 2
+*specifically to fix probe 1's dilution*, and introduced a worse blindness while doing so.
+**A fix aimed at a known failure mode is not thereby free of new ones**, and the confidence
+of having just corrected something is the worst possible frame of mind for auditing the
+correction. Third time tonight a repair damaged what it repaired (§75, §78, and now this).
+
+## §89 — the verifier accepted a path and verified something else
+
+Correcting the `flower-bud-alone` card meant rebuilding the gallery. `build_view.py`
+takes `src` and `out` positionally and defaults to `GALLERY-NOW` -> `VIEW-NOW`, so my
+rebuild went to **VIEW-NOW**, while every asset I had been measuring lives in
+**VIEW-SHIP**. I then ran `verify_gallery.py`, which printed **GALLERY VERIFIED**.
+
+It was verifying a third directory, `C:\dev\strehl-out\VIEW`.
+
+Three galleries exist, and the verifier's own paths were module constants:
+
+```
+OUT  = C:\dev\strehl-out\VIEW        <- asset root
+SHIP = C:\dev\strehl-out\SHIP-V1     <- master set, superseded by SHIP-V2
+IDX  = OUT / "index.html"
+```
+
+`main()` let `sys.argv[1]` override **`idx` only**. Passing
+`VIEW-SHIP\index.html` therefore read the right document and checked its assets against
+the wrong directory and its coverage against a **superseded master set** — producing a
+verdict that belonged to no single artifact. Given a real path it crashed on a file in
+`VIEW\assets\`; given no path it printed a clean bill of health for a page I was not
+looking at.
+
+> **A tool that accepts a path argument but keeps its other paths in constants will
+> verify a different artifact than the one you named — and the argument is what makes
+> you believe it did not.** Supplying a target creates the appearance of targeting.
+> Either derive every path from the argument, or print them all and let the reader see
+> the mismatch.
+
+It now prints `index / assets / masters / format` before any verdict, and derives the
+master set from the asset filenames. This file's own docstring says a generator's
+self-report is worthless because it uses "the same variables it used to build the page."
+The verifier had the sibling defect: **its variables were unrelated to the thing it was
+asked about**, which is worse, because it is not even self-consistent.
+
+Two further defects surfaced once it was pointed at the right page, both from the page
+format drifting underneath a pattern:
+
+- **`<h2>([^<]+)</h2>` matched nothing.** Headings gained an inline badge span, and
+  `[^<]+` stops at the first `<`. Result: **0 cards against 26 card sections**, so every
+  master reported `no card`. The failure was loud, but its *shape* — "no card" for
+  everything — reads like a catastrophically broken page rather than a stale regex.
+- **Stripping tags left the badge's text**, turning every heading into
+  `bee-1-cpl--SHIP-V2 showcase`, so every card then reported as an `orphan card`. A fix
+  aimed at the first defect produced a second one with an equally confident output.
+  Fourth time tonight (§75, §78, §88, here).
+
+And one that was not a defect at all: `cards missing a quality tag : 26`. The tag and
+prose checks were written for a legacy `t-*/g-*` taxonomy; this page uses `badge b-*`.
+Twenty-six perfectly good cards were being failed by checks that **did not apply**. Per
+the standing partition rule, inapplicable is now reported as `n/a` with its reason rather
+than as `0` (which would read as a pass) or as `26` (which reads as a failure):
+
+```
+broken image src              : 0
+masters with no card          : 0
+cards with no master          : 0
+cards missing a quality tag   : n/a (badge-format page; legacy tag taxonomy)
+1:1 crops under 700px         : 0
+GALLERY VERIFIED
+```
+
+**Commissioned before being believed**, on a pinned copy of the whole tree — the index
+alone is insufficient, since assets resolve relative to it:
+
+| arm | got | expected |
+|---|---|---|
+| NULL, unmutated | GREEN | GREEN |
+| M1 broken `<img src>` | RED | RED |
+| M2 deleted one card | RED | RED |
+| M3 unbalanced container | RED | RED |
+| NULL2, restored | GREEN | GREEN |
+
+5/5. Each mutation is anchored on a unique substring and hard-errors if the anchor is
+absent, because a mutation that fails to apply yields a GREEN indistinguishable from a
+passing control — the lesson already paid for once tonight.
+
+The deliverable at `VIEW-SHIP` is now genuinely verified: 26 cards, 0 broken sources, 0
+orphans, 0 uncovered masters, and the corrected `flower-bud-alone` card live.

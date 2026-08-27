@@ -107,7 +107,17 @@ VERDICTS = {
     "dry-erase-marker-head-cpl": (2, "minor", "specular fringe, as coffee-bubbles and with the same unsettled cause"),
     "flowers-cpl": (3, "capture-limited", "soft over most of the frame; per-pixel selection over the same frames recovers nothing the merge lacks, so it is not a merge failure -- the cause is NOT established"),
     "flower-bud-alone-cpl": (3, "capture-limited",
-        "softest merge-vs-best-frame in the corpus, plus an unattributed edge fringe"),
+        "softest merge-vs-best-frame in the corpus. At the same chroma-gradient threshold this "
+        "frame carries <b>22,522</b> chroma edges against 110,704\u2013205,362 for the showcase "
+        "subjects \u2014 5\u20139&times; fewer, which is the softness stated as a number rather than "
+        "an impression. It also carries a <b>red rim</b> on the bud silhouette: across the "
+        "boundary <code>R\u2212G</code> runs +11 (interior) \u2192 <b>+22 (rim)</b> \u2192 \u22124 "
+        "(background), and a value exceeding <i>both</i> endpoints cannot be a blend or a "
+        "demosaic transition \u2014 it is a chromatic overshoot. A background-only control row is "
+        "flat. This is <b>not</b> the same defect as the specular fringe below: it is red-dominant "
+        "with blue still under green, it sits on a diffuse edge rather than a specular, and the "
+        "statistic that separates the three specular subjects scores this one at 0.00% \u2014 "
+        "lowest of eight \u2014 while the rim is plainly visible at 3&times;."),
 }
 
 
