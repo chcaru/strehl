@@ -2658,7 +2658,17 @@ subjects `mean_coarse` is not repairing mottle; it is blurring the image at mid-
 and it is only distinguishable from a repair because a cheat arm was built that scores
 well on the headline number.
 
-## 10.6 Verdict: the fix cannot come from the selection rule
+## 10.6 Verdict: the fix cannot come from the selection rule at 50-400 px
+
+> **CORRECTED BY SECTION 11, 2026-08-27.** This verdict is sound for the band it was
+> measured in and was stated without naming that band, which made it read as a claim
+> about the fix family in general. It is not. `orch_blotch`'s own docstring puts its
+> band-pass at **50-400 px**; ORCH has since measured, on the exact pixels a 1:1 visual
+> verdict was formed on, that the band we lose to `enfuse` is **20-60 px**. Re-run in
+> that band, `mc=5` removes **20.9%** of the mid-scale structure on `coffee-bubbles`
+> flat sites while sharpness *rises* to 1.019 -- a result this section's numbers do not
+> bound and its heading appeared to exclude. The arithmetic below stands; the
+> generalisation did not. See section 11.
 
 V-NEVERWORSE convicted `coffee-bubbles` at **1.4501x** the best input frame. Applying
 this section's measured factors to that conviction:
@@ -2721,3 +2731,197 @@ Logs `C:\dev\strehl-out\V-H2H2\logs\dose5-*.txt`, `tiles-cb.txt`; arms
 `C:\dev\strehl-out\V-H2H2\mottle\*--mc*.tiff`. `verify10.py` re-derives every number
 in this section from those logs: **commissioned 7/7, 89/89 claims verified, exit 0.**
 It is the check to re-run if any of these figures is ever quoted elsewhere.
+
+# 11. The operative band is 20-60 px, and there is a free fix in it
+
+ORCH measured, on the exact 400 px his 1:1 visual verdict was formed on and in the
+exact display state he judged them in, that our relationship to `enfuse` is
+band-dependent rather than a level:
+
+| band | strehl | enfuse | who is cleaner |
+| --- | --- | --- | --- |
+| 1 px high-pass grain | 0.389 / 0.759 / 0.779 | 0.970 / 1.271 / 1.883 | **strehl, by 2.19x** |
+| mid-scale, 20-60 px | 5.675 / 5.514 / 7.064 | 4.812 / 4.963 / 6.488 | **enfuse, by 11%** |
+
+Both are true, and the eye reads the mid band because a sigma below one 8-bit code is
+invisible while a sigma near six is not.
+
+Section 10 measured a dose-response on `orch_blotch`, whose own docstring states its
+band-pass as **50-400 px**. That is a different band, and a ceiling established in one
+band does not bound a defect in another. Section 10's arithmetic stands; its heading
+generalised past its evidence, and section 10.6 now carries that correction.
+
+## 11.1 The gauge, and the two defects the real renders found in it
+
+`bandlib.py` measures a ladder of six bands plus 1 px grain plus sharpness, in ORCH's
+display state, always as a ratio between two arms **on the same pixels**. The absolute
+figure is never reported alone: `experiments/ORCH-drift-check/orch_mottle_visual.py` is
+a refuted instrument that ranked subjects by how much mid-scale content their flattest
+region held -- it lit up the vein network of a leaf -- and its verdict on itself is that
+"the defence is not a better band or a better site rule, it is the RATIO TO SOURCE."
+
+Commissioning is **14/14**, and it carries a planted defect, a planted improvement, and
+two traps. The improvement arm exists because a suite of degradations cannot separate a
+statistic that is blind to a defect from one that is perverse on it. Two of the checks
+were written only after a real render defeated an earlier version of the gauge.
+
+**Defect 1: the photometric fit was a function of the thing being measured.** Arms must
+be put on a common scale before their sigmas can be compared. The first fit was least
+squares, gain `cov(a,r)/var(a)` -- so an arm carrying uncorrelated energy, which is
+exactly what mottle is, gets a gain below 1 and is shrunk in proportion to its own
+defect. Commissioning caught it as a 5-15 band reading 0.972 on an arm where only the
+20-60 band had been planted. The repair was worse: matching the 5th and 95th
+percentiles is also widened by added variance, and it shrank the arm so hard that the
+**planted defect arm scored 0.967 and was reported as an improvement**. A photometric
+normaliser that converts a planted defect into a win is the most dangerous single
+component this gauge could have carried, and it survived one round of repair. Every
+disturbance the gauge must survive -- mottle, grain, blur, unsharp halo -- is zero-mean,
+so the fit is now a mean ratio, which those disturbances cannot move at all. That is
+decoupling by construction rather than by tolerance, and a check asserts it.
+
+**Defect 2: the smoothing guard was a ratio, and a uniform reduction cancels in a
+ratio.** The guard's job is to refuse a mid-band win bought by destroying detail --
+ORCH's evidence that this is reachable is that `focus-stack`, a real shipping tool,
+reads 0.077 grain and 0.260 mid on this site. The first guard was a selectivity, the
+ratio of fine-band change to mid-band change, and it was commissioned against a box
+blur, which crushes the fine bands while leaving the mid band at 0.852. It passed.
+Then the real `focus-stack` render was measured: **0.044 / 0.041 / 0.042 / 0.046 across
+the whole ladder**, a uniform 23x reduction, giving selectivity 1.05 -- comfortably "not
+smoothed" -- and it was instead mislabelled as a halo, because the ratio of two tiny
+numbers is large. The most smoothed render in the corpus was the one arm the smoothing
+guard could not see. No amount of tuning the blur arm would have found this, because a
+box blur cannot produce that shape. An absolute detail floor now runs alongside the
+ratio, and a synthetic uniform-attenuation arm derived from the real render's measured
+profile is in the suite.
+
+The gauge reproduces ORCH's published figures from an independently rendered arm:
+`enfuse` 20-60 absolute **[4.812 4.963 6.488]** against his 4.812/4.963/6.488, and our
+own `mc=0` at **[5.677 5.521 7.072]** against his 5.675/5.514/7.064, agreeing to 0.1%.
+That `mc=0` is a fresh render rather than his file is the useful part: it confirms
+`mean_coarse=0` is the shipping configuration.
+
+## 11.2 The comparators, described rather than ranked
+
+At the published site, ratios to strehl, `<1` meaning the comparator is lower:
+
+| arm | grain | sharp | 5-15 | 20-60 | 50-400 | call |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `enfuse` | 2.193 | 2.191 | 0.882 | **0.889** | 0.843 | traded: fine scale 2.46x the mid gain |
+| `focus-stack` | 0.123 | 0.095 | 0.044 | 0.042 | 0.044 | **REFUSED smoothed** |
+
+`enfuse` wins the mid band by 11.1% and pays 2.19x our fine grain for it. That is a
+trade, not a free win, and the gauge says so in both directions -- the same guard that
+refuses a smoothed arm also refuses to credit a mid-band win carried on excess fine
+energy. `focus-stack` is not a cleaner photograph, it is a smoothed one, which is
+consistent with our resolving 1.326x more than it does.
+
+## 11.3 The dose in the operative band, at flat AND detail sites
+
+Eight non-overlapping 400 px sites per class, pinned on `mc=0` so every arm is measured
+on identical pixels, medians with a 2000-sample bootstrap CI over sites. Both arms of
+every ratio come from **one binary** with one differing environment variable, so they
+share a lattice exactly and no registration -- and therefore no resampling blur -- enters
+the measurement.
+
+Sharpness is quoted beside every band number because a fix that smooths mottle by
+smoothing the image is not a fix. Measuring sharpness only at flat sites would have been
+the way to be wrong here: at the single published site `mc=5` reads sharp **0.981**,
+while across eight detail sites on the same subject it reads **0.955 [0.944, 0.960]**.
+
+`mc=5`, the best dose that is never refused:
+
+| subject | flat 20-60 [95% CI] | flat sharp | detail 20-60 [95% CI] | detail sharp [95% CI] |
+| --- | --- | ---: | --- | --- |
+| `coffee-bubbles` | 0.791 [0.762, 0.820] | **1.019** | 0.923 [0.896, 0.941] | 0.991 [0.986, 0.994] |
+| `lead-1-cpl` | 0.769 [0.436, 0.805] | 1.007 | **0.422 [0.413, 0.427]** | 0.901 [0.884, 0.922] |
+| `113MSDCF` | 0.735 [0.708, 0.757] | 1.003 | 0.705 [0.694, 0.720] | 0.956 [0.947, 0.960] |
+| `foam` | 0.441 [0.430, 0.454] | **0.844** | 0.454 [0.447, 0.462] | 0.894 [0.879, 0.909] |
+| `119MSDCF` | 0.943 [0.925, 0.949] | 0.992 | 0.922 [0.918, 0.933] | 0.955 [0.944, 0.960] |
+
+`mc=3` moves nothing anywhere (0.99-1.00 on both classes for four of five subjects).
+`mc=7` is **REFUSED smoothed 8/8 at both site classes on every subject**, with detail
+sharpness falling to 0.091-0.561. The ceiling arm of section 10 is confirmed
+unusable in this band too, by an independent gauge.
+
+**`mc=5` is never refused: 0 of 8 sites flagged smoothed, in all ten subject-by-class
+cells.** The evidence that it is selective rather than a blur is not the flag, it is
+the band profile: on `119MSDCF` it takes 20-60 to 0.893 while leaving 100-300 at 0.996
+and 50-400 at 0.992, and on three subjects flat-site sharpness *rises* while the mid
+band falls 21-27%. A blur cannot lower a middle band and leave both its neighbours.
+
+**It is not free, and the cost is subject-dependent.** Detail-site sharpness loss runs
+0.9% on `coffee-bubbles`, 4.4% on `113MSDCF`, 4.5% on `119MSDCF`, 9.9% on `lead-1-cpl`
+and 10.6% on `foam`, every interval bounded away from parity except `coffee-bubbles`.
+`foam` is the weakest case: it loses 15.6% of flat-site sharpness and 7.0% of its 5-15
+band, which is a broader loss than the other four and is the one subject where this
+lane would not call `mc=5` clean.
+
+## 11.4 What this does and does not settle
+
+At the one site where the `enfuse` deficit is established, closing it requires a factor
+of **0.889**; `mc=5` delivers **0.893** there. Across eight flat sites of the same
+subject it delivers 0.943, and there is no `enfuse` measurement at those sites, so
+whether the deficit itself is 11% there is **unmeasured**. The honest statement is that
+`mc=5` closes the measured gap at the measured site and roughly halves it at typical
+flat sites, against an unmeasured denominator.
+
+This does **not** overturn section 10.5's ceiling arithmetic in its own band, and it
+does not clear V-NEVERWORSE's 1.4501x conviction, which is stated as a ratio to the best
+input frame in the 50-400 band and has not been re-derived here. Those are different
+denominators and multiplying across them would be the error this lane spent section 10
+documenting.
+
+`mc=5` requires **no code change**: `STREHL_PYRAMID_MEAN_COARSE=5` is an existing switch
+on the shipping binary, hash-verified, whose liveness is asserted before every arm.
+Changing `DEFAULT_MEAN_COARSE` is a different question -- it is a byte-frozen deliverable
+and this lane does not touch it.
+
+## 11.5 Provenance
+
+Sealed pin `44C2F2CD2E5B2894`, git `9b05d0b7`, hash-verified per render; an unrecognised
+switch value panics and the driver asserts rc=101 with the message naming the switch
+before trusting any arm. No file under `crates/` modified by this lane.
+
+```
+powershell -NoProfile -ExecutionPolicy Bypass -File experiments\V-H2H2-MOTTLE\render_mc.ps1 119MSDCF 0 3 5 7
+python experiments\V-H2H2-MOTTLE\boxaudit.py          # helper audit, GREEN
+python experiments\V-H2H2-MOTTLE\bandcheck.py         # 14/14, comparators
+python experiments\V-H2H2-MOTTLE\bandsites.py <subject>
+```
+
+`boxaudit.py` exists because ORCH found a running-sum box blur returning an array one
+row and one column short, silently, and every number in section 10 runs through that
+helper. The shipped `orch_blotch.boxblur` passes 35 size-by-radius combinations against
+an independently written brute-force reference with 0 shape and 0 value failures, and
+the audit is shown to have reach by planting that exact defect, which produces 30 shape
+failures and breaks the difference probe. Section 10 is not void.
+
+## 11.6 The verifier, and the two gaps its own commissioning found
+
+`verify11.py` re-derives every number in this section from the run logs and compares
+against the value **read out of this document**, with each claim scoped to its own
+region before it is anchored. Both of those rules are inherited from section 10.3,
+where a verifier that skipped them checked 32 claims against the wrong table and
+compared log arithmetic to constants typed into itself.
+
+Commissioning is **10/10 with 0 void**, and two of those ten only reached that state
+after they failed:
+
+**A plant that lands somewhere other than where it is aimed is a void control, not a
+result.** The plant for the `119MSDCF` detail-sharpness cell was written as a bare
+`replace(old, new, 1)` on a string that occurs **twice** -- once in the table and once
+in a sentence restating it. It mutated the sentence, no claim covered the sentence, and
+the run printed **MISSED**. Read literally that says the verifier cannot see the table
+cell, which is false; it says the plant never reached the table. The verifier now counts
+occurrences and reports `PLANT TARGET OCCURS n TIMES -- control is void` rather than
+scoring it, and the sentence has a claim of its own.
+
+**A plant may be caught by the wrong claim, or by none, while every number still reads
+GREEN.** With the plant re-aimed at the table it *still* reported MISSED, because the
+claims covered the detail-sharpness **median** and not its interval, so changing
+`0.960` to `0.961` moved nothing any claim was reading. 62 of 62 claims verified GREEN
+at that moment and the document contained ten unchecked interval bounds. The failing
+control is the only reason they are checked now. A verifier's claim count is a
+statement about its reach, and the plant is the only thing that measures it.
+
+Final state: 10 plants, 10 caught, 0 void, **72/72 claims verified, exit 0**.
