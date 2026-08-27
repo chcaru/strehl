@@ -10938,3 +10938,31 @@ dividing by the wrong thing. §98 diagnosed exactly this failure in the denomina
 committed it in the numerator, in the same script, within the same hour.
 
 > **Fixing one term of a ratio does not license trusting the other.**
+
+### §99.1 — why no corrected noise figure is offered
+
+The obvious repair for §98's withdrawn claim is to redo it on **relative** noise, which is
+tone-invariant. Computed from the same run:
+
+```
+  foam       master 1462.3/ 7990.6 = 0.18300   source 168.3/3171.4 = 0.05307   3.45x NOISIER
+  112MSDCF   master  903.8/ 8524.0 = 0.10603   source  38.2/ 340.4 = 0.11222   0.94x
+  113MSDCF   master  956.0/ 8354.6 = 0.11443   source  52.1/ 638.2 = 0.08164   1.40x NOISIER
+```
+
+On two of three the master is relatively **noisier**, which is again a result requiring an
+impossible mechanism. The cause is in the estimator: noise here is
+`std(blk - boxblur(blk, 3))`, which captures **all** high-frequency content and cannot
+distinguish sensor noise from genuine fine detail. The master is sharp everywhere -- that is
+what the tool is for -- while a single source frame at the same coordinates is defocused. The
+master's own resolution inflates its noise estimate, and on `foam` (dense fine structure at
+every scale) it dominates completely.
+
+**So the instrument cannot measure the merge's noise reduction at all**, in either direction,
+and no corrected figure replaces the withdrawn one. Doing that properly needs a region where
+master and source are equally defocused, or a variance estimate that excludes structure --
+neither of which exists yet.
+
+> **A withdrawn number is better left withdrawn than replaced by a second number from the
+> same defective instrument.** The pressure to publish a correction is the pressure that
+> produced the error.
