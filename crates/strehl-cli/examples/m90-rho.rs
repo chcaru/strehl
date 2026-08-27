@@ -631,16 +631,16 @@ fn merge_pattern(
     Merged {
         // Per bin, both numerator and denominator are that bin's own, so a
         // non-stationary field cannot leak between bins.
-        f_bin: (0..RADIAL_BINS).map(|b| bins[b].cov() / c0b[b].cov()).collect(),
+        f_bin: (0..RADIAL_BINS)
+            .map(|b| bins[b].cov() / c0b[b].cov())
+            .collect(),
         w_bin: (0..RADIAL_BINS)
             .map(|b| w_acc_bin[b] / n / c0b[b].cov())
             .collect(),
         num_bin: (0..RADIAL_BINS).map(|b| bins[b].cov()).collect(),
         den_bin: (0..RADIAL_BINS).map(|b| c0b[b].cov()).collect(),
         w_num_bin: (0..RADIAL_BINS).map(|b| w_acc_bin[b] / n).collect(),
-        var_share: (0..RADIAL_BINS)
-            .map(|b| c0b[b].cov() / c00)
-            .collect(),
+        var_share: (0..RADIAL_BINS).map(|b| c0b[b].cov() / c00).collect(),
         f_all: all.cov() / c00,
         n_bin: bins.iter().map(|c| c.n).collect(),
         w_mean: w_acc / n / c00,
@@ -803,7 +803,10 @@ fn cmd_control() -> Result<()> {
 
     // -- N2: identity null -------------------------------------------------
     println!("\n--- N2 identity null: F must be 1.000 (bar +/-0.01) ---");
-    println!("{:>12} {:>12} {:>12} {:>8}", "resampler", "F", "n_prnu", "bar");
+    println!(
+        "{:>12} {:>12} {:>12} {:>8}",
+        "resampler", "F", "n_prnu", "bar"
+    );
     let ts_id: Vec<Similarity> = vec![Similarity::IDENTITY; 8];
     for (name, r) in RESAMPLERS.iter() {
         let lat = lattice(geom, &ts_id, *r, 0);
@@ -823,8 +826,14 @@ fn cmd_control() -> Result<()> {
 
     // -- N3: decorrelation bound -------------------------------------------
     let nfr = 8usize;
-    println!("\n--- N3 decorrelation bound: {BIG_SHIFT_PX} px per frame, F must be < 2/n = {:.4} ---", 2.0 / nfr as f64);
-    println!("{:>12} {:>12} {:>12} {:>8}", "resampler", "F", "n_prnu", "bar");
+    println!(
+        "\n--- N3 decorrelation bound: {BIG_SHIFT_PX} px per frame, F must be < 2/n = {:.4} ---",
+        2.0 / nfr as f64
+    );
+    println!(
+        "{:>12} {:>12} {:>12} {:>8}",
+        "resampler", "F", "n_prnu", "bar"
+    );
     let ts_big: Vec<Similarity> = (0..nfr)
         .map(|k| shift(BIG_SHIFT_PX * k as f64, BIG_SHIFT_PX * k as f64))
         .collect();
@@ -889,7 +898,10 @@ fn cmd_control() -> Result<()> {
             ratio,
             if ok { "PASS" } else { "FAIL" }
         );
-        println!("             placebo merged Pearson r = {:+.5}", plac.r_merged);
+        println!(
+            "             placebo merged Pearson r = {:+.5}",
+            plac.r_merged
+        );
     }
 
     println!("\n--- control verdict ---");
@@ -945,14 +957,18 @@ fn cmd_control() -> Result<()> {
     // sampling error of a covariance over the lattice: SD = 1/sqrt(N). Eight
     // seeds separate "the instrument is biased" from "that was one draw".
     println!("\n--- diagnostic: zero-noise seed sweep, 8 seeds ---");
-    let seeds: Vec<u64> = (0..8).map(|k| 0x9051_2E17u64.wrapping_add(k * 0x9E37_79B9)).collect();
+    let seeds: Vec<u64> = (0..8)
+        .map(|k| 0x9051_2E17u64.wrapping_add(k * 0x9E37_79B9))
+        .collect();
     let runs: Vec<Vec<(f64, f64)>> = seeds.iter().map(|s| ladder_at(0.0, *s)).collect();
     let npts = {
         let g = PlaneGeometry {
             width: CTRL_W,
             height: CTRL_H,
         };
-        lattice(g, &[Similarity::IDENTITY], Resampler::CatmullRom, 0).xs.len()
+        lattice(g, &[Similarity::IDENTITY], Resampler::CatmullRom, 0)
+            .xs
+            .len()
     };
     println!(
         "  theoretical sampling SD of a lattice covariance ratio = 1/sqrt({npts}) = {:.4}",
@@ -997,7 +1013,12 @@ const SEP_STRIDE_MULT: usize = 4;
 /// forms the cross-covariance for each requested separation. The A/B
 /// cross-estimate trick still does the work: only ever an A against a B, so
 /// temporal noise cancels in numerator and denominator alike.
-fn cmd_sep(edges: &Path, hp: usize, limit: Option<usize>, margin_override: Option<usize>) -> Result<()> {
+fn cmd_sep(
+    edges: &Path,
+    hp: usize,
+    limit: Option<usize>,
+    margin_override: Option<usize>,
+) -> Result<()> {
     let mut pat = Pattern::load(hp)?;
     let tab = read_edges(edges)?;
     let n = limit.map_or(tab.n, |l| l.min(tab.n));
@@ -1083,7 +1104,12 @@ fn cmd_sep(edges: &Path, hp: usize, limit: Option<usize>, margin_override: Optio
     Ok(())
 }
 
-fn cmd_rho(edges: &Path, hp: usize, limit: Option<usize>, margin_override: Option<usize>) -> Result<()> {
+fn cmd_rho(
+    edges: &Path,
+    hp: usize,
+    limit: Option<usize>,
+    margin_override: Option<usize>,
+) -> Result<()> {
     let mut pat = Pattern::load(hp)?;
     let tab = read_edges(edges)?;
     let n = limit.map_or(tab.n, |l| l.min(tab.n));
@@ -1123,24 +1149,15 @@ fn cmd_rho(edges: &Path, hp: usize, limit: Option<usize>, margin_override: Optio
         pat_kappa(&pat, margin) * 100.0
     );
 
-
-
     for (solver, place) in placements(&tab) {
-        let ts: Vec<Similarity> = place
-            .iter()
-            .take(n)
-            .filter_map(|p| *p)
-            .collect();
+        let ts: Vec<Similarity> = place.iter().take(n).filter_map(|p| *p).collect();
         if ts.len() < 2 {
             println!("\n  {solver}: placement not solvable");
             continue;
         }
         // How far does the warp actually move a photosite? This is the thing
         // that decides the answer, so it is reported before the answer.
-        let (cx, cy) = (
-            tab.geom.width as f64 * 0.5,
-            tab.geom.height as f64 * 0.5,
-        );
+        let (cx, cy) = (tab.geom.width as f64 * 0.5, tab.geom.height as f64 * 0.5);
         let corner = (cx * cx + cy * cy).sqrt();
         let mut d_centre = 0f64;
         let mut d_corner = 0f64;
@@ -1241,7 +1258,10 @@ fn cmd_rho(edges: &Path, hp: usize, limit: Option<usize>, margin_override: Optio
         print!("{:>12}", "step px");
         for b in 0..RADIAL_BINS {
             let r = (b as f64 + 0.5) / RADIAL_BINS as f64;
-            print!("{:>9.3}", d_centre / steps + r * (d_corner - d_centre) / steps);
+            print!(
+                "{:>9.3}",
+                d_centre / steps + r * (d_corner - d_centre) / steps
+            );
         }
         println!();
 
@@ -1253,7 +1273,9 @@ fn cmd_rho(edges: &Path, hp: usize, limit: Option<usize>, margin_override: Optio
         // ratio there is measuring the high-pass residual rather than PRNU.
         // This is an internal identity, not a fit to the answer.
         let keep: Vec<bool> = (0..RADIAL_BINS)
-            .map(|b| (per_res[0].1.w_bin[b] - 1.0).abs() <= W_NEAREST_TOL && per_res[0].1.n_bin[b] >= 64)
+            .map(|b| {
+                (per_res[0].1.w_bin[b] - 1.0).abs() <= W_NEAREST_TOL && per_res[0].1.n_bin[b] >= 64
+            })
             .collect();
         let kept: Vec<String> = (0..RADIAL_BINS)
             .filter(|b| keep[*b])
@@ -1296,10 +1318,7 @@ fn cmd_rho(edges: &Path, hp: usize, limit: Option<usize>, margin_override: Optio
             "{:>16} {:>14} {:>14} {:>14}",
             "quantity", "F=1 (round 1)", "measured", "F=1/n"
         );
-        println!(
-            "{:>16} {:>14.4} {:>14.4} {:>14.4}",
-            "F", 1.0, cf, 1.0 / nf
-        );
+        println!("{:>16} {:>14.4} {:>14.4} {:>14.4}", "F", 1.0, cf, 1.0 / nf);
         println!(
             "{:>16} {:>14.3} {:>14.3} {:>14.3}",
             "n_prnu",
@@ -1409,8 +1428,18 @@ fn main() -> Result<()> {
     }
     match args[0].as_str() {
         "prnu" => cmd_prnu(&flats.context("prnu needs --flats <DIR>")?, hp),
-        "rho" => cmd_rho(&edges.context("rho needs --edges <CSV>")?, hp, limit, margin),
-        "sep" => cmd_sep(&edges.context("sep needs --edges <CSV>")?, hp, limit, margin),
+        "rho" => cmd_rho(
+            &edges.context("rho needs --edges <CSV>")?,
+            hp,
+            limit,
+            margin,
+        ),
+        "sep" => cmd_sep(
+            &edges.context("sep needs --edges <CSV>")?,
+            hp,
+            limit,
+            margin,
+        ),
         "control" => cmd_control(),
         other => bail!("unknown subcommand {other}"),
     }

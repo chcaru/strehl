@@ -150,8 +150,9 @@ fn synth_frame(k: u16) -> SynthFrame {
                     CfaPlane::G2 => 1.00,
                 };
                 let s = base * tint * (1.0 + 0.25 * contrast * block);
-                let sigma =
-                    (PLANT_GAIN_DN_PER_E * s + PLANT_READ_DN * PLANT_READ_DN).max(0.0).sqrt();
+                let sigma = (PLANT_GAIN_DN_PER_E * s + PLANT_READ_DN * PLANT_READ_DN)
+                    .max(0.0)
+                    .sqrt();
                 let v = f64::from(BLACK) + s + sigma * rng.normal();
                 let (sx, sy) = geom.sensor_coord(plane, px, py);
                 rows[sy * w + sx] = v.clamp(0.0, f64::from(CONTAINER_MAX_DN)).round() as u16;
@@ -324,7 +325,11 @@ fn real_merge(blob: &mut Blob, dir: &Path, limit: Option<usize>) -> Result<()> {
         paths.truncate(n);
     }
     if paths.len() < 2 {
-        bail!("{} holds {} ARW files; need at least 2", dir.display(), paths.len());
+        bail!(
+            "{} holds {} ARW files; need at least 2",
+            dir.display(),
+            paths.len()
+        );
     }
 
     let first = strehl_raw::decode(&paths[0]).context("decoding the first frame")?;
@@ -683,7 +688,12 @@ fn cmd_flats(dir: &Path, side: usize, r: usize, limit: Option<usize>) -> Result<
         for plane in [CfaPlane::G1, CfaPlane::G2] {
             let l = measure_pair(&fa, &fb, plane, side, r);
             if l.clipped > 0.001 {
-                println!("  skip {:?} at {:.1} DN: {:.3}% clipped", l.plane, l.s, l.clipped * 100.0);
+                println!(
+                    "  skip {:?} at {:.1} DN: {:.3}% clipped",
+                    l.plane,
+                    l.s,
+                    l.clipped * 100.0
+                );
                 continue;
             }
             levels.push(l);
@@ -691,7 +701,10 @@ fn cmd_flats(dir: &Path, side: usize, r: usize, limit: Option<usize>) -> Result<
     }
 
     if levels.len() < 4 {
-        bail!("only {} usable levels; need at least 4 for a photon transfer", levels.len());
+        bail!(
+            "only {} usable levels; need at least 4 for a photon transfer",
+            levels.len()
+        );
     }
 
     // --- g, from the temporal photon transfer ---------------------------------
@@ -705,7 +718,11 @@ fn cmd_flats(dir: &Path, side: usize, r: usize, limit: Option<usize>) -> Result<
     let sx4: f64 = levels.iter().map(|l| l.s.powi(4)).sum();
     let sx2y: f64 = levels.iter().map(|l| l.s.powi(2) * l.v_fixed).sum();
     let kappa2 = sx2y / sx4;
-    let kappa = if kappa2 > 0.0 { kappa2.sqrt() } else { f64::NAN };
+    let kappa = if kappa2 > 0.0 {
+        kappa2.sqrt()
+    } else {
+        f64::NAN
+    };
     // Per-level kappa, so the spread is visible rather than smoothed away.
     let per_level: Vec<f64> = levels
         .iter()
@@ -718,7 +735,10 @@ fn cmd_flats(dir: &Path, side: usize, r: usize, limit: Option<usize>) -> Result<
         .sqrt();
 
     println!();
-    println!("--- PR-4: independent measurement, {} levels ---", levels.len());
+    println!(
+        "--- PR-4: independent measurement, {} levels ---",
+        levels.len()
+    );
     println!(
         "g (temporal PTC slope) = {:.6} +/- {:.6} DN/e-   intercept {:.3} DN^2",
         g, g_se, intercept
@@ -751,12 +771,18 @@ fn cmd_flats(dir: &Path, side: usize, r: usize, limit: Option<usize>) -> Result<
         kappa / 0.003096,
         (kappa / 0.003096 - 1.0) * 100.0
     );
-    println!("  read floor from intercept: {:.4} DN", intercept.max(0.0).sqrt());
+    println!(
+        "  read floor from intercept: {:.4} DN",
+        intercept.max(0.0).sqrt()
+    );
 
     // --- the four residual curves --------------------------------------------
     // Scored against v_single: the high-passed spatial variance of one real
     // frame, which is what the model claims to predict.
-    let lv = Levels { black: BLACK, white: WHITE };
+    let lv = Levels {
+        black: BLACK,
+        white: WHITE,
+    };
     let p = profile::by_model("ILCE-7CM2").context("no A7C II profile")?;
     let arms: [(&str, profile::Corrections); 4] = [
         ("shipped", profile::Corrections::SHIPPED),
@@ -794,7 +820,10 @@ fn cmd_flats(dir: &Path, side: usize, r: usize, limit: Option<usize>) -> Result<
 
     println!();
     println!("--- arm scores over the measured range ---");
-    println!("{:>10} {:>10} {:>10} {:>10}", "arm", "rms", "worst", "median");
+    println!(
+        "{:>10} {:>10} {:>10} {:>10}",
+        "arm", "rms", "worst", "median"
+    );
     for (j, (name, _)) in arms.iter().enumerate() {
         let mut v: Vec<f64> = rows.iter().map(|(_, r)| r[j]).collect();
         let rms = (v.iter().map(|x| x * x).sum::<f64>() / v.len() as f64).sqrt();
@@ -946,10 +975,12 @@ fn cmd_blast(dir: &Path, limit: Option<usize>, gate_threshold: f32, tiles: usize
         for a in arms.iter_mut() {
             a.field.compute(&luma, &a.noise);
             regularise(a.field.values(), geom, &mut scratch, &mut reg);
-            a.est
-                .as_mut()
-                .expect("estimator built")
-                .fold_censored(k as u16, &frame, &reg, CONTAINER_MAX_DN)?;
+            a.est.as_mut().expect("estimator built").fold_censored(
+                k as u16,
+                &frame,
+                &reg,
+                CONTAINER_MAX_DN,
+            )?;
         }
     }
 
@@ -1213,7 +1244,12 @@ fn report_blast(results: &[ArmResult], geom: strehl_core::plane::PlaneGeometry, 
     println!("  mean merged luma (DN) per tile:");
     for ty in 0..tiles {
         let row: Vec<String> = (0..tiles)
-            .map(|tx| format!("{:>7.0}", tile[ty * tiles + tx].0 / tile[ty * tiles + tx].2 as f64))
+            .map(|tx| {
+                format!(
+                    "{:>7.0}",
+                    tile[ty * tiles + tx].0 / tile[ty * tiles + tx].2 as f64
+                )
+            })
             .collect();
         println!("    {}", row.join(""));
     }
@@ -1267,8 +1303,7 @@ fn report_blast(results: &[ArmResult], geom: strehl_core::plane::PlaneGeometry, 
 /// sweep is no longer a pure bound: `--rho <v>` adds a measured point to it.
 /// The default list is retained unchanged so every round 1 number in the
 /// corpus can still be reproduced from this binary.
-static RHO_SWEEP: std::sync::Mutex<Vec<f32>> =
-    std::sync::Mutex::new(Vec::new());
+static RHO_SWEEP: std::sync::Mutex<Vec<f32>> = std::sync::Mutex::new(Vec::new());
 
 /// pixel, after warping. **Unmeasured** (M71 §11). 1.0 is the conservative end:
 /// the pattern does not average down at all. Every headline here is quoted at
@@ -1340,9 +1375,7 @@ fn cmd_selftest(r: usize) -> Result<()> {
     let sweep = [200.0f64, 500.0, 1000.0, 2000.0, 4000.0, 8000.0, 12000.0];
 
     println!("=== flats instrument self-test ===");
-    println!(
-        "plant: g = {SELFTEST_GAIN}, read = {SELFTEST_READ_DN} DN, {W}x{H}, hp radius {r}"
-    );
+    println!("plant: g = {SELFTEST_GAIN}, read = {SELFTEST_READ_DN} DN, {W}x{H}, hp radius {r}");
     println!("(constants belong to the plant, not to the profile or to M71)");
 
     // Three arms. The first must show no effect: it is the placebo.
@@ -1362,7 +1395,11 @@ fn cmd_selftest(r: usize) -> Result<()> {
             xs.push(mean);
             ys.push(v_temp);
             if *s >= 500.0 {
-                ks.push(if v_fixed > 0.0 { v_fixed.sqrt() / mean } else { 0.0 });
+                ks.push(if v_fixed > 0.0 {
+                    v_fixed.sqrt() / mean
+                } else {
+                    0.0
+                });
             }
         }
         let (g, inter, _) = ols(&xs, &ys);
@@ -1424,7 +1461,8 @@ fn write_blob(out: &Path, blob: &Blob, label: &str) -> Result<()> {
     if let Some(parent) = out.parent() {
         std::fs::create_dir_all(parent).ok();
     }
-    let mut fh = std::fs::File::create(out).with_context(|| format!("writing {}", out.display()))?;
+    let mut fh =
+        std::fs::File::create(out).with_context(|| format!("writing {}", out.display()))?;
     fh.write_all(&blob.0)?;
     fh.flush()?;
     println!(
@@ -1475,7 +1513,11 @@ fn main() -> Result<()> {
             }
             "--tiles" => tiles = args.next().context("--tiles")?.parse().context("--tiles")?,
             "--hp-radius" => {
-                hp_radius = args.next().context("--hp-radius")?.parse().context("--hp-radius")?
+                hp_radius = args
+                    .next()
+                    .context("--hp-radius")?
+                    .parse()
+                    .context("--hp-radius")?
             }
             "--limit" => {
                 limit = Some(

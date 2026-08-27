@@ -391,7 +391,8 @@ fn box_mean(src: &[f32], geom: PlaneGeometry, rad: usize, scratch: &mut [f32], d
         }
         for y in 0..h {
             dst[y * w + x] = acc * inv;
-            acc += scratch[(y + rad + 1).min(h - 1) * w + x] - scratch[y.saturating_sub(rad) * w + x];
+            acc +=
+                scratch[(y + rad + 1).min(h - 1) * w + x] - scratch[y.saturating_sub(rad) * w + x];
         }
     }
 }
@@ -595,7 +596,13 @@ impl OpStats {
 // ---------------------------------------------------------------------------
 
 #[allow(clippy::too_many_lines)]
-fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool, every: usize) -> Result<()> {
+fn survey(
+    dir: &Path,
+    limit: Option<usize>,
+    stride: usize,
+    sweep: bool,
+    every: usize,
+) -> Result<()> {
     let ld = Loader::open_every(dir, limit, every)?;
     let geom = ld.geom;
     let px = geom.pixels();
@@ -951,12 +958,7 @@ impl Plant {
 /// Run one plant and return
 /// `(tile fraction over 8 sigma, background fraction, fraction inside the tile
 /// at the planted frame only)`.
-fn plant_score(
-    ld: &Loader,
-    av: &AffineVar,
-    op: &Op,
-    pl: &Plant,
-) -> Result<(f64, f64, f64)> {
+fn plant_score(ld: &Loader, av: &AffineVar, op: &Op, pl: &Plant) -> Result<(f64, f64, f64)> {
     let geom = ld.geom;
     let px = geom.pixels();
     let mut ring: Vec<Vec<f32>> = (0..op.w).map(|_| vec![0.0f32; px]).collect();
@@ -1168,7 +1170,10 @@ fn levels_run(dir: &Path, limit: Option<usize>) -> Result<()> {
     let peak = d4.iter().fold(0.0f64, |m, v| m.max(v.abs()));
 
     println!("stack           : {}", dir.display());
-    println!("frames          : {n}   usable pixels {keep} ({:.2}%)", 100.0 * keep as f64 / px as f64);
+    println!(
+        "frames          : {n}   usable pixels {keep} ({:.2}%)",
+        100.0 * keep as f64 / px as f64
+    );
     println!("mean level      : {grand:.2} DN above black");
     println!(
         "photometric p-p : {:.4}%   (max {:.6} / min {:.6} of the stack mean)",
@@ -1388,7 +1393,9 @@ fn mask_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
         }
     }
     let ref_idx = ref_stats.best_index();
-    let elect_match = (0..px).filter(|&i| elect[0][0].idx[i] == ref_idx[i]).count();
+    let elect_match = (0..px)
+        .filter(|&i| elect[0][0].idx[i] == ref_idx[i])
+        .count();
     println!();
     println!("--- B0: faithfulness of this file's merge to the shipped one ---");
     println!(
@@ -1493,7 +1500,10 @@ fn mask_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
     // ---- B1 / B2 / B3 / B4 --------------------------------------------------
     println!();
     println!("--- B1/B2/B3: what the mask costs (MEASURED) ---");
-    for (arm, label) in ["off", "average only", "election+average"].iter().enumerate() {
+    for (arm, label) in ["off", "average only", "election+average"]
+        .iter()
+        .enumerate()
+    {
         let a = &acc[arm][0];
         println!(
             "arm {arm} ({label:<16}) weight removed {:.6}% of admitted   fallbacks {} ({:.6}% of px)   \

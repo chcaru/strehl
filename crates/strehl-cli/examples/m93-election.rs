@@ -129,7 +129,10 @@ fn loo_residual_kernel(w: usize, p: usize) -> Vec<f64> {
         ksum += kj;
         *rj = -kj;
     }
-    assert!((ksum - 1.0).abs() < 1e-9, "LOO weights sum to {ksum}, not 1");
+    assert!(
+        (ksum - 1.0).abs() < 1e-9,
+        "LOO weights sum to {ksum}, not 1"
+    );
     r
 }
 
@@ -184,14 +187,7 @@ impl AffineVar {
 /// denominator below evaluates. With every `c = 1` this reduces exactly to
 /// `a * sum(r^2 * L) + b * sum(r^2)`.
 #[inline]
-fn z_at(
-    ring: &[Vec<f32>],
-    slots: &[usize],
-    cs: &[f32],
-    op: &Op,
-    av: &AffineVar,
-    i: usize,
-) -> f32 {
+fn z_at(ring: &[Vec<f32>], slots: &[usize], cs: &[f32], op: &Op, av: &AffineVar, i: usize) -> f32 {
     let mut num = 0.0f32;
     let mut vs = 0.0f32;
     for (j, &s) in slots.iter().enumerate() {
@@ -536,7 +532,7 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32, photonorm: bool) -> Res
         // exists only to measure how much of the gate's firing is explained by
         // level drift, not to compete with M91.
         let cf = if photonorm {
-            let s: f64 = p.luma.iter().map(|&v| f64::from(v)) .sum::<f64>() / px as f64;
+            let s: f64 = p.luma.iter().map(|&v| f64::from(v)).sum::<f64>() / px as f64;
             let r0 = *ref_level.get_or_insert(s);
             if s.abs() < 1e-9 { 1.0 } else { (r0 / s) as f32 }
         } else {
@@ -641,11 +637,7 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32, photonorm: bool) -> Res
     let mut changed = [0u64; ARMS];
     let mut spk = vec![0.0f64; ARMS];
     for a in 0..ARMS {
-        changed[a] = wins[a]
-            .iter()
-            .zip(&wins[0])
-            .filter(|(x, y)| x != y)
-            .count() as u64;
+        changed[a] = wins[a].iter().zip(&wins[0]).filter(|(x, y)| x != y).count() as u64;
         spk[a] = speckle(&wins[a], geom);
         let s: f64 = wresp[a].iter().map(|&v| v as f64).sum();
         println!(
@@ -838,7 +830,11 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32, photonorm: bool) -> Res
             percentile(&hs, 0.999),
             admeans[a],
             dadm,
-            if dadm.abs() < 1e-6 { f64::NAN } else { dh / dadm },
+            if dadm.abs() < 1e-6 {
+                f64::NAN
+            } else {
+                dh / dadm
+            },
             diff_sum / diff_n.max(1) as f64,
             100.0 * diff_n as f64 / hs.len() as f64
         );
@@ -846,7 +842,11 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32, photonorm: bool) -> Res
             println!(
                 "        invariant: H is bit-identical to arm 0 at all {same_n} pixels whose\n\
                  \x20       half-election band centres are unchanged -- {violations} violations ({})",
-                if violations == 0 { "PASS" } else { "FAIL - instrument bug" }
+                if violations == 0 {
+                    "PASS"
+                } else {
+                    "FAIL - instrument bug"
+                }
             );
             assert_eq!(violations, 0, "H invariant violated on arm {a}");
         }
@@ -967,10 +967,7 @@ fn synth_run(dir: &Path, nframes: usize, crop: usize) -> Result<()> {
     println!("base stack      : {}", dir.display());
     println!("crop            : {cw} x {ch} at ({x0},{y0})   frames {nframes}   f0 = {f0}");
     println!("iso             : {:?}", ld.iso);
-    println!(
-        "green var model : var(L) = {:.6}*L + {:.4}",
-        av.a, av.b
-    );
+    println!("green var model : var(L) = {:.6}*L + {:.4}", av.a, av.b);
     println!(
         "\nGround truth: frame {f0} is the unique correct winner. Any pixel at which the gate\n\
          rules {f0} ineligible is a correctly-elected sharp frame being destroyed.\n\

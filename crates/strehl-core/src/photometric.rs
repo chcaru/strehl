@@ -151,11 +151,16 @@ pub const MAX_CLIPPED_FRACTION: f64 = 1e-4;
 /// promotion criterion failed and its verdict was KEEP-OFF.
 ///
 /// `Auto` decides per stack from the stack's own measured drift. It is
-/// **opt-in**: `Off` remains the default and M122's KEEP-OFF verdict on the
-/// unconditional switch stands untouched.
+/// **opt-in and should stay that way**: `AUTO_FRAMES_DOMAIN` is `33..=100`, so
+/// on this rig's real brackets (205 and 299 frames) it abstains with code U1
+/// and falls back to the default, making it a no-op dressed as a decision.
+/// The unconditional `On` is the default since V-TONE; M122's KEEP-OFF was
+/// retired because its criterion could not tell a seam from an edge.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum PhotometricMode {
-    /// Never correct. The shipped default.
+    /// Never correct. The shipped default until V-TONE, and still the value
+    /// this type's `Default` impl yields — that impl is used by tests only;
+    /// the product default is resolved in `resolve_photometric_mode`.
     #[default]
     Off,
     /// Always correct. What `--photometric` has always meant.
@@ -993,8 +998,17 @@ mod tests {
         assert_eq!(PhotometricMode::parse("on"), Ok(PhotometricMode::On));
     }
 
+    /// The `Default` impl yields `Off`. **This is not the product default.**
+    ///
+    /// The shipped default is `On`, resolved in
+    /// `strehl_cli::merge_cmd::resolve_photometric_mode` and asserted there.
+    /// This test pins the type's zero value only. It was called
+    /// `the_default_mode_is_off` while that was also the product default, and
+    /// the name survived the flip long enough to be worth renaming: a test
+    /// whose name states a default it does not test is the same defect as a
+    /// registry that declares one it did not run.
     #[test]
-    fn the_default_mode_is_off() {
+    fn the_zero_value_of_the_mode_type_is_off() {
         assert_eq!(PhotometricMode::default(), PhotometricMode::Off);
     }
 
