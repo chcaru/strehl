@@ -5,6 +5,12 @@ acceptance binary `C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\str
 (SHA-256 verified to begin `44C2F2CD2E5B2894` before every run that produced a
 number here). Source quoted from `git show 9b05d0b7:<path>`.
 
+**Follow-on.** [`V-SELECT.md`](V-SELECT.md) tests the competing hypothesis on the
+same two subjects and finds one thing this document did not: registration between
+two *independently solved halves* of `bee-3-cpl` diverges 1.90× with depth. That
+is not the accumulation refuted below — it is solve-to-solve divergence, and §8
+of that document holds it.
+
 ---
 
 ## Verdict
