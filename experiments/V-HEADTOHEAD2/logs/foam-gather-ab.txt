@@ -1,0 +1,28 @@
+g0 (2344, 3516, 3) uint16
+g1 (2344, 3516, 3) uint16
+
+DISTURBANCE CHECK: 97.82% of pixels differ, mean |d| = 163.3 DN
+
+specular box (SHIP (3466, 1698, 380)) -> render (1733, 849, 190), blown 0.396%
+control  box (65, 936, 190) chosen by measurement, blown 0.136%, local contrast 1.904
+  (foam has NO unblown region at this tile size; the control is 3x less blown, not unblown)
+
+=== SPECULAR (the rims in question) ===
+  specular
+    chroma  g0=0.2130  g1=0.2108   moved +1.02%
+    chroma pattern correlation g0 vs g1 : 0.9434
+    median |dLum|/Lum over same px      : 4.52%
+
+=== CONTROL: ordinary high-contrast texture, no blown highlight ===
+  control
+    chroma  g0=0.2573  g1=0.2174   moved +15.54%
+    chroma pattern correlation g0 vs g1 : 0.8339
+    median |dLum|/Lum over same px      : 3.07%
+
+=== VERDICT ===
+  specular chroma moved +1.02%, control chroma moved +15.54%
+  specular : control = 0.07x
+
+  SUBJECT: the chroma PATTERN survives a change of gather
+  lattice at r=0.9434, and moves no more than ordinary
+  texture does. The colour is not made by the estimator.

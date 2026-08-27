@@ -1,0 +1,20 @@
+master foam--SHIP-V4.tiff  shape=(4688, 7032, 3) dtype=uint16
+
+=== WHOLE FRAME ===
+  R ceiling  max= 65535  p99.999=  65535.0
+  G ceiling  max= 65535  p99.999=  65333.7
+  B ceiling  max= 65535  p99.999=  65440.0
+  ARM A: green pins below blue? G=65535 vs B=65535 -> NO
+  ARM B: B/G by luminance decile 0.9609 0.9683 0.9695 0.9712 0.9720 0.9714 0.9705 0.9743 0.9926
+         monotone fraction 0.75, span 0.9609 -> 0.9926  (+3.3%)
+  ARM C: hot pixels with B-G>0: 0.313 over 329668 px -> mixed (consistent with interference)
+
+=== OWNER'S 1:1 CROP ===
+  R ceiling  max= 65075  p99.999=  64919.9
+  G ceiling  max= 65075  p99.999=  64919.9
+  B ceiling  max= 65075  p99.999=  64919.9
+  ARM A: green pins below blue? G=65075 vs B=65075 -> NO
+  ARM B: B/G by luminance decile 0.9588 0.9779 0.9787 0.9708 0.9679 0.9676 0.9633 0.9754 1.0000
+         monotone fraction 0.50, span 0.9588 -> 1.0000  (+4.3%)
+  ARM C: hot pixels with B-G>0: 0.285 over 1445 px -> mixed (consistent with interference)
+

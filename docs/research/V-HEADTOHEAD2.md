@@ -1532,6 +1532,17 @@ single-pixel-area coloured components (median area 2 px), a speckle signature
 rather than ordered fringes — which is consistent with a fine, thin film at
 this magnification but is not positive evidence for ordering.
 
+> `[SUPERSEDED 2026-08-27 — see §8.7.` §8.5's **conclusion** survives on
+> better evidence, but its **reasoning was holed** and the hole is worth more
+> than the conclusion. The load-bearing arm above was retention through the
+> merge (foam 70.9%, polished steel 15.9%). That separates DETERMINISTIC from
+> PHASE-RANDOM. It does **not** separate SCENE from PIPELINE, because a
+> deterministic pipeline defect keyed to signal *level* is also
+> frame-invariant, and level is set by the scene, so it tracks the scene
+> through a merge exactly as real colour would. §8.5 measured the right
+> quantity and drew the wrong dichotomy from it. §8.7 runs the test that does
+> separate them. `]`
+
 ## 8.6 Applying V-LINEAR to this section
 
 V-LINEAR measured the in-focus/defocused fine-band power ratio at 1.015,
@@ -1554,3 +1565,101 @@ to the corrected 5.6% exactly as it applied to the 0.02%.
 > band of noise. The "not a resolution claim" caveat still applies in full to
 > the 0.25–0.30 and 0.30–0.40 rows, which is where the retracted "17–27%
 > behind" was measured. `]`
+
+---
+
+## 8.7 `foam`, settled by changing the estimator (2026-08-27)
+
+§8.5 answered the `foam` question with an instrument that could not fully
+decide it, and said so. The owner proposed the better discriminator and it is
+the one used here: **subject colour is invariant to how the merge gathers; an
+estimator artifact is keyed to the gather lattice and must move when the
+lattice moves.** `STREHL_FULLRES_GATHER` changes exactly that and nothing
+else — arm 0 gathers each frame from its own half-resolution CFA phase plane,
+arm 1 demosaics to full sensor resolution before the warp. One binary, one
+warpmap, one subject, linear render with no tone gain and therefore no
+exposure to pin.
+
+**The disturbance is real, asserted before the probe was asked anything:**
+97.82% of pixels differ between the arms, mean |Δ| 163.3 DN. A probe run
+against a non-disturbance is the failure this lane has already shipped once.
+
+| region | blown px | chroma g0 | chroma g1 | **moved** | pattern corr |
+|---|---:|---:|---:|---:|---:|
+| **specular rims** (the owner's 1:1 crop) | 0.396% | 0.2130 | 0.2108 | **+1.02%** | 0.9434 |
+| ordinary texture (control, chosen by measurement) | 0.136% | 0.2573 | 0.2174 | **+15.54%** | 0.8339 |
+
+**Verdict: the fringing is not made by strehl's merge or gather.** A change of
+gather lattice that moves *ordinary texture* chroma by 15.54% moves the
+specular rim chroma by **1.02%** — the rims are roughly **fifteen times more
+stable** than ordinary texture under the very transformation an estimator
+artifact would have to follow. Nothing keyed to the gather lattice can behave
+that way. **Do not route a merge fix.**
+
+**Two instrument repairs the run forced, both from the same class of error.**
+The first version used SHIP-V4 coordinates against a half-resolution render;
+numpy slicing clips silently, so it measured a 380×50 sliver at the frame edge
+and returned entirely plausible numbers (chroma 0.1668 → 0.1731, r = 0.96) for
+a region it never sampled. A hard bounds assertion now raises instead. The
+second: `foam` has **no unblown region** at this tile size — all 240 candidate
+tiles contained blown pixels, minimum 0.0166%, median 0.385% — so the control
+is honestly labelled as *3× less blown*, not *unblown*, and both fractions are
+printed rather than hidden behind the word "control".
+
+### The other lane's mechanism does not reproduce on the shipped masters
+
+README lines 517–540 report a different verdict from a better instrument than
+§8.5's: a channel-asymmetric highlight saturation in strehl's output, green
+pinning below blue so highlights acquire a one-sided blue excess. That is
+well-evidenced and this lane does not dispute it — but it was **measured on a
+different render**, and it does not appear in `foam--SHIP-V4.tiff`, which is
+what the gallery ships and what the owner is looking at.
+
+| arm | README's render | `foam--SHIP-V4.tiff` |
+|---|---|---|
+| A. channel ceilings | G **38921**, B **52239** | G **65535**, B **65535** — all three clip together |
+| B. B/G across level deciles | 1.0257 → 1.2903 (**+25.7%**) | 0.9609 → 0.9926 (**+3.3%**) |
+| C. hot pixels with B−G > 0 | **88.9%** (one-sided blue) | **31.3%** — leaning *green*, not blue |
+
+Both findings can be true: a render whose highlights land below full scale can
+show per-channel ceilings at 38921/52239, while a render whose highlights
+reach 65535 clips all three together and cannot. **The defect is real and the
+shipped masters do not exhibit it.**
+
+`foam_retract.py` commissions 8/8 in both directions before it is believed —
+a planted iridescent rim (hue cycling both signs, no ceiling) must acquit, a
+planted ceiling defect on neutral grey must convict, and a colourless
+luminance ramp must show no trend, which catches an arm reading level alone.
+Two of those arms were repaired *by* commissioning: the trend gate originally
+demanded monotonicity across all deciles, which a highlight defect — confined
+by definition to highlights — would have escaped as a hockey stick; and the
+hue-sign gate originally fired only on a *blue* excess, so the master's 31.3%
+green-excess lean was scored "mixed" by a statistic that could only charge in
+the direction I expected. Both are the same error this project keeps finding
+in its own instruments.
+
+### What is still open, and what would close it
+
+**Whether the colour is specifically thin-film interference is not settled.**
+Arm C on the shipped master reads 31.3% / 28.5%, a lean toward green excess
+where interference predicts ~50%, though inside the two-sided tolerance. And
+the subject description is itself in dispute: the brief describes `foam` as
+coffee crema, the README as "dark cellular plastic". Both admit thin films, so
+neither kills the hypothesis, but the corpus should agree on what the picture
+is of. What would close it needs no new capture: rim chroma against **distance
+from the optical centre** separates lateral CA from film, and hue *ordering*
+along a rim separates film from a level-keyed pin.
+
+**What is settled, and is what the question was asked to decide:** the rims'
+colour is not manufactured by strehl's merge or gather, and the shipped
+masters do not carry the channel-ceiling defect. `foam`'s speculars are not a
+merge defect to fix.
+
+### The limitation of this test, stated
+
+These A/B renders come out at CFA-plane resolution (3516×2344) where
+`foam--SHIP-V4.tiff` is 7032×4688, so the A/B certifies *the gather lattice
+does not make the colour* rather than certifying the shipped master
+pixel-for-pixel. Every other render in this lane is 7032×4688 from the same
+invocation, so the difference is a property of this subject's decode, not of
+the script; it is not chased here because it does not bear on the question.

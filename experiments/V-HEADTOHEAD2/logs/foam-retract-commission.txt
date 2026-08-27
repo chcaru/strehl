@@ -1,0 +1,30 @@
+COMMISSIONING -- planted inputs, true answer fixed by construction
+
+  IRIDESCENT (real film, no ceiling)
+    ceilings G=65535 B=65535  -> green-pins-first=False (want False)
+    B/G deciles 1.003 1.002 0.999 1.000 0.997 0.999 1.001 1.000 1.000
+    monotone=0.38 -> rising-trend=False (want False)
+    hot B-G>0 frac=0.501 -> one-sided=False (want False)
+
+  CEILING (no colour, green pins low)
+    ceilings G=38921 B=52239  -> green-pins-first=True (want True)
+    B/G deciles 1.000 1.000 1.000 1.000 1.001 1.143 1.294 1.342 1.342
+    monotone=0.62 -> rising-trend=True (want True)
+    hot B-G>0 frac=1.000 -> one-sided=True (want True)
+
+  FLAT (no colour, no ceiling)
+    ceilings G=53954 B=53987  -> green-pins-first=False (want False)
+    B/G deciles 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+    monotone=0.25 -> rising-trend=False (want False)
+    hot B-G>0 frac=0.512 -> one-sided=False
+
+  [PASS] IRIDESCENT-ceiling
+  [PASS] IRIDESCENT-trend
+  [PASS] IRIDESCENT-sign
+  [PASS] CEILING-ceiling
+  [PASS] CEILING-trend
+  [PASS] CEILING-sign
+  [PASS] FLAT-ceiling
+  [PASS] FLAT-trend
+
+  8 of 8 arms correct
