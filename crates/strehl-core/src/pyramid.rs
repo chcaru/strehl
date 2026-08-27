@@ -1225,6 +1225,40 @@ pub struct BandMerge {
     /// spatially coherent — are both answerable from the max and its argument.
     dmax: Vec<Vec<f32>>,
     darg: Vec<Vec<i32>>,
+
+    /// DIAGNOSTIC ONLY, and empty unless [`WEIGHT_DUMP_ENV`] is set: the sum of
+    /// the SQUARED weights at each coefficient, which with [`Self::den`] gives
+    /// the participation ratio `n_eff = den^2 / dsq`.
+    ///
+    /// This exists because [`Self::dmax`] alone cannot answer a question across
+    /// DIFFERENT FRAME COUNTS. The winner's share `max(w)/sum(w)` has null value
+    /// `1/N` under a plain mean, so it falls as `N` rises whatever the merge
+    /// does — comparing it at `N = 63` against `N = 32` would report "the winner
+    /// is diluted by depth" for a merge that behaved identically at both, and
+    /// for one that behaved randomly. It is a statistic that cannot fail the
+    /// hypothesis it would be used to test.
+    ///
+    /// `n_eff` is the scale-free form of the same question: it counts how many
+    /// frames effectively contribute, reading `N` for a plain mean and `1.0` for
+    /// winner-take-all, so `n_eff` at one frame count is directly comparable
+    /// with `n_eff` at another.
+    ///
+    /// Like `den` it absorbs by summation, so it is exact and independent of the
+    /// order frames were folded in.
+    ///
+    /// HELD IN `f64`, AND THAT IS NOT FASTIDIOUSNESS. `select_weight` clamps
+    /// `p * ln(r)` to `[-80, 80]`, so a thoroughly out-of-focus frame lands at
+    /// `exp(-80) ~= 1.8e-35`. That is a perfectly ordinary `f32`, but its SQUARE
+    /// is `3.2e-70`, which is below `f32::MIN_POSITIVE` and flushes to zero. In
+    /// `f32` this sum reads zero at every coefficient where the whole frame set
+    /// sits on the clamp floor, `n_eff` is then `0/0`, and the coefficients most
+    /// thoroughly averaged — every frame pinned to an identical floor weight is
+    /// exactly a plain mean — are reported as having no answer.
+    ///
+    /// MEASURED, not anticipated: the `f32` version failed this lane's
+    /// commissioning bound on 965 647 coefficients of a 19-frame subject, which
+    /// is why the bound is checked rather than assumed.
+    dsq: Vec<Vec<f64>>,
 }
 
 impl BandMerge {
@@ -1321,6 +1355,10 @@ impl BandMerge {
             darg: match weight_dump_prefix() {
                 None => Vec::new(),
                 Some(_) => sizes.iter().map(|s| vec![-1i32; s.pixels()]).collect(),
+            },
+            dsq: match weight_dump_prefix() {
+                None => Vec::new(),
+                Some(_) => sizes.iter().map(|s| vec![0.0f64; s.pixels()]).collect(),
             },
             sizes,
         }
@@ -1596,11 +1634,13 @@ impl BandMerge {
             let fr = self.frames as i32;
             let dm = &mut self.dmax[k][..px];
             let da = &mut self.darg[k][..px];
+            let ds = &mut self.dsq[k][..px];
             for i in 0..px {
                 if w[i] > dm[i] {
                     dm[i] = w[i];
                     da[i] = fr;
                 }
+                ds[i] += f64::from(w[i]) * f64::from(w[i]);
             }
         }
         let den = &mut self.den[k][..px];
@@ -1891,6 +1931,7 @@ impl BandMerge {
                         self.darg[k][i] =
                             if other.darg[k][i] < 0 { -1 } else { other.darg[k][i] + base };
                     }
+                    self.dsq[k][i] += other.dsq[k][i];
                 }
             }
         }
@@ -1924,6 +1965,12 @@ impl BandMerge {
     ///   not be counted as unanimous ones.
     /// - `<prefix>-b<k>-arg.i32` — the index of that frame, or `-1` where the
     ///   gate admitted nothing.
+    /// - `<prefix>-b<k>-neff.f32` — `sum(w)^2 / sum(w^2)`, the participation
+    ///   ratio: how many frames effectively contribute. `1.0` is
+    ///   winner-take-all and `frames` is a plain mean. This is the form to use
+    ///   when comparing runs with DIFFERENT frame counts, because `conc` has
+    ///   null value `1/frames` and therefore falls with depth whatever the merge
+    ///   does.
     ///
     /// Raw little-endian arrays with a sidecar `<prefix>-dims.json`, rather than
     /// an image format, because these are measurements and any image writer
@@ -1952,11 +1999,19 @@ impl BandMerge {
             let px = sz.pixels();
             let mut conc: Vec<u8> = Vec::with_capacity(px * 4);
             let mut arg: Vec<u8> = Vec::with_capacity(px * 4);
+            let mut neff: Vec<u8> = Vec::with_capacity(px * 4);
             for i in 0..px {
                 let d = self.den[k][i];
                 let share = if d > 0.0 { self.dmax[k][i] / d } else { f32::NAN };
                 conc.extend_from_slice(&share.to_le_bytes());
                 arg.extend_from_slice(&self.darg[k][i].to_le_bytes());
+                let q = self.dsq[k][i];
+                let n = if d > 0.0 && q > 0.0 {
+                    (f64::from(d) * f64::from(d) / q) as f32
+                } else {
+                    f32::NAN
+                };
+                neff.extend_from_slice(&n.to_le_bytes());
             }
             let write = |suffix: &str, bytes: &[u8]| {
                 let path = format!("{prefix}-b{k}-{suffix}");
@@ -1965,6 +2020,7 @@ impl BandMerge {
             };
             write("conc.f32", &conc);
             write("arg.i32", &arg);
+            write("neff.f32", &neff);
         }
         dims.push_str("]}");
         let path = format!("{prefix}-dims.json");
