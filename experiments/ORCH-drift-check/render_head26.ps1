@@ -14,11 +14,12 @@ param(
     [string]$Scale = "",
     [string]$Tag   = "default",
     [string]$Root  = "D:\personal\macro",
-    [string]$Out   = "C:\dev\strehl-out\ORCH-HEAD26"
+    [string]$Out   = "C:\dev\strehl-out\ORCH-HEAD26",
+    [string]$Exe   = "C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe"
 )
 
 $ErrorActionPreference = "Stop"
-$exe = "C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe"
+$exe = $Exe
 $dest = Join-Path $Out $Tag
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 $log = Join-Path $dest "render.log"
@@ -55,7 +56,13 @@ foreach ($s in $subjects) {
     # appeared rather than by the stream it wrote to.
     $prev = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
-    $banner = & $exe stack $s.FullName -o $target --srgb --auto-exposure 2>&1 |
+    # `--auto-exposure` is deliberately NOT passed. It is superseded on the
+    # `--srgb` path as of 5f367a94 and now applies nothing, but before that fix
+    # it double-normalised and blew 11 of 18 masters to a white median (facts
+    # 1815-1816). Omitting it states the intent rather than relying on the
+    # guard, and keeps this script honest if it is ever run against an older
+    # binary via -Exe.
+    $banner = & $exe stack $s.FullName -o $target --srgb 2>&1 |
         Select-String -Pattern '^averaged|^measured floor|x white|exposure|^build' |
         ForEach-Object { $_.Line.Trim() }
     $ErrorActionPreference = $prev
