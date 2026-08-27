@@ -15,10 +15,23 @@
 >    0.25-0.30 cyc/px band power to **0.02%** (0.037147 against 0.037138). The
 >    comparators were fed TIFFs developed with `Contrast2012=+100`; that is not
 >    a caveat on the result, it *is* the result.
-> 3. **The band contains no signal.** `V-LINEAR` measured the
->    in-focus/defocused fine-band ratio on **linear** develops at **1.015,
->    1.043, 1.004, 1.138** across four frame pairs, against 2.1-3.0 on the
->    Lightroom develops. **0.20-0.48 cyc/px is a noise band on this corpus.**
+> 3. **The band this claim was measured in carries little focus-dependent
+>    signal.** `V-LINEAR` first reported the in-focus/defocused fine-band ratio
+>    on **linear** develops at **1.015, 1.043, 1.004, 1.138** across four frame
+>    pairs, against 2.1-3.0 on the Lightroom develops, and concluded that
+>    0.20-0.48 cyc/px was uniformly noise. **`V-LINEAR2` §1 then corrected its
+>    own lane's number and the correction is recorded here rather than swapped
+>    in silently:** those were four hand-picked *whole-frame* pairs, and letting
+>    each of 29 tiles choose its **own** best-focus and worst-focus frame
+>    recovers a factor of 2.4 that whole-frame averaging destroyed. Per tile,
+>    **0.20-0.25 PASSES at R = 2.419** (CI 1.961-3.063), 0.25-0.30 is MARGINAL
+>    at **1.387**, and everything above 0.30 fails. In a focus stack "in focus"
+>    is a property of a tile in a frame, not of a frame.
+>
+>    **This sharpens the retraction rather than weakening it.** The 17-27% claim
+>    was measured at **0.25-0.30** — the band that still does not pass — so it
+>    was made where the focus signal is marginal at best, while the tone
+>    confound of point 2 was measured at full strength in exactly that band.
 >
 > **This file is retained, not deleted**, so its numbers stay reproducible and
 > the retraction stays auditable — the same treatment given every other refuted
