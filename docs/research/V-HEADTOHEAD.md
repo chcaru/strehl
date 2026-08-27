@@ -1,5 +1,35 @@
 # V-HEADTOHEAD — strehl against another stacker, for the first time
 
+> ## RETRACTED IN PART — read this before any number below
+>
+> **This report's headline finding is withdrawn.** It concluded a *"real deficit
+> of 17-27% at 3-5 px features"* and called that "the honest headline". Two
+> later lanes have since shown that quantity is **undecidable in either
+> direction** on this corpus, and it fails three separate ways:
+>
+> 1. **The instrument fails its own controls, five ways** — re-derived rather
+>    than taken on trust by `V-HEADTOHEAD2`.
+> 2. **The gap is a tone curve, not a resolution difference.** A curve fitted to
+>    strehl's own pixels using **only 4x4 block averages** — a transform with
+>    literally no information above 0.125 cyc/px — reproduces the comparator's
+>    0.25-0.30 cyc/px band power to **0.02%** (0.037147 against 0.037138). The
+>    comparators were fed TIFFs developed with `Contrast2012=+100`; that is not
+>    a caveat on the result, it *is* the result.
+> 3. **The band contains no signal.** `V-LINEAR` measured the
+>    in-focus/defocused fine-band ratio on **linear** develops at **1.015,
+>    1.043, 1.004, 1.138** across four frame pairs, against 2.1-3.0 on the
+>    Lightroom develops. **0.20-0.48 cyc/px is a noise band on this corpus.**
+>
+> **This file is retained, not deleted**, so its numbers stay reproducible and
+> the retraction stays auditable — the same treatment given every other refuted
+> instrument here. Nothing below has been altered except this banner and the
+> marker on the verdict row.
+>
+> The standing account is `docs/research/V-HEADTOHEAD2.md` and the README's
+> *Measured against other stackers* section. **What survives from this report:**
+> the noise and clipping wins, which need no registration between two renders
+> and were never in question.
+
 **Verifier:** V-HEADTOHEAD. **Subject:** the project's standing claim to be *state of the art*.
 **Standing:** every quality number in this corpus before tonight is internal — strehl against
 strehl, or strehl against its own input frames. This is the first comparison against software
@@ -11,7 +41,7 @@ someone else wrote. I wrote every instrument here from scratch under
 
 | # | Question | Answer |
 |---|---|---|
-| 1 | Is strehl sharper? | **No — mixed, and it loses where it matters most.** Level at coarse scales, ahead ~6-8% at 10-20 px features, **behind 17-23%** at 3-5 px features against *both* comparators |
+| 1 | Is strehl sharper? | **RETRACTED — see the banner at the top of this file. This row is undecidable in either direction, not a loss.** Original text: *"No — mixed, and it loses where it matters most. Level at coarse scales, ahead ~6-8% at 10-20 px features, behind 17-23% at 3-5 px features against both comparators"* |
 | 2 | Fewer artifacts? | **Yes, marginally, and neither stacker has an occlusion halo.** strehl's rim numbers are lower on all four measures; no median profile in either arm overshoots |
 | 3 | Less noisy? | **Yes, decisively.** ~4.5x lower high-pass amplitude on flat defocused ground, and what remains is real structure rather than grain |
 | 4 | What does the other one do better? | **Fine microcontrast at 0.20-0.40 cyc/px**, and it is *not* a sharpening artifact — the develop had `Sharpness=0` |
