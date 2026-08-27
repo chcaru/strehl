@@ -1005,3 +1005,57 @@ semantic duplication and it still needs a reader. Header rows containing numbere
 names produce spurious cross-table signatures, as §14.1's second hit shows. And only 2
 numeric lines live inside fences in this report, so that arm of the scan is barely exercised
 on real data despite passing its plant.
+
+### 14.4 ORCH's standing question, aimed at my own load-bearing null
+
+> *"What property of the input decides whether this check can see anything, and have I
+> varied it?"*
+
+Section 12's null — *my radial statistic reads flat on `flower-bud-alone-cpl`* — was used to
+settle a cross-lane conflict, so it is the one worth aiming this at. For a **radial**
+statistic the governing property is how far out the population actually reaches, and
+`l2_falsecolour.py:205` sets the band edges from the data:
+
+```python
+edges = np.linspace(0, r.max() + 1e-9, 7)
+```
+
+**The axis self-normalises per subject.** "Band 5" means *as far out as this subject's mask
+reached*, and I never reported what that was. Measured with the shipped `edge_mask` imported
+rather than reimplemented (`n_mask = 165018` reproduces the saved run exactly):
+
+| subject | `r.max()` | outermost band centre | corner band count |
+|---|---:|---:|---:|
+| flower-bud | 1.1260 | 1.032 | 14240 |
+| coffee-bubbles | 1.3086 | **1.200** | **852** |
+
+So the published **1.31x vs 1.66x** compared each subject's own span, and those spans differ
+by 16 %. That comparison was not as like-for-like as section 12 implied.
+
+**The null survives the sharper test.** At *matched* radius the two subjects separate at
+every pair, including on axis:
+
+| r (fb / coffee) | 0.09/0.11 | 0.28/0.33 | 0.47/0.55 | 0.66/0.76 | 0.85/0.98 | 1.03/1.20 |
+|---|---:|---:|---:|---:|---:|---:|
+| flower-bud `(R-G)/Y` | -0.0316 | -0.0432 | -0.0534 | -0.0366 | -0.0376 | -0.0414 |
+| coffee `(R-G)/Y` | -0.2114 | -0.2027 | -0.2455 | -0.2756 | -0.3331 | -0.3508 |
+| ratio | **6.7x** | 4.7x | 4.6x | 7.5x | 8.9x | **8.5x** |
+
+Flower-bud is flat across its **whole** span, out to r = 1.03 — past the radius where coffee
+already reads -0.2756. The subjects differ at every radius both sample, so the differing
+reach is not what produced the flat reading. **Section 12's conclusion stands; its ratio
+comparison carries this qualification.**
+
+**And this partly explains the band-4 wobble I carried forward in section 13.4.** Coffee's
+outermost band holds **852 pixels** against flower-bud's 14240 — above the instrument's
+`None` guard of 20, but thin. I wrote that small-sample variance was "the obvious candidate
+and I have not excluded it"; the occupancy numbers now support it directly.
+
+**One instrument defect caught in the course of this audit**, disclosed because it nearly
+shipped: my first run passed `pct = 0.5` where `stats()` passes `bright_pct = 99.5` into
+`np.percentile(g, pct)`. That selected the bottom 99.5 % — the **complement** of the
+population under audit — and returned confident, plausible numbers with identical band
+centres on both subjects, which would have "cleared" the null for entirely the wrong reason.
+It was caught only because `n_mask` came back at 32.8 M against the saved run's 165018.
+**Reproducing a stored value from the run being audited is what caught it**, and an audit
+instrument that cannot reproduce its target's numbers is not auditing it.
