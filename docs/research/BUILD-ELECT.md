@@ -3278,3 +3278,129 @@ my statistic was pointed the wrong way to see it.
   address), most likely a small address offset. Not chased.
 - The **estimator** arm was never tested here; CA on/off and n=1 turned out to
   discriminate better, so that is what the renders were spent on.
+
+## 22. Both hazards land on this lane, and one of them downgrades 21
+
+ORCH's notice carried two measurement hazards and a generalisation. All three
+touch work I have already published, and the third one demotes section 21's
+central piece of evidence.
+
+### 22.1 The loader: audited, not asserted
+
+A grep says every `.tiff` in this lane is read with `tifffile` and the only two
+`PIL.Image.open` calls read a `.png` and a `.jpg`. That is an argument about
+source text, not a measurement, and the notice is specifically about a loss that
+**nothing in the returned array records**. So it was measured.
+
+```
+file                                   tifffile           PIL
+ORCH master (sec 21 census ref)  uint16 max 64516   uint8 max 252
+g2.0 LINEAR default arm          uint16 max 22294   uint8 max  87
+n=1 pyramid arm                  uint16 max 21543   uint8 max  84
+```
+
+**PIL truncated 3 of 3 with no error** (64516 >> 8 = 252, exactly). That matters
+beyond confirming ORCH: it means this audit was *shown able to see the failure it
+was looking for* before its clean result was believed. An audit that could not
+reproduce the hazard would have had nothing to say.
+
+The one PIL input this lane does read is ORCH's 1:1 asset, and section 21's
+clipping census was read through it. Parsing IHDR straight out of the file bytes
+with no imaging library in the path:
+
+```
+IHDR : 800 x 800, bit depth 8, colour type 2
+```
+
+**Eight bits at source.** PIL returning `uint8` there is the file, not a
+truncation. Section 21's census stands. It would have stood anyway -- 16 to 8
+truncation maps 65280..65535 onto 255, so it can only ever *create* apparent
+clipping, never hide it, and a census that found none is conservative under the
+hazard. That reasoning is why the check was worth running rather than why it was
+worth skipping.
+
+### 22.2 The ladder: section 21's n=1 null is a margin, not a silence
+
+Section 21 rested on the n=1 arm showing no overshoot, and that silence is what
+kept ORCH's election hypothesis alive. It was quoted unqualified. Planting a
+synthetic version of the real defect -- a narrow gaussian subtracted from green
+at the tracked edge, the same sign and shape as the thing being looked for --
+and sweeping its depth:
+
+| N | rows | n=1 OVER | floor | signal (default arm) | **margin** |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 1 | -57.0 | 210 | 233.2 | **1.11** |
+| 2 | 5 | -111.7 | 100 | 129.7 | **1.30** |
+| 5 | 11 | -90.9 | 150 | 165.2 | **1.10** |
+| 10 | 21 | -82.8 | 50 | 69.0 | **1.38** |
+| 20 | 41 | -62.9 | 50 | 2.4 | **0.05** |
+| 40 | 81 | +12.4 | 100 | 32.4 | **0.32** |
+
+`floor` is the smallest overshoot the n=1 arm could have carried without this
+statistic reporting it; `margin` is the measured defect divided by that floor.
+
+**Two of the six settings are blind.** At N=20 and N=40 the floor is above the
+signal, so those rungs could not have detected a defect the size of the one they
+are being used to rule out. Section 21 counted them as two of its "five of six
+settings" and it had no right to. **They are struck.**
+
+At the four settings that can see anything, the margin is **1.10 to 1.38**. The
+conclusion survives -- a defect the size of the default arm's would have been
+reported and was not -- but by ten to thirty-eight percent, not by silence. The
+pattern is at least coherent: the blind settings are exactly the heavily averaged
+ones where dilution has already eaten the signal.
+
+**Section 21's line should read:** removing the election collapses the overshoot
+at the four averaging settings where the test has any power, by a margin of
+1.1-1.4x. Not "no overshoot at n=1".
+
+### 22.3 The first ladder was wrong by 2x, in the flattering-to-nobody direction
+
+Ladder v1 reported a floor of 400 DN against a 233 DN signal and concluded
+section 21's n=1 evidence was worthless. That was a grid artifact: the A=200 rung
+failed the criterion **by 0.5 DN** (OVER 61.8 against CTL 62.3) and the next rung
+on the grid was 400. The true crossing is 210.
+
+Section 77's rule is usually stated as a threshold read off the first failing
+grid point *flattering* the instrument. Here the identical mistake ran the other
+way and made the instrument look twice as deaf as it is, which for about ten
+minutes had me writing a retraction that was itself wrong. **The rule is not
+about the direction of the error. A limit quoted without its grid is unaudited
+whichever way it leans.**
+
+Ladder v2 also moved the signal measurement into the same run at the same N on
+the same statistic. Section 21 compared a floor measured one way against a signal
+quoted from a different table, which is the cross-table comparison that hides a
+mismatch.
+
+### 22.4 The crop hazard: my cleanliness baseline may be dust
+
+The generalisation -- a sampling rule that optimises for one quality has blinded
+itself to that quality's complement -- lands on section 15.4. There I justified
+the blend arm's residual by calling it *"far-field wobble of the same character
+and magnitude as `coffee-bean`'s clean 0.23% at d=450 px."*
+
+`coffee-bean` is one of the two masters ORCH just found dust in. A radial band at
+d=450 px on a smooth backdrop is exactly where a defocused mote lives. On ORCH's
+own amplitudes -- a crop spanning 59643..62587, dust a few levels below local
+background -- the contamination is of order a few hundred DN, and my reference
+number is 0.23% of a 62170 DN far field, about 143 DN. **The dust could be the
+entire magnitude of the thing I called clean.**
+
+This does not overturn 15.4's conclusion: 0.37% against 12.47% is a ratio no
+plausible dust amplitude closes. What it overturns is the **floor**. I had no
+measured basis for calling `coffee-bean`'s far field clean, and I have now been
+shown a specific reason to think it is not. The comparison is withdrawn; the
+conclusion stands on the 34x ratio alone.
+
+### 22.5 Carried forward
+
+- Section 21.6 already flagged that `CTL` is not a clean `1/sqrt(N)` floor. The
+  ladder confirms it: 62.3, 5.9, 61.4, 32.4, 8.6, -14.5 across the sweep. The
+  sweep discriminates by sign and small-N magnitude, and now by margin, but not
+  by a calibrated noise model.
+- The floor is measured at **one address on one subject**. It is not a
+  frame-wide sensitivity.
+- Nothing in this lane has been re-examined on a complementary low-texture crop.
+  Until it has, no BUILD-ELECT statement about a smooth region should be read as
+  a certification.
