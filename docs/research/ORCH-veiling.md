@@ -12547,3 +12547,64 @@ three were mine while I was enforcing partition discipline on six other lanes.
 > **The instruments that judge the work need the same adversarial treatment as
 > the work.** Nobody was commissioning the gate. Nobody plants a defect in the
 > ruler.
+
+## 117. Two builds, one file size, and the wrong pin in my own notes
+
+I dispatched a lane to measure the merge-attributable ratio on all 26 subjects
+and told it, from my own notes, to use build pin `740e7056`. Then I read a
+provenance file for an unrelated reason and found the masters name a different
+binary. Checked across the whole corpus:
+
+```
+Get-ChildItem SHIP-V4 -Filter *.provenance.txt | grep '^binary :' | split '\'[4]
+  -> 9b05d0b7      26 masters
+```
+
+**All 26 shipping masters were rendered by `9b05d0b7`.** Had the lane rendered
+its source arms with `740e7056`, every one of its 26 ratios would have carried
+an uncontrolled binary difference between numerator and denominator — the exact
+mismatched-gauge defect that killed the sharpness metric in §105, which I had
+just spent three paragraphs of that lane's own dispatch warning it about. I
+planted it in the instructions while writing the warning against it.
+
+> **The gauge check has to be run against the instructions, not only against the
+> inherited code.** A lane that verifies everything it is handed except the
+> handing is running the same risk with an extra step.
+
+**The trap underneath it.** The two pins are the same size to the byte:
+
+| pin | size | SHA256 |
+|---|---|---|
+| `740e7056` | 9,568,768 | `15EA7346 1905EA2D 44B2F824 2D578CD9 …` |
+| `9b05d0b7` | 9,568,768 | `44C2F2CD 2E5B2894 91AB81C2 3A9A6EBB …` |
+
+Identical size, different builds, five hours apart. Any selection rule based on
+size, timestamp proximity, or "it looks like the same build" picks wrong here
+and gives no sign of it. **Identify a build by hash or do not claim to have
+identified it.**
+
+**What makes this checkable rather than merely knowable.** Each master carries a
+`<subject>--SHIP-V4.tiff.ok` file whose entire content is the SHA256 of the
+binary that rendered it — for `bee-1-cpl`, `44C2F2CD…F490`, matching `9b05d0b7`
+exactly. So the question "am I using the binary that made this image" is one
+command, not an act of memory:
+
+```
+Get-FileHash <pinned exe> -Algorithm SHA256   ==   Get-Content <subject>.tiff.ok
+```
+
+That seal already existed and nobody was reading it, including me. A provenance
+artifact nobody checks is documentation, not provenance; it becomes provenance
+the moment a gate compares it. Both affected lanes have been told to verify the
+hash and report the check as part of their gauge finding, and the correction was
+broadcast to every lane that renders a comparison arm against SHIP-V4 — with the
+instruction to state a retraction plainly if they had already produced numbers
+on the wrong pin, rather than re-deriving quietly.
+
+The same provenance files also show that the harness explicitly CLEARS
+`STREHL_FIX_CA`, `STREHL_EDGE_AWARE`, `STREHL_EDGE_TAU` and `STREHL_EDGE_CONF`,
+whose built-in defaults are on / on / derived-per-image / 2.0. A reference arm
+that does not clear the same variables differs from the master by more than the
+thing being measured. That is four more ways for two arms to disagree about
+something other than the question, and they are listed in a file that has been
+sitting next to every master all night.
