@@ -11891,3 +11891,82 @@ a bright ground a slowly-decaying dark aura reads to the eye as a halo, so the
 word is defensible as description — but the sign of the measured quantity is
 negative, and a reader who goes looking for a positive overshoot will not find
 one and may wrongly conclude the claim was false.
+
+## 109. The re-render I ordered was unnecessary, and it proved something better than what it was for
+
+**Status: MEASURED.** `2026-08-27`, `SHIP-V3` vs `SHIP-V4`, all 26 masters.
+
+### 109.1 The claim I made, and its refutation
+
+Section 106 and my running notes recorded `SHIP-V3` as **stale — "no ICC/DPI"** —
+and I ordered a full 26-subject re-render (`SHIP-V4`, 4,825 frames, 21.0 min) to
+obtain masters carrying the colour profile. The premise was wrong:
+
+```
+SHIP-V3  wrapped-text-1--SHIP-V3.tiff   icc=2716  xres=(300, 1)  unit=2
+SHIP-V4  wrapped-text-1--SHIP-V4.tiff   icc=2716  xres=(300, 1)  unit=2
+```
+
+**V3 already had both.** It was rendered after `c7bb6282` landed the ICC work,
+and I recorded it as stale from memory rather than from the file. Twenty-one
+minutes of machine time were spent to fix a defect that did not exist.
+
+> **A file's properties are a question, not a recollection.** I had `tifffile`
+> and one command available the entire time.
+
+### 109.2 What the wasted run actually measured
+
+```
+masters v3=26 v4=26 common=26
+byte-identical: 26    differ: 0    sum=26 == common=26
+```
+
+**All 26 masters are byte-identical between the two arms.** Not merely
+pixel-identical — the whole file, including metadata.
+
+That is a determinism result no test in this repository produces. The
+byte-freezes pin **two** renders of **one** subject at **20** frames. This pins:
+
+| property | value |
+|---|---|
+| subjects | 26 |
+| frames | 4,825 |
+| output | 33 MP, 16-bit RGB, ~198 MB each |
+| wall clock | 21.0 min |
+| concurrency | 4 worker threads, **under 4-agent machine load** |
+| separation | two independent invocations, hours apart |
+| result | **26 / 26 byte-identical, 0 differ** |
+
+The load matters. Both runs used a work-stealing multithreaded fold while other
+agents competed for the same cores, so **thread scheduling certainly differed
+between the two runs** and the output did not. That is evidence the fold's
+reduction order is fixed by construction rather than by timing — the specific
+failure that makes most parallel float pipelines non-reproducible, and the one
+that would be hardest to find later.
+
+### 109.3 Why this belongs in a stacker's evidence and not just its trivia
+
+Reproducibility is a *product* property here, not hygiene. Every quality number
+in this corpus is measured on a rendered master; if the renderer were
+timing-dependent, every one of them would carry an unmeasured error bar, and
+`V-REVIEW`'s nine acquittals — each a comparison between a master and its own
+source frames — would be comparisons against a moving target.
+
+**The sidecars correctly differ.** `*.ok` and `*.provenance.txt` differ in all
+26 cases, because they record the arm name, timestamp and commit. A run that
+produced identical sidecars would mean the provenance was not being written.
+Both partitions are the expected reading:
+
+```
+masters   : 26 byte-identical,  0 differ
+sidecars  :  0 byte-identical, 52 differ   (26 .ok + 26 .provenance.txt)
+```
+
+### 109.4 Scope
+
+This shows **determinism**, i.e. that the pipeline returns the same answer twice.
+It says nothing about whether that answer is *correct*, and it does not transfer
+across commits, hardware, or thread counts — only across two runs of one binary
+on one machine. A byte-identical repeat is the weakest useful reproducibility
+claim; it is recorded because it was measured, and because it was measured at a
+scale the test suite cannot reach.
