@@ -160,7 +160,7 @@ def printable_rgb8(rgb8: np.ndarray, dest, srgb) -> np.ndarray:
     return np.asarray(ImageCms.applyTransform(ImageCms.applyTransform(im, fwd), back))
 
 
-def gamut_stats(rgb16: np.ndarray, swop, srgb, shift: bool = True) -> dict:
+def gamut_stats(rgb16: np.ndarray, swop, srgb, shift: bool = True, sat_grid: tuple = ()) -> dict:
     """Out-of-gamut judged on CHROMA THE PRESS CANNOT REACH.
 
     The first version of this scored total dE and a neutral grey ramp came back
@@ -195,6 +195,26 @@ def gamut_stats(rgb16: np.ndarray, swop, srgb, shift: bool = True) -> dict:
     saturated = c_orig >= SATURATED_CHROMA
     n_sat = int(saturated.sum())
     n = de.size
+
+    # `SATURATED_CHROMA` is a number I chose, and a threshold read off one
+    # working value flatters the instrument: the verdicts it gates cannot be
+    # audited without the grid behind them. Scoring the whole grid here reuses
+    # the single ICC round trip above, which is the expensive part, so the
+    # audit costs one pass rather than one per threshold.
+    grid = {}
+    for thr in sat_grid:
+        sat_t = c_orig >= thr
+        n_t = int(sat_t.sum())
+        grid[thr] = {
+            "sat_pct": 100.0 * n_t / n,
+            "sat_severe_pct": 100.0 * (sat_t & (lost_chroma > 5.0)).sum() / n,
+            "sat_rel_loss_p90": (
+                float(np.percentile(lost_chroma[sat_t] / c_orig[sat_t], 90))
+                if n_t > 0
+                else float("nan")
+            ),
+        }
+
     return {
         "oog_pct": 100.0 * oog.sum() / n,
         "severe_pct": 100.0 * (lost_chroma > 5.0).sum() / n,
@@ -213,6 +233,7 @@ def gamut_stats(rgb16: np.ndarray, swop, srgb, shift: bool = True) -> dict:
         "chroma_loss_max": float(lost_chroma.max()),
         "tonal_dL_p99": float(np.percentile(np.abs(d[..., 0]), 99)),
         "mean_chroma": float(c_orig.mean()),
+        "sat_grid": grid,
         "lab": lab_orig,
     }
 
