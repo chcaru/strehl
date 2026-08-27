@@ -72,7 +72,56 @@ explicitly to match what the ctrl's own log records.
 This does not change the verdict: every arm here was rendered under one
 protocol, so the four rows are comparable to each other regardless.
 
-## What the data actually points at
+## Addendum: ORCH's gate table arrived after these arms were scored
+
+It predicted `topk` would reproduce gate 2's flat-region disaster, by an
+arithmetic argument: top-3 of 100 i.i.d. samples is about the 98th
+percentile, ~2.2 sigma, not 0. Measured, that prediction is correct and the
+agreement is close:
+
+| | flat 6-10 amp |
+|---|---:|
+| ORCH gate 2 (fallback fraction 29%) | 5.5 - 6.9x |
+| my topk3 (fallback fraction 47.9%) | **5.06x** |
+| my best (= max of 100, ~2.6 sigma) | **7.63x** |
+
+`best` is max-of-100 and lands at 7.63x; `topk3` is top-3-of-100 and lands
+at 5.06x. The ordering and the magnitudes are what the sigma argument
+predicts. No tuning of k escapes this: k trades the same two quantities the
+gate already trades.
+
+## CONFIRMED: the shipped pyramid path is the gate-2 build
+
+ORCH flagged this as unverified. It reproduces, and the default is in this
+file, so it is mine:
+
+- `pyramid.rs:1081` -- `gate: 2.0`
+- `main.rs:971` -- `let mut pyramid = strehl_core::pyramid::MergeConfig::default();`
+- `merge_cmd.rs:317` -- comment already states "stock `MergeConfig::default()`,
+  band gate 2.00"
+
+Per ORCH's own table gate 2 is the arm with 5.5-6.9x band-pass amplitude
+across the flat bins -- 755 of 1660 tiles, 45% of the lit frame. Not flipped,
+because no default flips; flagged for decision.
+
+## Why the cheap shrinkage variants will also fail, and what will not
+
+Worth stating before anyone spends a cycle on it. The obvious soft gate --
+replace the hinge `(E - floor).max(0)` with a pedestal `(E - floor + c*floor)`
+-- cannot fix the notch. Below the floor the hinge has already flattened every
+frame's excess to exactly 0, so adding a pedestal makes the weights exactly
+UNIFORM and returns the mean, which is what we already have. Removing the
+hinge instead restores selection, and then the flats go back to gate 1's
+9.67x. Both directions land on the same one-dimensional trade.
+
+The reason is visible in the numbers: the notch bin at 31-53 DN is only ~5x
+the flat bin at 6-10 DN, while a single frame's noise excursion reaches 2.6
+sigma. So per-frame magnitude cannot separate them at any threshold. The
+separating quantity has to be **agreement across frames** -- whether the
+frames that clear do so coherently (real detail, adjacent in the bracket,
+contiguous in space) or scattered (noise). That is ORCH's candidate 3, and it
+is the only one on the list that is not a magnitude statistic.
+
 
 The sub-gate population is 47.9% of the finest band. The notch tiles are 18 of
 1660. Any operator applied to the whole sub-gate population to rescue those 18
