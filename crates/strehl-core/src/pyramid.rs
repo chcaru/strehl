@@ -771,6 +771,24 @@ pub fn mean_coarse_default() -> usize {
 /// is the correct estimator and the only one that gets below single-frame
 /// noise. This enum exists so the two readings can be told apart by
 /// measurement instead of argued.
+impl MergeConfig {
+    /// How many `(key, value)` slots per pixel the fallback accumulators need.
+    ///
+    /// Zero means no accumulator is allocated at all, which is why
+    /// [`Fallback::Mean`] costs nothing.
+    fn fallback_slots(&self) -> usize {
+        match self.fallback {
+            Fallback::Mean => 0,
+            Fallback::Best | Fallback::Power => 1,
+            Fallback::TopK => self.fallback_k.clamp(1, MAX_FALLBACK_K),
+        }
+    }
+}
+
+/// Upper bound on [`MergeConfig::fallback_k`], so [`BandMerge::absorb`] can
+/// merge two sorted runs on the stack.
+const MAX_FALLBACK_K: usize = 64;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Fallback {
     /// `usum[j] / frames`. The shipped behaviour and the control arm.
@@ -781,6 +799,32 @@ pub enum Fallback {
     /// the same reason `den` is: a per-plane decision would let chroma noise
     /// elect itself into structure.
     Best,
+    /// Mean of the `k` largest `|L|` across frames. See
+    /// [`MergeConfig::fallback_k`].
+    ///
+    /// Keeps a sparse real coefficient nearly intact while still averaging
+    /// down by `sqrt(k)` where the content genuinely is noise. Elected on
+    /// GREEN, applied to every plane, as [`Best`](Self::Best) is.
+    TopK,
+    /// Frame weights proportional to `|L_green|^p`, normalised. See
+    /// [`MergeConfig::fallback_power`].
+    ///
+    /// Not requested; offered because it dominates [`TopK`](Self::TopK) on
+    /// three axes and answers the guard rail directly.
+    ///
+    /// The discriminator the notch needs is not "how big is the largest
+    /// coefficient" but "how PEAKED is the distribution of `|L|` across
+    /// frames". In a flat region every frame reads a similar small `|L|`, the
+    /// weights come out near uniform, and this degrades gracefully to the
+    /// mean -- which is what the flat bins are already doing correctly. In
+    /// the notch a handful of in-focus frames dominate, the weights
+    /// concentrate on them, and the coefficient survives. One estimator, both
+    /// ends, no threshold to tune.
+    ///
+    /// It also costs `planes + 1` accumulators instead of `k * (planes + 1)`,
+    /// and it folds as two plain sums, so [`BandMerge::absorb`] is exact with
+    /// no tie-break caveat at all.
+    Power,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -970,6 +1014,14 @@ pub struct MergeConfig {
     /// What to emit where the gate refused every frame. See [`Fallback`].
     pub fallback: Fallback,
 
+    /// How many frames [`Fallback::TopK`] averages. Ignored otherwise.
+    pub fallback_k: usize,
+
+    /// The exponent [`Fallback::Power`] raises `|L_green|` to. Ignored
+    /// otherwise. `0.0` reproduces the mean exactly; large values approach
+    /// [`Fallback::Best`].
+    pub fallback_power: f32,
+
     /// Finest pyramid level at which the per-level bound acts. `1` bounds every
     /// level that has a hull (level 0 is handled by the final clamp).
     ///
@@ -1062,6 +1114,8 @@ impl Default for MergeConfig {
             // defaults. The targeted forms are opt-in until they are measured.
             hull_low_only: false,
             fallback: Fallback::Mean,
+            fallback_k: 3,
+            fallback_power: 4.0,
             hull_from_level: 1,
         }
     }
@@ -1137,12 +1191,18 @@ impl BandMerge {
             den: per_level(),
             fkey: match cfg.fallback {
                 Fallback::Mean => Vec::new(),
-                Fallback::Best => per_level(),
+                _ => {
+                    let s = cfg.fallback_slots();
+                    (0..nl).map(|k| vec![0.0; sizes[k].pixels() * s]).collect()
+                }
             },
             fval: match cfg.fallback {
                 Fallback::Mean => Vec::new(),
-                Fallback::Best => {
-                    (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect()
+                _ => {
+                    let s = cfg.fallback_slots();
+                    (0..nl * planes)
+                        .map(|i| vec![0.0; sizes[i / planes].pixels() * s])
+                        .collect()
                 }
             },
             best: match cfg.select {
@@ -1228,7 +1288,9 @@ impl BandMerge {
             * (2 * self.planes
                 + 1
                 + usize::from(!self.best.is_empty())
-                + usize::from(!self.fkey.is_empty()) * (self.planes + 1))
+                + usize::from(!self.fkey.is_empty())
+                    * self.cfg.fallback_slots()
+                    * (self.planes + 1))
             + self.lo.iter().chain(&self.hi).map(Vec::len).sum::<usize>()
     }
 
@@ -1426,30 +1488,72 @@ impl BandMerge {
                 }
             }
         }
-        if self.cfg.fallback == Fallback::Best {
+        if self.cfg.fallback != Fallback::Mean {
             // Elect on GREEN alone, then take that frame's coefficient in
             // every plane. Deciding per plane would let chroma noise elect
             // itself into structure -- the same reason `den` is luma-only.
             let gp = usize::from(self.planes >= 3);
-            let hit = {
-                let gl = cache.pyramids[gp].level(k);
-                let key = &mut self.fkey[k][..px];
-                let mut hit = vec![false; px];
-                for i in 0..px {
-                    let m = gl[i].abs();
-                    if m > key[i] {
-                        key[i] = m;
-                        hit[i] = true;
+            let slots = self.cfg.fallback_slots();
+            if self.cfg.fallback == Fallback::Power {
+                let p = self.cfg.fallback_power;
+                let wt = {
+                    let gl = cache.pyramids[gp].level(k);
+                    let key = &mut self.fkey[k][..px];
+                    let mut wt = vec![0.0f32; px];
+                    for i in 0..px {
+                        let m = gl[i].abs().powf(p);
+                        wt[i] = m;
+                        key[i] += m;
+                    }
+                    wt
+                };
+                for c in 0..self.planes {
+                    let lv = cache.pyramids[c].level(k);
+                    let val = &mut self.fval[k * self.planes + c][..px];
+                    for i in 0..px {
+                        val[i] += wt[i] * lv[i];
                     }
                 }
-                hit
+                return;
+            }
+            // Best and TopK share one sorted insert: Best is TopK with k = 1.
+            // The slot is decided once, on green, then replayed into every
+            // plane so all planes carry the same frame's coefficient.
+            let slot = {
+                let gl = cache.pyramids[gp].level(k);
+                let key = &mut self.fkey[k][..px * slots];
+                let mut slot = vec![u8::MAX; px];
+                for i in 0..px {
+                    let m = gl[i].abs();
+                    let base = i * slots;
+                    let mut s = slots;
+                    for t in 0..slots {
+                        if m > key[base + t] {
+                            s = t;
+                            break;
+                        }
+                    }
+                    if s < slots {
+                        for t in (s + 1..slots).rev() {
+                            key[base + t] = key[base + t - 1];
+                        }
+                        key[base + s] = m;
+                        slot[i] = s as u8;
+                    }
+                }
+                slot
             };
             for c in 0..self.planes {
                 let lv = cache.pyramids[c].level(k);
-                let val = &mut self.fval[k * self.planes + c][..px];
+                let val = &mut self.fval[k * self.planes + c][..px * slots];
                 for i in 0..px {
-                    if hit[i] {
-                        val[i] = lv[i];
+                    let s = slot[i] as usize;
+                    if s < slots {
+                        let base = i * slots;
+                        for t in (s + 1..slots).rev() {
+                            val[base + t] = val[base + t - 1];
+                        }
+                        val[base + s] = lv[i];
                     }
                 }
             }
@@ -1467,19 +1571,73 @@ impl BandMerge {
     pub fn absorb(&mut self, other: &BandMerge) {
         assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
         assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
-        if self.cfg.fallback == Fallback::Best {
+        if self.cfg.fallback != Fallback::Mean {
             assert_eq!(
                 other.cfg.fallback, self.cfg.fallback,
                 "cannot absorb a merge with a different fallback mode"
             );
+            let slots = self.cfg.fallback_slots();
             for k in 0..self.sizes.len() {
-                for j in 0..self.fkey[k].len() {
-                    if other.fkey[k][j] > self.fkey[k][j] {
-                        self.fkey[k][j] = other.fkey[k][j];
-                        for c in 0..self.planes {
-                            let i = k * self.planes + c;
-                            self.fval[i][j] = other.fval[i][j];
+                if self.cfg.fallback == Fallback::Power {
+                    // Two plain sums. Associative and commutative with no tie
+                    // to break, so grouping cannot change the result at all.
+                    for (a, b) in self.fkey[k].iter_mut().zip(&other.fkey[k]) {
+                        *a += b;
+                    }
+                    for c in 0..self.planes {
+                        let i = k * self.planes + c;
+                        let (dst, src) = (&mut self.fval[i], &other.fval[i]);
+                        for (a, b) in dst.iter_mut().zip(src) {
+                            *a += b;
                         }
+                    }
+                    continue;
+                }
+                // Merge two descending runs and keep the largest `slots`.
+                // Exact: the top-k of a union is the top-k of the two top-ks.
+                // Padding entries are key 0.0 AND value 0.0, and a real
+                // coefficient of magnitude 0.0 also has value 0.0, so a tie
+                // between padding and real content yields the same number
+                // either way.
+                let px = self.sizes[k].pixels();
+                let mut picks = vec![0u8; px * slots];
+                {
+                    let (ak, bk) = (&mut self.fkey[k], &other.fkey[k]);
+                    let mut tmp = [0.0f32; MAX_FALLBACK_K];
+                    for j in 0..px {
+                        let base = j * slots;
+                        let (mut ia, mut ib) = (0usize, 0usize);
+                        for t in 0..slots {
+                            let take_b = ia >= slots
+                                || (ib < slots && bk[base + ib] > ak[base + ia]);
+                            if take_b {
+                                tmp[t] = bk[base + ib];
+                                picks[base + t] = 0x80 | ib as u8;
+                                ib += 1;
+                            } else {
+                                tmp[t] = ak[base + ia];
+                                picks[base + t] = ia as u8;
+                                ia += 1;
+                            }
+                        }
+                        ak[base..base + slots].copy_from_slice(&tmp[..slots]);
+                    }
+                }
+                for c in 0..self.planes {
+                    let i = k * self.planes + c;
+                    let mut tmp = [0.0f32; MAX_FALLBACK_K];
+                    for j in 0..px {
+                        let base = j * slots;
+                        for t in 0..slots {
+                            let p = picks[base + t];
+                            let idx = base + (p & 0x7f) as usize;
+                            tmp[t] = if p & 0x80 != 0 {
+                                other.fval[i][idx]
+                            } else {
+                                self.fval[i][idx]
+                            };
+                        }
+                        self.fval[i][base..base + slots].copy_from_slice(&tmp[..slots]);
                     }
                 }
             }
@@ -1596,11 +1754,31 @@ impl BandMerge {
                     let usum = &self.usum[i];
                     let fval = match self.cfg.fallback {
                         Fallback::Mean => None,
-                        Fallback::Best => Some(&self.fval[i]),
+                        _ => Some(&self.fval[i]),
                     };
-                    let subgate = |j: usize| match fval {
-                        Some(v) => v[j],
-                        None => usum[j] * inv_n,
+                    let slots = self.cfg.fallback_slots();
+                    let nk = slots.min(self.frames as usize).max(1) as f32;
+                    let fkey = if self.cfg.fallback == Fallback::Power {
+                        Some(&self.fkey[k])
+                    } else {
+                        None
+                    };
+                    let subgate = |j: usize| match (fval, fkey) {
+                        // Power: a normalised weighted mean. A pixel where
+                        // every frame read |L| == 0 has key 0; fall back to
+                        // the unweighted mean there rather than divide by it.
+                        (Some(v), Some(kk)) => {
+                            if kk[j] > 0.0 {
+                                v[j] / kk[j]
+                            } else {
+                                usum[j] * inv_n
+                            }
+                        }
+                        (Some(v), None) => {
+                            let base = j * slots;
+                            v[base..base + slots].iter().sum::<f32>() / nk
+                        }
+                        _ => usum[j] * inv_n,
                     };
                     let out = pyr.level_mut(k);
                     match self.cfg.select {
@@ -2486,22 +2664,54 @@ mod tests {
         // A gate nothing can clear puts every coefficient on the fallback
         // path, so this measures the fallback rather than the weighted sum.
         let base = MergeConfig { bands: 3, gate: 1e9, ..Default::default() };
-        let best = MergeConfig { fallback: Fallback::Best, ..base };
-
-        let one = run(best, 1);
-        let three = run(best, 3);
-        assert_eq!(one, three, "chunking changed the Best fallback");
-
-        // A negative control on the instrument: were `Best` silently doing
-        // what `Mean` does, the equality above would pass for the wrong
-        // reason and this test would be measuring nothing.
         let mean = run(base, 1);
-        let differing = one.iter().zip(&mean).filter(|(a, b)| a != b).count();
-        assert!(
-            differing > 0,
-            "Fallback::Best is inert: it matched Mean on all {} coefficients",
-            one.len()
-        );
+
+        for (name, exact, cfg) in [
+            ("Best", true, MergeConfig { fallback: Fallback::Best, ..base }),
+            ("TopK", true, MergeConfig { fallback: Fallback::TopK, fallback_k: 3, ..base }),
+            // Power folds as a SUM, and float addition is not associative, so
+            // regrouping perturbs the last bits. That is not a defect special
+            // to it: `num`, `usum` and `den` are sums too, which is why
+            // `chunked_folding_gives_the_same_merge` asserts a tolerance
+            // rather than equality. Bit-identity is available to max-based
+            // folds and to no sum-based fold, shipped or new.
+            ("Power", false, MergeConfig { fallback: Fallback::Power, ..base }),
+        ] {
+            let one = run(cfg, 1);
+            let three = run(cfg, 3);
+            let two = run(cfg, 2);
+            if exact {
+                assert_eq!(one, three, "chunking 1 vs 3 changed the {name} fallback");
+                assert_eq!(one, two, "chunking 1 vs 2 changed the {name} fallback");
+            } else {
+                let scale = one.iter().fold(0.0f32, |a, v| a.max(v.abs()));
+                for (n, other) in [(3, &three), (2, &two)] {
+                    let e =
+                        one.iter().zip(other).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
+                    assert!(e < 1e-5 * scale, "chunking 1 vs {n} moved {name} by {e}/{scale}");
+                }
+            }
+
+            // A negative control on the instrument: were the mode silently
+            // doing what Mean does, the equalities above would pass for the
+            // wrong reason and this test would be measuring nothing.
+            let differing = one.iter().zip(&mean).filter(|(a, b)| a != b).count();
+            assert!(
+                differing > 0,
+                "Fallback::{name} is inert: it matched Mean on all {} coefficients",
+                one.len()
+            );
+        }
+
+        // Power with p = 0 weights every frame equally, so it must reproduce
+        // Mean exactly. That pins the estimator's zero point -- without it,
+        // `Power` differing from `Mean` above proves only that it differs,
+        // not that it differs in the intended direction.
+        let flat = MergeConfig { fallback: Fallback::Power, fallback_power: 0.0, ..base };
+        let flat_out = run(flat, 3);
+        let err = flat_out.iter().zip(&mean).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);
+        let scale = mean.iter().fold(0.0f32, |a, v| a.max(v.abs()));
+        assert!(err <= 1e-4 * scale, "Power(p=0) is not the mean: {err} on a scale of {scale}");
     }
 
     #[test]

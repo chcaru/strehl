@@ -143,9 +143,13 @@ fn parse_args() -> Result<Args> {
                 a.cfg.fallback = match val()?.as_str() {
                     "mean" => Fallback::Mean,
                     "best" => Fallback::Best,
+                    "topk" => Fallback::TopK,
+                    "power" => Fallback::Power,
                     other => anyhow::bail!("unknown --fallback {other:?}"),
                 }
             }
+            "--fallback-k" => a.cfg.fallback_k = val()?.parse()?,
+            "--fallback-power" => a.cfg.fallback_power = val()?.parse()?,
             "--hull-lambda" => a.cfg.hull_lambda = val()?.parse()?,
             // The knob that decides whether the per-level bound can pay in
             // acuity. `--hull-from 5` confines it to levels coarser than any
