@@ -220,3 +220,154 @@ project already refuted once, and it would be refuted the same way.
   arbitrarily and logged a FAIL at ×12.48 when the instrument was 9.1×
   corner-selective at that amplitude. Fixed with a graded curve. An arbitrary
   bar on an uncalibrated instrument produces a verdict about the bar.
+
+---
+
+## Section 105 resolved: the sharpness metric measured exposure, not sharpness
+
+*Prose mine (ORCH). Every number and every script below is V-GATHER's; the
+scripts are the arbiter, not this summary.*
+
+`orch_sharp1to1.py` was the instrument standing between this project and any
+statement about output quality. It was commissioned with three arms —
+SELECTION 1.0000, DEFECT 0.1717, RECONSTRUCT 3.4867 — including the planted
+*improvement* arm this project learned the hard way to require. Then five of
+nine real subjects read **above** the RECONSTRUCT arm, and every sharpness
+number in this project was barred from leaving the veiling log until that was
+explained.
+
+It is now explained. The instrument is unsound on real data, and the two
+largest causes were both invisible to a commissioning that looked exemplary.
+
+### The gauge: numerator and denominator were different image pipelines
+
+The numerator is a strehl master rendered `--srgb --auto-exposure`, whose own
+provenance string reads verbatim `TONE CURVE APPLIED -- DO NOT MEASURE
+NUMERICALLY`. The denominator is `rawpy.postprocess(no_auto_bright=True)`.
+
+The masters therefore carry a per-image auto-exposure gain the reference never
+sees — measured across this corpus at **0.79× to 13.6×** — and the statistic is
+*exactly* proportional to gain: a synthetic gain of 8.00 reads 8.0000. On real
+pixels, one multiply in linear light before the sRGB curve:
+
+| stops | gain | detail | vs +0.00 |
+|---|---|---|---|
+| −0.34 | 0.790 | 1219.57 | |
+| 0.00 | 1.000 | 1345.40 | 1.000× |
+| +1.50 | 2.828 | 1743.03 | 1.296× |
+| +2.27 | 4.823 | 1928.31 | 1.433× |
+| +3.76 | 13.548 | 2100.75 | 1.561× |
+
+Same statistic, two gauges, and both subjects **sign-flip**:
+
+| subject | exposure | original gauge | matched gauge | inflation |
+|---|---|---|---|---|
+| `coffee-bubbles` | −0.26 | 1.138 | **0.9269** | 1.23× |
+| `wrapped-text-1` | +2.27 | 4.767 | **0.9314** | **5.12×** |
+
+> **Every real-subject sharpness number this project produced was inflated by
+> an amount chosen per image for aesthetic reasons.** That is worse than a
+> wrong constant, because it is invisible and it varies by subject.
+
+### The reference: a 1-in-30 subsample nothing had ever tested
+
+`main()` samples `nsrc=10` frames — one in thirty on a 299-frame stack.
+Thinning the reference **alone**, master untouched in every row:
+
+| subject | keep | frames | sites | F med | inflation |
+|---|---|---|---|---|---|
+| `coffee-bubbles` | 1 | 19 | 67 | 0.9339 | 1.000× |
+| `coffee-bubbles` | 2 | 10 | 45 | 1.1658 | 1.248× |
+| `coffee-bubbles` | 4 | 5 | 18 | 1.4610 | 1.564× |
+| `109MSDCF` | 1 | 22 | 18 | 0.8531 | 1.000× |
+| `109MSDCF` | 4 | 6 | 12 | 1.0440 | 1.224× |
+| `119MSDCF` | 1 | 33 | 53 | 0.8616 | 1.000× |
+| `119MSDCF` | 6 | 6 | 39 | 1.1110 | 1.289× |
+
+Thinning the reference moves the reading **across unity** with the master
+untouched.
+
+The reason no arm caught it is one line. `commission()` line 281 builds all
+three arms from a single shared source set, `srcs = [blur(lat,k) for k in
+(2,3,4,5)]`, and only `master` varies between arms.
+
+> **A commissioning that perturbs only the numerator certifies half an
+> instrument.** Three arms, one of them a planted improvement, and all three
+> were blind to both dominant defects because the denominator never moved.
+
+### "Above RECONSTRUCT" was never a meaningful phrase
+
+With a stack whose best frame is genuinely soft (σ₀ = 1.0), a *perfect*
+reconstruction reads **2.6242** — below the 3.4867 the arm reports under its own
+box-blur plant.
+
+> **A planted-improvement ceiling is a property of the plant, not of the
+> physics.** "Above RECONSTRUCT" has no meaning without naming the plant.
+
+### The physics-fixed arm that made the replacement trustworthy
+
+`STREHL_ONLY_FRAME=k` (`merge_cmd.rs:1762`) renders exactly one source frame
+with no election. **A render containing one frame cannot reconstruct**, so it
+must read ≤ 1 whatever the statistic claims. Measured 0.245–1.024 across three
+plants on eight subjects; the 1.0236 excursion is the replacement's residual
+bias from per-site LO normalisation, reported rather than hidden.
+
+### Two further defects, still live in the original file
+
+- Masters are 1.01–1.19× larger than the raw frames while `register()` is pure
+  integer translation with `SEARCH=48`. Scale-induced displacement reaches
+  **559 px** at radius 3000 on `flower-inner-edge-cpl` — twelve times the search
+  range — and was observable live as `site 2 UNREGISTERED, 10 of 10 source
+  frames correlated below 0.50`.
+- `best_site()` applies a *relative* floor (`SITE_SHARE=0.25`) after selection,
+  so on low-texture subjects it returns background.
+
+### Instruments retired by their own author
+
+Statistic **E** used a HI/LO ratio as an argmax over the focus stack and
+**selected defocus**: the worst-correlating frame won 15.2% of sites, 31.8% of
+sites picked a stack end, and `M/F = 17.9` at low frequency, which defocus
+cannot cause. Statistic **F**'s content anchor at 0.05–0.12 cyc/px is not
+defocus-invariant at macro scale. **F2** fails its own arms on 3 of 10 subjects
+— `flat-on-ruler-cpl` reads `PIXBLUR 2.5643`, meaning blurring the master
+*raised* its score — and those subjects are refused rather than reported.
+
+### The surviving statement
+
+> On this corpus no defensible claim can be made that the strehl merge
+> out-resolves its own sharpest input frame. On the three subjects where every
+> source frame was rendered through the identical pipeline and the instrument
+> passes its full commissioning, the master's detail-band energy at 0.15–0.30
+> cyc/output px is bracketed between **0.85× and 1.32×** that of the sharpest
+> single frame at the same site — and the bracket straddles unity on all three.
+
+Subject partition, summing to 26: **3 MEASURED**, 2 arms-pass-but-reference-
+subsampled (refused), 3 FAILED-ARM, 2 REFUSED thin data, 16 not rendered.
+
+### The reframe, which is larger than the defects
+
+> *"The merge's product is depth of field — the fraction of the field in focus
+> simultaneously. A per-site peak-detail ratio prices only the resampling cost
+> and none of the benefit, which is why a well-built instrument lands near 1.0.
+> The defensible quality claim probably lives in a field-coverage statistic, not
+> a sharpness ratio."*
+
+At any single site, some individual frame is focused there **by definition**.
+Asking whether the master beats it prices what the merge costs and none of what
+it delivers. Nobody stacks 299 frames to win at one point; they stack to have
+the whole subject sharp at once. A field-coverage statistic has the properties
+this one lacked: any single frame scores its own depth of field, which is a
+measured floor rather than a planted one; a perfect stacker scores 1.0, a
+ceiling defined by the data, which removes the "above RECONSTRUCT" pathology
+entirely because an oracle cannot be exceeded; and it is gauge-invariant by
+construction when master and reference come from the same pipeline, killing the
+auto-exposure defect at the root instead of correcting for it.
+
+That statistic is being built now.
+
+### The capture that turns the refusal into a number
+
+**One repeat frame at an already-captured focus position, per stack.** It makes
+read noise directly measurable, collapsing the `[F, F/(1−nb)]` bracket from
+0.15–0.47 wide to a point. It is the cheapest capture change available and it is
+the difference between a bracket and a figure.

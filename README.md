@@ -49,6 +49,47 @@ diffraction-limited ideal.
 > Treat 51.6 s as evidence that the architecture is fast at 299 frames and 33 MP
 > — not as the current default's number.
 >
+> **The matching quality claim is a refusal, and it is the honest one.**
+> Speed above is measured; the quality counterpart is not, and the reason is
+> worth more than a number would have been:
+>
+> > On this corpus **no defensible claim can be made that the strehl merge
+> > out-resolves its own sharpest input frame.** On the three subjects where
+> > every source frame was rendered through the identical pipeline
+> > (`coffee-bubbles` 19/19, `109MSDCF` 22/22, `119MSDCF` 33/33) and the
+> > instrument passes its full commissioning, the master's detail-band energy
+> > at 0.15–0.30 cyc/output px is bracketed between **0.85× and 1.32×** that of
+> > the sharpest single frame at the same site — and **the bracket straddles
+> > unity on all three**.
+>
+> The bracket is `[F, F/(1−nb)]`: `F` subtracts no noise so it is biased down
+> because the merge averages; `F/(1−nb)` removes all of the reference's noise
+> and none of the master's, so it is a hard upper bound. Per subject:
+> `coffee-bubbles [0.93, 1.19]`, `109MSDCF [0.85, 1.32]`, `119MSDCF [0.86, 1.04]`.
+> Two further subjects pass every arm at 1.4177 and 1.0649 but their references
+> are 1-in-3 subsampled, and subsampling alone is measured to inflate by
+> 1.045–1.428× — **so they are not evidence and are not reported as such.**
+>
+> **What was wrong with the number this replaces.** The earlier instrument put a
+> strehl master in the numerator and a `rawpy` decode in the denominator. The
+> master carries a per-image auto-exposure gain of **0.79×–13.6×** that the
+> reference never sees, and the statistic is *exactly* linear in gain. On
+> `wrapped-text-1`, +2.27 stops multiplied the reading by **1.433× with nothing
+> sharper**; matched against the same gauge, its 4.767× becomes **0.9314×** — a
+> sign flip. Separately the reference was a **1-in-30 subsample** that no
+> commissioning arm had ever perturbed: all three arms shared one source set, so
+> only the numerator ever moved. Thinning the reference alone, master untouched,
+> moves the reading across unity. **A commissioning that only perturbs the
+> numerator certifies half an instrument.**
+>
+> **And the question itself may be the wrong one.** A focus stack's product is
+> *depth of field* — the fraction of the field sharp **simultaneously**. At any
+> single site some individual frame is focused there by definition, so a
+> per-site ratio prices the merge's resampling cost and none of its benefit,
+> which is why a correctly built instrument lands near 1.0. The defensible
+> quality claim lives in a **field-coverage** statistic, and that is what is
+> being built now.
+>
 > **Measured and refused, not pending.** Two items previously listed here as
 > "not yet built" have since been built, measured against the merge that already
 > ships, and declined:
