@@ -671,3 +671,255 @@ not against zero — but the cost is larger than §4 stated and is stated here.
   significant, measured sharpness regression on 4 of 5 subjects. `k = 1.7` is
   not fitted to these data — it equals the independently measured `k_eff =
   1.731` of §6.
+
+## 13. Does the admission gate fix the mid-scale mottle? No.
+
+ORCH asked for a two-column sweep -- blotch and sharpness in every row, never
+one -- on artifacts already on disk, and for the depth question. Both are below.
+No re-render was needed; all seven arms and five subjects were already rendered.
+
+**The answer in one line: the largest blotch reduction available at no
+measurable sharpness cost is -3.57%, and undoing the convicted 2.43x excess
+needs -58.8%.** The knob delivers at most 6.1% of the required reduction, on
+one subject of five, and on two subjects it delivers nothing at all. The
+admission gate is not the mechanism that manufactures the mottle.
+
+### 13.1 The instrument, and why it is ORCH's
+
+`sigma_mid` is imported from `experiments/ORCH-drift-check/orch_eye_check.py`,
+not reimplemented. It is `std(boxblur(p,10) - boxblur(p,30))`: box widths 21
+and 61 px, which is exactly the 20-60 px band the convictions live in. The
+earlier caveat in section 12 -- that the band cache starts at 0.05 cyc/px and
+so covers only the fine end of mottle scale -- applies to `tile_bands`, not to
+this statistic. `sigma_mid` covers the conviction band in full.
+
+**Textured sites cannot measure mottle, and this was measured rather than
+argued.** `sigma_mid` on a textured `pick_sites` crop of `coffee-bubbles` reads
+**25.34 codes**; on the flat sites it reads **0.12-1.30 codes**. A textured
+reading is therefore ~99% subject structure, and a 2-code plant on it is a 0.3%
+change -- unresolvable. This is the failure mode that refuted ORCH's own
+mid-band statistic when it lit up on a leaf's vein network. `pick_flat_sites`
+scans a 280-px grid of 560-px candidates, rejects clipped and near-black crops
+and overlaps, and keeps the three lowest fine-band-energy sites. Rejection
+counts are reported separately and never folded into the accepted count.
+
+The matched arm is what makes the absolute level irrelevant. Every arm is the
+same subject, the same frames, the same registration, one pinned binary,
+differing only in `k`. Subject structure is numerically identical across arms
+and cancels exactly in an arm-to-arm ratio. Only ratios are quoted.
+
+### 13.2 Commissioning, both ways, and two failures that were mine
+
+ORCH made both-way commissioning a condition. The statistic was commissioned on
+`coffee-bubbles`, four arms, all passing:
+
+| arm | what it plants | result |
+|---|---|---|
+| C1 | blotch at 0.25/0.5/1.0/2.0x baseline | rises 1.006/1.017/1.103/1.284x, within 3% of quadrature |
+| C2 | an improvement, strength 0.25-1.0 | falls 0.835/0.675/0.523/**0.390**x |
+| C3 | a 20-60px plant, read on the sharpness column | **-0.000%** |
+| C4 | a real blur, read on the sharpness column | 0.214x at r=1, 0.007x at r=2 |
+
+C2 is the arm a blind gauge fails. C4 exists because without it C3 is
+trivially satisfied by a sharpness column that never moves at all.
+
+**Two earlier commissioning runs failed, and both failures were in my plant,
+not in the statistic.** The plant was first built as
+`boxblur(w,10) - boxblur(w,30)`, a difference of boxes, whose stopband
+rejection is poor: it leaked into 0.20-0.25 cyc/px and moved the sharpness
+column **+4.79%**, failing C3. Passing that plant through the same band filter
+a second time inside `sigma_mid` then attenuated it below quadrature, failing
+C1 at f >= 1.0 (0.9411 measured against 1.1387 predicted). The fix was a
+brick-wall FFT bandpass at `1/60 <= f <= 1/20`, and C1 now predicts from the
+plant's own measured `sigma_mid` rather than from its amplitude.
+
+The bootstrap was commissioned separately. It resamples per-block sufficient
+statistics rather than pixels; the pooled sigma so computed was checked against
+a direct sigma over the same pixels on real data at **rel 1.4e-16**. The
+obvious implementation -- gathering `(2000, 108, 80, 80)` -- asks for 11 GB and
+was measured to hang for 17 minutes before being killed.
+
+### 13.3 The sharpness column is commissioned per subject
+
+`bee-1-cpl`'s sharpness column spans **1.20%** across a knob that moves its
+grain by **12x**. From the number alone that is indistinguishable from a column
+that cannot move on this subject -- the frozen probe -- and it is the most
+expensive way to be wrong here, because it would license a default change on a
+subject where the instrument is blind. So every subject's column was
+commissioned on its own sites, in both directions:
+
+| subject | planted blur r=1 | planted sharpen 1.0 | verdict |
+|---|---:|---:|---|
+| `coffee-bubbles` | 0.0157x | 4.0006x | responsive |
+| `109MSDCF` | 0.0129x | 4.0013x | responsive |
+| `119MSDCF` | 0.0150x | 4.0015x | responsive |
+| `flower-bud-alone-cpl` | 0.0151x | 4.0003x | responsive |
+| `bee-1-cpl` | **0.0166x** | **4.0002x** | responsive |
+
+`bee-1-cpl`'s null is therefore real: the gate genuinely does nothing to its
+textured sharpness. No row was refused.
+
+### 13.4 The two-column sweep
+
+`blotch` is `sigma_mid` as a ratio to the shipped arm with a 95% CI from a
+paired 108-block bootstrap; `*` marks a CI excluding 1.0. `sharp` is the
+compliant selection-immune `disj` statistic of section 12, confined to
+0.20-0.25 cyc/px, as a delta with `*` marking a CI excluding 0. `grain` is
+ORCH's `sigma_hp` on the same pixels.
+
+`WHITE200` is k=2.0 with the pre-fix white-noise floor and was measured
+pixel-identical to the shipped master. **`G200` is therefore not a sweep point:
+it is the section 9 floor fix priced at the shipped k.**
+
+| subject | N | arm | k | blotch x [95% CI] | sharp | grain x |
+|---|---:|---|---:|---|---:|---:|
+| `bee-1-cpl` | 299 | WHITE200 | 2.0 ship | 1.0000 | +0.00% | 1.0000 |
+| | | G100 | 1.0 | 0.9858 [0.9692, 0.9954] * | -0.02% | 0.8098 |
+| | | G140 | 1.4 | 0.9955 [0.9889, 0.9990] * | -0.00% | 0.9261 |
+| | | G170 | 1.7 | 1.0021 [1.0006, 1.0043] * | +0.01% | 1.0039 |
+| | | G200 | 2.0 | 1.0014 [0.9989, 1.0048] | -0.71% | 0.9638 |
+| | | G300 | 3.0 | 0.9800 [0.9575, 0.9968] * | -1.19% | 0.2440 |
+| | | G400 | 4.0 | **0.9643 [0.9298, 0.9866]** * | -0.84% | **0.0842** |
+| `flower-bud-alone-cpl` | 205 | WHITE200 | 2.0 ship | 1.0000 | +0.00% | 1.0000 |
+| | | G100 | 1.0 | 0.9504 [0.9299, 0.9677] * | -12.43% * | 0.8998 |
+| | | G140 | 1.4 | **0.9792 [0.9686, 0.9875]** * | -2.24% | 0.9894 |
+| | | G170 | 1.7 | 0.9925 [0.9893, 0.9951] * | +1.82% | 1.0073 |
+| | | G200 | 2.0 | 0.9669 [0.9552, 0.9754] * | -17.41% * | 0.8676 |
+| | | G300 | 3.0 | 0.8980 [0.8618, 0.9262] * | -79.98% * | 0.3105 |
+| | | G400 | 4.0 | 0.8506 [0.7905, 0.8963] * | -87.30% * | 0.2384 |
+| `119MSDCF` | 33 | WHITE200 | 2.0 ship | 1.0000 | +0.00% | 1.0000 |
+| | | G100 | 1.0 | **0.9988 [0.9977, 0.9999]** * | +9.68% * | 0.9565 |
+| | | G140 | 1.4 | 1.0000 [0.9989, 1.0012] | +16.57% * | 1.0264 |
+| | | G170 | 1.7 | 0.9999 [0.9996, 1.0001] | +0.97% | 1.0045 |
+| | | G200 | 2.0 | 0.9977 [0.9965, 0.9989] * | -26.79% * | 0.8697 |
+| | | G300 | 3.0 | 0.9882 [0.9854, 0.9908] * | -55.52% * | 0.4009 |
+| | | G400 | 4.0 | 0.9811 [0.9778, 0.9843] * | -69.12% * | 0.2502 |
+| `coffee-bubbles` | 19 | WHITE200 | 2.0 ship | 1.0000 | +0.00% | 1.0000 |
+| | | G100 | 1.0 | 1.0066 [1.0029, 1.0104] * | +7.46% * | 1.0832 |
+| | | G140 | 1.4 | 1.0041 [1.0004, 1.0079] * | +11.74% * | 1.1125 |
+| | | G170 | 1.7 | 1.0020 [1.0004, 1.0039] * | +6.47% * | 1.0513 |
+| | | G200 | 2.0 | 0.9982 [0.9970, 0.9993] * | -9.87% * | 0.9283 |
+| | | G300 | 3.0 | 0.9851 [0.9810, 0.9888] * | -46.65% * | 0.5811 |
+| | | G400 | 4.0 | 0.9852 [0.9803, 0.9897] * | -59.20% * | 0.4490 |
+| `109MSDCF` | 22 | WHITE200 | 2.0 ship | 1.0000 | +0.00% | 1.0000 |
+| | | G100 | 1.0 | 1.0082 [1.0045, 1.0126] * | +87.27% * | 1.4420 |
+| | | G140 | 1.4 | 1.0057 [1.0031, 1.0087] * | +43.80% * | 1.2697 |
+| | | G170 | 1.7 | 0.9953 [0.9938, 0.9967] * | -10.52% * | 0.9060 |
+| | | G200 | 2.0 | 0.9836 [0.9803, 0.9867] * | -39.93% * | 0.6159 |
+| | | G300 | 3.0 | 0.9710 [0.9655, 0.9766] * | -70.13% * | 0.3160 |
+| | | G400 | 4.0 | 0.9699 [0.9639, 0.9762] * | -82.02% * | 0.2969 |
+
+### 13.5 The knee, and why it does not pay
+
+The knee is the largest real blotch reduction (CI excluding 1.0) among arms
+that cost no measurable sharpness (`disj` CI not excluding 0 on the low side).
+
+| subject | N | knee | blotch | sharpness | share of the -58.8% needed |
+|---|---:|---|---:|---:|---:|
+| `bee-1-cpl` | 299 | G400 | **-3.57%** [-7.02, -1.34] | -0.84% null | **6.1%** |
+| `flower-bud-alone-cpl` | 205 | G140 | -2.08% [-3.14, -1.25] | -2.24% null | 3.5% |
+| `119MSDCF` | 33 | G100 | -0.12% [-0.23, -0.01] | +9.68% better | 0.2% |
+| `coffee-bubbles` | 19 | none | -- | -- | 0% |
+| `109MSDCF` | 22 | none | -- | -- | 0% |
+
+A knee exists on three subjects of five and is worth 0.12% to 3.57%. **This
+knob cannot fix the mottle.** Two subjects have no knee at all: on
+`coffee-bubbles` and `109MSDCF` every arm that cuts blotch costs sharpness at a
+CI that excludes zero.
+
+**And 6.1% is an over-estimate.** ORCH's note that a subsampled minimum is a
+denominator makes 2.43x a floor on the excess, so the true reduction required
+is larger than 58.8% and the knob's share is smaller than 6.1%. My own
+arm-to-arm ratios contain no minimum and are not lower bounds; the target they
+are measured against is.
+
+### 13.6 What the gate actually is: a grain knob
+
+The same seven arms move the two columns by wildly different amounts:
+
+| subject | blotch span | grain span |
+|---|---:|---:|
+| `bee-1-cpl` | 3.78% | **11.9x** |
+| `flower-bud-alone-cpl` | 14.94% | 4.2x |
+| `119MSDCF` | 1.89% | 4.1x |
+| `coffee-bubbles` | 2.15% | 2.5x |
+| `109MSDCF` | 3.83% | 4.9x |
+
+On the three shallow subjects blotch moves under 4% while grain moves 2.5-4.9x.
+The admission gate has authority over fine noise and almost none over mid-scale
+structure. That is a mechanism statement, not a correlation: mottle at 20-60 px
+survives a change that removes three quarters of the grain, so whatever creates
+it is not per-pixel frame admission.
+
+**One arm is worth ORCH's attention on the noise axis rather than the mottle
+axis.** On `bee-1-cpl`, G400 buys **-91.6% grain** for a sharpness change of
+-0.84% whose CI includes zero, with the column commissioned responsive on that
+subject (0.0166x to a blur, 4.0002x to a sharpen). This is not the
+blur-to-win failure ORCH warned about, and there is an internal check that
+says so: if `bee-1-cpl`'s textured band energy were noise-dominated it would
+have tracked grain down, and it did not. `r(sharp/tex, grain)` is **0.60** on
+`bee-1-cpl` against 0.976-0.999 on the other four -- the only subject where the
+two axes decouple. Against a 1.62x noise deficit this is the largest free move
+found anywhere in this sweep. **It is one subject, and G400 is catastrophic on
+the other four (-59% to -87% sharpness), so this is reported, not recommended.**
+
+### 13.7 ORCH's "same pixels" requirement is unsatisfiable as stated
+
+ORCH required the sharpness column on the same pixels as the blotch. It was
+computed, and it is degenerate. Pearson r between the flat-site sharpness
+column and grain, across the seven arms:
+
+| subject | r(sharp/flat, grain) | r(sharp/tex, grain) |
+|---|---:|---:|
+| `coffee-bubbles` | 0.9956 | 0.9992 |
+| `109MSDCF` | 0.9855 | 0.9880 |
+| `119MSDCF` | 0.9964 | 0.9759 |
+| `flower-bud-alone-cpl` | 0.9966 | 0.9921 |
+| `bee-1-cpl` | 0.9922 | **0.6011** |
+
+At r = 0.985-0.997 the flat-site sharpness column carries no information the
+grain column does not. The reason is structural: a site selected **for having
+no detail** has no detail to lose, so its band energy at 0.20-0.25 cyc/px is
+noise, and a column reading it is a second noise column wearing a sharpness
+label. The requirement cannot be met on the pixels where mottle is measurable.
+The sharpness column in section 13.4 is therefore read on textured sites, and
+the flat-site column is reported here only to show why it was not used.
+
+### 13.8 The depth question: no N-dependence these five subjects can establish
+
+| subject | N | sharpness authority | knee |
+|---|---:|---:|---|
+| `bee-1-cpl` | 299 | 1.20% | G400 |
+| `flower-bud-alone-cpl` | 205 | 89.12% | G140 |
+| `119MSDCF` | 33 | 85.69% | G100 |
+| `109MSDCF` | 22 | 169.29% | none |
+| `coffee-bubbles` | 19 | 70.94% | none |
+
+`Spearman(N, sharpness authority) = -0.30` over five subjects. **Not monotone
+and not significant.** Authority is highest at N=22 and lowest at N=299, but
+it is 70.94% at N=19 and 89.12% at N=205, so the ordering is not depth.
+
+The knee column looks monotone in N and must not be read that way. **N and
+regime are confounded across these five subjects**: `bee-1-cpl` (N=299) is the
+most selection-dominated and `109MSDCF` (N=22) the most averaging-dominated, so
+any statistic ordered by regime will appear ordered by N. With five subjects
+the two cannot be separated, and I am not separating them.
+
+What can be said without separating them is the part that bears on the depth
+collapse: **on the 299-frame subject, the entire gate range 1.0 to 4.0 moves
+textured sharpness by 1.20% total**, with the instrument commissioned
+responsive on that subject. Whatever costs `bee-1-cpl` its detail against a
+comparator, the admission gate has no authority over it. This does not
+exonerate the merge; it exonerates this knob.
+
+### 13.9 What this is not
+
+- Not a per-site-ceiling number. The sharpness column here is arm-to-arm, so it
+  prices the knob, not the product. The per-site-ceiling ratios are section 12.
+- Not a claim about absolute blotch level. Section 12.3's gain confound is
+  unresolved and absolute levels remain withdrawn; across-arm luma varies
+  <= 0.4% (<= 3.4% on `coffee-bubbles` G400), so arm-to-arm deltas are clean.
+- Not a recommendation to change the default. Section 9's recommendation stays
+  held, and `pyramid.rs` is closed to this lane.
+- Still owed from the original pre-registration: P2 (plane arm) and P6
+  (align-refused placebo).
