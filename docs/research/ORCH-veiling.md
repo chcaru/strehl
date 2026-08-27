@@ -10092,3 +10092,112 @@ passing control — the lesson already paid for once tonight.
 
 The deliverable at `VIEW-SHIP` is now genuinely verified: 26 cards, 0 broken sources, 0
 orphans, 0 uncovered masters, and the corrected `flower-bud-alone` card live.
+
+## §90 — the crop that shows your best work is the crop that hides your worst
+
+BUILD-WIRE's live intent line read "Blocky election seams seen directly", so I went
+looking for a periodic tile lattice in the shipped masters, independently of their
+detector so that agreement would mean two instruments rather than one read twice.
+
+**I never found a seam. I built three detectors that could not have found one, and then
+found a different defect by looking.**
+
+### Three failures, each producing confident, well-formed output
+
+1. **It read the wrong artifact.** v1 scanned `VIEW-SHIP\assets\*.jpg` — the gallery's
+   own preview derivatives — and reported strong periodicity at p=8 with ratios of 24 to
+   38, plus lines at 48 and 64. That is the **JPEG DCT lattice and its 16-px MCU
+   harmonics**: a property of my viewer, not of the stacker. Had the plant control not
+   also been flat, I would have reported blocky seams in the product. This is §89
+   committed a second time inside an hour — measuring a neighbouring artifact and
+   attributing the reading to the one I named.
+
+2. **It deleted the frequency it was probing.** v2 detrended with a fixed 65-tap moving
+   average before the FFT. That is a high-pass with a cutoff near wavelength 65, so a
+   period-128 component was *removed by the instrument* before the measurement. The
+   planted seam registered a gain of **1.0x** — exact silence — and the silence read as
+   "no seam". The fix is to scale the detrend window with the probed period.
+
+3. **It went deaf at the real bit depth.** With the detrend fixed and reading properly,
+   an amplitude ladder on `109MSDCF` gave 2.6 -> 9.1 across a 32x range of planted seam
+   amplitudes, never reaching the firing threshold. The detector *responds* and cannot
+   *conclude*. I stopped there rather than engineer a fourth version.
+
+> **A detector's silence is worth nothing until it has been made to speak at a stated
+> amplitude.** "Clean" is only meaningful as "no defect at or above X", with X measured.
+> Reported without X, it is indistinguishable from deafness — and all three versions
+> above would have been reported as "clean".
+
+### The library was quietly halving the data
+
+While diagnosing, PIL opened a 188.6 MiB master and returned `mode='RGB'`, `dtype=uint8`,
+`max=255`. Parsing the IFD out of the raw bytes, with no library in the path:
+
+```
+BitsPerSample   [16, 16, 16]      SampleFormat  [1, 1, 1]
+Compression     1                 Photometric   2
+ImageWidth 7032   ImageLength 4688   -> 197,796,096 bytes raw, file is 197,798,531
+```
+
+**Sixteen bits per sample, and Pillow 12.2.0 hands back eight without an exception, a
+warning, or a flag.** What it returns is a perfectly well-formed RGB array, which is why
+nobody notices.
+
+> **A library that silently narrows your data does not return something broken. It
+> returns something well-formed.** There is no defect in the object to find; the loss is
+> in the difference between the object and the file, and nothing in the object records it.
+
+Scope of the damage: my own seam scripts only. `build_view.py` already uses `tifffile`,
+and §88's chroma transects deliberately read the 8-bit crop PNG, so the +11 -> +22 -> -4
+overshoot stands — it was a claim about *shape*, and shape survives a monotone map.
+
+### The same header carried an unshipped product requirement
+
+`XResolution 1/1`, `YResolution 1/1`, `ResolutionUnit 1` — TIFF's "no absolute unit".
+**The masters carry no DPI at all.** The `Software` stamp landed (`strehl 0.0.0`); the
+resolution half of that task did not. For a deliverable whose entire acceptance criterion
+is *print-worthy*, a print shop opening this gets no physical size and invents one.
+Routed to BUILD-WIRE with the parser, and with the instruction to read the tags back out
+of the written file using a parser other than the one that wrote them.
+
+### What actually found the defect: inverting the crop selector
+
+`build_view.py` picks its 100% crop by **maximum high-frequency energy**, so it lands on
+the finest texture in the frame. That is the right choice for judging resolution and it
+is the worst possible one for finding anything that hides in texture and shows in smooth
+tone. **Every 1:1 crop this project has examined was selected to land where such defects
+are least visible.**
+
+> **A sampling rule that optimises for one quality has, by that same rule, blinded itself
+> to that quality's complement.** A census is not complete until something is cropped by
+> the *defect's* logic rather than the subject's. The gallery was not hiding anything; its
+> selector simply could not point at this.
+
+Inverting it — lowest-texture eligible block, excluding near-black and near-clipped —
+found the defect immediately, in the first two subjects tried:
+
+| master | crop | what is there |
+|---|---|---|
+| `coffee-bean--SHIP-V2` | (6000,900) | horizontal dash-shaped dark streaks, ~60-100 px long, soft-ended |
+| `flower-bud-alone-cpl--SHIP-V2` | (900,2400) | round dark discs, ~40-70 px across |
+
+**One cause, two shapes: dust in the optical path.** A defocused mote images as a disc;
+the inter-frame warp smears it into a dash when the stack moved and leaves it a disc when
+it did not. The shape is a readout of how much the aligner had to move that stack.
+
+Measured honestly: the crop spans 59643..62587 of 65535, a 4.5% range, **12 levels once
+mapped to 8-bit**, with the dust a few levels below local background. Under a 30x linear
+stretch it is blatant. At native 1:1 it is faint but genuinely visible. On a large print
+of a near-white field, a few levels of round mottling is what gets a print rejected.
+
+This is item 3 on the owner's own list of gaps, where it is described as "the kind of
+defect reviewers of a SOTA claim find in five minutes." It took five minutes, and only
+because the crop was chosen by the defect's logic instead of the subject's.
+
+Assigned to BUILD-BLEND in a new module no lane holds, with the design that removes the
+dependency on the unshot flat-field capture: **the stack is its own flat field.** Dust is
+fixed in sensor coordinates and the subject is not, so an exposure-normalised accumulation
+in *sensor* coordinates, before any warp, leaves the subject averaged away and the dust
+standing exactly still. Deep stacks make this stronger, not weaker; `bee-3-cpl` has 299
+frames. Pre-registered: a stated DN reduction at the two named crops, an unflagged subject
+that must come back unchanged within noise, and a kill on any loss of real texture.
