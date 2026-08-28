@@ -1482,3 +1482,112 @@ the one band that does not behave like the others.
   the subject's boundary is ~0.20, so the noise-corrected denominator is near
   zero. That is consistent with I.2 and is a property of the subject, not a
   bug, but it makes ratios in that band meaningless here.
+---
+
+# Addendum K — the built soft gate is NOT on the default path, and it is not
+# my design
+
+## K.1 STOP: `STREHL_SOFT_GATE` cannot affect a default `strehl stack`
+
+Before reconciling anything I checked whether the built gate is on the path my
+lane and the whole quality effort actually measure. **It is not.** Evidence
+chain, all read rather than inferred:
+
+- `merge_cmd.rs:2868-2869` dispatches
+  `MergeBackend::Pyramid => run_pyramid(opts)` and
+  `MergeBackend::Estimator => run_estimator(opts)`.
+- `MergeBackend::Pyramid` is **the default** — its own doc comment says
+  "Reachable, and **the default**."
+- `fn run_estimator` begins at `merge_cmd.rs:2937` and contains the **only
+  production `Estimator::new` in the repository**, at `merge_cmd.rs:4065`.
+  That is the constructor which resolves `SOFT_GATE_ENV`.
+- `fn run_pyramid` spans `merge_cmd.rs:5280-5734`. Within it, `SOFT_GATE`,
+  `SoftKernel` and `new_soft` are **absent**. `Estimator` appears only in
+  comments referring to the *other* arm ("the `--merge estimator` path's",
+  "the same resolver the estimator uses"). `soft` appears only as
+  `SelectMode::SoftPower`, which is the pyramid's own exponent weighting and a
+  different mechanism entirely.
+- `crates/strehl-core/src/pyramid.rs` contains **no** reference to
+  `Estimator`, `SoftKernel` or `SOFT_GATE`.
+
+**So `STREHL_SOFT_GATE=gaussian` on a default `strehl stack` invocation is a
+no-op.** It is reachable only under `--merge estimator`.
+
+**This needs to reach V-KILLB0 before it renders.** If it scores the gate on
+`bee-1-cpl` without also selecting the estimator backend, it will measure
+exactly zero difference on every axis and may report the gate as harmless, or
+as doing nothing — when it was never engaged. That is the same failure family
+as ORCH clearing the `--exposure` defect on a file hash when 0 of 98,898,048
+samples differed: **a no-op arm reads CLEAN on every structural axis.** The
+cheap guard is to confirm the two arms' outputs are not bit-identical before
+scoring either.
+
+A second consequence: the estimator backend is a **different merge**, so a
+soft-gate result obtained there does not transfer to the shipping pyramid
+merge without a further argument.
+
+*Checked and NOT a defect:* the flag table at `main.rs:968-1016` looks
+inverted, with `--pyramid-*` tagged `MergeBackend::Estimator`. It is correct —
+`main.rs:1076` reads `!(*given && backend == *refused_under)`, so the field is
+the backend the flag is **refused under**, not the one it belongs to. I raise
+it only because it reads as a bug and someone else will trip over it.
+
+## K.2 My design is not the built kernel, and the difference is the axis
+
+ORCH's point 1 asks me to say plainly if I have re-derived what ships. I have
+not, and the resemblance is superficial.
+
+| | built soft gate | my `pool1` |
+|---|---|---|
+| form | `exp(-0.5 (gap/T)^2)` | `gaussian(sq, sigma)` |
+| domain | **response margin**, in units of `Gate::tolerance()` | **image plane**, in pixels |
+| acts across | frames at one pixel | neighbouring pixels, per frame |
+| changes | how sharply admission decays with score margin | what the score *is*, before any max |
+| winner | keeps weight 1.0 at `gap = 0`; raises **losers** | can change **which frame wins** |
+| abstention | admits sub-threshold frames, so it **reduces** band 0's 25.8% | leaves it essentially unchanged |
+
+Both are Gaussians; neither is a Gaussian in the other's variable. **They are
+orthogonal and composable**, and on ORCH's own framing they treat different
+diseases: the soft gate is M111's remedy for the flat-region/abstention defect,
+mine is aimed at the winner's curse.
+
+## K.3 The difference stated as a falsifiable prediction
+
+My measurements say admission control is the wrong lever for the premium:
+
+- The premium is a **winner's curse**, not an admission-count effect. `oracle`
+  — an independent score, with N and admission **unchanged** — cut it
+  240.95 -> 58.78, **4.10x**.
+- **Candidate capping is refuted**: `capK4` 225.32 and `capK8` 225.59 against
+  shipping 226.39. Changing how many frames are admitted does essentially
+  nothing.
+- Arms that admit and average more trade premium for sharpness along one
+  curve: `pwin2_1` 32.82 at 0.192, `pwin2_2` 21.84 at 0.109, `winavg4` 13.19
+  at 0.111, plain mean 1.00 at 0.0072.
+
+**PREDICTION, pre-registered here before V-KILLB0 scores it.** The Gaussian
+soft gate will land on the admission/averaging curve above, not on the point
+`pool1` occupies:
+
+1. As `T` grows it approaches the plain mean — premium toward 1.0 and fine
+   grain toward fact 1844's 0.229x. It is a knob on the select-average
+   continuum.
+2. It will **not** reach ~1.8-2.0x premium reduction at >=0.97 sharpness,
+   because it does not decorrelate the score from the copied coefficient. Every
+   admitted frame's weight is still computed from that frame's own noisy
+   score, so the 4.12x curse at N=79 is untouched.
+3. Its largest effect will be where abstention is high — **band 0**, mean
+   25.8% and 0.0-72.5% across subjects — and it will do least in bands 1-6,
+   which are 0.00-0.29% averaged. That is the opposite of where ORCH's own
+   table says the premium lives.
+
+**If V-KILLB0 measures the soft gate reducing the premium while holding
+sharpness above 0.97, prediction 2 is refuted and my design is superseded.**
+I will report that as a refutation without widening the interval.
+
+## K.4 What I cannot do
+
+I cannot test any of this myself. V-KILLB0 owns scoring the built gate, and I
+would not have the data anyway — 112MSDCF and 119MSDCF were deleted at 22:48
+and `coffee-bubbles` has a degenerate variance fit (J.1). K.3 is a prediction,
+not a measurement, and it is offered so it can be refused.
