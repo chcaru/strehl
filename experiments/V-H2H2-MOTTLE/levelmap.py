@@ -33,6 +33,7 @@
 # exceed a bar of 2.0x. That bar was guessed, it read 1.40x, and the arm failed
 # on a true improvement. The energy centroid is directional and needs no bar.
 
+import re
 import sys
 
 import numpy as np
@@ -159,6 +160,27 @@ def commission():
     clean = int(np.argmax(band_energy(laplacian(sinusoid(1024, 256.0)))))
     arm("edge padding is what broke long periods", dirty == 0 and clean == 5,
         "256px: edge-pad -> L%d (wrong), wrap-pad -> L%d" % (dirty, clean))
+
+    # Cross-lane check. V-NEVERWORSE derived the exponent ladder independently,
+    # from its own reimplementation, and published it in a table. If the two
+    # disagree, one of us is wrong and neither result should be quoted. This
+    # FAILS if the file is missing: an unverifiable claim of independent
+    # confirmation must not read as a pass.
+    import os
+    p = os.path.join("experiments", "V-NEVERWORSE", "RESULT.md")
+    rows, txt = [], None
+    if os.path.exists(p):
+        txt = open(p, encoding="utf-8").read()
+        for k in range(BANDS):
+            m = re.search(r"\|\s*L%d\s*\|\s*(\d+)\s*\|\s*([\d.]+)\s*\|" % k, txt)
+            if m:
+                rows.append((int(m.group(1)), float(m.group(2))))
+    ok = (len(rows) == BANDS
+          and [c for c, _ in rows] == [2 ** k for k in range(BANDS)]
+          and all(abs(e - round(LADDER[k], 2)) < 5e-3 for k, (_, e) in enumerate(rows)))
+    arm("V-NEVERWORSE's independent ladder agrees", ok,
+        "their table: cells %s exponents %s"
+        % ([c for c, _ in rows], [e for _, e in rows]) if rows else "TABLE NOT FOUND")
     return fails
 
 
@@ -188,15 +210,53 @@ def main():
 
     print("\nthe convicted mottle band, 20-60 px:")
     ks = sorted({peak_level(float(p))[0] for p in (20, 24, 32, 40, 48, 60)})
-    print("  levels %s -> exponents %s"
+    print("  by PASSBAND: levels %s -> exponents %s"
           % (ks, ["%.4f" % LADDER[k] for k in ks]))
-    print("  ORCH claims levels [4, 5] -> exponents [4, 3]")
-    print("  agree: %s" % (ks == [4, 5]))
     print("\n  what a random 1.5x band-energy fluctuation buys in weight:")
     for k in ks + [4, 5]:
         print("    L%d  p = %-7.4f  1.5^p = %6.2fx" % (k, LADDER[k], 1.5 ** LADDER[k]))
+
+    print("\n" + "=" * 72)
+    print("TWO SCALES PER LEVEL. They are different and both are real.")
+    print("=" * 72)
+    print("""
+This distinction has now been got wrong in three independent places, so it is
+stated here once, measured, as the thing to cite.
+
+  CELL SPACING, 2^k px
+      The sampling grid of level k. Bounds the finest structure the WEIGHT
+      FIELD at that level can have. A connected plateau of D cells in the
+      weight field is a real image structure of D * 2^k native px, whatever
+      the band's passband is. This is the right scale for plateau geometry
+      and it is what V-NEVERWORSE's vn_plateau.py:253 uses (`2 ** k`).
+      Cross-checked against the pin: pyramid.rs:656 says level 6 spans 64
+      output px, and 2^6 = 64.
+
+  PASSBAND PERIOD, ~2^(k+3) px
+      The spatial period the Laplacian band at level k is most responsive to.
+      Measured above. This is the right scale for asking which level carries a
+      20-60 px FEATURE, i.e. band content.
+
+So, for the 20-60 px mottle band, both of these are true and they are not in
+conflict:
+
+  a 20-60 px PLATEAU in the weight field  lives at L3 (8 px cells) and L4
+  a 20-60 px IMAGE FEATURE                lives at L2 (7.68) and L3 (5.49)
+
+The error to avoid is the third mapping, `2^(k+1)`, asserted in a comment at
+vn_split.py:89-90 and used there to choose which levels to examine. It is two
+octaves fine and it is not measured. My own earlier report to ORCH cited only
+the passband scale and should not be read as refuting the plateau result --
+that result rests on cell spacing, which is correct.
+""")
+    print("  %-7s %-12s %-16s %-10s" % ("level", "cell px", "passband px", "exponent"))
+    for k in range(BANDS):
+        pb = 2 ** (k + 3)
+        print("  L%-6d %-12d %-16s %-10.4f"
+              % (k, 2 ** k, ("~%d" % pb) if k < 6 else ">=%d (residual)" % pb, LADDER[k]))
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
