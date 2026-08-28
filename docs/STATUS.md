@@ -263,17 +263,22 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
     violation of the axis's own documented refusal rule. (c) `printcert4.rim_verdict` convicts on
     `corrected_bright` **only**, and a one-sided gate cannot measure ringing, which is symmetric;
     `flower-bud-alone-cpl` PASSES while reading `corrected_dark` +4.51%. Facts 1898–1899.
-17. **The byte-freeze regression guard is blind to the default merge backend.** Verified by
-    reading the harness, not reported: `byte-freezes.tsv` holds **2 data rows and 0 naming
-    pyramid**, and `byte-freeze.rs` hardcodes `--merge estimator` into *every* row's argv
-    (`byte-freeze.rs:576–577`), while `DEFAULT_MERGE_BACKEND` is `MergeBackend::Pyramid`
-    (`merge_cmd.rs:429`). So the guard most relied on to catch silent output drift never
-    exercises the path every default render actually takes — **a green byte-freeze currently
-    certifies only the non-default backends**. The harness says so about itself at
-    `byte-freeze.rs:547–548` and `570`, and states the fix: the day a pyramid row is added,
-    `--merge` must become a registry column exactly as `--gate` did. This is a product risk
-    rather than a research finding, and closing it needs a freeze row, not a new measurement.
-    Fact 1977.
+17. ~~**The byte-freeze regression guard is blind to the default merge backend.**~~ **RESOLVED
+    AND COMMISSIONED.** `--merge` is now a registry column, both existing rows are backfilled
+    `estimator`, and `coffee-bean-20-gate2-pyramid` freezes the default backend at
+    `C6765BFA…CD65`, 49450019 bytes. **The controls are provably undisturbed** — both git blobs
+    read as bytes, every field of both pre-existing rows (sha256, bytes, and the whole `why`
+    prose) byte-identical across the commit, only the new column inserted. **Teeth proven twice,
+    by two different mechanisms and two different parties:** the author planted
+    `significance_scale_default()` `0.0→1.0` (→ `A4B699DA…`), then the orchestrator
+    independently planted `SNR_REF` `64.0→32.0` (`pyramid.rs:2502`) and measured **rc=101** with
+    the row moving to `CCAC0A72…E73B` — a *different* hash, which is what independent sabotage
+    should produce. Restore from a `$env:TEMP` copy (never `git checkout`) returned **5 passed,
+    all three rows HOLDING**, with `Compiling strehl-core` confirming a real rebuild rather than
+    a stale artifact. A new assertion requires at least one row per backend, so deleting the
+    pyramid row now fails the suite. **Remaining gap, named:** the pyramid row is `env_align=0`
+    only — there is no aligned pyramid row, so warp application *on the default backend* is
+    still unfrozen. Fact 1982.
 18. **`contrast_ms.py` fails a planted DC-offset null**, and roughly 38 committed files across
     at least eight lanes call it. A constant added to an image is annihilated by every high-pass
     filter, so the true reading is exactly 1.000 at every band; the instrument returned
