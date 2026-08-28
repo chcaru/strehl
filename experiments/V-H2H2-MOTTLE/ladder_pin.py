@@ -172,7 +172,71 @@ def main():
           % ["%.4f" % v for v in ladder(c, 6)])
     print("  ladder at bands=7, finest first: %s"
           % ["%.4f" % v for v in lad])
+
+    reachable(c)
     return 0
+
+
+def reachable(c):
+    """Which ladder SHAPES can be reached from the CLI without a code change?
+
+    Contradicting an earlier briefing, the ladder IS CLI-tunable on the shipping
+    backend: `--pyramid-exponent` sets `cfg.exponent` and `--pyramid-sharpen`
+    sets `cfg.sharpen_per_octave`. Both are listed in main.rs's incompatibility
+    table against MergeBackend::ESTIMATOR, i.e. they are refused on the backend
+    that never ships and ACCEPTED on the pyramid. (`--index-map` in the same
+    table is paired with Pyramid, which is what a genuinely refused flag looks
+    like -- the table's polarity is per-row.)
+
+    But the reachable family is only two parameters, and the validator bounds
+    one of them. That bound is the whole point of this section.
+    """
+    src = pin_source()
+    cli = subprocess.run(
+        ["git", "show", "9b05d0b7:crates/strehl-cli/src/merge_cmd.rs"],
+        capture_output=True).stdout.decode("utf-8")
+
+    m = re.search(r'"--pyramid-sharpen must be [^"]*"', cli)
+    if m is None:
+        sys.exit("VALIDATOR MESSAGE NOT FOUND -- the bound below is unverified")
+    print("\n" + "=" * 72)
+    print("WHAT THE CLI CAN AND CANNOT REACH")
+    print("=" * 72)
+    print("  validator: %s" % m.group(0))
+    at_least_one = "at least 1.0" in m.group(0)
+    print("  => sharpen >= 1.0 is ENFORCED: %s" % at_least_one)
+
+    print("\n  reachable ladders, finest -> coarsest (bands = %d):" % c["bands"])
+    print("  %-10s %-10s %s" % ("exponent", "sharpen", "ladder"))
+    for e, s in ((2.0, 1.4), (2.0, 1.0), (1.0, 1.0), (4.0, 1.0),
+                 (2.0, 1.122), (0.5, 1.7), (8.0, 1.0)):
+        cc = dict(c, exponent=e, sharpen=s)
+        print("  %-10.3f %-10.3f %s" % (e, s, ["%.2f" % v for v in ladder(cc)]))
+
+    print("""
+  So the family is `min(exponent * sharpen^(6-k), 8)`: a capped geometric ramp,
+  two free parameters, and -- because the validator enforces sharpen >= 1.0 --
+  MONOTONE NON-DECREASING TOWARD THE FINE BANDS.
+
+  That is enough to answer "is the exponent axis the right axis" without a
+  rebuild, which is a real saving. It is NOT enough to reach the shape the
+  measurements point at.
+
+  V-NEVERWORSE measured n_eff LOWEST AT L1-L4 and high at both ends: the
+  contest is most nearly tied in the MIDDLE bands. A response to that is to
+  relax selectivity at L2/L3 while keeping it at L0/L1 -- a ladder that dips in
+  the middle. Every reachable ladder above is monotone, so no combination of
+  --pyramid-exponent and --pyramid-sharpen can express it. Lowering the middle
+  from the CLI necessarily lowers the fine bands at least as much.
+
+  Two consequences for whoever builds the fix:
+    * the CLI sweep is a sound way to test the exponent AXIS, and a sound
+      source of a known-potent control, but it cannot test a non-monotone
+      ladder and a null result from it does not retire that shape;
+    * a confidence-dependent or r_max-relative weight is outside this family
+      by construction, so it needs the code change regardless of how the
+      sweep lands.
+""")
 
 
 if __name__ == "__main__":
