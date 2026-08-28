@@ -93,6 +93,20 @@ S9_HALO_ROW = ("| `flat-on-ruler-cpl` | **selected** on a halo verdict (fact "
                "1841, overshoot +4481.8 DN) that has **since been retracted** "
                "\u2014 see the note below |")
 
+# sec.14 grid anchors.  Full lines, each unique.
+S14_BEE_ROW = ("| `bee-1-cpl` |" + " **PASS** |" * 14)
+S14_CHIA_ROW = ("| `chia-seeds-cpl` |" + " -- |" * 14)
+S14_COUNT = ("`--` = UNQUALIFIED (never measured). 22 of 34 corpus subjects "
+             "have never been band-qualified at any slice.")
+S14_EXIT3 = ("| 3 | `UNQUALIFIED` | no \u2014 **never measured**, a queue "
+             "item, not a failure |")
+S14_INTERP = ("confident guess easy. `paper-sweep` is PASS at 0.30\u20130.40 "
+              "and **marg** at")
+S2_CHECKS = ("`experiments/V-LINEAR/verify_bands_doc.py` (804 checks, "
+             "cell-anchored, verdicts")
+S2_ARMS = ("`commission_verify_doc.py` at 38 defect arms caught and 3 null "
+           "arms quiet, and")
+
 # (name, why it matters, old_line, new_line-or-None-to-delete)
 ARMS = [
     ("R2-R-verdict-duplicated-elsewhere",
@@ -290,6 +304,75 @@ ARMS = [
      S9_HALO_ROW,
      "| `flat-on-ruler-cpl` | fails the halo measurement (fact 1841, "
      "overshoot **+4481.8 DN**) |"),
+
+    # ---- sec.14, the licence grid ---------------------------------------
+    # 484 of the verifier's checks are grid cells. Before these arms existed,
+    # every one of them was uncommissioned: a grid that agreed with a broken
+    # loader would have read exactly as green as a correct one.
+    ("s14-measured-cell-flipped",
+     "flips one measured grid cell from PASS to FAIL. Nothing else in the "
+     "document changes, and every R and CI stays correct. A lane reading the "
+     "grid would refuse a licence it actually holds.",
+     S14_BEE_ROW, S14_BEE_ROW.replace("| **PASS** |", "| FAIL |", 1)),
+
+    ("s14-measured-cell-blanked",
+     "claims UNQUALIFIED for a cell that IS measured. This is the softer half "
+     "of the section's whole point -- it turns an answer back into a queue "
+     "item and would have someone re-spend a develop that was already paid.",
+     S14_BEE_ROW, S14_BEE_ROW.replace("| **PASS** |", "| -- |", 1)),
+
+    ("s14-unmeasured-cell-claimed-PASS",
+     "THE MOST DANGEROUS ONE: licenses a cell nobody has ever measured. "
+     "`chia-seeds-cpl` has no record at any slice; this row would tell a lane "
+     "it is qualified. It is the exact inversion of the distinction sec.14 "
+     "exists to preserve, and no number anywhere else in the document moves.",
+     S14_CHIA_ROW, S14_CHIA_ROW.replace("| -- |", "| **PASS** |", 1)),
+
+    ("s14-unqualified-count-wrong",
+     "the summary count of unmeasured subjects. If it drifts low, the corpus "
+     "looks better covered than it is -- which is the impression the whole "
+     "section is built to prevent.",
+     S14_COUNT, S14_COUNT.replace("22 of 34", "21 of 34")),
+
+    ("s14-exit-code-table-wrong",
+     "changes the documented exit code for UNQUALIFIED from 3 to 2. Other "
+     "lanes are wiring `bandq.py` into their own gates FROM THIS TABLE, so a "
+     "wrong code here makes the document lie to every one of them. Checked "
+     "against bandq.py's actual constants, not against itself.",
+     S14_EXIT3, S14_EXIT3.replace("| 3 |", "| 2 |")),
+
+    ("s14-unqualified-reads-as-a-licence",
+     "flips the licence column on the UNQUALIFIED row from `no` to `yes`. No "
+     "exit code moves, no number moves, the table still has six well-formed "
+     "rows -- and it now tells every lane that a subject nobody ever measured "
+     "is licensed. That is the single sentence this section exists to prevent "
+     "and it is the error the orchestrator made twice.",
+     S14_EXIT3, S14_EXIT3.replace("| no \u2014", "| yes \u2014")),
+
+    ("s14-anti-interpolation-example-inverted",
+     "inverts the one concrete piece of evidence sec.14.9 offers for refusing "
+     "to interpolate. Both verdicts named are real, both slices are real, and "
+     "the sentence still reads perfectly -- it just now argues the opposite. "
+     "The records-based check alone did NOT catch this; it needed a check "
+     "pinned to the claim.",
+     S14_INTERP,
+     "confident guess easy. `paper-sweep` is PASS at 0.30\u20130.35 "
+     "and **marg** at"),
+
+    # ---- the document's claims about its own instruments -----------------
+    # Both of these were LIVE, not hypothetical: the document still claimed
+    # 310 checks and 29 arms after sec.14 had moved them to 804 and 36.
+    ("s2-check-count-stale",
+     "understates how many checks this document passes. A stale instrument "
+     "count misrepresents how hard the document's own claims have been pushed "
+     "on, in the lane's favour, and nothing else in the file changes.",
+     S2_CHECKS, S2_CHECKS.replace("804 checks", "799 checks")),
+
+    ("s2-arm-count-stale",
+     "reverts the commissioning arm count to its pre-sec.14 value. This is "
+     "the exact stale figure that was live in this file until the pin was "
+     "added -- the document claiming 29 arms while the harness ran 36.",
+     S2_ARMS, S2_ARMS.replace("38 defect arms", "29 defect arms")),
 ]
 
 # ---- SPECIFICITY (null) arms ------------------------------------------------
@@ -302,6 +385,12 @@ ARMS = [
 # ANY edit whatsoever -- both score 26/26.  An indiscriminate verifier is
 # useless in the more dangerous direction, because a lane would learn to ignore
 # its RED.
+#
+# The loader-collision arm below is run inline rather than declared in ARMS
+# (it mutates the data directory, not the document), so the harness's true
+# defect-arm count is ARMS + 1.  It is named once, here, because the document
+# quotes it and verify_bands_doc.py pins the document to it.
+TOTAL_ARMS_EXTRA = 1
 #
 # These edits change the document's prose without touching a single checked
 # claim.  The verifier MUST stay GREEN on all of them.
@@ -424,7 +513,7 @@ def main():
     print(f"document byte-identical to pre-commission: "
           f"{open(DOC, encoding='utf-8').read() == original}")
 
-    total = len(ARMS) + 1
+    total = len(ARMS) + TOTAL_ARMS_EXTRA
     print(f"\n  caught      : {caught}")
     print(f"  missed      : {missed}")
     print(f"  -----------------")
