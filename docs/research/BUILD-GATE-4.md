@@ -847,9 +847,41 @@ The same seven arms move the two columns by wildly different amounts:
 
 On the three shallow subjects blotch moves under 4% while grain moves 2.5-4.9x.
 The admission gate has authority over fine noise and almost none over mid-scale
-structure. That is a mechanism statement, not a correlation: mottle at 20-60 px
-survives a change that removes three quarters of the grain, so whatever creates
-it is not per-pixel frame admission.
+structure.
+
+**The first draft of this section over-claimed and the sentence is corrected
+here rather than removed.** It read: *"mottle at 20-60 px survives a change that
+removes three quarters of the grain, so whatever creates it is not per-pixel
+frame admission."* That does not follow, and the reason arrived from ORCH's
+`averaged` diagnostic, which I then reproduced at HEAD on `coffee-bubbles`:
+
+```
+averaged : 36.4% 3.1% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%
+```
+
+That is the fraction of coefficients per pyramid level where no frame cleared
+the floor and the merge averaged instead of selecting. **The gate fires on
+36.4% of level 0, 3.1% of level 1, and 0.0% of levels 2 through 6.** Grain
+(`sigma_hp`, ~2-3 px) is level 0. Blotch (`sigma_mid`, 20-60 px) is levels ~3-4.
+So the two columns sit on opposite sides of the gate's firing boundary, and
+`k` scales a floor that is never reached at mottle scale.
+
+The correct claim is therefore narrower than the one I made: **the gate never
+fires where the mottle is, so this sweep could not have moved mottle whatever
+the truth was.** What is eliminated is `k` as a *lever*, not per-pixel
+admission as a *mechanism*. Those are different statements and the first draft
+conflated them. The elimination in 13.5 stands; its scope does not extend to
+the mechanism.
+
+A caveat in the other direction, so the narrowing is not itself over-read. The
+merge's banner describes selection as `weight = (band power above the noise
+floor)^exponent`, so `k` sets the floor *subtracted inside the weight* at every
+level, not only where the hard gate fires. `k` may therefore have continuous
+authority where it has no binary authority, which would explain the residual
+blotch movement measured at levels the gate never fires on (-14.9% on
+`flower-bud-alone-cpl`). **Untested.** "The gate does not fire above level 0"
+and "`k` does nothing above level 0" are not the same claim and this data does
+not establish the second.
 
 **One arm is worth ORCH's attention on the noise axis rather than the mottle
 axis.** On `bee-1-cpl`, G400 buys **-91.6% grain** for a sharpness change of
