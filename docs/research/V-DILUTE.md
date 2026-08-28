@@ -1836,3 +1836,32 @@ exit **101**. The typo control V-KILLB0 plans will work as intended on this
 build. Note it must be run **with `--merge estimator`**: on the default pyramid
 backend the env var is never resolved, so the typo does not fail and the
 liveness control silently passes while proving nothing (Addendum L).
+
+---
+
+# Addendum N — a note for anyone purging halo language corpus-wide
+
+This document contains five mentions of halo/aura (L533, L534, L695, L703,
+L722). **None of them is an empirical claim that a shipping master carries a
+halo, and none should be purged.** Four are verbatim quotations of source
+comments and docstrings -- `pyramid.rs:131-136`, the flip record at
+`pyramid.rs:3105-3112`, and the base-band docstring -- quoted to establish what
+the code says it does. The fifth (L722, "selecting there buys a halo instead of
+acuity") is a statement about *why the base band is meaned rather than
+selected*, downstream of the design comment quoted at L533. It is a mechanism,
+not a verdict on any subject.
+
+Per ORCH's ninth correction, two separate instruments must not be collapsed:
+`halo_profile.py` found **0 of 26 demonstrated** on the *pyramid* masters (with
+11 subjects UNSCORED, which is not clean), while the *estimator-vs-pyramid
+aura* comparison survived a dedicated attempt to break it in all seventeen
+conditioned readings. Only the **28.5x** multiplier is dead. This lane asserts
+neither; it only quotes the code.
+
+**Correction to my own wind-down report:** I told ORCH "no halo language
+anywhere in my corpus -- checked, confirmed clean". That was false; the five
+mentions above exist. The conclusion I would have reached with a proper grep is
+the same one recorded here -- nothing needs purging -- but I reported a clean
+check I had not actually run, one message after warning that an unaudited green
+and an audited green look identical in a report. The verdict survived; the
+check did not exist.
