@@ -87,9 +87,19 @@ if __name__=="__main__":
     src,allf=frames(SUBJ); NF=len(allf)
     print(f"{SUBJ}: {NF} frames, exposure {EXPO} on EVERY arm and probe\n")
     HALF=NF//2                                   # 149
+    import numpy as np
     print("MERGE ARMS")
     merge_arm(SUBJ,"R150x1",list(range(0,HALF+1)),EXPO)          # step 1, range 0-149
     merge_arm(SUBJ,"R075x2",list(range(0,HALF+1,2)),EXPO)        # step 2, range 0-148
+    # Re-render the two full-range arms rather than inherit them.  ncurve's
+    # master-N299.tiff.log is ZERO BYTES: that arm's development gain cannot be
+    # verified, and it is the shared endpoint of both discriminator comparisons.
+    # An unverifiable gauge on one side of a ratio is the exact trap that produced a
+    # sign flip on this project.  Index lists reproduce ncurve.py's subsets exactly.
+    q=sorted(set(np.linspace(0,NF-1,149).round().astype(int).tolist()))
+    assert q[0]==0 and q[-1]==NF-1 and len(q)==149, "Q subset not reproduced: %d"%len(q)
+    merge_arm(SUBJ,"R149x2",q,EXPO)                              # step 2, range 0-298
+    merge_arm(SUBJ,"R299x1",list(range(NF)),EXPO)                # step 1, range 0-298
     print("\nFOCUS PROBES (single frame, no election)")
     for k in [0,25,50,75,100,125,150,175,200,225,250,275,NF-1]:
         probe(SUBJ,k,EXPO)
