@@ -1,0 +1,1796 @@
+﻿=== PURGED SCRATCH INDEX: DELIVER-V5
+generated : 2026-08-28T04:16:33.8969300-07:00
+root      : C:\dev\strehl-out\DELIVER-V5
+bytes     : 114779111 (0.11 GB)
+note      : the heavy artifacts below were deleted to reclaim disk. Their
+            SHA256 and size are preserved so any published claim about
+            them stays checkable, and the text bodies are inlined whole.
+
+--- TEXT BODIES (inlined verbatim)
+  [file] C:\dev\strehl-out\DELIVER-V5\crops-1to1\INDEX.md  (1877 bytes)
+    # 1:1 crops â€” best and worst site per subject
+    
+    400x400 pixels at native resolution. **1:1 is the only scale at
+    which a sharpness verdict is valid** â€” every halo complaint on this
+    project so far has been a downscaling artifact, so please judge here
+    and not from a gallery thumbnail.
+    
+    `BEST` is the highest-gradient-energy window; `WORST` is the lowest
+    that is still on the subject rather than on empty backdrop. Both are
+    shown on purpose: `BEST` alone answers *how good is the best part*,
+    which is not the question. **Judge the tool by the `WORST` files.**
+    
+    | subject | best site energy | worst site energy | ratio |
+    |---|---|---|---|
+    | `109MSDCF` | 7.288 | 2.707 | 2.69x |
+    | `112MSDCF` | 13.236 | 10.354 | 1.28x |
+    | `113MSDCF` | 12.208 | 8.602 | 1.42x |
+    | `119MSDCF` | 6.536 | 2.417 | 2.70x |
+    | `bee-1-cpl` | 15.522 | 5.479 | 2.83x |
+    | `bee-2-cpl` | 11.061 | 6.276 | 1.76x |
+    | `bee-3-cpl` | 9.500 | 5.342 | 1.78x |
+    | `coffee-bean` | 13.629 | 5.741 | 2.37x |
+    | `coffee-bubbles` | 11.797 | 3.095 | 3.81x |
+    | `couch-fibers-cpl` | 7.848 | 5.620 | 1.40x |
+    | `dry-erase-marker-head-cpl` | 7.877 | 2.272 | 3.47x |
+    | `flat-on-ruler-cpl` | 17.233 | 9.526 | 1.81x |
+    | `flower-bud-alone-cpl` | 4.115 | 1.341 | 3.07x |
+    | `flower-bud-with-background-fern-cpl` | 8.685 | 3.319 | 2.62x |
+    | `flower-inner-edge-cpl` | 3.749 | 1.775 | 2.11x |
+    | `flowers-cpl` | 3.714 | 2.314 | 1.60x |
+    | `foam` | 7.850 | 6.482 | 1.21x |
+    | `highly-angled-ruler-mm-cpl` | 6.847 | 2.871 | 2.39x |
+    | `lavendar-cpl` | 12.467 | 3.873 | 3.22x |
+    | `lead-1-cpl` | 8.316 | 6.677 | 1.25x |
+    | `leaf-2-cpl` | 12.631 | 11.558 | 1.09x |
+    | `pencil-flatter-angle-cpl` | 9.794 | 2.744 | 3.57x |
+    | `pencil-steep-angle-cpl` | 13.428 | 3.039 | 4.42x |
+    | `tweezers-cpl` | 16.115 | 10.521 | 1.53x |
+    | `wrapped-text-1` | 12.043 | 6.029 | 2.00x |
+    | `wrapped-text-2` | 14.080 | 6.153 | 2.29x |
+    
+
+  [file] C:\dev\strehl-out\DELIVER-V5\crops-worst-case\INDEX.md  (1877 bytes)
+    # 1:1 crops â€” best and worst site per subject
+    
+    400x400 pixels at native resolution. **1:1 is the only scale at
+    which a sharpness verdict is valid** â€” every halo complaint on this
+    project so far has been a downscaling artifact, so please judge here
+    and not from a gallery thumbnail.
+    
+    `BEST` is the highest-gradient-energy window; `WORST` is the lowest
+    that is still on the subject rather than on empty backdrop. Both are
+    shown on purpose: `BEST` alone answers *how good is the best part*,
+    which is not the question. **Judge the tool by the `WORST` files.**
+    
+    | subject | best site energy | worst site energy | ratio |
+    |---|---|---|---|
+    | `109MSDCF` | 7.288 | 2.707 | 2.69x |
+    | `112MSDCF` | 13.236 | 10.354 | 1.28x |
+    | `113MSDCF` | 12.208 | 8.602 | 1.42x |
+    | `119MSDCF` | 6.536 | 2.417 | 2.70x |
+    | `bee-1-cpl` | 15.522 | 5.479 | 2.83x |
+    | `bee-2-cpl` | 11.061 | 6.276 | 1.76x |
+    | `bee-3-cpl` | 9.500 | 5.342 | 1.78x |
+    | `coffee-bean` | 13.629 | 5.741 | 2.37x |
+    | `coffee-bubbles` | 11.797 | 3.095 | 3.81x |
+    | `couch-fibers-cpl` | 7.848 | 5.620 | 1.40x |
+    | `dry-erase-marker-head-cpl` | 7.877 | 2.272 | 3.47x |
+    | `flat-on-ruler-cpl` | 17.233 | 9.526 | 1.81x |
+    | `flower-bud-alone-cpl` | 4.115 | 1.341 | 3.07x |
+    | `flower-bud-with-background-fern-cpl` | 8.685 | 3.319 | 2.62x |
+    | `flower-inner-edge-cpl` | 3.749 | 1.775 | 2.11x |
+    | `flowers-cpl` | 3.714 | 2.314 | 1.60x |
+    | `foam` | 7.850 | 6.482 | 1.21x |
+    | `highly-angled-ruler-mm-cpl` | 6.847 | 2.871 | 2.39x |
+    | `lavendar-cpl` | 12.467 | 3.873 | 3.22x |
+    | `lead-1-cpl` | 8.316 | 6.677 | 1.25x |
+    | `leaf-2-cpl` | 12.631 | 11.558 | 1.09x |
+    | `pencil-flatter-angle-cpl` | 9.794 | 2.744 | 3.57x |
+    | `pencil-steep-angle-cpl` | 13.428 | 3.039 | 4.42x |
+    | `tweezers-cpl` | 16.115 | 10.521 | 1.53x |
+    | `wrapped-text-1` | 12.043 | 6.029 | 2.00x |
+    | `wrapped-text-2` | 14.080 | 6.153 | 2.29x |
+    
+
+  [file] C:\dev\strehl-out\DELIVER-V5\manifest.json  (17964 bytes)
+    {
+     "k": 4,
+     "crop": 380,
+     "n_sites": 3,
+     "bar_overview": 30,
+     "bar_crop": 18,
+     "images": [
+      {
+       "name": "109MSDCF",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\109MSDCF--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "109MSDCF__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "109MSDCF__1to1_1442_4066.png",
+         "x0": 1442,
+         "y0": 4066,
+         "n": 380
+        },
+        {
+         "file": "109MSDCF__1to1_3914_866.png",
+         "x0": 3914,
+         "y0": 866,
+         "n": 380
+        },
+        {
+         "file": "109MSDCF__1to1_4914_290.png",
+         "x0": 4914,
+         "y0": 290,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "112MSDCF",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\112MSDCF--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "112MSDCF__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "112MSDCF__1to1_610_3234.png",
+         "x0": 610,
+         "y0": 3234,
+         "n": 380
+        },
+        {
+         "file": "112MSDCF__1to1_3018_1058.png",
+         "x0": 3018,
+         "y0": 1058,
+         "n": 380
+        },
+        {
+         "file": "112MSDCF__1to1_5234_290.png",
+         "x0": 5234,
+         "y0": 290,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "113MSDCF",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\113MSDCF--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "113MSDCF__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "113MSDCF__1to1_610_3234.png",
+         "x0": 610,
+         "y0": 3234,
+         "n": 380
+        },
+        {
+         "file": "113MSDCF__1to1_3018_1058.png",
+         "x0": 3018,
+         "y0": 1058,
+         "n": 380
+        },
+        {
+         "file": "113MSDCF__1to1_4914_610.png",
+         "x0": 4914,
+         "y0": 610,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "119MSDCF",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\119MSDCF--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "119MSDCF__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "119MSDCF__1to1_1634_3938.png",
+         "x0": 1634,
+         "y0": 3938,
+         "n": 380
+        },
+        {
+         "file": "119MSDCF__1to1_2890_1442.png",
+         "x0": 2890,
+         "y0": 1442,
+         "n": 380
+        },
+        {
+         "file": "119MSDCF__1to1_6386_2402.png",
+         "x0": 6386,
+         "y0": 2402,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "bee-1-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\bee-1-cpl--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "bee-1-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "bee-1-cpl__1to1_1570_4002.png",
+         "x0": 1570,
+         "y0": 4002,
+         "n": 380
+        },
+        {
+         "file": "bee-1-cpl__1to1_4042_1442.png",
+         "x0": 4042,
+         "y0": 1442,
+         "n": 380
+        },
+        {
+         "file": "bee-1-cpl__1to1_5042_930.png",
+         "x0": 5042,
+         "y0": 930,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "bee-2-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\bee-2-cpl--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "bee-2-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "bee-2-cpl__1to1_1314_2530.png",
+         "x0": 1314,
+         "y0": 2530,
+         "n": 380
+        },
+        {
+         "file": "bee-2-cpl__1to1_3722_1506.png",
+         "x0": 3722,
+         "y0": 1506,
+         "n": 380
+        },
+        {
+         "file": "bee-2-cpl__1to1_5042_3170.png",
+         "x0": 5042,
+         "y0": 3170,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "bee-3-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\bee-3-cpl--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "bee-3-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "bee-3-cpl__1to1_866_2722.png",
+         "x0": 866,
+         "y0": 2722,
+         "n": 380
+        },
+        {
+         "file": "bee-3-cpl__1to1_3082_1378.png",
+         "x0": 3082,
+         "y0": 1378,
+         "n": 380
+        },
+        {
+         "file": "bee-3-cpl__1to1_5234_3170.png",
+         "x0": 5234,
+         "y0": 3170,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "coffee-bean",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\coffee-bean--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "coffee-bean__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "coffee-bean__1to1_1698_2402.png",
+         "x0": 1698,
+         "y0": 2402,
+         "n": 380
+        },
+        {
+         "file": "coffee-bean__1to1_3466_1442.png",
+         "x0": 3466,
+         "y0": 1442,
+         "n": 380
+        },
+        {
+         "file": "coffee-bean__1to1_4914_3170.png",
+         "x0": 4914,
+         "y0": 3170,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "coffee-bubbles",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\coffee-bubbles--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "coffee-bubbles__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "coffee-bubbles__1to1_1186_2146.png",
+         "x0": 1186,
+         "y0": 2146,
+         "n": 380
+        },
+        {
+         "file": "coffee-bubbles__1to1_3850_2466.png",
+         "x0": 3850,
+         "y0": 2466,
+         "n": 380
+        },
+        {
+         "file": "coffee-bubbles__1to1_6002_1890.png",
+         "x0": 6002,
+         "y0": 1890,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "couch-fibers-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\couch-fibers-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "couch-fibers-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "couch-fibers-cpl__1to1_482_1506.png",
+         "x0": 482,
+         "y0": 1506,
+         "n": 380
+        },
+        {
+         "file": "couch-fibers-cpl__1to1_3404_3490.png",
+         "x0": 3404,
+         "y0": 3490,
+         "n": 380
+        },
+        {
+         "file": "couch-fibers-cpl__1to1_4918_2018.png",
+         "x0": 4918,
+         "y0": 2018,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "dry-erase-marker-head-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\dry-erase-marker-head-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "dry-erase-marker-head-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "dry-erase-marker-head-cpl__1to1_1506_1378.png",
+         "x0": 1506,
+         "y0": 1378,
+         "n": 380
+        },
+        {
+         "file": "dry-erase-marker-head-cpl__1to1_2700_1634.png",
+         "x0": 2700,
+         "y0": 1634,
+         "n": 380
+        },
+        {
+         "file": "dry-erase-marker-head-cpl__1to1_6070_1378.png",
+         "x0": 6070,
+         "y0": 1378,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "flat-on-ruler-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\flat-on-ruler-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "flat-on-ruler-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "flat-on-ruler-cpl__1to1_1698_418.png",
+         "x0": 1698,
+         "y0": 418,
+         "n": 380
+        },
+        {
+         "file": "flat-on-ruler-cpl__1to1_3852_674.png",
+         "x0": 3852,
+         "y0": 674,
+         "n": 380
+        },
+        {
+         "file": "flat-on-ruler-cpl__1to1_5046_866.png",
+         "x0": 5046,
+         "y0": 866,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "flower-bud-alone-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\flower-bud-alone-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "flower-bud-alone-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "flower-bud-alone-cpl__1to1_1698_4066.png",
+         "x0": 1698,
+         "y0": 4066,
+         "n": 380
+        },
+        {
+         "file": "flower-bud-alone-cpl__1to1_2700_3746.png",
+         "x0": 2700,
+         "y0": 3746,
+         "n": 380
+        },
+        {
+         "file": "flower-bud-alone-cpl__1to1_6006_3810.png",
+         "x0": 6006,
+         "y0": 3810,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "flower-bud-with-background-fern-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\flower-bud-with-background-fern-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "flower-bud-with-background-fern-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "flower-bud-with-background-fern-cpl__1to1_930_2402.png",
+         "x0": 930,
+         "y0": 2402,
+         "n": 380
+        },
+        {
+         "file": "flower-bud-with-background-fern-cpl__1to1_3980_2274.png",
+         "x0": 3980,
+         "y0": 2274,
+         "n": 380
+        },
+        {
+         "file": "flower-bud-with-background-fern-cpl__1to1_4918_3682.png",
+         "x0": 4918,
+         "y0": 3682,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "flower-inner-edge-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\flower-inner-edge-cpl--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "flower-inner-edge-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "flower-inner-edge-cpl__1to1_610_1314.png",
+         "x0": 610,
+         "y0": 1314,
+         "n": 380
+        },
+        {
+         "file": "flower-inner-edge-cpl__1to1_4042_3426.png",
+         "x0": 4042,
+         "y0": 3426,
+         "n": 380
+        },
+        {
+         "file": "flower-inner-edge-cpl__1to1_5234_1762.png",
+         "x0": 5234,
+         "y0": 1762,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "flowers-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\flowers-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "flowers-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "flowers-cpl__1to1_1186_1122.png",
+         "x0": 1186,
+         "y0": 1122,
+         "n": 380
+        },
+        {
+         "file": "flowers-cpl__1to1_4044_930.png",
+         "x0": 4044,
+         "y0": 930,
+         "n": 380
+        },
+        {
+         "file": "flowers-cpl__1to1_5814_2978.png",
+         "x0": 5814,
+         "y0": 2978,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "foam",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\foam--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "foam__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "foam__1to1_994_2914.png",
+         "x0": 994,
+         "y0": 2914,
+         "n": 380
+        },
+        {
+         "file": "foam__1to1_3466_1698.png",
+         "x0": 3466,
+         "y0": 1698,
+         "n": 380
+        },
+        {
+         "file": "foam__1to1_6130_3362.png",
+         "x0": 6130,
+         "y0": 3362,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "highly-angled-ruler-mm-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\highly-angled-ruler-mm-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "highly-angled-ruler-mm-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "highly-angled-ruler-mm-cpl__1to1_1378_226.png",
+         "x0": 1378,
+         "y0": 226,
+         "n": 380
+        },
+        {
+         "file": "highly-angled-ruler-mm-cpl__1to1_3532_418.png",
+         "x0": 3532,
+         "y0": 418,
+         "n": 380
+        },
+        {
+         "file": "highly-angled-ruler-mm-cpl__1to1_5430_3874.png",
+         "x0": 5430,
+         "y0": 3874,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "lavendar-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\lavendar-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "lavendar-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "lavendar-cpl__1to1_1442_1506.png",
+         "x0": 1442,
+         "y0": 1506,
+         "n": 380
+        },
+        {
+         "file": "lavendar-cpl__1to1_2892_802.png",
+         "x0": 2892,
+         "y0": 802,
+         "n": 380
+        },
+        {
+         "file": "lavendar-cpl__1to1_5238_3362.png",
+         "x0": 5238,
+         "y0": 3362,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "lead-1-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\lead-1-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "lead-1-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "lead-1-cpl__1to1_354_290.png",
+         "x0": 354,
+         "y0": 290,
+         "n": 380
+        },
+        {
+         "file": "lead-1-cpl__1to1_3212_802.png",
+         "x0": 3212,
+         "y0": 802,
+         "n": 380
+        },
+        {
+         "file": "lead-1-cpl__1to1_5174_546.png",
+         "x0": 5174,
+         "y0": 546,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "leaf-2-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\leaf-2-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "leaf-2-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "leaf-2-cpl__1to1_1442_3426.png",
+         "x0": 1442,
+         "y0": 3426,
+         "n": 380
+        },
+        {
+         "file": "leaf-2-cpl__1to1_3340_738.png",
+         "x0": 3340,
+         "y0": 738,
+         "n": 380
+        },
+        {
+         "file": "leaf-2-cpl__1to1_5046_290.png",
+         "x0": 5046,
+         "y0": 290,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "pencil-flatter-angle-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\pencil-flatter-angle-cpl--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "pencil-flatter-angle-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "pencil-flatter-angle-cpl__1to1_1698_2018.png",
+         "x0": 1698,
+         "y0": 2018,
+         "n": 380
+        },
+        {
+         "file": "pencil-flatter-angle-cpl__1to1_2570_2210.png",
+         "x0": 2570,
+         "y0": 2210,
+         "n": 380
+        },
+        {
+         "file": "pencil-flatter-angle-cpl__1to1_5682_1634.png",
+         "x0": 5682,
+         "y0": 1634,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "pencil-steep-angle-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\pencil-steep-angle-cpl--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "pencil-steep-angle-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "pencil-steep-angle-cpl__1to1_1570_2466.png",
+         "x0": 1570,
+         "y0": 2466,
+         "n": 380
+        },
+        {
+         "file": "pencil-steep-angle-cpl__1to1_2570_2594.png",
+         "x0": 2570,
+         "y0": 2594,
+         "n": 380
+        },
+        {
+         "file": "pencil-steep-angle-cpl__1to1_5042_738.png",
+         "x0": 5042,
+         "y0": 738,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "tweezers-cpl",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\tweezers-cpl--SHIP-V4.tiff",
+       "w": 7040,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "tweezers-cpl__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "tweezers-cpl__1to1_1442_2786.png",
+         "x0": 1442,
+         "y0": 2786,
+         "n": 380
+        },
+        {
+         "file": "tweezers-cpl__1to1_3724_2082.png",
+         "x0": 3724,
+         "y0": 2082,
+         "n": 380
+        },
+        {
+         "file": "tweezers-cpl__1to1_5046_1890.png",
+         "x0": 5046,
+         "y0": 1890,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "wrapped-text-1",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\wrapped-text-1--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "wrapped-text-1__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "wrapped-text-1__1to1_1698_1890.png",
+         "x0": 1698,
+         "y0": 1890,
+         "n": 380
+        },
+        {
+         "file": "wrapped-text-1__1to1_3146_1954.png",
+         "x0": 3146,
+         "y0": 1954,
+         "n": 380
+        },
+        {
+         "file": "wrapped-text-1__1to1_5298_1698.png",
+         "x0": 5298,
+         "y0": 1698,
+         "n": 380
+        }
+       ]
+      },
+      {
+       "name": "wrapped-text-2",
+       "master": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\wrapped-text-2--SHIP-V4.tiff",
+       "w": 7032,
+       "h": 4688,
+       "k": 4,
+       "rim_dn": 0.0,
+       "area_err_dn": 0.5,
+       "overview": "wrapped-text-2__reduced-4x-box.png",
+       "bar_overview": 30,
+       "bar_crop": 18,
+       "crops": [
+        {
+         "file": "wrapped-text-2__1to1_1570_2082.png",
+         "x0": 1570,
+         "y0": 2082,
+         "n": 380
+        },
+        {
+         "file": "wrapped-text-2__1to1_3658_1890.png",
+         "x0": 3658,
+         "y0": 1890,
+         "n": 380
+        },
+        {
+         "file": "wrapped-text-2__1to1_4978_1122.png",
+         "x0": 4978,
+         "y0": 1122,
+         "n": 380
+        }
+       ]
+      }
+     ]
+    }
+
+  [file] C:\dev\strehl-out\DELIVER-V5\README.md  (12077 bytes)
+    # strehl â€” DELIVER-V5
+    
+    **Start with `crops-1to1/`.** A focus stack is judged at 1:1, and those files
+    have no resampling applied at all â€” not a reduction, not a resize, not a
+    sharpen. They are integer slices out of the master.
+    
+    > **The previous gallery could not be trusted at the zoom level it was judged
+    > at, and this one was rebuilt because of that.** Everything below states which
+    > files are exact, which are reduced, what kernel reduced them, and what was
+    > measured on the files that actually ship.
+    
+    ## What is in here
+    
+    | directory | what it is | resampled? |
+    |---|---|---|
+    | `crops-1to1/` | 78 crops, 380 x 380 px, three per subject. Integer slices of the master. A 18 px label bar is appended **below** the image; not one crop pixel is written by the labeller. | **No. Not one pixel.** |
+    | `overview/` | 26 whole frames, reduced **exactly 4x** with a **box (area-average)** kernel. `7032 x 4688` â†’ `1758 x 1172`; `7040 x 4688` â†’ `1760 x 1172`. Labelled on the image with the kernel and the measured injected rim. | Yes, and it says so on itself. |
+    | `known-defects/` | What is wrong with these files, at 1:1. | No. |
+    | `what-stacking-does/` | One frame against the 299-frame master, same scene, matched integer crops. Carried forward unchanged from DELIVER-V4. | No. |
+    | `print-masters/` | **The print deliverable.** 26 16-bit TIFFs, one per subject, straight from the stacker. Each carries an embedded ICC profile (`strehl sRGB (IEC 61966-2-1)`) and 300 dpi. No label bar, no reduction. | No. |
+    | `manifest.json` | Every file, its master, its crop origin, and its measured rim. | â€” |
+    
+    **Crops are 380 px on purpose.** An independent audit commissioned the image
+    viewer these are read in with a 1 px grating: it resolved at 400 px and had
+    collapsed to a flat wash by 600. The previous gallery's crops were 1000 x 1000,
+    so every verdict formed on them was formed through a 2.5x reduction nobody
+    knew was there. 380 + an 18 px label = 398 px, and the build **asserts** that it
+    stays under 400 rather than trusting me to remember.
+    
+    ## Which file to print from
+    
+    **Print from `print-masters/`. The PNGs are previews.** The 8-bit previews are
+    safe to print from for 49 of the 50 tone regions measured across all 26
+    subjects, but `dry-erase-marker-head-cpl` bands across 6.7% of its highlights,
+    and the corpus as a whole sits at 0.93x the noise level at which banding
+    disappears entirely â€” so 8 bits is clean here only because sensor noise happens
+    to dither it, and a subject smoother or cleaner than the ones measured has no
+    margin left.
+    
+    That last clause is the part worth keeping. Banding in a smooth ramp is
+    suppressed by noise, this stacker's headline result is that it produces
+    **less** noise than the alternatives, and those two facts pull against each
+    other: the quieter the render, the less dither there is to hide an 8-bit step.
+    The measured floor across 2,391 tiles is sigma = 0.28 codes against a
+    zero-banding threshold of 0.30, which is a margin of 7%, not a comfortable one.
+    16 bits removes the question rather than managing it.
+    
+    **Every delivered file now states its own colour space and print size.** All
+    185 PNGs and all 26 TIFFs carry the same embedded profile â€” byte-identical, and
+    checked by md5 on both sides rather than assumed â€” and a 300 dpi resolution tag.
+    An untagged file is interpreted in whatever working space the reader happens to
+    have, which is usually sRGB and usually right; these say it rather than relying
+    on the guess.
+    
+    ## Why this gallery was rebuilt: the old one manufactured the defect it was blamed for
+    
+    The old `_presentation/` gallery reduced the masters ~5x with **Lanczos**.
+    Lanczos has negative lobes. A kernel with negative lobes overshoots at a step
+    edge by construction â€” it puts a bright rim next to a dark edge that is not in
+    the image it reduced.
+    
+    Reducing the same 26 masters and measuring how far the output leaves the local
+    range of the master it came from:
+    
+    | reduction kernel | negative lobes | injected rim, 26 masters x 3 channels |
+    |---|---|---|
+    | **box (area average)** | no | **0.000000 DN** |
+    | **bilinear** | no | **0.000000 DN** |
+    | bicubic | yes | 17.126 DN |
+    | **Lanczos** â€” what the old gallery used | yes | **min 1.962, median 13.424, max 36.997 DN** |
+    
+    **The single loudest complaint about this stacker is halos, and the images that
+    complaint was formed on were reduced with a kernel that adds up to 37 DN out of
+    255 of bright rim at exactly the edges being looked at.** Some of what was seen
+    was manufactured by the resizer and some of it may be real. The old gallery
+    cannot tell you which, and that is why it was replaced rather than patched.
+    
+    Those figures were produced by another lane. They are quoted here because I
+    re-derived them from the theorem with my own code and got the same numbers:
+    `0.000000 / 0.000000 / 17.1256 / 36.9970`, lanczos median `13.4237`. The one
+    figure that differed â€” their min `1.962`, my `3.6714` â€” turned out to be
+    definitional, not an error: they publish rim **above** the local range, I
+    publish rim **above or below**. On the master that sets it, my bright-rim
+    reading is `1.9619`. Two implementations, written independently, agree.
+    
+    ## What this gallery's own reduction measures
+    
+    **`0.000000000 DN` injected rim, on all 26 shipped overviews.**
+    
+    That is not build-time self-reporting. A separate checker re-opens every
+    shipped PNG off disk, re-reads the master, strips the label bar, and requires:
+    
+    - injected rim **exactly** `0.000000000 DN`, and
+    - **byte equality** with an independently recomputed box reduction, and
+    - every crop **byte-identical** to the integer slice of its master â€” not close,
+      equal â€” and
+    - that the checker still **fails** when the same files are deliberately
+      corrupted. It caught **104 of 104** planted corruptions.
+    
+    The only residual is `0.500000000 DN`, which is the rounding of an exact area
+    average to 8-bit. That bound is arithmetic, not empirical.
+    
+    `Image.BOX` was **not** assumed to be a box filter. The shipping path computes
+    the block mean in numpy; PIL is merely checked against it, and agrees to
+    `0.000e+00 DN`.
+    
+    ## What the rim statistic can and cannot say
+    
+    It is stated here because a `0.000000` that a reader over-reads is worse than no
+    number at all.
+    
+    **It can** prove that a value in the reduced image is not in the master it came
+    from â€” that is the whole theorem, and it needs no edge finder, no plateau
+    detection and no site picking, so it has no phantom-site failure mode.
+    
+    **It cannot** say anything about blur, softness, or lost detail. It was
+    commissioned in both directions before use, 36 arms, and two of them exist
+    specifically to stop it being quoted as a quality claim:
+    
+    - **nearest-neighbour** â€” a kernel that physically *cannot* ring, but is a
+      catastrophic degradation â€” scores `0.000000000` rim. A second, independent
+      axis charges it `182.312 DN`. Without that arm this statistic could have been
+      mistaken for one that measures aliasing; another lane made exactly that error
+      tonight and convicted the wrong resampler until it added the same row.
+    - a master with **half its resolution destroyed** also scores `0.000000000`.
+      **A zero here is not a claim that the image is sharp.**
+    
+    And the overview has a resolution limit that is measured, not assumed: a 187 DN
+    disturbance finer than 2 px survives the 4x reduction as **1.000 DN** â€” the
+    overview *cannot* show it. The same probe moves **68.062 DN** on a coarser
+    disturbance, so that is a resolution limit and not a dead probe. **Judge fine
+    detail in `crops-1to1/`, never in `overview/`.**
+    
+    ## Where the crops are, and why
+    
+    Not chosen by eye. The frame is split into three vertical thirds and each crop
+    lands on the highest mean `|Laplacian|` tile *within its third*, using the crop
+    siting code from the lane that owns it. Thirds guarantee separation without me
+    picking anything.
+    
+    That puts the crops where detail exists â€” which is also where a stacking
+    failure shows worst. The selection cuts both ways on purpose.
+    
+    ## What was done to these files
+    
+    Nothing but 16-bit to 8-bit, rounded to nearest and clipped, plus the box
+    reduction in `overview/`. No tone curve, no black point, no saturation, no
+    percentile stretch, no sharpening. The masters carry the sRGB transfer curve
+    already.
+    
+    If they look flat, that is the render. The 16-bit masters are in
+    `../acceptance/SHIP-V4/`.
+    
+    ## Known defects
+    
+    ### Sensor dust â€” reported, and NOT reproduced here
+    
+    DELIVER-V4 states two sensor motes, present in 18 of 26 images, worst
+    **âˆ’13.28%** in `highly-angled-ruler-mm-cpl` at output `(7008, 4450)`, appearing
+    as a soft grey disc ~45 px across.
+    
+    **I could not reproduce that and I will not restate a number I could not
+    reproduce.** Three arms:
+    
+    | arm | result | does it decide anything? |
+    |---|---|---|
+    | whole-frame fixed-position residual field, 4x overviews | deepest candidate `âˆ’37.19%`, but its own position-scrambled null reads `27.85%` â†’ ratio **1.34x** | **No.** |
+    | flat/bright-masked cross-image median | ratio **1.17x** and **1.60x** | **No.** |
+    | **1:1 inspection at the stated coordinate** | on the **14 of 26** subjects whose background there is flat and bright (sd 1.1â€“7.2 DN on 91â€“246 DN), worst reading **âˆ’0.78%**; nothing visible in `known-defects/` | **Yes â€” at that coordinate.** |
+    
+    The first two arms are **underpowered, not negative**: their own noise floors
+    (21.1% and 39.0%) are *larger* than the 13.28% defect they are looking for, so
+    they could not have found it even if it were there. Reporting them as "clean"
+    would be a skipped check reading as a passed one, and they are not offered as
+    evidence of absence.
+    
+    The third arm does have power â€” sub-1% on flat bright background â€” and it is
+    negative **at `(7008, 4450)` only**. See
+    `known-defects/sensor-dust_mote2_6776_4322_NOT-REPRODUCED.png`: nine empty
+    backgrounds at that exact integer slice, no disc in any of them.
+    
+    **So: this gallery is not claiming the sensor is clean.** The motes may be real
+    at coordinates none of my arms searched with enough power, and dust correction
+    does exist in the tool and is off by default in this build. What is established
+    is that the specific published coordinate does not show it in SHIP-V4, and that
+    a corpus-wide search at 4x cannot settle it either way. What would settle it is
+    a flat-field frame â€” an out-of-focus shot of an evenly lit blank surface at the
+    same aperture â€” against which a mote is unmissable and no statistic is needed.
+    
+    ### The comparison this gallery does not make
+    
+    Box reduction injects no rim. That does **not** establish that this stacker's
+    merge is halo-free â€” that is a different measurement, on the master, and it is
+    not made here. It only establishes that if you see a rim in `crops-1to1/`, the
+    gallery did not put it there.
+    
+    ### Your viewer is still in the loop for `overview/`
+    
+    The overviews are 1758â€“1760 px. If your viewer shrinks them to fit, **that**
+    reduction is your viewer's, it may well use a ringing kernel, and it will do to
+    these images what the old gallery did. The label on every overview says so.
+    Halo judgements belong in `crops-1to1/`, which are small enough that no viewer
+    needs to touch them.
+    
+    ## Reproducing every number above
+    
+    `experiments/DELIVER-V5/` in the repository:
+    
+    | script | what it establishes |
+    |---|---|
+    | `commission_rim.py` | 36 arms, both directions, including the two that stop the statistic being over-read. Exits non-zero on any failure. |
+    | `crosscheck.py` | my hull implementation vs the other lane's published corpus figures |
+    | `resolve_min.py` | the one disagreement, resolved to a definition rather than waved at |
+    | `build.py` | builds the gallery; counted partition, 26 rendered + 0 refused + 0 failed |
+    | `verify.py` | re-derives every shipped file from its master and fails on corrupted input |
+    | `dust.py`, `dust_flat.py`, `dust_patch.py` | the three dust arms, with their power stated |
+    
+
+  [file] C:\dev\strehl-out\DELIVER-V5\vs-the-field\manifest-119MSDCF.json  (4018 bytes)
+    {
+      "subject": "119MSDCF",
+      "linear_arms": true,
+      "note": "one half-bracket, linear noise-measurement arms",
+      "arms": {
+        "strehl": "C:\\dev\\strehl-out\\V-NOISE2\\119\\arms\\strehl-A.tiff",
+        "enfuse": "C:\\dev\\strehl-out\\V-NOISE2\\119\\arms\\coh-enfuse-A.tif",
+        "focus-stack": "C:\\dev\\strehl-out\\V-NOISE2\\119\\arms\\coh-fs15-A.tif"
+      },
+      "crop_px": 400,
+      "shifts": {
+        "strehl": [
+          0,
+          0
+        ],
+        "enfuse": [
+          1,
+          0
+        ],
+        "focus-stack": [
+          1,
+          0
+        ]
+      },
+      "sites": [
+        {
+          "label": "worst-on-subject",
+          "y": 3512,
+          "x": 2232,
+          "exposure": 2.927,
+          "fits": {
+            "strehl": {
+              "gain": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "offset": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "shift": [
+                0,
+                0
+              ]
+            },
+            "enfuse": {
+              "gain": [
+                0.98484,
+                0.97694,
+                0.9705
+              ],
+              "offset": [
+                324.55,
+                48.69,
+                91.34
+              ],
+              "shift": [
+                5,
+                -6
+              ]
+            },
+            "focus-stack": {
+              "gain": [
+                0.98457,
+                0.98251,
+                0.98012
+              ],
+              "offset": [
+                81.79,
+                16.3,
+                27.37
+              ],
+              "shift": [
+                4,
+                -5
+              ]
+            }
+          }
+        },
+        {
+          "label": "random",
+          "y": 2488,
+          "x": 440,
+          "exposure": 3.262,
+          "fits": {
+            "strehl": {
+              "gain": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "offset": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "shift": [
+                0,
+                0
+              ]
+            },
+            "enfuse": {
+              "gain": [
+                1.04488,
+                1.03117,
+                1.04257
+              ],
+              "offset": [
+                -477.39,
+                -311.49,
+                -399.69
+              ],
+              "shift": [
+                1,
+                0
+              ]
+            },
+            "focus-stack": {
+              "gain": [
+                0.99549,
+                0.99043,
+                0.9959
+              ],
+              "offset": [
+                -82.36,
+                -4.22,
+                -73.2
+              ],
+              "shift": [
+                1,
+                0
+              ]
+            }
+          },
+          "refused": [
+            "enfuse: per-crop shift dy=-1 dx=-11 disagrees with global dy=+1 dx=+0 by more than 8 px (peak 0.0871) -- registration failed on this crop",
+            "focus-stack: per-crop shift dy=-1 dx=-11 disagrees with global dy=+1 dx=+0 by more than 8 px (peak 0.0658) -- registration failed on this crop"
+          ]
+        },
+        {
+          "label": "best",
+          "y": 2232,
+          "x": 4024,
+          "exposure": 2.985,
+          "fits": {
+            "strehl": {
+              "gain": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "offset": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "shift": [
+                0,
+                0
+              ]
+            },
+            "enfuse": {
+              "gain": [
+                1.02621,
+                1.04229,
+                1.04943
+              ],
+              "offset": [
+                -271.99,
+                -348.54,
+                -408.94
+              ],
+              "shift": [
+                1,
+                2
+              ]
+            },
+            "focus-stack": {
+              "gain": [
+                0.97602,
+                0.98908,
+                0.9772
+              ],
+              "offset": [
+                100.5,
+                -5.34,
+                68.1
+              ],
+              "shift": [
+                2,
+                2
+              ]
+            }
+          }
+        }
+      ],
+      "method": "integer-shift registration only; per-channel linear gain+offset to strehl",
+      "refused": 1
+    }
+
+  [file] C:\dev\strehl-out\DELIVER-V5\vs-the-field\manifest-coffee-bean.json  (5168 bytes)
+    {
+      "subject": "coffee-bean",
+      "linear_arms": false,
+      "note": "full 105-frame stack, sRGB end-to-end arms",
+      "arms": {
+        "strehl": "C:\\dev\\strehl-out\\V-SPEED\\coffee-bean\\out\\r0-strehl.tif",
+        "enfuse": "C:\\dev\\strehl-out\\V-SPEED\\coffee-bean\\out\\r0-srgb-enfuse.tif",
+        "focus-stack": "C:\\dev\\strehl-out\\V-SPEED\\coffee-bean\\out\\r0-srgb-fs.tif"
+      },
+      "crop_px": 400,
+      "shifts": {
+        "strehl": [
+          0,
+          0
+        ],
+        "enfuse": [
+          1,
+          12
+        ],
+        "focus-stack": [
+          1,
+          0
+        ]
+      },
+      "sites": [
+        {
+          "label": "worst-on-subject",
+          "y": 4024,
+          "x": 2488,
+          "exposure": 1.0,
+          "fits": {
+            "strehl": {
+              "gain": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "offset": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "shift": [
+                0,
+                0
+              ]
+            },
+            "enfuse": {
+              "gain": [
+                1.05449,
+                1.04879,
+                1.03663
+              ],
+              "offset": [
+                -5204.26,
+                -4987.12,
+                -4581.26
+              ],
+              "shift": [
+                1,
+                12
+              ]
+            },
+            "focus-stack": {
+              "gain": [
+                1.00359,
+                1.00262,
+                0.9983
+              ],
+              "offset": [
+                -5784.05,
+                -6473.43,
+                -6853.86
+              ],
+              "shift": [
+                1,
+                0
+              ]
+            }
+          },
+          "refused": [
+            "enfuse: per-crop shift dy=+20 dx=+3 disagrees with global dy=+1 dx=+12 by more than 8 px (peak 0.0274) -- registration failed on this crop",
+            "focus-stack: per-crop shift dy=+63 dx=-31 disagrees with global dy=+1 dx=+0 by more than 8 px (peak 0.0096) -- registration failed on this crop"
+          ]
+        },
+        {
+          "label": "random",
+          "y": 2488,
+          "x": 4536,
+          "exposure": 1.0,
+          "fits": {
+            "strehl": {
+              "gain": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "offset": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "shift": [
+                0,
+                0
+              ]
+            },
+            "enfuse": {
+              "gain": [
+                0.58141,
+                0.42886,
+                0.30545
+              ],
+              "offset": [
+                3505.21,
+                4841.12,
+                5375.83
+              ],
+              "shift": [
+                1,
+                12
+              ]
+            },
+            "focus-stack": {
+              "gain": [
+                0.33854,
+                0.2287,
+                0.19895
+              ],
+              "offset": [
+                8423.68,
+                8184.62,
+                6845.24
+              ],
+              "shift": [
+                1,
+                0
+              ]
+            }
+          },
+          "refused": [
+            "enfuse: per-crop shift dy=+6 dx=+29 disagrees with global dy=+1 dx=+12 by more than 8 px (peak 0.0368) -- registration failed on this crop",
+            "enfuse: fitted gain 0.581/0.429/0.305 vs whole-frame 1.012/1.016/1.013 (shift dy=+1 dx=+12)",
+            "focus-stack: per-crop shift dy=+12 dx=+46 disagrees with global dy=+1 dx=+0 by more than 8 px (peak 0.0099) -- registration failed on this crop",
+            "focus-stack: fitted gain 0.339/0.229/0.199 vs whole-frame 0.990/0.989/0.982 (shift dy=+1 dx=+0)"
+          ]
+        },
+        {
+          "label": "best",
+          "y": 952,
+          "x": 2744,
+          "exposure": 1.0,
+          "fits": {
+            "strehl": {
+              "gain": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "offset": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "shift": [
+                0,
+                0
+              ]
+            },
+            "enfuse": {
+              "gain": [
+                0.41093,
+                0.35381,
+                0.23671
+              ],
+              "offset": [
+                18265.72,
+                16693.82,
+                16518.18
+              ],
+              "shift": [
+                1,
+                12
+              ]
+            },
+            "focus-stack": {
+              "gain": [
+                0.12926,
+                0.11405,
+                0.09428
+              ],
+              "offset": [
+                27650.35,
+                23562.26,
+                19968.31
+              ],
+              "shift": [
+                1,
+                0
+              ]
+            }
+          },
+          "refused": [
+            "enfuse: per-crop shift dy=-14 dx=+6 disagrees with global dy=+1 dx=+12 by more than 8 px (peak 0.0596) -- registration failed on this crop",
+            "enfuse: fitted gain 0.411/0.354/0.237 vs whole-frame 1.012/1.016/1.013 (shift dy=+1 dx=+12)",
+            "focus-stack: per-crop shift dy=+13 dx=+74 disagrees with global dy=+1 dx=+0 by more than 8 px (peak 0.0076) -- registration failed on this crop",
+            "focus-stack: fitted gain 0.129/0.114/0.094 vs whole-frame 0.990/0.989/0.982 (shift dy=+1 dx=+0)"
+          ]
+        }
+      ],
+      "method": "integer-shift registration only; per-channel linear gain+offset to strehl",
+      "refused": 3
+    }
+
+  [file] C:\dev\strehl-out\DELIVER-V5\what-stacking-does\README.md  (2456 bytes)
+    # What the stacking actually does
+    
+    Two crops of the same place on the same bee, at **true 1:1** â€” integer slices out
+    of the full-resolution files, no resizing, no sharpening, no grading. The only
+    operation applied to either is a 16-to-8 bit shift, applied identically to both.
+    
+    | file | what it is |
+    |---|---|
+    | `ONE-frame-DSC00151.png` | **One frame.** The middle frame of the bracket, 151 of 299. |
+    | `STACK-299-frames.png` | **The stack.** All 299 frames merged. |
+    
+    Measured at that site: mean `|Laplacian|` of **708.7 DN** for the single frame
+    against **2385.1 DN** for the stack, a ratio of **3.37x**.
+    
+    ## How the two crops were made to show the same place
+    
+    strehl aligns by default, because focus breathing changes magnification frame to
+    frame, and alignment therefore shrinks the field. Pixel `(x,y)` in the master is
+    *not* the same scene point as `(x,y)` in a single-frame render, so cropping at
+    matching coordinates would have compared two different parts of the bee.
+    
+    The scale and shift were fitted by normalised cross-correlation on 8x-downscaled
+    copies: **scale 1.070, correlation 0.9403**. That 7% independently confirms the
+    alignment shrink the tool documents.
+    
+    **The search resampled. The output did not.** The delivered crops are integer
+    slices out of the full-resolution files.
+    
+    ## What this does and does not show
+    
+    It **does** show the thing focus stacking exists to do. Any single frame has one
+    thin plane of focus; at this location frame 151 has none of it, and the stack
+    resolves the ommatidia lattice across the full curvature of the eye, near side
+    and far side both.
+    
+    It **does not** show that the stack beats the best available frame *at this
+    site*. Two caveats, and they cut the same way:
+    
+    1. The crop location was chosen where the **master** has the most detail, which
+       favours the stack by construction.
+    2. Frame 151 is sharp **somewhere** â€” just not here. It sits at its own point in
+       the sweep.
+    
+    The honest hard question is the other one: is the stack at least as sharp as the
+    sharpest frame *at each pixel*? That is measured separately and is not answered
+    by these two files.
+    
+    ## Viewing
+    
+    **At 100%.** These are 380 x 380 so that an image viewer cannot scale them away.
+    A viewer showing them scaled-to-fit will make both look soft regardless of what
+    is in them â€” which is exactly how the earlier 1400 px gallery misrepresented
+    every render it was used to judge.
+    
+
+--- HEAVY ARTIFACT HASHES
+  2F84F4A7E4C856167506EA8AC1FE1F189C3EF8532BBBB0CED9BAE13C1FEA092E        227287  crops-1to1\109MSDCF__1to1_1442_4066.png
+  2B79A206759135522F20D844334E723AFE2E5AF93EA3B5FED45D4F4048E931B8        229910  crops-1to1\109MSDCF__1to1_3914_866.png
+  7E551F45CEE4CC8B0AFAFA8FD0024543E56A9CDCCC604C793C39809CFFE0EEB3        219730  crops-1to1\109MSDCF__1to1_4914_290.png
+  107AFA9156F8E62E9737D42E920198817C0C0216BA97E39B540818F94DBDDDDA        271156  crops-1to1\112MSDCF__1to1_3018_1058.png
+  19325641E7B03CD6430951B2504C2AE913CFE211C31D181E57E0F7EDDF3EEACF        272193  crops-1to1\112MSDCF__1to1_5234_290.png
+  A3717395B05B188D68BB094E14B7F04E5CF5EF97A472618CD7ECBF1E3B0A9DD6        269332  crops-1to1\112MSDCF__1to1_610_3234.png
+  045899C7F81AD5372074744B644BF123BD8FCFA36F2F58B273B9DBFA6D32EA2D        255378  crops-1to1\113MSDCF__1to1_3018_1058.png
+  5701F7F65B9B19B5163C7918F71CBBB8B345F93D75541A9DFF15179BE3DACF42        259520  crops-1to1\113MSDCF__1to1_4914_610.png
+  62B15F6166F0A61782DA13B896108601D638BBC49A475BF65BCCACB844698E4C        250437  crops-1to1\113MSDCF__1to1_610_3234.png
+  11D1EBF22D910D73B28C2FF2863E9F8E02DBFD8047A520B07B8BD04733E4EADF        187330  crops-1to1\119MSDCF__1to1_1634_3938.png
+  55B6A06D0C01E71C019C89B7E8798DA41D3D8857F71D322E9A50DA71092FB93F        181918  crops-1to1\119MSDCF__1to1_2890_1442.png
+  CB35F1EFDAAE28194B8E2D3F692E2C8C8E08602BB99DF355658E408F6860A98B        156963  crops-1to1\119MSDCF__1to1_6386_2402.png
+  EC497D6F856205586A07FA08602691E0F848506382E14BC1798439F702EE3A4B        188087  crops-1to1\bee-1-cpl__1to1_1570_4002.png
+  6319040792DE845DB5406A08A91564A9716C235A722685C14BB1CBEF2B1198EF        277168  crops-1to1\bee-1-cpl__1to1_4042_1442.png
+  1E2D957171CD175E5D107573C1BC12584FF37BF03653F8E5F52058D1353252EA        245201  crops-1to1\bee-1-cpl__1to1_5042_930.png
+  678A2C0ED3B2B3D803D2C2B654CCA3EE4998423B7DD8A2D18E6D7A05897AC2FB        246640  crops-1to1\bee-2-cpl__1to1_1314_2530.png
+  AE618869D38801ECF1D79BD2547F645B16EB02D5C38CE1DC6F782D344F5D7FB4        246557  crops-1to1\bee-2-cpl__1to1_3722_1506.png
+  5AF7F8ECFD0250B5DB7A8F9C1293A5468DDE1D0F9100951301BEB5823B4757E0        242493  crops-1to1\bee-2-cpl__1to1_5042_3170.png
+  E7F21AECC6BD4EAF45BB868261A4928176ADD0F826416A98203D044BF2759330        226657  crops-1to1\bee-3-cpl__1to1_3082_1378.png
+  B0500EC83D200CC0A39D7DB0C61F38B4BC7F855BDD0760E3F5DBD25709A50D75        229588  crops-1to1\bee-3-cpl__1to1_5234_3170.png
+  852E45B25D0020403249F9C5AA3CAC95D087AAA12C34EF73BC77FF1D9AABB46B        229335  crops-1to1\bee-3-cpl__1to1_866_2722.png
+  AAEE88707C3343DDE9936941E1E32173A65147FAAD69C02F1B4F4B7271B68033        244368  crops-1to1\coffee-bean__1to1_1698_2402.png
+  742867C76B1D3181D15778AB01904D3FDB74AF380AA9C255638BC9F7C949D7C4        268061  crops-1to1\coffee-bean__1to1_3466_1442.png
+  E5C33ED34790B123CC7BFE2EC822CC5FF58BC35839FE502E0F04992C5631B740        244790  crops-1to1\coffee-bean__1to1_4914_3170.png
+  7651CFE0D75FA9E4A80D6C96613A8361D337686A46E93F2082D4639507B080F2        201556  crops-1to1\coffee-bubbles__1to1_1186_2146.png
+  B95CC207EE5FBE1674479AE79B037A0473C7F5E6AB6A245730D0E94CD921E14E        250049  crops-1to1\coffee-bubbles__1to1_3850_2466.png
+  9368B0C9A89BB7B5974F1CF4EF9153B6BCC2C498B3F81741642D7A77028BF661        229153  crops-1to1\coffee-bubbles__1to1_6002_1890.png
+  99CD917901FA97C78DCCCF54C8866431D52267B7050B43DB04E7A7A3431B6740        236551  crops-1to1\couch-fibers-cpl__1to1_3404_3490.png
+  62C0F7B3B75EE77DA4D05CFEA4B984B24E6BC6B7CD4A0C8C6085A75838F306D1        235613  crops-1to1\couch-fibers-cpl__1to1_482_1506.png
+  3CAC3FF5F59CB2099DEEEC5C62506A563EF29AA8AA37C4154D39415E8C751E9C        240578  crops-1to1\couch-fibers-cpl__1to1_4918_2018.png
+  AEFCF88EF9C962404D145B6D456AF18A058EF5F9F8BA067D503A219D5096106D        175995  crops-1to1\dry-erase-marker-head-cpl__1to1_1506_1378.png
+  3DED553A89010CB268D8C475988F83BBD867E71467E007AF6296B29035CAF8CB        205958  crops-1to1\dry-erase-marker-head-cpl__1to1_2700_1634.png
+  98F449E2424E3BDE6CF5C6C91F2A178FAFBA397442A8231B8E9213C03CE73FD2         96862  crops-1to1\dry-erase-marker-head-cpl__1to1_6070_1378.png
+  B35BE6E5F54E6FCAFEA9A5A5DE26A9E453BA7DF8BB69504D290B02B1231EE4CC        254639  crops-1to1\flat-on-ruler-cpl__1to1_1698_418.png
+  E200466EF09B7C3536F8C3451323EDF06DD0B11B63E4AA83F4A0A1BB11F0C609        264116  crops-1to1\flat-on-ruler-cpl__1to1_3852_674.png
+  F0226876D8D0F3303B22B4F91B91D9D06A30915DA83970ED6DB8D101B4929714        267976  crops-1to1\flat-on-ruler-cpl__1to1_5046_866.png
+  DBE32D623F1613F365F52401656101DE5AE196C767605E1CC601B2A5663E30C1        176682  crops-1to1\flower-bud-alone-cpl__1to1_1698_4066.png
+  09BD054D33415F180FEC33EFAB81771CFCE385A5590084C093D7BC6DD1F01D6F        159746  crops-1to1\flower-bud-alone-cpl__1to1_2700_3746.png
+  AD3FC07227FDD74C174FF7107369F6009E3F6CD12CA3AB2B102FC344A4DFD80D        148891  crops-1to1\flower-bud-alone-cpl__1to1_6006_3810.png
+  5899FB53CF83A4EFA5AB178586CAB25CAADA5A52A7DB5DB39010C6FC192D1435        215297  crops-1to1\flower-bud-with-background-fern-cpl__1to1_3980_2274.png
+  32D0200C24D2B2D6CEFE6A5373F4F4209F3006D6C24A0104C7A20FBDC0701F97        180508  crops-1to1\flower-bud-with-background-fern-cpl__1to1_4918_3682.png
+  FA52E81DE2E486547C087F22229718AFB258D8E99C4A67E237175FBB773B9D5C        201739  crops-1to1\flower-bud-with-background-fern-cpl__1to1_930_2402.png
+  BA0B0704F5A6516218AC4035422F5A0EF935B3DBA6066B9758FF935B34812D4A        183849  crops-1to1\flower-inner-edge-cpl__1to1_4042_3426.png
+  832AE3385AE2E3039462AF2D6F59F04E580FD7ACC42F545FED47767BF8CD9E08        170813  crops-1to1\flower-inner-edge-cpl__1to1_5234_1762.png
+  E1FFB92CD76FD00ECFAA460232EEAABFB0E27BDCA613661BCFD8DF89AB5178D7        158806  crops-1to1\flower-inner-edge-cpl__1to1_610_1314.png
+  CC01A69E3C5063DE08CDDFCE376DA2920A06E7947EF9AB1D990109F5FFFE200E        181502  crops-1to1\flowers-cpl__1to1_1186_1122.png
+  8834EBF9E6246D546FF1BD2A2698BEEDA0854E9341EC8F81CFDB9C73DF4B33B8        178528  crops-1to1\flowers-cpl__1to1_4044_930.png
+  D48B8D6FBC704CA6E3F570C6EEF4D25DBBD59053EB935A9ED8579F2D013ABD24        190479  crops-1to1\flowers-cpl__1to1_5814_2978.png
+  C0B5BE879BE2DA6F627E956B826BE8885849E8EFE2DDA1EB006FE425FFBCAFC3        226322  crops-1to1\foam__1to1_3466_1698.png
+  8CCA9C90D7424DEFD52DB969EE31B3E5D55733C6DCDBDC34DBD454FEFBB9CDA8        227423  crops-1to1\foam__1to1_6130_3362.png
+  DA52B6B61A59D056D9E97CCDBA934F6E0BF613F9649B5F812F4C74BFFDD5CD47        228613  crops-1to1\foam__1to1_994_2914.png
+  8289E4841AE186B163B4FF2071F6464C21601435018B690572FBA666E1683D09        186979  crops-1to1\highly-angled-ruler-mm-cpl__1to1_1378_226.png
+  B502E4C2FE3EEB303111F8FEC783D9442838DD2D1ABBA701DD9AD795EF8F2161        197428  crops-1to1\highly-angled-ruler-mm-cpl__1to1_3532_418.png
+  A8BC760410C506117B140AA02EAB193157D7600B703EB2F84527CF0FEF46EBB4        205177  crops-1to1\highly-angled-ruler-mm-cpl__1to1_5430_3874.png
+  189E60F2DDE69C72FDCE76D616824864B8B61F33AC88C0D80D820FEC52EAA633        240510  crops-1to1\lavendar-cpl__1to1_1442_1506.png
+  A765F21652F70CBC132037AFDA45735B8D0B94FB7D6C2E392520920CA1355EA8        243358  crops-1to1\lavendar-cpl__1to1_2892_802.png
+  DC8FABB12E311E28170D2BA1AF487C5280FC7AD1119585F9FB788B04895043A2        255192  crops-1to1\lavendar-cpl__1to1_5238_3362.png
+  D4E6D9F0798326FD58D3BBC8FCF0610F59741C4C03A86E873FC70EF67927DF07        241682  crops-1to1\lead-1-cpl__1to1_3212_802.png
+  9E26E7857C4BE85E7546B012CC1AF6CF5AE87155EF73460B6FD7E5C465CD6B81        239861  crops-1to1\lead-1-cpl__1to1_354_290.png
+  E97D927948CC4D17C067BE9720E004E5F962521073BBB598764820A8A1B2B534        244250  crops-1to1\lead-1-cpl__1to1_5174_546.png
+  82E80DFEBE9FCA1D15E761E972FC2EC71589E88F2B34A5D8C1FB015C675D380E        282960  crops-1to1\leaf-2-cpl__1to1_1442_3426.png
+  4A36214B4B15C1359730BAF451816906F757230B591A010D0A0C6C470811FDEF        282575  crops-1to1\leaf-2-cpl__1to1_3340_738.png
+  A58391872E5AB18AE492B801BF1D92FBA399BFB9D2E46380050073E2CB4365D6        281770  crops-1to1\leaf-2-cpl__1to1_5046_290.png
+  E37EBFAD3B2E2810DDCB33CBE832D4283FE09AEDAF91922845DF700CFE5C1C65        219887  crops-1to1\pencil-flatter-angle-cpl__1to1_1698_2018.png
+  B69E9AD306E4CA55D523138EDC4B2A4833BFEFFE609DA218C061DBA47A09FF42        209423  crops-1to1\pencil-flatter-angle-cpl__1to1_2570_2210.png
+  F38C1A4FD7B0D76EE8807D3157D5C4CC07A4863C3382A248430F4AE023DECFDA        170379  crops-1to1\pencil-flatter-angle-cpl__1to1_5682_1634.png
+  57BEF00BF3CF09EF639C696F1ED6BD2BB80EE8CE5856472768097508DFB376E0        249038  crops-1to1\pencil-steep-angle-cpl__1to1_1570_2466.png
+  1BF41DD593DA6AEE4203CC74CFBD0788889463ECF89F506DA723B5D268ECF38B        243774  crops-1to1\pencil-steep-angle-cpl__1to1_2570_2594.png
+  4476AA1C6669E761F49E674DE649D56F4FC3F4764F3DD21257847994E4AED2F6        188043  crops-1to1\pencil-steep-angle-cpl__1to1_5042_738.png
+  8A5EABFEB8A75B1DF8F04EF7325E2C6DF1A863A8BF5491007929950C1A61A726        250229  crops-1to1\tweezers-cpl__1to1_1442_2786.png
+  0EA7EA04779FB6483BDA15BA69A991BDA6793B79D162002B5D0A89C2D56878D5        256512  crops-1to1\tweezers-cpl__1to1_3724_2082.png
+  88444DCCF78611DA9C1CE7BFE8AAFB36F35BA8A285183C96A5150635744BCABB        254304  crops-1to1\tweezers-cpl__1to1_5046_1890.png
+  203C46BEA810D1F797FCA79B7593CD3F0D2A8A059D476F7B33645B985CA63BE9        242313  crops-1to1\wrapped-text-1__1to1_1698_1890.png
+  F291176A62A2BDC1E69986019577C08E5D1CAAF409E0A7485F45814614657439        244047  crops-1to1\wrapped-text-1__1to1_3146_1954.png
+  0A37F785964D16EB71B0EE734EE6916EC74962B16A49EDA9969AB82BC4E7D114        267366  crops-1to1\wrapped-text-1__1to1_5298_1698.png
+  2B6BAEA8891B172FD26D3CEC0C801977BCC7928CC1EFF301F1D2333678A2E66B        253981  crops-1to1\wrapped-text-2__1to1_1570_2082.png
+  926F345701EB69F485674C37BE7A60525635143D785A0FD17637CE5A431B3224        266633  crops-1to1\wrapped-text-2__1to1_3658_1890.png
+  224DB6093FB31EA2C8E69FF1D3B47EB6A1CF890BD4A7C0AB7161EC9244C641EF        268632  crops-1to1\wrapped-text-2__1to1_4978_1122.png
+  ECC3EB13D5A1462A642E6693F3277495385657E2B14A884B9746EDF910D4D061        238349  crops-worst-case\109MSDCF__BEST.png
+  59E11BD6B829F9B6F1AF453FBB71C6AD643D089A777E5756C2242A9F08EDBF3D        194613  crops-worst-case\109MSDCF__WORST.png
+  DD51EB904390EF34061B80FB646C482DE3552B62FC7DDF8BE8D638AD8DBEA598        300749  crops-worst-case\112MSDCF__BEST.png
+  B812A61240E217FACBF69AFDD6DAAD3CA9F2E3DB0CE2F683C0C0A4B3184562DD        290196  crops-worst-case\112MSDCF__WORST.png
+  E4944DDC88F24DCFFF036155C16EB3A65B2EF40C82B5019DA39D9A4F591FFDEC        286196  crops-worst-case\113MSDCF__BEST.png
+  A71C76829DEE0CF79B5E4B186DE5FA0BB56C797EC6475CC13990AA4B9D89AFA7        274137  crops-worst-case\113MSDCF__WORST.png
+  7086716638EDA7861972686531C1B5CD3D797737F128DE9A95C56B3FD986295C        213983  crops-worst-case\119MSDCF__BEST.png
+  158B645EBE372AE919AF492DDFF0A67512FC8B2918C10D57A716AAEBE32001EB        192392  crops-worst-case\119MSDCF__WORST.png
+  29543AAD16D49AB0895EC7660B6533C90B90F5F956C4CA1310AABA4D0D545F7C        288671  crops-worst-case\bee-1-cpl__BEST.png
+  9127213019C2C21A94B397728E222AE44E734EB434062233A39E6813FB0C739A        236580  crops-worst-case\bee-1-cpl__WORST.png
+  528551592A3FE2BADCA34505D1E34F8F6273A804070DB58CC12832D410ACDC8E        280867  crops-worst-case\bee-2-cpl__BEST.png
+  9406F0488D894371929668B0F7DA3FD8FFD30FD9D2F5848D4D19A7BC02C3EA63        249454  crops-worst-case\bee-2-cpl__WORST.png
+  35A7383943B056586C50CD0046C3882EDF43B9ABCD38BCF493A03FD9221258F6        257848  crops-worst-case\bee-3-cpl__BEST.png
+  49554AF98F2BF92073B7EA9F357866AF07C005C2CFE29F7D99C9027ADC97A521        228877  crops-worst-case\bee-3-cpl__WORST.png
+  CE1012EEDAFE549375078636383B44D9D131F58085EC434485D57FAE66D6371D        300247  crops-worst-case\coffee-bean__BEST.png
+  077A1018B51C8A7FFF5AEA5699EBB3C64FF5DD372157D861BCC7178718FF8F6E        234167  crops-worst-case\coffee-bean__WORST.png
+  392ABFB79D9D4CF31C0EAA059D592373448C599B9AB541B428B515276465FAA1        274134  crops-worst-case\coffee-bubbles__BEST.png
+  BF556285641DD53B933E25071CA95C23FFFB34504ED4540F1F1EEA11AE88AB7D        195842  crops-worst-case\coffee-bubbles__WORST.png
+  77BB0AB038AB5A16FB0710EBE802BEEA55112FF95A21D31255916295F2595EFD        259259  crops-worst-case\couch-fibers-cpl__BEST.png
+  10E5FC82F610FD92832ACA06FB96DC743BC5A179C22CC8960E7FFED39D1A987E        253404  crops-worst-case\couch-fibers-cpl__WORST.png
+  368B2DBCD1FA1E15A0FA918F47C67B2F9217583EB19EA73A2EF9AF48FD508C6E        235716  crops-worst-case\dry-erase-marker-head-cpl__BEST.png
+  CFDF04769D2FC3ABBC913E3D6E06E4D0599E32633F157ADFE293A61D675FDCE0        165107  crops-worst-case\dry-erase-marker-head-cpl__WORST.png
+  EA18899AB7D4AE3899145B7DCFA75242CF84FE1A6525BAF8D976737693B2E84F        302079  crops-worst-case\flat-on-ruler-cpl__BEST.png
+  7AFB47173AE2F1A84E0C4A8F44828D86148B0BB7CEDBB566D4EE3868FEAE552E        269157  crops-worst-case\flat-on-ruler-cpl__WORST.png
+  44A168618B555755B1DD2A7462FA50C448140A21E669E9C3FBBED003252D1222        205919  crops-worst-case\flower-bud-alone-cpl__BEST.png
+  461F3BBD304E88861B4BA4F7B1148F0CC04EE08692B1AD1FBFF1B9414FDE9548        148205  crops-worst-case\flower-bud-alone-cpl__WORST.png
+  7B7A7ADC6ADEB153B1CE4548FA57EE6A9A5EDC437A8CFF79BB34FB7ED53CFD2E        262583  crops-worst-case\flower-bud-with-background-fern-cpl__BEST.png
+  9430BDBA06B92CB8607F3DAF96BA4619ADDB4383A8FEF0ABD0123B536E5F766A        186574  crops-worst-case\flower-bud-with-background-fern-cpl__WORST.png
+  44A67133DC4842B23A08828DC0855E5785C5BABAD69F76B986974682A1031716        209258  crops-worst-case\flower-inner-edge-cpl__BEST.png
+  120538D245F1DE0BF34C170EF124DF60BAD40D2C4A6F198F7505C9E819948839        168632  crops-worst-case\flower-inner-edge-cpl__WORST.png
+  460B464B22CB1EBF2A48C0DB8563AA6653BB7E3C7A4C485A73655627C8CBC065        208296  crops-worst-case\flowers-cpl__BEST.png
+  6FCDC16F27FEDA4029518C809D176F5B27830EB66EE1640693031B97934C8F68        189667  crops-worst-case\flowers-cpl__WORST.png
+  370EEA96D5D0A04D7EE9E42E8340411A2620504AF233F5BDFF777C066E1583E0        253590  crops-worst-case\foam__BEST.png
+  CF0B5D2150ECB894B5F14BEE2DCC7B46D1373C38929FAE57A05B22E5FE035964        244418  crops-worst-case\foam__WORST.png
+  EBA22F5D61D01FF6D8BA174B6AA14A7C00770A4DC9642F6DD84DC262C0579861        250930  crops-worst-case\highly-angled-ruler-mm-cpl__BEST.png
+  B05A630480C757318637BCF8DC71233712AEAACC2EE1F2935F5897A2C2EE40E8        202516  crops-worst-case\highly-angled-ruler-mm-cpl__WORST.png
+  F5ED6DF31A8A82319B2096F57DBE3547CAAC063DB15B24123D06643B10C53BEB        283441  crops-worst-case\lavendar-cpl__BEST.png
+  A31B8A50ACC2D4DA9ECF53A6B78BF1E81AC915F0ACD78A95C6268ACF4C4E9003        216742  crops-worst-case\lavendar-cpl__WORST.png
+  8F6529962118AB66B8E4C15181368867CD614F9B1793BF8381615A62CDC2939B        277364  crops-worst-case\lead-1-cpl__BEST.png
+  D32A5A5C5A78271960FF0AB1F2D1BDDAF7C75DD8AF39C8B2314AE399233FEA9E        265278  crops-worst-case\lead-1-cpl__WORST.png
+  7135A92217DDEEF736DB1B73B7915BC90604E726BCB90ABE5D3D70947982E2D7        311099  crops-worst-case\leaf-2-cpl__BEST.png
+  9CE13873FA4BAA12007E813179DDAFC7DC87360B0C3B46131A387B40B49486FD        312046  crops-worst-case\leaf-2-cpl__WORST.png
+  5B22AD7138FB528B67C95C86F74AA83DAAA32143E9A563B9E14BEAB4E30C6F17        261928  crops-worst-case\pencil-flatter-angle-cpl__BEST.png
+  527D5F18018D1FAF09FC0D5A95DEF2219004A1A65A1E3C43FC48FD60CE50B97A        179524  crops-worst-case\pencil-flatter-angle-cpl__WORST.png
+  BBDAE1B8E8068AFAF55FE2DD10E2043AB365D3134B62D0C99B40FC1641890253        293131  crops-worst-case\pencil-steep-angle-cpl__BEST.png
+  51F97EC3EB98C4D05786901296F30B277CE412F71039D4E38299D01C77DC992C        169924  crops-worst-case\pencil-steep-angle-cpl__WORST.png
+  F4F81ECC8CC611BF0BE3992132D7799AB73ECA88D8B007FAFCDB27E1F2D70671        284014  crops-worst-case\tweezers-cpl__BEST.png
+  7DE5EA3AE34AB3A2A0580487AAE1166362D09AF742FAFCA7F8B5780721D9819F        265847  crops-worst-case\tweezers-cpl__WORST.png
+  AAC90B8EB0542CBE7F0685501208F103ADC84F03DC30CE9768B1FB1F28610A8C        290089  crops-worst-case\wrapped-text-1__BEST.png
+  D82C855DF6E5326F5E50D5187CCDAA7EF49C9AAAF7DA7371686222978DBDCB9E        237794  crops-worst-case\wrapped-text-1__WORST.png
+  474D4E3482275AC1F133A16BBC7D0634E57ED5FDC6DE6BEAFC5A8005A785242D        305187  crops-worst-case\wrapped-text-2__BEST.png
+  0D95CA2F1E574429E25E1D4FE92B1EBC2F51ACEFA28B2D948837BBA86CB3CB56        257988  crops-worst-case\wrapped-text-2__WORST.png
+  712CF470C91C4D0842DA27A5DB00A4A5A4C25CE5C8D37C326B32211FB805B778        719577  known-defects\sensor-dust_mote2_6776_4322_NOT-REPRODUCED.png
+  88795C6E0F63813B99E58BFA7DBF86396E408AECA86EFF04C03D75C56D64E3F2       2574394  overview\109MSDCF__reduced-4x-box.png
+  6FA2641A9C7D187E4FB7445E68FAE307379DA3F829099BE6C6E6EC1B0363BB85       4138022  overview\112MSDCF__reduced-4x-box.png
+  A6142CAB934358B8E7551DFE327510085AF6A1859D081C262AB660DB7580BA80       4026677  overview\113MSDCF__reduced-4x-box.png
+  D6016603F90440A457A367110006A633884882480B21A1D4801AE92412D53BA6       2383907  overview\119MSDCF__reduced-4x-box.png
+  6B9024F306B552D25300EEC268275CC41DC08183C6FCCC129D14781E02E4F25E       3244156  overview\bee-1-cpl__reduced-4x-box.png
+  31CD1B090A4AD87636F88BED88D09365DC9FCD2442120A4766FAC7E2EF02771E       3595974  overview\bee-2-cpl__reduced-4x-box.png
+  94F06D5223CE74AE6A29EB597AD4C459F7D99E7A564B8977420615014036D84B       3279844  overview\bee-3-cpl__reduced-4x-box.png
+  5ECA80B80D6FD12E951B990E05E819FE2234924680DFBD0ACF1FDC67040E2319       3008068  overview\coffee-bean__reduced-4x-box.png
+  F2084B4D554B1081DE41996550D8C411CB4F19561DE98176D6D63A1B40FA0EF1       2659698  overview\coffee-bubbles__reduced-4x-box.png
+  F5C55C0A45D2302B470088620F72CA98E1E13C88B754364673547FC4C6C5B8FD       3702416  overview\couch-fibers-cpl__reduced-4x-box.png
+  F3A267DC25C5F600BDFACBE18AB37452C595048C134A5D1AB02AFF1889866656       2422416  overview\dry-erase-marker-head-cpl__reduced-4x-box.png
+  311EA6454E353189F8AC7F724CE745470771C5B56DE58DD6BA15FCC892D08D23       3961578  overview\flat-on-ruler-cpl__reduced-4x-box.png
+  EA3F9024F678E7285F2C33AF5418C64F534AF92D4F691A92120074211E120A5E       1999662  overview\flower-bud-alone-cpl__reduced-4x-box.png
+  27A1AF4CF19DBE696B89292D7586B22636B80EAAD3240151FADADF2E3AAF00C8       2798610  overview\flower-bud-with-background-fern-cpl__reduced-4x-box.png
+  11284F9F4929360C9939E79C542F923BE6DF6762523A662681A869200781D56A       2535438  overview\flower-inner-edge-cpl__reduced-4x-box.png
+  439782DEF47D8780F66F7E57E823A9FB8AF155ADD50485445DED85101FD39441       2366375  overview\flowers-cpl__reduced-4x-box.png
+  F413F0D335BCBB8644757EBE16ACAD8C603DD694D940143F79A2272C0EB3240C       3944379  overview\foam__reduced-4x-box.png
+  56D2C282C3BB5F9D9FCF7A935C18DF3F48D8DB852531B8879151C786BAFDABCD       2571806  overview\highly-angled-ruler-mm-cpl__reduced-4x-box.png
+  DE5B6B1052AA0532BFC5B60C702D0995B4D486E9C0EB0E1D815460A10443B1AB       3159503  overview\lavendar-cpl__reduced-4x-box.png
+  680CA5CCDC8D3B51B541FA4D8532AF1C71288825644D1B2CD5C477D0A9DA3DD3       3721766  overview\lead-1-cpl__reduced-4x-box.png
+  B4C1CA427BE4A5A86B81B4BD9D1DADB7CD3D2F3ACDB29D3AD0A734907F4A11DD       4097502  overview\leaf-2-cpl__reduced-4x-box.png
+  05249BAE577E9809525B0F8BC067492BBFB73BC8077B23AC5AB3664EA9427FFC       2581187  overview\pencil-flatter-angle-cpl__reduced-4x-box.png
+  2064554325903749AA0C691C273A71FE188627BB6EEFB5CB32ACD0AC6D3CD790       2748267  overview\pencil-steep-angle-cpl__reduced-4x-box.png
+  D246A3207C6034DC2F4188E8AA439414732C2845C21D1171DFF171E3F39A3627       3057614  overview\tweezers-cpl__reduced-4x-box.png
+  EE5C51ED8E2DABCB1AAF313CDDE123985CB173B60863655886C69EAEEDCB2EE8       3662550  overview\wrapped-text-1__reduced-4x-box.png
+  F6D1ABE431F14C0A084380F493A53E816684F3AA376AA1109A71A8206A314419       3748816  overview\wrapped-text-2__reduced-4x-box.png
+  3F6A9B775CAF91147C30613A32BC4C18CD358214C6BB8704181EFC7D0A8D9307        656041  vs-the-field\119MSDCF__best.png
+  FF6280AB608841C4BB5CB7ED6336FE7E8430F04FB9FC8071567FA0A607AC2B10        580573  vs-the-field\119MSDCF__worst-on-subject.png
+  95D29D9A0EBF9B901786BEEA97E7AC3186E56EA72D4F87D4BB1CBE1517A85375        148317  what-stacking-does\ONE-frame-DSC00151.png
+  55B3999D2CEE8B7AB4214B4B1087C3E1F5509F25FDE8A3FA6B3D3A53FF0A924E        229887  what-stacking-does\STACK-299-frames.png
+
+text files inlined : 7
+heavy artifacts    : 161
