@@ -1185,3 +1185,172 @@ The three findings stay separated exactly as required: crop **differs** from
 scale near the border (section 10, level); the CA correction makes R and B
 **differ** from an uncorrected render (section 11, bits); and nothing in this
 lane is claimed to **be softer** or sharper than anything else.
+
+---
+
+## 14. The magenta fringe on `dry-erase-marker-head-cpl` (ORCH priority item)
+
+**Verdict: ORCH's outcome (a), with a fourth outcome ORCH did not list. Real
+lateral CA is present and large. The MERGE IS INNOCENT. The visible magenta is
+made worse -- not better -- by strehl's own lateral-CA correction, whose red
+coefficient over-corrects by about 40 % and thereby converts the lens's natural
+red|blue fringe pair into a coherent MAGENTA one.**
+
+The premise ORCH commissioned this on is superseded: the R/B asymmetry quoted
+(G 100.0000 %, R 4.82 %, B 12.51 %) was diagnosed in section 11 as the lateral-CA
+correction, and with `STREHL_FIX_CA=off` all three channels are bit-exact at
+0 DN. That is the same subsystem as this defect, so the hand-off was right even
+though the stated reason was not.
+
+### 14.1 Instruments, commissioned before use
+
+`chromashift.py` fits a per-tile displacement of R and B against G by regressing
+the observed colour difference on the green gradient, and reports PIXELS.
+
+    null (R and B replaced by G)   true 0     read 0.000e+00 exactly, 82 tiles
+    plant 1 px                     true 1.0   read R +1.0003, B +1.0007
+    plant 2 px                     true 2.0   read R +1.624,  B +1.682
+
+Detection floor 0.01 px (tile sd 0.004-0.007). **STATED LIMITATION: the
+estimator is first-order, exact at <=1 px and a CONSERVATIVE UNDER-ESTIMATE
+above it** -- it reads a planted 2 px as 1.62. Every magnitude above 1 px in
+this section is therefore a lower bound.
+
+`chromaedge.py` counts magenta (R and B BOTH above G) at luma edges versus flat
+regions. Null exactly 0.000000; planted 1 px scores 0.000884 and localises to
+edges (cyan edge/flat 21x).
+
+### 14.2 The block size, and a correction to ORCH's reading
+
+Modal magenta run length is **1 px** (mean 2.76 h / 3.32 v, max 13-18) and the
+run-start phase is near-uniform mod 2, 4, 8, 16 and 32 (mod 8 peak 0.178 against
+0.125 uniform). **There is no grid-aligned block structure**, so the Bayer-cell,
+pyramid-level and tile candidates are all unsupported. `orch_zoom.py` uses 3x
+NEAREST-NEIGHBOUR by design, which renders any 1-3 px fringe as hard 3x3 blocks;
+the blockiness is substantially the viewer, not the data.
+
+Clipping is ruled out: 0.00 % of magenta pixels are near-clip, clipcheck reports
+clip 0.00 %, and the magenta pixels are DARK (luma 23906 against a 53073 rect
+mean), so they sit on the ink side, not the blown side.
+
+### 14.3 Is it in the source frames? Yes, and it is large
+
+    arm                              R radial @corner   B radial @corner   r2(R)
+    single frame, CA off                  -3.212 px          +1.316 px     0.309
+    single frame, CA on                   -1.034 px          +0.888 px     0.022
+    299-frame master, CA off              -2.009 px          +0.864 px     0.769
+    299-frame master, CA on (SHIPPING)    +0.672 px          +0.384 px     0.202
+
+The CA-off master is strongly radial (r2 = 0.769) with R and B in OPPOSITE
+directions: textbook lateral CA, doubled by the 2x teleconverter, and the gear
+profile resolves correctly (`a7c2-fe100gm-2xtc-x4cpl`, "gear matched").
+
+**The merge does not manufacture it.** A single frame carries LARGER CA
+(-3.212 px) and four times the tangential rms (0.796 against 0.193) than the
+299-frame merge. And there is no N-scaling across the corpus: dry-erase at
+N=299 reads +0.672 px while 113MSDCF reads +0.972 px.
+
+### 14.4 The mechanism: over-correction turns red|blue into MAGENTA
+
+Correction takes red from -2.009 px (inward) PAST ZERO to +0.672 px (outward)
+while blue stays outward. So:
+
+    before correction   R inward, B outward   -> OPPOSITE sides of each edge
+                                                 -> a red fringe and a blue fringe
+    after correction    R outward, B outward  -> THE SAME side of each edge
+                                                 -> R and B pile up together = MAGENTA
+
+Magenta requires R and B to move together, which the lens does not do and the
+over-correction does. Confirmed three ways: by the signs above; by direct count;
+and by eye in the chroma pane, where CA-off shows separated orange and blue rims
+and CA-on shows magenta and cyan rims.
+
+    at ORCH's rect (y=1250 x=6060)     magenta px    cyan px
+      master, CA ON  (shipping)            806          50
+      master, CA OFF                       408           0
+
+    whole image, 660071 edge px        edge magenta   flat magenta   score
+      master, CA ON  (shipping)          1.4447 %       0.0092 %    0.018145
+      master, CA OFF                     0.7939 %       0.0110 %    0.009945
+
+**The shipping default is 1.82x worse than switching the correction off.** The
+157x edge/flat ratio confirms a displacement signature rather than a colour cast.
+
+### 14.5 Not the declared extrapolation -- a uniform gain error
+
+The record declares `support_r_max = 0.788` and that "the corner is a 1.27x
+linear extrapolation". That predicts a residual concentrated OUTSIDE r = 0.788.
+**Pre-declared test, and it REFUTES that:**
+
+    r bin          R residual (CA on)   R raw (CA off)   applied/needed
+    0.000-0.200         +0.1143            -0.2721           1.42x
+    0.350-0.500         +0.3303            -0.6967           1.47x
+    0.650-0.788         +0.5143            -1.3239           1.39x
+    0.788-0.900         +0.6513            -1.5819           1.41x   EXTRAPOLATED
+
+No kink at 0.788; outside/inside is 1.74x for the residual and 1.87x for the raw,
+i.e. proportional. The innermost bin is the decisive one: both values are under
+0.4 px, entirely inside the estimator's exact range AND inside the fit's
+support, and still **42 % over-corrected**. So red's `eps_r` is simply too large
+by roughly 40 %, at every radius.
+
+Consistent with the record's own numbers: applied `eps_r` is **704.5 ppm**, while
+the six independent per-stack red measurements quoted in the same comment span
+**500.9-651.9 ppm** -- the shipping coefficient sits ABOVE the entire range of
+the six-stack instrument. Red was fitted from "20 gated ROIs over tweezers-cpl
+and bee-3-cpl"; blue from "1071 gated tiles over six stacks". The weaker-evidenced
+arm is the one that is wrong.
+
+### 14.6 Corpus scope, and an instrument I had to withdraw
+
+**First instrument FAILED external validation and its ranking is NOT reported as
+fact.** `corpus_scan.py` (magenta counting) ranked 109MSDCF top at 0.126524,
+seven times above the subject ORCH actually saw. 109MSDCF has r2 = -0.013 and
+rad/tan = 0.70 -- no radial organisation at all. Counting coloured pixels cannot
+distinguish a displacement from noise. **My commissioning proved SENSITIVITY
+(it detects a planted 1 px shift) and never proved SPECIFICITY (it rejects
+noise).** That is the same defect family ORCH has been circulating all night,
+found in my own instrument by checking it against the only ground truth
+available -- ORCH's visual survey of all 26.
+
+Re-ranked with `corpus_shift.py`, which gates on coherence (radial model must
+beat a constant, and radial must exceed tangential) and reports UNSCORED rather
+than CLEAN when it cannot tell:
+
+- **13 of 14 coherent subjects carry R displaced OUTWARD**, +0.24 to +1.00 px.
+- **12 of 14 have R and B the SAME sign** -- the over-correction fingerprint.
+  Natural lateral CA gives opposite signs, and only `highly-angled-ruler-mm-cpl`
+  (R -1.535, B +0.800, r2 = 0.814) still shows the natural pattern.
+
+**So this is corpus-wide, not one bad subject.** It is most VISIBLE on
+dry-erase because that subject has the highest edge contrast, not because it is
+uniquely affected.
+
+Four counts, on the defect ORCH described, VISIBLE meaning seen by a human eye:
+
+    VISIBLE                 1   dry-erase-marker-head-cpl (ORCH, by eye)
+    MEASURED-not-visible   13   coherent outward R displacement, not eye-flagged
+    CLEAN                   0   no subject passes coherence with near-zero shift
+    UNSCORED               12   fails the coherence gate; NOT counted as clean
+    TOTAL                  26
+
+`flowers-cpl` is UNSCORED for THIS defect; its visible fault is V-ORACLE's
+regional blur, a different finding.
+
+### 14.7 What I did not do, and the proposed change
+
+I did NOT edit the fix. The coefficient lives in
+`crates/strehl-core/src/optics.rs`, which is outside my lane
+(`align_cmd.rs`, `merge_cmd.rs`), and it is a calibration constant with its own
+provenance and tests. **Proposed, for ORCH to sequence:** re-fit `eps_r` against
+the same six-stack instrument that produced blue, rather than the 20-ROI M107
+instrument; the corpus evidence says the result should land near 500-650 ppm
+rather than 704.5 ppm. Until then `--fix-ca off` measurably reduces the visible
+fringe on this subject, at the cost of restoring the (less objectionable)
+separated red and blue rims.
+
+Three findings kept apart, as required: the master **differs** from the CA-off
+render (14.4, counted); the master **is a different colour** at edges (14.3,
+measured in px); nothing here is a claim that either **is softer**.
+
+clipcheck on all four renders in this section: 0/4 BLOWN, 4 ok, clip 0.00 %.
