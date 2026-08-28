@@ -36,6 +36,29 @@ MUTATIONS = [
   "### 16.10", "**The first condition fired. Rim is unmoved**\n\n### 16.10"),
  ("M8 flip the split table without touching prose", "NUMBER",
   "| 119MSDCF | **0.9262** | 1.0013 |", "| 119MSDCF | **0.8262** | 1.0013 |"),
+
+ # ORCH 2026-08-27: "Commission DELETION as well as reversal. Deleting a finding
+ # is cheaper than stating it wrongly." Every arm below removes a finding whole.
+ ("M9 DELETE the headline verdict entirely", "DELETION",
+  "**The first condition fired. Rim is unmoved**", ""),
+ ("M10 DELETE a subject row from the result table", "DELETION",
+  "| bee-2-cpl | 0.0 -> 33.3% | -0.020% | [-0.075%, +0.014%] |\n", ""),
+ ("M11 DELETE the REFUSED row (drop the awkward subject)", "DELETION",
+  "| coffee-bubbles | 3.1 -> 60.6% | *REFUSED* | instrument floor |\n", ""),
+ ("M12 DELETE the split table's worst row", "DELETION",
+  "| 119MSDCF | **0.9262** | 1.0013 |\n", ""),
+
+ # ORCH: "Commissioning sensitivity is not commissioning specificity. Planting a
+ # signal and confirming detection says nothing about whether noise is rejected."
+ # These are INNOCUOUS and MUST stay GREEN; a verifier that reddens on ordinary
+ # editing is a false-positive machine and will be ignored.
+ ("S1 innocuous prose reword (must stay GREEN)", "NOISE",
+  "That is a real benefit and it is", "That is a genuine benefit and it is"),
+ ("S2 innocuous new sentence (must stay GREEN)", "NOISE",
+  "### 16.9 Verdict", "Nothing further is claimed here.\n\n### 16.9 Verdict"),
+ ("S3 innocuous heading punctuation (must stay GREEN)", "NOISE",
+  "### 16.8 What the knob does do, on the same pixels",
+  "### 16.8 What the knob does do -- on the same pixels"),
 ]
 
 orig = io.open(DOC, encoding="utf-8", newline="").read()
@@ -55,8 +78,8 @@ if base != 0:
     print("ABORT: verifier is not green before mutation; nothing can be learned.")
     raise SystemExit(2)
 
-print("%-46s %-14s %-16s %s" % ("mutation", "class", "verifier", "tripped"))
-print("-" * 104)
+print("%-46s %-14s %-24s %s" % ("arm", "class", "verifier", "tripped"))
+print("-" * 112)
 missed = []
 try:
     for name, cls, old, new in MUTATIONS:
@@ -65,15 +88,21 @@ try:
             raise SystemExit("ANCHOR NOT UNIQUE for %s: found %d occurrences" % (name, n))
         io.open(DOC, "w", encoding="utf-8", newline="").write(orig.replace(old, new, 1))
         rc, which = run_verifier()
-        verdict = "RED  caught" if rc != 0 else "GREEN **MISSED**"
-        if rc == 0: missed.append((name, cls))
-        print("%-46s %-14s %-16s %s" % (name, cls, verdict, ",".join(which) or "-"))
+        want_red = cls != "NOISE"
+        got_red = rc != 0
+        good = (got_red == want_red)
+        if got_red:
+            verdict = "RED " + ("caught" if want_red else "**FALSE POSITIVE**")
+        else:
+            verdict = "GREEN " + ("**MISSED**" if want_red else "correctly quiet")
+        if not good: missed.append((name, cls))
+        print("%-46s %-14s %-24s %s" % (name, cls, verdict, ",".join(which) or "-"))
         io.open(DOC, "w", encoding="utf-8", newline="").write(orig)
 finally:
     shutil.copyfile(BAK, DOC)
     after = io.open(DOC, encoding="utf-8", newline="").read()
     print("\nrestored from backup, byte-identical to original: %s" % (after == orig))
 
-print("\n%d of %d mutations MISSED" % (len(missed), len(MUTATIONS)))
+print("\n%d of %d arms WRONG" % (len(missed), len(MUTATIONS)))
 for nm, cls in missed:
-    print("   MISSED  [%s]  %s" % (cls, nm))
+    print("   WRONG  [%s]  %s" % (cls, nm))

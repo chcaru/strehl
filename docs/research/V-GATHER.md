@@ -2431,6 +2431,14 @@ qualified list (N=300, R=4.877 PASS at 0.30-0.40) and `coffee-bubbles` is the on
 V-LINEAR reports has never been band-qualified at all -- which is also the
 subject this report REFUSES on the rim axis.
 
+**And `coffee-bubbles` sets the floor of the detail claim, so the claim was
+re-run without it.** ORCH's instruction of 2026-08-27 is not to score acuity on
+that subject. Its 1.0009 is the *minimum* of the detail column, so it is exactly
+the value `>= 1.0009 everywhere` is pinned to. Dropping it leaves five subjects
+with a minimum of **1.0013** (`119MSDCF`), so the conclusion does not merely
+survive the exclusion -- **the floor rises**. The detail finding is not carried
+by the unqualified subject, and nothing in it depends on that subject's number.
+
 ### 16.9 Verdict against ORCH's own falsification conditions
 
 > "Falsified if: rim is unmoved between the two files, or moves in the wrong
