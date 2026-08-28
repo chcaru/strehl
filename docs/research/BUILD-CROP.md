@@ -1594,3 +1594,112 @@ shifting R and B necessarily moves G -- an expected consequence, not a defect.
 **Not proven.** My flat/edge split (`gedge.py`) put flat-region G at 73-81 DN,
 which a pure warp cannot do; but my "flat" population is a median gradient split,
 which in a noisy image is not truly flat. Left open and honest.
+
+## 17. Corpus verification of the re-fit (ORCH's blocking assignment)
+
+`eps_r = -508.4e-6` was landed having been scored on **one** subject. ORCH
+blocked the re-render of 26 masters behind a corpus-wide score. This section
+closes that, and reports one structural finding that changes what the priority
+subject can mean.
+
+### 17.1 Protocol
+
+Three arms -- **re-fit** (`-508.4e-6`), **shipped** (`-704.5e-6`), **correction
+off** -- scored with ORCH's hue-neutral chroma statistic
+(`experiments/ORCH-drift-check/orch_chromamag.py`), imported rather than
+reimplemented by `experiments/BUILD-CROP/cacorpus.py` so the statistic cannot
+drift between lanes.
+
+Per fact 1886, **every arm of every subject came from one pinned build.** The
+coefficient is compile-time, so two binaries were pinned; `off` is an env var on
+either. Both were re-hashed after the run and **neither moved**, despite
+BUILD-SOFTGATE rebuilding `pyramid.rs`/`merge.rs` concurrently:
+
+| binary | SHA256 (at pin, and again after the run) |
+|---|---|
+| `strehl-refit508.exe`  | `2B2AC29A20DAAEC89A6739E2421ADFB4E59D3A9AC00B9C2D3E98E57D9404EF5D` |
+| `strehl-shipped704.exe`| `9FB3ECB2C775B14FBDB9444AFA6BAE286396365FDBC8D2442977BB0142678F72` |
+
+**Proxy and its limit.** Each subject is scored on a single mid-stack frame
+(~18 s/subject vs ~4-5 min for a full master). Validated on `dry-erase`: the
+proxy **reproduces the ordering** but **compresses the effect size** (-2.0% vs
+-11.3% on the master), so it is *conservative* for wins and **cannot resolve
+small losses**. Every number below is a proxy number.
+
+### 17.2 Verdict, stated as an ordering (never an absolute)
+
+Per fact 1886 absolutes expire; only ordering is stable.
+
+```
+re-fit beats shipped on 18 of 22 scored subjects, loses on 4
+re-fit beats CA-off  on 19 of 22
+shipped beats CA-off on 19 of 22
+delta (re-fit vs shipped): median -0.25%   range -11.38% .. +0.54%
+```
+
+Largest wins: `wrapped-text-1` -11.38%, `112MSDCF` -11.36%, `tweezers-cpl`
+-9.95%, `flat-on-ruler-cpl` -5.45%, `wrapped-text-2` -3.82%.
+
+The four losses are **at or below the proxy's resolution**: `flower-bud-alone-cpl`
++0.54%, `lavendar-cpl` +0.17%, `flower-inner-edge-cpl` +0.01%,
+`lead-1-cpl` +0.01%. The bottom two are fifth-decimal and I do **not** claim
+they are real; they need full-master renders to resolve. I am not reporting
+them as passes.
+
+Also worth flagging against the "correction is net beneficial" result: CA
+**off** beat both correction arms on `flowers-cpl`, `pencil-flatter-angle-cpl`
+and `pencil-steep-angle-cpl`. The aggregate ordering holds; it is not unanimous.
+
+### 17.3 The priority subject is UNSCORABLE, not a tie
+
+ORCH designated `highly-angled-ruler-mm-cpl` the priority control for the
+**under-corrected** end. It scored **0.02414 on all three arms, identical to
+five decimals.** I refused to report that as a tie and checked. All three TIFFs
+share one SHA256, and a freshly rendered CA-**on** probe is bit-identical to the
+CA-**off** render:
+
+```
+probe(CA on) vs off    : differs 0 px  max 0 DN
+probe(CA on) vs shipped: differs 0 px  max 0 DN
+```
+
+Meanwhile that same render's banner prints:
+
+```
+lateral CA : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+alignment  : REFUSED -- ... is a tilted subject; a global similarity cannot
+             describe it (M86). Merging unregistered.
+```
+
+**Mechanism.** The lateral-CA correction rides the warp/gather (my own earlier
+finding: `alignment_mode=off` makes CA unreachable). `AlignArgs::guard_subject`
+matches the **directory name** against `TILTED_SUBJECTS` and refuses to solve
+this subject, so no warp exists and the correction is never applied -- while the
+CA banner, printed from profile resolution rather than from application, still
+says `CORRECTING`.
+
+Because the guard is keyed on the subject name, this is **not an artifact of my
+single-frame proxy**: it fires identically at 1 frame or 299, i.e. this is how
+the subject ships.
+
+Scope-checked across the corpus with `experiments/BUILD-CROP/cainert.py`, which
+refuses a verdict unless at least one subject shows a difference (a comparator
+that finds everything identical is dead, not informative):
+
+```
+scored subjects : 23
+CA INERT        : 1   highly-angled-ruler-mm-cpl
+COMMISSION OK: comparator distinguishes (22 subjects DO differ).
+```
+
+**What this does and does not license.** ORCH's stated worry was that a
+coefficient fitted to fix over-correction could "quietly wreck the one subject
+that was never over-corrected." On this subject that is **structurally
+impossible via the shipping path** -- no coefficient reaches it. That is a
+stronger answer than a number. But it is *not* reassurance: it means the
+**under-corrected end of the fit remains uncontrolled**, because the designated
+control does not exercise the code under test. Reported UNSCORED, never as a
+tie or a clean pass.
+
+This is a fourth knob found inert on the path it ships on, and unlike the
+others it is accompanied by a banner asserting the opposite.
