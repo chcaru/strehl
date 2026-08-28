@@ -15,7 +15,7 @@ marked as unmeasured.
 | Property | Status | Evidence |
 | --- | --- | --- |
 | **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
-| **Corpus coverage** | **33 of 33 subjects rendered** (26 + the 7 new ones); 33 distinct output hashes | `render7.ps1`, `MANIFEST-ORCH7.txt` |
+| **Corpus coverage** | **33 of 33 subjects rendered** (26 + the 7 new ones); 33 distinct output hashes. Reconciled both ways against the source root: 0 subjects with frames but no master, 0 masters with no source. The 34th directory is `flat-fields` (calibration, no top-level `.ARW`) | `render7.ps1`, `MANIFEST-ORCH7.txt` |
 | **Visual quality** | **24 of 26 masters clean to the eye at 1:1**; the 7 new ones are rendered and 3 spot-viewed, none instrumented | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
 | **Halo** (shipping masters, 2–120 px) | **0 demonstrated on any subject** — but only 11 of 26 are actually *clean*; 4 blind + 7 unmeasurable remain UNSCORED, which is not the same as clean | facts 1851–1855, 1884 |
 | **Rim** (shipping masters, ±12 px) | **13 FAIL — a disjoint scale the halo work never reached; unscored by a second lane** | fact 1881 |
@@ -354,6 +354,28 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   deleted before its numbers were written down. `bank_purge.ps1` enforces the ordering: it
   refuses to delete unless the root avoids every protected path *and* its index is committed
   at HEAD, and both refusals are commissioned at rc=1.
+
+- **Two trees can share filenames and share no data — `V-H2H2` held 1,375 `.ARW` whose names
+  all collide with the protected originals.** Asked whether they were deletable copies, the
+  first probe matched each against the first file of that name anywhere under
+  `D:\personal\macro` and returned 0 same-size, 0 missing, **40 size mismatches** — a
+  well-formed answer, no error, no zero counts, and **exactly backwards**. `DSC00001.ARW`
+  exists in all 33 subject folders, so the probe compared frame 1 of one subject against
+  frame 1 of another and the mismatch was guaranteed before it ran. The set test — attribute
+  a subset to a subject only if *every* filename in it is present there at a byte-identical
+  size — resolved **22 of 22 subsets, 0 unresolved** (`bee-3-cpl` 16, `113MSDCF` 4,
+  `coffee-bean` 2) and 67.57 GB was safely reclaimed. A wrong subject fails the set test on
+  the first name it lacks, so it cannot make that error. The frame selection, which was the
+  only irreplaceable part, is banked in
+  `experiments/ORCH-drift-check/purged/V-H2H2-arw-manifest.txt`. **Corollary that outlives
+  this cleanup: same-name/different-size across two trees means any tool that pairs them by
+  filename silently pairs the wrong data.** Fact 1944.
+
+- **`bank_purge.ps1` must be invoked with `-ExecutionPolicy Bypass`.** Launched as
+  `powershell -File …` without it, the machine's execution policy refuses to load the script
+  and it exits **1 before banking anything**. That is the safe direction to fail, but only
+  because the caller checks `$LASTEXITCODE`; a caller that assumed success would proceed to
+  `-Purge` having banked nothing.
 
 - **`experiments/V-KILLB0/verdict.py` had no pass/fail channel and now has one, commissioned
   4/4.** Before the fix it printed `FAIL - the check is decorative` and exited 0. If you find
