@@ -1731,6 +1731,20 @@ respect but the two merge flags.
 
 **Partition: 25 TRADE, 1 FLAT LOSES, 0 FLAT WINS, 0 refused.**
 
+**That partition is computed on the *uncorrected* blotch, and one cell of it is
+basis-dependent.** `flatexp.py`'s verdict rule fires on the raw ratio, because
+the gain correction of §12.5 was derived afterwards and I did not re-baseline a
+committed, commissioned scorer to a number that post-dates it. Recomputing the
+same rule on the gain-corrected ratio moves exactly one subject --
+`coffee-bubbles`, raw blotch 1.0065 (FLAT LOSES, "blotch not improved") versus
+corrected 0.9288 (TRADE) -- giving **26 TRADE, 0 FLAT LOSES, 0 FLAT WINS**. The
+disclosure matters because the raw basis is the one that is *harsher on flat-1*,
+so the shipped partition slightly overstates the case I am arguing.
+
+**The load-bearing cell survives both bases: 0 FLAT WINS, 0 of 26, either way.**
+Not one subject in the corpus gets quieter at flat-1 without paying sharpness for
+it. That is the finding; the single FLAT LOSES is a rounding of it.
+
 | | quoted by ORCH | measured here |
 |---|---:|---:|
 | blotch improvement | 14.9% | **18.42%** |
@@ -1741,24 +1755,46 @@ The blotch side of ORCH's table reproduces and is in fact slightly better than
 quoted. **The sharpness side is 2.1x worse.** Flat-1 does not buy blotch
 cheaply; it buys it at roughly one-for-one.
 
-Per-subject, worst and best trades:
+Per-subject. "spent/bought" is percent of struct-band sharpness given up per
+percent of mottle-band floor gained -- the exchange rate, on the gain-corrected
+blotch, where **below 1.00 is a bargain and above 1.00 is not**:
 
-| subject | blotch (corr) | sharp | verdict |
-|---|---:|---:|---|
-| `flat-on-ruler-cpl` | 0.8439 | 0.9468 | best trade: 15.6% for 5.3% |
-| `foam` | 0.7662 | 0.8887 | 23.4% for 11.1% |
-| `lead-1-cpl` | 0.7668 | 0.7774 | 23.3% for 22.3% |
-| `112MSDCF` | 0.8356 | 0.8226 | 16.4% for 17.7% |
-| `113MSDCF` | 0.8582 | 0.8350 | 14.2% for 16.5% |
-| `coffee-bubbles` | 0.9288 | 0.8587 | **worst trade: 7.1% for 14.1%** |
-| `flower-bud-alone-cpl` | 0.8715 | **0.6463** | 12.9% for **35.4%** |
+| subject | blotch (corr) | sharp | bought % | spent % | spent/bought |
+|---|---:|---:|---:|---:|---:|
+| `flat-on-ruler-cpl` | 0.8439 | 0.9468 | 15.6 | 5.3 | **0.34** best |
+| `foam` | 0.7662 | 0.8887 | 23.4 | 11.1 | 0.48 |
+| `lead-1-cpl` | 0.7668 | 0.7774 | 23.3 | 22.3 | 0.95 |
+| `112MSDCF` | 0.8356 | 0.8226 | 16.4 | 17.7 | 1.08 |
+| `113MSDCF` | 0.8582 | 0.8350 | 14.2 | 16.5 | 1.16 |
+| `coffee-bubbles` | 0.9288 | 0.8587 | 7.1 | 14.1 | **1.99** |
+| `flower-bud-alone-cpl` | 0.8715 | **0.6463** | 12.8 | 35.4 | 2.75 |
+| `119MSDCF` | 0.9653 | 0.7821 | 3.8 | 21.8 | 5.79 |
+| `109MSDCF` | 0.9683 | 0.7829 | 3.2 | 21.7 | **6.71** worst |
 
-**The single most damaging fact for the proposition** is in that table. Those
-first six rows are the six subjects convicted of mid-scale mottle -- the defect
-flat-1 is proposed to fix. On `coffee-bubbles`, the subject with the **worst**
-convicted mottle at 1.4501x, flat-1 delivers the **worst trade in the entire
-corpus** and is the only subject scored FLAT LOSES. *The configuration does not
-work best where the defect is worst.*
+Two things in that table are damaging to the proposition, and I originally
+claimed a third that is **not true and I have removed it**. The false one first,
+because it ran in my own favour: I wrote that `coffee-bubbles` was "the worst
+trade in the entire corpus". Ranked by exchange rate it is **7th of 26**, and six
+subjects are worse. The claim was an artefact of `coffee-bubbles` being the only
+subject the raw-basis rule scored FLAT LOSES, which -- per the disclosure above --
+is itself basis-dependent. A verdict label is not a magnitude.
+
+What is true:
+
+1. **`coffee-bubbles` is the worst exchange rate among the six subjects convicted
+   of mid-scale mottle** -- 1.99 against the next-worst `113MSDCF` at 1.16. Those
+   six are the subjects flat-1 is proposed to fix, and on the very worst of them
+   (1.4501x) it buys the least blotch for the most sharpness of the six. *The
+   configuration works worst where the defect is worst.* That is the narrower
+   claim, it is the one the data supports, and it is sufficient.
+
+2. **The two worst exchange rates in the whole corpus are `109MSDCF` (6.71) and
+   `119MSDCF` (5.79)** -- the exact two subjects V-SOFTCHECK measured as *already
+   soft* against their own per-site complete-bracket ceiling, 0.6949 and 0.7533,
+   CIs entirely below 1.0 at 0.20-0.25 cyc/px. On those two, flat-1 spends
+   another ~21.7% of a resolution budget already overdrawn, and buys 3-4% of
+   floor for it. This is a stronger argument than the one I overstated, and I
+   found it only because I checked the overstatement.
 
 ## 12.7 Tone, both ends
 
@@ -1815,17 +1851,25 @@ did not run it and report a number I could not condition on.
 1. It costs **19.63%** of struct-band sharpness -- **2.1x the 9.3% quoted** --
    for **18.42%** of mottle-band floor. That is roughly one-for-one, not the
    bargain the proposition rested on.
-2. **Zero of 26 subjects read FLAT WINS.** 25 are trades and 1 is an outright
-   loss.
-3. **It fails worst exactly where the defect is worst.** On `coffee-bubbles`,
-   the flagship mottle subject at 1.4501x, it is the only FLAT LOSES in the
-   corpus: 14.1% of sharpness spent to buy 7.1% of blotch.
+2. **Zero of 26 subjects read FLAT WINS**, on the raw basis and on the
+   gain-corrected basis alike. Every subject that gets quieter pays sharpness
+   for it. (The count of outright losses is basis-dependent -- 1 raw, 0
+   corrected -- and is disclosed in §12.6. The zero is not.)
+3. **It works worst where the defect is worst.** Among the six subjects
+   convicted of mid-scale mottle, `coffee-bubbles` -- the flagship at 1.4501x --
+   has the worst exchange rate: 14.1% of sharpness spent to buy 7.1% of blotch,
+   a rate of 1.99 against the next-worst 1.16. (It is *not* the worst rate in
+   the corpus; that claim was in an earlier draft of §12.6 and was false. It is
+   7th of 26.)
 4. **We cannot pay for this with sharpness we have already spent.** V-SOFTCHECK
    has established, with an IMPROVE arm proving the estimator was free not to
    charge, that the masters are **already** soft against their own per-site
    complete-bracket ceiling -- 0.6949 on `109MSDCF`, 0.7533 on `119MSDCF`, all
    four CIs entirely below 1.0 at 0.20-0.25 cyc/px. Flat-1 spends another fifth
-   of what remains.
+   of what remains -- and those same two subjects carry the **worst two exchange
+   rates in the corpus**, 6.71 and 5.79, giving up ~21.7% of sharpness for 3-4%
+   of floor. The configuration is least affordable exactly where it is least
+   effective.
 
 **The condition under which this recommendation flips**, stated so it can be
 tested rather than argued: if the hull benefit is real at the magnitude

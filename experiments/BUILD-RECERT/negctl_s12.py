@@ -32,10 +32,23 @@ DEFECTS = [
      "**Partition: 25 TRADE, 1 FLAT LOSES, 0 FLAT WINS, 0 refused.**",
      "**Partition: 24 TRADE, 1 FLAT LOSES, 1 FLAT WINS, 0 refused.**"),
     ("D4 worst-trade subject row",
-     "| `coffee-bubbles` | 0.9288 | 0.8587 | **worst trade: 7.1% for 14.1%** |",
-     "| `coffee-bubbles` | 0.8288 | 0.8587 | **worst trade: 7.1% for 14.1%** |"),
+     "| `coffee-bubbles` | 0.9288 | 0.8587 | 7.1 | 14.1 | **1.99** |",
+     "| `coffee-bubbles` | 0.8288 | 0.8587 | 7.1 | 14.1 | **1.99** |"),
     ("D5 registration basis partition",
      "`SSD-WELL=18, MEDIAN-ONLY=8`", "`SSD-WELL=20, MEDIAN-ONLY=8`"),
+    # --- added with the exchange-rate table and the retraction ----------------
+    ("D6 corrected-basis partition",
+     "corrected 0.9288 (TRADE) -- giving **26 TRADE, 0 FLAT LOSES, 0 FLAT WINS**. The",
+     "corrected 0.9288 (TRADE) -- giving **26 TRADE, 1 FLAT LOSES, 0 FLAT WINS**. The"),
+    ("D7 worst corpus exchange rate",
+     "2. **The two worst exchange rates in the whole corpus are `109MSDCF` (6.71) and",
+     "2. **The two worst exchange rates in the whole corpus are `109MSDCF` (6.17) and"),
+    ("D8 the retracted rank (reinstate the false claim)",
+     "trade in the entire corpus\". Ranked by exchange rate it is **7th of 26**, and six",
+     "trade in the entire corpus\". Ranked by exchange rate it is **1st of 26**, and six"),
+    ("D9 exchange-rate column on an already-soft subject",
+     "| `109MSDCF` | 0.9683 | 0.7829 | 3.2 | 21.7 | **6.71** worst |",
+     "| `109MSDCF` | 0.9683 | 0.7829 | 3.2 | 12.7 | **6.71** worst |"),
 ]
 
 
