@@ -15,7 +15,7 @@ marked as unmeasured.
 | Property | Status | Evidence |
 | --- | --- | --- |
 | **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
-| **Corpus coverage** | **33 of 33 subjects rendered** (26 + the 7 new ones); 33 distinct output hashes. Reconciled both ways against the source root: 0 subjects with frames but no master, 0 masters with no source. The 34th directory is `flat-fields` (calibration, no top-level `.ARW`) | `render7.ps1`, `MANIFEST-ORCH7.txt` |
+| **Corpus coverage** | **33 of 33 subjects rendered** (26 + the 7 new ones); 33 distinct output hashes. Reconciled both ways against the source root: 0 subjects with frames but no master, 0 masters with no source. The 34th directory is `flat-fields` (calibration, no top-level `.ARW`). **The product is split across two directories** — `DELIVER-V6\masters\` (26) and `DELIVER-V6\orch-rendered-7\` (7); any instrument pointed at only the first silently under-reports by 7 | `render7.ps1`, `MANIFEST-ORCH7.txt`, fact 1948 |
 | **Visual quality** | **24 of 26 masters clean to the eye at 1:1**; the 7 new ones are rendered and 3 spot-viewed, none instrumented | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
 | **Halo** (shipping masters, 2–120 px) | **0 demonstrated on any subject** — but only 11 of 26 are actually *clean*; 4 blind + 7 unmeasurable remain UNSCORED, which is not the same as clean | facts 1851–1855, 1884 |
 | **Rim** (shipping masters, ±12 px) | **13 FAIL — a disjoint scale the halo work never reached; unscored by a second lane** | fact 1881 |
@@ -25,6 +25,7 @@ marked as unmeasured.
 | **Regional blur** | **`flowers-cpl` diagnosed: capture gap, not a merge defect** — (a) at all 6 sites | fact 1876 |
 | **Depth softening** | root cause identified; candidate fix built but **unscored** | facts 1843–1845, 1849 |
 | **GPU** | **unused** | explicit gap against the brief |
+| **Print gate** (blotch/chroma/band/clip/crush, all 33) | **0 FAIL.** 17 PASS · 3 ACQUITTED · 6 ACQUITTAL EXPIRED · 7 REVIEW · 0 NOT EXAMINED · 33 total (found 33). So **20 of 33 carry a standing clean verdict and 13 are unresolved** — expired and REVIEW are *not* passes, and the gate says so itself | `orch_printready.py` over `masters\` + `orch-rendered-7\`; facts 1947–1948 |
 | **Print-ready** | **NO** — see §3 | |
 
 `bee-1-cpl` (N=299) resolves individual ommatidia. `wrapped-text-1/2` resolve individual
