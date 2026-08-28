@@ -519,13 +519,19 @@ subject deterministically.
 `unpopped-popcorn-kernels-cpl`. These are exactly the seven newer captures I
 deliberately excluded to keep the subject list matched to ORCH-FAITHFUL. They
 report `Software 'strehl 0.0.0 (6af834dac08d)'` — my pinned commit — and they
-pass the same tag check, so they appear to have been produced with my pinned
-binary. **I did not render them, they are in no manifest record, and I cannot
-attest to their invocation.** I have left them in place and listed them as
-foreign in a `MANIFEST.txt` trailer rather than deleting them; deleting another
-lane's output without being asked is precisely what destroyed the ORCH-FAITHFUL
-baseline tonight. **Anyone counting files in that folder will find 33 and should
-treat only the 26 with manifest records as DELIVER-V6 output.**
+pass the same tag check. The provenance is not a guess: my private
+`scratch\warpmaps\` directory, which I had deleted during cleanup, has been
+**recreated** and contains warpmap sidecars for exactly those seven subjects,
+timestamped 02:35–02:46 against the seven TIFF writes at 02:36–02:47. Another
+lane ran my pinned binary with my `STREHL_CACHE_DIR`, almost certainly by
+reusing `experiments/DELIVER-V6/render.ps1` with a different subject list.
+**I did not render them, they are in no manifest record, and I cannot attest to
+their invocation.** I have left them in place — and left the 0.2 MB of
+regenerated warpmaps in place — and listed the seven as foreign in a
+`MANIFEST.txt` trailer rather than deleting them; deleting another lane's output
+without being asked is precisely what destroyed the ORCH-FAITHFUL baseline
+tonight. **Anyone counting files in that folder will find 33 and should treat
+only the 26 with manifest records as DELIVER-V6 output.**
 
 I re-hashed all 26 of my masters after discovering the folder had been written
 to. **All 26 match the SHA256 recorded at render time** — my delivered bytes
