@@ -900,3 +900,23 @@ justification for a halo fix** — not a visible defect, not a trustworthy
 amplitude on the two subjects I confirmed, and not a mechanism my own clamp
 addresses. `STREHL_HULL` stays opt-in and pixel-inert. I am not asking for it to
 ship as a default and this section is the reason.
+
+**14.7 `STREHL_HULL` is reachable, which is not the same as useful.** ORCH has
+now found three knobs that do nothing on the path they ship on (`--exposure`,
+`STREHL_SOFT_GATE`, and a third), so a knob of mine living in the shipping
+backend needs an explicit answer. `STREHL_HULL` is **not** a fourth: measured
+from `plantrim.json`, `unclamped` reads aura **1298.8 DN** against unset's
+**1260.3 DN**, and `perlevel` reads **1263.3 DN**. The aura statistic is a
+deterministic function of the pixels, so a moved statistic means moved pixels.
+Structurally it is consumed where it ships -- `pyramid.rs` carries 30 `Hull::`
+sites and `hull: hull_default()` at L1184, unlike `active_kernel()`, whose only
+call site is in `Estimator::new` and is unreachable from the pyramid default.
+
+**The control that separates "small" from "inert" is the arm that must NOT
+move.** `inputrange` reads 1260.3 DN, byte-for-byte the unset value, because
+`hull_default()` returns `Hull::InputRange` when the variable is unset. Without
+that arm, a knob whose real effect is 1.2 DN of rim spread is indistinguishable
+from a knob that is never read at all -- both look like zero at one decimal
+place. **The finding is that the hull modes are reachable and their effect is
+tiny, not that the knob is dead**, and those two conclusions have opposite
+consequences for whether the code should stay.
