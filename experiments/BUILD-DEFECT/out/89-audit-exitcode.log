@@ -1,0 +1,20 @@
+=== commission the pass/fail CHANNEL of every verifier, as a subprocess ===
+
+  original copied to C:\Users\chris\AppData\Local\Temp\89-audit-BUILD-DEFECT.md.bak  (restore is from this file, never from git)
+
+  45-verify-s18.py     clean 0 | innocuous 0 | planted 1 (10 tried) -> OK
+                       searched: 0.001 -> 0.002
+  63-verify-s20.py     clean 0 | innocuous 0 | planted 1 (3 tried) -> OK
+                       searched: 3448 -> 3449
+  73-verify-s21.py     clean 0 | innocuous 0 | planted 1 (2 tried) -> OK
+                       searched: 451,463 -> 451,464
+  82-verify-s22.py     clean 0 | innocuous 0 | planted 2 (1 tried) -> OK
+                       declared: planted max abs off by one
+  88-verify-s23.py     clean 0 | innocuous 0 | planted 2 (1 tried) -> OK
+                       declared: map line count
+
+  document restored byte-identical: True
+  5 verifiers = 5 OK
+  2 of 5 declare their own defect set; 3 were commissioned here for the first time
+
+VERDICT: CHANNEL-LIVE

@@ -1,0 +1,78 @@
+{
+  "written_utc": "2026-08-28T07:44:17Z",
+  "subject": "D:\\personal\\macro\\109MSDCF",
+  "flags": "--srgb --exposure=<stops>",
+  "pin_commit": "9b05d0b7",
+  "pin_exe": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+  "pin_sha256": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490",
+  "head_exe": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe",
+  "head_sha256": "8AD637B1D8C698EDC317031EAA7BFA7724742E6285A6A9342B1D5BFE4E0C4785",
+  "head_commit": "1e59993e",
+  "head_caveat": "HEAD has moved since section 21 was measured (393d7ca3 re-fit eps_r); head-*.tiff are NOT the originals and any difference from section 21 HEAD rows is binary drift.",
+  "declared": 6,
+  "rendered": 6,
+  "skipped": 0,
+  "failed": 0,
+  "files": [
+    {
+      "file": "pin-epos3.tiff",
+      "who": "pin",
+      "stops": "+3",
+      "exe": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+      "binary_sha256": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490",
+      "seconds": 8.2,
+      "sha256": "D749F1FDCD07355F70103BCBE39A9465696134ED0C9292EABA8528E6BA9D5B0C",
+      "state": "rendered"
+    },
+    {
+      "file": "pin-eneg.tiff",
+      "who": "pin",
+      "stops": "-3",
+      "exe": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+      "binary_sha256": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490",
+      "seconds": 7.6,
+      "sha256": "A5846DD2B0ACDC3A496EFB44C3DFA5C22FFF5D5A0B7AE7BBB33AA9FB6D71FE52",
+      "state": "rendered"
+    },
+    {
+      "file": "pin-e260.tiff",
+      "who": "pin",
+      "stops": "+2.60",
+      "exe": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+      "binary_sha256": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490",
+      "seconds": 8.0,
+      "sha256": "18E6EDA98DEC9930C162764DC4AA07561F44F8CA6BB277A3C6F571114DDF34F2",
+      "state": "rendered"
+    },
+    {
+      "file": "pin-e000.tiff",
+      "who": "pin",
+      "stops": "0",
+      "exe": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+      "binary_sha256": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490",
+      "seconds": 7.8,
+      "sha256": "3582620BB7E0C95CB0D138FA142C1D4952C316BF334B2AC4723CA40E3ABB0E05",
+      "state": "rendered"
+    },
+    {
+      "file": "head-e260.tiff",
+      "who": "head",
+      "stops": "+2.60",
+      "exe": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe",
+      "binary_sha256": "8AD637B1D8C698EDC317031EAA7BFA7724742E6285A6A9342B1D5BFE4E0C4785",
+      "seconds": 12.0,
+      "sha256": "6A29AB1699372B447091D762CE8AABE762CCC01A8290171B740BA3A0B14CA71D",
+      "state": "rendered"
+    },
+    {
+      "file": "head-e000.tiff",
+      "who": "head",
+      "stops": "0",
+      "exe": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe",
+      "binary_sha256": "8AD637B1D8C698EDC317031EAA7BFA7724742E6285A6A9342B1D5BFE4E0C4785",
+      "seconds": 11.7,
+      "sha256": "9C675019FE6990C1349633575CF496A439A417CA6BC03E942CA18A4032DF8645",
+      "state": "rendered"
+    }
+  ]
+}

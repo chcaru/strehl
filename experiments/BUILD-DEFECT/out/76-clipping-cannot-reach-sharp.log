@@ -1,9 +1,9 @@
 === can clipping explain 'master exceeds its own focus ceiling'? ===
 
 === COMMISSIONING ===
-  POSITIVE     PASS known-blown head-e260.tiff reads 85.5234% clipped, needs > 25.0%
+  POSITIVE     PASS known-blown head-e260.tiff reads 85.5206% clipped, needs > 25.0%
   NEGATIVE     PASS known-clean pin-e000.tiff reads 0.0012% clipped, needs < 0.100%
-  IMPROVEMENT  PASS dividing the blown array by its own gain 6.063x moves clipping 85.5234% -> 0.0000%, needs at least a 10x fall
+  IMPROVEMENT  PASS dividing the blown array by its own gain 6.063x moves clipping 85.5206% -> 0.0000%, needs at least a 10x fall
   3 declared = 3 passed + 0 failed
 
 === the three conditions the hypothesis requires ===

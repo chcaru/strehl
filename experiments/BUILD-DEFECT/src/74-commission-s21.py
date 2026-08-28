@@ -59,13 +59,13 @@ PLANTS: list[tuple[str, str, str, str, str]] = [
      "pin  +2.60 vs 0         2.60      6.1x        451,464   0.4565%          1      1.0000",
      "samples differ", "exact check; any change suffices"),
     ("max |d| on the positive control",
-     "HEAD +2.60 vs 0         2.60      6.1x     98,856,221  99.9577%      65535  14013.6874",
-     "HEAD +2.60 vs 0         2.60      6.1x     98,856,221  99.9577%      65534  14013.6874",
+     "HEAD +2.60 vs 0         2.60      6.1x     98,855,406  99.9569%      65535  14023.2383",
+     "HEAD +2.60 vs 0         2.60      6.1x     98,855,406  99.9569%      65534  14023.2383",
      "max |d|", "exact check; any change suffices"),
     ("mean |d| on the positive control",
-     "98,856,221  99.9577%      65535  14013.6874",
-     "98,856,221  99.9577%      65535  14113.6874",
-     "mean |d|", "check is rel 1e-4; 100 DN on 14013 is 0.7%, well clear"),
+     "98,855,406  99.9569%      65535  14023.2383",
+     "98,855,406  99.9569%      65535  14123.2383",
+     "mean |d|", "check is rel 1e-4; 100 DN on 14023 is 0.7%, well clear"),
     ("percent-differ",
      "451,463   0.4565%",
      "451,463   0.4665%",
@@ -126,8 +126,8 @@ PLANTS: list[tuple[str, str, str, str, str]] = [
      "SHIP-V4 seal mean", "check is rel 1e-5 with a 0.06 floor, so tol is 0.48; "
                           "1000 DN is 2000x clear"),
     ("a seal clip fraction",
-     "HEAD           --exposure=+2.60  mean 61822.1   clipped 85.5234%",
-     "HEAD           --exposure=+2.60  mean 61822.1   clipped 85.7234%",
+     "HEAD           --exposure=+2.60  mean 61821.3   clipped 85.5234%",
+     "HEAD           --exposure=+2.60  mean 61821.3   clipped 85.7234%",
      "clip", "check is rel 1e-3 with a 1e-4 floor, so tol is 0.0855 pp; "
              "0.2 pp is 2.3x clear. The earlier sizing note said 'abs 0.05' and "
              "was wrong about the verifier's own semantics -- the argument was "

@@ -3094,7 +3094,7 @@ I was replaying each subject's recorded `exposure_stops` from the SHIP-V4
 manifest so that my OFF arm would be comparable to the sealed corpus the print
 gate grades. On subject `109MSDCF`, `exposure_stops` is `+2.60`. The seal has a
 mean of 47719.1 and 0.0012% of samples at full scale. My HEAD render at the same
-`+2.60` came back at mean 61822.1 with **85.5234%** of samples clipped.
+`+2.60` came back at mean 61821.3 with **85.5234%** of samples clipped.
 
 Both binaries printed the identical banner:
 
@@ -3117,8 +3117,40 @@ pair                   stops commanded samples differ  % differ    max |d|    me
 pin  +3    vs -3        6.00     64.0x              0   0.0000%          0      0.0000
 pin  +2.60 vs 0         2.60      6.1x        451,463   0.4565%          1      1.0000
 pin  0     vs -3        3.00      8.0x              0   0.0000%          0      0.0000
-HEAD +2.60 vs 0         2.60      6.1x     98,856,221  99.9577%      65535  14013.6874
+HEAD +2.60 vs 0         2.60      6.1x     98,855,406  99.9569%      65535  14023.2383
 ```
+
+**The HEAD row is measured on a different binary than the one this section was
+first written against, and that is recorded here because it was not recorded
+then.** The six probe renders were deleted in the disk reclamation of
+2026-08-28 as consumed intermediates; they were not consumed, they were this
+section's evidence, and because they had been produced by an ad-hoc invocation
+rather than a script, the recipe went with them. They are restored by
+`experiments/BUILD-DEFECT/src/90-render-probes.ps1`, which now exists so that
+the recipe survives the files, and which writes a `PROVENANCE.json` naming both
+binaries.
+
+The restoration is itself a control and it passed: the four `pin` renders came
+back **byte-identical**, including the two hashes quoted below, so the pin rows
+above are the same numbers re-derived from freshly written files. The `HEAD`
+row could not come back, because HEAD moved — `393d7ca3` re-fit the lateral-CA
+coefficient `eps_r`, which changes the warp and therefore the pixels. Its
+figures were re-measured at HEAD `1e59993e`:
+
+```
+pin  binary   9b05d0b7   sha256 44C2F2CD2E5B2894...   pin rows reproduce exactly
+head binary   1e59993e   sha256 8AD637B1D8C698ED...   head rows re-measured here
+```
+
+The drift is small and it does not touch the finding: `samples differ` moved by
+815 of 98,898,048 (0.0008%) and `mean |d|` from 14013.6874 to 14023.2383. The
+verdict is `LIVE` at 65535 DN either way, and every `pin` quantity — which is
+what the conclusion rests on — is unchanged to the digit. **The original HEAD
+figures cannot be pinned retroactively, because no hash of that binary was ever
+written down.** That is the defect this block repairs, and it is the same one
+the reproduction contract in §23.9 repairs for the masters: a number derived
+from a render is meaningless without the identity of the binary that rendered
+it.
 
 The first row is the orchestrator's literal evidence pair. I reproduced both of
 its hashes exactly — `D749F1FDCD07355F` and `A5846DD2B0ACDC3A` — so this is the
@@ -3190,7 +3222,7 @@ arms, all of which must pass before any verdict is printed:
 ```
 positive control : HEAD +2.60 vs 0, max |d| = 65535 DN, needs >= 256  ->  LOUD
 negative control : pin-eneg.tiff against itself, 0 samples differ     ->  SILENT
-improvement arm  : HEAD mean 61822.1 at +2.60 vs 47814.3 at 0         ->  brighter
+improvement arm  : HEAD mean 61821.3 at +2.60 vs 47804.1 at 0         ->  brighter
 ```
 
 The improvement arm is the one that earns its place. The two controls establish
@@ -3219,8 +3251,8 @@ corpus**.
 subject 109MSDCF, exposure_stops = +2.60
   SHIP-V4 seal                     mean 47719.1   clipped 0.0012%
   pin  9b05d0b7  --exposure=+2.60  mean 47719.1   clipped 0.0012%   reproduces the seal
-  HEAD           --exposure=+2.60  mean 61822.1   clipped 85.5234%  blown out
-  HEAD           --exposure=0      mean 47814.3   clipped 0.0013%   0.20% from the seal
+  HEAD           --exposure=+2.60  mean 61821.3   clipped 85.5234%  blown out
+  HEAD           --exposure=0      mean 47804.1   clipped 0.0013%   0.18% from the seal
 ```
 
 Anyone who re-renders the sealed corpus at HEAD using the manifest's own
@@ -3230,7 +3262,7 @@ request in both cases.
 
 The correct HEAD replay of a SHIP-V4 seal is **`--exposure=0`**, and that follows
 from the measurement rather than from taste: if the recorded value did nothing,
-the seal is the zero render. The residual 0.20% is other pin-to-HEAD drift and is
+the seal is the zero render. The residual 0.18% is other pin-to-HEAD drift and is
 not attributable to exposure.
 
 ### 21.7 What this cost me, and what it is worth
@@ -3257,7 +3289,7 @@ catches every one.
 
 ```
 declared 22 = caught 22 + missed 0 + unanchored 0     (after the repairs below)
-clean control : PASS -- declared 58 = matched 58 + mismatched 0 + unresolved 0
+clean control : PASS -- declared 60 = matched 60 + mismatched 0 + unresolved 0
 restoration   : byte-identical to the original, verified by SHA-256
 ```
 
@@ -3858,7 +3890,7 @@ file.
 | `experiments/BUILD-DEFECT/out/88-ship-validate-RUN.txt` | Run-level provenance: recipe, per-switch liveness, cleared-set size |
 | `experiments/BUILD-DEFECT/out/88-ship-validate-*.manifest.json` | The two validated masters' manifests, with the defect partition |
 | `experiments/BUILD-DEFECT/src/88-verify-s23.py` | Re-derives this section from the artifacts; `--commission` plants reversals and deletions |
-| `experiments/BUILD-DEFECT/out/88-commission.json` | 26 planted = 26 caught + 0 missed + 0 unanchored + 0 ambiguous |
+| `experiments/BUILD-DEFECT/out/88-commission.json` | 37 planted = 37 caught + 0 missed + 0 unanchored + 0 ambiguous |
 | `experiments/BUILD-DEFECT/out/defect-map-ILCE-7CM2-photo.txt` | The v2 shipping map, `AD5769CD46F1…` |
 
 ### 23.9 A reproduction command names a path, and a path is not a binary
@@ -3962,13 +3994,13 @@ cleared env     : 23 names parsed from byte-freeze.rs RENDER_ENV
 Sections 18, 20, 21 and 22 each carry a checker that re-derives every number
 from the artifacts. Section 23 -- the one describing the render a reader is most
 likely to act on -- carried none. `88-verify-s23.py` closes that:
-`94 declared = 94 matched + 0 mismatched + 0 unresolved`, with tables parsed
+`112 declared = 112 matched + 0 mismatched + 0 unresolved`, with tables parsed
 structurally so each measured value has exactly one site, and with the eight
 cited artifacts checked for existence rather than assumed.
 
-Its commissioning is the part worth reporting. `26 planted = 26 caught +
-0 missed + 0 unanchored + 0 ambiguous`, of which **13 are numeric, 8 are
-conclusion reversals, and 5 are deletions**. The proportions are deliberate. A
+Its commissioning is the part worth reporting. `37 planted = 37 caught +
+0 missed + 0 unanchored + 0 ambiguous`, of which **19 are numeric, 10 are
+conclusion reversals, and 8 are deletions**. The proportions are deliberate. A
 number is not a conclusion, and this project now has four independent lanes that
 discovered their own verifier could not see a reversed one: V-NEVERWORSE passed
 a verdict flipped from refuted to confirmed through 712 green checks, V-LINEAR
@@ -3999,3 +4031,200 @@ partition refusing to call an unlanded plant a pass:
   over the anchor's tokens. **A plant reported absent on text that is right
   there is a clean bill of health the verifier did not earn**, and it is the
   same failure as a grep that reports no match on reflowed prose.
+
+### 23.12 The verifiers had never been run as programs
+
+Every commissioning suite in this lane called its verifier's `verify()` **inside
+its own process** and read the returned object. Nothing had ever run one the way
+an operator runs it, or the way the suite in §23.11 reports it: as a subprocess,
+reading only the exit code. Those are not the same channel. `verify()` can be
+perfectly sensitive while `main()` computes `ok` from the wrong field, and in
+that state every in-process arm reports CAUGHT while every shipped invocation
+exits 0 on a corrupt document. The commissioning would be measuring a function
+that no operator calls.
+
+`experiments/BUILD-DEFECT/src/89-audit-exitcode.py` closes that. It runs each
+verifier as `python <script>` from the repository root and reads nothing but the
+return code, over three arms:
+
+```
+CLEAN       unmodified document                       must exit 0
+INNOCUOUS   a claim-free paragraph appended to the    must exit 0   <- specificity
+            section under test
+PLANTED     one number changed in that section        must exit non-zero
+```
+
+The INNOCUOUS arm is the one that had no precedent here. Every previous arm in
+this lane planted a defect and confirmed detection, which measures sensitivity
+and says nothing about whether noise is rejected: **a verifier that exited
+non-zero on everything would have passed every commissioning this lane ever
+ran.** The arm appends a paragraph containing no digit and no claim, and
+requires the verdict not to move.
+
+The PLANTED arm is a search, so it is given a floor and allowed to return
+nothing. It prefers the verifier's own declared `DEFECTS` where one exists, then
+falls back to searching the section for a number of four digits or more that
+occurs exactly once, bounded at 14 candidates. Exhausting the bound returns
+`NO-RED-FOUND` — a named outcome, not a pass. Short tokens are excluded on
+purpose: a mutation landing on an unintended occurrence would report red for a
+reason the audit did not choose, which is a plant that did not land wearing a
+success.
+
+```
+verifier            clean  innocuous  planted  candidates  verdict
+------------------------------------------------------------------
+45-verify-s18.py        0          0        1          10  OK
+63-verify-s20.py        0          0        1           3  OK
+73-verify-s21.py        0          0        1           2  OK
+82-verify-s22.py        0          0        2           1  OK
+88-verify-s23.py        0          0        2           1  OK
+------------------------------------------------------------------
+5 verifiers = 5 OK          document restored byte-identical: True
+```
+
+**Three of the five — 45, 63 and 73 — declare no `DEFECTS` at all and had never
+been shown able to fail on any channel.** They were commissioned here for the
+first time, and all three reddened on a searched anchor. That is a real result
+and it was available for the asking at any point in the preceding day; nobody
+asked, because each of them had been printing PASS and a PASS is not
+self-suspicious.
+
+The audit is `CHANNEL-LIVE` at 5 of 5. Its own restoration is checked by
+`filecmp` against a copy taken in `%TEMP%` before the first mutation, restored
+in a `finally`, and never from git.
+
+**Two instrument defects surfaced while building it, and both are worth more
+than the result.**
+
+The first killed the audit and reported success. Reading a verifier's declared
+`DEFECTS` was done by importing it with `importlib`, guarded by
+`except Exception`. `63-verify-s20.py` has no `if __name__ == "__main__"` guard,
+so importing it **executed** it: its report appeared on the audit's own stdout,
+and its `SystemExit` propagated through the guard, because `SystemExit` derives
+from `BaseException` and not from `Exception`. The audit stopped after one
+verifier of five and exited 0. A partial run wearing a success is the worst
+available failure, and the only reason it was caught is that the printed table
+had one row where it should have had five. The list is now read out of the AST,
+which cannot execute what it is reading.
+
+The second is the same shape as the binary drift in §23.9. A non-zero exit was
+being read as one fact when it is three:
+
+```
+CRASH          traceback on stderr                the verifier is broken
+FAIL           a report on stdout, then non-zero  it ran, and it said no
+TYPED REFUSAL  no report at all, message only     it never got an input to read
+```
+
+The first attempt separated only crash from not-crash, and labelled
+`88-verify-s23.py`'s exit 2 — a genuine FAIL with a full report printed — as a
+typed refusal. The discriminator is whether the verifier got far enough to print
+its report at all. A refusal is credited only when it did not.
+
+### 23.13 I deleted the evidence, and a verifier that refused to guess found it
+
+`73-verify-s21.py` read `clean 1` in the first channel audit: it would not
+certify an unmodified document. It was not broken. The six probe renders §21 is
+measured on were gone, and it said so and exited rather than reporting perfect
+agreement over zero comparisons — the typed refusal its `_probe_dir()` docstring
+promises.
+
+I deleted them, in the disk reclamation this lane ran an hour earlier, as
+"consumed intermediates". They were not consumed. They were §21's evidence, and
+they were also the inputs of `72-exposure-inert-at-pin.py` and
+`76-clipping-cannot-reach-sharp.py`, so one `Remove-Item` disarmed three scripts.
+The suite did not notice, because the suite ran `73` and read the console, and
+its refusal exits 1 — which looks exactly like the crash it is not.
+
+**They had been produced by an ad-hoc invocation typed at a prompt, so when the
+files went the recipe went with them.** Nothing on disk recorded which binary,
+which subject, or which flags had produced the numbers §21 rests on. This is the
+same class as the flats map that had to be headed `SUPERSEDED`, running in the
+other direction: an artifact carrying no provenance gets **deleted** by whoever
+finds it next, because nothing on it says what it is for.
+
+`experiments/BUILD-DEFECT/src/90-render-probes.ps1` now exists so that the
+recipe outlives the files. It re-renders all six, refuses if any `STREHL_*` is
+set in the calling shell, asserts `declared = rendered + skipped + failed`, and
+writes a `PROVENANCE.json` naming both binaries by SHA-256.
+
+The restoration was a control, and it split exactly along the line the script
+predicted before it ran:
+
+```
+pin-epos3.tiff   D749F1FDCD07355F   byte-identical to the hash quoted in 21.2
+pin-eneg.tiff    A5846DD2B0ACDC3A   byte-identical to the hash quoted in 21.2
+pin-e260.tiff    18E6EDA98DEC9930   pin rows reproduce to the digit
+pin-e000.tiff    3582620BB7E0C95C
+head-e260.tiff   6A29AB1699372B44   HEAD moved; re-measured
+head-e000.tiff   9C675019FE6990C1
+```
+
+The four `pin` renders came back **byte-identical**, from a binary that has sat
+untouched on disk since it was pinned — which is both a restoration and a
+determinism control, and §21's pin quantities re-derived to the digit
+(`451,463` samples differing, `max |d| = 1 DN`). The two `head` renders could
+not come back, because `393d7ca3` re-fit `eps_r` and changed the warp. `73` went
+from `60 matched` to `56 matched + 4 mismatched`, and **all four mismatches were
+HEAD quantities and none was a pin quantity** — the signature of binary drift
+rather than a wrong document. They are re-measured and now carry the binary hash
+that was never recorded the first time.
+
+The drift is small and does not touch the finding: `samples differ` moved by 815
+of 98,898,048, `mean |d|` from 14013.6874 to 14023.2383, and the verdict is
+`LIVE` at 65535 DN either way. The clipped fractions did not move at all, so
+`85.5234%` — the figure the orchestrator has been quoting — survives the binary
+move untouched.
+
+One further staleness fell out of it. `74-commission-s21.py` checks §21.8's
+recorded clean-control line against the run it actually produces, and reported
+`declared 58` in the document against `declared 60` from the run. That drift
+predates this work: `73` had grown two checks and §21.8 was never updated,
+undetected because `74` was not in the routine suite. **A commissioning script
+that is not run is indistinguishable from one that passes.** It is in the suite
+now, at `22 declared = 22 caught + 0 missed + 0 unanchored`.
+
+### 23.14 A verifier that reads a neighbour's working tree measures whoever saved last
+
+`88-verify-s23.py` parses `RENDER_ENV` out of `crates/strehl-cli/tests/byte-freeze.rs`
+rather than hard-coding it, because §23.3's entire finding is that a duplicated
+list stops being true without a sound. It read **24** names against the
+document's **23** and reported four mismatched claims.
+
+Every one of those accusations was false. `HEAD` holds 23. The 24th,
+`STREHL_SOFT_GATE`, was an **uncommitted** addition by the soft-gate lane,
+written eleven minutes before the run. The verifier was not measuring its own
+document; it was measuring whoever had saved most recently in a tree that
+fifteen agents share.
+
+This is the multi-agent form of §23.9's binary drift and it takes the same
+remedy: name the revision the number is true of. `render_env()` now reads the
+blob at `HEAD` through `git show`, decoded from bytes — never through a `>`
+redirect, which on Windows re-encodes the stream and would measure the redirect
+instead of the blob. A neighbour cannot move a committed blob under a running
+check.
+
+The divergence is not swallowed, because a check that quietly agreed would print
+the same thing whether nobody was editing the file or somebody was editing it in
+a way that did not happen to matter yet. It is reported as a counted `NOTE`,
+deliberately outside the matched/mismatched partition — a condition of the
+environment is not a property of §23:
+
+```
+NOTE  23.3 byte-freeze.rs is UNCOMMITTED-MODIFIED by another lane:
+      worktree adds ['STREHL_SOFT_GATE'], drops nothing. Verified against
+      HEAD's blob, which is what these numbers are true of.
+112 declared = 112 matched + 0 mismatched + 0 unresolved
+```
+
+The general rule this lane now works to: **a verifier may re-derive from any
+artifact it likes, but if that artifact belongs to another lane it must be read
+at a named revision.** Working-tree reads are for files you own.
+
+The rule earned itself within the hour. On the next run the same note listed
+**two** uncommitted names rather than one — `STREHL_PYRAMID_SIGNIFICANCE` had
+joined `STREHL_SOFT_GATE` while this section was being written. Under the
+working-tree read that would have been a second false accusation against this
+document, from a third lane, inside ten minutes. The fix was not defensive
+programming against a hypothetical; the thing it defends against happened again
+before the paragraph describing it was finished.

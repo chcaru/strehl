@@ -1,0 +1,75 @@
+{
+  "rows": [
+    {
+      "script": "45-verify-s18.py",
+      "section": 18,
+      "clean_exit": 0,
+      "clean_crashed": false,
+      "clean_reported": true,
+      "innocuous_exit": 0,
+      "planted_exit": 1,
+      "candidates_tried": 10,
+      "anchor": "searched: 0.001 -> 0.002",
+      "declared_own_defects": false,
+      "verdict": "OK"
+    },
+    {
+      "script": "63-verify-s20.py",
+      "section": 20,
+      "clean_exit": 0,
+      "clean_crashed": false,
+      "clean_reported": true,
+      "innocuous_exit": 0,
+      "planted_exit": 1,
+      "candidates_tried": 3,
+      "anchor": "searched: 3448 -> 3449",
+      "declared_own_defects": false,
+      "verdict": "OK"
+    },
+    {
+      "script": "73-verify-s21.py",
+      "section": 21,
+      "clean_exit": 0,
+      "clean_crashed": false,
+      "clean_reported": true,
+      "innocuous_exit": 0,
+      "planted_exit": 1,
+      "candidates_tried": 2,
+      "anchor": "searched: 451,463 -> 451,464",
+      "declared_own_defects": false,
+      "verdict": "OK"
+    },
+    {
+      "script": "82-verify-s22.py",
+      "section": 22,
+      "clean_exit": 0,
+      "clean_crashed": false,
+      "clean_reported": true,
+      "innocuous_exit": 0,
+      "planted_exit": 2,
+      "candidates_tried": 1,
+      "anchor": "declared: planted max abs off by one",
+      "declared_own_defects": true,
+      "verdict": "OK"
+    },
+    {
+      "script": "88-verify-s23.py",
+      "section": 23,
+      "clean_exit": 0,
+      "clean_crashed": false,
+      "clean_reported": true,
+      "innocuous_exit": 0,
+      "planted_exit": 2,
+      "candidates_tried": 1,
+      "anchor": "declared: map line count",
+      "declared_own_defects": true,
+      "verdict": "OK"
+    }
+  ],
+  "restored_identical": true,
+  "tally": {
+    "OK": 5
+  },
+  "declare_own": 2,
+  "verdict": "CHANNEL-LIVE"
+}

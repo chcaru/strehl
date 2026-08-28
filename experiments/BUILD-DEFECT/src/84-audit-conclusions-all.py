@@ -109,7 +109,8 @@ VERIFIERS = [
     # control gets anchored on a value the verifier demonstrably parses --
     # `91.307 DN` is arm A's residual, extracted by `claim('arm A residual')`.
     ("s21", "73-verify-s21.py",
-     ("451,463", "451,464"),
+     ("pin  +2.60 vs 0         2.60      6.1x        451,463   0.4565%          1      1.0000",
+      "pin  +2.60 vs 0         2.60      6.1x        451,464   0.4565%          1      1.0000"),
      ("the orchestrator's literal evidence pair",
       "the orchestrator's plain evidence pair")),
     ("s22", "82-verify-s22.py",
