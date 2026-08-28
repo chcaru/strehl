@@ -67,6 +67,8 @@ R2_CI_TWEEZERS = (
 R1_VERDICT_LEAF = (
     "| `leaf-2-cpl` | 182 | 2 | 30 | **2.218** PASS | 1.512 MARG | 1.171 FAIL | "
     "1.068 FAIL | 1.040 FAIL | **0.20** |")
+BAND0_112 = "| `112MSDCF` | 1.202 | 1.089 | 1.049 | **NOISE** |"
+LADDER_112 = "| `112MSDCF` | 0.20 | 0.20 | same |"
 
 # (name, why it matters, old_line, new_line-or-None-to-delete)
 ARMS = [
@@ -101,6 +103,52 @@ ARMS = [
      "two verdict rows for one subject is ambiguous; resolving to the first "
      "is how defect 1 survived, so it must refuse instead.",
      R2_VERDICT_DRY, R2_VERDICT_DRY + "\n" + R2_VERDICT_DRY),
+
+    # ---- CONCLUSION FLIPS -------------------------------------------------
+    # ORCH broadcast 2026-08-27: V-NEVERWORSE's verifier passed 712 green
+    # checks on a document whose verdict had been flipped from "refuted" to
+    # "confirmed", because it tested for the PRESENCE of a string.  A verifier
+    # that certifies every NUMBER and no CONCLUSION certifies the wrong thing:
+    # the numbers are the evidence, the verdict and the boundary are the
+    # PRODUCT, and the product is what other lanes consume.  These four arms
+    # leave every number this document reports intact and change only what it
+    # CONCLUDES from them.
+    ("conclusion-flip-band-verdict",
+     "112MSDCF 0.25-0.30 FAIL -> PASS with R still 1.202. Flips a band from "
+     "noise to signal and re-licenses the gate-floor arm this lane withdrew "
+     "the licence from. Not one digit changes.",
+     R2_VERDICT_112, R2_VERDICT_112.replace("**1.202** FAIL", "**1.202** PASS")),
+
+    ("conclusion-flip-boundary",
+     "112MSDCF boundary 0.20 -> 0.48. The boundary IS the headline of this "
+     "document and the single value other lanes act on. Every R, CI and "
+     "sample count stays correct.",
+     R2_VERDICT_112, R2_VERDICT_112.replace("| **0.20** |", "| **0.48** |")),
+
+    ("conclusion-flip-band0-NOISE-to-SIGNAL",
+     "§10's band-0 verdict, which ORCH has adopted project-wide as the rule "
+     "for whether a band-0 result is licensed at all.",
+     BAND0_112, BAND0_112.replace("**NOISE**", "**SIGNAL**")),
+
+    ("conclusion-flip-ladder-control",
+     "the far-ladder CONTROL's own verdict: 'same' -> 'MOVED'. A flipped "
+     "control result invalidates the measurement while every measured "
+     "boundary in the row still reads 0.20.",
+     LADDER_112, "| `112MSDCF` | 0.20 | 0.48 | MOVED |"),
+
+    ("conclusion-flip-summary-claim",
+     "§9.4's summary '6/6 unchanged' -> '5/6'. The summary is the sentence "
+     "other lanes read instead of the table, so it must be certified against "
+     "the rows rather than trusted. Anchored on the full sentence because "
+     "§12 now quotes the bare token and the harness correctly refused it.",
+     "**6/6 unchanged**, matching the 5/5 of",
+     "**5/6 unchanged**, matching the 5/5 of"),
+
+    ("band0-row-deleted",
+     "a derived table silently losing a subject. A check that matches "
+     "nothing prints the same green as one that matches, so the row COUNT is "
+     "itself a check.",
+     "| `bee-1-cpl` | 10.728 | 4.732 | 3.629 | SIGNAL |", None),
 ]
 
 

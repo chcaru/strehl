@@ -743,22 +743,48 @@ and round 2 was pre-registered in `experiments/V-LINEAR/PREREG-R2.md`, committed
 
 | check | command | result |
 | --- | --- | --- |
-| every number in §3/§9 tables traces to a saved JSON | `python experiments/V-LINEAR/verify_bands_doc.py` | **88/88** located-and-correct, 0 wrong, 0 unresolved |
-| that verifier actually catches corruption | `python experiments/V-LINEAR/commission_verify_doc.py` | **7/7 caught**, 0 missed, document restored byte-identical |
+| every number **and every verdict** in §3/§9/§9.4/§10 traces to a saved JSON | `python experiments/V-LINEAR/verify_bands_doc.py` | **241/241** located-and-correct, 0 wrong, 0 unresolved |
+| that verifier actually catches corruption **and reversed conclusions** | `python experiments/V-LINEAR/commission_verify_doc.py` | **13/13 caught**, 0 missed, document restored byte-identical |
 | `boundary()` is not trivially satisfiable | `python experiments/V-LINEAR/commission_boundary.py` | **5/5** arms as expected |
 | corpus discipline | `python scripts/corpus_lint.py --root .` | OK, no violations |
 
-**The verifier has now failed twice and both failures were found by running it.**
-Version 1 read **40/40 GREEN on a document it had corrupted**, because each `R`
-is quoted in three tables and the check tested presence anywhere in the file.
-Version 2, rewritten row-anchored, then broke the moment §9.1 and §10 added two
-more subject-keyed tables: its row selection was **positional** (`rows[0]`,
-`rows[1]`), so `rows[0]` silently became a prose row and all 50 round-2 checks
-read WRONG against a row that never carried numbers. Version 3 anchors on row
-**shape** and requires exactly one match, reporting ambiguity as unresolved
-rather than resolving it to whichever came first.
+**The verifier has now failed three times and all three were found by running
+it.** Version 1 read **40/40 GREEN on a document it had corrupted**, because
+each `R` is quoted in three tables and the check tested presence anywhere in
+the file. Version 2, rewritten row-anchored, then broke the moment §9.1 and §10
+added two more subject-keyed tables: its row selection was **positional**
+(`rows[0]`, `rows[1]`), so `rows[0]` silently became a prose row and all 50
+round-2 checks read WRONG against a row that never carried numbers. Version 3
+anchors on row **shape** and requires exactly one match.
 
-A third defect appeared in the loader in the same hour: globbing
+**Version 3 was still certifying the evidence and not the product.** Prompted by
+V-NEVERWORSE's report verifier passing **712 green checks** on a document whose
+verdict had been flipped from "refuted" to "confirmed", four conclusion-flip
+arms were added here and **all four were MISSED**: `112MSDCF`'s 0.25–0.30 could
+be changed `FAIL` → `PASS` with `R` still reading 1.202, its **boundary** could
+be changed `0.20` → `0.48`, its §10 band-0 verdict `NOISE` → `SIGNAL`, and the
+far-ladder control `same` → `MOVED`, and the verifier reported 88/88 green on
+every one. The boundary flip is the serious one: it re-licenses the exact
+gate-floor arm this lane withdrew the licence from in §11, without altering a
+digit.
+
+Version 4 therefore pins each check to the **cell** that carries the claim, and
+certifies the conclusions as well as the numbers:
+
+- the per-band verdict token, derived from the instrument's own `verdict` string;
+- the **boundary**, recomputed by `bandsweep.boundary()` rather than read back
+  out of the document;
+- §10's band-0 verdict, derived from the three slice verdicts by the stated rule;
+- §9.4's ladder verdict, derived by comparing the far=20 and far=8 boundaries;
+- the **row counts** of both derived tables, and §9.4's summary claim
+  "**6/6 unchanged**" checked against the rows it summarises — because a check
+  that matches nothing prints the same green as one that matches.
+
+The count rose 88 → 241. All four flips are now caught, and the commissioning
+harness carries them permanently so a future edit cannot quietly reintroduce
+the hole.
+
+A fifth defect appeared in the loader in the same hour: globbing
 `bandsweep-far20*.json` pulled in the §6.1 reproduction control and shadowed the
 canonical `leaf-2-cpl` record, so the verifier reported the document wrong when
 the document was right. The fix is not a list of excluded filenames but a rule —
@@ -767,7 +793,21 @@ values match is accepted silently (`bandsweep-far20-noPF.json` repeats all five
 round-1 subjects and was measured to agree to 1e-9 on all 60 of its `R` values);
 a key whose values differ is a hard error.
 
-All three are the same failure: **a check satisfied by the wrong instance of the
-right-looking thing.** That is the third distinct sighting of this class in this
-lane alone, alongside `boundary()`'s original defect and `contrast_ms.py`'s
-Gaussian cut-off error.
+All five are the same failure: **a check satisfied by the wrong instance of the
+right-looking thing.** That is now five sightings in this lane alone, alongside
+`boundary()`'s original defect and `contrast_ms.py`'s Gaussian cut-off error.
+
+### 12.4 Can this statistic be inflated by noise?
+
+The standing guard is that raw band power counts noise as sharpness. `R` is not
+raw band power. It is a **ratio of in-focus to defocused power in the same band
+of the same subject**, and sensor noise is common to both terms, so noise drives
+`R` toward **1**, not upward (DERIVED from the estimator's form). The measured
+FAIL values corroborate it: they cluster just above unity — 1.049, 1.040, 1.035,
+1.066 — which is what a band containing only common noise should read.
+
+The consequence is that `R` errs toward **refusing to qualify** a band rather
+than toward qualifying one, so a PASS is conservative and a FAIL is not proof
+of absence. That is the safe direction for a gate whose purpose is to withhold
+a licence. It also means this document cannot be used to argue a band is
+*empty*; only that it did not clear the bar.

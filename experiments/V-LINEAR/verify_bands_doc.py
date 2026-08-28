@@ -26,9 +26,12 @@ import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
+sys.path.insert(0, _HERE)
+import bandsweep                                                 # noqa: E402
+
 DOC = os.path.join(_ROOT, "docs", "research", "V-LINEAR-BANDS.md")
-JSON = os.path.join(_HERE, "bandsweep-far20.json")
 BANDS = ["0.17-0.20", "0.20-0.25", "0.25-0.30", "0.30-0.40", "0.40-0.48"]
+BAND0 = ["0.25-0.30", "0.30-0.40", "0.40-0.48"]
 
 # Round 2 (sec.9) is stored one file per subject rather than one file for the
 # sweep, because those subjects were developed and swept one at a time under a
@@ -64,11 +67,11 @@ def _payload(r):
             {b: (v["R"], v["lo"], v["hi"]) for b, v in r["bands"].items()})
 
 
-def load_all():
+def load(pattern, controls):
     recs, src = {}, {}
-    for path in sorted(glob.glob(os.path.join(_HERE, "bandsweep-far20*.json"))):
+    for path in sorted(glob.glob(os.path.join(_HERE, pattern))):
         base = os.path.basename(path)
-        if any(c in base for c in CONTROLS):
+        if any(c in base for c in controls):
             continue
         with open(path) as fh:
             for r in json.load(fh):
@@ -90,6 +93,30 @@ def rows_for(lines, key):
     return [ln.strip() for ln in lines if pat.match(ln.strip())]
 
 
+def split_cells(row):
+    return [c.strip() for c in row.strip("|").split("|")]
+
+
+# The document's shorthand for the instrument's verdict strings.
+TOKEN = {"PASS": "PASS", "MARGINAL": "MARG", "FAIL(noise)": "FAIL"}
+
+
+def band0_verdict(rec):
+    """sec.10's band-0 conclusion, DERIVED from the three slice verdicts.
+
+    The document states the rule in prose: NOISE means every FINE slice of
+    band 0 FAILs; SIGNAL means they all PASS; anything else is mixed.  Deriving
+    it here rather than reading it means the CONCLUSION is certified against the
+    measurement, not against itself.
+    """
+    vs = [rec["bands"][b]["verdict"] for b in BAND0]
+    if all(v.startswith("FAIL") for v in vs):
+        return "NOISE"
+    if all(v == "PASS" for v in vs):
+        return "SIGNAL"
+    return "mixed"
+
+
 def locate(lines, key):
     """The verdict row and the CI row for `key`, found by SHAPE not by ordinal.
 
@@ -106,59 +133,161 @@ def locate(lines, key):
 
       verdict row : 10 cells, carries a PASS/MARG/FAIL token
       CI row      :  3 cells, carries exactly two `[`
+      band-0 row  :  5 cells, carries a NOISE/mixed/SIGNAL token  (sec.10)
+      ladder row  :  4 cells, carries a same/MOVED token          (sec.9.4)
 
     and each must match EXACTLY ONCE.  A shape that matches twice is ambiguous
     and is reported as unresolved rather than resolved to whichever came first,
     because "resolved to the first of several" is how the first defect survived.
     """
-    verdict, ci = [], []
+    verdict, ci, band0, ladder = [], [], [], []
     for s in rows_for(lines, key):
-        cells = [c.strip() for c in s.strip("|").split("|")]
+        cells = split_cells(s)
         if len(cells) == 10 and any(t in s for t in ("PASS", "MARG", "FAIL")):
-            verdict.append(s)
+            verdict.append(cells)
         elif len(cells) == 3 and s.count("[") == 2:
-            ci.append(s)
-    return verdict, ci
+            ci.append(cells)
+        elif len(cells) == 5 and any(t in s for t in ("NOISE", "mixed", "SIGNAL")):
+            band0.append(cells)
+        elif len(cells) == 4 and any(t in s for t in ("same", "MOVED")):
+            ladder.append(cells)
+    return verdict, ci, band0, ladder
 
 
 def main():
     lines = open(DOC, encoding="utf-8").read().splitlines()
-    recs = load_all()
+    recs = load("bandsweep-far20*.json", CONTROLS)
+    far8 = load("bandsweep-far8*.json", CONTROLS)
 
     ok = bad = unresolved = 0
+    ladder_rows = band0_rows = ladder_same = 0
 
-    def check(desc, hay, needle):
+    def check(desc, cell, needle):
+        """`needle` must be in THIS CELL, not merely somewhere in the row.
+
+        Row-wide `in` was the surviving remnant of the presence-test defect:
+        an R quoted in the wrong band's cell, or a verdict token belonging to a
+        neighbouring band, satisfied it.  A cell is the smallest unit that
+        carries one claim, so it is the unit a check is pinned to.
+        """
         nonlocal ok, bad
-        if needle in hay:
+        if needle in cell:
             ok += 1
         else:
             bad += 1
-            print(f"  WRONG      {desc}: expected {needle!r} in its own row")
+            print(f"  WRONG      {desc}: expected {needle!r}, cell reads {cell!r}")
 
     for key, r in sorted(recs.items()):
-        verdict_rows, ci_rows = locate(lines, key)
-        if len(verdict_rows) != 1 or len(ci_rows) != 1:
-            unresolved += 8
+        vrows, crows, brows, lrows = locate(lines, key)
+        if len(vrows) != 1 or len(crows) != 1:
+            unresolved += 11
             print(f"  UNRESOLVED {key}: need exactly 1 verdict row and 1 CI row, "
-                  f"found {len(verdict_rows)} and {len(ci_rows)}")
+                  f"found {len(vrows)} and {len(crows)}")
             continue
-        verdict_row, ci_row = verdict_rows[0], ci_rows[0]
+        v, c = vrows[0], crows[0]
 
-        check(f"{key} N/step/kept", verdict_row,
-              f"| {r['n_real']} | {r['step']} | {r['kept']} |")
-        for b in BANDS:
-            check(f"{key} {b} R", verdict_row, f"{r['bands'][b]['R']:.3f}")
-        for b in ("0.17-0.20", "0.20-0.25"):
-            v = r["bands"][b]
-            check(f"{key} {b} R+CI", ci_row,
-                  f"{v['R']:.3f} [{v['lo']:.3f}, {v['hi']:.3f}]")
+        check(f"{key} n_real", v[1], str(r["n_real"]))
+        check(f"{key} step", v[2], str(r["step"]))
+        check(f"{key} kept", v[3], str(r["kept"]))
+
+        for j, b in enumerate(BANDS):
+            cell, rec_b = v[4 + j], r["bands"][b]
+            check(f"{key} {b} R", cell, f"{rec_b['R']:.3f}")
+            # THE CONCLUSION, not the evidence.  A flipped verdict with an
+            # intact number is the mutation that passed 712 green checks in
+            # another lane; it is caught here because the token is derived
+            # from the instrument's own verdict string.
+            check(f"{key} {b} verdict", cell, TOKEN[rec_b["verdict"]])
+
+        # THE HEADLINE.  The boundary is the single value other lanes act on,
+        # and it is recomputed by the instrument that produced the record
+        # rather than read back out of the document.
+        check(f"{key} BOUNDARY", v[9], f"{bandsweep.boundary(r):.2f}")
+
+        for j, b in enumerate(("0.17-0.20", "0.20-0.25")):
+            rec_b = r["bands"][b]
+            check(f"{key} {b} R+CI", c[1 + j],
+                  f"{rec_b['R']:.3f} [{rec_b['lo']:.3f}, {rec_b['hi']:.3f}]")
+
+        # sec.10 band-0 verdict (all eleven subjects).
+        if len(brows) == 1:
+            band0_rows += 1
+            b0 = brows[0]
+            for j, b in enumerate(BAND0):
+                check(f"{key} band0 {b} R", b0[1 + j],
+                      f"{r['bands'][b]['R']:.3f}")
+            check(f"{key} BAND-0 VERDICT", b0[4], band0_verdict(r))
+        elif len(brows) > 1:
+            unresolved += 1
+            print(f"  UNRESOLVED {key}: {len(brows)} band-0 rows")
+
+        # sec.9.4 far ladder (round-2 subjects only; round 1's ladder is a
+        # differently-shaped table in sec.4 and is NOT re-checked here -- that
+        # is declared, not silent, and is asserted by the count below).
+        if len(lrows) == 1:
+            ladder_rows += 1
+            L, r8 = lrows[0], far8.get(key)
+            if r8 is None:
+                unresolved += 1
+                print(f"  UNRESOLVED {key}: ladder row with no far=8 record")
+            else:
+                b20, b8 = bandsweep.boundary(r), bandsweep.boundary(r8)
+                check(f"{key} ladder far20", L[1], f"{b20:.2f}")
+                check(f"{key} ladder far8", L[2], f"{b8:.2f}")
+                check(f"{key} LADDER VERDICT", L[3],
+                      "same" if b20 == b8 else "MOVED")
+                if L[3] == "same":
+                    ladder_same += 1
+        elif len(lrows) > 1:
+            unresolved += 1
+            print(f"  UNRESOLVED {key}: {len(lrows)} ladder rows")
+
+    # A check that matches nothing prints the same green as one that matches.
+    # These counts are what make the derived tables non-vacuous.
+    #
+    # The ladder count is pinned to the DOCUMENT'S OWN SUMMARY CLAIM ("6/6
+    # unchanged") rather than to a magic number or to len(far8).  len(far8) is
+    # 11 because round 1 also has far=8 records, but round 1's ladder lives in
+    # sec.4 in a differently-shaped six-cell table and is NOT re-checked here.
+    # Pinning to the claim means the summary line cannot drift away from the
+    # rows it summarises, which is the same failure the conclusion checks above
+    # exist for.
+    # The claim is now quoted in more than one place (sec.9.4 states it, sec.12
+    # discusses it), so taking the FIRST match would be the same positional
+    # mistake that produced defect 2. Every occurrence is collected and they
+    # must AGREE -- the same rule the loader uses for duplicate records.
+    claims = set(re.findall(r"\*\*(\d+)/(\d+) unchanged\*\*", "\n".join(lines)))
+    if len(claims) != 1:
+        bad += 1
+        print(f"  WRONG      sec.9.4 summary claim: found {len(claims)} "
+              f"distinct '**N/N unchanged**' claims {sorted(claims)}; "
+              "they must agree or the document contradicts itself")
+    else:
+        n_same, n_tot = (int(x) for x in claims.pop())
+        for label, got, want in (("ladder rows vs claimed denominator",
+                                  ladder_rows, n_tot),
+                                 ("ladder rows reading 'same' vs claimed",
+                                  ladder_same, n_same)):
+            if got == want:
+                ok += 1
+            else:
+                bad += 1
+                print(f"  WRONG      {label}: found {got}, claimed {want}")
+
+    if band0_rows == len(recs):
+        ok += 1
+    else:
+        bad += 1
+        print(f"  WRONG      band-0 rows: found {band0_rows}, "
+              f"expected {len(recs)}")
 
     attempted = ok + bad + unresolved
     print(f"\n  located-and-correct : {ok}")
     print(f"  located-and-WRONG   : {bad}")
     print(f"  unresolved          : {unresolved}")
     print(f"  ------------------------------")
-    print(f"  attempted           : {attempted}   over {len(recs)} subjects")
+    print(f"  attempted           : {attempted}   over {len(recs)} subjects "
+          f"({band0_rows} band-0 rows, {ladder_rows} ladder rows)")
     return 1 if (bad or unresolved) else 0
 
 
