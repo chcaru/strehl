@@ -128,6 +128,94 @@ def row_of(tab, pred):
     return hits[0] if len(hits) == 1 else None
 
 
+def _conclusions(ck, text, cb, dl, re_, b4, pin, neg):
+    """Conclusions, not only numbers.
+
+    ORCH's warning, measured on this very script before it was extended: five of
+    six conclusion flips passed. Flipping section 22.4's RED and GREEN, or the
+    22.1 pin row's `0 DN` to `65,535 DN`, or "disturbed none of them" to
+    "disturbed several", left every checked number intact and the verifier
+    reported 49 matched. That is the shape that carried another lane's report
+    through 712 green checks with its verdict reversed from refuted to
+    confirmed.
+
+    A number is not a conclusion. Each check below derives the CONCLUSION from
+    the artifact and requires the document to state that one, so reversing the
+    prose is a MISMATCH rather than an absence.
+    """
+    tabs = tables(text)
+
+    # -- 22.1: the two pre-fix arms, keyed by binary --------------------
+    t = find_table(tabs, "binary", "repro line", "replay vs original")
+    for key, art, subst in (("HEAD", b4, False), ("pin", pin, True)):
+        r = row_of(t, lambda x, k=key: x[0].strip().startswith(k))
+        rows = [q for q in art["rows"] if "max_abs" in q]
+        want_max = float(max(q["max_abs"] for q in rows)) if rows else None
+        want_n = float(rows[0]["n"]) if rows else None
+        v = nums(r[2]) if r and len(r) > 2 else None
+        ck.eq("22.1 %s replay max abs" % key, v[0] if v else None, want_max)
+        ck.eq("22.1 %s sample count" % key, v[1] if v and len(v) > 1 else None,
+              want_n)
+        # Was the line substituted? Read from the artifact, not from the prose.
+        got = None
+        if r and len(r) > 1:
+            got = ("substituted" in r[1]) and ("verbatim" not in r[1])
+        art_subst = bool(rows) and any(
+            re.search(r"--exposure[= ]", q.get("repro", "")) for q in rows)
+        ck.eq("22.1 %s substitution stated" % key, got, art_subst)
+        ck.eq("22.1 %s substitution matches artifact" % key, art_subst, subst)
+
+    # -- 22.4: the negative control's two verdicts ----------------------
+    t = find_table(tabs, "script under test", "verdict")
+    for key, want, phase in (("pre-fix", neg["prefix_verdict"], "negred"),
+                             ("fixed", neg["fixed_verdict"], "neggreen")):
+        r = row_of(t, lambda x, k=key: k in x[0])
+        c = r[1] if r and len(r) > 1 else None
+        tok = re.search(r"\b(RED|GREEN|BLOCKED)\b", c) if c else None
+        ck.eq("22.4 %s arm verdict" % key, tok.group(1) if tok else None, want)
+        v = nums(c) if c else None
+        art = jload("77-repro-contract-%s.json" % phase)
+        ck.eq("22.4 %s passed" % key, v[0] if v else None, float(art["passed"]))
+        ck.eq("22.4 %s failed" % key, v[1] if v and len(v) > 1 else None,
+              float(art["failed"]))
+        ck.eq("22.4 %s undefined" % key, v[2] if v and len(v) > 2 else None,
+              float(art["undefined"]))
+    ck.eq("22.4 pre-fix rev cited", neg["prefix_rev"] in text, True)
+
+    # -- prose conclusions, each derived from an artifact ---------------
+    # Whitespace-normalised: these phrases wrap across lines in the rendered
+    # document, and a plain substring probe reports a false absence on wrapped
+    # prose. One of the six audit probes read UNANCHORED for exactly that.
+    norm = re.sub(r"\s+", " ", text)
+
+    def polarity(label, yes, no, truth):
+        y, n = yes in norm, no in norm
+        if y == n:
+            ck.eq(label, None, truth)
+        else:
+            ck.eq(label, y, truth)
+
+    prefix_clean = all(q["max_abs"] == 0 for a in (b4, pin) for q in a["rows"]
+                       if "max_abs" in q)
+    polarity("22.1 conclusion: control did not fire",
+             "The negative control did not fire",
+             "The negative control fired", prefix_clean)
+    polarity("22.1 conclusion: accidentally correct",
+             "**accidentally correct**", "**actively destructive**",
+             prefix_clean)
+    polarity("22.6 conclusion: no master disturbed",
+             "disturbed none of them", "disturbed several of them",
+             all(q.get("verdict") == "PASS" for q in dl["rows"]))
+    subs = set(q["subject"] for q in cb["rows"])
+    worse = all(
+        [q for q in cb["rows"] if q["subject"] == s and q["label"].startswith("B_")][0]["max_abs"]
+        < [q for q in cb["rows"] if q["subject"] == s and q["label"].startswith("A_")][0]["max_abs"]
+        for s in subs)
+    polarity("22.3 conclusion: direction of the improvement",
+             "the substitution destroys it",
+             "the substitution preserves it", worse)
+
+
 def verify(text, quiet=False):
     cb, dl, re_ = (jload("78-crossbinary.json"), jload("81-delivered.json"),
                    jload("80-reemit.json"))
@@ -217,6 +305,11 @@ def verify(text, quiet=False):
         else:
             ck.eq("%s (all %d instances)" % (label, len(found)), found,
                   [want] * len(found))
+
+    _conclusions(ck, text, cb, dl, re_,
+                 jload("77-repro-contract-before.json"),
+                 jload("77-repro-contract-pin.json"),
+                 jload("79-negcontrol.json"))
 
     if not quiet:
         for b in ck.bad:

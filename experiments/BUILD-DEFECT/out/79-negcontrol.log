@@ -1,5 +1,5 @@
 === negative control: can the contract gate express the defect? ===
-repo HEAD (holds the PRE-FIX script) : dd25b4be
+pre-fix rev c69ae0b6^      : 81ee69fa
 
 backup taken : C:\Users\chris\AppData\Local\Temp\finalpass.fixed.backup.ps1 (43009 bytes, verified identical)
 pre-fix blob : 40157 bytes, defective substitution line PRESENT

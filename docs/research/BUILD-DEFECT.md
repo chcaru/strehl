@@ -3399,7 +3399,7 @@ copy taken first and verified after, in a `finally`:
 
 | script under test | verdict | why |
 | --- | --- | --- |
-| pre-fix blob at `dd25b4be` | **RED**, 0 passed + 2 failed + 0 undefined | `--srgb --exposure +2.61`, contract violated, both subjects |
+| pre-fix blob at `81ee69fa` | **RED**, 0 passed + 2 failed + 0 undefined | `--srgb --exposure +2.61`, contract violated, both subjects |
 | fixed working copy | **GREEN**, 2 passed + 0 failed + 0 undefined | `--srgb --auto-exposure`, 0 DN, both subjects |
 
 The pre-fix blob is asserted to contain the exact defective line before the arm
@@ -3467,7 +3467,45 @@ Every number above is a reproduction-fidelity measurement -- clipped fraction,
 median and max abs delta between two renders -- not a judgement about how any
 image looks.
 
-### 22.9 Evidence
+### 22.9 The verifier was audited for conclusion blindness, and it was blind
+
+ORCH circulated an instrument defect found in another lane: a report verifier
+that tested for the presence of the word "refuted" in a section, so reversing
+that section's verdict to "confirmed" -- leaving every number in the document
+intact -- passed 712 green checks. I ran that probe against my own verifier
+rather than reasoning about whether it applied to me.
+
+`83-audit-conclusions.py` flips one conclusion at a time in this section,
+changes no number, and asks the verifier for a verdict. Against the form that
+had just reported 49 claims matched, five of six probes passed: transposing the
+two verdicts in 22.4's table, inflating the pin row's replay delta from zero to
+a full-scale value, and negating the sentence in 22.6 that says no master moved
+were all invisible. A verifier can be exhaustive about numbers and say nothing
+whatever about what those numbers are held to mean.
+
+The sixth probe did not land, because the phrase it targets wraps across a line
+in the source and the probe was written the way the sentence reads rather than
+the way it is stored. That is a second lesson and it is not a pass.
+
+The repair is a different instrument, not a better search. Each conclusion is
+now derived from an artifact and the document is required to state that one:
+22.1's and 22.4's tables are parsed structurally and their verdicts, deltas and
+sample counts checked against the phase JSONs and `79-negcontrol.json`; whether
+a row's command was substituted is read out of the recorded invocation with a
+regex rather than believed from the prose; and four prose conclusions are
+polarity-checked against whitespace-normalised text, so a reversal is a
+mismatch, and a document that states both forms is unresolved rather than
+either. The audit now reports 8 probes = 8 caught + 0 blind + 0 unanchored + 0
+ambiguous, and the verifier itself reports 70 claims.
+
+One further defect fell out of building the audit. Its first verdict line read
+NO-BLIND-SPOT whenever nothing was blind -- including when two probes had never
+landed. A check that did not run was reading as a check that succeeded, inside
+the tool written to find checks that do not run. It now refuses on an
+unanchored probe, and requires each anchor to occur exactly once, so a probe
+cannot quietly test a different site from the one it names.
+
+### 22.10 Evidence
 
 The section verifier is worth one line of its own, because it failed first. Its
 initial form searched for each number near an anchor string and reported every
@@ -3495,5 +3533,7 @@ afternoon, none of which the passing first run would have revealed.
 | `experiments/BUILD-DEFECT/src/81-verify-delivered.py` | Executes delivered sidecars verbatim against sealed masters |
 | `experiments/BUILD-DEFECT/out/81-delivered.log` | Both subjects bit-exact, no master disturbed |
 | `experiments/BUILD-DEFECT/src/82-verify-s22.py` | Verifies this section; every value re-derived from the JSON, none held in the checker |
-| `experiments/BUILD-DEFECT/out/82-verify-s22.log` | 49 declared = 49 matched + 0 mismatched + 0 unresolved |
+| `experiments/BUILD-DEFECT/out/82-verify-s22.log` | 70 declared = 70 matched + 0 mismatched + 0 unresolved |
 | `experiments/BUILD-DEFECT/out/82-verify-s22-commission.log` | 14 planted = 14 caught + 0 missed + 0 unanchored |
+| `experiments/BUILD-DEFECT/src/83-audit-conclusions.py` | Flips conclusions leaving numbers intact; refuses if a probe does not land or its anchor is not unique |
+| `experiments/BUILD-DEFECT/out/83-audit.log` | 8 probes = 8 caught + 0 blind + 0 unanchored + 0 ambiguous |

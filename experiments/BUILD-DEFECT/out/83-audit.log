@@ -1,0 +1,15 @@
+=== auditing the section-22 verifier for conclusion blindness ===
+
+  clean : 70 matched + 0 mismatched + 0 unresolved
+
+  CAUGHT     22.1 heading conclusion                       
+  CAUGHT     22.1 headline characterisation                
+  CAUGHT     22.4 negative-control verdicts (RED/GREEN swapped)
+  CAUGHT     22.4 fixed-arm verdict                        
+  CAUGHT     22.1 pin row conclusion                       
+  CAUGHT     22.1 HEAD row substitution status             
+  CAUGHT     22.6 delivered conclusion sentence            
+  CAUGHT     22.3 improvement direction                    
+  8 probes = 8 caught + 0 blind + 0 unanchored + 0 ambiguous
+
+VERDICT: NO-BLIND-SPOT

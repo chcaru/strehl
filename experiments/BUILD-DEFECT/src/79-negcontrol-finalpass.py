@@ -25,6 +25,7 @@ stale bytes. finalpass.ps1 is interpreted, so there is nothing to rebuild and
 nothing to go stale.
 """
 import io
+import json
 import os
 import shutil
 import subprocess
@@ -39,6 +40,16 @@ PIN = r"C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe"
 
 DEFECT_ANCHOR = b"        ($Flags -replace '--auto-exposure', \"--exposure $expoStops\")"
 FIX_ANCHOR = b"    $repro = $Flags"
+
+# The pre-fix bytes are pinned to the PARENT of the fix commit, not to HEAD.
+# Before the fix landed, HEAD was the pre-fix state and reading it worked. Once
+# the fix is committed, HEAD holds the fix, and a control that plants the fixed
+# file over the fixed file is a second null wearing a positive control's name.
+# The anchor assertion below would catch that -- it refuses rather than reports
+# green -- but refusing on every future run is not useful either, so the rev is
+# pinned. Other lanes commit into this tree constantly, so a relative rev like
+# HEAD~1 would drift; the parent of a specific commit does not.
+PREFIX_REV = "c69ae0b6^"
 
 log = []
 
@@ -71,10 +82,10 @@ def run_gate(phase):
 
 
 def main():
-    head = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+    head = subprocess.run(["git", "rev-parse", PREFIX_REV], capture_output=True,
                           text=True, cwd=ROOT).stdout.strip()
     say("=== negative control: can the contract gate express the defect? ===")
-    say("repo HEAD (holds the PRE-FIX script) : %s" % head[:8])
+    say("pre-fix rev %-14s : %s" % (PREFIX_REV, head[:8]))
     say()
 
     fixed = open(LIVE, "rb").read()
@@ -141,6 +152,16 @@ def main():
     os.makedirs(od, exist_ok=True)
     io.open(os.path.join(od, "79-negcontrol.log"), "w",
             encoding="utf-8").write("\n".join(log) + "\n")
+    # Emitted so the report's negative-control table can be verified against a
+    # measurement rather than against prose. A verifier that cannot read these
+    # two verdicts cannot tell RED from GREEN if the table is transposed, which
+    # is the conclusion-flip blind spot rather than a numeric error.
+    io.open(os.path.join(od, "79-negcontrol.json"), "w",
+            encoding="utf-8").write(json.dumps(
+                dict(prefix_verdict=red, fixed_verdict=green,
+                     prefix_rev=head[:8], commissioned=ok,
+                     verdict="COMMISSIONED" if ok else "NOT-COMMISSIONED"),
+                indent=1, sort_keys=True))
     if not ok:
         raise SystemExit(2)
 
