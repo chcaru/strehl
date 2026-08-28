@@ -5,7 +5,13 @@ every inline value is anchored on a neighbouring literal so that a presence
 check cannot be satisfied by a duplicate of the number elsewhere in the file.
 
 Records read:
-  shipfr.json   the pinned binary, --limit 44/45/46/47
+  shipfr-pin-9b05d0b7.json   the pinned binary, --limit 44/45/46/47.
+      NOT `shipfr.json`. Section 9.25.11 reports the measurement made on pin
+      44C2F2CD2E5B2894, and 9.26 re-ran the same script against a newer
+      binary, overwriting `shipfr.json` in place. A section must read the
+      record it was actually generated from, not a filename a later run can
+      take over -- `vn_verify2511` went RED the moment that happened, which is
+      how this was found.
   regout.json   the neighbour-relative registration screen
   shipped46.json  the band-swap commissioning of the model arms
   pfvar.json    the per-frame variance arm that returned UNDECIDED
@@ -16,6 +22,7 @@ import os
 import sys
 
 OUT = r"C:\dev\strehl-out\V-NEVERWORSE\dilute"
+SHIPFR_9_25_11 = "shipfr-pin-9b05d0b7.json"
 GB = r"C:\dev\strehl-out\V-NEVERWORSE\gbundle"
 
 
@@ -27,7 +34,7 @@ def rec(name, where=OUT):
 
 
 def tables():
-    sf, ro, sh = rec("shipfr.json"), rec("regout.json"), rec("shipped46.json")
+    sf, ro, sh = rec(SHIPFR_9_25_11), rec("regout.json"), rec("shipped46.json")
     t = {}
 
     rows = ["| frames stacked | one frame added | kind | L3 | L4 | L5 | L6 |",
@@ -72,7 +79,7 @@ def tables():
 
 
 def values():
-    sf, ro = rec("shipfr.json"), rec("regout.json")
+    sf, ro = rec(SHIPFR_9_25_11), rec("regout.json")
     sh, pf = rec("shipped46.json"), rec("pfvar.json")
     c = sh["commission"]
     l5 = [x for x in sf["steps"] if x["kind"] == "ROGUE"][0]["ratio"][5]

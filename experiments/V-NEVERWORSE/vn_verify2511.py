@@ -60,7 +60,7 @@ def main():
     # Claims the section states in prose that no table carries, each anchored
     # on its own neighbouring literal so a stray duplicate cannot satisfy it.
     ro = R.rec("regout.json")
-    sf = R.rec("shipfr.json")
+    sf = R.rec(R.SHIPFR_9_25_11)
     prose = [
         ("prose:rogue_below_null",
          "**The rogue step is\nsmaller than a null.**",

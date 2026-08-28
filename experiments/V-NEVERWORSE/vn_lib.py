@@ -95,9 +95,18 @@ from orch_chroma import WIN as CWIN                         # noqa: E402
 SHIP = r"C:\dev\strehl-out\acceptance\SHIP-V4"
 ARM = "SHIP-V4"
 OUT = r"C:\dev\strehl-out\V-NEVERWORSE"
-EXE = os.path.join(OUT, "bin", "strehl.exe")
 SRC = r"D:\personal\macro"          # READ-ONLY. Nothing here ever writes to D:.
-PIN_SHA = "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490"
+
+# The binary under test, and the hash that pins it. Overridable by environment
+# so a second arm can be run against a newer build WITHOUT editing this file --
+# but the defaults are the original pin, so every script that does not set the
+# environment measures exactly what it measured before. Both must be overridden
+# together or `check_pin` refuses: a new exe against an old hash is the failure
+# mode this pin exists to catch.
+EXE = os.environ.get("VN_EXE", os.path.join(OUT, "bin", "strehl.exe"))
+PIN_SHA = os.environ.get(
+    "VN_PIN_SHA",
+    "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490")
 
 # The measurement space. Not a preference -- the CLI's own help calls it
 # "THE MODE TO MEASURE IN" and forbids judging quality on --srgb.
@@ -197,6 +206,12 @@ def n_frames(subj):
 
 def check_pin():
     import hashlib
+    if ("VN_EXE" in os.environ) != ("VN_PIN_SHA" in os.environ):
+        raise RuntimeError(
+            "VN_EXE and VN_PIN_SHA must be set together; got VN_EXE=%r "
+            "VN_PIN_SHA=%r. A new binary measured against the old hash is "
+            "exactly what this pin exists to catch."
+            % (os.environ.get("VN_EXE"), os.environ.get("VN_PIN_SHA")))
     h = hashlib.sha256(open(EXE, "rb").read()).hexdigest().upper()
     if h != PIN_SHA:
         raise RuntimeError("pinned copy %s is sha %s, expected %s" % (EXE, h, PIN_SHA))

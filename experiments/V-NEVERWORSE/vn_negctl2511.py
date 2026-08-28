@@ -22,7 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DOC = os.path.join(HERE, "RESULT.md")
 OUT = r"C:\dev\strehl-out\V-NEVERWORSE\dilute"
 GB = r"C:\dev\strehl-out\V-NEVERWORSE\gbundle"
-REC = [(OUT, "shipfr.json"), (OUT, "regout.json"),
+REC = [(OUT, "shipfr-pin-9b05d0b7.json"), (OUT, "regout.json"),
        (OUT, "shipped46.json"), (OUT, "pfvar.json"),
        (GB, "bee-2-cpl.json")]
 PY = sys.executable
@@ -115,11 +115,11 @@ PLANTS = [
     ("doc: the shipping L5 share",
      doc_plant("entitlement of 0.00348", "entitlement of 0.00448"), 1),
     ("oracle: the rogue step in the binary",
-     rec_plant(OUT, "shipfr.json", ["steps", 2, "ratio", 5], mult=2.0), 1),
+     rec_plant(OUT, "shipfr-pin-9b05d0b7.json", ["steps", 2, "ratio", 5], mult=2.0), 1),
     ("oracle: the worst null",
-     rec_plant(OUT, "shipfr.json", ["worst_null"], setval=1.9), 1),
+     rec_plant(OUT, "shipfr-pin-9b05d0b7.json", ["worst_null"], setval=1.9), 1),
     ("oracle: the binary's verdict string",
-     rec_plant(OUT, "shipfr.json", ["verdict"],
+     rec_plant(OUT, "shipfr-pin-9b05d0b7.json", ["verdict"],
                setval="THE SHIPPING BINARY CARRIES IT"), 1),
     ("oracle: the rogue's deviation",
      rec_plant(OUT, "regout.json", ["rogue_deviation"], mult=0.5), 1),
