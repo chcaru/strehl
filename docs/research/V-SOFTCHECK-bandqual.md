@@ -200,6 +200,54 @@ the stack; on `bee-1-cpl` (N=299, step 4) it is a small fraction of the focus ra
 partner rule. That makes bee's `R` the least transferable number in their table and is
 cheap to test: re-run one instrument at the other's defocus distance on bee alone.
 
+## 3d. The selection premium, and the noise-inflation guard (V-NEVERWORSE `f1f40150`)
+
+**The guard, applied to me first: my statistic is raw band power, and raw band power
+counts noise as sharpness.** I do not noise-correct it. Said plainly, as required: no
+single number in this document can be trusted on its own in a flat region.
+
+What I do instead is **stratify**, and the two strata disagree in sign -- which is the
+discrimination a noise-corrected scalar would be bought to provide. `mor(fewer, more)` in
+dex, positive = the deeper arm is softer:
+
+| band | 113 TOP | 113 FLAT | bee TOP | bee FLAT |
+|---|---:|---:|---:|---:|
+| 0.05-0.10 | -0.0133 | -0.0521 | -0.0151 | -0.0280 |
+| 0.10-0.15 | -0.0204 | -0.0708 | -0.0163 | -0.0403 |
+| 0.15-0.20 | -0.0142 | -0.1051 | +0.0121 | -0.0371 |
+| 0.20-0.25 | +0.0104 | -0.1348 | +0.0307 | -0.0384 |
+| 0.25-0.30 | +0.0528 | -0.1446 | +0.0659 | -0.0469 |
+| 0.30-0.35 | +0.0712 | -0.1516 | +0.0748 | -0.0450 |
+| 0.35-0.40 | +0.0749 | -0.1532 | +0.0662 | -0.0389 |
+
+**Every FLAT entry is negative on both subjects: the deeper arm holds MORE flat-region
+power at every band**, and on `113MSDCF` that excess grows monotonically with frequency,
+-0.0521 to -0.1532. That is the selection premium, measured here on real subjects without
+being looked for -- the same effect V-NEVERWORSE produced synthetically, where selecting
+rather than averaging multiplied manufactured 0.30-0.35 cyc/px noise power by
+2.16x / 6.79x / 24.82x at N = 4 / 9 / 19. Two lanes, two instruments, one mechanism.
+
+**Which fixes the direction of my own bias, and it runs against my finding.** The premium
+inflates the *deeper* arm's band power. On raw band power that pushes the deeper arm
+toward reading **sharper**. I measure it reading **softer** on textured tiles. So the
+premium cannot manufacture the textured deficit -- it can only mask it, and **the surviving
+deficits in section 5 are lower bounds, not point estimates.** I do not convert that into a
+corrected number: I would have to assume the flat-tile noise excess also holds on textured
+tiles, and I have not measured that.
+
+**And a pure noise difference cannot change sign between strata.** The deeper arm holds
+more power in flat tiles at every band while holding less in textured tiles at fine bands.
+One additive noise term cannot do both.
+
+**Separately: this lane already refuted the dilution story independently.**
+`V-SOFTCHECK-N-invariance.md` killed the share-dilution model before V-NEVERWORSE's
+argmax control did, by a different route. Two independent refutations, so nothing in this
+document rests on dilution.
+
+**What this does NOT settle**, and I am not claiming it does: within the textured stratum I
+still cannot separate blur from a noise-policy difference, because both predict a deficit
+rising with frequency. Section 6 stands unchanged.
+
 ## 4. What is withdrawn
 
 **`+0.0732` dex/doubling (113MSDCF) and `+0.0748` dex/doubling (bee-1-cpl) at
