@@ -89,7 +89,22 @@ ratio_ci, verdict = bandsignal.ratio_ci, bandsignal.verdict
 SUBJECTS = [
     ("113MSDCF",             r"C:\dev\strehl-out\V-LINEAR\lintiff"),
     ("119MSDCF",             r"C:\dev\strehl-out\V-NOISE2\119\lintiff"),
-    ("bee-1-cpl",            r"C:\dev\strehl-out\V-NOISE2\bee\lintiff"),
+    # RE-DEVELOPED 2026-08-27.  The round-1 develop at
+    # C:\dev\strehl-out\V-NOISE2\bee\lintiff was purged during ORCH's disk
+    # emergency (it was not on the untouchable list; only V-NOISE2\leaf was).
+    # sec.13.9 needed this subject back to qualify 0.30-0.35 on it.
+    #
+    # Re-developed at stride 1, NOT stride 4.  The committed record reads
+    # n_real=299 with step=4, and n_real is n_dev*decim: 299 is only reachable
+    # from 299 develops at decim=1, since a stride-4 develop gives 75*4=300.
+    # Developing at stride 4 would have produced a subject that is one frame
+    # different from the one every committed number describes, with no way to
+    # tell from the verdict.
+    #
+    # The re-develop is not assumed equivalent to the purged one.  It is
+    # CHECKED: all 12 pre-existing bands must reproduce the committed JSON
+    # exactly, which tests the develop and the RNG-append property at once.
+    ("bee-1-cpl",            r"D:\strehl-out\V-LINEAR\r2\bee-1-cpl\lintiff"),
     ("flower-bud-alone-cpl", r"C:\dev\strehl-out\V-NOISE2\fba\lintiff"),
     ("leaf-2-cpl",           r"C:\dev\strehl-out\V-NOISE2\leaf\lintiff"),
     # Round 2, requested by ORCH: the subjects that shipping decisions hang on.
