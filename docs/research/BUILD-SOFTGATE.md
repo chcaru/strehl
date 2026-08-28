@@ -234,26 +234,51 @@ hash, it is also a second independent inertness proof for F8 — on the **estima
 backend, on a **different subject** (coffee-bean, 20 frames, sidecar alignment)
 than the pyramid test used.
 
-**O1 — RESOLVED BY CROSS-CONFIRMATION, not open.** Lane BUILD-CROP reports this
-row as a *known, deliberate* red landmine, independently and before seeing this
-file. The two lanes agree **bit-for-bit** on all three hashes:
+**O1 — RESOLVED, WITH A MECHANISM THAT PREDICTS THIS LANE'S OBSERVATION.** The
+owner traced the cause rather than picking between two lanes' contradictory
+reports, and the trace makes a testable prediction about *this* file's control.
 
-| | BUILD-CROP | this lane |
-|---|---|---|
-| sidecar expects | `52517FF8…` | `52517FF8AE245F238C29F64A29E601C2D5C064CB4D86E93006512993837EC206` |
-| sidecar produces | `E600A506F6D05A84A21C9DF93E4EB82AED98C8098EAF956BCF0E25985F3D4CB2` | `E600A506F6D05A84A21C9DF93E4EB82AED98C8098EAF956BCF0E25985F3D4CB2` |
-| unaligned HOLDS | `88712017…` | `88712017FE31362F35FF2FF5D4B98727CDEFCBAC489D9A7827F21EE0154A8620` |
+Two lanes disagreed honestly because they measured different trees:
+BUILD-OUTPUT ran the suite at `c7bb6282` (**08-27 01:04**) and saw both rows
+hold; the `eps_r` re-fit is `393d7ca3` (**08-27 23:59**), ~23 h later.
 
-Two lanes, sharing no code, reached the same three hashes by different routes.
-**The row's `why` still describes the `4c99cc40` gather flip, so the registry
-text is stale with respect to whatever moved it since** — that remains for the
-owner, but it is one open question, not two.
+**F11c — MEASURED. The mechanism predicts this lane's red control, and the
+prediction holds.** `git merge-base --is-ancestor 393d7ca3 ec96973d` returns
+**0** — the re-fit *is* an ancestor of this lane's pristine baseline
+(`ec96973d`, 08-28 00:55). So the `git archive` tree §6 calls "pristine" already
+carried the CA re-fit, and **must** be red on `-sidecar`. It was. That is a
+mechanism predicting an independent measurement, which is worth more than either
+alone.
+
+`eps_r` is consumed by `OpticalProfile::compose`, whose **shipping** call sites
+are exactly two, both in `align_cmd.rs` (1929, 2095) — **the lateral-CA
+correction exists only on the alignment path.** Hence the rows behave as they
+must:
+
+| row | `env_align` | `compose` runs | outcome |
+|---|---|---|---|
+| `…-sidecar` | unset (alignment ON) | yes | **RED — the re-fit reaches it** |
+| `…-unaligned` | `0` (alignment OFF) | no | **HOLDS** |
+
+The registry is working exactly as designed: it caught a real change and its
+paired control localised the cause to one code path.
+
+**Three lanes now agree bit-for-bit** on all three hashes, having reached them by
+different routes: expects `52517FF8AE245F238C29F64A29E601C2D5C064CB4D86E93006512993837EC206`,
+produces `E600A506F6D05A84A21C9DF93E4EB82AED98C8098EAF956BCF0E25985F3D4CB2`,
+`-unaligned` holds at `88712017FE31362F35FF2FF5D4B98727CDEFCBAC489D9A7827F21EE0154A8620`.
+Matching `E600A506…` exactly also confirms this lane measured a tree **with** the
+CA fix in it; a third distinct hash would have been a finding worth stopping for,
+and there was none.
 
 **F11b — MEASURED. The specificity control is GREEN under this lane's change.**
 `coffee-bean-20-gate2-unaligned` holds at `88712017…` in **both** the pristine
 tree and the tree carrying this lane's full change — including the unlanded
 `pyramid.rs` hunk, which is strictly more than what was committed. That is the
-row that would be this lane's fault if it moved, and it did not.
+row that would be this lane's fault if it moved, and the soft kernel lives in the
+**merge**, not in alignment, so neither row should move and neither did. The one
+`RENDER_ENV` addition cannot move a hash either: it makes the harness *clear*
+`STREHL_SOFT_GATE`, and cleared equals unset equals the shipped selection.
 
 **D1 — DISCIPLINE. Every arm of a comparison must come from one build, and this
 lane hit that independently before it was told.** Binary `A`, built from the
@@ -382,10 +407,45 @@ summary is: the mechanism argued in F4 survives contact with measurement in
 grep the call sites before believing one.** `optics.rs:317` read "Nothing in this
 crate calls `compose` yet" while two live call sites existed, and cost BUILD-CROP
 an entire investigation into a wiring bug that did not exist (fixed at
-`910e6bc0`). This lane's entire brief rested on a reachability claim, so it was
-checked rather than trusted: `active_kernel` has exactly two occurrences
-crate-wide — the definition at `merge.rs:681` and its sole call at `merge.rs:1455`
-— which the owner independently confirmed by the same grep.
+`910e6bc0`). The scar is now in the source at `optics.rs:326-327`, which records
+the false sentence and its date so the next reader sees the failure and not only
+the fix. In this crate **a comment about reachability is a claim; the grep is the
+evidence.**
+
+**F16 — MEASURED. Call-site census of every symbol this lane's reachability
+claims depend on**, counted crate-wide over `crates/**/*.rs`, excluding comment
+lines. This is the evidence for those claims, and it is cheap to re-run:
+
+| symbol | occurrences | where |
+|---|---|---|
+| `active_kernel` | **3** | def `merge.rs:681`; call `merge.rs:1455` (`Estimator::new`); call `merge_cmd.rs:2905` (**this lane's preflight**) |
+| `preflight_soft_kernel` | **2** | def `merge_cmd.rs:2904`; **one** call `merge_cmd.rs:2917` (`merge_cmd::run`) |
+| `enable_soft` | **0** | — |
+| `SOFT_GATE_ENV` | 2 | def `merge.rs:530`; use `merge.rs:682` |
+
+Read the three numbers that matter:
+
+- **`active_kernel` went from one call site to two.** The premise of this
+  milestone was that it had exactly one, inside `Estimator::new` — which the
+  owner independently confirmed by the same grep. It now also runs on the
+  dispatch shared by both backends. That is deliverable 2, and the count is the
+  proof rather than the claim.
+- **`preflight_soft_kernel` has exactly one call site**, which is the design: one
+  site on `merge_cmd::run` refuses an unknown name on *both* backends. Two sites
+  would mean the dispatch was missed and each arm patched separately.
+- **`enable_soft` reads 0, and that number is load-bearing.** It is the grep
+  named in that function's own SCOPE paragraph. While it reads 0 the pyramid
+  backend *validates* the kernel and does not *apply* it, and the paragraph is
+  current. **When it reads 1, the paragraph is stale and must go in that commit.**
+
+A refinement worth recording because it is the same trap in miniature: counting
+`compose` naively gives more than two. The **shipping** call sites are
+`align_cmd.rs:1929` and `align_cmd.rs:2095` — which is what makes the CA re-fit
+alignment-only and O1 above resolvable — but a raw grep also returns one in
+`crates/strehl-cli/examples/build-demosaic-truth.rs`, an **example binary that
+ships nothing**, plus the definition and twelve in `optics.rs`'s own tests. The
+"exactly two" is a claim about shipping call sites and is correct as such; a
+census that does not say which kind it counted invites the next misreading.
 
 **The corollary is that this lane's own change creates two future instances, and
 they must be fixed IN THE COMMIT THAT LANDS THE PATCH, not after:**
@@ -403,8 +463,8 @@ describes. They are correct as they stand and become wrong on landing.
 
 3. `merge_cmd::preflight_soft_kernel`'s doc carries an explicit SCOPE paragraph
    stating that the pyramid backend *validates* the kernel but does not *apply*
-   it, with the grep that falsifies it (`enable_soft` having a call site in
-   `merge_cmd.rs`). Delete that paragraph when the patch lands.
+   it, naming the grep that falsifies it. Delete that paragraph when
+   `enable_soft` stops reading **0** in the F16 census.
 4. Re-measure everything in §5 after the hand-merge against the other lane's
    work. The patch was built and measured against `ec96973d` only, and that lane
    is changing a default in the same weight loop.
