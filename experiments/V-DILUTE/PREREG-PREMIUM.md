@@ -133,3 +133,62 @@ range. Refuse the design if `window-avg` grows more than 3x from N=19 to N=79.
 Offline in NumPy on a 900×900 crop of one subject. It cannot price runtime cost,
 cannot see CFA/quad-plane effects the Rust path has, and one subject cannot
 establish corpus behaviour. Treat as a design screen, not an acceptance test.
+
+---
+
+# ROUND 2 PRE-REGISTRATION — written after round 1, before round 2 ran
+
+Round 1 is scored in `V-DILUTE.md`. Three of its results drive round 2:
+`oracle` cut the premium **4.10x with N held at 79**, so correlation is the
+mechanism; capping did **nothing** (K=4 → 225.32 against shipping 226.39); and
+every arm that cut the premium also cut sharpness, so the real deliverable is
+the **frontier**, not a single arm.
+
+**The reframe.** A Laplacian level `k` carries roughly `0.5/2^(k+1)` to
+`0.5/2^k` cyc/px. So the premium band **0.30–0.35 is LEVEL 0**, while the
+sharpness band **0.20–0.25 is mostly LEVEL 1**. `vd_signal.py` already measured
+that this subject carries **S/y = 0.00 at 0.30–0.35** and **2.43 at 0.20–0.25**.
+
+That yields a mechanism neither ORCH's brief nor round 1 stated:
+
+> **The merge selects hardest in the band where the scene has nothing to
+> select on, and the premium is manufactured there. The candidate-set control
+> that costs nothing is to collapse the candidate set to ALL frames in bands
+> whose scene content is below the noise, and to keep selecting where it is
+> not.**
+
+**I flag the obvious objection against myself:** an arm that averages level 0
+attacks precisely the band the premium is scored in, which could be metric
+gaming. The defence must be independent, and it is only valid if BOTH hold:
+(a) `vd_signal` shows the band empty of scene content, measured before these
+arms existed; and (b) sharpness is reported in **several** bands, not only
+0.20–0.25, so a loss pushed into a neighbouring band cannot hide. Round 2
+reports 0.10–0.15, 0.17–0.20, 0.20–0.25 and 0.25–0.30 for every arm. If
+`lvl0mean` loses more than 5% in ANY of those, the "costs nothing" claim dies.
+
+**This design is necessarily subject-adaptive and I predict it in advance:** on
+`bee-1-cpl`, whose boundary V-LINEAR measured at **0.48**, level 0 carries real
+signal and averaging it must be destructive. A fixed "average level 0" rule is
+therefore wrong corpus-wide even if it wins here.
+
+### Predicted premium / sharpness(0.20–0.25) at N=79
+
+| arm | mechanism | premium | sharp | refuse if |
+|---|---|---|---|---|
+| `pool1` | spatial pool σ=1 | 110 | 0.90 | — |
+| `pool4` | spatial pool σ=4 | 45 | 0.60 | — |
+| `pool8` | spatial pool σ=8 | 35 | 0.45 | — |
+| `axis2` | focus-axis pooling ×2 | 70 | 0.75 | — |
+| `pwin2_1` | pooled peak, average ±1 | 22 | 0.70 | — |
+| `pwin2_2` | pooled peak, average ±2 | 13 | 0.65 | — |
+| **`lvl0mean`** | **average level 0 only** | **6** | **0.97** | **any band < 0.95** |
+| `lvl0pool8` | heavy pool at level 0 only | 30 | 0.99 | any band < 0.95 |
+
+### Kill conditions for round 2
+
+6. `lvl0mean` premium > 40 ⇒ level 0 is **not** the premium's home and the
+   level attribution above is wrong.
+7. `lvl0mean` sharpness < 0.95 in **any** reported band ⇒ the band is not
+   empty after all and the whole "costs nothing" claim is refused.
+8. If `pool` sharpness does not fall monotonically with σ, the pooling account
+   is wrong and must be re-derived before it is offered as a design.
