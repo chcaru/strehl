@@ -1,5 +1,5 @@
 {
- "arm": "SHIP-V3",
+ "arm": "SHIP-V3 (10 subjects, V-REVIEW) + DELIVER-V6 (13 subjects, V-ADJ13)",
  "gate_rule": {
   "blotch_review": 0.02,
   "chroma_review": 0.015,
@@ -8,7 +8,9 @@
  },
  "provenance": {
   "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+  "binary_v_adj13": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe sha256 2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
   "report": "experiments/V-REVIEW/report.md",
+  "report_v_adj13": "docs/research/V-ADJ13.md",
   "statistics": "imported unmodified from orch_blotch.py / orch_chroma.py"
  },
  "schema": "vr-baseline/1",
@@ -44,123 +46,487 @@
    "verdict": "ACQUIT"
   },
   "112MSDCF": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
    "flagged_for": "both",
    "master": {
-    "blotch": 0.14667335,
-    "blotch_band_dn": 2064.7993,
-    "blotch_mean_dn": 14077.5361,
+    "blotch": 0.14009192,
+    "blotch_band_dn": 1991.9413,
+    "blotch_mean_dn": 14218.816,
     "blotch_window_yx": [
      2254,
      5926
     ],
-    "chroma": 0.034850854,
-    "chroma_window_yx": [
-     2616,
-     1458
-    ]
-   },
-   "n_source_frames_registered": 18,
-   "ratio": {
-    "blotch": 1.0445,
-    "blotch_band_dn": 0.94647,
-    "chroma": 1.16762
-   },
-   "reason": "band DN 0.946x source max; excess is the denominator (mean 0.922x); chroma absolute DN 0.919x, excess confined to darkest luminance decile",
-   "source_frame_max": {
-    "blotch": 0.14042495,
-    "blotch_band_dn": 2181.5813,
-    "chroma": 0.029847806
-   },
-   "verdict": "ACQUIT"
-  },
-  "113MSDCF": {
-   "flagged_for": "both",
-   "master": {
-    "blotch": 0.25167988,
-    "blotch_band_dn": 2170.8538,
-    "blotch_mean_dn": 8625.4561,
-    "blotch_window_yx": [
-     14,
-     1558
-    ],
-    "chroma": 0.025378803,
+    "chroma": 0.028964196,
     "chroma_window_yx": [
      1744,
      1458
     ]
    },
-   "n_source_frames_registered": 16,
+   "master_cover": 0.97647922,
+   "master_cover_source": "MEASURED: ORB frame 39, scale 0.97902 x source cover 0.9974, 3691 inliers",
+   "master_sha256": "5AE988996541476CF74FD9FA1E0844E807C1A6A0452AFEA087F6BD21A75B9B24",
+   "n_source_frames_registered": 21,
    "ratio": {
-    "blotch": 1.06853,
-    "blotch_band_dn": 0.90497,
-    "chroma": 1.09358
+    "blotch": 0.99960973,
+    "blotch_band_dn": 0.91233772,
+    "chroma": 1.1041044
    },
-   "reason": "band DN 0.905x source max (mean 0.917x); chroma absolute DN 0.907x, d1 carries 31.8% of the excess",
+   "ratio_vs_median_source": {
+    "blotch": 1.0193624,
+    "chroma": 1.1391573
+   },
+   "reason": "blotch 1.000x source max (band DN 0.912x; the window's own mean DN is 0.940x the source median, so the excess sits in the denominator), chroma 1.104x source max; worst statistic 1.104x of the frames the master was built from, under the 1.3x elevated multiple. 21 of 21 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 47,
+    "chroma": 58
+   },
    "source_frame_max": {
-    "blotch": 0.23553746,
-    "blotch_band_dn": 2398.8149,
-    "chroma": 0.023207158
+    "blotch": 0.14014662,
+    "blotch_band_dn": 2183.3376,
+    "chroma": 0.026233205
+   },
+   "source_frames_available": 79,
+   "source_frames_sampled": 21,
+   "superseded_record": {
+    "arm": "SHIP-V3",
+    "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+    "gate_expiry_reason": "chroma 0.03485 -> 0.02896 (16.9% > 5%)",
+    "record": {
+     "flagged_for": "both",
+     "master": {
+      "blotch": 0.14667335,
+      "blotch_band_dn": 2064.7993,
+      "blotch_mean_dn": 14077.5361,
+      "blotch_window_yx": [
+       2254,
+       5926
+      ],
+      "chroma": 0.034850854,
+      "chroma_window_yx": [
+       2616,
+       1458
+      ]
+     },
+     "n_source_frames_registered": 18,
+     "ratio": {
+      "blotch": 1.0445,
+      "blotch_band_dn": 0.94647,
+      "chroma": 1.16762
+     },
+     "reason": "band DN 0.946x source max; excess is the denominator (mean 0.922x); chroma absolute DN 0.919x, excess confined to darkest luminance decile",
+     "source_frame_max": {
+      "blotch": 0.14042495,
+      "blotch_band_dn": 2181.5813,
+      "chroma": 0.029847806
+     },
+     "verdict": "ACQUIT"
+    },
+    "report": "experiments/V-REVIEW/report.md",
+    "v_adj13_finding": "MIXED: chroma window moved 872 px (2616,1458)->(1744,1458); at the recorded window today's master reads 0.03268, -6.23%, so ~6% is a same-window move and the other ~11% is the window. Gate could not say so: verdict() never puts chroma_window_yx in meas."
    },
    "verdict": "ACQUIT"
   },
-  "coffee-bubbles": {
+  "113MSDCF": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
    "flagged_for": "both",
    "master": {
-    "blotch": 0.09891994,
-    "blotch_band_dn": 233.8072,
-    "blotch_mean_dn": 2363.6003,
+    "blotch": 0.25186001,
+    "blotch_band_dn": 2151.9424,
+    "blotch_mean_dn": 8544.2002,
     "blotch_window_yx": [
-     38,
+     14,
+     1558
+    ],
+    "chroma": 0.023947175,
+    "chroma_window_yx": [
+     1744,
+     1458
+    ]
+   },
+   "master_cover": 0.98083337,
+   "master_cover_source": "MEASURED: ORB frame 31, scale 0.98339 x source cover 0.9974, 2719 inliers",
+   "master_sha256": "4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F",
+   "n_source_frames_registered": 19,
+   "ratio": {
+    "blotch": 1.0742859,
+    "blotch_band_dn": 0.89805555,
+    "chroma": 1.0307495
+   },
+   "ratio_vs_median_source": {
+    "blotch": 1.0884453,
+    "chroma": 1.054468
+   },
+   "reason": "blotch 1.074x source max (band DN 0.898x; the window's own mean DN is 0.908x the source median, so the excess sits in the denominator), chroma 1.031x source max; worst statistic 1.074x of the frames the master was built from, under the 1.3x elevated multiple. 19 of 19 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 34,
+    "chroma": 46
+   },
+   "source_frame_max": {
+    "blotch": 0.23444411,
+    "blotch_band_dn": 2396.2241,
+    "chroma": 0.023232778
+   },
+   "source_frames_available": 63,
+   "source_frames_sampled": 19,
+   "superseded_record": {
+    "arm": "SHIP-V3",
+    "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+    "gate_expiry_reason": "chroma 0.02538 -> 0.02395 (5.6% > 5%)",
+    "record": {
+     "flagged_for": "both",
+     "master": {
+      "blotch": 0.25167988,
+      "blotch_band_dn": 2170.8538,
+      "blotch_mean_dn": 8625.4561,
+      "blotch_window_yx": [
+       14,
+       1558
+      ],
+      "chroma": 0.025378803,
+      "chroma_window_yx": [
+       1744,
+       1458
+      ]
+     },
+     "n_source_frames_registered": 16,
+     "ratio": {
+      "blotch": 1.06853,
+      "blotch_band_dn": 0.90497,
+      "chroma": 1.09358
+     },
+     "reason": "band DN 0.905x source max (mean 0.917x); chroma absolute DN 0.907x, d1 carries 31.8% of the excess",
+     "source_frame_max": {
+      "blotch": 0.23553746,
+      "blotch_band_dn": 2398.8149,
+      "chroma": 0.023207158
+     },
+     "verdict": "ACQUIT"
+    },
+    "report": "experiments/V-REVIEW/report.md",
+    "v_adj13_finding": "RENDER CHANGE: chroma window unchanged (1744,1458); at that window today's master reads 0.02395, -5.64%. Not a window move. Direction is an improvement."
+   },
+   "verdict": "ACQUIT"
+  },
+  "chia-seeds-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.42715917,
+    "blotch_band_dn": 4653.7544,
+    "blotch_mean_dn": 10894.661,
+    "blotch_window_yx": [
+     1606,
+     254
+    ],
+    "chroma": 0.071042515,
+    "chroma_window_yx": [
+     872,
+     5832
+    ]
+   },
+   "master_cover": 0.9597,
+   "master_cover_source": "C:\\dev\\strehl-out\\DELIVER-V6\\masters\\chia-seeds-cpl.render.log",
+   "master_sha256": "2320CB71A790C41CD050889C87EDECB45417EACF5354901E03F3985D420905A8",
+   "n_source_frames_registered": 23,
+   "ratio": {
+    "blotch": 1.0153112,
+    "blotch_band_dn": 1.0030979,
+    "chroma": 0.96901601
+   },
+   "ratio_vs_median_source": {
+    "blotch": 1.0381787,
+    "chroma": 1.0277065
+   },
+   "reason": "blotch 1.015x source max (band DN 1.003x; the window's own mean DN is 0.982x the source median, so the excess sits in the denominator), chroma 0.969x source max; worst statistic 1.015x of the frames the master was built from, under the 1.3x elevated multiple. 23 of 23 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 56,
+    "chroma": 72
+   },
+   "source_frame_max": {
+    "blotch": 0.42071747,
+    "blotch_band_dn": 4639.3818,
+    "chroma": 0.073314077
+   },
+   "source_frames_available": 130,
+   "source_frames_sampled": 23,
+   "verdict": "ACQUIT"
+  },
+  "coffee-bubbles": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.10071126,
+    "blotch_band_dn": 239.56316,
+    "blotch_mean_dn": 2378.7126,
+    "blotch_window_yx": [
+     54,
      14
     ],
-    "chroma": 0.054596189,
+    "chroma": 0.053836938,
     "chroma_window_yx": [
      0,
      1458
     ]
    },
-   "n_source_frames_registered": 12,
+   "master_cover": 0.98869177,
+   "master_cover_source": "MEASURED: ORB frame 9, scale 0.99127 x source cover 0.9974, 3874 inliers",
+   "master_sha256": "6FE6A4903CD7C744EFB2C1334E69B93B63F5DD924109AE63DC74998CEB374CAA",
+   "n_source_frames_registered": 13,
    "ratio": {
-    "blotch": 1.06917,
-    "blotch_band_dn": 0.99373,
-    "chroma": 0.90146
+    "blotch": 0.93060561,
+    "blotch_band_dn": 0.85794098,
+    "chroma": 0.88895227
    },
-   "reason": "band DN 0.994x source max -- inside the +-17% frame-to-frame band spread; chroma 0.901x source max outright",
+   "ratio_vs_median_source": {
+    "blotch": 1.1678686,
+    "chroma": 0.94813463
+   },
+   "reason": "blotch 0.931x source max (band DN 0.858x; the window's own mean DN is 1.068x the source median, so the excess sits in the denominator), chroma 0.889x source max; worst statistic 0.931x of the frames the master was built from, under the 1.3x elevated multiple. 13 of 13 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 17,
+    "chroma": 13
+   },
    "source_frame_max": {
-    "blotch": 0.09252059,
-    "blotch_band_dn": 235.2833,
-    "chroma": 0.060564088
+    "blotch": 0.10822121,
+    "blotch_band_dn": 279.23035,
+    "chroma": 0.060562237
+   },
+   "source_frames_available": 19,
+   "source_frames_sampled": 13,
+   "superseded_record": {
+    "arm": "SHIP-V3",
+    "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+    "gate_expiry_reason": "blotch window [38, 14] -> [54, 14]",
+    "record": {
+     "flagged_for": "both",
+     "master": {
+      "blotch": 0.09891994,
+      "blotch_band_dn": 233.8072,
+      "blotch_mean_dn": 2363.6003,
+      "blotch_window_yx": [
+       38,
+       14
+      ],
+      "chroma": 0.054596189,
+      "chroma_window_yx": [
+       0,
+       1458
+      ]
+     },
+     "n_source_frames_registered": 12,
+     "ratio": {
+      "blotch": 1.06917,
+      "blotch_band_dn": 0.99373,
+      "chroma": 0.90146
+     },
+     "reason": "band DN 0.994x source max -- inside the +-17% frame-to-frame band spread; chroma 0.901x source max outright",
+     "source_frame_max": {
+      "blotch": 0.09252059,
+      "blotch_band_dn": 235.2833,
+      "chroma": 0.060564088
+     },
+     "verdict": "ACQUIT"
+    },
+    "report": "experiments/V-REVIEW/report.md",
+    "v_adj13_finding": "WINDOW MOVE: at the recorded window today's master reads 0.09900 vs 0.09892 recorded, +0.08%."
    },
    "verdict": "ACQUIT"
   },
   "couch-fibers-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
    "flagged_for": "blotch",
    "master": {
-    "blotch": 0.0451148,
-    "blotch_band_dn": 2069.3059,
-    "blotch_mean_dn": 45867.5625,
+    "blotch": 0.043097368,
+    "blotch_band_dn": 2031.4192,
+    "blotch_mean_dn": 47135.574,
     "blotch_window_yx": [
-     558,
-     6110
+     3422,
+     2334
     ],
-    "chroma": 0.00418283,
+    "chroma": 0.0041888791,
     "chroma_window_yx": [
      1744,
      2920
     ]
    },
-   "n_source_frames_registered": 17,
+   "master_cover": 0.88498321,
+   "master_cover_source": "MEASURED: ORB frame 149, scale 0.88729 x source cover 0.9974, 575 inliers",
+   "master_sha256": "9E37B3CE22A2BFEC1D62CABAD8454420DECA0ACAD57E6E695E68BC8B1E33EC42",
+   "n_source_frames_registered": 20,
    "ratio": {
-    "blotch": 0.81135,
-    "blotch_band_dn": 0.82962,
-    "chroma": 0.79564
+    "blotch": 0.6915803,
+    "blotch_band_dn": 0.65099636,
+    "chroma": 0.79549769
    },
-   "reason": "master reads below the worst source frame outright (0.811x); band 0.830x",
+   "ratio_vs_median_source": {
+    "blotch": 0.76202146,
+    "chroma": 0.86035834
+   },
+   "reason": "blotch 0.692x source max (band DN 0.651x; the window's own mean DN is 0.942x the source median, so the excess sits in the denominator), chroma 0.795x source max; worst statistic 0.795x of the frames the master was built from, under the 1.3x elevated multiple. 20 of 22 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 101,
+    "chroma": 101
+   },
    "source_frame_max": {
-    "blotch": 0.05560462,
-    "blotch_band_dn": 2494.2864,
-    "chroma": 0.005257173
+    "blotch": 0.062317229,
+    "blotch_band_dn": 3120.4771,
+    "chroma": 0.0052657338
    },
+   "source_frames_available": 299,
+   "source_frames_sampled": 22,
+   "superseded_record": {
+    "arm": "SHIP-V3",
+    "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+    "gate_expiry_reason": "blotch window [558, 6110] -> [3422, 2334]",
+    "record": {
+     "flagged_for": "blotch",
+     "master": {
+      "blotch": 0.0451148,
+      "blotch_band_dn": 2069.3059,
+      "blotch_mean_dn": 45867.5625,
+      "blotch_window_yx": [
+       558,
+       6110
+      ],
+      "chroma": 0.00418283,
+      "chroma_window_yx": [
+       1744,
+       2920
+      ]
+     },
+     "n_source_frames_registered": 17,
+     "ratio": {
+      "blotch": 0.81135,
+      "blotch_band_dn": 0.82962,
+      "chroma": 0.79564
+     },
+     "reason": "master reads below the worst source frame outright (0.811x); band 0.830x",
+     "source_frame_max": {
+      "blotch": 0.05560462,
+      "blotch_band_dn": 2494.2864,
+      "chroma": 0.005257173
+     },
+     "verdict": "ACQUIT"
+    },
+    "report": "experiments/V-REVIEW/report.md",
+    "v_adj13_finding": "WINDOW MOVE: at the recorded window today's master reads 0.04508 vs 0.04512 recorded, -0.09%."
+   },
+   "verdict": "ACQUIT"
+  },
+  "dime-flat-narrow-slices-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.047850465,
+    "blotch_band_dn": 1904.7687,
+    "blotch_mean_dn": 39806.691,
+    "blotch_window_yx": [
+     14,
+     38
+    ],
+    "chroma": 0.033138782,
+    "chroma_window_yx": [
+     872,
+     2916
+    ]
+   },
+   "master_cover": 0.9718,
+   "master_cover_source": "C:\\dev\\strehl-out\\DELIVER-V6\\masters\\dime-flat-narrow-slices-cpl.render.log",
+   "master_sha256": "E5798BC7899288F187F6771268ACF8CC76FA147943FA80DE9190EA81C8503399",
+   "n_source_frames_registered": 22,
+   "ratio": {
+    "blotch": 1.2565031,
+    "blotch_band_dn": 1.0170432,
+    "chroma": 0.98806933
+   },
+   "ratio_vs_median_source": {
+    "blotch": 1.338129,
+    "chroma": 1.0236153
+   },
+   "reason": "blotch 1.257x source max (band DN 1.017x; the window's own mean DN is 0.957x the source median, so the excess sits in the denominator), chroma 0.988x source max; worst statistic 1.257x of the frames the master was built from, under the 1.3x elevated multiple. 22 of 22 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 180,
+    "chroma": 106
+   },
+   "source_frame_max": {
+    "blotch": 0.03808225,
+    "blotch_band_dn": 1872.8494,
+    "chroma": 0.033538924
+   },
+   "source_frames_available": 207,
+   "source_frames_sampled": 22,
+   "verdict": "ACQUIT"
+  },
+  "duck-tape-side-layers-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "blotch",
+   "master": {
+    "blotch": 0.14188864,
+    "blotch_band_dn": 4751.0913,
+    "blotch_mean_dn": 33484.648,
+    "blotch_window_yx": [
+     1286,
+     5142
+    ],
+    "chroma": 0.0061263819,
+    "chroma_window_yx": [
+     872,
+     4374
+    ]
+   },
+   "master_cover": 0.9735,
+   "master_cover_source": "C:\\dev\\strehl-out\\DELIVER-V6\\masters\\duck-tape-side-layers-cpl.render.log",
+   "master_sha256": "00043B3812E03062BA9B820B6BFA22FBC5A527EDB2E5CA4AE45E14435AA0C7EE",
+   "n_source_frames_registered": 22,
+   "ratio": {
+    "blotch": 1.0048499,
+    "blotch_band_dn": 0.80639115,
+    "chroma": 1.0045432
+   },
+   "ratio_vs_median_source": {
+    "blotch": 1.0151082,
+    "chroma": 1.0466281
+   },
+   "reason": "blotch 1.005x source max (band DN 0.806x; the window's own mean DN is 0.905x the source median, so the excess sits in the denominator), chroma 1.005x source max; worst statistic 1.005x of the frames the master was built from, under the 1.3x elevated multiple. 22 of 22 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 147,
+    "chroma": 128
+   },
+   "source_frame_max": {
+    "blotch": 0.14120381,
+    "blotch_band_dn": 5891.7949,
+    "chroma": 0.0060986745
+   },
+   "source_frames_available": 197,
+   "source_frames_sampled": 22,
    "verdict": "ACQUIT"
   },
   "flat-on-ruler-cpl": {
@@ -194,62 +560,172 @@
    "verdict": "ACQUIT"
   },
   "flower-inner-edge-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
    "flagged_for": "blotch",
    "master": {
-    "blotch": 0.0992144,
-    "blotch_band_dn": 1254.1598,
-    "blotch_mean_dn": 12640.9043,
+    "blotch": 0.097826529,
+    "blotch_band_dn": 1201.7517,
+    "blotch_mean_dn": 12284.518,
     "blotch_window_yx": [
-     3670,
+     3710,
      3150
     ],
-    "chroma": 0.01226053,
+    "chroma": 0.012254016,
     "chroma_window_yx": [
      1744,
      0
     ]
    },
-   "n_source_frames_registered": 20,
+   "master_cover": 0.84177691,
+   "master_cover_source": "MEASURED: ORB frame 149, scale 0.84397 x source cover 0.9974, 45 inliers",
+   "master_sha256": "9B4C4204B4A1DDBEDF73834FD805D648E15BC416F51A014E43981E1BDD62160E",
+   "n_source_frames_registered": 22,
    "ratio": {
-    "blotch": 1.0886,
-    "blotch_band_dn": 0.97213,
-    "chroma": 0.82741
+    "blotch": 1.0132354,
+    "blotch_band_dn": 0.97910393,
+    "chroma": 0.82649989
    },
-   "reason": "band 0.972x; an independent all-in-focus composite of the same frames reads 0.12097, 1.22x the master",
+   "ratio_vs_median_source": {
+    "blotch": 1.0215617,
+    "chroma": 0.8740786
+   },
+   "reason": "blotch 1.013x source max (band DN 0.979x; the window's own mean DN is 1.033x the source median, so the excess sits in the denominator), chroma 0.826x source max; worst statistic 1.013x of the frames the master was built from, under the 1.3x elevated multiple. 22 of 22 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 251,
+    "chroma": 231
+   },
    "source_frame_max": {
-    "blotch": 0.09113976,
-    "blotch_band_dn": 1290.1161,
-    "chroma": 0.014817942
+    "blotch": 0.096548664,
+    "blotch_band_dn": 1227.3995,
+    "chroma": 0.014826398
+   },
+   "source_frames_available": 299,
+   "source_frames_sampled": 22,
+   "superseded_record": {
+    "arm": "SHIP-V3",
+    "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+    "gate_expiry_reason": "blotch window [3670, 3150] -> [3710, 3150]",
+    "record": {
+     "flagged_for": "blotch",
+     "master": {
+      "blotch": 0.0992144,
+      "blotch_band_dn": 1254.1598,
+      "blotch_mean_dn": 12640.9043,
+      "blotch_window_yx": [
+       3670,
+       3150
+      ],
+      "chroma": 0.01226053,
+      "chroma_window_yx": [
+       1744,
+       0
+      ]
+     },
+     "n_source_frames_registered": 20,
+     "ratio": {
+      "blotch": 1.0886,
+      "blotch_band_dn": 0.97213,
+      "chroma": 0.82741
+     },
+     "reason": "band 0.972x; an independent all-in-focus composite of the same frames reads 0.12097, 1.22x the master",
+     "source_frame_max": {
+      "blotch": 0.09113976,
+      "blotch_band_dn": 1290.1161,
+      "chroma": 0.014817942
+     },
+     "verdict": "ACQUIT"
+    },
+    "report": "experiments/V-REVIEW/report.md",
+    "v_adj13_finding": "WINDOW MOVE: at the recorded window today's master reads 0.09979 vs 0.09922 recorded, +0.58%."
    },
    "verdict": "ACQUIT"
   },
   "foam": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
    "flagged_for": "both",
    "master": {
-    "blotch": 0.46074508,
-    "blotch_band_dn": 3663.7317,
-    "blotch_mean_dn": 7951.7544,
+    "blotch": 0.45949569,
+    "blotch_band_dn": 3655.7549,
+    "blotch_mean_dn": 7956.0156,
     "blotch_window_yx": [
      518,
      2054
     ],
-    "chroma": 0.032503272,
+    "chroma": 0.030651979,
     "chroma_window_yx": [
-     872,
+     0,
      2916
     ]
    },
-   "n_source_frames_registered": 12,
+   "master_cover": 0.88235285,
+   "master_cover_source": "MEASURED: ORB frame 50, scale 0.88465 x source cover 0.9974, 1407 inliers",
+   "master_sha256": "76270C86E292A3419CA7C9B4D206E5660DC5C82D48E02E8319474C9093A2E365",
+   "n_source_frames_registered": 15,
    "ratio": {
-    "blotch": 0.88522,
-    "blotch_band_dn": 0.52709,
-    "chroma": 0.88041
+    "blotch": 0.88256774,
+    "blotch_band_dn": 0.52543121,
+    "chroma": 0.98541316
    },
-   "reason": "band DN 0.527x source max -- the merge halved it; chroma 0.880x outright",
+   "ratio_vs_median_source": {
+    "blotch": 0.92550388,
+    "chroma": 1.1155164
+   },
+   "reason": "blotch 0.883x source max (band DN 0.525x; the window's own mean DN is 0.882x the source median, so the excess sits in the denominator), chroma 0.985x source max; worst statistic 0.985x of the frames the master was built from, under the 1.3x elevated multiple. 15 of 19 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 37,
+    "chroma": 52
+   },
    "source_frame_max": {
-    "blotch": 0.52048773,
-    "blotch_band_dn": 6950.8252,
-    "chroma": 0.036918127
+    "blotch": 0.52063504,
+    "blotch_band_dn": 6957.6279,
+    "chroma": 0.031105713
+   },
+   "source_frames_available": 100,
+   "source_frames_sampled": 19,
+   "superseded_record": {
+    "arm": "SHIP-V3",
+    "binary": "C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe",
+    "gate_expiry_reason": "chroma 0.03250 -> 0.03065 (5.7% > 5%)",
+    "record": {
+     "flagged_for": "both",
+     "master": {
+      "blotch": 0.46074508,
+      "blotch_band_dn": 3663.7317,
+      "blotch_mean_dn": 7951.7544,
+      "blotch_window_yx": [
+       518,
+       2054
+      ],
+      "chroma": 0.032503272,
+      "chroma_window_yx": [
+       872,
+       2916
+      ]
+     },
+     "n_source_frames_registered": 12,
+     "ratio": {
+      "blotch": 0.88522,
+      "blotch_band_dn": 0.52709,
+      "chroma": 0.88041
+     },
+     "reason": "band DN 0.527x source max -- the merge halved it; chroma 0.880x outright",
+     "source_frame_max": {
+      "blotch": 0.52048773,
+      "blotch_band_dn": 6950.8252,
+      "chroma": 0.036918127
+     },
+     "verdict": "ACQUIT"
+    },
+    "report": "experiments/V-REVIEW/report.md",
+    "v_adj13_finding": "WINDOW MOVE: chroma window moved 872 px (872,2916)->(0,2916); at the recorded window today's master reads 0.03212, -1.19%, inside tolerance. The gate printed this as value drift because verdict() never puts chroma_window_yx in meas, so check_acquittal's moved-window branch cannot fire for chroma."
    },
    "verdict": "ACQUIT"
   },
@@ -311,6 +787,198 @@
     "blotch_band_dn": 197.0838,
     "chroma": 0.022333556
    },
+   "verdict": "ACQUIT"
+  },
+  "maldon-sea-salt-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "blotch",
+   "master": {
+    "blotch": 0.077939911,
+    "blotch_band_dn": 3320.9182,
+    "blotch_mean_dn": 42608.699,
+    "blotch_window_yx": [
+     94,
+     5782
+    ],
+    "chroma": 0.0017110271,
+    "chroma_window_yx": [
+     0,
+     2916
+    ]
+   },
+   "master_cover": 0.9406,
+   "master_cover_source": "C:\\dev\\strehl-out\\DELIVER-V6\\masters\\maldon-sea-salt-cpl.render.log",
+   "master_sha256": "6E29C074238A15FA66306DF1AB847FB0798FECE2BED4B324FF2A6AA504673E07",
+   "n_source_frames_registered": 25,
+   "ratio": {
+    "blotch": 1.1169481,
+    "blotch_band_dn": 0.93361845,
+    "chroma": 0.84225557
+   },
+   "ratio_vs_median_source": {
+    "blotch": 1.6827741,
+    "chroma": 0.91809329
+   },
+   "reason": "blotch 1.117x source max (band DN 0.934x; the window's own mean DN is 0.921x the source median, so the excess sits in the denominator), chroma 0.842x source max; worst statistic 1.117x of the frames the master was built from, under the 1.3x elevated multiple. 25 of 25 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 175,
+    "chroma": 80
+   },
+   "source_frame_max": {
+    "blotch": 0.06977935,
+    "blotch_band_dn": 3557.04,
+    "chroma": 0.0020314821
+   },
+   "source_frames_available": 255,
+   "source_frames_sampled": 25,
+   "verdict": "ACQUIT"
+  },
+  "medication-pill-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "blotch",
+   "master": {
+    "blotch": 0.10533736,
+    "blotch_band_dn": 227.12599,
+    "blotch_mean_dn": 2156.177,
+    "blotch_window_yx": [
+     3518,
+     678
+    ],
+    "chroma": 0.014610536,
+    "chroma_window_yx": [
+     1744,
+     4374
+    ]
+   },
+   "master_cover": 0.9466,
+   "master_cover_source": "C:\\dev\\strehl-out\\DELIVER-V6\\masters\\medication-pill-cpl.render.log",
+   "master_sha256": "4E9F6675B067B456DBF9EFBC17D4B168E35693BA6F382733D3BE2DEF8BEC8EC5",
+   "n_source_frames_registered": 23,
+   "ratio": {
+    "blotch": 0.68392654,
+    "blotch_band_dn": 0.58327233,
+    "chroma": 0.94564844
+   },
+   "ratio_vs_median_source": {
+    "blotch": 0.90884361,
+    "chroma": 0.98869744
+   },
+   "reason": "blotch 0.684x source max (band DN 0.583x; the window's own mean DN is 0.989x the source median, so the excess sits in the denominator), chroma 0.946x source max; worst statistic 0.946x of the frames the master was built from, under the 1.3x elevated multiple. 23 of 23 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 145,
+    "chroma": 76
+   },
+   "source_frame_max": {
+    "blotch": 0.15401853,
+    "blotch_band_dn": 389.39957,
+    "chroma": 0.015450283
+   },
+   "source_frames_available": 146,
+   "source_frames_sampled": 23,
+   "verdict": "ACQUIT"
+  },
+  "pottery-art-glazed-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.18171612,
+    "blotch_band_dn": 5234.0923,
+    "blotch_mean_dn": 28803.676,
+    "blotch_window_yx": [
+     766,
+     6102
+    ],
+    "chroma": 0.14372635,
+    "chroma_window_yx": [
+     3488,
+     4374
+    ]
+   },
+   "master_cover": 0.9616,
+   "master_cover_source": "C:\\dev\\strehl-out\\DELIVER-V6\\masters\\pottery-art-glazed-cpl.render.log",
+   "master_sha256": "863E477000E9B54033DD9A11C9855380D51CA7C952D6520147E9B34469FF979A",
+   "n_source_frames_registered": 21,
+   "ratio": {
+    "blotch": 0.97628622,
+    "blotch_band_dn": 0.97794702,
+    "chroma": 0.95354705
+   },
+   "ratio_vs_median_source": {
+    "blotch": 0.9783803,
+    "chroma": 0.95779134
+   },
+   "reason": "blotch 0.976x source max (band DN 0.978x; the window's own mean DN is 1.001x the source median, so the excess sits in the denominator), chroma 0.954x source max; worst statistic 0.976x of the frames the master was built from, under the 1.3x elevated multiple. 21 of 21 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 58,
+    "chroma": 64
+   },
+   "source_frame_max": {
+    "blotch": 0.18612997,
+    "blotch_band_dn": 5352.1226,
+    "chroma": 0.15072811
+   },
+   "source_frames_available": 123,
+   "source_frames_sampled": 21,
+   "verdict": "ACQUIT"
+  },
+  "unpopped-popcorn-kernels-cpl": {
+   "adjudicated_by": "V-ADJ13",
+   "arm": "DELIVER-V6",
+   "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+   "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+   "flagged_for": "both",
+   "master": {
+    "blotch": 0.46148842,
+    "blotch_band_dn": 1832.5509,
+    "blotch_mean_dn": 3970.9575,
+    "blotch_window_yx": [
+     454,
+     166
+    ],
+    "chroma": 0.037213663,
+    "chroma_window_yx": [
+     872,
+     2916
+    ]
+   },
+   "master_cover": 0.9345,
+   "master_cover_source": "C:\\dev\\strehl-out\\DELIVER-V6\\masters\\unpopped-popcorn-kernels-cpl.render.log",
+   "master_sha256": "A7C6555900FB5DD63343BF8594F4AB5B6332AC35596CABBE89E386E3B29EEC26",
+   "n_source_frames_registered": 22,
+   "ratio": {
+    "blotch": 1.2329489,
+    "blotch_band_dn": 1.0564577,
+    "chroma": 0.93342427
+   },
+   "ratio_vs_median_source": {
+    "blotch": 1.9717064,
+    "chroma": 0.95039523
+   },
+   "reason": "blotch 1.233x source max (band DN 1.056x; the window's own mean DN is 0.843x the source median, so the excess sits in the denominator), chroma 0.933x source max; worst statistic 1.233x of the frames the master was built from, under the 1.3x elevated multiple. 22 of 22 sampled frames registered at NCC >= 0.75.",
+   "report": "docs/research/V-ADJ13.md",
+   "source_frame_argmax": {
+    "blotch": 174,
+    "chroma": 93
+   },
+   "source_frame_max": {
+    "blotch": 0.37429647,
+    "blotch_band_dn": 1734.6183,
+    "chroma": 0.039867898
+   },
+   "source_frames_available": 234,
+   "source_frames_sampled": 22,
    "verdict": "ACQUIT"
   }
  }
