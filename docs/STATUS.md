@@ -95,9 +95,10 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    n_diff 0). `active_kernel()` has one call site, inside `Estimator::new`, and
    `DEFAULT_MERGE_BACKEND` is Pyramid; `pyramid.rs` contains none of the soft-gate symbols.
    The kernel itself works — it moves 59.16% of pixels on the estimator backend — it is
-   simply unreachable by default. **Two** knobs are now confirmed dead on their shipping path
-   (this one and `--exposure`); the per-band gate floor is not a third — it changes the image,
-   it just doesn't move the rim. Worse than inert, it is **unvalidated**: on the pyramid
+   simply unreachable by default. **Do not aggregate this with the other "dead knobs" — fact 1925
+   splits them into four kinds and only two are defects.** This one is the bad kind: silently
+   inert *and* unvalidated. It is **not** the same category as `--auto-exposure`, which is a
+   *declared* conditional no-op guarding a measured regression. Worse than inert, it is **unvalidated**: on the pyramid
    default, unset / `=on` / `=zzznope` all exit 0 with byte-identical output (SHA256
    `C5E59BC9…`), so a typo is indistinguishable from a working setting. So the standing
    candidate fix for depth softening is *not currently testable as shipped*.
@@ -304,12 +305,22 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   shipped default is not the best output the code can produce. The soft gate is worse than off:
   on the default backend, `STREHL_SOFT_GATE` unset, `=on`, and `=zzznope` all exit 0 and produce
   **byte-identical** output (SHA256 `C5E59BC9…`, 197,801,290 B). It is not merely ignored, it is
-  **unvalidated** — a value naming no kernel runs to completion. Two knobs are now confirmed dead
-  on their shipping path (`STREHL_SOFT_GATE`, `--exposure`); the per-band gate floor is *not* a
-  third — it changes the image, it just doesn't move the rim, which is a different repair.
+  **unvalidated** — a value naming no kernel runs to completion. **Report the taxonomy, never
+  the count (fact 1925).** "Number of dead knobs" is a statistic of the same defective shape
+  this project keeps catching: it counts a symptom without conditioning on the mechanism, so it
+  convicts a correct regression guard at the same rate as a silent unvalidated variable. The
+  four kinds are: **silently inert and unvalidated** (`STREHL_SOFT_GATE` — a real defect);
+  **banner asserts the opposite** (the CA `CORRECTING`/`REFUSED` pair — the worst kind);
+  **inert by value, honestly** (`SELECTION_INFLATION` = 1.0, both branches returning 1.0 —
+  dormant, not broken); and **declared conditional no-op, not a defect at all**
+  (`--auto-exposure` under `--srgb`, where `merge_cmd.rs:7069` says in terms "This is a declared
+  no-op, not a silent one", the binary prints its own supersession at runtime, and the guard
+  exists because applying it over the tone stage clipped **92.03% of pixels vs 0.00%** and blew
+  **11 of 18 masters** to a white median; off `--srgb` the flag stays load-bearing). The
+  per-band gate floor is in none of these — it changes the image, it just doesn't move the rim.
   **Assume a knob is inert until a liveness control proves otherwise** — the cheapest form is a
   deliberate typo that must fail loudly, and the honest form is a pixel-difference count against
-  a commissioned comparator. Facts 1869, 1873, 1880, 1882.
+  a commissioned comparator. Facts 1869, 1873, 1880, 1882, 1924, 1925.
 - **The env channel does not honour the contract the flag channel does, and it has 46 variables
   in it.** `strehl stack --help` states that estimator-only *flags* "are REFUSED under the
   pyramid backend rather than accepted and ignored," because "a flag that parses and does nothing
