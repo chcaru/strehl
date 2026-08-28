@@ -1,5 +1,29 @@
 # V-SOFTCHECK: N-invariance at depth
 
+> ## PARTIALLY WITHDRAWN -- read `V-SOFTCHECK-bandqual.md` before quoting any number here
+>
+> Every number below is measured at **0.30-0.35 cyc/output px**. That band has since
+> been qualified against an in-focus/defocused test on this lane's own develop path
+> and it is **MARGINAL on both subjects**: R_top = **1.5525** on `113MSDCF` and
+> **1.8480** on `bee-1-cpl`, against a bar of 2.0 pre-registered before the run.
+> The band is **not noise** -- both CIs exclude 1.0 and textured tiles respond 1.37x
+> and 1.60x more than flat ones -- but it does not qualify for a resolution claim.
+>
+> **WITHDRAWN:** `+0.0732` / `+0.0748` dex per doubling (17.8% / 18.8% softer) as
+> *resolution* claims, and **finding 4 entirely** -- the two subjects agree to 0.002
+> dex only in the unqualified band. Re-derived at 0.20-0.25 they read **+0.0106** and
+> **+0.0305** dex/doubling, a factor of **2.9** apart.
+>
+> **WHAT SURVIVES:** the sign, on both subjects, in bands that qualify, every CI
+> excluding zero. On `bee-1-cpl` at **0.25-0.30 (R = 2.32, qualifies)** the deficit is
+> **+0.0656 dex/doubling, 16.4% softer, CI [+0.0495,+0.0950]** -- nearly the whole of
+> the withdrawn 18.8%, now on a qualified band. On `113MSDCF` at 0.20-0.25 it is 2.4%.
+> The depth mechanism is not an artifact of measuring in a noise band; the magnitude
+> at 0.30-0.35 and the cross-subject precision are.
+>
+> **Numbers below are retained unedited.** They are correct band-power ratios; what
+> changed is what they may be called.
+
 **The pooled statistic reads zero because two defects cancel.** Everything below was
 measured at the SHIP-V4 pin `44C2F2CD2E5B2894`, matched development gain audited on
 every arm, sharpness and noise on the same pixels, band and frame count named.
@@ -10,8 +34,8 @@ every arm, sharpness and noise on the same pixels, band and frame count named.
 |---|---|---|
 | 1 | The standing `0.114` on `113MSDCF` **survives** independent re-derivation | CONFIRMED |
 | 2 | My own first re-measurement read `-0.0007` dex and I nearly retracted it. It was diluted, not clean | SELF-CAUGHT |
-| 3 | At depth, `bee-1-cpl` N=149->299 at matched range: **N=299 is 18.8% softer** | MEASURED |
-| 4 | Cost per doubling of N is the same on both subjects to within **0.002 dex** across a 4.7x difference in depth | MEASURED |
+| 3 | At depth, `bee-1-cpl` N=149->299 at matched range: **N=299 is 18.8% softer** | MEASURED, band MARGINAL -- 16.4% at 0.25-0.30, which qualifies |
+| 4 | Cost per doubling of N is the same on both subjects to within **0.002 dex** across a 4.7x difference in depth | **WITHDRAWN** -- 2.9x apart in the qualifying band |
 | 5 | The deeper merge is **noisier**, not cleaner, which removes the confound that forced my earlier refusal | MEASURED |
 | 6 | The orchestrator's third arm (N held, step doubled) **supports** the dilution model | MEASURED, confounded |
 | 7 | Acceptance gate delivered, commissioned in both directions with pixel-domain plants | DELIVERED |
