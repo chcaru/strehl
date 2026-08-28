@@ -2190,6 +2190,34 @@ pure gain cancels exactly (commissioned: `GAIN` arm invariant to 1e-12). So
 exposure is **not** the explanation for BUILD-PLUGIN's magnitude, and ORCH's
 recipe does not need changing.
 
+**CORRECTION, 2026-08-27. The last clause of that paragraph is refuted, and the
+evidence was already in it.** ORCH measured that `--srgb --auto-exposure` at HEAD
+blows 11 of 18 masters, `109MSDCF` reaching 92.03% of pixels clipped at 65535
+with a pure-white median, where the same command without `--auto-exposure` clips
+0.00%. A tone stage added since the pin performs the normalisation that
+`--auto-exposure` used to perform, so HEAD applies it twice.
+
+**Why this section missed it.** I compared the two arms' *gains* -- 6.063x
+against 6.105x, 0.7% apart -- and concluded the confound cancelled because a
+pure gain cancels in a normalised ratio. It does. But those are the same two
+numbers ORCH now cites as proof that **the gain is not the regression**: the
+gain is correct, and what changed is the baseline it multiplies. I checked the
+multiplier and never asked what it was multiplying. Clipping is not a gain. It
+is destructive, it is not invertible, and it does not cancel in a normalised
+metric -- a saturated region has no structure for a structural metric to read,
+so a blown master can read clean on every axis.
+
+The commissioned `GAIN` invariance result stands and is unaffected; it shows the
+metrics are blind to a gain, which was never the failure mode. **My
+recommendation that the recipe did not need changing is withdrawn.**
+
+**No measurement in this report moves.** Every V-GATHER render is plain `--srgb`
+with no exposure applied; verified three ways in Part 16's reply -- no V-GATHER
+script contains the flag, the render logs record `Nothing was applied`, and the
+pixels read 0.00-0.03% clipped across all 16 masters. The 26 delivered SHIP-V4
+masters, on which the rim corpus verdict rests, measure 0 blown with worst-case
+clipping 0.134%.
+
 ### 15.8 Gaps
 
 - Band 1's sub-1.0 ratio is measured but its behavioural consequence is not,
