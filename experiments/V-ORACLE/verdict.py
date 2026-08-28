@@ -63,7 +63,17 @@ def main() -> int:
                          "by commission_verdict.py to feed this decision rule "
                          "mutated inputs whose correct conclusion is known in "
                          "advance.  Empty means the real measurement.")
+    ap.add_argument("--bands", default="1,2,3",
+                    help="which bands the (a)/(b) rule may use.  Default 1,2,3. "
+                         "ORCH correction #5 binds every lane to name the band "
+                         "and the subject's qualification at it; flowers-cpl is "
+                         "NOT in V-LINEAR-BANDS.md, and bandfreq.py shows band 1 "
+                         "reaches 0.283 cyc/green-px, above the 0.17 floor of "
+                         "the corpus boundary range under the less favourable "
+                         "grid reading.  '2,3' re-runs the verdict on only the "
+                         "bands that are safe under BOTH grid conventions.")
     args = ap.parse_args()
+    SIG = tuple(int(x) for x in args.bands.split(","))
 
     A = np.load(os.path.join(ora.OUT, "stageA",
                              args.subject + args.variant + ".npz"))
@@ -112,7 +122,7 @@ def main() -> int:
           "focus for that tile was never captured.\n")
 
     for i, eye, R, C, ratios, rises in rows:
-        sig = [b for b in (1, 2, 3) if np.isfinite(ratios[b])]
+        sig = [b for b in SIG if np.isfinite(ratios[b])]
         beats = [b for b in sig if ratios[b] > 1.25]
         stuck = [b for b in sig if np.isfinite(rises[b]) and rises[b] < 0.10]
         if beats:

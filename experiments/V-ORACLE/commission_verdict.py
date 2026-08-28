@@ -46,21 +46,63 @@ import numpy as np
 import ora
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SITE_RE = re.compile(r"site (\d+) \(\s*(\w+)\s*\) tile r(\d+)c(\d+): \((a|b)\)")
+# NOTE the two capture groups.  The original version of this file parsed only
+# "(a)" vs "(b)", which COLLAPSED the two distinct (a) conclusions the rule can
+# reach -- "CAPTURE GAP" and "merge not beaten but the curve turned over" -- into
+# a single letter.  An arm that reversed the through-focus logic would have
+# flipped every site from one to the other and this harness would have reported
+# it as unchanged.  That is precisely the defect V-LINEAR found in itself (four
+# conclusion-flip arms MISSED at 88/88 green).  T5/T6 below exist because of it,
+# and they FAILED against the original parser.
+SITE_RE = re.compile(
+    r"site (\d+) \(\s*(\w+)\s*\) tile r(\d+)c(\d+): \((a|b)\)(.*)")
 
 
-def write_variant(subject: str, variant: str, scale, tiles=None) -> None:
-    """Copy stage A/B for `subject` to `subject+variant`, dividing the merge arm.
+def classify(letter: str, tail: str) -> str:
+    """Collapse a printed verdict to its CONCLUSION CLASS, not just its letter."""
+    if letter == "b":
+        return "b:defect"
+    if "CAPTURE GAP" in tail:
+        return "a:gap"
+    return "a:turnover"
+
+
+def roll_peak(var_k: np.ndarray, target: str) -> np.ndarray:
+    """Move each tile's through-focus peak to frame 0 or to the middle.
+
+    This mutates the FOCUS EVIDENCE, which is what separates 'capture gap' from
+    'focus was captured'.  It leaves the ratio evidence alone, so it isolates the
+    half of the rule that T1-T4 never touched.
+    """
+    K = var_k.shape[0]
+    dst = 0 if target == "edge" else K // 2
+    kpk = np.argmax(var_k, axis=0)                  # (NBAND, nr, nc)
+    shift = (dst - kpk) % K
+    ii = (np.arange(K)[:, None, None, None] - shift[None]) % K
+    return np.take_along_axis(var_k, ii, axis=0)
+
+
+def write_variant(subject: str, variant: str, scale, tiles=None,
+                  peak=None) -> None:
+    """Copy stage A/B for `subject` to `subject+variant`, applying a mutation.
 
     `scale` > 1 makes the merge WORSE, which drives the source/merge ratio up and
     should drive the rule toward (b).  `tiles`, if given, restricts the damage to
-    an explicit list of (row, col).
+    an explicit list of (row, col).  `peak`, if given ('edge' or 'mid'), moves the
+    through-focus peak and should drive the rule between its two (a) classes.
     """
     for stage in ("stageA", "stageB"):
         src = os.path.join(ora.OUT, stage, subject + ".npz")
         dst = os.path.join(ora.OUT, stage, subject + variant + ".npz")
         z = np.load(src)
         d = {k: z[k] for k in z.files}
+        if stage == "stageA" and peak is not None:
+            before = d["var_k"]
+            after = roll_peak(before.astype(float), peak)
+            if not np.any(after != before):
+                raise SystemExit(
+                    f"MUTATION DID NOT LAND: var_k unchanged in {variant}")
+            d["var_k"] = after
         if stage == "stageB" and scale != 1.0:
             touched = 0
             for m in [str(x) for x in z["modes"]]:
@@ -93,7 +135,7 @@ def run_rule(subject: str, variant: str):
         raise SystemExit(f"verdict.py failed on {variant}:\n{out.stderr[-2000:]}")
     got = {}
     for m in SITE_RE.finditer(out.stdout):
-        got[int(m.group(1))] = m.group(5)
+        got[int(m.group(1))] = classify(m.group(5), m.group(6))
     if not got:
         raise SystemExit(f"parsed no site verdicts from {variant}; the check "
                          f"cannot certify anything:\n{out.stdout[-2000:]}")
@@ -124,16 +166,23 @@ def main() -> int:
             nfail += 1
         print(f"  [{'PASS' if ok else 'FAIL'}] {name}: {detail}")
 
-    print(f"=== commissioning the VERDICT RULE on {s} ===\n")
+    def code(v):
+        return {"b:defect": "B", "a:gap": "G", "a:turnover": "T"}[v]
+
+    def codes(d):
+        return "".join(code(d[k]) for k in sorted(d))
+
+    print(f"=== commissioning the VERDICT RULE on {s} ===")
+    print("conclusion classes: B = (b) merge defect, G = (a) capture gap, "
+          "T = (a) merge not beaten / focus captured\n")
     try:
         # ---- T1 NULL ------------------------------------------------------
         variants.append("__null")
         write_variant(s, "__null", 1.0)
         base = run_rule(s, "__null")
-        ok = all(v == "a" for v in base.values())
+        ok = all(v.startswith("a") for v in base.values())
         report("T1 NULL", ok,
-               f"{len(base)} sites, verdicts "
-               f"{''.join(base[k] for k in sorted(base))} (expected all 'a')")
+               f"{len(base)} sites -> {codes(base)} (expected no B)")
 
         # ---- T2 DEFECT ----------------------------------------------------
         # Degrade the merge 4x everywhere.  A source frame now genuinely carries
@@ -142,11 +191,11 @@ def main() -> int:
         variants.append("__defect")
         write_variant(s, "__defect", 4.0)
         dv = run_rule(s, "__defect")
-        flipped = [k for k in sorted(dv) if dv[k] == "b"]
+        flipped = [k for k in sorted(dv) if dv[k] == "b:defect"]
         ok = len(flipped) == len(dv)
         report("T2 DEFECT (merge 4x worse)", ok,
-               f"{len(flipped)}/{len(dv)} sites now read (b) "
-               f"{''.join(dv[k] for k in sorted(dv))} (expected all 'b')")
+               f"{len(flipped)}/{len(dv)} sites -> {codes(dv)} "
+               f"(expected all B)")
 
         # ---- T3 BOUNDARY --------------------------------------------------
         # The rule states a 1.25x threshold.  Drive one site's best band to sit
@@ -172,11 +221,11 @@ def main() -> int:
         write_variant(s, "__under", lo, tiles=[(R, C)])
         write_variant(s, "__over", hi, tiles=[(R, C)])
         u, o = run_rule(s, "__under")[site], run_rule(s, "__over")[site]
-        ok = (u == "a" and o == "b")
+        ok = (u.startswith("a") and o == "b:defect")
         report("T3 BOUNDARY (1.25x)", ok,
                f"site {site} tile r{R:02d}c{C:02d} band {b_best}: "
-               f"ratio 1.24 -> ({u}), ratio 1.26 -> ({o}) "
-               f"(expected a then b)")
+               f"ratio 1.24 -> {code(u)}, ratio 1.26 -> {code(o)} "
+               f"(expected not-B then B)")
 
         # ---- T4 LOCALITY --------------------------------------------------
         # Damage exactly one site's tile.  Only that site may change verdict; a
@@ -188,6 +237,44 @@ def main() -> int:
         ok = changed == [site]
         report("T4 LOCALITY", ok,
                f"sites whose verdict changed: {changed} (expected [{site}])")
+
+        # ---- T5 / T6: the arms the ORIGINAL harness was blind to -----------
+        # T1-T4 only ever distinguish (a) from (b).  The rule also decides
+        # BETWEEN THE TWO (a) CLASSES -- "capture gap" versus "focus was
+        # captured and the merge still won" -- and that distinction is the
+        # actual product claim: reshoot-this versus retouch-this.  Reversing it
+        # would leave every number in the report correct and every letter
+        # unchanged.  These two arms move the focus evidence only.
+        variants.append("__mid")
+        write_variant(s, "__mid", 1.0, peak="mid")
+        mv = run_rule(s, "__mid")
+        ngap = [k for k in sorted(mv) if mv[k] == "a:gap"]
+        ok = len(ngap) == 0
+        report("T5 PEAK-CENTRED (focus captured everywhere)", ok,
+               f"sites -> {codes(mv)}; {len(ngap)} still read capture-gap "
+               f"(expected 0)")
+
+        variants.append("__edge")
+        write_variant(s, "__edge", 1.0, peak="edge")
+        ev = run_rule(s, "__edge")
+        ngap2 = [k for k in sorted(ev) if ev[k] == "a:gap"]
+        ok = len(ngap2) == len(ev)
+        report("T6 PEAK-AT-EDGE (capture gap everywhere)", ok,
+               f"sites -> {codes(ev)}; {len(ngap2)}/{len(ev)} read capture-gap "
+               f"(expected all)")
+
+        # Explicit record of the blind spot, so the fix cannot be forgotten.
+        blind = codes(mv) == codes(base) or codes(ev) == codes(base)
+        letters_only_mid = all(v[0] == base[k][0] for k, v in mv.items())
+        print(f"\n  [note] T5 changes the CLASS at "
+              f"{sum(1 for k, v in mv.items() if v != base[k])}/{len(mv)} sites "
+              f"but the LETTER at "
+              f"{sum(1 for k, v in mv.items() if v[0] != base[k][0])}/{len(mv)}.")
+        if letters_only_mid:
+            print("         A letter-only parser would have reported T5 as "
+                  "UNCHANGED.")
+            print("         That is the V-LINEAR defect shape, and this harness "
+                  "had it until now.")
     finally:
         cleanup(s, variants)
 

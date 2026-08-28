@@ -59,6 +59,60 @@ This discharges two of the project's standing rules directly:
 Grid: 18×27 = 486 tiles of 128 green px (= 256 master px). Bands from
 `SIGMAS = [0.0, 0.8, 1.6, 3.2, 6.4, 12.8]` (5 DoG bands).
 
+## 2.1 Which band, and is this subject qualified there?
+
+Required by ORCH correction #5: no sharpness claim may be quoted without naming
+the band and the subject's qualification at it.
+
+**`flowers-cpl` does not appear in `V-LINEAR-BANDS.md`. It has never been
+band-qualified** - the same status that cost `coffee-bubbles` its licence in that
+correction. So I cannot lean on qualification and must argue from frequency
+instead.
+
+Band frequencies measured from the actual band operator (`bandfreq.py`: white
+noise in, radially averaged output power = the band's squared transfer function),
+not from the DoG algebra:
+
+| band | peak (cyc/green-px) | half-power span | cyc/raw-px | used by the verdict |
+|---|---|---|---|---|
+| b0 | 0.498 | 0.303-0.498 | 0.249 | **no - excluded** |
+| b1 | 0.186 | 0.123-0.283 | 0.093 | yes, but see below |
+| b2 | 0.107 | 0.061-0.143 | 0.054 | **yes** |
+| b3 | 0.049 | 0.033-0.072 | 0.024 | **yes** |
+| b4 | 0.029 | 0.018-0.033 | 0.015 | no |
+
+V-ORACLE works on the green sub-lattice (1 green px = 2 raw px = 2 master px).
+V-LINEAR works with no demosaic. **I have not confirmed which grid its cyc/px
+refers to**, and it changes the comparison by 2x, so the claim below is required
+to hold under *both* readings.
+
+The available argument is one of margin, not qualification: **a band whose entire
+half-power span lies below 0.17 cyc/px - the lowest signal/noise boundary
+V-LINEAR observed anywhere in the corpus - cannot be grain on any subject in that
+corpus, qualified or not.**
+
+- **b2 and b3 clear this under both grid readings** (top edges 0.143 and 0.072
+  against a 0.17 floor). These are the bands that carry the verdict.
+- **b1 does not.** Its half-power span reaches 0.283 cyc/green-px, above 0.17
+  under the less favourable reading. Following ORCH's own precedent I treat b1's
+  licence as **withdrawn pending measurement, not refuted**.
+- **b0 was excluded from the rule before this check, not because of it** - it
+  peaks at Nyquist and is the band V-LINEAR found to be noise or mixed on 5 of 9
+  subjects.
+
+**The verdict survives without b1.** Re-running the rule on bands 2 and 3 only
+(`verdict.py flowers-cpl --bands 2,3`) returns the identical conclusion at all
+six sites, in the same classes:
+
+```
+bands 1,2,3 (published):  T G G G T T
+bands 2,3   (b1 dropped): T G G G T T      <- identical
+```
+
+The Stage B medians that carry §5.4 are b2 = 0.675 and b3 = 0.870, both in
+licensed bands and both below 1. The 25x fine-band deficit of §5.3 is a b2
+number. **No load-bearing number in this report depends on b1.**
+
 ## 3. Commissioning the instrument, and the detection floor
 
 `commission_tfc.py` commissions **the statistic that actually ships in this
@@ -118,8 +172,10 @@ ones that perturb a number:
 | T2 DEFECT | merge arm degraded 4x | all 6 sites (b) | **PASS** `bbbbbb` |
 | T3 BOUNDARY | one tile driven to ratio 1.24, then 1.26 | (a) then (b) | **PASS** flips at the published 1.25x |
 | T4 LOCALITY | one tile only, 8x | only that site changes | **PASS** `[0]` |
+| T5 PEAK-CENTRED | focus peak moved to mid-bracket | no site may read capture-gap | **PASS** `TTTTTT` |
+| T6 PEAK-AT-EDGE | focus peak moved to frame 0 | every site must read capture-gap | **PASS** `GGGGGG` |
 
-**4 PASS + 0 FAIL.** Every mutation asserts it actually landed before the rule is
+**6 PASS + 0 FAIL.** Every mutation asserts it actually landed before the rule is
 run; a mutation that silently fails to apply produces a green that means nothing.
 
 T2 is the one that matters: the rule *does* emit (b) on all six sites, including
@@ -341,7 +397,20 @@ there. **4a is the ranking to use.** The one follow-up I would offer is a look a
    (b) at all. A rule structurally stuck on (a) would have agreed with the prior,
    agreed with `BUILD-TRIAGE.md`, and passed every test I had. The gap is now
    closed and the rule passes 4/4 - but it was open when I published the verdict,
-   and nothing I had run would have caught it.
+    and nothing I had run would have caught it.
+8. **My commissioning harness had the V-LINEAR defect, and I only found it
+   because ORCH's postscript told me to look.** `commission_verdict.py` v1
+   parsed each printed verdict down to the letter `(a)` or `(b)`. But the rule
+   reaches **three** conclusions, not two: `(b)` merge defect, `(a)` capture gap,
+   and `(a)` merge-not-beaten-because-focus-was-captured. The letter parser
+   collapsed the two `(a)` classes into one symbol - and **the distinction it
+   erased is the actual product claim, reshoot-this versus retouch-this.**
+   Measured, not supposed: the T5 arm changes the conclusion class at **3 of 6
+   sites while changing the letter at 0 of 6**, so v1 would have reported a
+   fully reversed focus verdict as UNCHANGED, with every number in this document
+   still correct. Fixed by parsing the conclusion class and adding T5/T6; the
+   harness now catches 6 of 6 arms. This is the same shape as V-NEVERWORSE's 712
+   green checks and V-LINEAR's 88/88, and I had it too.
 
 ## 9. Defects I found in my own instrument before trusting it
 
@@ -456,6 +525,7 @@ deleted once reduced to numbers.
 | `verdict.py`, `losers.py`, `sites.py` | deliverables 1–3 |
 | `survey.py`, `surveyB.py`, `rank.py` | deliverable 4 |
 | `commission_verdict.py` | commissions the (a)/(b) DECISION RULE with conclusion-flipping mutations |
+| `bandfreq.py` | measures where each band sits in cyc/px (§2.1) |
 | `premium_control.py` | selection-premium and no-detail-null controls; produced the §7 correction |
 | `stride_control.py` | subsampling calibration of §11 |
 | `mapmake.py` | the per-tile map, `D:\strehl-out\V-ORACLE\maps\flowers-cpl-b2.png` |
