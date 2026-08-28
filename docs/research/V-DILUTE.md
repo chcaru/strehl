@@ -375,6 +375,85 @@ about whether they are committed to the *right* frame.
 
 ---
 
+## 9. Re-verified on HEAD, because the merge moved under this lane
+
+Discipline 34 applies and it bit: the pin is stale. Measured rather than assumed — pin
+`9b05d0b7` vs HEAD `c45d0067` (binary sha16 `F1D66AD7220DCC6C`), same subject, same flags:
+
+| | pin | HEAD |
+| --- | --- | --- |
+| samples differing | — | **71.35%** of 24,724,512, max Δ **881**, mean Δ 15.2 |
+| band-0 `averaged` duty cycle, N=299 | 0.4% | **8.4%** |
+
+So `78fed9a1` (noise floor measured from each frame's own warp) changed the **default** path,
+not only opt-in ones. I had read the diff as gated behind `--focus` and per-frame beta; the
+pixels say otherwise. **A diff is not a pixel gauge either.**
+
+**The verdict transfers anyway.** Re-measuring the load-bearing statistic on HEAD:
+
+| build | N | noise hard-max | noise default | **n_eff** | detail def/hard-max |
+| --- | --- | --- | --- | --- | --- |
+| pin | 22 | 26,375.7 | 25,892.0 | **1.019** | 1.0047 |
+| pin | 299 | 107,982.2 | 91,084.6 | **1.186** | 0.9479 |
+| **HEAD** | 22 | 25,988.9 | 25,459.6 | **1.021** | 1.0034 |
+| **HEAD** | 299 | 107,736.9 | 91,050.9 | **1.183** | 0.9483 |
+
+`n_eff` agrees between builds to **0.3%** at both ends of a 13.6× depth range. The noise-floor
+change moved 71% of samples without changing how *concentrated* the selection is. The merge on
+current code is as near winner-take-all as it was on the pin, and the refutation stands on HEAD.
+
+Also confirming ORCH's withdrawal of "the gate never fires above level 0": HEAD at N=22 reads
+`averaged: 41.3% 3.6% 0.1% 0.0% …` — band 1 and band 2 are non-zero. Coarse bands do gate.
+
+**Caveat:** the HEAD binary was built from a **dirty** working tree (`d35f9055…-dirty`) shared
+with other active lanes, and HEAD moved to `c45d0067` mid-run. The comparison is sound (one
+binary rendered both HEAD arms) but is not exactly reproducible from a clean checkout.
+
+## 10. Independent corroboration, and a correction to my own noise reading
+
+Commit **`8a480af9`** ("pyramid: n_eff, and what the frame count actually does to the merge")
+tested the same hypothesis from **inside** the merge — reading the weights directly rather than
+inferring from output noise — on a **different subject** (113MSDCF, N=63 vs N=32). It concludes
+*"The hypothesis is REFUTED in its distinctive form."* Two things are worth recording:
+
+- It converged on **the same statistic** (`n_eff = sum(w)²/sum(w²)`) and **the same confound**
+  I raised here: that `max(w)/sum(w)` has null value `1/N` and so "would have confirmed the
+  hypothesis by arithmetic". That is the same class of error as the confidence rank's
+  `E[v] ≈ 1 − √(2/πN)` bias (831.8 → 953.8) that §1 brackets against. Two lanes, two
+  instruments, same trap, caught independently.
+- It also excludes bands where `MAX_EXPONENT` caps both arms "rather than scoring FLAT, because
+  a band where nothing was planted is not evidence of a dead gauge" — independently the same
+  finding as §6 here.
+
+### The max-of-N flat-field result, cross-checked at 13.6× leverage
+
+That commit's unexpected finding is that deepening a stack makes **flat** fields **noisier**
+(grain ×1.1697 at N=63 vs N=32), because winner-take-all elects the largest of `N` noisy
+candidates and `E[max] ~ σ√(2 ln N)` predicts ×1.0934. Their arms span 2.0× in depth; mine span
+**13.6×**, where the predicted effect grows to ×1.358:
+
+| N | 22 | 33 | 63 | 105 | 299 |
+| --- | --- | --- | --- | --- | --- |
+| flat-site grain, amplitude vs N=22 | 1.000 | 1.149 | 1.428 | 1.618 | **1.846** |
+| `√(2 ln N)` prediction | 1.000 | 1.064 | 1.158 | 1.227 | **1.358** |
+| measured / predicted | 1.000 | 1.080 | 1.233 | 1.318 | **1.359** |
+
+**Direction and order confirmed on a second subject at 6.8× more leverage.** The measurement
+runs above the law by a factor that itself grows, and there is a ready mechanism for the excess
+that I measured independently: the band-0 `averaged` duty cycle **falls** with N (30.8% at
+N=22 → 3.3% at N=150 on the pin), so a *growing fraction* of coefficients come under
+winner-take-all as the stack deepens, on top of each being a max over more candidates. The
+`√(2 ln N)` law captures only the second effect; the two are multiplicative.
+
+**This corrects something I told ORCH earlier.** I said fact 1790's noise ratios (11.929 /
+15.619 on `bee`) must be explained by the comparators' own noise, since `n_eff = 1.19` refutes
+a `√N` averaging signature. The first half stands — `strehl` is not averaging. But there is a
+mechanism on `strehl`'s side after all, and it runs the *opposite* way to averaging: **electing
+the max of N noisy candidates is itself a noise amplifier that grows with depth.** On flat sites
+`bee` at N=299 carries **1.85×** the grain amplitude of N=22. A comparator that averages will
+beat that and the gap will widen with depth. This is a far better candidate for `bee`'s deficit
+than dilution ever was, and unlike dilution it is measured on two subjects by two lanes.
+
 ## Reproduce
 
 ```
@@ -387,5 +466,7 @@ experiments/V-DILUTE/b2_replicate.ps1     odd-phase replicate render (B's noise 
 experiments/V-DILUTE/b2_analyze.py        contrast vs replicate, same tiles, rule-3 paired
 experiments/V-DILUTE/conf_potency.py      confidence-map potency per N, percent-moved
 experiments/V-DILUTE/c_saturation.py     per-band ladder + where the exponent has reach
+experiments/V-DILUTE/head_recheck.ps1     re-render the n_eff brackets on HEAD
+experiments/V-DILUTE/maxn_crosscheck.py   max-of-N flat-field law at 13.6x leverage
 experiments/V-DILUTE/commission.py        null arm, potency arm, analytic rank bias
 ```
