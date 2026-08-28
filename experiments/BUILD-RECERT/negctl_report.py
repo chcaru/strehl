@@ -22,6 +22,28 @@ below are deliberately of two kinds --
   the instrument measures. The point of running them is to find out where that
   boundary sits and then to state it, or move it.
 
+  DELETION arms (D1-D2) remove a finding rather than misstating it. ORCH, after
+  six lanes had each found this class in their own harness: "Commission DELETION
+  as well as reversal. Deleting a finding is cheaper than stating it wrongly."
+  A verifier built from positive checks -- assert this cell equals that value --
+  can be fully satisfied by a document with the row removed, because the check
+  that would have failed is the one that no longer runs. D1 deletes a disclosed
+  hole; D2 deletes a whole measured row.
+
+  PROSE arm (P1) is the SPECIFICITY control and it is the only arm that must
+  come back GREEN. ORCH: "Commissioning sensitivity is not commissioning
+  specificity. Planting a signal and confirming detection says nothing about
+  whether noise is rejected. Plant noise too." A verifier that goes RED on any
+  edit at all would catch every arm above while certifying nothing, and it would
+  be indistinguishable from a sound one on a sensitivity-only suite. P1 changes
+  "needs" to "requires" in a narrative sentence: no claim moves, no digit moves,
+  and the suite must not fire.
+
+  The NULL arm and P1 together answer the other half of ORCH's warning, that
+  "an inert plant and a dead instrument give the identical green": NULL shows
+  the suite is not permanently RED, P1 shows it is not RED-on-contact, and the
+  five planted arms show it is not permanently GREEN.
+
 Every mutation is anchored on a UNIQUE FULL-LINE string and hard-errors if it
 does not land. A mutation that silently fails to apply produces a GREEN that
 looks exactly like a verifier correctly passing a clean document, which would
@@ -66,6 +88,18 @@ ARMS = [
      "## 12.8 The hull axis is NOT MEASURED, and that is a hole in this recommendation",
      "## 12.8 The hull axis is MEASURED, and that is not a hole in this recommendation",
      "RED", "a disclosed hole is un-disclosed; no digit changes"),
+    ("D1", "deletion",
+     "## 12.8 The hull axis is NOT MEASURED, and that is a hole in this recommendation",
+     "",
+     "RED", "the disclosed hole is DELETED outright rather than reversed"),
+    ("D2", "deletion",
+     "| `foam` | 0.7662 | 0.8887 | 23.4 | 11.1 | 0.48 |",
+     "",
+     "RED", "an entire measured row is deleted; nothing left says it is missing"),
+    ("P1", "prose",
+     "BUILD-HULL's instrument needs a per-frame basis to compare the merge against.",
+     "BUILD-HULL's instrument requires a per-frame basis to compare the merge against.",
+     "GREEN", "specificity: innocuous wording change, no claim and no digit moves"),
 ]
 
 
@@ -128,23 +162,39 @@ def main():
 
     arith = [r for r in results if r[1] == "arithmetic"]
     concl = [r for r in results if r[1] == "conclusion"]
+    dele = [r for r in results if r[1] == "deletion"]
+    prose = [r for r in results if r[1] == "prose"]
     a_ok = sum(1 for r in arith if r[4])
     c_ok = sum(1 for r in concl if r[4])
+    d_ok = sum(1 for r in dele if r[4])
+    p_ok = sum(1 for r in prose if r[4])
     print(f"\n  arithmetic defects caught : {a_ok}/{len(arith)}")
     print(f"  conclusion flips caught   : {c_ok}/{len(concl)}")
+    print(f"  deletions caught          : {d_ok}/{len(dele)}")
+    print(f"  specificity (must NOT fire): {p_ok}/{len(prose)}")
 
-    # Both counts are conditioned on. Partitioning them is the point: an
-    # aggregate "4 of 5 caught" would let a total blindness to conclusion flips
-    # hide behind strong numeric coverage.
+    # Every count is conditioned on. Partitioning them is the point: an
+    # aggregate "7 of 8 caught" would let a total blindness to one whole class
+    # hide behind strong coverage of another.
+    if p_ok != len(prose):
+        print("\n  VERDICT: RED -- the suite fires on an innocuous wording "
+              "change, so its REDs above certify nothing. A verifier that "
+              "cannot stay quiet cannot speak.")
+        return 4
     if a_ok != len(arith):
         print("\n  VERDICT: RED -- the numeric coverage has a hole.")
         return 1
+    if d_ok != len(dele):
+        print("\n  VERDICT: RED -- a finding can be DELETED without the suite "
+              "noticing. Positive checks do not run on rows that are gone.")
+        return 5
     if c_ok != len(concl):
         print("\n  VERDICT: the verifiers certify ARITHMETIC but not CLAIMS. A "
               "reversed recommendation passes every check. This is the exact "
               "shape ORCH reported in V-NEVERWORSE's verifier.")
         return 3
-    print("\n  VERDICT: GREEN -- arithmetic and conclusions are both pinned.")
+    print("\n  VERDICT: GREEN -- arithmetic, conclusions and deletions are "
+          "pinned, and the suite stays quiet on innocuous prose.")
     return 0
 
 
