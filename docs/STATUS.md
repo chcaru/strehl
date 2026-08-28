@@ -119,6 +119,24 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    further rows record that `selection_inflation` keys on an integer count whose n_eff ≤ 1
    population collapses 3.936% → 0.023% under a soft kernel, but that the branch is inert twice
    over today. Facts 1917–1920.
+   **STATUS AT WIND-DOWN — the wiring did NOT land, and the score is WITHDRAWN.** BUILD-SOFTGATE
+   committed a change that **validates the value without applying it**: `enable_soft` has
+   **zero call sites** (verified — both matches in `crates/` are doc comments, one of which says
+   "Grep `enable_soft` before believing otherwise"), and `pyramid.rs` contains none. So
+   `gaussian`/`exponential`/`off` still render the identical hash `C9A93201…` and only `zzznope`
+   newly fails, at rc=1. **The 242-line hunk is withheld at
+   `experiments/BUILD-SOFTGATE/pyramid-softgate.patch`** (12,410 B, applies to `ec96973d`),
+   deliberately not landed because another lane was rewriting that file mid-build. The lane
+   **withdrew its own 3.0% depth-softening headline** on receiving fact 1918: the measurement
+   reproduces, the inference does not, and **no arm ever measured n_eff**. The `-44.6%` sign
+   reversal survives, weakened. **Two structural findings make this axis less urgent than it
+   looked:** the pyramid's shipped weight is *already* an exponential soft kernel over log-SNR
+   deficit at temperature 1/p — so the sharpening ramp is a temperature schedule, and
+   `SoftKernel::Exponential` is a placebo moving 0.029% of pixels against Gaussian's 96.286% —
+   and the Gaussian is **not one-pass streamable** (a cross term forces a second decode pass,
+   **56.3 s → 124.7 s at N=79**). Pickup order: apply the patch, **calibrate Gaussian T to match
+   mean n_eff**, then score, then flip V-DILUTE's gate G2 *gated on `enable_soft` reading
+   non-zero*. Facts 1933–1940.
 3. ~~**Diagnose `flowers-cpl`.**~~ **RESOLVED — capture gap, not a merge defect.** Verdict (a)
    at all six sites on licensed bands 2 and 3, measured on the pyramid masters that ship. No
    code change will fix it; the fix is a capture instruction, which is exactly the case the
