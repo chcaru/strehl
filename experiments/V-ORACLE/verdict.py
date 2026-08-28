@@ -58,10 +58,17 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("subject")
     ap.add_argument("--mode", default="point", choices=["point", "box"])
+    ap.add_argument("--variant", default="",
+                    help="suffix appended to the stage A/B npz stem.  Used ONLY "
+                         "by commission_verdict.py to feed this decision rule "
+                         "mutated inputs whose correct conclusion is known in "
+                         "advance.  Empty means the real measurement.")
     args = ap.parse_args()
 
-    A = np.load(os.path.join(ora.OUT, "stageA", args.subject + ".npz"))
-    B = np.load(os.path.join(ora.OUT, "stageB", args.subject + ".npz"))
+    A = np.load(os.path.join(ora.OUT, "stageA",
+                             args.subject + args.variant + ".npz"))
+    B = np.load(os.path.join(ora.OUT, "stageB",
+                             args.subject + args.variant + ".npz"))
     nr, nc = int(A["nr"]), int(A["nc"])
     con, var_k, ks = A["contrast"], A["var_k"], A["frames"]
     mrg = B[f"{args.mode}_sig"]

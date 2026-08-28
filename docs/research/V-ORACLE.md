@@ -94,6 +94,38 @@ separation is ~25× in band-2 contrast. The floor is 1.5 master px, and σ=3.0 g
 px still registers on the ladder. The instrument had ample power to find a merge
 defect had one existed; it did not fail to find one for want of sensitivity.
 
+### 3.1 Commissioning the DECISION RULE, not just the statistic
+
+Added after the ORCH broadcast on V-NEVERWORSE's report verifier, which tested
+for the *presence* of the string "refuted" and stayed green through 712 checks
+while that section's conclusion was flipped to "confirmed". A presence test
+cannot detect a reversed conclusion.
+
+I had the same class of hole, one level up. `commission_tfc.py` proves the
+sharpness *number* moves correctly under a planted blur. It says nothing about
+the (a)/(b) *rule* that turns that number into the conclusion this lane
+published. **A rule structurally incapable of emitting (b) would have printed (a)
+on every input, agreed with the prior and with `BUILD-TRIAGE.md`, and passed
+every test I had.**
+
+`commission_verdict.py` closes it by feeding the real `verdict.py` inputs whose
+correct conclusion is known in advance - mutations that flip the CONCLUSION, not
+ones that perturb a number:
+
+| test | mutation | required conclusion | result |
+|---|---|---|---|
+| T1 NULL | none | all 6 sites (a) | **PASS** `aaaaaa` |
+| T2 DEFECT | merge arm degraded 4x | all 6 sites (b) | **PASS** `bbbbbb` |
+| T3 BOUNDARY | one tile driven to ratio 1.24, then 1.26 | (a) then (b) | **PASS** flips at the published 1.25x |
+| T4 LOCALITY | one tile only, 8x | only that site changes | **PASS** `[0]` |
+
+**4 PASS + 0 FAIL.** Every mutation asserts it actually landed before the rule is
+run; a mutation that silently fails to apply produces a green that means nothing.
+
+T2 is the one that matters: the rule *does* emit (b) on all six sites, including
+the three that read blurred, when a merge defect genuinely exists. The published
+(a) is therefore a property of the data and not of the rule.
+
 ## 4. The confound that had to die first: does tile *t* mean the same thing in every frame?
 
 Stage A compares frames at a *fixed* tile index. If the stack drifts, that
@@ -168,6 +200,36 @@ recovering them would be sub-visible.
 below detail threshold | **TOTAL 486 = 486.** Every tile lands in a counted
 outcome; nothing is skipped and read as a pass.
 
+### 5.5 The selection premium is inside my own instrument
+
+ORCH facts 1843-1845: the max-of-N order statistic on a noisy measure
+manufactures noise power, 24.82x at N=19 and 240.70x at N=79. My source arm
+contains `max_k Var(b,k,t)`, so this applies to **my** instrument. Common-mode
+cancellation removes the noise term's *mean*; it does not remove the upward bias
+of taking a maximum. Two consequences, measured (`premium_control.py`), not
+assumed:
+
+**On the ratio, the premium is adverse to my own conclusion.** The source arm is
+a max over N frames; the merge arm is one image with no max. So the premium
+inflates the source arm *only*, drives the ratio *up*, and biases the rule toward
+**(b)**. Measured inflation, N=176 versus N=88 on the same scene: median
+**1.032**, p90 1.092, max 1.220 at detail tiles. The published verdict is (a),
+reached *despite* a bias pushing the other way, and the bias is small enough
+(3%) that it cannot account for ratios of 0.675.
+
+**On the corpus ranking, it was not safe, and my own gate caught it.** This is
+where I had a real problem: see §7 and refuted prediction 6. The `rise < 0.10`
+criterion fires on **38.0%** of `flowers-cpl`'s no-detail tiles and up to 53.5%
+elsewhere - not from the premium as such but from a sweep-wide trend. The fix is
+`excess = stuck% - flat%`, each subject against its own null.
+
+One process note worth propagating: my first version of this control tested raw
+*argmax-at-boundary*, which is **not** the criterion the ranking ships
+(`rise < 0.10`). It gave a comfortable 3.2x separation where the shipped
+criterion gives 1.5x. Testing a proxy for the shipped statistic is the same
+error as testing a report for the presence of a word instead of the claim it
+certifies - it just looks more like real measurement.
+
 ## 6. Mechanism
 
 Deliverable 3 asked, *if* (b): which frame should have won, which won instead. It
@@ -182,32 +244,45 @@ the sweep, so the depth was never covered.
 boundary frame. **Frame-side only: no master, no registration, no resampling
 choice enters it**, so no such choice can move the ranking.
 
-| # | subject | frames | detail | stuck% |
-|---|---|---|---|---|
-| 1 | **flowers-cpl** | 176/176 | 138 | **58.7** |
-| 2 | highly-angled-ruler-mm-cpl | 100/299 | 187 | 18.2 |
-| 3 | flower-bud-with-background-fern-cpl | 100/299 | 247 | 14.2 |
-| 4 | coffee-bean | 100/105 | 339 | 7.1 |
-| 5 | dry-erase-marker-head-cpl | 100/299 | 329 | 4.3 |
-| 6 | pencil-steep-angle-cpl | 100/299 | 228 | 3.1 |
-| 7 | lavendar-cpl | 100/299 | 193 | 1.6 |
-| 8 | bee-1-cpl | 100/299 | 360 | 0.8 |
-| 9 | 119MSDCF | 33/33 | 168 | 0.6 |
-| 10 | bee-3-cpl | 100/299 | 392 | 0.3 |
-| 11–21 | (109/112/113MSDCF, bee-2, coffee-bubbles, flower-bud-alone, lead-1, leaf-2, pencil-flatter, **tweezers-cpl**, wrapped-text-1) | | | **0.0** |
+**Corrected 2026-08-27 after the ORCH selection-premium broadcast. The table
+below supersedes the raw-`stuck%` ordering I first published; §8.6 records what
+was wrong with it.**
 
-Corpus median **0.0**, max 58.7. Agreement between the two detail definitions
-**r = 0.978** — this ranking is not a ranking of its own threshold.
+The confound that had to be removed: the criterion *also* fires on tiles with no
+detail at all - on some subjects for more than half of them - because a
+whole-frame trend across the sweep (illumination or level drift) can make the
+boundary frame the maximum with no focus signal involved. `flat%` measures that
+per subject; **`excess = stuck% - flat%`** is the drift-controlled statistic and
+is the ranking. The confound is per-subject, so no global threshold could have
+removed it.
 
-**`flowers-cpl` is a massive outlier**, 3.2× the next subject and against a corpus
-median of zero. It is one badly-bracketed subject, not the tip of a corpus-wide
-merge defect.
+| # | subject | frames | detail | stuck% | flat% | **excess** |
+|---|---|---|---|---|---|---|
+| 1 | **flowers-cpl** | 176/176 | 138 | 58.7 | 38.0 | **+20.7** |
+| 2 | bee-1-cpl | 100/299 | 360 | 0.8 | 0.0 | +0.8 |
+| 3-6 | 112MSDCF, 113MSDCF, coffee-bubbles, wrapped-text-1 | | | 0.0 | 0.0 | 0.0 |
+| 9 | coffee-bean | 100/105 | 339 | 7.1 | 9.7 | -2.6 |
+| 13 | bee-3-cpl | 100/299 | 392 | 0.3 | 25.9 | -25.7 |
+| 14 | highly-angled-ruler-mm-cpl | 100/299 | 187 | 18.2 | 44.4 | **-26.2** |
+| 15 | flower-bud-with-background-fern-cpl | 100/299 | 247 | 14.2 | 41.1 | -26.9 |
+| 17 | tweezers-cpl | 100/100 | 291 | 0.0 | 30.4 | -30.4 |
+| 21 | dry-erase-marker-head-cpl | 100/299 | 329 | 4.3 | 53.5 | -49.3 |
 
-**On the orchestrator's two hints:** `highly-angled-ruler-mm-cpl` is
-**confirmed** at #2 (18.2%). **`tweezers-cpl` is refuted**: stuck% = **0.0**, and
-its top-left region shows nothing. That hint was correctly offered as a hint and
-it does not survive measurement.
+Corpus excess: median **-12.2**, max **+20.7**. **Subjects with excess > 5
+points: 1 of 21.** Detail-definition agreement r = 0.978.
 
+**`flowers-cpl` is the only subject in the corpus with a capture-gap signature at
+all** - 26x the next value, and the only positive one of any size. It is one
+badly-bracketed subject, not the tip of a corpus-wide defect. The drift control
+*strengthens* the conclusion: from "a large outlier" to "the sole instance".
+
+**On the orchestrator's two hints:** `tweezers-cpl` is **refuted** on both the
+raw statistic (stuck% = 0.0) and the controlled one (excess -30.4).
+`highly-angled-ruler-mm-cpl` I first **confirmed at #2 on raw stuck% (18.2), and
+that confirmation is now withdrawn**: its no-detail tiles fire at 44.4%, so its
+detail tiles are *less* stuck than its own null (excess -26.2). Its apparent rank
+was its own sweep-wide trend, not a capture gap. Both hints were correctly
+offered as hints; neither survives measurement.
 **Outcome partition over all 26 delivered masters:** RANKED 21 | TOO-LITTLE-DETAIL
 3 (`couch-fibers-cpl`, `flat-on-ruler-cpl`, `foam`) | UNREGISTERED 2
 (`flower-inner-edge-cpl`, `wrapped-text-2`) | **TOTAL 26 = 26.**
@@ -248,6 +323,25 @@ there. **4a is the ranking to use.** The one follow-up I would offer is a look a
    and median, so a tile excluded as a division artefact still supplied the
    headline. Fixed; `dry-erase-marker-head-cpl` 4.5e14 → 14.25,
    `flowers-cpl` 27.01 → 4.94. None of the §5 verdict numbers depend on it.
+6. **I confirmed the orchestrator's `highly-angled-ruler-mm-cpl` hint, and I was
+   wrong to.** Prompted by the ORCH selection-premium broadcast I built the
+   no-detail null I should have built first. The ranking criterion fires on
+   tiles with *no detail at all* on most subjects - 44.4% of them on the ruler,
+   53.5% on `dry-erase-marker-head-cpl`. Against its own null the ruler's 18.2%
+   is **negative** (excess -26.2): its detail tiles are *less* stuck than its
+   structureless ones. **The confirmation is withdrawn.** My published ranking
+   rows 2-10 were substantially measuring each subject's own sweep-wide trend.
+   The corrected result is *stronger*, not weaker - `flowers-cpl` goes from a
+   3.2x outlier to the **only** subject in the corpus carrying the signature -
+   but I published the uncontrolled version first and it named a subject that
+   does not have the defect. The `tweezers-cpl` refutation survives the control.
+7. **I commissioned the statistic but never the decision rule.** Also prompted by
+   the broadcast. `commission_tfc.py` proves the *number* moves correctly; it
+   says nothing about whether the (a)/(b) *rule* sitting on top of it can emit
+   (b) at all. A rule structurally stuck on (a) would have agreed with the prior,
+   agreed with `BUILD-TRIAGE.md`, and passed every test I had. The gap is now
+   closed and the rule passes 4/4 - but it was open when I published the verdict,
+   and nothing I had run would have caught it.
 
 ## 9. Defects I found in my own instrument before trusting it
 
@@ -327,16 +421,22 @@ turn over inside the bracket. Nothing I measured revives either explanation.
 
 ## 13. Product implication
 
-`stuck%` (§7) is the shippable half of this result. It needs **no master, no
-registration and no resampling choice** — it is computed frame-side, during or
-immediately after capture. It separates "reshoot this" from "retouch this",
-which is a feature the project already wants, and it is a clean outlier detector:
-`flowers-cpl` 58.7% against a corpus median of 0.0.
+`excess = stuck% - flat%` (§7) is the shippable half of this result. It needs
+**no master, no registration and no resampling choice** - it is computed frame
+side, during or immediately after capture. It separates "reshoot this" from
+"retouch this", which is a feature the project already wants.
+
+**Ship the drift-controlled form, not raw `stuck%`.** Raw `stuck%` fires on
+tiles with no detail at all - 53.5% of them on `dry-erase-marker-head-cpl` - so a
+product built on it would tell users to reshoot subjects that are correctly
+bracketed. Each subject must be scored against its own no-detail rate. On the
+controlled statistic the corpus separates cleanly: **1 subject of 21 above +5
+points, `flowers-cpl` at +20.7, corpus median -12.2.**
 
 For `flowers-cpl` specifically the honest user-facing message is: **the bracket
-did not cover the near depth; extend the sweep past the frame-0 end and reshoot.**
-No merge change will recover those regions, because the information is not in the
-data.
+did not cover the near depth; extend the sweep past the frame-0 end and
+reshoot.** No merge change will recover those regions, because the information is
+not in the data.
 
 ---
 
@@ -355,6 +455,8 @@ deleted once reduced to numbers.
 | `stageA.py` / `stageB.py` | frame-side cube; master-vs-source with similarity registration |
 | `verdict.py`, `losers.py`, `sites.py` | deliverables 1–3 |
 | `survey.py`, `surveyB.py`, `rank.py` | deliverable 4 |
+| `commission_verdict.py` | commissions the (a)/(b) DECISION RULE with conclusion-flipping mutations |
+| `premium_control.py` | selection-premium and no-detail-null controls; produced the §7 correction |
 | `stride_control.py` | subsampling calibration of §11 |
 | `mapmake.py` | the per-tile map, `D:\strehl-out\V-ORACLE\maps\flowers-cpl-b2.png` |
 

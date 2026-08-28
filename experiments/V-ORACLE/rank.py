@@ -50,6 +50,11 @@ def analyse(subj, b, thresh):
     p10 = float(np.nanquantile(c, 0.10))
     det = {"decile": c >= np.nanquantile(c, 0.90),
            "null": c > 10.0 * max(p10, 1e-9)}
+    # Tiles with NO detail at all.  These are the drift control: whatever
+    # fraction of THEM reads 'stuck' is what the criterion manufactures on this
+    # subject from a whole-frame trend across the sweep (illumination or level
+    # drift), with no focus signal available to produce it.
+    flat = c <= max(p10, 1e-9) * 2.0
 
     # fraction of detail tiles whose focus curve never turned over inside the
     # bracket -- the capture-gap signature, measured independently of the merge
@@ -106,6 +111,9 @@ def analyse(subj, b, thresh):
                       if n else float("nan")),
         }
     out["edge_lose"] = int((both & ~interior & det["null"]).sum())
+    out["stuck_flat"] = (100.0 * float(np.nanmean(rise[flat] < 0.10))
+                         if flat.any() else float("nan"))
+    out["nflat"] = int(flat.sum())
     return "OK", out
 
 
@@ -136,26 +144,42 @@ def main() -> int:
     # and no registration, so none of those choices can move it.  It answers the
     # product question directly: RESHOOT-THIS (the sweep ran out before focus
     # did) versus RETOUCH-THIS.
-    rows.sort(key=lambda t: -t[1]["null"]["stuck"])
+    # Ranked by EXCESS, not by raw stuck%.  Raw stuck% is confounded: the
+    # criterion also fires on tiles with no detail at all, on some subjects for
+    # more than half of them, because a whole-frame trend across the sweep makes
+    # the boundary frame the maximum without any focus signal being involved.
+    # Subtracting each subject's own no-detail rate removes a confound that is
+    # per-subject and cannot be removed by any global threshold.
+    rows.sort(key=lambda t: -(t[1]["null"]["stuck"] - t[1]["stuck_flat"]))
     print(f"=== DELIVERABLE 4a: all {len(subs)} delivered masters ranked by the "
           f"CAPTURE-GAP signature (band {args.band}) ===")
     print("stuck%% = detail tiles whose through-focus curve is still AT ITS "
           "MAXIMUM on a\n         boundary frame, i.e. the bracket ended while "
           "the tile was still getting\n         sharper.  Frame-side only: no "
           "master, no registration, no resampling\n         choice enters it, "
-          "so no such choice can move the ranking.\n")
+          "so no such choice can move the ranking.")
+    print("flat%%  = the same criterion on tiles with NO detail: what this "
+          "subject's own\n         sweep-wide trend manufactures with no focus "
+          "signal present.\nexcess = stuck%% - flat%%, the drift-controlled "
+          "statistic.  THIS IS THE RANKING.\n")
     hd = (f"{'#':<3}{'subject':<38}{'frames':>9}{'detail':>8}{'stuck%':>9}"
-          f"{'stuck% (decile)':>17}")
+          f"{'flat%':>8}{'excess':>9}")
     print(hd)
     print("-" * len(hd))
     for i, (s, r) in enumerate(rows):
+        ex = r["null"]["stuck"] - r["stuck_flat"]
         print(f"{i + 1:<3}{s:<38}{r['nused']:>5}/{r['nframes']:<3}"
               f"{r['null']['ndetail']:>8}{r['null']['stuck']:>9.1f}"
-              f"{r['decile']['stuck']:>17.1f}")
+              f"{r['stuck_flat']:>8.1f}{ex:>9.1f}")
     st_n = np.array([r["null"]["stuck"] for _, r in rows])
     st_d = np.array([r["decile"]["stuck"] for _, r in rows])
+    ex_a = np.array([r["null"]["stuck"] - r["stuck_flat"] for _, r in rows])
     print(f"\ncorpus stuck%: median {np.median(st_n):.1f}, "
-          f"max {st_n.max():.1f} ({rows[0][0]})")
+          f"max {st_n.max():.1f}")
+    print(f"corpus excess: median {np.median(ex_a):.1f}, "
+          f"max {ex_a.max():.1f} ({rows[0][0]})")
+    npos = int((ex_a > 5.0).sum())
+    print(f"subjects with excess > 5 points: {npos} of {len(rows)}")
     print(f"agreement between the two detail definitions: "
           f"r = {np.corrcoef(st_n, st_d)[0, 1]:.3f}")
 
