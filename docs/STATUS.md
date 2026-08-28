@@ -16,7 +16,7 @@ marked as unmeasured.
 | --- | --- | --- |
 | **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
 | **Visual quality** | **24 of 26 masters clean to the eye at 1:1** | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
-| **Halo** (shipping masters, 2–120 px) | **0 visible, 0 demonstrated on any subject** | facts 1851–1855 |
+| **Halo** (shipping masters, 2–120 px) | **0 demonstrated on any subject** — but only 11 of 26 are actually *clean*; 4 blind + 7 unmeasurable remain UNSCORED, which is not the same as clean | facts 1851–1855, 1884 |
 | **Rim** (shipping masters, ±12 px) | **13 FAIL — a disjoint scale the halo work never reached; unscored by a second lane** | fact 1881 |
 | **Aura** (estimator vs pyramid) | estimator measures deeper in **17 of 17** conditioned readings; magnitude unknown | fact 1871 |
 | **Chroma** | **1 visible defect, diagnosed, fix specified, not landed** | facts 1861–1863, 1865 |
@@ -184,11 +184,26 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 - **The dust correction is OFF by default, and the soft gate is off *and* inert.** Off is
   correct for the dust map — a stale map manufactures the defect it removes — but it means the
   shipped default is not the best output the code can produce. The soft gate is worse than off:
-  setting `STREHL_SOFT_GATE` on the default backend changes **zero pixels** and reports success,
-  so it will read as "tried it, made no difference" to anyone who does not check reachability.
-  Three knobs have now been found dead on their shipping path. **Assume a knob is inert until a
-  liveness control proves otherwise** — the cheapest form is a deliberate typo that must fail
-  loudly, and the honest form is a pixel-difference count against a commissioned comparator.
+  on the default backend, `STREHL_SOFT_GATE` unset, `=on`, and `=zzznope` all exit 0 and produce
+  **byte-identical** output (SHA256 `C5E59BC9…`, 197,801,290 B). It is not merely ignored, it is
+  **unvalidated** — a value naming no kernel runs to completion. Two knobs are now confirmed dead
+  on their shipping path (`STREHL_SOFT_GATE`, `--exposure`); the per-band gate floor is *not* a
+  third — it changes the image, it just doesn't move the rim, which is a different repair.
+  **Assume a knob is inert until a liveness control proves otherwise** — the cheapest form is a
+  deliberate typo that must fail loudly, and the honest form is a pixel-difference count against
+  a commissioned comparator. Facts 1869, 1873, 1880, 1882.
+- **The env channel does not honour the contract the flag channel does, and it has 46 variables
+  in it.** `strehl stack --help` states that estimator-only *flags* "are REFUSED under the
+  pyramid backend rather than accepted and ignored," because "a flag that parses and does nothing
+  is indistinguishable from one that works, and this project has shipped that failure before."
+  That fix was applied to flags only. `STREHL_SOFT_GATE` is a shipped instance of the same
+  failure in the env channel. Lane **V-ENVSURF** is classifying all 46. Until it reports, treat
+  any `STREHL_*` variable as unproven on the pyramid default. Fact 1882.
+- **An exit code is not a measurement of the knob you set.** A soft-gate probe read `rc=1` on
+  both estimator arms and nearly shipped the conclusion that the estimator rejects the variable;
+  `rc=1` was an unrelated photometric failure that fires whatever the environment says. Every arm
+  needs a matched unset control **on the identical command line**, and an arm whose control
+  already shows the effect has measured nothing. Fact 1883.
 - **`experiments/BUILD-DEFECT/out/defect-map-ILCE-7CM2.txt` is headered `SUPERSEDED — DO NOT
   ADOPT`.** It parses cleanly and looks usable. It is not.
 - **`docs/research/M111-waxy-blobs.md` has a self-retracted headline in §13**, and its §8.2 fix
