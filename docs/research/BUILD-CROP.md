@@ -361,6 +361,13 @@ V-REVIEW's 270× objection.** Three reasons, stated head-on:
 3. **It was already measured on real stacks and came out the wrong sign.**
    SYNTHESIS facts 1419 / 1459 measured **−0.0030 dex** — sharpness got very
    slightly *worse* — on 8 of 9 stacks when the enlargement was removed.
+4. **Laplacian energy is a raw band-power statistic and counts noise as
+   sharpness** (ORCH's guard, after an arm read +0.142 sharper raw and −0.134
+   softer once noise-corrected — a sign flip). This number is **not**
+   noise-corrected, so on its own it cannot be trusted, and least of all in flat
+   regions. §3.3 is the only place in this report where a laplacian reading is
+   load-bearing, and there it is explicitly partitioned flat-vs-textured for
+   exactly this reason.
 
 Point 2 is precisely why V-REVIEW's 270× stands: the effect scales with the
 kernel, not with `k`, so shrinking `k` toward 1 does not buy back the kernel.
@@ -473,6 +480,46 @@ Both emit **3470 x 2312**. The mode is resolved **once** in `main.rs` and stored
 on `MergeOptions`, and both backends print through the same `crop_banner`
 function, which is the structural reason a fix cannot land in one backend only.
 
+### 5a. The banner and the dimensions are not enough — the estimator's pixels
+
+**Added after ORCH's instrument-defect broadcast** (a presence test cannot
+detect a reversed conclusion). As first written, Test 3 checked the estimator
+backend's *banner text* and *output dimensions*. Both are satisfiable by a
+backend that crops at the **wrong origin**: the banner is printed from the
+resolved mode, not from the window actually written, and the dimensions are
+right for any origin. That is exactly the defect shape being warned about, and
+the commission warned that a previous fix here landed in one backend and
+shipped broken.
+
+So the estimator backend now carries the same bit-exact guard as the default:
+
+```
+=== ESTIMATOR backend: crop window vs no-fit, at the banner's origin (23,16)
+full e-nofit.tiff  (2344, 3516, 3) uint16
+crop e-crop.tiff   (2312, 3470, 3) uint16
+window at (23,16) size 3470x2312, 24067920 samples
+  exact-equal samples : 24067920 / 24067920  (100.0000 %)
+  max |diff|          : 0 DN
+  VERDICT             : BIT-IDENTICAL
+```
+
+**24,067,920 of 24,067,920 exact.** The estimator crops at the origin its banner
+claims, not merely to the right size.
+
+**And the guard has teeth** — commissioned with a mutation that flips the
+conclusion rather than perturbing a number. If the same comparison passed at a
+neighbouring origin it would be certifying nothing:
+
+```
+=== MUTANT origin (22,16)   exact 248651 / 24067920 (1.0331 %)  max 10651 DN  DIFFERS
+=== MUTANT origin (24,16)   exact 248618 / 24067920 (1.0330 %)  max 10651 DN  DIFFERS
+=== MUTANT origin (23,15)   exact 245336 / 24067920 (1.0193 %)  max  7394 DN  DIFFERS
+=== MUTANT origin (23,17)   exact 245284 / 24067920 (1.0191 %)  max  7394 DN  DIFFERS
+```
+
+A one-pixel error in **either** axis collapses the check from 100.0000% to
+~1.03%. The guard is pinned to the specific origin it certifies.
+
 ---
 
 ## 6. Test 4 — no content regression, and the off-by-one guard
@@ -495,8 +542,10 @@ window at (23,16) size 3470x2312, 24067920 samples
 ```
 
 **24,067,920 of 24,067,920 samples exact.** Together with the 24,580,566-sample
-single-frame result in §3 that is 48.6M samples with zero mismatches at two
-different values of `k` and two different rectangle origins.
+single-frame result in §3.2 and the 24,067,920-sample estimator result in §5a,
+that is **72.7M samples with zero mismatches**, across two values of `k`, two
+rectangle origins, and both merge backends — plus four one-pixel mutants that
+all fail as they must (§5a).
 
 **No bug was found in the rectangle computation.**
 
