@@ -3168,8 +3168,360 @@ oracle plants are caught. The placebo (a prose edit that changes no measured
 value) stays green, an unreadable record refuses with `2` rather than passing
 or failing, and the document is restored byte-identically.
 
-## 10. Files
+### 9.25 The sub-gate fallback is correct and I was wrong about it -- and the measurement built to convict it found a two-stop-dark frame holding 62% of a band on the deepest stack in the corpus
 
+Section 9.24 ended with two candidate second mechanisms and a promise to
+measure the one `pyramid.rs` says has never been measured. This section
+delivers that measurement, **refutes my own headline**, and reports what the
+instrument found instead.
+
+**Three of the four results here are against my own prior or against a fix
+this project is currently building.** That is the point of the lane.
+
+#### 9.25.1 The question the shipping source asks of itself
+
+At the pin, `git show 9b05d0b7:crates/strehl-core/src/pyramid.rs` L759-773,
+the `Fallback` enum carries this doc comment:
+
+> `den[j] <= 0.0` means no frame's smoothed band energy cleared
+> `gate * beta * var`. The shipped answer is the unweighted mean over all
+> frames. That is correct for the DC base band ... and a far stronger claim
+> for a BAND-PASS coefficient, where the detail exists only in the handful of
+> frames that have that pixel in focus. A mean over `N` frames then returns
+> roughly `n_focus / N` of it, an attenuation that worsens as the stack
+> deepens.
+>
+> Whether that is a defect turns on **something not yet measured**: whether a
+> sub-gate coefficient is real signal or pure noise. If it is noise, the mean
+> is the correct estimator and the only one that gets below single-frame
+> noise. This enum exists so the two readings can be told apart by
+> measurement instead of argued.
+
+`Fallback::Mean` is the shipping default (L1116). `Best`, `TopK` and `Power`
+exist and are switched off. In section 9.24 I reported that **99.89% of the
+finest band of `bee-2-cpl` is sub-gate**, so to three significant figures the
+whole fine band of that master is the unweighted mean of every frame, and I
+named this as the strongest remaining candidate for the depth collapse other
+lanes measured. That framing was wrong, and the instrument I built to support
+it is what refuted it.
+
+#### 9.25.2 The discriminator, and what it cost to commission
+
+`vn_subgate.py`. Split the stack into two half-stacks that span the same
+focus range and differ only in membership; at a sub-gate location each half's
+mean band coefficient is `S + noise` with the noise independent between
+halves and `S` common, so the Pearson correlation between them is
+
+    r = var(S) / (var(S) + var(noise_half))
+
+which is zero for pure noise and positive for real content. Nothing about it
+consults the weights.
+
+Commissioning **refused four times**, and every refusal was a defect in the
+instrument rather than in the subject:
+
+| # | refusal | what was actually wrong |
+|---|---|---|
+| 25 | a band with 8 sub-gate pixels printed an `r` beside a band with 800,000 | `scored` gated on the BAND's size, not on the number of sub-gate coefficients correlated. A skipped band read as a measured one -- the failure this project has already fixed once in `check-spec-refs.py`. |
+| 26 | a correct instrument read 0.077 where 0.923 was predicted | the planted signal was a single spatial frequency at 0.31/0.27 cyc/px, which lands almost entirely in L0. Bands L1-L5 held no planted signal at all and the median across bands measured them. Replaced with a broadband common field, which puts the same signal fraction in every band. |
+| 27 | S1 failed on L4 at `\|r\| = 0.084` | the bar was a flat 0.08 for every band. The standard error of a correlation over `m` samples is about `1/sqrt(m)` and L4 holds 144 coefficients, so the bar rejected a correct instrument. Replaced with a per-band `4/sqrt(m)`. |
+| 28 | the selection-cost control demanded a 0.10 fall on a pure-noise arm | with no common content the plain mean already reads `r = -0.007`. **A gate that requires a fall from a quantity sitting at its floor can only ever refuse.** Replaced with the interior-maximum prediction below. |
+
+Also corrected before it reached a number: the first version computed the
+plain half-mean over above-gate pixels and named it `r_abovegate`, implying a
+statement about the merge's above-gate behaviour. **Selection never entered
+the quantity.** I nearly reported `bee`'s L1 reading of 0.0287 as a property
+of the weighting law. It is kept as `r_mean` under a name that says what it
+is, and it is now the control.
+
+Commissioned, both directions, against closed-form known answers:
+
+| planted signal fraction | r predicted | r measured | bands scored + skipped | sub-gate fraction |
+|---|---:|---:|---|---:|
+| 0.00 | 0.0000 | -0.0070 | 5 + 2 = 7 | 1.0000 |
+| 0.02 | 0.1967 | 0.1878 | 5 + 2 = 7 | 1.0000 |
+| 0.10 | 0.5714 | 0.5651 | 5 + 2 = 7 | 1.0000 |
+| 0.50 | 0.9231 | 0.9201 | 5 + 2 = 7 | 1.0000 |
+| 0.90 | 0.9908 | 0.9905 | 5 + 2 = 7 | 1.0000 |
+
+The sweep recovers the closed form to within 0.009 at every rung, including a
+rung that must read near 1.0 and a rung that must read 0. The sub-gate
+fraction is 1.0000 at every rung, so the arms differ in the signal fraction
+and not in the gate decision -- the mismatched-arm trap that has now bitten
+three lanes on this project.
+
+#### 9.25.3 The selection-cost control and its interior maximum
+
+`sel_cost = r_mean - r_merge` is the half-stack coherence the shipping
+weighting **loses against a plain mean on the same pixels, from the same
+frames, with the weighting law as the only difference.**
+
+Its commissioning gate is a prediction, not a threshold I chose. At signal
+fraction 0 there is no coherence to lose; at signal fraction 1 selection and
+averaging agree because every frame carries the same content; in between,
+per-frame noise elects a winner the other half does not elect. So the cost
+must have an **interior maximum with both endpoints near zero** -- a shape
+that a statistic stuck high, stuck low, or short-circuited cannot produce.
+
+| planted signal fraction | r_mean (plain mean) | r_merge (shipping) | sel_cost |
+|---|---:|---:|---:|
+| 0.00 | -0.0070 | -0.0009 | -0.0078 |
+| 0.01 | 0.0993 | 0.0416 | +0.0577 |
+| 0.03 | 0.2619 | 0.1084 | +0.1535 |
+| 0.10 | 0.5651 | 0.2909 | +0.2743 |
+| 0.30 | 0.8346 | 0.5845 | +0.2461 |
+| 0.60 | 0.9454 | 0.8169 | +0.1304 |
+| 0.90 | 0.9905 | 0.9690 | +0.0212 |
+| 0.99 | 0.9991 | 0.9987 | +0.0004 |
+
+The peak sits at signal fraction 0.10 with a cost of +0.2743, and the endpoints read -0.0078 and +0.0004. Note `r_merge` at low signal fractions is roughly **half**
+`r_mean`: on frames that differ mostly by noise, the shipping weighting
+genuinely destroys half-stack coherence, demonstrated here against a known
+answer rather than inferred from arithmetic.
+
+#### 9.25.4 THE HEADLINE: a sub-gate coefficient is noise. The fallback is right and I was wrong
+
+| subject | N | band | sub-gate fraction | sub-gate pixels | **r_subgate** | r_merge | r_mean |
+|---|---:|---|---:|---:|---:|---:|---:|
+| `coffee-bubbles` | 19 | L0 | 0.9335 | 756161 | **0.0144** | 0.3376 | 0.3470 |
+| `112MSDCF` | 79 | L0 | 0.1001 | 81109 | **0.0261** | 0.2783 | 0.2892 |
+| `bee-2-cpl@registered` | 287 | L0 | 0.9989 | 809105 | **0.0018** | 0.8757 | 0.4447 |
+
+`r_subgate` is the fraction of the **delivered** sub-gate coefficient's
+variance that reproduces across two independent halves of the same stack. It
+is at most 0.026 on any subject measured, over pixel counts from 81,109 to
+809,105.
+
+**`pyramid.rs`'s open question has an answer and it is "noise".**
+`Fallback::Mean` is the correct estimator for what is there, and it is the
+only one that gets below single-frame noise. `Fallback::TopK` and
+`Fallback::Power` would select a maximum out of a noise field and inject it
+into the image. **The section 9.24 hypothesis that the sub-gate fallback is
+the second mechanism destroying detail is withdrawn.**
+
+**The standing qualifier on this result.** `r` is a property of the delivered
+value, not a bound on what a different estimator could have recovered. For
+content present in only `n_focus` of the `m` frames in a half, the numerator
+falls as `(n_focus/m)^2` while the noise term falls as `1/m`, so the
+discriminator's sensitivity to *sparse* focused content degrades as `1/m`. At
+`m = 10` on `coffee-bubbles` a null reading is strong evidence. At `m = 144`
+on `bee` it is weaker, and I do not claim more from it than that the value
+actually delivered is not reproducible.
+
+#### 9.25.5 The bee coarse-band selection cost is bimodal in N, which means it is not about N
+
+`sel_cost` at matched focus range, nested subsets, verified to span identical
+index ranges at every rung:
+
+| subject | N | L2 | L3 | L4 | L5 | L6 |
+|---|---:|---:|---:|---:|---:|---:|
+| `coffee-bubbles` | 3 | +0.020 | +0.066 | +0.080 | +0.053 | +0.021 |
+| `coffee-bubbles` | 4 | +0.017 | +0.126 | +0.158 | +0.142 | +0.100 |
+| `coffee-bubbles` | 6 | +0.057 | +0.185 | +0.240 | +0.220 | +0.133 |
+| `coffee-bubbles` | 10 | +0.119 | +0.218 | +0.334 | +0.272 | +0.115 |
+| `coffee-bubbles` | 19 | +0.162 | +0.326 | +0.456 | +0.369 | +0.268 |
+| `112MSDCF` | 6 | -0.008 | +0.082 | +0.055 | +0.015 | +0.000 |
+| `112MSDCF` | 11 | -0.015 | +0.035 | +0.007 | +0.001 | -0.000 |
+| `112MSDCF` | 21 | -0.028 | +0.008 | +0.002 | +0.000 | -0.000 |
+| `112MSDCF` | 40 | +0.003 | +0.007 | +0.002 | +0.000 | -0.000 |
+| `112MSDCF` | 79 | +0.027 | +0.007 | +0.001 | +0.000 | +0.000 |
+| `bee-2-cpl@registered` | 19 | +0.012 | +0.035 | +0.144 | +0.043 | +0.007 |
+| `bee-2-cpl@registered` | 37 | -0.017 | -0.083 | +0.011 | +0.014 | +0.014 |
+| `bee-2-cpl@registered` | 73 | -0.057 | -0.080 | +0.058 | +0.004 | +0.002 |
+| `bee-2-cpl@registered` | 144 | -0.077 | -0.020 | +0.070 | +0.003 | +0.001 |
+| `bee-2-cpl@registered` | 287 | -0.046 | +0.237 | +0.705 | +0.817 | +0.773 |
+
+On `coffee-bubbles` the cost rises monotonically with N at L2-L6 and
+reaches **+0.456 at L4**. On `112MSDCF` it never exceeds 0.03 in
+magnitude and shows no trend. On `bee-2-cpl` it is near zero to N=144 and
+then reads 0.71 / 0.82 / 0.77 at L4/L5/L6 -- a jump of more than two orders
+of magnitude for a factor of two in N.
+
+**A discontinuity is not a mechanism, so I did not report it as one.** Two
+controls:
+
+1. **A different half-split.** The interleaved split puts even frames in one
+   half and odd in the other, so anything that alternates frame to frame --
+   flash recycle, rail settle -- separates the arms systematically. A `pair`
+   split (0,1 | 2,3 | 4,5 ...) cannot do that. The two agree to 0.0004 at the
+   top rung (+0.8165 under the pair split against 0.8169 interleaved). **Not
+   a split artifact.**
+2. **A denser ladder.** N = 144, 170, 200, 230, 260, 273, 280, 287 at matched
+   range:
+
+| N | frame 46 in subsample | L3 | L4 | L5 | L6 |
+|---:|---|---:|---:|---:|---:|
+| 144 | **no** | -0.0198 | +0.0701 | +0.0030 | +0.0008 |
+| 170 | yes | +0.1292 | +0.6589 | +0.8078 | +0.7746 |
+| 200 | yes | +0.1361 | +0.6737 | +0.8072 | +0.7709 |
+| 230 | yes | +0.1782 | +0.6843 | +0.8099 | +0.7711 |
+| 260 | **no** | +0.1002 | +0.0715 | +0.0025 | +0.0005 |
+| 273 | yes | +0.2141 | +0.6994 | +0.8180 | +0.7732 |
+| 280 | yes | +0.2280 | +0.6876 | +0.8129 | +0.7702 |
+| 287 | yes | +0.2373 | +0.7053 | +0.8169 | +0.7733 |
+
+L5 reads ~0.003 at N=144, ~0.808 at N=170-230, **~0.003 again at N=260**, then
+~0.818 at N=273-287. **That is a switch, not a function of N.** Any reading of
+this as depth-dependent softening is unsupported, including my own. The
+`frame 46 in subsample` column is the answer and it is exact: the cost is
+high on every rung that contains that frame and low on every rung that does
+not, **8 of 8 rungs**.
+
+#### 9.25.6 What the switch actually is: one frame, two stops dark, holding a band
+
+Probing weight concentration at L5 per half:
+
+| N | frame 46 present | half A top frame | A share | A n_eff | half B top frame | B share | B n_eff |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 144 | **no** | 175 | 0.0686 | 20.10 | 177 | 0.0703 | 20.30 |
+| 170 | yes | 46 | 0.8773 | 1.30 | 168 | 0.0651 | 22.68 |
+| 260 | **no** | 168 | 0.0408 | 36.16 | 180 | 0.0449 | 35.45 |
+| 287 | yes | 177 | 0.0355 | 40.39 | 46 | 0.8172 | 1.50 |
+
+Wherever source frame **46** lands, it takes 82-88% of the entire band in that
+half and the effective frame count collapses to ~1.3. Where the subsample
+excludes it -- N=144 and N=260, by rounding, not by design -- both halves
+spread across 20 to 40 frames and the cost vanishes.
+
+What frame 46 is:
+
+| quantity | frame 46 | stack median | ratio |
+|---|---:|---:|---:|
+| mean level, DN | 3688.2 | 14834.7 | **0.249x** |
+| per-frame std, DN | 954.1 | 463.7 | 2.058x |
+| L0 band energy | 2984 | 1.806e+04 | **0.2x** (rank 285 of 287) |
+| L4 band energy | 1.822e+04 | 472.1 | **38.6x** (rank 1 of 287) |
+| L5 band energy | 7.822e+04 | 1290 | **60.6x** (rank 1 of 287) |
+| L6 band energy | 1.511e+05 | 4262 | **35.4x** (rank 1 of 287) |
+
+Frame 46 sits at 3688.2 DN against a stack median of 14834.7 -- **0.249x, two stops dark** -- with 2.058x the per-frame noise. It is a bad exposure, and its coarse-band energy is 35x to
+61x the stack median because a dark frame's gradient and read noise are
+low-frequency structure.
+
+The shipping merge's response, as a share of the band, against the `1/N =
+0.00348` a plain mean would give it:
+
+| band | shipping | rmax theta=0.25 | rmax theta=0.50 | rmax theta=0.75 | shipping vs 1/N | rmax0.75 vs 1/N |
+|---|---:|---:|---:|---:|---:|---:|
+| L0 | 0.00000 | 0.00000 | 0.00000 | 0.00000 | 0x | 0x |
+| L3 | 0.19704 | 0.20473 | 0.20800 | 0.20947 | 57x | 60x |
+| L4 | 0.34928 | 0.36548 | 0.37482 | 0.37924 | 100x | 109x |
+| L5 | 0.62336 | 0.68246 | 0.70615 | 0.71944 | 179x | 206x |
+| L6 | 0.54942 | 0.68676 | 0.72123 | 0.74597 | 158x | 214x |
+
+**Frame 46** receives **0.62336 of L5** -- 179 times its entitlement.
+It receives nothing at all at L0, because there the floor is set by real scene
+variance and a dark frame does not clear it. The defect is coarse-band only,
+which is exactly the band set where `sel_cost` fires, and that agreement was
+not arranged.
+
+The mechanism is in section 9.4's third correction to ORCH's share law:
+`BETA` collapses at coarse bands, the floor hits its `max(floor, 1.0)` clamp,
+and `r = excess / floor / SNR_REF` therefore becomes proportional to **raw
+band energy with no normalisation at all**. A frame with 60x the median
+coarse-band energy is not competing on focus. It is competing on being
+broken.
+
+**Fidelity note, and it runs against me.** My model shares one `var0` across
+frames. The Rust takes `variance` as a **per-frame** argument, and a two-stop
+dark frame has a lower fitted variance, hence a lower floor and a larger `r`.
+The shipping concentration on frame 46 is therefore likely at least as large
+as I measure. That is reasoning, not measurement, and it is listed in the
+open items.
+
+#### 9.25.7 The proposed r_max-relative fix makes this worse, measured
+
+ORCH's proposed N-invariant law is `w_k = max(0, r_k - theta*r_max)^p`, so
+participation is bounded by how many frames are genuinely competitive rather
+than by N. **The rogue frame *is* `r_max`.** Subtracting `theta*r_max` zeroes
+its competitors and concentrates the band on it further. The `rmax` columns
+of the table in 9.25.6 are that measurement.
+
+The share goes from **0.54942 of L6** under the shipping law to
+**0.74597 at theta = 0.75** -- 158x to 214x its entitlement, a
+**1.36x amplification** of exactly the failure the fix is not aimed at. This
+is additive to section 9.24's finding that the same law costs 1.21x-1.41x
+more hull violations.
+
+**This is not an argument against N-invariance.** It is an argument that the
+`r_max`-relative form needs a robustness term that the absolute form got for
+free from its floor, and that any acceptance table for the fix must include a
+stack containing a bad frame. `bee-2-cpl` is that stack and it is already in
+the corpus.
+
+#### 9.25.8 What this does and does not say about the other lanes' bee results
+
+V-LINEAR measured `bee` retaining 0.180 / 0.060 of comparator detail, and the
+tone lane found **38.5% of what its instrument scored as strehl's "noise" on
+`bee` was low-frequency content, not noise**. A two-stop-dark frame owning
+54-62% of L4-L6 puts that frame's low-frequency structure into the delivered
+image, which is low-frequency content that is neither scene nor grain.
+
+**I am labelling that as a hypothesis, not a finding.** I have measured the
+weight share and the frame; I have not measured either lane's statistic and I
+cannot attribute their numbers. What I can say is that ORCH asked what a
+common-cause artifact would look like before anyone calls the convergence
+settled, and the answer on this subject is: **a common cause in the data
+rather than in the instruments.** All three lanes share these 287 frames.
+
+#### 9.25.9 Corrections owed
+
+- **Section 9.24's second mechanism is withdrawn.** The sub-gate fallback is
+  correct. `Fallback::Mean` should not be changed on this evidence.
+- **No claim of N-dependent selection cost on `bee` survives.** The apparent
+  N trend is a single frame entering and leaving the subsample. The
+  `coffee-bubbles` N trend does survive its controls and is reported above.
+- `sel_cost` is a **coherence** statistic, and ORCH is right that a fix which
+  reduces half-stack incoherence improves coherence-based numbers without
+  necessarily improving the image. The rogue-frame share is not a coherence
+  statistic -- it is a weight -- and section 9.25.10 carries the image-space
+  reading that neither can be moved by coherence.
+
+#### 9.25.10 The image-space reading, which is the one that counts
+
+A weight share is a property of the estimator. ORCH's standing requirement is
+that any before/after include at least one statistic that **coherence alone
+cannot move**. So: merge `bee-2-cpl` twice, with and without frame 46,
+everything else identical, and difference the delivered pixels.
+
+| quantity | value |
+|---|---:|
+| RMS difference, DN | 627.4 |
+| as a fraction of mean level | 0.0426 |
+| 99th percentile absolute difference, DN | 1966.9 |
+| pixels differing by more than 10 DN | 0.9822 |
+| pixels differing by more than 100 DN | 0.5864 |
+
+627.4 DN RMS on a mean level of 14,739 DN, and **58.6% of the
+image moves by more than 100 DN**, because one frame out of 287 was dropped.
+
+| band | merged band RMS with frame 46 | without | ratio |
+|---|---:|---:|---:|
+| L0 | 28.3129 | 28.3200 | **0.9997** |
+| L1 | 194.1126 | 194.1126 | **1.0000** |
+| L2 | 104.0845 | 103.8666 | **1.0021** |
+| L3 | 74.1066 | 53.8982 | **1.3749** |
+| L4 | 139.5171 | 43.3349 | **3.2195** |
+| L5 | 282.2156 | 60.7448 | **4.6459** |
+| L6 | 382.0185 | 108.5677 | **3.5187** |
+
+Including that single frame multiplies the delivered coarse-band amplitude by
+**3.2195x at L4**, **4.6459x at L5** and **3.5187x at L6**, and leaves L0 to
+L2 unchanged to within 0.2%. Those bands sit at roughly 0.016, 0.008 and 0.004
+cyc/px on the band-frequency map measured in section 9.24 -- low-frequency
+structure that is neither scene nor grain.
+
+This is the statistic to hold the fix to. It is a difference between two
+renders of the same subject, it is measured in DN on delivered pixels, and no
+change in half-stack coherence can move it.
+
+**What I did not measure.** Whether the shipped `bee-2-cpl` master carries
+this: my bundle is my own registration of the source frames, not the shipping
+render, and I have not scored the shipped TIFF. Whether other subjects in the
+26-subject corpus contain a comparable frame: only `bee-2-cpl` was searched.
+Both are cheap and neither is done.
+
+## 10. Files
 | file | what it does |
 |---|---|
 | `vn_lib.py` | gauge, pin check, render, registration, per-statistic admission. Its docstring carries the gauge finding. |
