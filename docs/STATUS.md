@@ -278,16 +278,28 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 - **The seven new stacks delivered 2026-08-27** — `pottery-art-glazed-cpl`,
   `maldon-sea-salt-cpl`, `chia-seeds-cpl`, `medication-pill-cpl`, `duck-tape-side-layers-cpl`,
   `dime-flat-narrow-slices-cpl`, `unpopped-popcorn-kernels-cpl`, 1,292 frames total, at lower
-  ISO and focus-step 1 / 5 / 7 against the previous max of 10 — are now **rendered but not yet
-  measured**. All seven produced masters in 12.4 min total wall clock on the shipping binary
-  (`render7.ps1`, 63.9–162.7 s each, 33 distinct SHA256s over 33 subjects), and three were
-  viewed at 1:1 by the orchestrator: `maldon-sea-salt-cpl` resolves crystal facets and
-  micro-fractures, `duck-tape-side-layers-cpl` resolves individual scrim filaments and thin
-  loose fibres crossing adhesive ridges **with no halo at any fibre boundary**, which is the
-  occlusion case the halo work never had a clean subject for. `unpopped-popcorn-kernels-cpl`
-  is softer on the falling-away left shoulder — unattributed between capture coverage and
-  merge. **No instrument has been run on any of the seven.** They matter more than their count
-  suggests:
+  ISO and focus-step 1 / 5 / 7 against the previous max of 10 — are now **rendered, and eyed
+  at 1:1, but not instrumented**. All seven produced masters in 12.4 min total wall clock on
+  the shipping binary (`render7.ps1`, 63.9–162.7 s each, 33 distinct SHA256s over 33
+  subjects). **No instrument has been run on any of the seven** — the survey below is the
+  orchestrator's eye on a true 1:1 crop with no resampling and no stretch, which is evidence
+  about gross defects and nothing else.
+
+  | subject | 1:1 verdict |
+  | --- | --- |
+  | `maldon-sea-salt-cpl` | clean — crystal facets and micro-fractures resolved |
+  | `duck-tape-side-layers-cpl` | clean — individual scrim filaments and thin loose fibres over adhesive ridges, **no halo at any fibre boundary** |
+  | `dime-flat-narrow-slices-cpl` | clean — micro-scratches and verdigris across the field; bright relief edges are specular metal, not a symmetric rim |
+  | `medication-pill-cpl` | clean — individual powder grains on a near-white low-contrast tablet, which is the focus measure's hardest case |
+  | `pottery-art-glazed-cpl` | clean — bubbles suspended inside translucent glaze, sharp; the soft blue swirls behind them are at a depth the bracket did not cover, **unattributed** between capture coverage and merge |
+  | `unpopped-popcorn-kernels-cpl` | mostly clean — softer on the falling-away left shoulder, **unattributed** |
+  | `chia-seeds-cpl` | **mild veiling haze in the deep inter-seed crevices** — not the gross halo the owner rejected, but visible as a slight milkiness where clean dark separation is expected |
+
+  `chia-seeds-cpl` is the one to point an instrument at first: packed seeds with steep
+  curvature falling into deep shadow is the two-layer occlusion geometry, and a veil in the
+  crevice is exactly the predicted signature of a background pixel contaminated by defocused
+  foreground in near-focus frames. It is a hypothesis about a subject, not a measurement.
+  They matter more than their count suggests:
   - **Lower ISO should widen band qualification.** Only 2 of 26 current subjects qualify at
     0.30–0.35, which is the single biggest constraint on measuring sharpness at all.
   - **Thinner slices are the direct test of the selection premium.** Finer focus sampling puts
