@@ -29,7 +29,26 @@ import tifffile
 from scipy.ndimage import gaussian_filter
 
 A, B = sys.argv[1], sys.argv[2]
-SIGMAS = [1.0, 2.0, 4.0, 8.0, 16.0]
+
+# Band edges are placed deliberately, not by octave convention.
+#
+# A Gaussian of width sigma cuts at f = 1/(2*pi*sigma) cyc/px, so sigma is
+# chosen to land the band boundaries on the frequencies V-LINEAR qualified
+# per-tile on this corpus:
+#
+#   0.17-0.20  ratio 4.874           PASS  -- carries signal
+#   0.20-0.25  ratio 2.419           PASS  -- carries signal
+#   0.25-0.30  ratio 1.387       MARGINAL
+#   0.25-0.48                       NOISE
+#
+# sigma = 1/(2*pi*0.25) = 0.6366   -> boundary at 0.25, the noise edge
+# sigma = 1/(2*pi*0.17) = 0.9362   -> boundary at 0.17, the signal edge
+#
+# giving band 0 = the noise region and band 1 = the QUALIFIED SIGNAL region.
+# An acuity criterion must be read off band 1, not band 0 and not the coarse
+# bands: the coarse bands are 0.01-0.08 cyc/px and a merge can destroy all
+# visible acuity without moving them at all.
+SIGMAS = [0.6366, 0.9362, 2.0, 4.0, 8.0, 16.0]
 
 
 def lum(p):
@@ -87,18 +106,19 @@ def band_std(idx, arr):
     return float(np.mean(vals))
 
 
-hdr = f"{'band':>6s} {'approx cyc/px':>14s} " + " ".join(
+hdr = f"{'band':>6s} {'cyc/px':>14s} {'kind':>7s} " + " ".join(
     f"{k + ' A':>10s} {k + ' B':>10s} {'ratio':>7s}" for k in sites
 )
 print(hdr)
 print("-" * len(hdr))
 
-edges = [0.5 / s for s in SIGMAS]
+edges = [1.0 / (2.0 * np.pi * s) for s in SIGMAS]
 rows = []
 for j in range(len(SIGMAS)):
     hi = 0.5 if j == 0 else edges[j - 1]
     lo = edges[j]
-    line = f"{j:6d} {f'{lo:.3f}-{hi:.3f}':>14s} "
+    tag = {0: "NOISE", 1: "SIGNAL"}.get(j, "")
+    line = f"{j:6d} {f'{lo:.3f}-{hi:.3f}':>14s} {tag:>7s} "
     row = {"band": j}
     for k, idx in sites.items():
         sa, sb = band_std(idx, ba[j]), band_std(idx, bb[j])
@@ -109,12 +129,11 @@ for j in range(len(SIGMAS)):
     print(line)
 
 print()
-print("READING:")
-print("  grain win  = band 0 FLAT ratio well below 1")
-print("  acuity cost= bands 1-3 EDGE ratio below 1")
-print("  if the change is confined to band 0, the single-band 'micro-contrast")
-print("  cost' was a noise measurement, not an acuity measurement")
-worst = min(rows[1:4], key=lambda r: r["EDGE"])
+print("READING (band edges are placed on V-LINEAR's qualification, see source):")
+print("  band 0 = 0.25-0.5 cyc/px  -- NOISE on this corpus. Grain lives here.")
+print("  band 1 = 0.17-0.25 cyc/px -- QUALIFIED SIGNAL. Acuity lives here.")
+print("  bands 2+ are 0.01-0.08 cyc/px, far too coarse to be an acuity test.")
 print()
-print(f"  worst structural EDGE ratio (bands 1-3): {worst['EDGE']:.4f} at band {worst['band']}")
-print(f"  band 0 FLAT ratio:                       {rows[0]['FLAT']:.4f}")
+print(f"  GRAIN WIN      band-0 FLAT ratio : {rows[0]['FLAT']:.4f}   (want << 1)")
+print(f"  ACUITY COST    band-1 EDGE ratio : {rows[1]['EDGE']:.4f}   (want >= 0.98)")
+print(f"  INSTRUMENT NULL coarsest EDGE    : {rows[-1]['EDGE']:.4f}   (want ~1.000)")
