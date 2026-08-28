@@ -1,0 +1,22 @@
+subjects        : 6
+frames          : 463
+projected wall  : 11 min at 1.48 s/frame (measured under load)
+arm             : SC-16-bc6fa3c7
+flags           : --srgb --auto-exposure
+binary sha256   : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+git commit      : UNATTRIBUTED -- operator-supplied binary; tree HEAD was 822302d1400ba910a0032bbfbab342a2579ebeef WITH UNCOMMITTED CHANGES (the binary may not match any commit)
+[ 1/6] lead-1-cpl (123 frames)
+        ok  55s  189 MB
+[ 2/6] foam (100 frames)
+        ok  46s  189 MB
+[ 3/6] 112MSDCF (79 frames)
+        ok  41s  189 MB
+[ 4/6] flat-on-ruler-cpl (79 frames)
+        ok  40s  189 MB
+[ 5/6] 113MSDCF (63 frames)
+        ok  30s  189 MB
+[ 6/6] coffee-bubbles (19 frames)
+        ok  11s  189 MB
+
+wall clock      : 3.7 min for 463 frames (0.48 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\SC-16-bc6fa3c7  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)

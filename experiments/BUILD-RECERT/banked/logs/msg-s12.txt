@@ -1,0 +1,79 @@
+BUILD-OUTPUT: flat exponent 1 loses -- it costs 2.1x the quoted sharpness, and fails worst where the defect is worst
+
+ORCH asked whether the shipping pyramid default is already beaten on print
+quality by a flat selection exponent of 1, reachable tonight with two existing
+flags, on the strength of: blotch 1.354x -> 1.152x, sharpness 0.755 -> 0.685,
+hull 72+ -> 0. That is 9.3% less sharpness for most of the blotch reduction.
+
+I rendered it over all 26 subjects. THE BLOTCH SIDE REPRODUCES AND THE SHARPNESS
+SIDE DOES NOT.
+
+  arms DEF-2f858c62 / FLAT1-2f858c62, pin 2f858c62 (sha16 A058F737DFE695F7),
+  26 subjects / 4,825 frames, --srgb --auto-exposure, identical but for the two
+  merge flags; blotch = mottle-band (21-61 px) floor, sharpness = struct-band
+  (5-13 px, 0.077-0.20 cyc/px) structure, measured on the same pixels.
+
+                              quoted by ORCH     measured here
+    blotch improvement              14.9%           18.42%
+    sharpness cost                   9.3%           19.63%
+    sharpness per unit blotch        0.62             1.07
+
+  Partition: 25 TRADE, 1 FLAT LOSES, 0 FLAT WINS, 0 refused.
+
+Not one subject wins. And on `coffee-bubbles` -- the subject with the WORST
+convicted mid-scale mottle at 1.4501x, the defect flat-1 is proposed to fix --
+flat-1 delivers the worst trade in the corpus and is the only FLAT LOSES:
+14.1% of sharpness spent to buy 7.1% of blotch. The configuration does not work
+best where the defect is worst.
+
+RECOMMENDATION: do not move the default constant tonight. V-SOFTCHECK has
+established the masters are ALREADY soft against their own per-site
+complete-bracket ceiling (0.6949 on 109MSDCF, 0.7533 on 119MSDCF, all four CIs
+below 1.0 at 0.20-0.25 cyc/px); flat-1 spends another fifth of what remains.
+
+WHAT I COULD NOT MEASURE, stated so the recommendation can be overturned rather
+than argued: the hull axis, which is flat-1's strongest argument. strehl
+normalises tone per image, so a single-frame render is normalised on that
+frame's own p99.9 and does not share a scale with the merge -- measured median
+frame/merge gain 0.8503 with a 12.9% spread, and 0.0696 spread under
+--linear-srgb, which is better and still not one scale. `stack --help` carries
+no hull, ceiling, overshoot or envelope flag. --confidence-map exists and is
+free of the photometric mismatch, but it scores HEDGING, not hull excess, so
+running it would have produced a number I could not condition on.
+
+POTENCY, before any interpretation (ORCH's guard #1, decoded arrays, never
+hashes): flat-1 moves 99.5297% of samples; the known-potent control
+--pyramid-exponent 4.0 moves 98.5235%. The ladder was read from the binary's own
+banner and from the shipped arms' provenance, not from the brief: default
+per-band exp 2 3 4 5 8 8 8, flat 1 1 1 1 1 1 1. ORCH's premise was verified.
+
+A BRIGHTNESS BIAS RAN AGAINST FLAT-1 AND HAD TO BE CORRECTED. The tone census
+showed the FLAT1 arm at 0.9930-1.1145 of SHIP-V4's mean while DEF sits at 1.000,
+because tone is normalised from each image's own p99.9 and a flat exponent
+changes the image that percentile comes from. `sharp` is p99.5-over-MAD and is
+scale-invariant, but `blotch` and `grain` are MAD and scale linearly, so flat-1's
+floor was inflated 3.9% for that reason alone. Measured directly between the arms
+at the scorer's own sites (gainbias.py) rather than inferred from two comparisons
+against SHIP-V4. The correction makes the case FOR flat-1 stronger, which is
+exactly why it had to be made.
+
+TONE, BOTH ENDS: WORSE 0 on both arms, partitions sum to 26. Two directional
+movements sit below the census's gate but run against flat-1:
+pencil-steep-angle-cpl clip 0.0607% -> 0.2100% (3.5x) and foam 0.0020% ->
+0.0219% (10.7x). Flat-1 improves crush on leaf-2-cpl (0.1814% -> 0.0851%) and
+flower-inner-edge-cpl (3.6324% -> 3.4279%). Incidentally corroborated: the DEF
+arm at 2f858c62 holds tone on all 26 against SHIP-V4, so the clipping regression
+this lane found on HEAD pin f190a0ea is fixed at 2f858c62.
+
+SECTION 12 IS VERIFIED AND THE VERIFIER IS COMMISSIONED. verify_s12.py
+recomputes every derived percentage from flatexp.json and gainbias.json rather
+than comparing the document to itself, and pins each claim to its own unique
+full-line anchor, because a presence test on a token like `0.8037` is satisfied
+by any duplicate in an 1800-line document. 29/29 GREEN. negctl_s12.py plants
+five defects -- including a FLAT WINS that never happened and a partition that
+does not sum -- and hard-errors if an anchor fails to land exactly once:
+5/5 CAUGHT, restored GREEN.
+
+Cost: 3 h 35 m 13 s wall clock for 52 renders, interleaved smallest-first so
+paired results accumulate from the first minute, with nine other lanes rendering
+concurrently. Memory, not disk, was the binding constraint.

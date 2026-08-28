@@ -1,0 +1,41 @@
+
+=== identity ===
+candidate : C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe
+sha256    : 44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490
+identity  : THE SHIPPING PIN (this is a null re-certification)
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe -Arm RECERT-NULL -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent
+  rendered 26 master(s); COMPLETE.txt present
+  [render 2682.6s]
+
+=== gate ===
+  baseline  : 17 PASS, 0 FAIL, 9 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 0 NOT EXAMINED, 26 total (found 26)
+  candidate : 17 PASS, 0 FAIL, 9 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 0 NOT EXAMINED, 26 total (found 26)
+  no subject changed state
+  [gate 472.2s]
+
+=== pair ===
+  paired 26 subject(s) x 5 crops x 3 bands = 390 cells
+  vs baseline grain   tested 130 refused   0  cleaner   0  blur_trade   0  softer   0  d_floor +0.0000  d_struct +0.0000
+  vs baseline struct  tested 115 refused  15  cleaner   0  blur_trade   0  softer   0  d_floor +0.0000  d_struct +0.0000
+  vs baseline mottle  tested 113 refused  17  cleaner   0  blur_trade   0  softer   0  d_floor +0.0000  d_struct +0.0000
+  [pair 110.9s]
+
+=== h2h ===
+  vs enfuse  grain   tested   3 refused   0  cleaner   0  blur_trade   0  softer   0  d_floor -0.7136  d_struct +0.1290
+  vs enfuse  struct  tested   3 refused   0  cleaner   2  blur_trade   0  softer   0  d_floor -0.1956  d_struct +0.1387
+  vs enfuse  mottle  tested   2 refused   1  cleaner   1  blur_trade   0  softer   0  d_floor -0.0971  d_struct +0.2598
+  vs focus-stack grain   tested   3 refused   0  cleaner   0  blur_trade   0  softer   0  d_floor +10.6311  d_struct +20.7631
+  vs focus-stack struct  tested   3 refused   0  cleaner   0  blur_trade   0  softer   0  d_floor +20.4376  d_struct +22.1168
+  vs focus-stack mottle  tested   2 refused   1  cleaner   0  blur_trade   0  softer   0  d_floor +37.7655  d_struct +31.6564
+  [h2h 15.0s]
+
+=== verdict ===
+  [verdict 0.0s]
+
+============================================================================================
+TIMING: identity 0.0s  render 2682.6s  gate 472.2s  pair 110.9s  h2h 15.0s  verdict 0.0s  TOTAL 3280.8s
+VERDICT: PROMOTABLE -- no gate regression, no band bought its noise win out of structure
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-RECERT-NULL.json

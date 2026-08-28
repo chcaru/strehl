@@ -1,0 +1,6 @@
+THIS ARM IS INCOMPLETE.
+If this file is still here, the pass did not finish and the arm must not
+be scored -- accept.py cannot tell a missing subject from a passing one.
+started : 2026-08-27T22:29:27.1481336-07:00
+arm     : SC-BASE-bc6fa3c7
+pin     : UNPINNED (operator supplied C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe)

@@ -1,0 +1,41 @@
+binary : BC6FA3C787A18CAA
+
+===== SC-D64-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=1,1,1,64,64,64,64 =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-D64-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 219.5s]
+
+============================================================================================
+TIMING: identity 0.0s  render 219.5s  TOTAL 219.5s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-D64-bc6fa3c7.json
+----- SC-D64-bc6fa3c7 done in 220s, 6 master(s)
+
+===== SC-D4096-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=1,1,1,4096,4096,4096,4096 =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-D4096-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 231.5s]
+
+============================================================================================
+TIMING: identity 0.0s  render 231.5s  TOTAL 231.5s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-D4096-bc6fa3c7.json
+----- SC-D4096-bc6fa3c7 done in 232s, 6 master(s)
+
+DEEP SWEEP COMPLETE

@@ -1,0 +1,39 @@
+=== commissioning the tone census ===
+  A1 clean input          -> clip 0.0000%  crush 0.0000%   PASS
+  A2 planted 1234 top / 567 bottom -> clip 0.15691% (expect 0.15691)  crush 0.07210% (expect 0.07210)   PASS
+  A3 planted improvement  -> clip 41.3033% -> 0.0000%  (must fall)   PASS
+  commissioning PASSED
+
+=== tone census: SHIP-V4 vs HEAD-f190a0ea ===
+subject                             clip SHIP  clip CAND         d  crush SHIP  crush CAND  mean x
+109MSDCF                              0.0012%   85.5716%  +85.5704     2.4703%     0.0400%   1.296  WORSE
+112MSDCF                              0.0775%   33.6268%  +33.5494     0.0006%     0.0003%   2.834  WORSE
+113MSDCF                              0.0771%   15.8250%  +15.7479     0.0000%     0.0000%   2.263  WORSE
+119MSDCF                              0.0007%   72.4665%  +72.4658     3.2596%     1.6479%   1.249  WORSE
+bee-1-cpl                             0.0472%   57.8471%  +57.7999     0.0002%     0.0002%   1.294  WORSE
+bee-2-cpl                             0.0273%   55.2498%  +55.2224     0.0001%     0.0001%   1.311  WORSE
+bee-3-cpl                             0.0287%   57.4680%  +57.4393     0.0000%     0.0000%   1.297  WORSE
+coffee-bean                           0.0000%    0.0000%   -0.0000     0.0001%     0.0001%   0.932
+coffee-bubbles                        0.0007%    0.0000%   -0.0006     0.1261%     0.1145%   0.874
+couch-fibers-cpl                      0.0721%   88.5476%  +88.4755     0.0000%     0.0000%   1.427  WORSE
+dry-erase-marker-head-cpl             0.0000%    0.0000%   -0.0000     0.0001%     0.0001%   0.916
+flat-on-ruler-cpl                     0.0738%   55.4385%  +55.3647     0.0000%     0.0000%   1.597  WORSE
+flower-bud-alone-cpl                  0.0000%   78.5620%  +78.5620     0.0000%     0.0000%   1.120  WORSE
+flower-bud-with-background-fern-cpl    0.0263%   68.2589%  +68.2326     0.0001%     0.0000%   1.247  WORSE
+flower-inner-edge-cpl                 0.0061%    9.8871%   +9.8810     3.6395%     3.6062%   1.168  WORSE
+flowers-cpl                           0.1433%   73.3055%  +73.1622     0.0014%     0.0000%   1.480  WORSE
+foam                                  0.0020%    0.0001%   -0.0019     0.0312%     0.0312%   0.851
+highly-angled-ruler-mm-cpl            0.0272%   11.0343%  +11.0071     0.0000%     0.0000%   1.547  WORSE
+lavendar-cpl                          0.0516%   61.3905%  +61.3389     0.0000%     0.0000%   1.366  WORSE
+lead-1-cpl                            0.0230%   98.4836%  +98.4606     0.0404%     0.0002%   2.056  WORSE
+leaf-2-cpl                            0.0326%   95.2152%  +95.1827     0.6155%     0.0117%   2.075  WORSE
+pencil-flatter-angle-cpl              0.0443%   11.0452%  +11.0009     0.0000%     0.0000%   1.347  WORSE
+pencil-steep-angle-cpl                0.0610%   26.7218%  +26.6609     0.0000%     0.0000%   1.513  WORSE
+tweezers-cpl                          0.0345%   29.8249%  +29.7904     0.0000%     0.0000%   1.327  WORSE
+wrapped-text-1                        0.0329%   81.6986%  +81.6658     0.0000%     0.0000%   1.348  WORSE
+wrapped-text-2                        0.0248%   78.1814%  +78.1565     0.0000%     0.0000%   1.352  WORSE
+
+  compared 26   not yet rendered 0   total 26 of 26
+  WORSE 22   better 0   held 4   (partition sums to 26 = 26)
+
+VERDICT: TONE REGRESSION on 22 subject(s): 109MSDCF, 112MSDCF, 113MSDCF, 119MSDCF, bee-1-cpl, bee-2-cpl, bee-3-cpl, couch-fibers-cpl, flat-on-ruler-cpl, flower-bud-alone-cpl, flower-bud-with-background-fern-cpl, flower-inner-edge-cpl, flowers-cpl, highly-angled-ruler-mm-cpl, lavendar-cpl, lead-1-cpl, leaf-2-cpl, pencil-flatter-angle-cpl, pencil-steep-angle-cpl, tweezers-cpl, wrapped-text-1, wrapped-text-2

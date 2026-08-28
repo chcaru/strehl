@@ -1,0 +1,6 @@
+THIS ARM IS INCOMPLETE.
+If this file is still here, the pass did not finish and the arm must not
+be scored -- accept.py cannot tell a missing subject from a passing one.
+started : 2026-08-27T20:29:56.4897600-07:00
+arm     : DEF-2f858c62
+pin     : 2f858c62 (git archive + clean release build)

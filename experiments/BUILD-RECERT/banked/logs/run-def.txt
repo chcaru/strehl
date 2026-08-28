@@ -1,0 +1,11 @@
+subjects        : 26
+frames          : 4,825
+projected wall  : 119 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/26] pencil-steep-angle-cpl (299 frames)
+        ok  637s  189 MB
+[ 2/26] pencil-flatter-angle-cpl (299 frames)

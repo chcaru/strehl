@@ -1,0 +1,325 @@
+subjects        : 1
+frames          : 19
+projected wall  : 0 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] coffee-bubbles (19 frames)
+        ok  51s  189 MB
+
+wall clock      : 0.9 min for 19 frames (2.71 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 22
+projected wall  : 1 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 109MSDCF (22 frames)
+        ok  56s  189 MB
+
+wall clock      : 0.9 min for 22 frames (2.57 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 33
+projected wall  : 1 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 119MSDCF (33 frames)
+        ok  75s  189 MB
+
+wall clock      : 1.2 min for 33 frames (2.26 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 63
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 113MSDCF (63 frames)
+        ok  122s  189 MB
+
+wall clock      : 2.0 min for 63 frames (1.94 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 79
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 112MSDCF (79 frames)
+        ok  134s  189 MB
+
+wall clock      : 2.2 min for 79 frames (1.70 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 79
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flat-on-ruler-cpl (79 frames)
+        ok  142s  189 MB
+
+wall clock      : 2.4 min for 79 frames (1.80 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 100
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] tweezers-cpl (100 frames)
+        ok  176s  189 MB
+
+wall clock      : 2.9 min for 100 frames (1.76 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 100
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] foam (100 frames)
+        ok  106s  189 MB
+
+wall clock      : 1.8 min for 100 frames (1.06 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 105
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] coffee-bean (105 frames)
+        ok  123s  189 MB
+
+wall clock      : 2.1 min for 105 frames (1.18 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 120
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] wrapped-text-2 (120 frames)
+        ok  159s  189 MB
+
+wall clock      : 2.7 min for 120 frames (1.33 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 123
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] lead-1-cpl (123 frames)
+        ok  132s  189 MB
+
+wall clock      : 2.2 min for 123 frames (1.07 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 130
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] wrapped-text-1 (130 frames)
+        ok  228s  189 MB
+
+wall clock      : 3.8 min for 130 frames (1.76 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 176
+projected wall  : 4 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flowers-cpl (176 frames)
+        ok  200s  189 MB
+
+wall clock      : 3.3 min for 176 frames (1.14 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 182
+projected wall  : 4 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] leaf-2-cpl (182 frames)
+        ok  208s  189 MB
+
+wall clock      : 3.5 min for 182 frames (1.14 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 205
+projected wall  : 5 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flower-bud-alone-cpl (205 frames)
+        ok  282s  189 MB
+
+wall clock      : 4.7 min for 205 frames (1.37 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] dry-erase-marker-head-cpl (299 frames)
+        ok  431s  189 MB
+
+wall clock      : 7.2 min for 299 frames (1.44 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] bee-3-cpl (299 frames)
+        ok  444s  189 MB
+
+wall clock      : 7.4 min for 299 frames (1.49 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flower-bud-with-background-fern-cpl (299 frames)
+        ok  482s  189 MB
+
+wall clock      : 8.0 min for 299 frames (1.61 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flower-inner-edge-cpl (299 frames)
+        ok  386s  189 MB
+
+wall clock      : 6.4 min for 299 frames (1.29 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] bee-2-cpl (299 frames)
+        ok  337s  189 MB
+
+wall clock      : 5.6 min for 299 frames (1.13 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] highly-angled-ruler-mm-cpl (299 frames)
+        ok  186s  189 MB
+
+wall clock      : 3.1 min for 299 frames (0.62 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] lavendar-cpl (299 frames)
+        ok  487s  189 MB
+
+wall clock      : 8.1 min for 299 frames (1.63 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] pencil-flatter-angle-cpl (299 frames)
+        ok  515s  189 MB
+
+wall clock      : 8.6 min for 299 frames (1.72 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] bee-1-cpl (299 frames)
+        ok  421s  189 MB
+
+wall clock      : 7.0 min for 299 frames (1.41 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : DEF-2f858c62
+flags           : --srgb --auto-exposure
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] couch-fibers-cpl (299 frames)
+        ok  328s  189 MB
+
+wall clock      : 5.5 min for 299 frames (1.10 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)

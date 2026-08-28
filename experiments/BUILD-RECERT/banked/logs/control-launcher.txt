@@ -1,0 +1,10 @@
+subject: coffee-bubbles   (one subject is enough: the failure was at startup)
+
+PSModulePath inherited by this process:
+  C:\Users\chris\Documents\PowerShell\Modules;C:\Program Files\PowerShell\Modules;c:\program files\powershell\7\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+
+  A  powershell 5.1, PS7 module path inherited : 0 master(s), 'is not recognized' PRESENT
+  B  pwsh + _ps_env()                          : 1 master(s), 'is not recognized' absent
+
+CONTROL PASSED -- the inherited path reproduces the failure and the fix repairs it.
+The diagnosis is measured, not assumed, and the fix is potent rather than merely present.

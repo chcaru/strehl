@@ -1,0 +1,49 @@
+the HEAD baseline already existed: the thirteen commits helped, on grain
+
+ORCH escalated a 26-subject re-render as the project's top priority: 13 commits
+and +12,637/-538 lines separate pin 9b05d0b7 (which rendered every SHIP-V4
+master and every verdict five lanes are quoting) from HEAD.
+
+It did not need a render. All twelve named commits are already ancestors of pin
+2f858c62, checked one at a time with `git merge-base --is-ancestor`. Only two
+commits separate that pin from HEAD d2193a55 in crates/, and one of them puts
++400 lines into align_cmd.rs while its doc comment asserts "THE DEFAULT DOES NOT
+MOVE" -- a doc comment is not a measurement, and eb5145d4 is in this very range
+because a geometry guard broke 11 of 26 renders while passing every test it had.
+So headcheck.py cut a real pin at HEAD, built it (53AC552AF7093982, distinct
+from A058F737DFE695F7 and from the control's 44C2F2CD2E5B2894) and re-rendered
+three subjects, including the one whose alignment REFUSES: 3/3 BIT-IDENTICAL,
+296,808,192 samples, max|d| = 0. All three file SHAs differ -- a file hash is
+not a pixel gauge, confirmed in situ.
+
+HEAD vs SHIP-V4, 26/26 paired, three gated axes:
+  blotch   2 improved / 24 unchanged / 0 regressed   median 0.9998
+  sharp    5 improved / 21 unchanged / 0 regressed   median 1.0009
+  grain   17 improved /  9 unchanged / 0 regressed   median 0.9417
+leaf-2-cpl and lead-1-cpl are 56% and 51% quieter in fine grain while carrying
+34% and 23% MORE structure -- not a trade. lead-1-cpl is one of the six subjects
+convicted of mid-scale mottle. Registration verified clean on both.
+
+The first run of headscore.py printed the grain column without classifying it,
+and grain is the axis that moved most. A value printed but never conditioned on
+is a defect, and this one would have inverted the finding to "nothing happened".
+
+Commissioning, 10/10: null at corpus scale is 26/26 UNCHANGED at exactly 1.0000;
+blur buys grain 0.2485 and is convicted at sharp 0.8453; an FFT brick-wall
+denoise buys 0.7743 with sharp held at 0.9985. Three arms failed first and in
+all three the gauge was right and my plant was wrong -- white noise has no power
+in the 21-61 px band, a plant must exceed the statistic's resolution, and no
+gaussian separates the grain band from the structure band because at sigma 0.5
+it still passes 82% of the amplitude at 5 px.
+
+verify_s13.py returned 53/53 GREEN on its first clean run and the negative
+control immediately found it 8/9: mutating the REGRESSED row from 0 0 0 to
+0 1 0 still read GREEN, because the check asked whether "0" appeared anywhere in
+the line. The claim carrying the whole section was guarded by a test that could
+not fail. Repaired positionally, then proved with a transposition defect that
+leaves both values present in the line. 11/11 caught.
+
+sealshape.py hands V-GATHER a drop-in seal directory by hardlink at zero disk
+cost; printcert.py:72 is the one line that changes. Every .ok sentinel carries
+the binary that really rendered the bytes, so the seal contradicts the SHIP-V4
+filename on purpose.

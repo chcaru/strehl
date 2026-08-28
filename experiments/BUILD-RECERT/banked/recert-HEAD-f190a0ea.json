@@ -1,0 +1,234 @@
+{
+  "identity": {
+    "path": "C:\\dev\\strehl-out\\acceptance-pins\\f190a0ea\\target\\release\\strehl.exe",
+    "sha256": "332FA6AE8B8DA54C2BD90D8EA13683F736A0B68F7C4191C0F193BCE8938FD9C9",
+    "size": 9840128,
+    "is_shipping_pin": false
+  },
+  "render": {
+    "dir": "C:\\dev\\strehl-out\\BUILD-RECERT\\arms\\HEAD-f190a0ea",
+    "n_masters": 26,
+    "complete": true,
+    "only": null,
+    "adopted": true
+  },
+  "gate": {
+    "baseline_partition": "17 PASS, 0 FAIL, 9 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 0 NOT EXAMINED, 26 total (found 26)",
+    "partition": "2 PASS, 8 FAIL, 2 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 14 NOT EXAMINED, 26 total (found 26)",
+    "moves": [
+      {
+        "subject": "109MSDCF",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "112MSDCF",
+        "from": "ACQUIT",
+        "to": "FAIL"
+      },
+      {
+        "subject": "113MSDCF",
+        "from": "ACQUIT",
+        "to": "FAIL"
+      },
+      {
+        "subject": "119MSDCF",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "bee-1-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "bee-2-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "bee-3-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "couch-fibers-cpl",
+        "from": "ACQUIT",
+        "to": "FAIL"
+      },
+      {
+        "subject": "flat-on-ruler-cpl",
+        "from": "ACQUIT",
+        "to": "FAIL"
+      },
+      {
+        "subject": "flower-bud-alone-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "flower-bud-with-background-fern-cp",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "flower-inner-edge-cpl",
+        "from": "ACQUIT",
+        "to": "FAIL"
+      },
+      {
+        "subject": "flowers-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "highly-angled-ruler-mm-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "lavendar-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "lead-1-cpl",
+        "from": "ACQUIT",
+        "to": "SKIP"
+      },
+      {
+        "subject": "leaf-2-cpl",
+        "from": "ACQUIT",
+        "to": "SKIP"
+      },
+      {
+        "subject": "pencil-flatter-angle-cpl",
+        "from": "PASS",
+        "to": "FAIL"
+      },
+      {
+        "subject": "pencil-steep-angle-cpl",
+        "from": "PASS",
+        "to": "FAIL"
+      },
+      {
+        "subject": "tweezers-cpl",
+        "from": "PASS",
+        "to": "SKIP"
+      },
+      {
+        "subject": "wrapped-text-1",
+        "from": "PASS",
+        "to": "FAIL"
+      },
+      {
+        "subject": "wrapped-text-2",
+        "from": "PASS",
+        "to": "SKIP"
+      }
+    ],
+    "regressions": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "119MSDCF",
+      "bee-1-cpl",
+      "bee-2-cpl",
+      "bee-3-cpl",
+      "couch-fibers-cpl",
+      "flat-on-ruler-cpl",
+      "flower-bud-alone-cpl",
+      "flower-bud-with-background-fern-cp",
+      "flower-inner-edge-cpl",
+      "flowers-cpl",
+      "highly-angled-ruler-mm-cpl",
+      "lavendar-cpl",
+      "lead-1-cpl",
+      "leaf-2-cpl",
+      "pencil-flatter-angle-cpl",
+      "pencil-steep-angle-cpl",
+      "tweezers-cpl",
+      "wrapped-text-1",
+      "wrapped-text-2"
+    ],
+    "expiries": [],
+    "exit": 1
+  },
+  "pair": {
+    "subjects": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "119MSDCF",
+      "bee-1-cpl",
+      "bee-2-cpl",
+      "bee-3-cpl",
+      "coffee-bean",
+      "coffee-bubbles",
+      "couch-fibers-cpl",
+      "dry-erase-marker-head-cpl",
+      "flat-on-ruler-cpl",
+      "flower-bud-alone-cpl",
+      "flower-bud-with-background-fern-cpl",
+      "flower-inner-edge-cpl",
+      "flowers-cpl",
+      "foam",
+      "highly-angled-ruler-mm-cpl",
+      "lavendar-cpl",
+      "lead-1-cpl",
+      "leaf-2-cpl",
+      "pencil-flatter-angle-cpl",
+      "pencil-steep-angle-cpl",
+      "tweezers-cpl",
+      "wrapped-text-1",
+      "wrapped-text-2"
+    ],
+    "missing": [],
+    "summary": {
+      "grain": {
+        "n": 130,
+        "tested": 72,
+        "refused": 58,
+        "cleaner": 0,
+        "blur_trade": 0,
+        "softer": 0,
+        "median_d_floor": -0.10468994866406503,
+        "median_d_structure": 0.3152055522248074
+      },
+      "struct": {
+        "n": 130,
+        "tested": 64,
+        "refused": 66,
+        "cleaner": 18,
+        "blur_trade": 23,
+        "softer": 1,
+        "median_d_floor": -0.10244457924495137,
+        "median_d_structure": 0.14233702584883334
+      },
+      "mottle": {
+        "n": 130,
+        "tested": 83,
+        "refused": 47,
+        "cleaner": 21,
+        "blur_trade": 30,
+        "softer": 7,
+        "median_d_floor": -0.09441865079286296,
+        "median_d_structure": 0.028105555082540954
+      }
+    }
+  },
+  "h2h": {
+    "n_frames": 17
+  },
+  "timing_seconds": {
+    "identity": 0.0,
+    "render": 0.0,
+    "gate": 186.7,
+    "pair": 70.0,
+    "h2h": 10.4,
+    "verdict": 0.0,
+    "TOTAL": 267.1
+  },
+  "verdict": "NOT PROMOTABLE -- gate regression PASS->FAIL on 109MSDCF, 112MSDCF, 113MSDCF, 119MSDCF, bee-1-cpl, bee-2-cpl, bee-3-cpl, couch-fibers-cpl, flat-on-ruler-cpl, flower-bud-alone-cpl, flower-bud-with-background-fern-cp, flower-inner-edge-cpl, flowers-cpl, highly-angled-ruler-mm-cpl, lavendar-cpl, lead-1-cpl, leaf-2-cpl, pencil-flatter-angle-cpl, pencil-steep-angle-cpl, tweezers-cpl, wrapped-text-1, wrapped-text-2; struct: 23 blur-trade vs 18 clean cells -- the noise win was paid for out of structure; mottle: 30 blur-trade vs 21 clean cells -- the noise win was paid for out of structure",
+  "promotable": false
+}

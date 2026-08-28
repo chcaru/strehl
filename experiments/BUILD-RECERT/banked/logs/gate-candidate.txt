@@ -1,0 +1,51 @@
+ORCH print-readiness gate over 26 master(s) in C:\dev\strehl-out\BUILD-RECERT\arms\HEAD-f190a0ea
+
+thresholds: banding NOT(run>=4px AND step>=4DN)  clip<=0.1%   | review: blotch>0.02  chroma>0.015
+adjudications: 10 adjudicated subject(s); binary=C:\dev\strehl-out\acceptance-pins\740e7056\target\release\strehl.exe; report=experiments/V-REVIEW/report.md; statistics=imported unmodified from orch_blotch.py / orch_chroma.py
+--------------------------------------------------------------------------------------------------------------------
+SKIP    109MSDCF                           ValueError: could not convert string to float: 'REJECT-FLAT'
+FAIL    112MSDCF                           blotch 0.03614  chroma 0.0105  run 1.0px step 930.0DN  clip 32.5593% (gamut 33.627%)  crush 0.000%   <== clipped 32.5593% > 0.1% (all-3-channel, neutral blown)
+FAIL    113MSDCF                           blotch 0.14399  chroma 0.0149  run 1.0px step 1064.0DN  clip 15.4343% (gamut 15.825%)  crush 0.000%   <== clipped 15.4343% > 0.1% (all-3-channel, neutral blown)
+SKIP    119MSDCF                           ValueError: could not convert string to float: 'REJECT-FLAT'
+SKIP    bee-1-cpl                          ValueError: could not convert string to float: 'REJECT-FLAT'
+SKIP    bee-2-cpl                          ValueError: could not convert string to float: 'REJECT-FLAT'
+SKIP    bee-3-cpl                          ValueError: could not convert string to float: 'REJECT-FLAT'
+PASS    coffee-bean                        blotch 0.00098  chroma 0.0001  run 1.0px step 91.0DN  clip 0.0000% (gamut 0.000%)  crush 0.000%
+ACQUIT  coffee-bubbles                     blotch 0.10155  chroma 0.0547  run 1.0px step 205.0DN  clip 0.0000% (gamut 0.000%)  crush 0.115%   <== blotch 0.1015 (orch_blotch.py source arm); chroma 0.0547 (orch_chromapair.py)
+                                             band DN 0.994x source max -- inside the +-17% frame-to-frame band spread; chroma 0.901x source max outright [vs 12 source frames; master/worst-source blotch 1.069x blotch_band_dn 0.994x chroma 0.901x]
+FAIL    couch-fibers-cpl                   blotch 0.00018  chroma 0.0007  run 1.0px step 359.0DN  clip 86.6805% (gamut 88.548%)  crush 0.000%   <== clipped 86.6805% > 0.1% (all-3-channel, neutral blown)
+PASS    dry-erase-marker-head-cpl          blotch 0.00529  chroma 0.0005  run 1.0px step 124.0DN  clip 0.0000% (gamut 0.000%)  crush 0.000%
+FAIL    flat-on-ruler-cpl                  blotch 0.00088  chroma 0.0003  run 1.0px step 295.0DN  clip 54.5342% (gamut 55.439%)  crush 0.000%   <== clipped 54.5342% > 0.1% (all-3-channel, neutral blown)
+SKIP    flower-bud-alone-cpl               ValueError: could not convert string to float: 'REJECT-FLAT'
+SKIP    flower-bud-with-background-fern-cp ValueError: could not convert string to float: 'REJECT-FLAT'
+FAIL    flower-inner-edge-cpl              blotch 0.00255  chroma 0.0015  run 1.0px step 101.0DN  clip 9.5683% (gamut 9.887%)  crush 3.606%   <== clipped 9.5683% > 0.1% (all-3-channel, neutral blown)
+SKIP    flowers-cpl                        ValueError: could not convert string to float: 'REJECT-FLAT'
+ACQUIT  foam                               blotch 0.47486  chroma 0.0331  run 1.0px step 341.0DN  clip 0.0000% (gamut 0.000%)  crush 0.031%   <== blotch 0.4749 (orch_blotch.py source arm); chroma 0.0331 (orch_chromapair.py)
+                                             band DN 0.527x source max -- the merge halved it; chroma 0.880x outright [vs 12 source frames; master/worst-source blotch 0.885x blotch_band_dn 0.527x chroma 0.880x]
+SKIP    highly-angled-ruler-mm-cpl         ValueError: could not convert string to float: 'REJECT-FLAT'
+SKIP    lavendar-cpl                       ValueError: could not convert string to float: 'REJECT-FLAT'
+SKIP    lead-1-cpl                         ValueError: could not convert string to float: 'REJECT-FLAT'
+SKIP    leaf-2-cpl                         ValueError: could not convert string to float: 'REJECT-FLAT'
+FAIL    pencil-flatter-angle-cpl           blotch 0.00118  chroma 0.0005  run 1.0px step 174.0DN  clip 8.7105% (gamut 11.045%)  crush 0.000%   <== clipped 8.7105% > 0.1% (all-3-channel, neutral blown)
+FAIL    pencil-steep-angle-cpl             blotch 0.00002  chroma 0.0046  run 1.0px step 231.0DN  clip 25.4753% (gamut 26.722%)  crush 0.000%   <== clipped 25.4753% > 0.1% (all-3-channel, neutral blown)
+SKIP    tweezers-cpl                       ValueError: could not convert string to float: 'REJECT-FLAT'
+FAIL    wrapped-text-1                     blotch 0.00001  chroma 0.0020  run 1.0px step 1391.0DN  clip 81.5445% (gamut 81.699%)  crush 0.000%   <== clipped 81.5445% > 0.1% (all-3-channel, neutral blown)
+SKIP    wrapped-text-2                     ValueError: could not convert string to float: 'REJECT-FLAT'
+--------------------------------------------------------------------------------------------------------------------
+SCORED: C:\dev\strehl-out\BUILD-RECERT\arms\HEAD-f190a0ea
+partition: 2 PASS, 8 FAIL, 2 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 14 NOT EXAMINED, 26 total (found 26)
+A NOT EXAMINED master is not a clean master, and a REVIEW is not a
+failure -- it is a subject this gate has no standing to judge alone.
+An ACQUITTED master read high on a subject-dependent statistic and was
+then measured against its OWN source frames and found no worse. That
+acquittal is pinned to the number that was adjudicated: if the render
+moves more than 5%, it EXPIRES and the subject returns to REVIEW.
+
+FAILED: 112MSDCF, 113MSDCF, couch-fibers-cpl, flat-on-ruler-cpl, flower-inner-edge-cpl, pencil-flatter-angle-cpl, pencil-steep-angle-cpl, wrapped-text-1
+Run orch_halosrc.py on each before calling it a merge defect: a
+master can inherit a defect the optics delivered (section 96).
+
+NOT EXAMINED: 109MSDCF, 119MSDCF, bee-1-cpl, bee-2-cpl, bee-3-cpl, flower-bud-alone-cpl, flower-bud-with-background-fern-cpl, flowers-cpl, highly-angled-ruler-mm-cpl, lavendar-cpl, lead-1-cpl, leaf-2-cpl, tweezers-cpl, wrapped-text-2
+
+This gate certifies ABSENCE OF THE DEFECTS IT MEASURES. It does not
+certify sharpness (orch_sharp1to1.py) and does not screen dust.

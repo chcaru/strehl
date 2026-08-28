@@ -1,0 +1,11 @@
+subjects        : 1
+frames          : 19
+projected wall  : 0 min at 1.48 s/frame (measured under load)
+arm             : CTL-INHERITED
+flags           : --srgb --auto-exposure
+C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 : The term 'Get-FileHash' is not recognized as the 
+name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was 
+included, verify that the path is correct and try again.
+    + CategoryInfo          : ObjectNotFound: (Get-FileHash:String) [finalpass.ps1], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException,finalpass.ps1
+ 

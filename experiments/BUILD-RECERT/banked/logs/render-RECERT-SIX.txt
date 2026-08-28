@@ -1,0 +1,22 @@
+subjects        : 6
+frames          : 463
+projected wall  : 11 min at 1.48 s/frame (measured under load)
+arm             : RECERT-SIX
+flags           : --srgb --auto-exposure
+binary sha256   : 44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490
+git commit      : UNATTRIBUTED -- operator-supplied binary; tree HEAD was 7e0f584e7aa616ca28d31d161ba88d483daced05 WITH UNCOMMITTED CHANGES (the binary may not match any commit)
+[ 1/6] lead-1-cpl (123 frames)
+        ok  173s  189 MB  exp +3.76 st
+[ 2/6] foam (100 frames)
+        ok  118s  189 MB  exp -0.34 st
+[ 3/6] 112MSDCF (79 frames)
+        ok  70s  189 MB  exp +3.33 st
+[ 4/6] flat-on-ruler-cpl (79 frames)
+        ok  109s  189 MB  exp +1.95 st
+[ 5/6] 113MSDCF (63 frames)
+        ok  63s  189 MB  exp +2.33 st
+[ 6/6] coffee-bubbles (19 frames)
+        ok  22s  189 MB  exp -0.26 st
+
+wall clock      : 9.4 min for 463 frames (1.21 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\RECERT-SIX  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)

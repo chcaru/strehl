@@ -1,0 +1,74 @@
+[
+ {
+  "subject": "leaf-2-cpl",
+  "state": "SCORED",
+  "bands": {
+   "grain": {
+    "n_struct": 5,
+    "n_floor": 5,
+    "base_struct": 12.95977665803841,
+    "cand_struct": 11.179036054686044,
+    "struct_x": 0.8625948077393876,
+    "base_floor": 1.895401657380835,
+    "cand_floor": 4.2927881876411424,
+    "floor_x": 2.2648435337833046
+   },
+   "struct": {
+    "n_struct": 5,
+    "n_floor": 5,
+    "base_struct": 13.71280030399272,
+    "cand_struct": 10.368857724273873,
+    "struct_x": 0.756144441281975,
+    "base_floor": 3.406909934097534,
+    "cand_floor": 4.645375642957186,
+    "floor_x": 1.3635158348228282
+   },
+   "mottle": {
+    "n_struct": 3,
+    "n_floor": 5,
+    "base_struct": 20.830209715603615,
+    "cand_struct": 20.24312274475181,
+    "struct_x": 0.9718155996090606,
+    "base_floor": 11.582199969940246,
+    "cand_floor": 11.83340713334455,
+    "floor_x": 1.0216890715111353
+   }
+  }
+ },
+ {
+  "subject": "coffee-bubbles",
+  "state": "SCORED",
+  "bands": {
+   "grain": {
+    "n_struct": 5,
+    "n_floor": 5,
+    "base_struct": 25.299030412129767,
+    "cand_struct": 25.341763764434344,
+    "struct_x": 1.001689130042078,
+    "base_floor": 1.5219143961796977,
+    "cand_floor": 1.5285375328780717,
+    "floor_x": 1.0043518457509828
+   },
+   "struct": {
+    "n_struct": 5,
+    "n_floor": 5,
+    "base_struct": 64.976014857744,
+    "cand_struct": 64.99908368476817,
+    "struct_x": 1.0003550360402167,
+    "base_floor": 3.5860718792595914,
+    "cand_floor": 3.584231357439794,
+    "floor_x": 0.9994867582464139
+   },
+   "mottle": {
+    "n_struct": 5,
+    "n_floor": 5,
+    "base_struct": 96.94340203965346,
+    "cand_struct": 96.97878167522774,
+    "struct_x": 1.000364951454456,
+    "base_floor": 16.52797852643818,
+    "cand_floor": 16.524035104393704,
+    "floor_x": 0.9997614092952646
+   }
+  }
+ }
+]

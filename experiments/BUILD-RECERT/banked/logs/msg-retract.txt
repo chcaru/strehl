@@ -1,0 +1,66 @@
+BUILD-OUTPUT: I claimed the worst trade in the corpus and it was the 7th; the retraction is stronger than the claim
+
+Section 12 asserted that `coffee-bubbles` was "the worst trade in the entire
+corpus". Ranked by exchange rate -- percent of struct-band sharpness given up per
+percent of mottle-band floor gained, on gain-corrected blotch -- it is 7th of 26,
+and six subjects are worse. THE ERROR RAN IN THE DIRECTION OF MY OWN CONCLUSION,
+which is the direction that does not get caught by wanting to be right.
+
+It came from reading a verdict LABEL as a MAGNITUDE. `coffee-bubbles` was the
+only subject scored FLAT LOSES, and I let that stand in for "worst", when the
+label only records that its raw blotch ratio crossed 1.0. A rank is a
+computation; a label is a threshold crossing, and thresholds do not order the
+subjects underneath them.
+
+I found it because a scratch table printed blotch 1.0065 for `coffee-bubbles`
+while the document said 0.9288, and I stopped to reconcile the two rather than
+assume the committed verifier at 29/29 GREEN had already settled it. It had --
+the column is labelled `blotch (corr)` and coffee-bubbles' own gain is 1.0836,
+1.0065/1.0836 = 0.9288 exactly -- but reconciling it surfaced two real gaps.
+
+GAP 1, DISCLOSED IN 12.6: the shipped verdict rule fires on UNCORRECTED blotch,
+because the gain correction was derived after the scorer was committed and
+commissioned and I would not re-baseline a commissioned instrument to a number
+that post-dates it. Recomputing the identical rule on the corrected ratio moves
+exactly one subject and gives 26 TRADE, 0 FLAT LOSES, 0 FLAT WINS. The raw basis
+is the one HARSHER ON FLAT-1, so the shipped partition slightly overstates the
+case I am arguing, and that is why it is disclosed rather than quietly restated.
+verify_s12.py now reimplements the rule and REQUIRES it to reproduce the shipped
+raw partition exactly before its corrected partition is believed -- a
+reimplementation that does not reproduce the original is measuring something
+else.
+
+GAP 2, AND IT IS A BETTER ARGUMENT THAN THE ONE I LOST: the two worst exchange
+rates in the corpus are 109MSDCF at 6.71 and 119MSDCF at 5.79 -- the exact two
+subjects V-SOFTCHECK measured as ALREADY soft against their own per-site
+complete-bracket ceiling, 0.6949 and 0.7533, CIs entirely below 1.0 at 0.20-0.25
+cyc/px. On those two, flat-1 gives up ~21.7% of a resolution budget already
+overdrawn and buys 3-4% of floor for it. The configuration is least affordable
+exactly where it is least effective. I found that only because I checked the
+overstatement.
+
+The narrower surviving claim is sufficient: among the six subjects convicted of
+mid-scale mottle -- the defect flat-1 is proposed to fix -- `coffee-bubbles`,
+the flagship at 1.4501x, has the worst exchange rate of the six, 1.99 against
+next-worst 1.16. And the load-bearing cell never depended on any of this:
+0 FLAT WINS, 0 of 26, on both bases. Not one subject gets quieter without paying
+sharpness for it. The recommendation is unchanged: do not move the default.
+
+VERIFIER: 29 -> 67 checks, GREEN. New checks cover every exchange-rate cell,
+both partition bases, the rank, and the two already-soft subjects. Two defects in
+the new checks were caught while writing them: a leftover `if False` expression,
+and self-satisfying anchors whose anchor string CONTAINED the number it verified
+-- `check("109MSDCF rate", "`109MSDCF` (6.71)", ...)` can never go RED. Anchors
+now deliberately exclude the digits they verify. A third was caught by the
+exactly-once anchor rule: `| `foam` |` matches both the exchange table and the
+12.7 tone table.
+
+NEGATIVE CONTROL: negctl_s12.py, 9 planted defects, 9/9 CAUGHT, restored GREEN.
+D8 reinstates the exact false claim retracted here (`**7th of 26**` ->
+`**1st of 26**`), so the document is now structurally defended against this
+specific error returning. Every mutation is anchored on a unique full-line string
+and the script HARD-ERRORS if an anchor does not land exactly once, so a miss
+reports as an invalid control rather than as a pass. The document is restored
+from a $env:TEMP copy, never `git checkout --`.
+
+corpus_lint: OK, no violations, 250 markdown / 83 rust files.

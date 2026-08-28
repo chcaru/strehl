@@ -1,0 +1,25 @@
+BUILD-OUTPUT: the scalar gate cannot separate the bands, measured on prints
+
+Same-subject, same-binary (BC6FA3C787A18CAA) comparison of the two knobs on
+coffee-bubbles, 19 frames, averaged duty cycle per pyramid level:
+
+  default                      36.4 3.1 0.0 0.0 0.0 0.0 0.0
+  --pyramid-gate 64            95.9 80.9 54.5 16.2 0.4 0.0 0.0
+  SCALE=1,1,1,4096,4096,4096   36.4 3.1 0.0 88.6 81.7 67.2 37.9
+
+The scalar knob drives band 0 from 36.4% to 95.9% and still reaches band 4 at
+0.4%. The per-band knob leaves band 0 unchanged to the printed digit and
+reaches band 4 at 81.7% -- 204x the dose at the target band at zero cost to
+fine detail. ORCH's "one number cannot ask for less selection at coarse scales
+and unchanged selection at fine ones" is now measured rather than argued.
+
+The print consequence over the six mottle subjects, paired against SC-BASE:
+--pyramid-gate 64 wins mottle on 1/6 with median paid 0.035 and destroys fine
+detail (grain-band structure -85.75% on lead-1-cpl, -65.57% on 112MSDCF);
+the per-band 4096x arm wins 2/6 with paid 0.000 and grain-band structure
+between -0.10% and +0.46%.
+
+Four cells under --pyramid-gate 64 landed `paid` in the 0.25-0.406 range where
+PAID_MAX has no commissioning evidence (foam mottle 0.382, adjacent to the
+planted-blur population's 0.406). No per-band arm put a cell there. Named,
+not resolved.

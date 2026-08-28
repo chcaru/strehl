@@ -1,0 +1,12 @@
+subjects        : 1
+frames          : 19
+projected wall  : 0 min at 1.48 s/frame (measured under load)
+arm             : CTL-FIXED
+flags           : --srgb --auto-exposure
+binary sha256   : 44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490
+git commit      : UNATTRIBUTED -- operator-supplied binary; tree HEAD was 9dbb5c92e773e4b93022a190a097c128d822f23f WITH UNCOMMITTED CHANGES (the binary may not match any commit)
+[ 1/1] coffee-bubbles (19 frames)
+        ok  17s  189 MB  exp -0.26 st
+
+wall clock      : 0.3 min for 19 frames (0.88 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\control\CTL-FIXED  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)

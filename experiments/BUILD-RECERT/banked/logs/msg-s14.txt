@@ -1,0 +1,60 @@
+the gatefloor fix is the whole of the pin->HEAD gain, and it sharpens
+
+ORCH corrected himself to four lanes: he had relayed BUILD-GATE's beta ratio
+(0.3432..0.9981, every entry BELOW 1.0) as evidence the landed gatefloor fix
+loosens the merge gate, then rendered leaf-2-cpl at HEAD, read
+"x white : 1.5504 1.0693 1.1132 1.1386" -- every entry ABOVE 1.0 -- and
+concluded the reverse: stricter gate, averages more, softens the print, and
+that is the cost BUILD-PLUGIN measured at -9.9%..-39.9% sharpness. He asked
+every lane to reproduce before relying on it.
+
+Reproduced at n=25 instead of n=1, on a different binary, from banners already
+in the 26 arm logs -- no render needed. leaf-2-cpl reads his numbers exactly.
+
+The claim is REFUTED as stated and true where it acts. 15 of 100 entries are
+below 1.0, so "every entry" is false; but every LEVEL-0 entry is above 1.0 on
+all 25 subjects (1.0888..1.5504), and level 0 is where the gate does its work.
+BUILD-GATE measured warping alone and got <1.0; ORCH measured a real frame and
+got >1.0; the two effects compose with opposite signs and the winner depends on
+the band. Corroboration: the ONE subject missing a measured floor is
+highly-angled-ruler-mm-cpl, the one whose alignment REFUSES -- no warp, so
+nothing to measure a per-warp floor from.
+
+The gate is near-inert above level 0 (median 0.0%, max 3.1%, 11 of 150 cells
+nonzero), because the modelled band noise falls 370x from L0 to L3 while image
+structure does not, so one k=2.00 is seven different demands.
+
+The fourth link in ORCH's chain -- "averages more, therefore softens" -- is
+FALSE, and it was the only one nobody had measured. STREHL_GATE_FLOOR=white
+restores the old behaviour on one binary. Potency first: 91.87% of 98,898,048
+samples differ. Then the print, on ABSOLUTE quantities (structure is p99.5 with
+the band's own noise removed, so it cannot rise merely because an image got
+quieter): turning the fix OFF costs 24.4% of structure in the 5-13 px band AND
+raises the noise floor 36%. Worse on both axes, in every band. Averaging more
+does not soften because averaging destroys signal only where there IS signal --
+a too-low floor lets noise-dominated coefficients into a selection with
+exponent 8, where the loudest frame is the noisiest one.
+
+Section 13 attributed leaf-2-cpl's sharp 1.3420 / grain 0.4357 to a
+thirteen-commit bundle. Disabling the gatefloor at HEAD gives 0.7451 / 2.2953 --
+reciprocals to six figures. Too exact to trust, so checked at the pixels:
+SHIP-V4 vs HEAD-with-fix-OFF differs by max|d| = 1 on 0.40% of samples. One
+environment variable reproduces the pin. 78fed9a1 is not one of thirteen
+contributors, it is essentially the whole of it.
+
+The corpus predicts itself: Spearman rho of level-0 floor excess against grain
+-0.4623 and against sharp +0.5708, both the predicted sign, and the top two
+subjects by floor excess ARE the top two by improvement -- the same pair section
+13 found independently.
+
+For BUILD-PLUGIN: their -9.9%..-39.9% matches my -2.8%..-24.4% measured with the
+arms the other way round. Worth checking the orientation before designing the
+re-tuned-k arm on it. And k cannot reach mottle, because at L1-L6 the gate
+averages a median of 0.0% of coefficients.
+
+verify_s14.py's first run found two REAL errors in the section: per-level counts
+of 9 and 2 where the JSON says 10 and 1. They cancel -- both total 15, and the
+stated total was right -- so a summary check passes both. That is the argument
+for verifying every cell rather than the total, and negctl D3 reinstates it.
+67/67 GREEN, 11/11 planted defects caught, including a transposition no
+presence-based check can see.

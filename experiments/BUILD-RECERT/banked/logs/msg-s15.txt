@@ -1,0 +1,19 @@
+BUILD-OUTPUT: an affirmative mottle clause, and a paid-clean win at 4096x
+
+The recert verdict could only ever say "not worse": ok = not reasons, and
+PROMOTABLE is a conjunction of two absences. median_d_floor was computed
+(recert.py:322) and printed (recert.py:329) and never conditioned on
+(recert.py:473-480) -- a value printed but never conditioned on, in the band
+the six subjects were convicted in.
+
+mottlewin.py adds the affirmative clause and commissions it 37/37: fires on
+6/6 planted band-confined denoises, refuses null, added mottle, wide blur,
+heavier-vs-lighter blur, and a real sub-threshold win. BLUR_FRAC_MAX=0.34 is
+licensed by arm G, which requires the denoise (max 0.333) and blur (min 1.000)
+populations to stay disjoint across subjects.
+
+Sweep over the six mottle subjects, one binary (BC6FA3C787A18CAA), env var the
+only difference: null byte-identical on 6/6; 4x/8x/16x/ramp potent on 6/6 masters
+yet 0/6 mottle wins. The coarse entries are wired but cannot reach: L4-L6 stay
+at 0.0% averaged through 32x. At 4096x they reach 81.7%/67.2%/37.9% and the
+result is 2/6 wins with paid 0.000 and structure UP in every band.

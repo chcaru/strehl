@@ -1,0 +1,52 @@
+ORCH print-readiness gate over 26 master(s) in C:\dev\strehl-out\acceptance\SHIP-V4
+
+thresholds: banding NOT(run>=4px AND step>=4DN)  clip<=0.1%   | review: blotch>0.02  chroma>0.015
+adjudications: 10 adjudicated subject(s); binary=C:\dev\strehl-out\acceptance-pins\740e7056\target\release\strehl.exe; report=experiments/V-REVIEW/report.md; statistics=imported unmodified from orch_blotch.py / orch_chroma.py
+--------------------------------------------------------------------------------------------------------------------
+PASS    109MSDCF                           blotch 0.00169  chroma 0.0005  run 1.0px step 84.0DN  clip 0.0007% (gamut 0.001%)  crush 2.470%
+ACQUIT  112MSDCF                           blotch 0.14667  chroma 0.0349  run 1.0px step 952.0DN  clip 0.0691% (gamut 0.077%)  crush 0.001%   <== blotch 0.1467 (orch_blotch.py source arm); chroma 0.0349 (orch_chromapair.py)
+                                             band DN 0.946x source max; excess is the denominator (mean 0.922x); chroma absolute DN 0.919x, excess confined to darkest luminance decile [vs 18 source frames; master/worst-source blotch 1.044x blotch_band_dn 0.946x chroma 1.168x]
+ACQUIT  113MSDCF                           blotch 0.25168  chroma 0.0254  run 1.0px step 674.0DN  clip 0.0689% (gamut 0.077%)  crush 0.000%   <== blotch 0.2517 (orch_blotch.py source arm); chroma 0.0254 (orch_chromapair.py)
+                                             band DN 0.905x source max (mean 0.917x); chroma absolute DN 0.907x, d1 carries 31.8% of the excess [vs 16 source frames; master/worst-source blotch 1.069x blotch_band_dn 0.905x chroma 1.094x]
+PASS    119MSDCF                           blotch 0.00157  chroma 0.0006  run 1.0px step 95.0DN  clip 0.0002% (gamut 0.001%)  crush 3.260%
+PASS    bee-1-cpl                          blotch 0.00105  chroma 0.0004  run 1.0px step 134.0DN  clip 0.0287% (gamut 0.047%)  crush 0.000%
+PASS    bee-2-cpl                          blotch 0.00133  chroma 0.0006  run 1.0px step 260.0DN  clip 0.0229% (gamut 0.027%)  crush 0.000%
+PASS    bee-3-cpl                          blotch 0.00113  chroma 0.0005  run 1.0px step 135.0DN  clip 0.0240% (gamut 0.029%)  crush 0.000%
+PASS    coffee-bean                        blotch 0.00082  chroma 0.0001  run 1.0px step 79.0DN  clip 0.0000% (gamut 0.000%)  crush 0.000%
+ACQUIT  coffee-bubbles                     blotch 0.09892  chroma 0.0546  run 1.0px step 279.0DN  clip 0.0003% (gamut 0.001%)  crush 0.126%   <== blotch 0.0989 (orch_blotch.py source arm); chroma 0.0546 (orch_chromapair.py)
+                                             band DN 0.994x source max -- inside the +-17% frame-to-frame band spread; chroma 0.901x source max outright [vs 12 source frames; master/worst-source blotch 1.069x blotch_band_dn 0.994x chroma 0.901x]
+ACQUIT  couch-fibers-cpl                   blotch 0.04511  chroma 0.0042  run 1.0px step 567.0DN  clip 0.0520% (gamut 0.072%)  crush 0.000%   <== blotch 0.0451 (orch_blotch.py source arm)
+                                             master reads below the worst source frame outright (0.811x); band 0.830x [vs 17 source frames; master/worst-source blotch 0.811x blotch_band_dn 0.830x chroma 0.796x]
+PASS    dry-erase-marker-head-cpl          blotch 0.00446  chroma 0.0004  run 1.0px step 136.0DN  clip 0.0000% (gamut 0.000%)  crush 0.000%
+ACQUIT  flat-on-ruler-cpl                  blotch 0.18363  chroma 0.0028  run 1.0px step 349.0DN  clip 0.0675% (gamut 0.074%)  crush 0.000%   <== blotch 0.1836 (orch_blotch.py source arm)
+                                             master reads below the worst source frame outright (0.921x); band 0.842x [vs 20 source frames; master/worst-source blotch 0.921x blotch_band_dn 0.842x chroma 0.815x]
+PASS    flower-bud-alone-cpl               blotch 0.00036  chroma 0.0003  run 1.0px step 114.0DN  clip 0.0000% (gamut 0.000%)  crush 0.000%
+PASS    flower-bud-with-background-fern-cp blotch 0.00092  chroma 0.0003  run 1.0px step 145.0DN  clip 0.0219% (gamut 0.026%)  crush 0.000%
+ACQUIT  flower-inner-edge-cpl              blotch 0.09921  chroma 0.0123  run 1.0px step 117.0DN  clip 0.0014% (gamut 0.006%)  crush 3.639%   <== blotch 0.0992 (orch_blotch.py source arm)
+                                             band 0.972x; an independent all-in-focus composite of the same frames reads 0.12097, 1.22x the master [vs 20 source frames; master/worst-source blotch 1.089x blotch_band_dn 0.972x chroma 0.827x]
+PASS    flowers-cpl                        blotch 0.01090  chroma 0.0099  run 1.0px step 163.0DN  clip 0.0086% (gamut 0.143%)  crush 0.001%
+ACQUIT  foam                               blotch 0.46075  chroma 0.0325  run 1.0px step 406.0DN  clip 0.0007% (gamut 0.002%)  crush 0.031%   <== blotch 0.4607 (orch_blotch.py source arm); chroma 0.0325 (orch_chromapair.py)
+                                             band DN 0.527x source max -- the merge halved it; chroma 0.880x outright [vs 12 source frames; master/worst-source blotch 0.885x blotch_band_dn 0.527x chroma 0.880x]
+PASS    highly-angled-ruler-mm-cpl         blotch 0.00507  chroma 0.0009  run 1.0px step 321.0DN  clip 0.0211% (gamut 0.027%)  crush 0.000%
+PASS    lavendar-cpl                       blotch 0.00155  chroma 0.0006  run 1.0px step 257.0DN  clip 0.0462% (gamut 0.052%)  crush 0.000%
+ACQUIT  lead-1-cpl                         blotch 0.00555  chroma 0.0202  run 1.0px step 532.0DN  clip 0.0110% (gamut 0.023%)  crush 0.040%   <== chroma 0.0202 (orch_chromapair.py)
+                                             chroma 0.903x source max outright [vs 20 source frames; master/worst-source blotch 1.258x blotch_band_dn 1.174x chroma 0.903x]
+ACQUIT  leaf-2-cpl                         blotch 0.00448  chroma 0.0197  run 1.0px step 1024.0DN  clip 0.0187% (gamut 0.033%)  crush 0.615%   <== chroma 0.0197 (orch_chromapair.py)
+                                             chroma 0.883x source max outright [vs 20 source frames; master/worst-source blotch 1.138x blotch_band_dn 1.027x chroma 0.883x]
+PASS    pencil-flatter-angle-cpl           blotch 0.00164  chroma 0.0006  run 1.0px step 215.0DN  clip 0.0301% (gamut 0.044%)  crush 0.000%
+PASS    pencil-steep-angle-cpl             blotch 0.00501  chroma 0.0010  run 1.0px step 224.0DN  clip 0.0262% (gamut 0.061%)  crush 0.000%
+PASS    tweezers-cpl                       blotch 0.00345  chroma 0.0002  run 1.0px step 104.0DN  clip 0.0320% (gamut 0.035%)  crush 0.000%
+PASS    wrapped-text-1                     blotch 0.00452  chroma 0.0010  run 1.0px step 335.0DN  clip 0.0284% (gamut 0.033%)  crush 0.000%
+PASS    wrapped-text-2                     blotch 0.00395  chroma 0.0009  run 1.0px step 352.0DN  clip 0.0205% (gamut 0.025%)  crush 0.000%
+--------------------------------------------------------------------------------------------------------------------
+SCORED: C:\dev\strehl-out\acceptance\SHIP-V4
+partition: 17 PASS, 0 FAIL, 9 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 0 NOT EXAMINED, 26 total (found 26)
+A NOT EXAMINED master is not a clean master, and a REVIEW is not a
+failure -- it is a subject this gate has no standing to judge alone.
+An ACQUITTED master read high on a subject-dependent statistic and was
+then measured against its OWN source frames and found no worse. That
+acquittal is pinned to the number that was adjudicated: if the render
+moves more than 5%, it EXPIRES and the subject returns to REVIEW.
+
+This gate certifies ABSENCE OF THE DEFECTS IT MEASURES. It does not
+certify sharpness (orch_sharp1to1.py) and does not screen dust.

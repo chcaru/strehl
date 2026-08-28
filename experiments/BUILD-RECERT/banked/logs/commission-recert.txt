@@ -1,0 +1,47 @@
+
+=== ARM: the gate-diff regression rule ===
+  null -- nothing moved                          -> regressions []  want []   PASS
+  planted PASS->FAIL                             -> regressions ['a']  want ['a']   PASS
+  planted PASS->SKIP (the gate crashed on it)    -> regressions ['b']  want ['b']   PASS
+  planted ACQUIT->FAIL                           -> regressions ['c']  want ['c']   PASS
+  planted improvement ACQUIT->PASS               -> regressions []  want []   PASS
+  all three damaging moves at once               -> regressions ['a', 'b', 'c']  want ['a', 'b', 'c']   PASS
+  gate-diff rule PASSED
+
+--- NULL: arm is a byte-copy of the baseline ---
+  paired 3 subject(s) x 5 crops x 3 bands = 45 cells
+  vs baseline grain   tested  15 refused   0  cleaner   0  blur_trade   0  softer   0  d_floor +0.0000  d_struct +0.0000
+  vs baseline struct  tested  12 refused   3  cleaner   0  blur_trade   0  softer   0  d_floor +0.0000  d_struct +0.0000
+  vs baseline mottle  tested  12 refused   3  cleaner   0  blur_trade   0  softer   0  d_floor +0.0000  d_struct +0.0000
+  verdict: PROMOTABLE -- no gate regression, no band bought its noise win out of structure
+  PASS  [expected PROMOTABLE]
+
+--- DEGRADED: arm is the baseline blurred -- quieter in every band ---
+  paired 3 subject(s) x 5 crops x 3 bands = 45 cells
+  vs baseline grain   tested  15 refused   0  cleaner   0  blur_trade   0  softer   0  d_floor -0.7301  d_struct -0.6026
+  vs baseline struct  tested  12 refused   3  cleaner   0  blur_trade  12  softer   0  d_floor -0.1701  d_struct -0.1539
+  vs baseline mottle  tested  12 refused   3  cleaner   0  blur_trade   0  softer   1  d_floor -0.0108  d_struct -0.0133
+  verdict: NOT PROMOTABLE -- struct: 12 blur-trade vs 0 clean cells -- the noise win was paid for out of structure; struct: median structure -0.1539 -- sharpness fell
+  PASS  [expected NOT PROMOTABLE, naming 'structure']
+  the trade, made visible rather than averaged away:
+    grain   median d_floor -0.7301  (quieter)   median d_structure -0.6026  (softer)
+    struct  median d_floor -0.1701  (quieter)   median d_structure -0.1539  (softer)
+    mottle  median d_floor -0.0108  (quieter)   median d_structure -0.0133  (softer)
+
+--- IMPROVED: baseline is noisy, arm is the clean shipping master ---
+  paired 3 subject(s) x 5 crops x 3 bands = 45 cells
+  vs baseline grain   tested  15 refused   0  cleaner   0  blur_trade   0  softer   0  d_floor -0.1910  d_struct +0.0529
+  vs baseline struct  tested  12 refused   3  cleaner  12  blur_trade   0  softer   0  d_floor -0.2509  d_struct +0.0149
+  vs baseline mottle  tested  12 refused   3  cleaner   2  blur_trade   0  softer   0  d_floor -0.0009  d_struct +0.0000
+  verdict: PROMOTABLE -- no gate regression, no band bought its noise win out of structure
+  PASS  [expected PROMOTABLE]
+  struct: cleaner 12 vs blur_trade 0, median d_structure +0.0149  PASS  [an improvement must be SCORED as one]
+
+--- INCOMPLETE: arm is missing masters ---
+  verdict: INCONCLUSIVE -- the render arm is INCOMPLETE (2 masters). A partial arm must never be scored as a full one.
+  PASS  [a partial arm must never be scored as a full one]
+
+============================================================================================
+HARNESS COMMISSIONING PASSED -- 5/5 arms. A blurred arm is
+refused despite being quieter in every band; a genuinely cleaner arm is scored as an
+improvement; a partial arm is inconclusive.

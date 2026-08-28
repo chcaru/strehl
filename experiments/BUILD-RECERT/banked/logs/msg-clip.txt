@@ -1,0 +1,39 @@
+BUILD-OUTPUT: this lane's arms are not in the exposure regression's blast radius
+
+ORCH broadcast an exposure regression at HEAD (11 of 18 masters blown, >25% of
+pixels pinned at 65535) and asked each lane whether its evidence base moved.
+recert.py:69 pins FLAGS = "--srgb --auto-exposure", so this lane is nominally
+in case 2 by flag string. It is in case 3 by pixels, and the binary says so
+itself.
+
+clipprobe.py measures the emitted distribution on the six mottle subjects for
+SC-BASE and SC-D4096 (binary BC6FA3C787A18CAA), against the delivered SHIP-V4
+masters ORCH verified are unaffected:
+
+  worst clip fraction across this lane's arms   0.0769%   (BLOWN threshold 25%)
+  medians                                       2030-38690 (none near white)
+  p99.9                                         63983-64449, i.e. the top of the
+                                                real distribution does not reach
+                                                the clip point at all
+
+Per subject the arms match SHIP-V4 to <=0.0007 percentage points of clip
+fraction and <=1.5% of median. 112MSDCF is on ORCH's blown list at 35.57%; it
+reads 0.0769% here, 463x lower.
+
+The mechanism is not luck. The render-time tree b3ed9800 has 5f367a94
+("fix(exposure): stop --auto-exposure double-normalising the srgb render") as an
+ancestor, and the guard is FIRING in the provenance of every arm:
+
+  exposure : --auto-exposure is SUPERSEDED and applies NOTHING.
+             It would have chosen +3.33 stops (gain 10.056x), but --srgb's tone
+             rendering already places luminance p99.9 at 0.90 -- the identical
+             rule. Applying both double-normalises and blows the highlights
+
+So the flag was passed and discarded, which is why a case-2 command line
+produced case-3 output. A flag string is not a measurement of what ran.
+
+The probe conditions on what it prints (AGENTS.md): it exits 1 on BLOWN, 2 on
+ELEVATED above the delivered population, 0 only when the arms sit inside it.
+It returned 0.
+
+No number this lane has reported to ORCH requires correction.

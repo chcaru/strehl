@@ -1,0 +1,29 @@
+{
+  "identity": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+    "sha256": "BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC",
+    "size": 9858048,
+    "is_shipping_pin": false
+  },
+  "render": {
+    "dir": "C:\\dev\\strehl-out\\BUILD-RECERT\\arms\\SC-D64-bc6fa3c7",
+    "n_masters": 6,
+    "complete": true,
+    "only": [
+      "coffee-bubbles",
+      "lead-1-cpl",
+      "113MSDCF",
+      "flat-on-ruler-cpl",
+      "112MSDCF",
+      "foam"
+    ],
+    "exit": 0
+  },
+  "timing_seconds": {
+    "identity": 0.0,
+    "render": 219.5,
+    "TOTAL": 219.5
+  },
+  "verdict": "INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.",
+  "promotable": false
+}

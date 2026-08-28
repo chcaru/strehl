@@ -1,0 +1,181 @@
+strehl render provenance
+artifact      : flowers-cpl--DEF-2f858c62.tiff
+rendered      : 2026-08-27T17:59:11.9831356-07:00
+status        : ok   (exit 0, 198026309 bytes)
+
+binary        : C:\dev\strehl-out\acceptance-pins\2f858c62\target\release\strehl.exe
+sha256        : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit    : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+pin           : 2f858c62
+
+source        : D:\personal\macro\flowers-cpl
+frames        : 176
+backend       : pyramid (default)
+gate          : (backend default)
+colour space  : sRGB, TONE CURVE APPLIED -- DO NOT MEASURE NUMERICALLY
+exposure      : --auto-exposure is SUPERSEDED and applies NOTHING.
+
+ARGV (verbatim, as executed -- NOT the whole switch state; see below):
+  C:\dev\strehl-out\acceptance-pins\2f858c62\target\release\strehl.exe stack "D:\personal\macro\flowers-cpl" --out "C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62\flowers-cpl--DEF-2f858c62.tiff" --srgb --auto-exposure
+
+RESOLVED SWITCH STATE (45 registry switches; 0 set)
+  backend applicability: 6 applicable, 6 INAPPLICABLE, 33 unclassified
+  Environment variables never appear in argv however they are set, so
+  the argv line above cannot show them. Unset switches are listed too:
+  an omitted line is indistinguishable from a switch nobody considered.
+  INAPPLICABLE means the stage does not exist on the backend that ran;
+  that is NOT the same fact as a stage that exists and is switched off.
+  UNCLASSIFIED means the registry declares no backend for it, so this
+  block cannot tell you whether it could act. It is not a clean bill.
+  STREHL_BUILD_ID            = (unset)            [not set; built-in default: unset (build.rs derives the stamp from git)]
+  STREHL_FIX_CA              = (unset)            [cleared by harness; built-in default: on (gear-matched); backend applicability UNCLASSIFIED in the registry]
+  STREHL_PHOTOMETRIC         = (n/a)              [INAPPLICABLE -- estimator-only stage; this render was pyramid, which never reaches it]
+  STREHL_EDGE_AWARE          = (unset)            [cleared by harness; built-in default: on (EdgeArm::Acuity); backend applicability UNCLASSIFIED in the registry]
+  STREHL_EDGE_TAU            = (unset)            [cleared by harness; built-in default: derived per image from the guide field (no constant); backend applicability UNCLASSIFIED in the registry]
+  STREHL_EDGE_CONF           = (unset)            [cleared by harness; built-in default: 2.0; backend applicability UNCLASSIFIED in the registry]
+  STREHL_EDGE_FEATHER        = (unset)            [not set; built-in default: the built-in FEATHER constant; backend applicability UNCLASSIFIED in the registry]
+  STREHL_FIX_HALO            = (n/a)              [INAPPLICABLE -- estimator-only stage; this render was pyramid, which never reaches it]
+  STREHL_WINDOW_RADIUS       = (unset)            [not set; built-in default: 13; backend applicability UNCLASSIFIED in the registry]
+  STREHL_MERGE               = (unset)            [cleared by harness; built-in default: pyramid; backend applicability UNCLASSIFIED in the registry]
+  STREHL_ACUITY              = (unset)            [not set; built-in default: on; backend applicability UNCLASSIFIED in the registry]
+  STREHL_DEMOSAIC            = (unset)            [not set; built-in default: malvar (non-directional); backend applicability UNCLASSIFIED in the registry]
+  STREHL_RESTORE             = (unset)            [not set; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_GATE_FLOOR          = (unset)            [not set; built-in default: on (the merge gate's per-band noise floor is MEASURED per frame)]
+  STREHL_FULLRES_GATHER      = (unset)            [not set; built-in default: on (frames are gathered on the full output lattice); backend applicability UNCLASSIFIED in the registry]
+  STREHL_VEIL                = (n/a)              [INAPPLICABLE -- estimator-only stage; this render was pyramid, which never reaches it]
+  STREHL_VEIL_MARGIN         = (n/a)              [INAPPLICABLE -- estimator-only stage; this render was pyramid, which never reaches it]
+  STREHL_VEIL_FLOOR          = (n/a)              [INAPPLICABLE -- estimator-only stage; this render was pyramid, which never reaches it]
+  STREHL_RESTORE_SIGMA       = (unset)            [not set; built-in default: 1.0 (the calibrated sigma^2, unscaled); backend applicability UNCLASSIFIED in the registry]
+  STREHL_SOFT_GATE           = (unset)            [not set; built-in default: off (None -- the shipped top-hat Gate); backend applicability UNCLASSIFIED in the registry]
+  STREHL_ROBUST_ELECTION     = (unset)            [not set; built-in default: off (no robust arm); backend applicability UNCLASSIFIED in the registry]
+  STREHL_ALIGN               = (unset)            [cleared by harness; built-in default: on (registration runs); backend applicability UNCLASSIFIED in the registry]
+  STREHL_SMOOTH              = (unset)            [not set; built-in default: built-in (DEFAULT_SMOOTH_LAMBDA); backend applicability UNCLASSIFIED in the registry]
+  STREHL_SMOOTH_HUBER        = (unset)            [not set; built-in default: built-in (DEFAULT_SMOOTH_HUBER_PX); backend applicability UNCLASSIFIED in the registry]
+  STREHL_CACHE_DIR           = (unset)            [cleared by harness; built-in default: platform default; backend applicability UNCLASSIFIED in the registry]
+  STREHL_PYRAMID_MEAN_COARSE = (unset)            [not set; built-in default: 0 (no Laplacian band averaged; base band is a mean regardless); backend applicability UNCLASSIFIED in the registry]
+  STREHL_PYRAMID_WORKERS     = (unset)            [cleared by harness; built-in default: solved from the memory budget alone; backend applicability UNCLASSIFIED in the registry]
+  STREHL_CAPTURES            = (unset)            [not set; built-in default: unset; backend applicability UNCLASSIFIED in the registry]
+  STREHL_FREEZE_REQUIRE      = (unset)            [not set; built-in default: unset (a missing corpus SKIPS); backend applicability UNCLASSIFIED in the registry]
+  STREHL_ONLY_FRAME          = (unset)            [cleared by harness; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_DUMP_ELECTION       = (unset)            [not set; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_DUMP_NEFF           = (unset)            [not set; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_DUMP_MERGE_STATE    = (unset)            [not set; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_BIMODAL_DUMP        = (unset)            [not set; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_WARPMAP             = (unset)            [cleared by harness; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_FIX_HALO_DELTA      = (unset)            [cleared by harness; built-in default: built-in DELTA (and the stage reading it is gated off); backend applicability UNCLASSIFIED in the registry]
+  STREHL_COVER               = (unset)            [not set; built-in default: on (the coverage fit is applied); backend applicability UNCLASSIFIED in the registry]
+  STREHL_HIGHLIGHT_KNEE      = (unset)            [not set; built-in default: on (knee at 0.60 of the container ceiling); backend applicability UNCLASSIFIED in the registry]
+  STREHL_VEIL_DISPERSION     = (n/a)              [INAPPLICABLE -- estimator-only stage; this render was pyramid, which never reaches it]
+  STREHL_CONFIDENCE_MAP      = (unset)            [not set; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_CONFIDENCE_DEBUG    = (unset)            [not set; built-in default: off; backend applicability UNCLASSIFIED in the registry]
+  STREHL_DEFECT              = (unset)            [not set; built-in default: off]
+  STREHL_DEFECT_MAP          = (unset)            [not set; built-in default: unset (no sidecar; the embedded per-body map is used)]
+  STREHL_DEFECT_ARM          = (unset)            [not set; built-in default: dust]
+  STREHL_DEFECT_HOT_FLOOR    = (unset)            [not set; built-in default: 8 e- (HotFloor::default())]
+
+BINARY-REPORTED RESOLVED STATE (the binary's own banner, not inferred)
+  A gear-guarded switch reads '(unset)' above whether or not it acted.
+  This is an INDEX of 36 reported settings, not a filter:
+  the binary's complete self-report follows verbatim below, so a key
+  missing from this index is still present in the record.
+  merge backend   : pyramid (default)
+  camera          : ILCE-7CM2
+  lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+  iso             : 100
+  noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+  bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+  selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+  base band       : plain mean across frames
+  not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+  alignment       : ON (sidecar), reference frame 88, 176 placed / 0 refused, 0.0 s
+  colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+
+BINARY SELF-REPORT, VERBATIM (82 lines, nothing filtered)
+  The binary states its ABSENT stages here too (see 'not applied'),
+  which no environment variable and no argv can express.
+  | build           : strehl 0.0.0 (unknown)
+  | merge backend   : pyramid (default)
+  | strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+  | camera          : ILCE-7CM2
+  | lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+  | iso             : 100
+  | levels          : black 512, white 15360
+  | noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+  |                   GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+  |                   SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+  |                   camera's own white level, which checks one relation and is not a PTC; the
+  |                   PTC now exists and the relation survives it at true gain steps -- the ISO 160
+  |                   control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+  |                   READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+  |                   ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+  |                   This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+  |                   camera MODEL and nothing here was fitted from this stack. Below the profile's
+  |                   base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+  |                   is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+  |                   -- the corpus holds no ISO 64 or 80 capture).
+  | defect map      : off (STREHL_DEFECT=off)
+  | frames          : 176 from D:\personal\macro\flowers-cpl  (first decode 0.32 s)
+  | planes          : 3520 x 2344 per CFA plane
+  | --- the merge ---
+  | bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+  | selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+  |                   Sign coherence is free: a convex combination cannot take adjacent
+  |                   coefficients from opposite-signed frames, which is the ringing a
+  |                   coefficient-wise argmax produces.
+  | noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+  |                   merge averages -- which is the correct estimator when there is no
+  |                   information, and the only operation that gets below single-frame noise.
+  | exponent        : 2.00
+  | per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)
+  |                   sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+  |                   fine band is one high-frequency coefficient nobody can see; a wrong pick
+  |                   in a coarse band IS the rim.
+  | base band       : plain mean across frames
+  | not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+  |                   statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+  | alignment       : ON (sidecar), reference frame 88, 176 placed / 0 refused, 0.0 s
+  |   held-out err  : NOT MEASURED   resampler: CatmullRom
+  |   coverage      : field of view scaled to 0.9367 so that EVERY frame covers every pixel (6.3% of width dropped, then upsampled to keep the output dimensions).
+  | memory plan     : 4 workers x 1322 MB = 5.2 GB against a 6144 MB budget, CONSTANT in
+  |                   the frame count. The merge is a fold: every accumulator is a sum, so a
+  |                   frame is built, added and dropped. STREHL_PYRAMID_WORKERS=N overrides.
+  | 
+  | folded          : 176 / 176 frames in 196.7 s (1.12 s per frame, 4 workers)
+  | band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+  |                   (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+  | measured floor  : 1.0091 0.0548 0.0112 0.0027
+  |                   x white       : 1.1341 1.0346 1.1055 1.1328
+  |                   THE FLOOR THE GATE ACTUALLY USED, averaged over 176 warped
+  |   frames. The line above it is the white-noise constant, which is
+  |   exact only for an UNWARPED frame; resampling correlates neighbours
+  |                   and moves the per-band split. Bands past this list kept the constant.
+  |                   STREHL_GATE_FLOOR=white restores it everywhere.
+  | averaged        : 56.5% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%
+  |                   per level, the fraction of coefficients where NO frame cleared the noise
+  |                   floor and the merge therefore averaged instead of selecting. Near 0%
+  |                   everywhere would mean the gate is not gating and this is a naive
+  |                   pyramid stacker.
+  | 
+  | colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+  |                   characterisation: decoder color_matrix[D65]
+  |                   XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+  |                   implied daylight WB R 2.6266 B 1.3878, against as-shot R 2.3672 B 1.7021
+  |                   Order: black, as-shot WB, demosaic, matrix, clamp, sRGB curve.
+  | exposure        : --auto-exposure is SUPERSEDED and applies NOTHING.
+  |                   It would have chosen +1.89 stops (gain 3.706x), but --srgb's tone rendering
+  |                   already places luminance p99.9 at 0.90 -- the identical rule.
+  |                   Applying both double-normalises and blows the highlights
+  |                   (measured: 92% of pixels clipped). This render is
+  |                   byte-for-byte a plain --srgb render.
+  |                   To deviate deliberately from that rendering, use --exposure.
+  | tone            : black 0.01719, white 0.26655 (linear), contrast 0.55
+  | 
+  | wrote           : C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62\flowers-cpl--DEF-2f858c62.tiff (7040 x 4688, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)
+  |                   Full sensor resolution: every CFA site estimated, one focus
+  |                   decision per quad. Interpolated -- do not measure resolution on it.
+  | collapse+write  : 2.0 s
+  | total           : 199.9 s
+
+REPRODUCE THIS EXACT FILE:
+  C:\dev\strehl-out\acceptance-pins\2f858c62\target\release\strehl.exe stack "D:\personal\macro\flowers-cpl" --out <OUT> --srgb --auto-exposure
+  ...with all 45 registry switches UNSET, as listed above.

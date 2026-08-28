@@ -19,7 +19,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 DOC = ROOT / "docs" / "research" / "BUILD-OUTPUT.md"
-LOGS = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs")
+LOGS = Path(__file__).resolve().parent / "banked" / "logs"
 
 text = DOC.read_text(encoding="utf-8")
 # Bound the section ABOVE as well as below. The first version sliced from the

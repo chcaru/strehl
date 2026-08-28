@@ -1,0 +1,16 @@
+verifier scope: a section slice that runs to EOF decays as the document grows
+
+verify_s13.py sliced from its own heading to end-of-file, which was correct only
+while section 13 was last. Committing section 14 put six more
+`| `leaf-2-cpl` |` rows inside that slice and three anchors that had been unique
+became ambiguous: 50/53 RED, with ANCHOR failures rather than value failures.
+
+Nothing about section 13 changed. The verifier's scope did.
+
+Both verifiers now bound the section ABOVE as well as below, at the next
+top-level heading, so section 15 cannot do the same thing to section 14. The
+ANCHOR guard is what surfaced this -- a checker that had merely searched for a
+value would have gone on reading GREEN against whichever row it found first.
+
+Re-run after the fix: s13 53/53 GREEN 11/11 caught, s14 67/67 GREEN 11/11
+caught.

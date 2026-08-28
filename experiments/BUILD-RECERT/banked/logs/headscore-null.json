@@ -1,0 +1,2368 @@
+[
+ {
+  "subject": "109MSDCF",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "112MSDCF",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "113MSDCF",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "119MSDCF",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "bee-1-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "bee-2-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "bee-3-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "coffee-bean",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      300,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "coffee-bubbles",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "couch-fibers-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "dry-erase-marker-head-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flat-on-ruler-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flower-bud-alone-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flower-bud-with-background-fern-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flower-inner-edge-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flowers-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "foam",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "highly-angled-ruler-mm-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "lavendar-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "lead-1-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "leaf-2-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "pencil-flatter-angle-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "pencil-steep-angle-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "tweezers-cpl",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "wrapped-text-1",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      900,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "wrapped-text-2",
+  "state": "SCORED",
+  "gain": 1.0,
+  "blotch": 1.0,
+  "blotch_corr": 1.0,
+  "sharp": 1.0,
+  "grain": 1.0,
+  "grain_corr": 1.0,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": null,
+     "exact": true,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ }
+]

@@ -1,0 +1,2368 @@
+[
+ {
+  "subject": "109MSDCF",
+  "state": "SCORED",
+  "gain": 1.0023167019524448,
+  "blotch": 0.99297499736996,
+  "blotch_corr": 0.9906798873407099,
+  "sharp": 1.0066535116420756,
+  "grain": 0.6429256856530254,
+  "grain_corr": 0.6414396611376922,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 8.336942079861917,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 5.385874981956481,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 6.402657252427755,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.92895847600156,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3.1678127521917956,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "112MSDCF",
+  "state": "SCORED",
+  "gain": 0.9987327512930584,
+  "blotch": 0.9965888355837238,
+  "blotch_corr": 0.9978533639689308,
+  "sharp": 1.0163128279906188,
+  "grain": 0.9031469682726027,
+  "grain_corr": 0.9042929323217839,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "IMPROVED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 7.2820511317921675,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 11.344000808752767,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 11.277935246546932,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 23.37688285395508,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 11.148489684128155,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "113MSDCF",
+  "state": "SCORED",
+  "gain": 0.9972031056499258,
+  "blotch": 1.000554968269589,
+  "blotch_corr": 1.0033612637191685,
+  "sharp": 1.0031321760097776,
+  "grain": 0.9390178413922199,
+  "grain_corr": 0.9416515412677303,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 14.042978240430323,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 28.75911391340155,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 26.176147606409508,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 60.894907627393266,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 27.623275806287612,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "119MSDCF",
+  "state": "SCORED",
+  "gain": 1.0002120318300747,
+  "blotch": 0.999980904832036,
+  "blotch_corr": 0.999768921997853,
+  "sharp": 1.0011042923457105,
+  "grain": 0.932688721450875,
+  "grain_corr": 0.9324910036768372,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 45.08333945685596,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 234.20765677160375,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 151.98113903266227,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3.858525801294015,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 100.60130939548941,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "bee-1-cpl",
+  "state": "SCORED",
+  "gain": 0.9998449798796062,
+  "blotch": 0.9996345184108373,
+  "blotch_corr": 0.9997895059004104,
+  "sharp": 1.0009362515921418,
+  "grain": 0.9568972154628779,
+  "grain_corr": 0.9570455767834132,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 91.6990803544725,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 29.31399781146177,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 128.0157807848692,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 242.66985249251334,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 89.64838929256186,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "bee-2-cpl",
+  "state": "SCORED",
+  "gain": 1.0006848966997668,
+  "blotch": 1.0003413920499333,
+  "blotch_corr": 0.9996567304543454,
+  "sharp": 1.0047380013342257,
+  "grain": 0.8159603640914952,
+  "grain_corr": 0.8154018980225559,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 6.651888834791169,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 12.860472141048763,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 22.375045425243393,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 9.104995878312726,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 18.65140372852231,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "bee-3-cpl",
+  "state": "SCORED",
+  "gain": 0.999557863937696,
+  "blotch": 0.997074716009959,
+  "blotch_corr": 0.997515753697385,
+  "sharp": 0.9998529442508394,
+  "grain": 0.9413972940188221,
+  "grain_corr": 0.9418137038212536,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 9.130575476723976,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 62.469341383486885,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 279.8071970383671,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 74.71596093615015,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2471.065503293536,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "coffee-bean",
+  "state": "SCORED",
+  "gain": 1.0000348163342743,
+  "blotch": 1.0023889742403957,
+  "blotch_corr": 1.0023540759458265,
+  "sharp": 1.0001487504114241,
+  "grain": 1.0063894941946594,
+  "grain_corr": 1.0063544566214992,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      300,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1727.649471226374,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2347.460184082743,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 505.95050151601623,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2508.836034742841,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1788.35011268514,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "coffee-bubbles",
+  "state": "SCORED",
+  "gain": 1.0001330900311651,
+  "blotch": 1.0003643474428165,
+  "blotch_corr": 1.000231226637691,
+  "sharp": 0.9998735355406919,
+  "grain": 0.9956670192777657,
+  "grain_corr": 0.9955345235569996,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3875.224486133564,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3331.6210935095532,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3033.3778649398705,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1758.7491809175017,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 204.93441277021586,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "couch-fibers-cpl",
+  "state": "SCORED",
+  "gain": 0.9999817741737317,
+  "blotch": 0.998752111579818,
+  "blotch_corr": 0.9987703149940611,
+  "sharp": 1.0035000238413005,
+  "grain": 0.9362134060079454,
+  "grain_corr": 0.9362304695818312,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 38.08982940874398,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 41.592966773261345,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 12.754282890885033,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 14.4821160503775,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 6.96445261325697,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "dry-erase-marker-head-cpl",
+  "state": "SCORED",
+  "gain": 0.9998631730760807,
+  "blotch": 0.9997560940592506,
+  "blotch_corr": 0.9998929063298724,
+  "sharp": 1.0008288197417132,
+  "grain": 0.9982601253334608,
+  "grain_corr": 0.9983967328872727,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 31.059127554713207,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 49.175408803028596,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 458.9584785931847,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 152.86510477912478,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 4536.279565911444,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flat-on-ruler-cpl",
+  "state": "SCORED",
+  "gain": 1.0000438503789113,
+  "blotch": 1.0003011221243994,
+  "blotch_corr": 1.0002572604645192,
+  "sharp": 1.00023511285814,
+  "grain": 1.0026917128470814,
+  "grain_corr": 1.0026477463634889,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 39591.71693799909,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 19041.430604426005,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 13921.157210652324,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 17280.639410102598,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 16948.754986751625,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flower-bud-alone-cpl",
+  "state": "SCORED",
+  "gain": 1.0006227805635424,
+  "blotch": 0.9982752280143753,
+  "blotch_corr": 0.9976539085509877,
+  "sharp": 1.0009641737701314,
+  "grain": 0.9411717509043898,
+  "grain_corr": 0.9405859722425365,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 12.693577552630588,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 149.02847238884317,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 9.509554358625996,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 19.54790974700331,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 202.98198206065663,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flower-bud-with-background-fern-cpl",
+  "state": "SCORED",
+  "gain": 0.9996804493776221,
+  "blotch": 1.002237682308722,
+  "blotch_corr": 1.0025580503576839,
+  "sharp": 1.0009266667848795,
+  "grain": 0.850373542214568,
+  "grain_corr": 0.8506453664708465,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 86.8268944921689,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 61.968687716520044,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 13.615769923886035,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 5.138153762862143,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 12.114131176430137,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flower-inner-edge-cpl",
+  "state": "SCORED",
+  "gain": 0.9988766063511381,
+  "blotch": 0.9929830559991774,
+  "blotch_corr": 0.9940998214249008,
+  "sharp": 1.0156883249558477,
+  "grain": 0.6469794437562746,
+  "grain_corr": 0.64770707376927,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "IMPROVED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 14.430117425899478,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3.9708353562044185,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3.5194628742238856,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 4.278750945295282,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 4.130453070082291,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "flowers-cpl",
+  "state": "SCORED",
+  "gain": 1.0003777130729543,
+  "blotch": 0.9931891501643431,
+  "blotch_corr": 0.9928141512803904,
+  "sharp": 1.0325349570610876,
+  "grain": 0.5476230418894267,
+  "grain_corr": 0.5474162756057824,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "IMPROVED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.2025782478311293,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.647859907975224,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.6579236325625586,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.1365027722297434,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.6455267067997057,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "foam",
+  "state": "SCORED",
+  "gain": 0.9992737895693632,
+  "blotch": 1.0002678342277105,
+  "blotch_corr": 1.0009947670685686,
+  "sharp": 1.000263945167902,
+  "grain": 0.9733214236413147,
+  "grain_corr": 0.9740287734963681,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 206.20095405372007,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 257.6035580728476,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 130.8617100896607,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 140.5041860164567,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 208.22498965313153,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "highly-angled-ruler-mm-cpl",
+  "state": "SCORED",
+  "gain": 1.000000003874658,
+  "blotch": 0.9999998482188893,
+  "blotch_corr": 0.999999844344232,
+  "sharp": 1.000000256521185,
+  "grain": 1.000000235215547,
+  "grain_corr": 1.0000002313408882,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 306295770.7603309,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 200065915.3932862,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 153554756.44718498,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 173162493.77870107,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 224710776.87729186,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "lavendar-cpl",
+  "state": "SCORED",
+  "gain": 0.999723293198927,
+  "blotch": 0.999937730279678,
+  "blotch_corr": 1.0002144964333728,
+  "sharp": 1.0000606329969124,
+  "grain": 0.9996030934338385,
+  "grain_corr": 0.9998797669656131,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      4500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1723.2738776253875,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 778.6895451733391,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3300,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 241.8115856957435,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 300.7732845656263,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2538.272108283862,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "lead-1-cpl",
+  "state": "SCORED",
+  "gain": 1.0004330859576887,
+  "blotch": 0.9897418905277712,
+  "blotch_corr": 0.9893134327722848,
+  "sharp": 1.2334756723705393,
+  "grain": 0.49417137415344725,
+  "grain_corr": 0.4939574481189712,
+  "blotch_verdict": "IMPROVED",
+  "sharp_verdict": "IMPROVED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.6784440402025074,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.9555245643214323,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.8689108765080933,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.4573800956766996,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3.1324179961419034,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "leaf-2-cpl",
+  "state": "SCORED",
+  "gain": 1.0033023808450348,
+  "blotch": 0.9794829801459504,
+  "blotch_corr": 0.9762590011208561,
+  "sharp": 1.3420091537691448,
+  "grain": 0.43710453239087,
+  "grain_corr": 0.4356657980047025,
+  "blotch_verdict": "IMPROVED",
+  "sharp_verdict": "IMPROVED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1.7412338278810842,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.2307591091260326,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.4552692064379995,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1.9483586521934748,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.1537284949469226,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "pencil-flatter-angle-cpl",
+  "state": "SCORED",
+  "gain": 0.9997735157964425,
+  "blotch": 0.9998965145243122,
+  "blotch_corr": 1.0001230265914494,
+  "sharp": 0.999646414614474,
+  "grain": 1.0001068451308943,
+  "grain_corr": 1.0003334048453827,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2890.862765237466,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1876.9052594249674,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 464.4691148572574,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 86.21204325751197,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1120.183327243486,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "pencil-steep-angle-cpl",
+  "state": "SCORED",
+  "gain": 0.9999530326089938,
+  "blotch": 0.9973917134317639,
+  "blotch_corr": 0.9974385605186404,
+  "sharp": 1.0009256426502815,
+  "grain": 0.9391041301091543,
+  "grain_corr": 0.9391482394517294,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 16.72732034172895,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 27.060049411507457,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 6.088222132937388,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 89.8554268202043,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 65151.811594156825,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "tweezers-cpl",
+  "state": "SCORED",
+  "gain": 0.999500333784815,
+  "blotch": 1.0001533393107007,
+  "blotch_corr": 1.0006533319738005,
+  "sharp": 0.9999584849409063,
+  "grain": 0.9698421753078244,
+  "grain_corr": 0.9703270149348686,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "IMPROVED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      1500,
+      5700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 356.06521344674036,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2780.374591295482,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 20.494075455527014,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      1500
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 93.48772015966217,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      5100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 82857.74773756792,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "wrapped-text-1",
+  "state": "SCORED",
+  "gain": 0.999969085698585,
+  "blotch": 0.9998344047677574,
+  "blotch_corr": 0.9998653149054768,
+  "sharp": 1.0000981724132072,
+  "grain": 1.0016441414679451,
+  "grain_corr": 1.00167510755414,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      900,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1327.0966624209577,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 442.95126137935836,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 139390.96952371948,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 191.27733351451792,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1264.5605182322513,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "wrapped-text-2",
+  "state": "SCORED",
+  "gain": 0.999977376320374,
+  "blotch": 0.9992263347326598,
+  "blotch_corr": 0.9992489414205771,
+  "sharp": 1.0007981609001302,
+  "grain": 0.9934285838002965,
+  "grain_corr": 0.9934510593187866,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2100,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 195.9284795910464,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 223.82917621464466,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 821.8247236424896,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      300,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 93.24977821103292,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      2700
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 475.9540328696354,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ }
+]

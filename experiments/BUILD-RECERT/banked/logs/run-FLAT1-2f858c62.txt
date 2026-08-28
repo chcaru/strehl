@@ -1,0 +1,338 @@
+subjects        : 1
+frames          : 19
+projected wall  : 0 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] coffee-bubbles (19 frames)
+        ok  42s  189 MB
+
+wall clock      : 0.7 min for 19 frames (2.22 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 22
+projected wall  : 1 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 109MSDCF (22 frames)
+        ok  49s  189 MB
+
+wall clock      : 0.8 min for 22 frames (2.26 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 33
+projected wall  : 1 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 119MSDCF (33 frames)
+        ok  64s  189 MB
+
+wall clock      : 1.1 min for 33 frames (1.93 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 63
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 113MSDCF (63 frames)
+        ok  103s  189 MB
+
+wall clock      : 1.7 min for 63 frames (1.64 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 79
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] 112MSDCF (79 frames)
+        ok  128s  189 MB
+
+wall clock      : 2.1 min for 79 frames (1.63 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 79
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flat-on-ruler-cpl (79 frames)
+        ok  153s  189 MB
+
+wall clock      : 2.6 min for 79 frames (1.94 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 100
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] tweezers-cpl (100 frames)
+        ok  153s  189 MB
+
+wall clock      : 2.5 min for 100 frames (1.53 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 100
+projected wall  : 2 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] foam (100 frames)
+        ok  119s  189 MB
+
+wall clock      : 2.0 min for 100 frames (1.19 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 105
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] coffee-bean (105 frames)
+        ok  181s  189 MB
+
+wall clock      : 3.0 min for 105 frames (1.73 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 120
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] wrapped-text-2 (120 frames)
+        ok  140s  189 MB
+
+wall clock      : 2.3 min for 120 frames (1.17 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 123
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] lead-1-cpl (123 frames)
+        ok  143s  189 MB
+
+wall clock      : 2.4 min for 123 frames (1.17 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 130
+projected wall  : 3 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] wrapped-text-1 (130 frames)
+        ok  230s  189 MB
+
+wall clock      : 3.8 min for 130 frames (1.77 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 176
+projected wall  : 4 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flowers-cpl (176 frames)
+        ok  219s  189 MB
+
+wall clock      : 3.6 min for 176 frames (1.24 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 182
+projected wall  : 4 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] leaf-2-cpl (182 frames)
+        ok  195s  189 MB
+
+wall clock      : 3.3 min for 182 frames (1.07 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 205
+projected wall  : 5 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flower-bud-alone-cpl (205 frames)
+        ok  340s  189 MB
+
+wall clock      : 5.7 min for 205 frames (1.66 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] dry-erase-marker-head-cpl (299 frames)
+        ok  522s  189 MB
+
+wall clock      : 8.7 min for 299 frames (1.75 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] bee-3-cpl (299 frames)
+        ok  428s  189 MB
+
+wall clock      : 7.1 min for 299 frames (1.43 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flower-bud-with-background-fern-cpl (299 frames)
+        ok  398s  189 MB
+
+wall clock      : 6.6 min for 299 frames (1.33 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] flower-inner-edge-cpl (299 frames)
+        ok  335s  189 MB
+
+wall clock      : 5.6 min for 299 frames (1.12 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] bee-2-cpl (299 frames)
+        ok  482s  189 MB
+
+wall clock      : 8.0 min for 299 frames (1.61 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] highly-angled-ruler-mm-cpl (299 frames)
+        ok  177s  189 MB
+
+wall clock      : 3.0 min for 299 frames (0.59 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] lavendar-cpl (299 frames)
+        ok  302s  189 MB
+
+wall clock      : 5.0 min for 299 frames (1.01 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] pencil-flatter-angle-cpl (299 frames)
+        ok  615s  189 MB
+
+wall clock      : 10.3 min for 299 frames (2.06 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] pencil-steep-angle-cpl (299 frames)
+        ok  516s  189 MB
+
+wall clock      : 8.6 min for 299 frames (1.73 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] bee-1-cpl (299 frames)
+        ok  314s  189 MB
+
+wall clock      : 5.2 min for 299 frames (1.05 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)
+subjects        : 1
+frames          : 299
+projected wall  : 7 min at 1.48 s/frame (measured under load)
+arm             : FLAT1-2f858c62
+flags           : --srgb --auto-exposure --pyramid-exponent 1.0 --pyramid-sharpen 1.0
+pin             : reusing C:\dev\strehl-out\acceptance-pins\2f858c62
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+[ 1/1] couch-fibers-cpl (299 frames)
+        ok  287s  189 MB
+
+wall clock      : 4.8 min for 299 frames (0.96 s/frame)
+ARM INCOMPLETE  : C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62  (-Only run: partial by construction, nothing failed; INCOMPLETE.txt kept)

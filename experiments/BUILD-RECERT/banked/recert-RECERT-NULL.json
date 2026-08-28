@@ -1,0 +1,11 @@
+{
+  "h2h": {
+    "n_frames": 17
+  },
+  "timing_seconds": {
+    "h2h": 10.4,
+    "TOTAL": 10.4
+  },
+  "verdict": "INCONCLUSIVE -- no verdict can be formed: stage(s) render, gate, pair did not run. Nothing was measured, so nothing is certified.",
+  "promotable": false
+}

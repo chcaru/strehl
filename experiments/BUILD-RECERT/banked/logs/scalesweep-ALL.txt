@@ -1,0 +1,117 @@
+binary : BC6FA3C787A18CAA  9858048 bytes
+
+===== SC-BASE-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=(unset) =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-BASE-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 349.5s]
+
+============================================================================================
+TIMING: identity 0.0s  render 349.5s  TOTAL 349.5s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-BASE-bc6fa3c7.json
+----- SC-BASE-bc6fa3c7 done in 350.4s, 6 master(s)
+
+===== SC-NULL-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=1,1,1,1,1,1,1 =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-NULL-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 347.1s]
+
+============================================================================================
+TIMING: identity 0.0s  render 347.1s  TOTAL 347.1s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-NULL-bc6fa3c7.json
+----- SC-NULL-bc6fa3c7 done in 347.8s, 6 master(s)
+
+===== SC-4-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=1,4,4,4,4,4,4 =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-4-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 256.0s]
+
+============================================================================================
+TIMING: identity 0.0s  render 256.0s  TOTAL 256.0s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-4-bc6fa3c7.json
+----- SC-4-bc6fa3c7 done in 256.5s, 6 master(s)
+
+===== SC-8-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=1,8,8,8,8,8,8 =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-8-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 234.3s]
+
+============================================================================================
+TIMING: identity 0.0s  render 234.3s  TOTAL 234.3s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-8-bc6fa3c7.json
+----- SC-8-bc6fa3c7 done in 234.9s, 6 master(s)
+
+===== SC-16-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=1,16,16,16,16,16,16 =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-16-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 222.9s]
+
+============================================================================================
+TIMING: identity 0.0s  render 222.9s  TOTAL 222.9s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-16-bc6fa3c7.json
+----- SC-16-bc6fa3c7 done in 223.4s, 6 master(s)
+
+===== SC-RAMP-bc6fa3c7  STREHL_GATE_FLOOR_SCALE=1,1,4,16,32,32,32 =====
+
+=== identity ===
+candidate : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+sha256    : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+identity  : a new binary
+  [identity 0.0s]
+
+=== render ===
+  C:\dev\blog\death-of-software\projects\strehl\scripts\finalpass.ps1 -Exe C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe -Arm SC-RAMP-bc6fa3c7 -Flags --srgb --auto-exposure -OutRoot C:\dev\strehl-out\BUILD-RECERT\arms -NoPresent -Only coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam
+  rendered 6 master(s); COMPLETE.txt ABSENT  (subject-restricted run)
+  [render 219.5s]
+
+============================================================================================
+TIMING: identity 0.0s  render 219.5s  TOTAL 219.5s
+VERDICT: INCONCLUSIVE -- no verdict can be formed: stage(s) gate, pair did not run. Nothing was measured, so nothing is certified.
+manifest: C:\dev\strehl-out\BUILD-RECERT\recert-SC-RAMP-bc6fa3c7.json
+----- SC-RAMP-bc6fa3c7 done in 220s, 6 master(s)
+
+SWEEP COMPLETE

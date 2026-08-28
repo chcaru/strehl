@@ -1,0 +1,307 @@
+[
+ {
+  "subject": "coffee-bubbles",
+  "state": "SCORED",
+  "sites": [
+   [
+    2700,
+    3900
+   ],
+   [
+    1500,
+    3300
+   ],
+   [
+    2100,
+    3900
+   ],
+   [
+    2100,
+    3300
+   ],
+   [
+    2100,
+    6300
+   ]
+  ],
+  "cells": [
+   {
+    "site": [
+     2700,
+     3900
+    ],
+    "band": "grain",
+    "base_floor": 1.6094072732610698,
+    "cand_floor": 1.1422373181875813,
+    "base_struct": 25.299030412129767,
+    "cand_struct": 16.809084823597537,
+    "d_floor": -0.29027453947494775,
+    "d_peak": -0.33558383266979575,
+    "paid": 1.1560911724355984,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "QUIETER (noise-only band; no sharpness claim admissible)"
+   },
+   {
+    "site": [
+     2700,
+     3900
+    ],
+    "band": "struct",
+    "base_floor": 4.2076872594160655,
+    "cand_floor": 3.6291962724682834,
+    "base_struct": 65.08360087441172,
+    "cand_struct": 56.06579072896219,
+    "d_floor": -0.1374843117565881,
+    "d_peak": -0.13855733278880344,
+    "paid": 1.0078046798104143,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "BLUR_TRADE -- quieter, but 101%% of the noise win was paid for out of structure; that is a blur, not a clean-up"
+   },
+   {
+    "site": [
+     2700,
+     3900
+    ],
+    "band": "mottle",
+    "base_floor": 21.04113499454257,
+    "cand_floor": 21.272720520660215,
+    "base_struct": 92.47648718279402,
+    "cand_struct": 89.12303717715263,
+    "d_floor": 0.01100632290880272,
+    "d_peak": -0.036262731293120826,
+    "paid": null,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "SOFTER -- structure lost with no noise win"
+   },
+   {
+    "site": [
+     1500,
+     3300
+    ],
+    "band": "grain",
+    "base_floor": 1.7475422058186372,
+    "cand_floor": 1.2122103691949702,
+    "base_struct": 25.84661613167941,
+    "cand_struct": 16.873690485027527,
+    "d_floor": -0.30633413879288285,
+    "d_peak": -0.34716055676062146,
+    "paid": 1.1332741369558617,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "QUIETER (noise-only band; no sharpness claim admissible)"
+   },
+   {
+    "site": [
+     1500,
+     3300
+    ],
+    "band": "struct",
+    "base_floor": 5.166927990603962,
+    "cand_floor": 4.3111237684981445,
+    "base_struct": 64.976014857744,
+    "cand_struct": 55.79273752615522,
+    "d_floor": -0.16563114943000828,
+    "d_peak": -0.14133334202927494,
+    "paid": 0.8533017039104652,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "BLUR_TRADE -- quieter, but 85%% of the noise win was paid for out of structure; that is a blur, not a clean-up"
+   },
+   {
+    "site": [
+     1500,
+     3300
+    ],
+    "band": "mottle",
+    "base_floor": 16.52797852643818,
+    "cand_floor": 16.635399382617283,
+    "base_struct": 101.4277007129866,
+    "cand_struct": 97.4252700675165,
+    "d_floor": 0.006499334205164494,
+    "d_peak": -0.0394609225816518,
+    "paid": null,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "SOFTER -- structure lost with no noise win"
+   },
+   {
+    "site": [
+     2100,
+     3900
+    ],
+    "band": "grain",
+    "base_floor": 1.5219143961796977,
+    "cand_floor": 1.1127501725931712,
+    "base_struct": 25.113507827322486,
+    "cand_struct": 15.842750736087613,
+    "d_floor": -0.26884838241468023,
+    "d_peak": -0.3691542079656695,
+    "paid": 1.3730943985977733,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "QUIETER (noise-only band; no sharpness claim admissible)"
+   },
+   {
+    "site": [
+     2100,
+     3900
+    ],
+    "band": "struct",
+    "base_floor": 3.5860718792595914,
+    "cand_floor": 3.316130245460305,
+    "base_struct": 62.4273853844025,
+    "cand_struct": 52.92962406115573,
+    "d_floor": -0.0752750203810807,
+    "d_peak": -0.1521409436702084,
+    "paid": 2.0211345397183953,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "BLUR_TRADE -- quieter, but 202%% of the noise win was paid for out of structure; that is a blur, not a clean-up"
+   },
+   {
+    "site": [
+     2100,
+     3900
+    ],
+    "band": "mottle",
+    "base_floor": 18.734188938002685,
+    "cand_floor": 18.944902697681503,
+    "base_struct": 96.94340203965346,
+    "cand_struct": 95.64042090245894,
+    "d_floor": 0.011247551755570299,
+    "d_peak": -0.013440637627525735,
+    "paid": null,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "HELD"
+   },
+   {
+    "site": [
+     2100,
+     3300
+    ],
+    "band": "grain",
+    "base_floor": 1.4272613293887433,
+    "cand_floor": 1.1146764126832405,
+    "base_struct": 25.833815881165965,
+    "cand_struct": 16.510141988147485,
+    "d_floor": -0.21901028933459182,
+    "d_peak": -0.36090966723254636,
+    "paid": 1.6479119238145405,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "QUIETER (noise-only band; no sharpness claim admissible)"
+   },
+   {
+    "site": [
+     2100,
+     3300
+    ],
+    "band": "struct",
+    "base_floor": 2.9331331704680483,
+    "cand_floor": 2.7636588566733202,
+    "base_struct": 65.46779240374838,
+    "cand_struct": 56.57063779779662,
+    "d_floor": -0.05777927695239443,
+    "d_peak": -0.13590124669366957,
+    "paid": 2.35207593209658,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "BLUR_TRADE -- quieter, but 235%% of the noise win was paid for out of structure; that is a blur, not a clean-up"
+   },
+   {
+    "site": [
+     2100,
+     3300
+    ],
+    "band": "mottle",
+    "base_floor": 14.129543731540524,
+    "cand_floor": 14.159064461186446,
+    "base_struct": 80.12008958928068,
+    "cand_struct": 81.56024364598237,
+    "d_floor": 0.002089291077391606,
+    "d_peak": 0.017974943164496483,
+    "paid": null,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "HELD"
+   },
+   {
+    "site": [
+     2100,
+     6300
+    ],
+    "band": "grain",
+    "base_floor": 1.174072509511194,
+    "cand_floor": 0.9341296750093727,
+    "base_struct": 12.400991916209664,
+    "cand_struct": 7.755403273611512,
+    "d_floor": -0.20436798626834174,
+    "d_peak": -0.3746142787598934,
+    "paid": 1.8330379703796307,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "QUIETER (noise-only band; no sharpness claim admissible)"
+   },
+   {
+    "site": [
+     2100,
+     6300
+    ],
+    "band": "struct",
+    "base_floor": 1.7656566910995581,
+    "cand_floor": 1.6141916717185396,
+    "base_struct": 41.734396856694374,
+    "cand_struct": 34.566991825205356,
+    "d_floor": -0.085783957971294,
+    "d_peak": -0.17173855551573247,
+    "paid": 2.001989178130503,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "BLUR_TRADE -- quieter, but 200%% of the noise win was paid for out of structure; that is a blur, not a clean-up"
+   },
+   {
+    "site": [
+     2100,
+     6300
+    ],
+    "band": "mottle",
+    "base_floor": 5.040221528055531,
+    "cand_floor": 4.910757299406176,
+    "base_struct": 97.65585020816857,
+    "cand_struct": 87.49664189083059,
+    "d_floor": -0.02568621794274608,
+    "d_peak": -0.10403071905760954,
+    "paid": 4.050059813768276,
+    "floor_ok": true,
+    "struct_ok": true,
+    "refused": false,
+    "verdict": "BLUR_TRADE -- quieter, but 405%% of the noise win was paid for out of structure; that is a blur, not a clean-up"
+   }
+  ],
+  "blotch": 1.0064993342051645,
+  "sharp": 0.8586666579707251,
+  "grain": 0.7311516175853198,
+  "verdict": "FLAT LOSES -- 14.1% softer, blotch not improved",
+  "n_blotch": 5,
+  "n_sharp": 5,
+  "n_no_sharp": 0
+ }
+]

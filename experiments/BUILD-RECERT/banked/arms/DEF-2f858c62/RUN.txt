@@ -1,0 +1,19 @@
+acceptance arm  : DEF-2f858c62
+finished        : 2026-08-27T20:35:24.7642876-07:00
+pin             : 2f858c62 (git archive + clean release build)
+binary          : C:\dev\strehl-out\acceptance-pins\2f858c62\target\release\strehl.exe
+binary sha256   : A058F737DFE695F711DBACB077B118ED10A5B85C556FE888EE7F929F10397542
+git commit      : 2f858c624f897c8dde140e06fe6b6cb8643454c8
+library         : D:\personal\macro
+flags           : --srgb --auto-exposure   (IDENTICAL on every subject)
+subjects        : 1/1 rendered
+frames          : 299
+wall clock      : 5.5 min
+PARTIAL ARM     : -Only was used -- couch-fibers-cpl
+
+score it with:
+  python C:\dev\strehl-out\ORCH-CLAMP\accept.py C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62 <other-arm-dir> --ref <arm>
+
+Arms are comparable ONLY if rendered with these same flags in this same
+colour space. accept.py reads absolute DN; a tone-mapped arm and a
+camera-linear arm are not two arms of one experiment.

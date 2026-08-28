@@ -1,0 +1,184 @@
+[
+ {
+  "subject": "coffee-bubbles",
+  "state": "SCORED",
+  "gain": 0.9998669072521531,
+  "blotch": 0.9996357205566104,
+  "blotch_corr": 0.999768782531089,
+  "sharp": 1.0001266043648323,
+  "grain": 1.0043518457509828,
+  "grain_corr": 1.0044855354910738,
+  "blotch_verdict": "UNCHANGED",
+  "sharp_verdict": "UNCHANGED",
+  "grain_verdict": "UNCHANGED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      2700,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3880.2059899981705,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      1500,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3324.5761566426563,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 3034.7839166693648,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      3300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1759.1502934100945,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      6300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 205.2135464641725,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ },
+ {
+  "subject": "leaf-2-cpl",
+  "state": "SCORED",
+  "gain": 0.9967084475997864,
+  "blotch": 1.0209467955080012,
+  "blotch_corr": 1.0243183931736348,
+  "sharp": 0.7451449909242812,
+  "grain": 2.287782713566536,
+  "grain_corr": 2.29533793866786,
+  "blotch_verdict": "REGRESSED",
+  "sharp_verdict": "REGRESSED",
+  "grain_verdict": "REGRESSED",
+  "registration": {
+   "ok": true,
+   "basis": "SSD-WELL",
+   "n_informative": 5,
+   "probes": [
+    {
+     "site": [
+      3300,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1.7407117978503315,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      3900,
+      2100
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.2309936580372716,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      300
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.453017932872085,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2100,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 1.948937587721614,
+     "exact": false,
+     "informative": true
+    },
+    {
+     "site": [
+      2700,
+      900
+     ],
+     "argmin": [
+      0,
+      0
+     ],
+     "well": 2.1504572565860767,
+     "exact": false,
+     "informative": true
+    }
+   ],
+   "worst": 0,
+   "median": [
+    0,
+    0
+   ],
+   "median_mag": 0
+  }
+ }
+]

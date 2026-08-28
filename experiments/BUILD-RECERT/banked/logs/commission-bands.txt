@@ -1,0 +1,87 @@
+band noise-peak ratios (p99.5 of a PURE-NOISE band residual, in units of its own
+floor -- the part of `peak` that is noise and must not be counted as structure):
+    grain   2.8050
+    struct  2.8173
+    mottle  2.8833
+
+arms A-E on C:\dev\strehl-out\V-NOISE2\119\arms\strehl-A.tiff (LINEAR arm; sRGB curve applied as display)
+
+--- site worst-on-subject  y=3512 x=2232 ---
+    grain      <=3px 0.330-0.500cyc/px  floor   0.2817  peak   3.1890  structure   3.0895  [noise-only]
+    struct    5-13px 0.077-0.200cyc/px  floor   0.4603  peak  11.0490  structure  10.9726
+    mottle   21-61px 0.016-0.048cyc/px  floor   3.1024  peak  30.8159  structure  29.4891
+  A null   grain   d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD (noise-only band; no sharpness claim admissible)  [identical pixels must read HELD]
+  B blur-n grain   d_floor -0.79721 d_struct -0.65557 paid 0.822  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [acts here: structure must fall and must not be scored CLEANER]
+  B2 blur-wgrain   d_floor -0.96010 d_struct -0.95138 paid 0.991  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [wide blur must be caught in every band it reaches]
+  C denoisegrain   d_floor -0.61467 d_struct +0.12347 paid 0.000  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [must read QUIETER]
+  A null   struct  d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD  [identical pixels must read HELD]
+  B blur-n struct  d_floor -0.09801 d_struct -0.10474 paid 1.069  PASS    BLUR_TRADE -- quieter, but 107%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [acts here: structure must fall and must not be scored CLEANER]
+  B2 blur-wstruct  d_floor -0.57810 d_struct -0.77229 paid 1.336  PASS    BLUR_TRADE -- quieter, but 134%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [wide blur must be caught in every band it reaches]
+  C denoisestruct  d_floor -0.42438 d_struct +0.00716 paid 0.000  PASS    CLEANER -- quieter with structure held  [must read CLEANER]
+  A null   mottle  d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD  [identical pixels must read HELD]
+  B blur-n mottle  d_floor -0.00585 d_struct -0.00982 paid      -  PASS    HELD  [cannot reach this band: must merely never be scored CLEANER]
+  B2 blur-wmottle  d_floor -0.16011 d_struct -0.28063 paid 1.753  PASS    BLUR_TRADE -- quieter, but 175%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [wide blur must be caught in every band it reaches]
+  C denoisemottle  d_floor -0.40334 d_struct +0.02866 paid 0.000  PASS    CLEANER -- quieter with structure held  [must read CLEANER]
+  D ladder struct  structure 10.973 -> 10.363 -> 9.823 -> 9.360 -> 8.919  PASS  [must fall monotonically with blur]
+  E nonrew struct  d_floor -0.08231 d_struct -0.09676 paid 1.176  PASS    BLUR_TRADE -- quieter, but 118%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [heavier blur must never be ranked CLEANER]
+
+--- site random  y=2488 x=440 ---
+    grain      <=3px 0.330-0.500cyc/px  floor   0.3112  peak   3.2860  structure   3.1679  [noise-only]
+    struct    5-13px 0.077-0.200cyc/px  floor   0.6807  peak  18.2887  structure  18.1879
+    mottle   21-61px 0.016-0.048cyc/px  floor   3.8089  peak  46.2339  structure  44.9107
+  A null   grain   d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD (noise-only band; no sharpness claim admissible)  [identical pixels must read HELD]
+  B blur-n grain   d_floor -0.75319 d_struct -0.47287 paid 0.628  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [acts here: structure must fall and must not be scored CLEANER]
+  B2 blur-wgrain   d_floor -0.96492 d_struct -0.94450 paid 0.979  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [wide blur must be caught in every band it reaches]
+  C denoisegrain   d_floor -0.62247 d_struct +0.15439 paid 0.000  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [must read QUIETER]
+  A null   struct  d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD  [identical pixels must read HELD]
+  B blur-n struct  d_floor -0.10414 d_struct -0.11621 paid 1.116  PASS    BLUR_TRADE -- quieter, but 112%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [acts here: structure must fall and must not be scored CLEANER]
+  B2 blur-wstruct  d_floor -0.74072 d_struct -0.83478 paid 1.127  PASS    BLUR_TRADE -- quieter, but 113%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [wide blur must be caught in every band it reaches]
+  C denoisestruct  d_floor -0.53172 d_struct +0.01486 paid 0.000  PASS    CLEANER -- quieter with structure held  [must read CLEANER]
+  A null   mottle  d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD  [identical pixels must read HELD]
+  B blur-n mottle  d_floor -0.00239 d_struct -0.00665 paid      -  PASS    HELD  [cannot reach this band: must merely never be scored CLEANER]
+  B2 blur-wmottle  d_floor +0.00026 d_struct -0.22748 paid      -  PASS    SOFTER -- structure lost with no noise win  [wide blur must be caught in every band it reaches]
+  C denoisemottle  d_floor -0.55986 d_struct +0.12045 paid 0.000  PASS    CLEANER -- quieter with structure held  [must read CLEANER]
+  D ladder struct  structure 18.188 -> 17.074 -> 16.074 -> 15.221 -> 14.470  PASS  [must fall monotonically with blur]
+  E nonrew struct  d_floor -0.09266 d_struct -0.10855 paid 1.172  PASS    BLUR_TRADE -- quieter, but 117%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [heavier blur must never be ranked CLEANER]
+
+--- site best  y=2232 x=4024 ---
+    grain      <=3px 0.330-0.500cyc/px  floor   0.8202  peak   6.2084  structure   5.7663  [noise-only]
+    struct    5-13px 0.077-0.200cyc/px  floor   4.2430  peak  21.9034  structure  18.3541
+    mottle   21-61px 0.016-0.048cyc/px  floor  19.7422  peak  52.7000  structure   0.0000  NO STRUCTURE ABOVE FLOOR
+  A null   grain   d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD (noise-only band; no sharpness claim admissible)  [identical pixels must read HELD]
+  B blur-n grain   d_floor -0.55782 d_struct -0.64575 paid 1.158  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [acts here: structure must fall and must not be scored CLEANER]
+  B2 blur-wgrain   d_floor -0.90089 d_struct -0.99131 paid 1.100  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [wide blur must be caught in every band it reaches]
+  C denoisegrain   d_floor -0.61079 d_struct +0.28282 paid 0.000  PASS    QUIETER (noise-only band; no sharpness claim admissible)  [must read QUIETER]
+  A null   struct  d_floor +0.00000 d_struct +0.00000 paid      -  PASS    HELD  [identical pixels must read HELD]
+  B blur-n struct  d_floor -0.07430 d_struct -0.13597 paid 1.830  PASS    BLUR_TRADE -- quieter, but 183%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [acts here: structure must fall and must not be scored CLEANER]
+  B2 blur-wstruct  d_floor -0.67261 d_struct      - paid      -  REFUSED REFUSED -- no structure above this band's own noise floor (p99.5 <= 2.82 x floor); no sharpness claim can be formed  [refused before a verdict could form]
+  C denoisestruct  d_floor -0.43574 d_struct +0.17941 paid 0.000  PASS    CLEANER -- quieter with structure held  [must read CLEANER]
+  A null   mottle  d_floor +0.00000 d_struct      - paid      -  REFUSED REFUSED -- no structure above this band's own noise floor (p99.5 <= 2.88 x floor); no sharpness claim can be formed  [identical pixels must read HELD]
+  B blur-n mottle  d_floor -0.00724 d_struct      - paid      -  REFUSED REFUSED -- no structure above this band's own noise floor (p99.5 <= 2.88 x floor); no sharpness claim can be formed  [refused before a verdict could form]
+  B2 blur-wmottle  d_floor -0.22810 d_struct      - paid      -  REFUSED REFUSED -- no structure above this band's own noise floor (p99.5 <= 2.88 x floor); no sharpness claim can be formed  [refused before a verdict could form]
+  C denoisemottle  d_floor -0.36935 d_struct      - paid      -  REFUSED REFUSED -- no structure above this band's own noise floor (p99.5 <= 2.88 x floor); no sharpness claim can be formed  [refused before a verdict could form]
+  D ladder struct  structure 18.354 -> 17.020 -> 15.858 -> 14.826 -> 13.915  PASS  [must fall monotonically with blur]
+  E nonrew struct  d_floor -0.06565 d_struct -0.12892 paid 1.964  PASS    BLUR_TRADE -- quieter, but 196%% of the noise win was paid for out of structure; that is a blur, not a clean-up  [heavier blur must never be ranked CLEANER]
+
+--- F: is PAID_MAX subject-invariant? blur vs denoise, 6 subjects x 4 crops ---
+  excluded: 0 plant-did-not-land, 2 refused (no structure above floor / degenerate) -- UNTESTED, not passed
+  planted BLUR    paid: n=22 min 0.406 max 1.336
+  planted DENOISE paid: n=22 min 0.000 max 0.000
+  PAID_MAX = 0.25  ->  PASS  [need denoise max 0.000 < 0.25 < blur min 0.406]
+
+============================================================================================
+arm              PASS   FAIL  REFUSED   total   >= 3 tested?
+A null              8      0        1       9   yes (8)
+B blur-n            8      0        1       9   yes (8)
+B2 blur-w           7      0        2       9   yes (7)
+C denoise           8      0        1       9   yes (8)
+D ladder            3      0        0       3   yes (3)
+E non-reward        3      0        0       3   yes (3)
+F invariance       22      0        2      24   yes (22)
+TOTAL              59      0        7      66
+partition: 59 + 0 + 7 = 66 cells examined  (sums)
+
+COMMISSIONING PASSED -- null held; narrow and wide blur both caught and both refused a
+win; band-confined denoise scored as an improvement; ladder monotone; heavier blur never
+ranked above lighter; degenerate and structureless crops refused rather than passed;
+PAID_MAX=0.25 separates the planted populations on every subject tested.

@@ -1,0 +1,79 @@
+BUILD-OUTPUT: the registration guard was refusing on noise, and hiding the worst evidence
+
+flatexp.py's registration guard refused three of the first sixteen subjects --
+dry-erase-marker-head-cpl, flower-bud-alone-cpl, flowers-cpl -- on an SSD argmin
+taken at ONE site with a +/-4 px search. None of them was shifted. Each arm's
+own log reports the same sidecar, the same reference frame and the same N placed
+/ 0 refused; the outputs have identical shape; and a selection exponent
+reweights pyramid coefficients on a fixed grid, so there is no mechanism by
+which it could translate an image. What the argmin was reading was the CONTENT
+DIFFERENCE between the arms, which is the quantity the experiment exists to
+measure.
+
+The cost of that defect was not neutral. With the guard fixed, the two subjects
+it had been discarding turn out to carry the LARGEST sharpness losses in the
+corpus -- dry-erase-marker-head-cpl at 27.5% softer and flower-bud-alone-cpl at
+35.4% softer, against a corpus median of 19.2%. The broken guard was suppressing
+the strongest evidence against the arm under test.
+
+THE THRESHOLD IS MEASURED, NOT CHOSEN (regsens2.py). Three real masters were
+self-shifted, so the shift is the only difference between the two sides, and the
+published ratios were read off at each planted offset:
+
+    shift   max|blotch-1|   max|sharp-1|   max|grain-1|
+        1        0.424%         0.106%         0.088%
+        8        0.839%         0.472%         0.346%
+       16        2.639%         1.333%         1.174%
+       32        5.620%         3.509%         2.530%
+
+The effect under test moves `sharp` by 15-22%. A 1 px argmin -- all the evidence
+there ever was -- perturbs the answer by 0.106%, a four-hundredth of the effect.
+8 px is the last row that is negligible against it, so TOLERATED_SHIFT = 8.
+
+TWO CANDIDATE REPLACEMENTS WERE BUILT AND BOTH WERE KILLED BY THEIR OWN CONTROLS.
+Neither ships, and both are recorded because a rejected instrument is a result:
+
+  * Normalised cross-correlation fails AGENTS.md rule 5 -- not subject-invariant,
+    so it cannot carry an absolute threshold. NCC(0) = 0.889 is a 4 px shift on
+    coffee-bubbles and a 64 px shift on dry-erase-marker-head-cpl. It reports how
+    much fine content a subject has, not how far it moved.
+  * Low-passing into the base band, on the banner's claim that the base is a
+    plain mean across frames in both arms, does not respond to a planted shift at
+    all (baseband.py): on flower-bud-alone-cpl the low-passed excess reads 41.2%
+    unshifted, 43.3% at +1 px, 41.5% at +4 px and 33.0% at +32 px. A hard
+    low-pass removes the structure that localises SSD.
+
+THREE DEFECTS IN THE REPLACEMENT, EACH CAUGHT BY COMMISSIONING AND NOT BY
+READING:
+
+  1. The rewrite searched +/-4 px against a tolerance of 8 and passed a PLANTED
+     32 px SHIFT as NEUTRAL -- the same saturation defect one layer down, because
+     an argmin pinned at the boundary of its own search reports 4, and 4 <= 8.
+     SEARCH_RADIUS must exceed TOLERATED_SHIFT.
+  2. Well depth was measured at the ORIGIN rather than at the ARGMIN. On a pair
+     that really is displaced the origin is nowhere near the minimum, the surface
+     there is flat, and the site was declared UNINFORMATIVE -- so both planted
+     shifts passed. Whether a surface has a well AT THE ORIGIN is a different
+     question from whether it has one AT ALL.
+  3. An exact match at the argmin (SSD == 0) was mapped to float("inf") and then
+     gated on np.isfinite, which classified the DEEPEST POSSIBLE WELL as
+     uninformative. Every planted shift is a np.roll of an exact copy, so every
+     one of them went through that door. Real masters never produce a zero SSD,
+     so this was invisible on real data and only a synthetic could expose it.
+
+WHAT SHIPS: every site is probed, not one. A global displacement is the same at
+every site and noise is not, so the per-axis MEDIAN argmin across sites is the
+primary clause; a site whose surface holds a genuine well may also refuse on its
+own. Both clauses are conditioned on, and the registration BASIS is partitioned
+in the output and asserted to sum, so a subject admitted because no site could
+speak never prints as the same glyph as one admitted because a site spoke and
+agreed.
+
+Commissioning is 8 arms, 8 PASS / 0 FAIL, and now brackets the threshold from
+both sides: 2 px must be TOLERATED (the false-refusal control, without which a
+guard that refuses everything is indistinguishable from a correct one), 12 px
+must refuse via the interior path, 32 px must refuse via the saturated path.
+
+Measured on 18 of 26 paired subjects, arms DEF/FLAT1 @ pin 2f858c62
+(sha16 A058F737DFE695F7): zero refusals, registration basis SSD-WELL=13,
+MEDIAN-ONLY=5, summing to 18.

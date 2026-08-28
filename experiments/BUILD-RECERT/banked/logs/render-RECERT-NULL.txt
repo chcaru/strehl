@@ -1,0 +1,62 @@
+subjects        : 26
+frames          : 4,825
+projected wall  : 119 min at 1.48 s/frame (measured under load)
+arm             : RECERT-NULL
+flags           : --srgb --auto-exposure
+binary sha256   : 44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490
+git commit      : UNATTRIBUTED -- operator-supplied binary; tree HEAD was 9dbb5c92e773e4b93022a190a097c128d822f23f WITH UNCOMMITTED CHANGES (the binary may not match any commit)
+[ 1/26] pencil-steep-angle-cpl (299 frames)
+        ok  203s  189 MB  exp +1.29 st
+[ 2/26] pencil-flatter-angle-cpl (299 frames)
+        ok  167s  189 MB  exp +0.88 st
+[ 3/26] bee-1-cpl (299 frames)
+        ok  148s  189 MB  exp +1.50 st
+[ 4/26] bee-2-cpl (299 frames)
+        ok  146s  189 MB  exp +1.52 st
+[ 5/26] bee-3-cpl (299 frames)
+        ok  173s  189 MB  exp +1.52 st
+[ 6/26] lavendar-cpl (299 frames)
+        ok  132s  189 MB  exp +1.43 st
+[ 7/26] couch-fibers-cpl (299 frames)
+        ok  109s  189 MB  exp +1.82 st
+[ 8/26] dry-erase-marker-head-cpl (299 frames)
+        ok  148s  189 MB  exp -0.25 st
+[ 9/26] highly-angled-ruler-mm-cpl (299 frames)
+        ok  109s  189 MB  exp +1.29 st
+[10/26] flower-bud-with-background-fern-cpl (299 frames)
+        ok  158s  189 MB  exp +1.70 st
+[11/26] flower-inner-edge-cpl (299 frames)
+        ok  122s  189 MB  exp +0.50 st
+[12/26] flower-bud-alone-cpl (205 frames)
+        ok  62s  189 MB  exp +1.44 st
+[13/26] leaf-2-cpl (182 frames)
+        ok  71s  189 MB  exp +3.19 st
+[14/26] flowers-cpl (176 frames)
+        ok  97s  189 MB  exp +1.89 st
+[15/26] wrapped-text-1 (130 frames)
+        ok  87s  189 MB  exp +2.27 st
+[16/26] lead-1-cpl (123 frames)
+        ok  139s  189 MB  exp +3.76 st
+[17/26] wrapped-text-2 (120 frames)
+        ok  122s  189 MB  exp +1.90 st
+[18/26] coffee-bean (105 frames)
+        ok  84s  189 MB  exp -0.22 st
+[19/26] tweezers-cpl (100 frames)
+        ok  62s  189 MB  exp +1.13 st
+[20/26] foam (100 frames)
+        ok  62s  189 MB  exp -0.34 st
+[21/26] flat-on-ruler-cpl (79 frames)
+        ok  57s  189 MB  exp +1.95 st
+[22/26] 112MSDCF (79 frames)
+        ok  63s  189 MB  exp +3.33 st
+[23/26] 113MSDCF (63 frames)
+        ok  66s  189 MB  exp +2.33 st
+[24/26] 119MSDCF (33 frames)
+        ok  30s  189 MB  exp +1.53 st
+[25/26] 109MSDCF (22 frames)
+        ok  34s  189 MB  exp +2.60 st
+[26/26] coffee-bubbles (19 frames)
+        ok  29s  189 MB  exp -0.26 st
+
+wall clock      : 44.7 min for 4,825 frames (0.56 s/frame)
+ARM COMPLETE    : C:\dev\strehl-out\BUILD-RECERT\arms\RECERT-NULL

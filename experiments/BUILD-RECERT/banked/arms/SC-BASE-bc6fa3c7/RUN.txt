@@ -1,0 +1,19 @@
+acceptance arm  : SC-BASE-bc6fa3c7
+finished        : 2026-08-27T22:35:15.8852212-07:00
+pin             : UNPINNED (operator supplied C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe)
+binary          : C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe
+binary sha256   : BC6FA3C787A18CAA13A9DB7FD0E447C62CB371DD2B7533D8CDBE9935FBD6B0BC
+git commit      : UNATTRIBUTED -- operator-supplied binary; tree HEAD was b3ed9800383cc08bc60de23bf1678aa4f430c644 WITH UNCOMMITTED CHANGES (the binary may not match any commit)
+library         : D:\personal\macro
+flags           : --srgb --auto-exposure   (IDENTICAL on every subject)
+subjects        : 6/6 rendered
+frames          : 463
+wall clock      : 5.8 min
+PARTIAL ARM     : -Only was used -- coffee-bubbles, lead-1-cpl, 113MSDCF, flat-on-ruler-cpl, 112MSDCF, foam
+
+score it with:
+  python C:\dev\strehl-out\ORCH-CLAMP\accept.py C:\dev\strehl-out\BUILD-RECERT\arms\SC-BASE-bc6fa3c7 <other-arm-dir> --ref <arm>
+
+Arms are comparable ONLY if rendered with these same flags in this same
+colour space. accept.py reads absolute DN; a tone-mapped arm and a
+camera-linear arm are not two arms of one experiment.

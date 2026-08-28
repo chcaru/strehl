@@ -1,0 +1,48 @@
+=== commissioning the census ===
+  A1 unparseable provenance -> raised ValueError  PASS
+  A2 identical copy -> equal True;  +1 in one channel -> detected True   PASS
+  commissioning PASSED
+
+=== exposure census: 26 subject(s) ===
+  same exposure : 24
+  differing     : 2
+  not rendered  : 0
+  partition     : 26 = 26 found
+    109MSDCF                         SHIP +2.60 st (x6.063)  ->  HEAD +2.61 st (x6.105)
+    tweezers-cpl                     SHIP +1.13 st (x2.189)  ->  HEAD +1.14 st (x2.204)
+
+=== pixel census (decoded arrays, not hashes) ===
+  pixel-identical : 0
+  differing       : 26
+  not rendered    : 0
+  partition       : 26 = 26 found
+
+  subject                           %px changed   mean B/A  note
+  flower-bud-alone-cpl                100.0000%    1.11958  max |d| 52687
+  dry-erase-marker-head-cpl            99.9999%    0.91573  max |d| 21040
+  coffee-bean                          99.9998%    0.93179  max |d| 7211
+  lead-1-cpl                           99.9785%    2.05554  max |d| 65535
+  wrapped-text-2                       99.9759%    1.35163  max |d| 45397
+  flower-bud-with-background-fern-cpl     99.9742%    1.24691  max |d| 65535
+  highly-angled-ruler-mm-cpl           99.9738%    1.54714  max |d| 42321
+  bee-2-cpl                            99.9733%    1.31144  max |d| 65535
+  bee-3-cpl                            99.9720%    1.29726  max |d| 49647
+  wrapped-text-1                       99.9679%    1.34760  max |d| 49101
+  foam                                 99.9676%    0.85112  max |d| 41220
+  tweezers-cpl                         99.9659%    1.32671  max |d| 42823
+  109MSDCF                             99.9610%    1.29603  max |d| 65535
+  leaf-2-cpl                           99.9605%    2.07462  max |d| 65535
+  pencil-flatter-angle-cpl             99.9570%    1.34697  max |d| 36373
+  bee-1-cpl                            99.9567%    1.29446  max |d| 65535
+  lavendar-cpl                         99.9493%    1.36569  max |d| 65535
+  pencil-steep-angle-cpl               99.9452%    1.51308  max |d| 59090
+  couch-fibers-cpl                     99.9295%    1.42683  max |d| 46785
+  flat-on-ruler-cpl                    99.9271%    1.59662  max |d| 48901
+  113MSDCF                             99.9236%    2.26294  max |d| 51184
+  112MSDCF                             99.9230%    2.83400  max |d| 65535
+  coffee-bubbles                       99.9099%    0.87356  max |d| 11785
+  flowers-cpl                          99.8657%    1.48019  max |d| 56943
+  119MSDCF                             98.3565%    1.24892  max |d| 65535
+  flower-inner-edge-cpl                96.6234%    1.16818  max |d| 48186
+
+EXPOSURE MOVED on 2/26 subjects. Band comparisons against SHIP-V4 MUST be gain-normalised or they are measuring brightness.

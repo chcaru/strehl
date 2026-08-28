@@ -1,0 +1,83 @@
+{
+  "identity": {
+    "path": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+    "sha256": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490",
+    "size": 9568768,
+    "is_shipping_pin": true
+  },
+  "render": {
+    "dir": "C:\\dev\\strehl-out\\BUILD-RECERT\\arms\\RECERT-SIX",
+    "n_masters": 6,
+    "complete": true,
+    "only": [
+      "coffee-bubbles",
+      "lead-1-cpl",
+      "113MSDCF",
+      "flat-on-ruler-cpl",
+      "112MSDCF",
+      "foam"
+    ],
+    "exit": 0
+  },
+  "gate": {
+    "baseline_partition": "17 PASS, 0 FAIL, 9 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 0 NOT EXAMINED, 26 total (found 26)",
+    "partition": "0 PASS, 0 FAIL, 6 ACQUITTED, 0 ACQUITTAL EXPIRED, 0 REVIEW, 0 NOT EXAMINED, 6 total (found 6)",
+    "moves": [],
+    "regressions": [],
+    "expiries": [],
+    "exit": 0
+  },
+  "pair": {
+    "subjects": [
+      "112MSDCF",
+      "113MSDCF",
+      "coffee-bubbles",
+      "flat-on-ruler-cpl",
+      "foam",
+      "lead-1-cpl"
+    ],
+    "missing": [],
+    "summary": {
+      "grain": {
+        "n": 30,
+        "tested": 30,
+        "refused": 0,
+        "cleaner": 0,
+        "blur_trade": 0,
+        "softer": 0,
+        "median_d_floor": 0.0,
+        "median_d_structure": 0.0
+      },
+      "struct": {
+        "n": 30,
+        "tested": 28,
+        "refused": 2,
+        "cleaner": 0,
+        "blur_trade": 0,
+        "softer": 0,
+        "median_d_floor": 0.0,
+        "median_d_structure": 0.0
+      },
+      "mottle": {
+        "n": 30,
+        "tested": 24,
+        "refused": 6,
+        "cleaner": 0,
+        "blur_trade": 0,
+        "softer": 0,
+        "median_d_floor": 0.0,
+        "median_d_structure": 0.0
+      }
+    }
+  },
+  "timing_seconds": {
+    "identity": 0.0,
+    "render": 576.7,
+    "gate": 93.6,
+    "pair": 35.1,
+    "verdict": 0.0,
+    "TOTAL": 705.4
+  },
+  "verdict": "PARTIAL (6/26 subjects: coffee-bubbles, lead-1-cpl, 113MSDCF, flat-on-ruler-cpl, 112MSDCF, foam) -- PROMOTABLE -- no gate regression, no band bought its noise win out of structure. NOT a full certification; a promotion needs a 26-subject pass.",
+  "promotable": true
+}
