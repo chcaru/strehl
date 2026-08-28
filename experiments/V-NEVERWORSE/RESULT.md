@@ -3993,6 +3993,57 @@ is **unaffected**.
 
 
 
+### 9.28 My own report verifier was blind to a reversed conclusion, measured 6 of 6 against 0 of 5
+
+ORCH's broadcast of 2026-08-28 reports that a verifier of this lane's tested
+for the **presence** of the string "refuted" and passed **712 green checks**
+after that section's verdict was flipped to "confirmed", every number intact.
+Rather than assume the newest instrument was free of it, I planted the defect
+in `vn_verify927.py` -- the checker written hours earlier, which had reported
+56/56 GREEN on section 9.27.
+
+**It was completely blind.** Six plants that perturb a digit were all caught.
+Five plants that change no number at all and only reverse a claim were all
+missed:
+
+| plant | before the fix |
+|---|---|
+| L0 table verdict `FAIL(noise)` -> `PASS` | MISSED |
+| "**refuted it**" -> "confirmed it" | MISSED |
+| "verdict is **WITHHELD**" -> "is CONFIRMED" | MISSED |
+| "sign flip **survives**" -> "dies under" | MISSED |
+| "**is not licensed** as an acuity" -> "is licensed" | MISSED |
+
+So the 56/56 GREEN I reported certified the arithmetic of section 9.27 and
+left every one of its conclusions unguarded. The cause is the one ORCH names:
+the checks tested values near an anchor, and a value is still present when the
+sentence around it has been negated.
+
+**The repair is to derive the wording from the record rather than to test for
+it.** Each conclusion is now pinned to the datum that determines it: the L0
+table verdict must equal the verdict in `l0band/<subj>.json`; "WITHHELD"
+follows from `boundary_agrees` being false on both subjects; "survives"
+follows from `shipping > 1 > mean` at the qualified band on both subjects;
+"is not licensed" follows from L0 reading `FAIL(noise)`. Each check also
+forbids the phrasings that would reverse it, since a required phrase alone
+cannot notice an added negation.
+
+**Commissioned 13/13.** Six numeric plants, five conclusion plants, and -- to
+prove the derivations are live rather than hardcoded strings that would pass
+the document plants equally well -- **two record plants**: setting
+`boundary_agrees` true makes the unchanged document's "WITHHELD" wrong, and
+setting the L0 verdict to `PASS` makes its "is not licensed" wrong. Both are
+caught, so the conclusions are genuinely tied to the evidence. Baseline and
+post-restore GREEN are confirmed around every plant, and the document and the
+record are each restored from a TEMP copy rather than with `git checkout --`.
+
+**The generalisation, which is the part worth carrying.** A presence test
+certifies that a number was written down. It cannot certify what the document
+concluded from it. Any check whose expected value does not move when the
+evidence moves is not reading the evidence.
+
+
+
 ## 10. Files
 | file | what it does |
 |---|---|
@@ -4053,8 +4104,8 @@ is **unaffected**.
 | `vn_clipaudit.py` | counts pixels at the 16-bit ceiling across every population this lane's findings rest on, after ORCH's HEAD exposure regression. Commissioned 5/5 against a planted 92.03%-clipped image, a clean image and an unreadable file; outcomes partition so a file it could not open never counts as clean (S9.26.5) |
 | `vn_qband.py` | re-measures the N-invariance ladder on a band QUALIFIED per subject, after ORCH's CORRECTION #4. Carries a spectrally truncated ground-truth fixture that **refuted this lane's own hypothesis** that large argmax/mean scene ratios prove fine-scale manufacture; the two failed checks were removed from the gate and recorded as a refutation rather than tuned until they passed. 6/6 on instrument properties (§9.27) |
 | `vn_l0band.py` | qualifies the band `vn_plateau.sharpness` actually reads, by applying V-LINEAR's focus discriminability to the finest Laplacian level. Commissioned both ways on one code path -- through-focus 17.3817 PASS, grain-only 1.0002 FAIL(noise), separation 17.3778x -- with an inertness guard on the plants. Withholds its verdict when it cannot reproduce V-LINEAR's published boundary, which is what it did on both subjects (§9.27) |
-| `vn_verify927.py` | re-derives every number quoted in §9.27 from the records, anchored so repeated short values cannot satisfy the wrong check: 55/55. It **caught a false claim in §9.27's own first draft** -- that `0.20-0.25` appeared nowhere in the file, when it appears twice in retracted §9.17 |
-| `vn_negctl927.py` | negative control for that checker: 6 plants, each anchored on a string proven unique and hard-erroring if it does not land, restored from a TEMP copy rather than `git checkout --`. 6/6 caught, baseline and post-restore GREEN both confirmed |
+| `vn_verify927.py` | re-derives every number quoted in §9.27 from the records, anchored so repeated short values cannot satisfy the wrong check, and pins each CONCLUSION to the datum that determines it: 62/62. It **caught a false claim in §9.27's own first draft** -- that `0.20-0.25` appeared nowhere in the file, when it appears twice in retracted §9.17 |
+| `vn_negctl927.py` | negative control for that checker: 6 numeric plants + 5 conclusion plants + 2 **record** plants, each anchored on a string proven unique and hard-erroring if it does not land, document and record both restored from TEMP copies rather than `git checkout --`. 13/13 caught. Its first run measured the blindness recorded in §9.28 -- 6 of 6 numeric caught against 0 of 5 conclusion |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. The read-only source
 data at `D:\personal\macro\` was never written.

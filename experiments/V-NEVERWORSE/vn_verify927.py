@@ -38,10 +38,17 @@ def _heading(text, head):
     return m.start()
 
 
-def section(text, head="### 9.27", nxt="## 10. Files"):
+def section(text, head="### 9.27", nxt=None):
+    """Section 9.27 up to the NEXT heading of any level.
+
+    Originally this stopped at the literal `## 10. Files`, which broke as soon
+    as 9.28 was added -- the body would have swallowed it and the occurrence
+    counts below would have silently shifted.  Stopping at the next heading is
+    the property actually wanted.
+    """
     i = _heading(text, head)
-    m = re.search(r"^" + re.escape(nxt), text[i:], re.M)
-    return text[i:i + m.start()] if m else text[i:]
+    m = re.search(r"^#{2,3} ", text[i + len(head):], re.M)
+    return text[i:i + len(head) + m.start()] if m else text[i:]
 
 
 class Checker:
@@ -74,6 +81,33 @@ class Checker:
         else:
             self.mismatched.append(
                 "%s: expected %d occurrence(s), found %d" % (name, want, n))
+
+    def conclusion(self, name, anchor, must_say, must_not_say, window=520):
+        """Pin a CONCLUSION to the record that determines it.
+
+        A presence test for a word like "refuted" is satisfied by any duplicate
+        or paraphrase elsewhere in the document and cannot notice that the
+        sentence now says the opposite.  So each check here takes a window
+        around ONE anchor, requires the phrasing the RECORD implies, and
+        forbids the phrasings that would reverse it.  `must_say` is derived
+        from data wherever a record exists, so the document cannot drift away
+        from its own evidence.
+        """
+        if anchor not in self.flat:
+            self.unresolvable.append("%s: anchor %r not present" % (name, anchor))
+            return
+        i = self.flat.find(anchor)
+        w = self.flat[i:i + window]
+        if must_say not in w:
+            self.mismatched.append(
+                "%s: does not assert %r" % (name, must_say))
+            return
+        for bad in must_not_say:
+            if bad in w:
+                self.mismatched.append(
+                    "%s: asserts the reverse, %r" % (name, bad))
+                return
+        self.verified.append("%s asserts %r" % (name, must_say))
 
     def report(self):
         total = (len(self.verified) + len(self.mismatched)
@@ -186,10 +220,52 @@ def main():
     # A bare total would let an occurrence move between sections unnoticed.
     ck.count("0.20-0.25 anywhere in the file", r"0\.20-0\.25", 4, whole)
 
+    # ---- CONCLUSIONS, pinned to the records that determine them.
+    # Added after ORCH's 2026-08-28 broadcast reported that a verifier of this
+    # lane's passed 712 checks with a section's verdict flipped from "refuted"
+    # to "confirmed".  Measured on THIS verifier before the fix: 6 of 6 numeric
+    # plants caught, 0 of 5 conclusion plants caught.  A GREEN that certifies
+    # only arithmetic is worth very little.
+    cb = json.load(open(os.path.join(LB, "coffee-bubbles.json")))
+    m112 = json.load(open(os.path.join(LB, "112MSDCF.json")))
+    qcb = ratios(json.load(open(os.path.join(QB, "coffee-bubbles.json"))))
+    qm = ratios(json.load(open(os.path.join(QB, "112MSDCF.json"))))
+
+    for subj, rec in (("coffee-bubbles", cb), ("112MSDCF", m112)):
+        wrong = [v for v in ("PASS", "MARGINAL") if v != rec["L0"]["verdict"]]
+        ck.conclusion("%s L0 table verdict" % subj, "`%s` | **" % subj,
+                      rec["L0"]["verdict"], wrong, window=120)
+
+    # WITHHELD is not a stylistic choice -- it follows from boundary_agrees
+    withheld = not (cb["boundary_agrees"] or m112["boundary_agrees"])
+    ck.conclusion("subject-level verdict", "The subject-level verdict is",
+                  "WITHHELD" if withheld else "GRANTED",
+                  ["CONFIRMED", "ESTABLISHED", "GRANTED"] if withheld else [])
+
+    # the sign flip survives only if shipping gains where the mean loses, on
+    # BOTH subjects; the word in the document must follow the arithmetic
+    survives = all(q["shipping"]["qual"] > 1.0 > q["mean"]["qual"]
+                   for q in (qcb, qm))
+    ck.conclusion("sign flip survival", "Section 9.23.6's sign flip",
+                  "survives" if survives else "dies",
+                  ["dies", "does not survive", "fails"] if survives
+                  else ["survives"])
+
+    # the acuity claim is licensed only if L0 is focus-discriminable
+    lic = cb["L0"]["verdict"] != "FAIL(noise)"
+    ck.conclusion("acuity licensing", '"9.3% relative sharpness cost"',
+                  "is licensed as an acuity" if lic
+                  else "is not licensed as an acuity",
+                  [] if lic else ["cost\" is licensed as an acuity"])
+
+    # the fixture refuted the hypothesis; the direction is fixed by 1.904 <
+    # 8.704, both of which are checked as numbers elsewhere in this run
+    ck.conclusion("hypothesis refutation", "spectrally truncated so",
+                  "refuted it", ["confirmed it", "supported it", "upheld it"])
+
     print("section 9.27 -- re-derivation from records\n")
     ok = ck.report()
     sys.exit(0 if ok else 1)
-
 
 if __name__ == "__main__":
     main()
