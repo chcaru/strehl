@@ -191,14 +191,39 @@ a develop-path offset. V-LINEAR's actual `bee-1-cpl` value at 0.20-0.25 is **27.
 offset" was an artifact of the mismatch. The `113MSDCF` agreement above is real and is
 within-subject; the corpus-level claim was not licensed and I should not have made it.
 
-**Where the `bee-1-cpl` disagreement most likely lives, stated as a hypothesis and not a
-result:** defocus distance. V-LINEAR uses `far = 20` real frames for every subject, and
-their own section 4 measures bee's `R` spanning **4.36x** across `far` in {8, 20, auto=50}
-against <=1.13x on every other subject. On `113MSDCF` (N=63) twenty frames is a third of
-the stack; on `bee-1-cpl` (N=299, step 4) it is a small fraction of the focus range, so
-"defocused" is a much weaker defocus there. My bee probes span frames 0-200 under my own
-partner rule. That makes bee's `R` the least transferable number in their table and is
-cheap to test: re-run one instrument at the other's defocus distance on bee alone.
+### 3c.2 My defocus-distance hypothesis, tested and REFUTED by my own data
+
+I published a hypothesis here: that the `bee-1-cpl` disagreement lived in defocus
+distance, because V-LINEAR's `far = 20` real frames is a weak defocus on a 299-frame stack
+while my rule takes the globally most-defocused probe. **I tested it and it is wrong.**
+`experiments/V-SOFTCHECK/fardep.py` re-derives `R` at a fixed partner distance `k` and
+sweeps it, entirely from the cached per-tile band powers -- no re-render. Reading
+pre-registered in the script before running: *rise steeply toward their magnitude, or the
+hypothesis is dead.*
+
+`R` at 0.30-0.35 on TOP tiles, by partner distance:
+
+| subject | k=1 | k=2 | k=3 | k=5 | k=8 | k=10 | k=15 | global (published) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `113MSDCF` | 1.096 | 1.127 | 1.191 | 1.208 | 1.263 | **1.262** | 1.354 | **1.553** |
+| `bee-1-cpl` | 1.331 | **1.488** | 1.581 | 1.556 | 1.597 | 1.594 | 1.533 | **1.848** |
+
+Bold marks each subject's equivalent of V-LINEAR's `far = 20` real frames (k=10 at 2
+frames per probe step; k=2 at 10). **`R` rises with distance and plateaus far below their
+magnitude, and at their own defocus distance my bee reading FALLS to 1.4877 -- further
+from their 4.732, not closer.** Distance cannot explain a gap it moves the wrong way.
+The hypothesis is withdrawn. (`bee` k=20 is degenerate at n=21 probes -- only extreme-peak
+tiles have a partner that far -- and is excluded from this reading.)
+
+**Two things this does establish.** First, the global-argmin rule I published is the
+choice most *generous* to qualification: it yields the highest `R` at every band on both
+subjects. So my MARGINAL verdict is already the most favourable reading my data supports,
+and **under every defocus rule I can construct, `bee-1-cpl` at 0.30-0.35 is MARGINAL --
+1.33 to 1.85 -- and never PASS.** Second, the remaining candidate for the gap is the
+**develop path** (`--srgb` here against `--linear-srgb --demosaic` there), which is the
+variable V-LINEAR itself identified. **I have not tested it and I am not asserting it.**
+Having just had one hypothesis killed by measurement, I am not replacing it with another
+unmeasured one.
 
 ## 3d. The selection premium, and the noise-inflation guard (V-NEVERWORSE `f1f40150`)
 
