@@ -1094,3 +1094,94 @@ $ python experiments\ORCH-drift-check\clipcheck.py D:\strehl-out\BUILD-CROP
 
 All 17 renders cited in §10 and §11 pass, including every `--pyramid-bands` arm
 and both CA arms.
+
+---
+
+## 13. Harness self-check under ORCH correction #5, and band-naming compliance
+
+Two obligations from correction #5 bind this lane: run the conclusion-flip check
+on my own harness, and never quote a sharpness claim without naming the band and
+the subject's qualification in it. Neither withdrawn number (-44.6%, 27.2%) is
+load-bearing anywhere in this report, so nothing here is held or reversed.
+
+### 13.1 The trap: 100.0000% is satisfied by a degenerate case
+
+`nullcheck.py` compared against itself, which is the reading a self-comparison
+would produce:
+
+    === TRAP-self-vs-self  (3516x2344 vs base window at (0,0))
+      R   100.0000%    0    1.00000
+      G   100.0000%    0    1.00000
+      B   100.0000%    0    1.00000
+
+This is **character-for-character the section 11 result**. So the section 11
+output, standing alone, does not distinguish "the placement is the identity"
+from "I compared a file with itself". It is rescued only by external evidence:
+
+  n-base.tiff        49,450,019 bytes  SHA256 A9F2AAA1AD45FF05
+  n-crop.tiff        49,162,127 bytes  SHA256 B86CA3BAA5F8F7EA
+  n-crop-noca2.tiff  49,162,127 bytes  SHA256 22EB2A8B7CDC3E7F
+
+three distinct files, and the window comparison runs at 3506x2337 against a
+3516x2344 base, so it is not self-vs-self.
+
+### 13.2 Live fire: the detector does report failure
+
+Same detector, same base, same offset, different render (CA left on):
+
+      R     4.8217%   1402   0.50747
+      G   100.0000%      0   1.00000
+      B    12.5086%    399   0.80309
+
+Not stuck at 100%.
+
+### 13.3 Conclusion-flip arms: 4 planted, 4 caught -- by one column only
+
+Each mutant flips the conclusion "the placement is the identity" into "it is
+displaced by one pixel", leaving every other input correct.
+
+    offset   bit-exact R / G / B        max|d|   lap ratio R
+    (5,4)*   100.0000 /100.0000/100.0000     0     1.00000   <- real
+    (4,4)      3.9154 /  1.0618 /  3.7245  3208    1.00004
+    (6,4)      3.9153 /  1.0620 /  3.7244  3208    0.99998
+    (5,3)      3.8504 /  1.0176 /  2.9473  2564    1.00003
+    (5,5)      3.8501 /  1.0176 /  2.9471  2564    0.99993
+
+**The bit-exactness column catches 4 of 4. The laplacian-ratio column catches
+0 of 4.** A one-pixel misplacement changes up to 3208 DN while leaving the
+laplacian ratio at 1.00000 to five figures, because a shifted image is exactly
+as sharp as an unshifted one.
+
+Instrument warning for every lane: **a laplacian / band-energy ratio cannot
+detect a misplacement.** Used alone as a null detector it is precisely the
+defect ORCH described -- it would have passed all four conclusion-flip arms
+green with every number correct. It is corroborative only, and valid here solely
+because it is pinned to a bit-exactness arm that does discriminate.
+
+### 13.4 Band-naming compliance
+
+Audit of this document: 29 lines mention sharpness, softness or laplacian
+energy; **0 name a band, and 0 name a subject's qualification at one.**
+
+Under correction #5 that would be disqualifying if any of them were a sharpness
+claim. None is, and this section makes it explicit rather than leaving it to be
+inferred:
+
+- The laplacian statistic used here is **broadband** (a 4-neighbour discrete
+  laplacian over the whole plane). It is not band-limited, no subject in this
+  report has been band-qualified, and per 13.3 it cannot even discriminate a
+  shift. It therefore cannot support a sharpness claim in either direction, and
+  no sentence in this report should be read as one.
+- Section 3.4 already dismantles this lane's own 9.5% laplacian number, and
+  section 0 records no sharpness claim for crop mode. That position is unchanged
+  and is now additionally justified by 13.3.
+- The laplacian ratio of 1.00000 in section 11 is a **corollary of
+  bit-exactness**, not an independent measurement: bit-identical images match on
+  every statistic trivially. It is reported for completeness, not as evidence.
+- Section 10's +9.3% is a **level/brightness** claim, not a sharpness claim, so
+  the band rule does not bind it. It is an absolute-DN mean over an annulus.
+
+The three findings stay separated exactly as required: crop **differs** from
+scale near the border (section 10, level); the CA correction makes R and B
+**differ** from an uncorrected render (section 11, bits); and nothing in this
+lane is claimed to **be softer** or sharper than anything else.
