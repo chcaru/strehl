@@ -303,6 +303,33 @@ PLANTS += [
 PLACEBO = ("So the counterfactual below is run on the exponent, not on a tolerance.",
            "The counterfactual below is therefore run on the exponent, not a tolerance.")
 
+# CONCLUSION PLANTS.  Every plant above perturbs a DIGIT.  ORCH's broadcast of
+# 2026-08-28 reports a lane verifier passing 712 green checks after a section
+# verdict was flipped from "refuted" to "confirmed" with every number left
+# intact -- and names this lane's checker as the one that did it.  These plants
+# change NO number.  Each reverses a load-bearing conclusion, starting with the
+# headline answer of the entire report.
+CONCLUSION_PLANTS = [
+    ("**Answer, in one line.** The invariant as stated is **VIOLATED**",
+     "**Answer, in one line.** The invariant as stated is **UPHELD**",
+     "headline answer VIOLATED -> UPHELD"),
+    ("**never measurable from the existing instrument**",
+     "**fully measurable from the existing instrument**",
+     "gauge finding reversed"),
+    ("refuted by a control it cannot survive",
+     "confirmed by a control it survives",
+     "9.18 heading refuted -> confirmed"),
+    ("**The second half is refuted.**",
+     "**The second half is confirmed.**",
+     "ORCH dilution second half"),
+    ("the third time the data has refused it",
+     "the third time the data has supported it",
+     "dilution refusal -> support"),
+    ("the fix is the only arm that **loses\nabsolute scene** as N rises",
+     "the fix is the only arm that **gains\nabsolute scene** as N rises",
+     "fix loses -> gains scene at depth"),
+]
+
 
 def run():
     p = subprocess.run([sys.executable, CHK], capture_output=True)
@@ -322,6 +349,7 @@ def main():
     shutil.copyfile(DOC, BAK)
     shutil.copyfile(CHK, CBAK)
     caught = missed = crashes = 0
+    ccaught = cmissed = 0
     placebo_ok = crash_ok = False
     try:
         rc, out = run()
@@ -342,6 +370,20 @@ def main():
             else:
                 missed += 1
                 print("  MISSED  %-30s rc=%d" % (label, rc))
+
+        ccaught = cmissed = 0
+        print("  -- conclusion plants (no number changes) --")
+        for old, new, label in CONCLUSION_PLANTS:
+            apply(old, new, label)
+            rc, out = run()
+            shutil.copyfile(BAK, DOC)
+            if rc == 1:
+                ccaught += 1
+                print("    caught  %s" % label)
+            else:
+                cmissed += 1
+                print("    MISSED  %-38s rc=%d" % (label, rc))
+        print("  conclusion plants: %d caught, %d MISSED" % (ccaught, cmissed))
 
         apply(PLACEBO[0], PLACEBO[1], "placebo")
         rc, _ = run()
@@ -366,11 +408,16 @@ def main():
 
     same = (io.open(DOC, encoding="utf-8").read()
             == io.open(BAK, encoding="utf-8").read())
-    print("\n%d/%d plants caught; placebo %s; %d crash(es); restore %s"
-          % (caught, len(PLANTS), "clean" if placebo_ok else "DIRTY", crashes,
+    print("\n%d/%d numeric plants caught; %d/%d CONCLUSION plants caught; "
+          "placebo %s; %d crash(es); restore %s"
+          % (caught, len(PLANTS), ccaught, len(CONCLUSION_PLANTS),
+             "clean" if placebo_ok else "DIRTY", crashes,
              "verified byte-identical" if same else "DIFFERS"))
-    ok = (caught == len(PLANTS) and placebo_ok and crashes == 0
-          and crash_ok and same)
+    if cmissed:
+        print("BLIND SPOT: %d conclusion(s) can be reversed with every number "
+              "left intact and this checker still reads GREEN." % cmissed)
+    ok = (caught == len(PLANTS) and ccaught == len(CONCLUSION_PLANTS)
+          and placebo_ok and crashes == 0 and crash_ok and same)
     return 0 if ok else 1
 
 

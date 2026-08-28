@@ -4037,6 +4037,57 @@ caught, so the conclusions are genuinely tied to the evidence. Baseline and
 post-restore GREEN are confirmed around every plant, and the document and the
 record are each restored from a TEMP copy rather than with `git checkout --`.
 
+#### 9.28.1 The instrument ORCH actually named was worse, and its headline answer was guarded by nothing
+
+`vn_verify927.py` above is a small checker over one section. The instrument
+ORCH's broadcast describes -- the one that passed **712** green checks with a
+verdict reversed -- is `vn_verify9.py`, which now stands at **996 checks** over
+sections 9.1-9.24. I planted six conclusion reversals in it, none of which
+changes a single digit:
+
+| plant | before | after |
+|---|---|---|
+| headline invariant verdict, VIOLATED -> UPHELD | MISSED | caught |
+| headline gauge finding, never -> fully measurable | MISSED | caught |
+| 9.18 heading verdict, refuted -> confirmed | MISSED | caught |
+| 9.18 "second half" verdict, refuted -> confirmed | MISSED | caught |
+| dilution asked three times, refused -> supported | MISSED | caught |
+| 9.23 absolute scene at depth, loses -> gains | MISSED | caught |
+
+**95 of 95 numeric plants caught, 0 of 6 conclusion plants caught.** The worst
+of these is the first. `grep` across every `vn_verify*.py` in this lane for
+`VIOLATED`, `Answer, in one line` and `never measurable` returns **no matches**:
+the one-line answer of this entire report -- whether the never-worse invariant
+is violated or upheld -- **was checked by no instrument at all.** It could be
+reversed to `UPHELD` and every one of the lane's ~1,300 checks would still read
+GREEN. It is now derived from `report/table.json`: the headline word is
+required to be `VIOLATED` exactly because that record carries a non-empty
+`violations["blotch"]` list, and it would demand `UPHELD` if that list emptied.
+
+**A second, independent defect in the same instrument.** Its section slice was
+`doc.index("## 9. ...")` to `doc.index("## 10. Files")` -- unanchored, and
+`## 10. Files` occurs twice, first **quoted inside prose** at offset 182,834 and
+only then as the real heading at 234,021. The checker was therefore reading a
+section **51,187 characters short -- a third of section 9 -- and reporting
+"981 checks: 981 passed, 0 FAILED, 0 REFUSED"**. This is the third time this
+lane has been bitten by an unanchored heading match, and the pattern is now
+fixed in both checkers: bound every section with `re.search(r"^...", re.M)`.
+
+Anchoring the slice immediately produced **10 new FAILs** -- seven `L0`-`L6`
+plateau rows and three `pyramid.rs` quotations that are no longer unique once
+9.25 and 9.27 are visible. Those checks had been passing only because the text
+that made them ambiguous was outside the slice. The fix is not to widen the
+scope but to **state** it: this checker owns 9.1-9.24, sections 9.25/9.27/9.28
+have their own verifiers, and the summary now prints `not examined by this
+checker: 9.25, 9.27, 9.28`. The truncated slice happened to end in the same
+place by accident; the difference is that it disclosed nothing, and **an
+unexamined section that prints no line is indistinguishable from a passing
+one.**
+
+Commissioned: **95/95 numeric and 6/6 conclusion**, placebo clean, the crash arm
+still returning `REFUSED` rather than a pass, and the document restored
+byte-identical.
+
 **The generalisation, which is the part worth carrying.** A presence test
 certifies that a number was written down. It cannot certify what the document
 concluded from it. Any check whose expected value does not move when the

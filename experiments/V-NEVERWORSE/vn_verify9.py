@@ -122,10 +122,59 @@ def seg(body, a, b, what):
     return body[body.index(a):body.index(b)]
 
 
+def conclusion(body, pat, want, what, forbid=()):
+    """Parse a verdict WORD and compare it to what the evidence requires.
+
+    The §9.20 block below established this idiom and it is the only defence
+    against the defect ORCH broadcast on 2026-08-28: a presence test for
+    "refuted" is satisfied by any other use of the word, so a section's
+    conclusion can be reversed with every number left intact.  Measured on
+    this very checker: 95/95 numeric plants caught, 0/6 conclusion plants.
+    `forbid` additionally rejects the reversed phrasing, because a required
+    word cannot notice a negation added around it.
+    """
+    global checked
+    checked += 1
+    m = re.findall(pat, _flat(body))
+    if len(m) != 1:
+        fails.append("%s: verdict pattern %r matched %d times, need 1"
+                     % (what, pat, len(m)))
+        return
+    got = m[0] if isinstance(m[0], str) else m[0][0]
+    if got.strip().lower() != want.strip().lower():
+        fails.append("%s: the document concludes %r but the evidence "
+                     "requires %r" % (what, got, want))
+    for bad in forbid:
+        checked += 1
+        if bad.lower() in _flat(body).lower():
+            fails.append("%s: reversed phrasing %r is present" % (what, bad))
+
+
 def main():
     global checked
     doc = io.open(DOC, encoding="utf-8").read()
-    s9 = doc[doc.index("## 9. Falsifying the fix"):doc.index("## 10. Files")]
+    # The section bound MUST be line-anchored. `doc.index("## 10. Files")`
+    # matched the heading QUOTED IN PROSE 51,187 characters early, silently
+    # truncating a third of section 9 -- and the summary still read
+    # "981 checks: 981 passed, 0 FAILED, 0 REFUSED", because an unreached
+    # check is not a failing one.
+    _a = re.search(r"^## 9\. Falsifying the fix", doc, re.M)
+    _b = re.search(r"^## 10\. Files", doc, re.M)
+    if _a is None or _b is None:
+        refused.append("section 9 bounds not found at line start")
+        s9full = ""
+    else:
+        s9full = doc[_a.start():_b.start()]
+    # This checker owns 9.1-9.24. Sections 9.25, 9.27 and 9.28 have their own
+    # verifiers (vn_verify25.py, vn_verify927.py) and are NOT examined here.
+    # They are named in the summary so an unexamined section cannot be read as
+    # a passing one -- the old truncated slice ended in the same place by
+    # accident and disclosed nothing.
+    _own = re.search(r"^### 9\.25", s9full, re.M)
+    s9 = s9full[:_own.start()] if _own else s9full
+    notmine = [m.group(0).split()[1] for m in
+               re.finditer(r"^### 9\.\d+", s9full[_own.start():], re.M)] \
+        if _own else []
 
     def sub(head):
         """Slice ONE '### 9.x' subsection out of section 9.
@@ -1250,9 +1299,81 @@ def main():
             fails.append("9.17-9.22 carry retracted numbers but no retraction "
                          "banner points at 9.23")
 
+    # ---- CONCLUSIONS, derived from the records rather than looked for ----
+    # Measured blind spot: 95/95 numeric plants caught, 0/6 conclusion plants.
+    # The headline answer of the whole report was guarded by NO verifier in
+    # this lane, so it is guarded here.
+    import json as _json
+    _tb = _json.load(io.open(
+        os.path.join(OUTD, "report", "table.json"), encoding="utf-8"))
+    _viol = _tb["violations"]["blotch"]
+    _head = doc[:doc.index("## 0.")] if "## 0." in doc else doc[:4000]
+    conclusion(
+        _head,
+        r"\*\*Answer, in one line\.\*\* The invariant as stated is \*\*(\w+)\*\*",
+        "VIOLATED" if _viol else "UPHELD",
+        "headline invariant verdict (%d blotch violations on record)"
+        % len(_viol),
+        forbid=("invariant as stated is **UPHELD**",
+                "invariant as stated is **HOLDS**") if _viol else ())
+    conclusion(
+        _head,
+        r"it was \*\*(\w+) measurable from the existing instrument\*\*",
+        "never", "headline gauge finding",
+        forbid=("**fully measurable from the existing instrument**",
+                "**always measurable from the existing instrument**"))
+
+    if s18:
+        # argmax has share 1.000 -- no dilution to have -- and still softens.
+        _ar = NI["coffee-bubbles"]["verdict"]["argmax"]
+        _share_is_one = abs(_ar["top_deep"] - 1.0) < 1e-9
+        _still_softens = _ar["snr_ratio"]["0.30-0.35"] < 1.0
+        conclusion(
+            s9[s9.index("### 9.18"):s9.index("### 9.19")],
+            r"### 9\.18[^|]*?-- (\w+) by a control it",
+            "refuted" if (_share_is_one and _still_softens) else "confirmed",
+            "9.18 heading verdict (argmax share=%.6f, softens=%s)"
+            % (_ar["top_deep"], _still_softens),
+            forbid=("confirmed by a control it survives",))
+
+    _dil = s9[s9.index("**Monotone in selectivity"):] if \
+        "**Monotone in selectivity" in s9 else ""
+    if _dil:
+        conclusion(
+            _dil[:1200],
+            r"the third time the data has (\w+) it",
+            "refused", "dilution asked three times",
+            forbid=("the third time the data has supported it",
+                    "the third time the data has confirmed it"))
+
+    if s18:
+        conclusion(
+            s18, r"\*\*The second half is (\w+)\.\*\*",
+            "refuted" if (_share_is_one and _still_softens) else "confirmed",
+            "9.18 ORCH's second half",
+            forbid=("**The second half is confirmed.**",))
+
+    # The word must agree with the two numbers beside it: if the fix retains
+    # less than unity of absolute scene at both scales, it LOSES scene.
+    _ls = grab(_flat(s9),
+               r"the fix is the only arm that \*\*(\w+) absolute scene\*\* "
+               r"as N rises: mid (\d+\.\d+), fine (\d+\.\d+)",
+               "9.23 absolute-scene verdict sentence")
+    if _ls is not None:
+        checked += 1
+        _want = "loses" if (float(_ls[1]) < 1.0 and float(_ls[2]) < 1.0) \
+            else "gains"
+        if _ls[0] != _want:
+            fails.append("9.23 absolute scene: document says %r but mid=%s "
+                         "fine=%s require %r"
+                         % (_ls[0], _ls[1], _ls[2], _want))
+
     print("\n%d checks: %d passed, %d FAILED, %d REFUSED"
           % (checked, checked - len(fails) - len(refused), len(fails),
              len(refused)))
+    print("  not examined by this checker: %s (own verifiers: "
+          "vn_verify25.py, vn_verify927.py)"
+          % (", ".join(notmine) if notmine else "none"))
     for f in fails:
         print("  FAIL    " + f)
     for r_ in refused:
