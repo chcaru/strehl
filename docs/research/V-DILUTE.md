@@ -774,3 +774,152 @@ experiments/V-DILUTE/bandsweep_render.ps1  --pyramid-bands sweep
 experiments/V-DILUTE/bandsweep_score.py    sweep scorer, acuity+noise+null
 experiments/V-DILUTE/nullnorm.py           null-normalised acuity, corpus table
 ```
+
+---
+
+# V-DILUTE Assignment 2 — ADDENDUM: re-check under ORCH correction #4
+
+**Correction #4** (V-LINEAR `31eda43a`, `docs/research/V-LINEAR-BANDS.md`): the
+signal/noise boundary moves by subject, **0.17 → 0.48 cyc/px**, so the fixed
+"band 1 = SIGNAL" gate I was instructed to use is not licensed corpus-wide.
+
+**RESULT OF THE RE-CHECK: re-checked, and nothing moves.** The verdict and every
+headline number stand. Below is why, measured rather than argued.
+
+## A. Two of my seven subjects were already qualified, and I used them correctly
+
+V-LINEAR §3 measures `119MSDCF` → **0.25** and `113MSDCF` → **0.25**. Both are in
+my corpus. On both, band 1 (0.17–0.25) is fully qualified SIGNAL — PASS in
+0.17–0.20 *and* 0.20–0.25 (`R` = 5.898/2.790 and 4.874/2.419). So on the two
+subjects where the answer is known, my band choice was correct by measurement.
+
+The other five (`coffee-bubbles`, `109MSDCF`, `foam`, `coffee-bean`,
+`bee-3-cpl`) are **unmeasured**. `bee-3-cpl`'s sibling `bee-1-cpl` measures
+**0.48**, the corpus maximum — ORCH's dangerous direction, where a band I called
+NOISE is largely signal.
+
+## B. Why the verdict cannot depend on the boundary: the null is flat in *every* band
+
+The fixed-band error bites when there is a **differential** effect between bands
+and you read the wrong one. My result is a null, and a null that is flat across
+the whole frequency axis is immune to moving a boundary *within* that axis.
+
+Null-normalised ratio, `--pyramid-base weighted` vs `mean`, `--pyramid-bands 7`,
+**every band reported**, EDGE row then FLAT row:
+
+| subject | N | boundary | 0.50 | 0.25 | 0.17 | 0.08 | 0.04 | 0.02 | max dev 0.17–0.50 |
+|---|---:|---:|---|---|---|---|---|---|---:|
+| coffee-bubbles | 19 | — | 0.9982 | 0.9982 | 0.9982 | 0.9983 | 0.9992 | 1.0000 | **0.0018** |
+| | | | 0.9990 | 0.9988 | 0.9987 | 0.9988 | 0.9987 | 0.9987 | |
+| 109MSDCF | 22 | — | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | **0.0000** |
+| | | | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | |
+| 119MSDCF | 33 | **0.25** | 1.0001 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | **0.0002** |
+| | | | 1.0002 | 1.0002 | 1.0002 | 1.0001 | 1.0000 | 1.0000 | |
+| 113MSDCF | 63 | **0.25** | 1.0001 | 1.0001 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | **0.0004** |
+| | | | 1.0004 | 1.0002 | 1.0002 | 1.0002 | 1.0001 | 0.9999 | |
+| foam | 100 | — | 1.0002 | 1.0003 | 1.0002 | 1.0001 | 0.9999 | 1.0000 | **0.0003** |
+| | | | 1.0001 | 1.0002 | 1.0002 | 1.0000 | 0.9998 | 1.0000 | |
+| coffee-bean | 105 | — | 0.9984 | 0.9979 | 0.9975 | 0.9972 | 0.9978 | 1.0000 | **0.1064** |
+| | | | 0.8936 | 0.8994 | 0.9170 | 0.9149 | 0.9095 | 0.9209 | (FLAT only) |
+| bee-3-cpl | 299 | ~0.48? | 0.9991 | 1.0005 | 1.0017 | 1.0008 | 0.9985 | 1.0000 | **0.0034** |
+| | | | 0.9973 | 0.9966 | 0.9948 | 0.9947 | 0.9967 | 0.9974 | |
+
+Bands 0 and 1 together span **0.17–0.50 cyc/px** and therefore contain *every*
+boundary V-LINEAR observed. On six of seven subjects the deviation anywhere in
+that range, at either site type, is **≤ 0.0034**. **No choice of boundary within
+V-LINEAR's measured range changes the verdict on those six.** They need no
+per-subject qualification, which is a stronger statement than qualifying them.
+
+## C. The boundary-free restatement of the confinement result
+
+"99.301% below 0.010 cyc/px / 0.035% in the SIGNAL band" used a band label that
+is no longer licensed. Restated against **fixed absolute frequencies**, using the
+corpus **minimum** boundary 0.17 as a conservative upper bound (every subject's
+boundary is ≥ 0.17, so its share above its own boundary is ≤ its share above
+0.17):
+
+| subject | N | max abs diff | rms | share ≥ 0.17 cyc/px | share ≥ 0.48 cyc/px |
+|---|---:|---:|---:|---:|---:|
+| coffee-bubbles | 19 | 213.9 DN | 22.4 | 6.288% | 0.015% |
+| 109MSDCF | 22 | **2.1 DN** | 0.308 | 45.727% *(of quantisation)* | 0.132% |
+| 119MSDCF | 33 | 13.7 DN | 1.90 | 0.940% | 0.003% |
+| 113MSDCF | 63 | 10.0 DN | 1.22 | 2.590% | 0.007% |
+| foam | 100 | 149.4 DN | 16.6 | 2.535% | 0.006% |
+| coffee-bean | 105 | **1803.7 DN** | 437.0 | **0.425%** | 0.001% |
+| bee-3-cpl | 299 | 1188.8 DN | 324.0 | **0.313%** | 0.001% |
+
+**Wherever the base band's contribution has real amplitude, ≤6.3% of it lies
+above the corpus-minimum boundary and ≤0.015% above the corpus-maximum.** The
+one large high-frequency share (109MSDCF, 45.7%) is a share of **2.1 DN** — the
+quantisation floor, whose white spectrum concentrates in the widest annulus.
+This row is boundary-free by construction and does not move.
+
+## D. The band-count sweep is band-independent too
+
+The sweep conclusion was also read off band 1. Re-read in every band,
+null-normalised, EDGE sites:
+
+**109MSDCF (N=22)**
+
+| bands | 0.50 | 0.25 | 0.17 | 0.08 | 0.04 | null |
+|---|---|---|---|---|---|---|
+| 3 | 0.9499 | 0.9467 | 0.9475 | 0.9577 | 0.9768 | 0.9875 |
+| 5 | 0.9972 | 0.9910 | 0.9861 | 0.9862 | 0.9920 | 0.9953 |
+| **7** | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| 9 | 0.9982 | 0.9988 | 0.9996 | 1.0006 | 1.0013 | 1.0016 |
+
+**bee-3-cpl (N=299)**
+
+| bands | 0.50 | 0.25 | 0.17 | 0.08 | 0.04 | null |
+|---|---|---|---|---|---|---|
+| 5 | 1.0814 | 1.0790 | 1.0751 | 1.0653 | 1.0455 | **0.9197 VOID** |
+| **7** | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| 9 | 0.9858 | 0.9862 | 0.9868 | 0.9891 | 0.9946 | 1.0121 |
+
+**The ordering of arms is identical in every column.** "Acuity saturates at the
+shipping default and does not improve beyond it" reads the same at 0.50, 0.25 and
+0.17 cyc/px, so it holds whatever boundary these subjects turn out to have. The
+`bands 5` row at N=299 stays void on its null (8% global offset), as before.
+
+## E. The one row that does move, and what it actually is
+
+**`coffee-bean` (N=105)** is the exception and I flag it rather than bury it. Its
+FLAT-site ratio is **0.894–0.921 uniformly across all six bands** while its EDGE
+ratio is flat at 0.997–0.998. In my original table this appeared only as "noise
+corr 0.8936" and I did not comment on it.
+
+**A ratio that is uniform across every band from 0.50 down to 0.02 cyc/px is a
+gain change, not a filtering change.** A filter has a frequency response; this
+does not. Combined with `coffee-bean` having the **largest** base-band
+contribution in the corpus (rms 437 DN) of which only **0.425%** lies above
+0.17 cyc/px, the reading is a position-dependent **level/gain** difference in
+flat regions — i.e. tone again, the same thing the base band carries everywhere
+else in this report. It is not an acuity effect: EDGE is unmoved at every
+frequency.
+
+I am **not** claiming that as qualified, because `coffee-bean`'s boundary is
+unmeasured. What I can say without qualification is that **whatever band is
+signal on `coffee-bean`, its EDGE sites moved by ≤0.28% at every frequency**, so
+the base-band verdict holds there too.
+
+## F. What I am withdrawing from the wording of the original section
+
+- The band labels "**NOISE**" (0.25–0.50) and "**SIGNAL**" (0.17–0.25) as used in
+  §2, §3 and §4 of the Assignment 2 report were inherited from ORCH's
+  instruction and are **not licensed corpus-wide**. Read them as bare frequency
+  ranges. The numbers attached to them are unaffected; only the labels are.
+- The aggregate "mean 0.9996, spread 0.0026" over seven subjects is a summary of
+  **seven independent within-subject nulls**, not a cross-subject band ratio, so
+  it does not fall foul of V-LINEAR's "no cross-subject `R`" rule. I state that
+  explicitly rather than leave it inferred. Every ratio in this report compares
+  two arms **within one subject**.
+- Nothing in §5 (`fit_to_cover` separation), §6 (`DEFAULT_MEAN_COARSE`, the
+  MTF-1.0 argument), or §7 (guards) touches a band criterion.
+
+## G. Files
+
+```
+experiments/V-DILUTE/bandagnostic_recheck.py  null-normalised ratio, every band, 7 subjects
+experiments/V-DILUTE/boundary_free.py         energy share above 0.17 and 0.48 cyc/px
+experiments/V-DILUTE/sweep_recheck.py         band-count sweep re-read in every band
+```
