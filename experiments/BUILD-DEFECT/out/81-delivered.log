@@ -1,0 +1,18 @@
+=== does a DELIVERED sidecar reproduce its DELIVERED master? ===
+
+=== SEAL CHECK (80 wrote text beside these images) ===
+  26 masters = 26 untouched + 0 moved + 0 without sentinel
+
+  109MSDCF     executing: --srgb --auto-exposure
+  109MSDCF     PASS
+     sealed master : clipped   0.0012%  median  60918.0  sha 18E6EDA98DEC9930
+     replay        : clipped   0.0012%  median  60918.0  sha 18E6EDA98DEC9930
+     difference    : max |delta| 0 DN over 0 of 98898048 samples
+  foam         executing: --srgb --auto-exposure
+  foam         PASS
+     sealed master : clipped   0.0020%  median   6768.0  sha 84F57ADD94BE902A
+     replay        : clipped   0.0020%  median   6768.0  sha 84F57ADD94BE902A
+     difference    : max |delta| 0 DN over 0 of 98898048 samples
+  2 declared = 2 passed + 0 failed + 0 undefined
+
+VERDICT: GREEN

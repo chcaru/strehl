@@ -1,0 +1,91 @@
+{
+ "commission_null": {
+  "clip_a": 0.001232582467148391,
+  "clip_b": 0.001232582467148391,
+  "cmd": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe stack \"D:\\personal\\macro\\109MSDCF\" --out <OUT> --srgb --exposure +2.61 --limit 8",
+  "label": "D_NULL unchanged",
+  "max_abs": 0,
+  "med_a": 61007.0,
+  "med_b": 61007.0,
+  "n": 98898048,
+  "n_diff": 0,
+  "shape_mismatch": false,
+  "subject": "109MSDCF",
+  "verdict": "PASS"
+ },
+ "commission_planted": {
+  "clip_a": 0.001232582467148391,
+  "clip_b": 0.0008847495149752601,
+  "cmd": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe stack \"D:\\personal\\macro\\109MSDCF\" --out <OUT> --srgb --exposure +2.61 --limit 6",
+  "label": "C_PLANTED limit8->6",
+  "max_abs": 31792,
+  "med_a": 61007.0,
+  "med_b": 61092.0,
+  "n": 98898048,
+  "n_diff": 96349077,
+  "shape_mismatch": false,
+  "subject": "109MSDCF",
+  "verdict": "FAIL"
+ },
+ "head": "13D6B39160E38F82",
+ "pin": "44C2F2CD2E5B2894",
+ "rows": [
+  {
+   "clip_a": 0.001232582467148391,
+   "clip_b": 85.56370900262864,
+   "cmd": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe stack \"D:\\personal\\macro\\109MSDCF\" --out <OUT> --srgb --exposure +2.61 --limit 8",
+   "label": "A_SUBSTITUTED on HEAD",
+   "max_abs": 65535,
+   "med_a": 61007.0,
+   "med_b": 65535.0,
+   "n": 98898048,
+   "n_diff": 98859243,
+   "shape_mismatch": false,
+   "subject": "109MSDCF",
+   "verdict": "FAIL"
+  },
+  {
+   "clip_a": 0.001232582467148391,
+   "clip_b": 0.001271005874655888,
+   "cmd": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe stack \"D:\\personal\\macro\\109MSDCF\" --out <OUT> --srgb --auto-exposure --limit 8",
+   "label": "B_VERBATIM on HEAD",
+   "max_abs": 13547,
+   "med_a": 61007.0,
+   "med_b": 61091.0,
+   "n": 98898048,
+   "n_diff": 96336087,
+   "shape_mismatch": false,
+   "subject": "109MSDCF",
+   "verdict": "FAIL"
+  },
+  {
+   "clip_a": 0.08386212031202071,
+   "clip_b": 15.083932698044759,
+   "cmd": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe stack \"D:\\personal\\macro\\foam\" --out <OUT> --srgb --exposure +1.90 --limit 8",
+   "label": "A_SUBSTITUTED on HEAD",
+   "max_abs": 41990,
+   "med_a": 26960.0,
+   "med_b": 54925.0,
+   "n": 98898048,
+   "n_diff": 98815107,
+   "shape_mismatch": false,
+   "subject": "foam",
+   "verdict": "FAIL"
+  },
+  {
+   "clip_a": 0.08386212031202071,
+   "clip_b": 0.0839632345423036,
+   "cmd": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe stack \"D:\\personal\\macro\\foam\" --out <OUT> --srgb --auto-exposure --limit 8",
+   "label": "B_VERBATIM on HEAD",
+   "max_abs": 16435,
+   "med_a": 26960.0,
+   "med_b": 26973.0,
+   "n": 98898048,
+   "n_diff": 94258878,
+   "shape_mismatch": false,
+   "subject": "foam",
+   "verdict": "FAIL"
+  }
+ ],
+ "verdict": "SUBSTITUTION-IS-WORSE"
+}

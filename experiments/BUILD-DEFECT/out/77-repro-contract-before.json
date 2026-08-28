@@ -1,0 +1,38 @@
+{
+ "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe",
+ "failed": 0,
+ "flags": "--srgb --auto-exposure --limit 8",
+ "passed": 2,
+ "phase": "before",
+ "rows": [
+  {
+   "clip_a": 1.271005874655888e-05,
+   "clip_b": 1.271005874655888e-05,
+   "max_abs": 0,
+   "med_a": 61091.0,
+   "med_b": 61091.0,
+   "n": 98898048,
+   "n_diff": 0,
+   "repro": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe stack \"D:\\personal\\macro\\109MSDCF\" --out <OUT> --srgb --auto-exposure --limit 8",
+   "shape_mismatch": false,
+   "subject": "109MSDCF",
+   "verdict": "PASS"
+  },
+  {
+   "clip_a": 0.0008396323454230361,
+   "clip_b": 0.0008396323454230361,
+   "max_abs": 0,
+   "med_a": 26973.0,
+   "med_b": 26973.0,
+   "n": 98898048,
+   "n_diff": 0,
+   "repro": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe stack \"D:\\personal\\macro\\foam\" --out <OUT> --srgb --auto-exposure --limit 8",
+   "shape_mismatch": false,
+   "subject": "foam",
+   "verdict": "PASS"
+  }
+ ],
+ "sha": "13D6B39160E38F82",
+ "undefined": 0,
+ "verdict": "GREEN"
+}

@@ -1,0 +1,50 @@
+=== does the SUBSTITUTED repro command survive a binary change? ===
+pin  (reference, emitted the sidecars) : 44C2F2CD2E5B2894
+head (the substituted binary)          : 13D6B39160E38F82
+
+sidecar line as printed today:
+  C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe stack "D:\personal\macro\109MSDCF" --out <OUT> --srgb --exposure +2.61 --limit 8
+
+=== COMMISSIONING (both must land or nothing below is readable) ===
+  C_PLANTED limit8->6    109MSDCF   FAIL
+       reference clipped   0.0012%  median  61007.0
+       replay    clipped   0.0009%  median  61092.0
+       max |delta|  31792 DN over 96349077 of 98898048 samples
+  D_NULL unchanged       109MSDCF   PASS
+       reference clipped   0.0012%  median  61007.0
+       replay    clipped   0.0012%  median  61007.0
+       max |delta|      0 DN over 0 of 98898048 samples
+  planted defect reads FAIL : True
+  known-clean reads PASS    : True
+
+=== BINARY SUBSTITUTION: substituted vs verbatim, both run on HEAD ===
+  A_SUBSTITUTED on HEAD  109MSDCF   FAIL
+       reference clipped   0.0012%  median  61007.0
+       replay    clipped  85.5637%  median  65535.0
+       max |delta|  65535 DN over 98859243 of 98898048 samples
+  B_VERBATIM on HEAD     109MSDCF   FAIL
+       reference clipped   0.0012%  median  61007.0
+       replay    clipped   0.0013%  median  61091.0
+       max |delta|  13547 DN over 96336087 of 98898048 samples
+
+  A_SUBSTITUTED on HEAD  foam       FAIL
+       reference clipped   0.0839%  median  26960.0
+       replay    clipped  15.0839%  median  54925.0
+       max |delta|  41990 DN over 98815107 of 98898048 samples
+  B_VERBATIM on HEAD     foam       FAIL
+       reference clipped   0.0839%  median  26960.0
+       replay    clipped   0.0840%  median  26973.0
+       max |delta|  16435 DN over 94258878 of 98898048 samples
+
+=== GATE ===
+  109MSDCF   substituted max|d|  65535 DN, clip  0.0012% -> 85.5637%
+             verbatim    max|d|  13547 DN, clip  0.0012% ->  0.0013%
+             verbatim closer to reference : True
+             substituted destroys highlights (>10x clip) : True
+  foam       substituted max|d|  41990 DN, clip  0.0839% -> 15.0839%
+             verbatim    max|d|  16435 DN, clip  0.0839% ->  0.0840%
+             verbatim closer to reference : True
+             substituted destroys highlights (>10x clip) : True
+  2 declared = 2 improved + 0 not-improved + 0 undefined
+
+VERDICT: SUBSTITUTION-IS-WORSE

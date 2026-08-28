@@ -507,11 +507,34 @@ function Invoke-Subject {
     # its own sidecar, and the reproduction command is written out in full
     # rather than left to be reassembled.
     #
-    # The exposure line is not decoration. --auto-exposure chooses the gain FROM
-    # THE IMAGE, so the flags alone do not determine the pixels; the binary
-    # quantises it to 1/100 stop precisely "so that the printed number
-    # reproduces the file exactly". Without it captured, an --auto-exposure
-    # render cannot be reproduced at all -- not approximately, at all.
+    # The exposure line is not decoration -- but it is an OBSERVATION, not an
+    # INSTRUCTION, and this script used to confuse the two.
+    #
+    # --auto-exposure chooses the gain FROM THE IMAGE, so the flags alone do not
+    # determine the pixels, and the binary quantises the choice to 1/100 stop
+    # precisely "so that the printed number reproduces the file exactly". That
+    # much is true and is why the number is still captured below.
+    #
+    # What was wrong was the conclusion drawn from it: that the reproduction
+    # command should therefore SUBSTITUTE `--exposure <stops>` for
+    # `--auto-exposure`. Measured (78-crossbinary.py, commissioned RED at 31,792
+    # DN on a planted --limit 8 -> 6 and GREEN at 0 DN on a null):
+    #
+    #   verbatim flags, binary named in the sidecar : 0 DN over 98,898,048
+    #       samples, both subjects. Bit-exact. The substitution was never
+    #       load-bearing for the case it was written for.
+    #   substituted flags, later binary : 109MSDCF 85.5637% of pixels clipped
+    #       and a pure-white median 65535, against this file's 0.0012% and
+    #       61007. foam 15.0839% against 0.0839%.
+    #   verbatim flags, later binary : 109MSDCF 0.0013% clipped, median 61091.
+    #       foam 0.0840%, median 26973. The exposure survives the binary change.
+    #
+    # The substitution was correct only because `--exposure` happened to be
+    # inert in the binary that emitted the sidecars. A command that is right for
+    # a reason unrelated to what it says is one binary away from being wrong,
+    # and surviving a binary change is the entire purpose of the sidecar. So the
+    # flags are now emitted VERBATIM and the chosen gain is reported beside them
+    # as something the run observed. See docs/research/BUILD-DEFECT.md section 22.
     $binaryOut = @()
     foreach ($f in @("$log.out", $log)) {
         if (Test-Path $f) { $binaryOut += Get-Content $f -ErrorAction SilentlyContinue }
@@ -526,11 +549,12 @@ function Invoke-Subject {
     elseif ($Flags -match '--srgb') { 'sRGB, TONE CURVE APPLIED -- DO NOT MEASURE NUMERICALLY' }
     else { 'camera-native binned linear -- MEASURABLE (primaries are the sensor''s own)' }
 
-    $repro = if ($expoStops -and $Flags -match '--auto-exposure') {
-        # --auto-exposure is image-dependent; pin it to the printed number.
-        ($Flags -replace '--auto-exposure', "--exposure $expoStops")
-    }
-    else { $Flags }
+    # Emitted VERBATIM. See the measurement in the comment block above: pinning
+    # the chosen gain into the command destroys the image on any binary where
+    # `--exposure` is load-bearing, and buys nothing on the binary that wrote
+    # it. $repro is kept as a distinct name so that any future transform has one
+    # place to live and one place to be tested.
+    $repro = $Flags
 
     # Resolved state of every registry switch, set and unset alike.
     #
@@ -649,9 +673,15 @@ function Invoke-Subject {
         else {
             "  ...with the $switchSet non-default switch(es) above exported first."
         })
-        $(if ($repro -ne $Flags) {
-            "  (--auto-exposure replaced by the gain it CHOSE; re-running with"
-            "   --auto-exposure on a different binary may choose differently)"
+        $(if ($expoStops) {
+            "  OBSERVED, NOT AN INSTRUCTION: --auto-exposure chose $expoStops stops"
+            "   for this file. It is recorded so the choice is auditable; it is"
+            "   deliberately NOT substituted into the command above. Replaying"
+            "   this file's own chosen gain as --exposure $expoStops on a binary"
+            "   where --exposure is load-bearing clips 85% of the frame to white"
+            "   (measured, docs/research/BUILD-DEFECT.md section 22). The command"
+            "   above is bit-exact with the binary it names, and preserves this"
+            "   file's exposure on binaries that post-date it."
         })
     ) | Where-Object { $null -ne $_ } | Out-File -Encoding utf8 "$tif.provenance.txt"
 

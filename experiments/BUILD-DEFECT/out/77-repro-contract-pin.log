@@ -1,0 +1,19 @@
+=== does the sidecar's REPRODUCE command reproduce the file? ===
+binary under test : C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe
+sha256            : 44C2F2CD2E5B2894
+flags             : --srgb --auto-exposure --limit 8
+
+=== PHASE PIN ===
+  109MSDCF     PASS
+     repro flags : --srgb --exposure +2.61 --limit 8
+     original    : clipped  0.0012%  median  61007.0
+     replay      : clipped  0.0012%  median  61007.0
+     difference  : max |delta|     0 DN over 0 of 98898048 samples
+  foam         PASS
+     repro flags : --srgb --exposure +1.90 --limit 8
+     original    : clipped  0.0839%  median  26960.0
+     replay      : clipped  0.0839%  median  26960.0
+     difference  : max |delta|     0 DN over 0 of 98898048 samples
+  2 declared = 2 passed + 0 failed + 0 undefined
+
+VERDICT: GREEN  (2/2 reproduce bit-exactly, 0 failed, 0 undefined)

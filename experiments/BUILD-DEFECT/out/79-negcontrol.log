@@ -1,0 +1,31 @@
+=== negative control: can the contract gate express the defect? ===
+repo HEAD (holds the PRE-FIX script) : dd25b4be
+
+backup taken : C:\Users\chris\AppData\Local\Temp\finalpass.fixed.backup.ps1 (43009 bytes, verified identical)
+pre-fix blob : 40157 bytes, defective substitution line PRESENT
+
+--- ARM RED: gate run against the PRE-FIX script ---
+   109MSDCF     FAIL
+   repro flags : --srgb --exposure +2.61 --limit 8
+   CONTRACT    : flags carried --auto-exposure but the repro line dropped it
+   foam         FAIL
+   repro flags : --srgb --exposure +1.90 --limit 8
+   CONTRACT    : flags carried --auto-exposure but the repro line dropped it
+   2 declared = 0 passed + 2 failed + 0 undefined
+   VERDICT: RED  (0/2 reproduce bit-exactly, 2 failed, 0 undefined)
+restored     : working copy is byte-identical to the backup
+
+--- ARM GREEN: gate run against the FIXED script ---
+   109MSDCF     PASS
+   repro flags : --srgb --auto-exposure --limit 8
+   foam         PASS
+   repro flags : --srgb --auto-exposure --limit 8
+   2 declared = 2 passed + 0 failed + 0 undefined
+   VERDICT: GREEN  (2/2 reproduce bit-exactly, 0 failed, 0 undefined)
+
+=== RESULT ===
+  pre-fix script : RED   (must be RED)
+  fixed script   : GREEN   (must be GREEN)
+  commissioned   : True
+
+VERDICT: COMMISSIONED

@@ -3296,3 +3296,204 @@ about.** Give each measured number one canonical site and pin its check there.
 | `experiments/BUILD-DEFECT/out/73-verify-s21.log` | 58 declared = 58 matched + 0 mismatched + 0 unresolved |
 | `experiments/BUILD-DEFECT/src/74-commission-s21.py` | Plants 22 defects, each anchored and sized against its check's tolerance |
 | `experiments/BUILD-DEFECT/out/74-commission-s21.log` | 22 caught / 0 missed / 0 unanchored, restoration verified |
+
+## 22. THE REPRODUCTION COMMAND THAT WAS RIGHT FOR THE WRONG REASON
+
+ORCH charged that `scripts/finalpass.ps1:529-533` "ships, next to each image, an
+instruction that destroys the image", because it rewrites `--auto-exposure` into
+`--exposure <stops>` and replaying `109MSDCF`'s `+2.60` at HEAD clips 85.5% of
+the frame. The fix asked for was left open deliberately, on the grounds that
+prescribing it would be guessing at semantics that had not been measured.
+
+The charge is **half right, and the half that is wrong matters**, because it
+changes what the fix has to defend against.
+
+### 22.1 The negative control did not fire, and that was the first result
+
+The required proof began with ORCH's step 4: show the current script failing, so
+the test is known able to express the defect before anything is called green.
+It did not fail. Driven end to end at HEAD `13D6B39160E38F82`, both subjects
+reproduced bit-exactly:
+
+| binary | repro line the sidecar printed | replay vs original |
+| --- | --- | --- |
+| HEAD `13D6B39160E38F82` | `--srgb --auto-exposure --limit 8` (verbatim) | 0 DN over 98,898,048 samples, both subjects |
+| pin `44C2F2CD2E5B2894` | `--srgb --exposure +2.61 --limit 8` (substituted) | 0 DN over 98,898,048 samples, both subjects |
+
+Two separate reasons, both measured:
+
+1. **At HEAD the branch is unreachable.** It is guarded on `$expoStops`, parsed
+   from the binary's `exposure :` line. HEAD's auto-exposure is superseded and
+   prints no stops, so `$expoStops` is empty and no substitution occurs at all.
+2. **At the pin the substitution is inert.** `--exposure` does nothing in that
+   binary -- section 21's finding -- so pinning the chosen gain into the command
+   changes the text and not the pixels.
+
+And the sidecar **names its binary by absolute path**. Executed verbatim, as a
+naive user would and as ORCH's step 2 specifies, the delivered command runs the
+pin, where the substitution is inert. So the shipped corpus was not shipping a
+command that destroys the image. It was shipping one that is **accidentally
+correct**: correct because `--exposure` happens to be inert in the binary that
+wrote it, not because the substituted command means what the original meant.
+
+That is still a defect, and a worse-shaped one than it looks. A command that is
+right for a reason unrelated to what it says is one binary away from being
+wrong, and surviving a binary change is the entire purpose of a sidecar.
+
+### 22.2 A gate that only compared pixels read PASS on the defective script
+
+The pin row above is the important one: the pre-fix script substituted, and a
+bit-exactness gate called it PASS. **A gate that has only ever read GREEN is not
+an instrument, it is a constant** -- and this one could not have read anything
+else, because the property it measured was not the property under test.
+
+The gate was therefore given a second, direct test of the contract: the printed
+command must be what was RUN, not a transform of it. A substituted line now
+FAILS even when it reproduces. This is the print-then-TEST rule applied to a
+gate rather than to a value -- the pixel comparison was still printed, and is
+still necessary, but it is no longer sufficient.
+
+### 22.3 Commissioning, including the improvement arm
+
+`78-crossbinary.py` refuses to report anything until both arms land:
+
+| arm | mutation | result | required |
+| --- | --- | --- | --- |
+| C_PLANTED | `--limit 8` -> `--limit 6`, pin binary | FAIL, max abs 31,792 DN over 96,349,077 of 98,898,048 samples | FAIL |
+| D_NULL | unchanged, pin binary | PASS, 0 DN over 98,898,048 samples | PASS |
+
+Then the question itself, both contracts executed with **HEAD substituted for the
+pin** -- the binary change the sidecar exists to survive. Subjects `109MSDCF`
+(loud, clips) and `foam` (quiet, darkens), so the instrument cannot be a
+saturation detector; 8 frames each; reference is the pin's own master.
+
+| subject | contract | clipped, reference -> replay | median, reference -> replay | max abs |
+| --- | --- | --- | --- | --- |
+| 109MSDCF | substituted `--exposure +2.61` | 0.0012% -> **85.5637%** | 61,007 -> **65,535** (pure white) | 65,535 DN |
+| 109MSDCF | verbatim `--auto-exposure` | 0.0012% -> 0.0013% | 61,007 -> 61,091 | 13,547 DN |
+| foam | substituted `--exposure +1.90` | 0.0839% -> **15.0839%** | 26,960 -> 54,925 | 41,990 DN |
+| foam | verbatim `--auto-exposure` | 0.0839% -> 0.0840% | 26,960 -> 26,973 | 16,435 DN |
+
+The verbatim rows are the **improvement arm** the commissioning standard
+requires: a suite of degradations alone cannot separate a blind metric from a
+perverse one, so the fix must be shown to move the number the right way, not
+merely to avoid moving it the wrong way. It does, on both subjects, and the gate
+conditions on it rather than printing it: `2 declared = 2 improved + 0
+not-improved + 0 undefined`, verdict `SUBSTITUTION-IS-WORSE`.
+
+**Honest limit on that table.** Verbatim is *not* bit-exact across binaries
+either -- 13,547 and 16,435 DN. HEAD is 12,000-plus lines from the pin and
+nothing makes a render binary-independent. The claim is narrower and is what the
+clipped and median columns show: **verbatim preserves this file's exposure across
+the binary change; the substitution destroys it.** 85.5637% here also
+independently reproduces ORCH's 85.5234%, measured on a different frame count.
+
+### 22.4 The fix, and its negative control
+
+`$repro = $Flags`. No substitution. The chosen gain is still captured and is now
+printed as a labelled **observation** beside the command rather than inside it.
+
+`79-negcontrol-finalpass.py` takes the pre-fix bytes from the git object store,
+writes them over the live script, runs the real gate, and restores from a byte
+copy taken first and verified after, in a `finally`:
+
+| script under test | verdict | why |
+| --- | --- | --- |
+| pre-fix blob at `dd25b4be` | **RED**, 0 passed + 2 failed + 0 undefined | `--srgb --exposure +2.61`, contract violated, both subjects |
+| fixed working copy | **GREEN**, 2 passed + 0 failed + 0 undefined | `--srgb --auto-exposure`, 0 DN, both subjects |
+
+The pre-fix blob is asserted to contain the exact defective line before the arm
+runs. A mutation that does not land turns a positive control into a second null
+and reads as a pass; this one is anchored on a unique full line and hard-errors
+if absent. The restore is byte-verified, and `git checkout --` is never used.
+
+### 22.5 Re-emission: the rewriter is measured against the emitter, not trusted
+
+The 26 delivered sidecars were rewritten in place rather than re-rendered. The
+masters are sealed and re-rendering would replace a sealed artifact in order to
+correct a text file beside it.
+
+The corrected line is not reconstructed by inverting the substitution -- that
+would rebuild the intent from its own corruption. Every sidecar records the real
+invocation, `--out` and all, and replacing the concrete path with the `<OUT>`
+token yields "what was run" **by construction**. The stops recovered from the
+defective line are cross-checked against the binary's self-report, and a
+disagreement leaves the file alone as UNRESOLVED.
+
+Before any delivered file is opened for writing, the rewriter is required to
+reproduce the fixed script's own output: section 22.4 left a pre-fix and a fixed
+sidecar on disk for the same subject and flags, and the rewritten pre-fix tail
+must be byte-identical to the fixed tail from `REPRODUCE THIS EXACT FILE:` to
+EOF. It is. `26 found = 26 rewritten`, verified by re-reading from disk, `26
+correct + 0 still wrong`, verdict `RE-EMITTED`, originals backed up.
+
+### 22.6 And then the delivered corpus itself
+
+Correct text is not a working command. The corrected sidecars were executed
+verbatim, full stacks, delivered `--srgb --auto-exposure` recipe, pin binary:
+
+| subject | sealed master | replay | difference |
+| --- | --- | --- | --- |
+| 109MSDCF | 0.0012% clipped, median 60,918, sha `18E6EDA98DEC9930` | 0.0012%, median 60,918, sha `18E6EDA98DEC9930` | **0 DN over 98,898,048 samples** |
+| foam | 0.0020% clipped, median 6,768, sha `84F57ADD94BE902A` | 0.0020%, median 6,768, sha `84F57ADD94BE902A` | **0 DN over 98,898,048 samples** |
+
+`26 masters = 26 untouched + 0 moved + 0 without sentinel`: the re-emission wrote
+text beside sealed images and disturbed none of them.
+
+### 22.7 Two things found on the way that are not mine to fix
+
+1. **The bad advice originates in the binary.** Every sidecar's verbatim
+   self-report contains `reproduce this exact file with --exposure=2.60`. That
+   is the binary's own message, and at HEAD it is wrong for exactly the reason
+   above. The substitution this section removes was very likely written in good
+   faith by reading it. The message lives in the tone/output code, which this
+   lane does not own; reported rather than touched.
+2. **Windows PowerShell 5.1 on this machine cannot autoload
+   `Microsoft.PowerShell.Utility`.** `powershell -NoProfile -Command Get-FileHash
+   <file>` exits 1 with `CommandNotFoundException`, with `PSModulePath` both
+   inherited and cleared; `pwsh` returns the hash. `finalpass.ps1` calls
+   `Get-FileHash`, so driving it through 5.1 fails inside the script and emits no
+   sidecar at all. The harness counted that as UNDEFINED rather than FAIL and
+   returned `BLOCKED` rather than a verdict -- a broken harness must not be
+   readable as a negative control that fired.
+
+### 22.8 A note on how these renders were made
+
+Everything in this section was rendered **with** `--auto-exposure`, which the
+standing instruction says to avoid. That is deliberate and necessary: the
+substitution branch is guarded on `--auto-exposure` being present, so the defect
+is unreachable without it. **No quality claim is made from any of these renders.**
+Every number above is a reproduction-fidelity measurement -- clipped fraction,
+median and max abs delta between two renders -- not a judgement about how any
+image looks.
+
+### 22.9 Evidence
+
+The section verifier is worth one line of its own, because it failed first. Its
+initial form searched for each number near an anchor string and reported every
+claim matched. Commissioning then planted eight defects and it missed three --
+the sealed sha and the sealed median each appear twice on their own row because
+replay equals reference, and the rewritten count appears again in the table
+below, so corrupting one copy left another to satisfy the search. It was
+rebuilt to parse the tables structurally, one site per number, with an
+all-occurrences rule for values that legitimately recur. The rebuilt form then
+caught a genuine omission in this section -- the `RE-EMITTED` verdict was never
+stated -- and then missed one more plant for the same duplicate reason, on the
+verdict token. Three separate manifestations of one defect class in one
+afternoon, none of which the passing first run would have revealed.
+
+| Artifact | What it holds |
+| --- | --- |
+| `experiments/BUILD-DEFECT/src/77-repro-contract.py` | End-to-end contract gate; drives the real script, compares pixels, tests the contract |
+| `experiments/BUILD-DEFECT/out/77-repro-contract-*.log` | Per-phase partitions; `before` and `pin` both 2 passed pre-fix, which is the finding |
+| `experiments/BUILD-DEFECT/src/78-crossbinary.py` | Commissioning arms plus substituted-vs-verbatim under binary change |
+| `experiments/BUILD-DEFECT/out/78-crossbinary.log` | Planted FAIL, null PASS, verdict `SUBSTITUTION-IS-WORSE` |
+| `experiments/BUILD-DEFECT/src/79-negcontrol-finalpass.py` | Pre-fix blob from git, byte-verified restore, both arms |
+| `experiments/BUILD-DEFECT/out/79-negcontrol.log` | pre-fix RED / fixed GREEN, `COMMISSIONED` |
+| `experiments/BUILD-DEFECT/src/80-reemit-sidecars.py` | Equivalence-gated re-emitter; aborts before writing if it disagrees with the emitter |
+| `experiments/BUILD-DEFECT/out/80-reemit.log` | Sidecar partition and post-write re-read, verdict `RE-EMITTED` |
+| `experiments/BUILD-DEFECT/src/81-verify-delivered.py` | Executes delivered sidecars verbatim against sealed masters |
+| `experiments/BUILD-DEFECT/out/81-delivered.log` | Both subjects bit-exact, no master disturbed |
+| `experiments/BUILD-DEFECT/src/82-verify-s22.py` | Verifies this section; every value re-derived from the JSON, none held in the checker |
+| `experiments/BUILD-DEFECT/out/82-verify-s22.log` | 49 declared = 49 matched + 0 mismatched + 0 unresolved |
+| `experiments/BUILD-DEFECT/out/82-verify-s22-commission.log` | 14 planted = 14 caught + 0 missed + 0 unanchored |

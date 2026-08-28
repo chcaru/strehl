@@ -1,0 +1,40 @@
+{
+ "binary": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+ "failed": 0,
+ "flags": "--srgb --auto-exposure --limit 8",
+ "passed": 2,
+ "phase": "neggreen",
+ "rows": [
+  {
+   "clip_a": 1.232582467148391e-05,
+   "clip_b": 1.232582467148391e-05,
+   "contract": null,
+   "max_abs": 0,
+   "med_a": 61007.0,
+   "med_b": 61007.0,
+   "n": 98898048,
+   "n_diff": 0,
+   "repro": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe stack \"D:\\personal\\macro\\109MSDCF\" --out <OUT> --srgb --auto-exposure --limit 8",
+   "shape_mismatch": false,
+   "subject": "109MSDCF",
+   "verdict": "PASS"
+  },
+  {
+   "clip_a": 0.0008386212031202072,
+   "clip_b": 0.0008386212031202072,
+   "contract": null,
+   "max_abs": 0,
+   "med_a": 26960.0,
+   "med_b": 26960.0,
+   "n": 98898048,
+   "n_diff": 0,
+   "repro": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe stack \"D:\\personal\\macro\\foam\" --out <OUT> --srgb --auto-exposure --limit 8",
+   "shape_mismatch": false,
+   "subject": "foam",
+   "verdict": "PASS"
+  }
+ ],
+ "sha": "44C2F2CD2E5B2894",
+ "undefined": 0,
+ "verdict": "GREEN"
+}

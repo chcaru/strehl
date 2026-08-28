@@ -1,0 +1,15 @@
+=== re-emit delivered sidecars under the corrected contract ===
+
+=== EQUIVALENCE: does this rewriter produce the fixed script's text? ===
+  pre-fix sidecar  : D:\strehl-out\BUILD-DEFECT\repro\negred\109MSDCF\REPROTEST\109MSDCF--REPROTEST.tiff.provenance.txt
+  fixed sidecar    : D:\strehl-out\BUILD-DEFECT\repro\neggreen\109MSDCF\REPROTEST\109MSDCF--REPROTEST.tiff.provenance.txt
+  rewritten tail == fixed tail : True
+
+=== APPLY (26 sidecars found) ===
+  rewritten                                26
+  26 found = 26 rewritten
+
+=== VERIFY (re-read from disk) ===
+  26 found = 26 correct + 0 still wrong
+
+VERDICT: RE-EMITTED   (backups in D:\strehl-out\BUILD-DEFECT\sidecar-backup)

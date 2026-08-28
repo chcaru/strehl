@@ -1,0 +1,7 @@
+=== verify section 22 against the artifacts it cites ===
+
+=== COMMISSIONING: plant a defect, require the verifier to catch it ===
+  clean section : 49 matched + 0 mismatched + 0 unresolved of 49
+  14 planted = 14 caught + 0 missed + 0 unanchored
+
+VERDICT: COMMISSIONED

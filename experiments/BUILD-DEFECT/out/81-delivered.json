@@ -1,0 +1,32 @@
+{
+ "rows": [
+  {
+   "clip_a": 0.0011891033481267496,
+   "clip_b": 0.0011891033481267496,
+   "max_abs": 0,
+   "med_a": 60918.0,
+   "med_b": 60918.0,
+   "n": 98898048,
+   "n_diff": 0,
+   "sha_a": "18E6EDA98DEC9930",
+   "sha_b": "18E6EDA98DEC9930",
+   "subject": "109MSDCF",
+   "verdict": "PASS"
+  },
+  {
+   "clip_a": 0.001979816628938925,
+   "clip_b": 0.001979816628938925,
+   "max_abs": 0,
+   "med_a": 6768.0,
+   "med_b": 6768.0,
+   "n": 98898048,
+   "n_diff": 0,
+   "sha_a": "84F57ADD94BE902A",
+   "sha_b": "84F57ADD94BE902A",
+   "subject": "foam",
+   "verdict": "PASS"
+  }
+ ],
+ "seals_untouched": 26,
+ "verdict": "GREEN"
+}

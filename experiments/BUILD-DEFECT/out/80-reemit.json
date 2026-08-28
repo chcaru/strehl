@@ -1,0 +1,111 @@
+{
+ "backup": "D:\\strehl-out\\BUILD-DEFECT\\sidecar-backup",
+ "delivered": "C:\\dev\\strehl-out\\acceptance\\SHIP-V4",
+ "rows": [
+  {
+   "file": "109MSDCF--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "112MSDCF--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "113MSDCF--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "119MSDCF--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "bee-1-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "bee-2-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "bee-3-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "coffee-bean--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "coffee-bubbles--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "couch-fibers-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "dry-erase-marker-head-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "flat-on-ruler-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "flower-bud-alone-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "flower-bud-with-background-fern-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "flower-inner-edge-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "flowers-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "foam--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "highly-angled-ruler-mm-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "lavendar-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "lead-1-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "leaf-2-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "pencil-flatter-angle-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "pencil-steep-angle-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "tweezers-cpl--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "wrapped-text-1--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  },
+  {
+   "file": "wrapped-text-2--SHIP-V4.tiff.provenance.txt",
+   "outcome": "rewritten"
+  }
+ ],
+ "verdict": "RE-EMITTED"
+}
