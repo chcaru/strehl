@@ -1101,8 +1101,28 @@ and both CA arms.
 
 Two obligations from correction #5 bind this lane: run the conclusion-flip check
 on my own harness, and never quote a sharpness claim without naming the band and
-the subject's qualification in it. Neither withdrawn number (-44.6%, 27.2%) is
-load-bearing anywhere in this report, so nothing here is held or reversed.
+the subject's qualification in it. Neither number (-44.6%, 27.2%) is load-bearing
+anywhere in this report, so nothing here is held or reversed.
+
+**Status update, correction #5 RESOLVED.** Those two figures are no longer
+"withdrawn pending measurement" -- V-LINEAR measured the narrow 0.30-0.35 slice
+directly (`e05d967f`, `968a5ae4`, `3d4e41c1`) and `112MSDCF` reads R = 1.079,
+95% CI [1.040, 1.121], FAIL(noise), with the CI's UPPER bound 0.379 below
+MARGINAL. The -44.6% is **measured and dead**; the 27.2% (`coffee-bubbles`,
+MARGINAL at 1.542) is not quotable either. "Harmful at depth" is REFUTED as an
+established finding and must not be cited. It is NOT replaced by "the exponent
+is fine": the exponent at depth is UNMEASURED. The gate ran before the verdicts
+(`dry-erase` 4.530 PASS at the same slice), so the FAIL is a property of the
+subject, not of narrowing the window.
+
+The selection premium is untouched by this and remains the quotable account of
+deep-stack softening: 2.16x / 6.79x / 24.82x at N=4/9/19 and 23.24x / 80.78x /
+240.70x at N=19/39/79, measured on a synthetic twin with no focus signal by
+construction, so band qualification does not bear on it.
+
+If any acuity claim is ever added to this report, the qualified subjects at
+0.30-0.35 are `bee-1-cpl` (R = 5.311) and `dry-erase-marker-head-cpl` (4.530).
+`112MSDCF`, `flower-bud-alone-cpl` and `coffee-bubbles` must not be used.
 
 ### 13.1 The trap: 100.0000% is satisfied by a degenerate case
 
@@ -1452,3 +1472,36 @@ term and the TC term CANNOT be separated -- confirmed, not assumed. The capture
 that would settle it: the same subject at 100 mm with the TC removed, same
 aperture, same CPL. Incidentally the corpus DOES contain f/11 (109/112/113MSDCF),
 which `measured_at` still calls untested.
+
+### 15.7 Conclusion-reversal audit of the harness that set the coefficient
+
+Run through carefit.py's REAL command line (`revaudit.py` writes synthetic
+masters and prints ground truth; it does not import the thing it audits).
+
+| arm | planted | reported | verdict |
+|---|---|---|---|
+| 1 normal | +192 resid | native -485.4, r2 1.000 | scored |
+| 2 **REVERSED** | -192 resid | native **-923.1**, not -485.4 | reversal CAUGHT |
+| 3 **liveness** R=G exactly | 0 resid | **"UNSCORED (too few tiles)"** | **DEFECT** |
+| 4 noise only | no radial signal | +0.1 ppm, r2 0.006, FAILS GATE | specificity CAUGHT |
+| 5 **deleted** +600 scrambled | signal destroyed | +31.4 ppm, r2 0.080, FAILS GATE | deletion CAUGHT |
+
+**DEFECT FOUND, and it is ORCH's first lesson exactly.** `fit_mag_and_offset`
+skips tiles where `den = vx^2+vy^2 < 1e-12`. A perfectly corrected channel has
+`dx=dy=0` on EVERY tile, so every row is skipped and the harness emits
+**"UNSCORED (too few tiles)" -- character-for-character what it emits for no
+data.** The tool cannot distinguish MEASURED ZERO from COULD NOT MEASURE. It does
+not affect the shipped fit (no real stack is exactly zero, and all six scored at
+r2 0.810-0.966), but it means a future re-fit that actually NULLED a subject
+would see that subject silently dropped, biasing the fit AWAY from well-corrected
+subjects -- the precise direction that would keep an over-correction alive.
+Logged as open; the fix is to distinguish the two exits, not to lower the
+threshold.
+
+**One caveat reported rather than swept.** Arms 1 and 2 over-read magnitude by
+~14% (219.1 for a planted 192; -218.6 for -192). It is symmetric, so it does not
+touch sign, ordering or any verdict, and the synthetic is idealised (r2 = 1.000,
+noise-free green). The authoritative magnitude calibration remains the in-situ
+one on REAL data -- the code's own +704.5 ppm dose read at 0.996 -- and 14% of a
+192 ppm residual is 27 ppm on the native, inside the 82.3 ppm uncertainty already
+declared in 15.4.
