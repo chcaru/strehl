@@ -617,6 +617,10 @@ def check_s5_emphasis_balance(index):
              `phi_nonorm` are identifiers written outside code spans, and no
              counter can tell those from italics. Seventeen false positives is
              a check that gets switched off, so `_` is left alone.
+
+    A pair counter cannot see a run of three or four asterisks, so a raw parity
+    arm ships alongside them; see the comment at its site. Base rate 0 over 2560
+    units, and it catches the `***` plant that the pair counters missed.
     """
     out = []
     units = [("§%d %s" % (sec, label),
@@ -637,6 +641,29 @@ def check_s5_emphasis_balance(index):
                     "stripped, so a %s"
                     % (who, label, token, n, meaning),
                     text.strip().split("\n")[0]))
+        # MARKUP_TOKENS counts `**` PAIRS, so a run of three asterisks reads as
+        # one balanced `**` plus an orphan that the single-`*` arm's `(?<![\\*])`
+        # lookbehind deliberately skips, and a run of four reads as two balanced
+        # `**`. Both are invisible to the loop above. Demonstrated rather than
+        # supposed: experiments/ORCH-drift-check/negctl_1851.py planted `***` on
+        # a fact row and S5 stayed silent while the same control's raw-pipe arm
+        # fired correctly on S1 -- an inert plant and a dead check give the same
+        # green, so the arm had to be shown live before the miss meant anything.
+        # `***bold-italic***` is legal Markdown, so a run of three is not itself
+        # a defect; the invariant that holds is PARITY of the total. Measured
+        # base rate by orch_astparity.py over 2560 units (§5, §10, all fact
+        # rows): 0 odd. Escapes are removed first, exactly as the single-`*` arm
+        # already excludes them.
+        raw = stripped.replace("\\*", "").count("*")
+        if raw % 2:
+            out.append(Violation(
+                SYNTHESIS, line, "S5",
+                "%s (%s): odd total of `*` (%d) after code spans are stripped "
+                "and escapes removed, so an emphasis run never closes. Runs of "
+                "three or four asterisks are invisible to the `**` pair counter "
+                "above; this parity arm is what sees them."
+                % (who, label, raw),
+                text.strip().split("\n")[0]))
         # The stripper is this linter's instrument: S5 above, A2's matching and
         # A4's all depend on it. A backtick it cannot pair leaves residue, and
         # from that point the strip is silently wrong. CODE_SPAN's `[^`]*`
