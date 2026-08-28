@@ -1,0 +1,15 @@
+====================================================================================================
+VERIFYING BUILD-DEFECT.md SECTION 21 AGAINST RE-DERIVED TRUTH
+====================================================================================================
+  difference table          : 4 rows x 5 quantities re-derived from the TIFFs
+  zero-difference headline  : plane size and both means re-derived
+  byte-level diff           : 11 differing bytes at 339..359 re-derived
+  tone points and ratios    : parsed from both files' metadata and divided
+  reproduced hashes         : both re-hashed from the files on disk
+  thresholds                : cross-checked report against instrument source
+  seal comparison table     : 4 renders re-measured for mean and clip
+  21.8 derived figures      : plant count from the PLANTS table, slack re-derived
+
+declared 58 = matched 58 + mismatched 0 + unresolved 0
+
+VERDICT: PASS -- every claim in section 21 re-derives from the artifacts.

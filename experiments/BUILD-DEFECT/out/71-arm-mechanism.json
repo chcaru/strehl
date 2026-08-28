@@ -1,0 +1,106 @@
+[
+ {
+  "subject": "coffee-bubbles",
+  "sites": [
+   {
+    "qx": 3202,
+    "qy": 119,
+    "depth_pct": -9.468,
+    "map_pct": -3.606,
+    "p": 0.0075,
+    "present": 1.0,
+    "action": "skip: not significant here",
+    "corrected": false
+   },
+   {
+    "qx": 3434,
+    "qy": 2305,
+    "depth_pct": -12.606,
+    "map_pct": -8.236,
+    "p": 0.0025,
+    "present": 1.0,
+    "action": "CORRECT at scale 1.568",
+    "corrected": true
+   }
+  ],
+  "n_corrected_sites": 1,
+  "samples_changed": 49551,
+  "frames": 19,
+  "dust_quads": 652,
+  "frac_samples_moved": 0.9851548839467489,
+  "abs_max": 2413,
+  "frac_area_near_motes": 0.0014414844669128353,
+  "clip": {
+   "near_off": 0.0,
+   "near_on": 0.0,
+   "far_off": 2.632765077319045e-07,
+   "far_on": 2.632765077319045e-07
+  },
+  "tone": {
+   "a": 0.9999233602245774,
+   "b": -3.5659078968467783,
+   "n_fit": 1200000,
+   "mean_abs_before": 3.8739751567189677,
+   "mean_abs_after": 2.147124586901233,
+   "explained_frac": 0.4457567485487638,
+   "near_mean_abs_before": 32.40493125701459,
+   "near_mean_abs_after": 31.257162553259363,
+   "far_mean_abs_before": 3.8327888572633046,
+   "far_mean_abs_after": 2.1051023449324218
+  },
+  "verdict": "MIXED",
+  "why": "a global fit a=0.99992336 b=-3.5659 explains only 44.6% of the change"
+ },
+ {
+  "subject": "109MSDCF",
+  "sites": [
+   {
+    "qx": 3202,
+    "qy": 119,
+    "depth_pct": -7.486,
+    "map_pct": -3.606,
+    "p": 0.0025,
+    "present": 1.0,
+    "action": "CORRECT at scale 2.119",
+    "corrected": true
+   },
+   {
+    "qx": 3434,
+    "qy": 2305,
+    "depth_pct": -16.305,
+    "map_pct": -8.236,
+    "p": 0.0025,
+    "present": 1.0,
+    "action": "CORRECT at scale 2.071",
+    "corrected": true
+   }
+  ],
+  "n_corrected_sites": 2,
+  "samples_changed": 99880,
+  "frames": 22,
+  "dust_quads": 1135,
+  "frac_samples_moved": 0.0,
+  "abs_max": 0,
+  "frac_area_near_motes": 0.0031887383662011206,
+  "clip": {
+   "near_off": 1.0,
+   "near_on": 1.0,
+   "far_off": 0.8549873584295044,
+   "far_on": 0.8549873584295044
+  },
+  "tone": {
+   "a": 1.0000000000011458,
+   "b": -6.854195379479856e-11,
+   "n_fit": 1200000,
+   "mean_abs_before": 0.0,
+   "mean_abs_after": 6.606308323896662e-09,
+   "explained_frac": null,
+   "near_mean_abs_before": 0.0,
+   "near_mean_abs_after": 0.0,
+   "far_mean_abs_before": 0.0,
+   "far_mean_abs_after": 6.627441500880273e-09
+  },
+  "verdict": "CLIPPED",
+  "why": "the corrector changed 99880 samples but the mote neighbourhoods are 100.0% saturated in BOTH arms, so the correction lands above the top of the range"
+ }
+]

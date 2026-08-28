@@ -1,0 +1,39 @@
+====================================================================================================
+COMMISSIONING 73-verify-s21.py
+====================================================================================================
+backed up to C:\Users\chris\AppData\Local\Temp\BUILD-DEFECT.md.s21commission.bak  sha256 a41ee461944eb453
+
+CLEAN CONTROL (must read PASS, or no RED below is attributable)
+  PASS -- declared 58 = matched 58 + mismatched 0 + unresolved 0
+
+plant                                verdict   evidence
+----------------------------------------------------------------------------------------------------
+samples-differ count                 CAUGHT    MISMATCHED  pin +2.60 vs 0 | samples differ: report=4514
+max |d| on the positive control      CAUGHT    MISMATCHED  HEAD +2.60 vs 0 | max |d|: report=65534.0 tr
+mean |d| on the positive control     CAUGHT    MISMATCHED  HEAD +2.60 vs 0 | mean |d|: report=14113.687
+percent-differ                       CAUGHT    MISMATCHED  pin +2.60 vs 0 | pct differ: report=0.4665 t
+commanded linear ratio               CAUGHT    MISMATCHED  pin +3 vs -3 | commanded ratio: report=70.0 
+the plane size in the headline       CAUGHT    MISMATCHED  headline | plane size: report=98898049.0 tru
+the identical means                  CAUGHT    MISMATCHED  headline | mean A: report=47719.098 truth=47
+the first differing byte offset      CAUGHT    MISMATCHED  bytes | first offset: report=340.0 truth=339
+the pixel payload size               CAUGHT    MISMATCHED  bytes | pixel payload size: report=197796097
+a recorded tone point                CAUGHT    MISMATCHED  tone | +3 black: report=0.037986 truth=0.037
+the black tone ratio                 CAUGHT    MISMATCHED  tone | black ratio: report=63.9578 truth=63.
+the agreement percentage             CAUGHT    MISMATCHED  tone | black agreement %: report=0.2 truth=0
+a reproduced SHA-256 prefix          CAUGHT    MISMATCHED  hash | pin-epos3.tiff: report='D749F1FDCD073
+the INERT threshold                  CAUGHT    MISMATCHED  band | INERT_MAX_DN: report=3.0 truth=2.0
+the LIVE threshold                   CAUGHT    MISMATCHED  band | LIVE_MIN_DN: report=257.0 truth=256.0
+the partition                        CAUGHT    MISMATCHED  partition | sums to declared: report=3 truth
+a seal mean                          CAUGHT    MISMATCHED  seal table | SHIP-V4 seal mean: report=48719
+a seal clip fraction                 CAUGHT    MISMATCHED  seal table | HEAD           --exposure=+2.60
+the plant partition in 21.8          CAUGHT    MISMATCHED  21.8 | all plants caught: report=21.0 truth=
+the pre-repair caught figure         CAUGHT    MISMATCHED  21.8 | pre-repair caught = that run's plants
+the current suite size               CAUGHT    MISMATCHED  21.8 | current suite size: report=21.0 truth
+the derived slack figure             CAUGHT    MISMATCHED  21.8 | slack = 5% of the clip fraction: repo
+----------------------------------------------------------------------------------------------------
+declared 22 = caught 22 + missed 0 + unanchored 0
+
+restoration: sha256 a41ee461944eb453  byte-identical to the original
+
+PROVENANCE: section 21.8's partition, clean control and restoration hash all describe this run.
+VERDICT: PASS -- 22/22 plants caught, each naming its own check.

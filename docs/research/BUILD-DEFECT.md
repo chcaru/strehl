@@ -3069,3 +3069,225 @@ byte-identical before it exits.
 | `experiments/BUILD-DEFECT/out/64-commission-s20.log` | 14 caught / 0 missed / 0 unanchored |
 
 Suite at the time of writing: 713 pass, 0 fail. Both byte-freezes hold.
+
+## 21. THE HASH THAT SAID YES: `--exposure` WAS INERT AT THE PIN, AND THE SEALED CORPUS INHERITED IT
+
+This section was not planned. It is what happened when I tried to render a
+matched OFF/ON pair for the default-flip decision (§13.1, Q1) and could not get
+the OFF arm to look like the sealed master it was supposed to match.
+
+### 21.1 The premise I was working from, and how it broke
+
+The orchestrator had tested the claim that `--exposure` does nothing, and had
+recorded the test as follows: on pin binary `9b05d0b7`, `--exposure=3` and
+`--exposure=-3` "produce **different files**" with SHA-256 prefixes
+`D749F1FDCD07355F` and `A5846DD2B0ACDC3A`, the banner reads "as asked", and the
+pin folds the gain into the normalisation. On that evidence the accusation was
+withdrawn before it reached the README.
+
+I was replaying each subject's recorded `exposure_stops` from the SHIP-V4
+manifest so that my OFF arm would be comparable to the sealed corpus the print
+gate grades. On subject `109MSDCF`, `exposure_stops` is `+2.60`. The seal has a
+mean of 47719.1 and 0.0012% of samples at full scale. My HEAD render at the same
+`+2.60` came back at mean 61822.1 with **85.5234%** of samples clipped.
+
+Both binaries printed the identical banner:
+
+```
+exposure   : +2.60 stops (gain 6.063x), as asked
+```
+
+The banner is not evidence of what was applied. That trap is registered twice
+already in this project and it caught me a third time, on the input side: I
+believed a recorded parameter because a banner had once confirmed it.
+
+### 21.2 The measurement
+
+I rendered `109MSDCF` five times and compared the outputs sample by sample over
+the full 98,898,048-sample plane. `experiments/BUILD-DEFECT/src/72-exposure-inert-at-pin.py`.
+
+```
+pair                   stops commanded samples differ  % differ    max |d|    mean |d|
+------------------------------------------------------------------------------------
+pin  +3    vs -3        6.00     64.0x              0   0.0000%          0      0.0000
+pin  +2.60 vs 0         2.60      6.1x        451,463   0.4565%          1      1.0000
+pin  0     vs -3        3.00      8.0x              0   0.0000%          0      0.0000
+HEAD +2.60 vs 0         2.60      6.1x     98,856,221  99.9577%      65535  14013.6874
+```
+
+The first row is the orchestrator's literal evidence pair. I reproduced both of
+its hashes exactly — `D749F1FDCD07355F` and `A5846DD2B0ACDC3A` — so this is the
+same binary and the same experiment, not an adjacent one.
+
+**Those two files are different bytes and the same image. Zero of 98,898,048
+samples differ.** Across a commanded 64.0x linear gain, the mean is identical to
+eight significant figures: 47719.088 against 47719.088.
+
+The only pin pair that moved at all moved 0.4565% of samples by **exactly 1 DN**
+of 65535 — every differing sample differed by one. That is dither, and the
+instrument classifies it as such rather than reading it as a small effect.
+
+### 21.3 Where the hash difference actually came from
+
+Eleven bytes differ, at file offsets 339 through 359, inside the TIFF's embedded
+description. Not in the pixel data, which begins after it and runs to
+197,796,096 bytes.
+
+```
+exposure=+3 : ... Tone rendering: black 0.037985, white 1.311591 (linear, ...
+exposure=-3 : ... Tone rendering: black 0.000594, white 0.020494 (linear, ...
+```
+
+```
+black ratio +3 / -3 = 63.9478      commanded 2^6 = 64.0000    agreement 0.082%
+white ratio +3 / -3 = 63.9988      commanded 2^6 = 64.0000    agreement 0.002%
+```
+
+The recorded tone points scale by **exactly the commanded gain**, and that is the
+whole mechanism. From the pin, `git show 9b05d0b7:crates/strehl-cli/src/stack.rs`:
+
+```rust
+let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
+```
+
+`eg` multiplies the linear image. The tone rendering then chooses black and
+white as luminance percentiles **of that same already-gained image** and
+normalises by `(white - black)`. The gain divides out to the last bit. The file
+faithfully records the two numbers that cancelled it.
+
+So the gain was applied, and then removed, and the removal is what got written
+into the metadata that made the hashes differ. **The file's record of the
+request is the thing that made the test say yes.**
+
+### 21.4 Why the test could not have failed
+
+The check was "do the hashes differ". `--exposure=N` writes N into the file's
+tone record. Therefore any two distinct values of `--exposure` produce different
+hashes **whether or not the flag does anything to the image**. There is no value
+of the flag for which the test could have returned "same file". A test that
+cannot return the answer that would falsify the claim is not evidence about the
+claim.
+
+This is the same shape as §17's `E*`: a quantity that moves for a reason
+unrelated to the thing being graded. Here it is narrower and sharper, because the
+confounder is not a subtle statistical dependence — it is a literal transcript of
+the command line embedded in the artifact under test.
+
+A hash is a presence test. It answers "did any byte move", never "did the image
+change". The two questions have opposite answers here.
+
+### 21.5 Commissioning
+
+A difference detector that reads quiet on everything would print "no-op" for
+every input and look like a finding, so the readings above are gated on three
+arms, all of which must pass before any verdict is printed:
+
+```
+positive control : HEAD +2.60 vs 0, max |d| = 65535 DN, needs >= 256  ->  LOUD
+negative control : pin-eneg.tiff against itself, 0 samples differ     ->  SILENT
+improvement arm  : HEAD mean 61822.1 at +2.60 vs 47814.3 at 0         ->  brighter
+```
+
+The improvement arm is the one that earns its place. The two controls establish
+that the detector can see a difference and does not invent one, but both are
+satisfied by a detector that reports `|delta|` with its operands transposed. The
+third arm checks a **signed** quantity — a positive gain must brighten — so a
+detector that had exposure running backwards could not pass all three.
+
+The verdict band is `INERT <= 2 DN`, `LIVE >= 256 DN`, and **AMBIGUOUS between**,
+so the instrument can decline. `INERT_MAX_DN` is 2 rather than 0 because a
+renderer is entitled to dither; the question is whether a 64x gain is
+distinguishable from rounding, not whether the pipeline is bit-deterministic.
+The four declared pairs partition as 4 measured + 0 missing-input + 0 failed,
+asserted to sum, and a pair whose input is absent reads UNDEFINED — never PASS.
+
+### 21.6 The consequence, which reaches past this lane
+
+`exposure_stops` in `C:\dev\strehl-out\acceptance\SHIP-V4\manifest.tsv` was
+chosen under semantics where it did nothing. The 26 sealed masters are, to the
+bit, zero-exposure renders. Commit `9cb7f5d9`/`f2254c12` made the flag real by
+applying the gain past the tone normalisation — which is the correct fix — and
+in doing so it **silently invalidated every recorded exposure value in the
+corpus**.
+
+```
+subject 109MSDCF, exposure_stops = +2.60
+  SHIP-V4 seal                     mean 47719.1   clipped 0.0012%
+  pin  9b05d0b7  --exposure=+2.60  mean 47719.1   clipped 0.0012%   reproduces the seal
+  HEAD           --exposure=+2.60  mean 61822.1   clipped 85.5234%  blown out
+  HEAD           --exposure=0      mean 47814.3   clipped 0.0013%   0.20% from the seal
+```
+
+Anyone who re-renders the sealed corpus at HEAD using the manifest's own
+parameters will produce blown-out images and grade them. Nothing warns them: the
+banner says "as asked" in both binaries, and it is telling the truth about the
+request in both cases.
+
+The correct HEAD replay of a SHIP-V4 seal is **`--exposure=0`**, and that follows
+from the measurement rather than from taste: if the recorded value did nothing,
+the seal is the zero render. The residual 0.20% is other pin-to-HEAD drift and is
+not attributable to exposure.
+
+### 21.7 What this cost me, and what it is worth
+
+It cost the pilot renders. §21.6 explains why `109MSDCF` read CLIPPED in the
+first arm-mechanism probe: at 85.5% saturation the correction had no headroom to
+show in, and I had briefly taken that for a property of the subject. Those
+renders are void and the Q1 default decision is unblocked but not yet made.
+
+What it is worth is that the ledger now reads correctly in three places it did
+not. The exposure accusation was **true**. The lane that raised it was right, the
+fix that landed was necessary, and the test that dismissed it was structurally
+incapable of dismissing anything. And the sealed corpus has a documented
+incompatibility with the binary that is supposed to succeed it, found from the
+outside, by a lane that was trying to do something else.
+
+### 21.8 What the commissioning found in the verifier
+
+The verifier read clean before it was commissioned. Then 18 planted defects
+were run through it and it caught 16. The two it did not are both defects in the
+instrument, and neither was visible by reading it. The suite has since grown to
+22 plants, four of them covering this subsection's own figures, and it now
+catches every one.
+
+```
+declared 22 = caught 22 + missed 0 + unanchored 0     (after the repairs below)
+clean control : PASS -- declared 58 = matched 58 + mismatched 0 + unresolved 0
+restoration   : byte-identical to the original, verified by SHA-256
+```
+
+**A tolerance argument that meant something other than what its call site
+assumed.** The clip-fraction check was written as `v.check(..., truth, 0.05)`
+with the intent of allowing 0.05 percentage points. The fourth positional
+parameter is a *relative* tolerance, so the check actually allowed 5% — which on
+an 85.5234% clip fraction is **4.3 percentage points** of slack. A planted
+0.2 pp error passed. The sizing note I wrote next to that plant said "check is
+abs 0.05 pp", so the comment and the code disagreed and the comment was the one
+I trusted. Repaired by naming both parameters and giving `check` an explicit
+`abs_floor`, because a single relative tolerance cannot serve a quantity that
+ranges from 0.0012% to 85.5234% while the report rounds it to four decimals.
+
+**A presence test standing in for a reference.** The hash check asked
+`"D749F1FDCD07355F" in sec`. Both prefixes appear twice in this section — once
+in 21.1 quoting the orchestrator and once in 21.2 reporting the reproduction —
+so corrupting either occurrence leaves the other to satisfy the test. The plant
+anchor guard caught this first and reported **UNANCHORED**, refusing to score
+rather than mutating an occurrence it could not identify; that refusal is what
+exposed the duplication. Repaired by parsing both prefixes out of one canonical
+sentence, so the check has a site rather than a haystack.
+
+The general form, which this project has now hit in three separate instruments:
+**a check satisfied by any copy of the value is not checking the copy you care
+about.** Give each measured number one canonical site and pin its check there.
+
+### 21.9 Artifacts
+
+| Path | What it is |
+| --- | --- |
+| `experiments/BUILD-DEFECT/src/72-exposure-inert-at-pin.py` | The gated difference instrument and its three commissioning arms |
+| `experiments/BUILD-DEFECT/out/72-exposure-inert-at-pin.log` | 3 INERT / 1 LIVE, partition 4 = 4 + 0 + 0 |
+| `experiments/BUILD-DEFECT/out/72-exposure-inert-at-pin.json` | Per-pair counts, verdicts and the gating thresholds |
+| `experiments/BUILD-DEFECT/src/73-verify-s21.py` | Verifies this section; 58 claims, no expected value of its own |
+| `experiments/BUILD-DEFECT/out/73-verify-s21.log` | 58 declared = 58 matched + 0 mismatched + 0 unresolved |
+| `experiments/BUILD-DEFECT/src/74-commission-s21.py` | Plants 22 defects, each anchored and sized against its check's tolerance |
+| `experiments/BUILD-DEFECT/out/74-commission-s21.log` | 22 caught / 0 missed / 0 unanchored, restoration verified |

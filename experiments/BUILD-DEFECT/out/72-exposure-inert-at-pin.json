@@ -1,0 +1,72 @@
+{
+  "declared": 4,
+  "measured": 4,
+  "missing_input": 0,
+  "failed": 0,
+  "inert_max_dn": 2,
+  "live_min_dn": 256,
+  "pairs": {
+    "pin  +3    vs -3   ": {
+      "n_total": 98898048,
+      "n_differ": 0,
+      "pct_differ": 0.0,
+      "max_delta": 0,
+      "mean_delta": 0.0,
+      "hist_top": {},
+      "stops": 6.0,
+      "linear_ratio_commanded": 64.0,
+      "mean_a": 47719.08799469935,
+      "mean_b": 47719.08799469935
+    },
+    "pin  +2.60 vs 0    ": {
+      "n_total": 98898048,
+      "n_differ": 451463,
+      "pct_differ": 0.4564933374620296,
+      "max_delta": 1,
+      "mean_delta": 1.0,
+      "hist_top": {
+        "1": 451463
+      },
+      "stops": 2.6,
+      "linear_ratio_commanded": 6.062866266041593,
+      "mean_a": 47719.084484023384,
+      "mean_b": 47719.08799469935
+    },
+    "pin  0     vs -3   ": {
+      "n_total": 98898048,
+      "n_differ": 0,
+      "pct_differ": 0.0,
+      "max_delta": 0,
+      "mean_delta": 0.0,
+      "hist_top": {},
+      "stops": 3.0,
+      "linear_ratio_commanded": 8.0,
+      "mean_a": 47719.08799469935,
+      "mean_b": 47719.08799469935
+    },
+    "HEAD +2.60 vs 0    ": {
+      "n_total": 98898048,
+      "n_differ": 98856221,
+      "pct_differ": 99.95770695089958,
+      "max_delta": 65535,
+      "mean_delta": 14013.687394412942,
+      "hist_top": {
+        "2893": 29050,
+        "2883": 28926,
+        "2900": 28889,
+        "2895": 28886
+      },
+      "stops": 2.6,
+      "linear_ratio_commanded": 6.062866266041593,
+      "mean_a": 61822.10539382941,
+      "mean_b": 47814.34481510697
+    }
+  },
+  "verdicts": {
+    "pin  +3    vs -3   ": "INERT",
+    "pin  +2.60 vs 0    ": "INERT",
+    "pin  0     vs -3   ": "INERT",
+    "HEAD +2.60 vs 0    ": "LIVE"
+  },
+  "conclusion": "INERT"
+}

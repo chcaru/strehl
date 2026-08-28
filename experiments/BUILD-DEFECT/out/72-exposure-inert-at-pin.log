@@ -1,0 +1,31 @@
+============================================================================================================
+WHAT `--exposure` DID TO THE IMAGE AT PIN 9b05d0b7
+============================================================================================================
+
+pair                   stops commanded samples differ  % differ    max |d|    mean |d|
+------------------------------------------------------------------------------------------------------------
+pin  +3    vs -3        6.00     64.0x              0   0.0000%          0      0.0000
+pin  +2.60 vs 0         2.60      6.1x        451,463   0.4565%          1      1.0000
+pin  0     vs -3        3.00      8.0x              0   0.0000%          0      0.0000
+HEAD +2.60 vs 0         2.60      6.1x     98,856,221  99.9577%      65535  14013.6874
+------------------------------------------------------------------------------------------------------------
+declared 4 = measured 4 + missing-input 0 + failed 0
+
+COMMISSIONING
+  positive control       : max |d| = 65535 DN, needs >= 256  ->  LOUD (machinery works)
+  negative control       : file against itself, 0 samples differ  ->  SILENT (no manufactured difference)
+  improvement arm        : HEAD mean at +2.60 = 61822.1, at 0 = 47814.3  ->  brighter, correct direction
+
+  all three arms pass; the readings below are admissible.
+
+VERDICT  (band: INERT <= 2 DN, LIVE >= 256 DN, anything between is AMBIGUOUS)
+  pin  +3    vs -3      INERT      max |d| = 0 DN over a commanded 64.0x
+  pin  +2.60 vs 0       INERT      max |d| = 1 DN over a commanded 6.1x
+  pin  0     vs -3      INERT      max |d| = 0 DN over a commanded 8.0x
+  HEAD +2.60 vs 0       LIVE       max |d| = 65535 DN over a commanded 6.1x
+
+  CONCLUSION: at pin 9b05d0b7, `--exposure` is INERT on the delivered image.
+  Across a commanded linear range of 64.0x, no sample moved by more than 1 DN of 65535.
+  The hash difference the orchestrator observed is therefore not evidence of effect.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\out\72-exposure-inert-at-pin.json

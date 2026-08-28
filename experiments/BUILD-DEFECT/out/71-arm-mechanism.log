@@ -1,0 +1,44 @@
+==============================================================================
+coffee-bubbles
+  dust quads mapped      652
+  sites confirmed        1 of 2
+    ( 3202,  119) depth  -9.468% map  -3.606% p 0.0075  skip: not significant here
+    ( 3434, 2305) depth -12.606% map  -8.236% p 0.0025  CORRECT at scale 1.568
+  samples changed        49551 over 19 frames
+  output samples moved   98.515488%  (|delta| max 2413)
+  area near motes        0.1441% of the frame
+  at top of range        near-mote off 0.00% on 0.00%   |   elsewhere off 0.00% on 0.00%
+  global affine fit      a=0.99992336  b=-3.5659  (fitted on 1200000 pixels away from motes)
+  mean |on-off|          3.8740 DN, after removing the global fit 2.1471 DN
+    away from motes      3.8328 -> 2.1051 DN
+    near the motes       32.4049 -> 31.2572 DN
+  VERDICT                MIXED
+                         a global fit a=0.99992336 b=-3.5659 explains only 44.6% of the change
+
+==============================================================================
+109MSDCF
+  dust quads mapped      1135
+  sites confirmed        2 of 2
+    ( 3202,  119) depth  -7.486% map  -3.606% p 0.0025  CORRECT at scale 2.119
+    ( 3434, 2305) depth -16.305% map  -8.236% p 0.0025  CORRECT at scale 2.071
+  samples changed        99880 over 22 frames
+  output samples moved   0.000000%  (|delta| max 0)
+  area near motes        0.3189% of the frame
+  at top of range        near-mote off 100.00% on 100.00%   |   elsewhere off 85.50% on 85.50%
+  global affine fit      a=1.00000000  b=-0.0000  (fitted on 1200000 pixels away from motes)
+  mean |on-off|          0.0000 DN, after removing the global fit 0.0000 DN
+    away from motes      0.0000 -> 0.0000 DN
+    near the motes       0.0000 -> 0.0000 DN
+  VERDICT                CLIPPED
+                         the corrector changed 99880 samples but the mote neighbourhoods are 100.0% saturated in BOTH arms, so the correction lands above the top of the range
+
+==============================================================================
+PARTITION -- every subject examined lands in exactly one mechanism
+  CLIPPED               1
+  GLOBAL TONE SHIFT     0
+  LOCAL ONLY            0
+  MIXED                 1
+  UNEXPLAINED           0
+  TOTAL                 2  (must equal 2)
+
+wrote experiments\BUILD-DEFECT\out\71-arm-mechanism.json
