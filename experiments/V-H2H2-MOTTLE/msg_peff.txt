@@ -1,0 +1,90 @@
+p_eff: the derived significance floor is too small to matter, and band 0 is
+out of reach of any weight change
+
+Builds the per-coefficient significance fix as specified (fact 1812), then
+falsifies it on its own acceptance criterion. Defaulted OFF as a result.
+
+WHAT IT DOES. select_weight() takes r_floor and replaces r with hypot(r,
+r_floor), which is exactly p_eff = p * f(z) with f(z) = ln(1+z^2)/(2 ln z) --
+full strength where a coefficient is plainly above its own measurement noise,
+collapsing to a plain mean where it is not. NU_SMOOTH = 13.37469 is derived
+from KERNEL, not chosen, and a test recomputes it (it caught a digit
+transposition in my own arithmetic: I had written 13.37619).
+
+THE COROLLARY ORCH ASKED TO BE RECORDED: an exponent change cannot MOVE a
+plateau boundary, only DILUTE it, because argmax(r_i^p) = argmax(r_i) for all
+p > 0. p_eff differs from a global exponent drop in that it dilutes only where
+the noise model says there is nothing to select on -- so it should not cost the
+sharpness a global drop costs. It does not cost that sharpness. It also does
+not buy anything.
+
+MEASURED. coffee-bean 20 frames, --merge pyramid, ONE binary (6A9FABB7), three
+arms differing only in STREHL_PYRAMID_SIGNIFICANCE. Concentration
+max_i(w_i)/sum_i(w_i), flat/detail by local SD:
+
+         FLAT                        DETAIL
+band  off      x1       x1000     off      x1       x1000
+  0   1.0000   1.0000   1.0000    0.9999   0.9990   0.5000
+  1   0.8997   0.8444   0.1667    0.8340   0.8106   0.0958
+  2   0.6440   0.6325   0.0909    0.6917   0.6876   0.2802
+  3   0.3074   0.3071   0.0556    0.3955   0.3953   0.3244
+  6   0.0583   0.0583   0.0582    0.0567   0.0567   0.0565
+
+At the derived strength the flat/detail inversion does NOT collapse. It narrows
+at band 1 (gap 0.0657 -> 0.0338) and moves bands 2-6 by under 0.2%. At 1000x it
+collapses and reverses to the correct polarity at bands 2-4, so the mechanism is
+real and the derived scale is simply far too small to reach it. Reaching it
+needs a fitted multiplier -- the exact constant this design existed to avoid.
+
+BAND 0 CANNOT BE FIXED BY ANY WEIGHTING CHANGE, and that is arithmetic rather
+than tuning. conc = 1.0000 EXACTLY means every other frame's weight is exactly
+zero, and select_weight returns 0 on excess <= 0 before it looks at the floor.
+One frame cleared the gate and the rest did not. That is a decision of the GATE,
+upstream of the weight, which is why the refused fractions (0.6176 flat, 0.4958
+detail) are byte-identical in all three arms.
+
+SO p_eff DOES NOT SUBSUME STREHL_GATE_FLOOR_SCALE. They act on different
+mechanisms, and at the band where the inversion is worst only the gate-side knob
+can act at all. Not redundant; complementary.
+
+DEFAULTED OFF. It moves every byte of a shipping render -- three arms, three
+distinct hashes -- while failing the criterion it was built for, and a live
+behaviour change with no demonstrated benefit silently invalidates every other
+lane's in-flight baseline. Kept rather than deleted because it is the instrument
+that establishes the band-0 result.
+
+NULL ARM PROVEN ON A REAL RENDER, not only in unit tests: explicit =0 under
+binary 6A9FABB7 and the new unset default under binary B1524C8C both produce
+89CB2998FF0B5A4B5B1658549DD51F9817E1736E7C5F3835FB91916F0CE4F230, distinct from
+arm 1 (17C43D1F). The variable is a MULTIPLIER, not a flag, and that is what
+made the potency arm possible: arms 0 and 1 alone cannot distinguish "too small
+to matter" from "never executed", because both render identical bytes.
+
+TWO INSTRUMENT DEFECTS FOUND, both reported rather than worked around:
+
+1. byte-freeze.rs:574 hardcodes `--merge estimator` for every row, while
+   merge_cmd.rs:429 sets DEFAULT_MERGE_BACKEND = Pyramid. The freeze suite has
+   ZERO coverage of the backend that ships, and the comment at byte-freeze.rs:564
+   still claims "the estimator is still the default". My first three-arm A/B
+   returned byte-identical output at 1000x on those rows; that was a fact about
+   the harness, not the fix.
+
+2. coffee-bean-20-gate2-sidecar has MOVED (52517FF8 -> E600A506) and it is NOT
+   mine: arm 0 restores the shipping weight bit for bit and still renders
+   E600A506. Attribution belongs to whoever owns the estimator path. NOT
+   re-baselined here.
+
+Pre-existing and left alone, but now named by a test: select_weight's p == 2.0
+fast path returns r*r unbounded while the general path clamps p*ln(r), so it
+overflows at r > 1.844e19 where the general path cannot. Band 0 ships at p = 2.0
+so the branch is live; overflow needs excess > 1.18e21 DN^2 against a largest
+possible coefficient of 65535^2 = 4.3e9, so it is unreachable by eleven orders
+of magnitude.
+
+Also fixes the two wrong doc comments ORCH required: the ladder is
+2.000 2.800 3.920 5.488 7.683 8.000 8.000 with DEFAULT_BANDS = 7, not
+"2 3 4 5 8 8 8" (max error 0.488).
+
+49/49 pyramid tests pass, including a byte-exact null, a monotonicity test that
+rules out the non-monotone p*z^2/(1+z^2) form, a planted-improvement arm, and a
+potency guard on the overflow sweep.
