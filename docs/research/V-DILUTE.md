@@ -923,3 +923,102 @@ experiments/V-DILUTE/bandagnostic_recheck.py  null-normalised ratio, every band,
 experiments/V-DILUTE/boundary_free.py         energy share above 0.17 and 0.48 cyc/px
 experiments/V-DILUTE/sweep_recheck.py         band-count sweep re-read in every band
 ```
+
+---
+
+# ADDENDUM G — ORCH's noise-correction guard, applied to my own sweep
+
+ORCH, V-NEVERWORSE broadcast: *"Raw band power counts noise as sharpness. One
+arm read +0.142 sharper raw and −0.134 softer once noise-corrected — a sign
+flip. If your statistic can be inflated by noise, correct it or say plainly it
+cannot be trusted in flat regions."*
+
+My section-4 ACUITY column is a **raw** band EDGE std and is exactly that shape.
+Instrument: `experiments/V-DILUTE/noisecorrected.py`. EDGE-site variance is
+structure + noise; FLAT-site variance is noise alone, at the same tiles chosen
+on the reference so the choice is common to every arm. Corrected statistic is
+`sqrt(max(edge² − flat², 0))`, then null-normalised as before.
+
+## G.1 The guard PASSES — no sign flip anywhere
+
+| subject | N | bands | raw dev | **corrected dev** | sign |
+|---|---|---|---|---|---|
+| 109MSDCF | 22 | 3 | −0.0533 | **−0.0564** | same |
+| 109MSDCF | 22 | 5 | −0.0090 | **−0.0096** | same |
+| 109MSDCF | 22 | 8/9 | −0.0012 | **−0.0011** | same |
+| bee-3-cpl | 299 | 5 | +0.0790 | **+0.0785** | same |
+| bee-3-cpl | 299 | 9 | −0.0138 | **−0.0139** | same |
+
+Agreement is within **0.0002** at N=299 and within 0.018 at N=22 in the worst
+(0.25–0.50) band. **Not one row changes sign, and none changes magnitude
+materially.** Reason it survives where V-NEVERWORSE's arm did not: my acuity is
+measured at **EDGE sites**, where structure dominates noise, and I reported the
+noise column on the same pixels beside every acuity number from the start. The
+defect ORCH describes bites hardest on **flat**-region statistics.
+
+## G.2 But the guard exposed a defect of my own — I quoted a row I had voided
+
+Section 4 states *"deeper than 7 buys −0.12% at N=22 and **−1.38% at N=299** —
+worse."* The −1.38% is the `bands 9 / N=299` row, and **my own table at line 650
+marks that row `NULL VOID (marginal)`** — its instrument null reads **1.0121**,
+a deviation of 0.0121 against ORCH's stated 0.005 validity tolerance, **2.4×
+over**. I marked it invalid and then quoted its number in the prose conclusion.
+That is the same shape as the errors this session keeps turning up: a gate
+applied, then bypassed.
+
+**I withdraw the −1.38% figure.** It is not noise-inflated — G.1 proves that —
+it is **unlicensed**, which is a different and worse problem.
+
+Checked whether null-normalisation repairs it. My repair is legitimate only when
+the null offset is a **pure gain**, i.e. uniform across frequency (Addendum E's
+discriminator: uniform across bands = gain, band-selective = filter). Per-band
+reading of that row is `0.9858 / 0.9862 / 0.9868 / 0.9891 / 0.9946 / 1.0121` —
+a monotone 2.6% drift across frequency, **not** uniform. So it is a genuine
+filtering difference *plus* a global offset that a scalar cannot separate.
+**Genuinely void. No repair available.**
+
+## G.3 What survives, stated against the gate
+
+- **N=22 rows `bands 6, 8, 9` pass the null gate outright** (0.9979, 1.0016,
+  1.0016 — all inside 0.005). Noise-corrected deviations **−0.0010, −0.0011,
+  −0.0011**. So *"more bands than the default does not buy acuity"* is licensed
+  at N=22, noise-corrected, magnitude ≈ **−0.1%** — indistinguishable from zero
+  and certainly not a gain.
+- **At N=299 no non-reference sweep row passes the gate** (bands 5 → 0.9197,
+  bands 9 → 1.0121). The deep sweep therefore licenses **no acuity number in
+  either direction**. I previously read a *number* off it; I should have read
+  only *"uninformative."*
+- **The corpus result (section 3) is unaffected.** Its four in-tolerance rows
+  (coffee-bubbles 0.9975, 109MSDCF 1.0000, 119MSDCF 0.9998, 113MSDCF 0.9980)
+  pass outright; the three out-of-tolerance rows (foam 1.0125, coffee-bean
+  0.9887, bee-3 1.0130) are repairable because Addendum B showed their residual
+  is **flat to ≤0.0034 across every band** — a pure gain, which is exactly the
+  condition under which dividing by the null is valid. Verdict unchanged:
+  **0.9979–1.0005, no trend in N.**
+- **`bands 8 ≡ bands 9` bit-identical** (24,724,512 samples) needs no gate at
+  all — it is an equality, not a ratio.
+
+**The headline is unchanged: the base-band blur hypothesis is DEAD.** It never
+rested on the voided rows; it rests on the corpus null and on the geometry.
+The hypothesis predicted *more bands → sharper, and the gain LARGER on deep
+stacks.* At N=22 the gain is −0.1%; at N=299 it is unmeasurable. Neither is the
+predicted positive, N-growing gain.
+
+## G.4 Verifier audit — the presence-test defect
+
+ORCH asked every lane to check for verifiers that test the **presence of a
+conclusion string**. Audited all **24** V-DILUTE scripts:
+
+- **`assert` statements: 2 total**, both array-shape preconditions
+  (`baseband_spectrum.py:66`, `vd_metrics.py:30`). Neither certifies a claim.
+- **Conclusion-string tests: zero.** No script tests for or emits `refuted`,
+  `confirmed`, `DEAD` or `ALIVE`.
+
+**Clean — but the honest flip side is that this is not a virtue.** My scripts
+*print numbers*; every conclusion in this document was drawn by hand from that
+output. So I have no verifiers to be fooled **and no machine check on my
+conclusions either** — which is precisely how G.2 happened: a row correctly
+marked `NULL VOID` by the script, then quoted anyway by the human writing the
+prose. **The defect ORCH found in V-NEVERWORSE's verifier and the defect I
+found in my own section 4 are the same failure at different stations:** a gate
+that fires and is then not honoured downstream.
