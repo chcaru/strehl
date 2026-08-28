@@ -708,6 +708,41 @@ enum Command {
         /// so on stderr.
         #[arg(long, value_name = "NAME", default_value = align_cmd::DEFAULT_RESAMPLER_NAME)]
         resampler: String,
+
+        /// What to do about the region only SOME frames cover: `scale` (the
+        /// default) or `crop`.
+        ///
+        /// Every frame lands somewhere slightly different on the reference
+        /// grid, so the region ALL of them cover is smaller than the frame.
+        /// Rendering outside it puts black into the merge.
+        ///
+        ///   scale (DEFAULT) Shrink the field of view by k <= 1 and compose
+        ///             that scale into every placement, keeping the output
+        ///             dimensions. The dropped field of view is paid for by an
+        ///             UPSAMPLE of 1/k at every pixel of every render, and
+        ///             because the scale rides on every placement the reference
+        ///             frame is resampled too. k falls as the stack deepens:
+        ///             0.9870 on a 22-frame bracket, 0.9321 on a 299-frame one.
+        ///
+        ///   crop      Compose nothing. Emit the covered rectangle at UNITY
+        ///             SCALE, so nothing is upsampled and a frame placed at an
+        ///             integer offset -- the reference frame's identity is the
+        ///             extreme case -- is copied rather than interpolated. THE
+        ///             OUTPUT IS SMALLER, about k*W x k*H, and the banner says
+        ///             which rectangle it emitted.
+        ///
+        /// THE DEFAULT DOES NOT MOVE. `scale` is what every quality number in
+        /// this project's corpus was measured through, and a run that omits
+        /// this flag is byte-identical to one from before the flag existed.
+        ///
+        /// STREHL_COVER=scale|crop does the same for a harness that cannot edit
+        /// the command line; this flag wins. That variable's pre-existing
+        /// measurement control, STREHL_COVER=0 -- apply no fit at all and leave
+        /// uncovered edges in the picture -- still works and is deliberately
+        /// NOT reachable from this flag: it produces a knowingly wrong render.
+        /// An unrecognised value in either channel is an ERROR.
+        #[arg(long, value_name = "MODE")]
+        cover: Option<String>,
     },
 
     /// List the focus operators `--focus` can select, with the noise scale the
@@ -901,6 +936,7 @@ fn main() -> Result<()> {
             stats_placebo,
             confidence_tail,
             resampler,
+            cover,
         } => {
             // The lateral-CA profile is selected from the process environment
             // by `strehl_core::optics::profile_for_capture_env`, which the
@@ -1081,6 +1117,14 @@ fn main() -> Result<()> {
             let (photometric_mode, photometric_source) =
                 merge_cmd::resolve_photometric_mode(photometric.as_deref())?;
 
+            // Same shape, same precedence, same reason: `--cover` wins over
+            // STREHL_COVER, an unrecognised spelling is an error in either
+            // channel, and the source travels with the value so the banner can
+            // say whether anybody asked. Resolved HERE, once, rather than
+            // inside each merge backend -- that is what makes it impossible for
+            // one backend to honour the mode while the other ignores it.
+            let (cover_mode, cover_source) = merge_cmd::resolve_cover_mode(cover.as_deref())?;
+
             merge_cmd::run(&MergeOptions {
             dir,
             out,
@@ -1134,6 +1178,9 @@ fn main() -> Result<()> {
             // never a silent fall back to the default.
             resampler: align_cmd::parse_resampler(&resampler)?,
             backend,
+            // Resolved above with its provenance, exactly like `photometric`.
+            cover: cover_mode,
+            cover_source,
             pyramid,
         })
         }

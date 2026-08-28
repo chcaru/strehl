@@ -433,12 +433,26 @@ fn main() -> Result<()> {
     // ---- registration -----------------------------------------------------
     let t_align = Instant::now();
     let alignment = align_cmd::load_or_solve(&args.dir, &paths, 0, Resampler::CatmullRom)?;
+    // MEASUREMENT PATH, DELIBERATELY LEFT ON THE DEFAULT. This example is a
+    // frozen measurement harness: it resolves the coverage mode from the
+    // environment exactly as it always did, so `STREHL_COVER=0` still reaches
+    // it, and it REFUSES `crop` rather than accepting it and rendering the
+    // uncropped picture. Accepting a mode it does not implement would be a
+    // switch that parses and does nothing, which is indistinguishable from one
+    // that works.
+    let cover_mode = align_cmd::cover_mode_from_env()?.unwrap_or(align_cmd::DEFAULT_COVER_MODE);
+    anyhow::ensure!(
+        cover_mode != align_cmd::CoverMode::Crop,
+        "{}=crop is not implemented in this example: it emits the full plane, so a crop mode \
+         here would silently render the uncropped picture. Use `strehl stack --cover crop`.",
+        align_cmd::COVER_ENV
+    );
     let alignment = alignment.map(|(m, how)| {
-        let (m, k) = align_cmd::cover_or_explain(m);
-        (m, how, k)
+        let (m, fit) = align_cmd::cover_or_explain(m, cover_mode);
+        (m, how, fit)
     });
     match &alignment {
-        Some((map, how, k)) => {
+        Some((map, how, fit)) => {
             let p = map.provenance();
             eprintln!(
                 "alignment       : ON ({how}), reference {}, {} placed / {} refused, {:.1} s",
@@ -447,15 +461,18 @@ fn main() -> Result<()> {
                 map.refused_count(),
                 t_align.elapsed().as_secs_f64()
             );
-            match k {
-                Some(k) if *k >= 0.999_999 => {
+            match fit {
+                align_cmd::CoverFit::Scaled(k) if *k >= 0.999_999 => {
                     eprintln!("  coverage      : every frame covers the whole grid")
                 }
-                Some(k) => eprintln!(
+                align_cmd::CoverFit::Scaled(k) => eprintln!(
                     "  coverage      : field of view scaled to {k:.4} so every frame covers \
                      every pixel"
                 ),
-                None => eprintln!("  coverage      : WARNING -- could not fit a covered grid"),
+                // Unreachable: `crop` is refused above.
+                align_cmd::CoverFit::Cropped { .. } | align_cmd::CoverFit::Uncovered => {
+                    eprintln!("  coverage      : WARNING -- could not fit a covered grid")
+                }
             }
         }
         None => eprintln!("alignment       : OFF -- frames combined unregistered"),

@@ -933,7 +933,226 @@ pub const ALIGN_ENV: &str = "STREHL_ALIGN";
 /// This exists so the enlargement can be priced against the identical render
 /// with the identical solve from the identical binary; it is not a shipping
 /// option, because a render made with it has edge pixels no frame covers.
+///
+/// Since BUILD-CROP it carries a third value, `crop`, and the `--cover` flag is
+/// its louder twin. See [`CoverMode`] for the whole vocabulary.
 pub const COVER_ENV: &str = "STREHL_COVER";
+
+/// The `--cover` flag that names [`CoverMode`], for provenance lines.
+pub const COVER_FLAG: &str = "--cover";
+
+/// What the merge does about the region only *some* frames cover.
+///
+/// # Why there is a choice at all
+///
+/// Every placed frame covers a different part of the reference plane, so the
+/// region **all** of them cover is smaller than the plane. Rendering outside it
+/// puts the black level into the merge on whichever frames do not reach, which
+/// M86 measured at 9.5% of `bee-3-cpl` and which wrecks both the picture and
+/// any statistic taken on it. Something has to give, and the two honest answers
+/// give different things.
+///
+/// # The two answers, and what each costs
+///
+/// [`CoverMode::Scale`] shrinks the reference grid by `k <= 1` about the plane
+/// centre and composes that scale into every placement, so the same pixel
+/// dimensions come out. **The dropped field of view is paid for by an upsample
+/// of `1/k` at every pixel of every render**, and because `S_k` rides on every
+/// placement, the reference frame -- whose placement is the identity, and which
+/// would otherwise pass through the interpolator untouched -- is resampled too.
+/// `k` falls as the stack deepens (`109MSDCF`, 22 frames: 0.9870; `bee-1-cpl`,
+/// 299 frames: 0.9321), so the tax is worst on the deepest stacks.
+///
+/// [`CoverMode::Crop`] composes **nothing**. It renders the covered rectangle at
+/// unity scale and emits it, so the output is about `k*W x k*H` instead of
+/// `W x H` and no upsample happens anywhere. A frame whose placement is an
+/// integer translation -- the reference frame's identity is the extreme case --
+/// then reaches the output through an interpolating kernel evaluated exactly on
+/// a sample, which is a copy.
+///
+/// The price of `Crop` is the one the doc on [`fit_to_cover`] named: **the
+/// output dimensions change**, which is why it is opt-in and why
+/// [`CoverMode::Scale`] is still the default. There is a second price that is
+/// easier to miss: the merge still runs on the full plane, so frames that do
+/// not reach the border still fold their black fill there, and the pyramid's
+/// coarse bands spread that fill inward some distance before the crop discards
+/// it. Measure a border profile before trusting the outermost pixels.
+///
+/// [`CoverMode::Skip`] is neither: the pre-existing `STREHL_COVER=0`
+/// measurement control, which drops the fit and keeps the full dimensions, so
+/// the render has edge pixels no frame covers. It is not reachable from
+/// `--cover` on purpose -- it produces a deliberately wrong picture.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum CoverMode {
+    /// Shrink the field of view by `k` and upsample by `1/k`. **The default.**
+    #[default]
+    Scale,
+    /// Emit the covered rectangle at unity scale. Changes the output size.
+    Crop,
+    /// Apply no fit at all. A measurement control; leaves uncovered edges.
+    Skip,
+}
+
+/// The spellings [`CoverMode`] accepts, in a stable order, for help text and
+/// for the error a bad name earns. `off` and its synonyms reach
+/// [`CoverMode::Skip`] and are deliberately absent from this list, which is the
+/// *offered* vocabulary -- see [`CoverMode::parse`].
+pub const COVER_MODE_NAMES: [&str; 2] = ["scale", "crop"];
+
+/// The mode nothing asked for.
+pub const DEFAULT_COVER_MODE: CoverMode = CoverMode::Scale;
+
+impl CoverMode {
+    /// Parse one spelling, refusing rather than guessing.
+    ///
+    /// The `0`/`off`/`false`/`no` arm is the vocabulary [`COVER_ENV`] shipped
+    /// with and is kept exactly, so no existing harness changes meaning. Every
+    /// other unrecognised value is an **error**: this switch selects whether
+    /// every output pixel is interpolated, and a typo that silently selects the
+    /// default is the failure `STREHL_FULLRES_GATHER` panics on.
+    pub fn parse(raw: &str) -> Result<Self> {
+        match raw.trim().to_ascii_lowercase().as_str() {
+            "" | "1" | "on" | "true" | "yes" | "scale" => Ok(Self::Scale),
+            "crop" => Ok(Self::Crop),
+            "0" | "off" | "false" | "no" => Ok(Self::Skip),
+            other => bail!(
+                "{other:?} is not a coverage mode. Choose one of {}, or the \
+                 measurement control 0/off (which leaves uncovered edges). Refusing to \
+                 guess: this switch decides whether every output pixel is interpolated.",
+                COVER_MODE_NAMES.join(", ")
+            ),
+        }
+    }
+
+    /// The spelling this mode round-trips through [`CoverMode::parse`] as.
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Scale => "scale",
+            Self::Crop => "crop",
+            Self::Skip => "off",
+        }
+    }
+}
+
+/// The coverage mode named by [`COVER_ENV`], or `None` when nobody named one.
+///
+/// This is the environment half of the resolution only. The flag half, and the
+/// provenance that goes with it, live in [`crate::merge_cmd::resolve_cover_mode`]
+/// — `SettingSource` is a merge-path type and this module is `#[path]`-included
+/// by examples that do not compile the merge path at all.
+///
+/// An unset or blank variable is `None`, not an error: blank is how a caller
+/// clears an inherited value, and it has to mean "I am not asking".
+pub fn cover_mode_from_env() -> Result<Option<CoverMode>> {
+    match std::env::var(COVER_ENV) {
+        Ok(v) if !v.trim().is_empty() => {
+            let mode =
+                CoverMode::parse(&v).with_context(|| format!("reading {COVER_ENV}={v:?}"))?;
+            Ok(Some(mode))
+        }
+        // Unset, empty, or not valid UTF-8: nobody asked.
+        _ => Ok(None),
+    }
+}
+
+/// An axis-aligned window on the reference plane, in **plane (quad) pixels**.
+///
+/// Plane pixels, not output pixels, because that is the grid the merge and the
+/// warp map both live on. A `--demosaic` or `--srgb` render is twice this in
+/// each axis, and doubling an integer plane offset keeps the crop on an even
+/// output boundary, so the CFA phase of the emitted image is the one the
+/// merge produced.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CropRect {
+    pub x: usize,
+    pub y: usize,
+    pub width: usize,
+    pub height: usize,
+}
+
+impl CropRect {
+    /// The whole plane: the rectangle that crops nothing.
+    pub fn whole(geom: PlaneGeometry) -> Self {
+        Self {
+            x: 0,
+            y: 0,
+            width: geom.width,
+            height: geom.height,
+        }
+    }
+
+    /// Is this the whole plane, i.e. a crop that removes nothing?
+    pub fn is_whole(&self, geom: PlaneGeometry) -> bool {
+        *self == Self::whole(geom)
+    }
+
+    pub fn geometry(&self) -> PlaneGeometry {
+        PlaneGeometry {
+            width: self.width,
+            height: self.height,
+        }
+    }
+}
+
+/// What the coverage decision actually did, so the banner reports the run
+/// rather than the intent.
+///
+/// An enum rather than the `Option<f64>` this replaces, because "cropped" and
+/// "scaled" carry the same `k` and are not the same render, and a caller that
+/// reads only the number cannot tell them apart.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum CoverFit {
+    /// [`CoverMode::Scale`]: every placement carries `S_k`, dimensions kept,
+    /// output upsampled by `1/k`. `k == 1.0` means nothing was composed.
+    Scaled(f64),
+    /// [`CoverMode::Crop`]: nothing composed, output windowed to `rect` at
+    /// unity scale. `k` is the same fit; it is carried for the banner.
+    Cropped { k: f64, rect: CropRect },
+    /// [`CoverMode::Skip`], or no `k > 0` covers the grid. Either way the
+    /// render may contain regions no frame reached.
+    Uncovered,
+}
+
+impl CoverFit {
+    /// The window to emit, if this fit asks for one.
+    pub fn rect(self) -> Option<CropRect> {
+        match self {
+            Self::Cropped { rect, .. } => Some(rect),
+            _ => None,
+        }
+    }
+}
+
+/// The `coverage` banner line for [`CoverMode::Crop`].
+///
+/// One function, called by both merge backends, so the two cannot drift into
+/// describing the same decision differently -- and so the sentence that has to
+/// stay truthful has one home. **It deliberately shares no phrase with the
+/// scale arm**: the scale line says "field of view scaled to k ... then
+/// upsampled", roughly thirty harnesses under `experiments/` parse exactly that
+/// substring to recover the sampling factor, and there is no such factor here.
+pub fn crop_banner(k: f64, rect: CropRect, geom: PlaneGeometry) -> String {
+    if rect.is_whole(geom) {
+        return format!(
+            "  coverage      : CROP mode, and every frame already covers the whole grid, so \
+             nothing was cropped and nothing was upsampled (k={k:.4})."
+        );
+    }
+    format!(
+        "  coverage      : CROPPED to the region EVERY frame covers -- {} x {} plane px at \
+         ({}, {}) of {} x {}, emitted at UNITY SCALE. {:.1}% of width dropped and NOT \
+         upsampled (k={k:.4}), so the output is SMALLER than the plane by design and no \
+         placement carries a coverage scale. The reference frame's own placement reaches the \
+         gather unmodified.",
+        rect.width,
+        rect.height,
+        rect.x,
+        rect.y,
+        geom.width,
+        geom.height,
+        100.0 * (1.0 - k),
+    )
+}
 
 /// Environment switch for the **full-resolution gather**, which is **on** by
 /// default.
@@ -1407,6 +1626,12 @@ fn save_atomic(map: &WarpMap, path: &Path) -> Result<()> {
 /// Split out so both the merge and any future consumer take the same decision
 /// rather than each deciding for itself what to do about uncovered pixels.
 ///
+/// `mode` decides *how* the covered region is delivered -- see [`CoverMode`].
+/// It is an argument rather than another environment read because two merge
+/// backends and one example call this, and a switch each caller resolves for
+/// itself is a switch that can be honoured by one backend and ignored by
+/// another. This project has shipped that exact failure.
+///
 /// If `STREHL_ALIGN=zoom` this additionally replaces every placement with the
 /// *same* global zoom, discarding all relative registration. That is the null
 /// control for the sharpness comparison: it pays the identical resampling cost
@@ -1414,7 +1639,7 @@ fn save_atomic(map: &WarpMap, path: &Path) -> Result<()> {
 /// between it and the real thing is registration and nothing else. Without it
 /// an aligned render is measured against an unaligned one at a different
 /// sampling density, and the upsample alone moves gradient energy.
-pub fn cover_or_explain(map: WarpMap) -> (WarpMap, Option<f64>) {
+pub fn cover_or_explain(map: WarpMap, mode: CoverMode) -> (WarpMap, CoverFit) {
     // Measurement control (BUILD-RESAMP). `fit_to_cover`'s enlargement and the
     // per-frame gather are folded into one matrix and paid in one resample, so
     // no A/B against an unregistered render can separate them: turning
@@ -1425,34 +1650,54 @@ pub fn cover_or_explain(map: WarpMap) -> (WarpMap, Option<f64>) {
     // the fused matrix carries the extra 1/k scale. The output then has
     // uncovered pixels at the edges -- which is why this is a control and not
     // an option -- so anything measured through it must stay well inside.
-    let skip_fit = std::env::var(COVER_ENV)
-        .map(|v| {
-            matches!(
-                v.trim().to_ascii_lowercase().as_str(),
-                "0" | "off" | "false" | "no"
-            )
-        })
-        .unwrap_or(false);
-    if skip_fit {
+    if mode == CoverMode::Skip {
         eprintln!(
             "  coverage      : SKIPPED ({COVER_ENV}=0). Frames keep their solved scale, so edge \
              pixels NO frame covers are left as the merge found them. Measurement control only."
         );
-        return (map, None);
+        return (map, CoverFit::Uncovered);
     }
-    // Catmull-Rom reads one sample before and two after, so the grid must stay
-    // that far inside the source or the interpolator's support leaves it.
-    let (fitted, k) = match fit_to_cover(&map, 3.0) {
+
+    // The crop path composes NOTHING. It takes the same `k` from the same
+    // bisection -- so the field of view it emits is the one the scale path
+    // emits, to within the rounding of the rectangle to whole plane pixels --
+    // and then windows the output instead of stretching it back. Every
+    // placement therefore reaches the gather exactly as the solve wrote it, and
+    // a placement that is an integer translation resamples nothing.
+    if mode == CoverMode::Crop {
+        assert!(
+            !zoom_only_null(),
+            "{ALIGN_ENV}=zoom is the zoom-only NULL for the {} path: it replaces every \
+             placement with S_k, which the {} path deliberately never builds. Combining them \
+             would render a control nobody could interpret. Pick one.",
+            CoverMode::Scale.name(),
+            CoverMode::Crop.name(),
+        );
+        let geom = map.geometry();
+        let fit = match cover_scale(&map, COVER_MARGIN_PX) {
+            Some(k) => CoverFit::Cropped {
+                k,
+                rect: cover_rect(geom, k),
+            },
+            None => CoverFit::Uncovered,
+        };
+        return (map, fit);
+    }
+
+    let (fitted, k) = match fit_to_cover(&map, COVER_MARGIN_PX) {
         Some((fitted, k)) => (fitted, Some(k)),
         None => (map, None),
     };
-    let zoom_only = std::env::var(ALIGN_ENV)
-        .map(|v| v.trim().eq_ignore_ascii_case("zoom"))
-        .unwrap_or(false);
-    if !zoom_only {
-        return (fitted, k);
+    let fit = match k {
+        Some(k) => CoverFit::Scaled(k),
+        None => CoverFit::Uncovered,
+    };
+    if !zoom_only_null() {
+        return (fitted, fit);
     }
-    let Some(k) = k else { return (fitted, None) };
+    let Some(k) = k else {
+        return (fitted, CoverFit::Uncovered);
+    };
     let s = Similarity::from_params(SimilarityParams {
         ax: 0.0,
         ay: 0.0,
@@ -1472,8 +1717,67 @@ pub fn cover_or_explain(map: WarpMap) -> (WarpMap, Option<f64>) {
     prov.strategy = format!("{} [zoom-only null]", prov.strategy);
     (
         WarpMap::new(prov, fitted.geometry(), fitted.resampler(), warps),
-        Some(k),
+        CoverFit::Scaled(k),
     )
+}
+
+/// Is the zoom-only null control asked for? See [`cover_or_explain`].
+fn zoom_only_null() -> bool {
+    std::env::var(ALIGN_ENV)
+        .map(|v| v.trim().eq_ignore_ascii_case("zoom"))
+        .unwrap_or(false)
+}
+
+/// How far inside every source frame the reference grid must stay.
+///
+/// Catmull-Rom reads one sample before and two after, so the grid must stay
+/// that far inside the source or the interpolator's support leaves it. Named
+/// once because [`CoverMode::Scale`] and [`CoverMode::Crop`] must ask the same
+/// question of the same placements: two margins would be two fields of view,
+/// and the two modes would no longer be comparable.
+pub const COVER_MARGIN_PX: f64 = 3.0;
+
+/// The rectangle [`CoverMode::Crop`] emits, given the fitted `k`.
+///
+/// # Why it is derived from `k` rather than measured directly
+///
+/// `S_k` maps the destination grid onto the centred box
+/// `[c*(1-k), c*(1-k) + k*(n-1)]` in each axis, and [`fit_to_cover`] has
+/// already proved that box lands inside every source frame. Deriving the
+/// rectangle from the same `k` therefore makes the two modes render **the same
+/// region of the same scene**, one stretched and one not, which is what makes
+/// them comparable at all. Computing a maximal rectangle instead would recover
+/// a little more field of view -- the covered region is not centred when the
+/// drift is one-sided -- and would break that comparison. Recorded as
+/// follow-up, not done here.
+///
+/// # Rounding
+///
+/// Inward on both edges (`ceil` of the low corner, `floor` of the high one), so
+/// the emitted rectangle is a **subset** of the region every frame covers and
+/// never a superset by half a pixel. Whole plane pixels, so the window is an
+/// integer offset into the merged grid and the copy that applies it interpolates
+/// nothing -- which is the entire point of this mode.
+pub fn cover_rect(geom: PlaneGeometry, k: f64) -> CropRect {
+    let axis = |n: usize| -> (usize, usize) {
+        let n = n as f64;
+        let lo = 0.5 * n * (1.0 - k);
+        let hi = lo + k * (n - 1.0);
+        // `hi` is the last sampled coordinate, inclusive, so the count is
+        // `floor(hi) - ceil(lo) + 1`. Clamped to the plane because k == 1.0
+        // puts `lo` at exactly 0.0 and `hi` at exactly n-1.
+        let x0 = lo.ceil().max(0.0) as usize;
+        let x1 = (hi.floor().min(n - 1.0) as usize).max(x0);
+        (x0, x1 - x0 + 1)
+    };
+    let (x, width) = axis(geom.width);
+    let (y, height) = axis(geom.height);
+    CropRect {
+        x,
+        y,
+        width,
+        height,
+    }
 }
 
 /// Reusable buffers for [`warp_frame_in_place`], sized to the **quad** grid.
@@ -2239,10 +2543,42 @@ fn quad_mad(
 /// because the output keeps its pixel dimensions the result is upsampled by
 /// `1/k`. The alternative -- cropping the output -- keeps every pixel real but
 /// changes the image dimensions, which would break the byte-frozen measurement
-/// path. That trade is recorded in the M86 report as follow-up work.
+/// path. That trade is no longer only recorded: [`CoverMode::Crop`] implements
+/// it, opt-in and off by default, on the same `k` this function bisects for.
 ///
 /// Returns the scale applied, or `None` if no frame is placed.
 pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
+    let lo = cover_scale(map, margin)?;
+    if lo >= 1.0 {
+        return Some((map.clone(), 1.0));
+    }
+    let s = Similarity::from_params(SimilarityParams {
+        ax: 0.0,
+        ay: 0.0,
+        g: lo - 1.0,
+        rot: 0.0,
+    });
+    let warps: Vec<FrameWarp> = map
+        .warps()
+        .iter()
+        .map(|f| match f {
+            FrameWarp::Placed(t) => FrameWarp::Placed(s.then(*t)),
+            FrameWarp::Refused(why) => FrameWarp::Refused(why.clone()),
+        })
+        .collect();
+    let mut prov = map.provenance().clone();
+    prov.note = format!("{} | fit-to-cover k={lo:.6}", prov.note);
+    Some((WarpMap::new(prov, map.geometry(), map.resampler(), warps), lo))
+}
+
+/// The largest `k <= 1` for which the grid scaled by `k` about the plane centre
+/// lands inside **every** placed frame, or `None` if none does.
+///
+/// Split out of [`fit_to_cover`] so that [`CoverMode::Crop`] fits the same
+/// number from the same placements without composing anything. The two modes
+/// must agree about the field of view exactly, or the crop is not the scale
+/// path's own region and no comparison between them means anything.
+pub fn cover_scale(map: &WarpMap, margin: f64) -> Option<f64> {
     let geom = map.geometry();
     let (w, h) = (geom.width as f64, geom.height as f64);
     let (cx, cy) = (w * 0.5, h * 0.5);
@@ -2277,7 +2613,7 @@ pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
     };
 
     if covers(1.0) {
-        return Some((map.clone(), 1.0));
+        return Some(1.0);
     }
     // Bisection. `covers` is monotone in k: shrinking the grid can only pull
     // its image further inside every source frame.
@@ -2293,23 +2629,7 @@ pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
     if lo <= 0.0 {
         return None;
     }
-    let s = Similarity::from_params(SimilarityParams {
-        ax: 0.0,
-        ay: 0.0,
-        g: lo - 1.0,
-        rot: 0.0,
-    });
-    let warps: Vec<FrameWarp> = map
-        .warps()
-        .iter()
-        .map(|f| match f {
-            FrameWarp::Placed(t) => FrameWarp::Placed(s.then(*t)),
-            FrameWarp::Refused(why) => FrameWarp::Refused(why.clone()),
-        })
-        .collect();
-    let mut prov = map.provenance().clone();
-    prov.note = format!("{} | fit-to-cover k={lo:.6}", prov.note);
-    Some((WarpMap::new(prov, geom, map.resampler(), warps), lo))
+    Some(lo)
 }
 
 #[cfg(test)]

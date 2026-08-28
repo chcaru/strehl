@@ -243,6 +243,18 @@ pub struct MergeOptions {
     /// unrecognised spelling is one error in one place, exactly as
     /// [`resolve_photometric_mode`] does it.
     pub backend: MergeBackend,
+    /// What to do about the region only *some* frames cover: shrink the field
+    /// of view and upsample (the default), or emit the covered rectangle at
+    /// unity scale. See [`align_cmd::CoverMode`].
+    ///
+    /// Resolved in `main.rs` from `--cover` / [`align_cmd::COVER_ENV`] so that
+    /// an unrecognised spelling is one error in one place, and carried here
+    /// rather than read from the environment at each of the two call sites --
+    /// which is what keeps **both** backends on the same decision. A previous
+    /// fix in this file reached one backend and shipped broken in the other.
+    pub cover: align_cmd::CoverMode,
+    /// Which channel chose [`MergeOptions::cover`], for the banner.
+    pub cover_source: SettingSource,
     /// Configuration for [`MergeBackend::Pyramid`]. Ignored, and REFUSED by
     /// `main.rs` rather than ignored silently, under the other backend.
     pub pyramid: MergeConfig,
@@ -2343,6 +2355,26 @@ pub const WARPMAP_ENV: &str = "STREHL_WARPMAP";
 /// on), so the disagreement is **reported** rather than either silently
 /// dropped or turned into a refusal that would break an existing measurement
 /// route.
+/// Say which channel chose the coverage mode, but **only when one did**.
+///
+/// Silent on [`SettingSource::Default`], which is every run that does not
+/// mention `--cover` or `STREHL_COVER`, so the default banner is exactly the
+/// banner it was before this mode existed. When somebody does ask, the run's
+/// own record has to name the channel: an argv records what the caller said and
+/// only the run can record what it resolved, and those differ exactly when a
+/// default is doing the work.
+fn cover_mode_line(opts: &MergeOptions) {
+    if !opts.cover_source.asked() {
+        return;
+    }
+    eprintln!(
+        "coverage mode   : {} -- {}",
+        opts.cover.name(),
+        opts.cover_source
+            .describe(align_cmd::COVER_FLAG, align_cmd::COVER_ENV)
+    );
+}
+
 fn alignment_for(
     dir: &Path,
     paths: &[PathBuf],
@@ -2636,6 +2668,30 @@ pub fn resolve_photometric_mode(
         // Unset, empty, or not valid UTF-8: the default, and nobody asked.
         _ => Ok((DEFAULT_PHOTOMETRIC_MODE, SettingSource::Default)),
     }
+}
+
+/// Resolve the coverage mode from the flag and the environment.
+///
+/// Precedence, and it is the same one `--photometric` uses: the flag wins, then
+/// [`align_cmd::COVER_ENV`], then [`align_cmd::DEFAULT_COVER_MODE`]. The source
+/// comes back with the value from the same read, so a banner cannot report a
+/// channel that did not supply the mode in use.
+///
+/// The flag cannot spell the measurement control `0`/`off` even though the
+/// environment can. That asymmetry is deliberate: leaving the plane uncovered
+/// produces an image with invented edges, which is a thing to measure and not a
+/// thing to render, and a command line is the channel a caller reaches for when
+/// they want output they intend to keep.
+pub fn resolve_cover_mode(flag: Option<&str>) -> Result<(align_cmd::CoverMode, SettingSource)> {
+    if let Some(v) = flag {
+        let mode = align_cmd::CoverMode::parse(v)
+            .with_context(|| format!("reading {} {v:?}", align_cmd::COVER_FLAG))?;
+        return Ok((mode, SettingSource::Flag));
+    }
+    if let Some(mode) = align_cmd::cover_mode_from_env()? {
+        return Ok((mode, SettingSource::Env));
+    }
+    Ok((align_cmd::DEFAULT_COVER_MODE, SettingSource::Default))
 }
 
 /// Where to write the n_eff map, if anywhere: `--n-eff-map` wins, then
@@ -3114,14 +3170,15 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
     // Solved (or loaded) before either pass, because both passes must see the
     // same geometry. M86 fact: every bracket in this corpus drifts far past
     // T_usable, so this is on by default; `STREHL_ALIGN=0` turns it off.
+    cover_mode_line(opts);
     let t_align = Instant::now();
     let alignment = alignment_for(&opts.dir, &paths, opts.resampler)?;
     let alignment = alignment.map(|(m, how)| {
-        let (m, k) = align_cmd::cover_or_explain(m);
-        (m, how, k)
+        let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
+        (m, how, fit)
     });
     match &alignment {
-        Some((map, how, k)) => {
+        Some((map, how, fit)) => {
             let p = map.provenance();
             eprintln!(
                 "alignment      : ON ({how}), reference frame {}, {} placed / {} refused",
@@ -3150,18 +3207,27 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                 map.resampler(),
                 t_align.elapsed().as_secs_f64()
             );
-            match k {
-                Some(k) if *k >= 0.999_999 => {
+            match fit {
+                // The crop arm deliberately shares no phrase with the scale
+                // arm below. Around thirty harnesses in `experiments/` regex
+                // `field of view scaled to ([0-9.]+)` out of this line and
+                // divide by it to compare spectra at matched sensor bandwidth;
+                // a crop render has no such factor, and a line they could
+                // half-match would feed them a correction that does not apply.
+                align_cmd::CoverFit::Cropped { k, rect } => {
+                    eprintln!("{}", align_cmd::crop_banner(*k, *rect, map.geometry()))
+                }
+                align_cmd::CoverFit::Scaled(k) if *k >= 0.999_999 => {
                     eprintln!("  coverage      : every frame covers the whole grid; no crop needed")
                 }
-                Some(k) => eprintln!(
+                align_cmd::CoverFit::Scaled(k) => eprintln!(
                     "  coverage      : field of view scaled to {:.4} so that EVERY frame covers \
                      every pixel ({:.1}% of width dropped, then upsampled to keep the output \
                      dimensions). Without this the render is part black.",
                     k,
                     100.0 * (1.0 - k)
                 ),
-                None => eprintln!(
+                align_cmd::CoverFit::Uncovered => eprintln!(
                     "  coverage      : WARNING -- could not fit a fully covered grid; the render \
                      may contain black regions where no frame reaches."
                 ),
@@ -4341,6 +4407,11 @@ fn run_estimator(opts: &MergeOptions) -> Result<()> {
                         noise: &noise,
                     })
             }),
+            // ESTIMATOR BACKEND. The pyramid backend's call carries the
+            // identical expression; both read the one `CoverFit` their own
+            // `cover_or_explain` returned, so neither can honour `--cover crop`
+            // while the other quietly does not.
+            alignment.as_ref().and_then(|(_, _, fit)| fit.rect()),
             path,
         )?;
     }
@@ -5354,14 +5425,15 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // The same resolver the estimator uses, so STREHL_WARPMAP, STREHL_ALIGN and
     // --resampler behave identically on both arms and a sidecar solved for one
     // is the sidecar the other gathers through.
+    cover_mode_line(opts);
     let t_align = Instant::now();
     let alignment = alignment_for(&opts.dir, &paths, opts.resampler)?;
     let alignment = alignment.map(|(m, how)| {
-        let (m, k) = align_cmd::cover_or_explain(m);
-        (m, how, k)
+        let (m, fit) = align_cmd::cover_or_explain(m, opts.cover);
+        (m, how, fit)
     });
     match &alignment {
-        Some((map, how, k)) => {
+        Some((map, how, fit)) => {
             let p = map.provenance();
             eprintln!(
                 "alignment       : ON ({how}), reference frame {}, {} placed / {} refused, \
@@ -5378,17 +5450,25 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                     .unwrap_or("NOT MEASURED".into()),
                 map.resampler()
             );
-            match k {
-                Some(k) if *k >= 0.999_999 => {
+            match fit {
+                // Same wording, from the same function, as the estimator arm.
+                // The two backends resolving one mode from one field and
+                // printing it through one function is deliberate: the failure
+                // this file has actually shipped is a fix that reached one
+                // backend and not the other.
+                align_cmd::CoverFit::Cropped { k, rect } => {
+                    eprintln!("{}", align_cmd::crop_banner(*k, *rect, map.geometry()))
+                }
+                align_cmd::CoverFit::Scaled(k) if *k >= 0.999_999 => {
                     eprintln!("  coverage      : every frame covers the whole grid; no crop needed")
                 }
-                Some(k) => eprintln!(
+                align_cmd::CoverFit::Scaled(k) => eprintln!(
                     "  coverage      : field of view scaled to {k:.4} so that EVERY frame covers \
                      every pixel ({:.1}% of width dropped, then upsampled to keep the output \
                      dimensions).",
                     100.0 * (1.0 - k)
                 ),
-                None => eprintln!(
+                align_cmd::CoverFit::Uncovered => eprintln!(
                     "  coverage      : WARNING -- could not fit a fully covered grid; the render \
                      may contain black regions where no frame reaches."
                 ),
@@ -5640,6 +5720,9 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
                     noise: &noise,
                 })
         }),
+        // PYRAMID BACKEND -- the default one. Textually identical to the
+        // estimator's argument, and it must stay that way.
+        alignment.as_ref().and_then(|(_, _, fit)| fit.rect()),
         path,
     )?;
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
@@ -6782,6 +6865,12 @@ fn write_merged(
     // `None` leaves every arithmetic expression below textually and
     // numerically identical to what it was before this was wired.
     restore: Option<strehl_core::restore::RestorePlan<'_>>,
+    // `Some` only under `--cover crop`. The window every frame covered, in
+    // plane px, emitted at unity scale instead of being stretched back to the
+    // full plane. `None` -- every other run -- takes `CropRect::whole`, whose
+    // index map is the identity, so the byte-frozen branch below reads exactly
+    // the values it always read, in exactly the order it always read them.
+    crop: Option<align_cmd::CropRect>,
     path: &Path,
 ) -> Result<()> {
     // The transfer curve, and *only* the transfer curve. Bound here so the
@@ -6790,7 +6879,26 @@ fn write_merged(
     // that name has not changed -- what changed is that the matrix no longer
     // rides on it.
     let srgb = space.applies_curve();
-    let geom = merged.geometry();
+    // THE ONE PLACE THE CROP IS APPLIED, and it is applied by *addressing*, not
+    // by copying: every expression below asks `merged` for quad `i` of the grid
+    // it is writing, and `at` turns that into the quad of the merged grid it
+    // came from. Everything downstream -- the exposure statistic, the four
+    // restored planes, the demosaic interleave, the binned write and the
+    // byte-frozen encode -- is therefore cropped by construction rather than by
+    // four separate crops that could disagree.
+    //
+    // The offsets are whole PLANE pixels, so a `--demosaic`/`--srgb` render is
+    // cropped on an EVEN full-resolution boundary and keeps the CFA phase the
+    // merge produced.
+    let full = merged.geometry();
+    let rect = crop.unwrap_or(align_cmd::CropRect::whole(full));
+    let geom = rect.geometry();
+    let at = move |i: usize| -> usize {
+        if rect.x == 0 && rect.y == 0 && rect.width == full.width {
+            return i;
+        }
+        (i / rect.width + rect.y) * full.width + (i % rect.width) + rect.x
+    };
     let n = geom.pixels();
     let range = levels.range();
     ensure!(range > 0.0, "white level is not above black level");
@@ -6803,8 +6911,8 @@ fn write_merged(
     // same order, which is what keeps the measurement branch byte-frozen.
     // Untreated pixels fall straight through to the estimator, so `halo = None`
     // and "treated nothing" produce the identical file.
-    let val = |p: CfaPlane, i: usize| merged.value(p, i, black);
-    let gmean = |i: usize| merged.green_mean(i, black);
+    let val = |p: CfaPlane, i: usize| merged.value(p, at(i), black);
+    let gmean = |i: usize| merged.green_mean(at(i), black);
     let gains = wb.unwrap_or([1.0, 1.0, 1.0]);
 
     // The colour matrix rides with `--srgb`, and only with `--srgb`. Both are
