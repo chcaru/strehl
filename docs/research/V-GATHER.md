@@ -2043,3 +2043,161 @@ sound for what it tests and blind to the thing that turned out to matter.
   reproducible from a commit alone.
 - `STREHL_GATE_FLOOR_SCALE` was not swept. It is the knob that could correct
   band 0 alone, and it is the obvious next measurement.
+
+## Part 15 - ORCH's correction, corroborated, bounded, and one consequence refuted
+
+ORCH retracted the direction they had relayed and asked all lanes to
+reproduce before relying on it. Part 14 had already run the experiment. This
+part reconciles the two, generalises the half of their correction that holds,
+bounds the half that does not, and refutes the reconciliation they drew from
+it.
+
+### 15.1 Independent corroboration of the headline
+
+| | ORCH | V-GATHER (Part 14) |
+| --- | --- | --- |
+| binary | `AAAF8666B5F08DA5`, clean HEAD | `16E645FD0AD42260`, HEAD + 43 uncommitted lines |
+| recipe | `--srgb --auto-exposure` | `--srgb`, no exposure applied |
+| leaf-2-cpl band-0 `x white` | **1.5504** | **1.5504** |
+
+Two lanes, two builds, two recipes, the same number. That also retires my own
+Part 14 caveat about the dirty `pyramid.rs`: the floor ratio is identical on a
+clean tree, so the dirt did not touch it.
+
+### 15.2 "Every entry is ABOVE 1.0" - true for their subject, false for most
+
+ORCH generalised from `leaf-2-cpl`. Across the eight subjects already rendered:
+
+| subject | band 0 | band 1 | band 2 | band 3 |
+| --- | --- | --- | --- | --- |
+| leaf-2-cpl | 1.5504 | 1.0693 | 1.1132 | 1.1386 |
+| wrapped-text-1 | 1.1619 | 1.0139 | 1.0796 | 1.1068 |
+| 109MSDCF | 1.2332 | **0.9475** | **0.9963** | 1.0196 |
+| 112MSDCF | 1.2151 | **0.9650** | 1.0186 | 1.0430 |
+| 113MSDCF | 1.2151 | **0.9574** | 1.0097 | 1.0339 |
+| 119MSDCF | 1.1655 | **0.9368** | **0.9880** | 1.0114 |
+| coffee-bean | 1.1609 | **0.9808** | 1.0409 | 1.0668 |
+| flat-on-ruler-cpl | 1.1736 | **0.9745** | 1.0329 | 1.0570 |
+
+**Band 0 is above 1.0 on 8 of 8** (1.1609..1.5504) - the headline holds and
+generalises. **Band 1 is BELOW 1.0 on 6 of 8.** The two subjects where "every
+entry" holds are ORCH's own and `wrapped-text-1`.
+
+So the composition ORCH describes - warping pulls down, demosaic pulls up - is
+right, but which term wins is **band-dependent and subject-dependent**, and it
+only reliably wins at band 0.
+
+### 15.3 "The gate does not fire above level 0" - confirmed, and it generalises
+
+This is the more valuable half of ORCH's message and it survives widening.
+`averaged`, default arm, all eight subjects:
+
+| subject | L0 | L1 | L2 | L3..L6 |
+| --- | --- | --- | --- | --- |
+| 109MSDCF | 72.5% | 0.2% | 0.0% | 0.0% |
+| 119MSDCF | 34.4% | 0.0% | 0.0% | 0.0% |
+| 112MSDCF | 32.1% | 0.7% | 0.0% | 0.0% |
+| 113MSDCF | 28.6% | 1.1% | 0.1% | 0.0% |
+| leaf-2-cpl | 54.4% | 0.0% | 0.0% | 0.0% |
+| coffee-bean | 7.5% | 0.0% | 0.0% | 0.0% |
+| wrapped-text-1 | 1.1% | 0.0% | 0.0% | 0.0% |
+| flat-on-ruler-cpl | 0.0% | 0.0% | 0.0% | 0.0% |
+
+The literal "0.0% at levels 1 through 6" is not exact - `113MSDCF` reaches 1.1%
+at L1 and 0.1% at L2 - but **the maximum anywhere above level 0, across eight
+subjects, is 1.1%**. By the banner's own criterion the gate is a level-0
+device. Confirmed at 8x the evidence ORCH had.
+
+### 15.4 Their new prediction for me: half confirmed, half refuted
+
+> "`white` is the *looser* gate on real frames, so `white` should select more
+> and soften less. If rim worsens under `white`, that supports the
+> excursion-then-clamp mechanism."
+
+- **"`white` selects more" - CONFIRMED.** Band-0 averaging is lower under
+  `white` on 7 of 8 and equal on the eighth (Part 14 §14.4).
+- **"and softens less" - REFUTED as stated.** `white` is not sharper in real
+  detail; it is **noisier**. The structure-split discriminator, commissioned to
+  read exactly `0.5000` on a planted halving of noise, puts the whole
+  difference in flat territory.
+- **"if rim worsens under `white`" - it does not, either way.** 8 of 8
+  UNRESOLVED, every delta below the gauge's own +0.0039 deformation floor. This
+  neither supports nor refutes excursion-then-clamp; the instrument cannot
+  resolve a change of that size, and that is reported as UNRESOLVED rather than
+  as a clean bill.
+
+### 15.5 The reconciliation with BUILD-PLUGIN is probably wrong
+
+ORCH now reads BUILD-PLUGIN's **-9.9% to -39.9% sharpness** as vindicated by
+the stricter gate, and has promoted "`k` was tuned against the wrong floor" to
+leading candidate. Before that is acted on, the same pixels pooled two ways,
+on `leaf-2-cpl`, white -> default:
+
+| sigma | GLOBAL (no structure split) | flat | detail |
+| --- | --- | --- | --- |
+| 0.7 | **-22.42%** | -51.24% | **-1.21%** |
+| 1.4 | -8.33% | -33.13% | +0.64% |
+| 2.8 | -2.89% | -9.75% | +0.04% |
+| 5.6 | -1.23% | -2.04% | -0.63% (scale blind) |
+| 11.2 | -0.52% | -0.64% | -0.30% (scale blind) |
+
+**A global sharpness metric reports -22.42% on pixels where detail is
+-1.21%.** That lands inside BUILD-PLUGIN's reported range, from noise removal
+alone, on the subject and the change in question.
+
+I have not read BUILD-PLUGIN's instrument and I am not asserting it is wrong. I
+am asserting that **an error of exactly their magnitude is available here**,
+that I nearly published it myself in Part 14 before the discriminator caught
+me, and that it is cheap to exclude: `gf_discriminate.py` and
+`gf_multiscale.py` are committed and take one extra pooling step over bands
+they already compute.
+
+The two coarsest scales are marked blind because a **planted** softening reads
+only 0.9598 and 0.9888 there - they cannot see the defect, so they are excluded
+rather than counted as evidence of its absence.
+
+### 15.6 A falsifiable prediction for the re-tuned `k`
+
+If the measured -9.9%..-39.9% is noise rather than detail, then **lowering `k`
+will restore noise and not sharpness.** Concretely, on `leaf-2-cpl`:
+
+- band-0 averaging falls from 54.4% toward the `white` arm's 7.1%;
+- flat-territory mid-band energy rises back toward 1.0 - most of the -51.24% at
+  sigma 0.7 returns;
+- **detail-territory energy moves by ~1%, because it only moved by 1.21% in the
+  first place.**
+
+If a lower `k` recovers materially more than ~1% of *detail* energy, this
+analysis is wrong and BUILD-PLUGIN's reading is right. That is the experiment
+that separates them, and it is one render plus one pooling.
+
+One caution on the direction: because the gate already fires at 0.0-1.1% above
+level 0, **`k` has no authority there** - lowering it can only act at band 0.
+And the band-1 floor moved *down* on 6 of 8 subjects, so the stated
+justification ("the floor moved up and `k` did not move with it") is a band-0
+argument, not a pyramid-wide one. The per-band `STREHL_GATE_FLOOR_SCALE` knob
+exists for exactly this asymmetry, and its own docstring says `--pyramid-gate`
+"is a single number by construction and the measurement that motivated the knob
+wants opposite moves at opposite ends of the pyramid".
+
+### 15.7 The `--auto-exposure` recipe is safe here
+
+ORCH's recipe uses `--auto-exposure`, which chooses a gain per image and is a
+documented trap. Read from the fixed-exposure logs, which print the gain that
+*would* have been chosen, the two arms agree on **7 of 8** subjects; `109MSDCF`
+differs by 6.063x vs 6.105x, or 0.7%. Since the metrics here are normalised, a
+pure gain cancels exactly (commissioned: `GAIN` arm invariant to 1e-12). So
+exposure is **not** the explanation for BUILD-PLUGIN's magnitude, and ORCH's
+recipe does not need changing.
+
+### 15.8 Gaps
+
+- Band 1's sub-1.0 ratio is measured but its behavioural consequence is not,
+  because the gate barely fires there. If a lower `k` makes L1 gating live, that
+  floor becomes relevant and has not been evaluated.
+- The multi-scale check ran on `leaf-2-cpl` only - the largest effect, but one
+  subject.
+- Two of five scales are blind to a planted softening; a softening confined to
+  sigma >= 5.6 would not be caught by anything here.
+- I still have not seen BUILD-PLUGIN's instrument. §15.5 is an available
+  explanation, not a diagnosis.
