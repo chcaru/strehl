@@ -8,26 +8,31 @@ objected to is gone from the subjects it was diagnosed on.
 
 **The masters are also print files, verified in their own bytes.** All 26 carry
 the 2716-byte sRGB ICC profile in tag 34675, `300/1` X and Y resolution, and
-`ResolutionUnit = inch`. The shipped gallery had none of these. The reader was
-commissioned against a file known to lack them before any master was trusted
-(§11). **Nothing regressed.**
+`ResolutionUnit = inch`. The reader was commissioned against a file known to
+lack them before any master was trusted. **A correction to the brief that sent
+me looking:** the profile-less gallery BUILD-OUTPUT found is `SHIP-V2`, not
+ORCH-FAITHFUL — ORCH-FAITHFUL was built after both ICC commits and already had
+the profile, so commissioning against it, as instructed, would have failed (§11).
 
-**Two things happened to the delivery that I did not do**, and both are
-stop-and-report items: the ORCH-FAITHFUL masters were deleted from disk at
-02:53, and seven files I did not render appeared in my delivery folder (§13).
+**Two things happened in my delivery folder that I did not do**, both since
+explained: ORCH purged the superseded ORCH-FAITHFUL tree at 02:53 after banking
+its hashes eleven seconds earlier, and ORCH rendered seven further subjects into
+my masters folder with my pinned binary. Neither is data loss; both change how
+the folder should be read (§13).
 
 **Three things in this report are more important than that headline**, because
 each one contradicts something the lane was briefed to expect:
 
 1. **The build-drift confound does not exist on this path.** I rendered a
    second arm from the same pinned commit with only `eps_r` reverted, and it
-   reproduces the shipped ORCH-FAITHFUL masters **bit-for-bit on all 5 subjects
-   tested**. The six `crates/` commits between the old masters' build and my
+   reproduces the shipped ORCH-FAITHFUL masters **pixel-for-pixel on all 5
+   subjects tested**. The six `crates/` commits between the old masters' build
+   and my
    pin, and that build's `-dirty` state, changed the output by **zero pixels**.
    The old-vs-new comparison is therefore a clean coefficient-only A/B, not a
    confounded one.
 2. **`highly-angled-ruler-mm-cpl` receives no CA correction at all** — under
-   either coefficient — and is bit-identical between arms. It is a tilted
+   either coefficient — and is pixel-identical between arms. It is a tilted
    subject, its alignment is refused, and an unregistered merge does not
    resample, so the correction (which rides the alignment gather) never runs.
    It could not have got worse. It also cannot get better, and it still visibly
@@ -95,17 +100,30 @@ change (`eps_r: -508.4e-6` -> `-704.5e-6`; `git diff --stat` =
 `1 file changed, 1 insertion(+), 1 deletion(-)`) and rendered five subjects.
 
 ```
-dry-erase-marker-head-cpl            BIT-IDENTICAL to shipped master
-tweezers-cpl                         BIT-IDENTICAL to shipped master
-lavendar-cpl                         BIT-IDENTICAL to shipped master
-highly-angled-ruler-mm-cpl           BIT-IDENTICAL to shipped master
-113MSDCF                             BIT-IDENTICAL to shipped master
+dry-erase-marker-head-cpl            PIXEL-IDENTICAL to shipped master
+tweezers-cpl                         PIXEL-IDENTICAL to shipped master
+lavendar-cpl                         PIXEL-IDENTICAL to shipped master
+highly-angled-ruler-mm-cpl           PIXEL-IDENTICAL to shipped master
+113MSDCF                             PIXEL-IDENTICAL to shipped master
 ```
 
 Five for five, `np.array_equal` on the full 4688x7040x3 arrays. **The six
 intervening commits and the dirty tree changed nothing.** Therefore
 old-vs-new *is* the coefficient, and every number in section 4 is a
 coefficient-only measurement.
+
+**Read that as pixels, not as whole files, and here is the arithmetic to prove
+it.** ORCH-FAITHFUL has since been purged (§13), but its per-file SHA256 and
+size were banked first, in
+`experiments/ORCH-drift-check/purged/ORCH-FAITHFUL-index.txt`. Anyone comparing
+those banked hashes against my CA-old arm will find they **differ on all five**,
+and I would rather state why than have it look like an overclaim. The file sizes
+differ by **exactly -6 bytes on every subject** (e.g. `dry-erase-marker-head-cpl`
+198 026 320 -> 198 026 314), which is the length of the `305 Software` string:
+`strehl 0.0.0 (8a480af9c6ba-dirty)` is six characters longer than
+`strehl 0.0.0 (6af834dac08d)`. The identity claim is about **image content**,
+which is what `np.array_equal` tested and what the A/B depends on; the container
+metadata necessarily records a different build and cannot match.
 
 I am not able to reconcile this with fact 1886 and I did not try — that is
 another lane's measurement on another arm. I note only that 1886's "33 003 417
@@ -402,13 +420,13 @@ written would have corrupted the one subject it matters most on.
 
 ## 11. The masters are print files, verified in their own bytes (MEASURED)
 
-The gallery BUILD-OUTPUT audited was not a print file: no ICC profile, no
-physical resolution, `ResolutionUnit = none`. BUILD-OUTPUT established that the
-**code** at HEAD is already correct and the gallery was simply stale, predating
-`96b7e119` and `c14284a8`. I confirmed those two commits are ancestors of my pin
-(`96b7e119` 2026-08-26 11:27, `c14284a8` 2026-08-26 16:32, pin `6af834da`
-2026-08-28 00:51), but an ancestry argument is not evidence about bytes, so I
-read the bytes.
+The gallery BUILD-OUTPUT audited — `SHIP-V2` — was not a print file: no ICC
+profile, no physical resolution, `ResolutionUnit = none`. BUILD-OUTPUT
+established that the **code** at HEAD is already correct and the gallery was
+simply stale, predating `96b7e119` and `c14284a8`. I confirmed those two commits
+are ancestors of my pin (`96b7e119` 2026-08-26 11:27, `c14284a8` 2026-08-26
+16:32, pin `6af834da` 2026-08-28 00:51), but an ancestry argument is not
+evidence about bytes, so I read the bytes.
 
 **Reader, and why it is not `tifffile`.** I reused BUILD-OUTPUT's
 `experiments/BUILD-OUTPUT/tiff_tags.py` rather than writing my own, driven by
@@ -417,10 +435,11 @@ read the bytes.
 indistinguishable from a real `1/1`, so the highest-level reader available
 cannot see this defect at all.
 
-**Commissioned before it was trusted.** The brief asked me to point the reader at
-an ORCH-FAITHFUL master and confirm it reports the defect. Those files no longer
-exist (§13). I used `C:\dev\strehl-out\marker.tif`, rendered 2026-08-23 and so
-predating the ICC fix by three days. It reads:
+**Commissioned before it was trusted — and the target in the brief would have
+been the wrong file.** The brief asked me to point the reader at an
+ORCH-FAITHFUL master and confirm it reports the defect. Those files have since
+been purged (§13), so I used `C:\dev\strehl-out\marker.tif`, rendered
+2026-08-23 and so predating the ICC fix by three days. It reads:
 
 ```
 ICC 34675      : ABSENT
@@ -432,6 +451,19 @@ ResolutionUnit : 1 (none)
 can see the defect, so a clean read from it means something. `tagcheck.py`
 re-runs this commissioning on every invocation and refuses to check any master
 if it fails.
+
+**The substitution was not merely convenient, it was necessary**, and this is
+worth banking. ORCH-FAITHFUL was built from `8a480af9c6ba` (2026-08-27 15:11),
+and both `96b7e119` and `c14284a8` are **ancestors of that build** — so those
+masters already carried the profile and the 300 DPI. Commissioning against one
+would have reported *clean*, i.e. the commissioning would have **failed**, and a
+lane following the instruction literally would have concluded its reader was
+broken. The banked sizes corroborate independently: each old master is **6 bytes
+larger** than mine, not ~2716 bytes smaller, and 6 bytes is exactly the extra
+length of its `Software` string. **The print defect BUILD-OUTPUT found is real,
+but it belongs to `SHIP-V2`, an older gallery — not to ORCH-FAITHFUL.** The
+re-render was still the right call; it just was not fixing what the addendum
+assumed it was fixing on this particular predecessor.
 
 **Result: 26 of 26 clean.**
 
@@ -486,33 +518,41 @@ pinning — `109MSDCF` has `R == 0` on 7.54 % of pixels, `119MSDCF` 9.77 %,
 nowhere near zero. These are saturated colours resting on the gamut floor, not
 black. **Crush must stay ungated.**
 
-## 13. Two things happened to the delivery that I did not do (STOP-AND-REPORT)
+## 13. Two things happened to the delivery folder that I did not do (explained)
 
-**The ORCH-FAITHFUL masters have been deleted.**
+**The ORCH-FAITHFUL masters have been purged — deliberately, and safely.**
 `C:\dev\strehl-out\ORCH-FAITHFUL\faithful\` now contains only `render.log` and
-an empty `preview\` directory. All 26 old master TIFFs are gone; the directory's
+an empty `preview\`. All 26 old master TIFFs are gone; the directory's
 LastWriteTime is `2026-08-28 02:53:36`. My renders finished at 02:15 and my
 cleanup named only `DELIVER-V6\tgt`, `DELIVER-V6\tgt-caold`, `DELIVER-V6\scratch`,
 `D:\strehl-out\DELIVER-V6\corpus-preview` and `DELIVER-V6\masters-caold\*.tiff`.
-I did not touch ORCH-FAITHFUL and it is on my do-not-modify list.
 
-The consequence is honest and worth stating plainly: **the baseline for every
-old-vs-new claim in this report no longer exists on disk.** The A/B crops, the
-bit-identity proof in §2 and the measurements in §4 and §6 were all computed
-while those files were present and are unaffected — but a reader who wants to
-re-check them from the original files now cannot. This is made worse by a
-judgement of mine: during cleanup I deleted my own CA-old arm TIFFs *because*
-they were provably bit-identical to ORCH-FAITHFUL, which was preserved and
-protected. That reasoning was sound at 02:15 and wrong by 02:53. **The remedy is
-that the old arm is reproducible rather than merely archived**: the control
-binary is still pinned at
-`C:\dev\strehl-out\DELIVER-V6\bin\strehl-caold.exe` (sha256
+I first recorded this as data loss. **It is not**, and the correction matters:
+commit `0fd8ec7e` ("ORCH: bank-then-purge tool plus indexes for three superseded
+scratch trees") landed at **02:53:25**, eleven seconds before the directory was
+emptied, and banked
+`experiments/ORCH-drift-check/purged/ORCH-FAITHFUL-index.txt` — 5.00 GB of
+artifacts reduced to their SHA256, size and inlined text bodies, explicitly so
+that "any published claim about them stays checkable". ORCH-FAITHFUL was
+superseded by these masters (`dc6419ae`, "orch: faithful gallery for the V6
+masters"), which is why it was chosen for purge. This is a standing practice
+tonight, not an accident — V-LINEAR, V-ORACLE, V-GATHER, BUILD-CROP, V-REVIEW,
+V-DILUTE and BUILD-OUTPUT all banked before purging.
+
+**The practical effect on this report is that §2 stays checkable without the
+files**, via the banked hashes and sizes — see the -6-byte reconciliation in §2,
+which I would not have been able to state at all if the index had not been
+banked. The old arm is additionally *reproducible*: the control binary is still
+pinned at `C:\dev\strehl-out\DELIVER-V6\bin\strehl-caold.exe` (sha256
 `9DC2F85A99E033E3AE4217EF4FD7923A4836A727AEA562D9B993F3FE0D2F00F1`), the sources
 are read-only, and `experiments/DELIVER-V6/render-caold.ps1` regenerates any
-subject deterministically.
+subject deterministically. One judgement of mine was still wrong: during cleanup
+I deleted my own CA-old arm TIFFs *because* ORCH-FAITHFUL was preserved and
+protected. That reasoning was sound at 02:15 and obsolete by 02:53. Banking the
+hashes, as I did, is what made it recoverable.
 
-**Seven files I did not render are sitting in my delivery folder.** Between
-02:36 and 02:47 — after my run ended — seven TIFFs appeared in
+**Seven files I did not render are sitting in my delivery folder — they are
+ORCH's.** Between 02:36 and 02:47, after my run ended, seven TIFFs appeared in
 `C:\dev\strehl-out\DELIVER-V6\masters\`: `chia-seeds-cpl`,
 `dime-flat-narrow-slices-cpl`, `duck-tape-side-layers-cpl`,
 `maldon-sea-salt-cpl`, `medication-pill-cpl`, `pottery-art-glazed-cpl`,
@@ -524,14 +564,15 @@ pass the same tag check. The provenance is not a guess: my private
 **recreated** and contains warpmap sidecars for exactly those seven subjects,
 timestamped 02:35–02:46 against the seven TIFF writes at 02:36–02:47. Another
 lane ran my pinned binary with my `STREHL_CACHE_DIR`, almost certainly by
-reusing `experiments/DELIVER-V6/render.ps1` with a different subject list.
-**I did not render them, they are in no manifest record, and I cannot attest to
-their invocation.** I have left them in place — and left the 0.2 MB of
+reusing `experiments/DELIVER-V6/render.ps1` with a different subject list, and
+commit `1fe5cb14` ("ORCH: 1:1 eye survey of all seven new subjects, including
+the one that is not clean") identifies it as ORCH extending the survey to the
+seven captures I excluded. That is a reasonable thing to have done with a pinned
+binary. **They are still not mine**: they are in no manifest record and I cannot
+attest to their invocation. I have left them in place — and left the 0.2 MB of
 regenerated warpmaps in place — and listed the seven as foreign in a
-`MANIFEST.txt` trailer rather than deleting them; deleting another lane's output
-without being asked is precisely what destroyed the ORCH-FAITHFUL baseline
-tonight. **Anyone counting files in that folder will find 33 and should treat
-only the 26 with manifest records as DELIVER-V6 output.**
+`MANIFEST.txt` trailer. **Anyone counting files in that folder will find 33 and
+should treat only the 26 with manifest records as DELIVER-V6 output.**
 
 I re-hashed all 26 of my masters after discovering the folder had been written
 to. **All 26 match the SHA256 recorded at render time** — my delivered bytes
