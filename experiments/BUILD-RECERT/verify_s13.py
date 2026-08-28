@@ -22,7 +22,14 @@ DOC = ROOT / "docs" / "research" / "BUILD-OUTPUT.md"
 LOGS = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
 
 text = DOC.read_text(encoding="utf-8")
-sec = text[text.index("# 13. The HEAD baseline against SHIP-V4"):]
+# Bound the section ABOVE as well as below. The first version sliced from the
+# heading to end-of-file, which was correct only while section 13 was last:
+# adding section 14 put six more `| `leaf-2-cpl` |` rows inside the slice and
+# three anchors that had been unique became ambiguous. A verifier whose scope
+# silently grows with the document is a verifier that decays.
+_start = text.index("# 13. The HEAD baseline against SHIP-V4")
+_next = re.search(r"^# \d+\. ", text[_start + 1:], flags=re.M)
+sec = text[_start:_start + 1 + _next.start()] if _next else text[_start:]
 # Fenced code blocks are illustrations, not claims -- 13.8 quotes a mutated copy
 # of the partition table's REGRESSED row to explain a defect, and that copy must
 # not be mistaken for the table itself. Strip them before matching.

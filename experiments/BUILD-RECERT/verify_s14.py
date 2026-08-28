@@ -22,7 +22,12 @@ DOC = ROOT / "docs" / "research" / "BUILD-OUTPUT.md"
 LOGS = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
 
 text = DOC.read_text(encoding="utf-8")
-sec = text[text.index("# 14. The gatefloor fix"):]
+# Bounded above as well as below, so a future section 15 cannot silently widen
+# this verifier's scope and turn its unique anchors ambiguous. That is exactly
+# what section 14 did to verify_s13.py.
+_start = text.index("# 14. The gatefloor fix")
+_next = re.search(r"^# \d+\. ", text[_start + 1:], flags=re.M)
+sec = text[_start:_start + 1 + _next.start()] if _next else text[_start:]
 sec = re.sub(r"```.*?```", "", sec, flags=re.S)
 flat = " ".join(sec.split())
 
