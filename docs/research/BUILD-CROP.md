@@ -1529,3 +1529,68 @@ noise-free green). The authoritative magnitude calibration remains the in-situ
 one on REAL data -- the code's own +704.5 ppm dose read at 0.996 -- and 14% of a
 192 ppm residual is 27 ppm on the native, inside the 82.3 ppm uncertainty already
 declared in 15.4.
+
+## 16. The re-fit, SCORED on the hue-neutral metric (ORCH's acceptance test)
+
+ORCH refuted my 1.82x off-vs-shipped recommendation and set the acceptance test:
+the re-fit must beat BOTH arms on a hue-NEUTRAL statistic, because a magenta
+counter cannot rank two artifacts of different hue.
+
+**All three arms rendered on ONE tree, one command, only `STREHL_FIX_CA` and the
+coefficient differing.** Subject `dry-erase-marker-head-cpl` (N=299), `--demosaic`,
+edge population derived from the SHIPPED arm and applied to all three.
+`orch_chromamag.py` re-commissioned inline on every run: responds to the
+same-direction (magenta) shape +139%, the opposite-direction (lens) shape +142%,
+and is silent on the null (+0.000).
+
+| arm | edge_mean | edge_p99 | flat_mean | edge/flat |
+|---|---|---|---|---|
+| CA OFF | 0.15576 | 0.63268 | 0.06468 | 2.4 |
+| SHIPPED -704.5 | 0.11377 | 0.40289 | 0.06288 | 1.8 |
+| **RE-FIT -508.4** | **0.10093** | **0.37172** | **0.06279** | **1.6** |
+
+**RE-FIT beats SHIPPED by 11.3% and CA OFF by 35.2%. It passes.**
+
+Three properties make this more than one number:
+- **The flat control is flat.** 0.06468 / 0.06288 / 0.06279 -- essentially
+  identical across arms. So this is a displacement result at edges, not a colour
+  cast, by the same discrimination as the 157x ratio.
+- **edge/flat falls monotonically** 2.4 -> 1.8 -> 1.6. The re-fit leaves the
+  least edge-specific chroma of the three.
+- **ORCH's item-3 worry is closed on this subject.** The concern was that a
+  re-fit could "win by simply doing less". CA OFF *is* doing less -- it is doing
+  nothing -- and it scores WORST. The metric responds to the under-correction
+  shape at +142%, so it cannot be gamed in that direction.
+
+### 16.1 A finding that invalidates cross-time thresholds
+
+ORCH set the thresholds as absolute numbers (0.15999 on, 0.20807 off). **Those
+cannot be used across trees, and I found out the hard way.** I re-rendered the
+CA-OFF arm -- which is COEFFICIENT-INDEPENDENT and must therefore reproduce
+bit-exactly -- and it differed from the original on **33,003,417 px, max 23210
+DN**. Same command, same source, same flag. Fourteen lanes commit to this tree;
+the binary that made my 22:25 renders no longer exists.
+
+The same two arms read **0.15999 / 0.20807 last night and 0.11377 / 0.15576
+today**. The ORDERING and the RATIOS are stable; the absolute values are not.
+**An acceptance threshold quoted as an absolute chroma number silently expires.**
+Every arm in a comparison must be rendered from one build.
+
+### 16.2 Stated limits
+
+- **One subject.** `highly-angled-ruler-mm-cpl`, the under-correction control,
+  was NOT run. The commissioned two-shape response is an argument that the
+  re-fit is not merely doing less; it is not a substitute for that control.
+- **Not re-ranked across 26.** Item 4 remains undone.
+- **Green moves between CA arms and I did not finish explaining it** (16.3).
+
+### 16.3 ORCH's green question -- narrowed, not closed
+
+ORCH found G differing between CA arms and listed three causes. Measured:
+green moves in the SINGLE-FRAME pair too (95.8% of px, mean 39.8 DN), which
+removes **frame election**. The likely mechanism is that these are `--demosaic`
+renders and Malvar-He-Cutler reconstructs green FROM red and blue gradients, so
+shifting R and B necessarily moves G -- an expected consequence, not a defect.
+**Not proven.** My flat/edge split (`gedge.py`) put flat-region G at 73-81 DN,
+which a pure warp cannot do; but my "flat" population is a median gradient split,
+which in a noisy image is not truly flat. Left open and honest.
