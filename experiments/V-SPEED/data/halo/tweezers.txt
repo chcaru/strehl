@@ -1,0 +1,27 @@
+TWEEZERS: does the bump survive removing the second arm?
+
+tweezers-cpl                   comps=10    plant=0      
+    union silhouette      bump    1542.3  overshoot  -15502.0
+    largest arm only      bump    1566.7  overshoot  -15545.7
+
+NEGATIVE CONTROL -- a subject that is already one blob. The
+restriction must do nothing here, or it is not a clean operation.
+
+flower-bud-alone-cpl           comps=3     plant=0      
+    union silhouette      bump       0.0  overshoot    -431.7
+    largest arm only      bump       0.0  overshoot    -439.4
+
+POSITIVE CONTROL -- plant a real 3000 DN rim on the largest arm.
+The restricted measurement must SEE it, or 'bump vanished' above
+means only that the measurement stopped working.
+
+tweezers-cpl                   comps=10    plant=3000   
+    union silhouette      bump    3034.3  overshoot  -14499.4
+    largest arm only      bump    3076.8  overshoot  -14470.7
+
+--------------------------------------------------------------------------
+  commission 2/2 PASS: restriction inert on one blob (0.0 DN),
+  and still detects a planted 3000 DN rim (bump 3076.8).
+
+  tweezers bump 1542.3 -> 1566.7 on removing the second arm (-24.4 DN, -2%).
+  VERDICT: REAL RIM (threshold 200 DN, the instrument's own).

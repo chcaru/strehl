@@ -1,0 +1,26 @@
+subject=coffee-bean frames=105 src=D:\personal\macro\coffee-bean
+{"strehl.exe": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490", "align_image_stack.exe": "361133980DB4FDCB083B8687B3780F7820823E45AE349B424A8CFC51D598CD55", "enfuse.exe": "919B1BB1E6E48AC5D673B92C489450A74C48735341B5F6F25EFA0153221FF7B9", "focus-stack.exe": "E256176D70BEC54BB51A448B2ADC452E7F49D21BC5042B40689A3257BBFDEE9E"}
+== round 0 (forward) ==
+   0 develop         44.08s rc=0
+   0 strehl          39.41s rc=0
+   0 align          548.96s rc=0
+   0 enfuse         284.17s rc=0
+   0 focus-stack    106.88s rc=0
+== round 1 (reverse) ==
+   1 develop         32.52s rc=0
+   1 focus-stack    115.23s rc=0
+   1 align          511.02s rc=0
+   1 enfuse         272.56s rc=0
+   1 strehl          28.34s rc=0
+== round 2 (forward) ==
+   2 develop         27.57s rc=0
+   2 strehl          28.70s rc=0
+   2 align          368.68s rc=0
+   2 enfuse         251.76s rc=0
+   2 focus-stack     93.18s rc=0
+== round 3 (reverse) ==
+   3 develop         30.88s rc=0
+   3 focus-stack     98.89s rc=0
+   3 align          399.92s rc=0
+   3 enfuse         433.91s rc=0
+   3 strehl          44.20s rc=0

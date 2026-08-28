@@ -1,0 +1,31 @@
+binary : C:\dev\blog\death-of-software\projects\strehl\target-vspeed\release\strehl.exe
+sha256 : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+source : D:\personal\macro\109MSDCF
+recipe : stack --srgb   (NO --auto-exposure; matches the faithful
+         corpus recipe of fact 1823, which is the exposure the
+         masters under test were rendered at)
+
+
+tag        value            rc sha                                                              secs     bytes
+---        -----            -- ---                                                              ----     -----
+unset1                       0 BE149EBF54F0176D88C8233E14DE3DC8F725488AAF85BC211E7746C96E83DF67 82.2 197801296
+unset2                       0 BE149EBF54F0176D88C8233E14DE3DC8F725488AAF85BC211E7746C96E83DF67 61.3 197801296
+inputrange input-range       0 BE149EBF54F0176D88C8233E14DE3DC8F725488AAF85BC211E7746C96E83DF67 62.5 197801296
+perlevel   per-level         0 CF83995F9FF9262FD524964673E54A920B500A8A33120E2E2CF1A7A3A2ECD9E9   69 197801296
+unclamped  unclamped         0 90C58DF2FCA62D12EFDD31F5C3162B008DD7F5094425DE8F55A6B7695F6BF3A0 49.1 197801296
+bogus      not-a-hull-mode 101                                                                   0.2         0
+
+
+
+[PASS] A. renderer is deterministic (unset run 1 == unset run 2)
+       run1 BE149EBF54F0176D88C8233E14DE3DC8F725488AAF85BC211E7746C96E83DF67
+       run2 BE149EBF54F0176D88C8233E14DE3DC8F725488AAF85BC211E7746C96E83DF67
+[PASS] B. UNSET is byte-identical to explicit input-range
+[PASS] C. per-level DIFFERS from the default
+       per-level CF83995F9FF9262FD524964673E54A920B500A8A33120E2E2CF1A7A3A2ECD9E9
+[PASS] C2. unclamped is reachable and distinct from both
+       unclamped 90C58DF2FCA62D12EFDD31F5C3162B008DD7F5094425DE8F55A6B7695F6BF3A0
+[PASS] D. unrecognised value aborts (rc=101, want nonzero)
+
+hull commission: 5/5 PASS

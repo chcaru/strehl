@@ -1,0 +1,9 @@
+=== clean document must be GREEN ===
+20/20 re-derived rows matched  GREEN
+
+=== planted defect (paired median 22.58x -> 31.41x) must be RED ===
+  MISMATCH  coffee-bean/enfuse paired ratios: found 0 times, expected exactly 1
+      want: | coffee-bean | 105 | align+enfuse | 28.80�, 22.58�, 19.56� | **22.58�** | 19.56� | 28.80� |
+19/20 re-derived rows matched  RED
+
+COMMISSIONING PASS: clean GREEN, planted defect RED.

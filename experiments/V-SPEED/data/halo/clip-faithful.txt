@@ -1,0 +1,20 @@
+commission: 5/5 PASS
+     0.001% med  61063.0  109MSDCF.tiff
+     0.077% med  14674.0  112MSDCF.tiff
+     0.076% med  14174.0  113MSDCF.tiff
+     0.001% med  58941.0  119MSDCF.tiff
+     0.043% med  49836.0  bee-1-cpl.tiff
+     0.027% med  48095.0  bee-2-cpl.tiff
+     0.028% med  50482.0  bee-3-cpl.tiff
+     0.000% med  38080.0  coffee-bean.tiff
+     0.001% med   2084.0  coffee-bubbles.tiff
+     0.070% med  45885.0  couch-fibers-cpl.tiff
+     0.000% med  38464.0  dry-erase-marker-head-cpl.tiff
+     0.073% med  38687.0  flat-on-ruler-cpl.tiff
+     0.000% med  60672.0  flower-bud-alone-cpl.tiff
+     0.026% med  57821.0  flower-bud-with-background-fern-cpl.tiff
+     0.005% med  24467.0  flower-inner-edge-cpl.tiff
+     0.135% med  43240.0  flowers-cpl.tiff
+     0.002% med   6755.0  foam.tiff
+     0.026% med  30335.0  highly-angled-ruler-mm-cpl.tiff
+     0.051% med  47706.0  lavendar-cpl.tiff

@@ -1,0 +1,1 @@
+{"stage": "develop", "mode": "srgb", "src": "D:\\personal\\macro\\coffee-bean", "dst": "C:\\dev\\strehl-out\\V-SPEED\\coffee-bean\\tif-srgb", "frames": 105, "workers": 16, "wall_s": 30.65451360004954, "s_per_frame": 0.29194774857190037, "cpu_s_sum": 465.6389935007319, "shapes": [[4688, 7028, 3]]}

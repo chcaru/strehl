@@ -1,0 +1,58 @@
+[
+ {
+  "subject": "109MSDCF",
+  "total": 1260.4,
+  "scene": 1109.0,
+  "merge_base": 151.4,
+  "fix": 1229.7,
+  "merge_fix": 120.7,
+  "merge_pct": -20.3,
+  "scene_frac": 88.0,
+  "sharp_pct": -1.12,
+  "black_delta": 9.4,
+  "scene_tone": 66.8,
+  "verdict": "HALO dark"
+ },
+ {
+  "subject": "112MSDCF",
+  "total": 8679.9,
+  "scene": 7819.4,
+  "merge_base": 860.5,
+  "fix": 8520.2,
+  "merge_fix": 700.8,
+  "merge_pct": -18.6,
+  "scene_frac": 90.1,
+  "sharp_pct": 0.03,
+  "black_delta": 66.1,
+  "scene_tone": 798.0,
+  "verdict": "gradient"
+ },
+ {
+  "subject": "119MSDCF",
+  "total": 503.0,
+  "scene": 447.8,
+  "merge_base": 55.2,
+  "fix": 494.8,
+  "merge_fix": 47.0,
+  "merge_pct": -14.9,
+  "scene_frac": 89.0,
+  "sharp_pct": -1.4,
+  "black_delta": 48.3,
+  "scene_tone": 192.8,
+  "verdict": "HALO pair"
+ },
+ {
+  "subject": "tweezers-cpl",
+  "total": 2621.7,
+  "scene": 654.8,
+  "merge_base": 1966.9,
+  "fix": 1577.3,
+  "merge_fix": 922.5,
+  "merge_pct": -53.1,
+  "scene_frac": 25.0,
+  "sharp_pct": 0.25,
+  "black_delta": -143.3,
+  "scene_tone": -722.0,
+  "verdict": "HALO pair"
+ }
+]

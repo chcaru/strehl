@@ -1,0 +1,117 @@
+halo = overshoot of near-silhouette background ABOVE its own far
+field, in DN of 65535. positive = bright rim = HALO.
+bump = largest decrease walking outward; 0 on a monotone (clean) ramp.
+penumbra = the subject's own out-of-focus transition. NOT a defect
+           statistic, carries no verdict, printed to describe the picture.
+threshold: halo if overshoot > 200 DN or bump > 200 DN
+
+subject                               overshoot     bump   penumbra  farfield  verdict
+----------------------------------------------------------------------------------------------
+109MSDCF.tiff                                 -        -          -         -  SKIPPED -- subject is 49 components, largest only 48% of mass (need 70%)
+112MSDCF.tiff                                 -        -          -         -  SKIPPED -- far field only 0 px, need 1250
+113MSDCF.tiff                                 -        -          -         -  SKIPPED -- far field only 0 px, need 1250
+119MSDCF.tiff                                 -        -          -         -  SKIPPED -- subject is 56 components, largest only 70% of mass (need 70%)
+bee-1-cpl.tiff                          -3666.5      0.0   -18385.6     58667  clean
+      d   2-  6  n=33398     -18385.6
+      d   6- 12  n=32792     -16893.4
+      d  12- 20  n=44547     -15731.8
+      d  20- 32  n=54934     -13007.4
+      d  32- 50  n=60572      -9824.9
+      d  50- 80  n=75069      -6281.2
+      d  80-120  n=80752      -3666.5
+bee-2-cpl.tiff                          -4273.0      0.0   -19272.9     60705  clean
+      d   2-  6  n=31431     -19272.9
+      d   6- 12  n=30900     -16526.6
+      d  12- 20  n=42327     -14909.6
+      d  20- 32  n=59566     -11316.0
+      d  32- 50  n=68076      -7293.3
+      d  50- 80  n=89868      -5157.4
+      d  80-120  n=97705      -4273.0
+bee-3-cpl.tiff                          -4212.3      0.0   -19081.6     60606  clean
+      d   2-  6  n=31788     -19081.6
+      d   6- 12  n=31144     -16189.4
+      d  12- 20  n=42831     -14586.3
+      d  20- 32  n=61056     -10868.6
+      d  32- 50  n=70549      -7130.6
+      d  50- 80  n=91431      -5184.2
+      d  80-120  n=97491      -4212.3
+coffee-bean.tiff                              -        -          -         -  SKIPPED -- background not uniform: far annuli differ by 3563 DN (limit 3000)
+coffee-bubbles.tiff                           -        -          -         -  SKIPPED -- no background (subject is 98.5% of frame)
+couch-fibers-cpl.tiff                         -        -          -         -  SKIPPED -- subject is 862 components, largest only 38% of mass (need 70%)
+dry-erase-marker-head-cpl.tiff           +236.7      0.0    -9813.7     40417  *** HALO ***
+      d   2-  6  n=7946       -9813.7
+      d   6- 12  n=8236       -5819.7
+      d  12- 20  n=13097      -4068.8
+      d  20- 32  n=21630      -2647.5
+      d  32- 50  n=33146      -1709.7
+      d  50- 80  n=55876       -726.0
+      d  80-120  n=74390       +236.7
+flat-on-ruler-cpl.tiff                  +4481.8    227.0    -8365.7     45456  *** HALO ***
+      d   2-  6  n=68135      -8138.7
+      d   6- 12  n=66217      -8365.7
+      d  12- 20  n=88656      -6017.9
+      d  20- 32  n=88317      -1739.5
+      d  32- 50  n=101440     +2019.9
+      d  50- 80  n=125318     +3522.3
+      d  80-120  n=152861     +4481.8
+flower-bud-alone-cpl.tiff                -431.7      0.0   -19973.7     61910  clean
+      d   2-  6  n=4908      -19973.7
+      d   6- 12  n=4904      -11507.9
+      d  12- 20  n=7051       -5047.9
+      d  20- 32  n=11566      -2038.3
+      d  32- 50  n=15998      -1188.0
+      d  50- 80  n=24435       -752.2
+      d  80-120  n=31710       -431.7
+flower-bud-with-background-fern-cpl.tiff          -        -          -         -  SKIPPED -- subject is 35 components, largest only 70% of mass (need 70%)
+flower-inner-edge-cpl.tiff             -16604.4      0.0   -24227.4     57924  clean
+      d   2-  6  n=8934      -24227.4
+      d   6- 12  n=9329      -23927.1
+      d  12- 20  n=10462     -22851.0
+      d  20- 32  n=16750     -22125.9
+      d  32- 50  n=24300     -21053.2
+      d  50- 80  n=37999     -19437.6
+      d  80-120  n=51612     -16604.4
+flowers-cpl.tiff                              -        -          -         -  SKIPPED -- subject is 31 components, largest only 53% of mass (need 70%)
+foam.tiff                                     -        -          -         -  SKIPPED -- no background (subject is 97.0% of frame)
+highly-angled-ruler-mm-cpl.tiff               -        -          -         -  SKIPPED -- no background (subject is 86.0% of frame)
+lavendar-cpl.tiff                        +527.3      0.0    -9132.2     51104  *** HALO ***
+      d   2-  6  n=33671      -9132.2
+      d   6- 12  n=33774      -7411.6
+      d  12- 20  n=49581      -5821.3
+      d  20- 32  n=65287      -3437.4
+      d  32- 50  n=69094      -1397.9
+      d  50- 80  n=72968       -294.9
+      d  80-120  n=66526       +527.3
+lead-1-cpl.tiff                               -        -          -         -  SKIPPED -- subject is 546 components, largest only 67% of mass (need 70%)
+leaf-2-cpl.tiff                               -        -          -         -  SKIPPED -- subject is 574 components, largest only 69% of mass (need 70%)
+pencil-flatter-angle-cpl.tiff           -4340.4      0.0   -13041.0     55820  clean
+      d   2-  6  n=29906     -13041.0
+      d   6- 12  n=30630     -11310.5
+      d  12- 20  n=39448      -9496.9
+      d  20- 32  n=50292      -8074.6
+      d  32- 50  n=58173      -6563.8
+      d  50- 80  n=63741      -5456.1
+      d  80-120  n=57723      -4340.4
+pencil-steep-angle-cpl.tiff            -10361.3      0.0   -19010.1     52695  clean
+      d   2-  6  n=14519     -19010.1
+      d   6- 12  n=14526     -18296.2
+      d  12- 20  n=15505     -15930.2
+      d  20- 32  n=19306     -14887.0
+      d  32- 50  n=22406     -13694.8
+      d  50- 80  n=27726     -12137.2
+      d  80-120  n=34096     -10361.3
+tweezers-cpl.tiff                      -15502.0   1542.3   -21803.2     61948  *** HALO ***
+      d   2-  6  n=30497     -21275.6
+      d   6- 12  n=26650     -21803.2
+      d  12- 20  n=26873     -20443.8
+      d  20- 32  n=24587     -17498.1
+      d  32- 50  n=27232     -16124.6
+      d  50- 80  n=26906     -17666.9
+      d  80-120  n=35668     -15502.0
+wrapped-text-1.tiff                           -        -          -         -  SKIPPED -- subject is 79 components, largest only 8% of mass (need 70%)
+wrapped-text-2.tiff                           -        -          -         -  SKIPPED -- subject is 51 components, largest only 13% of mass (need 70%)
+----------------------------------------------------------------------------------------------
+partition: 7 clean, 4 HALO, 15 skipped, 26 total (found 26)
+A SKIPPED subject is not a clean subject. It is one where the
+measurement is undefined because there is no silhouette to measure
+a rim against, and the reason is printed beside each.

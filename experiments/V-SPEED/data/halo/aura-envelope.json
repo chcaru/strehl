@@ -1,0 +1,62 @@
+[
+ {
+  "kind": "depth",
+  "planted": 3000,
+  "aura": 2433.9
+ },
+ {
+  "kind": "depth",
+  "planted": 1500,
+  "aura": 933.9
+ },
+ {
+  "kind": "depth",
+  "planted": 750,
+  "aura": 183.9
+ },
+ {
+  "kind": "depth",
+  "planted": 375,
+  "aura": 0.0
+ },
+ {
+  "kind": "depth",
+  "planted": 200,
+  "aura": 0.0
+ },
+ {
+  "kind": "depth",
+  "planted": 100,
+  "aura": 0.0
+ },
+ {
+  "kind": "shape",
+  "sigma": 4,
+  "at": 60,
+  "aura": 268.6
+ },
+ {
+  "kind": "shape",
+  "sigma": 12,
+  "at": 60,
+  "aura": 13.2
+ },
+ {
+  "kind": "shape",
+  "sigma": 18,
+  "at": 60,
+  "aura": 0.0
+ },
+ {
+  "kind": "shape",
+  "sigma": 18,
+  "at": 150,
+  "aura": 1159.6
+ },
+ {
+  "kind": "shape",
+  "sigma": 30,
+  "at": 150,
+  "aura": 751.6
+ }
+]

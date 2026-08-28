@@ -1,0 +1,7 @@
+  plant 1  narrow ring removal   w=   12.8 px  local  PASS
+  plant 2  broad background tilt w=   88.9 px  broad  PASS
+  plant 2b monotone tilt         w=    0.0 px  broad  PASS
+  plant 3  the two SEPARATE      ratio=  6.9x        PASS
+  plant 4  flat offset (null)    dn=     0.0 DN     PASS
+
+selftest: PASS

@@ -1,0 +1,21 @@
+============================================================================
+annulus.py commission
+============================================================================
+[PASS] 0 plants matched in total excess to 0.41%: ring 1.059e+08  s30 1.06e+08  s50 1.064e+08
+     plant        median       mean        p90    conc
+     clean          +1.0       +0.1       +0.0    None
+     ring        +3001.0    +3000.1    +3000.0     1.0
+     s30           +35.0    +3001.0    +9949.0    None
+     s50         +5844.0    +3012.4    +5974.0    0.52
+[PASS] 1 sparse scatter collapses the median: ring +3001.0 -> s30 +35.0 DN
+[PASS] 2 mean conserved across ring/s30/s50: +3000.1 +3001.0 +3012.4 (spread 0.4%)
+[PASS] 3 clean ground reads zero on all three (1.0 0.1 0.0)
+[PASS] 4 coherent ring reads conc 1.00 (must be ~1.00)
+     coherent-ring sensitivity floor:
+       plant  3000.0 DN -> median  +3001.0  mean  +3000.1  (100%)
+       plant  1000.0 DN -> median  +1001.0  mean  +1000.1  (100%)
+       plant   300.0 DN -> median   +301.0  mean   +300.1  (100%)
+       plant   100.0 DN -> median   +101.0  mean   +100.1  (101%)
+       plant    30.0 DN -> median    +31.0  mean    +30.1  (103%)
+----------------------------------------------------------------------------
+5/5 PASS

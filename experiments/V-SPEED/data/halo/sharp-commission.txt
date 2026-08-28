@@ -1,0 +1,16 @@
+commissioning sharp.py -- identity, defect, improvement, noise
+
+  [PASS] identity (must not move)                 ratio= 1.000  want 1.000 +-0.001
+  [PASS] PLANTED DEFECT: gaussian blur sigma 1.0  ratio= 0.380  want < 0.80 (must FALL)
+  [PASS] PLANTED IMPROVEMENT: unsharp mask        ratio= 1.625  want > 1.20 (must RISE)
+
+  NOISE CAVEAT, measured not assumed:
+    sigma   5.0 DN of white noise moves this metric by    -0.1%
+    sigma  15.0 DN of white noise moves this metric by    -0.0%
+    sigma  50.0 DN of white noise moves this metric by    +0.2%
+    A high-pass statistic cannot separate detail from grain. Two
+    arms may only be compared on this number when their grain is
+    known to match; a gap smaller than the row above that matches
+    their noise difference is not readable as acuity.
+
+sharp commission: 3/3 PASS

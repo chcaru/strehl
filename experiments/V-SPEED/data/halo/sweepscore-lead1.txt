@@ -1,0 +1,28 @@
+scoring 9 arms in C:\dev\strehl-out\V-SPEED-HALO\sweep\lead-1-cpl
+sharpness sites and subject mask FIXED from arm 'baseline' (1323822 sites)
+
+arm                aura    @px      rim    @px verdict         sharp  vs base    black    white
+--------------------------------------------------------------------------------------------------------
+bands5           1687.4     56   1105.0     36 HALO pair     1508.18   1.026x   +266.7   +169.3
+bands9           1867.2     56   1267.5     36 HALO pair     1462.69   0.996x    -65.7    -14.7
+baseline         1848.4     56   1233.2     36 HALO pair     1469.36   1.000x     +0.0     +0.0
+baseweighted     1837.2     56   1241.0     36 HALO pair     1468.60   1.000x    -12.9     -3.9
+exp1             1740.1     56   1128.0     36 HALO pair     1496.31   1.018x   +248.1    +64.9
+exp4             1877.8     56   1291.4     36 HALO pair     1458.77   0.993x    -85.5    -28.7
+gate8            1695.7     56   1229.4     36 HALO pair      214.78   0.146x   +143.3   +113.2
+hullperlevel     1830.5     56   1223.4     36 HALO pair     1469.61   1.000x     +2.8     +0.4
+sharpen1         1623.7     56   1091.5     36 HALO pair     1407.11   0.958x   +436.5    +65.8
+--------------------------------------------------------------------------------------------------------
+black/white are DELTAS vs baseline in DN. A POSITIVE black delta is
+blacks going grey, which no sharpness statistic can see.
+baseline halo 1848.4 DN, sharpness 1469.36 DN
+
+arms that reduce the halo, with what they cost:
+  sharpen1       halo  1623.7 DN ( -12.2%)  sharp  -4.2%  black  +436.5 DN
+  bands5         halo  1687.4 DN (  -8.7%)  sharp  +2.6%  black  +266.7 DN
+  gate8          halo  1695.7 DN (  -8.3%)  sharp -85.4%  black  +143.3 DN
+  exp1           halo  1740.1 DN (  -5.9%)  sharp  +1.8%  black  +248.1 DN
+  hullperlevel   halo  1830.5 DN (  -1.0%)  sharp  +0.0%  black    +2.8 DN
+  baseweighted   halo  1837.2 DN (  -0.6%)  sharp  -0.0%  black   -12.9 DN
+
+wrote C:\dev\strehl-out\V-SPEED-HALO\sweep-lead1.json

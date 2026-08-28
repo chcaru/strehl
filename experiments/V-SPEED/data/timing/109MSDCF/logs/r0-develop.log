@@ -1,0 +1,1 @@
+{"stage": "develop", "mode": "srgb", "src": "D:\\personal\\macro\\109MSDCF", "dst": "C:\\dev\\strehl-out\\V-SPEED\\109MSDCF\\tif-srgb", "frames": 22, "workers": 16, "wall_s": 6.22823809995316, "s_per_frame": 0.2831017318160527, "cpu_s_sum": 74.40121820010245, "shapes": [[4688, 7028, 3]]}

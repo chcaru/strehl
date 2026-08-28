@@ -1,0 +1,12 @@
+A parent.tiff  shape (4688, 7032, 3) dtype uint16
+B mine.tiff  shape (4688, 7032, 3) dtype uint16
+
+samples total     98,898,048
+samples differing 0  (0.000000%)
+
+file sizes        197,801,290 vs 197,801,290
+first byte differs at offset 3375
+
+VERDICT: PIXEL-IDENTICAL. The file hashes differ only in metadata,
+so the code change is INERT on output. A byte hash would have
+reported a regression that does not exist.

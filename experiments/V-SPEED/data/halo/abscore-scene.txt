@@ -1,0 +1,31 @@
+corpus A/B: 'baseline' vs 'plainmean'
+
+subject                       halo base   halo arm   d halo  fix base   fix arm    d fix  d sharp  d black
+------------------------------------------------------------------------------------------------------------
+109MSDCF                         1260.3     1108.9  -12.0%    1260.4    1109.0  -12.0%  -51.81%    +66.8
+112MSDCF                         8679.8     7819.4   -9.9%    8679.9    7819.4   -9.9%  -44.73%   +798.0
+119MSDCF                          503.1      447.7  -11.0%     503.0     447.8  -11.0%  -61.22%   +192.8
+bee-1-cpl                          45.9        0.0 -100.0%      46.0       0.0 -100.0%  -83.75%  +1838.9
+coffee-bean                       728.0       30.3  -95.8%     728.0      30.3  -95.8%  -82.66%  +1490.5
+coffee-bubbles                      0.0        0.0       -         -         -       -  -45.88%   +130.5
+dry-erase-marker-head-cpl         694.9      584.5  -15.9%     695.0     584.5  -15.9%  -82.41%   +409.2
+flat-on-ruler-cpl                5579.3     5865.3   +5.1%    5579.3    5865.3   +5.1%  -75.27%  +4173.1
+foam                                0.0        0.0       -         -         -       -  -44.99%  +4640.8
+leaf-2-cpl                       1766.9        0.0 -100.0%    1766.9       0.0 -100.0%   -0.95%  +4206.9
+tweezers-cpl                     2621.7      654.9  -75.0%    2621.7     654.8  -75.0%  -81.37%   -722.0
+------------------------------------------------------------------------------------------------------------
+11 subjects.  halo   median -15.9%  range -100.0% .. +5.1%
+                              sharp  median -61.22%  range -83.75% .. -0.95%
+                              black  median +798.0 DN  range -722.0 .. +4640.8 DN
+
+ACCEPTANCE (a fix must not do these):
+  halo worse by >5%   : flat-on-ruler-cpl
+  blacks >200 DN grey : 112MSDCF, bee-1-cpl, coffee-bean, dry-erase-marker-head-cpl, flat-on-ruler-cpl, foam, leaf-2-cpl
+  sharpness <-1%      : 109MSDCF, 112MSDCF, 119MSDCF, bee-1-cpl, coffee-bean, coffee-bubbles, dry-erase-marker-head-cpl, flat-on-ruler-cpl, foam, tweezers-cpl
+
+VERDICT CHANGES:
+  119MSDCF                     HALO pair -> HALO bright
+  coffee-bean                  HALO dark -> clean
+  leaf-2-cpl                   HALO pair -> clean
+
+wrote C:\dev\strehl-out\V-SPEED-HALO\abscore-scene.json

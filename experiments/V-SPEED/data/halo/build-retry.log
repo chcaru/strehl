@@ -1,0 +1,13 @@
+start 2026-08-27T19:36:26.4792637-07:00
+ATTEMPT 1 FAIL 2026-08-27T19:36:36.4092866-07:00
+error[E0027]: pattern does not mention field `cover`; error[E0063]: missing fields `cover` and `cover_source` in initializer of `MergeOptions`; error: could not compile `strehl-cli` (bin "strehl") due to 2 previous errors
+ATTEMPT 2 FAIL 2026-08-27T19:39:10.6123826-07:00
+error: failed to remove file `C:\dev\blog\death-of-software\projects\strehl\target-orch\release\strehl.exe`
+ATTEMPT 3 FAIL 2026-08-27T19:43:50.0262933-07:00
+error: failed to remove file `C:\dev\blog\death-of-software\projects\strehl\target-orch\release\strehl.exe`
+ATTEMPT 4 FAIL 2026-08-27T19:46:14.9651152-07:00
+error: failed to remove file `C:\dev\blog\death-of-software\projects\strehl\target-orch\release\strehl.exe`
+ATTEMPT 5 FAIL 2026-08-27T19:48:47.6213371-07:00
+error: failed to remove file `C:\dev\blog\death-of-software\projects\strehl\target-orch\release\strehl.exe`
+ATTEMPT 6 FAIL 2026-08-27T19:51:27.3986367-07:00
+error: failed to remove file `C:\dev\blog\death-of-software\projects\strehl\target-orch\release\strehl.exe`

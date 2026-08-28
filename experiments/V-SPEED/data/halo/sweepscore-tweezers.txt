@@ -1,0 +1,30 @@
+scoring 10 arms in C:\dev\strehl-out\V-SPEED-HALO\sweep\tweezers-cpl
+sharpness sites and subject mask FIXED from arm 'baseline' (1967584 sites)
+
+arm                aura    @px      rim    @px verdict         sharp  vs base    black    white
+--------------------------------------------------------------------------------------------------------
+bands5           1577.2     56   1577.2     36 HALO pair     2198.49   1.002x   -143.3     +7.4
+bands9           2841.7     56   2841.7     36 HALO pair     2188.05   0.998x    +76.7     -2.0
+baseline         2621.7     56   2621.7     36 HALO pair     2192.95   1.000x     +0.0     +0.0
+baseweighted     1860.5     56   1860.5     36 HALO pair     2196.22   1.002x    -12.8     -8.0
+exp1             2060.0     56   2060.0     36 HALO pair     2188.36   0.998x   -248.4     +4.8
+exp4             2978.8     56   2978.8     36 HALO pair     2185.30   0.997x   +158.7     -1.5
+gate8            2572.2     56   2572.2     36 HALO pair     2204.89   1.005x   +122.1    +91.4
+hullperlevel     2548.4     56   2548.4     36 HALO pair     2193.56   1.000x   +148.0     -0.0
+plainmean         654.9     56    654.9     45 HALO pair      408.58   0.186x   -722.0    +59.1
+sharpen1         2315.8     56   2315.8     36 HALO pair     1797.67   0.820x   -650.6    +23.7
+--------------------------------------------------------------------------------------------------------
+black/white are DELTAS vs baseline in DN. A POSITIVE black delta is
+blacks going grey, which no sharpness statistic can see.
+baseline halo 2621.7 DN, sharpness 2192.95 DN
+
+arms that reduce the halo, with what they cost:
+  plainmean      halo   654.9 DN ( -75.0%)  sharp -81.4%  black  -722.0 DN
+  bands5         halo  1577.2 DN ( -39.8%)  sharp  +0.2%  black  -143.3 DN
+  baseweighted   halo  1860.5 DN ( -29.0%)  sharp  +0.2%  black   -12.8 DN
+  exp1           halo  2060.0 DN ( -21.4%)  sharp  -0.2%  black  -248.4 DN
+  sharpen1       halo  2315.8 DN ( -11.7%)  sharp -18.0%  black  -650.6 DN
+  hullperlevel   halo  2548.4 DN (  -2.8%)  sharp  +0.0%  black  +148.0 DN
+  gate8          halo  2572.2 DN (  -1.9%)  sharp  +0.5%  black  +122.1 DN
+
+wrote C:\dev\strehl-out\V-SPEED-HALO\sweep-tweezers.json

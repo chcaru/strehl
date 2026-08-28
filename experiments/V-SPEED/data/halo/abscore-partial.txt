@@ -1,0 +1,25 @@
+corpus A/B: 'baseline' vs 'bands5'
+
+subject                       halo base   halo arm   d halo  fix base   fix arm    d fix  d sharp  d black
+------------------------------------------------------------------------------------------------------------
+109MSDCF                         1260.3     1229.8   -2.4%    1260.4    1229.7   -2.4%   -1.12%     +9.4
+112MSDCF                         8679.8     8520.2   -1.8%    8679.9    8520.2   -1.8%   +0.03%    +66.1
+119MSDCF                          503.1      494.8   -1.6%     503.0     494.8   -1.6%   -1.40%    +48.3
+coffee-bubbles                      0.0        0.0       -         -         -       -   +0.05%     -4.9
+flat-on-ruler-cpl                5579.3     5566.4   -0.2%    5579.3    5566.3   -0.2%   +0.80%    +41.5
+lead-1-cpl                       1848.4     1687.4   -8.7%    1848.5    1687.3   -8.7%   +2.64%   +266.7
+tweezers-cpl                     2621.7     1577.2  -39.8%    2621.7    1577.3  -39.8%   +0.25%   -143.3
+------------------------------------------------------------------------------------------------------------
+7 subjects.  halo   median -2.1%  range -39.8% .. -0.2%
+                              sharp  median +0.05%  range -1.40% .. +2.64%
+                              black  median +41.5 DN  range -143.3 .. +266.7 DN
+
+ACCEPTANCE (a fix must not do these):
+  halo worse by >5%   : NONE
+  blacks >200 DN grey : lead-1-cpl
+  sharpness <-1%      : 109MSDCF, 119MSDCF
+
+VERDICT CHANGES:
+  119MSDCF                     HALO pair -> HALO bright
+
+wrote C:\dev\strehl-out\V-SPEED-HALO\abscore-bands5-partial.json

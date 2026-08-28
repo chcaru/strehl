@@ -1,0 +1,43 @@
+aura.py detection floor vs halo_profile.py, and what the clamp moves
+master: D:\strehl-out\V-SPEED-HALO\sweep\tweezers-cpl\baseline.tiff
+
+baseline rim 2621.7 DN at 36 px (field 380 px, 19 bands)
+
+--- narrow rim: centre 30 px, sigma 12 px (spans ~72 px) ---
+      250 DN  landed     217  rim   2830.7 at    36 px  w   22.6  rise   +209.0  DETECTED
+      500 DN  landed     427  rim   3036.0 at    36 px  w   23.0  rise   +414.3  DETECTED
+     1000 DN  landed     851  rim   3460.7 at    36 px  w   23.6  rise   +839.0  DETECTED
+     2000 DN  landed    1707  rim   4290.3 at    36 px  w   24.7  rise  +1668.6  DETECTED
+     4500 DN  landed    3877  rim   6317.8 at    36 px  w   25.7  rise  +3696.1  DETECTED
+     9000 DN  landed    7751  rim   9866.8 at    36 px  w   26.3  rise  +7245.1  DETECTED
+  aura.py floor for a narrow rim: 250 DN   |   halo_profile.py: 4500 DN
+
+--- wide rim: centre 120 px, sigma 60 px (spans ~360 px) ---
+      250 DN  landed     227  rim   2560.6 at    36 px  w   22.0  rise    -61.1  missed
+      500 DN  landed     457  rim   2504.6 at    36 px  w   21.8  rise   -117.1  missed
+     1000 DN  landed     912  rim   2385.7 at    36 px  w   21.4  rise   -236.0  missed
+     2000 DN  landed    1823  rim   2153.2 at    36 px  w   20.5  rise   -468.5  missed
+     4500 DN  landed    4107  rim   1556.7 at    36 px  w   18.3  rise  -1065.0  missed
+     9000 DN  landed    8062  rim   2372.8 at   135 px  w   75.7  rise   -248.9  missed
+  aura.py floor for a wide rim: NOT DETECTED up to 9000 DN   |   halo_profile.py: missed at 9000 DN
+
+--- broad rim: centre 120 px, sigma 150 px (spans ~900 px) ---
+      250 DN  landed     182  rim   2601.2 at    36 px  w   22.1  rise    -20.5  missed
+      500 DN  landed     364  rim   2584.8 at    36 px  w   22.0  rise    -36.9  missed
+     1000 DN  landed     727  rim   2550.5 at    36 px  w   21.9  rise    -71.2  missed
+     2000 DN  landed    1454  rim   2477.5 at    36 px  w   21.6  rise   -144.2  missed
+     4500 DN  landed    3271  rim   2301.3 at    36 px  w   21.0  rise   -320.4  missed
+     9000 DN  landed    6543  rim   1990.9 at    36 px  w   19.8  rise   -630.8  missed
+  aura.py floor for a broad rim: NOT DETECTED up to 9000 DN   |   halo_profile.py: missed at 9000 DN
+
+
+--- does STREHL_HULL change the rim on a real render? ---
+(109MSDCF, stack --srgb, the four hull arms from hullcommission)
+  unset1       rim     69.4 DN at   135 px   aura   1260.3 DN at    36 px
+  inputrange   rim     69.4 DN at   135 px   aura   1260.3 DN at    36 px
+  perlevel     rim     69.5 DN at   135 px   aura   1263.3 DN at    36 px
+  unclamped    rim     70.6 DN at   135 px   aura   1298.8 DN at    36 px
+
+  rim spread across hull modes: 1.2 DN
+  The clamp does NOT move the rim statistic on this subject, so no
+  halo justification for it survives here.

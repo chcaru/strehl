@@ -1,0 +1,81 @@
+commissioning aura.py -- eight plants, both signs
+
+  [PASS] 1. dark ring 3000 DN on flat ground            aura_dn=  3000.0  want  3000.0 +-400
+  [PASS] 2. bright ring 3000 DN on flat ground          rim_dn=  3000.0  want  3000.0 +-400
+  [PASS] 3. penumbra only, no ring (must read zero)     aura_dn=     0.0  want     0.0 +-60
+  [PASS] 4. monotone background gradient 6000 DN (the confound) aura_dn=     0.0  want     0.0 +-60
+  [PASS] 5. dark ring 3000 DN ON a steep 18000 DN penumbra aura_dn=  2433.9  want >=1000 (detection)
+        recovery on a steep penumbra: 81% of the planted 3000 DN
+  [PASS] 6. ring INSIDE the excluded edge zone (d=14 px) head=    0.0 edge= 3000.0  want head<=200 AND edge>=1000
+  [PASS] 7. width separates a ring from a lighting arch narrow=  36.2 px broad= 242.5 px  ratio 6.7x
+        analytic widths 45.0 and 266.7 px; gates <=90, >=200, >=3x
+        both plants carry the same 3000 DN planted amplitude and read
+        3000 and 2545 DN, so amplitude CANNOT separate them -- only width.
+  [PASS] 8. field-fraction guard fires only outside it  outer=gradient     inner=HALO bright 
+        same 3000 DN ring, same 255 px field: at 208 px (81%)
+        reads 3000 DN and is rejected; at 90 px (35%) it reads
+        3000 DN and is kept. Amplitude is equal; only position differs.
+
+  sensitivity envelope. Two different limits, measured not claimed.
+  (a) DEPTH floor: band-aligned top-hat ring on the 18000 DN
+      penumbra, depth swept. Below some depth it is not detectable.
+    planted DN    aura DN    verdict
+          3000     2433.9   detected
+          1500      933.9   detected
+           750      183.9     MISSED
+           375        0.0     MISSED
+           200        0.0     MISSED
+           100        0.0     MISSED
+  (b) SHAPE blind spot: a ring gentler than the penumbra it sits on
+      shelves the profile instead of turning it over, and no dip
+      detector can see it. This is the limit halo_profile.py's
+      header calls structural, and this design does NOT escape it.
+    sigma px  at d px    aura DN    verdict
+           4       60      268.6   detected
+          12       60       13.2     MISSED
+          18       60        0.0     MISSED
+          18      150     1159.6   detected
+          30      150      751.6   detected
+  Read both as the instrument's blind spots, not as corpus results.
+
+commission: 8/8 PASS
+
+
+aura = depth of the darkest ring, rim = height of the brightest,
+both reference-free. w = full width at half prominence.
+A HALO is NARROW and sits near the subject. A broad feature is the
+background's own lighting arch, and amplitude cannot tell them
+apart -- only width can. See width_px() and plant 7.
+
+subject                                    aura   w px   @px      rim   w px   @px verdict
+------------------------------------------------------------------------------------------------
+109MSDCF                                 1260.3      6    36     69.4     68   135 HALO dark
+112MSDCF                                    0.0      0    36   8679.8     64    90 gradient
+113MSDCF                                    0.0      0   135   8468.9     65    90 gradient
+119MSDCF                                  305.3      6    36    503.1    108    71 HALO pair
+bee-1-cpl                                   0.0      0   310     45.9     42   310 clean
+bee-2-cpl                                   0.0      0   208      0.0      0   168 clean
+bee-3-cpl                                   0.0      0   208      0.0      0   168 clean
+coffee-bean                               728.0     15    36    105.6     39   310 HALO dark
+coffee-bubbles                              0.0      0     5      0.0      0     5 clean
+couch-fibers-cpl                            0.0      0   310      0.0      0   255 clean
+dry-erase-marker-head-cpl                  20.2     44   310    694.9     78   135 HALO bright
+flat-on-ruler-cpl                         334.3     35   255   5579.3    172   168 gradient
+flower-bud-alone-cpl                        0.0      0   255    110.6    119   255 clean
+flower-bud-with-background-fern-cpl       125.0    103   255    157.5     71   135 clean
+flower-inner-edge-cpl                       0.0      0    36      0.0      0    45 clean
+flowers-cpl                                 0.0      0    36      0.0      0    36 clean
+foam                                        0.0      0     5      0.0      0     5 clean
+highly-angled-ruler-mm-cpl                  0.0      0    36      0.0      0   255 clean
+lavendar-cpl                              702.7     89   310   4713.3    124   110 gradient
+lead-1-cpl                               1848.4     68    56   1233.2     33    36 HALO pair
+leaf-2-cpl                               1766.9     62    56   1137.9     34    36 HALO pair
+pencil-flatter-angle-cpl                    0.0      0    56    464.8     48   310 gradient
+pencil-steep-angle-cpl                      0.0      0    36      0.0      0   168 clean
+tweezers-cpl                             2621.7     28    56   2621.7     22    36 HALO pair
+wrapped-text-1                             91.1     44   310    284.9     44   255 gradient
+wrapped-text-2                              0.0      0   310   1525.9    108   255 gradient
+------------------------------------------------------------------------------------------------
+7 HALO, 7 gradient-only, 12 clean, 26 scored, 26 files
+worst: tweezers-cpl 2622 DN at 56 px, lead-1-cpl 1848 DN at 56 px, leaf-2-cpl 1767 DN at 56 px, 109MSDCF 1260 DN at 36 px, coffee-bean 728 DN at 36 px
+wrote C:\dev\strehl-out\V-SPEED-HALO\aura-faithful.json

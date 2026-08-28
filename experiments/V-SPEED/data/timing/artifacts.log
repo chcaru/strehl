@@ -1,0 +1,6 @@
+r2-srgb-enfuse.tif     7028x4688x4 uint16  min=4690   max=65535  mean=   45632.0 sd=  19690.0 uniq=54863   262,335,944 B  REAL
+r2-srgb-fs.tif         7028x4688x3 uint8   min=16     max=255    mean=     154.4 sd=     72.7 uniq=233      54,076,824 B  REAL
+r2-strehl.tif          7032x4688x3 uint16  min=0      max=64443  mean=   37538.0 sd=  20055.0 uniq=60367   197,801,285 B  REAL
+r2-srgb-enfuse.tif     7028x4688x4 uint16  min=0      max=65535  mean=   51555.8 sd=  18162.4 uniq=53588   256,961,756 B  REAL
+r2-srgb-fs.tif         6960x4641x3 uint8   min=0      max=255    mean=     182.4 sd=     73.9 uniq=256      62,090,984 B  REAL
+r2-strehl.tif          7032x4688x3 uint16  min=0      max=65535  mean=   47719.7 sd=  20287.2 uniq=50619   197,801,285 B  REAL

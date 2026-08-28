@@ -1,0 +1,31 @@
+halo decomposition: total = scene floor + merge excess
+
+subject                         total    scene    merge      fix fix-merge   d merge   tone
+----------------------------------------------------------------------------------------------------
+109MSDCF                       1260.4   1109.0    151.4   1229.7     120.7    -20.3%     67
+112MSDCF                       8679.9   7819.4    860.5   8520.2     700.8    -18.6%    798
+119MSDCF                        503.0    447.8     55.2    494.8      47.0    -14.9%    193
+coffee-bubbles                (not scorable in one arm)
+flat-on-ruler-cpl              5579.3        -        -   5566.3         -         -   4173  WITHHELD
+tweezers-cpl                   2621.7    654.8   1966.9   1577.3     922.5    -53.1%    722
+----------------------------------------------------------------------------------------------------
+
+WITHHELD -- the no-selection arm also moved BLACK LEVEL by more
+than 1000 DN on these, so it is not the same picture at a
+different selection and its profile is not a scene floor:
+  flat-on-ruler-cpl            black +4173.1 DN
+
+how much of each subject's halo is SCENE (not addressable by any
+merge knob), and what the fix did to the addressable remainder:
+
+subject                      verdict        scene %     d merge   d sharp   d black
+------------------------------------------------------------------------------------
+112MSDCF                     gradient         90.1%     -18.6%     0.03%    +66.1
+119MSDCF                     HALO pair        89.0%     -14.9%    -1.40%    +48.3
+109MSDCF                     HALO dark        88.0%     -20.3%    -1.12%     +9.4
+tweezers-cpl                 HALO pair        25.0%     -53.1%     0.25%   -143.3
+------------------------------------------------------------------------------------
+merge-excess change: median -19.5%, range -53.1% .. -14.9%, n=4
+scene fraction     : median 88.5%, range 25.0% .. 90.1%, n=4
+
+wrote C:\dev\strehl-out\V-SPEED-HALO\decompose-partial.json

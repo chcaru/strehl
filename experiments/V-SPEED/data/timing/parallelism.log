@@ -1,0 +1,8 @@
+subject 109MSDCF, 22 frames, 32 logical processors
+
+stage            wall_s     cpu_s  mean cores busy
+--------------------------------------------------
+strehl             8.83     88.39            10.01
+enfuse            52.69    368.98             7.00
+focus-stack       29.06    219.58             7.56
+align             77.16    415.36             5.38

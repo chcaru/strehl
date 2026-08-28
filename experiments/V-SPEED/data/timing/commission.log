@@ -1,0 +1,65 @@
+child startup baseline (sleep 0): min 0.0281 s, median 0.0302 s, spread 0.0326 s
+
+ target_s     min_s   delta_s   error_s  spread_s  verdict
+     1.00    1.0340    1.0059   +0.0059    0.0555  PASS
+     5.00    5.0351    5.0071   +0.0071    0.0377  PASS
+
+CLOCK-CHECK: PASS
+subject=109MSDCF frames=22 src=D:\personal\macro\109MSDCF
+{"strehl.exe": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490", "align_image_stack.exe": "361133980DB4FDCB083B8687B3780F7820823E45AE349B424A8CFC51D598CD55", "enfuse.exe": "919B1BB1E6E48AC5D673B92C489450A74C48735341B5F6F25EFA0153221FF7B9", "focus-stack.exe": "E256176D70BEC54BB51A448B2ADC452E7F49D21BC5042B40689A3257BBFDEE9E"}
+== round 0 (forward) ==
+   0 develop          9.09s rc=0
+subject=109MSDCF frames=22 src=D:\personal\macro\109MSDCF
+{"strehl.exe": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490", "align_image_stack.exe": "361133980DB4FDCB083B8687B3780F7820823E45AE349B424A8CFC51D598CD55", "enfuse.exe": "919B1BB1E6E48AC5D673B92C489450A74C48735341B5F6F25EFA0153221FF7B9", "focus-stack.exe": "E256176D70BEC54BB51A448B2ADC452E7F49D21BC5042B40689A3257BBFDEE9E"}
+== round 0 (forward) ==
+   0 strehl          31.36s rc=0
+   0 focus-stack     60.91s rc=0
+== round 1 (reverse) ==
+   1 focus-stack     51.15s rc=0
+   1 strehl          16.34s rc=0
+== round 2 (forward) ==
+   2 strehl          13.51s rc=0
+   2 focus-stack     52.58s rc=0
+== round 3 (reverse) ==
+   3 focus-stack     62.18s rc=0
+   3 strehl          12.31s rc=0
+subject=109MSDCF frames=22 src=D:\personal\macro\109MSDCF
+{"strehl.exe": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490", "align_image_stack.exe": "361133980DB4FDCB083B8687B3780F7820823E45AE349B424A8CFC51D598CD55", "enfuse.exe": "919B1BB1E6E48AC5D673B92C489450A74C48735341B5F6F25EFA0153221FF7B9", "focus-stack.exe": "E256176D70BEC54BB51A448B2ADC452E7F49D21BC5042B40689A3257BBFDEE9E"}
+== round 0 (forward) ==
+   0 strehl          18.11s rc=0  PLANT 5.0s
+   0 focus-stack     50.95s rc=0
+== round 1 (reverse) ==
+   1 focus-stack     50.52s rc=0
+   1 strehl          16.57s rc=0  PLANT 5.0s
+== round 2 (forward) ==
+   2 strehl          15.09s rc=0  PLANT 5.0s
+   2 focus-stack     47.27s rc=0
+== round 3 (reverse) ==
+   3 focus-stack     47.32s rc=0
+   3 strehl          18.91s rc=0  PLANT 5.0s
+subject=109MSDCF frames=22 src=D:\personal\macro\109MSDCF
+{"strehl.exe": "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490", "align_image_stack.exe": "361133980DB4FDCB083B8687B3780F7820823E45AE349B424A8CFC51D598CD55", "enfuse.exe": "919B1BB1E6E48AC5D673B92C489450A74C48735341B5F6F25EFA0153221FF7B9", "focus-stack.exe": "E256176D70BEC54BB51A448B2ADC452E7F49D21BC5042B40689A3257BBFDEE9E"}
+== round 0 (forward) ==
+   0 strehl          13.93s rc=0
+   0 focus-stack     71.76s rc=0  PLANT 5.0s
+== round 1 (reverse) ==
+   1 focus-stack     63.93s rc=0  PLANT 5.0s
+   1 strehl          23.19s rc=0
+== round 2 (forward) ==
+   2 strehl          15.85s rc=0
+   2 focus-stack     66.67s rc=0  PLANT 5.0s
+== round 3 (reverse) ==
+   3 focus-stack     59.41s rc=0  PLANT 5.0s
+   3 strehl          15.27s rc=0
+plant = 5.00 s, tolerance +/- 0.50 s, estimator = warm minimum
+
+planted      stage         ctrl_min  arm_min   d_min ctrl_med  arm_med   d_med  expect  verdict
+-----------------------------------------------------------------------------------------------
+strehl       focus-stack      51.15    47.27   -3.89    52.58    47.32   -5.26      ~0  PASS  (spread 11.03 s)
+strehl       strehl           12.31    15.09   +2.78    13.51    16.57   +3.05   +5.00  FAIL  (spread 4.04 s)
+focus-stack  focus-stack      51.15    59.41   +8.26    52.58    63.93  +11.35   +5.00  FAIL  (spread 11.03 s)
+focus-stack  strehl           12.31    15.27   +2.96    13.51    15.85   +2.33      ~0  PASS  (spread 7.92 s)
+
+COMMISSIONING: FAIL
+A timer that cannot see a planted 5 s cannot see a real 5 s.
+REFUSING to report timings.

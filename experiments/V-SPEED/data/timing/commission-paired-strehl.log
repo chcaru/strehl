@@ -1,0 +1,23 @@
+stage=strehl pairs=6 plant=5.00s tol=0.50s
+
+PLANT arm (6 pairs of bare vs +5.0s):
+  pair 0  bare-first   bare   16.78   other   28.11   delta  +11.32
+  pair 1  treated-1st  bare   16.52   other   22.81   delta   +6.29
+  pair 2  bare-first   bare    9.69   other   15.67   delta   +5.97
+  pair 3  treated-1st  bare   18.57   other   17.47   delta   -1.10
+  pair 4  bare-first   bare   14.25   other   18.07   delta   +3.82
+  pair 5  treated-1st  bare    8.50   other   20.27   delta  +11.77
+  PLANT median delta +6.13 s (expected +5.00), spread 12.87 s -> FAIL
+
+NULL arm (6 pairs of bare vs bare):
+  pair 0  bare-first   bare    8.79   other    9.29   delta   +0.49
+  pair 1  treated-1st  bare    8.02   other    8.62   delta   +0.60
+  pair 2  bare-first   bare   10.73   other   16.89   delta   +6.16
+  pair 3  treated-1st  bare    9.80   other   11.54   delta   +1.74
+  pair 4  bare-first   bare    9.45   other   10.94   delta   +1.49
+  pair 5  treated-1st  bare   10.64   other   12.99   delta   +2.36
+  NULL  median delta +1.62 s (expected  +0.00), spread 5.67 s -> FAIL
+
+COMMISSIONING (strehl, paired): FAIL
+A timer that cannot see a planted 5 s cannot see a real 5 s.
+REFUSING to report timings.

@@ -1,0 +1,8 @@
+subject 112MSDCF, 79 frames
+run    state     wall_s   s/frame
+----------------------------------
+0      cold       28.89     0.366
+1      warm       24.82     0.314
+2      warm       25.48     0.323
+
+cold 28.89 s, warm min 24.82 s, cold penalty +4.07 s (+16.4%)

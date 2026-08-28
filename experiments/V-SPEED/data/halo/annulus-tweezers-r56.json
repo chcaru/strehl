@@ -1,0 +1,57 @@
+[
+ {
+  "n": 17200,
+  "r_px": 56.0,
+  "far_dn": 61949.1,
+  "median_dn": -18354.2,
+  "mean_dn": -13460.9,
+  "p90_dn": -7144.2,
+  "conc": 0.73,
+  "far_ok": true,
+  "arm": "baseline"
+ },
+ {
+  "n": 17200,
+  "r_px": 56.0,
+  "far_dn": 61784.5,
+  "median_dn": -18224.0,
+  "mean_dn": -13578.2,
+  "p90_dn": -7445.5,
+  "conc": 0.75,
+  "far_ok": true,
+  "arm": "bands5"
+ },
+ {
+  "n": 17200,
+  "r_px": 56.0,
+  "far_dn": 62548.5,
+  "median_dn": -18080.6,
+  "mean_dn": -13581.5,
+  "p90_dn": -7274.1,
+  "conc": 0.75,
+  "far_ok": true,
+  "arm": "baseweighted"
+ },
+ {
+  "n": 17200,
+  "r_px": 56.0,
+  "far_dn": 61959.3,
+  "median_dn": -18494.6,
+  "mean_dn": -13663.7,
+  "p90_dn": -7440.9,
+  "conc": 0.74,
+  "far_ok": true,
+  "arm": "sharpen1"
+ },
+ {
+  "n": 17200,
+  "r_px": 56.0,
+  "far_dn": 62082.6,
+  "median_dn": -18499.4,
+  "mean_dn": -13557.6,
+  "p90_dn": -7075.5,
+  "conc": 0.73,
+  "far_ok": true,
+  "arm": "bands9"
+ }
+]

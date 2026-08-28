@@ -1,0 +1,111 @@
+==== coffee-bubbles ====
+subject: coffee-bubbles   frames: 19
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0     33s  ok
+bands5         rc=0     26s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\coffee-bubbles
+
+==== 109MSDCF ====
+subject: 109MSDCF   frames: 22
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0     47s  ok
+bands5         rc=0     39s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\109MSDCF
+
+==== 119MSDCF ====
+subject: 119MSDCF   frames: 33
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0     57s  ok
+bands5         rc=0     49s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\119MSDCF
+
+==== flat-on-ruler-cpl ====
+subject: flat-on-ruler-cpl   frames: 79
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0    122s  ok
+bands5         rc=0    144s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\flat-on-ruler-cpl
+
+==== 112MSDCF ====
+subject: 112MSDCF   frames: 79
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0    110s  ok
+bands5         rc=0    105s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\112MSDCF
+
+==== foam ====
+subject: foam   frames: 100
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0    164s  ok
+bands5         rc=0    138s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\foam
+
+==== coffee-bean ====
+subject: coffee-bean   frames: 105
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0     99s  ok
+bands5         rc=0    119s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\coffee-bean
+
+==== leaf-2-cpl ====
+subject: leaf-2-cpl   frames: 182
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0    184s  ok
+bands5         rc=0    168s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\leaf-2-cpl
+
+==== dry-erase-marker-head-cpl ====
+subject: dry-erase-marker-head-cpl   frames: 299
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0    379s  ok
+bands5         rc=0    325s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\dry-erase-marker-head-cpl
+
+==== bee-1-cpl ====
+subject: bee-1-cpl   frames: 299
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0    359s  ok
+bands5         rc=0    302s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\bee-1-cpl
+
+AB SWEEP COMPLETE

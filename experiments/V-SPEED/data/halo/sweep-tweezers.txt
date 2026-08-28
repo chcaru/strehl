@@ -1,0 +1,16 @@
+subject: tweezers-cpl   frames: 100
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0    115s  ok
+exp1           rc=0    105s  ok
+exp4           rc=0    121s  ok
+sharpen1       rc=0    112s  ok
+gate8          rc=0    100s  ok
+bands5         rc=0    112s  ok
+bands9         rc=0     93s  ok
+baseweighted   rc=0     69s  ok
+hullperlevel   rc=0     66s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\tweezers-cpl

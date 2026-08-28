@@ -1,0 +1,232 @@
+{
+ "sweep": [
+  {
+   "shape": "narrow",
+   "amp": 250.0,
+   "status": "SCORED",
+   "landed_dn": 216.5,
+   "rim_dn": 2830.7,
+   "rim_at_px": 36.0,
+   "rim_w_px": 22.6,
+   "rise_dn": 209.0,
+   "detected": true
+  },
+  {
+   "shape": "narrow",
+   "amp": 500.0,
+   "status": "SCORED",
+   "landed_dn": 426.9,
+   "rim_dn": 3036.0,
+   "rim_at_px": 36.0,
+   "rim_w_px": 23.0,
+   "rise_dn": 414.3,
+   "detected": true
+  },
+  {
+   "shape": "narrow",
+   "amp": 1000.0,
+   "status": "SCORED",
+   "landed_dn": 851.4,
+   "rim_dn": 3460.7,
+   "rim_at_px": 36.0,
+   "rim_w_px": 23.6,
+   "rise_dn": 839.0,
+   "detected": true
+  },
+  {
+   "shape": "narrow",
+   "amp": 2000.0,
+   "status": "SCORED",
+   "landed_dn": 1707.4,
+   "rim_dn": 4290.3,
+   "rim_at_px": 36.0,
+   "rim_w_px": 24.7,
+   "rise_dn": 1668.6,
+   "detected": true
+  },
+  {
+   "shape": "narrow",
+   "amp": 4500.0,
+   "status": "SCORED",
+   "landed_dn": 3876.5,
+   "rim_dn": 6317.8,
+   "rim_at_px": 36.0,
+   "rim_w_px": 25.7,
+   "rise_dn": 3696.1,
+   "detected": true
+  },
+  {
+   "shape": "narrow",
+   "amp": 9000.0,
+   "status": "SCORED",
+   "landed_dn": 7751.3,
+   "rim_dn": 9866.8,
+   "rim_at_px": 36.0,
+   "rim_w_px": 26.3,
+   "rise_dn": 7245.1,
+   "detected": true
+  },
+  {
+   "shape": "wide",
+   "amp": 250.0,
+   "status": "SCORED",
+   "landed_dn": 227.5,
+   "rim_dn": 2560.6,
+   "rim_at_px": 36.0,
+   "rim_w_px": 22.0,
+   "rise_dn": -61.1,
+   "detected": false
+  },
+  {
+   "shape": "wide",
+   "amp": 500.0,
+   "status": "SCORED",
+   "landed_dn": 457.3,
+   "rim_dn": 2504.6,
+   "rim_at_px": 36.0,
+   "rim_w_px": 21.8,
+   "rise_dn": -117.1,
+   "detected": false
+  },
+  {
+   "shape": "wide",
+   "amp": 1000.0,
+   "status": "SCORED",
+   "landed_dn": 911.6,
+   "rim_dn": 2385.7,
+   "rim_at_px": 36.0,
+   "rim_w_px": 21.4,
+   "rise_dn": -236.0,
+   "detected": false
+  },
+  {
+   "shape": "wide",
+   "amp": 2000.0,
+   "status": "SCORED",
+   "landed_dn": 1823.1,
+   "rim_dn": 2153.2,
+   "rim_at_px": 36.0,
+   "rim_w_px": 20.5,
+   "rise_dn": -468.5,
+   "detected": false
+  },
+  {
+   "shape": "wide",
+   "amp": 4500.0,
+   "status": "SCORED",
+   "landed_dn": 4107.0,
+   "rim_dn": 1556.7,
+   "rim_at_px": 36.0,
+   "rim_w_px": 18.3,
+   "rise_dn": -1065.0,
+   "detected": false
+  },
+  {
+   "shape": "wide",
+   "amp": 9000.0,
+   "status": "SCORED",
+   "landed_dn": 8062.5,
+   "rim_dn": 2372.8,
+   "rim_at_px": 135.0,
+   "rim_w_px": 75.7,
+   "rise_dn": -248.9,
+   "detected": false
+  },
+  {
+   "shape": "broad",
+   "amp": 250.0,
+   "status": "SCORED",
+   "landed_dn": 181.9,
+   "rim_dn": 2601.2,
+   "rim_at_px": 36.0,
+   "rim_w_px": 22.1,
+   "rise_dn": -20.5,
+   "detected": false
+  },
+  {
+   "shape": "broad",
+   "amp": 500.0,
+   "status": "SCORED",
+   "landed_dn": 363.8,
+   "rim_dn": 2584.8,
+   "rim_at_px": 36.0,
+   "rim_w_px": 22.0,
+   "rise_dn": -36.9,
+   "detected": false
+  },
+  {
+   "shape": "broad",
+   "amp": 1000.0,
+   "status": "SCORED",
+   "landed_dn": 727.4,
+   "rim_dn": 2550.5,
+   "rim_at_px": 36.0,
+   "rim_w_px": 21.9,
+   "rise_dn": -71.2,
+   "detected": false
+  },
+  {
+   "shape": "broad",
+   "amp": 2000.0,
+   "status": "SCORED",
+   "landed_dn": 1454.1,
+   "rim_dn": 2477.5,
+   "rim_at_px": 36.0,
+   "rim_w_px": 21.6,
+   "rise_dn": -144.2,
+   "detected": false
+  },
+  {
+   "shape": "broad",
+   "amp": 4500.0,
+   "status": "SCORED",
+   "landed_dn": 3271.0,
+   "rim_dn": 2301.3,
+   "rim_at_px": 36.0,
+   "rim_w_px": 21.0,
+   "rise_dn": -320.4,
+   "detected": false
+  },
+  {
+   "shape": "broad",
+   "amp": 9000.0,
+   "status": "SCORED",
+   "landed_dn": 6542.8,
+   "rim_dn": 1990.9,
+   "rim_at_px": 36.0,
+   "rim_w_px": 19.8,
+   "rise_dn": -630.8,
+   "detected": false
+  }
+ ],
+ "hull": [
+  {
+   "arm": "unset1",
+   "status": "SCORED",
+   "rim_dn": 69.4,
+   "rim_at_px": 135.0,
+   "aura_dn": 1260.3
+  },
+  {
+   "arm": "inputrange",
+   "status": "SCORED",
+   "rim_dn": 69.4,
+   "rim_at_px": 135.0,
+   "aura_dn": 1260.3
+  },
+  {
+   "arm": "perlevel",
+   "status": "SCORED",
+   "rim_dn": 69.5,
+   "rim_at_px": 135.0,
+   "aura_dn": 1263.3
+  },
+  {
+   "arm": "unclamped",
+   "status": "SCORED",
+   "rim_dn": 70.6,
+   "rim_at_px": 135.0,
+   "aura_dn": 1298.8
+  }
+ ]
+}

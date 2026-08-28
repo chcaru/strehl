@@ -1,0 +1,16 @@
+grain-vs-acuity audit: baseline vs plainmean
+sharp.py has NO band; operator gain 2.618 at 0.30 cyc/px, 4.000 at Nyquist.
+Qualification quoted from V-LINEAR depthqual.py (dc8c16b5) at band 0.30-0.40.
+
+| subject                    |    N |      R |  qual | grain A | grain B |  d obs % | d grain % | d corr % | verdict    |
+|----------------------------|------|--------|-------|---------|---------|----------|-----------|----------|------------|
+| bee-1-cpl                  |  299 |  4.732 |    PASS |  249.00 |  154.43 |  -83.746 |   -14.845 |  -68.901 | CLEAN      |
+| dry-erase-marker-head-cpl  |  300 |  4.877 |    PASS |  158.68 |   94.21 |  -82.406 |   -13.194 |  -69.212 | CLEAN      |
+| tweezers-cpl               |  100 |    n/a | UNKNOWN |   99.35 |   86.78 |  -81.369 |    -0.666 |  -80.702 | CLEAN      |
+| lead-1-cpl                 | SKIPPED: missing baseline.tiff or plainmean.tiff
+| coffee-bean                |  105 |    n/a | UNKNOWN |  143.59 |   76.49 |  -82.657 |    -4.923 |  -77.734 | CLEAN      |
+| leaf-2-cpl                 |  182 |    n/a | UNKNOWN |  597.45 |  554.63 |   -0.953 |    -1.924 |   +0.971 | CONFOUNDED |
+
+0 opposed + 4 clean + 1 confounded + 1 skipped = 6 subjects
+OPPOSED means the grain difference pushes AGAINST the observed effect,
+so the effect cannot be a grain artifact and 'd corr' is the larger, truer number.

@@ -1,0 +1,14 @@
+--- SPECIFICITY: does background structure alone create a rim? ---
+no ring planted in the 'false rim' column; 3000 DN ring in the control column
+
+| background                   |  false rim |    width |    at px | control (3000) | verdict
+|------------------------------|------------|----------|----------|----------------|--------------------
+| gradient 2879 DN             |        0.0 |      0.0 |       36 |         2819.7 | specific
+| arch 2879 DN                 |     2442.2 |    242.5 |      208 |         2669.0 | MANUFACTURED
+| gradient 9000 DN             |        0.0 |      0.0 |       36 |         2436.2 | specific
+| arch 9000 DN                 |     7634.6 |    242.5 |      208 |         1965.3 | MANUFACTURED
+| gradient 22461 DN            |        0.0 |      0.0 |       36 |            0.0 | DEAD (control failed)
+| arch 22461 DN                |    19053.4 |    242.5 |      208 |          417.8 | MANUFACTURED
+
+2 specific + 4 failed = 6 background arms
+threshold: a false rim >= 200 DN would be manufactured (same gate used for detection)

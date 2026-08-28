@@ -1,0 +1,25 @@
+=== clean document must be GREEN ===
+20/20 re-derived rows matched  GREEN
+  UNCERTIFIED 3 claim(s) match no re-derived ratio, direction unchecked: 5.70� faster, 2.11� faster, 2.1� faster
+6 certified + 0 reversed + 3 uncertified = 9 directional claims  GREEN
+
+=== planted NUMBER defect (paired median 22.58x -> 31.41x) must be RED ===
+  MISMATCH  coffee-bean/enfuse paired ratios: found 0 times, expected exactly 1
+      want: | coffee-bean | 105 | align+enfuse | 28.80�, 22.58�, 19.56� | **22.58�** | 19.56� | 28.80� |
+19/20 re-derived rows matched  RED
+  UNCERTIFIED 3 claim(s) match no re-derived ratio, direction unchecked: 5.70� faster, 2.11� faster, 2.1� faster
+6 certified + 0 reversed + 3 uncertified = 9 directional claims  GREEN
+
+=== planted CONCLUSION flip (22.6x faster -> SLOWER) must be RED ===
+20/20 re-derived rows matched  GREEN
+  REVERSED    22.6� says 'slower' but the measured ratio is 22.5818 (coffee-bean/enfuse), which is 'faster'
+  UNCERTIFIED 3 claim(s) match no re-derived ratio, direction unchecked: 5.70� faster, 2.11� faster, 2.1� faster
+  TOO FEW     only 5 certified claims, expected at least 6 -- claims cannot be deleted to pass
+5 certified + 1 reversed + 3 uncertified = 9 directional claims  RED
+
+=== all directional claims DELETED must be RED (not vacuously green) ===
+20/20 re-derived rows matched  GREEN
+  TOO FEW     only 0 certified claims, expected at least 6 -- claims cannot be deleted to pass
+0 certified + 0 reversed + 0 uncertified = 0 directional claims  RED
+
+COMMISSIONING PASS: clean GREEN; number defect, conclusion flip and claim deletion all RED.

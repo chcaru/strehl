@@ -25,7 +25,9 @@ import statistics
 import sys
 import tempfile
 
-ROOT = r"C:\dev\strehl-out\V-SPEED"
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "timing")
+if not os.path.isdir(ROOT):  # pre-banking scratch location, kept as a fallback
+    ROOT = r"C:\dev\strehl-out\V-SPEED"
 DOC = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
     "docs", "research", "V-SPEED.md",

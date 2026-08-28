@@ -1,0 +1,22 @@
+STREHL_HULL inertness check -- is the default preserved across the commit?
+source : D:\personal\macro\109MSDCF
+recipe : stack --srgb  (no --auto-exposure; faithful corpus recipe)
+env    : STREHL_HULL UNSET in both arms
+
+
+rendering (STREHL_HULL unset in both) ...
+
+stability control (same binary, second run) ...
+
+[PASS] CONTROL: renderer is deterministic (mine run1 == mine run2)
+[PASS] RESULT : unset output is PIXEL-identical across the commit
+         samples total     98,898,048
+         samples differing 0  (0.000000%)
+         first byte differs at offset 3375
+         VERDICT: PIXEL-IDENTICAL. The file hashes differ only in metadata,
+         (file hashes differ only in the embedded git version:)
+         parent A65189B3C4223B383C811361AFDB131058865D15FF391A6192BA12E3BE097698
+         mine   9D071C1ACECF88AFBBB2B70A3C451121A356F5EF9B99FFA8689C23D9AD805D08
+
+STREHL_HULL is PIXEL-INERT when unset. The commit does not change any
+master rendered without the variable. Measured, not reasoned.

@@ -1,0 +1,72 @@
+build           : strehl 0.0.0 (unknown)
+merge backend   : pyramid (default)
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+iso             : 160
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 160. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+frames          : 22 from D:\personal\macro\109MSDCF  (first decode 0.15 s)
+planes          : 3516 x 2344 per CFA plane
+--- the merge ---
+bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (sidecar), reference frame 11, 22 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : field of view scaled to 0.9870 so that EVERY frame covers every pixel (1.3% of width dropped, then upsampled to keep the output dimensions).
+memory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in
+                  the frame count. The merge is a fold: every accumulator is a sum, so a
+                  frame is built, added and dropped. STREHL_PYRAMID_WORKERS=N overrides.
+
+folded          : 22 / 22 frames in 9.2 s (0.42 s per frame, 4 workers)
+band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+averaged        : 52.5% 0.3% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+                  characterisation: decoder color_matrix[D65]
+                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 2.8613 B 1.4824
+                  Order: black, as-shot WB, demosaic, matrix, clamp, sRGB curve.
+exposure        : +2.60 stops (gain 6.063x), chosen from the image
+                  rule: linear-sRGB luma p99.9 -> 0.90 on the binned grid (M100).
+                  reproduce this exact file with --exposure=2.60
+                  ONE multiply in linear light, before the curve. No tone curve, no
+                  saturation, no roll-off: every unclipped ratio is unchanged.
+tone            : black 0.02879, white 0.99400 (linear), contrast 0.55
+
+wrote           : C:\dev\strehl-out\V-SPEED\109MSDCF\out\cp-strehl-b5.tif (7032 x 4688, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.8 s
+total           : 10.6 s

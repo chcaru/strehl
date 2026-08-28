@@ -1,0 +1,68 @@
+[
+ {
+  "bg": "gradient 2879 DN",
+  "status": "SCORED",
+  "verdict": "specific",
+  "false_rim_dn": 0.0,
+  "false_rim_w_px": 0.0,
+  "false_rim_at_px": 36.0,
+  "control_aura_dn": 2819.7,
+  "specific": true,
+  "control_live": true
+ },
+ {
+  "bg": "arch 2879 DN",
+  "status": "SCORED",
+  "verdict": "MANUFACTURED",
+  "false_rim_dn": 2442.2,
+  "false_rim_w_px": 242.5,
+  "false_rim_at_px": 207.5,
+  "control_aura_dn": 2669.0,
+  "specific": false,
+  "control_live": true
+ },
+ {
+  "bg": "gradient 9000 DN",
+  "status": "SCORED",
+  "verdict": "specific",
+  "false_rim_dn": 0.0,
+  "false_rim_w_px": 0.0,
+  "false_rim_at_px": 36.0,
+  "control_aura_dn": 2436.2,
+  "specific": true,
+  "control_live": true
+ },
+ {
+  "bg": "arch 9000 DN",
+  "status": "SCORED",
+  "verdict": "MANUFACTURED",
+  "false_rim_dn": 7634.6,
+  "false_rim_w_px": 242.5,
+  "false_rim_at_px": 207.5,
+  "control_aura_dn": 1965.3,
+  "specific": false,
+  "control_live": true
+ },
+ {
+  "bg": "gradient 22461 DN",
+  "status": "SCORED",
+  "verdict": "VOID (control dead)",
+  "false_rim_dn": 0.0,
+  "false_rim_w_px": 0.0,
+  "false_rim_at_px": 36.0,
+  "control_aura_dn": 0.0,
+  "specific": true,
+  "control_live": false
+ },
+ {
+  "bg": "arch 22461 DN",
+  "status": "SCORED",
+  "verdict": "VOID (control dead)",
+  "false_rim_dn": 19053.4,
+  "false_rim_w_px": 242.5,
+  "false_rim_at_px": 207.5,
+  "control_aura_dn": 417.8,
+  "specific": false,
+  "control_live": false
+ }
+]

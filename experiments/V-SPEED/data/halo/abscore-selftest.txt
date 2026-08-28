@@ -1,0 +1,9 @@
+====================================================================
+abscore.py fixed_at() self-test
+====================================================================
+[PASS] 1 monotone ramp reads 0.0 DN (must be ~0; old design gave 600)
+[PASS] 2 planted notch reads 600.0 DN (expected 600.0)
+[PASS] 3 planted bump reads 600.0 DN (expected 600.0)
+[PASS] 4 defect at an UNFLAGGED index reads 0.0 DN (window is fixed)
+--------------------------------------------------------------------
+4/4 PASS

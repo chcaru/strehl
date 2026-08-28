@@ -33,7 +33,9 @@ import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DOC = ROOT / "docs" / "research" / "V-SPEED-HALO.md"
-DATA = pathlib.Path(r"C:\dev\strehl-out\V-SPEED-HALO")
+DATA = pathlib.Path(__file__).resolve().parent / "data" / "halo"
+if not DATA.exists():  # pre-banking scratch location, kept as a fallback
+    DATA = pathlib.Path(r"C:\dev\strehl-out\V-SPEED-HALO")
 
 AURA = DATA / "aura-faithful.json"
 SPEC = DATA / "plantrim-specificity.json"

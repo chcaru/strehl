@@ -1,0 +1,4 @@
+{"wall_s": 8.826938000041991, "cpu_s": 88.390625, "cores": 10.013735793723656, "rc": 0, "stage": "strehl", "subject": "109MSDCF", "frames": 22}
+{"wall_s": 52.69108819984831, "cpu_s": 368.984375, "cores": 7.002785245210826, "rc": 0, "stage": "enfuse", "subject": "109MSDCF", "frames": 22}
+{"wall_s": 29.055778699927032, "cpu_s": 219.578125, "cores": 7.557124084254931, "rc": 0, "stage": "focus-stack", "subject": "109MSDCF", "frames": 22}
+{"wall_s": 77.16006000014022, "cpu_s": 415.359375, "cores": 5.383087765862872, "rc": 0, "stage": "align", "subject": "109MSDCF", "frames": 22}

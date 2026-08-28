@@ -1,0 +1,67 @@
+A/B: where is the maximum, and is there an interior peak?
+
+subject                               argmax band       peaks  interior peak height
+----------------------------------------------------------------------------------------
+109MSDCF                                   6 80-120         0  none
+112MSDCF                                   - -              -  (not scorable: far n=0)
+113MSDCF                                   - -              -  (not scorable: far n=0)
+119MSDCF                                   5 50-80          1  band 5 by 89.6 DN
+bee-1-cpl                                  6 80-120         0  none
+bee-2-cpl                                  6 80-120         0  none
+bee-3-cpl                                  6 80-120         0  none
+coffee-bean                                6 80-120         0  none
+coffee-bubbles                             - -              -  (not scorable: far n=0)
+couch-fibers-cpl                           6 80-120         0  none
+dry-erase-marker-head-cpl                  6 80-120         0  none
+flat-on-ruler-cpl                          6 80-120         0  none
+flower-bud-alone-cpl                       6 80-120         0  none
+flower-bud-with-background-fern-cpl         6 80-120         0  none
+flower-inner-edge-cpl                      6 80-120         0  none
+flowers-cpl                                6 80-120         0  none
+foam                                       - -              -  (not scorable: far n=0)
+highly-angled-ruler-mm-cpl                 6 80-120         0  none
+lavendar-cpl                               6 80-120         0  none
+lead-1-cpl                                 3 20-32          1  band 3 by 710.1 DN
+leaf-2-cpl                                 3 20-32          1  band 3 by 796.8 DN
+pencil-flatter-angle-cpl                   6 80-120         0  none
+pencil-steep-angle-cpl                     6 80-120         0  none
+tweezers-cpl                               6 80-120         1  band 4 by 1373.5 DN
+wrapped-text-1                             6 80-120         0  none
+wrapped-text-2                             6 80-120         0  none
+----------------------------------------------------------------------------------------
+22 scorable subjects: 19 have argmax in the OUTERMOST band (80-120),
+4 have any interior local maximum.
+
+
+C: does the verdict depend on where the reference annulus sits?
+
+subject                                   400-900        200-400        150-300        120-250   verdict flips?
+------------------------------------------------------------------------------------------------------------
+109MSDCF                                    -64.1           21.0           22.8            5.8   no
+119MSDCF                                   -284.1          415.4          395.1          290.9   YES
+bee-1-cpl                                 -3666.5        -3683.3        -3002.2        -2219.5   no
+bee-2-cpl                                 -4273.0        -1764.8        -1249.8         -978.1   no
+bee-3-cpl                                 -4212.3        -1931.0        -1331.1        -1026.1   no
+coffee-bean                               -7055.2        -4119.5        -3083.4        -2182.8   no
+couch-fibers-cpl                          -4045.2        -3387.7        -2582.6        -1846.1   no
+dry-erase-marker-head-cpl                   236.7           -9.0         -126.1         -325.7   YES
+flat-on-ruler-cpl                          4481.8         4507.3         1647.0          320.8   no
+flower-bud-alone-cpl                       -431.7         -445.2         -416.7         -330.8   no
+flower-bud-with-background-fern-cpl         -438.4          -90.6          -69.7          -85.0   no
+flower-inner-edge-cpl                    -16604.4        -8516.8        -6192.0        -4730.3   no
+flowers-cpl                              -10765.1        -6499.4        -4442.2        -3145.6   no
+highly-angled-ruler-mm-cpl               -10248.9        -6838.3        -5686.6        -4280.7   no
+lavendar-cpl                                527.3         4241.4         3621.6         2737.7   no
+lead-1-cpl                                -3626.6        -1766.6        -1064.4         -627.9   no
+leaf-2-cpl                                -3375.2        -1876.9        -1192.8         -715.6   no
+pencil-flatter-angle-cpl                  -4340.4        -3860.6        -2955.4        -2102.1   no
+pencil-steep-angle-cpl                   -10361.3        -6140.5        -4045.8        -3109.9   no
+tweezers-cpl                             -15502.0        -7679.4        -5173.1        -3759.3   no
+wrapped-text-1                            -2183.2        -2251.1        -2025.9        -1584.3   no
+wrapped-text-2                            -1313.5        -1302.9        -1507.8        -1285.6   no
+------------------------------------------------------------------------------------------------------------
+2 of 22 subjects change verdict purely by moving the reference
+annulus. A rim a few px from the silhouette cannot know where the
+reference sits, so any subject that flips was never reading a rim.
+
+wrote C:\dev\strehl-out\V-SPEED-HALO\halodiag.json

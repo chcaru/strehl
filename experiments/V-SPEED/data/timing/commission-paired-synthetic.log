@@ -1,0 +1,21 @@
+stage=synthetic pairs=6 plant=5.00s tol=0.50s
+
+PLANT arm (6 pairs of bare vs +5.0s):
+  pair 0  bare-first   bare   10.36   other   15.25   delta   +4.90
+  pair 1  treated-1st  bare   10.11   other   15.25   delta   +5.14
+  pair 2  bare-first   bare   10.05   other   15.11   delta   +5.07
+  pair 3  treated-1st  bare   10.08   other   15.05   delta   +4.97
+  pair 4  bare-first   bare   10.19   other   15.09   delta   +4.90
+  pair 5  treated-1st  bare   10.04   other   15.28   delta   +5.23
+  PLANT median delta +5.02 s (expected +5.00), spread 0.34 s -> PASS
+
+NULL arm (6 pairs of bare vs bare):
+  pair 0  bare-first   bare   10.06   other   10.04   delta   -0.02
+  pair 1  treated-1st  bare   10.04   other   10.05   delta   +0.01
+  pair 2  bare-first   bare   10.04   other   10.04   delta   -0.00
+  pair 3  treated-1st  bare   10.35   other   10.22   delta   -0.13
+  pair 4  bare-first   bare   10.32   other   10.28   delta   -0.05
+  pair 5  treated-1st  bare   10.05   other   10.14   delta   +0.09
+  NULL  median delta -0.01 s (expected  +0.00), spread 0.22 s -> PASS
+
+COMMISSIONING (synthetic, paired): PASS

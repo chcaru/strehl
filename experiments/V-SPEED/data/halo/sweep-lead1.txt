@@ -1,0 +1,16 @@
+subject: lead-1-cpl   frames: 123
+binary : 7252AF9C19A5BFE28789662E88D157D079A26C0689B7956D81153E26E32FEA8F
+version: strehl 0.0.0 (cc98561582ab-dirty)
+recipe : stack --srgb  (NO --auto-exposure; faithful-corpus recipe)
+
+baseline       rc=0     84s  ok
+exp1           rc=0     77s  ok
+exp4           rc=0     89s  ok
+sharpen1       rc=0     90s  ok
+gate8          rc=0    108s  ok
+bands5         rc=0    138s  ok
+bands9         rc=0    161s  ok
+baseweighted   rc=0    146s  ok
+hullperlevel   rc=0    177s  ok
+
+renders complete in C:\dev\strehl-out\V-SPEED-HALO\sweep\lead-1-cpl
