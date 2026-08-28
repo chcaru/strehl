@@ -90,6 +90,24 @@
 //! localised: if only the sidecar row moves, warp application changed; if both
 //! move, the merge core did.
 //!
+//! # Both backends, always
+//!
+//! There is a second axis, and for the whole life of this file it was frozen at
+//! one end without anyone noticing. `Freeze::argv` hardcoded `--merge
+//! estimator` into every row, and by the time that was read back
+//! `merge_cmd::DEFAULT_MERGE_BACKEND` had already moved to `Pyramid` -- so a
+//! green byte-freeze certified only the backend nobody gets by default, and a
+//! regression in the path every default render takes could not trip a single
+//! check here (SYNTHESIS fact 1909).
+//!
+//! `merge` is now a registry column, and
+//! [`every_registry_row_records_a_complete_invocation`] requires at least one
+//! row on **each** backend, so whichever way that constant is pointed the
+//! registry has already frozen it. The column also decides which gate flag the
+//! argv carries -- `--gate` on the estimator, `--pyramid-gate` on the pyramid --
+//! because `main.rs` refuses each under the other backend rather than carrying
+//! the number across two different quantities.
+//!
 //! # Running it
 //!
 //! `cargo test -p strehl-cli --test byte-freeze`. The render arm needs the
@@ -102,7 +120,11 @@
 //! Measured cost at `fea1a72` on the reference rig: 3.3 s (unaligned) and 7.6 s
 //! (sidecar) per render in `--release`, 26 s unaligned in `dev`. The hash is
 //! **identical in both profiles** (measured), so this runs under a plain
-//! `cargo test`.
+//! `cargo test`. The pyramid row costs 3.6 s per render in `--release`
+//! (measured at `a5ecda36`), and its hash was measured under **both** profiles
+//! rather than inheriting that claim from the estimator rows: the whole file
+//! reproduces bit-for-bit under `cargo test` (dev, 350 s for five tests) and
+//! under `cargo test --release` (47 s).
 
 use std::collections::BTreeSet;
 use std::fmt::Write as _;
@@ -345,6 +367,7 @@ const HEADER: &[&str] = &[
     "stack",
     "frames",
     "limit",
+    "merge",
     "gate",
     "srgb",
     "env_align",
@@ -368,6 +391,7 @@ struct Freeze {
     stack: String,
     frames: String,
     limit: String,
+    merge: String,
     gate: String,
     srgb: bool,
     env_align: String,
@@ -395,6 +419,16 @@ const UNSET: &str = "unset";
 
 /// The literal recorded for a path the harness itself supplies at run time.
 const SCRATCH: &str = "scratch";
+
+/// The two spellings the `merge` column admits, which are the two spellings
+/// `--merge` itself accepts (`merge_cmd::MergeBackend::name`).
+///
+/// Spelled here rather than imported because this test drives the binary as a
+/// stranger would -- through argv. If the CLI ever renames a backend, the row
+/// must fail loudly at the command line rather than follow the rename silently
+/// through a shared constant.
+const ESTIMATOR: &str = "estimator";
+const PYRAMID: &str = "pyramid";
 
 /// Environment variables that change what `strehl stack` emits.
 ///
@@ -541,12 +575,40 @@ const RENDER_ENV: &[&str] = &[
     // Registered in the commit that introduces the variable, which is what the
     // four comments above say should have happened each time and did not. It
     // ships defaulted OFF, so unset and `0` are the same render today and this
-    // entry cannot yet move a hash -- it is registered against the flip, which
-    // is precisely the case those four comments describe going wrong. It is
-    // also unreachable from these rows for a second reason: every row here
-    // hardcodes `--merge estimator` (see `argv` below) and this variable only
-    // exists on the pyramid backend, which is `DEFAULT_MERGE_BACKEND`.
+    // entry cannot yet move a hash by being cleared.
+    //
+    // IT IS NOW REACHABLE. This entry used to end "it is also unreachable from
+    // these rows for a second reason: every row here hardcodes `--merge
+    // estimator` and this variable only exists on the pyramid backend, which is
+    // `DEFAULT_MERGE_BACKEND`." That sentence retired the moment
+    // `coffee-bean-20-gate2-pyramid` was added. The variable is live on that
+    // row, and the row's teeth were proven with exactly this mechanism: with
+    // `significance_scale_default`'s unset arm planted at 1.0 in the source --
+    // the same render the ambient variable would produce, but reaching past
+    // this list, which is the only way a plant CAN reach past it -- the pyramid
+    // row moved
+    //   C6765BFA0D2FD203F65A7B02FE36920902B26A6706CCEAA8E87B76AC1CE5CD65 ->
+    //   A4B699DA7FE32E70ED35002720539460C43EFEC093BA68191A9E7A4C14479547
+    // while both estimator rows held. Written in full rather than truncated for
+    // the reason the `sha256` column insists on it: this corpus already carries
+    // a freeze recorded as `D99F5D82...76CA`, which no machine can check.
     "STREHL_PYRAMID_SIGNIFICANCE",
+    // The rest of the pyramid's own environment, registered in the commit that
+    // gives it something to hide -- the first pyramid row. Both are read by
+    // `MergeConfig::default()` through a `OnceLock`, so an ambient value is
+    // resolved once per process and applies to the whole fold:
+    //
+    //   * `STREHL_HULL` selects what the reconstruction is clamped to. Anything
+    //     other than the default `InputRange` rewrites merged samples.
+    //   * `STREHL_PYRAMID_MEAN_COARSE` sets how many coarse bands are replaced
+    //     by a plain mean. It defaults to 0 -- "until the ladder that chooses
+    //     it has been run, so this field cannot move a byte until it is
+    //     measured" (`pyramid.rs`) -- and a shell that sets it moves bytes now.
+    //
+    // Neither could reach a row in this file until today, which is precisely
+    // the condition the five comments above describe forgetting under.
+    "STREHL_HULL",
+    "STREHL_PYRAMID_MEAN_COARSE",
 ];
 
 impl Freeze {
@@ -556,25 +618,36 @@ impl Freeze {
             .join("data")
     }
 
+    /// Is this row a pyramid freeze? Decided by the recorded column and by
+    /// nothing else -- never by `DEFAULT_MERGE_BACKEND`, which is the value a
+    /// freeze must be able to outlive.
+    fn is_pyramid(&self) -> bool {
+        self.merge == PYRAMID
+    }
+
     /// The argv this row freezes, built from the row itself.
     fn argv(&self, stack_dir: &Path, out: &Path) -> Vec<String> {
         let mut v = vec![
             "stack".to_string(),
             stack_dir.display().to_string(),
-            // Every row in this registry was frozen before `strehl stack` had
-            // a choice of merge, when the estimator was the only thing the
-            // command could run. The estimator is still the default, so these
-            // rows would run correctly without this -- but the backend is now
-            // an INPUT, and an input that is merely defaulted rather than
-            // recorded is the exact defect this file's header describes. The
-            // day DEFAULT_MERGE_BACKEND moves, an unnamed row would silently
-            // change pipeline and every hash below would move at once.
+            // The backend is an INPUT, and an input that is merely defaulted
+            // rather than recorded is the exact defect this file's header
+            // describes: the day `DEFAULT_MERGE_BACKEND` moves, an unnamed row
+            // would silently change pipeline and every hash below would move at
+            // once.
             //
-            // It is hardcoded rather than a column because every existing row
-            // genuinely is an estimator freeze. The day a pyramid row is added
-            // this must become a registry column, exactly like `--gate` did.
+            // THIS WAS HARDCODED TO `estimator` UNTIL THE FIRST PYRAMID ROW WAS
+            // ADDED. The note that stood here said so, and said what to do:
+            // "the day a pyramid row is added this must become a registry
+            // column, exactly like `--gate` did." That day came, and the reason
+            // it had to is sharper than the note anticipated --
+            // `DEFAULT_MERGE_BACKEND` had ALREADY moved to `Pyramid`, so
+            // hardcoding `estimator` meant this registry certified only the
+            // NON-default backend and every default render was unguarded.
             "--merge".to_string(),
-            "estimator".to_string(),
+            self.merge.clone(),
+        ];
+        if !self.is_pyramid() {
             // Every row in this registry was frozen while `--photometric`
             // defaulted OFF. The default is now ON, so an unnamed row would
             // render a pipeline it does not describe and every hash below
@@ -583,21 +656,35 @@ impl Freeze {
             //
             // Named for the same reason `--merge` is named directly above: the
             // mode is an INPUT, and an input that is merely defaulted rather
-            // than recorded is the defect this file's header describes. This
-            // is the second entry in this function to be written for that
-            // reason, and the first one predicted the second.
+            // than recorded is the defect this file's header describes.
             //
-            // Hardcoded rather than a column because every existing row
-            // genuinely is a photometric-off freeze. The day a photometric-on
-            // row is added this must become a registry column, exactly like
-            // `--gate` did.
-            "--photometric".to_string(),
-            "off".to_string(),
-            "--limit".to_string(),
-            self.limit.clone(),
-            "--gate".to_string(),
-            self.gate.clone(),
-        ];
+            // ESTIMATOR ROWS ONLY, and that is a property of the CLI rather
+            // than a choice made here: `main.rs`'s wrong-backend table REFUSES
+            // `--photometric` under `--merge pyramid` ("NOT YET IMPLEMENTED on
+            // this backend, rather than inapplicable"), so passing it on a
+            // pyramid row would exit non-zero rather than freeze anything. The
+            // pyramid says the same thing on its own stderr -- `not applied :
+            // photometric gain, ...` -- which is the observation this omission
+            // rests on, not an assumption about the table.
+            v.push("--photometric".to_string());
+            v.push("off".to_string());
+        }
+        v.push("--limit".to_string());
+        v.push(self.limit.clone());
+        // The noise gate, by value, on whichever flag the row's backend
+        // accepts. THE TWO ARE DIFFERENT QUANTITIES -- `--gate` is a multiple
+        // of the focus-response SD (default 4.0), `--pyramid-gate` a multiple
+        // of the modelled band-noise power (default 2.0) -- and `main.rs`
+        // refuses each under the other backend rather than carrying the number
+        // across. So this is a switch, not a rename: the `gate` column records
+        // the number, the `merge` column decides what it means, and a row that
+        // named the wrong one would not run at all.
+        v.push(if self.is_pyramid() {
+            "--pyramid-gate".to_string()
+        } else {
+            "--gate".to_string()
+        });
+        v.push(self.gate.clone());
         if self.srgb {
             v.push("--srgb".to_string());
         }
@@ -638,36 +725,34 @@ impl Freeze {
                 s.to_string()
             }
         });
-        // STREHL_DEFECT=off, hardcoded, for the same reason `--merge estimator`
-        // is hardcoded in `argv` and with the same expiry condition.
+        // STREHL_DEFECT=off, hardcoded, and now for a stronger reason than
+        // when it was written.
         //
-        // Sensor defect correction is now ON by default. It is applied by
+        // Sensor defect correction is ON by default. It is applied by
         // `stack.rs`'s `load_frame`, which is the PYRAMID backend's loader;
         // the estimator loads frames through `field_for`/`Scratch` and does
-        // not apply it. Every row in this registry is an estimator row, so
-        // **no row here has ever been rendered with the correction, and none
-        // can be** -- `merge_cmd::preflight_defect_backend_support` refuses to
-        // render an estimator stack with a correction configured rather than
-        // silently dropping it.
+        // not apply it. While every row here was an estimator row, the note in
+        // this place said "no row here has ever been rendered with the
+        // correction, AND NONE CAN BE" -- `merge_cmd::preflight_defect_backend_support`
+        // refuses to render an estimator stack with a correction configured
+        // rather than silently dropping it.
         //
-        // So this is not the harness suppressing a feature to keep a hash
-        // still. It is the harness spelling out the value these rows already
-        // render under, which the registry header requires of every other
-        // variable: "`unset` is a VALUE, spelled out, never an empty field".
-        // Without it, RENDER_ENV clears the variable, the clear means
-        // "default", the default means "on", and every row exits non-zero.
+        // THAT SECOND CLAUSE IS RETIRED. `coffee-bean-20-gate2-pyramid` renders
+        // on the backend that DOES apply the correction, so this line stopped
+        // being a restatement of an impossibility and became the setting that
+        // decides that row's bytes: on `coffee-bean` the correction fires at
+        // -14.859% (p 0.0025), so `off` versus `on` is a different image.
+        // MEASURED, not inferred from the code path -- the pyramid says which
+        // it did on its own stderr, `defect map      : off (STREHL_DEFECT=off)`.
         //
-        // MEASURED: with this line, both `coffee-bean` hashes reproduce
-        // bit-exactly (BUILD-DEFECT.md sec 12.4). The freeze does not move,
-        // and that is the result rather than the absence of one -- the
-        // prediction written before the render was that it could not move,
-        // because the correction is unreachable from this backend.
-        //
-        // Hardcoded rather than a column because every existing row genuinely
-        // is an uncorrected freeze. **The day a pyramid row is added this must
-        // become a registry column**, exactly like `--gate` did -- and that
-        // row WILL differ from these bytes, because on `coffee-bean` the
-        // correction fires at -14.859% (p 0.0025).
+        // Still hardcoded rather than a column because every row genuinely is
+        // an uncorrected freeze, and a column with one value in every row
+        // records nothing the reader cannot already read here or in the
+        // reproduction `command` prints. The day a CORRECTED row is added it
+        // must become a column, exactly like `--merge` just did -- and unlike
+        // `--merge`, whose hardcode had already gone stale against
+        // `DEFAULT_MERGE_BACKEND` by the time anyone looked, this one is still
+        // true of every row in the file.
         v.push(("STREHL_DEFECT".to_string(), "off".to_string()));
         v
     }
@@ -724,8 +809,8 @@ fn parse_registry() -> Vec<Freeze> {
         // mode label, because the combination is the true cause: alignment on
         // (`STREHL_ALIGN` unset) with no override (`STREHL_WARPMAP` unset) is a
         // solving row however it is spelled.
-        let align_on = f[6] == UNSET;
-        let no_override = f[7] == UNSET;
+        let align_on = f[7] == UNSET;
+        let no_override = f[8] == UNSET;
         if align_on && no_override {
             panic!(
                 "\n{REGISTRY_FILE}:{line}: env_align = `unset` with env_warpmap = `unset` is \
@@ -766,18 +851,34 @@ fn parse_registry() -> Vec<Freeze> {
                  records an input that cannot affect its hash. That is the decorative \
                  record rule 47 exists to stop: the next reader cannot tell which of the \
                  two actually produced the bytes.\n",
-                f[6], f[7]
+                f[7], f[8]
             );
         }
-        if !align_on && f[6] != "0" {
+        if !align_on && f[7] != "0" {
             panic!(
                 "\n{REGISTRY_FILE}:{line}: env_align = `{}`; use `0` (off) or `unset` (on). \
                  An empty field is not a value -- see the `unset` convention at the top of \
                  the registry.\n",
-                f[6]
+                f[7]
             );
         }
-        let srgb = match f[5] {
+        // The backend, validated HERE rather than only in the row-completeness
+        // test, because `Freeze::is_pyramid` reads it to decide which gate flag
+        // the argv carries. An unrecognised spelling must not be able to fall
+        // through that comparison as "estimator" -- the row would then build a
+        // command nobody wrote and the failure would be reported against the
+        // wrong backend.
+        if !matches!(f[4], ESTIMATOR | PYRAMID) {
+            panic!(
+                "\n{REGISTRY_FILE}:{line}: merge = `{}`; use `{ESTIMATOR}` or `{PYRAMID}`.\n\n\
+                 RECORD THE BACKEND, NOT THE FACT THAT YOU LEFT IT ALONE. \
+                 `DEFAULT_MERGE_BACKEND` is `pyramid` today and was `estimator` \
+                 yesterday; a row that does not name its backend freezes whichever \
+                 one the constant happens to hold, and moves the day it flips.\n",
+                f[4]
+            );
+        }
+        let srgb = match f[6] {
             "yes" => true,
             "no" => false,
             other => panic!("\n{REGISTRY_FILE}:{line}: srgb = `{other}`; use `yes` or `no`.\n"),
@@ -787,24 +888,25 @@ fn parse_registry() -> Vec<Freeze> {
             stack: f[1].to_string(),
             frames: f[2].to_string(),
             limit: f[3].to_string(),
-            gate: f[4].to_string(),
+            merge: f[4].to_string(),
+            gate: f[5].to_string(),
             srgb,
-            env_align: f[6].to_string(),
-            env_warpmap: f[7].to_string(),
-            env_fix_halo: f[8].to_string(),
-            env_cache_dir: f[9].to_string(),
-            alignment_mode: f[10].to_string(),
-            sha256: f[11].to_string(),
-            bytes: f[12].parse().unwrap_or_else(|e| {
+            env_align: f[7].to_string(),
+            env_warpmap: f[8].to_string(),
+            env_fix_halo: f[9].to_string(),
+            env_cache_dir: f[10].to_string(),
+            alignment_mode: f[11].to_string(),
+            sha256: f[12].to_string(),
+            bytes: f[13].parse().unwrap_or_else(|e| {
                 panic!(
                     "\n{REGISTRY_FILE}:{line}: bytes = `{}` is not a number ({e}).\n",
-                    f[12]
+                    f[13]
                 )
             }),
-            workers: f[13].to_string(),
-            baselined_at: f[14].to_string(),
-            baselined_on: f[15].to_string(),
-            why: f[16].to_string(),
+            workers: f[14].to_string(),
+            baselined_at: f[15].to_string(),
+            baselined_on: f[16].to_string(),
+            why: f[17].to_string(),
             line,
         });
     }
@@ -1042,6 +1144,22 @@ fn every_registry_row_records_a_complete_invocation() {
             .unwrap_or_else(|_| panic!("\n{at}: limit `{}` is not a positive integer.\n", r.limit));
         assert!(limit > 0, "\n{at}: limit must be > 0.\n");
 
+        // The backend, by name, for the reason the gate is recorded by value
+        // one assertion below -- and for one the gate never had. Until a
+        // pyramid row existed, `Freeze::argv` hardcoded `--merge estimator`
+        // into every row while `DEFAULT_MERGE_BACKEND` was already `pyramid`,
+        // so a green registry certified only the backend nobody runs by
+        // default. A regression in the pyramid path could not have tripped
+        // anything in this file. This column is what fixes that, and it is
+        // worth nothing unless at least one row on each backend exists -- which
+        // is what the next assertion, outside the loop, requires.
+        assert!(
+            matches!(r.merge.as_str(), ESTIMATOR | PYRAMID),
+            "\n{at}: merge = `{}`; use `{ESTIMATOR}` or `{PYRAMID}` -- the two spellings \
+             `--merge` itself accepts.\n",
+            r.merge
+        );
+
         assert!(
             !matches!(
                 r.gate.trim().to_ascii_lowercase().as_str(),
@@ -1166,6 +1284,36 @@ fn every_registry_row_records_a_complete_invocation() {
             r.why.len()
         );
     }
+
+    // THE DEFAULT BACKEND MUST BE FROZEN BY SOMETHING.
+    //
+    // This is the assertion the registry did not have, and its absence was a
+    // hole rather than an omission: for the whole life of this file every row
+    // ran `--merge estimator`, while `DEFAULT_MERGE_BACKEND` had already moved
+    // to `pyramid`. A green byte-freeze certified the backend nobody gets by
+    // default, and a regression in the path every default render takes could
+    // not trip a single check here.
+    //
+    // Written against the SPELLINGS rather than against
+    // `merge_cmd::DEFAULT_MERGE_BACKEND`, deliberately: this test drives the
+    // binary through argv as a stranger would, and a check that imported the
+    // constant would follow it wherever it went. What is wanted is coverage of
+    // BOTH backends at all times, so that whichever one the constant names, the
+    // registry already froze it. Freezing everything is the same as freezing
+    // nothing -- but freezing neither arm of a switch that selects the whole
+    // merge is worse than either.
+    for backend in [ESTIMATOR, PYRAMID] {
+        assert!(
+            rows.iter().any(|r| r.merge == backend),
+            "\n{REGISTRY_FILE}: no row freezes `--merge {backend}`.\n\n\
+             Both backends must be covered, because `DEFAULT_MERGE_BACKEND` selects \
+             one of them for every render that does not name one, and it has already \
+             moved once. A registry that covers only the non-default backend is the \
+             defect this assertion was written for: it goes green while the path every \
+             default render takes is unguarded.\n\n\
+             Do not delete a backend's last row to make this pass. Add one.\n"
+        );
+    }
 }
 
 /// The anti-splice check, and a power check on the pair.
@@ -1183,8 +1331,16 @@ fn no_two_rows_freeze_the_same_invocation() {
     // have let two rows differing only in, say, STREHL_FIX_HALO collide.
     let key = |r: &Freeze| {
         format!(
-            "{}|{}|{}|{}|{}|{}|{}|{}",
-            r.stack, r.frames, r.limit, r.gate, r.srgb, r.env_align, r.env_warpmap, r.env_fix_halo
+            "{}|{}|{}|{}|{}|{}|{}|{}|{}",
+            r.stack,
+            r.frames,
+            r.limit,
+            r.merge,
+            r.gate,
+            r.srgb,
+            r.env_align,
+            r.env_warpmap,
+            r.env_fix_halo
         )
     };
     let mut seen: Vec<(String, String)> = Vec::new();
@@ -1201,7 +1357,12 @@ fn no_two_rows_freeze_the_same_invocation() {
         seen.push((r.id.clone(), k));
     }
 
-    let no_align = |r: &Freeze| format!("{}|{}|{}|{}", r.stack, r.limit, r.gate, r.srgb);
+    // "Differ only in alignment" has to mean it. `merge` joins the key for the
+    // same reason `gate` is in it: two rows on DIFFERENT backends are not a
+    // registration pair at all, and comparing them would report a merge
+    // difference as if it were an alignment result.
+    let no_align =
+        |r: &Freeze| format!("{}|{}|{}|{}|{}", r.stack, r.limit, r.merge, r.gate, r.srgb);
     for (i, a) in rows.iter().enumerate() {
         for b in rows.iter().skip(i + 1) {
             if no_align(a) == no_align(b) {
@@ -1275,8 +1436,21 @@ fn alignment_mode(log: &str) -> String {
     found.unwrap_or_else(|| "MISSING (no `alignment : ON/OFF` line in the log)".to_string())
 }
 
-/// The `workers ... : N chunks of <= M frames` fingerprint, for the failure
-/// message only.
+/// The chunking fingerprint, for the failure message only.
+///
+/// Two backends, two lines, because they partition the fold differently and
+/// each says so in its own words:
+///
+/// * the estimator prints `workers         : N chunks of <= M frames (...)`;
+/// * the pyramid prints `memory plan     : N workers x M MB = ... budget, ...`
+///   and no `workers` line at all.
+///
+/// The pyramid arm was added with the first pyramid row. Without it that row
+/// would record `unknown` in the `workers` column -- and this column exists to
+/// be "the first thing to suspect when a hash moves on a machine that is not
+/// the one above", which `unknown` cannot be. Only the host-dependent head of
+/// the line is kept (`N workers x M MB`); everything after the `=` is derived
+/// from it and the timings that follow are not reproducible text.
 fn workers_line(log: &str) -> String {
     log.lines()
         .find_map(|l| {
@@ -1286,6 +1460,17 @@ fn workers_line(log: &str) -> String {
                     .split_once(" (")
                     .map(|(a, _)| a.to_string())
                     .unwrap_or_else(|| v.trim().to_string())
+            })
+        })
+        .or_else(|| {
+            log.lines().find_map(|l| {
+                let (k, v) = l.split_once(':')?;
+                k.trim_start().starts_with("memory plan").then(|| {
+                    v.trim()
+                        .split_once(" = ")
+                        .map(|(a, _)| a.to_string())
+                        .unwrap_or_else(|| v.trim().to_string())
+                })
             })
         })
         .unwrap_or_else(|| "unknown".to_string())
