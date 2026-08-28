@@ -314,8 +314,20 @@ impl OpticalProfile {
     /// **This function scales about the coordinate ORIGIN, not about the plane
     /// centre.** `z` must already be plane-centre-relative. Feeding it absolute
     /// warpmap coordinates would introduce a uniform red offset of order
-    /// `eps * half_diagonal` ~ 1.5 sensels. Nothing in this crate calls
-    /// `compose` yet; a wiring commit must satisfy that precondition.
+    /// `eps * half_diagonal` ~ 1.5 sensels. Two live call sites satisfy that
+    /// precondition today — `align_cmd.rs:1929` and `align_cmd.rs:2095`, which
+    /// deinterleave the CFA into four half-resolution single-site planes and
+    /// pass centre-relative coordinates. **Measured, not assumed:** the wiring
+    /// was tested for exactly this bug in 2026-08 by predicting the 2.98 px
+    /// uniform offset it would produce and looking for it; the measurement came
+    /// back 0.24 px (ratio 0.081), refuting the hypothesis. See
+    /// `experiments/BUILD-CROP/caorigin.py`.
+    ///
+    /// (This paragraph read "Nothing in this crate calls `compose` yet" until
+    /// 2026-08-28, long after those two call sites landed. A reader took it at
+    /// face value, inferred the precondition was therefore unenforced, and spent
+    /// an investigation on a wiring bug that did not exist. A stale "nobody
+    /// calls this" is more expensive than no comment at all.)
     ///
     /// An earlier version of this doc comment specified `q' = (q - t) / (1 +
     /// eps)` with `s = 1/(1 + eps)`. That was the inverted convention, and the
