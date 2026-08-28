@@ -61,7 +61,16 @@ def weights(e, floor, p):
         elif p == 2.0:
             w = r * r
         else:
-            w = np.exp(np.clip(p * np.log(np.where(r > 0, r, 1.0)), -80.0, 80.0))
+            # The placeholder is for r == 0 only, where `excess <= 0` discards
+            # the result anyway; it must NOT swallow a NaN. An earlier version
+            # wrote `np.where(r > 0, r, 1.0)`, and because `NaN > 0` is False a
+            # NaN band energy was silently converted to weight 1.0 -- a mid-
+            # weight participant, not an error. The Rust propagates it: f32
+            # clamp and exp both carry NaN through. Diverging from the pin on
+            # degenerate input is exactly the kind of difference that makes a
+            # model untrustworthy precisely where it is most needed.
+            safe = np.where(np.isnan(r) | (r > 0), r, 1.0)
+            w = np.exp(np.clip(p * np.log(safe), -80.0, 80.0))
     return np.where(excess <= 0.0, 0.0, w)
 
 
