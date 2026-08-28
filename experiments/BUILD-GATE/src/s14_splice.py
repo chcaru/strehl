@@ -13,8 +13,20 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPORT = os.path.abspath(os.path.join(HERE, "..", "..", "..",
                                       "docs", "research", "BUILD-GATE-4.md"))
 BODY = os.path.join(HERE, "s14_body.md")
-TABLES = os.path.join(os.environ["TEMP"], "s14tables.md")
-BOOT = os.path.join(os.environ["TEMP"], "s14boot.md")
+# The generators write to TEMP, which is volatile, and the masters they were
+# derived from are deleted once section 14 is closed. A durable copy lives in
+# `gen/` so this drift guard keeps working after both -- TEMP is preferred when
+# present so a fresh generator run is still what gets checked.
+GEN = os.path.abspath(os.path.join(HERE, "..", "gen"))
+
+
+def _gen(name):
+    t = os.path.join(os.environ["TEMP"], name)
+    return t if os.path.exists(t) else os.path.join(GEN, name)
+
+
+TABLES = _gen("s14tables.md")
+BOOT = _gen("s14boot.md")
 
 
 def blocks(path):
