@@ -1,0 +1,18 @@
+========================================================================
+P59 -- planted-mote fidelity, against a reference only this run holds
+========================================================================
+subject : D:\personal\macro\coffee-bubbles
+flats   : D:\personal\macro\flat-fields\flat-fields  (first 20 decodable, for cleanliness only)
+
+The corrector under test is a PER-SAMPLE AFFINE MAP -- apply() reads
+and writes the same index, with no neighbour or inter-frame term.
+So the question is not whether it hallucinates texture. It is what
+it leaves behind when its amplitude is wrong.
+
+truth frame  : D:\personal\macro\coffee-bubbles\DSC00034.ARW
+active       : 7032x4688 at (0,0)  ->  quad grid 3516x2344
+levels       : black 512 white 15360 range 14848
+
+-- certifying a clean site on the flats (dust is a sensor property) --
+flats        : examined 60 = used 20 + no-decode 0 + outside-window 40 + geometry-mismatch 0  [sums]
+REFUSED: flat quad grid 3520x2344 != subject quad grid 3516x2344; the two are not the same sensor geometry and a site index would not transfer
