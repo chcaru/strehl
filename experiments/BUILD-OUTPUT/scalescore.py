@@ -41,12 +41,13 @@ LOGS = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
 BASE_ARM = "SC-BASE-bc6fa3c7"
 CAND_ARMS = ["SC-NULL-bc6fa3c7", "SC-4-bc6fa3c7", "SC-8-bc6fa3c7",
              "SC-16-bc6fa3c7", "SC-RAMP-bc6fa3c7",
-             "SC-D64-bc6fa3c7", "SC-D4096-bc6fa3c7"]
+             "SC-D64-bc6fa3c7", "SC-D4096-bc6fa3c7", "SC-PG64-bc6fa3c7"]
 SCALES = {"SC-NULL-bc6fa3c7": "1,1,1,1,1,1,1", "SC-4-bc6fa3c7": "1,4,4,4,4,4,4",
           "SC-8-bc6fa3c7": "1,8,8,8,8,8,8", "SC-16-bc6fa3c7": "1,16,16,16,16,16,16",
           "SC-RAMP-bc6fa3c7": "1,1,4,16,32,32,32",
           "SC-D64-bc6fa3c7": "1,1,1,64,64,64,64",
-          "SC-D4096-bc6fa3c7": "1,1,1,4096,4096,4096,4096"}
+          "SC-D4096-bc6fa3c7": "1,1,1,4096,4096,4096,4096",
+          "SC-PG64-bc6fa3c7": "(env unset; --pyramid-gate 64 instead)"}
 SUBJECTS = ["coffee-bubbles", "lead-1-cpl", "113MSDCF",
             "flat-on-ruler-cpl", "112MSDCF", "foam"]
 CROPS = [(1200, 1200), (2400, 3600), (3600, 2000), (1600, 4800), (2800, 2400),

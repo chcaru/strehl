@@ -146,6 +146,27 @@
   foam                   struct   10   0   0   0   -0.0084   -0.0002       -
   foam                   grain    10   0   0   0   -0.0142   +0.0017   0.000
 
+=== SC-PG64-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=(env unset; --pyramid-gate 64 instead) ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   7   0   -0.1224   +0.0070   0.000  WIN
+  coffee-bubbles         struct   10   0   6   4   -0.6215   -0.0013   0.006
+  coffee-bubbles         grain    10   0   0   0   -0.6518   -0.1634   0.263
+  lead-1-cpl             mottle    8   2   5   3   -0.0658   +0.0043   0.035  no mottle claim -- 3/8 cells (38%) bought the noise win ou
+  lead-1-cpl             struct   10   0   0  10   -0.3594   -0.4220   1.159
+  lead-1-cpl             grain    10   0   0   0   -0.5844   -0.8575   1.483
+  113MSDCF               mottle    7   3   3   2   -0.0250   -0.0135   0.149  no mottle claim -- only 3/7 cells clean, need a majority
+  113MSDCF               struct   10   0   7   3   -0.4718   +0.0284   0.000
+  113MSDCF               grain    10   0   0   0   -0.7735   +0.2283   0.000
+  flat-on-ruler-cpl      mottle   10   0   0   0   -0.0059   +0.0080       -  no mottle claim -- only 0/10 cells clean, need a majority
+  flat-on-ruler-cpl      struct    7   3   7   0   -0.3224   +0.2349   0.000
+  flat-on-ruler-cpl      grain    10   0   0   0   -0.2797   +0.1836   0.000
+  112MSDCF               mottle    7   3   3   0   -0.0144   -0.0011   0.014  no mottle claim -- only 3/7 cells clean, need a majority
+  112MSDCF               struct   10   0   1   9   -0.5349   -0.3427   0.610
+  112MSDCF               grain    10   0   0   0   -0.8042   -0.6557   0.808
+  foam                   mottle   10   0   8   1   -0.0294   -0.0023   0.101  no mottle claim -- median_d_floor -0.0294 does not reach -
+  foam                   struct   10   0  10   0   -0.3945   +0.0095   0.000
+  foam                   grain    10   0   0   0   -0.6662   +0.0561   0.000
+
 ====================================================================================================
 PER-ARM SUMMARY over the six mottle-convicted subjects
   arm                  mottle wins  med d_floor med d_struct  med paid  verdict
@@ -156,9 +177,14 @@ PER-ARM SUMMARY over the six mottle-convicted subjects
   SC-RAMP-bc6fa3c7          0/6         +0.0022      +0.0009       NaN  NO MOTTLE CLAIM
   SC-D64-bc6fa3c7           0/6         +0.0024      +0.0009       NaN  NO MOTTLE CLAIM
   SC-D4096-bc6fa3c7         2/6         -0.0404      +0.0013     0.000  PARTIAL -- 2/6 subjects
+  SC-PG64-bc6fa3c7          1/6         -0.0272      +0.0041     0.035  PARTIAL -- 1/6 subjects
 
   WIN_MIN=0.05  BLUR_FRAC_MAX=0.34
 
-  No cell landed `paid` in the untested 0.25-0.406 range.
+  *** 4 cell(s) landed `paid` in the UNTESTED range 0.25-0.406. PAID_MAX has no commissioning evidence there, in either direction. Named, not resolved:
+        SC-PG64-bc6fa3c7     113MSDCF               struct  paid 0.316
+        SC-PG64-bc6fa3c7     113MSDCF               struct  paid 0.298
+        SC-PG64-bc6fa3c7     112MSDCF               grain   paid 0.263
+        SC-PG64-bc6fa3c7     foam                   mottle  paid 0.382
 
   wrote C:\dev\strehl-out\BUILD-RECERT\logs\scalescore.json
