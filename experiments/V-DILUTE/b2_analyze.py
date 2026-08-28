@@ -22,7 +22,7 @@ HERE = r"C:\dev\blog\death-of-software\projects\strehl\experiments\V-DILUTE"
 sys.path.insert(0, HERE)
 import vd_metrics as vd
 
-R = r"C:\dev\strehl-out\V-DILUTE\runs"
+R = r"D:\strehl-out\V-DILUTE\runs"
 TILE = vd.TILE
 half = TILE // 2
 

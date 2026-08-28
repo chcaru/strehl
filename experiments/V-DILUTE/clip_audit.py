@@ -19,7 +19,7 @@ import os
 import numpy as np
 import tifffile
 
-R = r"C:\dev\strehl-out\V-DILUTE\runs"
+R = r"D:\strehl-out\V-DILUTE\runs"
 MAXV = 65535
 
 rows = []

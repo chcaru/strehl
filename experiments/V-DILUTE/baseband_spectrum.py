@@ -105,7 +105,7 @@ def report(tag, pa, pb):
 
 
 if __name__ == "__main__":
-    D = r"C:\dev\strehl-out\V-DILUTE\baseband"
+    D = r"D:\strehl-out\V-DILUTE\baseband"
     subj = sys.argv[1]
     res = {}
     for b in (7, 2):

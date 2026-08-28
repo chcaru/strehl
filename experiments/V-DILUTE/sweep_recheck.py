@@ -40,7 +40,7 @@ def octaves(x):
 
 
 def main(subj, ref_b=7):
-    D = r"C:\dev\strehl-out\V-DILUTE\bandsweep"
+    D = r"D:\strehl-out\V-DILUTE\bandsweep"
     paths = {}
     for p in glob.glob(os.path.join(D, f"{subj}.nb*.tiff")):
         m = re.search(r"\.nb(\d+)\.tiff$", p)

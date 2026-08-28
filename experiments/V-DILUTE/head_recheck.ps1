@@ -13,8 +13,8 @@
 # N=22 spans the FULL focus range by striding, NOT --limit, which would take the
 # first 22 frames and change the range instead of the density.
 $new  = "C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe"
-$runs = "C:\dev\strehl-out\V-DILUTE\runs"
-$stk  = "C:\dev\strehl-out\V-DILUTE\stacks\bee_head22"
+$runs = "D:\strehl-out\V-DILUTE\runs"
+$stk  = "D:\strehl-out\V-DILUTE\stacks\bee_head22"
 $bee  = "D:\personal\macro\bee-3-cpl"
 $sha  = (Get-FileHash $new -Algorithm SHA256).Hash.Substring(0,16)
 Write-Host "HEAD binary sha16 $sha  commit $(git -C 'C:\dev\blog\death-of-software\projects\strehl' rev-parse --short HEAD)"

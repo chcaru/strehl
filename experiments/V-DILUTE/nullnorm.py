@@ -81,7 +81,7 @@ SUBJECTS = [
 ]
 
 if __name__ == "__main__":
-    D = r"C:\dev\strehl-out\V-DILUTE\baseband"
+    D = r"D:\strehl-out\V-DILUTE\baseband"
     rows = []
     for subj, n in SUBJECTS:
         for bnd in (7, 2):

@@ -12,8 +12,8 @@
 # resample blur -- and shares NONE of its signal. Any effect B claims must exceed
 # what this pair produces by chance.
 $exe  = "C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe"
-$runs = "C:\dev\strehl-out\V-DILUTE\runs"
-$stk  = "C:\dev\strehl-out\V-DILUTE\stacks\bee_odd150"
+$runs = "D:\strehl-out\V-DILUTE\runs"
+$stk  = "D:\strehl-out\V-DILUTE\stacks\bee_odd150"
 $bee  = "D:\personal\macro\bee-3-cpl"
 
 # Rule 2: never trust a result from an unverified binary.

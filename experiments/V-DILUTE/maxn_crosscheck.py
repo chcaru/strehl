@@ -22,7 +22,7 @@ import numpy as np
 sys.path.insert(0, r"C:\dev\blog\death-of-software\projects\strehl\experiments\V-DILUTE")
 import vd_metrics as vd
 
-R = r"C:\dev\strehl-out\V-DILUTE\runs"
+R = r"D:\strehl-out\V-DILUTE\runs"
 FALLBACK = {22: 0.9021}
 
 ref = vd.green(rf"{R}\A_n299_default.tif")

@@ -83,7 +83,7 @@ def per_band(pa, pb):
 
 
 if __name__ == "__main__":
-    D = r"C:\dev\strehl-out\V-DILUTE\baseband"
+    D = r"D:\strehl-out\V-DILUTE\baseband"
     print("Null-normalised ratio, --pyramid-base weighted vs mean, --pyramid-bands 7.")
     print("Every band reported. A verdict that is flat across all bands does not")
     print("depend on where a subject's signal/noise boundary sits.")

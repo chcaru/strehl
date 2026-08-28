@@ -1,8 +1,8 @@
 # V-DILUTE render queue. Pin binary only. Always names --merge pyramid explicitly,
 # because the CLI infers the ESTIMATOR backend from any estimator-only flag.
 $exe  = "C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe"
-$runs = "C:\dev\strehl-out\V-DILUTE\runs"
-$stk  = "C:\dev\strehl-out\V-DILUTE\stacks"
+$runs = "D:\strehl-out\V-DILUTE\runs"
+$stk  = "D:\strehl-out\V-DILUTE\stacks"
 $bee  = "D:\personal\macro\bee-3-cpl"
 New-Item -ItemType Directory -Force -Path $runs | Out-Null
 $summary = "$runs\_queue_summary.txt"

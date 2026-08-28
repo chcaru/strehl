@@ -7,7 +7,7 @@ import numpy as np
 sys.path.insert(0, r"C:\dev\blog\death-of-software\projects\strehl\experiments\V-DILUTE")
 import vd_metrics as vd
 
-R = r"C:\dev\strehl-out\V-DILUTE\runs"
+R = r"D:\strehl-out\V-DILUTE\runs"
 
 a = vd.read_rgb(rf"{R}\A_n22_default.tif")
 b = vd.read_rgb(rf"{R}\X_n22_default_rep.tif")

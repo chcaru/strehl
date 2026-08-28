@@ -20,7 +20,7 @@ import tifffile
 sys.path.insert(0, r"C:\dev\blog\death-of-software\projects\strehl\experiments\V-DILUTE")
 import vd_metrics as vd
 
-R = r"C:\dev\strehl-out\V-DILUTE\runs"
+R = r"D:\strehl-out\V-DILUTE\runs"
 UNREACHED = 65535
 
 

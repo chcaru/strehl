@@ -34,7 +34,7 @@ def lum(p):
     return a.astype(np.float64)
 
 
-D = r"C:\dev\strehl-out\V-DILUTE\baseband"
+D = r"D:\strehl-out\V-DILUTE\baseband"
 print("Base-band contribution = decoded(--pyramid-base weighted) - decoded(mean),")
 print("both at --pyramid-bands 7.  Energy share above the CORPUS-MINIMUM boundary")
 print("0.17 cyc/px is an upper bound on the share above any subject's own boundary.")

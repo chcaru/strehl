@@ -15,7 +15,7 @@ param(
 
 $ex  = "C:\dev\blog\death-of-software\projects\strehl\target-orch\release\strehl.exe"
 $src = "D:\personal\macro\$Subject"
-$out = "C:\dev\strehl-out\V-DILUTE\baseband"
+$out = "D:\strehl-out\V-DILUTE\baseband"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
 foreach ($b in $Bands) {

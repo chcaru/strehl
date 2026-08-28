@@ -13,7 +13,7 @@ HERE = r"C:\dev\blog\death-of-software\projects\strehl\experiments\V-DILUTE"
 sys.path.insert(0, HERE)
 import vd_metrics as vd
 
-R = r"C:\dev\strehl-out\V-DILUTE\runs"
+R = r"D:\strehl-out\V-DILUTE\runs"
 
 # FOV scale is set by the frame set, not the merge flags. The N=22 arms were
 # rendered before the queue existed and have no log; 0.9021 was read directly
