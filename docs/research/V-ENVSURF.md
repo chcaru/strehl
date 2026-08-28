@@ -387,3 +387,94 @@ Recorded as skips, not passes.
   with the structure the knob is aimed at -- a real halo for `STREHL_FIX_HALO`, a
   real veil for the veil knobs -- could move any of them out of tier 4 and into
   tier 1a, which would make them more urgent, not less.
+
+## 11. Post-audit re-verification on the landed build
+
+ORCH amended the brief after this ledger was measured, requiring the binary to be
+pinned, the pin to be *commissioned* rather than assumed, and the shared binary to
+be re-hashed at the end. All three were done. The pin discipline is vindicated by
+measurement: **the shared `target/release/strehl.exe` took three distinct
+identities in 102 minutes.**
+
+| # | sha256 | `LastWriteTime` | bytes | version |
+|---:|---|---|---:|---|
+| 1 | `EE7A302963B7657CEBAE5BAFB5D8E5628E41EBF92213EB935401CEDDF37C4C5C` | 00:01:35 | 9,858,048 | `ba34142806cf` |
+| 2 | `55E0C07E8BC74DAB7BEAAE3890458F5637C9C813EBEB2A69B9D34B9D9B6F62A7` | 01:01:49 | 9,861,632 | `165074a1606a-dirty` |
+| 3 | `B2EC82935182E754B57223FCAFC0250FCF8BEB9B4A2960D1B60ACCD2749DF41F` | 01:43:25 | 9,861,632 | `c9f557f61e6f-dirty` |
+
+**Sections 1-10 describe binary 1.** An unpinned audit would have straddled all
+three and nothing in the output would have shown it.
+
+### Commissioning the pin
+
+Not assumed. Binary 3 was copied to scratch and one arm was run twice, once from
+`target/release/strehl.exe` and once from the copy:
+
+| runner | rc | sha256 | bytes |
+|---|---:|---|---:|
+| shared `target/release/strehl.exe` | 0 | `B46AECAA19CFD178E672B44CF3C47C2E9AD18A7E4104F72CAA43CF6EDF06BD20` | 197,801,296 |
+| pinned copy | 0 | `B46AECAA19CFD178E672B44CF3C47C2E9AD18A7E4104F72CAA43CF6EDF06BD20` | 197,801,296 |
+
+The copy resolves the same sidecars and renders the same bytes, so a null measured
+from a pinned copy is a real null. Note that this control hash is **not**
+`C5E59BC931C3AD93...`: the shipping default render itself moved between binary 1
+and binary 3, and the output grew by 6 bytes. Ledger hashes are not comparable
+across the boundary; ledger *classifications* were re-tested below.
+
+### The fix list survives the rebuild
+
+All 22 `INERT-SILENT` rows excluding `STREHL_SOFT_GATE` were re-run with `zzznope`
+against binary 3 and its own unset control `B46AECAA...`. **All 22 returned rc=0
+and byte-identical output.** `STREHL_ACUITY`, `STREHL_BIMODAL_DUMP`,
+`STREHL_BUILD_ID`, `STREHL_CONFIDENCE_DEBUG`, `STREHL_DEFECT_ARM`,
+`STREHL_DEFECT_HOT_FLOOR`, `STREHL_DUMP_ELECTION`, `STREHL_DUMP_MERGE_STATE`,
+`STREHL_DUMP_NEFF`, `STREHL_EDGE_AWARE`, `STREHL_EDGE_CONF`,
+`STREHL_EDGE_FEATHER`, `STREHL_EDGE_TAU`, `STREHL_FIX_HALO`,
+`STREHL_FIX_HALO_DELTA`, `STREHL_RESTORE_SIGMA`, `STREHL_ROBUST_ELECTION`,
+`STREHL_VEIL`, `STREHL_VEIL_DISPERSION`, `STREHL_VEIL_FLOOR`,
+`STREHL_VEIL_MARGIN`, `STREHL_WINDOW_RADIUS` are all still silent on the backend
+that ships. The channel-wide finding is not an artifact of a stale binary.
+
+### `STREHL_SOFT_GATE`: the validation half landed, the wiring half did not
+
+This variable is owned by BUILD-SOFTGATE and was not re-audited. Two arms were
+spent confirming which half of its commit is observable, because section 7 made a
+falsifiable prediction about it and the prediction can now be tested on a
+committed build rather than a dirty tree.
+
+On binary 3, `zzznope` is refused properly:
+
+    Error: unknown soft-gate kernel "zzznope"; known kernels: gaussian,
+    exponential (unset, "", "0", "off" or "false" run the shipped hard gate)
+
+But all four accepted settings render the identical file:
+
+| setting | rc | render |
+|---|---:|---|
+| unset | 0 | `B46AECAA19CFD178` |
+| `off` | 0 | `B46AECAA19CFD178` |
+| `gaussian` | 0 | `B46AECAA19CFD178` |
+| `exponential` | 0 | `B46AECAA19CFD178` |
+
+Section 7 predicted exactly this ("the fix closes the typo hole and not the inert
+hole"), from the dirty tree, before the commit landed. **Confirmed.**
+
+The source agrees. `preflight_soft_kernel` (`merge_cmd.rs:2904`) is
+`strehl_core::merge::active_kernel()?; Ok(())` -- it asks the question and throws
+the answer away, which its own doc comment now says in as many words after
+`9bbb7a1c`. Grepping the working tree for `active_kernel`, `SoftKernel` and
+`soft_kernel` returns **four hits in `merge_cmd.rs`, all inside the preflight, and
+zero hits in `pyramid.rs`.** The kernel is not consumed by the pyramid backend.
+
+One trap worth recording, because it nearly produced a false accusation here: the
+banner line `selection : SOFT -- weight = (band power above the noise floor)^...`
+prints on **all four** arms including unset, and looks at first like a knob
+announcing itself and doing nothing. It is not. `merge_cmd.rs:5426` switches that
+string on `cfg.select` (`SelectMode::SoftPower` vs `SelectMode::HardMax`), a
+pyramid-internal weighting mode that is already soft by default and is unrelated
+to `SoftKernel`. The banner is honest; the coincidence of the word "soft" is not
+evidence. **A string match is not a wiring proof.**
+
+Accordingly `STREHL_SOFT_GATE` is `INERT-VALIDATED` on binary 3, moved one step
+from `INERT-SILENT`, and the count on the landed build is `INERT-SILENT` 22 +
+`INERT-VALIDATED` 2. The ledger in section 3 is left as measured on binary 1.
