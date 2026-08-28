@@ -1768,8 +1768,8 @@ blotch, where **below 1.00 is a bargain and above 1.00 is not**:
 | `113MSDCF` | 0.8582 | 0.8350 | 14.2 | 16.5 | 1.16 |
 | `coffee-bubbles` | 0.9288 | 0.8587 | 7.1 | 14.1 | **1.99** |
 | `flower-bud-alone-cpl` | 0.8715 | **0.6463** | 12.8 | 35.4 | 2.75 |
-| `119MSDCF` | 0.9653 | 0.7821 | 3.8 | 21.8 | 5.79 |
-| `109MSDCF` | 0.9683 | 0.7829 | 3.2 | 21.7 | **6.71** worst |
+| `119MSDCF` | 0.9623 | 0.7821 | 3.8 | 21.8 | 5.79 |
+| `109MSDCF` | 0.9677 | 0.7829 | 3.2 | 21.7 | **6.71** worst |
 
 Two things in that table are damaging to the proposition, and I originally
 claimed a third that is **not true and I have removed it**. The false one first,
