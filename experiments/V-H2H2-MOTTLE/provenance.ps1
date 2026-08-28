@@ -42,7 +42,8 @@ foreach ($k in @('mine', 'pin')) {
 if ($res['mine'] -eq $res['pin']) {
     "IDENTICAL - the ladder was rendered by the shipping merge"
 } else {
-    "DIFFER - the ladder's binary is NOT the shipping merge; every number below "
-    "is a statement about a drifted tree and must say so."
-    exit 2
+    "DIFFER by hash - now measure the SIZE of the drift, because a hash is one"
+    "bit and cannot say whether the numbers are void or hold to 5 decimals."
+    & python -u (Join-Path $PSScriptRoot 'provdiff.py')
+    if ($LASTEXITCODE -ne 0) { throw "provdiff failed rc=$LASTEXITCODE" }
 }

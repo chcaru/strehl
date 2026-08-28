@@ -1,3 +1,4 @@
+param([string]$Verifier = 'verify12.py', [int]$Plants = 14, [int[]]$Gaps = @(7,8))
 # Commission verify12.py. A checker that has only ever been shown to pass is not
 # evidence.
 #
@@ -16,7 +17,7 @@ function Get-Failures($out) {
 }
 
 Write-Host "baseline (no plant)"
-$base = & python -u verify12.py 2>&1 | ForEach-Object { "$_" }
+$base = & python -u $Verifier 2>&1 | ForEach-Object { "$_" }
 $baseFail = Get-Failures $base
 $census = (($base | Select-String -Pattern 'NOT COVERED').Line -join ' ').Trim()
 Write-Host ("  {0} pre-existing failures; {1}" -f $baseFail.Count, $census)
@@ -28,11 +29,11 @@ if ($baseFail.Count -gt 0) {
 # Indices whose values the verifier does not re-derive. Declaring them here is the
 # point: an undeclared survivor is a defect in the checker, a declared one is a
 # measured gap in its coverage.
-$expectSurvive = @(7, 8)
-$caught = 0; $survived = 0; $bad = @()
+$expectSurvive = $Gaps
+$caught = 0; $gap = 0; $bad = @()
 Write-Host "`nplants"
-for ($i = 0; $i -lt 14; $i++) {
-  $out = & python -u verify12.py --plant $i 2>&1 | ForEach-Object { "$_" }
+for ($i = 0; $i -lt $Plants; $i++) {
+  $out = & python -u $Verifier --plant $i 2>&1 | ForEach-Object { "$_" }
   $rc = $LASTEXITCODE
   if ($out -match 'PLANT TARGET OCCURS') {
     Write-Host ("  VOID    [{0,2}] plant target is stale -- control could not be applied" -f $i) -ForegroundColor Red
@@ -48,8 +49,8 @@ for ($i = 0; $i -lt 14; $i++) {
     Write-Host ("  WRONG   [{0,2}] {1,-22} -> red, but only on pre-existing failures" -f $i, $name) -ForegroundColor Red
     $bad += "$i $name (red for the wrong reason)"
   } else {
-    $survived++
     if ($expectSurvive -contains $i) {
+      $gap++
       Write-Host ("  gap     [{0,2}] {1,-22} -> declared uncovered" -f $i, $name) -ForegroundColor Yellow
     } else {
       Write-Host ("  MISSED  [{0,2}] {1}" -f $i, $name) -ForegroundColor Red
@@ -58,9 +59,16 @@ for ($i = 0; $i -lt 14; $i++) {
   }
 }
 Write-Host ""
-Write-Host ("14 plants: {0} caught by a new failure, {1} survived inside a declared gap, {2} unaccounted" -f $caught, $survived, $bad.Count)
+# caught + gap + bad must exhaust the plants, so a MISSED can never be read as a
+# gap and a plant can never quietly go uncounted
+Write-Host ("{4} plants: {0} caught by a new failure, {1} survived inside a declared gap, {2} unaccounted (sum {3})" -f $caught, $gap, $bad.Count, ($caught + $gap + $bad.Count), $Plants)
+if (($caught + $gap + $bad.Count) -ne $Plants) {
+  Write-Host ("RED -- outcomes sum to {0}, not {1}" -f ($caught + $gap + $bad.Count), $Plants) -ForegroundColor Red
+  exit 1
+}
 if ($bad.Count -gt 0) {
   Write-Host ("RED -- " + ($bad -join '; ')) -ForegroundColor Red
   exit 1
 }
 Write-Host "GREEN -- every plant is either caught by a new failure or a declared gap" -ForegroundColor Green
+

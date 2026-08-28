@@ -3206,3 +3206,340 @@ The census counts 12.1 to 12.7 only, because a census that counted its own quota
 could never be quoted correctly. The three numbers above are themselves a check --
 plant 13 mutates them and the run goes red -- so this paragraph cannot drift away from
 the coverage it describes.
+
+## 13 Coherence between half-stacks measures registration, not selection
+
+ORCH's third confirmation proposes that a merge over-selecting on noise picks
+different frames per pixel in half A than in half B, so detail correlated across two
+half-stacks falls short of total detail, and the shortfall rises with N. It asks each
+lane to test that where it sits, and adds that alignment drift is not a competing
+explanation because it "would produce coherent error in both halves rather than
+incoherent choice".
+
+That is true of a drift shared by both halves. It is not true of a drift **between**
+them, and section 12 measured exactly that: two strehl renders differing only in frame
+set do not share a pixel grid. **Two independent half-stacks are two different frame
+sets.** The confound is not adjacent to the instrument; it is inside it.
+
+This section tests the prediction on renders that already exist, and the answer is
+clean.
+
+## 13.1 The instrument, and the arm that decides the question
+
+`gamma` is the correlation of two arms' band coefficients: 1 when both halves agree
+pixel for pixel about where the detail is, 0 when they do not. `total` is band energy
+in **one** arm -- ORCH asked for at least one statistic that cannot be moved by
+coherence alone, and this is it, because no second image is consulted.
+
+`commcoh.py` is GREEN at 16 checks. Four are worth quoting because they set up
+everything that follows.
+
+**gamma is accurate, not merely directional.** For independent noise at ratio r,
+`gamma = 1/(1+r^2)` exactly:
+
+| r | measured | closed form |
+| ---: | ---: | ---: |
+| 0.10 | 0.9901 | 0.9901 |
+| 0.30 | 0.9175 | 0.9174 |
+| 0.90 | 0.5564 | 0.5525 |
+
+**The proposed mechanism is detected, and its size is predicted.** Planting exactly
+what ORCH describes -- each half taking its band from a different randomly chosen frame
+at every pixel, with no displacement whatever -- gives `gamma = (1 + p r^2)/(1 + r^2)`:
+
+| r | measured | closed form |
+| ---: | ---: | ---: |
+| 0.50 | 0.9018 | 0.9000 |
+| 1.00 | 0.7498 | 0.7500 |
+
+**And here is the problem.** A pure translation, with no selection defect at all, costs
+far more:
+
+| disturbance | gamma at 5-15 px | total band energy, one arm |
+| --- | ---: | ---: |
+| per-pixel selection disagreement, r = 0.5 | 0.9018 | unchanged |
+| 1 px shift | 0.9296 | unchanged |
+| **3 px shift** | **0.5085** | unchanged |
+| 10 px shift | -0.1117 | **+0.29%** |
+
+A 3 px displacement costs five times as much coherence as the selection defect at a
+plausible noise ratio, and it costs it while leaving total detail **untouched to 0.29%**.
+Coherence alone cannot tell the two apart -- the commissioning suite asserts that
+explicitly. What tells them apart is whether registration recovers it, and the suite
+establishes that registration can:
+
+- a pure 7,-4 px shift: gamma -0.1292 recovers to **0.9822**;
+- an 0.67% magnification, which is the size measured in 12.4: 0.8785, and an integer
+  shift **does not recover it at all**, because there is no single shift to find.
+
+**The hostile arm, because this lane's conclusion flatters the tool.** If the alignment
+search could find a shift that correlates unrelated images, every recovery number below
+would be worthless. Registering two independent noise fields: the search **saturates**,
+which is a refusal rather than an answer -- and a refusal scored as a pass is a skip
+scored as a check, so the search is forced to hand back its best in-range shift anyway.
+The most favourable shift pure noise can offer yields **gamma = 0.0038**. On a
+noise-dominated pair that does share a scene, registration returns **0.1012** against a
+closed form of 0.1000. Registration recovers coherence that is there and manufactures
+none that is not.
+
+## 13.2 The measurement
+
+`bee-3-cpl`, the four ladder rungs, 24 sites of 384 px each, both arms of each rung
+disjoint and one frame apart in focus. `field` is the b-to-a displacement field rms
+measured on the same sites.
+
+| N | field | band | gamma raw | gamma registered | recovered | total, one arm |
+| ---: | ---: | --- | ---: | ---: | ---: | ---: |
+| 18 | 7.00 px | 5-15 | 0.1473 | 0.7689 | 72.9% | 2.5955 |
+| 18 | 7.00 px | 20-60 | 0.8325 | 0.9833 | 90.0% | 6.1281 |
+| 18 | 7.00 px | 40-120 | 0.9410 | 0.9964 | 93.9% | 7.7475 |
+| 37 | 20.81 px | 5-15 | -0.0260 | 0.6817 | 69.0% | 3.8762 |
+| 37 | 20.81 px | 20-60 | 0.2201 | 0.9715 | 96.3% | 7.2229 |
+| 37 | 20.81 px | 40-120 | 0.6836 | 0.9924 | 97.6% | 8.2391 |
+| 74 | 10.46 px | 5-15 | -0.0181 | 0.8555 | 85.8% | 4.7143 |
+| 74 | 10.46 px | 20-60 | 0.6404 | 0.9892 | 97.0% | 7.5455 |
+| 74 | 10.46 px | 40-120 | 0.8896 | 0.9977 | 97.9% | 8.2653 |
+| 149 | 9.92 px | 5-15 | 0.0115 | 0.8968 | 89.6% | 5.2111 |
+| 149 | 9.92 px | 20-60 | 0.6013 | 0.9927 | 98.2% | 7.7573 |
+| 149 | 9.92 px | 40-120 | 0.8919 | 0.9981 | 98.3% | 8.3815 |
+
+The two hypotheses make different predictions about this table and only one of them
+survives.
+
+| band | rho(gamma raw, displacement field) | rho(gamma raw, N) |
+| --- | ---: | ---: |
+| 5-15 | **-1.000** | -0.200 |
+| 20-60 | -0.800 | -0.400 |
+| 40-120 | **-1.000** | -0.200 |
+
+Raw cross-half coherence is ordered **perfectly** by the displacement field at two of
+three bands and near-perfectly at the third. It is ordered by N essentially not at all.
+The clearest single case: **N = 37 is the second-shallowest rung and has the worst
+coherence in the table** -- worse than N = 149, which has four times as many frames --
+and it is also the rung with the largest displacement field, 20.81 px, and the largest
+magnification difference, -1.367%. Under "disagreement rises with N", N = 37 should sit
+near the top. It is at the bottom.
+
+Registration then recovers **69% to 90%** of the fine-band deficit and **90% to 98%** of
+the mid and coarse deficit. What is left is a lower bound on the true coherence, not an
+estimate of it, because an integer shift cannot undo the magnification component and the
+commissioning suite shows it does not try.
+
+And the statistic that coherence cannot move:
+
+| band | total detail, one arm, N = 18 -> 149 | rho vs N |
+| --- | --- | ---: |
+| 5-15 | 2.5955 -> 5.2111 (**2.01x**) | **+1.000** |
+| 20-60 | 6.1281 -> 7.7573 (1.27x) | **+1.000** |
+| 40-120 | 7.7475 -> 8.3815 (1.08x) | **+1.000** |
+
+Detail in a single render rises monotonically with N in every band, most steeply in the
+finest one. That is the opposite of depth collapse, on this subject, by a measure that
+is immune to the confound.
+
+## 13.3 What this does and does not settle
+
+**It does not exonerate the merge.** A selection defect can exist and be invisible here:
+coherence is dominated by a confound five times more potent, and after registration my
+fine-band numbers sit at 0.68-0.90 rather than 1, which leaves room for one. Nothing in
+this section refutes the mottle convictions, which were measured within single renders
+and never touched a cross-render difference.
+
+**It does mean a cross-half coherence deficit is not evidence for the mechanism until
+registration is ruled out.** The same merge, on the same subject, with identical
+settings, produces raw coherence from **-0.026 to +0.147** at 5-15 px and from **0.220
+to 0.833** at 20-60 px, driven by nothing but which frames landed in which half. A
+2.017 between two different tools sits comfortably inside the spread one tool shows
+against itself. That number should not be quoted, in either direction, until both tools'
+half-stack pairs have had their displacement fields measured -- which is one cheap run of
+`diag_warp.py` per pair.
+
+**It supports ORCH's own caveat, and the caveat is the more important half.** If the
+detail is misregistered rather than absent, it is present in the delivered image, and it
+lands in the half-difference where our noise instruments count it as noise. My
+registered coherence at N = 149 is 0.8968 at 5-15 px against 0.0115 raw. That is a large
+quantity of real detail that an unregistered paired instrument would have scored as
+grain -- consistent with the earlier finding that 38.5% of what was scored as strehl's
+noise on `bee` was low-frequency content.
+
+**The prediction that would settle it, and it does not need my instrument.** ORCH's
+mechanism is about which frame the merge picks. Emitting the per-pixel winner index from
+the pyramid merge for two half-stacks and comparing them directly tests selection with no
+coherence statistic in the path at all -- but it must be compared **after** registering
+the two index maps, or it measures the same confound. That belongs to the lane that owns
+`pyramid.rs`; this lane does not edit it.
+
+**And the standing ask is now load-bearing for three lanes.** `--align-reference <frame>`
+removes this confound at the source. Without it, every half-stack instrument in this
+project is measuring a lottery over frame sets alongside whatever it intended to measure.
+
+## 13.4 Provenance: is this the shipping merge?
+
+Everything above is a statement about the binary that rendered the ladder, and that binary
+is HEAD plus my own additive instrumentation, on a `pyramid.rs` that has drifted about 300
+lines from the sealed pin `9b05d0b7` under other lanes. If the drift changed the merge,
+none of it describes what ships. This had never been checked, and the check is cheap:
+render one subject with both binaries and compare.
+
+`provenance.ps1` renders `coffee-bubbles` (19 frames, the cheapest subject in the corpus
+and one of the six convicted ones) with my build and with the pinned build, same flags,
+same input. Both logs report `merge backend   : pyramid (default)`, both report
+`alignment       : ON (sidecar), reference frame 9, 19 placed / 0 refused`.
+
+**The hashes differ.** Taken alone that is a red result, and the script used to stop there
+and declare every number above void.
+
+That was the wrong instrument, for a reason worth stating: **a hash is one bit, and one bit
+cannot distinguish a rewritten merge from a changed TIFF header.** The two files are 11
+bytes apart in 197,798,934. So `provdiff.py` measures the drift in the units the
+conclusions are actually stated in.
+
+| quantity | value |
+|---|---:|
+| pixels differing | 77,495,786 of 98,898,048 (78.36%) |
+| max abs difference | 8468 DN |
+| rms difference | 50.30 DN |
+| image rms | 4839.49 DN |
+| **drift as a fraction of the image** | **1.04%** |
+
+| band | mine | pin | ratio | gamma(mine, pin) |
+|---|---:|---:|---:|---:|
+| 5-15 | 3478.205539 | 3476.907088 | 1.000373 | 0.999995916 |
+| 20-60 | 5336.017993 | 5338.234590 | 0.999585 | 0.999998042 |
+| 40-120 | 4908.061343 | 4910.040603 | 0.999597 | 0.999998872 |
+
+**The drift is real but it is not a merge change.** Band energy agrees to 0.0415% in every
+band, and the two renders are coherent with each other at gamma > 0.99999 -- which is to
+say the drift is a small perturbation riding on an otherwise identical image, not a
+different reconstruction. The effects reported in 13.2 are gamma differences of order 0.5
+to 0.9 and a total-detail ratio of 2.01x. A perturbation at gamma = 0.999996 cannot
+produce any of them.
+
+This comparison is also a clean negative control by construction: both renders consume the
+same 19 frames, so section 12's displacement confound is absent and the difference is
+attributable to the binary alone. It is worth contrasting the two magnitudes directly --
+**changing the binary moves gamma by 4.08e-6; changing the frame set moves it by up to
+0.6125** (13.2, 20-60 px, N=18 against N=37). The variable this lane identified is five orders of
+magnitude more potent than the variable everyone assumed was controlled.
+
+**What this does not establish.** One subject at N=19. The concern that motivates the whole
+N-ladder is that behaviour changes with depth, so a drift measured at N=19 does not bound
+the drift at N=149 by itself. The bound that does carry is structural rather than
+empirical: both binaries select the same backend and the same alignment reference, and the
+drift is a 1% perturbation with no band-selective signature at the one depth measured. I
+am recording the gap rather than closing it.
+
+## 13.5 The mechanism was already measured, by a different lane with a different instrument
+
+I found sections 12 and 13 by measuring renders. `M103-halfdrift` found the cause by
+measuring the alignment solve, on the same subject, against a 39-rung RAW ladder with no
+strehl code in its measurement path. Neither lane knew about the other. The two results
+fit together, and M103 has priority on the cause.
+
+`M103-halfdrift.md` 16.2, quoted:
+
+> But the merge does not gather frames end to end. It gathers each frame at its own `a_k`.
+
+| solve | end-to-end residual | per-frame placement, mean |
+|---|---:|---:|
+| `deep()`, as shipped | 150.3 px | **36.4 px** |
+| `iterated_wide()`, M103's fix | 2.9 px | **37.5 px** |
+
+**The shipped solve places each frame with a mean error of 36.4 plane px on
+`bee-3-cpl`**, and M103's own fix -- which improves the headline end-to-end number
+fifty-fold -- does not improve placement at all. M103 withdrew its shipping
+recommendation on exactly that ground.
+
+That is the mechanism for section 12. If every frame is placed with a mean error of 36.4
+px, then a render is a blend over whichever placement errors its frame set happens to
+contain, and **changing the frame set changes the output geometry**. The displacement
+fields I measure between renders -- 2.98 to 20.68 px rms -- are smaller than 36.4 px,
+which is the direction consistency requires: averaging many frames pulls the blend toward
+the middle of a spread, and the residual between two such blends is smaller than the
+spread itself.
+
+**What section 12 adds is the output-side consequence, which had not been measured.**
+M103 measured placement in the sidecar, in plane px, and its section 9 found a null when it
+looked for a sharpness change in a single render. It did not compare two renders of one
+subject on different frame sets, and so did not find that they do not share a pixel grid.
+That is the fact that invalidates a paired instrument, and it is what sections 12 and 13
+contribute.
+
+**It also explains why the effect is not monotone in N.** Section 12 reported the
+displacement field as a lottery rather than a trend, and M103 says what the lottery is over:
+each render's merge elects its own alignment reference from the frames it was given --
+`coffee-bubbles` logs `reference frame 9` of 19 -- and `bee-3-cpl/warpmap.txt` says
+`reference 149`. Which frame wins, and how badly that particular frame is placed, is a
+property of the subset, not of its size. N=37 having the worst coherence and the largest
+field in the table is what a lottery looks like, not a defect in the measurement.
+
+**For the lanes reading this: the standing ask is now supported by two independent
+measurements.** `--align-reference <frame>` pins the lottery. Until it exists, any
+instrument that compares two renders built from different frame sets -- every half-stack
+statistic in this project -- carries a confound of order 36 plane px at source, against
+selection effects that section 13's commissioning prices at roughly a fifth of that.
+
+## 13.6 The verifier, and the four things it caught in my own work
+
+`verify13.py` holds no expected values. Every quantity is parsed out of the document on
+one side and out of an artifact on the other -- `coh.json`, `provdiff.json`, a live run of
+`commcoh.py`, `M103-halfdrift.md`, and my own render log. It is commissioned by
+`commverify2.ps1`, which measures the baseline failure set first, requires it empty, and
+scores each planted defect on the **set difference** so that a plant cannot be credited to
+a failure that was already there.
+
+**State: GREEN at 60 checks, 0 failed, 161 of 199 numeric literals verified against an
+artifact and 38 declared uncovered. Commissioning GREEN at 28 plants, 28 caught by a new
+failure, 0 unaccounted, outcomes summing to 28.**
+
+Five things it caught, all of them mine.
+
+**1. A tolerance that could not discriminate, because the true value sat on the
+quantisation boundary.** Plant [2] changed a recovery cell from 89.6% to 89.5% and the
+suite stayed green. The artifact says **89.555228**. Against a half-ulp bar of 0.06 the
+correct 89.6 is 0.0448 away and the planted 89.5 is 0.0552 away, so **both passed**. This
+is not a tolerance that was set too loose. No tolerance works here: any bar that admits
+the right answer admits the wrong one, because the truth is equidistant between them.
+
+The replacement is not a smaller number. A quoted figure is correct **iff re-formatting
+the artifact at the document's own precision reproduces the document's glyphs**, so
+`quoted("89.6", 89.555228)` asks whether `"%.1f" % 89.555228 == "89.6"`. There is no slack
+left to tune. Every quotation check in the suite now uses it; the three claims that are
+genuinely *bounds* rather than quotations -- `gamma > 0.99999` among them -- are checked as
+inequalities instead, because re-formatting 0.999995916 at five places gives `1.00000` and
+demanding the glyphs would be wrong.
+
+**2. A number in 13.4 that was simply false.** An inequality check printed the largest
+frame-set gamma span in its diagnostic as **0.6125** while the prose beside it claimed
+**0.86**. The prose was wrong; there is no pair of rungs in 13.2 separated by 0.86. The
+figure is now parsed from the document and recomputed from `coh.json`, so it cannot drift
+again, and `0.0415%` replaced a hand-rounded `0.04%` for the same reason.
+
+**3. A log read as the wrong encoding, which presented as a false claim.** The check that
+`reference frame 9` appears in my render log failed. The claim was true; the read was
+wrong. `provenance.ps1` writes logs with PowerShell's `*>` redirect, which emits UTF-16LE
+with a byte-order mark, and reading that as UTF-8 with `errors="replace"` **does not
+raise** -- it returns a string of replacement characters in which no search term is ever
+found. An encoding fault is indistinguishable from a false statement unless something
+forces the read to happen. Had I not checked the claim, the document would have carried a
+true sentence supported by an instrument that could never confirm it.
+
+**4. A commissioning summary that could not distinguish a miss from a gap.** The harness
+counted a MISSED plant and a declared-gap plant in the same variable and reported both as
+"survived inside a declared gap". It now partitions every plant into caught, gap, or
+unaccounted, prints the sum, and fails if the sum is not the plant count.
+
+**5. A check about one section satisfied by a different section.** Plant [24] changed
+`reference frame 9` in 13.5 and the suite stayed green. The check searched a slice that
+ran from 13.5 to the end of the document, and **13.6 quotes that same string while
+describing the check itself**, so the presence test was satisfied by the prose about it.
+A presence test is satisfied by any duplicate of the value; each one needs its own anchor.
+Every section slice is now bounded by the next heading. This is the second defect in this
+suite -- after the tolerance in 1 -- that only a planted defect could have found, and both
+were in checks that had never once failed.
+**The uncovered 38 are declared, not hidden.** They are section cross-references (`13.2`,
+`16.2`), configuration constants stated in prose (`384` px sites, `24` sites, `39` rungs),
+and figures carried over from section 12 which are verified by `verify12.py` rather than
+here (`2.98`, `20.68`, `1.367`). A literal that no artifact covers is printed by name at
+every run, because a count that does not move looks the same whether nothing was wrong or
+nothing was examined.
