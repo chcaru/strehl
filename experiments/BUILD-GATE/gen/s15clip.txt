@@ -1,0 +1,11 @@
+subject                     clipped@65535    median     p99.9  verdict
+---------------------------------------------------------------------------
+109MSDCF.tiff                       0.00%     61063     64454  clean
+119MSDCF.tiff                       0.00%     58941     64252  clean
+bee-1-cpl.tiff                      0.04%     49836     65291  clean
+coffee-bubbles.tiff                 0.00%      2084     63983  clean
+flower-bud-alone-cpl.tiff           0.00%     60672     64078  clean
+---------------------------------------------------------------------------
+worst clipped fraction across the 5 section-15 NULL masters: 0.04%
+ORCH's BLOWN threshold is >25%; ORCH measured 11 of 18 HEAD --auto-exposure
+masters BLOWN, worst 92.13%, several with a pure-white (65535) median.
