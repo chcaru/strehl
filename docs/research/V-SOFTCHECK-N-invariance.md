@@ -241,3 +241,11 @@ in gain.
 
 Machine-readable: `dilut/113MSDCF/d113recon.json`, `dilut/bee-1-cpl/dstrat.json`,
 `dilut/ninv_gate.json`.
+
+**Reproduction note.** The four arms the gate reads are kept on disk. The `P`
+(`R150x1`) and `S` (`R075x2`) arms were deleted while reclaiming disk, so
+`dstrat.py` will not re-run its `A3` block as committed until `drender.py`
+regenerates them -- 153 s and 75 s respectively. The pipeline is bit-deterministic:
+two arms inherited from an earlier run re-rendered byte-identical
+(`master-N149`/`R149x2` `EAE7539A...`, `master-N299`/`R299x1` `CC410176...`), which
+is why regenerating them is a reproduction and not a new measurement.
