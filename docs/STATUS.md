@@ -124,6 +124,15 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    sharp edge with no rim must not trip it. Fact 1881.
 6. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
    taken on output carrying an uncorrected corpus-wide CA error and two dust motes.
+   **OWNED — lane DELIVER-V6**, rendering all 26 from a clean pinned build.
+7. **The delivered masters are not print files: no embedded ICC profile, no print resolution.**
+   Read from the actual bytes — `ResolutionUnit (none)`, `XResolution 1/1`, tag 34675 ICCProfile
+   ABSENT. **The code at HEAD is already correct** on all three modes (`--srgb` → 2716 B sRGB-TRC
+   + 300/1 + inch; `--linear-srgb` → 696 B identity TRC; camera-native → none), so these are
+   **stale artifacts, not broken code, and the re-render is the entire fix**. DELIVER-V6 has been
+   instructed to verify tags 34675 / 282 / 296 in its own output bytes per subject, and to
+   commission its tag reader against an old master that is known to lack them. A master with no
+   profile and no physical size is not print-ready by definition. Fact 1893.
 
 ### 3.2 Important, not blocking
 
@@ -145,6 +154,18 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    the orchestrator.
 10. **The sidecar repro contract.** `scripts/finalpass.ps1` L529-533 writes a repro command into
     all 26 sidecars that does not reproduce the render.
+14. **The print gate itself is broken and is currently unowned.** `orch_printready.py`'s clip
+    check measures the **sRGB gamut wall**, not the tone scale: it FAILED the corpus's only
+    master with zero blown highlights (`dry-erase-marker-head-cpl`, `clipALL3` 0.0000%) while
+    PASSING 16 subjects carrying more genuine clipping than one it failed (`112MSDCF` 0.0693%
+    vs `flowers-cpl` 0.0131%). `clipALL3` is the statistic its name refers to. Its **crush**
+    statistic is **anti-correlated** with the property it names and must stay ungated — 25 of 26
+    read 0.0000%, and the pixels it flags have median luma 0.24–0.33 with 33k–53k surviving
+    levels, against `flowers-cpl`'s genuine black at 0.0011 with 122 levels. Until it is fixed,
+    quote clipping and crush as **numbers with their subject**, never as a verdict. Known
+    non-finding: `flowers-cpl` will still trip `CLIP_MAX` after the re-render; bounding it needs
+    a per-channel rather than per-luminance tone stage, which is a corpus-wide change nobody has
+    authorised. Fact 1894.
 
 ### 3.3 Open against the brief
 
@@ -203,6 +224,16 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   the rows differ only in alignment, so the change is localised to the **aligned** path. Any
   lane told "the freezes must pass" will mis-attribute this to itself: **baseline which rows
   pass before you edit.** Fact 1887.
+  **RESOLVED, and the resolution is a method note.** Two lanes contradicted each other on this
+  row and both were honest: BUILD-OUTPUT measured at `c7bb6282` (before the `eps_r` re-fit) and
+  saw both rows hold; BUILD-CROP measured after `393d7ca3` and saw the RED. The mechanism was
+  then traced rather than assumed — `eps_r`'s sole consumer `OpticalProfile::compose` has
+  **exactly two live call sites crate-wide, both in `align_cmd.rs` (1929, 2095)**, so the
+  lateral-CA correction exists **only on the alignment path**. `-sidecar` therefore *must* move
+  and `-unaligned` *must* hold. **A third distinct hash would be a real finding.** The row still
+  needs re-baselining **with its `why` column rewritten to name `eps_r` and `393d7ca3`** — the
+  procedure the file's own header documents — because a permanently-red row trains every lane
+  to ignore it and would mask the next genuine break. Fact 1892.
 - **Absolute numbers in this corpus are timestamps, not constants.** The CA-OFF arm is
   coefficient-independent and must reproduce bit-exactly; re-rendered it differed on
   **33,003,417 px, max 23210 DN**, because ~14 lanes edited the crate concurrently. My own
