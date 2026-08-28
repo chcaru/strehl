@@ -4056,4 +4056,28 @@ is **unaffected**.
 | `vn_verify927.py` | re-derives every number quoted in §9.27 from the records, anchored so repeated short values cannot satisfy the wrong check: 55/55. It **caught a false claim in §9.27's own first draft** -- that `0.20-0.25` appeared nowhere in the file, when it appears twice in retracted §9.17 |
 | `vn_negctl927.py` | negative control for that checker: 6 plants, each anchored on a string proven unique and hard-erroring if it does not land, restored from a TEMP copy rather than `git checkout --`. 6/6 caught, baseline and post-restore GREEN both confirmed |
 
-Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
+Nothing outside `experiments/V-NEVERWORSE/` was modified. The read-only source
+data at `D:\personal\macro\` was never written.
+
+**Where the evidence lives, after the disk emergency of 2026-08-28.** Consumed
+intermediates were deleted: the 26 full-resolution `--LIN` master renders, the
+`gauge` exposure ladder, the `dilute` per-level TIFF dumps for both binaries,
+a stray probe render and a cargo target dir -- **8.04 GB**, every one of them
+already reduced to a JSON record that survives. The surviving records are
+small and stay on `C:\dev\strehl-out\V-NEVERWORSE\`, alongside the pinned
+binaries in `bin\`, which are kept because they are what this lane's numbers
+were measured against.
+
+The source-frame bundles this lane's live sections still read --
+`bundle\coffee-bubbles.npz` and `gbundle\{112MSDCF,bee-2-cpl}.npz`, 610 MB --
+were **moved to `D:\strehl-out\V-NEVERWORSE\`**, verified byte-identical by
+SHA-256 on all 9 files, and the old `C:` paths replaced with **directory
+junctions** so the hardcoded paths in `vn_gbundle.py`, `vn_regout.py`,
+`vn_rep2511.py` and `vn_negctl2511.py` keep resolving without edits. The move
+was verified end to end rather than assumed: re-running `vn_l0band.py` on
+`112MSDCF` through the junction reproduced a **bit-identical record**
+(SHA-256 `CF92BE25...B545E3`), and `vn_verify927.py` still reads 56/56 GREEN.
+
+**Warning for anyone reclaiming disk.** `bundle\` and `gbundle\` under the
+`C:` path are junctions, not directories. A recursive delete or a `robocopy
+/MIR` that follows them will reach the real data on `D:`.
