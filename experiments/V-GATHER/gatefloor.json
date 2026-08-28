@@ -1,0 +1,170 @@
+[
+ {
+  "subject": "leaf-2-cpl",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0026 < deformation floor 0.0039",
+  "rim_white": 0.10380887089913715,
+  "rim_measured": 0.10121355121975739,
+  "acuity_white": 0.019399843461236316,
+  "acuity_measured": 0.017780087887749377,
+  "acuity_ratio": 0.9165067709580521,
+  "n_isolated": 149,
+  "n_offered": 668,
+  "isolated_frac": 0.22305389221556887,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 0.0002649446985836484,
+  "avg_b0_white": 7.1,
+  "avg_b0_measured": 54.4,
+  "floor_x_white": 1.5504
+ },
+ {
+  "subject": "coffee-bean",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0002 < deformation floor 0.0039",
+  "rim_white": 0.14396202656594959,
+  "rim_measured": 0.14375565062870654,
+  "acuity_white": 0.02291392472186657,
+  "acuity_measured": 0.02291445303522907,
+  "acuity_ratio": 1.0000230564326678,
+  "n_isolated": 440,
+  "n_offered": 4738,
+  "isolated_frac": 0.09286618826509076,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 5.070908814662309e-08,
+  "avg_b0_white": 1.5,
+  "avg_b0_measured": 7.5,
+  "floor_x_white": 1.1609
+ },
+ {
+  "subject": "113MSDCF",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0004 < deformation floor 0.0039",
+  "rim_white": 0.08639913884540795,
+  "rim_measured": 0.08677085056589418,
+  "acuity_white": 0.05951474225597945,
+  "acuity_measured": 0.0600034638481551,
+  "acuity_ratio": 1.0082117736488483,
+  "n_isolated": 581,
+  "n_offered": 5044,
+  "isolated_frac": 0.11518636003172085,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 7.106503443261077e-05,
+  "avg_b0_white": 16.0,
+  "avg_b0_measured": 28.6,
+  "floor_x_white": 1.2151
+ },
+ {
+  "subject": "flat-on-ruler-cpl",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0002 < deformation floor 0.0039",
+  "rim_white": 0.10065953879382805,
+  "rim_measured": 0.1008302999670132,
+  "acuity_white": 0.04377048239163767,
+  "acuity_measured": 0.04377435840718337,
+  "acuity_ratio": 1.0000885531831936,
+  "n_isolated": 448,
+  "n_offered": 3827,
+  "isolated_frac": 0.11706297360857068,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 9.939540977408565e-08,
+  "avg_b0_white": 0.0,
+  "avg_b0_measured": 0.0,
+  "floor_x_white": 1.1736
+ },
+ {
+  "subject": "112MSDCF",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0022 < deformation floor 0.0039",
+  "rim_white": 0.09298116581293514,
+  "rim_measured": 0.09082563807795618,
+  "acuity_white": 0.059278629623697204,
+  "acuity_measured": 0.05906380603163425,
+  "acuity_ratio": 0.9963760364666547,
+  "n_isolated": 583,
+  "n_offered": 5022,
+  "isolated_frac": 0.11608920748705695,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 0.00016911748990331346,
+  "avg_b0_white": 14.8,
+  "avg_b0_measured": 32.1,
+  "floor_x_white": 1.2151
+ },
+ {
+  "subject": "wrapped-text-1",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0002 < deformation floor 0.0039",
+  "rim_white": 0.10121834969030208,
+  "rim_measured": 0.1014345909989871,
+  "acuity_white": 0.016287428872477666,
+  "acuity_measured": 0.01629013840701843,
+  "acuity_ratio": 1.0001663574135597,
+  "n_isolated": 241,
+  "n_offered": 1597,
+  "isolated_frac": 0.1509079524107702,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 6.921114850998344e-09,
+  "avg_b0_white": 0.3,
+  "avg_b0_measured": 1.1,
+  "floor_x_white": 1.1619
+ },
+ {
+  "subject": "109MSDCF",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0002 < deformation floor 0.0039",
+  "rim_white": 0.036637131851851024,
+  "rim_measured": 0.036419670180273034,
+  "acuity_white": 0.007740717549722736,
+  "acuity_measured": 0.007654983091478276,
+  "acuity_ratio": 0.9889242234077471,
+  "n_isolated": 27,
+  "n_offered": 110,
+  "isolated_frac": 0.24545454545454545,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 1.7664805444406486e-05,
+  "avg_b0_white": 52.5,
+  "avg_b0_measured": 72.5,
+  "floor_x_white": 1.2332
+ },
+ {
+  "subject": "119MSDCF",
+  "state": "UNRESOLVED",
+  "why": "|delta| 0.0000 < deformation floor 0.0039",
+  "rim_white": 0.028793573226557623,
+  "rim_measured": 0.028772197575147596,
+  "acuity_white": 0.008507066799792696,
+  "acuity_measured": 0.008487551514113961,
+  "acuity_ratio": 0.9977059912496267,
+  "n_isolated": 31,
+  "n_offered": 115,
+  "isolated_frac": 0.26956521739130435,
+  "shift": [
+   0,
+   0
+  ],
+  "shift_mse": 7.858616262238698e-07,
+  "avg_b0_white": 15.5,
+  "avg_b0_measured": 34.4,
+  "floor_x_white": 1.1655
+ }
+]

@@ -1,0 +1,63 @@
+diff --git a/crates/strehl-core/src/pyramid.rs b/crates/strehl-core/src/pyramid.rs
+index 9a789c32..852be93f 100644
+--- a/crates/strehl-core/src/pyramid.rs
++++ b/crates/strehl-core/src/pyramid.rs
+@@ -738,6 +738,46 @@ pub fn mean_coarse_default() -> usize {
+     })
+ }
+ 
++/// Which [`Hull`] mode the merge runs, overriding the built-in default.
++///
++/// The mode is not on the CLI -- `strehl stack` exposes `--pyramid-bands`,
++/// `--pyramid-gate`, `--pyramid-exponent`, `--pyramid-sharpen`,
++/// `--pyramid-select` and `--pyramid-base`, and none of them reaches this
++/// field. That is fine for a setting nobody needs to change, but it also makes
++/// the clamp the one part of the merge whose effect cannot be measured from
++/// outside the crate: [`Hull::Unclamped`] is documented as "kept reachable
++/// because a fix whose defect can no longer be reproduced cannot be measured
++/// interventionally", and until now it was not in fact reachable on a real
++/// render. The excursion is the only direct evidence the clamp does anything,
++/// so there has to be a way to turn it off on a real subject.
++///
++/// Accepts `input-range`, `per-level` or `unclamped`. Unset leaves the default
++/// untouched and is byte-identical to the code before this existed.
++///
++/// A set-but-unrecognised value panics rather than falling back, for
++/// [`MEAN_COARSE_ENV`]'s reason and for the one the `--merge` help states
++/// outright: a flag that parses and does nothing is indistinguishable from one
++/// that works, and this project has shipped that failure before.
++pub const HULL_ENV: &str = "STREHL_HULL";
++
++/// The [`Hull`] mode, honouring [`HULL_ENV`].
++#[must_use]
++pub fn hull_default() -> Hull {
++    static CACHED: std::sync::OnceLock<Hull> = std::sync::OnceLock::new();
++    *CACHED.get_or_init(|| match std::env::var(HULL_ENV) {
++        Err(_) => Hull::InputRange,
++        Ok(raw) => match raw.trim() {
++            "input-range" => Hull::InputRange,
++            "per-level" => Hull::PerLevel,
++            "unclamped" => Hull::Unclamped,
++            other => panic!(
++                "{HULL_ENV}={other:?} is not one of \
++                 input-range, per-level, unclamped"
++            ),
++        },
++    })
++}
++
+ /// Whether the reconstruction is confined to the range of values the input
+ /// frames actually support at each pixel.
+ ///
+@@ -1139,8 +1179,9 @@ impl Default for MergeConfig {
+             mean_coarse: mean_coarse_default(),
+             // A merge has no basis for emitting a value none of its inputs
+             // support. Per-band convexity does not imply reconstruction
+-            // convexity -- see `Hull`.
+-            hull: Hull::InputRange,
++            // convexity -- see `Hull`. `hull_default` reads `HULL_ENV`, which
++            // is unset in every shipping run and returns `InputRange`.
++            hull: hull_default(),
+             // See `MergeConfig::hull_lambda`. Chosen by the ladder in
+             // `docs/research/BUILD-BLEND.md`; inert unless `hull` is `PerLevel`.
+             hull_lambda: 2.0,

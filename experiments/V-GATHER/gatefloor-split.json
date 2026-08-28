@@ -1,0 +1,74 @@
+[
+ {
+  "subject": "leaf-2-cpl",
+  "flat": 0.8082117939921323,
+  "detail": 0.9895341562790025,
+  "d_b0": 47.3,
+  "reading": "denoise only",
+  "n_flat": 9901056,
+  "n_detail": 3300352
+ },
+ {
+  "subject": "coffee-bean",
+  "flat": 0.9470516831770884,
+  "detail": 0.9998651828230908,
+  "d_b0": 6.0,
+  "reading": "denoise only",
+  "n_flat": 9889805,
+  "n_detail": 3296602
+ },
+ {
+  "subject": "113MSDCF",
+  "flat": 0.8983441989992612,
+  "detail": 1.0042306776608132,
+  "d_b0": 12.600000000000001,
+  "reading": "denoise only",
+  "n_flat": 9889805,
+  "n_detail": 3296602
+ },
+ {
+  "subject": "flat-on-ruler-cpl",
+  "flat": 1.0002815867236514,
+  "detail": 1.0000256184999414,
+  "d_b0": 0,
+  "reading": "inert",
+  "n_flat": 9901056,
+  "n_detail": 3300352
+ },
+ {
+  "subject": "112MSDCF",
+  "flat": 0.8577646944480412,
+  "detail": 1.0039426125684046,
+  "d_b0": 17.3,
+  "reading": "denoise only",
+  "n_flat": 9889805,
+  "n_detail": 3296602
+ },
+ {
+  "subject": "wrapped-text-1",
+  "flat": 0.9996984009662705,
+  "detail": 1.0002292589404227,
+  "d_b0": 0.8,
+  "reading": "inert",
+  "n_flat": 9889805,
+  "n_detail": 3296602
+ },
+ {
+  "subject": "109MSDCF",
+  "flat": 0.7374399994971023,
+  "detail": 1.0021014209865662,
+  "d_b0": 20.0,
+  "reading": "denoise only",
+  "n_flat": 9889805,
+  "n_detail": 3296602
+ },
+ {
+  "subject": "119MSDCF",
+  "flat": 0.9078753278246815,
+  "detail": 1.0003702552667963,
+  "d_b0": 18.9,
+  "reading": "denoise only",
+  "n_flat": 9889805,
+  "n_detail": 3296602
+ }
+]

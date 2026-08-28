@@ -1776,3 +1776,270 @@ population, wearing the same glyph as a conclusion drawn from evidence.
   placement, not one-sidedness.
 - **`blend-render` is missing photometric normalisation and clip handling.**
   That is admissible here only because both arms are missing them equally.
+
+## Part 14 - STREHL_GATE_FLOOR: the fix is real, its stated reason is inverted
+
+ORCH asked for a `STREHL_GATE_FLOOR=white` vs default A/B on the rim subjects,
+as a retrospective control on the pin: `white` restores the pin's floor
+behaviour inside the current binary, so one variable moves instead of
+eighteen commits. That framing is right and I adopted it. I did not adopt the
+mechanism it came with, because the mechanism does not survive measurement.
+
+The short version: **the gate-floor default is a genuine improvement, it
+denoises rather than softens, it does not touch rim - and the justification
+written in its own module docs has the wrong sign for the configuration
+strehl actually ships.**
+
+### 14.1 Premises checked first
+
+| ORCH's premise | verdict |
+| --- | --- |
+| `9b05d0b7..HEAD` is 13 commits / 26 files / +12,637 / -538 | **stale**. Measured 18 commits, 29 files, +15,047 / -604. HEAD moved after they measured; the direction of their point is unaffected. |
+| `gatefloor.rs` does not exist at the pin | **confirmed**. `git cat-file -e 9b05d0b7:...` rc=128, present at HEAD rc=0. |
+| `78fed9a1` landed | **confirmed**, `git merge-base --is-ancestor` rc=0. |
+| on by default unless `STREHL_GATE_FLOOR=white` | **confirmed** at `gatefloor.rs:92-99`, `.unwrap_or(true)`. |
+| `crates/` clean | **false**. `pyramid.rs` carries 43 uncommitted lines from the build lane. |
+
+That last one matters procedurally. **I did not build "HEAD".** I built
+`f1f40150` plus 43 uncommitted lines in `pyramid.rs`, and the diff is saved at
+`experiments/V-GATHER/gf-tree-dirt.diff` so the arm can be identified later.
+It is admissible because both arms come from **one binary**
+(`16E645FD0AD42260...`, hashed before and after the whole run, unchanged), so
+the dirt is common to both and cancels in the paired difference. It would not
+be admissible against any number rendered from a different build.
+
+**A trap worth naming.** `STREHL_FULLRES_GATHER` panics on an unrecognised
+value by design. `STREHL_GATE_FLOOR` does **not**: anything that is not
+`white` enables the measured floor. A typo in the control arm therefore
+silently produces two default arms, and the experiment reads as a clean null.
+Every arm below is backed by a positive presence check, never by the spelling
+of an environment variable.
+
+### 14.2 Potency, established three ways before anything was interpreted
+
+| check | result |
+| --- | --- |
+| output bytes differ between arms | `white` 1F937943.. vs `measured` CDC0C458.. - differ |
+| `measured floor` banner | present in default, **absent** under `white` (0 lines) |
+| `debug` is reporting-only | `debug` output is **byte-identical** to the default arm (CDC0C458..) |
+
+The third is a control I have not seen asked for and it is worth keeping: it
+proves `STREHL_GATE_FLOOR=debug` can be used to read the mechanism without
+changing the render being read.
+
+### 14.3 The finding: the documented premise is inverted where strehl ships
+
+The module docs state the white floor **over-states** the true one, citing
+BUILD-GATE's `beta_actual / beta_white` in **0.3432 .. 0.9981**, "every entry
+below 1.0", measured "in **both** gather arms".
+
+That reproduces only with `STREHL_FULLRES_GATHER=0`. At the shipping default -
+full-res gather ON, the flip I verified in Part 1 - it inverts:
+
+| subject | gather=0 (old plane path) | gather=1 (**shipping**) |
+| --- | --- | --- |
+| 109MSDCF | 0.6219 | **1.2332** |
+| 119MSDCF | 0.6227 | **1.1655** |
+| 112MSDCF | 0.6188 | **1.2151** |
+| wrapped-text-1 | 0.6115 | **1.1619** |
+| 113MSDCF | - | **1.2151** |
+| coffee-bean | - | **1.1609** |
+| flat-on-ruler-cpl | - | **1.1736** |
+| leaf-2-cpl | - | **1.5504** |
+
+**4 of 4 below 1.0 in the old path; 8 of 8 above 1.0 in the shipping path, all
+outside the cited range.** The two arms were run from one binary at identical
+warps - the debug lines print the same displacements per frame
+(`frame 0 d=(-0.0778,+0.5023)` in both) - so the gather path is the only
+variable.
+
+The mechanism is not mysterious. The old path deinterleaves to half-res planes
+and interpolates, which correlates neighbours and *lowers* band-0 noise power.
+The new path demosaics, and Malvar interpolation *raises* it. Both floors are
+measured correctly. Only the sentence explaining why is wrong.
+
+### 14.4 Consequence: the gate gets stricter, and ORCH's prediction is refuted in sign
+
+ORCH predicted the fix "makes the gate **less** strict, so it should
+**increase** selection and **reduce** softening". Band-0 averaging, the
+fraction of pixels the gate averages rather than selects:
+
+| subject | white | measured (default) | change |
+| --- | --- | --- | --- |
+| leaf-2-cpl | 7.1% | 54.4% | **+47.3** |
+| 109MSDCF | 52.5% | 72.5% | +20.0 |
+| 119MSDCF | 15.5% | 34.4% | +18.9 |
+| 112MSDCF | 14.8% | 32.1% | +17.3 |
+| 113MSDCF | 16.0% | 28.6% | +12.6 |
+| coffee-bean | 1.5% | 7.5% | +6.0 |
+| wrapped-text-1 | 0.3% | 1.1% | +0.8 |
+| flat-on-ruler-cpl | 0.0% | 0.0% | 0.0 |
+
+**Rose on 7 of 8, fell on none.** The gate became *more* strict at band 0, not
+less. Under `STREHL_FULLRES_GATHER=0` the same knob moves 109MSDCF's averaging
+76.8% -> 16.9%, which is the intended direction. The fix does what BUILD-GATE
+says - in the gather arm strehl no longer uses.
+
+### 14.5 But the effect is denoising, not softening - and that overturned my own reading
+
+Global acuity fell (leaf-2-cpl 0.9165, i.e. -8.35%) and I was heading for
+"the default softens". That would have been wrong. Frame averaging lowers
+mid-band energy two ways that mean opposite things, and a global number cannot
+separate them, so I split the frame by local structure measured on a reference
+built from **both** arms, privileging neither.
+
+Commissioned with a planted denoise and a planted softening, because a
+discriminator that has only seen one cannot be known to separate them:
+
+| arm | flat | detail | required |
+| --- | --- | --- | --- |
+| DENOISE (noise halved, signal untouched) | **0.5000** | 0.9983 | flat<<1, detail~1 |
+| SOFTEN (signal blurred, noise untouched) | 1.0000 | **0.7313** | detail<<1 |
+| NULL | 1.000000 | 1.000000 | exactly 1 |
+
+`0.5000` for an exact halving is amplitude fidelity, not merely direction.
+Separation in detail territory is 0.2670. The result:
+
+| subject | flat | detail | reading |
+| --- | --- | --- | --- |
+| leaf-2-cpl | 0.8082 | 0.9895 | denoise only |
+| 109MSDCF | 0.7374 | 1.0021 | denoise only |
+| 112MSDCF | 0.8578 | 1.0039 | denoise only |
+| 113MSDCF | 0.8983 | 1.0042 | denoise only |
+| 119MSDCF | 0.9079 | 1.0004 | denoise only |
+| coffee-bean | 0.9471 | 0.9999 | denoise only |
+| wrapped-text-1 | 0.9997 | 1.0002 | inert |
+| flat-on-ruler-cpl | 1.0003 | 1.0000 | inert |
+
+leaf-2-cpl loses **19.2% of flat-field mid-band energy and 1.05% of detail**.
+The -8.35% global acuity was almost entirely noise.
+
+Two independent reasons this is not an artifact of my cut. Sweeping the detail
+quantile from 0.50 to 0.99, leaf-2-cpl runs 0.9539 -> 0.9735 -> 0.9895 ->
+0.9984 -> **1.0114**: the tighter the cut onto real structure, the closer to
+and then above unity, which is the signature of noise removal rather than
+detail loss. And every arm registers at integer shift **(0,0)**, so no band
+difference is fabricated by misalignment.
+
+### 14.6 Rim does not move
+
+The axis ORCH was most worried about. Sites frozen once on a rim-free
+reference built from both arms - an earlier version of this instrument
+reselected per arm and compared two different populations, which is the same
+defect that makes the inherited v3 read +14.85% on a rim-free image.
+
+| subject | rim white | rim measured | delta | verdict |
+| --- | --- | --- | --- | --- |
+| leaf-2-cpl | +0.1038 | +0.1012 | -0.0026 | UNRESOLVED |
+| coffee-bean | +0.1440 | +0.1438 | -0.0002 | UNRESOLVED |
+| 113MSDCF | +0.0864 | +0.0868 | +0.0004 | UNRESOLVED |
+| flat-on-ruler-cpl | +0.1007 | +0.1008 | +0.0002 | UNRESOLVED |
+| 112MSDCF | +0.0930 | +0.0908 | -0.0022 | UNRESOLVED |
+| wrapped-text-1 | +0.1012 | +0.1014 | +0.0002 | UNRESOLVED |
+| 109MSDCF | +0.0366 | +0.0364 | -0.0002 | UNRESOLVED |
+| 119MSDCF | +0.0288 | +0.0288 | -0.0000 | UNRESOLVED |
+
+`partition: 8 = 0 PASS + 0 FAIL + 8 UNRESOLVED + 0 REFUSED + 0 NOT EXAMINED`
+
+**UNRESOLVED is not PASS.** Every delta is smaller than the gauge's own
+deformation floor, so the honest statement is that this instrument cannot
+resolve a rim change of this size - not that there is none.
+
+That floor is itself a measurement. The BLUR commissioning arm **failed** in
+its strict form: a sigma-2 blur, which cannot create a rim, still moved the
+statistic by **+0.0039**. Rather than move `FLATTEN` until it passed - fitting
+the instrument to the answer - I recorded +0.0039 as the floor for comparing
+two *different* images. The byte-identical floor is exactly 0; this one is not,
+and this one governs an A/B. The largest rim delta observed is 0.0026, which
+is 67% of it.
+
+Calibration, stated as a limit: the SCALE arm recovers planted amplitude with
+slope **0.644**, monotone over 0.05..0.40. Rim readings here are **lower
+bounds**, understated by about 1.55x.
+
+### 14.6a Commissioning, in full
+
+| arm | result |
+| --- | --- |
+| NULL | rim delta 0.000e+00, acuity ratio 1.000000000000 |
+| GAIN (x1.7) | both **exactly** invariant - the `--auto-exposure` trap in miniature |
+| SCALE | monotone, slope 0.644 - measures amplitude, not presence |
+| BLUR | acuity -36.1%; rim +0.0039 = the deformation floor |
+| RIMPLANT | +0.0000 -> +0.3262 |
+| IMPROVE (detail added away from edges) | acuity +0.2%, rim +0.0002 - **not** fooled by sharpening as such |
+| DERIM | +0.3262 -> +0.0000 - removing a rim scores better, so the axis is not perverse |
+| NANGUARD | a NaN does not read as a clean pass |
+
+`IMPROVE` and `DERIM` are the planted-improvement arms. Without them a suite of
+degradations cannot distinguish a gauge that is blind to a defect from one that
+is perverse on it.
+
+### 14.7 Two natural nulls I did not have to build
+
+`flat-on-ruler-cpl` averages **0.0% in both arms** - the mechanism is inert
+there by the tool's own accounting - and reads acuity 1.0001, detail 1.0000 at
+every quantile from 0.50 to 0.99, rim +0.0002. `wrapped-text-1` moves 0.8
+points and reads 1.0002 / 1.0002. The gauge is quiet exactly where the
+mechanism is quiet, which is what makes the movement elsewhere interpretable.
+
+### 14.8 A defect in the module's own control
+
+`gatefloor.rs` ships a self-check that measures the probe at an **identity
+warp** and compares it to white:
+
+```
+gate floor: NULL frame 18 identity warp  b0=0.8895 (0.9997x white)  worst band +0.736%  PASS
+```
+
+It passes at `0.9996x`..`0.9997x` in **both** gather arms. It has to: the
+module's own docs say the full-res gather "is an exact no-op at integer
+full-res shifts". So the control is evaluated at precisely the one point where
+the two gather paths agree by construction, and is **structurally incapable**
+of detecting that they diverge to 0.62x and 1.55x at real warps. The control is
+sound for what it tests and blind to the thing that turned out to matter.
+
+### 14.9 Verdict
+
+- **Keep the default on.** It removes up to 26% of flat-field mid-band energy
+  and costs at most 1.05% of detail on the worst subject tested, and it does
+  not move rim.
+- **The docstring and the commit message are wrong for the shipping
+  configuration** and should not be cited as the reason. `beta_actual/beta_white`
+  is 1.16..1.55 at band 0 under the default gather, not "every entry below 1.0".
+  Anyone reasoning forward from that sentence - as ORCH did, and as I nearly
+  did - will predict the wrong sign.
+- **ORCH's prediction is refuted in sign, and their fear is not realised.** The
+  gate got stricter, not looser; and rim did not get worse. Both halves needed
+  measuring because neither was implied by the other.
+- **This does not explain the rim failures.** Rim does not move, so the
+  already-landed fix accounts for **none** of the 13, and re-certifying against
+  a HEAD baseline will not clear them by this mechanism.
+
+### 14.10 My own defects this part
+
+1. `gf_commission.py` had a format string with four placeholders and three
+   arguments; it crashed before printing a baseline.
+2. My first discriminator fixture used 20 px flat runs against a 33 px variance
+   window, so no window was ever purely flat and a planted **halving** of noise
+   read 0.9161 instead of 0.5000. The fixture was wrong, not the instrument;
+   widening the runs gave exactly 0.5000. Caught only because the planted arm
+   had a predicted *value* rather than a predicted direction.
+3. I read the `x white` banner with a pattern that also matched the per-frame
+   `0.9993x white` NULL lines, and briefly tabulated NULL values as banner
+   values.
+
+### 14.11 Gaps
+
+- 8 subjects of 26. Chosen by rim severity at the pin; that selection cannot
+  bias a paired A/B run entirely at HEAD, but it does not make them typical.
+- **The rim axis is UNRESOLVED, not clean.** A change smaller than 0.0039
+  would not have been seen.
+- Isolation excludes most high-contrast features on some subjects, as
+  V-HEADTOHEAD2 found; the rim numbers speak only to edges that settle within
+  7 px.
+- Noise reduction is measured as mid-band energy in flat territory, not as a
+  photon-noise estimate against a dark-frame model.
+- One binary at `f1f40150` + 43 uncommitted lines. Not a clean HEAD, and not
+  reproducible from a commit alone.
+- `STREHL_GATE_FLOOR_SCALE` was not swept. It is the knob that could correct
+  band 0 alone, and it is the obvious next measurement.
