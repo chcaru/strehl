@@ -27,8 +27,18 @@ SOURCES = [ALIGN, "crates/strehl-cli/src/merge_cmd.rs", "crates/strehl-core/src/
 
 # Read the blob as BYTES via subprocess. Redirecting `git show` through
 # PowerShell's `>` re-encodes the stream and silently corrupts the comparison.
-blob = subprocess.run(["git", "show", f"HEAD:{REL_GD}"], cwd=REAL,
+# Pinned to the commit that PRECEDES the fix, not to HEAD. When the fix was
+# uncommitted, HEAD was the pre-fix version and this control was valid. The
+# moment 58e08649 landed, HEAD became the FIXED version and "before" ceased to
+# exist -- the control would have compared the fixed script against itself, seen
+# RED on both arms, and printed a green that proved nothing. It did not, because
+# the injection guard below refused. A control whose reference point moves is a
+# control that expires silently; this one now cannot.
+PRE_FIX = "a3ae2dd3"
+blob = subprocess.run(["git", "show", f"{PRE_FIX}:{REL_GD}"], cwd=REAL,
                       capture_output=True).stdout.decode("utf-8")
+if not blob.strip():
+    raise SystemExit(f"cannot read {PRE_FIX}:{REL_GD} -- control is void")
 
 OLD_ROOT = 'ROOT = Path(r"C:\\dev\\blog\\death-of-software\\projects\\strehl")'
 NEW_ROOT = ('import os as _os\n'
@@ -82,8 +92,8 @@ print("=" * 74)
 print(f"{'griddiag version':<22}{'mutation':<18}{'want':<8}{'got':<8}")
 
 trials = [
-    ("HEAD (pre-fix)", "none",           "GREEN", head_gd, None),
-    ("HEAD (pre-fix)", "REVERSE_ESCAPE", "GREEN", head_gd, mutate_escape),
+    ("a3ae2dd3 (pre-fix)", "none",           "GREEN", head_gd, None),
+    ("a3ae2dd3 (pre-fix)", "REVERSE_ESCAPE", "GREEN", head_gd, mutate_escape),
     ("worktree (fixed)", "none",         "GREEN", work_gd, None),
     ("worktree (fixed)", "REVERSE_ESCAPE", "RED",  work_gd, mutate_escape),
 ]
