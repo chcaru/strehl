@@ -1,0 +1,167 @@
+# strehl — status and gaps
+
+**Updated:** end of the 2026-08-27 build session.
+**Scope:** what is measured, what is broken, and what is not yet known. Facts cited
+by number refer to the table in [`research/SYNTHESIS.md`](research/SYNTHESIS.md).
+
+This file exists because the corpus is 2 MB and nobody should have to read it to find
+out where the product stands. Every claim here names the measurement behind it or is
+marked as unmeasured.
+
+---
+
+## 1. Where the product actually stands
+
+| Property | Status | Evidence |
+| --- | --- | --- |
+| **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
+| **Visual quality** | **24 of 26 masters clean to the eye at 1:1** | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
+| **Halo** | **0 visible, 0 demonstrated on any subject** | facts 1851–1855 |
+| **Chroma** | **1 visible defect, diagnosed, fix specified, not landed** | facts 1861–1863, 1865 |
+| **Dust** | **2 real motes found; correction built, wired, tested, OFF by default** | fact 1856 |
+| **Regional blur** | 1 subject (`flowers-cpl`), undiagnosed | V-ORACLE |
+| **Depth softening** | root cause identified; candidate fix built but **unscored** | facts 1843–1845, 1849 |
+| **GPU** | **unused** | explicit gap against the brief |
+| **Print-ready** | **NO** — see §3 | |
+
+`bee-1-cpl` (N=299) resolves individual ommatidia. `wrapped-text-1/2` resolve individual
+toner particles and paper fibre. The ceiling of this pipeline is already high; the gap to
+"print-worthy across the corpus" is a small number of specific, named defects, not a
+general softness.
+
+---
+
+## 2. What was settled this session
+
+**The halo complaint is answered.** All four HALO verdicts were false positives. The
+instrument walked 2–120 px and took its far reference at 400–900 px, never measuring
+120–400 px — exactly the interval where a halo's decay separates it from a scene lighting
+falloff. `flat-on-ruler-cpl`'s excursion *peaks outside the measured window* at 107% of its
+flagged value; `119MSDCF` never decays out to 900 px; `tweezers-cpl` is one step in a
+22,461 DN ramp. A second defect in the same instrument ran the opposite way and passed four
+subjects on a partial walk. Facts 1851–1855.
+
+**The visible magenta is ours, not the lens and not the merge.** strehl's own lateral-CA
+correction moves red from −2.009 px inward *past zero* to +0.672 px outward while blue stays
+outward, so R and B pile up on the same side of every edge. The lens moves them in opposite
+directions, so magenta is the correction's signature. `eps_r = 704.5 ppm` sits above the
+entire 500.9–651.9 ppm range of the six measurements quoted three lines from it in
+`optics.rs`. Facts 1861–1863.
+
+**But disabling the correction is worse, by 30%.** The statistic that recommended disabling
+it counted magenta specifically, and the disabled artifact is the opposite-sign orange/cyan
+shape that counter cannot see. Measured hue-neutrally: CA ON 0.15999, CA OFF 0.20807 at
+edges, flat control unmoved. The correction is *net beneficial and over-corrected at the same
+time*. Fact 1865.
+
+**Two real dust motes**, at −3.63% and −8.24%, found on 12 subject stacks. The flat-field
+derived map was mis-registered and would have brightened clean pixels beside an uncorrected
+mote; the photograph-derived map replaces it. Fact 1856.
+
+**The merge is in its selecting regime for essentially every mid-frequency coefficient of
+every subject** — bands 1–6 average 0.29 / 0.08 / 0.06 / 0.03 / 0.00 / 0.00 % averaged. That
+is where the measured 24–240× selection premium applies. Facts 1843–1845, 1849.
+
+---
+
+## 3. Gaps, ranked by what stands between here and print-worthy
+
+### 3.1 Blocking
+
+1. **Land the `eps_r` re-fit.** Diagnosed, specified, owner assigned, **not landed**. Must
+   beat both arms on the hue-neutral metric: better than 0.15999 (on) and 0.20807 (off).
+   `highly-angled-ruler-mm-cpl` is the control for the under-corrected end, since it is the
+   one subject still showing the lens's natural opposite-sign pattern.
+2. **Score `STREHL_SOFT_GATE`.** A soft admission kernel is *already built and wired* in
+   `crates/strehl-core/src/merge.rs` (`:530`, `:532-607`, `:1435-1454`, `:1898-1906`), off by
+   default, and appears never to have been scored on real output. It is the standing candidate
+   fix for depth softening. Score on `bee-1-cpl` at 0.30–0.40, with a liveness control first
+   (`STREHL_SOFT_GATE=gausian` must fail loudly). N-invariance is necessary but **not
+   sufficient** — a plain mean is perfectly N-invariant and destroys grain to 0.229×.
+3. **Diagnose `flowers-cpl`.** Abrupt regional blur adjacent to regions resolving individual
+   hairs. Capture gap or merge defect is not yet established.
+4. **Enable the dust correction in the delivered renders.** Built and OFF. Every delivered
+   master currently carries both motes.
+5. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
+   taken on output carrying an uncorrected corpus-wide CA error and two dust motes.
+
+### 3.2 Important, not blocking
+
+6. **Resolve the unexplained green-channel difference** between the CA-on and CA-off renders:
+   G differs on 30.9M px, mean 51.39 DN, max 9595 DN, when a correction that moves only R and
+   B should leave G bit-identical. Until resolved, nothing should be concluded from that render
+   pair. Fact 1867.
+7. **Close the halo residual.** 11 subjects are UNSCORED, not clean — 4 that passed on a
+   partial walk (including `leaf-2-cpl`, carrying an unexamined +5721 DN excursion at 50–80 px)
+   and 7 unmeasurable. The instrument is also blind to a broad rim at 9000 DN, twice the
+   amplitude of anything it flagged. The fix is a decay test, which tightens rather than
+   loosens. Fact 1855.
+8. **Measure the confidence exponent at depth on a qualified subject.** "Harmful at depth" was
+   refuted, but is *not* replaced by "it is fine" — it is unmeasured. Use `bee-1-cpl`.
+9. **Band-qualify more subjects.** Only `bee-1-cpl` (5.311) and `dry-erase-marker-head-cpl`
+   (4.530) PASS at 0.30–0.35. `112MSDCF` reads 1.079 FAIL(noise) and `coffee-bubbles` 1.542
+   MARGINAL. **No sharpness, softening or acuity claim is quotable without naming the band and
+   the subject's qualification at it** — this rule was broken twice this session, both times by
+   the orchestrator.
+10. **The sidecar repro contract.** `scripts/finalpass.ps1` L529-533 writes a repro command into
+    all 26 sidecars that does not reproduce the render.
+
+### 3.3 Open against the brief
+
+11. **GPU is entirely unused.** Speed is already SOTA on CPU, so this is not blocking quality,
+    but it is explicitly in the brief and remains unaddressed. A non-contending approach is a
+    separate crate rather than edits to the held merge files.
+12. **Plugin surface** — in progress, not finished.
+13. **Colour management, photometric normalisation, outlier/robustness mask** — named in the
+    research and unplanned. These are the unglamorous layer a SOTA claim dies without.
+
+---
+
+## 4. What the owner still owes, and what it would unlock
+
+- **Flat fields: delivered.** Used; the resulting dust map was refuted on its own merits
+  (fact 1856), which is a result rather than a waste.
+- **A capture without the 2× teleconverter.** All 26 masters share the
+  `a7c2-fe100gm-2xtc-x4cpl` profile, so it is currently impossible to tell whether the ~40%
+  `eps_r` error lives in the base lens term or the teleconverter term. This directly affects
+  how the gear plugin should be structured.
+- **The seven new stacks delivered 2026-08-27** — `pottery-art-glazed-cpl`,
+  `maldon-sea-salt-cpl`, `chia-seeds-cpl`, `medication-pill-cpl`, `duck-tape-side-layers-cpl`,
+  `dime-flat-narrow-slices-cpl`, `unpopped-popcorn-kernels-cpl`, 1,292 frames total, at lower
+  ISO and focus-step 1 / 5 / 7 against the previous max of 10 — are **not yet processed**.
+  They matter more than their count suggests:
+  - **Lower ISO should widen band qualification.** Only 2 of 26 current subjects qualify at
+    0.30–0.35, which is the single biggest constraint on measuring sharpness at all.
+  - **Thinner slices are the direct test of the selection premium.** Finer focus sampling puts
+    more frames near peak, which is exactly the regime where selecting rather than estimating
+    is measured to multiply noise 24–240×.
+  - **Step 1 vs 5 vs 7 vs 10 on the same rig is a step-size ladder**, which is the experiment
+    the capture advisor needs and which nobody has been able to run.
+
+---
+
+## 5. Landmines for whoever picks this up
+
+- **`crates/strehl-cli/tests/byte-freezes.tsv` must never be re-baselined casually.** If a
+  freeze moves, that is a finding.
+- **The dust correction and the soft gate are both OFF by default.** Off is correct for the
+  dust map — a stale map manufactures the defect it removes — but it means the shipped default
+  is not the best output the code can produce.
+- **`experiments/BUILD-DEFECT/out/defect-map-ILCE-7CM2.txt` is headered `SUPERSEDED — DO NOT
+  ADOPT`.** It parses cleanly and looks usable. It is not.
+- **`docs/research/M111-waxy-blobs.md` has a self-retracted headline in §13**, and its §8.2 fix
+  has since been built. Read §13 before citing §8.
+- **Six independent lanes found their own verifier blind to a reversed conclusion** this
+  session — 712 green, 88/88 green, a verdict living only in prose, 7 of 10 reversals passing
+  with every number intact, a counter that passed a planted-1px control and then ranked the
+  wrong subject 7× above the one a human actually saw, and a presence test written into the
+  very section documenting the previous five. Three rules were earned:
+  - **An inert plant and a dead instrument give the identical green.** Commission the pass/fail
+    channel per verifier, not per suite.
+  - **Commissioning sensitivity is not commissioning specificity.** Planting a signal and
+    confirming detection says nothing about whether noise, or a different artifact shape, is
+    rejected. This one reached a shipping recommendation and was wrong by 30%.
+  - **Commission deletion as well as reversal.** Deleting a finding is cheaper than stating it
+    wrongly.
+- **An unaudited green and an audited green look identical in a report** and are worth
+  completely different amounts.
