@@ -3168,7 +3168,21 @@ oracle plants are caught. The placebo (a prose edit that changes no measured
 value) stays green, an unreadable record refuses with `2` rather than passing
 or failing, and the document is restored byte-identically.
 
-### 9.25 The sub-gate fallback is correct and I was wrong about it -- and the measurement built to convict it found a two-stop-dark frame holding 62% of a band on the deepest stack in the corpus
+### 9.25 The sub-gate fallback is correct and I was wrong about it -- and the measurement built to convict it convicted my own aligner
+
+> **CORRECTION, ADDED AFTER THIS SECTION WAS FIRST COMMITTED. READ 9.25.11
+> BEFORE QUOTING ANYTHING BELOW ABOUT FRAME 46.** The second headline of this
+> section originally read "a two-stop-dark frame holding 62% of a band on the
+> deepest stack in the corpus". That capture is real in my offline model and
+> **does not happen in the product.** Put through the pinned binary one frame
+> at a time on the real stack, adding source frame 46 moves the L5 band shape
+> by 1.011x against nulls of 1.008x and 1.014x -- no effect at all. The frame
+> is a **registration failure in my own bundle**: `ncc_b` 0.0275 where its
+> four nearest neighbours read 0.9467 to 0.9488, fitted at a 0.58x scale where
+> they fit 0.962. Everything in 9.25.5 through 9.25.10 is a correct
+> measurement of what a badly warped frame does to a selective merge, and none
+> of it is a defect of the shipping merge. 9.25.11 has the retraction, what
+> survives it, and the finding that replaces it.
 
 Section 9.24 ended with two candidate second mechanisms and a promise to
 measure the one `pyramid.rs` says has never been measured. This section
@@ -3369,6 +3383,13 @@ not, **8 of 8 rungs**.
 
 #### 9.25.6 What the switch actually is: one frame, two stops dark, holding a band
 
+> **RETRACTED IN PART -- see 9.25.11.** The measurement below is correct and
+> reproduces exactly. Its attribution is not: frame 46's coarse-band energy is
+> an artefact of a failed registration in my own bundle, not a property of the
+> source frame, and the shipping binary does not reproduce any of it. "Two
+> stops dark" is a consequence of the bad warp, not a cause of anything --
+> 9.25.11 shows darkness is neither necessary nor sufficient.
+
 Probing weight concentration at L5 per half:
 
 | N | frame 46 present | half A top frame | A share | A n_eff | half B top frame | B share | B n_eff |
@@ -3521,6 +3542,136 @@ render, and I have not scored the shipped TIFF. Whether other subjects in the
 26-subject corpus contain a comparable frame: only `bee-2-cpl` was searched.
 Both are cheap and neither is done.
 
+> Both were done immediately afterwards. The first answered no, and 9.25.11 is
+> the retraction it forced.
+
+#### 9.25.11 RETRACTION: the shipping binary does not reproduce any of this, because frame 46 is my own registration failure
+
+The paragraph directly above named two cheap things I had not done. Doing the
+first of them overturned the section's second headline, so it is recorded here
+in full rather than quietly amended.
+
+**The test that settles it.** `--limit N` stacks the first N frames in
+filename order, and `vn_lib.frames_of` is `sorted(...)` over the same
+directory, so `--limit 46` and `--limit 47` differ by exactly one frame and
+that frame is the accused. Both renders go through the pinned binary on the
+real stack with real alignment, real CA correction and the real merge. Two
+nulls -- `44 -> 45` and `45 -> 46` -- add exactly one ordinary frame each, so
+"adding a frame changes the picture" cannot be mistaken for "adding this
+frame changes the picture":
+
+| frames stacked | one frame added | kind | L3 | L4 | L5 | L6 |
+|---|---|---|---:|---:|---:|---:|
+| 44 -> 45 | `DSC00045.ARW` | null | 1.004 | 1.009 | 1.008 | 1.004 |
+| 45 -> 46 | `DSC00046.ARW` | null | 1.012 | 1.018 | 1.014 | 1.007 |
+| 46 -> 47 | `DSC00047.ARW` | **the accused** | 1.010 | 1.014 | 1.011 | 1.005 |
+
+Adding the accused frame moves the L5 band shape by **1.011x**.
+The worst null moves it by **1.014x**. **The rogue step is
+smaller than a null.** There is no effect to explain.
+
+The statistic is band RMS divided by the L1 band RMS of the same image. A
+ratio taken inside one image cancels per-image gain exactly, because the
+Laplacian pyramid is linear, and that invariance is checked rather than
+asserted: a 1.7x gain moves it by 1.78e-15. This project has twice
+shipped a statistic that turned out to be linear in exposure, once after the
+number had been sent upward, so the gauge is verified on every arm and the
+renders carry no tone curve and no auto-exposure.
+
+**Why my model saw it and the product does not.** Frame 46 failed to register
+in my bundle, and nothing else did:
+
+| source frame | state | `ncc_b` | fitted scale |
+|---|---|---:|---:|
+| 44 | OK | 0.9467 | 0.9635 |
+| 45 | OK | 0.9471 | 0.9629 |
+| **46** | **POOR-REG** | **0.0275** | **0.5800** |
+| 47 | OK | 0.9477 | 0.9617 |
+| 48 | OK | 0.9488 | 0.9612 |
+
+My aligner fitted a 0.58x similarity to a frame whose four nearest neighbours
+all fit 0.962. The warped window is junk; the junk is broadside coarse-scale;
+and a merge that rewards raw coarse-band energy handed it the band. The
+shipping binary aligns the frame itself and never sees my warp.
+
+**The admission rule was not the bug, and tightening it is not the fix.**
+`rule="registered"` admits every frame that got a warp, and `vn_gbundle`
+defends that correctly: on this stack `ncc_b` decays smoothly with depth --
+0.950, 0.943, 0.916, 0.865, 0.752, 0.628, 0.517, 0.386, 0.265, 0.143 -- so a
+fixed 0.75 floor cuts a defocus ramp rather than a registration cliff, and
+dropping those 118 frames would measure a subrange and call it the stack. A
+threshold on the LEVEL of `ncc_b` cannot separate the two populations because
+they overlap completely in level. They do not overlap in **shape**: defocus is
+continuous in frame index and a registration failure is not. Scoring each
+frame against the median of its neighbours instead:
+
+| quantity | value |
+|---|---:|
+| frame 46 `ncc_b` | 0.0275 |
+| median `ncc_b` of its neighbours | 0.9474 |
+| its deviation from them | **-0.9196** |
+| next worst deviation in the stack | -0.0141 |
+| frames screened / frames in stack | 287 / 299 |
+| POOR-REG frames flagged | 0 of 118 |
+| frames flagged in the whole stack | 46 |
+
+Frame 46 sits nearly a full unit of correlation below its neighbours. The next
+worst frame in the entire stack sits just -0.0141 below its own -- a 65x margin
+-- and the screen flags
+**0 of the 118 POOR-REG frames**, every one of which a level threshold would condemn. It
+was commissioned in four directions, including an **inverted plant**: a frame
+made anomalously *good* must not fire, or the screen is detecting difference
+rather than failure. All four pass.
+
+**Darkness was a correlate and I reported it as though it were the mechanism.**
+Two band-swap plants separate them. An ordinary frame wearing frame 46's
+coarse bands reproduces **4.63x of the 4.97x** of the effect; frame 46 wearing
+ordinary coarse bands reproduces only 1.04x. The coarse bands are
+necessary and sufficient and the exposure is neither. The first version of
+that control simply scaled an ordinary frame to 0.249x level -- planting the
+correlate -- and it reproduced nothing whatsoever, moving L5 by 0.9998x.
+That refusal is what forced the band-swap design.
+
+**I also had the per-frame variance backwards, in both directions.** 9.25.6's
+fidelity note reasoned that `pyramid.rs` fits `variance` per frame while my
+model shares one, and concluded the shipping concentration is "at least as
+large as I measure". Measured: the accused frame fits a variance
+**0.02x** the stack median, and switching my model to a per-frame
+fit *raises* its L5 share from 0.62336 to 0.91315. But that arm cannot be read
+either -- it moves an ordinary frame's share by **3017665x**, so it is
+not acting selectively and `vn_pfvar.py` returns UNDECIDED rather than a
+number. Two claims about per-frame variance, in opposite directions, neither
+of them supported. It is not the explanation; the failed warp is.
+
+**What is retracted.** Every attribution of the 9.25.5-9.25.10 measurements to
+a source frame or to the shipping merge. Specifically: the corpus does not
+contain a demonstrated rogue source frame; `bee-2-cpl` is not demonstrated to
+ship a coarse-band capture; the image-space difference reported in 9.25.10 is
+a difference between two of my own renders, one of which contains a broken
+warp; and the `r_max` amplification in 9.25.7 is arithmetically correct about
+that weight field but its input was an artefact, so it is not a price of the
+fix. No other lane should carry frame 46 as a common cause for the `bee`
+results, and the hypothesis offered to that effect in 9.25.8 is withdrawn.
+
+**What survives.** 9.25.4 -- a sub-gate coefficient is noise, `r` at most
+0.026 over 81,109 to 809,105 pixels -- is untouched: it is a different
+statistic on three subjects, and the two subjects without a broken warp agree
+with the one that has it. The instrument defects 25 to 29 stand. The
+`coffee-bubbles` selection cost rising monotonically with N stands, on a
+subject with no flagged frame. The bimodality of the bee ladder stands as an
+observation and now has its correct explanation.
+
+**And what replaces it, which is worth more than what it retracts.** The
+merge has no robustness term. It trusts the aligner completely, and where the
+aligner is wrong the coarse bands are not merely degraded -- they are handed
+to the wrong frame, at **0.62336** of the band against a 1/N
+entitlement of 0.00348. The shipping aligner did not fail on this stack. The
+claim that it never fails on any stack is not measured, and the merge is the
+wrong place to find out. A neighbour-relative registration screen costs one
+pass over statistics the pipeline already computes, separates the two
+populations by that margin, and is quiet on all 118 genuinely
+defocused frames. That is the acceptance check this section actually earned.
+
 ## 10. Files
 | file | what it does |
 |---|---|
@@ -3564,5 +3715,14 @@ Both are cheap and neither is done.
 | `vn_ninv.py` | N-invariance at matched focus range: the spectral statistic, the noise twin that separates sharper from noisier, the four bracketing arms and the selection premium (S9.17-S9.19) |
 | `vn_prereg.py` | writes a prediction to disk for a subject not yet measured, and refuses to write one for a subject already measured or to overwrite one already written (S9.20) |
 | `vn_seals.py` | hashes every `strehl*.exe` and every `.tiff.ok` seal; reproduces §0. Plants decoys it must find, so reach is measured rather than assumed. |
+
+| `vn_shipped.py` | asks whether the shipped master carries frame 46 by bracketing it between with- and without-rogue model arms. **Returns UNDECIDED** -- the model-to-shipping systematic is the same order as the plant. Its G4/G5 band-swap pair is what separated the cause from the correlate (S9.25.11) |
+| `vn_shipfr.py` | the decisive test: the pinned binary at `--limit 44/45/46/47`, so two renders differ by exactly one frame, with two nulls (S9.25.11) |
+| `vn_pfvar.py` | the per-frame-variance arm. **Returns UNDECIDED** -- it moves an ordinary frame's share too, so it cannot be read as a defence (S9.25.11) |
+| `vn_regout.py` | the neighbour-relative registration screen, commissioned in four directions including an inverted plant (S9.25.11) |
+| `vn_rep2511.py` | generates every table and value of S9.25.11 from the records |
+| `vn_place2511.py` | substitutes them; refuses on an unresolved marker or an unplaced key |
+| `vn_verify2511.py` | re-derives every number quoted in S9.25.11: 22 checks, 22/22 |
+| `vn_negctl2511.py` | negative control for that checker: 14 document plants + 18 **record** plants + placebo + refusal arm, 34/34. It caught a hand-typed number no check covered, which is now generated |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
