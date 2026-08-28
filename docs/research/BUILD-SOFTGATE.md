@@ -234,10 +234,38 @@ hash, it is also a second independent inertness proof for F8 — on the **estima
 backend, on a **different subject** (coffee-bean, 20 frames, sidecar alignment)
 than the pyramid test used.
 
-**O1 — OPEN, for the owner.** The row's `why` records a re-baselining at
-`4c99cc40` for the full-resolution gather flip. Something has moved those bytes
-again since, and it is not this lane. It needs an attribution lane; I did not
-open one, because the commission says not to open new research directions.
+**O1 — RESOLVED BY CROSS-CONFIRMATION, not open.** Lane BUILD-CROP reports this
+row as a *known, deliberate* red landmine, independently and before seeing this
+file. The two lanes agree **bit-for-bit** on all three hashes:
+
+| | BUILD-CROP | this lane |
+|---|---|---|
+| sidecar expects | `52517FF8…` | `52517FF8AE245F238C29F64A29E601C2D5C064CB4D86E93006512993837EC206` |
+| sidecar produces | `E600A506F6D05A84A21C9DF93E4EB82AED98C8098EAF956BCF0E25985F3D4CB2` | `E600A506F6D05A84A21C9DF93E4EB82AED98C8098EAF956BCF0E25985F3D4CB2` |
+| unaligned HOLDS | `88712017…` | `88712017FE31362F35FF2FF5D4B98727CDEFCBAC489D9A7827F21EE0154A8620` |
+
+Two lanes, sharing no code, reached the same three hashes by different routes.
+**The row's `why` still describes the `4c99cc40` gather flip, so the registry
+text is stale with respect to whatever moved it since** — that remains for the
+owner, but it is one open question, not two.
+
+**F11b — MEASURED. The specificity control is GREEN under this lane's change.**
+`coffee-bean-20-gate2-unaligned` holds at `88712017…` in **both** the pristine
+tree and the tree carrying this lane's full change — including the unlanded
+`pyramid.rs` hunk, which is strictly more than what was committed. That is the
+row that would be this lane's fault if it moved, and it did not.
+
+**D1 — DISCIPLINE. Every arm of a comparison must come from one build, and this
+lane hit that independently before it was told.** Binary `A`, built from the
+shared working tree, renders `742A6331…` where pristine `ec96973d` renders
+`C9A93201…` on an identical command line. It was discarded and every number in
+this file is against `git archive HEAD` (§6). BUILD-CROP proved the general form
+on a stronger case: a **coefficient-independent** CA-OFF arm, which must
+reproduce bit-exactly, differed on 33 003 417 px at max 23 210 DN when
+re-rendered across the night's churn. Ordering and ratios survive a shared tree;
+**absolutes do not.** A pinned pre-change binary is not bookkeeping, it is the
+only thing that makes "byte-identical to today" a measurement rather than a
+guess.
 
 ### The collision — the operationally important part
 
@@ -345,3 +373,38 @@ summary is: the mechanism argued in F4 survives contact with measurement in
   working tree**, only in the private `git archive` tree. It will need a
   hand-merge against the other lane's work and must be re-measured after it.
 - I did not audit any other `STREHL_*` variable; that is V-ENVSURF's lane.
+
+---
+
+## 10. Landing checklist for the unlanded `pyramid.rs` hunk
+
+**D2 — DISCIPLINE. Treat doc comments in this crate as unverified claims, and
+grep the call sites before believing one.** `optics.rs:317` read "Nothing in this
+crate calls `compose` yet" while two live call sites existed, and cost BUILD-CROP
+an entire investigation into a wiring bug that did not exist (fixed at
+`910e6bc0`). This lane's entire brief rested on a reachability claim, so it was
+checked rather than trusted: `active_kernel` has exactly two occurrences
+crate-wide — the definition at `merge.rs:681` and its sole call at `merge.rs:1455`
+— which the owner independently confirmed by the same grep.
+
+**The corollary is that this lane's own change creates two future instances, and
+they must be fixed IN THE COMMIT THAT LANDS THE PATCH, not after:**
+
+1. `crates/strehl-core/src/softgate.rs`, module header: *"Opt-in and not
+   wired."* **True today, FALSE the moment the patch lands.**
+2. `crates/strehl-core/src/merge.rs` ~1435, on `Estimator::new`: *"it is the
+   only reason the soft kernel is reachable from `strehl stack` at all."*
+   **True today, FALSE the moment the patch lands** — `run_pyramid` becomes the
+   second route.
+
+Neither was corrected in this milestone, deliberately: with the hunk unlanded,
+editing them to say "wired" would have manufactured exactly the defect D2
+describes. They are correct as they stand and become wrong on landing.
+
+3. `merge_cmd::preflight_soft_kernel`'s doc carries an explicit SCOPE paragraph
+   stating that the pyramid backend *validates* the kernel but does not *apply*
+   it, with the grep that falsifies it (`enable_soft` having a call site in
+   `merge_cmd.rs`). Delete that paragraph when the patch lands.
+4. Re-measure everything in §5 after the hand-merge against the other lane's
+   work. The patch was built and measured against `ec96973d` only, and that lane
+   is changing a default in the same weight loop.

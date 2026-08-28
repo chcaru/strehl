@@ -2859,17 +2859,32 @@ fn write_n_eff_map(path: &Path, n_eff: &[u16], frames: u32, geom: PlaneGeometry)
 /// Resolve [`strehl_core::merge::SOFT_GATE_ENV`] once, **before any frame is
 /// decoded**, on whichever backend is about to run.
 ///
+/// **SCOPE, because this is a reachability claim and those have cost this
+/// project whole investigations** (`optics.rs:317` documented `compose` as
+/// uncalled while two live call sites existed). This function makes the pyramid
+/// backend **validate** the kernel name. It does **not** make the pyramid
+/// backend *apply* the kernel: that is `BandMerge::enable_soft`, which is not
+/// landed at the time of writing. So on the pyramid backend a correctly-spelled
+/// `gaussian` currently exits 0 and renders the shipped selection, unchanged.
+/// Grep `enable_soft` before believing otherwise -- if it has no call site in
+/// `merge_cmd.rs`, this paragraph is still current.
+///
 /// This closes an asymmetry, not a parse bug. The kernel name was validated on
 /// exactly one path -- `Estimator::new`, which `panic!`s -- and the pyramid
 /// backend, which is the shipped default, never read the variable at all.
-/// MEASURED on `coffee-bubbles -l 3 --srgb` against the pre-change binary:
+/// MEASURED on `coffee-bubbles -l 3 --srgb` against a binary built and pinned
+/// from a `git archive` of pristine `ec96973d`. It must be a private pristine
+/// build: this tree is shared by roughly a dozen lanes, and the same table run
+/// against a binary built from the *working* tree reads `742A6331..` where
+/// pristine `ec96973d` reads `C9A93201..`, so an arm compared against anything
+/// but its own matched build measures other lanes' drift.
 ///
 /// ```text
 /// STREHL_SOFT_GATE   pyramid (SHIPS)            estimator --photometric off
-/// unset              rc=0  742A6331..           rc=0  BBF38DD4..
-/// gaussian           rc=0  742A6331..  SAME     rc=0  00D8BFE3..  differs
-/// exponential        rc=0  742A6331..  SAME     rc=0  F496B5A7..  differs
-/// zzznope            rc=0  742A6331..  SAME     rc=101 panic in 3.4 s
+/// unset              rc=0  C9A93201..           rc=0  BBF38DD4..
+/// gaussian           rc=0  C9A93201..  SAME     rc=0  00D8BFE3..  differs
+/// exponential        rc=0  C9A93201..  SAME     rc=0  F496B5A7..  differs
+/// zzznope            rc=0  C9A93201..  SAME     rc=101 panic in 3.4 s
 /// ```
 ///
 /// The estimator column is the control: it moves, so the harness could see a
