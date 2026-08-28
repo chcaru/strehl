@@ -1,0 +1,61 @@
+# BUILD-SOFTGATE measured arms, transcribed from docs/research/BUILD-SOFTGATE.md.
+# No new measurement: every value here was measured before scratch deletion and
+# already existed in the committed report. This file exists so the numbers sit
+# next to the harness that produced them rather than only inside prose.
+#
+# Scratch under C:\dev\strehl-out\BUILD-SOFTGATE and D:\strehl-out\BUILD-SOFTGATE
+# is DELETED and fully regenerable: render.ps1 + the read-only originals under
+# D:\personal\macro, against a binary built from the stated commit.
+#
+# binary H = pristine HEAD ec96973d, no change.
+# binary S = ec96973d + pyramid-softgate.patch (that patch is NOT landed in the tree).
+# subject  = D:\personal\macro\coffee-bubbles, 19 frames, -l 3 --srgb, pyramid backend.
+#
+# kind	arm	binary	env STREHL_SOFT_GATE	rc	sha256_or_metric	note
+
+validation	unset	S	(unset)	0	C9A93201	shipping default
+validation	off	S	off	0	C9A93201	byte-identical to unset
+validation	exponential	S	exponential	0	D8376E35	placebo, see F4
+validation	gaussian	S	gaussian	0	4EC3FB2B	treatment
+validation	typo	S	zzznope	1	(no output)	refused in 0.0 s, deliverable 2
+validation	on	S	on	1	(no output)	not a kernel name on this backend
+
+inertness	H-unset_vs_S-unset	H,S	(unset)	0	0 px of 98898048	THE constraint: default unmoved
+inertness	S-unset_vs_S-off	S	unset,off	0	0 px of 98898048	off == unset
+
+potency	placebo_exponential	S	exponential	0	28754 px = 0.029 pct	mean 0.001 DN, max 1091
+potency	treatment_gaussian	S	gaussian	0	95224579 px = 96.286 pct	mean 10.874 DN, max 3956
+
+comparator	self_vs_self	H	(unset)	0	IDENTICAL	commissioning, must be identical
+comparator	known_different	H,S	unset,gaussian	0	DIFFERENT 96.286 pct	commissioning, must differ
+
+depthmetric	planted_blur	n/a	n/a	n/a	x0.0009	commissioning of soften.py
+depthmetric	planted_sharpen	n/a	n/a	n/a	x2.41	commissioning of soften.py
+
+depthscore	shipping	S	(unset)	0	-0.000264	112MSDCF N=39->79, n_0.30-0.35
+depthscore	placebo	S	exponential	0	-0.000264	flat to six decimals
+depthscore	gaussian	S	gaussian	0	-0.000256	3.0 pct removed -- WITHDRAWN, see below
+
+freeze	coffee-bean-20-gate2-sidecar	H	(unset)	n/a	E600A506	RED, expects 52517FF8, cause eps_r 393d7ca3
+freeze	coffee-bean-20-gate2-unaligned	H	(unset)	n/a	88712017	GREEN, specificity control, held under S too
+
+timing	gaussian_second_pass	S	gaussian	0	56.3 s -> 124.7 s	N=79, Gaussian is not one-pass streamable
+
+census	active_kernel	n/a	n/a	n/a	3	def merge.rs:681, merge.rs:1455, merge_cmd.rs:2905
+census	preflight_soft_kernel	n/a	n/a	n/a	2	def merge_cmd.rs:2904, call merge_cmd.rs:2917
+census	enable_soft	n/a	n/a	n/a	0	load-bearing: validates but does not apply
+census	SOFT_GATE_ENV	n/a	n/a	n/a	2	def merge.rs:530, use merge.rs:682
+
+# WITHDRAWN: the depthscore rows above are measured but NOT a controlled
+# comparison. Per fact 1918 the arms differ in effective width as well as kernel
+# shape, and no arm here has an n_eff measurement. Do not quote 3.0 pct as a
+# score. To score properly, calibrate the Gaussian temperature until mean n_eff
+# matches the shipped kernel on the same subject, then re-run depthscore.
+#
+# NOT MEASURED, deliberately, because the session wound down before it:
+#   - n_eff for any arm in this file.
+#   - any n_eff-matched depth-softening comparison.
+#   - the patch built against any tree other than ec96973d.
+#   - a second subject or depth pair for depthscore (all rows are n=1).
+#   - the rule 9 flat-region control: it FAILED to find a flat tile
+#     (auto-selected tile variance 9.5e6) and is absent, not passing.
