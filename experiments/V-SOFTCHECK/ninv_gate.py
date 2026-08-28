@@ -34,8 +34,14 @@ TWO WAYS A FIX COULD PASS THIS GATE WITHOUT IMPROVING THE IMAGE, both blocked he
 
 USAGE
     import ninv_gate
-    r = ninv_gate.evaluate(fewer_tiff, more_tiff, n_fewer, n_more, subject="bee-1-cpl")
+    r = ninv_gate.evaluate(fewer_tiff, more_tiff, n_fewer, n_more, subject="bee-1-cpl",
+                           binary_sha=sha256_of_the_binary_that_rendered_both_arms)
     assert r["verdict"] == "PASS", r["why"]
+
+INSTRUMENT IDENTITY.  This is not a print gate.  Three instruments in this project now emit
+PASS/FAIL: `orch_printready.py` (PASS/FAIL/ACQUITTED), `printcert4.py` (blotch/rim/sharp/dust)
+and this one (N-invariance only).  They are not comparable and must not be reconciled.
+Every result carries `instrument` so a verdict cannot be quoted without its source.
 """
 import os, sys, json, numpy as np, softcheck as S, hsel as HS
 import dmeasure as DM
@@ -47,7 +53,15 @@ TOP_FRAC = 0.20             # top two contrast deciles
 FLAT_FRAC = 0.20
 THRESHOLD = 0.0200          # dex per doubling of N, pre-registered above
 MIN_TILES = 60
+# The baselines were measured at the SHIP-V4 pin and belong to THAT binary.  Dividing a
+# HEAD measurement by them is a cross-binary comparison and will manufacture a win out of
+# nothing -- the same error class as the withdrawn 17 PASS / 5 FAIL print-gate diff.  The
+# PASS/FAIL verdict itself is binary-independent, because depth_cost compares two arms
+# rendered by the SAME binary; only fraction_of_baseline_removed is unsafe, and it is now
+# withheld unless the caller states a binary that matches.
+BASELINE_BINARY = "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490"
 BASELINE = {"113MSDCF": 0.0712, "bee-1-cpl": 0.0748}
+INSTRUMENT = "ninv_gate.py (V-SOFTCHECK N-invariance)"
 
 def _audit(paths):
     """Trap 1: both sides of every ratio must be developed identically."""
@@ -74,7 +88,8 @@ def _bands(path_fewer, path_more):
     del im, ref
     return p_few, p_more, d_lo, (sy, sx)
 
-def evaluate(path_fewer, path_more, n_fewer, n_more, subject=None, band=BAND):
+def evaluate(path_fewer, path_more, n_fewer, n_more, subject=None, band=BAND,
+             binary_sha=None):
     if n_more <= n_fewer: raise ValueError("n_more must exceed n_fewer")
     gauge = _audit([path_fewer, path_more])
     p_few, p_more, d_lo, shift = _bands(path_fewer, path_more)
@@ -100,8 +115,21 @@ def evaluate(path_fewer, path_more, n_fewer, n_more, subject=None, band=BAND):
                flat_excess=float(np.median(np.log10(x[flat] / y[flat]))),
                absolute_more=float(np.median(y[top])),
                threshold=THRESHOLD)
+    res["instrument"] = INSTRUMENT
+    res["binary_sha"] = binary_sha
+    same_binary = (binary_sha is not None
+                   and binary_sha.upper() == BASELINE_BINARY.upper())
+    res["baseline_comparable"] = bool(same_binary)
     if subject in BASELINE and BASELINE[subject] > 0:
-        res["fraction_of_baseline_removed"] = float(1.0 - per / BASELINE[subject])
+        if same_binary:
+            res["fraction_of_baseline_removed"] = float(1.0 - per / BASELINE[subject])
+        else:
+            res["fraction_of_baseline_removed"] = None
+            res["baseline_withheld"] = (
+                "baseline %+.4f dex was measured at binary %s; caller stated %s. A ratio "
+                "across binaries measures the two builds, not the fix." %
+                (BASELINE[subject], BASELINE_BINARY[:16],
+                 (binary_sha or "NO BINARY STATED")[:16]))
     res["verdict"] = "PASS" if per <= THRESHOLD else "FAIL"
     res["why"] = ("%+.4f dex per doubling of N at matched range, %s threshold %+.4f"
                   % (per, "within" if per <= THRESHOLD else "OVER", THRESHOLD))

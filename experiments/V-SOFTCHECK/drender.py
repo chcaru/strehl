@@ -19,9 +19,13 @@ import os, sys, shutil, subprocess, time, hashlib
 BIN=r"C:\dev\strehl-out\V-SOFTCHECK\bin\strehl.exe"
 PIN_SHA="44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490"
 OUTROOT=r"C:\dev\strehl-out\V-SOFTCHECK\dilut"
-CLEAR=["STREHL_FIX_CA","STREHL_EDGE_AWARE","STREHL_EDGE_TAU","STREHL_EDGE_CONF","STREHL_ACUITY",
-       "STREHL_MERGE","STREHL_WARPMAP","STREHL_ALIGN","STREHL_SOFT_GATE","STREHL_PHOTOMETRIC",
-       "STREHL_FIX_HALO","STREHL_VEIL","STREHL_COVER","STREHL_FULLRES_GATHER","STREHL_ONLY_FRAME"]
+# WHITELIST, NOT BLACKLIST.  This was a named list of 15 variables, which was safe at the
+# pin and is not safe now: HEAD reads 48 STREHL_* variables, including STREHL_GATE_FLOOR_SCALE,
+# STREHL_HULL, STREHL_ROBUST_ELECTION, STREHL_RESTORE and STREHL_PYRAMID_MEAN_COARSE, none of
+# which existed when the list was written.  A blacklist silently stops covering the switch
+# surface every time the build lane adds a knob, and lanes share this machine.  Everything
+# STREHL_* is now removed unless it is explicitly kept.
+KEEP_ENV={"STREHL_CACHE_DIR"}
 
 def pin():
     h=hashlib.sha256(open(BIN,"rb").read()).hexdigest().upper()
@@ -30,8 +34,16 @@ def pin():
 
 def base_env():
     env=dict(os.environ)
-    for v in CLEAR: env.pop(v,None)
+    dropped=[k for k in list(env) if k.startswith("STREHL_") and k not in KEEP_ENV]
+    for v in dropped: env.pop(v,None)
+    if dropped: print("  cleared ambient switches: %s"%",".join(sorted(dropped)))
     return env
+
+def record_binary(dst,sha):
+    """The render log says `build : strehl 0.0.0 (unknown)` -- the binary does not
+    self-identify, so no output in this project can be attributed to a build from its log
+    alone.  Attribution has to be written down at render time or it does not exist."""
+    open(dst+".binary.sha256","w",encoding="utf-8").write(sha+"\n")
 
 def frames(subject):
     src=rf"D:\personal\macro\{subject}"
