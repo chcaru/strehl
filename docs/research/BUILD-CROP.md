@@ -48,6 +48,28 @@ This is a correctness and honesty change, not a quality change.
 
 ---
 
+## 0b. The two open defects are now diagnosed
+
+Both items left open at the end of the first pass have mechanisms. One of them
+**reverses a claim made earlier in this document**, and one of them **dissolves
+the lane's own headline negative result**. Both are written up in full at §10
+(the border overshoot) and §11 (the R/B null).
+
+| | finding | status |
+| --- | --- | --- |
+| **A** | The near-border level difference is **not** in `scale`. It is a **bright ringing overshoot in the `crop`/no-fit render**, caused by the black-filled uncovered region forming a hard step that the pyramid's per-band election spreads inward by **~2^bands px**. | **DIAGNOSED** §10 |
+| **B** | The R/B null failure is **not a defect**. It is the gear-gated **lateral chromatic aberration correction**, which by design holds green fixed and moves R and B. With `STREHL_FIX_CA=off` the null passes **100.0000% on all three channels at 0 DN**. | **DIAGNOSED, not a bug** §11 |
+
+**Correction to §6c.** That section speculated "on this evidence it is the
+*scale* render's outer ring that is depressed". **That was wrong, and §10
+measures it wrong.** `scale` is the clean one; `crop` carries the artifact.
+
+**Correction to §0 claim 4 and §3.1.** The null does not fail. It passes
+completely once the CA correction — an unrelated, intended transform that
+`STREHL_ALIGN=0` silently disables — is held constant. §11 replaces §3.1.
+
+---
+
 ## 1. What the mode is, and how you ask for it
 
 | | |
@@ -785,3 +807,290 @@ python experiments\BUILD-CROP\bleedband.py      "$o\scale.tiff" "$o\crop.tiff" 0
 python experiments\BUILD-CROP\borderprofile.py  "$o\crop.tiff"
 python experiments\ORCH-drift-check\clipcheck.py $o
 ```
+
+---
+
+## 10. DEFECT A -- the near-border level difference, diagnosed
+
+**Verdict: the artifact is in the `crop` / no-fit render, NOT in `scale`. It is
+ringing from the black-filled uncovered region, spread inward by the pyramid.**
+
+This reverses the guess in §6c. It was wrong; here is the measurement.
+
+### 10.1 First: the detector was commissioned before it was believed
+
+Required by ORCH, and it changes what the 14% is allowed to mean.
+`plantcheck.py` runs the band-ratio detector in a NULL arm (crop against itself
+through the same mapping, so every step is shared except the effect) and a
+PLANT arm (a known multiplicative error inside a known border width):
+
+```
+== NULL (crop vs itself through the same mapping; must read 1.000000)
+null k=1            0-2:1.000000  4-8:1.000000  16-32:1.000000  64-128:1.000000  128-:1.000000
+
+== PLANT (known error in the outer 8 px of crop; detector must recover it)
+plant x1.100 -> 1.100000 PASS   0-2:1.100000  4-8:1.100000  16-32:1.000000
+plant x1.020 -> 1.020000 PASS   0-2:1.020000  4-8:1.020000  16-32:1.000000
+plant x1.005 -> 1.005000 PASS   0-2:1.005000  4-8:1.005000  16-32:1.000000
+plant x1.001 -> 1.001000 PASS   0-2:1.001000  4-8:1.001000  16-32:1.000000
+```
+
+**Detection floor: 0.001 (0.1%), recovered exactly**, and correctly localised to
+the planted 8 px width -- the 16-32 band stays at unity, so the detector does
+not smear an edge error inward. The null reads **exactly** 1.000000, bounding
+the tool's own mapping and band-bookkeeping error below 1e-6.
+
+The one thing the null does not exercise is the bilinear resample at
+`k = 0.9236`. That is bounded separately by the **interior** band of the real
+measurement, which runs through the identical resampling and reads
+**1.000982** -- so resampling bias is at most ~0.1%, two orders below the
+effect.
+
+### 10.2 The effect is entirely in the crop render, because crop is verbatim
+
+On the deep stack, `crop` is a bit-exact window of the no-fit render:
+
+```
+=== bee: is crop a verbatim window of the no-fit render? origin (135,90)
+  exact-equal samples : 21073032 / 21073032  (100.0000 %)
+  max |diff|          : 0 DN          VERDICT : BIT-IDENTICAL
+```
+
+So `crop` invents nothing, and whatever the 14% is, it is already present in a
+plain unity-scale render. The question is which of the two is *wrong*.
+
+### 10.3 The lever: the ring width is the pyramid support
+
+`reduce` in `pyramid.rs` replicates borders and `DEFAULT_BANDS = 7`. If the
+merge is transporting a boundary effect inward, the reach must scale as
+`2^bands`. `--pyramid-bands` tests that directly. 109MSDCF, crop vs scale:
+
+```
+bands=7   0-2:1.027974  16-32:1.025726  64-128:1.019232  128+:1.001462
+bands=4   0-2:1.028133  16-32:1.010154  32-64:1.000048  64-128:0.999956
+bands=2   0-2:1.024745  4-8:1.001024   8-16:0.999997   16-32:0.999980
+```
+
+| bands | support `2^b` | ratio returns to 1.000 at |
+| ---: | ---: | --- |
+| 2 | 4 px | **8 px** |
+| 4 | 16 px | **32 px** |
+| 7 | 128 px | **128+ px** |
+
+**The reach is the pyramid support, to within a factor of one band.** The peak
+amplitude at the very edge barely moves (1.0280 / 1.0281 / 1.0247); what the
+depth controls is how far inward it reaches. That is transport, not source.
+
+### 10.4 Which render is wrong: absolute levels, same rings
+
+`edgeprofile.py` walks in from the plane edge in absolute DN. 109MSDCF:
+
+```
+ring px      no-fit b7    no-fit b2    b7 excess    scale b7
+  24-32        6792.58      6631.14      +2.43%      6604.56
+  48-64        6780.15      6619.64      +2.42%      6622.53
+  96-128       6731.97      6605.50      +1.91%      6595.29
+ 160-192       6668.87      6595.84      +1.11%      6583.40
+ 256-384       6545.21      6543.27      +0.03%      6527.95
+    512+       5595.04      5595.62      -0.01%      5573.95
+```
+
+**Two independent boundary-free references agree and the 7-band no-fit render
+is the outlier.** `scale` (no uncovered region at all, so no step) and the
+2-band no-fit render (step present but support only 4 px) agree to within 0.4%
+at every ring; the 7-band no-fit render sits up to **+2.4%** above both. The
+deep interior of all three agrees to 0.01-0.03%, so band count is not shifting
+levels globally -- the excess is boundary-localised.
+
+The same on the deep stack, where it is five times larger:
+
+```
+ring px    bee no-fit b7   bee no-fit b2   b7 excess
+  64-96        13079.73        12455.98      +5.01%
+  96-128       14768.92        13514.46      +9.28%
+ 128-160       15082.71        13846.57      +8.93%
+ 192-256       14160.00        13597.12      +4.14%
+ 256-384       12902.04        12762.58      +1.09%
+    512+        7519.68         7516.14      +0.05%
+```
+
+**The crop rectangle on bee starts at 135 px, so the overshoot peaks INSIDE the
+delivered image.**
+
+### 10.5 The mechanism
+
+`warp_frame_in_place` documents that **uncovered destination pixels are set to
+the black level**. In `crop` / no-fit mode the plane therefore carries a hard
+step from image down to black all the way round, at the coverage boundary. The
+pyramid merge **elects per band coefficient**, so analysis-synthesis is not the
+identity, and a step passed through a non-invertible multi-scale reconstruction
+rings -- overshooting **bright on the bright side**. The overshoot reaches
+inward by the coarsest band's support, `~2^bands` px.
+
+`scale` mode composes `S_k` precisely so that every frame covers the whole
+plane. There is no uncovered region, no black fill, no step, and therefore no
+ringing. Measured: `scale` shows `black% = 0.00%` in every ring and a flat
+profile from ring 0 (6611.55) through ring 96 (6614.72).
+
+Every observation follows:
+
+| observation | explained by |
+| --- | --- |
+| reach scales as `2^bands` (4/16/128 px measured) | pyramid transport |
+| `scale` unaffected, stable across band counts | no step to ring |
+| single frame flat to **1.00003** (§6c) | N=1 election is invertible, so no ringing |
+| sign is *bright*, not dark | overshoot on the bright side of a step, not black bleeding in |
+| bigger on bee (9.3%) than 109 (2.4%) | on 109 the rect sits only 23 px in, so crop keeps most of the ringing too and the two renders differ less |
+
+The last row is why §6c's ratio looked like "scale is depressed": on 109 both
+renders carry some of the artifact. The band-depth lever separates them.
+
+**ORCH's candidate list, resolved:**
+
+- *coverage count falling off near the boundary* -- **it is the source of the
+  step**, but not the transport: the excess persists at rings where `black%` is
+  0.00% and, decisively, it changes with pyramid depth while the coverage
+  geometry does not.
+- *gather edge-clamp/padding differing between paths* -- **ruled out**.
+  `gather_checked` writes NaN and never clamps, and it is the same code on both
+  paths; the effect vanishes at `bands=2` with a byte-identical gather.
+- *normalisation over a region including/excluding the border* -- **ruled out**
+  by the same lever: a normalisation difference would not scale with `2^bands`.
+- *placement rectangle partly outside some frames' valid area* -- **ruled out**
+  by §10.2: crop is a bit-exact window, so its content is not placement-dependent.
+
+### 10.6 What follows, and why I did not "fix" it
+
+**No code change this turn, deliberately.** The mechanism admits two remedies
+and both are product decisions with costs I can price but should not pick:
+
+1. **Inset the crop rectangle past the ringing.** Principled -- it is what the
+   rectangle already does for the black -- but the measurements say it needs
+   ~256 px on 109 and ~384-512 px on bee to get under 0.1%. bee would go
+   `3246 x 2164` to about `2478 x 1396`: **3.46 MP from an 8.24 MP sensor, -58%
+   of pixels.** That is not a trade worth making silently.
+2. **Remove the step** by filling uncovered pixels continuously instead of with
+   the black level. This is the correct fix, but the black fill is a
+   *deliberate, documented* decision in `warp_frame_in_place` ("clamping is not
+   an option", with `align.rs` cited), and changing it would also move the
+   `STREHL_COVER=0` measurement control other lanes may be using. Not mine to
+   take unilaterally.
+
+**It is byte-safe to fix.** `scale` renders contain **zero** uncovered pixels
+(`black% = 0.00%` in every ring, measured), so any change to the uncovered-fill
+policy cannot touch the shipping default or the byte-freezes.
+
+**The finding that matters for the product:** `crop` mode delivers a border ring
+contaminated by up to **+9%** on a 299-frame stack, and `scale` mode does not.
+The upsample `scale` pays for is also, incidentally, what protects it from this
+ringing. That is a second, independent reason -- unrelated to print size -- for
+`--cover crop` to remain opt-in.
+
+---
+
+## 11. DEFECT B -- the R/B null failure was the CA correction
+
+**Verdict: not a defect. The null passes completely. §3.1 is superseded.**
+
+### 11.1 The chroma-phase hypothesis, tested and refuted
+
+ORCH's structural hint was a chroma phase error: in a Bayer quad the two greens
+are diagonal so their mean is co-sited with the quad centre, while R and B sit
+at opposite corners, so code that treats all three as co-sited would be right
+for G and wrong by a quarter pixel for R and B in opposite directions. That is
+a sharp prediction, and `subshift.py` solves for translation directly rather
+than on an integer grid:
+
+```
+window 3506x2337 at (5,4)
+ ch      dx px      dy px   rms before   rms after   explained
+  R    -0.0109    -0.0046      184.246     184.239       0.00%
+  G    -0.0000     0.0000        0.000       0.000         n/a
+  B     0.0093     0.0005       43.532      43.522       0.02%
+```
+
+The signs **are** opposite as predicted, but the magnitudes are ~0.01 px rather
+than 0.25, and the translation model explains **0.00%** of the residual.
+**REFUTED**: the R/B difference is not a displacement of the sampling grid.
+
+### 11.2 What it actually is
+
+`warp_frame_in_place_plane` composes a **lateral chromatic aberration profile**
+per CFA phase, resolved through a gear guard on body and lens id, and its own
+comment records that it recently became default-on. `STREHL_ALIGN=0` never
+calls the warp, so **the align-off baseline silently has no CA correction**.
+I was comparing a CA-corrected render against an uncorrected one.
+
+Holding it constant:
+
+```
+$ STREHL_FIX_CA=off strehl stack one --cover crop
+lateral CA      : off (operator asked for "off")
+
+=== CA-OFF  (3506x2337 vs base window at (5,4))
+ ch   bit-exact    max|d|    mean|d|     lap base   lap render     ratio
+  R   100.0000%         0     0.0000     548661.1     548661.1   1.00000
+  G   100.0000%         0     0.0000     101490.8     101490.8   1.00000
+  B   100.0000%         0     0.0000     240923.5     240923.5   1.00000
+```
+
+**All three channels bit-exact, 0 DN, laplacian ratio exactly 1.00000.** An
+exactly-identity placement at unity scale IS a bit-perfect pass-through. The
+pixel-exactness null passes without qualification.
+
+### 11.3 Colour, measured -- not only bits
+
+Required by ORCH, because a chroma error would also be a colour defect.
+`cafit.py` fits the displacement between the CA-off and CA-on renders (same
+scene content, so a gradient estimate measures the applied transform itself):
+
+```
+3506x2337, centre (1753.0,1168.5), 128px blocks
+ ch   alpha (px/px)   corner px   blocks   r (radial fit)
+  R       3.796e-04      0.7998      486          -0.2894
+  G       0.000e+00      0.0000      486              nan
+  B      -1.638e-04     -0.3451      486           0.9769
+```
+
+**Green is held exactly fixed (alpha = 0.000e+00), and R and B move in OPPOSITE
+radial directions** -- +0.80 px outward and -0.35 px inward at the corner. That
+is the definitive signature of a lateral CA correction and rules out a general
+resampling error, which would move all three channels the same way.
+
+**Caveat, stated rather than buried:** the linear-radial model fits blue well
+(r^2 = 0.977) but red badly (r^2 = -0.29). Red is the noisiest plane -- its base
+laplacian energy is 5.4x green's -- and the estimator is also being asked to fit
+a pure translation to a pair that differs by a resample, which violates its
+model. The **sign and magnitude** for red are trustworthy; the **radial form**
+for red is **NOT VERIFIED** by this measurement.
+
+### 11.4 What §3.3's noise finding now means
+
+§3.3 measured that the energy removed from R and B is flat-field dominated
+(R: 0.440 flat against 0.534 textured) and concluded it was noise suppression
+rather than detail loss. That conclusion **stands and is now explained**: the
+CA correction resamples R and B at a sub-pixel offset, which attenuates the
+noise and aliasing carried on the critically-sampled chroma subgrids. It is the
+ordinary cost of a geometric correction, paid on the two channels being
+corrected, and it buys colour registration.
+
+### 11.5 The instrument defect worth propagating
+
+**`STREHL_ALIGN=0` is not a clean control.** It disables the warp, and the warp
+is the only site that applies lateral CA -- so an A/B that uses `STREHL_ALIGN=0`
+as its baseline is silently toggling a colour correction as well as alignment.
+This lane published `R 4.8% / B 12.5% bit-exact` as a null failure on exactly
+that confound. Any lane using an align-off baseline for a chroma or colour claim
+should pin `STREHL_FIX_CA` explicitly in both arms.
+
+---
+
+## 12. Exposure guard on the diagnostic renders
+
+```
+$ python experiments\ORCH-drift-check\clipcheck.py D:\strehl-out\BUILD-CROP
+0/17 BLOWN (>25% clipped), 0 high, 17 ok
+```
+
+All 17 renders cited in §10 and §11 pass, including every `--pyramid-bands` arm
+and both CA arms.
