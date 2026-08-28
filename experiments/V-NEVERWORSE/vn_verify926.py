@@ -102,6 +102,32 @@ def main():
           "'not applied'" % (n_norej, n_logs),
           n_logs == 26 and n_norej == 26)
 
+    # --- the clipping audit ORCH's exposure regression demanded ---
+    ca = R.rec("clipaudit.json")
+    s = ca["summary"]
+    claim("clip audit: nothing in this lane's evidence base is blown",
+          s["blown"] == 0)
+    claim("clip audit: nothing was unreadable (a zero produced by not "
+          "looking is not a zero)", s["unreadable"] == 0)
+    claim("clip audit: outcomes partition to the files examined",
+          s["blown"] + s["clean"] + s["unreadable"]
+          == sum(len(ca[k]["rows"]) + len(ca[k]["unreadable"])
+                 for k in ("masters", "head_renders", "old_renders",
+                           "bundles")))
+    claim("clip audit: all 26 linear masters accounted for",
+          len(ca["masters"]["rows"]) == 26)
+    claim("clip audit: every master is under ORCH's 25% blown threshold",
+          all(r["clip_pct"] < 25.0 for r in ca["masters"]["rows"]))
+    claim("clip audit: the four HEAD renders are the only HEAD images, and "
+          "are unclipped",
+          len(ca["head_renders"]["rows"]) == 4
+          and all(r["clip_pct"] == 0.0 for r in ca["head_renders"]["rows"]))
+    claim("clip audit: HEAD and old-pin medians agree to better than 0.5%",
+          all(abs(a - b) / b < 0.005
+              for a, b in zip(s["head_median"], s["old_median"])))
+    claim("clip audit: no bundle array is near the ceiling",
+          all(r["worst_clip_pct"] == 0.0 for r in ca["bundles"]["rows"]))
+
     # --- the document-wide claims section 9.26.4 makes about itself ---
     claim("9.26.4 is honest: '5 FAIL' really is absent from the document",
           "5 FAIL" not in whole.replace(sec, ""))

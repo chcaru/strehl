@@ -38,7 +38,8 @@ import vn_rep926 as R  # noqa: E402
 DOC = os.path.join(HERE, "RESULT.md")
 OUT = R.OUT
 VERIFY = os.path.join(HERE, "vn_verify926.py")
-RECORDS = ["shipfr.json", "shipfr-pin-9b05d0b7.json", "shipalign.json"]
+RECORDS = ["shipfr.json", "shipfr-pin-9b05d0b7.json", "shipalign.json",
+           "clipaudit.json"]
 
 
 def run():
@@ -195,6 +196,38 @@ def main():
         edit("shipfr.json", lambda d: d["steps"][0].__setitem__("kind",
                                                                 "ROGUE"))
         expect("record plant: two accused steps, no nulls left", "nonzero")
+
+        # --- clip-audit oracle plants ------------------------------------
+        edit("clipaudit.json",
+             lambda d: d["summary"].__setitem__("blown", 4))
+        expect("record plant: 4 blown files (the lane put in ORCH's case 2)",
+               "nonzero")
+
+        edit("clipaudit.json",
+             lambda d: d["summary"].__setitem__("unreadable", 2))
+        expect("record plant: 2 unreadable files (a zero produced by not "
+               "looking)", "nonzero")
+
+        def blow_master(d):
+            d["masters"]["rows"][0]["clip_pct"] = 92.03
+            d["masters"]["rows"][0]["blown"] = True
+        edit("clipaudit.json", blow_master)
+        expect("record plant: a linear master blown at ORCH's 92.03%",
+               "nonzero")
+
+        def blow_head(d):
+            d["head_renders"]["rows"][0]["clip_pct"] = 60.0
+        edit("clipaudit.json", blow_head)
+        expect("record plant: a HEAD render clipped at 60%", "nonzero")
+
+        edit("clipaudit.json",
+             lambda d: d["summary"].__setitem__(
+                 "head_median", [65535.0] + d["summary"]["head_median"][1:]))
+        expect("record plant: a HEAD median pinned at pure white", "nonzero")
+
+        edit("clipaudit.json", lambda d: d["masters"]["rows"].pop())
+        expect("record plant: a linear master dropped (25 of 26 examined)",
+               "nonzero")
 
         # ---- PLACEBO: must stay GREEN -----------------------------------
         mutate_doc("ORCH's discipline 34 requires",

@@ -131,6 +131,53 @@ correlations are unaffected; and under the corrected reading a subject at 0.000
 still means every coefficient was selected rather than averaged, which is what
 that row already says.
 
+#### 9.26.5 The HEAD exposure regression does not reach this lane, and I measured that rather than reading the flags
+
+ORCH found that at HEAD `--srgb --auto-exposure` double-applies a tone
+normalisation, blowing 11 of 18 masters -- up to 92.13% of pixels pinned at
+65535 -- and asked every lane which of three cases it is in. This lane is
+**{case}**.
+
+The flags say so: `vn_lib.MEASURE_FLAGS` is `--linear-srgb --demosaic`, and
+`--auto-exposure` is never passed to a render anywhere in this lane
+(`vn_damage.py` uses `SHIP_FLAGS[:1]` plus a *fixed* `--exposure=`, which is a
+different flag). But a flag audit proves what was *requested*. ORCH's regression
+is precisely a case of a flag no longer doing what it says, and this lane
+already refuses when `--limit` and the log disagree for that reason. So the
+answer is a pixel audit.
+
+`vn_clipaudit.py` counts pixels at the 16-bit ceiling across every population
+this lane's findings rest on -- the 26 re-rendered linear masters behind
+sections 1-8, the four HEAD-pin renders behind 9.26 against the four old-pin
+renders of the same arms, and the cached arrays behind 9.24 and 9.25. Result:
+**{clip}**, {worst_master} -- a specular highlight, and a subject ORCH's own
+sweep also lists as clean. No population is near ORCH's 25% threshold and no
+median is anywhere near white.
+
+The four HEAD renders are the only images this lane produced at HEAD at all.
+They {head_clip}, and their medians {median_gap} against
+the old pin's renders of the same arms -- which is the same agreement ORCH
+reports between pin-with-auto and HEAD-without-auto. **Nothing this lane has
+reported was measured on an `--auto-exposure` HEAD master.**
+
+The audit is commissioned before its zero is believed: a synthetic image
+clipped at ORCH's observed 92.03% must read BLOWN and its fraction be recovered
+to within 0.5%, a clean image must read clean, and an unreadable file must
+count as unreadable rather than clean. That last arm is the one that matters,
+because a zero produced by not looking is the failure this lane's counting rule
+exists to prevent.
+
+**One correction ORCH should carry, because it has now propagated into a build
+decision.** ORCH has twice attributed `0 / 72 / 511 hull violations at
+exponents 1 / 8 / 16` to this lane, most recently as the reason to tell the
+build lane not to raise `p` with `log N`. **This lane never measured those
+numbers.** They are a block quotation of the `Hull` doc comment inside
+`pyramid.rs`, attributed as such where they appear in section 9. The hull
+figures this lane did measure are the section 9.24 prices, 1.211x / 1.337x /
+1.408x at theta 0.25 / 0.50 / 0.75, computed in the offline model from cached
+source-frame bundles -- which the audit above confirms are unclipped, so
+ORCH's `pinned_to_hull` caution does not reach them either.
+
 """
 
 

@@ -64,6 +64,19 @@ def values():
     v["total_frames"] = "{:,}".format(placed + 299)
     v["n_total"] = len(al) + 1
     v["deepest"] = max(x["frames"] for x in al)
+
+    ca = rec("clipaudit.json")
+    s = ca["summary"]
+    v["clip_files"] = s["blown"] + s["clean"] + s["unreadable"]
+    v["clip_blown"] = s["blown"]
+    v["clip_unread"] = s["unreadable"]
+    v["worst_master"] = "%.2f" % s["worst_master"]
+    wm = max(ca["masters"]["rows"], key=lambda r: r["clip_pct"])
+    v["worst_master_subject"] = wm["file"].replace("--LIN.tiff", "")
+    v["worst_head_render"] = "%.2f" % s["worst_head_render"]
+    hm, om = s["head_median"], s["old_median"]
+    v["median_gap"] = "%.3f" % (100.0 * max(
+        abs(a - b) / b for a, b in zip(hm, om)))
     return v
 
 
@@ -150,7 +163,31 @@ def phrases():
         "norej": "All %d logs state in their own header that outlier "
                  "rejection is `not applied`" % logs_without_outlier_rejection()[0],
         "conclusion": _conclusion(),
+        "clip": "%d blown, %d unreadable, out of %d files examined"
+                % (values()["clip_blown"], values()["clip_unread"],
+                   values()["clip_files"]),
+        "worst_master": "worst is `%s` at %s%%"
+                        % (values()["worst_master_subject"],
+                           values()["worst_master"]),
+        "median_gap": "agree to %s%%" % values()["median_gap"],
+        "head_clip": "read %s%% clipped" % values()["worst_head_render"],
+        "case": _case(),
     }
+
+
+def _case():
+    """Which of ORCH's three cases this lane is in -- DERIVED, not asserted.
+
+    If any render this lane produced at HEAD were blown, this sentence would
+    have to change and the verifier would fail because the document would no
+    longer contain the generated text.
+    """
+    s = rec("clipaudit.json")["summary"]
+    if s["blown"] == 0 and s["unreadable"] == 0:
+        return ("case 3: rendered at HEAD without `--auto-exposure`, and "
+                "measured to be unclipped rather than assumed to be")
+    return ("case 2: %d blown file(s) found in this lane's own evidence base"
+            % s["blown"])
 
 
 def _conclusion():
