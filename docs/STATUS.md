@@ -112,16 +112,20 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    site 1's 0.999 tie is the single reading that could pull the verdict apart. Fact 1876.
 4. **Enable the dust correction in the delivered renders.** Built and OFF. Every delivered
    master currently carries both motes.
-5. **Adjudicate the 13 tight-scale rim failures.** `rimv6` walks a contiguous ±12 px with its
-   reference inside the same profile and fails 13 of the SHIP-V4 **pyramid** masters — the
-   backend that ships. `halo_profile.py` walks 2–120 px against a 400–900 px reference, so the
-   two instruments are at **disjoint scales** and neither result touches the other. The 0-of-26
-   halo refutation therefore does **not** license a rim claim, and no second lane has scored
-   these 13. Until they are adjudicated the honest statement is *rim-unexamined at tight scale*,
-   not rim-clean. **OWNED — lane V-RIM**, tasked to return one of three verdicts per subject
-   (real defect / real but below visibility / instrument artifact) with 1:1 crops actually
-   viewed, and to commission `rimv6` for **specificity** as well as sensitivity — an ordinary
-   sharp edge with no rim must not trip it. Fact 1881.
+5. **RESOLVED — the 13 tight-scale rim failures are 11 instrument artifact, 2 real-but-below-
+   visibility, 0 real defect. Rim does not block print.** Lane V-RIM ran the specificity arm
+   nobody had run. The controls that settle it are **not ours**: Zerene Stacker PMax reads
+   **+7.455% FAIL**, and **single captures of `coffee-bean` that were never stacked at all** read
+   **+6.741%** and **+7.579% FAIL**. *A statistic that convicts a raw camera frame is not
+   measuring a stacker defect.* Mechanism: `rimv6.measure` returns `max(q[t=+2..+7]) − 1` where
+   `q` is normalised so `E[q]=1`, i.e. **a max over six samples of a quantity whose expectation
+   is 1** — a rim-free monotone image FAILs at 2% shoulder roughness (+2.304% vs `RIM_MAX` 0.02).
+   The floor cannot cancel it because the floor is measured on the σ=3 **smoothed** image, where
+   the fluctuation has been destroyed by construction. Amplitude check: `wrapped-text-2`'s
+   +10.93% asserts a rim **stronger than a 4× unsharp mask** (+10.22% on the USM ladder); nothing
+   like it is in the pixels, and `leaf-2-cpl`'s worst four sites are **flat out-of-focus
+   background with no edge in frame**. Honest verdict: **rim-unconvicted at tight scale** —
+   stronger than *rim-unexamined*, weaker than *rim-clean*. Facts 1896–1897, 1900, 1902.
 6. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
    taken on output carrying an uncorrected corpus-wide CA error and two dust motes.
    **OWNED — lane DELIVER-V6**, rendering all 26 from a clean pinned build.
@@ -139,7 +143,16 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 6. **Resolve the unexplained green-channel difference** between the CA-on and CA-off renders:
    G differs on 30.9M px, mean 51.39 DN, max 9595 DN, when a correction that moves only R and
    B should leave G bit-identical. Until resolved, nothing should be concluded from that render
-   pair. Fact 1867.
+   pair. Fact 1867. **OWNED — lane V-GREEN.** Two leads, neither yet measured: (a) explanation 1
+   ("the correction touches G") looks **refuted by the source** — `OpticalProfile::eps` returns
+   `Channel::Green => None` (`optics.rs:275`) and `compose` short-circuits on that **before**
+   reaching the profile's `translation: (0.6294, -0.4240)`, so green should be returned
+   bit-for-bit; note that this ordering is load-bearing, since letting green through would move
+   it 0.63/-0.42 px and change ~every pixel; (b) explanation 3 ("the renders differ in something
+   besides the flag") has independent measured support in fact 1886, where a
+   coefficient-independent arm re-rendered across builds differed on **33,003,417 px** — the same
+   order of magnitude. The decisive test is a pair rendered from **one pinned build**, plus a
+   determinism control.
 7. **Close the halo residual.** 11 subjects are UNSCORED, not clean — 4 that passed on a
    partial walk (including `leaf-2-cpl`, carrying an unexamined +5721 DN excursion at 50–80 px)
    and 7 unmeasurable. The instrument is also blind to a broad rim at 9000 DN, twice the
@@ -154,7 +167,7 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    the orchestrator.
 10. **The sidecar repro contract.** `scripts/finalpass.ps1` L529-533 writes a repro command into
     all 26 sidecars that does not reproduce the render.
-14. **The print gate itself is broken and is currently unowned.** `orch_printready.py`'s clip
+14. **The print gate itself is broken. OWNED — lane BUILD-GATE.** `orch_printready.py`'s clip
     check measures the **sRGB gamut wall**, not the tone scale: it FAILED the corpus's only
     master with zero blown highlights (`dry-erase-marker-head-cpl`, `clipALL3` 0.0000%) while
     PASSING 16 subjects carrying more genuine clipping than one it failed (`112MSDCF` 0.0693%
@@ -166,6 +179,26 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
     non-finding: `flowers-cpl` will still trip `CLIP_MAX` after the re-render; bounding it needs
     a per-channel rather than per-luminance tone stage, which is a corpus-wide change nobody has
     authorised. Fact 1894.
+15. **A mid-scale ring axis is still live and unadjudicated, and must not be conflated with the
+    tight-scale acquittal.** Three rim-like axes exist at **three disjoint scales**: `rimv6` at
+    ±12 px (now acquitted), `halo_profile` at 2–120 px with a 400–900 px far field (four false
+    positives, closed), and a separate axis in `docs/research/V-RIM-verification.md` using a
+    **0–140 px ring window with a 170–300 px null**, which reports **RING on 5 of 14 measurable**
+    subjects (`coffee-bean`, `lavendar-cpl`, `flower-bud-alone-cpl`, `bee-3-cpl`,
+    `flower-bud-with-background-fern-cpl`). **Three of those five are also among the thirteen** —
+    exactly the coincidence that invites a false retirement. Two bands remain unwalked by anyone:
+    **9–120 px and 120–400 px**, and the second is the geometry where a halo's decay separates
+    from ordinary scene lighting falloff, which is what produced `halo_profile`'s false
+    positives. Fact 1901.
+16. **The rim axis carries three defects of its own, none yet fixed.** (a) `rimaxis.py:52`
+    `SEAL_DIR` points at `acceptance\SHIP-V4`, **not the deliverable** — genuinely different
+    renders, ~99.7% of samples differing, max 22764 DN; re-pointing moves the tally to 9 PASS /
+    12 FAIL / 5 REFUSED and swings `leaf-2-cpl` from +37.07% to +12.92%. (b) `rimaxis.py:57`
+    `MIN_ISOLATED = 0.20` is **dead** — the name appears exactly once in the repo, at its own
+    definition — so `wrapped-text-1` (16.2%) and `wrapped-text-2` (12.1%) were convicted in
+    violation of the axis's own documented refusal rule. (c) `printcert4.rim_verdict` convicts on
+    `corrected_bright` **only**, and a one-sided gate cannot measure ringing, which is symmetric;
+    `flower-bud-alone-cpl` PASSES while reading `corrected_dark` +4.51%. Facts 1898–1899.
 
 ### 3.3 Open against the brief
 
