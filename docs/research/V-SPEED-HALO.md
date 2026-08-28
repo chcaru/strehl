@@ -659,6 +659,94 @@ measured and this lane does not claim it.
 
 ---
 
+## 13. After V-REVIEW's adjudication: what my instrument can and cannot see
+
+V-REVIEW adjudicated all four of ORCH's HALO verdicts as false positives, on
+the mechanism that `halo_profile.py` walks 2–120 px and then takes its far
+field at 400–900 px, **never measuring 120–400 px**.
+
+**I agree, and two of the four I had already refuted independently.** §1
+called `flat-on-ruler-cpl` a 172 px arch and `lavendar-cpl` a 124 px arch
+before that adjudication existed. The reason is structural rather than lucky:
+`aura.py`'s `EDGES` run **2 → 420 px continuously** (…100, 120, 150, 185, 230,
+280, 340, 420), so it samples the exact interval the other instrument skips,
+and an arch peaking at 168 px is visible as an arch.
+
+### Detection floors, measured by planting rims into a real master
+
+`plantrim.py`, on `tweezers-cpl` baseline. Every plant is verified to have
+moved the image's own radial profile by ≥50% of its nominal amplitude at the
+planted radius before its detection result counts — an instrument that is
+blind and a plant that never landed produce the same clean reading.
+
+| rim shape | span | `aura.py` floor | `halo_profile.py` |
+|---|---:|---|---|
+| narrow (σ 12 px @ 30 px) | ~72 px | **250 DN** | 4500 DN |
+| wide (σ 60 px @ 120 px) | ~360 px | **not detected ≤9000 DN** | — |
+| broad (σ 150 px @ 120 px) | ~900 px | **not detected ≤9000 DN** | missed at 9000 DN |
+
+**On a narrow rim this instrument is ~18× more sensitive**, detects at every
+amplitude, localises to 36 px, and its rise tracks the landed amplitude
+(+209 DN for 217 landed; +7245 for 7751). **On a broad rim it is exactly as
+blind as the instrument it replaced.**
+
+### The finding that matters more than the floor
+
+A broad rim does not merely go undetected — **it actively suppresses a real
+narrow rim that is present.** As broad amplitude rises, the measured rim
+*falls*:
+
+| broad plant | measured rim at 36 px |
+|---:|---:|
+| 0 DN (baseline) | 2621.7 DN |
+| 2000 DN | 2153.2 DN |
+| 4500 DN | **1556.7 DN (−41%)** |
+| 9000 DN | 1990.9 DN |
+
+`prominence` measures a feature against its two shoulders; a broad rim lifts
+the outer shoulder, so the real narrow feature reads smaller. Since most
+studio shots carry a scene gradient, **this instrument under-reports real
+narrow halos on exactly the subjects most likely to have one.** ORCH placed
+residual risk on 11 subjects; on this evidence that risk is not merely
+unmeasured there, it is *biased downward*.
+
+### Does the clamp justify itself? No.
+
+`aura.py` across the four hull arms on the same real render (109MSDCF,
+`stack --srgb`):
+
+| arm | rim DN @135 px | aura DN @36 px |
+|---|---:|---:|
+| unset | 69.4 | 1260.3 |
+| `input-range` | 69.4 | 1260.3 |
+| `per-level` | 69.5 | 1263.3 |
+| `unclamped` | 70.6 | 1298.8 |
+
+**Rim spread across all hull modes: 1.2 DN.** Turning the clamp entirely off
+moves the rim by 1.7%. Whatever `Hull::InputRange` does, it is not halo
+suppression on this subject — so **no halo justification for `STREHL_HULL`
+survives**, independently of whether any halo exists. It stays opt-in.
+
+### `STREHL_HULL` is pixel-inert when unset — measured across the commit
+
+Commission arm B proved *unset == explicit `input-range`*, which shows the
+routing is self-consistent but **not** that the default was preserved across
+the commit. `inertness.ps1` answers the actual question: build both commits in
+detached worktrees (the shared tree is never checked out) and render with the
+variable unset. `pyramid.rs` is the only compiled file that differs.
+
+**0 of 98,898,048 samples differ.**
+
+**And the first version of that check read FAIL.** It compared SHA-256 of the
+TIFFs, which differ at byte offset 3375 because the writer stamps the git hash
+(`649e35620f02` vs `6341a7a4b7e9`) into the header. A file hash was the wrong
+instrument: it would have had me report a regression in every re-rendered
+master that does not exist. Same family as ORCH's own note about clearing an
+`--exposure` defect on a file hash when 0 of 98,898,048 samples actually
+differed — the identical count, because it is the identical corpus.
+
+---
+
 ## 11. Files
 
 | path | what | commission |
