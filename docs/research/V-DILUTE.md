@@ -1022,3 +1022,231 @@ marked `NULL VOID` by the script, then quoted anyway by the human writing the
 prose. **The defect ORCH found in V-NEVERWORSE's verifier and the defect I
 found in my own section 4 are the same failure at different stations:** a gate
 that fires and is then not honoured downstream.
+
+---
+
+# Addendum H — the candidate-set control: the premium factorises, and only
+# one factor is attackable
+
+Assignment: find the candidate-set control that kills the selection premium
+(V-NEVERWORSE facts 1843-1845 at `f1f40150`) without losing sharpness.
+Offline in NumPy over real aligned stacks; no Rust touched.
+
+Pre-registration at `81ee69fa` (round 1) and `cc0061cd` (round 2), both
+committed **before** the arms they score were run.
+
+Gauge inherited verbatim from V-NEVERWORSE. Commissioning gate, every run:
+`argmax` premium at N=79 on 112MSDCF must reproduce 240.70. Measured 240.95
+(0.1% off) on the primary seed, and 244.93 / 245.51 / 245.37 (1.8-2.0%) on
+three further twin seeds.
+
+## H.1 The headline: the premium is a PRODUCT of two things, and candidate-set
+## control can only touch the smaller one
+
+    premium(arm, N)  =  floor(N)  x  curse(arm, N)
+
+**`floor(N)` — the cost of copying one frame instead of averaging N.** It is
+what the `random` arm pays, and `random` and `oracle` agree to 0.6%, which is
+what theory demands: with no focus signal a decorrelated score *is* random.
+No control over the candidate set can go below it, because it is not a defect
+of *how* a frame is chosen — it is the arithmetic of using one sample where
+the mean uses N.
+
+**`curse(arm, N)` — the winner's curse.** In `vn_pyr.merge` the score is
+`sq_i = smooth5(lap_i^2)` and the value copied is `lap_i`: **the score
+contains the very coefficient it selects** (2D centre tap `(6/16)^2 =
+0.1406`). This is the whole of the attackable prize, and it is bounded.
+
+Measured, 112MSDCF:
+
+| N | floor (`random`) | `argmax` | curse | phi measured |
+|---|---|---|---|---|
+| 19 | 7.23 | 23.12 | **3.20** | 0.611 |
+| 39 | 21.60 | 79.63 | **3.69** | 0.385 |
+| 79 | 58.43 | 240.95 | **4.12** | 0.160 |
+
+and 119MSDCF, independently:
+
+| N | floor | `argmax` | curse |
+|---|---|---|---|
+| 16 | 6.66 | 19.41 | **2.92** |
+| 32 | 18.84 | 63.41 | **3.37** |
+
+**The consequence ORCH needs before anyone writes Rust: the entire prize
+available to candidate-set control at N=79 is 4.12x, not 240x.** The other
+58.43x is the floor and is not going anywhere while the merge copies single
+frames. An arm that reached the floor exactly would still read 58x above the
+mean. This bounds the assignment.
+
+The curse does grow with depth — 3.20 -> 3.69 -> 4.12 on 112MSDCF, 2.92 ->
+3.37 on 119MSDCF — so it is a genuine N-dependent defect and worth attacking.
+But it grows roughly as `N^0.18`, while the floor grows roughly as `N`.
+
+## H.2 The floor is `N` diluted by gate abstention — measured, not inferred
+
+Round 1 refuted my own prediction that the floor equals `N` (kill condition
+#2 fired: measured 58.4, predicted 79). I proposed that pixels where no frame
+clears `gate * beta[k] * var` fall back to the unweighted mean, giving
+`floor = phi + (1 - phi) * N`. **Solving that for `phi` using the number it
+is meant to explain is circular**, so `vd_abstain.py` measures `phi`
+independently as the energy-weighted fraction of pixels whose shipping weight
+stack sums to zero:
+
+| N | phi measured | floor predicted | floor observed | ratio |
+|---|---|---|---|---|
+| 19 | 0.611 | 8.00 | 7.23 | 0.904 |
+| 39 | 0.385 | 24.37 | 21.60 | 0.886 |
+| 79 | 0.160 | 66.51 | 58.43 | 0.879 |
+
+The independently measured abstention reproduces the observed floor to within
+a **consistent 12%**, with the correct monotone decline (deeper stacks have
+fewer pixels where nothing clears the gate). I regard the mechanism as
+confirmed and the residual 12% as unexplained — most likely because
+`BETA`-weighting only approximates each level's true energy share, and
+abstention is spatially correlated with the low-variance pixels that carry
+least power. **Stated as a partial confirmation, not a clean one.**
+
+## H.3 The ranked arms, N=79 on 112MSDCF
+
+Sharpness is noise-corrected (`band(real) - band(twin residual)`) and reported
+in **four** bands, pre-committed in round 2 so that a loss pushed out of the
+scored band cannot hide. 112MSDCF's signal/noise boundary is **0.25 cyc/px**
+(measured in `vd_band.py`; V-LINEAR had not covered this subject), so
+0.10-0.15, 0.17-0.20 and 0.20-0.25 are **qualified signal** and **0.25-0.30
+is not creditable as acuity on this subject**. "worst" is the minimum over
+the three qualified bands.
+
+| arm | premium | curse | worst qualified band | verdict |
+|---|---|---|---|---|
+| `mean` | 1.00 | — | 0.0072 | control; N-invariant and useless |
+| `random` / `oracle` | 58.43 / 58.78 | 1.00 | 0.032 / 0.097 | **the floor** |
+| `xpool1` | 61.35 | 1.05 | 0.622 | at floor, −38% |
+| `pool2` | 64.83 | 1.11 | 0.708 | at floor, −29% |
+| `punctured` = `xpool0` | 64.45 | 1.10 | 0.630 | at floor, −37% |
+| `pool1.5` | 74.07 | 1.27 | 0.849 | 3.06x, −15% |
+| **`pool1`** | **122.71** | **2.10** | **0.974** | **1.84x, −2.6%** |
+| `pool0.5` | 212.64 | 3.64 | 1.028 | 1.06x, no loss |
+| `shipping` | 226.39 | 3.87 | 1.000 | reference |
+| `argmax` | 240.95 | 4.12 | 0.966 | worse on **both** axes |
+| `capK8` / `capK4` | 225.59 / 225.32 | 3.86 | 0.988 / 0.980 | **lever refuted** |
+| `coarse1` / `coarse2` | (N=19) 7.45 | 1.03 | 0.405 / 0.399 | a heavy pool in disguise |
+| `pwin2_1` / `pwin2_2` | 32.82 / 21.84 | — | 0.192 / 0.109 | below floor by averaging; guts sharpness |
+| `lvl0mean` | 1.29 | — | 0.014 | **my round-2 hypothesis, refuted** |
+
+## H.4 Three of ORCH's five levers are refuted, one works, one is a rename
+
+- **"Explicitly cap the effective candidate count" — REFUTED.** `capK4` =
+  225.32 and `capK8` = 225.59 against shipping 226.39. Capping the losers
+  changes nothing, because the premium is set by *who wins*, not by how many
+  frames lose. This is the single most useful negative result here: it is the
+  most obvious thing to implement and it does not work.
+- **"Pre-smooth the focus measure before the max" — WORKS**, and is the only
+  lever that does. It is the `pool<sigma>` family and it traces the entire
+  frontier on its own.
+- **"Select once at a coarse scale and propagate" — a rename of the above.**
+  `coarse1` and `coarse2` land on the same floor as `pool2` with worse
+  sharpness (0.405 vs 0.708). Expanding a coarse score *is* a heavy spatial
+  pool; it buys nothing extra and costs resolution in the depth map.
+- **"Take the max over a sufficient statistic of the through-focus curve" —
+  BROKEN AS SPECIFIED.** For a curve peaked at frame `m`, a leave-one-out
+  score at `i = m±1` still contains `f(m)` while the score at `i = m` does
+  not, so `argmax` of any LOO estimator lands on the **neighbour** of the true
+  peak whenever `f(m) > ~2 f(m±1)`. The quadratic correction `(4 m1 − m2)/3`
+  does not repair it (0.2742 vs 0.2757). This would have been an expensive
+  discovery in Rust.
+- **"Restrict candidates to a neighbourhood of a regularised depth estimate"
+  — works only via its pooling.** `pwin` and `winavg` go *below* the floor
+  (32.8, 21.8, 13.2) because they average several frames, but they pay for it
+  exactly where the mean pays: 0.19, 0.11, 0.11 worst-band. They are the mean
+  in local clothing.
+
+## H.5 Exact self-exclusion is correct theory and a worse design
+
+The curse is *exactly* the score kernel's centre tap, so `xpool<s>` removes
+exactly that — the combined `gauss(s) o smooth5` centre weight, measured by
+filtering a delta rather than assumed. **Commissioning: `xpool0` reproduces
+`punctured` to ten significant figures (63540349.2089).** The machinery is
+right.
+
+And it loses. `xpool1` reaches the floor (curse 1.05) at worst-band 0.622,
+while `pool1.5` gets curse 1.27 at 0.849. Removing the centre tap removes the
+score's *signal* along with the curse: that tap carries 14% of the focus
+evidence, so the depth map degrades faster than the noise does. **The
+theoretically exact fix is dominated by the crude one.** I would not have
+predicted this and it is the reason to measure before implementing.
+
+## H.6 What I got wrong (round 2, pre-registered at `cc0061cd`)
+
+I predicted that because Laplacian level 0 nominally carries 0.25-0.50 cyc/px
+and `vd_signal.py` measured 112MSDCF at `S/y = 0.00` there, **replacing
+selection with a plain mean at level 0 would cost nothing** in the qualified
+bands. I pre-committed the four-band report specifically so this could not be
+scored on a band of its own choosing.
+
+**It is refuted, and not marginally.** `lvl0mean` reads 0.0373 at 0.20-0.25,
+0.0872 at 0.17-0.20 and **0.3238 even at 0.10-0.15** — a band it should barely
+touch. Level 0 carries most of the reconstructed detail at *every* band I
+scored. The error is that a Laplacian level is not a band-pass: level 0 is
+`I − expand(reduce(I))` with a 5-tap binomial whose response is `cos^4(pi f)`,
+still passing ~27% of amplitude at 0.125 cyc/px. **My level-to-band mapping
+was wrong, and every inference I drew from it dies with it.** The "empty band"
+finding stands as a statement about the *scene*, but it licenses nothing about
+which *level* may be averaged.
+
+## H.7 The recommendation, specified for implementation
+
+**Pool the focus score spatially with a Gaussian of sigma = 1.0 px before the
+max, at every pyramid level, and change nothing else.**
+
+    sq_i = smooth5(lap_i^2)                  # unchanged
+    sq_i = gaussian(sq_i, sigma = 1.0)       # ADD THIS LINE
+    w_i  = select_weight(...)                # unchanged, from pooled score
+    out  = sum_i w_i * lap_i / sum_i w_i     # unchanged, copies UNPOOLED lap
+
+The value copied stays `lap_i`; only the score that ranks the frames is
+pooled. That is the whole change.
+
+Measured effect, 112MSDCF N=79: premium 226.39 -> 122.71 (**1.84x**), worst
+qualified band 0.974. 119MSDCF N=32: 60.53 -> 34.28 (**1.77x**), worst
+qualified band 0.940.
+
+`sigma` is the single knob and the frontier is monotone in it: 0.5 -> 1.06x
+for nothing, 1.0 -> 1.84x for 2.6%, 1.5 -> 3.06x for 15%, 2.0 -> 3.49x
+(at the floor) for 29%. **Anything past sigma = 2 is strictly wasteful** —
+pool2, pool4 and pool8 all sit at 63.8-64.8 while sharpness keeps falling
+(0.708, 0.421, 0.381). The floor is reached at sigma = 2 and there is nothing
+below it.
+
+## H.8 What I could not measure, stated plainly
+
+1. **`pool1` is not free, and I will not round it to free.** Its 0.17-0.20
+   deficit is 0.9737 +/- 0.0021 over four independent twin seeds — 12 sigma
+   below 1.0, small but real. It gains at 0.20-0.25 (1.037). On 119MSDCF the
+   cost is larger, −6.0%. **Under a strict reading of "sharpness must not
+   fall", `pool1` fails and only `pool0.5` passes, at 1.06x.** I report the
+   frontier rather than nominate a winner that clears the bar by choosing its
+   own band.
+2. **Pooling does not restore N-invariance and I do not claim it does.**
+   `pool1/shipping` is 0.510 / 0.503 / 0.542 at N = 19 / 39 / 79 — a constant
+   factor, not a flattening. The premium still grows about `N^1.6` after the
+   fix. Per ORCH's own guard, N-invariance is necessary but not sufficient;
+   here I have neither, only a constant improvement.
+3. **Sharpness cannot be compared across N** and I have not done so.
+   `pick(n, k)` decimates over a matched range, so smaller N means a coarser
+   focus step and a different merge problem. `pool1`'s worst band rises
+   0.858 -> 0.911 -> 0.976 with N, which *suggests* pooling gets cheaper at
+   depth, but that comparison is confounded by focus step and I am not
+   claiming it.
+4. **Two subjects, both ~0.25 boundary.** 112MSDCF and 119MSDCF agree, but
+   `bee-1-cpl` (boundary 0.48) and `flower-bud-alone-cpl` (0.17) are not in
+   V-NEVERWORSE's bundle and I could not test them. On a subject with real
+   content at 0.30-0.35 the pooling trade may differ, and I did not measure
+   it.
+5. **All of this is on a synthetic twin with no focus signal.** That is
+   correct for isolating manufactured noise and it is the inherited gauge, but
+   it means the premium numbers are not a claim about any real photograph. The
+   sharpness numbers *are* on real pixels.
+6. **The `prem_sig` question from round 1 is unresolved.** Shipping recovers
+   `6.54e7 > 0` at 0.30-0.35 on real frames, which may qualify the "empty
+   band" claim. It does not affect H.1-H.7, because the premium is defined on
+   the twin where the band is empty by construction.

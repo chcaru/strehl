@@ -221,9 +221,55 @@ def arm_weights(name, L, floor, p, ctx):
                         for i in range(n)])
         W2 = weights_from(np.maximum(sq2, 0.0), floor, p)
         return np.where(live[None], onehot(W, W2.argmax(axis=0)), 0.0)
+    if name.startswith("xpool"):
+        # The curse is EXACTLY the centre tap of the score kernel, so remove
+        # exactly that and nothing else, at whatever pool radius. The combined
+        # kernel is gauss(s) o smooth5; its centre weight is measured, not
+        # assumed, by filtering a delta. At s=0 this must reproduce
+        # `punctured` -- a built-in commissioning check.
+        s = float(name[5:])
+        d = np.zeros((25, 25))
+        d[12, 12] = 1.0
+        kc = VP.smooth5(d)
+        if s > 0.0:
+            kc = ndimage.gaussian_filter(kc, s)
+        kc = float(kc[12, 12])
+        sq2 = sq if s == 0.0 else np.stack(
+            [ndimage.gaussian_filter(sq[i], s) for i in range(n)])
+        sq2 = np.maximum(sq2 - kc * L ** 2, 0.0) / (1.0 - kc)
+        W2 = weights_from(sq2, floor, p)
+        return np.where(live[None], onehot(W, W2.argmax(axis=0)), 0.0)
     if name.startswith("pool"):
         s = float(name[4:])
         sq2 = np.stack([ndimage.gaussian_filter(sq[i], s) for i in range(n)])
+        W2 = weights_from(sq2, floor, p)
+        return np.where(live[None], onehot(W, W2.argmax(axis=0)), 0.0)
+    if name.startswith("coarse"):
+        # ORCH's lever 3: score at a COARSER level and propagate down. The
+        # coefficient being copied never appears in the score that chose it,
+        # so the curse is removed by construction -- but unlike `oracle` the
+        # true focus signal is retained, because a defocused frame is
+        # defocused at every scale. `_p<S>` optionally pools as well.
+        spec = name[6:]
+        s = 0.0
+        if "_p" in spec:
+            spec, sp = spec.split("_p")
+            s = float(sp)
+        j = int(spec)
+        st = ctx["stack"]
+        src = min(k + j, st.nb - 1)
+        if src == k:
+            sq2 = sq
+        else:
+            Lc = st.level(src)
+            sc = base_scores(Lc)
+            for lv in range(src - 1, k - 1, -1):
+                tgt = st.laps[0][lv].shape
+                sc = np.stack([VP.expand(sc[i], tgt) for i in range(n)])
+            sq2 = sc
+        if s > 0.0:
+            sq2 = np.stack([ndimage.gaussian_filter(sq2[i], s)
+                            for i in range(n)])
         W2 = weights_from(sq2, floor, p)
         return np.where(live[None], onehot(W, W2.argmax(axis=0)), 0.0)
     if name.startswith("axis"):
@@ -272,7 +318,7 @@ def run_arm(name, stack, varp, rng, alt=None):
         p = VP.exponent_at(k, stack.nb, SHIP["exponent"], SHIP["sharpen"])
         floor = SHIP["gate"] * BETA[k] * np.maximum(varp[k], 0.0)
         sq = base_scores(L)
-        ctx = {"sq": sq, "rng": rng, "level": k,
+        ctx = {"sq": sq, "rng": rng, "level": k, "stack": stack,
                "W_ship": weights_from(sq, floor, p),
                "sq_alt": base_scores(alt.level(k)) if alt is not None else None}
         W = arm_weights(name, L, floor, p, ctx)

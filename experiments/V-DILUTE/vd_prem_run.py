@@ -47,6 +47,7 @@ def main():
     subj = sys.argv[1] if len(sys.argv) > 1 else "112MSDCF"
     ns = [int(x) for x in sys.argv[2].split(",")] if len(sys.argv) > 2 else [79]
     arms = sys.argv[3].split(",") if len(sys.argv) > 3 else list(FULL)
+    seed = int(sys.argv[4]) if len(sys.argv) > 4 else 20260827
     os.makedirs(OUT, exist_ok=True)
 
     g = load_green(subj)
@@ -57,7 +58,7 @@ def main():
         return 2
     sd = np.sqrt(np.maximum(var0, 0.0))
     base = g.mean(axis=0)
-    rng = np.random.default_rng(20260827)
+    rng = np.random.default_rng(seed)
     twin_all = np.stack([base + rng.normal(0.0, 1.0, base.shape) * sd
                          for _ in range(n)])
     print("subject %s  N=%d  read2=%.2f  photon_gain=%.5f" % (subj, n, read2, gph))
@@ -149,9 +150,9 @@ def main():
                             "in this run may be quoted"))
         del sr, st, alt
 
-    json.dump(results, io.open(os.path.join(OUT, "arms_%s.json" % subj), "w",
+    json.dump(results, io.open(os.path.join(OUT, "arms_%s_%d.json" % (subj, seed)), "w",
                                encoding="utf-8"), indent=1)
-    print("\nwrote %s" % os.path.join(OUT, "arms_%s.json" % subj))
+    print("\nwrote %s" % os.path.join(OUT, "arms_%s_%d.json" % (subj, seed)))
     return 0
 
 
