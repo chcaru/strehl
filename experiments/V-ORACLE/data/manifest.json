@@ -1,0 +1,232 @@
+{
+  "lane": "V-ORACLE",
+  "verdict": "(a) CAPTURE GAP at all six sites on licensed bands 2,3",
+  "detection_floor": "0.75 green px = 1.5 master px",
+  "tile_grid": "18 rows x 27 cols = 486 tiles",
+  "bands": "b0..b4 from SIGMAS=[0.0,0.8,1.6,3.2,6.4,12.8]",
+  "licensed_bands": [
+    2,
+    3
+  ],
+  "band_licence_note": "b1 withdrawn pending measurement: half-power top edge 0.283 cyc/green-px vs the 0.17 corpus floor. b2/b3 clear it under both grid readings.",
+  "deleted_scratch_sha256": {
+    "stageA/109MSDCF.npz": {
+      "sha256": "cb9135ba3525249b14ab12deb0aad8b30aba2001bc22b4dc94a8ab8e816ae955",
+      "bytes": 527331
+    },
+    "stageA/112MSDCF.npz": {
+      "sha256": "e0b3978e93bcedd2128eaf528d57c4fa1c177d54e2c6a1f8e56e22895957885c",
+      "bytes": 1655296
+    },
+    "stageA/113MSDCF.npz": {
+      "sha256": "aab4acaa1df77f98c86aa24ed7a1edd79f8dfa6ebedd86822813702a46359bc3",
+      "bytes": 1339171
+    },
+    "stageA/119MSDCF.npz": {
+      "sha256": "2ed12df819fd075dde1d6c01d5157d895d50690538dbb0fc1d4fffedd0eb6afc",
+      "bytes": 746303
+    },
+    "stageA/bee-1-cpl.npz": {
+      "sha256": "8659100cda80fb55db53b76b1337612e0db8508b8fde8c4c3329644bdbecb372",
+      "bytes": 2083560
+    },
+    "stageA/bee-2-cpl.npz": {
+      "sha256": "f9726465f057ce9af18e3818be8f4744e562fc91748dfbca349cc6a82cf68b06",
+      "bytes": 2085683
+    },
+    "stageA/bee-3-cpl.npz": {
+      "sha256": "738390f634b80c574d7d6dfe631d77703fd8de0c9496ae2a42ca98d448a3aa7f",
+      "bytes": 2083129
+    },
+    "stageA/coffee-bean.npz": {
+      "sha256": "8cae1e7b5045c45b4da53d5b1b2a25ed591b8d98d65e4931707146dec34b4419",
+      "bytes": 2081287
+    },
+    "stageA/coffee-bubbles.npz": {
+      "sha256": "95c74402c50822c60e839c1000e596f60e5c517c04d0b0f8ddaba3777915ec7d",
+      "bytes": 467522
+    },
+    "stageA/couch-fibers-cpl.npz": {
+      "sha256": "75156f41941a7edaf813010116d03b385569d70fb755b23975d95490e7f1c692",
+      "bytes": 2070574
+    },
+    "stageA/dry-erase-marker-head-cpl.npz": {
+      "sha256": "7298340269a4f3351875af49d1810b4b822adc0d2fe637ffdd250a0fc50198e6",
+      "bytes": 2035437
+    },
+    "stageA/flat-on-ruler-cpl.npz": {
+      "sha256": "3d33c9cbb6ae6ab1233eb415f04a7819d83273aedebe0faf77742767855581f8",
+      "bytes": 1643113
+    },
+    "stageA/flower-bud-alone-cpl.npz": {
+      "sha256": "7eac2d4ef640c95db2a804d8cc811f2fc1fdb8381cfe04505db679d8b26f6c57",
+      "bytes": 2062538
+    },
+    "stageA/flower-bud-with-background-fern-cpl.npz": {
+      "sha256": "8a1e8c5804f4dc6baa36ee7c0a56844f9c0c61eb8444d9fe8a86c0b67d2e9797",
+      "bytes": 2075140
+    },
+    "stageA/flower-inner-edge-cpl.npz": {
+      "sha256": "28a90c11980e637d94f436885df0985e9b4c87466454e53f09409f885938b795",
+      "bytes": 2089057
+    },
+    "stageA/flowers-cpl.npz": {
+      "sha256": "25b96b0a7008954db112f1eb6a4312d12e696c4eed01ff8bd6cc957f70f34114",
+      "bytes": 3559821
+    },
+    "stageA/foam.npz": {
+      "sha256": "7571739c48d37be3df7b2820ade2117a56661fc9a501a2c12c04c399529fe241",
+      "bytes": 2045953
+    },
+    "stageA/highly-angled-ruler-mm-cpl.npz": {
+      "sha256": "062fa92d06f34289be4649cd864e343c4bd31549322141fb9f296107b9ab9c00",
+      "bytes": 2065924
+    },
+    "stageA/lavendar-cpl.npz": {
+      "sha256": "f0cbb0ca25132b5aa89331a9d9eb414fa590f57324c8a29173132b8907c1db2a",
+      "bytes": 2076643
+    },
+    "stageA/lead-1-cpl.npz": {
+      "sha256": "3a1e1257b1c7fd7c799d2923be5f198c6945d02730410b33d30038447a145e52",
+      "bytes": 2065220
+    },
+    "stageA/leaf-2-cpl.npz": {
+      "sha256": "8e3dc0fbbc985c902feadd4537148c76f0e36bceeb03b6882ae574a0f82f52e0",
+      "bytes": 2068522
+    },
+    "stageA/pencil-flatter-angle-cpl.npz": {
+      "sha256": "c73a9d768134e8f52705fdcc134df175ce1bccc88eace7a4b6425d4ef876c717",
+      "bytes": 2080195
+    },
+    "stageA/pencil-steep-angle-cpl.npz": {
+      "sha256": "d89389d6192e82e8772341c2a0e9719ca9a3cc0e838dd31bff922825a9880b72",
+      "bytes": 2089072
+    },
+    "stageA/tweezers-cpl.npz": {
+      "sha256": "a2fdded309446b4d80cb9cf675fb6b2509d98d390d052dc42d2abb2fd4f3be0c",
+      "bytes": 2082849
+    },
+    "stageA/wrapped-text-1.npz": {
+      "sha256": "815b6624d30f9f89dd3a9ed0651ecbd2cf7eee1c04e32346ffa4a6a7c96a4e1b",
+      "bytes": 2079193
+    },
+    "stageA/wrapped-text-2.npz": {
+      "sha256": "cb75e21e53c414217a1a2ed19769ec817086d69b94e2d7741f6fb3921a743442",
+      "bytes": 2080924
+    },
+    "stageB/109MSDCF.npz": {
+      "sha256": "f2b10ead74a0bab75ab22e0c042fa101cb6ff7eb07eabf208b7982e905c1850a",
+      "bytes": 138616
+    },
+    "stageB/112MSDCF.npz": {
+      "sha256": "5243dfa08cb3bb85e08385495013c92e680a59d2a712fe8455e5578d02588b61",
+      "bytes": 132412
+    },
+    "stageB/113MSDCF.npz": {
+      "sha256": "01b01693a1470e35a6dcb24ce744d625f40304a819822aa5ba08949fcead0dd0",
+      "bytes": 132329
+    },
+    "stageB/119MSDCF.npz": {
+      "sha256": "64ef849e40fa8949c448322eae85960ed7cca2c573a8ef654ca3b288599d91fe",
+      "bytes": 138442
+    },
+    "stageB/bee-1-cpl.npz": {
+      "sha256": "6d01d45e288b566015a997da3cfc2af4744aace18293fc64b5b42d9bb71c40be",
+      "bytes": 129681
+    },
+    "stageB/bee-2-cpl.npz": {
+      "sha256": "114c26aaef5ba70c73d7ce3f7a494e7bb4193fe1c8f1f77a075efdbb420950b1",
+      "bytes": 122665
+    },
+    "stageB/bee-3-cpl.npz": {
+      "sha256": "36e61a908d1fb863ae0ed06efb439b99efe5bbcaa4ccabbfda699ea6fb569e83",
+      "bytes": 129763
+    },
+    "stageB/coffee-bean.npz": {
+      "sha256": "b7afe323fa167527c41a197acfdbabd8552b8e37d61240d57db192547c8420d1",
+      "bytes": 132627
+    },
+    "stageB/coffee-bubbles.npz": {
+      "sha256": "672780f3cee5af72c6646dd8f0a6251addf8ba5d5f15c4eda5d479c5a17faa86",
+      "bytes": 139075
+    },
+    "stageB/couch-fibers-cpl.npz": {
+      "sha256": "26d66506ed9c944f28a175ecc95bee1ab24366babb54c52246bcd9611a57229c",
+      "bytes": 122521
+    },
+    "stageB/dry-erase-marker-head-cpl.npz": {
+      "sha256": "6a5f44154e12e16eceddcdc15ad8463e69f43f00d100b0a7fdf3a9bde3eb6862",
+      "bytes": 132267
+    },
+    "stageB/flat-on-ruler-cpl.npz": {
+      "sha256": "6cdfa00751576537300b1bdbefa90be7e57eecdf6b15dc83328a7dede1caf47c",
+      "bytes": 131985
+    },
+    "stageB/flower-bud-alone-cpl.npz": {
+      "sha256": "c3a6b112f5d90ad76a2bf52b9e5f6a20e50a503a051e405d2883971b400e6d1a",
+      "bytes": 138678
+    },
+    "stageB/flower-bud-with-background-fern-cpl.npz": {
+      "sha256": "cab496fdb471473825ca27c9da39910df2940803fd1434e1ec47fa7dbbcbf7b3",
+      "bytes": 132725
+    },
+    "stageB/flower-inner-edge-cpl.npz": {
+      "sha256": "bdcbbba958a38886e1c3ac4841d38eff37045af65c813884cf16683367d5dbbc",
+      "bytes": 122748
+    },
+    "stageB/flowers-cpl.npz": {
+      "sha256": "c315369e5e401d2e0fdbdabf4a4559956c2e4ea81f57dcc404e0106bda209b09",
+      "bytes": 138674
+    },
+    "stageB/flowers-cpl__green.npz": {
+      "sha256": "46800f9c76f09d0f177ff408c21ed778d4ae66380d85e4572c61f107f22e923f",
+      "bytes": 138621
+    },
+    "stageB/foam.npz": {
+      "sha256": "0a087898d7d9ea68bf78a218573a29109b44d173435870672e759b18d6a4d456",
+      "bytes": 123662
+    },
+    "stageB/highly-angled-ruler-mm-cpl.npz": {
+      "sha256": "f7749f1cafbfe0039058cc5417bf9cee4942f79331de64bd47dbed663aa3b27f",
+      "bytes": 139303
+    },
+    "stageB/lavendar-cpl.npz": {
+      "sha256": "490f52a1cee5d0dfcb0376310c05efd736e9b956ff50b6908aaf1d6d89c0fe99",
+      "bytes": 132614
+    },
+    "stageB/lead-1-cpl.npz": {
+      "sha256": "aa577985dbfa55642aa4f91c94f4141260750772bc071f3a16e7a73318a2d6df",
+      "bytes": 132746
+    },
+    "stageB/leaf-2-cpl.npz": {
+      "sha256": "e9b48d2448c07d424c5d45815b8e95a9eb006ef629918eb997be64ba85d647c9",
+      "bytes": 132557
+    },
+    "stageB/pencil-flatter-angle-cpl.npz": {
+      "sha256": "afb9443a915d7628af43f24a19a91c6f3389141cde16b1886b653b04429a3a9e",
+      "bytes": 132976
+    },
+    "stageB/pencil-steep-angle-cpl.npz": {
+      "sha256": "22b642e67d09cd08de06d75162af85451d7fead409736c4c8966ef2e568950fc",
+      "bytes": 130802
+    },
+    "stageB/tweezers-cpl.npz": {
+      "sha256": "1108c6353a1bb99fe5e405f1b646bc374051df7fba5368ab3ac09e9e1c47e32f",
+      "bytes": 132581
+    },
+    "stageB/wrapped-text-1.npz": {
+      "sha256": "54be483087d32ed6e11ac893256a5d83f9178ca3a2d9a974ebfde2b490d21311",
+      "bytes": 132437
+    },
+    "stageB/wrapped-text-2.npz": {
+      "sha256": "8dce0235efc0481329a7b803063fe1e3796f383024ed465c87e2c63b23499d8a",
+      "bytes": 129370
+    }
+  },
+  "regeneration": {
+    "stageA": "python experiments/V-ORACLE/stageA.py <subject>   (reads D:\\personal\\macro, read-only; ~7-11 s/frame)",
+    "stageB": "python experiments/V-ORACLE/stageB.py <subject> [--chan green]   (needs stageA first; ~30 s/subject)",
+    "crops": "python experiments/ORCH-drift-check/crop1to1.py <master.tiff> <out.jpg> --sites 6 --size 520 --mode edge",
+    "note": "All scratch is regenerable from these committed scripts plus the read-only originals under D:\\personal\\macro. Nothing unique was destroyed; the numbers themselves are banked in data/."
+  }
+}

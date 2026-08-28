@@ -1,0 +1,34 @@
+$ python verdict.py flowers-cpl
+# exit=0
+
+=== flowers-cpl :: VERDICT TABLE (point sampling) ===
+grid 18x27 tiles of 128 green px = 256 master px; 176 of 176 frames
+
+site eye       tile        b0 ratio   b1 ratio   b2 ratio   b3 ratio   b4 ratio   b0 rise   b1 rise   b2 rise   b3 rise   b4 rise
+---------------------------------------------------------------------------------------------------------------------------------
+0    SHARP     r12c01         1.589      1.099      0.925      0.924      1.009      0.96      0.90      0.76      0.44      0.28
+1    BLURRED   r05c02        11.040      1.211      0.975      0.929      1.007      0.00      0.00      0.00      0.00      0.00
+2    SHARP     r06c05         0.918      0.868      0.743      0.741      1.007      0.00      0.00      0.00      0.00      0.00
+3    BLURRED   r09c02         0.176      0.288      0.399      0.900      0.992      0.02      0.04      0.00      0.00      0.00
+4    SHARP     r06c08         0.652      0.383      0.458      0.751      0.964      1.17      1.02      1.00      1.01      1.02
+5    BLURRED   r16c10         1.210      0.841      0.675      0.664      1.023      0.18      0.41      0.22      0.06      0.00
+
+ratio = best source frame signal / merge signal, both noise-corrected.
+rise  = fraction of the through-focus peak that has decayed by the nearer
+        bracket end.  ~0 = the sweep ended while the tile was still at its
+        sharpest, i.e. best focus for that tile was never captured.
+
+  site 0 (SHARP  ) tile r12c01: (a) merge not beaten, but the focus curve DID turn over inside the bracket in band(s) [1, 2, 3]: focus was captured and the merge still matched or beat every frame
+  site 1 (BLURRED) tile r05c02: (a) CAPTURE GAP -- no frame sharper than the merge, and the focus curve is still at its peak on the boundary frame in every signal band
+  site 2 (SHARP  ) tile r06c05: (a) CAPTURE GAP -- no frame sharper than the merge, and the focus curve is still at its peak on the boundary frame in every signal band
+  site 3 (BLURRED) tile r09c02: (a) CAPTURE GAP -- no frame sharper than the merge, and the focus curve is still at its peak on the boundary frame in every signal band
+  site 4 (SHARP  ) tile r06c08: (a) merge not beaten, but the focus curve DID turn over inside the bracket in band(s) [1, 2, 3]: focus was captured and the merge still matched or beat every frame
+  site 5 (BLURRED) tile r16c10: (a) merge not beaten, but the focus curve DID turn over inside the bracket in band(s) [1, 2]: focus was captured and the merge still matched or beat every frame
+
+=== whole-frame summary, all 486 tiles, partitioned so the counts sum ===
+  band 1: detail tiles where source beats merge by >1.25x:    7  ( 1.44% of all tiles, 14.29% of detail tiles); worst ratio 6.39x
+          detail-and-merge-not-beaten   42 | detail-but-unmeasurable    0 | below detail threshold  437 | TOTAL 486 == 486
+  band 2: detail tiles where source beats merge by >1.25x:    7  ( 1.44% of all tiles, 14.29% of detail tiles); worst ratio 4.02x
+          detail-and-merge-not-beaten   42 | detail-but-unmeasurable    0 | below detail threshold  437 | TOTAL 486 == 486
+  band 3: detail tiles where source beats merge by >1.25x:    0  ( 0.00% of all tiles,  0.00% of detail tiles); worst ratio 1.12x
+          detail-and-merge-not-beaten   49 | detail-but-unmeasurable    0 | below detail threshold  437 | TOTAL 486 == 486

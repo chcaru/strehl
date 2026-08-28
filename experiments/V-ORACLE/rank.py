@@ -127,6 +127,31 @@ def main() -> int:
                          "its own denominator")
     args = ap.parse_args()
     subs = sorted(f[:-5] for f in os.listdir(ora.MASTERS) if f.endswith(".tiff"))
+    src = ora.MASTERS
+    if not subs:
+        # The delivered-master directory has been emptied since this ranking was
+        # published (the corpus moved to DELIVER-V6).  The 4a statistic is
+        # FRAME-SIDE ONLY -- no master enters it -- so the subject list can be
+        # recovered from the banked stage A products without changing a single
+        # number.  Enumerating from stage A is therefore a recovery, not a
+        # re-measurement on a different corpus.
+        #
+        # This branch also closes a real defect: with an empty master directory
+        # the run below would otherwise have reported "all 0 masters ranked" and
+        # a partition check of "0 == 0", i.e. a skipped corpus reading as a
+        # passed one.  It now says so loudly instead.
+        sa = os.path.join(ora.OUT, "stageA")
+        subs = sorted(f[:-4] for f in os.listdir(sa) if f.endswith(".npz"))
+        src = sa + "  (RECOVERED: master dir is empty)"
+        print(f"!! {ora.MASTERS} contains no .tiff -- the delivered corpus has\n"
+              f"!! moved or been reclaimed.  Falling back to the stage A subject\n"
+              f"!! list ({len(subs)} subjects).  4a is frame-side only, so the\n"
+              f"!! numbers are unchanged; 4b ratios likewise read banked arrays.\n")
+    if not subs:
+        raise SystemExit("no subjects from either the master dir or stage A; "
+                         "refusing to print an empty ranking that would read as "
+                         "a clean corpus")
+    print(f"# subject list from: {src}\n")
 
     rows, bad = [], []
     for s in subs:

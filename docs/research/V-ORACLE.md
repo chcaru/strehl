@@ -481,6 +481,58 @@ there. **4a is the ranking to use.** The one follow-up I would offer is a look a
    "PASS" I had reported was uncertified until the pass/fail channel itself was
    commissioned - an inert plant and a dead instrument print the same green.
 
+## 8.5 Wind-down: what was banked, what was deleted, and one thing that broke
+
+The lane's `.npz` scratch (50.8 MB) has been deleted under ORCH's disk reclaim.
+Every number in this report was written out as text FIRST, under
+`experiments/V-ORACLE/data/` (0.32 MB), so nothing here depends on a file that
+no longer exists:
+
+| banked file | what it preserves |
+|---|---|
+| `verdict-flowers-cpl-allbands.txt` / `-licensed.txt` | verbatim stdout of the shipped entry point, both band sets |
+| `rank-corpus.txt` | the full deliverable-4 ranking, 26 subjects, partition 26 == 26 |
+| `commission-verdict.txt` | the 8-arm commissioning run, incl. the live pass/fail channel |
+| `flowers-cpl-tiles.csv` | 2430 rows = 5 bands x 486 tiles: contrast, best frame, src/point/box sig, both ratios |
+| `flowers-cpl-sites-through-focus.csv` | 5280 rows = the six sites x 5 bands x 176 frames -- **the decisive evidence**, the curves themselves |
+| `corpus-subject-summary.csv` | per-subject per-band medians and detail counts, 26 of 26 |
+| `manifest.json` | SHA256 + byte count of all 53 deleted scratch files, plus the regeneration recipe |
+
+All deleted scratch is regenerable from `stageA.py` / `stageB.py` plus the
+read-only originals under `D:\personal\macro`. The one surviving exhibit is
+`D:\strehl-out\V-ORACLE\crops\flowers-EDGE.jpg` (0.24 MB) -- kept because,
+unlike the map, it is **not** regenerable: see below.
+
+### The corpus I measured no longer exists on disk
+
+`rank.py` was run as part of banking and **exited 1 having found zero subjects**.
+`C:\dev\strehl-out\ORCH-FAITHFUL\faithful` still exists as a directory but now
+contains **0 `.tiff`**; the delivered corpus has moved to `DELIVER-V6`, which holds
+**33** masters, not the **26** this study measured.
+
+Two consequences, and the second is a defect in my own tool:
+
+1. **My 1:1 crops are not regenerable.** They were cut from the ORCH-FAITHFUL
+   render of `flowers-cpl`, which is gone, and a DELIVER-V6 master is a different
+   render. That is why the crop is the exhibit I kept and the map is the one I
+   deleted -- the map reconstructs exactly from `flowers-cpl-tiles.csv`.
+2. **`rank.py` would have reported an empty corpus as a clean one.** With the
+   master directory empty it printed "all 0 delivered masters ranked" and would
+   have gone on to a partition check of `0 == 0`; only an unrelated
+   `max()`-of-empty crash stopped it. This is exactly the failure shape I have
+   been auditing for all night -- a skipped input reading as a passed one -- and
+   it was sitting in my own deliverable 4. Fixed: `rank.py` now recovers the
+   subject list from stage A when the master directory is empty, prints a loud
+   banner naming the recovery, and hard-errors rather than printing an empty
+   ranking.
+
+The recovery changes no number. The 4a statistic is frame-side only -- no master,
+registration or resampling choice enters it -- so the masters served only as a
+list of names. The recovered run reproduces the published ranking exactly:
+`flowers-cpl` +20.7, `bee-1-cpl` +0.8, `coffee-bean` -2.6, `bee-3-cpl` -25.7,
+`highly-angled-ruler-mm-cpl` -26.2, `flower-bud-with-background-fern-cpl` -26.9,
+partition 26 == 26.
+
 ## 9. Defects I found in my own instrument before trusting it
 
 - **G1×G2 covariance sign inversion near Nyquist** — would have manufactured

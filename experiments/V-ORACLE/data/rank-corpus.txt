@@ -1,0 +1,97 @@
+$ python rank.py
+# exit=0
+
+!! C:\dev\strehl-out\ORCH-FAITHFUL\faithful contains no .tiff -- the delivered corpus has
+!! moved or been reclaimed.  Falling back to the stage A subject
+!! list (26 subjects).  4a is frame-side only, so the
+!! numbers are unchanged; 4b ratios likewise read banked arrays.
+
+# subject list from: D:\strehl-out\V-ORACLE\stageA  (RECOVERED: master dir is empty)
+
+=== DELIVERABLE 4a: all 26 delivered masters ranked by the CAPTURE-GAP signature (band 2) ===
+stuck%% = detail tiles whose through-focus curve is still AT ITS MAXIMUM on a
+         boundary frame, i.e. the bracket ended while the tile was still getting
+         sharper.  Frame-side only: no master, no registration, no resampling
+         choice enters it, so no such choice can move the ranking.
+flat%%  = the same criterion on tiles with NO detail: what this subject's own
+         sweep-wide trend manufactures with no focus signal present.
+excess = stuck%% - flat%%, the drift-controlled statistic.  THIS IS THE RANKING.
+
+#  subject                                  frames  detail   stuck%   flat%   excess
+------------------------------------------------------------------------------------
+1  flowers-cpl                             176/176     138     58.7    38.0     20.7
+2  bee-1-cpl                               100/299     360      0.8     0.0      0.8
+3  112MSDCF                                 79/79      271      0.0     0.0      0.0
+4  113MSDCF                                 63/63      275      0.0     0.0      0.0
+5  coffee-bubbles                           19/19      111      0.0     0.0      0.0
+6  wrapped-text-1                          100/130      47      0.0     0.0      0.0
+7  109MSDCF                                 22/22      161      0.0     0.4     -0.4
+8  lead-1-cpl                              100/123      35      0.0     1.2     -1.2
+9  coffee-bean                             100/105     339      7.1     9.7     -2.6
+10 119MSDCF                                 33/33      168      0.6     3.6     -3.0
+11 leaf-2-cpl                              100/182      36      0.0    12.2    -12.2
+12 bee-2-cpl                               100/299     384      0.0    13.7    -13.7
+13 bee-3-cpl                               100/299     392      0.3    25.9    -25.7
+14 highly-angled-ruler-mm-cpl              100/299     187     18.2    44.4    -26.2
+15 flower-bud-with-background-fern-cpl     100/299     247     14.2    41.1    -26.9
+16 flower-bud-alone-cpl                    100/205     147      0.0    29.3    -29.3
+17 tweezers-cpl                            100/100     291      0.0    30.4    -30.4
+18 pencil-steep-angle-cpl                  100/299     228      3.1    37.9    -34.8
+19 pencil-flatter-angle-cpl                100/299     215      0.0    42.9    -42.9
+20 lavendar-cpl                            100/299     193      1.6    45.6    -44.1
+21 dry-erase-marker-head-cpl               100/299     329      4.3    53.5    -49.3
+
+corpus stuck%: median 0.0, max 58.7
+corpus excess: median -12.2, max 20.7 (flowers-cpl)
+subjects with excess > 5 points: 1 of 21
+agreement between the two detail definitions: r = 0.978
+
+=== DELIVERABLE 4b: the same masters ranked by the MERGE-DEFECT signature (threshold 1.25x) ===
+lose%% = interior detail tiles where the best source frame beats the merge by more
+        than the threshold under BOTH resampling conventions, counting only tiles
+        where the merge itself has measurable signal.
+'edge' = losing tiles on the outer tile ring, excluded from lose%% because the
+         master's crop and the frame's active area do not cover the same scene there.
+
+#  subject                                 detail  lose   lose%   worst    med  edge  decile lose%
+--------------------------------------------------------------------------------------------------
+1  coffee-bean                                339    69   20.35    7.28   1.10     3         16.33
+2  113MSDCF                                   275    33   12.00    2.68   1.03     2         36.73
+3  coffee-bubbles                             111    13   11.71    1.95   0.94     3          0.00
+4  112MSDCF                                   271    28   10.33    2.86   1.03     2         30.61
+5  bee-1-cpl                                  360    31    8.61    3.22   0.77     7         14.29
+6  flower-bud-with-background-fern-cpl        247    18    7.29    9.43   0.77     0          4.08
+7  flowers-cpl                                138     9    6.52    4.94   0.81     5          4.08
+8  lead-1-cpl                                  35     2    5.71    1.52   1.05     0          4.08
+9  highly-angled-ruler-mm-cpl                 187    10    5.35    2.95   0.71     0         12.24
+10 bee-2-cpl                                  384    18    4.69    3.35   0.70     9          2.04
+11 pencil-flatter-angle-cpl                   215    10    4.65    1.91   0.85     0         18.37
+12 wrapped-text-1                              47     2    4.26    1.32   0.96     0          4.08
+13 lavendar-cpl                               193     8    4.15    1.76   0.70     0          4.08
+14 flower-bud-alone-cpl                       147     6    4.08    1.91   0.80     0          4.08
+15 tweezers-cpl                               291    10    3.44    7.52   1.00     1          8.16
+16 dry-erase-marker-head-cpl                  329    11    3.34   14.25   0.79     0          2.04
+17 119MSDCF                                   168     5    2.98    2.15   0.68     0          6.12
+18 leaf-2-cpl                                  36     1    2.78    1.46   1.06     0          2.04
+19 bee-3-cpl                                  392    10    2.55    2.52   0.71    12          0.00
+20 pencil-steep-angle-cpl                     228     2    0.88    2.97   0.66     0          0.00
+21 109MSDCF                                   161     1    0.62    4.28   0.60     0          2.04
+
+corpus lose%: median 4.65, max 20.35 (coffee-bean)
+agreement between the two detail definitions: r = 0.557
+  !! THIS RANKING IS PARTLY A RANKING OF THE THRESHOLD.  The two
+     detail definitions disagree, so 4b must not be read as an
+     ordering of merge quality.  4a, which has no such
+     dependence, is the ranking to use.
+
+-- outcome partition over all delivered masters --
+  RANKED               21
+  TOO-LITTLE-DETAIL    3
+  UNREGISTERED         2
+  TOTAL                26
+    TOO-LITTLE-DETAIL: couch-fibers-cpl
+    TOO-LITTLE-DETAIL: flat-on-ruler-cpl
+    TOO-LITTLE-DETAIL: foam
+    UNREGISTERED: flower-inner-edge-cpl
+    UNREGISTERED: wrapped-text-2
+partition check OK: 26 == 26 masters

@@ -1,0 +1,23 @@
+$ python commission_verdict.py
+# exit=0
+
+=== commissioning the VERDICT RULE on flowers-cpl ===
+conclusion classes: B = (b) merge defect, G = (a) capture gap, T = (a) merge not beaten / focus captured
+
+  [PASS] T1 NULL: 6 sites -> TGGGTT (expected no B)
+  [PASS] T2 DEFECT (merge 4x worse): 6/6 sites -> BBBBBB (expected all B)
+  [PASS] T3 BOUNDARY (1.25x): site 0 tile r12c01 band 1: ratio 1.24 -> T, ratio 1.26 -> B (expected not-B then B)
+  [PASS] T4 LOCALITY: sites whose verdict changed: [0] (expected [0])
+  [PASS] T5 PEAK-CENTRED (focus captured everywhere): sites -> TTTTTT; 0 still read capture-gap (expected 0)
+  [PASS] T6 PEAK-AT-EDGE (capture gap everywhere): sites -> GGGGGG; 6/6 read capture-gap (expected all)
+
+  [note] T5 changes the CLASS at 3/6 sites but the LETTER at 0/6.
+         A letter-only parser would have reported T5 as UNCHANGED.
+         That is the V-LINEAR defect shape, and this harness had it until now.
+
+  [PASS] T7 SPECIFICITY (both arms x3, no information): sites -> TGGGTT vs baseline TGGGTT (expected identical)
+  [PASS] T8 DELETION (one site removed from the output): harness sees 5 sites, expects 6 -> refused
+  [FAIL] CHANNEL (deliberately false expectation): this line MUST read FAIL; if it reads PASS the pass/fail channel is dead and every result above is meaningless
+
+  8 PASS + 0 FAIL = 8 tests (every test lands in a counted outcome)
+  pass/fail channel: LIVE (a false expectation did produce FAIL)
