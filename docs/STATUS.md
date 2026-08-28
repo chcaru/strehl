@@ -201,8 +201,20 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    and 7 unmeasurable. The instrument is also blind to a broad rim at 9000 DN, twice the
    amplitude of anything it flagged. The fix is a decay test, which tightens rather than
    loosens. Fact 1855.
-8. **Measure the confidence exponent at depth on a qualified subject.** "Harmful at depth" was
-   refuted, but is *not* replaced by "it is fine" — it is unmeasured. Use `bee-1-cpl`.
+8. ~~**Measure the confidence exponent at depth on a qualified subject.**~~ **MEASURED — it is a
+   null, and it should not ship on this evidence.** On `bee-1-cpl` at N=299, over the acuity
+   band 0.17–0.25 where this subject qualifies SIGNAL: S100 reads flat 0.8015 / acuity 0.9939,
+   S1000 reads flat 0.8052 / acuity 0.8854, and gate-floor arm K reads flat 0.0937 / acuity
+   1.0028. All three nulls land inside the 0.005 tolerance (1.0016, 1.0040, 1.0013), so the
+   comparisons are valid rather than merely reported. Both strengths remove the same flat
+   amplitude while S1000 costs ~19× the acuity — the benefit saturates by z=100, the cost does
+   not. **The benefit is not quotable on this subject at all**, for a qualification reason
+   rather than a measurement failure: `bee-1-cpl`'s signal/noise boundary sits at 0.48, so the
+   flat 0.25–0.50 band qualifies as SIGNAL too and a reduction there cannot be called a grain
+   win. The lane also **falsified its own pre-registered prediction** (predicted flat ≥0.95 at
+   every strength; measured 1.0019 at N=79 but 0.805 at N=299) and withdrew the scope claim that
+   `select_weight` returns zero before consulting the exponent — that holds only where the gate
+   has already collapsed the set to one frame, which stops being true at depth. Facts 1974–1975.
 9. **Band-qualify more subjects.** Only `bee-1-cpl` (5.311) and `dry-erase-marker-head-cpl`
    (4.530) PASS at 0.30–0.35. `112MSDCF` reads 1.079 FAIL(noise) and `coffee-bubbles` 1.542
    MARGINAL. **No sharpness, softening or acuity claim is quotable without naming the band and
@@ -251,6 +263,29 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
     violation of the axis's own documented refusal rule. (c) `printcert4.rim_verdict` convicts on
     `corrected_bright` **only**, and a one-sided gate cannot measure ringing, which is symmetric;
     `flower-bud-alone-cpl` PASSES while reading `corrected_dark` +4.51%. Facts 1898–1899.
+17. **The byte-freeze regression guard is blind to the default merge backend.** Verified by
+    reading the harness, not reported: `byte-freezes.tsv` holds **2 data rows and 0 naming
+    pyramid**, and `byte-freeze.rs` hardcodes `--merge estimator` into *every* row's argv
+    (`byte-freeze.rs:576–577`), while `DEFAULT_MERGE_BACKEND` is `MergeBackend::Pyramid`
+    (`merge_cmd.rs:429`). So the guard most relied on to catch silent output drift never
+    exercises the path every default render actually takes — **a green byte-freeze currently
+    certifies only the non-default backends**. The harness says so about itself at
+    `byte-freeze.rs:547–548` and `570`, and states the fix: the day a pyramid row is added,
+    `--merge` must become a registry column exactly as `--gate` did. This is a product risk
+    rather than a research finding, and closing it needs a freeze row, not a new measurement.
+    Fact 1977.
+18. **`contrast_ms.py` fails a planted DC-offset null**, and roughly 38 committed files across
+    at least eight lanes call it. A constant added to an image is annihilated by every high-pass
+    filter, so the true reading is exactly 1.000 at every band; the instrument returned
+    **0.9696** at all six. The mechanism was confirmed in the source rather than inferred:
+    `contrast_ms.py:64–67` rescales B by `median(a)/median(b)` under the banner "tone confound
+    removed", so a DC offset moves B's median, moves the scale, and multiplies B's AC amplitude
+    by a factor ≠ 1. The error is invertible, so **the truth is bracketed between the raw and
+    the corrected reading and neither end may be quoted alone**. Fact 1976. Note the exposure
+    is bounded, not zero: the published merge-vs-best-frame softness numbers came from
+    V-SOFTCHECK's `bandqual.py`, which normalises per-frame *gain* rather than a median ratio —
+    a different mechanism in the same vulnerability class, referred for independent DC-null
+    testing rather than assumed safe.
 
 ### 3.3 Open against the brief
 
