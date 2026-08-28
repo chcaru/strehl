@@ -35,7 +35,7 @@ import tifffile
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from flatexp import DEF_DIR, FLAT_DIR, CROP, content_sites  # noqa: E402
 
-OUT = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
+OUT = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs")
 
 
 def main():

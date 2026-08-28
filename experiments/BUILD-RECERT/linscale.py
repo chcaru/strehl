@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np
 import tifffile
 
-T = Path(r"C:\dev\strehl-out\BUILD-RECERT\hull\lintest")
+T = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\hull\lintest")
 
 m = tifffile.imread(T / "merged-lin.tiff").astype(np.float64)
 print(f"merge --linear-srgb: shape={m.shape} p50={np.percentile(m, 50):8.1f} "

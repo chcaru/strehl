@@ -65,7 +65,7 @@ REPO = Path(__file__).resolve().parents[2]
 FINALPASS = REPO / "scripts" / "finalpass.ps1"
 GATE = REPO / "experiments" / "ORCH-drift-check" / "orch_printready.py"
 BASELINE_DIR = Path(r"C:\dev\strehl-out\acceptance\SHIP-V4")
-OUT_ROOT = Path(r"C:\dev\strehl-out\BUILD-RECERT")
+OUT_ROOT = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT")
 FLAGS = "--srgb --auto-exposure"
 
 SHIPPING_SHA = "44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490"

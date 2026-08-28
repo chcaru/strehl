@@ -61,7 +61,7 @@ from scipy.ndimage import gaussian_filter
 
 HERE = Path(__file__).resolve().parent
 SHIP = Path(r"C:\dev\strehl-out\acceptance\SHIP-V4")
-WORK = Path(r"C:\dev\strehl-out\BUILD-RECERT\commission-head")
+WORK = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\commission-head")
 SUBJECTS = ["coffee-bubbles", "flat-on-ruler-cpl"]
 MAX = 65535
 

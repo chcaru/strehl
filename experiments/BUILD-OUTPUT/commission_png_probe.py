@@ -25,7 +25,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from png_probe import probe, dpi_of, SIG  # noqa: E402
 
-TMP = Path(r"C:\dev\strehl-out\BUILD-OUTPUT\commission")
+TMP = Path(r"D:\strehl-out\BUILD-OUTPUT\scratch\commission")
 WIN_SRGB = Path(r"C:\Windows\System32\spool\drivers\color\sRGB Color Space Profile.icm")
 
 

@@ -1,6 +1,6 @@
 import re
 rows = []
-for ln in open(r"C:\dev\strehl-out\BUILD-OUTPUT\banding_corpus.log", encoding="utf-8", errors="replace"):
+for ln in open(r"D:\strehl-out\BUILD-OUTPUT\scratch\banding_corpus.log", encoding="utf-8", errors="replace"):
     m = re.match(r"^(\S.*?)\s+(shadow|mid|high)\s+(\d+)\s+(\d+)\s+(\d+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+(\d+)\s*$", ln.rstrip())
     if m:
         rows.append((m.group(1).strip(), m.group(2), float(m.group(6)), float(m.group(11)), int(m.group(3))))

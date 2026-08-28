@@ -19,7 +19,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 DOC = ROOT / "docs" / "research" / "BUILD-OUTPUT.md"
-LOGS = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
+LOGS = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs")
 
 text = DOC.read_text(encoding="utf-8")
 # Bounded above as well as below, so a future section 15 cannot silently widen

@@ -36,8 +36,8 @@ from recertlib import BANDS, classify, display_crop, measure_crop  # noqa: E402
 from mottlewin import (BLUR_FRAC_MAX, WIN_MIN, mottle_win,  # noqa: E402
                        summarise_band)
 
-ARMS = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms")
-LOGS = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
+ARMS = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms")
+LOGS = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs")
 BASE_ARM = "SC-BASE-bc6fa3c7"
 CAND_ARMS = ["SC-NULL-bc6fa3c7", "SC-4-bc6fa3c7", "SC-8-bc6fa3c7",
              "SC-16-bc6fa3c7", "SC-RAMP-bc6fa3c7",

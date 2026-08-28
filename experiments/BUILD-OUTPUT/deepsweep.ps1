@@ -19,7 +19,7 @@
 $ErrorActionPreference = "Stop"
 $repo = "C:\dev\blog\death-of-software\projects\strehl"
 $exe  = Join-Path $repo "target\release\strehl.exe"
-$logs = "C:\dev\strehl-out\BUILD-RECERT\logs"
+$logs = "D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs"
 $six  = "coffee-bubbles,lead-1-cpl,113MSDCF,flat-on-ruler-cpl,112MSDCF,foam"
 
 $sha = (Get-FileHash $exe -Algorithm SHA256).Hash
@@ -43,7 +43,7 @@ foreach ($tag in $arms.Keys) {
         --candidate $exe --arm $arm --only $six --stages "identity,render" `
         *>&1 | Tee-Object -FilePath (Join-Path $logs "scalesweep-$tag.txt")
     $dt = [math]::Round(((Get-Date) - $t0).TotalSeconds, 1)
-    $n  = (Get-ChildItem "C:\dev\strehl-out\BUILD-RECERT\arms\$arm" -Filter "*.tiff" -ErrorAction SilentlyContinue).Count
+    $n  = (Get-ChildItem "D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\$arm" -Filter "*.tiff" -ErrorAction SilentlyContinue).Count
     Write-Host "----- $arm done in ${dt}s, $n master(s)"
 }
 Remove-Item Env:\STREHL_GATE_FLOOR_SCALE -ErrorAction SilentlyContinue

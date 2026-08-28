@@ -37,7 +37,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ARM = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62")
+ARM = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\DEF-2f858c62")
 DEST = Path(r"C:\dev\strehl-out\acceptance\HEAD-d2193a55-sealshape")
 ARM_TAG = "DEF-2f858c62"
 SEAL_TAG = "SHIP-V4"          # dictated by printcert4.py:171, not chosen

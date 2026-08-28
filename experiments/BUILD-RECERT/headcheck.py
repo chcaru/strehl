@@ -41,8 +41,8 @@ import numpy as np
 import tifffile
 
 HEAD_EXE = Path(r"C:\dev\strehl-out\acceptance-pins\d2193a55\target\release\strehl.exe")
-ARM = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62")
-OUT = Path(r"C:\dev\strehl-out\BUILD-RECERT\headcheck")
+ARM = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\DEF-2f858c62")
+OUT = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\headcheck")
 SRC = Path(r"D:\personal\macro")
 
 SUBJECTS = ["highly-angled-ruler-mm-cpl", "109MSDCF", "coffee-bubbles"]

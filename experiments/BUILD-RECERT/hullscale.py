@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 import tifffile
 
-H = Path(r"C:\dev\strehl-out\BUILD-RECERT\hull")
+H = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\hull")
 
 m = tifffile.imread(H / "merged-default.tiff").astype(np.float64)
 print(f"merge  shape={m.shape} p50={np.percentile(m, 50):9.1f} "

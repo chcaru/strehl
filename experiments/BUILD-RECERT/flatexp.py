@@ -62,9 +62,9 @@ sys.path.insert(0, str(HERE))
 
 import recertlib as R  # noqa: E402
 
-DEF_DIR = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62")
-FLAT_DIR = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\FLAT1-2f858c62")
-OUT = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
+DEF_DIR = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\DEF-2f858c62")
+FLAT_DIR = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\FLAT1-2f858c62")
+OUT = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs")
 
 CROP = R.CROP
 N_SITES = 5

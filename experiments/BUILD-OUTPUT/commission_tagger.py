@@ -28,7 +28,7 @@ import build as B          # noqa: E402
 from png_probe import probe, dpi_of  # noqa: E402
 
 Image.MAX_IMAGE_PIXELS = None
-TMP = Path(r"C:\dev\strehl-out\BUILD-OUTPUT\tagcheck")
+TMP = Path(r"D:\strehl-out\BUILD-OUTPUT\scratch\tagcheck")
 SRC = Path(r"C:\dev\strehl-out\DELIVER-V5\crops-1to1")
 
 

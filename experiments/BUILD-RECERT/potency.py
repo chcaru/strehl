@@ -30,7 +30,7 @@ import sys
 import numpy as np
 import tifffile
 
-POT = r"C:\dev\strehl-out\BUILD-RECERT\potency"
+POT = r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\potency"
 
 # The positive control must move at least this fraction of samples for the
 # comparison itself to be considered awake. 0.9098 is ORCH's measured figure for

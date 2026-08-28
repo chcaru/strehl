@@ -42,9 +42,9 @@ sys.path.insert(0, str(HERE))
 import flatexp as F  # noqa: E402
 import recertlib as R  # noqa: E402
 
-DEF = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62")
-WHITE = Path(r"C:\dev\strehl-out\BUILD-RECERT\gatefloor")
-OUT = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs\gatefloor-decomp.json")
+DEF = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\DEF-2f858c62")
+WHITE = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\gatefloor")
+OUT = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs\gatefloor-decomp.json")
 
 SUBJECTS = ["leaf-2-cpl", "coffee-bubbles"]
 

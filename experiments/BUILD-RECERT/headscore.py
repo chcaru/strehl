@@ -51,8 +51,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from flatexp import CROP, content_sites, ratios, score_subject  # noqa: E402
 
 SHIP = Path(r"C:\dev\strehl-out\acceptance\SHIP-V4")
-HEAD = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62")
-OUT = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
+HEAD = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\DEF-2f858c62")
+OUT = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs")
 
 # A movement smaller than this is called UNCHANGED. It is the largest |ratio-1|
 # that regsens2.py measured from a 1 px registration shift alone across three

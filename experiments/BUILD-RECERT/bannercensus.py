@@ -36,8 +36,8 @@ from pathlib import Path
 
 import numpy as np
 
-ARM = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\DEF-2f858c62")
-OUT = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs\bannercensus.json")
+ARM = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\DEF-2f858c62")
+OUT = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs\bannercensus.json")
 
 RE_XWHITE = re.compile(r"x white\s*:\s*([0-9.\s]+)")
 RE_FLOOR = re.compile(r"measured floor\s*:\s*([0-9.\s]+)")

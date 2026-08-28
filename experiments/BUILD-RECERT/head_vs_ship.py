@@ -37,7 +37,7 @@ import tifffile
 
 BASE_DIR = Path(r"C:\dev\strehl-out\acceptance\SHIP-V4")
 BASE_ARM = "SHIP-V4"
-HEAD_DIR = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms\HEAD-f190a0ea")
+HEAD_DIR = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms\HEAD-f190a0ea")
 HEAD_ARM = "HEAD-f190a0ea"
 
 EXP_RE = re.compile(r"^exposure\s*:\s*([+-]?[\d.]+)\s*stops\s*\(gain\s*([\d.]+)x\)", re.M)
@@ -66,7 +66,7 @@ def commission():
 
     # A1: the exposure parser must RAISE on an unparseable provenance, not
     # return a value that compares equal to another failure.
-    tmp = Path(r"C:\dev\strehl-out\BUILD-RECERT\commission-census")
+    tmp = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\commission-census")
     tmp.mkdir(parents=True, exist_ok=True)
     fake = tmp / "x.tiff"
     (tmp / "x.tiff.provenance.txt").write_text("no exposure here\n", encoding="utf-8")

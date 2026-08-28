@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DOC = ROOT / "docs" / "research" / "BUILD-OUTPUT.md"
-LOGS = Path(r"C:\dev\strehl-out\BUILD-RECERT\logs")
+LOGS = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\logs")
 
 text = DOC.read_text(encoding="utf-8")
 sec = text[text.index("# 12. Is the shipping default"):]

@@ -47,7 +47,7 @@ BLOWN = 0.25
 # from the known-good population.
 CLEAN = 0.0009
 
-ARMS = Path(r"C:\dev\strehl-out\BUILD-RECERT\arms")
+ARMS = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\arms")
 SHIP = Path(r"C:\dev\strehl-out\acceptance\SHIP-V4")
 SUBJECTS = ["coffee-bubbles", "lead-1-cpl", "113MSDCF",
             "flat-on-ruler-cpl", "112MSDCF", "foam"]

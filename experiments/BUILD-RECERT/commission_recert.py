@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from commission_bands import blur_rgb, plant_band_noise  # noqa: E402
 from recert import BASELINE_DIR, CROPS, diff_gate, stage_pair, verdict  # noqa: E402
 
-WORK = Path(r"C:\dev\strehl-out\BUILD-RECERT\commission")
+WORK = Path(r"D:\strehl-out\BUILD-OUTPUT\BUILD-RECERT\commission")
 SUBJECTS = ["119MSDCF", "coffee-bean", "tweezers-cpl"]
 STAGES = ["render", "gate", "pair"]
 
