@@ -1,0 +1,242 @@
+diff --git "a/C:\\dev\\strehl-out\\BUILD-SOFTGATE\\head0\\crates\\strehl-core\\src\\pyramid.rs" "b/C:\\dev\\strehl-out\\BUILD-SOFTGATE\\head\\crates\\strehl-core\\src\\pyramid.rs"
+index 852be93f..a715569a 100644
+--- "a/C:\\dev\\strehl-out\\BUILD-SOFTGATE\\head0\\crates\\strehl-core\\src\\pyramid.rs"
++++ "b/C:\\dev\\strehl-out\\BUILD-SOFTGATE\\head\\crates\\strehl-core\\src\\pyramid.rs"
+@@ -65,6 +65,7 @@
+ 
+ use std::sync::{Mutex, OnceLock};
+ 
++use crate::merge::SoftKernel;
+ use crate::noise::NoiseModel;
+ 
+ /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
+@@ -1300,6 +1301,32 @@ pub struct BandMerge {
+     /// commissioning bound on 965 647 coefficients of a 19-frame subject, which
+     /// is why the bound is checked rather than assumed.
+     dsq: Vec<Vec<f64>>,
++    /// The admission kernel, or `None` for the shipped selection.
++    ///
++    /// **Off by default and it must stay that way.** With `None` every field
++    /// below is unallocated and not one branch in the fold is taken, so the
++    /// shipped path is byte-for-byte what it was.
++    soft: Option<SoftKernel>,
++    /// Per level, per coefficient: the largest `ln r` any frame reached, where
++    /// `r = excess / floor / SNR_REF` is the quantity [`select_weight`] raises
++    /// to the exponent. Empty unless [`Self::soft`] is set.
++    ///
++    /// This is the kernel's **reference point** — the band's own winner. The
++    /// estimator's kernel measures a gap against the best focus response at a
++    /// pixel; the pyramid's equivalent is the best log-SNR at a coefficient,
++    /// and it is per band because the selection is.
++    ///
++    /// A maximum is associative and commutative, so it folds and
++    /// [`absorb`](Self::absorb)s exactly, like [`Self::lo`]/[`Self::hi`]. What
++    /// it does **not** do is stream in one pass with the accumulation that
++    /// consumes it: the weight for frame `f` needs the winner over *all*
++    /// frames, which is not known until the last one is folded. Hence
++    /// [`Self::ref_mode`] and a genuine second pass — the cost of the arm, paid
++    /// only when it is switched on.
++    ref_u: Vec<Vec<f32>>,
++    /// `true` while collecting [`Self::ref_u`] (pass one), `false` while
++    /// accumulating against it (pass two).
++    ref_mode: bool,
+ }
+ 
+ impl BandMerge {
+@@ -1402,9 +1429,76 @@ impl BandMerge {
+                 Some(_) => sizes.iter().map(|s| vec![0.0f64; s.pixels()]).collect(),
+             },
+             sizes,
++            soft: None,
++            ref_u: Vec::new(),
++            ref_mode: false,
+         }
+     }
+ 
++    /// Switch this merge onto the soft admission kernel.
++    ///
++    /// Allocates [`Self::ref_u`] and puts the merge in pass-one (reference
++    /// collecting) mode. Call [`Self::begin_accumulate`] with the reduced
++    /// reference before pass two.
++    ///
++    /// # What the kernel means here, which is not what it means in the estimator
++    ///
++    /// The estimator applies its kernel per **pixel**, over a regularised focus
++    /// field, softening a decision about which *frame* resolves that pixel. The
++    /// pyramid decides per **coefficient per band**, and its shipped weight is
++    /// already `w_f = r_f^p`. Normalising against the band's own winner `b`:
++    ///
++    /// ```text
++    /// w_f / w_b = (r_f / r_b)^p = exp(-p * d_f),   d_f = ln r_b - ln r_f >= 0
++    /// ```
++    ///
++    /// and `r_b^p` is a common positive factor that cancels in `num/den`. So
++    /// **the shipped pyramid selection already IS an exponential kernel** over
++    /// the log-SNR deficit, at temperature `T = 1/p`, and the sharpening ramp
++    /// [`MergeConfig::sharpen_per_octave`] is a temperature schedule over
++    /// scale. That is the identity this arm is built on, and
++    /// [`SoftKernel::Exponential`] is therefore a **placebo**: algebraically
++    /// the shipped merge, differing only in float rounding. It exists to
++    /// separate "the kernel changed the picture" from "the second pass changed
++    /// the picture", which is the control `ROBUST_ENV`'s `ungated` arm serves
++    /// for the estimator.
++    ///
++    /// [`SoftKernel::Gaussian`] is the treatment: `exp(-(p*d)^2 / 2)` is
++    /// *flatter* than shipped near `d = 0`, so frames within statistical noise
++    /// of the winner are admitted as the near-ties they are, and *sharper* in
++    /// the tail, so a frame that genuinely loses is rejected harder than
++    /// shipped rejects it. That is **candidate-set control** — it changes who
++    /// is in the running, not how steeply the winner is preferred — which is
++    /// the remedy corpus fact 1844 says depth softening needs, and explicitly
++    /// not the exponent control that fact measured making the deeper subject
++    /// 44.6% worse.
++    ///
++    /// The temperature is deliberately left at the shipped `1/p`. Any other
++    /// choice would confound "a different kernel shape" with "a different
++    /// exponent", and the exponent already has its own knob.
++    pub fn enable_soft(&mut self, kernel: SoftKernel) {
++        self.soft = Some(kernel);
++        self.ref_u = self.sizes.iter().map(|s| vec![f32::NEG_INFINITY; s.pixels()]).collect();
++        self.ref_mode = true;
++    }
++
++    /// The reference field collected by pass one.
++    pub fn ref_u(&self) -> &[Vec<f32>] {
++        &self.ref_u
++    }
++
++    /// Install a reduced reference field and leave pass-one mode.
++    pub fn begin_accumulate(&mut self, reference: Vec<Vec<f32>>) {
++        assert_eq!(reference.len(), self.sizes.len(), "reference has the wrong level count");
++        self.ref_u = reference;
++        self.ref_mode = false;
++    }
++
++    /// Whether this merge is collecting the reference rather than accumulating.
++    pub fn is_ref_pass(&self) -> bool {
++        self.ref_mode
++    }
++
+     pub fn sizes(&self) -> &[LevelSize] {
+         &self.sizes
+     }
+@@ -1560,15 +1654,84 @@ impl BandMerge {
+                 // Sharper toward the fine bands: see `MergeConfig::sharpen_per_octave`.
+                 let p = self.cfg.exponent_at(k, nb);
+                 let vv = ws.var.level(k);
+-                for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
+-                    // The floor at this band's scale: the level-0 variance
+-                    // carried down to this grid, times the measured band gain.
+-                    let floor = gate * beta * v.max(0.0);
+-                    let excess = (*e - floor).max(0.0);
+-                    *w = select_weight(excess, floor, p);
++                match self.soft {
++                    // The shipped path, untouched. No branch, no lookup, no
++                    // allocation -- the arm below cannot cost the default
++                    // anything it does not already pay.
++                    None => {
++                        for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
++                            // The floor at this band's scale: the level-0 variance
++                            // carried down to this grid, times the measured band gain.
++                            let floor = gate * beta * v.max(0.0);
++                            let excess = (*e - floor).max(0.0);
++                            *w = select_weight(excess, floor, p);
++                        }
++                    }
++                    Some(kernel) => {
++                        let collecting = self.ref_mode;
++                        let ru = &mut self.ref_u[k];
++                        for (j, ((w, e), v)) in
++                            w.iter_mut().zip(sq.iter()).zip(vv).enumerate()
++                        {
++                            let floor = gate * beta * v.max(0.0);
++                            let excess = (*e - floor).max(0.0);
++                            // `u = ln r` for exactly the `r` `select_weight`
++                            // forms, so the two paths agree on what the gap
++                            // axis IS. A coefficient that did not clear its
++                            // floor has no finite log-SNR and stays refused --
++                            // this arm softens the comparison BETWEEN admitted
++                            // frames, it does not lower the noise floor.
++                            let u = if excess > 0.0 {
++                                (excess / floor.max(1.0) / SNR_REF).ln()
++                            } else {
++                                f32::NEG_INFINITY
++                            };
++                            if collecting {
++                                if u > ru[j] {
++                                    ru[j] = u;
++                                }
++                                *w = 0.0;
++                            } else {
++                                let ub = ru[j];
++                                *w = if u.is_finite() && ub.is_finite() {
++                                    // Non-negative by construction: `ub` is a
++                                    // maximum over a superset of this frame.
++                                    // Clamped anyway, because a `NaN` variance
++                                    // would otherwise reach `exp` as a
++                                    // negative gap and manufacture a weight
++                                    // ABOVE the winner's.
++                                    let d = (ub - u).max(0.0);
++                                    let z = p * d;
++                                    match kernel {
++                                        // Identically the shipped ratio, up to
++                                        // float rounding: see `enable_soft`.
++                                        SoftKernel::Exponential => (-z).exp(),
++                                        SoftKernel::Gaussian => (-0.5 * z * z).exp(),
++                                    }
++                                } else {
++                                    0.0
++                                };
++                            }
++                        }
++                    }
+                 }
+             }
+-            self.accumulate_level(k, planes, &mut ws.plane, w);
++            // Pass one reads band energies only. Skipping the accumulation
++            // makes it cheaper than pass two AND makes it impossible for the
++            // discarded pass to contribute a coefficient to the result.
++            if !self.ref_mode {
++                self.accumulate_level(k, planes, &mut ws.plane, w);
++            }
++        }
++
++        // Pass one has everything it came for once the band loop has run: the
++        // reference is a per-band maximum of log-SNR and nothing below this
++        // point contributes to it. The base band and the hull are recomputed
++        // identically in pass two, over the same frames, so stopping here loses
++        // nothing and halves what the extra pass costs.
++        if self.ref_mode {
++            self.frames += 1;
++            return;
+         }
+ 
+         // 3. The base band.
+@@ -1594,7 +1757,6 @@ impl BandMerge {
+             }
+         }
+         Self::accumulate_level(self, kb, planes, &mut ws.plane, &ws.coarse[..szb.pixels()]);
+-
+         // 4. The hull of the aligned inputs, which the reconstruction will be
+         //    confined to. Taken from the frames as supplied — before any
+         //    decomposition — because it is a statement about the observations,
+@@ -1806,6 +1968,19 @@ impl BandMerge {
+     pub fn absorb(&mut self, other: &BandMerge) {
+         assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
+         assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
++        // The soft kernel's reference field. A maximum is associative and
++        // commutative, so this is exact under any chunking -- the same argument
++        // `lo`/`hi` rely on, and the reason a per-coefficient winner can be
++        // collected by a parallel fold at all.
++        if !self.ref_u.is_empty() && !other.ref_u.is_empty() {
++            for (a, b) in self.ref_u.iter_mut().zip(&other.ref_u) {
++                for (x, y) in a.iter_mut().zip(b) {
++                    if *y > *x {
++                        *x = *y;
++                    }
++                }
++            }
++        }
+         if self.cfg.fallback != Fallback::Mean {
+             assert_eq!(
+                 other.cfg.fallback, self.cfg.fallback,

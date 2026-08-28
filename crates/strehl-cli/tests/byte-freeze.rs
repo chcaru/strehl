@@ -515,6 +515,38 @@ const RENDER_ENV: &[&str] = &[
     // complete on the day it was written -- and it is not made safe by having
     // said so, either.
     "STREHL_PHOTOMETRIC",
+    // The soft admission kernel. This entry is the third instance of the
+    // pattern the two comments above predict, and the first that can do
+    // something worse than move a hash: it can *abort the test*.
+    //
+    // Both rows in `byte-freezes.tsv` pass `--merge estimator` explicitly, and
+    // on that backend the variable has always been live -- `Estimator::new`
+    // resolves it from the process environment. So an ambient
+    // `STREHL_SOFT_GATE=gaussian` does not produce a frozen render with
+    // different bytes; it produces a *differently weighted* fold that no row
+    // records, and an ambient typo produces `panic!` at rc=101, which reads as
+    // a crashed harness rather than a dirty shell.
+    //
+    // It was missing from this list for the whole life of the variable. The
+    // omission never bit for the same reason `STREHL_FIX_CA`'s did not: nobody
+    // sets it, because until now it did nothing on the default backend. That
+    // is exactly the condition under which these entries get forgotten, and
+    // exactly the condition that ends the moment the switch becomes useful.
+    "STREHL_SOFT_GATE",
+    // The per-coefficient significance floor. It multiplies the noise floor
+    // each band coefficient is judged against, so it rewrites `select_weight`
+    // for every coefficient in every band of every frame -- the election
+    // itself, not a post-process.
+    //
+    // Registered in the commit that introduces the variable, which is what the
+    // four comments above say should have happened each time and did not. It
+    // ships defaulted OFF, so unset and `0` are the same render today and this
+    // entry cannot yet move a hash -- it is registered against the flip, which
+    // is precisely the case those four comments describe going wrong. It is
+    // also unreachable from these rows for a second reason: every row here
+    // hardcodes `--merge estimator` (see `argv` below) and this variable only
+    // exists on the pyramid backend, which is `DEFAULT_MERGE_BACKEND`.
+    "STREHL_PYRAMID_SIGNIFICANCE",
 ];
 
 impl Freeze {

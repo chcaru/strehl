@@ -2856,6 +2856,41 @@ fn write_n_eff_map(path: &Path, n_eff: &[u16], frames: u32, geom: PlaneGeometry)
     Ok(())
 }
 
+/// Resolve [`strehl_core::merge::SOFT_GATE_ENV`] once, **before any frame is
+/// decoded**, on whichever backend is about to run.
+///
+/// This closes an asymmetry, not a parse bug. The kernel name was validated on
+/// exactly one path -- `Estimator::new`, which `panic!`s -- and the pyramid
+/// backend, which is the shipped default, never read the variable at all.
+/// MEASURED on `coffee-bubbles -l 3 --srgb` against the pre-change binary:
+///
+/// ```text
+/// STREHL_SOFT_GATE   pyramid (SHIPS)            estimator --photometric off
+/// unset              rc=0  742A6331..           rc=0  BBF38DD4..
+/// gaussian           rc=0  742A6331..  SAME     rc=0  00D8BFE3..  differs
+/// exponential        rc=0  742A6331..  SAME     rc=0  F496B5A7..  differs
+/// zzznope            rc=0  742A6331..  SAME     rc=101 panic in 3.4 s
+/// ```
+///
+/// The estimator column is the control: it moves, so the harness could see a
+/// change if there were one, and the pyramid column's single hash is a real
+/// zero rather than a blind comparator. A typo exited 0 and rendered normally
+/// on the backend that ships -- the same failure `MergeBackend::parse` refuses
+/// for the flag channel, because a flag that parses and does nothing is
+/// indistinguishable from one that works.
+///
+/// Placed on the shared dispatch so **both** backends refuse the same value.
+/// On the estimator that also converts an rc=101 panic into the ordinary rc=1
+/// `anyhow` error every other bad setting produces, by arriving first; the
+/// `panic!` stays where it is as a library-level invariant for direct API
+/// callers who bypass the CLI. Like [`align_cmd::preflight_ca_profile`] this
+/// asks the question once and throws the answer away, so the per-use re-read
+/// contract on [`strehl_core::merge::active_kernel`] is untouched.
+pub fn preflight_soft_kernel() -> Result<()> {
+    strehl_core::merge::active_kernel()?;
+    Ok(())
+}
+
 /// Run the merge the options selected.
 ///
 /// **The dispatch is the point.** Both merges are compiled and both are
@@ -2864,6 +2899,7 @@ fn write_n_eff_map(path: &Path, n_eff: &[u16], frames: u32, geom: PlaneGeometry)
 /// lines of compiled, tested, unreachable code and `blend-render` -- an example
 /// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
+    preflight_soft_kernel()?;
     match opts.backend {
         MergeBackend::Pyramid => run_pyramid(opts),
         MergeBackend::Estimator => run_estimator(opts),
