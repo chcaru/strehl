@@ -41,8 +41,25 @@ $Controls = @($Controls | ForEach-Object { $_ -split ',' } | Where-Object { $_ -
 if ($Values.Count -eq 0) { throw "REFUSING: no values to check" }
 
 function Test-Token([string]$hay, [string]$needle) {
-  # Digit boundaries on both sides: a longer number must not satisfy a shorter claim.
-  return $hay -match ("(?<![0-9])" + [regex]::Escape($needle) + "(?![0-9])")
+  return $hay -match (Get-TokenPattern $needle)
+}
+
+function Get-TokenPattern([string]$needle) {
+  # BOUNDARY CLASS depends on what the value IS. A digit-only boundary is wrong
+  # for hex: the character after a truncated digest is usually a LETTER, so
+  # 742A6331 matched inside 742A6331ABCDEF... and every truncated-hash claim
+  # certified too easily. Measured TRUE under (?![0-9]), FALSE under
+  # (?![0-9A-Fa-f]). Corpus fact 1965.
+  if ($needle -match '^[0-9A-Fa-f]+$' -and $needle -match '[A-Fa-f]') {
+    return "(?<![0-9A-Fa-f])" + [regex]::Escape($needle) + "(?![0-9A-Fa-f])"
+  }
+  # DIGIT GROUPING: house style writes large numbers as `98 898 048` with U+0020
+  # between groups, so a plain token search returns a FALSE NOT-BANKED for every
+  # number above 9999 in a prose report. Rather than mutating the haystack (which
+  # would fuse unrelated adjacent numbers), make the needle separator-tolerant.
+  $parts = $needle.ToCharArray() | ForEach-Object { [regex]::Escape([string]$_) }
+  $body = $parts -join '[\u0020\u00A0\u2009,]?'
+  return "(?<![0-9])" + $body + "(?![0-9])"
 }
 
 # Commission the instrument on THIS run's data before trusting its verdicts.
