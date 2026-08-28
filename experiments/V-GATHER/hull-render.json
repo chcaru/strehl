@@ -1,0 +1,67 @@
+{
+ "112MSDCF": {
+  "prior_excess": 0.17,
+  "control": false,
+  "clamp": {
+   "inputrange": "hull clamp      : 1.360% 10.866% 10.788% 2.449%",
+   "perlevel": "hull clamp      : 1.360% 10.866% 10.788% 2.449%"
+  }
+ },
+ "coffee-bubbles": {
+  "prior_excess": -0.016,
+  "control": true,
+  "clamp": {
+   "inputrange": "hull clamp      : 6.248% 15.091% 15.097% 8.499%",
+   "perlevel": "hull clamp      : 6.248% 15.091% 15.097% 8.499%"
+  }
+ },
+ "119MSDCF": {
+  "prior_excess": -0.013,
+  "control": true,
+  "clamp": {
+   "inputrange": "hull clamp      : 1.581% 4.544% 4.622% 2.059%",
+   "perlevel": "hull clamp      : 1.581% 4.544% 4.622% 2.059%"
+  }
+ },
+ "109MSDCF": {
+  "prior_excess": -0.055,
+  "control": true,
+  "clamp": {
+   "inputrange": "hull clamp      : 1.104% 4.853% 4.860% 1.781%",
+   "perlevel": "hull clamp      : 1.104% 4.853% 4.860% 1.781%"
+  }
+ },
+ "foam": {
+  "prior_excess": 0.232,
+  "control": false,
+  "clamp": {
+   "inputrange": "hull clamp      : 15.996% 20.631% 21.011% 18.653%",
+   "perlevel": "hull clamp      : 15.996% 20.631% 21.011% 18.653%"
+  }
+ },
+ "wrapped-text-1": {
+  "prior_excess": 0.283,
+  "control": false,
+  "clamp": {
+   "inputrange": "hull clamp      : 2.836% 6.056% 6.078% 3.378%",
+   "perlevel": "hull clamp      : 2.836% 6.056% 6.078% 3.378%"
+  }
+ },
+ "flower-inner-edge-cpl": {
+  "prior_excess": 0.694,
+  "control": false,
+  "clamp": {
+   "inputrange": "hull clamp      : 4.726% 7.194% 7.261% 4.398%",
+   "perlevel": "hull clamp      : 4.726% 7.194% 7.261% 4.398%"
+  }
+ },
+ "pencil-steep-angle-cpl": {
+  "prior_excess": 0.964,
+  "control": false,
+  "clamp": {
+   "inputrange": "hull clamp      : 3.411% 5.855% 5.886% 4.957%",
+   "perlevel": "hull clamp      : 3.411% 5.855% 5.886% 4.957%"
+  }
+ },
+ "_pin": "37A1B1D49E11713E216E6893CF932B6570869F1197774EDDE77386AFA5F1F037"
+}

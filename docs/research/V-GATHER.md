@@ -1510,3 +1510,269 @@ it is measurable in both directions on the same gauge.
   passband would be an independent check and there is not one.
 - **`--pyramid-gate` and `--pyramid-bands` were held fixed.** Only the exponent
   was varied. A different knob could produce the same ordering.
+
+
+## Part 13 - the hull ladder: the level-0 clamp is not the mechanism
+
+ORCH proposed a fix that is already built, already tested, and does not ship:
+`Hull::PerLevel`. The argument was that a band excursion born at a coarse level
+and guillotined at level 0 leaves a run of pixels pinned flat at `lo` and `hi` -
+a squared-off edge higher in contrast than any input, sitting entirely inside
+the value hull. A cut-out sticker rim is what a level-0 clamp looks like from
+the outside. ORCH called it a hypothesis and asked me to kill or confirm it.
+
+**Verdict: refuted, with a bound rather than a shrug.** Switching the level-0
+clamp off *entirely* changes mid-band contrast by **+0.32% to +2.14%**. The
+manufactured detail it is offered to explain is **+17% to +96%** ceiling excess.
+`PerLevel` moves it by **-0.11% to +0.42%** - and on the three worst subjects the
+sign is *up*, not down. A hard per-level projection, the strongest the code can
+express, reaches only **-0.22%**. The clamp axis is one to two orders of
+magnitude too small to be the mechanism, and ORCH's own stated criterion was
+"if it does not move it at all, the level-0 clamp is not the mechanism and I am
+wrong."
+
+For scale, from Part 12 on the same subjects: the *exponent* removes 54.7% to
+163% of the same excess. The hull removes 1.17% to 10.12%. `PerLevel` removes
+between -1.30% and +0.59%.
+
+### 13.1 Three things I checked before rendering anything
+
+**`crates/` was clean, not dirty.** ORCH said `pyramid.rs` "is dirty right now".
+`git status --porcelain -- crates/` returned empty at `fc83eb4e`. That is the
+better case - I compiled committed code - but it also means the build lane can
+land mid-experiment, so the binary is pinned (13.2) rather than trusted.
+
+**`--per-level` is wired.** `blend-render.rs:138`. It is absent from the usage
+string at `blend-render.rs:101`, which advertises `--unclamped` and not
+`--per-level`, so it is reachable and undocumented. Three further hull knobs
+exist that the brief did not mention: `--hull-lambda`, `--hull-from`,
+`--hull-low-only`.
+
+**The tool's own clamp diagnostic cannot answer this question, and I nearly
+quoted it as if it could.** `hull clamp : ...` reads *identically* under
+`InputRange` and `PerLevel` on all eight subjects, to three decimals. That looks
+exactly like `PerLevel` failing its documented claim that "by the time the
+reconstruction reaches level 0 there is far less for the last clamp to do".
+It is not. `clamped_fraction` at `pyramid.rs:2251` constructs a *fresh* merge
+with `hull: Hull::Unclamped` and empty `lo_lv`/`hi_lv`, then measures that
+reconstruction against the level-0 bounds. It reports the unclamped excursion
+regardless of the configured mode, so it is invariant to the very knob under
+test and carries no information about it either way. I record this because the
+line is operator-facing and reads like evidence.
+
+### 13.2 The instrument, and a conflict in the brief
+
+ORCH asked for two things that cannot both be done: "run your corrected
+ceiling-excess gauge, unchanged" and "do not compare a `blend-render` number
+against a `strehl stack` number". The ceiling in `sharp.json` comes from
+`strehl.exe` single-frame renders driven by `STREHL_ONLY_FRAME`, and that
+variable lives in `merge_cmd.rs`, which `blend-render` does **not** include - it
+takes `align_cmd.rs` and `image_out.rs` by `#[path]` and nothing else. So the
+frozen ceiling is a strehl-stack quantity and dividing a blend-render master by
+it is precisely the forbidden comparison.
+
+I resolved it toward the safety rule. The primary measurand is the **paired arm
+ratio** `band(arm) / band(inputrange)` at frozen sites, entirely inside
+`blend-render`. It needs no ceiling, so it cannot make the forbidden
+comparison, and it is strictly more sensitive than a difference of two excesses
+because the ceiling's noise is absent from it. All three predictions are claims
+about a change between arms, so all three survive the translation.
+
+Both arms come from **one pinned copy** of the binary,
+`37A1B1D49E11713E216E6893CF932B6570869F1197774EDDE77386AFA5F1F037`, hashed
+before the first render and again after the last, and it was unchanged. Output
+space is `--camera-linear`: camera-native primaries, linear, no matrix, no
+transfer curve. `blend-render`'s two declared gaps - no photometric
+normalisation, no clip handling - cancel exactly in a within-`blend-render`
+difference because both arms are missing the same two stages. That cancellation
+is the only thing that makes this instrument admissible and it is void the
+moment a number from here is set beside a `strehl stack` number. Nothing in
+this part does that.
+
+### 13.3 Commissioning, including the specific artifact under test
+
+All arms pass. `NULL` gives ratio exactly `1.0`, so the reproducibility floor is
+zero. `GAIN` x0.5/x2/x8 gives `max |r-1| = 0.000e+00` - both statistics are
+exactly invariant to a pure gain, which matters because two separate renders are
+not forced to share an absolute level. `SCALE` is exact to **3.01e-08** across
+k = 0.5..2.0. `BLUR` is the planted improvement and lowers both statistics
+monotonically. `HALO` is the planted defect and raises band monotonically.
+
+The arm that earns its place is **HALOCLAMP**, because it plants ORCH's
+mechanism rather than a generic defect: create an unsharp overshoot, then clamp
+it back inside the local input range, so an edge is squared off and *no*
+overshoot survives outside the hull.
+
+| alpha | band ratio | acuity ratio | px pushed outside the hull |
+|---:|---:|---:|---:|
+| 0.25 | 1.1146 | 1.1248 | 6.5% |
+| 0.50 | 1.2105 | 1.2384 | 11.9% |
+| 1.00 | 1.3495 | 1.4196 | 23.6% |
+
+Two things follow. **ORCH's mechanism is physically real** - a clamped overshoot
+genuinely carries more mid-band contrast than its source while remaining inside
+the value hull. And **the gauge can see it**, at the right sign and monotone in
+amplitude. A null from this gauge is therefore a statement about the renders and
+not about the instrument's reach.
+
+A separate `PIN` arm, which compresses a window's whole range instead, *lowers*
+both statistics (0.83 / 0.73 / 0.61). The two are different artifacts and I keep
+them apart; conflating them is how a softening would get reported as a fix.
+
+### 13.4 Potency, and the guard P2 needs
+
+ORCH: run `--unclamped` first. Done, and it raises band on **7 of 8** subjects
+(+0.32% to +2.14%), one flat. The gauge responds to the hull axis.
+
+A second potency question the brief did not ask for. Prediction P2 is
+"`PerLevel` is inert on the controls", and inertness is indistinguishable from
+dead plumbing. `pyramid.rs:3256` records that `hull_lambda` shipped **WIRED AND
+INERT** - plumbed correctly, plausible, and moving the output by 0.008%. So
+before reporting any null:
+
+| pair | samples differing | median abs delta | max |
+|---|---:|---:|---:|
+| inputrange vs perlevel, 112MSDCF | **3.790%** | 1 DN | 179 |
+| inputrange vs perlevel, coffee-bubbles | **17.468%** | 5 DN | 7304 |
+| inputrange vs unclamped, 112MSDCF | 26.077% | 4 DN | 636 |
+| inputrange vs unclamped, coffee-bubbles | 37.679% | 8 DN | 11687 |
+
+`--per-level` moves 470x to 2180x more samples than the setting judged inert. It
+is doing something substantial to pixels. What follows is therefore inertness of
+the *statistic*, not dead plumbing.
+
+### 13.5 The ladder
+
+Median ratio against the `inputrange` (shipping) arm, 40 frozen sites each.
+
+| subject | prior excess | perlevel band | perlevel acuity | unclamped band | unclamped acuity |
+|---|---:|---:|---:|---:|---:|
+| pencil-steep-angle-cpl | +96.4% | **+0.037%** | +0.000% | +0.575% | +0.468% |
+| flower-inner-edge-cpl | +69.4% | **+0.424%** | +0.028% | +2.138% | +1.451% |
+| wrapped-text-1 | +28.3% | **+0.287%** | +0.102% | +0.594% | +0.238% |
+| foam | +23.2% | -0.110% | -0.149% | +1.907% | +1.739% |
+| 112MSDCF | +17.0% | -0.009% | -0.015% | +0.772% | +0.390% |
+| 109MSDCF * | -5.5% | +0.000% | -0.000% | +0.799% | +0.119% |
+| coffee-bubbles * | -1.6% | -0.009% | -0.007% | +1.286% | +0.938% |
+| 119MSDCF * | -1.3% | +0.000% | -0.002% | +0.319% | +0.126% |
+
+`*` = negative control. Acuity is quoted on the same pixels as band throughout,
+as ORCH required, and it tracks band closely everywhere - so there is no hidden
+sharpness trade in either direction. `PerLevel` neither removes manufactured
+detail nor costs acuity; it does very little to either.
+
+**P1 is refuted.** `PerLevel` does not reduce manufactured detail on the excess
+subjects. On the three worst it *raises* it, one of them by +0.42% with a
+worst site at +7.4%.
+
+**P2 is confirmed but uninformative.** `PerLevel` is inert on the controls
+(+0.000%, -0.009%, +0.000%). It is equally inert on the excess subjects, so this
+is not the selective inertness the prediction described - it is global
+inertness.
+
+Arms are on the same pixel grid: zero-shift Pearson r has median >= 0.9996 and
+minimum 0.9974 across every subject and arm, with no registration applied.
+
+### 13.6 Is the null a result, or is my site set pointed away from it?
+
+`--per-level` moves up to 17.5% of samples while the gauge reads ~1.0000. Those
+are compatible two ways, and only one is a result. Three checks, none of which
+uses the site list:
+
+| subject | global band ratio, no sites | at the 24 most-changed tiles | mean abs delta: frame / my sites / hottest tiles |
+|---|---:|---:|---|
+| foam | 0.998874 | 0.998531 | 8.90 / 8.46 / 24.76 DN |
+| 112MSDCF | 0.999880 | 0.999780 | 0.151 / 0.143 / 0.749 DN |
+| coffee-bubbles | 0.998831 | 0.996591 | 4.72 / 6.11 / 48.34 DN |
+
+The global ratio, computed over the entire frame with no site selection at all,
+reproduces the site reading to four decimals. And **where `PerLevel` acts
+hardest** - tiles carrying 3x to 10x the frame-average change - mid-band
+contrast still does not move. The same global measure reads 1.019 / 1.007 /
+1.018 for `--unclamped`, so it is not a measure that refuses to move. The null
+is a property of the renders.
+
+### 13.7 Is `PerLevel` merely configured too soft?
+
+`hull_lambda` defaults to 2.0 and `pyramid.rs:1013` documents `hull_lambda = 0`
+as a hard per-level projection, so a null at the default is ambiguous between
+"wrong mechanism" and "too weak a bound". The sweep removes the ambiguity.
+
+| arm | foam band | coffee-bubbles band | what it is |
+|---|---:|---:|---|
+| `--hull-from 5` | 1.00007 | 1.00000 | bound confined above the visible scales - **internal null** |
+| `--per-level` (lambda 2.0) | 0.99890 | 0.99991 | the mode as it would ship |
+| `--hull-lambda 0.5` | 0.99819 | 0.99968 | |
+| `--hull-lambda 0` | **0.99778** | **0.99941** | **hard projection, the strongest available** |
+| `--unclamped` | 1.01907 | 1.01286 | no hull at all - **potency** |
+
+The arms order monotonically by bound strength and the internal null lands at
+1.00007, so the sweep is responding to the knob and is capable of printing a
+null when a null is correct. The entire span from the weakest per-level bound to
+the hardest is **0.23%** on `foam` and **0.06%** on `coffee-bubbles`. There is
+no setting of this mechanism that reaches the effect.
+
+### 13.8 What the clamp is worth, projected onto the excess
+
+The ratios above are dimensionless and measured within one binary. Projecting
+them onto Part 12's ceiling excess assumes the ratio transfers between the two
+renderers; it is labelled a projection for that reason and the primary result
+above does not depend on it.
+
+| subject | excess | removed by `PerLevel` | removed by removing the clamp entirely |
+|---|---:|---:|---:|
+| pencil-steep-angle-cpl | +96.4% | -0.08% | -1.17% |
+| flower-inner-edge-cpl | +69.4% | -1.04% | -5.22% |
+| wrapped-text-1 | +28.3% | -1.30% | -2.69% |
+| foam | +23.2% | +0.59% | -10.12% |
+| 112MSDCF | +17.0% | +0.06% | -5.31% |
+
+Negative means the arm *added* excess. The shipping level-0 clamp is already
+worth between 1.17% and 10.12% of the manufactured detail - it helps, mildly -
+and `PerLevel` adds nothing on top of it.
+
+### 13.9 What this result does and does not say
+
+It says the level-0 clamp is not the mechanism behind ceiling excess, and it
+bounds the whole clamp axis at ~2% of mid-band contrast.
+
+It does **not** independently re-open the rim question, but it does bound it.
+`HALOCLAMP` shows this gauge reads a clamped overshoot at +11% to +35% band, so
+a sticker rim of any material amplitude would be visible to it. Removing the
+clamp entirely moves the measured band by at most 2.14%. Whatever rim the
+level-0 clamp creates on these eight subjects is therefore small on this
+statistic. A dedicated rim instrument zoning on occluding edges - Part 11's
+axis, or V-HEADTOHEAD2's - remains the right tool for the rim question, and this
+is a bound, not a substitute for it.
+
+It also does not touch the residual identified in 12.9. That residual survives
+an exhaustive ceiling at exponent 1, and the hull is now excluded as its source
+too, which makes the cross-band hypothesis in 12.9 more attractive by
+elimination and no better tested.
+
+### 13.10 Defects I found in my own harness
+
+| # | defect | what caught it |
+|---|---|---|
+| 1 | `hul_report.py` read its subject list from `hull-render.json`, which `hul_run.py` only writes after the last subject. It examined **0** subjects, summed its partition to `0 == 0`, called that OK, and printed **"the gauge is NOT sensitive to the hull axis"** from n = 0. | Reading the output instead of the exit code. It now hard-errors on an empty population and prints NOT EXAMINED rather than a verdict. |
+| 2 | The same run's partition was a green produced by nothing being examined - the exact ambiguity this lane filed against the print gate. | Now a partition that balances at zero is an explicit failure. |
+| 3 | The `PIN` commissioning arm printed a "pixels pinned" figure computed as `100 * p / 100 * 100 / 100 * p`, which is not the quantity named. | Reading my own output. Replaced with an actual count. |
+| 4 | I was about to cite the identical `hull clamp` lines as evidence that `PerLevel` fails its documented claim. | Reading `clamped_fraction` rather than trusting the label (13.1). |
+
+Defect 1 is the serious one and it is the same shape as the finding this lane
+filed against the print certification: a conclusion printed from an empty
+population, wearing the same glyph as a conclusion drawn from evidence.
+
+### 13.11 Gaps
+
+- **Eight subjects, not the full 26.** The five with the largest measured excess
+  and all three within-ceiling controls.
+- **One gauge, one passband.** Mid-band contrast at DoG sigma 1.0-2.5 plus a
+  gradient acutance. Commissioned for amplitude, but a rim-specific zoning
+  statistic is a different instrument and is not run here.
+- **The projection in 13.8 assumes the ratio transfers between renderers.** It
+  is labelled and nothing depends on it.
+- **`--hull-low-only` was not swept.** The sweep covers bound strength and bound
+  placement, not one-sidedness.
+- **`blend-render` is missing photometric normalisation and clip handling.**
+  That is admissible here only because both arms are missing them equally.
