@@ -147,3 +147,26 @@ Kept, deliberately:
   reproduced without another clean worktree build; the entire before/after
   magenta comparison rests on it.
 - All manifests, logs, banners, JSON and sheets. Text and JPEG, 0.07 GB total.
+
+Measured, by directory:
+
+```
+before   C: 8.6793 GB   D: 0.0703 GB   total 8.7496 GB
+after    C: 6.1000 GB   D: 0.0703 GB   total 6.1703 GB
+logical difference                            2.5793 GB
+of which hardlinks (view-new7), freeing nothing 1.2895 GB
+genuinely reclaimed                            1.2898 GB
+```
+
+**The honest number is 1.29 GB, not 2.58 GB.** `view-new7` was a directory of
+NTFS hardlinks into `masters\`, verified with `fsutil hardlink list` (2 links per
+file) before deletion; it inflated any recursive byte count but occupied no
+blocks of its own. The C: volume free-space delta across the purge was 1.646 GB,
+which is *larger* than this lane reclaimed because sixteen other lanes were
+freeing scratch at the same time. Volume free space is not attributable to one
+lane during a concurrent purge; the directory measurement is.
+
+The remaining 6.17 GB is the deliverable itself and is on the protected list.
+After the purge all **33 masters re-hashed clean against the table above (33 OK,
+0 mismatch, 0 missing)** and both pinned binaries still match their recorded
+SHA256 — deleting the hardlinks did not touch the product.
