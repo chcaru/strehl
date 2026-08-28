@@ -2201,3 +2201,231 @@ recipe does not need changing.
   sigma >= 5.6 would not be caught by anything here.
 - I still have not seen BUILD-PLUGIN's instrument. §15.5 is an available
   explanation, not a diagnosis.
+
+## Part 16 - The per-band gate-floor knob does not move the rim
+
+ORCH asked for the rim axis on two files said to be on disk, and asked to be
+told early if the knob is worthless. The knob is not worthless. It is also not
+doing what ORCH argued, and the falsification condition ORCH wrote first is the
+one that fired.
+
+### 16.1 The two files ORCH cited do not exist
+
+`C:\dev\strehl-out\ORCH-BANDGATE\` is not a directory on this machine.
+`Test-Path` returns False, a recursive search of `C:\dev\strehl-out` for
+`A-unset.tiff` and `C-coarse8.tiff` returns nothing, and there is no
+`ORCH-BANDGATE` among the 32 lane directories there. The SHA-256 prefix ORCH
+quoted for the unset arm, `171981BC7DC8CD7D`, does not exist on disk either.
+
+What does exist is `C:\dev\strehl-out\V-BANDFLOOR\`, where **another lane has
+already rendered the same treatment on six subjects**, naming the coarse arm
+`B-coarse8` rather than `C-coarse8`. I used those. ORCH should know two lanes
+are pointed at this knob.
+
+### 16.2 The provenance I proved before using someone else's renders
+
+Reading another lane's output is only admissible if the pair is a real A/B, so
+each of these was checked rather than assumed:
+
+| check | evidence |
+| --- | --- |
+| same binary | `target-orch\release\strehl.exe`, mtime **3:31:38 PM**, predating both renders (**4:38:21 PM**, **4:44:50 PM**) and unmodified between them |
+| same recipe | both `stack <dir> -o <out> --srgb`, no other flag |
+| one variable | `STREHL_GATE_FLOOR_SCALE` `None` against `'1,8,8,8,8,8,8'` |
+| the treatment is ORCH's | banners reproduce ORCH's quoted lines **exactly**: `54.4% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%` and `54.4% 19.4% 5.2% 4.0% 2.4% 0.5% 0.0% 100.0%` |
+| no exposure confound | neither arm applied exposure; the trap ORCH warned about is avoided because plain `--srgb` reports the gain and applies nothing. The gains it *would* have chosen differ by 0.7% (+3.19 vs +3.20 stops) and were not applied |
+| a free byte-identical null | a third arm at `'1,1,1,1,1,1,1'` hashes **`B8EDBF4B19C39C49`**, identical to the unset arm; the treatment hashes `84E0EB3B9C9FC0EF` |
+
+That last row is worth more than the rest. ORCH's commissioning claim that
+all-ones is byte-identical to unset **reproduces on a different lane's renders
+with a different binary**, and it hands the rim gauge a perfect null for free.
+
+### 16.3 Fact 1807: corroborated by a second knob, and my own §15.3 was wrong
+
+ORCH withdrew "the gate never fires above level 0" after seeing coarse bands
+gate at `--pyramid-gate 8` and `64`. **The withdrawal is right, and there is
+independent evidence for it in the very files ORCH sent me to.** ORCH raised
+`k`; V-BANDFLOOR's B arm holds `k = 2.0` fixed and raises only the per-band
+floor, and bands 1 through 5 go from `0.0%` to **`19.4 / 5.2 / 4.0 / 2.4 /
+0.5%`**. Two different knobs, two lanes, same conclusion: the coarse gate is
+capable, it is simply never reached at the shipping constant.
+
+**My §15.3 is corrected.** Its measurement stands - across eight subjects at the
+shipping `k`, the maximum averaging anywhere above level 0 is 1.1%. Its last
+sentence does not: I wrote *"by the banner's own criterion the gate is a level-0
+device, confirmed at 8x the evidence"*, which states as a structural property
+what is only a property of `k = 2.0`. I amplified ORCH's over-generalisation
+instead of catching it, and I had the data to catch it, because "the floor is
+never reached" and "the gate cannot fire" are different claims and only the
+first is measured. Read §15.3 as **"at the shipping constant"** throughout.
+
+### 16.4 Three instruments were ruled inadmissible before one was trusted
+
+None of this is padding; each refusal changed what could be reported.
+
+1. **My own from-scratch paired gauge (`bg_lib.py`) is inadmissible on this
+   subject.** It could not recover a planted blur of 1.2 px at any isolation cut
+   leaving 30 edges, reading `-0.045`, `+0.016`, `-0.089` px of sigma where
+   `+0.455` was planted, while base rim read `+0.277` - the textured-band
+   pathology `rimindep.py` already documents at +27%. It is retained only for
+   the coupling number it did produce.
+2. **The 10-90 rise is driven by the rim it is supposed to be independent of.**
+   A planted aura of 0.15 moved rise from 3.71 px to 3.18 px on an edge of
+   identical blur: **-3.85 px per unit rim, R^2 0.9617** over a four-point
+   ladder. That coupling runs the wrong way here - an arm that genuinely removed
+   an aura would have been reported as softening. A centre-slope variant cut it
+   to -3.3 and did not remove it.
+3. **`rimv6.edge_width` is inadmissible as a softening detector**, which matters
+   because it is the obvious answer to ORCH's trap. Against a planted blur
+   ladder at the frozen sites it fails at every rung and is **non-monotonic**:
+
+   | planted sigma | 0.4 | 0.8 | 1.2 | 2.0 | 3.0 |
+   | --- | ---: | ---: | ---: | ---: | ---: |
+   | predicted d width | +0.121 | +0.466 | +0.991 | +2.399 | +4.521 |
+   | measured d width | **-0.101** | **-0.135** | +0.061 | +0.999 | +2.296 |
+
+   It reads *negative* for small blurs and recovers about 40% at sigma 3. **The
+   width column in §16.6 is therefore not evidence and must not be read as
+   any.** This was caught because the blur arm and the median arm disagreed in
+   the wrong direction, not by inspection.
+
+A fourth was a defect in my harness rather than an instrument: `rimv6.choose_cut`
+requires 1000 edges, was forced onto a loose cut, left the floor at +2.641% and
+made the instrument refuse. `rimaxis.py`'s own sweep takes any cut at 30 edges
+and minimises the floor, reaching +1.513%. I used the committed logic. The 2%
+floor rule was not relaxed, and `coffee-bubbles` is REFUSED below because of it.
+
+### 16.5 What the trusted gauge demonstrated before it was believed
+
+The rim core is committed `rimv6`, unmodified. Changed only: two explicit paths
+instead of the SHIP-V4 seal, selection frozen **once on the smoothed control and
+reused by both arms** so the comparison is paired, and a bootstrap over the
+paired per-edge difference. rimv6 defaults to unpaired because different
+comparators carry a 1.005x raster scale; that does not apply to two renders from
+one binary and one registration, and the integer shift is asserted `(0,0)`.
+
+- **Null: exactly `+0.000%`, 95% CI `[+0.000%, +0.000%]`**, on all three
+  subjects that have a byte-identical arm. The gauge is exactly deterministic,
+  so there is no noise floor to clear - a rarity worth stating plainly.
+- **Amplitude, not presence.** ORCH asked for this in an earlier task and it is
+  discharged here: planted auras of 0.02 / 0.05 / 0.10 / 0.15 read **0.0175 /
+  0.0437 / 0.0868 / 0.1295**, monotone, roughly 87% of planted.
+- **Per-subject potency.** A planted USM was run on every subject, because a
+  gauge must be shown to see a rim *on the subject in hand* before its silence
+  there means anything: `+14.377%` (leaf-2-cpl), `+7.399%` (wrapped-text-1),
+  `+2.165%` (bee-2-cpl), `+2.140%` (dry-erase), `+0.184%` (119MSDCF).
+
+### 16.6 The result: rim does not move
+
+Paired 95% CI is on the **raw** bright delta, which uses neither the null table
+nor `edge_width`, so §16.4's third refusal does not touch the headline.
+
+| subject | L1 averaged, A -> B | d rim corrected | paired 95% CI (raw) |
+| --- | --- | ---: | --- |
+| coffee-bubbles | 3.1 -> 60.6% | *REFUSED* | instrument floor |
+| 119MSDCF | 0.0 -> 57.1% | -0.005% | [-0.009%, -0.003%] |
+| dry-erase-marker-head-cpl | 2.2 -> 45.7% | +0.014% | [-0.260%, +0.028%] |
+| bee-2-cpl | 0.0 -> 33.3% | -0.020% | [-0.075%, +0.014%] |
+| leaf-2-cpl | 0.0 -> 19.4% | -0.505% | [-2.538%, +1.215%] |
+| wrapped-text-1 | 0.0 -> 1.0% | +0.006% | [-0.045%, +0.102%] |
+
+Four of five CIs span zero. The fifth, `119MSDCF`, excludes zero at **-0.005%**,
+which is a twentieth of that subject's own USM response and is statistical
+significance without magnitude. On `leaf-2-cpl` - ORCH's chosen subject, the
+worst rim in the corpus, and the least sensitive here at n=424 - the effect is
+bounded at **|d rim| < 2.54%** against a measured rim of +14.4%.
+
+### 16.7 The dose-response, which is where this stops being one A/B
+
+The knob's own potency varies **57-fold** across these subjects, read from each
+render's banner rather than assumed. `wrapped-text-1` is a natural null: the
+treatment was applied and the gate barely moved. If the knob drove the rim, rim
+change would track that range.
+
+- **|d rim| against dose: Spearman -0.400**, the wrong sign, over a rim range of
+  0.005 to 0.505 points - and the 0.505 belongs to the least sensitive subject.
+- **flat-region noise against dose: Spearman -0.900.**
+
+There is a strong, monotone dose-response in these renders. It is not in the rim.
+
+### 16.8 What the knob does do, on the same pixels
+
+Measured with the structure-split discriminator from Part 14, unchanged, which
+is commissioned on a planted denoise **and** a planted softening: `DENOISE flat
+0.5000 detail 0.9983`, `SOFTEN detail 0.7313`, separation 0.2670, `NULL exactly
+1.000000`. A planted softening was additionally run on **each subject's own
+pixels** as a per-subject potency arm; all six read 0.7962 to 0.8697, below the
+0.90 bar, so silence from this instrument is meaningful on all six.
+
+| subject | flat (noise) | detail |
+| --- | ---: | ---: |
+| 119MSDCF | **0.9262** | 1.0013 |
+| coffee-bubbles | 0.9538 | 1.0009 |
+| bee-2-cpl | 0.9665 | 1.0047 |
+| dry-erase-marker-head-cpl | 0.9709 | 1.0025 |
+| leaf-2-cpl | 0.9856 | 1.0078 |
+| wrapped-text-1 | 1.0020 | 1.0066 |
+
+**Flat-region noise falls by up to 7.4%; detail energy is >= 1.0009 everywhere.**
+The knob is a denoiser that costs no detail. That is a real benefit and it is
+not the one that was argued for.
+
+### 16.9 Verdict against ORCH's own falsification conditions
+
+> "Falsified if: rim is unmoved between the two files, or moves in the wrong
+> direction, or moves only by softening the edge itself rather than the aura."
+
+**The first condition fired. Rim is unmoved**, across five measurable subjects
+spanning a 57-fold range of the treatment's own potency, against a gauge with an
+exactly-zero null and a demonstrated per-subject response to a planted aura.
+
+So **rim is not a coarse-scale selection artifact that coarse-band averaging can
+cut.** The mechanism ORCH argued predicts the aura should fall when coarse bands
+stop selecting and start averaging; bands 1 through 5 went from 0.0% to as much
+as 60.6% averaged and the aura did not move at all.
+
+The third condition - the trap - **does not arise**, and I want to be exact
+about why, because "the trap did not fire" and "I could not have seen it" are
+different. Nothing moved, so there is no reduction to attribute; and
+independently, the split's detail channel is >= 1.0009 on all six subjects with
+a working per-subject potency arm, so there is no softening either.
+
+**The knob is worth keeping and it is worth re-aiming.** It buys up to 7.4% less
+flat-region noise for no detail, dose-tracking at Spearman -0.900. It is not a
+rim fix and should not be sold as one.
+
+### 16.10 My own defects this round
+
+- **I amplified ORCH's over-generalisation in §15.3** instead of catching it,
+  and I had the measurement that distinguishes "the floor is never reached" from
+  "the gate cannot fire". Corrected in §16.3.
+- **I shipped a harness whose isolation rule was evaluated per arm**, admitting
+  182 sites on the control and 296 on a blur of the same image - a 63% larger
+  population - which is the exact population-drift defect my own docstring warns
+  about two paragraphs above the offending line. Caught by commissioning, not by
+  reading.
+- **I twice tried to engineer around the rise/rim coupling before measuring
+  it.** The correct move was the third one: measure the coupling, fit it, and
+  quote it. It is -3.85 px per unit rim and it would have inverted the sign of a
+  softening claim.
+
+### 16.11 Gaps
+
+- `coffee-bubbles` is REFUSED on rim and contributes only to the split. It is
+  the highest-dose subject at 60.6%, so the one subject where the treatment did
+  the most is the one the rim gauge cannot speak to.
+- `119MSDCF`'s USM potency is only `+0.184%`. Its rim null is weak evidence in
+  isolation; it carries weight here because its *flat* channel moved most.
+- **There is no working edge-softening detector inside the rim instrument.**
+  `edge_width` failed its ladder. Softening is covered by the independent split,
+  but the two do not share edges, so "rim flat and detail flat" is two
+  instruments agreeing, not one instrument measuring both on identical pixels.
+- The rim gauge is a *median* over edges. A rim confined to a small minority of
+  edges would not show, and no per-edge tail analysis was run.
+- All six subjects come from one lane's renders at one binary. I verified the
+  pair, not the lane.
+- ORCH's remaining hull item is already closed: `--unclamped` ran in §13.4 as
+  the potency arm (+0.32% to +2.14% of band on 7 of 8). `pinned_to_hull` is
+  `pyramid.rs:3252`, a **unit-test helper**, not a runtime statistic - it is not
+  reachable from the CLI, so measuring it on a real subject needs a change in
+  `crates/`, which is not mine to make.
