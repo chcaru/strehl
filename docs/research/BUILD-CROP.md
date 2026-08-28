@@ -1296,6 +1296,30 @@ and CA-on shows magenta and cyan rims.
 **The shipping default is 1.82x worse than switching the correction off.** The
 157x edge/flat ratio confirms a displacement signature rather than a colour cast.
 
+> **WITHDRAWN 2026-08-28 -- ONE-SIDED INSTRUMENT. DO NOT QUOTE THE 1.82x.**
+> The counts above are real and stand as counts. The *comparison* does not.
+> This counter scores MAGENTA, which is the over-correction artifact. Four
+> paragraphs up, this same section states that CA-off's artifact is "separated
+> orange and blue rims" -- and the counter has a magenta channel and a cyan
+> channel and **no orange channel at all**. So it was asked which of two
+> failure directions is worse using a statistic that can only see one of them.
+> A comparison run on such an instrument can be won by simply doing less, which
+> is exactly what ORCH warned about in item 3 of the re-fit assignment -- the
+> item I explicitly did not complete. ORCH has since looked at four sites at
+> 1:1 and reports CA OFF appearing MORE saturated, not less, which is the
+> outcome this counter is incapable of reporting.
+>
+> **Scope of the withdrawal, stated narrowly.** This retracts the
+> off-vs-shipped SHIPPING RECOMMENDATION only. It does NOT touch the re-fit in
+> 15: that was fitted on signed radial displacement in ppm against blue as a
+> control, and never on this counter. The over-correction diagnosis itself also
+> stands independently -- red crosses zero from -2.009 px to +0.672 px, which
+> is a signed displacement measurement, not a colour count.
+>
+> This is the same defect family as my withdrawn `corpus_scan.py`: commissioning
+> proved sensitivity and never proved specificity. Here it is worse, because the
+> blind spot is not noise -- it is the alternative hypothesis.
+
 ### 14.5 Not the declared extrapolation -- a uniform gain error
 
 The record declares `support_r_max = 0.788` and that "the corner is a 1.27x
