@@ -2149,3 +2149,184 @@ presence-based check is satisfied by any duplicate of the value it is looking
 for.* On four-decimal ratios that rarely bites. On a table of small integers it
 bites immediately, and it bites hardest on the summary rows -- which are exactly
 the rows a reader takes at face value.
+
+# 14. The gatefloor fix: ORCH's sign correction is right where it acts, and its consequence is the opposite of what was feared
+
+ORCH corrected himself to four lanes at once: he had relayed BUILD-GATE's
+`beta_actual / beta_white` range of **0.3432 - 0.9981, every entry below 1.0**
+as evidence the landed gatefloor fix makes the merge gate LOOSER, then rendered
+`leaf-2-cpl` at HEAD and read `x white : 1.5504 1.0693 1.1132 1.1386` -- every
+entry ABOVE 1.0 -- and concluded the reverse: the fix makes the gate STRICTER,
+therefore it averages more, therefore it softens, therefore BUILD-PLUGIN's
+measured **-9.9% to -39.9% sharpness** is the cost of it.
+
+He asked every lane to reproduce before relying on it. This section does that at
+**n = 25 rather than n = 1**, on a **different binary**, and then measures the
+consequence he inferred rather than inferring it.
+
+## 14.1 Reproduced, then generalised: the sign is level-dependent
+
+The 26 logs of the `DEF-2f858c62` arm already carry that banner, so the corpus
+answer cost no render. `leaf-2-cpl` reads `1.5504 1.0693 1.1132 1.1386` and
+`averaged 54.4% 0.0% ... 100.0%` -- **identical to ORCH's HEAD render**, from
+binary `A058F737DFE695F7` rather than his `AAAF8666B5F08DA5`. The banner
+reproduces across binaries.
+
+Across all 25 subjects that emit it, **ORCH's claim is REFUTED as stated and
+confirmed where it matters**:
+
+| level | n | min | median | max | entries below 1.0 |
+|---|---:|---:|---:|---:|---:|
+| **0** | 25 | **1.0888** | **1.1751** | **1.5504** | **0 of 25** |
+| 1 | 25 | 0.9275 | 1.0139 | 1.2660 | 10 of 25 |
+| 2 | 25 | 0.9779 | 1.0736 | 1.3611 | 4 of 25 |
+| 3 | 25 | 0.9998 | 1.0993 | 1.4009 | 1 of 25 |
+
+15 of 100 entries are below 1.0, so "every entry is above 1.0" is false. But
+**every level-0 entry is above 1.0 on every subject**, and level 0 is where the
+gate does essentially all of its work. Both prior claims were over-generalised
+from the level they happened to look at: BUILD-GATE measured warping alone and
+got <1.0; ORCH measured a real frame and got >1.0; the truth is that the two
+effects compose with opposite signs and **which one wins depends on the band.**
+
+The 26th subject is `highly-angled-ruler-mm-cpl`, and its absence is
+corroboration rather than a gap: it is the one subject whose alignment REFUSES,
+so its frames are never warped, and a floor **measured from each frame's own
+warp** has nothing to measure. The subject with no warp is the subject with no
+measured floor.
+
+## 14.2 The gate is very nearly inert above level 0 -- also refuted as stated, also true in substance
+
+| level | min | median | max | cells above 0.0% |
+|---|---:|---:|---:|---:|
+| 0 | 0.0% | 26.4% | 72.5% | -- |
+| 1-6 | 0.0% | 0.0% | 3.1% | 11 of 150 |
+| base | 100.0% | 100.0% | 100.0% | by design |
+
+Strictly, 11 of 150 cells are non-zero, so "0.0% at levels 1 through 6" is not
+universal -- `dry-erase-marker-head-cpl` alone gates 2.2 / 1.9 / 1.5 / 0.8%
+across L1-L4. But the median is 0.0% and the maximum is 3.1%, so ORCH's
+substantive point stands: **above the finest band the gate is doing almost
+nothing, and no choice of `k` can change that.** One caveat that must not be
+smoothed over: the banner prints one decimal, so `0.0%` means *below 0.05%*, not
+zero.
+
+The mechanism is visible in the banner's own numbers. The modelled band noise
+falls by roughly 17x per octave while natural image structure does not:
+
+| level | median band noise gain | ratio to L0 |
+|---|---:|---:|
+| 0 | 0.8898 | 1.00000 |
+| 1 | 0.0529 | 0.05945 |
+| 2 | 0.0101 | 0.01135 |
+| 3 | 0.0024 | 0.00270 |
+
+A single `k = 2.00` applied to a floor that collapses by 370x between L0 and L3
+is not one threshold, it is seven wildly different demands. **`flat-on-ruler-cpl`
+gates 0.0% at every level including level 0** -- on that subject the gate never
+fires at all.
+
+## 14.3 The consequence, measured rather than inferred
+
+ORCH's chain has four links: *the floor rises -> the gate is stricter -> the
+merge averages more -> the print softens.* The first three are confirmed above.
+**The fourth is false**, and it is the only one nobody had measured.
+
+`STREHL_GATE_FLOOR=white` restores the old behaviour, so the fix can be A/B'd on
+one binary with everything else held fixed. Two subjects, chosen as the extremes
+of the floor-excess range:
+
+| subject | x white (L0) | averaged L0, fix ON | averaged L0, fix OFF | change |
+|---|---:|---:|---:|---:|
+| `leaf-2-cpl` | 1.5504 | **54.4%** | 7.1% | **7.7x more gating** |
+| `coffee-bubbles` | 1.0888 | 36.4% | 26.1% | 1.4x more gating |
+
+**Potency first**, because an arm that silently rendered the default is
+indistinguishable from an arm that made no difference: on `coffee-bubbles`
+**91.87% of 98,898,048 samples differ, max |delta| 4328**. The flag reaches
+pixels.
+
+Now the print consequence, `base = fix ON` (the shipping default), `cand = fix
+OFF`. Both quantities are ABSOLUTE -- `structure` is the p99.5 with the band's
+own noise contribution removed, so it does not fall merely because an image got
+noisier, and `floor` is the band MAD:
+
+| subject | band | structure, fix OFF / ON | noise floor, fix OFF / ON |
+|---|---|---:|---:|
+| `leaf-2-cpl` | grain <=3 px | **0.8626** | **2.2648** |
+| `leaf-2-cpl` | struct 5-13 px | **0.7561** | **1.3635** |
+| `leaf-2-cpl` | mottle 21-61 px | 0.9718 | 1.0217 |
+| `coffee-bubbles` | all three | 1.0004-1.0017 | 0.9995-1.0044 |
+
+**Turning the fix off costs 24.4% of absolute structure in the 5-13 px band and
+simultaneously raises the noise floor by 36%.** It is worse on both axes at
+once, in every band. The fix is not a trade and its sharpness margin is not a
+denominator artifact -- which was the one objection that could have explained
+these numbers away, since `sharp` is a contrast-to-noise ratio and an arm that
+merely gets quieter scores higher on it without resolving anything.
+
+**Why averaging more does not soften:** averaging destroys signal only where
+there IS signal. Below the floor there is none, and a too-low floor lets
+noise-dominated coefficients clear the gate and enter a selection whose exponent
+is 8 at the fine bands -- where the loudest band power wins, and in a
+noise-dominated coefficient the loudest frame is the noisiest one. The white
+floor was not being permissive, it was electing noise. The banner says exactly
+this and it is correct: averaging is *"the correct estimator when there is no
+information, and the only operation that gets below single-frame noise."*
+
+## 14.4 The whole of the pin -> HEAD improvement is this one commit
+
+Section 13 measured `leaf-2-cpl` from pin `9b05d0b7` to HEAD at sharp **1.3420**
+and grain **0.4357**, and attributed it to a thirteen-commit bundle. Disabling
+the gatefloor at HEAD gives sharp **0.7451** and grain **2.2953** -- reciprocals
+to six significant figures (ratio-of-ratios 0.999991 and 1.000000).
+
+That agreement is close enough to be a tautology rather than a measurement, so
+it was checked at the pixels rather than believed:
+
+| subject | SHIP-V4 (pin) vs HEAD-with-fix-OFF | max delta |
+|---|---:|---:|
+| `leaf-2-cpl` | 393,494 of 99,010,560 samples (0.40%) | **1** |
+| `coffee-bubbles` | 65,757 of 98,898,048 samples (0.07%) | 2330 |
+
+**Disabling one environment variable at HEAD reproduces the pin's render of
+`leaf-2-cpl` to within one least-significant bit.** So `78fed9a1` is not one of
+thirteen contributors to that improvement, it is essentially the whole of it,
+and the other twelve commits are worth at most 1 LSB on that subject.
+
+## 14.5 The corpus predicts itself
+
+If the mechanism is right -- the white floor under-states the true noise at L0,
+so the fix helps most where it under-states it most -- then floor excess should
+predict improvement. Over the 25 subjects with both numbers:
+
+| prediction | Spearman rho | |
+|---|---:|---|
+| grain ratio FALLS as `x white` rises | **-0.4623** | CONFIRMED |
+| sharp ratio RISES as `x white` rises | **+0.5708** | CONFIRMED |
+
+And the sharpest form of it: the **top two subjects by level-0 floor excess**
+(`leaf-2-cpl` 1.5504, `lead-1-cpl` 1.5405) are **exactly** the top two by grain
+improvement (0.4357, 0.4940), which section 13 had already independently
+identified as the only two subjects that improved on all three axes at once.
+Two measurements taken for different reasons pick the same two subjects.
+
+## 14.6 What this means for the other lanes
+
+**BUILD-PLUGIN's magnitudes match mine and the direction does not.** They
+reported -9.9% to -39.9% sharpness attributed to the floor fix; I measure the
+floor fix moving absolute structure by **-2.8% to -24.4% when it is turned
+OFF**, which is the same effect size with the arms the other way round. That is
+worth checking before their re-tuned-`k` arm is designed on it: **if the
+orientation is inverted, the conclusion inverts with it.** I cannot check their
+harness from here and I am not claiming they are wrong -- I am claiming the
+coincidence of magnitude is too close to leave unexamined.
+
+**Re-tuning `k` is unlikely to reach mottle.** Not because the floor is
+mis-scaled, but because at L1-L6 the gate averages a median of 0.0% of
+coefficients, and `k` multiplies a floor those bands are already far above.
+BUILD-PLUGIN's elimination result is thereby mechanically explained.
+
+**The direction to predict for V-GATHER's A/B is now measured, not guessed:**
+`white` is the LOOSER gate at level 0 on all 25 subjects, so `white` should
+select more, be noisier, and -- on this evidence -- resolve LESS, not more.
