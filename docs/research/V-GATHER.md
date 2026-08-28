@@ -1131,3 +1131,382 @@ sheet was produced by a gate that could not see either of the two problems above
 
 One honest limit: I could not finish the sharpness check on seven of the deepest
 stacks, and I have counted them as unexamined rather than passed.
+
+
+## Part 12 - the merge's selection law, made the independent variable
+
+My previous report claimed the merge manufactures detail and supported it two
+ways: `stack.rs:11` names the mechanism, and 13 of 19 masters exceed their own
+focus ceiling. I also filed the gap against myself:
+
+> merge attribution is mechanistic, not experimentally isolated.
+
+An argument about code and an observation about pixels are not an experiment.
+Neither varies the merge. This part varies it.
+
+**Design.** `--pyramid-sharpen 1.0` disables the per-octave ramp, so
+`--pyramid-exponent e` sets one flat selection exponent at every band. I
+rendered `e = 1, 2, 4, 8, 16` plus the shipping default on nine subjects - the
+six worst by measured ceiling excess, and three that the sharpness axis had
+placed *within* their ceiling as negative controls - and re-measured ceiling
+excess on each with the same gauge, no threshold moved between arms.
+
+**Prediction under test**, as ORCH stated it: ceiling excess rises
+monotonically with the exponent and approaches zero at exponent 1. If excess is
+flat across a 16x range, or large at exponent 1, the selection law is not the
+mechanism.
+
+**Verdict, in two parts, because the experiment gave two answers.**
+
+1. **The selection law is confirmed as the dominant lever.** 9 of 9 subjects and
+   89 of 92 individual sites rise monotonically with the exponent. The three
+   negative controls are not inert - every one crosses above its ceiling as the
+   exponent rises. `112MSDCF` swings from 10.8% *below* its ceiling to 16.9%
+   *above* it on one knob, everything else frozen.
+2. **It is not the only source, and this half refutes ORCH's prediction.** The
+   prediction was that excess "should approach zero at exponent 1". On the two
+   deep stacks it does not. I suspected my own under-sampled ceiling, said in
+   advance what would settle it, and ran an **exhaustive every-frame ceiling**
+   over all 299 frames. It absorbed **17.1%** of the residual and left
+   **+36.2%** standing. By the criterion I set before seeing the number, the
+   selection exponent does not account for the whole effect (12.9).
+
+Both halves are load-bearing. The first is what a build lane can act on. The
+second is an open mechanism this project has not yet identified, and I would
+rather hand it over named than let the 9-of-9 result cover it.
+
+### 12.1 A correction to the brief's stated rationale
+
+ORCH's reason for expecting zero at exponent 1 was that "at exponent 1 the
+weights are proportional to excess and the output is a convex combination of
+the inputs - which cannot leave the hull."
+
+**The premise does not hold, and I read it off the shipping binary rather than
+off `crates/`, which is dirty under the build lane and would not describe the
+pin.** `--pyramid-select soft` is a convex combination weighted by excess band
+power *at every exponent*. The exponent sharpens the weights; it does not
+switch the merge between convex and non-convex. Convexity therefore does not
+separate the arms, and a convex combination of registered-and-warped frames is
+not confined to the per-site hull of the *unwarped* inputs the ceiling is
+measured on.
+
+This weakens the a-priori argument for the prediction without settling the
+prediction itself, which is empirical. The ladder then confirms its
+monotonicity half and refutes its approach-zero half (12.9) - so the rationale
+and the outcome are wrong in the same place, which is worth knowing. I record
+it because a prediction resting on a false rationale is a coincidence until
+someone checks, and the check is cheap.
+
+### 12.2 Commissioning the gauge for amplitude, not for presence
+
+ORCH required the gauge report a plant "at the right magnitude, not merely to
+report *something*", with a planted improvement as well as a planted defect.
+`lad_commission.py` fires 15 arms. All 15 pass.
+
+The load-bearing arm is SCALE, because its prediction is *exact*. For
+`band(a) = std(DoG(a)) / mean(a)` and `a' = m + k(a - m)`, the predicted excess
+is algebraic, not approximate:
+
+```
+  k           predicted       measured      rel err
+  0.5       -51.797736%    -51.797730%    9.88e-08
+  0.8       -22.876377%    -22.876378%    4.47e-08
+  1.0        -3.595471%     -3.595471%    0.00e+00
+  1.25       20.505661%     20.505671%    4.99e-07
+  2.0        92.809058%     92.809078%    2.20e-07
+  [PASS] SCALE two-sided   improvement -51.798% < base -3.595% < defect +92.809%
+```
+
+INJECT adds an *independent* bandpass field, so the bands add in quadrature and
+the prediction is a different formula, stated in advance. Measured correlation
+between the plant and the master is `+0.0038`, confirming the independence the
+quadrature assumes; worst relative error 4.5e-02.
+
+Two physical arms bracket it. HALO plants an unsharp overshoot and must raise
+the reading at every amplitude (`+2.12% / +10.77% / +25.38%`). BLUR is the
+**planted improvement**: removing mid-band contrast must *lower* manufactured-
+detail excess (`-5.81% / -18.86% / -43.66%`). A statistic whose error sign is
+bounded below - one that can ignore a defect but never charge for an
+improvement - passes defect-only commissioning trivially, and this project has
+shipped exactly that failure before. BLUR is the arm that excludes it.
+
+NANGUARD is not decoration. It confirms the unguarded value is `nan`, that
+`nan > 0` is `False`, and that a missing measurement would therefore have read
+as *within ceiling* - a silent PASS. The gauge returns `None` instead.
+
+**The SCALE arm caught a real defect in me, and only SCALE could have.** Its
+first run failed at every `k` except 1.0, by 2e-3 to 9e-3, on a relation I had
+asserted was analytically exact. `lad_scalediag.py` showed the relation holds to
+1.06e-07 in float32 and 0.00e+00 in float64: the gauge was right and my harness
+was wrong. I had built the affine map around `mean(big)` over a 576 px margined
+window while `band()` normalises by `mean(core)` over 512 px, so my normaliser
+moved with `k` by exactly the 0.42% the two means differ by. An arm that had
+only asserted "the number should go up" would have passed, and the bug would
+have shipped *inside the instrument certifying the ladder*.
+
+### 12.3 Potency, the null, and the licence to freeze the ceiling
+
+Three gates before any interpretation (`lad_probe.py`):
+
+| gate | result |
+|---|---|
+| **Potency** - are the arms actually different renders? | **98.18-99.07%** of 98,898,048 samples differ between arms. ORCH's known-potent reference for `--pyramid-exponent 4.0` is 90.98%. Not stale bytes. |
+| **Null** - reproducibility floor | The same arm re-rendered is **byte-identical**, SHA256 `398B5E43..`. The floor is exactly 0, so any inter-arm difference is real. |
+| **Ceiling invariance** | A *single source frame* rendered at exponent 1 and at 16 is **byte-identical**, SHA256 `DA1AB73C..`. |
+
+The third is the licence for the whole design. With one frame the merge has
+nothing to select between, so the exponent cannot reach the output; the ceiling
+is therefore a property of the inputs and not of the arm. That lets me freeze
+the sites *and* the ceiling and vary only the master - 5 renders per subject
+instead of a full re-derivation per arm - and it forecloses the population-
+mismatch failure that made an earlier rim instrument in this same lane read a
+*blurred* image as ringing more than the master.
+
+Provenance is captured per arm from the tool's own log line, which prints
+`per-band exp : 1 1 1 1 1 1 1` when the ramp is disabled.
+
+### 12.4 The ladder
+
+Median ceiling excess. Positive means the master carries **more** mid-band
+contrast than the best single input frame achieves at that site.
+
+| subject | e1 | e2 | e4 | e8 | e16 | shipping |
+|---|---:|---:|---:|---:|---:|---:|
+| coffee-bubbles* | -20.70% | -10.21% | -4.67% | -1.46% | -4.10% | -1.62% |
+| 109MSDCF* | -22.70% | -15.61% | -10.13% | -5.44% | +6.68% | -5.50% |
+| 119MSDCF* | -22.14% | -12.95% | -5.66% | -1.25% | +344.72% | -1.32% |
+| foam | -4.87% | +12.05% | +19.18% | +22.86% | +1204.28% | +23.24% |
+| wrapped-text-1 | +0.77% | +15.78% | +23.86% | +27.08% | +1975.75% | +28.32% |
+| leaf-2-cpl | -3.82% | +9.63% | +19.03% | +23.99% | +10.57% | +24.12% |
+| flower-inner-edge-cpl | +28.78% | +49.84% | +61.16% | +65.15% | +2728.92% | +69.37% |
+| pencil-steep-angle-cpl | +43.64% | +69.85% | +86.64% | +95.80% | +515.63% | +96.41% |
+| 112MSDCF | -10.78% | +1.80% | +11.06% | +16.89% | +5.17% | +17.03% |
+
+`*` = negative control.
+
+**All nine rise monotonically `e1 < e2 < e4 < e8`.** One subject landing on that
+ordering by chance is 1 in 24; nine independently is **P = 3.785e-13**. The
+exponent is not inert.
+
+The magnitude matters as much as the ordering. On `112MSDCF` the master goes
+from **10.8% below** its ceiling to **16.9% above** it purely by turning one
+knob, with the input frames, the sites and the gauge all frozen.
+
+`wrapped-text-1` needs a caveat I will not let the table hide: at `+0.775%` it
+is the one subject still nominally above ceiling at exponent 1, but that is
+1/37th of its shipping excess and smaller than the ceiling's own measured
+reproducibility floor of 2.38% (12.9). I would not defend it as a non-zero
+residual.
+
+Two subjects that were re-run in full as replication controls - `112MSDCF`
+after a self-inflicted concurrency failure, and all nine in the per-site pass -
+reproduced every previously measured median **exactly to six decimal places**.
+
+### 12.5 The negative controls respond, which closes ORCH's second route to refutation
+
+ORCH: *"A subject that was within ceiling and stays within ceiling at exponent
+16 is a second, independent way for the mechanism to be wrong."*
+
+None of the three stays within ceiling.
+
+| control | shipping | e1 | e16 median | e16 max site |
+|---|---:|---:|---:|---:|
+| coffee-bubbles | -1.62% | -20.70% | -4.10% | **+315.53%** |
+| 109MSDCF | -5.50% | -22.70% | **+6.68%** | +216.71% |
+| 119MSDCF | -1.32% | -22.14% | **+344.72%** | +15620.13% |
+
+Every one crosses above its own ceiling as the exponent rises. Their being
+within ceiling at the shipping setting is a fact about how much selection
+pressure that setting applies to *their* content, not evidence that the
+mechanism is absent from them.
+
+### 12.6 Per site
+
+Medians can be produced by a few sites moving a lot. They were not.
+
+**89 of 92 sites (96.7%) rise monotonically `e1 < e2 < e4 < e8`**, against 4.2%
+expected by chance. The three exceptions are two sites in `coffee-bubbles` and
+one in `foam`. Five of the nine subjects are 100% monotone at every site.
+
+### 12.7 Exponent 16 is degenerate, and I am not counting it as evidence
+
+e16 is *erratic*, not extreme in one direction: `+1975.75%` on `wrapped-text-1`
+but `+5.17%` on `112MSDCF`, which is **below that subject's own e8**. I
+excluded it from the monotonicity test in advance, and I want to be explicit
+that this cuts against me - a degenerate arm is not evidence for a trend in
+either direction, and including it would have made my own result look worse,
+not better.
+
+The registration audit flagged 15 sites, all in e16, with physically impossible
+shifts like `(350, -356)`. Those sites read correlation confidence **2.09-3.56**
+against **31-58** where the lock held: no peak at all, not a displacement. A
+low-pass did not restore the lock, refuting the obvious "the coarse structure is
+still shared" story.
+
+The control that settles it is Pearson `r` of heavily blurred windows **at zero
+shift, with no registration applied at all**:
+
+| arm | min r | median r |
+|---|---:|---:|
+| e1..e8 (all subjects) | >= 0.83 | >= 0.9985 |
+| e16 | **-0.61** | +0.10 to +0.93 |
+
+The frozen windows are on the same content in every arm the shipping ladder
+actually spans. e16's apparent displacement is genuine decorrelation of the
+image content - a second signature of the same effect, not a measurement
+defect. The shipping configuration runs 2..8, so nothing operational depends on
+e16.
+
+### 12.8 The shipping arm is a flat exponent 8, on this statistic
+
+Read off the binary: exponent 2.00, ramp 1.4x/octave, per-band `2 3 4 5 8 8 8`,
+gate 2.00, 7 bands plus a plain-mean base. This statistic lives in the fine
+bands, where the ramp has saturated at 8.
+
+Shipping minus flat-e8 across all nine subjects: **-0.162 to +4.213 pp**,
+median +0.134 pp. The prediction holds, and it means the ladder's e8 arm is a
+faithful stand-in for what ships.
+
+### 12.9 The confound in my own headline number, and how far it goes
+
+Seven of nine subjects fall to zero or below at exponent 1. Two do not:
+`flower-inner-edge-cpl` (+28.8%) and `pencil-steep-angle-cpl` (+43.6%). **Those
+two are the only 299-frame stacks in the set.** That is a suspicious
+coincidence and I went after it rather than reporting the residual as merge
+behaviour.
+
+`sharpaxis.py` caps its ceiling search at 56 renders. A 299-frame stack is
+therefore searched at **18.1% coverage** against **78.9%** for a 19-frame stack.
+An under-sampled maximum is *too low*, and a ceiling that is too low inflates
+excess. Across the nine subjects:
+
+- Spearman(ceiling coverage, excess at e1) = **-0.8167**
+- Spearman(n_raw, excess at e1) = **+0.9333**
+
+That is the signature of my own sampling, not of the merge.
+
+**The control.** `lad_ceiling.py` recomputes the ceiling **exhaustively, every
+frame**, on the deep subject and on a shallow one as a control on the method
+itself. The shallow result is in and it is the one that makes the deep result
+interpretable:
+
+```
+119MSDCF (33 frames, exhaustive)   ceiling rose: median +0.00%  max +2.38%
+  default  excess   sampled -1.322%  ->  exhaustive -2.329%
+```
+
+A maximum over more draws is larger in expectation even from pure noise, so a
+ceiling that rose everywhere would have proved nothing. Here it rises by a
+median of **zero**, and 5 of 8 sites do not move at all. The procedure is not
+inflating the ceiling by construction.
+
+That control also hands me a number I did not have. `119MSDCF` has 33 frames
+against a search cap of 56, so its sampled ceiling was **already exhaustive** -
+the two runs saw the same frames. Three of its eight sites nevertheless moved,
+by up to **+2.38%**. That is not coverage; it is the ceiling statistic's own
+run-to-run floor, consistent with the `STREHL_ONLY_FRAME` drift I filed earlier
+in this lane. **No excess difference smaller than 2.4% should be read as
+meaningful**, and I have applied that above to `wrapped-text-1`.
+
+**The deep subject, and the answer to the question I set.**
+
+```
+pencil-steep-angle-cpl (299 frames, exhaustive)   ceiling rose: median +5.49%  max +9.60%
+  e1       excess   sampled +43.644%  ->  exhaustive +36.164%
+  e2                        +69.848%  ->             +61.003%
+  e4                        +86.637%  ->             +76.917%
+  e8                        +95.799%  ->             +85.602%
+  default                   +96.409%  ->             +86.181%
+```
+
+The confound is **real**: the median ceiling rise of +5.49% is well above the
+2.38% floor, so the deep stack's ceiling genuinely was under-sampled, exactly as
+the rank correlations predicted. And it is **not large enough**. At exponent 1
+the residual falls from +43.644% to +36.164% - the exhaustive search absorbs
+**7.48 pp, or 17.1% of it. 82.9% survives.**
+
+I stated the reading in advance and I am holding to it: *if the residual
+survives an exhaustive ceiling, the selection law is not the only source.*
+**It survives.**
+
+Three things make the surviving +36.2% a conservative figure rather than an
+inflated one, and I looked for biases in the other direction first:
+
+- The ceiling is now a maximum over **every** input frame. No further sampling
+  can raise it. It is not an estimate.
+- The ceiling frames are rendered singly and are therefore **noisier** than a
+  299-frame merge, and `band()` is a standard deviation, which counts noise.
+  Single-frame noise inflates the ceiling and merge noise-averaging deflates the
+  master. Both bias excess **downward**.
+- The master's contributions are warped by a per-frame similarity and the
+  ceiling frames are not; resampling blurs, which again raises the ceiling
+  relative to the master and biases excess **downward**.
+
+**What the residual might be, stated as an untested hypothesis and labelled as
+one.** My gauge is a DoG at sigma 1.0-2.5, whose passband spans **more than one
+pyramid band**. The merge selects per band, so adjacent bands at one site can be
+drawn from *different* frames. Their reconstructed sum can exceed any single
+frame's contrast inside my passband even where every individual band is a convex
+combination. That mechanism is **exponent-independent**, which is the shape of a
+residual that survives at exponent 1. It is a hypothesis. I have not tested it,
+the obvious test is a DoG narrow enough to sit inside one pyramid band, and I am
+naming it so the next lane does not have to rediscover it.
+
+### 12.10 Defects I found in my own harness
+
+Four, all found by controls rather than by reading, which is the argument for
+the controls.
+
+| # | defect | what caught it |
+|---|---|---|
+| 1 | The commissioning affine map normalised by `mean(big)` over a 576 px window while `band()` normalises by `mean(core)` over 512 px, so my planted amplitude moved with `k`. | **SCALE**, because it predicts an exact value. A "the number should go up" arm passes this bug and ships it inside the instrument. |
+| 2 | Render-failure capture sliced the **tail** of stderr, which on this tool is a progress line. A failed arm reported `field of view scaled to 0.9765..` and named nothing. | Reproducing the failing arm standalone, where it exited 0. |
+| 3 | Self-inflicted concurrency: I launched a second render while the ladder ran, and each process plans 5.2 GB against a 6,144 MB budget. Read as a subject-specific failure. | The standalone reproduction succeeding. **Do not run renders concurrently on this machine.** |
+| 4 | The report printed "removed -1174.7% of the excess" for subjects whose shipping excess is negative - a quotient of two negatives, printed as a confident number meaning nothing. | Reading my own output rather than its exit code. |
+
+Defect 4 is the smallest and the most characteristic: it did not fail, it
+printed. Everything in this part is now guarded so that an undefined quantity
+says so instead of rendering as a figure.
+
+### 12.11 What this means operationally
+
+**Exponent 1 is not the fix.** It removes the manufactured detail on the shallow
+subjects and replaces it with genuine softness: `-20.70%`, `-22.70%` and
+`-22.14%` below ceiling on the three controls, and `-4.87%` to `-10.78%` on
+`foam` and `112MSDCF`. Trading a master that invents contrast for one that
+throws away a fifth of what the sensor recorded is not an improvement, and on a
+print it would read as mush.
+
+The measured zero-crossings - where a subject's master exactly meets its
+ceiling - cluster far below what ships:
+
+| subject | crosses zero at exponent | ships at |
+|---|---:|---:|
+| foam | 1.22 | 8 |
+| leaf-2-cpl | 1.22 | 8 |
+| 112MSDCF | 1.81 | 8 |
+
+The three shallow controls never cross by exponent 8; the two deep stacks are
+already above ceiling at exponent 1. **The subject dependence is real and it is
+partly confounded** - the controls in this set are shallow and the excess
+subjects are deep - so I do not offer a single recommended exponent. What the
+ladder does support is that the fine-band exponent of 8 is far above the point
+at which these subjects begin manufacturing detail, and that the cost of moving
+it is measurable in both directions on the same gauge.
+
+### 12.12 Gaps
+
+- **The residual mechanism is unidentified.** 12.9 names a cross-band
+  hypothesis and does not test it. This is now the largest open question in this
+  lane and it is more interesting than the result that prompted it.
+- **The exhaustive ceiling was run on two subjects, not nine.** 299 frames at
+  ~10 s each is ~50 minutes per subject. The seven others' e1 values still carry
+  a sampled ceiling and are upper bounds on excess by an amount that grows with
+  stack depth.
+- **`e16` is reported and excluded from every test.** It decorrelates the
+  content, so nothing about it should be read as a trend.
+- **One gauge, one passband.** Every number here is a DoG at sigma 1.0-2.5
+  normalised by local mean. It is commissioned for amplitude, but a second
+  passband would be an independent check and there is not one.
+- **`--pyramid-gate` and `--pyramid-bands` were held fixed.** Only the exponent
+  was varied. A different knob could produce the same ordering.

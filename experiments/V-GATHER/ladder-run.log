@@ -1,0 +1,51 @@
+binary 44C2F2CD2E5B2894..  matches all 26 SHIP-V4 seals
+
+== 112MSDCF
+    default  exp[2 3 4 5 8 8 8   (coarsest -> finest)] n=13  median excess  +17.028%  p90  +40.401%  (41s)
+    e1       RENDER FAILED d of view scaled to 0.9765 so that EVERY frame covers every pixel (2.4% of width
+    e2       exp[2 2 2 2 2 2 2   (coarsest -> finest)] n=13  median excess   +1.804%  p90  +25.319%  (32s)
+    e4       exp[4 4 4 4 4 4 4   (coarsest -> finest)] n=13  median excess  +11.061%  p90  +34.705%  (27s)
+    e8       exp[8 8 8 8 8 8 8   (coarsest -> finest)] n=13  median excess  +16.894%  p90  +40.511%  (23s)
+    e16      exp[16 16 16 16 16 16 16   (coarsest -> finest)] n=13  median excess   +5.171%  p90  +41.648%  (33s)
+
+== foam
+    default  exp[2 3 4 5 8 8 8   (coarsest -> finest)] n=12  median excess  +23.241%  p90  +41.882%  (39s)
+    e1       exp[1 1 1 1 1 1 1   (coarsest -> finest)] n=12  median excess   -4.869%  p90   +7.565%  (25s)
+    e2       exp[2 2 2 2 2 2 2   (coarsest -> finest)] n=12  median excess  +12.052%  p90  +27.551%  (27s)
+    e4       exp[4 4 4 4 4 4 4   (coarsest -> finest)] n=12  median excess  +19.183%  p90  +36.953%  (35s)
+    e8       exp[8 8 8 8 8 8 8   (coarsest -> finest)] n=12  median excess  +22.862%  p90  +41.707%  (31s)
+    e16      exp[16 16 16 16 16 16 16   (coarsest -> finest)] n=12  median excess +1204.284%  p90 +2582.054%  (23s)
+
+== wrapped-text-1
+    default  exp[2 3 4 5 8 8 8   (coarsest -> finest)] n=11  median excess  +28.317%  p90  +53.936%  (85s)
+    e1       exp[1 1 1 1 1 1 1   (coarsest -> finest)] n=11  median excess   +0.775%  p90  +18.630%  (46s)
+    e2       exp[2 2 2 2 2 2 2   (coarsest -> finest)] n=11  median excess  +15.780%  p90  +37.804%  (31s)
+    e4       exp[4 4 4 4 4 4 4   (coarsest -> finest)] n=11  median excess  +23.855%  p90  +48.356%  (26s)
+    e8       exp[8 8 8 8 8 8 8   (coarsest -> finest)] n=11  median excess  +27.078%  p90  +52.792%  (29s)
+    e16      exp[16 16 16 16 16 16 16   (coarsest -> finest)] n=11  median excess +1975.754%  p90 +9869.145%  (37s)
+
+== leaf-2-cpl
+    default  exp[2 3 4 5 8 8 8   (coarsest -> finest)] n=12  median excess  +24.121%  p90  +36.328%  (87s)
+    e1       exp[1 1 1 1 1 1 1   (coarsest -> finest)] n=12  median excess   -3.823%  p90   +9.145%  (58s)
+    e2       exp[2 2 2 2 2 2 2   (coarsest -> finest)] n=12  median excess   +9.630%  p90  +22.423%  (63s)
+    e4       exp[4 4 4 4 4 4 4   (coarsest -> finest)] n=12  median excess  +19.025%  p90  +31.496%  (100s)
+    e8       exp[8 8 8 8 8 8 8   (coarsest -> finest)] n=12  median excess  +23.988%  p90  +36.088%  (87s)
+    e16      exp[16 16 16 16 16 16 16   (coarsest -> finest)] n=12  median excess  +10.574%  p90  +29.719%  (88s)
+
+== flower-inner-edge-cpl
+    default  exp[2 3 4 5 8 8 8   (coarsest -> finest)] n= 6  median excess  +69.365%  p90  +79.557%  (156s)
+    e1       exp[1 1 1 1 1 1 1   (coarsest -> finest)] n= 6  median excess  +28.784%  p90  +36.860%  (106s)
+    e2       exp[2 2 2 2 2 2 2   (coarsest -> finest)] n= 6  median excess  +49.837%  p90  +58.013%  (137s)
+    e4       exp[4 4 4 4 4 4 4   (coarsest -> finest)] n= 6  median excess  +61.165%  p90  +70.311%  (150s)
+    e8       exp[8 8 8 8 8 8 8   (coarsest -> finest)] n= 6  median excess  +65.152%  p90  +75.167%  (120s)
+    e16      exp[16 16 16 16 16 16 16   (coarsest -> finest)] n= 6  median excess +2728.924%  p90 +10166.468%  (103s)
+
+== pencil-steep-angle-cpl
+    default  exp[2 3 4 5 8 8 8   (coarsest -> finest)] n= 9  median excess  +96.409%  p90 +125.098%  (150s)
+    e1       exp[1 1 1 1 1 1 1   (coarsest -> finest)] n= 9  median excess  +43.644%  p90  +67.843%  (132s)
+    e2       exp[2 2 2 2 2 2 2   (coarsest -> finest)] n= 9  median excess  +69.848%  p90  +96.782%  (132s)
+    e4       exp[4 4 4 4 4 4 4   (coarsest -> finest)] n= 9  median excess  +86.637%  p90 +113.153%  (101s)
+    e8       exp[8 8 8 8 8 8 8   (coarsest -> finest)] n= 9  median excess  +95.799%  p90 +121.380%  (121s)
+    e16      exp[16 16 16 16 16 16 16   (coarsest -> finest)] n= 9  median excess +515.634%  p90 +2788.303%  (99s)
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\V-GATHER\ladder.json

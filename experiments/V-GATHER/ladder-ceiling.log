@@ -1,0 +1,31 @@
+binary 44C2F2CD2E5B2894..  matches all 26 SHIP-V4 seals
+
+== 119MSDCF  (8 sites, exhaustive ceiling)
+       25/ 33 frames  308s elapsed  99s left
+    frames rendered 33/33   ceiling rose: median +0.00%  max +2.38%
+    e1       excess  sampled ceiling  -22.142%  ->  exhaustive  -22.740%
+    e2       excess  sampled ceiling  -12.955%  ->  exhaustive  -13.346%
+    e4       excess  sampled ceiling   -5.657%  ->  exhaustive   -6.617%
+    e8       excess  sampled ceiling   -1.253%  ->  exhaustive   -2.238%
+    default  excess  sampled ceiling   -1.322%  ->  exhaustive   -2.329%
+
+== pencil-steep-angle-cpl  (9 sites, exhaustive ceiling)
+       25/299 frames  294s elapsed  3225s left
+       50/299 frames  511s elapsed  2545s left
+       75/299 frames  718s elapsed  2143s left
+      100/299 frames  977s elapsed  1944s left
+      125/299 frames  1203s elapsed  1675s left
+      150/299 frames  1466s elapsed  1456s left
+      175/299 frames  1757s elapsed  1245s left
+      200/299 frames  1999s elapsed  990s left
+      225/299 frames  2241s elapsed  737s left
+      250/299 frames  2482s elapsed  486s left
+      275/299 frames  2684s elapsed  234s left
+    frames rendered 299/299   ceiling rose: median +5.49%  max +9.60%
+    e1       excess  sampled ceiling  +43.644%  ->  exhaustive  +36.164%
+    e2       excess  sampled ceiling  +69.848%  ->  exhaustive  +61.003%
+    e4       excess  sampled ceiling  +86.637%  ->  exhaustive  +76.917%
+    e8       excess  sampled ceiling  +95.799%  ->  exhaustive  +85.602%
+    default  excess  sampled ceiling  +96.409%  ->  exhaustive  +86.181%
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\V-GATHER\ladder-ceiling.json

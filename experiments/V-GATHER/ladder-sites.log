@@ -1,0 +1,75 @@
+binary 44C2F2CD2E5B2894..  matches all 26 SHIP-V4 seals
+
+== coffee-bubbles  (14 sites)
+    default  n=14 median    -1.624%  
+    e1       n=14 median   -20.702%  coarse r min 0.9590
+    e2       n=14 median   -10.208%  coarse r min 0.9924
+    e4       n=14 median    -4.667%  coarse r min 0.9991
+    e8       n=14 median    -1.462%  coarse r min 0.8325
+    e16      n=14 median    -4.104%  coarse r min -0.3336
+
+== 109MSDCF  (7 sites)
+    default  n= 7 median    -5.501%  
+    e1       n= 7 median   -22.697%  coarse r min 0.9984
+    e2       n= 7 median   -15.607%  coarse r min 0.9993
+    e4       n= 7 median   -10.133%  coarse r min 0.9999
+    e8       n= 7 median    -5.444%  coarse r min 1.0000
+    e16      n= 7 median    +6.676%  coarse r min 0.7218
+
+== 119MSDCF  (8 sites)
+    default  n= 8 median    -1.322%  
+    e1       n= 8 median   -22.142%  coarse r min 0.9990
+    e2       n= 8 median   -12.955%  coarse r min 0.9996
+    e4       n= 8 median    -5.657%  coarse r min 0.9999
+    e8       n= 8 median    -1.253%  coarse r min 1.0000
+    e16      n= 8 median  +344.719%  coarse r min -0.2690
+
+== 112MSDCF  (13 sites)
+    default  n=13 median   +17.028%  
+    e1       n=13 median   -10.779%  coarse r min 0.9982
+    e2       n=13 median    +1.804%  coarse r min 0.9996
+    e4       n=13 median   +11.061%  coarse r min 1.0000
+    e8       n=13 median   +16.894%  coarse r min 1.0000
+    e16      n=13 median    +5.171%  coarse r min 0.7819
+
+== foam  (12 sites)
+    default  n=12 median   +23.241%  
+    e1       n=12 median    -4.869%  coarse r min 0.9955
+    e2       n=12 median   +12.052%  coarse r min 0.9990
+    e4       n=12 median   +19.183%  coarse r min 0.9999
+    e8       n=12 median   +22.862%  coarse r min 0.8990
+    e16      n=12 median +1204.284%  coarse r min -0.0378
+
+== wrapped-text-1  (11 sites)
+    default  n=11 median   +28.317%  
+    e1       n=11 median    +0.775%  coarse r min 0.9974
+    e2       n=11 median   +15.780%  coarse r min 0.9997
+    e4       n=11 median   +23.855%  coarse r min 1.0000
+    e8       n=11 median   +27.078%  coarse r min 0.9999
+    e16      n=11 median +1975.754%  coarse r min -0.3289
+
+== leaf-2-cpl  (12 sites)
+    default  n=12 median   +24.121%  
+    e1       n=12 median    -3.823%  coarse r min 0.9962
+    e2       n=12 median    +9.630%  coarse r min 0.9993
+    e4       n=12 median   +19.025%  coarse r min 0.9999
+    e8       n=12 median   +23.988%  coarse r min 0.9999
+    e16      n=12 median   +10.574%  coarse r min 0.8806
+
+== flower-inner-edge-cpl  (6 sites)
+    default  n= 6 median   +69.365%  
+    e1       n= 6 median   +28.784%  coarse r min 0.9956
+    e2       n= 6 median   +49.837%  coarse r min 0.9994
+    e4       n= 6 median   +61.165%  coarse r min 0.9999
+    e8       n= 6 median   +65.152%  coarse r min 0.9996
+    e16      n= 6 median +2728.924%  coarse r min 0.0108
+
+== pencil-steep-angle-cpl  (9 sites)
+    default  n= 9 median   +96.409%  
+    e1       n= 9 median   +43.644%  coarse r min 0.9830
+    e2       n= 9 median   +69.848%  coarse r min 0.9976
+    e4       n= 9 median   +86.637%  coarse r min 0.9985
+    e8       n= 9 median   +95.799%  coarse r min 0.9960
+    e16      n= 9 median  +515.634%  coarse r min -0.6082
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\V-GATHER\ladder-sites.json
