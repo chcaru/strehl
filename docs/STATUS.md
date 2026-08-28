@@ -81,10 +81,13 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 
 ### 3.1 Blocking
 
-1. **Land the `eps_r` re-fit.** Diagnosed, specified, owner assigned, **not landed**. Must
-   beat both arms on the hue-neutral metric: better than 0.15999 (on) and 0.20807 (off).
-   `highly-angled-ruler-mm-cpl` is the control for the under-corrected end, since it is the
-   one subject still showing the lens's natural opposite-sign pattern.
+1. **`eps_r` re-fit — LANDED at `-508.4e-6` (`38df35fb`), but scored on ONE subject.** All three
+   arms rendered from a single build: **re-fit 0.10093 / shipped 0.11377 / off 0.15576**, so it
+   beats both. What remains is breadth: it is **not corpus-verified**, and
+   `highly-angled-ruler-mm-cpl` — the control for the under-corrected end, the one subject still
+   showing the lens's natural opposite-sign pattern — is still unscored. **My original acceptance
+   numbers (0.15999 / 0.20807) had already expired** and must not be reused; see the landmine on
+   absolute thresholds. Facts 1885–1886.
 2. **Score a soft admission kernel — but not via `STREHL_SOFT_GATE`, which is inert.**
    ~~Score `STREHL_SOFT_GATE`.~~ **MEASURED INERT on the default backend**: `bee-1-cpl`
    gaussian-vs-unset differs on **0 of 98,898,048 px**, `112MSDCF` on 0 of 24,724,512, with
@@ -187,7 +190,24 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   Rec.709 red-plus-blue luma weight — live and correct. The retracted **28.5× aura multiplier**
   is dead. A grep for `28.5` hunting the dead one lands on the live one.
 - **`crates/strehl-cli/tests/byte-freezes.tsv` must never be re-baselined casually.** If a
-  freeze moves, that is a finding.
+  freeze moves, that is a finding. **One row is already RED:**
+  `coffee-bean-20-gate2-sidecar` expects `52517FF8…`, renders `E600A506…`. Its pair
+  `coffee-bean-20-gate2-unaligned` **holds** at `88712017…`, and that holding is the finding —
+  the rows differ only in alignment, so the change is localised to the **aligned** path. Any
+  lane told "the freezes must pass" will mis-attribute this to itself: **baseline which rows
+  pass before you edit.** Fact 1887.
+- **Absolute numbers in this corpus are timestamps, not constants.** The CA-OFF arm is
+  coefficient-independent and must reproduce bit-exactly; re-rendered it differed on
+  **33,003,417 px, max 23210 DN**, because ~14 lanes edited the crate concurrently. My own
+  acceptance thresholds (0.15999 / 0.20807) read 0.11377 / 0.15576 within hours. **Ordering and
+  ratios are stable; absolutes are not — every arm of a comparison must come from one build**,
+  and a verifier must pin its own binary rather than compare against a hash from an older
+  report. Fact 1886.
+- **Doc comments about reachability are unverified claims.** `optics.rs:317` said "Nothing in
+  this crate calls `compose` yet" while two live call sites existed, and cost a lane a whole
+  investigation into a bug that did not exist. Grep the symbol crate-wide and count definitions
+  against call sites; it takes seconds and is the only form of the claim worth believing.
+  Fact 1888.
 - **The dust correction is OFF by default, and the soft gate is off *and* inert.** Off is
   correct for the dust map — a stale map manufactures the defect it removes — but it means the
   shipped default is not the best output the code can produce. The soft gate is worse than off:
