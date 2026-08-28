@@ -129,14 +129,21 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 6. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
    taken on output carrying an uncorrected corpus-wide CA error and two dust motes.
    **OWNED — lane DELIVER-V6**, rendering all 26 from a clean pinned build.
-7. **The delivered masters are not print files: no embedded ICC profile, no print resolution.**
-   Read from the actual bytes — `ResolutionUnit (none)`, `XResolution 1/1`, tag 34675 ICCProfile
-   ABSENT. **The code at HEAD is already correct** on all three modes (`--srgb` → 2716 B sRGB-TRC
-   + 300/1 + inch; `--linear-srgb` → 696 B identity TRC; camera-native → none), so these are
-   **stale artifacts, not broken code, and the re-render is the entire fix**. DELIVER-V6 has been
-   instructed to verify tags 34675 / 282 / 296 in its own output bytes per subject, and to
-   commission its tag reader against an old master that is known to lack them. A master with no
-   profile and no physical size is not print-ready by definition. Fact 1893.
+7. ~~**The delivered masters are not print files: no embedded ICC profile, no print
+   resolution.**~~ **RESOLVED — and the blocker was raised from the wrong tree.** The claim was
+   measured on the stale `ORCH-FAITHFUL` masters and then written up as a property of the
+   project. Read out of the actual deliverable —
+   `C:\dev\strehl-out\DELIVER-V6\masters\bee-2-cpl.tiff`, via `experiments/BUILD-OUTPUT/tiff_tags.py`,
+   which parses the IFD directly — the master carries **tag 34675 ICCProfile, 2716 bytes, whose
+   own internal size field also reads 2716**; a valid v2.1.0 `mntr`/`RGB `/`XYZ ` profile with
+   D65 white point and the published IEC 61966-2-1 red primary; 1024-point TRCs returning
+   f(0.5) = 0.21450 against sRGB's 0.2140, so the real curve and not a gamma-2.2 stand-in; and
+   **tags 282/283 = 300/1 with tag 296 = 2 (inch)**, i.e. 300 DPI. Tag 305 stamps
+   `strehl 0.0.0 (6af834dac08d)`, so the render is traceable to a commit. The code at HEAD was
+   correct all along and the re-render was the entire fix. Fact 1916 supersedes fact 1893.
+   **Generalisation, same shape as fact 1901's `SEAL_DIR`:** a defect must be attributed to the
+   artifact it was measured on, and re-checked against the current deliverable before it is
+   allowed to block shipping.
 
 ### 3.2 Important, not blocking
 
