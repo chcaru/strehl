@@ -1250,3 +1250,130 @@ below it.
    `6.54e7 > 0` at 0.30-0.35 on real frames, which may qualify the "empty
    band" claim. It does not affect H.1-H.7, because the premium is defined on
    the twin where the band is empty by construction.
+---
+
+# Addendum I — coffee-bubbles band qualification, and the deletion of my
+# input data
+
+Written in response to ORCH correction #5.
+
+## I.1 What correction #5 does and does not do to Addendum H
+
+**Nothing.** Checked, not assumed, and stated explicitly so "re-checked and
+unchanged" can be told from "not re-checked":
+
+- The premium numbers are measured on a **synthetic twin with no focus signal
+  by construction**, which is why band qualification cannot bear on them —
+  ORCH's own partition says so, and H.8 item 5 already said so before the
+  correction arrived.
+- The **sharpness** numbers were already qualified per subject. H.3 used
+  112MSDCF's measured boundary of **0.25 cyc/px** (`vd_band.py`) and
+  explicitly refused to credit 0.25-0.30 as acuity. V-LINEAR's independent
+  `depthqual.py` now reports 112MSDCF **R = 1.089 FAIL(noise)** at 0.30-0.40.
+  **Two independent methods agree**, so H.3's exclusion was correct and no
+  number in Addendum H moves.
+
+## I.2 coffee-bubbles IS band-qualifiable, and it FAILS at 0.30-0.35
+
+ORCH: "`coffee-bubbles` -- the source of the 27.2% -- has never been
+band-qualified at all." It can be, and `vd_xsig.py` does it with a statistic
+that needs no noise model.
+
+Split the real frames into two **interleaved** halves, run the same operator on
+each independently, and take the normalised cross-power per band. Sensor noise
+is independent between halves and cancels in the numerator; real static scene
+content is common to both and survives. The result is the fraction of a band's
+power that is REAL, 0 = noise, 1 = signal.
+
+    coffee-bubbles N=19    0.10-0.15  0.17-0.20  0.20-0.25  0.25-0.30  0.30-0.35
+    mean                      0.2710     0.0291     0.0204     0.0018    -0.0035
+    shipping                  0.5284     0.1437     0.0775    -0.0060    -0.0209
+    pool1                     0.5442     0.1536     0.0922    -0.0033    -0.0043
+
+    null scatter (max |frac| over all bands on a flat field)          0.0222
+
+**At 0.30-0.35 the merged output reads −0.021, inside the instrument's own
+null scatter of 0.022. coffee-bubbles carries no measurable real content
+there.** Its boundary is about **0.20 cyc/px** — the lowest yet recorded on
+this corpus, below `leaf-2-cpl` and level with `flower-bud-alone-cpl`.
+
+So the **27.2%** is measured in a band that is noise on the subject that
+carries it, exactly as the **−44.6%** was. I am not extrapolating from the
+withdrawal of one to the other; this is a direct measurement of the second.
+
+## I.3 An independent corroboration of H.7 that I did not design
+
+`pool1` is not below `shipping` in any band, and is **above** it in all three
+that carry real content: 0.5442 vs 0.5284, 0.1536 vs 0.1437, 0.0922 vs 0.0775.
+This is a third subject, a model-free statistic, and a different failure mode
+from the noise-corrected band power used in H.3 — and it agrees. It does not
+license a cross-subject ratio and I am not quoting one.
+
+## I.4 My input data was deleted mid-lane
+
+`C:\dev\strehl-out\V-NEVERWORSE\bundle\112MSDCF.npz` (0.8 GB) and
+`119MSDCF.npz` (0.3 GB) were deleted at **22:48 tonight**, between my last
+measurement and my next one. `coffee-bubbles.npz` and all four `.json`
+sidecars survive. No `.npz` copy exists anywhere on C: or D:.
+
+Consequences, stated plainly:
+- **Addendum H is not currently reproducible.** Its numbers were taken from
+  those files and I stand behind them, but the 240.70 commissioning gate
+  cannot be re-run until the bundles are rebuilt.
+- The same applies to **V-NEVERWORSE facts 1843-1845**, which are measured on
+  the same deleted inputs.
+- I could not test 112MSDCF with `vd_xsig.py`, so **H.8 item 6 stays open**.
+  The `prem_sig = 6.54e7` question is now unresolvable without a rebuild.
+
+Rebuild is possible in principle — `vn_commission.py` builds the bundles and
+the surviving `.json` sidecars retain every alignment parameter — but it
+requires re-running the align pipeline from `D:\personal\macro`.
+
+**The general lesson, which is the same shape as V-LINEAR declining to delete
+`V-LINEAR\lintiff`: a FINISHED lane's outputs may be a RUNNING lane's inputs.**
+Ownership of a directory is not the same as exclusive readership of it. The
+question to ask before deleting is not "is this lane done" but "does anything
+still read this", and it is answered by grepping for the path.
+
+## I.5 Conclusion-flip mutation test of my own gates (ORCH correction #5,
+## item 3)
+
+Run on `vd_xsig.py`, the instrument carrying I.2. I predicted **before
+running** that the `contiguous` arm would defeat both gates, and wrote the
+reason into the arm's docstring: both gates use a *static* synthetic field,
+and a static field is invariant to how frames are split, so no static arm can
+detect a split that decorrelates focus-varying content.
+
+**The prediction was half right, and I report the wrong half as a miss.**
+
+| arm | NULL | POT | verdict @0.30-0.35 | signal band @0.10-0.15 | outcome |
+|---|---|---|---|---|---|
+| identity | ok | ok | −0.0209 | 0.5284 | baseline |
+| samehalf | FAIL | ok | 1.0000 | 1.0000 | caught by NULL |
+| noconj | ok | FAIL | −0.0042 | −0.0054 | caught by POTENCY |
+| **contiguous** | **ok** | **ok** | 0.0081 | **0.1617** | **MISSED at green** |
+
+`contiguous` defeated both gates as predicted, but it did **not** flip the
+verdict under test, because that verdict is a null and the mutated reading is
+also ~0. What it did instead was **collapse the band that actually carries
+content by 3.3x — 0.5284 to 0.1617 — at fully green gates.**
+
+That is still a defect of my instrument, and in the dangerous direction: it
+understates real content, which would wrongly disqualify a band. Tonight's
+claim happens to be immune because tonight's claim is a null. **The next
+positive claim would not have been.**
+
+**Repaired.** A third gate, `SWEEP`, plants a tone whose amplitude ramps with
+frame index — the one property a focus bracket has that a static field does
+not. An interleaved split gives both halves nearly equal mean amplitude and
+passes at 0.9958; a contiguous split gives them 0.239 and 0.761 and fails.
+All three mutations are now caught, and the coffee-bubbles verdict is
+unchanged under the stricter instrument.
+
+I also note the scoring defect this exposed in my *test*, not my instrument:
+my first pass scored only "did the headline verdict flip", so it printed
+`contiguous` as "green, verdict held" — a pass. It was only because I also
+printed a band I was not testing that the corruption was visible. **A
+mutation test that checks only the conclusion under test has the same blind
+spot as the presence-test it is meant to replace.** The scorer now fails an
+arm that corrupts any reported band, not just the one in the headline.
