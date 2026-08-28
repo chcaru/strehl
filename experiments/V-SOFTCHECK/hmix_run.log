@@ -1,0 +1,39 @@
+
+119MSDCF N=32 halves 16+16  shift(-1,-1)  tiles 442
+  REAL profile   0.8810  0.8788  0.8885  0.8817  0.8752  0.8755  0.8109  0.7058  0.5394  0.1935
+  anchor decile 0 (first below 0.90), anchor f = 0.8810
+  REAL fall ratio (anchor/top) = 4.554
+   lambda 0.00  noise amp 0.0246  anchor 0.8821  top 0.2666  fall 3.309
+   lambda 0.25  noise amp 0.0217  anchor 0.8808  top 0.2761  fall 3.190
+   lambda 0.50  noise amp 0.0187  anchor 0.8811  top 0.3226  fall 2.732
+   lambda 0.75  noise amp 0.0158  anchor 0.8796  top 0.4088  fall 2.152
+   lambda 1.00  noise amp 0.0123  anchor 0.8810  top 0.5622  fall 1.567
+  calibration ['3.309', '3.190', '2.732', '2.152', '1.567']  monotone=True  spread=2.112
+  ==> real fall 4.554 vs pure-noise rung 3.309 -> SELECTION SHARE BOUND = 0.00 (real fall EXCEEDS the pure-noise rung; no contrast-proportional component fits)
+
+113MSDCF N=62 halves 31+31  shift(-1,0)  tiles 459
+  REAL profile   0.9524  0.7807  0.6090  0.5862  0.5528  0.5184  0.4247  0.4180  0.4030  0.3828
+  anchor decile 1 (first below 0.90), anchor f = 0.7807
+  REAL fall ratio (anchor/top) = 2.039
+   lambda 0.00  noise amp 0.1875  anchor 0.7794  top 0.5898  fall 1.321
+   lambda 0.25  noise amp 0.1664  anchor 0.7795  top 0.6024  fall 1.294
+   lambda 0.50  noise amp 0.1477  anchor 0.7818  top 0.6225  fall 1.256
+   lambda 0.75  noise amp 0.1242  anchor 0.7811  top 0.6506  fall 1.201
+   lambda 1.00  noise amp 0.0914  anchor 0.7823  top 0.6546  fall 1.195
+  calibration ['1.321', '1.294', '1.256', '1.201', '1.195']  monotone=True  spread=1.106
+  REFUSED: calibration spans only 1.106, too little to bound a share.
+
+bee-1-cpl N=298 halves 149+149  shift(2,-2)  tiles 468
+  REAL profile   0.9822  0.9872  0.9698  0.8671  0.6758  0.6285  0.5544  0.5296  0.4607  0.4301
+  anchor decile 3 (first below 0.90), anchor f = 0.8671
+  REAL fall ratio (anchor/top) = 2.016
+   lambda 0.00  noise amp 0.0609  anchor 0.8655  top 0.2416  fall 3.583
+   lambda 0.25  noise amp 0.0562  anchor 0.8650  top 0.2669  fall 3.241
+   lambda 0.50  noise amp 0.0492  anchor 0.8651  top 0.3042  fall 2.844
+   lambda 0.75  noise amp 0.0398  anchor 0.8642  top 0.3742  fall 2.310
+   lambda 1.00  noise amp 0.0328  anchor 0.8686  top 0.5566  fall 1.561
+  calibration ['3.583', '3.241', '2.844', '2.310', '1.561']  monotone=True  spread=2.296
+  ==> real fall 2.016 vs pure-noise rung 3.583 -> SELECTION SHARE BOUND = 0.85 (interpolated on the calibration)
+
+  attempted 3 = measured 2 + refused 1
+  machine-readable: C:\dev\strehl-out\V-SOFTCHECK\hcoh\hmix.json
