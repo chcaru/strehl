@@ -2577,3 +2577,38 @@ compare the per-subject census between arms rather than the pooled count. Not
 fixed here - `printcert4.py` is an instrument another lane is about to depend
 on, and changing it during wind-down without re-commissioning would be worse
 than naming it.
+
+### 17.4 Response to ORCH's halo correction and the SOFT_GATE inertness finding
+
+**Nothing here was purged, so nothing needs restoring.** Section 17.2 added a
+scope note; it deleted no finding. Three checks against this document:
+
+| probe | count |
+| --- | --- |
+| `STREHL_SOFT_GATE` / "soft gate" | **0** |
+| `28.5x` | **0** |
+| `halo_profile` | **0** |
+
+So no citation here is voided by either correction. The five occurrences of
+"estimator" in this report are a *different* estimator - the shift estimator at
+L585-593 and the `--gate 0` backend confound at L189/L207. **None of them is
+the estimator-vs-pyramid aura finding.** This report says nothing about that
+comparison in either direction.
+
+**Which backend the rim axis measured, since ORCH's correction makes this the
+load-bearing question.** `rimaxis.py:52` sets
+`SEAL_DIR = C:\dev\strehl-out\acceptance\SHIP-V4` and L185-194 enumerate
+`*--SHIP-V4.tiff`. Those are the shipped masters, produced on the default
+backend, which is Pyramid. **The thirteen rim failures are therefore a statement
+about the pyramid masters at tight scale - the same object `halo_profile`
+scored 0 of 26 on at wide scale.** They are not the estimator aura and must not
+be read as corroborating it.
+
+**The per-band gate floor is NOT a fourth inert knob.** ORCH now counts
+`STREHL_SOFT_GATE` as the third knob doing nothing on its shipping path, after
+`--exposure`. Part 16's knob does not belong on that list and I do not want it
+added by association. It **demonstrably changed the image** - that is why Part
+16 concludes it acts as a denoiser. What it did not do is move the rim, which is
+a statement about *which* quantity it reaches, not about whether it reaches
+anything. An inert knob and an effective knob aimed at the wrong quantity
+produce the same disappointment and require opposite responses.
