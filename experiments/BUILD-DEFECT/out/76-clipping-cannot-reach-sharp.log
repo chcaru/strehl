@@ -1,0 +1,37 @@
+=== can clipping explain 'master exceeds its own focus ceiling'? ===
+
+=== COMMISSIONING ===
+  POSITIVE     PASS known-blown head-e260.tiff reads 85.5234% clipped, needs > 25.0%
+  NEGATIVE     PASS known-clean pin-e000.tiff reads 0.0012% clipped, needs < 0.100%
+  IMPROVEMENT  PASS dividing the blown array by its own gain 6.063x moves clipping 85.5234% -> 0.0000%, needs at least a 10x fall
+  3 declared = 3 passed + 0 failed
+
+=== the three conditions the hypothesis requires ===
+  (1) BINARY  the axis renders with strehl.exe
+              pin 9b05d0b7
+              regression commit 9cb7f5d9 an ancestor of the pin? NO
+              regression commit f2254c12 an ancestor of the pin? NO
+  (2) FLAGS   render argv flags: --out --linear-srgb --demosaic
+              --auto-exposure present? NO   --srgb present? NO
+  (3) GUARD   tone-mapped seal offered to sharpaxis._verify_tags:
+              REFUSED: C:\dev\strehl-out\acceptance\SHIP-V4\109MSDCF--SHIP-V4.tiff carries a fitted tone stage
+
+=== (4) direct measurement, not inference ===
+  subject 112MSDCF -- ORCH measured this one at 35.57% clipped under the
+  HEAD --srgb --auto-exposure recipe. Rendered here through the axis's
+  own render call:
+    whole image      0.0000% of samples at full scale
+    peak sample      50635 of 65535 -- 22.7% headroom remains, so the zero
+                     above is a real absence and not an unreachable test
+    13 axis sites    max 0.0000%  median 0.0000%  mean 0.0000%
+
+=== verdict ===
+  binary predates the regression     HOLDS
+  flags cannot trigger it            HOLDS
+  guard refuses tone-mapped input    HOLDS
+  measured site clipping            REFUTED (worst site 0.0000%, floor 0.100%)
+
+  OVERALL: REFUTED. The clipping regression cannot reach the
+  sharpness axis by any of the three routes it would need, and the
+  render the axis actually measures is clipped at 0.0000% globally
+  and 0.0000% at its worst measured site.

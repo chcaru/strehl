@@ -1,0 +1,32 @@
+{
+ "ancestors": {
+  "9cb7f5d9": false,
+  "f2254c12": false
+ },
+ "argv": [
+  "--out",
+  "--linear-srgb",
+  "--demosaic"
+ ],
+ "commission": {
+  "improvement": 0.0,
+  "negative": 1.1891033481267497e-05,
+  "positive": 0.855234089150071
+ },
+ "exe": "C:\\dev\\strehl-out\\acceptance-pins\\9b05d0b7\\target\\release\\strehl.exe",
+ "global_clip": 0.0,
+ "guard_message": "REFUSED: C:\\dev\\strehl-out\\acceptance\\SHIP-V4\\109MSDCF--SHIP-V4.tiff carries a fitted tone stage",
+ "guard_refuses": true,
+ "headroom": 0.22735942626077665,
+ "n_sites": 13,
+ "peak_sample": 50635,
+ "pin": "9b05d0b7",
+ "refute_below": 0.001,
+ "site_max": 0.0,
+ "site_mean": 0.0,
+ "site_median": 0.0,
+ "subject": "112MSDCF",
+ "support_above": 0.05,
+ "verdict": "REFUTED",
+ "verdict_measured": "REFUTED"
+}
