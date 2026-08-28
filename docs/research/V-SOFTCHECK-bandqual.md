@@ -146,6 +146,60 @@ the HIGHEST-frequency PASSing band"* -- to my data gives **0.20-0.25 for `113MSD
 **0.25-0.30 for `bee-1-cpl`**. Those are the two bands section 5 already re-derives in,
 chosen before I had read that rule.
 
+## 3c. Checked against V-LINEAR's per-subject boundaries (`31eda43a`)
+
+V-LINEAR measured the signal/noise boundary per subject and found it moves 0.17-0.48
+cyc/px, refuting any fixed band. **Both of my subjects are in their table**, so this is a
+within-subject comparison of two independent instruments on two develop paths -- the only
+kind their section 4 licenses (`R` magnitude moves 4.36x on `bee-1-cpl` across defocus
+rungs alone, so cross-subject `R` comparisons are not admissible).
+
+| subject | V-LINEAR boundary | mine (top edge of highest PASSing band) | agree |
+|---|---:|---:|---|
+| `113MSDCF` | **0.25** | **0.25** | **exact** |
+| `bee-1-cpl` | 0.48 | 0.30 | **no** -- mine is more conservative |
+
+Band for band on `113MSDCF`, V-LINEAR's `bandsignal.py` on `--linear-srgb --demosaic`
+single frames against my `bandqual.py` on `--srgb` merged-grid probes:
+
+| band | V-LINEAR `R` | mine `R` | V-LINEAR | mine |
+|---|---:|---:|---|---|
+| 0.20-0.25 | 2.419 [1.970,3.058] | 3.3235 [2.9495,3.9073] | PASS | PASS |
+| 0.25-0.30 | 1.387 | 1.8241 | MARGINAL | MARGINAL |
+| 0.30-0.40 / 0.30-0.35 | 1.149 | 1.5525 | FAIL(noise) | MARGINAL |
+
+**My numbers do not move.** This document never used a fixed corpus band: section 5
+re-derives each subject in its own highest-frequency qualifying band. Both of those bands
+PASS on **both** instruments independently -- `113MSDCF` 0.20-0.25 (2.419 and 3.3235) and
+`bee-1-cpl` 0.25-0.30 (10.728 and 2.3180). The surviving deficits stand unchanged.
+
+**I decline the reinstatement this offers me.** V-LINEAR's `bee-1-cpl` boundary of 0.48
+would place 0.30-0.35 inside qualified signal and un-withdraw my original headline
+(`+0.0748` dex/doubling, 18.8% softer). I am not taking it. My own instrument, on the
+develop path the deficit is actually measured on, reads that band MARGINAL, and adopting
+another lane's more permissive boundary *because* it restores my result is boundary-
+shopping after seeing the data. The withdrawal in section 4 stands.
+
+### 3c.1 A cross-subject comparison of mine, withdrawn
+
+I previously reported to the orchestrator that my instrument "reproduces V-LINEAR's
+per-tile boundaries with a consistent sRGB offset -- 0.20-0.25: mine 3.32/4.93 vs theirs
+2.419." **That is withdrawn.** The 2.419 is `113MSDCF`'s number specifically, so I was
+comparing my `bee-1-cpl` reading against a *different subject's* value and calling the gap
+a develop-path offset. V-LINEAR's actual `bee-1-cpl` value at 0.20-0.25 is **27.993**, not
+2.419 -- so within subject the two instruments disagree there by 5.7x, and the "consistent
+offset" was an artifact of the mismatch. The `113MSDCF` agreement above is real and is
+within-subject; the corpus-level claim was not licensed and I should not have made it.
+
+**Where the `bee-1-cpl` disagreement most likely lives, stated as a hypothesis and not a
+result:** defocus distance. V-LINEAR uses `far = 20` real frames for every subject, and
+their own section 4 measures bee's `R` spanning **4.36x** across `far` in {8, 20, auto=50}
+against <=1.13x on every other subject. On `113MSDCF` (N=63) twenty frames is a third of
+the stack; on `bee-1-cpl` (N=299, step 4) it is a small fraction of the focus range, so
+"defocused" is a much weaker defocus there. My bee probes span frames 0-200 under my own
+partner rule. That makes bee's `R` the least transferable number in their table and is
+cheap to test: re-run one instrument at the other's defocus distance on bee alone.
+
 ## 4. What is withdrawn
 
 **`+0.0732` dex/doubling (113MSDCF) and `+0.0748` dex/doubling (bee-1-cpl) at
