@@ -21,7 +21,7 @@ marked as unmeasured.
 | **Rim** (shipping masters, ±12 px) | **13 FAIL — a disjoint scale the halo work never reached; unscored by a second lane** | fact 1881 |
 | **Aura** (estimator vs pyramid) | estimator measures deeper in **17 of 17** conditioned readings; magnitude unknown | fact 1871 |
 | **Chroma** | **1 visible defect, diagnosed, fix specified, not landed** | facts 1861–1863, 1865 |
-| **Dust** | **2 real motes found; correction built, wired, tested, OFF by default** | fact 1856 |
+| **Dust** | **2 real motes found; correction built, wired, tested, OFF by default.** Adjudicated: the advertised **17× does not exist** (it divided two different subjects); depth is −2.94% ± 0.06% on flats, −3.4% to −5.7% on masters. Downside bounded (a wrong-coordinate map renders byte-identical to OFF) *and* upside shown separately (−4.644% → +0.019%). **The lane recommends defaulting it ON, after the cache-key question is resolved** — flipping it moves every byte-freeze, so it was not done unverified at session end | fact 1856; facts 1953–1955; `docs/research/V-MOTE.md` (`09feffe8`) |
 | **Regional blur** | **`flowers-cpl` diagnosed: capture gap, not a merge defect** — (a) at all 6 sites | fact 1876 |
 | **Depth softening** | root cause identified; candidate fix built but **unscored** | facts 1843–1845, 1849 |
 | **GPU** | **unused** | explicit gap against the brief |
