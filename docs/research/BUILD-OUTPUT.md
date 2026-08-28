@@ -1530,3 +1530,320 @@ worth keeping: the harness scored a catastrophically damaged arm as a
 3-subject regression because twelve subjects had crashed the gate and fallen out
 of the count entirely. **A candidate that breaks the judge must not thereby
 escape judgement.**
+
+
+# 12. Is the shipping default already beaten by a flat exponent of 1?
+
+ORCH's proposition: the pyramid merge's selection-exponent ladder is under three
+constraints that no single exponent can meet, a rebuild is underway for that,
+but a cheaper question sits in front of it and needs no code change --
+
+> Is the shipping default already beaten, on print quality, by a flat exponent
+> of 1, a configuration reachable tonight with two existing flags?
+
+The numbers offered to make it worth a render rather than an argument were
+blotch 1.354x -> 1.152x, sharpness 0.755 -> 0.685, hull violations 72+ -> 0:
+**9.3% less sharpness in exchange for eliminating manufactured detail entirely
+and taking most of the blotch reduction.**
+
+I rendered it. **The blotch side reproduces and the sharpness side does not.**
+Flat-1 costs **19.63%** of struct-band sharpness, not 9.3% -- 2.1x the quoted
+price -- and **not one of the 26 subjects reads FLAT WINS.**
+
+## 12.1 The ladder, read from the binary and not from the brief
+
+ORCH warned it had been wrong about a flag's spelling once and about a flag's
+potency twice, and asked me to verify from the run's own banner. Both flags are
+as described. `--pyramid-sharpen`'s help says verbatim: *"1.0 disables the ramp
+and restores a single global exponent."*
+
+The banner's headline `exponent : 2.00` initially read to me as contradicting
+ORCH's claim of "exponent 8 at the three finest bands", and I was wrong -- the
+full banner resolves it:
+
+```
+DEFAULT   exponent 2.00, ramps 1.4x/octave, per-band exp : 2 3 4 5 8 8 8
+FLAT-1    exponent 1.00, ramps 1.0x/octave, per-band exp : 1 1 1 1 1 1 1
+                                            (coarsest -> finest)
+```
+
+The ramp is clamped at 8. **ORCH's premise was verified, not refuted.** Both
+lines are recorded in the shipped arms' own `.provenance.txt`, not merely in a
+test run: same binary, same input set, same ARGV apart from the two flags.
+
+## 12.2 Potency, before any interpretation
+
+ORCH's guard #1: an arm that silently rendered the default is indistinguishable
+from an arm that made no difference. `potency.py` decodes arrays and never
+compares hashes -- a file hash is not a pixel gauge.
+
+| arm | samples moved | mean abs delta on moved samples |
+|---|---:|---:|
+| flat-1 vs default | **99.5297%** | 255.9 DN |
+| `--pyramid-exponent 4.0` (known-potent control) | 98.5235% | -- |
+
+The positive control is awake, and the arms genuinely differ.
+
+## 12.3 The gauge, and the two defects it caught in itself
+
+`flatexp.py` pairs a blotch number with a sharpness number **on the same pixels**
+-- mottle-band floor (21-61 px) against struct-band structure (5-13 px,
+0.077-0.20 cyc/px), five content-chosen sites per subject. Sites are chosen on
+the **base arm only**: a geometric grid lands on black backdrops, and choosing
+on the candidate would let a blur pick the flattest places to be judged.
+
+Commissioning is `commission_flatexp.py`, **8 arms, 8 PASS / 0 FAIL**:
+
+| arm | blotch | sharp | verdict |
+|---|---:|---:|---|
+| null | 1.0000 | 1.0000 | NEUTRAL |
+| blur | 0.9631 | 0.5921 | TRADE |
+| improve | 0.6104 | 0.9920 | FLAT WINS |
+| noise | 1.2813 | 0.9976 | FLAT LOSES |
+| softonly | 0.9914 | 0.7680 | FLAT LOSES |
+| shift 32px | -- | -- | UNREGISTERED |
+| shift 12px | -- | -- | UNREGISTERED |
+| shift 2px | 0.9985 | 1.0000 | NEUTRAL |
+
+The load-bearing pair is `blur` and `improve`: a blur and a denoise **both** win
+on blotch, and they are separated only because the blur pays 41% of sharpness
+against the denoise's 0.8%. A suite that plants only degradations cannot make
+that distinction.
+
+Two defects in my own scorer were caught this way and neither would have been
+caught by reading:
+
+1. **The verdict hid a trade.** Run on the real coffee-bubbles pair it printed
+   `NEUTRAL` on blotch 1.0065 while sharpness had fallen to **0.8587** -- it hid
+   a 14.1% loss of detail behind a noise number that had not moved. That is
+   exactly the failure ORCH named. The verdict is now two-sided on **both** axes
+   and sharpness can convict alone; the `softonly` arm exists for that case.
+2. **The floor was discarded with the peak.** `ratios` threw away the *blotch*
+   measurement whenever the *sharpness* half refused. Those are independent
+   claims -- measuring how loud a band is does not require it to contain detail
+   -- and conflating them refused every flat crop in the corpus.
+
+## 12.4 The registration guard was refusing on noise, and hiding the worst evidence
+
+Three of the first sixteen subjects refused as UNREGISTERED. **None was
+shifted.** Each arm's own log reports the same sidecar, the same reference frame
+and the same N placed / 0 refused; the outputs have identical shape; and a
+selection exponent reweights pyramid coefficients on a fixed grid, so there is
+no mechanism by which it could translate an image. The guard was taking an SSD
+argmin at **one** site over a +/-4 px search, and what that argmin was reading
+was the **content difference between the arms** -- the quantity the experiment
+exists to measure.
+
+**The threshold is now measured, not chosen.** `regsens2.py` self-shifts three
+real masters, so the shift is the only difference between the two sides:
+
+| planted shift | max abs blotch-1 | max abs sharp-1 | max abs grain-1 |
+|---:|---:|---:|---:|
+| 1 px | 0.424% | **0.106%** | 0.088% |
+| 8 px | 0.839% | 0.472% | 0.346% |
+| 16 px | 2.639% | 1.333% | 1.174% |
+| 32 px | 5.620% | 3.509% | 2.530% |
+
+The effect under test moves sharp by 15-22%. A 1 px argmin -- all the evidence
+there ever was -- perturbs the answer by **0.106%, a four-hundredth of the
+effect**. 8 px is the last row negligible against it, so that is the tolerance.
+
+**Two candidate replacements were built and both were killed by their own
+controls.** Both are recorded, because a rejected instrument is a result:
+
+- **Normalised cross-correlation** fails AGENTS.md rule 5 -- it is not
+  subject-invariant, so it cannot carry an absolute threshold. NCC(0) ~= 0.89 is
+  a **4 px** shift on `coffee-bubbles` (0.88873) and a **64 px** shift on
+  `dry-erase-marker-head-cpl` (0.89158). It reports how much fine content a
+  subject has, not how far it moved.
+- **Low-passing into the base band**, on the banner's claim that the base is a
+  plain mean across frames in both arms, **does not respond to a planted shift at
+  all**: on `flower-bud-alone-cpl` the low-passed excess reads 41.2% unshifted,
+  43.3% at +1 px, 41.5% at +4 px, 33.0% at +32 px. A hard low-pass removes the
+  structure that localises SSD.
+
+**Three defects in the replacement, each caught by commissioning and not by
+reading:**
+
+1. The rewrite searched +/-4 px against a tolerance of 8 and passed a **planted
+   32 px shift as NEUTRAL** -- the same saturation defect one layer down, because
+   an argmin pinned at the boundary of its own search reports 4, and 4 <= 8.
+   `SEARCH_RADIUS` must exceed `TOLERATED_SHIFT`.
+2. Well depth was measured at the **origin** rather than at the **argmin**. On a
+   pair that really is displaced the origin is nowhere near the minimum, the
+   surface there is flat, and the site was declared uninformative -- so both
+   planted shifts passed. Whether a surface has a well *at the origin* is a
+   different question from whether it has one *at all*.
+3. An exact match at the argmin (SSD == 0) was mapped to `float("inf")` and then
+   gated on `np.isfinite`, which classified the **deepest possible well** as
+   uninformative. Every planted shift is a `np.roll` of an exact copy, so every
+   one went through that door. **Real masters never produce a zero SSD, so this
+   was invisible on real data and only a synthetic could expose it.**
+
+What ships: every site is probed; a global displacement is the same at every
+site and noise is not, so the per-axis **median argmin across sites** is the
+primary clause, and a site whose surface holds a genuine well may also refuse on
+its own. Both clauses are conditioned on. The registration **basis** is
+partitioned in the output and asserted to sum -- `SSD-WELL=18, MEDIAN-ONLY=8`
+over 26 -- so a subject admitted because no site could speak never prints as the
+same glyph as one admitted because a site spoke and agreed.
+
+**The fix did not flatter my conclusion.** The two subjects the broken guard had
+been discarding carry the **largest sharpness losses in the corpus**:
+`dry-erase-marker-head-cpl` at **27.5% softer** and `flower-bud-alone-cpl` at
+**35.4% softer**, against a corpus median of 19.6%. The broken guard was
+suppressing the strongest evidence against the arm under test.
+
+## 12.5 A brightness bias that ran against flat-1, and had to be corrected
+
+The tone census reports a `mean x` column against SHIP-V4. The DEF arm sits at
+1.000 on every subject; **the FLAT1 arm runs from 0.9930 to 1.1145.** strehl
+normalises tone from each image's own p99.9, and a flat exponent changes the
+merged image that percentile is taken from.
+
+This matters to one statistic and not the other:
+
+- `sharp` is `structure` = p99.5 over MAD, a **ratio inside one crop**, so a
+  global gain cancels and the number is untouched.
+- `blotch` and `grain` are `floor` = MAD, which scales **linearly** with gain.
+
+Measured directly between the arms at the scorer's own content sites
+(`gainbias.py`, not inferred by dividing two comparisons against SHIP-V4): the
+median FLAT1/DEF gain is **1.0391**. Flat-1's floor was inflated 3.9% for that
+reason alone, so the reported blotch **understated** how much quieter it is.
+**The bias ran against the arm this lane's recommendation goes against**, which
+is precisely why it had to be corrected rather than noted and dropped.
+
+## 12.6 The result, all 26 subjects
+
+Arms `DEF-2f858c62` and `FLAT1-2f858c62`, pin `2f858c62`, binary sha16
+**A058F737DFE695F7**, 26 subjects / 4,825 frames (4,526 placed across the 25
+aligned subjects plus 299 on `highly-angled-ruler-mm-cpl`, where alignment is
+REFUSED as a tilted subject under M86 -- identically in both arms, so it does
+not confound the comparison), `--srgb --auto-exposure`, identical in every
+respect but the two merge flags.
+
+| | as reported | gain-corrected |
+|---|---:|---:|
+| blotch, mottle 21-61 px floor | 0.8525 | **0.8158** |
+| sharpness, struct 5-13 px (0.077-0.20 cyc/px) | 0.8037 | 0.8037 |
+| grain, <=3 px floor | 0.7462 | 0.7281 |
+
+**Partition: 25 TRADE, 1 FLAT LOSES, 0 FLAT WINS, 0 refused.**
+
+| | quoted by ORCH | measured here |
+|---|---:|---:|
+| blotch improvement | 14.9% | **18.42%** |
+| sharpness cost | 9.3% | **19.63%** |
+| sharpness spent per unit of blotch bought | 0.62 | **1.07** |
+
+The blotch side of ORCH's table reproduces and is in fact slightly better than
+quoted. **The sharpness side is 2.1x worse.** Flat-1 does not buy blotch
+cheaply; it buys it at roughly one-for-one.
+
+Per-subject, worst and best trades:
+
+| subject | blotch (corr) | sharp | verdict |
+|---|---:|---:|---|
+| `flat-on-ruler-cpl` | 0.8439 | 0.9468 | best trade: 15.6% for 5.3% |
+| `foam` | 0.7662 | 0.8887 | 23.4% for 11.1% |
+| `lead-1-cpl` | 0.7668 | 0.7774 | 23.3% for 22.3% |
+| `112MSDCF` | 0.8356 | 0.8226 | 16.4% for 17.7% |
+| `113MSDCF` | 0.8582 | 0.8350 | 14.2% for 16.5% |
+| `coffee-bubbles` | 0.9288 | 0.8587 | **worst trade: 7.1% for 14.1%** |
+| `flower-bud-alone-cpl` | 0.8715 | **0.6463** | 12.9% for **35.4%** |
+
+**The single most damaging fact for the proposition** is in that table. Those
+first six rows are the six subjects convicted of mid-scale mottle -- the defect
+flat-1 is proposed to fix. On `coffee-bubbles`, the subject with the **worst**
+convicted mottle at 1.4501x, flat-1 delivers the **worst trade in the entire
+corpus** and is the only subject scored FLAT LOSES. *The configuration does not
+work best where the defect is worst.*
+
+## 12.7 Tone, both ends
+
+`tone_census.py` (commissioned 3/3, including a planted improvement) against
+SHIP-V4. Both arms: WORSE 0, partition sums to 26.
+
+Two directional movements sit below the census's move threshold and so did not
+gate, but they are real and they are **against** flat-1:
+
+| subject | clip DEF | clip FLAT1 | |
+|---|---:|---:|---|
+| `pencil-steep-angle-cpl` | 0.0607% | **0.2100%** | 3.5x more clipping |
+| `foam` | 0.0020% | 0.0219% | 10.7x more clipping |
+
+Flat-1 also *improves* crush, measured DEF -> FLAT1 on the same axis:
+`leaf-2-cpl` 0.1814% -> 0.0851% and `flower-inner-edge-cpl` 3.6324% -> 3.4279%.
+
+Incidentally corroborated: the DEF arm at pin `2f858c62` holds tone on **all 26**
+subjects against SHIP-V4, confirming that the clipping regression this lane
+found on the earlier HEAD pin `f190a0ea` is fixed at `2f858c62`.
+
+## 12.8 The hull axis is NOT MEASURED, and that is a hole in this recommendation
+
+Flat-1's strongest argument is hull violations 72+ -> 0: manufactured detail
+eliminated. **I could not measure it on this binary, and I will not report a
+number I could not form.**
+
+BUILD-HULL's instrument needs a per-frame basis to compare the merge against.
+strehl normalises tone per image (`TONE_WHITE_TARGET = 0.90`, p99.9 -> 0.90), so
+a single-frame render is normalised on *that frame's* percentile and does not
+share a scale with the merge. Measured on coffee-bubbles / 19 frames
+(`hullscale.py`): median frame/merge gain **0.8503 with a 12.9% spread**. Under
+`--linear-srgb`, whose help says "THIS IS THE MODE TO MEASURE IN", the spread is
+**0.0696** -- better, still not one scale (`linscale.py`). `bhull2.py` on that
+basis reports an implausible 18.8% violation rate, which is the normaliser and
+not manufactured detail. Fitting a per-frame gain would fit away the very
+excursions the hull exists to find.
+
+BUILD-HULL's own runs used a **different binary** -- `pairprice.py:85` records
+"ORCH-SHIP blend-render.exe, `--camera-linear` (never a tone curve)".
+
+I checked whether the shipping binary can price it directly. `stack --help` has
+no hull, ceiling, overshoot or envelope flag. `--confidence-map` exists and is
+computed by strehl against its own frames, so it carries no photometric
+mismatch -- but it measures *how centrally the output sits in the cloud of
+observations*, a hedging score. Low means the merge elected a frame, which is
+what selection is **supposed** to do. It would answer a different question, so I
+did not run it and report a number I could not condition on.
+
+## 12.9 Recommendation: do not move the default constant tonight
+
+**Flat exponent 1 loses on the axes I can measure.**
+
+1. It costs **19.63%** of struct-band sharpness -- **2.1x the 9.3% quoted** --
+   for **18.42%** of mottle-band floor. That is roughly one-for-one, not the
+   bargain the proposition rested on.
+2. **Zero of 26 subjects read FLAT WINS.** 25 are trades and 1 is an outright
+   loss.
+3. **It fails worst exactly where the defect is worst.** On `coffee-bubbles`,
+   the flagship mottle subject at 1.4501x, it is the only FLAT LOSES in the
+   corpus: 14.1% of sharpness spent to buy 7.1% of blotch.
+4. **We cannot pay for this with sharpness we have already spent.** V-SOFTCHECK
+   has established, with an IMPROVE arm proving the estimator was free not to
+   charge, that the masters are **already** soft against their own per-site
+   complete-bracket ceiling -- 0.6949 on `109MSDCF`, 0.7533 on `119MSDCF`, all
+   four CIs entirely below 1.0 at 0.20-0.25 cyc/px. Flat-1 spends another fifth
+   of what remains.
+
+**The condition under which this recommendation flips**, stated so it can be
+tested rather than argued: if the hull benefit is real at the magnitude
+V-GATHER measured -- the merge emitting detail present in *none* of its inputs,
+on 13 of 19 subjects, by up to -96.4% -- and if a print buyer would rather have
+a fifth less resolved detail than any manufactured detail at all, then flat-1 is
+the better default and this recommendation is wrong. **I could not price that
+side of the trade** (section 12.8), so I am reporting the cost I measured and
+naming the benefit I did not.
+
+"We checked and kept it" is a materially different claim from "we never checked."
+This is the first.
+
+## 12.10 Cost
+
+Both arms, 26 subjects, 52 renders, interleaved smallest-first so paired results
+accumulate from the first minute rather than after three hours: **3 h 35 m 13 s**
+wall clock (17:04:59 -> 20:40:12), on a machine with nine other lanes rendering
+concurrently. Memory, not disk, is the binding constraint -- 4.5 GB free with
+44.7 GB held by other lanes' `strehl` processes -- so the arms were run
+sequentially rather than in parallel.
