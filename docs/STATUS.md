@@ -16,7 +16,8 @@ marked as unmeasured.
 | --- | --- | --- |
 | **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
 | **Visual quality** | **24 of 26 masters clean to the eye at 1:1** | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
-| **Halo** | **0 visible, 0 demonstrated on any subject** | facts 1851–1855 |
+| **Halo** (shipping/pyramid masters) | **0 visible, 0 demonstrated on any subject** | facts 1851–1855 |
+| **Aura** (estimator vs pyramid) | estimator measures deeper in **17 of 17** conditioned readings; magnitude unknown | fact 1871 |
 | **Chroma** | **1 visible defect, diagnosed, fix specified, not landed** | facts 1861–1863, 1865 |
 | **Dust** | **2 real motes found; correction built, wired, tested, OFF by default** | fact 1856 |
 | **Regional blur** | 1 subject (`flowers-cpl`), undiagnosed | V-ORACLE |
@@ -40,6 +41,17 @@ falloff. `flat-on-ruler-cpl`'s excursion *peaks outside the measured window* at 
 flagged value; `119MSDCF` never decays out to 900 px; `tweezers-cpl` is one step in a
 22,461 DN ramp. A second defect in the same instrument ran the opposite way and passed four
 subjects on a partial walk. Facts 1851–1855.
+
+**But that sentence covers one instrument, not two, and I over-broadcast it once already.**
+`halo_profile.py` asks whether a *shipping* master carries a bright rim against its own
+background, and the answer is no on all 26. The **estimator-vs-pyramid aura** is a different
+instrument asking a different question, and its direction survived a dedicated attack: the
+estimator measured deeper in all 17 conditioned readings across 4 subjects (excess
+294–3446 DN on flower-bud, 334–1127 DN on `bee-2-cpl`, 40–205 DN on tweezers, 5 DN on
+lead-1). Only the **28.5× multiplier is dead** — withdrawn by its own author because the
+denominator crosses zero and the ratio spans 1.24×–17.70×. The estimator is not the default
+backend, so this does not touch the shipping masters; it does constrain any future move to
+make the estimator default. Fact 1871.
 
 **The visible magenta is ours, not the lens and not the merge.** strehl's own lateral-CA
 correction moves red from −2.009 px inward *past zero* to +0.672 px outward while blue stays
@@ -72,12 +84,19 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    beat both arms on the hue-neutral metric: better than 0.15999 (on) and 0.20807 (off).
    `highly-angled-ruler-mm-cpl` is the control for the under-corrected end, since it is the
    one subject still showing the lens's natural opposite-sign pattern.
-2. **Score `STREHL_SOFT_GATE`.** A soft admission kernel is *already built and wired* in
-   `crates/strehl-core/src/merge.rs` (`:530`, `:532-607`, `:1435-1454`, `:1898-1906`), off by
-   default, and appears never to have been scored on real output. It is the standing candidate
-   fix for depth softening. Score on `bee-1-cpl` at 0.30–0.40, with a liveness control first
-   (`STREHL_SOFT_GATE=gausian` must fail loudly). N-invariance is necessary but **not
-   sufficient** — a plain mean is perfectly N-invariant and destroys grain to 0.229×.
+2. **Score a soft admission kernel — but not via `STREHL_SOFT_GATE`, which is inert.**
+   ~~Score `STREHL_SOFT_GATE`.~~ **MEASURED INERT on the default backend**: `bee-1-cpl`
+   gaussian-vs-unset differs on **0 of 98,898,048 px**, `112MSDCF` on 0 of 24,724,512, with
+   the comparator commissioned in the same run (planted 1-sample defect → n_diff 1, null →
+   n_diff 0). `active_kernel()` has one call site, inside `Estimator::new`, and
+   `DEFAULT_MERGE_BACKEND` is Pyramid; `pyramid.rs` contains none of the soft-gate symbols.
+   The kernel itself works — it moves 59.16% of pixels on the estimator backend — it is
+   simply unreachable by default. This is the **third** knob found dead on its shipping path,
+   after `--exposure`. So the standing candidate fix for depth softening is *not currently
+   testable as shipped*: either wire the kernel into `run_pyramid`, or score it on the
+   estimator backend and accept that the result does not transfer. Fact 1869. N-invariance
+   remains necessary but **not sufficient** — a plain mean is perfectly N-invariant and
+   destroys grain to 0.229×.
 3. **Diagnose `flowers-cpl`.** Abrupt regional blur adjacent to regions resolving individual
    hairs. Capture gap or merge defect is not yet established.
 4. **Enable the dust correction in the delivered renders.** Built and OFF. Every delivered
@@ -144,9 +163,14 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 
 - **`crates/strehl-cli/tests/byte-freezes.tsv` must never be re-baselined casually.** If a
   freeze moves, that is a finding.
-- **The dust correction and the soft gate are both OFF by default.** Off is correct for the
-  dust map — a stale map manufactures the defect it removes — but it means the shipped default
-  is not the best output the code can produce.
+- **The dust correction is OFF by default, and the soft gate is off *and* inert.** Off is
+  correct for the dust map — a stale map manufactures the defect it removes — but it means the
+  shipped default is not the best output the code can produce. The soft gate is worse than off:
+  setting `STREHL_SOFT_GATE` on the default backend changes **zero pixels** and reports success,
+  so it will read as "tried it, made no difference" to anyone who does not check reachability.
+  Three knobs have now been found dead on their shipping path. **Assume a knob is inert until a
+  liveness control proves otherwise** — the cheapest form is a deliberate typo that must fail
+  loudly, and the honest form is a pixel-difference count against a commissioned comparator.
 - **`experiments/BUILD-DEFECT/out/defect-map-ILCE-7CM2.txt` is headered `SUPERSEDED — DO NOT
   ADOPT`.** It parses cleanly and looks usable. It is not.
 - **`docs/research/M111-waxy-blobs.md` has a self-retracted headline in §13**, and its §8.2 fix
