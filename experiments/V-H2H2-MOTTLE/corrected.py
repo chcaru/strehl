@@ -34,7 +34,7 @@ from pathlib import Path
 ROOT = Path(r"C:\dev\blog\death-of-software\projects\strehl")
 MS = ROOT / "experiments" / "ORCH-drift-check" / "contrast_ms.py"
 
-PAIRS = [
+DEFAULT_PAIRS = [
     ("112MSDCF srgb   A vs K",      r"vh2h2-2side\A.tif",  r"vh2h2-2side\K.tif"),
     ("112MSDCF srgb   A vs S1",     r"vh2h2-2side\A.tif",  r"vh2h2-2side\S1.tif"),
     ("112MSDCF srgb   A vs S1000",  r"vh2h2-2side\A.tif",  r"vh2h2-2side\S1000.tif"),
@@ -43,18 +43,41 @@ PAIRS = [
 TMP = Path(r"C:\Users\chris\AppData\Local\Temp")
 SCALE_RE = re.compile(r"B rescaled by\s+([0-9.]+)")
 
-print("RAW = contrast_ms.py as published.  CORR = raw / rescale, the correction")
-print("commissioned on the OFFSET arm.  Truth is bracketed by the two.\n")
+# DEFECT FOUND 2026-08-28, and it nearly cost a wrong report.
+# This script used to hardcode DEFAULT_PAIRS and never look at sys.argv. Invoked
+# as `corrected.py <bee A.tif> <bee K.tif>` it silently rendered the 112MSDCF
+# table instead -- three different invocations produced three byte-identical
+# tables, and only the subject name baked into the label stopped those numbers
+# being reported as a 299-frame depth result. Identical output across differing
+# inputs is the signature; a script that cannot see its arguments cannot fail.
+# Arguments are now honoured, and an odd/unusable argv is a hard error rather
+# than a silent fallback to the built-in list.
+argv = sys.argv[1:]
+if argv:
+    if len(argv) % 2 != 0:
+        sys.exit(f"need an even number of paths (A B [A B ...]); got {len(argv)}")
+    PAIRS = []
+    for i in range(0, len(argv), 2):
+        a, b = Path(argv[i]).resolve(), Path(argv[i + 1]).resolve()
+        PAIRS.append((f"{a.parent.name}  {a.stem} vs {b.stem}", a, b))
+else:
+    PAIRS = [(lab, TMP / ra, TMP / rb) for lab, ra, rb in DEFAULT_PAIRS]
 
-for label, ra, rb in PAIRS:
-    pa, pb = TMP / ra, TMP / rb
+print("RAW = contrast_ms.py as published.  CORR = raw / rescale, the correction")
+print("commissioned on the OFFSET arm.  Truth is bracketed by the two.")
+print(f"source: {'argv' if argv else 'built-in DEFAULT_PAIRS'}   {len(PAIRS)} pair(s)\n")
+
+n_scored = n_skipped = n_failed = 0
+for label, pa, pb in PAIRS:
     if not (pa.exists() and pb.exists()):
         print(f"{label}: SKIPPED (master missing: {pa if not pa.exists() else pb})\n")
+        n_skipped += 1
         continue
     out = subprocess.run([sys.executable, str(MS), str(pa), str(pb)],
                          capture_output=True, text=True)
     if out.returncode != 0:
         print(f"{label}: instrument FAILED\n{out.stderr}")
+        n_failed += 1
         continue
     m = SCALE_RE.search(out.stdout)
     assert m, f"{label}: could not read the rescale factor; refusing to guess"
@@ -98,6 +121,8 @@ for label, ra, rb in PAIRS:
 
     print("=" * 86)
     print(f"{label}     rescale = {scale:.4f}   (bias injected into every band)")
+    print(f"  A = {pa}")
+    print(f"  B = {pb}")
     print(f"{'band':>4} {'cyc/px':>13} {'FLAT A':>9} {'FLAT raw':>9} {'FLAT corr':>10}"
           f" {'EDGE raw':>9} {'EDGE corr':>10}")
     for b, cyc, fa, fr, ea, er in rows:
@@ -125,4 +150,16 @@ for label, ra, rb in PAIRS:
     verdict.append("acuity clears 0.98 corrected" if b1[5] / scale >= 0.98
                    else "acuity below 0.98 corrected")
     print(f"  -> {'; '.join(verdict)}")
+    n_scored += 1
+
+# Every input lands in exactly one counted outcome, and they sum to the number
+# of pairs offered. A count that does not move looks the same whether nothing
+# was wrong or nothing was examined.
+print()
+print("=" * 86)
+print(f"PARTITION  offered {len(PAIRS)}  =  scored {n_scored} + "
+      f"skipped {n_skipped} + instrument-failed {n_failed}")
+assert n_scored + n_skipped + n_failed == len(PAIRS), "partition does not close"
+if n_scored == 0:
+    sys.exit("nothing was scored -- do not read any verdict above as a result")
     print()
