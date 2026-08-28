@@ -1981,6 +1981,327 @@ because the synthetic stack has no dropped frames and no registration step.
 
 ---
 
+### 9.17 ASK: does the confidence rule restore N-invariance? No -- and on the deeper subject it makes it worse
+
+ORCH's softness lane measured, against a literally identical denominator,
+that merging **63 frames is 0.114 softer at 0.30-0.35 cyc/px than merging 32
+frames of the same focus range**. It measured the effect. Nobody had
+demonstrated the cause, and ORCH was explicit that his account of it was an
+inference from the arithmetic rather than a measurement.
+
+**The construction.** Frames are decimated with `linspace(0, n-1, k)`, which
+pins the first and last frame in every arm, so the focus range is identical by
+construction rather than by intention. Every arm is merged from the same
+in-memory arrays, with the same config, the same fitted noise model and the
+same band betas.
+
+**The gauge, measured rather than asserted.** The arms' mean output levels
+span **6.196%** of the mean on `coffee-bubbles`, from **702.9** to **747.6
+DN**, and **2.344%** on `112MSDCF` -- so the merge's photometric level is
+itself N-dependent, which is a finding in its own right and would have
+contaminated any raw spectral comparison. The statistic normalises each image
+by its own `0.02-0.05 cyc/px` band power; applying the observed drift to one
+arm moves the reading by **1.4e-16** and **2.08e-16** respectively. The arms
+differ in N and in nothing the statistic can see.
+
+**The statistic is commissioned in both directions**, because an N-invariance
+test won by blurring would read perfectly invariant:
+
+| arm | requirement | measured |
+|---|---|---:|
+| planted blur | 0.30-0.35 power must fall | **0.010x** |
+| planted sharpening | must rise, or it cannot detect softening at all | **2.573x** |
+| null rescore | identical image, identical reading | **0** |
+| exposure immunity | a 1.75x common gain must not move it | **0** |
+| noise twin, up | adding an equal noise field must raise raw power | **2.002x** |
+| noise twin, down | smoothing the residual must lower it | **0.008x** |
+
+**`coffee-bubbles`, 19 frames.** `n_eff` and `share` are measured at the top
+decile of through-focus response -- real detail -- and each arm supplies its
+own weights.
+
+| arm | N | 0.10-0.15 | 0.20-0.25 | 0.30-0.35 | 0.40-0.45 | blotch | n_eff | share | SNR at 0.30-0.35 |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| shipping | 19 | 0.0783 | 0.0117 | 0.0062 | 0.0033 | 0.06716 | 1.78 | 0.755 | **0.30** |
+| shipping | 9 | 0.0975 | 0.0146 | 0.0063 | 0.0028 | 0.06231 | 1.40 | 0.853 | 0.37 |
+| shipping | 4 | 0.1363 | 0.0235 | 0.0090 | 0.0032 | 0.05626 | 1.18 | 0.928 | **0.49** |
+| confidence | 19 | 0.0805 | 0.0152 | 0.0092 | 0.0050 | 0.06048 | 7.38 | 0.289 | 0.32 |
+| confidence | 9 | 0.1017 | 0.0173 | 0.0081 | 0.0037 | 0.05781 | 3.99 | 0.437 | 0.36 |
+| confidence | 4 | 0.1494 | 0.0265 | 0.0105 | 0.0037 | 0.05448 | 2.10 | 0.663 | 0.48 |
+| argmax | 19 | 0.0780 | 0.0119 | 0.0061 | 0.0033 | 0.07481 | 1.00 | 1.000 | 0.29 |
+| argmax | 9 | 0.0964 | 0.0148 | 0.0062 | 0.0028 | 0.06760 | 1.00 | 1.000 | 0.36 |
+| argmax | 4 | 0.1359 | 0.0236 | 0.0090 | 0.0032 | 0.05890 | 1.00 | 1.000 | 0.48 |
+| mean | 19 | 0.0411 | 0.0149 | 0.0068 | 0.0020 | 0.04874 | 19.00 | 0.053 | 0.69 |
+| mean | 9 | 0.0720 | 0.0326 | 0.0152 | 0.0046 | 0.04898 | 9.00 | 0.111 | 0.68 |
+| mean | 4 | 0.1500 | 0.0697 | 0.0316 | 0.0096 | 0.04875 | 4.00 | 0.250 | 0.68 |
+
+**`112MSDCF`, 79 frames** -- the arms at 79 and 39 bracket the softness lane's
+63-against-32 comparison.
+
+| arm | N | 0.10-0.15 | 0.20-0.25 | 0.30-0.35 | 0.40-0.45 | blotch | n_eff | share | SNR at 0.30-0.35 |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| shipping | 79 | 0.1088 | 0.0308 | 0.0167 | 0.0092 | 0.21187 | 3.60 | 0.470 | **1.28** |
+| shipping | 39 | 0.0997 | 0.0265 | 0.0131 | 0.0067 | 0.21362 | 2.32 | 0.624 | 1.37 |
+| shipping | 19 | 0.0905 | 0.0219 | 0.0100 | 0.0048 | 0.21445 | 1.65 | 0.787 | **1.53** |
+| confidence | 79 | 0.1168 | 0.0386 | 0.0210 | 0.0107 | 0.20721 | 19.22 | 0.142 | 1.21 |
+| confidence | 39 | 0.1089 | 0.0357 | 0.0183 | 0.0090 | 0.20867 | 10.59 | 0.245 | 1.33 |
+| confidence | 19 | 0.0988 | 0.0298 | 0.0144 | 0.0067 | 0.20986 | 6.00 | 0.401 | 1.53 |
+| argmax | 79 | 0.1043 | 0.0286 | 0.0157 | 0.0090 | 0.22411 | 1.00 | 1.000 | 1.24 |
+| argmax | 39 | 0.0965 | 0.0252 | 0.0123 | 0.0065 | 0.22487 | 1.00 | 1.000 | 1.32 |
+| argmax | 19 | 0.0891 | 0.0215 | 0.0097 | 0.0047 | 0.22454 | 1.00 | 1.000 | 1.47 |
+| mean | 79 | 0.0166 | 0.0038 | 0.0011 | 0.0003 | 0.19887 | 79.00 | 0.013 | 0.97 |
+| mean | 39 | 0.0239 | 0.0075 | 0.0023 | 0.0006 | 0.19870 | 39.00 | 0.026 | 1.00 |
+| mean | 19 | 0.0394 | 0.0154 | 0.0049 | 0.0013 | 0.19826 | 19.00 | 0.053 | 0.99 |
+
+**The softness lane's effect reproduces, on two subjects it never touched,
+with a different instrument.** Shipping's noise-corrected sharpness at
+0.30-0.35 falls monotonically as frames are added: **0.49 -> 0.37 -> 0.30**
+on `coffee-bubbles` and **1.53 -> 1.37 -> 1.28** on `112MSDCF`. Adding frames
+makes the output softer.
+
+**The noise twin earned its place immediately, and it flips signs.** On raw
+band power, going deeper reads *sharper* on six of eight selective arm-pairs
+-- shipping on `112MSDCF` reads **+0.281 sharper** at 79 frames than at 39.
+Corrected against a twin stack carrying no focus signal at all, the same
+comparison reads **-0.062 softer**.
+
+| subject | arm | raw 0.30-0.35 ratio, deep vs half | noise-corrected |
+|---|---|--:|--:|
+| `coffee-bubbles` | shipping | 0.9892 | **0.8157** |
+| `coffee-bubbles` | confidence | 1.1422 *(reads sharper)* | **0.8658** *(is softer)* |
+| `coffee-bubbles` | argmax | 0.9799 | 0.8062 |
+| `coffee-bubbles` | mean | 0.4452 | **1.0176** |
+| `112MSDCF` | shipping | 1.2805 *(reads sharper)* | **0.9378** *(is softer)* |
+| `112MSDCF` | confidence | 1.1494 *(reads sharper)* | **0.9100** *(is softer)* |
+| `112MSDCF` | argmax | 1.2678 *(reads sharper)* | **0.9391** *(is softer)* |
+| `112MSDCF` | mean | 0.4776 | 0.9677 |
+
+Every arm that reads sharper with depth on raw power is softer with depth once
+the manufactured noise is removed. **Any N-invariance claim made on an
+uncorrected magnitude would have come out with the wrong sign.**
+
+**The answer to the ask: the confidence rule does not restore N-invariance,
+and on the deeper subject it is actively harmful.**
+
+| subject | shipping softening | confidence softening | fix removes |
+|---|--:|--:|--:|
+| `coffee-bubbles`, 9 -> 19 | -0.1843 | -0.1342 | **27.2%** |
+| `112MSDCF`, 39 -> 79 | -0.0622 | -0.0900 | **-44.6%** |
+
+On the 19-frame subject it removes about a quarter of the softening, the same
+order as the quarter it accounts for on the mottle in section 9.14. **On the
+79-frame subject it makes the softening 45% worse.** The commercially
+important stacks are the deep ones -- the owner's deepest capture is a
+**299-frame** bee and `flower-bud-alone-cpl` at **N=205** is already refused
+by the print gate -- and the deep subject is where this fix goes the wrong
+way.
+
+**And my own prediction was wrong.** I predicted the fix would read
+*identical* to shipping at real detail, on the argument that `p_eff <= p`
+always and `conf -> 1` where differences are significant. The premise is
+false: at the top decile of focus response the fix runs at `n_eff` **7.38**
+against shipping's **1.78** on `coffee-bubbles`, and **19.22** against
+**3.60** on `112MSDCF`. It is nowhere near shipping even where the signal is
+strongest. My conclusion -- that the fix would not restore N-invariance --
+survived, but for a reason I had not measured, which is not a success. It is
+the same error I have been reporting in others all night: reasoning from the
+shape of the code to a number instead of measuring it.
+
+### 9.18 ORCH's cause, tested rather than assumed -- refuted by a control it cannot survive
+
+ORCH's account: `SoftPower` normalises `w_i / sum_j w_j`, so the winner's
+share depends on how many frames are near-tied with it, that count grows with
+N, the effective frame count inflates and the reconstruction drifts toward an
+average.
+
+**The first half of that is true.** The winner's share at real detail does
+fall as N rises, in every arm that selects at all -- `x0.885` and `x0.753` for
+shipping on the two subjects.
+
+**The second half is refuted.** `argmax` is winner-take-all: its share is
+exactly **1.000** and its `n_eff` exactly **1.000** at every N, verified to
+`1e-9` before it is used as a control, so it has **no dilution to have**. If
+dilution caused the softening, this arm could not soften.
+
+| subject | arm | share, half -> deep | dilution | noise-corrected softening |
+|---|---|--:|--:|--:|
+| `coffee-bubbles` | argmax | 1.000 -> 1.000 | **none, by construction** | **-0.194** |
+| `coffee-bubbles` | shipping | 0.853 -> 0.755 | x0.885 | -0.184 |
+| `coffee-bubbles` | confidence | 0.437 -> 0.289 | x0.662 | -0.134 |
+| `coffee-bubbles` | mean | 0.111 -> 0.053 | **x0.474, maximal** | **+0.018** |
+| `112MSDCF` | argmax | 1.000 -> 1.000 | **none, by construction** | **-0.061** |
+| `112MSDCF` | shipping | 0.624 -> 0.470 | x0.753 | -0.062 |
+| `112MSDCF` | confidence | 0.245 -> 0.142 | x0.579 | -0.090 |
+| `112MSDCF` | mean | 0.026 -> 0.013 | **x0.494, maximal** | **-0.032** |
+
+**An arm with zero dilution softens 105% and 98% as much as shipping.**
+Dilution is not necessary for the softening on either subject, so it is not
+the cause. On both subjects the maximally diluting arm -- the plain mean --
+softens **least** of all four.
+
+**One thing that does not replicate, and I am reporting it as such.** On
+`coffee-bubbles` the correlation across the four arms between dilution and
+softening is **-0.929**, which reads as the hypothesis being contradicted in
+sign. On `112MSDCF` it is only **-0.155**. The strong anti-correlation is a
+one-subject result and should not be quoted as a corpus finding. **The
+control, however, replicates exactly**: the no-dilution arm softens as much as
+shipping on both. The refutation rests on the control, not on the
+correlation.
+
+### 9.19 What it is instead -- a merge that selects is charged for every frame it is given
+
+The noise twin carries **no focus signal whatsoever**: identical scene
+content, independent noise at the fitted sensor level. Any mid-band power in
+its output was manufactured. Comparing the selecting arm against the averaging
+arm on that twin isolates the price of selection with the scene held at
+literally zero.
+
+| subject | N | manufactured 0.30-0.35 noise power, selecting vs averaging |
+|---|--:|--:|
+| `coffee-bubbles` | 4 | **2.16x** |
+| `coffee-bubbles` | 9 | **6.79x** |
+| `coffee-bubbles` | 19 | **24.82x** |
+| `112MSDCF` | 19 | **23.24x** |
+| `112MSDCF` | 39 | **80.78x** |
+| `112MSDCF` | 79 | **240.70x** |
+
+Scaling with N, per arm, on the real subjects:
+
+| subject | arm | signal power | noise power |
+|---|---|--:|--:|
+| `coffee-bubbles`, 4 -> 19 | shipping | x1.476 | **x2.419** |
+| `coffee-bubbles`, 4 -> 19 | confidence | x1.546 | **x2.344** |
+| `coffee-bubbles`, 4 -> 19 | argmax | x1.482 | **x2.468** |
+| `coffee-bubbles`, 4 -> 19 | mean | x0.218 | x0.215 |
+
+**For every arm that selects, noise grows about 1.6 times faster than signal
+as frames are added. For the plain mean, signal and noise fall at the same
+rate and the SNR is flat** -- 0.68, 0.68, 0.69 across the three depths. That
+is the whole of the N-dependent softening, and it is not about shares.
+
+Averaging cancels noise. Selecting *keeps the largest* noise, and the largest
+of N draws grows with N. A merge that picks a winner per pixel per band is
+charged for every extra candidate it is handed, **whether or not that
+candidate carries any signal**. In a flat region no candidate does, which is
+exactly the manufactured mid-scale structure convicted in section 9.14. In a
+detailed region one candidate does, but the other N-1 still bid, and the noise
+they inject dilutes the SNR of the detail that is there.
+
+**One mechanism does produce both defects, as ORCH argued -- but not the
+mechanism he named.** It is not the winner's share being diluted. It is
+selection on a quantity that contains noise, over a candidate set that grows
+with N. The two are opposites: dilution is averaging creeping in, and this is
+selection biting harder.
+
+**A note on what depth actually trades.** On `112MSDCF` shipping's blotch
+barely moves with depth -- 0.21445 at N=19 against 0.21187 at N=79, slightly
+*better* -- while its sharpness falls from 1.53 to 1.28. Adding frames on that
+subject buys a rounding error of mottle and pays 16% of the mid-band signal
+for it.
+
+### 9.20 The pre-registered out-of-sample test -- and it refutes my own model
+
+For N independent draws the mean has band power `~ 1/N` while the maximum has
+`~ 2 ln N`, so the price of selecting rather than averaging should scale as
+`2 N ln N`. On `coffee-bubbles` that looked right: the premium grew **11.48x**
+from N=4 to N=19 against a predicted **10.09x**.
+
+Fitting a model to the subject that suggested it proves nothing, so the
+prediction for the next subject was written to disk **before that subject was
+run**, by a script that refuses to write a prediction for a subject already
+measured and refuses to overwrite one already written. Both refusals were
+exercised and both returned `rc=2`.
+
+Calibrated on `coffee-bubbles` at N=19 (`C = 0.22185`), the registered
+prediction for `112MSDCF` at **N=79** was a selection premium of **153.2**,
+declared **refuted** outside **102.1 to 229.7**, with predicted growth
+**6.17x** from N=19 to N=79.
+
+**Measured: 240.70. Growth 10.36x against a predicted 6.17x. The model is
+refuted.**
+
+The miss is only 4.8% outside the interval and it is in the direction that
+makes the defect *worse* than predicted, both of which would make it easy to
+wave through. It is a refutation and it is recorded as one. The interval was
+chosen before the measurement and is not being widened after it.
+
+**What survives and what does not.** The qualitative mechanism survives
+untouched and is strengthened -- the premium is real, it is large, and it
+grows steeply with N. What is refuted is my model of *how fast*. Descriptively
+the two subjects give an empirical exponent of **N^1.566** and **N^1.640**,
+against the `2 N ln N` model's effective **N^1.3** over this range. I am
+labelling that as description, not prediction: it is fitted to the same two
+subjects it describes, and it has not been tested on a third. **Anyone
+extrapolating a 299-frame stack from these numbers is extrapolating a curve
+that has already failed once.**
+
+### 9.21 What this means for the fix, stated for the build lane
+
+1. **N-invariance is a legitimate acceptance criterion and it is measurable
+   offline.** The construction in this section pins the focus range by
+   construction, proves the arms share a gauge to `1e-16`, and corrects for
+   manufactured noise. Shipping today reads **-0.184** on a 19-frame subject
+   and **-0.062** on a 79-frame one.
+2. **The confidence-dependent exponent does not deliver it.** It removes 27%
+   of the softening on the shallow subject and makes it **45% worse** on the
+   deep one. It is aimed at the exponent, and the exponent is not what grows
+   with N.
+3. **The quantity that grows with N is the candidate count**, and nothing in
+   the proposed rule is a function of N. A fix for this defect has to be: the
+   selectivity has to fall as the candidate set grows, or the selection has to
+   be made on a quantity whose noise has already been suppressed, or the
+   losers have to be averaged rather than discarded.
+4. **The plain mean is N-invariant and is not the answer.** Its SNR is flat in
+   N -- the only arm here that is -- but section 9.14 already priced it at
+   **0.229x** of the best frame's fine grain. It wins invariance by not
+   resolving anything, which is exactly the `focus-stack` trade at 0.077 and
+   0.260 that ORCH warned about. **Invariance is necessary, not sufficient,
+   and it must be quoted with a sharpness number beside it or it is
+   inadmissible.**
+
+**Partition.** 2 subjects examined = 2 measured + 0 refused + 0 failed.
+4 arms x 3 depths x 2 subjects = **24 arm-measurements attempted = 24
+measured + 0 refused + 0 failed.** 1 pre-registered prediction = 0 confirmed
++ **1 refuted** + 0 unscored.
+
+### 9.22 Instrument defects caught this round
+
+Five. Four were caught by controls rather than by inspection, and the fifth was caught by the negative control after the verifier had already reported itself green.
+
+1. **A gauge check that could not fail.** The first `gauge()` asserted that
+   `frames[i]` equalled `frames[i]` -- true for any input whatsoever. It was
+   replaced by three properties a real mistake would break: endpoints pinned,
+   no repeats, indices in range. **A check that cannot fail is not evidence
+   that nothing is wrong; it is the absence of a check wearing its clothes.**
+2. **The fix's `n_eff` column silently repeated shipping's.** `detail_neff`
+   recomputed the weights itself with a hardcoded shipping merge, so both arms
+   were described by identical numbers and would have read as perfect
+   agreement between the fix and the code it replaces. Weights are now passed
+   in from the arm that produced the image.
+3. **The photometric gate refused a finding instead of testing the
+   statistic.** The first version aborted the run because the arms' mean
+   levels differed by more than 2%. But the level drift with N is a *result*,
+   and the question is whether the statistic can see it. Rewritten to apply
+   the observed drift to one arm and measure the movement -- **1.4e-16**.
+   **A refusal triggered by the answer is not a safety check.**
+4. **Abstention contamination, the same defect as section 9.15, caught in
+   advance this time.** `argmax` over an all-zero weight column returns frame
+   0, which would have manufactured a fake unanimous winner in every
+   unadmitted pixel and quietly broken the one control the whole refutation
+   rests on. Both the merge and `detail_neff` now guard on `sum > 0`
+   explicitly.
+5. **A verifier check satisfied by a word it was not looking at.** The
+   pre-registered verdict in section 9.20 was checked by testing whether
+   "refuted" appeared anywhere in the section. It appears twice there
+   legitimately, so a planted edit flipping the conclusion to **confirmed** --
+   while leaving all four numbers untouched -- passed a full green run of 712
+   checks. The negative control caught it; review did not. The check now
+   *parses* the verdict word out of the sentence and compares it against the
+   record's `survives` flag. **A presence test is satisfied by any duplicate
+   of the thing it looks for, so a conclusion needs an anchor of its own --
+   the same defect ORCH named in my duplicate `+8%` and the same one recorded
+   in section 9.15.**
+
 ## 10. Files
 
 | file | what it does |
@@ -2015,6 +2336,8 @@ because the synthetic stack has no dropped frames and no registration step.
 | `vn_snrref.py` | ASK 1 and ASK 2: `SNR_REF` cancellation with a positive control, weight concentration by flatness, winner-field coherence with a like-for-like null (S9.11, S9.12) |
 | `vn_confexp.py` | the confidence-dependent exponent implemented offline, swept against a scalar frontier, with an oracle bound (S9.13) |
 | `vn_manuf.py` | the synthetic null: a stack with nothing to resolve, and the attribution between admission and exponent (S9.14) |
+| `vn_ninv.py` | N-invariance at matched focus range: the spectral statistic, the noise twin that separates sharper from noisier, the four bracketing arms and the selection premium (S9.17-S9.19) |
+| `vn_prereg.py` | writes a prediction to disk for a subject not yet measured, and refuses to write one for a subject already measured or to overwrite one already written (S9.20) |
 | `vn_seals.py` | hashes every `strehl*.exe` and every `.tiff.ok` seal; reproduces §0. Plants decoys it must find, so reach is measured rather than assumed. |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.

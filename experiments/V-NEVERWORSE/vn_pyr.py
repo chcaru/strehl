@@ -254,6 +254,20 @@ def merge(frames, cfg, beta, var0, nb=7):
         W = np.stack(ws)
         if mode == "mean":
             W = np.zeros_like(W)
+        elif mode == "argmax":
+            # Winner-take-all: the effective frame count is exactly 1 and the
+            # winner's share is exactly 1.0 at every N, so this arm has NO
+            # share dilution by construction. It is the control that decides
+            # whether N-dependent softening needs dilution to happen.
+            # Pixels where nothing was admitted keep W = 0 and fall through to
+            # the same unweighted fallback the other modes use; taking argmax
+            # of an all-zero column would silently elect frame 0 everywhere,
+            # which is the abstention contamination this lane has already been
+            # bitten by once.
+            den0 = W.sum(axis=0)
+            hot = np.zeros_like(W)
+            np.put_along_axis(hot, W.argmax(axis=0)[None], 1.0, axis=0)
+            W = np.where(den0[None] > 0.0, hot, 0.0)
         wstack_lv.append(W)
         den = W.sum(axis=0)
         chans = []

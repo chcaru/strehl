@@ -10,6 +10,7 @@ re-derived rather than restated.
 """
 import io
 import json
+import math
 import os
 import re
 import subprocess
@@ -69,6 +70,38 @@ def grab(body, pat, what):
         fails.append("%s: %r matched %d times, need 1" % (what, pat, len(m)))
         return None
     return m[0]
+
+
+def row2(body, label, label2, what):
+    global checked
+    checked += 1
+    hits = []
+    for ln in body.splitlines():
+        if not ln.startswith("|"):
+            continue
+        c = ln.split("|")
+        if (len(c) > 2 and _flat(c[1]).strip() == label
+                and _flat(c[2]).strip() == label2):
+            hits.append(ln)
+    if len(hits) != 1:
+        fails.append("%s: %d rows with cells (%r, %r), need 1"
+                     % (what, len(hits), label, label2))
+        return None
+    return [c.strip() for c in hits[0].strip("|").split("|")]
+
+
+def seg(body, a, b, what):
+    """Slice between two markers, refusing if either is not unique. Section
+    9.17 carries two tables whose arm labels and N=19 row collide across
+    subjects, so a slice that silently matched the wrong table would check one
+    subject's numbers twice and the other's never."""
+    global checked
+    checked += 1
+    if body.count(a) != 1 or body.count(b) != 1:
+        refused.append("%s: markers not unique (%d, %d)"
+                       % (what, body.count(a), body.count(b)))
+        return ""
+    return body[body.index(a):body.index(b)]
 
 
 def main():
@@ -648,6 +681,203 @@ def main():
         checked += 1
         if pr is not None and int(pr[0]) != sum(int(x) for x in pr[1:]):
             fails.append("%s does not sum: %s" % (what, pr))
+
+
+    # ================= 9.17 - 9.22, N-invariance =================
+    NINV = os.path.join(OUTD, "ninv")
+    NI = {}
+    for _s in ("coffee-bubbles", "112MSDCF"):
+        _p = os.path.join(NINV, "%s.json" % _s)
+        if not os.path.exists(_p):
+            refused.append("9.17: %s ninv record missing" % _s)
+        else:
+            NI[_s] = json.load(io.open(_p, encoding="utf-8"))
+
+    if len(NI) == 2:
+        s17 = s9[s9.index("### 9.17"):s9.index("### 9.18")]
+        s18 = s9[s9.index("### 9.18"):s9.index("### 9.19")]
+        s19 = s9[s9.index("### 9.19"):s9.index("### 9.20")]
+        s20 = s9[s9.index("### 9.20"):s9.index("### 9.21")]
+        s21 = s9[s9.index("### 9.21"):s9.index("### 9.22")]
+        s22 = s9[s9.index("### 9.22"):]
+
+        # ---- the two arm tables, every cell against the record ----
+        tabs = {
+            "coffee-bubbles": seg(s17, "**`coffee-bubbles`, 19 frames.**",
+                                  "**`112MSDCF`, 79 frames**",
+                                  "9.17 coffee-bubbles arm table"),
+            "112MSDCF": seg(s17, "**`112MSDCF`, 79 frames**",
+                            "**The softness lane's effect",
+                            "9.17 112MSDCF arm table"),
+        }
+        for _s, d in NI.items():
+            body = tabs[_s]
+            for r in d["rows"]:
+                w = "9.17 %s %s N=%d" % (_s, r["arm"], r["N"])
+                cs = row2(body, r["arm"], str(r["N"]), w)
+                for i, (lo, hi) in enumerate(
+                        ((0.10, 0.15), (0.20, 0.25), (0.30, 0.35),
+                         (0.40, 0.45))):
+                    cell(cs, 2 + i,
+                         "%.4f" % r["spectrum"]["n_%.2f-%.2f" % (lo, hi)], w)
+                cell(cs, 6, "%.5f" % r["blotch"], w)
+                cell(cs, 7, "%.2f" % r["neff_detail"], w)
+                cell(cs, 8, "%.3f" % r["top_detail"], w)
+                cell(cs, 9, "%.2f" % r["snr30"], w)
+
+        # ---- the raw-vs-noise-corrected table ----
+        for _s, d in NI.items():
+            for arm, v in d["verdict"].items():
+                w = "9.17 corrected %s %s" % (_s, arm)
+                cs = row2(s17, "`%s`" % _s, arm, w)
+                cell(cs, 2, "%.4f" % v["ratios"]["0.30-0.35"], w)
+                cell(cs, 3, "%.4f" % v["snr_ratio"]["0.30-0.35"], w)
+
+        # ---- the fix's ceiling, recomputed from the record ----
+        for _s, d in NI.items():
+            m = d["mechanism"]
+            sh = m["soft_shipping"]
+            cf = d["verdict"]["confidence"]["snr_ratio"]["0.30-0.35"] - 1.0
+            rem = 100.0 * (abs(sh) - abs(cf)) / abs(sh)
+            ks = d["ks"]
+            w = "9.17 ceiling %s" % _s
+            cs = row2(s17, "`%s`, %d -> %d" % (_s, ks[1], ks[0]),
+                      "%.4f" % sh, w)
+            cell(cs, 2, "%.4f" % cf, w)
+            cell(cs, 3, "%.1f%%" % rem, w)
+
+        # ---- 9.18 the bracket table ----
+        for _s, d in NI.items():
+            for arm in ("argmax", "shipping", "confidence", "mean"):
+                v = d["verdict"][arm]
+                w = "9.18 %s %s" % (_s, arm)
+                cs = row2(s18, "`%s`" % _s, arm, w)
+                cell(cs, 2, "%.3f -> %.3f" % (v["top_half"], v["top_deep"]), w)
+                cell(cs, 4, "%+.3f" % (v["snr_ratio"]["0.30-0.35"] - 1.0), w)
+                if arm != "argmax":
+                    cell(cs, 3, "x%.3f"
+                         % (v["top_deep"] / v["top_half"]), w)
+
+        # the no-dilution control, which is what the refutation rests on
+        for _s, d in NI.items():
+            am = 1.0 - d["verdict"]["argmax"]["snr_ratio"]["0.30-0.35"]
+            sh = 1.0 - d["verdict"]["shipping"]["snr_ratio"]["0.30-0.35"]
+            checked += 1
+            if "%.0f%%" % (100 * am / sh) not in _flat(s18):
+                fails.append("9.18 %s: argmax/shipping softening ratio %.0f%% "
+                             "not quoted" % (_s, 100 * am / sh))
+        for _s, d in NI.items():
+            checked += 1
+            if "%.3f" % d["mechanism"]["dilution_softening_corr"] \
+                    not in _flat(s18):
+                fails.append("9.18 %s: correlation %.3f not quoted"
+                             % (_s, d["mechanism"]["dilution_softening_corr"]))
+
+        # ---- 9.19 the premium table ----
+        for _s, d in NI.items():
+            for k, v in d["mechanism"]["premium"].items():
+                w = "9.19 premium %s N=%s" % (_s, k)
+                cs = row2(s19, "`%s`" % _s, k, w)
+                cell(cs, 2, "%.2fx" % v, w)
+
+        # ---- 9.20 the pre-registration, scored from the record ----
+        pr = NI["112MSDCF"]["mechanism"].get("prereg")
+        checked += 1
+        if pr is None:
+            fails.append("9.20: 112MSDCF record carries no pre-registration")
+        else:
+            for val, what in ((pr["point"], "point"),
+                              (pr["interval"][0], "lower bound"),
+                              (pr["interval"][1], "upper bound"),
+                              (pr["measured"], "measurement")):
+                checked += 1
+                if "%.1f" % val not in _flat(s20):
+                    fails.append("9.20: %s %.1f not quoted" % (what, val))
+            checked += 1
+            if pr["survives"]:
+                fails.append("9.20: the record says the model SURVIVES but "
+                             "the section reports a refutation")
+            # The verdict WORD is parsed, not looked for. A presence test
+            # for "refuted" is satisfied by any other use of the word in the
+            # same section -- and the section legitimately uses it twice --
+            # so flipping the conclusion to "confirmed" while leaving every
+            # number intact passed a presence test. It does not pass this.
+            mv = grab(_flat(s20),
+                      r"\*\*Measured:\s*([\d.]+)\.\s*Growth\s*([\d.]+)x"
+                      r"\s*against\s*a\s*predicted\s*([\d.]+)x\.\s*The"
+                      r"\s*model\s*is\s*(\w+)\.\*\*",
+                      "9.20 verdict sentence")
+            if mv is not None:
+                _mech = NI["112MSDCF"]["mechanism"]
+                for got, want, what in (
+                        (mv[0], "%.2f" % pr["measured"], "measurement"),
+                        (mv[1], "%.2f" % _mech["premium_growth"], "growth"),
+                        (mv[2], "%.2f" % _mech["premium_model"],
+                         "predicted growth"),
+                        (mv[3], "survives" if pr["survives"] else "refuted",
+                         "verdict word")):
+                    checked += 1
+                    if got != want:
+                        fails.append("9.20 verdict sentence: %s is %r, the "
+                                     "record gives %r" % (what, got, want))
+            # the miss, recomputed rather than trusted
+            miss = 100.0 * (pr["measured"] / pr["interval"][1] - 1.0)
+            checked += 1
+            if "%.1f%%" % miss not in _flat(s20):
+                fails.append("9.20: miss of %.1f%% outside the interval not "
+                             "quoted" % miss)
+
+        for _s, d in NI.items():
+            m = d["mechanism"]
+            ks = sorted(int(k) for k in m["premium"])
+            e = (math.log(m["premium"][str(ks[-1])] / m["premium"][str(ks[0])])
+                 / math.log(float(ks[-1]) / ks[0]))
+            checked += 1
+            if "N^%.3f" % e not in _flat(s20):
+                fails.append("9.20: %s empirical exponent N^%.3f not quoted"
+                             % (_s, e))
+            checked += 1
+            if "%.2fx" % m["premium_growth"] not in _flat(s20 + s19):
+                fails.append("9.20: %s premium growth %.2fx not quoted"
+                             % (_s, m["premium_growth"]))
+
+        # ---- 9.21 shipping's softening restated, and the partition ----
+        for _s, d in NI.items():
+            checked += 1
+            if "%.3f" % d["mechanism"]["soft_shipping"] not in _flat(s21):
+                fails.append("9.21: %s shipping softening %.3f not quoted"
+                             % (_s, d["mechanism"]["soft_shipping"]))
+        pr2 = grab(s21, r"\*\*(\d+)\s+arm-measurements\s+attempted\s+=\s+(\d+)"
+                   r"\s+measured\s+\+\s+(\d+)\s+refused\s+\+\s+(\d+)"
+                   r"\s+failed\.\*\*",
+                   "9.21 arm partition")
+        checked += 1
+        if pr2 is not None:
+            if int(pr2[0]) != sum(int(x) for x in pr2[1:]):
+                fails.append("9.21 arm partition does not sum: %s" % (pr2,))
+            n_arms = sum(len(d["rows"]) for d in NI.values())
+            checked += 1
+            if int(pr2[0]) != n_arms:
+                fails.append("9.21 claims %s arm-measurements, the records "
+                             "hold %d" % (pr2[0], n_arms))
+
+        # ---- 9.22 must describe defects, and the count must be honest ----
+        checked += 1
+        n_def = len([l for l in s22.splitlines()
+                     if re.match(r"^\d+\. \*\*", l)])
+        _w = dict(One=1, Two=2, Three=3, Four=4, Five=5, Six=6, Seven=7,
+                  Eight=8, Nine=9, Ten=10)
+        _m = re.search(r"\n(\w+)[.,] ", s22)
+        _said = _w.get(_m.group(1)) if _m else None
+        if _said != n_def:
+            fails.append("9.22 announces %r (%s) but lists %d numbered "
+                         "defects" % (_m.group(1) if _m else None, _said,
+                                      n_def))
+        checked += 1
+        if abs(NI["coffee-bubbles"]["verdict"]["argmax"]["top_deep"]
+               - 1.0) > 1e-9:
+            fails.append("9.18: the argmax control's share is not 1.0 in the "
+                         "record, so the no-dilution claim is unsupported")
 
     print("\n%d checks: %d passed, %d FAILED, %d REFUSED"
           % (checked, checked - len(fails) - len(refused), len(fails),
