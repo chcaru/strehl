@@ -802,8 +802,9 @@ pub fn hull_default() -> Hull {
 ///
 /// The rate is driven by the selection exponent, not the gate: 0 violations at
 /// exponent ≤ 1, 72 at exponent 8, 511 at 16. The shipped per-band ramp is
-/// `2 3 4 5 8 8 8`, so **the three finest bands sit exactly where this turns
-/// severe**.
+/// `2.000 2.800 3.920 5.488 7.683 8.000 8.000` (coarsest to finest, over
+/// `DEFAULT_BANDS = 7`), so **the three finest bands sit exactly where this
+/// turns severe**.
 ///
 /// In a real render the excursion is downward into darkness, where the hull
 /// sits near zero and crossing it clips: on `flower-bud-alone-cpl` the
@@ -1111,7 +1112,102 @@ pub struct MergeConfig {
     /// move either. If clipping falls under a coarse-only bound, the fix is
     /// sharp-by-construction rather than sharp-by-measurement.
     pub hull_from_level: usize,
+
+    /// Scale the selection exponent by each coefficient's own significance.
+    ///
+    /// A **multiplier on the derived significance floor**, not a flag.
+    /// `0.0` reproduces the shipping merge byte for byte; `1.0` is the value
+    /// derived from the noise model and adds no tunable constant. Values above
+    /// `1.0` exaggerate the effect and exist so the change can be *commissioned*
+    /// — see [`significance_scale_default`].
+    pub significance_scale: f32,
 }
+
+/// Judge each coefficient against its own measurement noise before selecting.
+///
+/// The exponent is a single number per band, and three measured defects pull
+/// it in two directions at once: mottle in flat regions and manufactured
+/// detail both want it lower, while depth softening on deep stacks wants it
+/// higher. No fixed value satisfies all three, because the parameterisation is
+/// wrong rather than the value.
+///
+/// The measurement that says so: on `coffee-bubbles` at 19 frames, selection
+/// **concentration is higher in flat regions than in detail regions at every
+/// band** — 1.0000 against 0.8214 at band 0 and 0.7837 against 0.2989 at band
+/// 2, where a plain mean reads 0.0526 and winner-take-all reads 1.0. One frame
+/// in nineteen owns essentially the whole coefficient exactly where there is
+/// nothing to choose on. That is a merge selecting on noise.
+///
+/// This makes the exponent **local**: full strength where a coefficient stands
+/// above its own noise, falling to a plain mean where it does not. See
+/// [`select_weight`] for the arithmetic and [`NU_SMOOTH`] for why it adds no
+/// tunable constant.
+///
+/// Set `STREHL_PYRAMID_SIGNIFICANCE=1` to enable it at the derived strength;
+/// **it is off by default**, so unset reproduces the shipping merge bit for
+/// bit. Any other non-negative finite number is a multiplier on the derived
+/// floor.
+///
+/// # Why it is off, when the mechanism is sound
+///
+/// MEASURED, `coffee-bean` 20 frames, `--merge pyramid`, one binary
+/// (`6A9FABB7`), three arms differing only in this variable. Concentration
+/// `max_i(w_i) / sum_i(w_i)`, flat vs detail sites classified by local SD:
+///
+/// ```text
+///          FLAT                        DETAIL
+/// band  off      x1       x1000     off      x1       x1000
+///   0   1.0000   1.0000   1.0000    0.9999   0.9990   0.5000
+///   1   0.8997   0.8444   0.1667    0.8340   0.8106   0.0958
+///   2   0.6440   0.6325   0.0909    0.6917   0.6876   0.2802
+///   3   0.3074   0.3071   0.0556    0.3955   0.3953   0.3244
+///   6   0.0583   0.0583   0.0582    0.0567   0.0567   0.0565
+/// ```
+///
+/// At the derived strength the flat/detail inversion does **not** collapse: it
+/// narrows at band 1 (gap 0.0657 -> 0.0338) and moves bands 2-6 by under 0.2%.
+/// At 1000x it collapses and reverses to the correct polarity at bands 2-4 —
+/// so the mechanism is real, and the derived scale is simply far too small to
+/// reach it. Reaching it needs a fitted multiplier, which is the constant this
+/// design existed to avoid.
+///
+/// **Band 0 is out of reach of any weighting change at all**, and that is
+/// arithmetic rather than a tuning problem: `conc = 1.0000` exactly means every
+/// other frame's weight is exactly zero, and `select_weight` returns zero on
+/// `excess <= 0` before it ever looks at the floor. One frame cleared the gate
+/// and the rest did not. That is a decision of the *gate*, upstream of the
+/// weight, which is why the refused fractions (0.6176 flat, 0.4958 detail) are
+/// identical in all three arms.
+///
+/// So it stays off. It moves every byte of a shipping render — three arms, three
+/// distinct output hashes — while failing the criterion it was built for, and a
+/// behaviour change that is live but unjustified silently invalidates every
+/// other lane's baseline. It is kept, not deleted, because it is the instrument
+/// that establishes the band-0 result above.
+///
+/// A value that is negative, NaN, or unparseable panics rather than being
+/// silently read as off, because an A/B whose arms are decided by a typo is not
+/// an A/B.
+pub fn significance_scale_default() -> f32 {
+    static CACHED: std::sync::OnceLock<f32> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(SIGNIFICANCE_ENV) {
+        Err(_) => 0.0,
+        Ok(raw) => match raw.trim() {
+            "0" | "off" | "false" => 0.0,
+            "1" | "on" | "true" => 1.0,
+            other => match other.parse::<f32>() {
+                Ok(v) if v.is_finite() && v >= 0.0 => v,
+                _ => panic!(
+                    "{SIGNIFICANCE_ENV}={other:?} is not 0/1/off/on/false/true \
+                     nor a finite non-negative multiplier"
+                ),
+            },
+        },
+    })
+}
+
+/// Environment override for [`significance_scale_default`].
+pub const SIGNIFICANCE_ENV: &str = "STREHL_PYRAMID_SIGNIFICANCE";
 
 impl MergeConfig {
     /// The selection exponent for band `k`, `k = 0` finest.
@@ -1155,11 +1251,19 @@ impl Default for MergeConfig {
             bands: DEFAULT_BANDS,
             gate: 2.0,
             exponent: 2.0,
-            // 1.4x per octave. Over a 7-band pyramid this runs 2, 3, 4, 5, 8,
-            // 8, 8 from coarsest to finest, so the fine bands -- where all the
-            // acuity is, and where a wrong pick is a single high-frequency
-            // coefficient nobody can see -- are near winner-take-all, while the
-            // coarse bands, where a wrong pick is the rim, stay gently blended.
+            // 1.4x per octave. Over a 7-band pyramid this runs 2.000, 2.800,
+            // 3.920, 5.488, 7.683, 8.000, 8.000 from coarsest to finest -- the
+            // last two capped from 10.756 and 15.059 by `MAX_EXPONENT`. So the
+            // fine bands -- where all the acuity is, and where a wrong pick is
+            // a single high-frequency coefficient nobody can see -- are near
+            // winner-take-all, while the coarse bands, where a wrong pick is
+            // the rim, stay gently blended.
+            //
+            // Stated to three decimals because the rounded form `2 3 4 5 8 8 8`
+            // that used to sit here is wrong by up to 0.488, and a rounded
+            // constant in a doc comment is how the next reader inherits a wrong
+            // premise. `DEFAULT_BANDS` is 7, so any reading of this ladder over
+            // six bands is also shifted one index.
             //
             // Chosen by sweeping 1.0 / 1.4 / 2.0 on an 80-frame subsample of
             // `couch-fibers-cpl` (acuity) and `flower-bud-with-background-fern`
@@ -1193,6 +1297,7 @@ impl Default for MergeConfig {
             fallback_k: 3,
             fallback_power: 4.0,
             hull_from_level: 1,
+            significance_scale: significance_scale_default(),
         }
     }
 }
@@ -1559,13 +1664,16 @@ impl BandMerge {
                 let gate = self.cfg.gate;
                 // Sharper toward the fine bands: see `MergeConfig::sharpen_per_octave`.
                 let p = self.cfg.exponent_at(k, nb);
+                // Zero disables the significance test and restores the shipping
+                // weight bit for bit: see `select_weight`.
+                let r_floor = significance_floor(gate) * self.cfg.significance_scale;
                 let vv = ws.var.level(k);
                 for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
                     // The floor at this band's scale: the level-0 variance
                     // carried down to this grid, times the measured band gain.
                     let floor = gate * beta * v.max(0.0);
                     let excess = (*e - floor).max(0.0);
-                    *w = select_weight(excess, floor, p);
+                    *w = select_weight(excess, floor, p, r_floor);
                 }
             }
             self.accumulate_level(k, planes, &mut ws.plane, w);
@@ -2393,6 +2501,73 @@ fn smooth5(data: &mut [f32], size: LevelSize, scratch: &mut [f32]) {
 /// clamped, all astronomically large *and equal* — see [`select_weight`].
 const SNR_REF: f32 = 64.0;
 
+/// Effective degrees of freedom of the smoothed band-power estimate.
+///
+/// `add_frame_with_gain` squares the band coefficients and then runs
+/// [`smooth5`] over them, so `e` at a coefficient is a weighted mean of squared
+/// samples, not one sample. For a normalised kernel `a` the effective sample
+/// count of that mean is `(sum a)^2 / sum a^2 = 1 / sum a^2`, and the 2-D
+/// separable form squares the 1-D figure:
+///
+/// ```text
+/// sum a^2 (1-D)  = (1 + 16 + 36 + 16 + 1) / 256 = 70/256 = 0.2734375
+/// sum A^2 (2-D)  = 0.2734375^2              = 0.07476807
+/// nu             = 1 / 0.07476807           = 13.374690
+/// ```
+///
+/// **Derived from [`KERNEL`], not fitted.** If the kernel changes this changes
+/// with it, which is the property that lets the significance test below ship on
+/// the default path: it introduces no constant anybody chose.
+///
+/// # The assumption, and which way it errs
+///
+/// This treats the pre-smoothing squared coefficients as independent. They are
+/// not — a Laplacian band is band-limited, so neighbours are correlated and the
+/// true `nu` is *lower*. A lower `nu` means a larger `SIGMA_REL`, a smaller `z`,
+/// and therefore *more* shrinkage. Assuming independence is the conservative
+/// end: it is the choice that intervenes least and stays closest to the
+/// shipping merge. Measuring the real `nu` would strengthen the effect, not
+/// reverse it.
+const NU_SMOOTH: f32 = 13.374_69;
+
+/// Relative standard deviation of the band-power estimate, `sqrt(2 / nu)`.
+///
+/// A power estimate averaging `nu` independent squared Gaussian samples is
+/// chi-squared with `nu` degrees of freedom, whose standard deviation is
+/// `sqrt(2/nu)` of its mean. This is the scale against which an `excess` is
+/// judged real: it is the noise of the *measurement*, not of the image.
+///
+/// Computed from [`NU_SMOOTH`] rather than written out, so the kernel stays the
+/// single source of truth and the two cannot drift apart.
+#[inline]
+fn sigma_rel() -> f32 {
+    (2.0 / NU_SMOOTH).sqrt()
+}
+
+/// The soft floor on the SNR ratio that makes selection strength local.
+///
+/// Returns `1 / Z_REF`, where `Z_REF` is the significance `z` corresponding to
+/// `r = 1`. Since `r = excess / floor / SNR_REF` and
+/// `z = excess / (floor/gate * SIGMA_REL)`, the two differ by exactly the
+/// constant `Z_REF = gate * SNR_REF / SIGMA_REL`, so `r = z / Z_REF` and the
+/// significance test can be applied without ever forming `z`.
+///
+/// At the shipping `gate = 2.0` this is `0.386699 / 128 = 0.0030211`.
+///
+/// **`gate <= 0` returns 0, which disables the fix.** The significance scale is
+/// `floor / gate`, so a gate of zero makes it `0 / 0` — the noise estimate is
+/// still there, but the caller has thrown away the only handle this function
+/// has on it. There is no scale to judge against, so decline to judge: the
+/// coefficient falls back to the shipping weight rather than to a fabricated
+/// one. `NaN` takes the same branch, deliberately.
+#[inline]
+fn significance_floor(gate: f32) -> f32 {
+    if !(gate > 0.0) {
+        return 0.0;
+    }
+    sigma_rel() / (gate * SNR_REF)
+}
+
 /// Turn a noise-corrected band energy into a selection weight, safely.
 ///
 /// The weight is `(excess / floor / SNR_REF)^p` — a **signal-to-noise ratio**
@@ -2422,15 +2597,65 @@ const SNR_REF: f32 = 64.0;
 /// straddle 1 instead of piling up against the ceiling, and the clamp becomes
 /// what it was meant to be — an overflow guard that never binds in practice
 /// rather than a silent averaging switch.
+///
+/// # `r_floor`: making the exponent local instead of global
+///
+/// With `r_floor = 0.0` this is exactly the shipping weight, bit for bit.
+///
+/// A positive `r_floor` replaces `r` with `hypot(r, r_floor)`, which is the
+/// whole of the significance fix. Writing `z` for the significance
+/// `excess / (floor/gate * SIGMA_REL)` and `Z_REF = gate * SNR_REF / SIGMA_REL`
+/// so that `r = z / Z_REF` and `r_floor = 1 / Z_REF`:
+///
+/// ```text
+/// w = (sqrt(r^2 + r_floor^2))^p = (sqrt(1 + z^2) / Z_REF)^p
+/// ```
+///
+/// so `ln w = (p/2) * ln(1 + z^2) - p * ln(Z_REF)`. The second term is the same
+/// for every frame at a coefficient, so it cancels in `w_i / sum w_j` and
+/// exists only to keep the log centred. The first is the entire behaviour:
+///
+/// * **`z >> 1`** (the coefficient is plainly above its own measurement noise):
+///   `(p/2) ln(1+z^2) -> p ln z`, so the weight is the shipping weight and the
+///   band runs at full selection strength. The two agree to `p / (2 z^2)` in
+///   the log — 3.6e-5 at `z = Z_REF`.
+/// * **`z << 1`** (the excess is indistinguishable from a fluctuation of the
+///   noise estimate itself): `(p/2) ln(1+z^2) -> 0`, every frame lands on the
+///   same weight `Z_REF^-p`, and the coefficient becomes a plain mean.
+///
+/// This is `p_eff = p * f(z)` with `f(z) = ln(1+z^2) / (2 ln z)`, expressed in
+/// the form that costs one `sqrt` and cannot overflow. It is strictly monotone
+/// in `z`, which the more obvious `p * z^2/(1+z^2)` is not — that form dips
+/// below its own `z -> 0` limit around `z = 0.61` and would hand a coefficient
+/// with *more* signal *less* weight than one with less.
+///
+/// **Why the floor must sit at `z = 1` and not at `r = 1`.** A per-frame
+/// exponent breaks the invariance that makes `SNR_REF` inert. Shrinking `p`
+/// toward 0 drives `r^p` toward **1**, so if the reference point is not also
+/// the bottom of the weight range, an insignificant coefficient at weight ~1
+/// outranks a significant one at `r < 1` — an inversion across the whole band
+/// `1 < z < Z_REF`. Anchoring at `z = 1` puts "no evidence" at the bottom by
+/// construction.
 #[inline]
-fn select_weight(excess: f32, floor: f32, p: f32) -> f32 {
+fn select_weight(excess: f32, floor: f32, p: f32, r_floor: f32) -> f32 {
     if excess <= 0.0 {
         return 0.0;
     }
     // `floor` is zero only where the noise model says this pixel has no noise
     // at all, which cannot happen physically but can happen at a clamped black
     // pixel. Treat it as "one DN^2" rather than dividing by zero.
-    let r = excess / floor.max(1.0) / SNR_REF;
+    let mut r = excess / floor.max(1.0) / SNR_REF;
+    if r_floor > 0.0 {
+        // Branch rather than always calling `hypot`: with the fix disabled the
+        // arithmetic must be untouched, so the null arm is byte-exact by
+        // construction rather than by an appeal to `hypot(r, 0.0) == r`.
+        //
+        // `hypot` and not `(r*r + rf*rf).sqrt()`: `r` is `excess / floor`, and
+        // at a clamped black pixel `floor` is 1 while `excess` can be the whole
+        // dynamic range, so `r` reaches ~5e36 and `r*r` overflows `f32` to
+        // `inf`. `hypot` is specified to scale first and cannot.
+        r = r.hypot(r_floor);
+    }
     if p == 1.0 {
         r
     } else if p == 2.0 {
@@ -2653,7 +2878,7 @@ mod tests {
         for p in [1.0, 2.0, 4.0, 8.0, MAX_EXPONENT] {
             for excess in [1e-8f32, 1.0, 1e4, 1e7, 1e12] {
                 for floor in [0.0f32, 1.0, 1e3] {
-                    let w = select_weight(excess, floor, p);
+                    let w = select_weight(excess, floor, p, 0.0);
                     assert!(
                         w.is_finite() && w >= 0.0,
                         "weight {w} for excess {excess}, floor {floor}, p {p}"
@@ -2664,10 +2889,10 @@ mod tests {
         // Ordering is still strictly preserved where it matters -- a stronger
         // coefficient must always outweigh a weaker one at the same floor.
         let p = 8.0;
-        assert!(select_weight(1e5, 100.0, p) > select_weight(1e4, 100.0, p));
-        assert!(select_weight(1e4, 100.0, p) > select_weight(1e3, 100.0, p));
+        assert!(select_weight(1e5, 100.0, p, 0.0) > select_weight(1e4, 100.0, p, 0.0));
+        assert!(select_weight(1e4, 100.0, p, 0.0) > select_weight(1e3, 100.0, p, 0.0));
         // And nothing below the floor may carry any weight at all.
-        assert_eq!(select_weight(0.0, 100.0, p), 0.0);
+        assert_eq!(select_weight(0.0, 100.0, p, 0.0), 0.0);
     }
 
     #[test]
@@ -2686,8 +2911,8 @@ mod tests {
             // A 300-frame bracket has many such pairs, and telling them apart
             // is the entire job.
             for snr in [10.0f32, 100.0, 1_000.0, 10_000.0, 100_000.0] {
-                let lo = select_weight(snr * floor, floor, p);
-                let hi = select_weight(2.0 * snr * floor, floor, p);
+                let lo = select_weight(snr * floor, floor, p, 0.0);
+                let hi = select_weight(2.0 * snr * floor, floor, p, 0.0);
                 assert!(
                     hi > lo * 1.5,
                     "at p={p}, snr={snr}: doubling the band energy moved the weight from \
@@ -2706,14 +2931,290 @@ mod tests {
         // output is NaN everywhere the sum saturated.
         let mut sum = 0.0f32;
         for _ in 0..1000 {
-            sum += select_weight(1e9, 1.0, MAX_EXPONENT);
+            sum += select_weight(1e9, 1.0, MAX_EXPONENT, 0.0);
         }
         assert!(sum.is_finite(), "the weight sum overflowed to {sum}");
     }
 
     #[test]
+    fn nu_smooth_is_derived_from_the_kernel_and_not_chosen() {
+        // The claim that the significance test adds no tunable constant rests
+        // entirely on this. If someone changes KERNEL, `NU_SMOOTH` must be
+        // wrong immediately and loudly, not silently stale.
+        let s1: f32 = KERNEL.iter().map(|a| a * a).sum();
+        let nu = 1.0 / (s1 * s1);
+        assert!(
+            (nu - NU_SMOOTH).abs() < 1e-4,
+            "NU_SMOOTH is {NU_SMOOTH} but the kernel gives {nu}; it is a derived \
+             quantity and must track KERNEL"
+        );
+        // And the DC gain assumption the derivation rests on.
+        let dc: f32 = KERNEL.iter().sum();
+        assert!((dc - 1.0).abs() < 1e-6, "KERNEL is not unit-DC: {dc}");
+        // sigma_rel is sqrt(2/nu), not anything else.
+        assert!((sigma_rel() - (2.0f32 / nu).sqrt()).abs() < 1e-6);
+    }
+
+    #[test]
+    fn the_null_arm_is_byte_exact() {
+        // ORCH requires an arm where the fix is disabled and reproduces the
+        // shipping render exactly. If `r_floor = 0.0` perturbs even one ULP,
+        // the A/B has no control and every difference is unattributable.
+        for p in [1.0, 2.0, 3.92, 8.0, MAX_EXPONENT] {
+            for excess in [1e-6f32, 1.0, 37.5, 1e4, 1e7] {
+                for floor in [0.0f32, 1.0, 100.0, 1e3] {
+                    let shipping = {
+                        let r = excess / floor.max(1.0) / SNR_REF;
+                        if excess <= 0.0 {
+                            0.0
+                        } else if p == 1.0 {
+                            r
+                        } else if p == 2.0 {
+                            r * r
+                        } else {
+                            (p * r.ln()).clamp(-80.0, 80.0).exp()
+                        }
+                    };
+                    let got = select_weight(excess, floor, p, 0.0);
+                    assert_eq!(
+                        got.to_bits(),
+                        shipping.to_bits(),
+                        "null arm differs at excess {excess}, floor {floor}, p {p}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn significance_never_inverts_the_weight_ordering() {
+        // The property that rules out the obvious `p_eff = p * z^2/(1+z^2)`
+        // form, which dips below its own `z -> 0` limit near z = 0.61 and hands
+        // a coefficient with MORE signal LESS weight. A merge that does that is
+        // selecting backwards in exactly the regime this fix exists to repair.
+        let floor = 100.0f32;
+        let rf = significance_floor(2.0);
+        for p in [1.0, 2.0, 3.92, 8.0] {
+            let mut prev = -1.0f32;
+            let mut e = 1e-4f32;
+            while e < 1e8 {
+                let w = select_weight(e, floor, p, rf);
+                assert!(
+                    w >= prev - prev.abs() * 1e-6,
+                    "weight fell from {prev:e} to {w:e} as excess rose to {e:e} at p={p}"
+                );
+                prev = w;
+                e *= 1.2;
+            }
+        }
+    }
+
+    #[test]
+    fn an_insignificant_coefficient_collapses_to_a_plain_mean() {
+        // THE CLAIM. Two frames whose excess is far below the noise of the
+        // power estimate itself must end up with near-equal weight, because
+        // there is no evidence either is better. Shipping gives one of them
+        // 256x the other purely on a noise fluctuation -- that is the mottle
+        // mechanism stated arithmetically.
+        let (floor, p) = (100.0f32, 8.0);
+        let rf = significance_floor(2.0);
+        // z = 0.05 and 0.10: both far inside the noise of the estimate.
+        let (lo, hi) = (1.0f32, 2.0f32);
+
+        let ship_ratio = select_weight(hi, floor, p, 0.0) / select_weight(lo, floor, p, 0.0);
+        let fix_ratio = select_weight(hi, floor, p, rf) / select_weight(lo, floor, p, rf);
+
+        // Potency: without this the test could pass on an inert fix.
+        assert!(
+            ship_ratio > 100.0,
+            "the shipping merge should concentrate hard here; got {ship_ratio}"
+        );
+        assert!(
+            fix_ratio < 1.10,
+            "an insignificant coefficient still concentrates {fix_ratio}x (shipping \
+             {ship_ratio}x); the significance test is not reaching the noise regime"
+        );
+    }
+
+    #[test]
+    fn a_significant_coefficient_keeps_the_shipping_weight() {
+        // DO NO HARM, and it is the half that decides whether this can ship.
+        // Where a coefficient plainly stands above its own noise the fix must
+        // be arithmetically absent, so acuity cannot be traded for smoothness
+        // without that showing up somewhere else.
+        let floor = 100.0f32;
+        let rf = significance_floor(2.0);
+        for p in [2.0, 3.92, 8.0] {
+            for snr in [1e3f32, 1e4, 1e5] {
+                let excess = snr * floor;
+                let ship = select_weight(excess, floor, p, 0.0);
+                let fixed = select_weight(excess, floor, p, rf);
+                let rel = (fixed - ship).abs() / ship;
+                assert!(
+                    rel < 1e-5,
+                    "at p={p}, snr={snr} the fix moved a plainly-significant weight by \
+                     {rel:e} ({ship:e} -> {fixed:e})"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn a_planted_improvement_is_scored_better_not_merely_differently() {
+        // A suite of planted degradations cannot distinguish a metric that is
+        // BLIND to a defect from one that is PERVERSE on it. So: make one frame
+        // genuinely, unambiguously the best coefficient in the stack and
+        // require the fix to give it MORE of the share than it had when every
+        // frame was noise. If the fix only ever dilutes, this fails.
+        let (floor, p) = (100.0f32, 8.0);
+        let rf = significance_floor(2.0);
+
+        let share = |excesses: &[f32]| -> f32 {
+            let w: Vec<f32> = excesses.iter().map(|e| select_weight(*e, floor, p, rf)).collect();
+            let sum: f32 = w.iter().sum();
+            w[0] / sum
+        };
+
+        // All noise: the winner is a fluctuation and must get ~1/N.
+        let noise = share(&[2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
+        // Frame 0 is now genuinely in focus, far above the estimate noise.
+        let real = share(&[1e6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
+
+        assert!(
+            noise < 0.20,
+            "a noise fluctuation still takes {noise:.3} of the coefficient"
+        );
+        assert!(
+            real > 0.99,
+            "a genuinely sharp frame only takes {real:.3}; the fix is diluting real \
+             detail, which is the falsification"
+        );
+        assert!(real > noise * 4.0, "improvement {real:.3} vs noise {noise:.3}");
+    }
+
+    #[test]
+    fn the_fix_cannot_overflow_or_produce_a_nan() {
+        // A NaN in a weight is not inert: `NaN > x` is false, so a NaN silently
+        // satisfies every one-sided acceptance check downstream, and one NaN
+        // coefficient spreads through the collapse into a black hole.
+        //
+        // The claim is *relative*: wherever the shipping weight is finite, the
+        // fixed weight must be too. That is the only claim this change is
+        // entitled to make, and it is the stronger test -- an absolute
+        // "the fix is finite" can always be satisfied by quietly dropping the
+        // input that breaks it, which is how the pre-existing overflow below
+        // would have gone unrecorded.
+        let mut sum = 0.0f32;
+        let mut shipping_overflows = 0usize;
+        for gate in [0.0f32, -1.0, f32::NAN, 1e-6, 2.0, 64.0] {
+            let rf = significance_floor(gate);
+            if gate > 0.0 {
+                assert!(rf.is_finite() && rf > 0.0, "significance_floor({gate}) = {rf}");
+            } else {
+                // Documented: no usable noise scale, so decline to judge and
+                // fall back to the shipping weight. Asserted rather than
+                // tolerated, because a silently-disabled fix is this
+                // campaign's most expensive recurring failure.
+                assert_eq!(rf, 0.0, "significance_floor({gate}) should disable the fix");
+            }
+            for p in [1.0, 2.0, 8.0, MAX_EXPONENT] {
+                for excess in [0.0f32, 1e-12, 1.0, 1e7, 1e12, f32::MAX] {
+                    for floor in [0.0f32, 1.0, 1e3, f32::MAX] {
+                        let ship = select_weight(excess, floor, p, 0.0);
+                        let w = select_weight(excess, floor, p, rf);
+                        assert!(!w.is_nan(), "NaN for excess {excess}, floor {floor}, p {p}");
+                        if ship.is_finite() {
+                            assert!(
+                                w.is_finite() && w >= 0.0,
+                                "the fix overflowed where shipping did not: weight {w} \
+                                 for excess {excess}, floor {floor}, p {p}, gate {gate}"
+                            );
+                            sum += w;
+                        } else {
+                            shipping_overflows += 1;
+                        }
+                    }
+                }
+            }
+        }
+        assert!(sum.is_finite(), "the weight sum overflowed to {sum}");
+        // Potency guard: if the sweep ever stops reaching the shipping
+        // overflow, the relative claim above has become vacuous and this test
+        // is passing on an input set that no longer contains the hard case.
+        assert!(
+            shipping_overflows > 0,
+            "the torture sweep no longer reaches the pre-existing overflow; \
+             the finiteness claim is now untested"
+        );
+    }
+
+    #[test]
+    fn the_squared_fast_path_overflows_before_the_clamped_one_does() {
+        // PRE-EXISTING, not introduced by the significance fix, and left in
+        // place deliberately: `p == 2.0` returns `r * r` with no bound, while
+        // the general path clamps `p * ln(r)` to +-80. So the fast path
+        // overflows at `r > sqrt(f32::MAX) = 1.844e19` where the general path
+        // never can. Band 0 ships at exactly `p = 2.0`, so the branch is live.
+        //
+        // It is recorded rather than fixed because the headroom is enormous and
+        // the fix is out of this change's scope: `r = excess / max(floor, 1) /
+        // SNR_REF`, so overflow needs `excess > 1.18e21` DN^2, against a
+        // largest physically possible single coefficient of `65535^2 = 4.3e9`
+        // on a 16-bit sensor -- eleven orders of magnitude of margin. A test
+        // that names the bug cannot be lost the way a comment can.
+        let r_overflow = (f32::MAX).sqrt() * 1.01;
+        let excess = r_overflow * SNR_REF;
+        assert!(!select_weight(excess, 1.0, 2.0, 0.0).is_finite());
+        assert!(select_weight(excess, 1.0, MAX_EXPONENT, 0.0).is_finite());
+        // And the margin claim, so it fails loudly if SNR_REF ever moves.
+        let smallest_overflowing_excess = (f32::MAX).sqrt() * SNR_REF;
+        assert!(
+            smallest_overflowing_excess > 1e21,
+            "overflow now needs only {smallest_overflowing_excess:e} DN^2; the \
+             headroom argument for leaving this unfixed no longer holds"
+        );
+    }
+
+    #[test]
+    fn the_significance_fix_is_off_by_default_and_still_works_when_asked() {
+        // Two claims, because either alone rots. The default must be OFF -- it
+        // failed its acceptance criterion and moves every byte of a shipping
+        // render, so defaulting it on would invalidate other lanes' baselines.
+        // And it must still DO something when switched on, or this becomes dead
+        // code that a later reader deletes along with the band-0 result it is
+        // the evidence for.
+        assert_eq!(MergeConfig::default().significance_scale, 0.0);
+
+        let (floor, p, e) = (100.0f32, 8.0, 150.0f32);
+        let off = select_weight(e, floor, p, 0.0);
+        let on = select_weight(e, floor, p, significance_floor(2.0) * 1000.0);
+        assert!(on > off * 1.01, "enabled at 1000x, the fix moved the weight {off:e} -> {on:e}");
+    }
+
+    #[test]
+    fn the_scale_is_a_multiplier_and_can_be_turned_up() {
+        // The potency handle. A change that renders byte-identical output is
+        // indistinguishable from one that was never wired in; this makes the
+        // difference testable by letting the arm be exaggerated until it must
+        // show. Zero must remain exactly off, or the null arm is not a null.
+        let (floor, p, e) = (100.0f32, 8.0, 150.0f32);
+        let base = significance_floor(2.0);
+        assert_eq!(select_weight(e, floor, p, base * 0.0), select_weight(e, floor, p, 0.0));
+        let mut prev = select_weight(e, floor, p, 0.0);
+        let mut moved = 0;
+        for scale in [1.0f32, 10.0, 100.0, 1000.0] {
+            let w = select_weight(e, floor, p, base * scale);
+            assert!(w >= prev, "a larger floor lowered the weight at scale {scale}");
+            if w > prev {
+                moved += 1;
+            }
+            prev = w;
+        }
+        assert!(moved >= 3, "turning the scale up 1000x moved the weight {moved} times");
+    }
+
+    #[test]
     fn a_sharpened_merge_still_reconstructs_a_single_frame_exactly() {
-        // The ramp changes the weights, so it must not change the one case
         // where the answer is known: with every frame identical, any convex
         // combination has to return that frame. If the sharpening had broken
         // normalisation this would drift.
