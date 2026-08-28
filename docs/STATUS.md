@@ -92,12 +92,16 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    n_diff 0). `active_kernel()` has one call site, inside `Estimator::new`, and
    `DEFAULT_MERGE_BACKEND` is Pyramid; `pyramid.rs` contains none of the soft-gate symbols.
    The kernel itself works — it moves 59.16% of pixels on the estimator backend — it is
-   simply unreachable by default. This is the **third** knob found dead on its shipping path,
-   after `--exposure`. So the standing candidate fix for depth softening is *not currently
-   testable as shipped*: either wire the kernel into `run_pyramid`, or score it on the
-   estimator backend and accept that the result does not transfer. Fact 1869. N-invariance
-   remains necessary but **not sufficient** — a plain mean is perfectly N-invariant and
-   destroys grain to 0.229×.
+   simply unreachable by default. **Two** knobs are now confirmed dead on their shipping path
+   (this one and `--exposure`); the per-band gate floor is not a third — it changes the image,
+   it just doesn't move the rim. Worse than inert, it is **unvalidated**: on the pyramid
+   default, unset / `=on` / `=zzznope` all exit 0 with byte-identical output (SHA256
+   `C5E59BC9…`), so a typo is indistinguishable from a working setting. So the standing
+   candidate fix for depth softening is *not currently testable as shipped*.
+   **OWNED — lane BUILD-SOFTGATE** is wiring the kernel into `run_pyramid` and making the value
+   validated under pyramid, then scoring the depth-softening fix that this unblocks. Facts 1869,
+   1880, 1882. N-invariance remains necessary but **not sufficient** — a plain mean is perfectly
+   N-invariant and destroys grain to 0.229×.
 3. ~~**Diagnose `flowers-cpl`.**~~ **RESOLVED — capture gap, not a merge defect.** Verdict (a)
    at all six sites on licensed bands 2 and 3, measured on the pyramid masters that ship. No
    code change will fix it; the fix is a capture instruction, which is exactly the case the
@@ -111,7 +115,10 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    two instruments are at **disjoint scales** and neither result touches the other. The 0-of-26
    halo refutation therefore does **not** license a rim claim, and no second lane has scored
    these 13. Until they are adjudicated the honest statement is *rim-unexamined at tight scale*,
-   not rim-clean. Fact 1881.
+   not rim-clean. **OWNED — lane V-RIM**, tasked to return one of three verdicts per subject
+   (real defect / real but below visibility / instrument artifact) with 1:1 crops actually
+   viewed, and to commission `rimv6` for **specificity** as well as sensitivity — an ordinary
+   sharp edge with no rim must not trip it. Fact 1881.
 6. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
    taken on output carrying an uncorrected corpus-wide CA error and two dust motes.
 
