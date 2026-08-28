@@ -3505,6 +3505,63 @@ the tool written to find checks that do not run. It now refuses on an
 unanchored probe, and requires each anchor to occur exactly once, so a probe
 cannot quietly test a different site from the one it names.
 
+That repaired one verifier. It said nothing about the other three, which are
+older than the defect class. `84-audit-conclusions-all.py` measures all four,
+through the shipped entry point rather than an internal function: it mutates
+the real document on disk, runs `python <verifier>` as a subprocess the way a
+person would, and reads the exit code. The original bytes go to `%TEMP%` first,
+every write is undone in a `finally`, and the restore is checked byte-identical
+before the script may exit.
+
+An exit code is an instrument, so each verifier faces a 2x2 before any probe of
+it is believed: the clean document must exit 0, a planted digit must exit
+non-zero, and an innocuous prose edit must exit 0. The middle arm earned its
+place immediately. The first positive control for section 20 corrupted the
+site-search partition line and the verifier exited 0 -- which reads exactly like
+an exit code wired to a constant. It was not: that verifier exits 1 on any
+mismatch, but the partition line in 20.2 is prose it never re-derives, so the
+plant was inert rather than the instrument dead. Those two produce the same
+reading. Re-anchored on arm A's residual, a value the verifier demonstrably
+parses, the arm went red.
+
+With all four detectors commissioned, seven of ten conclusion reversals passed:
+
+| section | conclusion reversed, every number left correct | before | after |
+|---|---|---|---|
+| 18.5 | mote 2 is in both blocks, so it is not on the filter | BLIND | CAUGHT |
+| 18.5 | the bound points at the fixed path | BLIND | CAUGHT |
+| 18.5 | the quoted-log outcome token for mote 2 | CAUGHT | CAUGHT |
+| 18.7 | the open search found no filter dust | BLIND | CAUGHT |
+| 20.2 | the failure was in the statistic, not the sensor | BLIND | CAUGHT |
+| 20.7 | arm B is circular, which is why arm F exists | BLIND | CAUGHT |
+| 21.2 | different bytes, same image | BLIND | CAUGHT |
+| 21.2 | the 1 DN pair is dither, not a small effect | BLIND | CAUGHT |
+| 22.6 | no delivered master moved | CAUGHT | CAUGHT |
+| 22.3 | which contract holds the exposure | CAUGHT | CAUGHT |
+
+Section 18's entire result is a claim about which side of the optical path two
+motes sit on, and its verifier could not see that claim inverted. Section 21's
+result is that a flag did nothing, and "the same image" could be turned into
+"two different images" with all four numbers of the difference table intact.
+
+The repair adds a conclusions table to each verifier, and every truth is
+re-derived from a retained log rather than written into the checker: mote 2's
+outcome token and the open search's above-the-bar count come from
+`43-cpl-split.log`; arm B's circularity from its residual sitting under 1 DN
+while the mismatched-model arm sits two orders above it; the dither reading
+from the difference table's own max-delta column. Section 20.2 needed the least
+obvious derivation. "The failure is in the statistic" is not settled by the
+refusal itself -- refusing every site is equally consistent with a dirty sensor
+-- but by what the revised statistic did on the same flats, which is accept
+thousands of sites. A field that yields them was never filthy.
+
+One property of the repair was still only asserted: that stating neither form
+is unresolved rather than a pass. So the audit also deletes each conclusion
+outright and requires an objection. Nine of nine. If deletion were cheaper than
+being wrong, the cheapest route past a conclusion check would be to delete the
+conclusion, and a report that has quietly lost its findings reads exactly as
+green as one that never had them.
+
 ### 22.10 Evidence
 
 The section verifier is worth one line of its own, because it failed first. Its
@@ -3537,3 +3594,5 @@ afternoon, none of which the passing first run would have revealed.
 | `experiments/BUILD-DEFECT/out/82-verify-s22-commission.log` | 14 planted = 14 caught + 0 missed + 0 unanchored |
 | `experiments/BUILD-DEFECT/src/83-audit-conclusions.py` | Flips conclusions leaving numbers intact; refuses if a probe does not land or its anchor is not unique |
 | `experiments/BUILD-DEFECT/out/83-audit.log` | 8 probes = 8 caught + 0 blind + 0 unanchored + 0 ambiguous |
+| `experiments/BUILD-DEFECT/src/84-audit-conclusions-all.py` | Audits all four section verifiers through their shipped entry points; commissions each exit code 2x2 first |
+| `experiments/BUILD-DEFECT/out/84-audit-all.log` | 10 probes = 10 caught; 9 deletions = 9 caught; document restored byte-identical |

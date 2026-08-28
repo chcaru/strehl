@@ -1,0 +1,57 @@
+=== auditing every BUILD-DEFECT section verifier for conclusion blindness ===
+
+  document  : docs\research\BUILD-DEFECT.md (193255 bytes)
+  backup    : C:\Users\chris\AppData\Local\Temp\BUILD-DEFECT.md.audit-bak
+
+=== COMMISSIONING THE DETECTOR, PER VERIFIER ===
+  s18  45-verify-s18.py
+      clean                exit=0  ok
+      planted number       exit=1  ok
+      innocuous prose      exit=0  ok
+      -> COMMISSIONED
+  s20  63-verify-s20.py
+      clean                exit=0  ok
+      planted number       exit=1  ok
+      innocuous prose      exit=0  ok
+      -> COMMISSIONED
+  s21  73-verify-s21.py
+      clean                exit=0  ok
+      planted number       exit=1  ok
+      innocuous prose      exit=0  ok
+      -> COMMISSIONED
+  s22  82-verify-s22.py
+      clean                exit=0  ok
+      planted number       exit=2  ok
+      innocuous prose      exit=0  ok
+      -> COMMISSIONED
+
+=== CONCLUSION PROBES ===
+  CAUGHT         18.5 mote 2 is on the sensor, not the filter        
+  CAUGHT         18.5 the bound points at the fixed path             
+  CAUGHT         18.5 quoted-log outcome token (Common -> Underpowered)
+  CAUGHT         18.7 the open search found nothing                  
+  CAUGHT         20.2 the failure is in the statistic, not the sensor
+  CAUGHT         20.7 arm B is circular                              
+  CAUGHT         21.2 different bytes, same image                    
+  CAUGHT         21.2 the 1 DN pair is dither, not a small effect    
+  CAUGHT         22.6 no delivered master moved                      
+  CAUGHT         22.3 direction of the improvement                   
+
+=== DELETION PROBES ===
+  CAUGHT         18.5 mote 2 is on the sensor, not the filter        
+  CAUGHT         18.5 the bound points at the fixed path             
+  N/A            18.5 quoted-log outcome token (Common -> Underpowered) not a polarity check
+  CAUGHT         18.7 the open search found nothing                  
+  CAUGHT         20.2 the failure is in the statistic, not the sensor
+  CAUGHT         20.7 arm B is circular                              
+  CAUGHT         21.2 different bytes, same image                    
+  CAUGHT         21.2 the 1 DN pair is dither, not a small effect    
+  CAUGHT         22.6 no delivered master moved                      
+  CAUGHT         22.3 direction of the improvement                   
+  10 deletions = 9 caught + 0 blind + 1 n/a
+
+  document restored byte-identical: True
+
+  10 probes = 10 caught + 0 blind + 0 unanchored + 0 uncommissioned
+
+VERDICT: NO-BLIND-SPOT

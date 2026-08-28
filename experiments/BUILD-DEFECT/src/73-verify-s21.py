@@ -396,6 +396,50 @@ def main() -> int:
         declared += 1
         print("  21.8 derived figures      : plant count from the PLANTS table, slack re-derived")
 
+    # ---- 10. the conclusions, not only the numbers -------------------------
+    #
+    # Every check above compares a number in the report against a number
+    # re-derived from an artifact. Not one of them reads what those numbers are
+    # held to MEAN. `84-audit-conclusions-all.py` measured the consequence:
+    # reversing "the same image" to "two different images", and "That is
+    # dither" to "That is a real effect", left every number in section 21
+    # correct and this verifier exited 0 on both. A verifier that cannot see a
+    # reversed conclusion certifies arithmetic, not a finding -- which is how
+    # another lane in this build passed 712 green checks with its verdict
+    # inverted from refuted to confirmed.
+    #
+    # Each conclusion's truth is re-derived from the SAME difference table the
+    # numeric checks read, so this is not a constant written into the checker.
+    # Stating neither form, or both, is unresolved rather than a pass: deleting
+    # the sentence must not be cheaper than being wrong.
+    flat = re.sub(r"\s+", " ", sec)
+    tab = {}
+    for g in re.findall(
+            r"^(pin|HEAD)\s+([-+0-9.]+)\s+vs\s+([-+0-9.]+)\s+[0-9.]+\s+[0-9.]+x\s+"
+            r"([0-9,]+)\s+[0-9.]+%\s+(\d+)\s+[0-9.]+\s*$", sec, re.M):
+        tab[(g[0], g[1], g[2])] = (num(g[3]), int(g[4]))
+
+    def polarity(name, yes, no, truth):
+        y, n = yes in flat, no in flat
+        if truth is None or y == n:
+            v.check(name, None, truth)
+        else:
+            v.check(name, "yes" if y else "no", "yes" if truth else "no")
+
+    inert = tab.get(("pin", "+3", "-3"))
+    polarity("21.2 | conclusion: different bytes, same image",
+             "different bytes and the same image",
+             "different bytes and two different images",
+             None if inert is None else inert[0] == 0)
+    declared += 1
+
+    dith = tab.get(("pin", "+2.60", "0"))
+    polarity("21.2 | conclusion: the 1 DN pair is dither",
+             "That is dither", "That is a real effect",
+             None if dith is None else dith[1] == 1)
+    declared += 1
+    print("  21.2 conclusions          : polarity re-derived from the difference table")
+
     return v.report(declared)
 
 

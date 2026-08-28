@@ -120,6 +120,43 @@ DERIVED = [
 ]
 
 
+# CONCLUSIONS -- what the numbers are HELD TO MEAN.
+#
+# Everything above compares a number in the report against a number in a log.
+# `84-audit-conclusions-all.py` measured what that leaves uncovered: reversing
+# "It is not on the filter" to "It is on the filter", flipping the bound from
+# the fixed path to the removable filter, and turning "The CPL carries no dust"
+# into "The CPL carries dust" each left every number in section 18 correct, and
+# this verifier exited 0 on all three. Section 18's entire result is a claim
+# about WHICH SIDE OF THE OPTICAL PATH the motes are on; a verifier blind to
+# that certifies the arithmetic of a finding it cannot read.
+#
+# Each entry names the two opposed forms and re-derives which one is true from
+# log 43. Stating both, or neither, counts as doc-not-found rather than as
+# agreement -- deleting a conclusion must not be cheaper than getting it wrong.
+# The doc side is matched against whitespace-normalised text because these
+# sentences wrap, and a probe written the way a sentence reads rather than the
+# way it is stored reports a false absence.
+CONCLUSIONS = [
+    ("s18.5 mote 2 not on filter",
+     "It is in both. It is not on the filter.",
+     "It is on the filter.",
+     43, r"mote 2\s+-[\d.]+%\s+-[\d.]+%\s+[-+][\d.]+\s+[\d.]+\s+(\w+)",
+     lambda outcome: outcome == "Common"),
+    ("s18.5 bound is fixed-path",
+     "of mote 2 is in the fixed optical path.",
+     "of mote 2 is on the removable filter.",
+     43, r"mote 2\s+edge-dist\s+\d+\s+matched null n=\d+\s+p95 ([\d.]+) pp"
+         r"\s+DELTA ([-+][\d.]+) pp",
+     lambda p95, delta: abs(float(delta)) < float(p95)),
+    ("s18.7 CPL carries no dust",
+     "carries no dust this instrument can see.",
+     "carries dust this instrument can see.",
+     43, r"scanned \d+ sites -> (\d+) above the bar",
+     lambda n: int(n) == 0),
+]
+
+
 def run(doc_text, log43, log44, verbose=True):
     agreed = disagreed = doc_missing = log_missing = 0
     for label, dre, which, lre in CHECKS:
@@ -145,7 +182,7 @@ def run(doc_text, log43, log44, verbose=True):
             disagreed += 1
             if verbose:
                 print(f"  DISAGREE       {label:<22} doc={d}  log={l}")
-    total = len(CHECKS) + len(DERIVED)
+    total = len(CHECKS) + len(DERIVED) + len(CONCLUSIONS)
     for label, dre, w1, l1re, w2, l2re, fn in DERIVED:
         t1 = log43 if w1 == 43 else log44
         t2 = log43 if w2 == 43 else log44
@@ -171,6 +208,34 @@ def run(doc_text, log43, log44, verbose=True):
             disagreed += 1
             if verbose:
                 print(f"  DISAGREE       {label:<22} doc={dm.group(1)}  recomputed={want}")
+
+    flat = re.sub(r"\s+", " ", doc_text)
+    for label, yes, no, which, lre, fn in CONCLUSIONS:
+        text = log43 if which == 43 else log44
+        lm = re.search(lre, text, re.S)
+        if not lm:
+            log_missing += 1
+            if verbose:
+                print(f"  LOG-NOT-FOUND  {label}")
+            continue
+        truth = fn(*lm.groups())
+        y, n = yes in flat, no in flat
+        if y == n:
+            doc_missing += 1
+            if verbose:
+                state = "states both forms" if y else "states neither form"
+                print(f"  DOC-NOT-FOUND  {label:<22} {state}")
+            continue
+        if y == truth:
+            agreed += 1
+            if verbose:
+                print(f"  ok (conclusion){label:<22} {'affirmed' if y else 'denied'}")
+        else:
+            disagreed += 1
+            if verbose:
+                print(f"  DISAGREE       {label:<22} doc says "
+                      f"{'yes' if y else 'no'}, log 43 says "
+                      f"{'yes' if truth else 'no'}")
 
     print(
         f"\n  partition: {total} checks = {agreed} agreed + {disagreed} disagreed"

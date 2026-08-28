@@ -149,6 +149,68 @@ def check_ring_pct():
 derived('52.8% charge removed is arithmetic on 20.7 residuals', check_removed_pct)
 derived('12.8% ring reduction is arithmetic on 20.7 rings', check_ring_pct)
 
+
+# -- conclusions, not only numbers ------------------------------------------
+#
+# Every claim above compares a value in the report against the same value in a
+# log. `84-audit-conclusions-all.py` measured what that misses: reversing "the
+# failure is clearly in the statistic" to "in the sensor", and "Arm B is
+# circular" to "Arm B is independent", left every number in section 20 correct
+# and this verifier exited 0 on both. Section 20 is a section about instrument
+# defects; a verifier that cannot see its conclusions reversed is one more.
+#
+# Both truths are re-derived from the retained fidelity log, not asserted here.
+def _polarity(yes, no, truth):
+    y, n = yes in nsec, no in nsec
+    if truth is None:
+        return None, 'the artifact does not resolve it'
+    if y == n:
+        return None, ('the report states both forms' if y
+                      else 'the report states neither form')
+    return y == truth, 'report says %s, log says %s' % (
+        'yes' if y else 'no', 'yes' if truth else 'no')
+
+
+def check_failure_was_in_the_statistic():
+    """The first cleanliness statistic refused all 110,538 candidates.
+
+    That reading is equally consistent with "the sensor is filthy", and the
+    report chooses "the statistic is wrong". What settles it is not the refusal
+    but what happened next: the REVISED statistic, run on the same flats,
+    accepted sites. A field that yields thousands of clean sites was never
+    filthy. So the conclusion is true iff the retained log's site search
+    accepted more than zero.
+    """
+    m = re.search(r'site search\s*:\s*scanned \d+ =[^\n]*?accepted (\d+)',
+                  log['fid'])
+    return _polarity('with it, the failure is clearly in the statistic.',
+                     'with it, the failure is clearly in the sensor.',
+                     None if not m else int(m.group(1)) > 0)
+
+
+def check_arm_b_is_circular():
+    """Arm B plants a mote and divides by the exact gain it planted.
+
+    It therefore cannot fail for any reason connected to the correction being
+    right -- it is circular, and arm F exists because of it. The circularity is
+    visible in the residuals: B returns essentially zero while F0, which is the
+    same measurement with a mismatched model, is two orders larger. If B were
+    an independent test those two would be comparable.
+    """
+    b = _f(r'B FIDELITY\s+planted, exact gain\s+residual\s+([\d.]+) DN',
+           norm(log['fid']))
+    f0 = _f(r'F0 MISMATCH\s+gaussian mote, raw\s+residual\s+([\d.]+) DN',
+            norm(log['fid']))
+    truth = None if None in (b, f0) else (b < 1.0 and f0 > 10.0 * max(b, 1e-9))
+    return _polarity('Arm B is circular, which is why arm F exists',
+                     'Arm B is independent, which is why arm F is redundant',
+                     truth)
+
+
+derived('20.2 conclusion: the failure was in the statistic',
+        check_failure_was_in_the_statistic)
+derived('20.7 conclusion: arm B is circular', check_arm_b_is_circular)
+
 SCOPES = {
     'all': nsec,
     's207': norm(slice_between(sec, '### 20.7', '### 20.8')),
