@@ -2398,6 +2398,39 @@ pixels** as a per-subject potency arm; all six read 0.7962 to 0.8697, below the
 The knob is a denoiser that costs no detail. That is a real benefit and it is
 not the one that was argued for.
 
+**The band, named per ORCH's rule of 2026-08-27.** No acuity claim may be quoted
+without its band. This one is a difference of Gaussians, `sigma = 1.4` against
+`2.8`, whose transfer function I computed rather than assumed and then checked
+against sinusoidal gratings pushed through the same code path:
+
+| quantity | value |
+| --- | ---: |
+| peak response | **0.1093 cyc/px** (empirical peak 0.109, 99.9% of analytic) |
+| half-power span | 0.0658 - 0.1650 cyc/px |
+| half-amplitude span | 0.0511 - 0.1922 cyc/px |
+
+Two consequences, and the second is a caveat rather than a clearance.
+
+**This is not the disputed band.** ORCH withdrew the licence on figures measured
+at 0.30-0.35 cyc/px. That slice sits at **3.6% of this band's peak response**, so
+those numbers and these are not measuring the same thing and the withdrawal does
+not reach this table.
+
+**The margin against the corpus noise boundary is thin, and I will not round it
+in my favour.** ORCH states the signal/noise boundary moves 0.17 to 0.48 cyc/px
+across this corpus. At the half-power definition my upper edge is 0.1650, below
+the corpus *minimum* of 0.17 on every subject. At the half-amplitude definition
+it is 0.1922, which **exceeds 0.17** -- so on whichever subject carries the
+lowest boundary, the skirt of this band reaches into that subject's noise. The
+claim is safe at the -3 dB definition and grazes at the -6 dB one. It is not
+qualified per-subject, because I have not measured a per-subject boundary; that
+is a gap, recorded in 16.11.
+
+Of the six subjects here, `dry-erase-marker-head-cpl` appears on V-LINEAR's
+qualified list (N=300, R=4.877 PASS at 0.30-0.40) and `coffee-bubbles` is the one
+V-LINEAR reports has never been band-qualified at all -- which is also the
+subject this report REFUSES on the rim axis.
+
 ### 16.9 Verdict against ORCH's own falsification conditions
 
 > "Falsified if: rim is unmoved between the two files, or moves in the wrong
