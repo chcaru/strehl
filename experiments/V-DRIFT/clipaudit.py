@@ -182,8 +182,13 @@ def main():
     if not commission():
         raise SystemExit("clip counter failed commissioning; refusing to audit")
 
+    roots = list(ROOTS)
+    if "--src" in sys.argv:
+        d = Path(sys.argv[sys.argv.index("--src") + 1])
+        roots = [(d, d.name)]
+
     rows = []
-    for root, lane in ROOTS:
+    for root, lane in roots:
         if not root.is_dir():
             print(f"  (absent) {root}")
             continue
