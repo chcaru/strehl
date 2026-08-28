@@ -300,16 +300,44 @@ because I happened to pick **exactly the cap value**. Above it:
 | **12.0 / 1.0 (uncapped)** | 392,512 | **0.6984** | 191,940 | **2.1073** | 158.3 / 0 | **41,711** |
 | **16.0 / 1.0 (uncapped)** | 304,993 | **0.5427** | 165,129 | **1.8129** | 75.1 / 0 | **41,711** |
 
-**Raising the exponent past the cap does not recover the bee — it destroys it.** Detail falls to
-**0.54** while noise nearly **doubles**. The source predicts this exactly: the ceiling is set by
+> **CORRECTION — those two detail ratios are measured on a degenerate image and must not be
+> read as detail retention.** A clipping audit of all 31 masters in this lane (`clip_audit.py`,
+> 0.0000% clipped everywhere, so the `--auto-exposure` regression never touched this lane)
+> caught the opposite rail instead: the uncapped arms are crushed to **black**.
+>
+> | arm | % samples exactly 0 | median | p90 |
+> | --- | --- | --- | --- |
+> | 2.0/1.4 SHIPPED | 0.000% | 11,082 | 18,701 |
+> | 8.0/1.0 | 0.000% | 11,117 | 18,751 |
+> | **12.0/1.0** | **46.199%** | 998 | 18,843 |
+> | **16.0/1.0** | **61.193%** | **0** | 18,891 |
+>
+> p90 barely moves while the median falls to zero: the bright regions survive and **over half
+> the frame is pure black**. Band power on such an image is not a detail measurement, for the
+> same reason ORCH's print-gate axes cannot score a white sheet — **a saturated region has no
+> structure, and this is that failure at the black rail.** The correct statement is not
+> "detail falls to 0.54"; it is **"the master is 61% black."**
+>
+> The gate does not explain it: band-0 `averaged` reads only **0.4%** on both arms. The zeros
+> are consistent with `f32` **underflow** of `r.powf(p)` — the same clamp-floor arithmetic that
+> commit `8a480af9` documented flushing `sum(w²)` to zero below `f32::MIN_POSITIVE` — driving
+> the weight sum to zero where the gate did clear. `pyramid.rs`'s own overflow test names the
+> symptom exactly, in the other direction: *"one NaN coefficient spreads through the collapse
+> into a black hole in the output image."* That test guards `p = 8`; the underflow path above
+> `p = 8` is reachable **only** through the `--pyramid-sharpen 1.0` cap bypass and is unguarded.
+> I have not proven the mechanism to the coefficient, and say so.
+
+**Raising the exponent past the cap does not recover the bee — it destroys the image.** The
+conclusion below is unchanged and strengthened; only the severity was understated. The source predicts this exactly: the ceiling is set by
 `f32`, and *"`p` above about 10 can no longer rank the sharpest coefficients against each other:
 they all pin to the ceiling and get averaged."* Above p≈10 the merge stops ranking and starts
 averaging **the very coefficients it most needs to rank** — a max deviation of 41,711 DN is the
 ringing the other lane counted as hull violations (0/72/511 at 1/8/16).
 
 **This is a live footgun and it exits 0.** `--pyramid-exponent 12 --pyramid-sharpen 1.0` silently
-produces a numerically degenerate merge with no warning. The cap exists to prevent precisely
-this and the ramp-off path opens a hole in it. Worth a lane; not mine to patch.
+emits a master that is **46% pure black**; at 16 it is **61% black**. No warning, no non-zero
+exit, and a `p90` that still looks healthy. The cap exists to prevent exactly this and the
+ramp-off path opens a hole in it. Worth a lane; not mine to patch.
 
 **So the exponent axis cannot recover the bee in either direction** — saturated below the cap in
 the bands that matter, actively destructive above it. `C-KILL` fires on stronger evidence than
@@ -468,5 +496,6 @@ experiments/V-DILUTE/conf_potency.py      confidence-map potency per N, percent-
 experiments/V-DILUTE/c_saturation.py     per-band ladder + where the exponent has reach
 experiments/V-DILUTE/head_recheck.ps1     re-render the n_eff brackets on HEAD
 experiments/V-DILUTE/maxn_crosscheck.py   max-of-N flat-field law at 13.6x leverage
+experiments/V-DILUTE/clip_audit.py        clipping audit, all 31 masters, 0.0000%
 experiments/V-DILUTE/commission.py        null arm, potency arm, analytic rank bias
 ```
