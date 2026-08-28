@@ -16,8 +16,17 @@ Those are the `-both` arms. A `-both` numeric defect is caught only if the
 verifier genuinely RE-DERIVES rather than re-reads, and a `-both` conclusion
 defect is caught only by the pinned CONCLUSIONS table.
 
-Two controls carry identical text and must stay GREEN, so a harness that
-simply failed everything could not be read as a success.
+Three controls must stay GREEN, so a harness that simply failed everything
+could not be read as a success. Two carry text identical to what they
+replace; the third makes a REAL but innocuous prose edit, which is the only
+one of the three that can distinguish a verifier from one that fails on any
+edit whatsoever. Controls are declared by name, not inferred from `old ==
+new`, because inferring it makes every control a no-op by construction.
+
+Defects are commissioned in three shapes, because they fail differently:
+a changed NUMBER, a reversed CONCLUSION, and a DELETED finding. Deletion is
+cheapest for an author to reach for and is caught here by making an
+unmatched anchor fatal rather than a green skip.
 
 Every mutation is anchored on a unique string and hard-errors if it does not
 land: a control that silently fails to plant its defect reports the
@@ -124,6 +133,40 @@ FLIPS = [
      "THE REAL TEST: a claim that silently drops OUT OF COVERAGE. Every "
      "number stays correct and no verdict moves; only making an unmatched "
      "anchor fatal catches it"),
+
+    # --- SPECIFICITY. Every control above plants text IDENTICAL to what it
+    # replaces, which only shows the harness does not fail on a no-op. This
+    # one makes a real, innocuous prose edit that changes no number and no
+    # verdict, and must still be GREEN. Without it, a verifier that failed
+    # on any edit whatsoever would score 13/13 and look perfect.
+    ("control-innocuous-prose", ["report", "body"],
+     "and sharpness together, hunting for a region where blotch falls and "
+     "sharpness",
+     "and sharpness together, looking for a region where blotch falls and "
+     "sharpness",
+     "control 3: a REAL but innocuous prose edit, must stay GREEN"),
+
+    # --- DELETION. Removing a finding is cheaper than stating it wrongly,
+    # and every arm above is a replacement. These delete outright.
+    ("delete-licence-disclosure-both", ["report", "tables"],
+     "**3 of 5 are qualified at 0.20-0.25 cyc/px**; "
+     "`flower-bud-alone-cpl` and `109MSDCF` are not, and their sharpness "
+     "cells below are therefore withdrawn as evidence and retained only "
+     "for completeness.",
+     "",
+     "THE REAL TEST: DELETES the band-licence withdrawal entirely, "
+     "reverting the section to an unlicensed sharpness claim"),
+    ("delete-pinned-verdict-both", ["report", "body"],
+     "- **This is not a shipping recommendation.** It is an env var, "
+     "default off, and",
+     "- It is an env var, default off, and",
+     "THE REAL TEST: DELETES a pinned disclaimer rather than reversing it"),
+    ("delete-table-row-both", ["report", "tables"],
+     "| `flower-bud-alone-cpl` | 205 | **-21.92%** | [-25.93%, -18.07%] | "
+     "-0.56% | **+0.92%** | R=1.342 MARGINAL | no |\n",
+     "",
+     "THE REAL TEST: DELETES the row carrying the withdrawn subject, so "
+     "the withdrawal has nothing left to point at"),
 ]
 
 
@@ -170,9 +213,21 @@ def main():
 
     caught = missed = ctl_bad = 0
     rows = []
+    # Commissioning toggle for the partition check below. Setting this to an
+    # arm name silently drops that arm without counting it anywhere, which is
+    # the exact failure the partition exists to catch: a summary that still
+    # reads healthy because the arm that would have failed never ran.
+    skip_one = os.environ.get("BG_SKIP_ONE", "")
     try:
         for name, files, old, new, what in FLIPS:
-            control = (old == new)
+            if name == skip_one:
+                continue
+            # A control is declared, NOT inferred from `old == new`. Inferring
+            # it restricts every control to a no-op, which can only show the
+            # harness does not fail spuriously -- it cannot express "a real
+            # edit that must still pass". That is commissioning sensitivity
+            # without commissioning specificity.
+            control = name.startswith("control")
             for fl in files:
                 plant(SRC[fl], old, new)
             sp, ve = gates()
@@ -200,12 +255,27 @@ def main():
     print("\nrestored byte-identical: %s   post-restore: splice=%s verify=%s"
           % (same, "OK" if post[0] else "RED", "OK" if post[1] else "RED"))
 
-    real = [x for x in FLIPS if x[3] != x[2]]
+    # Classify by the SAME explicit rule the loop uses. Inferring it from
+    # `old != new` here while the loop uses the name is how the summary
+    # drifted out of step with the run and reported "16 caught of 17
+    # defects (2 controls)" for 16 defects and 3 controls.
+    ctls = [x for x in FLIPS if x[0].startswith("control")]
+    real = [x for x in FLIPS if not x[0].startswith("control")]
     print("\n%d caught / %d MISSED of %d defects  (%d controls, %d failures)"
-          % (caught, missed, len(real), len(FLIPS) - len(real), ctl_bad))
+          % (caught, missed, len(real), len(ctls), ctl_bad))
     print("\ndetail:")
     for name, what, verdict in rows:
         print("  %-32s %-72s %s" % (name, what[:72], verdict))
+    # Hard partition: every arm must land in exactly one counted outcome.
+    # A summary whose parts do not sum to the arms actually run can hide an
+    # arm that never executed behind a healthy-looking total. Checked after
+    # the detail print so a broken run still shows which arms did report.
+    tot = caught + missed + len(ctls)
+    if tot != len(FLIPS):
+        print("\n  PARTITION BROKEN: caught %d + missed %d + controls %d = "
+              "%d, but %d arms were declared" % (caught, missed, len(ctls),
+                                                 tot, len(FLIPS)))
+        return 1
 
     ok = missed == 0 and ctl_bad == 0 and same and all(post)
     print("\n%s" % ("COMMISSIONED: every planted defect was caught."

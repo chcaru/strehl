@@ -65,6 +65,11 @@ FLIPS = [
      "`bee-1-cpl` against 0.976-0.999 on the other four -- the only subject "
      "where the",
      "control 2: identical text in a different section, must stay GREEN"),
+    ("control-innocuous-prose",
+     "The correct claim is therefore narrower",
+     "The correct claim is thus narrower",
+     "control 3: a REAL but innocuous prose edit (therefore -> thus), "
+     "changing no number, verdict or direction; must stay GREEN"),
     ("scope-correction-undone",
      "floor and across the whole scalar range this section swept, the gate "
      "does not",
@@ -132,7 +137,11 @@ def main():
     rows = []
     try:
         for name, old, new, what in FLIPS:
-            control = (old == new)
+            # Declared, not inferred from `old == new`. Inferring it makes
+            # every control a no-op, which shows only that the harness does
+            # not fail spuriously -- it cannot express "a real edit that must
+            # still pass", i.e. specificity.
+            control = name.startswith("control")
             plant(REPORT, old, new)
             new_ok, old_ok = gate(False), gate(True)
             shutil.copy2(bak, REPORT)
@@ -164,15 +173,24 @@ def main():
     print("\nrestored byte-identical: %s   post-restore gate: %s"
           % (same, "GREEN" if post else "RED"))
 
-    real = [f for f in FLIPS if f[2] != f[1]]
+    ctls = [f for f in FLIPS if f[0].startswith("control")]
+    real = [f for f in FLIPS if not f[0].startswith("control")]
     print("\n%d caught / %d MISSED of %d conclusion flips  "
           "(%d controls, %d control failures)"
-          % (caught, missed, len(real), len(FLIPS) - len(real), ctl_bad))
+          % (caught, missed, len(real), len(ctls), ctl_bad))
     print("pre-fix verifier missed %d of %d -- that is what the CONCLUSIONS "
           "table is worth." % (pre_missed, len(real)))
     print("\ndetail:")
     for name, what, verdict in rows:
         print("  %-24s %-62s %s" % (name, what[:62], verdict))
+    # Every arm must land in exactly one counted outcome, or an arm that
+    # never ran hides behind a healthy-looking total.
+    tot = caught + missed + len(ctls)
+    if tot != len(FLIPS):
+        print("\n  PARTITION BROKEN: caught %d + missed %d + controls %d = "
+              "%d, but %d arms were declared" % (caught, missed, len(ctls),
+                                                 tot, len(FLIPS)))
+        return 1
 
     ok = (missed == 0 and ctl_bad == 0 and same and post)
     print("\nVERDICT: %s" % ("every conclusion flip was caught."
