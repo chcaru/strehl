@@ -13,6 +13,7 @@ subject's qualification boundary so that a band which carried a withdrawn claim
 becomes re-licensed, with every measured number left correct.
 """
 import copy
+import sys
 
 # ---- the evidence, exactly as measured -------------------------------------
 FACTS = {
@@ -122,3 +123,49 @@ for name, fn in ARMS:
     print(f"  {'CAUGHT ' if flipped else 'MISSED '} {show(name, r)}")
 print(f"\n  {caught}/{len(ARMS)} conclusion-flip arms caught  "
       f"{'PASS' if caught == len(ARMS) else 'FAIL - the check is decorative'}")
+
+# --- pass/fail channel -------------------------------------------------------
+# Added by ORCH, not by this file's author, after V-KILLB0's own `verdictaudit.py`
+# proved every designed outcome here exited 0 -- including a run that printed the
+# word FAIL.  Two separate defects were found and both are fixed below.
+#
+# 1. `caught == len(ARMS)` is satisfied by DELETING an arm: remove A7 and the
+#    harness prints "6/6 ... PASS".  A count pins nothing on its own, so the arm
+#    NAMES are pinned too.  This is the same hole `softaudit.py` found in the
+#    sibling `softverdict.py`.
+# 2. Nothing here ever exited non-zero, so any CI step or `if ($LASTEXITCODE)`
+#    wrapper read this harness as green unconditionally.
+#
+# The verdict itself was re-audited under these mutations and did NOT move: the
+# derivation is sound and correctly signed in both directions.  What was wrong
+# was the assurance the printed number implied, not the number.
+EXPECTED_ARMS = (
+    "A1 loss reduced above the denoise floor",
+    "A2 boundary moved so damaged bands are 'noise'",
+    "A3 bee flat band 0 reclassified as SIGNAL",
+    "A4 STRUCT/FLAT populations swapped",
+    "A5 R inflated until the floor sinks under the loss",
+    "A6 subject de-qualified (boundary removed)",
+    "A7 bee flat R stands clear of the permuted null",
+)
+
+failures = []
+names = tuple(n for n, _ in ARMS)
+if names != EXPECTED_ARMS:
+    failures.append(
+        "ARM SET CHANGED: expected %d arms %r, found %d arms %r. An arm was added, "
+        "removed or renamed; `caught == len(ARMS)` cannot see that."
+        % (len(EXPECTED_ARMS), EXPECTED_ARMS, len(names), names))
+if caught != len(ARMS):
+    failures.append(
+        "%d of %d conclusion-flip arms were MISSED: the verdict does not follow "
+        "from the numbers." % (len(ARMS) - caught, len(ARMS)))
+
+if failures:
+    print("\n  VERDICT BINDING FAILED")
+    for f in failures:
+        print("    " + f)
+    sys.exit(1)
+print("\n  VERDICT BINDING PASSED  "
+      f"({len(ARMS)} arms, all named as expected, all caught)")
+sys.exit(0)
