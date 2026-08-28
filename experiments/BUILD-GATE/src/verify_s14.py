@@ -426,11 +426,17 @@ def main():
     # them is reversed; ORCH measured a verifier that passed 712 checks after
     # "refuted" was flipped to "confirmed". Whitespace is collapsed first
     # because these sentences wrap, and a wrapped phrase does not match as a
-    # plain substring.
-    flat = re.sub(r"\s+", " ", t)
-    for name, required, forbidden in CONCLUSIONS:
-        n += 1
-        c.verdict(name, flat, required, forbidden)
+    # plain substring. BG_NO_CONCLUSIONS reproduces the pre-fix verifier for
+    # commissioning; it is loud because a switch that quietly drops checks is
+    # itself the defect.
+    if os.environ.get("BG_NO_CONCLUSIONS") == "1":
+        print("\n  *** BG_NO_CONCLUSIONS=1: conclusion checks DISABLED. "
+              "This is the pre-fix verifier, for commissioning only. ***")
+    else:
+        flat = re.sub(r"\s+", " ", t)
+        for name, required, forbidden in CONCLUSIONS:
+            n += 1
+            c.verdict(name, flat, required, forbidden)
 
     return c.report(n)
 

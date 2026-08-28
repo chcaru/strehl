@@ -25,6 +25,45 @@ REPORT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 TOL = 5e-4
 
 
+# Section 13's CONCLUSIONS, pinned here for the same reason as in
+# verify_s14.py, but the exposure is worse: section 13 has no `--check` splice
+# guard, so until this table existed a reversed verdict was caught by NOTHING.
+# This verifier re-derives numbers and a flipped verdict changes no number --
+# measured, not assumed: the 13.6 scope correction rewrote a conclusion
+# outright and the verifier still returned 53/0/0 GREEN.
+CONCLUSIONS = [
+    ("13 headline answer is No",
+     "## 13. Does the admission gate fix the mid-scale mottle? No.",
+     ["mid-scale mottle? Yes.", "mid-scale mottle? Partly.",
+      "mid-scale mottle? Yes,"]),
+    ("13.5 knob cannot fix the mottle",
+     "**This knob cannot fix the mottle.**",
+     ["**This knob fixes the mottle.**", "**This knob can fix the mottle.**"]),
+    ("13.1 textured sites cannot measure mottle",
+     "**Textured sites cannot measure mottle, and this was measured rather "
+     "than argued.**",
+     ["**Textured sites can measure mottle",
+      "**Textured sites do measure mottle"]),
+    ("13.6 G400 reported not recommended",
+     "so this is reported, not recommended.**",
+     ["so this is recommended", "and it is recommended"]),
+    ("13.8 depth not monotone or significant",
+     "**Not monotone and not significant.**",
+     ["**Monotone and significant.**", "**Monotone and not significant.**"]),
+    # The 13.6 scope correction. Pinned tightly because this is the exact
+    # sentence that was wrong once already, and the unrestricted form is the
+    # reversal to guard against -- it is ORCH's withdrawn fact 1807.
+    ("13.6 gate-fires claim is scoped, not structural",
+     "**at the shipping floor and across the whole scalar range this section "
+     "swept, the gate does not fire where the mottle is,",
+     ["**the gate never fires where the mottle is, so this sweep could not"]),
+    ("13.6 failure is the knob's shape not the gate's reach",
+     "The failure is in the shape of the knob, not in the reach of the gate.",
+     ["The failure is in the reach of the gate, not in the shape of the "
+      "knob."]),
+]
+
+
 class Check:
     def __init__(self):
         self.ok = self.bad = self.skip = 0
@@ -41,6 +80,31 @@ class Check:
             self.bad += 1
             self.msgs.append("FAIL %s: report %s, derived %s"
                              % (name, want, got))
+
+    def verdict(self, name, hay, required, forbidden):
+        """Assert a CONCLUSION, not a number.
+
+        Section 13 has no splice check at all, so before this existed a
+        reversed verdict here was caught by nothing: this verifier re-derives
+        numbers, and flipping "No." to "Yes." changes no number. Requiring the
+        pinned sentence EXACTLY ONCE, rather than merely present, is the point
+        -- a presence test is satisfied by any duplicate or paraphrase
+        elsewhere in the document and cannot detect a reversal.
+        """
+        n = hay.count(required)
+        if n != 1:
+            self.bad += 1
+            self.msgs.append("FAIL %s: pinned verdict found %d times, "
+                             "expected exactly 1: %r" % (name, n,
+                                                         required[:60]))
+            return
+        hits = [f for f in forbidden if f in hay]
+        if hits:
+            self.bad += 1
+            self.msgs.append("FAIL %s: reversed verdict present: %r"
+                             % (name, hits[0][:60]))
+            return
+        self.ok += 1
 
     def report(self, nfound):
         tot = self.ok + self.bad + self.skip
@@ -250,6 +314,24 @@ def main():
     bo, _ = bb.run("bee-1-cpl")
     share = 100 * (1 - bo["G400"][0]) / (1 - 1 / CONVICTED)
     c.eq("bee-1 knee share", share, 6.1 if m else None, tol=1e-2)
+
+    # --- conclusions. Every number above can be correct while the verdict
+    # drawn from them is reversed. Whitespace is collapsed because these
+    # sentences wrap in the source and a wrapped phrase is not a substring.
+    #
+    # BG_NO_CONCLUSIONS reproduces the pre-fix verifier exactly, so a negative
+    # control can measure what this table is worth instead of asserting it.
+    # It is commissioning-only and says so loudly, because a switch that
+    # quietly drops checks is the defect this whole file exists to catch.
+    if os.environ.get("BG_NO_CONCLUSIONS") == "1":
+        print("\n  *** BG_NO_CONCLUSIONS=1: conclusion checks DISABLED. "
+              "This is the pre-fix verifier, for commissioning only. ***")
+    else:
+        flat = re.sub(r"\s+", " ", t)
+        for name, required, forbidden in CONCLUSIONS:
+            nrows += 1
+            c.verdict(name, flat, re.sub(r"\s+", " ", required),
+                      [re.sub(r"\s+", " ", f) for f in forbidden])
 
     rc = c.report(nrows)
     print("\nVERIFY SECTION 13: %s" % ("GREEN" if rc == 0 else "RED"))

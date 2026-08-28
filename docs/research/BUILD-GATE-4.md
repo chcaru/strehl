@@ -866,22 +866,64 @@ the floor and the merge averaged instead of selecting. **The gate fires on
 So the two columns sit on opposite sides of the gate's firing boundary, and
 `k` scales a floor that is never reached at mottle scale.
 
-The correct claim is therefore narrower than the one I made: **the gate never
-fires where the mottle is, so this sweep could not have moved mottle whatever
+The correct claim is therefore narrower than the one I made: **at the shipping
+floor and across the whole scalar range this section swept, the gate does not
+fire where the mottle is, so this sweep could not have moved mottle whatever
 the truth was.** What is eliminated is `k` as a *lever*, not per-pixel
 admission as a *mechanism*. Those are different statements and the first draft
 conflated them. The elimination in 13.5 stands; its scope does not extend to
 the mechanism.
+
+**The second draft of this section also over-claimed, in the same place, and
+the scope qualifier above is the repair.** What I wrote was unrestricted -- *"the
+gate never fires where the mottle is"* -- and read as a structural property of
+the gate. It is not one. It is a property of the floor the gate is given, and I
+falsified it myself in section 15 before anyone asked me to. ORCH reached the
+same conclusion independently and withdrew its own fact 1807 in fact 1808; the
+measurement below is this lane's, on this lane's subject, and does not depend
+on ORCH's.
+
+The per-band arms of section 15 hold `k` fixed at the shipped 2.0 and scale
+only the floor, and the gate's own duty cycle on `bee-1-cpl` (299 frames)
+answers the capability question directly:
+
+```
+WHITE200  averaged : 10.6% 0.0%  0.0%  0.0%  0.0% 0.0% 0.0%
+S32       averaged : 10.6% 39.7% 32.3% 18.7% 6.5% 0.1% 0.0%
+```
+
+Blotch is levels ~3-4. Under `S32` those levels read **18.7% and 6.5%**, not
+zero, while band 0 stays pinned at **10.6%** to the printed digit. The gate is
+perfectly capable of firing at mottle scale. It reads `0.0%` at the shipping
+floor because coarse Laplacian coefficients clear that floor by a wide margin --
+the measured floor falls roughly two orders of magnitude from band 0 to band 3
+while the signal does not -- which is arithmetic, not a defect and not an
+incapacity.
+
+So the reason this section's sweep could not move mottle is **not** that the
+gate cannot fire there. It is that `--pyramid-gate` is a *single scalar*: it
+cannot raise the coarse floors without raising band 0 by the same factor, and
+band 0 is where the sharpness lives. The failure is in the shape of the knob,
+not in the reach of the gate. That is a strictly better explanation than the
+one it replaces, it is the explanation section 15 acts on, and it is why the
+per-band knob succeeds on exactly the axis this section eliminated.
+
+One guard on the paragraph above, because it would be easy to over-read.
+`averaged` is a **duty cycle, not a quality metric**, and nothing here claims
+`S32` is a better image on the strength of it. It is used only to settle a
+*capability* question -- can the gate fire at these levels at all -- which is
+precisely what a duty cycle is competent to answer. The quality verdict for
+those arms is in section 15, measured on pixels, with intervals.
 
 A caveat in the other direction, so the narrowing is not itself over-read. The
 merge's banner describes selection as `weight = (band power above the noise
 floor)^exponent`, so `k` sets the floor *subtracted inside the weight* at every
 level, not only where the hard gate fires. `k` may therefore have continuous
 authority where it has no binary authority, which would explain the residual
-blotch movement measured at levels the gate never fires on (-14.9% on
-`flower-bud-alone-cpl`). **Untested.** "The gate does not fire above level 0"
-and "`k` does nothing above level 0" are not the same claim and this data does
-not establish the second.
+blotch movement measured at levels the gate is not observed to fire on
+(-14.9% on `flower-bud-alone-cpl`). **Untested.** "The gate does not fire above
+level 0" and "`k` does nothing above level 0" are not the same claim and this
+data does not establish the second.
 
 **One arm is worth ORCH's attention on the noise axis rather than the mottle
 axis.** On `bee-1-cpl`, G400 buys **-91.6% grain** for a sharpness change of
@@ -1316,3 +1358,206 @@ What the data does support:
 - Not measured on a quiet machine: the runtime table is upper-biased.
 - Still owed from the original pre-registration: P2 (plane arm) and P6
   (align-refused placebo).
+
+## 15. The per-band gate floor: the first move that cuts blotch without costing sharpness
+
+ORCH built `STREHL_GATE_FLOOR_SCALE` -- a comma-separated per-band multiplier
+on the measured noise floor -- and asked this lane to sweep it against blotch
+and sharpness together, hunting for a region where blotch falls and sharpness
+does not. There is one, it is large, and it is on the deepest subjects.
+
+**Measured on binary SHA256 `5915316B95E21446A85A1F50EC4D459E1E52F19DAE4487981E0342622740AFF9`,
+`strehl 0.0.0 (5e914c5f4fa2)`.** That commit is a descendant of `9b05d0b7`, so
+it is not stale under discipline 34; it contains ORCH's knob (`f190a0ea`) and
+the `--auto-exposure` supersession guard (`5f367a94`). Every master in this
+section was rendered by that one binary.
+
+| subject | N | blotch vs null | 95% CI | grain | sharp/tex |
+|---|---:|---:|---|---:|---:|
+| `bee-1-cpl` | 299 | **-25.34%** | [-36.27%, -19.19%] | +0.06% | **+2.25%** |
+| `flower-bud-alone-cpl` | 205 | **-21.92%** | [-25.93%, -18.07%] | -0.56% | **+0.92%** |
+| `119MSDCF` | 33 | **-3.76%** | [-4.33%, -3.21%] | -0.33% | **+0.16%** |
+| `109MSDCF` | 22 | **-11.21%** | [-12.37%, -10.13%] | -1.08% | **+0.42%** |
+| `coffee-bubbles` | 19 | **-8.91%** | [-11.02%, -6.96%] | +0.68% | **+0.56%** |
+
+Sharpness on textured sites rises on all 5 subjects (+0.16% to +2.25%). Grain spans -1.08% to +0.68%, so there is no grain move for the sharpness column to be a proxy for.
+
+Blotch falls on all five subjects, and the two deepest -- a **299-frame** bee and
+a **205-frame** flower bud -- give the two largest reductions. Depth is where
+ORCH says the product is judged, and depth is where this helps most. Sharpness
+on textured sites does not fall on any subject in the headline arm; it rises.
+
+### 15.1 Why the sharpness column is trustworthy here, which it was not in section 13
+
+Section 13 had to withdraw its flat-site sharpness column because it correlated
+0.985-0.997 with grain and was therefore measuring grain. That objection does
+not apply here, and the reason is stronger than a correlation argument.
+
+**Grain barely moves at all.** Across the headline arm it spans -1.08% to
++0.68%. A column cannot be a proxy for a quantity that is not moving. Where
+section 13 had to argue that sharpness was independent of a grain change, here
+there is no grain change to be dependent on. The correlations are reported
+anyway, in 15.3, but with grain this flat they are computed over near-zero
+variance and are not leaned on.
+
+| subject | arm | scale | blotch | grain | sharp/tex |
+|---|---|---|---:|---:|---:|
+| `bee-1-cpl` | `S04` | `1,4,4,4,4,4,4` | -6.54% | -0.23% | +0.51% |
+| `bee-1-cpl` | `S08` | `1,8,8,8,8,8,8` | -11.01% | -0.16% | +1.11% |
+| `bee-1-cpl` | `S16` | `1,16,16,16,16,16,16` | -17.59% | -0.09% | +1.55% |
+| `bee-1-cpl` | `SRAMP` | `1,1,4,16,32,32,32` | -2.06% | +0.13% | +2.10% |
+| `bee-1-cpl` | `S32` | `1,32,32,32,32,32,32` | -25.34% | +0.06% | +2.25% |
+| `bee-1-cpl` | `B1ONLY` | `1,32,1,1,1,1,1` | -14.47% | -0.15% | +0.04% |
+| `bee-1-cpl` | `NOB1` | `1,1,32,32,32,32,32` | -11.96% | +0.19% | +2.21% |
+| `flower-bud-alone-cpl` | `S04` | `1,4,4,4,4,4,4` | -18.34% | -0.39% | +0.30% |
+| `flower-bud-alone-cpl` | `S08` | `1,8,8,8,8,8,8` | -20.59% | -0.35% | +0.14% |
+| `flower-bud-alone-cpl` | `S16` | `1,16,16,16,16,16,16` | -21.56% | -0.46% | +0.93% |
+| `flower-bud-alone-cpl` | `SRAMP` | `1,1,4,16,32,32,32` | -8.90% | +0.02% | +0.72% |
+| `flower-bud-alone-cpl` | `S32` | `1,32,32,32,32,32,32` | -21.92% | -0.56% | +0.92% |
+| `flower-bud-alone-cpl` | `B1ONLY` | `1,32,1,1,1,1,1` | -11.70% | -0.46% | +0.12% |
+| `flower-bud-alone-cpl` | `NOB1` | `1,1,32,32,32,32,32` | -10.56% | -0.14% | +0.81% |
+| `119MSDCF` | `S04` | `1,4,4,4,4,4,4` | +0.22% | -0.03% | -0.01% |
+| `119MSDCF` | `S08` | `1,8,8,8,8,8,8` | -0.35% | -0.16% | -0.05% |
+| `119MSDCF` | `S16` | `1,16,16,16,16,16,16` | -1.86% | -0.27% | +0.04% |
+| `119MSDCF` | `SRAMP` | `1,1,4,16,32,32,32` | +0.20% | -0.02% | -0.17% |
+| `119MSDCF` | `S32` | `1,32,32,32,32,32,32` | -3.76% | -0.33% | +0.16% |
+| `119MSDCF` | `B1ONLY` | `1,32,1,1,1,1,1` | -3.27% | -0.32% | +0.36% |
+| `119MSDCF` | `NOB1` | `1,1,32,32,32,32,32` | -0.58% | +0.01% | -0.18% |
+| `109MSDCF` | `S04` | `1,4,4,4,4,4,4` | -1.34% | -0.54% | +0.11% |
+| `109MSDCF` | `S08` | `1,8,8,8,8,8,8` | -4.80% | -0.86% | +0.09% |
+| `109MSDCF` | `S16` | `1,16,16,16,16,16,16` | -7.99% | -1.01% | +0.26% |
+| `109MSDCF` | `SRAMP` | `1,1,4,16,32,32,32` | +0.68% | -0.03% | -0.73% |
+| `109MSDCF` | `S32` | `1,32,32,32,32,32,32` | -11.21% | -1.08% | +0.42% |
+| `109MSDCF` | `B1ONLY` | `1,32,1,1,1,1,1` | -6.71% | -0.94% | +1.13% |
+| `109MSDCF` | `NOB1` | `1,1,32,32,32,32,32` | -4.81% | -0.04% | -0.64% |
+| `coffee-bubbles` | `S04` | `1,4,4,4,4,4,4` | -1.90% | +0.28% | +0.21% |
+| `coffee-bubbles` | `S08` | `1,8,8,8,8,8,8` | -3.16% | +0.38% | +0.36% |
+| `coffee-bubbles` | `S16` | `1,16,16,16,16,16,16` | -5.24% | +0.52% | +0.46% |
+| `coffee-bubbles` | `SRAMP` | `1,1,4,16,32,32,32` | +0.17% | -0.02% | +0.06% |
+| `coffee-bubbles` | `S32` | `1,32,32,32,32,32,32` | -8.91% | +0.68% | +0.56% |
+| `coffee-bubbles` | `B1ONLY` | `1,32,1,1,1,1,1` | -6.04% | +0.46% | +0.41% |
+| `coffee-bubbles` | `NOB1` | `1,1,32,32,32,32,32` | -3.30% | +0.35% | +0.19% |
+
+Lowest sharpness cell anywhere in the sweep: **0.9927x** (-0.73%).
+
+The blotch column is the bootstrap estimate throughout, so that one quantity has one number. The scorer's plain ratio of means is a **different estimator of the same quantity**, and the two are reconciled here rather than quietly averaged. They agree on direction in **35 of 35** cells -- there is no sign disagreement anywhere in the sweep. They disagree on magnitude by a median of **0.76** and a maximum of **5.62** percentage points, concentrated on `flower-bud-alone-cpl`.
+
+Only 18 of 35 scorer estimates fall inside the bootstrap's 95% interval, and that is expected rather than alarming: the interval is the sampling uncertainty **of the bootstrap estimator**, not a tolerance band for a different statistic, and under site heterogeneity a ratio of means and a paired block-resampled estimate have genuinely different estimands. Testing one against the other's CI was the wrong test and the first draft of this section made that mistake.
+
+What matters for the claim is the direction of the bias: the scorer reports a reduction **at least as large** as the bootstrap in **29 of 35** cells. Quoting the bootstrap throughout therefore states the **smaller** of the two available effects, so every blotch number in this section is conservative with respect to the other instrument.
+
+### 15.2 The correlations, and the one subject where the column is disqualified
+
+| subject | r(sharp/tex, grain) | r(blotch, grain) | independent? |
+|---|---:|---:|---|
+| `bee-1-cpl` | +0.6931 | +0.2043 | yes |
+| `flower-bud-alone-cpl` | -0.1862 | +0.8302 | yes |
+| `119MSDCF` | -0.7963 | +0.9273 | yes |
+| `109MSDCF` | -0.7706 | +0.8493 | yes |
+| `coffee-bubbles` | +0.9644 | -0.9709 | **no** |
+
+`|r| > 0.9` on 1 of 5 subjects (`coffee-bubbles`), where the sharpness column is not independent evidence and is not leaned on.
+
+`coffee-bubbles` is flagged and its sharpness number is not used as evidence.
+Note the sign on `119MSDCF` and `109MSDCF`: sharpness and grain are
+**negatively** correlated there, sharpness rising while grain falls, which is
+the opposite of the failure mode section 13 fell into.
+
+### 15.3 Which bands do the work: band 1 carries most of it
+
+The sweep arms move six bands at once, so they cannot say which band matters.
+Two more arms decompose it -- `B1ONLY` moves band 1 alone, `NOB1` moves bands
+2-6 and leaves band 1 at 1.0 -- and this is a measurement, not an inference
+from the joint arm.
+
+| subject | S32 (all coarse) | B1ONLY (band 1) | NOB1 (bands 2-6) | band-1 share | excess over joint |
+|---|---:|---:|---:|---:|---:|
+| `bee-1-cpl` | -25.34% | **-14.47%** | -11.96% | **55%** | +4.3% |
+| `flower-bud-alone-cpl` | -21.92% | **-11.70%** | -10.56% | **53%** | +1.6% |
+| `119MSDCF` | -3.76% | **-3.27%** | -0.58% | **85%** | +2.4% |
+| `109MSDCF` | -11.21% | **-6.71%** | -4.81% | **58%** | +2.8% |
+| `coffee-bubbles` | -8.91% | **-6.04%** | -3.30% | **65%** | +4.8% |
+
+Band 1 alone carries 53%-85% of the two-arm total and beats all five coarser bands combined on every subject. The arms are close to additive: their sum exceeds the joint arm by 1.6%-4.8%.
+
+Band 1 alone beats all five coarser bands combined on every subject, and
+`B1ONLY` costs nothing in sharpness anywhere (+0.04% to +1.13%).
+
+**A self-correction, because the first version of this claim was too strong.**
+I reported to ORCH that "the mottle is a band-1 artifact". It is not. `NOB1`
+holds band 1 fixed and still delivers -0.58% to -11.96%, so bands 2-6 carry
+real signal on their own. Band 1 is **the largest single share, not the whole
+mechanism**, and the two arms are close to additive rather than one arm
+explaining the other.
+
+The `SRAMP` arm is the negative result that corroborates this. It escalates
+with coarseness but deliberately leaves band 1 at 1.0, and it is the worst arm
+in the sweep: it makes blotch slightly **worse** on `119MSDCF`, `109MSDCF` and
+`coffee-bubbles`, and it holds the lowest sharpness cell anywhere in the sweep
+(0.9927x on `109MSDCF`). Leaving band 1 alone is what breaks it.
+
+### 15.4 What the gate is actually doing, and the section 13 claim it falsifies
+
+| subject | arm | L0 | L1 | L2 | L3 | L4 | L5 | L6 |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| `bee-1-cpl` | `NULL` | 10.6% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| `bee-1-cpl` | `S32` | 10.6% | 39.7% | 32.3% | 18.7% | 6.5% | 0.1% | 0.0% |
+| `flower-bud-alone-cpl` | `NULL` | 37.3% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| `flower-bud-alone-cpl` | `S32` | 37.3% | 81.3% | 73.1% | 64.4% | 54.8% | 21.3% | 0.0% |
+| `119MSDCF` | `NULL` | 34.4% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| `119MSDCF` | `S32` | 34.4% | 79.2% | 42.1% | 2.8% | 0.0% | 0.0% | 0.0% |
+| `109MSDCF` | `NULL` | 72.5% | 0.2% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| `109MSDCF` | `S32` | 72.5% | 86.1% | 65.7% | 28.2% | 2.6% | 0.1% | 0.0% |
+| `coffee-bubbles` | `NULL` | 36.4% | 3.1% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| `coffee-bubbles` | `S32` | 36.4% | 80.9% | 54.5% | 16.2% | 0.4% | 0.0% | 0.0% |
+
+Band 0 is identical between the null and `S32` on every subject to the printed digit: **yes**. At levels 3-4, where the blotch statistic lives, the null reads 0.0%-0.0% and `S32` reads 2.8%-64.4%.
+
+This table is the reason section 13.6 now carries a scope qualifier. Section 13
+observed the gate reading `0.0%` above level 0 and I wrote that the gate
+"never fires where the mottle is". **That was wrong, and this section's own
+arms are what falsify it.** The null and `S32` differ only in the coarse floor,
+band 0 is identical between them on every subject to the printed digit, and at
+levels 3-4 -- where the blotch statistic lives -- the null reads `0.0%` while
+`S32` reads up to 64.4%. The gate fires there perfectly well when the floor
+permits it. It reads zero at the shipping floor because coarse Laplacian
+coefficients clear that floor by a wide margin, which is arithmetic, not an
+incapacity.
+
+ORCH reached the same conclusion independently and withdrew its own fact 1807
+in fact 1808. The measurement above is this lane's, on this lane's subjects,
+and does not depend on ORCH's.
+
+So the corrected account of why section 13's sweep failed is not that the gate
+cannot reach the mottle. It is that `--pyramid-gate` is a **single scalar**: it
+cannot raise the coarse floors without raising band 0 by the same factor, and
+band 0 is where the sharpness lives. That is exactly the constraint the
+per-band knob removes, which is why the same axis that was eliminated in
+section 13 moves here.
+
+**`averaged` is a duty cycle, not a quality metric**, and nothing above claims
+`S32` is a better image because its duty cycle changed. It is used only to
+settle a capability question -- can the gate fire at these levels at all --
+which is what a duty cycle is competent to answer. Every quality number in this
+section is measured on pixels, with intervals.
+
+### 15.5 What this is not
+
+- **This is not a shipping recommendation.** It is an env var, default off, and
+  one lane's instrument. `S32` is a large change to the merge's behaviour and
+  nobody has looked at these masters at print size.
+- **This is not a print-gate result.** Neither `orch_printready.py` nor
+  `printcert4.py` was run on these arms. On the six mottle subjects the first
+  of those reads 0 PASS / 6 ACQUITTED and an acquittal expires once the render
+  moves 5%, so it would score this change as `ACQUIT->EXPIRED` on exactly the
+  subjects it targets and could not credit a success.
+- **Blotch and sharpness are two axes and rim is a third.** V-GATHER owns rim
+  and it was not measured here. A change that averages more at coarse scales is
+  exactly the kind of change that could move rim, and that is an open question
+  rather than a claimed clean result.
+- **Five subjects, one instrument, one binary.** The blotch estimator is this
+  lane's; it has been commissioned both ways but it has not been validated
+  against a human judgement of what mottle is.
+- **The sweep is a ladder, not an optimum.** `S32` is the strongest arm tried,
+  not the best available; the sweep does not bracket a maximum, and nothing
+  here locates one.

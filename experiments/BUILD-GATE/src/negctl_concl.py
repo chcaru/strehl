@@ -29,6 +29,7 @@ reports the instrument as healthy, which is the failure it exists to prevent.
 """
 import os
 import shutil
+from reportlock import ReportLock
 import subprocess
 import sys
 
@@ -154,4 +155,5 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    with ReportLock("negctl_concl.py"):
+        sys.exit(main())

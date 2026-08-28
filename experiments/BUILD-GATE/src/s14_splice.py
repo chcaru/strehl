@@ -96,7 +96,13 @@ def check():
     if idx < 0:
         print("CHECK FAIL: report has no section 14")
         return 1
-    have = report[idx:].strip("\n")
+    # Bound section 14 at the NEXT top-level header, not at end-of-file.
+    # Slicing to EOF worked only while 14 was the last section; appending a
+    # section 15 would drag it into the comparison and fail this check for a
+    # reason that has nothing to do with section 14 drifting.
+    tail = report[idx + 1:]
+    nxt = re.search(r"(?m)^## ", tail[1:])
+    have = (tail[:nxt.start() + 1] if nxt else tail).strip("\n")
     want = body.strip("\n")
     if have == want:
         print("CHECK OK: section 14 matches the generated tables exactly "
