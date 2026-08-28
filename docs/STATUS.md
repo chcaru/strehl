@@ -161,6 +161,13 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 
 - **Flat fields: delivered.** Used; the resulting dust map was refuted on its own merits
   (fact 1856), which is a result rather than a waste.
+- **Captures with ≥400 px of clear background around the subject.** The **highest-value
+  outstanding request after the flat fields**, and it is a capture change, not code. The halo
+  instrument needs that much clear ground to separate a broad rim from an ordinary backdrop
+  falloff. The corpus does not contain it, so **7 subjects are UNMEASURABLE and 4 more return a
+  BLIND walk** — which is not a pass. That is why the honest claim is *11 of 26 demonstrated
+  clean*, not 26 of 26: the gap is the instrument's reach, not a defect in the renders. A full
+  night of work moved **none** of the 11. Fact 1891.
 - **A capture without the 2× teleconverter.** All 26 masters share the
   `a7c2-fe100gm-2xtc-x4cpl` profile, so it is currently impossible to tell whether the ~40%
   `eps_r` error lives in the base lens term or the teleconverter term. This directly affects
