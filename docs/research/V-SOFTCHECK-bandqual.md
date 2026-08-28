@@ -392,3 +392,102 @@ depth number must quote its band's R with it.
 - The qualification is measured on **single frames**; the deficit is measured on
   **merges**, whose noise floor is lower. The qualification is therefore a conservative
   proxy for the merged band's SNR, not a direct measurement of it.
+
+## VERDICT
+
+Stated for the record at the orchestrator's request. **No new measurement was taken for
+this section.** Every figure is quoted from a committed section of this lane's own
+reports; where a figure does not exist, this section says so rather than supplying one.
+
+### (a) Is the shipped merge softer than the best single source frame?
+
+**Not as a single broadband number. The sign depends on spatial frequency.** On
+`113MSDCF` (63 frames, the complete bracket), the shipped master divided by the per-site
+maximum over all 63 frames reads, band by band (`V-SOFTCHECK-nyquist.md`):
+
+| band (cyc/output px) | master / per-site ceiling | direction |
+|---|---:|---|
+| 0.05-0.10 | 1.0997 | master sharper |
+| 0.10-0.15 | 1.1936 | master sharper |
+| 0.15-0.20 | 1.1345 | master sharper |
+| 0.20-0.25 | 0.9426 | master softer |
+| 0.25-0.30 | 0.7314 | master softer |
+| 0.30-0.35 | 0.6063 | master softer |
+| 0.35-0.40 | 0.5942 | master softer |
+
+A scalar of the form "the master is 5-19% softer than its own bracket" is therefore a
+weighted average taken across a sign change, and which value it lands on is decided by
+the band weighting as much as by the merge. Above roughly 0.20 cyc/output px the master
+falls short of the per-site best; below it, the master exceeds it.
+
+The qualification in this document decides which half is quotable. On `113MSDCF` the
+highest band carrying real detail is 0.20-0.25, at R = 3.32. In that band the master
+reads **0.9426 of the per-site ceiling, about 5.7% short**. The large shortfalls, 0.7314
+down to 0.5942, all sit at 0.25-0.40, which is marginal or worse on both subjects this
+lane qualified, so they are not resolution statements.
+
+**The sign of the original finding survives qualification; its magnitude does not.** The
+softness is real, at the bottom of the originally quoted 5-19% range rather than the top.
+
+### (b) The number that decides it, and its interval
+
+The deciding figure for (a) is **0.9426** at 0.20-0.25 on `113MSDCF`.
+
+**It has no confidence interval and this lane is not going to supply one. NOT MEASURED.**
+The band table it comes from carries significance markers on the between-arm difference,
+not on the ratio to the ceiling.
+
+The figure this lane does hold with an interval, in a band that qualifies, answers a
+different question, namely bracket depth rather than master versus frame: on
+`bee-1-cpl`, N = 149 to 299 at matched range, **+0.0656 dex per doubling, 16.4% softer,
+95% CI [+0.0495,+0.0950]**, in a band qualifying at R = 2.32. That interval excludes
+zero, and the figure is a lower bound because the deeper arm is measurably noisier and
+noise biases this statistic upward.
+
+**These are two different questions, and the one carrying the interval is not the one
+asked in (a).** Anyone quoting that CI beside 0.9426 is quoting the wrong measurement.
+
+### (c) Subjects and count
+
+- Ceiling ratio: **one subject**, `113MSDCF`, 63 frames, complete bracket, uniform
+  486-tile grid, denominator the per-site maximum over all 63 frames, both arms rendered
+  through one pin and one develop path.
+- Band qualification: **two subjects**, `113MSDCF` at N = 63 and `bee-1-cpl` at N = 299.
+- The originating claim spanned **four** subjects. None of `coffee-bubbles`, `109MSDCF`,
+  `119MSDCF` or `flower-bud-alone-cpl` was re-derived by this lane in a qualified band.
+  Nothing here is a corpus claim.
+
+### (d) Which commissioning arm would have caught the metric being blind
+
+Each arm below was run and each fired, so the metric's blindness is bounded by
+measurement rather than by argument:
+
+- **Pure-noise stack.** Choosing the in-focus frame by the same band being measured is an
+  order statistic. On a stack with no focus signal it inflates R to **1.1489**. This is
+  the arm that stops a noise band from qualifying itself.
+- **Gain audit.** Uncorrected, a pure-noise stack read **2.3451** on `113MSDCF` from
+  per-frame gain spread alone. This is the arm that catches the mismatched-gauge failure
+  that destroyed the previous sharpness metric.
+- **Two-stratum split.** Sharpness and noise are measured on the same tiles in both
+  strata. A pure noise difference cannot change sign between strata, and this lane's
+  does, which is what keeps a noise-policy difference from being counted as sharpness.
+- **Conclusion-reversal arms.** `verify_bandqual.py` and `commission_entry.py` flip a
+  stated conclusion while leaving every number intact. An earlier verifier of mine passed
+  every check with its headline reversed, and three of six such flips went undetected. A
+  harness that cannot fail this arm certifies nothing.
+- **Improvement arm.** The scene estimator is required to rise under a deliberate
+  sharpening. A statistic bounded below at zero may ignore a defect but can never charge
+  for one.
+
+### (e) NOT MEASURED
+
+- **A confidence interval on the ceiling ratio itself**, in any band, on any subject.
+- **The other three subjects of the originating claim**, in qualified bands.
+- **The disagreement with V-LINEAR on `bee-1-cpl` at 0.30-0.35**, where this lane reads
+  1.8480 against their 5.311 with non-overlapping intervals. Unresolved; the one
+  untested suspect that remains is the develop path.
+- **Anything at HEAD.** All of this is pinned to `9b05d0b7`, several hundred commits
+  behind, and whether it survives later merge and exposure work is untested.
+- **Blur versus noise policy**, which remains unseparated inside the textured stratum.
+- **The confidence-dependent exponent at depth on a qualified subject**, never scored here.
+- **`flower-bud-alone-cpl` at N = 205**, unqualified and unmeasured throughout.
