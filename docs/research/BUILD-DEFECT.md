@@ -3001,7 +3001,12 @@ whose profile it does not model.
 
 It does not license turning the correction ON. Nothing here measures the two
 real motes, for which no independent clean reference exists, and nothing here
-touches the print gate's 17 PASS / 5 FAIL / 4 REFUSED. In ORCH's words:
+touches the print gate. (An earlier draft cited a standing of 17 PASS / 5 FAIL /
+4 REFUSED. That split was withdrawn by ORCH on 2026-08-27: `recert.py` re-measured
+`orch_printready.py` at 17 PASS / 0 FAIL / 9 ACQUITTED, and `recert.py:456` records
+that the phantom FAILs were 5 ACQUIT->FAIL transitions mislabelled as PASS->FAIL.
+The withdrawn figure also named the wrong instrument for this clause -- see 22.)
+In ORCH's words:
 **planted-mote fidelity measured against truth; real-mote improvement measured
 against the print gate; no claim that the second inherits the first.** The
 second is not yet measured. §13.1 stays OFF until it is.

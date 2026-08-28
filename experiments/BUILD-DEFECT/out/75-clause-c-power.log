@@ -1,0 +1,31 @@
+================================================================================================
+CLAUSE (c) POWER CENSUS -- instrument: printcert4.py (blotch/rim/sharp/dust)
+================================================================================================
+subjects: 26 (from 26 sealed masters, cross-checked against 26 .ok seals)
+axis record coverage: delivered 26, cert 26, rim 26, sharp 19, dust 26
+
+axis     verdict census
+------------------------------------------------------------------------------------------------
+blotch   17 PASS, 8 FAIL, 1 SUBJECT   (sums to 26)
+rim      13 FAIL, 9 PASS, 4 REFUSED   (sums to 26)
+sharp    16 REFUSED, 7 NOT EXAMINED, 2 PASS, 1 FAIL   (sums to 26)
+dust     26 PASS   (sums to 26)
+
+CLAUSE (c) OBSERVABILITY -- only a currently-PASS subject can move PASS -> FAIL
+------------------------------------------------------------------------------------------------
+  blotch   17 PASS observable,  9 NOT observable (35% of subjects blind on this axis)
+  rim       9 PASS observable, 17 NOT observable (65% of subjects blind on this axis)
+  sharp     2 PASS observable, 24 NOT observable (92% of subjects blind on this axis)
+
+  subjects PASSing at least one gradable axis (clause (c) can see them) : 19
+  subjects PASSing NO gradable axis (clause (c) is blind to them entirely): 7
+      112MSDCF                     blotch=FAIL     rim=FAIL     sharp=REFUSED 
+      113MSDCF                     blotch=FAIL     rim=FAIL     sharp=REFUSED 
+      couch-fibers-cpl             blotch=FAIL     rim=FAIL     sharp=REFUSED 
+      flat-on-ruler-cpl            blotch=SUBJECT  rim=FAIL     sharp=REFUSED 
+      foam                         blotch=FAIL     rim=REFUSED  sharp=REFUSED 
+      lead-1-cpl                   blotch=FAIL     rim=FAIL     sharp=REFUSED 
+      leaf-2-cpl                   blotch=FAIL     rim=FAIL     sharp=REFUSED 
+
+partition: 19 observable + 7 blind = 26 subjects
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\out\75-clause-c-power.json

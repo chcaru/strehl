@@ -1,0 +1,212 @@
+{
+  "n_subjects": 26,
+  "per_axis": {
+    "blotch": {
+      "PASS": 17,
+      "FAIL": 8,
+      "SUBJECT": 1
+    },
+    "rim": {
+      "PASS": 9,
+      "FAIL": 13,
+      "REFUSED": 4
+    },
+    "sharp": {
+      "FAIL": 1,
+      "REFUSED": 16,
+      "PASS": 2,
+      "NOT EXAMINED": 7
+    },
+    "dust": {
+      "PASS": 26
+    }
+  },
+  "observable": [
+    "109MSDCF",
+    "119MSDCF",
+    "bee-1-cpl",
+    "bee-2-cpl",
+    "bee-3-cpl",
+    "coffee-bean",
+    "coffee-bubbles",
+    "dry-erase-marker-head-cpl",
+    "flower-bud-alone-cpl",
+    "flower-bud-with-background-fern-cpl",
+    "flower-inner-edge-cpl",
+    "flowers-cpl",
+    "highly-angled-ruler-mm-cpl",
+    "lavendar-cpl",
+    "pencil-flatter-angle-cpl",
+    "pencil-steep-angle-cpl",
+    "tweezers-cpl",
+    "wrapped-text-1",
+    "wrapped-text-2"
+  ],
+  "blind": [
+    "112MSDCF",
+    "113MSDCF",
+    "couch-fibers-cpl",
+    "flat-on-ruler-cpl",
+    "foam",
+    "lead-1-cpl",
+    "leaf-2-cpl"
+  ],
+  "rows": {
+    "109MSDCF": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "FAIL",
+      "dust": "PASS"
+    },
+    "112MSDCF": {
+      "blotch": "FAIL",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "113MSDCF": {
+      "blotch": "FAIL",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "119MSDCF": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "PASS",
+      "dust": "PASS"
+    },
+    "bee-1-cpl": {
+      "blotch": "PASS",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "bee-2-cpl": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "bee-3-cpl": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "NOT EXAMINED",
+      "dust": "PASS"
+    },
+    "coffee-bean": {
+      "blotch": "PASS",
+      "rim": "FAIL",
+      "sharp": "NOT EXAMINED",
+      "dust": "PASS"
+    },
+    "coffee-bubbles": {
+      "blotch": "FAIL",
+      "rim": "REFUSED",
+      "sharp": "PASS",
+      "dust": "PASS"
+    },
+    "couch-fibers-cpl": {
+      "blotch": "FAIL",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "dry-erase-marker-head-cpl": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "NOT EXAMINED",
+      "dust": "PASS"
+    },
+    "flat-on-ruler-cpl": {
+      "blotch": "SUBJECT",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "flower-bud-alone-cpl": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "NOT EXAMINED",
+      "dust": "PASS"
+    },
+    "flower-bud-with-background-fern-cpl": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "NOT EXAMINED",
+      "dust": "PASS"
+    },
+    "flower-inner-edge-cpl": {
+      "blotch": "FAIL",
+      "rim": "PASS",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "flowers-cpl": {
+      "blotch": "PASS",
+      "rim": "FAIL",
+      "sharp": "NOT EXAMINED",
+      "dust": "PASS"
+    },
+    "foam": {
+      "blotch": "FAIL",
+      "rim": "REFUSED",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "highly-angled-ruler-mm-cpl": {
+      "blotch": "PASS",
+      "rim": "REFUSED",
+      "sharp": "NOT EXAMINED",
+      "dust": "PASS"
+    },
+    "lavendar-cpl": {
+      "blotch": "PASS",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "lead-1-cpl": {
+      "blotch": "FAIL",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "leaf-2-cpl": {
+      "blotch": "FAIL",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "pencil-flatter-angle-cpl": {
+      "blotch": "PASS",
+      "rim": "PASS",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "pencil-steep-angle-cpl": {
+      "blotch": "PASS",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "tweezers-cpl": {
+      "blotch": "PASS",
+      "rim": "REFUSED",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "wrapped-text-1": {
+      "blotch": "PASS",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    },
+    "wrapped-text-2": {
+      "blotch": "PASS",
+      "rim": "FAIL",
+      "sharp": "REFUSED",
+      "dust": "PASS"
+    }
+  }
+}
