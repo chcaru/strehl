@@ -78,7 +78,7 @@ CLAIMS = {
  "FARFALLS":     ("matching their defocus moves my bee reading AWAY from theirs",
                   "my bee reading FALLS to 1.4877 -- further\nfrom their 4.732, not closer"),
  "GENEROUS":     ("bee is MARGINAL under every defocus rule, never PASS",
-                  "**1.33 to 1.85 -- and never PASS.**"),
+                  "1.33 to 1.85 -- and never PASS.**"),
  "NOREPLACE":    ("I do not replace the dead hypothesis with an untested one",
                   "I have not tested it and I am not asserting it"),
  "RAWPOWER":     ("the noise-inflation guard is answered, not dodged",
@@ -145,12 +145,17 @@ def main():
     print("  ---> %d/%d claims certified\n" % (len(CLAIMS) - len(base), len(CLAIMS)))
 
     print("=== COMMISSIONING: every mutation must be caught by ITS OWN claim ===")
-    caught = mis = silent = 0
+    caught = mis = silent = vacuous = 0
     for claim, old, new in MUTATIONS:
         mut = mutate(doc, old, new)
         nums_same = re.findall(r"\d+\.\d+", doc) == re.findall(r"\d+\.\d+", mut)
         f = failing(mut)
-        if claim in f:
+        if claim in base:
+            # A claim absent at baseline is absent after mutation too, so it would score
+            # as "caught" while testing nothing. That is the same family as a mutation
+            # that fails to land: an instrument reporting on something it never measured.
+            vacuous += 1; verdict = "VACUOUS -- claim absent at baseline, certifies nothing"
+        elif claim in f:
             caught += 1; verdict = "RED (by %s)" % claim
         elif f:
             mis += 1;    verdict = "MIS-ATTRIBUTED (caught by %s)" % ",".join(f)
@@ -158,7 +163,8 @@ def main():
             silent += 1; verdict = "*** GREEN -- CONCLUSION REVERSED, VERIFIER SILENT ***"
         print("  %-13s numbers %-7s %s" % (claim, "intact" if nums_same else "changed", verdict))
     tot = len(MUTATIONS)
-    print("\n  caught %d + mis-attributed %d + silent %d = %d mutations" % (caught, mis, silent, tot))
+    print("\n  caught %d + mis-attributed %d + silent %d + vacuous %d = %d mutations"
+          % (caught, mis, silent, vacuous, tot))
     ok = (not base) and caught == tot
     print("\nVERDICT: %s" % ("GREEN -- document certified, verifier commissioned"
           if ok else "RED -- see above"))
