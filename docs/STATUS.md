@@ -27,7 +27,7 @@ marked as unmeasured.
 | **GPU** | **unused** | explicit gap against the brief |
 | **Pluggability** | **1 of 5 kinds, and it is refused on the shipping default.** Focus measures are a real trait seam, host-calibrated and *demonstrated* (7 operators, 10.27× noise-sd span; swapping moves 99.9105% of samples between two named hashes while the default stays byte-identical). Merge strategy is an enum in core; alignment model, optical profile and output stage have no trait. `--focus` is **refused** on `MergeBackend::Pyramid`, which is the default — so the plugin surface and the shipping path do not intersect. Registry is in-tree, so contributing still requires patching this repo | fact 1952; `docs/research/BUILD-PLUGIN.md` (`e1bf09e0`) |
 | **Print gate** (blotch/chroma/band/clip/crush, all 33) | **0 FAIL, and now 0 unresolved.** 17 PASS · 16 ACQUITTED · 0 ACQUITTAL EXPIRED · 0 REVIEW · 0 NOT EXAMINED · 33 total (found 33) — a summing partition with every subject adjudicated. All 13 formerly unresolved subjects were measured against *the frames they were built from* and none is a real defect; worst is `dime-flat-narrow-slices-cpl` at 1.257× against a rule admitting 1.3×, band DN only 1.017×. **No threshold or tolerance was touched.** Re-run independently by the orchestrator against the lane that produced it, same partition | `orch_printready.py` over `masters\`; facts 1966–1968; `docs/research/V-ADJ13.md` (`6f57726f`) |
-| **Merge vs. best single frame** | **The sign flips with frequency — there is no single number.** On `113MSDCF` the master reads **1.0997 / 1.1936 / 1.1345** of the per-site ceiling at 0.05–0.20 cyc/output px (*sharper* than the best source frame) and **0.9426 / 0.7314 / 0.6063 / 0.5942** at 0.20–0.40 (softer). Softer only above ~0.20 cyc/px; in the highest qualifying band (0.20–0.25, R = 3.32) the shortfall is **0.9426, ≈5.7%**. The originating claim's **sign survives qualification, its magnitude does not.** Two limits stated not buried: 0.9426 carries **no CI** (marked NOT MEASURED — the one interval this lane holds answers bracket depth, not master-vs-frame), and it rests on **one** subject of 63 frames where the original claim spanned four | fact 1969; `docs/research/V-SOFTCHECK-nyquist.md` (`bd5580e3`) |
+| **Merge vs. best single frame** | **The sign flips with frequency — there is no single number.** On `113MSDCF` the master reads **1.0997 / 1.1936 / 1.1345** of the per-site ceiling at 0.05–0.20 cyc/output px (*sharper* than the best source frame) and **0.9426 / 0.7314 / 0.6063 / 0.5942** at 0.20–0.40 (softer). Softer only above ~0.20 cyc/px; in the highest qualifying band (0.20–0.25, R = 3.32) the shortfall is **0.9426, ≈5.7%**. The originating claim's **sign survives qualification, its magnitude does not.** **Instrument audited (V-DCNULL):** the producer is `experiments/V-SOFTCHECK/ncommon.py`, **not** `bandqual.py` (which is the *qualifier*) — exactly one file in the tree prints its `max63/max32` column. It **passes a planted DC-offset null** at max deviation **2.3e-07** across six plant arms, and the zero is a live null, not a dead probe: the same plant on a deliberately mean-normalised scorer moves the band 0.5824 → 0.4086 → 0.1852. But it is **exactly covariant with squared gain** (`r_obs = r_true × (g_master/g_frame)²`, measured to 1.5e-07) and has **no exposure audit at all** — 0 mentions, against 6 in sibling `dmeasure.py`. **A 2.91% master-vs-frame level mismatch would erase the entire 5.7%**, and the `.log` files recording each side's `--exposure` are **purged**, so this is now unfalsifiable without a re-render. The **sign is immune** regardless: for all seven bands to truly read 1.0000 the single mismatch would have to be simultaneously +4.87 / +9.25 / +6.51 / −2.91 / −14.48 / −22.13 / −22.92 % — one scalar cannot take seven values of opposite sign (re-derived independently by the orchestrator as √r−1; agrees to the last digit in magnitude, mirrored in sign by ratio convention). Two further limits stated not buried: 0.9426 carries **no CI** (marked NOT MEASURED — the one interval this lane holds answers bracket depth, not master-vs-frame), and it rests on **one** subject of 63 frames where the original claim spanned four | facts 1969, 1978–1981; `docs/research/V-SOFTCHECK-nyquist.md` (`bd5580e3`), `docs/research/V-DCNULL.md` |
 | **Print-ready** | **NO** — see §3 | |
 
 `bee-1-cpl` (N=299) resolves individual ommatidia. `wrapped-text-1/2` resolve individual
@@ -281,11 +281,30 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
     `contrast_ms.py:64–67` rescales B by `median(a)/median(b)` under the banner "tone confound
     removed", so a DC offset moves B's median, moves the scale, and multiplies B's AC amplitude
     by a factor ≠ 1. The error is invertible, so **the truth is bracketed between the raw and
-    the corrected reading and neither end may be quoted alone**. Fact 1976. Note the exposure
-    is bounded, not zero: the published merge-vs-best-frame softness numbers came from
-    V-SOFTCHECK's `bandqual.py`, which normalises per-frame *gain* rather than a median ratio —
-    a different mechanism in the same vulnerability class, referred for independent DC-null
-    testing rather than assumed safe.
+    the corrected reading and neither end may be quoted alone**. Fact 1976. **Exposure now
+    bounded, not open:** the published merge-vs-best-frame softness numbers came from
+    `ncommon.py`, **not** `bandqual.py` as first recorded here, and it **passes** the DC null at
+    2.3e-07 — so the softness figures are clean of this mechanism. `bandqual.py::gnorm` *does*
+    carry the defect class (up to **44%** R bias under differential DC, 1.6–3.7e-02 under
+    uniform DC at a realistic 4.01% level spread), but its gain normalisation is exact
+    (4.3e-07), and deflating the published R = 3.3235 / CI-low 2.9495 by the worst measured bias
+    gives 2.3047 / 2.0453 against bars of 2.00 / 1.50 — **PASS survives, band selection does not
+    move.** Facts 1978, 1981.
+19. **`ncommon.py` has no exposure guard, and the evidence to close it is purged.** The producer
+    of the headline softness numbers is exactly covariant with squared gain and greps clean for
+    `exposure`, `.log` and `check_exposure` — 0 matches, against 6 in `dmeasure.py` and 3 in
+    `d113measure.py`, both of which hard-error on a gain mismatch. **2.91% erases the 5.7%
+    result**; 1% moves it by 0.0199. `C:\dev\strehl-out\V-SOFTCHECK` no longer exists, so the
+    master, the 63 frame TIFFs and the `.log` files recording each side's `--exposure` are all
+    gone. `softcheck.py`'s "no exposure gain" is a **docstring assertion, not a measurement**.
+    The fix is to re-render the pair with both exposures recorded and add the sibling's gain
+    hard-error to `ncommon.py`. Fact 1979.
+20. **Two audit gaps named by the auditor against itself.** V-DCNULL's own harness had **no
+    polarity audit** — no arm was deliberately reversed to confirm it would report a failure it
+    was told to report — and the **wall-pricing table** in `V-SOFTCHECK-nyquist.md` (0.8795 →
+    0.7368) runs to 0.50 cyc/px, so it is *not* `ncommon.py` output; its producer was never
+    identified and remains **unaudited**. Only the 0.20–0.25 band was bounded for qualification;
+    the other six were not. Fact 1981.
 
 ### 3.3 Open against the brief
 
