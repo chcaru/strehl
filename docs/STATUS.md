@@ -326,6 +326,22 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   scratch tree a later purge had removed. **Enumerate from the declared source of truth and
   print the enumeration root next to the count**, as `render7.ps1` does, so the count can be
   audited against its provenance in one line. Fact 1941.
+- **A pinned binary does not know what it is.** Seven of the nine trees under
+  `C:\dev\strehl-out\acceptance-pins\` report `(unknown)` or no hash at all from
+  `strehl --version`, so the **directory name is their only provenance and nothing
+  validates it**. The one pin that could be checked *failed the check*: the binary in
+  `bd33ebed\` reports `6943f04b6654`, a strictly earlier commit. That instance is benign —
+  the 2 commits between them touch no `.rs`, `Cargo.toml` or `Cargo.lock`, so a rebuild at
+  the label gives the same binary — but it is benign **because it was checked afterwards,
+  not because anything prevented it**. Cite a pin by the SHA256 of its binary, banked for
+  all nine in `experiments/ORCH-drift-check/acceptance-pin-binaries.txt`, not by its path.
+  The real fix is a build-time commit hash that is always populated. Fact 1943.
+- **The pin trees were trimmed, and each pin's binary was kept and re-run.**
+  `acceptance-pins` went 7.42 → 3.61 GB by deleting build intermediates under `target/`
+  while preserving `target/release/strehl.exe` and the pinned source checkout. Every one of
+  the nine binaries was executed afterwards and returned rc=0, which is the check that
+  matters — file presence is not the same as a working binary. `trim_pins.ps1` refuses to
+  trim a pin that has no binary, rather than stranding it.
 - **Heavy scratch has been purged, and the hashes were banked first.** ~14.6 GB of freeze
   output under `C:\dev\strehl-out\acceptance` and 5.0 GB under `ORCH-FAITHFUL` are gone. Their
   SHA256s, byte sizes and full provenance records (binary path, binary hash, git commit, pin,
