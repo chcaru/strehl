@@ -2551,3 +2551,29 @@ as evidence about the other. Section 11.3 already records that this instrument
 was caught making the same class of false positive on itself - `foam` read
 +5.014% on a rim-free control - and now REFUSES any subject whose floor exceeds
 2%.
+
+### 17.3 `printcert4.py` reads a missing input as an empty dict, not an error
+
+Found while auditing what was safe to delete at wind-down, in code I was already
+reading. `load()` is:
+
+    def load(name):
+        p = os.path.join(HERE, name)
+        return json.load(io.open(p, encoding="utf-8")) if os.path.exists(p) else {}
+
+**A missing JSON returns `{}` and the run continues.** All five inputs are
+currently tracked in Git under `experiments/V-GATHER/`, so the gate is safe as
+it stands today. The hazard is for anyone re-running it on a *different* arm:
+BUILD-DEFECT intends exactly this, an OFF/ON defect-correction A/B, and
+`SEAL_DIR` is still hardcoded to `C:\dev\strehl-out\acceptance\SHIP-V4`. If a
+producer fails to run for one arm, that axis silently contributes nothing and
+the subject count falls rather than the run failing.
+
+This is the same defect class this report has been chasing all night: **a
+skipped check that reads as a passed one.** The axis would not report FAIL; it
+would report nothing, and a pooled verdict would improve. Anyone running this
+gate on a new arm should assert all five inputs exist and are non-empty, and
+compare the per-subject census between arms rather than the pooled count. Not
+fixed here - `printcert4.py` is an instrument another lane is about to depend
+on, and changing it during wind-down without re-commissioning would be worse
+than naming it.
