@@ -2498,3 +2498,56 @@ rim fix and should not be sold as one.
   `pyramid.rs:3252`, a **unit-test helper**, not a runtime statistic - it is not
   reachable from the CLI, so measuring it on a real subject needs a change in
   `crates/`, which is not mine to make.
+
+
+---
+
+## Part 17 - Reading notes at wind-down (2026-08-28)
+
+Two scope notes, both required by ORCH's wind-down instruction. Neither is a new
+measurement; both mark existing numbers so a later reader cannot misread them.
+
+### 17.1 `112MSDCF` carries band claims here, in a band nobody has qualified
+
+ORCH's instruction is that a number measured on a failing subject must be marked
+rather than quietly kept. `112MSDCF` appears 23 times in this report and carries
+band percentages at L1283, L1291, L1334 and L1164.
+
+**The FAIL does not transfer, and I am not going to pretend it does.** V-LINEAR
+measured `112MSDCF` at R = 1.079, 95% CI [1.040, 1.121], FAIL(noise) **at
+0.30-0.35 cyc/px**. Every band number in this report is measured through
+`gf_discriminate.band_rms`, a DoG(1.4, 2.8) whose peak is **0.1093 cyc/px** and
+whose half-power support is 0.0658-0.1650 (Part 16 band declaration, re-derived
+in `bg_band.py`). The disputed slice sits at 3.6% of my peak. Importing a
+verdict measured at 0.30-0.35 into a statistic centred at 0.1093 would be the
+same band-transfer error ORCH has twice asked to be called out on, and I am not
+committing it in the other direction.
+
+**But I cannot claim the subject is qualified either.** No one has measured the
+signal/noise boundary for `112MSDCF` at 0.1093 cyc/px. The corpus boundary moves
+0.17-0.48 across subjects; 0.1650 clears the corpus minimum at half power and
+0.1922 grazes it at half amplitude. So the honest status of every `112MSDCF`
+band number here is **UNQUALIFIED IN BOTH DIRECTIONS** - not vindicated by the
+band mismatch, not condemned by V-LINEAR's FAIL. Ranked first in GAPS.
+
+### 17.2 "Thirteen haloed" and "no halo is demonstrated" are both true
+
+ORCH reports all four HALO verdicts are false positives and no halo is
+demonstrated on any of the 26 masters. This report says thirteen of twenty-six
+show bright overshoot hugging their edges (L1105). **These do not contradict
+each other, because they are measurements at disjoint scales.**
+
+`halo_profile.py` walks 2-120 px and takes its far reference at 400-900 px; the
+refuted defect is the unmeasured 120-400 px gap, exactly where a halo's decay
+separates from a lighting falloff. The rim axis here imports only `rimv6`, which
+walks a contiguous +-12 px with its reference inside the same profile. There is
+no gap of that kind, and there is also no ability to see anything wider than
+about 12 px. This report contains 0 occurrences of `halo_profile`.
+
+Therefore: ORCH's refutation is a statement about the wide scale and does not
+reach the rim axis; and the thirteen rim failures are a statement about the
+tight scale and **do not rescue `halo_profile`**. A reader must not use either
+as evidence about the other. Section 11.3 already records that this instrument
+was caught making the same class of false positive on itself - `foam` read
++5.014% on a rim-free control - and now REFUSES any subject whose floor exceeds
+2%.
