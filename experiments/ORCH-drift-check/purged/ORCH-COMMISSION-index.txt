@@ -1,0 +1,17 @@
+﻿=== PURGED SCRATCH INDEX: ORCH-COMMISSION
+generated : 2026-08-28T02:52:51.1847248-07:00
+root      : C:\dev\strehl-out\ORCH-COMMISSION
+bytes     : 792085568 (0.74 GB)
+note      : the heavy artifacts below were deleted to reclaim disk. Their
+            SHA256 and size are preserved so any published claim about
+            them stays checkable, and the text bodies are inlined whole.
+
+--- TEXT BODIES (inlined verbatim)
+--- HEAVY ARTIFACT HASHES
+  2B29DB8E5AAB460A4B938D020BA0E613A62E14B734DBBBB9ADDD64423EA5106A     198021392  CLEAN\commission-clean--CLEAN.tiff
+  F2587E8BEE7DFDA85712A4AA42563B26CA2D3725A76EA6EB1108995FC5B15582     198021392  NEUTRAL\commission-neutral--NEUTRAL.tiff
+  5E018AF3D8A8AB4DBF021F72FD02F7BB028E7781F91D7BA3C80CF3DC31B90049     198021392  ONECHAN\commission-onechan--ONECHAN.tiff
+  391A85B9EE43FF9053632A07F637471565ECC21F7C0EC1DC432ED4F14D83DE1B     198021392  TINY\commission-tiny--TINY.tiff
+
+text files inlined : 0
+heavy artifacts    : 4

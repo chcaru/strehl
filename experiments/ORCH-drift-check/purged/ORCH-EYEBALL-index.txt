@@ -1,0 +1,17 @@
+﻿=== PURGED SCRATCH INDEX: ORCH-EYEBALL
+generated : 2026-08-28T02:52:52.0396704-07:00
+root      : D:\strehl-out\ORCH-EYEBALL
+bytes     : 5485711 (0.01 GB)
+note      : the heavy artifacts below were deleted to reclaim disk. Their
+            SHA256 and size are preserved so any published claim about
+            them stays checkable, and the text bodies are inlined whole.
+
+--- TEXT BODIES (inlined verbatim)
+--- HEAVY ARTIFACT HASHES
+  624E5F7331CAC9CCD8C1F7286625868F9DCE08DC3B7E8662EE55E1ACE873D245       1340979  bee-2-cpl-1to1-4564_514.png
+  C608D9A21D626B3E84713F04A791DBEF7B107ADF853AD0EB5C8E730FDE90E93E       1295751  coffee-bubbles-1to1-3664_1864.png
+  54A962EB2D5876BB9AFF101A60BA4AF7925A7DDDD117B58F20175FE855D5C7E5       1346080  dry-erase-marker-head-cpl-1to1-2314_1414.png
+  A4EE757763475258AB1EE1C658B21D1B4BEC6F73F2268F348D8807C11CC4163F       1502901  flat-on-ruler-cpl-1to1-4564_64.png
+
+text files inlined : 0
+heavy artifacts    : 4
