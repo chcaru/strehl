@@ -1,7 +1,6 @@
 === verify section 22 against the artifacts it cites ===
 
 === CLAIMS ===
-  UNRESOLVED 22.3 conclusion: direction of the improvement could not locate it
-  70 declared = 69 matched + 0 mismatched + 1 unresolved
+  70 declared = 70 matched + 0 mismatched + 0 unresolved
 
-VERDICT: FAIL
+VERDICT: PASS

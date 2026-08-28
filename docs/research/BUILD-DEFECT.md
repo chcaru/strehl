@@ -4252,3 +4252,116 @@ working-tree read that would have been a second false accusation against this
 document, from a third lane, inside ten minutes. The fix was not defensive
 programming against a hypothetical; the thing it defends against happened again
 before the paragraph describing it was finished.
+
+## 24. THE CORPUS VANISHED MID-WIND-DOWN, AND THE SEAL THAT COULD NEVER HAVE NOTICED
+
+This section was not planned. It exists because a verifier refused to run, and the
+refusal was correct.
+
+### 24.1 What was measured
+
+At `03:40:45` on 2026-08-28, `75-clause-c-power.py` aborted before producing any
+census at all:
+
+    POPULATION DISAGREES WITH SEALS: 0 masters, 26 seals
+
+The seal directory `C:\dev\strehl-out\acceptance\SHIP-V4` held **107 files
+totalling roughly 0.5 MB and not one `.tiff`**: 28 `.provenance.txt`, 26 `.log`,
+26 `.tiff.ok`, 26 `.out`, 1 `manifest.tsv`. Its own mtime was `02:50:45`, fifty
+minutes before the reading. The full-resolution masters were gone.
+
+They were gone everywhere. A census of the four acceptance trees returned zero
+`.tiff` in all of them. `C:\dev\strehl-out\ORCH-FAITHFUL\` -- described by the
+orchestrator as "the 26 masters, the current deliverable" -- held exactly one
+file, `render.log`, on the first read and **zero on a second read ninety seconds
+later**: the deletion was still in progress while it was being measured.
+`C:\dev\strehl-out\DELIVER-V5\` survives at 168 files and 0.11 GB, but 161 of
+those are `.png` and the largest is `112MSDCF__reduced-4x-box.png` at 3.9 MB.
+What is left of the delivery is a set of **4x-reduced previews**.
+
+This lane deleted none of it. Its own cleanup was confined to
+`C:\dev\strehl-out\BUILD-DEFECT\clip`, `D:\strehl-out\BUILD-DEFECT\none-check`
+and `D:\strehl-out\BUILD-DEFECT\ship-validate`, and the two `BUILD-DEFECT` roots
+still stand with `probe`, `sidecar-backup` and `delivered-replay` intact.
+
+### 24.2 The seal never attested to the thing it sealed
+
+Every one of the 26 `--SHIP-V4.tiff.ok` files is 66 bytes: a 64-character hex
+digest and a line ending. Read all 26 and group them and there is **one distinct
+value**, `44C2F2CD2E5B289491AB81C23A9A6EBB1BC4B095192981647F7F541FCB59F490`,
+repeated 26 times.
+
+Two different masters cannot share a content hash. So the `.ok` file is not a
+per-master content seal, and whatever it does attest to is not in the directory
+with it: the digest matches no file in the seal directory, it is not
+`manifest.tsv` (`2759E4F9...`), and it is not the release binary
+(`strehl.exe` is `69DB8F2D...`).
+
+The consequence is the point. **A seal that does not hash its subject cannot
+notice that its subject is missing.** All 26 seals still read as satisfied
+against 26 files that do not exist. This is the same defect the orchestrator
+flagged in `printcert4.py`, whose `load()` returns `{}` for an absent input,
+one layer further out: there, a missing measurement becomes an empty
+population; here, a missing image leaves a green certificate behind. In both
+cases the artifact that survives is the one that says everything is fine.
+
+### 24.3 What the instruments did about it, counted
+
+Ten instruments were run after the deletion. The partition sums:
+
+| exit | instruments | what they printed |
+| --- | --- | --- |
+| 0 | `45`, `63`, `82`, `88`, `83` | `GREEN`, `PASS`, `PASS`, `NO-BLIND-SPOT` |
+| non-zero | `73`, `74`, `76`, `84`, `89` | each named the absent file or the uncommissioned probe |
+
+Five green, five red, ten accounted for. **Every one of the five failures traces
+to the same external deletion, and not one of them scored the absence as a
+pass:**
+
+- `73-verify-s21.py` exit 1: `declared 59 = matched 58 + mismatched 0 +
+  unresolved 1`, with `UNRESOLVED  seal table SHIP-V4 seal: ...
+  109MSDCF--SHIP-V4.tiff absent`. It put the loss in a counted bucket that sums
+  to its own declared total rather than reporting 58 of 58.
+- `76-clipping-cannot-reach-sharp.py` exit 1: `missing seal
+  C:\dev\strehl-out\acceptance\SHIP-V4\109MSDCF--SHIP-V4.tiff`. Its commissioning
+  block had already passed 3 of 3 immediately above, including the improvement
+  arm -- dividing the blown array by its own 6.063x gain moved clipping from
+  85.5206% to 0.0000% -- because that arm renders from RAW and needs no seal.
+- `84-audit-conclusions-all.py` exit 2: `10 deletions = 9 caught + 0 blind + 1
+  n/a` and `10 probes = 8 caught + 0 blind + 0 unanchored + 2 uncommissioned`.
+  **Zero blind.** The two shortfalls are reported as *uncommissioned*, which is
+  the distinction this project has spent the night insisting on: an
+  uncommissioned probe is not a passing one.
+- `89-audit-exitcode.py` exit 2: `5 verifiers = 1 BROKEN-CLEAN + 4 OK`,
+  `VERDICT: CHANNEL-SUSPECT`, downgraded from `CHANNEL-LIVE` because
+  `73-verify-s21.py` now returns non-zero on its *clean* arm. A verifier that
+  fails when nothing is planted cannot demonstrate that its failure means
+  "planted", and the audit says so by name instead of averaging it away. The
+  snapshot machinery added in `30957366` held: `artifacts: 90 snapshotted = 88
+  unchanged + 2 restored + 0 failed`.
+
+One number moved and is **not** explained here: `73` declared 59 checks where it
+declared 60 before the deletion. The likeliest cause is that its seal comparison
+table contributes a variable number of derived checks, but that has not been
+measured, and it is recorded as an open discrepancy rather than assigned a
+cause.
+
+### 24.4 The lesson, which is about measurement and not about disks
+
+The deletion was found by a guard written for exactly this and never expected to
+fire. `75` establishes its population from the **seal directory**, then
+cross-checks `--SHIP-V4.tiff` against `--SHIP-V4.tiff.ok` and refuses if they
+disagree. Had it taken its population from the axis JSONs -- all five of which
+are present, tracked in Git, and load cleanly -- it would have produced a
+confident 26-subject census of images that no longer exist.
+
+There is a second, smaller lesson from the same hour, and it cuts against the
+author. The distinct-hash count above was produced twice by two PowerShell
+one-liners, and **both were wrong**: the first compared each hash against
+`$u[0]` where `$u` had collapsed to a bare string, so `$u[0]` was the character
+`4` and it printed `x0`; the second read `$g.Count` on a single `GroupInfo`,
+which is the group's own member count, and printed `26` distinct values on the
+line directly above a table listing one. The true reading, one value seen 26
+times, was settled by two differently shaped measurements agreeing, not by
+re-reading either script. Every defect this lane found tonight was found the
+same way: an artifact disagreeing with a run.
