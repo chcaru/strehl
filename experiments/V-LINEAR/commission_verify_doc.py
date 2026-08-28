@@ -80,6 +80,9 @@ S13_DRY = ("| `dry-erase-marker-head-cpl` | 300 | 9.665 | **4.530** | "
            "[3.115, 5.947] | 5.283 | **PASS** |")
 S13_DELTA_112 = "| `112MSDCF` | 1.089 | 1.079 | \u22121.0% |"
 S13_FARCTL = "| `--far 24` | 6 developed frames | **4.659** | **PASS** |"
+S13_BEE = ("| `bee-1-cpl` | 299 | 10.728 | **5.311** | [3.083, 7.638] | "
+           "4.047 | **PASS** |")
+S13_DELTA_BEE = "| `bee-1-cpl` | 4.732 | 5.311 | +12.2% |"
 
 # (name, why it matters, old_line, new_line-or-None-to-delete)
 ARMS = [
@@ -225,6 +228,26 @@ ARMS = [
      "distinguishes five subjects measured from four measured and one "
      "forgotten.",
      S13_DRY, None),
+
+    # ---- 13.9: bee-1-cpl, the subject ORCH routed another lane onto --------
+    ("s13-conclusion-flip-bee-PASS-to-FAIL",
+     "bee-1-cpl 0.30-0.35 PASS -> FAIL. ORCH has directed the pyramid lane to "
+     "score the confidence exponent at depth on THIS subject at THIS slice, so "
+     "this token decides whether that lane is measuring signal or grain. R "
+     "stays 5.311 and the CI stays [3.083, 7.638].",
+     S13_BEE, S13_BEE.replace("**PASS** |", "**FAIL (noise)** |")),
+
+    ("s13-bee-R",
+     "bee's point estimate, quoted from the re-developed record rather than "
+     "the canonical one, so this also covers the record-selection logic.",
+     S13_BEE, S13_BEE.replace("**5.311**", "**3.311**")),
+
+    ("s13-bee-delta-sign",
+     "bee is the only subject whose narrow band reads HIGHER than its wide "
+     "one, which is what shows narrowing is not a systematic penalty. "
+     "Flipping the sign inverts that conclusion while leaving both R values "
+     "correct.",
+     S13_DELTA_BEE, S13_DELTA_BEE.replace("+12.2%", "\u221212.2%")),
 ]
 
 

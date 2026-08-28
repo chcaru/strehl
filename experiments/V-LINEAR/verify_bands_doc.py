@@ -59,7 +59,7 @@ BAND0 = ["0.25-0.30", "0.30-0.40", "0.40-0.48"]
 # R values.  A key in two files whose values differ is a real ambiguity about
 # what the document quotes and is a hard error.  Written this way, a future
 # control that happens to disagree cannot slip through by being added to a list.
-CONTROLS = ("simdecim", "bandsweep-far20-leaf-2-cpl")
+CONTROLS = ("simdecim", "bandsweep-far20-leaf-2-cpl", "bandsweep-far20-bee-1-cpl")
 
 
 def _payload(r):
@@ -204,6 +204,21 @@ def main():
     # prose.  So the exclusion is asserted against the text below, and the
     # subject is still fully checked, by sec.13's own tables.
     recs = {k: v for k, v in recs_all.items() if k != NONCANON}
+
+    # sec.13.9's `bee-1-cpl` single-subject rerun.  It is declared a CONTROL
+    # above for the same reason sec.6.1's leaf control is: swept alone, it sees
+    # a different bootstrap stream from the five-subject round-1 run, so its
+    # CIs differ from the canonical record BY DESIGN and would otherwise shadow
+    # it.  Its point estimates do not differ, and that is the real acceptance
+    # condition for the re-develop -- enforced below rather than described.
+    #
+    # sec.13 quotes THIS record for bee (it is the only one carrying the narrow
+    # bands), while sec.3/9/10 quote the canonical one.  `s13src` keeps that
+    # explicit: a silent fallback to the canonical record would make sec.13's
+    # bee row unverifiable and print the same green as a verified one.
+    bee_narrow = load("bandsweep-far20-bee-1-cpl.json", ())["bee-1-cpl"]
+    s13src = dict(recs_all)
+    s13src["bee-1-cpl"] = bee_narrow
 
     ok = bad = unresolved = 0
     ladder_rows = band0_rows = ladder_same = 0
@@ -350,7 +365,7 @@ def main():
               "from the canonical tables but the document no longer says so")
 
     for key in sorted(recs_all):
-        r = recs_all[key]
+        r = s13src[key]
         res, delta = locate13(lines, key)
         if not res and not delta:
             continue
@@ -426,6 +441,37 @@ def main():
             print(f"  WRONG      sec.13.5 distance to {name} bar: "
                   f"{needle!r} occurs {text.count(needle)} times, need 1")
 
+    # sec.13.9's ACCEPTANCE CONDITION for the re-developed `bee-1-cpl`, in the
+    # CORRECTED form.  The pre-registered version said all 12 pre-existing
+    # bands must reproduce exactly; that failed, because the CIs are
+    # call-order dependent (sec.6.1).  The substantive requirement is that the
+    # POINT ESTIMATES reproduce, and it is checked here rather than asserted:
+    # max |dR| must be exactly 0 across all 12 pre-existing bands.
+    #
+    # The document's claim that the CIs DO differ is deliberately not checked.
+    # It is an incidental property of the run, not a conclusion; pinning a
+    # check to it would fail the day someone legitimately re-runs round 1.
+    canon_bee = recs["bee-1-cpl"]
+    drs = [abs(v["R"] - bee_narrow["bands"][b]["R"])
+           for b, v in canon_bee["bands"].items()]
+    if drs and max(drs) == 0.0:
+        ok += 1
+    else:
+        bad += 1
+        print(f"  WRONG      sec.13.9 re-develop acceptance: max |dR| = "
+              f"{max(drs) if drs else 'n/a'}, must be exactly 0 over "
+              f"{len(drs)} pre-existing bands")
+
+    # ...and that the two records really are the two the document describes,
+    # so the check above cannot pass by comparing a record with itself.
+    if canon_bee is not bee_narrow and len(drs) == 12:
+        ok += 1
+    else:
+        bad += 1
+        print(f"  WRONG      sec.13.9: expected two distinct bee records over "
+              f"12 pre-existing bands, got {len(drs)} "
+              f"(same object: {canon_bee is bee_narrow})")
+
     # Non-vacuity: the commissioning table must have one row per swept subject
     # and every one of them must read zero.
     zero_rows = len(re.findall(r"\|\s*0 of 12\s*\|\s*exact zero\s*\|", text))
@@ -436,8 +482,8 @@ def main():
         print(f"  WRONG      sec.13.2 commissioning rows: found {zero_rows}, "
               "expected 4")
 
-    for label, got, want in (("sec.13.4 result rows", res13_rows, 5),
-                             ("sec.13.7 delta rows", delta13_rows, 5)):
+    for label, got, want in (("sec.13.4 result rows", res13_rows, 6),
+                             ("sec.13.7 delta rows", delta13_rows, 6)):
         if got == want:
             ok += 1
         else:
