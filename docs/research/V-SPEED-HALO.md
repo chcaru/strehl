@@ -554,17 +554,87 @@ would carry unchanged to a different problem.
 - `dry-erase-marker-head-cpl` verdict flip under a reference-annulus change.
 - ≤0.135% clipping on all 26 faithful masters and 139 masters overall.
 - `aura.py` 8/8, `sharp.py` 3/3, `annulus.py` 5/5, `abscore.py` 4/4,
-  `armprofile.py` 5/5, `hullcommission.ps1` 5/5, `tweezers.py` 2/2.
+  `armprofile.py` 5/5, `hullcommission.ps1` 5/5, `tweezers.py` 2/2,
+  `noiseaudit.py` 8/8 grain estimator + 7/7 verdict rule.
 - Renderer byte-determinism run to run.
 - Every number in every table above.
+
+## 12. The sharpness column, priced against grain
+
+ORCH's rule: no sharpness claim without naming the band and the subject's
+qualification at it. And its warning: raw band power counts noise as
+sharpness — one lane read +0.142 sharper raw and −0.134 softer corrected, a
+sign flip. I told ORCH my sharpness column was untrustworthy under that
+warning. **I then measured it, and that self-flag was right in one place,
+wrong in another, and I could not have known which by reasoning.**
+
+**Naming the band.** `sharp.py` has no band. It is the median of |Laplacian|
+over the most textured decile — a spatial-domain operator, not a band power.
+The two accumulate noise differently: a band power is a sum of squares and
+rises with grain by construction, while a median over the highest-signal
+sites moves only if grain becomes comparable to signal *there*. What can be
+named is the operator's weighting: the discrete Laplacian's gain rises
+monotonically to Nyquist (|H| = 2.618 at 0.30 cyc/px, 4.000 at 0.50), so it
+weights most heavily exactly the frequencies most likely to be grain.
+
+**Method** (`noiseaudit.py`). Measure each arm's grain, inject white noise
+into the quieter arm by binary search until its grain *matches* the noisier
+one, re-measure sharpness on identical sites. The resulting change is the
+part of the observed gap grain can account for. The verdict rule asks
+whether grain could have *manufactured* the effect — which requires it to
+push the same direction — rather than comparing magnitudes, because the sign
+is the whole question.
+
+**`bands5` vs baseline — grain OPPOSES my conclusion, so it stands:**
+
+| subject | N | qual @0.30–0.40 | grain base | grain bands5 | Δ obs | Δ grain | Δ corrected |
+|---|---:|---|---:|---:|---:|---:|---:|
+| `bee-1-cpl` | 299 | PASS (R=4.732) | 249.00 | 267.31 | −2.868% | +0.529% | **−3.397%** |
+| `dry-erase-marker-head-cpl` | 300 | PASS (R=4.877) | 158.68 | 169.76 | −1.593% | +0.813% | **−2.406%** |
+
+`bands5` is the *noisier* arm and reads *softer*. Grain would inflate it, so
+it cannot be manufacturing the loss; correcting makes `bands5` look **worse**.
+My rejection of `bands5` strengthens.
+
+**The no-selection floor — here the confound runs my way, and it bites:**
+
+| subject | qual | grain base | grain mean | Δ obs | Δ grain | Δ corrected | verdict |
+|---|---|---:|---:|---:|---:|---:|---|
+| `bee-1-cpl` | PASS | 249.00 | 154.43 | −83.746% | −14.845% | **−68.901%** | CLEAN |
+| `dry-erase-marker-head-cpl` | PASS | 158.68 | 94.21 | −82.406% | −13.194% | **−69.212%** | CLEAN |
+| `tweezers-cpl` | **UNLICENSED** | 99.35 | 86.78 | −81.369% | −0.666% | **−80.702%** | CLEAN |
+| `coffee-bean` | **UNLICENSED** | 143.59 | 76.49 | −82.657% | −4.923% | **−77.734%** | CLEAN |
+| `leaf-2-cpl` | **UNLICENSED** | 597.45 | 554.63 | −0.953% | −1.924% | **+0.971%** | **CONFOUNDED** |
+
+A plain mean of N frames is ~√N quieter, so *quieter and softer* is the
+confoundable direction. Three consequences:
+
+1. **My headline −81.4% was inflated.** On the two deep qualified subjects
+   the true loss is **−68.9%/−69.2%**, ~14 points less. The −81.4% I quoted
+   for `tweezers-cpl` survives almost intact (−80.7%) because that subject is
+   quiet, which is luck, not method.
+2. **`leaf-2-cpl` sign-flips**: −0.953% observed becomes **+0.971%**
+   corrected. That is ORCH's warned failure occurring in my own data, on the
+   noisiest subject in the set (grain 597 DN). No conclusion of mine rests on
+   it — `leaf-2-cpl`'s load-bearing number is its **−100.0% halo** — but it
+   is the proof that the correction is not cosmetic.
+3. **The corrected range −68.9%…−80.7% brackets ORCH's independently measured
+   −78%** for a true plain mean, which is better corroboration for the
+   "exponent 0.001 ≈ plain mean" assumption below than the raw −81.4% was.
+
+**Unlicensed, stated rather than hidden.** `tweezers-cpl`, `lead-1-cpl`,
+`coffee-bean` and `leaf-2-cpl` are not in V-LINEAR's qualification table, so
+under ORCH's rule their sharpness numbers are unlicensed as stated. The grain
+confound is priced above without knowing the band; the band itself is not
+measured and this lane does not claim it.
 
 **ASSUMED** — reasoned, not measured:
 
 - That `--pyramid-exponent 0.001 --pyramid-sharpen 1.0` is *exactly* a plain
   mean. It is a weight of `excess^0.001`, which is ≈1 but not 1, and a frame
-  with exactly zero excess still gets weight 0. Corroborated only indirectly:
-  its −81.4% sharpness loss is close to ORCH's independently measured −78% for
-  a true plain mean.
+  with exactly zero excess still gets weight 0. Corroborated indirectly: its
+  grain-corrected loss of −68.9%…−80.7% (§12) brackets ORCH's independently
+  measured −78% for a true plain mean.
 - That the no-selection floor contains no pyramid reconstruction artifact.
   Uniform weights should reconstruct near-exactly; I did not measure it.
 - That `bands5`'s behaviour on the twelve A/B subjects extrapolates to the 14
