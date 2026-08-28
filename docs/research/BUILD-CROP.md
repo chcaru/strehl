@@ -1,12 +1,50 @@
 # BUILD-CROP — an opt-in crop-to-cover output mode
 
 **Lane:** BUILD-CROP. **Owner of this file:** BUILD-CROP only.
-**Binary under test:** `.cargo-target-crop\release\strehl.exe`, built from the
-working tree at HEAD `69ee6532` plus this lane's four files.
-**Outputs:** `C:\dev\strehl-out\BUILD-CROP\`. **Scripts:** `experiments\BUILD-CROP\`.
+**Binary under test:** `strehl-BUILD-CROP-aa40cc78.exe`, built from the
+working tree at HEAD `69ee6532` plus this lane's four files; kept at
+`D:\strehl-out\BUILD-CROP\`.
+**Outputs:** `D:\strehl-out\BUILD-CROP\` (moved off C: for the disk emergency).
+**Scripts:** `experiments\BUILD-CROP\`.
 
 Every number below is from a command that was run and whose output was read.
 Anything not measured is labelled **ASSUMED** and says why.
+
+Pasted output that names `C:\dev\strehl-out\BUILD-CROP\` or
+`.cargo-target-crop\` is a **historical record** of the run that produced it;
+both were deleted for the disk emergency and current work lives on D:.
+
+---
+
+## 0. What this lane does and does not claim
+
+This lane was commissioned on the hypothesis that `fit_to_cover`'s uniform
+scale `k` is the root cause of deep-stack softness. **That hypothesis is dead.**
+V-REVIEW adjudicated it in commit `cc985615` and found `fit_to_cover` **too
+small by 270×** to explain the observed softness; the two contradicting softness
+measurements were taken on different subjects and both go VOID on their null.
+The softness root cause is **UNKNOWN**, not reassigned.
+
+Accordingly:
+
+> **This lane makes NO sharpness, acuity, or quality claim for `crop` mode.**
+> Nothing in this document should be quoted as one. §3 contains a single
+> laplacian number measured on a degenerate one-frame render; §3.4 explains in
+> detail why it does **not** transfer to real stacks and does **not** survive
+> the 270× objection.
+
+What the lane does claim, and what it measured:
+
+| # | Claim | Status |
+| --- | --- | --- |
+| 1 | `crop` mode removes a resample that has no reason to exist. At unity scale nothing is composed into the placements. | **VERIFIED** §3.2 |
+| 2 | The default did not move, on either backend. | **VERIFIED** §2 |
+| 3 | The pixel-exactness null passes **exactly** on green: an identity placement is a bit-perfect copy. | **VERIFIED** §3.1 |
+| 4 | The null **does not pass on red and blue** — an identity placement is not a pass-through for chroma. | **VERIFIED, and reported loudly** §3.1 |
+| 5 | The energy the placement removes from R/B is noise and aliasing on the CFA chroma subgrid, **not** scene detail. | **VERIFIED** §3.3 |
+| 6 | `crop` changes output pixel dimensions — a user-visible print-size consequence. | **VERIFIED** §4, quantified §4.1 |
+
+This is a correctness and honesty change, not a quality change.
 
 ---
 
@@ -30,7 +68,7 @@ output they intend to keep.
 Extending the existing variable rather than adding `STREHL_COVER_MODE` was a
 deliberate choice: `scripts/check-defaults.py` treats an undeclared environment
 switch as a hard failure, `STREHL_COVER` is already declared there, and that
-file is being edited concurrently by at least three other lanes (§7).
+file is being edited concurrently by at least three other lanes (§8 item 3).
 
 ### What `crop` does
 
@@ -164,37 +202,75 @@ stderr.
 
 ---
 
-## 3. Test 1 — the mechanism proof
+## 3. Test 1 — the mechanism proof, and where the null FAILS
 
-**The confound to remove first.** `STREHL_ALIGN=0` is *not* the right null: it
-disables alignment entirely, so no coverage fit runs and the comparison mixes
-"no `S_k`" with "no warp at all". Measured, that confound is real and large:
+This section carries the entire weight of the lane. It has four parts, and the
+second-most important one is a **failure**.
+
+### 3.1 The null passes exactly on green — and FAILS on red and blue
+
+**HEADLINE FINDING. Reported loudly, as commissioned.**
+
+Subject: one ARW (`DSC00009.ARW`) alone in a private directory
+(`D:\strehl-out\BUILD-CROP\one\`). Its solved sidecar placement is **exactly
+the identity** (`a = 1.0 + 0i`, `b = 0 + 0i`, read from
+`%LOCALAPPDATA%\strehl\warpmaps\one-2ca189e6463d3f43.warpmap.txt`). In `crop`
+mode nothing is composed onto it, so the gather is asked to perform an exact
+identity. Against the directly-demosaiced input (`STREHL_ALIGN=0`, no warp path
+at all) it should therefore be a bit-perfect copy.
+
+`python experiments\BUILD-CROP\nullcheck.py n-base.tiff 5 4 ...`:
 
 ```
-### align-OFF baseline vs the identity-warp render, per channel
-R: exact   4.811%  max  1402  mean 133.9108
-G: exact  99.858%  max  9536  mean   9.3741
-B: exact  12.464%  max  9716  mean  41.7905
-### and it is not a shift
-   ARGMIN: dx=+0 dy=+0 (mean |diff| 29.0300)
+=== crop, default gather (fullres ON)  (3506x2337 vs base window at (5,4))
+ ch   bit-exact    max|d|    mean|d|     lap base   lap render     ratio
+  R     4.8217%      1402   133.7171     548661.1     278426.3   0.50747
+  G   100.0000%         0     0.0000     101490.8     101490.8   1.00000
+  B    12.5086%       399    30.0014     240923.5     193482.7   0.80309
 ```
 
-The **green** channel is 99.86% bit-exact between "no alignment" and "aligned
-through an exactly-identity placement", so the identity gather is effectively a
-copy. R and B are not, at zero spatial offset — a chroma-only, non-geometric
-difference between the two paths that is **pre-existing and outside this
-change** (§7, lead 1).
+**Green: 100.0000% bit-exact, max difference 0 DN, laplacian ratio exactly
+1.00000.** Every one of the 8.19 million green samples in the covered rectangle
+survives the round trip unchanged. That is the null, and on green it passes
+perfectly.
 
-**The clean null** is therefore `STREHL_COVER=0` versus `--cover crop` on the
-same stack: identical merge, identical placements, identical everything —
-the *only* difference is whether `S_k` is composed and which window is written.
+**Red and blue do not.** Only 4.8% of red and 12.5% of blue samples are
+reproduced, and both planes lose laplacian energy — red **half** of it. This is
+not a shift: an integer-offset scan finds the minimum at exactly `dx=+0 dy=+0`,
+the median ratio is exactly 1.0, and the global gain is 0.99877.
 
-Subject: one ARW (`DSC00009.ARW`) copied to a private directory. Its solved
-sidecar placement is **exactly the identity** (`a = 1.0 + 0i`, `b = 0 + 0i`,
-read from `%LOCALAPPDATA%\strehl\warpmaps\one-2ca189e6463d3f43.warpmap.txt`),
-yet the fit still returns `k = 0.9974`, because `COVER_MARGIN_PX = 3` forces
-`k <= 1 - 6/2344` even for a perfect identity. This is the extreme case the
-defect report named: the reference frame, which should pass through untouched.
+**So placements ARE lossy for a reason other than `k`** — this is exactly the
+outcome the orchestrator flagged as more interesting than the sharpness
+question. It is a chroma-plane effect, present at the exact identity, at unity
+scale, with nothing composed. It is **pre-existing**, not introduced by this
+change; `crop` mode is simply the first configuration in which it is visible,
+because it is the first one in which the placement is an exact identity.
+
+I isolated the full-resolution gather, which was my working hypothesis for it:
+
+```
+=== crop, per-phase-plane gather (fullres OFF)  (3506x2337 vs base window at (5,4))
+ ch   bit-exact    max|d|    mean|d|     lap base   lap render     ratio
+  R     5.6748%      1351   129.1910     548661.1     253418.2   0.46188
+  G   100.0000%         0     0.0000     101490.8     101490.8   1.00000
+  B    19.5946%       308    17.9296     240923.5     183639.0   0.76223
+```
+
+**Hypothesis refuted.** `STREHL_FULLRES_GATHER=0` does not fix it and makes red
+slightly *worse* (0.462 vs 0.507). The effect is present in both gather
+backends. **Cause NOT DIAGNOSED** — handed over, see §9 lead 1.
+
+### 3.2 What `crop` mode itself removes — the clean null
+
+`STREHL_ALIGN=0` is not the right null for the *coverage* question, because it
+mixes "no `S_k`" with "no warp at all" — as §3.1 shows, those are not the same.
+The clean null is `STREHL_COVER=0` versus `--cover crop` on the same stack:
+identical merge, identical placements, identical everything, the **only**
+difference being whether `S_k` is composed and which window is written.
+
+Note the fit still returns `k = 0.9974` for a perfect identity, because
+`COVER_MARGIN_PX = 3` forces `k <= 1 - 6/2344` regardless. This is the extreme
+case the defect report named: the reference frame, which should pass untouched.
 
 ```
 ### A) CROP vs NO-FIT (same aligned path, only S_k differs), window at (5,4)
@@ -214,15 +290,52 @@ window at (0,0) size 3516x2344, 24724512 samples
   VERDICT             : DIFFERS
 ```
 
-**The prediction held.** In `crop` mode the covered region is reproduced with
-**zero** interpolation — 24,580,566 of 24,580,566 samples bit-identical, max
+**The prediction held for the part of the pipeline this lane owns.** In `crop`
+mode the covered region is written with **zero** interpolation from `S_k` —
+24,580,566 of 24,580,566 samples bit-identical, all three channels, max
 difference 0 DN. In `scale` mode the same render differs on **97.9%** of its
-samples, by up to 9,736 DN. The claim in the defect report — that `S_k` rides on
-every placement so not even the reference frame survives — is confirmed
-directly.
+samples, by up to 9,736 DN. `S_k` does ride on every placement, and removing it
+does remove that resample entirely.
 
-And the resampling is not free. Laplacian energy on a fixed interior window
-(green channel):
+### 3.3 Is the R/B loss detail, or noise? — it is noise
+
+A laplacian drop alone cannot distinguish "detail was removed" from "noise and
+aliasing were removed". The base R and B planes are **one raw CFA sample per
+quad** (critically sampled, aliased, full per-sample noise), while base G is the
+mean of two samples. Base R carries 5.4× green's laplacian energy, which is not
+plausible as scene structure — red detail in a real subject is not five times
+greener — so much of it must be noise and aliasing.
+
+`flatvstex.py` splits the frame into 32 px cells and partitions them by the
+**green** gradient — an unbiased referee, since green is reproduced exactly and
+therefore cannot itself be moved by the effect under test:
+
+```
+cells 109x73 of 32px; green gradient p25=64.67 p75=80.58
+ ch   partition      lap base    lap render     ratio
+  R        flat      298481.3      131255.2   0.43974
+  R    textured      563311.1      300593.8   0.53362
+  G        flat       27297.1       27297.1   1.00000
+  G    textured      109032.7      109032.7   1.00000
+  B        flat      100610.0       87288.9   0.86760
+  B    textured      249808.9      203653.2   0.81524
+```
+
+**The loss does not concentrate in textured cells.** For red it is *worse in
+flat cells* (0.440) than in textured ones (0.534). Detail removal would show the
+opposite ordering. This is the signature of **noise and aliasing suppression on
+the chroma subgrids**, not an acuity loss.
+
+So the honest reading of §3.1 is: the identity placement **rewrites** the R and
+B planes rather than passing them through, and what it removes is predominantly
+noise. That is still a null failure and still worth knowing — a placement that
+claims to be the identity should be the identity — but it is **not** evidence of
+a detail loss, and I am not offering it as one.
+
+### 3.4 The one laplacian number in this report, and why it proves nothing
+
+For completeness, on the same one-frame identity render (green channel, fixed
+interior window):
 
 ```
 t1-base-align0   laplacian-energy      83821.5  mean   5074.05
@@ -231,18 +344,30 @@ t1-ident-crop    laplacian-energy      83823.5  mean   5072.97
 t1-ident-scale   laplacian-energy      75876.3  mean   5068.34
 ```
 
-`scale` carries **9.5% less** high-frequency energy than the same pixels
-unresampled, on a single frame with an identity placement — i.e. on a render
-where the upsample buys literally nothing, since one frame covers itself.
+`scale` carries 9.5% less high-frequency energy than the same pixels
+unresampled. **This number must not be quoted as a win, and it does not survive
+V-REVIEW's 270× objection.** Three reasons, stated head-on:
 
-**This is not a quality claim for real stacks and must not be read as one.**
-On a deep stack the placements are non-integer regardless, and a prior lane
-(SYNTHESIS facts 1419 / 1459) measured that removing the enlargement moved
-sharpness by **−0.0030 dex, the wrong sign**, on 8 of 9 stacks — because
-dropping `S_k` only moves the sampling step from 0.9315 to ~1.0014, still
-non-integer. What Test 1 proves is the **mechanism**: crop mode composes
-nothing, so any placement that *is* an exact integer now survives exactly. How
-much that is worth on real subjects is the verifier's measurement, not mine.
+1. **It is a degenerate case that never occurs in production.** One frame, an
+   exactly-identity placement, `k = 0.9974`. The upsample buys literally nothing
+   here because one frame covers itself. Every real stack has non-identity
+   placements.
+2. **Catmull-Rom's top-octave attenuation depends on sampling *phase*, not on
+   the magnitude of `(1-k)`.** The 9.5% appears because removing `S_k` takes
+   this render from a non-integer step to an *exactly integer* one — a
+   pass-through. In a real deep stack the placements are already non-integer, so
+   removing `S_k` moves the step from 0.9315 to ~1.0014: still non-integer,
+   still paying the full kernel cost. The saving does not transfer.
+3. **It was already measured on real stacks and came out the wrong sign.**
+   SYNTHESIS facts 1419 / 1459 measured **−0.0030 dex** — sharpness got very
+   slightly *worse* — on 8 of 9 stacks when the enlargement was removed.
+
+Point 2 is precisely why V-REVIEW's 270× stands: the effect scales with the
+kernel, not with `k`, so shrinking `k` toward 1 does not buy back the kernel.
+**No sharpness claim survives.** What §3.2 proves is the *mechanism* — crop mode
+composes nothing, so a placement that *is* an exact integer now survives
+exactly. Whether that is ever worth anything on a real subject is the verifier's
+measurement, not mine, and the prior evidence says it is not.
 
 ---
 
@@ -289,6 +414,38 @@ a crop render and silently record a scale factor that was never applied.
 the render pair in §6 to `0.923600`). I did not chase the difference; possible
 causes are a re-solved sidecar or a different frame set. The tax is 7.6% of
 width, not 6.8%.
+
+### 4.1 Yes, `crop` changes output pixel dimensions — the print-size consequence
+
+**This is a user-visible behaviour change and is documented here rather than
+left to be discovered.** `scale` keeps the plane's dimensions and upsamples to
+fill them; `crop` keeps unity scale and therefore emits a **smaller image**.
+
+| subject | frames | `k` | scale dims | crop dims | width | height | **pixel count** |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: |
+| `109MSDCF` | 22 | 0.9870 | 3516 x 2344 | 3470 x 2312 | −1.31% | −1.37% | **−2.66%** |
+| `bee-1-cpl` | 299 | 0.9236 | 3516 x 2344 | 3246 x 2164 | −7.68% | −7.68% | **−14.77%** |
+
+On a 299-frame stack the output loses **7.7% of its width and 7.7% of its
+height, i.e. 14.8% of its pixels** — 8.24 MP down to 7.02 MP. At 300 dpi the
+print goes from **11.72 x 7.81 inches to 10.82 x 7.21 inches**, a loss of about
+nine tenths of an inch on the long edge.
+
+Two things follow, and both are consequences of the trade, not defects:
+
+- **The tax grows with stack depth.** `k` shrinks as `N` grows, so the deepest
+  stacks — the showcase images — lose the most print size. This is the exact
+  mirror of the upsample tax `scale` pays, moved from resolution to dimensions.
+- **No pixel is invented.** `scale`'s 8.24 MP contains 7.02 MP of real
+  information stretched over 8.24 MP of grid. `crop`'s 7.02 MP is 7.02 MP of
+  information on a 7.02 MP grid. The *information* content is the same; only the
+  honesty of the container differs. That is the whole argument for this mode.
+
+**ASSUMED, not measured:** that downstream consumers (web export presets, print
+templates, any fixed-size comparison harness) tolerate a varying output size. A
+harness that hardcodes 3516 x 2344 will break on a crop render. This is a real
+integration risk of flipping the default and is the main reason the mode ships
+opt-in.
 
 ---
 
@@ -474,15 +631,39 @@ t6-109-srgb-scale                           0.00%    7.54%    61063         ok
 **13/13 `ok`, 0 BLOWN.** Every crop render passes, on both backends and both
 output paths.
 
+Re-run after the move to D:, covering the re-measured null renders of §3.1:
+
+```
+$ python experiments\ORCH-drift-check\clipcheck.py D:\strehl-out\BUILD-CROP
+subject                                     clip%   black%   median    verdict
+n-base                                      0.00%    0.00%     7181         ok
+n-crop-nofullres                            0.00%    0.00%     7161         ok
+n-crop                                      0.00%    0.00%     7161         ok
+t2-109-crop                                 0.00%    0.00%     7226         ok
+t2-109-scale                                0.00%    0.00%     7209         ok
+t2-bee-crop                                 0.00%    0.00%    11294         ok
+t2-bee-scale                                0.00%    0.00%    10892         ok
+
+0/7 BLOWN (>25% clipped), 0 high, 7 ok
+```
+
+**20/20 `ok` across both runs, 0 BLOWN.**
+
 ---
 
 ## 8. Known gaps, and things left alone deliberately
 
-1. **The R/B channel difference between `STREHL_ALIGN=0` and an
-   exactly-identity aligned placement** (§3) is **pre-existing** and unexplained.
-   Green is 99.86% bit-exact; R is 4.8% and B is 12.5%, at zero spatial offset.
-   Someone should find out why the chroma planes do not survive an identity
-   warp. Not this lane's change and not this lane's file.
+1. **An exactly-identity placement does not reproduce the R and B planes**
+   (§3.1). This is the lane's headline negative result. Green is 100.0000%
+   bit-exact through the identity; R is 4.8% and B is 12.5%, at zero spatial
+   offset, in **both** gather backends (`STREHL_FULLRES_GATHER` on and off).
+   §3.3 establishes the removed energy is flat-field-dominated, i.e. noise and
+   aliasing on the CFA chroma subgrids rather than scene detail — so it is not
+   an acuity loss — but the cause is **NOT DIAGNOSED**. It is **pre-existing**,
+   not introduced here; `crop` mode is merely the first configuration in which
+   a placement is an exact identity and the failure becomes visible. Someone
+   should find out why the chroma planes do not survive an identity warp. Not
+   this lane's change and not this lane's file.
 2. **The near-border level difference between crop and scale** (§6c) is
    characterised, has four candidate causes ruled out, and is **not diagnosed**.
 3. **`scripts/check-defaults.py` was not edited.** Its `STREHL_COVER` row
@@ -508,20 +689,28 @@ output paths.
    from the scale path's centred `k` so the two modes render the same region and
    §6b is meaningful. When drift is one-sided a non-centred rectangle would
    recover more field of view. Follow-up, deliberately not done here.
-7. **This lane makes no sharpness claim.** Test 1 is a mechanism proof on a
-   pixel-exactness null, not a quality measurement. SYNTHESIS facts 1419/1459
-   already record that removing the enlargement measured **−0.0030 dex, the
-   wrong sign**, on 8 of 9 stacks. A separate verifier owns the quality
-   question.
+7. **This lane makes no sharpness claim** (§0, §3.4). Test 1 is a mechanism
+   proof on a pixel-exactness null, not a quality measurement. V-REVIEW commit
+   `cc985615` found `fit_to_cover` **270× too small** to explain the observed
+   softness, and SYNTHESIS facts 1419/1459 already record that removing the
+   enlargement measured **−0.0030 dex, the wrong sign**, on 8 of 9 stacks. The
+   single laplacian number in §3.4 is a degenerate one-frame result and §3.4
+   explains why it does not transfer. A separate verifier owns the quality
+   question; on the present evidence there is nothing there to find.
+8. **`crop` changes output pixel dimensions** — −2.7% of pixels at N=22, −14.8%
+   at N=299 (§4.1). Any consumer that hardcodes 3516 x 2344 will break on a crop
+   render. Not measured: which consumers those are. Principal reason the mode
+   ships opt-in.
 
 ---
 
 ## 9. Reproduction
 
 ```powershell
-cargo build --release --target-dir .cargo-target-crop
-$exe = ".cargo-target-crop\release\strehl.exe"
-$o   = "C:\dev\strehl-out\BUILD-CROP"
+# NB: outputs now go to D: (C: hit 4.4% free). D:\personal\macro is READ-ONLY.
+cargo build --release --target-dir D:\strehl-out\BUILD-CROP\tgt
+$exe = "D:\strehl-out\BUILD-CROP\strehl-BUILD-CROP-aa40cc78.exe"
+$o   = "D:\strehl-out\BUILD-CROP"
 
 # the mode
 & $exe stack D:\personal\macro\109MSDCF --cover crop --out "$o\crop.tiff"
@@ -532,6 +721,13 @@ $env:STREHL_COVER = "0"; & $exe stack D:\personal\macro\109MSDCF --out "$o\nofit
 Remove-Item Env:\STREHL_COVER
 & $exe stack D:\personal\macro\109MSDCF --cover crop --out "$o\crop.tiff"
 python experiments\BUILD-CROP\cmp.py "$o\nofit.tiff" "$o\crop.tiff" 23 16
+
+# the null that FAILS on R/B (§3.1, §3.3) -- one frame, identity placement
+$env:STREHL_ALIGN = "0"; & $exe stack "$o\one" --out "$o\n-base.tiff"
+Remove-Item Env:\STREHL_ALIGN
+& $exe stack "$o\one" --cover crop --out "$o\n-crop.tiff"
+python experiments\BUILD-CROP\nullcheck.py  "$o\n-base.tiff" 5 4 "crop=$o\n-crop.tiff"
+python experiments\BUILD-CROP\flatvstex.py  "$o\n-base.tiff" "$o\n-crop.tiff" 5 4
 
 # the rest
 python experiments\BUILD-CROP\crop_vs_scale.py  "$o\scale.tiff" "$o\crop.tiff" 0.9870 23 16 3516 2344
