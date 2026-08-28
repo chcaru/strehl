@@ -25,6 +25,25 @@ is the same design as BUILD-CHROMA's `c4_attenuation.py` (report S15).
 If a < 1 the statistic under-reads (regression dilution). If a > 1 it over-reads,
 which dilution cannot cause and which would indicate a gain defect.
 
+READ THIS BEFORE QUOTING THIS TOOL'S NUMBER
+-------------------------------------------
+This tool measures a = 0.775-0.794, and **that figure must NOT be used to
+de-attenuate a measurement of the shipped correction.** The plant here resamples
+an ALREADY-DEMOSAICED red plane, which adds a second interpolation that the real
+correction explicitly does not have ("the correction rides the gather's existing
+interpolation and adds no second resampling pass" -- optics.rs). That extra blur
+decorrelates R from G and is itself most of the measured shortfall.
+
+The controlled figure is 0.996: the SAME estimator reading the dose the CODE
+applies, on a single-frame CA-on/CA-off pair, where no extra resample occurs
+(caorigin.py). `magtruth.py` separately proves the plant geometry is honest to
+0.7%, so the gap is the blur and not the dose. See BUILD-CROP.md S15.2, which is
+also why BUILD-CHROMA S15's de-attenuation does not transfer to a
+gradient-regression estimator.
+
+What this tool IS good for: the null and specificity arms below, and detecting a
+gain defect, where only the RATIO between arms matters.
+
 ARMS
 ----
   base       undosed, gives slope_base
