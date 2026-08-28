@@ -38,7 +38,13 @@ from aura import (SUB, luma, measure as aura_measure, prominence, segment,  # no
 from sharp import sharpness, subject_mask, textured  # noqa
 
 OUT = pathlib.Path(r"C:\dev\strehl-out\V-SPEED-HALO")
-ROOT = pathlib.Path(r"C:\dev\strehl-out\V-SPEED-HALO\sweep")
+
+# Rendered masters are BULK (10 GB for this sweep) and live on D:, which has
+# free space; the scored .txt/.json above are under a megabyte and stay on C:
+# where this lane's report cites them.  D: is preferred but not required, so
+# the harness still runs on a machine without it.
+_D = pathlib.Path(r"D:\strehl-out\V-SPEED-HALO\sweep")
+ROOT = _D if _D.is_dir() else pathlib.Path(r"C:\dev\strehl-out\V-SPEED-HALO\sweep")
 
 
 def band_index(mids, px):

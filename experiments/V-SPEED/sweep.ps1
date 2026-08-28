@@ -25,7 +25,7 @@ param(
     [string]$Subject = "tweezers-cpl",
     [string]$ArmSet = "knobs",
     [string]$Bin = "C:\dev\blog\death-of-software\projects\strehl\target-vspeed\release\strehl.exe",
-    [string]$Out = "C:\dev\strehl-out\V-SPEED-HALO\sweep"
+    [string]$Out = "D:\strehl-out\V-SPEED-HALO\sweep"
 )
 
 $ErrorActionPreference = "Continue"

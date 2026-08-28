@@ -27,7 +27,7 @@
 param(
     [string]$Src = "D:\personal\macro\109MSDCF",
     [string]$Bin = "C:\dev\blog\death-of-software\projects\strehl\target-vspeed\release\strehl.exe",
-    [string]$Out = "C:\dev\strehl-out\V-SPEED-HALO\hullcommission"
+    [string]$Out = "D:\strehl-out\V-SPEED-HALO\hullcommission"
 )
 
 $ErrorActionPreference = "Continue"
