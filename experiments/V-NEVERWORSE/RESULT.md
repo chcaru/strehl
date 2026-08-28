@@ -1983,6 +1983,16 @@ because the synthetic stack has no dropped frames and no registration step.
 
 ### 9.17 ASK: does the confidence rule restore N-invariance? No -- and on the deeper subject it makes it worse
 
+> **RETRACTED -- see section 9.23.** Every noise-corrected number in sections
+> 9.17 to 9.22 was divided by a noise estimate that over-stated the variance by
+> **2.724x**, and the resulting "softening" was an SNR statement misreported as
+> a detail loss. On the corrected gauge the sign flips: shipping *gains* scene
+> with N and gains noise, and the confidence rule's fine-scale conviction here
+> (0.4379) becomes 1.3663. The construction, the controls and the refutation of
+> share dilution in 9.18 and 9.19 all survive -- they do not depend on the noise
+> term -- but no ratio below should be quoted. Sections 9.17-9.22 are kept
+> unedited because the retraction is only legible against what it retracts.
+
 ORCH's softness lane measured, against a literally identical denominator,
 that merging **63 frames is 0.114 softer at 0.30-0.35 cyc/px than merging 32
 frames of the same focus range**. It measured the effect. Nobody had
@@ -2302,6 +2312,450 @@ Five. Four were caught by controls rather than by inspection, and the fifth was 
    the same defect ORCH named in my duplicate `+8%` and the same one recorded
    in section 9.15.**
 
+### 9.23 I retract section 9.17-9.22's noise-corrected numbers: my own noise gauge was wrong by 2.72x in variance
+
+ORCH sent two instrument lessons from the tone lane: a control that returned a
+suspiciously round number because it short-circuited, and a decomposition that
+was degenerate on 3 of 3 arms and printed a verdict anyway. I applied both to my
+own harness. The first came back clean. **The second convicted me.**
+
+#### 9.23.1 The defect
+
+`vn_pyr.fit_variance` fits the sensor's photon-transfer line `var = read2 + g*S`
+from **one frame**, by binning pixels on level. Its own docstring already records
+one repair. The surviving failure is the clamp:
+
+```
+if g < 0:  g = 0;  read2 = median(ys)
+```
+
+Bright bins in a single frame are bright partly *because they contain detail*,
+so the fitted slope goes negative and the clamp replaces the whole photon term
+with a flat constant taken from the noisiest bins. On `coffee-bubbles` it fires:
+`read2 = 8414, gain = 0`, a flat **91.727 DN**.
+
+The model-free check needs no fit at all. The standard deviation of the
+difference of two adjacent registered frames, over 1/sqrt(2), is **60.42 DN** --
+and that is itself an *upper* bound, because it still contains the focus
+difference between the two frames. So the incumbent was carrying at least
+(91.727/60.42)^2 = 2.30x too much noise power. Against the proper measurement
+below, **55.576 DN, the over-statement is 2.724x in variance.**
+
+#### 9.23.2 It was visible and I had not read it
+
+Every ratio in sections 9.17-9.22 was `total / noise_twin`. Under the two lessons
+I computed the *difference* instead, which the ratio had never required me to do:
+
+**scene = total - noise was negative in 12 of 12 cells.** The synthetic twin was
+carrying 145% to 345% of the real merge's **total** band power. That is
+impossible for additive noise and it was sitting inside every number I had
+already reported upward. The tone lane's exact failure, reproduced in the lane
+sent to check for it, one message later.
+
+#### 9.23.3 The repair, and its commissioning
+
+`vn_noise.py` fits the same photon-transfer form with the same calibration
+constants (`BETA0 = 0.8898`, `Q = 20.0`, `QS = 0.2533`), deliberately unchanged
+so that any difference is attributable to the one thing that did change: it fits
+on **frame differences**, where the scene cancels and the focus difference is the
+only residual. On `coffee-bubbles` it returns `read2 = 672, gain = 3.5082`,
+sigma = **55.576 DN**, which agrees with the independent 60.42 DN bound and sits
+below it as an upper bound should.
+
+Five tests, both directions, and it did not pass first time:
+
+| test | result |
+|---|---|
+| ACCURACY | known 40.0 DN recovered as 39.19 DN, 2.0% error |
+| ACCURACY x3 | known 120.0 DN recovered as 118.01 DN, 1.7% error |
+| UP | 60 DN added in quadrature to 40 DN predicts 72.11, measured 71.00, 1.5% |
+| DOWN | smoothing a 40 DN stack reads 14.74 DN |
+| SCENE IMMUNITY | on noiseless frames differing only by structure, reads **13.440 DN** against a bar of 13.894 |
+
+Section 9.23.12 lists the ten instrument defects this lane has caught in itself,
+five of them by a test failing rather than by reading the code.
+
+**The first run of SCENE IMMUNITY FAILED at 18.104 DN**, and fixing it exposed two
+further defects of mine (below). I report the final margin rather than banking
+it: 13.440 against 13.894 is a **3% margin, not a clean pass**. On an adversarial
+1-px-shift input the paired fit still has measurable scene contamination. The
+incumbent single-frame fit reads 21.79 DN on the same input.
+
+#### 9.23.4 The second defect, which the first repair exposed
+
+Correcting the gauge was not enough. `112MSDCF` then **REFUSED**:
+
+```
+FAILED  UP, and SEPARATED: adding 45 DN to every SOURCE raises the noise term
+        4.7961e+07 -> 2.2878e+08 while the scene term moves
+        6.2023e+07 -> -3.5036e+07 (156.5%, must be under 35%)
+REFUSED: the decomposition is not commissioned
+```
+
+The cause is structural, not numerical. The twin was a synthetic noise stack that
+**chose its own weights**. A pure-noise stack has nothing but noise to select on,
+so it selects harder than the real merge does, and its noise term comes out too
+high -- by an amount that grows with the noise level, which is exactly why a
+planted noise increase blew the separation apart.
+
+The fix is to stop estimating the weights and use the real ones. `VP.merge` now
+takes `fixedW`, and the noise term is the noise that **the arm's own weight field
+passes through**. Commissioned as new code, with the round-number lesson applied
+directly:
+
+- **IDENTITY** -- replaying an arm's own weights over its own frames reproduces
+  it to **0 DN**. A round number, so it needs the next line to mean anything.
+- **RESPONSIVENESS** -- reversing the frame order inside the weight stack changes
+  the output by **4067 DN**. `fixedW` is therefore being read, and IDENTITY is a
+  prediction rather than a short circuit.
+
+On `coffee-bubbles` the separation error fell from **25.9% to 0.1%** at a
+stimulus of 1.0x the subject's own sigma.
+
+#### 9.23.4b The stimulus was not comparable between subjects, and that was mine too
+
+With `fixedW` in place `112MSDCF` still refused, but the error had moved from
+**-156.5% to +45.1%** -- `fixedW` had removed 111 points of a 156-point failure
+and left a 45-point one against a 35-point bar. The residue was a defect in my
+*test*, not in the instrument. The stimulus was a flat **45 DN** for every
+subject, which is a 1.66x variance increase on `coffee-bubbles` at sigma 55.58
+and a **4.6x** increase on `112MSDCF` at sigma 23.64. A fixed stimulus does not
+ask two subjects the same question; it asks the quieter one a much harder one.
+
+Shrinking a stimulus until a subject passes is bar-shopping, so I did not do only
+that. The stimulus is now scaled to each subject's own measured sigma **and the
+test sweeps it**, publishing the separation error at 0.5x, 1.0x and 2.0x sigma
+together with the breakdown point, gated at 1.0x. On `coffee-bubbles`:
+
+```
+SEPARATION BREAKDOWN (reported, not gated): scene error 0.9%, 0.1%, 19.6%
+at 0.5/1.0/2.0 x sigma; separation holds to beyond 2.0x sigma
+```
+
+**A limit that is published cannot be shopped for.** The decomposition is
+commissioned to a doubling of the subject's noise amplitude and I state that as
+its range rather than implying it holds everywhere.
+
+Re-running the full ladder after this change reproduced all twelve cells
+unchanged to the last printed digit, which is the regression check that the
+commissioning perturbations do not leak into the measurement.
+
+#### 9.23.5 The corrected ladder, `coffee-bubbles`, N = 4 / 9 / 19
+
+| arm | N | SCENE 20-50 | NOISE 20-50 | SCENE mid | SCENE fine | noise mid | blotch | n_eff | share |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| shipping | 19 | 5.403e+10 | 2.797e+08 | 1.295e+09 | 5.237e+08 | 2.528e+08 | 0.06512 | 1.96 | 0.721 |
+| shipping | 9 | 3.841e+10 | 2.621e+08 | 9.542e+08 | 3.216e+08 | 2.158e+08 | 0.06125 | 1.54 | 0.819 |
+| shipping | 4 | 2.512e+10 | 2.465e+08 | 5.627e+08 | 1.202e+08 | 1.768e+08 | 0.05596 | 1.26 | 0.898 |
+| confidence | 19 | 3.769e+10 | 1.160e+08 | 1.022e+09 | 3.712e+08 | 1.826e+08 | 0.05977 | 9.35 | 0.249 |
+| confidence | 9 | 2.992e+10 | 1.374e+08 | 8.683e+08 | 2.717e+08 | 1.865e+08 | 0.05751 | 4.99 | 0.379 |
+| confidence | 4 | 2.113e+10 | 1.612e+08 | 5.491e+08 | 1.063e+08 | 1.711e+08 | 0.05453 | 2.50 | 0.590 |
+| argmax | 19 | 5.573e+10 | 3.658e+08 | 1.309e+09 | 5.533e+08 | 2.779e+08 | 0.07153 | 1.00 | 1.000 |
+| argmax | 9 | 3.977e+10 | 3.152e+08 | 9.651e+08 | 3.360e+08 | 2.273e+08 | 0.06578 | 1.00 | 1.000 |
+| argmax | 4 | 2.548e+10 | 2.697e+08 | 5.698e+08 | 1.222e+08 | 1.803e+08 | 0.05834 | 1.00 | 1.000 |
+| mean | 19 | 5.072e+09 | 1.809e+07 | 1.636e+07 | -7.809e+06 | 1.804e+07 | 0.04874 | 19.00 | 0.053 REFUSED |
+| mean | 9 | 4.705e+09 | 3.786e+07 | 3.361e+07 | -1.657e+07 | 3.838e+07 | 0.04898 | 9.00 | 0.111 REFUSED |
+| mean | 4 | 4.891e+09 | 9.004e+07 | 7.365e+07 | -4.016e+07 | 8.386e+07 | 0.04875 | 4.00 | 0.250 REFUSED |
+
+**Cells: 12 examined = 9 measured + 3 refused.** The plain mean is refused on its
+own terms: its fine-scale scene estimate is negative, which means the twin's
+selection premium exceeds what little fine structure survives an unweighted
+average. I report it as refused rather than reading a negative number as zero.
+
+#### 9.23.6 The sign flip
+
+**Shipping does not lose scene as N rises. It gains scene and, on this subject,
+it gains noise.** (On `112MSDCF` the noise term is nearly flat in N instead --
+section 9.23.8b -- so the growth is subject-dependent and I do not state it as a
+universal. What holds on both is the *efficiency*: 1.88x to 2.37x the noise a
+plain average would incur.)
+
+| arm | rungs | scene mid | scene fine | noise/doubling | vs ideal 0.5 |
+|---|---|--:|--:|--:|--:|
+| shipping | 19<-9 | 1.3567 | 1.6286 | 1.1582 | 2.32x |
+| shipping | 9<-4 | 1.6956 | 2.6763 | 1.1857 | 2.37x |
+| confidence | 19<-9 | 1.1770 | 1.3663 | 0.9807 | 1.96x |
+| confidence | 9<-4 | 1.5812 | 2.5552 | 1.0761 | 2.15x |
+| argmax | 19<-9 | 1.3566 | 1.6469 | 1.2053 | 2.41x |
+| argmax | 9<-4 | 1.6937 | 2.7501 | 1.2188 | 2.44x |
+| mean | both | REFUSED | REFUSED | REFUSED | REFUSED |
+
+The 0.5 ideal is derived (var/N for N independent samples) and it is **not
+asserted anywhere in the checker**: the plain-mean arm measures **0.4963 and
+0.5127** per doubling on this subject, so the ideal is recovered from the data as
+a live check that could have failed.
+
+What section 9.17-9.22 called "softening" was `total / noise_twin` falling
+because an over-noised divisor grew faster than the signal did. **It was an SNR
+statement misreported as a detail-loss statement.** The softness lane's 0.114 at
+0.30-0.35 is *their* measurement on shipping masters and is untouched by this;
+what I retract is my attribution of it to lost scene power.
+
+#### 9.23.7 The mechanism, settled by ordering rather than by another experiment
+
+Share dilution and a maximum-of-N selection premium predict **opposite** orderings
+across arms, so ranking three arms by selectivity decides between them:
+
+| arm | winner share at N=19 | noise per doubling |
+|---|--:|--:|
+| argmax | 1.0000 | 1.2053 |
+| shipping | 0.7211 | 1.1582 |
+| confidence | 0.2490 | 0.9807 |
+
+**Monotone in selectivity, in the direction the selection premium predicts and
+against the direction dilution predicts.** ORCH's N-dilution story required the
+*least* selective arm to suffer most; it suffers least, and is the only arm whose
+noise does not grow with N at all. This is the third time this lane has been
+asked to test dilution and the third time the data has refused it.
+**It replicates on `112MSDCF` at N=79** -- 1.0190 > 0.9396 > 0.6970 at shares
+1.0000 / 0.4673 / 0.1407 -- so the ordering is six arm-points across two
+subjects and one stack depth apart, not a single-subject coincidence.
+
+#### 9.23.8 The fix's ceiling on `coffee-bubbles`, and the trade at full depth
+
+| rungs | shipping excess | fix excess | removed | cost |
+|---|--:|--:|--:|---|
+| 19<-9 | 0.6582 | 0.4807 | **27.0%** | -16.1% fine scene gain per doubling |
+| 9<-4 | 0.6857 | 0.5761 | **16.0%** | -4.5% fine scene gain per doubling |
+
+Ratios alone can be won by an arm that is worse everywhere, so the levels at full
+depth, on the same pixels, from the same decomposition of the same
+reconstruction:
+
+| arm | scene fine | noise mid | fine/noise | scene 20-50 | 20-50/noise | blotch |
+|---|--:|--:|--:|--:|--:|--:|
+| shipping | 5.237e+08 | 2.528e+08 | 2.072 | 5.403e+10 | 193.1 | 0.06512 |
+| confidence | 3.712e+08 | 1.826e+08 | 2.033 | 3.769e+10 | 324.8 | 0.05977 |
+| argmax | 5.533e+08 | 2.779e+08 | 1.991 | 5.573e+10 | 152.4 | 0.07153 |
+
+The fix retains **70.9%** of shipping's fine scene while carrying **72.2%** of its
+mid-band noise. **At fine scale that is a wash** -- 2.033 against 2.072, a 1.9%
+loss of SNR, not the collapse I reported last time and not an improvement either.
+Where it pays is the mottle band: **193.1 -> 324.8, a 1.68x gain in 20-50 px
+scene-to-noise, with blotch 8.2% lower.**
+
+So, to ORCH's question stated as he stated it: **it is not most of it** at this
+depth. The fix removes 27% of the N-noise defect at the deep rung here and 16% at
+the shallow one, and buys 1.68x at the band where the convictions live. On the
+deeper subject it removes 55% -- see 9.23.8b, and read that section before
+drawing any conclusion from this one, because the cost changes with depth too.
+
+On **this** subject the fix is not the `focus-stack` trade ORCH warned about:
+`focus-stack` bought quiet by blurring, and here the fix's fine-scale SNR is flat
+(-1.9%) while its mid-scale SNR rises. **That reading does not survive the deeper
+subject, where the same comparison is -15.9% and the fix loses absolute scene.**
+A shallow subject cannot clear this fix. The arm that takes the bad trade even
+here is `argmax`, which buys 5.7% more fine scene for 9.9% more noise and 9.8%
+worse blotch.
+
+#### 9.23.8b The second subject, `112MSDCF` at N = 19 / 39 / 79 -- where the fix takes the trade ORCH warned about
+
+`112MSDCF` commissioned once the stimulus was scaled, at a published breakdown
+of **3.6% / 5.8% / 47.1%** at 0.5x / 1.0x / 2.0x sigma -- a tighter range than
+`coffee-bubbles`, stated rather than smoothed over. Its plain-mean arm recovers
+the ideal independently at **0.5039 and 0.4952** per doubling.
+
+| arm | rungs | scene mid | scene fine | noise/doubling | vs ideal 0.5 |
+|---|---|--:|--:|--:|--:|
+| shipping | 79<-39 | 1.2303 | 1.3951 | 0.9396 | 1.88x |
+| shipping | 39<-19 | 1.2759 | 1.5946 | 1.0717 | 2.14x |
+| confidence | 79<-39 | **0.8965** | **0.9553** | 0.6970 | 1.39x |
+| confidence | 39<-19 | 1.0186 | 1.2038 | 0.8564 | 1.71x |
+| argmax | 79<-39 | 1.2991 | 1.4953 | 1.0190 | 2.04x |
+| argmax | 39<-19 | 1.3151 | 1.6895 | 1.1288 | 2.26x |
+| mean | both | REFUSED | REFUSED | REFUSED | REFUSED |
+
+**The selectivity ordering replicates on the deeper subject**: 1.0190 > 0.9396 >
+0.6970, monotone again, at winner shares of 1.0000 / 0.4673 / 0.1407. Six
+arm-points across two subjects, all in the direction the selection premium
+predicts and against the direction dilution predicts.
+
+The full ladder, so that every cell above is checkable against the record:
+
+| arm | N | SCENE 20-50 | NOISE 20-50 | SCENE mid | SCENE fine | noise mid | blotch | n_eff | share |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| shipping | 79 | 1.723e+10 | 3.809e+07 | 2.444e+08 | 1.081e+08 | 4.101e+07 | 0.21166 | 3.63 | 0.467 |
+| shipping | 39 | 1.600e+10 | 4.465e+07 | 1.986e+08 | 7.748e+07 | 4.370e+07 | 0.21307 | 2.35 | 0.622 |
+| shipping | 19 | 1.380e+10 | 4.423e+07 | 1.557e+08 | 4.858e+07 | 4.067e+07 | 0.21381 | 1.67 | 0.784 |
+| confidence | 79 | 1.058e+10 | 1.069e+07 | 1.205e+08 | 4.250e+07 | 1.917e+07 | 0.20782 | 19.76 | 0.141 |
+| confidence | 39 | 1.044e+10 | 1.699e+07 | 1.344e+08 | 4.448e+07 | 2.768e+07 | 0.20868 | 10.87 | 0.243 |
+| confidence | 19 | 9.633e+09 | 2.203e+07 | 1.320e+08 | 3.695e+07 | 3.251e+07 | 0.20948 | 6.16 | 0.398 |
+| argmax | 79 | 1.884e+10 | 6.377e+07 | 2.680e+08 | 1.303e+08 | 5.051e+07 | 0.22366 | 1.00 | 1.000 |
+| argmax | 39 | 1.700e+10 | 6.687e+07 | 2.063e+08 | 8.715e+07 | 4.955e+07 | 0.22389 | 1.00 | 1.000 |
+| argmax | 19 | 1.429e+10 | 5.747e+07 | 1.569e+08 | 5.159e+07 | 4.370e+07 | 0.22337 | 1.00 | 1.000 |
+| mean | 79 | 8.632e+08 | 6.980e+05 | 2.349e+05 | -4.724e+05 | 7.322e+05 | 0.19887 | 79.00 | 0.013 REFUSED |
+| mean | 39 | 8.555e+08 | 1.425e+06 | 5.370e+05 | -9.463e+05 | 1.472e+06 | 0.19870 | 39.00 | 0.026 REFUSED |
+| mean | 19 | 8.342e+08 | 3.176e+06 | 1.066e+06 | -1.951e+06 | 3.051e+06 | 0.19826 | 19.00 | 0.053 REFUSED |
+
+**Cells: 12 examined = 9 measured + 3 refused**, the same partition as
+`coffee-bubbles` and refused for the same reason.
+
+The incumbent gauge over-states the variance by **1.350x** here against 2.724x on
+`coffee-bubbles`, so the defect in section 9.23.1 is real on both subjects and
+its size is subject-dependent -- another reason no single correction factor
+should be applied to the retracted numbers.
+
+Now the part that matters:
+
+| arm | scene fine | noise mid | fine/noise | scene 20-50 | 20-50/noise | blotch |
+|---|--:|--:|--:|--:|--:|--:|
+| shipping | 1.081e+08 | 4.101e+07 | 2.636 | 1.723e+10 | 452.4 | 0.21166 |
+| confidence | 4.250e+07 | 1.917e+07 | 2.217 | 1.058e+10 | 989.5 | 0.20782 |
+| argmax | 1.303e+08 | 5.051e+07 | 2.580 | 1.884e+10 | 295.4 | 0.22366 |
+
+| rungs | shipping excess | fix excess | removed | cost |
+|---|--:|--:|--:|---|
+| 79<-39 | 0.4396 | 0.1970 | **55.2%** | -31.5% fine scene gain per doubling |
+| 39<-19 | 0.5717 | 0.3564 | **37.7%** | -24.5% fine scene gain per doubling |
+
+Shipping's noise growth is **not** the same on the two subjects -- 1.16 per
+doubling on `coffee-bubbles`, 0.94 here -- so "the merge gains noise with N" is
+not a universal statement and I withdraw it as one. What *is* consistent is the
+efficiency: shipping spends frames at **1.88x to 2.37x** the noise cost a plain
+average would incur, on both subjects, at every rung.
+
+Now the part that matters:
+
+At N=79 the fix retains **39.3%** of shipping's fine scene while carrying
+**46.7%** of its mid-band noise. Fine-scale scene-to-noise falls **2.636 ->
+2.217, a 15.9% loss.** And at 79<-39 the fix is the only arm that **loses
+absolute scene** as N rises: mid 0.8965, fine 0.9553.
+
+**Compare the two subjects and the cost is a function of depth:**
+
+| subject | deepest N | fix removes | fine-scale SNR change | fix loses absolute scene? |
+|---|--:|--:|--:|---|
+| `coffee-bubbles` | 19 | 27.0% | 2.072 -> 2.033, **-1.9%** | no |
+| `112MSDCF` | 79 | 55.2% | 2.636 -> 2.217, **-15.9%** | **yes, at the deep rung** |
+
+The fix gets *better* at removing the N-noise defect as depth rises (27.0% ->
+55.2%) and *worse* at keeping detail (-1.9% -> -15.9%). **That is the
+`focus-stack` trade ORCH warned about, measured, in flight, before the Rust
+shipped -- and it is worst exactly where this project's worst results already
+are.** The user's deepest captures are 205 and 299 frames, well beyond the 79
+where the loss is already 15.9%, and `flower-bud-alone-cpl` at N=205 is one of
+the four subjects the print gate refuses.
+
+I am not saying the fix is wrong. It removes over half the N-noise defect at
+depth and it is the only arm that improves both blotch (0.21166 -> 0.20782) and
+mid-scale scene-to-noise (452.4 -> 989.5, **2.19x**) on this subject. I am saying
+**it must not ship without a fine-scale floor**, and that the acceptance table
+must be evaluated at the deepest N available rather than on a shallow subject
+where the cost is 1.9% and invisible.
+
+**Predicted ceiling across the two subjects measured: 27% to 55% of the N-noise
+defect, rising with depth.** Not most of it at shallow depth, over half of it at
+79. Two subjects is not a corpus and I do not extrapolate to 26.
+
+
+
+Two lanes converging is not proof when they share inputs. What we do **not**
+share: I never score the shipping masters, never run the shipping binary, and
+merge in Python from registered source frames; my noise estimate is a synthetic
+twin where theirs is a high-pass. What we **do** share: the source stacks on
+`D:`, the subject list, band-energy statistics, and -- the dangerous one -- **the
+need to estimate a noise term and subtract it.**
+
+That is the common cause, and it is not a hypothetical risk. **It happened, in
+this lane, tonight.** Had I not corrected the gauge I would have reported
+softening and *agreed with them*, for a reason that was entirely my own bad
+variance fit. Their finding that 38.5% of what their instrument scored as our
+"noise" on `bee` was low-frequency content, and my finding that my REFBAND
+normaliser grew 113.6% with N, are plausibly the same physical signal seen twice:
+**any statistic that normalises by low frequency, as mine did, or attributes low
+frequency to noise, as theirs did, is contaminated by the very defect under
+study.** I would not treat the two lanes as independent confirmation on any
+number that involves a noise subtraction until one of them measures without one.
+
+#### 9.23.10 The deep subjects ORCH asked for: both REFUSED, with the measurement
+
+`flower-bud-alone-cpl` (N=205) and `bee` (N=299) were to top the ladder. Neither
+can be measured by this instrument and I am not going to approximate them.
+
+- **`flower-bud-alone-cpl`: 0 of 205 frames register.** `register_best` returns
+  `A=None`, `how='none'`, ncc `-2.0` on every frame; ORB fails its 40-inlier
+  floor and model-ECC fails to converge. The master is 4688x7040, mean
+  15103/22852.
+- **`bee-2-cpl`: partial, and focus-biased.** f0 `none` / -2.0, f150 `orb` /
+  0.8956, f298 `model-ecc` / 0.0394. Registration to an all-in-focus master
+  fails *at the focus extremes*, so the survivors are a focus-selected subset and
+  `pick()`'s matched-range guarantee is broken. A ladder built on them would
+  compare different focus ranges and call the difference N.
+- **`bee` is ambiguous**: `bee-1-cpl`, `bee-2-cpl` and `bee-3-cpl` all exist at
+  N=299 and all ship masters. Nothing in the request selects one.
+- **Memory**: a 900x900 frame is 19.4 MB as float64; N=205 needs ~12.75 GB
+  against 14.6 GB free with nine lanes running, and N=299 needs ~18.6 GB.
+
+The N-dependence I *can* measure spans 4 to 19 on one subject and 4 to 79 on
+another. **Extrapolating it to 299 is not something this lane has earned**, and
+the softness lane's 63-vs-32 result is the only measurement in the fleet on a
+deep stack at matched range.
+
+#### 9.23.11 What I did not measure
+
+- **Manufactured mid-scale structure.** I nearly reported shipping's 20-50 px
+  scene power as 5.11x -> 8.10x -> **10.54x** the plain mean's, growing with N
+  against a mean that is flat to 3.7%, and called the excess manufactured mottle.
+  **Withdrawn before publication.** At 20-50 px a plain mean over a deep macro
+  stack is not an unbiased scene reference: defocus PSFs are tens of pixels wide
+  and genuinely attenuate that band, so an honest merge *should* read higher
+  there. Separately, the twin has no weak signal to select on, so it
+  **under-states** manufactured mottle. This instrument cannot quantify the
+  quantity in its own headline band, and the 1.68x above is a scene-to-noise
+  ratio, not a mottle measurement.
+- **An asymmetry that cuts against my own conclusion.** The twin's weights are
+  now the real arm's, which removes the bulk of the bias but not the part where
+  a noise-only stack has no signal. The residual makes "shipping gains scene with
+  N" conservative -- and makes any conviction of the fix **not** conservative. I
+  state it because the direction is inconvenient for the reading I prefer.
+- **Whether correcting `var0` makes my reimplementation more or less faithful to
+  the Rust.** The shipping merge has its own internal noise floor. If it carries
+  the incumbent's over-statement, my corrected reimplementation now diverges from
+  it. I ran corrected-everywhere and retained the old numbers on disk as the
+  sensitivity comparison; I have not read the Rust's floor and do not claim it.
+- **`112MSDCF`.** Measured -- section 9.23.8b. It refused twice before it
+  commissioned, and both refusals were defects of mine rather than properties of
+  the subject.
+
+#### 9.23.12 Instrument defects self-caught this round (6-9, after 9.22's five)
+
+6. **The twin was referenced against the wrong mean.** `syn_all[i] = base_all +
+   noise_i`, so any convex merge of a *subset* returns `base_all + sum(w_i n_i)`;
+   subtracting the *subset* mean injected a real focus-average difference into
+   the noise term at every rung below full N. Fixed, and validated by a
+   prediction the old reference broke: the plain mean's noise now falls
+   8.386e+07 -> 3.838e+07 -> 1.804e+07, ratios 2.18 and 2.13 against the
+   theoretical 2.25 and 2.11.
+7. **A units bug inside my own commissioning test.** The SCENE IMMUNITY bar was
+   `mean(sqrt(green))`, which is not a DN scale at all. Re-based on a sigma
+   measured on the subject under test -- ORCH's rule about parsing values out of
+   the artifact, applied to a bar rather than to a check.
+8. **Binning by level does not isolate flat patches.** The incumbent's stated
+   rationale is wrong: a bright bin still contains edges. Selecting on local
+   gradient instead (`_flat_mask`, `FLAT_PCT = 40`) took the scene-only reading
+   from 18.104 DN to 13.440 DN.
+9. **The twin chose its own weights** -- section 9.23.4. Caught by a
+   commissioning test that refused a subject rather than by review.
+10. **A commissioning stimulus fixed in absolute units.** A flat 45 DN plant is
+   a 1.66x variance increase on one subject and 4.6x on another, so the test's
+   severity ranked subject quietness rather than instrument quality. Now scaled
+   to each subject's own sigma, swept, and the breakdown point published
+   alongside the gate -- section 9.23.4b.
+11. **I transcribed two table rows I had not read.** Writing section 9.23.8b I
+   had only seen `mean` at N=79 in the run output, and I filled in N=39 and
+   N=19 by extending the 1/N pattern instead of reading them. Five of the
+   twelve cells were wrong -- `5.370e+05` written as `4.888e+05`, `1.472e+06`
+   as `1.399e+06`. **The verifier caught it**, because it parses the table and
+   compares floats against the record rather than looking for strings. Both
+   tables are now generated from the JSON. The lesson is not "be careful": it
+   is that a plausible number is indistinguishable from a measured one by
+   inspection, which is the whole reason this lane re-derives every cell.
+
+Six of these eleven were caught by a test failing, not by reading the code. The
+ratio statistic never required the subtraction that would have exposed the first
+one, which is the general lesson: **a ratio hides the sign of its own
+components.**
+
 ## 10. Files
 
 | file | what it does |
@@ -2323,6 +2777,9 @@ Five. Four were caught by controls rather than by inspection, and the fifth was 
 | `vn_negctl65.py` | negative control for that checker: 17 plants + 1 placebo, 17/17 |
 | `vn_bubbles.py` | the 19-frame re-measurement, motion and tile statistics (§7.2, §7.3) |
 | `vn_mech.py` | separates fine from mid-scale mechanisms; the decisive instrument (§7.3) |
+| `vn_noise.py` | the measured paired-difference noise gauge that replaces `fit_variance` for the twin, and its 5-test commissioning (§9.23.3) |
+| `vn_ninv2.py` | the corrected N-invariance ladder: `fixedW` twin, swept separation stimulus, mottle band, argmax audit (§9.23.5) |
+| `vn_accept.py` | derives the two-term N-invariance acceptance criterion, the absolute-level table and the fix's ceiling from `ninv2` JSON alone (§9.23.6, §9.23.8) |
 | `vn_subsample.py` | measures which way subsampling moves the ratio (§7.1) |
 | `vn_where.py` | spatial localisation — **refused**, five designs, see §7.5 |
 | `vn_select.py` | select-or-blend recovery — **refused**, see §7.5 |

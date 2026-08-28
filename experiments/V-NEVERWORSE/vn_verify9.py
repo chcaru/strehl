@@ -23,6 +23,24 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 DOC = os.path.join(HERE, "RESULT.md")
 PLAT = r"C:\dev\strehl-out\V-NEVERWORSE\plateau\coffee-bubbles.json"
+NINV2 = r"C:\dev\strehl-out\V-NEVERWORSE\ninv2"
+
+
+def _mono(d):
+    """Is a subject's noise growth monotone in how selective the arm is?
+
+    Recomputed from the record on demand so that the count of subjects making
+    the claim in section 9.23 is compared against the number of subjects that
+    actually measure it, rather than against a number written here.
+    """
+    import math as _m
+    rows = {(r["arm"], r["N"]): r for r in d["rows"]}
+    ks = d["ks"]
+    order = sorted(("shipping", "confidence", "argmax"),
+                   key=lambda a: -rows[(a, ks[0])]["share"])
+    ns = [(rows[(a, ks[0])]["noise_mid"] / rows[(a, ks[1])]["noise_mid"])
+          ** (1.0 / _m.log(ks[0] / float(ks[1]), 2.0)) for a in order]
+    return all(ns[i] >= ns[i + 1] for i in range(len(ns) - 1))
 PYR = os.path.join(HERE, "pin9b05", "pyramid.rs")
 OUTD = r"C:\dev\strehl-out\V-NEVERWORSE"
 SNRREF = os.path.join(OUTD, "snrref", "coffee-bubbles.json")
@@ -221,6 +239,15 @@ def main():
                 ln.lstrip(">").strip() for ln in blk.splitlines()))
                 for blk in re.findall(r"(?:^> .*\n)+", s9, re.M)]:
             checked += 1
+            # Blockquotes are used for two different things in section 9: for
+            # verbatim source quotations, which this check exists to police,
+            # and for editorial banners such as the 9.17 retraction notice. A
+            # banner is not a claim about pyramid.rs and must not be looked up
+            # in it, so quotations are identified by their content rather than
+            # by being a blockquote. `RETRACTED` is the marker.
+            if q.startswith("RETRACTED"):
+                checked -= 1
+                continue
             if q and q.strip() not in flat:
                 fails.append("quoted pyramid.rs text is not verbatim: %r" % q[:80])
     except Exception as e:
@@ -699,7 +726,7 @@ def main():
         s19 = s9[s9.index("### 9.19"):s9.index("### 9.20")]
         s20 = s9[s9.index("### 9.20"):s9.index("### 9.21")]
         s21 = s9[s9.index("### 9.21"):s9.index("### 9.22")]
-        s22 = s9[s9.index("### 9.22"):]
+        s22 = s9[s9.index("### 9.22"):s9.index("### 9.23")]
 
         # ---- the two arm tables, every cell against the record ----
         tabs = {
@@ -878,6 +905,335 @@ def main():
                - 1.0) > 1e-9:
             fails.append("9.18: the argmax control's share is not 1.0 in the "
                          "record, so the no-dilution claim is unsupported")
+
+    # ---- 9.23: the corrected ladder, re-derived from the ninv2 artifacts ----
+    #
+    # Every value compared against below is READ OUT of the JSON that vn_ninv2
+    # wrote. Nothing in this block is a constant transcribed from the report,
+    # which is the failure ORCH propagated across the fleet: a checker that
+    # compares an artifact against its own copy of the answer verifies nothing.
+    # The one exception is the 0.5 ideal, which is a derivation (var/N), and it
+    # is itself checked against the plain-mean arm's measured ratio.
+    N2 = {}
+    for s in ("coffee-bubbles", "112MSDCF"):
+        p = os.path.join(NINV2, "%s.json" % s)
+        if os.path.exists(p):
+            N2[s] = json.load(io.open(p, encoding="utf-8"))
+        else:
+            refused.append("9.23: no ninv2 artifact for %s, so its rows are "
+                           "NOT EXAMINED" % s)
+    s23 = s9[s9.index("### 9.23"):] if "### 9.23" in s9 else ""
+    if s23 and N2:
+        flat23 = _flat(s23)
+
+        def has(tok, what, ctx=None):
+            """Anchored presence: a bare token can be matched by a decoy.
+
+            Short numerics such as 1.000 or 12 recur by chance across a long
+            section, so each is required to appear next to a neighbouring
+            literal from its own row rather than anywhere in the text.
+            """
+            hay = flat23
+            if ctx is not None:
+                i = flat23.find(ctx)
+                if i < 0:
+                    fails.append("9.23 anchor %r absent, so %s is UNCHECKED"
+                                 % (ctx, what))
+                    return
+                hay = flat23[i:i + 400]
+            if tok not in hay:
+                fails.append("9.23 %s: %r not found" % (what, tok))
+
+        for s, d in sorted(N2.items()):
+            rows = {(r["arm"], r["N"]): r for r in d["rows"]}
+            # counts partition
+            checked += 1
+            c = d["counts"]
+            if c["examined"] != c["measured"] + c["refused"]:
+                fails.append("9.23 %s: counts do not sum, %d != %d + %d"
+                             % (s, c["examined"], c["measured"], c["refused"]))
+            checked += 1
+            if len([r for r in d["rows"] if r["degenerate"]]) != c["refused"]:
+                fails.append("9.23 %s: refused count disagrees with the "
+                             "degenerate rows it summarises" % s)
+            # every printed ladder cell, PARSED out of the markdown table so
+            # that a value in the wrong column is a failure. String presence
+            # would pass a table whose cells had been transposed.
+            checked += 1
+            cells = {}
+            # Both subjects have an N=19 rung, so an (arm, N) key is ambiguous
+            # across the whole section and the two ladders overwrite each
+            # other. Each ladder is therefore read only from the subsection
+            # whose HEADING names its subject -- an anchor that is unique by
+            # construction, and one that fails loudly if a heading is renamed
+            # rather than silently reading the wrong table.
+            chunks = [c for c in re.split(r"\n#### ", s23) if s in c[:200]]
+            if not chunks:
+                fails.append("9.23 %s: no subsection heading names it, so its "
+                             "ladder is NOT EXAMINED" % s)
+            for ch in chunks:
+                for ln in ch.splitlines():
+                    m = re.match(r"^\| (\w[\w-]*) \| (\d+) \|(.+)\|\s*$", ln)
+                    if not m:
+                        continue
+                    vals = [v.strip() for v in m.group(3).split("|")]
+                    if len(vals) != 8:
+                        continue
+                    cells[(m.group(1), int(m.group(2)))] = vals
+            missing = [k for k in rows if k not in cells]
+            if missing:
+                fails.append("9.23 %s: the ladder table omits %d of %d rows "
+                             "(%s), so those cells are NOT EXAMINED"
+                             % (s, len(missing), len(rows),
+                                ", ".join("%s N=%d" % k
+                                          for k in sorted(missing))))
+            for k, r in sorted(rows.items()):
+                if k not in cells:
+                    continue
+                v = cells[k]
+                for j, key in enumerate(("scene_mot", "noise_mot",
+                                         "scene_mid", "scene_fine",
+                                         "noise_mid")):
+                    checked += 1
+                    try:
+                        got = float(v[j])
+                    except ValueError:
+                        fails.append("9.23 %s %s N=%d %s: %r is not a number"
+                                     % (s, k[0], k[1], key, v[j]))
+                        continue
+                    if abs(got - r[key]) > 5e-4 * abs(r[key]):
+                        fails.append("9.23 %s %s N=%d %s: table says %g, the "
+                                     "record holds %g"
+                                     % (s, k[0], k[1], key, got, r[key]))
+                checked += 1
+                if abs(float(v[5]) - r["blotch"]) > 5e-6:
+                    fails.append("9.23 %s %s N=%d blotch: table says %s, the "
+                                 "record holds %.5f"
+                                 % (s, k[0], k[1], v[5], r["blotch"]))
+            # per-doubling ratios and the ceiling, recomputed here
+            ks = d["ks"]
+            for a in ("shipping", "confidence", "argmax"):
+                for i in range(len(ks) - 1):
+                    hi, lo = ks[i], ks[i + 1]
+                    rh, rl = rows[(a, hi)], rows[(a, lo)]
+                    oct_ = math.log(hi / float(lo), 2.0)
+                    checked += 1
+                    has("%.4f" % (rh["scene_mid"] / rl["scene_mid"]),
+                        "%s %s %d<-%d scene mid ratio" % (s, a, hi, lo),
+                        ctx="| %s | %d<-%d |" % (a, hi, lo))
+                    checked += 1
+                    has("%.4f" % (rh["scene_fine"] / rl["scene_fine"]),
+                        "%s %s %d<-%d scene fine ratio" % (s, a, hi, lo),
+                        ctx="| %s | %d<-%d |" % (a, hi, lo))
+                    checked += 1
+                    has("%.4f" % ((rh["noise_mid"] / rl["noise_mid"])
+                                  ** (1.0 / oct_)),
+                        "%s %s %d<-%d noise per doubling" % (s, a, hi, lo),
+                        ctx="| %s | %d<-%d |" % (a, hi, lo))
+            # the 0.5 ideal must be MEASURED by the plain mean, not asserted
+            checked += 1
+            got = []
+            for i in range(len(ks) - 1):
+                hi, lo = ks[i], ks[i + 1]
+                rh, rl = rows[("mean", hi)], rows[("mean", lo)]
+                got.append((rh["noise_mid"] / rl["noise_mid"])
+                           ** (1.0 / math.log(hi / float(lo), 2.0)))
+            if not all(0.40 < g < 0.60 for g in got):
+                fails.append("9.23 %s: the plain-mean arm measures %s per "
+                             "doubling, which does not recover the 0.5 ideal, "
+                             "so the acceptance bar is unsupported"
+                             % (s, ", ".join("%.4f" % g for g in got)))
+            for g in got:
+                checked += 1
+                has("%.4f" % g, "%s measured ideal" % s)
+            # the fix's ceiling, as a fraction of the excess over ideal.
+            # Parsed by ROW, not looked up as a string: 55.2% also appears in
+            # the depth-comparison table, and a presence check is satisfied by
+            # any duplicate of the value it looks for, so altering one of the
+            # two left the other to pass the check. The negative control
+            # caught that; review did not.
+            crows = {}
+            for ch in chunks:
+                for ln in ch.splitlines():
+                    m = re.match(r"^\| (\d+)<-(\d+) \| ([\d.]+) \| ([\d.]+) "
+                                 r"\| \*\*([\d.]+)%\*\* \|", ln)
+                    if m:
+                        crows[(int(m.group(1)), int(m.group(2)))] = (
+                            float(m.group(3)), float(m.group(4)),
+                            float(m.group(5)))
+            checked += 1
+            want = [(ks[i], ks[i + 1]) for i in range(len(ks) - 1)]
+            if set(crows) != set(want):
+                fails.append("9.23 %s: the ceiling table covers %s, the "
+                             "ladder has rungs %s -- the missing rungs are "
+                             "NOT EXAMINED"
+                             % (s, sorted(crows) or "nothing", want))
+            for hi, lo in want:
+                if (hi, lo) not in crows:
+                    continue
+                oct_ = math.log(hi / float(lo), 2.0)
+                es = (rows[("shipping", hi)]["noise_mid"]
+                      / rows[("shipping", lo)]["noise_mid"]) ** (1.0 / oct_) \
+                    - 0.5
+                ec = (rows[("confidence", hi)]["noise_mid"]
+                      / rows[("confidence", lo)]["noise_mid"]) ** (1.0 / oct_)\
+                    - 0.5
+                gs, gc, gr = crows[(hi, lo)]
+                # Tolerance follows the printed precision: the excesses are
+                # quoted to 4 decimals and the removed fraction to 1, so a
+                # single tolerance would either reject correct rounding or
+                # accept a wrong fourth decimal.
+                for got, exp, tol, what in (
+                        (gs, es, 5e-5, "shipping excess"),
+                        (gc, ec, 5e-5, "fix excess"),
+                        (gr, 100.0 * (es - ec) / es, 0.05, "removed")):
+                    checked += 1
+                    if abs(got - exp) > tol:
+                        fails.append("9.23 %s %d<-%d %s: table says %g, the "
+                                     "record gives %g"
+                                     % (s, hi, lo, what, got, exp))
+            # the partition PRINTED IN THE REPORT, against the record. The
+            # earlier version checked only that the JSON's own counts summed,
+            # which no edit to the report could ever break.
+            checked += 1
+            said = set(re.findall(r"(\d+) examined = (\d+) measured \+ "
+                                  r"(\d+) refused", " ".join(chunks)))
+            if not said:
+                fails.append("9.23 %s: its subsection states no partition, so "
+                             "the cell count is NOT EXAMINED" % s)
+            for a, b, cc in said:
+                checked += 1
+                if (int(a), int(b), int(cc)) != (c["examined"], c["measured"],
+                                                 c["refused"]):
+                    fails.append("9.23 %s: the report states %s = %s + %s, "
+                                 "the record holds %d = %d + %d"
+                                 % (s, a, b, cc, c["examined"], c["measured"],
+                                    c["refused"]))
+            # absolute levels at full depth, PARSED BY ROW. Every one of these
+            # values is also quoted in the surrounding prose, and a presence
+            # test is satisfied by the prose copy -- the third time in this
+            # one section that a duplicate defeated a presence check, and the
+            # reason the ladder, the ceiling and this table are all parsed.
+            deep = ks[0]
+            arows = {}
+            for ch in chunks:
+                for ln in ch.splitlines():
+                    m = re.match(r"^\| (\w+) \| ([-\d.e+]+) \| ([-\d.e+]+) \| "
+                                 r"([\d.]+) \| ([-\d.e+]+) \| ([\d.]+) \| "
+                                 r"([\d.]+) \|\s*$", ln)
+                    if m:
+                        arows[m.group(1)] = [float(x)
+                                             for x in m.groups()[1:]]
+            checked += 1
+            if set(arows) != set(("shipping", "confidence", "argmax")):
+                fails.append("9.23 %s: the full-depth table lists %s, so the "
+                             "missing arms are NOT EXAMINED"
+                             % (s, sorted(arows) or "no arms"))
+            for a, v in sorted(arows.items()):
+                r = rows[(a, deep)]
+                exp = [r["scene_fine"], r["noise_mid"],
+                       r["scene_fine"] / r["noise_mid"], r["scene_mot"],
+                       r["scene_mot"] / r["noise_mot"], r["blotch"]]
+                # (relative-or-absolute, tolerance) per column, matched to the
+                # precision each is printed at: 4 significant figures for the
+                # powers, 3 decimals for fine/noise, 1 for 20-50/noise, 5 for
+                # blotch.
+                spec = [("rel", 5e-4), ("rel", 5e-4), ("abs", 5e-4),
+                        ("rel", 5e-4), ("abs", 0.05), ("abs", 5e-6)]
+                names = ["scene fine", "noise mid", "fine/noise",
+                         "scene 20-50", "20-50/noise", "blotch"]
+                for got, e, (kind, t), nm in zip(v, exp, spec, names):
+                    checked += 1
+                    lim = t * abs(e) if kind == "rel" else t
+                    if abs(got - e) > lim:
+                        fails.append("9.23 %s %s %s at N=%d: table says %g, "
+                                     "the record gives %g"
+                                     % (s, a, nm, deep, got, e))
+            # selectivity ordering is the mechanism claim; check the ORDER,
+            # not just that the numbers appear
+            checked += 1
+            order = sorted(("shipping", "confidence", "argmax"),
+                           key=lambda a: -rows[(a, deep)]["share"])
+            ns = [(rows[(a, ks[0])]["noise_mid"]
+                   / rows[(a, ks[1])]["noise_mid"])
+                  ** (1.0 / math.log(ks[0] / float(ks[1]), 2.0))
+                  for a in order]
+            if not all(ns[i] >= ns[i + 1] for i in range(len(ns) - 1)):
+                fails.append("9.23 %s: noise growth is NOT monotone in "
+                             "selectivity (%s), so the selection-premium "
+                             "claim in 9.23.7 is unsupported"
+                             % (s, ", ".join("%.4f" % x for x in ns)))
+            # The prose verdict needs an anchor of its own. Checking that the
+            # numbers appear leaves the sentence around them free to say the
+            # opposite of what they show, which is the defect recorded at
+            # 9.22 item 5 and again in 9.15.
+            checked += 1
+            mono = all(ns[i] >= ns[i + 1] for i in range(len(ns) - 1))
+            # COUNTED, not looked up. The phrase appears once per subject, so
+            # a presence test is satisfied by the other subject's copy and a
+            # flipped verdict passes -- which is exactly what the negative
+            # control demonstrated before this was a count.
+            said_n = flat23.count("against the direction dilution predicts")
+            if said_n != sum(1 for _s, _d in N2.items()
+                             if _mono(_d)):
+                fails.append("9.23.7/9.23.8b state the ordering is against "
+                             "dilution %d times, but %d of %d subjects "
+                             "measure a monotone ordering"
+                             % (said_n, sum(1 for _s, _d in N2.items()
+                                            if _mono(_d)), len(N2)))
+            if not mono:
+                fails.append("9.23 %s: ordering not monotone" % s)
+            # the gauge over-statement quoted in 9.23.1
+            checked += 1
+            nz = d["noise"]
+            has("%.3fx" % ((nz["incumbent_sigma"] / nz["paired_sigma"]) ** 2),
+                "%s variance over-statement" % s)
+        # Each over-statement is quoted twice by design (once where it is
+        # derived, once where the two subjects are compared), so requiring
+        # presence lets one of the pair be altered freely. The SET of
+        # three-decimal x-ratios in the section must therefore equal the set
+        # the records give, which fails on any value that is not one of them.
+        checked += 1
+        want_x = set("%.3fx" % ((d["noise"]["incumbent_sigma"]
+                                 / d["noise"]["paired_sigma"]) ** 2)
+                     for d in N2.values())
+        got_x = set(re.findall(r"\b\d\.\d{3}x\b", s23))
+        if got_x != want_x:
+            fails.append("9.23: the section quotes variance over-statements "
+                         "%s, the records give %s"
+                         % (sorted(got_x), sorted(want_x)))
+        # the commissioning strings must come from the artifact, not the log
+        for s, d in sorted(N2.items()):
+            checked += 1
+            if "commission" not in d:
+                fails.append("9.23 %s: the artifact does not carry its "
+                             "commissioning lines, so every commissioning "
+                             "number in the report is UNVERIFIABLE" % s)
+                continue
+            lines = _flat(" ".join(d["commission"]["noise"]
+                                   + d["commission"]["decomp"]))
+            for m in re.findall(r"scene error ([\d.]+)%, ([\d.]+)%, "
+                                r"([\d.]+)%", lines):
+                for tok in m:
+                    checked += 1
+                    has(tok + "%", "%s separation sweep" % s)
+        # 9.23.12 must announce as many defects as the report lists in total,
+        # counting 9.22's five as well, because that is what "these ten" means
+        checked += 1
+        n_def = len([l for l in (s22 + s23).splitlines()
+                     if re.match(r"^\d+\. \*\*", l)])
+        _w2 = dict(One=1, Two=2, Three=3, Four=4, Five=5, Six=6, Seven=7,
+                   Eight=8, Nine=9, Ten=10, Eleven=11, Twelve=12,
+                   Thirteen=13, Fourteen=14, Fifteen=15)
+        _m2 = re.search(r"(\w+) of these (\w+) were caught", s23)
+        if not _m2 or _w2.get(_m2.group(2).title()) != n_def:
+            fails.append("9.23.12 announces %r defects but lists %d"
+                         % (_m2.group(2) if _m2 else None, n_def))
+        # the retraction must actually be present at 9.17
+        checked += 1
+        if "RETRACTED -- see section 9.23" not in doc:
+            fails.append("9.17-9.22 carry retracted numbers but no retraction "
+                         "banner points at 9.23")
 
     print("\n%d checks: %d passed, %d FAILED, %d REFUSED"
           % (checked, checked - len(fails) - len(refused), len(fails),

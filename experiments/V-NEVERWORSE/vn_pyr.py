@@ -217,8 +217,23 @@ def fit_variance(green):
     return np.maximum(v, 1.0), read2, g
 
 
-def merge(frames, cfg, beta, var0, nb=7):
-    """Return (reconstruction HxWx3, per-level weight stacks, per-level luma)."""
+def merge(frames, cfg, beta, var0, nb=7, fixedW=None):
+    """Return (reconstruction HxWx3, per-level weight stacks, per-level luma).
+
+    `fixedW` replaces the computed weights with a per-level stack supplied by
+    the caller, so that a DIFFERENT set of frames can be pushed through the
+    weight field an arm actually chose.
+
+    MEASURED REASON IT EXISTS. This lane estimates a merge's noise term by
+    merging a synthetic stack whose frames share one latent scene. Letting that
+    stack choose its OWN weights makes the estimate wrong in a direction that
+    grows with noise: the synthetic stack has nothing but noise to select on,
+    so it selects harder than the real merge does, and the noise term comes out
+    too high. Commissioning caught it -- adding 45 DN to every source frame of
+    112MSDCF drove the estimated scene term to -3.5036e+07, and the run refused
+    rather than report it. Pushing the noise through the real merge's own
+    weights removes the mismatch instead of bounding it.
+    """
     exponent = cfg["exponent"]
     sharpen = cfg["sharpen"]
     gate = cfg["gate"]
@@ -245,29 +260,33 @@ def merge(frames, cfg, beta, var0, nb=7):
     for k in range(nb):
         p = exponent_at(k, nb, exponent, sharpen)
         vv = varp[k]
-        ws = []
-        for i in range(n):
-            sq = smooth5(laps[i][k] ** 2)
-            floor = gate * beta[k] * np.maximum(vv, 0.0)
-            excess = np.maximum(sq - floor, 0.0)
-            ws.append(select_weight(excess, floor, p, count=cfg.get("_clamp")))
-        W = np.stack(ws)
-        if mode == "mean":
-            W = np.zeros_like(W)
-        elif mode == "argmax":
-            # Winner-take-all: the effective frame count is exactly 1 and the
-            # winner's share is exactly 1.0 at every N, so this arm has NO
-            # share dilution by construction. It is the control that decides
-            # whether N-dependent softening needs dilution to happen.
-            # Pixels where nothing was admitted keep W = 0 and fall through to
-            # the same unweighted fallback the other modes use; taking argmax
-            # of an all-zero column would silently elect frame 0 everywhere,
-            # which is the abstention contamination this lane has already been
-            # bitten by once.
-            den0 = W.sum(axis=0)
-            hot = np.zeros_like(W)
-            np.put_along_axis(hot, W.argmax(axis=0)[None], 1.0, axis=0)
-            W = np.where(den0[None] > 0.0, hot, 0.0)
+        if fixedW is not None:
+            W = fixedW[k]
+        else:
+            ws = []
+            for i in range(n):
+                sq = smooth5(laps[i][k] ** 2)
+                floor = gate * beta[k] * np.maximum(vv, 0.0)
+                excess = np.maximum(sq - floor, 0.0)
+                ws.append(select_weight(excess, floor, p,
+                                        count=cfg.get("_clamp")))
+            W = np.stack(ws)
+            if mode == "mean":
+                W = np.zeros_like(W)
+            elif mode == "argmax":
+                # Winner-take-all: the effective frame count is exactly 1 and
+                # the winner's share is exactly 1.0 at every N, so this arm has
+                # NO share dilution by construction. It is the control that
+                # decides whether N-dependent softening needs dilution to
+                # happen. Pixels where nothing was admitted keep W = 0 and fall
+                # through to the same unweighted fallback the other modes use;
+                # taking argmax of an all-zero column would silently elect
+                # frame 0 everywhere, which is the abstention contamination
+                # this lane has already been bitten by once.
+                den0 = W.sum(axis=0)
+                hot = np.zeros_like(W)
+                np.put_along_axis(hot, W.argmax(axis=0)[None], 1.0, axis=0)
+                W = np.where(den0[None] > 0.0, hot, 0.0)
         wstack_lv.append(W)
         den = W.sum(axis=0)
         chans = []
