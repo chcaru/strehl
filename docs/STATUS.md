@@ -105,6 +105,19 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    validated under pyramid, then scoring the depth-softening fix that this unblocks. Facts 1869,
    1880, 1882. N-invariance remains necessary but **not sufficient** — a plain mean is perfectly
    N-invariant and destroys grain to 0.229×.
+   **THIRD INDEPENDENT REPRODUCTION, and a confound that lands on BUILD-SOFTGATE's scoring.**
+   V-DILUTE measured 0 of 24,724,512 on `109MSDCF` against 23,980,319 of 24,724,512 under
+   `--merge estimator`, pre-registering its predictions at `4dca927d` before any arm ran; with
+   V-KILLB0 that is three lanes and four subjects. More important for what happens next:
+   **`Gate::tolerance()` is shared across kernels, so hard-versus-soft at equal T is not a
+   controlled comparison.** The same calibrated T admits mean **n_eff 4.674 under the hard gate
+   and 19.295 of 22 under the Gaussian**, with 79.2% of the plane at n_eff ≥ 20 — the soft
+   kernel averages nearly the whole stack where the hard one averaged under five. **Match on
+   effective width, not on the threshold parameter**, or the depth-softening score will confound
+   kernel shape with admission width and read as a win for whichever kernel admits more. Two
+   further rows record that `selection_inflation` keys on an integer count whose n_eff ≤ 1
+   population collapses 3.936% → 0.023% under a soft kernel, but that the branch is inert twice
+   over today. Facts 1917–1920.
 3. ~~**Diagnose `flowers-cpl`.**~~ **RESOLVED — capture gap, not a merge defect.** Verdict (a)
    at all six sites on licensed bands 2 and 3, measured on the pyramid masters that ship. No
    code change will fix it; the fix is a capture instruction, which is exactly the case the
