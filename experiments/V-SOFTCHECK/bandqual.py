@@ -1,7 +1,11 @@
 """bandqual.py -- does 0.30-0.35 cyc/output px carry focus-dependent signal on MY data?
 
-Written by V-SOFTCHECK. NOT derived from V-LINEAR's noisefloor.py, which I have not
-read; if the two disagree I want the disagreement to be informative. Decision rule and
+Written by V-SOFTCHECK. NOT derived from V-LINEAR's noisefloor.py or V-LINEAR2's
+bandsignal.py. Neither had been read when this was written or when it produced its
+numbers; both were read afterwards, to verify an attribution, per the standing rule
+that a borrowed instrument makes agreement meaningless. My pre-registered PASS
+condition (R >= 2.0 and CI low > 1.5) turned out to be identical to the one
+bandsignal.py encodes -- convergence, not copying. Decision rule and
 kill condition are in PREREG-bandqual.md, committed at 11ede945 before this file ran.
 
 THE MEASUREMENT. Defocus is a low-pass filter, so in a badly defocused tile whatever

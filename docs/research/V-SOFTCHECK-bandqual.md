@@ -113,6 +113,39 @@ ladder -- response decays smoothly with frequency, which is what defocus plus a 
 noise floor should look like. "Noise band" is the wrong shape for this data; **low
 signal-to-noise band** is the right one.
 
+## 3b. Attribution of the threshold, verified at source
+
+ORCH corrected the attribution of the bar after this was measured. I verified the
+correction at the primary source rather than accepting it, and it is **exactly right**:
+
+| rule | source | boundary |
+|---|---|---|
+| noise vs detail | `experiments/V-LINEAR/noisefloor.py:93` | `NOISE-DOMINATED if r < 1.3 else carries real detail` |
+| eligibility to be the comparison band | `experiments/V-LINEAR2/bandsignal.py:94-99` and `V-LINEAR2/PREREGISTRATION.md` sec.2 | `PASS if r >= 2.0 and CI low >= 1.5; MARGINAL if r >= 1.3; else FAIL(noise)` |
+
+**The correction does not move my verdict, and my bar was not borrowed.** The PASS
+condition I fixed at `11ede945` -- `R >= 2.0` and bootstrap low `> 1.5` -- is the same
+condition `bandsignal.py` encodes, arrived at before I had read either file. Re-scored
+under both rules by `experiments/V-SOFTCHECK/rescore.py`, with nothing re-measured:
+
+| subject | band | R | 95% CI | `bandsignal.py` | `noisefloor.py` |
+|---|---|---:|---|---|---|
+| 113MSDCF | 0.30-0.35 | 1.5525 | [1.4583,1.6437] | MARGINAL | carries real detail |
+| bee-1-cpl | 0.30-0.35 | 1.8480 | [1.6403,2.0347] | MARGINAL | carries real detail |
+
+**Correction back to the orchestrator.** "0.30-0.35 is inside the confirmed noise region
+0.25-0.48" is true of V-LINEAR's `--linear-srgb --demosaic` single frames and **false of
+this lane's `--srgb` merged masters**. On my develop path the band is `MARGINAL`, not
+`FAIL(noise)`: R = 1.5525 and 1.8480, and **both CIs exclude 1.3**, the noise boundary.
+That is precisely the develop-dependence V-LINEAR itself flagged, so the region label
+cannot be carried across develop paths without re-measuring -- which is what this
+document did.
+
+Applying `PREREGISTRATION.md` sec.2's own band-selection rule -- *"the comparison band is
+the HIGHEST-frequency PASSing band"* -- to my data gives **0.20-0.25 for `113MSDCF`** and
+**0.25-0.30 for `bee-1-cpl`**. Those are the two bands section 5 already re-derives in,
+chosen before I had read that rule.
+
 ## 4. What is withdrawn
 
 **`+0.0732` dex/doubling (113MSDCF) and `+0.0748` dex/doubling (bee-1-cpl) at
