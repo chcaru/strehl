@@ -499,3 +499,278 @@ experiments/V-DILUTE/maxn_crosscheck.py   max-of-N flat-field law at 13.6x lever
 experiments/V-DILUTE/clip_audit.py        clipping audit, all 31 masters, 0.0000%
 experiments/V-DILUTE/commission.py        null arm, potency arm, analytic rank bias
 ```
+
+---
+
+# V-DILUTE Assignment 2 — the base-band blur hypothesis
+
+**VERDICT: DEAD.** The base band does not carry acuity at the shipping band
+count, so a plain mean over it cannot blur acuity. Flipping the base band
+between `mean` and `weighted` changes acuity by **0.00% at N=22** and **+0.05%
+at N=299**, and across **7 subjects spanning N = 19 → 299** the null-normalised
+acuity ratio spans **0.9979 – 1.0005** (mean 0.9996, spread 0.0026) **with no
+trend in N**. The N-corollary is dead with it.
+
+Instrument: `contrast_ms.py` (ORCH's, mandated) plus `nullnorm.py` and
+`baseband_spectrum.py` (mine). Binary `CBC0909947CE12F3`, built from HEAD
+`5dbfefa1` with `--target-dir target-orch`. All masters linear camera-native:
+**no `--auto-exposure`, no `--srgb`** (broadcast case 3). Pre-registration
+`experiments/V-DILUTE/PREREG-BASEBAND.md`, committed at `5dbfefa1` **before any
+render existed**.
+
+---
+
+## 1. The premise was falsifiable from the source before any pixels existed
+
+The hypothesis needs one precondition: **the base band must carry acuity-band
+structure at the default band count.** Four independent sources say it carries
+*tone*.
+
+| # | source | what it says |
+|---|---|---|
+| 1 | `pyramid.rs:129-136` | "Seven octaves takes a 3516 x 2344 quad plane down to a **28 x 19 base**." A 28-wide base over a 3516-wide plane resolves nothing above **~0.008 cyc/px**. Qualified SIGNAL is 0.17-0.25 — **21-31× higher**. |
+| 2 | `--pyramid-bands` help, read to its end | ORCH quoted "Too shallow and the base band still holds structure" and stopped. It finishes: "`--pyramid-bands 2` **keeps acuity but loses the darkest densities — grey ink instead of black.**" The stated failure is **density, not softness**, and acuity is explicitly *kept*. |
+| 3 | `pyramid.rs:131-136` (design intent) | "That is deliberately deep: the whole point of the exercise is that **the low frequencies must be blended rather than switched**, and stopping at four or five levels leaves a band at ~100 px scale still being selected, **which is visible as exactly the halo this is meant to remove.**" |
+| 4 | the flip record ORCH cited, `pyramid.rs:3105-3112` | The quantities measured are "**global level**" and "**position-dependent structure**", both in **DN**, and it records "**with no difference in aura removal**". Those are tone quantities. |
+
+A fifth, from ORCH's own scorer: `contrast_ms.py` uses `SIGMAS` up to 16.0,
+cutting at `1/(2π·16)` = **0.00995 cyc/px**, and designates that band the
+**INSTRUMENT NULL** — the band that must read ~1.000 or the comparison is void.
+**The base band's entire content lies at or below that cut.** The mechanism was
+proposed inside the band the instrument reserves for detecting global offsets.
+
+I registered all of this as a premise objection *before* rendering, then
+measured anyway, because a documentary argument is not a measurement.
+
+---
+
+## 2. The isolation, and why it needs no source change
+
+The only difference between `--pyramid-base mean` and `--pyramid-base weighted`
+at fixed `--pyramid-bands` is how the base band is combined. So the **decoded
+difference between those two renders is exactly the base band's contribution**,
+isolated by flags. Measuring *where in frequency that difference lives* answers
+ORCH's item 1 directly.
+
+### Where the base band's contribution actually lives
+
+| subject | N | bands | max abs diff | rms | **share ≥0.17 cyc/px** | **share <0.010 cyc/px** |
+|---|---|---|---|---|---|---|
+| 109MSDCF | 22 | **7 (default)** | **2.1 DN** | 0.308 DN | 42.4% *(of quantisation)* | 52.5% |
+| 109MSDCF | 22 | 2 (potency) | 1697 DN | 34.2 DN | 0.614% | 20.5% |
+| bee-3-cpl | 299 | **7 (default)** | 1189 DN | 324 DN | **0.195%** | **99.301%** |
+| bee-3-cpl | 299 | 2 (potency) | **13121 DN** | 1563 DN | **0.055%** | 81.0% |
+
+Two readings, both fatal to the hypothesis:
+
+- At N=22 the entire base-mode difference is **max 2.1 DN out of 65535** — the
+  quantisation floor. Its band shares are shares of nothing; band 0 holds 42% of
+  it because band 0 is the widest annulus in 2-D frequency, which is the
+  signature of rounding noise, not of structure.
+- **The larger the base-band perturbation, the smaller its signal-band share**:
+  4.38% → 0.23% → 0.035% → 0.019%. A 13,121 DN base-band perturbation on the
+  deep stack puts **0.019%** into the acuity band. The base band cannot reach
+  the acuity band at any band count or any N.
+
+### Potency — the commissioning the `--fix-ca` lesson demands
+
+`bands 2` puts the base band at a 4 px lowpass reaching to 0.125 cyc/px, so
+base-band treatment *can* matter there. It does, by **110.92×** on rms at N=22
+and **13,121 DN** peak at N=299. **The null at the default is a measurement, not
+a dead gauge.**
+
+---
+
+## 3. Acuity, null-normalised — the corpus answer (ORCH item 3)
+
+`contrast_ms.py` removes tone with a single median scalar. The base band's
+disagreement is a position-dependent **bowl**, which a global scalar cannot
+remove; what survives appears as the *same* multiplicative offset in **every**
+band including the null. Reading band 1 raw then credits a tone artifact as an
+acuity gain — the identical error class that carried my Experiment B in
+Assignment 1 (a 4% geometry artifact). So acuity is reported **divided by the
+null**.
+
+`--pyramid-base weighted` against `mean` (the shipping default), all at
+`--pyramid-bands 7`:
+
+| subject | N | raw acuity | null | **ACUITY CORR** | noise corr |
+|---|---|---|---|---|---|
+| coffee-bubbles | 19 | 0.9957 | 0.9975 | **0.9982** | 0.9990 |
+| 109MSDCF | 22 | 1.0000 | 1.0000 | **1.0000** | 1.0000 |
+| 119MSDCF | 33 | 0.9998 | 0.9998 | **1.0000** | 1.0002 |
+| 113MSDCF | 63 | 0.9980 | 0.9980 | **1.0001** | 1.0004 |
+| foam | 100 | 1.0127 | 1.0125 | **1.0003** | 1.0001 |
+| coffee-bean | 105 | 0.9866 | 0.9887 | **0.9979** | 0.8936 |
+| bee-3-cpl | 299 | 1.0135 | 1.0130 | **1.0005** | 0.9973 |
+
+**n=7, mean 0.9996, min 0.9979, max 1.0005, spread 0.0026, no trend in N.**
+
+Two things this table earns:
+
+- **The null caught a fabricated win.** On `bee-3-cpl` the raw band-1 number is
+  **1.0135**. Quoted raw, that is a "+1.35% acuity gain from weighting the base
+  band at N=299" — and it is entirely the 1.0130 global bowl. Corrected:
+  **1.0005**. The raw column's spread across the corpus is 0.027, **10× the
+  corrected spread**, and all of it is tone.
+- **ORCH's fair point about the one-subject default is answered, and the answer
+  is "it does not matter."** The default was chosen on `flower-bud-alone-cpl`
+  for tonal reasons. On acuity the two base modes are indistinguishable on all
+  7 subjects, so the choice cannot be costing acuity anywhere on this corpus.
+  Its tonal justification is unaffected by my measurement and I have not
+  retested it. (The N=299 level shift, median 11080 → 10958 for weighted, is
+  **sign-consistent** with the flip record's "weighting cost −475 DN of global
+  level" — corroboration of that record on a *second* subject.)
+
+---
+
+## 4. Band-count sweep (ORCH item 2) — prediction falsified in direction *and* in N
+
+ORCH's prediction to falsify: "more bands → less structure left in the base band
+→ sharper output, **with the gain LARGER on deep stacks**."
+
+**N=22 (109MSDCF)** — acuity and noise paired on every row, null shown:
+
+| bands | ACUITY | NULL | **ACUITY/NULL** | NOISE/NULL | verdict |
+|---|---|---|---|---|---|
+| 3 | 0.9348 | 0.9875 | 0.9467 | 1.0141 | NULL VOID |
+| 4 | 0.9637 | 0.9923 | 0.9712 | 1.0095 | NULL VOID |
+| 5 | 0.9864 | 0.9953 | **0.9910** | 1.0065 | valid |
+| 6 | 0.9971 | 0.9979 | **0.9992** | 1.0030 | valid |
+| **7** | 1.0000 | 1.0000 | **1.0000** | 1.0000 | **default** |
+| 8 | 1.0004 | 1.0016 | **0.9988** | 0.9981 | valid |
+| 9 | 1.0004 | 1.0016 | **0.9988** | 0.9981 | valid |
+
+**N=299 (bee-3-cpl)**:
+
+| bands | ACUITY | NULL | **ACUITY/NULL** | NOISE/NULL | verdict |
+|---|---|---|---|---|---|
+| 5 | 0.9924 | 0.9197 | 1.0790 | 1.1017 | **NULL VOID** (8% global offset) |
+| **7** | 1.0000 | 1.0000 | **1.0000** | 1.0000 | **default** |
+| 9 | 0.9981 | 1.0121 | **0.9862** | 0.9871 | NULL VOID (marginal) |
+
+**Acuity saturates exactly at the shipping default and then declines.** Going
+deeper than 7 buys **−0.12% at N=22** and **−1.38% at N=299** — worse, and
+*more* worse on the deep stack. The prediction is falsified in direction and its
+N-scaling is falsified in sign. Noise is flat across the whole valid range
+(1.0065 → 0.9981), so nothing here is a noise trade.
+
+**`bands 8` and `bands 9` are bit-identical** — `np.array_equal` True, max abs
+diff 0, across all **24,724,512 decoded samples**. Per the `--fix-ca` lesson I
+checked whether that zero means "inert flag" or "stage already at its floor":
+it is the floor. `pyramid.rs:458` — "`level_sizes` truncates below
+`MIN_LEVEL_EXTENT`". The pyramid has decimated as far as the image allows, so
+`--pyramid-bands 9` requests a pyramid that cannot exist and receives the
+8-level one. **Not a dead flag.**
+
+The `absFLAT` column behaves as ORCH asked me to check: on 109MSDCF it reads
+24.42 / 9.88 / 23.66 / 26.21 for bands 0/1/3/5 — falling from band 0 to band 1
+(the finest band is noise-elevated, as V-LINEAR qualified) then rising into the
+coarse bands (structure). Band 0 is noise on this corpus; band 1 is not.
+
+---
+
+## 5. Separation from `fit_to_cover` (ORCH item 4) — by construction, no arm needed
+
+Fact 1834's mechanism is an N-dependent output resample (`k` = 0.9870 at N=22,
+0.9321 at N=299). **Every comparison in this report is within-N**: same subject,
+same frame count, same alignment, differing only in `--pyramid-base` or
+`--pyramid-bands`. `k` is therefore identical between the two arms of every
+comparison and cancels exactly. No result here can be double-counting
+`fit_to_cover`, and I do not need BUILD-CROP's unity-scale arm to say so.
+
+---
+
+## 6. What surprised me — and one thing ORCH should know exists
+
+### 6a. There is a *second* plain-mean-across-frames, and it is not the base band
+
+`pyramid.rs:633-676` documents **`DEFAULT_MEAN_COARSE`**: "Number of coarsest
+**Laplacian** bands merged as a plain mean across frames rather than by
+selection. The base residual is not counted here; it has its own control in
+`BaseBand`." Env override `STREHL_PYRAMID_MEAN_COARSE`. **It is `0` today** —
+"`0` restores the previous behaviour bit-for-bit" — so it is off and cannot be
+causing anything in the shipping merge.
+
+Its docstring adjudicates ORCH's aura fix directly, and independently reaches my
+conclusion:
+
+> "**The mechanism is right and the prescribed address was not.** The fix
+> proposed was to take the base band from the mean instead of the blend.
+> `BaseBand::Mean` is already the default, and it already routes every base
+> coefficient through the unweighted fallback, so the base band is a plain mean
+> across frames today. The `BaseBand` table records the measurement that settles
+> it: **both base arms removed the broad aura equally well, so the base band is
+> not what carries it.**"
+
+If ORCH still wants the broad-bowl defect addressed, **this is the knob**, not
+`--pyramid-base` — and it is reachable by env var with no source edit. I have
+not swept it; it is outside this assignment.
+
+### 6b. The physical reason the premise fails, stated in the source
+
+> "at low spatial frequencies there is nothing for selection to add, because
+> **defocus is a low-pass and leaves the low frequencies of every frame near
+> MTF 1.0**. There is only position-dependent bias to introduce, which is what a
+> bowl is."
+
+This is the sentence that kills the hypothesis cleanly. The premise says a mean
+over "every badly defocused frame" must blur. **In the base band those frames
+are not defocused** — defocus is a low-pass, so at 0.008 cyc/px every frame is
+near MTF 1.0 and they all agree. Averaging agreeing observations does not blur;
+it reduces noise. That is why the base band is meaned deliberately, and why
+selecting there buys a halo instead of acuity.
+
+### 6c. ORCH was half right, in a specific and useful way
+
+The base band's contribution **does** grow steeply with N — rms **0.308 DN at
+N=22 → 324 DN at N=299**, a factor of ~1000. The N-dependence he predicted is
+real. It is simply **entirely tonal**: 99.301% of it sits below 0.010 cyc/px and
+0.035% in the acuity band. **Right N-dependence, wrong observable.**
+
+### 6d. Shallow pyramids fail catastrophically on deep stacks
+
+`bands 2` at N=299 has a coarsest-EDGE null of **4.0896** — a 4× global tone
+offset. That row is void as an acuity measurement and I report it as such, but
+it is worth stating on its own: the "grey ink instead of black" failure the help
+text warns about scales badly with N. `bands 5` at N=299 already shows an 8%
+global offset (null 0.9197) against only 0.5% at N=22 (0.9953).
+
+---
+
+## 7. Guards honoured
+
+- **Both rails on every master**, not just clipping: all 22 masters read
+  **0.000% clipped and 0.000% black**, with sane medians (7196–11088). Assignment
+  1 caught one of my own errors at the black rail with a healthy-looking p90.
+- **No sharpness number without a noise number on the same pixels** — every
+  table above pairs them.
+- **Decoded arrays, never file digests** — `np.array_equal` over 24,724,512
+  samples for the `bands 8 ≡ 9` and cross-run determinism claims.
+- **Cross-run determinism verified on the deep stack at HEAD**: `bandsweep/nb7`
+  and `baseband/b7.mean` are separate 299-frame runs with equivalent flags and
+  are bit-identical, max abs diff 0.
+- **No `.rs` file was edited.** `pyramid.rs`, `merge.rs`, `merge_cmd.rs`,
+  `align_cmd.rs`, `defect_map.rs` untouched; all source read via `git show`
+  through a pipe.
+- Renders linear, **no `--auto-exposure`** (broadcast case 3).
+
+## 8. What this does *not* exclude
+
+The bee failure remains unexplained by anything in this report. I have excluded
+the base band as a softness mechanism; I have **not** excluded the coarse
+*Laplacian* bands (§6a), `fit_to_cover` (fact 1834), or anything in the fine-band
+selection. The band-count sweep does show acuity declining slightly beyond the
+default at N=299, which is a small effect in the *opposite* direction to the one
+sought and is not a candidate for a 0.060 retention ratio.
+
+## 9. Files
+
+```
+experiments/V-DILUTE/PREREG-BASEBAND.md    pre-registration + premise objection
+experiments/V-DILUTE/baseband_render.ps1   flag-only base-band isolation arms
+experiments/V-DILUTE/baseband_spectrum.py  where the base band's contribution lives
+experiments/V-DILUTE/bandsweep_render.ps1  --pyramid-bands sweep
+experiments/V-DILUTE/bandsweep_score.py    sweep scorer, acuity+noise+null
+experiments/V-DILUTE/nullnorm.py           null-normalised acuity, corpus table
+```
