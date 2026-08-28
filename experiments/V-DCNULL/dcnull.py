@@ -339,6 +339,12 @@ def main():
     print("     a true 1.0000 reads %.4f if g_master/g_frame = %.6f  (%.2f%% level mismatch)"
           % (pub, np.sqrt(pub), 100 * (1 - np.sqrt(pub))))
     print("     a 1%% master under-gain alone moves the reading by %.4f" % (1 - 0.99 ** 2))
+    PUB = [1.0997, 1.1936, 1.1345, 0.9426, 0.7314, 0.6063, 0.5942]
+    print("     gain mismatch that would explain each PUBLISHED 113MSDCF band as a true 1.0000:")
+    print("     %s" % " ".join("%8s" % bname(b) for b in range(NB)))
+    print("     %s" % " ".join("%7.2f%%" % (100 * (1 - np.sqrt(v))) for v in PUB))
+    print("     one scalar cannot take seven values, so a gain mismatch cannot make the")
+    print("     frequency-dependent SHAPE; it can only move all seven by one factor.")
 
     # Can the worst DC bias measured on the qualifier move the published band
     # selection? Real-data readings, quoted from V-SOFTCHECK-bandqual.md:167.

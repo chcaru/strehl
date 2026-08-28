@@ -182,9 +182,18 @@ qualification that makes 0.9426 the quotable number also survives, by section 5.
 **The remaining exposure is not DC.** It is the `g^2` law of section 4, and 2.91% of
 relative gain mismatch is exactly the size that would erase the whole 5.7%. That is a
 real, unguarded, one-sided threat to the magnitude and it is named here rather than
-dismissed. It is not a threat to the sign, because a gain mismatch large enough to
-explain 0.7314 at 0.25-0.30 would be 14.5%, and it would have to grow with frequency
-to reproduce the shape, which a scalar cannot do.
+dismissed.
+
+**It is not a threat to the sign.** The gain mismatch that would explain each published
+band as a true 1.0000, printed by the harness:
+
+| band | 0.05-0.10 | 0.10-0.15 | 0.15-0.20 | 0.20-0.25 | 0.25-0.30 | 0.30-0.35 | 0.35-0.40 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| required mismatch | -4.87% | -9.25% | -6.51% | 2.91% | 14.48% | 22.13% | 22.92% |
+
+One scalar cannot take seven values, and it cannot take opposite signs in the low bands
+and the high bands. A gain mismatch multiplies all seven readings by one factor; it
+cannot manufacture the frequency-dependent shape, which is the sign claim.
 
 ## 7. EVIDENCE GONE
 
