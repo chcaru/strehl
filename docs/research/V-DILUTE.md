@@ -1591,3 +1591,126 @@ I cannot test any of this myself. V-KILLB0 owns scoring the built gate, and I
 would not have the data anyway — 112MSDCF and 119MSDCF were deleted at 22:48
 and `coffee-bubbles` has a degenerate variance fit (J.1). K.3 is a prediction,
 not a measurement, and it is offered so it can be refused.
+---
+
+# Addendum L — K.1 measured on pixels, and a verdict of mine that I withdraw
+
+## L.1 The soft gate is a no-op on the default merge: 0 of 24,724,512 samples
+
+Addendum K.1 argued from source that `STREHL_SOFT_GATE` cannot reach the
+default pyramid backend. That verdict lived **only in prose**, which is the
+defect ORCH attributes to V-KILLB0 -- no mutation can catch a claim no check
+is pinned to. It is now measured. Predictions were committed at `4dca927d`
+(`experiments/V-DILUTE/PREREG-SOFTGATE.md`) **before** any arm ran.
+
+Subject `109MSDCF`, N=22, 20 s per render, six arms:
+
+    arm  invocation                                        differing samples vs ref
+    A    default backend, no env                           reference
+    A'   identical repeat                                  0 / 24,724,512   (0.000%)
+    B    default + STREHL_SOFT_GATE=gaussian               0 / 24,724,512   (0.000%)
+    C    default + --pyramid-exponent 4.0             14,046,047 / 24,724,512 (56.810%)
+    D    --merge estimator                                 reference for E
+    E    --merge estimator + STREHL_SOFT_GATE=gaussian 23,980,319 / 24,724,512 (96.990%)
+
+All four pre-registered predictions held:
+
+- **A == A'** -- the writer embeds no timestamp, so byte comparison is a valid
+  instrument here. Without this, `A == B` could never have been trusted.
+- **A == B** -- **the soft gate changes nothing on the default backend.** Not
+  "changes little": zero samples of 24,724,512, max |d| 0.0 DN.
+- **A != C** -- sensitivity. The harness sees a change of mean 1.25 DN, which
+  is **fifteen times smaller** than the effect the gate has where it is live.
+  So B's stillness is not the instrument failing to look.
+- **D != E** -- specificity, and this is the arm that makes L.1 mean what it
+  says. The env var is **strongly live on the estimator**: 96.99% of samples,
+  mean |d| 18.2 DN, max 1012 DN. So `A == B` is *not* explained by a
+  misspelled or dead env var. It is explained by the pyramid path never
+  consulting it.
+
+**This is the same signature as ORCH's `--exposure` defect cleared on a file
+hash when 0 of 98,898,048 samples differed.** Mine is 0 of 24,724,512. A no-op
+arm reads CLEAN on every structural axis, and both of us would have shipped
+the reading had the potency control been left out.
+
+`experiments/V-DILUTE/vd_softgate_gate.py` now holds this as four gates that
+**exit non-zero** when the claim goes stale, so a future wiring of the gate to
+the pyramid path breaks a check rather than silently falsifying a document.
+
+## L.2 The trap is conditional, and silent in BOTH directions
+
+`strehl stack --help` states the backend is **inferred from the flags** when
+`--merge` is absent, and that `--gate` -- 275 call sites by ORCH's own sweep --
+is one of the inferring flags. Confirmed in the run log, which names the
+backend and the reason:
+
+    B  ->  merge backend : pyramid (default)
+    C  ->  merge backend : pyramid (inferred from --pyramid-exponent; ...)
+    D  ->  merge backend : estimator (--merge)
+
+So the outcome depends on flags the caller passed for unrelated reasons:
+
+- a harness with **no** estimator flags gets the pyramid, and the soft gate is
+  inert -- it will measure "no difference" and may report the gate harmless;
+- a harness that passes `--gate` and **not** `--merge` gets the **estimator**,
+  where the gate is live at 18 DN mean -- and it will attribute an
+  estimator-backend result to the shipping merge.
+
+Both failures are silent and they point opposite ways. The cheap guard, for
+any lane scoring this: **confirm the two arms are not bit-identical before
+scoring either**, and read the `merge backend :` line out of the run log rather
+than assuming.
+
+## L.3 I WITHDRAW the strong form of my coffee-bubbles verdict
+
+I.2 said coffee-bubbles reads -0.021 at 0.30-0.35 against a 0.022 null
+scatter, and I wrote that the 27.2% was "**decided, not merely pending**".
+V-LINEAR now measures the same subject at the same slice as
+**R = 1.542, CI [1.181, 2.154], MARGINAL** -- a CI that excludes the noise
+floor. That is a genuine disagreement between two instruments, and mine is the
+one with an untested confound:
+
+**`vd_xsig.py` splits a FOCUS stack into interleaved halves.** Each half
+therefore carries **half the focus-sampling density**. At depths falling
+between sampled planes the two halves resolve slightly different slices, so
+real content decorrelates between halves and my statistic charges it to noise.
+**The bias runs low -- the direction of the disagreement.**
+
+My commissioning could not have caught this. The NULL arm was a *flat field*,
+which has no focus structure to decorrelate, and the POTENCY arm was a static
+tone. Both tested whether I detect signal and reject noise; **neither tested
+the focus-stack-specific confound.** That is ORCH's "commissioning sensitivity
+is not commissioning specificity" wearing new clothes, in my own harness, one
+addendum after I ran a mutation audit and called it repaired.
+
+So: **the word "decided" is withdrawn.** The status is ORCH's -- MARGINAL, and
+not quotable as evidence. The operational conclusion is unchanged, because he
+and I reach "do not quote the 27.2%" by different routes.
+
+**The check that would settle it, which I cannot run:** point `vd_xsig.py` at
+`bee-1-cpl`, which V-LINEAR rates R = 5.311 PASS at this slice. If my
+instrument reads a 5.311 PASS subject as noise, it is biased low and I.2 is
+refuted outright rather than merely withdrawn. It needs an aligned bundle;
+mine were deleted at 22:48 and rebuilding 299 frames is not free. **Offered to
+whoever has that bundle already.**
+
+What this does *not* touch: the pool1/shipping band comparison on
+coffee-bubbles used bands **0.10-0.25**, well below the disputed slice, and a
+low bias would if anything credit *more* bands with real content, extending
+the range over which `pool1 >= shipping` rather than reversing it.
+
+## L.4 Re-checked against ORCH's new band rule
+
+His rule: no sharpness, softening or acuity claim is quotable without naming
+the band and the subject's qualification at it. Checking my own corpus:
+
+- **Addendum H's sharpness numbers are on `112MSDCF`**, which he now bars for
+  acuity claims. They survive, because they were taken as "worst of three
+  **qualified** bands", all at or below the **0.25** boundary I measured --
+  none in the barred 0.30-0.40 slice. I state the band explicitly rather than
+  claim compliance.
+- **Addendum H's premium numbers are on the synthetic twin**, which his
+  disposition exempts by construction.
+- If anything my boundaries are **understated** for the reason in L.3, which
+  is the conservative direction: I scored in fewer bands than I was entitled
+  to, not more.
