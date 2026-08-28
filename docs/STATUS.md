@@ -200,21 +200,30 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
     non-finding: `flowers-cpl` will still trip `CLIP_MAX` after the re-render; bounding it needs
     a per-channel rather than per-luminance tone stage, which is a corpus-wide change nobody has
     authorised. Fact 1894.
-15. **A mid-scale ring axis is still live and unadjudicated, and must not be conflated with the
-    tight-scale acquittal.** Three rim-like axes exist at **three disjoint scales**: `rimv6` at
-    ±12 px (now acquitted), `halo_profile` at 2–120 px with a 400–900 px far field (four false
-    positives, closed), and a separate axis in `docs/research/V-RIM-verification.md` using a
-    **0–140 px ring window with a 170–300 px null**, which reports **RING on 5 of 14 measurable**
-    subjects (`coffee-bean`, `lavendar-cpl`, `flower-bud-alone-cpl`, `bee-3-cpl`,
-    `flower-bud-with-background-fern-cpl`). **Three of those five are also among the thirteen** —
-    exactly the coincidence that invites a false retirement. Two bands remain unwalked by anyone:
-    **9–120 px and 120–400 px**, and the second is the geometry where a halo's decay separates
-    from ordinary scene lighting falloff, which is what produced `halo_profile`'s false
-    positives. Fact 1901.
+15. ~~**A mid-scale ring axis is still live and unadjudicated.**~~ **RESOLVED — it does not block
+    print.** Re-run unchanged on everything that still exists — the deliverable, SHIP-V4, and the
+    deliverable with the sRGB curve undone — the instrument returns **15 measurements, 0 RING**,
+    sitting **25–80× below the published amplitudes**, with **8 of 9 subjects at or below their
+    own rim-free floor**. The instrument is not at fault: its ratio rule is sound at **0 false
+    positives in 432 trials**. Corroborated by eye — no band is visible in the unstretched
+    panels of `D:\strehl-out\V-RIM\pics\ship-112MSDCF-stack.png` or `ship-113MSDCF-stack.png`.
+    **The published 5-of-14 RING result is not reproducible by anyone, including its author**:
+    it rendered its inputs with a binary pinned at `1cacb61` into a scratch tree, and that tree,
+    its `json2` outputs, and the binary are all **deleted**, with `summarise.py` hardcoding the
+    vanished path. So the one hypothesis that would make it correct as written — that strehl
+    improved in between — is **permanently untestable**, and `experiments/V-RIM/logs/summarise.log`
+    now reads like current evidence while being unreproducible. Three rim-like axes existed at
+    three disjoint scales and **all three are now closed**: `rimv6` at ±12 px (acquitted),
+    `halo_profile` at 2–120 px (four false positives, closed), and this one. Facts 1901,
+    1930–1931.
 16. **The rim axis carries three defects of its own, none yet fixed.** (a) `rimaxis.py:52`
     `SEAL_DIR` points at `acceptance\SHIP-V4`, **not the deliverable** — genuinely different
     renders, ~99.7% of samples differing, max 22764 DN; re-pointing moves the tally to 9 PASS /
-    12 FAIL / 5 REFUSED and swings `leaf-2-cpl` from +37.07% to +12.92%. (b) `rimaxis.py:57`
+    12 FAIL / 5 REFUSED and swings `leaf-2-cpl` from +37.07% to +12.92%. **Worse than a wrong
+    path: SHIP-V4's own provenance files state the colour space is sRGB with the tone curve
+    applied and carry the instruction `DO NOT MEASURE NUMERICALLY`, and each subject was
+    rendered with per-subject `--auto-exposure`.** The instrument is taking numbers off files
+    that explicitly forbid it. Fact 1932. (b) `rimaxis.py:57`
     `MIN_ISOLATED = 0.20` is **dead** — the name appears exactly once in the repo, at its own
     definition — so `wrapped-text-1` (16.2%) and `wrapped-text-2` (12.1%) were convicted in
     violation of the axis's own documented refusal rule. (c) `printcert4.rim_verdict` convicts on
