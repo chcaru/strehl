@@ -13,11 +13,17 @@ silently moved is the failure mode this campaign has paid the most for.
 Nothing here modifies anything. It reads source and does arithmetic.
 """
 
+import os
 import re
 import sys
 from pathlib import Path
 
-ROOT = Path(r"C:\dev\blog\death-of-software\projects\strehl")
+# Defaults to the real tree. The override exists so the conclusion-reversal
+# audit can run this script through its SHIPPED ENTRY POINT against a COPY of
+# the sources: this working tree is shared by ~12 lanes and briefly sabotaging
+# merge_cmd.rs to test my own verifier would corrupt whatever they are building.
+ROOT = Path(os.environ.get("STREHL_GRIDDIAG_ROOT",
+                           r"C:\dev\blog\death-of-software\projects\strehl"))
 MERGE = ROOT / "crates/strehl-cli/src/merge_cmd.rs"
 ALIGN = ROOT / "crates/strehl-cli/src/align_cmd.rs"
 PYR = ROOT / "crates/strehl-core/src/pyramid.rs"
@@ -80,7 +86,24 @@ atext = ALIGN.read_text(encoding="utf-8", errors="replace")
 for name in ("rp", "gp", "bp"):
     if f"let mut {name} = vec![0f32; fw * fh];" not in atext:
         raise AssertionError(f"full-res plane `{name}` is no longer a local -- claim VOID")
-print("  align_cmd.rs        rp/gp/bp are function-locals: built, sampled, dropped")
+
+# The declarations alone do NOT establish the claim. A function may declare a
+# local and still hand it back; `let mut rp = vec![...]` would sit there
+# unchanged while the planes escaped. What forbids escape is the RETURN TYPE:
+# the function yields a scalar, so no plane can leave through it. Until this
+# check existed the conclusion was true but untested -- green by luck.
+sig = re.search(r"pub fn warp_frame_in_place_fullres\((?:[^)]*)\)\s*->\s*([^\{]+)\{",
+                atext, re.S)
+if not sig:
+    raise AssertionError("warp_frame_in_place_fullres signature not found -- claim VOID")
+ret = sig.group(1).strip()
+if ret != "Result<f64>":
+    raise AssertionError(
+        f"warp_frame_in_place_fullres now returns `{ret}`, not `Result<f64>`. "
+        "A non-scalar return can carry the full-res planes out of the function, "
+        "so 'built, sampled, dropped' is VOID until re-established.")
+print(f"  align_cmd.rs        rp/gp/bp are function-locals; return type is "
+      f"`{ret}`, a scalar, so no plane can escape")
 
 # ---------------------------------------------------------------------------
 print()
