@@ -116,3 +116,95 @@ If detail is incoherent rather than absent, it is still PRESENT in the delivered
 image. A high `f` therefore does NOT by itself establish that the image is worse.
 It establishes that the choice is not reproducible. Any before/after built on this
 number must include a statistic that coherence alone cannot move.
+
+---
+
+# AMENDMENT, written after the numbers existed
+
+Recorded here rather than by editing the text above, so the registered form and the
+delivered form can be compared. Everything above this line is as committed in
+`f518b8dd`, before any coherence number existed.
+
+## 1. The statistic I registered FAILED its own commissioning. It was replaced.
+
+The half-difference form `f = 2*P_dif / (P_coh + 2*P_dif)` registered above is
+**not gain-free**, and my own `NULL_GAIN` arm caught it: a photometric difference
+between the arms lands entirely in `(A-B)/2`, so scaling one half by 1.3 moved `f`.
+That is the exact defect the pre-registration demanded the arm exist to find, and it
+found it in my own registered design.
+
+Delivered form, adopted before any subject was measured:
+
+```
+gamma = |SUM FA conj(FB)| / sqrt( SUM|FA|^2 * SUM|FB|^2 )        f = 1 - gamma
+```
+
+Gain-free **exactly** — a scalar on either arm cancels in numerator and denominator.
+`NULL_GAIN` now reproduces `BASE` to 1.2e-07 on `bee-1-cpl`. `P_coh` is retained
+only as the degeneracy diagnostic, because `gamma` cannot express `P_coh < 0`.
+
+## 2. The registration-floor control VOIDED the first run, correctly.
+
+One pixel of misalignment alone manufactures `f = 0.486` at 0.20-0.25, which
+**exceeded the `f = 0.467` measured between the real halves.** Uncorrected, this
+instrument cannot distinguish incoherent frame choice from one pixel of shift.
+Sub-pixel correction was added as a pure phase ramp, never resampling.
+
+My first phase correction had the **sign backwards** and doubled the shift rather
+than removing it: the floor rose to 0.666. numpy's `ifft` puts the phase-correlation
+peak at `-s`. Corrected, the 1 px floor is 1.74e-04 and a planted NON-integer shift
+of (0.37, -0.62) px reads 7.9e-05. `FLOOR_GATE_ratio` on `bee-1-cpl` is 2584.
+
+## 3. A fourth defect, found by the `DEGRADE` ladder.
+
+Fitting the shift over the full spectrum let two free parameters per tile buy
+apparent coherence out of noise: adding **independent** noise to both arms drove `f`
+DOWN, 0.510 -> 0.482, which the additive model forbids. Shift estimation is now
+confined to 0.02-0.05 cyc/px, disjoint from every reported band. The ladder is
+monotone on all three subjects.
+
+## 4. A fifth defect, found by `bee-1-cpl` and fixed in the instrument.
+
+`NULL_SHIFT_BOTH` compared its own median against `BASE`, but the arm drops the
+tiles too near the top-left edge. It was comparing a **116-tile median against a
+120-tile median**. On bee that population difference alone read 6.334e-03 and VOIDED
+a valid run. Comparing like with like, per-tile `|shifted - base|` is **0.000e+00 at
+the median, the p90 and the max.**
+
+That exact zero is a **prediction, not a short-circuit**: `np.roll` by integer
+(7,11) with tile origins offset by the same (7,11) extracts bit-identical arrays,
+verified with `np.array_equal`. The repaired gate was then commissioned against a
+graded planted mismatch and is monotone in it, firing at >= 8 px:
+
+| origin mismatch | 0 px | 1 px | 2 px | 4 px | 8 px | 16 px |
+|---|---:|---:|---:|---:|---:|---:|
+| deviation | 0.0 | 1.8e-04 | 8.8e-04 | 2.5e-03 | **5.9e-03** | **8.2e-03** |
+
+On the two shallower subjects the unrepaired arm happened to fall under tolerance.
+It was passing for a reason unrelated to its own validity.
+
+## 5. Outcome against the registered predictions
+
+| | registered | measured | |
+|---|---|---|---|
+| **P1** within subject | RISE if noise-driven | **FALL on all three**, incl. the deepest capture in the corpus | **REFUTED** |
+| **P2** between subjects | `f(119) > f(113)` at matched N | holds at both informative depths | **SUPPORTED** |
+| **P3** band shape | fall/rise larger at 0.20-0.25 than 0.05-0.10 | fall is far larger at 0.05-0.10 | **REFUTED** |
+
+`P1` was refuted in the registered direction on `119MSDCF` (N<=32) and `113MSDCF`
+(N<=62) before `bee-1-cpl` was rendered, and `bee-1-cpl` then refuted it at halves of
+149 frames each -- past this lane's own measured N* = 149 sharpness turnover, which
+is where the rising branch would have had to appear.
+
+## 6. The one-sided protection in section "Why a rise cannot be explained"
+
+That section argues a RISE could not be manufactured by noise. It is silent on the
+converse, and the converse is what I measured. Independent sensor noise contributes
+to `f` and **falls** with N as the merge averages more frames. A selection term that
+rose more slowly than the noise term fell would not be visible in this observable.
+
+So the registered prediction is refuted **as stated** -- the disagreement rate does
+not rise with N -- but the mechanism is **not conclusively excluded**. I cannot
+separate the two terms, because this lane already established that noise and scene
+are not separable on this data: the merge noise is non-white, falling 4.82x across
+0.30-0.50 cyc/px, and all three of my scene/noise estimators were refused.

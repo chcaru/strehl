@@ -121,8 +121,23 @@ def commission(A,B):
     fI,_=pair_stats(A,A,y,x,y,x); out["IDENTITY"]=float(np.median(fI[:,PRIMARY]))
     fO,_=pair_stats(A+2000.0,B+2000.0,y,x,y,x); out["NULL_OFFSET"]=float(np.median(fO[:,PRIMARY]))
     fG,_=pair_stats(A,B*1.3,y,x,y,x); out["NULL_GAIN"]=float(np.median(fG[:,PRIMARY]))
+    # DEFECT FOUND BY bee-1-cpl, N=298 (fixed here).  This arm rolls both arms and
+    # re-reads the tiles at matching offsets, so f must be EXACTLY unchanged.  It was
+    # compared against BASE, a median over all 120 tiles, while the arm own k-filter
+    # drops the 4 tiles too near the top-left edge.  On bee that population difference
+    # alone moved the median by 6.334e-03 and VOIDED a valid run; on the two shallower
+    # subjects it happened to fall under tolerance, so the defect was latent and was
+    # passing for a reason unrelated to its own validity.  Comparing like with like,
+    # per-tile |shifted-base| is 0.000e+00 at the median, p90 AND max.
+    # The exact zero is a PREDICTION, not a short-circuit: np.roll by integer (7,11)
+    # with tile origins offset by the same (7,11) extracts bit-identical arrays
+    # (verified with np.array_equal), so identical output is arithmetic.  The arm can
+    # still fail -- offsetting the origin by ONE pixel against the roll moves it
+    # 1.303e-03 (x) and 1.170e-03 (y).  Sensitivity to real misregistration is not
+    # this arm job; REG_FLOOR_1px shifts ONE arm only and reads 0.393 uncorrected.
     Ar=np.roll(np.roll(A,7,0),11,1); Br=np.roll(np.roll(B,7,0),11,1)
     k=(y>=7)&(x>=11)
+    out["NULL_SHIFT_BOTH_basis"]=float(np.median(base[k,PRIMARY]))   # same tiles as arm
     fS,_=pair_stats(Ar,Br,y[k]+7,x[k]+11,y[k]+7,x[k]+11); out["NULL_SHIFT_BOTH"]=float(np.median(fS[:,PRIMARY]))
     n1=rng.standard_normal(A.shape[:2]).astype(np.float32)*1000
     n2=rng.standard_normal(A.shape[:2]).astype(np.float32)*1000
@@ -156,7 +171,7 @@ def commission(A,B):
         # a non-zero residue is positive evidence the code path executed rather
         # than short-circuiting.  This arm is reported, never relied on.
         and abs(out["NULL_OFFSET"]-b0)<1e-6 and abs(out["NULL_GAIN"]-b0)<1e-6
-        and abs(out["NULL_SHIFT_BOTH"]-b0)<5e-3
+        and abs(out["NULL_SHIFT_BOTH"]-out["NULL_SHIFT_BOTH_basis"])<5e-3
         and abs(out["NOISE_NULL"]-out["NOISE_NULL_predicted"])<0.02
         and deg[0]<deg[1]<deg[2] and deg[0]>b0
         and out["IMPROVE"]<0.25*b0)
