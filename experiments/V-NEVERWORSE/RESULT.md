@@ -3862,10 +3862,30 @@ verifier for this section caught it.) My fixed bands are my own:
 Imported rather than reimplemented, because its restriction to the `FINE`
 partition is load-bearing:
 
-| subject | boundary | my MID 0.30-0.35 | my FINE 0.40-0.45 |
-|---|---:|---|---|
-| `coffee-bubbles` | 0.25 | R=1.533 MARGINAL | R=1.515 MARGINAL |
-| `112MSDCF` | 0.20 | **R=1.089 FAIL(noise)** | **R=1.049 FAIL(noise)** |
+| subject | boundary | 0.30-0.35 | 0.30-0.40 | 0.40-0.48 |
+|---|---:|---|---|---|
+| `coffee-bubbles` | 0.25 | R=1.542 MARGINAL | R=1.533 MARGINAL | R=1.515 MARGINAL |
+| `112MSDCF` | 0.20 | **R=1.079 FAIL(noise)** | **R=1.089 FAIL(noise)** | **R=1.049 FAIL(noise)** |
+
+**Correction, 2026-08-28, and it is the error ORCH's correction #5 says now binds
+everyone -- I made it in this very table.** The two right-hand columns were
+originally headed `my MID 0.30-0.35` and `my FINE 0.40-0.45`, which are the
+bands *my ladder uses*. The R values beneath them were never measured on those
+slices: they are V-LINEAR's `0.30-0.40` and `0.40-0.48` verdicts, transcribed.
+`vn_qband.py`'s own docstring says so explicitly (`my MID -> 0.30-0.40
+R=1.533`), so the file was right and the table's header was wrong. **A
+qualification table that misnames the band it qualifies is worse than no table,
+because it is quoted as licence.** The columns above now carry V-LINEAR's
+actual slice bounds and no column is labelled with a band nobody measured.
+
+**The narrow band has since been measured and it does not rescue the number.**
+V-LINEAR landed `0.30-0.35` at commit `968a5ae4`, pre-registered at `09394648`
+before any value existed, with the width itself gate-tested first --
+`dry-erase-marker-head-cpl` reads **R=4.530 PASS** at that width, so a FAIL
+there is a property of the subject and not of a 0.05-wide slice. `112MSDCF`
+reads **R=1.079 [1.040, 1.121] FAIL(noise)**, upper bound 0.379 below the
+MARGINAL bar. `coffee-bubbles` reads **1.542 MARGINAL** -- so it *has* been
+qualified, and it is not noise.
 
 So both of my quoted bands sit above both subjects' boundaries, and on
 `112MSDCF` they are noise outright.
@@ -3970,9 +3990,29 @@ That is an open finding and it is not this section's conclusion.
 was computed on **these** frames. On these frames, at the band that statistic
 reads, focus discriminability is 1.1628 and 1.1501 against a commissioned
 grain null of 1.0002. **So the `0.755 / 0.217 / 0.685` column is scoring a band
-that carries almost no focus-dependent signal on the pixels it was computed
-from, and the "9.3% relative sharpness cost" is not licensed as an acuity
-statement.** This is a within-subject, same-pixels comparison, which is what
+that does not qualify on either subject, and the "9.3% relative sharpness cost"
+is not licensed as an acuity statement.**
+
+**Narrowed 2026-08-28 against V-LINEAR's `0.30-0.35` measurement, which is the
+better reference.** My first draft of the sentence above said the band "carries
+almost no focus-dependent signal". On `112MSDCF` that stands and both
+instruments agree -- V-LINEAR reads 1.079 FAIL(noise), I read 1.1501. On
+`coffee-bubbles`, which is the subject section 9.5's column is actually
+computed on, **V-LINEAR reads 1.542 MARGINAL on unresampled linear develops,
+and MARGINAL is not noise.** So the reason the column is unlicensed is that the
+band **fails to qualify** -- noise on one subject, merely marginal on the other
+-- not that it is empty. The stronger phrasing overstated the coffee-bubbles
+case and is withdrawn.
+
+**The gap between the two readings is itself evidence, and it points at my own
+instrument.** V-LINEAR reads 1.542 where `vn_l0band.py` reads 1.1628 on the
+nominally same band and subject. That is the direction and roughly the
+magnitude the resampling hypothesis predicts: V-LINEAR measures unregistered
+linear develops, my bundles are registered and therefore resampled, and
+resampling attenuates exactly these frequencies. It is the same defect that
+made my boundary read 0.14 against a published 0.25. **This is why the
+subject-level verdict was withheld, and the withholding was correct.** Where
+the two disagree, V-LINEAR's unresampled number is the one to quote. This is a within-subject, same-pixels comparison, which is what
 V-LINEAR's rules permit; it is not a claim about what a pristine develop of
 either subject would show.
 

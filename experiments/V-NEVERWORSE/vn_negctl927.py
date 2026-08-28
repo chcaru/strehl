@@ -44,6 +44,14 @@ NUMERIC_PLANTS = [
     ("112MSDCF confidence arm",
      "| `112MSDCF` | confidence | 1.0124 | **0.8953** | 0.8697 | 0.9258 |",
      "| `112MSDCF` | confidence | 1.0124 | **0.8952** | 0.8697 | 0.9258 |"),
+    ("V-LINEAR 112MSDCF narrow-band verdict (duplicate-satisfaction trap)",
+     "**R=1.079 FAIL(noise)**", "**R=1.079 PASS**"),
+    ("narrow band conflated with the wider one, the defect just fixed",
+     "| R=1.542 MARGINAL | R=1.533 MARGINAL |",
+     "| R=1.533 MARGINAL | R=1.533 MARGINAL |"),
+    ("width-gate PASS on dry-erase",
+     "**R=4.530 PASS** at that width",
+     "**R=4.530 FAIL(noise)** at that width"),
 ]
 
 # CONCLUSION PLANTS.  ORCH's broadcast of 2026-08-28 names this lane: a report
@@ -71,8 +79,8 @@ CONCLUSION_PLANTS = [
      "**Section 9.23.6's sign flip survives qualification on both subjects, at",
      "**Section 9.23.6's sign flip dies under qualification on both subjects, at"),
     ("the unlicensed acuity claim flipped to a licensed one",
-     "from, and the \"9.3% relative sharpness cost\" is not licensed as an acuity",
-     "from, and the \"9.3% relative sharpness cost\" is licensed as an acuity"),
+     "cost\"\nis not licensed as an acuity statement.**",
+     "cost\"\nis licensed as an acuity statement.**"),
 ]
 
 

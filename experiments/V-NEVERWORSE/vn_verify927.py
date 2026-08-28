@@ -127,6 +127,23 @@ class Checker:
         return bad == 0
 
 
+VL = os.path.join(os.path.dirname(HERE), "V-LINEAR")
+
+
+def vlband(subject, band):
+    """One band verdict straight out of V-LINEAR's committed bandsweep record.
+
+    Quoting another lane's number means re-deriving it from that lane's record,
+    not transcribing it. Transcription is exactly how this section came to head
+    two columns `0.30-0.35` / `0.40-0.45` over values measured at `0.30-0.40`
+    and `0.40-0.48`.
+    """
+    p = os.path.join(VL, "bandsweep-far20-%s.json" % subject)
+    with open(p, encoding="utf-8") as fh:
+        rows = json.load(fh)
+    return rows[0]["bands"][band]
+
+
 def ratios(rec):
     """scene(deepest N) / scene(half N) per arm, recomputed from the record."""
     by = {}
@@ -262,6 +279,29 @@ def main():
     # 8.704, both of which are checked as numbers elsewhere in this run
     ck.conclusion("hypothesis refutation", "spectrally truncated so",
                   "refuted it", ["confirmed it", "supported it", "upheld it"])
+
+    # ---- V-LINEAR's band verdicts, re-derived from V-LINEAR's records ----
+    for subj in ("coffee-bubbles", "112MSDCF"):
+        anc = "| `%s` | 0." % subj
+        for band in ("0.30-0.35", "0.30-0.40", "0.40-0.48"):
+            b = vlband(subj, band)
+            # value and verdict pinned TOGETHER: this row carries three
+            # columns and a bare "FAIL(noise)" is satisfied by either of the
+            # other two, which is the duplicate-satisfaction defect again.
+            ck.has("%s %s" % (subj, band),
+                   "R=%.3f %s" % (b["R"], b["verdict"]), anc)
+    _de = vlband("decim4-dry-erase-marker-head-cpl", "0.30-0.35")
+    ck.has("width gate dry-erase 0.30-0.35", "R=%.3f" % _de["R"],
+           "gate-tested first")
+    ck.conclusion(
+        "width gate is a subject property, not a slice artefact",
+        "gate-tested first", _de["verdict"],
+        ("FAIL(noise)** at that width", "MARGINAL** at that width"))
+    _cb = vlband("coffee-bubbles", "0.30-0.35")
+    ck.conclusion(
+        "coffee-bubbles narrowing follows the record",
+        "V-LINEAR reads 1.542", _cb["verdict"],
+        ("MARGINAL is noise",))
 
     print("section 9.27 -- re-derivation from records\n")
     ok = ck.report()
