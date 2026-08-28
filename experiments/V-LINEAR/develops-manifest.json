@@ -1,0 +1,1519 @@
+{
+ "_generated": "2026-08-28T03:05:11",
+ "_recipe": "powershell -File experiments/V-LINEAR/r2_develop.ps1 -Key <subject>   (source D:\\personal\\macro\\<subject>, READ-ONLY; binary C:\\dev\\strehl-out\\acceptance-pins\\740e7056\\target\\release\\strehl.exe)",
+ "_what": "SHA256 of every developed linear TIFF deleted by V-LINEAR during the 2026-08-28 disk reclaim. Rebuild with experiments/V-LINEAR/r2_develop.ps1 -Key <subject> and compare against these digests to prove the rebuild is byte-identical.",
+ "subjects": {
+  "bee-1-cpl": {
+   "bytes": 59141877977,
+   "files": {
+    "DSC00001.tif": {
+     "bytes": 197798923,
+     "sha256": "e295e2272ff10758358c452c2b0e03984f684fe7bfcec0fbdbef5389c5a0fdc6"
+    },
+    "DSC00002.tif": {
+     "bytes": 197798923,
+     "sha256": "14e1d4140831e812abb01a9c6265c2e19bc17c995309854d3ab63f6132808191"
+    },
+    "DSC00003.tif": {
+     "bytes": 197798923,
+     "sha256": "90e509c82bbf162593f3643a1b5353b346d72b3b826388638cb34e712f0d6070"
+    },
+    "DSC00004.tif": {
+     "bytes": 197798923,
+     "sha256": "1fffc5766ac853c414725130457607e9f70ea45854c45e7300559bc06e39defa"
+    },
+    "DSC00005.tif": {
+     "bytes": 197798923,
+     "sha256": "792d90cbcb5c722e4b458a5a02e5f28cd616752afe4f5b448107b6dbca4ad0c0"
+    },
+    "DSC00006.tif": {
+     "bytes": 197798923,
+     "sha256": "e0e4619d00f06a975191023a2c5f04851d02fe4b7a5dc1b76d24f296bbe74d8d"
+    },
+    "DSC00007.tif": {
+     "bytes": 197798923,
+     "sha256": "8addc8e66e220e3d66243c9ab6aab5d6b80c7dc08e28bd34a1ac4ebbc67a3475"
+    },
+    "DSC00008.tif": {
+     "bytes": 197798923,
+     "sha256": "7898e9ce9cf6816b4d12c799b78c289af5b9ba9a6572abc5e05bf6540daa5da8"
+    },
+    "DSC00009.tif": {
+     "bytes": 197798923,
+     "sha256": "5965e50711f898ae037607d166e7d80f467747afe9ac286e5306a03579116f62"
+    },
+    "DSC00010.tif": {
+     "bytes": 197798923,
+     "sha256": "0159cd6fa1f8e4a3725ec7895109e42d4b348ca38ab969d78643f3c9cc0e2fce"
+    },
+    "DSC00011.tif": {
+     "bytes": 197798923,
+     "sha256": "c5a965c21088fed5b82047780f5df2cd249b610aae2b2739220e976f235c4531"
+    },
+    "DSC00012.tif": {
+     "bytes": 197798923,
+     "sha256": "90ab92460367d7d42141154dd3de73317bc1f43a38c3e9f4c87ca24a538886c3"
+    },
+    "DSC00013.tif": {
+     "bytes": 197798923,
+     "sha256": "1bd22ab4d098738bc0b4e03ae6c64274b28ed8fa37e0b01b97f3d91553e4b583"
+    },
+    "DSC00014.tif": {
+     "bytes": 197798923,
+     "sha256": "c13536a3ac1e6bccc9a63d9ef5513c24de14d03e1cd4bf757ac8dbf4f2986bb4"
+    },
+    "DSC00015.tif": {
+     "bytes": 197798923,
+     "sha256": "9556be96b5d7de49701ce6484ac7c7df985e3240b4b9dfaac85dfe1f6a8de776"
+    },
+    "DSC00016.tif": {
+     "bytes": 197798923,
+     "sha256": "299f287912fd0d5a0f14faee2a6a8599753012ddbe1eafeecd5efcbc37ea541a"
+    },
+    "DSC00017.tif": {
+     "bytes": 197798923,
+     "sha256": "8fb628af7f75ac5a9e385b5cccb1f097dd38a6cf36a0f0e6c14d58256236ccba"
+    },
+    "DSC00018.tif": {
+     "bytes": 197798923,
+     "sha256": "62d305834c72fbe230273013821b1479a848880cae690956279107fe2f21f316"
+    },
+    "DSC00019.tif": {
+     "bytes": 197798923,
+     "sha256": "ff8940a56d297eddbe6f443f32ed70651b383f0e17f6726416daed7dfd494cb1"
+    },
+    "DSC00020.tif": {
+     "bytes": 197798923,
+     "sha256": "98dcde25a506dc93eb7d0dc101fab564e3c8e679be5be9a5b972b5d2094b75bf"
+    },
+    "DSC00021.tif": {
+     "bytes": 197798923,
+     "sha256": "d26cdf28dfec59d80e1fdfccde8abf63c19ae82194280bac7075813e83aeb72b"
+    },
+    "DSC00022.tif": {
+     "bytes": 197798923,
+     "sha256": "d664e853a5aa791f91379ff69fd9fad98baa754de2a27a960ef303caf97913fc"
+    },
+    "DSC00023.tif": {
+     "bytes": 197798923,
+     "sha256": "9b60a794f0870562b3720fcc7aec0fbce8353003a18bad6fc84903935b108287"
+    },
+    "DSC00024.tif": {
+     "bytes": 197798923,
+     "sha256": "f09b8b22b5c93c1000b01df4c7ee5568c0ce95e3d169f6bf65fd39eae09b86b0"
+    },
+    "DSC00025.tif": {
+     "bytes": 197798923,
+     "sha256": "c5d659f6acb13c241611d4f5d4d307b60e5a0ac930f470d62a5e3daa7abf5e96"
+    },
+    "DSC00026.tif": {
+     "bytes": 197798923,
+     "sha256": "ee2177e262f2f48e2783ed83dc62e4c0328298d611fe28f44b7d39670c72182c"
+    },
+    "DSC00027.tif": {
+     "bytes": 197798923,
+     "sha256": "fddf3094116f57a67c9ed4016a45ad888030035f5fa8c5d9055c6afc51d7f91d"
+    },
+    "DSC00028.tif": {
+     "bytes": 197798923,
+     "sha256": "837a352a9d6d21cb4d7d91552328cbc187056c38448e5bea369185a5cb9587ac"
+    },
+    "DSC00029.tif": {
+     "bytes": 197798923,
+     "sha256": "ad253734f8a8c0aa2d2bbe499cef12c3de3c3bc5d23fc707dc8ea99816fd2caf"
+    },
+    "DSC00030.tif": {
+     "bytes": 197798923,
+     "sha256": "52d8dad398a71eb1939c7582cd12b39bb37b35a710673889d77b2fd5cc4eaaa1"
+    },
+    "DSC00031.tif": {
+     "bytes": 197798923,
+     "sha256": "d3a2ca6c7fcca42e9ed68080cb8972188985b581d40210a8f2325eedacdcfb6b"
+    },
+    "DSC00032.tif": {
+     "bytes": 197798923,
+     "sha256": "ec0711d394fe9267b8f7937e7b827aa9204a27a70308baec3ab6182d6ff2b54a"
+    },
+    "DSC00033.tif": {
+     "bytes": 197798923,
+     "sha256": "b2216e2fcbf5d88450a4f548d084c455facef2f92013e9a600c0d82fc6201c1d"
+    },
+    "DSC00034.tif": {
+     "bytes": 197798923,
+     "sha256": "5f787bfd20938b8f214e450884a69b5553ce7b2f44952da0a38864ee4eca0932"
+    },
+    "DSC00035.tif": {
+     "bytes": 197798923,
+     "sha256": "cd211df5569add481caf04981eee94cd8ac6bc730c8c731d57380706217c73d5"
+    },
+    "DSC00036.tif": {
+     "bytes": 197798923,
+     "sha256": "7e0fb48ccced9784e04fd8b84f9d8233ec822e8e1a3ad3cc88fd02cf580880d7"
+    },
+    "DSC00037.tif": {
+     "bytes": 197798923,
+     "sha256": "2ad44e0ca2ca4f121cadccb325b0fb3e55409d2bdd01f3152c09553d0c2a493e"
+    },
+    "DSC00038.tif": {
+     "bytes": 197798923,
+     "sha256": "dd3e99c67670c829b8842bd63ef982644d3c3f758f567ec8ac97c899bd711570"
+    },
+    "DSC00039.tif": {
+     "bytes": 197798923,
+     "sha256": "d0d1024e00af150d763d717d988a9524f91fc412461263f90196d99c2e2057bd"
+    },
+    "DSC00040.tif": {
+     "bytes": 197798923,
+     "sha256": "369979cf2eb8bb62bf3e46ad8ee21b4b50ae7ba34a0ae82ecd938063a476b7c6"
+    },
+    "DSC00041.tif": {
+     "bytes": 197798923,
+     "sha256": "234e025bc005a281cd6799c7a3648798a339f716c1f23319d08ad92ef8bf5185"
+    },
+    "DSC00042.tif": {
+     "bytes": 197798923,
+     "sha256": "a56ba2f2d6a288bbfa8b6fe0b0eb72bb7e62cc7476368acc68030a20d3d8f48a"
+    },
+    "DSC00043.tif": {
+     "bytes": 197798923,
+     "sha256": "ba92f9577bac76ae137b2f4b511c296fb15e87f889c9f416e1f472167936bd21"
+    },
+    "DSC00044.tif": {
+     "bytes": 197798923,
+     "sha256": "21be46c1a9b772501692212d016a0a8755110af333c0276d42b6978b73b27be9"
+    },
+    "DSC00045.tif": {
+     "bytes": 197798923,
+     "sha256": "7da5a17606e345ae04d4a607553f48d40093193aeab27231c8746e99a1ac0bcb"
+    },
+    "DSC00046.tif": {
+     "bytes": 197798923,
+     "sha256": "e859381da039de5b76ddb529bcc3fb567c57a0bd053766fdc89abcea875f9b2e"
+    },
+    "DSC00047.tif": {
+     "bytes": 197798923,
+     "sha256": "c87cf14c7b3e70d2a991239a90867937f4f32f19ca9ddbfa805f8ab8d14be3de"
+    },
+    "DSC00048.tif": {
+     "bytes": 197798923,
+     "sha256": "68f67ce6dd0267d5ddd94694f404461e2a0e13af7bad1f5c24005bc780a1c41c"
+    },
+    "DSC00049.tif": {
+     "bytes": 197798923,
+     "sha256": "4729bc6c12bdaa8c46e89b6f9170325d94d8612ce0ab823b12bd47c6881b684f"
+    },
+    "DSC00050.tif": {
+     "bytes": 197798923,
+     "sha256": "d0c4c791c7696b07d9b51e6cc15667721f8265ff4dba33f647278033be96886a"
+    },
+    "DSC00051.tif": {
+     "bytes": 197798923,
+     "sha256": "50f6cd00944c9d4042c014429c4a535e5df8d06bfc7f7bccb9382b62e54d6044"
+    },
+    "DSC00052.tif": {
+     "bytes": 197798923,
+     "sha256": "1e7a23a8261503df59733bbbd70fdcdc0575aa702aa95b899cfae7e36a99d554"
+    },
+    "DSC00053.tif": {
+     "bytes": 197798923,
+     "sha256": "130681058490dd1d5e90c70a954bbbb6e6b0f0764d782d2336de1033834d6f1b"
+    },
+    "DSC00054.tif": {
+     "bytes": 197798923,
+     "sha256": "9bfd465c6a757c70d9329fe09f5d47cb09cd573f1fd102c420f48357b0759ecb"
+    },
+    "DSC00055.tif": {
+     "bytes": 197798923,
+     "sha256": "e38117381929ac7e058befd9b07d5be4931713929036cadb25087f10dad0075b"
+    },
+    "DSC00056.tif": {
+     "bytes": 197798923,
+     "sha256": "d1fc9bb3f5dab3f57f15174829a3985a48c3f80c52ed3b8ecd340d32fe9d89d9"
+    },
+    "DSC00057.tif": {
+     "bytes": 197798923,
+     "sha256": "d7871e86f5421e1fb977d3fbe14d2ef4e3f3b1a8ddc8d5093a1d5c3f844bbb3e"
+    },
+    "DSC00058.tif": {
+     "bytes": 197798923,
+     "sha256": "c334cf26149388b78a23f3a4c6b01d5b3e926bb64cd979443021b27e3bd92596"
+    },
+    "DSC00059.tif": {
+     "bytes": 197798923,
+     "sha256": "650a9bad7ee94343aa8830e1fc08716262a2b8ea59d0e926a2f9e9be6078f3a0"
+    },
+    "DSC00060.tif": {
+     "bytes": 197798923,
+     "sha256": "263c38d395e99f0075028891584d8af5637ace70bef78a82202ad001abba9b9c"
+    },
+    "DSC00061.tif": {
+     "bytes": 197798923,
+     "sha256": "738906ef858e4e94dceb97ea046195a7674e141c05db99846c05336dd60650f5"
+    },
+    "DSC00062.tif": {
+     "bytes": 197798923,
+     "sha256": "2319b1959ac028d3f87f26399624118bd70548154c3500f87c51c2f8d5ce7a1a"
+    },
+    "DSC00063.tif": {
+     "bytes": 197798923,
+     "sha256": "5d4dde6de2a47f3a8f601cbcdc30e8e57362440b14e06ff27ac5ace2fd76eb1a"
+    },
+    "DSC00064.tif": {
+     "bytes": 197798923,
+     "sha256": "36de515739984e6a71d62a971344105751eade9a98f9af219b8600f7f581a9f0"
+    },
+    "DSC00065.tif": {
+     "bytes": 197798923,
+     "sha256": "bcf3bf357869629c82f197ca182f42611184ffc231e66462619d6bf340189a46"
+    },
+    "DSC00066.tif": {
+     "bytes": 197798923,
+     "sha256": "f570095488481d3c2d404ed83e97a404afb9593193f568c4fe7e7ecd56b01149"
+    },
+    "DSC00067.tif": {
+     "bytes": 197798923,
+     "sha256": "6fd9192e6a9ccb04b48de28cfa12e4aad39b91ffb7d53397a15fbda9f9d8e21f"
+    },
+    "DSC00068.tif": {
+     "bytes": 197798923,
+     "sha256": "ab7ef53c89f2e12ec1f772caa0494dd4b86e2b25dc274b7801814d5819d6b019"
+    },
+    "DSC00069.tif": {
+     "bytes": 197798923,
+     "sha256": "2473c0e4fcf4320e8a5e4034d28af6b7a3bb193f354974d181547fb404f0905b"
+    },
+    "DSC00070.tif": {
+     "bytes": 197798923,
+     "sha256": "0758dccbdd53acb18e005fff44c7cfedf1c2943fab62554f4e3cf6fa3e21da71"
+    },
+    "DSC00071.tif": {
+     "bytes": 197798923,
+     "sha256": "63cdeb47fa5810f7ef0511dcbb8d1e50ccf5935104dc38868e8117b16bbecbe8"
+    },
+    "DSC00072.tif": {
+     "bytes": 197798923,
+     "sha256": "eab63d63346580bce8b91e563dae38a6a8cbcf8d82299e3a5d71876c6ee21574"
+    },
+    "DSC00073.tif": {
+     "bytes": 197798923,
+     "sha256": "a7bc1de13c3955717d1072ffe93b7d8fc01700535585e1a7aa3da8e467170073"
+    },
+    "DSC00074.tif": {
+     "bytes": 197798923,
+     "sha256": "7ebb05f95bcc2fc6165692fbbca1271f2c0cea0ec6ee485094669a41bf9f8ada"
+    },
+    "DSC00075.tif": {
+     "bytes": 197798923,
+     "sha256": "0b3e3ffa505fad032fb5589da34cc771834d6c3877a40260a1dad5fca8843962"
+    },
+    "DSC00076.tif": {
+     "bytes": 197798923,
+     "sha256": "03f39683c50baa3f47faba2cd821631ba2f2deb2d3473bc7f220773de73e1c7b"
+    },
+    "DSC00077.tif": {
+     "bytes": 197798923,
+     "sha256": "5b8c648be4d301cdfd427e77bd24ba18520d0ecf999e7061af51e7297a5f2708"
+    },
+    "DSC00078.tif": {
+     "bytes": 197798923,
+     "sha256": "07127e09d637a1167381ffb54cee1af3f22c3830bfb9bdf40ddd08df132c93c4"
+    },
+    "DSC00079.tif": {
+     "bytes": 197798923,
+     "sha256": "36e421f1b058a776ac54c9d3c68fc89ed88c567274b647d46e03a2a7e3e82779"
+    },
+    "DSC00080.tif": {
+     "bytes": 197798923,
+     "sha256": "427444498959bb20601039a7295c15c1058f22ae995b791e6836d3b4bd3a6cce"
+    },
+    "DSC00081.tif": {
+     "bytes": 197798923,
+     "sha256": "e5339547c95d2394bb351e75731427c3ff6263e30e962d5310404f98e977c606"
+    },
+    "DSC00082.tif": {
+     "bytes": 197798923,
+     "sha256": "98e680dfc02a5993df224a5664f0861eb958bc23508e09129fa8f8b0e7a14142"
+    },
+    "DSC00083.tif": {
+     "bytes": 197798923,
+     "sha256": "2925a264b18c4839c822549c35c1495c4916e7335c2bbc7757da0b98e95f6143"
+    },
+    "DSC00084.tif": {
+     "bytes": 197798923,
+     "sha256": "0bc2cfd8e0231432ca0c94cd9775e441fd95f1eb087ff65704bf33374e0532e9"
+    },
+    "DSC00085.tif": {
+     "bytes": 197798923,
+     "sha256": "4b916fb719552a4bd48027db1bf0a3124cbed1dd1638a353a89b9bb23a634ccc"
+    },
+    "DSC00086.tif": {
+     "bytes": 197798923,
+     "sha256": "70bfb4c65d4c2867bcfeb67e1968f239c0ce9873ed5d70f699e762c854190b04"
+    },
+    "DSC00087.tif": {
+     "bytes": 197798923,
+     "sha256": "3d455771edccc897f23e4dcc0c5583cc92baed0c2e6e0164b61efeeedead5cdc"
+    },
+    "DSC00088.tif": {
+     "bytes": 197798923,
+     "sha256": "4b6b011e55fb3d402df34e7ccb8842cdcf5d77d46a111d339379e9494e051bd0"
+    },
+    "DSC00089.tif": {
+     "bytes": 197798923,
+     "sha256": "72164b2c1e59ece2a07e0cbd0314bf7a182dc546307938a9d6d4c0f520e3246e"
+    },
+    "DSC00090.tif": {
+     "bytes": 197798923,
+     "sha256": "cad5bd722d0de7a0e55d5a47e49eaa19039937356a19873adf5f566c5d12b640"
+    },
+    "DSC00091.tif": {
+     "bytes": 197798923,
+     "sha256": "c79b3b4530dfe09a176072b11196e164f7445f67c3c6bfb0f538c5ea55cdcb8c"
+    },
+    "DSC00092.tif": {
+     "bytes": 197798923,
+     "sha256": "6f8ee640e7d56cab641be21ca1fe23d2edc88f7e3fcee1352870d0e15f4445a3"
+    },
+    "DSC00093.tif": {
+     "bytes": 197798923,
+     "sha256": "e25312e47bfd3a45dba6d21402211fef05ef9a18caf4b8979c94e07be500cda6"
+    },
+    "DSC00094.tif": {
+     "bytes": 197798923,
+     "sha256": "72ec392548a1ee52c226c9a433a08bee3548b44e63aa4d4eb4f7a5f087fbcbdf"
+    },
+    "DSC00095.tif": {
+     "bytes": 197798923,
+     "sha256": "bb0cdcdb49c73bf11f1be349a2e77105a79bacce81d8014fb35101c39c19b4df"
+    },
+    "DSC00096.tif": {
+     "bytes": 197798923,
+     "sha256": "2cf4b5bb1df7487e840a568f6abce92e29e7a63ee997c4e61a5df877bc175fd6"
+    },
+    "DSC00097.tif": {
+     "bytes": 197798923,
+     "sha256": "67864513cb663d9b0ea1b8c6534c938f3bdd2a3c9ab128d0c53bb6b5ddfbb87e"
+    },
+    "DSC00098.tif": {
+     "bytes": 197798923,
+     "sha256": "5588de044236f037e57d02c8e40ae8675db21079a406c999f19efd13de3e6347"
+    },
+    "DSC00099.tif": {
+     "bytes": 197798923,
+     "sha256": "c8a56bb6bcd3335eefb72efafe793e04cb3791302551d9a58ddbf89ca30588b3"
+    },
+    "DSC00100.tif": {
+     "bytes": 197798923,
+     "sha256": "5fbdf501a3a0f1b707f3f4f795ebf2b1df0012827898113a2bb9dde60f9ac2a4"
+    },
+    "DSC00101.tif": {
+     "bytes": 197798923,
+     "sha256": "602df4cbd60fd920ae889b3dbf034462e26ae74242d0f6f2af33efd2a539ffed"
+    },
+    "DSC00102.tif": {
+     "bytes": 197798923,
+     "sha256": "6719b2922c24d0ca51e390d215e579d10f55f1e36409440be4f5f7ac4e0350c8"
+    },
+    "DSC00103.tif": {
+     "bytes": 197798923,
+     "sha256": "493e283e9cc78943f6b42cb72e359a89371067738098e523236436086a918819"
+    },
+    "DSC00104.tif": {
+     "bytes": 197798923,
+     "sha256": "18b526ee963a64f806a1ab3aaac96a6da6bff00fafbe894febf48caa491af35f"
+    },
+    "DSC00105.tif": {
+     "bytes": 197798923,
+     "sha256": "e778c43b8eaf0a27b79b97fce9fdbde8cca367a433abc96a83d750680d8d2755"
+    },
+    "DSC00106.tif": {
+     "bytes": 197798923,
+     "sha256": "afd20b20cefb893f3ba388931943b77e25db9cd422f1923ab1c8950b6b664b5e"
+    },
+    "DSC00107.tif": {
+     "bytes": 197798923,
+     "sha256": "d51d1ea92e020e05cbc4abae6fdd5fedff35f8951dac8a5251403a18a494a9cf"
+    },
+    "DSC00108.tif": {
+     "bytes": 197798923,
+     "sha256": "0bcd9269484e451098ded24b5eebc491adf4d27434e787bbcd33e814c75c7419"
+    },
+    "DSC00109.tif": {
+     "bytes": 197798923,
+     "sha256": "30a69c9246f13a7e3f9bde5b96736b8e6c57130c43a2eb7be941bf8606f19c6d"
+    },
+    "DSC00110.tif": {
+     "bytes": 197798923,
+     "sha256": "a848fe61f10181ae801085cb9c4c81ae179e67bfe9b2683ca88436d788ddcee1"
+    },
+    "DSC00111.tif": {
+     "bytes": 197798923,
+     "sha256": "a2e40919b0a19bc4219615e18022888f90b3a8ae385ff8e1e95158f61cd8f52c"
+    },
+    "DSC00112.tif": {
+     "bytes": 197798923,
+     "sha256": "e4be21d0beb59c8d52a11d51d915d05a8be02432997770a5659d79fef56dd6db"
+    },
+    "DSC00113.tif": {
+     "bytes": 197798923,
+     "sha256": "bee1ca131ea1e690c7a9cb60cff3f5a77b55410fd505ed9df36c1383259c8e1b"
+    },
+    "DSC00114.tif": {
+     "bytes": 197798923,
+     "sha256": "888f2734a35b7a568e52659c09214c22ed0eda7dc5a867bc9e05c82e5c55b210"
+    },
+    "DSC00115.tif": {
+     "bytes": 197798923,
+     "sha256": "83d3d298ce877e83d8f7368c975f0ed360747c4c0e265482c98d4fda75559cc7"
+    },
+    "DSC00116.tif": {
+     "bytes": 197798923,
+     "sha256": "f679916fb209af34befdb6843a6082aa5fc2498150d64687df054c9a6902235a"
+    },
+    "DSC00117.tif": {
+     "bytes": 197798923,
+     "sha256": "3acf7e8bcd03d51a067cbdb38e77bae543b5fc6dd0138cd5d165617f8ca7c38b"
+    },
+    "DSC00118.tif": {
+     "bytes": 197798923,
+     "sha256": "b561fa5cd5f2093e0e9b77a4b809851e10a598f05fdb55c2b9e8804ea79f6a7f"
+    },
+    "DSC00119.tif": {
+     "bytes": 197798923,
+     "sha256": "a7816b0d47a7ffca45fb959b4a74ad461592e768e559fed2ab00972f68a73efa"
+    },
+    "DSC00120.tif": {
+     "bytes": 197798923,
+     "sha256": "e8b43c600decd9120459d27228933455cf64a8e77e7cdb68fad57eca6869b837"
+    },
+    "DSC00121.tif": {
+     "bytes": 197798923,
+     "sha256": "ca268927e2afb698401ece50202499cf48e85c28c5ff560bb5f2bd63879a703e"
+    },
+    "DSC00122.tif": {
+     "bytes": 197798923,
+     "sha256": "2b397503122017c0559cefd2c2b98757f22f6fd7b580aee9c8bdd8e6beabdbe5"
+    },
+    "DSC00123.tif": {
+     "bytes": 197798923,
+     "sha256": "34f3966e432fff00a13c5e93a9eabddbab06ac13524e8de28bcd8271fdcb1fc1"
+    },
+    "DSC00124.tif": {
+     "bytes": 197798923,
+     "sha256": "8a8629e1a92af3d6e57a1d64491310a516c0d60a0b0b05cf4934b4a4de4e8a15"
+    },
+    "DSC00125.tif": {
+     "bytes": 197798923,
+     "sha256": "e1993bccacfbd884d594abf272dea65a182d161d9783b42ca00e94130cf3f9c2"
+    },
+    "DSC00126.tif": {
+     "bytes": 197798923,
+     "sha256": "33687df6311ce66d374ad97933a3083fc5f6143bd0aa4e453eb4045d98021d75"
+    },
+    "DSC00127.tif": {
+     "bytes": 197798923,
+     "sha256": "f497ca07e36fd39af46fd7473904f445eb7c09e7ccc4cce4ca96fb118fc26bb1"
+    },
+    "DSC00128.tif": {
+     "bytes": 197798923,
+     "sha256": "e195c5f6d92120087f205cf1857c0e715dba2adb0beb879a33660a7d85fe1430"
+    },
+    "DSC00129.tif": {
+     "bytes": 197798923,
+     "sha256": "8b739921eaf651d4d50158761cb003ec5f106ef8471f39ed5238fb77ac0ca621"
+    },
+    "DSC00130.tif": {
+     "bytes": 197798923,
+     "sha256": "df408a5c1ef4e1ca8bc0f7010b1ae8adc8c32147ddafd051df5d7be84e6c8e3c"
+    },
+    "DSC00131.tif": {
+     "bytes": 197798923,
+     "sha256": "d8d77baf96f8859131591a7f6d997bab5f6d086a8324fa2df8d69156a29c1602"
+    },
+    "DSC00132.tif": {
+     "bytes": 197798923,
+     "sha256": "d83873650d2ad17c56407186341db0fa46fdf3895f6b11dd8b0083ea20c31a43"
+    },
+    "DSC00133.tif": {
+     "bytes": 197798923,
+     "sha256": "564b24f0b6e320a9bedb3ea0cb6be55fd95073f0b1b39de46390695bc86dbef4"
+    },
+    "DSC00134.tif": {
+     "bytes": 197798923,
+     "sha256": "17477e226851288c31175720c8ec4eced54246ffe5068c4ee156c9fda5d26b74"
+    },
+    "DSC00135.tif": {
+     "bytes": 197798923,
+     "sha256": "ffb0484e1a1891b9d447d080abc0af1c524fd5c7df4c2ab18d3365bf70e24097"
+    },
+    "DSC00136.tif": {
+     "bytes": 197798923,
+     "sha256": "35522a2ac013b3dda4f7fca091a6f7d7a60b81fab56b4d81c57f88a477836828"
+    },
+    "DSC00137.tif": {
+     "bytes": 197798923,
+     "sha256": "1ed6a0a9cf0b1341368ab9647ca783836b43b59c6a5f85db3cbae8c6ff8e3134"
+    },
+    "DSC00138.tif": {
+     "bytes": 197798923,
+     "sha256": "8fdad8fffeb6b8e38170e16d0257b02d39d658a36b1c30070ee1ffeb3ac05124"
+    },
+    "DSC00139.tif": {
+     "bytes": 197798923,
+     "sha256": "4f8a1ed1f764437bce8bb46a83f03b157834b9a899a31072900d130abddc33f7"
+    },
+    "DSC00140.tif": {
+     "bytes": 197798923,
+     "sha256": "4911a6c02d630b74ea4a4ec15edfb4e60f202f707ea55299ad8329f118ae68d6"
+    },
+    "DSC00141.tif": {
+     "bytes": 197798923,
+     "sha256": "9c6950ec237baea4c6fce4da64009d71d587434eafc49000f00a573e8916d5b7"
+    },
+    "DSC00142.tif": {
+     "bytes": 197798923,
+     "sha256": "8e44194a6fe57fec760c66e1933d89c7a330bbefdf5c54364b72248fdb1e838e"
+    },
+    "DSC00143.tif": {
+     "bytes": 197798923,
+     "sha256": "43b80724fc09f8a1daefbe9e9e7707501ec60aa31a00eae23226ac453355b771"
+    },
+    "DSC00144.tif": {
+     "bytes": 197798923,
+     "sha256": "de831ea472a8e2e45927ea1658bb37d5e870d097e9f3f844d068ead374b6b615"
+    },
+    "DSC00145.tif": {
+     "bytes": 197798923,
+     "sha256": "621371f4b0d407a82594f7754f1ea4b738172d4ae56d67a88fd99248e2a8b567"
+    },
+    "DSC00146.tif": {
+     "bytes": 197798923,
+     "sha256": "8bd8f075d33df4a7b97652941ee5377b93dadb4755344bcdfc3090ec6612061d"
+    },
+    "DSC00147.tif": {
+     "bytes": 197798923,
+     "sha256": "4cff260778f4161e28c18d5c19b36f38ff223863b2bffc55f01011ff925cafac"
+    },
+    "DSC00148.tif": {
+     "bytes": 197798923,
+     "sha256": "5e8280cebd6658fbd44b19ca2c99df214bf4bc93e19ba4de9dbf7cd6d1c4c0dc"
+    },
+    "DSC00149.tif": {
+     "bytes": 197798923,
+     "sha256": "5806f5645cbd2cb4aad8a886f14f4c6a1268fa4f777503647b009626eedbfe33"
+    },
+    "DSC00150.tif": {
+     "bytes": 197798923,
+     "sha256": "3f97033f25cd948734dd9bae07493f6f128ef3bf0ee57496332d91484816b16a"
+    },
+    "DSC00151.tif": {
+     "bytes": 197798923,
+     "sha256": "6cd7bb761f76796aa6031be87660f4f0e2ed2058ee2ca65fc4747d4cccd6151a"
+    },
+    "DSC00152.tif": {
+     "bytes": 197798923,
+     "sha256": "21986835c9cdb67ab30e3c134111d20a7d9becf843a144edc51445e9913006e8"
+    },
+    "DSC00153.tif": {
+     "bytes": 197798923,
+     "sha256": "b65e6997d2ea30b17b72795bd0d746292918401d07513d8cb097a8bd627fbb41"
+    },
+    "DSC00154.tif": {
+     "bytes": 197798923,
+     "sha256": "7e5925b79fb6a8d06951d27fcd4ed80b52533d7cdab8c2c8b4c7386a7153f41b"
+    },
+    "DSC00155.tif": {
+     "bytes": 197798923,
+     "sha256": "a08e03716ceddd9b69d6c8ea6710ea031f55545788ff8807d542ae21b9a9feb0"
+    },
+    "DSC00156.tif": {
+     "bytes": 197798923,
+     "sha256": "dd0886150a8e587ff7bf6f78b7a2954b5fd94a2fa2f3f2ef8ede83d9fb4d3277"
+    },
+    "DSC00157.tif": {
+     "bytes": 197798923,
+     "sha256": "20e58f36210118e42c1275d21ee49a17f48c68ec9ee68dcc4160132d23780f2d"
+    },
+    "DSC00158.tif": {
+     "bytes": 197798923,
+     "sha256": "89efe2c9db03d7a31bc566fb7fefe517b32dd2891070cf8d208eb4261c90fbbd"
+    },
+    "DSC00159.tif": {
+     "bytes": 197798923,
+     "sha256": "674a898eaca5b303201f5fe6921d7f1ee325e424f4718ecf2318426bd33e95dc"
+    },
+    "DSC00160.tif": {
+     "bytes": 197798923,
+     "sha256": "d0072bb55d9d347ca5d33657297bef0c4f6965b14417fa6c0b939dc47feef51f"
+    },
+    "DSC00161.tif": {
+     "bytes": 197798923,
+     "sha256": "b8224f5d5ef586d8a96f266c4f7cc0dd0507b7cb18e32fcfd984a968cb87b102"
+    },
+    "DSC00162.tif": {
+     "bytes": 197798923,
+     "sha256": "69e559c875e710ce70e1451f5addd4a5afdb25687dece326be01d032e43e80aa"
+    },
+    "DSC00163.tif": {
+     "bytes": 197798923,
+     "sha256": "e8acc92079330c494ec4bad0990e6038a9f588e3eb5ee5cbe5af5eb6eb0d2171"
+    },
+    "DSC00164.tif": {
+     "bytes": 197798923,
+     "sha256": "38264b057e7ba47d3a63547be4f10adfd15471602de69931fb56b924a0e386a6"
+    },
+    "DSC00165.tif": {
+     "bytes": 197798923,
+     "sha256": "53168e2c46517181e58364f8db12b5f287f40c98c70f69fc7b3547a4e8b4ed87"
+    },
+    "DSC00166.tif": {
+     "bytes": 197798923,
+     "sha256": "aad6415851801f9639ca48bc9675f0fdc282a85a10bc7bdeaf1dc55935eb4ffb"
+    },
+    "DSC00167.tif": {
+     "bytes": 197798923,
+     "sha256": "2e5520a4545a903ec1d0397985d743229d71bc2091deab38ee701e5310ce84cd"
+    },
+    "DSC00168.tif": {
+     "bytes": 197798923,
+     "sha256": "3d80e791175cdec10c8de51d62f11ba40cd07fbe3da79ca249bfeba6e769040e"
+    },
+    "DSC00169.tif": {
+     "bytes": 197798923,
+     "sha256": "9cf9215f480210987937789da5ac60b7694942f980afcb3cf434dddf6e229df3"
+    },
+    "DSC00170.tif": {
+     "bytes": 197798923,
+     "sha256": "ed96ed577f035adf168be3634a0867bcec0b77663a78e0526d0e6c7f8492c089"
+    },
+    "DSC00171.tif": {
+     "bytes": 197798923,
+     "sha256": "8495ef3cfa0dc7ba3d232dd9e41fe5bafbf7b83a5719ad82a014a0c1970f261b"
+    },
+    "DSC00172.tif": {
+     "bytes": 197798923,
+     "sha256": "4f7f0f82f9d60dd9d5b66abd651527f2b0f2a03e22f8fea79a2444d4fbd76d69"
+    },
+    "DSC00173.tif": {
+     "bytes": 197798923,
+     "sha256": "d666adbb22af028a9b667bfa6a61cca92c9b1a4f4547b89134855e170b6c6402"
+    },
+    "DSC00174.tif": {
+     "bytes": 197798923,
+     "sha256": "6f1addc5fa6a8893973d406b01fbb5281f347af909bfb8719acebdbeec648ea2"
+    },
+    "DSC00175.tif": {
+     "bytes": 197798923,
+     "sha256": "f6ed5eeb77518674dbcbc14511eaf776f6fb7c2ab5cfdd61b261b29f1aa7bd40"
+    },
+    "DSC00176.tif": {
+     "bytes": 197798923,
+     "sha256": "bc737387b9e742b7848feff6641c71cc0049a79921489fecadeb5c3322f59504"
+    },
+    "DSC00177.tif": {
+     "bytes": 197798923,
+     "sha256": "f6707e1518b73cd5a3827e29c538c1d5361f600d493614dfe50bbda94a56e7bf"
+    },
+    "DSC00178.tif": {
+     "bytes": 197798923,
+     "sha256": "341bb7c3523ab898514e83bc486c9ba525b9a59d82b1fbfe7f7719ffad643fd5"
+    },
+    "DSC00179.tif": {
+     "bytes": 197798923,
+     "sha256": "b09d965bb232d014877a4411fe7150e533dae40c50b21c2f0581f88221b8b5c9"
+    },
+    "DSC00180.tif": {
+     "bytes": 197798923,
+     "sha256": "dbf6e247bd2f2ff8ecbc41926948e960122d0fdc4e4cb6c36093a93a0b746dc0"
+    },
+    "DSC00181.tif": {
+     "bytes": 197798923,
+     "sha256": "3ca70b69fa0e28efc6babffb47a0d70330cbdb68d3c4db25b1ee33503a47cd6c"
+    },
+    "DSC00182.tif": {
+     "bytes": 197798923,
+     "sha256": "eee9529a6667dee99fcfc74340c6ce7f700aa8c390c3fec50778abfd47263cb1"
+    },
+    "DSC00183.tif": {
+     "bytes": 197798923,
+     "sha256": "d90e917a58f1cc821f8b1a44cb61d0bbe1673b43f3a0990bda38e5c3e5febcae"
+    },
+    "DSC00184.tif": {
+     "bytes": 197798923,
+     "sha256": "303477bb08be7ca4b6e642ceaee073ea46ac8c77c668de5565b98a2d63fd46dd"
+    },
+    "DSC00185.tif": {
+     "bytes": 197798923,
+     "sha256": "26fd40ec8eee1e5ed091df994f4d9e3c8357d1e5fd63dcce9703cc22acb4c366"
+    },
+    "DSC00186.tif": {
+     "bytes": 197798923,
+     "sha256": "d8da92718c99fbd3bd2e17016bde9f236b8facc702476b1b8e66b4e7af4973c7"
+    },
+    "DSC00187.tif": {
+     "bytes": 197798923,
+     "sha256": "617118fa00c4297b9861b40c6266827f5e73756175e34d41444e6057854e00e9"
+    },
+    "DSC00188.tif": {
+     "bytes": 197798923,
+     "sha256": "b74e189ed1d47c172e44662da870f466998d20105db288f3505444693eb33ad9"
+    },
+    "DSC00189.tif": {
+     "bytes": 197798923,
+     "sha256": "0fb745139aba3992341c3ee45a18d456c7faba5c9b4935a9ac3fa64889aca31c"
+    },
+    "DSC00190.tif": {
+     "bytes": 197798923,
+     "sha256": "427cbdc8d06b343a0f1fc69719354cf1775f8d8c379362a76aa2fbb523cae3e2"
+    },
+    "DSC00191.tif": {
+     "bytes": 197798923,
+     "sha256": "3082695f476fb5b1c2f3f28ffd5101514ae1348382625eb54426ee9e2861767b"
+    },
+    "DSC00192.tif": {
+     "bytes": 197798923,
+     "sha256": "c1f7913f1de612b47fcb18eea19f364ded67fc79a5fd4e7ec5a2b30322b9873b"
+    },
+    "DSC00193.tif": {
+     "bytes": 197798923,
+     "sha256": "61354c4e4e38c3ee596cf49f5a25559f52b756dbc2816549ada2446fd06f2856"
+    },
+    "DSC00194.tif": {
+     "bytes": 197798923,
+     "sha256": "0909072d5d1f63b56147a89540aebc8cddf63bf10e26c682ece30eb7fbabfa1d"
+    },
+    "DSC00195.tif": {
+     "bytes": 197798923,
+     "sha256": "1ea73858ad39891c51f3e685e2d44265b8c6e4fd5c1833c9b7f475288b6d6d05"
+    },
+    "DSC00196.tif": {
+     "bytes": 197798923,
+     "sha256": "7949a94ad05a148c06b8b02d4b62ee8a3648f6fd4d3ef9b4330a7648e3cb79b8"
+    },
+    "DSC00197.tif": {
+     "bytes": 197798923,
+     "sha256": "7a26201e928c09d6f15cf6bafd4ce1856b9fe2f99eff392abb7055c2389ca401"
+    },
+    "DSC00198.tif": {
+     "bytes": 197798923,
+     "sha256": "a471c8ce8ee230f335bbc58b9cf1bf53b77a1a31f8628880c1ee9ba4e24ea3b0"
+    },
+    "DSC00199.tif": {
+     "bytes": 197798923,
+     "sha256": "23be26fb289eb8b255b029998651ca3e06d8847bcbf11c3acea659b90fbc79db"
+    },
+    "DSC00200.tif": {
+     "bytes": 197798923,
+     "sha256": "7959d5f6e55910320ab3f17294bdd380926c798579aeed010c530c1a597759c5"
+    },
+    "DSC00201.tif": {
+     "bytes": 197798923,
+     "sha256": "73e9ddd4ab05abadfa28e7b3d411fbf24a376810ac27314d8035b513f6f21886"
+    },
+    "DSC00202.tif": {
+     "bytes": 197798923,
+     "sha256": "a5c33d648372d61d566d90c9844231ba4cb98700170b183817e7ba5b7d7c9307"
+    },
+    "DSC00203.tif": {
+     "bytes": 197798923,
+     "sha256": "7abd8c959f52c2ca076af3a9b90d16d60962690ff440a2e91dbcf95f616401fc"
+    },
+    "DSC00204.tif": {
+     "bytes": 197798923,
+     "sha256": "5dc366716700894e787bdbe8a5f146d38f9ff033c2406640227c921d36806b6f"
+    },
+    "DSC00205.tif": {
+     "bytes": 197798923,
+     "sha256": "30cf383dffad4fb836178fc7b0683990b45e0d63351867fd18625292e4c9347e"
+    },
+    "DSC00206.tif": {
+     "bytes": 197798923,
+     "sha256": "c8dea33ea0d6d981e82dd110fba021c23ef58232e9f86d3f041b6bb5f87b2699"
+    },
+    "DSC00207.tif": {
+     "bytes": 197798923,
+     "sha256": "2642fae1620c5643897323fd7ed41d84c28b01b0d37b69f29e5eb38ba9c49df7"
+    },
+    "DSC00208.tif": {
+     "bytes": 197798923,
+     "sha256": "c8b556263c9700b00ebd0425858db9a4fe823896532fc9e321b413edf73d3e8c"
+    },
+    "DSC00209.tif": {
+     "bytes": 197798923,
+     "sha256": "87ab7356eddf34a1630106e33728431bdf99ac1cb6f9632f0ce605d50051d27e"
+    },
+    "DSC00210.tif": {
+     "bytes": 197798923,
+     "sha256": "52f449a09a2d463c204956ce9e0729067b9272503e344c6d3899ed5f2ff777bb"
+    },
+    "DSC00211.tif": {
+     "bytes": 197798923,
+     "sha256": "5fcd8b9504a85e206a78d19cadede537ad9c82f29fac4e41f1338887240791f5"
+    },
+    "DSC00212.tif": {
+     "bytes": 197798923,
+     "sha256": "1768668c62a07f543ff9f15a71063951e0240d2e39ecafa442849090e4dd910e"
+    },
+    "DSC00213.tif": {
+     "bytes": 197798923,
+     "sha256": "2044bae4eacba1c6f70dd6ed3ff63fdd1529cdf058d388f9647e1068f690b104"
+    },
+    "DSC00214.tif": {
+     "bytes": 197798923,
+     "sha256": "c92077511093f113f50dfc76ee05208811f9f9c830405e7eb4e884f559bbcfe1"
+    },
+    "DSC00215.tif": {
+     "bytes": 197798923,
+     "sha256": "f2b39a4fe7df0773b92aeeb78cc164ec74174f83f39d0c9b979b268e04a07cb7"
+    },
+    "DSC00216.tif": {
+     "bytes": 197798923,
+     "sha256": "c899ace7c49527733fc71402a73cd7be496c168e986d3481361e7c71163ebc88"
+    },
+    "DSC00217.tif": {
+     "bytes": 197798923,
+     "sha256": "b5a746ecd8b8421400b3815146e55abebb383a2dd8e65087174ccfab19b759f3"
+    },
+    "DSC00218.tif": {
+     "bytes": 197798923,
+     "sha256": "cb4bbfb443598630243dbd6f9003dcc40f9e93da2fb7c7bd4393f7a48e3e5ad8"
+    },
+    "DSC00219.tif": {
+     "bytes": 197798923,
+     "sha256": "4fcc681251bc50579ece95e5b3f22abf4de9c7af16d291f6ec4eacee9ba8d787"
+    },
+    "DSC00220.tif": {
+     "bytes": 197798923,
+     "sha256": "ca4bdb766d0badeb5099a25e51a5a617b3802b23a09f614fc79f984e0df682ff"
+    },
+    "DSC00221.tif": {
+     "bytes": 197798923,
+     "sha256": "172670387e893acb93777287c98f57d8883761e5452f25cae3bcf9f08779cc3f"
+    },
+    "DSC00222.tif": {
+     "bytes": 197798923,
+     "sha256": "c457b23251bf86536a2861ff3c52129916f9e569664d66b74d43a22673cdcb52"
+    },
+    "DSC00223.tif": {
+     "bytes": 197798923,
+     "sha256": "bad5b9e80d3f13f21ed6e2d2a3754cd270420f53e616d1ae2924ba101493f5a5"
+    },
+    "DSC00224.tif": {
+     "bytes": 197798923,
+     "sha256": "abeaf5a48d094ad56941ec5496b5e63d599f13f895f3baffe74ac8e11f330353"
+    },
+    "DSC00225.tif": {
+     "bytes": 197798923,
+     "sha256": "7f873964f8815b631252cdf5782e9e7a6ba917dac4feb8a7585c53ff1e2d21ca"
+    },
+    "DSC00226.tif": {
+     "bytes": 197798923,
+     "sha256": "1865d05b49a8ca39374e137859ceeeffb96f44757a1422b43d64a6fdd27d0135"
+    },
+    "DSC00227.tif": {
+     "bytes": 197798923,
+     "sha256": "fa032a94d5a02adcf7d503b4665153b098e671f587c90014ff14c72d9262bbfa"
+    },
+    "DSC00228.tif": {
+     "bytes": 197798923,
+     "sha256": "3fae25d289d4229f73bafd6b7c5ed73f60aefa4971d748e0bb94a47bba829ad7"
+    },
+    "DSC00229.tif": {
+     "bytes": 197798923,
+     "sha256": "525cce3d1535520fa0dc6f4a3d7424b0a2043938c085028a14d01c77531dddda"
+    },
+    "DSC00230.tif": {
+     "bytes": 197798923,
+     "sha256": "1b81c3fc215e3be3b9d2db339d8c922876f79d318507687cb4a7429e4c4d001b"
+    },
+    "DSC00231.tif": {
+     "bytes": 197798923,
+     "sha256": "877aa886db5053095478fc44fd1545e351c15364e0e2695cdff19c282c904fc9"
+    },
+    "DSC00232.tif": {
+     "bytes": 197798923,
+     "sha256": "4be6d44030f806cea427b4c6e814d49d54d7b4d56b83b19dbca011e40bb7b501"
+    },
+    "DSC00233.tif": {
+     "bytes": 197798923,
+     "sha256": "7f4860e4df1fa127e2b9ae317e9cf6cff7d99111142388ee2defe21c0928e1ad"
+    },
+    "DSC00234.tif": {
+     "bytes": 197798923,
+     "sha256": "2600df2038740c130cd87832878b768d6a58bc31d9908bdda4eab3af508f3952"
+    },
+    "DSC00235.tif": {
+     "bytes": 197798923,
+     "sha256": "43427b87e02f3571490b91880e0cc88659d4a32d31be8cb738df7333f5f50478"
+    },
+    "DSC00236.tif": {
+     "bytes": 197798923,
+     "sha256": "3d12c4800e6c45d2aabad6a42473ebddac0f6b43a0b3f297d0d2d1d1d9581758"
+    },
+    "DSC00237.tif": {
+     "bytes": 197798923,
+     "sha256": "3ed6bc08e04fb66976f3fd1ca223f06e5389284f189b1fab3734b498ca8ca2ad"
+    },
+    "DSC00238.tif": {
+     "bytes": 197798923,
+     "sha256": "e71d350f7f83d1e821643b79f6e7c8982722919f6e459b0a07fe18103576236d"
+    },
+    "DSC00239.tif": {
+     "bytes": 197798923,
+     "sha256": "ecd49b5309f4203f9da951f216c46871a557b2aa97212b4ae5ccbd0eb33b99cc"
+    },
+    "DSC00240.tif": {
+     "bytes": 197798923,
+     "sha256": "8b3a25e1e8294d03408f9c077bc3b2a7e6a769e119af25ebcd74ac12b23b44d0"
+    },
+    "DSC00241.tif": {
+     "bytes": 197798923,
+     "sha256": "691a33fc7b10270e78a45b47a2d5289c5e01dee31c4daf60bbf7fe92789b46a5"
+    },
+    "DSC00242.tif": {
+     "bytes": 197798923,
+     "sha256": "1bb9453f19fd9a7786cd070f295f25ced9fe7e1036db889b024ec1cbeb838a5e"
+    },
+    "DSC00243.tif": {
+     "bytes": 197798923,
+     "sha256": "2b74572e368e0a31e5b0221c672d3167ea94475eed3047a752024f72f1d45098"
+    },
+    "DSC00244.tif": {
+     "bytes": 197798923,
+     "sha256": "9c47c4e6095373d4783d4d95df1b113eb5a8e3b19d6343f5c29bcefc8156dc95"
+    },
+    "DSC00245.tif": {
+     "bytes": 197798923,
+     "sha256": "6463e33e5f584d2cd3a559fda2f46be308ee1d7478026dfd13e83dc5385224f2"
+    },
+    "DSC00246.tif": {
+     "bytes": 197798923,
+     "sha256": "b3a13d9a8935fdb20f5ca70172c387bee55d1137e006e780ff90813e4dfffa38"
+    },
+    "DSC00247.tif": {
+     "bytes": 197798923,
+     "sha256": "565a63812aed127c163d84ec31b81dd6beabbc81e89c04d0b6537d0fdfc4d1de"
+    },
+    "DSC00248.tif": {
+     "bytes": 197798923,
+     "sha256": "a714e5c8ed72461bb593074483117edc58cd49db73c16579b1c9a7ae41232973"
+    },
+    "DSC00249.tif": {
+     "bytes": 197798923,
+     "sha256": "5f4f71379b5d0451fb12051619cade3f68b5ecad5b807e568b3f38c6a815b977"
+    },
+    "DSC00250.tif": {
+     "bytes": 197798923,
+     "sha256": "eaf7342af7db82ba1c563c69607ef749166fad9544752bd1351752ab3e9c2419"
+    },
+    "DSC00251.tif": {
+     "bytes": 197798923,
+     "sha256": "d5b97540182ad72505d8a71519929b5860a677e08522c4cee48b3def14435f31"
+    },
+    "DSC00252.tif": {
+     "bytes": 197798923,
+     "sha256": "8e778a17f9062a58ee4a0eb8cc65f7726ee4fee045c3257c0104743c459b64b0"
+    },
+    "DSC00253.tif": {
+     "bytes": 197798923,
+     "sha256": "8d945c94f94f2457ed3f1cad7101fc5529f9125e88108c528aaffb34fb682b49"
+    },
+    "DSC00254.tif": {
+     "bytes": 197798923,
+     "sha256": "d56f625c0f5829731570172936286a37e70f08409594af7bb97448f666a54d6b"
+    },
+    "DSC00255.tif": {
+     "bytes": 197798923,
+     "sha256": "a55a291db07866525f5687942a1727bdf0f9afab4381126db82325e058ceb06e"
+    },
+    "DSC00256.tif": {
+     "bytes": 197798923,
+     "sha256": "fcab6a795bd85a114ff93e5c5de37ec7cfe453b763c87fda15852e6de49bc042"
+    },
+    "DSC00257.tif": {
+     "bytes": 197798923,
+     "sha256": "9be25fa2e63dffc58a52c550e6fefd9f36f170f92ad87bb4e6dbe48d80c1d2cc"
+    },
+    "DSC00258.tif": {
+     "bytes": 197798923,
+     "sha256": "5a7b75941d721dc7bd8b0f53540c1ebf5d4fc79edbb48aab6505afa4256c5917"
+    },
+    "DSC00259.tif": {
+     "bytes": 197798923,
+     "sha256": "09771b71228020e8cd2400f555b57fb11d6b845a1611be9860a640eed7436b28"
+    },
+    "DSC00260.tif": {
+     "bytes": 197798923,
+     "sha256": "c193f29ed15de92cfb12e4a3f6d832b157b54bb2d8168d70001d98bf967fb0ed"
+    },
+    "DSC00261.tif": {
+     "bytes": 197798923,
+     "sha256": "becbb14615172a621aa0d6bdef48c1fbafff4879c1c796ffb4c47bb9e40ddf72"
+    },
+    "DSC00262.tif": {
+     "bytes": 197798923,
+     "sha256": "ac72608eba100f5d501bcfc4f5dc72927a4060e8a737889498722c5404e0de49"
+    },
+    "DSC00263.tif": {
+     "bytes": 197798923,
+     "sha256": "a754c9ef47cf9ef0c925be21afcb232682df8e82a9168be37bd1cdede2d4fd44"
+    },
+    "DSC00264.tif": {
+     "bytes": 197798923,
+     "sha256": "899f651c4a9b6fc07dbfad72be376c392fcdc27028aed211a34fd18251b6093b"
+    },
+    "DSC00265.tif": {
+     "bytes": 197798923,
+     "sha256": "e9b69fa1705a7d6c9b4048459e85ec1c3cfbd8f26b251935d90a2054c462c8c0"
+    },
+    "DSC00266.tif": {
+     "bytes": 197798923,
+     "sha256": "0c6e2e46792fb26e80980b5098b82773c174250c211b6be699a097d5706c10cb"
+    },
+    "DSC00267.tif": {
+     "bytes": 197798923,
+     "sha256": "0e75073cf0f50017ebb1b54ecede4316639be27aaee81dc868c1797d9b9a956b"
+    },
+    "DSC00268.tif": {
+     "bytes": 197798923,
+     "sha256": "4dd0cd54bbd7920b44725fed3d0a43c5c4d0981242169f53f3536717caadcfc7"
+    },
+    "DSC00269.tif": {
+     "bytes": 197798923,
+     "sha256": "c72776537a1f088d29e1f4c7b84e36ee2dca9c31376d4770707fad6add0d88fb"
+    },
+    "DSC00270.tif": {
+     "bytes": 197798923,
+     "sha256": "80f52b2f6592ef3b374114c0fea334116848756bf39bf225e6c28630767c21ad"
+    },
+    "DSC00271.tif": {
+     "bytes": 197798923,
+     "sha256": "0a2c72b2d501fe1aaf1668f348e9c15a1f390f0fddcbdee583eae863961f2e13"
+    },
+    "DSC00272.tif": {
+     "bytes": 197798923,
+     "sha256": "0f9d1d8af976b35a2003ec6e3015c3ce93b648ce8f7675d01e27891273243dd0"
+    },
+    "DSC00273.tif": {
+     "bytes": 197798923,
+     "sha256": "62c44e3b76e52a9b37d22987e7caaf956a707cd34a3577d5097be4ceb9a686a2"
+    },
+    "DSC00274.tif": {
+     "bytes": 197798923,
+     "sha256": "831a9d46030e94de5315c11ccd007f22f05eaa16b11a326d8e653d79915bdf5d"
+    },
+    "DSC00275.tif": {
+     "bytes": 197798923,
+     "sha256": "20ff08ecec7d0d473ab89ceb35f7c96d2860affbf9ce58a7e0d039fb70fd2cd4"
+    },
+    "DSC00276.tif": {
+     "bytes": 197798923,
+     "sha256": "19c2851b03e54470f5e88fcfd1ddd0994da45670f5d51faf7e697a7156f59d93"
+    },
+    "DSC00277.tif": {
+     "bytes": 197798923,
+     "sha256": "ffc99f985fb11a85142907c455ce0a229ad782472bf51327acf79231766a0eca"
+    },
+    "DSC00278.tif": {
+     "bytes": 197798923,
+     "sha256": "ad5def2c13624a9dbc8ada4478b3b6bec15e2e029476f201c00441a7d90988d2"
+    },
+    "DSC00279.tif": {
+     "bytes": 197798923,
+     "sha256": "d7ae6e2d9f5e5704ab8434a217e8682e42735130a1a6205039c005463cd7ef47"
+    },
+    "DSC00280.tif": {
+     "bytes": 197798923,
+     "sha256": "3ab3e3085b7634a655608c15b3aa4c962c65ad812d93b68c483abfc745c99baa"
+    },
+    "DSC00281.tif": {
+     "bytes": 197798923,
+     "sha256": "55ab12cbdcdb69fdf153082e87ce6fd5126d56565a9dacc6af137c93bfb49baf"
+    },
+    "DSC00282.tif": {
+     "bytes": 197798923,
+     "sha256": "dc834c75396ecae11fcb053a3c9bbac102f8c55a0e0594a81e3f12c261b3a562"
+    },
+    "DSC00283.tif": {
+     "bytes": 197798923,
+     "sha256": "6a9b1c9eead9d3a02cfa625c66b7850a6385e803f8180119255b26f431fad5b9"
+    },
+    "DSC00284.tif": {
+     "bytes": 197798923,
+     "sha256": "a2e3fbcd5ea8e78649e497a2a8afa609805ad96687e36933a567242b56208939"
+    },
+    "DSC00285.tif": {
+     "bytes": 197798923,
+     "sha256": "2243d9650db451430cf8fe835e1c5c09447516f06de6a489e253072b2df1e0c5"
+    },
+    "DSC00286.tif": {
+     "bytes": 197798923,
+     "sha256": "38dca587e3ffd0e12768592d79bd0f571485add9ec864646bab332a0b5b7226f"
+    },
+    "DSC00287.tif": {
+     "bytes": 197798923,
+     "sha256": "c8023abfddb4cf91d139ef6f029e10524ef1c165c8b92ae84a909878230239cc"
+    },
+    "DSC00288.tif": {
+     "bytes": 197798923,
+     "sha256": "1a83543d84394b397beab191e7deb5925c29548a0b89b7bc163f5935f8f238de"
+    },
+    "DSC00289.tif": {
+     "bytes": 197798923,
+     "sha256": "d980c57330ad5ef6d2cb3b32075d3b00cc78c0a5031e609bb86fc083ddae5bbc"
+    },
+    "DSC00290.tif": {
+     "bytes": 197798923,
+     "sha256": "e3271819bd20530243360f90787857e968dc13ede5d98c3d505125e13b440ec2"
+    },
+    "DSC00291.tif": {
+     "bytes": 197798923,
+     "sha256": "3b3b7ecea580e08f50c33231844e03de3b96de111047845e9d163d1bf7c1c248"
+    },
+    "DSC00292.tif": {
+     "bytes": 197798923,
+     "sha256": "88fd8f232e6ec4b496ec63f1872dd73329cb1e0ab43517142eb579d47058710c"
+    },
+    "DSC00293.tif": {
+     "bytes": 197798923,
+     "sha256": "5c3c70d73d05767fc635c95b2e98ef945769dace3635228758532929979969db"
+    },
+    "DSC00294.tif": {
+     "bytes": 197798923,
+     "sha256": "8bdab5764a4b6d4948583874c44992040ae6b223da89daee8c7f1ef36b62c1f7"
+    },
+    "DSC00295.tif": {
+     "bytes": 197798923,
+     "sha256": "1ac6121366adb84c05e67ab188801f248485e607d790162d8630b7c1e31a9061"
+    },
+    "DSC00296.tif": {
+     "bytes": 197798923,
+     "sha256": "c663c30ca791c36e39166a0f251eba6c033d77913c192b09b5755a0e82521304"
+    },
+    "DSC00297.tif": {
+     "bytes": 197798923,
+     "sha256": "3bfc0229488c0a2f1a5447151c21730930ffd797948b1f38de4466a37bbfc615"
+    },
+    "DSC00298.tif": {
+     "bytes": 197798923,
+     "sha256": "83975cd00d0492a78f3d036009ffbb1238d61a5f349f07839b0d18b319b0c40d"
+    },
+    "DSC00299.tif": {
+     "bytes": 197798923,
+     "sha256": "3ee7b359028a697e9cb38e2c1c9fd304477662ea572cdb3d23d34c4bffde49cc"
+    }
+   },
+   "frames": 299,
+   "root": "D:\\strehl-out\\V-LINEAR\\r2\\bee-1-cpl\\lintiff",
+   "tree": "D:\\strehl-out\\V-LINEAR\\r2\\bee-1-cpl\\lintiff"
+  },
+  "dry-erase-marker-head-cpl": {
+   "bytes": 14851796025,
+   "files": {
+    "DSC00001.tif": {
+     "bytes": 198023947,
+     "sha256": "0b075492e48bb063ecfa12cf53cb840a4a5b38318f1b13e2d8d5bb9d1426bf43"
+    },
+    "DSC00005.tif": {
+     "bytes": 198023947,
+     "sha256": "82c12ac9434d414e41a558069d3cbfdd117149b4541197909d18b883aa4c96f9"
+    },
+    "DSC00009.tif": {
+     "bytes": 198023947,
+     "sha256": "e92589084c6fe28298796b741c8d2de970620b7041f62813be1172b98c445ada"
+    },
+    "DSC00013.tif": {
+     "bytes": 198023947,
+     "sha256": "ec436aaa7e8ad13b32905e21f344e98e7d000ca974ea8e6299abdcc59f3905f2"
+    },
+    "DSC00017.tif": {
+     "bytes": 198023947,
+     "sha256": "8d6ad2ba4ade7bb01d832e22761a29a5894f63cfea3cdd8a6d542bcfdc9cfad5"
+    },
+    "DSC00021.tif": {
+     "bytes": 198023947,
+     "sha256": "3fcd13b7a7449fb40d6cdd78349a4423b21ea9f3fb2d33cd4d8c4a0c13fcdab9"
+    },
+    "DSC00025.tif": {
+     "bytes": 198023947,
+     "sha256": "2f48b5929d657e89ad231fb77ee46ca6766fd783bfb747bad0fcb8fb5c0d64da"
+    },
+    "DSC00029.tif": {
+     "bytes": 198023947,
+     "sha256": "0ade205ca2f3c452cc83d379af1a611d0e8328f338f80520c5ab8fc1b3c1c669"
+    },
+    "DSC00033.tif": {
+     "bytes": 198023947,
+     "sha256": "fb839b0bb5a99ff9e20ec57ed770d8e4a0df2902909ff6912c34af97433bbdd9"
+    },
+    "DSC00037.tif": {
+     "bytes": 198023947,
+     "sha256": "f8802b2319bc6a484b2e09c06871a4b852c9692dd7acee61f227b33bb92cba85"
+    },
+    "DSC00041.tif": {
+     "bytes": 198023947,
+     "sha256": "bdde1887de78140a440a80d11c89f538dfc4650b928cf2fcadc43fab7e642497"
+    },
+    "DSC00045.tif": {
+     "bytes": 198023947,
+     "sha256": "6c4c7e14792f54a9dcc3a5ff3ec52771f496be4e6a03bf44e20e2256281b19d2"
+    },
+    "DSC00049.tif": {
+     "bytes": 198023947,
+     "sha256": "8c8d64ed1790887f661219b3d51ff7a5db5db03304770be6963d4a37052ca07f"
+    },
+    "DSC00053.tif": {
+     "bytes": 198023947,
+     "sha256": "14b08d5b58ad7769e8f1b5ba536b7cc448a302fc843dbcf67b0e269771a8aee7"
+    },
+    "DSC00057.tif": {
+     "bytes": 198023947,
+     "sha256": "15735b314298032e2dcd1c217b069c1ba7a3bdf4ff2d77faa6630e11e3d5b20b"
+    },
+    "DSC00061.tif": {
+     "bytes": 198023947,
+     "sha256": "5a856526c0ef0a8aaed50a4ec7fb61ddd785f7ef5120f98c0f1b391531c2939f"
+    },
+    "DSC00065.tif": {
+     "bytes": 198023947,
+     "sha256": "99e8d7784a1d232ef8cf57ed57b600447f751ba14aab02e06cd42f8dec108b3e"
+    },
+    "DSC00069.tif": {
+     "bytes": 198023947,
+     "sha256": "1d10fabce0f71ce1c1b96097502454d9fa0150c25032bf8dc140bd02753cffdd"
+    },
+    "DSC00073.tif": {
+     "bytes": 198023947,
+     "sha256": "068d5cdae083f5d3063d9ad951d6b6c292d3d69301269ef071305bb1a2d226c2"
+    },
+    "DSC00077.tif": {
+     "bytes": 198023947,
+     "sha256": "e6158ddd83cd53d7cef053d6fc2d59f23f3c6ebc8ddbf7586949e00a17bbba46"
+    },
+    "DSC00081.tif": {
+     "bytes": 198023947,
+     "sha256": "8943bf8f324e743e452c9ee7c328e19a5c3b52da2df08e47901996a611997106"
+    },
+    "DSC00085.tif": {
+     "bytes": 198023947,
+     "sha256": "5d0dfdb3b8be8c5aa5d1a4e156a968c1c307d6d491b4466ce76530d751a1ec47"
+    },
+    "DSC00089.tif": {
+     "bytes": 198023947,
+     "sha256": "63460fc78521ef9d599ff0fb2ebbf5a967925a87dcbcbc743530766a14181bbd"
+    },
+    "DSC00093.tif": {
+     "bytes": 198023947,
+     "sha256": "79b2e133ddff1457adbbb28498022faad799f46fcee1a2f8ee47e0b6cebffc19"
+    },
+    "DSC00097.tif": {
+     "bytes": 198023947,
+     "sha256": "7df5673cca2fbe7090b081bef958b1fd8f88d86c68966fd56ddc1edf658444ae"
+    },
+    "DSC00101.tif": {
+     "bytes": 198023947,
+     "sha256": "cf23c9934e692b10b590e271da006125d7b493a3abf522aea92a9bfcf19af36e"
+    },
+    "DSC00105.tif": {
+     "bytes": 198023947,
+     "sha256": "b0d2cac962b9f11142d466da33acb2161060ec31616634e6578bbe668b4fa7a7"
+    },
+    "DSC00109.tif": {
+     "bytes": 198023947,
+     "sha256": "cd34303f7160163d4649543c7ba8e4d9333d3b41ce623edc5574044f838ecc36"
+    },
+    "DSC00113.tif": {
+     "bytes": 198023947,
+     "sha256": "e744223de930d87962dd668ce34b225953482108bf79c505bfda345d24fd9cb4"
+    },
+    "DSC00117.tif": {
+     "bytes": 198023947,
+     "sha256": "5019187a62a8c1b0f3333a31414cb39b67b9f2a71be6632ca58fb3d774d6024e"
+    },
+    "DSC00121.tif": {
+     "bytes": 198023947,
+     "sha256": "9f6d73a6d26290d14cca0b4d7ad8c0a0f009eba0e7bf0825879def98827d4ed1"
+    },
+    "DSC00125.tif": {
+     "bytes": 198023947,
+     "sha256": "4e35f77c6d834460e544138c1c2c4ace4fc9070e50a799c12e96283aee7871e8"
+    },
+    "DSC00129.tif": {
+     "bytes": 198023947,
+     "sha256": "787dd3462270fcaa1c637a084772d23fb983770fe53da401c917e96044e925c7"
+    },
+    "DSC00133.tif": {
+     "bytes": 198023947,
+     "sha256": "adbc30c963fd94c3d555dea2d5ad0a0430b8cff0e3a8485353d6e6485220f4e4"
+    },
+    "DSC00137.tif": {
+     "bytes": 198023947,
+     "sha256": "9466a538335481bd22bd026fb46258b877d575cf844ffeaa2677d68eaad8c53e"
+    },
+    "DSC00141.tif": {
+     "bytes": 198023947,
+     "sha256": "2a3ae2e091ea3b3a3a14edae2531207d5817ba06f8f9f9495b9ad8013e05d7c1"
+    },
+    "DSC00145.tif": {
+     "bytes": 198023947,
+     "sha256": "bf489db62aadb93a832fc560eb204b88cc1b41aee09322878df174a1bc4e0643"
+    },
+    "DSC00149.tif": {
+     "bytes": 198023947,
+     "sha256": "f2026d59f3bd029f5881fdc668e5e69cf62a5e901cec16f051191b9422c4bdc4"
+    },
+    "DSC00153.tif": {
+     "bytes": 198023947,
+     "sha256": "56f9af2cb5ebbd25c2b8f4fa3060f523f024d7bb2940dfb859c92a7ae87f780a"
+    },
+    "DSC00157.tif": {
+     "bytes": 198023947,
+     "sha256": "7ac792d9ab75459da7f408f6a2150b6eb1e4bf05e9e1c0b1f4c97e076b39a071"
+    },
+    "DSC00161.tif": {
+     "bytes": 198023947,
+     "sha256": "9e812026e7c9ddd0a6d97f60a64f57933414aefa36b85e326b8fef0e77108109"
+    },
+    "DSC00165.tif": {
+     "bytes": 198023947,
+     "sha256": "4853d0a6c513b8e375eb89bb8ad8d8fba203ae08014e3b63437eeac0afd2ca2b"
+    },
+    "DSC00169.tif": {
+     "bytes": 198023947,
+     "sha256": "2c632c1c10054673a734cb978cb37ab56bb7f8b905da4db8bef320ee6fdbd18b"
+    },
+    "DSC00173.tif": {
+     "bytes": 198023947,
+     "sha256": "c0564f6cbf2232c8c26f9a1d2b61cdda5dfd1b59de00b62041a0bbc1f223ee22"
+    },
+    "DSC00177.tif": {
+     "bytes": 198023947,
+     "sha256": "97c576346e7466dae095926b6ae3ef527a1bdfef25e800f450720c3208b24e8f"
+    },
+    "DSC00181.tif": {
+     "bytes": 198023947,
+     "sha256": "083b914641f86c286caf1ec1db654af13dbd543f3475e8c71ededfac3167de68"
+    },
+    "DSC00185.tif": {
+     "bytes": 198023947,
+     "sha256": "7a6a4973946e62720f17146282f9ba5520d2ac9568d3d85aa5b41f3eca12cca3"
+    },
+    "DSC00189.tif": {
+     "bytes": 198023947,
+     "sha256": "040561d55f7d1fd6c3def27b4351573d7b8f6195abc571ff5da5fa4cee356a92"
+    },
+    "DSC00193.tif": {
+     "bytes": 198023947,
+     "sha256": "21d513d1cbe41a791c8a73057b5fd072f3ebb49c41ca6b10174e6ae034547a92"
+    },
+    "DSC00197.tif": {
+     "bytes": 198023947,
+     "sha256": "2449f3f783309456fe569bdbeb1c0f455f0782597522aec08f18a9974f3843ed"
+    },
+    "DSC00201.tif": {
+     "bytes": 198023947,
+     "sha256": "526581133efc2bfe23723c667fb864a543af876043b08d7c3134436649cb44c0"
+    },
+    "DSC00205.tif": {
+     "bytes": 198023947,
+     "sha256": "cd6d934f37e664c5032ab19826cfbcab0b62a139d982153b8b4897bda75d9a15"
+    },
+    "DSC00209.tif": {
+     "bytes": 198023947,
+     "sha256": "77ff1444e5365a862818406da3bbc54654e4f2f54182da349c452bafe17375ec"
+    },
+    "DSC00213.tif": {
+     "bytes": 198023947,
+     "sha256": "2f5ac7f708a0eeca8e2064a2f1e75b8ad510812cde98a494c4872cb53b800e23"
+    },
+    "DSC00217.tif": {
+     "bytes": 198023947,
+     "sha256": "faef5baa8e1d6c345a2a21ff1c8390cc7596f4c085497216bfff7c30d66fa337"
+    },
+    "DSC00221.tif": {
+     "bytes": 198023947,
+     "sha256": "63953aca8abf4600b154b5cf1dc02a2a0cc643e9dcfd60a7d16fdd0d4a39c6df"
+    },
+    "DSC00225.tif": {
+     "bytes": 198023947,
+     "sha256": "40424f70d944bb4d3cdb3aa81654b32e3a4aa7e71528b71641af36c138d5539e"
+    },
+    "DSC00229.tif": {
+     "bytes": 198023947,
+     "sha256": "d81c463541f0d02e02fdc9774a7020f009062af8fbb014cca1b4a953dbc484df"
+    },
+    "DSC00233.tif": {
+     "bytes": 198023947,
+     "sha256": "c96a92f7104e67f58fdb092c62db72975d0ea6c62111fc4eccd6386f41739665"
+    },
+    "DSC00237.tif": {
+     "bytes": 198023947,
+     "sha256": "577519cee1c224be40965a7bb7be8990f43a08467f75dace04834baeceea00c7"
+    },
+    "DSC00241.tif": {
+     "bytes": 198023947,
+     "sha256": "7886029228a3b62c75d7d5c1b91b8620c9b5080853fa36809c518320886c667d"
+    },
+    "DSC00245.tif": {
+     "bytes": 198023947,
+     "sha256": "88d61345e354047fe489fd3d683b9737ffe9fbadef327dad15cdfc319a65bb63"
+    },
+    "DSC00249.tif": {
+     "bytes": 198023947,
+     "sha256": "3a78c41e549474669b44a32ce3a63ff88819cc0b0ff5dbe54e1321d416cbe861"
+    },
+    "DSC00253.tif": {
+     "bytes": 198023947,
+     "sha256": "5d930af7ea12675c773fd6a68f627c1bad97627c50165a2e2b69395e5dd53331"
+    },
+    "DSC00257.tif": {
+     "bytes": 198023947,
+     "sha256": "66600cd2f0a5586303058ac837bf2cf59d40aa7d2f3985792c7f61c46ecab839"
+    },
+    "DSC00261.tif": {
+     "bytes": 198023947,
+     "sha256": "ea113e94cd95a523792138819854eda58d426b03b8ddefb8481194195d8d4667"
+    },
+    "DSC00265.tif": {
+     "bytes": 198023947,
+     "sha256": "1837e306a233b7cc4d9a721431585a865d336044c0441a10de8f34cbc20d0e06"
+    },
+    "DSC00269.tif": {
+     "bytes": 198023947,
+     "sha256": "f425275a98300c1f7c937e1d12be744928c9d67d313eab02bd71183410227477"
+    },
+    "DSC00273.tif": {
+     "bytes": 198023947,
+     "sha256": "1a0c0d7578d2aa40b7b40776586d68d5da4993e6b74054dedb76607d73f6de3b"
+    },
+    "DSC00277.tif": {
+     "bytes": 198023947,
+     "sha256": "157aec1e7b5bb372a69d6eb2a6e11b91e6da780d7c844bb3cba445b609e09c46"
+    },
+    "DSC00281.tif": {
+     "bytes": 198023947,
+     "sha256": "095f365b6726f7e6955ed0ffad6dc8b2c27716ec2a49843af349f814c59aec0f"
+    },
+    "DSC00285.tif": {
+     "bytes": 198023947,
+     "sha256": "db57d797a79f20a99f61253aaf7e616f658a565d87a4821d5ad1f7e8eebd191c"
+    },
+    "DSC00289.tif": {
+     "bytes": 198023947,
+     "sha256": "e32c0114bfc53ea97098103659e8835e0d1dff9774c7796b64e0ac85e24d7fe8"
+    },
+    "DSC00293.tif": {
+     "bytes": 198023947,
+     "sha256": "e55669e1abb079044876683bbeafd3e5c2b0ac5c5821f59406440f0a004be6a6"
+    },
+    "DSC00297.tif": {
+     "bytes": 198023947,
+     "sha256": "565626432244627867b9e3c3b97a435a97a71cd2fe582d8f41f5b6f227483727"
+    }
+   },
+   "frames": 75,
+   "root": "D:\\strehl-out\\V-LINEAR\\r2\\dry-erase-marker-head-cpl\\lintiff",
+   "tree": "D:\\strehl-out\\V-LINEAR\\r2\\dry-erase-marker-head-cpl\\lintiff"
+  }
+ }
+}
