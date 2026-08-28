@@ -1,72 +1,34 @@
-"""Truncate the outward walk where the dominant part's Voronoi cell pinches off.
+"""How many of the 7 bands did profile() actually WALK?
 
-MEASURED MECHANISM.  On `leaf-2-cpl` the profile is a clean monotone ramp out
-to d=32-50 and then spikes +5721 DN at d=50-80 and falls back -4524 at 80-120.
-Band populations over the same walk collapse 42924 -> 7994.  The cell has
-narrowed to a directional sliver, so the outer band medians are not the
-background level at that distance -- they are the level in whichever direction
-happened to survive.  That is a sampling artifact of the Voronoi restriction and
-it manufactured HALO verdicts on `leaf-2-cpl` and `lead-1-cpl`.
-
-THE DISCRIMINATOR IS DENSITY, NOT POPULATION.  The bands are 4,6,8,12,18,30,40
-px wide, so raw counts are not comparable.  Per-unit-width density, normalised
-to the innermost band, was measured on all 26 subjects.  A well-formed cell
-holds 0.2-0.6; the pinching ones fall to 0.02.
-
-The walk therefore STOPS at the first band whose density falls below 10% of the
-innermost band's, rather than the subject being skipped.  A halo lives close to
-the silhouette, so the truncated bands are not where one would hide -- and this
-is commissioned, not asserted: see vh_commission.py for the detection floor.
+A verdict of clean computed from 4 bands is not the same claim as one computed
+from 7, and the current output prints both as "MEASURED ... bump 0.0". If the
+walk stops early the instrument has not looked where a halo would be, and the
+pass is a skip wearing a pass's label.
 """
-import io
+import os, sys, json
+import numpy as np, tifffile
+sys.path.insert(0, r"C:\dev\blog\death-of-software\projects\strehl\experiments\ORCH-drift-check")
+import halo_profile as H
 
-PATH = r"C:\dev\blog\death-of-software\projects\strehl\experiments\ORCH-drift-check\halo_profile.py"
-src = io.open(PATH, encoding="utf-8").read()
+FAITH = r"C:\dev\strehl-out\ORCH-FAITHFUL\faithful"
+stems = sorted(x[:-5] for x in os.listdir(FAITH) if x.endswith(".tiff"))
+print("%-26s %-14s %5s %10s %9s   %s" % ("subject","verdict","bands","overshoot","bump","outermost band walked"))
+short = []; res = {}
+for s in stems:
+    y = H.luma(tifffile.imread(os.path.join(FAITH, s + ".tiff")))
+    v, ov, bp, pen, fl, bands, why = H.profile(y)
+    nb = len(bands) if bands else 0
+    outer = ("%d-%d" % (bands[-1][0], bands[-1][1])) if bands else "-"
+    print("%-26s %-14s %5s %10s %9s   %s%s" % (
+        s, v, nb if bands else "-",
+        ("%.1f"%ov) if ov is not None else "-",
+        ("%.1f"%bp) if bp is not None else "-",
+        outer, "   <== TRUNCATED" if bands and nb < len(H.NEAR) else ""))
+    res[s] = dict(verdict=v, overshoot=ov, bump=bp, nbands=nb, outer=outer, why=why)
+    if bands and nb < len(H.NEAR):
+        short.append((s, nb, outer, v))
 
-A = ("MIN_BANDPX = 200      # px needed in a band before its median is used")
-if A not in src:
-    raise SystemExit("ANCHOR NOT FOUND: MIN_BANDPX")
-src = src.replace(A, A + "\nMIN_CELL_DENS = 0.10  # stop the walk when the dominant part's cell has\n"
-                        "                      # narrowed to <10% of its innermost density", 1)
-
-B = """    bands = []
-    for lo, hi in NEAR:
-        m = own & (d >= lo) & (d < hi)
-        n = int(m.sum())
-        bands.append((lo, hi, n,
-                      float(np.median(y[m])) - farlevel if n > MIN_BANDPX else None))
-    vals = [b[3] for b in bands if b[3] is not None]
-    if not vals:
-        return ("UNMEASURABLE", None, None, None, None, None, "no populated near band")"""
-if B not in src:
-    raise SystemExit("ANCHOR NOT FOUND: band loop")
-NEW = """    bands = []
-    dens0 = None
-    for lo, hi in NEAR:
-        m = own & (d >= lo) & (d < hi)
-        n = int(m.sum())
-        dens = n / float(hi - lo)
-        if dens0 is None:
-            dens0 = dens
-        # CELL-PINCH TRUNCATION. Stop rather than skip: the surviving pixels
-        # this far out are a directional sliver, and their median is not the
-        # background level at that distance.
-        if dens0 > 0 and dens / dens0 < MIN_CELL_DENS:
-            bands.append((lo, hi, n, None))
-            continue
-        bands.append((lo, hi, n,
-                      float(np.median(y[m])) - farlevel if n > MIN_BANDPX else None))
-    vals = []
-    for b in bands:
-        if b[3] is None:
-            break
-        vals.append(b[3])
-    if len(vals) < 3:
-        return ("UNMEASURABLE", None, None, None, None, None,
-                "only %d usable near band(s): dominant part's cell pinches off "
-                "before a profile can be walked" % len(vals))"""
-src = src.replace(B, NEW, 1)
-
-with io.open(PATH, "w", encoding="utf-8", newline="\n") as fh:
-    fh.write(src)
-print("patched cell-pinch truncation")
+print("\nTRUNCATED WALKS: %d of %d subjects never reached the outermost band 80-120" % (len(short), len(stems)))
+for s, nb, outer, v in short:
+    print("   %-26s walked %d/7, stopped at %-8s verdict %s" % (s, nb, outer, v))
+json.dump(res, open(r"D:\strehl-out\V-REVIEW\halo\trunc.json","w"), indent=1)
