@@ -1,0 +1,296 @@
+{
+ "threshold": 1.05,
+ "claim": [
+  2000.0,
+  500.0
+ ],
+ "real": {
+  "cut_excess_dn": 48.0,
+  "amp_max": 330.875,
+  "amp_med": 11.21875,
+  "n_sites_total": 34907,
+  "n_sites_kept": 600,
+  "cut_dn": 3.459399882173538,
+  "n_darks": 48,
+  "raw_shape": [
+   4688,
+   7028
+  ]
+ },
+ "rungs": [
+  4000.0,
+  2000.0,
+  1000.0,
+  500.0,
+  250.0,
+  120.0,
+  60.0,
+  30.0
+ ],
+ "subjects": [
+  {
+   "subject": "flower-bud-alone-cpl",
+   "shape": [
+    4688,
+    7040
+   ],
+   "n_sites": 583,
+   "n_ctrl": 4664,
+   "null_ratio": 0.995927988293794,
+   "null_control_med": 589.96484375,
+   "null_defect_med": 587.5625,
+   "ladder": [
+    {
+     "amp_dn": 4000.0,
+     "ratio": 6.739479027385728,
+     "detected": true
+    },
+    {
+     "amp_dn": 2000.0,
+     "ratio": 3.368573267964146,
+     "detected": true
+    },
+    {
+     "amp_dn": 1000.0,
+     "ratio": 1.73449710295647,
+     "detected": true
+    },
+    {
+     "amp_dn": 500.0,
+     "ratio": 1.0861732994114397,
+     "detected": true
+    },
+    {
+     "amp_dn": 250.0,
+     "ratio": 1.002555174559464,
+     "detected": false
+    },
+    {
+     "amp_dn": 120.0,
+     "ratio": 0.995927988293794,
+     "detected": false
+    },
+    {
+     "amp_dn": 60.0,
+     "ratio": 0.995927988293794,
+     "detected": false
+    },
+    {
+     "amp_dn": 30.0,
+     "ratio": 0.995927988293794,
+     "detected": false
+    }
+   ],
+   "floor_dn": 500.0,
+   "improve": {
+    "top_dn": 4000.0,
+    "planted_ratio": 6.739479027385728,
+    "repaired_ratio": 0.985724524753582
+   },
+   "null_ok": true,
+   "ladder_ok": true,
+   "improve_ok": true,
+   "outcome": "COMMISSIONED"
+  },
+  {
+   "subject": "pencil-steep-angle-cpl",
+   "shape": [
+    4688,
+    7032
+   ],
+   "n_sites": 583,
+   "n_ctrl": 4664,
+   "null_ratio": 0.9807688959243201,
+   "null_control_med": 1289.9736328125,
+   "null_defect_med": 1265.166015625,
+   "ladder": [
+    {
+     "amp_dn": 4000.0,
+     "ratio": 3.0696516061256465,
+     "detected": true
+    },
+    {
+     "amp_dn": 2000.0,
+     "ratio": 1.5746424355146,
+     "detected": true
+    },
+    {
+     "amp_dn": 1000.0,
+     "ratio": 1.0539268822934518,
+     "detected": true
+    },
+    {
+     "amp_dn": 500.0,
+     "ratio": 0.9859372125611215,
+     "detected": false
+    },
+    {
+     "amp_dn": 250.0,
+     "ratio": 0.9798278943746579,
+     "detected": false
+    },
+    {
+     "amp_dn": 120.0,
+     "ratio": 0.9798278943746579,
+     "detected": false
+    },
+    {
+     "amp_dn": 60.0,
+     "ratio": 0.9807688959243201,
+     "detected": false
+    },
+    {
+     "amp_dn": 30.0,
+     "ratio": 0.9807688959243201,
+     "detected": false
+    }
+   ],
+   "floor_dn": 1000.0,
+   "improve": {
+    "top_dn": 4000.0,
+    "planted_ratio": 3.0696516061256465,
+    "repaired_ratio": 0.9959338478260574
+   },
+   "null_ok": true,
+   "ladder_ok": true,
+   "improve_ok": true,
+   "outcome": "COMMISSIONED"
+  },
+  {
+   "subject": "bee-2-cpl",
+   "shape": [
+    4688,
+    7032
+   ],
+   "n_sites": 583,
+   "n_ctrl": 4664,
+   "null_ratio": 0.9973225825849458,
+   "null_control_med": 2630.873046875,
+   "null_defect_med": 2623.8291015625,
+   "ladder": [
+    {
+     "amp_dn": 4000.0,
+     "ratio": 1.5820385378227424,
+     "detected": true
+    },
+    {
+     "amp_dn": 2000.0,
+     "ratio": 1.0529271351521279,
+     "detected": true
+    },
+    {
+     "amp_dn": 1000.0,
+     "ratio": 1.0186955227404164,
+     "detected": false
+    },
+    {
+     "amp_dn": 500.0,
+     "ratio": 1.0124520511029267,
+     "detected": false
+    },
+    {
+     "amp_dn": 250.0,
+     "ratio": 0.9998552346053139,
+     "detected": false
+    },
+    {
+     "amp_dn": 120.0,
+     "ratio": 0.9973225825849458,
+     "detected": false
+    },
+    {
+     "amp_dn": 60.0,
+     "ratio": 0.9973225825849458,
+     "detected": false
+    },
+    {
+     "amp_dn": 30.0,
+     "ratio": 0.9973225825849458,
+     "detected": false
+    }
+   ],
+   "floor_dn": 2000.0,
+   "improve": {
+    "top_dn": 4000.0,
+    "planted_ratio": 1.5820385378227424,
+    "repaired_ratio": 1.0670437354549016
+   },
+   "null_ok": true,
+   "ladder_ok": true,
+   "improve_ok": true,
+   "outcome": "COMMISSIONED"
+  },
+  {
+   "subject": "flat-on-ruler-cpl",
+   "shape": [
+    4688,
+    7040
+   ],
+   "n_sites": 583,
+   "n_ctrl": 4664,
+   "null_ratio": 1.0202525427665525,
+   "null_control_med": 5270.34033203125,
+   "null_defect_med": 5377.078125,
+   "ladder": [
+    {
+     "amp_dn": 4000.0,
+     "ratio": 1.0481335064642459,
+     "detected": false
+    },
+    {
+     "amp_dn": 2000.0,
+     "ratio": 1.0274593680343929,
+     "detected": false
+    },
+    {
+     "amp_dn": 1000.0,
+     "ratio": 1.0242704581033102,
+     "detected": false
+    },
+    {
+     "amp_dn": 500.0,
+     "ratio": 1.0202525427665525,
+     "detected": false
+    },
+    {
+     "amp_dn": 250.0,
+     "ratio": 1.0202525427665525,
+     "detected": false
+    },
+    {
+     "amp_dn": 120.0,
+     "ratio": 1.0202525427665525,
+     "detected": false
+    },
+    {
+     "amp_dn": 60.0,
+     "ratio": 1.0202525427665525,
+     "detected": false
+    },
+    {
+     "amp_dn": 30.0,
+     "ratio": 1.0202525427665525,
+     "detected": false
+    }
+   ],
+   "floor_dn": null,
+   "improve": {
+    "top_dn": 4000.0,
+    "planted_ratio": 1.0481335064642459,
+    "repaired_ratio": 1.0188677200137757
+   },
+   "null_ok": true,
+   "ladder_ok": false,
+   "improve_ok": false,
+   "outcome": "UNCOMMISSIONED"
+  }
+ ],
+ "detector": {
+  "prose_only": false,
+  "subscript": true,
+  "dot_get": true
+ },
+ "prose_only_mention": true,
+ "power_records": 0,
+ "verdict_reads_power": false
+}

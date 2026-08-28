@@ -1,0 +1,116 @@
+THE AXIS UNDER TEST
+  module            experiments\V-GATHER\dustaxis.py
+  pass threshold    DUST_MAX = 1.0500   (parsed from the module)
+  site map loaded   experiments\V-GATHER\defectmap.json
+  published claim   detects 2000 DN, misses 500 DN  (parsed from printcert4.py)
+
+WHAT THE DARKS SAY IS ACTUALLY PRESENT  (from the map the axis loads)
+  darks used        48
+  sites found       34907, of which kept in the map 600
+  cut               3.4594 DN  (MAD-based, kept a site at all)
+  excess threshold  48.0 DN  (dustmap.py EXCESS_DN -- a SELECTION CUT,
+                             not the worst site; see parse_real_amplitude)
+  worst site amp    330.875 DN   <- the largest real defect on this sensor
+  median site amp   11.219 DN   <- what a typical mapped site carries
+  map raw_shape     [4688, 7028]
+
+SUBJECTS, chosen to span the measured range of control_med in dust.json
+  flower-bud-alone-cpl                   control_med =    590.0
+  pencil-steep-angle-cpl                 control_med =   1290.0
+  bee-2-cpl                              control_med =   2630.9
+  flat-on-ruler-cpl                      control_med =   5270.3
+
+[1/4] flower-bud-alone-cpl
+        null ratio 0.9959  (control med 590.0)
+        plant  4000.0 DN -> ratio 6.7395  DETECTED
+        plant  2000.0 DN -> ratio 3.3686  DETECTED
+        plant  1000.0 DN -> ratio 1.7345  DETECTED
+        plant   500.0 DN -> ratio 1.0862  DETECTED
+        plant   250.0 DN -> ratio 1.0026  missed
+        plant   120.0 DN -> ratio 0.9959  missed
+        plant    60.0 DN -> ratio 0.9959  missed
+        plant    30.0 DN -> ratio 0.9959  missed
+        floor      500.0 DN
+        improvement 4000.0 DN planted 6.7395 -> repaired 0.9857  moved back toward null
+        COMMISSIONED  (null_ok True, ladder_ok True, improve_ok True)
+
+[2/4] pencil-steep-angle-cpl
+        null ratio 0.9808  (control med 1290.0)
+        plant  4000.0 DN -> ratio 3.0697  DETECTED
+        plant  2000.0 DN -> ratio 1.5746  DETECTED
+        plant  1000.0 DN -> ratio 1.0539  DETECTED
+        plant   500.0 DN -> ratio 0.9859  missed
+        plant   250.0 DN -> ratio 0.9798  missed
+        plant   120.0 DN -> ratio 0.9798  missed
+        plant    60.0 DN -> ratio 0.9808  missed
+        plant    30.0 DN -> ratio 0.9808  missed
+        floor      1000.0 DN
+        improvement 4000.0 DN planted 3.0697 -> repaired 0.9959  moved back toward null
+        COMMISSIONED  (null_ok True, ladder_ok True, improve_ok True)
+
+[3/4] bee-2-cpl
+        null ratio 0.9973  (control med 2630.9)
+        plant  4000.0 DN -> ratio 1.5820  DETECTED
+        plant  2000.0 DN -> ratio 1.0529  DETECTED
+        plant  1000.0 DN -> ratio 1.0187  missed
+        plant   500.0 DN -> ratio 1.0125  missed
+        plant   250.0 DN -> ratio 0.9999  missed
+        plant   120.0 DN -> ratio 0.9973  missed
+        plant    60.0 DN -> ratio 0.9973  missed
+        plant    30.0 DN -> ratio 0.9973  missed
+        floor      2000.0 DN
+        improvement 4000.0 DN planted 1.5820 -> repaired 1.0670  moved back toward null
+        COMMISSIONED  (null_ok True, ladder_ok True, improve_ok True)
+
+[4/4] flat-on-ruler-cpl
+        null ratio 1.0203  (control med 5270.3)
+        plant  4000.0 DN -> ratio 1.0481  missed
+        plant  2000.0 DN -> ratio 1.0275  missed
+        plant  1000.0 DN -> ratio 1.0243  missed
+        plant   500.0 DN -> ratio 1.0203  missed
+        plant   250.0 DN -> ratio 1.0203  missed
+        plant   120.0 DN -> ratio 1.0203  missed
+        plant    60.0 DN -> ratio 1.0203  missed
+        plant    30.0 DN -> ratio 1.0203  missed
+        floor      UNRESOLVED-ABOVE-TOP
+        improvement 4000.0 DN planted 1.0481 -> repaired 1.0189  DID NOT RECOVER
+        UNCOMMISSIONED  (null_ok True, ladder_ok False, improve_ok False)
+
+==============================================================================
+COMMISSIONING PARTITION -- every subject examined lands in exactly one
+  COMMISSIONED       3
+  UNCOMMISSIONED     1
+  REFUSED            0
+  TOTAL              4   (must equal 4 examined)
+
+THE VERDICT THIS SCRIPT EXISTS TO REACH
+  measured floor    best 500.0 DN, worst 2000.0 DN over 3 subject(s)
+  no rung cleared   flat-on-ruler-cpl
+  largest real defect 330.875 DN (worst mapped site over 48 darks)
+  typical real defect 11.219 DN (median mapped site -- and the axis's
+                              statistic is a MEDIAN over sites, so this
+                              is the amplitude it must actually resolve)
+  worst floor / worst real defect  6.04 x
+  worst floor / median real defect 178.27 x
+  best  floor / worst real defect  1.51 x
+  => THE AXIS CANNOT SEE THIS SENSOR'S DEFECTS. Even its BEST measured
+     floor sits 1.51 x above the largest excess the darks record, and on
+     1 of 4 subjects examined no planted rung cleared at all. A PASS on
+     this axis is silence, not a clean bill. Under the axis's own
+     docstring rule those subjects are REFUSED, not PASS.
+
+IS THE POWER RULE ACTUALLY ENFORCED?
+  detector commissioned: prose-only -> False, subscript -> True, .get -> True
+  dust.json records carrying a power arm : 0 of 26
+  dust_verdict() ACCESSES a power field  : False
+  ... mentions it only in prose          : True
+  => the power rule is DISCLOSED IN PROSE AND ENFORCED NOWHERE. The axis
+     docstring says a subject whose defects sit below the detection floor
+     'is REFUSED rather than passed', but no record carries the arm and the
+     verdict function never consults it. This is print-then-TEST: a value
+     computed, published in a footnote, and conditioned on by nothing.
+     dustaxis.main() calls run_subject(s) with commission defaulting to
+     False, so the ladder that would have produced the arm never ran on the
+     delivered path.
+
+wrote experiments\BUILD-DEFECT\out\70-dustaxis-power.json
