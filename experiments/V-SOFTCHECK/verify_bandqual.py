@@ -28,12 +28,18 @@ WHAT IS DIFFERENT HERE
    in both directions before trusting an instrument).
 4. Any mutation whose target string is absent is a HARD ERROR, never a silent pass.
 """
-import re, subprocess, sys
+import io, os, re, subprocess, sys
 
 REPO = r"C:\dev\blog\death-of-software\projects\strehl"
 DOC  = "docs/research/V-SOFTCHECK-bandqual.md"
 
 def blob(rev, path):
+    # VBQ_DOC lets the commissioning harness drive THIS ENTRY POINT over a mutated copy,
+    # so the pass/fail channel is exercised as shipped rather than by calling internals.
+    # The harness writes copies to TEMP; the real document is never modified.
+    ov = os.environ.get("VBQ_DOC")
+    if ov:
+        return io.open(ov, encoding="utf-8").read()
     r = subprocess.run(["git", "show", "%s:%s" % (rev, path)], capture_output=True, cwd=REPO)
     if r.returncode:
         sys.exit("git show failed: " + r.stderr.decode("utf-8", "replace"))
@@ -79,6 +85,12 @@ CLAIMS = {
                   "my bee reading FALLS to 1.4877 -- further\nfrom their 4.732, not closer"),
  "GENEROUS":     ("bee is MARGINAL under every defocus rule, never PASS",
                   "1.33 to 1.85 -- and never PASS.**"),
+ "DISJOINT":     ("the bee disagreement with V-LINEAR is matched-band and CIs are disjoint",
+                  "**The intervals do not overlap.**"),
+ "NOTRIGHT":     ("I do not claim my number is the correct one",
+                  "**I am not claiming my number is the right one.**"),
+ "TONEARG":      ("the tone-curve cancellation is offered as argument, not measurement",
+                  "offered as an argument and not a measurement"),
  "NOREPLACE":    ("I do not replace the dead hypothesis with an untested one",
                   "I have not tested it and I am not asserting it"),
  "RAWPOWER":     ("the noise-inflation guard is answered, not dodged",
@@ -106,6 +118,9 @@ MUTATIONS = [
  ("FARFALLS",    "my bee reading FALLS to 1.4877 -- further from their 4.732, not closer",
                  "my bee reading RISES to 4.7312 -- reaching their 4.732, as predicted"),
  ("GENEROUS",    "1.33 to 1.85 -- and never PASS.", "1.33 to 1.85 -- and reaches PASS."),
+ ("DISJOINT",    "The intervals do not overlap.", "The intervals overlap comfortably."),
+ ("NOTRIGHT",    "I am not claiming my number is the right one.", "My number is the correct one."),
+ ("TONEARG",     "offered as an argument and not a measurement", "offered as a measurement and not an argument"),
  ("NOREPLACE",   "I have not tested it and I am not asserting it",
                  "I have tested it and I am asserting it"),
  ("R-113",       "1.5525 | [1.4583,1.6437]", "1.5526 | [1.4583,1.6437]"),   # number direction

@@ -273,6 +273,43 @@ document rests on dilution.
 still cannot separate blur from a noise-policy difference, because both predict a deficit
 rising with frequency. Section 6 stands unchanged.
 
+### 3c.3 MATCHED-BAND DISAGREEMENT WITH V-LINEAR ON `bee-1-cpl`, CIs DISJOINT
+
+V-LINEAR has now measured the narrow slice directly (`e05d967f`, `968a5ae4`, `3d4e41c1`).
+That removes the last difference of framing between us: same subject, same band, same
+pre-registered rule, two instruments.
+
+| lane | subject | band | `R` | 95% CI | verdict |
+|---|---|---|---:|---|---|
+| V-LINEAR (`bandsignal.py`, `--linear-srgb --demosaic`) | `bee-1-cpl` | 0.30-0.35 | **5.311** | [3.083, 7.638] | PASS |
+| V-SOFTCHECK (`bandqual.py`, `--srgb`) | `bee-1-cpl` | 0.30-0.35 | **1.848** | [1.6403, 2.0347] | MARGINAL |
+
+**The intervals do not overlap.** Their CI low of 3.083 sits 1.048 above my CI high of
+2.0347, and the point estimates differ by 2.87x. This is no longer a wide-slice-versus-
+narrow-slice artifact or a verdict-boundary quibble; it is a straight contradiction
+between two instruments about a single number, and **the orchestrator is routing
+ship-gating depth measurements onto `bee-1-cpl` on the strength of the PASS side of it.**
+
+**What is already excluded, by measurement rather than argument.** Defocus distance
+(section 3c.2): matching their `far = 20` moves my reading to 1.4877, *away* from theirs,
+widening the gap to 3.6x. Selection-band coupling, gain coupling, and the order statistic
+are commissioned out in section 2.
+
+**What is not excluded, and I am not asserting any of it.** Develop path is the obvious
+candidate and is the variable V-LINEAR themselves identified. I note one argument against
+the simplest form of it, offered as an argument and not a measurement: `R` is a ratio of
+band powers on the *same tile at the same mean level*, so a monotone tone curve of local
+slope `s` scales numerator and denominator by `s^2` alike and **cancels to first order**.
+Tone compression alone therefore should not produce 2.87x. Demosaic-versus-merged-grid,
+tile population (their 27 kept against my 90 TOP) and the interior-maximum test are all
+still open.
+
+**I am not claiming my number is the right one.** I am claiming the two cannot both be
+right, that neither lane has verified the other, and that a qualification currently being
+used to select the subject for a ship gate should not rest on an unresolved 2.87x
+disagreement. The decisive experiment is one instrument run on both develop paths, or
+both instruments run on one; either isolates it in a single pass.
+
 ## 4. What is withdrawn
 
 **`+0.0732` dex/doubling (113MSDCF) and `+0.0748` dex/doubling (bee-1-cpl) at
