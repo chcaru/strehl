@@ -43,24 +43,39 @@ KV = {"G090": 0.9, "G100": 1.0, "G129": 1.29, "G140": 1.4,
       "G160": 1.6, "G200": 2.0, "G260": 2.6}
 
 
-def interp(ks, grain, sharp, target):
-    """Sharpness where grain == target, on the descending branch after the peak.
+def interp(ks, grain, sharp, target, branch="upper"):
+    """Sharpness where grain == target. Kept for callers wanting one root."""
+    r = roots(ks, grain, sharp, target)
+    if not r:
+        return None
+    pk = float(ks[int(np.argmax(grain))])
+    lo = [x for x in r if x[0] < pk]
+    hi = [x for x in r if x[0] >= pk]
+    pick = (hi or r)[0] if branch == "upper" else (lo or r)[0]
+    return pick[0], pick[1], pk
 
-    Returns (k, sharp, peak_k). None if target is off the branch.
+
+def roots(ks, grain, sharp, target):
+    """EVERY k where grain crosses target, with sharpness at each.
+
+    Grain is not monotone in k: it rises to a peak then falls, so grain=1.0
+    generally has TWO solutions, one either side of the peak. They are not
+    interchangeable -- they deliver the same grain from different amounts of
+    selection, and the sharpness at each is a measurement, not a symmetry.
+    Returning only one root is how a better operating point gets hidden.
     """
-    pk = int(np.argmax(grain))
-    ks, grain, sharp = ks[pk:], grain[pk:], sharp[pk:]
+    out = []
     for i in range(len(ks) - 1):
         lo, hi = grain[i], grain[i + 1]
         if (lo - target) * (hi - target) <= 0 and hi != lo:
             f = (target - lo) / (hi - lo)
-            return (ks[i] + f * (ks[i + 1] - ks[i]),
-                    sharp[i] + f * (sharp[i + 1] - sharp[i]), ks[0])
-    return None
+            out.append((float(ks[i] + f * (ks[i + 1] - ks[i])),
+                        float(sharp[i] + f * (sharp[i + 1] - sharp[i]))))
+    return out
 
 
 def commission():
-    """Null, planted loss, and planted gain. Fails loudly."""
+    """Null, planted loss, planted gain, and a known two-root curve."""
     ks = np.array([1.0, 1.4, 1.6, 2.0, 2.6])
     grain = np.array([1.20, 1.10, 1.00, 0.80, 0.50])
     sharp = np.array([1.10, 1.05, 1.00, 0.90, 0.70])
@@ -79,7 +94,22 @@ def commission():
     assert r3 is not None and r3[1] > 1.01 * 1.05, r3
     print("  planted +15%% at the matched arm -> sharp %.4f, reads %+.1f%%  "
           "PASS  (not bounded below)" % (r3[1], 100 * (r3[1] / 1.05 - 1)))
-    print("  interpolator responds to both signs.\n")
+
+    # A curve with a KNOWN pair of roots, and deliberately different sharpness
+    # at each, so a one-root implementation is caught rather than trusted.
+    k2 = np.array([0.9, 1.0, 1.3, 1.4, 1.6, 2.0])
+    g2 = np.array([0.90, 0.95, 1.05, 1.10, 1.05, 0.90])
+    s2 = np.array([1.00, 1.04, 1.12, 1.14, 1.05, 0.90])
+    rr = roots(k2, g2, s2, 1.00)
+    assert len(rr) == 2, rr
+    assert rr[0][0] < 1.4 < rr[1][0], rr        # 1.4 is the peak k, not 1.10
+    assert abs(rr[0][1] - rr[1][1]) > 0.05, rr
+    print("  two-root  : found %d roots at k=%.3f (sharp %.4f) and k=%.3f "
+          "(sharp %.4f)" % (len(rr), rr[0][0], rr[0][1], rr[1][0], rr[1][1]))
+    print("              a one-root version would have reported only the "
+          "second and\n              hidden a %+.1f%% better operating point."
+          "  PASS" % (100 * (rr[0][1] / rr[1][1] - 1)))
+    print("  interpolator responds to both signs and finds both roots.\n")
 
 
 def profile(arm, subject):
@@ -116,10 +146,10 @@ def main():
     commission()
     print("(A) MATCHED GRAIN -- sharpness with the grain difference removed.")
     print("    Baseline WHITE200 = white floor, k=2.0 = the PRE-FIX ship.\n")
-    print("  %-22s %9s %9s | %8s %9s | %9s"
-          % ("subject", "k @grain=1", "peak k", "sharp raw", "@ k=2.0",
-             "sharp matched"))
-    keep = {}
+    print("  %-22s %8s | %-24s | %-24s"
+          % ("subject", "raw@k=2", "lower root (less selection)",
+             "upper root (more selection)"))
+    keep, twin = {}, 0
     for s in S.SUBJECTS:
         rows = S.score(s)
         if not rows or len(rows) < len(S.ARMS):
@@ -130,17 +160,23 @@ def main():
         ks = np.array([KV[a] for a in MEAS])
         g = np.array([rows[a][1] / w[1] for a in MEAS])
         t = np.array([rows[a][2] / w[2] for a in MEAS])
-        r = interp(ks, g, t, 1.0)
+        rr = roots(ks, g, t, 1.0)
         raw = rows["G200"][2] / w[2]
-        if r is None:
-            print("  %-22s %9s" % (s, "off-branch"))
-            continue
-        print("  %-22s %9.3f %9.2f | %8s %+8.1f%% | %+8.1f%%"
-              % (s, r[0], r[2], "", 100 * (raw - 1), 100 * (r[1] - 1)))
-    print("\n  'sharp raw @ k=2.0' is today's shipping default against the")
-    print("  pre-fix ship at the SAME k. 'sharp matched' is the same two")
-    print("  builds compared at the same GRAIN. The gap between the two")
-    print("  columns is how much of the apparent sharpness cost was grain.\n")
+        pk = float(ks[int(np.argmax(g))])
+        lo = [x for x in rr if x[0] < pk]
+        hi = [x for x in rr if x[0] >= pk]
+        f = lambda x: ("k=%.3f  sharp %+.1f%%" % (x[0], 100 * (x[1] - 1))
+                       ) if x else "none on this branch"
+        if lo and hi:
+            twin += 1
+        print("  %-22s %+7.1f%% | %-24s | %-24s"
+              % (s, 100 * (raw - 1), f(lo[0] if lo else None),
+                 f(hi[0] if hi else None)))
+    print("\n  %d/%d subjects have TWO k values delivering the pre-fix grain."
+          % (twin, len(keep)))
+    print("  'raw@k=2' is today's default against the pre-fix ship at the same")
+    print("  k. The root columns are the same two builds compared at the same")
+    print("  GRAIN; the gap is how much of the raw number was grain.\n")
 
     print("(B) SOFT WEIGHT LAW -- G090 vs G100. 'gate off' means the WHOLE")
     print("    printed profile, every level, is under 0.05%, not just L0.\n")

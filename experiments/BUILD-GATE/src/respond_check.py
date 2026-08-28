@@ -94,7 +94,7 @@ def main():
     print("\nSUMMARY")
     for s, ok in verdicts.items():
         print("  %-22s %s" % (s, "admissible" if ok else "REFUSED"))
-    return 0 if all(verdicts.values()) else 0
+    return 0 if all(verdicts.values()) else 1
 
 
 if __name__ == "__main__":

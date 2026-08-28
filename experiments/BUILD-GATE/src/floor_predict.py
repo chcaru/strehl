@@ -93,6 +93,7 @@ def main():
             bad += 1
     print("\n  within 15%%: %d   outside: %d   not scorable: %d   = %d"
           % (ok, bad, skip, ok + bad + skip))
+    globals()["LAST_ROWS"] = rows
     if rows:
         xws = [r[1] for r in rows]
         print("\n  xw b0 spans %.4f-%.4f across %d subjects, so k_pred spans"
@@ -105,11 +106,15 @@ def main():
 def decoy(rows):
     """Is the agreement above specific, or would any floor number have fit?
 
-    Three points spanning 13% can agree by luck. The control asks the same
-    formula to predict from BAND 1 instead of band 0. Band 1 is the wrong
+    A handful of points spanning ~13% can agree by luck. The control asks the
+    same formula to predict from BAND 1 instead of band 0. Band 1 is the wrong
     band -- averaged@L0 is gated by the band-0 floor -- so a formula that is
     actually reading the mechanism must FAIL here. If the b1 decoy fits too,
     the b0 fit means nothing and this test is not an instrument.
+
+    The gate is RELATIVE, not an absolute threshold: the decoy must be clearly
+    worse than band 0 on the same subjects. An absolute cut would pass a run
+    in which band 0 fitted badly too, which is not evidence of specificity.
     """
     if not rows:
         return 1
@@ -127,13 +132,17 @@ def decoy(rows):
         print("  %-22s %8.4f %8.3f %+7.1f%%" % (s, b1, k, 100 * errs[-1]))
     worst = max(abs(e) for e in errs)
     spread = (max(kd) - min(kd)) / np.mean(kd)
-    print("  worst decoy error %.1f%% (b0 worst was 0.8%%); decoy k spans "
-          "only %.1f%%" % (100 * worst, 100 * spread))
-    if worst < 0.05:
-        print("  DECOY ALSO FITS -> the b0 agreement is not evidence. FAIL")
+    worst_b0 = max(abs(r[4]) for r in rows)
+    print("  worst decoy error %.1f%% (b0 worst was %.1f%%); decoy k spans "
+          "only %.1f%%" % (100 * worst, 100 * worst_b0, 100 * spread))
+    if worst < 2 * worst_b0 or worst < 0.05:
+        print("  DECOY FITS AS WELL AS BAND 0 -> the b0 agreement is not")
+        print("  evidence of specificity. FAIL")
         return 1
-    print("  decoy rejected: the fit is specific to band 0, which is the band")
-    print("  that gates level 0. The agreement is reading the mechanism. PASS")
+    print("  decoy rejected: %.1f%% vs %.1f%%, a %.1fx margin. The fit is"
+          % (100 * worst, 100 * worst_b0, worst / worst_b0))
+    print("  specific to band 0, which is the band that gates level 0.")
+    print("  The agreement is reading the mechanism. PASS")
     return 0
 
 

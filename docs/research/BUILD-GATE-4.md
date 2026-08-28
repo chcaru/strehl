@@ -955,3 +955,364 @@ exonerate the merge; it exonerates this knob.
   held, and `pyramid.rs` is closed to this lane.
 - Still owed from the original pre-registration: P2 (plane arm) and P6
   (align-refused placebo).
+
+## 14. The floor fix at HEAD: a retraction, and where `k` actually acts
+
+### 14.1 What this section changes
+
+**I retract the sharpness cost I reported for the measured-floor fix.** I told
+ORCH the fix cost **-9.9% to -39.9% sharpness on three subjects**, ORCH
+relayed it to four lanes, and it became the leading evidence that the landed
+fix regressed the shipping default. It is an artefact of my own instrument.
+My sharpness column correlates with my grain column at **+0.933 to +0.997** on
+four of five subjects; at that correlation "the default costs 22% sharpness"
+and "the default removes 38% of the grain" are one measurement wearing two
+labels. Compared at **matched grain** instead of matched `k`, the fix costs
+**-0.1% to +6.1%** -- neutral to better on every subject measured.
+
+ORCH offered four reconciliations and asked which was right. It was **(a)**:
+*the fix is correct and the sharpness column is reading grain.* ORCH also
+proposed **(d)**, a stale `k`, as the leading candidate. (d) is separately
+true -- section 14.5 -- but it is not what produced my number.
+
+Three further results, in descending order of how much they should change
+what other lanes do:
+
+1. **`k` is not inert where the hard gate does not fire.** On four subjects
+   the gate is provably below 0.05% at *every* pyramid level in both the
+   `k`=0.9 and `k`=1.0 arms, and `k` still moves grain by up to 3.89% and
+   blotch by up to 1.42%. ORCH's inference that "sweeping `k` cannot fix a
+   gate that does not fire" **does not hold**: `k` is not only an admission
+   threshold, it is the floor subtracted inside the weight law at every level.
+   This confirms the caveat flagged as untested in section 13.6.
+2. **ORCH's compensation formula generalises; ORCH's constant does not.**
+   `k_pred = 2.0 / xw` predicts the measured gating rate to within **4.3%** on
+   five subjects it was not derived on, against a band-1 decoy that misses by
+   **14.1-22.6%**. But `xw` is subject-dependent, so the compensating `k` is
+   **1.611-1.834** here against **1.29** on ORCH's `leaf-2-cpl`. **1.29 is
+   that subject's number, not a landmark.**
+3. **No `k` cuts mottle for free at HEAD either.** The largest interval-backed
+   blotch cut anywhere in the sweep is **-8.38%**, which is 14.3% of the
+   -58.8% needed, and it costs -54.8% grain. Section 13's elimination survives
+   the corrected floor.
+
+**Provenance.** All 40 masters were rendered by one binary,
+`strehl 0.0.0 (6c36106cfdbc)`, read from each master's TIFF `Software` tag; the
+worktree it was built from reported zero modified files, so unlike the section
+13 masters (`42e2d95ec94c-dirty`) this build is reproducible from a commit.
+Eight arms x five subjects, `--srgb --auto-exposure`, sources read-only from
+`D:\personal\macro`.
+
+**Arms.** `WHITE200` is `STREHL_GATE_FLOOR=white` at `k`=2.0 -- the **pre-fix
+ship**, and the baseline every ratio below is against. Every other arm removes
+the environment variable and therefore uses the **measured floor**, which is
+today's default. `G200` is **today's shipping default** and appears as a scored
+arm, not as the baseline: a baseline cannot answer a question about itself.
+
+**Commissioning.** The sharpness column was re-commissioned on the HEAD
+masters, because commissioning is a claim about whether a statistic can move on
+*these* pixels and HEAD produces different pixels. All five subjects pass both
+sides -- a planted 1-pixel blur reads **0.0129-0.0166x** and a planted
+unit sharpen reads **4.0002-4.0015x**, across all five.
+`bee-1-cpl`'s 0.56% arm span is therefore a real null and not
+a frozen probe. The blotch bootstrap's sufficient-statistic shortcut was
+re-checked against a direct sigma on a HEAD master: relative error 1.42e-16.
+
+### 14.2 The sweep
+
+`coffee-bubbles`, N=19, measured floor at band 0 = 1.0888 x white:
+
+| arm | `k` | floor | blotch | grain | sharp/tex | averaged @ L0 |
+|---|---:|---|---:|---:|---:|---:|
+| `WHITE200` (pre-fix ship) | 2.0 | white | +0.00% | +0.00% | +0.00% | 26.1% |
+| `G090` | 0.9 | measured | +0.90% | +6.98% | +0.88% | 0.0% |
+| `G100` | 1.0 | measured | +0.87% | +8.32% | +1.24% | 0.0% |
+| `G129` | 1.29 | measured | +0.75% | +11.30% | +2.13% | 1.2% |
+| `G140` | 1.4 | measured | +0.68% | +11.25% | +2.20% | 3.4% |
+| `G160` | 1.6 | measured | +0.47% | +8.12% | +1.77% | 11.6% |
+| `G200` (**ships today**) | 2.0 | measured | -0.25% | -7.17% | -1.77% | 36.4% |
+| `G260` | 2.6 | measured | -1.48% | -31.22% | -6.81% | 62.5% |
+
+`r(sharp/tex, grain)` = **+0.9973**, `r(blotch, grain)` = +0.9733.
+
+`109MSDCF`, N=22, measured floor at band 0 = 1.2332 x white:
+
+| arm | `k` | floor | blotch | grain | sharp/tex | averaged @ L0 |
+|---|---:|---|---:|---:|---:|---:|
+| `WHITE200` (pre-fix ship) | 2.0 | white | +0.00% | +0.00% | +0.00% | 52.5% |
+| `G090` | 0.9 | measured | +0.74% | +41.46% | +38.70% | 0.2% |
+| `G100` | 1.0 | measured | +0.85% | +44.20% | +41.26% | 1.2% |
+| `G129` | 1.29 | measured | +0.93% | +37.38% | +29.88% | 19.3% |
+| `G140` | 1.4 | measured | +0.73% | +26.97% | +19.77% | 31.0% |
+| `G160` | 1.6 | measured | +0.11% | +2.78% | +2.13% | 50.6% |
+| `G200` (**ships today**) | 2.0 | measured | -1.22% | -38.41% | -22.07% | 72.5% |
+| `G260` | 2.6 | measured | -2.14% | -63.78% | -43.87% | 83.8% |
+
+`r(sharp/tex, grain)` = **+0.9928**, `r(blotch, grain)` = +0.9861.
+
+`119MSDCF`, N=33, measured floor at band 0 = 1.1655 x white:
+
+| arm | `k` | floor | blotch | grain | sharp/tex | averaged @ L0 |
+|---|---:|---|---:|---:|---:|---:|
+| `WHITE200` (pre-fix ship) | 2.0 | white | +0.00% | +0.00% | +0.00% | 15.5% |
+| `G090` | 0.9 | measured | -0.47% | -6.31% | +2.53% | 0.0% |
+| `G100` | 1.0 | measured | -0.38% | -4.35% | +3.97% | 0.0% |
+| `G129` | 1.29 | measured | -0.14% | +1.09% | +6.60% | 0.7% |
+| `G140` | 1.4 | measured | -0.05% | +2.64% | +6.01% | 2.1% |
+| `G160` | 1.6 | measured | +0.05% | +2.53% | +2.61% | 9.0% |
+| `G200` (**ships today**) | 2.0 | measured | -0.53% | -13.03% | -6.64% | 34.4% |
+| `G260` | 2.6 | measured | -1.59% | -45.40% | -16.06% | 63.4% |
+
+`r(sharp/tex, grain)` = **+0.9329**, `r(blotch, grain)` = +0.9848.
+
+`flower-bud-alone-cpl`, N=205, measured floor at band 0 = 1.1515 x white:
+
+| arm | `k` | floor | blotch | grain | sharp/tex | averaged @ L0 |
+|---|---:|---|---:|---:|---:|---:|
+| `WHITE200` (pre-fix ship) | 2.0 | white | +0.00% | +0.00% | +0.00% | 12.5% |
+| `G090` | 0.9 | measured | -9.61% | -12.42% | -5.26% | 0.0% |
+| `G100` | 1.0 | measured | -8.33% | -10.02% | -4.23% | 0.0% |
+| `G129` | 1.29 | measured | -4.55% | -3.40% | -1.28% | 0.1% |
+| `G140` | 1.4 | measured | -3.11% | -1.06% | -0.22% | 0.4% |
+| `G160` | 1.6 | measured | -1.13% | +1.47% | +0.70% | 4.6% |
+| `G200` (**ships today**) | 2.0 | measured | -4.68% | -13.24% | -5.26% | 37.3% |
+| `G260` | 2.6 | measured | -12.42% | -54.83% | -15.11% | 75.9% |
+
+`r(sharp/tex, grain)` = **+0.9856**, `r(blotch, grain)` = +0.8157.
+
+`bee-1-cpl`, N=299, measured floor at band 0 = 1.1879 x white:
+
+| arm | `k` | floor | blotch | grain | sharp/tex | averaged @ L0 |
+|---|---:|---|---:|---:|---:|---:|
+| `WHITE200` (pre-fix ship) | 2.0 | white | +0.00% | +0.00% | +0.00% | 0.4% |
+| `G090` | 0.9 | measured | -6.94% | -22.05% | -0.56% | 0.0% |
+| `G100` | 1.0 | measured | -6.12% | -19.02% | -0.46% | 0.0% |
+| `G129` | 1.29 | measured | -3.59% | -10.47% | -0.26% | 0.0% |
+| `G140` | 1.4 | measured | -2.63% | -7.39% | -0.15% | 0.0% |
+| `G160` | 1.6 | measured | -0.84% | -1.98% | -0.02% | 0.1% |
+| `G200` (**ships today**) | 2.0 | measured | -0.54% | -3.62% | -0.18% | 10.6% |
+| `G260` | 2.6 | measured | -8.25% | -54.49% | -0.36% | 35.4% |
+
+`r(sharp/tex, grain)` = **+0.6170**, `r(blotch, grain)` = +0.8851.
+
+### 14.3 The sharpness cost was grain
+
+`r(sharp/tex, grain)` is quoted in every table above because it is the column
+that decides whether the other two mean anything. On four subjects it exceeds
++0.93 and the sharpness column is **not independent evidence**. `bee-1-cpl` at
+**+0.617** is the exception and it is the subject that settles the question.
+
+Grain is not monotone in `k` -- it rises to a peak and then falls -- so
+"the `k` that reproduces the pre-fix grain" generally has **two** solutions,
+one either side of the peak. They are not interchangeable, and reporting only
+one is how a better operating point gets hidden, so both are given.
+
+| subject | N | sharp/tex at `k`=2.0, raw | `r`(sharp,grain) | lower root | upper root |
+|---|---:|---:|---:|---|---|
+| `coffee-bubbles` | 19 | -1.8% | +0.997 | none | `k`=1.812, **-0.1%** |
+| `109MSDCF` | 22 | -22.1% | +0.993 | none | `k`=1.627, **+0.5%** |
+| `119MSDCF` | 33 | -6.6% | +0.933 | `k`=1.232, **+6.1%** | `k`=1.665, **+1.1%** |
+| `flower-bud-alone-cpl` | 205 | -5.3% | +0.986 | `k`=1.484, **+0.2%** | `k`=1.640, **+0.1%** |
+| `bee-1-cpl` | 299 | -0.2% | +0.617 | none | none |
+
+Read the `raw` column against the root columns. The raw column is the shipping
+default against the pre-fix ship **at the same `k`**; the root columns are the
+same two builds **at the same grain**. The entire -22.1% on `109MSDCF`
+disappears. Nothing in this table supports the claim I made.
+
+**`bee-1-cpl` is decisive and deserves separating out.** It has no root at all
+because **every** measured-floor arm has *less* grain than the pre-fix ship --
+by up to -54.49% -- while its sharpness column stays within **0.56%** across
+the whole sweep, with that column independently commissioned responsive on this
+subject and only weakly coupled to grain (`r`=+0.617). On the one subject where
+the two axes come apart, the measured floor is a strict improvement: the arm
+that removes the most grain moves sharpness by -0.36%.
+
+### 14.4 Blotch, with intervals
+
+Section 13's blotch numbers carried bootstrap intervals and section 14's must
+too, because the point estimates here are in the size range where section 13
+needed an interval to tell a move from noise.
+
+**Two estimators, and they disagree by up to 4x.** The sweep tables above take
+`sigma_mid` per channel and average; the bootstrap averages the three channels
+*before* taking sigma. Averaging first cancels channel-independent chroma
+noise, so the bootstrap measures **luma** mottle and the sweep table measures
+**per-channel** mottle. Section 13 quoted the bootstrap, so section 14 quotes
+the bootstrap, and the sweep tables' blotch column should be read as a second
+estimator that agrees in sign except on arms whose interval already contains
+zero.
+
+| subject | arm | blotch ratio | 95% CI | moved? |
+|---|---|---:|---|---|
+| `coffee-bubbles` | `G090` | +0.72% | [+0.35%, +1.09%] | **yes** |
+| `coffee-bubbles` | `G100` | +0.66% | [+0.29%, +1.04%] | **yes** |
+| `coffee-bubbles` | `G129` | +0.49% | [+0.11%, +0.89%] | **yes** |
+| `coffee-bubbles` | `G140` | +0.41% | [+0.04%, +0.79%] | **yes** |
+| `coffee-bubbles` | `G160` | +0.24% | [-0.02%, +0.51%] | no |
+| `coffee-bubbles` | `G200` | -0.18% | [-0.30%, -0.07%] | **yes** |
+| `coffee-bubbles` | `G260` | -1.13% | [-1.46%, -0.82%] | **yes** |
+| `109MSDCF` | `G090` | +0.80% | [+0.43%, +1.23%] | **yes** |
+| `109MSDCF` | `G100` | +0.82% | [+0.45%, +1.26%] | **yes** |
+| `109MSDCF` | `G129` | +0.72% | [+0.31%, +1.14%] | **yes** |
+| `109MSDCF` | `G140` | +0.57% | [+0.31%, +0.87%] | **yes** |
+| `109MSDCF` | `G160` | +0.13% | [+0.02%, +0.24%] | **yes** |
+| `109MSDCF` | `G200` | -1.64% | [-1.97%, -1.33%] | **yes** |
+| `109MSDCF` | `G260` | -2.73% | [-3.26%, -2.20%] | **yes** |
+| `119MSDCF` | `G090` | -0.15% | [-0.27%, -0.04%] | **yes** |
+| `119MSDCF` | `G100` | -0.12% | [-0.23%, -0.01%] | **yes** |
+| `119MSDCF` | `G129` | -0.04% | [-0.15%, +0.08%] | no |
+| `119MSDCF` | `G140` | -0.00% | [-0.11%, +0.12%] | no |
+| `119MSDCF` | `G160` | +0.04% | [-0.05%, +0.12%] | no |
+| `119MSDCF` | `G200` | -0.23% | [-0.35%, -0.11%] | **yes** |
+| `119MSDCF` | `G260` | -0.63% | [-0.89%, -0.40%] | **yes** |
+| `flower-bud-alone-cpl` | `G090` | -5.69% | [-8.02%, -3.74%] | **yes** |
+| `flower-bud-alone-cpl` | `G100` | -4.96% | [-7.01%, -3.23%] | **yes** |
+| `flower-bud-alone-cpl` | `G129` | -2.87% | [-4.19%, -1.81%] | **yes** |
+| `flower-bud-alone-cpl` | `G140` | -2.08% | [-3.14%, -1.25%] | **yes** |
+| `flower-bud-alone-cpl` | `G160` | -1.03% | [-1.61%, -0.54%] | **yes** |
+| `flower-bud-alone-cpl` | `G200` | -3.31% | [-4.48%, -2.46%] | **yes** |
+| `flower-bud-alone-cpl` | `G260` | -8.38% | [-11.44%, -6.07%] | **yes** |
+| `bee-1-cpl` | `G090` | -1.63% | [-3.54%, -0.51%] | **yes** |
+| `bee-1-cpl` | `G100` | -1.42% | [-3.08%, -0.46%] | **yes** |
+| `bee-1-cpl` | `G129` | -0.70% | [-1.63%, -0.18%] | **yes** |
+| `bee-1-cpl` | `G140` | -0.45% | [-1.11%, -0.10%] | **yes** |
+| `bee-1-cpl` | `G160` | +0.02% | [-0.18%, +0.16%] | no |
+| `bee-1-cpl` | `G200` | +0.14% | [-0.11%, +0.48%] | no |
+| `bee-1-cpl` | `G260` | -1.77% | [-3.91%, -0.24%] | **yes** |
+
+29 of 35 measured-floor arms moved blotch beyond the interval.
+
+The largest interval-backed cut is `flower-bud-alone-cpl` `G260`,
+**-8.38% [-11.44%, -6.07%]**. Undoing the convicted 2.43x mottle excess needs
+**-58.8%**, so that is **14.3%** of the requirement -- and an over-estimate of
+the share, because 2.43x is a subsampled minimum and therefore a floor. It
+costs **-54.83% grain** and **-15.11%** on a sharpness column that correlates
++0.986 with grain on that subject, so its sharpness cost is not separable from
+its grain cost. **There is still no knee that cuts mottle at no cost.**
+
+### 14.5 The compensation formula generalises; the constant does not
+
+| subject | measured floor b0 (x white) | `k_pred` = 2.0/xw | `k_obs` | error | band-1 decoy error |
+|---|---:|---:|---:|---:|---:|
+| `coffee-bubbles` | 1.0888 | 1.837 | 1.834 | -0.2% | -14.1% |
+| `109MSDCF` | 1.2332 | 1.622 | 1.635 | +0.8% | -22.6% |
+| `119MSDCF` | 1.1655 | 1.716 | 1.702 | -0.8% | -20.3% |
+| `flower-bud-alone-cpl` | 1.1515 | 1.737 | 1.697 | -2.3% | -21.3% |
+| `bee-1-cpl` | 1.1879 | 1.684 | 1.611 | -4.3% | -14.3% |
+
+`k_pred` comes from the floor header, `k_obs` from the gating rates. The two
+use disjoint inputs. The decoy asks the same formula to predict from band 1 --
+the wrong band, since it is the band-0 floor that gates level 0 -- and it
+misses by **14.1-22.6%** against band 0's worst of **4.3%**, a **5.3x**
+margin, while its own predictions span only 13.2%. The decoy gate is
+relative rather than an absolute cut, and it is commissioned: it passes the
+real data and fails when band 0's error is planted at the decoy's level or at
+the 2x margin boundary. The band-0 agreement is reading
+the mechanism rather than fitting anything that was offered.
+
+**What this settles.** ORCH's account of the mechanism is right and now holds
+on six subjects rather than one. **What it unsettles:** `xw` is a property of
+the subject, so the measured `k` that reproduces pre-fix behaviour is
+**1.611-1.834** here and **1.29** on `leaf-2-cpl`. No single constant
+reproduces the pre-fix build.
+
+That has a consequence worth stating plainly, and it is a point in the fix's
+favour rather than against it. Before the fix, `k`=2.0 was applied against a
+floor that under-stated the truth by a subject-dependent factor, so the
+**effective** strictness was `2.0/xw` -- about **1.62 to 1.84** on these
+subjects and 1.29 on `leaf-2-cpl`. **The pre-fix build's strictness was never 2.0 and it
+was never the same twice.** The fix did not only make the gate stricter; it
+made `k` mean the same thing on every subject. That is a correctness
+improvement that the raw sharpness column was hiding, and reconciliation (d) --
+a `k` tuned against the wrong floor -- is confirmed: `k` has never been chosen
+against a correct floor.
+
+### 14.6 `k` acts where the hard gate never fires
+
+| subject | blotch | grain | sharp/tex | worst level, both arms | hard gate off everywhere? |
+|---|---:|---:|---:|---:|---|
+| `coffee-bubbles` | -0.03% | +1.26% | +0.35% | 0.00% | **yes** |
+| `109MSDCF` | +0.11% | +1.94% | +1.85% | 1.20% | no, excluded |
+| `119MSDCF` | +0.09% | +2.09% | +1.41% | 0.00% | **yes** |
+| `flower-bud-alone-cpl` | +1.42% | +2.74% | +1.09% | 0.00% | **yes** |
+| `bee-1-cpl` | +0.88% | +3.89% | +0.09% | 0.00% | **yes** |
+
+"Hard gate off" is checked on the **whole** printed profile, every level, not
+just level 0; the base band is excluded because it is 100% averaged by design.
+`109MSDCF` is excluded because its gate reaches 1.20%.
+
+On the four subjects that qualify, both arms gate under 0.05% of coefficients,
+so the gated populations differ by at most 0.05 percentage points -- and yet
+grain moves 1.26% to 3.89% and blotch up to 1.42%. Admission cannot be the
+channel: the coefficients whose admission status differs are at most 1 in
+2000, and they would have to carry the entire move on their own.
+**The weight law is the channel.** The merge's own banner describes selection
+as `weight = (band power above the noise floor)^exponent`, and `k` sets that
+subtracted floor at every level, so `k` has continuous authority where it has
+no binary authority.
+
+This does not resurrect `k` as a mottle fix -- section 14.4 shows it still buys
+at most 14.3% of the requirement, and at heavy cost. It corrects the reasoning:
+`k` was eliminated by **measurement**, not by the argument that the gate does
+not fire there.
+
+### 14.7 Runtime
+
+| subject | N | white floor | measured floor | ratio |
+|---|---:|---:|---:|---:|
+| `coffee-bubbles` | 19 | 17.1 s | 43.5 s | 2.54x |
+| `109MSDCF` | 22 | 35.2 s | 58.9 s | 1.67x |
+| `119MSDCF` | 33 | 50.0 s | 72.7 s | 1.45x |
+| `flower-bud-alone-cpl` | 205 | 179.5 s | 287.3 s | 1.60x |
+| `bee-1-cpl` | 299 | 215.0 s | 494.5 s | 2.30x |
+
+Median **1.67x**, range 1.45-2.54x.
+
+Consistent with ORCH's 1.9x on a quiet machine. Mine was not
+quiet -- a verifier ran alongside -- so these are upper-biased and the spread
+is wide; `coffee-bubbles` at 2.54x is 19 frames, where fixed costs dominate.
+The three mid-size subjects give 1.45-1.67x.
+
+**Is the probe earned?** On the evidence here it buys no measurable image
+quality at matched grain: five of the six root readings in section 14.3 sit
+inside +/-1.1% and the sixth is +6.1%, i.e. in the fix's favour.
+What it buys is that `k` means the same thing on every subject, which is a
+precondition for ever tuning `k` at all. That is worth 1.7x to a project that
+intends to tune it, and hard to justify to a user who wants a photograph
+faster. **It should not be defended on quality grounds, because I could not
+measure a quality gain.**
+
+### 14.8 What I recommend, and what I refuse to recommend
+
+**I do not recommend a default `k`.** The subjects disagree, four of five have
+a degenerate sharpness column, and the one subject where the axes decouple has
+a sharpness column that does not move at all. Naming a constant from this would
+be naming it from grain.
+
+What the data does support:
+
+- **`k`=2.0 under the measured floor is not vindicated by anything measured
+  here.** On every subject some lower `k` gives more grain reduction *and*
+  flat-or-better sharpness, and on `bee-1-cpl` the whole range below 1.6
+  dominates it. But "not vindicated" is not "worse" -- see the refusal above.
+- **The floor probe should stay.** It is neutral-to-better at matched grain on
+  all five subjects and it makes `k` comparable across subjects.
+- **`1.29` should stop being quoted as a landmark.** It is `leaf-2-cpl`'s
+  `2.0/xw`. The formula is the landmark; the number is one subject's value.
+- **The next `k` experiment should be run at matched grain**, not at matched
+  `k`, or it will re-measure grain and call it sharpness exactly as I did.
+
+### 14.9 What this is not
+
+- Not a rim result. V-GATHER owns that axis and no rim number was rendered or
+  read here.
+- Not a per-site-ceiling number. The sharpness column is arm-to-arm; it prices
+  the knob, not the product.
+- Not a claim that admission is irrelevant to mottle. Section 13.6 already
+  narrowed that; 14.6 narrows it further in the other direction.
+- Not a defence of `k`=2.0 and not an attack on it. The instrument that would
+  decide is degenerate on four of five subjects.
+- Not measured on a quiet machine: the runtime table is upper-biased.
+- Still owed from the original pre-registration: P2 (plane arm) and P6
+  (align-refused placebo).
