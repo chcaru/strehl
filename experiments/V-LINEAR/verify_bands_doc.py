@@ -100,6 +100,18 @@ def split_cells(row):
 # The document's shorthand for the instrument's verdict strings.
 TOKEN = {"PASS": "PASS", "MARGINAL": "MARG", "FAIL(noise)": "FAIL"}
 
+# sec.13 writes verdicts out in full rather than in the four-character
+# shorthand sec.3/9 use, so it needs its own map.  Two maps is not duplication:
+# a check that accepted either spelling in either table would stop detecting a
+# table quoting the wrong vocabulary.
+TOKEN13 = {"PASS": "PASS", "MARGINAL": "MARGINAL", "FAIL(noise)": "FAIL (noise)"}
+
+# Loaded by the far=20 glob but NOT a canonical subject -- see main().
+NONCANON = "coffee-bubbles"
+
+# The five subjects swept at 0.30-0.35 (sec.13.4).
+NARROW_BANDS = ("0.25-0.30", "0.30-0.35", "0.35-0.40")
+
 
 def band0_verdict(rec):
     """sec.10's band-0 conclusion, DERIVED from the three slice verdicts.
@@ -154,13 +166,48 @@ def locate(lines, key):
     return verdict, ci, band0, ladder
 
 
+def locate13(lines, key):
+    """Section 13's two subject-keyed tables, again found by SHAPE.
+
+    sec.13.4 results row : 7 cells, carries a PASS/MARGINAL/FAIL token
+    sec.13.7 delta row   : 4 cells, last cell carries '%'
+
+    The delta row's shape is checked on the '%' and not on the cell count
+    alone, because sec.13.6's far-control table ALSO has four cells and is
+    ALSO keyed by `dry-erase-marker-head-cpl`.  Cell count alone would make
+    that subject ambiguous -- which the exactly-once rule would have caught,
+    but as an UNRESOLVED rather than as a correct reading.
+    """
+    res, delta = [], []
+    for s in rows_for(lines, key):
+        cells = split_cells(s)
+        if len(cells) == 7 and any(t in s for t in ("PASS", "MARGINAL", "FAIL")):
+            res.append(cells)
+        elif len(cells) == 4 and cells[3].endswith("%"):
+            delta.append(cells)
+    return res, delta
+
+
 def main():
     lines = open(DOC, encoding="utf-8").read().splitlines()
-    recs = load("bandsweep-far20*.json", CONTROLS)
+    text = "\n".join(lines)
+    recs_all = load("bandsweep-far20*.json", CONTROLS)
     far8 = load("bandsweep-far8*.json", CONTROLS)
+
+    # `coffee-bubbles` is a far=20 record but is NOT a canonical subject: its
+    # 19-frame stack forces the realised `far` down to 6, so it is measured on
+    # a different protocol from the other eleven and sec.13.6 excludes it from
+    # sec.0/7/8/10 on purpose.
+    #
+    # Excluding it here without checking that the DOCUMENT excludes it would be
+    # defect 3 again -- a loader decision that silently disagrees with the
+    # prose.  So the exclusion is asserted against the text below, and the
+    # subject is still fully checked, by sec.13's own tables.
+    recs = {k: v for k, v in recs_all.items() if k != NONCANON}
 
     ok = bad = unresolved = 0
     ladder_rows = band0_rows = ladder_same = 0
+    res13_rows = delta13_rows = 0
 
     def check(desc, cell, needle):
         """`needle` must be in THIS CELL, not merely somewhere in the row.
@@ -280,6 +327,122 @@ def main():
         bad += 1
         print(f"  WRONG      band-0 rows: found {band0_rows}, "
               f"expected {len(recs)}")
+
+    # ------------------------------------------------------------------
+    # sec.13 -- the 0.30-0.35 narrow-band measurement.
+    # ------------------------------------------------------------------
+    # The exclusion of `coffee-bubbles` from the canonical tables is a LOADER
+    # decision above; here it is required to be a DOCUMENTED one.  If the
+    # sentence goes, the check goes red even though every number is intact.
+    #
+    # Matched against WHITESPACE-COLLAPSED text.  The first version of this
+    # check used a literal-with-spaces regex and reported the sentence missing
+    # when it was present, because Markdown had wrapped it between
+    # "eleven-subject" and "tables".  A prose check that cannot survive a
+    # reflow is a check that will eventually fire on a document that is right.
+    flat = re.sub(r"\s+", " ", text)
+    if ("`coffee-bubbles` is **deliberately excluded from the canonical "
+            "eleven-subject tables in §0, §7, §8 and §10.**") in flat:
+        ok += 1
+    else:
+        bad += 1
+        print("  WRONG      sec.13.6: the verifier excludes `coffee-bubbles` "
+              "from the canonical tables but the document no longer says so")
+
+    for key in sorted(recs_all):
+        r = recs_all[key]
+        res, delta = locate13(lines, key)
+        if not res and not delta:
+            continue
+
+        if len(res) == 1:
+            res13_rows += 1
+            R = res[0]
+            check(f"{key} s13 N", R[1], str(r["n_real"]))
+            for j, b in enumerate(NARROW_BANDS):
+                col = (2, 3, 5)[j]
+                check(f"{key} s13 {b} R", R[col], f"{r['bands'][b]['R']:.3f}")
+            nb = r["bands"]["0.30-0.35"]
+            check(f"{key} s13 0.30-0.35 CI", R[4],
+                  f"[{nb['lo']:.3f}, {nb['hi']:.3f}]")
+            # THE CONCLUSION.  Derived from the instrument's verdict string,
+            # so flipping FAIL to PASS while leaving R=1.079 in place -- the
+            # mutation that four arms of this file's own harness once missed
+            # at 88/88 green -- goes red here.
+            check(f"{key} s13 VERDICT", R[6], TOKEN13[nb["verdict"]])
+        elif len(res) > 1:
+            unresolved += 1
+            print(f"  UNRESOLVED {key}: {len(res)} sec.13.4 rows")
+
+        if len(delta) == 1:
+            delta13_rows += 1
+            D = delta[0]
+            wide, narrow = r["bands"]["0.30-0.40"]["R"], r["bands"]["0.30-0.35"]["R"]
+            check(f"{key} s13.7 wide", D[1], f"{wide:.3f}")
+            check(f"{key} s13.7 narrow", D[2], f"{narrow:.3f}")
+            # Recomputed, not read.  A delta table is a conclusion about how
+            # far the narrow band moved; quoting it back would certify it
+            # against itself.
+            check(f"{key} s13.7 DELTA", D[3].replace("\u2212", "-"),
+                  f"{100.0 * (narrow - wide) / wide:+.1f}%")
+        elif len(delta) > 1:
+            unresolved += 1
+            print(f"  UNRESOLVED {key}: {len(delta)} sec.13.7 rows")
+
+    # sec.13.6's far-matched control, from its own record.
+    #
+    # SIXTH INSTANCE OF THE PRESENCE-TEST DEFECT, AND IT WAS WRITTEN INTO THE
+    # SECTION THAT DOCUMENTS THE DEFECT.  The first version of this check was
+    # `needle in text` for "**PASS**".  That token appears all over sec.13.4,
+    # so flipping the far-control's own verdict to FAIL left the check green:
+    # arm `s13-far-control-flipped` read MISSED at 294/294.  Caught only
+    # because the arm existed.  Pinned to the row's cells now, like every
+    # other conclusion in this file.
+    far24 = load("bandsweep-far24*.json", CONTROLS)
+    ctl = far24.get("dry-erase-marker-head-cpl")
+    ctl_rows = [split_cells(ln.strip()) for ln in lines
+                if ln.strip().startswith("| `--far 24`")]
+    if ctl is None:
+        bad += 1
+        print("  WRONG      sec.13.6: no far=24 control record on disk")
+    elif len(ctl_rows) != 1:
+        unresolved += 2
+        print(f"  UNRESOLVED sec.13.6: {len(ctl_rows)} far-control rows, need 1")
+    else:
+        cb, row = ctl["bands"]["0.30-0.35"], ctl_rows[0]
+        check("sec.13.6 far-control R", row[2], f"{cb['R']:.3f}")
+        check("sec.13.6 far-control VERDICT", row[3], TOKEN13[cb["verdict"]])
+
+    # sec.13.5's two arithmetic claims about the CI upper bound, recomputed.
+    # Counted rather than tested for presence, for the reason immediately
+    # above: a claim satisfied by a duplicate of itself is not certified.
+    hi = recs["112MSDCF"]["bands"]["0.30-0.35"]["hi"]
+    for bar, name in ((1.5, "MARGINAL"), (2.0, "PASS")):
+        needle = f"**{bar - hi:.3f} below the {name} bar**"
+        if text.count(needle) == 1:
+            ok += 1
+        else:
+            bad += 1
+            print(f"  WRONG      sec.13.5 distance to {name} bar: "
+                  f"{needle!r} occurs {text.count(needle)} times, need 1")
+
+    # Non-vacuity: the commissioning table must have one row per swept subject
+    # and every one of them must read zero.
+    zero_rows = len(re.findall(r"\|\s*0 of 12\s*\|\s*exact zero\s*\|", text))
+    if zero_rows == 4:
+        ok += 1
+    else:
+        bad += 1
+        print(f"  WRONG      sec.13.2 commissioning rows: found {zero_rows}, "
+              "expected 4")
+
+    for label, got, want in (("sec.13.4 result rows", res13_rows, 5),
+                             ("sec.13.7 delta rows", delta13_rows, 5)):
+        if got == want:
+            ok += 1
+        else:
+            bad += 1
+            print(f"  WRONG      {label}: found {got}, expected {want}")
 
     attempted = ok + bad + unresolved
     print(f"\n  located-and-correct : {ok}")

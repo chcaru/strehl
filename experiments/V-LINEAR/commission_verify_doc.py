@@ -70,6 +70,17 @@ R1_VERDICT_LEAF = (
 BAND0_112 = "| `112MSDCF` | 1.202 | 1.089 | 1.049 | **NOISE** |"
 LADDER_112 = "| `112MSDCF` | 0.20 | 0.20 | same |"
 
+# Section 13 anchors.  Each is a FULL row: anchoring on a fragment such as
+# "1.079" would land on whichever occurrence came first, which is how the
+# earlier `§2.7` mis-plant happened in a neighbouring lane and how a green
+# negative control can be a statement about nothing.
+S13_112 = ("| `112MSDCF` | 79 | 1.202 | **1.079** | [1.040, 1.121] | 1.102 | "
+           "**FAIL (noise)** |")
+S13_DRY = ("| `dry-erase-marker-head-cpl` | 300 | 9.665 | **4.530** | "
+           "[3.115, 5.947] | 5.283 | **PASS** |")
+S13_DELTA_112 = "| `112MSDCF` | 1.089 | 1.079 | \u22121.0% |"
+S13_FARCTL = "| `--far 24` | 6 developed frames | **4.659** | **PASS** |"
+
 # (name, why it matters, old_line, new_line-or-None-to-delete)
 ARMS = [
     ("R2-R-verdict-duplicated-elsewhere",
@@ -149,6 +160,71 @@ ARMS = [
      "nothing prints the same green as one that matches, so the row COUNT is "
      "itself a check.",
      "| `bee-1-cpl` | 10.728 | 4.732 | 3.629 | SIGNAL |", None),
+
+    # ---- SECTION 13: the 0.30-0.35 narrow-band measurement -----------------
+    # This section exists because ORCH withdrew the licence from his own
+    # broadcast figure on the strength of this lane's table.  It is therefore
+    # the section most likely to be quoted and the one where a reversed
+    # conclusion would do the most damage, so it gets conclusion-flip arms
+    # before it gets anything else.
+    ("s13-conclusion-flip-112-FAIL-to-PASS",
+     "THE ARM THAT MATTERS. 112MSDCF 0.30-0.35 FAIL -> PASS with R still "
+     "1.079 and the CI still [1.040, 1.121]. This single token decides "
+     "whether ORCH's -44.6% is licensed. Every digit stays correct.",
+     S13_112, S13_112.replace("**FAIL (noise)** |", "**PASS** |")),
+
+    ("s13-conclusion-flip-gate-PASS-to-FAIL",
+     "the GATE. dry-erase 0.30-0.35 PASS -> FAIL voids §13 entirely, because "
+     "a FAIL there means the instrument cannot resolve a 0.05-wide band and "
+     "112MSDCF's FAIL says nothing about 112MSDCF.",
+     S13_DRY, S13_DRY.replace("**PASS** |", "**FAIL (noise)** |")),
+
+    ("s13-R-narrow",
+     "the point estimate the whole section turns on.",
+     S13_112, S13_112.replace("**1.079**", "**1.179**")),
+
+    ("s13-CI-upper",
+     "the CI upper bound, which is what makes this a decisive FAIL rather "
+     "than a marginal one.",
+     S13_112, S13_112.replace("1.121]", "1.521]")),
+
+    ("s13-delta-recomputed",
+     "§13.7's delta is a CONCLUSION about how far the narrow band moved from "
+     "the wide one; quoting it back would certify it against itself, so the "
+     "verifier recomputes it from both records.",
+     S13_DELTA_112, S13_DELTA_112.replace("−1.0%", "−9.0%")),
+
+    ("s13-far-control-flipped",
+     "§13.6's far-matched control is the only thing standing between "
+     "coffee-bubbles' MARGINAL and a sampling artifact. Flipping its verdict "
+     "leaves the confound uncontrolled.",
+     S13_FARCTL, S13_FARCTL.replace("**PASS** |", "**FAIL (noise)** |")),
+
+    ("s13-commissioning-not-zero",
+     "the RNG commissioning claim. If a pre-existing band DID move, every "
+     "committed number in this document is suspect, so '0 of 12' must be "
+     "certified against the records rather than typed.",
+     "| `paper-sweep` | 0 of 12 | exact zero |",
+     "| `paper-sweep` | 1 of 12 | exact zero |"),
+
+    ("s13-arithmetic-claim",
+     "§13.5's 'how far below the bar' figure, which is the sentence a reader "
+     "takes away instead of the interval.",
+     "**0.379 below the MARGINAL bar**", "**0.079 below the MARGINAL bar**"),
+
+    ("s13-exclusion-sentence-deleted",
+     "the documented exclusion of coffee-bubbles. Deleting it makes the "
+     "verifier's loader silently disagree with the prose -- a subject dropped "
+     "from the canonical tables with nothing saying so. This is the arm for "
+     "'do not silently drop an awkward one'.",
+     "`coffee-bubbles` is **deliberately excluded from the canonical "
+     "eleven-subject", None),
+
+    ("s13-row-deleted",
+     "a §13.4 row vanishing. The row count is the only thing that "
+     "distinguishes five subjects measured from four measured and one "
+     "forgotten.",
+     S13_DRY, None),
 ]
 
 

@@ -102,7 +102,7 @@ SUBJECTS = [
     # variable the measurement can see -- a develop is bit-identical wherever it
     # is written -- so a split path costs nothing and rewriting the earlier three
     # would cost 30 minutes of re-develops for no measurable difference.
-    ("112MSDCF",                  r"C:\dev\strehl-out\V-LINEAR\r2\112MSDCF\lintiff"),
+    ("112MSDCF",                  r"D:\strehl-out\V-LINEAR\r2\112MSDCF\lintiff"),
     ("flat-on-ruler-cpl",         r"C:\dev\strehl-out\V-LINEAR\r2\flat-on-ruler-cpl\lintiff"),
     ("tweezers-cpl",              r"C:\dev\strehl-out\V-LINEAR\r2\tweezers-cpl\lintiff"),
     ("lavendar-cpl",              r"D:\strehl-out\V-LINEAR\r2\lavendar-cpl\lintiff"),
@@ -115,10 +115,35 @@ SUBJECTS = [
     # If its band 0 is in fact noise like 112MSDCF's, the two-subject contrast
     # that the self-targeting claim rests on is not a contrast at all.
     ("paper-sweep",               r"D:\strehl-out\V-LINEAR\r2\flat-fields\subject-focus-sweep-with-cpl\lintiff"),
+    # ORCH correction #5: coffee-bubbles carries the 27.2% figure and has never
+    # been band-qualified.  It is 19 frames -- the shallowest subject in this
+    # table by a factor of 1.7 -- so `far` collapses from the requested 20 to
+    # about 6 and its R is biased DOWNWARD relative to every other row.  A FAIL
+    # here is INDETERMINATE, not noise; see PREREG-NARROW.md reading 4.
+    ("coffee-bubbles",            r"D:\strehl-out\V-LINEAR\r2\coffee-bubbles\lintiff"),
 ]
 
 NY, NX = 5, 6
 TARGET_READS = 80
+
+# ORCH correction #5: the -44.6% and 27.2% depth figures are measured at
+# 0.30-0.35 cyc/px, inside this instrument's 0.30-0.40 slice.  A FAIL on the
+# wider slice withdraws a licence; it does not prove the narrower one is noise.
+# These two bands partition 0.30-0.40 so the three are checkable against each
+# other.
+#
+# `EXTRA` IS DELIBERATELY NOT PART OF `FINE`.  `boundary()` reads the FINE
+# partition, so keeping these out of it leaves every committed boundary and all
+# 241 checks in V-LINEAR-BANDS.md untouched.
+#
+# IT IS ALSO DELIBERATELY APPENDED AFTER `FINE` RATHER THAN INSERTED.
+# `ratio_ci` draws from a module-level RNG (bandsignal.py:69), so every call
+# consumes randomness and shifts the calls after it.  Inserting (0.30,0.35)
+# next to (0.30,0.40) would change the CI of every band that follows and would
+# silently disagree with the committed table.  Appending leaves all existing
+# bands at their existing positions in the RNG stream -- a claim commissioned
+# in PREREG-NARROW.md by requiring a digit-exact re-sweep.
+EXTRA = [(0.30, 0.35), (0.35, 0.40)]
 
 
 def frames_of(d):
@@ -147,7 +172,7 @@ def sweep(key, d, far_force=None, decim=1, simdecim=1):
     if n - 2 * far < 6:
         far = max(2, (n - 6) // 2)
 
-    allb = BANDS + FINE + [(SEL_LO, SEL_HI)]
+    allb = BANDS + FINE + EXTRA + [(SEL_LO, SEL_HI)]
     lo = np.array([b[0] for b in allb])
     hi = np.array([b[1] for b in allb])
     nsel = len(allb) - 1
