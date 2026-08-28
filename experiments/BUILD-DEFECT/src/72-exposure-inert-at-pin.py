@@ -81,7 +81,36 @@ import sys
 import numpy as np
 import tifffile
 
-PROBE = r"C:\dev\strehl-out\BUILD-DEFECT\probe"
+def _probe_dir():
+    """Where the six probe renders live.
+
+    They moved from C: to D: in the disk reclamation of 2026-08-27; C: is kept
+    as a fallback so a tree that still holds the old location keeps verifying,
+    and the env var lets a third location be named without editing this file.
+    A missing tree is a typed refusal rather than a silent empty result: these
+    renders are the evidence, and a verifier that quietly finds none of them
+    would otherwise report perfect agreement over zero comparisons.
+    """
+    named = os.environ.get("STREHL_DEFECT_PROBE")
+    if named:
+        # An override that is SET but wrong must fail, not quietly fall through
+        # to a default -- otherwise a typo silently measures a different tree
+        # and reports it as the requested one.
+        if not os.path.isdir(named):
+            raise SystemExit("STREHL_DEFECT_PROBE is set to %r, which is not a "
+                             "directory; refusing to fall back to a default"
+                             % named)
+        return named
+    for p in (r"D:\strehl-out\BUILD-DEFECT\probe",
+              r"C:\dev\strehl-out\BUILD-DEFECT\probe"):
+        if os.path.isdir(p):
+            return p
+    raise SystemExit("probe renders not found in any known location; set "
+                     "STREHL_DEFECT_PROBE to the directory holding "
+                     "pin-e260.tiff and its siblings")
+
+
+PROBE = _probe_dir()
 OUT_JSON = os.path.join(os.path.dirname(__file__), "..", "out", "72-exposure-inert-at-pin.json")
 
 # The decision band.  INERT_MAX_DN is 2 rather than 0 because a renderer is
