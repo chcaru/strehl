@@ -122,6 +122,21 @@ def seg(body, a, b, what):
     return body[body.index(a):body.index(b)]
 
 
+def _at(text, head, what):
+    """Line-anchored offset of a heading, refusing unless it is unique.
+
+    Plain `.index()` matched `## 10. Files` where it was quoted in prose,
+    51,187 characters before the real heading. `### 9.23` likewise occurs 14
+    times as a plain substring because `#### 9.23.x` contains it.
+    """
+    ms = list(re.finditer(r"^" + re.escape(head) + r"(?![\w.])", text, re.M))
+    if len(ms) != 1:
+        refused.append("%s: heading %r matches %d lines, need 1"
+                       % (what, head, len(ms)))
+        return None
+    return ms[0].start()
+
+
 def conclusion(body, pat, want, what, forbid=()):
     """Parse a verdict WORD and compare it to what the evidence requires.
 
@@ -790,7 +805,10 @@ def main():
         s19 = s9[s9.index("### 9.19"):s9.index("### 9.20")]
         s20 = s9[s9.index("### 9.20"):s9.index("### 9.21")]
         s21 = s9[s9.index("### 9.21"):s9.index("### 9.22")]
-        s22 = s9[s9.index("### 9.22"):s9.index("### 9.23")]
+        _p22 = _at(s9, "### 9.22", "9.22 bound")
+        _p23 = _at(s9, "### 9.23", "9.23 bound")
+        s22 = s9[_p22:_p23] if (_p22 is not None
+                                and _p23 is not None) else ""
 
         # ---- the two arm tables, every cell against the record ----
         tabs = {
@@ -1307,7 +1325,8 @@ def main():
     _tb = _json.load(io.open(
         os.path.join(OUTD, "report", "table.json"), encoding="utf-8"))
     _viol = _tb["violations"]["blotch"]
-    _head = doc[:doc.index("## 0.")] if "## 0." in doc else doc[:4000]
+    _h0 = _at(doc, "## 0.", "headline bound")
+    _head = doc[:_h0] if _h0 is not None else doc[:4000]
     conclusion(
         _head,
         r"\*\*Answer, in one line\.\*\* The invariant as stated is \*\*(\w+)\*\*",
