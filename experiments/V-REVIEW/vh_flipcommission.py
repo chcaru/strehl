@@ -18,14 +18,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FP = os.path.join(HERE, "HALO-falsepositive.md")
 RS = os.path.join(HERE, "HALO-residual.md")
 BJ = r"D:\strehl-out\V-REVIEW\halo\blind.json"
+TJ = r"D:\strehl-out\V-REVIEW\halo\trunc2.json"
 TMP = tempfile.mkdtemp(prefix="vhcom_")
-for f in (FP, RS, BJ):
+for f in (FP, RS, BJ, TJ):
     shutil.copy2(f, os.path.join(TMP, os.path.basename(f)))
 print("backups in %s\n" % TMP)
 
 
 def restore():
-    for f in (FP, RS, BJ):
+    for f in (FP, RS, BJ, TJ):
         shutil.copy2(os.path.join(TMP, os.path.basename(f)), f)
 
 
@@ -41,6 +42,12 @@ def sub(path, old, new):
         raise SystemExit("MUTATION TARGET NOT FOUND (%d occurrences): %.60s"
                          % (t.count(old), old))
     io.open(path, "w", newline="\n", encoding="utf-8").write(t.replace(old, new, 1))
+
+
+def tmut(path):
+    d = json.load(open(path))
+    d["couch-fibers-cpl"]["used"] = 7   # would make a 5/7 blind walk look complete
+    json.dump(d, open(path, "w"), indent=1)
 
 
 def jmut(path):
@@ -75,6 +82,18 @@ ARMS = [
   lambda: sub(RS, "| bee-1-cpl | **1600 DN** | 400 DN | 1 of 4 (at 3000 DN) |",
                   "| bee-1-cpl | (n/a) | 400 DN | 1 of 4 (at 3000 DN) |"), 1),
  ("DATA         leaf-2 coverage 44%->95%", lambda: jmut(BJ), 1),
+ ("SPECIFICITY  s6 prose reword",
+  lambda: sub(RS, "and agrees row-for-row with", "and matches row-for-row with"), 0),
+ ("REVERSAL     s6 clean count 11->14",
+  lambda: sub(RS, "| clean, full 7-band walk | **11** |",
+                  "| clean, full 7-band walk | **14** |"), 1),
+ ("REGRESSION   withdrawn 'clean 14' row returns",
+  lambda: sub(RS, "| UNMEASURABLE, per-subject reason in section 2 | **7** |",
+                  "| UNMEASURABLE, per-subject reason in section 2 | **7** |\n| clean | **14** |"), 1),
+ ("DELETION     s6 residual-risk statement",
+  lambda: sub(RS, "**Residual risk is 11 subjects UNSCORED**",
+                  "Residual risk is a number of subjects"), 1),
+ ("DATA         trunc2 blind walk 5/7->7/7", lambda: tmut(TJ), 1),
 ]
 
 bad = []
