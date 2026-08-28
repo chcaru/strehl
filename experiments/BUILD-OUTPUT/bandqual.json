@@ -1,0 +1,125 @@
+{
+  "threshold": 1.05,
+  "per_subject": {
+    "coffee-bubbles": {
+      "mottle": {
+        "median_R": 3.0942755564982,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "struct": {
+        "median_R": 7.026310737796313,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "grain": {
+        "median_R": 3.153717508994424,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      }
+    },
+    "lead-1-cpl": {
+      "mottle": {
+        "median_R": 1.187421065485012,
+        "frac_crops_qualifying": 0.8,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "struct": {
+        "median_R": 2.2532178999477313,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "grain": {
+        "median_R": 3.8552596727713766,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      }
+    },
+    "113MSDCF": {
+      "mottle": {
+        "median_R": 1.2862594020156335,
+        "frac_crops_qualifying": 0.7,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "struct": {
+        "median_R": 1.6941018371586856,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "grain": {
+        "median_R": 1.44160245882578,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      }
+    },
+    "flat-on-ruler-cpl": {
+      "mottle": {
+        "median_R": 1.3115642284815927,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "struct": {
+        "median_R": 1.1048567184266718,
+        "frac_crops_qualifying": 0.7,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "grain": {
+        "median_R": 1.5414843035781587,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      }
+    },
+    "112MSDCF": {
+      "mottle": {
+        "median_R": 1.3015509415767965,
+        "frac_crops_qualifying": 0.7,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "struct": {
+        "median_R": 1.6942344175700512,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "grain": {
+        "median_R": 1.37345827751902,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      }
+    },
+    "foam": {
+      "mottle": {
+        "median_R": 2.9671410870776613,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "struct": {
+        "median_R": 5.523119006853379,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      },
+      "grain": {
+        "median_R": 3.800245200689185,
+        "frac_crops_qualifying": 1.0,
+        "n_crops": 10,
+        "qualifies": true
+      }
+    }
+  }
+}
