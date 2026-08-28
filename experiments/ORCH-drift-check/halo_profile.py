@@ -81,6 +81,62 @@ subject with a real silhouette. Subjects that are full-frame texture (`foam`,
 `couch-fibers`) have no background to measure a rim in. Those are reported as
 SKIPPED with the reason, and the summary partitions every input into outcomes
 that sum to the total, so a skipped subject can never be read as a clean one.
+
+WHAT THE SKIP TAXONOMY FOUND, AND WHAT CHANGED (V-REVIEW)
+---------------------------------------------------------
+Run over the 26 delivered masters this instrument measured 11 and skipped 15.
+Diagnosing all guards independently rather than reporting only the first to
+fire showed the 15 were not one problem but four, and that BOTH regime guards
+were inert on the exact subjects they were written for:
+
+  * REGIME GUARD 1 was written to catch `tweezers-cpl`, whose two arms are
+    separate components. On these masters the tweezers segment as ONE component
+    (largest share 100%, 10 components), so the guard never fires and the
+    subject is measured and flagged anyway.
+  * REGIME GUARD 2 was written to catch `flat-on-ruler-cpl`. It requires both
+    far annuli to hold >200 px, and it splits them at a FIXED 650 px. That
+    subject reaches only 599 px, so the outer annulus is EMPTY and the guard
+    does not apply. It was inert on 7 of 26 subjects, including that one.
+
+A guard that cannot apply reads exactly like a guard that passed. Both are
+fixed below, and the fix for guard 2 is to split the far field at its own
+MEDIAN distance so that both halves are populated whenever the far field is.
+
+The component guard is replaced rather than loosened. Its stated concern --
+that walking outward from a union of parts crosses the gaps between them -- is
+answered directly by restricting every band to the DOMINANT COMPONENT'S OWN
+VORONOI CELL: background whose nearest subject pixel belongs to the dominant
+part. Inside that cell "outward from the silhouette" is well defined no matter
+how many other parts exist, because the walk stops at the cell boundary instead
+of crossing into another part's territory. This is what lets 862-component
+`couch-fibers-cpl` be measured without relaxing anything.
+
+AN ADAPTIVE FAR FIELD WAS TESTED AND REJECTED, WITH THE CALIBRATION
+------------------------------------------------------------------
+`112MSDCF` and `113MSDCF` have a real background -- 24% of frame -- that never
+lies more than 167 and 181 px from the subject, so the fixed 400-900 px window
+is unreachable and they cannot be measured. The obvious fix is a nearer far
+field. It was calibrated on the 17 subjects where BOTH windows exist, by
+measuring overshoot at 400-900 and again at 130-180:
+
+    median absolute error 3318 DN, worst 13023 DN, against a 200 DN threshold.
+
+It is not a small bias and it is not one-signed. It flips verdicts in BOTH
+directions -- `dry-erase-marker-head-cpl` +236.7 -> -535.1 (HALO would become
+clean) and `119MSDCF` -284.1 -> +240.5 (clean would become HALO). A far field
+inside the penumbra is not a far field. Those two subjects are therefore
+reported UNMEASURABLE with that reason, and the honest answer is that measuring
+them needs a capture with more clearance around the subject, not a better
+statistic.
+
+MAX_SUBJ WAS A PROXY FOR TESTS THAT ARE ALREADY PRESENT
+--------------------------------------------------------
+"Subject is more than 80% of frame" was standing in for "there is no usable
+background". That is tested directly and better by the backdrop fraction, the
+far-field population and the near-band population, all of which already exist.
+`coffee-bubbles` and `foam` fail those direct tests anyway (far field 0 px) and
+are still UNMEASURABLE. `highly-angled-ruler-mm-cpl` fails only the proxy: it
+has 106,153 far-field px and 7 populated near bands, and is now measured.
 """
 
 import argparse
@@ -99,7 +155,12 @@ FAR = (400, 900)
 MIN_SUBJ = 0.02       # subject must be >=2% of frame
 MAX_SUBJ = 0.80
 MIN_FARPX = 20000     # need a real far field to reference against
-MIN_LARGEST = 0.70    # largest connected component share of subject mass
+MIN_LARGEST = 0.70    # RETIRED: replaced by the Voronoi restriction
+MIN_DOM_FRAME = 0.02  # dominant part must be >=2% of FRAME to have a
+                      # perimeter long enough to carry a measurable rim
+MIN_BANDPX = 200      # px needed in a band before its median is used
+MIN_CELL_DENS = 0.10  # stop the walk when the dominant part's cell has
+                      # narrowed to <10% of its innermost density
 BG_UNIFORM = 3000     # DN spread allowed between two disjoint far annuli
 
 # THE BANDS, AND WHY NARROWING THEM WAS TRIED AND ABANDONED
@@ -158,73 +219,106 @@ def otsu(v):
     return float(mids[int(np.argmax(var))])
 
 
-def profile(y, sub=4):
-    """Returns (verdict, overshoot, veil, farlevel, bands) on a luma plane."""
-    y = y[::sub, ::sub]
+def segment(y):
     t = otsu(y.ravel())
-    subj = y < t
-    subj = binary_opening(subj, np.ones((3, 3)))
+    subj = binary_opening(y < t, np.ones((3, 3)))
     subj = binary_closing(subj, np.ones((5, 5)))
+    return t, subj
+
+
+def profile(y, sub=4):
+    """Returns (verdict, overshoot, bump, penumbra, farlevel, bands, why)."""
+    y = y[::sub, ::sub]
+    t, subj = segment(y)
     frac = float(subj.mean())
     if frac < MIN_SUBJ:
-        return ("SKIPPED", None, None, None, None, None,
+        return ("UNMEASURABLE", None, None, None, None, None,
                 "no dark subject (%.1f%% of frame)" % (frac * 100))
-    if frac > MAX_SUBJ:
-        return ("SKIPPED", None, None, None, None, None,
-                "no background (subject is %.1f%% of frame)" % (frac * 100))
     if float((y > t).mean()) < 0.05:
-        return ("SKIPPED", None, None, None, None, None, "backdrop too small")
+        return ("UNMEASURABLE", None, None, None, None, None,
+                "backdrop too small (%.1f%% of frame)" % (float((y > t).mean()) * 100))
 
-    d = distance_transform_edt(~subj) * sub
+    lab, nlab = label(subj)
+    if nlab < 1:
+        return ("UNMEASURABLE", None, None, None, None, None, "no subject component")
+    sizes = np.bincount(lab.ravel())[1:]
+    dom = int(np.argmax(sizes)) + 1
+    dom_frame = float(sizes[dom - 1]) / float(subj.size)
+    if dom_frame < MIN_DOM_FRAME:
+        return ("UNMEASURABLE", None, None, None, None, None,
+                "no dominant silhouette: largest of %d parts is %.1f%% of frame "
+                "(need %.0f%%)" % (nlab, dom_frame * 100, MIN_DOM_FRAME * 100))
+
+    # THE VORONOI RESTRICTION. `ind` gives, for every background pixel, the
+    # coordinates of its nearest subject pixel; the label there says which part
+    # owns it. Restricting to the dominant part's cell means the outward walk
+    # never crosses a gap into another part, which is precisely what REGIME
+    # GUARD 1 existed to prevent -- now prevented by construction instead of by
+    # refusing to measure.
+    d, ind = distance_transform_edt(~subj, return_indices=True)
+    d = d * sub
+    own = (lab[ind[0], ind[1]] == dom) & (~subj)
+
+    # THE FAR FIELD IS NOT RESTRICTED TO THE CELL. It is a global reference
+    # level -- background far from the whole subject -- and starving it by
+    # intersecting with one part's cell both broke the fibrous subjects this
+    # restriction exists to rescue and shifted every already-passing subject,
+    # because moving the reference moves all seven bands together. Only the
+    # outward WALK has to stay inside one part's territory.
     far = (d >= FAR[0]) & (d < FAR[1])
-    if int(far.sum()) < MIN_FARPX // (sub * sub):
-        return ("SKIPPED", None, None, None, None, None,
-                "far field only %d px, need %d"
-                % (int(far.sum()), MIN_FARPX // (sub * sub)))
+    nfar = int(far.sum())
+    if nfar < MIN_FARPX // (sub * sub):
+        return ("UNMEASURABLE", None, None, None, None, None,
+                "far field only %d px, need %d (subject reaches %.0f px)"
+                % (nfar, MIN_FARPX // (sub * sub), float(d.max())))
     farlevel = float(np.median(y[far]))
 
-    # REGIME GUARD 1: one compact subject. Walking outward from the union of
-    # several disconnected parts crosses the gaps between them, and every
-    # crossing is a non-monotonicity that has nothing to do with a rim. This is
-    # what flagged `tweezers-cpl`, whose two arms are separate components.
-    lab, nlab = label(subj)
-    if nlab > 1:
-        sizes = np.bincount(lab.ravel())[1:]
-        share = float(sizes.max()) / float(sizes.sum())
-        if share < MIN_LARGEST:
-            return ("SKIPPED", None, None, None, None, None,
-                    "subject is %d components, largest only %.0f%% of mass "
-                    "(need %.0f%%)" % (nlab, share * 100, MIN_LARGEST * 100))
-
-    # REGIME GUARD 2: uniform background. The bands are referenced to a far
-    # field, so a background with its own illumination gradient puts that
-    # gradient straight into the measurement. This is what flagged
-    # `flat-on-ruler-cpl`. Two disjoint annuli inside the far field must agree.
-    mid = (FAR[0] + FAR[1]) // 2
-    a1 = (d >= FAR[0]) & (d < mid)
-    a2 = (d >= mid) & (d < FAR[1])
-    if int(a1.sum()) > 200 and int(a2.sum()) > 200:
-        spread = abs(float(np.median(y[a1])) - float(np.median(y[a2])))
+    # REGIME GUARD 2, ALWAYS APPLICABLE. Split the far field at its OWN median
+    # distance, so both halves are populated whenever the far field is. The
+    # previous fixed 650 px split left the outer half empty on 7 of 26 subjects
+    # -- including `flat-on-ruler-cpl`, the subject the guard was written for.
+    dv = d[far]
+    dmed = float(np.median(dv))
+    A = far & (d < dmed)
+    B = far & (d >= dmed)
+    spread = None
+    if int(A.sum()) > MIN_BANDPX and int(B.sum()) > MIN_BANDPX:
+        spread = abs(float(np.median(y[A])) - float(np.median(y[B])))
         if spread > BG_UNIFORM:
-            return ("SKIPPED", None, None, None, None, None,
-                    "background not uniform: far annuli differ by %.0f DN "
-                    "(limit %d)" % (spread, BG_UNIFORM))
+            return ("UNMEASURABLE", None, None, None, None, None,
+                    "background not uniform: far field's own halves differ by "
+                    "%.0f DN (limit %d)" % (spread, BG_UNIFORM))
+    else:
+        return ("UNMEASURABLE", None, None, None, None, None,
+                "far field cannot be split to test uniformity (%d/%d px)"
+                % (int(A.sum()), int(B.sum())))
 
     bands = []
+    dens0 = None
     for lo, hi in NEAR:
-        m = (d >= lo) & (d < hi)
+        m = own & (d >= lo) & (d < hi)
         n = int(m.sum())
+        dens = n / float(hi - lo)
+        if dens0 is None:
+            dens0 = dens
+        # CELL-PINCH TRUNCATION. Stop rather than skip: the surviving pixels
+        # this far out are a directional sliver, and their median is not the
+        # background level at that distance.
+        if dens0 > 0 and dens / dens0 < MIN_CELL_DENS:
+            bands.append((lo, hi, n, None))
+            continue
         bands.append((lo, hi, n,
-                      float(np.median(y[m])) - farlevel if n > 200 else None))
-    vals = [b[3] for b in bands if b[3] is not None]
-    if not vals:
-        return ("SKIPPED", None, None, None, None, None, "no populated near band")
+                      float(np.median(y[m])) - farlevel if n > MIN_BANDPX else None))
+    vals = []
+    for b in bands:
+        if b[3] is None:
+            break
+        vals.append(b[3])
+    if len(vals) < 3:
+        return ("UNMEASURABLE", None, None, None, None, None,
+                "only %d usable near band(s): dominant part's cell pinches off "
+                "before a profile can be walked" % len(vals))
     over = max(vals)
-    # bump: the largest DECREASE walking outward. A clean edge's profile rises
-    # monotonically to the far field, so bump == 0 by construction. A halo is a
-    # local maximum, which forces a decrease on its outer side. Unlike
-    # `overshoot` this never touches the far-field level, so the two statistics
-    # fail in different ways and a halo must defeat both to hide.
     bump = 0.0
     for i in range(len(vals) - 1):
         bump = max(bump, vals[i] - vals[i + 1])
@@ -259,13 +353,13 @@ def main():
           % ("subject", "overshoot", "bump", "penumbra", "farfield", "verdict"))
     print("-" * 94)
 
-    clean = halo = skipped = 0
+    clean = halo = unmeas = 0
     for f in files:
         stem = os.path.basename(f).split("--")[0]
         v, over, bump, pen, farl, bands, why = profile(luma(tifffile.imread(f)))
-        if v == "SKIPPED":
-            skipped += 1
-            print("%-36s %10s %8s %10s %9s  SKIPPED -- %s"
+        if v == "UNMEASURABLE":
+            unmeas += 1
+            print("%-36s %10s %8s %10s %9s  UNMEASURABLE -- %s"
                   % (stem, "-", "-", "-", "-", why))
             continue
         if over > args.thresh or bump > args.thresh:
@@ -281,12 +375,12 @@ def main():
                 print("      d %3d-%3d  n=%-8d  %s"
                       % (lo, hi, n, "%+8.1f" % dv if dv is not None else "sparse"))
 
-    total = clean + halo + skipped
+    total = clean + halo + unmeas
     print("-" * 94)
-    print("partition: %d clean, %d HALO, %d skipped, %d total (found %d)"
-          % (clean, halo, skipped, total, len(files)))
+    print("partition: %d clean, %d HALO, %d UNMEASURABLE, %d total (found %d)"
+          % (clean, halo, unmeas, total, len(files)))
     assert total == len(files), "partition does not sum -- a subject went uncounted"
-    print("A SKIPPED subject is not a clean subject. It is one where the")
+    print("An UNMEASURABLE subject is not a clean subject. It is one where the")
     print("measurement is undefined because there is no silhouette to measure")
     print("a rim against, and the reason is printed beside each.")
     return 1 if halo else 0
