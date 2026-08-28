@@ -90,9 +90,39 @@ def check():
     return 1
 
 
+def replace():
+    """Replace an existing section 15 in place with a fresh splice.
+
+    No lock is taken here deliberately: `negctl_s15.py` holds the report lock
+    while it calls this module, and taking it again would deadlock the very
+    harness that proves this section's gates work. Run it serially.
+    """
+    body, n = render()
+    report = open(REPORT, encoding="utf-8").read()
+    have = section(report)
+    if have is None:
+        sys.exit("FATAL: report has no section 15 to replace; use a plain "
+                 "splice to append it")
+    want = body.strip("\n")
+    if have == want:
+        print("REPLACE: section 15 already matches; nothing to do")
+        return 0
+    if report.count(have) != 1:
+        sys.exit("FATAL: section 15's text is not unique in the report; "
+                 "refusing to replace the wrong one")
+    out = report.replace(have, want)
+    with open(REPORT, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(out)
+    print("replaced section 15: %d -> %d lines (%d placeholders)"
+          % (len(have.splitlines()), len(want.splitlines()), n))
+    return 0
+
+
 def main():
     if "--check" in sys.argv:
         return check()
+    if "--replace" in sys.argv:
+        return replace()
     body, n = render()
     report = open(REPORT, encoding="utf-8").read()
     if "\n## 15." in report:

@@ -18,6 +18,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPORT = os.path.abspath(os.path.join(HERE, "..", "..", "..",
                                       "docs", "research", "BUILD-GATE-4.md"))
+GEN = os.path.abspath(os.path.join(HERE, "..", "gen"))
 
 ORDER = ["bee-1-cpl", "flower-bud-alone-cpl", "119MSDCF", "109MSDCF",
          "coffee-bubbles"]
@@ -50,6 +51,25 @@ CONCLUSIONS = [
     ("15.5 not a print-gate result",
      "**This is not a print-gate result.**",
      ["**This is a print-gate result.**"]),
+    # ORCH's band rule. These three pin the SCOPE of the sharpness claim.
+    # Without them a later edit could quietly re-license the two withdrawn
+    # subjects, or drop the withdrawal entirely, without moving one number.
+    ("15.1 the band is named and the licence is narrow",
+     "**The sharpness column measures band `0.20-0.25` cyc/px at textured "
+     "sites**",
+     ["sharpness column measures every band",
+      "band qualification does not apply to this section"]),
+    ("15.1 the withdrawal does not rescue the headline range",
+     "**The headline range does not depend on the withdrawal.**",
+     ["The headline range depends on the withdrawal.",
+      "**The headline range narrows once the withdrawal is applied.**"]),
+    ("15.3 band licence and grain correlation are independent tests",
+     "**The two disqualifications compose.**",
+     ["**The two disqualifications are the same test.**",
+      "Band qualification makes the correlation check redundant."]),
+    ("15.1 band qualification does not touch the blotch column",
+     "The blotch column is unaffected by this rule.",
+     ["The blotch column is withdrawn by this rule."]),
 ]
 
 
@@ -101,7 +121,17 @@ class Check:
             return 1
         for m in self.msgs:
             print("  " + m)
-        return 1 if self.bad else 0
+        # A skip is a claim that stopped being checked. It is reported
+        # separately from a pass so the two can never be confused, and it is
+        # FATAL: an anchor that no longer matches means the report was
+        # rewritten out from under its own gate, which is exactly the state
+        # this file exists to refuse.
+        if self.skip:
+            print("  RED: %d claim(s) went unchecked because their anchor no "
+                  "longer matches. Re-anchor them or delete the claim; a "
+                  "green run with unchecked claims is how a claim quietly "
+                  "stops being checked." % self.skip)
+        return 1 if (self.bad or self.skip) else 0
 
 
 def s15(t):
@@ -115,6 +145,30 @@ def s15(t):
 
 def f(m, g=1):
     return float(m.group(g)) if m else None
+
+
+def qual_licensed():
+    """subject -> True if PASS at the measured band, read from gen/s15qual.txt.
+
+    Deliberately a SECOND, independent reader of that file: `s15_tables.py`
+    reads it to build the table and this reads it to check the table, so a
+    licence hand-edited into the report disagrees with the record it claims
+    to be quoting. Absence of a subject is a licence of False, not a crash --
+    a subject that was never qualified is exactly the case the rule is for.
+    """
+    p = os.path.join(GEN, "s15qual.txt")
+    if not os.path.exists(p):
+        sys.exit("FATAL: missing %s (run bandqual.py)" % p)
+    out = {}
+    for line in open(p, encoding="utf-8").read().splitlines():
+        m = re.match(r"^(\S+)\s+(\d+|\?)\s+(--|[\d.]+)\s+"
+                     r"(PASS|MARGINAL\S*|FAIL\S*|NO RECORD)\s", line)
+        if m and m.group(1) in ORDER:
+            out[m.group(1)] = (m.group(4) == "PASS")
+    missing = [s for s in ORDER if s not in out]
+    if missing:
+        sys.exit("FATAL: qualification file missing subjects %s" % missing)
+    return out
 
 
 def half_ulp(s):
@@ -136,14 +190,21 @@ def main():
     n = 0
 
     # ---- 15.1 headline rows
+    #
+    # The last two columns are the band verdict and the sharpness licence.
+    # They are parsed here and re-derived below against bandqual.py's file,
+    # so a hand-typed "yes" in the report contradicts the record it claims
+    # to come from.
     t1 = {}
     for m in re.finditer(
             r"\|\s*`([^`]+)`\s*\|\s*(\d+)\s*\|\s*\*\*([-+][\d.]+)%\*\*\s*\|\s*"
             r"\[([-+][\d.]+)%,\s*([-+][\d.]+)%\]\s*\|\s*([-+][\d.]+)%\s*\|\s*"
-            r"\*\*([-+][\d.]+)%\*\*\s*\|", t):
+            r"\*\*([-+][\d.]+)%\*\*\s*\|\s*([^|]+?)\s*\|\s*"
+            r"(\*\*yes\*\*|no)\s*\|", t):
         t1[m.group(1)] = (int(m.group(2)), float(m.group(3)),
                           float(m.group(4)), float(m.group(5)),
-                          float(m.group(6)), float(m.group(7)))
+                          float(m.group(6)), float(m.group(7)),
+                          m.group(9) == "**yes**", m.group(8))
     assert len(t1) == 5, "15.1 parsed %d rows" % len(t1)
 
     # ---- 15.2 sweep rows
@@ -170,18 +231,59 @@ def main():
     sh1 = [t1[s][5] for s in ORDER]
     gr1 = [t1[s][4] for s in ORDER]
     n += 1
-    c.eq("15.1 sharp min", min(sh1),
-         f(re.search(r"rises on all 5 subjects \(([-+][\d.]+)%", t)))
-    n += 1
-    c.eq("15.1 sharp max", max(sh1),
-         f(re.search(r"rises on all 5 subjects \([-+][\d.]+% to "
+    c.eq("15.1 sharp min (all)", min(sh1),
+         f(re.search(r"Across all 5 subjects sharpness spans "
                      r"([-+][\d.]+)%", t)))
+    n += 1
+    c.eq("15.1 sharp max (all)", max(sh1),
+         f(re.search(r"Across all 5 subjects sharpness spans "
+                     r"[-+][\d.]+% to ([-+][\d.]+)%", t)))
     n += 1
     c.eq("15.1 grain min", min(gr1),
          f(re.search(r"Grain spans ([-+][\d.]+)%", t)))
     n += 1
     c.eq("15.1 grain max", max(gr1),
          f(re.search(r"Grain spans [-+][\d.]+% to ([-+][\d.]+)%", t)))
+
+    # ---- band qualification (ORCH's rule: name the band and the subject's
+    # qualification at it). The licence is re-derived from bandqual.py's
+    # snapshot of V-LINEAR's committed records, so a hand-edited "yes" in the
+    # report contradicts the file the verdict was read from.
+    lic = qual_licensed()
+    n += 1
+    c.eq("15.1 licensed count", float(sum(1 for s in ORDER if lic[s])),
+         f(re.search(r"\*\*(\d+) of 5 are qualified at 0\.20-0\.25", t)))
+    for s in ORDER:
+        n += 1
+        c.eq("15.1 licence %s" % s, 1.0 if lic[s] else 0.0,
+             1.0 if t1[s][6] else 0.0)
+
+    # The restricted range must be computed over the licensed subjects only,
+    # and it must be quoted, or the withdrawal is decorative.
+    lsh = [t1[s][5] for s in ORDER if lic[s]]
+    lgr = [t1[s][4] for s in ORDER if lic[s]]
+    n += 1
+    c.eq("15.1 licensed sharp min", min(lsh),
+         f(re.search(r"across the 3 licensed subjects it spans "
+                     r"([-+][\d.]+)%", t)))
+    n += 1
+    c.eq("15.1 licensed sharp max", max(lsh),
+         f(re.search(r"across the 3 licensed subjects it spans "
+                     r"[-+][\d.]+% to ([-+][\d.]+)%", t)))
+    n += 1
+    c.eq("15.1 licensed grain min", min(lgr),
+         f(re.search(r"and ([-+][\d.]+)% to [-+][\d.]+% across the "
+                     r"licensed ones", t)))
+    n += 1
+    c.eq("15.1 licensed grain max", max(lgr),
+         f(re.search(r"and [-+][\d.]+% to ([-+][\d.]+)% across the "
+                     r"licensed ones", t)))
+
+    # The claim that the withdrawal costs the headline nothing is only true
+    # if both extremes are licensed. Derive it rather than trust the prose.
+    n += 1
+    c.eq("15.1 extremes both licensed",
+         1.0 if (min(lsh) == min(sh1) and max(lsh) == max(sh1)) else 0.0, 1.0)
 
     # every headline sharpness must actually be positive, or the section's
     # title is false

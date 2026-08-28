@@ -11,12 +11,34 @@ it is not stale under discipline 34; it contains ORCH's knob (`f190a0ea`) and
 the `--auto-exposure` supersession guard (`5f367a94`). Every master in this
 section was rendered by that one binary.
 
+**The sharpness column measures band `0.20-0.25` cyc/px at textured sites**
+(`scale_score.py`), and under ORCH's rule -- no sharpness, softening or acuity
+claim may be quoted without naming the band and the subject's qualification at
+that band -- every subject's qualification is carried in the table rather than
+assumed. It is *read*, not recomputed, from V-LINEAR's committed
+`bandsweep-far20*.json`, the same records `depthqual.py` reads at `dc8c16b5`,
+so the two lanes cannot drift into different verdicts for one subject. This
+band is **coarser** than the `0.30-0.35` slice ORCH withdrew its own numbers
+from, and coarser means more signal -- but that is an argument, and the table
+settles it by measurement.
+
 @@T1@@
 
 Blotch falls on all five subjects, and the two deepest -- a **299-frame** bee and
 a **205-frame** flower bud -- give the two largest reductions. Depth is where
 ORCH says the product is judged, and depth is where this helps most. Sharpness
-on textured sites does not fall on any subject in the headline arm; it rises.
+on textured sites does not fall on any subject in the headline arm; it rises,
+and it rises most on the deepest subject, which is also the most strongly
+qualified subject at this band anywhere in the corpus (`bee-1-cpl`, R=27.993
+against a PASS threshold the two subjects ORCH names as deep-and-qualified sit
+at 4.7-4.9).
+
+The blotch column is unaffected by this rule. Blotch is `sigma_mid` over
+20-60 px at flat sites -- a mottle amplitude, not a sharpness, softening or
+acuity claim -- so band qualification at `0.20-0.25` neither licenses nor
+withdraws it. Stating that explicitly matters: the withdrawal below is narrow,
+and quietly letting it shade the blotch result would overstate the damage as
+badly as ignoring it would understate it.
 
 ### 15.1 Why the sharpness column is trustworthy here, which it was not in section 13
 
@@ -31,6 +53,13 @@ there is no grain change to be dependent on. The correlations are reported
 anyway, in 15.3, but with grain this flat they are computed over near-zero
 variance and are not leaned on.
 
+**And the band is now a second, independent test.** The grain argument says the
+column is not restating noise the arms moved; band qualification says the band
+carries signal on that subject in the first place. Neither implies the other,
+and section 15 applies both: three subjects are qualified at `0.20-0.25`, four
+are correlation-independent, and **two survive both**. The result rests on
+those two, and the largest gain in the sweep is one of them.
+
 @@T2@@
 
 ### 15.2 The correlations, and the one subject where the column is disqualified
@@ -38,7 +67,10 @@ variance and are not leaned on.
 @@T3@@
 
 `coffee-bubbles` is flagged and its sharpness number is not used as evidence.
-Note the sign on `119MSDCF` and `109MSDCF`: sharpness and grain are
+It is band-qualified at `0.20-0.25` (R=3.380 PASS) and still fails here, which
+is the point of running both tests: a subject can sit in a band that carries
+signal and still have a column that moves with its grain. Note the sign on
+`119MSDCF` and `109MSDCF`: sharpness and grain are
 **negatively** correlated there, sharpness rising while grain falls, which is
 the opposite of the failure mode section 13 fell into.
 

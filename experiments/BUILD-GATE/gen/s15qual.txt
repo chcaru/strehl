@@ -1,0 +1,20 @@
+Section 15 sharpness-band qualification.
+
+Band measured by section 15's sharp/tex column: 0.20-0.25 cyc/px.
+Band ORCH's withdrawn numbers sit in: 0.30-0.40 (fine slice 0.30-0.35).
+Source: V-LINEAR's committed bandsweep-far20*.json (12 files), the same records depthqual.py reads at dc8c16b5. Verdicts are READ from those records, not recomputed here.
+
+subject                      N R@0.20-0.25      verdict R@0.30-0.40      verdict
+--------------------------------------------------------------------------------
+bee-1-cpl                  299     27.993         PASS      4.732         PASS
+flower-bud-alone-cpl       205      1.342     MARGINAL      1.035  FAIL(noise)
+119MSDCF                    33      2.790         PASS      1.273  FAIL(noise)
+109MSDCF                     ?         --    NO RECORD         --           --
+coffee-bubbles              19      3.380         PASS      1.533     MARGINAL
+
+PASS at 0.20-0.25: 3 of 5 subjects.  MARGINAL: 1.  no record at any band: 1.
+
+LICENSED for a sharpness claim (PASS at the measured band): bee-1-cpl, 119MSDCF, coffee-bubbles
+NOT LICENSED: flower-bud-alone-cpl, 109MSDCF
+
+coffee-bubbles IS band-qualified, in bandsweep-far20-coffee-bubbles.json: 0.30-0.35 R=1.542 MARGINAL. ORCH's statement that it 'has never been band-qualified at all' does not hold against the committed records.

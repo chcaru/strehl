@@ -1,14 +1,18 @@
 #### 15.1
 
-| subject | N | blotch vs null | 95% CI | grain | sharp/tex |
-|---|---:|---:|---|---:|---:|
-| `bee-1-cpl` | 299 | **-25.34%** | [-36.27%, -19.19%] | +0.06% | **+2.25%** |
-| `flower-bud-alone-cpl` | 205 | **-21.92%** | [-25.93%, -18.07%] | -0.56% | **+0.92%** |
-| `119MSDCF` | 33 | **-3.76%** | [-4.33%, -3.21%] | -0.33% | **+0.16%** |
-| `109MSDCF` | 22 | **-11.21%** | [-12.37%, -10.13%] | -1.08% | **+0.42%** |
-| `coffee-bubbles` | 19 | **-8.91%** | [-11.02%, -6.96%] | +0.68% | **+0.56%** |
+| subject | N | blotch vs null | 95% CI | grain | sharp/tex | band 0.20-0.25 | sharpness licensed |
+|---|---:|---:|---|---:|---:|---|---|
+| `bee-1-cpl` | 299 | **-25.34%** | [-36.27%, -19.19%] | +0.06% | **+2.25%** | R=27.993 PASS | **yes** |
+| `flower-bud-alone-cpl` | 205 | **-21.92%** | [-25.93%, -18.07%] | -0.56% | **+0.92%** | R=1.342 MARGINAL | no |
+| `119MSDCF` | 33 | **-3.76%** | [-4.33%, -3.21%] | -0.33% | **+0.16%** | R=2.790 PASS | **yes** |
+| `109MSDCF` | 22 | **-11.21%** | [-12.37%, -10.13%] | -1.08% | **+0.42%** | -- NO RECORD | no |
+| `coffee-bubbles` | 19 | **-8.91%** | [-11.02%, -6.96%] | +0.68% | **+0.56%** | R=3.380 PASS | **yes** |
 
-Sharpness on textured sites rises on all 5 subjects (+0.16% to +2.25%). Grain spans -1.08% to +0.68%, so there is no grain move for the sharpness column to be a proxy for.
+Sharpness on textured sites rises on all 5 subjects, but a sharpness number is only evidence on a subject qualified at the band it was measured in. **3 of 5 are qualified at 0.20-0.25 cyc/px**; `flower-bud-alone-cpl` and `109MSDCF` are not, and their sharpness cells below are therefore withdrawn as evidence and retained only for completeness.
+
+**The headline range does not depend on the withdrawal.** Across all 5 subjects sharpness spans +0.16% to +2.25%; across the 3 licensed subjects it spans +0.16% to +2.25%. Both extremes are licensed subjects, so restricting to qualified bands changes the claim's range not at all -- the two unlicensed cells were interior.
+
+Grain spans -1.08% to +0.68% across all subjects and -0.33% to +0.68% across the licensed ones, so there is no grain move for the sharpness column to be a proxy for.
 
 #### 15.2
 
@@ -69,6 +73,8 @@ What matters for the claim is the direction of the bias: the scorer reports a re
 | `coffee-bubbles` | +0.9644 | -0.9709 | **no** |
 
 `|r| > 0.9` on 1 of 5 subjects (`coffee-bubbles`), where the sharpness column is not independent evidence and is not leaned on.
+
+**The two disqualifications compose.** Band qualification asks whether 0.20-0.25 cyc/px carries signal on that subject; the correlation asks whether the column is restating grain. They are independent tests and a cell is evidence only if it survives both. 2 of 5 subjects do: `bee-1-cpl`, `119MSDCF`. The largest sharpness gain in the sweep (`bee-1-cpl`, +2.25%) is among them, and it is also the deepest subject and the most strongly qualified at this band in the corpus.
 
 #### 15.4
 

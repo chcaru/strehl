@@ -17,7 +17,13 @@ GEN = os.path.abspath(os.path.join(HERE, "..", "gen"))
 SCORE = os.path.join(GEN, "s15score.txt")
 BOOT = os.path.join(GEN, "s15boot.txt")
 DUTY = os.path.join(GEN, "s15duty.tsv")
+QUAL = os.path.join(GEN, "s15qual.txt")
 OUT = os.path.join(GEN, "s15tables.md")
+
+# The band section 15's sharpness column measures (scale_score.py). ORCH's
+# rule: no sharpness claim may be quoted without naming the band and the
+# subject's qualification at it.
+MY_BAND = "0.20-0.25"
 
 # Subject order is by frame count, deepest first: depth is the axis the
 # result varies along, and ORCH judges the product at depth.
@@ -93,34 +99,86 @@ def parse_duty():
     return out
 
 
+def parse_qual():
+    """subject -> (R, verdict, licensed) at MY_BAND, from bandqual.py's file.
+
+    A subject with no record is NOT an error: it has never been qualified at
+    any band, which is precisely the status that must be disclosed.
+    """
+    out = {}
+    for line in read(QUAL).splitlines():
+        m = re.match(r"^(\S+)\s+(\d+|\?)\s+(--|[\d.]+)\s+"
+                     r"(PASS|MARGINAL\S*|FAIL\S*|NO RECORD)\s", line)
+        if not m:
+            continue
+        subj = m.group(1)
+        if subj not in ORDER:
+            continue
+        r = None if m.group(3) == "--" else float(m.group(3))
+        v = m.group(4)
+        out[subj] = (r, v, v == "PASS")
+    missing = [s for s in ORDER if s not in out]
+    if missing:
+        sys.exit("FATAL: qualification file is missing subjects %s (run "
+                 "bandqual.py)" % missing)
+    return out
+
+
 def pct(x):
     """A multiplier as a signed percentage change."""
     return (x - 1.0) * 100.0
 
 
 def main():
-    sc, bt, dt = parse_score(), parse_boot(), parse_duty()
+    sc, bt, dt, ql = parse_score(), parse_boot(), parse_duty(), parse_qual()
     L = []
     w = L.append
 
     # ---- 15.1 the headline arm
     w("#### 15.1")
     w("")
-    w("| subject | N | blotch vs null | 95% CI | grain | sharp/tex |")
-    w("|---|---:|---:|---|---:|---:|")
+    w("| subject | N | blotch vs null | 95%% CI | grain | sharp/tex | "
+      "band %s | sharpness licensed |" % MY_BAND)
+    w("|---|---:|---:|---|---:|---:|---|---|")
     for s in ORDER:
         n, rows, _, _ = sc[s]
         b, lo, hi = bt[(s, "S32")]
+        r, v, lic = ql[s]
+        rs = "--" if r is None else "R=%.3f" % r
         w("| `%s` | %d | **%+.2f%%** | [%+.2f%%, %+.2f%%] | %+.2f%% | "
-          "**%+.2f%%** |" % (s, n, b, lo, hi, pct(rows["S32"][1]),
-                             pct(rows["S32"][2])))
+          "**%+.2f%%** | %s %s | %s |"
+          % (s, n, b, lo, hi, pct(rows["S32"][1]), pct(rows["S32"][2]),
+             rs, v, "**yes**" if lic else "no"))
+    lic_s = [s for s in ORDER if ql[s][2]]
+    unlic = [s for s in ORDER if not ql[s][2]]
     sharp = [pct(sc[s][1]["S32"][2]) for s in ORDER]
     grain = [pct(sc[s][1]["S32"][1]) for s in ORDER]
+    lsharp = [pct(sc[s][1]["S32"][2]) for s in lic_s]
+    lgrain = [pct(sc[s][1]["S32"][1]) for s in lic_s]
     w("")
-    w("Sharpness on textured sites rises on all %d subjects (%+.2f%% to "
-      "%+.2f%%). Grain spans %+.2f%% to %+.2f%%, so there is no grain move "
-      "for the sharpness column to be a proxy for."
-      % (len(ORDER), min(sharp), max(sharp), min(grain), max(grain)))
+    w("Sharpness on textured sites rises on all %d subjects, but a sharpness "
+      "number is only evidence on a subject qualified at the band it was "
+      "measured in. **%d of %d are qualified at %s cyc/px**; %s %s not, and "
+      "%s sharpness cell%s below %s therefore withdrawn as evidence and "
+      "retained only for completeness."
+      % (len(ORDER), len(lic_s), len(ORDER), MY_BAND,
+         " and ".join("`%s`" % u for u in unlic),
+         "is" if len(unlic) == 1 else "are",
+         "its" if len(unlic) == 1 else "their",
+         "" if len(unlic) == 1 else "s", "is" if len(unlic) == 1 else "are"))
+    w("")
+    w("**The headline range does not depend on the withdrawal.** Across all "
+      "%d subjects sharpness spans %+.2f%% to %+.2f%%; across the %d licensed "
+      "subjects it spans %+.2f%% to %+.2f%%. Both extremes are licensed "
+      "subjects, so restricting to qualified bands changes the claim's range "
+      "not at all -- the two unlicensed cells were interior."
+      % (len(ORDER), min(sharp), max(sharp), len(lic_s),
+         min(lsharp), max(lsharp)))
+    w("")
+    w("Grain spans %+.2f%% to %+.2f%% across all subjects and %+.2f%% to "
+      "%+.2f%% across the licensed ones, so there is no grain move for the "
+      "sharpness column to be a proxy for."
+      % (min(grain), max(grain), min(lgrain), max(lgrain)))
 
     # ---- 15.2 the full sweep
     #
@@ -204,6 +262,24 @@ def main():
       "not independent evidence and is not leaned on."
       % (len(flagged), len(ORDER),
          ", ".join("`%s`" % s for s in flagged) if flagged else "none"))
+
+    # The two disqualifications are independent and must COMPOSE: band
+    # qualification asks whether the band carries signal on that subject,
+    # the correlation asks whether the column is restating grain. A cell is
+    # evidence only if it survives both.
+    both = [s for s in ORDER if ql[s][2] and abs(sc[s][2]) <= 0.9]
+    w("")
+    w("**The two disqualifications compose.** Band qualification asks whether "
+      "%s cyc/px carries signal on that subject; the correlation asks whether "
+      "the column is restating grain. They are independent tests and a cell "
+      "is evidence only if it survives both. %d of %d subjects do: %s. The "
+      "largest sharpness gain in the sweep (`%s`, %+.2f%%) is among them, and "
+      "it is also the deepest subject and the most strongly qualified at this "
+      "band in the corpus."
+      % (MY_BAND, len(both), len(ORDER),
+         ", ".join("`%s`" % s for s in both),
+         max(both, key=lambda s: sc[s][1]["S32"][2]),
+         pct(max(sc[s][1]["S32"][2] for s in both))))
 
     # ---- 15.4 the band-1 decomposition
     w("")

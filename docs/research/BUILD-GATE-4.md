@@ -1372,20 +1372,46 @@ it is not stale under discipline 34; it contains ORCH's knob (`f190a0ea`) and
 the `--auto-exposure` supersession guard (`5f367a94`). Every master in this
 section was rendered by that one binary.
 
-| subject | N | blotch vs null | 95% CI | grain | sharp/tex |
-|---|---:|---:|---|---:|---:|
-| `bee-1-cpl` | 299 | **-25.34%** | [-36.27%, -19.19%] | +0.06% | **+2.25%** |
-| `flower-bud-alone-cpl` | 205 | **-21.92%** | [-25.93%, -18.07%] | -0.56% | **+0.92%** |
-| `119MSDCF` | 33 | **-3.76%** | [-4.33%, -3.21%] | -0.33% | **+0.16%** |
-| `109MSDCF` | 22 | **-11.21%** | [-12.37%, -10.13%] | -1.08% | **+0.42%** |
-| `coffee-bubbles` | 19 | **-8.91%** | [-11.02%, -6.96%] | +0.68% | **+0.56%** |
+**The sharpness column measures band `0.20-0.25` cyc/px at textured sites**
+(`scale_score.py`), and under ORCH's rule -- no sharpness, softening or acuity
+claim may be quoted without naming the band and the subject's qualification at
+that band -- every subject's qualification is carried in the table rather than
+assumed. It is *read*, not recomputed, from V-LINEAR's committed
+`bandsweep-far20*.json`, the same records `depthqual.py` reads at `dc8c16b5`,
+so the two lanes cannot drift into different verdicts for one subject. This
+band is **coarser** than the `0.30-0.35` slice ORCH withdrew its own numbers
+from, and coarser means more signal -- but that is an argument, and the table
+settles it by measurement.
 
-Sharpness on textured sites rises on all 5 subjects (+0.16% to +2.25%). Grain spans -1.08% to +0.68%, so there is no grain move for the sharpness column to be a proxy for.
+| subject | N | blotch vs null | 95% CI | grain | sharp/tex | band 0.20-0.25 | sharpness licensed |
+|---|---:|---:|---|---:|---:|---|---|
+| `bee-1-cpl` | 299 | **-25.34%** | [-36.27%, -19.19%] | +0.06% | **+2.25%** | R=27.993 PASS | **yes** |
+| `flower-bud-alone-cpl` | 205 | **-21.92%** | [-25.93%, -18.07%] | -0.56% | **+0.92%** | R=1.342 MARGINAL | no |
+| `119MSDCF` | 33 | **-3.76%** | [-4.33%, -3.21%] | -0.33% | **+0.16%** | R=2.790 PASS | **yes** |
+| `109MSDCF` | 22 | **-11.21%** | [-12.37%, -10.13%] | -1.08% | **+0.42%** | -- NO RECORD | no |
+| `coffee-bubbles` | 19 | **-8.91%** | [-11.02%, -6.96%] | +0.68% | **+0.56%** | R=3.380 PASS | **yes** |
+
+Sharpness on textured sites rises on all 5 subjects, but a sharpness number is only evidence on a subject qualified at the band it was measured in. **3 of 5 are qualified at 0.20-0.25 cyc/px**; `flower-bud-alone-cpl` and `109MSDCF` are not, and their sharpness cells below are therefore withdrawn as evidence and retained only for completeness.
+
+**The headline range does not depend on the withdrawal.** Across all 5 subjects sharpness spans +0.16% to +2.25%; across the 3 licensed subjects it spans +0.16% to +2.25%. Both extremes are licensed subjects, so restricting to qualified bands changes the claim's range not at all -- the two unlicensed cells were interior.
+
+Grain spans -1.08% to +0.68% across all subjects and -0.33% to +0.68% across the licensed ones, so there is no grain move for the sharpness column to be a proxy for.
 
 Blotch falls on all five subjects, and the two deepest -- a **299-frame** bee and
 a **205-frame** flower bud -- give the two largest reductions. Depth is where
 ORCH says the product is judged, and depth is where this helps most. Sharpness
-on textured sites does not fall on any subject in the headline arm; it rises.
+on textured sites does not fall on any subject in the headline arm; it rises,
+and it rises most on the deepest subject, which is also the most strongly
+qualified subject at this band anywhere in the corpus (`bee-1-cpl`, R=27.993
+against a PASS threshold the two subjects ORCH names as deep-and-qualified sit
+at 4.7-4.9).
+
+The blotch column is unaffected by this rule. Blotch is `sigma_mid` over
+20-60 px at flat sites -- a mottle amplitude, not a sharpness, softening or
+acuity claim -- so band qualification at `0.20-0.25` neither licenses nor
+withdraws it. Stating that explicitly matters: the withdrawal below is narrow,
+and quietly letting it shade the blotch result would overstate the damage as
+badly as ignoring it would understate it.
 
 ### 15.1 Why the sharpness column is trustworthy here, which it was not in section 13
 
@@ -1399,6 +1425,13 @@ section 13 had to argue that sharpness was independent of a grain change, here
 there is no grain change to be dependent on. The correlations are reported
 anyway, in 15.3, but with grain this flat they are computed over near-zero
 variance and are not leaned on.
+
+**And the band is now a second, independent test.** The grain argument says the
+column is not restating noise the arms moved; band qualification says the band
+carries signal on that subject in the first place. Neither implies the other,
+and section 15 applies both: three subjects are qualified at `0.20-0.25`, four
+are correlation-independent, and **two survive both**. The result rests on
+those two, and the largest gain in the sweep is one of them.
 
 | subject | arm | scale | blotch | grain | sharp/tex |
 |---|---|---|---:|---:|---:|
@@ -1458,8 +1491,13 @@ What matters for the claim is the direction of the bias: the scorer reports a re
 
 `|r| > 0.9` on 1 of 5 subjects (`coffee-bubbles`), where the sharpness column is not independent evidence and is not leaned on.
 
+**The two disqualifications compose.** Band qualification asks whether 0.20-0.25 cyc/px carries signal on that subject; the correlation asks whether the column is restating grain. They are independent tests and a cell is evidence only if it survives both. 2 of 5 subjects do: `bee-1-cpl`, `119MSDCF`. The largest sharpness gain in the sweep (`bee-1-cpl`, +2.25%) is among them, and it is also the deepest subject and the most strongly qualified at this band in the corpus.
+
 `coffee-bubbles` is flagged and its sharpness number is not used as evidence.
-Note the sign on `119MSDCF` and `109MSDCF`: sharpness and grain are
+It is band-qualified at `0.20-0.25` (R=3.380 PASS) and still fails here, which
+is the point of running both tests: a subject can sit in a band that carries
+signal and still have a column that moves with its grain. Note the sign on
+`119MSDCF` and `109MSDCF`: sharpness and grain are
 **negatively** correlated there, sharpness rising while grain falls, which is
 the opposite of the failure mode section 13 fell into.
 

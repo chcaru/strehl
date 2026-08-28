@@ -89,6 +89,41 @@ FLIPS = [
      "- **This is a shipping recommendation.** It is an env var, "
      "default off, and",
      "THE REAL TEST: turns a disclaimer into a recommendation"),
+
+    # --- ORCH's band rule: the licence itself must be defensible
+    ("licence-flip-both", ["report", "tables"],
+     "| **+0.92%** | R=1.342 MARGINAL | no |",
+     "| **+0.92%** | R=1.342 MARGINAL | **yes** |",
+     "THE REAL TEST: licenses a MARGINAL subject for a sharpness claim; "
+     "only re-reading V-LINEAR's record catches it"),
+    ("licence-count-both", ["report", "tables"],
+     "**3 of 5 are qualified at 0.20-0.25 cyc/px**",
+     "**4 of 5 are qualified at 0.20-0.25 cyc/px**",
+     "THE REAL TEST: overstates how many subjects are licensed"),
+    ("licence-range-both", ["report", "tables"],
+     "across the 3 licensed subjects it spans +0.16% to +2.25%",
+     "across the 3 licensed subjects it spans +0.42% to +2.25%",
+     "THE REAL TEST: a restricted range that does not follow from the "
+     "licensed rows"),
+    ("verdict-compose-both", ["report", "tables"],
+     "**The two disqualifications compose.** Band qualification asks",
+     "**The two disqualifications are the same test.** Band qualification "
+     "asks",
+     "THE REAL TEST: collapses two independent tests into one, changing "
+     "no number"),
+    ("verdict-blotch-scope-both", ["report", "body"],
+     "The blotch column is unaffected by this rule. Blotch is `sigma_mid` "
+     "over",
+     "The blotch column is withdrawn by this rule. Blotch is `sigma_mid` "
+     "over",
+     "THE REAL TEST: widens the withdrawal to a column the rule does not "
+     "reach"),
+    ("anchor-drift-both", ["report", "tables"],
+     "Grain spans -1.08% to +0.68% across all subjects",
+     "Grain spanned -1.08% to +0.68% across all subjects",
+     "THE REAL TEST: a claim that silently drops OUT OF COVERAGE. Every "
+     "number stays correct and no verdict moves; only making an unmatched "
+     "anchor fatal catches it"),
 ]
 
 
