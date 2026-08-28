@@ -6,7 +6,12 @@ error fell on **14 of 14** — median **-17.0 %**, best **-35.3 %**, worst
 **-0.4 %**. I looked at all 26 subjects myself and the magenta the owner
 objected to is gone from the subjects it was diagnosed on.
 
-**The masters are also print files, verified in their own bytes.** All 26 carry
+**The delivery was then extended from 26 subjects to all 33**, on the owner's
+"please stack all samples". Seven subjects that had never been stacked by
+anything are now rendered from the same pinned binary and are in the same
+folder; §14 covers them, and I looked at all seven at 1:1 as well.
+
+**The masters are also print files, verified in their own bytes.** All 33 carry
 the 2716-byte sRGB ICC profile in tag 34675, `300/1` X and Y resolution, and
 `ResolutionUnit = inch`. The reader was commissioned against a file known to
 lack them before any master was trusted. **A correction to the brief that sent
@@ -51,11 +56,17 @@ re-hashed after the last render and unchanged.
 
 **Invocation:** `strehl.exe stack <dir> -o <out>.tiff --srgb`. Nothing else.
 All `STREHL_*` cleared except `STREHL_CACHE_DIR`. **Outputs:**
-`C:\dev\strehl-out\DELIVER-V6\masters\` (26 masters, 4.79 GB, `MANIFEST.txt`),
+`C:\dev\strehl-out\DELIVER-V6\masters\` (33 masters, 6.08 GB, `MANIFEST.txt`
+plus `manifest-A/B/C.txt`),
+`D:\strehl-out\DELIVER-V6\corpus-all33\` (11 sheets, every subject),
+`D:\strehl-out\DELIVER-V6\corpus-new7\` (3 sheets, the new subjects),
 `D:\strehl-out\DELIVER-V6\corpus\` (9 sheets),
 `D:\strehl-out\DELIVER-V6\corpus-registered\` (tile-for-tile before/after),
 `D:\strehl-out\DELIVER-V6\ca-ab\` (52 A/B pairs).
-**Scripts:** `experiments/DELIVER-V6/`.
+**Scripts:** `experiments/DELIVER-V6/`. **Banked record:**
+`experiments/DELIVER-V6/BANK-33.md` carries the full per-subject table — frames,
+ISO, wall time, SHA256, byte count and print tags for all 33 — so the delivery
+survives in text if the TIFFs are ever reclaimed.
 
 ## 1. Provenance, and why a clean worktree was not paranoia
 
@@ -569,11 +580,111 @@ commit `1fe5cb14` ("ORCH: 1:1 eye survey of all seven new subjects, including
 the one that is not clean") identifies it as ORCH extending the survey to the
 seven captures I excluded. That is a reasonable thing to have done with a pinned
 binary. **They are still not mine**: they are in no manifest record and I cannot
-attest to their invocation. I have left them in place — and left the 0.2 MB of
-regenerated warpmaps in place — and listed the seven as foreign in a
-`MANIFEST.txt` trailer. **Anyone counting files in that folder will find 33 and
-should treat only the 26 with manifest records as DELIVER-V6 output.**
+attest to their invocation. **This has since been resolved by re-rendering all
+seven myself** — see §14. They are now DELIVER-V6 output with full manifest
+records, and my renders proved byte-for-byte identical to ORCH's, which
+retrospectively vindicates the files but not the provenance gap. **The folder
+now holds 33 masters and all 33 have manifest records.**
 
 I re-hashed all 26 of my masters after discovering the folder had been written
 to. **All 26 match the SHA256 recorded at render time** — my delivered bytes
 have not moved.
+
+## 14. All 33 subjects, and the seven the owner has never seen (MEASURED)
+
+The brief was extended to the owner's own words — "please stack all samples".
+That is 33 subjects, not 26: `D:\personal\macro` holds 34 directories, of which
+`flat-fields` contains no ARW and is calibration data rather than a subject.
+**All 33 are now rendered from the same pinned binary**, so the whole gallery is
+one build with one coefficient. Seven of them had never been stacked by
+anything.
+
+**I re-rendered the seven rather than adopting ORCH's copies.** ORCH's files
+were almost certainly fine — same binary, same cache dir, and they passed the
+same tag check. But they carried no manifest record: no frame count, no ISO, no
+wall time, no banner capture, and no statement of the invocation. Adopting them
+would have meant certifying bytes whose provenance I could only infer. Rendering
+them cost ten minutes of a machine that was otherwise idle, and it is the
+difference between a delivery I can attest to and one I can only vouch for.
+
+Doing that produced a result worth more than the ten minutes:
+
+**The pipeline is bit-exactly deterministic for a fixed binary.** ORCH's seven
+(rendered 02:36-02:47, single stream) and mine (03:38-03:50, three concurrent
+streams, different cache directories) are **byte-for-byte identical on all
+seven** — whole-file SHA256, container metadata included. That is a meaningful
+bound on corpus fact 1886. The 33,003,417-pixel drift that fact records, on an
+arm that was coefficient-independent and *should* have been bit-exact, is
+attributable to the **tree moving under the build**, not to nondeterminism in
+the pipeline. Pin the binary and absolutes hold; that is exactly why this lane
+was told to pin one, and it worked.
+
+| subject | frames | ISO | secs | clipONE | notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `chia-seeds-cpl` | 130 | 50 | 158.3 | 0.0000 % | sharpest of the seven |
+| `dime-flat-narrow-slices-cpl` | 207 | 100 | 187.7 | 0.0002 % | only ISO 100 of the seven |
+| `duck-tape-side-layers-cpl` | 197 | 50 | 209.9 | 0.0003 % | filament colour, see below |
+| `maldon-sea-salt-cpl` | 255 | 50 | 315.1 | 0.0179 % | softest of the seven |
+| `medication-pill-cpl` | 146 | 50 | 152.5 | 0.0000 % | surface debris, real |
+| `pottery-art-glazed-cpl` | 123 | 50 | 132.7 | 0.4499 % | R pinned at 65535 on 0.4251 % |
+| `unpopped-popcorn-kernels-cpl` | 234 | 50 | 246.0 | 0.2106 % | specular glaze highlights |
+
+**Every one solved an alignment and placed every frame — 0 refused, on all
+seven.** No subject needed a different optical profile: all 33 are 2x
+teleconverter at 200 mm effective.
+
+### The ISO-50 warning was worth making and does not explain what I see
+
+Six of the seven are **ISO 50**, below the ISO 100 floor the shipped noise
+profile is calibrated at, so every gate that divides by sigma is extrapolating
+on them. I was told to treat that as the first hypothesis for any subject that
+came out visibly worse than its neighbours. **I looked, and it does not
+predict the pattern.** The sharpest subject of the seven (`chia-seeds-cpl`) and
+the softest (`maldon-sea-salt-cpl`) are *both* ISO 50, and the one ISO 100
+subject sits in the middle. What the two soft subjects share is not their gain
+but their **surface**: both are smooth and partly translucent, which is the
+condition the focus measure has least to work with. That is a subject-matter
+explanation, not a noise-floor one. **I am not claiming the ISO-50
+extrapolation is harmless** — I have not measured it, and it should still be
+recorded against these seven. I am claiming it is not the explanation for the
+softness anyone will notice first.
+
+### What I saw, on the seven, at 1:1
+
+- **`chia-seeds-cpl`** — the best of the new subjects. Seed coats resolve to
+  individual surface pits, the mottled dark/pale patterning is crisp across the
+  full depth, and edges are clean with no colour fringe I can find.
+- **`unpopped-popcorn-kernels-cpl`** — very good. Pericarp texture and the germ
+  scar read clearly. The glaze highlights are specular and genuinely blown in
+  red on 0.43 % of pixels; that is the subject, not the tone curve.
+- **`pottery-art-glazed-cpl`** — good on the body, and the highest clipping in
+  the corpus. The glaze throws hard speculars that pin red. Worth an exposure
+  conversation with the owner; not a merge defect.
+- **`dime-flat-narrow-slices-cpl`** — clean and legible, lettering sharp. This
+  is the flattest subject of the seven and behaves like it.
+- **`medication-pill-cpl`** — sharp, with an odd fine dotted line across the
+  pill face. **I checked this at 380 px unresampled before reporting it**: it is
+  **real surface debris**, resolved dust and fibre on the tablet, not a merge
+  artifact and not a sensor mote. Consistent spacing at 1:1, with shadow.
+- **`duck-tape-side-layers-cpl`** — sharp on the weave, and the one place I have
+  an **unresolved** observation. The thin loose filaments at the cut edge carry
+  pink and green colour edges. **I could not separate genuine fibre iridescence
+  from residual lateral CA**, because the filaments are sub-pixel-wide against a
+  bright background, which is exactly the geometry where both look the same. It
+  is not the broad magenta the owner objected to. Flagging it as open rather
+  than calling it either way.
+- **`maldon-sea-salt-cpl`** — the weakest of the seven. The pyramid flake
+  crystals are translucent and the stack softens where facets overlap; edges
+  that should be knife-sharp are slightly smeared. This is the depth-softening
+  behaviour already known at boundaries, showing up worse here because the
+  subject is transparent. Honest assessment: **the owner may not like this
+  one**, and it is the subject to show him first if he wants to see the
+  pipeline's current limit.
+
+### Sheets
+
+`D:\strehl-out\DELIVER-V6\corpus-all33\sheet-00..10.jpg` — all 33 subjects,
+11 sheets, no read failures. `D:\strehl-out\DELIVER-V6\corpus-new7\` — the seven
+alone, 3 sheets. Same generator and same **1:1 sampling** as §7: 520 px crops
+taken at native resolution and pasted without scaling, one image pixel to one
+sheet pixel, no integer zoom.
