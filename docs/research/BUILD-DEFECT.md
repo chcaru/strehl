@@ -4404,3 +4404,80 @@ A 0.46 MB 1:1 exhibit, `out/dust-onoff-1to1-exhibit.png`, is kept in place of th
 377 MB pair: OFF on the left, ON on the right, one row per mote. The crops were
 located **by the difference itself**, not by coordinates typed in by hand, and
 the script refuses to write an exhibit at all if it finds no difference.
+
+## 26. THE EXHIBIT'S IDENTITY, AND ONE FIELD THAT CANNOT BE RECOVERED
+
+### 26.1 Identity, stated in full
+
+`experiments/BUILD-DEFECT/out/dust-onoff-1to1-exhibit.png` is untracked and always
+will be: this repository tracks **zero** images by design, and `.gitignore`
+excludes `*.png` along with the other raster formats. The file therefore lives on
+disk only, and its identity has to live here instead.
+
+| | |
+|---|---|
+| sha256 | `1654702225E292EF3418D9AE0C74DC7705B0CFB124BCD23AF9816D5CC7B2B0D7` |
+| bytes | 459736 |
+| dimensions | 512 x 410 |
+| browsable copy | `D:\strehl-out\ORCH-GALLERY\exhibits\dust-onoff-1to1-exhibit.png` |
+
+The hash is written out to all 64 characters deliberately. A truncated binary
+identity is not an identity; eight hex characters name about four billion files.
+
+The gallery copy was verified by re-hashing at the destination rather than by
+trusting the copy: it reads the same `1654702225...B2B0D7` and the same 459736
+bytes, and the source was left in place.
+
+### 26.2 Geometry, and the one field that is gone
+
+The source pair was `(4688, 7032, 3)` uint16. Crops are 256 wide, centred on the
+two largest difference clusters, clipped at the frame edge, and the sheet is
+`[OFF | ON]` horizontally with one row per mote, ordered by cluster size:
+
+| row | cluster | centre (x, y) | x range | y range | size |
+|---|---|---|---|---|---|
+| 1 | 7 | (6869, 4611) | 6741..6997 | 4483..4688 | 256 x 205 |
+| 2 | 1 | (6405, 236) | 6277..6533 | 108..364 | 256 x 256 |
+
+Both rows are truncated to the shorter height, 205, because row 1 is clipped by
+the bottom edge of the frame. That predicts a 512 x 410 sheet, and the file on
+disk **is** 512 x 410, so the geometry above is confirmed against the artifact
+rather than merely asserted.
+
+**NOT RECOVERABLE — the stretch endpoints.** Each crop was rendered to 8 bit
+through `np.percentile(a, 1)` and `np.percentile(a, 99.5)` computed *per crop*,
+and those two DN16 values were never printed. They were properties of arrays
+inside `bee3-dust-{on,off}.tiff`, which have been deleted. They cannot be
+recovered by reading the PNG, because the stretch is exactly the information the
+8 bit conversion discarded.
+
+**So this exhibit is NOT reproducible from text, and the entry above must not be
+read as though it were.** Rebuilding a byte-identical PNG would require
+re-rendering the 377 MB pair, which the disk directive forbids. What survives is
+weaker and should be named as such: the sheet's provenance, its geometry, and its
+hash, sufficient to prove that a given file *is* this exhibit, and insufficient
+to make another one. The measurements the exhibit illustrates do not depend on
+it -- they are in section 25, re-derived from the pair before deletion.
+
+### 26.3 A retry loop that discards stderr cannot tell "busy" from "refused"
+
+Adding the exhibit failed five times in a row. The loop reported five identical
+failures and looked exactly like `index.lock` contention, which is the condition
+it was written for. It was not contention. `git add` was **refusing**, every
+time, for a deterministic reason:
+
+    The following paths are ignored by one of your .gitignore files:
+    experiments/BUILD-DEFECT/out/dust-onoff-1to1-exhibit.png
+
+The loop never saw that, because it ran `git add -- $add 2>&1 | Out-Null`. It
+had thrown away the only thing that distinguished a transient condition from a
+permanent one, and then retried a refusal five times as though patience could
+change it. The retries were not merely useless, they were evidence-destroying:
+each one overwrote the chance to read why.
+
+The rule this lane now works to: **capture stderr, inspect it, and retry only on
+the specific signature you are retrying for.** Anything else is a deterministic
+error wearing a transient's costume. This is the same family as every other
+defect found here -- a channel that carries the diagnosis was discarded, and what
+remained was a count with no cause attached. It was found by reading the error,
+not by retrying harder.
