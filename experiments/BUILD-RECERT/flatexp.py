@@ -107,26 +107,167 @@ def content_sites(arr, n=N_SITES):
     return [(y, x) for _, y, x, _ in picked]
 
 
-def registration_shift(a, b, y, x, radius=4):
-    """Integer shift that best aligns b to a at one site, by SSD.
+# -- registration ------------------------------------------------------------
+#
+# WELL_MIN: a site may only refuse the subject if its SSD surface actually holds
+# displacement information. The test is whether the surface has a DISTINCT
+# MINIMUM -- the cheapest neighbour of the argmin, divided by the argmin itself.
+# On a pair with real structure, stepping one pixel off the best alignment costs
+# something and the ratio sits well above 1; on a crop with no localising
+# structure the surface is flat, the ratio sits at ~1.0, and the argmin is being
+# chosen by noise. MEASURED on four subjects (baseband.py, arms DEF/FLAT1 @
+# 2f858c62): coffee-bubbles 1.9909 with argmin (0,0) at every site; flowers-cpl
+# 1.0013, flower-bud-alone-cpl 0.9394, dry-erase-marker-head-cpl 0.9963, all
+# three with argmins scattered to the search boundary. The first is a well; the
+# other three are flat surfaces being read as if they were wells.
+#
+# THE RATIO IS TAKEN AT THE ARGMIN AND NOT AT THE ORIGIN, and that distinction
+# is load-bearing. A first version measured the ring against SSD(0,0). On a pair
+# that really is displaced, the origin is nowhere near the minimum, the surface
+# there is flat or sloping, the ratio reads ~1.0 -- and the site was declared
+# UNINFORMATIVE, so the planted 12 px and 32 px shifts both passed as NEUTRAL.
+# Asking whether the surface has a well AT THE ORIGIN is a different question
+# from asking whether it has a well AT ALL, and only the second one can detect a
+# shift.
+WELL_MIN = 1.10
 
-    The two arms come from one binary, one input set and one alignment solve, so
-    the honest expectation is exactly (0, 0) and anything else means the arms are
-    not on a common grid and no per-pixel comparison between them is admissible.
-    This CHECKS that rather than assuming it -- a structural claim about a render
-    is a claim about pixels.
+# TOLERATED_SHIFT: how far the arms may sit apart before the comparison is
+# inadmissible. This is NOT a taste threshold -- it is read off a measured
+# sensitivity sweep (regsens2.py, self-shift on three masters, so the shift is
+# the only difference between the two sides):
+#
+#     shift   max|blotch-1|   max|sharp-1|   max|grain-1|
+#         1        0.424%         0.106%         0.088%
+#         8        0.839%         0.472%         0.346%
+#        16        2.639%         1.333%         1.174%
+#        32        5.620%         3.509%         2.530%
+#
+# The effect under test moves `sharp` by 15-22%. At 8 px the induced error is
+# 0.47%, roughly a fortieth of that, and the comparison survives; by 32 px it is
+# 3.5% and it does not. 8 px is the last row that is negligible against the
+# effect, so that is the bound, and it is stated here with the numbers that set
+# it rather than asserted.
+TOLERATED_SHIFT = 8
+
+# SEARCH_RADIUS must EXCEED TOLERATED_SHIFT, and that is not a detail -- it is
+# the whole reason this guard works at all. The first version of this rewrite
+# searched +/-4 px against a tolerance of 8 and passed a PLANTED 32 px SHIFT as
+# NEUTRAL, because the argmin saturated at the edge of its own search and 4 <= 8.
+# That is the same defect the guard was written to remove, reproduced one layer
+# down: a search that saturates reports the boundary, and a boundary inside the
+# tolerance is indistinguishable from agreement. With the radius outside the
+# tolerance, any displacement past the bound lands past the bound -- either at an
+# interior argmin greater than 8, or pinned at the radius, which is also greater
+# than 8. Both are refusals. Commissioned at 12 px (interior) and 32 px
+# (saturated), which exercise the two paths separately.
+SEARCH_RADIUS = 16
+
+
+def registration_check(a, b, sites, radius=SEARCH_RADIUS):
+    """Is the candidate close enough to the base for a per-crop comparison?
+
+    THE FIRST VERSION OF THIS GUARD WAS WRONG AND IT COST THREE SUBJECTS. It took
+    the SSD argmin at ONE site and refused the subject on anything but (0, 0).
+    Three of the first sixteen subjects refused. They were not shifted: each
+    arm's own log reports the same sidecar, the same reference frame and the same
+    N placed / 0 refused, the outputs have identical shape, and a selection
+    exponent reweights pyramid coefficients on a fixed grid -- there is no
+    mechanism by which it could translate an image. What the argmin was actually
+    reading was the CONTENT DIFFERENCE between the arms, which is the very
+    quantity this experiment exists to measure.
+
+    Two candidate replacements were built and both were killed by their own
+    controls, which is why neither is used here:
+
+      * NORMALISED CROSS-CORRELATION fails AGENTS.md rule 5 -- it cannot carry an
+        absolute threshold because it is not subject-invariant. Measured
+        (regsens2.py): NCC(0) = 0.889 corresponds to a 4 px shift on
+        coffee-bubbles and to a 64 px shift on dry-erase-marker-head-cpl. It
+        reports how much fine content a subject has, not how far it moved.
+      * LOW-PASSING INTO THE BASE BAND, on the banner's claim that the base is a
+        plain mean across frames in both arms, does not respond to a planted
+        shift at all: on flower-bud-alone-cpl the low-passed excess reads 41.2%
+        unshifted, 43.3% at +1 px, 41.5% at +4 px and 33.0% at +32 px
+        (baseband.py). A hard low-pass removes the structure that localises SSD,
+        so there is no well left to read.
+
+    What survives is the raw SSD probe with two corrections. Every site is
+    probed, not one; and a site may only speak if its surface holds a WELL --
+    ring/zero >= WELL_MIN. Flat sites are recorded and ignored, because an argmin
+    drawn from a flat surface is noise and noise must not be allowed to refuse a
+    measurement. If no site is informative the arms' shared geometry is not
+    contradicted by anything in the pixels, so the subject is scored and the
+    state is carried in the result rather than discarded.
     """
-    pa = a[y:y + CROP, x:x + CROP, 1].astype(np.float32)
-    best, bshift = None, (0, 0)
-    for dy in range(-radius, radius + 1):
-        for dx in range(-radius, radius + 1):
-            pb = b[y + dy:y + dy + CROP, x + dx:x + dx + CROP, 1].astype(np.float32)
-            if pb.shape != pa.shape:
-                continue
-            s = float(np.mean((pa - pb) ** 2))
-            if best is None or s < best:
-                best, bshift = s, (dy, dx)
-    return bshift
+    probes = []
+    for (y, x) in sites:
+        pa = a[y:y + CROP, x:x + CROP, 1].astype(np.float32)
+        surf = {}
+        for dy in range(-radius, radius + 1):
+            for dx in range(-radius, radius + 1):
+                pb = b[y + dy:y + dy + CROP, x + dx:x + dx + CROP, 1].astype(np.float32)
+                if pb.shape != pa.shape:
+                    continue
+                surf[(dy, dx)] = float(np.mean((pa - pb) ** 2))
+        if not surf or (0, 0) not in surf:
+            continue
+        am = min(surf, key=surf.get)
+        low = surf[am]
+        # The ring is taken around the ARGMIN, not around the origin: the
+        # question is whether this surface has a distinct minimum at all, not
+        # whether it happens to be flat where we started looking.
+        ring = min((v for k, v in surf.items()
+                    if max(abs(k[0] - am[0]), abs(k[1] - am[1])) == 1), default=low)
+        # An EXACT match at the argmin (SSD == 0) is the deepest well there can
+        # be, not the absence of one. A first version wrote `float("inf")` here
+        # and then gated informativeness on `np.isfinite(well)`, which inverted
+        # it: every planted shift is a np.roll of an exact copy, so it matched
+        # perfectly at the argmin, was classified UNINFORMATIVE, and sailed
+        # through the "no site could speak" door as NEUTRAL. Real masters never
+        # produce a zero SSD, so this defect was invisible on real data and only
+        # the synthetic commissioning could expose it -- which is the argument
+        # for commissioning on synthetics at all.
+        exact = low <= 0.0
+        well = float("inf") if exact else float(ring / low)
+        informative = exact or (np.isfinite(well) and well >= WELL_MIN)
+        probes.append({"site": [y, x], "argmin": list(am),
+                       "well": None if exact else well, "exact": bool(exact),
+                       "informative": bool(informative)})
+
+    live = [p for p in probes if p["informative"]]
+    if not probes:
+        return {"ok": True, "basis": "NO-PROBE", "n_informative": 0,
+                "probes": probes, "worst": None, "median": None}
+
+    # CLAUSE 1 -- the median argmin across ALL sites.
+    #
+    # A real displacement between two renders is GLOBAL: the same offset at every
+    # site. Noise on a flat SSD surface is not -- it scatters, and the scatter is
+    # symmetric about zero. So the per-axis median across sites is robust to the
+    # flat-surface sites that defeated the first two versions of this guard, and
+    # still reports a true global shift at full magnitude. Measured on the four
+    # real subjects at radius 4: coffee-bubbles median (0,0); flowers-cpl
+    # argmins (4,-4) (0,0) (0,0) (4,4) (-4,-3) -> median (0,0); flower-bud
+    # -> median (-1,2); dry-erase -> median (0,0). Every one of them inside
+    # tolerance. On the synthetic plants: 2 px -> 2, 12 px -> 12, 32 px -> 16
+    # (pinned at the radius, which is already past tolerance and refuses).
+    med = (int(np.median([p["argmin"][0] for p in probes])),
+           int(np.median([p["argmin"][1] for p in probes])))
+    med_mag = max(abs(med[0]), abs(med[1]))
+
+    # CLAUSE 2 -- any site whose surface holds a genuine well, and which
+    # nevertheless disagrees by more than the tolerance. A deep well means that
+    # site's argmin is trustworthy on its own, so it is allowed to refuse even if
+    # the median has not moved.
+    worst_live = (max(max(abs(p["argmin"][0]), abs(p["argmin"][1])) for p in live)
+                  if live else None)
+
+    ok = med_mag <= TOLERATED_SHIFT and (worst_live is None
+                                         or worst_live <= TOLERATED_SHIFT)
+    basis = "SSD-WELL" if live else "MEDIAN-ONLY"
+    return {"ok": bool(ok), "basis": basis, "n_informative": len(live),
+            "probes": probes, "worst": worst_live,
+            "median": [med[0], med[1]], "median_mag": int(med_mag)}
 
 
 def score_subject(name, verbose=False, paths=None):
@@ -146,9 +287,10 @@ def score_subject(name, verbose=False, paths=None):
     if not sites:
         return {"subject": name, "state": "NO-SITES"}
 
-    shift = registration_shift(a, b, *sites[0])
-    if shift != (0, 0):
-        return {"subject": name, "state": "UNREGISTERED", "shift": list(shift)}
+    reg = registration_check(a, b, sites)
+    if not reg["ok"]:
+        return {"subject": name, "state": "UNREGISTERED",
+                "shift": reg.get("median"), "registration": reg}
 
     cells = []
     for (y, x) in sites:
@@ -181,7 +323,8 @@ def score_subject(name, verbose=False, paths=None):
                 "floor_ok": bool(floor_ok), "struct_ok": bool(struct_ok),
                 "refused": bool(c.get("refused")), "verdict": c["verdict"],
             })
-    return {"subject": name, "state": "SCORED", "sites": sites, "cells": cells}
+    return {"subject": name, "state": "SCORED", "sites": sites, "cells": cells,
+            "registration": reg}
 
 
 def ratios(rows, band, key):
@@ -234,7 +377,7 @@ def main():
         print(f"subjects    : {len(subs)}\n")
 
     hdr = (f"{'subject':<28} {'blotch':>8} {'sharp':>8} {'grain':>8} "
-           f"{'nB':>3} {'nS':>3} {'noS':>4}  verdict")
+           f"{'nB':>3} {'nS':>3} {'noS':>4} {'reg':>7}  verdict")
     print(hdr)
     print("-" * len(hdr))
 
@@ -294,14 +437,30 @@ def main():
 
         def f(v):
             return f"{v:>8.4f}" if fin(v) else f"{'--':>8}"
+        reg = r.get("registration") or {}
+        rtag = {"SSD-WELL": f"w/{reg.get('median_mag')}",
+                "MEDIAN-ONLY": f"m/{reg.get('median_mag')}",
+                "NO-PROBE": "none"}.get(reg.get("basis"), "?")
         print(f"{s:<28} {f(blotch)} {f(sharp)} {f(grain)} "
-              f"{nb:>3} {ns:>3} {no_struct:>4}  {v}")
+              f"{nb:>3} {ns:>3} {no_struct:>4} {rtag:>7}  {v}")
 
     print()
     total = sum(tally.values())
     print(f"partition ({total} subjects): " +
           ", ".join(f"{k}={v}" for k, v in sorted(tally.items())))
     assert total == len(jobs), f"partition {total} != {len(jobs)} subjects"
+
+    # The registration BASIS is partitioned too, and it sums. A subject admitted
+    # because no site could speak is not the same claim as one admitted because a
+    # site spoke and agreed, and the two must never print as the same glyph.
+    rtally = {}
+    for r in out:
+        rtally[(r.get("registration") or {}).get("basis", "n/a")] = \
+            rtally.get((r.get("registration") or {}).get("basis", "n/a"), 0) + 1
+    print("registration basis: " +
+          ", ".join(f"{k}={v}" for k, v in sorted(rtally.items())) +
+          f"   (tolerated shift <= {TOLERATED_SHIFT}px, well >= {WELL_MIN})")
+    assert sum(rtally.values()) == len(out), "registration partition does not sum"
 
     # Corpus roll-up, medians of the per-subject medians.
     for label, key in (("blotch (mottle 21-61px floor)", "blotch"),

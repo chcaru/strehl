@@ -25,9 +25,32 @@ So arm C plants an IMPROVEMENT and requires the scorer to say so.
   D  planted noise   candidate is the base plus noise. Must be scored
                      FLAT LOSES. Tests the other side of the tone of the
                      statistic; a one-sided gate has tested half of it.
-  E  registration    candidate is the base shifted by 2 px. Must be REFUSED as
-                     UNREGISTERED, not silently measured. A per-pixel comparison
-                     between images on different grids is not a measurement.
+  E  registration    candidate is the base shifted by 32 px. Must be REFUSED as
+                     UNREGISTERED. 32 px is not an arbitrary plant: regsens2.py
+                     measured, by self-shifting three real masters so the shift
+                     is the only difference between the two sides, that a 32 px
+                     offset moves blotch by 5.6% and sharp by 3.5%, which is no
+                     longer small against the 15-22% the effect under test moves
+                     sharp by. That is where the comparison stops being
+                     admissible, so that is where the plant sits. This arm
+                     exercises the SATURATED path: 32 px is past the search
+                     radius, so the argmin pins at the boundary.
+  E2 mid registration candidate is shifted by 12 px -- past the 8 px tolerance
+                     but INSIDE the 16 px search radius. Must be REFUSED. This is
+                     a different code path from E and it is the one that catches
+                     a search that saturates: the first version of this rewrite
+                     searched +/-4 against a tolerance of 8 and passed the 32 px
+                     plant as NEUTRAL, because 4 <= 8. E alone did not catch it
+                     until the radius was fixed; E and E2 together pin both ends.
+  F  micro-shift     candidate is the base shifted by 2 px. Must be SCORED, NOT
+                     refused, and must read NEUTRAL. This is the FALSE-REFUSAL
+                     control and it is the arm that earns E its credibility: a
+                     guard tested only with shifts it must catch cannot be
+                     distinguished from a guard that refuses everything. The
+                     first version of this scorer refused three of sixteen real
+                     subjects on a 1 px SSD argmin -- a displacement the same
+                     sweep prices at 0.106% of sharp, a four-hundredth of the
+                     effect. Without this arm that defect ships.
 """
 from __future__ import annotations
 
@@ -142,6 +165,10 @@ def make(kind):
         # to 0.8587. A sharpness loss that buys nothing must convict on its own.
         cand = R.boxblur(STRUCT.astype(np.float64), 2).astype(np.float32) + base_noise
     elif kind == "shift":
+        cand = np.roll(base, 32, axis=0)
+    elif kind == "midshift":
+        cand = np.roll(base, 12, axis=0)
+    elif kind == "microshift":
         cand = np.roll(base, 2, axis=0)
     else:
         raise ValueError(kind)
@@ -158,6 +185,8 @@ EXPECT = {
     "noise": "FLAT LOSES",
     "softonly": "FLAT LOSES",
     "shift": "UNREGISTERED",
+    "midshift": "UNREGISTERED",
+    "microshift": "NEUTRAL",
 }
 
 
