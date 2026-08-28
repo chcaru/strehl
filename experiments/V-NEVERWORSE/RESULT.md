@@ -3845,6 +3845,154 @@ source-frame bundles -- which the audit above confirms are unclipped, so
 ORCH's `pinned_to_hull` caution does not reach them either.
 
 
+### 9.27 CORRECTION #4 moves this lane's numbers, and the `sharpness` column ORCH is pricing with reads as grain on the pixels it was computed from
+
+**Answer to the three questions ORCH asked every lane.** (1) I did use a fixed
+band. (2) **My numbers move.** (3) The specific instruction -- score with
+`contrast_ms.py` treating band 0 as noise and band 1 as signal -- was never
+applied here: `contrast_ms` appears **0 times** in this lane. A `0.20-0.25` column does
+appear **twice**, in the table headers of section 9.17 -- but section 9.23 had
+already retracted 9.17 through 9.22 for an unrelated reason, so nothing live
+rests on it. (My first draft of this paragraph claimed zero occurrences; the
+verifier for this section caught it.) My fixed bands are my own:
+`vn_ninv2.py` L58-61 defines `MID = (0.30, 0.35)`, `FINE = (0.40, 0.45)` and
+`MOTTLE = (0.02, 0.05)` cyc/px.
+
+**Qualification, from V-LINEAR's own records via V-LINEAR's own `boundary()`.**
+Imported rather than reimplemented, because its restriction to the `FINE`
+partition is load-bearing:
+
+| subject | boundary | my MID 0.30-0.35 | my FINE 0.40-0.45 |
+|---|---:|---|---|
+| `coffee-bubbles` | 0.25 | R=1.533 MARGINAL | R=1.515 MARGINAL |
+| `112MSDCF` | 0.20 | **R=1.089 FAIL(noise)** | **R=1.049 FAIL(noise)** |
+
+So both of my quoted bands sit above both subjects' boundaries, and on
+`112MSDCF` they are noise outright.
+
+**Re-measurement on a qualified band.** `0.17-0.20` PASSes on both subjects, so
+`vn_qband.py` re-runs the N-invariance ladder there. Scene term, deepest N vs
+half N (`coffee-bubbles` 19 vs 9, `112MSDCF` 79 vs 39):
+
+| subject | arm | mot 0.02-0.05 | **qual 0.17-0.20** | mid 0.30-0.35 | fine 0.40-0.45 |
+|---|---|---:|---:|---:|---:|
+| `coffee-bubbles` | mean | 1.0783 | 0.5021 | 0.4758 | REFUSED |
+| `coffee-bubbles` | confidence | 1.2604 | **0.9939** | 1.1755 | 1.3673 |
+| `coffee-bubbles` | shipping | 1.4069 | **1.1360** | 1.3562 | 1.6220 |
+| `coffee-bubbles` | argmax | 1.4021 | 1.1489 | 1.3553 | 1.6430 |
+| `112MSDCF` | mean | 1.0091 | 0.5910 | 0.5069 | REFUSED |
+| `112MSDCF` | confidence | 1.0124 | **0.8953** | 0.8697 | 0.9258 |
+| `112MSDCF` | shipping | 1.0772 | **1.1123** | 1.2319 | 1.4096 |
+| `112MSDCF` | argmax | 1.1076 | 1.1538 | 1.3042 | 1.5304 |
+
+**Section 9.23.6's sign flip survives qualification on both subjects, at
+reduced magnitude.** Shipping still gains scene with depth where a plain mean
+loses it: 1.1360 against 0.5021, and 1.1123 against 0.5910. The magnitude falls
+from the unqualified 1.3562 and 1.2319, so the effect was overstated but not
+manufactured.
+
+**The result that moved in the fix's favour, and ORCH should have it.** The
+confidence arm reads **0.9939** on `coffee-bubbles` at the qualified band --
+essentially exactly N-invariant -- against 1.1755 at the unqualified band I
+previously quoted. On `112MSDCF` it reads **0.8953**. Qualifying the band made
+the candidate fix look **better**, not worse.
+
+**A hypothesis of mine died here and it nearly became ORCH's third false
+convergence.** The argmax/mean scene ratio is enormous in the unqualified
+bands -- `coffee-bubbles` 11.0x / 34.1x / 82.0x and `112MSDCF` 21.8x / 183.6x /
+**1088.0x** across mot / qual / mid -- and I intended to report the growth with
+band frequency as evidence that selection *manufactures* fine-scale scene. A
+ground-truth fixture in `vn_qband.py`, whose texture is spectrally truncated so
+true scene at MID is exactly zero, **refuted it**: with MID content absent the
+argmax/mean ratio read **1.904** against **8.704** at the qualified band, and
+the ratio-of-ratios was **0.2188** where content is absent against **2.679**
+where it is present -- the opposite of my prediction. The large ratios are the
+plain mean blurring, not manufacture. **The two failed checks were removed from
+the gate rather than tuned**, because they tested a claim about the merge
+rather than a property of the instrument, and gating on them would have meant
+adjusting the fixture until my own hypothesis passed. They are recorded in the
+run output as a refutation instead. Commissioning is 6/6 on instrument
+properties only.
+
+**Gauge control, because `112MSDCF`'s RGB bundle no longer exists.** Widening
+the green-only bundle to three channels is a change of gauge, and this lane has
+already watched one gauge mismatch invert a headline. Re-running
+`coffee-bubbles`, which has both, gave **48 of 48 scene cells bit-identical**
+(`gauge = green-replicated (from RGB, control)`, so the plant is confirmed to
+have landed). That identity is a **prediction of the source, not a short
+circuit**: `vn_pyr.merge` builds its weight field from channel 1 only -- "Channel
+1 IS the luma plane, so this aliases rather than recomputing" -- and
+`band_power` reads channel 1, so replacing channels 0 and 2 cannot move a
+channel-1 statistic. The green bundle is gauge-safe **for this statistic**, and
+that scope is not a general claim about RGB versus green.
+
+**The exposure that reaches ORCH's fix pricing.** `vn_plateau.sharpness` is
+`lap[0].std() / mean` -- the RMS of the **finest Laplacian level**, which
+section 9.24 places at 99.7-99.9% of the 0.30-0.35 cyc/px band. It is the
+source of section 9.5's `0.755 / 0.217 / 0.685` column and of the claim at
+section 9.5 that exponent 1 buys 57% of the excess "for a **9.3%** relative
+sharpness cost". Both subjects' boundaries are below that band.
+
+`vn_l0band.py` qualifies L0 directly, applying V-LINEAR's focus
+discriminability -- best frame versus the same tile `far` frames away -- to the
+L0 band itself. Commissioned in both directions on the same code path: a
+genuine through-focus stack reads **R = 17.3817 PASS**, a grain-only stack with
+one fixed scene and independent noise reads **R = 1.0002 [0.9995, 1.0008]
+FAIL(noise)**, separation **17.3778x**, and an inertness guard confirms the
+plants landed (L0 frame-to-frame spread 25.546x focus against 1.001x grain).
+The null matters on its own: **selection on noise alone does not inflate L0's
+R**, so a real reading cannot be dismissed as selection bias.
+
+On real frames:
+
+| subject | L0 R (power) | CI | R (amplitude) | verdict |
+|---|---:|---|---:|---|
+| `coffee-bubbles` | **1.1628** | [1.1435, 1.1814] | 1.0783 | **FAIL(noise)** |
+| `112MSDCF` | **1.1501** | [1.1066, 1.1967] | 1.0724 | **FAIL(noise)** |
+
+Both sit far nearer the grain null of 1.0002 than the focus positive of
+17.3817.
+
+**The subject-level verdict is WITHHELD, by the file's own cross-check.** The
+run first reproduces V-LINEAR's published boundary from these pixels on this
+plane, and it **does not**: mine reads **0.14** on both subjects against
+published **0.25** and **0.20**. A reimplementation that cannot recover the
+other lane's boundary is not licensed to overturn it, so `vn_l0band.py` prints
+`VERDICT WITHHELD` rather than a conclusion. The disagreement is consistent
+(both subjects, same value, same direction) and points **downward**, while the
+one bias I can sign -- these bundles are decimated, so `far` spans more real
+frames than V-LINEAR's and defocus is deeper -- pushes R **up**. The leading
+untested candidate is that these bundle frames are **registered, hence
+resampled**, and resampling attenuates exactly the frequencies in question.
+That is an open finding and it is not this section's conclusion.
+
+**What IS licensed is narrower and is enough.** Section 9.5's sharpness column
+was computed on **these** frames. On these frames, at the band that statistic
+reads, focus discriminability is 1.1628 and 1.1501 against a commissioned
+grain null of 1.0002. **So the `0.755 / 0.217 / 0.685` column is scoring a band
+that carries almost no focus-dependent signal on the pixels it was computed
+from, and the "9.3% relative sharpness cost" is not licensed as an acuity
+statement.** This is a within-subject, same-pixels comparison, which is what
+V-LINEAR's rules permit; it is not a claim about what a pristine develop of
+either subject would show.
+
+**This is corroborated inside this lane's existing record.** Section 9.14's
+commissioning requires that averaging 19 independent noise fields cut the same
+statistic to `1/sqrt(19) = 0.229x` and **refuses** otherwise; it reads
+**0.249x**. A statistic that follows the noise-averaging law that closely is
+tracking an incoherent quantity. Section 9.14 already says so in words -- "they
+are moving noise from fine scales to mid scales" -- but that section is a null
+stack where the reading is unambiguous, and section 9.5 carries the same
+statistic on real frames under the name **sharpness**. The name is the defect.
+
+**Not re-checked, stated so it cannot read as re-checked and unchanged:** every
+other fine-scale number in sections 9.14b through 9.23 that derives from
+`vn_plateau.sharpness`. `vn_plateau.blotch` is a 50-400 px difference of
+Gaussians, roughly 0.001-0.008 cyc/px, far below every measured boundary, and
+is **unaffected**.
+
+
+
 ## 10. Files
 | file | what it does |
 |---|---|
@@ -3903,5 +4051,9 @@ ORCH's `pinned_to_hull` caution does not reach them either.
 | `vn_verify926.py` | re-derives every number quoted in S9.26: 32 checks, 32/32 |
 | `vn_negctl926.py` | negative control for that checker: 14 document plants + 8 **record** plants + placebo + refusal arm, 26/26. It caught an **inert plant** of its own -- `s + "X"` leaves the original as a substring -- and now proves every mutation lands before trusting the result |
 | `vn_clipaudit.py` | counts pixels at the 16-bit ceiling across every population this lane's findings rest on, after ORCH's HEAD exposure regression. Commissioned 5/5 against a planted 92.03%-clipped image, a clean image and an unreadable file; outcomes partition so a file it could not open never counts as clean (S9.26.5) |
+| `vn_qband.py` | re-measures the N-invariance ladder on a band QUALIFIED per subject, after ORCH's CORRECTION #4. Carries a spectrally truncated ground-truth fixture that **refuted this lane's own hypothesis** that large argmax/mean scene ratios prove fine-scale manufacture; the two failed checks were removed from the gate and recorded as a refutation rather than tuned until they passed. 6/6 on instrument properties (§9.27) |
+| `vn_l0band.py` | qualifies the band `vn_plateau.sharpness` actually reads, by applying V-LINEAR's focus discriminability to the finest Laplacian level. Commissioned both ways on one code path -- through-focus 17.3817 PASS, grain-only 1.0002 FAIL(noise), separation 17.3778x -- with an inertness guard on the plants. Withholds its verdict when it cannot reproduce V-LINEAR's published boundary, which is what it did on both subjects (§9.27) |
+| `vn_verify927.py` | re-derives every number quoted in §9.27 from the records, anchored so repeated short values cannot satisfy the wrong check: 55/55. It **caught a false claim in §9.27's own first draft** -- that `0.20-0.25` appeared nowhere in the file, when it appears twice in retracted §9.17 |
+| `vn_negctl927.py` | negative control for that checker: 6 plants, each anchored on a string proven unique and hard-erroring if it does not land, restored from a TEMP copy rather than `git checkout --`. 6/6 caught, baseline and post-restore GREEN both confirmed |
 
 Nothing outside `experiments/V-NEVERWORSE/` was modified. `D:\` was never written.
