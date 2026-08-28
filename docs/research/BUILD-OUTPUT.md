@@ -1891,3 +1891,261 @@ wall clock (17:04:59 -> 20:40:12), on a machine with nine other lanes rendering
 concurrently. Memory, not disk, is the binding constraint -- 4.5 GB free with
 44.7 GB held by other lanes' `strehl` processes -- so the arms were run
 sequentially rather than in parallel.
+
+# 13. The HEAD baseline against SHIP-V4: the thirteen commits HELPED, on grain
+
+ORCH escalated this to the highest-priority task in the project: thirteen
+commits and +12,637 / -538 lines separate pin `9b05d0b7`, from which all 26
+SHIP-V4 masters were rendered, from current HEAD -- and **nobody had rendered a
+single image on any of them.** Every verdict being relayed to five lanes was a
+verdict on a binary that far out of date. `merge_cmd.rs` warns about exactly
+this in its own doc block: *"Comparing a new treatment against an old control is
+how a corpus drifts without anyone deciding to move it."*
+
+## 13.1 The baseline already existed, and proving that took 4 minutes of render
+
+The render ORCH asked for was already on disk. The `DEF-2f858c62` arm from
+section 12 is 26 subjects at `--srgb --auto-exposure`, the identical flags the
+SHIP-V4 masters carry -- confirmed by reading both sets' provenance rather than
+by memory. The only question was whether pin `2f858c62` is HEAD.
+
+**All twelve of ORCH's named commits are ancestors of `2f858c62`**, checked one
+at a time with `git merge-base --is-ancestor` rather than by reading a log:
+`78fed9a1` (gatefloor), `8457dfc2`, `5db5ac09` (demosaic chroma restore),
+`107b37e0`, `eb5145d4` (the geometry guard that broke 11 of 26 renders),
+`e1bf09e0`, `2815a1e1`, `9cb7f5d9`, `9dbb5c92`, `439563ff`, `49227061`,
+`0dd3d3f9` -- all `True`. `crates/strehl-cli/src/merge_cmd/gatefloor.rs` exists
+at that pin.
+
+Exactly two commits separate `2f858c62` from HEAD `d2193a55` in `crates/`:
+
+| commit | files touched | claim |
+|---|---|---|
+| `9c11209e` | 3 files, ALL under `crates/strehl-cli/examples/` | cannot reach `strehl stack` |
+| `aa40cc78` | `align_cmd.rs` **+400**, `merge_cmd.rs`, `main.rs`, `blend-render.rs` | `DEFAULT_COVER_MODE = Scale`, "THE DEFAULT DOES NOT MOVE" |
+
+**That second row is a doc comment, and a doc comment is not a measurement.**
++400 lines in the alignment path is precisely where an inert-looking change stops
+being inert, and `eb5145d4` is in recent history because an exact-equality
+geometry guard broke 11 of 26 renders *while passing every test it had*. So it
+was measured. `headcheck.py` cut a fresh pin at HEAD `d2193a55`, built it
+(sha16 `53AC552AF7093982`, distinct from `2f858c62`'s `A058F737DFE695F7` and
+from SHIP-V4's `44C2F2CD2E5B2894`, and a different file size, so the
+`Copy-Item`-preserves-mtime trap is not in play), and re-rendered three subjects
+at default flags:
+
+| subject | why this subject | result |
+|---|---|---|
+| `highly-angled-ruler-mm-cpl` | the ONE subject whose alignment REFUSES -- most exposed to `align_cmd.rs` | BIT-IDENTICAL |
+| `109MSDCF` | the provenance exemplar, 22 frames | BIT-IDENTICAL |
+| `coffee-bubbles` | the mid-scale mottle flagship | BIT-IDENTICAL |
+
+**3/3, 296,808,192 samples, max|d| = 0.** The two commits are inert on the
+shipping render path, so `DEF-2f858c62` **is** the HEAD baseline.
+
+And the file SHAs of all three pairs DIFFER while every sample matches --
+`1F9D5DC73A2ED9A8` vs `B6B3FDCD0F33395E` and so on. ORCH's own rule, confirmed
+in situ on the very measurement it was issued for: *a file hash is not a pixel
+gauge.*
+
+## 13.2 Render count: 26 of 26
+
+ORCH asked for this explicitly because `eb5145d4` records a break of exactly this
+shape. **26 masters, 26 `.provenance.txt`, every one `status : ok (exit 0)`.**
+No subject failed, so the corpus average is over 26 and is comparable to
+SHIP-V4's 26.
+
+## 13.3 Three axes, each gated, and the one I nearly failed to gate
+
+| | blotch (21-61 px floor) | sharp (5-13 px struct) | grain (<=3 px floor) |
+|---|---:|---:|---:|
+| IMPROVED | 2 | 5 | **17** |
+| UNCHANGED | 24 | 21 | 9 |
+| **REGRESSED** | **0** | **0** | **0** |
+| REFUSED | 0 | 0 | 0 |
+| TOTAL | 26 | 26 | 26 |
+
+Corpus medians, gain-corrected: blotch **0.9998**, sharp **1.0009**, grain
+**0.9417**. Every axis partitions all 26 independently and each column is
+asserted to sum.
+
+**The first run of `headscore.py` printed the grain column and did not classify
+it.** Only blotch and sharp were gated, and on those two the honest reading is
+"nothing happened" -- which is the answer ORCH said he expected. Grain is the
+axis that moved most, by a wide margin, and it would have sat in an unread
+column labelled `grain*` while the two gated axes reported silence. *A value
+printed but never conditioned on is a defect*, and this one would have inverted
+the finding.
+
+The subjects, ranked by grain improvement:
+
+| subject | grain | sharp | blotch | reading |
+|---|---:|---:|---:|---|
+| `leaf-2-cpl` | **0.4357** | **1.3420** | 0.9763 | better on ALL THREE |
+| `lead-1-cpl` | **0.4940** | **1.2335** | 0.9893 | better on ALL THREE |
+| `flowers-cpl` | 0.5474 | 1.0325 | 0.9928 | quieter and sharper |
+| `109MSDCF` | 0.6414 | 1.0067 | 0.9907 | quieter |
+| `flower-inner-edge-cpl` | 0.6477 | 1.0157 | 0.9941 | quieter and sharper |
+| `bee-2-cpl` | 0.8154 | 1.0047 | 0.9997 | quieter |
+| `flower-bud-with-background-fern-cpl` | 0.8506 | 1.0009 | 1.0026 | quieter |
+
+`leaf-2-cpl` and `lead-1-cpl` are **56% and 51% quieter in fine grain while
+carrying 34% and 23% MORE structure.** That is not a trade and it is not a
+blur -- it is the signature of a merge that stopped averaging pixels it should
+have been allowed to select, which is exactly what `78fed9a1` and `5db5ac09`
+claim to fix. Their registration is clean (`SSD-WELL`, median displacement
+`[0, 0]`, worst 0, 5 informative sites each), so the movement is not a crop
+mismatch.
+
+**`lead-1-cpl` is one of the six subjects convicted of mid-scale mottle, at
+2.43x chroma.** It is now the second-largest improvement in the corpus.
+
+## 13.4 An accidental null control inside the corpus
+
+`highly-angled-ruler-mm-cpl` reads **exactly 1.0000 on gain, blotch, sharp and
+grain**. It is not bit-identical between the two binaries -- 332,408 of
+99,010,560 samples differ, with **max|d| = 1**. So a real perturbation of one
+least-significant bit on 0.34% of the frame reads as no change on all four
+numbers. The gauge does not manufacture signal from rounding, demonstrated on
+corpus data rather than on a synthetic.
+
+## 13.5 Commissioning: the gauge was right three times and I was wrong three times
+
+`headscore.py` reuses `flatexp`'s measurement core, commissioned 8/8. But
+`classify()` and `BAND` are new code with a new orientation -- blotch and grain
+improve DOWNWARD, sharpness improves UPWARD -- and a sign error there inverts the
+conclusion silently. A new classifier is a new instrument.
+
+**Null, at corpus scale:** SHIP-V4 scored against itself, 26 subjects,
+**26/26 UNCHANGED on all three axes, every ratio exactly 1.0000.**
+
+**Planted arms, `commission_headscore.py`, final 10/10 PASS:**
+
+| arm | blotch | sharp | grain | verdicts |
+|---|---:|---:|---:|---|
+| `null` | 1.0000 | 1.0000 | 1.0000 | all UNCHANGED |
+| `blur` sigma 1.2 | 0.9904 | **0.8453** | 0.2485 | sharp REGRESSED |
+| `noise` white | 1.0001 | 1.0002 | **1.0463** | grain REGRESSED |
+| `mottle` bandpassed 21-61 px | **1.0654** | 0.9968 | 0.9561 | blotch REGRESSED |
+| `improve` brick-wall f > 0.30 | 1.0001 | 0.9985 | **0.7743** | grain IMPROVED, sharp HELD |
+
+The `blur` and `improve` rows together are the whole point. Blur buys a huge
+grain number (0.2485) and the gauge convicts it anyway on sharpness (0.8453).
+The targeted denoise buys a smaller one (0.7743) with sharpness held at 0.9985.
+**A gauge that could not separate those two would certify the fix lane's next
+blur as a clean-up.**
+
+Three arms failed first, and in all three the gauge was right and my plant was
+wrong. Recording them because the corrections are the content:
+
+1. **White noise was required to move the BLOTCH axis.** It read 1.0001 and
+   0.9999 -- UNCHANGED -- and I recorded a gauge failure. White noise has almost
+   no power at 21-61 px, so a band-selective statistic is *correct* to ignore it.
+   Fixed by adding a separate `mottle` arm bandpassed into that band. A plant
+   must be matched to the band it is meant to move.
+2. **The `improve` arm cost 7.4% of sharpness** using an `exp(-(g/p75)^2)`
+   gradient weight -- on `flat-on-ruler-cpl`, a mostly-flat subject, that weight
+   stays high over real detail. The gauge refused to certify my improvement as
+   free, and was right to.
+3. **The gaussian rewrite still cost 1.35%.** A gaussian is not a band separator:
+   its MTF is `exp(-2 pi^2 sigma^2 f^2)`, so at sigma 0.5 it still passes 82% of
+   the amplitude at f = 0.20 cyc/px, the fine end of the structure band. Halving
+   "the fine residual" removes ~9% of real amplitude at 5 px. Only an FFT brick
+   wall above 0.30 cyc/px separates the grain band from the structure band
+   *exactly* rather than approximately, and that is what the arm now uses.
+
+## 13.6 The print gate: a drop-in that needs one line from V-GATHER
+
+`printcert4.py` scores four axes -- `blotch`, `rim`, `sharp`, `dust`. Two of
+those (`rim`, `dust`) are V-GATHER's and are not reimplemented here; a second
+judgement of the same thing is worse than none.
+
+`printcert.py:72` hardcodes `SEAL_DIR = r"C:\dev\strehl-out\acceptance\SHIP-V4"`
+and `printcert4.py:171` hardcodes the filename suffix `--SHIP-V4.tiff`. There is
+**no environment override anywhere in `experiments/V-GATHER`** -- grepped for
+`environ.get` and `getenv` across the directory, zero hits. So the harness can
+only be pointed elsewhere by changing that one constant, which is V-GATHER's line
+to change and not mine.
+
+`sealshape.py` therefore presents the HEAD baseline in exactly the shape the
+harness expects, at **zero disk cost**, using NTFS hardlinks rather than copying
+4.9 GB while ten lanes share the volume:
+
+```
+C:\dev\strehl-out\acceptance\HEAD-d2193a55-sealshape\
+  26 x <subject>--SHIP-V4.tiff              hardlinks into the DEF-2f858c62 arm
+  26 x <subject>--SHIP-V4.tiff.ok           sha256 of the binary that REALLY rendered them
+  26 x <subject>--SHIP-V4.tiff.provenance.txt
+  README.txt
+```
+
+Verified against the real seal directory: want 26, got 26, missing 0, extra 0,
+and a first-megabyte hash probe confirming the link resolves to the arm's bytes
+(`417c1a14ab8d30ec` both sides).
+
+**Writing HEAD bytes into files named `--SHIP-V4.tiff` is the mislabelled-artifact
+hazard `corpuscopy.py` opens by warning about, and it is what
+`C:\dev\strehl-out\PIN-V3\strehl.exe` did to this campaign tonight.** The suffix
+is not negotiable, so it is defended three ways: the directory name carries the
+real commit, every `.ok` sentinel carries `A058F737...` rather than SHIP-V4's
+`44C2F2CD...` so the seal contradicts the filename out loud, and a `README.txt`
+says so in its first sentence.
+
+V-GATHER changes one line:
+
+```python
+printcert.py:72   SEAL_DIR = r"C:\dev\strehl-out\acceptance\HEAD-d2193a55-sealshape"
+```
+
+## 13.7 Conclusion
+
+**The thirteen commits helped, and did not hurt anything measurable.** Zero
+regressions on all three axes over 26 subjects. Blotch and sharpness are
+essentially unmoved at the corpus median (0.9998, 1.0009), which is the "did
+nothing" ORCH expected -- but **fine grain improved on 17 of 26**, with two
+subjects 51-56% quieter while simultaneously 23-34% sharper.
+
+The consequence for the campaign is the one ORCH already anticipated: the
+**1 of 26 clean** verdict, and the 13 FAIL / 9 PASS rim split, were measured on
+`9b05d0b7`. They are verdicts on a binary that is 12,637 lines out of date, and
+they must be re-taken on this baseline before any of them is quoted again.
+
+## 13.8 The verifier's own commissioning found a check that could not fail
+
+`verify_s13.py` recomputes all 53 numeric claims in this section from
+`headscore.json` and returned **53/53 GREEN on its first clean run** -- which is
+also precisely the reading a verifier gives when it is checking nothing. So it
+was commissioned the same way every other instrument here is: `negctl_s13.py`
+plants defects into the document and requires each to be caught.
+
+**The first commissioning run was 8 of 9, and the miss was the most important row
+in the section.** Mutating
+
+```
+| **REGRESSED** | **0** | **0** | **0** |   ->   | **REGRESSED** | **0** | **1** | **0** |
+```
+
+still read GREEN. The check asked whether the string `0` appeared **anywhere in
+the line**, and a row of single digits satisfies `0` no matter which cell holds
+it. The claim that carries this entire section -- *zero regressions on any axis*
+-- was guarded by a test that could not go RED.
+
+The repair is positional: address the cell by column index and compare for
+equality rather than containment. Two further defects were added to prove the
+repair rather than assume it:
+
+* **D10 transposes** the UNCHANGED row's blotch and sharp counts (`24 21 9` ->
+  `21 24 9`). Both values remain present in the line, so every presence-based
+  check passes it trivially. It now trips **two** checks, which is the correct
+  count for a transposition.
+* **D11** breaks the TOTAL row, which is the claim that each column covers all
+  26 subjects.
+
+Final state: **53/53 GREEN, 11/11 planted defects caught**, document restored
+from a `$env:TEMP` copy rather than `git checkout --`.
+
+The general lesson is one this repository has now paid for twice: *a
+presence-based check is satisfied by any duplicate of the value it is looking
+for.* On four-decimal ratios that rarely bites. On a table of small integers it
+bites immediately, and it bites hardest on the summary rows -- which are exactly
+the rows a reader takes at face value.
