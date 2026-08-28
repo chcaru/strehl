@@ -16,7 +16,8 @@ marked as unmeasured.
 | --- | --- | --- |
 | **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
 | **Visual quality** | **24 of 26 masters clean to the eye at 1:1** | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
-| **Halo** (shipping/pyramid masters) | **0 visible, 0 demonstrated on any subject** | facts 1851–1855 |
+| **Halo** (shipping masters, 2–120 px) | **0 visible, 0 demonstrated on any subject** | facts 1851–1855 |
+| **Rim** (shipping masters, ±12 px) | **13 FAIL — a disjoint scale the halo work never reached; unscored by a second lane** | fact 1881 |
 | **Aura** (estimator vs pyramid) | estimator measures deeper in **17 of 17** conditioned readings; magnitude unknown | fact 1871 |
 | **Chroma** | **1 visible defect, diagnosed, fix specified, not landed** | facts 1861–1863, 1865 |
 | **Dust** | **2 real motes found; correction built, wired, tested, OFF by default** | fact 1856 |
@@ -104,7 +105,14 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    site 1's 0.999 tie is the single reading that could pull the verdict apart. Fact 1876.
 4. **Enable the dust correction in the delivered renders.** Built and OFF. Every delivered
    master currently carries both motes.
-5. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
+5. **Adjudicate the 13 tight-scale rim failures.** `rimv6` walks a contiguous ±12 px with its
+   reference inside the same profile and fails 13 of the SHIP-V4 **pyramid** masters — the
+   backend that ships. `halo_profile.py` walks 2–120 px against a 400–900 px reference, so the
+   two instruments are at **disjoint scales** and neither result touches the other. The 0-of-26
+   halo refutation therefore does **not** license a rim claim, and no second lane has scored
+   these 13. Until they are adjudicated the honest statement is *rim-unexamined at tight scale*,
+   not rim-clean. Fact 1881.
+6. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
    taken on output carrying an uncorrected corpus-wide CA error and two dust motes.
 
 ### 3.2 Important, not blocking
