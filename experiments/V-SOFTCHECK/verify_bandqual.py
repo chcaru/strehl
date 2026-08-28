@@ -101,6 +101,12 @@ CLAIMS = {
                   "**the surviving\ndeficits in section 5 are lower bounds, not point estimates.**"),
  "UNSETTLED":    ("blur vs noise-policy remains unseparated within the textured stratum",
                   "I\nstill cannot separate blur from a noise-policy difference"),
+ "VSIGN":        ("the master-vs-frame answer is band-dependent, not one number",
+                  "**Not as a single broadband number. The sign depends on spatial frequency.**"),
+ "VNOCI":        ("the deciding ceiling figure carries no confidence interval",
+                  "**It has no confidence interval and this lane is not going to supply one. NOT MEASURED.**"),
+ "VMAG":         ("the sign survives qualification but the magnitude does not",
+                  "**The sign of the original finding survives qualification; its magnitude does not.**"),
 }
 
 # each mutation flips a CONCLUSION (numbers intact) and must be caught BY ITS OWN CLAIM
@@ -132,6 +138,12 @@ MUTATIONS = [
                  "are upper bounds, not point estimates"),
  ("UNSETTLED",   "I still cannot separate blur from a noise-policy difference",
                  "I have now separated blur from a noise-policy difference"),
+ ("VSIGN",      "Not as a single broadband number. The sign depends on spatial frequency.",
+                "Yes, uniformly, at every spatial frequency measured."),
+ ("VNOCI",      "It has no confidence interval and this lane is not going to supply one. NOT MEASURED.",
+                "It has a confidence interval and this lane has supplied one. MEASURED."),
+ ("VMAG",       "The sign of the original finding survives qualification; its magnitude does not.",
+                "Both the sign and the magnitude of the original finding survive qualification."),
 ]
 
 def mutate(text, old, new):
