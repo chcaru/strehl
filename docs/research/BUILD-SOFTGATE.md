@@ -1,4 +1,4 @@
-# BUILD-SOFTGATE — the soft admission kernel is wired into the pyramid, the env channel now refuses a typo on both backends, and the kernel removes 3.0 % of depth softening: real, reproducible, and far too small to be the fix
+# BUILD-SOFTGATE — the soft admission kernel is wired into the pyramid, the env channel now refuses a typo on both backends, and the depth-softening score is WITHDRAWN as confounded by width
 
 **Facts, disciplines and open questions in this file are numbered LOCALLY as
 `F1, F2, …` per rule 28.** The orchestrator allocates absolute numbers at fold.
@@ -347,23 +347,57 @@ planted sharpening to **2.41×**. Both PASS.
 **F13 — MEASURED. Depth softening reproduces on this subject: every arm is
 negative.** The deeper stack is softer, consistent with fact 1843.
 
-**F14 — MEASURED. The Gaussian kernel removes 3.0 % of the depth softening on
-112MSDCF 39→79. The placebo removes 0.0 %.** The effect is real — it is about
-eight times the placebo's floor and the placebo is flat to six decimal places —
-and it is **far too small to be the fix**. A 3 % reduction in a defect that grows
-with N is not a remedy for a 299-frame capture.
+**F14 — WITHDRAWN AS A CONTROLLED SCORE. The 3.0 % is measured but
+uninterpretable, and fact 1918 is why.** The raw numbers stand and are
+reproducible from the harness: Gaussian removes **3.0 %** of the depth softening
+on 112MSDCF 39→79, placebo removes **0.0 %**. What does *not* stand is the
+inference that the kernel is therefore 3.0 % better.
 
-**F15 — MEASURED. The kernel does not reproduce the sign reversal that
-disqualified the previous candidate.** Fact 1844 measured the
-confidence-dependent exponent at **−44.6 %** on this exact subject and depth
-pair — it made the deeper case *worse*. The kernel is **+3.0 %** on the same
-measurement. That is the useful part of this result: candidate-set control is at
-least pointing the right way where exponent control pointed backwards, which is
-what fact 1844 predicted and had not been tested.
+Lane V-DILUTE measured that `Gate::tolerance()` is shared across kernels, so a
+hard-versus-soft comparison **at equal threshold is not a controlled comparison**:
+on `109MSDCF` the same calibrated T admits mean n_eff **4.674** under the hard
+gate against **19.295 of 22** under the Gaussian, with 79.2 % of the plane at
+n_eff ≥ 20. Holding the threshold fixed varies kernel *shape* and effective
+*width* together.
 
-**Read this as a near-null result, because that is what it is.** The honest
-summary is: the mechanism argued in F4 survives contact with measurement in
-*direction* and fails it in *magnitude*.
+That fact is measured on the estimator's `Gate`, and this lane's wiring is on the
+pyramid's `select_weight`, so the specific code path does not transfer. **The
+mechanism transfers exactly, and §2's own derivation predicts it.** Swapping
+`exp(−p·d)` for `exp(−½p²d²)` makes the kernel *flatter near d = 0* — that is
+precisely the "admits statistical ties" property F4 argues is the whole point —
+and a flatter kernel near the winner admits more frames. **Admitting more frames
+trivially reduces noise and trivially increases blur**, which is the dilution
+mechanism this project already knows about. This lane **never measured n_eff in
+any arm**, so it cannot separate the two.
+
+**The placebo does not rescue this, and it is important to say why.** The
+exponential placebo is algebraically the shipped weight (F4), so it has the *same*
+n_eff as shipping. It therefore controls for harness artefacts and for the wiring
+itself — which is what F9 and F10 use it for, and there it is sound — but it
+provides **no width control at all**, because the only arm whose width moved is
+the one arm it is not matched to.
+
+**What the next person must do to score this properly:** calibrate the Gaussian's
+temperature so its **mean n_eff matches the shipped kernel's on the same
+subject**, then compare at matched width. Scoring at equal `p` cannot answer the
+question no matter how many subjects it is run on. This lane did not do that
+calibration — it is a new experiment and the session was winding down — so per
+instruction it reports **no soft-versus-hard score**, rather than a clean-looking
+number that would have to be withdrawn later.
+
+**F15 — MEASURED, AND IT SURVIVES THE F14 WITHDRAWAL, WEAKLY.** Fact 1844
+measured the confidence-dependent exponent at **−44.6 %** on this exact subject
+and depth pair — it made the deeper case *worse*. This kernel is **+3.0 %** on
+the same measurement. The **sign** is the part that survives, because a width
+confound of the F14 kind plausibly explains a small positive number but does not
+explain away a **sign reversal** of that size. So the defensible claim is the
+weak one: candidate-set control does not reproduce the backwards result that
+disqualified exponent control. It is not evidence that it *works*.
+
+**Read this as a null result, because that is now what it is.** The honest
+summary: the mechanism argued in F4 survives contact with measurement in
+*direction*, fails it in *magnitude*, and **is not yet controlled for width at
+all**.
 
 ---
 
@@ -465,6 +499,40 @@ describes. They are correct as they stand and become wrong on landing.
    stating that the pyramid backend *validates* the kernel but does not *apply*
    it, naming the grep that falsifies it. Delete that paragraph when
    `enable_soft` stops reading **0** in the F16 census.
+
+5. **`selection_inflation` keys on a count that stops being integral under a soft
+   kernel, and landing the patch makes that live.** V-DILUTE measured it:
+   `fold_inner` skips only at weight ≤ 0 and increments `n` afterwards, so `n`
+   counts every frame that survives f32 underflow rather than every frame
+   meaningfully admitted. The n_eff ≤ 1 population — *the population the
+   correction exists to serve* — collapses from **3.936 % to 0.023 %**. The guard
+   still runs and still returns success on a domain emptied underneath it, which
+   is the failure mode this project keeps finding: a check that passes because its
+   input vanished. **Do not fix it while landing the soft kernel** — it is
+   mitigated twice over today, since `SELECTION_INFLATION` is 1.0 and both
+   branches return 1.0 — but do not be surprised by it, and do not read its
+   success as evidence.
+
+**D3 — DISCIPLINE. Do not flip another lane's gate on the strength of a claim
+about your own change; check whether your change actually made its premise
+false.** V-DILUTE's gate **G2 asserts that `STREHL_SOFT_GATE` changes nothing on
+the pyramid**, and this lane was asked to flip its polarity on the grounds that
+the wiring made that false. **It did not, and G2 was left alone.** The reason is
+F16: `enable_soft` greps to **0**, so the committed change validates the kernel
+without applying it. Concretely:
+
+| input | pyramid before | pyramid now | G2's assertion |
+|---|---|---|---|
+| `gaussian`, `exponential`, `off` | renders `C9A93201…` | renders `C9A93201…` | **still TRUE** |
+| `zzznope` | rc=0, renders | **rc=1 in 0.0 s** | false, for this input only |
+
+Flipping G2 wholesale would have asserted that the soft gate *changes pyramid
+output*, which is **false for every valid kernel name** — planting a green-looking
+lie in a commissioned harness owned by another lane. G2 is not in any file this
+lane owns (`grep '\bG2\b'` over `experiments/BUILD-SOFTGATE/` and
+`docs/research/BUILD-SOFTGATE.md` returns **nothing**). **When the `pyramid.rs`
+hunk lands, G2's premise genuinely becomes false and it should be flipped then**
+— gated on `enable_soft` reading 1, not on this report.
 4. Re-measure everything in §5 after the hand-merge against the other lane's
    work. The patch was built and measured against `ec96973d` only, and that lane
    is changing a default in the same weight loop.
