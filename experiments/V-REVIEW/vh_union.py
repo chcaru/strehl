@@ -3,8 +3,14 @@ spots, so the set no instrument can read is smaller than either alone.
 ORCH is about to write "residual risk is 11" into reports; this checks it.
 """
 import json
-tr = json.load(open(r"D:\strehl-out\V-REVIEW\halo\trunc2.json"))
-h3 = json.load(open(r"D:\strehl-out\V-REVIEW\halo\halo3.json"))
+import os as _os
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_REPO = _os.path.join(_HERE, "halo-data")
+_SCRATCH = r"D:\strehl-out\V-REVIEW\halo"
+# prefer the banked in-repo inputs; fall back to scratch if it still exists
+D = _REPO if _os.path.isdir(_REPO) else _SCRATCH
+tr = json.load(open(_os.path.join(D, "trunc2.json")))
+h3 = json.load(open(_os.path.join(D, "halo3.json")))
 subs = sorted(tr)
 prof_unscored, prof_partial, h3_unscored = set(), set(), set()
 for s in subs:

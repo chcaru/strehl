@@ -1,0 +1,40 @@
+halo = overshoot of near-silhouette background ABOVE its own far
+field, in DN of 65535. positive = bright rim = HALO.
+bump = largest decrease walking outward; 0 on a monotone (clean) ramp.
+penumbra = the subject's own out-of-focus transition. NOT a defect
+           statistic, carries no verdict, printed to describe the picture.
+threshold: halo if overshoot > 200 DN or bump > 200 DN
+
+subject                               overshoot     bump   penumbra  farfield  verdict
+----------------------------------------------------------------------------------------------
+109MSDCF.tiff                             -25.5      0.0   -14342.4     62441  clean
+112MSDCF.tiff                                 -        -          -         -  UNMEASURABLE -- far field only 0 px, need 1250 (subject reaches 167 px)
+113MSDCF.tiff                                 -        -          -         -  UNMEASURABLE -- far field only 0 px, need 1250 (subject reaches 181 px)
+119MSDCF.tiff                            +820.5      0.0   -13810.9     61741  *** HALO ***
+bee-1-cpl.tiff                          -3441.0      0.0   -18389.8     58667  clean
+bee-2-cpl.tiff                          -4306.9      0.0   -19256.7     60705  clean
+bee-3-cpl.tiff                          -4186.6      0.0   -19034.6     60606  clean
+coffee-bean.tiff                              -        -          -         -  UNMEASURABLE -- background not uniform: far field's own halves differ by 3659 DN (limit 3000)
+coffee-bubbles.tiff                           -        -          -         -  UNMEASURABLE -- backdrop too small (1.5% of frame)
+couch-fibers-cpl.tiff                   -5347.0      0.0    -9091.6     53149  clean
+dry-erase-marker-head-cpl.tiff          -1014.3      0.0   -10218.5     40417  clean
+flat-on-ruler-cpl.tiff                  +5680.4      0.0    -8368.5     45456  *** HALO ***
+flower-bud-alone-cpl.tiff                -471.0      0.0   -19942.7     61910  clean
+flower-bud-with-background-fern-cpl.tiff     -453.2      0.0   -16376.2     60315  clean
+flower-inner-edge-cpl.tiff                    -        -          -         -  UNMEASURABLE -- background not uniform: far field's own halves differ by 3147 DN (limit 3000)
+flowers-cpl.tiff                       -10841.7      0.0   -16774.4     58835  clean
+foam.tiff                                     -        -          -         -  UNMEASURABLE -- far field only 0 px, need 1250 (subject reaches 42 px)
+highly-angled-ruler-mm-cpl.tiff        -11603.9      0.0   -22189.3     55524  clean
+lavendar-cpl.tiff                        +350.9      0.0    -9023.3     51104  *** HALO ***
+lead-1-cpl.tiff                         +4446.8   9508.3    -9296.8     48286  *** HALO ***
+leaf-2-cpl.tiff                         +5721.4  10245.4    -8890.0     47537  *** HALO ***
+pencil-flatter-angle-cpl.tiff           -4499.7      0.0   -13212.4     55820  clean
+pencil-steep-angle-cpl.tiff            -11901.8      0.0   -19195.6     52695  clean
+tweezers-cpl.tiff                      -15519.0   1567.0   -21780.5     61948  *** HALO ***
+wrapped-text-1.tiff                           -        -          -         -  UNMEASURABLE -- no dominant silhouette: largest of 79 parts is 1.7% of frame (need 2%)
+wrapped-text-2.tiff                      -868.2      0.0   -15891.8     53916  clean
+----------------------------------------------------------------------------------------------
+partition: 13 clean, 6 HALO, 7 UNMEASURABLE, 26 total (found 26)
+An UNMEASURABLE subject is not a clean subject. It is one where the
+measurement is undefined because there is no silhouette to measure
+a rim against, and the reason is printed beside each.

@@ -1,0 +1,170 @@
+{
+ "109MSDCF": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -25.50390625,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "112MSDCF": {
+  "verdict": "UNMEASURABLE",
+  "used": 0,
+  "why": "far field only 0 px, need 1250 (subject reaches 167 px)"
+ },
+ "113MSDCF": {
+  "verdict": "UNMEASURABLE",
+  "used": 0,
+  "why": "far field only 0 px, need 1250 (subject reaches 181 px)"
+ },
+ "119MSDCF": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": 820.46875,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "bee-1-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -3441.03515625,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "bee-2-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -4306.9453125,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "bee-3-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -4186.57421875,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "coffee-bean": {
+  "verdict": "UNMEASURABLE",
+  "used": 0,
+  "why": "background not uniform: far field's own halves differ by 3659 DN (limit 3000)"
+ },
+ "coffee-bubbles": {
+  "verdict": "UNMEASURABLE",
+  "used": 0,
+  "why": "backdrop too small (1.5% of frame)"
+ },
+ "couch-fibers-cpl": {
+  "verdict": "MEASURED",
+  "used": 5,
+  "overshoot": -6830.28515625,
+  "bump": 0.0,
+  "deepest": "32-50"
+ },
+ "dry-erase-marker-head-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -1014.28515625,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "flat-on-ruler-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": 5680.43359375,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "flower-bud-alone-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -470.96484375,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "flower-bud-with-background-fern-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -453.19921875,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "flower-inner-edge-cpl": {
+  "verdict": "UNMEASURABLE",
+  "used": 0,
+  "why": "background not uniform: far field's own halves differ by 3147 DN (limit 3000)"
+ },
+ "flowers-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -10841.66796875,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "foam": {
+  "verdict": "UNMEASURABLE",
+  "used": 0,
+  "why": "far field only 0 px, need 1250 (subject reaches 42 px)"
+ },
+ "highly-angled-ruler-mm-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -11603.859375,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "lavendar-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": 350.9453125,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "lead-1-cpl": {
+  "verdict": "MEASURED",
+  "used": 4,
+  "overshoot": -2143.6796875,
+  "bump": 0.0,
+  "deepest": "20-32"
+ },
+ "leaf-2-cpl": {
+  "verdict": "MEASURED",
+  "used": 4,
+  "overshoot": -1808.578125,
+  "bump": 0.0,
+  "deepest": "20-32"
+ },
+ "pencil-flatter-angle-cpl": {
+  "verdict": "MEASURED",
+  "used": 5,
+  "overshoot": -7002.41796875,
+  "bump": 0.0,
+  "deepest": "32-50"
+ },
+ "pencil-steep-angle-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -11901.796875,
+  "bump": 0.0,
+  "deepest": "80-120"
+ },
+ "tweezers-cpl": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -15518.99609375,
+  "bump": 1567.015625,
+  "deepest": "80-120"
+ },
+ "wrapped-text-1": {
+  "verdict": "UNMEASURABLE",
+  "used": 0,
+  "why": "no dominant silhouette: largest of 79 parts is 1.7% of frame (need 2%)"
+ },
+ "wrapped-text-2": {
+  "verdict": "MEASURED",
+  "used": 7,
+  "overshoot": -868.21484375,
+  "bump": 0.0,
+  "deepest": "80-120"
+ }
+}

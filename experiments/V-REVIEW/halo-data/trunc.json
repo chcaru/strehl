@@ -1,0 +1,210 @@
+{
+ "109MSDCF": {
+  "verdict": "MEASURED",
+  "overshoot": -25.50390625,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "112MSDCF": {
+  "verdict": "UNMEASURABLE",
+  "overshoot": null,
+  "bump": null,
+  "nbands": 0,
+  "outer": "-",
+  "why": "far field only 0 px, need 1250 (subject reaches 167 px)"
+ },
+ "113MSDCF": {
+  "verdict": "UNMEASURABLE",
+  "overshoot": null,
+  "bump": null,
+  "nbands": 0,
+  "outer": "-",
+  "why": "far field only 0 px, need 1250 (subject reaches 181 px)"
+ },
+ "119MSDCF": {
+  "verdict": "MEASURED",
+  "overshoot": 820.46875,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "bee-1-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -3441.03515625,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "bee-2-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -4306.9453125,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "bee-3-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -4186.57421875,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "coffee-bean": {
+  "verdict": "UNMEASURABLE",
+  "overshoot": null,
+  "bump": null,
+  "nbands": 0,
+  "outer": "-",
+  "why": "background not uniform: far field's own halves differ by 3659 DN (limit 3000)"
+ },
+ "coffee-bubbles": {
+  "verdict": "UNMEASURABLE",
+  "overshoot": null,
+  "bump": null,
+  "nbands": 0,
+  "outer": "-",
+  "why": "backdrop too small (1.5% of frame)"
+ },
+ "couch-fibers-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -6830.28515625,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "dry-erase-marker-head-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -1014.28515625,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "flat-on-ruler-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": 5680.43359375,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "flower-bud-alone-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -470.96484375,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "flower-bud-with-background-fern-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -453.19921875,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "flower-inner-edge-cpl": {
+  "verdict": "UNMEASURABLE",
+  "overshoot": null,
+  "bump": null,
+  "nbands": 0,
+  "outer": "-",
+  "why": "background not uniform: far field's own halves differ by 3147 DN (limit 3000)"
+ },
+ "flowers-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -10841.66796875,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "foam": {
+  "verdict": "UNMEASURABLE",
+  "overshoot": null,
+  "bump": null,
+  "nbands": 0,
+  "outer": "-",
+  "why": "far field only 0 px, need 1250 (subject reaches 42 px)"
+ },
+ "highly-angled-ruler-mm-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -11603.859375,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "lavendar-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": 350.9453125,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "lead-1-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -2143.6796875,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "leaf-2-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -1808.578125,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "pencil-flatter-angle-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -7002.41796875,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "pencil-steep-angle-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -11901.796875,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "tweezers-cpl": {
+  "verdict": "MEASURED",
+  "overshoot": -15518.99609375,
+  "bump": 1567.015625,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ },
+ "wrapped-text-1": {
+  "verdict": "UNMEASURABLE",
+  "overshoot": null,
+  "bump": null,
+  "nbands": 0,
+  "outer": "-",
+  "why": "no dominant silhouette: largest of 79 parts is 1.7% of frame (need 2%)"
+ },
+ "wrapped-text-2": {
+  "verdict": "MEASURED",
+  "overshoot": -868.21484375,
+  "bump": 0.0,
+  "nbands": 7,
+  "outer": "80-120",
+  "why": ""
+ }
+}

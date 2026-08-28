@@ -10,7 +10,12 @@ Exit 0 = GREEN. Non-zero = the report disagrees with the measurements.
 import io, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-D = r"D:\strehl-out\V-REVIEW\halo"
+import os as _os
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_REPO = _os.path.join(_HERE, "halo-data")
+_SCRATCH = r"D:\strehl-out\V-REVIEW\halo"
+# prefer the banked in-repo inputs; fall back to scratch if it still exists
+D = _REPO if _os.path.isdir(_REPO) else _SCRATCH
 FP = os.path.join(HERE, "HALO-falsepositive.md")
 RS = os.path.join(HERE, "HALO-residual.md")
 

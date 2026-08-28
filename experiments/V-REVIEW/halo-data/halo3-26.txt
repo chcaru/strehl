@@ -1,0 +1,38 @@
+halo3: median over-plateau excursion along the outward edge normal.
+Each edge is scored against ITS OWN plateau, so penumbra depth cancels.
+UNSCORED is NOT a pass: the instrument could not look.
+
+subject                              verdict   overshoot noisefloor   at px   edges  note
+------------------------------------------------------------------------------------------------------------
+109MSDCF                             CLEAN          54.8      53.2     139    1568  width 48 px
+112MSDCF                             UNSCORED          -         -       -       -  only 2 of 4000 normals stay in open background for 200 px; the silhouette has no clear run to measure against
+113MSDCF                             UNSCORED          -         -       -       -  only 4 of 4000 normals stay in open background for 200 px; the silhouette has no clear run to measure against
+119MSDCF                             CLEAN          76.7      47.0     131    1555  width 23 px
+bee-1-cpl                            CLEAN         256.1     135.8     105     674  width 7 px
+bee-2-cpl                            CLEAN         108.4     108.4     169     849  width 11 px
+bee-3-cpl                            CLEAN          92.7      81.1      49     842  width 5 px
+coffee-bean                          CLEAN        1098.9     576.4     110    2434  width 53 px
+coffee-bubbles                       UNSCORED          -         -       -       -  backdrop too small (1.5% of frame)
+couch-fibers-cpl                     UNSCORED          -         -       -       -  only 162 of 4000 normals stay in open background for 200 px; the silhouette has no clear run to measure against
+dry-erase-marker-head-cpl            CLEAN          16.3      14.4     128    1570  width 2 px
+flat-on-ruler-cpl                    CLEAN         437.5     437.5     163     826  width 9 px
+flower-bud-alone-cpl                 CLEAN          17.6      17.6     184    2720  width 4 px
+flower-bud-with-background-fern-cpl  CLEAN         178.4     106.5     105     916  width 92 px
+flower-inner-edge-cpl                CLEAN         163.2     132.7     136    1355  width 3 px
+flowers-cpl                          CLEAN          17.6      17.6     181    1894  width 2 px
+foam                                 UNSCORED          -         -       -       -  only 0 of 4000 normals stay in open background for 200 px; the silhouette has no clear run to measure against
+highly-angled-ruler-mm-cpl           CLEAN          19.4      19.4     195    2564  width 2 px
+lavendar-cpl                         HALO         1410.0     610.4      65     404  width 20 px
+lead-1-cpl                           UNSCORED          -         -       -       -  only 140 of 4000 normals stay in open background for 200 px; the silhouette has no clear run to measure against
+leaf-2-cpl                           UNSCORED          -         -       -       -  only 113 of 4000 normals stay in open background for 200 px; the silhouette has no clear run to measure against
+pencil-flatter-angle-cpl             UNSCORED          -         -       -       -  only 166 of 4000 normals stay in open background for 200 px; the silhouette has no clear run to measure against
+pencil-steep-angle-cpl               CLEAN         439.1     439.1     160     733  width 40 px
+tweezers-cpl                         CLEAN           0.0       0.0       0     510  width 0 px
+wrapped-text-1                       CLEAN         395.4     395.4     158     980  width 8 px
+wrapped-text-2                       CLEAN         233.4     233.4     147    1195  width 2 px
+
+PARTITION (must sum to 26)
+  HALO      1
+  CLEAN     17
+  UNSCORED  8
+  total     26

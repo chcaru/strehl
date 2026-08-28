@@ -17,8 +17,14 @@ import io, json, os, shutil, subprocess, sys, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 FP = os.path.join(HERE, "HALO-falsepositive.md")
 RS = os.path.join(HERE, "HALO-residual.md")
-BJ = r"D:\strehl-out\V-REVIEW\halo\blind.json"
-TJ = r"D:\strehl-out\V-REVIEW\halo\trunc2.json"
+import os as _os
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_REPO = _os.path.join(_HERE, "halo-data")
+_SCRATCH = r"D:\strehl-out\V-REVIEW\halo"
+# prefer the banked in-repo inputs; fall back to scratch if it still exists
+D = _REPO if _os.path.isdir(_REPO) else _SCRATCH
+BJ = _os.path.join(D, "blind.json")
+TJ = _os.path.join(D, "trunc2.json")
 TMP = tempfile.mkdtemp(prefix="vhcom_")
 for f in (FP, RS, BJ, TJ):
     shutil.copy2(f, os.path.join(TMP, os.path.basename(f)))

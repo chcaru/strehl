@@ -1,0 +1,40 @@
+halo = overshoot of near-silhouette background ABOVE its own far
+field, in DN of 65535. positive = bright rim = HALO.
+bump = largest decrease walking outward; 0 on a monotone (clean) ramp.
+penumbra = the subject's own out-of-focus transition. NOT a defect
+           statistic, carries no verdict, printed to describe the picture.
+threshold: halo if overshoot > 200 DN or bump > 200 DN
+
+subject                               overshoot     bump   penumbra  farfield  verdict
+----------------------------------------------------------------------------------------------
+109MSDCF.tiff                             +58.5      0.0   -14258.4     62356  clean
+112MSDCF.tiff                                 -        -          -         -  UNMEASURABLE -- far field only 0 px within the dominant part's cell, need 1250 (subject reaches 167 px)
+113MSDCF.tiff                                 -        -          -         -  UNMEASURABLE -- far field only 0 px within the dominant part's cell, need 1250 (subject reaches 181 px)
+119MSDCF.tiff                            -307.4      0.0   -14938.8     62869  clean
+bee-1-cpl.tiff                          -2703.1      0.0   -17651.9     57929  clean
+bee-2-cpl.tiff                          -2477.0      0.0   -17426.8     58875  clean
+bee-3-cpl.tiff                          -3354.3      0.0   -18202.3     59774  clean
+coffee-bean.tiff                        -5573.8      0.0   -19937.2     57812  clean
+coffee-bubbles.tiff                           -        -          -         -  UNMEASURABLE -- backdrop too small (1.5% of frame)
+couch-fibers-cpl.tiff                         -        -          -         -  UNMEASURABLE -- far field only 0 px within the dominant part's cell, need 1250 (subject reaches 538 px)
+dry-erase-marker-head-cpl.tiff           +506.4      0.0    -8697.8     38896  *** HALO ***
+flat-on-ruler-cpl.tiff                  +5187.4      0.0    -8861.5     45949  *** HALO ***
+flower-bud-alone-cpl.tiff                -439.5      0.0   -19911.3     61878  clean
+flower-bud-with-background-fern-cpl.tiff     +398.1      0.0   -15524.9     59464  *** HALO ***
+flower-inner-edge-cpl.tiff                    -        -          -         -  UNMEASURABLE -- background not uniform: far field's own halves differ by 3361 DN (limit 3000)
+flowers-cpl.tiff                              -        -          -         -  UNMEASURABLE -- far field only 1169 px within the dominant part's cell, need 1250 (subject reaches 1114 px)
+foam.tiff                                     -        -          -         -  UNMEASURABLE -- far field only 0 px within the dominant part's cell, need 1250 (subject reaches 42 px)
+highly-angled-ruler-mm-cpl.tiff         -7017.5      0.0   -17602.9     50938  clean
+lavendar-cpl.tiff                        -876.1      0.0   -10250.3     52331  clean
+lead-1-cpl.tiff                               -        -          -         -  UNMEASURABLE -- far field only 0 px within the dominant part's cell, need 1250 (subject reaches 1766 px)
+leaf-2-cpl.tiff                               -        -          -         -  UNMEASURABLE -- far field only 1101 px within the dominant part's cell, need 1250 (subject reaches 1770 px)
+pencil-flatter-angle-cpl.tiff           -4106.8      0.0   -12819.6     55427  clean
+pencil-steep-angle-cpl.tiff            -11538.2      0.0   -18831.9     52332  clean
+tweezers-cpl.tiff                      -15545.2   1567.0   -21806.8     61974  *** HALO ***
+wrapped-text-1.tiff                           -        -          -         -  UNMEASURABLE -- no dominant silhouette: largest of 79 parts is 1.7% of frame (need 2%)
+wrapped-text-2.tiff                     -2062.1      0.0   -17085.8     55110  clean
+----------------------------------------------------------------------------------------------
+partition: 12 clean, 4 HALO, 10 UNMEASURABLE, 26 total (found 26)
+An UNMEASURABLE subject is not a clean subject. It is one where the
+measurement is undefined because there is no silhouette to measure
+a rim against, and the reason is printed beside each.
