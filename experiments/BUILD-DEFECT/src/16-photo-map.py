@@ -162,10 +162,35 @@ def main():
     ]
 
     L = [
-        "strehl-defect-map 1",
+        "strehl-defect-map 2",
         f"camera {CAMERA}",
         f"sensor {SENSOR_W} {SENSOR_H}",
         f"covered {COVERED_W} {COVERED_H}",
+        # THE COORDINATE SPACE, WHICH IS NOT A GUESS.
+        #
+        # v1 of this format did not say which array its coordinates index, and
+        # the loader at HEAD refuses a v1 map for exactly that reason: a map
+        # applied at the wrong origin is off by the optical-black border and
+        # nothing downstream can see it. Building the module's self-validation,
+        # a script read `raw_image` where the map had been measured on
+        # `raw_image_visible` and reported this sensor's dust as **+54.8%** --
+        # a dark mote read as a bright spot, caught only because the sign was
+        # absurd.
+        #
+        # These coordinates are `active` because THIS SCRIPT'S OWN INPUT SAYS
+        # SO, not because active is the usual answer. The pooled residual comes
+        # from out/15-stacks.npz, written by 15-corner-commissioned.py, whose
+        # decode is `quad_mean(raw.raw_image_visible, black)` at line 182. The
+        # coordinates below index that array and no other. The geometry lines
+        # agree independently: `covered` is 7028 wide, which is rawpy's visible
+        # width, not rawler's 7032-column active buffer.
+        #
+        # This reasoning is ALSO emitted into the map itself, below, because the
+        # map is the artifact that travels and a file that does not carry its
+        # own provenance gets re-adopted by whoever finds it next. See
+        # BUILD-DEFECT.md 23.2 for the discriminating control -- rendering the
+        # same subject under `coords full` and reading the binary's verdicts.
+        "coords active",
         f"aperture {APERTURE}",
         f"# built {time.strftime('%Y-%m-%dT%H:%M:%S')} by experiments/BUILD-DEFECT/src/16-photo-map.py",
         "# hot: carried verbatim from defect-map-ILCE-7CM2.txt (242 darks, 11 ISO",
@@ -185,6 +210,13 @@ def main():
         f"# dust: every component clears a 400-draw local null at p <= {P_BAR}.",
         f"# geometry: rawler active {SENSOR_W}x{SENSOR_H}; rawpy visible {COVERED_W}x{COVERED_H}.",
         "# geometry: the last 4 sensor columns are UNMEASURED, not clean.",
+        "# coords: ACTIVE -- these quads index rawpy's raw_image_visible, the",
+        "# coords: array 15-corner-commissioned.py line 182 actually decoded",
+        "# coords: (`quad_mean(raw.raw_image_visible, black)`). Not inferred from",
+        "# coords: convention: a v1 map omitted this key, and applying a map at",
+        "# coords: the wrong origin read this sensor's dust as +54.8% -- a dark",
+        "# coords: mote as a bright spot -- caught only because the sign was",
+        "# coords: absurd. `covered` being 7028 and not 7032 agrees independently.",
     ]
     for e in emitted:
         c = e["core"]

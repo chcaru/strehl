@@ -1,0 +1,73 @@
+{
+ "subject": "D:\\personal\\macro\\109MSDCF",
+ "frames": 2,
+ "verdict": "BLIND -- both arms confirmed 2 sites at identical depths. `coords` changes nothing measurable on this subject; the `active` choice is UNFALSIFIED, not confirmed.",
+ "arms": {
+  "active": {
+   "space": "active",
+   "exit": 0,
+   "declared_coords": [
+    "coords active"
+   ],
+   "summary": {
+    "confirmed": 2,
+    "total": 2,
+    "frames": 2,
+    "not_significant": 0,
+    "too_shallow": 0,
+    "not_stationary": 0,
+    "unmeasurable": 0
+   },
+   "sites": [
+    {
+     "x": 3202,
+     "y": 119,
+     "depth_pct": -7.627,
+     "p": 0.0025,
+     "verdict": "CORRECT"
+    },
+    {
+     "x": 3434,
+     "y": 2305,
+     "depth_pct": -16.942,
+     "p": 0.0025,
+     "verdict": "CORRECT"
+    }
+   ],
+   "map_path": "C:\\Users\\chris\\AppData\\Local\\Temp\\86-map-coords-active.txt"
+  },
+  "full": {
+   "space": "full",
+   "exit": 0,
+   "declared_coords": [
+    "coords full"
+   ],
+   "summary": {
+    "confirmed": 2,
+    "total": 2,
+    "frames": 2,
+    "not_significant": 0,
+    "too_shallow": 0,
+    "not_stationary": 0,
+    "unmeasurable": 0
+   },
+   "sites": [
+    {
+     "x": 3202,
+     "y": 119,
+     "depth_pct": -7.627,
+     "p": 0.0025,
+     "verdict": "CORRECT"
+    },
+    {
+     "x": 3434,
+     "y": 2305,
+     "depth_pct": -16.942,
+     "p": 0.0025,
+     "verdict": "CORRECT"
+    }
+   ],
+   "map_path": "C:\\Users\\chris\\AppData\\Local\\Temp\\86-map-coords-full.txt"
+  }
+ }
+}

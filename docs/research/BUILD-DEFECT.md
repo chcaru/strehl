@@ -3596,3 +3596,259 @@ afternoon, none of which the passing first run would have revealed.
 | `experiments/BUILD-DEFECT/out/83-audit.log` | 8 probes = 8 caught + 0 blind + 0 unanchored + 0 ambiguous |
 | `experiments/BUILD-DEFECT/src/84-audit-conclusions-all.py` | Audits all four section verifiers through their shipped entry points; commissions each exit code 2x2 first |
 | `experiments/BUILD-DEFECT/out/84-audit-all.log` | 10 probes = 10 caught; 9 deletions = 9 caught; document restored byte-identical |
+
+## 23. THE INTEGRATED RENDER: A FIX THAT WAS BUILT, WIRED, TESTED, AND UNREACHABLE
+
+The assignment was to own the integrated final render end to end: one
+reproducible command that renders the corpus with every landed fix enabled, a
+per-subject manifest recording what was actually active, a reproduction command
+that reproduces, per-subject defect accounting, and a loud failure if a fix the
+run was told to enable is not reachable in the binary doing the rendering.
+
+The last of those was expected to be the cheapest item. It found the largest
+defect in this section, before a single master was rendered.
+
+### 23.1 The shipping map could not be loaded by the shipping binary
+
+The preflight's first act is a positive control: apply the whole recipe intact
+and require the binary to render. It did not render. It failed in 1.0 s with
+
+```
+Error: loading the defect map ...\out\defect-map-ILCE-7CM2-photo.txt
+Caused by:
+    unsupported defect map version 1 (this build understands 2)
+```
+
+`defect_map.rs` bumped the sidecar format to `VERSION = 2` and made the loader
+**refuse** a v1 map, deliberately: v1 does not record which raw array its
+coordinates index, and a map applied at the wrong origin is displaced by the
+optical-black border with no downstream symptom. The refusal is correct. But
+the only canonical map on disk was written as v1 by `16-photo-map.py`, and
+nothing had moved it.
+
+**So at HEAD the sensor defect correction was not merely off by default. It was
+unreachable.** Any operator who set `STREHL_DEFECT=on` got an error, not a
+correction. The arm this lane built, wired, tested and byte-froze could not have
+been switched on by anyone, and the report said it was ready.
+
+Nothing detected this because nothing had ever run the two together. The unit
+tests build their maps inline from the `{MAGIC} {VERSION}` constants, so those
+fixtures moved with the bump and could not notice that the artifact had not.
+The general form is worth more than the instance:
+
+> **A test that constructs its own input at the current version cannot detect
+> that the shipping input is at an older one.** The fixture and the code move
+> together. The artifact does not move with them. Only loading the real file
+> finds it, and only a preflight that runs before the render finds it in time
+> for the finding to be free.
+
+This is the same shape as the flats map that had to be headered `SUPERSEDED`:
+an artifact that does not travel with the code that reads it drifts out from
+under it silently.
+
+### 23.2 The coordinate key is real in code and inert on this path
+
+`85-map-v2.py` upgrades the map rather than re-deriving it. Re-deriving was not
+possible -- `out/15-stacks.npz` was deleted in the disk reclamation -- and was
+not desirable either: it would rebuild the map's *contents*, and every number in
+section 16 is quoted against the file that exists. So the script changes a
+header key and proves it changed nothing else. Every `h`/`d` record must be
+byte-identical **in order**, the declared counts must still equal the records
+that follow them, and the diff must be exactly the intended lines, counted. It
+writes nothing if any of that fails.
+
+Measured: `15789 -> 15797` lines, `+8` (one `coords` key, seven provenance
+comments), payload `15764 records, byte-identical, order preserved`, hot
+`declared 14626, records 14626`, dust `declared 1135, records 1135`. The v1 file
+is kept beside it as `defect-map-ILCE-7CM2-photo.v1-superseded-*.txt`.
+
+The key's value is `active`, and it is read off provenance rather than
+convention: `16-photo-map.py` builds from `15-stacks.npz`, which
+`15-corner-commissioned.py:182` writes as `quad_mean(raw.raw_image_visible,
+black)`, and `raw_image_visible` *is* the active area. The map's own `covered
+7028` agrees independently -- that is rawpy's visible width, not rawler's 7032.
+
+That is evidence, not proof, so `86-coords-control.py` asks the binary. It
+renders the same subject under `coords active` and `coords full` and reads the
+loader's own per-site verdicts. **The result is BLIND:**
+
+| arm | confirmed | site (3202,119) | site (3434,2305) |
+| --- | --- | --- | --- |
+| `coords active` | 2/2 | depth -7.627%, p 0.0025 | depth -16.942%, p 0.0025 |
+| `coords full` | 2/2 | depth -7.627%, p 0.0025 | depth -16.942%, p 0.0025 |
+
+Identical to the digit. The mechanism is visible in the code:
+`CoordSpace::Active => (ax, ay)` and `Full => (0, 0)`, so the two branches
+coincide exactly when the decoder's active-rect origin is already `(0, 0)`,
+which on this decode path it is. The identical outputs *are* the measurement of
+that.
+
+**Stated honestly: on this body and this decoder the `coords` key changes
+nothing measurable, so `active` is UNFALSIFIED, not confirmed.** The key is
+still right to require -- it would bite on a decoder that hands back the full
+buffer, which is exactly the case that produced the +54.8% error -- but the
+protection it advertises is not currently being exercised, and this section
+does not get to claim the control passed.
+
+The first run of that control reported "both arms identical, 2/2 confirmed"
+while comparing the map **to itself**: the PowerShell `-replace` had not landed
+and both arms were handed `coords active`. It was caught only because the arm
+printed its own `coords` line back. The rewritten control counts the
+substitution, requires exactly one, re-reads the written file, and exits without
+running an arm if the mutation is not present on disk. An inert plant and a dead
+instrument give the identical green; this one gave it in the friendliest
+possible way, on the very control whose job was to be sceptical.
+
+### 23.3 Eight variables the harness swore it cleared, and did not
+
+`finalpass.ps1` cleared a hand-typed list of 15 environment variables under a
+comment reading *"this list mirrors byte-freeze.rs's RENDER_ENV"*. `RENDER_ENV`
+holds **23**. The comment was false and had been for some time.
+
+The eight never cleared: `STREHL_GATE_FLOOR`, `STREHL_DEFECT`,
+`STREHL_DEFECT_MAP`, `STREHL_DEFECT_ARM`, `STREHL_DEFECT_HOT_FLOOR`,
+`STREHL_ACUITY`, `STREHL_FULLRES_GATHER`, `STREHL_PHOTOMETRIC`. Zero were
+cleared that are not in `RENDER_ENV`, so this was a pure omission, not a drift
+in both directions.
+
+That set includes `STREHL_FULLRES_GATHER`, which the byte-freeze registry's own
+note describes as selecting *"what every output pixel is interpolated FROM"*,
+and all four defect variables -- which means the provenance sidecars of the 26
+delivered masters cannot rule out an ambient `STREHL_DEFECT` having been set in
+the shell that rendered them. It is the `STREHL_ALIGN=0` defect that file's
+header documents, committed a third time, in the file whose entire job is
+provenance.
+
+The repair is not a longer list. A duplicated list is a claim that must be
+re-checked by hand whenever somebody edits the original, and this one stopped
+being true without a sound. `Get-RenderEnv` now **parses** `RENDER_ENV` out of
+`byte-freeze.rs` and the harness refuses to render if it recovers fewer than 15
+names, on the standing principle that a partial guard reports the same
+confidence as a whole one. Measured after the change: 23 names parsed, all eight
+now cleared.
+
+### 23.4 Liveness: two measurements that break the obvious probe
+
+The requirement was to generalise `STREHL_DEFECT_ARM="dsut"` -> exit 1 into a
+check that refuses to render when a fix is unreachable. The obvious
+implementation -- set the variable to nonsense, require a non-zero exit -- is
+wrong twice, and both failures were measured rather than reasoned about.
+
+**A non-zero exit is not evidence.** With `STREHL_DEFECT_ARM="dsut"` set and a
+nonexistent subject directory, the binary exits **1** in 0.45 s with
+`Error: reading C:\no-such-dir-xyz`. The arm was never parsed. A probe testing
+only the exit code passes on a dead variable, with a message about something
+else entirely. So the probe uses a real subject and requires the failure text to
+**quote the sentinel value back**; echoing the value is what proves the parse
+was reached.
+
+**The original pattern is conditional.** `STREHL_DEFECT_ARM="dsut"` on a real
+subject with `STREHL_DEFECT` unset exits **0** and renders normally, in 31.5 s.
+The arm is only parsed once the master switch is on. A probe that varied one
+variable at a time would therefore have declared `STREHL_DEFECT_ARM` dead on a
+binary where it is perfectly alive. Each probe applies the **whole** recipe and
+corrupts exactly one entry.
+
+The detector is commissioned in both directions, per run:
+
+| control | requirement | measured |
+| --- | --- | --- |
+| positive | the intact recipe must render | exit 0 |
+| negative | `STREHL_NOT_A_REAL_VARIABLE`, corrupted identically, must read NOT LIVE | NOT LIVE |
+| `STREHL_DEFECT` | must be rejected, quoting the value | LIVE, exit 1 |
+| `STREHL_DEFECT_MAP` | must be rejected, quoting the value | LIVE, exit 1 |
+| `STREHL_DEFECT_ARM` | must be rejected, quoting the value | LIVE, exit 1 |
+
+`3 of 3 live, 0 dead`. Without the negative arm, a probe that always answered
+LIVE would be indistinguishable from three genuinely reachable switches.
+
+### 23.5 The reproduction command now carries the environment, and it is tested
+
+The sidecar's `RESOLVED SWITCH STATE` block has said for weeks that
+*"environment variables never appear in argv however they are set"*. The
+reproduction line was the one place in the file that had not acted on it: it
+printed the flags alone. That was harmless only while the harness set nothing.
+The moment `-Fixes ship` exports `STREHL_DEFECT`, an argv-only command
+reproduces a **different image** -- the uncorrected one -- while claiming to be
+exact.
+
+The command now emits both halves: clear all 23 `RENDER_ENV` names (from the
+same parse the harness itself uses, so it cannot drift from what ran), then set
+exactly the recipe entries applied. A `-Fixes none` run prints *"this render
+applied NO switches; set nothing"*, so an empty environment reads as a positive
+statement rather than an omission.
+
+This is the third time this project has had to fix this line, so it is not
+verified by reading it. `87-repro-reproduces.ps1` extracts the block a naive
+user would copy, executes it, and compares **bytes**. The negative control runs
+first and must fail:
+
+| subject | original | ARGV-ONLY (old contract) | VERBATIM (new) | verdict |
+| --- | --- | --- | --- | --- |
+| `coffee-bubbles` | `47FBD1BB4CCB…` | `D73BFBB52566…` DIFFERS | `47FBD1BB4CCB…` identical | PASS |
+| `109MSDCF` | `E67FD38A12DF…` | `389C2FF769F1…` DIFFERS | `E67FD38A12DF…` identical | PASS |
+
+`2 masters = 2 pass + 0 fail + 0 inconclusive`. The control biting on both
+subjects is what earns the green: it proves the test could have failed, and it
+independently demonstrates that the dust correction is **not inert** -- with and
+without it, the same subject renders to different bytes.
+
+### 23.6 Per-subject defect accounting, counted so a zero is readable
+
+The manifest and sidecar carry the binary's own partition verbatim rather than a
+summary of it, because `corrected 0` and `examined 0` are different facts.
+`coffee-bubbles`, measured:
+
+```
+sites           : 1/2 sites confirmed from 8 frames (not significant 1, too shallow 0, not stationary 0, unmeasurable 0)
+site ( 3202,  119): depth  -9.468% (map -3.606%), p 0.0075 -> skip: not significant here
+site ( 3434, 2305): depth -12.606% (map -8.236%), p 0.0025 -> CORRECT at scale 1.568
+defect map      : 14626 hot, 652 dust quads, arms dust
+hot             : examined 0, corrected 0, below floor 0, clipped 0, outside 0, no change 0
+dust            : examined 12388, corrected 12388, clipped 0, outside 0, no change 0
+samples changed : 49551 over 19 frame loads (2607.9 per frame)
+```
+
+Two things in that block are worth reading twice. The map declares 1135 dust
+quads and the run used **652**: the self-validation refused site (3202,119) on
+this subject, and 1135 = 652 + 483 is that refusal, on the record. And
+`hot: examined 0` is a genuine zero with a stated cause -- the arm ships off --
+which the sidecar distinguishes explicitly from a correction that did not run.
+Where no partition is printed at all, the sidecar says `NOT APPLIED` rather than
+showing zeros.
+
+### 23.7 What is ready, and what is not
+
+Ready, validated on two subjects end to end: `-Fixes ship` as a single declared
+recipe driving the environment, the manifest, the sidecar and the reproduction
+command from one table; a commissioned liveness preflight that refuses to render
+an unreachable fix; a `.manifest.json` beside every master carrying binary
+hash, git commit, map path **and map hash**, the arm of every recipe switch,
+and the defect partition; and a reproduction command proven by bytes.
+
+Not done, deliberately: the corpus has **not** been re-rendered. Lanes are still
+landing merge changes and the binary will move.
+
+One flag for the orchestrator. `cargo test --test byte-freeze` currently fails
+on the row `coffee-bean-20-gate2-sidecar` (expected `52517FF8…`, actual
+`E600A506…`). **It is not this lane's.** This lane's diff contains no Rust at
+all; `crates/strehl-core/src/optics.rs` is uncommitted-modified by another lane
+and was written at 23:50:29, three minutes before the binary under test was
+built at 23:53:58. The defect map cannot be implicated either: `byte-freeze.rs`
+removes every `RENDER_ENV` name before rendering, and `STREHL_DEFECT` and
+`STREHL_DEFECT_MAP` are both in that list, so the freeze never loads a map. The
+specificity control agrees -- `coffee-bean-20-gate2-unaligned` **HOLDS**,
+reproduced twice. The registry has not been re-baselined; it is not this lane's
+file.
+
+### 23.8 Evidence
+
+| Artifact | What it holds |
+| --- | --- |
+| `scripts/finalpass.ps1` | `Get-RenderEnv`, `$ShipRecipe`, `Assert-RecipeIsLive`, the env-carrying repro line, `.manifest.json` |
+| `experiments/BUILD-DEFECT/src/85-map-v2.py` | v1 -> v2 upgrade proving the payload byte-identical; `--check` re-verifies on disk |
+| `experiments/BUILD-DEFECT/src/86-coords-control.py` | `coords active` vs `full`; hard-errors if the mutation does not land |
+| `experiments/BUILD-DEFECT/data/86-coords-control.json` | BLIND: both arms 2/2 at identical depths |
+| `experiments/BUILD-DEFECT/src/87-repro-reproduces.ps1` | Executes the printed command; negative control runs first and must differ |
+| `experiments/BUILD-DEFECT/out/87-repro-reproduces.json` | 2 masters = 2 pass + 0 fail + 0 inconclusive |
+| `experiments/BUILD-DEFECT/out/defect-map-ILCE-7CM2-photo.txt` | The v2 shipping map, `AD5769CD46F1…` |

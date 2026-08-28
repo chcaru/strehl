@@ -1,7 +1,8 @@
-strehl-defect-map 1
+strehl-defect-map 2
 camera ILCE-7CM2
 sensor 7032 4688
 covered 7028 4688
+coords active
 aperture 5.6
 # built 2026-08-27T01:47:56 by experiments/BUILD-DEFECT/src/16-photo-map.py
 # hot: carried verbatim from defect-map-ILCE-7CM2.txt (242 darks, 11 ISO
@@ -21,6 +22,13 @@ aperture 5.6
 # dust: every component clears a 400-draw local null at p <= 0.0025.
 # geometry: rawler active 7032x4688; rawpy visible 7028x4688.
 # geometry: the last 4 sensor columns are UNMEASURED, not clean.
+# coords: ACTIVE -- these quads index rawpy's raw_image_visible, the
+# coords: array 15-corner-commissioned.py line 182 actually decoded
+# coords: (`quad_mean(raw.raw_image_visible, black)`). Not inferred from
+# coords: convention: a v1 map omitted this key, and applying a map at
+# coords: the wrong origin read this sensor's dust as +54.8% -- a dark
+# coords: mote as a bright spot -- caught only because the sign was
+# coords: absurd. `covered` being 7028 and not 7032 agrees independently.
 # mote: 483 quads at quad (3202,121), core -3.6303%, p=0.0025, nominated by flats at (3192,109) (3210,136) (3209,116)
 # mote: 652 quads at quad (3434,2305), core -8.2359%, p=0.0025, nominated by flats at (3440,2281)
 hot 14626

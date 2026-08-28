@@ -1,0 +1,11 @@
+{
+  "Subject": "109MSDCF--ship-validate",
+  "Original": "E67FD38A12DF52B7A62D48ECC6BDF10F610846DF5929D446D4DA4477AA31F1FD",
+  "ArgvOnlySha": "389C2FF769F1343B973B28C4706838CEFD8E956A70218B81B02E96FC105521F0",
+  "ArgvOnlyExit": 0,
+  "ArgvOnlyDiffers": true,
+  "VerbatimSha": "E67FD38A12DF52B7A62D48ECC6BDF10F610846DF5929D446D4DA4477AA31F1FD",
+  "VerbatimExit": 0,
+  "VerbatimMatches": true,
+  "Verdict": "PASS -- reproduces byte-for-byte, and the control proves the test could have failed"
+}

@@ -97,6 +97,24 @@ param(
     # harness itself; a run made this way is recorded as UNPINNED.
     [string]$Exe,
 
+    # WHICH LANDED FIXES THIS RENDER ENABLES.
+    #
+    #   none  (default)  every render-affecting variable cleared, nothing set.
+    #                    This is the arm the byte-freeze registry pins, and it
+    #                    must stay the default for that reason.
+    #   ship             the integrated corpus render: every fix that has been
+    #                    measured and accepted, switched on together, declared
+    #                    once in $ShipRecipe below and carried into the
+    #                    manifest, the sidecar and the reproduction command
+    #                    from that single declaration.
+    #
+    # A third value is deliberately absent. An arm assembled ad hoc at the
+    # command line is how C:\dev\strehl-out\ORCH-FAITHFUL\faithful\ came to
+    # exist without a record of what produced it, and that directory is the
+    # reason this parameter exists.
+    [ValidateSet('none', 'ship')]
+    [string]$Fixes = 'none',
+
     # Skip the graded presentation outputs and emit masters only.
     #
     # The presentation files exist because a faithful --srgb master is flat by
@@ -356,16 +374,241 @@ if (-not $NoPresent) {
 # variable no longer means off -- it means "let the binary's gear guard decide"
 # -- so leaving it unset would make the arm's colour path depend on the calling
 # shell. Every other variable that re-routes a render is cleared for the same
-# reason; this list mirrors byte-freeze.rs's RENDER_ENV.
-$ClearedSwitches = @(
-    'STREHL_ALIGN', 'STREHL_WARPMAP', 'STREHL_CACHE_DIR',
-    'STREHL_FIX_HALO', 'STREHL_FIX_HALO_DELTA',
-    'STREHL_EDGE_AWARE', 'STREHL_EDGE_TAU', 'STREHL_EDGE_CONF',
-    'STREHL_ONLY_FRAME', 'STREHL_MERGE', 'STREHL_PYRAMID_WORKERS',
-    'STREHL_VEIL', 'STREHL_VEIL_MARGIN', 'STREHL_VEIL_FLOOR',
-    'STREHL_FIX_CA')
+# reason.
+#
+# THIS LIST USED TO BE TYPED OUT HERE, with a comment saying it mirrored
+# byte-freeze.rs's RENDER_ENV. It did not. Measured 2026-08-27: RENDER_ENV held
+# 23 names and this list held 15, so EIGHT variables that re-route a render were
+# never cleared --
+#
+#   STREHL_GATE_FLOOR      moves the noise floor, and so moves which
+#                          coefficients are averaged rather than selected
+#   STREHL_DEFECT          )
+#   STREHL_DEFECT_MAP      ) the sensor defect correction, which rewrites
+#   STREHL_DEFECT_ARM      ) photosites BEFORE the warp
+#   STREHL_DEFECT_HOT_FLOOR)
+#   STREHL_ACUITY
+#   STREHL_FULLRES_GATHER  selects what every output pixel is interpolated FROM
+#   STREHL_PHOTOMETRIC
+#
+# -- which means an operator with any of them exported rendered a different
+# image from the one this harness reports, and nothing in the run would say so.
+# That is precisely the STREHL_ALIGN=0 defect the byte-freeze registry header
+# documents, committed a third time, in the file whose job is provenance.
+#
+# A duplicated list is a claim that has to be re-checked by hand every time
+# somebody else edits the original, and this one silently stopped being true.
+# So it is PARSED from the freeze registry instead. If the parse fails, or
+# returns fewer names than the smallest plausible list, this script refuses to
+# render rather than clearing a subset and reporting confidence.
+function Get-RenderEnv {
+    $src = Join-Path $repo 'crates\strehl-cli\tests\byte-freeze.rs'
+    if (-not (Test-Path $src)) { return @() }
+    $t = Get-Content $src -Raw
+    $m = [regex]::Match($t, 'const RENDER_ENV: &\[&str\] = &\[(.*?)\n\];', 'Singleline')
+    if (-not $m.Success) { return @() }
+    return [regex]::Matches($m.Groups[1].Value, '"(STREHL_[A-Z_0-9]+)"') |
+        ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+}
+$ClearedSwitches = @(Get-RenderEnv)
+if ($ClearedSwitches.Count -lt 15) {
+    throw ("REFUSING TO RENDER: parsed only $($ClearedSwitches.Count) name(s) from " +
+        "RENDER_ENV in crates/strehl-cli/tests/byte-freeze.rs. That list is the " +
+        "project's record of which environment variables change a render, and this " +
+        "harness clears it so that a render does not depend on the calling shell. " +
+        "A short parse means the guard is partial, and a partial guard reports the " +
+        "same confidence as a whole one.")
+}
 foreach ($v in $ClearedSwitches) {
     Remove-Item "Env:\$v" -ErrorAction SilentlyContinue
+}
+
+# ---------------------------------------------------------------------------
+# THE SHIP RECIPE: ONE DECLARATION OF WHAT THE INTEGRATED RENDER ENABLES.
+#
+# Everything downstream reads this table and nothing re-states it: the
+# environment is set from it, the liveness preflight probes it, the per-subject
+# manifest records it, and the sidecar's reproduction command is generated from
+# it. That is the point. A recipe written in one place and re-typed in a second
+# is the defect that was sitting in this very file -- $ClearedSwitches claimed
+# in a comment to mirror byte-freeze.rs's RENDER_ENV and had silently stopped
+# doing so, eight variables short, including all four of the ones below.
+#
+# `Bad` is a value the binary must REJECT. It is not decoration: it is how the
+# preflight proves the running binary can still see the variable at all. See
+# Assert-RecipeIsLive.
+$ShipRecipe = @(
+    [pscustomobject]@{
+        Name  = 'STREHL_DEFECT'
+        Value = 'on'
+        Bad   = 'xyzzy-not-a-setting'
+        Why   = 'master switch for sensor defect correction; off by default because a stale map manufactures the defect it removes'
+    }
+    [pscustomobject]@{
+        Name  = 'STREHL_DEFECT_MAP'
+        Value = (Join-Path $repo 'experiments\BUILD-DEFECT\out\defect-map-ILCE-7CM2-photo.txt')
+        Bad   = 'C:\no-such-defect-map-xyzzy.txt'
+        Why   = 'the photograph-derived map. NOT defect-map-ILCE-7CM2.txt, which is headered SUPERSEDED: three of its four motes read POSITIVE on real subjects'
+    }
+    [pscustomobject]@{
+        Name  = 'STREHL_DEFECT_ARM'
+        Value = 'dust'
+        Bad   = 'dsut'
+        Why   = 'dust only. The hot arm is a separately measured 14626-site census and ships OFF: M101 measured it immaterial on this body, and 14626 corrections that change nothing are 14626 chances to change something'
+    }
+)
+
+# ---------------------------------------------------------------------------
+# LIVENESS: REFUSE TO RENDER A FIX THE BINARY CANNOT SEE.
+#
+# The failure this prevents, stated concretely because it has happened twice on
+# this project: a variable is exported, the render runs, the manifest records
+# the variable as set, and the binary never read it -- because it was renamed,
+# because the build predates it, or because it is gated behind another
+# variable. Every artifact then says the fix was on. Nothing measured whether
+# it was reachable.
+#
+# TWO MEASUREMENTS SHAPE THIS CHECK, AND NEITHER IS OBVIOUS.
+#
+# 1. A NON-ZERO EXIT IS NOT EVIDENCE. Handing the binary a bad subject path
+#    with STREHL_DEFECT_ARM="dsut" set exits 1 in 0.45 s -- with
+#    `Error: reading C:\no-such-dir-xyz`. The arm was never parsed. A liveness
+#    probe that only tested the exit code would have passed on a dead variable
+#    with a message about something else entirely. So the probe uses a REAL
+#    subject, and requires the failure text to quote the sentinel value back.
+#    Echoing the value is what proves the parse was reached.
+#
+# 2. THE ORIGINAL PATTERN IS CONDITIONAL. `STREHL_DEFECT_ARM="dsut"` on a real
+#    subject with STREHL_DEFECT unset exits **0** and renders normally: the arm
+#    is only parsed once the master switch is on. A probe that set one variable
+#    at a time would therefore have found STREHL_DEFECT_ARM dead on a binary
+#    where it is perfectly alive. Each probe applies the WHOLE recipe and
+#    corrupts exactly one entry.
+#
+# The detector is commissioned in both directions, because a probe that always
+# reports LIVE and a fix that is genuinely live give the identical green:
+#   positive : the intact recipe must render (exit 0). If it cannot, the recipe
+#              is broken and every LIVE verdict below is meaningless.
+#   negative : STREHL_NOT_A_REAL_VARIABLE, corrupted the same way, must read
+#              NOT LIVE. If a name the binary has never heard of reads LIVE,
+#              the probe is measuring nothing.
+function Invoke-Probe {
+    param([hashtable]$Env, [string]$Subject, [string]$Tag)
+
+    $tmp = Join-Path ([IO.Path]::GetTempPath()) "finalpass-probe-$Tag.tiff"
+    $errf = Join-Path ([IO.Path]::GetTempPath()) "finalpass-probe-$Tag.err"
+    $outf = "$errf.out"
+    $saved = @{}
+    foreach ($k in $Env.Keys) {
+        $saved[$k] = [Environment]::GetEnvironmentVariable($k)
+        Set-Item "Env:\$k" $Env[$k]
+    }
+    try {
+        $p = Start-Process -FilePath $Exe -NoNewWindow -PassThru `
+            -ArgumentList @('stack', "`"$Subject`"", '--out', "`"$tmp`"", '--limit', '2',
+            '--linear-srgb', '--demosaic') `
+            -RedirectStandardError $errf -RedirectStandardOutput $outf
+        $null = $p.Handle
+        $p.WaitForExit()
+        $text = ''
+        foreach ($f in @($errf, $outf)) {
+            if (Test-Path $f) { $text += (Get-Content $f -Raw -ErrorAction SilentlyContinue) }
+        }
+        return [pscustomobject]@{ Exit = $p.ExitCode; Text = $text }
+    }
+    finally {
+        foreach ($k in $Env.Keys) {
+            if ($null -eq $saved[$k]) { Remove-Item "Env:\$k" -ErrorAction SilentlyContinue }
+            else { Set-Item "Env:\$k" $saved[$k] }
+        }
+        Remove-Item $tmp, $errf, $outf -ErrorAction SilentlyContinue
+    }
+}
+
+function Assert-RecipeIsLive {
+    param([object[]]$Recipe, [string]$Subject)
+
+    Write-Host "  preflight: probing $($Recipe.Count) recipe switch(es) against the binary that will render"
+    $base = @{}
+    foreach ($e in $Recipe) { $base[$e.Name] = $e.Value }
+
+    # POSITIVE CONTROL. The intact recipe must render.
+    $ok = Invoke-Probe -Env $base -Subject $Subject -Tag 'positive'
+    if ($ok.Exit -ne 0) {
+        $why = ($ok.Text -split "`n" | Where-Object { $_ -match 'Error|Caused' } | Select-Object -First 3) -join ' / '
+        throw ("REFUSING TO RENDER: the intact ship recipe does not render. exit $($ok.Exit). $why`n" +
+            "  Every liveness verdict is measured by CORRUPTING this recipe, so if the " +
+            "uncorrupted form cannot run, a 'not live' reading would be indistinguishable " +
+            "from a recipe that is simply wrong.")
+    }
+    Write-Host "    positive control  : intact recipe renders (exit 0)"
+
+    # NEGATIVE CONTROL. A name the binary never heard of must NOT read live.
+    $fakeEnv = $base.Clone()
+    $fakeEnv['STREHL_NOT_A_REAL_VARIABLE'] = 'xyzzy-sentinel-nonexistent'
+    $fake = Invoke-Probe -Env $fakeEnv -Subject $Subject -Tag 'negative'
+    $fakeLive = ($fake.Exit -ne 0 -and $fake.Text -match [regex]::Escape('xyzzy-sentinel-nonexistent'))
+    if ($fakeLive) {
+        throw ("REFUSING TO RENDER: the liveness probe reported a variable the binary has " +
+            "never heard of (STREHL_NOT_A_REAL_VARIABLE) as LIVE. The probe is not " +
+            "measuring reachability and its verdicts below cannot be trusted.")
+    }
+    Write-Host "    negative control  : STREHL_NOT_A_REAL_VARIABLE reads NOT LIVE, as it must"
+
+    $verdicts = @()
+    $live = 0; $dead = 0
+    foreach ($e in $Recipe) {
+        $env2 = $base.Clone()
+        $env2[$e.Name] = $e.Bad
+        $r = Invoke-Probe -Env $env2 -Subject $Subject -Tag $e.Name
+        $echoed = ($r.Text -match [regex]::Escape($e.Bad))
+        $isLive = ($r.Exit -ne 0 -and $echoed)
+        if ($isLive) { $live++ } else { $dead++ }
+        $err = (($r.Text -split "`r?`n" | Where-Object { $_ -match '^Error|^\s+' -and $_ -match [regex]::Escape($e.Bad) } |
+                Select-Object -First 1) -replace '\s+', ' ').Trim()
+        $verdicts += [pscustomobject]@{
+            Name = $e.Name; Value = $e.Value; Live = $isLive
+            Exit = $r.Exit; Echoed = $echoed
+            Evidence = $(if ($err) { $err } else { "(no line quoted $($e.Bad); exit $($r.Exit))" })
+        }
+        Write-Host ("    {0,-24} {1}  exit {2}" -f $e.Name, $(if ($isLive) { 'LIVE    ' } else { 'NOT LIVE' }), $r.Exit)
+    }
+
+    if ($live + $dead -ne $Recipe.Count) {
+        throw "REFUSING TO RENDER: liveness partition does not sum -- $live live + $dead dead != $($Recipe.Count) probed."
+    }
+    if ($dead -gt 0) {
+        $names = ($verdicts | Where-Object { -not $_.Live } | ForEach-Object { $_.Name }) -join ', '
+        throw ("REFUSING TO RENDER: $dead of $($Recipe.Count) recipe switch(es) are NOT REACHABLE " +
+            "in this binary -- $names.`n" +
+            "  This render would have produced masters whose manifest said the fix was on " +
+            "while the binary ignored it. Rebuild, or correct the recipe.")
+    }
+    Write-Host "    $live of $($Recipe.Count) live, 0 dead -- recipe is reachable in this binary"
+    return $verdicts
+}
+
+$RecipeApplied = @()
+$RecipeLiveness = @()
+if ($Fixes -eq 'ship') {
+    foreach ($e in $ShipRecipe) {
+        if ($e.Name -eq 'STREHL_DEFECT_MAP' -and -not (Test-Path $e.Value)) {
+            throw ("REFUSING TO RENDER: -Fixes ship names a defect map that does not exist:`n" +
+                "  $($e.Value)`n" +
+                "  Rendering without it would silently produce the uncorrected corpus while " +
+                "the manifest recorded the correction as enabled.")
+        }
+    }
+    $probeSubject = ($subjects | Sort-Object Frames | Select-Object -First 1).Path
+    Write-Host "SHIP RECIPE: $($ShipRecipe.Count) switch(es); probe subject $(Split-Path $probeSubject -Leaf)"
+    $RecipeLiveness = Assert-RecipeIsLive -Recipe $ShipRecipe -Subject $probeSubject
+    foreach ($e in $ShipRecipe) {
+        Set-Item "Env:\$($e.Name)" $e.Value
+        $RecipeApplied += $e
+    }
+}
+else {
+    Write-Host "FIXES: none -- every render-affecting variable cleared, nothing set (byte-freeze arm)"
 }
 
 # ---------------------------------------------------------------------------
@@ -556,6 +799,39 @@ function Invoke-Subject {
     # place to live and one place to be tested.
     $repro = $Flags
 
+    # THE REPRODUCTION COMMAND MUST CARRY THE ENVIRONMENT, NOT JUST THE ARGV.
+    #
+    # The line above is the flag half and it used to be the whole of it. That
+    # was sound only while this harness set nothing: the moment -Fixes ship
+    # exports STREHL_DEFECT, an argv-only command reproduces a DIFFERENT image
+    # -- the uncorrected one -- while claiming to be exact. The sidecar's own
+    # RESOLVED SWITCH STATE block has said for weeks that "environment
+    # variables never appear in argv however they are set"; the reproduction
+    # line was the one place that had not acted on it.
+    #
+    # Both halves are emitted, and in this order, because either alone is
+    # wrong:
+    #   CLEAR  every render-affecting variable, so an operator with something
+    #          exported in their shell does not silently get a third image.
+    #          The names come from the same parsed RENDER_ENV the harness
+    #          itself clears, so this cannot drift from what actually ran.
+    #   SET    exactly the recipe entries this render applied -- nothing if the
+    #          run was -Fixes none, which then reads as a positive statement
+    #          that nothing was set rather than as an omission.
+    $reproEnv = @()
+    $reproEnv += "  # clear every render-affecting variable ($($ClearedSwitches.Count) from RENDER_ENV):"
+    $reproEnv += "  @('" + (($ClearedSwitches | Sort-Object) -join "','") + "') |"
+    $reproEnv += "      ForEach-Object { Remove-Item `"Env:\`$_`" -ErrorAction SilentlyContinue }"
+    if ($RecipeApplied.Count -gt 0) {
+        $reproEnv += "  # then set the $($RecipeApplied.Count) switch(es) this render applied:"
+        foreach ($e in $RecipeApplied) {
+            $reproEnv += "  `$env:$($e.Name) = '$($e.Value)'"
+        }
+    }
+    else {
+        $reproEnv += "  # this render applied NO switches (-Fixes none); set nothing."
+    }
+
     # Resolved state of every registry switch, set and unset alike.
     #
     # A switch is reported against THE BACKEND THIS RENDER ACTUALLY RAN. The
@@ -621,6 +897,33 @@ function Invoke-Subject {
     $binaryVerbatim = @($binaryOut | ForEach-Object { '  | ' + $_ })
     $binaryKeyCount = @($binaryOut | Where-Object { $_ -match '^\s*[a-z][a-z0-9 /_+-]{2,20}\s*:\s*\S' }).Count
 
+    # PER-SUBJECT DEFECT ACCOUNTING, PARSED FROM THE BINARY'S OWN PARTITION.
+    #
+    # The binary prints `--- defect correction (MEASURED) ---` with a counted
+    # partition per arm. It is lifted into the sidecar and the manifest rather
+    # than summarised, for the reason the partition exists at all: `corrected 0`
+    # and `examined 0` are different facts and a single "0 corrected" line
+    # reports them identically. One means the map was applied and this frame had
+    # nothing to fix. The other means nothing ran.
+    #
+    # `Applied = $false` is therefore recorded as its own state, distinct from
+    # both. If the block is absent the sidecar says the correction did not run,
+    # which is the honest reading of a missing measurement.
+    $defectLines = @($binaryOut | Where-Object {
+            $_ -match '^\s*(hot|dust)\s*:\s*examined' -or
+            $_ -match '^\s*(defect map|samples changed|sites)\s*:' -or
+            $_ -match '^\s*site\s*\(' })
+    $defectCounts = [ordered]@{}
+    foreach ($ln in $defectLines) {
+        if ($ln -match '^\s*(hot|dust)\s*:\s*(.+)$') {
+            $arm = $Matches[1]
+            foreach ($m in [regex]::Matches($Matches[2], '([a-z][a-z ]*?)\s+(\d+)')) {
+                $defectCounts["$arm.$(($m.Groups[1].Value).Trim() -replace ' ','_')"] = [int]$m.Groups[2].Value
+            }
+        }
+    }
+    $defectApplied = ($defectLines | Where-Object { $_ -match 'examined' }).Count -gt 0
+
     @(
         "strehl render provenance"
         "artifact      : $(Split-Path $tif -Leaf)"
@@ -641,6 +944,44 @@ function Invoke-Subject {
         ""
         "ARGV (verbatim, as executed -- NOT the whole switch state; see below):"
         "  $Exe $($argv -join ' ')"
+        ""
+        "FIXES ENABLED BY THIS RENDER (-Fixes $Fixes)"
+        $(if ($RecipeApplied.Count -eq 0) {
+            "  none. Every render-affecting variable was cleared and none was set."
+            "  This is a POSITIVE STATEMENT, not an omission: the $($ClearedSwitches.Count) names parsed"
+            "  from byte-freeze.rs's RENDER_ENV were removed from the environment"
+            "  before this render, so no ambient value in the calling shell reached it."
+        }
+        else {
+            "  $($RecipeApplied.Count) switch(es), each PROVEN REACHABLE in this binary before the"
+            "  render started -- the recipe was re-run with each entry corrupted in"
+            "  turn and the binary had to reject the corrupt value by quoting it back."
+            "  A switch the binary silently ignores would have aborted the run."
+            foreach ($e in $RecipeApplied) {
+                $lv = $RecipeLiveness | Where-Object { $_.Name -eq $e.Name } | Select-Object -First 1
+                $lvTxt = if ($lv -and $lv.Live) { "LIVE -- rejected '$($e.Bad)' with exit $($lv.Exit)" } else { 'NOT PROBED' }
+                "    $($e.Name) = $($e.Value)"
+                "        liveness: $lvTxt"
+                "        why     : $($e.Why)"
+                if ($e.Name -eq 'STREHL_DEFECT_MAP' -and (Test-Path $e.Value)) {
+                    "        sha256  : $((Get-FileHash $e.Value -Algorithm SHA256).Hash)"
+                    "        bytes   : $((Get-Item $e.Value).Length)"
+                }
+            }
+        })
+        ""
+        "DEFECT ACCOUNTING (the binary's own partition, not this script's summary)"
+        $(if (-not $defectApplied) {
+            "  NOT APPLIED -- the binary printed no '--- defect correction (MEASURED) ---'"
+            "  partition, so no site was examined. This is a different fact from a"
+            "  partition reading `corrected 0`, which would mean the map ran and found"
+            "  nothing to do. Neither is reported as the other."
+        }
+        else {
+            "  Counted so that a zero is readable: 'examined' is what the map offered,"
+            "  and every site leaves through exactly one of the outcomes beside it."
+            $defectLines | ForEach-Object { '  ' + $_.Trim() }
+        })
         ""
         "RESOLVED SWITCH STATE ($($RegistrySwitches.Count) registry switches; $switchSet set)"
         "  backend applicability: $switchOK applicable, $switchNA INAPPLICABLE, $switchUnk unclassified"
@@ -666,12 +1007,13 @@ function Invoke-Subject {
         $binaryVerbatim
         ""
         "REPRODUCE THIS EXACT FILE:"
+        $reproEnv
         "  $Exe stack `"$($S.Path)`" --out <OUT> $repro"
         $(if ($switchSet -eq 0) {
             "  ...with all $($RegistrySwitches.Count) registry switches UNSET, as listed above."
         }
         else {
-            "  ...with the $switchSet non-default switch(es) above exported first."
+            "  ...the $switchSet non-default switch(es) above are set by the lines shown."
         })
         $(if ($expoStops) {
             "  OBSERVED, NOT AN INSTRUCTION: --auto-exposure chose $expoStops stops"
@@ -684,6 +1026,59 @@ function Invoke-Subject {
             "   file's exposure on binaries that post-date it."
         })
     ) | Where-Object { $null -ne $_ } | Out-File -Encoding utf8 "$tif.provenance.txt"
+
+    # MACHINE-READABLE MANIFEST, BESIDE THE PROSE ONE.
+    #
+    # The text sidecar is for a human reading one master. This is for anyone
+    # asking a question across the corpus -- "which of these 26 had the defect
+    # map on, and which map" -- which is exactly the question nobody could
+    # answer about C:\dev\strehl-out\ORCH-FAITHFUL\faithful\. Prose is a poor
+    # substrate for that and re-parsing it is how the wrong answer gets given.
+    #
+    # It carries hashes, not paths alone. A path records where a file was; a
+    # hash records WHICH file it was, and the map at that path has already been
+    # rewritten once during this project (v1 -> v2) without its name changing.
+    $manifest = [ordered]@{
+        artifact      = Split-Path $tif -Leaf
+        rendered      = (Get-Date -Format o)
+        status        = $status
+        exit          = $exit
+        bytes         = $bytes
+        sha256        = $(if ($status -eq 'ok') { (Get-FileHash $tif -Algorithm SHA256).Hash } else { $null })
+        subject       = $S.Name
+        source        = $S.Path
+        frames        = $S.Frames
+        binary        = $Exe
+        binary_sha256 = $binHash
+        git_commit    = $gitFull
+        pin           = $(if ($Sha) { $Sha } else { 'UNPINNED' })
+        argv          = @('stack', $S.Path, '--out', $tif) + @($Flags -split '\s+' | Where-Object { $_ })
+        flags         = $Flags
+        fixes_arm     = $Fixes
+        exposure      = $expoStops
+        backend       = $backend
+        cleared_env   = @($ClearedSwitches | Sort-Object)
+        fixes         = @(foreach ($e in $RecipeApplied) {
+                $lv = $RecipeLiveness | Where-Object { $_.Name -eq $e.Name } | Select-Object -First 1
+                [ordered]@{
+                    name         = $e.Name
+                    value        = $e.Value
+                    why          = $e.Why
+                    liveness     = $(if ($lv.Live) { 'LIVE' } else { 'NOT PROBED' })
+                    probe_exit   = $lv.Exit
+                    probe_value  = $e.Bad
+                    file_sha256  = $(if ($e.Name -eq 'STREHL_DEFECT_MAP' -and (Test-Path $e.Value)) {
+                            (Get-FileHash $e.Value -Algorithm SHA256).Hash
+                        } else { $null })
+                }
+            })
+        defect        = [ordered]@{
+            applied = $defectApplied
+            counts  = $defectCounts
+            lines   = @($defectLines | ForEach-Object { $_.Trim() })
+        }
+    }
+    $manifest | ConvertTo-Json -Depth 6 | Out-File -Encoding utf8 "$tif.manifest.json"
 
     # A sentinel beside the file, not the file's mere existence: a killed render
     # leaves a partial TIFF on disk that is the right name and the wrong image.
