@@ -364,6 +364,44 @@ def main():
         print("  WRONG      sec.13.6: the verifier excludes `coffee-bubbles` "
               "from the canonical tables but the document no longer says so")
 
+    # sec.9.1's halo retraction.  This lane has never measured a halo, so this
+    # is a CITATION, not a finding of ours -- and a citation is exactly the
+    # shape of claim that can be reversed with every number in the document
+    # left correct.  Four subjects entered sec.9 *because of* halo verdicts
+    # that V-REVIEW has since shown to be artifacts of a walk that never
+    # samples 120-400 px.  Restoring the old wording would re-assert a dead
+    # premise and no numeric check would notice.
+    #
+    # Pinned on POLARITY, not presence: the negation must be there AND the
+    # affirmative must not.  A presence test alone would pass a document that
+    # said both, which is the sixth defect (sec.12.3) in a new costume.
+    halo_neg = "**No halo is demonstrated on any of the 26 masters.**"
+    halo_pos = re.search(r"\bA halo is demonstrated\b|"
+                         r"\bfails the halo measurement\b", flat)
+    if halo_neg in flat and halo_pos is None:
+        ok += 1
+    else:
+        bad += 1
+        print(f"  WRONG      sec.9.1: halo retraction not stated in the "
+              f"retracted direction (negation present: {halo_neg in flat}, "
+              f"affirmative present: {halo_pos is not None})")
+
+    # ...and the four selection rows must carry the retraction with them.  The
+    # sentence above is three paragraphs from the table; a reader scanning the
+    # table alone must not be told these subjects fail a measurement that has
+    # been withdrawn.
+    for key in ("flat-on-ruler-cpl", "tweezers-cpl", "lavendar-cpl",
+                "dry-erase-marker-head-cpl"):
+        sel = [ln for ln in lines
+               if ln.startswith(f"| `{key}` |") and "halo" in ln]
+        if len(sel) == 1 and "retracted" in sel[0]:
+            ok += 1
+        else:
+            bad += 1
+            print(f"  WRONG      sec.9.1 selection row for {key}: expected "
+                  f"exactly one halo row carrying 'retracted', found "
+                  f"{len(sel)}")
+
     for key in sorted(recs_all):
         r = s13src[key]
         res, delta = locate13(lines, key)

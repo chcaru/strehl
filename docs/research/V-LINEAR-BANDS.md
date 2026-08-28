@@ -412,11 +412,13 @@ the subject subset. This was caught by running the control above, not by review.
 - **Sharpness claims on `leaf-2-cpl`, `flower-bud-alone-cpl` and `112MSDCF` are
   limited to below 0.20 cyc/px.** Anything quoted at 0.20–0.25 or above on those
   subjects is measuring noise.
-- **The four halo subjects are qualified, and three of them generously.**
-  `flat-on-ruler-cpl`, `tweezers-cpl` and `dry-erase-marker-head-cpl` qualify to
-  **0.48**, so V-SPEED may score its halo fix at any band up to Nyquist on them.
-  `lavendar-cpl` qualifies only to **0.30** and its 0.30–0.48 cells are on the
-  line (§9.2) — score that subject at or below 0.30.
+- **The four subjects selected on halo verdicts are qualified, and three of them
+  generously.** `flat-on-ruler-cpl`, `tweezers-cpl` and
+  `dry-erase-marker-head-cpl` qualify to **0.48**, so a fix may be scored at any
+  band up to Nyquist on them. `lavendar-cpl` qualifies only to **0.30** and its
+  0.30–0.48 cells are on the line (§9.2) — score that subject at or below 0.30.
+  The halo verdicts that selected these four have since been **retracted** by
+  V-REVIEW (§9.1); the band qualifications are independent of them and stand.
 - **A cross-subject ratio of `R` is not a thing this instrument supports** (§4).
 
 ---
@@ -425,8 +427,10 @@ the subject subset. This was caught by running the control above, not by review.
 `experiments/V-LINEAR/bandanalysis.py` (every derived table in §4, §5 and §6.1;
 reads only the saved JSON, so it cannot disagree with the measurement),
 `experiments/V-LINEAR/commission_boundary.py` (5 arms, exit 0),
-`experiments/V-LINEAR/verify_bands_doc.py` (re-reads §3 from the JSON; 4/4
-planted defects caught),
+`experiments/V-LINEAR/verify_bands_doc.py` (310 checks, cell-anchored, verdicts
+and boundaries derived rather than read; commissioned by
+`commission_verify_doc.py` at 29 defect arms caught and 3 null arms quiet, and
+by `commission_redevelop.py` at 3/3),
 `experiments/V-LINEAR2/bandsignal.py` (frozen, imported not reimplemented),
 `experiments/V-LINEAR2/PREREGISTRATION.md:51` (decision rule).
 Data: `experiments/V-LINEAR/bandsweep.json` (scaled `far`),
@@ -448,14 +452,30 @@ round-2 subject was swept**.
 | subject | why it is here |
 | --- | --- |
 | `112MSDCF` | carries ORCH's band-0 gate-floor arm (32.1% -> 80.9% averaged duty cycle) and was absent from §3, so a candidate default rested on an unqualified band |
-| `flat-on-ruler-cpl` | fails the halo measurement (fact 1841, overshoot **+4481.8 DN**) |
-| `tweezers-cpl` | fails the halo measurement (bump **1542.3**) |
-| `lavendar-cpl` | marginal on the halo measurement |
-| `dry-erase-marker-head-cpl` | marginal on the halo measurement |
+| `flat-on-ruler-cpl` | **selected** on a halo verdict (fact 1841, overshoot +4481.8 DN) that has **since been retracted** — see the note below |
+| `tweezers-cpl` | selected on a halo verdict (bump 1542.3), **since retracted** |
+| `lavendar-cpl` | selected as marginal on the halo measurement, **since retracted** |
+| `dry-erase-marker-head-cpl` | selected as marginal on the halo measurement, **since retracted** |
 | `paper-sweep` | **not on ORCH's list.** `flat-fields\subject-focus-sweep-with-cpl`, 62 frames. It is the *structure* side of fact 1826's self-targeting claim and the only subject on that side, and it had never been band-qualified — the claim rested on a duty cycle and a visual crop. See §11. |
 
-The four halo subjects are the ones V-SPEED must score its halo fix on, and it
-needs a qualified band to do that.
+**The halo premise these four were selected on is dead, and the band
+qualifications are unaffected.** V-REVIEW has since measured that
+`halo_profile.py` walks 2–120 px and takes its far reference at 400–900 px,
+never measuring 120–400 px — the interval where a halo's decay separates it from
+a scene lighting falloff. `flat-on-ruler-cpl`'s excursion peaks **outside** the
+measured window at 107% of its flagged value; `tweezers-cpl`'s "bump" is one
+step in a 22461 DN ramp. **No halo is demonstrated on any of the 26 masters.**
+
+That is V-REVIEW's measurement, not this lane's; this lane has never measured a
+halo and does not now claim one either way. It is recorded here because these
+four subjects entered §9 *because of* those verdicts, and a reader arriving at
+this table would otherwise inherit a retracted premise.
+
+**What survives is everything §9 actually measured.** `R` is a property of the
+source frames and of the band; it was never computed from a halo statistic and
+does not depend on one. The four subjects remain correctly qualified, and the
+qualification is the reason they are useful — whatever V-SPEED ends up scoring
+on them, it now has a band it may score in.
 
 **Nothing was dropped.** All six sampled subjects appear below, including
 `lavendar-cpl`, whose two top bands land 0.010 and 0.001 either side of the
@@ -813,6 +833,38 @@ inside a section documenting the previous five, written by someone who had just
 finished writing about it. The only thing that has ever caught it here is a
 planted mutation that flips a conclusion while leaving every number correct, so
 no conclusion in this document is trusted until such an arm exists for it.
+
+#### The harness had no specificity, and that was invisible from its score
+
+ORCH's broadcast of 2026-08-27 named the gap directly: *"Commissioning
+sensitivity is not commissioning specificity. Planting a signal and confirming
+detection says nothing about whether noise is rejected. Plant noise too."*
+
+Every arm above is a defect that must be caught, so **nothing in a 26/26 score
+distinguishes a verifier that detects reversed conclusions from one that exits
+non-zero on any edit whatsoever.** Both score 26/26. The second is worse than
+useless, because a lane learns to ignore a RED that fires on everything.
+
+Three null arms were added and the verifier must stay **green** on all of them:
+prose reworded, an unchecked sentence **deleted**, and a sentence reworded in
+place. Measured: **3 of 3 quiet.**
+
+The deletion null is the load-bearing one. Four of the defect arms above are
+deletions of checked rows, and their CAUGHT results only mean something if
+deletion *per se* is not what trips the verifier. Until this arm ran, that was
+an assumption.
+
+The harness now reports the two channels separately — 29 caught / 0 missed, and
+3 quiet / 0 false alarms — because a single combined number would hide exactly
+the failure this section is about.
+
+Three of the 29 defect arms are the §9.1 halo retraction, and they are the
+clearest case in this document of a check that certifies a *conclusion* rather
+than evidence. None of the three changes a single number: reversing the
+retraction, deleting it, and restoring one selection row's pre-retraction
+wording all leave every `R`, CI and verdict correct. The third is the sharpest
+— it makes the document contradict itself, and a whole-file presence test for
+the retraction sentence still passes it.
 
 ### 12.4 Can this statistic be inflated by noise?
 

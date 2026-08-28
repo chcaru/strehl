@@ -84,6 +84,15 @@ S13_BEE = ("| `bee-1-cpl` | 299 | 10.728 | **5.311** | [3.083, 7.638] | "
            "4.047 | **PASS** |")
 S13_DELTA_BEE = "| `bee-1-cpl` | 4.732 | 5.311 | +12.2% |"
 
+# sec.9.1 halo-retraction anchors.  Both are full lines and both are unique;
+# `plant()` refuses anything that does not occur exactly once, so a reflow of
+# either paragraph fails loudly here rather than silently disarming an arm.
+S9_HALO_NEG = ("step in a 22461 DN ramp. **No halo is demonstrated on any of "
+               "the 26 masters.**")
+S9_HALO_ROW = ("| `flat-on-ruler-cpl` | **selected** on a halo verdict (fact "
+               "1841, overshoot +4481.8 DN) that has **since been retracted** "
+               "\u2014 see the note below |")
+
 # (name, why it matters, old_line, new_line-or-None-to-delete)
 ARMS = [
     ("R2-R-verdict-duplicated-elsewhere",
@@ -248,6 +257,71 @@ ARMS = [
      "Flipping the sign inverts that conclusion while leaving both R values "
      "correct.",
      S13_DELTA_BEE, S13_DELTA_BEE.replace("+12.2%", "\u221212.2%")),
+
+    # ---- sec.9.1 halo retraction (V-REVIEW's finding, cited by this lane) ----
+    #
+    # These three are the reason the retraction is worth checking at all.  Not
+    # one of them changes a number: every R, CI and verdict in the document
+    # stays correct under all three.  What they change is what a reader
+    # believes about four subjects and about an instrument another lane has
+    # withdrawn.  A verifier that only certifies evidence sails through all of
+    # them -- which is precisely the failure sec.12.3 documents six times.
+    ("s91-halo-negation-reversed",
+     "flips the retraction back to an assertion: 'No halo is demonstrated' -> "
+     "'A halo is demonstrated'. Every number in the document remains correct. "
+     "This is the conclusion-reversal shape, and it re-asserts a premise "
+     "V-REVIEW has measured to be an artifact.",
+     S9_HALO_NEG,
+     S9_HALO_NEG.replace("**No halo is demonstrated",
+                         "**A halo is demonstrated")),
+
+    ("s91-halo-negation-deleted",
+     "DELETION rather than reversal, per ORCH's third lesson -- deleting a "
+     "finding is cheaper than stating it wrongly, and a document that simply "
+     "goes quiet about the retraction leaves the four selection rows as the "
+     "only thing a scanning reader sees.",
+     S9_HALO_NEG, "step in a 22461 DN ramp."),
+
+    ("s91-halo-selection-row-restored",
+     "restores the ORIGINAL pre-retraction wording of one selection row. The "
+     "sentence three paragraphs below still says the verdicts were retracted, "
+     "so the document contradicts itself and a whole-file presence test for "
+     "the retraction still passes. Only a per-row check catches this.",
+     S9_HALO_ROW,
+     "| `flat-on-ruler-cpl` | fails the halo measurement (fact 1841, "
+     "overshoot **+4481.8 DN**) |"),
+]
+
+# ---- SPECIFICITY (null) arms ------------------------------------------------
+# ORCH broadcast 2026-08-27: "Commissioning sensitivity is not commissioning
+# specificity. Planting a signal and confirming detection says nothing about
+# whether noise is rejected. Plant noise too."
+#
+# Every arm above is a defect that MUST be caught.  Nothing above distinguishes
+# a verifier that detects reversed conclusions from one that exits non-zero on
+# ANY edit whatsoever -- both score 26/26.  An indiscriminate verifier is
+# useless in the more dangerous direction, because a lane would learn to ignore
+# its RED.
+#
+# These edits change the document's prose without touching a single checked
+# claim.  The verifier MUST stay GREEN on all of them.
+NULLS = [
+    ("null-prose-reworded",
+     "a sentence rewritten with identical meaning and no number in it.",
+     "ORCH authorised measuring 0.30–0.35 specifically. This section is that",
+     "ORCH authorised measuring 0.30–0.35 specifically. This section reports that"),
+
+    ("null-prose-deleted",
+     "DELETION of an unchecked sentence. Deletion arms above are all of "
+     "checked rows; this shows deletion per se is not what trips the "
+     "verifier, so those CAUGHT results mean what they claim.",
+     "It is not void. On the strongest qualifier:\n\n", ""),
+
+    ("null-sentence-added",
+     "new prose asserting nothing the verifier certifies. A verifier that "
+     "reddens on added text would make the document unmaintainable.",
+     "That is a statement about the measurement, not about the",
+     "That is a statement about the measurement and not about the"),
 ]
 
 
@@ -274,6 +348,7 @@ def main():
     print(f"backup: {backup}\n")
 
     caught = missed = 0
+    nulls_ok = nulls_bad = 0
     try:
         rc, out = run_verifier()
         print(f"[baseline    ] exit={rc}  (expect 0)")
@@ -320,6 +395,26 @@ def main():
                 print(out)
         finally:
             os.remove(COLLIDER)
+
+        # ---- specificity: these MUST stay green -------------------------
+        for name, why, old, new in NULLS:
+            mutated = plant(original, old, new)
+            if mutated == original:
+                raise SystemExit(f"{name}: null mutation was a no-op.")
+            open(DOC, "w", encoding="utf-8", newline="").write(mutated)
+            rc, out = run_verifier()
+            quiet = (rc == 0)
+            if quiet:
+                nulls_ok += 1
+            else:
+                nulls_bad += 1
+            print(f"[{'quiet' if quiet else 'FALSE-ALARM':11}  ] exit={rc}  "
+                  f"{name}")
+            print(f"                 why: {why}")
+            if not quiet:
+                print("  ---- verifier reddened on a harmless edit ----")
+                print(out)
+            open(DOC, "w", encoding="utf-8", newline="").write(original)
     finally:
         shutil.copy2(backup, DOC)
 
@@ -330,14 +425,24 @@ def main():
           f"{open(DOC, encoding='utf-8').read() == original}")
 
     total = len(ARMS) + 1
-    print(f"\n  caught : {caught}")
-    print(f"  missed : {missed}")
+    print(f"\n  caught      : {caught}")
+    print(f"  missed      : {missed}")
     print(f"  -----------------")
-    print(f"  arms   : {caught + missed}   (declared {total})")
+    print(f"  defect arms : {caught + missed}   (declared {total})")
+    print(f"\n  quiet       : {nulls_ok}")
+    print(f"  FALSE ALARM : {nulls_bad}")
+    print(f"  -----------------")
+    print(f"  null arms   : {nulls_ok + nulls_bad}   (declared {len(NULLS)})")
     if caught + missed != total:
         print("  ARM COUNT MISMATCH -- an arm did not run.")
         return 1
-    return 0 if (missed == 0 and restored_ok) else 1
+    if nulls_ok + nulls_bad != len(NULLS):
+        print("  NULL COUNT MISMATCH -- a null arm did not run.")
+        return 1
+    if nulls_bad:
+        print("  SPECIFICITY FAILURE -- the verifier reddens on edits that "
+              "change no checked claim, so its RED carries no information.")
+    return 0 if (missed == 0 and nulls_bad == 0 and restored_ok) else 1
 
 
 if __name__ == "__main__":
