@@ -1,0 +1,1799 @@
+{
+ "summary": {
+  "SC-NULL-bc6fa3c7": {
+   "wins": 0,
+   "n": 6,
+   "median_d_floor": 0.0,
+   "median_d_structure_struct_band": 0.0,
+   "median_paid": NaN,
+   "verdict": "NO MOTTLE CLAIM"
+  },
+  "SC-4-bc6fa3c7": {
+   "wins": 0,
+   "n": 6,
+   "median_d_floor": 0.0003984264248346545,
+   "median_d_structure_struct_band": 0.0007180310217909742,
+   "median_paid": 0.0,
+   "verdict": "NO MOTTLE CLAIM"
+  },
+  "SC-8-bc6fa3c7": {
+   "wins": 0,
+   "n": 6,
+   "median_d_floor": 0.0003107676979748,
+   "median_d_structure_struct_band": 0.0008152690208273437,
+   "median_paid": 0.0,
+   "verdict": "NO MOTTLE CLAIM"
+  },
+  "SC-16-bc6fa3c7": {
+   "wins": 0,
+   "n": 6,
+   "median_d_floor": -0.006880206492264151,
+   "median_d_structure_struct_band": 0.0015287524328225636,
+   "median_paid": 0.0,
+   "verdict": "NO MOTTLE CLAIM"
+  },
+  "SC-RAMP-bc6fa3c7": {
+   "wins": 0,
+   "n": 6,
+   "median_d_floor": 0.002167963605887112,
+   "median_d_structure_struct_band": 0.0009120816388897245,
+   "median_paid": NaN,
+   "verdict": "NO MOTTLE CLAIM"
+  },
+  "SC-D64-bc6fa3c7": {
+   "wins": 0,
+   "n": 6,
+   "median_d_floor": 0.002370824653573083,
+   "median_d_structure_struct_band": 0.0008798935962229788,
+   "median_paid": NaN,
+   "verdict": "NO MOTTLE CLAIM"
+  },
+  "SC-D4096-bc6fa3c7": {
+   "wins": 2,
+   "n": 6,
+   "median_d_floor": -0.04038194066427882,
+   "median_d_structure_struct_band": 0.0013112826813404697,
+   "median_paid": 0.0,
+   "verdict": "PARTIAL -- 2/6 subjects"
+  }
+ },
+ "per_subject": {
+  "SC-NULL-bc6fa3c7": {
+   "coffee-bubbles": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "lead-1-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 8,
+     "refused": 2,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/8 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "113MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "flat-on-ruler-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "112MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "foam": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0,
+     "median_d_structure": 0.0,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   }
+  },
+  "SC-4-bc6fa3c7": {
+   "coffee-bubbles": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 4,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.015431872134325723,
+     "median_d_structure": 0.000986881384779514,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 4/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 5,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.024476361168712504,
+     "median_d_structure": 0.0016961882108112044,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.00036284679115120683,
+     "median_d_structure": 0.0017020874463629636,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "lead-1-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 8,
+     "refused": 2,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0009564954592693373,
+     "median_d_structure": 5.135966614984002e-06,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/8 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.009200806256212116,
+     "median_d_structure": -0.0001774173466465966,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.01300294743662038,
+     "median_d_structure": 0.00038254990289502517,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "113MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0028350784600924923,
+     "median_d_structure": 0.0007642001089386455,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 2/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0027390895715069313,
+     "median_d_structure": 0.0007420366055147585,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0011164794207882316,
+     "median_d_structure": 0.001747222244493825,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "flat-on-ruler-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.00034690088839914903,
+     "median_d_structure": 0.0028670748022255168,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -2.6216971493471025e-05,
+     "median_d_structure": -0.0008919597066676945,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 2.9144354531669668e-05,
+     "median_d_structure": -0.000616703750844571,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "112MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.00015964260960002832,
+     "median_d_structure": 0.0055936001796001965,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 2/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.00444255999702612,
+     "median_d_structure": 0.0014371872282572008,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0020057176765458733,
+     "median_d_structure": 0.0033686898244078864,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "foam": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.003018089218702353,
+     "median_d_structure": -0.0003180372796345687,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.004914819375291715,
+     "median_d_structure": 0.0006940254380671901,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.009167808640807906,
+     "median_d_structure": 0.0022524341904281717,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   }
+  },
+  "SC-8-bc6fa3c7": {
+   "coffee-bubbles": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 5,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.021767162509093066,
+     "median_d_structure": 0.001290527630284208,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 5/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 6,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.03971118440697936,
+     "median_d_structure": 0.002530482499714831,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0009057982422849252,
+     "median_d_structure": 0.002129360490458362,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "lead-1-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 8,
+     "refused": 2,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.002479230774663792,
+     "median_d_structure": 0.0023047617163271064,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/8 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.008079735230492864,
+     "median_d_structure": 0.00010720145250671623,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.01033575082879753,
+     "median_d_structure": 1.9750481038506516e-05,
+     "median_paid": 0.00013978632567544585,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "113MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0007840327470164353,
+     "median_d_structure": 0.0032798413820121983,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 2/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.003857616751197449,
+     "median_d_structure": 0.0007926982971838245,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.001562224503018215,
+     "median_d_structure": 0.001939991881750141,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "flat-on-ruler-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0001624973510668353,
+     "median_d_structure": 0.0027444901878429205,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0006188046187139766,
+     "median_d_structure": -0.0006775176211480345,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0001705035402774935,
+     "median_d_structure": -0.00043834014845739786,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "112MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.006796426058393512,
+     "median_d_structure": 0.010455259040287728,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 2/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0035819590207311694,
+     "median_d_structure": 0.0022489661701895255,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.002984123489086675,
+     "median_d_structure": 0.004117363934769143,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "foam": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0031796630829226753,
+     "median_d_structure": -0.0002911957716821013,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.005044529735720454,
+     "median_d_structure": 0.0008378397444708629,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.011936110717891649,
+     "median_d_structure": 0.0027070618302534512,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   }
+  },
+  "SC-16-bc6fa3c7": {
+   "coffee-bubbles": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 6,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0444879886808551,
+     "median_d_structure": 0.0013716966184558468,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- median_d_floor -0.0445 does not reach -0.05"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 7,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.056020391445515155,
+     "median_d_structure": 0.002546077385451889,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0031388142714873996,
+     "median_d_structure": 0.002056339453312267,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "lead-1-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 8,
+     "refused": 2,
+     "cleaner": 1,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.009719800517097813,
+     "median_d_structure": 0.01619570760612961,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 1/8 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 4,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.007905201780675445,
+     "median_d_structure": 0.0010089560631725706,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.011264465408844081,
+     "median_d_structure": 0.0008990148720925402,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "113MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.004040612467430488,
+     "median_d_structure": 0.008575680320576333,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 2/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0017102097436688284,
+     "median_d_structure": 0.0020485488024725566,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0021766437717483066,
+     "median_d_structure": 0.0016701971647323315,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "flat-on-ruler-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.00027486390709183803,
+     "median_d_structure": 0.004155436415479421,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0012203131113216147,
+     "median_d_structure": -2.188107552355431e-05,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -2.412817852657309e-05,
+     "median_d_structure": 0.000920196197373586,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "112MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 2,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.011916932479332117,
+     "median_d_structure": 0.017142291646069414,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 2/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 3,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.006132817940511196,
+     "median_d_structure": 0.007682827077300439,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.005638789027620578,
+     "median_d_structure": 0.00381956102586459,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "foam": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.003540099278876903,
+     "median_d_structure": -0.000556931514324308,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.005905287363277936,
+     "median_d_structure": 0.0008805776320435854,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.01276692816545425,
+     "median_d_structure": 0.0028809332273968865,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   }
+  },
+  "SC-RAMP-bc6fa3c7": {
+   "coffee-bubbles": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.00446926061069656,
+     "median_d_structure": 0.0001801031486642577,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0013483374724963964,
+     "median_d_structure": 0.0003797002248498723,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0017941393877138091,
+     "median_d_structure": 0.00048066919805046413,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "lead-1-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 8,
+     "refused": 2,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0015552531992097632,
+     "median_d_structure": -0.0012172636556112794,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/8 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.002300748334062889,
+     "median_d_structure": 0.0013328056288627289,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.001548110313464691,
+     "median_d_structure": 0.0008218516791213982,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "113MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0021097667080346204,
+     "median_d_structure": 0.0005343967584628766,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0006760002876954287,
+     "median_d_structure": 0.0011027623536802474,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -6.408108792974682e-05,
+     "median_d_structure": 0.001681914737339407,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "flat-on-ruler-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.00013213461626813383,
+     "median_d_structure": 0.005118520868857104,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0001512360703176818,
+     "median_d_structure": 0.0007214009240992015,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -9.47125706674341e-05,
+     "median_d_structure": 0.0013614039226883803,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "112MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0029875379361876636,
+     "median_d_structure": 0.0008455097198592566,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.001210096068291925,
+     "median_d_structure": 0.002189330219225594,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.00010039432812376824,
+     "median_d_structure": 0.0019368743724941075,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "foam": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0022261605037396034,
+     "median_d_structure": -0.0004420678503807067,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.008039096075129919,
+     "median_d_structure": 0.0006926672482810691,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.01317230592338954,
+     "median_d_structure": 0.002899313772415581,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   }
+  },
+  "SC-D64-bc6fa3c7": {
+   "coffee-bubbles": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0006057201827482572,
+     "median_d_structure": 0.0009188020350823227,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0007354198432125963,
+     "median_d_structure": 0.0004257048143073623,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0016949030393424156,
+     "median_d_structure": 9.878059566386825e-05,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "lead-1-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 8,
+     "refused": 2,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.002452410327538382,
+     "median_d_structure": -0.0024819126106001197,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/8 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0013460521147655663,
+     "median_d_structure": 0.0009703803456107854,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0013482557211768197,
+     "median_d_structure": 0.0009702818221059796,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "113MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0023939315266720733,
+     "median_d_structure": 0.0008207128886784489,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0008785847599904722,
+     "median_d_structure": 0.0011074471556446668,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 3.1374484090679734e-05,
+     "median_d_structure": 0.0016797803665069184,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "flat-on-ruler-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0009176227373494905,
+     "median_d_structure": 0.005236382451412934,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0005523081954943475,
+     "median_d_structure": 0.0007894068468351722,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -1.3090241456883362e-05,
+     "median_d_structure": 0.0022452174345595254,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "112MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.00261352881585726,
+     "median_d_structure": 0.0017371937273861447,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/7 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0013427223583810494,
+     "median_d_structure": 0.0021651652770191916,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.00012669777640496728,
+     "median_d_structure": 0.0019970053248729762,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "foam": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0023477177804740925,
+     "median_d_structure": -0.00043689399950088174,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.008044369981373494,
+     "median_d_structure": 0.0006743516547650577,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.013172062564317265,
+     "median_d_structure": 0.0028656064834612117,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   }
+  },
+  "SC-D4096-bc6fa3c7": {
+   "coffee-bubbles": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 4,
+     "blur_trade": 3,
+     "blur_frac": 0.3,
+     "median_d_floor": -0.035728704222671874,
+     "median_d_structure": 0.00024413121522912751,
+     "median_paid": 0.05195425074845663,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 4/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.000722830461743257,
+     "median_d_structure": 0.0007556583779151657,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.00041007666638975435,
+     "median_d_structure": 0.0017349452576549342,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "lead-1-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 8,
+     "refused": 2,
+     "cleaner": 8,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.11912920929819111,
+     "median_d_structure": 0.16912595278799156,
+     "median_paid": 0.0,
+     "mottle_win": true,
+     "mottle_line": "BETTER ON MOTTLE -- mottle floor -11.91% on 8/8 clean cells, 0 blur-trades, structure +16.91%"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.0009266528561724509,
+     "median_d_structure": 0.005881771478115596,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.008947166143969374,
+     "median_d_structure": -0.000986284101226339,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "113MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 6,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.04503517710588576,
+     "median_d_structure": 0.047511752974132695,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- median_d_floor -0.0450 does not reach -0.05"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0010883389471518243,
+     "median_d_structure": 0.001866906984765774,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0009750840110041539,
+     "median_d_structure": 0.0033288664063255828,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "flat-on-ruler-cpl": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 6,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.028606594509998362,
+     "median_d_structure": 0.04670395249372628,
+     "median_paid": 0.0,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- median_d_floor -0.0286 does not reach -0.05"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0004789913368651036,
+     "median_d_structure": 8.020427902099615e-05,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -3.08056756454467e-05,
+     "median_d_structure": 0.0028788645664175735,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "112MSDCF": {
+    "mottle": {
+     "n": 10,
+     "tested": 7,
+     "refused": 3,
+     "cleaner": 5,
+     "blur_trade": 2,
+     "blur_frac": 0.2857142857142857,
+     "median_d_floor": -0.08020590496354907,
+     "median_d_structure": 0.06585727370571096,
+     "median_paid": 0.0,
+     "mottle_win": true,
+     "mottle_line": "BETTER ON MOTTLE -- mottle floor -8.02% on 5/7 clean cells, 0 blur-trades, structure +6.59%"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0019064827518873988,
+     "median_d_structure": 0.005680379141288769,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.0026921914736411597,
+     "median_d_structure": 0.00455913961773254,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   },
+   "foam": {
+    "mottle": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": 0.004859549519201629,
+     "median_d_structure": 4.2757335730019785e-05,
+     "median_paid": null,
+     "mottle_win": false,
+     "mottle_line": "no mottle claim -- only 0/10 cells clean, need a majority"
+    },
+    "struct": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.008403133483762665,
+     "median_d_structure": -0.00016429403439662026,
+     "median_paid": null,
+     "mottle_win": null,
+     "mottle_line": ""
+    },
+    "grain": {
+     "n": 10,
+     "tested": 10,
+     "refused": 0,
+     "cleaner": 0,
+     "blur_trade": 0,
+     "blur_frac": 0.0,
+     "median_d_floor": -0.014224004185639143,
+     "median_d_structure": 0.0017391462075335685,
+     "median_paid": 0.0,
+     "mottle_win": null,
+     "mottle_line": ""
+    }
+   }
+  }
+ },
+ "untested_paid": []
+}

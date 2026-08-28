@@ -1,0 +1,164 @@
+
+=== SC-NULL-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=1,1,1,1,1,1,1 ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   0   0   +0.0000   +0.0000       -  no mottle claim -- only 0/10 cells clean, need a majority
+  coffee-bubbles         struct   10   0   0   0   +0.0000   +0.0000       -
+  coffee-bubbles         grain    10   0   0   0   +0.0000   +0.0000       -
+  lead-1-cpl             mottle    8   2   0   0   +0.0000   +0.0000       -  no mottle claim -- only 0/8 cells clean, need a majority
+  lead-1-cpl             struct   10   0   0   0   +0.0000   +0.0000       -
+  lead-1-cpl             grain    10   0   0   0   +0.0000   +0.0000       -
+  113MSDCF               mottle    7   3   0   0   +0.0000   +0.0000       -  no mottle claim -- only 0/7 cells clean, need a majority
+  113MSDCF               struct   10   0   0   0   +0.0000   +0.0000       -
+  113MSDCF               grain    10   0   0   0   +0.0000   +0.0000       -
+  flat-on-ruler-cpl      mottle   10   0   0   0   +0.0000   +0.0000       -  no mottle claim -- only 0/10 cells clean, need a majority
+  flat-on-ruler-cpl      struct    7   3   0   0   +0.0000   +0.0000       -
+  flat-on-ruler-cpl      grain    10   0   0   0   +0.0000   +0.0000       -
+  112MSDCF               mottle    7   3   0   0   +0.0000   +0.0000       -  no mottle claim -- only 0/7 cells clean, need a majority
+  112MSDCF               struct   10   0   0   0   +0.0000   +0.0000       -
+  112MSDCF               grain    10   0   0   0   +0.0000   +0.0000       -
+  foam                   mottle   10   0   0   0   +0.0000   +0.0000       -  no mottle claim -- only 0/10 cells clean, need a majority
+  foam                   struct   10   0   0   0   +0.0000   +0.0000       -
+  foam                   grain    10   0   0   0   +0.0000   +0.0000       -
+
+=== SC-4-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=1,4,4,4,4,4,4 ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   4   0   -0.0154   +0.0010   0.000  no mottle claim -- only 4/10 cells clean, need a majority
+  coffee-bubbles         struct   10   0   5   0   -0.0245   +0.0017   0.000
+  coffee-bubbles         grain    10   0   0   0   -0.0004   +0.0017       -
+  lead-1-cpl             mottle    8   2   0   0   +0.0010   +0.0000       -  no mottle claim -- only 0/8 cells clean, need a majority
+  lead-1-cpl             struct   10   0   0   0   +0.0092   -0.0002       -
+  lead-1-cpl             grain    10   0   0   0   +0.0130   +0.0004       -
+  113MSDCF               mottle    7   3   2   0   +0.0028   +0.0008   0.000  no mottle claim -- only 2/7 cells clean, need a majority
+  113MSDCF               struct   10   0   2   0   +0.0027   +0.0007   0.000
+  113MSDCF               grain    10   0   0   0   +0.0011   +0.0017   0.000
+  flat-on-ruler-cpl      mottle   10   0   0   0   -0.0003   +0.0029       -  no mottle claim -- only 0/10 cells clean, need a majority
+  flat-on-ruler-cpl      struct    7   3   0   0   -0.0000   -0.0009       -
+  flat-on-ruler-cpl      grain    10   0   0   0   +0.0000   -0.0006       -
+  112MSDCF               mottle    7   3   2   0   -0.0002   +0.0056   0.000  no mottle claim -- only 2/7 cells clean, need a majority
+  112MSDCF               struct   10   0   2   0   +0.0044   +0.0014   0.000
+  112MSDCF               grain    10   0   0   0   +0.0020   +0.0034       -
+  foam                   mottle   10   0   0   0   +0.0030   -0.0003       -  no mottle claim -- only 0/10 cells clean, need a majority
+  foam                   struct   10   0   0   0   -0.0049   +0.0007       -
+  foam                   grain    10   0   0   0   -0.0092   +0.0023       -
+
+=== SC-8-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=1,8,8,8,8,8,8 ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   5   0   -0.0218   +0.0013   0.000  no mottle claim -- only 5/10 cells clean, need a majority
+  coffee-bubbles         struct   10   0   6   0   -0.0397   +0.0025   0.000
+  coffee-bubbles         grain    10   0   0   0   +0.0009   +0.0021       -
+  lead-1-cpl             mottle    8   2   0   0   +0.0025   +0.0023       -  no mottle claim -- only 0/8 cells clean, need a majority
+  lead-1-cpl             struct   10   0   2   0   +0.0081   +0.0001   0.000
+  lead-1-cpl             grain    10   0   0   0   +0.0103   +0.0000   0.000
+  113MSDCF               mottle    7   3   2   0   +0.0008   +0.0033   0.000  no mottle claim -- only 2/7 cells clean, need a majority
+  113MSDCF               struct   10   0   2   0   +0.0039   +0.0008   0.000
+  113MSDCF               grain    10   0   0   0   +0.0016   +0.0019   0.000
+  flat-on-ruler-cpl      mottle   10   0   0   0   -0.0002   +0.0027       -  no mottle claim -- only 0/10 cells clean, need a majority
+  flat-on-ruler-cpl      struct    7   3   0   0   +0.0006   -0.0007       -
+  flat-on-ruler-cpl      grain    10   0   0   0   +0.0002   -0.0004       -
+  112MSDCF               mottle    7   3   2   0   -0.0068   +0.0105   0.000  no mottle claim -- only 2/7 cells clean, need a majority
+  112MSDCF               struct   10   0   2   0   +0.0036   +0.0022   0.000
+  112MSDCF               grain    10   0   0   0   +0.0030   +0.0041       -
+  foam                   mottle   10   0   0   0   +0.0032   -0.0003       -  no mottle claim -- only 0/10 cells clean, need a majority
+  foam                   struct   10   0   0   0   -0.0050   +0.0008       -
+  foam                   grain    10   0   0   0   -0.0119   +0.0027   0.000
+
+=== SC-16-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=1,16,16,16,16,16,16 ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   6   0   -0.0445   +0.0014   0.000  no mottle claim -- median_d_floor -0.0445 does not reach -
+  coffee-bubbles         struct   10   0   7   0   -0.0560   +0.0025   0.000
+  coffee-bubbles         grain    10   0   0   0   +0.0031   +0.0021       -
+  lead-1-cpl             mottle    8   2   1   0   -0.0097   +0.0162   0.000  no mottle claim -- only 1/8 cells clean, need a majority
+  lead-1-cpl             struct   10   0   4   0   +0.0079   +0.0010   0.000
+  lead-1-cpl             grain    10   0   0   0   +0.0113   +0.0009   0.000
+  113MSDCF               mottle    7   3   2   0   -0.0040   +0.0086   0.000  no mottle claim -- only 2/7 cells clean, need a majority
+  113MSDCF               struct   10   0   2   0   +0.0017   +0.0020   0.000
+  113MSDCF               grain    10   0   0   0   +0.0022   +0.0017   0.000
+  flat-on-ruler-cpl      mottle   10   0   0   0   +0.0003   +0.0042       -  no mottle claim -- only 0/10 cells clean, need a majority
+  flat-on-ruler-cpl      struct    7   3   0   0   +0.0012   -0.0000       -
+  flat-on-ruler-cpl      grain    10   0   0   0   -0.0000   +0.0009       -
+  112MSDCF               mottle    7   3   2   0   -0.0119   +0.0171   0.000  no mottle claim -- only 2/7 cells clean, need a majority
+  112MSDCF               struct   10   0   3   0   -0.0061   +0.0077   0.000
+  112MSDCF               grain    10   0   0   0   +0.0056   +0.0038       -
+  foam                   mottle   10   0   0   0   +0.0035   -0.0006       -  no mottle claim -- only 0/10 cells clean, need a majority
+  foam                   struct   10   0   0   0   -0.0059   +0.0009       -
+  foam                   grain    10   0   0   0   -0.0128   +0.0029   0.000
+
+=== SC-RAMP-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=1,1,4,16,32,32,32 ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   0   0   +0.0045   +0.0002       -  no mottle claim -- only 0/10 cells clean, need a majority
+  coffee-bubbles         struct   10   0   0   0   -0.0013   +0.0004       -
+  coffee-bubbles         grain    10   0   0   0   -0.0018   +0.0005       -
+  lead-1-cpl             mottle    8   2   0   0   +0.0016   -0.0012       -  no mottle claim -- only 0/8 cells clean, need a majority
+  lead-1-cpl             struct   10   0   0   0   +0.0023   +0.0013       -
+  lead-1-cpl             grain    10   0   0   0   +0.0015   +0.0008       -
+  113MSDCF               mottle    7   3   0   0   +0.0021   +0.0005       -  no mottle claim -- only 0/7 cells clean, need a majority
+  113MSDCF               struct   10   0   0   0   +0.0007   +0.0011       -
+  113MSDCF               grain    10   0   0   0   -0.0001   +0.0017       -
+  flat-on-ruler-cpl      mottle   10   0   0   0   -0.0001   +0.0051       -  no mottle claim -- only 0/10 cells clean, need a majority
+  flat-on-ruler-cpl      struct    7   3   0   0   +0.0002   +0.0007       -
+  flat-on-ruler-cpl      grain    10   0   0   0   -0.0001   +0.0014       -
+  112MSDCF               mottle    7   3   0   0   +0.0030   +0.0008       -  no mottle claim -- only 0/7 cells clean, need a majority
+  112MSDCF               struct   10   0   0   0   +0.0012   +0.0022       -
+  112MSDCF               grain    10   0   0   0   -0.0001   +0.0019       -
+  foam                   mottle   10   0   0   0   +0.0022   -0.0004       -  no mottle claim -- only 0/10 cells clean, need a majority
+  foam                   struct   10   0   0   0   -0.0080   +0.0007       -
+  foam                   grain    10   0   0   0   -0.0132   +0.0029   0.000
+
+=== SC-D64-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=1,1,1,64,64,64,64 ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   0   0   -0.0006   +0.0009       -  no mottle claim -- only 0/10 cells clean, need a majority
+  coffee-bubbles         struct   10   0   0   0   -0.0007   +0.0004       -
+  coffee-bubbles         grain    10   0   0   0   -0.0017   +0.0001       -
+  lead-1-cpl             mottle    8   2   0   0   +0.0025   -0.0025       -  no mottle claim -- only 0/8 cells clean, need a majority
+  lead-1-cpl             struct   10   0   0   0   +0.0013   +0.0010       -
+  lead-1-cpl             grain    10   0   0   0   +0.0013   +0.0010       -
+  113MSDCF               mottle    7   3   0   0   +0.0024   +0.0008       -  no mottle claim -- only 0/7 cells clean, need a majority
+  113MSDCF               struct   10   0   0   0   +0.0009   +0.0011       -
+  113MSDCF               grain    10   0   0   0   +0.0000   +0.0017       -
+  flat-on-ruler-cpl      mottle   10   0   0   0   +0.0009   +0.0052       -  no mottle claim -- only 0/10 cells clean, need a majority
+  flat-on-ruler-cpl      struct    7   3   0   0   +0.0006   +0.0008       -
+  flat-on-ruler-cpl      grain    10   0   0   0   -0.0000   +0.0022       -
+  112MSDCF               mottle    7   3   0   0   +0.0026   +0.0017       -  no mottle claim -- only 0/7 cells clean, need a majority
+  112MSDCF               struct   10   0   0   0   +0.0013   +0.0022       -
+  112MSDCF               grain    10   0   0   0   -0.0001   +0.0020       -
+  foam                   mottle   10   0   0   0   +0.0023   -0.0004       -  no mottle claim -- only 0/10 cells clean, need a majority
+  foam                   struct   10   0   0   0   -0.0080   +0.0007       -
+  foam                   grain    10   0   0   0   -0.0132   +0.0029   0.000
+
+=== SC-D4096-bc6fa3c7   STREHL_GATE_FLOOR_SCALE=1,1,1,4096,4096,4096,4096 ===
+  subject                band    tst ref cln blr   d_floor  d_struct    paid  verdict
+  coffee-bubbles         mottle   10   0   4   3   -0.0357   +0.0002   0.052  no mottle claim -- only 4/10 cells clean, need a majority
+  coffee-bubbles         struct   10   0   0   0   +0.0007   +0.0008       -
+  coffee-bubbles         grain    10   0   0   0   -0.0004   +0.0017       -
+  lead-1-cpl             mottle    8   2   8   0   -0.1191   +0.1691   0.000  WIN
+  lead-1-cpl             struct   10   0   0   0   -0.0009   +0.0059       -
+  lead-1-cpl             grain    10   0   0   0   +0.0089   -0.0010       -
+  113MSDCF               mottle    7   3   6   0   -0.0450   +0.0475   0.000  no mottle claim -- median_d_floor -0.0450 does not reach -
+  113MSDCF               struct   10   0   0   0   +0.0011   +0.0019       -
+  113MSDCF               grain    10   0   0   0   +0.0010   +0.0033       -
+  flat-on-ruler-cpl      mottle   10   0   6   0   -0.0286   +0.0467   0.000  no mottle claim -- median_d_floor -0.0286 does not reach -
+  flat-on-ruler-cpl      struct    7   3   0   0   +0.0005   +0.0001       -
+  flat-on-ruler-cpl      grain    10   0   0   0   -0.0000   +0.0029       -
+  112MSDCF               mottle    7   3   5   2   -0.0802   +0.0659   0.000  WIN
+  112MSDCF               struct   10   0   0   0   +0.0019   +0.0057       -
+  112MSDCF               grain    10   0   0   0   +0.0027   +0.0046       -
+  foam                   mottle   10   0   0   0   +0.0049   +0.0000       -  no mottle claim -- only 0/10 cells clean, need a majority
+  foam                   struct   10   0   0   0   -0.0084   -0.0002       -
+  foam                   grain    10   0   0   0   -0.0142   +0.0017   0.000
+
+====================================================================================================
+PER-ARM SUMMARY over the six mottle-convicted subjects
+  arm                  mottle wins  med d_floor med d_struct  med paid  verdict
+  SC-NULL-bc6fa3c7          0/6         +0.0000      +0.0000       NaN  NO MOTTLE CLAIM
+  SC-4-bc6fa3c7             0/6         +0.0004      +0.0007     0.000  NO MOTTLE CLAIM
+  SC-8-bc6fa3c7             0/6         +0.0003      +0.0008     0.000  NO MOTTLE CLAIM
+  SC-16-bc6fa3c7            0/6         -0.0069      +0.0015     0.000  NO MOTTLE CLAIM
+  SC-RAMP-bc6fa3c7          0/6         +0.0022      +0.0009       NaN  NO MOTTLE CLAIM
+  SC-D64-bc6fa3c7           0/6         +0.0024      +0.0009       NaN  NO MOTTLE CLAIM
+  SC-D4096-bc6fa3c7         2/6         -0.0404      +0.0013     0.000  PARTIAL -- 2/6 subjects
+
+  WIN_MIN=0.05  BLUR_FRAC_MAX=0.34
+
+  No cell landed `paid` in the untested 0.25-0.406 range.
+
+  wrote C:\dev\strehl-out\BUILD-RECERT\logs\scalescore.json

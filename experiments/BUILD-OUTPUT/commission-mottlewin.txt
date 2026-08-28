@@ -1,0 +1,37 @@
+WIN_MIN=0.05  WIN_MAJORITY=0.5  WIN_STRUCT_TOL=0.02  MIN_TESTED_WIN=3
+
+  coffee-bubbles         C improve  fired=True  BETTER ON MOTTLE -- mottle floor -43.26% on 10/10 clean cells, 0 blur-trades, structure +8.86%
+  coffee-bubbles         D blur     fired=False  d_floor -0.2940  paid 1.319  no mottle claim -- 10/10 cells (100%) bought the noise win out of structure (BLUR_TRADE), over the 34% ceiling; a blur is not a mottle win
+  coffee-bubbles         F subthr   fired=False  d_floor -0.0160 (target: between -0.005 and -0.05)
+  lead-1-cpl             C improve  fired=True  BETTER ON MOTTLE -- mottle floor -39.22% on 2/3 clean cells, 0 blur-trades, structure +4.17%
+  lead-1-cpl             D blur     fired=False  d_floor -0.2572  paid 0.845  no mottle claim -- 8/8 cells (100%) bought the noise win out of structure (BLUR_TRADE), over the 34% ceiling; a blur is not a mottle win
+  lead-1-cpl             F subthr   fired=False  d_floor -0.0133 (target: between -0.005 and -0.05)
+  113MSDCF               C improve  fired=True  BETTER ON MOTTLE -- mottle floor -45.35% on 4/4 clean cells, 0 blur-trades, structure +12.69%
+  113MSDCF               D blur     fired=False  d_floor -0.2365  paid 1.210  no mottle claim -- 7/7 cells (100%) bought the noise win out of structure (BLUR_TRADE), over the 34% ceiling; a blur is not a mottle win
+  113MSDCF               F subthr   fired=False  d_floor -0.0159 (target: between -0.005 and -0.05)
+  flat-on-ruler-cpl      C improve  fired=True  BETTER ON MOTTLE -- mottle floor -40.12% on 5/6 clean cells, 0 blur-trades, structure +32.69%
+  flat-on-ruler-cpl      D blur     fired=False  d_floor -0.3619  paid 0.771  no mottle claim -- 10/10 cells (100%) bought the noise win out of structure (BLUR_TRADE), over the 34% ceiling; a blur is not a mottle win
+  flat-on-ruler-cpl      F subthr   fired=False  d_floor -0.0111 (target: between -0.005 and -0.05)
+  112MSDCF               C improve  fired=True  BETTER ON MOTTLE -- mottle floor -41.19% on 5/5 clean cells, 0 blur-trades, structure +7.94%
+  112MSDCF               D blur     fired=False  d_floor -0.2511  paid 1.196  no mottle claim -- 7/7 cells (100%) bought the noise win out of structure (BLUR_TRADE), over the 34% ceiling; a blur is not a mottle win
+  112MSDCF               F subthr   fired=False  d_floor -0.0129 (target: between -0.005 and -0.05)
+  foam                   C improve  fired=True  BETTER ON MOTTLE -- mottle floor -43.21% on 10/10 clean cells, 0 blur-trades, structure +9.35%
+  foam                   D blur     fired=False  d_floor -0.2543  paid 1.253  no mottle claim -- 10/10 cells (100%) bought the noise win out of structure (BLUR_TRADE), over the 34% ceiling; a blur is not a mottle win
+  foam                   F subthr   fired=False  d_floor -0.0109 (target: between -0.005 and -0.05)
+
+  arm G invariance -- BLUR_TRADE fraction, per subject:
+    C improve (denoise): coffee-bubbles=0.00, lead-1-cpl=0.33, 113MSDCF=0.00, flat-on-ruler-cpl=0.17, 112MSDCF=0.00, foam=0.00
+    D blur   (blur)   : coffee-bubbles=1.00, lead-1-cpl=1.00, 113MSDCF=1.00, flat-on-ruler-cpl=1.00, 112MSDCF=1.00, foam=1.00
+    denoise max 0.333   BLUR_FRAC_MAX 0.340   blur min 1.000   -> DISJOINT
+
+==============================================================================
+  A null       PASS  6  FAIL  0   (fired on 0/6 subjects)
+  B degrade    PASS  6  FAIL  0   (fired on 0/6 subjects)
+  C improve    PASS  6  FAIL  0   (fired on 6/6 subjects)
+  D blur       PASS  6  FAIL  0   (fired on 0/6 subjects)
+  E nonreward  PASS  6  FAIL  0   (fired on 0/6 subjects)
+  F subthresh  PASS  6  FAIL  0   (fired on 0/6 subjects)
+  G invariance PASS  1  FAIL  0   (fired on 0/0 subjects)
+  TOTAL        37/37 cells pass
+
+COMMISSIONING PASSED -- the clause fires on a planted mottle improvement, and refuses null, added mottle, wide blur, heavier blur and a sub-threshold win.
