@@ -3785,10 +3785,13 @@ first and must fail:
 
 | subject | original | ARGV-ONLY (old contract) | VERBATIM (new) | verdict |
 | --- | --- | --- | --- | --- |
-| `coffee-bubbles` | `47FBD1BB4CCB…` | `D73BFBB52566…` DIFFERS | `47FBD1BB4CCB…` identical | PASS |
-| `109MSDCF` | `E67FD38A12DF…` | `389C2FF769F1…` DIFFERS | `E67FD38A12DF…` identical | PASS |
+| `coffee-bubbles` | `7738DF099D65…` | `EF7C3B8FCEA1…` DIFFERS | `7738DF099D65…` identical | PASS |
+| `109MSDCF` | `8EAA4B849C84…` | `8C418E60C186…` DIFFERS | `8EAA4B849C84…` identical | PASS |
 
-`2 masters = 2 pass + 0 fail + 0 inconclusive`. The control biting on both
+`2 masters = 2 pass + 0 fail + 0 inconclusive + 0 binary-drifted`, all four
+outcomes counted so the sum is checkable against the number of masters read.
+Both rows are measured against binary `944E67F4DCA8…`; §23.9 explains why that
+qualifier is load-bearing rather than decorative. The control biting on both
 subjects is what earns the green: it proves the test could have failed, and it
 independently demonstrates that the dust correction is **not inert** -- with and
 without it, the same subject renders to different bytes.
@@ -3850,5 +3853,149 @@ file.
 | `experiments/BUILD-DEFECT/src/86-coords-control.py` | `coords active` vs `full`; hard-errors if the mutation does not land |
 | `experiments/BUILD-DEFECT/data/86-coords-control.json` | BLIND: both arms 2/2 at identical depths |
 | `experiments/BUILD-DEFECT/src/87-repro-reproduces.ps1` | Executes the printed command; negative control runs first and must differ |
-| `experiments/BUILD-DEFECT/out/87-repro-reproduces.json` | 2 masters = 2 pass + 0 fail + 0 inconclusive |
+| `experiments/BUILD-DEFECT/out/87-repro-reproduces.json` | 2 masters = 2 pass + 0 fail + 0 inconclusive + 0 binary-drifted |
+| `experiments/BUILD-DEFECT/out/87-commission.json` | 4 arms = 4 caught + 0 missed, including the arm whose plant was inert |
+| `experiments/BUILD-DEFECT/out/88-ship-validate-RUN.txt` | Run-level provenance: recipe, per-switch liveness, cleared-set size |
+| `experiments/BUILD-DEFECT/out/88-ship-validate-*.manifest.json` | The two validated masters' manifests, with the defect partition |
+| `experiments/BUILD-DEFECT/src/88-verify-s23.py` | Re-derives this section from the artifacts; `--commission` plants reversals and deletions |
+| `experiments/BUILD-DEFECT/out/88-commission.json` | 26 planted = 26 caught + 0 missed + 0 unanchored + 0 ambiguous |
 | `experiments/BUILD-DEFECT/out/defect-map-ILCE-7CM2-photo.txt` | The v2 shipping map, `AD5769CD46F1…` |
+
+### 23.9 A reproduction command names a path, and a path is not a binary
+
+The first regeneration of the §23.5 table failed on **both** subjects. The
+honest reading of two masters that had passed an hour earlier and now did not is
+that something in the measurement had moved, so the failure was diagnosed rather
+than re-run until it went green.
+
+It had moved. The two masters were rendered against `A768B385…`; the binary on
+disk was `944E67F4DCA8…`. Nothing in this lane rebuilt it deliberately. Another
+lane committed `optics.rs` into the shared working tree, and one of *this*
+lane's `cargo test` runs picked the change up and relinked `strehl.exe` in
+place. The mtime did not move enough to notice. The reproduction command names
+the executable by **path**, so it faithfully re-ran a command whose meaning had
+changed underneath it, and the verifier reported that as a defect in the
+command.
+
+That verdict was wrong, and wrong in the expensive direction: it accuses a
+correct artifact. The two facts are not the same and must not share an outcome:
+
+- **FAIL** -- the same binary, given the printed command, produces different
+  bytes. The command is wrong.
+- **BINARY-DRIFTED** -- the binary named by the path is not the binary that
+  rendered the master. The command is *untested*, and nothing whatever has been
+  learned about it. This is NOT a failure of the reproduction command.
+
+The sidecar had recorded `sha256` of the binary since the first version of this
+harness. The verifier simply never read it. So the fix is one comparison and a
+fourth counted outcome, and the partition becomes
+`pass + fail + inconclusive + binary-drifted = masters read`.
+
+The check was commissioned on the failure that produced it, which is as good a
+natural experiment as this project has had: run against the stale masters it
+reports `sidecar A768B3851F25 / on disk 944E67F4DCA8 -> DRIFTED` on both and
+exits 3; re-render against the current binary and the same two masters return
+`2 pass + 0 fail + 0 inconclusive + 0 binary-drifted` with the ARGV-ONLY control
+still differing on both.
+
+An accident is not an instrument, though, so `-Commission` reproduces every
+outcome on demand, from a copy, with each mutation anchored on a unique full
+line and hard-erroring if it does not land:
+
+| arm | mutation | required | measured |
+| --- | --- | --- | --- |
+| `A_NULL` | none; untouched copy | PASS, exit 0 | CAUGHT |
+| `B_DRIFT` | the sidecar's `sha256` line | BINARY-DRIFTED, exit 3 | CAUGHT |
+| `C_WRONGCMD` | `STREHL_DEFECT_ARM` `dust` -> `none` | FAIL, exit 1 | CAUGHT |
+| `D_IMPLIED` | delete `$env:STREHL_DEFECT = 'on'` | PASS, exit 0 | CAUGHT |
+
+`4 arms = 4 caught + 0 missed`. `C_WRONGCMD` and `D_IMPLIED` are the pair that
+matters. One mutation must move the verdict and the other must not, so an
+instrument that fires on any edit fails `D_IMPLIED` and one that fires on none
+fails `C_WRONGCMD`; neither can be passed by a check that is merely quiet.
+
+`D_IMPLIED` earned that role by being wrong. It was written as the *defect*
+arm -- delete the master switch, expect the correction to stop -- and it
+reported PASS. The instrument was right and the plant was inert:
+`stack.rs:897` reads `STREHL_DEFECT_MAP` **first** and it implies on, documented
+at `stack.rs:864` as *"naming a map is asking for it"*, so the deleted line was
+one the command does not need. Had the arm been scored on `caught` alone it
+would have read as a blind spot in the verifier and sent this lane looking for a
+bug that was not there. Kept with the verdict it actually earns, it measures a
+real property: **the reproduction command survives losing that line**, and the
+redundancy is now on the record rather than assumed.
+
+Two consequences that reach past this lane. First, **every A/B comparison in a
+shared tree is invalid unless the binary is hashed, not pathed** -- an
+uncontrolled rebuild is not a rare event here, it happened without any action by
+the lane it affected. Second, the master hashes in §23.5 changed between the two
+runs (`47FBD1BB…` to `7738DF09…`), which means **a byte-identity claim is a
+statement about a binary and is void without one**. The defect accounting is the
+control that shows the change came from elsewhere: examined 12388, corrected
+12388, the same 1-of-2 site confirmation and the same 49551 samples changed
+under both binaries. `optics.rs` moved the render; it did not move the defect
+path.
+
+### 23.10 The run-level provenance carried the flags and not the fixes
+
+`RUN.txt` recorded the binary, its hash, the commit and the flags, and said
+nothing about which fixes were enabled -- the information that separates a
+corrected corpus from an uncorrected one lived only in the per-subject
+manifests. An arm directory is the unit somebody finds a month later, and this
+is the same failure class as the flats map that had to be headered
+`SUPERSEDED`: an artifact that does not carry its own provenance gets re-adopted
+by whoever finds it next. It now carries the recipe, each switch's liveness
+verdict, and the size of the cleared set, with `NOT APPLIED` written as a
+positive statement so an empty recipe cannot be read as a missing field:
+
+```
+fixes arm       : ship
+fix             : STREHL_DEFECT=on  [LIVE]
+fix             : STREHL_DEFECT_MAP=...\out\defect-map-ILCE-7CM2-photo.txt  [LIVE]
+fix             : STREHL_DEFECT_ARM=dust  [LIVE]
+liveness        : 3 of 3 probed live, 0 dead
+cleared env     : 23 names parsed from byte-freeze.rs RENDER_ENV
+```
+
+### 23.11 This section had no verifier for the several hours it mattered most
+
+Sections 18, 20, 21 and 22 each carry a checker that re-derives every number
+from the artifacts. Section 23 -- the one describing the render a reader is most
+likely to act on -- carried none. `88-verify-s23.py` closes that:
+`94 declared = 94 matched + 0 mismatched + 0 unresolved`, with tables parsed
+structurally so each measured value has exactly one site, and with the eight
+cited artifacts checked for existence rather than assumed.
+
+Its commissioning is the part worth reporting. `26 planted = 26 caught +
+0 missed + 0 unanchored + 0 ambiguous`, of which **13 are numeric, 8 are
+conclusion reversals, and 5 are deletions**. The proportions are deliberate. A
+number is not a conclusion, and this project now has four independent lanes that
+discovered their own verifier could not see a reversed one: V-NEVERWORSE passed
+a verdict flipped from refuted to confirmed through 712 green checks, V-LINEAR
+carried four conclusion-flip arms at 88/88, V-KILLB0's verdict existed only in
+prose, and this lane's own audit passed 7 of 10 reversals with every number
+left correct.
+
+**Stated plainly, because four lanes is not a coincidence: presence-testing
+cannot detect polarity.** It is the natural thing to write -- searching for the
+string you expect is what "check the document says X" means to anyone -- and it
+is satisfied by any duplicate or paraphrase elsewhere in the file. The remedy is
+to derive the conclusion from the artifact and require the document to state
+*that* member of the pair, so its opposite MISMATCHES and its absence
+UNRESOLVES. Deletion is planted separately because deleting a finding is
+cheaper than stating it wrongly, and a check anchored on a string vanishes
+politely when the string does.
+
+Two instrument defects were found in the commissioner itself, both by the
+partition refusing to call an unlanded plant a pass:
+
+- One arm read AMBIGUOUS. `7738DF099D65…` occurs twice in §23.5 -- legitimately,
+  since byte-identity means the original and the replay carry the same hash --
+  so a single-site mutation left a duplicate to satisfy the search. Re-anchored
+  on the whole table row.
+- One arm read UNANCHORED on `It was unreachable`, which is present. The
+  document is hard-wrapped and the phrase straddles a line break as
+  `It was\nunreachable`. A literal miss now falls back to a `\s+`-joined regex
+  over the anchor's tokens. **A plant reported absent on text that is right
+  there is a clean bill of health the verifier did not earn**, and it is the
+  same failure as a grep that reports no match on reflowed prose.

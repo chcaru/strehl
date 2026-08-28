@@ -1,0 +1,25 @@
+acceptance arm  : ship-validate
+finished        : 2026-08-28T00:10:21.6245470-07:00
+pin             : UNPINNED (operator supplied C:\dev\blog\death-of-software\projects\strehl\.cargo-target-defect\release\strehl.exe)
+binary          : C:\dev\blog\death-of-software\projects\strehl\.cargo-target-defect\release\strehl.exe
+binary sha256   : 944E67F4DCA8D28911B7AEC184E5077DCCF78F8C029854DA0FD00594037F33C4
+git commit      : UNATTRIBUTED -- operator-supplied binary; tree HEAD was 5adc13ac320e0fce0d7566ccba7f5173d477b5a8 WITH UNCOMMITTED CHANGES (the binary may not match any commit)
+library         : D:\personal\macro
+flags           : --linear-srgb --demosaic   (IDENTICAL on every subject)
+fixes arm       : ship
+fix             : STREHL_DEFECT=on  [LIVE]
+fix             : STREHL_DEFECT_MAP=C:\dev\blog\death-of-software\projects\strehl\experiments\BUILD-DEFECT\out\defect-map-ILCE-7CM2-photo.txt  [LIVE]
+fix             : STREHL_DEFECT_ARM=dust  [LIVE]
+liveness        : 3 of 3 probed live, 0 dead
+cleared env     : 23 names parsed from byte-freeze.rs RENDER_ENV
+subjects        : 2/2 rendered
+frames          : 41
+wall clock      : 0 min
+PARTIAL ARM     : -Only was used -- coffee-bubbles, 109MSDCF
+
+score it with:
+  python C:\dev\strehl-out\ORCH-CLAMP\accept.py D:\strehl-out\BUILD-DEFECT\ship-validate <other-arm-dir> --ref <arm>
+
+Arms are comparable ONLY if rendered with these same flags in this same
+colour space. accept.py reads absolute DN; a tone-mapped arm and a
+camera-linear arm are not two arms of one experiment.

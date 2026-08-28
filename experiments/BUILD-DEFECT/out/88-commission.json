@@ -1,0 +1,12 @@
+{
+  "planted": 26,
+  "caught": 26,
+  "missed": 0,
+  "unanchored": 0,
+  "ambiguous": 0,
+  "reversals": 8,
+  "deletions": 5,
+  "numeric": 13,
+  "declared": 94,
+  "verdict": "COMMISSIONED"
+}

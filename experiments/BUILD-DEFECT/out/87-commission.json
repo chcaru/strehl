@@ -1,0 +1,31 @@
+{
+  "missed": 0,
+  "caught": 4,
+  "verdict": "COMMISSIONED",
+  "arms": [
+    {
+      "why": "untouched copy",
+      "want_exit": 0,
+      "want": "PASS",
+      "name": "A_NULL"
+    },
+    {
+      "why": "sidecar's recorded binary sha256 changed",
+      "want_exit": 3,
+      "want": "BINARY-DRIFTED",
+      "name": "B_DRIFT"
+    },
+    {
+      "why": "the repro block's arm becomes 'none' -- valid, runs clean, renders a different image",
+      "want_exit": 1,
+      "want": "FAIL",
+      "name": "C_WRONGCMD"
+    },
+    {
+      "why": "the repro block loses STREHL_DEFECT='on'; _MAP implies it, so the outcome must NOT move",
+      "want_exit": 0,
+      "want": "PASS",
+      "name": "D_IMPLIED"
+    }
+  ]
+}

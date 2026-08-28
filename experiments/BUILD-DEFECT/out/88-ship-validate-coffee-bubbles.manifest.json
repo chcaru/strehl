@@ -1,0 +1,106 @@
+{
+  "artifact": "coffee-bubbles--ship-validate.tiff",
+  "rendered": "2026-08-28T00:05:16.5722277-07:00",
+  "status": "ok",
+  "exit": 0,
+  "bytes": 197798934,
+  "sha256": "7738DF099D65CF70EBAF10B0241DB182279A8224D88606721E7A8529E742F391",
+  "subject": "coffee-bubbles",
+  "source": "D:\\personal\\macro\\coffee-bubbles",
+  "frames": 19,
+  "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\.cargo-target-defect\\release\\strehl.exe",
+  "binary_sha256": "944E67F4DCA8D28911B7AEC184E5077DCCF78F8C029854DA0FD00594037F33C4",
+  "git_commit": "UNATTRIBUTED -- operator-supplied binary; tree HEAD was 2fafc91a52723c7d405ef530abb7aed930ce790e WITH UNCOMMITTED CHANGES (the binary may not match any commit)",
+  "pin": "UNPINNED",
+  "argv": [
+    "stack",
+    "D:\\personal\\macro\\coffee-bubbles",
+    "--out",
+    "D:\\strehl-out\\BUILD-DEFECT\\ship-validate\\coffee-bubbles--ship-validate.tiff",
+    "--linear-srgb",
+    "--demosaic"
+  ],
+  "flags": "--linear-srgb --demosaic",
+  "fixes_arm": "ship",
+  "exposure": null,
+  "backend": "pyramid (default)",
+  "cleared_env": [
+    "STREHL_ACUITY",
+    "STREHL_ALIGN",
+    "STREHL_CACHE_DIR",
+    "STREHL_DEFECT",
+    "STREHL_DEFECT_ARM",
+    "STREHL_DEFECT_HOT_FLOOR",
+    "STREHL_DEFECT_MAP",
+    "STREHL_EDGE_AWARE",
+    "STREHL_EDGE_CONF",
+    "STREHL_EDGE_TAU",
+    "STREHL_FIX_CA",
+    "STREHL_FIX_HALO",
+    "STREHL_FIX_HALO_DELTA",
+    "STREHL_FULLRES_GATHER",
+    "STREHL_GATE_FLOOR",
+    "STREHL_MERGE",
+    "STREHL_ONLY_FRAME",
+    "STREHL_PHOTOMETRIC",
+    "STREHL_PYRAMID_WORKERS",
+    "STREHL_VEIL",
+    "STREHL_VEIL_FLOOR",
+    "STREHL_VEIL_MARGIN",
+    "STREHL_WARPMAP"
+  ],
+  "fixes": [
+    {
+      "name": "STREHL_DEFECT",
+      "value": "on",
+      "why": "master switch for sensor defect correction; off by default because a stale map manufactures the defect it removes",
+      "liveness": "LIVE",
+      "probe_exit": 1,
+      "probe_value": "xyzzy-not-a-setting",
+      "file_sha256": null
+    },
+    {
+      "name": "STREHL_DEFECT_MAP",
+      "value": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-DEFECT\\out\\defect-map-ILCE-7CM2-photo.txt",
+      "why": "the photograph-derived map. NOT defect-map-ILCE-7CM2.txt, which is headered SUPERSEDED: three of its four motes read POSITIVE on real subjects",
+      "liveness": "LIVE",
+      "probe_exit": 1,
+      "probe_value": "C:\\no-such-defect-map-xyzzy.txt",
+      "file_sha256": "AD5769CD46F1EB48C89BFF03840B98C05FD7EF4778BA73237ECB0BB3456306D4"
+    },
+    {
+      "name": "STREHL_DEFECT_ARM",
+      "value": "dust",
+      "why": "dust only. The hot arm is a separately measured 14626-site census and ships OFF: M101 measured it immaterial on this body, and 14626 corrections that change nothing are 14626 chances to change something",
+      "liveness": "LIVE",
+      "probe_exit": 1,
+      "probe_value": "dsut",
+      "file_sha256": null
+    }
+  ],
+  "defect": {
+    "applied": true,
+    "counts": {
+      "hot.examined": 0,
+      "hot.corrected": 0,
+      "hot.below_floor": 0,
+      "hot.clipped": 0,
+      "hot.outside": 0,
+      "hot.no_change": 0,
+      "dust.examined": 12388,
+      "dust.corrected": 12388,
+      "dust.clipped": 0,
+      "dust.outside": 0,
+      "dust.no_change": 0
+    },
+    "lines": [
+      "sites           : 1/2 sites confirmed from 8 frames (not significant 1, too shallow 0, not stationary 0, unmeasurable 0)",
+      "site ( 3202,  119): depth -9.468% (map -3.606%), p 0.0075, present 1.00 -> skip: not significant here",
+      "site ( 3434, 2305): depth -12.606% (map -8.236%), p 0.0025, present 1.00 -> CORRECT at scale 1.568",
+      "defect map      : 14626 hot, 652 dust quads, arms dust (floor 8.0 e-, gain 2.28938 DN/e-)",
+      "hot             : examined 0, corrected 0, below floor 0, clipped 0, outside 0, no change 0",
+      "dust            : examined 12388, corrected 12388, clipped 0, outside 0, no change 0",
+      "samples changed : 49551 over 19 frame loads (2607.9 per frame)"
+    ]
+  }
+}

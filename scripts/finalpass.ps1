@@ -1155,6 +1155,25 @@ $bad = @($results | Where-Object { $_.Status -notin @('ok', 'skip') })
     "git commit      : $gitFull"
     "library         : $Library"
     "flags           : $Flags   (IDENTICAL on every subject)"
+    "fixes arm       : $Fixes"
+    # The recipe and its liveness belong in the RUN-level provenance, not only
+    # in the per-subject manifests. An arm directory that does not carry which
+    # fixes were active is the same failure class as the flats map that had to
+    # be headered SUPERSEDED: whoever finds it next re-adopts it without
+    # knowing what produced it. `NOT APPLIED` is printed as a positive
+    # statement so that an empty recipe cannot read as an omitted field.
+    if ($RecipeApplied.Count) {
+        foreach ($f in $RecipeApplied) {
+            $lv = @($RecipeLiveness | Where-Object { $_.Name -eq $f.Name })
+            $tag = if ($lv.Count -eq 1) { if ($lv[0].Live) { 'LIVE' } else { 'NOT LIVE' } }
+                   else { 'LIVENESS NOT PROBED' }
+            "fix             : {0}={1}  [{2}]" -f $f.Name, $f.Value, $tag
+        }
+        $nLive = @($RecipeLiveness | Where-Object { $_.Live }).Count
+        "liveness        : $nLive of $($RecipeLiveness.Count) probed live, $($RecipeLiveness.Count - $nLive) dead"
+    }
+    else { "fix             : NOT APPLIED -- this arm set no switches" }
+    "cleared env     : $($ClearedSwitches.Count) names parsed from byte-freeze.rs RENDER_ENV"
     "subjects        : $($ok.Count)/$($nSubjects) rendered"
     "frames          : $totalFrames"
     "wall clock      : $([math]::Round($runSw.Elapsed.TotalMinutes,1)) min"
