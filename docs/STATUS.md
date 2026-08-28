@@ -20,7 +20,7 @@ marked as unmeasured.
 | **Aura** (estimator vs pyramid) | estimator measures deeper in **17 of 17** conditioned readings; magnitude unknown | fact 1871 |
 | **Chroma** | **1 visible defect, diagnosed, fix specified, not landed** | facts 1861–1863, 1865 |
 | **Dust** | **2 real motes found; correction built, wired, tested, OFF by default** | fact 1856 |
-| **Regional blur** | 1 subject (`flowers-cpl`), undiagnosed | V-ORACLE |
+| **Regional blur** | **`flowers-cpl` diagnosed: capture gap, not a merge defect** — (a) at all 6 sites | fact 1876 |
 | **Depth softening** | root cause identified; candidate fix built but **unscored** | facts 1843–1845, 1849 |
 | **GPU** | **unused** | explicit gap against the brief |
 | **Print-ready** | **NO** — see §3 | |
@@ -97,8 +97,11 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
    estimator backend and accept that the result does not transfer. Fact 1869. N-invariance
    remains necessary but **not sufficient** — a plain mean is perfectly N-invariant and
    destroys grain to 0.229×.
-3. **Diagnose `flowers-cpl`.** Abrupt regional blur adjacent to regions resolving individual
-   hairs. Capture gap or merge defect is not yet established.
+3. ~~**Diagnose `flowers-cpl`.**~~ **RESOLVED — capture gap, not a merge defect.** Verdict (a)
+   at all six sites on licensed bands 2 and 3, measured on the pyramid masters that ship. No
+   code change will fix it; the fix is a capture instruction, which is exactly the case the
+   reshoot advisor exists to serve. One residual thread is named rather than buried: GAP 1,
+   site 1's 0.999 tie is the single reading that could pull the verdict apart. Fact 1876.
 4. **Enable the dust correction in the delivered renders.** Built and OFF. Every delivered
    master currently carries both motes.
 5. **Re-render the corpus once the above land, then re-survey by eye.** The 24/26 verdict was
@@ -161,6 +164,13 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 
 ## 5. Landmines for whoever picks this up
 
+- **`experiments/V-KILLB0/verdict.py` had no pass/fail channel and now has one, commissioned
+  4/4.** Before the fix it printed `FAIL - the check is decorative` and exited 0. If you find
+  any *other* harness in `experiments/` wired into an automated check, assume its exit code is
+  decorative until you have planted a defect and seen it go red. Facts 1874–1875.
+- **`28.5` is two different numbers.** `experiments/V-ORACLE/stageB.py:94` uses 28.5 as a
+  Rec.709 red-plus-blue luma weight — live and correct. The retracted **28.5× aura multiplier**
+  is dead. A grep for `28.5` hunting the dead one lands on the live one.
 - **`crates/strehl-cli/tests/byte-freezes.tsv` must never be re-baselined casually.** If a
   freeze moves, that is a finding.
 - **The dust correction is OFF by default, and the soft gate is off *and* inert.** Off is
