@@ -174,8 +174,11 @@ ones that perturb a number:
 | T4 LOCALITY | one tile only, 8x | only that site changes | **PASS** `[0]` |
 | T5 PEAK-CENTRED | focus peak moved to mid-bracket | no site may read capture-gap | **PASS** `TTTTTT` |
 | T6 PEAK-AT-EDGE | focus peak moved to frame 0 | every site must read capture-gap | **PASS** `GGGGGG` |
+| T7 SPECIFICITY | both arms scaled x3 (no information) | conclusion must not move | **PASS** `TGGGTT` |
+| T8 DELETION | one site removed from the output | harness must refuse it | **PASS** refused 5/6 |
+| CHANNEL | a deliberately false expectation | must report FAIL | **LIVE** |
 
-**6 PASS + 0 FAIL.** Every mutation asserts it actually landed before the rule is
+**8 PASS + 0 FAIL, and the pass/fail channel is verified LIVE.** Every mutation asserts it actually landed before the rule is
 run; a mutation that silently fails to apply produces a green that means nothing.
 
 T2 is the one that matters: the rule *does* emit (b) on all six sites, including
@@ -255,6 +258,55 @@ recovering them would be sub-visible.
 42 detail tiles where the merge is not beaten | 0 detail-but-unmeasurable | 437
 below detail threshold | **TOTAL 486 = 486.** Every tile lands in a counted
 outcome; nothing is skipped and read as a pass.
+
+### 5.45 The merge arm carries strehl's lateral-CA defect, and it flattered me
+
+ORCH has since shown that the visible magenta is strehl's own lateral-CA
+correction: it moves red from -2.009 px inward past zero to +0.672 px outward
+while blue stays outward, so R and B pile up on the same side of every edge, on
+12 of 14 coherent subjects.
+
+**This lands on me because my merge arm is Rec.709 luma, not green** -
+`0.2126 R + 0.7152 G + 0.0722 B`, so **28.5% of it is R and B**. A spurious
+colour fringe is extra edge structure; extra edge structure inflates the merge
+arm; an inflated merge arm drives the source/merge ratio **down**, toward
+verdict **(a)** - the verdict I published. Unlike the selection premium (§5.5),
+whose sign was adverse to my conclusion, **this one biases in my favour**, so it
+had to be measured.
+
+The control re-runs Stage B with the master's **green channel alone**. Green is
+the reference channel that lateral-CA correction moves R and B *relative to*, so
+the green-only arm does not carry the fringe. Frames are unchanged, so the arms
+still differ only in the plane under test.
+
+| band | merge arm = Rec.709 luma (published) | merge arm = green only |
+|---|---|---|
+| b1 point | 0.696 | **0.824** |
+| b2 point | 0.675 | **0.768** |
+| b3 point | 0.870 | 0.869 |
+| b2 box | 0.682 | 0.660 |
+
+**The effect is real: removing R and B raises the b1/b2 point ratios by 14-18%.
+My published medians were flattered by a genuine product defect.** They are not
+invalidated - every median remains **below 1** under both channel choices, so no
+source frame beats the merge at the median detail tile either way.
+
+**One site does move, and it is the one that matters.** Under the green-only arm,
+site 1 (BLURRED, r05c02) flips to **(b) MERGE DEFECT at 1.32x - in band 1 only**.
+Its licensed-band ratios are b2 = **0.999** and b3 = **0.946**. Restricted to the
+licensed bands 2 and 3, all six sites return **(a)** under both channel
+choices, identical to the published table.
+
+So the honest statement is narrower than the one I first published:
+
+- **The verdict (a) holds** on licensed bands under both channel choices.
+- **The margin at site 1 is thinner than I represented.** At b2 the green-only
+  source and merge are within 0.1% of each other - a tie, not a defeat. I
+  previously reported that site at 0.975 and did not flag it as marginal.
+- The one reading that would call site 1 a merge defect depends on **band 1,
+  whose licence is withdrawn** (§2.1), and on the **green-only** arm. Neither
+  alone is sufficient and I am not claiming a defect on that basis. It is the
+  single tile in this study most worth re-measuring once band 1 is qualified.
 
 ### 5.5 The selection premium is inside my own instrument
 
@@ -411,6 +463,23 @@ there. **4a is the ranking to use.** The one follow-up I would offer is a look a
    still correct. Fixed by parsing the conclusion class and adding T5/T6; the
    harness now catches 6 of 6 arms. This is the same shape as V-NEVERWORSE's 712
    green checks and V-LINEAR's 88/88, and I had it too.
+9. **My merge arm was contaminated by a product defect that flattered my own
+   result, and I did not notice for three rounds.** The arm is Rec.709 luma, so
+   28.5% of it is R and B - the two channels strehl's lateral-CA correction
+   piles onto the same side of every edge. The spurious fringe inflates the
+   merge arm and pushes the ratio toward (a). Measured (§5.45): removing R and B
+   raises the b1/b2 ratios by 14-18%, and site 1 flips to (b) at 1.32x in band 1.
+   The verdict survives on licensed bands, but **the margin at site 1 is a tie
+   (b2 = 0.999), not the comfortable 0.975 I published**, and I should have
+   noticed that a luma arm imports every chroma defect in the product into a
+   measurement that did not need chroma at all. Using green alone from the start
+   would have cost nothing.
+10. **Three of my arms were sensitivity-only.** T2-T6 all plant something and
+   require a reaction; none established that the rule stays put when handed a
+   change carrying no information, and none tested that a *deleted* finding is
+   refused rather than silently passed. T7/T8 close both. Separately, every
+   "PASS" I had reported was uncertified until the pass/fail channel itself was
+   commissioned - an inert plant and a dead instrument print the same green.
 
 ## 9. Defects I found in my own instrument before trusting it
 

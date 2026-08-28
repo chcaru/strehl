@@ -87,9 +87,30 @@ MIN_PEAK = 4.0
 MAX_RESID = 2
 
 
-def master_luma(subject: str) -> np.ndarray:
+def master_luma(subject: str, chan: str = "rec709") -> np.ndarray:
+    """Master plane to compare against the frames' green sub-lattices.
+
+    `chan='rec709'` is the default and weights R 0.2126 / G 0.7152 / B 0.0722.
+    That means 28.5% of the merge arm is R and B -- and ORCH has since shown
+    that strehl's own lateral-CA correction piles R and B on the SAME side of
+    every edge, producing a magenta fringe on 12 of 14 coherent subjects.
+
+    A spurious fringe adds edge structure to the merge arm, INFLATES it, drives
+    the source/merge ratio DOWN and therefore biases toward verdict (a) -- the
+    verdict this lane published.  That is a bias in my own favour, so it has to
+    be measured rather than argued.
+
+    `chan='green'` takes the master's green channel alone.  Green is the
+    reference channel that lateral-CA correction moves R and B *relative to*, so
+    the green-only arm is not carrying the fringe.  If the ratios agree between
+    the two, the verdict does not depend on the CA defect.
+    """
     a = tifffile.imread(os.path.join(ora.MASTERS, subject + ".tiff"))
     a = a[:, :, :3].astype(np.float32)
+    if chan == "green":
+        return a[:, :, 1]
+    if chan != "rec709":
+        raise SystemExit(f"unknown --chan {chan!r}")
     return 0.2126 * a[:, :, 0] + 0.7152 * a[:, :, 1] + 0.0722 * a[:, :, 2]
 
 
@@ -229,6 +250,10 @@ def plane_tile_var(p1: np.ndarray, p2: np.ndarray, nr: int, nc: int) -> np.ndarr
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("subject")
+    ap.add_argument("--chan", default="rec709", choices=["rec709", "green"],
+                    help="which master plane forms the merge arm.  'green' is "
+                         "the control for the lateral-CA magenta fringe, which "
+                         "lives in R and B and would inflate the merge arm.")
     ap.add_argument("--sampling", default="both",
                     choices=["point", "box", "both"])
     args = ap.parse_args()
@@ -242,7 +267,7 @@ def main() -> int:
     print(f"{args.subject}: grid {nr}x{nc}, {len(kk)} frames sampled, "
           f"green site offset ({y0},{x0})")
 
-    lum = master_luma(args.subject)
+    lum = master_luma(args.subject, args.chan)
     modes = ["point", "box"] if args.sampling == "both" else [args.sampling]
     # Register against the SHARPEST frame in the bracket, not frame 0.  In a
     # deep stack frame 0 is almost entirely defocused, shares little structure
@@ -299,7 +324,8 @@ def main() -> int:
         print(f"  [{mode}] merge flat-tile floor per band (frame DN^2): "
               + " ".join(f"b{i}={nfloor[i]:.1f}" for i in range(ora.NBAND)))
 
-    p = os.path.join(ora.OUT, "stageB", args.subject + ".npz")
+    p = os.path.join(ora.OUT, "stageB", args.subject +
+                     ("" if args.chan == "rec709" else "__" + args.chan) + ".npz")
     os.makedirs(os.path.dirname(p), exist_ok=True)
     np.savez_compressed(
         p, subject=args.subject, nr=nr, nc=nc, modes=np.array(modes),

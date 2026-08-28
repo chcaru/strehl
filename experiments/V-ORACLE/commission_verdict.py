@@ -58,6 +58,9 @@ SITE_RE = re.compile(
     r"site (\d+) \(\s*(\w+)\s*\) tile r(\d+)c(\d+): \((a|b)\)(.*)")
 
 
+TRUTH_LINES: list[str] = []
+
+
 def classify(letter: str, tail: str) -> str:
     """Collapse a printed verdict to its CONCLUSION CLASS, not just its letter."""
     if letter == "b":
@@ -83,19 +86,30 @@ def roll_peak(var_k: np.ndarray, target: str) -> np.ndarray:
 
 
 def write_variant(subject: str, variant: str, scale, tiles=None,
-                  peak=None) -> None:
+                  peak=None, gain=None) -> None:
     """Copy stage A/B for `subject` to `subject+variant`, applying a mutation.
 
     `scale` > 1 makes the merge WORSE, which drives the source/merge ratio up and
     should drive the rule toward (b).  `tiles`, if given, restricts the damage to
     an explicit list of (row, col).  `peak`, if given ('edge' or 'mid'), moves the
     through-focus peak and should drive the rule between its two (a) classes.
+    `gain`, if given, multiplies BOTH arms equally -- an information-free change
+    that every conclusion must survive unmoved.
     """
     for stage in ("stageA", "stageB"):
         src = os.path.join(ora.OUT, stage, subject + ".npz")
         dst = os.path.join(ora.OUT, stage, subject + variant + ".npz")
         z = np.load(src)
         d = {k: z[k] for k in z.files}
+        if gain is not None:
+            keys = (["contrast", "var_k"] if stage == "stageA"
+                    else [f"{m}_sig" for m in [str(x) for x in z["modes"]]])
+            for k in keys:
+                before = d[k]
+                d[k] = before.astype(float) * gain
+                if not np.any(d[k] != before):
+                    raise SystemExit(
+                        f"MUTATION DID NOT LAND: {k} unchanged in {variant}")
         if stage == "stageA" and peak is not None:
             before = d["var_k"]
             after = roll_peak(before.astype(float), peak)
@@ -125,20 +139,34 @@ def write_variant(subject: str, variant: str, scale, tiles=None,
         np.savez(dst, **d)
 
 
-def run_rule(subject: str, variant: str):
-    """Run the real verdict.py and parse the conclusion it printed per site."""
+def run_rule(subject: str, variant: str, expect_n: int | None = None,
+             bands: str = "1,2,3"):
+    """Run the real verdict.py and parse the conclusion it printed per site.
+
+    `expect_n` guards against DELETION.  ORCH's third instrument lesson is that
+    deleting a finding is cheaper than stating it wrongly, and a harness that
+    only inspects the verdicts it happens to parse reports green when a site
+    silently vanishes.  Without this, T1's "no site reads (b)" passes vacuously
+    on zero sites, one site, or five.
+    """
     out = subprocess.run(
         [sys.executable, os.path.join(HERE, "verdict.py"), subject,
-         "--variant", variant],
+         "--variant", variant, "--bands", bands],
         capture_output=True, text=True, cwd=HERE)
     if out.returncode != 0:
         raise SystemExit(f"verdict.py failed on {variant}:\n{out.stderr[-2000:]}")
+    global TRUTH_LINES
+    TRUTH_LINES = [l for l in out.stdout.splitlines() if SITE_RE.search(l)]
     got = {}
     for m in SITE_RE.finditer(out.stdout):
         got[int(m.group(1))] = classify(m.group(5), m.group(6))
     if not got:
         raise SystemExit(f"parsed no site verdicts from {variant}; the check "
                          f"cannot certify anything:\n{out.stdout[-2000:]}")
+    if expect_n is not None and len(got) != expect_n:
+        raise SystemExit(f"SITE COUNT CHANGED on {variant}: parsed {len(got)}, "
+                         f"expected {expect_n}.  A deleted finding is not a "
+                         f"passed one.")
     return got
 
 
@@ -264,7 +292,6 @@ def main() -> int:
                f"(expected all)")
 
         # Explicit record of the blind spot, so the fix cannot be forgotten.
-        blind = codes(mv) == codes(base) or codes(ev) == codes(base)
         letters_only_mid = all(v[0] == base[k][0] for k, v in mv.items())
         print(f"\n  [note] T5 changes the CLASS at "
               f"{sum(1 for k, v in mv.items() if v != base[k])}/{len(mv)} sites "
@@ -274,12 +301,57 @@ def main() -> int:
             print("         A letter-only parser would have reported T5 as "
                   "UNCHANGED.")
             print("         That is the V-LINEAR defect shape, and this harness "
-                  "had it until now.")
+                  "had it until now.\n")
+
+        # ---- T7 SPECIFICITY -----------------------------------------------
+        # ORCH lesson 2: commissioning SENSITIVITY is not commissioning
+        # SPECIFICITY.  T2-T6 all plant something and require a reaction.  None
+        # of them establishes that the rule STAYS PUT when handed a change that
+        # carries no information.  Scaling BOTH arms by the same constant is
+        # exactly such a change: every ratio is identical, so every conclusion
+        # must be too.  A rule that moves here is reading absolute level.
+        variants.append("__gain")
+        write_variant(s, "__gain", 1.0, gain=3.0)
+        gv = run_rule(s, "__gain", expect_n=len(base))
+        ok = all(gv[k] == base[k] for k in base)
+        report("T7 SPECIFICITY (both arms x3, no information)", ok,
+               f"sites -> {codes(gv)} vs baseline {codes(base)} "
+               f"(expected identical)")
+
+        # ---- T8 DELETION ---------------------------------------------------
+        # ORCH lesson 3: commission DELETION as well as reversal, because
+        # deleting a finding is cheaper than stating it wrongly.  Here the
+        # harness is handed output with one site removed and must refuse it.
+        # This tests the HARNESS, not the rule.
+        doctored = "\n".join(
+            l for l in TRUTH_LINES if "site 3 " not in l)
+        seen = {int(m.group(1)) for m in SITE_RE.finditer(doctored)}
+        caught = len(seen) != len(base)
+        report("T8 DELETION (one site removed from the output)", caught,
+               f"harness sees {len(seen)} sites, expects {len(base)} -> "
+               f"{'refused' if caught else 'ACCEPTED SILENTLY'}")
     finally:
         cleanup(s, variants)
 
+    # ---- commission the PASS/FAIL CHANNEL ITSELF --------------------------
+    # ORCH lesson 1: an inert plant and a dead instrument give the identical
+    # green.  Every arm above reported PASS.  That is only meaningful if this
+    # harness is capable of reporting FAIL at all, so a knowingly-false
+    # expectation is evaluated through the SAME report() path and must produce a
+    # non-zero failure count.
+    probe_pass, probe_fail = npass, nfail
+    report("CHANNEL (deliberately false expectation)", False,
+           "this line MUST read FAIL; if it reads PASS the pass/fail channel "
+           "is dead and every result above is meaningless")
+    channel_live = (nfail == probe_fail + 1)
+    npass, nfail = probe_pass, probe_fail   # the probe is not a real failure
+
     print(f"\n  {npass} PASS + {nfail} FAIL = {npass + nfail} tests "
           f"(every test lands in a counted outcome)")
+    print(f"  pass/fail channel: "
+          f"{'LIVE (a false expectation did produce FAIL)' if channel_live else 'DEAD -- RESULTS ABOVE ARE VOID'}")
+    if not channel_live:
+        return 1
     if nfail:
         print("\n  THE PUBLISHED (a) VERDICT IS NOT SUPPORTED: the decision "
               "rule did not track a known-correct conclusion.")
