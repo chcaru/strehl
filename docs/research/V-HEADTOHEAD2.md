@@ -2925,3 +2925,284 @@ control is the only reason they are checked now. A verifier's claim count is a
 statement about its reach, and the plant is the only thing that measures it.
 
 Final state: 10 plants, 10 caught, 0 void, **72/72 claims verified, exit 0**.
+
+## 12 The N ladder: an instrument that refused, and the reason it refused
+
+ORCH asked for one measurement: extend a scene/noise decomposition down an N ladder on
+a single subject at matched focus range, because if scene ratio falls monotonically with
+N the "merge softens with depth" mechanism is demonstrated rather than inferred.
+
+The ladder was built, commissioned, staged and run. It did not demonstrate the
+mechanism, and the reason it did not is a property of the renderer that no lane had
+measured and that bears on every cross-arm number in this project.
+
+**Two strehl renders of one subject, from the same binary with the same flags, differing
+only in which frames were in the stack, do not land on the same pixel grid.** They differ
+by a displacement *field* of 3 to 21 px rms carrying a magnification component of 0.16%
+to 1.37%. It is not a translation, so no single integer shift removes it.
+
+## 12.1 The decomposition, and why it needs no comparator
+
+A single render cannot be split into scene and noise. Two renders of the same scene from
+**disjoint** frames can be, exactly. For A = S + n_A and B = S + n_B with independent
+noise,
+
+    var((A+B)/2) = var(S) + var(n)/2
+    var((A-B)/2) =          var(n)/2
+
+so `var(S) = var(halfsum) - var(halfdiff)` and the single-arm noise sd is
+`sqrt(2)*sd(halfdiff)`. No comparator, no external reference, no noise model, and no
+tone stage to mismatch.
+
+`decomplib.py` builds both terms from **one** filter argument and exposes no way for a
+caller to pass two. That is structural, not a convention, and it is aimed at the exact
+failure the tone lane hit: a decomposition whose two terms had different bandwidths was
+degenerate on 3 of 3 arms and still printed a verdict.
+
+## 12.2 Commissioning: 23 checks, and the five that had to fail first
+
+`commdecomp.py` is GREEN at 23 checks, exit 0. Five of them only reached that state after
+failing, and each failure was a defect in the instrument rather than a threshold to
+loosen.
+
+**The gain guard had no power, and measuring it was the only way to see that.** It tested
+the interquartile ratio of the two arms **per site**, on 384 px crops. A gain is a
+property of a render, not of a site, and the raw IQR of a small crop is dominated by the
+low-frequency content inside it. Measured across 40 random sites on two arms that
+*cannot* differ in gain -- `--linear-srgb`, no `--exposure`, so there is no tone stage
+for them to differ in:
+
+| scale | IQR ratio | spread |
+| --- | --- | --- |
+| whole frame, 33 Mpx | 1.00195 | -- |
+| 40 sites of 384 px | median 0.99960 | sd **4.30%**, full range 21.60% |
+
+**21 of 40 sites would have tripped a 2% guard.** A guard whose own noise is twice the
+effect it must catch is not a guard, it is a coin. It is now a pair-level, whole-frame
+call returning a token that `decompose` will not run without.
+
+**The obvious error estimator was the wrong one.** The first version took the scatter of
+per-block *ratios*. A block on flat content has a near-zero denominator, so the measured
+scatter **grew** with block count -- 4.05% at k=4, 7.31% at k=8, 17.50% at k=16, 70.31%
+at k=32 -- when a standard error must shrink. Replaced by a delete-one jackknife on the
+statistic actually reported: se 0.417%, detection floor 1.67% at Z=4, against a measured
+ratio of +0.195%.
+
+**The bound on what the guard could not rule out was itself wrong, and a planted
+disturbance of exactly the admitted size caught it.** Writing B = g(S + n_B),
+
+    2*var(hd) = eps^2*var(S)/2 + (1+g^2)/2 * var(n)
+
+The first version kept only the `eps^2` leak and dropped the `(1+g^2)/2` factor -- the
+gain scales arm b's **noise** as well as its scene. Arm 5f plants a gain of exactly the
+certified floor and measures the result:
+
+| site | floor | measured bias | old bound | corrected bound |
+| --- | ---: | ---: | ---: | ---: |
+| r = 5.6 | 1.253% | +0.759% | 0.12% | **0.751%** |
+| r = 56.5 | 0.686% | +4.063% | 4.10% | **4.151%** |
+
+The corrected bound `eps/2 + eps^2*r^2/4` predicts to better than 2%. The scene term
+needs no such bound: the noise contributions to `var(hs)` and `var(hd)` are identical and
+cancel exactly, leaving `g*var(S)`, so a 2% gain costs 1% on the scene sd and nothing
+else. That asymmetry is why one number is reported and not two.
+
+**A slack factor chosen to make an arm pass is not a test.** The single-draw version of
+5f needed a 1.35x fudge to admit +0.86% against a 0.75% bound. It now measures the bias
+over 24 draws and compares to the bound with its own standard error.
+
+**The guard must be calibrated, not merely on.** The arm that demanded a fixed 0.5% gain
+be admitted was obsolete once the threshold became a significance test, because on a
+synthetic pair the floor is far below 0.5% and a 0.5% gain really is detectable there.
+It now plants half the floor and twice the floor and requires admit/refuse.
+
+## 12.3 The staging, and the trap it was rebuilt to avoid
+
+Rungs N in {18, 37, 74, 149} on `bee-3-cpl` (299 frames), each rung two **disjoint** arms.
+
+The first staging dealt 2N evenly-spaced frames alternately into the two arms. That is
+wrong in a way that varies systematically with N: interleaved arms sample **different
+depths**, by half a rung -- 8 frames of 299 apart at rung 18, 1 at rung 149. It would
+have manufactured an N-trend out of the staging. Rebuilt to **adjacent pairing**: at each
+of N depth positions arm a takes frame p and arm b takes p+1, so the arms are one frame
+apart in focus at every rung, constant in N.
+
+## 12.4 The finding: the renders are not on a common grid
+
+Every crop is registered by an **integer-only** shift -- sub-pixel resampling adds blur
+to the quantity being measured. The search is coarse-to-fine at full resolution and
+self-checks against an exhaustive search on a real site every run.
+
+Fitting `offset = t + M(p - centre)` over a 4x6 grid of sites:
+
+| pair | rms displacement field | isotropic scale | affine absorbs |
+| --- | ---: | ---: | ---: |
+| n18a vs n18b | 6.54 px | -0.372% | 51% |
+| n37a vs n37b | 20.68 px | -1.367% | 80% |
+| n74a vs n74b | 9.90 px | -0.665% | 90% |
+| n149a vs n149b | 10.00 px | -0.667% | 84% |
+| n18a vs n149a | 19.00 px | -1.071% | 46% |
+| n37a vs n74a | 2.98 px | +0.164% | 46% |
+
+A single translation leaves 3 to 21 px rms behind. An affine model absorbs most of it on
+some pairs and under half on others, so the disagreement has structure finer than a
+global warp as well as a magnification component.
+
+**The negative control that makes this a claim rather than a coincidence.** An innocent
+alternative would make the whole finding worthless: strehl might simply be
+nondeterministic, in which case the geometry differs between any two renders and the
+frame set has nothing to do with it. Rendering the *same* 18 frames twice, same binary,
+same flags:
+
+    pass1 AC0DD9E6F9C9FDBD263A309F79AEDBAE
+    pass2 AC0DD9E6F9C9FDBD263A309F79AEDBAE
+
+**Byte-identical.** The renderer is deterministic on a fixed frame set, so the geometry
+difference is caused by the frame set. There is no flag to pin the merge's alignment
+reference; each render chooses its own from whatever frames it was given.
+
+## 12.5 What that does to the ladder
+
+At a detail site the fine band is dominated by scene, and a residual displacement of d px
+puts a fraction of order `2*pi*d/lambda` of the scene amplitude into the half-difference.
+A 0.667% magnification residual across a 384 px site is 1.28 px at the corner, which at
+lambda = 5 px is of order unity. The instrument says so itself: **the 5-15 px band at
+detail sites returned a scene of zero at 3 of 4 rungs**, half-difference variance having
+met or exceeded the half-sum.
+
+That is the band the softness question lives in. So this instrument cannot address it,
+and saying that is the result.
+
+What the ladder did return, with the per-rung displacement field beside it:
+
+| N | b->a field rms | flat 20-60 scene | detail 20-60 scene | flat sharpness | detail sharpness |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 18 | 14.69 px | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| 37 | 10.70 px | 2.0235 | 2.5048 | 1.2901 | 1.2552 |
+| 74 | 4.49 px | 1.7108 | 1.8339 | 1.8526 | 1.5912 |
+| 149 | 9.09 px | 2.6856 | 3.7028 | 2.5515 | 2.2158 |
+
+Scene **rises** with N at every band that produced a number, and sharpness rises 2.55x
+(flat) and 2.22x (detail) from N=18 to N=149. At these scales that is the expected
+behaviour of a focus stacker -- 18 frames spread across a 299-frame bracket leave large
+depth gaps, and closing them sharpens the result. It is not evidence against the other
+lanes' fine-scale finding, because it is not measured at their scale.
+
+Worst-case bias on any noise number above, from the gain the level guard could not rule
+out: **2.03%** at flat sites, **3.63%** at detail sites.
+
+## 12.6 What this means for the other lanes
+
+**Independent band-energy ratios survive misregistration.** Scoring each arm on itself
+across a (-3,+17) px shift changed the three bands by 0.43%, 1.62% and 0.54%. The two
+converging lanes' headline band ratios are **not** artifacts of this, which is a direct
+answer to ORCH's common-cause question.
+
+**Anything built on a difference is not safe.** A - B, a half-difference, a residual, a
+correlation, a per-pixel map: all of them carry the displacement field, and its size is a
+lottery over frame sets rather than a function of N (20.68 px at rung 37, 4.49 px at rung
+74). Any lane computing such a statistic across two renders needs per-site integer
+registration and should expect the fine bands to be unusable.
+
+**The concrete ask.** This is not a capture that would decide it; it is a flag. strehl
+needs a way to pin the merge's alignment reference so that two renders of one subject
+from different frame subsets land on the same output grid. Without it, no N-invariance
+test, no frame-count A/B, and no per-pixel comparison between two strehl renders can be
+made clean, and the confound moves with the variable under test.
+
+## 12.7 Provenance
+
+One binary for all eight ladder arms and both determinism passes,
+`C:\dev\strehl-out\V-H2H2\target\release\strehl.exe`, SHA `FC7B1DAF8DBDE0D9`. Flags
+identical across arms: `stack <dir> --out <tif> --linear-srgb --demosaic`. `--linear-srgb`
+stops before the tone curve and `--exposure` refuses to run without `--srgb`, so **no arm
+can carry a gain by construction**; the level guard exists to catch a staging error, not
+a flag error. One display gain, 2.6898, derived once from `n149a` and applied to every
+arm. Disjointness of the two arms of each rung is asserted at staging time and is the
+only defence against the correlated-arms blind spot measured in commissioning arm 6.
+
+## 12.8 Verifying the section, and what the verifier found in it
+
+`verify12.py` re-derives every number above from the artifacts that produced them:
+`warp.json` for the geometry table, `ladder.json` for the ladder, the rendered TIFFs on
+disk for the determinism hashes, and a live re-run of `commdecomp.py` for the
+commissioning claims.
+
+It is built against a specific failure another lane hit tonight: a checker passed 37/37
+and then caught only 5 of 13 planted defects, because eight of its checks compared the
+document against constants written inside the checker. Those checks could not fail. So
+this one holds **no** expected values; every quantity is parsed out of the document on
+one side and out of a JSON or a subprocess on the other.
+
+**On its first run it failed, and all four failures were real errors in this section.**
+
+| the verifier said | what was actually wrong |
+| --- | --- |
+| n37a vs n37b absorbs 79%, artifact says 80% | I had transcribed the isotropic figure into the affine column |
+| pass1/pass2 hash mismatch | the hashes quoted were **carried over from an earlier run** and were not the hashes of these files (`ac0dd9e6...`, not `52c6183d...`) |
+| the refusal claim is not in the expected form | prose reflowed and my own pattern no longer matched it |
+| document says 20 arms, suite ran 23 | the suite had grown and the count was stale |
+
+The determinism failure is the one worth dwelling on. The control's *conclusion* was
+correct -- the two passes are byte-identical, and the verifier confirms that
+independently by hashing the files. But the specific hash printed in the document was
+not the hash of the files it claimed to describe. A reader checking that hash by hand
+would have found a mismatch and been entitled to discard the whole section. A checker
+that only re-asserted "the two hashes in the document are equal to each other" would
+have passed it, because they were equal -- to each other, and to nothing on disk.
+
+### Commissioning the verifier
+
+`commverify2.ps1` plants 13 defects, one at a time, in the document text and requires the
+run to go red. Two properties of it are load-bearing:
+
+**A plant must produce a failure that is not in the baseline.** The first version scored
+a plant "caught" whenever the run went red. It reported `iqr local sd` as caught while
+the only failing check was an unrelated pre-existing failure elsewhere in the table. A
+red for the wrong reason is worth exactly as much as a green for the wrong reason. The
+baseline failure set is now measured first, must be empty, and each plant is scored on
+the **difference**.
+
+**A stale plant is announced, not silently skipped.** Each plant counts its target's
+occurrences and aborts with `PLANT TARGET OCCURS n TIMES -- control is void` unless there
+is exactly one. This fired twice for real: once after I corrected the hash in the
+document, and once on a target whose text spans a line break, which is a standing trap in
+reflowed prose.
+
+Three tolerances had to be tightened because a plant walked through them: a 0.5%
+relative bar admitted a mutation of the isotropic scale, and a 2% bar admitted a mutation
+of the bound. They are now the document's **own quantisation** -- it quotes three decimal
+places, so half an ulp is the bar -- which is a defensible number rather than a chosen
+one. This is only safe because the suite is seeded (`default_rng(20260824)`) and its
+values reproduce exactly across runs.
+
+Final state:
+
+```
+baseline: 0 pre-existing failures
+14 plants: 12 caught by a new failure, 2 survived inside a declared gap, 0 unaccounted
+GREEN -- every plant is either caught by a new failure or a declared gap
+```
+
+### The coverage census, which is the part I would read first
+
+A passing checker says nothing about what it did not look at. So the verifier ends by
+counting every numeric literal in this section and partitioning them:
+
+```
+137 numeric literals in 12.1-12.7: 70 verified against an artifact, 67 NOT COVERED
+```
+
+The two "declared gap" plants above sit in that 67 deliberately, as proof the census is
+describing real coverage rather than decorating a pass. The uncovered set is mostly
+prose (band edges, site sizes, counts) but it also contains the guard-rebuild
+measurements in 12.2 -- `4.30`, `21.60`, `70.31`, `0.417`, `1.67`, `0.195` -- which come
+from `diag_iqr.py` and `diag_tol.py`. Those scripts are committed and re-runnable, but
+they are not re-run here, so **a wrong number among them would survive this verifier**.
+That is stated rather than left to be discovered, because a count that does not move
+looks the same whether nothing was wrong or nothing was examined.
+
+The census counts 12.1 to 12.7 only, because a census that counted its own quotation
+could never be quoted correctly. The three numbers above are themselves a check --
+plant 13 mutates them and the run goes red -- so this paragraph cannot drift away from
+the coverage it describes.
