@@ -6,7 +6,24 @@ instrument first, then fix it, and do not regress the seven clean subjects."
 **Status of the premise: substantially refuted.** The four HALO verdicts I was
 handed came from an instrument that measures a background gradient, could only
 score 11 of 26 subjects, and disagrees with itself on 3 of its own 4 targets.
-Two of the four are lighting arches. Five real halos were invisible to it.
+Two of the four are lighting arches.
+
+**Status of the word "halo" in this document — read this before any table
+below.** V-REVIEW subsequently adjudicated *all four* of ORCH's verdicts as
+false positives and measured a visibility floor of roughly **4500 DN** for a
+narrow rim. **Every excursion this document labels a halo is smaller than
+that** — the largest is 2621.7 DN and the rest run 503–1848 DN. So two things
+are true at once and the report is only honest if it says both:
+
+- **No *visible* halo is demonstrated on any of the 26 masters.** ORCH's
+  corpus-wide statement stands and nothing here contradicts it.
+- **Narrow radial excursions are nonetheless measured**, are not gradient
+  artifacts (§14 plants the confound and they survive it), and sit below the
+  threshold at which anyone would see them.
+
+Where a table below says "HALO", read **"narrow radial excursion, sub-visible"**.
+The word is left in the tables only so the numbers remain comparable with the
+verdicts they were originally scored against.
 
 **Status of the fix: a mechanism is confirmed but it is a minority of the
 defect, and the best-looking candidate fix was not doing what it appeared to.**
@@ -200,7 +217,8 @@ by reasoning about it. Reasoning failed three times out of three.
 
 `aura.py` scores **26 of 26** subjects. `halo_profile.py` scored 11.
 
-**7 HALO, 7 gradient-only, 12 clean.**
+**7 narrow excursions (all sub-visible, see §0), 7 gradient-only, 12 not detected.**
+The 12 are **not detected**, which §13 shows is not the same as clean.
 
 | subject | aura DN | w px | @px | rim DN | w px | @px | verdict |
 |---|---:|---:|---:|---:|---:|---:|---|
@@ -222,15 +240,33 @@ by reasoning about it. Reasoning failed three times out of three.
 
 ### Against ORCH's four
 
-| ORCH verdict | mine | why |
-|---|---|---|
-| `flat-on-ruler-cpl` +4481.8 HALO | **REFUTED** | 172 px-wide lighting arch spanning the field |
-| `tweezers-cpl` bump 1542.3 HALO | **CONFIRMED** | 22 px bright peak at 36 px, 28 px dark trough at 56 px |
-| `lavendar-cpl` +527.3 HALO | **REFUTED** | 124 px-wide arch |
-| `dry-erase-marker-head-cpl` +236.7 HALO | **CONFIRMED** | 78 px bright rim at 135 px |
+**Superseded in part by V-REVIEW's adjudication.** V-REVIEW showed
+`halo_profile.py` walks 2–120 px and takes its far reference at 400–900 px,
+never measuring 120–400 px, and ruled all four verdicts false positives. My two
+REFUTALS agree with it and were reached independently. My two CONFIRMATIONS need
+restating, because they were confirmations *of a measurement*, never of
+visibility:
 
-Five halos `halo_profile.py` never flagged: `lead-1-cpl`, `leaf-2-cpl`,
+| ORCH verdict | mine | disposition |
+|---|---|---|
+| `flat-on-ruler-cpl` +4481.8 HALO | **REFUTED** | 172 px-wide lighting arch spanning the field — agrees with V-REVIEW |
+| `lavendar-cpl` +527.3 HALO | **REFUTED** | 124 px-wide arch — agrees with V-REVIEW |
+| `tweezers-cpl` bump 1542.3 HALO | **NOT A HALO** — narrow excursion, sub-visible | A 22 px feature at 36 px does exist and is not the ramp (§14). At **2621.7 DN** it is below V-REVIEW's ~4500 DN visibility floor, so V-REVIEW's "not visible" and my "measurable" are both correct |
+| `dry-erase-marker-head-cpl` +236.7 HALO | **NOT A HALO** — narrow excursion, sub-visible | 78 px rim at 135 px, **694.9 DN**, ~6× below the visibility floor |
+
+**No verdict in this document should be read as demonstrating a visible halo.**
+The two rows above previously read CONFIRMED; that was a claim about my
+instrument's reading and it was being mistaken for a claim about the image.
+
+Five narrow excursions `halo_profile.py` never flagged — all sub-visible, all
+now to be counted **UNSCORED rather than clean**: `lead-1-cpl`, `leaf-2-cpl`,
 `109MSDCF`, `coffee-bean`, `119MSDCF`.
+
+**The 11 subjects V-REVIEW leaves at residual risk are UNSCORED, not clean.**
+§13 measured why that matters in my own instrument too: a broad rim *suppresses*
+a real narrow one (a 4500 DN broad rim drops a real 2621.7 DN narrow rim to
+1556.7 DN, −41%), so the residual-risk count is biased **downward**. "Not
+detected" is not "absent" in either lane's instrument.
 
 Note the direction of the error: the instrument's **loudest** verdict
 (`flat-on-ruler-cpl`, +4481.8 DN, "the one that matters most") is a lighting
@@ -502,7 +538,7 @@ cannot move a lighting arch, and it did not.
 
 1. **"Four subjects halo" was an instrument artifact in half its cases.** Two
    of four are lighting arches; the instrument could score 11 of 26 subjects
-   and was blind to five real halos, including the corpus's most merge-driven
+   and was blind to five real narrow excursions, including the corpus's most merge-driven
    one.
 2. **The mechanism is real but minority.** Coarse-band selection ringing is
    confirmed — monotone in band count, monotone in exponent, sitting in a
@@ -770,3 +806,97 @@ to the shipping behaviour when unset, and it is the arm that produced the clean
 null in §5. A default chosen by measurement needs the arm it beat to remain
 runnable — the same argument `pyramid.rs` already makes for keeping
 `--pyramid-base weighted`.
+
+
+---
+
+## 14. Specificity: plant the confound, not just the signal
+
+ORCH: *"Commissioning sensitivity is not commissioning specificity. Planting a
+signal and confirming detection says nothing about whether noise is rejected.
+Plant noise too."* My commission had eight sensitivity arms and **zero**
+specificity arms. Every plant I had ever run made a rim appear and I checked
+that the number went up.
+
+The confound to plant is the one V-REVIEW convicted `halo_profile.py` on: a
+**scene lighting structure with no ring in it at all**. If that manufactures a
+rim, my §4 verdicts are the same false positives I accused their instrument of.
+Each background is paired with a positive control — the same background *plus* a
+real 3000 DN ring — so a dead instrument cannot pass by reading zero everywhere.
+
+`plantrim.py --specificity`, amplitudes taken from V-REVIEW's own figures
+(2879 DN = `lavendar-cpl`'s background span, 22461 DN = `tweezers-cpl`'s ramp):
+
+| background | false rim DN | width px | at px | control (3000 DN) | verdict |
+|---|---:|---:|---:|---:|---|
+| gradient 2879 | **0.0** | 0.0 | 36 | 2819.7 | specific |
+| gradient 9000 | **0.0** | 0.0 | 36 | 2436.2 | specific |
+| gradient 22461 | 0.0 | 0.0 | 36 | **0.0** | **VOID — control dead** |
+| arch 2879 | **2442.2** | 242.5 | 208 | 2669.0 | **MANUFACTURED** |
+| arch 9000 | **7634.6** | 242.5 | 208 | 1965.3 | **MANUFACTURED** |
+| arch 22461 | 19053.4 | 242.5 | 208 | **417.8** | **VOID — control dead** |
+
+**2 specific + 2 manufactured + 2 void = 6 arms.** The void arms are counted as
+void and never as either result; their false-rim figures are struck through
+below and are not quotable.
+
+**Three findings, two of them against me.**
+
+**14.1 A monotone gradient is rejected exactly.** 0.0 DN at 2879 and 9000 DN,
+each against a live paired control. `prominence()` measures against local
+shoulders, so a trend with no turning point has no prominence by construction.
+This is the confound `halo_profile.py` was convicted on and my instrument is
+immune to it. **At 22461 DN the arm is void, so I make no claim there.**
+
+**14.2 An arch manufactures a rim worth ~85% of its amplitude.** 2442 DN from a
+2879 DN arch and 7635 DN from a 9000 DN arch, both from backgrounds containing
+**no ring**. `rim_dn` **alone is not evidence of a halo** and I should not have
+reported it as though it were. An arch *has* a turning point, so it has genuine
+prominence; the statistic is working as defined and the definition is narrower
+than the use I put it to. (The 22461 DN arm read 19053 DN, but its control is
+dead and the figure is **not quotable** — see 14.4.)
+
+**14.3 What saves the §4 verdicts is width, and only width.** The manufactured
+feature is **242.5 px wide at 208 px at every amplitude** — its shape is fixed
+by the arch, not by the amplitude. The §4 excursions are **22–78 px wide at
+36–135 px**: a 3–11× separation in width at a different radius. So:
+
+- The **classification** in §4 stands, because it was made on the
+  (amplitude, width, location) triple, which is specific.
+- The **amplitudes** quoted anywhere on their own do not stand, because
+  `rim_dn` in isolation is arch-confoundable.
+- This is why `width_px()` exists, and it is the only reason §4 survived a
+  control I did not run until after I had published it.
+
+**14.4 The instrument dies at extreme gradient and I did not know.** At 22461 DN
+**both** arms are void: the gradient arm's paired control reads **0.0** and the
+arch arm's reads **417.8** against a planted 3000 DN ring. A real ring becomes
+invisible. Otsu segmentation swallows the darkened near-background into the
+subject mask, so the annulus the ring sits in is never sampled. `tweezers-cpl`
+is the subject V-REVIEW measured a 22461 DN ramp on. **My tweezers reading is
+therefore made at the amplitude where my own instrument is demonstrably
+blind**, and its 2621.7 DN is a lower bound of unknown tightness, not a
+measurement.
+
+This was found by the verifier, not by me. `plantrim.py` originally tested
+`not spec_ok` *before* `live_ok`, so it labelled `arch 22461` MANUFACTURED on a
+dead control — the table asserted a positive result at the exact amplitude this
+subsection says the instrument cannot see. **A dead control must void an arm
+regardless of what the other column reads**, because a broken instrument
+produces garbage in both. The precedence is corrected and the two 22461 arms
+now read VOID.
+
+**14.5 Disposition against V-REVIEW.** We do not disagree. `halo_profile.py`'s
+`bump` on `tweezers-cpl` was reading the ramp — 14.1 shows my instrument reads
+0.0 on exactly that structure, so the ramp cannot be what I am seeing. A narrow
+22 px feature does exist. It is **2621.7 DN against a ~4500 DN visibility
+floor**, and 14.4 says even that number is untrustworthy. **"Measured" and "not
+visible" are both correct, and only the second one is a claim about the
+product.**
+
+**14.6 What this costs the halo case.** Combined with §13 (hull modes move the
+rim 1.2 DN) and the corpus adjudication, there is now **no surviving
+justification for a halo fix** — not a visible defect, not a trustworthy
+amplitude on the two subjects I confirmed, and not a mechanism my own clamp
+addresses. `STREHL_HULL` stays opt-in and pixel-inert. I am not asking for it to
+ship as a default and this section is the reason.

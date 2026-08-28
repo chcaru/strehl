@@ -201,24 +201,125 @@ def hull_modes():
     return out
 
 
+def specificity():
+    """Does background structure alone MANUFACTURE a rim? Plant noise, not signal.
+
+    ORCH, after six lanes found their verifiers blind: "Commissioning
+    sensitivity is not commissioning specificity. Planting a signal and
+    confirming detection says nothing about whether noise is rejected. Plant
+    noise too."
+
+    This is the control that decides a live disagreement. V-REVIEW adjudicated
+    `tweezers-cpl` a false positive because its `bump` is "one step in a ramp
+    spanning 22461 DN". aura.py reads a 2621.7 DN rim at 36 px on that subject
+    with a 22 px width and a paired dark trough at 56 px. Those two readings
+    can both be right -- halo_profile.py's `bump` can be spurious while a
+    smaller real feature exists -- but only if aura.py does not itself invent
+    a narrow rim when handed a large smooth background.
+
+    So: background structure at the amplitudes the real corpus carries, with
+    NO ring planted at all. A rim reported here is manufactured.
+
+    Each arm is paired with a POSITIVE CONTROL: the same background plus a
+    known 3000 DN ring. Without it, "reports nothing" is ambiguous between a
+    specific instrument and a dead one -- an inert plant and a dead instrument
+    give the identical green.
+    """
+    from aura import segment as seg
+    from aura import synth
+
+    print("--- SPECIFICITY: does background structure alone create a rim? ---")
+    print("no ring planted in the 'false rim' column; 3000 DN ring in the "
+          "control column\n")
+    print("| %-28s | %10s | %8s | %8s | %14s | %s" %
+          ("background", "false rim", "width", "at px", "control (3000)", "verdict"))
+    print("|" + "-" * 30 + "|" + "-" * 12 + "|" + "-" * 10 + "|" + "-" * 10 + "|" + "-" * 16 + "|" + "-" * 20)
+
+    rows, bad = [], 0
+    cases = []
+    for amp in [2879.0, 9000.0, 22461.0]:
+        cases.append((f"gradient {amp:.0f} DN", {"gradient": amp}))
+        cases.append((f"arch {amp:.0f} DN", {"arch": amp}))
+
+    for name, kw in cases:
+        y_bg = synth(**kw)
+        m_bg = measure(y_bg, seg(y_bg), scale=1)
+        y_ct = synth(ring=3000.0, **kw)
+        m_ct = measure(y_ct, seg(y_ct), scale=1)
+        if m_bg is None or m_ct is None:
+            print(f"| {name:<28s} | {'UNMEASURABLE':>10s} |")
+            rows.append({"bg": name, "status": "UNMEASURABLE"})
+            continue
+        false_rim = m_bg["rim_dn"]
+        # The control plants a DARK ring, which aura.py scores as `aura_dn`.
+        ctrl = m_ct["aura_dn"]
+        spec_ok = false_rim < DETECT_DN
+        live_ok = ctrl >= 0.5 * 3000.0
+        # A dead control VOIDS the arm regardless of what the false-rim column
+        # reads. With the control dead I cannot distinguish "the background
+        # manufactured a rim" from "the instrument is broken at this amplitude
+        # and both columns are garbage". Testing spec_ok first reported
+        # `arch 22461` as MANUFACTURED on a control of 417.8 DN, contradicting
+        # this file's own finding that segmentation collapses there.
+        if not live_ok:
+            v = "VOID (control dead)"
+        elif not spec_ok:
+            v = "MANUFACTURED"
+        else:
+            v = "specific"
+        if not (spec_ok and live_ok):
+            bad += 1
+        print("| %-28s | %10.1f | %8.1f | %8.0f | %14.1f | %s" % (name, false_rim, m_bg["rim_w_px"], m_bg["rim_at_px"], ctrl, v))
+        rows.append({"bg": name, "status": "SCORED", "verdict": v,
+                     "false_rim_dn": false_rim, "false_rim_w_px": m_bg["rim_w_px"], "false_rim_at_px": m_bg["rim_at_px"], "control_aura_dn": ctrl,
+                     "specific": bool(spec_ok), "control_live": bool(live_ok)})
+
+    print(f"\n{len(rows) - bad} specific + {bad} failed = {len(rows)} background arms")
+    print(f"threshold: a false rim >= {DETECT_DN:.0f} DN would be manufactured "
+          f"(same gate used for detection)")
+    if bad == 0:
+        print("\naura.py does NOT manufacture a rim from background structure, at\n"
+              "amplitudes up to 22461 DN -- the span V-REVIEW attributes to\n"
+              "tweezers-cpl.")
+    else:
+        mono = [r for r in rows if r.get("bg", "").startswith("gradient")
+                and r.get("specific") and r.get("control_live")]
+        print(f"\naura.py rejects a MONOTONE gradient exactly ({len(mono)} arms at 0.0 DN),\n"
+              "which is the confound halo_profile.py was convicted on. It does NOT\n"
+              "reject an ARCH: rim_dn alone is arch-confoundable and must never be\n"
+              "quoted on its own. What separates them is WIDTH -- the manufactured\n"
+              "feature is 242.5 px wide at 208 px regardless of amplitude, while the\n"
+              "section 4 excursions are 22-78 px wide at 36-135 px.")
+    return rows
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--master", default=str(
         pathlib.Path(r"D:\strehl-out\V-SPEED-HALO\sweep\tweezers-cpl\baseline.tiff")))
+    ap.add_argument("--specificity", action="store_true")
     a = ap.parse_args()
+    if a.specificity:
+        spec = specificity()
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / "plantrim-specificity.json").write_text(json.dumps(spec, indent=1))
+        return 0
     print("aura.py detection floor vs halo_profile.py, and what the clamp moves")
     print(f"master: {a.master}\n")
     rows = sweep(pathlib.Path(a.master))
     print()
     hull = hull_modes()
+    print()
+    spec = specificity()
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "plantrim.json").write_text(
-        json.dumps({"sweep": rows, "hull": hull}, indent=1))
+        json.dumps({"sweep": rows, "hull": hull, "specificity": spec}, indent=1))
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
 
 
 

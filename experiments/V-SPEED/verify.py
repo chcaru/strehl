@@ -275,13 +275,26 @@ def commission():
     gone = run(tmp)
     os.remove(tmp)
 
+    # SPECIFICITY. Commissioning sensitivity is not commissioning specificity:
+    # planting a defect and seeing it caught says nothing about whether benign
+    # text is rejected. Innocuous prose -- including prose carrying a number
+    # that is not a claim -- must score 0, or the verifier is just noisy.
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(src + "\n\nAll timings in this report were collected on one "
+                       "machine over a single night; the deepest stack "
+                       "examined contains 299 frames.\n")
+    print("\n=== innocuous prose (no claim, but carries a number) must be GREEN ===")
+    benign = run(tmp)
+    os.remove(tmp)
+
     print()
-    if clean == 0 and dirty != 0 and flip != 0 and gone != 0:
+    if clean == 0 and dirty != 0 and flip != 0 and gone != 0 and benign == 0:
         print("COMMISSIONING PASS: clean GREEN; number defect, conclusion flip "
-              "and claim deletion all RED.")
+              "and claim deletion all RED; innocuous prose GREEN.")
         return 0
     print(f"COMMISSIONING FAIL: clean rc={clean} (want 0), number rc={dirty}, "
-          f"flip rc={flip}, deletion rc={gone} (all want nonzero).")
+          f"flip rc={flip}, deletion rc={gone} (all want nonzero), "
+          f"innocuous prose rc={benign} (want 0).")
     return 1
 
 
