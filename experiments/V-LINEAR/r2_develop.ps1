@@ -55,13 +55,21 @@
 param(
   [Parameter(Mandatory=$true)][string]$Key,
   [int]$Stride = 1,
-  [string]$Exe = 'C:\dev\strehl-out\acceptance-pins\740e7056\target\release\strehl.exe'
+  [string]$Exe = 'C:\dev\strehl-out\acceptance-pins\740e7056\target\release\strehl.exe',
+  # DISK.  Heavy output goes to D: per ORCH's disk broadcast -- C: hit 4.4% free
+  # while this lane was running.  D:\personal\macro and D:\macro-dark-frames are
+  # READ-ONLY source data; this writes to its own directory at the D: root.
+  # Subjects developed to C: before the broadcast (112MSDCF, flat-on-ruler-cpl,
+  # tweezers-cpl) keep their C: paths in bandsweep.SUBJECTS, because the develops
+  # are BIT-IDENTICAL wherever they are written -- the drive is not a variable
+  # the measurement can see.
+  [string]$Root = 'D:\strehl-out\V-LINEAR\r2'
 )
 
 $ErrorActionPreference = 'Stop'
 
 $src  = "D:\personal\macro\$Key"
-$root = "C:\dev\strehl-out\V-LINEAR\r2\$Key"
+$root = "$Root\$Key"
 $lin  = "$root\lintiff"
 $wrk  = "$root\work"
 $logs = "$root\logs"
@@ -87,10 +95,11 @@ Say ("$Key : $($all.Count) ARW in source, stride $Stride -> $($frames.Count) dev
 # Refuse up front rather than dying at frame 60 with a half-written set.  198 MB
 # is the observed develop size; 15 GB of headroom is left for other lanes.
 $need = $frames.Count * 198MB
-$free = (Get-PSDrive C).Free
-Say ("free on C: {0:N1} GB;  this subject needs {1:N1} GB" -f ($free/1GB), ($need/1GB))
+$drv  = (Split-Path -Qualifier $lin).TrimEnd(':')
+$free = (Get-PSDrive $drv).Free
+Say ("free on ${drv}: {0:N1} GB;  this subject needs {1:N1} GB" -f ($free/1GB), ($need/1GB))
 if ($free - $need -lt 15GB) {
-  throw ("refusing to start: {0:N1} GB free, need {1:N1} GB, would leave under 15 GB" -f ($free/1GB), ($need/1GB))
+  throw ("refusing to start: {0:N1} GB free on ${drv}, need {1:N1} GB, would leave under 15 GB" -f ($free/1GB), ($need/1GB))
 }
 
 $clear = @('STREHL_FULLRES_GATHER','STREHL_WARPMAP','STREHL_ALIGN','STREHL_MERGE',

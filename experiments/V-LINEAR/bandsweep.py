@@ -92,6 +92,29 @@ SUBJECTS = [
     ("bee-1-cpl",            r"C:\dev\strehl-out\V-NOISE2\bee\lintiff"),
     ("flower-bud-alone-cpl", r"C:\dev\strehl-out\V-NOISE2\fba\lintiff"),
     ("leaf-2-cpl",           r"C:\dev\strehl-out\V-NOISE2\leaf\lintiff"),
+    # Round 2, requested by ORCH: the subjects that shipping decisions hang on.
+    # 112MSDCF carries the band-0 gate-floor arm; the other four are the
+    # subjects that still fail the halo measurement (fact 1841).  Decimated
+    # where the stack is deep enough that the sweep would subsample anyway.
+    #
+    # The first three were developed to C: before ORCH's disk broadcast; the two
+    # 299-frame subjects go to D:, which has 1.15 TB free.  The drive is not a
+    # variable the measurement can see -- a develop is bit-identical wherever it
+    # is written -- so a split path costs nothing and rewriting the earlier three
+    # would cost 30 minutes of re-develops for no measurable difference.
+    ("112MSDCF",                  r"C:\dev\strehl-out\V-LINEAR\r2\112MSDCF\lintiff"),
+    ("flat-on-ruler-cpl",         r"C:\dev\strehl-out\V-LINEAR\r2\flat-on-ruler-cpl\lintiff"),
+    ("tweezers-cpl",              r"C:\dev\strehl-out\V-LINEAR\r2\tweezers-cpl\lintiff"),
+    ("lavendar-cpl",              r"D:\strehl-out\V-LINEAR\r2\lavendar-cpl\lintiff"),
+    ("dry-erase-marker-head-cpl", r"D:\strehl-out\V-LINEAR\r2\dry-erase-marker-head-cpl\lintiff"),
+    # The backlit-paper focus sweep of fact 1826.  Not a halo subject and not on
+    # ORCH's round-2 list: it is the STRUCTURE side of the gate-floor knob's
+    # "self-targeting" claim, and it is the only subject on that side.  Fact 1826
+    # asserts its lowest-gradient tiles "carry real fibre structure" -- asserted
+    # from a duty cycle (0.0% -> 1.1%) and a visual crop, never band-qualified.
+    # If its band 0 is in fact noise like 112MSDCF's, the two-subject contrast
+    # that the self-targeting claim rests on is not a contrast at all.
+    ("paper-sweep",               r"D:\strehl-out\V-LINEAR\r2\flat-fields\subject-focus-sweep-with-cpl\lintiff"),
 ]
 
 NY, NX = 5, 6
@@ -102,14 +125,23 @@ def frames_of(d):
     return sorted(f for f in os.listdir(d) if f.lower().endswith(".tif"))
 
 
-def sweep(key, d, far_force=None):
+def sweep(key, d, far_force=None, decim=1, simdecim=1):
     files = frames_of(d)
-    n_real = len(files)
-    if n_real < 12:
+    if simdecim > 1:
+        files = files[::simdecim]
+        decim = simdecim
+    n_dev = len(files)
+    if n_dev < 12:
         return None
+    # `decim` declares that the TIFFs on disk are every decim-th frame of a
+    # stack that is decim x longer.  Everything the decision rule sees must be
+    # in REAL frames, so depth and spacing are scaled back up here and `far`
+    # is converted into developed-file units once, in one place.
+    n_real = n_dev * decim
     far_real = far_force if far_force else max(20, round(n_real / 6))
-    step = max(1, round(n_real / TARGET_READS))
-    idx = list(range(0, n_real, step))
+    step_dev = max(1, round(n_dev / TARGET_READS))
+    step = step_dev * decim
+    idx = list(range(0, n_dev, step_dev))
     far = max(2, round(far_real / step))
     n = len(idx)
     if n - 2 * far < 6:
@@ -157,13 +189,15 @@ def sweep(key, d, far_force=None):
 
     if len(keep) < 4:
         return {"key": key, "n_real": n_real, "step": step,
-                "far_real": far_real, "kept": len(keep), "bands": {},
+                "far_real": far_real, "decim": decim, "n_dev": n_dev,
+                "kept": len(keep), "bands": {},
                 "note": "too few tiles with an interior selection maximum"}
 
     pf, pd, selr = np.array(pf), np.array(pd), np.array(selr)
     conf = selr >= 2.0
 
     out = {"key": key, "n_real": n_real, "step": step, "far_real": far_real,
+           "decim": decim, "n_dev": n_dev,
            "tiles": ntile, "kept": len(keep), "confirmed": int(conf.sum()),
            "bands": {}}
     pop = conf if conf.sum() >= 4 else np.ones(len(keep), bool)
@@ -230,10 +264,19 @@ def _fine_partition():
 def main():
     argv = sys.argv[1:]
     far_force = None
-    if "--far" in argv:
-        i = argv.index("--far")
-        far_force = int(argv[i + 1])
-        del argv[i:i + 2]
+    decim = 1
+    simdecim = 1
+    for flag, cast in (("--far", int), ("--decim", int), ("--simdecim", int)):
+        if flag in argv:
+            i = argv.index(flag)
+            val = cast(argv[i + 1])
+            del argv[i:i + 2]
+            if flag == "--far":
+                far_force = val
+            elif flag == "--decim":
+                decim = val
+            else:
+                simdecim = val
     if "--report" in argv:
         i = argv.index("--report")
         path = argv[i + 1]
@@ -247,12 +290,14 @@ def main():
         if not os.path.isdir(d):
             print(f"SKIP {key}: {d} missing")
             continue
-        r = sweep(key, d, far_force)
+        r = sweep(key, d, far_force, decim, simdecim)
         if r:
             recs.append(r)
 
+    tag = ("" if decim == 1 else f"-decim{decim}")
+    tag += ("" if simdecim == 1 else f"-simdecim{simdecim}")
     out = os.path.join(
-        _HERE, f"bandsweep{'-far%d' % far_force if far_force else ''}"
+        _HERE, f"bandsweep{'-far%d' % far_force if far_force else ''}{tag}"
                f"{'-' + '+'.join(sorted(want)) if want else ''}.json")
     with open(out, "w") as fh:
         json.dump(recs, fh, indent=1)
