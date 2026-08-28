@@ -536,3 +536,71 @@ hunk lands, G2's premise genuinely becomes false and it should be flipped then**
 4. Re-measure everything in §5 after the hand-merge against the other lane's
    work. The patch was built and measured against `ec96973d` only, and that lane
    is changing a default in the same weight loop.
+
+---
+
+## 11. Re-certification of banking under the scoped instrument (fact 1962)
+
+This lane previously certified its numbers "12 of 12 banked" using an unscoped
+`git grep` hit count. **That certification is withdrawn.** It was measured blind:
+invented numbers score the same order of magnitude as published ones, so a hit
+count proves nothing. Re-run under
+`experiments/ORCH-drift-check/verify_banked.ps1`, which scopes to one named
+committed file and requires digit boundaries. **Controls read clean, 3 of 3
+NOT-BANKED, on both runs below.**
+
+| target file | BANKED | NOT-BANKED |
+|---|---|---|
+| `experiments/BUILD-SOFTGATE/results.tsv` | 11 of 12 | `742A6331` |
+| `docs/research/BUILD-SOFTGATE.md` | 10 of 12 | `28754`, `98898048` |
+
+**F17 — MEASURED. Two of the three misses are instrument false negatives caused
+by this project's own house style, and other lanes will hit them.** The report
+writes grouped digits, so `28 754` and `98 898 048` are stored with U+0020
+between groups — verified by dumping the code points, not assumed. A
+digit-bounded token search for `28754` cannot match `28 754`. The values are
+present and correct; the instrument cannot see them. **Any lane certifying
+against a prose report in `docs/research/` will get false NOT-BANKED for every
+number above 9 999.** The third miss is not a defect: `742A6331` is genuinely
+absent from `results.tsv` and present in the report, which is correct, because it
+is a discarded contaminated hash and not a measured arm.
+
+So the union across both committed files is 12 of 12 as tokens. **That union is
+not the interesting number, and it is not what this section concludes.**
+
+**F18 — MEASURED. EVIDENCE GONE: four of this lane's six SHA256 values exist
+only as 8-character prefixes, and the full digests are unrecoverable.** Scanning
+both committed files for 64-character hex tokens returns **three**, and all three
+are byte-freeze registry hashes that belong to the registry and were
+cross-confirmed with BUILD-CROP:
+
+| digest | full 64 chars banked | status |
+|---|---|---|
+| `52517FF8AE…`, `88712017FE…`, `E600A506F6…` | **yes** | freeze rows, not this lane's renders |
+| `C9A93201…` baseline | **no** | **EVIDENCE GONE** |
+| `D8376E35…` exponential | **no** | **EVIDENCE GONE** |
+| `4EC3FB2B…` gaussian | **no** | **EVIDENCE GONE** |
+| `742A6331…` contaminated binary A | **no** | **EVIDENCE GONE** |
+
+The full digests existed only in deleted scratch and in terminal output that no
+longer exists. They are **not reconstructible**: scratch is gone, re-rendering is
+forbidden here, and per fact 1886 a re-render on today's tree would not reproduce
+them anyway. They are recorded as EVIDENCE GONE rather than reconstructed from
+memory, because memory is not measurement.
+
+**What survives this, and it is the part that mattered.** The load-bearing claim
+of this lane is **inertness** — that the default did not move — and that claim was
+never carried by a hash. It is a pixel count: **0 differing pixels of 98 898 048**,
+banked in both files. A pixel-difference count is stronger evidence than a digest
+comparison, because it survives the tree drift that makes absolutes meaningless.
+The potency and placebo results are likewise pixel counts. **The withdrawn
+depth-softening score is unaffected: it was already withdrawn in section 7 for a
+different and more serious reason.**
+
+**D4 — DISCIPLINE. Bank full digests or bank none.** An 8-character prefix is not
+a verifiable hash: it cannot be checked against a re-render with any confidence,
+and under a digit-boundary matcher a hex prefix is not even reliably
+distinguishable from a longer digest, because the boundary is `[0-9]` and the
+next character of a hash is often a letter. Truncating a digest for readability
+in prose is fine **only if the full value is banked verbatim somewhere else in
+the same commit.** This lane did not do that and cannot now.

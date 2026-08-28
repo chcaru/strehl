@@ -59,3 +59,24 @@ census	SOFT_GATE_ENV	n/a	n/a	n/a	2	def merge.rs:530, use merge.rs:682
 #   - a second subject or depth pair for depthscore (all rows are n=1).
 #   - the rule 9 flat-region control: it FAILED to find a flat tile
 #     (auto-selected tile variance 9.5e6) and is absent, not passing.
+
+# RE-CERTIFICATION under experiments/ORCH-drift-check/verify_banked.ps1, fact 1962.
+# The earlier "12 of 12 banked" used an unscoped git grep hit count and is WITHDRAWN.
+# Scoped re-run, controls clean 3/3 NOT-BANKED on both:
+#   results.tsv           11 of 12 BANKED; NOT-BANKED 742A6331 (correctly absent, discarded hash)
+#   BUILD-SOFTGATE.md     10 of 12 BANKED; NOT-BANKED 28754, 98898048
+#     -- both are instrument FALSE NEGATIVES: the report uses house-style grouped
+#        digits "28 754" and "98 898 048" with U+0020 separators, verified by code
+#        point dump, so a digit-bounded token search cannot match them.
+#
+# EVIDENCE GONE -- full 64-char SHA256 never banked, unrecoverable, do not reconstruct:
+#   C9A93201  baseline render      full digest gone
+#   D8376E35  exponential render   full digest gone
+#   4EC3FB2B  gaussian render      full digest gone
+#   742A6331  contaminated bin A   full digest gone
+# Only the three byte-freeze digests are banked at full length, and those belong
+# to the freeze registry, not to this lane's renders.
+#
+# Unaffected: the inertness, potency and placebo results are PIXEL COUNTS, not
+# digests, and are banked in full. Inertness (0 px of 98898048) is the
+# load-bearing claim and never depended on a hash.
