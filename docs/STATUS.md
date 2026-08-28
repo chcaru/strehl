@@ -25,6 +25,7 @@ marked as unmeasured.
 | **Regional blur** | **`flowers-cpl` diagnosed: capture gap, not a merge defect** — (a) at all 6 sites | fact 1876 |
 | **Depth softening** | root cause identified; candidate fix built but **unscored** | facts 1843–1845, 1849 |
 | **GPU** | **unused** | explicit gap against the brief |
+| **Pluggability** | **1 of 5 kinds, and it is refused on the shipping default.** Focus measures are a real trait seam, host-calibrated and *demonstrated* (7 operators, 10.27× noise-sd span; swapping moves 99.9105% of samples between two named hashes while the default stays byte-identical). Merge strategy is an enum in core; alignment model, optical profile and output stage have no trait. `--focus` is **refused** on `MergeBackend::Pyramid`, which is the default — so the plugin surface and the shipping path do not intersect. Registry is in-tree, so contributing still requires patching this repo | fact 1952; `docs/research/BUILD-PLUGIN.md` (`e1bf09e0`) |
 | **Print gate** (blotch/chroma/band/clip/crush, all 33) | **0 FAIL.** 17 PASS · 3 ACQUITTED · 6 ACQUITTAL EXPIRED · 7 REVIEW · 0 NOT EXAMINED · 33 total (found 33). So **20 of 33 carry a standing clean verdict and 13 are unresolved** — expired and REVIEW are *not* passes, and the gate says so itself | `orch_printready.py` over `masters\` + `orch-rendered-7\`; facts 1947–1948 |
 | **Print-ready** | **NO** — see §3 | |
 
