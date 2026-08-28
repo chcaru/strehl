@@ -33,6 +33,25 @@ predicted collapse never starts.
 | **Potency** — `--pyramid-exponent 4.0` vs default | **84.94%** of samples moved, max Δ **1208 DN** |
 | **Confidence-map potency** — hard-max vs default vs mean-arm, N=22 | **409.8 / 463.3 / 811.8** — cleanly separated |
 
+### Confidence-map potency AT EVERY FRAME COUNT, in percent-of-samples-moved
+
+So that "flat in N" can never be confused with "not reading", the known-potent brackets were run
+at each depth and are restated here in the same units as V-REVIEW's arms:
+
+| N | default vs hard-max (elect floor) | default vs mean-arm (average ceiling) |
+| --- | --- | --- |
+| 22 | 42.69% moved | 82.96% |
+| 63 | 60.97% moved | 91.77% |
+| **299** | **80.63% moved** | **98.43%** |
+
+For reference: `--pyramid-gate 8.0` moves it 16.27%, `--pyramid-bands 3` 9.66%,
+`--confidence-tail` **0.00% (inert)**. **The instrument is not merely alive at N=299 — it is
+the most responsive there**, moving 4 in 5 of all samples, ~5× the gate arm. The flatness
+reported below is a measurement.
+
+`--confidence-tail` **was never used in any arm of this lane**; every threshold is applied by me
+to the decoded array, so its inertness cannot have touched a result here.
+
 ORCH's quoted potency figure is 90.98%; I measure **84.94%** on `beeN22`, presumably a
 different subject/frame-set. Potency is established either way.
 
@@ -243,12 +262,59 @@ Every row pairs detail with noise on the same tiles (rule 3).
 genuine null and not a dead metric: those arms move **90–98% of all samples**, up to 4041 DN,
 and the same metric registers the low arm at 0.889/0.866.
 
-The reason is structural: with `sharpen 1.4` over 7 bands the default ladder is
-`2.0, 2.8, 3.9, 5.5, 7.7, 8, 8` and is **already pinned at `MAX_EXPONENT = 8.0` in the fine
-bands** where the measured detail lives (`exponent_at`, `pyramid.rs`). Raising
-`--pyramid-exponent` only lifts the *coarse* bands. **There is no headroom on this axis**, which
-is also why the other lane's hull violations (0/72/511 at exponent 1/8/16) buy ringing and
-nothing else.
+The reason is structural, and it is the **`--fix-ca` pattern**: a zero from a flag because the
+stage is already doing the work. With `sharpen 1.4` over 7 bands the shipped ladder is
+`2.0, 2.8, 3.9, 5.5, 7.7, 8, 8` and the two finest levels are **already pinned at the cap**:
+
+| k | band cyc/px | default 2.0/1.4 | uniform 8.0/1.0 | low 0.5/1.4 | uniform/default detail |
+| --- | --- | --- | --- | --- | --- |
+| 0 | 0.250–0.500 | **8.000** | **8.000** | 3.765 | 0.9967 |
+| 1 | 0.125–0.250 | **8.000** | **8.000** | 2.689 | 0.9947 |
+| 2 | 0.063–0.125 | 7.683 | 8.000 | 1.921 | 0.9933 |
+| 3 | 0.031–0.063 | 5.488 | 8.000 | 1.372 | 1.0081 |
+| 4 | 0.016–0.031 | 3.920 | 8.000 | 0.980 | **1.0483** |
+
+My detail bands (0.30–0.35, 0.20–0.25 cyc/px) sit in k=0 and k=1, where the two arms are
+**identical by construction**. The **stage is potent** — the metric moves 4.8% at k=4 where the
+ladders differ, and the low arm moves every band (0.72–0.90). The **flag is redundant** in the
+bands that carry acuity. Exactly `--fix-ca`.
+
+### 6b. Correction: there IS headroom above the cap, it is CLI-reachable, and it is a footgun
+
+I first wrote "no headroom on this axis." **That was wrong**, and following the `--fix-ca`
+advice found it. `exponent_at` (`pyramid.rs`, pin `9b05d0b7`) returns **uncapped** on the ramp-off
+path:
+
+```rust
+if self.sharpen_per_octave == 1.0 || bands == 0 { return self.exponent; }   // NOT capped
+(self.exponent * self.sharpen_per_octave.powi(steps)).min(MAX_EXPONENT)     // capped
+```
+
+So `--pyramid-sharpen 1.0` bypasses `MAX_EXPONENT` entirely. My uniform arm read 0.997 partly
+because I happened to pick **exactly the cap value**. Above it:
+
+| exponent / sharpen | detail 0.30–0.35 | det/def | noise 0.40–0.50 | **noise/def** | confidence mean/p50 | max Δ vs default |
+| --- | --- | --- | --- | --- | --- | --- |
+| **2.0 / 1.4 SHIPPED** | 561,990 | 1.0000 | 91,085 | 1.0000 | 418.5 / 355 | — |
+| 8.0 / 1.0 (= cap) | 560,130 | 0.9967 | 90,878 | 0.9977 | — | 1,558 |
+| **12.0 / 1.0 (uncapped)** | 392,512 | **0.6984** | 191,940 | **2.1073** | 158.3 / 0 | **41,711** |
+| **16.0 / 1.0 (uncapped)** | 304,993 | **0.5427** | 165,129 | **1.8129** | 75.1 / 0 | **41,711** |
+
+**Raising the exponent past the cap does not recover the bee — it destroys it.** Detail falls to
+**0.54** while noise nearly **doubles**. The source predicts this exactly: the ceiling is set by
+`f32`, and *"`p` above about 10 can no longer rank the sharpest coefficients against each other:
+they all pin to the ceiling and get averaged."* Above p≈10 the merge stops ranking and starts
+averaging **the very coefficients it most needs to rank** — a max deviation of 41,711 DN is the
+ringing the other lane counted as hull violations (0/72/511 at 1/8/16).
+
+**This is a live footgun and it exits 0.** `--pyramid-exponent 12 --pyramid-sharpen 1.0` silently
+produces a numerically degenerate merge with no warning. The cap exists to prevent precisely
+this and the ramp-off path opens a hole in it. Worth a lane; not mine to patch.
+
+**So the exponent axis cannot recover the bee in either direction** — saturated below the cap in
+the bands that matter, actively destructive above it. `C-KILL` fires on stronger evidence than
+I first had, and a higher exponent is emphatically **not** recommended.
+
 
 ---
 
@@ -271,6 +337,15 @@ nothing else.
 6. **Experiment B's one pro-model number is a noise artifact.** Its 11% detail gain comes with
    an 18% noise gain on the same tiles; noise-matched it reverses to 0.948. Judged on detail
    alone it would have read as support for the hypothesis.
+7. **The confidence map reads "maximally committed" exactly when the merge is at its worst.**
+   At exponent 16 it reports mean **75.1**, p50 **0**, p90 **7** — as elected as a merge can
+   look — while detail has collapsed to **0.54** and noise risen **1.81×**. The rank asks
+   whether the output sits at an *extreme* of the observations, and **overshoot past every
+   frame is also an extreme**. Confidence near 0 therefore means "elected a frame" *or* "rang
+   past all of them", and cannot distinguish them. This is a real limitation of the instrument
+   and another reason rule 3 is not optional. My `A` conclusions do not lean on absolute
+   confidence — they rest on the bracketed CI and on `n_eff`, a noise-power ratio.
+8. **`MAX_EXPONENT` is bypassable from the CLI** (§6b), silently, with exit 0.
 
 ### Two corrections to the brief's flag list, found by running `--help` before rendering
 
@@ -310,5 +385,7 @@ experiments/V-DILUTE/analyze.py           A | B | BROI | C
 experiments/V-DILUTE/broi_robust.py       paired per-tile bootstrap + correction-off sensitivity
 experiments/V-DILUTE/b2_replicate.ps1     odd-phase replicate render (B's noise floor)
 experiments/V-DILUTE/b2_analyze.py        contrast vs replicate, same tiles, rule-3 paired
+experiments/V-DILUTE/conf_potency.py      confidence-map potency per N, percent-moved
+experiments/V-DILUTE/c_saturation.py     per-band ladder + where the exponent has reach
 experiments/V-DILUTE/commission.py        null arm, potency arm, analytic rank bias
 ```
