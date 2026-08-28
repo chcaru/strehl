@@ -8,6 +8,45 @@ strehl-arm renders, which are not used for any number here.*
 
 ---
 
+> ## 🔒 FOR THE OWNER — the external comparator is blocked pending a Zerene Stacker licence
+>
+> **This is a purchase decision and only you can make it. Nothing in the code
+> can unblock it.**
+>
+> The copy installed at `C:\Program Files\ZereneStacker` runs as
+> `License category = EXPIREDLICENSE` (bundled default key, expired
+> 2026-06-06). It aligns and stacks to completion and then refuses to write the
+> file — *"Trial expired: cannot save output image: Aborting batch run."* The
+> output folder is left empty. It is not watermarking and not degrading output;
+> it simply produces nothing, so **there is no partial result to work with and
+> no way around it.** Your `zerenstk.cfg` was backed up before the first launch
+> and verified byte-identical afterwards; **no circumvention of any kind was
+> attempted, and none will be.**
+>
+> **What a licence would buy:** Zerene Stacker PMax is the only credible
+> *commercial* third-party quality comparator this project has identified, and
+> it is the specific comparator the retracted "17–27% behind" claim was made
+> against. Buying it is the only way to re-run that comparison at all.
+>
+> **What it would not buy, and this is the part not to gloss:** **we do not
+> know that the comparison would favour us.** On the present corpus the fine
+> bands a stacker comparison would be decided in are noise-limited above 0.25
+> cyc/px (§5.3, as amended below). Running Zerene there would not measure
+> resolution in either direction — and a competitor that selects on local
+> contrast, scored in a band that is noise, can lose for reasons that have
+> nothing to do with quality. **A licence bought today would not produce a
+> trustworthy verdict today.** It needs the capture in
+> `docs/captures-needed.md` §33 first.
+>
+> **The cheaper path, and it is already running.** `enfuse` and `focus-stack`
+> are licence-clean, already wired, and already reported: `docs/research/V-LINEAR2.md`
+> puts strehl level with `enfuse` (0.977, CI [0.810, 1.181]) and ahead of
+> `focus-stack` (1.326, CI [1.089, 1.625]) at 0.20–0.25 cyc/px. So an external
+> comparison **already exists** and did not cost anything. Zerene adds the
+> commercial reference point, not the only comparison. **Order of operations:
+> shoot §33 first, then decide on the licence — in that order the licence buys
+> a verdict, and in the other order it buys a number nobody should quote.**
+
 > ## ⚠ PARTIALLY SUPERSEDED — read this before §0.3, §5.3 or P7
 >
 > **`docs/research/V-LINEAR2.md` §1 overturns this document's reading of the
