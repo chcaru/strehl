@@ -1,0 +1,25 @@
+backup -> C:\Users\chris\AppData\Local\Temp\BUILD-DEFECT.s20commission.bak
+live report verifies clean (rc=0)
+
+plants declared : 14
+caught          : 14
+missed          : 0
+unanchored      : 0
+partition sums  : True (14)
+
+  CAUGHT     arm B residual digit -> MISMATCH   arm B residual | report value '0.098' | probe 'B FIDELITY planted, exact gain residual 0.098 DN'
+  CAUGHT     arm F residual -> MISMATCH   arm F residual | report value '21.825' | probe 'F MISMATCH gaussian, parabolic fix residual 21.825 DN'
+  CAUGHT     arm F ring -> MISMATCH   20.7 corrected ring | report value '13.250' | probe 'gaussian, parabolic fix residual 31.825 DN ring 13.250 DN'
+  CAUGHT     commissioning DEFECT -> MISMATCH   commissioning DEFECT | report value '1.88281' | probe 'DEFECT disc in both halves 1.88281%'
+  CAUGHT     prior-stat value -> MISMATCH   prior-stat unsigned | report value '0.47302' | probe 'PRIOR-STAT unsigned worst quad 0.47302%'
+  CAUGHT     wide mismatch pct -> MISMATCH   wide mismatch pct | report value '0.1139' | probe 'mismatch 0.1139%'
+  CAUGHT     census differing count -> MISMATCH   census differing | report value '11' | probe 'differing-but-admitted 11 / 27'
+  CAUGHT     near-mote count -> MISMATCH   near-mote count | report value '569' | probe 'near-mote 569'
+  CAUGHT     candidates scanned -> MISMATCH   candidates scanned | report value '110,539' | probe 'scanned 110539'
+  CAUGHT     dark-on-subject count -> MISMATCH   dark-on-subject count | report value '85,760' | probe 'dark-on-subject 85760'
+  CAUGHT     flats used -> MISMATCH   flats used | report value '140' | probe 'used 140'
+  CAUGHT     truth HF -> MISMATCH   truth HF | report value '334.6763' | probe 'truth 334.6763'
+  CAUGHT     mapped quad max -> MISMATCH   mapped quad max | report value '3444' | probe 'max mapped quad px 3444'
+  CAUGHT     site signal -> MISMATCH   site signal DN | report value '2061.5' | probe 'site signal : 2061.5 DN'
+
+report restored byte-identical : True

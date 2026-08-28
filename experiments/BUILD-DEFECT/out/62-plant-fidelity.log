@@ -1,0 +1,72 @@
+========================================================================
+P59 -- planted-mote fidelity, against a reference only this run holds
+========================================================================
+subject : D:\personal\macro\coffee-bubbles
+flats   : D:\personal\macro\flat-fields\flat-fields  (first 120 decodable, for cleanliness only)
+
+The corrector under test is a PER-SAMPLE AFFINE MAP -- apply() reads
+and writes the same index, with no neighbour or inter-frame term.
+So the question is not whether it hallucinates texture. It is what
+it leaves behind when its amplitude is wrong.
+
+truth frame  : D:\personal\macro\coffee-bubbles\DSC00034.ARW
+active       : 7032x4688 at (0,0)  ->  quad grid 3516x2344
+levels       : black 512 white 15360 range 14848
+
+-- certifying a clean site on the flats (dust is a sensor property) --
+flats        : examined 160 = used 120 + no-decode 0 + outside-window 40 + geometry-mismatch 0  [sums]
+geometry     : flats 3520x2344 quads, subject 3516x2344 quads, shared origin (0,0)
+               -> indices transfer; search bounded to the shared width 3516 (4 quads dropped from the wider grid)
+mapped motes : 1135 (clearance required: 120 quads)
+
+-- commissioning the cleanliness statistic (floor 0.12500%) --
+halves       : a=60 frames, b=60 frames (interleaved, so cloud drift is shared)
+  PRIOR-STAT  unsigned worst quad          0.47301%   expect >= floor     PASS
+  BASELINE    untouched site               0.01388%   expect < floor      PASS
+  DEFECT      disc in both halves          1.88280%   expect >= 4x baseline PASS
+  NULL        disc in one half only        0.04113%   expect <= 25% of span PASS
+  IMPROVEMENT planted mote divided out     0.03613%   expect back to baseline PASS
+  all 5 arms pass -- the statistic reads a planted defect, ignores a
+  non-reproducible one, and scores a repair better than the defect.
+
+site search  : scanned 110538 = near-mote 568 + near-exclude 0 + too-dirty 18631 + no-signal 0 + dark-on-subject 85764 + accepted 5575  [sums]
+clean site   : quad (2025,1505)  disc response 0.00001%  (worst single quad in the same region 0.46105%, which is the PRNU the disc average cancels)
+null search  : scanned 110538 = near-mote 568 + near-exclude 489 + too-dirty 18631 + no-signal 0 + dark-on-subject 85494 + accepted 5356  [sums]
+null site    : quad (1857,809)  (containment arm measures here)
+site signal  : 2061.4 DN = 0.139 of range
+
+-- corrector reports (partitioned; the counts must sum) --
+  B exact        examined 697 = corrected 697 + no-change 0 + clipped 0 + outside 0  [sums]
+  E 2x-strong    examined 697 = corrected 697 + no-change 0 + clipped 0 + outside 0  [sums]
+  C containment  examined 697 = corrected 697 + no-change 0 + clipped 0 + outside 0  [sums]
+  F mismatch     examined 697 = corrected 697 + no-change 0 + clipped 0 + outside 0  [sums]
+
+------------------------------------------------------------------------
+ARM RESULTS  (residual vs truth, RMS in DN over r=25 quads)
+------------------------------------------------------------------------
+  A CHARGE       planted, uncorrected   residual    91.307 DN   ring   70.088 DN
+  B FIDELITY     planted, exact gain    residual     0.097 DN   ring    0.019 DN
+  E PERVERSE     planted, 2x gain       residual    91.322 DN   ring   70.069 DN
+  C CONTAINMENT  distant clean site     moved    0 sample(s)
+  D INVENTION    HF energy   truth 334.6762  B 334.7147  E 346.7149
+  F0 MISMATCH    gaussian mote, raw     residual    67.365 DN   ring   38.119 DN
+  F  MISMATCH    gaussian, parabolic fix residual   31.825 DN   ring   33.250 DN
+
+------------------------------------------------------------------------
+  A CHARGE       PASS   91.307 DN must exceed both 1.0 DN and 4x arm B (0.389)
+  B FIDELITY     PASS   0.097 DN must be <= 1.0 DN (quantisation only)
+  C CONTAINMENT  PASS   0 samples moved at a site the map does not name; must be exactly 0
+  D INVENTION    PASS   B HF 334.7147 must be <= truth HF x1.05 (351.4100)
+  E PERVERSE     PASS   residual 91.322 > 0.097 AND ring 70.069 > 0.019
+  F MISMATCH     PASS   31.825 DN must be <= 50% of uncorrected 67.365 AND ring 33.250 <= 38.119
+------------------------------------------------------------------------
+partition: 6 arms = 6 pass + 0 fail + 0 undefined
+
+VERDICT: the corrector restores a planted mote to within quantisation,
+  touches nothing it does not name, adds no high-frequency content the
+  truth lacks, and is charged more when its amplitude is wrong.
+  Arm F additionally shows it removes 52.8% of a mote whose profile it
+  does not model, without leaving a worse footprint edge than the mote.
+  THIS IS A STATEMENT ABOUT A PLANTED MOTE AT A CERTIFIED CLEAN SITE.
+  It does not transfer to the two real motes, for which no clean
+  reference exists. That is the print gate's question, not this one.

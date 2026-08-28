@@ -2764,3 +2764,308 @@ outstanding.** `crates/strehl-core/src/defect_map.rs` carries `HotSite`,
 So of the original brief's two classes, dust is the live question and hot
 pixels are closed with a null. §19.7 exists because the null was previously
 legible only by reading §3.1 and §6.2 together.
+## 20. THE PLANTED-MOTE FIDELITY INSTRUMENT, AND THREE DEFECTS IT FOUND IN ITSELF
+
+ORCH asked for evidence that the correction can be turned ON: a measured
+improvement on real stacks, no print-gate regression, a planted-improvement
+arm, and proof that the corrector does not invent detail. This section
+delivers the first half of the split ORCH accepted -- **planted-mote
+fidelity measured against truth**. It makes no claim about the two real
+motes; that is the print gate's question and it is still open.
+
+The instrument is `crates/strehl-cli/examples/defect-plant-fidelity.rs`.
+Every number below is from `experiments/BUILD-DEFECT/out/62-plant-fidelity.log`.
+
+### 20.1 The geometry refusal was a real question, and the answer was not the safe one
+
+The first run refused. The flats decode a 3520x2344 quad grid; `coffee-bubbles`
+decodes 3516x2344. The embedded map declares `sensor 7032 4688` while its own
+header records that it was built from 160 flats -- which decode at 7040. So the
+shipping map is applied to two different bodies, and P39's census had labelled
+the wide one:
+
+```
+DOES NOT MATCH -> the correction refuses
+```
+
+That label was a **prediction about `check_geometry` printed by code that never
+called `check_geometry`**. P61 called it:
+
+```
+narrow 7032x4688  ADMITTED   mismatch 0.0000% vs bar 1.00%
+wide   7040x4688  ADMITTED   mismatch 0.1138% vs bar 1.00%
+```
+
+`MAX_ACTIVE_MISMATCH_FRAC = 0.01` and 8/7032 = 0.1138%, so the wide body is
+admitted, not refused. The census was wrong and is corrected.
+
+Admission is the *more* dangerous outcome of the two, because a refusal fails
+loudly at fold frame 0 while an admission could misregister every corrected
+quad in silence. So the displacement was measured rather than assumed, by
+reading the active origin from a real frame of each geometry:
+
+```
+narrow  7032x4688 at (0,0)   DSC00034.ARW
+wide    7040x4688 at (0,0)   DSC00001.ARW
+active origin same in both : true
+max mapped quad px 3448, narrow quad limit 3516  -> all named quads inside both
+```
+
+Shared origin means quad (px,py) addresses the same photosite in both bodies;
+the extra 8 columns extend the right edge only. **Displacement is zero and the
+admission is safe** -- for the 1,135 quads this map names, all of which are
+inside the narrower width. The census now reads `exact-match 15 / 27,
+differing-but-admitted 12 / 27`.
+
+This does not generalise to a map whose quads reach past 3516, and nothing in
+the module currently enforces that. Recorded as an open item, not fixed here.
+
+### 20.2 The cleanliness test rejected every site, and the refusal was the finding
+
+ORCH's first requirement was to plant only where the truth is genuinely clean.
+The first cleanliness test high-passed a 20-frame mean flat and required the
+residual below 0.125%. It refused all 110,538 candidates.
+
+A search that rejects every input is not a strict search, it is an
+uncommissioned one -- so the refusal was partitioned before it was believed:
+
+```
+scanned 110538 = near-mote 568 + near-exclude 0 + too-dirty 109970
+               + no-signal 0 + accepted 0  [sums]
+best residual among eligible candidates: 0.60701% against a floor of 0.12500%
+```
+
+Only 568 sites were excluded by mote clearance. The whole field read dirty, at
+about 5x the floor. Without the partition this would have read as "the sensor
+is filthy"; with it, the failure is clearly in the statistic.
+
+### 20.3 Split-half reproducibility, and why the sign is load-bearing
+
+A fixed multiplicative defect is identical in two independent estimates of the
+field; shot noise is not. The 120 usable flats were therefore accumulated into
+two **interleaved** halves -- used frame 0,2,4,... against 1,3,5,... The
+interleaving is the control for ORCH's own caveat about moving cloud: splitting
+the sequence into a first and a second half would put the illumination drift
+entirely into the difference between halves, and the statistic would read the
+weather as irreproducibility.
+
+Split-half agreement removed the shot noise and the site still read dirty.
+That reading is not a remembered one: the statistic this suite replaced is
+re-measured on the same pixels in every run, as a gated commissioning arm, so
+the claim lives or dies with the current log:
+
+```
+PRIOR-STAT  unsigned worst quad   0.47301%   expect >= floor   PASS
+```
+
+This is the part worth keeping. **Split-half cannot remove PRNU.** Per-photosite
+response non-uniformity is a fixed multiplicative pattern, so it is
+reproducible *by definition* and appears in both halves at full strength. At
+0.473% it is 3.8x the floor, and no site on this sensor could ever have been
+certified. The floor was not too strict for the dust; it was below the sensor's
+own grain.
+
+PRNU and dust are separable by **geometry**, not amplitude: PRNU is spatially
+white, a mote is a correlated disc tens of quads across. So the statistic keeps
+the sign of the reproducible residual and averages it over a dust-sized disc.
+PRNU cancels toward zero as 1/sqrt(area); a coherent disc does not. Measured at
+the site the search finally chose:
+
+```
+disc response 0.00001%   worst single quad in the same region 0.46105%
+```
+
+A separation of about 4.6e4 between the two statistics on the same pixels,
+while the planted-defect arm still reads 1.88% on the disc statistic. That is
+the evidence the disc average is cancelling PRNU rather than cancelling
+everything.
+
+### 20.4 Commissioning the cleanliness statistic, including an arm that had to be rewritten
+
+Five arms, gated before any site is certified:
+
+```
+PRIOR-STAT  unsigned worst quad          0.47301%   expect >= floor         PASS
+BASELINE    untouched site               0.01388%   expect < floor          PASS
+DEFECT      disc in both halves          1.88280%   expect >= 4x baseline   PASS
+NULL        disc in one half only        0.04113%   expect <= 25% of span   PASS
+IMPROVEMENT planted mote divided out     0.03613%   expect back to baseline PASS
+```
+
+The PRIOR-STAT arm exists because the first draft of this section quoted
+0.47301% from a run whose log had since been overwritten by a later run of the
+same script. The number was right, but nothing on disk backed it. Re-measuring
+the superseded statistic inside the live suite, and gating it, converts a
+citation into a measurement -- and the arm would fail, loudly, if PRNU on this
+sensor ever fell below the floor and the argument for the replacement
+evaporated.
+
+The NULL arm is the one that proves the statistic suppresses non-reproducible
+structure rather than merely being small, and the IMPROVEMENT arm is ORCH's
+requirement that the statistic be able to score a fix and not only a defect.
+
+**The first version of this suite failed its own NULL arm for the wrong
+reason.** It scored the null against the absolute floor and read `0.40489% >=
+0.125% FAIL` -- while baseline at the same site was 0.47301%. The one-sided
+stamp had moved the statistic *downward* by 0.068%, which is exactly what the
+null wanted to see. Scoring against an absolute floor instead of against
+baseline turned a passing null into a failing one. Every arm is now scored as a
+response above baseline, and the span `DEFECT - BASELINE` is the scale the
+other two are judged against.
+
+### 20.5 Two more instrument defects, both caught by disagreement rather than by inspection
+
+**A search with two floors.** The site search accepted candidates on
+cleanliness alone, returned quad (1441,553), and the run then refused because
+that site sits at 0.016 of range on the subject. Cleanliness is a property of
+the sensor and brightness is a property of the scene; a search that optimises
+one and discovers the other afterwards has a hidden second criterion. Subject
+signal is now a search criterion with its own census bucket
+(`dark-on-subject`), which is where 85,764 of the 110,538 candidates go.
+
+**Two statistics wearing one name.** After that fix the search accepted a site
+at >= 0.080 of range and the final gate refused the same site at 0.079 -- twice,
+at two different sites. `mean_signal` was indexing `(oy + qy*QUAD)*stride + ox +
+qx*QUAD`, the top-left photosite of every quad, which under a Bayer CFA is
+always the same colour channel. It was reporting the red channel's level and
+calling it the site signal, while the search used `quad_mean` over R, G, G and
+B. Not a boundary case: a channel bias. `mean_signal` now averages the whole
+quad and the site reads 2061.4 DN = 0.139 of range.
+
+Both were found because two numbers that should have agreed did not. Neither
+would have been visible by reading the code.
+
+### 20.6 The six arms
+
+```
+A CHARGE       planted, uncorrected    residual   91.307 DN   ring  70.088 DN
+B FIDELITY     planted, exact gain     residual    0.097 DN   ring   0.019 DN
+E PERVERSE     planted, 2x gain        residual   91.322 DN   ring  70.069 DN
+C CONTAINMENT  distant clean site      moved   0 sample(s)
+D INVENTION    HF energy   truth 334.6762   B 334.7147   E 346.7149
+F0 MISMATCH    gaussian mote, raw      residual   67.365 DN   ring  38.119 DN
+F  MISMATCH    gaussian, parabolic fix residual   31.825 DN   ring  33.250 DN
+
+partition: 6 arms = 6 pass + 0 fail + 0 undefined
+```
+
+Every corrector report partitions: `examined 697 = corrected 697 + no-change 0 +
+clipped 0 + outside 0` on all four corrected arms.
+
+- **C CONTAINMENT** is exact, not tolerant: 0 samples moved at a distant
+  certified-clean site the map does not name. This is the null ORCH asked for
+  -- a corrector that repaints everywhere would look excellent on a planted
+  mote and destroy the image.
+- **D INVENTION** is measured, not argued. It is also structurally weak by
+  design, because `DefectMap::apply` reads and writes the same index with no
+  neighbour and no inter-frame term (§13, verified again here). The corrector
+  cannot reconstruct texture because it never reads a second sample.
+- **E PERVERSE** reads 91.322 DN against B's 0.097. That E lands within 0.02 DN
+  of the uncorrected arm A is expected arithmetic, not a coincidence: a 2x
+  correction over-restores by exactly the attenuation depth, so the residual
+  magnitude matches the uncorrected one.
+
+### 20.7 Arm B is circular, which is why arm F exists
+
+`mote_map` sets `gain = 1.0 / plant_profile(d)` on the same `d` the plant used.
+Arm B therefore corrects a mote that is the algebraic inverse of the
+correction, and its 0.097 DN establishes exactly two things: that `apply`
+implements `(v - black) * gain + black` correctly, and that u16 rounding costs
+about a tenth of a DN. It establishes **nothing about a mote the model does not
+fit**, and real dust does not consult the map's profile function.
+
+Arm F plants a **Gaussian** mote -- same centre, same central transmission,
+same footprint radius, `sigma = PLANT_R/2` -- and corrects it with the
+parabolic map:
+
+```
+uncorrected  residual 67.365 DN   ring 38.119 DN
+corrected    residual 31.825 DN   ring 33.250 DN     -> 52.8% of the charge removed
+```
+
+It passes, and the pass is narrow in the direction that matters. The residual
+halves, but the **footprint edge barely moves**: 33.250 against 38.119, a
+reduction of 12.8%. A shape-mismatched correction leaves a correction ring
+almost as strong as the mote's own edge. That is the honest limit of this
+result and it bears directly on the default-ON question, because §13.6 measured
+that stored depth can be wrong by up to 4.3x -- wrong amplitude is the normal
+case, not the edge case.
+
+### 20.8 What this section does and does not license
+
+It licenses: the corrector, given a map that names the right quads with the
+right gains, restores a planted mote to quantisation, touches nothing outside
+the quads it names, adds no high-frequency content the truth lacks, is charged
+more when its amplitude is wrong, and still removes half the charge of a mote
+whose profile it does not model.
+
+It does not license turning the correction ON. Nothing here measures the two
+real motes, for which no independent clean reference exists, and nothing here
+touches the print gate's 17 PASS / 5 FAIL / 4 REFUSED. In ORCH's words:
+**planted-mote fidelity measured against truth; real-mote improvement measured
+against the print gate; no claim that the second inherits the first.** The
+second is not yet measured. §13.1 stays OFF until it is.
+
+### 20.10 The verifier missed a plant, and the reason is the same one twice
+
+`63-verify-s20.py` parses every claim out of the report and every ground truth
+out of the log the report cites. Nothing in it is an expected value: a checker
+that compares the artifact against its own constants runs green while the
+artifact drifts, which is how another lane scored 37/37 and then caught 5 of 13.
+
+It read 30/30 on the first pass. `64-commission-s20.py` then planted 14 known
+defects and it caught **13**:
+
+```
+plants declared : 14   caught 13   missed 1   unanchored 0   [sums]
+MISSED  arm F ring -- verifier stayed GREEN
+```
+
+Arm F's ring is stated twice: once in the §20.6 table and once again in §20.7's
+prose. Only the table was pinned, so the prose could be changed to any value at
+all and the verifier would not notice. **A presence check is satisfied by any
+duplicate of the value.** This is the second time this exact failure has been
+recorded in this report -- §18.11 is the first, where `0.052` occurred at two
+sites and the check was pinned to one.
+
+The repair was four site-scoped claims plus two DERIVED checks that recompute
+`52.8%` and `12.8%` from the report's own residuals instead of string-matching
+them, so a percentage cannot agree with itself while disagreeing with its
+inputs. Two further instrument defects surfaced during that repair and both are
+worth naming, because they are the kind that make a checker quietly weaker:
+
+- Four claims resolved against the **wrong site**, because the §20.6 table
+  states the same quantities and matched first. Fixed by giving each claim an
+  explicit scope rather than searching the whole section.
+- `corrected\s+residual` matched inside **un**`corrected`, so the derived check
+  compared 67.365 against itself and reported `0.0000%` removed. It read as a
+  mismatch rather than a pass, which is the safe direction, but a substring
+  collision that had landed the other way would have been a silent green.
+
+Final state:
+
+```
+claims declared : 36 (34 parsed + 2 derived)   resolved 36   unresolved 0   mismatched 0  [sums]
+plants declared : 14   caught 14   missed 0   unanchored 0  [sums]
+report restored byte-identical : True
+```
+
+The commissioning script backs the report up to `$env:TEMP` and restores from
+that copy, never `git checkout --`, and it verifies the restoration is
+byte-identical before it exits.
+
+### 20.9 Artifacts
+
+| Path | What it is |
+| --- | --- |
+| `crates/strehl-cli/examples/defect-plant-fidelity.rs` | The six-arm instrument and the four-arm cleanliness commissioning |
+| `crates/strehl-cli/examples/defect-geometry-verdict.rs` | P61: calls `check_geometry` instead of predicting it |
+| `crates/strehl-cli/examples/defect-geometry-census.rs` | P39, with the false refusal label corrected |
+| `experiments/BUILD-DEFECT/out/61-geometry-verdict.log` | The admission verdict and the origin reads |
+| `experiments/BUILD-DEFECT/out/62-plant-fidelity.log` | All six arms and the commissioning |
+| `experiments/BUILD-DEFECT/out/60-geometry-census.log` | 15 exact-match / 12 differing-but-admitted |
+| `experiments/BUILD-DEFECT/src/63-verify-s20.py` | Verifies this section; 36 claims, no constant of its own |
+| `experiments/BUILD-DEFECT/src/64-commission-s20.py` | Plants 14 defects and requires the verifier to catch each |
+| `experiments/BUILD-DEFECT/out/64-commission-s20.log` | 14 caught / 0 missed / 0 unanchored |
+
+Suite at the time of writing: 713 pass, 0 fail. Both byte-freezes hold.

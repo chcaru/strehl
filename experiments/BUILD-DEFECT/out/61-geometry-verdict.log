@@ -1,0 +1,31 @@
+========================================================================
+P61 -- is the 7040-wide body refused, or silently admitted?
+========================================================================
+map declares : sensor 7032x4688
+map coords   : Active
+dust quads   : 1135
+bar          : MAX_ACTIVE_MISMATCH_FRAC = 0.01
+
+-- check_geometry CALLED (not predicted) --
+  narrow 7032x4688  ADMITTED   mismatch 0.0000% vs bar 1.00%
+  wide   7040x4688  ADMITTED   mismatch 0.1138% vs bar 1.00%
+
+-- active origin, read from a real frame of each geometry --
+  narrow  7032x4688 at (0,0)   DSC00034.ARW
+  wide    7040x4688 at (0,0)   DSC00001.ARW
+
+------------------------------------------------------------------------
+active origin same in both : true  (narrow (0,0), wide (0,0))
+active width delta         : 8 photosites = 4 quads
+
+VERDICT: the wide body is ADMITTED, not refused.
+  The census's 'the correction refuses' label is WRONG -- it
+  printed a prediction about a function it never called.
+
+  Both geometries share active origin (0,0), so a mapped
+  quad at (px,py) addresses the SAME photosite in both. The
+  extra 8 columns extend the right edge only.
+  Displacement is therefore ZERO and admission is SAFE for
+  every quad the map names, PROVIDED no named quad lies
+  beyond the narrower width -- checked next.
+  max mapped quad px 3448, narrow quad limit 3516  -> all named quads inside both

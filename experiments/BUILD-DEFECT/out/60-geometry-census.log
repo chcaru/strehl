@@ -1,0 +1,37 @@
+the embedded map was measured on 7032x4688
+
+        7032x4688 at (0,0)   15 stacks  MATCHES the map exactly
+                            109MSDCF
+                            112MSDCF
+                            113MSDCF
+                            119MSDCF
+                            bee-1-cpl
+                            bee-2-cpl
+                            bee-3-cpl
+                            coffee-bean
+                            coffee-bubbles
+                            flower-inner-edge-cpl
+                            foam
+                            pencil-flatter-angle-cpl
+                            pencil-steep-angle-cpl
+                            wrapped-text-1
+                            wrapped-text-2
+
+        7040x4688 at (0,0)   11 stacks  differs -> ADMITTED by check_geometry (P61), origin shared
+                            couch-fibers-cpl
+                            dry-erase-marker-head-cpl
+                            flat-on-ruler-cpl
+                            flower-bud-alone-cpl
+                            flower-bud-with-background-fern-cpl
+                            flowers-cpl
+                            highly-angled-ruler-mm-cpl
+                            lavendar-cpl
+                            lead-1-cpl
+                            leaf-2-cpl
+                            tweezers-cpl
+
+             no raw frames    1 stacks  not applicable
+                            flat-fields
+
+examined 27, bucketed 27
+exact-match 15 / 27   differing-but-admitted 12 / 27

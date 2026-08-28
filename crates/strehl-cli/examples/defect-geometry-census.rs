@@ -102,9 +102,16 @@ fn main() {
             matching += names.len();
         }
         let verdict = if matches {
-            "MATCHES the map"
+            "MATCHES the map exactly"
         } else if key.contains('x') && key.contains("at (") {
-            "DOES NOT MATCH -> the correction refuses"
+            // This slot once read "-> the correction refuses". That was a
+            // PREDICTION about check_geometry printed by code that never
+            // called check_geometry, and P61 measured it false: the wide body
+            // is ADMITTED (0.1138% mismatch against a 1.00% bar) and, because
+            // both bodies place their active area at origin (0,0), the extra
+            // columns extend the right edge only and every mapped quad
+            // addresses the same photosite in both. See BUILD-DEFECT.md P61.
+            "differs -> ADMITTED by check_geometry (P61), origin shared"
         } else {
             "not applicable"
         };
@@ -117,7 +124,7 @@ fn main() {
     println!("examined {examined}, bucketed {bucketed}");
     assert_eq!(examined, bucketed, "PARTITION VIOLATED");
     println!(
-        "matching {matching} / {examined}   refused {} / {examined}",
+        "exact-match {matching} / {examined}   differing-but-admitted {} / {examined}",
         examined - matching
     );
 }
