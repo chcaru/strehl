@@ -105,6 +105,55 @@ class Checker:
             return
         self.ok += 1
 
+    def pin(self, sec: str, needles: list[str], col: int, want: float, what: str,
+            ncells: int | None = None, col_n: int | None = None,
+            rel: float = 6e-3) -> None:
+        """Anchor a cell by SEVERAL needles, for tables whose row label repeats.
+
+        Sections 11.3, 11.4 and 12 each carry four to eight rows that share a
+        subject name, so `row()`'s single leading-label anchor is ambiguous by
+        construction. Every needle must appear in the row and the match must
+        still be unique; `col_n` additionally pins one column to an exact
+        numeric value so a subject/depth pair cannot be satisfied by a digit
+        that happens to occur inside some other cell.
+        """
+        if sec not in self.sec:
+            self.fail.append(f"{what}: section {sec} not found")
+            return
+        hits = []
+        for line in self.sec[sec]:
+            t = line.strip()
+            if not t.startswith("|"):
+                continue
+            cells = [c.strip() for c in t.strip("|").split("|")]
+            if ncells is not None and len(cells) != ncells:
+                continue
+            # EXACT CELL EQUALITY, not substring-in-row.  The first version of
+            # this matched needles against the concatenated row and every flower
+            # row satisfied the needle 'low', because "f-l-o-w" contains it.
+            # Short needles collide with longer words by chance, so a needle
+            # must BE a cell, not merely occur somewhere in the line.
+            flat = [label(c) for c in cells]
+            if not all(label(n) in flat for n in needles):
+                continue
+            if col_n is not None:
+                got_n = cell(cells[col_n])
+                if got_n is None or abs(got_n - float(needles[-1])) > 1e-9:
+                    continue
+            hits.append(cells)
+        if len(hits) != 1:
+            self.fail.append(
+                f"{what}: needles {needles} in section {sec} matched "
+                f"{len(hits)} rows, want 1")
+            return
+        got = cell(hits[0][col])
+        if got is None:
+            self.fail.append(f"{what}: cell {col} has no number")
+        elif abs(got - want) > rel * max(abs(want), 1e-9):
+            self.fail.append(f"{what} = {got}, want {want}")
+        else:
+            self.ok += 1
+
     def has(self, needle: str, what: str) -> None:
         if re.search(r"\s+".join(map(re.escape, norm(needle).split())), norm(self.text)):
             self.ok += 1
@@ -231,6 +280,47 @@ def build(text: str) -> Checker:
                 c.ok += 1
     c.has("1.13x on flower, 1.20x on bee", "7 headroom growth")
 
+    # 11 -- the band/support correction
+    c.row("11.1", "`high` 0.30-0.45 cyc/px", 3, 1.28, "11.1 high leak", ncells=4)
+    c.row("11.1", "`low` 0.02-0.08 cyc/px", 3, 0.13, "11.1 low leak", ncells=4)
+    c.row("11.1", "`high` 0.30-0.45 cyc/px", 2, 129.7, "11.1 high separation", ncells=4)
+    c.row("11.1", "`low` 0.02-0.08 cyc/px", 2, 214.7, "11.1 low separation", ncells=4)
+    c.has("9.8x fall", "11.1 leak scaling")
+
+    # 11.3 -- every support, both bands. Anchored on band+support, not subject
+    # alone, because each subject contributes four rows.
+    for subj, band, sup, frac in [("flower", "high", "detail", 0.86),
+                                  ("flower", "low", "detail", 0.52),
+                                  ("flower", "low", "flat", 0.63),
+                                  ("bee", "high", "detail", 0.69),
+                                  ("bee", "low", "detail", 0.52),
+                                  ("bee", "low", "flat", 0.50),
+                                  ("bee", "low", "grid", 0.48)]:
+        c.pin("11.3", [subj, band, sup], 3, frac, f"11.3 {subj}/{band}/{sup}", 5)
+    c.has("Seven informative readings. Six fall, one is refused, none rises",
+          "11.3 tally")
+
+    # 11.4 -- reg ratio, collapse subject rises on every support
+    for subj, sup, want in [("bee", "detail", 2.15), ("bee", "flat", 1.93),
+                            ("bee", "grid", 2.07), ("flower", "detail", 0.45),
+                            ("flower", "flat", 0.64), ("flower", "grid", 0.17)]:
+        c.pin("11.4", [subj, sup], 2, want, f"11.4 {subj}/{sup} reg", 3)
+
+    # 12 -- spatial headroom
+    for pre, n, whole, q0, q3, bd in [("flower", 18, 50.93, 71.18, 54.41, 19.23),
+                                      ("flower", 205, 57.47, 88.88, 69.54, 24.69),
+                                      ("bee", 25, 55.51, 88.94, 39.51, 44.85),
+                                      ("bee", 299, 66.51, 97.28, 45.02, 59.98)]:
+        c.pin("12", [pre, str(n)], 2, whole, f"12 {pre} N={n} whole", 9, col_n=1)
+        c.pin("12", [pre, str(n)], 3, q0, f"12 {pre} N={n} q0_flat", 9, col_n=1)
+        c.pin("12", [pre, str(n)], 6, q3, f"12 {pre} N={n} q3_detail", 9, col_n=1)
+        c.pin("12", [pre, str(n)], 7, bd, f"12 {pre} N={n} border", 9, col_n=1)
+    c.has("diluted 2.2x", "12 dilution factor")
+    c.has("18.11** -- diluted", "12 whole-field reading of a 40-unit plant")
+    c.has("1.40-1.60x", "12 understatement factor")
+    c.has("59% to 81% of the entire distance", "12 flat-quartile size")
+    c.has("4.17-unit", "12 self-caught plant misalignment")
+
     # 8 -- what rises with depth (3 columns)
     c.row("8", "`flower-bud-alone-cpl`", 2, 0.60, "8 flower reg ratio", ncells=3)
     c.row("8", "`bee-3-cpl`", 2, 1.90, "8 bee reg ratio", ncells=3)
@@ -242,8 +332,10 @@ def build(text: str) -> Checker:
     c.has("1.19x and 1.02x respectively", "verdict absolute")
     c.has("headroom grows **1.13x on flower** (50.9 -> 57.5", "verdict flower headroom")
     c.has("**1.20x on bee** (55.5 -> 66.5", "verdict bee headroom")
-    c.has("6.6 units on flower and 11.0 on bee", "verdict effect size")
-    c.has("5.5% to 9.2% of that span", "verdict span fraction")
+    c.has("+6.6 units on flower and +11.0 on bee", "7 whole-field effect size")
+    c.has("Do not quote those percentages as the mechanism's size",
+          "7 supersession notice")
+    c.has("withdrawn", "verdict withdraws the span fraction")
     c.has("761.8->728.4 on flower", "verdict flower confidence level")
     c.has("458.2->418.5 on bee", "verdict bee confidence level")
     return c
@@ -263,6 +355,18 @@ def commission(text: str) -> int:
         ("| bee | 299 | 418.5 | 352.0 | **+66.5** |",
          "| bee | 299 | 418.5 | 352.0 | **+36.5** |",
          "7 bee deep headroom"),
+        ("| `low` 0.02–0.08 cyc/px | 12.5–50 px | 214.7× | **0.13** |",
+         "| `low` 0.02–0.08 cyc/px | 12.5–50 px | 214.7× | **1.13** |",
+         "11.1 low-band leak ratio"),
+        ("| bee | low | flat | **0.50×** | 0.41× |",
+         "| bee | low | flat | **1.50×** | 0.41× |",
+         "11.3 bee low/flat fraction (the refutation itself)"),
+        ("| bee | flat | **1.93×** |",
+         "| bee | flat | **0.93×** |",
+         "11.4 bee flat reg ratio"),
+        ("| bee | 299 | 66.51 | **97.28** | 58.26 | 65.42 | 45.02 | 59.98 | 71.92 |",
+         "| bee | 299 | 66.51 | **57.28** | 58.26 | 65.42 | 45.02 | 59.98 | 71.92 |",
+         "12 bee deep flat-quartile headroom"),
     ]
     bad = 0
     for old, new, what in plants:

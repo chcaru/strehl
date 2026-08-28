@@ -37,6 +37,7 @@ choice does to an image, and nothing about it is a warp of the other half.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -48,8 +49,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "BUILD-TRIAGE"))
 import tri  # noqa: E402
 from commission_detail import gauss  # noqa: E402
-from detail import pick_sites  # noqa: E402
-from halfmetric import decompose, fshift  # noqa: E402
+from halfmetric import SITE_MODES, decompose, fshift, leak_name  # noqa: E402
 
 ROOT = Path(r"C:\dev\strehl-out\V-DRIFT")
 TILE = 256
@@ -93,15 +93,28 @@ def sel_plant(t: np.ndarray, frac: float, rng: np.random.Generator,
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--band", default="high", choices=sorted(tri.BANDS),
+                    help="scoring band to calibrate. The leak is a phase error "
+                         "and scales with frequency, so every band this lane "
+                         "reports must be calibrated in its own right.")
+    ap.add_argument("--site-mode", default="detail",
+                    help="site support to calibrate on; must match the support "
+                         "the ladder will be run with")
+    a = ap.parse_args()
+    band = a.band
     base = tri.luma(tri.load16(str(ROOT / "merge" / "d0.tif")))
-    sites = pick_sites(base, K, 12, TILE)
+    sites = SITE_MODES[a.site_mode](base, K, 12, TILE)
     rng = np.random.default_rng(20260827)
-    print(f"commissioning on d0.tif, {len(sites)} sites, {TILE}px tiles\n")
+    lo_hz, hi_hz = tri.BANDS[band]
+    print(f"commissioning on d0.tif, {len(sites)} sites, {TILE}px tiles")
+    print(f"band {band} = {lo_hz}-{hi_hz} cyc/px (period {1/hi_hz:.1f}-{1/lo_hz:.1f} px)"
+          f"   support '{a.site_mode}'\n")
 
     def run(make_b) -> dict:
         acc: dict[str, list[float]] = {"dis": [], "reg": [], "sel": [], "shift_px": []}
         for i, (y, x) in enumerate(sites):
-            r = decompose(base[y:y + TILE, x:x + TILE], make_b(y, x, i), K)
+            r = decompose(base[y:y + TILE, x:x + TILE], make_b(y, x, i), K, band)
             for key in acc:
                 acc[key].append(r[key])
         return {key: float(np.median(v)) for key, v in acc.items()}
@@ -199,9 +212,12 @@ def main() -> int:
           f"    reg.  halfmetric.py subtracts leak_ratio * reg, so a `sel_net`\n"
           f"    that survives is not a registration difference between the halves.")
 
-    (ROOT / "half-leak.json").write_text(json.dumps(
+    out = ROOT / leak_name(band, a.site_mode)
+    out.write_text(json.dumps(
         {"shift": shift_rows, "blob": sel_rows, "scale": scale_rows,
-         "null": null, "worst_leak_ratio": worst}, indent=1), encoding="utf-8")
+         "null": null, "worst_leak_ratio": worst,
+         "band": band, "site_mode": a.site_mode}, indent=1), encoding="utf-8")
+    print(f"\nwrote {out.name}")
     print(f"\n{'HALF-STACK DECOMPOSITION COMMISSIONED' if bad == 0 else f'{bad} CHECK(S) FAILED'}")
     return 1 if bad else 0
 

@@ -40,31 +40,47 @@ and that disagreement rate should rise with N.*
    458.2→418.5 on bee — but that reading is confounded by the cloud widening with
    N, and §7 is the controlled one. The controlled reading is what stands.
 
-3. **And it is small.** The pyramid's own knobs span about 120 confidence units
-   from `hard-max` to `--pyramid-exponent 0.5` (§6). The entire depth effect is
-   6.6 units on flower and 11.0 on bee — **5.5% to 9.2% of that span, across a
-   ~12× change in N.** Over the same range bee's delivered quality is on record
-   collapsing to 0.180 of `enfuse`'s detail and 0.060 of `focus-stack`'s. Whether
-   a 6–9% shift along the commitment axis can produce a 94% detail loss is not
-   something this lane can determine, and I do not claim it cannot. I claim only
-   that the mechanism's measured size is far smaller than the effect it is being
-   asked to explain, and that nobody has yet measured whether the gap closes.
+3. **Its size was understated here, and I am correcting my own number.** §7
+   measured headroom as a **whole-field mean**, and §12 shows that dilutes a
+   region-confined effect **2.2×**. Resolved spatially, headroom in the flattest
+   quartile — the support the 20–60 px plateau was convicted on — is the highest
+   of any region on both subjects at both depths: **71.2 → 88.9** on flower and
+   **88.9 → 97.3** on bee, against whole-field means of 50.9–66.5. That is **59%
+   to 81% of the ~120-unit span** between argmax and `--pyramid-exponent 0.5`,
+   not the 5.5–9.2% an earlier draft of this document claimed. **That claim is
+   withdrawn.** The shipped merge hedges hard, and hardest exactly where the
+   defect is.
+
+   What does *not* change is the depth half. The flat quartile grows 1.25×
+   (flower) and 1.09× (bee) — on bee, *slower* than the whole field. So the
+   mechanism is large in level and modest in depth-growth, and it is the depth
+   behaviour that the collapse to 0.180 / 0.060 needs explaining.
+
+4. **The band and the support both had to be corrected first (§11).** Everything
+   in §§3–4 was originally scored at 0.30–0.45 cyc/px — a period of 2.2–3.3 px —
+   while the convicted plateau sits at 20–60 px, and on the 24 *most textured*
+   tiles in the frame while the defect is flat-region mottle. Re-measured at
+   0.02–0.08 cyc/px on the flat support, the refutation in (1) gets **stronger**
+   (0.52× against 0.86×), and the leak calibration proved band-specific by a
+   factor of **9.8×** — reusing it would have manufactured a result.
 
 **But one thing does rise with depth steeply, and only on the collapse subject.**
 The registration difference between two *independently solved halves* of
-`bee-3-cpl` grows 1.90× in fitted amplitude and 1.74× in fitted shift
-(0.356→0.618 px) across N=50→299. On `flower-bud-alone-cpl` — where V-DRIFT §4
-measured total corner drift at 0.715 px, flat — the same quantity *falls* 0.60×.
-This is not the accumulation V-DRIFT refuted; it is solve-to-solve divergence, it
-behaves the way the collapse behaves, and it is unowned. See §8.
+`bee-3-cpl` grows **1.93× to 2.15×** across every support tested, in the
+convicted band, across N=50→299, with fitted shift 0.356→0.618 px. On
+`flower-bud-alone-cpl` — where V-DRIFT §4 measured total corner drift at 0.715 px,
+flat — the same quantity *falls*, on every support. This is not the accumulation
+V-DRIFT refuted; it is solve-to-solve divergence, it behaves the way the collapse
+behaves, it survived a content-blind support, and it is unowned. See §8 and §11.4.
 
 **What this means for the fix in flight.** Nothing here says the
-confidence-dependent exponent is a bad change; it targets a real, measured effect.
-It says two things about how to judge it. First, do not validate it with a
-half-stack disagreement rate — that statistic is blind to this. Second, the effect
-it targets is small enough on these subjects that if the fix produces a large
-quality improvement, the improvement is probably not coming from the mechanism
-advertised, and something else will have moved.
+confidence-dependent exponent is a bad change; §12 says it targets a larger
+effect than I first reported. It says two things about how to judge it. First, do
+not validate it with a half-stack disagreement rate — that statistic is blind to
+this, on every band and support tested. Second, measure any before/after **per
+region, not as a whole-field mean**: a flat-region effect is diluted 2.2× by the
+average, so a real improvement will look small and a regression at the borders
+will look like nothing.
 
 ---
 
@@ -434,13 +450,17 @@ the control was necessary: both arms' absolute confidence falls with N (the clou
 widening), but the shipped weighting falls *less* than argmax does, so the gap
 between them opens. Reading §5 alone would have refuted dilution incorrectly.
 
-**The size, stated in the units the knobs provide.** §6 measures the pyramid's
-full commitment axis at ~120 units (`hard-max` 691.3 to `--pyramid-exponent 0.5`
-811.6, on flower at N=52). The depth effect is +6.6 units on flower and +11.0 on
-bee. So going from a shallow stack to a ~12× deeper one moves the merge along the
-commitment axis by **5.5% (flower) to 9.2% (bee)** of what the exponent knob
-itself can move it. bee — the collapse subject — shows the larger effect, which
-is consistent, but it is still under a tenth of the available range.
+**The size, stated in the units the knobs provide — and superseded by §12.** §6
+measures the pyramid's full commitment axis at ~120 units (`hard-max` 691.3 to
+`--pyramid-exponent 0.5` 811.6, on flower at N=52). The whole-field depth effect
+is +6.6 units on flower and +11.0 on bee, or 5.5% to 9.2% of that span.
+
+**Do not quote those percentages as the mechanism's size.** They are the size of
+the *depth growth* of a *whole-field mean*, and §12 shows that mean dilutes a
+region-confined effect by 2.2×. Measured on the support where the defect was
+convicted, headroom is 71–97 units, or 59–81% of the same span. The two readings
+answer different questions and only the §12 one describes how hard the shipped
+merge is hedging.
 
 **A caveat I cannot close.** Headroom is measured against argmax *on the same
 weighting family*. If the pyramid's per-band exponent ramp already behaves
@@ -550,17 +570,203 @@ as evidence of quality.
 
 ---
 
-## Reproducing
+## 11. The instrument was measuring the wrong band and the wrong support
+
+This section exists because the fleet reported that the falsification lane
+self-caught a defect **its own self-test missed, because the test asserted only
+the mean of a field whose defect was at the borders**, and asked every lane to
+check its harness for that shape. Mine had it twice.
+
+**Gap one: the wrong band.** Everything in §§3–4 was scored at
+`tri.BANDS["high"]` = 0.30–0.45 cyc/px, a period of **2.2–3.3 px**. The defect
+the fleet has convicted is a plateau at **20–60 px**, with L3 holding 54.3% of
+plateau area and L4 36.5%. Those are different worlds: the convicted band is
+roughly ten times coarser than the band I measured in, and `high` does not reach
+it at all. `tri.BANDS["low"]` = 0.02–0.08 cyc/px (period 12.5–50 px) covers it.
+
+**Gap two: the wrong support.** `pick_sites` ranks tiles by mid-band amplitude
+**descending** and keeps the top 24. That is correct sampling for a sharpness
+question and precisely wrong for this one: the convicted defect is *flat-region*
+mottle, so an instrument that samples the 24 most textured tiles in the frame is
+looking everywhere except where the defect was convicted.
+
+Neither gap returns "no effect". Both return **no information**, and in this
+document's output the two were indistinguishable.
+
+### 11.1 The calibration does not transfer, and that is measurable
+
+The leak ratio — how much apparent selection a pure registration error
+manufactures — is a phase error, `2·pi·f·d`, so it scales with the scoring
+frequency. Re-running `commission_half.py --band low`:
+
+| band | period | separation | worst leak ratio |
+|---|---|---:|---:|
+| `high` 0.30–0.45 cyc/px | 2.2–3.3 px | 129.7× | **1.28** |
+| `low` 0.02–0.08 cyc/px | 12.5–50 px | 214.7× | **0.13** |
+
+A 9.8× fall for a ~10× fall in centre frequency, which is what the phase argument
+predicts and is therefore a check on the calibration rather than just an output
+of it. **Carrying 1.28 down to the low band would have subtracted about ten times
+the real leak and could have manufactured a negative `sel_net` out of nothing.**
+`leak_ratio()` now refuses to run on an uncalibrated band rather than borrowing
+one.
+
+### 11.2 Two supports fail commissioning, and are reported as failing
+
+| band | support | null | monotone `reg` | monotone `sel` | dose recovery | separation |
+|---|---|---|---|---|---:|---:|
+| low | `detail` | PASS | PASS | PASS | **13.7% PASS** | 214.7× PASS |
+| low | `flat` | PASS | PASS | PASS | **22.9% FAIL** | 175.4× PASS |
+| low | `grid` | PASS | PASS | PASS | **19.6% FAIL** | 866.6× PASS |
+
+Flat and content-blind tiles have weak gradients, so the `Sx, Sy` columns are
+poorly conditioned and the fitted translation recovers its planted dose to only
+20–23% against a 15% gate. **The consequence is scoped, not waved away:** no
+pixel-valued inter-half shift is quoted from the `flat` or `grid` supports
+anywhere in this document. The null, both monotonicity checks and the separation
+all pass on all three supports, so the *band-ratio* decomposition and the
+*direction* of its depth trend stand on all three; the absolute px figure does
+not.
+
+### 11.3 Re-measured, the refutation gets stronger
+
+`sel_net`, N low rung → high rung, fixed-separation ladder, all at
+0.02–0.08 cyc/px except the first row:
+
+| subject | band | support | fraction | absolute |
+|---|---|---|---:|---:|
+| flower | high | detail | 0.86× | 1.19× |
+| flower | low | detail | **0.52×** | 0.65× |
+| flower | low | flat | **0.63×** | 0.55× |
+| flower | low | grid | *saturated — REFUSED* | 1.40× |
+| bee | high | detail | 0.69× | 1.02× |
+| bee | low | detail | **0.52×** | 0.62× |
+| bee | low | flat | **0.50×** | 0.41× |
+| bee | low | grid | **0.48×** | 0.63× |
+
+`flower` × `low` × `grid` is refused rather than read: its `sel_net` sits at
+1.0035 → 1.0032, pinned against the half-sum's own amplitude, and its absolute
+rise of 1.40× tracks `high_A`'s 1.40× exactly. A ratio that saturates is not a
+measurement of the numerator. Flower's grid support samples mostly defocused
+background where the low-band half-sum is 264–402 DN against 7712–9962 on the
+detail support, so there is little signal to be a fraction of.
+
+**Seven informative readings. Six fall, one is refused, none rises.** The
+refutation is not an artifact of the band or the support: it is *stronger* in the
+convicted band (0.52× against 0.86×) and it survives on the flat support where
+the blotch actually lives (0.50× on the collapse subject, from the highest
+starting level of any support, 0.3563). **Half-stack incoherence does not rise
+with N, and the fleet should not use it to validate the exponent fix.**
+
+### 11.4 What the re-measurement changed on the other side
+
+`reg` — the inter-half registration divergence of §8 — reads **larger** in the
+convicted band, and the subject asymmetry survives a content-blind support:
+
+| subject | support | `reg` ratio, N low → high |
+|---|---|---:|
+| bee | detail | **2.15×** |
+| bee | flat | **1.93×** |
+| bee | grid | **2.07×** |
+| flower | detail | 0.45× |
+| flower | flat | 0.64× |
+| flower | grid | 0.17× |
+
+Rises on the collapse subject on every support; falls on the control subject on
+every support. §8 was measured on the detail support at the high band and read
+1.90×; in the convicted band on the convicted support it is 1.93–2.15×. This
+finding did not weaken under scrutiny, it strengthened, and it remains unowned.
+
+---
+
+## 12. §7 understated the mechanism, because a whole-field mean was the wrong statistic
+
+Applying the fleet's warning to §7 directly. Headroom there was a **mean over the
+whole confidence map**. If the effect is concentrated in the flat regions where
+blotch was convicted, a whole-field mean dilutes it — the exact failure the
+falsification lane hit.
+
+**Commissioning first, spatially, both ways.** `headmap.py --commission` plants a
+known offset in one region and requires it to be seen *there* and not elsewhere,
+in both signs, and it separately requires the whole-field mean to *fail* to see
+it in full:
+
+| check | result |
+|---|---|
+| +40 border plant moves border | +40.00 PASS |
+| +40 border plant leaks to interior | +0.00 PASS |
+| −40 border plant moves border | −40.00 PASS |
+| −40 border plant leaks to interior | +0.00 PASS |
+| +60 flat-quartile plant moves `q0_flat` | +60.00 PASS |
+| +60 flat-quartile plant leaks to `q3_detail` | +0.00 PASS |
+| whole-field mean sees a ±40 border-only plant | **±18.11** — diluted 2.2× |
+
+The last row is not a pass in the ordinary sense; it is the quantified statement
+of the defect being guarded against. A real effect confined to one region is
+understated **2.2×** by the statistic §7 used. Commissioning also caught a live
+bug in this script: the plant originally ringed *pixels* at 15% while the mask
+ringed *blocks* at 15%, so straddling blocks took part of the plant and were then
+scored as interior, reporting a 4.17-unit "leak" that was a misalignment between
+the plant and the partition, not a property of the field.
+
+**Headroom by region, in confidence units:**
+
+| subject | N | whole | `q0_flat` | q1 | q2 | `q3_detail` | border | interior |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| flower | 18 | 50.93 | **71.18** | 42.39 | 35.55 | 54.41 | 19.23 | 77.15 |
+| flower | 205 | 57.47 | **88.88** | 44.75 | 26.36 | 69.54 | 24.69 | 84.59 |
+| bee | 25 | 55.51 | **88.94** | 40.22 | 53.24 | 39.51 | 44.85 | 64.33 |
+| bee | 299 | 66.51 | **97.28** | 58.26 | 65.42 | 45.02 | 59.98 | 71.92 |
+| flower ratio | | 1.13× | **1.25×** | 1.06× | 0.74× | 1.28× | 1.28× | 1.10× |
+| bee ratio | | 1.20× | **1.09×** | 1.45× | 1.23× | 1.14× | 1.34× | 1.12× |
+
+**The level is the finding, and it corrects me.** `q0_flat` — the flattest
+quartile of the delivered image, the support the plateau was convicted on — has
+the highest headroom of any region on both subjects at both depths: 71.2 and 88.9
+on flower, 88.9 and 97.3 on bee, against whole-field means of 50.9–66.5. **§7
+understated the shipped merge's excess hedging on the convicted support by
+1.40–1.60×.**
+
+Against §6's ~120-unit knob span, headroom in the flat quartile is **59% to 81%
+of the entire distance between argmax and `--pyramid-exponent 0.5`**. My earlier
+sentence — that the mechanism is "5.5% to 9.2%" of the available range — was
+measured on the wrong support and is **withdrawn as a statement about the
+mechanism's size**. It remains true only of the whole-field average.
+
+**The depth growth is the part that does not change much.** `q0_flat` grows
+1.25× on flower (+17.7 units) and 1.09× on bee (+8.3). On bee the flat quartile
+grows *more slowly* than the whole field. So the corrected picture is:
+
+- **in level**, the shipped weighting hedges hard, and hardest exactly where the
+  defect is — a large effect that the exponent fix is well aimed at;
+- **in depth-growth**, the effect remains modest on the convicted support, so
+  depth is still not well explained by this mechanism alone.
+
+That is a genuine split, and it is the honest reading: the fleet is fixing
+something real and larger than I said, but the *depth* half of the story is still
+not accounted for by it.
+
+**One more thing the partition shows.** `border` grows fastest of any region on
+both subjects — 1.28× on flower, 1.34× on bee — from the lowest level on flower
+(19.2). Border geometry is where deep stacks lose coverage overlap, and it is the
+same geometry that fooled the falsification lane. Nobody is looking at it.
+
+
 
 ```powershell
 cd projects\strehl\experiments\V-DRIFT
 python commission_half.py              # decomposition, 5 checks + leak calibration
-python commission_conf.py              # confidence map, both ways, 4 checks
+python commission_half.py --band low --site-mode detail   # the convicted band
+python commission_conf.py             # confidence map, both ways, 4 checks
+python headmap.py --commission        # spatial headroom, 8 checks, both signs
 python halfstack.py  --subject flower  # interleaved ladder (confounded; see 3)
 python offsetctl.py  --subject flower  # fixed-separation ladder (primary)
 python halfmetric.py --subject flower --ladder s
+python halfmetric.py --subject flower --ladder s --band low            # see 11
+python halfmetric.py --subject bee --ladder s --band low --site-mode flat --ncc-floor 0.5
 python conf.py       --subject flower --strides 12 4 2 1
 python headroom.py   --subject flower --strides 12 1
+python headmap.py                      # headroom by region (see 12)
 python verify_select.py                # numeric check of this document
 ```
 
