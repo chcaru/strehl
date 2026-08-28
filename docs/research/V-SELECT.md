@@ -751,7 +751,91 @@ both subjects — 1.28× on flower, 1.34× on bee — from the lowest level on f
 (19.2). Border geometry is where deep stacks lose coverage overlap, and it is the
 same geometry that fooled the falsification lane. Nobody is looking at it.
 
+---
 
+## 13. Provenance under discipline 34: the merge did change, and the result survives
+
+The orchestrator has ruled that anything measured at or before `9b05d0b7` is
+stale by 13 commits. Every number in §§1–12 was measured on that pin
+(`44C2F2CD2E5B2894`). This section tests whether that matters rather than
+asserting either way.
+
+**Reading the source said the change was default-off. Reading was wrong.**
+`git diff 9b05d0b7..HEAD` over `pyramid.rs` and `merge.rs` is 438 insertions and
+11 deletions, two of them in the election arithmetic: `Gate::tolerance()` moved
+from the `FOCUS_NOISE_SD` constant to a per-instance `self.noise_sd`, and the
+fold's `gain.beta(k)` became `beta_for(&self.gain, frame_beta, k)`. Both look
+default-preserving in source — `Gate::new` still fills `FOCUS_NOISE_SD`, and
+`beta_for` falls through to `gain.beta(k)` on `None`. **`binsame.py` renders the
+same frames with both binaries and the outputs differ on every case tested**,
+shallow and deep, merge and confidence map alike. A default-preserving change is
+a claim about behaviour, and this one does not hold.
+
+| case | N | merge | confidence map |
+|---|---:|---|---|
+| flower stride 12 | 18 | DIFFERS | DIFFERS |
+| flower stride 2 | 103 | DIFFERS | DIFFERS |
+| bee stride 12 | 25 | DIFFERS | DIFFERS |
+
+### 13.1 How large, in the units of each claim
+
+| case | mean conf pin | mean conf HEAD | delta | image RMS DN | low-band pin | low-band HEAD |
+|---|---:|---:|---:|---:|---:|---:|
+| flower N=18 | 761.8 | 765.3 | **+3.5** | 50.6 | 633.0 | 628.3 |
+| flower N=103 | 737.3 | 747.2 | **+10.0** | 79.2 | 932.6 | 927.3 |
+| bee N=25 | 458.2 | 459.1 | **+0.9** | 44.2 | 6225.0 | 6225.3 |
+
+Two things follow and they point in opposite directions.
+
+**The pin numbers reproduce exactly.** 761.8, 737.3 and 458.2 come back to the
+printed digit against §5's table, re-rendered on a CPU-saturated host. The
+measurements were right about the binary they were made on.
+
+**But the binary shift is N-dependent and large in level terms.** +3.5 at N=18
+against +10.0 at N=103 on the same subject. §7's whole-field depth effect on
+flower was +6.6 units. **The binary change alone moves a single rung by more than
+the entire depth effect §7 measured**, so any statistic read as an absolute
+confidence *level* across depth is contaminated. Low-band amplitude, by contrast,
+moves at most 0.74%.
+
+### 13.2 What survives, and the reason is the differencing
+
+`headroom_head.py` re-renders both arms with the HEAD binary:
+
+| subject | N | default | hard-max | headroom HEAD | headroom pin | shift |
+|---|---:|---:|---:|---:|---:|---:|
+| flower | 18 | 765.3 | 714.0 | 51.31 | 50.93 | **+0.38** |
+| bee | 25 | 459.1 | 403.4 | 55.69 | 55.51 | **+0.18** |
+
+**The binary moves the level by up to 10.0 units and the headroom by 0.38.** Both
+arms move together and the shift cancels in the difference — 0.7% and 0.3% of the
+respective headrooms. The cloud-width control in §7 was built to cancel a *scene*
+confound; it cancels a *binary* confound as well, which was not designed for and
+is the reason this document did not have to be withdrawn.
+
+| claim | statistic | binary sensitivity | standing |
+|---|---|---|---|
+| §11.3 refutation, 0.48–0.63× | low-band amplitude ratio | 0.74% | **STANDS** |
+| §11.4 bee reg rises 1.93–2.15× | same family | 0.74% | **STANDS** |
+| §4 high-band refutation | high-band ratio | not re-measured | **ASSUMED** |
+| §7 and §12 headroom | differenced, same binary | 0.38 units | **STANDS** |
+| §5 absolute confidence levels | absolute level | 10.0 units, N-dependent | **PERTURBED** |
+
+§5's fall of 761.8 → 728.4 on flower is 33.4 units; a +3.5/+10.0 differential
+across depth shrinks it by roughly a fifth without reversing it. §5 was already
+the *uncontrolled* reading, reported only so that §7 had something to control,
+and the verdict never rested on it. It is now doubly hedged — confounded by cloud
+width and perturbed by the binary. **Do not quote §5 levels.**
+
+**Not re-measured, and named as such.** The §4 high-band ladder and the §12
+regional partition were not re-rendered on HEAD. §12 is a headroom difference and
+inherits the cancellation argument above, but that is an inference from a
+whole-field measurement, not a regional one. The full ladders are ~40 merges and
+the differencing evidence did not justify the host time tonight.
+
+---
+
+## Reproducing
 
 ```powershell
 cd projects\strehl\experiments\V-DRIFT
@@ -767,6 +851,9 @@ python halfmetric.py --subject bee --ladder s --band low --site-mode flat --ncc-
 python conf.py       --subject flower --strides 12 4 2 1
 python headroom.py   --subject flower --strides 12 1
 python headmap.py                      # headroom by region (see 12)
+python binsame.py                      # pin vs HEAD: same frames, both binaries
+python bindelta.py                     # size of the pin/HEAD difference (see 13)
+python headroom_head.py                # does headroom survive the binary change
 python verify_select.py                # numeric check of this document
 ```
 

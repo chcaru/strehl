@@ -321,6 +321,38 @@ def build(text: str) -> Checker:
     c.has("59% to 81% of the entire distance", "12 flat-quartile size")
     c.has("4.17-unit", "12 self-caught plant misalignment")
 
+    # 13 -- provenance under discipline 34
+    c.pin("13.1", ["flower N=18"], 3, 3.5, "13.1 flower shallow conf delta", 7)
+    c.pin("13.1", ["flower N=103"], 3, 10.0, "13.1 flower deep conf delta", 7)
+    c.pin("13.1", ["bee N=25"], 3, 0.9, "13.1 bee conf delta", 7)
+    c.pin("13.1", ["flower N=103"], 4, 79.2, "13.1 flower deep image rms", 7)
+    c.pin("13.2", ["flower", "18"], 6, 0.38, "13.2 flower headroom shift", 7, col_n=1)
+    c.pin("13.2", ["bee", "25"], 6, 0.18, "13.2 bee headroom shift", 7, col_n=1)
+    c.pin("13.2", ["flower", "18"], 4, 51.31, "13.2 flower headroom head", 7, col_n=1)
+    c.has("438 insertions and 11 deletions", "13 merge diff size")
+    c.has("Reading the source said the change was default-off. Reading was wrong",
+          "13 the finding")
+    c.has("Do not quote §5 levels", "13 section 5 withdrawal")
+
+    # STRUCTURE. Every numeric claim above is anchored inside a section, so a
+    # heading that goes missing silently orphans its content and every check in
+    # it starts reporting "section not found" -- or, worse, keeps passing while
+    # the reader sees a code block with no heading. That happened: an edit
+    # consumed '## Reproducing' and nothing noticed, because this verifier only
+    # ever asked about numbers. A document checker that cannot see the document
+    # fall apart is checking the wrong thing.
+    want = [str(i) for i in range(1, 14)] + ["Verdict", "Reproducing"]
+    for key in want:
+        if key not in c.sec:
+            c.fail.append(f"structure: section '{key}' is missing")
+        else:
+            c.ok += 1
+    body = c.sec.get("Reproducing", [])
+    if not any("verify_select.py" in l for l in body):
+        c.fail.append("structure: Reproducing section lost its command block")
+    else:
+        c.ok += 1
+
     # 8 -- what rises with depth (3 columns)
     c.row("8", "`flower-bud-alone-cpl`", 2, 0.60, "8 flower reg ratio", ncells=3)
     c.row("8", "`bee-3-cpl`", 2, 1.90, "8 bee reg ratio", ncells=3)
@@ -367,6 +399,11 @@ def commission(text: str) -> int:
         ("| bee | 299 | 66.51 | **97.28** | 58.26 | 65.42 | 45.02 | 59.98 | 71.92 |",
          "| bee | 299 | 66.51 | **57.28** | 58.26 | 65.42 | 45.02 | 59.98 | 71.92 |",
          "12 bee deep flat-quartile headroom"),
+        ("| flower | 18 | 765.3 | 714.0 | 51.31 | 50.93 | **+0.38** |",
+         "| flower | 18 | 765.3 | 714.0 | 51.31 | 50.93 | **+9.38** |",
+         "13.2 headroom survives the binary change"),
+        ("## Reproducing", "## Reproducing-DELETED-HEADING",
+         "structure: a heading going missing"),
     ]
     bad = 0
     for old, new, what in plants:
