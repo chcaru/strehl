@@ -61,6 +61,42 @@ def _tol_for(s):
     return 0.5 * 10 ** -(len(s.split(".")[1]) if "." in s else 0)
 
 
+# Section 14's CONCLUSIONS, pinned here on purpose.
+#
+# `s14_splice.py --check` compares the report against `s14_body.md`, so it
+# catches a verdict flipped in the report alone -- but an author edits the
+# source and regenerates, which moves both together and it sees nothing.
+# `verify_s14.py` re-derives numbers, and a reversed conclusion changes no
+# number. This table is the third copy: flipping a verdict in the report AND
+# the body still disagrees with the sentence stored here.
+#
+# `forbidden` lists the reversals, because an author may rewrite rather than
+# delete, and a required-string check alone would then fail with a confusing
+# "not found" instead of naming the reversal.
+CONCLUSIONS = [
+    ("14.1 retraction stands",
+     "**I retract the sharpness cost I reported for the measured-floor fix.**",
+     ["I CONFIRM the sharpness cost", "I confirm the sharpness cost",
+      "I stand by the sharpness cost"]),
+    ("14.1 reconciliation (a) not (d)",
+     "ORCH offered four reconciliations and asked which was right. "
+     "It was **(a)**:",
+     ["It was **(b)**:", "It was **(c)**:", "It was **(d)**:"]),
+    ("14.1 ORCH's inference does not hold",
+     'ORCH\'s inference that "sweeping `k` cannot fix a gate that does not '
+     'fire" **does not hold**',
+     ['cannot fix a gate that does not fire" **holds**',
+      'cannot fix a gate that does not fire" **is confirmed**']),
+    ("14.1 k acts at every level",
+     "it is the floor subtracted inside the weight law at every level.",
+     ["inside the weight law at no level.",
+      "inside the weight law at only the finest level."]),
+    ("14.1 1.29 is not a landmark",
+     "**1.29 is that subject's number, not a landmark.**",
+     ["1.29 is a landmark", "**1.29 is the landmark"]),
+]
+
+
 class Check:
     def __init__(self):
         self.ok = self.bad = self.skip = 0
@@ -96,6 +132,32 @@ class Check:
             self.bad += 1
             self.msgs.append("FAIL %s: prose bounds it at %s, tables give %s"
                              % (name, quoted, derived))
+
+    def verdict(self, name, hay, required, forbidden):
+        """Assert a CONCLUSION, not a number.
+
+        A presence test cannot detect a reversed conclusion and is satisfied
+        by any duplicate or paraphrase elsewhere in the document, so this
+        requires the pinned sentence to appear EXACTLY ONCE and requires every
+        known reversal of it to be absent. `required` is stored in this file,
+        which makes the verifier a third copy independent of both the report
+        and `s14_body.md` -- flipping a verdict in the source and regenerating
+        the report moves two of the three and still fails here.
+        """
+        n = hay.count(required)
+        if n != 1:
+            self.bad += 1
+            self.msgs.append("FAIL %s: pinned verdict found %d times, "
+                             "expected exactly 1: %r" % (name, n,
+                                                         required[:60]))
+            return
+        hits = [f for f in forbidden if f in hay]
+        if hits:
+            self.bad += 1
+            self.msgs.append("FAIL %s: reversed verdict present: %r"
+                             % (name, hits[0][:60]))
+            return
+        self.ok += 1
 
     def report(self, attempted):
         tot = self.ok + self.bad + self.skip
@@ -359,6 +421,17 @@ def main():
 
     print("14.3 roots %d, 14.4 boot rows %d, 14.5 subjects %d, 14.7 ratios %d"
           % (len(roots), len(moved), len(kobs), len(ratios)))
+
+    # --- conclusions. Numbers can all be correct while the verdict drawn from
+    # them is reversed; ORCH measured a verifier that passed 712 checks after
+    # "refuted" was flipped to "confirmed". Whitespace is collapsed first
+    # because these sentences wrap, and a wrapped phrase does not match as a
+    # plain substring.
+    flat = re.sub(r"\s+", " ", t)
+    for name, required, forbidden in CONCLUSIONS:
+        n += 1
+        c.verdict(name, flat, required, forbidden)
+
     return c.report(n)
 
 
