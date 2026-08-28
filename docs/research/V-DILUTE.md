@@ -1714,3 +1714,125 @@ the band and the subject's qualification at it. Checking my own corpus:
 - If anything my boundaries are **understated** for the reason in L.3, which
   is the conservative direction: I scored in fewer bands than I was entitled
   to, not more.
+
+---
+
+# Addendum M — reconciling my design against the shipped kernel
+
+ORCH asked two specific questions. Both have measured answers, and neither
+answer is the one the code's comments assume.
+
+## M.1 Sharing `Gate::tolerance()` unchanged is NOT behaviourally neutral
+
+The claim in the build is that Gaussian and Exponential "both share
+`Gate::tolerance()` exactly, so only the kernel SHAPE varies over an unchanged
+calibrated axis". Measured on `109MSDCF`, N=22, one binary, `--merge estimator`,
+`--n-eff-map` on both arms:
+
+    n_eff                       hard gate    soft gaussian
+    mean                            4.674           19.295
+    median                          5.000           22.000
+    p10 / p90                    3.0 / 7.0      8.0 / 22.0
+    % of plane at n_eff <= 1        3.936            0.023
+    % of plane at n_eff >= 20       0.219           79.233
+
+**The tolerance is shared; the behaviour is not.** The same calibrated `T` that
+admits a mean of 4.674 frames under a hard decision admits **19.295 of 22**
+under the Gaussian — 88% of the stack — and 79.2% of the plane runs at
+`n_eff >= 20`. So switching kernel does not vary shape over a fixed axis; it
+varies shape *and* effective width together, and the two cannot be attributed
+apart.
+
+The reason is structural: `T` was calibrated as the point where a response gap
+stops being meaningful **for a boolean admit/reject**. Re-used as a Gaussian
+scale it is far too wide, because `exp(-0.5 (gap/T)^2)` is still 0.607 at
+`gap = T` and only reaches zero at f32 underflow, near `gap = 13 T`. The
+Exponential reaches underflow near `gap = 87 T` and is therefore far wider
+again — the heavy-tail direction M111 §15.8 measured destroying the photograph.
+
+**Under my model this is the single most consequential fact about the built
+gate, and it is not about the premium at all.** Fact 1844 established the plain
+mean as perfectly N-invariant and useless, destroying fine grain to 0.229x. A
+kernel running at `n_eff = 19.3 of 22` is **most of the way to that mean**
+before anyone scores a pixel. My Addendum K.3 predicted, before this was run,
+that the soft gate would trace the admit-more/averaging curve toward the plain
+mean rather than reaching `pool1`'s corner. **That prediction is corroborated
+at the shipped tolerance, without `T` being widened at all.**
+
+Recommendation, for whoever sequences `merge.rs`: keep one calibrated axis --
+forking it would be worse -- but **do not describe equal `T` as a controlled
+comparison.** Either match the kernels at a stated moment (equal half-weight
+gap, or equal mean `n_eff` on a reference plane) and say which, or report
+`n_eff` beside every kernel result so the width difference is visible. I would
+also expect a Gaussian scale of roughly `T/3` to reproduce hard-gate `n_eff`,
+though I have not measured that and it should not be quoted until someone does.
+
+## M.2 `selection_inflation` on the integer count: inert today, a trap when armed
+
+**First, the correction that matters most: it decides nothing at present.**
+`SELECTION_INFLATION = 1.0` (`merge.rs:136`) and both branches of
+`selection_inflation` return 1.0 (`:154-156`), which the doc comment states
+outright. So the integer-vs-`n_eff` choice cannot currently help or harm any
+render. It is a latent decision, not an active one, and ORCH's framing --
+"the kind of detail that silently decides whether the fix helps" -- overstates
+its present reach. It is worth fixing anyway, for the reason below.
+
+**When it is armed, keying it on the integer count is wrong.** The
+justification in the code is that "exactly one frame contributed" is a discrete
+fact about selection. That is true on the hard path, where `n` is the admitted
+count. On the soft path it silently changes meaning, because `fold_inner`
+skips a frame only at `raw <= 0.0` (`:1905`) and increments `self.n[i]`
+afterwards (`:1971`). **So `n` counts every frame whose weight merely survives
+f32 underflow** — within ~13 T for the Gaussian, ~87 T for the Exponential.
+
+The measured consequence, from the table above: the `n_eff <= 1` population
+falls from **3.94%** of the plane to **0.023%**, a **99.4% loss of reach** —
+and since the integer count is always `>= n_eff`, the true figure for
+`selection_inflation(n)` is that or lower. The term would fire on essentially
+nothing, and the pixels it stops firing on are precisely the selecting pixels
+it exists to serve. (The map is written as u16, so `<= 1` includes rounding up
+from below 1.5 — which inflates the soft figure, making 0.023% conservative.)
+
+This is the *same* hazard the code already fixed one line earlier: `:2634-2639`
+moved the `sqrt` divisor from `n` to `eff` precisely because "dividing by the
+raw admitted count while `value` divides by `wsum` would report a noise floor
+the estimator does not have". That argument applies unchanged to the inflation
+factor sitting in the same expression, and it was not applied there.
+
+**Recommendation:** when fact 448's curve is armed — 1.0770, 1.0591, 1.0454,
+1.0383, 1.0319, 1.0293, 1.0286, 1.0220 for n = 1..8 — evaluate it at `n_eff`,
+not at the integer count. The doc already requires "a decaying function of `n`,
+not a two-valued one", and a decaying function takes a fractional argument
+natively, so this costs nothing and removes the discontinuity at the same time.
+On the hard path `soft_n_eff_at` returns the integer count exactly, so this is
+a strict generalisation and changes no hard-path behaviour.
+
+## M.3 Which regime my design acts in — correcting the framing
+
+ORCH: "a design that only moves band 0 touches almost nothing a viewer sees,
+and a design aimed at bands 1-6 is aimed at 0.03-0.29% of coefficients."
+
+That reads the `averaged` table as if it bounded every design. It bounds only
+designs that change **admission** — what happens where no frame cleared the
+floor. `pool1` does not change admission. It changes **which frame wins**, by
+pooling the ranking score before the max, and every coefficient in the
+selecting regime is eligible. That regime is ~100% of bands 1-6 and ~74% of
+band 0 — the complement of his figures, not those figures.
+
+So: **the soft gate is an admission design and is bounded by his table;
+`pool1` is a selection design and is not.** They are not competing for the
+same coefficients, which is the sharper form of K.2's "orthogonal axes".
+
+His caution is worth restating in my own words because it cuts against me too:
+`averaged` says nothing about `n_eff`, and I have not restated it as such. What
+M.1 adds is that `n_eff` is now *measured* on one subject, and it is 19.3 of 22
+under the soft Gaussian.
+
+## M.4 Liveness control, confirmed for V-KILLB0
+
+`STREHL_SOFT_GATE=gausian` panics at `merge.rs:1457` with
+`unknown soft-gate kernel "gausian"; known kernels: gaussian, exponential`,
+exit **101**. The typo control V-KILLB0 plans will work as intended on this
+build. Note it must be run **with `--merge estimator`**: on the default pyramid
+backend the env var is never resolved, so the typo does not fail and the
+liveness control silently passes while proving nothing (Addendum L).
