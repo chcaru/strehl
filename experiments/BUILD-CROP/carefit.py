@@ -36,7 +36,7 @@ import sys
 import numpy as np
 import tifffile
 
-from caorigin import fit_mag_and_offset
+from caorigin import fit_mag_and_offset, MEASURED_ZERO
 from chromashift import field
 
 APPLIED_R = +704.5   # ppm of outward push the shipped profile applies to red
@@ -76,13 +76,18 @@ def main() -> int:
         rows = field(img, args.tile, args.gradpct)
         fr = fit_mag_and_offset(rows, "R")
         fb = fit_mag_and_offset(rows, "B")
+        if fr is MEASURED_ZERO:
+            print(f"{name:>20}  MEASURED ZERO -- red displacement is zero on "
+                  f"every tile; the correction is exact here. native = "
+                  f"{-APPLIED_R:+.1f} ppm")
+            continue
         if fr is None:
-            print(f"{name:>20}  UNSCORED (too few tiles)")
+            print(f"{name:>20}  UNSCORED (cannot measure: too few usable tiles)")
             continue
         mr, _, _, r2r, n = fr
         nat_r = mr - APPLIED_R
         bcr, bcd = BC.get(name, (float("nan"), float("nan")))
-        if fb is not None:
+        if fb is not None and fb is not MEASURED_ZERO:
             mb, _, _, r2b, _ = fb
             nat_b = mb - APPLIED_B
         else:

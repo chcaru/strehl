@@ -42,15 +42,53 @@ from chromashift import field
 W_FULL, H_FULL = 7040, 4688
 
 
+class _MeasuredZero:
+    """Sentinel: the channel WAS measurable and its displacement is zero.
+
+    Distinct from `None`, which means COULD NOT MEASURE. Conflating the two is a
+    real defect that this module shipped until 2026-08-28: because the tile's
+    unit radial vector is recovered FROM the displacement vector, a displacement
+    of exactly zero has no recoverable direction and the tile was dropped. A
+    perfectly corrected channel therefore dropped every tile and reported "too
+    few tiles" -- character-for-character the no-data message.
+
+    The direction of the bias is the dangerous one: a re-fit would silently
+    discard its BEST-corrected subjects and be pulled toward the subjects that
+    are still wrong, which is exactly the direction that keeps an
+    over-correction alive.
+    """
+
+    def __repr__(self):
+        return "MEASURED_ZERO"
+
+
+MEASURED_ZERO = _MeasuredZero()
+
+
 def fit_mag_and_offset(rows, ch):
-    """Least squares for d(p) = m*(p - c) + t0.  Returns m (ppm), t0x, t0y, r2.
+    """Least squares for d(p) = m*(p - c) + t0.
+
+    Returns `(m_ppm, t0x, t0y, r2, n)`, or `MEASURED_ZERO` if the channel is
+    measurable and its displacement is zero, or `None` if it cannot be measured.
+    Callers MUST distinguish the last two; see `_MeasuredZero`.
 
     Tile centres are already centre-relative in chromashift's `field` (it stores
     r and the unit radial vector about the plane centre), so we rebuild the
     centre-relative position from r and the unit vector.
     """
+    n_rows = 0
+    n_zero_disp = 0
+    # `cond` from solve_tile is det/tr^2: 0.25 is perfectly conditioned and
+    # EXACTLY 0.0 is returned when det <= 0, i.e. when the tile carries no
+    # usable gradient. That is the discriminator between the two zero states.
+    # A flat field still yields tiles, because `field` gates on a PERCENTILE of
+    # gradient rather than an absolute one, so tile COUNT cannot distinguish
+    # "perfectly corrected" from "nothing here". Conditioning can.
+    COND_FLOOR = 1e-4
+    n_zero_wellcond = 0
     px, py, dx, dy = [], [], [], []
     for q in rows:
+        n_rows += 1
         r = q["r"]
         rad, tan = q[ch + "rad"], q[ch + "tan"]
         ux, uy = None, None
@@ -59,6 +97,13 @@ def fit_mag_and_offset(rows, ch):
         # rad = vx*ux + vy*uy ; tan = -vx*uy + vy*ux  ->  solve for (ux, uy)
         den = vx * vx + vy * vy
         if den < 1e-12:
+            # Zero displacement. NOT missing data -- a measured zero whose
+            # direction happens to be unrecoverable. Counted, not discarded.
+            # Only a WELL-CONDITIONED tile is evidence of a real zero; an
+            # ill-conditioned one is evidence of no signal.
+            n_zero_disp += 1
+            if q.get("cond", 0.0) > COND_FLOOR:
+                n_zero_wellcond += 1
             continue
         ux = (vx * rad + vy * tan) / den
         uy = (vy * rad - vx * tan) / den
@@ -74,6 +119,11 @@ def fit_mag_and_offset(rows, ch):
     dx, dy = np.array(dx), np.array(dy)
     n = len(px)
     if n < 8:
+        # Two different states, and they must not share a return value.
+        # MEASURED ZERO requires tiles that COULD have shown a displacement --
+        # well-conditioned ones -- and did not.
+        if n_rows >= 8 and n_zero_wellcond >= 0.9 * n_rows:
+            return MEASURED_ZERO
         return None
     # stack x and y equations: dx = m*px + t0x ; dy = m*py + t0y
     A = np.zeros((2 * n, 3))

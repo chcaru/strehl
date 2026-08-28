@@ -24,7 +24,7 @@ import sys
 import numpy as np
 import tifffile
 
-from caorigin import fit_mag_and_offset
+from caorigin import fit_mag_and_offset, MEASURED_ZERO
 from chromashift import field
 
 N_PERM = 2000
@@ -79,8 +79,11 @@ def main() -> int:
         rows = field(img, args.tile, args.gradpct)
         px, py, dx, dy = rows_to_arrays(rows, "R")
         fr = fit_mag_and_offset(rows, "R")
+        if fr is MEASURED_ZERO:
+            print(f"{name:>20}  MEASURED ZERO (red displacement zero on every tile)")
+            continue
         if fr is None:
-            print(f"{name:>20}  UNSCORED")
+            print(f"{name:>20}  UNSCORED (cannot measure)")
             continue
         m, tx, ty, r2, n = fr
         A = design(px, py)
