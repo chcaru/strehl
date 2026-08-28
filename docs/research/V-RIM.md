@@ -395,3 +395,315 @@ possible defect in the product.
 - Any run of `experiments/V-RIM/vr_specificity.py` in which Arm B does **not**
   rise monotonically. That would mean my harness cannot see a rim either, and
   nothing above would be admissible.
+
+---
+
+# Part two: ORCH's three follow-ups, 2026-08-28
+
+*Sections 1-11 above stand except where section 14 revises them, and the
+revisions are marked. Instruments added for this part:
+`experiments/V-RIM/vr_ladder.py`, `vr_ladder2.py`, `vr_ladder3.py`,
+`vr_score13.py`, `vr_shoulder.py`, `vr_ring.py`, `vr_ring2.py`,
+`vr_ring_ship.py`, `vr_ring_lin.py`, `vr_ring_cmp.py`, `vr_ring_pics.py`.*
+
+## 12. Closing the clamp: my own falsification 1, run
+
+Section 3's read-across priced each master's rim-free pedestal by `np.interp`
+on an Arm A ladder that stopped at shoulder sd **0.1957**. `coffee-bean`
+(0.1992) and `leaf-2-cpl` (0.3015) are above that, so `np.interp` clamped and
+their pedestals were extrapolated. ORCH called that the weakest joint in the
+report. It was.
+
+**Route 1 -- the ladder extended by direct measurement.** Same scene, same
+roughener, same pipeline. The nominal roughness amplitude is not the achieved
+shoulder sd, so the achieved sd is reported next to each rung:
+
+| amp | achieved sd | corrected | med-then-max | n_sel | verdict |
+|---|---|---|---|---|---|
+| 0.000 | 0.0175 | +0.787% | +0.000% | 6003 | PASS |
+| 0.012 | 0.0388 | +3.982% | +0.553% | 6170 | FAIL |
+| 0.048 | 0.1187 | +16.370% | +4.574% | 6307 | FAIL |
+| 0.090 | 0.1957 | +28.346% | +8.763% | 4433 | FAIL |
+| 0.110 | 0.2279 | +32.999% | +9.909% | 3669 | FAIL |
+| 0.130 | 0.2526 | +36.698% | +10.970% | 2994 | FAIL |
+| 0.150 | 0.2672 | +39.254% | +11.163% | 2468 | FAIL |
+| 0.170 | 0.2966 | +44.902% | +13.078% | 2036 | FAIL |
+| 0.200 | 0.3342 | +48.659% | +13.115% | 1624 | FAIL |
+| 0.240 | 0.3930 | +59.049% | +20.201% | 1109 | FAIL |
+
+The ladder now spans **0.0175 to 0.3930**. Every one of the thirteen has a
+shoulder sd inside it. Nothing in this report is extrapolated any more.
+
+Re-pricing the headline read-across with no clamp anywhere:
+
+| subject | sd | reads | rim-free at that sd | headline call |
+|---|---|---|---|---|
+| `bee-1-cpl` | 0.0795 | +3.13% | +10.29% | artifact |
+| `couch-fibers-cpl` | 0.0584 | +3.50% | +7.02% | artifact |
+| `lead-1-cpl` | 0.1333 | +3.36% | +18.64% | artifact |
+| `flowers-cpl` | 0.0868 | +5.18% | +11.43% | artifact |
+| `pencil-steep-angle-cpl` | 0.0780 | +6.77% | +10.05% | artifact |
+| `wrapped-text-1` | 0.1088 | +7.48% | +14.83% | artifact |
+| `lavendar-cpl` | 0.1035 | +8.01% | +14.01% | artifact |
+| `wrapped-text-2` | 0.1199 | +10.93% | +16.55% | artifact |
+| `flat-on-ruler-cpl` | 0.1557 | +14.84% | +22.12% | artifact |
+| **`coffee-bean`** | 0.1992 | **+33.25%** | **+28.84%** | **ABOVE PEDESTAL** |
+| `leaf-2-cpl` | 0.3015 | +37.07% | +45.39% | artifact |
+| `112MSDCF` | 0.1440 | +12.62% | +20.30% | artifact |
+| `113MSDCF` | 0.1644 | +17.28% | +23.47% | artifact |
+| `109MSDCF` control | 0.0598 | -2.25% | +7.24% | artifact |
+
+**`leaf-2-cpl` is acquitted by direct measurement**: its rim-free pedestal is
++45.39% against a reading of +37.07%. **`coffee-bean` is not.** It reads 4.4
+points above its own rim-free pedestal. Section 8 called it an artifact on the
+strength of the pixels and the never-stacked captures, not on this comparison,
+and that is still the argument -- but the read-across no longer supports it and
+I am recording that it does not.
+
+**Route 2 -- the pedestal measured on the master itself, no synthetic scene.**
+`rimv6.measure` returns the `(n_edges x 25)` array of normalised profiles. Split
+it as `P = m + R`, `m` the median profile and `R` the per-edge residual. A rim
+is a coherent non-monotone excursion in `m`; roughness lives in `R` and is
+incoherent across edges. Replace `m` by its isotonic non-decreasing projection
+and re-read. Every edge keeps its residual row bit-exact, so shoulder sd and
+t-to-t correlation are unchanged, and the only thing removed is the coherent
+bump.
+
+The operation's matched control, on a planted rim at fixed roughness:
+
+| planted rim / step | raw | isotonic pedestal | coherent excursion |
+|---|---|---|---|
+| 0.000 | +3.312% | +3.155% | +0.370% |
+| 0.020 | +4.335% | +3.909% | +1.021% |
+| 0.080 | +8.059% | +6.166% | +3.795% |
+
+The pedestal follows about 63% of a planted rim, so it is a weak, conservative
+control -- but the **coherent excursion** column tracks the plant cleanly and is
+the usable statistic. Both PASS controls, `109MSDCF` and `119MSDCF`, read
+coherent excursion **0.000%**: their median profiles are already monotone, so
+the projection is the identity and the operation correctly does nothing.
+
+## 13. The rim-free floor for the coherent excursion
+
+The coherent excursion of a median over `n` rough edges is not zero when no rim
+exists. Measured on the rim-free synthetic across the whole sd range, and on the
+planted-rim series for the other end of the scale
+(`z = coherent * sqrt(n) / sd`):
+
+| rim-free sd | 0.0175 | 0.0388 | 0.1187 | 0.1957 | 0.2526 | 0.2966 | 0.3342 | 0.3930 |
+|---|---|---|---|---|---|---|---|---|
+| coherent | 0.000% | 0.370% | 2.698% | 5.260% | 6.751% | 7.999% | 8.501% | 12.623% |
+| z | 0.0 | 7.5 | 18.1 | 17.9 | 14.6 | 12.1 | 10.2 | 10.6 |
+
+| planted rim / step | 0.000 | 0.010 | 0.020 | 0.040 | 0.080 | 0.160 |
+|---|---|---|---|---|---|---|
+| z | 7.5 | 12.0 | 20.5 | 36.6 | 62.6 | 98.2 |
+
+The thirteen, scored on `z` against the rim-free floor at their own sd. `z_free`
+is interpolated, never extrapolated:
+
+| subject | n edges | sd | coherent | z | rim-free z | call |
+|---|---|---|---|---|---|---|
+| `bee-1-cpl` | 2970 | 0.0795 | 0.380% | 2.6 | 12.9 | artifact |
+| `couch-fibers-cpl` | 1679 | 0.0584 | 0.549% | 3.9 | 10.1 | artifact |
+| `lead-1-cpl` | 1284 | 0.1333 | 0.849% | 2.3 | 18.0 | artifact |
+| `flowers-cpl` | 2411 | 0.0868 | 0.961% | 5.4 | 13.8 | artifact |
+| **`pencil-steep-angle-cpl`** | 2034 | 0.0780 | 2.319% | **13.4** | 12.7 | **above floor** |
+| `wrapped-text-1` | 1861 | 0.1088 | 1.515% | 6.0 | 16.7 | artifact |
+| `lavendar-cpl` | 1159 | 0.1035 | 1.492% | 4.9 | 16.0 | artifact |
+| `wrapped-text-2` | 1432 | 0.1199 | 2.404% | 7.6 | 18.0 | artifact |
+| `flat-on-ruler-cpl` | 244 | 0.1557 | 6.386% | 6.4 | 18.0 | artifact |
+| `coffee-bean` | 334 | 0.1992 | 9.578% | 8.8 | 17.7 | artifact |
+| `leaf-2-cpl` | 109 | 0.3015 | 5.416% | 1.9 | 11.9 | artifact |
+| `112MSDCF` | 97 | 0.1440 | 5.009% | 3.4 | 18.0 | artifact |
+| `113MSDCF` | 72 | 0.1644 | 7.584% | 3.9 | 18.0 | artifact |
+| `109MSDCF` control | 2371 | 0.0598 | 0.000% | 0.0 | 10.3 | artifact |
+
+`pencil-steep-angle-cpl` is the only subject above the floor, at `z` 13.4
+against 12.7, implying a rim of **1.2% of the local edge step**. The planted
+ladder does not resolve 1% of step from nothing (`z` 12.0 against a floor of
+7.5-18.0), so that is inside the instrument's own noise.
+
+**The two routes disagree about which subject is the exception, and no subject
+fails both.** Route 1 leaves `coffee-bean`; route 2 leaves
+`pencil-steep-angle-cpl`. That is what a null looks like when two estimators
+each keep one different subject at the margin.
+
+I tested the obvious explanation for `coffee-bean`'s 4.4-point excess -- that
+bean crystal is heavy-tailed where the synthetic roughener is Gaussian, and a
+max over six samples is exactly what a heavy tail inflates. **It is not.**
+Excess kurtosis of the shoulder residual: `coffee-bean` **-1.60**, synthetic at
+matched sd **-1.58**. The 99.9th percentile: 1.98 against 1.93. That hypothesis
+is dead and `coffee-bean`'s excess is unexplained.
+
+## 14. Revisions to sections 3 and 8
+
+- **`leaf-2-cpl`** -- was artifact on an extrapolated pedestal; **now artifact
+  on a directly measured one**. Strengthened.
+- **`112MSDCF` and `113MSDCF`** -- were *real but below visibility* on the
+  strength of the tangent-averaged stack. Their coherent excursion is 5.009%
+  and 7.584% against a rim-free floor of 3.538% and 4.217%, but on `z`, which
+  accounts for their very small edge counts (97 and 72 against the ladder's
+  1082-6307), they read 3.4 and 3.9 against a floor of 18.0. **On this
+  evidence they move to instrument artifact.** The stack excursion in
+  section 5 is real and I still cannot say whether it is scene or merge; what
+  has changed is that it is no longer above what 97 rough edges produce by
+  chance.
+- **`pencil-steep-angle-cpl`** -- was artifact; **now the one subject marginally
+  above the coherent floor**, at an implied rim of 1.2% of the edge step, which
+  is below what the planted ladder can resolve. Call it *real but unresolvable*
+  and note that this is a downgrade in confidence, not an upgrade to defect.
+- **`coffee-bean`** -- was artifact; the read-across no longer supports that and
+  the heavy-tail explanation is refuted. Its acquittal now rests on the pixels
+  and on the two never-stacked captures of the same subject that FAIL the same
+  axis. **Recorded as artifact-on-external-evidence-only.**
+
+Revised score: **13 instrument artifact / 0 real but below visibility / 0 real
+defect**, with `coffee-bean` and `pencil-steep-angle-cpl` flagged as the two
+whose acquittals are one-legged. The verdict in section 9 is unchanged and is
+slightly strengthened.
+
+## 15. The mid-scale ring axis, adjudicated
+
+`docs/research/V-RIM-verification.md` and `experiments/V-RIM/logs/summarise.log`
+report a 0-140 px ring window with a 170-300 px null and **RING on 5 of 14**.
+Different scale, different estimator; section 9 does not reach it. Four tests.
+
+**INPUT PATH -- the worst defect on this axis.** `experiments/V-RIM/src/render_all.ps1`
+line 3 renders the axis's own inputs to `C:\dev\strehl-out\V-RIM\lin` with
+`$exe = C:\dev\strehl-out\pin-1cacb61\target\release\strehl.exe`, `--demosaic`,
+no `--srgb`. **That is neither the deliverable nor `acceptance/SHIP-V4`.** All
+three of `C:\dev\strehl-out\V-RIM`, its `lin` and `json2` subtrees, and the
+pinned binary are **gone**; `summarise.py` hardcodes `JS = C:\dev\strehl-out\V-RIM\json2`
+and cannot run. The published mid-scale result is **not reproducible from its
+own artifacts by anyone**.
+
+**RE-RUN.** The instrument imported unchanged from `experiments/V-RIM/src` and
+pointed at every render that survives:
+
+| subject | published (1cacb61, linear) | deliverable | SHIP-V4 | deliverable, curve undone |
+|---|---|---|---|---|
+| `bee-3-cpl` | +4.48% @29 RING | +0.06% @89 no ring | +0.07% @96 no ring | +0.40% @21 no ring |
+| `flower-bud-alone-cpl` | +3.18% @22 RING | +0.04% @98 no ring | +0.04% @113 no ring | +0.13% @109 no ring |
+| `flower-bud-with-background-fern-cpl` | +9.76% @21 RING | +0.12% @116 no ring | +0.09% @115 no ring | +0.28% @127 no ring |
+| `lavendar-cpl` | +2.93% @22 RING | +0.80% @77 no ring | +0.63% @67 no ring | +0.76% @87 no ring |
+| `coffee-bean` | +7.13% @34 RING | +1.82% @84 no ring | +1.76% @83 no ring | +0.06% @132 no ring |
+
+Fifteen measurements, **zero RING**. Two independently produced current renders
+agree with each other to within 15% and disagree with the published table by
+25x to 80x.
+
+**COLOUR SPACE, the matched control that arm needed.** `acceptance/SHIP-V4`'s
+own provenance file states
+
+> `colour space  : sRGB, TONE CURVE APPLIED -- DO NOT MEASURE NUMERICALLY`
+
+and `ORCH-FAITHFUL/faithful` matches it to **0.02%** on the green channel over
+515k samples, so the deliverable is in that same encoded space. The published
+run measured camera-linear. Undoing the curve and re-running is the fourth
+column above: it moves `bee-3-cpl` from +0.06% to +0.40% and puts its peak back
+at t=21 px, where the published run found t=29 -- so a small feature is in the
+same place -- but it is still **11x short** of the published amplitude and still
+no ring.
+
+**SPECIFICITY.** Build a curve with no ring in it: the subject's own far-field
+fluctuation (t=150-300, linearly detrended) transplanted over the whole grid on
+a monotone rise, so ring window and null window are treated identically.
+
+| subject | real | rim-free | detections |
+|---|---|---|---|
+| `bee-3-cpl` | +0.06% | +0.15% | 0/48 |
+| `flower-bud-alone-cpl` | +0.04% | +0.14% | 0/48 |
+| `flower-bud-with-background-fern-cpl` | +0.12% | +0.13% | 0/48 |
+| `lavendar-cpl` | +0.80% | +1.10% | 0/48 |
+| `coffee-bean` | +1.82% | +4.77% | 0/48 |
+| `bee-1-cpl` | +0.78% | +1.06% | 0/48 |
+| `bee-2-cpl` | +0.96% | +0.77% | 0/48 |
+| `109MSDCF` | +5.72% | +6.60% | 0/48 |
+| `119MSDCF` | +0.19% | +1.56% | 0/48 |
+
+**The ratio rule is sound** -- 0 of 432 false detections -- and this is where
+the mid-scale axis differs from the tight-scale one. But **8 of 9 subjects read
+at or below what their own backdrop fluctuation produces with no ring present**,
+so on the deliverable there is nothing there to detect and the detector
+correctly says so.
+
+I predicted before running that `ringstat.dip`'s recovery gate would favour the
+ring window, because `tail = med[b:]` runs to the end of the grid rather than
+the end of the window, giving a ring-window pair a 160-point tail and a
+null-window pair as few as none. **That prediction is refuted.** On correlated
+noise with no ring the ring/null ratio is 1.01x to 1.21x and the 3x rule fires
+0/200, 0/200, 1/200 and 13/200 at correlation lengths 1, 2, 4 and 8 px.
+
+**A DEFECT IN MY OWN FIRST SPECIFICITY ARM, withdrawn.** The first version put
+the transplanted fluctuation inside the ring window only, leaving the null
+window perfectly smooth, and duly printed 24/24 detections. Those detection
+rates were an artifact of my construction and are withdrawn; the corrected arm
+is the table above. The ring amplitudes from that first run were unaffected and
+agree with the corrected ones to 0.15 points.
+
+**PIXELS.** `D:\strehl-out\V-RIM\pics\midscale-*.png`. At a stretch of +/-2% of
+the far field, the published +3% to +10% band at 21-34 px would be saturated
+white. There is nothing there on any of the three renders. The boundary crops
+show the backdrop next to the silhouette is **darker** than the far field, not
+brighter -- a moat, the opposite sign to a halo -- recovering over 60-90 px.
+
+**VERDICT ON THE MID-SCALE AXIS.** It does not convict the deliverable, and its
+published conviction of five subjects cannot be reproduced on any render that
+exists. What I cannot rule out is that the vanished 1cacb61 render genuinely
+carried a ring that the shipping render does not; the binary and the images are
+both deleted and that hypothesis is now untestable. Either way it is **not a
+print blocker for the deliverable**.
+
+## 16. A third defect in the tight-scale axis
+
+`rimaxis.py:52` sets `SEAL_DIR` to `acceptance/SHIP-V4`. That directory's own
+provenance files say `colour space : sRGB, TONE CURVE APPLIED -- DO NOT MEASURE
+NUMERICALLY`, and every subject there was rendered with `--auto-exposure`, so
+each master sits at a different place on that curve. The thirteen were produced
+by measuring, numerically, a set of images whose own provenance record forbids
+it in capital letters.
+
+The direction of the error is not the one that would rescue the thirteen. The
+sRGB curve is concave, so the encoded edge step grows faster than the encoded
+shoulder texture and the normalised shoulder sd is **compressed** by the
+encoding. Measured in linear light the max-of-six pedestal would be larger, not
+smaller, and the false FAILs would be worse. This is stated as a direction from
+the shape of the curve; I did not re-run the tight-scale axis in linear light,
+and it belongs on the list of things I could not measure.
+
+## 17. What part two could not measure
+
+- **`coffee-bean`'s 4.4-point excess over its rim-free pedestal.** Measured, not
+  explained. The heavy-tail hypothesis is refuted. Its acquittal rests on the
+  pixels and the never-stacked captures alone.
+- **The tight-scale axis in linear light.** Section 16 argues the direction from
+  the shape of the curve, not from a measurement.
+- **Whether the vanished 1cacb61 render carried a real mid-scale ring.** Binary
+  and images both deleted. Untestable now, and it is the one hypothesis that
+  would make the published mid-scale result correct as written.
+- **The dark arm as a symmetry control.** `dark/bright` runs 0.11 to 1.75 across
+  the thirteen against 1.04 on the rim-free synthetic, which looks like strong
+  bright-side asymmetry -- but the subjects with the smallest ratios are exactly
+  the ones whose edges are so wide that the dark window `t = -7..-2` is still on
+  the rising edge (`q` already 0.12 to 0.26 at `t = -2`). Window placement
+  explains it mechanically. **Inconclusive, reported as such.**
+- **The four REFUSED subjects, on either axis.**
+
+## 18. What would falsify part two
+
+- **A rim-free sharp image at shoulder sd 0.19-0.21 reading below +29%.** That
+  would put `coffee-bean` back above its pedestal by more than 4.4 points and
+  make it a candidate defect rather than a one-legged acquittal.
+- **A visible band in the LEFT (unstretched) panel of `ship-112MSDCF-stack.png`
+  or `ship-113MSDCF-stack.png`.** Section 14 downgraded both to artifact on a
+  statistical argument; a human seeing the band overturns that immediately.
+- **A bright band at 21-34 px in any `midscale-*-profile.png` strip.**
+- **Any re-render at commit `1cacb61` reproducing +9.76% on
+  `flower-bud-with-background-fern-cpl`.** That would establish the published
+  mid-scale result and turn section 15 into a claim about a regression that was
+  fixed rather than a result that was wrong.
+- **A demonstration that `np.maximum.accumulate` is the wrong monotone baseline
+  in the mid-scale specificity arm.** It is a valid non-decreasing curve, but it
+  is not the least-squares one, and a different choice could move the rim-free
+  numbers.
