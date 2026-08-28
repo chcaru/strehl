@@ -6,6 +6,16 @@ error fell on **14 of 14** — median **-17.0 %**, best **-35.3 %**, worst
 **-0.4 %**. I looked at all 26 subjects myself and the magenta the owner
 objected to is gone from the subjects it was diagnosed on.
 
+**The masters are also print files, verified in their own bytes.** All 26 carry
+the 2716-byte sRGB ICC profile in tag 34675, `300/1` X and Y resolution, and
+`ResolutionUnit = inch`. The shipped gallery had none of these. The reader was
+commissioned against a file known to lack them before any master was trusted
+(§11). **Nothing regressed.**
+
+**Two things happened to the delivery that I did not do**, and both are
+stop-and-report items: the ORCH-FAITHFUL masters were deleted from disk at
+02:53, and seven files I did not render appeared in my delivery folder (§13).
+
 **Three things in this report are more important than that headline**, because
 each one contradicts something the lane was briefed to expect:
 
@@ -389,3 +399,134 @@ written would have corrupted the one subject it matters most on.
   `highly-angled-ruler-mm-cpl`, which is merged unregistered.
 - `coffee-bean-20-gate2-sidecar` byte-freeze is already RED and is not mine. I
   did not touch `crates/strehl-cli/tests/byte-freezes.tsv`.
+
+## 11. The masters are print files, verified in their own bytes (MEASURED)
+
+The gallery BUILD-OUTPUT audited was not a print file: no ICC profile, no
+physical resolution, `ResolutionUnit = none`. BUILD-OUTPUT established that the
+**code** at HEAD is already correct and the gallery was simply stale, predating
+`96b7e119` and `c14284a8`. I confirmed those two commits are ancestors of my pin
+(`96b7e119` 2026-08-26 11:27, `c14284a8` 2026-08-26 16:32, pin `6af834da`
+2026-08-28 00:51), but an ancestry argument is not evidence about bytes, so I
+read the bytes.
+
+**Reader, and why it is not `tifffile`.** I reused BUILD-OUTPUT's
+`experiments/BUILD-OUTPUT/tiff_tags.py` rather than writing my own, driven by
+`experiments/DELIVER-V6/tagcheck.py`. It parses the raw IFD. This matters:
+`tifffile` normalises a *missing* resolution to `(1, 1)`, which is
+indistinguishable from a real `1/1`, so the highest-level reader available
+cannot see this defect at all.
+
+**Commissioned before it was trusted.** The brief asked me to point the reader at
+an ORCH-FAITHFUL master and confirm it reports the defect. Those files no longer
+exist (§13). I used `C:\dev\strehl-out\marker.tif`, rendered 2026-08-23 and so
+predating the ICC fix by three days. It reads:
+
+```
+ICC 34675      : ABSENT
+XResolution    : 1/1
+ResolutionUnit : 1 (none)
+```
+
+— the identical defect signature BUILD-OUTPUT quoted from `SHIP-V2`. The reader
+can see the defect, so a clean read from it means something. `tagcheck.py`
+re-runs this commissioning on every invocation and refuses to check any master
+if it fails.
+
+**Result: 26 of 26 clean.**
+
+| tag | required | found |
+| --- | --- | --- |
+| 34675 ICCProfile | present, 2716 B | present, 2716 B, TIFF type `UNDEFINED` (7), on all 26 |
+| 282 XResolution | `300/1` | `300/1` on all 26 |
+| 283 YResolution | `300/1` | `300/1` on all 26 |
+| 296 ResolutionUnit | `2` (inch) | `2` (inch) on all 26 |
+| 305 Software | — | `strehl 0.0.0 (6af834dac08d)` on all 26 |
+
+The embedded profile is **byte-identical across all 26** (one distinct SHA256),
+is a v2.1.0 `mntr`/`RGB`/`XYZ` profile described as `strehl sRGB (IEC
+61966-2-1)`, its internal size field agrees with the actual tag length, and its
+`rTRC`/`gTRC`/`bTRC` are a 1024-point curve with `f(0.5) = 0.21450` — the sRGB
+transfer curve, not a gamma-2.2 stand-in. Tag 34675 carries TIFF type
+`UNDEFINED` as the ICC technote specifies, which is worth recording because a
+`[u8]` field would naturally encode as `BYTE` and no high-level reader reports
+field type. `270 ImageDescription` additionally states the colour space in
+words.
+
+Every one of these values is recorded **per subject** in
+`C:\dev\strehl-out\DELIVER-V6\masters\MANIFEST.txt`, beside that subject's
+output SHA256 and byte count. Nothing regressed between BUILD-OUTPUT's
+verification and my render.
+
+## 12. Clipping and crush, as numbers with their subject (MEASURED)
+
+Reported as numbers, not as a verdict, per the instruction not to treat
+`orch_printready.py`'s clip gate as one. Measured with BUILD-OUTPUT's
+`clip_census.py`, which separates the two mechanisms a flattened three-channel
+statistic conflates. **My masters reproduce BUILD-OUTPUT's diagnosis of the gate
+exactly:**
+
+- **`dry-erase-marker-head-cpl` — the subject the gate failed — has
+  `clipALL3 = 0.0000 %`.** It is still the corpus's cleanest master by that
+  measure. The gate is not measuring blown highlights.
+- **`flowers-cpl` reads `clipALL3` 0.0087 % but `clipONE` 0.3993 %**, of which
+  blue alone is 0.410 % and `B == 65535` exactly is 0.3859 %. That is the
+  `gamut_map` signature — an out-of-gamut triple blended to the boundary — not
+  a blown highlight. It will keep tripping `CLIP_MAX`; bounding it needs a
+  per-channel tone stage. Known non-finding, not re-diagnosed.
+- Larger genuine neutral clipping than `flowers-cpl` occurs on **13 of my 26**
+  subjects, led by `113MSDCF` 0.0692 %, `flat-on-ruler-cpl` 0.0684 % and
+  `112MSDCF` 0.0676 %.
+
+Crush behaves exactly as the brief said it would: **`crushALL3` is 0.0000 % on
+24 of my 26**, the exceptions being `foam` 0.0011 % and `coffee-bubbles`
+0.0002 %. What the flattened statistic calls crush is single-channel floor
+pinning — `109MSDCF` has `R == 0` on 7.54 % of pixels, `119MSDCF` 9.77 %,
+`flower-inner-edge-cpl` has `B == 0` on 10.63 % — with the other two channels
+nowhere near zero. These are saturated colours resting on the gamut floor, not
+black. **Crush must stay ungated.**
+
+## 13. Two things happened to the delivery that I did not do (STOP-AND-REPORT)
+
+**The ORCH-FAITHFUL masters have been deleted.**
+`C:\dev\strehl-out\ORCH-FAITHFUL\faithful\` now contains only `render.log` and
+an empty `preview\` directory. All 26 old master TIFFs are gone; the directory's
+LastWriteTime is `2026-08-28 02:53:36`. My renders finished at 02:15 and my
+cleanup named only `DELIVER-V6\tgt`, `DELIVER-V6\tgt-caold`, `DELIVER-V6\scratch`,
+`D:\strehl-out\DELIVER-V6\corpus-preview` and `DELIVER-V6\masters-caold\*.tiff`.
+I did not touch ORCH-FAITHFUL and it is on my do-not-modify list.
+
+The consequence is honest and worth stating plainly: **the baseline for every
+old-vs-new claim in this report no longer exists on disk.** The A/B crops, the
+bit-identity proof in §2 and the measurements in §4 and §6 were all computed
+while those files were present and are unaffected — but a reader who wants to
+re-check them from the original files now cannot. This is made worse by a
+judgement of mine: during cleanup I deleted my own CA-old arm TIFFs *because*
+they were provably bit-identical to ORCH-FAITHFUL, which was preserved and
+protected. That reasoning was sound at 02:15 and wrong by 02:53. **The remedy is
+that the old arm is reproducible rather than merely archived**: the control
+binary is still pinned at
+`C:\dev\strehl-out\DELIVER-V6\bin\strehl-caold.exe` (sha256
+`9DC2F85A99E033E3AE4217EF4FD7923A4836A727AEA562D9B993F3FE0D2F00F1`), the sources
+are read-only, and `experiments/DELIVER-V6/render-caold.ps1` regenerates any
+subject deterministically.
+
+**Seven files I did not render are sitting in my delivery folder.** Between
+02:36 and 02:47 — after my run ended — seven TIFFs appeared in
+`C:\dev\strehl-out\DELIVER-V6\masters\`: `chia-seeds-cpl`,
+`dime-flat-narrow-slices-cpl`, `duck-tape-side-layers-cpl`,
+`maldon-sea-salt-cpl`, `medication-pill-cpl`, `pottery-art-glazed-cpl`,
+`unpopped-popcorn-kernels-cpl`. These are exactly the seven newer captures I
+deliberately excluded to keep the subject list matched to ORCH-FAITHFUL. They
+report `Software 'strehl 0.0.0 (6af834dac08d)'` — my pinned commit — and they
+pass the same tag check, so they appear to have been produced with my pinned
+binary. **I did not render them, they are in no manifest record, and I cannot
+attest to their invocation.** I have left them in place and listed them as
+foreign in a `MANIFEST.txt` trailer rather than deleting them; deleting another
+lane's output without being asked is precisely what destroyed the ORCH-FAITHFUL
+baseline tonight. **Anyone counting files in that folder will find 33 and should
+treat only the 26 with manifest records as DELIVER-V6 output.**
+
+I re-hashed all 26 of my masters after discovering the folder had been written
+to. **All 26 match the SHA256 recorded at render time** — my delivered bytes
+have not moved.
