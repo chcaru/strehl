@@ -2616,6 +2616,41 @@ average would incur, on both subjects, at every rung.
 
 Now the part that matters:
 
+> **RETRACTED IN PART, 2026-08-28 -- the fine-scale half of this subsection is
+> withdrawn; the mottle half stands.** Every "scene fine" figure here is
+> measured at `FINE = 0.40-0.45` and every "noise mid" figure at
+> `MID = 0.30-0.35` cyc/px. V-LINEAR has since measured `112MSDCF` -- the
+> subject carrying the depth claim -- at **0.30-0.35 R=1.0786 [1.040, 1.121]
+> FAIL(noise)** and **0.40-0.48 R=1.0494 FAIL(noise)** (`968a5ae4`). The slice
+> was gate-tested, but **not with a like-for-like control**: ORCH cites
+> `dry-erase` at R=4.5296 PASS, and that record is `decim=4`
+> (`bandsweep-far20-decim4-dry-erase-marker-head-cpl.json`), so its
+> `0.30-0.35` is four times coarser in physical detail than the `decim=1`
+> subject it is gating. It still answers the width question in normalised
+> units, and **the conclusion survives, on a better control**: `bee-1-cpl` is
+> `decim=1` at **R=5.3109 [3.083, 7.638] PASS** over the identical slice and
+> identical sampling, so the FAIL is a property of the subject and not of the
+> slice. `coffee-bubbles` reads **R=1.5417 MARGINAL**. So on this subject those
+> two bands carry no resolvable
+> focus-dependent scene signal, and **no acuity, sharpness or softening number
+> below is quotable**: not the 39.3% fine-scene retention, not the 2.636 ->
+> 2.217 / -15.9% fine-scale SNR loss, not "loses absolute scene", and not the
+> -1.9% on `coffee-bubbles`. **The conclusion "the cost is a function of depth"
+> is withdrawn with them.** ORCH's `-44.6%` and `27.2%`, which came from the
+> retracted 9.17 and which this subsection was the live successor to, are
+> **measured and dead** -- not merely unlicensed.
+>
+> **What survives, and why the distinction is not a hedge.** The `20-50 px`
+> band is `0.02-0.05` cyc/px, where V-LINEAR reads `112MSDCF` **R=10.1256
+> PASS** and `coffee-bubbles` **R=2.6156 PASS** -- both `decim=1`. So the
+> mottle-band results stand: the
+> `452.4 -> 989.5` (**2.19x**) mid-scale scene-to-noise gain, and blotch
+> `0.21166 -> 0.20782`. The noise-side removal percentages (**55.2%**, 37.7%)
+> are measurements of *manufactured noise* in a noise-dominated band, which is
+> the one thing such a band is fit for; they stand as noise claims and must not
+> be restated as sharpness ones. **The paired "cost" column beside them is
+> `scene_fine` and is withdrawn.**
+
 At N=79 the fix retains **39.3%** of shipping's fine scene while carrying
 **46.7%** of its mid-band noise. Fine-scale scene-to-noise falls **2.636 ->
 2.217, a 15.9% loss.** And at 79<-39 the fix is the only arm that **loses

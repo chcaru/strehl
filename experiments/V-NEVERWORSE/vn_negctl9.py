@@ -19,6 +19,19 @@ BAK = os.path.join(os.environ["TEMP"], "vn_negctl9_RESULT.md")
 CBAK = os.path.join(os.environ["TEMP"], "vn_negctl9_verify9.py")
 
 PLANTS = [
+    # ORCH 2026-08-28: "Commission DELETION as well as reversal. Deleting a
+    # finding is cheaper than stating it wrongly." Every plant in this file
+    # before today ALTERED something; none removed a finding outright. This
+    # one deletes the marker line of the 9.23 band-qualification retraction,
+    # leaving all its prose in place but unmarked -- the cheap attack.
+    ("> **RETRACTED IN PART, 2026-08-28 -- the fine-scale half of this "
+     "subsection is\n> withdrawn; the mottle half stands.**",
+     "",
+     "9.23 band-qualification retraction DELETED"),
+    ("R=1.5417 MARGINAL", "R=1.5418 MARGINAL",
+     "9.23 banner: quoted V-LINEAR coffee-bubbles R altered"),
+    ("`decim=4`", "`decim=1`",
+     "9.23 banner: dry-erase decimation misstated as like-for-like"),
     ("| L3 | 8 | 5.49 | 2.42 | 2.02 | 0.371 | 13.9 px | **0.543** |",
      "| L3 | 8 | 5.49 | 2.42 | 2.02 | 0.371 | 13.9 px | **0.443** |",
      "L3 frac 20-60px"),
@@ -310,6 +323,9 @@ PLACEBO = ("So the counterfactual below is run on the exponent, not on a toleran
 # change NO number.  Each reverses a load-bearing conclusion, starting with the
 # headline answer of the entire report.
 CONCLUSION_PLANTS = [
+    ("subsection is\n> withdrawn; the mottle half stands.",
+     "subsection is\n> upheld; the mottle half stands.",
+     "9.23 fine-scale retraction reversed to upheld"),
     ("**Answer, in one line.** The invariant as stated is **VIOLATED**",
      "**Answer, in one line.** The invariant as stated is **UPHELD**",
      "headline answer VIOLATED -> UPHELD"),

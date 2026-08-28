@@ -314,9 +314,18 @@ def main():
             return _flat(s.replace("**", ""))
 
         flat = norm(src)
+        # A blockquote's internal paragraph break is a bare `>` line, which
+        # `^> ` (note the required space) does not match -- so matching on
+        # `^> ` silently splits one blockquote into several, and a multi-
+        # paragraph banner loses the RETRACTED exemption on every paragraph
+        # after the first. Match `^>` so a blockquote is grouped whole. The
+        # risk this creates is the opposite one: a real source quotation
+        # sharing a blockquote with a banner would inherit the exemption.
+        # `vn_negctl9.py`'s three verbatim-quotation plants are the control
+        # for that, and they still fail this check after the change.
         for q in [norm(" ".join(
                 ln.lstrip(">").strip() for ln in blk.splitlines()))
-                for blk in re.findall(r"(?:^> .*\n)+", s9, re.M)]:
+                for blk in re.findall(r"(?:^>.*\n)+", s9, re.M)]:
             checked += 1
             # Blockquotes are used for two different things in section 9: for
             # verbatim source quotations, which this check exists to police,
@@ -1386,6 +1395,85 @@ def main():
             fails.append("9.23 absolute scene: document says %r but mid=%s "
                          "fine=%s require %r"
                          % (_ls[0], _ls[1], _ls[2], _want))
+
+    # ---- 9.23 band-qualification retraction, re-derived from V-LINEAR ----
+    # ORCH's standing rule after correction #5: no sharpness, softening or
+    # acuity claim is quotable without naming the band AND the subject's
+    # qualification at that band.  The banner that retracts 9.23's fine-scale
+    # half therefore quotes six of V-LINEAR's readings, and quoting is how the
+    # band mislabel in 9.27 happened -- a transcribed value under a wrong
+    # header.  So these are re-derived from V-LINEAR's committed records and
+    # never transcribed, and value+verdict+decim are pinned TOGETHER because a
+    # bare `PASS` is satisfied by any other row in the same banner.
+    _vl = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                       "..", "V-LINEAR")
+    _ban = ""
+    _lines = s9.split("\n")
+    for _i, _ln in enumerate(_lines):
+        if "RETRACTED IN PART, 2026-08-28" in _ln:
+            _j = _i
+            while _j < len(_lines) and _lines[_j].lstrip().startswith(">"):
+                _j += 1
+            # strip the blockquote markers: `_flat` collapses whitespace but
+            # leaves `>` in place, which breaks every phrase that wraps a line
+            _ban = _flat(" ".join(x.lstrip().lstrip(">").strip()
+                                  for x in _lines[_i:_j]))
+            break
+    checked += 1
+    if not _ban:
+        fails.append("9.23 band-qualification retraction banner is ABSENT; "
+                     "the fine-scale claims it withdraws would read as live")
+    else:
+        for _f, _s, _b in (
+                ("bandsweep-far20-112MSDCF.json", "112MSDCF", "0.30-0.35"),
+                ("bandsweep-far20-112MSDCF.json", "112MSDCF", "0.40-0.48"),
+                ("bandsweep-far20-112MSDCF.json", "112MSDCF", "0.02-0.05"),
+                ("bandsweep-far20-coffee-bubbles.json",
+                 "coffee-bubbles", "0.30-0.35"),
+                ("bandsweep-far20-coffee-bubbles.json",
+                 "coffee-bubbles", "0.02-0.05"),
+                ("bandsweep-far20-bee-1-cpl.json", "bee-1-cpl", "0.30-0.35"),
+                ("bandsweep-far20-decim4-dry-erase-marker-head-cpl.json",
+                 "dry-erase", "0.30-0.35")):
+            checked += 1
+            try:
+                _r = json.load(io.open(os.path.join(_vl, _f),
+                                       encoding="utf-8"))
+                _r = _r[0] if isinstance(_r, list) else _r
+                _rec = _r["bands"][_b]
+            except Exception as _e:
+                refused.append("9.23 banner: V-LINEAR record %s/%s "
+                               "unreadable: %s" % (_f, _b, _e))
+                continue
+            _tok = "R=%.4f" % _rec["R"]
+            if _tok not in _ban:
+                fails.append("9.23 banner: %s %s reads %s in V-LINEAR's "
+                             "record, not as quoted" % (_s, _b, _tok))
+                continue
+            # verdict must sit beside its own value, not anywhere in the banner
+            _w = _ban[_ban.find(_tok):_ban.find(_tok) + 220]
+            checked += 1
+            if _rec["verdict"].split("(")[0] not in _w:
+                fails.append("9.23 banner: %s %s is %s in the record but that "
+                             "verdict does not follow %s"
+                             % (_s, _b, _rec["verdict"], _tok))
+            if _r.get("decim", 1) != 1:
+                checked += 1
+                if "decim=%d" % _r["decim"] not in _w:
+                    fails.append("9.23 banner: %s is decim=%d, a different "
+                                 "physical band from the decim=1 subject it "
+                                 "gates, and the banner does not say so"
+                                 % (_s, _r["decim"]))
+        conclusion(_ban,
+                   r"the fine-scale half of this subsection is (\w+)",
+                   "withdrawn", "9.23 fine-scale disposition",
+                   forbid=("fine-scale half of this subsection stands",
+                           "cost is a function of depth is upheld",
+                           "measured and alive"))
+        conclusion(_ban,
+                   r"conclusion \"the cost is a function of depth\" "
+                   r"is (\w+)",
+                   "withdrawn", "9.23 depth-cost conclusion")
 
     print("\n%d checks: %d passed, %d FAILED, %d REFUSED"
           % (checked, checked - len(fails) - len(refused), len(fails),
