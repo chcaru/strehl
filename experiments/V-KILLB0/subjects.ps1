@@ -1,0 +1,22 @@
+$M = "D:\personal\macro"
+$SUBJECTS = @(
+  "112MSDCF=$M\112MSDCF",
+  "paper-sweep-cpl=$M\flat-fields\subject-focus-sweep-with-cpl",
+  "coffee-bubbles=$M\coffee-bubbles",
+  "109MSDCF=$M\109MSDCF",
+  "119MSDCF=$M\119MSDCF",
+  "113MSDCF=$M\113MSDCF",
+  "flat-on-ruler-cpl=$M\flat-on-ruler-cpl",
+  "foam=$M\foam",
+  "tweezers-cpl=$M\tweezers-cpl",
+  "coffee-bean=$M\coffee-bean",
+  "wrapped-text-1=$M\wrapped-text-1",
+  "leaf-2-cpl=$M\leaf-2-cpl",
+  "bee-1-cpl=$M\bee-1-cpl",
+  "flower-inner-edge-cpl=$M\flower-inner-edge-cpl",
+  "lavendar-cpl=$M\lavendar-cpl",
+  "couch-fibers-cpl=$M\couch-fibers-cpl",
+  "flower-bud-alone-cpl=$M\flower-bud-alone-cpl",
+  "dry-erase-marker-head-cpl=$M\dry-erase-marker-head-cpl",
+  "pencil-steep-angle-cpl=$M\pencil-steep-angle-cpl"
+)
