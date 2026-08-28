@@ -344,6 +344,19 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   the nine binaries was executed afterwards and returned rc=0, which is the check that
   matters — file presence is not the same as a working binary. `trim_pins.ps1` refuses to
   trim a pin that has no binary, rather than stranding it.
+- **The out-trees ended the session at 7% of their peak, and the product was re-verified
+  after every purge.** Measured: `C:\dev\strehl-out` 139.3 → 14.43 GB and `D:\strehl-out`
+  77.1 → 0.73 GB, so **~201 GB reclaimed**, leaving C: 816.1 GB free (44%) and D: 1,108.5 GB
+  (59%). Of the 14.43 GB that remains, 6.10 GB *is the deliverable* (33 masters plus two
+  pinned binaries) and 3.61 GB is `acceptance-pins`; both are on the protected list. The
+  Rust `target/` tree (14.71 GB) was deliberately **not** cleaned because six lanes were
+  still building against it. Two traps priced here and worth re-reading before the next
+  purge: a directory of NTFS **hardlinks** inflates every recursive size query while
+  occupying no blocks, so one lane's honest 2.58 GB reading was really 1.29 GB (fact 1957);
+  and **volume free-space delta is not attributable to one lane during a concurrent purge**
+  — the same lane saw 1.646 GB appear, more than it had freed, because sixteen other lanes
+  were purging in the same window. After the deletions the 33 masters were re-hashed against
+  the banked table by a second party: 33 found, 0 mismatch, 0 missing.
 - **Heavy scratch has been purged, and the hashes were banked first.** ~14.6 GB of freeze
   output under `C:\dev\strehl-out\acceptance` and 5.0 GB under `ORCH-FAITHFUL` are gone. Their
   SHA256s, byte sizes and full provenance records (binary path, binary hash, git commit, pin,
