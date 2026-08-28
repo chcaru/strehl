@@ -126,6 +126,21 @@ def main():
     global checked
     doc = io.open(DOC, encoding="utf-8").read()
     s9 = doc[doc.index("## 9. Falsifying the fix"):doc.index("## 10. Files")]
+
+    def sub(head):
+        """Slice ONE '### 9.x' subsection out of section 9.
+
+        Scoping a check to all of section 9 silently breaks the day a later
+        subsection reuses a row label: the row lookup finds two and the check
+        fails on a document that is correct. Every uniqueness-based check
+        below must be scoped to the subsection whose claim it is verifying.
+        """
+        i = s9.index(head)
+        nxt = re.search(r"\n### 9\.\d+ ", s9[i + len(head):])
+        return s9[i:i + len(head) + nxt.start()] if nxt else s9[i:]
+
+    s913 = sub("### 9.13 ")
+    s923 = sub("### 9.23 ")
     d = json.load(io.open(PLAT, encoding="utf-8"))
 
     # ---- 9.4 plateau table, cell-exact against the harness output ----
@@ -512,7 +527,7 @@ def main():
     # ---- 9.13 oracle ----
     orc = [x for x in CX["rows"] if x["arm"] == "o_oracle"]
     for x in orc:
-        r = row(s9, "%.2f" % x["frac_flattened"],
+        r = row(s913, "%.2f" % x["frac_flattened"],
                 "oracle %.2f" % x["frac_flattened"])
         cell(r, 1, "%.3fx" % x["blotch_vs_best_source"], "oracle b")
         cell(r, 2, "%.3fx" % x["sharp_vs_best_source"], "oracle s")
@@ -922,7 +937,7 @@ def main():
         else:
             refused.append("9.23: no ninv2 artifact for %s, so its rows are "
                            "NOT EXAMINED" % s)
-    s23 = s9[s9.index("### 9.23"):] if "### 9.23" in s9 else ""
+    s23 = s923 if "### 9.23" in s9 else ""
     if s23 and N2:
         flat23 = _flat(s23)
 

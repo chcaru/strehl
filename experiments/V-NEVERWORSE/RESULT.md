@@ -2756,6 +2756,418 @@ ratio statistic never required the subtraction that would have exposed the first
 one, which is the general lesson: **a ratio hides the sign of its own
 components.**
 
+### 9.24 ORCH's split-half frame-choice test reads a bit-identical number before and after the fix -- and my own reproducibility statistic did not survive its own plant
+
+ORCH asked for one number: whether the merge's per-pixel **frame choice**
+disagrees between two independent half-stacks "at a rate far above what the
+scene justifies", and whether that rate rises with `N`. It was offered as the
+statistic that discriminates over-selection from alignment drift, because
+drift produces coherent error in both halves and noisy selection does not.
+
+**The answer, in four lines.**
+
+1. The test as stated **cannot grade the fix**. The frame choice is exactly
+   invariant to the exponent, and it reads the same digits for shipping, for
+   the fix and for pure argmax -- three arms whose fine-band power differs by
+   up to 49%.
+2. My replacement for it -- output reproducibility across the halves -- **was
+   refused on all three subjects**, twice with the wrong sign. I withdraw it.
+3. The mottle conviction nevertheless **stands on single-render evidence**:
+   flat-region mid-band variance is 8.04x, 2.84x, 10.39x the plain mean's
+   on the same pixels, and it rises with `N` on all three.
+4. **The fix's ceiling is about a third, and it is not free.** It removes a
+   strikingly uniform ~36% of that variance on every subject, but the fine
+   band it costs rises with depth -- 28.5%, 48.9%, 58.7% -- so on the blur
+   immune ratio it is +9.2% on the shallowest subject and **-20.2% and -55.6%
+   on the two deeper ones**. There is a second mechanism, and as I modelled it
+   the fix takes the `focus-stack` trade on deep stacks.
+
+#### 9.24.1 The test as stated is exactly invariant to the fix
+
+The shipping weight is `w_i = (snr_i / SNR_REF)^p`. For every `p > 0` the map
+`x -> x^p` is monotone increasing, so it **cannot reorder the frames**. The
+argmax over `i` is identical at every exponent. The exponent changes how much
+the winner is worth; it never changes who wins.
+
+That is not a deduction I asked the reader to accept. It is a prediction the
+commissioning block would refuse the run over: hard-winner discordance must be
+**exactly** equal across a 4x exponent range, and if it moves, my stated reason
+for replacing the statistic is wrong and the run aborts.
+
+| subject | N | hard-winner discordance at p=1 | p=2 | p=4 | spread | soft at p=2 | soft at p=4 |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| coffee-bubbles | 19 | 0.5404 | 0.5404 | 0.5404 | 0.00e+00 | 0.4660 | 0.4934 |
+| 119MSDCF | 32 | 0.7571 | 0.7571 | 0.7571 | 0.00e+00 | 0.5224 | 0.6014 |
+| 112MSDCF | 79 | 0.6639 | 0.6639 | 0.6639 | 0.00e+00 | 0.4496 | 0.4932 |
+
+The spread is `0.00e+00` on all three subjects while the soft statistic on the
+same pixels moves 5.9%, 15.1%, 9.7%.
+
+The same monotonicity argument covers the fix itself, not just my plant. A
+confidence-dependent exponent scales `p` per pixel; within a pixel every frame
+shares that `p`; the ordering is untouched. So the measurement below is the one
+that matters -- ORCH's statistic against arms whose delivered images are
+grossly different:
+
+| arm | N | ORCH: hard frame-choice discordance | soft (weight centroid) | flat mid-band var | fine |
+|---|--:|--:|--:|--:|--:|
+| shipping | 32 | 0.7571 | 0.5224 | 1596.5 | 2.728e+08 |
+| shipping | 16 | 0.5527 | 0.3404 | 1491.9 | 2.164e+08 |
+| shipping | 8 | 0.2764 | 0.1536 | 1414.4 | 1.485e+08 |
+| confidence | 32 | 0.7571 | 0.1304 | 980.0 | 1.393e+08 |
+| confidence | 16 | 0.5527 | 0.0646 | 979.4 | 1.512e+08 |
+| confidence | 8 | 0.2764 | 0.0211 | 1004.6 | 1.269e+08 |
+| argmax | 32 | 0.7571 | 0.7571 | 1832.5 | 3.173e+08 |
+| argmax | 16 | 0.5527 | 0.5527 | 1665.8 | 2.367e+08 |
+| argmax | 8 | 0.2764 | 0.2764 | 1525.7 | 1.555e+08 |
+
+On `119MSDCF` the three arms read `0.7571462134857859` to every digit Python
+prints, and `hard(shipping) - hard(fix)` is `0.0` exactly, while the fix
+removes 48.9% of the fine band. **The build lane can ship the fix and this test
+will print what it printed before.**
+
+#### 9.24.2 The naive form cannot read zero even on a perfect input
+
+I built a synthetic stack with a **known** per-pixel focus optimum and **zero**
+noise. The naive rank-disagreement statistic scores **0.4946** on it.
+
+The cause is the split. Half A holds frames `idx[0::2]`, half B holds
+`idx[1::2]`, so the halves sample focus at the same spacing offset by one step.
+A perfect estimator's picks straddle the optimum and land on different frame
+*ranks* about half the time. The disagreement is a property of the sampling
+grid, not of the merge.
+
+That is why the reported statistics count only disagreement **larger than one
+step of the half-stack's own sampling**. The quantisation signature is visible
+in commissioning -- `med_steps` is exactly `0.50` on a perfect merge and `1.50`
+when noise drives the choice:
+
+| arm | region | soft | hard | naive rank | recoh | median steps | admitted |
+|---|---|--:|--:|--:|--:|--:|--:|
+| noisefree | textured_L2 | 0.0000 | 0.0000 | 0.4946 | 0.9972 | 0.50 | 0.500 |
+| noisefree | textured_L3 | 0.0000 | 0.0000 | 0.5117 | 0.9991 | 0.50 | 0.500 |
+| noisefree | flat_L2 | 0.0400 | 0.1055 | 0.4727 | 0.9969 | 0.50 | 0.067 |
+| noisefree | flat_L3 | 0.0390 | 0.1234 | 0.3896 | 0.9985 | 0.50 | 0.150 |
+| noisy | textured_L2 | 0.0029 | 0.0161 | 0.5342 | 0.9704 | 0.50 | 0.500 |
+| noisy | textured_L3 | 0.0215 | 0.1914 | 0.5312 | 0.9795 | 0.50 | 0.500 |
+| noisy | flat_L2 | 0.5745 | 0.6149 | 0.7764 | 0.0888 | 1.50 | 0.079 |
+| noisy | flat_L3 | 0.6446 | 0.6807 | 0.7831 | 0.1434 | 1.50 | 0.162 |
+
+The two noise-free textured rows are the null for the focus-offset confound:
+reproducibility there is 0.9972 and 0.9991, so the offset costs at most 0.3%.
+That is what would have licensed a reproducibility statistic on real data --
+had it survived section 9.24.4.
+
+#### 9.24.3 The floor is a property of the subject, not of the merge
+
+Where there is no focus-dependent content the optimum does not exist, so every
+estimator disagrees with itself. The floor is set by how much of a subject is
+flat, which is a subject property.
+
+**This is the error that created this lane.** The print gate thresholds
+absolute blotch, which ranks subject difficulty rather than merge quality, and
+that is why `lead-1-cpl` passes at 1.258x while `foam` is convicted at 0.885x.
+A discordance level has the identical defect. Every comparison below is
+therefore **within** subject, on the **same** pixels, against an arm swap.
+Across subjects I compare only the sign and direction of a ladder, never a
+level.
+
+#### 9.24.4 The gate convicted my own instrument: every reproducibility statistic is REFUSED
+
+The first version of the arm gate asked only `defect > base`. It was a coin
+flip, and I caught it only because I ran a second subject.
+
+Whole-frame reproducibility moved by **1.3e-4** under a 4x exponent range on
+`coffee-bubbles` (0.7408 -> 0.7407, PASS) and by **1.0e-4** the *wrong way* on
+`112MSDCF` (0.9780 -> 0.9781, FAIL). Those are the same null result, reported
+as opposite verdicts.
+
+The gate is now a **margin**: each side of the plant must move its statistic by
+at least 1% in relative terms, and the margin is recorded beside the verdict
+rather than reduced to a boolean.
+
+| statistic | coffee-bubbles defect / improve | 119MSDCF defect / improve | 112MSDCF defect / improve | admitted on |
+|---|--:|--:|--:|:-:|
+| `soft` | +5.8824% / +16.6723% | +15.1274% / +36.0270% | +9.7021% / +20.3971% | 3 of 3 |
+| `blotch` | +5.0040% / +8.3811% | +0.4638% / +0.4984% | +1.7047% / +1.9138% | 2 of 3 |
+| `flatvar` | +1.5854% / +11.5684% | +5.3756% / +14.4152% | +3.1457% / +13.5278% | 3 of 3 |
+| `recoh_all` | +0.0098% / +1.2692% | -0.0817% / +0.3214% | -0.0090% / +0.3712% | 0 of 3 |
+| `recoh_flat` | -0.0558% / +2.7915% | -0.0985% / +0.2611% | -0.1043% / +1.0834% | 0 of 3 |
+| `recoh_detail` | +0.0166% / +0.4614% | -0.0557% / +0.3067% | +0.0068% / +0.1496% | 0 of 3 |
+
+`recoh_all`, `recoh_flat` and `recoh_detail` fail on **0 of 3** subjects, and
+on 6 of the 9 defect-side readings the planted degradation moved
+reproducibility the *wrong way*. **I therefore withdraw the "manufactured
+fraction" and every reproducibility-derived number from my conclusions.** They
+appear in the tables marked REFUSED rather than deleted, so that a reader can
+see they were measured and rejected rather than never attempted.
+
+This is not a small retraction. `1 - recoh` was to be my headline description
+of the mottle. It reads well -- "0.54 of the mid-band is not reproducible
+across independent halves" -- and it is exactly the kind of number that
+survives review by being interesting. It does not survive its own plant.
+
+**Admission is per statistic, not per subject**, following `vn_lib.py`, because
+refusing a whole subject over one dead statistic would discard the ones that
+were commissioned. That also refuses **`blotch` on `119MSDCF`**: the print
+gate's own headline statistic moves 0.46% under a 4x exponent range there,
+while flat-restricted mid-band variance on the same render moves 5.38%. Of the
+three statistics, the one the gate ships on is the least sensitive to the
+defect under investigation.
+
+#### 9.24.5 A second gate for the trade ORCH warned about, and its breakdown point
+
+An exponent plant cannot commission the anti-blur denominator, because changing
+selectivity is not blurring. So there is a separate **planted blur** on the
+delivered render: `fine` must fall, and the blur-immune ratio `flatvar / fine`
+must get **worse**.
+
+The first version used a single `sigma = 1.2 px`. It removed 100.00% of the
+fine band and drove the ratio to +2.06e6%. That is a plant so far above the
+effect under test that any statistic reading the fine band at all would pass
+it -- the same defect class as a commissioning stimulus fixed in absolute units
+(section 9.23.4b): severity unrelated to instrument quality. The plant is now
+swept and its **breakdown point is published**:
+
+| blur sigma px | fine | flat mid-band var | var/fine (must worsen) | fires |
+|--:|--:|--:|--:|:-:|
+| 0.10 | +0.00% | +0.00% | +0.00% | no |
+| 0.15 | -0.00% | -0.00% | +0.00% | no |
+| 0.20 | -0.00% | -0.00% | +0.00% | no |
+| 0.30 | -3.52% | -0.03% | +3.63% | yes |
+| 0.50 | -69.58% | -0.72% | +226.36% | yes |
+| 0.80 | -98.75% | -2.12% | +7757.84% | yes |
+| 1.20 | -100.00% | -4.63% | +2079939.38% | yes |
+
+It fires from `sigma = 0.30 px`, where `fine` falls 3.54%. The effect it must
+police is a 28-59% fine-band change, so it resolves that with an order of
+magnitude to spare.
+
+#### 9.24.6 What survives: the conviction, on single-render evidence only
+
+| arm | N | soft L3 | recoh all | recoh flat | recoh detail | blotch | fine |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| shipping | 19 | 0.4660 | REFUSED | REFUSED | REFUSED | 0.06512 | 7.847e+08 |
+| shipping | 9 | 0.3022 | REFUSED | REFUSED | REFUSED | 0.06125 | 5.464e+08 |
+| shipping | 4 | 0.0838 | REFUSED | REFUSED | REFUSED | 0.05596 | 3.044e+08 |
+| confidence | 19 | 0.2255 | REFUSED | REFUSED | REFUSED | 0.05977 | 5.614e+08 |
+| confidence | 9 | 0.0790 | REFUSED | REFUSED | REFUSED | 0.05751 | 4.67e+08 |
+| confidence | 4 | 0.0187 | REFUSED | REFUSED | REFUSED | 0.05453 | 2.862e+08 |
+| argmax | 19 | 0.5404 | REFUSED | REFUSED | REFUSED | 0.07153 | 8.399e+08 |
+| argmax | 9 | 0.3646 | REFUSED | REFUSED | REFUSED | 0.06578 | 5.719e+08 |
+| argmax | 4 | 0.0928 | REFUSED | REFUSED | REFUSED | 0.05834 | 3.103e+08 |
+| mean | 19 | REFUSED | REFUSED | REFUSED | REFUSED | 0.04874 | 1.036e+07 |
+| mean | 9 | REFUSED | REFUSED | REFUSED | REFUSED | 0.04898 | 2.195e+07 |
+| mean | 4 | REFUSED | REFUSED | REFUSED | REFUSED | 0.04875 | 4.782e+07 |
+
+| arm | N | manufactured | flat mid-band var | x plain mean | fine | var/fine |
+|---|--:|--:|--:|--:|--:|--:|
+| shipping | 19 | REFUSED | 1192.1 | 8.04x | 7.847e+08 | 1.519e-06 |
+| confidence | 19 | REFUSED | 774.2 | 5.22x | 5.614e+08 | 1.379e-06 |
+| argmax | 19 | REFUSED | 1255.2 | 8.46x | 8.399e+08 | 1.494e-06 |
+| mean | 19 | REFUSED | 148.3 | 1.00x | 1.036e+07 | 1.431e-05 |
+| shipping | 9 | REFUSED | 893.3 | 6.15x | 5.464e+08 | 1.635e-06 |
+| confidence | 9 | REFUSED | 630.1 | 4.34x | 4.67e+08 | 1.349e-06 |
+| argmax | 9 | REFUSED | 928.4 | 6.39x | 5.719e+08 | 1.623e-06 |
+| mean | 9 | REFUSED | 145.2 | 1.00x | 2.195e+07 | 6.614e-06 |
+| shipping | 4 | REFUSED | 689.0 | 4.38x | 3.044e+08 | 2.264e-06 |
+| confidence | 4 | REFUSED | 542.9 | 3.45x | 2.862e+08 | 1.897e-06 |
+| argmax | 4 | REFUSED | 702.6 | 4.47x | 3.103e+08 | 2.264e-06 |
+| mean | 4 | REFUSED | 157.2 | 1.00x | 4.782e+07 | 3.287e-06 |
+
+The load-bearing column is **`x plain mean`**: shipping's mid-band variance in
+the flattest quartile of the frame, divided by an unweighted average of the
+same frames on the same pixels. One render per arm, so no half-stack
+relationship can enter it and nothing that merely makes two halves agree can
+move it. That is the statistic ORCH required before any before/after would be
+accepted.
+
+| subject | N | sigma DN | shipping excess | excess at min N | rises with N | twin ratio | manufactured | fix var | fix fine |
+|---|--:|--:|--:|--:|:-:|--:|--:|--:|--:|
+| coffee-bubbles | 19 | 55.576 | 8.04x | 4.38x | yes | 1.0060 | REFUSED | 35.1% | 28.5% |
+| 119MSDCF | 32 | 34.200 | 2.84x | 2.39x | yes | 1.5809 | REFUSED | 38.6% | 48.9% |
+| 112MSDCF | 79 | 23.640 | 10.39x | 9.21x | yes | 0.7518 | REFUSED | 35.7% | 58.7% |
+
+The excess is above unity on all three subjects and **rises with `N` on all
+three**. Note also that the plain mean's own flat-region variance is close to
+`N`-independent on `coffee-bubbles` (157.2, 145.2, 148.3 at N = 4, 9, 19).
+Noise averaged over `N` frames would fall like `1/N`; this does not. So the
+plain mean's flat variance is measuring residual **scene**, not noise, which is
+what makes it a defensible floor rather than a noise estimate.
+
+#### 9.24.7 The noise twin, and why I will not generalise it
+
+The twin carries the same per-frame noise and the same half sizes but **no
+focus information at all**, so 100% of its selection is noise-driven. It is the
+half-size-controlled reference the raw `N` ladder is not.
+
+| N | twin soft (no focus info) | shipping soft | obs/ceiling |
+|--:|--:|--:|--:|
+| 19 | 0.4632 | 0.4660 | 1.0060 |
+| 9 | 0.2681 | 0.3022 | 1.1273 |
+| 4 | 0.1192 | 0.0838 | 0.7033 |
+
+Across the three subjects the observed-to-twin ratio is **1.006, 1.581, 0.752**. On `coffee-bubbles` essentially all the discordance is available
+without any focus signal; on `119MSDCF` noise alone accounts for at most 63% of
+it; on `112MSDCF` the observed discordance is *below* the pure-noise level.
+**"The discordance is noise" is therefore not a corpus property, and I refuse
+to state it as one.** It is saturated on one subject, partial on another, and
+inverted on the third.
+
+#### 9.24.8 The fix's ceiling -- the number ORCH asked for
+
+| subject | N | flat mid-band var removed | fine band cost | blur-immune var/fine gain | verdict |
+|---|--:|--:|--:|--:|---|
+| coffee-bubbles | 19 | 35.1% | 28.5% | 9.2% | costs more sharpness than it buys cleanliness |
+| 119MSDCF | 32 | 38.6% | 48.9% | -20.2% | costs more sharpness than it buys cleanliness |
+| 112MSDCF | 79 | 35.7% | 58.7% | -55.6% | costs more sharpness than it buys cleanliness |
+
+**Read the middle two columns together.** The variance the fix removes is
+almost constant across a 4x range of stack depth -- 35.1%, 38.6%, 35.7% -- so
+"about a third" is the answer to *how much of the mottle the exponent ladder
+accounts for*. That is ORCH's "a third" branch, not the "most of it" branch:
+**there is a second mechanism and this fix does not touch it.**
+
+The cost is not constant. The fine band it spends rises monotonically with
+depth -- 28.5%, 48.9%, 58.7% -- so the blur-immune ratio goes from +9.2% on the
+19-frame subject to **-20.2%** and **-55.6%** on the 32- and 79-frame ones. On
+two of three subjects the fix as I modelled it is a **net loss** by the only
+measure that cannot be gamed by throwing detail away.
+
+Two qualifications, both of which cut against my own result:
+
+- **This is my reimplementation of the idea, not the build lane's code.** The
+  confidence arm collapses the exponent toward averaging where between-frame
+  band-energy differences are inside the noise of their own estimate. A
+  different calibration of "inside the noise" will land somewhere else on the
+  same trade curve. What generalises is the *shape*: this family buys
+  cleanliness with fine-band power, and the exchange rate gets worse as the
+  stack deepens.
+- **`argmax` reads 0.984 on the blur-immune ratio on `coffee-bubbles`** --
+  marginally *better* than shipping despite worse blotch. I have not planted
+  against that and do not claim it.
+
+#### 9.24.9 The anti-blur demonstration, in-lane
+
+ORCH's warning was that a fix can improve every mottle number by blurring. The
+plain mean is that failure mode in its purest form, and it is in every table
+above:
+
+| subject | arm | blotch | flat mid-band var | fine | var/fine | vs shipping |
+|---|---|--:|--:|--:|--:|--:|
+| coffee-bubbles | shipping | 0.06512 | 1192.1 | 7.847e+08 | 1.519e-06 | -- |
+| coffee-bubbles | mean | 0.04874 | 148.3 | 1.036e+07 | 1.431e-05 | 9.42x WORSE |
+| 119MSDCF | shipping | REFUSED | 1596.5 | 2.728e+08 | 5.851e-06 | -- |
+| 119MSDCF | mean | REFUSED | 561.6 | 1.683e+06 | 0.0003336 | 57.01x WORSE |
+| 112MSDCF | shipping | 0.21166 | 461.0 | 1.519e+08 | 3.036e-06 | -- |
+| 112MSDCF | mean | 0.19887 | 44.4 | 2.537e+05 | 0.000175 | 57.63x WORSE |
+
+The mean wins **every raw mottle number** on every subject -- lowest blotch,
+lowest flat mid-band variance -- and loses the blur-immune ratio by **9.42x, 57.01x, 57.63x**, retaining 1.32%, 0.62%, 0.17% of the fine band. This is
+`focus-stack`'s 0.077 / 0.260 trade reproduced inside my own lane, with the
+statistic that catches it named. Any before/after on the fix must carry
+`var/fine`, or a blur will read as a cure.
+
+#### 9.24.10 Common cause -- my reproducibility statistic IS the tone lane's noise term
+
+ORCH warned that two lanes converging is not proof when they share a binary,
+a set of masters and a band-energy statistic. Working the algebra rather than
+asserting independence: with half renders `a = s + e_a` and `b = s + e_b`,
+independent errors of variance `v` on shared scene of variance `S`,
+
+    recoh = corr(a, b) = S / (S + v)      so   1 - recoh = v / (S + v)
+
+and the tone lane's half-difference noise term is `var(a - b) / 2 = v`.
+
+**These are one measurement, not two.** Up to normalisation by `S + v`, my
+"manufactured fraction" and their "noise" are the same quantity. Had I reported
+mine, I would have handed their number back to them as independent
+confirmation of itself.
+
+Two consequences, the second of which is for them:
+
+1. **Only my single-render statistics are independent of the tone lane.**
+   `flatvar`, its ratio to the plain mean, `blotch` and `fine` read one image
+   and never compare halves. Everything in section 9.24.6 and 9.24.8 is on that
+   side of the line; everything refused in 9.24.4 is on the other.
+2. **The normalised form is roughly two orders of magnitude less sensitive to
+   selectivity than the choice statistic on the same data** -- 0.06% against
+   5.9% on `coffee-bubbles` under an identical plant. That is a property of the
+   estimator rather than of my implementation, so any lane grading the fix on a
+   half-difference noise term should plant a defect in it and read the margin
+   before trusting a before/after.
+
+#### 9.24.11 What I did not measure
+
+- **The detail-region half of ORCH's caveat.** Whether incoherent detail is
+  present-but-scrambled in the delivered image is unanswered. The flat half is
+  settled -- a flat-quartile region has little mid-scale scene by construction,
+  so excess there is manufactured rather than displaced -- but the statistic
+  that would settle the detail half is a reproducibility statistic, and it is
+  refused.
+- **The noise-injection floor is REFUSED as uninformative.** Tripling the
+  injected variance moved discordance by about 2%. That is equally consistent
+  with "not noise-driven" and "already saturated", and on `coffee-bubbles` the
+  twin shows it is saturated. The intercept must **not** be quoted as a
+  scene-justified floor.
+- **`bee` (N=299) and `flower-bud-alone-cpl` (N=205)** are not measured here.
+  The three subjects run are 19, 32 and 79 frames, and every depth trend above
+  is a three-point trend inside that range.
+- **The build lane's actual implementation.** Section 9.24.8 grades a
+  reimplementation of the idea.
+- **Whether `argmax`'s better-than-shipping blur-immune ratio is real.**
+
+#### 9.24.12 Instrument defects caught this round
+
+12. **A boolean direction gate on a statistic with no headroom.** Reported the
+    same 1e-4 null as PASS on one subject and FAIL on another. Replaced by a
+    recorded margin; the statistic is now refused on all three.
+13. **A commissioning plant far stronger than the effect under test.** A
+    `sigma = 1.2 px` blur removed 100.00% of the fine band, so passing it
+    proved nothing. Now swept, with the breakdown point published beside the
+    verdict.
+14. **A gate that tested a statistic I was not reporting.** The arm gate
+    checked whole-frame reproducibility while the conviction quoted the
+    flat-restricted one. Both are now gated, and both are refused.
+15. **An ungated conviction statistic.** `flatvar_L3` -- the number this
+    section's verdict rests on -- was computed without `flat` being passed to
+    `immune()` during commissioning, so it had never faced a plant at all. It
+    now does, and it passes on all three subjects.
+16. **Unreachable report code behind an early `return`.** Adding the `--emit`
+    path to `vn_splitrep.py` orphaned the entire per-subject print block, and
+    the tool exited `0` while printing nothing. A generator that silently
+    produces no output is worse than one that crashes, because an empty table
+    in a report reads as "nothing to report".
+17. **A consistency check written as a bare `assert`.** `vn_verify24.py`
+    checked the recorded exponent-invariance spread against the arms it was
+    computed from with an `assert`, so a corrupted record raised and exited
+    `2` -- the same code as an unreadable file -- and the check was never
+    counted in the verified total. The negative control found it: the oracle
+    plant that perturbs one arm's winner field came back `ERRORED`, not
+    `caught`. A detected inconsistency is a **failure**, not a refusal, and
+    only a counted check appears in a partition. Now three counted checks.
+18. **A checker scoped to "everything until the next top-level heading".**
+    `vn_verify9.py` sliced section 9 as far as `## 10. Files`, so §9.13's
+    oracle rows and §9.23's set-equality check silently absorbed this
+    section the moment it was added: `981 passed` became `977 passed, 4
+    FAILED` on a document in which nothing previously verified had changed.
+    Removing §9.24 and re-running returned `981/981`, which is what proves
+    the four were scope collisions rather than errors. The failure mode is
+    the dangerous direction of that class -- a false alarm is visible --
+    but the same coarse slice makes a uniqueness check *weaker* as the
+    document grows, and that direction is silent. Each check is now scoped
+    to the subsection whose claim it verifies.
+
+The negative control for this section runs **42 plants** and requires each to
+turn the checker red. Thirty-five edit the document. **Seven edit the record**
+-- the split JSONs the checker derives its expectations from -- because a
+checker that carries its own copy of the answer passes every document plant
+and catches nothing. That is the failure ORCH propagated across the fleet
+after a checker ran 37/37 green and then caught 5 of 13 plants. All seven
+oracle plants are caught. The placebo (a prose edit that changes no measured
+value) stays green, an unreadable record refuses with `2` rather than passing
+or failing, and the document is restored byte-identically.
+
 ## 10. Files
 
 | file | what it does |
@@ -2788,6 +3200,10 @@ components.**
 | `vn_mechtest.py` | admission vs measured excess, commissioned both ways (§8.3) |
 | `pin9b05/` | gate source at the BUILD commit, not HEAD — the source drifts (§8.1) |
 | `vn_pyr.py` | offline reimplementation of the SHIPPING pyramid merge (§9.2) |
+| `vn_split.py` | split-half frame-choice instrument: exponent-invariance proof, per-statistic admission, swept blur plant (S9.24) |
+| `vn_splitrep.py` | generates every table and inline number of S9.24 from the split records; refuses on an unsubstituted marker |
+| `vn_verify24.py` | re-derives every number quoted in S9.24 from the split JSONs: 73 checks, 73/73 |
+| `vn_negctl24.py` | negative control for that checker: 35 document plants + 7 **record** plants + placebo + crash arm, 42/42 |
 | `vn_plateau.py` | winner-field plateaus, counterfactual arms, sensitivity (§9.4-9.6) |
 | `vn_bungauge.py` | proves the reused source bundle is not the sRGB master (§9.2) |
 | `vn_snrref.py` | ASK 1 and ASK 2: `SNR_REF` cancellation with a positive control, weight concentration by flatness, winner-field coherence with a like-for-like null (S9.11, S9.12) |
