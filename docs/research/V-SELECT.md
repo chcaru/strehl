@@ -4,7 +4,7 @@ Lane V-SELECT. Companion to [`V-DRIFT.md`](V-DRIFT.md), which refuted alignment
 *accumulation* as the cause of the depth-dependent quality collapse. This document
 tests the hypothesis that replaced it.
 
-Numbers quoted against commit `ded3b21b`. Every merge here was produced by the
+Numbers quoted against commit `a9ed52cb`. Every merge here was produced by the
 pinned binary at `C:\dev\strehl-out\acceptance-pins\9b05d0b7\target\release\strehl.exe`,
 SHA-256 prefix `44C2F2CD2E5B2894`, verified at the top of every run. Subjects are
 `flower-bud-alone-cpl` (205 frames) and `bee-3-cpl` (299 frames). All merges
