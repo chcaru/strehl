@@ -4365,3 +4365,42 @@ line directly above a table listing one. The true reading, one value seen 26
 times, was settled by two differently shaped measurements agreeing, not by
 re-reading either script. Every defect this lane found tonight was found the
 same way: an artifact disagreeing with a run.
+
+## 25. THE ON/OFF PAIR, RE-DERIVED BEFORE IT WAS DELETED
+
+The two 188.6 MB renders `out/renders/bee3-dust-{on,off}.tiff` were deleted under
+the owner's disk directive. Before deleting them their difference was measured
+once more, by a script written independently of the one that produced §3's
+figures, so that the claim survives the pixels:
+
+    pixels total    : 32966016
+    pixels changed  : 16039 = 0.0487%
+    pixels identical: 32949977 = 99.9513%
+    partition sums  : True
+    max |delta|     : 3974 DN
+    clusters        : 15
+
+**`99.9513%` is the same untouched fraction §3 reports**, re-derived from the
+files rather than copied from the earlier run. The partition is explicit: every
+one of the 32,966,016 pixels is counted as changed or identical and the two sum
+to the total, so "changed: 0" could not have been confused with "examined: 0".
+
+The correction is **local, not global**. Fifteen disjoint clusters, and the two
+largest are the motes:
+
+| cluster | pixels | centre (output px) | bbox |
+| --- | --- | --- | --- |
+| 7 | 8321 | (6869, 4611) | 118x114 |
+| 1 | 7087 | (6405, 236) | 110x104 |
+
+Cluster 7's centre sits **one pixel** from `(6868, 4610)`, which is the photosite
+coordinate §13.2 derives for the disputed mote at quad `(3434,2305)`. That is an
+independent confirmation of the coordinate mapping, obtained from the rendered
+output rather than from the validator that defined it. It does **not** resolve
+the 25-quad dispute in §3, which is about where the *flats* place the mote; it
+confirms only that the corrector acts where the validator says it should.
+
+A 0.46 MB 1:1 exhibit, `out/dust-onoff-1to1-exhibit.png`, is kept in place of the
+377 MB pair: OFF on the left, ON on the right, one row per mote. The crops were
+located **by the difference itself**, not by coordinates typed in by hand, and
+the script refuses to write an exhibit at all if it finds no difference.
