@@ -71,5 +71,11 @@
     "OK": 5
   },
   "declare_own": 2,
+  "artifacts": {
+    "snapshotted": 90,
+    "unchanged": 88,
+    "restored": 2,
+    "failed": []
+  },
   "verdict": "CHANNEL-LIVE"
 }

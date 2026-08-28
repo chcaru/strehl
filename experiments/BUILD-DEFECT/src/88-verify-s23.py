@@ -198,24 +198,50 @@ def render_env():
     The divergence is not swallowed. `render_env_uncommitted()` reports it as a
     separate, counted outcome, because "your neighbour is editing this" is a
     fact worth surfacing -- just not as a defect in this section.
+
+    AND HEAD WAS STILL NOT FIXED ENOUGH. MEASURED, 2026-08-28.
+
+    Reading HEAD removed the working-tree race but not the underlying one: HEAD
+    itself moves when the neighbour COMMITS. Within four hours of the fix above,
+    `40307289 BUILD-SOFTGATE` landed, and this check went from 112/112 matched to
+    FOUR MISMATCHED on an untouched document -- doc 23 vs artifact 25, the two
+    extra names being exactly `STREHL_SOFT_GATE` and `STREHL_PYRAMID_SIGNIFICANCE`,
+    the two the NOTE channel had been naming as uncommitted for hours. The NOTE
+    predicted this failure by name before it happened.
+
+    So the pin is to a NAMED COMMIT, not to a moving pointer. Section 23.3's
+    numbers are a measurement of a specific revision, and a measurement whose
+    subject is allowed to change is not reproducible. This is the same remedy as
+    section 21.2's binary-identity block, applied to a source blob instead of a
+    binary: say which revision the number is true of, and the number stays true.
+
+    That HEAD drifts is still reported, as a counted NOTE. It is how this lane
+    learns that a downstream registry has grown.
     """
-    return _parse_render_env(_blob_at_head(RENDER_ENV_PATH), "HEAD")
+    return _parse_render_env(_blob_at_rev(RENDER_ENV_REV, RENDER_ENV_PATH),
+                             RENDER_ENV_REV)
 
 
 RENDER_ENV_PATH = "crates/strehl-cli/tests/byte-freeze.rs"
 
+# The revision section 23.3's RENDER_ENV numbers were measured at. Verified: 23
+# names at b221cb2f, 25 at HEAD after 40307289. Moving this constant is a claim
+# that the section's prose has been re-measured, so it must be changed together
+# with the numbers in the document and never on its own to silence a mismatch.
+RENDER_ENV_REV = "b221cb2f"
 
-def _blob_at_head(relpath):
-    """The file's committed content, decoded from BYTES.
+
+def _blob_at_rev(rev, relpath):
+    """The file's content at a NAMED revision, decoded from BYTES.
 
     Never `git show HEAD:path > tmp`: on Windows the `>` redirect re-encodes the
     stream and the parse then measures the redirect rather than the blob.
     """
-    p = subprocess.run(["git", "-C", ROOT, "show", "HEAD:" + relpath],
+    p = subprocess.run(["git", "-C", ROOT, "show", rev + ":" + relpath],
                        capture_output=True)
     if p.returncode != 0:
-        raise SystemExit("git show HEAD:%s failed: %s"
-                         % (relpath, p.stderr.decode("utf-8", "replace")[:200]))
+        raise SystemExit("git show %s:%s failed: %s"
+                         % (rev, relpath, p.stderr.decode("utf-8", "replace")[:200]))
     return p.stdout.decode("utf-8")
 
 
@@ -231,19 +257,32 @@ def _parse_render_env(t, where):
 
 
 def render_env_uncommitted():
-    """Names present in the working tree but not at HEAD, and vice versa.
+    """Names that diverge from the pinned revision, at HEAD and in the worktree.
 
-    Returned so the run can SAY that a neighbour has this file open. A silent
-    equality would make the two cases -- nobody is editing it, and somebody is
-    editing it in a way that happens not to matter yet -- print the same thing.
+    Returned so the run can SAY that the registry has grown since the section was
+    measured. A silent equality would make three different situations -- nobody
+    has touched it, somebody is editing it right now, and somebody landed a
+    change an hour ago -- all print the same thing.
+
+    Reports against RENDER_ENV_REV rather than against HEAD, because HEAD is
+    itself one of the things that moves. Returns a dict of the two comparisons,
+    or None if the working tree copy cannot be parsed at all.
     """
+    out = {}
+    try:
+        head = _parse_render_env(_blob_at_rev("HEAD", RENDER_ENV_PATH), "HEAD")
+    except SystemExit:
+        return None
+    pinned = render_env()
+    out["head"] = (sorted(set(head) - set(pinned)), sorted(set(pinned) - set(head)))
     p = os.path.join(ROOT, *RENDER_ENV_PATH.split("/"))
     try:
         wt = _parse_render_env(io.open(p, encoding="utf-8").read(), "worktree")
-    except SystemExit:
-        return None
-    head = render_env()
-    return (sorted(set(wt) - set(head)), sorted(set(head) - set(wt)))
+    except (SystemExit, IOError):
+        out["worktree"] = None
+        return out
+    out["worktree"] = (sorted(set(wt) - set(pinned)), sorted(set(pinned) - set(wt)))
+    return out
 
 
 def map_stats(path):
@@ -440,12 +479,27 @@ def verify(text, quiet=False):
 
     # -- 23.3 RENDER_ENV ------------------------------------------------
     env = render_env()
-    named = re.findall(r"`(STREHL_[A-Z_]+)`", text[text.find("### 23.3"):text.find("### 23.4")])
+    # Anchored on the sentence that LISTS the eight, not on the whole section.
+    #
+    # This originally scraped every `STREHL_*` in 23.3 and assumed each one was
+    # a member of the eight. That held only while the section mentioned nothing
+    # else. Adding a paragraph about the pinned revision -- which necessarily
+    # names `STREHL_SOFT_GATE` and `STREHL_PYRAMID_SIGNIFICANCE` -- took the
+    # scrape to ten and reddened two checks on prose that contradicted nothing.
+    # A check anchored to a section rather than to the claim it certifies breaks
+    # when anyone writes a sentence near it, which is the same loose-anchor
+    # defect that made 451,463 ambiguous in 84.
+    m8 = re.search(r"The eight never cleared:(.*?)\.\s*Zero were", text, re.S)
+    if not m8:
+        raise SystemExit("could not locate the sentence listing the eight in 23.3; "
+                         "refusing to fall back to scraping the section")
+    named = re.findall(r"`(STREHL_[A-Z_]+)`", m8.group(1))
     eight = [n for n in dict.fromkeys(named) if n != "STREHL_ALIGN"]
     m = re.search(r"`RENDER_ENV`\s*\n?holds\s*\*\*(\d+)\*\*", text)
     ck.eq("23.3 RENDER_ENV holds", int(m.group(1)) if m else None, len(env))
     m = re.search(r"Measured after the change: (\d+) names parsed", text)
     ck.eq("23.3 names parsed after fix", int(m.group(1)) if m else None, len(env))
+    ck.eq("23.3 the eight named are exactly eight", len(eight), 8)
     ck.eq("23.3 the eight are all real RENDER_ENV names",
           sorted(n for n in eight if n in env), sorted(eight))
     m = re.search(r"a hand-typed list of (\d+) environment variables", text)
@@ -455,12 +509,21 @@ def verify(text, quiet=False):
           int(re.search(r"cleared env\s*:\s*(\d+) names", run).group(1)), len(env))
     div = render_env_uncommitted()
     if div is not None:
-        added, removed = div
-        if added or removed:
-            ck.note("23.3 byte-freeze.rs is UNCOMMITTED-MODIFIED by another lane: "
-                    "worktree adds %s, drops %s. Verified against HEAD's blob, "
-                    "which is what these numbers are true of."
-                    % (added or "nothing", removed or "nothing"))
+        for where, label in (("head", "HEAD has MOVED since"),
+                             ("worktree", "the worktree diverges from")):
+            d = div.get(where)
+            if d is None:
+                ck.note("23.3 byte-freeze.rs could not be parsed in the %s copy; "
+                        "the pinned revision was used and no comparison was made"
+                        % where)
+                continue
+            added, removed = d
+            if added or removed:
+                ck.note("23.3 %s the pinned revision %s: %s adds %s, drops %s. "
+                        "These numbers are true of %s and are verified against "
+                        "it, not against a moving pointer."
+                        % (label, RENDER_ENV_REV, where, added or "nothing",
+                           removed or "nothing", RENDER_ENV_REV))
 
     # -- 23.4 liveness table -------------------------------------------
     t = find_table(tabs, "control", "requirement", "measured")
@@ -728,6 +791,12 @@ DEFECTS = [
     ("document restored byte-identical: True", "",
      "DELETION: 23.12 restoration claim"),
     ("pin-e260.tiff    18E6EDA98DEC9930", "", "DELETION: 23.13 restored pin hash"),
+    # Deleting one of the eight was invisible until 2026-08-28. The membership
+    # check compares "the named ones that are real" against "the named ones",
+    # which is trivially equal for any subset, so removing a name passed. The
+    # count check added alongside this plant is what catches it.
+    ("`STREHL_ACUITY`, `STREHL_FULLRES_GATHER`", "`STREHL_FULLRES_GATHER`",
+     "DELETION: one of the eight never-cleared names"),
 ]
 
 

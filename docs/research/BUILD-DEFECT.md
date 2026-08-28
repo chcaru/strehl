@@ -3737,6 +3737,20 @@ possible way, on the very control whose job was to be sceptical.
 comment reading *"this list mirrors byte-freeze.rs's RENDER_ENV"*. `RENDER_ENV`
 holds **23**. The comment was false and had been for some time.
 
+That count of 23 is measured at commit **`b221cb2f`**, and the verifier reads
+the blob at that named revision rather than at `HEAD`. This is not pedantry, it
+is the same defect this section is about, caught happening to me. The check
+originally read the working tree and accused this section of four defects that
+were a neighbour's unsaved edit; it was changed to read `HEAD`, and four hours
+later `40307289` landed `STREHL_SOFT_GATE` and `STREHL_PYRAMID_SIGNIFICANCE`,
+taking `RENDER_ENV` to **25** and turning this section red on an untouched
+document. A number whose subject is allowed to move is not a measurement. The
+two names that broke it are exactly the two the run had been naming for hours as
+uncommitted, so the drift channel predicted its own failure before it happened.
+
+Both are still reported, as counted notes rather than as defects: at the time of
+writing, `HEAD` is +2 against the pin.
+
 The eight never cleared: `STREHL_GATE_FLOOR`, `STREHL_DEFECT`,
 `STREHL_DEFECT_MAP`, `STREHL_DEFECT_ARM`, `STREHL_DEFECT_HOT_FLOOR`,
 `STREHL_ACUITY`, `STREHL_FULLRES_GATHER`, `STREHL_PHOTOMETRIC`. Zero were
@@ -3994,13 +4008,13 @@ cleared env     : 23 names parsed from byte-freeze.rs RENDER_ENV
 Sections 18, 20, 21 and 22 each carry a checker that re-derives every number
 from the artifacts. Section 23 -- the one describing the render a reader is most
 likely to act on -- carried none. `88-verify-s23.py` closes that:
-`112 declared = 112 matched + 0 mismatched + 0 unresolved`, with tables parsed
+`113 declared = 113 matched + 0 mismatched + 0 unresolved`, with tables parsed
 structurally so each measured value has exactly one site, and with the eight
 cited artifacts checked for existence rather than assumed.
 
-Its commissioning is the part worth reporting. `37 planted = 37 caught +
+Its commissioning is the part worth reporting. `38 planted = 38 caught +
 0 missed + 0 unanchored + 0 ambiguous`, of which **19 are numeric, 10 are
-conclusion reversals, and 8 are deletions**. The proportions are deliberate. A
+conclusion reversals, and 9 are deletions**. The proportions are deliberate. A
 number is not a conclusion, and this project now has four independent lanes that
 discovered their own verifier could not see a reversed one: V-NEVERWORSE passed
 a verdict flipped from refuted to confirmed through 712 green checks, V-LINEAR
@@ -4215,6 +4229,16 @@ NOTE  23.3 byte-freeze.rs is UNCOMMITTED-MODIFIED by another lane:
       worktree adds ['STREHL_SOFT_GATE'], drops nothing. Verified against
       HEAD's blob, which is what these numbers are true of.
 112 declared = 112 matched + 0 mismatched + 0 unresolved
+```
+
+That reading is **superseded** — both the note's wording and the count. What it
+prints now, after the pin moved from `HEAD` to a named commit and one check was
+added, is:
+
+```
+NOTE  23.3 HEAD has MOVED since the pinned revision b221cb2f: head adds
+      ['STREHL_PYRAMID_SIGNIFICANCE', 'STREHL_SOFT_GATE'], drops nothing.
+113 declared = 113 matched + 0 mismatched + 0 unresolved
 ```
 
 The general rule this lane now works to: **a verifier may re-derive from any

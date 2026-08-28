@@ -45,6 +45,35 @@ THE DOCUMENT IS RESTORED FROM A COPY, NEVER FROM GIT.
 uncommitted work in the file, including another arm's in-flight edit. The
 original bytes are copied to the temp directory first and written back in a
 `finally`, then compared byte-for-byte and reported.
+
+SO ARE THE VERIFIERS' OWN LOGS, AND THAT WAS A DEFECT THIS SCRIPT SHIPPED.
+
+The first version restored the document and nothing else. But every verifier
+writes `out/<name>.log` (and some a `.json`) as a side effect, unconditionally,
+and the LAST arm this script runs on each one is the PLANTED arm -- the arm that
+is required to fail. So a green audit left `out/88-verify-s23.log` on disk
+reading
+
+    MISMATCHED 23.2 line counts   doc (15789, 15798) vs artifact (15789, 15797)
+    112 declared = 111 matched + 1 mismatched + 0 unresolved
+    VERDICT: FAIL
+
+next to a document that verifies 112/112. Measured, not hypothesised: it was
+found during wind-down by `git diff` disagreeing with a run that had exited 0
+minutes earlier, and the off-by-one is this script's own numeric plant.
+
+That is the misleading-artifact class exactly: the log outlives the run, carries
+no note of which arm produced it, and the next reader -- or the next audit that
+treats it as evidence -- sees a failure that never happened. It is the same
+disease as an unprovenanced map being re-adopted by whoever finds it. An
+instrument that dirties the evidence it is auditing is not a clean instrument,
+however green its own verdict.
+
+Both channels are now snapshotted and restored, and the restoration is COUNTED
+rather than assumed: every `.log`/`.json` under `out/` is copied first, and the
+partition `unchanged + restored` must sum to the number snapshotted. `restored`
+being non-zero is normal and is printed -- it is the side effect being cleaned
+up, not an error -- but a file that fails to come back byte-identical is fatal.
 """
 import filecmp
 
@@ -261,6 +290,52 @@ def audit_one(script, sec, original):
     return row
 
 
+def snapshot_artifacts():
+    """Copy every text artifact under out/ to a temp dir, keyed by filename.
+
+    Only `.log` and `.json` are taken: those are what the verifiers write, and
+    out/ also holds ~380 MB of binary intermediates that would be pointless and
+    slow to copy. Measured at the time of writing: 90 files, 181.5 KB total, so
+    the snapshot is free.
+    """
+    d = os.path.join(tempfile.gettempdir(), "89-audit-artifacts")
+    if os.path.isdir(d):
+        shutil.rmtree(d)
+    os.makedirs(d)
+    kept = {}
+    for name in sorted(os.listdir(OUTD)):
+        if not name.endswith((".log", ".json")):
+            continue
+        src = os.path.join(OUTD, name)
+        if not os.path.isfile(src):
+            continue
+        dst = os.path.join(d, name)
+        shutil.copy2(src, dst)
+        kept[name] = dst
+    return kept
+
+
+def restore_artifacts(kept):
+    """Put the snapshotted artifacts back; return (unchanged, restored, failed).
+
+    The three outcomes sum to len(kept) by construction, so a run that restored
+    nothing is distinguishable from a run that snapshotted nothing -- the same
+    partition rule the rest of this lane is held to.
+    """
+    unchanged, restored, failed = 0, 0, []
+    for name, saved in sorted(kept.items()):
+        live = os.path.join(OUTD, name)
+        if os.path.isfile(live) and filecmp.cmp(saved, live, shallow=False):
+            unchanged += 1
+            continue
+        shutil.copy2(saved, live)
+        if filecmp.cmp(saved, live, shallow=False):
+            restored += 1
+        else:
+            failed.append(name)
+    return unchanged, restored, failed
+
+
 def main():
     say("=== commission the pass/fail CHANNEL of every verifier, as a subprocess ===")
     say()
@@ -268,6 +343,9 @@ def main():
     backup = os.path.join(tempfile.gettempdir(), "89-audit-BUILD-DEFECT.md.bak")
     shutil.copy2(DOC, backup)
     say("  original copied to %s  (restore is from this file, never from git)" % backup)
+    kept = snapshot_artifacts()
+    say("  %d text artifact(s) under out/ snapshotted; the planted arm dirties "
+        "them and they are put back" % len(kept))
     say()
 
     rows = []
@@ -283,10 +361,18 @@ def main():
                 say("      %-16s %s" % ("", r["anchor"]))
     finally:
         shutil.copy2(backup, DOC)
+        art_unchanged, art_restored, art_failed = restore_artifacts(kept)
 
     identical = filecmp.cmp(backup, DOC, shallow=False)
     say()
     say("  document restored byte-identical: %s" % identical)
+    say("  artifacts: %d snapshotted = %d unchanged + %d restored + %d failed"
+        % (len(kept), art_unchanged, art_restored, len(art_failed)))
+    if art_unchanged + art_restored + len(art_failed) != len(kept):
+        raise SystemExit("artifact partition does not sum")
+    if art_failed:
+        raise SystemExit("artifacts did not restore byte-identical: %s"
+                         % ", ".join(art_failed))
 
     tally = {}
     for r in rows:
@@ -307,6 +393,10 @@ def main():
             encoding="utf-8").write(json.dumps(
                 dict(rows=rows, restored_identical=identical, tally=tally,
                      declare_own=n_own,
+                     artifacts=dict(snapshotted=len(kept),
+                                    unchanged=art_unchanged,
+                                    restored=art_restored,
+                                    failed=art_failed),
                      verdict="CHANNEL-LIVE" if ok else "CHANNEL-SUSPECT"),
                 indent=2))
     io.open(os.path.join(OUTD, "89-audit-exitcode.log"), "w",

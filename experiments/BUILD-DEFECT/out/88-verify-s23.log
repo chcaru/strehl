@@ -1,7 +1,8 @@
 === verify section 23 against the artifacts it cites ===
 
 === CLAIMS ===
-  NOTE       23.3 byte-freeze.rs is UNCOMMITTED-MODIFIED by another lane: worktree adds ['STREHL_PYRAMID_SIGNIFICANCE', 'STREHL_SOFT_GATE'], drops nothing. Verified against HEAD's blob, which is what these numbers are true of.
-  112 declared = 112 matched + 0 mismatched + 0 unresolved
+  NOTE       23.3 HEAD has MOVED since the pinned revision b221cb2f: head adds ['STREHL_PYRAMID_SIGNIFICANCE', 'STREHL_SOFT_GATE'], drops nothing. These numbers are true of b221cb2f and are verified against it, not against a moving pointer.
+  NOTE       23.3 the worktree diverges from the pinned revision b221cb2f: worktree adds ['STREHL_PYRAMID_SIGNIFICANCE', 'STREHL_SOFT_GATE'], drops nothing. These numbers are true of b221cb2f and are verified against it, not against a moving pointer.
+  113 declared = 113 matched + 0 mismatched + 0 unresolved
 
 VERDICT: PASS

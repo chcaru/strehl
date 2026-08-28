@@ -1,6 +1,7 @@
 === commission the pass/fail CHANNEL of every verifier, as a subprocess ===
 
   original copied to C:\Users\chris\AppData\Local\Temp\89-audit-BUILD-DEFECT.md.bak  (restore is from this file, never from git)
+  90 text artifact(s) under out/ snapshotted; the planted arm dirties them and they are put back
 
   45-verify-s18.py     clean 0 | innocuous 0 | planted 1 (10 tried) -> OK
                        searched: 0.001 -> 0.002
@@ -14,6 +15,7 @@
                        declared: map line count
 
   document restored byte-identical: True
+  artifacts: 90 snapshotted = 88 unchanged + 2 restored + 0 failed
   5 verifiers = 5 OK
   2 of 5 declare their own defect set; 3 were commissioned here for the first time
 
