@@ -70,6 +70,21 @@ ARMS = [
     ("comparator dead (blind to defect)",  dict(comparator_planted=0),             "VOID"),
     ("valid kernel also errored",          dict(valid_exit_estimator=101),         "VOID"),
 ]
+# --- ARM-SET PIN (added after softaudit.py caught this exact hole) ---
+# Without this, DELETING an arm keeps `caught == len(ARMS)` and the check stays
+# green: the harness would certify itself on a shrunken commissioning set.
+# The count AND the names are pinned, so neither deletion nor substitution passes.
+EXPECTED_ARM_NAMES = frozenset({
+    "pyramid actually moved pixels", "typo failed loudly on pyramid too",
+    "switch not readable anywhere", "estimator moved nothing either",
+    "comparator dead (null broken)", "comparator dead (blind to defect)",
+    "valid kernel also errored",
+})
+_names = {a[0] for a in ARMS}
+if len(ARMS) != 7 or _names != EXPECTED_ARM_NAMES:
+    sys.exit("FATAL: commissioning arm set altered. missing=%s unexpected=%s n=%d"
+             % (sorted(EXPECTED_ARM_NAMES - _names), sorted(_names - EXPECTED_ARM_NAMES), len(ARMS)))
+
 caught = 0
 for name, patch, expect in ARMS:
     m2 = copy.deepcopy(M); m2.update(patch)
@@ -82,3 +97,4 @@ print("conclusion-flip arms caught: %d/%d" % (caught, len(ARMS)))
 if caught != len(ARMS):
     sys.exit("FATAL: harness cannot detect a reversed conclusion")
 print("BINDING CHECK PASSED -- the verdict above is pinned to the measurements, not asserted.")
+
