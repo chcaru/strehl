@@ -1354,3 +1354,101 @@ render (14.4, counted); the master **is a different colour** at edges (14.3,
 measured in px); nothing here is a claim that either **is softer**.
 
 clipcheck on all four renders in this section: 0/4 BLOWN, 4 ok, clip 0.00 %.
+
+## 15. Re-fitting `eps_r` (ORCH assignment, this turn)
+
+### 15.1 I refuted two of my own hypotheses before landing anything
+
+**(a) The "1.325x gain" was my instrument.** `chromashift.py` fits a radial slope
+THROUGH THE ORIGIN with no translation term. Its own source says the commissioned
+statistic is something else -- "For planted/null arms report the raw mean
+displacement, not the radial decomposition" -- so every ppm figure this lane has
+quoted came from a statistic that had never been dosed. Worse, the plant arm sets
+`R = np.roll(G)`, an exact copy of green, which DELETES the channel-content
+difference that causes regression dilution. A plant that removes the error
+mechanism cannot measure it; that is why it recovered 1.0003.
+
+**(b) The origin-scaling hypothesis is dead.** `optics.rs::compose` scales about
+the coordinate ORIGIN and states a precondition ("`z` must already be
+plane-centre-relative ... Nothing in this crate calls `compose` yet") that is now
+stale -- `align_cmd.rs` calls it at L1929 and L2095. A violated precondition
+predicts a uniform red offset of `eps * centre` = 2.98 px. Measured on the
+controlled single-frame pair: **0.24 px, ratio 0.081**; on the merge pair, ratio
+**0.010**. The wiring is CORRECT and I was wrong.
+
+With a translation term added (`caorigin.py`, commissioned to separate the two
+terms: planted (700 ppm, 0, 0) recovers (697.9, -0.010, +0.001); planted (0 ppm,
+2.48, 1.65) recovers (-0.3, +2.482, +1.645)), the code's own dose reads
+**701.6 ppm against a nominal 704.5 -- gain 0.996. There is no gain bug.**
+
+### 15.2 Why BUILD-CHROMA's de-attenuation does not transfer
+
+S15 de-attenuates by a planted dose. `lateral.plant_scale` is cubic-spline
+resampling of an already-demosaiced plane, which adds a second interpolation the
+real correction explicitly does not have ("the correction rides the gather's
+existing interpolation and adds no second resampling pass"). Its defence --
+symmetric blur cannot move a correlation peak -- is sound for a CORRELATION
+estimator and does not transfer to a GRADIENT-REGRESSION one. Measured
+(`magdose.py`): a synthetic +704.5 ppm plant reads back at **0.775-0.794** of
+nominal, while the same estimator reads the code's own dose at **0.996**.
+`magtruth.py` proves the plant itself is honest (ratio 0.992-0.993 against
+closed-form geometry at three radii; dose 0 gives exactly 0.0000), so the
+shortfall is the extra blur, not the dose.
+
+**The falsification, and it is a prediction about the product, not about
+coefficients.** S15's de-attenuated median (-658.7) predicts delivered masters
+carry a **-45.8 ppm INWARD** residual. Measured on the six delivered masters:
+**+131.6..+255.5 ppm OUTWARD, 6 of 6.** That is where S15 fails.
+
+### 15.3 The fit (`carefit.py`, `cafitstats.py`)
+
+Native = measured residual - applied push, on the six DELIVERED masters of the
+six stacks blue was fitted on. No new renders required.
+
+| stack | n | R resid | r2 | R native | BC raw | BC de-att | B resid |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| tweezers-cpl | 72 | +162.1 | 0.939 | **-542.4** | -650.8 | -661.8 | -8.7 |
+| bee-3-cpl | 98 | +255.5 | 0.945 | **-449.0** | -519.9 | -593.8 | +48.9 |
+| coffee-bean | 69 | +166.5 | 0.810 | **-538.0** | -653.2 | -655.6 | +12.2 |
+| lavendar-cpl | 58 | +231.9 | 0.966 | **-472.6** | -552.0 | -600.6 | +22.9 |
+| couch-fibers-cpl | 117 | +131.6 | 0.872 | **-572.9** | -654.5 | -700.7 | -28.0 |
+| bee-2-cpl | 100 | +225.6 | 0.916 | **-478.9** | -548.4 | -676.1 | +40.5 |
+
+**Median -508.4 ppm**, mean -509.0, range -449.0..-572.9, mean |LOO error| 71.7.
+Pooled: 514 tiles, mean per-stack r2 0.9080, residual rms 0.0651 sensel,
+permutation p = 0.0005 (0/2000).
+
+**BLUE IS THE CONTROL AND IT IS THE ARGUMENT.** Identical estimator, identical
+tiles, identical masters. Red leaves +192 ppm median (27% of applied) on 6/6 in
+the same direction; blue leaves **+18 ppm median, straddling zero** (8.6% of
+applied, 2 negative / 4 positive). A generic instrument gain error moves both.
+Blue was fitted on 1071 tiles over six stacks; red on 20 ROIs over two.
+
+### 15.4 Stated uncertainty, NOT resolved
+
+On the one subject with both routes (dry-erase), the residual route reads -501.2
+and a direct fit to a CA-off render reads -583.5: **an 82.3 ppm discrepancy I did
+not resolve.** -508.4 is better than -704.5 under either route. It is worse than
+-704.5 only under S15's de-attenuated hypothesis, which 15.2 refutes.
+
+### 15.5 Byte-freezes -- prediction written BEFORE running
+
+CA rides the warp, so the `STREHL_ALIGN=0` row cannot reach it.
+
+* `coffee-bean-20-gate2-unaligned` -- predicted MUST NOT MOVE. **HOLDS**,
+  `88712017FE31362F35FF2FF5D4B98727CDEFCBAC489D9A7827F21EE0154A8620`,
+  reproduced twice. Specificity control intact.
+* `coffee-bean-20-gate2-sidecar` -- predicted MUST MOVE. **MOVED**,
+  `52517FF8...` -> `E600A506F6D05A84A21C9DF93E4EB82AED98C8098EAF956BCF0E25985F3D4CB2`,
+  bytes unchanged at 49450019.
+
+NOT re-baselined: `byte-freezes.tsv` is ORCH's.
+
+### 15.6 The gear question, answered from EXIF
+
+All 33 source stacks read `200.0 mm | FE 100mm F2.8 Macro GM OSS + 2X
+Teleconverter`. **There is no TC-free capture in the corpus**, so the base-lens
+term and the TC term CANNOT be separated -- confirmed, not assumed. The capture
+that would settle it: the same subject at 100 mm with the TC removed, same
+aperture, same CPL. Incidentally the corpus DOES contain f/11 (109/112/113MSDCF),
+which `measured_at` still calls untested.

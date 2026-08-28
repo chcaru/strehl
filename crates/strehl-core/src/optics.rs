@@ -24,17 +24,52 @@
 //! displacement grows linearly with distance from the optical centre and
 //! vanishes at it. One coefficient per channel describes the whole field.
 //!
-//! M107 measured `eps_R = -704.5 ppm` on this path: a radial fit with
-//! `R^2 = 0.9969` over 20 gated ROIs, permutation `p < 0.0005`, residual rms
-//! **0.073 sensel**. The same fit run on a `G1 - G2` null — two greens, same
-//! wavelength, different lattice site, so it carries every instrumental bias and
-//! none of the chromatic signal — gets `R^2 = 0.0524` and **fails** its own
-//! permutation null at `p = 0.7095`. That contrast is what makes the coefficient
-//! a measurement rather than a curve through scatter.
+//! `eps_R = -508.4 ppm` is the median of six per-stack fits measured by
+//! BUILD-CROP on the six DELIVERED masters of the same six stacks blue was
+//! fitted on: 514 gated tiles, mean per-stack `R^2 = 0.9080`, residual rms
+//! **0.0651 sensel**, tile-permutation `p = 0.0005` (0/2000). Per-stack range
+//! -449.0..-572.9 ppm; mean absolute leave-one-out error 71.7 ppm.
 //!
-//! At the CFA half-diagonal of 2112.9 sensels that coefficient is **1.489
-//! sensels, or 2.977 output pixels**, of red-against-green misregistration at
-//! the corner. The owner inspects at 100%.
+//! ## SUPERSEDED -- DO NOT ADOPT: `eps_R = -704.5 ppm` (M107)
+//!
+//! The superseded value was a radial fit with `R^2 = 0.9969` over **20 gated
+//! ROIs on two subjects**, permutation `p < 0.0005`, residual rms 0.073 sensel.
+//! Its internal statistics are excellent and are not the problem; its *support*
+//! is. It over-corrects, and the refutation is a direct measurement of the
+//! shipped product rather than an argument about coefficients:
+//!
+//! * Applying -704.5 ppm leaves red displaced **outward** by +131.6..+255.5 ppm
+//!   on **6 of 6** stacks (median +192), `R^2 = 0.81..0.97`. Red does not merely
+//!   fall short of neutral, it **crosses past it** onto the same side as blue,
+//!   and R and B landing on the same side of an edge is what makes the magenta
+//!   rim visible at 1:1 in `dry-erase-marker-head-cpl`.
+//! * Blue is the control, and it is a strong one: the identical estimator on the
+//!   identical tiles of the identical masters leaves blue at **+18 ppm median,
+//!   straddling zero** (-28.0..+48.9). A generic instrument gain error would
+//!   move both channels. Blue was fitted on 1071 tiles over six stacks; red was
+//!   fitted on 20 ROIs over two. The weaker-evidenced arm is the one that
+//!   disagrees with the corpus.
+//! * The applied 704.5 ppm sat **above the entire 500.9..651.9 ppm range** of
+//!   the six per-stack measurements recorded a few lines below it.
+//!
+//! A DISAGREEMENT RECORDED AS OPEN, NOT RESOLVED. BUILD-CHROMA S15 argues the
+//! per-stack values are attenuated by regression dilution and de-attenuates them
+//! to -593.8..-700.7 (median -658.7), which would leave -704.5 nearly right.
+//! That argument predicts the delivered masters carry a **-45.8 ppm inward**
+//! residual; the measurement above finds **+131.6..+255.5 ppm outward on 6/6**,
+//! which is where it fails. The likely reason is that S15's dose is planted by
+//! cubic-spline resampling an already-demosaiced plane, adding a second
+//! interpolation the real correction explicitly does not have (see "Why applying
+//! it is free" below). Its defence -- "symmetric blur cannot move a correlation
+//! peak" -- is sound for a correlation estimator but does not transfer to a
+//! gradient-regression one, and its own stated criterion of recovery = 1.000 was
+//! not met (0.692..0.938). Measured here: a synthetic plant reads back at 0.775
+//! of nominal, while the SAME estimator reads the code's own +704.5 ppm dose at
+//! **0.996** on a controlled single-frame pair.
+//!
+//! At the CFA half-diagonal of 2112.9 sensels the shipped coefficient is **1.074
+//! sensels, or 2.148 output pixels**, of red-against-green misregistration
+//! removed at the corner. The owner inspects at 100%.
 //!
 //! # Why applying it is free
 //!
@@ -375,11 +410,43 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
     // records what was measured; it is not a licence for every aperture.
     measured_at: Some("f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested"),
     version: 1,
-    // Measured by R6: the 20 gated ROIs span r = 0.208..0.788, six of ten
-    // annuli populated, outer two annuli empty. The corner is a 1.27x linear
-    // extrapolation. Declared, not enforced.
+    // RETAINED CONSERVATIVELY at the superseded fit's support. The M107 fit this
+    // described spanned r = 0.208..0.788 over 20 gated ROIs, six of ten annuli
+    // populated, outer two empty, corner a 1.27x linear extrapolation.
+    //
+    // The BUILD-CROP fit that now sets `eps_r` reaches further -- its 512 px tile
+    // grid tops out at r/corner = 0.916 -- but which annuli are actually
+    // populated depends on each stack's gradient gating and was NOT verified
+    // per-annulus. Over-declaring support is the failure this field exists to
+    // prevent, so the smaller number stands until someone measures the larger.
+    // Declared, not enforced.
     support_r_max: Some(0.788),
-    eps_r: -704.5e-6,
+    // Measured by BUILD-CROP on the six DELIVERED masters of the six stacks
+    // blue was fitted on (tweezers-cpl, bee-3-cpl, coffee-bean, lavendar-cpl,
+    // couch-fibers-cpl, bee-2-cpl): the median of six per-stack fits, 514 gated
+    // tiles, per-stack range -449.0..-572.9 ppm, mean |LOO error| 71.7 ppm.
+    //
+    // SUPERSEDED -- DO NOT ADOPT: -704.5e-6, the M107 20-ROI fit. It leaves red
+    // displaced OUTWARD on 6 of 6 stacks (+131.6..+255.5 ppm, median +192),
+    // i.e. past neutral and onto blue's side, which is the magenta rim visible
+    // at 1:1 in dry-erase-marker-head-cpl. Blue, measured by the same estimator
+    // on the same tiles, straddles zero at +18 ppm median. See the module docs
+    // for the full refutation and for the BUILD-CHROMA S15 disagreement, which
+    // is recorded as OPEN.
+    //
+    // METHOD, and it needs no CA-off renders: every delivered master already
+    // carries a known exactly-applied dose -- the shipping correction itself --
+    // so native = measured_residual - applied_push. The fit is magnification AND
+    // uniform translation JOINTLY; fitting a radial slope through the origin
+    // conflates the two and inflated this coefficient by 32% in an earlier pass
+    // of this same work.
+    //
+    // STATED UNCERTAINTY: on the one subject where both routes were run, the
+    // residual route reads -501.2 ppm and a direct fit to a CA-off render reads
+    // -583.5 ppm, an 82.3 ppm discrepancy that is NOT resolved. -508.4 is better
+    // than -704.5 under either route, and worse than it only under S15's
+    // de-attenuated hypothesis, which the 6/6 outward residual refutes.
+    eps_r: -508.4e-6,
     // MEASURED, where this was `None` until BUILD-CHROMA.
     //
     // +174.4 ppm: the leave-one-out median of six de-attenuated per-stack
@@ -399,11 +466,18 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
     // Unattributed: degenerate with an optical-centre offset, and the same order
     // as the ~0.5 px/axis that CFA co-siting predicts. See the field docs.
     translation: (0.6294, -0.4240),
+    // Red's evidence, RE-MEASURED by BUILD-CROP together with `eps_r`. Both arms
+    // now count gated tiles in `n_regions`, so red's 514 and blue's 1071 are
+    // finally the same kind of number -- unlike the superseded record, where
+    // red's 20 counted M107 ROIs and the two were not comparable as sample
+    // sizes. `r_squared` is the mean of the six per-stack joint fits (range
+    // 0.810-0.966); `permutation_p` is the pooled tile-permutation null, 0 of
+    // 2000 shuffles reaching the observed magnification.
     fit_r: FitStats {
-        r_squared: 0.9969,
+        r_squared: 0.9080,
         permutation_p: 0.0005,
-        residual_rms_sensel: 0.073,
-        n_regions: 20,
+        residual_rms_sensel: 0.0651,
+        n_regions: 514,
     },
     // Blue's evidence, kept separate from red's because it is weaker and saying
     // so is the point. `n_regions` counts gated tiles, not M107 ROIs, so the two
@@ -1158,9 +1232,13 @@ mod tests {
         );
         // The published corner figure, in sensels. Two CFA plane px per sensel
         // is *not* applied here: the fit is in plane px and so is this.
+        //
+        // Was 1.4885 under the superseded -704.5 ppm. The number moved because
+        // the coefficient did; if it moves again without `eps_r` moving, the
+        // geometry has drifted and that is the bug this pin exists to catch.
         assert!(
-            (aberration - 1.4885).abs() < 2e-3,
-            "corner displacement {aberration} should be ~1.489 sensel"
+            (aberration - 1.0742).abs() < 2e-3,
+            "corner displacement {aberration} should be ~1.074 sensel"
         );
     }
 
@@ -1434,8 +1512,11 @@ mod tests {
     /// datum* were not. Given that this term was inverted alongside the radial
     /// one, nothing here would have caught it had it stayed inverted.
     ///
-    /// So this test asserts the literal numbers against their source of truth:
-    /// `e10_transfer.py`'s 3-parameter fit, `eps = -704.5273607382725e-6` and
+    /// So this test asserts the literal numbers against their source of truth.
+    /// For `eps_r` that source is now BUILD-CROP's six-stack fit on the
+    /// delivered masters, median `-508.4e-6`; it was `e10_transfer.py`'s
+    /// 3-parameter fit at `-704.5273607382725e-6`, which is SUPERSEDED and
+    /// documented as such beside the field. The translation is unchanged at
     /// `t = (0.6294433, -0.4240211)` plane px. A profile that drifts from the
     /// fit it claims to record is not a profile.
     #[test]
@@ -1445,8 +1526,8 @@ mod tests {
         // eps_R, in ppm, as fitted. Sign is load-bearing: red is imaged SMALL.
         assert!(p.eps_r < 0.0, "red is under-magnified; eps_r must be negative");
         assert!(
-            (p.eps_r * 1e6 + 704.5).abs() < 0.05,
-            "eps_r is {} ppm; the fit says -704.5 ppm",
+            (p.eps_r * 1e6 + 508.4).abs() < 0.05,
+            "eps_r is {} ppm; the fit says -508.4 ppm",
             p.eps_r * 1e6
         );
 
