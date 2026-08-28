@@ -1377,3 +1377,108 @@ printed a band I was not testing that the corruption was visible. **A
 mutation test that checks only the conclusion under test has the same blind
 spot as the presence-test it is meant to replace.** The scorer now fails an
 arm that corrupts any reported band, not just the one in the headline.
+---
+
+# Addendum J — the premium gauge is blind to bands 1-6
+
+Written in response to ORCH's `averaged` tabulation.
+
+## J.1 First, a correction to something I told ORCH ten minutes ago
+
+I reported that my independent implementation disagreed with his band-0
+figure — 93.4% against his 36.4% on `coffee-bubbles` — and flagged it as a
+discrepancy worth investigating. **It was my defect, and I withdraw the
+number.**
+
+`vd_prem_run.py` prints the fitted noise model, and on this subject it reads
+`read2 = 8413.89, photon_gain = 0.00000`. The variance fit has collapsed to
+pure read noise with no photon term. That puts an enormous constant floor
+under the gate, which is exactly what drives level-0 abstention to 93%.
+**His 36.4% stands; my 93.4% is void on this subject.**
+
+The gap that let it through is inherited and worth fixing wherever this
+harness is reused: the guard is
+
+    if gph < 0:  refuse
+
+which refuses a *negative* photon gain but passes `gph == 0.0`, and zero is
+just as degenerate. A fit that has lost its photon term should be refused, not
+merely one that has gone negative.
+
+**Bands 1-6, however, are independently CONFIRMED.** On real frames I measure
+**0.00% abstention at every level 1 through 6**, against his 0.0-3.1%. That
+finding does not depend on the variance fit in the way band 0 does, and it
+holds. His design guidance is correct: bands 1-6 are the selecting regime.
+
+## J.2 The finding: an arm aimed at bands 1-6 cannot be scored by the premium
+
+ORCH's point 1 says candidate-set control has to act in bands 1-6. That is a
+testable instruction, so I partitioned my recommended arm into the two regimes
+he warned must not be conflated:
+
+- `poolhi1` — pool the focus score at levels **1-6 only**, level 0 untouched
+- `poollo1` — pool the focus score at level **0 only**, levels 1-6 untouched
+
+`coffee-bubbles`, N=19. Commissioning intact: `argmax` = 24.37 against
+V-NEVERWORSE's 24.82 for this subject at this N, 1.8% off.
+
+| arm | premium | vs shipping | 0.20-0.25 band |
+|---|---|---|---|
+| shipping | 23.19 | — | 1.0000 |
+| `argmax` | 24.37 | +5% | 1.0506 |
+| `pool1` (all levels) | 11.89 | **1.95x** | — |
+| **`poolhi1` (levels 1-6)** | **23.36** | **1.00x — nothing** | 0.9757 |
+| **`poollo1` (level 0)** | **11.81** | **1.96x — all of it** | 0.0672 |
+
+**Every bit of the premium reduction comes from level 0. Pooling levels 1-6
+moves the premium by 0.7%, which is noise.**
+
+And `poolhi1` is not inert — it changes the picture, moving the 0.20-0.25
+band to 0.9757. **It changes the merge in exactly the regime ORCH wants
+targeted, and the premium statistic cannot see it.**
+
+## J.3 Why, and what it means for the acceptance criteria
+
+The premium is defined as reconstructed power at **0.30-0.35 cyc/px**. A
+Laplacian level is not a band-pass (Addendum H.6), and level 0 dominates that
+frequency. So the premium is, in effect, **a level-0 statistic**.
+
+Two independent confirmations, on two subjects:
+- `lvl0mean` on 112MSDCF: replacing selection with a plain mean at level 0
+  *alone* collapses the premium from 226.39 to **1.29** — to the floor. Levels
+  1-6 contribute essentially nothing to it.
+- `poolhi1` / `poollo1` on coffee-bubbles, above.
+
+**So two of ORCH's instructions are mutually unsatisfiable as written:**
+
+1. acceptance criterion 1 — "the premium must fall measurably at N=79 against
+   the 240.70 baseline"; and
+2. the new design guidance — "candidate-set control has to act in bands 1-6".
+
+Any arm that acts only in bands 1-6 will score **no effect** on the premium
+gauge, and any arm that scores well on that gauge is, by construction, doing
+its work in band 0. This is not an argument that either instruction is wrong.
+It is that **the gauge cannot adjudicate the target**, and one of the two has
+to give.
+
+This also re-frames facts 1843-1845. The premium — 2.16x/6.79x/24.82x and
+23.24x/80.78x/240.70x — is measured at 0.30-0.35 on the reconstruction, so it
+is a measurement of **level-0 behaviour**. That is precisely the band ORCH's
+own tabulation shows to be atypical: mean 25.8% averaged and a 0.0-72.5%
+spread, against a uniform ~0% in bands 1-6. The premium literature describes
+the one band that does not behave like the others.
+
+## J.4 What I could not do
+
+- **ORCH's point 3 — the N axis — is blocked.** It needs the bundles deleted
+  at 22:48. `coffee-bubbles` at N=19 is the only stack I still hold, so I
+  cannot pre-register or test an N-ordering.
+- **The J.2 partition needs re-running on a subject with a healthy variance
+  fit.** coffee-bubbles' fit is degenerate (J.1), and while the level-0/1-6
+  split is corroborated independently by `lvl0mean` on 112MSDCF, I would not
+  ship this on the degenerate subject alone.
+- **coffee-bubbles sharpness columns are unusable** and I quote none of them
+  except 0.20-0.25. The 0.17-0.20 ratios explode (36.94 for `pool1`) because
+  the subject's boundary is ~0.20, so the noise-corrected denominator is near
+  zero. That is consistent with I.2 and is a property of the subject, not a
+  bug, but it makes ratios in that band meaningless here.

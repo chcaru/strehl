@@ -41,6 +41,13 @@ def main():
     subj = sys.argv[1] if len(sys.argv) > 1 else "112MSDCF"
     ns = [int(x) for x in sys.argv[2].split(",")] if len(sys.argv) > 2 \
         else [19, 39, 79]
+    # Which surface to count on. `twin` is the one the FLOOR is defined on and
+    # is what H.2 needs. `real` is the surface the shipping binary's own
+    # `averaged` log line reports, and is the only one comparable to it: the
+    # twin carries no focus signal, so its coefficients sit at the noise floor
+    # by construction and it necessarily abstains more. Measuring the wrong
+    # one here would manufacture a disagreement with the shipping log.
+    surface = sys.argv[3] if len(sys.argv) > 3 else "twin"
 
     g = load_green(subj)
     n = len(g)
@@ -52,13 +59,12 @@ def main():
                          for _ in range(n)])
     varp = VP.gauss_pyr(var0, 7)
 
-    print("subject %s   abstention measured on the TWIN, which is the "
-          "surface the premium is scored on\n" % subj)
+    print("subject %s   abstention counted on the %s frames\n" % (subj, surface.upper()))
     print("  %3s %6s %9s %9s %9s %9s"
           % ("N", "level", "abstain", "weight", "phi_cum", "floor_pred"))
     for N in ns:
         idx = pick(n, N)
-        st = Stack(twin_all[idx])
+        st = Stack((twin_all if surface == "twin" else g)[idx])
         num = 0.0
         den = 0.0
         for k in range(st.nb):

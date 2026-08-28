@@ -239,6 +239,26 @@ def arm_weights(name, L, floor, p, ctx):
         sq2 = np.maximum(sq2 - kc * L ** 2, 0.0) / (1.0 - kc)
         W2 = weights_from(sq2, floor, p)
         return np.where(live[None], onehot(W, W2.argmax(axis=0)), 0.0)
+    if name.startswith("poolhi"):
+        # Pool the score at levels 1..6 ONLY, leaving level 0 shipping. This
+        # is ORCH's point 1 made falsifiable: if the premium reduction is a
+        # bands-1-6 effect it survives here, and if it was really a band-0
+        # effect this arm does nothing.
+        if k == 0:
+            return W
+        s = float(name[6:])
+        sq2 = np.stack([ndimage.gaussian_filter(sq[i], s) for i in range(n)])
+        return np.where(live[None], onehot(W, weights_from(sq2, floor, p)
+                                           .argmax(axis=0)), 0.0)
+    if name.startswith("poollo"):
+        # The complement: pool at level 0 ONLY. The two arms partition pool1's
+        # effect between the two regimes ORCH warned must not be conflated.
+        if k != 0:
+            return W
+        s = float(name[6:])
+        sq2 = np.stack([ndimage.gaussian_filter(sq[i], s) for i in range(n)])
+        return np.where(live[None], onehot(W, weights_from(sq2, floor, p)
+                                           .argmax(axis=0)), 0.0)
     if name.startswith("pool"):
         s = float(name[4:])
         sq2 = np.stack([ndimage.gaussian_filter(sq[i], s) for i in range(n)])
