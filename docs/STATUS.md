@@ -15,7 +15,8 @@ marked as unmeasured.
 | Property | Status | Evidence |
 | --- | --- | --- |
 | **Speed** | **SOTA.** 22.58× `enfuse`; N=299 in 233 s | measured end to end |
-| **Visual quality** | **24 of 26 masters clean to the eye at 1:1** | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
+| **Corpus coverage** | **33 of 33 subjects rendered** (26 + the 7 new ones); 33 distinct output hashes | `render7.ps1`, `MANIFEST-ORCH7.txt` |
+| **Visual quality** | **24 of 26 masters clean to the eye at 1:1**; the 7 new ones are rendered and 3 spot-viewed, none instrumented | full-corpus survey, `orch_corpuseye.py`, every sheet viewed |
 | **Halo** (shipping masters, 2–120 px) | **0 demonstrated on any subject** — but only 11 of 26 are actually *clean*; 4 blind + 7 unmeasurable remain UNSCORED, which is not the same as clean | facts 1851–1855, 1884 |
 | **Rim** (shipping masters, ±12 px) | **13 FAIL — a disjoint scale the halo work never reached; unscored by a second lane** | fact 1881 |
 | **Aura** (estimator vs pyramid) | estimator measures deeper in **17 of 17** conditioned readings; magnitude unknown | fact 1871 |
@@ -277,8 +278,16 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 - **The seven new stacks delivered 2026-08-27** — `pottery-art-glazed-cpl`,
   `maldon-sea-salt-cpl`, `chia-seeds-cpl`, `medication-pill-cpl`, `duck-tape-side-layers-cpl`,
   `dime-flat-narrow-slices-cpl`, `unpopped-popcorn-kernels-cpl`, 1,292 frames total, at lower
-  ISO and focus-step 1 / 5 / 7 against the previous max of 10 — are **not yet processed**.
-  They matter more than their count suggests:
+  ISO and focus-step 1 / 5 / 7 against the previous max of 10 — are now **rendered but not yet
+  measured**. All seven produced masters in 12.4 min total wall clock on the shipping binary
+  (`render7.ps1`, 63.9–162.7 s each, 33 distinct SHA256s over 33 subjects), and three were
+  viewed at 1:1 by the orchestrator: `maldon-sea-salt-cpl` resolves crystal facets and
+  micro-fractures, `duck-tape-side-layers-cpl` resolves individual scrim filaments and thin
+  loose fibres crossing adhesive ridges **with no halo at any fibre boundary**, which is the
+  occlusion case the halo work never had a clean subject for. `unpopped-popcorn-kernels-cpl`
+  is softer on the falling-away left shoulder — unattributed between capture coverage and
+  merge. **No instrument has been run on any of the seven.** They matter more than their count
+  suggests:
   - **Lower ISO should widen band qualification.** Only 2 of 26 current subjects qualify at
     0.30–0.35, which is the single biggest constraint on measuring sharpness at all.
   - **Thinner slices are the direct test of the selection premium.** Finer focus sampling puts
@@ -286,10 +295,37 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
     is measured to multiply noise 24–240×.
   - **Step 1 vs 5 vs 7 vs 10 on the same rig is a step-size ladder**, which is the experiment
     the capture advisor needs and which nobody has been able to run.
+  - **`duck-tape-side-layers-cpl` is the corpus's first clean occlusion subject** — thin dark
+    fibres suspended over a textured mid-grey ground is exactly the two-layer veiling geometry
+    the occlusion work is aimed at, and it is now available to point an instrument at.
 
 ---
 
 ## 5. Landmines for whoever picks this up
+
+- **A lane's work list is part of its calibration, and this tree has been bitten three
+  times.** DELIVER-V6 rendered 26 of 33 subjects and reported success, because its manifest
+  header shows it enumerated `from C:\dev\strehl-out\ORCH-FAITHFUL\faithful` — an **output**
+  tree — instead of `D:\personal\macro`, the read-only source. The seven subjects the owner
+  had just added were structurally invisible and nothing errored: listing a directory that
+  exists and holds 26 valid entries succeeds, and a count of 26 is indistinguishable from a
+  correct count of 26 unless you already know the answer is 33. Prior two occurrences:
+  `SEAL_DIR` pointing at the superseded `acceptance/SHIP-V4`, and `rimaxis.py:52` reading a
+  scratch tree a later purge had removed. **Enumerate from the declared source of truth and
+  print the enumeration root next to the count**, as `render7.ps1` does, so the count can be
+  audited against its provenance in one line. Fact 1941.
+- **Heavy scratch has been purged, and the hashes were banked first.** ~14.6 GB of freeze
+  output under `C:\dev\strehl-out\acceptance` and 5.0 GB under `ORCH-FAITHFUL` are gone. Their
+  SHA256s, byte sizes and full provenance records (binary path, binary hash, git commit, pin,
+  source dir, frame count, backend) live in
+  `experiments/ORCH-drift-check/acceptance-hash-index.txt` and
+  `experiments/ORCH-drift-check/purged/*-index.txt`. A byte-freeze result *is* a SHA256, so
+  those indexes preserve the measurement; the TIFFs were only its carrier. **Do not purge
+  anything else without banking it the same way** — `V-RIM` published a 5-of-14 rim result
+  that is now permanently unreproducible because its binary, scratch tree and JSON were all
+  deleted before its numbers were written down. `bank_purge.ps1` enforces the ordering: it
+  refuses to delete unless the root avoids every protected path *and* its index is committed
+  at HEAD, and both refusals are commissioned at rc=1.
 
 - **`experiments/V-KILLB0/verdict.py` had no pass/fail channel and now has one, commissioned
   4/4.** Before the fix it printed `FAIL - the check is decorative` and exited 0. If you find
