@@ -789,14 +789,3 @@ backends, so any unintended change to the merge is caught as a hash movement.
   declined a real file, because all corpus stacks are the same rig.
 - **Rail capture is deferred** — no rail hardware to test against, and an untested geometry
   model would violate rule 8.
-
-**Documentation defects.** Writing this document surfaced ten stale comments and counts:
-a promised `NoiseModel::estimated` that was never written; three "not wired" headers that
-outlived their wiring; a test doc describing the opt-in demosaic arm as the shipping
-default; a defect corrector documented as on by default when it ships off; a fitted
-intercept of 1.08 attributed to a constant fourteen times its value; and a refused-flag
-count that disagreed three ways between `README.md`, `--help` and the table that actually
-decides the refusals. **All ten are fixed at source as of this revision**, each corrected
-in place rather than silently overwritten, so the retraction sits where the false claim
-was. The project's own `outlier.rs` header states the principle they violated: *"A stale
-header is not a cosmetic defect; it is the part of the file a reader hits first."*
