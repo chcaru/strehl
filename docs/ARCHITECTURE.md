@@ -94,9 +94,6 @@ row-at-a-time specifically so the CLI can choose how to parallelise it
 (`demosaic.rs:334-337`). Grepping `par_iter|par_chunks` in `strehl-core/src` matches only
 two doc comments.
 
-> **`AGENTS.md`'s Layout table is stale** — it lists three crates and omits
-> `strehl-plugin/`.
-
 ---
 
 ## 3. The three invariants
@@ -119,9 +116,10 @@ constructed once, in `profile.rs`, and passed by value.
 
 > Rule 3's enforcement is **by convention and single-constructor discipline, not by the
 > compiler** — `PlaneNoise`'s fields are `pub` (`noise.rs:86-93`) and no test forbids a
-> stage from building its own. Relatedly, `noise.rs:51` promises a
-> `NoiseModel::estimated` against which profiled bodies are validated. **No such function
-> exists.** That half of rule 3 is currently unimplemented.
+> stage from building its own. And the rule has a second half that is **unimplemented**:
+> there is no runtime noise estimator, so nothing cross-checks a profiled body against
+> what its own frames actually show. The shipped coefficients are a consistency check
+> against the camera's own white level, not a photon-transfer measurement.
 
 ---
 
@@ -199,10 +197,14 @@ that worked. **Ten** flags are refused under `Pyramid`:
 `--pyramid-exponent`, `--pyramid-sharpen`, `--pyramid-select`, `--pyramid-base`,
 `--confidence-map`.
 
-> **Documentation defect.** `README.md:34` says "nine"; the `--help` prose at
-> `main.rs:144-145` enumerates **eight** and its migration note claims "0 of 8 fail"; the
-> code refuses **ten**. The self-check test only couples the help text to its own count,
-> so it cannot catch drift against the table.
+> `README.md`, the `--help` prose and the refusal table now all say **ten**. They
+> disagreed — nine, eight and ten respectively — and the self-check test at `main.rs:1609`
+> could not catch it, because it couples the help text only to *its own* count and never
+> to `wrong_backend`, which it cannot reach: that table is a local built from parsed
+> arguments inside `run`. Two flags were added to the table, the help's list and the
+> help's count both stayed at eight, the two agreed with each other, and the test stayed
+> green. A coupling between two copies of a claim keeps them consistent; it cannot keep
+> them true.
 
 ### 5a. The pyramid backend — DEFAULT
 
@@ -381,10 +383,6 @@ the inverted version shipped once and made the aberration 7.2% worse, where the 
 direction removes 94.3%. Out-of-sample leave-one-out transfer is 93.7%/93.3%, taking
 corner residual from 1.519 px to 0.071 px.
 
-> **`optics.rs:113-121` still says "This module is not wired to anything / Nothing calls
-> it."** That is false and has been for some time. The same file records that a previous
-> stale "nobody calls this" already cost one investigation.
-
 ### Sensor defects — OPT-IN, off by default
 
 Two defect classes with two different arithmetics: **hot** pixels are additive
@@ -457,12 +455,11 @@ subjects against an ideal of 1.60, and gain caps of 1.4, 1.7 and 2.5 produce
 **byte-identical output** because the cap never binds — the calibrated noise stops it
 first. There is no ringing "because it is too weak to ring."
 
-> **`restore.rs:4` says "BUILT, MEASURED, and NOT WIRED IN".** The last clause is false:
-> `STREHL_RESTORE` is read on the estimator path at `merge_cmd.rs:4452` **and on the
-> default pyramid path at `merge_cmd.rs:5765`**. The correct label is OPT-IN. The file
-> itself records an orchestrator setting `STREHL_RESTORE=1`, seeing byte-identical output,
-> and wrongly concluding the stage was unreachable — `1` is the documented no-op, because
-> the value *is* the gain cap.
+> **`STREHL_RESTORE` is read on both backends** — the estimator path at
+> `merge_cmd.rs:4452` and the default pyramid path at `merge_cmd.rs:5765` — so the label
+> is OPT-IN, not unreachable. The file records how easily that is misread: an orchestrator
+> set `STREHL_RESTORE=1`, saw byte-identical output, and concluded the stage was never
+> wired in. `1` is the documented no-op, because the value *is* the gain cap.
 
 ---
 
@@ -574,13 +571,11 @@ This was turned into a dose-response by sweeping the radius on `bee-3-cpl`:
 | rim w50, px | 8.75 | 8.75 | 9.50 | 10.75 | 19.00 | 25.75 |
 | rim cutoff, px | 9.25 | 9.75 | 10.75 | 14.00 | 21.25 | 29.00 |
 
-Over w9–w26 the cutoff is linear in radius with slope **1.07** and intercept **1.08**.
-The cutoff tracks the window radius 1:1 over a 3× range. That is about as clean a
-mechanism identification as this codebase contains.
-
-> The source comment at `edgeaware.rs:29-31` attributes that 1.08 intercept to
-> `SUPPORT_RADIUS`, which is 14 and cannot be the intercept of a line fitted at 1.08;
-> `SOBEL_RADIUS` is 1 and fits. Flagged, not fixed.
+Over w9–w26 the cutoff is linear in radius with slope **1.07** and intercept **1.08** —
+the cutoff tracks the window radius 1:1 over a 3× range, offset by `SOBEL_RADIUS`, which
+is 1. Evaluated at the shipped `WINDOW_RADIUS` of 13 that line lands on the focus
+operator's own `SUPPORT_RADIUS`. That is about as clean a mechanism identification as
+this codebase contains.
 
 The fix (`edgeaware.rs`) is three cooperating pieces:
 
@@ -752,7 +747,7 @@ backends, so any unintended change to the merge is caught as a hash movement.
 | `color.rs`, `highlight.rs`, `clip.rs` | **DEFAULT** in the writer | Roll-off is identity below the knee |
 | `noise.rs`, `profile.rs` | **DEFAULT** | Injected once; PRNU term measured but off |
 | `defect_map.rs` | **OPT-IN**, off | Dust arm real; hot arm a measured null on this body |
-| `restore.rs` | **OPT-IN**, off | Header says "not wired" — stale |
+| `restore.rs` | **OPT-IN**, off | `STREHL_RESTORE` carries the gain cap; read on both backends |
 | `merge.rs` (estimation, `n_eff`, veil) | **ESTIMATOR-ONLY** | Where the thesis is literally implemented |
 | `focus.rs`, `edgeaware.rs` | **ESTIMATOR-ONLY** | Absent from the default backend entirely |
 | `photometric.rs` | **ESTIMATOR-ONLY** | `--photometric` REFUSED on default |
@@ -795,27 +790,13 @@ backends, so any unintended change to the merge is caught as a hash movement.
 - **Rail capture is deferred** — no rail hardware to test against, and an untested geometry
   model would violate rule 8.
 
-**Documentation defects found while writing this document.** Items 1–5 and 8 are stale
-comments that survived the code they described; 6 and 7 are stale documentation. None is
-fixed here — this document records them, it does not repair them:
-
-1. `noise.rs:51` promises `NoiseModel::estimated`. **It does not exist.**
-2. `optics.rs:113-121` says the module is not wired to anything. **It is, and it is
-   default-on.**
-3. `restore.rs:4` says "BUILT, MEASURED, and NOT WIRED IN". The last clause is false — it
-   is **opt-in via `STREHL_RESTORE`, read on both backends**.
-4. `softgate.rs:83` says "**Opt-in and not wired.**" The second clause is stale:
-   `Estimator::new` resolves the kernel from the environment and the estimator's
-   byte-freeze hash moves when it is set. (The sentence that follows it — "nothing in this
-   module is reachable from the default merge path" — is **true**, and this document
-   asserts the same thing.)
-5. `demosaic.rs:541-548` describes a default that is not the shipping default.
-6. `README.md:34` says nine refused flags; `--help` says eight; the code refuses **ten**.
-7. `AGENTS.md`'s Layout table omits `strehl-plugin/`.
-8. `merge_cmd.rs:5396` says defect correction is "**On by default**" on the pyramid path,
-   while `defect_request_from_env` returns `Off` when `STREHL_DEFECT` is unset and
-   `stack.rs:820` says "Why this is **OFF** by default". The code is off; the comment on
-   the default path is stale.
-
-The project's own `outlier.rs` header states the principle these violate: *"A stale header
-is not a cosmetic defect; it is the part of the file a reader hits first."*
+**Documentation defects.** Writing this document surfaced ten stale comments and counts:
+a promised `NoiseModel::estimated` that was never written; three "not wired" headers that
+outlived their wiring; a test doc describing the opt-in demosaic arm as the shipping
+default; a defect corrector documented as on by default when it ships off; a fitted
+intercept of 1.08 attributed to a constant fourteen times its value; and a refused-flag
+count that disagreed three ways between `README.md`, `--help` and the table that actually
+decides the refusals. **All ten are fixed at source as of this revision**, each corrected
+in place rather than silently overwritten, so the retraction sits where the false claim
+was. The project's own `outlier.rs` header states the principle they violated: *"A stale
+header is not a cosmetic defect; it is the part of the file a reader hits first."*

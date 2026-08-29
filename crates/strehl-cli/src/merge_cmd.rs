@@ -5393,10 +5393,15 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // ---- sensor defect correction ----------------------------------------
     //
     // Built once here and borrowed by the fold and by both confidence passes,
-    // so all three see the identical frames. **On by default**, and safe to be
-    // on by default only because `defect_preflight` requires the frames
-    // themselves to show the darkening before any site is corrected -- see
-    // `stack::defect_request_from_env` for the staleness argument this answers.
+    // so all three see the identical frames. **Off by default** --
+    // `defect_request_from_env` returns `Off` when `STREHL_DEFECT` is unset --
+    // because two lanes hunting the same mote disagree by 17x and the
+    // contradiction is unadjudicated; see `stack::defect_request_from_env`,
+    // which carries that argument in full. When it IS switched on,
+    // `defect_preflight` still requires the frames themselves to show the
+    // darkening before any site is corrected, which is the staleness argument
+    // this answers. This comment read "**On by default**, and safe to be on by
+    // default", contradicting the function it cites.
     let defect_request = crate::stack::defect_request_from_env()?;
     let defect_plan = crate::stack::defect_preflight(&defect_request, &noise, &paths)?;
     let defect_tally = crate::stack::DefectTally::default();

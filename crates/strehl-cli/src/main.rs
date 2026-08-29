@@ -141,18 +141,19 @@ enum Command {
     /// edit the command line; the flag wins. An unrecognised value in either
     /// channel is an ERROR, never a silent fall back to the other merge.
     ///
-    /// The estimator-only flags -- --gate, --target-n-eff, --index-map,
-    /// --n-eff-map, --photometric, --stats, --flat-roi, --detail-roi -- are
-    /// REFUSED under the pyramid backend rather than accepted and ignored. A
-    /// flag that parses and does nothing is indistinguishable from one that
-    /// works, and this project has shipped that failure before.
+    /// The estimator-only flags -- --gate, --focus, --target-n-eff,
+    /// --index-map, --n-eff-map, --photometric, --stats, --stats-placebo,
+    /// --flat-roi, --detail-roi -- are REFUSED under the pyramid backend rather
+    /// than accepted and ignored. A flag that parses and does nothing is
+    /// indistinguishable from one that works, and this project has shipped that
+    /// failure before.
     ///
     /// NOTE, now that the pyramid is the default: a harness that passes one of
     /// those flags WITHOUT also passing `--merge estimator` still RUNS, and
     /// gets the ESTIMATOR. The backend is inferred from the flags when `--merge`
     /// is absent, so naming an estimator parameter selects the estimator rather
     /// than colliding with a backend the caller never chose. Exit codes are
-    /// unchanged: measured, 0 of 8 fail.
+    /// unchanged: measured, 0 of 10 fail.
     ///
     /// The consequence is the one worth stating plainly. Those call lines are
     /// not broken, but they are no longer on the merge this tool now defaults
@@ -1593,18 +1594,49 @@ mod tests {
         );
     }
 
-    /// The NOTE about pre-flip command lines makes a MEASURED claim ("0 of 8
+    /// The NOTE about pre-flip command lines makes a MEASURED claim ("0 of 10
     /// fail") about a list it also enumerates. Those two must not drift apart.
     ///
     /// The claim was false once already: before backend inference landed, the
     /// NOTE said those flags "now fails where it used to run", and after
     /// inference every one of them runs and selects the estimator. Measured
-    /// 0 of 8 failing. Prose that describes the tool's exit codes is as
+    /// 0 of 10 failing. Prose that describes the tool's exit codes is as
     /// load-bearing as prose that names a default, so it gets the same
     /// treatment: coupled to something that changes when the truth changes.
     ///
-    /// Adding a ninth estimator-only flag now fails this test until the
+    /// Adding an eleventh estimator-only flag now fails this test until the
     /// measured count is re-taken, which is the point.
+    ///
+    /// # What this test does NOT check, learned the hard way
+    ///
+    /// It compares the help's enumeration to the help's own count. It does not
+    /// compare either against `wrong_backend`, the table that actually decides
+    /// the refusals -- and cannot, because that table is a local built from the
+    /// parsed arguments inside `run`, unreachable from here. So when `--focus`
+    /// and `--stats-placebo` were added to the table, the enumeration stayed at
+    /// eight, the count stayed at eight, the two agreed with each other, and
+    /// this test stayed GREEN while the help under-reported the refusals by two.
+    /// Both were restored to ten by counting the table by hand. A coupling that
+    /// only ties two copies of a claim together keeps them consistent; it
+    /// cannot keep them true.
+    ///
+    /// # How the count of ten was re-measured
+    ///
+    /// `C:\dev\strehl-out\ORCH-docfix\measure_refusals2.ps1`, over 4 frames of
+    /// `coffee-bean`, in three arms: a BASELINE (`--merge estimator`, no
+    /// estimator-only flag) proving the scene stacks at all; the CLAIM (each
+    /// flag alone, no `--merge`), measured 0 of 10 failing and 10 of 10
+    /// inferring the estimator; and a POSITIVE CONTROL (each flag with
+    /// `--merge pyramid`), measured 10 of 10 refused. The control is not
+    /// decoration -- the harness's first two revisions reported "10 of 10 fail"
+    /// and then "0 of 10 refused", both of which were harness defects rather
+    /// than binary behaviour, and only the control distinguished them.
+    ///
+    /// One nuance the measurement exposed: `--stats-placebo` cannot be passed
+    /// alone at all. Clap requires `--stats` alongside it, so by itself it
+    /// exits 2 during argument parsing, before any backend is chosen. It is
+    /// measured with that prerequisite. The NOTE's claim is about backend
+    /// refusals and holds; a caller who passes it bare meets a different error.
     #[test]
     fn the_migration_note_counts_the_flags_it_enumerates() {
         // The help is hard-wrapped, so collapse before matching: every one of
@@ -1616,7 +1648,7 @@ mod tests {
             !flat.contains("now fails where it used to run"),
             "`stack --help` still claims the estimator-only flags fail without \
              `--merge estimator`. Backend inference makes them run and select \
-             the estimator; measured 0 of 8 failing."
+             the estimator; measured 0 of 10 failing."
         );
 
         let list = flat

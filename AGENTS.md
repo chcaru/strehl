@@ -946,6 +946,7 @@ certification is the shared-tree hazard rule 42 exists for.
 | --- | --- |
 | `crates/strehl-core/` | Types, noise model, tile views, geometry |
 | `crates/strehl-raw/` | RAW decode behind `rawler` |
+| `crates/strehl-plugin/` | Contribution surface for focus measures; the host measures each entrant's noise scale at registration |
 | `crates/strehl-cli/` | The binary |
 | `docs/captures-needed.md` | **Data owed by the owner.** Read before asking for captures. |
 | `docs/research/` | Research corpus and decision record |

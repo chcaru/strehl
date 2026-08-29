@@ -538,14 +538,20 @@ mod tests {
         m
     }
 
-    /// The reason the default changed, asserted rather than asserted-about.
+    /// What the directional arm buys, asserted rather than asserted-about.
     ///
     /// A horizontal neutral grating is the case where the vertical estimate is
     /// exact and the horizontal one is attenuated. Malvar averages them and
     /// loses amplitude; the directional green picks the exact one. Two claims
-    /// are pinned here: that the default recovers materially more amplitude
-    /// than Malvar at the frequency the loss was priced at, and that Malvar's
-    /// own loss is the ~23% that priced it.
+    /// are pinned here: that the directional arm recovers materially more
+    /// amplitude than Malvar at the frequency the loss was priced at, and that
+    /// Malvar's own loss is the ~23% that priced it.
+    ///
+    /// This doc called the directional arm "the default" and named itself "the
+    /// reason the default changed". It is not the default: Malvar ships, and
+    /// directional is the opt-in arm. What the test pins is the size of the
+    /// prize, which is an argument for changing the default and not a record
+    /// that it changed.
     #[test]
     fn directional_green_recovers_the_amplitude_malvar_averages_away() {
         let (w, h) = (64usize, 64usize);

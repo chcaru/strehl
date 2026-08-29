@@ -81,8 +81,13 @@
 //!
 //! # Status
 //!
-//! **Opt-in and not wired.** Nothing in this module is reachable from the
-//! default merge path, and building it changes no output byte. The boolean gate
+//! **Opt-in.** `Estimator::new` resolves `SOFT_GATE_ENV` (`merge.rs:1454`), so
+//! this module is reachable on `--merge estimator` and the estimator's own
+//! byte-freeze moves when it is set. What remains true, and is the load-bearing
+//! half of this paragraph, is that nothing in this module is reachable from the
+//! **default** merge path: the pyramid never constructs an `Estimator`, so
+//! building it changes no shipped output byte. The claim "and not wired"
+//! outlived the estimator wiring and is retracted here. The boolean gate
 //! remains the default, so no `stack`/`merge` byte-freeze moves, `DEFAULT_GATE`
 //! needs no re-solve, and fact 19's `0.534x` continues to describe the shipped
 //! merge. `docs/research/M111-waxy-blobs.md` section 15 specifies the

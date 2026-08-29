@@ -41,15 +41,25 @@
 //! is which and why, and for the byte-identity proof that turning this on by
 //! default is a one-line change and turning it off changes nothing.
 //!
-//! # Provenance, and why a runtime estimator exists
+//! # Provenance, and why a runtime estimator is needed
 //!
 //! The A7C II coefficients were originally inferred by reproducing the camera's
 //! own white level to 0.23%. That is a consistency check on one relation, **not
 //! a photon-transfer measurement**. A wrong noise floor does not raise an error;
 //! it silently mis-gates the merge and quietly degrades the output.
 //!
-//! So [`NoiseModel::estimated`] exists on the v1 path, not as a future
-//! nicety, and profiled bodies are validated against it.
+//! So a runtime estimator belongs on the v1 path, not on a list of future
+//! niceties, and a profiled body should be validated against what its own
+//! frames actually show.
+//!
+//! **It does not exist.** This paragraph read "So `NoiseModel::estimated`
+//! exists on the v1 path ... and profiled bodies are validated against it",
+//! naming a function that was never written. There is no runtime estimator and
+//! nothing cross-checks a profiled body against a measured one. [`Provenance`]
+//! recording which of `Profile`, `Measured` or `Fallback` a model came from is
+//! the whole of the safeguard today, and it labels the gap rather than closing
+//! it. Stated here as an open gap because a promise in the present tense reads
+//! as a shipped feature to everyone who did not write it.
 
 use crate::CfaPlane;
 

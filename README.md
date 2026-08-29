@@ -31,7 +31,7 @@ diffraction-limited ideal.
 > **"currently exits rc=1 out of the box"**; that is now false and is retracted —
 > see the correction below.
 > It also claimed "per-pixel confidence as outputs": the only per-pixel trust
-> artifact in the tree is `--n-eff-map`, which is one of nine flags the CLI
+> artifact in the tree is `--n-eff-map`, which is one of ten flags the CLI
 > refuses on the default backend. The default emits an image and nothing else.
 > Closing that is the top build priority; see the comparison table below.
 >

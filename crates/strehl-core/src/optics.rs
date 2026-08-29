@@ -110,12 +110,26 @@
 //! radial coefficient is lateral CA; the translation may be lattice, may be
 //! optical, and this instrument cannot say which.
 //!
-//! # This module is not wired to anything
+//! # How this module is wired
 //!
-//! Nothing calls it. It is a tested unit awaiting a separate wiring commit, and
-//! the correction is **opt-in by construction**: the entry point takes an
-//! [`Option`], and [`None`] is a silent, exact no-op. The default linear render
-//! path is byte-frozen, and a profile that is never supplied cannot move it.
+//! [`OpticalProfile::compose`] folds the correction into the registration
+//! similarity, so a corrected frame is resampled exactly once rather than
+//! twice. It has two call sites in the shipping binary, both in warp
+//! application: `align_cmd.rs:1929` in `warp_frame_in_place_plane` and
+//! `align_cmd.rs:2095` in `warp_frame_in_place_fullres`. The correction is
+//! therefore reachable only where a warp is applied, which is why the
+//! `STREHL_ALIGN=0` byte-freeze row is invariant to it.
+//!
+//! It is **on by default for a capture whose gear matches a profile**, resolved
+//! in one place by [`resolve_for_capture`], and off for everything else. A
+//! capture the library does not recognise still gets [`None`], which is a
+//! silent, exact no-op. `STREHL_FIX_CA=off` forces it off regardless.
+//!
+//! This heading read "This module is not wired to anything / Nothing calls it"
+//! for some time after the wiring landed. It is corrected in place rather than
+//! quietly deleted because a stale "nobody calls this" in this very file
+//! already cost one investigation, and the second-cheapest way to prevent the
+//! third is to leave the correction where the claim was.
 
 use crate::align::{Cx, Similarity};
 

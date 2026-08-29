@@ -1,7 +1,14 @@
 //! Undo the resampling kernel — a single-image Wiener restoration whose `H` is
 //! **our own interpolator**, not a model of a lens.
 //!
-//! # Status: BUILT, MEASURED, and NOT WIRED IN. Read §"The verdict" first.
+//! # Status: BUILT, MEASURED, and OPT-IN. Read §"The verdict" first.
+//!
+//! Reachable on **both** merge backends through `STREHL_RESTORE`, which carries
+//! the gain cap: the estimator reads it at `merge_cmd.rs:4452` and the default
+//! pyramid path at `merge_cmd.rs:5765`. Unset means off, so no shipped byte
+//! moves without it. This line read "NOT WIRED IN" after both call sites
+//! existed; the verdict below is unaffected, because being reachable is not the
+//! same as being recommended.
 //!
 //! # What this is for
 //!

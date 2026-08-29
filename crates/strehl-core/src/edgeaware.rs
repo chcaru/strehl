@@ -27,9 +27,19 @@
 //!
 //! Over `w9..w26`, where the instrument is clear of its own transition
 //! exclusion, the cutoff is linear in the radius with slope **1.07** and
-//! intercept **1.08** — that is `SOBEL_RADIUS + WINDOW_RADIUS`, the focus
-//! operator's own [`SUPPORT_RADIUS`](crate::focus::SUPPORT_RADIUS), 1:1 over a
-//! 3x range. The rim is the window.
+//! intercept **1.08** — that is, the rim runs one window radius out plus
+//! [`SOBEL_RADIUS`](crate::focus::SOBEL_RADIUS), which is 1, 1:1 over a 3x
+//! range. The rim is the window.
+//!
+//! Read the two coefficients separately. The **slope** near 1 is the window
+//! radius; the **intercept** near 1 is `SOBEL_RADIUS`. Evaluated at the shipped
+//! `WINDOW_RADIUS` of 13 the line lands on the operator's own
+//! [`SUPPORT_RADIUS`](crate::focus::SUPPORT_RADIUS) — which is what makes the
+//! result mean something — but this passage read "intercept **1.08** — that is
+//! `SOBEL_RADIUS + WINDOW_RADIUS`, the focus operator's own `SUPPORT_RADIUS`",
+//! attributing the intercept to a sum that equals 14. A line fitted with an
+//! intercept of 1.08 cannot have an intercept of 14, so the attribution was
+//! arithmetically impossible as written, whatever the fit itself showed.
 //!
 //! # Why the guide is elected at a NARROW radius
 //!
