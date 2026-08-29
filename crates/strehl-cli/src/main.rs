@@ -1622,15 +1622,21 @@ mod tests {
     ///
     /// # How the count of ten was re-measured
     ///
-    /// `C:\dev\strehl-out\ORCH-docfix\measure_refusals2.ps1`, over 4 frames of
-    /// `coffee-bean`, in three arms: a BASELINE (`--merge estimator`, no
-    /// estimator-only flag) proving the scene stacks at all; the CLAIM (each
-    /// flag alone, no `--merge`), measured 0 of 10 failing and 10 of 10
-    /// inferring the estimator; and a POSITIVE CONTROL (each flag with
-    /// `--merge pyramid`), measured 10 of 10 refused. The control is not
-    /// decoration -- the harness's first two revisions reported "10 of 10 fail"
-    /// and then "0 of 10 refused", both of which were harness defects rather
-    /// than binary behaviour, and only the control distinguished them.
+    /// `scripts/measure-refusal-flags.ps1`, over 4 frames of `coffee-bean`, in
+    /// three arms: a BASELINE (`--merge estimator`, no estimator-only flag)
+    /// proving the scene stacks at all; the CLAIM (each flag alone, no
+    /// `--merge`), measured 0 of 10 failing and 10 of 10 inferring the
+    /// estimator; and a POSITIVE CONTROL (each flag with `--merge pyramid`),
+    /// measured 10 of 10 refused. The control is not decoration -- the
+    /// harness's first two revisions reported "10 of 10 fail" and then "0 of 10
+    /// refused", both of which were harness defects rather than binary
+    /// behaviour, and only the control distinguished them.
+    ///
+    /// That script lives IN THIS REPOSITORY on purpose. This message used to
+    /// send the reader to `C:\dev\strehl-out\BUILD-WIRE\notecheck.ps1`, which
+    /// no longer exists -- a citation to a scratch directory rots the moment
+    /// the directory is cleaned up, and then the instruction for re-taking the
+    /// measurement is itself the stale documentation it was meant to prevent.
     ///
     /// One nuance the measurement exposed: `--stats-placebo` cannot be passed
     /// alone at all. Clap requires `--stats` alongside it, so by itself it
@@ -1669,7 +1675,7 @@ mod tests {
             enumerated.to_string(),
             "`stack --help` enumerates {} estimator-only flags but reports the \
              measurement over {}. Re-run \
-             C:\\dev\\strehl-out\\BUILD-WIRE\\notecheck.ps1 and update both.",
+             scripts/measure-refusal-flags.ps1 and update both.",
             enumerated,
             claimed,
         );
