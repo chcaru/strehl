@@ -1,0 +1,128 @@
+S0  exact-MTF code vs m5_lib.mtf_diffraction at W20=0
+============================================================================
+  rms over s in [0,0.95] = 7.482e-05  -> PASS
+
+  where the OTF first changes sign, from the exact pupil
+    W20 = 0.00  first null at s = none in band
+    W20 = 0.01  first null at s = none in band
+    W20 = 0.05  first null at s = none in band
+    W20 = 0.10  first null at s = none in band
+    W20 = 0.15  first null at s = none in band
+    W20 = 0.25  first null at s = none in band
+    W20 = 0.40  first null at s = none in band
+    W20 = 0.60  first null at s = none in band
+    W20 = 1.00  first null at s = 0.194
+  the fitted model is monotone and has no nulls, so it can only
+  represent W20 in [0.0, 0.01, 0.05, 0.1, 0.15, 0.25, 0.4, 0.6]; the rest are printed but excluded
+  from S2p by this criterion, which was computed from the optics and
+  not from where the data stopped cooperating.
+
+  12 in-band ROIs (f/14, f/18)
+
+fitted B against applied defocus
+============================================================================
+     ap  ROI  seeded B    0.00    0.01    0.05    0.10    0.15    0.25    0.40    0.60    1.00
+    f14    0    2.1732  2.1735  2.1733  2.1689  2.1546  2.1291  2.0273  1.4090  4.3144  0.3159
+    f18    0    2.0472  2.0475  2.0473  2.0434  2.0308  2.0081  1.9192  1.4658  3.9095  0.2457
+    f14    1    2.1178  2.1180  2.1178  2.1131  2.0978  2.0703  1.9596  1.2869  4.2606  0.3159
+    f18    1    1.9565  1.9567  1.9566  1.9526  1.9397  1.9166  1.8253  1.3400  3.7878  0.2457
+    f14    2    2.2197  2.2200  2.2199  2.2160  2.2033  2.1808  2.0924  1.5914  4.2417  0.3159
+    f18    2    2.0835  2.0839  2.0837  2.0806  2.0704  2.0524  1.9829  1.6590  3.7164  1.7598
+    f14    3    2.2214  2.2217  2.2215  2.2171  2.2028  2.1771  2.0753  1.4744  4.3290  0.3159
+    f18    3    2.0511  2.0514  2.0512  2.0474  2.0351  2.0132  1.9271  1.4892  3.8346  0.2457
+    f14    4    2.2330  2.2332  2.2330  2.2274  2.2095  2.1771  2.0479  1.3690  4.5119  0.3159
+    f18    4    2.0467  2.0469  2.0467  2.0419  2.0261  1.9977  1.8847  1.2859  4.0098  0.2457
+    f14    5    2.1486  2.1489  2.1487  2.1438  2.1281  2.0998  1.9861  1.3099  4.2591  0.3159
+    f18    5    1.9728  1.9730  1.9728  1.9685  1.9546  1.9295  1.8298  1.2866  3.7843  0.2457
+
+S1  round trip at zero defocus
+============================================================================
+  worst |B_refit - B_seeded| = 0.0003   (< 0.02 required)
+  worst cutoff error         = 0.016%  (< 1% required)
+  S1 -> PASS
+
+S2p direction, over the null-free range
+============================================================================
+  mean shift in B per ROI at each defocus:
+      0.00    0.01    0.05    0.10    0.15    0.25    0.40    0.60    1.00
+   +0.0000 -0.0002 -0.0045 -0.0185 -0.0436 -0.1431 -0.6923 +1.9737 -1.6992
+    applic  applic  applic  applic  applic  applic  applic  applic  ------
+  monotonically non-decreasing across [0.0, 0.01, 0.05, 0.1, 0.15, 0.25, 0.4, 0.6] in every ROI -> False
+  higher at 0.6 waves than at 0 in every ROI -> True
+  S2p -> FAIL
+
+  THE REGISTERED DIRECTION WAS WRONG, AND THE MEASURED ONE IS THE
+  POINT. Defocus LOWERS fitted B, which means it RAISES the fitted
+  cutoff. The reasoning behind S2 - defocus suppresses the MTF, so
+  a diffraction-shaped fit must shrink its cutoff - ignored that
+  the fit has a second free parameter. S4 shows where the defocus
+  actually goes: the slope absorbs it, alpha steepens, and a
+  steeper scene term needs a WIDER diffraction term to keep the
+  same curve. The two parameters trade, and the cutoff moves
+  opposite to the naive expectation.
+
+  This overturns a diagnosis, not just a prediction. defocus_b.py
+  found fitted B peaking near best focus at 12 of 12 cells and I
+  read that as the estimator failing off-focus. It is not. It is
+  the response measured here, in the same direction: B highest
+  where defocus is least, falling away on both sides. The real
+  B-versus-offset curves are defocus curves.
+
+  monotone over the prefix [0.0, 0.01, 0.05, 0.1, 0.15, 0.25, 0.4], direction falling
+  Beyond that the response reverses, which is a stricter limit than
+  the null criterion and is the range used for any calibration.
+
+S5  null control at W20 = 0.01
+============================================================================
+  worst |shift in B| = 0.0002   (< 0.01 required)
+  S5 -> PASS, a negligible defocus produces a negligible response
+  Run 1 returned +0.5106 here on a 0.05-wave input and that is what
+  exposed the double-envelope bug.
+
+S3  sensitivity at the Rayleigh quarter wave  (DECISIVE)
+============================================================================
+  shift in B at W20 = 0.25: min -0.1854  mean -0.1431  max -0.1009
+  smallest |shift| over the 12 ROIs: 0.1009
+  required: every ROI moves more than 0.05
+
+  S3 WAS WRITTEN TWO WAYS AND THEY DISAGREE. Both are reported rather
+  than choosing after the fact. The registered prose asks whether the
+  estimator 'moves fitted B by more than 0.05' and glosses a pass as
+  'the estimator is not blind', which is a question about MAGNITUDE.
+  The code as first written tested `at_r.min() > 0.05`, which also
+  demands the SIGN predicted by S2. Since S2's direction turned out to
+  be wrong, the two readings now separate:
+    as coded, signed     -> FAIL
+    as worded, magnitude -> PASS
+  The blindness question - the only thing S3 exists to answer, and the
+  premise defocus_robust.py rests on - is the magnitude one, and it
+  passes by a factor of two at the worst ROI. The signed reading fails
+  for the same reason S2p fails, and is not independent evidence.
+
+S4  how much leaks into the slope
+============================================================================
+  alpha at 0 waves    2.3341 +- 0.2090
+  alpha at 0.25 waves 2.7708 +- 0.2403
+  mean change +0.4367 over a quarter wave
+
+what this buys: converting the aperture gap into waves
+============================================================================
+  calibrated at the end of the monotone range, W20 = 0.4
+  the estimator moves B by -1.7308 per wave of defocus
+  the aperture gap is +0.1157, f/14 minus f/18
+  so it would need -0.0668 waves more defocus at f/14
+
+  THE SIGN MAKES THIS DECISIVE ON ITS OWN. Defocus LOWERS
+  fitted B. f/14 measures HIGHER than f/18. For defocus to
+  explain that, f/14 would need NEGATIVE defocus relative to
+  f/18 - it would have to be sharper than perfectly focused,
+  which is not a physical state. Defocus cannot make the sign
+  of the observed gap, whatever its magnitude.
+
+  The mechanism proposed in threat T1 - that f/14's shallower
+  depth of field makes an identical residual focus step cost
+  more defocus - is therefore excluded. It predicts f/14 more
+  defocused, hence f/14 LOWER, hence a NEGATIVE gap. The
+  measured gap is positive.
+
+wrote out/defocus-sens.json

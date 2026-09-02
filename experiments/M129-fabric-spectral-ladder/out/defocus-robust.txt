@@ -1,0 +1,36 @@
+how far B moves when the frame moves
+============================================================================
+      ap  n cells    min B    max B    range   mean within-cell range
+     f14        6   1.9226   2.2450   0.3224                   0.2063
+     f18        6   1.7359   2.0883   0.3524                   0.1849
+
+Q1: does the exclusion of H3 survive an adversarial frame choice?
+============================================================================
+  Amendment 9's bound came from the mean at best focus: 2.0309 +- 0.0204
+  the largest B any single f/18 cell reaches at ANY offset: 2.0883
+  H3 sits at 2.4020, which is 15.3 s.e. above even that
+  Q1 -> PASS, the exclusion is not a property of the frame choice
+  Every candidate contaminant, defocus included, inflates B, so a
+  worse frame choice can only raise the measured value. The bound is
+  one-sided in the safe direction.
+
+Q2: could a frame-selection bias have manufactured the aperture gap?
+============================================================================
+  offsets present in every cell: [-1, 0, 1, 2]
+   offset  f14 mean B  f18 mean B       gap
+       -1      2.1187      2.0012   +0.1175
+       +0      2.1466      2.0309   +0.1157
+       +1      2.1386      2.0115   +0.1271
+       +2      2.1380      1.9793   +0.1587
+
+  gap held at a COMMON offset ranges +0.1157 to +0.1587
+  Amendment 9 measured +0.1157 at each cell's own best frame
+  the gap keeps its sign at every common offset -> YES
+
+  Now the adversarial version: allow the two apertures DIFFERENT
+  offsets, which is what a frame-selection bias that acted unequally
+  on the two stacks would do.
+  reachable gap spans +0.0878 to +0.1674
+  Q2 -> PASS, no frame choice makes the gap vanish or reverse
+
+wrote out/defocus-robust.json

@@ -1,0 +1,98 @@
+V1  is the synthetic response quadratic in defocus?
+============================================================================
+      W20   |mean dB|     c*W20^q
+     0.01     0.00018     0.00015
+     0.05     0.00450     0.00491
+     0.10     0.01850     0.02221
+     0.15     0.04360     0.05371
+     0.25     0.14310     0.16334
+     0.40     0.69230     0.45454
+  fitted  |dB| = 3.3427 * W20^2.1775
+  V1 -> PASS, exponent 2.1775 inside [1.8, 2.2]
+  A quadratic in W20 and a defocus linear in frame offset together
+  make B a parabola in offset, which is the form defocus_b.py fitted.
+
+V2/V3  the real curvatures, put through that law
+============================================================================
+  a cell's parabola has B(k) = B* + curv * (k - vertex)^2 with curv < 0
+  the law has |dB| = c * W20^q and defocus is linear in offset, so
+  W20 per frame = (|curv| / c) ** (1/q)
+
+     ap  ROI       curv   W20/frame  frames to 1/4 wave
+    f14    0   -0.02096     0.09736                2.57
+    f14    1   -0.01593     0.08584                2.91
+    f14    2   -0.01135     0.07348                3.40
+    f14    3   -0.00819     0.06326                3.95
+    f14    4   -0.01531     0.08429                2.97
+    f14    5   -0.01788     0.09052                2.76
+    f18    0   -0.01853     0.09201                2.72
+    f18    1   -0.01790     0.09055                2.76
+    f18    2   -0.01068     0.07145                3.50
+    f18    3   -0.01194     0.07520                3.32
+    f18    4   -0.01265     0.07721                3.24
+    f18    5   -0.00889     0.06568                3.81
+
+  V2 -> PASS, every cell implies less than 0.25 waves between neighbouring frames
+
+  f14: mean 0.08246 waves/frame, sd 0.01226, cv 0.149
+  f18: mean 0.07869 waves/frame, sd 0.01053, cv 0.134
+  V3 -> PASS, spread across the six ROIs within 0.40 in both apertures
+
+  consistency observation, NOT a blind prediction (see the header)
+  ------------------------------------------------------------------------
+  measured ratio of waves per frame, f/14 : f/18 = 1.048
+  a constant physical step would give (N18/N14)^2 = 1.480
+     using N_eff = 30.05 at f/14 and 36.56 at f/18
+  a step scaled to the diffraction depth of field would give 1.000,
+  because that depth is itself proportional to N_eff^2, so the
+  wavefront error per step is the same at every aperture
+  the measurement is 0.048 from 1.000 and 0.432 from 1.480, so it favours depth-of-field scaled stepping
+  which is the standard way to bracket a macro stack, and it means the
+  two stacks carry comparable defocus per frame rather than f/14
+  carrying half again as much
+
+V4  does defocus have the sign needed to explain the gap?
+============================================================================
+  measured gap, f/14 minus f/18            +0.1157
+  effect of defocus on fitted B            negative, -1.7308 per wave
+  threat T1 predicts f/14 carries MORE residual defocus, because its
+  depth of field is shallower, so T1 predicts f/14 measures LOWER
+  and the gap should be NEGATIVE.
+  V4 -> PASS, T1 is excluded by sign, not merely bounded
+
+  This does not depend on the calibration constant, on the focus step,
+  or on which frame the focus map chose. It depends only on the
+  measured direction of the estimator's defocus response, which S3
+  establishes at ten times its own threshold, and on the measured sign
+  of the gap. Both are large and both were measured independently.
+
+what is retracted
+============================================================================
+  defocus_b.py's reading of its own output is withdrawn. It found
+  fitted B peaking near best focus at 12 of 12 cells and concluded the
+  estimator had failed off-focus, because a diffraction-limited fit
+  should not be trusted on a defocused frame. The premise was sound and
+  the conclusion was wrong: the peak is the estimator's genuine defocus
+  response, measured here on synthetic data where the answer is known.
+  Its control C1 still stands as failed and its P8-P10 are still not
+  claimed, because P8 asked for a curvature sign that is now known to
+  be the wrong way round and cannot be reinterpreted after the fact.
+
+  What replaces them is stronger than what they asked for. P10 wanted
+  the gap to close after a defocus correction. V4 shows no defocus
+  correction of any size can close it, because defocus moves B the
+  wrong way.
+
+verdict
+============================================================================
+  V1 quadratic law      PASS
+  V2 defocus per frame  PASS
+  V3 uniform over field PASS
+  V4 sign test          PASS
+  -> threat T1 (residual defocus) is EXCLUDED
+  The aperture trend in B remains unexplained, with defocus now
+  removed from the candidate list. Aberration and rig geometry remain,
+  and two apertures cannot separate them, which is what the capture
+  requested in captures-needed section 34 is for.
+
+wrote out/defocus-verdict.json

@@ -1,0 +1,37 @@
+apparent B against focus offset
+==============================================================================
+  offsets [-3, -2, -1, 0, 1, 2, 3], route-A model fit at each
+
+  f14: 83 frames
+     ROI  best      -3      -2      -1      +0      +1      +2      +3  vertex      B*     curv
+       0    58      --   1.943   2.097   2.134   2.157   2.187   2.112   +1.28   2.179  -0.0210
+       1    58      --      --   1.985   2.080   2.107   2.161   2.130   +2.16   2.146  -0.0159
+       2    38   2.196   2.218   2.221   2.180   2.114   2.064      --   -1.78   2.217  -0.0114
+       3    37   1.951   2.041   2.153   2.182   2.161   2.162   2.245   +2.46   2.210  -0.0082
+       4    53   2.028   2.112   2.161   2.193   2.208   2.185   2.090   +0.44   2.204  -0.0153
+       5    56   1.923   2.087   2.095   2.110   2.084   2.069   1.973   +0.10   2.120  -0.0179
+
+  f18: 71 frames
+     ROI  best      -3      -2      -1      +0      +1      +2      +3  vertex      B*     curv
+       0    47   1.736   1.925   1.993   2.052   2.026   2.022   2.006   +1.00   2.058  -0.0185
+       1    48   1.752   1.896   1.932   1.961   1.973   1.949   1.859   +0.47   1.978  -0.0179
+       2    30   2.036   2.065   2.060   2.088   2.029   1.951   1.908   -1.08   2.075  -0.0107
+       3    30   1.929   2.001   2.036   2.056   2.014   2.003   1.945   +0.04   2.045  -0.0119
+       4    43   1.898   1.991   1.997   2.051   2.050   2.045   1.959   +0.49   2.052  -0.0126
+       5    46   1.936   1.975   1.990   1.977   1.978   1.907   1.877   -0.66   1.988  -0.0089
+
+results
+==============================================================================
+      ap   n  B at offset 0   B at vertex    curvature  mean vertex
+     f14   6   2.1466 +-0.0186   2.1795 +-0.0159  -0.0149 +-0.0019        +0.78
+     f18   6   2.0309 +-0.0204   2.0328 +-0.0162  -0.0134 +-0.0016        +0.04
+
+  P8  curvature positive at both       -> FAIL (FALSIFIER: the focus map is not at this optimum)
+  P9  f/14 steeper than f/18           -> FAIL (defocus cannot make the observed sign)
+  P10 gap at offset 0 +0.1157, at vertex +0.1467
+      gap below 0.05 after correction  -> FAIL, defocus is excluded
+  C1  worst vertex +2.46 frames from the focus map's choice -> VOID: the two disagree about where focus is
+
+  C1 failed, so P8-P10 are not interpretable and are not claimed.
+
+wrote out/defocus-b.json

@@ -1217,3 +1217,212 @@ measured `B`; a capture at f/16 and f/22 would give four in-band points and
 two spare degrees of freedom, which is the minimum that can distinguish a
 defocus term from an absolute blur. Until then the one-sided bound is the
 result.
+
+---
+
+## Amendment 10 - residual defocus is excluded, and by the opposite sign
+
+Amendment 9 left one thing unresolved: apparent `B` falls as the aperture
+closes, f/14 above f/18 by a gap that no candidate could be pinned on.
+Threat T1 named residual defocus as the leading suspect, because f/14's
+depth of field is shallower and an identical residual focus step therefore
+costs more defocus there. This amendment closes T1. It is excluded, and not
+by a bound that happened to come out small - by the direction of the effect,
+which is opposite to the one T1 requires.
+
+Four scripts, run in this order. Two of them failed as registered and both
+failures are recorded here rather than repaired out of sight.
+
+### 10.1 The direct test failed its own control
+
+`defocus_b.py` walked the frame offset from -3 to +3 in each of the twelve
+in-band cells, refitted `B` at every offset and fitted a parabola. Its
+control C1 required the parabola vertex to sit within one frame of the
+frame the focus map had already chosen.
+
+| check | registered | measured | verdict |
+| --- | --- | --- | --- |
+| P8 | curvature positive at both apertures | -0.0149 and -0.0134 | FAIL |
+| P9 | f/14 curvature exceeds f/18 | larger in magnitude, smaller in sign | FAIL as coded |
+| P10 | gap below 0.05 after correction | +0.1467 at the vertices | FAIL |
+| C1 | vertex within 1 frame of the focus map | worst +2.46 frames | VOID |
+
+P9 has the same prose-versus-code split that 10.3 records for S3, and it is
+noted here for the same reason. Its prose says the f/14 curvature exceeds
+f/18, glossed as rising faster; the code compared the two signed values.
+Under P8's premise that both parabolas open upward those are the same
+comparison. Once the curvatures came out negative they are opposites, and
+the two readings disagree. Nothing turns on it, because C1 voided the whole
+group, but a discrepancy found and left unrecorded is one that gets
+rediscovered as a contradiction later.
+
+C1 failed, so P8 through P10 are not interpretable and **are not claimed**,
+here or anywhere else. They are listed because a registered prediction that
+is quietly dropped is indistinguishable from one that was never made.
+
+The curvature is negative at 12 of 12 cells: fitted `B` is
+**highest** near best focus and falls away on both sides. I read that at the
+time as the estimator failing, on the reasoning that a fit which assumes a
+diffraction-limited MTF has no business being trusted on a deliberately
+defocused frame. That reading is retracted in 10.3. The reasoning was sound
+and the conclusion was wrong.
+
+### 10.2 What the voided test still established
+
+`defocus_robust.py` asked what the per-offset values say about Amendment 9
+regardless of where the true optimum lies, since they are measurements and
+not fits to any theory of focus.
+
+| question | measured | verdict |
+| --- | --- | --- |
+| does the exclusion of H3 survive an adversarial frame choice | the largest `B` any f/18 cell reaches at any offset is 2.0883, still 15.3 s.e. below H3 | PASS |
+| could a frame-selection bias have made the gap | letting the two apertures take different offsets, the reachable gap spans +0.0878 to +0.1674 | PASS, never closes |
+
+The gap keeps its sign at every offset held in common:
+
+| offset | gap |
+| --- | --- |
+| -1 | +0.1175 |
+| +0 | +0.1157 |
+| +1 | +0.1271 |
+| +2 | +0.1587 |
+
+Within a single stack `B` swings by about 0.21 across the seven offsets, which is
+larger than the gap under investigation. That the gap survives anyway is
+because the swing is largely cell-specific and averages away over six ROIs,
+while the gap does not.
+
+**That conclusion rested on an unexamined premise**: that moving the frame
+moves the estimator. A blind instrument would also have shown a gap that
+survives every offset. Closing that is what 10.3 is for.
+
+### 10.3 Commissioning the estimator against a known defocus
+
+`defocus_sens.py` measures the estimator's defocus response on synthetic
+data where the truth is known exactly. Each real in-band PSD is fitted once,
+a clean PSD is regenerated from those parameters on the identical frequency
+grid and bin counts, defocus is applied to that, and the fit is repeated.
+Nothing but the defocus changes.
+
+The defocused MTF is computed from first principles as the normalised
+autocorrelation of the complex pupil, not from a published closed form.
+Closed forms for the defocus MTF circulate with several different constants
+inside the Bessel argument, and the wrong one would silently rescale the
+wave axis and every number derived from it.
+
+| check | registered | measured | verdict |
+| --- | --- | --- | --- |
+| S0 | pupil code matches `mtf_diffraction` at zero defocus, rms < 2e-3 | 7.482e-05 | PASS |
+| S1 | round trip recovers the seeded cutoff to 1% | 0.016% worst | PASS |
+| S2p | fitted `B` rises with defocus | it falls | FAIL |
+| S5 | null control: 0.01 waves moves `B` under 0.01 | 0.0002 worst | PASS |
+| S3 | a quarter wave moves `B` by more than 0.05 | 0.1009 at the least responsive ROI | PASS as worded |
+
+**S3 was written two ways and they disagree.** The registered prose asks
+whether the estimator moves `B` by more than 0.05 and glosses a pass as
+"the estimator is not blind", which is a question about magnitude. The code
+as first written also demanded the sign S2 predicted. Once that direction
+turned out to be wrong the two readings separated, so both are reported and
+the script prints both. The blindness question is the magnitude one and it
+passes by a factor of 2.0 at the
+worst cell. The signed reading fails for the same reason S2p fails and is
+not independent evidence.
+
+**An earlier run of this script failed and the failure was mine.** Run 1
+multiplied the analytic diffraction MTF by the value returned from the pupil
+code, which already contains that envelope, so the envelope was applied
+twice. The signature was unmistakable in hindsight: fitted `B` jumped +0.51
+at 0.05 waves, a defocus that is optically negligible. Run 1 is preserved at
+`out/defocus-sens-run1.txt`. S5, the null control, was added afterwards
+precisely because it is the check that would have caught it, and it now
+stands permanently alongside S3: a positive control alone cannot tell a
+sensitive instrument from one that lurches at any input.
+
+**The measured response.** Defocus LOWERS fitted `B`, by
+-1.7308 per wave over the monotone range
+[0.0, 0.01, 0.05, 0.1, 0.15, 0.25, 0.4]. Lower `B` means a LARGER fitted cutoff, which is
+the opposite of the naive expectation registered as S2. The reason is
+visible in S4: the slope absorbs the defocus, alpha steepening from
+2.3341 to 2.7708 over a quarter wave, and a
+steeper scene term needs a wider diffraction term to trace the same curve.
+The two free parameters trade, and the cutoff moves against the eye.
+
+**This overturns 10.1's diagnosis.** The peak in `B` at best focus is not
+the estimator failing. It is the estimator's genuine response, in the same
+direction, measured where the answer is known. The real B-versus-offset
+curves are defocus curves. C1 still stands as failed and P8 through P10 are
+still not claimed, because P8 asked for a curvature sign now known to be the
+wrong way round, and a registered prediction cannot be reinterpreted into a
+pass after the fact.
+
+### 10.4 The real curves match the calibrated law
+
+`defocus_verdict.py` puts the twelve measured curvatures through the
+synthetic law. The two ends were measured independently - the synthetic side
+knows nothing about focus rails, the real side nothing about wavefronts - so
+agreement is not built in anywhere.
+
+| check | registered | measured | verdict |
+| --- | --- | --- | --- |
+| V1 | the law is quadratic, exponent in [1.8, 2.2] | abs(dB) = 3.3427 W20^2.1775 | PASS |
+| V2 | implied defocus per frame below a quarter wave everywhere | worst 0.09736 waves | PASS |
+| V3 | spread across the six ROIs, cv below 0.40 | 0.149 at f/14, 0.134 at f/18 | PASS |
+| V4 | defocus has the sign needed to explain the gap | it has the opposite sign | PASS, T1 excluded |
+
+V1 matters beyond itself. A quadratic in wavefront error, with defocus
+linear in frame offset, makes `B` a parabola in offset - which is the form
+`defocus_b.py` fitted before any of this was known.
+
+The implied defocus is 0.08246 waves per frame at f/14 and
+0.07869 at f/18, so 3.03 frames at f/14 and 3.18 at f/18 to
+the Rayleigh quarter wave. That is a sensibly sampled stack, and V3 says
+the whole field agrees on it.
+
+**A consistency observation, and it is labelled as such because the ratio
+was worked out by hand before the check was written.** It carries no pass or
+fail. A constant physical step would give f/14
+1.480 times the defocus per frame, since the
+wavefront error goes as the reciprocal of the squared effective f-number,
+which is 30.05 at f/14 and 36.56 at
+f/18. A step scaled to the diffraction depth of field would give exactly 1,
+since that depth carries the same squared factor. Measured:
+1.048.
+That favours depth-of-field scaled stepping, which is the standard way to bracket a macro
+stack, and it means the two stacks carry comparable defocus per frame rather
+than f/14 carrying half again as much.
+
+### 10.5 What is settled and what is not
+
+**Threat T1 is excluded.** T1 says f/14 carries more residual defocus. More
+defocus lowers fitted `B`. So T1 predicts f/14 measures **lower** than f/18
+and the gap should be negative. The measured gap is +0.1157,
+positive. The prediction and the
+observation have opposite signs.
+
+This does not depend on the calibration constant, on the focus step, on
+which frame the focus map chose, or on the parabola fit. It depends on two
+independently measured signs, both large.
+
+**What it does not settle.** The aperture trend itself remains unexplained.
+Defocus is now off the list; aberration and rig geometry remain, they share
+a sign, and two in-band apertures cannot separate them. Section 34 of
+`docs/captures-needed.md` still stands and its priority is unchanged: a
+third and fourth in-band aperture are what distinguishes the survivors.
+
+**A side result worth carrying forward.** The estimator's defocus response
+is now calibrated, so `B` measured across a focus sweep is a usable focus
+metric with a physical scale attached, reading out directly in waves. The
+vertex of the parabola locates best focus to a fraction of a frame. Whether
+that beats the mid-band focus score the survey currently uses is untested
+and is not claimed.
+
+**A pattern in my own errors, recorded because three is enough to be one.**
+Amendment 9 retracted a shape diagnosis that was an artefact of a wrong `B`.
+This amendment retracts a failure diagnosis that was an artefact of a wrong
+assumed direction, and records a registered direction, S2, that was simply
+backwards. In all three the magnitudes were sound and the signs and
+baselines were not. The corrective that worked every time was the same:
+compute the thing forward from a known truth instead of reasoning about
+which way it ought to go. House rule 18 asks for the direction to be stated
+before measuring, which these did. Stating it did not make it right; only
+the synthetic forward model did.

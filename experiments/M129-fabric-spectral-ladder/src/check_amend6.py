@@ -53,6 +53,29 @@ def rows_after(text, heading, n):
     return out
 
 
+def rows_from(text, first_row, n):
+    """The n table rows starting AT `first_row`, which is a data row not a header.
+
+    rows_after treats its anchor as the header and skips it. Where the only
+    unique anchor is itself a data row - the three Amendment 10 verdict tables
+    share the header "| check | registered | measured | verdict |" - that would
+    silently return the wrong rows, so this includes the anchor instead.
+    """
+    i = text.index(first_row)
+    out = []
+    for line in text[i:].splitlines():
+        s = line.strip()
+        if not s.startswith("|"):
+            break
+        cells = [c.strip() for c in s.strip("|").split("|")]
+        if all(set(c) <= set("- :") for c in cells):
+            continue
+        out.append(cells)
+        if len(out) == n:
+            break
+    return out
+
+
 class Q(float):
     """A number parsed from the document, carrying the precision it was quoted at.
 
@@ -71,15 +94,17 @@ class Q(float):
 
 def _q(s):
     txt = str(s).replace("**", "").replace("~~", "")
-    m = re.search(r"-?\d+\.?\d*", txt)
+    m = re.search(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?", txt)
     if not m:
         q = Q("nan")
         q.ulp = 0.0
         return q
     tok = m.group()
     q = Q(tok)
-    d = len(tok.split(".")[1]) if "." in tok else 0
-    q.ulp = 0.5 * 10.0 ** (-d)
+    mant, _, expo = tok.partition("e") if "e" in tok else tok.partition("E")
+    d = len(mant.split(".")[1]) if "." in mant else 0
+    scale = 10.0 ** int(expo) if expo else 1.0
+    q.ulp = 0.5 * 10.0 ** (-d) * scale
     return q
 
 
@@ -766,9 +791,192 @@ def main():
                     tol=0.02)
 
     print()
-    print("all Amendment 6, 7, 7a, 8 and 9 figures reproduce" if ok
+    ok &= amend10(text)
+
+    print()
+    print("all Amendment 6, 7, 7a, 8, 9 and 10 figures reproduce" if ok
           else "SOME FIGURES DO NOT REPRODUCE")
     return 0 if ok else 1
+
+
+def amend10(text):
+    """Re-derive every figure Amendment 10 quotes.
+
+    The four JSON files were written by four scripts that do not read each
+    other's output except through this chain, so several of the checks below are
+    cross-file: the document has to agree with all of them at once. Three checks
+    are marked INTERNAL and compare one column of the document against another
+    column of the same document. Those are the ones no external file can catch,
+    because a plant that moves only a derived column leaves every JSON valid.
+    """
+    db = _load("defocus-b.json")
+    rb = _load("defocus-robust.json")
+    sn = _load("defocus-sens.json")
+    vd = _load("defocus-verdict.json")
+    pc = _load("pixel-check.json")
+    ok = True
+
+    # A Markdown cell containing a bare "|" silently splits into extra columns,
+    # which renders wrong AND makes every positional cell index after it point at
+    # the wrong thing. That happened once here, writing |dB| into a verdict table,
+    # and the checker reported an unrelated parse error rather than the real
+    # defect. Every table in this amendment is now checked for a uniform width.
+    i = text.index("## Amendment 10")
+    width, bad = None, []
+    for line in text[i:].splitlines():
+        s = line.strip()
+        if not s.startswith("|"):
+            width = None
+            continue
+        cells = [c.strip() for c in s.strip("|").split("|")]
+        if all(set(c) <= set("- :") for c in cells):
+            continue
+        if width is None:
+            width = len(cells)
+        elif len(cells) != width:
+            bad.append((len(cells), width, s[:60]))
+    if bad:
+        for got, want, s in bad:
+            print(f"  FAIL {'10 table row width':44s} got {got} want {want}  {s}")
+        ok = False
+    else:
+        print(f"  ok  {'10 every table row has a uniform width':44s}")
+
+    # -- 10.1 the voided direct test -----------------------------------------
+    r = rows_from(text, "| P8 | curvature positive at both apertures |", 4)
+    p8 = re.findall(r"-?\d+\.\d+", r[0][2])
+    ok &= check("10 P8 curvature f14", db["agg"]["f14"]["curv"], qf(p8[0]))
+    ok &= check("10 P8 curvature f18", db["agg"]["f18"]["curv"], qf(p8[1]))
+    ok &= check("10 P10 gap at the vertices", db["gap_vertex"], num(r[2][2]))
+    ok &= check("10 C1 worst vertex", db["agg"]["f14"]["vertex_absmax"],
+                num(r[3][2]))
+
+    # INTERNAL: the P9 cell describes the two curvatures the P8 cell quotes. No
+    # JSON holds these words, so a plant that flips one of them is invisible to
+    # every external check and only this comparison can catch it.
+    c14, c18 = float(qf(p8[0])), float(qf(p8[1]))
+    want_mag = "larger" if abs(c14) > abs(c18) else "smaller"
+    want_sgn = "larger" if c14 > c18 else "smaller"
+    got = r[1][2]
+    good = (f"{want_mag} in magnitude" in got and f"{want_sgn} in sign" in got)
+    print(f"  {'ok ' if good else 'FAIL'} "
+          f"{'10 INTERNAL P9 describes its own curvatures':44s} "
+          f"doc {got!r} expects {want_mag}/{want_sgn}")
+    ok &= good
+
+    m = re.search(r"negative at (\d+) of (\d+) cells", text)
+    nneg = sum(1 for c in db["cells"] if c["curv"] < 0)
+    ok &= check("10 cells with negative curvature", nneg, qf(m.group(1)))
+    ok &= check("10 cells in total", len(db["cells"]), qf(m.group(2)))
+
+    # -- 10.2 what survives ---------------------------------------------------
+    m = re.search(r"any f/18 cell reaches at any offset is\s+(\d+\.\d+)", text)
+    ok &= check("10 worst f18 B at any offset", rb["f18_max_any_offset"],
+                qf(m.group(1)))
+    m2 = re.search(r"still ([\d.]+) s\.e\. below H3", text)
+    ok &= check("10 s.e. below H3", rb["H3_se_above_worst"], qf(m2.group(1)))
+    # INTERNAL: the s.e. figure must follow from the document's own worst value.
+    ok &= check("10 INTERNAL s.e. follows from the quoted worst B",
+                (rb["H3_B"] - float(qf(m.group(1)))) / pc["bound"]["sem"],
+                qf(m2.group(1)), tol=0.03)
+
+    m = re.search(r"reachable gap spans\s+([-+]\d+\.\d+) to ([-+]\d+\.\d+)", text)
+    ok &= check("10 adversarial gap low", rb["gap_span_adversarial"][0],
+                qf(m.group(1)))
+    ok &= check("10 adversarial gap high", rb["gap_span_adversarial"][1],
+                qf(m.group(2)))
+
+    g = rows_after(text, "| offset | gap |", 4)
+    for row in g:
+        k = str(int(num(row[0])))
+        ok &= check(f"10 gap at offset {k}", rb["gap_by_common_offset"][k],
+                    num(row[1]))
+
+    m = re.search(r"`B` swings by about\s+(\d+\.\d+) across the seven", text)
+    ok &= check("10 within-stack swing", rb["stats"]["f14"]["within"],
+                qf(m.group(1)))
+
+    # -- 10.3 commissioning ---------------------------------------------------
+    r = rows_from(text, "| S0 | pupil code matches `mtf_diffraction`", 5)
+    ok &= check("10 S0 rms", sn["S0_rms"], qf(r[0][2].replace("e-0", "e-")),
+                tol=0.02)
+    ok &= check("10 S1 worst cutoff error", sn["S1_worst_fc_pct"], num(r[1][2]))
+    ok &= check("10 S5 worst null response", sn["S5_worst"], num(r[3][2]))
+    ok &= check("10 S3 least responsive ROI", sn["S3_at_rayleigh"]["min_abs"],
+                num(r[4][2]))
+
+    m = re.search(r"passes by a factor of ([\d.]+) at the", text)
+    ok &= check("10 S3 factor over threshold",
+                sn["S3_at_rayleigh"]["min_abs"] / sn["gap_threshold"],
+                qf(m.group(1)))
+    # INTERNAL: the factor must follow from the document's own S3 figure.
+    ok &= check("10 INTERNAL S3 factor follows from the quoted S3",
+                float(num(r[4][2])) / sn["gap_threshold"], qf(m.group(1)))
+
+    m = re.search(r"Defocus LOWERS fitted `B`, by\s*\n?([-+]\d+\.\d+) per wave",
+                  text)
+    ok &= check("10 response per wave", sn["verdict"]["per_wave"],
+                qf(m.group(1)))
+    m = re.search(r"alpha steepening from\s*\n?([\d.]+) to ([\d.]+)", text)
+    ok &= check("10 alpha at zero defocus", sn["S4_alpha0"], qf(m.group(1)))
+    ok &= check("10 alpha at a quarter wave", sn["S4_alphaR"], qf(m.group(2)))
+
+    # -- 10.4 the cross-check -------------------------------------------------
+    r = rows_from(text, "| V1 | the law is quadratic, exponent in [1.8, 2.2] |", 4)
+    lawc = re.findall(r"(\d+\.\d+)", r[0][2])
+    ok &= check("10 V1 law coefficient", vd["law_c"], qf(lawc[0]))
+    ok &= check("10 V1 law exponent", vd["law_q"], qf(lawc[1]))
+    wpf = vd["waves_per_frame"]
+    ok &= check("10 V2 worst waves per frame",
+                max(max(wpf["f14"]), max(wpf["f18"])), num(r[1][2]))
+    cvs = re.findall(r"(\d+\.\d+)", r[2][2])
+    ok &= check("10 V3 cv at f14", vd["cv"]["f14"], qf(cvs[0]))
+    ok &= check("10 V3 cv at f18", vd["cv"]["f18"], qf(cvs[1]))
+
+    m = re.search(r"implied defocus is ([\d.]+) waves per frame at f/14 and\s*\n"
+                  r"([\d.]+) at f/18", text)
+    r14 = sum(wpf["f14"]) / len(wpf["f14"])
+    r18 = sum(wpf["f18"]) / len(wpf["f18"])
+    ok &= check("10 waves per frame at f14", r14, qf(m.group(1)))
+    ok &= check("10 waves per frame at f18", r18, qf(m.group(2)))
+
+    # INTERNAL: frames to a quarter wave, derived by the document from the two
+    # figures immediately above it. No JSON contains it.
+    mfr = re.search(r"so ([\d.]+) frames at f/14 and ([\d.]+) at f/18 to", text)
+    ok &= check("10 INTERNAL frames to a quarter wave at f14",
+                0.25 / float(qf(m.group(1))), qf(mfr.group(1)))
+    ok &= check("10 INTERNAL frames to a quarter wave at f18",
+                0.25 / float(qf(m.group(2))), qf(mfr.group(2)))
+
+    mr = re.search(r"Measured:\s*\n?([\d.]+)\.", text)
+    ok &= check("10 measured ratio", vd["ratio_measured"], qf(mr.group(1)))
+    # INTERNAL: the ratio must follow from the document's own two means.
+    ok &= check("10 INTERNAL ratio follows from the quoted means",
+                float(qf(m.group(1))) / float(qf(m.group(2))), qf(mr.group(1)))
+
+    mf = re.search(r"give f/14\s*\n?([\d.]+) times the defocus per frame", text)
+    ok &= check("10 fixed-step ratio", vd["ratio_fixed_step"], qf(mf.group(1)))
+    mn = re.search(r"which is ([\d.]+) at f/14 and ([\d.]+) at\s*\n?f/18", text)
+    ok &= check("10 N_eff at f14", vd["n_eff"]["f14"], qf(mn.group(1)))
+    ok &= check("10 N_eff at f18", vd["n_eff"]["f18"], qf(mn.group(2)))
+    # INTERNAL: the fixed-step ratio must follow from the document's own N_eff.
+    ok &= check("10 INTERNAL fixed-step ratio follows from the quoted N_eff",
+                (float(qf(mn.group(2))) / float(qf(mn.group(1)))) ** 2,
+                qf(mf.group(1)))
+
+    # -- 10.5 the headline ----------------------------------------------------
+    m = re.search(r"The measured gap is ([-+]\d+\.\d+),\s*\n(positive|negative)\.",
+                  text)
+    ok &= check("10 headline gap", vd["gap"], qf(m.group(1)))
+    # INTERNAL: the word must match the sign of the number beside it. The whole
+    # exclusion of T1 rests on that sign, and no external file can see the word.
+    want = "positive" if float(qf(m.group(1))) > 0 else "negative"
+    good = m.group(2) == want
+    print(f"  {'ok ' if good else 'FAIL'} "
+          f"{'10 INTERNAL the gap sign word matches its number':44s} "
+          f"doc {m.group(2)!r} expects {want!r}")
+    ok &= good
+    return ok
 
 
 if __name__ == "__main__":
