@@ -502,8 +502,116 @@ def main():
             print("       7a states a residual confound remains")
             ok = False
 
+    print("\nAmendment 8, the A1' bias ladder")
+    with open(os.path.join(OUT, "bias-ladder.json"), encoding="utf-8") as fh:
+        bl = json.load(fh)
+    arms8 = {(a["hypothesis"], a["arm"]): a for a in bl["arms"]}
+    marg8 = {(m["hypothesis"], m["arm"]): m for m in bl["margins"]}
+    fwd8 = {a["arm"]: a for a in bl["forward"]}
+    reach8 = {r["tag"]: r for r in bl["reach"]}
+
+    # The lattice Nyquist and the decision boundary are re-derived here from
+    # m5_lib's constants and Amendment 7a's B values, NOT read from the JSON the
+    # document was written from. A checker that reads its answer out of the same
+    # file the document was written from confirms only that a copy succeeded.
+    nyq_indep = 0.5 / _m5.LATTICE_PITCH_PX["GQ"]
+    ok &= check("8 GQ Nyquist (independent)", nyq_indep, _q(f"{bl['nyquist_sensor']:.5f}"))
+    b_h2, b_h3 = 3.0763, 2.4020
+    ok &= check("8 boundary (independent)", 0.5 * (b_h2 + b_h3),
+                _q(f"{bl['boundary']:.4f}"))
+    ok &= check("8 gap (independent)", abs(b_h2 - b_h3) / b_h3, _q(f"{bl['gap']:.6f}"))
+
+    h8 = rows_after(text, "| planted `f_c` | recovered | ratio | low-band SNR |", 4)
+    for row, r in zip(h8, bl["harness"]):
+        ok &= check(f"8 harness planted {r['planted']:.2f}, recovered",
+                    r["recovered"], num(row[1]))
+        ok &= check(f"8 harness planted {r['planted']:.2f}, ratio",
+                    r["ratio"], num(row[2]))
+        ok &= check(f"8 harness planted {r['planted']:.2f}, snr",
+                    r["snr"], num(row[3]), tol=0.02)
+
+    m8 = rows_after(text, "| built at | arm | `B_hat` | s.e. |", 4)
+    for row in m8:
+        key = (row[0], row[1])
+        a, m = arms8[key], marg8[key]
+        ok &= check(f"8 B_hat {row[0]} {row[1]}", a["B_hat"], num(row[2]))
+        ok &= check(f"8 B_sem {row[0]} {row[1]}", a["B_sem"], num(row[3]))
+        ok &= check(f"8 distance {row[0]} {row[1]}", m["distance"], num(row[4]))
+        ok &= check(f"8 sigma {row[0]} {row[1]}", m["sigma"], num(row[5]), tol=0.02)
+        # The distance must equal |B_hat - boundary|. If the document's own three
+        # columns are inconsistent with each other, no external file can tell.
+        ok &= check(f"8 distance {row[0]} {row[1]} is internally consistent",
+                    abs(num(row[2]) - 0.5 * (b_h2 + b_h3)), num(row[4]), tol=0.02)
+
+    f8 = rows_after(text, "| arm | ap | reported under H2 | reported under H3 |", 6)
+    for row in f8:
+        c = next(x for x in fwd8[row[0]]["cells"] if x["tag"] == row[1])
+        ok &= check(f"8 forward {row[0]} {row[1]}, H2", c["fc_H2"], num(row[2]))
+        ok &= check(f"8 forward {row[0]} {row[1]}, H3", c["fc_H3"], num(row[3]))
+        ok &= check(f"8 forward {row[0]} {row[1]}, gap", 100 * c["rel_gap"],
+                    num(row[4]), tol=0.02)
+        ok &= check(f"8 forward {row[0]} {row[1]}, sigma", c["sigma"], num(row[5]),
+                    tol=0.02)
+
+    r8 = rows_after(text, "| ap | `f_c` H2 | / Nyquist | `f_c` H3 |", 5)
+    for row in r8:
+        r = reach8[row[0]]
+        ok &= check(f"8 reach {row[0]}, f_c H2", r["fc_H2"], num(row[1]))
+        ok &= check(f"8 reach {row[0]}, H2/Nyq", r["fc_H2"] / nyq_indep, num(row[2]))
+        ok &= check(f"8 reach {row[0]}, f_c H3", r["fc_H3"], num(row[3]))
+        ok &= check(f"8 reach {row[0]}, H3/Nyq", r["fc_H3"] / nyq_indep, num(row[4]))
+
+    print("\nAmendment 8, prose")
+    for name, pat, want in (
+        ("8 P3 max B error",
+         r"It reaches \*\*(\d+\.\d+)%\*\*",
+         100 * max(abs(a["B_err"]) for a in bl["arms"])),
+        ("8 P3 share of gap",
+         r"and \*\*(\d+\.\d+)%\*\* of the gap between",
+         100 * max(abs(a["B_err"]) for a in bl["arms"]) / bl["gap"]),
+        ("8 H2 clears by",
+         r"\*\*H2 clears it by (\d+) sigma",
+         marg8[("H2", "equalised")]["sigma"]),
+        ("8 H3 clears by",
+         r"and H3 by (\d+\.\d+)\.\*\*",
+         marg8[("H3", "equalised")]["sigma"]),
+        ("8 f11 scatter ratio",
+         r"scatter under H3 is (\d+\.\d+) times its scatter",
+         (next(x for x in arms8[("H3", "equalised")]["rows"] if x["tag"] == "f11")["sd"]
+          / next(x for x in arms8[("H2", "equalised")]["rows"] if x["tag"] == "f11")["sd"])),
+        ("8 native fcN spread",
+         r"It does the opposite: (\d+\.\d+)% native",
+         100 * 0.5 * (arms8[("H2", "native")]["fcN_spread"]
+                      + arms8[("H3", "native")]["fcN_spread"])),
+        ("8 equalised fcN spread",
+         r"becomes (\d+\.\d+)% equalised",
+         100 * 0.5 * (arms8[("H2", "equalised")]["fcN_spread"]
+                      + arms8[("H3", "equalised")]["fcN_spread"])),
+        ("8 forward combined, native",
+         r"Combined separation \*\*(\d+\.\d+) sigma\*\* native",
+         fwd8["native"]["combined_sigma"]),
+        ("8 forward combined, equalised",
+         r"native, \*\*(\d+\.\d+) sigma\*\* equalised",
+         fwd8["equalised"]["combined_sigma"]),
+        ("8 inverse worst sigma",
+         r"equalised, against\s*\*\*(\d+\.\d+)\*\*",
+         bl["worst_sigma"]),
+        ("8 GQ Nyquist in prose",
+         r"`0\.5 / sqrt\(2\)` = \*\*(\d+\.\d+)\*\*",
+         nyq_indep),
+        ("8 f11 below Nyquist",
+         r"f/11's cutoff is (\d+\.\d+)% below the GQ",
+         100 * (1 - reach8["f11"]["fc_H3"] / nyq_indep)),
+    ):
+        m = re.search(pat, flat)
+        if not m:
+            print(f"  FAIL {name:44s} sentence not found in the document")
+            ok = False
+            continue
+        ok &= check(name, want, qf(m.group(1)), tol=0.02)
+
     print()
-    print("all Amendment 6, 7 and 7a figures reproduce" if ok
+    print("all Amendment 6, 7, 7a and 8 figures reproduce" if ok
           else "SOME FIGURES DO NOT REPRODUCE")
     return 0 if ok else 1
 

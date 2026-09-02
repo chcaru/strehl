@@ -1,0 +1,280 @@
+Amendment 6, the non-monotone SNR table
+  ok  knee band, f5.6                              doc     18.600  recomputed     18.579
+  ok  knee band, f8                                doc     23.100  recomputed     23.137
+  ok  knee band, f11                               doc     39.700  recomputed     39.702
+  ok  knee band, f14                               doc     23.200  recomputed     23.200
+  ok  knee band, f18                               doc      7.700  recomputed      7.651
+  ok  low band, f5.6                               doc   2011.000  recomputed   2011.410
+  ok  low band, f8                                 doc   1707.000  recomputed   1707.447
+  ok  low band, f11                                doc   2802.000  recomputed   2801.909
+  ok  low band, f14                                doc   2591.000  recomputed   2588.841
+  ok  low band, f18                                doc   1730.000  recomputed   1730.016
+
+Amendment 6, the equalisation cost table
+  ok  ROI 0 f11 floor multiplier                   doc      1.840  recomputed      1.841
+  ok  ROI 0 f14 floor multiplier                   doc      1.670  recomputed      1.670
+  ok  ROI 0 knee ratio before                      doc      5.810  recomputed      5.811
+  ok  ROI 0 knee ratio after                       doc      3.160  recomputed      3.157
+  ok  ROI 1 f11 floor multiplier                   doc      1.600  recomputed      1.603
+  ok  ROI 1 f14 floor multiplier                   doc      1.470  recomputed      1.473
+  ok  ROI 1 knee ratio before                      doc      4.450  recomputed      4.455
+  ok  ROI 1 knee ratio after                       doc      2.780  recomputed      2.778
+  ok  ROI 2 f11 floor multiplier                   doc      1.650  recomputed      1.647
+  ok  ROI 2 f14 floor multiplier                   doc      1.480  recomputed      1.484
+  ok  ROI 2 knee ratio before                      doc      5.590  recomputed      5.588
+  ok  ROI 2 knee ratio after                       doc      3.390  recomputed      3.392
+  ok  ROI 3 f11 floor multiplier                   doc      1.790  recomputed      1.790
+  ok  ROI 3 f14 floor multiplier                   doc      1.500  recomputed      1.497
+  ok  ROI 3 knee ratio before                      doc      5.450  recomputed      5.447
+  ok  ROI 3 knee ratio after                       doc      3.040  recomputed      3.043
+  ok  ROI 4 f11 floor multiplier                   doc      2.230  recomputed      2.231
+  ok  ROI 4 f14 floor multiplier                   doc      1.550  recomputed      1.552
+  ok  ROI 4 knee ratio before                      doc      6.100  recomputed      6.097
+  ok  ROI 4 knee ratio after                       doc      2.730  recomputed      2.733
+  ok  ROI 5 f11 floor multiplier                   doc      1.630  recomputed      1.632
+  ok  ROI 5 f14 floor multiplier                   doc      1.510  recomputed      1.515
+  ok  ROI 5 knee ratio before                      doc      5.800  recomputed      5.798
+  ok  ROI 5 knee ratio after                       doc      3.550  recomputed      3.552
+
+Amendment 6, the units table
+  ok  low primary-arm ratio                        doc      1.720  recomputed      1.719
+  ok  low differential points                      doc      3.100  recomputed      3.087
+  ok  knee primary-arm ratio                       doc      5.690  recomputed      5.693
+  ok  knee differential points                     doc      9.900  recomputed      9.913
+
+Amendment 6a, the A4 table
+  ok  high band, f5.6                              doc      0.557  recomputed      0.557
+  ok  high band, f8                                doc      0.708  recomputed      0.708
+  ok  high band, f11                               doc      0.823  recomputed      0.823
+  ok  high band, f14                               doc      0.083  recomputed      0.083
+  ok  high band, f18                               doc     -0.021  recomputed     -0.021
+
+Amendment 6, ranges quoted in prose (parsed from the doc, not hardcoded)
+  ok  min floor multiplier                         doc      1.470  recomputed      1.473
+  ok  max floor multiplier                         doc      2.230  recomputed      2.231
+  ok  min residual knee ratio                      doc      2.700  recomputed      2.733
+  ok  max residual knee ratio                      doc      3.600  recomputed      3.552
+
+Amendment 6b, the equalisation commissioning
+  ok  added v 500, rise                            doc    475.400  recomputed    475.438
+  ok  added v 500, rise/v                          doc      0.951  recomputed      0.951
+  ok  added v 2000, rise                           doc   1955.500  recomputed   1955.531
+  ok  added v 2000, rise/v                         doc      0.978  recomputed      0.978
+  ok  added v 8000, rise                           doc   7936.100  recomputed   7936.120
+  ok  added v 8000, rise/v                         doc      0.992  recomputed      0.992
+  ok  quiet_raw snr                                doc    170.000  recomputed    170.337
+  ok  quiet_raw bias                               doc     -7.770  recomputed     -7.769
+  ok  quiet_raw sd                                 doc      1.880  recomputed      1.879
+  ok  loud_raw snr                                 doc     19.000  recomputed     18.920
+  ok  loud_raw bias                                doc    -17.530  recomputed    -17.535
+  ok  loud_raw sd                                  doc      2.510  recomputed      2.506
+  ok  quiet_eq snr                                 doc     19.000  recomputed     19.055
+  ok  quiet_eq bias                                doc    -18.620  recomputed    -18.620
+  ok  quiet_eq sd                                  doc      1.880  recomputed      1.879
+  ok  loud_eq snr                                  doc     19.000  recomputed     18.920
+  ok  loud_eq bias                                 doc    -17.530  recomputed    -17.535
+  ok  loud_eq sd                                   doc      2.510  recomputed      2.506
+  ok  gap before                                   doc      9.770  recomputed      9.766
+  ok  gap after                                    doc      1.090  recomputed      1.085
+  ok  slope, gap                                   doc      9.770  recomputed      9.766
+  ok  slope, snr ratio                             doc      9.000  recomputed      9.003
+  ok  slope, points/e-fold                         doc      4.400  recomputed      4.444
+  ok  applied differential                         doc      2.400  recomputed      2.410
+
+Amendment 7, the measured texture slope
+  ok  slope, f5.6                                  doc      3.402  recomputed      3.402
+  ok  slope, f8                                    doc      3.080  recomputed      3.080
+  ok  slope, f11                                   doc      2.949  recomputed      2.949
+  ok  slope, f14                                   doc      3.031  recomputed      3.031
+  ok  slope, f18                                   doc      3.168  recomputed      3.168
+  ok  slope, overall mean                          doc      3.126  recomputed      3.126
+  ok  slope, overall sd                            doc      0.294  recomputed      0.294
+  ok  between-aperture spread                      doc      0.155  recomputed      0.155
+  ok  within-aperture spread                       doc      0.247  recomputed      0.247
+  ok  spread ratio                                 doc      0.630  recomputed      0.630
+  ok  ramp sd / span                               doc      0.354  recomputed      0.354
+
+Amendment 7, bias against slope
+  ok  alpha 2.000, alpha                           doc      2.000  recomputed      2.000
+  ok  alpha 2.000, bias                            doc     -0.440  recomputed     -0.445
+  ok  alpha 2.000, sd                              doc      1.050  recomputed      1.051
+  ok  alpha 2.200, alpha                           doc      2.200  recomputed      2.200
+  ok  alpha 2.200, bias                            doc     -1.530  recomputed     -1.530
+  ok  alpha 2.200, sd                              doc      2.010  recomputed      2.012
+  ok  alpha 2.600, alpha                           doc      2.600  recomputed      2.600
+  ok  alpha 2.600, bias                            doc     -3.970  recomputed     -3.971
+  ok  alpha 2.600, sd                              doc      1.440  recomputed      1.435
+  ok  alpha 3.000, alpha                           doc      3.000  recomputed      3.000
+  ok  alpha 3.000, bias                            doc     -3.430  recomputed     -3.429
+  ok  alpha 3.000, sd                              doc      1.880  recomputed      1.879
+  ok  alpha 3.126, alpha                           doc      3.126  recomputed      3.126
+  ok  alpha 3.126, bias                            doc     -4.240  recomputed     -4.243
+  ok  alpha 3.126, sd                              doc      1.050  recomputed      1.051
+  ok  alpha 3.400, alpha                           doc      3.400  recomputed      3.400
+  ok  alpha 3.400, bias                            doc     -4.240  recomputed     -4.243
+  ok  alpha 3.400, sd                              doc      1.050  recomputed      1.051
+  ok  alpha 3.800, alpha                           doc      3.800  recomputed      3.800
+  ok  alpha 3.800, bias                            doc     -5.060  recomputed     -5.056
+  ok  alpha 3.800, sd                              doc      1.440  recomputed      1.435
+  ok  points per unit alpha                        doc     -2.350  recomputed     -2.346
+  ok  bias at alpha 2.2                            doc     -1.530  recomputed     -1.530
+  ok  bias at fabric alpha                         doc     -4.240  recomputed     -4.243
+  ok  2.2 vs fabric difference                     doc      2.700  recomputed      2.713
+
+Amendment 7, quantisation
+  ok  one bin, % of f_c                            doc      4.340  recomputed      4.340
+  ok  smallest gap                                 doc      0.271  recomputed      0.271
+  ok  endpoint difference                          doc      4.610  recomputed      4.612
+  ok  endpoint sigma                               doc     10.400  recomputed     10.370
+  ok  hypotheses, bins apart                       doc      6.500  recomputed      6.467
+
+Amendment 7, threat T6
+  ok  T6, bins examined                            doc   1350.000  recomputed   1350.000
+  ok  T6, expected false positives                 doc      1.800  recomputed      1.823
+  ok  T6, bins observed                            doc      1.000  recomputed      1.000
+  ok  T6, max shared frequency                     doc      1.000  recomputed      1.000
+
+Amendment 7a, the paired aperture test
+  ok  7a effect, f5.6                              doc      0.276  recomputed      0.276
+  ok  7a t, f5.6                                   doc      3.910  recomputed      3.910
+  ok  7a effect, f8                                doc     -0.046  recomputed     -0.046
+  ok  7a t, f8                                     doc     -0.650  recomputed     -0.655
+  ok  7a effect, f11                               doc     -0.177  recomputed     -0.177
+  ok  7a t, f11                                    doc     -2.510  recomputed     -2.511
+  ok  7a effect, f14                               doc     -0.095  recomputed     -0.095
+  ok  7a t, f14                                    doc     -1.350  recomputed     -1.346
+  ok  7a effect, f18                               doc      0.043  recomputed      0.042
+  ok  7a t, f18                                    doc      0.600  recomputed      0.601
+  ok  7a residual sd                               doc      0.173  recomputed      0.173
+  ok  7a residual df                               doc     20.000  recomputed     20.000
+  ok  7a effect se                                 doc      0.071  recomputed      0.071
+  ok  7a sign positives                            doc      6.000  recomputed      6.000
+  ok  7a sign n                                    doc      6.000  recomputed      6.000
+  ok  7a mean difference                           doc      0.220  recomputed      0.220
+  ok  7a sign p                                    doc      0.031  recomputed      0.031
+  ok  7a predicted arm H2                          doc      0.845  recomputed      0.845
+  ok  7a band tilt                                 doc      1.195  recomputed      1.195
+  ok  7a shape vs level %                          doc     27.000  recomputed     27.097
+
+Amendment 7a, the object slope
+  ok  7a f_c H2, f5.6                              doc      0.540  recomputed      0.540
+  ok  7a f_c H3, f5.6                              doc      0.692  recomputed      0.692
+  ok  7a f_c H2, f8                                doc      0.378  recomputed      0.378
+  ok  7a f_c H3, f8                                doc      0.484  recomputed      0.484
+  ok  7a f_c H2, f11                               doc      0.275  recomputed      0.275
+  ok  7a f_c H3, f11                               doc      0.352  recomputed      0.352
+  ok  7a f_c H2, f14                               doc      0.216  recomputed      0.216
+  ok  7a f_c H3, f14                               doc      0.277  recomputed      0.277
+  ok  7a f_c H2, f18                               doc      0.168  recomputed      0.168
+  ok  7a f_c H3, f18                               doc      0.215  recomputed      0.215
+  ok  7a object H2, f5.6                           doc      3.067  recomputed      3.067
+  ok  7a object H3, f5.6                           doc      3.149  recomputed      3.149
+  ok  7a object H2, f8                             doc      2.567  recomputed      2.566
+  ok  7a object H3, f8                             doc      2.699  recomputed      2.699
+  ok  7a object H2, f11                            doc      2.175  recomputed      2.174
+  ok  7a object H3, f11                            doc      2.388  recomputed      2.388
+  ok  7a object H2, f14                            doc      1.943  recomputed      1.943
+  ok  7a object H3, f14                            doc      2.263  recomputed      2.263
+  ok  7a object H2, f18                            doc      1.549  recomputed      1.549
+  ok  7a object H3, f18                            doc      2.074  recomputed      2.074
+  ok  7a object mean H2                            doc      2.260  recomputed      2.260
+  ok  7a object mean H3                            doc      2.515  recomputed      2.515
+  ok  7a distance from 2.2                         doc      0.060  recomputed      0.060
+  ok  7a applicable bias                           doc      1.800  recomputed      1.671
+
+Amendment 8, the A1' bias ladder
+  ok  8 GQ Nyquist (independent)                   doc      0.354  recomputed      0.354
+  ok  8 boundary (independent)                     doc      2.739  recomputed      2.739
+  ok  8 gap (independent)                          doc      0.281  recomputed      0.281
+  ok  8 harness planted 0.12, recovered            doc      0.121  recomputed      0.122
+  ok  8 harness planted 0.12, ratio                doc      1.013  recomputed      1.013
+  ok  8 harness planted 0.12, snr                  doc   4794.000  recomputed   4793.999
+  ok  8 harness planted 0.18, recovered            doc      0.176  recomputed      0.176
+  ok  8 harness planted 0.18, ratio                doc      0.978  recomputed      0.978
+  ok  8 harness planted 0.18, snr                  doc   7845.000  recomputed   7844.711
+  ok  8 harness planted 0.25, recovered            doc      0.240  recomputed      0.240
+  ok  8 harness planted 0.25, ratio                doc      0.961  recomputed      0.961
+  ok  8 harness planted 0.25, snr                  doc   9747.000  recomputed   9747.186
+  ok  8 harness planted 0.30, recovered            doc      0.284  recomputed      0.284
+  ok  8 harness planted 0.30, ratio                doc      0.948  recomputed      0.948
+  ok  8 harness planted 0.30, snr                  doc  10505.000  recomputed  10505.289
+  ok  8 B_hat H2 native                            doc      3.295  recomputed      3.295
+  ok  8 B_sem H2 native                            doc      0.007  recomputed      0.007
+  ok  8 distance H2 native                         doc      0.556  recomputed      0.556
+  ok  8 sigma H2 native                            doc     83.200  recomputed     83.159
+  ok  8 distance H2 native is internally consistent doc      0.556  recomputed      0.556
+  ok  8 B_hat H2 equalised                         doc      3.317  recomputed      3.317
+  ok  8 B_sem H2 equalised                         doc      0.006  recomputed      0.006
+  ok  8 distance H2 equalised                      doc      0.578  recomputed      0.578
+  ok  8 sigma H2 equalised                         doc     94.400  recomputed     94.352
+  ok  8 distance H2 equalised is internally consistent doc      0.578  recomputed      0.578
+  ok  8 B_hat H3 native                            doc      2.685  recomputed      2.685
+  ok  8 B_sem H3 native                            doc      0.011  recomputed      0.010
+  ok  8 distance H3 native                         doc      0.054  recomputed      0.054
+  ok  8 sigma H3 native                            doc      5.200  recomputed      5.152
+  ok  8 distance H3 native is internally consistent doc      0.054  recomputed      0.054
+  ok  8 B_hat H3 equalised                         doc      2.715  recomputed      2.715
+  ok  8 B_sem H3 equalised                         doc      0.011  recomputed      0.011
+  ok  8 distance H3 equalised                      doc      0.025  recomputed      0.024
+  ok  8 sigma H3 equalised                         doc      2.300  recomputed      2.304
+  ok  8 distance H3 equalised is internally consistent doc      0.025  recomputed      0.024
+  ok  8 forward native f11, H2                     doc      0.252  recomputed      0.252
+  ok  8 forward native f11, H3                     doc      0.300  recomputed      0.300
+  ok  8 forward native f11, gap                    doc     16.000  recomputed     15.977
+  ok  8 forward native f11, sigma                  doc     14.200  recomputed     14.247
+  ok  8 forward native f14, H2                     doc      0.202  recomputed      0.202
+  ok  8 forward native f14, H3                     doc      0.252  recomputed      0.252
+  ok  8 forward native f14, gap                    doc     19.900  recomputed     19.863
+  ok  8 forward native f14, sigma                  doc     42.400  recomputed     42.414
+  ok  8 forward native f18, H2                     doc      0.160  recomputed      0.160
+  ok  8 forward native f18, H3                     doc      0.198  recomputed      0.198
+  ok  8 forward native f18, gap                    doc     19.500  recomputed     19.512
+  ok  8 forward native f18, sigma                  doc     40.900  recomputed     40.897
+  ok  8 forward equalised f11, H2                  doc      0.249  recomputed      0.249
+  ok  8 forward equalised f11, H3                  doc      0.293  recomputed      0.293
+  ok  8 forward equalised f11, gap                 doc     15.100  recomputed     15.094
+  ok  8 forward equalised f11, sigma               doc     14.100  recomputed     14.135
+  ok  8 forward equalised f14, H2                  doc      0.201  recomputed      0.201
+  ok  8 forward equalised f14, H3                  doc      0.250  recomputed      0.250
+  ok  8 forward equalised f14, gap                 doc     19.600  recomputed     19.613
+  ok  8 forward equalised f14, sigma               doc     34.700  recomputed     34.696
+  ok  8 forward equalised f18, H2                  doc      0.160  recomputed      0.160
+  ok  8 forward equalised f18, H3                  doc      0.198  recomputed      0.198
+  ok  8 forward equalised f18, gap                 doc     19.500  recomputed     19.512
+  ok  8 forward equalised f18, sigma               doc     40.900  recomputed     40.897
+  ok  8 reach f5.6, f_c H2                         doc      0.540  recomputed      0.540
+  ok  8 reach f5.6, H2/Nyq                         doc      1.528  recomputed      1.528
+  ok  8 reach f5.6, f_c H3                         doc      0.692  recomputed      0.692
+  ok  8 reach f5.6, H3/Nyq                         doc      1.958  recomputed      1.957
+  ok  8 reach f8, f_c H2                           doc      0.378  recomputed      0.378
+  ok  8 reach f8, H2/Nyq                           doc      1.070  recomputed      1.070
+  ok  8 reach f8, f_c H3                           doc      0.484  recomputed      0.484
+  ok  8 reach f8, H3/Nyq                           doc      1.370  recomputed      1.370
+  ok  8 reach f11, f_c H2                          doc      0.275  recomputed      0.275
+  ok  8 reach f11, H2/Nyq                          doc      0.778  recomputed      0.778
+  ok  8 reach f11, f_c H3                          doc      0.352  recomputed      0.352
+  ok  8 reach f11, H3/Nyq                          doc      0.997  recomputed      0.997
+  ok  8 reach f14, f_c H2                          doc      0.216  recomputed      0.216
+  ok  8 reach f14, H2/Nyq                          doc      0.611  recomputed      0.611
+  ok  8 reach f14, f_c H3                          doc      0.277  recomputed      0.277
+  ok  8 reach f14, H3/Nyq                          doc      0.783  recomputed      0.783
+  ok  8 reach f18, f_c H2                          doc      0.168  recomputed      0.168
+  ok  8 reach f18, H2/Nyq                          doc      0.475  recomputed      0.476
+  ok  8 reach f18, f_c H3                          doc      0.215  recomputed      0.215
+  ok  8 reach f18, H3/Nyq                          doc      0.609  recomputed      0.609
+
+Amendment 8, prose
+  ok  8 P3 max B error                             doc     13.020  recomputed     13.017
+  ok  8 P3 share of gap                            doc     46.400  recomputed     46.368
+  ok  8 H2 clears by                               doc     94.000  recomputed     94.352
+  ok  8 H3 clears by                               doc      2.300  recomputed      2.304
+  ok  8 f11 scatter ratio                          doc      3.600  recomputed      3.559
+  ok  8 native fcN spread                          doc      2.360  recomputed      2.360
+  ok  8 equalised fcN spread                       doc      3.190  recomputed      3.186
+  ok  8 forward combined, native                   doc     60.600  recomputed     60.617
+  ok  8 forward combined, equalised                doc     55.500  recomputed     55.463
+  ok  8 inverse worst sigma                        doc      2.300  recomputed      2.304
+  ok  8 GQ Nyquist in prose                        doc      0.354  recomputed      0.354
+  ok  8 f11 below Nyquist                          doc      0.350  recomputed      0.348
+
+all Amendment 6, 7, 7a and 8 figures reproduce

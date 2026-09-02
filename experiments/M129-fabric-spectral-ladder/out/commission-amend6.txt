@@ -28,6 +28,13 @@ baseline on the real document: exit 0
   ok   7a mean object slope                     caught, and named the right line
   ok   7a predicted steepening                  caught, and named the right line
   ok   7a band tilt                             caught, and named the right line
+  ok   8 harness table                          caught, and named the right line
+  ok   8 margin table, B_hat                    caught, and named the right line
+  ok   8 margin table, distance alone           caught, and named the right line
+  ok   8 forward table                          caught, and named the right line
+  ok   8 reach table                            caught, and named the right line
+  ok   8 combined separation                    caught, and named the right line
+  ok   8 Nyquist in prose                       caught, and named the right line
 
-28/28 plants caught
+35/35 plants caught
 check_amend6.py is commissioned.

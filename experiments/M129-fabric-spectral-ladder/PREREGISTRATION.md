@@ -893,3 +893,133 @@ against a level ratio of **1.72x** being corrected - so the shape error is about
 **27%** of the level difference. Not negligible, not dominant. It is carried as an
 uncertainty on the equalised arm, and it is a further reason Amendment 5 required both
 arms to be reported rather than averaged.
+
+### Amendment 8 - the bias does not cancel, so the ladder stops inverting and compares forward
+
+Condition A1' asked whether the crossing estimator's bias cancels in the product
+`f_c . N`. It does not, and the phrasing was loose enough to hide why. If the estimator
+returns `f_c_hat = f_c (1+b)` then `K = mean(f_c_hat . N) = K_true (1+b)` and
+`B_hat = B/(1+b)`. Nothing cancels anywhere. The bias passes through the product
+undiminished and lands entirely on `B`. The only real questions are how big it is
+against the **28.07%** that separates the hypotheses, and whether it is the same at
+every aperture.
+
+`src/bias_ladder.py` answers both by synthesising a ladder at each hypothesis' own
+cutoffs, with the object slope Amendment 7a inferred for that hypothesis, degraded
+to each aperture's measured low-band SNR, and running the real estimator over it.
+Predictions P1-P5 were written into its docstring before the first run.
+
+**P1 holds.** `f_c` is read low in all 12 measured cells, worst -16.90%, best -5.12%.
+**P2 holds.** `B` is therefore inferred high, in every arm.
+
+**P3 IS FALSIFIED.** I predicted the inflation of `B` would stay under 5%, reasoning
+from Amendment 7a's applicable bias near 1.8%. It reaches **13.02%** - seven
+times my estimate, and **46.4%** of the gap between the hypotheses. The reason is
+in the harness table below: the bias grows with the cutoff, and Amendment 7a
+quoted a single number for a quantity that is not a single number. The registered
+falsifier was P4 failing or the error exceeding 14%, and neither happened, so the
+lane continues - but the analysis it was going to use does not.
+
+| planted `f_c` | recovered | ratio | low-band SNR |
+| --- | --- | --- | --- |
+| 0.1200 | 0.1215 | 1.0128 | 4794 |
+| 0.1800 | 0.1761 | 0.9783 | 7845 |
+| 0.2500 | 0.2403 | 0.9612 | 9747 |
+| 0.3000 | 0.2845 | 0.9483 | 10505 |
+
+The noise floor in that table is pushed far below anything the ladder sees - SNR
+4794 to 10505 against 1730 to 2802 on the real ladder - and the ratio still runs from
+1.0128 at `f_c` 0.12 down to 0.9483 at 0.30. A cutoff-dependent bias with almost no
+noise to blame is the one kind that does not divide out of a ladder: it tilts
+`f_c . N` across the apertures and so tilts the fitted `B`.
+
+**P4 passes, and hides the result.** Asking only which side of the boundary
+`B_hat` falls on gives four passes out of four. Asking by how much, in units of the
+replicate scatter, gives this.
+
+| built at | arm | `B_hat` | s.e. | distance from boundary | sigma |
+| --- | --- | --- | --- | --- | --- |
+| H2 | native | 3.2951 | 0.0067 | 0.5560 | 83.2 |
+| H2 | equalised | 3.3172 | 0.0061 | 0.5780 | 94.4 |
+| H3 | native | 2.6853 | 0.0105 | 0.0539 | 5.2 |
+| H3 | equalised | 2.7147 | 0.0106 | 0.0245 | 2.3 |
+
+The boundary sits at `B` = 2.7391. **H2 clears it by 94 sigma and H3 by
+2.3.** That asymmetry is the finding. Under H3 every cutoff sits higher, nearer
+the lattice Nyquist, exactly where the harness shows the bias is largest, and
+f/11's replicate scatter under H3 is 3.6 times its scatter under H2. The lane's weak
+case is H3, and on the inverse analysis it is close to being no case at all.
+
+**P5 is falsified too, and in the interesting direction.** Equalising was expected
+to flatten `f_c . N`. It does the opposite: 2.36% native becomes
+3.19% equalised. Equalisation can only add noise, so it moves every
+aperture toward the worst one's bias rather than toward a common value, and the
+aperture whose bias moves furthest is the one with the highest cutoff. This does
+not retire the equalised arm - Amendment 5 requires both arms reported - but it
+removes the reason to prefer it, and Amendment 6's equalisation is now a control
+on the SNR explanation rather than the primary analysis.
+
+#### The registered change: compare forward, do not invert
+
+The inverse analysis pays the bias in full because the bias sits between the
+measurement and the answer. The forward comparison asks the other question: what
+cutoff would the estimator **report** under each hypothesis, and how does that
+compare with what it did report. The bias is then on both sides and cancels by
+construction rather than by subtraction. Read off the same runs, with no new
+simulation:
+
+| arm | ap | reported under H2 | reported under H3 | gap | sigma |
+| --- | --- | --- | --- | --- | --- |
+| native | f11 | 0.2524 | 0.3004 | 16.0% | 14.2 |
+| native | f14 | 0.2020 | 0.2520 | 19.9% | 42.4 |
+| native | f18 | 0.1595 | 0.1982 | 19.5% | 40.9 |
+| equalised | f11 | 0.2486 | 0.2928 | 15.1% | 14.1 |
+| equalised | f14 | 0.2009 | 0.2500 | 19.6% | 34.7 |
+| equalised | f18 | 0.1595 | 0.1982 | 19.5% | 40.9 |
+
+Combined separation **60.6 sigma** native, **55.5 sigma** equalised, against **2.3**
+for the inverse analysis on its weakest arm. The hypotheses stand 15% to 20%
+apart in the quantity the estimator actually reports, and that gap does not
+require knowing the bias - only that the bias is the same for a predicted cutoff
+and a measured one at the same frequency, which is the one thing about it that
+is certain.
+
+**These sigmas are an upper bound and must not be quoted as a forecast.** The
+scatter above is replicate-to-replicate on statistically identical synthetic
+scenes. The real measurement's scatter is ROI-to-ROI on one piece of fabric and
+will be larger, plausibly much larger. What the table establishes is the ordering
+- that the forward comparison is the stronger test - not the margin the real data
+will have. The real margin is measured by `ladder.py` and by nothing before it.
+
+**Registered now, before it touches real data:** the ladder's primary statistic
+is the forward comparison. For each hypothesis, predict the cutoff the estimator
+would report at each aperture by running the estimator over a synthetic scene at
+that hypothesis' cutoff, that aperture's measured SNR, and the object slope
+Amendment 7a infers for that hypothesis; then compare against the measured
+cutoffs by chi-squared over the primary arm, with the ROI-to-ROI scatter as the
+denominator. The inverse `B_hat` continues to be reported, because it is the
+interpretable number and because a large disagreement between the two would be
+evidence that the forward model is wrong. It is no longer the statistic that
+decides.
+
+#### f/11 has no margin under H3, in the units that decide it
+
+A scene planted at lattice cutoff `fc_lat` reads back at `fc_lat / LATTICE_PITCH_PX['GQ']`,
+so the largest cutoff the GQ lattice can represent is `0.5 / sqrt(2)` = **0.35355**
+sensor cyc/px. This is not a property of the simulation; it is the lattice's
+Nyquist and it applies to the real measurement identically.
+
+| ap | `f_c` H2 | / Nyquist | `f_c` H3 | / Nyquist | reachable |
+| --- | --- | --- | --- | --- | --- |
+| f5.6 | 0.5404 | 1.5284 | 0.6921 | 1.9575 | neither |
+| f8 | 0.3783 | 1.0699 | 0.4844 | 1.3702 | neither |
+| f11 | 0.2751 | 0.7781 | 0.3523 | 0.9965 | both |
+| f14 | 0.2161 | 0.6114 | 0.2768 | 0.7830 | both |
+| f18 | 0.1681 | 0.4755 | 0.2153 | 0.6090 | both |
+
+**Under H3, f/11's cutoff is 0.35% below the GQ lattice's Nyquist.** Section 2.3 called f/11's
+H3 margin "+0.24 cy/mm - not a margin". This says the same thing in the units
+that decide it: under H3 the lattice cannot resolve f/11's cutoff at all. f/14
+and f/18 are the measurement, as registered, and f/5.6 and f/8 are unreachable
+under either hypothesis, which is exactly the out-of-band role section 2.3 gave
+them.

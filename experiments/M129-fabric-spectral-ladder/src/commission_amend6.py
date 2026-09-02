@@ -147,6 +147,38 @@ PLANTS = [
      "band spanning 2.25x in frequency tilts one end relative to the other by **1.195x**,",
      "band spanning 2.25x in frequency tilts one end relative to the other by **1.295x**,",
      "7a band tilt"),
+    # --- Amendment 8 ------------------------------------------------------
+    ("8 harness table",
+     "| 0.3000 | 0.2845 | 0.9483 | 10505 |",
+     "| 0.3000 | 0.2845 | 0.9283 | 10505 |",
+     "harness planted 0.30, ratio"),
+    ("8 margin table, B_hat",
+     "| H3 | equalised | 2.7147 | 0.0106 | 0.0245 | 2.3 |",
+     "| H3 | equalised | 2.8147 | 0.0106 | 0.0245 | 2.3 |",
+     "B_hat H3 equalised"),
+    # The distance column must equal |B_hat - boundary|. Moving ONLY the distance
+    # leaves every external figure intact, so nothing outside the document can
+    # catch it. The internal-consistency check is the only thing that can.
+    ("8 margin table, distance alone",
+     "| H2 | equalised | 3.3172 | 0.0061 | 0.5780 | 94.4 |",
+     "| H2 | equalised | 3.3172 | 0.0061 | 0.5280 | 94.4 |",
+     "distance H2 equalised"),
+    ("8 forward table",
+     "| native | f18 | 0.1595 | 0.1982 | 19.5% | 40.9 |",
+     "| native | f18 | 0.1595 | 0.1982 | 19.5% | 44.9 |",
+     "forward native f18, sigma"),
+    ("8 reach table",
+     "| f11 | 0.2751 | 0.7781 | 0.3523 | 0.9965 | both |",
+     "| f11 | 0.2751 | 0.7781 | 0.3523 | 0.9765 | both |",
+     "reach f11, H3/Nyq"),
+    ("8 combined separation",
+     "Combined separation **60.6 sigma** native, **55.5 sigma** equalised, against **2.3**",
+     "Combined separation **66.6 sigma** native, **55.5 sigma** equalised, against **2.3**",
+     "forward combined, native"),
+    ("8 Nyquist in prose",
+     "so the largest cutoff the GQ lattice can represent is `0.5 / sqrt(2)` = **0.35355**",
+     "so the largest cutoff the GQ lattice can represent is `0.5 / sqrt(2)` = **0.36355**",
+     "GQ Nyquist in prose"),
 ]
 
 
