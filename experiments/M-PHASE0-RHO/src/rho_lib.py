@@ -331,6 +331,19 @@ def _log_model(
     return alpha + logsumexp(np.stack([lb, la], axis=0), axis=0)
 
 
+def _log_total_model(
+    params: np.ndarray,
+    base: np.ndarray,
+    alias: np.ndarray,
+    angular_model: bool,
+    noise_floor: float,
+) -> np.ndarray:
+    scene = _log_model(params, base, alias, angular_model)
+    if noise_floor <= 0.0:
+        return scene
+    return np.logaddexp(scene, math.log(float(noise_floor)))
+
+
 def fit_gq_powerlaw(
     patch: np.ndarray,
     noise_floor: float = 0.0,
@@ -357,25 +370,28 @@ def fit_gq_powerlaw(
     one_side = (fy > 0) | ((np.abs(fy) < 1e-15) & (fx > 0))
     candidate = legal & one_side & (r >= rmin) & (r <= rmax)
     significance = max(min_significance * noise_se, 0.0)
-    positive = corrected > max(significance, np.finfo(float).tiny)
-    keep = candidate & positive & np.isfinite(corrected)
+    significant = corrected > max(significance, np.finfo(float).tiny)
+    keep = candidate & (psd > np.finfo(float).tiny) & np.isfinite(psd)
 
     total_candidate = int(np.sum(candidate))
-    significant_bins = int(np.sum(keep))
+    significant_bins = int(np.sum(candidate & significant))
     if significant_bins < 40:
         raise ValueError(
             f"only {significant_bins} significant bins, need at least 40"
         )
+    rr_sig = r[candidate & significant]
     rr = r[keep]
-    span = float(rr.max() / rr.min())
+    span = float(rr_sig.max() / rr_sig.min())
     if span < 2.5:
         raise ValueError(f"frequency span {span:.3f} is below 2.5")
-    if float(rr.max()) < 0.25:
+    if float(rr_sig.max()) < 0.25:
         raise ValueError("fit does not reach 0.25 sensor cycles/pixel")
 
     b = base[keep]
     a = alias[keep]
-    y = np.log(corrected[keep])
+    y = np.log(psd[keep])
+    corrected_keep = corrected[keep]
+    significant_keep = significant[keep]
     sec = sector_index(theta[keep], sectors=16)
     hold = (sec % holdout_mod) == 0
     train = ~hold
@@ -383,7 +399,23 @@ def fit_gq_powerlaw(
         raise ValueError("fit or holdout sector has too few bins")
 
     p0 = np.array(
-        [float(np.median(y)), 2.0, 0.0, 0.0, 0.0, 0.0],
+        [
+            float(
+                np.median(
+                    np.log(
+                        np.maximum(
+                            corrected_keep[significant_keep],
+                            np.finfo(float).tiny,
+                        )
+                    )
+                )
+            ),
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
         dtype=float,
     )
     if angular_model:
@@ -396,7 +428,16 @@ def fit_gq_powerlaw(
         use0 = p0[:2]
 
     def resid(p: np.ndarray, mask: np.ndarray) -> np.ndarray:
-        return _log_model(p, b[mask], a[mask], angular_model) - y[mask]
+        return (
+            _log_total_model(
+                p,
+                b[mask],
+                a[mask],
+                angular_model,
+                float(noise_floor),
+            )
+            - y[mask]
+        )
 
     fit = least_squares(
         lambda p: resid(p, train),
@@ -428,10 +469,20 @@ def fit_gq_powerlaw(
     else:
         beta_se = float("nan")
 
-    pred_all = _log_model(params, b, a, angular_model)
-    err_dex = np.abs(pred_all - y) / math.log(10.0)
-    fit_err = err_dex[train]
-    hold_err = err_dex[hold]
+    pred_scene = _log_model(params, b, a, angular_model)
+    scene_err_dex = (
+        np.abs(
+            pred_scene[significant_keep]
+            - np.log(corrected_keep[significant_keep])
+        )
+        / math.log(10.0)
+    )
+    sig_train = train[significant_keep]
+    sig_hold = hold[significant_keep]
+    fit_err = scene_err_dex[sig_train]
+    hold_err = scene_err_dex[sig_hold]
+    if fit_err.size == 0 or hold_err.size == 0:
+        raise ValueError("significant fit or holdout sector has too few bins")
     rg = rho_from_params("G-1x", beta, angular, grid=8)
     rrho = rho_from_params("RB-1x", beta, angular, grid=8)
     comps = component_ratios("G-1x", beta, angular, grid=8)
@@ -455,10 +506,10 @@ def fit_gq_powerlaw(
         rho_rb=rrho,
         rho_g_grid16=rho_from_params("G-1x", beta, angular, grid=16),
         rho_g_grid32=rho_from_params("G-1x", beta, angular, grid=32),
-        n_fit=int(train.sum()),
-        n_holdout=int(hold.sum()),
+        n_fit=int(sig_train.sum()),
+        n_holdout=int(sig_hold.sum()),
         welch_blocks=blocks,
-        max_fit_frequency=float(rr.max()),
+        max_fit_frequency=float(rr_sig.max()),
         frequency_span=span,
         holdout_median_abs_dex=float(np.median(hold_err)),
         holdout_p90_abs_dex=float(np.percentile(hold_err, 90)),

@@ -603,3 +603,22 @@ it upward. Mistaking target texture or illumination structure for sensor gain
 can remove true scene power and push `rho` downward, so disagreement between
 the two split maps enters the systematic envelope rather than being assigned a
 one-sided sign.
+
+---
+
+## Amendment A3 -- extend commissioning beyond the original sweep
+
+Written after one explicitly exploratory fabric-ROI probe and before accepting
+or aggregating any real estimate. The probe returned fitted `beta` above 4 and
+`rho` below 0.01, outside the synthetic values in C2 and C3. Those probe values
+are not licensed results.
+
+The known-answer ladders are extended before further measurement:
+
+* C2 adds `beta` 5 and 6 under the existing error gates;
+* C3 adds planted `rho` 0.003 and 0.001 under the existing dex gates;
+* the noisy C5 plant is repeated at `rho = 0.003`.
+
+The independent truth generator still chooses the plant and the estimator
+still cannot import it. Any failure returns commissioning to red and blocks the
+real-data analysis.

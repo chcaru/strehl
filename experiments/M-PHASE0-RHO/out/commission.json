@@ -25,7 +25,7 @@
     {
       "name": "C2 power-law beta ladder",
       "status": "PASS",
-      "detail": "max |error| 0.010",
+      "detail": "max |error| 0.016",
       "exercised": true
     },
     {
@@ -43,7 +43,7 @@
     {
       "name": "C5 photon plus read subtraction",
       "status": "PASS",
-      "detail": "error raw 0.043, dark 0.042, full 0.003 dex",
+      "detail": "worst error raw 1.805, dark 1.803, full 0.022 dex",
       "exercised": true
     },
     {
@@ -112,7 +112,7 @@
       "name": "D5 omit photon noise",
       "status": "CAUGHT",
       "catcher": "C5",
-      "detail": "dark-only 0.042 vs full 0.003 dex"
+      "detail": "dark-only 1.803 vs full 0.022 dex"
     },
     {
       "name": "D6 clip negative corrected bins",
@@ -182,6 +182,20 @@
         "error": 0.00039772081984068564,
         "rho_truth": 0.009840738141126081,
         "rho_est": 0.009846661027362145
+      },
+      {
+        "truth": 5.0,
+        "estimated": 5.016203980192014,
+        "error": 0.016203980192013745,
+        "rho_truth": 0.0021262383046846143,
+        "rho_est": 0.0020736997264421153
+      },
+      {
+        "truth": 6.0,
+        "estimated": 6.016304447050398,
+        "error": 0.016304447050398352,
+        "rho_truth": 0.000453124711417479,
+        "rho_est": 0.00044185403819866254
       }
     ],
     "rho_ladder": [
@@ -214,16 +228,40 @@
         "beta_truth": 3.989385963762803,
         "rho_est": 0.00982978691578537,
         "error_dex": 0.007455896440663463
+      },
+      {
+        "rho_truth": 0.003,
+        "beta_truth": 4.7768092661136485,
+        "rho_est": 0.002964439338342734,
+        "error_dex": 0.0051786869648267585
+      },
+      {
+        "rho_truth": 0.001,
+        "beta_truth": 5.488008522492381,
+        "rho_est": 0.0010057946839231514,
+        "error_dex": 0.0025093358494915926
       }
     ],
-    "noise_control": {
-      "raw_error_dex": 0.04257220906200744,
-      "dark_error_dex": 0.04240936709149275,
-      "full_error_dex": 0.00250115307670453,
-      "raw_rho": 0.11029916102726824,
-      "dark_rho": 0.1102578112829616,
-      "full_rho": 0.09942574341390624
-    },
+    "noise_control": [
+      {
+        "rho_truth": 0.1,
+        "raw_error_dex": 0.04257220906200744,
+        "dark_error_dex": 0.04240402755660929,
+        "full_error_dex": 0.0024056564523384457,
+        "raw_rho": 0.11029916102726824,
+        "dark_rho": 0.11025645570089701,
+        "full_rho": 0.09944760845536398
+      },
+      {
+        "rho_truth": 0.003,
+        "raw_error_dex": 1.8050944696381939,
+        "dark_error_dex": 1.8029176693943865,
+        "full_error_dex": 0.022102611528177742,
+        "raw_rho": 0.1915207017484431,
+        "dark_rho": 0.19056315046004302,
+        "full_rho": 0.0028511406573167265
+      }
+    ],
     "anisotropy": {
       "truth_rho": 0.08219247495954296,
       "angular": {

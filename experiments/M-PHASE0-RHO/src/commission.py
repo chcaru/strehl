@@ -127,7 +127,8 @@ def main():
     # C2: beta ladder.
     beta_rows = []
     c2_ok = True
-    for i, beta in enumerate((1.5, 2.0, 2.5, 3.0, 4.0)):
+    beta_values = (1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0)
+    for i, beta in enumerate(beta_values):
         patch, _, _ = make_patch(beta, 20 + i, noise=False)
         fit = fit_patch(patch, angular=False)
         err = abs(fit.beta - beta)
@@ -145,14 +146,15 @@ def main():
         "C2 power-law beta ladder",
         c2_ok,
         "max |error| %.3f" % max(r["error"] for r in beta_rows),
-        exercised=(len(beta_rows) == 5),
+        exercised=(len(beta_rows) == len(beta_values)),
     )
 
     # C3 and C4: exact planted aggregate rho values, sampled through Bayer GQ.
     rho_rows = []
     c3_ok = True
     c4_ok = True
-    for i, target in enumerate((1.0, 0.3, 0.1, 0.03, 0.01)):
+    rho_values = (1.0, 0.3, 0.1, 0.03, 0.01, 0.003, 0.001)
+    for i, target in enumerate(rho_values):
         beta = T.beta_for_rho(target, "G")
         patch, truth_patch, _ = make_patch(beta, 50 + i, noise=False)
         c4_ok &= np.array_equal(patch, truth_patch)
@@ -174,43 +176,67 @@ def main():
         c3_ok,
         "median %.3f dex, worst %.3f dex"
         % (median_dex, max(r["error_dex"] for r in rho_rows)),
-        exercised=(len(rho_rows) == 5),
+        exercised=(len(rho_rows) == len(rho_values)),
     )
     tally.control(
         "C4 Bayer/GQ sampling",
         c4_ok,
         "estimator and independent sampler agree on all planted scenes",
-        exercised=(len(rho_rows) == 5 and c12),
+        exercised=(len(rho_rows) == len(rho_values) and c12),
     )
 
-    # C5: noisy plant. Full white-floor subtraction must beat raw and dark-only.
-    beta = T.beta_for_rho(0.1, "G")
-    field = T.powerlaw_field(1536, beta, 77)
+    # C5: noisy plants. Full white-floor subtraction must beat raw and dark-only,
+    # including below the original rho sweep.
     mean_dn = 4000.0
     gain = 0.4
     read = 2.5
-    raw = T.sampled_raw(
-        field,
-        mean_dn=mean_dn,
-        contrast_dn=300.0,
-        gain_dn_per_e=gain,
-        read_sd_dn=read,
-        seed=91,
-        add_noise=True,
-    )
-    patch = R.extract_gq(raw, 768, 768, 640)
     full_floor = gain * mean_dn + read**2
     dark_floor = read**2
-    f_raw = fit_patch(patch, 0.0, angular=False)
-    f_dark = fit_patch(patch, dark_floor, angular=False)
-    f_full = fit_patch(patch, full_floor, angular=False)
-    eraw = abs(math.log10(f_raw.rho_g / 0.1))
-    edark = abs(math.log10(f_dark.rho_g / 0.1))
-    efull = abs(math.log10(f_full.rho_g / 0.1))
+    noise_rows = []
+    c5_ok = True
+    for i, target in enumerate((0.1, 0.003)):
+        beta = T.beta_for_rho(target, "G")
+        field = T.powerlaw_field(1536, beta, 77 + i)
+        raw = T.sampled_raw(
+            field,
+            mean_dn=mean_dn,
+            contrast_dn=300.0,
+            gain_dn_per_e=gain,
+            read_sd_dn=read,
+            seed=91 + i,
+            add_noise=True,
+        )
+        patch = R.extract_gq(raw, 768, 768, 640)
+        f_raw = fit_patch(patch, 0.0, angular=False)
+        f_dark = fit_patch(patch, dark_floor, angular=False)
+        f_full = fit_patch(patch, full_floor, angular=False)
+        eraw = abs(math.log10(f_raw.rho_g / target))
+        edark = abs(math.log10(f_dark.rho_g / target))
+        efull = abs(math.log10(f_full.rho_g / target))
+        c5_ok &= efull <= 0.30 and efull < eraw and efull < edark
+        noise_rows.append(
+            {
+                "rho_truth": target,
+                "raw_error_dex": eraw,
+                "dark_error_dex": edark,
+                "full_error_dex": efull,
+                "raw_rho": f_raw.rho_g,
+                "dark_rho": f_dark.rho_g,
+                "full_rho": f_full.rho_g,
+            }
+        )
     c5 = tally.control(
         "C5 photon plus read subtraction",
-        efull <= 0.30 and efull < eraw and efull < edark,
-        f"error raw {eraw:.3f}, dark {edark:.3f}, full {efull:.3f} dex",
+        c5_ok,
+        (
+            "worst error raw %.3f, dark %.3f, full %.3f dex"
+            % (
+                max(r["raw_error_dex"] for r in noise_rows),
+                max(r["dark_error_dex"] for r in noise_rows),
+                max(r["full_error_dex"] for r in noise_rows),
+            )
+        ),
+        exercised=(len(noise_rows) == 2),
     )
 
     # C6/C11: pure noise has no scene power. Real cross power is signed and
@@ -489,14 +515,7 @@ def main():
     payload["details"] = {
         "beta_ladder": beta_rows,
         "rho_ladder": rho_rows,
-        "noise_control": {
-            "raw_error_dex": eraw,
-            "dark_error_dex": edark,
-            "full_error_dex": efull,
-            "raw_rho": f_raw.rho_g,
-            "dark_rho": f_dark.rho_g,
-            "full_rho": f_full.rho_g,
-        },
+        "noise_control": noise_rows,
         "anisotropy": {
             "truth_rho": truth,
             "angular": fa.to_dict(),
