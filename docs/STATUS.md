@@ -39,6 +39,50 @@ general softness.
 
 ## 2. What was settled this session
 
+### 2.0 Phase 0 of the SOTA path — three lanes closed, zero captures consumed
+
+The owner's `docs/proposals/2026-08-sota-path.md` front-loads phase-0 gates that can
+kill an item before it is built. Three are now closed. **None consumed a capture, a
+decode, or a frame.** Two of the three found their headline measurement already sitting
+in the corpus — a pattern strong enough that every remaining lane should begin by
+searching for existing data before planning any decode.
+
+**M-PHASE0-PTC — B1 is a port, not a build.** Its acceptance bar names ±0.0642%
+precision as an accuracy target for a quantity whose two best independent measurements
+disagree by 1.33%. Its estimator already exists and has already been run in-stack
+(M61-E1: 12 subjects, 1554 frames, ISO 50–1000, passing pre-registered control) — the
+proposal cites M90 six times and M61 zero times. One named output rests on a mechanism
+measured to fail twice and must be struck. `docs/research/M-PHASE0-PTC.md`.
+
+**M-PHASE0-QUINCUNX — C12 survives, and its aperture prediction is wrong.** The
+measurement C12 asks for already existed in M129's `snr-w2.json`, whose `high` band
+[0.26, 0.33] sensor cyc/px sits entirely above the green plane's 0.25 Nyquist. Scored
+against a threshold measured from f/18 — the one aperture that cannot transmit into the
+band under any bellows hypothesis, and so measures the instrument's zero — energy is
+detected at **4 of 5 apertures**. C12 predicts "f/5.6 yes, f/11 no"; measured, **f/11 is
+the strongest aperture in the band** and the cut falls between f/14 and f/18. A wholly
+unregistered bonus brackets M129's open bellows factor B to **1.994–2.512**, excluding
+two of its three hypotheses at every λ across the stated systematic.
+`docs/research/M-PHASE0-QUINCUNX.md`, commit `c7173e2c`.
+
+**M128 razor ladder — disqualified twice, on two different features.** The ground
+cutting edge is too ragged (−31.70%). The one smooth high-contrast edge is real, but
+width-dominated: rises fall with aperture where a sharp edge demands a 1.964× rise, and
+w = 0 is excluded at 2.03σ / 2.50σ. Charging the full green-sublattice pitch as an
+instrumental floor — hostile to that conclusion by construction — still leaves
+16.70 / 14.74 µm of physical width. Useful for *exercising* SFR machinery, not for
+*calibrating* optics. Amendment A4 in `experiments/M128-razor-ladder/PREREGISTRATION.md`,
+commit `5ab4b913`.
+
+**Two lane-level defects were found by controls failing, and one by a checker.** In both
+control failures the premise was wrong and the bar was replaced by a *derived* one
+rather than relaxed; both errors had made the instrument look blinder than it was. The
+third — every QUINCUNX "median" was `sorted(v)[len(v)//2]`, the 4th of 6, biased upward —
+was invisible to all five of that lane's controls because all five compare the lane to
+itself. It was caught only by a checker that re-derives the same quantities from the raw
+spectra with independently written code. **That is now the standard for this workstream:
+a lane's own controls cannot audit the lane's own summary statistics.**
+
 **The halo complaint is answered.** All four HALO verdicts were false positives. The
 instrument walked 2–120 px and took its far reference at 400–900 px, never measuring
 120–400 px — exactly the interval where a halo's decay separates it from a scene lighting
