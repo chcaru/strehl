@@ -644,3 +644,31 @@ The known-answer ladders are extended before further measurement:
 The independent truth generator still chooses the plant and the estimator
 still cannot import it. Any failure returns commissioning to red and blocks the
 real-data analysis.
+
+---
+
+## Amendment A4 -- fixed ordinary-stack census frames
+
+Written before computing a spectrum from an ordinary macro stack. Selecting a
+focus frame at the measurement ROI and then fitting the same spatial block
+would not satisfy section 4.3's cross-fitting requirement. Selecting on a
+nearby block can also be wrong for a three-dimensional macro subject because
+the two blocks need not share a focus plane.
+
+The ordinary-stack census therefore uses no data-dependent focus selection.
+For each prelisted ISO 100 scene, it takes the frames nearest the 25th, 50th,
+and 75th percentiles of filename order and applies the six fixed sensor ROIs in
+`src/data_lib.py`. Clipped, black-censored, untextured, or failed-model ROIs are
+reported and rejected by the existing gates. No replacement frame is chosen.
+
+The prelisted scenes are:
+
+* `bee-1-cpl`;
+* `dry-erase-marker-head-cpl`;
+* `flower-inner-edge-cpl`;
+* `pencil-steep-angle-cpl`;
+* `wrapped-text-1`.
+
+This arm is a secondary scene census. The no-bracket paper and bee repeats
+remain the cleanest noise tests, while the controlled fabric ladder remains
+the aperture arm.
