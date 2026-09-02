@@ -569,3 +569,37 @@ changed to inspect preregistered shifts through 0.25 pixel in bins where the
 phase ramp is large enough to discriminate the two signs. These are repairs
 to the statistic and algebra, not relaxed gates. Real-data measurement remains
 blocked until the complete tally is green.
+
+---
+
+## Amendment A2 -- the inventory exposed a stronger flat-field calibration
+
+Written after the commissioned instrument inspected capture names and EXIF
+metadata, and before decoding a pixel from `D:\personal\macro\flat-fields`.
+The original capture-role table omitted that directory because it was not
+named in the task's diagnostic list.
+
+The metadata inventory found a dedicated ISO 100, f/5.6 flat-field ladder:
+nine exposure groups from 1/250 s through 1/5 s, with 40 repeated RAW frames
+per group. This is stronger calibration evidence than inferring the photon
+coefficient from textured scenes that can move between repeats.
+
+The ladder is added with these fixed roles:
+
+1. Fit temporal variance against black-subtracted mean signal independently
+   for G1 and G2. Alternate exposure groups are held out. The held-out median
+   variance error must satisfy section 4.4's 20 percent gate.
+2. Estimate the repeatable multiplicative photo-response map from split-half
+   exposure-normalised means after removing illumination structure below
+   0.02 sensor cycles/pixel. Split-half maps must correlate above 0.90 in the
+   spatial band used for correction.
+3. Report scene fits without photo-response correction, with the split-half
+   correction, and with the correction estimated from the opposite split.
+   The two split estimates may not be averaged before this comparison.
+
+Uncorrected photo-response nonuniformity adds fixed high-frequency power and
+pushes `rho` upward. A noisy gain map also adds high-frequency power and pushes
+it upward. Mistaking target texture or illumination structure for sensor gain
+can remove true scene power and push `rho` downward, so disagreement between
+the two split maps enters the systematic envelope rather than being assigned a
+one-sided sign.
