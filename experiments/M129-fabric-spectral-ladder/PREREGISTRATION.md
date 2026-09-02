@@ -282,3 +282,120 @@ headline"*. That standing remains. Its `above_reach` flag, which M5 validated at
 36/36 with no false alarms, **is** promoted to the primary instrument for condition
 A4, because A4 is a question about band coverage rather than about the cutoff value.
 
+---
+
+### Amendment 2 — gate T5 is applied per (ROI, aperture), not per ROI
+
+**Raised after selecting ROIs and before reducing any spectrum. Forced by data, and
+recorded here for that reason.**
+
+T5 as registered says: *"reject any ROI whose 99.9th percentile exceeds 15000 DN"*.
+Applied literally that rejects an ROI at every aperture if it clips at any one of
+them. Measured on the six flattest non-overlapping ROIs (`out/rois-w2.json`):
+
+| ROI | rc | cc | f/5.6 | f/8 | f/11 | f/14 | f/18 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | 832 | 2880 | **16383** | 14207 | 7712 | 4637 | 3244 |
+| 1 | 576 | 3648 | **16383** | 13685 | 7082 | 4281 | 3041 |
+| 2 | 3392 | 4416 | **15410** | 8477 | 4597 | 2821 | 2069 |
+| 3 | 3392 | 3136 | **15950** | 9312 | 4965 | 3038 | 2167 |
+| 4 | 832 | 576 | **15603** | 9270 | 5465 | 3289 | 2294 |
+| 5 | 1344 | 4672 | 12786 | 7068 | 3869 | 2432 | 1787 |
+
+**Only f/5.6 clips.** Exposure was held at 1.3 s across all five apertures, so f/5.6
+receives about 10x the light of f/18 and saturates. Every ROI is clear at f/8 and
+far clear at the three in-band apertures.
+
+Applying T5 per ROI would therefore discard five of six ROIs on account of an
+aperture that section 2.3 has **already declared out of band**, and that appears in
+this lane only as the A4 control. That is not a conservative reading of the gate, it
+is an irrelevant one.
+
+**T5 is therefore applied to each (ROI, aperture) cell.** A cell over 15000 DN is
+rejected and takes no part in any statistic. The consequences are registered now:
+
+- The in-band fit over f/11, f/14, f/18 uses **all six ROIs**, unaffected.
+- The **A4 control at f/5.6 is available at ROI 5 only.** A4 is thereby weakened
+  from six independent replicates to one, and the report must say so rather than
+  quote A4 as if it were as well supported as the fit.
+- At f/8, ROIs 0 and 1 sit at 14207 and 13685 DN. Those are under the gate but close
+  to it, and the expected f/8-to-f/11 ratio of `(11.314/8)^2 = 2.00` is observed as
+  only 1.84 and 1.93 there, which is the signature of mild tail compression starting
+  below the white level. **The f/8 arm is therefore taken from ROIs 2 and 5 only**,
+  where the ratio is clean, and this restriction is registered before use.
+
+**This is a change of granularity, not of threshold.** The 15000 DN level is
+untouched. The rejection count is still reported, now as a matrix rather than a
+scalar.
+
+---
+
+### Amendment 3 — T1's mechanism is wrong as registered; its direction survives
+
+**Raised after measuring the subject's focus geometry, before any spectrum.**
+
+T1 is registered on this premise: *"Depth of field grows 3.2x from f/5.6 to f/18. So
+at f/18 more of any ROI lies within the in-focus depth."* That is correct for a
+single frame at a fixed focus setting. **It is not what this capture is.**
+
+`planarity.py` establishes that the bracket stepped in **depth-of-field units**:
+frame counts fit `n = 1162/N + 4.7` with 1.76-frame rms against 50.6 for a constant
+count, better by 28.8x. The reduction then selects the best-focus frame *per ROI*.
+So the residual defocus across an ROI is its physical relief divided by the depth of
+field, and that **shrinks as `1/N`**; it does not grow.
+
+The registered **direction is unchanged** — there is still less defocus penalty at
+f/18, so the confound still pushes toward H3 — but the mechanism is different and,
+more usefully, the magnitude is now measured rather than assumed.
+
+**Supporting control, obtained free from data already in hand.** The subject was not
+touched between apertures, so its tilt and relief are fixed physical depths, and
+every geometric quantity read off the best-focus index map must scale as `1/N`.
+Tested on three independently:
+
+| quantity | spread of `y*N` | spread of `y` alone |
+| --- | --- | --- |
+| tilt gradient (steps/mm) | 7.5% | 48.9% |
+| planar-fit residual (steps) | 6.2% | 47.7% |
+| full range (steps) | 8.0% | 49.7% |
+
+This certifies the cadence model from evidence independent of the file counts that
+suggested it, shows the index map measures real subject geometry rather than
+estimator noise (which would be constant in frames, not proportional to `1/N`), and
+shows the rig was not disturbed between the five stacks.
+
+The residual drift in that control is itself well determined: `y ~ N^-gamma` with
+**gamma = 1.160** across all three quantities, log-residual rms 0.015 to 0.034. The
+step grows slightly faster than `N`. This is recorded, not explained. It does not
+enter the primary measurement, which selects frames by search and never converts a
+frame index into micrometres; it is used only to put ROI relief into common physical
+units when comparing ROIs across apertures.
+
+**T1 is now self-diagnosing, which is the substantive gain.** Defocus blur scales as
+relief divided by `N_eff` while diffraction blur scales as `lambda * N_eff`, so their
+ratio goes as `1/N^2`. T1 therefore imprints a **trend** of `B` against `N`, whereas
+a wrong value of `B` is a **constant offset**. Registered condition A3, the constancy
+of `f_c(N) * N`, is thus a T1 detector and not merely a consistency check. A3 failing
+with a monotone trend in `N` is diagnostic of T1; A3 failing with scatter is not.
+
+---
+
+### Amendment 4 — a threat absent from the original document
+
+`m5_lib.focus_score`'s default band is 0.05 to 0.14 sensor cyc/px, that is 9.8 to
+27.3 cy/mm. Its docstring describes this as *"well below every candidate cutoff"*,
+which was true for M5's apertures. It is **not** true here: section 2.3 puts `f_c` at
+f/18 at 32.83 cy/mm under H2, so the band's top edge sits at **0.83 of the cutoff**.
+A focus measure whose band overlaps the roll-off would preferentially select frames
+with a higher cutoff, biasing toward H3 — the same direction as T1, so the two would
+compound rather than cancel.
+
+**Registered control, and its result.** The focus score is computed in three bands:
+the `m5_lib` default, a narrow band of 0.04 to 0.09 cyc/px chosen to lie below every
+candidate cutoff at every aperture in the ladder, and a deliberately contaminated
+wide band of 0.05 to 0.20. If frame selection were contaminated the three would
+disagree. Measured at f/18 on a 512-sample ROI: **all three select frame 38.** The
+control passes. It is nonetheless retained for every ROI, and the narrow band is used
+for all map work, because passing once is not passing everywhere.
+
+
