@@ -548,3 +548,91 @@ the **largest placed count**; ties break on the lexicographically smallest diges
 chosen digest is recorded per stack in the note, and the census is additionally repeated
 across *all* maps of each stack as a robustness ladder. If the verdict flips across that
 ladder, the lane reports NOT ROBUST.
+
+---
+
+## Amendment 3 — A2.2's predictions were falsified, and the diagnosis found a real defect
+
+Written after the controls were re-run and **before** the corrected bar is derived. A2.2
+registered two predictions precisely so that they could fail. They did. This amendment
+records what failed, why, and what the failure exposed.
+
+### A3.1 What was predicted, and what actually happened
+
+A2.2 predicted (1) the bar tightens as `rho` falls, and (2) `eta_naive -> 1` as
+`rho -> 0`. The instrument returned `eta` **bit-identical** across a 100x change in `rho`,
+so both predictions were false and the bar did not move at all. Control C-Y failed, as it
+was built to.
+
+### A3.2 The cause: the model dropped the phase that the displacement actually carries
+
+Section 3 wrote the system matrix as `A[i,k] = exp(j 2 pi <h_k, d_i>)`. That is wrong. A
+displaced frame shifts the **whole** scene, not just its alias replicas, so replica `k`
+arrives with the phase of its **own frequency**, `nu + h_k`:
+
+    y_i = sum_k X_k exp(j 2 pi <nu + h_k, d_i>) = exp(j 2 pi <nu, d_i>) sum_k X_k exp(j 2 pi <h_k, d_i>)
+
+so `A = D V` with `D = diag(exp(j 2 pi <nu, d_i>))`.
+
+Because `h_0 = 0`, dropping `D` makes column 0 of `V` identically all-ones **for every
+displacement**, so `Vhat e_0 = V e_0` exactly and `(pinv(Vhat) V - I) e_0 = 0` exactly. The
+baseband was therefore recovered perfectly no matter how wrong the displacements were, all
+error landed in the alias coefficients, and `eta`, a ratio of two quantities that both
+scaled as `sqrt(rho)`, could not depend on `rho` at all. Measured first column of the error
+operator under the old model: **3.42e-16**. Under the corrected model: **0.0551**.
+
+**This is a defect that flattered C1**, and it had been through a full commissioning pass —
+11 controls and 6 plants — without firing, because every one of those controls tested the
+algebra of `V` and none tested whether `V` was the right matrix.
+
+### A3.3 What survives untouched, and why
+
+`D` is diagonal and unitary, so it leaves every singular value of `A` alone. **`kappa` is
+exactly invariant to `nu`** — measured at `3.09e-14` relative across all four targets, every
+geometry and four frequencies including one far outside the band (control C-AA). So every
+conditioning result in this lane, and the entire census, which computes `kappa` with no
+reference to any output frequency, stands unchanged. The defect was confined to the
+reconstruction-error model, which is precisely where the bar comes from.
+
+### A3.4 The comparator had the same defect, in the opposite direction
+
+With `D` restored, averaging the raw measurements models a comparator that **never aligns**
+— it sums frames with unremoved per-frame carrier phase and destroys its own baseband. That
+is a strawman and it flatters the unfolder. The comparator now derotates by
+`conj(Ahat[:, 0])`, which is exactly the estimated common phase, i.e. it aligns on the
+**same estimated displacements the unfolder uses**, then averages, then zeroes the aliases.
+Giving the comparator exact displacements would be equally unfair in the other direction.
+
+Two structural consequences are now checked rather than assumed: at `sigma = 0` the
+unfolder recovers exactly (`eta ~ 1e-15`) and `eta_naive` is **exactly** independent of
+`rho` (measured spread `0.0e+00` across `rho` from 1 to 0.01), because with perfect
+alignment every term in the comparator's error scales as `sqrt(rho)` along with the
+denominator.
+
+### A3.5 The corrected predictions, registered before the headline run
+
+1. The bar tightens monotonically and **strictly** as `rho` falls. Displacement error now
+   corrupts the baseband, and that corruption does not shrink with the alias energy, so it
+   dominates as `rho -> 0`. Measured on one configuration at `kappa = 1.72`:
+   `0.2818, 0.2290, 0.1719, 0.1081, 0.0650` px for `rho = 1, 0.3, 0.1, 0.03, 0.01`.
+2. `rho = 1` gives the loosest bar of any `rho` (control C-Z). A2.1's claim was therefore
+   right, but for the wrong reason and by luck: under the model as implemented it was not
+   false but **vacuous**.
+3. `nu` is swept over the fundamental band and the site summary is the **worst** over `nu`,
+   which subsumes A1.1's worst-over-geometries rule rather than sitting beside it, since
+   the geometry is a function of `nu`.
+
+### A3.6 The consequence for the bar, stated before it is computed
+
+The proposal's unsupported "~0.1-0.15 px" now sits **inside** the measured range rather than
+outside it, but it corresponds to a particular `rho` near 0.1-0.03 rather than to a
+geometric fact. So the lane's deliverable is not a single number: it is `bar(kappa, rho)`,
+plus a defensible `rho` with its uncertainty. A2.3's problem — that the alias frequencies
+sit above the warp plane's Nyquist and cannot be measured directly from anything in this
+repository — is **not** dissolved by this correction and still has to be answered.
+
+A3.7 records the standing methodological point: **a commissioned instrument is only
+commissioned against the questions its controls ask.** Fifteen green controls did not
+notice that the system matrix was the wrong matrix, because all of them tested that matrix's
+algebra. The control that caught it was the one that tested a *physical* prediction about
+the scene, and it caught it by failing.

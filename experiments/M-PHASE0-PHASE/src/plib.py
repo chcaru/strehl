@@ -166,6 +166,44 @@ def distinct_rep_sets(target, grid=16):
 # The system matrix and its conditioning
 # ---------------------------------------------------------------------------
 
+def band_frequencies(target, grid=8):
+    """Output frequencies sampled over the target's fundamental band.
+
+    Returns a list of `(nu, reps)`.  The alias geometry is a FUNCTION of nu
+    (amendment A1.1), so sweeping nu subsumes the geometry enumeration rather
+    than sitting beside it.  `nu = 0` is excluded: it is the one frequency at
+    which the common-phase term vanishes identically, which is exactly the
+    degenerate case amendment A3 exists to stop the lane relying on.
+    """
+    spec = TARGETS[target]
+    c = spec["cell"]
+    out = []
+    for a in range(grid):
+        for b in range(grid):
+            nu = (-c / 2 + c * (a + 0.5) / grid, -c / 2 + c * (b + 0.5) / grid)
+            out.append((np.array(nu, dtype=float),
+                        np.array(coset_reps(target, nu), dtype=float)))
+    return out
+
+
+def full_reps(reps, nu):
+    """The frequencies that actually carry phase: `nu + h_k`, not `h_k`.
+
+    A frame displaced by `d_i` shifts the WHOLE scene, so replica `k` arrives
+    with phase `exp(j 2 pi <nu + h_k, d_i>)`.  Factoring out the common
+    `exp(j 2 pi <nu, d_i>)` gives `A = D V` with `D` diagonal and unitary, so
+    it leaves every singular value alone and `kappa` may be computed from the
+    alias offsets alone.  It does NOT leave the reconstruction alone: `D` is
+    built from the ESTIMATED displacement, so a displacement error survives as
+    a per-frame common phase that no amount of conditioning removes.
+
+    Dropping `D` makes column 0 of the system matrix identically all-ones and
+    therefore immune to displacement error, which recovers the baseband exactly
+    and is an artifact.  Control C-AB pins that difference.
+    """
+    return np.asarray(reps, dtype=float) + np.asarray(nu, dtype=float)
+
+
 def system_matrix(reps, d):
     """A[i,k] = exp(j 2 pi <h_k, d_i>).
 
@@ -254,7 +292,7 @@ def resultant(reps, d):
 # The bar: when does unfolding stop being better than not unfolding?
 # ---------------------------------------------------------------------------
 
-def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials):
+def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None):
     """Monte-Carlo the reconstruction error against its own do-nothing baseline.
 
     Returns (eta, eta_naive), each of shape (trials,).
@@ -267,21 +305,38 @@ def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials):
     perfectly and abandons the aliases, so it is the natural fixed reference.
     eta_naive is what the shipping behaviour actually achieves, and is >= 1
     because plain averaging leaks alias energy into the baseband estimate.
+
+    `nu` is the output frequency, and it is NOT optional in any run that reports
+    a bar.  Phase is carried by `nu + h_k`, not by `h_k`, and although the
+    common `nu` part is unitary and therefore invisible to `kappa`, it is built
+    from the ESTIMATED displacement and so is a first-order source of
+    reconstruction error.  Passing `nu = None` reproduces the superseded
+    alias-only model, in which column 0 is all-ones, the baseband is recovered
+    exactly however bad the estimates are, and `eta` is exactly independent of
+    `rho`.  That path exists only so control C-AB can demonstrate the artifact.
+
+    `rho` is the per-alias-component energy relative to the baseband component
+    at the same output frequency (amendment A2.2).
     """
     reps = np.asarray(reps, dtype=float)
     d = np.asarray(d, dtype=float)
     n, m = d.shape[0], reps.shape[0]
+    if not (rho > 0.0):
+        raise ValueError("rho must be positive; got %r" % (rho,))
+    carrier = reps if nu is None else full_reps(reps, nu)
 
-    A = system_matrix(reps, d)                                  # (N, M) truth
+    A = system_matrix(carrier, d)                               # (N, M) truth
 
     delta = rng.normal(0.0, sigma_delta, size=(trials, n, 2))
-    Ahat = system_matrix(reps, d[None, :, :] + delta)           # (T, N, M)
+    Ahat = system_matrix(carrier, d[None, :, :] + delta)        # (T, N, M)
 
     x = (rng.normal(size=(trials, m)) + 1j * rng.normal(size=(trials, m))) / np.sqrt(2.0)
+    x[:, 1:] *= np.sqrt(rho)
     alias_norm = np.linalg.norm(x[:, 1:], axis=-1)
 
-    # Per-measurement alias power is (M-1) since |A|=1 and x has unit variance.
-    noise_var = (m - 1) / (10.0 ** (snr_db / 10.0)) if np.isfinite(snr_db) else 0.0
+    # Per-measurement signal power is 1 + (M-1)*rho, since every |A[i,k]| = 1.
+    sig_pow = 1.0 + (m - 1) * rho
+    noise_var = sig_pow / (10.0 ** (snr_db / 10.0)) if np.isfinite(snr_db) else 0.0
     nz = np.sqrt(noise_var / 2.0) * (rng.normal(size=(trials, n))
                                      + 1j * rng.normal(size=(trials, n)))
 
@@ -291,8 +346,15 @@ def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials):
 
     eta = np.linalg.norm(xhat - x, axis=-1) / alias_norm
 
-    # Do-nothing: baseband from the plain average, aliases zeroed.
-    x0_naive = y.mean(axis=-1)
+    # Do-nothing: align on the SAME estimated displacements the unfolder used,
+    # average, and set every alias to zero.  Derotating by `conj(Ahat[:, 0])`
+    # is what alignment-then-average physically is: `Ahat[i, 0]` is
+    # `exp(j 2 pi <nu + h_0, dhat_i>)` and `h_0 = 0`, so it is exactly the
+    # estimated common phase.  Averaging the RAW `y` instead would model a
+    # comparator that never aligns at all, which is a strawman and would
+    # flatter the unfolder.  In the alias-only model `Ahat[:, 0]` is all-ones
+    # and this reduces to the plain mean, so the superseded path is unchanged.
+    x0_naive = (y * np.conj(Ahat[:, :, 0])).mean(axis=-1)
     err_naive = np.empty_like(x)
     err_naive[:, 0] = x0_naive - x[:, 0]
     err_naive[:, 1:] = -x[:, 1:]
@@ -324,8 +386,8 @@ def _batched_lstsq(A, y):
     return out
 
 
-def median_eta(reps, d, sigma_delta, snr_db, rng, trials):
-    eta, eta_naive = unfold_trial(reps, d, sigma_delta, snr_db, rng, trials)
+def median_eta(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None):
+    eta, eta_naive = unfold_trial(reps, d, sigma_delta, snr_db, rng, trials, rho, nu)
     return float(np.median(eta)), float(np.median(eta_naive))
 
 
@@ -372,7 +434,7 @@ def unfold_mismatch(reps_true, reps_model, d, sigma_delta, snr_db, rng, trials):
 
 
 def bar_sigma(reps, d, snr_db, rng, trials=4000, lo=1e-5, hi=2.0, tol=1e-4,
-              criterion="unit"):
+              criterion="unit", rho=1.0, nu=None):
     """Largest displacement-error sd at which unfolding still does no harm.
 
     criterion "unit"  : median eta < 1            (beat perfect-baseband)
@@ -383,7 +445,7 @@ def bar_sigma(reps, d, snr_db, rng, trials=4000, lo=1e-5, hi=2.0, tol=1e-4,
     report a bar if the bracket is not ordered as expected.
     """
     def harmful(s):
-        e, en = median_eta(reps, d, s, snr_db, rng, trials)
+        e, en = median_eta(reps, d, s, snr_db, rng, trials, rho, nu)
         return e >= (1.0 if criterion == "unit" else en)
 
     if harmful(lo):

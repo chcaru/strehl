@@ -276,6 +276,115 @@ def c_n_rank_guard_sensitivity():
 # Commissioning: plant the exact defect each control exists to catch.
 # ---------------------------------------------------------------------------
 
+def c_y_scene_ratio_behaves_as_registered():
+    """Amendment A3's corrected predictions, replacing A2.2's falsified ones.
+
+    A2.2 predicted that the bar would tighten as rho fell and that eta_naive
+    would converge to 1.  The instrument falsified BOTH under the alias-only
+    model, by showing eta exactly independent of rho -- and the diagnosis
+    exposed the real defect (see C-AB).  With the common phase restored, the
+    corrected predictions are:
+
+    (1) The bar tightens monotonically as rho falls.  Displacement error now
+        corrupts the baseband too, and that corruption does NOT shrink with the
+        alias energy, so it dominates the ratio as rho -> 0.
+    (2) At sigma = 0 exactly, eta_naive is INDEPENDENT of rho.  With perfect
+        alignment the naive method's only error is the alias energy it leaks
+        and the alias energy it discards, and both scale as sqrt(rho), as does
+        the denominator.  This is a structural identity, not a trend, so it is
+        checked to tight tolerance.
+    """
+    reps = plib.distinct_rep_sets("G-1x")[0]
+    nu = np.array([0.31, -0.18])
+    d = np.array([[0.0, 0.0], [0.5, 0.5], [0.23, -0.61], [-0.4, 0.12]])
+    rhos = [1.0, 0.3, 0.1, 0.03, 0.01]
+
+    bars, naive0 = [], []
+    for r in rhos:
+        rng = np.random.default_rng(90210)
+        bars.append(plib.bar_sigma(reps, d, np.inf, rng, trials=1500, rho=r, nu=nu))
+        rng = np.random.default_rng(90211)
+        _, en = plib.median_eta(reps, d, 0.0, np.inf, rng, 3000, rho=r, nu=nu)
+        naive0.append(en)
+
+    mono = all(bars[i] >= bars[i + 1] - 1e-9 for i in range(len(bars) - 1))
+    strict = bars[0] > bars[-1] * 1.2
+    flat = max(naive0) - min(naive0) < 1e-9
+    print("      rho     :  " + "  ".join("%8.4f" % r for r in rhos))
+    print("      bar     :  " + "  ".join("%8.4f" % b for b in bars))
+    print("      naive(0):  " + "  ".join("%8.5f" % e for e in naive0))
+    return record("C-Y bar tightens with rho; naive(0) is rho-free",
+                  mono and strict and flat,
+                  "monotone=%s strict=%s (%.4f->%.4f); naive(0) spread %.1e"
+                  % (mono, strict, bars[0], bars[-1], max(naive0) - min(naive0)))
+
+
+def c_z_white_scene_is_the_generous_end():
+    """rho = 1 must give the loosest bar of any rho tested.
+
+    This is the claim amendment A2.1 made, and it is only TRUE once the common
+    phase is restored.  Under the alias-only model it was neither true nor
+    false but vacuous, because the bar did not move at all.
+    """
+    reps = plib.distinct_rep_sets("G-1x")[0]
+    nu = np.array([0.31, -0.18])
+    d = np.array([[0.0, 0.0], [0.37, 0.41], [-0.2, 0.55], [0.6, -0.3]])
+    rng = np.random.default_rng(5150)
+    b1 = plib.bar_sigma(reps, d, np.inf, rng, trials=1500, rho=1.0, nu=nu)
+    rng = np.random.default_rng(5150)
+    b01 = plib.bar_sigma(reps, d, np.inf, rng, trials=1500, rho=0.1, nu=nu)
+    return record("C-Z rho=1 is the most generous scene", b1 > b01,
+                  "bar(rho=1)=%.4f > bar(rho=0.1)=%.4f" % (b1, b01))
+
+
+def c_aa_kappa_is_invariant_to_nu():
+    """The factorisation A = D V, proved numerically rather than asserted.
+
+    D = diag(exp(j 2 pi <nu, d_i>)) is diagonal and unitary, so it leaves every
+    singular value of the system matrix alone.  If this failed, every kappa in
+    the lane -- and the whole census, which computes kappa without reference to
+    any output frequency -- would be measuring the wrong thing.
+    """
+    worst = 0.0
+    for target in ["G-1x", "RB-1x", "G-2x", "RB-2x"]:
+        for reps in plib.distinct_rep_sets(target):
+            d = rand_d(reps.shape[0] + 2)
+            k0 = plib.kappa(reps, d)
+            for nu in [(0.31, -0.18), (0.5, 0.5), (-0.44, 0.02), (1.7, -3.3)]:
+                k1 = plib.kappa(plib.full_reps(reps, np.array(nu)), d)
+                worst = max(worst, abs(k1 - k0) / k0)
+    return record("C-AA kappa is invariant to the output frequency", worst < 1e-12,
+                  "max relative deviation = %.2e" % worst)
+
+
+def c_ab_alias_only_model_is_blind_to_baseband_error():
+    """Pin the defect the corrected model repairs, so it cannot return silently.
+
+    In the alias-only model column 0 of the system matrix is all-ones for every
+    displacement, so `pinv(Ahat) A - I` annihilates e_0 EXACTLY and the baseband
+    is recovered perfectly no matter how wrong the displacements are.  With the
+    common phase restored, that column is generically nonzero.  The check is
+    two-sided: the artifact must be present in the old path and absent in the
+    new one, otherwise this control would pass on an instrument that had simply
+    stopped computing anything.
+    """
+    reps = plib.distinct_rep_sets("G-1x")[0]
+    d = np.array([[0.0, 0.0], [0.5, 0.5], [0.23, -0.61], [-0.4, 0.12]])
+    rng = np.random.default_rng(31337)
+    dhat = d + rng.normal(0.0, 0.05, size=d.shape)
+
+    def first_col(carrier):
+        A = plib.system_matrix(carrier, d)
+        Ah = plib.system_matrix(carrier, dhat)
+        return float(np.abs((np.linalg.pinv(Ah) @ A - np.eye(A.shape[1]))[:, 0]).max())
+
+    blind = first_col(reps)
+    seeing = first_col(plib.full_reps(reps, np.array([0.31, -0.18])))
+    return record("C-AB alias-only model is baseband-blind; nu model is not",
+                  blind < 1e-12 and seeing > 1e-3,
+                  "alias-only |E e0| = %.2e (artifact); nu-carrying = %.4f" % (blind, seeing))
+
+
 def commission():
     """Each plant must make its target control FAIL.  A control that has never
     fired may be a no-op."""
@@ -392,6 +501,10 @@ def main():
     c_g_translation()
     c_h_permutation()
     c_n_rank_guard_sensitivity()
+    c_y_scene_ratio_behaves_as_registered()
+    c_z_white_scene_is_the_generous_end()
+    c_aa_kappa_is_invariant_to_nu()
+    c_ab_alias_only_model_is_blind_to_baseband_error()
 
     all_caught = commission()
 
