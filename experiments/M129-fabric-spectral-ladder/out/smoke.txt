@@ -1,0 +1,23 @@
+M5 constants: black 512, white 15360, active 7028x4688, pitch 5.12 um
+GQ reach 69.05 cy/mm, G1 reach 48.83 cy/mm
+
+  f5.6 N=5.6   DSC00106.ARW  210 frames
+        DN p0.1/med/p99.9/max = 553/2240/16383/16383   clipped 0.5760%
+        patch mean 4377 DN   dyn 3981.8  has_signal True  saturated False
+        knee f_c    44.78 cy/mm    model f_c   101.45 cy/mm  above_reach True  resid 0.1304
+    f8 N=8.0   DSC00076.ARW  150 frames
+        DN p0.1/med/p99.9/max = 533/1370/10861/16383   clipped 0.0016%
+        patch mean 2310 DN   dyn 2920.9  has_signal True  saturated False
+        knee f_c    44.24 cy/mm    model f_c   146.03 cy/mm  above_reach True  resid 0.0937
+   f11 N=11.0  DSC00055.ARW  109 frames
+        DN p0.1/med/p99.9/max = 523/941/5923/14734   clipped 0.0000%
+        patch mean 1193 DN   dyn 2569.0  has_signal True  saturated False
+        knee f_c    46.93 cy/mm    model f_c    94.96 cy/mm  above_reach True  resid 0.0775
+   f14 N=14.0  DSC00042.ARW  83 frames
+        DN p0.1/med/p99.9/max = 518/755/3746/10732   clipped 0.0000%
+        patch mean 705 DN   dyn 4866.5  has_signal True  saturated False
+        knee f_c    51.79 cy/mm    model f_c   193.97 cy/mm  above_reach True  resid 0.1642
+   f18 N=18.0  DSC00036.ARW  71 frames
+        DN p0.1/med/p99.9/max = 517/675/2746/6545   clipped 0.0000%
+        patch mean 484 DN   dyn 5273.3  has_signal True  saturated False
+        knee f_c    44.24 cy/mm    model f_c    52.63 cy/mm  above_reach False  resid 0.0781

@@ -232,4 +232,53 @@ recording what changed, why, and what evidence forced it.
 
 ## 11. Amendments
 
-*(none yet)*
+### Amendment 1 — A1's 5% bar is unachievable as written, and is restated
+
+**Raised before any real frame was reduced; forced by prior art, not by a result.**
+
+A1 as registered requires the commissioning battery to recover a planted cutoff "to
+within 5%". **M5 has already measured that the primary estimator cannot do this.**
+`m5_lib.knee_floor_crossing`'s own docstring records: *"C1 measures this estimator to
+be biased 5-23% LOW, always in the same direction: the diffraction MTF approaches
+zero as (1 - f/f_c)^1.5, so the last stretch below the cutoff is always buried in
+noise. It is therefore read as a lower bound on f_c, hence an upper bound on
+(1 + m/p)."*
+
+So a 5% bar on the raw crossing estimate fails by construction. I registered a bar
+the corpus had already measured to be unreachable. That is my error, and it is the
+same class rule 43 and fact 1157 name: **reaching for an assumption without checking
+whether a measurement of it already existed.** It is recorded here rather than
+silently relaxed.
+
+**Why this does not sink the lane, and why the bias matters less than it looks.**
+The bias is multiplicative and common across apertures, because it is a property of
+where the roll-off disappears into the floor, not of `N`. The registered primary
+statistic is `f_c(N) * N`, and a common multiplicative bias leaves its **constancy**
+untouched. So the falsification test in section 3 and condition A3 survive the bias
+unchanged; only the **absolute** `B` is displaced.
+
+**But the bias cannot simply be ignored**, because at 5-23% it is comparable to the
+28.07% H2-H3 separation this lane exists to resolve. It must be measured, not
+assumed.
+
+**A1 is therefore restated as A1':**
+
+> **A1'** The commissioning battery measures the crossing estimator's bias and its
+> scatter as a function of planted `f_c`, signal-to-noise ratio and texture spectral
+> slope, across the range this ladder actually uses. The **bias-corrected** estimator
+> must then recover planted truth to within 5%, and the scatter of the correction
+> must be reported as an uncertainty carried into every quoted `B`. If the bias
+> depends on `N` — that is, if it does **not** cancel in `f_c(N) * N` — the ladder's
+> falsification test is compromised and the lane must say so and stop.
+
+The last sentence is the part that can fail, and it is registered before the battery
+runs so that it cannot be quietly dropped.
+
+**Consequence for the model fit.** `knee_model_fit` is not biased in this way,
+because it uses the whole roll-off rather than the last detectable bin. It is
+nevertheless **not** promoted to primary: it assumes the diffraction MTF shape, which
+is the hypothesis under test, and M5 registered it as *"a cross-check, never the
+headline"*. That standing remains. Its `above_reach` flag, which M5 validated at
+36/36 with no false alarms, **is** promoted to the primary instrument for condition
+A4, because A4 is a question about band coverage rather than about the cutoff value.
+
