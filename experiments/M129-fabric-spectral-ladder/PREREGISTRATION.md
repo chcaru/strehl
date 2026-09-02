@@ -466,5 +466,105 @@ every aperture lands at the same mid-scale level instead of at a constant 1.3 s.
 how this lane resolves: a spectral aperture ladder should hold the *exposure level*
 constant, not the *exposure time*.
 
+---
+
+### Amendment 6 — Amendment 5 did not say in which band, and the obvious band is wrong
+
+**Raised by measurement, one day after Amendment 5 and still before any cutoff was
+estimated on real data.** `src/snr_survey.py`, `out/snr-w2.json`, `out/snr-survey.txt`.
+
+Amendment 5 registered "equalise the spectral SNR" without naming the band it is
+measured in. Measuring it exposed that the choice is not free, and that the obvious
+choice destroys the experiment.
+
+**The measured spectral SNR is not monotone in aperture.** Power ratio, scene over
+floor, in the band containing the candidate cutoffs (29.3-44.9 cy/mm), median over
+the six ROIs:
+
+| band | f/5.6 | f/8 | f/11 | f/14 | f/18 |
+| --- | --- | --- | --- | --- | --- |
+| knee, 29.3-44.9 cy/mm | 18.6 | 23.1 | 39.7 | 23.2 | 7.7 |
+| low, 7.8-17.6 cy/mm | 2011 | 1707 | 2802 | 2591 | 1730 |
+
+It rises and then falls. That is not a nuisance behaving oddly; it is two different
+things being added together. The floor falls with aperture because exposure was held
+constant, which is the artefact. And the roll-off moves down into the band as `N`
+grows, which is **the signal**. f/18's knee-band SNR is low in large part *because its
+cutoff lies inside that band.*
+
+**So equalising on the knee band would have equalised away the effect under test.**
+It would degrade f/11 and f/14 until they matched f/18's *optics* rather than
+f/18's *noise*, and the ladder would measure nothing. This is the same error class as
+T1 and the focus-band threat of Amendment 4: a control chosen inside the signal.
+
+**The band is therefore fixed to `low`, 0.040-0.090 sensor cyc/px (7.8-17.6 cy/mm)**,
+which sits below every candidate cutoff at every aperture in the ladder, so it carries
+texture contrast over noise floor with the roll-off excluded by construction. It is
+the same band, and for the same reason, that Amendment 4 fixed for focus scoring.
+
+**What equalisation then costs, measured.** f/18 sets the target at every one of the
+six ROIs, with no reordering:
+
+| ROI | f/11 floor x | f/14 floor x | knee ratio before | after |
+| --- | --- | --- | --- | --- |
+| 0 | 1.84 | 1.67 | 5.81 | 3.16 |
+| 1 | 1.60 | 1.47 | 4.45 | 2.78 |
+| 2 | 1.65 | 1.48 | 5.59 | 3.39 |
+| 3 | 1.79 | 1.50 | 5.45 | 3.04 |
+| 4 | 2.23 | 1.55 | 6.10 | 2.73 |
+| 5 | 1.63 | 1.51 | 5.80 | 3.55 |
+
+The floor rises by 1.47x to 2.23x, which is a real but modest cost. **The residual
+knee-band ratio of 2.7x to 3.6x is not a failure to equalise: it is the roll-off
+difference between f/11 and f/18, which is precisely what the ladder exists to
+measure.** Before equalising, that residual was confounded with a 1.6x to 2.2x
+exposure artefact; after, it is not.
+
+**A units error I made and caught, recorded because it changes the number by 6x.**
+`xspec.py` indexes its bias surface by *amplitude* SNR, sigma_signal over
+sigma_noise, at about 11.4 points of bias per e-fold. Everything in this amendment is
+a *power* ratio. Amplitude is the square root of power, so the slope in power terms is
+**5.7** points per e-fold, not 11.4. The differential bias across the primary arm is
+therefore:
+
+| read from | ratio | differential bias |
+| --- | --- | --- |
+| low band, the artefact alone | 1.72x | **3.1 points** |
+| knee band, contaminated by the signal | 5.69x | 9.9 points |
+
+against a 28.07-point H2-H3 separation. My first pass wrote 18.6 points, from the
+contaminated band and the wrong exponent. Both errors pushed the same way, toward
+declaring the lane hopeless.
+
+**And this is an extrapolation, not a measurement, and is not to be used as a
+correction.** `xspec.py`'s surface spans amplitude SNR 1 to 15; the low band here
+sits at amplitude 31 to 74, well outside it, on a texture whose spectral slope was
+not the one planted. The figures above size the problem. The commissioning battery
+measures the bias where the ladder actually sits, and **its numbers supersede these.**
+
+### Amendment 6a — condition A4 is already satisfied, by evidence that quotes no cutoff
+
+Falls out of the same survey, and is recorded here because it is a result rather than
+a change. `src/a4_evidence.py`, `out/a4-evidence.txt`.
+
+A4 asks whether f/5.6 and f/8 show a texture-limited knee. That is answerable without
+estimating any cutoff, which is worth doing while the estimator's bias is still
+uncommissioned: excess power in 50.8-64.5 cy/mm lies above every candidate cutoff at
+f/14 and f/18 and below every candidate cutoff at f/5.6 and f/8. Excess as a fraction
+of the floor, median over six ROIs, all six agreeing in sign:
+
+| f/5.6 | f/8 | f/11 | f/14 | f/18 |
+| --- | --- | --- | --- | --- |
+| 0.557 | 0.708 | 0.823 | 0.083 | **-0.021** |
+
+f/5.6 and f/8 have not reached the floor; f/14 and f/18 have. **A4 is consistent with
+section 2.3, on a prediction made before the data existed.** f/18's -0.021, a value
+indistinguishable from zero, is a second and unplanned result: it says the floor
+estimator is unbiased, since the excess it reports above the cutoff is nil.
+
+f/11 reads 0.823, not at floor. Section 2.3 already registered that band as straddling
+f/11's two candidates, so this is **undecided by construction** and is not read as
+evidence for H3. It is recorded, not interpreted.
+
 
 

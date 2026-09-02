@@ -1,0 +1,40 @@
+CONDITION A4: does the spectrum reach the noise floor inside the band?
+
+Statistic: excess power in the 'high' band, 50.8-64.5 cy/mm,
+as a fraction of the noise floor. GQ lattice reach 69.05 cy/mm.
+A value below 0.20 means the spectrum has reached the floor
+there, i.e. the roll-off is complete inside the measurable band.
+
+  Registered prediction from section 2.3, made before any data:
+      ap  H2 cy/mm  H3 cy/mm  band position
+    f5.6    105.54    135.17  both cutoffs ABOVE the band -> must NOT be at floor
+      f8     73.88     94.62  both cutoffs ABOVE the band -> must NOT be at floor
+     f11     53.73     68.81  band straddles the candidates -> undecided by construction
+     f14     42.22     54.07  band straddles the candidates -> undecided by construction
+     f18     32.83     42.05  both cutoffs BELOW the band -> must be at floor
+
+   ROI      f5.6       f8      f11      f14      f18
+     0     0.686    0.831    1.120    0.110   -0.032
+     1     0.567    0.662    0.849    0.086   -0.018
+     2     0.685    0.956    1.418    0.128   -0.024
+     3     0.547    0.754    0.797    0.059   -0.012
+     4     0.090    0.162    0.345    0.038   -0.008
+     5     0.417    0.583    0.671    0.081   -0.026
+
+      ap    median   at floor?  verdict against the prediction
+    f5.6     0.557       False  predicted not at floor: AGREES
+      f8     0.708       False  predicted not at floor: AGREES
+     f11     0.823       False  predicted undecided; measured not at floor
+     f14     0.083        True  predicted undecided; measured at floor
+     f18    -0.021        True  predicted at floor: AGREES
+
+A4 evidence: CONSISTENT with section 2.3.
+
+What this does and does not establish. It establishes that the roll-off
+is complete inside the band at f/14 and f/18 and incomplete at f/5.6 and
+f/8, which is what A4 asks and is exactly what the model predicted before
+the data existed. It does NOT establish where the cutoff is, and no
+cutoff is quoted here. f/11 is left undecided on purpose: the band
+straddles its two candidates, which is the same marginality section 2.3
+already registered when it called f/11 'a supporting point' with an H3
+margin of 0.24 cy/mm under the lattice reach.

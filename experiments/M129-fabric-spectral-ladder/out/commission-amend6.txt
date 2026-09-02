@@ -1,0 +1,14 @@
+baseline on the real document: exit 0
+
+  ok   SNR table, knee row                      caught, and named the right line
+  ok   SNR table, low row                       caught, and named the right line
+  ok   equalisation cost, a floor multiplier    caught, and named the right line
+  ok   equalisation cost, a residual ratio      caught, and named the right line
+  ok   units table, the ratio                   caught, and named the right line
+  ok   units table, the derived points          caught, and named the right line
+  ok   A4 table                                 caught, and named the right line
+  ok   prose range, floor multiplier            caught, and named the right line
+  ok   prose range, residual knee ratio         caught, and named the right line
+
+9/9 plants caught
+check_amend6.py is commissioned.

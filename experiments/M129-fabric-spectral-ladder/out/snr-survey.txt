@@ -1,0 +1,169 @@
+spectral SNR survey: 6 ROIs x 5 apertures, GQ 256, Welch tile 128
+GQ reach 69.05 cy/mm
+bands, sensor cyc/px -> cy/mm:
+  low   0.040-0.090  ->     7.8-  17.6 cy/mm
+  mid   0.100-0.150  ->    19.5-  29.3 cy/mm
+  knee  0.150-0.230  ->    29.3-  44.9 cy/mm
+  high  0.260-0.330  ->    50.8-  64.5 cy/mm
+
+ROI 0 at (832,2880)
+      ap  frame   meanDN      floor    snr low   snr mid  snr knee  snr high
+    f5.6    156   7309.6    10833.1    1553.95     96.18     19.27      0.69
+      f8    111   3795.2     3627.8    1911.14    162.95     26.22      0.83
+     f11     81   1931.0      903.4    2254.27    234.41     41.50      1.12
+     f14     58   1136.3      326.0    2044.72    190.12     26.51      0.11
+     f18     47    770.2      222.7    1224.46     84.55      7.14     -0.03
+
+ROI 1 at (576,3648)
+      ap  frame   meanDN      floor    snr low   snr mid  snr knee  snr high
+    f5.6    160   8017.1    12025.6    1846.67    113.66     19.97      0.57
+      f8    114   4304.6     7063.3    1184.29     98.89     22.97      0.66
+     f11     82   2210.6      908.5    2435.36    187.43     37.90      0.85
+     f14     58   1311.7      317.9    2236.96    142.17     21.67      0.09
+     f18     48    891.2      210.4    1518.78     89.21      8.51     -0.02
+
+ROI 2 at (3392,4416)
+      ap  frame   meanDN      floor    snr low   snr mid  snr knee  snr high
+    f5.6     89   1569.8     5136.3    1922.56    175.72     23.68      0.68
+      f8     65    784.8     2730.1    1530.43    188.77     34.95      0.96
+     f11     52    400.9      183.2    5545.55    532.20     83.94      1.42
+     f14     38    234.8       60.1    4996.55    365.56     45.16      0.13
+     f18     30    160.6       39.4    3366.13    201.08     15.02     -0.02
+
+ROI 3 at (3392,3136)
+      ap  frame   meanDN      floor    snr low   snr mid  snr knee  snr high
+    f5.6     94   2327.9     2388.2    2989.32    132.36     17.89      0.55
+      f8     68   1270.8     2278.1    1411.57    121.71     21.09      0.75
+     f11     52    681.7      246.8    3810.95    308.97     44.46      0.80
+     f14     37    406.6      100.7    3187.98    228.60     24.73      0.06
+     f18     30    277.0       63.8    2128.92    121.72      8.16     -0.01
+
+ROI 4 at (832,576)
+      ap  frame   meanDN      floor    snr low   snr mid  snr knee  snr high
+    f5.6    137   4995.8     1696.4    2575.33     96.69      9.08      0.09
+      f8     99   2599.5      895.1    2319.61     91.11     10.30      0.16
+     f11     74   1333.7      385.1    2152.76    145.69     18.98      0.34
+     f14     53    788.3      197.4    1497.33     92.45      9.77      0.04
+     f18     43    536.1      134.9     965.01     46.57      3.11     -0.01
+
+ROI 5 at (1344,4672)
+      ap  frame   meanDN      floor    snr low   snr mid  snr knee  snr high
+    f5.6    152   1933.7     1691.4    2100.26    124.10     17.14      0.42
+      f8    109   1003.5      883.9    1884.46    161.13     23.30      0.58
+     f11     79    515.4      179.6    3168.46    264.32     37.58      0.67
+     f14     56    307.8       77.4    2940.72    196.24     20.90      0.08
+     f18     46    210.1       50.0    1941.25    101.86      6.48     -0.03
+
+==========================================================================
+SPECTRAL SNR IN THE KNEE BAND, the quantity the bias is indexed by
+
+   ROI      f5.6       f8      f11      f14      f18   max/min   primary
+     0     19.27    26.22    41.50    26.51     7.14      5.81      5.81
+     1     19.97    22.97    37.90    21.67     8.51      4.45      4.45
+     2     23.68    34.95    83.94    45.16    15.02      5.59      5.59
+     3     17.89    21.09    44.46    24.73     8.16      5.45      5.45
+     4      9.08    10.30    18.98     9.77     3.11      6.10      6.10
+     5     17.14    23.30    37.58    20.90     6.48      5.80      5.80
+
+  across all apertures : median ratio 5.69x
+  across f11+f14+f18 : median ratio 5.69x
+
+  BUT THE KNEE BAND IS THE WRONG PLACE TO READ THE NUISANCE FROM. Its
+  SNR is non-monotone in aperture because it mixes two effects: the
+  noise floor, which is a constant-exposure artefact, and the roll-off
+  moving into the band, which is the measurement. The 'low' band lies
+  below every candidate cutoff and so isolates the artefact.
+
+   ROI      f5.6       f8      f11      f14      f18   primary
+     0      1554     1911     2254     2045     1224      1.84
+     1      1847     1184     2435     2237     1519      1.60
+     2      1923     1530     5546     4997     3366      1.65
+     3      2989     1412     3811     3188     2129      1.79
+     4      2575     2320     2153     1497      965      2.23
+     5      2100     1884     3168     2941     1941      1.63
+
+  READ THIS AS FOLLOWS, AND MIND THE UNITS, WHICH DIFFER BETWEEN THE TWO
+  MEASUREMENTS AND ARE EASY TO CONFLATE.
+    xspec.py indexed its bias surface by AMPLITUDE snr, sigma_signal over
+    sigma_noise, and measured about 11.4 points of bias per e-fold of it.
+    Every ratio printed above is a POWER ratio, scene power over floor
+    power. Amplitude = sqrt(power), so the same slope is 5.7 points per
+    e-fold of power ratio.
+
+    low-band power ratio across the primary arm    1.72x  ->   3.1 points differential
+    knee-band power ratio, contaminated, for contrast  5.69x  ->   9.9 points
+    The H2-H3 separation is 28.07 points.
+
+  AND THIS IS AN EXTRAPOLATION, NOT A MEASUREMENT. xspec.py's surface
+  spans amplitude SNR 1 to 15; the low band here sits at amplitude 31 to
+  74, far above it, on a texture whose spectral slope was not the one
+  planted. The slope is quoted to size the problem, not to correct it.
+  The commissioning battery measures the bias where the ladder actually
+  sits, and its numbers supersede these.
+
+==========================================================================
+AMENDMENT 5 EQUALISATION, computed on the 'low' band
+
+  Adding white noise of variance v raises the floor by v in this
+  normalisation and leaves the scene untouched, so the ratio can be
+  driven down to any target below the current one, never up.
+
+  THE BAND MATTERS AND THE OBVIOUS CHOICE IS WRONG. Equalising on the
+  knee band equalises away the effect under test: f/18's knee-band SNR
+  is low partly because its cutoff lies INSIDE that band, which is the
+  signal, not a nuisance. Degrading f/11 and f/14 until they match it
+  would be matching them to f/18's optics rather than to its noise.
+  The 'low' band lies below every candidate cutoff at every aperture, so
+  its SNR is texture contrast over noise floor with the roll-off
+  excluded by construction -- the part of the SNR that is an artefact of
+  constant exposure rather than a consequence of the optics.
+
+  ROI 0: target low-band SNR 1224.5, set by f18
+        ap     floor   add var  new floor      x  knee snr before    after
+       f11     903.4     759.8     1663.2   1.84            41.50    22.54
+       f14     326.0     218.4      544.4   1.67            26.51    15.88
+       f18     222.7       0.0      222.7   1.00             7.14     7.14
+     knee-band SNR ratio after equalising: 3.16x  (this is the RESIDUAL, and it is the
+     roll-off difference the ladder exists to measure)
+
+  ROI 1: target low-band SNR 1518.8, set by f18
+        ap     floor   add var  new floor      x  knee snr before    after
+       f11     908.5     548.3     1456.8   1.60            37.90    23.64
+       f14     317.9     150.3      468.3   1.47            21.67    14.71
+       f18     210.4       0.0      210.4   1.00             8.51     8.51
+     knee-band SNR ratio after equalising: 2.78x  (this is the RESIDUAL, and it is the
+     roll-off difference the ladder exists to measure)
+
+  ROI 2: target low-band SNR 3366.1, set by f18
+        ap     floor   add var  new floor      x  knee snr before    after
+       f11     183.2     118.6      301.8   1.65            83.94    50.95
+       f14      60.1      29.1       89.1   1.48            45.16    30.42
+       f18      39.4       0.0       39.4   1.00            15.02    15.02
+     knee-band SNR ratio after equalising: 3.39x  (this is the RESIDUAL, and it is the
+     roll-off difference the ladder exists to measure)
+
+  ROI 3: target low-band SNR 2128.9, set by f18
+        ap     floor   add var  new floor      x  knee snr before    after
+       f11     246.8     195.0      441.7   1.79            44.46    24.83
+       f14     100.7      50.1      150.8   1.50            24.73    16.52
+       f18      63.8       0.0       63.8   1.00             8.16     8.16
+     knee-band SNR ratio after equalising: 3.04x  (this is the RESIDUAL, and it is the
+     roll-off difference the ladder exists to measure)
+
+  ROI 4: target low-band SNR 965.0, set by f18
+        ap     floor   add var  new floor      x  knee snr before    after
+       f11     385.1     474.0      859.0   2.23            18.98     8.51
+       f14     197.4     108.9      306.4   1.55             9.77     6.30
+       f18     134.9       0.0      134.9   1.00             3.11     3.11
+     knee-band SNR ratio after equalising: 2.73x  (this is the RESIDUAL, and it is the
+     roll-off difference the ladder exists to measure)
+
+  ROI 5: target low-band SNR 1941.3, set by f18
+        ap     floor   add var  new floor      x  knee snr before    after
+       f11     179.6     113.5      293.1   1.63            37.58    23.03
+       f14      77.4      39.8      117.2   1.51            20.90    13.79
+       f18      50.0       0.0       50.0   1.00             6.48     6.48
+     knee-band SNR ratio after equalising: 3.55x  (this is the RESIDUAL, and it is the
+     roll-off difference the ladder exists to measure)
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M129-fabric-spectral-ladder\out\snr-w2.json
