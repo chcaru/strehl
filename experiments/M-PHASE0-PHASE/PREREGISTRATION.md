@@ -1099,3 +1099,171 @@ first C-I expected the plateau to track ISO and read 1.0x over a 13x span -- cor
 and completely uninformative. The lever is EXPOSURE. The same capture holds
 matched-ISO 1/2 s against 1/8 s pairs, 4x the light: plateau 3.62x (predict 4),
 scene 1.02x (predict 1), over 10 pairs. That is the control that means something.
+
+--------------------------------------------------------------------------------
+
+## Amendment A8 -- RETRACTION of A7's KILL verdict
+
+**A7 reported C1 KILLED. That verdict is withdrawn. C1 is UNREFUTED.**
+
+Withdrawn on independent verification by an agent that was given the argument, the
+scripts and the data, and was asked to break it. It did, on three independent
+load-bearing defects, any one of which voids the verdict. It confirmed it made no
+change to this lane (`git diff --exit-code` clean) and reproduced every published
+number before attacking it, so the defects are in the reasoning and the
+instruments, not in the reproduction.
+
+"Unrefuted" is not "verified". C1 has not been shown to work. It has not been shown
+not to.
+
+### A8.1 rho was never measured (CRITICAL)
+
+`p7_rho.py`. Every alias frequency for the frequencies that could be scored lies
+ABOVE the retained band. For 113MSDCF the four scored base frequencies sit at
+|nu| = 0.0884 and their nearest alias is at 0.6187, while `radial_power` truncates
+at 0.5. Across all seven stacks, **0 of 36 (or 0 of 108) alias lookups were inside
+the measured spectrum.** Every one was extrapolated at the last retained bin, and
+the `np.minimum.accumulate` envelope had already driven that bin to the 1e-300
+floor. The reported rho ~ 1e-297 IS that floor. It is not a measurement of anything.
+
+The lane's own conservative arm, `rho_g_floored`, reads **9**, and 9 does not kill
+C1. A7 quoted the arm whose unknown tail had been set to zero and dismissed the
+arm that retained the detection limit as "vacuous". That was backwards: the
+floored arm is the honest one, and it is the one that had to be argued against.
+
+There is a deeper problem than the truncation. Aliased power in a sampled signal
+appears INSIDE the band -- that is what aliasing means. Reading power AT the alias
+frequency of the continuous scene is not something one frame's periodogram can do
+at all. Bounding rho needs either a genuine optical model or a measurement at a
+finer sampling than the channel being tested. `rho_bound` as written cannot bound
+rho, and no fix to the truncation repairs that.
+
+### A8.2 "flat means noise" is false (CRITICAL)
+
+A7 argued that a diffraction-limited OTF is monotone decreasing to its cutoff, so a
+spectrum flat from 0.2 out to Nyquist cannot be scene content and must be shot
+noise. The premise about the OTF is true. The inference does not follow, because
+the captured spectrum is the object spectrum TIMES the OTF, and nothing constrains
+the object.
+
+Demonstrated, not argued: a planted **noiseless** scene with genuine flat
+high-frequency content was classified by `shot_floor` as noise and driven from a
+true rho of 8.99869 to 7.5e-300. And the object spectrum required is unremarkable
+-- with a cutoff at 0.70 cyc/pitch, H(0.35) = 0.391 and H(0.50) = 0.175, so a PSD
+proportional to 1/H^2 needs only **4.98x** more object power at 0.50 than at 0.35
+to produce a flat captured plateau.
+
+The exposure control (C-I) remains live and does establish exposure-dependent shot
+noise on the paper capture at 3.62x against a predicted 4x. It establishes that
+shot noise is present. It does not establish that any given plateau is ENTIRELY
+shot noise, which is what the subtraction assumed.
+
+Two further errors here. `f_die` is the FIRST threshold crossing, not the first
+crossing that stays below: every stack rebounds afterwards, 2 to 19 times, by up to
+6725x the floor for 109MSDCF, and the persistent crossing is 0.49792 for all seven.
+And the 10th-percentile plateau was chosen to guarantee under-subtraction, but
+measured against this repository's own sensor-noise model it runs as high as 10.84x
+the predicted noise for coffee-bubbles, so it does not.
+
+### A8.3 the averaging proxy is capped at sqrt(3) (CRITICAL)
+
+`p5_gain.py:58-71`. The estimator scores the single path AND the averaged paths
+against the same **noisy direct edge**, so that edge's own error appears in
+numerator and denominator alike. For k independent two-hop paths the proxy reads
+sqrt(3 / (1 + 2/k)), which is 1.464 at k = 5 and approaches sqrt(3) = 1.732 however
+many paths are added.
+
+Measured on scalar iid noise: true gain 2.2395x, proxy 1.4643x.
+
+So A7's positive control, which "read 1.45x on planted iid noise", was reporting
+**the proxy's own ceiling**. A7 compared that 1.45 against sqrt(k) = 2.24 and read
+the difference as headroom, concluding the instrument could see gain when gain was
+present. It could not. The control was CAPPED, not sensitive, and the real data's
+1.07x has to be read against 1.46x rather than 2.24x.
+
+The conclusion that within-DOF registration error is systematic is therefore
+unproven. It may still be true; this instrument cannot say.
+
+### A8.4 the "ceiling" is a median, and the headline is a corner (CRITICAL / HIGH)
+
+`p6_ceiling.py:54-69` takes the **median** bar among rows below the 10th-percentile
+kappa and calls it a ceiling. A ceiling is a maximum. From the same registered
+`p1_bar.json`, at rho = 0.01, G-1x:
+
+    reported "ceiling"      0.0703 raw / 0.1009 gauge-fixed
+    actual maximum          0.2557 raw / 0.3093 gauge-fixed   (kappa 1.573, nu 0.088, N 8)
+    99th percentile         0.1988 raw / 0.2337 gauge-fixed
+    maximum at N <= 6       0.2079 raw / 0.2471 gauge-fixed
+
+Both maxima exceed the 0.2250 A7 called best achievable. The bar depends on nu, N
+and gauge as well as kappa, so kappa >= 1 does not deliver the asserted scalar
+ceiling and A7.3's argument does not stand.
+
+Separately, the 0.2250 headline is a **corner** statistic: `p5_gain` drops the
+radius dimension that `p4_floor` had deliberately introduced. The same p5 transforms
+on the same stack read **0.0801 sensor px at field centre** and 0.1168 at the first
+annulus. Against a gauge-fixed bar of 0.1009, the aligner at field centre is at or
+inside the bar. A7 compared a corner against a median and reported the ratio as a
+margin.
+
+### A8.5 the physical corroboration does not corroborate (MEDIUM)
+
+`p7_rho.py:425-429` uses N_eff = N(1+m), which implicitly fixes pupil magnification
+at one. This repository already records a **measured** bellows factor
+B = N_eff/N in [2.41, 3.06]. Under that bound:
+
+    f/5.6   cutoff 0.5435..0.6901 cyc/pitch    vs G alias start 0.3536   ABOVE
+    f/8     cutoff 0.3805..0.4831              vs 0.3536                 ABOVE
+    f/11    cutoff 0.2767..0.3513              vs 0.3536                 at/just below
+
+So the optics CAN form green aliases in the f/5.6 and f/8 stacks. Even A7's own
+m = 2 column puts four of seven stacks above the alias start. And the printed m = 2
+cutoff is 1.51x to 2.64x the reported f_die, so it is a loose upper bound well away
+from the measured die-off, not an independent confirmation of it.
+
+Truncating at radial 0.5 also discards precisely the green-diagonal alias
+neighbourhood, where five stacks carry median power between 1.43x and 23.4x the
+selected floor. A7 declared residual chroma an upward bias favouring C1 and then
+discarded its strongest location.
+
+### A8.6 the controls, and the lesson
+
+C-A is INERT for the third time in this lane. Its carrier is
+`outer(cos(0.45x), cos(0.45y))`, whose spectral centre is at radius 0.6364, and
+only 3.56e-13 of its windowed energy survives the 0.5 truncation. It passes through
+endpoint leakage, not because the plant lands in the measured band. A7 recorded
+fixing this defect and did not fix it. C-D is labelled "planted alias content" but
+plants nothing and never calls `rho_bound`.
+
+`p5_gain`'s four controls generate their base edge set with `flib.synth_consistent`,
+which calls `flib.then`, and check with `flib.then`. Patching `then` to a reversed
+composition left **all four passing** -- the identical generator/checker cancellation
+this lane documented in A7.6 for `p4_controls` plant 1 and then reproduced.
+
+Controls confirmed live: C-W, C-S, C-M, C-I, and the four data-side checks.
+
+**The lesson A7 should have drawn and did not: a control can be CAPPED rather than
+blind, and a capped control reads exactly like a sensitive one.** A positive control
+must be calibrated against what the estimator reads when the effect is FULLY
+PRESENT, not against the effect's true magnitude. A7 had 1.45 against an expected
+2.24 and called the instrument sensitive; 1.45 was all it could ever read.
+
+### A8.7 what is actually known
+
+    C1 status                      UNREFUTED. Not verified. Not killed.
+    rho                            UNMEASURED. Conservative reading 9. No valid bound exists.
+    achievable accuracy            reproduces exactly: 0.267..1.430 sensor px pooled,
+                                   but 0.0801 at field centre on the best stack
+    averaging gain                 UNMEASURED; the estimator is capped at sqrt(3)
+    the bar                        unchanged and still registered; A7.3's ceiling is void
+
+The strongest surviving evidence against C1 is weak: a 63-crop probe over frames and
+field positions found no radial excess near the alias boundary on the two stacks
+examined (high-band/floor max 1.04). That suggests C1 may be UNPRODUCTIVE on these
+scenes. It is not a refutation.
+
+**No verdict may be filed for C1 until rho has a defensible bound.** The next step
+is not another attempt at the same measurement -- `rho_bound`'s approach is
+structurally unable to answer the question. It needs either a measurement at finer
+sampling than the channel under test, or a forward optical model with the measured
+bellows factor rather than N(1+m).

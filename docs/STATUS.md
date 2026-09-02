@@ -39,15 +39,68 @@ general softness.
 
 ## 2. What was settled this session
 
-### 2.0 Phase 0 of the SOTA path — five lanes closed, zero captures consumed
+### 2.0 Phase 0 of the SOTA path — four lanes closed, one RETRACTED
 
 The owner's `docs/proposals/2026-08-sota-path.md` front-loads phase-0 gates that can
-kill an item before it is built. Five are now closed. **None consumed a capture, a
-decode, or a frame.** Three of the five found their headline measurement already sitting
+kill an item before it is built. Four are closed and **one reported verdict has been
+retracted under independent verification.** None consumed a capture, a decode, or a
+frame. Three of the four closed lanes found their headline measurement already sitting
 in the corpus — a pattern strong enough that every remaining lane should begin by
 searching for existing data before planning any decode.
 
-**M-PHASE0-PHASE — C1 is KILLED, and the optics are why.** C1 proposes recovering detail
+**M-PHASE0-PHASE — RETRACTED. I reported C1 KILLED. Independent verification broke that
+verdict on three independent load-bearing defects. C1 is UNREFUTED.** The retraction and
+the defect list are Amendment A8 in the lane's `PREREGISTRATION.md`; read it before
+anything below. The original claim is left in place, marked, so the error stays legible.
+
+The three defects, each sufficient on its own to void the verdict:
+
+1. **ρ was never measured.** Every alias frequency lies above the retained band (0.5
+   cyc/pitch), so all 36–108 alias lookups per stack fell off the end of the radial
+   average and were extrapolated at the last bin — which a cumulative-minimum envelope
+   had already driven to 1e-300. The reported ρ ≈ 1e-297 is that floor, not a
+   measurement. **The lane's own conservative reading is ρ = 9, which does not kill C1.**
+2. **"Flat means noise" is false.** I argued a diffraction-limited OTF is monotone
+   decreasing, so a flat spectrum out to Nyquist must be noise. A planted *noiseless*
+   flat high-frequency scene was classified as shot noise and driven from a true
+   ρ = 8.999 to 7.5e-300. A scene PSD ∝ 1/H² needs only 4.98× more object power at 0.50
+   than at 0.35 to produce a flat captured plateau — modest, and physically ordinary.
+3. **The averaging proxy is structurally capped at √3.** It scores both the single path
+   and the averaged paths against the *same noisy direct edge*, so that edge's own noise
+   sits in numerator and denominator alike. Under planted iid noise the true gain is
+   2.2395× while the proxy reads 1.4643×. My positive control's "1.45×" was the proxy's
+   own ceiling, not evidence it could see 2.24×.
+
+Two further errors compound them. The claimed bar **"ceiling" is a median** over the
+best-conditioned decile, not a maximum: the actual maximum at ρ = 0.01 is 0.2557 raw /
+0.3093 gauge-fixed, both *above* the 0.2250 I called best achievable. And the headline
+0.2250 is a **corner** statistic with the radius dimension dropped — the same data reads
+**0.0801 sensor px at field centre** and 0.1168 at the first annulus, against a
+gauge-fixed bar of 0.1009. At field centre the aligner is at or inside the bar, which is
+the opposite of what I concluded.
+
+The physical corroboration fails too. I used N_eff = N(1+m), implicitly fixing pupil
+magnification at one, when this repository already records a *measured* bellows factor
+B ∈ [2.41, 3.06]. Under that bound the f/5.6 and f/8 stacks can form green aliases, and
+even my own m = 2 numbers put four of seven stacks above the 0.3536 alias start.
+
+**The transferable lesson is that a control can be capped rather than blind.** P5's
+positive control reported 1.45× against a √k = 2.24× expectation and I read the gap as
+headroom. It was the ceiling. A positive control must be calibrated against *what the
+estimator can read when the effect is fully present*, not against the effect's true size.
+The same instrument also failed the generator/checker test this lane had already
+documented once: reversing composition order inside `flib.then` left all four controls
+passing, because `synth_consistent` builds its test data with the same function the
+checker uses. That is now the third inert control in this lane.
+
+The one piece of evidence still standing against C1 is weak and does not sustain a kill:
+a 63-crop probe over frames and field positions found no radial excess near the alias
+boundary on the two stacks examined, so C1 may be *unproductive* on these particular
+scenes. Unproductive is not refuted.
+
+> **RETRACTED — everything from here to the end of this lane's section is the claim
+> as I originally filed it, preserved so the error is legible. Do not cite it.** C1
+> proposes recovering detail
 above Nyquist by algebraically unfolding aliased content across a focus stack. It reduces
 to a comparison of two numbers in sensor pixels: how precisely registration must be
 *known*, against how precisely this aligner actually registers. The bar, derived first,
