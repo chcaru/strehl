@@ -1,0 +1,27 @@
+baseline: 51 claims, checker GREEN on the real document
+
+  D1  CAUGHT   2.1 GQ quincunx Nyquist reach, last digit
+           - 2.1 GQ quincunx nyquist: doc 69.054 != recomputed 69.053
+  D2  CAUGHT   2.2 H2 bellows factor B
+           - 2.2 H2 B: doc 3.0863 != recomputed 3.0763
+  D3  CAUGHT   2.2 H3 pupil magnification p
+           - 2.2 H3 p: doc 1.95 != recomputed 1.9400
+  D4  CAUGHT   2.3 f/18 H3 cutoff frequency
+           - 2.3 f/18.0 H3 f_c: doc 42.95 != recomputed 42.05
+  D5  CAUGHT   2.3 f/11 H3 margin under the GQ reach
+           - 2.3 f/11.0 H3 margin: doc 1.24 != recomputed 0.24
+  D6  CAUGHT   2.3 band tag: claim f/8 H2 is measurable when it is not
+           - 2.3 f/8.0 H2 band tag '73.88 IN' contradicts f_c 73.88 vs GQ 69.05
+  D7  CAUGHT   section 0 hypothesis separation percentage
+           - section 0 separation %: doc 26.07 != recomputed 28.07
+  D8  CAUGHT   T2 light ratio between f/5.6 and f/18
+           - T2 light ratio: doc 12.3 != recomputed 10.3
+  D9  CAUGHT   T4 wavelength sensitivity, B at H3 at 500 nm
+           - T4 B at H3 500nm: doc 2.6522 != recomputed 2.6422
+  D10  CAUGHT   T1 depth-of-field growth factor
+           - T1 DOF growth: doc 4.2 != recomputed 3.2
+  D11  CAUGHT   2.2 H1 cutoff, which must match predict.py's registered value
+           - 2.2 H1 N_eff: doc 20.899 != recomputed 20.661
+
+partition: caught 11 + missed 0 + anchor errors 0 = 11
+COMMISSIONING PASSED: every planted defect was caught
