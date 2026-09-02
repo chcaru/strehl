@@ -636,3 +636,102 @@ commissioned against the questions its controls ask.** Fifteen green controls di
 notice that the system matrix was the wrong matrix, because all of them tested that matrix's
 algebra. The control that caught it was the one that tested a *physical* prediction about
 the scene, and it caught it by failing.
+
+---
+
+## Amendment 4 — the bar, and a second gate the proposal does not mention
+
+Registered **after** running `p1_bar.py` under the A3-corrected model. Section 4's
+definition and A3.5's predictions were registered before the run; the bar values in A4.1
+are the registered measurement. **A4.2 is not a registered prediction — it is an
+exploratory finding**, discovered by inspecting rows the run produced for another purpose,
+and it is labelled as such wherever it is used.
+
+### A4.1 The bar, measured
+
+`out/p1_bar.json`. 320 random `(N, nu, d)` draws per target, `M`-dependent `N` ladders,
+1000 trials per point, sigma grid `{0} u geomspace(1e-3, 2, 31)`. Displacement clustering
+scale drawn log-uniformly over `[0.02, 3.0]` px so the ill-conditioned tail is populated
+rather than left to chance.
+
+Median `bar_unit` (px), noiseless, pooled over `nu` and `N`:
+
+| `rho` | G-1x | RB-1x |
+| --- | --- | --- |
+| 1.00 | 0.1401 | 0.0414 |
+| 0.30 | 0.1235 | 0.0385 |
+| 0.10 | **0.1006** | 0.0336 |
+| 0.03 | 0.0678 | 0.0252 |
+| 0.01 | 0.0433 | 0.0168 |
+
+Two things follow.
+
+**The proposal's number is vindicated, and my first attempt at it was the artifact.** The
+superseded alias-only model gave 0.836 px — six to eight times more generous than the
+proposal's asserted "~0.1-0.15 px", which is what made it suspicious enough to audit. The
+corrected model puts G-1x at **0.1006 px** at `rho = 0.1` and **0.1401 px** at `rho = 1`.
+The proposal's undefended assertion sits squarely inside the measured range. It was right;
+the derivation it never showed would have agreed with it.
+
+**The bar is a transfer function, not a number.** `kappa * bar` is far flatter than `bar`
+itself — 0.20 to 0.38 across four decades of conditioning for G-1x — so the census's usable
+form is approximately `bar ~ 0.36 / kappa` in the ill-conditioned tail where sites actually
+live. `rho` scales it roughly as `rho^0.3`. The single scalar that replaces `[bar]` in the
+proposal is **0.10 px**, and it is only correct at `kappa ~ 3` and `rho ~ 0.1`.
+
+Censoring, per A2.4: **0 of 4480** rows failed to cross inside the sigma grid. The grid is
+adequate and no row was dropped.
+
+### A4.2 The noise gate (EXPLORATORY, not preregistered)
+
+419 of 4480 rows have `bar_unit = 0` — unfolding is harmful at *every* displacement
+accuracy including exact. Their distribution is the finding:
+
+| SNR | G-1x | RB-1x |
+| --- | --- | --- |
+| inf | 0 / 1600 | 0 / 1600 |
+| 30 dB | 31 / 320 | 123 / 320 |
+| 20 dB | 93 / 320 | 172 / 320 |
+
+Not one noiseless row is harmful, at any conditioning: all 1600 recover exactly
+(`eta` at `sigma=0` has median 1.7e-15, max 1.55e-12 at `kappa = 10862`). Every zero-bar row
+is a *noise* row. So C1 is gated twice, not once:
+
+1. **the registration gate**, `sigma_delta < bar(kappa, rho)` — the gate the proposal asks
+   about; and
+2. **the noise gate**, `kappa < kappa_max(SNR)` — which the proposal does not mention.
+
+The second gate is sharp, not gradual. Choosing the best single `kappa` threshold
+misclassifies 2.2-4.1% of rows, and the fraction of (surviving, dead) pairs ordered the
+wrong way is 0.003-0.007:
+
+| SNR | target | best `kappa` threshold | misclassified |
+| --- | --- | --- | --- |
+| 30 dB | G-1x | 23.4 | 7 / 320 |
+| 30 dB | RB-1x | 70.7 | 9 / 320 |
+| 20 dB | G-1x | 9.6 | 13 / 320 |
+| 20 dB | RB-1x | 24.5 | 7 / 320 |
+
+`eta` at `sigma=0` fits `0.0544 * kappa^0.875` at 30 dB and `0.172 * kappa^0.875` at 20 dB;
+the 3.16x noise ratio moves the threshold by 3.7x, consistent with the fitted exponent
+(3.16^(1/0.875) = 3.75). The two fits differ only in the constant, which is the signature of
+a noise-amplification gate rather than a modelling coincidence.
+
+**The unit matters and is easy to overclaim.** `snr_db` in `plib` is defined per frame at
+the working spatial frequency (`plib.py:337-339`: signal power `1 + (M-1)*rho`). That is
+*not* global image SNR. Near Nyquist the OTF has attenuated the signal while the noise
+stays white, so a frame that looks like 40 dB globally can be far worse at the frequency
+being unfolded. The census must therefore estimate SNR **at the working frequency from the
+data**, and must not import a global figure. Until it does, the numbers in this section fix
+the *shape* of the gate and not its location on any real stack.
+
+### A4.3 Consequence for the census and the verdict
+
+`p2_census.py` must report the joint survival of both gates, not the registration gate
+alone, and must report them separately so a site killed by noise is not miscounted as a
+site killed by registration. `p3_verdict.py`'s ladders gain SNR as an axis. A site is
+winnable only if `sigma_delta < bar(kappa, rho)` **and** `kappa < kappa_max(SNR)`.
+
+Because A4.2 is exploratory, the verdict must state the fraction of the field it excludes
+under both readings — with the noise gate applied and with it ignored — so a reader can see
+exactly how much of the conclusion rests on an unregistered finding.
