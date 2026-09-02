@@ -604,6 +604,28 @@ can remove true scene power and push `rho` downward, so disagreement between
 the two split maps enters the systematic envelope rather than being assigned a
 one-sided sign.
 
+### A2.1 The 40-frame metadata groups contain two light runs
+
+The first pixel-level calibration was red. Treating each EXIF exposure as one
+40-frame repeat group produced an impossible gain of 89.77 DN/e and a 4328
+percent held-out median error. Inspection showed that every exposure contains
+two 20-frame runs separated by about five minutes and taken at different light
+levels. Merging them made illumination change look like temporal sensor noise.
+
+The repair is fixed before rerunning calibration:
+
+* split a nominal exposure whenever adjacent timestamps differ by more than
+  30 seconds;
+* normalise only the small within-run illumination drift;
+* reject a run if more than 0.01 percent of its GQ samples exceed 14848 DN
+  above black;
+* fit the white temporal PSD plateau, with the measured dark variance fixed,
+  as an independent photon-transfer estimate;
+* require both per-green temporal fits and the spectral-plateau fit to meet
+  the same 20 percent held-out median gate.
+
+The failed calibration output is superseded, not evidence about `rho`.
+
 ---
 
 ## Amendment A3 -- extend commissioning beyond the original sweep
