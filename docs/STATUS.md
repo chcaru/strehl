@@ -39,13 +39,60 @@ general softness.
 
 ## 2. What was settled this session
 
-### 2.0 Phase 0 of the SOTA path — four lanes closed, zero captures consumed
+### 2.0 Phase 0 of the SOTA path — five lanes closed, zero captures consumed
 
 The owner's `docs/proposals/2026-08-sota-path.md` front-loads phase-0 gates that can
-kill an item before it is built. Four are now closed. **None consumed a capture, a
-decode, or a frame.** Three of the four found their headline measurement already sitting
+kill an item before it is built. Five are now closed. **None consumed a capture, a
+decode, or a frame.** Three of the five found their headline measurement already sitting
 in the corpus — a pattern strong enough that every remaining lane should begin by
 searching for existing data before planning any decode.
+
+**M-PHASE0-PHASE — C1 is KILLED, and the optics are why.** C1 proposes recovering detail
+above Nyquist by algebraically unfolding aliased content across a focus stack. It reduces
+to a comparison of two numbers in sensor pixels: how precisely registration must be
+*known*, against how precisely this aligner actually registers. The bar, derived first,
+is **0.1006 raw / 0.1231 gauge-fixed** sensor px at typical conditioning. Recut to the
+loosest geometry that exists anywhere in the census (κ ≥ 1 is verified, not assumed —
+min 1.0278 over 7680 rows) it reaches at most **0.245 / 0.292**, and only if ρ ≈ 1.
+
+Achievable, measured on the same stacks: **0.267–1.430 sensor px**, median 0.583, once
+the cycle floor is recut to the within-DOF spans the unfolding actually uses rather than
+the shipped figure pooled over spans 1–128. That recut cuts *against* the verdict, because
+cycle-consistency is a self-consistency measure and is blind to systematic error shared
+by every edge.
+
+**The one escape was averaging, and it was measured rather than argued.** A global solve
+uses many edges, so if per-edge errors were iid the pose would beat the per-edge floor by
+~√k — for k of 10–100 that is 3–10×, exactly the size of the gap. Measured directly from
+the data with no solver in the loop, the realised gain is **1.07× median** against 2.24×
+predicted by iid. The positive control carries this result, because 1.0 is also what a
+broken instrument reports: this one reads 1.45× on planted iid noise and exactly 1.000× on
+a planted systematic error. Within-DOF registration error is **systematic and does not
+average**. Best achievable anywhere, after whatever averaging is really available: **0.225**.
+
+**ρ then settled it, and the finding is physical.** Every stack's scene spectrum sinks into
+its own photon shot noise at **f_die = 0.144–0.256 cycles/pitch against a Nyquist of 0.500**,
+while the nearest green alias frequency is 0.354 and most lie beyond 0.5. Of 64 band
+frequencies, 52–60 must be *skipped* because their own power is already at the floor — a
+ratio there is a zero over a zero, and the skipped count is reported separately so it can
+never be read as a measured one. The optics agree independently: at m ≈ 2 the effective
+aperture is ~3× the marked one, and the resulting diffraction cutoff (0.28–0.55 cyc/pitch)
+lands at or just above the measured die-off in all seven stacks. **There is no aliased
+content to unfold because the lens cannot form any.** `PREREGISTRATION.md` A7, commit
+`32647a47`. A7.4 is flagged EXPLORATORY: the preregistration named ρ but never specified
+how it would be measured.
+
+**PHASE's transferable lesson is that a dark frame does not measure the floor that matters.**
+Four of five defects in the ρ instrument were noise-accounting errors, and the last was the
+finding. A dark frame captures read noise only — 3.8e-06 here — while the dominant floor in
+a lit exposure is photon shot noise at 3.3e-04, **87× higher and absent from any dark frame**.
+Identifying it needs no model: a diffraction-limited OTF is monotone decreasing to its
+cutoff, so a spectrum that is *flat* from 0.2 out to Nyquist is noise by construction.
+And **ISO is not a shot-noise lever** — it is gain applied after the photodiode, so varying
+it at fixed exposure never moves the electron count. The first exposure control expected the
+plateau to track ISO and read ×1.0 over a 13× span: correct, and completely uninformative.
+Exposure is the lever; matched-ISO 1/2 s against 1/8 s pairs give plateau ×3.62 (predict 4)
+and scene ×1.02 (predict 1) over 10 pairs.
 
 **M-PHASE0-PTC — B1 is a port, not a build.** Its acceptance bar names ±0.0642%
 precision as an accuracy target for a quantity whose two best independent measurements
