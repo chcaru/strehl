@@ -18,9 +18,19 @@ detected at **4 of 5** corpus apertures — f/5.6, f/8, f/11 and f/14 — at
 rather than chosen.
 
 **But C12's per-aperture prediction is backwards at one end.** It says "f/5.6
-should; f/11 should not". Measured, **f/11 is the strongest aperture in this
-band** (median power SNR 0.823 against f/5.6's 0.557), and the cut falls between
-f/14 and f/18, two full stops further down than C12 places it.
+should; f/11 should not", attributing that to M88. Measured, **f/11 is the
+strongest aperture in this band** (median power SNR 0.823 against f/5.6's 0.557),
+and the cut falls between f/14 and f/18, two full stops further down than C12
+places it. The error is inherited, so the correction belongs at M88 as well as
+at C12.
+
+**This lane answers C12's kill gate and only its kill gate.** C12's phase-0 also
+asks for three characterisation items: the disagreement statistic's through-focus
+behaviour at elected-sharp tiles, its flat-ROI null against the calibrated
+prediction, and its imbalance-calibration residual on the flats. **None of those
+three is answered here.** They need per-frame G1/G2 planes, which means decodes.
+What is discharged is the one question that could have killed consumers 1–2
+before any of that work was done.
 
 **And a constant fell out.** The aperture at which that energy disappears is a
 cutoff detector. It brackets the bellows factor `B` to **1.994 – 2.512**,
@@ -263,12 +273,14 @@ correctly, not that the file is correct.
 
 | § | Change | Why |
 | --- | --- | --- |
-| C12 kill condition | **Not met — mark C12 as surviving phase 0.** | Energy detected at 4 of 5 apertures at 1.8–18.4× a measured null. |
+| C12 kill condition | **Not met — mark C12 as surviving phase 0.** | Energy detected at 4 of 5 apertures at 1.8–17.8× a measured null. |
 | C12 "f/11 should not" | **Strike.** Replace with "the cut falls between f/14 and f/18". | f/11 is the strongest aperture in the band, not an absent one. |
+| M88 | The prediction C12 cites originates there; correct it at source. | C12 inherits the error rather than making it. |
+| C12 phase-0, remaining | Three characterisation items are still open: through-focus behaviour at elected-sharp tiles, flat-ROI null, imbalance residual. | This lane discharged the kill gate only; those three need decodes. |
 | C12 phase-0 scope | Note that the isotropic part of the band was measured; 0.354–0.500 cyc/px near the axes remains unmeasured. | The radial spectrum stops at the quincunx inscribed limit. |
 | C12 consumers 1–2 | Live across the full working aperture range, not only wide open. | Follows from the corrected cut. |
 | M129 `B` | Flag the bracket 1.994–2.512 as independent evidence excluding H1 and H2. | Unregistered; needs pre-registration and a second subject. |
-| §9 sequencing | M-PHASE0-QUINCUNX needs no captures and is complete. | Ran on existing corpus data. |
+| §9 sequencing | M-PHASE0-QUINCUNX's kill gate needs no captures and is complete. | Ran on existing corpus data. |
 
 ---
 

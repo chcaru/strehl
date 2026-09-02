@@ -189,6 +189,12 @@ for t, lbl in zip(TAGS, ["f/5.6", "f/8", "f/11", "f/14", "f/18"]):
           f_c(EXACT_N[t], B_HYP["H2"]), f_c(EXACT_N[t], B_HYP["H3"])))
 ck("cut location", "CLAIM",
    "the cut falls between f/14 and f/18**, not between")
+ck("M88 attribution", "CLAIM",
+   "attributing that to M88. Measured, **f/11 is the")
+ck("kill gate only", "CLAIM",
+   "**This lane answers C12's kill gate and only its kill gate.**")
+ck("three items open", "CLAIM",
+   "**None of those three is answered here.** They need per-frame G1/G2 planes")
 
 # ==================================================================== §4 transfer
 ck("transfer swing", "DERIVED",
