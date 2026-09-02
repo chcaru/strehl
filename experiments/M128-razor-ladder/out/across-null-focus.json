@@ -1,0 +1,82 @@
+{
+ "frames": {
+  "n26": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl\\DSC00044.ARW",
+  "n27": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl\\DSC00045.ARW",
+  "n28": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl\\DSC00046.ARW"
+ },
+ "planes": {
+  "n26": "G1",
+  "n27": "G1",
+  "n28": "G1"
+ },
+ "which": "G1",
+ "band_half": 60,
+ "per_aperture": {
+  "n26": {
+   "step_row": 1117,
+   "angle_deg": -0.32630501275808005,
+   "n_cross": 2589,
+   "rms_px": 1.873629402245153,
+   "sigma_c_median": 0.12336137979337485,
+   "slope_dn_px_median": 217.25
+  },
+  "n27": {
+   "step_row": 1116,
+   "angle_deg": -0.3280543022601404,
+   "n_cross": 2611,
+   "rms_px": 1.860558512599264,
+   "sigma_c_median": 0.12177199362623542,
+   "slope_dn_px_median": 221.25
+  },
+  "n28": {
+   "step_row": 1116,
+   "angle_deg": -0.3329083603537216,
+   "n_cross": 2662,
+   "rms_px": 1.8402419834831267,
+   "sigma_c_median": 0.11871035713632078,
+   "slope_dn_px_median": 226.875
+  }
+ },
+ "shifts": {
+  "n26->n27": {
+   "shift": 0,
+   "corr": 0.9842309318181006,
+   "n": 2481,
+   "corr_at_0": 0.9842309318181006
+  },
+  "n26->n28": {
+   "shift": 0,
+   "corr": 0.9689345337270173,
+   "n": 2459,
+   "corr_at_0": 0.9689345337270173
+  }
+ },
+ "n_common": 2418,
+ "rms_common_px": {
+  "n26": 1.874816965836903,
+  "n27": 1.8462582475511482,
+  "n28": 1.8080325065467915
+ },
+ "corr": [
+  [
+   1.0,
+   0.9853197419007363,
+   0.9701027717361551
+  ],
+  [
+   0.9853197419007363,
+   1.0,
+   0.989354377869909
+  ],
+  [
+   0.9701027717361551,
+   0.9893543778699091,
+   1.0
+  ]
+ ],
+ "mean_offdiag_corr": 0.9815922971689335,
+ "shared_px": 1.8259940885586323,
+ "independent_px": 0.25005387765738135,
+ "shared_um": 18.698179466840397,
+ "independent_um": 2.560551707211585
+}

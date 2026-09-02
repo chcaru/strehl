@@ -1,0 +1,58 @@
+{
+ "frames": {
+  "G1": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl\\DSC00045.ARW",
+  "G2": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl\\DSC00045.ARW"
+ },
+ "planes": {
+  "G1": "G1",
+  "G2": "G2"
+ },
+ "which": "G1",
+ "band_half": 60,
+ "per_aperture": {
+  "G1": {
+   "step_row": 1116,
+   "angle_deg": -0.3280543022601404,
+   "n_cross": 2611,
+   "rms_px": 1.860558512599264,
+   "sigma_c_median": 0.12177199362623542,
+   "slope_dn_px_median": 221.25
+  },
+  "G2": {
+   "step_row": 1116,
+   "angle_deg": -0.3284805169480291,
+   "n_cross": 2622,
+   "rms_px": 1.8541675699223055,
+   "sigma_c_median": 0.12351856768957911,
+   "slope_dn_px_median": 219.0
+  }
+ },
+ "shifts": {
+  "G1->G2": {
+   "shift": 0,
+   "corr": 0.9794133147864305,
+   "n": 2469,
+   "corr_at_0": 0.9794133147864305
+  }
+ },
+ "n_common": 2469,
+ "rms_common_px": {
+  "G1": 1.8621166877439501,
+  "G2": 1.8630049216635647
+ },
+ "corr": [
+  [
+   1.0,
+   0.9794133147864305
+  ],
+  [
+   0.9794133147864305,
+   0.9999999999999999
+  ]
+ ],
+ "mean_offdiag_corr": 0.9794133147864305,
+ "shared_px": 1.8432891274309855,
+ "independent_px": 0.2672413589125456,
+ "shared_um": 18.875280664893292,
+ "independent_um": 2.7365515152644666
+}
