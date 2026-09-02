@@ -1,0 +1,37 @@
+equalisation self-test
+======================================================================
+
+(a) does adding variance v raise the floor by v?
+       added v  floor before  floor after       rise   rise/v
+           500        1636.3       2111.7      475.4    0.951
+          2000        1636.3       3591.8     1955.5    0.978
+          8000        1636.3       9572.4     7936.1    0.992
+    normalisation CONFIRMED: the PSD is scaled
+    so that white noise of variance s^2 reads as a flat s^2, which is
+    what makes the prescription add_var = scene/target - floor valid.
+
+(b) two copies of one scene, same planted cutoff, different noise
+    planted f_c 0.1273 sensor cyc/px (24.9 cy/mm)
+
+                       arm    low SNR    bias %      sd
+        quiet, as captured        170     -7.77    1.88
+         loud, as captured         19    -17.53    2.51
+          quiet, equalised         19    -18.62    1.88
+           loud, unchanged         19    -17.53    2.51
+
+    differential bias BEFORE equalising:  9.77 points
+    differential bias AFTER  equalising:  1.09 points
+    potency: the un-equalised gap is 9.77 points, which must
+             exceed 3.0 for the comparison to mean anything: PASS
+    the gap shrinks by more than half: PASS
+    the equalised SNRs actually match to 10%: PASS
+
+    WHAT THIS DOES NOT SHOW. The residual gap is not zero and is not
+    claimed to be. Equalising the low band equalises the floor relative
+    to the texture, but the estimator also sees the roll-off's own shape,
+    and two apertures genuinely differ there. On real data that residual
+    is entangled with the signal, which is exactly why the native-SNR arm
+    is run alongside and the two are compared rather than averaged.
+
+======================================================================
+self-test PASS

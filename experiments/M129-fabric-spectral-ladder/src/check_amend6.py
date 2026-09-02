@@ -71,6 +71,10 @@ def main():
     recs = d["records"]
     tags = ["f5.6", "f8", "f11", "f14", "f18"]
     ok = True
+    # Prose regexes run against a whitespace-collapsed copy. A quoted phrase that
+    # happens to straddle a line break is invisible to a plain pattern, and the
+    # resulting "sentence not found" reads exactly like a legitimate failure.
+    flat = re.sub(r"\s+", " ", text)
 
     print("Amendment 6, the non-monotone SNR table")
     band_rows = rows_after(text, "**The measured spectral SNR is not monotone", 2)
@@ -116,7 +120,7 @@ def main():
         ok &= check(f"high band, {t}", med(recs, t, "high"), num(cell), tol=0.03)
 
     print("\nAmendment 6, ranges quoted in prose (parsed from the doc, not hardcoded)")
-    m = re.search(r"The floor rises by ([\d.]+)x to ([\d.]+)x", text)
+    m = re.search(r"The floor rises by ([\d.]+)x to ([\d.]+)x", flat)
     if not m:
         print("  FAIL floor-multiplier prose sentence not found")
         ok = False
@@ -125,7 +129,7 @@ def main():
                  for i in eq for t in ("f11", "f14")]
         ok &= check("min floor multiplier", min(mults), float(m.group(1)))
         ok &= check("max floor multiplier", max(mults), float(m.group(2)))
-    m = re.search(r"knee-band ratio of ([\d.]+)x to ([\d.]+)x", text)
+    m = re.search(r"knee-band ratio of ([\d.]+)x to ([\d.]+)x", flat)
     if not m:
         print("  FAIL residual-ratio prose sentence not found")
         ok = False
@@ -136,6 +140,55 @@ def main():
             afters.append(max(a) / min(a))
         ok &= check("min residual knee ratio", min(afters), float(m.group(1)))
         ok &= check("max residual knee ratio", max(afters), float(m.group(2)))
+
+    print("\nAmendment 6b, the equalisation commissioning")
+    eqp = os.path.join(OUT, "equalise-selftest.json")
+    if not os.path.exists(eqp):
+        print("  FAIL out/equalise-selftest.json missing; run src/equalise.py")
+        ok = False
+    else:
+        with open(eqp, encoding="utf-8") as fh:
+            e6 = json.load(fh)
+        lin_rows = rows_after(text, "**(a) The arithmetic.**", 3)
+        for row, rec in zip(lin_rows, e6["variance_linearity"]):
+            ok &= check(f"added v {rec['v']:.0f}, rise", rec["rise"], num(row[1]))
+            ok &= check(f"added v {rec['v']:.0f}, rise/v", rec["ratio"],
+                        num(row[2]), tol=0.01)
+        arm_rows = rows_after(text, "*same* planted cutoff, degraded to low-band", 4)
+        for row, key in zip(arm_rows, ("quiet_raw", "loud_raw", "quiet_eq",
+                                       "loud_eq")):
+            a = e6["arms"][key]
+            ok &= check(f"{key} snr", a["snr"], num(row[1]), tol=0.01)
+            ok &= check(f"{key} bias", a["bias"], num(row[2]), tol=0.01)
+            ok &= check(f"{key} sd", a["sd"], num(row[3]), tol=0.01)
+        m2 = re.search(r"falls from ([\d.]+) points to ([\d.]+) points", flat)
+        if not m2:
+            print("  FAIL differential-bias sentence not found")
+            ok = False
+        else:
+            ok &= check("gap before", e6["gap_raw"], float(m2.group(1)), tol=0.01)
+            ok &= check("gap after", e6["gap_eq"], float(m2.group(2)), tol=0.01)
+        m3 = re.search(r"([\d.]+)\s+points\s+across\s+a\s+([\d.]+)x\s+power\s+ratio"
+                       r"\s+is\s+\*\*([\d.]+)\s+points\s+per\s+e-fold", flat)
+        if not m3:
+            print("  FAIL slope sentence not found")
+            ok = False
+        else:
+            ok &= check("slope, gap", e6["gap_raw"], float(m3.group(1)), tol=0.01)
+            ok &= check("slope, snr ratio", e6["snr_ratio"], float(m3.group(2)),
+                        tol=0.02)
+            ok &= check("slope, points/e-fold", e6["points_per_efold_power"],
+                        float(m3.group(3)), tol=0.02)
+        m4 = re.search(r"real ladder's ([\d.]+)x, the expected differential bias is\s*"
+                       r"\*\*([\d.]+) points", flat)
+        if not m4:
+            print("  FAIL applied-slope sentence not found")
+            ok = False
+        else:
+            r_low = float(m4.group(1))
+            ok &= check("applied differential",
+                        e6["points_per_efold_power"] * np.log(r_low),
+                        float(m4.group(2)), tol=0.03)
 
     print()
     print("all Amendment 6 figures reproduce" if ok else "SOME FIGURES DO NOT REPRODUCE")

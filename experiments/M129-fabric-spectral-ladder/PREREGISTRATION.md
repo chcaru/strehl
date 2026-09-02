@@ -566,5 +566,59 @@ f/11 reads 0.823, not at floor. Section 2.3 already registered that band as stra
 f/11's two candidates, so this is **undecided by construction** and is not read as
 evidence for H3. It is recorded, not interpreted.
 
+### Amendment 6b — the equalisation is commissioned, and it works
+
+`src/equalise.py`, `out/equalise-selftest.txt`. Amendments 5 and 6 asserted two things
+about equalisation without testing either. Both are now tested.
+
+**(a) The arithmetic.** The prescription `add_var = scene/target - floor` is only
+valid if adding spatially white noise of variance `v` raises the measured PSD floor by
+exactly `v`. Measured:
+
+| added v | floor rise | rise / v |
+| --- | --- | --- |
+| 500 | 475.4 | 0.951 |
+| 2000 | 1955.5 | 0.978 |
+| 8000 | 7936.1 | 0.992 |
+
+Confirmed, and the small shortfall is understood: the floor is read from the top of
+the band, which still holds a little scene power, so the *baseline* floor is slightly
+over-read and the ratio approaches 1 as `v` grows past it.
+
+**(b) The claim that actually matters.** Two copies of one synthetic scene with the
+*same* planted cutoff, degraded to low-band SNR 170 and 19 — a 8.9x power ratio,
+deliberately larger than the 1.72x the real ladder shows. Any difference in recovered
+`f_c` is bias and nothing else. Twelve replicates:
+
+| arm | low-band SNR | bias | sd |
+| --- | --- | --- | --- |
+| quiet, as captured | 170 | -7.77% | 1.88 |
+| loud, as captured | 19 | -17.53% | 2.51 |
+| quiet, equalised | 19 | -18.62% | 1.88 |
+| loud, unchanged | 19 | -17.53% | 2.51 |
+
+**Differential bias falls from 9.77 points to 1.09 points**, a factor of 9.
+
+**The potency control is the part that makes this mean anything.** "After equalising
+the biases agree" is worth nothing unless "before equalising they did not" — the
+lesson of `xspec.py`'s test 4, where a hard band limit made two arms look identical
+and certified nothing. The registered gate is that the un-equalised gap must exceed
+3.0 points; it is 9.77.
+
+**A measured slope, in the right units and on the right lattice, replacing an
+extrapolation.** Amendment 6 quoted 5.7 points per e-fold of power ratio, carried
+across from `xspec.py`'s amplitude-indexed surface. Here the same quantity is measured
+directly: 9.77 points across a 9.0x power ratio is **4.4 points per e-fold**. Applied
+to the real ladder's 1.72x, the expected differential bias is **2.4 points** against a
+28.07-point separation. The extrapolation was the right order and slightly
+pessimistic, which is the direction one wants to be wrong in.
+
+**What this does not show, stated because the residual is not zero.** 1.09 points
+remain. Equalising the low band equalises the floor relative to the texture, but the
+estimator also sees the roll-off's own shape, and two apertures genuinely differ
+there. On real data that residual is entangled with the signal. This is precisely why
+Amendment 5 registered **both** arms and required them to be compared rather than
+averaged.
+
 
 

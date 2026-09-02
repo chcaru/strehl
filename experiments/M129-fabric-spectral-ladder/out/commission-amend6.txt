@@ -9,6 +9,11 @@ baseline on the real document: exit 0
   ok   A4 table                                 caught, and named the right line
   ok   prose range, floor multiplier            caught, and named the right line
   ok   prose range, residual knee ratio         caught, and named the right line
+  ok   6b linearity table                       caught, and named the right line
+  ok   6b arms table, a bias                    caught, and named the right line
+  ok   6b arms table, an sd                     caught, and named the right line
+  ok   6b gap sentence                          caught, and named the right line
+  ok   6b slope sentence                        caught, and named the right line
 
-9/9 plants caught
+14/14 plants caught
 check_amend6.py is commissioned.
