@@ -601,29 +601,31 @@ def main() -> int:
                     "aperture": 5.6,
                 },
             )
+        )
 
     for iso in sorted({int(row["ISO"]) for row in bee_records}):
-            rows = D.group_records(bee_records, ISO=iso, ExposureTime=1.6)
-            if len(rows) != 64:
-                raise ValueError(f"expected 64 bee frames at ISO {iso}, got {len(rows)}")
-            bright = rows[:32]
-            used_paths.update(row["SourceFile"] for row in bright)
-            measurements.extend(
-                analyze_repeat_group(
-                    bright,
-                    (4,),
-                    maps,
-                    gain,
-                    read_variance,
-                    {
-                        "scene": "bee",
-                        "arm": "iso-bee",
-                        "light": "bright",
-                        "iso": iso,
-                        "exposure": 1.6,
-                        "aperture": 5.6,
-                    },
-                )
+        rows = D.group_records(bee_records, ISO=iso, ExposureTime=1.6)
+        if len(rows) != 64:
+            raise ValueError(
+                f"expected 64 bee frames at ISO {iso}, got {len(rows)}"
+            )
+        bright = rows[:32]
+        used_paths.update(row["SourceFile"] for row in bright)
+        measurements.extend(
+            analyze_repeat_group(
+                bright,
+                (4,),
+                maps,
+                gain,
+                read_variance,
+                {
+                    "scene": "bee",
+                    "arm": "iso-bee",
+                    "light": "bright",
+                    "iso": iso,
+                    "exposure": 1.6,
+                    "aperture": 5.6,
+                },
             )
         )
 

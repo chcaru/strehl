@@ -1,0 +1,862 @@
+{
+  "schema_version": 1,
+  "role": "geometry-specific controls only; no value here enters the natural-scene rho census",
+  "synthetic_grid": {
+    "planted_cyc_per_sensor_px": 0.0573,
+    "recovered_cyc_per_sensor_px": [
+      0.05859375,
+      0.05859375
+    ],
+    "absolute_errors": [
+      0.0012937500000000032,
+      0.0012937500000000032
+    ],
+    "tolerance": 0.0029296875,
+    "blocks": 49,
+    "known_answer": {
+      "status": "PASS",
+      "criterion": "both sensor axes recover the planted frequency within 1.5 FFT bins"
+    },
+    "factor_two_defect": {
+      "status": "CAUGHT",
+      "defective_absolute_errors": [
+        0.0598875,
+        0.0598875
+      ],
+      "criterion": "doubling the sensor-frequency conversion must fail the same tolerance"
+    }
+  },
+  "real_calibration_grid": {
+    "source": "D:\\personal\\macro\\requests\\30-calibration-grid",
+    "frames": [
+      {
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl\\DSC00071.ARW",
+        "sha256": "7120148b5ecd1b005599786ed073ac1b14649677615eaea668adcb3e7e457508",
+        "blocks": 49,
+        "fundamental_x_cyc_per_sensor_px": 0.0390625,
+        "fundamental_y_cyc_per_sensor_px": 0.0390625,
+        "x_peak": [
+          0.0390625,
+          0.0,
+          2529657583.2981167
+        ],
+        "y_peak": [
+          0.0,
+          0.0390625,
+          1412141729.1923919
+        ],
+        "x_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 2929.6220901757256
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 9.598624436769597
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 233.72174691329556
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 1.3071850391814157
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.7441622957464777
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.2394737491003536
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.5853281228825522
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.3368414823151147
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.27329856464437
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.382001633626608
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.3270990778582246
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.3345523282437162
+          }
+        ],
+        "y_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 1573.0399268791884
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 239.9724488873994
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 16.695667899182023
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 3.36485413517481
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.273674369110309
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.2667751463614279
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.2559236628963795
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.4204391269682837
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.3634588640788465
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.3936693862648242
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.2669397749861084
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.2556493632182073
+          }
+        ]
+      },
+      {
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl\\DSC00018.ARW",
+        "sha256": "4a7872a9cf4220824ac373a4d7bad7d97fc6ebc4a6efbede2aafb3a9d8c1ba38",
+        "blocks": 49,
+        "fundamental_x_cyc_per_sensor_px": 0.0390625,
+        "fundamental_y_cyc_per_sensor_px": 0.0390625,
+        "x_peak": [
+          0.0390625,
+          0.0,
+          2500704907.4236345
+        ],
+        "y_peak": [
+          0.0,
+          0.0390625,
+          1388008839.8663445
+        ],
+        "x_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 2988.87520867835
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 10.303447614842185
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 257.9607201338689
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 1.372347266000828
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.724895027092339
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.116456099585594
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.1783981806554558
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.190544874698737
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.2249443604962236
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.2055891978645974
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.3728323688309974
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.22544484420885
+          }
+        ],
+        "y_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 1657.4376747109723
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 258.33985214066735
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 18.990294254573932
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 3.789772068038662
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.2641759315731023
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.2957066177683485
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.3899042647754383
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.3179923746574156
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.5725458107321981
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.2161316491060625
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.183386043935313
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.1468043850270033
+          }
+        ]
+      },
+      {
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl\\DSC00042.ARW",
+        "sha256": "17eb6a8409917a360bbf77a5ecf257051cd153850f06dc07e6b9a78b300ecf81",
+        "blocks": 49,
+        "fundamental_x_cyc_per_sensor_px": 0.0390625,
+        "fundamental_y_cyc_per_sensor_px": 0.0390625,
+        "x_peak": [
+          0.0390625,
+          0.0,
+          2501969983.426394
+        ],
+        "y_peak": [
+          0.0,
+          0.0390625,
+          1394072707.6666741
+        ],
+        "x_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 3070.5142707497976
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 10.479480228269775
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 259.80279061241555
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 1.1899647489947875
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.720315145019204
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.168168308041696
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.1394839634849911
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.228458958260852
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.1693737799181865
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.298798653260516
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.2865830041836914
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.244569578541287
+          }
+        ],
+        "y_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 1680.4360657076845
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 260.032058134364
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 19.393820253058593
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 4.21993630545135
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.4180840063060907
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.2247088393676908
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.268781632178234
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.0309695618532444
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.55839602972975
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.3070003291916044
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.236961063782305
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.155617846089482
+          }
+        ]
+      },
+      {
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl\\DSC00021.ARW",
+        "sha256": "60c93b60ea709e2c477809539b8d004999103935c13ad43f75a93337e65c937f",
+        "blocks": 49,
+        "fundamental_x_cyc_per_sensor_px": 0.0390625,
+        "fundamental_y_cyc_per_sensor_px": 0.0390625,
+        "x_peak": [
+          0.0390625,
+          0.0,
+          2539917844.4227176
+        ],
+        "y_peak": [
+          0.0,
+          0.0390625,
+          1413539738.6152983
+        ],
+        "x_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 2919.5081896918487
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 9.301466018200358
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 231.87777505886555
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 1.2871289199563745
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.6585706440200312
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.0766314791494838
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.3582321897902307
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.1544613289343866
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.1702423447429824
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.2310232839463668
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.351264811036761
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.2892028900842436
+          }
+        ],
+        "y_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 1565.3623769834594
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 242.73030124943963
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 16.436939499218578
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 3.3204216226416157
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.2417953149315313
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.2115318673121505
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.3297765065178528
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.2674345992320832
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.4462000429573825
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.569309676506904
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.1034913699320048
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.1745926396239759
+          }
+        ]
+      },
+      {
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl\\DSC00047.ARW",
+        "sha256": "0ad53b2a72c2ac070ebee22fb35d49a68e0c1b1af93d79116b011b1d5977510b",
+        "blocks": 49,
+        "fundamental_x_cyc_per_sensor_px": 0.0390625,
+        "fundamental_y_cyc_per_sensor_px": 0.0390625,
+        "x_peak": [
+          0.0390625,
+          0.0,
+          2501897132.7232075
+        ],
+        "y_peak": [
+          0.0,
+          0.0390625,
+          1390411928.7937539
+        ],
+        "x_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 2981.219953202369
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 10.32589770871127
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 262.49522514346086
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 1.238997239276946
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.8285644939953627
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.2268879025385162
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.3434264366345752
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.1840652209628852
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.390099945096126
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.4086498988738965
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.1773260954465656
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.138180199000729
+          }
+        ],
+        "y_harmonics": [
+          {
+            "harmonic": 1,
+            "target": 0.0390625,
+            "peak_to_local_median": 1632.3171696985967
+          },
+          {
+            "harmonic": 2,
+            "target": 0.078125,
+            "peak_to_local_median": 252.28797599974928
+          },
+          {
+            "harmonic": 3,
+            "target": 0.1171875,
+            "peak_to_local_median": 18.872474459028876
+          },
+          {
+            "harmonic": 4,
+            "target": 0.15625,
+            "peak_to_local_median": 3.8822466777102793
+          },
+          {
+            "harmonic": 5,
+            "target": 0.1953125,
+            "peak_to_local_median": 1.3439916185873484
+          },
+          {
+            "harmonic": 6,
+            "target": 0.234375,
+            "peak_to_local_median": 1.056656540603459
+          },
+          {
+            "harmonic": 7,
+            "target": 0.2734375,
+            "peak_to_local_median": 1.2358780851117561
+          },
+          {
+            "harmonic": 8,
+            "target": 0.3125,
+            "peak_to_local_median": 1.3981588760736945
+          },
+          {
+            "harmonic": 9,
+            "target": 0.3515625,
+            "peak_to_local_median": 1.2925723537891411
+          },
+          {
+            "harmonic": 10,
+            "target": 0.390625,
+            "peak_to_local_median": 1.2100615475800354
+          },
+          {
+            "harmonic": 11,
+            "target": 0.4296875,
+            "peak_to_local_median": 1.361001224115201
+          },
+          {
+            "harmonic": 12,
+            "target": 0.46875,
+            "peak_to_local_median": 1.3435837277587355
+          }
+        ]
+      }
+    ],
+    "frame_count": 5,
+    "median_fundamental_cyc_per_sensor_px": 0.0390625,
+    "period_sensor_px": 25.6,
+    "grid_division_um": 10.0,
+    "sensor_pitch_um": 5.12,
+    "inferred_magnification_if_one_division_is_the_fundamental": 13.1072,
+    "median_axis_fractional_disagreement": 0.0,
+    "strong_harmonics": 28,
+    "tested_harmonics": 120,
+    "status": "PASS",
+    "criterion": "at least three runs, x/y fundamentals agree within 5%, and at least 12 registered harmonics exceed 10x local median power",
+    "interpretation": "The periodic target validates sensor-frequency axes but is too coherent to license the broadband natural-scene rho model."
+  },
+  "synthetic_edge": {
+    "expected_beta": 2.0,
+    "recovered_beta": 2.025834429321212,
+    "absolute_error": 0.02583442932121205,
+    "tolerance": 0.35,
+    "known_answer": {
+      "status": "PASS",
+      "criterion": "step-edge power slope is beta=2 within 0.35"
+    },
+    "lsf_as_esf_defect": {
+      "status": "CAUGHT",
+      "defective_beta": 0.025834429321214925,
+      "criterion": "differentiating the edge but still expecting beta=2 must fail"
+    }
+  },
+  "real_razor_edge": {
+    "source": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl",
+    "selection_rule": "among every fifth frame, select the largest negative derivative of the full-width G1 row profile",
+    "candidates": [
+      {
+        "index": 0,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00031.ARW",
+        "edge_score_dn_per_g1_px": 99.0874730393839,
+        "coarse_edge_row_g1": 1111
+      },
+      {
+        "index": 5,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00036.ARW",
+        "edge_score_dn_per_g1_px": 146.7272887572159,
+        "coarse_edge_row_g1": 1112
+      },
+      {
+        "index": 10,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00041.ARW",
+        "edge_score_dn_per_g1_px": 265.8660682803163,
+        "coarse_edge_row_g1": 1112
+      },
+      {
+        "index": 15,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00046.ARW",
+        "edge_score_dn_per_g1_px": 269.2812411003638,
+        "coarse_edge_row_g1": 1112
+      },
+      {
+        "index": 20,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00051.ARW",
+        "edge_score_dn_per_g1_px": 174.7109471814232,
+        "coarse_edge_row_g1": 1112
+      },
+      {
+        "index": 25,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00056.ARW",
+        "edge_score_dn_per_g1_px": 155.1118008004048,
+        "coarse_edge_row_g1": 453
+      },
+      {
+        "index": 30,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00061.ARW",
+        "edge_score_dn_per_g1_px": 152.2031845317547,
+        "coarse_edge_row_g1": 453
+      },
+      {
+        "index": 35,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00066.ARW",
+        "edge_score_dn_per_g1_px": 139.77358505931284,
+        "coarse_edge_row_g1": 453
+      },
+      {
+        "index": 40,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00071.ARW",
+        "edge_score_dn_per_g1_px": 101.6476144886783,
+        "coarse_edge_row_g1": 454
+      },
+      {
+        "index": 45,
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00076.ARW",
+        "edge_score_dn_per_g1_px": 77.07948920423019,
+        "coarse_edge_row_g1": 1107
+      }
+    ],
+    "selected_path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl\\DSC00046.ARW",
+    "selected_sha256": "3431041933bfe3f04855f31792d20286f27c79d811f8693d228dcdfc348c9239",
+    "coarse_edge_row_g1": 1112,
+    "line_slope_g1_rows_per_g1_column": -0.005707531765647296,
+    "line_intercept_g1_row": 1114.9375427368655,
+    "kept_segments": 82,
+    "total_segments": 96,
+    "segment_residual_mad_g1_px": 2.8086892920411,
+    "esf_bin_width_sensor_px": 0.1,
+    "median_samples_per_esf_bin": 157.0,
+    "fit_band_cyc_per_sensor_px": [
+      0.005,
+      0.03
+    ],
+    "beta": 2.37946984846315,
+    "defective_lsf_as_esf_beta": 0.3794698484631507,
+    "side_levels_dn": [
+      2208.0090268697013,
+      788.2302165432689
+    ],
+    "expected_geometric_step_beta": 2.0,
+    "status": "PASS",
+    "criterion": "undemosaiced slanted-edge low-band power slope lies in [2,3]; the geometric step supplies beta=2 and optical MTF steepens it",
+    "interpretation": "This validates the edge-spectrum convention.  It does not estimate natural-scene rho because a blade edge is not a stationary field."
+  },
+  "tally": {
+    "PASS": 4,
+    "FAIL": 0,
+    "CAUGHT": 2,
+    "MISSED": 0
+  }
+}

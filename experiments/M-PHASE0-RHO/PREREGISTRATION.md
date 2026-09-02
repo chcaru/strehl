@@ -725,3 +725,13 @@ direction.
 Choosing a textured ROI can bias the absolute scene census upward relative to
 all bee pixels, but the same ROI and scene are paired across ISO, so that
 selection does not favour an ISO trend.
+
+---
+
+## Amendment A7 -- clerical correction to A5
+
+This is a post-run correction, not a prospective estimator change. A5
+incorrectly assigned the auto-spectrum control's `0.022` dex error to the
+signed cross-spectrum. In the final commissioned run, the auto-spectrum error
+at `rho = 0.003` is `0.022` dex and the signed cross-spectrum error is `0.062`
+dex. Both pass their registered `0.15` dex gate. No real-data value changes.

@@ -1,0 +1,2228 @@
+{
+  "target": "G-1x",
+  "nu_grid": 8,
+  "trials": 300,
+  "sigma_grid": [
+    0.0,
+    0.001,
+    0.0012883513984014395,
+    0.0016598493257629447,
+    0.0021384691999823766,
+    0.0027550997842357024,
+    0.0035495366597555716,
+    0.004573050519273265,
+    0.0058916960314661345,
+    0.007590574821095614,
+    0.009779327685429282,
+    0.012599210498948734,
+    0.0162322104650747,
+    0.02091279105182546,
+    0.026943023596096446,
+    0.03471208212719384,
+    0.044721359549995794,
+    0.05761682611465066,
+    0.07423071849626275,
+    0.09563524997900373,
+    0.1232118080469207,
+    0.15874010519682002,
+    0.20451303651271469,
+    0.26348465658248066,
+    0.33946082576536196,
+    0.4373448295773111,
+    0.563453822769568,
+    0.7259265204998098,
+    0.9352484478226213,
+    1.2049286456050499,
+    1.5523715055392187,
+    2.0
+  ],
+  "geometry": {
+    "frequency_components": 128,
+    "nu_plus_h_outside_target_band": 64,
+    "nu_minus_h_outside_target_band": 0
+  },
+  "physical_control": {
+    "nu": [
+      -0.4375,
+      -0.4375
+    ],
+    "reps": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        -0.5,
+        -0.5
+      ]
+    ],
+    "displacement": [
+      0.23,
+      -0.17
+    ],
+    "physical_real_imag": [
+      0.6028858190195407,
+      0.7234808000855923
+    ],
+    "current_real_imag": [
+      0.8862720320755194,
+      0.8282797628431722
+    ],
+    "corrected_real_imag": [
+      0.6028858190195407,
+      0.7234808000855923
+    ],
+    "current_abs_error": 0.3021432910810252,
+    "corrected_abs_error": 0.0
+  },
+  "pooled": {
+    "0.1": {
+      "configs": 64,
+      "current_median": 0.09563524997900373,
+      "corrected_median": 0.1232118080469207,
+      "median_ratio": 1.2883513984014394,
+      "ratio_p10": 1.0,
+      "ratio_p90": 1.2883513984014396,
+      "ratio_min": 1.0,
+      "ratio_max": 1.659849325762945,
+      "changed_configs": 53
+    },
+    "0.01": {
+      "configs": 64,
+      "current_median": 0.039716720838594816,
+      "corrected_median": 0.044721359549995794,
+      "median_ratio": 1.0,
+      "ratio_p10": 1.0,
+      "ratio_p90": 1.2018459788810083,
+      "ratio_min": 0.7761857527696091,
+      "ratio_max": 1.659849325762944,
+      "changed_configs": 9
+    },
+    "0.005": {
+      "configs": 64,
+      "current_median": 0.026943023596096446,
+      "corrected_median": 0.026943023596096446,
+      "median_ratio": 1.0,
+      "ratio_p10": 1.0,
+      "ratio_p90": 1.2883513984014392,
+      "ratio_min": 1.0,
+      "ratio_max": 1.2883513984014396,
+      "changed_configs": 8
+    }
+  },
+  "comparisons": [
+    {
+      "rho": 0.1,
+      "config": 0,
+      "nu": [
+        -0.4375,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 1,
+      "nu": [
+        -0.4375,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 2,
+      "nu": [
+        -0.4375,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 3,
+      "nu": [
+        -0.4375,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 4,
+      "nu": [
+        -0.4375,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 5,
+      "nu": [
+        -0.4375,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 6,
+      "nu": [
+        -0.4375,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 7,
+      "nu": [
+        -0.4375,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 8,
+      "nu": [
+        -0.3125,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 9,
+      "nu": [
+        -0.3125,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 10,
+      "nu": [
+        -0.3125,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 11,
+      "nu": [
+        -0.3125,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 12,
+      "nu": [
+        -0.3125,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 13,
+      "nu": [
+        -0.3125,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 14,
+      "nu": [
+        -0.3125,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 15,
+      "nu": [
+        -0.3125,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 16,
+      "nu": [
+        -0.1875,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 17,
+      "nu": [
+        -0.1875,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 18,
+      "nu": [
+        -0.1875,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 19,
+      "nu": [
+        -0.1875,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 20,
+      "nu": [
+        -0.1875,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.20451303651271469,
+      "bar_corrected_nu_minus_h": 0.26348465658248066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 21,
+      "nu": [
+        -0.1875,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 22,
+      "nu": [
+        -0.1875,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 23,
+      "nu": [
+        -0.1875,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 24,
+      "nu": [
+        -0.0625,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 25,
+      "nu": [
+        -0.0625,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.26348465658248066,
+      "corrected_over_current": 1.659849325762945
+    },
+    {
+      "rho": 0.1,
+      "config": 26,
+      "nu": [
+        -0.0625,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.659849325762945
+    },
+    {
+      "rho": 0.1,
+      "config": 27,
+      "nu": [
+        -0.0625,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 28,
+      "nu": [
+        -0.0625,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.26348465658248066,
+      "bar_corrected_nu_minus_h": 0.33946082576536196,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 29,
+      "nu": [
+        -0.0625,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.20451303651271469,
+      "bar_corrected_nu_minus_h": 0.26348465658248066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 30,
+      "nu": [
+        -0.0625,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 31,
+      "nu": [
+        -0.0625,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 32,
+      "nu": [
+        0.0625,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 33,
+      "nu": [
+        0.0625,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 34,
+      "nu": [
+        0.0625,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.20451303651271469,
+      "bar_corrected_nu_minus_h": 0.26348465658248066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 35,
+      "nu": [
+        0.0625,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 36,
+      "nu": [
+        0.0625,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.20451303651271469,
+      "bar_corrected_nu_minus_h": 0.26348465658248066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 37,
+      "nu": [
+        0.0625,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 38,
+      "nu": [
+        0.0625,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 39,
+      "nu": [
+        0.0625,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 40,
+      "nu": [
+        0.1875,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 41,
+      "nu": [
+        0.1875,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 42,
+      "nu": [
+        0.1875,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 43,
+      "nu": [
+        0.1875,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 44,
+      "nu": [
+        0.1875,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.20451303651271469,
+      "bar_corrected_nu_minus_h": 0.26348465658248066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 45,
+      "nu": [
+        0.1875,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 46,
+      "nu": [
+        0.1875,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 47,
+      "nu": [
+        0.1875,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 48,
+      "nu": [
+        0.3125,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 49,
+      "nu": [
+        0.3125,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 50,
+      "nu": [
+        0.3125,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 51,
+      "nu": [
+        0.3125,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 52,
+      "nu": [
+        0.3125,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 53,
+      "nu": [
+        0.3125,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 54,
+      "nu": [
+        0.3125,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 55,
+      "nu": [
+        0.3125,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 56,
+      "nu": [
+        0.4375,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.1,
+      "config": 57,
+      "nu": [
+        0.4375,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.6598493257629439
+    },
+    {
+      "rho": 0.1,
+      "config": 58,
+      "nu": [
+        0.4375,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 59,
+      "nu": [
+        0.4375,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.1,
+      "config": 60,
+      "nu": [
+        0.4375,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 61,
+      "nu": [
+        0.4375,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.1,
+      "config": 62,
+      "nu": [
+        0.4375,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.2883513984014388
+    },
+    {
+      "rho": 0.1,
+      "config": 63,
+      "nu": [
+        0.4375,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.01,
+      "config": 0,
+      "nu": [
+        -0.4375,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 1,
+      "nu": [
+        -0.4375,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 2,
+      "nu": [
+        -0.4375,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 3,
+      "nu": [
+        -0.4375,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 4,
+      "nu": [
+        -0.4375,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 5,
+      "nu": [
+        -0.4375,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 6,
+      "nu": [
+        -0.4375,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 7,
+      "nu": [
+        -0.4375,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 8,
+      "nu": [
+        -0.3125,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 9,
+      "nu": [
+        -0.3125,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 10,
+      "nu": [
+        -0.3125,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 11,
+      "nu": [
+        -0.3125,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 12,
+      "nu": [
+        -0.3125,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.01,
+      "config": 13,
+      "nu": [
+        -0.3125,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 14,
+      "nu": [
+        -0.3125,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 15,
+      "nu": [
+        -0.3125,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0058916960314661345,
+      "bar_corrected_nu_minus_h": 0.0058916960314661345,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 16,
+      "nu": [
+        -0.1875,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 17,
+      "nu": [
+        -0.1875,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 18,
+      "nu": [
+        -0.1875,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 19,
+      "nu": [
+        -0.1875,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 20,
+      "nu": [
+        -0.1875,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 21,
+      "nu": [
+        -0.1875,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 22,
+      "nu": [
+        -0.1875,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.009779327685429282,
+      "bar_corrected_nu_minus_h": 0.009779327685429282,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 23,
+      "nu": [
+        -0.1875,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 0.7761857527696091
+    },
+    {
+      "rho": 0.01,
+      "config": 24,
+      "nu": [
+        -0.0625,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.009779327685429282,
+      "bar_corrected_nu_minus_h": 0.009779327685429282,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 25,
+      "nu": [
+        -0.0625,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 26,
+      "nu": [
+        -0.0625,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.01,
+      "config": 27,
+      "nu": [
+        -0.0625,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 28,
+      "nu": [
+        -0.0625,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.01,
+      "config": 29,
+      "nu": [
+        -0.0625,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 30,
+      "nu": [
+        -0.0625,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 31,
+      "nu": [
+        -0.0625,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 32,
+      "nu": [
+        0.0625,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 33,
+      "nu": [
+        0.0625,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 34,
+      "nu": [
+        0.0625,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 35,
+      "nu": [
+        0.0625,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.659849325762944
+    },
+    {
+      "rho": 0.01,
+      "config": 36,
+      "nu": [
+        0.0625,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.15874010519682002,
+      "bar_corrected_nu_minus_h": 0.20451303651271469,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.01,
+      "config": 37,
+      "nu": [
+        0.0625,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 38,
+      "nu": [
+        0.0625,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 39,
+      "nu": [
+        0.0625,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 40,
+      "nu": [
+        0.1875,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 41,
+      "nu": [
+        0.1875,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 42,
+      "nu": [
+        0.1875,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 43,
+      "nu": [
+        0.1875,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 44,
+      "nu": [
+        0.1875,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 45,
+      "nu": [
+        0.1875,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 46,
+      "nu": [
+        0.1875,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 47,
+      "nu": [
+        0.1875,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 48,
+      "nu": [
+        0.3125,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 49,
+      "nu": [
+        0.3125,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.0058916960314661345,
+      "bar_corrected_nu_minus_h": 0.0058916960314661345,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 50,
+      "nu": [
+        0.3125,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 51,
+      "nu": [
+        0.3125,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 52,
+      "nu": [
+        0.3125,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 53,
+      "nu": [
+        0.3125,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 0.7761857527696091
+    },
+    {
+      "rho": 0.01,
+      "config": 54,
+      "nu": [
+        0.3125,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 55,
+      "nu": [
+        0.3125,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 56,
+      "nu": [
+        0.4375,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 57,
+      "nu": [
+        0.4375,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.0058916960314661345,
+      "bar_corrected_nu_minus_h": 0.0058916960314661345,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 58,
+      "nu": [
+        0.4375,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 59,
+      "nu": [
+        0.4375,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.01,
+      "config": 60,
+      "nu": [
+        0.4375,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.01,
+      "config": 61,
+      "nu": [
+        0.4375,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 62,
+      "nu": [
+        0.4375,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.007590574821095614,
+      "bar_corrected_nu_minus_h": 0.007590574821095614,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.01,
+      "config": 63,
+      "nu": [
+        0.4375,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 0,
+      "nu": [
+        -0.4375,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.009779327685429282,
+      "bar_corrected_nu_minus_h": 0.009779327685429282,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 1,
+      "nu": [
+        -0.4375,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 2,
+      "nu": [
+        -0.4375,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 3,
+      "nu": [
+        -0.4375,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 4,
+      "nu": [
+        -0.4375,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 5,
+      "nu": [
+        -0.4375,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 6,
+      "nu": [
+        -0.4375,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 7,
+      "nu": [
+        -0.4375,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 8,
+      "nu": [
+        -0.3125,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 9,
+      "nu": [
+        -0.3125,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 10,
+      "nu": [
+        -0.3125,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 11,
+      "nu": [
+        -0.3125,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 12,
+      "nu": [
+        -0.3125,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 13,
+      "nu": [
+        -0.3125,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.007590574821095614,
+      "bar_corrected_nu_minus_h": 0.009779327685429282,
+      "corrected_over_current": 1.2883513984014383
+    },
+    {
+      "rho": 0.005,
+      "config": 14,
+      "nu": [
+        -0.3125,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.009779327685429282,
+      "bar_corrected_nu_minus_h": 0.009779327685429282,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 15,
+      "nu": [
+        -0.3125,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0035495366597555716,
+      "bar_corrected_nu_minus_h": 0.0035495366597555716,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 16,
+      "nu": [
+        -0.1875,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 17,
+      "nu": [
+        -0.1875,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.005,
+      "config": 18,
+      "nu": [
+        -0.1875,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 19,
+      "nu": [
+        -0.1875,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 20,
+      "nu": [
+        -0.1875,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 21,
+      "nu": [
+        -0.1875,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 22,
+      "nu": [
+        -0.1875,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.007590574821095614,
+      "bar_corrected_nu_minus_h": 0.007590574821095614,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 23,
+      "nu": [
+        -0.1875,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.009779327685429282,
+      "bar_corrected_nu_minus_h": 0.009779327685429282,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 24,
+      "nu": [
+        -0.0625,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0058916960314661345,
+      "bar_corrected_nu_minus_h": 0.0058916960314661345,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 25,
+      "nu": [
+        -0.0625,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 26,
+      "nu": [
+        -0.0625,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 27,
+      "nu": [
+        -0.0625,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.09563524997900373,
+      "bar_corrected_nu_minus_h": 0.09563524997900373,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 28,
+      "nu": [
+        -0.0625,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.15874010519682002,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.005,
+      "config": 29,
+      "nu": [
+        -0.0625,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 30,
+      "nu": [
+        -0.0625,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 31,
+      "nu": [
+        -0.0625,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 32,
+      "nu": [
+        0.0625,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 33,
+      "nu": [
+        0.0625,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 34,
+      "nu": [
+        0.0625,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 35,
+      "nu": [
+        0.0625,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 36,
+      "nu": [
+        0.0625,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.1232118080469207,
+      "bar_corrected_nu_minus_h": 0.1232118080469207,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 37,
+      "nu": [
+        0.0625,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 38,
+      "nu": [
+        0.0625,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 39,
+      "nu": [
+        0.0625,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 40,
+      "nu": [
+        0.1875,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.009779327685429282,
+      "bar_corrected_nu_minus_h": 0.009779327685429282,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 41,
+      "nu": [
+        0.1875,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.005,
+      "config": 42,
+      "nu": [
+        0.1875,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 43,
+      "nu": [
+        0.1875,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.05761682611465066,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 44,
+      "nu": [
+        0.1875,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.07423071849626275,
+      "bar_corrected_nu_minus_h": 0.07423071849626275,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 45,
+      "nu": [
+        0.1875,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.005,
+      "config": 46,
+      "nu": [
+        0.1875,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 47,
+      "nu": [
+        0.1875,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 48,
+      "nu": [
+        0.3125,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 49,
+      "nu": [
+        0.3125,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.0035495366597555716,
+      "bar_corrected_nu_minus_h": 0.004573050519273265,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.005,
+      "config": 50,
+      "nu": [
+        0.3125,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 51,
+      "nu": [
+        0.3125,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.044721359549995794,
+      "bar_corrected_nu_minus_h": 0.05761682611465066,
+      "corrected_over_current": 1.2883513984014396
+    },
+    {
+      "rho": 0.005,
+      "config": 52,
+      "nu": [
+        0.3125,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 53,
+      "nu": [
+        0.3125,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.012599210498948734,
+      "bar_corrected_nu_minus_h": 0.012599210498948734,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 54,
+      "nu": [
+        0.3125,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 55,
+      "nu": [
+        0.3125,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.026943023596096446,
+      "bar_corrected_nu_minus_h": 0.026943023596096446,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 56,
+      "nu": [
+        0.4375,
+        -0.4375
+      ],
+      "bar_current_nu_plus_h": 0.0162322104650747,
+      "bar_corrected_nu_minus_h": 0.0162322104650747,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 57,
+      "nu": [
+        0.4375,
+        -0.3125
+      ],
+      "bar_current_nu_plus_h": 0.004573050519273265,
+      "bar_corrected_nu_minus_h": 0.004573050519273265,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 58,
+      "nu": [
+        0.4375,
+        -0.1875
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.044721359549995794,
+      "corrected_over_current": 1.2883513984014394
+    },
+    {
+      "rho": 0.005,
+      "config": 59,
+      "nu": [
+        0.4375,
+        -0.0625
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 60,
+      "nu": [
+        0.4375,
+        0.0625
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 61,
+      "nu": [
+        0.4375,
+        0.1875
+      ],
+      "bar_current_nu_plus_h": 0.03471208212719384,
+      "bar_corrected_nu_minus_h": 0.03471208212719384,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 62,
+      "nu": [
+        0.4375,
+        0.3125
+      ],
+      "bar_current_nu_plus_h": 0.0058916960314661345,
+      "bar_corrected_nu_minus_h": 0.0058916960314661345,
+      "corrected_over_current": 1.0
+    },
+    {
+      "rho": 0.005,
+      "config": 63,
+      "nu": [
+        0.4375,
+        0.4375
+      ],
+      "bar_current_nu_plus_h": 0.02091279105182546,
+      "bar_corrected_nu_minus_h": 0.02091279105182546,
+      "corrected_over_current": 1.0
+    }
+  ],
+  "verdict": "nu-h is the band representative; nu+h fails the physical component control"
+}
