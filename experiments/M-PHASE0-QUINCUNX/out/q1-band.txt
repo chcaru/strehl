@@ -1,0 +1,111 @@
+M-PHASE0-QUINCUNX step 1 -- energy above the green-plane Nyquist
+==========================================================================
+source: M129-fabric-spectral-ladder\out\snr-w2.json
+30 records, bands {"low": [0.04, 0.09], "mid": [0.1, 0.15], "knee": [0.15, 0.23], "high": [0.26, 0.33]}
+
+Q1  GEOMETRY  (re-derived from PITCH_UM, not copied)
+--------------------------------------------------------------------------
+    lattice            pitch um      Nyq cy/mm  Nyq sensor cyc/px
+    full sensor          5.1200          97.66            0.50000
+    GQ quincunx          7.2408          69.05            0.35355
+    G1 or G2 alone      10.2400          48.83            0.25000
+
+    C12 states the plane Nyquist is 0.25 cyc/sensor-px: CONFIRMED
+    M129 f axis runs 0.00829 to 0.35079; GQ radial reach is 0.35355
+    axis terminates at the quincunx reach (within one bin): YES
+
+    NOTE ON COVERAGE, load-bearing for how far this lane can conclude.
+    C12's band is 0.25 to 0.50 cyc/px, because the quincunx union reaches
+    full sensor Nyquist ALONG THE AXES. This radial spectrum reaches only
+    0.35355, the inscribed diagonal limit. Energy between 0.354 and 0.500
+    exists only near the axes and is NOT sampled here. This lane therefore
+    measures the ISOTROPIC part of C12's band, not all of it.
+
+CONTROLS C1 (recompute) and C4 (band placement)
+--------------------------------------------------------------------------
+    C1 worst relative disagreement over 30 records x 4 bands: 8.13e-15  -> PASS
+    C4 lowest frequency used by the high band: 0.26240 cyc/px (> 0.25) -> PASS
+
+Q2  DETECTABILITY  -- high-band power SNR (scene / noise floor)
+--------------------------------------------------------------------------
+    ap          N     median        min        max      floor      n>1
+    f5.6    5.657      0.557      0.090      0.686     3762.2      0/6
+    f8      8.000      0.708      0.162      0.956     2504.1      0/6
+    f11    11.314      0.823      0.345      1.418      315.9      2/6
+    f14    14.254      0.083      0.038      0.128      149.1      0/6
+    f18    17.959     -0.021     -0.032     -0.008       99.3      0/6
+
+    cells with high-band SNR above 1, over all 30: 2
+    NOTE the floor column: it moves 37.9x from f/5.6 to f/18, which is why
+    SNR alone cannot compare apertures. That is Q3's job.
+
+Q3  OPTICAL TRANSFER  -- high_scene / low_scene, per aperture
+--------------------------------------------------------------------------
+    Subject-normalised: the same weave is imaged at every aperture, so the
+    low band divides out both exposure and subject contrast. What remains
+    that MOVES with f-number is optical.
+
+    ap          N   median ratio            min            max  rel f/5.6
+    f5.6    5.657      2.528e-04      3.504e-05      4.417e-04      1.000
+    f8      8.000      4.844e-04      6.977e-05      6.245e-04      1.916
+    f11    11.314      2.338e-04      1.601e-04      4.966e-04      0.925
+    f14    14.254      2.649e-05      1.864e-05      5.370e-05      0.105
+    f18    17.959     -9.823e-06     -2.578e-05     -5.868e-06     -0.039
+
+PHYSICAL FRAME  -- where each aperture's diffraction cutoff falls
+--------------------------------------------------------------------------
+    f_c = PITCH_UM / (lambda * N_eff), N_eff = B * N, from m5_lib.
+    M129 has not settled B; its three hypotheses are carried side by side
+    so that nothing below depends on which one is right.
+
+    ap            N         H1         H2         H3   band 0.26-0.33
+    f5.6      5.657     0.4410     0.5350     0.6851   full/full/full
+    f8        8.000     0.3118     0.3783     0.4844   part/full/full
+    f11      11.314     0.2205     0.2675     0.3426   none/part/full
+    f14      14.254     0.1750     0.2123     0.2719   none/none/part
+    f18      17.959     0.1389     0.1685     0.2158   none/none/none
+
+    f/18 cannot transmit into this band under ANY hypothesis, so its cells
+    measure this instrument's zero. That is control C5 and it is what makes
+    the detection threshold below measured rather than chosen.
+
+CONTROL C5  -- the empirical null at f/18
+--------------------------------------------------------------------------
+    f/18 high-band SNR over 6 cells: mean -0.0198, sd 0.0088
+    the floor estimate is therefore good to about 2.0% -> PASS
+    DETECTION THRESHOLD |snr| > |mean| + 3sd = 0.0462
+
+    detections against the measured null, not against SNR > 1:
+        f5.6   6/6 cells detected   median +0.557 = 12.0x threshold
+        f8     6/6 cells detected   median +0.708 = 15.3x threshold
+        f11    6/6 cells detected   median +0.823 = 17.8x threshold
+        f14    5/6 cells detected   median +0.083 = 1.8x threshold
+        f18    0/6 cells detected   median -0.021 = -0.4x threshold
+
+CONTROLS C2 (low-band sanity) and C3 (monotone where cutoff-limited)
+--------------------------------------------------------------------------
+    C2 smallest low-band SNR over all 30 cells: 965.0 (> 10) -> PASS
+    C3 transfer over f11 > f14 > f18 must decline monotonically:
+        2.338e-04  2.649e-05  -9.823e-06  -> PASS
+        (applies only here: under every B hypothesis these apertures'
+         cutoffs sit inside or below the band, so diffraction governs.)
+
+    REPORTED, NOT CONTROLLED: transfer RISES 1.916x from f/5.6 to f/8.
+    Both apertures transmit the whole band under every B hypothesis, so
+    this is MTF shape, not cutoff -- aberration or residual focus error.
+    It is the same sign as M129's own unexplained aperture trend in B.
+
+VERDICT
+--------------------------------------------------------------------------
+  C12's kill condition asks whether the optics put MEASURABLE energy past
+  plane Nyquist at corpus apertures. Against the measured null:
+    energy detected at 4 of 5 apertures (f5.6, f8, f11, f14).
+  The kill condition is therefore NOT met: consumers 1-2 survive.
+
+  BUT C12's per-aperture prediction is wrong. It says f/5.6 should and
+  f/11 should not. Measured, f/11 is the STRONGEST aperture in this band
+  (median SNR 0.823 against f/5.6's 0.557), and the cut falls between f/11
+  and f/14, not between f/5.6 and f/11.
+
+  controls: C1 PASS  C2 PASS  C3 PASS  C4 PASS  C5 PASS
+  all controls pass; the numbers above stand.

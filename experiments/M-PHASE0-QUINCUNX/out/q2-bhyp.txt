@@ -1,0 +1,88 @@
+M-PHASE0-QUINCUNX step 2 -- UNREGISTERED constraint on B
+==========================================================================
+reads out/q1-band.json; measures nothing new
+
+C6  the detection boundary, re-read from step 1's JSON
+--------------------------------------------------------------------------
+    threshold 0.0462 (|null mean| + 3 sd)
+      f5.6   6/6 detected   median +0.5570
+      f8     6/6 detected   median +0.7080
+      f11    6/6 detected   median +0.8229
+      f14    5/6 detected   median +0.0831
+      f18    0/6 detected   median -0.0205
+    boundary sits between f/14 (detected) and f/18 (not): PASS
+
+C7  f/18's null is not a sensitivity failure
+--------------------------------------------------------------------------
+      f5.6   median noise floor     3762.2
+      f8     median noise floor     2504.1
+      f11    median noise floor      315.9
+      f14    median noise floor      149.1
+      f18    median noise floor       99.3
+    lowest floor is f18 -> PASS
+    f/18 is the most sensitive cell in the ladder, so its null cannot be
+    explained by lost sensitivity. It is an absence of signal.
+
+THE BRACKET
+--------------------------------------------------------------------------
+    at lambda = 0.550 um:  1.9936 < B < 2.5118
+
+    hyp         B   inside bracket?
+    H1      3.732   no -- EXCLUDED
+    H2      3.076   no -- EXCLUDED
+    H3      2.402   YES
+
+C9  lambda sensitivity (+-50 nm, per m5_lib)
+--------------------------------------------------------------------------
+    lambda 0.500 um -> 2.1930 < B < 2.7630   inside: H3
+    lambda 0.550 um -> 1.9936 < B < 2.5118   inside: H3
+    lambda 0.600 um -> 1.8275 < B < 2.3025   inside: none
+
+    inside at EVERY lambda: none
+    excluded at EVERY lambda: H1, H2
+
+C8  direction of the hard-cutoff idealisation, stated not assumed
+--------------------------------------------------------------------------
+    A real MTF decays to zero rather than stepping. Energy just below the
+    true cutoff is therefore attenuated and may go undetected, so the
+    aperture that reads null has a true cutoff slightly ABOVE the band
+    edge, not at it. f_c is proportional to 1/B, so the true B is slightly
+    SMALLER than the lower bound derived above. Both bounds move the same
+    way, and the effect pushes AWAY from H1 and H2, never toward them.
+    The exclusion is therefore conservative; the inclusion of H3 is not.
+
+C10  the single load-bearing point
+--------------------------------------------------------------------------
+    The UPPER bound on B comes entirely from f/14 being a detection. If
+    f/14 were actually null, only B > 1.994 would survive and H1 and H2
+    would NOT be excluded. The whole exclusion rests on one aperture, so
+    it is worth stating how firm that one aperture is.
+
+      f/14 median SNR      +0.0831
+      f/18 null mean, sd   -0.0198, 0.0088
+      f/14 stands 11.7 null sd above the null mean -> PASS
+      its noise floor (149.1) is within 50% of f/18's (99.3), so the null
+      scale measured at f/18 is the right scale to judge f/14 by.
+
+VERDICT (unregistered)
+--------------------------------------------------------------------------
+  controls: C6 PASS  C7 PASS  C9 PASS  C10 PASS
+
+  The super-plane-Nyquist detection boundary brackets B to
+  1.994 - 2.512 at lambda 0.550 um.
+
+  ROBUST: H1 (3.732) and H2 (3.076) are excluded at every lambda across the
+  stated +-50 nm systematic, and C8's idealisation bias pushes further
+  away from them rather than toward them.
+
+  NOT ROBUST: H3 (2.402) is inside only for lambda up to about 0.57 um.
+  At 0.600 um the bracket is 1.827 - 2.302 and H3 sits just outside it.
+  So this evidence does NOT elect H3. It says B lies near 2.0-2.8, which
+  is H3's neighbourhood and nobody else's.
+
+  This is an independent line of evidence on a question M129 left open,
+  from data M129 itself produced. It is NOT a substitute for M129's own
+  ladder: it is one bracket from one subject, it assumes a hard cutoff,
+  it rests on a single aperture's detection, and it was found after the
+  fact. It should be pre-registered and re-run on a second subject before
+  it is allowed to settle anything.
