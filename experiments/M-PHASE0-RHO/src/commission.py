@@ -127,7 +127,7 @@ def main():
     # C2: beta ladder.
     beta_rows = []
     c2_ok = True
-    beta_values = (1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0)
+    beta_values = (1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0)
     for i, beta in enumerate(beta_values):
         patch, _, _ = make_patch(beta, 20 + i, noise=False)
         fit = fit_patch(patch, angular=False)
@@ -153,7 +153,17 @@ def main():
     rho_rows = []
     c3_ok = True
     c4_ok = True
-    rho_values = (1.0, 0.3, 0.1, 0.03, 0.01, 0.003, 0.001)
+    rho_values = (
+        1.0,
+        0.3,
+        0.1,
+        0.03,
+        0.01,
+        0.003,
+        0.001,
+        0.0003,
+        0.0001,
+    )
     for i, target in enumerate(rho_values):
         beta = T.beta_for_rho(target, "G")
         patch, truth_patch, _ = make_patch(beta, 50 + i, noise=False)
@@ -194,7 +204,7 @@ def main():
     dark_floor = read**2
     noise_rows = []
     c5_ok = True
-    for i, target in enumerate((0.1, 0.003)):
+    for i, target in enumerate((0.1, 0.003, 0.0003)):
         beta = T.beta_for_rho(target, "G")
         field = T.powerlaw_field(1536, beta, 77 + i)
         raw = T.sampled_raw(
@@ -236,7 +246,7 @@ def main():
                 max(r["full_error_dex"] for r in noise_rows),
             )
         ),
-        exercised=(len(noise_rows) == 2),
+        exercised=(len(noise_rows) == 3),
     )
 
     # C6/C11: pure noise has no scene power. Real cross power is signed and

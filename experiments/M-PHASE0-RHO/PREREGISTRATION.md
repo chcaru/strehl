@@ -645,6 +645,14 @@ The independent truth generator still chooses the plant and the estimator
 still cannot import it. Any failure returns commissioning to red and blocks the
 real-data analysis.
 
+### A3.1 A stopped aperture probe required one more extension
+
+After A3 passed, the stopped fabric probe reached `beta = 6.50` and
+`rho = 0.00017`, just outside the extended ladder. Those values remain
+exploratory. Before the scene run, C2 is extended through `beta` 7 and 8, C3
+adds planted `rho` 0.0003 and 0.0001, and C5 adds a noisy `rho = 0.0003`
+plant. The gates do not change.
+
 ---
 
 ## Amendment A4 -- fixed ordinary-stack census frames

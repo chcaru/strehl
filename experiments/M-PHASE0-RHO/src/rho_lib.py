@@ -94,12 +94,28 @@ def alias_groups(target: str, grid: int = 8) -> list[dict]:
                 ),
                 dtype=float,
             )
+            base_candidates = [
+                np.asarray(p, dtype=float)
+                for p in sorted(
+                    bases,
+                    key=lambda p: (
+                        round(float(np.linalg.norm(p)), 14),
+                        _point_key(p),
+                    ),
+                )
+            ]
             aliases = [
                 np.asarray(p, dtype=float)
                 for p in points
                 if _point_key(p) != _point_key(base)
             ]
-            seen[key] = {"base": base, "aliases": aliases}
+            seen[key] = {
+                "base": base,
+                "aliases": aliases,
+                "points": [np.asarray(p, dtype=float) for p in points],
+                "base_candidates": base_candidates,
+                "boundary_ambiguous": len(base_candidates) > 1,
+            }
     return list(seen.values())
 
 
@@ -140,19 +156,43 @@ def rho_from_params(
     beta: float,
     angular: tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0),
     grid: int = 8,
+    boundary: str = "primary",
 ) -> float:
     """A2.2 ratio of mean per-alias power to mean base power."""
+    if boundary not in ("primary", "swap", "average", "exclude"):
+        raise ValueError(f"unknown boundary convention {boundary!r}")
     c2, s2, c4, s4 = angular
     groups = alias_groups(target, grid)
     base = 0.0
     alias = 0.0
     n_alias = 0
+    used = 0
     for group in groups:
-        base += float(model_power_unit(group["base"], beta, c2, s2, c4, s4))
-        for f in group["aliases"]:
-            alias += float(model_power_unit(f, beta, c2, s2, c4, s4))
-            n_alias += 1
-    aliases_per_group = n_alias / len(groups)
+        candidates = group["base_candidates"]
+        if boundary == "exclude" and len(candidates) > 1:
+            continue
+        if boundary == "average" and len(candidates) > 1:
+            assignments = candidates
+        elif boundary == "swap" and len(candidates) > 1:
+            assignments = [candidates[-1]]
+        else:
+            assignments = [candidates[0]]
+        weight = 1.0 / len(assignments)
+        for chosen in assignments:
+            base += weight * float(
+                model_power_unit(chosen, beta, c2, s2, c4, s4)
+            )
+            for f in group["points"]:
+                if _point_key(f) == _point_key(chosen):
+                    continue
+                alias += weight * float(
+                    model_power_unit(f, beta, c2, s2, c4, s4)
+                )
+                n_alias += weight
+        used += 1
+    if used == 0:
+        raise ValueError("boundary convention excluded every alias group")
+    aliases_per_group = n_alias / used
     return alias / (aliases_per_group * base)
 
 
@@ -278,6 +318,9 @@ class FitResult:
     rho_rb: float
     rho_g_grid16: float
     rho_g_grid32: float
+    rho_g_boundary_swap: float
+    rho_g_boundary_average: float
+    rho_g_boundary_exclude: float
     n_fit: int
     n_holdout: int
     welch_blocks: int
@@ -357,6 +400,39 @@ def fit_gq_powerlaw(
 ) -> FitResult:
     """Fit the captured-scene power law through the GQ alias sum."""
     psd, blocks = welch_psd2(patch, tile=tile, window=window)
+    return fit_gq_powerlaw_psd(
+        psd,
+        blocks,
+        noise_floor=noise_floor,
+        window=window,
+        rmin=rmin,
+        rmax=rmax,
+        angular_model=angular_model,
+        holdout_mod=holdout_mod,
+        min_significance=min_significance,
+    )
+
+
+def fit_gq_powerlaw_psd(
+    psd: np.ndarray,
+    blocks: int,
+    noise_floor: float = 0.0,
+    window: str = "hann",
+    rmin: float = 0.04,
+    rmax: float = 0.46,
+    angular_model: bool = True,
+    holdout_mod: int = 4,
+    min_significance: float = 3.0,
+) -> FitResult:
+    """Fit an already Welch-averaged GQ PSD."""
+    psd = np.asarray(psd, dtype=float)
+    if psd.ndim != 2 or psd.shape[0] != psd.shape[1]:
+        raise ValueError("PSD must be a square 2D array")
+    if psd.shape[0] < 16 or psd.shape[0] % 2:
+        raise ValueError("PSD side must be even and at least 16")
+    if blocks <= 0:
+        raise ValueError("blocks must be positive")
+    tile = psd.shape[0]
     fx, fy = gq_frequency_grid(tile)
     ax, ay = gq_partner(fx, fy)
     base = np.stack([fx, fy], axis=-1)
@@ -506,6 +582,15 @@ def fit_gq_powerlaw(
         rho_rb=rrho,
         rho_g_grid16=rho_from_params("G-1x", beta, angular, grid=16),
         rho_g_grid32=rho_from_params("G-1x", beta, angular, grid=32),
+        rho_g_boundary_swap=rho_from_params(
+            "G-1x", beta, angular, grid=8, boundary="swap"
+        ),
+        rho_g_boundary_average=rho_from_params(
+            "G-1x", beta, angular, grid=8, boundary="average"
+        ),
+        rho_g_boundary_exclude=rho_from_params(
+            "G-1x", beta, angular, grid=8, boundary="exclude"
+        ),
         n_fit=int(sig_train.sum()),
         n_holdout=int(sig_hold.sum()),
         welch_blocks=blocks,
@@ -544,14 +629,13 @@ def peak_frequency_sensor(
     raise ValueError(f"unknown lattice {lattice!r}")
 
 
-def real_cross_psd(
+def complex_cross_psd(
     a: np.ndarray,
     b: np.ndarray,
     tile: int = 256,
     window: str = "hann",
-    shift_sensor: tuple[float, float] = (0.0, 0.0),
-) -> tuple[np.ndarray, int]:
-    """Real, phase-corrected Welch cross-periodogram for two GQ patches."""
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, int]:
+    """Complex Welch cross-periodogram and its two auto-periodograms."""
     x = np.asarray(a, dtype=float)
     y = np.asarray(b, dtype=float)
     if x.shape != y.shape or x.ndim != 2 or x.shape[0] != x.shape[1]:
@@ -561,6 +645,8 @@ def real_cross_psd(
     win = window_2d(tile, window)
     norm = float(np.sum(win * win))
     acc = np.zeros((tile, tile), dtype=complex)
+    auto_x = np.zeros((tile, tile), dtype=float)
+    auto_y = np.zeros((tile, tile), dtype=float)
     count = 0
     for i in starts:
         for j in starts:
@@ -569,14 +655,104 @@ def real_cross_psd(
             fa = np.fft.fft2((xa - float(np.mean(xa))) * win)
             fb = np.fft.fft2((ya - float(np.mean(ya))) * win)
             acc += fa * np.conjugate(fb) / norm
+            auto_x += (fa.real * fa.real + fa.imag * fa.imag) / norm
+            auto_y += (fb.real * fb.real + fb.imag * fb.imag) / norm
             count += 1
     acc /= max(count, 1)
-    fx, fy = gq_frequency_grid(tile)
+    auto_x /= max(count, 1)
+    auto_y /= max(count, 1)
+    return acc, auto_x, auto_y, count
+
+
+def derotate_cross_psd(
+    cross: np.ndarray, shift_sensor: tuple[float, float]
+) -> np.ndarray:
+    c = np.asarray(cross, dtype=complex)
+    if c.ndim != 2 or c.shape[0] != c.shape[1]:
+        raise ValueError("cross PSD must be square")
+    fx, fy = gq_frequency_grid(c.shape[0])
     dx, dy = shift_sensor
+    ramp = np.exp(2j * np.pi * (fx * dx + fy * dy))
+    return np.real(c * ramp)
+
+
+def fit_cross_translation(
+    cross: np.ndarray,
+    auto_a: np.ndarray,
+    auto_b: np.ndarray,
+    rmin: float = 0.02,
+    rmax: float = 0.12,
+    min_coherence: float = 0.5,
+) -> dict:
+    """Fit a small sensor-pixel translation from a GQ cross-phase ramp."""
+    c = np.asarray(cross, dtype=complex)
+    pa = np.asarray(auto_a, dtype=float)
+    pb = np.asarray(auto_b, dtype=float)
+    if c.shape != pa.shape or c.shape != pb.shape:
+        raise ValueError("cross and auto PSD shapes differ")
+    fx, fy = gq_frequency_grid(c.shape[0])
+    radius = np.hypot(fx, fy)
+    coherence = np.abs(c) ** 2 / np.maximum(pa * pb, np.finfo(float).tiny)
+    coherence = np.clip(coherence, 0.0, 1.0)
+    one_side = (fy > 0) | ((np.abs(fy) < 1e-15) & (fx > 0))
+    keep = (
+        legal_frequency_mask(fx, fy, "GQ")
+        & one_side
+        & (radius >= rmin)
+        & (radius <= rmax)
+        & (coherence >= min_coherence)
+        & np.isfinite(coherence)
+    )
+    if int(np.sum(keep)) < 40:
+        raise ValueError(
+            f"only {int(np.sum(keep))} coherent bins for translation fit"
+        )
+    phase = np.angle(c[keep])
+    design = np.column_stack(
+        [fx[keep], fy[keep], np.ones(int(np.sum(keep)))]
+    )
+    target = -phase / (2.0 * np.pi)
+    weight = np.abs(c[keep])
+    weight /= max(float(np.median(weight)), np.finfo(float).tiny)
+    root_weight = np.sqrt(weight)
+    xw = design * root_weight[:, None]
+    yw = target * root_weight
+    coef, _, _, _ = np.linalg.lstsq(xw, yw, rcond=None)
+    residual = target - design @ coef
+    dof = max(target.size - design.shape[1], 1)
+    scale = float(np.sum(weight * residual * residual) / dof)
+    try:
+        covariance = np.linalg.inv(xw.T @ xw) * scale
+        se = np.sqrt(np.maximum(np.diag(covariance), 0.0))
+    except np.linalg.LinAlgError:
+        se = np.full(3, np.nan)
+    return {
+        "dx": float(coef[0]),
+        "dy": float(coef[1]),
+        "phase_intercept_cycles": float(coef[2]),
+        "se_dx": float(se[0]),
+        "se_dy": float(se[1]),
+        "bins": int(np.sum(keep)),
+        "median_coherence": float(np.median(coherence[keep])),
+        "p10_coherence": float(np.percentile(coherence[keep], 10)),
+        "weighted_residual_rms_cycles": float(
+            np.sqrt(np.average(residual * residual, weights=weight))
+        ),
+    }
+
+
+def real_cross_psd(
+    a: np.ndarray,
+    b: np.ndarray,
+    tile: int = 256,
+    window: str = "hann",
+    shift_sensor: tuple[float, float] = (0.0, 0.0),
+) -> tuple[np.ndarray, int]:
+    """Real, phase-corrected Welch cross-periodogram for two GQ patches."""
+    acc, _, _, count = complex_cross_psd(a, b, tile=tile, window=window)
     # b(x) = a(x + d) gives B = A exp(+2 pi i f.d), hence
     # A conj(B) carries exp(-2 pi i f.d). Multiply by the positive ramp.
-    ramp = np.exp(2j * np.pi * (fx * dx + fy * dy))
-    return np.real(acc * ramp), count
+    return derotate_cross_psd(acc, shift_sensor), count
 
 
 def file_sha256(path: str | Path) -> str:

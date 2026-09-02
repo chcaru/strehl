@@ -25,13 +25,13 @@
     {
       "name": "C2 power-law beta ladder",
       "status": "PASS",
-      "detail": "max |error| 0.016",
+      "detail": "max |error| 0.038",
       "exercised": true
     },
     {
       "name": "C3 exact rho ladder",
       "status": "PASS",
-      "detail": "median 0.004 dex, worst 0.007 dex",
+      "detail": "median 0.005 dex, worst 0.015 dex",
       "exercised": true
     },
     {
@@ -43,7 +43,7 @@
     {
       "name": "C5 photon plus read subtraction",
       "status": "PASS",
-      "detail": "worst error raw 1.805, dark 1.803, full 0.022 dex",
+      "detail": "worst error raw 3.202, dark 3.201, full 0.053 dex",
       "exercised": true
     },
     {
@@ -112,7 +112,7 @@
       "name": "D5 omit photon noise",
       "status": "CAUGHT",
       "catcher": "C5",
-      "detail": "dark-only 1.803 vs full 0.022 dex"
+      "detail": "dark-only 3.201 vs full 0.053 dex"
     },
     {
       "name": "D6 clip negative corrected bins",
@@ -196,6 +196,20 @@
         "error": 0.016304447050398352,
         "rho_truth": 0.000453124711417479,
         "rho_est": 0.00044185403819866254
+      },
+      {
+        "truth": 7.0,
+        "estimated": 7.021774498762292,
+        "error": 0.02177449876229165,
+        "rho_truth": 9.71293649543594e-05,
+        "rho_est": 9.393832237356135e-05
+      },
+      {
+        "truth": 8.0,
+        "estimated": 8.038050672622063,
+        "error": 0.038050672622063075,
+        "rho_truth": 2.1088895851247357e-05,
+        "rho_est": 1.9903953434416655e-05
       }
     ],
     "rho_ladder": [
@@ -240,6 +254,18 @@
         "beta_truth": 5.488008522492381,
         "rho_est": 0.0010057946839231514,
         "error_dex": 0.0025093358494915926
+      },
+      {
+        "rho_truth": 0.0003,
+        "beta_truth": 6.2671104060887615,
+        "rho_est": 0.0002897592747518347,
+        "error_dex": 0.015083908758480924
+      },
+      {
+        "rho_truth": 0.0001,
+        "beta_truth": 6.9810179321097205,
+        "rho_est": 9.715708970009137e-05,
+        "error_dex": 0.01252550278128563
       }
     ],
     "noise_control": [
@@ -260,6 +286,15 @@
         "raw_rho": 0.1915207017484431,
         "dark_rho": 0.19056315046004302,
         "full_rho": 0.0028511406573167265
+      },
+      {
+        "rho_truth": 0.0003,
+        "raw_error_dex": 3.2016566882035784,
+        "dark_error_dex": 3.200527634312496,
+        "full_error_dex": 0.05318406605019124,
+        "raw_rho": 0.4772851728124738,
+        "dark_rho": 0.47604596569605406,
+        "full_rho": 0.000265422165829432
       }
     ],
     "anisotropy": {
@@ -278,6 +313,9 @@
         "rho_rb": 0.07268308601429554,
         "rho_g_grid16": 0.044243504098745126,
         "rho_g_grid32": 0.02639878975852969,
+        "rho_g_boundary_swap": 0.08156102567799159,
+        "rho_g_boundary_average": 0.08156102567799159,
+        "rho_g_boundary_exclude": 0.04815436142171388,
         "n_fit": 5542,
         "n_holdout": 2348,
         "welch_blocks": 81,
@@ -310,6 +348,9 @@
         "rho_rb": 0.06946252339704521,
         "rho_g_grid16": 0.05784036946710959,
         "rho_g_grid32": 0.03860109715901748,
+        "rho_g_boundary_swap": 0.09390121849299629,
+        "rho_g_boundary_average": 0.0939012184929963,
+        "rho_g_boundary_exclude": 0.060976845451677454,
         "n_fit": 5542,
         "n_holdout": 2348,
         "welch_blocks": 81,
