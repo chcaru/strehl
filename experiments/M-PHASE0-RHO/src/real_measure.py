@@ -133,7 +133,7 @@ def fit_psd_safe(psd: np.ndarray, sem: np.ndarray, blocks: int) -> dict:
             blocks=blocks,
             noise_floor=0.0,
             rmin=0.04,
-            rmax=0.30,
+            rmax=0.46,
             angular_model=True,
             required_max_frequency=0.25,
             signed_se=sem,
@@ -456,7 +456,8 @@ def analyze_repeat_group(
         record["fits"] = fits
         primary_key = (
             "empirical_a"
-            if identity.get("arm") == "iso" and "empirical_a" in fits
+            if identity.get("arm") in ("iso", "iso-bee", "repeat-primary")
+            and "empirical_a" in fits
             else "full_a"
         )
         record["primary_fit_key"] = primary_key
@@ -599,6 +600,30 @@ def main() -> int:
                     "exposure": 1.6,
                     "aperture": 5.6,
                 },
+            )
+
+    for iso in sorted({int(row["ISO"]) for row in bee_records}):
+            rows = D.group_records(bee_records, ISO=iso, ExposureTime=1.6)
+            if len(rows) != 64:
+                raise ValueError(f"expected 64 bee frames at ISO {iso}, got {len(rows)}")
+            bright = rows[:32]
+            used_paths.update(row["SourceFile"] for row in bright)
+            measurements.extend(
+                analyze_repeat_group(
+                    bright,
+                    (4,),
+                    maps,
+                    gain,
+                    read_variance,
+                    {
+                        "scene": "bee",
+                        "arm": "iso-bee",
+                        "light": "bright",
+                        "iso": iso,
+                        "exposure": 1.6,
+                        "aperture": 5.6,
+                    },
+                )
             )
         )
 

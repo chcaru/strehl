@@ -266,7 +266,7 @@ def main():
         blocks=81 * len(cross_rows),
         noise_floor=0.0,
         rmin=0.04,
-        rmax=0.30,
+        rmax=0.46,
         angular_model=False,
         required_max_frequency=0.25,
         signed_se=np.std(cross_stack, axis=0, ddof=1)

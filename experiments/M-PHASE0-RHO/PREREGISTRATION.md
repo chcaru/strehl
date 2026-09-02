@@ -696,3 +696,32 @@ Before rerunning real repeats, the cross fit now minimises an
 estimated across independent frame pairs. No bin is clipped or dropped for
 being negative. A 16-pair noisy synthetic plant at `rho = 0.003` recovers it
 within 0.022 dex. The auto-spectrum estimator and all gates are unchanged.
+
+---
+
+## Amendment A6 -- ISO fallback after the paper model failed
+
+All twelve paper ISO groups failed the registered angular holdout gate. Their
+raw estimates rose with ISO as expected from photon noise, but no corrected
+paper `rho` is licensed.
+
+Before opening the non-ISO-100 bee repeats, the ISO arm moves to fixed ROI 4,
+the bottom-centre fixed sensor ROI. It passed the ISO 100 model gate under both
+bee light sources and has strong low-band scene power. The first 32-frame
+bright-light block is used at every ISO. The ROI and block are never replaced.
+The repeat-difference noise floor is primary because the ISO 100 photon
+coefficient cannot be transferred across analogue gains without a separate
+calibration.
+
+For every repeat capture, not only the ISO arm, the exact-group
+pair-difference plateau is now the primary full-noise subtraction and the
+flat-field prediction is a sensitivity. This changes no single-frame result.
+The reason is measured: the two agree near ordinary signal levels, but the
+flat-field ladder does not reach the darkest bee ROI. Motion or illumination
+change can inflate a difference plateau and then push corrected `rho`
+downward. The signed repeat cross-spectrum is the registered check on that
+direction.
+
+Choosing a textured ROI can bias the absolute scene census upward relative to
+all bee pixels, but the same ROI and scene are paired across ISO, so that
+selection does not favour an ISO trend.
