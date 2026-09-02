@@ -1,0 +1,45 @@
+{
+ "results": [
+  {
+   "control": "C1a planted-sigma, synthetic",
+   "pass": true,
+   "detail": "worst relative error 2.90% over sigma in 0.05/0.2/1.0"
+  },
+  {
+   "control": "C1b planted-sigma, real cube",
+   "pass": true,
+   "detail": "recovered 0.0359 vs predicted 0.0359 (0.13%), base sigma_r 0.0179, smoothed residual 0.0008"
+  },
+  {
+   "control": "C2 planted-zhat (bootstrap)",
+   "pass": true,
+   "detail": "bias +0.0002 frames, empirical sd 0.2634, bootstrap 0.3000 (ratio 1.139); retired analytic forms: symmetric-point 0.1454 (ratio 0.552), general-offset 0.1965 (ratio 0.746)"
+  },
+  {
+   "control": "C3' sigma_r truth test",
+   "pass": true,
+   "detail": "worst error 0.74%; s=0.0179: mine 0.0181 (+0.7% vs truth), M69 sg 1.05x, M69 structure 2.28x; s=0.0359: mine 0.0359 (+0.2% vs truth), M69 sg 1.00x, M69 structure 1.44x; s=0.0717: mine 0.0717 (-0.1% vs truth), M69 sg 0.98x, M69 structure 1.14x"
+  },
+  {
+   "control": "C4 null n=22",
+   "pass": true,
+   "detail": "bootstrap median sigma_z 5.852 frames, EASY 0.24% WINNABLE 0.55% LOST 99.21%; retired analytic form called EASY 90.2% at median sigma_z 0.1907"
+  },
+  {
+   "control": "C4 null n=105",
+   "pass": true,
+   "detail": "bootstrap median sigma_z 29.663 frames, EASY 0.00% WINNABLE 0.00% LOST 100.00%; retired analytic form called EASY 97.9% at median sigma_z 0.1416"
+  },
+  {
+   "control": "C5 easy saturation",
+   "pass": true,
+   "detail": "EASY 100.00% WINNABLE 0.00% LOST 0.00%, median bootstrap sigma_z 0.00248"
+  },
+  {
+   "control": "C6 noise correlation length",
+   "pass": true,
+   "detail": "113MSDCF: 1/e lag x=7 y=14 px, n_eff(9x9)=1.58 of 81 (deflation x51.2)"
+  }
+ ],
+ "n_fail": 0
+}

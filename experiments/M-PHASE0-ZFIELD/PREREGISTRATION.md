@@ -205,3 +205,108 @@ construction, and the lane is written to make a kill hard rather than easy.**
 
 Outputs land in `experiments/M-PHASE0-ZFIELD/out/`. No file under `D:\personal\macro` is
 written. No RAW is decoded.
+
+---
+
+## Amendment 1 — the analytic σ_z is unusable, and the controls proved it
+
+Registered 2026-08, after running §7's controls and **before** computing any census
+statistic in §5. All four numbers below come from `out/z2-controls.json`, run 1.
+
+### A1.1 The §4 derivation was evaluated at a special point and applied generally
+
+§4 derived `σ_z = σ_r / (|D| · √2)` "at the symmetric point", where `y_l = y_r` and the
+sub-frame offset `x*` is zero. That step is correct but the result was then applied to
+every pixel. Carrying the general offset through:
+
+    ∂x*/∂y_l = (D − n)/(2D²),  ∂x*/∂y_r = −(D + n)/(2D²),  ∂x*/∂y_c = n/D²
+
+with `n = y_l − y_r = 2D·x*`, giving
+
+    σ_z = σ_r · √(1 + 12 x*²) / (|D| · √2)
+
+Since `x*` is near-uniform on [−0.5, 0.5], the omitted factor averages `√2` and reaches
+`2` at an interval edge. **This is a disclosed error in the preregistration**, not a
+finding.
+
+### A1.2 Even corrected, first-order propagation is inadequate — §8's escape hatch fires
+
+Measured against a planted-ẑ truth (C2, 96 noise realisations, known ramp + 2-frame
+step):
+
+| σ_z estimator | predicted | empirical sd | ratio |
+| --- | --- | --- | --- |
+| §4 as registered | 0.1454 | 0.2634 | **0.552** |
+| §4 with the A1.1 correction | 0.1965 | 0.2634 | **0.746** |
+| per-pixel parametric bootstrap | 0.3000 | 0.2634 | **1.139** |
+
+Both analytic forms are **optimistic**, which is the dangerous direction: they would
+have inflated EASY and shrunk LOST. The residual after A1.1 is the discrete
+argmax flip, which no smooth first-order propagation can represent.
+
+§8 registered the response: *"If C2's σ_z does not match empirical scatter, the Gaussian
+first-order propagation in §4 is inadequate at these SNRs and the lane must move to a
+Monte-Carlo σ_z."* It does not match, so the lane moves.
+
+**The replacement.** Per-pixel parametric bootstrap: Savitzky-Golay (window 9, order 3)
+the measured curve along the frame axis to get a working truth, add fresh Gaussian noise
+at the pixel's own measured σ_r, re-run the full argmax-plus-parabola estimator, and take
+the sd of ẑ over 64 realisations. It uses the **real measured curve shape** at each
+pixel rather than a parabolic idealisation, and it inherits every discreteness the real
+estimator has because it runs the real estimator.
+
+Its 1.139 ratio errs **conservative**. Per §6 that is a bias against A5, so it cannot
+manufacture a survive verdict.
+
+### A1.3 The peak-reality gate is no longer needed, because the bootstrap subsumes it
+
+C4 was registered to check that a pure-noise cube is not called placeable. Under the §4
+analytic σ_z it failed catastrophically:
+
+| cube | analytic median σ_z | analytic EASY | bootstrap median σ_z | bootstrap fraction ≤ DOF/2 |
+| --- | --- | --- | --- | --- |
+| pure noise, n = 22 | 0.1907 frames | **90.2%** | 5.85 frames | **0.2%** |
+| pure noise, n = 105 | 0.1416 frames | **97.9%** | 29.67 frames | **0.0%** |
+
+The analytic form conditions on the argmax, and an argmax over pure noise *is* a spike,
+so it reports high curvature and therefore high confidence. The bootstrap has no such
+blind spot: it lets the argmax wander, sees it wander across the whole stack, and
+reports σ_z of order the stack length.
+
+A separate `|D|/σ_r` gate was considered and is **not** adopted: the null's own
+`|D|/σ_r` is 3.66 at n = 22 and 4.97 at n = 105, so any fixed threshold is N-dependent
+and would need its own calibration. The bootstrap needs none.
+
+### A1.4 C3 becomes a truth test rather than an agreement test
+
+As registered, C3 compared this lane's σ_r against M69's two estimators and demanded
+agreement within 1.5×. Measured on `113MSDCF-d4`: this lane 0.0179, M69 `sg_sigma`
+0.0426 (2.4×), M69 `structure_intercept` 0.0810 (4.5×). The registered test fails.
+
+The three estimators average the residual over different frame spans — 5 frames here, 11
+for the Savitzky-Golay arm, 12 for the structure function's τ ≤ 6 — so on a cube whose
+focus curve has real structure at those scales they *must* disagree, and the widest span
+must read highest. That is the observed ordering.
+
+Agreement was therefore the wrong test. **C3 is replaced by C3′: run all three
+estimators on a cube with planted noise of known sd, and require this lane's estimator to
+recover it within 10%.** The two M69 estimators are reported alongside, without a
+pass/fail bar, because they are being used outside the frame-span regime they were
+written for. This is a change of instrument, not a relaxation: C3′ is strictly harder for
+this lane's estimator than C3 was, because it must hit a truth rather than match a peer.
+
+### A1.5 Bias B3 is confirmed, and it is the dominant term
+
+C6 measured the response noise correlation length on `113MSDCF-d4`: 1/e at **7 px in x
+and 14 px in y**, giving `n_eff(9×9) = 1.58` against a nominal 81 — a deflation of
+**51×**. The pooling gain a 9×9 surface can buy is therefore `√1.58 = 1.26×`, not `9×`.
+
+§6 named B3 as "the single most likely way this lane could wrongly let A5 live". It is
+real and it is large. No further amendment follows from this; the registered deflation
+handles it. The x/y asymmetry is noted and not explained.
+
+### A1.6 What does not change
+
+The §2 partition, the 2% / 10% verdict bar, the four DOF/2 values, the eight stacks, and
+every bias direction in §6 stand exactly as registered. Only the σ_z *estimator* and the
+σ_r *control* change, and both changes move the lane against A5.
