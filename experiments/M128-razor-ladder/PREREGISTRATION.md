@@ -511,6 +511,20 @@ toward H3 (2.402) and away from H1 (3.732). Any result favouring H1 is
 therefore conservative under this correction; a result favouring H3 must be
 discounted by this amount.
 
+**The correction is commissioned, not assumed.** `src\check_a2.py` plants a
+known `B` and the measured per-aperture jitter into synthetic ladder data. The
+uncorrected fit reproduces A2's predicted bias (+7.18% at H2 against the +7.2%
+above); the corrected fit recovers the planted `B` to better than 0.01% at all
+three hypotheses; the correction is inert on clean data to 1e-14%; and applying
+it with the wrong sign is caught at +13.90%. It also establishes two things not
+visible from the H2 figure alone. The bias is **hypothesis-dependent** -- 4.93%
+at H1, 7.18% at H2, 11.53% at H3 -- so it matters most exactly where H3 lives.
+And `sigma_e` need not be known precisely: an error of 25% in `sigma_e` leaves
+4.3% residual in `B`, against a 21% gap from H1 to H2 and 28% from H2 to H3. The
+same script confirms `a*lambda = 0.555176 um` independently of `predict.py`'s
+constants, identical across the three hypotheses to 6.4e-17, so the ladder
+reduction inverts the forward model exactly.
+
 **Rule-20 failure mode.** If the corrected and uncorrected ladders assign
 different hypotheses, the lane does not choose between them. It reports the
 pair and refuses, because the correction would then be carrying the verdict
