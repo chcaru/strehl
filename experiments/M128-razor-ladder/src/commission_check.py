@@ -46,6 +46,23 @@ DEFECTS = [
     ("D5 separation percentage, 0.01",
      "adjacent gap grows from 11.71% of the largest rise at f/5.6 to 15.82% at",
      "adjacent gap grows from 11.72% of the largest rise at f/5.6 to 15.82% at"),
+    # A2 defects. These checks are known to fire -- they caught six errors of
+    # mine while Amendment A2 was being written, including a wrong a*lambda
+    # that turned a 7.2% bias into a 1.0% one -- but a check that fired once
+    # during authoring is not a check that is still wired up. They are planted
+    # here so that stays true.
+    ("D6 A2 jitter in px, last digit (drives um, smear, slope, bias and B)",
+     "| f/5.6 | 0.2672 px | 2.74 | 7.01 |",
+     "| f/5.6 | 0.2673 px | 2.74 | 7.01 |"),
+    ("D7 A2 smear cell alone, 0.01 um",
+     "| f/11  | 0.3555 px | 3.64 | 9.33 |",
+     "| f/11  | 0.3555 px | 3.64 | 9.34 |"),
+    ("D8 A2 regression slope, 0.0001 um^2",
+     "0.4336 um^2 into the fitted `s^2`. Against `s^2 = 2.917 um^2` under H2",
+     "0.4337 um^2 into the fitted `s^2`. Against `s^2 = 2.917 um^2` under H2"),
+    ("D9 A2 bias percentage and the B it implies",
+     "`B`**: 3.076 becomes 3.297, which is a third of the way to H1 at 3.732.",
+     "`B`**: 3.076 becomes 3.298, which is a third of the way to H1 at 3.732."),
 ]
 
 

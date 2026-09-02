@@ -439,3 +439,116 @@ pick the `W` that gives the wanted answer.
 `c` costs precision, not validity. The verdict rules in §7 are untouched. The
 choice of `W` is frozen before any real measurement frame is analysed, exactly
 as the half-width is.
+
+### Amendment A2 — the registration jitter is aperture-dependent; it is measured and subtracted
+
+**What was registered.** Section 4.1 argued that edge-locus registration error
+enters the ESF as a smear that is common to all three apertures, and so joins
+the subject term `c` and cancels. Control C7 made that falsifiable: the
+aperture-dependent part of the jitter had to be constant within 20%, or the
+argument fails.
+
+**The measurement that changed it.** `src\across.py` splits the locus into a
+shared part and an independent part by correlating the two green sublattices of
+a single frame -- identical geometry, independent photon noise. Measured on the
+best-focus frame of each aperture, on common columns:
+
+| aperture | independent locus component | um | 10-90% smear it contributes |
+| --- | --- | --- | --- |
+| f/5.6 | 0.2672 px | 2.74 | 7.01 |
+| f/8   | 0.2885 px | 2.95 | 7.57 |
+| f/11  | 0.3555 px | 3.64 | 9.33 |
+
+The spread is 33%, so **C7 fails as written**. Two nulls bound the reading: the
+same-frame two-plane null is 0.2672 px, and three adjacent focus positions at
+one aperture give 0.2501 px, so focus-step and frame-to-frame variation add
+nothing beyond the noise floor and averaging over the focus plateau is safe.
+
+**A quantity that was measured and then set aside.** A three-way comparison
+ACROSS apertures gave an independent component of 0.7070 px (7.24 um), which
+looked disqualifying. It is the wrong quantity. Each aperture's ESF is
+registered on its OWN locus, so what governs its width is that aperture's
+self-consistency, not its agreement with a different aperture. Cross-aperture
+disagreement is expected whenever the apertures resolve the blade differently,
+and the correlation structure says they do: f/8 and f/11 agree with each other
+at 0.9154 while both agree with f/5.6 at only ~0.80. The sharpest aperture is
+the outlier, which noise cannot produce, because noise is worst at f/11. This
+paragraph is recorded so that setting the number aside is on the record rather
+than silent.
+
+**The size of the bias if nothing is done.** A jitter of `sigma` contributes
+`2.563*sigma` to a 10-90% rise, the 10-90% width of a Gaussian. Regressing that
+contribution's variance on `N^2` across the three apertures puts an extra
+0.4336 um^2 into the fitted `s^2`. Against `s^2 = 2.917 um^2` under H2 -- the
+least-squares slope of `rise^2` against `N^2` over the three registered
+apertures, not a hand-copied constant -- that is **+7.2% in `s`, hence +7.2% in
+`B`**: 3.076 becomes 3.297, which is a third of the way to H1 at 3.732. Large
+enough to matter, small enough not to refuse.
+
+**The new plan, frozen here.** The jitter is measured per aperture, so it is
+subtracted rather than merely quoted.
+
+- *Secondary reduction (rise ladder).* Fit
+  `rise^2_corrected(N) = rise^2_measured(N) - (2.563 * sigma_e(N))^2`
+  where `sigma_e(N)` is the independent locus component reported by
+  `across.py` in its two-plane configuration, on the same frames that produce
+  the ladder point.
+- *Primary reduction (`fit_fc`).* A Gaussian jitter multiplies the MTF by
+  `exp(-2*pi^2*sigma_e^2*f^2)`. The measured MTF is divided by that factor
+  before `fit_fc` is called. Applying the correction in the transform rather
+  than to a summary statistic is the reason the primary reduction stays
+  primary.
+- `sigma_e(N)` is measured on the ladder frames themselves and is not a free
+  parameter. Both corrected and uncorrected results are reported, always
+  together.
+
+**Direction of the residual error, stated in advance.** G1 and G2 are offset by
+one sensor pixel, so they do not sample identical sub-pixel geometry and their
+disagreement includes real subject structure as well as estimation noise.
+`sigma_e` is therefore an over-estimate of pure registration noise, the
+correction is an over-correction, and the residual bias in `B` is **negative** --
+toward H3 (2.402) and away from H1 (3.732). Any result favouring H1 is
+therefore conservative under this correction; a result favouring H3 must be
+discounted by this amount.
+
+**Rule-20 failure mode.** If the corrected and uncorrected ladders assign
+different hypotheses, the lane does not choose between them. It reports the
+pair and refuses, because the correction would then be carrying the verdict
+rather than the data. If `sigma_e` measured on the ladder frames differs from
+the table above by more than 50%, the correction is void and the lane refuses,
+because that would mean `sigma_e` is a property of the frame rather than of the
+aperture.
+
+**What does not change.** The verdict rules in §7 are untouched, and the
+ladder-consistency gate is still applied before any hypothesis is assigned.
+
+### Amendment A3 — the two-pass locator was built, commissioned, and rejected
+
+`src\yield_diag.py` established that the 74.3% / 70.6% / 61.3% crossing yields
+are an estimator limit, not a data limit: **no column anywhere fails to cross
+the mid level**. Rejections are low contrast (2-3%) or a profile crossing the
+mid level more than once -- 23.7% at f/5.6, rising to 35.5% at f/11.
+
+Because that rate is aperture-dependent, recovering those columns looked like a
+way to remove an aperture-dependent selection effect. `src\locate2.py`
+implements the two-pass locator that does it -- seed a locus from the
+unambiguous columns, then take the crossing nearest that prediction -- and
+commissions it by planting a known sub-pixel shift into the real band and
+requiring the shift back.
+
+It is **not adopted**. The commissioning shows it provably does not disturb the
+columns the one-pass locator already reports (0.1201 px vs 0.1201 px on the
+identical set, at `smooth_w` 129 and `min_margin` 2.0 px), but the recovered
+columns carry 0.3576 px against 0.1201 px for the easy ones. The ambiguous
+columns are ambiguous for a reason. Recovery buys 14% more edge at three times
+worse locus quality, which would raise the ESF smear the ladder is trying to
+minimise.
+
+The aperture-dependent selection effect it was meant to remove is separately
+excluded: `across.py` already restricts every comparison to columns common to
+all frames being compared, so a differing column set cannot explain the
+cross-aperture disagreement.
+
+Recorded because the instrument exists and a later reader will otherwise
+rebuild it. It is available behind `crossings2` if a future subject has a
+genuinely higher ambiguity rate.

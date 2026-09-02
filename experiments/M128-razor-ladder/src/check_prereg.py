@@ -150,6 +150,101 @@ def main():
         if rel != want:
             fails.append(f"separation at f/{n:g} is {rel}%, doc says {want}%")
 
+    # --- Amendment A2: the jitter correction ------------------------------
+    # Every value here is PARSED FROM THE DOCUMENT and then re-derived. The
+    # first version of this block compared re-derived values against constants
+    # written in this file, so it never read the document at all: the
+    # commissioner planted four A2 defects and all four were MISSED. A check
+    # that does not read the thing it checks is decoration.
+    text = DOC.read_text(encoding="utf-8")
+    GREEN_PX_UM = 10.24
+    GAUSS_1090 = 2.563
+
+    a2_rows = re.findall(
+        r"\|\s*f/([\d.]+)\s*\|\s*([\d.]+) px\s*\|\s*([\d.]+)\s*\|"
+        r"\s*([\d.]+)\s*\|", text)
+    checks += 1
+    if len(a2_rows) != 3:
+        fails.append(f"A2: found {len(a2_rows)} jitter rows, want 3")
+        a2_rows = []
+
+    a2_um, a2_smear = {}, {}
+    for n_s, px_s, um_s, sm_s in a2_rows:
+        n, px = float(n_s), float(px_s)
+        checks += 1
+        um = px * GREEN_PX_UM
+        a2_um[n] = um
+        if round(um, 2) != float(um_s):
+            fails.append(f"A2: {px} px is {um:.4f} um, doc says {um_s}")
+        checks += 1
+        sm = GAUSS_1090 * um
+        a2_smear[n] = sm
+        if round(sm, 2) != float(sm_s):
+            fails.append(f"A2: smear at f/{n:g} is {sm:.4f} um, doc says "
+                         f"{sm_s}")
+
+    if len(a2_smear) == 3:
+        ns = sorted(a2_smear)
+        xv = [n ** 2 for n in ns]
+        yv = [a2_smear[n] ** 2 for n in ns]
+        mx = sum(xv) / len(xv)
+        my = sum(yv) / len(yv)
+        slope = (sum((x - mx) * (y - my) for x, y in zip(xv, yv))
+                 / sum((x - mx) ** 2 for x in xv))
+
+        # s^2 the way the ladder itself obtains it: least-squares slope of
+        # rise^2 against N^2 under H2. An earlier version used a hand-copied
+        # a*lambda that was wrong by 2.7x and turned a 7.2% bias into 1.0%.
+        _, fc_h2 = P.HYPOTHESES[1]
+        rv = [P.rise_um(fc_h2 * P.N_REF / n) ** 2 for n in ns]
+        mrv = sum(rv) / len(rv)
+        s2_h2 = (sum((x - mx) * (y - mrv) for x, y in zip(xv, rv))
+                 / sum((x - mx) ** 2 for x in xv))
+        bias = ((s2_h2 + slope) ** 0.5 / s2_h2 ** 0.5 - 1.0) * 100.0
+
+        m = re.search(r"([\d.]+) um\^2 into the fitted `s\^2`\. Against "
+                      r"`s\^2 = ([\d.]+) um\^2`", text)
+        checks += 1
+        if not m:
+            fails.append("A2: slope/s^2 prose sentence not found")
+        else:
+            checks += 1
+            if round(slope, 4) != float(m.group(1)):
+                fails.append(f"A2: slope is {slope:.4f} um^2, doc says "
+                             f"{m.group(1)}")
+            if round(s2_h2, 3) != float(m.group(2)):
+                fails.append(f"A2: H2 s^2 is {s2_h2:.4f} um^2, doc says "
+                             f"{m.group(2)}")
+
+        m = re.search(r"\*\*\+([\d.]+)% in `s`, hence \+([\d.]+)% in\s+`B`"
+                      r"\*\*: ([\d.]+) becomes ([\d.]+),", text)
+        checks += 1
+        if not m:
+            fails.append("A2: bias prose sentence not found")
+        else:
+            checks += 2
+            for g in (1, 2):
+                if round(bias, 1) != float(m.group(g)):
+                    fails.append(f"A2: bias is {bias:.3f}%, doc says "
+                                 f"{m.group(g)}%")
+            b_biased = float(m.group(3)) * (1.0 + bias / 100.0)
+            if round(b_biased, 3) != float(m.group(4)):
+                fails.append(f"A2: biased B is {b_biased:.4f}, doc says "
+                             f"{m.group(4)}")
+
+        # The spread that fails control C7's 20% bar.
+        checks += 1
+        spread = (max(a2_um.values()) / min(a2_um.values()) - 1.0) * 100.0
+        m = re.search(r"The spread is (\d+)%, so \*\*C7 fails", text)
+        if not m:
+            fails.append("A2: C7-failure sentence not found")
+        elif round(spread) != float(m.group(1)):
+            fails.append(f"A2: spread is {spread:.1f}%, doc says {m.group(1)}%")
+        checks += 1
+        if spread <= 20.0:
+            fails.append("A2: doc says control C7 fails, but the spread is "
+                         f"{spread:.1f}%, inside C7's 20% bar")
+
     print(f"M128 pre-registration check: {checks} claims re-derived")
     if fails:
         print(f"\nRED  {len(fails)} mismatch(es):")
