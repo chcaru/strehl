@@ -1,0 +1,68 @@
+M-PHASE0-PTC step 2 -- B1's per-stack go/no-go from M61's existing ladder
+==============================================================================
+source: experiments/m61-ptc-high-iso/data/ptc-ladder.csv  (48 rows)
+
+CONTROLS ON THIS SCRIPT'S READING OF THE CSV
+------------------------------------------------------------------------------
+C4  ISO 100 greens r recomputed = 0.9463   M61 published 0.9463   -> PASS   (n=3 stacks)
+C5  ISO 160 greens r recomputed = 0.9887   M61 published 0.9887   -> PASS
+C6  g_model(ISO100) read from CSV = 0.2289377   expected 0.2289377   -> PASS
+    ISO 50 g_model = 0.2289377  (identical to ISO 100 -> the pull-ISO clamp is real,
+     and run 1's linear scaling was wrong; see the disclosed error above)
+
+CONTROLS: ALL PASS -- proceeding
+
+R1  PER-STACK ACCURACY vs M90  (low-mode stacks; g scaled to each ISO)
+------------------------------------------------------------------------------
+    M90 g(ISO100) = 0.221113 DN/e-;  baseline at other ISO = M90 * g_model(ISO)/g_model(100)
+    (the scaling is READ from the CSV's g_model column -- see C6)
+
+    stack               ISO   g greens   M90 base   delta %   resid%
+    119MSDCF             50   0.226133   0.221113    +2.270     44.8
+    coffee-bean          50   0.224188   0.221113    +1.391      6.6
+    bee-1               100   0.222641   0.221113    +0.691      1.1
+    bee-3               100   0.222805   0.221113    +0.765      0.5
+    wrapped-text-1      100   0.204460   0.221113    -7.532     35.3
+    109MSDCF            160   0.362146   0.353781    +2.365     18.7
+
+    inside B1's named CI (+/-0.0642%):        0 of 6
+    inside M90's stated band (+/-3.4%):     5 of 6
+    sign split: 5 above M90, 1 below   -> STRADDLES (as registered)
+    per-stack spread: -7.532% to +2.365%   (width 9.896 pp)
+
+R2  INTERNAL (split-half) vs EXTERNAL (stack-to-stack) PRECISION
+------------------------------------------------------------------------------
+    split-half |g0-g1|/mean, all 12 stacks:
+      median 0.224%   min 0.007%   max 9.755%
+    stack-to-stack spread at fixed ISO (low mode, from R1): 9.896 pp
+    external / internal = 44.3x
+
+    registered direction (internal MUCH tighter): CONFIRMED
+    => the limit on an in-stack g is SCENE/STACK SYSTEMATICS, not photon
+       noise. More frames of one subject cannot buy accuracy. B1 must
+       average over SUBJECTS, or report a per-stack value with an honest
+       systematic band -- it cannot claim a tight CI from one stack.
+
+R3  THE INTERCEPT -- M90's PR-4d RE-TESTED ON INDEPENDENT DATA
+------------------------------------------------------------------------------
+    M90 PR-4d (on FLATS): intercept 11.0% low on a known plant;
+                          -2.795 DN^2, negative and physically impossible, on real flats.
+    Here (on SUBJECT FRAMES, independent data, different lane):
+      icptA < 0 in 33 of 48 rows = 68.8%
+      range -548.4080 to 42.4424 DN^2
+      plane R : 10 of 12 negative
+      plane G1: 8 of 12 negative
+      plane G2: 8 of 12 negative
+      plane B : 7 of 12 negative
+
+    registered bar was >25% negative: 68.8% -> CONFIRMED
+    => the PTC intercept is NOT a usable read-floor estimator in-stack.
+       B1 lists 'read floor' as an output of this mechanism and B5 leans
+       on it for black-level drift. Both must be struck or re-sourced.
+       M61 already knew: it reports only the SLOPE and prints a
+       forced-zero-intercept variant as proof it does not lean on this.
+
+==============================================================================
+The three answers together say B1 is a PORT with a RESTATED BAR and one
+OUTPUT STRUCK, not a new build. See the lane PREREGISTRATION for the
+replacement acceptance criterion.

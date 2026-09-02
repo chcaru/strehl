@@ -1,0 +1,97 @@
+{
+  "inputs": {
+    "m90_g": {
+      "value": 0.221113,
+      "cite": "M90 section 2.2 table, column 'M90'"
+    },
+    "m90_se": {
+      "value": 0.000142,
+      "cite": "M90 section 2.2 table, same cell, quoted +/-"
+    },
+    "m71_g": {
+      "value": 0.224103,
+      "cite": "M90 section 2.2 table, column 'M71'"
+    },
+    "m90_vs_m71_pct_quoted": {
+      "value": -1.33,
+      "cite": "M90 section 2.2 table, column 'delta'"
+    },
+    "shipped_g": {
+      "value": 0.228938,
+      "cite": "M90 section 2.2 row 2, quoted shipped value"
+    },
+    "m90_vs_shipped_pct_quoted": {
+      "value": -3.42,
+      "cite": "M90 section 2.2 row 2, column 'M90'"
+    },
+    "m71_vs_shipped_pct_quoted": {
+      "value": -2.16,
+      "cite": "M90 section 2.2 row 2, column 'M71'"
+    },
+    "gain_divisor": {
+      "value": 436.8,
+      "cite": "M61 section 1, hypotheses preamble"
+    },
+    "m61_r100_greens": {
+      "value": 0.9463,
+      "cite": "M61 section 3.1 ladder, ISO 100, 'r (greens)'"
+    },
+    "m61_r100_greens_spread": {
+      "value": 0.0461,
+      "cite": "M61 section 3.1 ladder, ISO 100, same cell"
+    },
+    "m61_r100_nstacks": {
+      "value": 3,
+      "cite": "M61 section 3.1 ladder, ISO 100, 'stacks'"
+    },
+    "m61_r100_greens_gated": {
+      "value": 0.9728,
+      "cite": "M61 section 2.2, parenthetical excluding the failing stack"
+    },
+    "m90_band_lo_pct": {
+      "value": -2.2,
+      "cite": "M90 section 8.2 PR-5a, stated accuracy band"
+    },
+    "m90_band_hi_pct": {
+      "value": -3.4,
+      "cite": "M90 section 8.2 PR-5a, stated accuracy band"
+    }
+  },
+  "controls": {
+    "c1_g_model_vs_shipped_pct": 0.00011839985981643153,
+    "c1": true,
+    "c2_calc_pct": -1.3342079311745025,
+    "c2": true,
+    "c3_calc_pct": -3.4179559531401504,
+    "c3": true,
+    "all_pass": true
+  },
+  "g_model_100": 0.22893772893772893,
+  "q1": {
+    "bar_rel_pct": 0.06422055690981535,
+    "inter_method_pct": 1.3342079311745025,
+    "ratio": 20.775402696182237,
+    "reachable": false,
+    "m90_band_width_pct": 1.1999999999999997,
+    "band_over_bar": 18.685605633802812
+  },
+  "q2": {
+    "exists": true,
+    "lane": "M61",
+    "estimator": "M61-E1"
+  },
+  "q3": {
+    "m61_r100_greens": {
+      "r": 0.9463,
+      "g": 0.2166437728937729,
+      "pct_vs_m90": -2.0212412233686416
+    },
+    "m61_r100_greens_gated": {
+      "r": 0.9728,
+      "g": 0.2227106227106227,
+      "pct_vs_m90": 0.72253676202787
+    },
+    "own_rel_pct": 4.871605199196872,
+    "ratio_to_bar": 75.85741129648014
+  }
+}

@@ -1,0 +1,61 @@
+M-PHASE0-PTC step 4 -- OBSERVATION (not registered, no pass/fail)
+==============================================================================
+
+The M90 / M71 tie, and where a third method lands.
+  M90 (flats, temporal PTC)   g = 0.221113 DN/e-
+  M71 (profile fit)           g = 0.224103 DN/e-   (+1.352% vs M90)
+  shipped constant            g = 0.228938 DN/e-   (+3.539% vs M90)
+  M90 could not break its tie with M71 and said so (section 8.2).
+
+ARM A -- ISO 100 ONLY.  No scaling. Like against like.
+------------------------------------------------------------------------------
+    stack              g greens   vs M90 %   vs M71 %
+    bee-1              0.222641     +0.691     -0.652
+    bee-3              0.222805     +0.765     -0.579
+
+    mean of 2 CONSIST-passing ISO-100 stacks: g = 0.222723
+    the two stacks agree with each other to 0.074 pp
+    vs M90: +0.728%      vs M71: -0.616%
+    position in the M90->M71 interval: 54% of the way from M90 to M71
+
+    OBSERVATION: the in-stack temporal PTC lands BETWEEN the two
+    disputed values, 54% of the way across, closer to M71.
+    It does NOT break the tie. It is consistent with both to within
+    less than the width of their disagreement.
+
+ARM B -- all CONSIST-passing low-mode stacks.  ASSUMES the model's ISO scaling.
+------------------------------------------------------------------------------
+    stack               ISO   g @ISO100-eq   vs M90 %   vs M71 %
+    119MSDCF             50       0.226133     +2.270     +0.906
+    coffee-bean          50       0.224188     +1.391     +0.038
+    bee-1               100       0.222641     +0.691     -0.652
+    bee-3               100       0.222805     +0.765     -0.579
+    109MSDCF            160       0.226342     +2.365     +0.999
+
+    mean of 5 stacks: g(ISO100-equivalent) = 0.224422
+    vs M90: +1.496%      vs M71: +0.142%
+    sign vs M90: 5 of 5 positive
+
+DO THE ARMS AGREE?
+------------------------------------------------------------------------------
+    ARM A says +0.728% vs M90; ARM B says +1.496%. They differ by 0.768 pp.
+    THEY DISAGREE by more than half a point. ARM B's extra offset is
+    carried by the ISO 50 and ISO 160 stacks, i.e. by the model's ISO
+    scaling -- NOT by the gain measurement. ARM A is the arm that means
+    something, and ARM B's larger number must not be quoted as if it
+    were a cleaner measurement of the same thing.
+
+WHAT WOULD ACTUALLY SETTLE IT  (registered here, to be run elsewhere)
+------------------------------------------------------------------------------
+  The tie between M90 and M71 is 1.33% wide. ARM A's two stacks agree with
+  each other to 0.074 pp, so the in-stack method has the PRECISION to resolve
+  a 1.33% difference -- but two stacks is not a measurement of a systematic.
+
+  The test: run the in-stack temporal PTC on EVERY ISO-100 subject stack in
+  the corpus that passes CONSIST, n >= 6, and ask whether the mean offset
+  from M90 exceeds its own stack-to-stack standard error. Register the
+  direction BEFORE running: on the evidence here it would be POSITIVE, i.e.
+  in-stack reads above M90, toward M71.
+
+  Stating that direction now is what makes the future test falsifiable.
+  It is a prediction, not a result, and nothing in this lane rests on it.

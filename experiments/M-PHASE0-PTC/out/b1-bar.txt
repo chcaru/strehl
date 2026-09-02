@@ -1,0 +1,62 @@
+M-PHASE0-PTC step 3 -- the achievable bar, under M61's own CONSIST gate
+==============================================================================
+
+C7  IMPLEMENTATION CONTROL: reproduce M61 fact 33's drop list
+------------------------------------------------------------------------------
+    M61 CONSIST = half_pct < 5% AND ac_pct < 10%; drops exactly ['coffee-bubbles', 'wrapped-text-1']
+
+    aggregation greens  -> drops ['coffee-bubbles', 'wrapped-text-1']     REPRODUCES M61
+    aggregation worst   -> drops ['coffee-bubbles', 'wrapped-text-1']     REPRODUCES M61
+
+    C7 PASS -- using aggregation 'greens'.
+
+    per-stack consistency metrics (greens):
+      stack               ISO   half_pct    ac_pct  CONSIST
+      119MSDCF             50      0.026     0.660  pass
+      coffee-bean          50      0.007     0.155  pass
+      bee-1               100      0.041     0.037  pass
+      bee-3               100      0.042     0.074  pass
+      wrapped-text-1      100      9.755     4.899  DROP
+      109MSDCF            160      0.394     0.828  pass
+      bee-2               400      0.008     0.042  pass
+      wrapped-text-2      400      0.224     0.169  pass
+      112MSDCF            500      0.084     0.449  pass
+      113MSDCF            500      1.542     1.591  pass
+      coffee-bubbles     1000        nan     2.715  DROP
+      foam               1000      0.349     0.874  pass
+
+R4  DOES CONSIST COLLAPSE THE PER-STACK ACCURACY SPREAD?
+------------------------------------------------------------------------------
+    stack               ISO   delta %  CONSIST
+    119MSDCF             50    +2.270  pass
+    coffee-bean          50    +1.391  pass
+    bee-1               100    +0.691  pass
+    bee-3               100    +0.765  pass
+    wrapped-text-1      100    -7.532  DROP
+    109MSDCF            160    +2.365  pass
+
+    ungated  n=6  spread -7.532% to +2.365%   width 9.896 pp
+    CONSIST  n=5  spread +0.691% to +2.365%   width 1.674 pp
+    collapse factor: 5.9x
+    registered direction (substantial collapse): CONFIRMED
+
+    => the external scatter was dominated by badly-conditioned fits,
+       not by a real per-scene gain difference. B1 IS rescuable by a
+       consistency gate -- and the gate is one M61 already validated.
+R5  THE BAR THE EVIDENCE SUPPORTS  (readout, no direction registered)
+------------------------------------------------------------------------------
+    every CONSIST-passing low-mode stack lies within +/-2.365% of M90
+    B1's stated bar (M90's fit CI):              +/- 0.0642%
+    M90's own stated band of ignorance on g:     2.2% to 3.4%
+    ratio, achievable to stated:                 37x
+
+    PROPOSED REPLACEMENT ACCEPTANCE FOR B1
+    --------------------------------------
+    'On CONSIST-passing stacks (half_pct < 5% AND ac_pct < 10%), the
+     in-stack g agrees with M90's independent value to within +/-3%,
+     per stack, from subject frames alone; stacks failing CONSIST are
+     reported as UNMEASURED rather than given a value.'
+
+    Rationale: 3% is inside M90's own 2.2-3.4% band of ignorance about
+    g, so the bar cannot demand more accuracy than the reference itself
+    possesses -- which is exactly the defect in the stated bar.

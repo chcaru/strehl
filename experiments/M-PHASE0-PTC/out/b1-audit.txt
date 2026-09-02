@@ -1,0 +1,84 @@
+M-PHASE0-PTC step 1 -- B1 acceptance audit
+==============================================================================
+
+Inputs are quotations. Citations:
+  m90_g                      = 0.221113      [M90 section 2.2 table, column 'M90']
+  m90_se                     = 0.000142      [M90 section 2.2 table, same cell, quoted +/-]
+  m71_g                      = 0.224103      [M90 section 2.2 table, column 'M71']
+  m90_vs_m71_pct_quoted      = -1.33         [M90 section 2.2 table, column 'delta']
+  shipped_g                  = 0.228938      [M90 section 2.2 row 2, quoted shipped value]
+  m90_vs_shipped_pct_quoted  = -3.42         [M90 section 2.2 row 2, column 'M90']
+  m71_vs_shipped_pct_quoted  = -2.16         [M90 section 2.2 row 2, column 'M71']
+  gain_divisor               = 436.8         [M61 section 1, hypotheses preamble]
+  m61_r100_greens            = 0.9463        [M61 section 3.1 ladder, ISO 100, 'r (greens)']
+  m61_r100_greens_spread     = 0.0461        [M61 section 3.1 ladder, ISO 100, same cell]
+  m61_r100_nstacks           = 3             [M61 section 3.1 ladder, ISO 100, 'stacks']
+  m61_r100_greens_gated      = 0.9728        [M61 section 2.2, parenthetical excluding the failing stack]
+  m90_band_lo_pct            = -2.2          [M90 section 8.2 PR-5a, stated accuracy band]
+  m90_band_hi_pct            = -3.4          [M90 section 8.2 PR-5a, stated accuracy band]
+
+CONTROLS ON THE READING
+------------------------------------------------------------------------------
+C1  g_model(ISO100) = 100/436.8 = 0.2289377
+    shipped constant                 = 0.2289380
+    disagreement = 0.00012%   (bar 0.01%)   -> PASS
+    Meaning: M61's dimensionless r IS anchored to the shipped gain.
+
+C2  M90 vs M71 recomputed = -1.3342%   quoted -1.33%  -> PASS
+C3  M90 vs shipped recomputed = -3.4180%   quoted -3.42%  -> PASS
+
+CONTROLS: ALL PASS
+
+Q1  IS B1'S ACCEPTANCE BAR REACHABLE?
+------------------------------------------------------------------------------
+    B1's bar          = M90's CI            = +/- 0.0642% of g
+    Same quantity, two careful methods, same body:
+      M90 0.221113   vs   M71 0.224103   -> 1.3342% apart
+    The disagreement is 20.8x the bar.
+    REACHABLE: NO
+
+    M90's own section 8.2 declines to narrow g beyond a band of
+      -2.2% to -3.4% (width 1.2 percentage points)
+    That stated band is 19x wider than the CI B1 cites as the bar.
+
+    => The CI is a PRECISION statement about one regression's slope.
+       B1 uses it as an ACCURACY statement about g. Those differ here by
+       a factor of 19, and M90 says so in its own words.
+
+Q2  DOES AN IN-STACK g ALREADY EXIST?
+------------------------------------------------------------------------------
+    YES. M61 ran a temporal adjacent-frame PTC on SUBJECT stacks:
+      12 stacks, 1554 frames, ISO 50-1000, per CFA plane, raw DN,
+      low-texture tile selection, never demosaiced.
+    That is the estimator B1 describes, in the configuration B1 proposes
+    (subject frames, working exposure), with a PASSING pre-registered
+    control at ISO 160 (r = 0.9887 greens, band 0.80-1.20).
+
+    => B1 is a PORT AND A GENERALISATION, not a new build.
+
+Q3  HOW FAR IS THE EXISTING IN-STACK NUMBER FROM M90?  (observation)
+------------------------------------------------------------------------------
+    pre-registered, 3 stacks   r = 0.9463  ->  g = 0.216644 DN/e-   -2.021% vs M90
+    fit-gated, 2 stacks        r = 0.9728  ->  g = 0.222711 DN/e-   +0.723% vs M90
+
+    M61's OWN uncertainty at ISO 100 (stack-to-stack, n=3): +/- 4.872%
+    B1's bar (M90's CI):                                    +/- 0.0642%
+    The existing in-stack instrument's uncertainty is 76x the bar.
+
+    Arms landing inside B1's stated bar: 0 of 2
+    Arms landing inside M61's own uncertainty: 2 of 2
+
+VERDICT
+------------------------------------------------------------------------------
+  1. B1's acceptance bar as written is UNREACHABLE. It names a 0.0642%
+     precision figure as an accuracy target for a quantity whose two
+     best independent measurements disagree by 1.33%.
+  2. B1's estimator ALREADY EXISTS and has been run in-stack (M61-E1),
+     with a passing pre-registered control.
+  3. It lands -2.02% (pre-registered) / +0.72% (fit-gated) from M90 --
+     i.e. WELL INSIDE M90's own stated 2.2-3.4% band of ignorance,
+     and far outside the CI the acceptance names.
+
+  The bar should be restated against the inter-method spread that
+  actually exists, not one method's fit error. Proposed replacement is
+  in the lane PREREGISTRATION.

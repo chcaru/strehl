@@ -1,0 +1,79 @@
+{
+  "c7": {
+    "impl": {
+      "greens": {
+        "dropped": [
+          "coffee-bubbles",
+          "wrapped-text-1"
+        ],
+        "match": true
+      },
+      "worst": {
+        "dropped": [
+          "coffee-bubbles",
+          "wrapped-text-1"
+        ],
+        "match": true
+      }
+    },
+    "chosen": "greens"
+  },
+  "r4": {
+    "rows": [
+      {
+        "stack": "119MSDCF",
+        "iso": 50.0,
+        "g": 0.22613288785196126,
+        "delta_pct": 2.2702816442096374,
+        "pass": true
+      },
+      {
+        "stack": "coffee-bean",
+        "iso": 50.0,
+        "g": 0.22418827598878768,
+        "delta_pct": 1.390816455291044,
+        "pass": true
+      },
+      {
+        "stack": "bee-1",
+        "iso": 100.0,
+        "g": 0.22264105166533213,
+        "delta_pct": 0.6910727389760618,
+        "pass": true
+      },
+      {
+        "stack": "bee-3",
+        "iso": 100.0,
+        "g": 0.22280493480849287,
+        "delta_pct": 0.7651901102571301,
+        "pass": true
+      },
+      {
+        "stack": "wrapped-text-1",
+        "iso": 100.0,
+        "g": 0.2044597802151652,
+        "delta_pct": -7.5315425980538535,
+        "pass": false
+      },
+      {
+        "stack": "109MSDCF",
+        "iso": 160.0,
+        "g": 0.36214641224488253,
+        "delta_pct": 2.364631502015535,
+        "pass": true
+      }
+    ],
+    "width_all_pp": 9.896174100069388,
+    "width_gated_pp": 1.6735587630394733,
+    "collapse": 5.913251639934183,
+    "verdict": "CONFIRMED",
+    "n_all": 6,
+    "n_gated": 5
+  },
+  "r5": {
+    "half_width_pct": 2.364631502015535,
+    "proposed_bar_pct": 2.864631502015535,
+    "stated_bar_pct": 0.06422055690981535,
+    "ratio": 36.82047642994092
+  }
+}
