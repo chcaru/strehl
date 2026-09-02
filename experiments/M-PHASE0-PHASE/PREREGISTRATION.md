@@ -414,3 +414,51 @@ fractional offsets on six stacks and diagnosed integer locking.
     python experiments/M-PHASE0-PHASE/src/p3_verdict.py      # the joint gate
     python experiments/M-PHASE0-PHASE/src/check_note.py      # independent verifier
     python experiments/M-PHASE0-PHASE/src/commission_note.py # plants, must all be caught
+
+---
+
+## Amendment 1 — three refinements forced by building the instrument
+
+Written after `p0_controls.py` was green and **before** `p1_bar.py` was run. None of
+these is a result; all three are design corrections that building the algebra exposed.
+
+### A1.1 `κ` depends on the output frequency, so a target has several alias geometries
+
+Section 3 wrote the system matrix as though a target fixed one set of representatives. It
+does not. Which representative of each coset lands inside the target band depends on where
+the output frequency `ν` sits, so `κ` is a function of `ν` as well as of `{d_i}`. The set
+of distinct geometries is data-independent, small, and enumerated once: **G-1x has exactly
+two** — the diagonal `(½,½)` and the anti-diagonal `(½,−½)` — and a quincunx unfolds along
+one or the other depending on the quadrant of the band. RB-1x also has two; G-2x and RB-2x
+have eight each. (Distinctness is taken up to column permutation and up to negating all
+representatives, both of which leave every singular value alone.)
+
+**Registered consequence:** every statistic is computed per geometry, and the **site-level
+summary is the worst over geometries** — the largest `κ`, the smallest bar — because a
+reconstruction has to serve the whole band, not its most convenient quadrant. The median
+over geometries is reported alongside. Taking the best geometry would have been a
+researcher degree of freedom worth roughly a factor of two, and it is closed here.
+
+### A1.2 The registered `η < 1` bar is conservative, and the realistic comparator is also reported
+
+Section 4 defined the no-attempt comparator as "keep the baseband, discard the aliases",
+whose error is exactly `‖x_alias‖`, giving `η = 1`. That comparator assumes the baseband is
+recovered *perfectly*. What actually ships does not: averaging the frames and zeroing the
+aliases leaks alias energy into the baseband estimate, so its error is
+`sqrt(1 + |leak|²/‖x_alias‖²) ≥ 1`.
+
+So **`η < 1` demands the unfolder beat something better than the real alternative.** It is
+kept as the primary registered bar precisely because it is the conservative one, and the
+realistic per-trial comparator `η_naive` is computed in the same trial, with the same noise
+and the same scene draw, and reported alongside. Both bars appear in the note. Bias B7's
+declared direction is unchanged: the noiseless read still favours C1.
+
+### A1.3 Infeasible is a reported category, not a dropped row
+
+`N < M` and lattice-degenerate configurations return `κ = ∞`. These sites are **counted and
+reported as infeasible**, never dropped from the denominator and never silently
+pseudo-inverted. A site that cannot be solved at all and a site that is merely poorly
+conditioned are different claims, and the winnable-fraction denominators in §9 include
+both. This is what control C-B and plant 2 exist to protect: the instrument shipped with a
+`smin > 0` rank test that reported `κ = 3.2e15` for a degenerate system instead of
+infeasible, and the control caught it.
