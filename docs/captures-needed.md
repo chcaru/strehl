@@ -27,6 +27,7 @@ replaced.*
 | 6 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
 | 7 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
 | 8 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
+| 9 | **§34** — the aperture ladder re-shot in one sitting, **f/11, f/14, f/16, f/18, f/22**, rig untouched between stops | ~30 min | **New 2026-08-27.** Of the five apertures already shot, the validated out-of-band guard says only **two** are usable, so the effective-f-number measurement has as many free parameters as data points and reports a bound rather than a number. Two more usable stops separate residual defocus from lens aberration from vibration — which matter because they prescribe *opposite* fixes: finer focus steps, a different aperture, or a sturdier rig. Must be one sitting: the quantity depends on rig geometry, so mixing a new stop with the old stacks fits a thing that changed underneath. |
 
 ### Before you read any number below: I had my own bookkeeping audited, and it leans one way
 
@@ -3800,3 +3801,127 @@ resolution as a differentiator at all.
   does carry signal when best focus is chosen per tile.
 - Section 30 (slanted edge) -- orthogonal, still wanted, and no substitute for
   this.
+
+---
+
+## 34. The aperture ladder re-shot in one sitting, with f/16 and f/22 added -- REQUESTED 2026-08-27 by M129, about half an hour, and it is the difference between a bound and a number
+
+**The short version.** M129 measured the effective-f-number multiplier `B` on
+your `7-aperture-pairs` fabric-weave stacks and got a clean answer that excluded
+all three hypotheses it was built to test. It also found something it cannot
+resolve with the five apertures it has: **`B` is not constant across
+apertures.** Two independent methods agree on the size of the drift to three
+decimal places, so it is real, and three different physical causes predict it
+equally well. Separating them needs a third and fourth aperture inside the
+measurable band. Only two of your five are inside it.
+
+### What to shoot
+
+The **same fabric weave** as `7-aperture-pairs`, or any flat, finely-textured,
+achromatic subject that fills the frame -- the weave is ideal because its texture
+runs well past the frequencies that matter.
+
+| setting | value |
+| --- | --- |
+| apertures | **f/11, f/14, f/16, f/18, f/22** -- all five, in one sitting |
+| frames per aperture | 60-80 is plenty; the existing stacks range 71-210 and 71 was sufficient |
+| focus | a normal focus sweep through the subject, as you already shoot |
+| everything else | identical to the existing `fabric-weave-*-sw5-cpl` stacks |
+
+**The one constraint that makes or breaks it: do not move the rig between
+apertures.** Not the focus rail, not the extension, not the subject distance.
+Change the aperture ring and nothing else.
+
+### Why the whole ladder and not just the two new stops
+
+This is the part worth reading, because the obvious cheaper version does not
+work.
+
+`B` is the bellows factor, `1 + m/p`. It depends on how far the lens is extended,
+which means it depends on the exact rig geometry at the moment of the shot. The
+existing f/11, f/14 and f/18 stacks were shot in some earlier session. **If the
+rig has been touched since -- and over this many months it almost certainly has
+-- then an f/16 stack taken today measures a different `B` than they did, and
+mixing them produces a four-point fit to a quantity that changed underneath it.**
+That fit would look better than the two-point one and mean less.
+
+Re-shooting all five in one sitting sidesteps the question entirely. The five
+stacks are then internally consistent by construction, whatever the rig is doing,
+and nothing depends on the old session's geometry being recoverable. It costs
+three extra stacks and buys the ability to stop worrying about it.
+
+### Why f/16 and f/22 specifically
+
+Not arbitrary. The measurement only works at apertures whose diffraction cutoff
+lands inside the frequency band the green quincunx lattice can represent, and
+**that band is narrower than the ladder assumed.** The validated out-of-band flag
+(`knee_model_fit`'s `above_reach`, commissioned at 36/36 with no false alarms)
+fires on 6 of 6 regions at f/5.6, f/8 **and f/11**. An independent statistic
+agrees without being asked: the fitted noise-floor slope is -3.22, -3.21 and
+-3.62 at those three -- signal still falling, not a floor -- against -0.374 and
+-0.028 at f/14 and f/18, which are flat.
+
+So of the five apertures already shot, **two are usable.** f/16 and f/22 sit
+below f/14 on the ladder and are comfortably inside the band at the measured `B`,
+which takes the usable count from two to four. f/11 stays in the request as a
+control -- it should keep failing the guard, and if it suddenly stops, that is
+itself worth knowing.
+
+### What it unblocks
+
+With two usable apertures, `B` and any blur term together have as many free
+parameters as there are data points. Such a fit has nothing left over to be wrong
+with, and M129 declined to quote one for that reason. It reports a **one-sided
+bound** instead: `B` <= 2.0309 +- 0.0204, hence pupil magnification `p` >=
+2.6383. That is honest and it is weaker than the data would support with two more
+points.
+
+Four usable apertures give two spare degrees of freedom -- the minimum that can
+tell these apart:
+
+| candidate | why it drifts with aperture | distinguishable how |
+| --- | --- | --- |
+| residual defocus | blur circle grows as the pupil opens | scales with aperture diameter |
+| lens aberration | worsens as the pupil opens | different exponent from defocus |
+| vibration or motion | fixed absolute blur, so it costs relatively more where diffraction is weak | flat in absolute terms |
+
+All three inflate the apparent `B` and all three inflate it more at the wider
+aperture, which is why two points cannot separate them. They have different
+*shapes* across four points.
+
+**Why you should care about which one it is.** If it is defocus, it is a
+technique problem and the fix is free -- finer focus steps. If it is aberration,
+it is the lens and the fix is to stop down slightly further than the
+diffraction-optimal aperture. If it is vibration, it is the rig and no amount of
+software recovers it. These prescribe opposite things, and right now the project
+cannot tell you which one it is looking at. It also sets the true cutoff, which
+is what decides how much detail there is to recover at all: the measurement
+already says the pupil magnification is **larger** than every hypothesis assumed,
+so the real cutoff is **higher** and there is more available detail at a given
+marked aperture than the project had been assuming.
+
+### What is already known, so you can judge whether this is worth your time
+
+- Both live hypotheses were rejected by the registered test, every residual the
+  same sign. All three including the refuted one are now excluded at 83, 51 and
+  18 standard errors.
+- `B` was then measured two ways -- a model fit over the whole roll-off, and a
+  forward comparison through the crossing estimator -- which agreed to 0.0030
+  once both were made to model the photosite the same way.
+- The drift is +0.1157 by one route and +0.11 by the other, with non-overlapping
+  intervals. It is not noise.
+- The sensor's photosite was tested as the cause and **excluded**: it is already
+  in the model, and removing it moves the drift by 0.0096 against a 0.05
+  threshold.
+
+### Related
+
+- `experiments/M129-fabric-spectral-ladder/PREREGISTRATION.md` Amendment 9 --
+  the full result, the retraction it contains, and the registration of this
+  request as the successor lane's entry condition.
+- Section 19 (razor edge at three apertures) -- orthogonal. That one measures a
+  real edge; this one measures the spectrum of a texture. Neither substitutes for
+  the other.
+- Section 33 (a subject with contrast above 0.25 cyc/px) -- closely related and
+  would pair well in the same session, since the fabric weave is exactly the kind
+  of subject it asks for.
