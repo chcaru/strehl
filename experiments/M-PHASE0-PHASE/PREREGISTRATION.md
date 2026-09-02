@@ -1267,3 +1267,73 @@ is not another attempt at the same measurement -- `rho_bound`'s approach is
 structurally unable to answer the question. It needs either a measurement at finer
 sampling than the channel under test, or a forward optical model with the measured
 bellows factor rather than N(1+m).
+
+--------------------------------------------------------------------------------
+
+## Amendment A9 -- a representative-sign defect in plib, and a real rho at last
+
+Two findings from `experiments/M-PHASE0-RHO` (commit `4d7adf2d`), an independent lane
+that ran to completion after I had wrongly recorded it as having produced nothing.
+Both are confirmed here.
+
+### A9.1 `full_reps` uses `nu + h` where `coset_reps` defines `nu - h` (CONFIRMED)
+
+`plib.coset_reps` documents its own construction as "the element h with **nu - h**
+in [-c/2, c/2)^2 is h = g + c * floor((nu - g)/c + 1/2)". `plib.full_reps` then
+builds the phase-carrying frequencies as **`nu + h`**. The two disagree.
+
+Reproduced directly:
+
+    target   components   nu+h in band   nu-h in band
+    G-1x        128            64            128
+    RB-1x       256            64            256
+
+Half of every G-1x system matrix and three quarters of every RB-1x one were built
+from frequencies outside the target band. M-PHASE0-RHO's physical translation
+control separates the two cleanly: absolute error **0.302143 under `nu+h`** and
+**exactly 0 under `nu-h`**. An error of exactly zero on a physical control is the
+discriminator; the band-membership count above only corroborates it.
+
+Note that `nu+h` and `nu-h` differ by `2h`, which is a lattice vector whenever the
+coset representative is half-integral, so both name the SAME replica. They do not
+give the same phase, because a sub-pixel displacement is not on the sampling lattice.
+The choice is therefore not cosmetic and is not absorbed by any gauge.
+
+**This reaches the bar, not just rho.** With the corrected sign the pooled G-1x bar
+moves from 0.095635 to **0.123212** at rho = 0.1, and from 0.039717 to **0.044721**
+at rho = 0.01. Every bar figure in A7 and every figure in `p1_bar.json` is suspect
+until `p1` is rerun with the corrected sign.
+
+### A9.2 rho is approximately 0.0055, not 0 and not 1 (ADOPTED)
+
+M-PHASE0-RHO measured it on undemosaiced data with a noise-aware estimator,
+commissioned 12 PASS / 0 FAIL with 10 planted defects CAUGHT / 0 MISSED:
+
+    G     0.00552   (95%  0.00185 -- 0.01078)
+    RB    0.00530   (95%  0.00214 -- 0.00891)
+    census range for design decisions   0.0001 -- 0.06
+
+with raw 0.108817 and dark-only 0.108586 falling to 0.0055165 under full noise
+subtraction -- so the noise correction is the whole measurement, which is exactly
+where A7 went wrong in the other direction.
+
+Its stated limits are adopted with it. Only **9 of 46** records directly detect
+high-band power. Scenes vary by 5.84x and f/8-to-f/18 by 4.51x. A grid refinement
+changes the median by **30.49x**, so no rho is meaningful without stating the
+frequency grid and boundary convention. It explicitly refuses a universal scalar,
+and that refusal is adopted: A2.2's common-scalar framing does not survive.
+
+It also independently identifies A7.4's normalisation as wrong -- the nine-member
+statistic returns 9 for green and 27 for red/blue on a white scene where A2.2's
+normalisation requires 1. That is the same defect A8.1 retracted, found by a
+different route.
+
+### A9.3 consequence
+
+rho ~ 0.0055 is far below the rho ~ 1 that A7.3 showed C1 needs at the loosest
+geometry, so the direction of A7's conclusion may well survive. **It is not
+re-asserted here.** The bar must first be rerun with the corrected representative
+sign, and the verdict must then be resolved by field radius rather than pooled,
+because A8.4 established that achievable accuracy is 0.0801 sensor px at field
+centre against 0.2256 at the corner. A pooled comparison cannot decide a claim whose
+two sides both vary by 3x across the field.
