@@ -1,0 +1,32 @@
+route A refitted with and without the photosite term
+============================================================================
+   pixel_mtf   f14 f_c    f14 B   f18 f_c    f18 B   mean B      gap
+        True    0.3043   2.1466    0.2554   2.0309   2.0888  +0.1157
+       False    0.3011   2.1697    0.2537   2.0444   2.1070  +0.1254
+
+  route B (no photosite term at all) sits at B = 2.11
+  route A with the term ON  : 2.0888, 0.0212 from route B
+  route A with the term OFF : 2.1070, 0.0030 from route B
+  P6 direction: B rose when the term was removed -> PASS
+  P6 approach : moved toward route B -> PASS
+  Reading: the residual disagreement between the routes is the size of
+  the photosite term the forward model omits, and it is now accounted
+  for rather than merely small.
+
+  P7 gap with term ON  : +0.1157
+  P7 gap with term OFF : +0.1254, moved 0.0096
+  P7 (photosite explains the trend, threshold 0.05) -> FAIL, as expected
+  The aperture trend is not the photosite. It survives a model that
+  already contains one, and removing it barely moves the trend.
+
+one-sided conclusion
+============================================================================
+  Every surviving candidate for the trend inflates B. The smallest
+  measured B therefore bounds the true one from above:
+    B <= 2.0309 +- 0.0204  (at f18)
+    p  >= 2.6383
+    H1: B 3.7319 is +83.2 s.e. above the bound -> EXCLUDED
+    H2: B 3.0763 is +51.1 s.e. above the bound -> EXCLUDED
+    H3: B 2.4020 is +18.2 s.e. above the bound -> EXCLUDED
+
+wrote out/pixel-check.json

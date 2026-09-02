@@ -1023,3 +1023,197 @@ that decide it: under H3 the lattice cannot resolve f/11's cutoff at all. f/14
 and f/18 are the measurement, as registered, and f/5.6 and f/8 are unreachable
 under either hypothesis, which is exactly the out-of-band role section 2.3 gave
 them.
+
+### Amendment 9 - all three hypotheses are rejected, and B is measured instead
+
+Amendment 8 registered the forward comparison as the primary statistic and
+`ladder.py` ran it. It rejected **both** live hypotheses, with every residual
+of the same sign: the real cutoffs sit ABOVE what either predicts.
+
+| ap | n | measured `f_c` | s.e. | H2 predicted | z | H3 predicted | z |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| f11 | 6 | 0.2946 | 0.0044 | 0.2482 | +10.19 | 0.3004 | -1.18 |
+| f14 | 6 | 0.2753 | 0.0026 | 0.2020 | +26.91 | 0.2496 | +8.97 |
+| f18 | 6 | 0.2311 | 0.0030 | 0.1640 | +21.89 | 0.2023 | +9.37 |
+
+Chi-squared over the arm as registered: H2 1307.20, H3 169.53, on 3 terms. H3 is the better of the two and
+is still rejected outright.
+
+A rejection in which every residual shares a sign is not a coin landing
+badly; it is a parameter set wrongly. This amendment records what was wrong,
+retracts one diagnosis that turned out to be a consequence rather than a
+cause, and replaces the two-way test with a measurement of `B` itself.
+
+#### 9.1 f/11 is out of band, so the primary arm was mis-scoped
+
+The out-of-band detector is not a judgement call. `knee_model_fit` reports
+`above_reach` when the fitted cutoff exceeds the highest frequency the
+lattice can measure, and M5's commissioning validated it at 36/36 with no
+false alarms. Asked about this data it says:
+
+| ap | `above_reach` | crossing `f_c` | model-fit `f_c` | floor slope |
+| --- | --- | --- | --- | --- |
+| f5.6 | 6/6 | 0.2771 | 0.4322 | -3.217 |
+| f8 | 6/6 | 0.2955 | 0.4033 | -3.210 |
+| f11 | 6/6 | 0.2946 | 0.3685 | -3.618 |
+| f14 | 0/6 | 0.2753 | 0.3043 | -0.374 |
+| f18 | 0/6 | 0.2311 | 0.2554 | -0.028 |
+
+**f/11 is out of band, 6/6.** Section 2.3 registered it as "a supporting
+point" whose H3 margin "is not a margin", and Amendment 8 sharpened that to
+0.35% below the lattice Nyquist. The data has now demoted it the rest of the
+way: at f/11 the crossing rule is not reporting a diffraction cutoff at all.
+
+An independent statistic agrees without being asked. The fitted floor slope
+is -3.22, -3.21 and -3.62 at the three out-of-band apertures - steeply
+negative, which is signal still falling, not a floor - against
+-0.374 and -0.028 at f/14 and
+f/18, which are flat. The three apertures whose guard fires are exactly the
+three that never reach a floor, and their crossing cutoffs cluster at
+0.2771, 0.2955, 0.2946 - the fabric's own texture limit, which is a
+property of the subject and not of the aperture.
+
+**The chi-squared that rejected H2 and H3 included f/11 and should not
+have.** That does not rescue either hypothesis - section 9.3 rejects them
+far more decisively on the two apertures that are in band - but the
+mis-scoping is recorded as an error in the registered analysis, not
+silently corrected.
+
+#### 9.2 R2 was mis-scoped by me, and both scores are reported
+
+R2 was registered as "`f_c` falls monotonically with f-number in every
+ROI", over all five apertures. The registered wording does not say whether
+a tie counts as falling, and the two readings differ:
+
+* ties allowed, which is how `ladder.py` scored it: **1/6**
+* ties disallowed, the literal reading of "falls": **0/6**
+
+Either way it failed. The ambiguity is not a loophole worth arguing over,
+because the ties are an artefact of the instrument rather than of the
+subject: the crossing rule reports a radial bin, bins are 4.34% of `f_c`
+wide, and two apertures whose cutoffs differ by less than a bin must report
+the same number.
+
+Over the three-aperture primary arm R2 is **6/6** and over the
+two in-band apertures **6/6**, both under the strict reading.
+
+**Every tie and every rise involves only f5.6, f8, f11.** The f/11 -> f/14 -> f/18 chain
+never ties and never rises in any ROI. The prediction failed exactly and
+only where section 9.1 has just shown the estimator is not measuring optics.
+
+The registered scoring is the one that counts and it failed. But the
+prediction was unsatisfiable as written, and that is my error rather than
+the subject's: an aperture whose cutoff lies beyond the lattice cannot roll
+off inside the band, so f/5.6 and f/8 cannot be monotone with anything. A
+prediction that no possible sensor could satisfy tested nothing. Both
+numbers are quoted here permanently so the failure cannot be read off as a
+success by quoting only the primary arm.
+
+#### 9.3 Retraction: the "shape excess" was a wrong B, not a wrong shape
+
+`ladder_diag.py` compared the real spectrum against the model's with each
+normalised by its own low band, so only shape was compared, and found the
+real spectrum running above the model through the roll-off. It named the
+candidate causes before testing them and concluded the real MTF rolls off
+more slowly than ideal diffraction. **That conclusion is withdrawn.** It was
+computed at H3's `B`, and H3's `B` is wrong. Rebuilt at the fitted `B`, in
+the same bins with the same normalisation, the excess collapses:
+
+| ap | peak real/synth at H3 | peak at fitted `B` |
+| --- | --- | --- |
+| f14 | 1.48 | 1.19 |
+| f18 | 2.17 | 1.16 |
+
+The registered threshold was that both peaks fall below 1.25, and both do.
+The diffraction MTF shape was never in trouble; the cutoff it was evaluated
+at was. This is recorded as a retraction because the earlier reading would
+have sent the lane after a new optical model it did not need.
+
+#### 9.4 `B` measured two ways, and why they agree
+
+`B` is the effective-f-number multiplier, `N_eff = B N`. All three
+hypotheses of section 2.2 carry the same magnification - `(B-1)p` is
+2.7199, 2.7197, 2.7199
+- so they differ only in pupil magnification through `B = 1 + m/p` with
+`m` = 2.7198. **Measuring `B` measures `p`.**
+
+| route | what it assumes | what it pays | `B` |
+| --- | --- | --- | --- |
+| A model fit | diffraction shape | no crossing bias | 2.0888 +- 0.0219 |
+| B forward | diffraction shape | the bias, on both sides | 2.11 |
+
+The two routes agree to 0.0212 in `B`. That agreement was checked
+rather than admired. Route A calls `knee_model_fit`, whose `pixel_mtf`
+argument defaults to true, so it models the 5.12 um photosite; route B
+synthesises through `equalise._scene`, which applies `mtf_diffraction` and
+nothing else, so it does not. Refitting route A with the photosite term off
+is therefore a like-for-like comparison, and it was registered in advance
+that `B` must RISE:
+
+| route A setting | f/14 `B` | f/18 `B` | mean `B` | distance to route B |
+| --- | --- | --- | --- | --- |
+| photosite on | 2.1466 | 2.0309 | 2.0888 | 0.0212 |
+| photosite off | 2.1697 | 2.0444 | 2.1070 | 0.0030 |
+
+Modelled like for like the two routes differ by 0.0030. The entire original disagreement was
+the photosite, and it is now accounted for rather than merely small. An
+independent estimator that does not pay the crossing bias and a forward
+comparison that pays it on both sides land in the same place.
+
+#### 9.5 One `B` does not fit both apertures
+
+| ap | route A `B` | route B `B` | route B |z|<=1 | implied `p` |
+| --- | --- | --- | --- | --- |
+| f14 | 2.1466 +- 0.0186 | 2.17 | 2.13 to 2.19 | 2.3246 |
+| f18 | 2.0309 +- 0.0204 | 2.06 | 2.02 to 2.08 | 2.5658 |
+
+The gap is +0.1157 by route A and
++0.11 by route B - two routes, one answer - and the intervals
+do not overlap. **The apparent `B` falls as the aperture closes**, which a
+single bellows factor cannot do.
+
+The photosite is excluded as the cause, and was excluded by a test that
+expected to fail so that a pass would have been news. Removing the term
+moves the gap by only 0.0096, against a registered
+threshold of 0.05. A term already in the model cannot explain a residual the
+model still has.
+
+**What this lane cannot decide.** The surviving candidates are residual
+defocus - registered as threat T1 - lens aberration, and vibration. All
+three inflate the apparent `B`, and all three inflate it more at the wider
+aperture: defocus and aberration because they worsen as the pupil opens, an
+absolute blur because diffraction has less roll-off of its own to hide
+behind. They share a sign, so two in-band apertures cannot separate them,
+and section 9.1 has just removed the third. **This lane does not identify
+which, and no later section should claim it did.**
+
+#### 9.6 What survives: a one-sided bound, which is what the evidence supports
+
+Because every surviving candidate biases `B` upward, the aperture least
+contaminated by them bounds the true value from above. That is a weaker
+claim than a two-sided interval and it is the one the evidence actually
+supports - a two-parameter fit to two apertures would have zero degrees of
+freedom and could not be wrong.
+
+**`B` <= 2.0309 +- 0.0204** (at f18, n = 6), hence **`p` >= 2.6383**.
+
+| hypothesis | `B` | `p` | s.e. above the bound | verdict |
+| --- | --- | --- | --- | --- |
+| H1 | 3.7319 | 0.9956 | +83.2 | EXCLUDED |
+| H2 | 3.0763 | 1.3099 | +51.1 | EXCLUDED |
+| H3 | 2.4020 | 1.9400 | +18.2 | EXCLUDED |
+
+All three registered hypotheses are excluded, H3 - the survivor the lane was
+built to test - by 18.2 standard errors. The pupil
+magnification is larger than any of them assumed, so the bellows factor at
+2.72x magnification is smaller, the true cutoff is higher, and
+there is more recoverable detail at a given marked aperture than the
+registered hypotheses allowed.
+
+**Registered now, before anything acts on it:** the successor lane must
+recover a third in-band aperture before the residual trend can be
+attributed. f/16 sits between the two survivors and is in band under the
+measured `B`; a capture at f/16 and f/22 would give four in-band points and
+two spare degrees of freedom, which is the minimum that can distinguish a
+defocus term from an absolute blur. Until then the one-sided bound is the
+result.

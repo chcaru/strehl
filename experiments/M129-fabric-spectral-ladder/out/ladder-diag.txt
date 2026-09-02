@@ -1,0 +1,61 @@
+does the forward model reproduce the real spectrum where it matters?
+==========================================================================
+
+(1) the SNR the model matched, and the SNR that decides the answer
+      ap   real low  real knee |    H2 low   H2 knee |    H3 low   H3 knee
+    f5.6     2011.4      18.58 |        --        -- |        --        -- |
+      f8     1707.4      23.14 |        --        -- |        --        -- |
+     f11     2801.9      39.70 |    2786.2     19.19 |    2749.6     33.49 |
+     f14     2588.8      23.20 |    2600.3      5.45 |    2600.2     17.23 |
+     f18     1730.0       7.65 |    1717.8      0.17 |    1721.4      3.49 |
+
+  If the synthetic knee-band SNR is far BELOW the real one, the model's
+  scenes are noisier than the data exactly where the crossing happens,
+  the synthetic estimator crosses too early, and every residual comes
+  out positive. That is the whole of the suspected defect.
+     f11 real knee SNR is   1.19x the H3 synthetic
+     f14 real knee SNR is   1.35x the H3 synthetic
+     f18 real knee SNR is   2.19x the H3 synthetic
+
+(2) the shape of the real spectrum against the model's, near the knee
+==========================================================================
+  each spectrum divided by its own low-band mean, so only SHAPE is
+  compared and the level difference measured in (1) cannot masquerade
+  as a shape difference
+
+  f11, H3 cutoff 0.3426
+           f   cy/mm        real    synth H3  real/synth
+       0.115    22.5   1.072e-01   1.066e-01        1.01
+       0.145    28.3   4.277e-02   4.069e-02        1.05
+       0.175    34.2   1.694e-02   1.745e-02        0.97
+       0.205    40.0   7.642e-03   7.146e-03        1.07
+       0.235    45.9   2.441e-03   2.694e-03        0.91
+       0.265    51.8   9.648e-04   1.031e-03        0.94
+       0.300    58.6   4.092e-04   4.349e-04        0.94
+
+  f14, H3 cutoff 0.2719
+           f   cy/mm        real    synth H3  real/synth
+       0.115    22.5   8.684e-02   8.706e-02        1.00
+       0.145    28.3   3.038e-02   2.697e-02        1.13
+       0.175    34.2   1.090e-02   9.792e-03        1.11
+       0.205    40.0   3.826e-03   2.737e-03        1.40
+       0.235    45.9   1.081e-03   7.286e-04        1.48
+       0.265    51.8   5.600e-04   3.985e-04        1.41
+       0.300    58.6   4.683e-04   3.907e-04        1.20
+
+  f18, H3 cutoff 0.2158
+           f   cy/mm        real    synth H3  real/synth
+       0.115    22.5   7.185e-02   6.773e-02        1.06
+       0.145    28.3   2.099e-02   1.533e-02        1.37
+       0.175    34.2   5.672e-03   3.200e-03        1.77
+       0.205    40.0   1.560e-03   7.190e-04        2.17
+       0.235    45.9   7.592e-04   5.940e-04        1.28
+       0.265    51.8   7.017e-04   6.008e-04        1.17
+       0.300    58.6   6.965e-04   6.010e-04        1.16
+
+  A ratio that is flat and above 1 means the real spectrum sits higher
+  everywhere -- a level or floor difference, the (1) explanation. A ratio
+  that GROWS with frequency means the real subject holds power the model
+  does not, which would be the weave shoulder and a far worse problem.
+
+wrote out/ladder-diag.json

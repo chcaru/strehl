@@ -28,6 +28,11 @@ def med(recs, tag, band, key="snr"):
     return float(np.median(v))
 
 
+def _load(name):
+    with open(os.path.join(OUT, name), encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def rows_after(text, heading, n):
     """The n table rows following a heading, as lists of stripped cells."""
     i = text.index(heading)
@@ -610,8 +615,158 @@ def main():
             continue
         ok &= check(name, want, qf(m.group(1)), tol=0.02)
 
+    # ---- Amendment 9 -----------------------------------------------------
+    print("\nAmendment 9, the rejection and the B measurement")
+    lad = _load("ladder.json")
+    guard9 = {r["tag"]: r for r in _load("reach-guard.json")}
+    fb9, fbf9 = _load("fit-b.json"), _load("fit-b-fine.json")
+    pc9, diag9 = _load("pixel-check.json"), _load("ladder-diag.json")
+    zt9 = {h: {x["tag"]: x["z"] for x in lad["chi2_primary"][h]["terms"]}
+           for h in ("H2", "H3")}
+
+    r9 = rows_after(text, "| ap | n | measured `f_c` | s.e. | H2 predicted |", 3)
+    for row in r9:
+        t = row[0]
+        ok &= check(f"9 measured {t}", lad["measured"][t]["mean"], num(row[2]))
+        ok &= check(f"9 sem {t}", lad["measured"][t]["sem"], num(row[3]))
+        for k, h in ((4, "H2"), (6, "H3")):
+            ok &= check(f"9 predicted {t} {h}",
+                        lad["predicted"][h][t]["fc_hat"], num(row[k]))
+            ok &= check(f"9 z {t} {h}", zt9[h][t], num(row[k + 1]), tol=0.02)
+
+    g9 = rows_after(text, "| ap | `above_reach` | crossing `f_c` |", 5)
+    for row in g9:
+        r = guard9[row[0]]
+        ok &= check(f"9 guard {row[0]} above_reach", r["above_reach"],
+                    qf(row[1].split("/")[0]))
+        ok &= check(f"9 guard {row[0]} crossing", r["knee_fc"], num(row[2]))
+        ok &= check(f"9 guard {row[0]} model fit", r["fit_fc"], num(row[3]))
+        ok &= check(f"9 guard {row[0]} floor slope", r["floor_slope"], num(row[4]))
+
+    # R2 is recomputed here from ladder.json's own cells, under BOTH readings of
+    # "falls monotonically". The document claims a specific pair of scores and a
+    # specific set of guilty apertures; all three are re-derived, not copied.
+    cells9 = lad["cells"]
+    rois9 = sorted({c["roi"] for c in cells9})
+    tags9 = ["f5.6", "f8", "f11", "f14", "f18"]
+
+    def _mono(tags, strict):
+        n = 0
+        for i in rois9:
+            v = [next(c["f_c"] for c in cells9
+                      if c["roi"] == i and c["aperture"] == t) for t in tags]
+            n += all((v[k] > v[k + 1]) if strict else (v[k] >= v[k + 1])
+                     for k in range(len(v) - 1))
+        return n
+
+    guilty = set()
+    for i in rois9:
+        v = [next(c["f_c"] for c in cells9
+                  if c["roi"] == i and c["aperture"] == t) for t in tags9]
+        for k in range(len(tags9) - 1):
+            if v[k] <= v[k + 1]:
+                guilty |= {tags9[k], tags9[k + 1]}
+
+    for name, pat, want in (
+        ("9 R2 ties allowed",
+         r"ties allowed, which is how `ladder\.py` scored it: \*\*(\d+)/\d+\*\*",
+         _mono(tags9, False)),
+        ("9 R2 strict",
+         r"ties disallowed, the literal reading of \"falls\": \*\*(\d+)/\d+\*\*",
+         _mono(tags9, True)),
+        ("9 R2 primary arm",
+         r"primary arm R2 is \*\*(\d+)/\d+\*\*",
+         _mono(["f11", "f14", "f18"], True)),
+        ("9 R2 in band",
+         r"two in-band apertures \*\*(\d+)/\d+\*\*",
+         _mono(["f14", "f18"], True)),
+        ("9 bound on B",
+         r"\*\*`B` <= (\d+\.\d+) \+- \d+\.\d+\*\*",
+         pc9["bound"]["B"]),
+        ("9 bound s.e.",
+         r"\*\*`B` <= \d+\.\d+ \+- (\d+\.\d+)\*\*",
+         pc9["bound"]["sem"]),
+        ("9 lower bound on p",
+         r"hence \*\*`p` >= (\d+\.\d+)\*\*",
+         pc9["p_lower"]),
+        ("9 H3 exclusion in sigma",
+         r"built to test - by\s*(\d+\.\d+) standard errors",
+         (2.4020 - pc9["bound"]["B"]) / pc9["bound"]["sem"]),
+        ("9 photosite gap movement",
+         r"moves the gap by only (\d+\.\d+)",
+         pc9["P7_gap_delta"]),
+        ("9 route gap, like for like",
+         r"like for like the two routes differ by\s*(\d+\.\d+)",
+         abs(pc9["routes"]["off"]["B"] - pc9["route_B"])),
+        ("9 route A gap",
+         r"The gap is \+?(\d+\.\d+) by route A",
+         fb9["route_A"]["per_aperture"]["f14"]["B"]
+         - fb9["route_A"]["per_aperture"]["f18"]["B"]),
+    ):
+        m = re.search(pat, flat)
+        if not m:
+            print(f"  FAIL {name:44s} sentence not found in the document")
+            ok = False
+            continue
+        ok &= check(name, want, qf(m.group(1)), tol=0.02)
+
+    m = re.search(r"Every tie and every rise involves only\s*(.+?)\.\*\*", flat)
+    if not m:
+        print(f"  FAIL {'9 guilty apertures':44s} sentence not found")
+        ok = False
+    else:
+        claimed = {x.strip() for x in m.group(1).replace("**", "").split(",")}
+        if claimed == guilty:
+            print(f"  ok  {'9 guilty apertures':44s} "
+                  f"{', '.join(sorted(guilty, key=tags9.index))}")
+        else:
+            print(f"  FAIL {'9 guilty apertures':44s} doc {sorted(claimed)} "
+                  f"recomputed {sorted(guilty)}")
+            ok = False
+
+    s9 = rows_after(text, "| ap | peak real/synth at H3 | peak at fitted `B` |", 2)
+    for row in s9:
+        t = row[0]
+        ok &= check(f"9 shape peak {t} at H3",
+                    max(x["ratio"] for x in diag9["shape"] if x["tag"] == t),
+                    num(row[1]), tol=0.02)
+        ok &= check(f"9 shape peak {t} fitted", fbf9["peaks"][t], num(row[2]),
+                    tol=0.02)
+
+    p9 = rows_after(text, "| route A setting | f/14 `B` | f/18 `B` |", 2)
+    for row in p9:
+        r = pc9["routes"]["on" if row[0].endswith("on") else "off"]
+        ok &= check(f"9 photosite {row[0]} f14", r["per"]["f14"]["B"], num(row[1]))
+        ok &= check(f"9 photosite {row[0]} f18", r["per"]["f18"]["B"], num(row[2]))
+        ok &= check(f"9 photosite {row[0]} mean", r["B"], num(row[3]))
+        # The distance column must equal |mean - route B|. Internal consistency:
+        # moving only this column leaves every external file intact.
+        ok &= check(f"9 photosite {row[0]} distance is internally consistent",
+                    abs(num(row[3]) - pc9["route_B"]), num(row[4]), tol=0.02)
+
+    a9 = rows_after(text, "| ap | route A `B` | route B `B` |", 2)
+    for row in a9:
+        t = row[0]
+        ok &= check(f"9 per-ap route A {t}",
+                    fb9["route_A"]["per_aperture"][t]["B"], num(row[1]))
+        ok &= check(f"9 per-ap route B {t}", fbf9["per_aperture"][t]["B"],
+                    num(row[2]))
+        ok &= check(f"9 per-ap p {t}", fbf9["per_aperture"][t]["p"], num(row[4]))
+        # p must equal m/(B-1) using the document's own B, not the JSON's.
+        ok &= check(f"9 per-ap p {t} is internally consistent",
+                    fb9["m"] / (num(row[2]) - 1.0), num(row[4]), tol=0.02)
+
+    h9 = rows_after(text, "| hypothesis | `B` | `p` | s.e. above the bound |", 3)
+    for row in h9:
+        b_h, p_h = num(row[1]), num(row[2])
+        ok &= check(f"9 {row[0]} magnification is internally consistent",
+                    (b_h - 1.0) * p_h, fb9["m"], tol=0.01)
+        ok &= check(f"9 {row[0]} s.e. above bound",
+                    (b_h - pc9["bound"]["B"]) / pc9["bound"]["sem"], num(row[3]),
+                    tol=0.02)
+
     print()
-    print("all Amendment 6, 7, 7a and 8 figures reproduce" if ok
+    print("all Amendment 6, 7, 7a, 8 and 9 figures reproduce" if ok
           else "SOME FIGURES DO NOT REPRODUCE")
     return 0 if ok else 1
 
