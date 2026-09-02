@@ -523,3 +523,49 @@ at the working magnification and aperture as:
 * Rule 42: every commit uses explicit owned paths.
 * Rule 46: command exit codes are captured before any display filtering.
 
+---
+
+## Amendment A1 -- boundary convention and commissioning repairs
+
+Written after synthetic commissioning and before decoding any real RAW pixel.
+
+### A1.1 Green boundary groups need an explicit convention
+
+The original text assumed each alias group had one member in the sampled
+channel's first Brillouin zone. Synthetic C1 to C4 exposed an exception: the
+cell-centred 8 by 8 PHASE grid puts 8 of 32 green groups exactly on the
+quincunx diamond boundary. Both members of each such pair satisfy
+`|fx| + |fy| = 0.5`. The 16 by 16 and 32 by 32 arms have 16 of 128 and 32 of
+512 boundary groups, respectively. RB has no ambiguous group on these
+cell-centred grids.
+
+For the primary scalar, a boundary pair chooses the member with lower
+Euclidean radius as base. An exact radius tie uses the lexicographically
+smaller integerised `(fx, fy)` key. This rule is deterministic and does not
+look at measured power.
+
+Every result also gets three boundary sensitivities:
+
+1. swap the base and alias labels in every ambiguous pair;
+2. average the two reciprocal assignments for every ambiguous pair;
+3. exclude ambiguous pairs.
+
+An isotropic radial model gives the same answer under the first two choices
+because paired boundary radii are equal. An anisotropic model need not. The
+full boundary envelope enters systematic uncertainty, and section 10's
+factor-of-three refusal rule applies.
+
+### A1.2 Failed commissioning attempts remain part of the audit trail
+
+The first complete synthetic run was red: 10 of 12 known-answer controls
+passed and 9 of 10 deliberate defects were caught. C9 used a
+phase-insensitive low-frequency summary, C10 incorrectly azimuthally averaged
+the line spectrum of one finite edge, and D7 was consequently missed.
+
+Repairing C10 to measure the one-dimensional edge-normal spectrum recovered
+the registered `beta = 2` quantity. C9 then exposed an actual Fourier-shift
+sign error in the cross-spectrum correction. After the sign repair, C9 was
+changed to inspect preregistered shifts through 0.25 pixel in bins where the
+phase ramp is large enough to discriminate the two signs. These are repairs
+to the statistic and algebra, not relaxed gates. Real-data measurement remains
+blocked until the complete tally is green.

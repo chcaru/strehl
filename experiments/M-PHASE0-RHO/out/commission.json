@@ -1,0 +1,295 @@
+{
+  "known_answer": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "defects": {
+    "caught": 10,
+    "missed": 0,
+    "total": 10
+  },
+  "controls": [
+    {
+      "name": "C12 active/CFA round trip",
+      "status": "PASS",
+      "detail": "independent extracts differ at 0 samples",
+      "exercised": true
+    },
+    {
+      "name": "C1 white spectrum rho=1",
+      "status": "PASS",
+      "detail": "G 1.0000, RB 1.0000, beta 0.000",
+      "exercised": true
+    },
+    {
+      "name": "C2 power-law beta ladder",
+      "status": "PASS",
+      "detail": "max |error| 0.010",
+      "exercised": true
+    },
+    {
+      "name": "C3 exact rho ladder",
+      "status": "PASS",
+      "detail": "median 0.004 dex, worst 0.007 dex",
+      "exercised": true
+    },
+    {
+      "name": "C4 Bayer/GQ sampling",
+      "status": "PASS",
+      "detail": "estimator and independent sampler agree on all planted scenes",
+      "exercised": true
+    },
+    {
+      "name": "C5 photon plus read subtraction",
+      "status": "PASS",
+      "detail": "error raw 0.043, dark 0.042, full 0.003 dex",
+      "exercised": true
+    },
+    {
+      "name": "C6 zero alias power",
+      "status": "PASS",
+      "detail": "signed cross mean z=0.942, 121 Welch blocks",
+      "exercised": true
+    },
+    {
+      "name": "C11 flat/no-scene control",
+      "status": "PASS",
+      "detail": "mean -0.2006 vs noise variance 400",
+      "exercised": true
+    },
+    {
+      "name": "C7 anisotropic scene",
+      "status": "PASS",
+      "detail": "rho error angular 0.003 vs isotropic 0.058 dex; holdout 0.037 vs 0.133",
+      "exercised": true
+    },
+    {
+      "name": "C8 coherent grating refusal",
+      "status": "PASS",
+      "detail": "concentration 0.158, holdout 1.511/5.327",
+      "exercised": true
+    },
+    {
+      "name": "C9 translated repeat phase correction",
+      "status": "PASS",
+      "detail": "phase-sensitive corrected/raw 1.162x, corrected/auto 0.994x",
+      "exercised": true
+    },
+    {
+      "name": "C10 step-edge beta=2",
+      "status": "PASS",
+      "detail": "fitted beta 1.997",
+      "exercised": true
+    }
+  ],
+  "defect_records": [
+    {
+      "name": "D1 read G1/G2 above support",
+      "status": "CAUGHT",
+      "catcher": "C12/grid",
+      "detail": "12545 illegal bins rejected"
+    },
+    {
+      "name": "D2 multiply frequency by two",
+      "status": "CAUGHT",
+      "catcher": "C10/grid",
+      "detail": "correct error 0.0010, doubled error 0.1331"
+    },
+    {
+      "name": "D3 sum nine members per alias",
+      "status": "CAUGHT",
+      "catcher": "C1",
+      "detail": "defective white values G=9.0, RB=27.0"
+    },
+    {
+      "name": "D4 magnitude cross-spectrum",
+      "status": "CAUGHT",
+      "catcher": "C6/C11",
+      "detail": "magnitude mean 1.85e+08, signed mean 0.201"
+    },
+    {
+      "name": "D5 omit photon noise",
+      "status": "CAUGHT",
+      "catcher": "C5",
+      "detail": "dark-only 0.042 vs full 0.003 dex"
+    },
+    {
+      "name": "D6 clip negative corrected bins",
+      "status": "CAUGHT",
+      "catcher": "C6",
+      "detail": "clipped mean 10.7, signed -0.201"
+    },
+    {
+      "name": "D7 swap G phase geometry",
+      "status": "CAUGHT",
+      "catcher": "C9/grid",
+      "detail": "correct/wrong phase-sensitive power 2.073x"
+    },
+    {
+      "name": "D8 fit S(q), omit alias sum",
+      "status": "CAUGHT",
+      "catcher": "C3/C4",
+      "detail": "bad beta 3.687, alias-aware 4.000"
+    },
+    {
+      "name": "D9 estimator reads planted truth",
+      "status": "CAUGHT",
+      "catcher": "source-isolation",
+      "detail": "no truth module or planted-answer identifier in estimator AST"
+    },
+    {
+      "name": "D10 omit an unverified claim",
+      "status": "CAUGHT",
+      "catcher": "checker accounting",
+      "detail": "VERIFIED 1, UNVERIFIED 2, TOTAL 3"
+    }
+  ],
+  "verdict": "COMMISSIONED",
+  "details": {
+    "beta_ladder": [
+      {
+        "truth": 1.5,
+        "estimated": 1.4980357795194073,
+        "error": 0.001964220480592749,
+        "rho_truth": 0.28175906248151206,
+        "rho_est": 0.2823452247161467
+      },
+      {
+        "truth": 2.0,
+        "estimated": 2.0103311404460977,
+        "error": 0.01033114044609773,
+        "rho_truth": 0.16002627133349417,
+        "rho_est": 0.15804918747170035
+      },
+      {
+        "truth": 2.5,
+        "estimated": 2.498373689682191,
+        "error": 0.001626310317809132,
+        "rho_truth": 0.0850246955311408,
+        "rho_est": 0.08520779728057597
+      },
+      {
+        "truth": 3.0,
+        "estimated": 3.000162676299803,
+        "error": 0.00016267629980282194,
+        "rho_truth": 0.04284256160505097,
+        "rho_est": 0.04283271106932231
+      },
+      {
+        "truth": 4.0,
+        "estimated": 3.9996022791801593,
+        "error": 0.00039772081984068564,
+        "rho_truth": 0.009840738141126081,
+        "rho_est": 0.009846661027362145
+      }
+    ],
+    "rho_ladder": [
+      {
+        "rho_truth": 1.0,
+        "beta_truth": 0.0,
+        "rho_est": 0.9928870586160558,
+        "error_dex": 0.003100149902846535
+      },
+      {
+        "rho_truth": 0.3,
+        "beta_truth": 1.4402200253409605,
+        "rho_est": 0.29743965383878324,
+        "error_dex": 0.0037223877248466104
+      },
+      {
+        "rho_truth": 0.1,
+        "beta_truth": 2.3761085478461617,
+        "rho_est": 0.0991142268456617,
+        "error_dex": 0.00386400245615923
+      },
+      {
+        "rho_truth": 0.03,
+        "beta_truth": 3.248998011583135,
+        "rho_est": 0.029684079899748455,
+        "error_dex": 0.0045976628237624165
+      },
+      {
+        "rho_truth": 0.01,
+        "beta_truth": 3.989385963762803,
+        "rho_est": 0.00982978691578537,
+        "error_dex": 0.007455896440663463
+      }
+    ],
+    "noise_control": {
+      "raw_error_dex": 0.04257220906200744,
+      "dark_error_dex": 0.04240936709149275,
+      "full_error_dex": 0.00250115307670453,
+      "raw_rho": 0.11029916102726824,
+      "dark_rho": 0.1102578112829616,
+      "full_rho": 0.09942574341390624
+    },
+    "anisotropy": {
+      "truth_rho": 0.08219247495954296,
+      "angular": {
+        "beta": 2.605123800256203,
+        "beta_se": 0.0035676705529412585,
+        "log_amplitude": 7.371485861317909,
+        "angular": [
+          0.691595062699985,
+          -0.34722890952307045,
+          0.2469679461025779,
+          0.20619508751381074
+        ],
+        "rho_g": 0.08156102567799159,
+        "rho_rb": 0.07268308601429554,
+        "rho_g_grid16": 0.044243504098745126,
+        "rho_g_grid32": 0.02639878975852969,
+        "n_fit": 5542,
+        "n_holdout": 2348,
+        "welch_blocks": 81,
+        "max_fit_frequency": 0.45838141911581126,
+        "frequency_span": 11.39761643403385,
+        "holdout_median_abs_dex": 0.036906688369886635,
+        "holdout_p90_abs_dex": 0.08764703664808907,
+        "fit_median_abs_dex": 0.03405186891344321,
+        "noise_floor": 0.0,
+        "noise_se": 0.0,
+        "significant_bins": 7890,
+        "total_candidate_bins": 7890,
+        "component_p10": 0.007326202869546831,
+        "component_median": 0.18275957053008274,
+        "component_p90": 1.3377864912730952,
+        "extrapolation_median": 1.2500000000000002,
+        "extrapolation_max": 1.7500000000000002
+      },
+      "isotropic": {
+        "beta": 2.4244726796089124,
+        "beta_se": 0.017922132146140277,
+        "log_amplitude": 7.60388340781569,
+        "angular": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rho_g": 0.09390121849299629,
+        "rho_rb": 0.06946252339704521,
+        "rho_g_grid16": 0.05784036946710959,
+        "rho_g_grid32": 0.03860109715901748,
+        "n_fit": 5542,
+        "n_holdout": 2348,
+        "welch_blocks": 81,
+        "max_fit_frequency": 0.45838141911581126,
+        "frequency_span": 11.39761643403385,
+        "holdout_median_abs_dex": 0.13291996170608103,
+        "holdout_p90_abs_dex": 0.36754600209980853,
+        "fit_median_abs_dex": 0.16585160609181132,
+        "noise_floor": 0.0,
+        "noise_se": 0.0,
+        "significant_bins": 7890,
+        "total_candidate_bins": 7890,
+        "component_p10": 0.016877894668173667,
+        "component_median": 0.3339548154551545,
+        "component_p90": 1.0,
+        "extrapolation_median": 1.2500000000000002,
+        "extrapolation_max": 1.7500000000000002
+      }
+    }
+  }
+}
