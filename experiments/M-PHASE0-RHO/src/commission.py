@@ -235,18 +235,58 @@ def main():
                 "full_rho": f_full.rho_g,
             }
         )
+
+    # The repeated-frame arm fits signed cross-power without discarding
+    # negative bins. It must recover the low-rho plant independently of the
+    # additive auto-spectrum likelihood.
+    cross_target = 0.003
+    cross_beta = T.beta_for_rho(cross_target, "G")
+    cross_field = T.powerlaw_field(1536, cross_beta, 181)
+    cross_scene = R.extract_gq(
+        T.sampled_raw(
+            cross_field,
+            mean_dn=mean_dn,
+            contrast_dn=300.0,
+            add_noise=False,
+        ),
+        768,
+        768,
+        640,
+    )
+    cross_rows = []
+    rng = np.random.default_rng(182)
+    for _ in range(16):
+        a = cross_scene + rng.normal(0.0, math.sqrt(full_floor), cross_scene.shape)
+        b = cross_scene + rng.normal(0.0, math.sqrt(full_floor), cross_scene.shape)
+        cross, _, _, _ = R.complex_cross_psd(a, b, tile=128, window="hann")
+        cross_rows.append(R.derotate_cross_psd(cross, (0.0, 0.0)))
+    cross_stack = np.stack(cross_rows)
+    cross_fit = R.fit_gq_powerlaw_psd(
+        np.mean(cross_stack, axis=0),
+        blocks=81 * len(cross_rows),
+        noise_floor=0.0,
+        rmin=0.04,
+        rmax=0.30,
+        angular_model=False,
+        required_max_frequency=0.25,
+        signed_se=np.std(cross_stack, axis=0, ddof=1)
+        / np.sqrt(len(cross_rows)),
+    )
+    cross_error = abs(math.log10(cross_fit.rho_g / cross_target))
+    c5_ok &= cross_error <= 0.30
     c5 = tally.control(
         "C5 photon plus read subtraction",
         c5_ok,
         (
-            "worst error raw %.3f, dark %.3f, full %.3f dex"
+            "worst error raw %.3f, dark %.3f, full %.3f, signed cross %.3f dex"
             % (
                 max(r["raw_error_dex"] for r in noise_rows),
                 max(r["dark_error_dex"] for r in noise_rows),
                 max(r["full_error_dex"] for r in noise_rows),
+                cross_error,
             )
         ),
-        exercised=(len(noise_rows) == 3),
+        exercised=(len(noise_rows) == 3 and len(cross_rows) == 16),
     )
 
     # C6/C11: pure noise has no scene power. Real cross power is signed and
@@ -525,7 +565,15 @@ def main():
     payload["details"] = {
         "beta_ladder": beta_rows,
         "rho_ladder": rho_rows,
-        "noise_control": noise_rows,
+        "noise_control": {
+            "auto_spectra": noise_rows,
+            "signed_cross": {
+                "rho_truth": cross_target,
+                "rho_est": cross_fit.rho_g,
+                "error_dex": cross_error,
+                "fit": cross_fit.to_dict(),
+            },
+        },
         "anisotropy": {
             "truth_rho": truth,
             "angular": fa.to_dict(),

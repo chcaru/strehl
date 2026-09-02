@@ -680,3 +680,19 @@ The prelisted scenes are:
 This arm is a secondary scene census. The no-bracket paper and bee repeats
 remain the cleanest noise tests, while the controlled fabric ladder remains
 the aperture arm.
+
+---
+
+## Amendment A5 -- signed repeat cross-power must stay signed
+
+The first repeat analysis incorrectly passed a signed cross-spectrum through
+the positive auto-spectrum log fit. Negative bins were discarded by that
+route. The resulting cross-derived `rho` was 3.6 to 8.3 times the matched
+full-subtraction value on the passing bee ROIs, in the same upward direction
+predicted for B3 and D6. Those cross estimates are superseded.
+
+Before rerunning real repeats, the cross fit now minimises an
+`asinh(model / SE) - asinh(power / SE)` residual over all signed bins. `SE` is
+estimated across independent frame pairs. No bin is clipped or dropped for
+being negative. A 16-pair noisy synthetic plant at `rho = 0.003` recovers it
+within 0.022 dex. The auto-spectrum estimator and all gates are unchanged.

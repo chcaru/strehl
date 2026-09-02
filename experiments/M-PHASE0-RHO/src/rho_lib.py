@@ -397,6 +397,7 @@ def fit_gq_powerlaw(
     angular_model: bool = True,
     holdout_mod: int = 4,
     min_significance: float = 3.0,
+    required_max_frequency: float = 0.25,
 ) -> FitResult:
     """Fit the captured-scene power law through the GQ alias sum."""
     psd, blocks = welch_psd2(patch, tile=tile, window=window)
@@ -410,6 +411,7 @@ def fit_gq_powerlaw(
         angular_model=angular_model,
         holdout_mod=holdout_mod,
         min_significance=min_significance,
+        required_max_frequency=required_max_frequency,
     )
 
 
@@ -423,6 +425,8 @@ def fit_gq_powerlaw_psd(
     angular_model: bool = True,
     holdout_mod: int = 4,
     min_significance: float = 3.0,
+    required_max_frequency: float = 0.25,
+    signed_se: np.ndarray | None = None,
 ) -> FitResult:
     """Fit an already Welch-averaged GQ PSD."""
     psd = np.asarray(psd, dtype=float)
@@ -433,6 +437,15 @@ def fit_gq_powerlaw_psd(
     if blocks <= 0:
         raise ValueError("blocks must be positive")
     tile = psd.shape[0]
+    signed = signed_se is not None
+    if signed and noise_floor != 0.0:
+        raise ValueError("signed PSD fit requires noise_floor=0")
+    if signed:
+        se_array = np.asarray(signed_se, dtype=float)
+        if se_array.shape != psd.shape:
+            raise ValueError("signed PSD and standard-error shapes differ")
+    else:
+        se_array = None
     fx, fy = gq_frequency_grid(tile)
     ax, ay = gq_partner(fx, fy)
     base = np.stack([fx, fy], axis=-1)
@@ -441,13 +454,26 @@ def fit_gq_powerlaw_psd(
     theta = np.arctan2(fy, fx)
 
     corrected = psd - float(noise_floor)
-    noise_se = float(noise_floor) / math.sqrt(max(blocks, 1))
+    noise_se = (
+        float(np.median(se_array[np.isfinite(se_array) & (se_array > 0.0)]))
+        if signed
+        else float(noise_floor) / math.sqrt(max(blocks, 1))
+    )
     legal = legal_frequency_mask(fx, fy, "GQ")
     one_side = (fy > 0) | ((np.abs(fy) < 1e-15) & (fx > 0))
     candidate = legal & one_side & (r >= rmin) & (r <= rmax)
-    significance = max(min_significance * noise_se, 0.0)
-    significant = corrected > max(significance, np.finfo(float).tiny)
-    keep = candidate & (psd > np.finfo(float).tiny) & np.isfinite(psd)
+    if signed:
+        significant = corrected > min_significance * se_array
+        keep = (
+            candidate
+            & np.isfinite(psd)
+            & np.isfinite(se_array)
+            & (se_array > 0.0)
+        )
+    else:
+        significance = max(min_significance * noise_se, 0.0)
+        significant = corrected > max(significance, np.finfo(float).tiny)
+        keep = candidate & (psd > np.finfo(float).tiny) & np.isfinite(psd)
 
     total_candidate = int(np.sum(candidate))
     significant_bins = int(np.sum(candidate & significant))
@@ -460,14 +486,18 @@ def fit_gq_powerlaw_psd(
     span = float(rr_sig.max() / rr_sig.min())
     if span < 2.5:
         raise ValueError(f"frequency span {span:.3f} is below 2.5")
-    if float(rr_sig.max()) < 0.25:
-        raise ValueError("fit does not reach 0.25 sensor cycles/pixel")
+    if float(rr_sig.max()) < required_max_frequency:
+        raise ValueError(
+            "fit reaches %.6f, below required %.6f sensor cycles/pixel"
+            % (float(rr_sig.max()), required_max_frequency)
+        )
 
     b = base[keep]
     a = alias[keep]
-    y = np.log(psd[keep])
+    y = psd[keep] if signed else np.log(psd[keep])
     corrected_keep = corrected[keep]
     significant_keep = significant[keep]
+    signed_scale = se_array[keep] if signed else None
     sec = sector_index(theta[keep], sectors=16)
     hold = (sec % holdout_mod) == 0
     train = ~hold
@@ -504,23 +534,26 @@ def fit_gq_powerlaw_psd(
         use0 = p0[:2]
 
     def resid(p: np.ndarray, mask: np.ndarray) -> np.ndarray:
-        return (
-            _log_total_model(
-                p,
-                b[mask],
-                a[mask],
-                angular_model,
-                float(noise_floor),
+        if signed:
+            model = np.exp(
+                _log_model(p, b[mask], a[mask], angular_model)
             )
-            - y[mask]
-        )
+            scale = signed_scale[mask]
+            return np.arcsinh(model / scale) - np.arcsinh(y[mask] / scale)
+        return _log_total_model(
+            p,
+            b[mask],
+            a[mask],
+            angular_model,
+            float(noise_floor),
+        ) - y[mask]
 
     fit = least_squares(
         lambda p: resid(p, train),
         use0,
         bounds=(lower, upper),
         loss="soft_l1",
-        f_scale=0.35 * math.log(10.0),
+        f_scale=1.0 if signed else 0.35 * math.log(10.0),
         max_nfev=400,
     )
     if not fit.success:
