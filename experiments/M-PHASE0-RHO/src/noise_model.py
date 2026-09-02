@@ -138,6 +138,12 @@ def measure_flat_group(rows: list[dict], exposure: float, run: int) -> dict:
     p2 = _trimmed_variance(
         np.mean(phase_2, axis=0), np.var(phase_2, axis=0, ddof=1)
     )
+    p1["photon_predictor"] = float(
+        np.mean(phase_1 * scale[:, None])
+    )
+    p2["photon_predictor"] = float(
+        np.mean(phase_2 * scale[:, None])
+    )
 
     pair_psds = []
     for i in range(0, len(patches), 2):
@@ -171,7 +177,11 @@ def measure_flat_group(rows: list[dict], exposure: float, run: int) -> dict:
         "scale2_mean": float(np.mean(scale * scale)),
         "saturation_fraction": saturation,
         "noise_plateau": plateau,
-        "photon_predictor": float(target * np.mean(scale)),
+        "photon_predictor": float(
+            np.mean(
+                np.mean(patches, axis=(1, 2)) * scale
+            )
+        ),
         "read_predictor": float(np.mean(scale * scale)),
         "G1": p1,
         "G2": p2,
@@ -251,10 +261,7 @@ def fit_ptc(groups: list[dict], phase: str, read_variance: float) -> dict:
     if len(usable) < 6:
         raise ValueError(f"only {len(usable)} usable PTC groups for {phase}")
     x = np.array(
-        [
-            g[phase]["signal_mean"] * g["scale_mean"]
-            for g in usable
-        ],
+        [g[phase]["photon_predictor"] for g in usable],
         dtype=float,
     )
     y = np.array([g[phase]["variance_mean"] for g in usable], dtype=float)

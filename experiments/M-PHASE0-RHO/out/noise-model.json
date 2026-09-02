@@ -1,0 +1,2454 @@
+{
+  "camera": "ILCE-7CM2",
+  "frequency_unit": "cycles per full-resolution sensor pixel",
+  "flat_groups": [
+    {
+      "exposure": 0.004,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00083.ARW",
+      "last_file": "DSC00102.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 238.0,
+      "frame_level_max": 307.0,
+      "frame_level_cv": 0.1006317287683487,
+      "scale_mean": 0.9850649833679199,
+      "scale2_mean": 0.9792345762252808,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 60.082732322086905,
+      "photon_predictor": 280.82098388671875,
+      "read_predictor": 0.9792345762252808,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 253.92967224121094,
+        "signal_median": 261.1772766113281,
+        "variance_mean": 54.05315017700195,
+        "variance_median": 51.88383865356445,
+        "variance_trim_ceiling": 118.3460464477539,
+        "photon_predictor": 250.22911071777344
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 253.86361694335938,
+        "signal_median": 261.12091064453125,
+        "variance_mean": 53.84392547607422,
+        "variance_median": 51.624237060546875,
+        "variance_trim_ceiling": 117.04374694824219,
+        "photon_predictor": 250.16677856445312
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 65.55109093696771,
+          "median": 65.58485714859401,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 64.02509438376494,
+          "median": 63.87055597085397,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 61.615553071060596,
+          "median": 61.56337312554145,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 59.93105649981838,
+          "median": 59.86240307920999,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 60.33104242900019,
+          "median": 60.302257769881024,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.004,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00263.ARW",
+      "last_file": "DSC00282.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 1179.5,
+      "frame_level_max": 1282.0,
+      "frame_level_cv": 0.032994017004966736,
+      "scale_mean": 1.001402735710144,
+      "scale2_mean": 1.0038485527038574,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 299.6309554149798,
+      "photon_predictor": 1346.742431640625,
+      "read_predictor": 1.0038485527038574,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 1198.5692138671875,
+        "signal_median": 1233.3231201171875,
+        "variance_mean": 265.4867248535156,
+        "variance_median": 256.17608642578125,
+        "variance_trim_ceiling": 564.9932861328125,
+        "photon_predictor": 1200.6824951171875
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 1197.9268798828125,
+        "signal_median": 1232.88134765625,
+        "variance_mean": 265.9215393066406,
+        "variance_median": 256.2872009277344,
+        "variance_trim_ceiling": 567.8601684570312,
+        "photon_predictor": 1200.0189208984375
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 307.2297634905948,
+          "median": 308.0343755043506,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 304.50878472350644,
+          "median": 304.1470563685089,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 301.75687349301177,
+          "median": 301.3041250313802,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 299.55726938641044,
+          "median": 299.1912641026673,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 299.7515875985302,
+          "median": 299.4779112647137,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.008,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00103.ARW",
+      "last_file": "DSC00122.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 643.5,
+      "frame_level_max": 946.5,
+      "frame_level_cv": 0.12243206053972244,
+      "scale_mean": 1.0106797218322754,
+      "scale2_mean": 1.0366075038909912,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 194.73226564295962,
+      "photon_predictor": 882.5916137695312,
+      "read_predictor": 1.0366075038909912,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 778.3995971679688,
+        "signal_median": 800.8681030273438,
+        "variance_mean": 173.3253173828125,
+        "variance_median": 166.53126525878906,
+        "variance_trim_ceiling": 374.8153991699219,
+        "photon_predictor": 787.0088500976562
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 777.8901977539062,
+        "signal_median": 800.3006591796875,
+        "variance_mean": 173.52964782714844,
+        "variance_median": 166.8750457763672,
+        "variance_trim_ceiling": 374.2159729003906,
+        "photon_predictor": 786.4959106445312
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 199.21055505211163,
+          "median": 198.47936608807612,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 199.28926988396304,
+          "median": 199.1418885654423,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 196.74611512005112,
+          "median": 196.6716108364312,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 194.64091537465097,
+          "median": 194.45727152559743,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 194.8818161418527,
+          "median": 194.5717549503276,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.008,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00283.ARW",
+      "last_file": "DSC00302.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 2208.5,
+      "frame_level_max": 2385.0,
+      "frame_level_cv": 0.025613034144043922,
+      "scale_mean": 0.9972043037414551,
+      "scale2_mean": 0.9950315356254578,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 551.8402069639205,
+      "photon_predictor": 2483.2734375,
+      "read_predictor": 0.9950315356254578,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 2219.91015625,
+        "signal_median": 2284.10888671875,
+        "variance_mean": 488.4602355957031,
+        "variance_median": 470.82318115234375,
+        "variance_trim_ceiling": 1039.562744140625,
+        "photon_predictor": 2214.46826171875
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 2218.394287109375,
+        "signal_median": 2282.767333984375,
+        "variance_mean": 489.10455322265625,
+        "variance_median": 471.762451171875,
+        "variance_trim_ceiling": 1038.9361572265625,
+        "photon_predictor": 2213.003662109375
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 560.8373216887044,
+          "median": 560.2912942607556,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 557.3387128121228,
+          "median": 556.9807762691428,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 554.1037741270101,
+          "median": 553.4314452494875,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 550.9768655294027,
+          "median": 550.259141086829,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 553.2535924376335,
+          "median": 552.7644713562909,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.01666667,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00123.ARW",
+      "last_file": "DSC00142.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 2032.5,
+      "frame_level_max": 2509.75,
+      "frame_level_cv": 0.0719265267252922,
+      "scale_mean": 0.9599746465682983,
+      "scale2_mean": 0.9255989789962769,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 489.7166565695,
+      "photon_predictor": 2203.99462890625,
+      "read_predictor": 0.9255989789962769,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 2047.416259765625,
+        "signal_median": 2106.44189453125,
+        "variance_mean": 434.1456298828125,
+        "variance_median": 418.4526672363281,
+        "variance_trim_ceiling": 926.4610595703125,
+        "photon_predictor": 1966.1483154296875
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 2046.090576171875,
+        "signal_median": 2105.28369140625,
+        "variance_mean": 434.1299743652344,
+        "variance_median": 418.35931396484375,
+        "variance_trim_ceiling": 923.941650390625,
+        "photon_predictor": 1964.904296875
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 495.1123638138698,
+          "median": 495.4175717717234,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 494.22331779475314,
+          "median": 493.2025392086022,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 490.55447326916203,
+          "median": 489.8193845110617,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 489.72457594227626,
+          "median": 489.15912285683663,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 489.70369167983364,
+          "median": 489.54671252285914,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.01666667,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00303.ARW",
+      "last_file": "DSC00322.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 3857.5,
+      "frame_level_max": 4368.5,
+      "frame_level_cv": 0.03485885635018349,
+      "scale_mean": 1.0199073553085327,
+      "scale2_mean": 1.0415531396865845,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 1077.7843857581945,
+      "photon_predictor": 4823.11962890625,
+      "read_predictor": 1.0415531396865845,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 4214.68603515625,
+        "signal_median": 4336.5009765625,
+        "variance_mean": 952.5567626953125,
+        "variance_median": 917.0283813476562,
+        "variance_trim_ceiling": 2034.42236328125,
+        "photon_predictor": 4300.12841796875
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 4211.9658203125,
+        "signal_median": 4333.98388671875,
+        "variance_mean": 953.5543212890625,
+        "variance_median": 918.5240478515625,
+        "variance_trim_ceiling": 2021.7703857421875,
+        "photon_predictor": 4297.36376953125
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1078.5545817159702,
+          "median": 1077.4079120933834,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1084.1599481290225,
+          "median": 1082.5722424908413,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1080.9623858000023,
+          "median": 1079.144742084709,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 1078.768566159593,
+          "median": 1077.187385826398,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 1076.1731735225317,
+          "median": 1075.1623024993191,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.03333333,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00143.ARW",
+      "last_file": "DSC00162.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 4978.5,
+      "frame_level_max": 5025.0,
+      "frame_level_cv": 0.0030759514775127172,
+      "scale_mean": 0.999958872795105,
+      "scale2_mean": 0.9999269247055054,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 1220.7311468319483,
+      "photon_predictor": 5450.517578125,
+      "read_predictor": 0.9999269247055054,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 4860.2158203125,
+        "signal_median": 5000.6923828125,
+        "variance_mean": 1080.76904296875,
+        "variance_median": 1040.98876953125,
+        "variance_trim_ceiling": 2304.039306640625,
+        "photon_predictor": 4861.68603515625
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 4857.408203125,
+        "signal_median": 4998.27001953125,
+        "variance_mean": 1079.3974609375,
+        "variance_median": 1039.8677978515625,
+        "variance_trim_ceiling": 2279.48828125,
+        "photon_predictor": 4858.86669921875
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1233.4539143485756,
+          "median": 1227.7189165426894,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1225.6464179257234,
+          "median": 1225.539145336857,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1221.3183134599913,
+          "median": 1219.834522427679,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 1221.579869763869,
+          "median": 1219.8097484923169,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 1219.341693464806,
+          "median": 1218.0696461561179,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.03333333,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00323.ARW",
+      "last_file": "DSC00342.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 6473.5,
+      "frame_level_max": 7878.0,
+      "frame_level_cv": 0.07045046985149384,
+      "scale_mean": 1.0127047300338745,
+      "scale2_mean": 1.0305211544036865,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 1795.3640446583368,
+      "photon_predictor": 7997.9130859375,
+      "read_predictor": 1.0305211544036865,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 7036.36669921875,
+        "signal_median": 7239.6552734375,
+        "variance_mean": 1589.610595703125,
+        "variance_median": 1533.653564453125,
+        "variance_trim_ceiling": 3377.32421875,
+        "photon_predictor": 7128.2275390625
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 7031.60107421875,
+        "signal_median": 7235.81787109375,
+        "variance_mean": 1591.1534423828125,
+        "variance_median": 1531.6845703125,
+        "variance_trim_ceiling": 3398.698486328125,
+        "photon_predictor": 7123.44677734375
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1799.1010001154152,
+          "median": 1794.301919622911,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1802.4483752940089,
+          "median": 1802.5529419643349,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1797.3666551479314,
+          "median": 1795.7586265458392,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 1796.2188868017668,
+          "median": 1795.2271966347844,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 1793.9645734647454,
+          "median": 1791.8367146218184,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.05,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00163.ARW",
+      "last_file": "DSC00182.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 7842.5,
+      "frame_level_max": 7895.5,
+      "frame_level_cv": 0.002309299074113369,
+      "scale_mean": 0.9997890591621399,
+      "scale2_mean": 0.9995830655097961,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 1921.185952179347,
+      "photon_predictor": 8572.9150390625,
+      "read_predictor": 0.9995830655097961,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 7644.3896484375,
+        "signal_median": 7866.28125,
+        "variance_mean": 1695.0595703125,
+        "variance_median": 1633.8480224609375,
+        "variance_trim_ceiling": 3601.717041015625,
+        "photon_predictor": 7645.56591796875
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 7639.8681640625,
+        "signal_median": 7861.66259765625,
+        "variance_mean": 1696.97900390625,
+        "variance_median": 1637.7679443359375,
+        "variance_trim_ceiling": 3588.126220703125,
+        "photon_predictor": 7640.95166015625
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1924.6316007601272,
+          "median": 1920.6656564027585,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1931.4014964389698,
+          "median": 1929.789190003911,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1926.5975160691685,
+          "median": 1924.7794250498628,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 1921.1317745978408,
+          "median": 1920.7975658289702,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 1921.2746468760681,
+          "median": 1920.2446461717286,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.05,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00343.ARW",
+      "last_file": "DSC00362.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 10351.5,
+      "frame_level_max": 11778.5,
+      "frame_level_cv": 0.03904028981924057,
+      "scale_mean": 0.9894434213638306,
+      "scale2_mean": 0.9803383946418762,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 2592.0187840358753,
+      "photon_predictor": 11535.197265625,
+      "read_predictor": 0.9803383946418762,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 10385.2841796875,
+        "signal_median": 10685.1826171875,
+        "variance_mean": 2299.07275390625,
+        "variance_median": 2215.619873046875,
+        "variance_trim_ceiling": 4837.5546875,
+        "photon_predictor": 10279.236328125
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 10377.935546875,
+        "signal_median": 10678.5927734375,
+        "variance_mean": 2300.40966796875,
+        "variance_median": 2217.323974609375,
+        "variance_trim_ceiling": 4878.109375,
+        "photon_predictor": 10272.1669921875
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 2590.614481081111,
+          "median": 2587.753349688075,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 2598.8072889095747,
+          "median": 2594.001636262189,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 2589.7755319072667,
+          "median": 2589.0095313032166,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 2593.2723132132214,
+          "median": 2591.6486132497466,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 2589.966618045341,
+          "median": 2588.5140133037694,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.07692308,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00183.ARW",
+      "last_file": "DSC00202.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 12333.0,
+      "frame_level_max": 12433.5,
+      "frame_level_cv": 0.002594399731606245,
+      "scale_mean": 0.9998670816421509,
+      "scale2_mean": 0.9997404217720032,
+      "saturation_fraction": 0.0,
+      "noise_plateau": 3011.5738603777,
+      "photon_predictor": 13488.5029296875,
+      "read_predictor": 0.9997404217720032,
+      "G1": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 12026.845703125,
+        "signal_median": 12375.44140625,
+        "variance_mean": 2668.756591796875,
+        "variance_median": 2573.268798828125,
+        "variance_trim_ceiling": 5677.08154296875,
+        "photon_predictor": 12029.5927734375
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 128275,
+        "signal_mean": 12019.458984375,
+        "signal_median": 12368.9599609375,
+        "variance_mean": 2677.32666015625,
+        "variance_median": 2582.444580078125,
+        "variance_trim_ceiling": 5681.3662109375,
+        "photon_predictor": 12022.2080078125
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 3010.853577593174,
+          "median": 3007.7733785426244,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 3012.5648414509214,
+          "median": 3012.394479326442,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 3017.599145635465,
+          "median": 3012.2595246322553,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 3008.590272808424,
+          "median": 3005.06225066256,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 3016.458323420205,
+          "median": 3015.310321812361,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.07692308,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00363.ARW",
+      "last_file": "DSC00382.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 15871.0,
+      "frame_level_max": 15871.0,
+      "frame_level_cv": 0.0,
+      "scale_mean": 1.0,
+      "scale2_mean": 1.0,
+      "saturation_fraction": 1.0,
+      "noise_plateau": 0.0,
+      "photon_predictor": 15871.0,
+      "read_predictor": 1.0,
+      "G1": {
+        "usable": true,
+        "pixels": 5735,
+        "signal_mean": 12849.7939453125,
+        "signal_median": 13088.7001953125,
+        "variance_mean": 793310.375,
+        "variance_median": 816589.3125,
+        "variance_trim_ceiling": 980289.1875,
+        "photon_predictor": 15618.978515625
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 5799,
+        "signal_mean": 12855.2705078125,
+        "signal_median": 13096.2001953125,
+        "variance_mean": 794465.5,
+        "variance_median": 817583.9375,
+        "variance_trim_ceiling": 985843.1875,
+        "photon_predictor": 15617.2490234375
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.1,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00203.ARW",
+      "last_file": "DSC00222.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 15390.0,
+      "frame_level_max": 15484.0,
+      "frame_level_cv": 0.0019819631706923246,
+      "scale_mean": 0.9996674656867981,
+      "scale2_mean": 0.9993386268615723,
+      "saturation_fraction": 1.0,
+      "noise_plateau": 4.945436977610757e-61,
+      "photon_predictor": 15860.5029296875,
+      "read_predictor": 0.9993386268615723,
+      "G1": {
+        "usable": true,
+        "pixels": 29803,
+        "signal_mean": 12539.51171875,
+        "signal_median": 12841.134765625,
+        "variance_mean": 2780.764892578125,
+        "variance_median": 2684.163330078125,
+        "variance_trim_ceiling": 5875.51025390625,
+        "photon_predictor": 14780.9443359375
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 29959,
+        "signal_mean": 12537.419921875,
+        "signal_median": 12831.1494140625,
+        "variance_mean": 2774.767578125,
+        "variance_median": 2673.96923828125,
+        "variance_trim_ceiling": 5857.95263671875,
+        "photon_predictor": 14774.90625
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 9.90935148145568e-28,
+          "median": 1.176748525570317e-61,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1.5005862027357973e-60,
+          "median": 1.0077252729110258e-61,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 9.692475463496364e-61,
+          "median": 1.0665645429148737e-61,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 5.834244377065421e-61,
+          "median": 1.0740662151962168e-61,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 3.490360900995251e-61,
+          "median": 1.073241180863965e-61,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.1,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00383.ARW",
+      "last_file": "DSC00402.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 15871.0,
+      "frame_level_max": 15871.0,
+      "frame_level_cv": 0.0,
+      "scale_mean": 1.0,
+      "scale2_mean": 1.0,
+      "saturation_fraction": 1.0,
+      "noise_plateau": 0.0,
+      "photon_predictor": 15871.0,
+      "read_predictor": 1.0,
+      "G1": {
+        "usable": true,
+        "pixels": 3812,
+        "signal_mean": 12917.630859375,
+        "signal_median": 13115.724609375,
+        "variance_mean": 206526.796875,
+        "variance_median": 209749.515625,
+        "variance_trim_ceiling": 267092.5,
+        "photon_predictor": 15720.4560546875
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 3834,
+        "signal_mean": 12916.6279296875,
+        "signal_median": 13117.8251953125,
+        "variance_mean": 205805.640625,
+        "variance_median": 209987.515625,
+        "variance_trim_ceiling": 265866.6875,
+        "photon_predictor": 15719.396484375
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.125,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00223.ARW",
+      "last_file": "DSC00242.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 15871.0,
+      "frame_level_max": 15871.0,
+      "frame_level_cv": 0.0,
+      "scale_mean": 1.0,
+      "scale2_mean": 1.0,
+      "saturation_fraction": 1.0,
+      "noise_plateau": 0.0,
+      "photon_predictor": 15871.0,
+      "read_predictor": 1.0,
+      "G1": {
+        "usable": true,
+        "pixels": 4045,
+        "signal_mean": 12907.927734375,
+        "signal_median": 13131.599609375,
+        "variance_mean": 3250.953369140625,
+        "variance_median": 3146.537109375,
+        "variance_trim_ceiling": 6737.3759765625,
+        "photon_predictor": 15718.7451171875
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 4061,
+        "signal_mean": 12907.123046875,
+        "signal_median": 13121.5,
+        "variance_mean": 3269.426025390625,
+        "variance_median": 3167.30517578125,
+        "variance_trim_ceiling": 6579.28271484375,
+        "photon_predictor": 15717.9072265625
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.125,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00403.ARW",
+      "last_file": "DSC00422.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 15871.0,
+      "frame_level_max": 15871.0,
+      "frame_level_cv": 0.0,
+      "scale_mean": 1.0,
+      "scale2_mean": 1.0,
+      "saturation_fraction": 1.0,
+      "noise_plateau": 0.0,
+      "photon_predictor": 15871.0,
+      "read_predictor": 1.0,
+      "G1": {
+        "usable": true,
+        "pixels": 952,
+        "signal_mean": 13226.69921875,
+        "signal_median": 13340.25,
+        "variance_mean": 15356.4619140625,
+        "variance_median": 15190.4921875,
+        "variance_trim_ceiling": 24799.701171875,
+        "photon_predictor": 15833.369140625
+      },
+      "G2": {
+        "usable": true,
+        "pixels": 957,
+        "signal_mean": 13225.7587890625,
+        "signal_median": 13343.2001953125,
+        "variance_mean": 15417.685546875,
+        "variance_median": 15219.3251953125,
+        "variance_trim_ceiling": 26406.3359375,
+        "photon_predictor": 15833.1181640625
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.2,
+      "run": 1,
+      "frames": 20,
+      "first_file": "DSC00243.ARW",
+      "last_file": "DSC00262.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 15871.0,
+      "frame_level_max": 15871.0,
+      "frame_level_cv": 0.0,
+      "scale_mean": 1.0,
+      "scale2_mean": 1.0,
+      "saturation_fraction": 1.0,
+      "noise_plateau": 0.0,
+      "photon_predictor": 15871.0,
+      "read_predictor": 1.0,
+      "G1": {
+        "usable": false,
+        "pixels": 0,
+        "signal_mean": 15870.998046875,
+        "signal_median": 15871.0,
+        "signal_p01": 15871.0,
+        "signal_p99": 15871.0,
+        "reason": "fewer than 100 unsaturated calibration samples",
+        "photon_predictor": 15870.998046875
+      },
+      "G2": {
+        "usable": false,
+        "pixels": 0,
+        "signal_mean": 15870.998046875,
+        "signal_median": 15871.0,
+        "signal_p01": 15871.0,
+        "signal_p99": 15871.0,
+        "reason": "fewer than 100 unsaturated calibration samples",
+        "photon_predictor": 15870.998046875
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 15090
+        }
+      ]
+    },
+    {
+      "exposure": 0.2,
+      "run": 2,
+      "frames": 20,
+      "first_file": "DSC00423.ARW",
+      "last_file": "DSC00442.ARW",
+      "layout": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "raw_pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "white_level": 16383.0
+      },
+      "frame_level_min": 15871.0,
+      "frame_level_max": 15871.0,
+      "frame_level_cv": 0.0,
+      "scale_mean": 1.0,
+      "scale2_mean": 1.0,
+      "saturation_fraction": 1.0,
+      "noise_plateau": 0.0,
+      "photon_predictor": 15871.0,
+      "read_predictor": 1.0,
+      "G1": {
+        "usable": false,
+        "pixels": 0,
+        "signal_mean": 15870.9990234375,
+        "signal_median": 15871.0,
+        "signal_p01": 15871.0,
+        "signal_p99": 15871.0,
+        "reason": "fewer than 100 unsaturated calibration samples",
+        "photon_predictor": 15870.9990234375
+      },
+      "G2": {
+        "usable": false,
+        "pixels": 0,
+        "signal_mean": 15870.9990234375,
+        "signal_median": 15871.0,
+        "signal_p01": 15871.0,
+        "signal_p99": 15871.0,
+        "reason": "fewer than 100 unsaturated calibration samples",
+        "photon_predictor": 15870.9990234375
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.0,
+          "median": 0.0,
+          "bins": 15090
+        }
+      ]
+    }
+  ],
+  "dark_groups": [
+    {
+      "exposure": 1.0,
+      "frames": 22,
+      "first_file": "DSC01070.ARW",
+      "last_file": "DSC01091.ARW",
+      "temporal": {
+        "usable": true,
+        "pixels": 256551,
+        "signal_mean": 0.7185718417167664,
+        "signal_median": 0.7272727489471436,
+        "variance_mean": 1.008893609046936,
+        "variance_median": 0.9264068603515625,
+        "variance_trim_ceiling": 9.97402572631836
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1.6543288631580495,
+          "median": 1.5260079494705137,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1.4789543282341082,
+          "median": 1.369086039037994,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1.1054078071205564,
+          "median": 1.0939990233299635,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.9336474228923266,
+          "median": 0.9316020169820197,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.978043215518126,
+          "median": 0.9775145779720328,
+          "bins": 15090
+        }
+      ],
+      "fixed_pattern_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.11666920455244499,
+          "median": 0.11513204681154401,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.10574801836427472,
+          "median": 0.10511806363303125,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.0995970370327027,
+          "median": 0.09825432346939458,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.09210978861701193,
+          "median": 0.09117422622664673,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.0940283451158038,
+          "median": 0.09268960489587291,
+          "bins": 15090
+        }
+      ],
+      "master_split_rms_dn": 0.3070676083218802
+    },
+    {
+      "exposure": 2.5,
+      "frames": 22,
+      "first_file": "DSC01092.ARW",
+      "last_file": "DSC01113.ARW",
+      "temporal": {
+        "usable": true,
+        "pixels": 256550,
+        "signal_mean": 0.6847066879272461,
+        "signal_median": 0.7272727489471436,
+        "variance_mean": 0.9957774877548218,
+        "variance_median": 0.9177489280700684,
+        "variance_trim_ceiling": 9.879264831542969
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1.701963565767046,
+          "median": 1.5497023323436452,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1.4791859309694935,
+          "median": 1.3805980258358015,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1.1160643446162009,
+          "median": 1.1054993932291253,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.9379761822810202,
+          "median": 0.9352860843770021,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.981490639722311,
+          "median": 0.981455384269602,
+          "bins": 15090
+        }
+      ],
+      "fixed_pattern_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.17143262504461756,
+          "median": 0.16952296740329453,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.16443210388836016,
+          "median": 0.15776699109706077,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.14394259089279166,
+          "median": 0.1422406156927417,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.13435567853261784,
+          "median": 0.13290654222704715,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.13666411368076128,
+          "median": 0.13513280513192194,
+          "bins": 15090
+        }
+      ],
+      "master_split_rms_dn": 0.313601212778039
+    },
+    {
+      "exposure": 5.0,
+      "frames": 22,
+      "first_file": "DSC01224.ARW",
+      "last_file": "DSC01245.ARW",
+      "temporal": {
+        "usable": true,
+        "pixels": 256550,
+        "signal_mean": 0.7361090779304504,
+        "signal_median": 0.7727272510528564,
+        "variance_mean": 1.0433238744735718,
+        "variance_median": 0.9458875060081482,
+        "variance_trim_ceiling": 10.050681114196777
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1.7371970423904297,
+          "median": 1.6044971749777488,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1.53726774429806,
+          "median": 1.4194888679145405,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1.1485883208063052,
+          "median": 1.1365035576340479,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.9645173810630743,
+          "median": 0.9629796556598782,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 1.00982382977497,
+          "median": 1.0096786161937834,
+          "bins": 15090
+        }
+      ],
+      "fixed_pattern_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.2878718720620786,
+          "median": 0.2841584996285424,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.26740367118171143,
+          "median": 0.26443872648262834,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.24892695214484215,
+          "median": 0.2465684056238555,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.23588477185183757,
+          "median": 0.23309387434311668,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.23920908104619393,
+          "median": 0.23642255314299687,
+          "bins": 15090
+        }
+      ],
+      "master_split_rms_dn": 0.32087204990835033
+    },
+    {
+      "exposure": 10.0,
+      "frames": 22,
+      "first_file": "DSC01356.ARW",
+      "last_file": "DSC01377.ARW",
+      "temporal": {
+        "usable": true,
+        "pixels": 256550,
+        "signal_mean": 0.6378682255744934,
+        "signal_median": 0.5909090638160706,
+        "variance_mean": 1.5761982202529907,
+        "variance_median": 1.4199135303497314,
+        "variance_trim_ceiling": 12.779221534729004
+      },
+      "difference_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 1.8199787524952256,
+          "median": 1.6602482202621311,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 1.7591939246524744,
+          "median": 1.6507146836991629,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 1.664105942415806,
+          "median": 1.6535940066825772,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 1.6539236827012032,
+          "median": 1.648948157416843,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 1.6540466777256664,
+          "median": 1.6467463328310172,
+          "bins": 15090
+        }
+      ],
+      "fixed_pattern_psd": [
+        {
+          "lo": 0.0,
+          "hi": 0.05,
+          "mean": 0.8519862155924235,
+          "median": 0.8551069649010132,
+          "bins": 1033
+        },
+        {
+          "lo": 0.05,
+          "hi": 0.15,
+          "mean": 0.8416932154816414,
+          "median": 0.8354603242342429,
+          "bins": 8232
+        },
+        {
+          "lo": 0.15,
+          "hi": 0.25,
+          "mean": 0.8381461007096042,
+          "median": 0.8316860175189992,
+          "bins": 16476
+        },
+        {
+          "lo": 0.25,
+          "hi": 0.35,
+          "mean": 0.8429079696573186,
+          "median": 0.8354723804575181,
+          "bins": 24704
+        },
+        {
+          "lo": 0.35,
+          "hi": 0.5,
+          "mean": 0.8420682030245912,
+          "median": 0.8367902700145263,
+          "bins": 15090
+        }
+      ],
+      "master_split_rms_dn": 0.3910948951142309
+    }
+  ],
+  "ptc": {
+    "G1": {
+      "phase": "G1",
+      "gain_dn_per_e": 0.22229171949635798,
+      "read_variance_dn2_fixed": 0.9675831118753045,
+      "train_gain_dn_per_e": 0.2217093098798605,
+      "held_out_exposures": [
+        0.008,
+        0.01666667,
+        0.01666667,
+        0.03333333,
+        0.05
+      ],
+      "held_out_relative_errors": [
+        0.012490244291941439,
+        0.006134693083789772,
+        0.001920652445131135,
+        0.005170494275609007,
+        0.008317180306102833
+      ],
+      "held_out_median_relative_error": 0.006134693083789772,
+      "held_out_max_relative_error": 0.012490244291941439,
+      "points": [
+        {
+          "photon_predictor": 250.22911071777344,
+          "read_predictor": 0.9792345762252808,
+          "variance": 54.05315017700195
+        },
+        {
+          "photon_predictor": 787.0088500976562,
+          "read_predictor": 1.0366075038909912,
+          "variance": 173.3253173828125
+        },
+        {
+          "photon_predictor": 1200.6824951171875,
+          "read_predictor": 1.0038485527038574,
+          "variance": 265.4867248535156
+        },
+        {
+          "photon_predictor": 1966.1483154296875,
+          "read_predictor": 0.9255989789962769,
+          "variance": 434.1456298828125
+        },
+        {
+          "photon_predictor": 2214.46826171875,
+          "read_predictor": 0.9950315356254578,
+          "variance": 488.4602355957031
+        },
+        {
+          "photon_predictor": 4300.12841796875,
+          "read_predictor": 1.0415531396865845,
+          "variance": 952.5567626953125
+        },
+        {
+          "photon_predictor": 4861.68603515625,
+          "read_predictor": 0.9999269247055054,
+          "variance": 1080.76904296875
+        },
+        {
+          "photon_predictor": 7128.2275390625,
+          "read_predictor": 1.0305211544036865,
+          "variance": 1589.610595703125
+        },
+        {
+          "photon_predictor": 7645.56591796875,
+          "read_predictor": 0.9995830655097961,
+          "variance": 1695.0595703125
+        },
+        {
+          "photon_predictor": 10279.236328125,
+          "read_predictor": 0.9803383946418762,
+          "variance": 2299.07275390625
+        },
+        {
+          "photon_predictor": 12029.5927734375,
+          "read_predictor": 0.9997404217720032,
+          "variance": 2668.756591796875
+        }
+      ]
+    },
+    "G2": {
+      "phase": "G2",
+      "gain_dn_per_e": 0.2227783638658195,
+      "read_variance_dn2_fixed": 0.9675831118753045,
+      "train_gain_dn_per_e": 0.22232909810699664,
+      "held_out_exposures": [
+        0.008,
+        0.01666667,
+        0.01666667,
+        0.03333333,
+        0.05
+      ],
+      "held_out_relative_errors": [
+        0.013451779536972845,
+        0.008340865592814838,
+        0.0030228787099285882,
+        0.004026531902390952,
+        0.0068072597393019066
+      ],
+      "held_out_median_relative_error": 0.0068072597393019066,
+      "held_out_max_relative_error": 0.013451779536972845,
+      "points": [
+        {
+          "photon_predictor": 250.16677856445312,
+          "read_predictor": 0.9792345762252808,
+          "variance": 53.84392547607422
+        },
+        {
+          "photon_predictor": 786.4959106445312,
+          "read_predictor": 1.0366075038909912,
+          "variance": 173.52964782714844
+        },
+        {
+          "photon_predictor": 1200.0189208984375,
+          "read_predictor": 1.0038485527038574,
+          "variance": 265.9215393066406
+        },
+        {
+          "photon_predictor": 1964.904296875,
+          "read_predictor": 0.9255989789962769,
+          "variance": 434.1299743652344
+        },
+        {
+          "photon_predictor": 2213.003662109375,
+          "read_predictor": 0.9950315356254578,
+          "variance": 489.10455322265625
+        },
+        {
+          "photon_predictor": 4297.36376953125,
+          "read_predictor": 1.0415531396865845,
+          "variance": 953.5543212890625
+        },
+        {
+          "photon_predictor": 4858.86669921875,
+          "read_predictor": 0.9999269247055054,
+          "variance": 1079.3974609375
+        },
+        {
+          "photon_predictor": 7123.44677734375,
+          "read_predictor": 1.0305211544036865,
+          "variance": 1591.1534423828125
+        },
+        {
+          "photon_predictor": 7640.95166015625,
+          "read_predictor": 0.9995830655097961,
+          "variance": 1696.97900390625
+        },
+        {
+          "photon_predictor": 10272.1669921875,
+          "read_predictor": 0.9803383946418762,
+          "variance": 2300.40966796875
+        },
+        {
+          "photon_predictor": 12022.2080078125,
+          "read_predictor": 0.9997404217720032,
+          "variance": 2677.32666015625
+        }
+      ]
+    },
+    "spectral_plateau": {
+      "gain_dn_per_e": 0.22381179721064925,
+      "read_variance_dn2_fixed": 0.9675831118753045,
+      "train_gain_dn_per_e": 0.22341459285033202,
+      "held_out_relative_errors": [
+        0.01774017420009786,
+        0.0073174967285307285,
+        0.0007225115159500182,
+        0.004186579355980573,
+        0.0053775939816767685
+      ],
+      "held_out_median_relative_error": 0.0053775939816767685,
+      "held_out_max_relative_error": 0.01774017420009786,
+      "points": [
+        {
+          "photon_predictor": 280.82098388671875,
+          "read_predictor": 0.9792345762252808,
+          "noise_plateau": 60.082732322086905
+        },
+        {
+          "photon_predictor": 882.5916137695312,
+          "read_predictor": 1.0366075038909912,
+          "noise_plateau": 194.73226564295962
+        },
+        {
+          "photon_predictor": 1346.742431640625,
+          "read_predictor": 1.0038485527038574,
+          "noise_plateau": 299.6309554149798
+        },
+        {
+          "photon_predictor": 2203.99462890625,
+          "read_predictor": 0.9255989789962769,
+          "noise_plateau": 489.7166565695
+        },
+        {
+          "photon_predictor": 2483.2734375,
+          "read_predictor": 0.9950315356254578,
+          "noise_plateau": 551.8402069639205
+        },
+        {
+          "photon_predictor": 4823.11962890625,
+          "read_predictor": 1.0415531396865845,
+          "noise_plateau": 1077.7843857581945
+        },
+        {
+          "photon_predictor": 5450.517578125,
+          "read_predictor": 0.9999269247055054,
+          "noise_plateau": 1220.7311468319483
+        },
+        {
+          "photon_predictor": 7997.9130859375,
+          "read_predictor": 1.0305211544036865,
+          "noise_plateau": 1795.3640446583368
+        },
+        {
+          "photon_predictor": 8572.9150390625,
+          "read_predictor": 0.9995830655097961,
+          "noise_plateau": 1921.185952179347
+        },
+        {
+          "photon_predictor": 11535.197265625,
+          "read_predictor": 0.9803383946418762,
+          "noise_plateau": 2592.0187840358753
+        },
+        {
+          "photon_predictor": 13488.5029296875,
+          "read_predictor": 0.9997404217720032,
+          "noise_plateau": 3011.5738603777
+        }
+      ]
+    }
+  },
+  "response_map": {
+    "flat_exposure": 0.05,
+    "dark_exposure": 1.0,
+    "flat_frames": 40,
+    "dark_frames": 22,
+    "cutoff_sensor_cyc_px": 0.02,
+    "rois": [
+      {
+        "roi": 0,
+        "centre": [
+          1200,
+          1200
+        ],
+        "gain_split_correlation": 0.9762170255211063,
+        "gain_a_rms": 0.007536094170063734,
+        "gain_b_rms": 0.007639224175363779,
+        "gain_split_rms": 0.0011723914764018243,
+        "dark_split_rms_dn": 0.3051486105906908
+      },
+      {
+        "roi": 1,
+        "centre": [
+          1200,
+          3514
+        ],
+        "gain_split_correlation": 0.9091549026382462,
+        "gain_a_rms": 0.00365646043792367,
+        "gain_b_rms": 0.0035909709986299276,
+        "gain_split_rms": 0.0010931434650821364,
+        "dark_split_rms_dn": 0.305470828162293
+      },
+      {
+        "roi": 2,
+        "centre": [
+          1200,
+          5828
+        ],
+        "gain_split_correlation": 0.9817452439667705,
+        "gain_a_rms": 0.008556663058698177,
+        "gain_b_rms": 0.00851407740265131,
+        "gain_split_rms": 0.0011536046833142204,
+        "dark_split_rms_dn": 0.30919320034659864
+      },
+      {
+        "roi": 3,
+        "centre": [
+          3488,
+          1200
+        ],
+        "gain_split_correlation": 0.9775513186438025,
+        "gain_a_rms": 0.00753521965816617,
+        "gain_b_rms": 0.007597706746309996,
+        "gain_split_rms": 0.0011345254964650721,
+        "dark_split_rms_dn": 0.30856985635599155
+      },
+      {
+        "roi": 4,
+        "centre": [
+          3488,
+          3514
+        ],
+        "gain_split_correlation": 0.9229474227993342,
+        "gain_a_rms": 0.00400057528167963,
+        "gain_b_rms": 0.0038847641553729773,
+        "gain_split_rms": 0.0010973616896099562,
+        "dark_split_rms_dn": 0.30978295514499254
+      },
+      {
+        "roi": 5,
+        "centre": [
+          3488,
+          5828
+        ],
+        "gain_split_correlation": 0.9809542147050345,
+        "gain_a_rms": 0.008793807588517666,
+        "gain_b_rms": 0.0086954515427351,
+        "gain_split_rms": 0.001208798780253395,
+        "dark_split_rms_dn": 0.313655983938907
+      }
+    ],
+    "median_gain_split_correlation": 0.9768841720824544
+  },
+  "gates": {
+    "held_out_variance_median_le_20pct": true,
+    "held_out_variance_worst_median": 0.0068072597393019066,
+    "response_split_correlation_ge_0_90": true,
+    "licensed_full_subtraction": true,
+    "licensed_response_correction": true
+  },
+  "primary_gain_dn_per_e": 0.22381179721064925,
+  "primary_read_variance_dn2": 0.9675831118753045
+}
