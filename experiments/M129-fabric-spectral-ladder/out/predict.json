@@ -1,0 +1,180 @@
+{
+  "inputs": {
+    "pitch_um": 5.12,
+    "m": 2.7198,
+    "lambda_um": 0.55,
+    "n_ref": 5.6
+  },
+  "hypotheses": {
+    "H1 fact 1149 (refuted)": {
+      "fc_ref_cymm": 87.0,
+      "n_eff": 20.89864158829676,
+      "B": 3.7319002836244213,
+      "p": 0.9955707447680456
+    },
+    "H2 fact 1152 low": {
+      "fc_ref_cymm": 105.54,
+      "n_eff": 17.227419160335586,
+      "B": 3.076324850059926,
+      "p": 1.3099106336474768
+    },
+    "H3 fact 1152 high": {
+      "fc_ref_cymm": 135.17,
+      "n_eff": 13.451075077175545,
+      "B": 2.401977692352776,
+      "p": 1.939973806170679
+    }
+  },
+  "ladder": {
+    "f/5.6": {
+      "H1": {
+        "fc_cymm": 87.0,
+        "in_band_gq": false,
+        "in_band_g1": false
+      },
+      "H2": {
+        "fc_cymm": 105.54,
+        "in_band_gq": false,
+        "in_band_g1": false
+      },
+      "H3": {
+        "fc_cymm": 135.17,
+        "in_band_gq": false,
+        "in_band_g1": false
+      }
+    },
+    "f/8.0": {
+      "H1": {
+        "fc_cymm": 60.9,
+        "in_band_gq": true,
+        "in_band_g1": false
+      },
+      "H2": {
+        "fc_cymm": 73.878,
+        "in_band_gq": false,
+        "in_band_g1": false
+      },
+      "H3": {
+        "fc_cymm": 94.61899999999999,
+        "in_band_gq": false,
+        "in_band_g1": false
+      }
+    },
+    "f/11.0": {
+      "H1": {
+        "fc_cymm": 44.29090909090909,
+        "in_band_gq": true,
+        "in_band_g1": true
+      },
+      "H2": {
+        "fc_cymm": 53.729454545454544,
+        "in_band_gq": true,
+        "in_band_g1": false
+      },
+      "H3": {
+        "fc_cymm": 68.81381818181818,
+        "in_band_gq": true,
+        "in_band_g1": false
+      }
+    },
+    "f/14.0": {
+      "H1": {
+        "fc_cymm": 34.8,
+        "in_band_gq": true,
+        "in_band_g1": true
+      },
+      "H2": {
+        "fc_cymm": 42.216,
+        "in_band_gq": true,
+        "in_band_g1": true
+      },
+      "H3": {
+        "fc_cymm": 54.06799999999999,
+        "in_band_gq": true,
+        "in_band_g1": false
+      }
+    },
+    "f/18.0": {
+      "H1": {
+        "fc_cymm": 27.066666666666666,
+        "in_band_gq": true,
+        "in_band_g1": true
+      },
+      "H2": {
+        "fc_cymm": 32.834666666666664,
+        "in_band_gq": true,
+        "in_band_g1": true
+      },
+      "H3": {
+        "fc_cymm": 42.05288888888888,
+        "in_band_gq": true,
+        "in_band_g1": true
+      }
+    }
+  },
+  "reach": {
+    "G1 or G2": {
+      "pitch_um": 10.24,
+      "nyquist_cymm": 48.828125
+    },
+    "GQ quincunx": {
+      "pitch_um": 7.240773439350248,
+      "nyquist_cymm": 69.05339660024877
+    },
+    "full sensor": {
+      "pitch_um": 5.12,
+      "nyquist_cymm": 97.65625
+    }
+  },
+  "separation": {
+    "f/5.6": {
+      "h2": 105.54,
+      "h3": 135.17,
+      "gap_cymm": 29.62999999999998,
+      "gap_pct": 28.074663634640874,
+      "h3_margin_under_gq": -66.11660339975121
+    },
+    "f/8.0": {
+      "h2": 73.878,
+      "h3": 94.61899999999999,
+      "gap_cymm": 20.740999999999985,
+      "gap_pct": 28.074663634640874,
+      "h3_margin_under_gq": -25.56560339975121
+    },
+    "f/11.0": {
+      "h2": 53.729454545454544,
+      "h3": 68.81381818181818,
+      "gap_cymm": 15.084363636363634,
+      "gap_pct": 28.07466363464089,
+      "h3_margin_under_gq": 0.23957841843059668
+    },
+    "f/14.0": {
+      "h2": 42.216,
+      "h3": 54.06799999999999,
+      "gap_cymm": 11.85199999999999,
+      "gap_pct": 28.074663634640867,
+      "h3_margin_under_gq": 14.985396600248784
+    },
+    "f/18.0": {
+      "h2": 32.834666666666664,
+      "h3": 42.05288888888888,
+      "gap_cymm": 9.218222222222217,
+      "gap_pct": 28.074663634640878,
+      "h3_margin_under_gq": 27.000507711359894
+    }
+  },
+  "lambda_sensitivity": {
+    "500nm": {
+      "B_h2": 3.3839573350659196,
+      "B_h3": 2.6421754615880535
+    },
+    "550nm": {
+      "B_h2": 3.076324850059926,
+      "B_h3": 2.401977692352776
+    },
+    "600nm": {
+      "B_h2": 2.819964445888267,
+      "B_h3": 2.2018128846567118
+    }
+  }
+}

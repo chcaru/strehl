@@ -1,0 +1,41 @@
+sensor pitch 5.12 um, magnification m = 2.7198 (M84b), lambda = 550 nm
+
+Lattice reach -- the ceiling on what any spectral method can see:
+         lattice   pitch um   Nyquist cy/mm
+        G1 or G2    10.2400          48.828
+     GQ quincunx     7.2408          69.053
+     full sensor     5.1200          97.656
+
+Hypotheses, inverted to B and p:
+                hypothesis  f_c@f/5.6    N_eff        B        p
+    H1 fact 1149 (refuted)      87.00   20.899   3.7319   0.9956
+          H2 fact 1152 low     105.54   17.227   3.0763   1.3099
+         H3 fact 1152 high     135.17   13.451   2.4020   1.9400
+
+The ladder: predicted f_c in cy/mm at each marked aperture.
+  IN  = below the GQ quincunx reach, so measurable on this sensor.
+  out = above it, so the spectrum is texture-limited and the knee is not the optics.
+      N               H1               H2               H3
+    5.6       87.00  out      105.54  out      135.17  out
+    8.0       60.90  IN        73.88  out       94.62  out
+   11.0       44.29  IN        53.73  IN        68.81  IN 
+   14.0       34.80  IN        42.22  IN        54.07  IN 
+   18.0       27.07  IN        32.83  IN        42.05  IN 
+
+  GQ reach 69.05 cy/mm, single green plane reach 48.83 cy/mm.
+
+Discrimination: the H2-H3 gap at each aperture, and its margin under GQ.
+      N   H2 cy/mm   H3 cy/mm      gap    gap %   H3 vs GQ
+    5.6     105.54     135.17    29.63    28.07     -66.12
+    8.0      73.88      94.62    20.74    28.07     -25.57
+   11.0      53.73      68.81    15.08    28.07       0.24
+   14.0      42.22      54.07    11.85    28.07      14.99
+   18.0      32.83      42.05     9.22    28.07      27.00
+
+Wavelength sensitivity (M5 section 10 carries this as a stated systematic).
+   lambda nm    B at H2    B at H3
+         500     3.3840     2.6422
+         550     3.0763     2.4020
+         600     2.8200     2.2018
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M129-fabric-spectral-ladder\out\predict.json
