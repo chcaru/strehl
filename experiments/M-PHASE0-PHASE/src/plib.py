@@ -292,7 +292,8 @@ def resultant(reps, d):
 # The bar: when does unfolding stop being better than not unfolding?
 # ---------------------------------------------------------------------------
 
-def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None):
+def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None,
+                 gauge="raw"):
     """Monte-Carlo the reconstruction error against its own do-nothing baseline.
 
     Returns (eta, eta_naive), each of shape (trials,).
@@ -317,6 +318,24 @@ def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None):
 
     `rho` is the per-alias-component energy relative to the baseband component
     at the same output frequency (amendment A2.2).
+
+    `gauge` selects what counts as an error (amendment A6.2).  The scene is only
+    determined up to a global translation: displacing every frame by a common
+    `c` and rephasing the scene by `exp(-j 2 pi <nu + h_k, c>)` produces
+    identical data.  A common component of the displacement error is therefore
+    not an unfolding failure at all, it is a re-choice of origin.  Drawing
+    `delta` iid per frame puts a common component of sd `sigma/sqrt(N)` into
+    every trial, and because that component acts on the strong baseband `X_0`
+    while `eta` is normalised by the weak alias energy, it contributes a
+    spurious `rho^(-1/2)` term.
+
+      "raw"        count it.  Charges the unfolder for a global translation.
+      "zero_mean"  remove the mean of `delta` over frames.  To first order the
+                   gauge direction is exactly the constant vector, so this
+                   removes it and nothing else.
+
+    Both are reported.  "raw" bounds the geometric error too and is therefore
+    the conservative read; "zero_mean" isolates the unfolding question C1 asks.
     """
     reps = np.asarray(reps, dtype=float)
     d = np.asarray(d, dtype=float)
@@ -328,6 +347,10 @@ def unfold_trial(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None):
     A = system_matrix(carrier, d)                               # (N, M) truth
 
     delta = rng.normal(0.0, sigma_delta, size=(trials, n, 2))
+    if gauge == "zero_mean":
+        delta = delta - delta.mean(axis=1, keepdims=True)
+    elif gauge != "raw":
+        raise ValueError("gauge must be 'raw' or 'zero_mean'; got %r" % (gauge,))
     Ahat = system_matrix(carrier, d[None, :, :] + delta)        # (T, N, M)
 
     x = (rng.normal(size=(trials, m)) + 1j * rng.normal(size=(trials, m))) / np.sqrt(2.0)
@@ -386,8 +409,10 @@ def _batched_lstsq(A, y):
     return out
 
 
-def median_eta(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None):
-    eta, eta_naive = unfold_trial(reps, d, sigma_delta, snr_db, rng, trials, rho, nu)
+def median_eta(reps, d, sigma_delta, snr_db, rng, trials, rho=1.0, nu=None,
+               gauge="raw"):
+    eta, eta_naive = unfold_trial(reps, d, sigma_delta, snr_db, rng, trials,
+                                  rho, nu, gauge)
     return float(np.median(eta)), float(np.median(eta_naive))
 
 

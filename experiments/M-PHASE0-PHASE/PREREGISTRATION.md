@@ -735,3 +735,190 @@ winnable only if `sigma_delta < bar(kappa, rho)` **and** `kappa < kappa_max(SNR)
 Because A4.2 is exploratory, the verdict must state the fraction of the field it excludes
 under both readings — with the noise gate applied and with it ignored — so a reader can see
 exactly how much of the conclusion rests on an unregistered finding.
+
+---
+
+## Amendment 5 — C-X was wrong, the aligner is deterministic, and the census gets a better rule
+
+A2.5 recorded duplicate cached warpmaps disagreeing "by up to a factor of 117" in `kappa`
+and built a canonical-map rule around that. **A2.5's premise is withdrawn.** The factor of
+117 was an artifact of my own grouping, and the underlying reproducibility worry was tested
+directly and falsified.
+
+### A5.1 Two defects in C-X, both mine
+
+`clib.list_maps` groups sidecars by `name.split("-", 1)[0]`, the filename prefix. For
+hyphenated stack names that is not the stack. The group C-X called `coffee` pooled
+**`coffee-bean` and `coffee-bubbles`, which are different scenes**, and the group it called
+`dry` pooled the `dry-erase-marker-head-cpl` variants. Comparing `kappa` across that group
+compares different subjects, so the spread it reported was never a reproducibility figure.
+
+The second defect survives the first: even grouped correctly by the authoritative
+`stack-name` header, a stack's sidecars have **different frame counts** -- `109MSDCF` has
+maps at N = 1, 3, 4, 6, 8, 12 and 22. Those are the N-ladder subsets other lanes generated,
+not repeat alignments. Comparing them measures how conditioning varies with N, which is a
+real thing this lane already measures on purpose, and not disagreement between alignments.
+
+### A5.2 The reproducibility question, asked properly and answered
+
+Restricting to sidecars at each stack's **full** frame count with zero refusals and every
+frame placed leaves genuine candidates, and those still differed: all-but-the-reference
+frame, median 0.11 / 0.18 / 0.024 plane px for `113MSDCF` / `119MSDCF` / `coffee-bubbles`.
+Every pair shared reference frame, identity frame, strategy, note and cycle-floor
+bit-for-bit, and the `coffee-bubbles` pair was written one minute apart. That is a strong
+circumstantial case for non-determinism in `strehl align`, which -- given the bar of
+0.10 sensor px derived in A4.1 -- would have been close to decisive for C1 on its own,
+because a method cannot be more accurate than it is repeatable.
+
+So it was tested rather than asserted. `strehl align` was run four times on
+`D:\personal\macro\coffee-bubbles`: twice at the default thread count and twice at
+`--threads 1`, the latter arm included because non-associative floating-point reduction
+under thread scheduling is the obvious candidate mechanism.
+
+**All four runs are bit-identical** (placement payload SHA256 `667f9de55069d163` in every
+case), and identical across thread counts. `strehl align` is deterministic. The hypothesis
+is falsified and the worry it raised for C1 is withdrawn.
+
+The regenerated digest also equals the *majority* cached digest for that stack -- four of
+the six `coffee-bubbles` sidecars carry `667f9de55069`. So the minority sidecars were
+produced by a configuration or a build that differed in some field the header does not
+print. Consistent with that, the sidecar **filename is a content-addressed cache key**: two
+sidecars for one stack with different filenames are, by the aligner's own accounting,
+different (input, configuration) tuples. They were never repeat runs.
+
+### A5.3 The canonical-map rule, replaced
+
+A2.5's rule picked among cached artifacts of unknown provenance and broke ties on an
+admittedly arbitrary digest ordering. Since the aligner is deterministic, that is
+unnecessary. **Replacement rule, fixed now:** the census runs on warpmaps
+**regenerated for this lane** by the shipping binary at its default configuration, written
+to `out/canon/<stack>.warpmap.txt`, with the placement-payload SHA256 recorded per stack in
+the note. Anyone can reproduce them exactly with the command in section 13.
+
+This is strictly better than A2.5: the substrate is reproducible on demand, its provenance
+is known rather than inferred, and no arbitrary tie-break is needed.
+
+The cached sidecars are retained as a **sensitivity arm**, since they represent real
+configuration variation (resampler, span set, N), and the census is still repeated across
+them. But they are no longer evidence of irreproducibility, and the note must not cite them
+as such.
+
+### A5.4 What this costs the lane, stated plainly
+
+A5.2 removes an argument that would have favoured a KILL verdict. Recording it is not
+optional: the case for non-determinism was assembled here, in this document, before it was
+tested, and it looked strong. It was wrong. The registered verdict thresholds in section 9
+are unchanged and the lane is no closer to a KILL than it was before C-X ran.
+
+---
+
+## Amendment 6 — an independent re-derivation of the model, and what it caught
+
+A `rubber-duck` sub-agent was given the measurement model, the A3 diagnosis and the
+`plib` implementation, and asked to re-derive the algebra from first principles by a
+route of its own choosing. It used Poisson summation rather than a discrete-DFT
+argument. Its report is the reason this amendment exists.
+
+### A6.1 What it confirmed
+
+Independently derived and agreeing with A3:
+
+- `y_i = sum_k X_k exp(j 2 pi <nu + h_k, d_i>)` -- the phase carries the **full**
+  frequency `nu + h_k`. A3's central correction is right.
+- `A = D V` with `D` diagonal unitary, therefore `A^H A = V^H V` and **every singular
+  value** of `A` equals that of `V`, so `kappa(A) = kappa(V)` exactly. This is stronger
+  than control C-AA, which only measured the condition number; the whole spectrum is
+  invariant. C-AA measured 3.09e-14 and is consistent.
+- `(Vhat^+ V - I) e_0 = 0` exactly whenever `Vhat` has full column rank. Measured 3.42e-16.
+- `eta = O(rho^(-1/2))` as `rho -> 0`, so a **weaker** alias signal makes the displacement
+  tolerance **tighter**. A2.2's registered prediction had this backwards and A3.5 corrected
+  it; the re-derivation confirms the corrected direction.
+
+It also supplies the closed form A4.1 measured empirically: `bar ~ sqrt(rho) / |nu|`. The
+measured exponent moves from `rho^0.26` over the full sweep to `rho^0.41` over the last
+decade, approaching the predicted `rho^0.5` as `rho` falls. That is a non-trivial predicted
+trend confirmed against data that was collected before the prediction was read.
+
+### A6.2 Blocking issue 1: a global translation is not an unfolding error (REAL, CORRECTED)
+
+The scene is determined only up to a global translation: displacing every frame by a common
+`c` and rephasing the scene by `exp(-j 2 pi <nu + h_k, c>)` produces identical data.
+`plib.unfold_trial` drew `delta` iid per frame, which puts a common component of standard
+deviation `sigma / sqrt(N)` into every trial. Part of the error it charged the unfolder for
+was therefore a re-choice of origin and not a failure to unfold.
+
+**Direction, declared before measuring:** removing a gauge removes error, so the corrected
+bar can only be **looser**, which makes C1 **easier**. This is the direction that favours
+the conclusion already reached, so it gets the greater scrutiny, not the lesser.
+
+Corrected by adding a `gauge` argument. `"zero_mean"` subtracts the mean of `delta` over
+frames, which to first order is exactly the gauge direction and nothing else. **Both reads
+are now reported and neither is allowed to stand alone**: `"raw"` also bounds the local
+geometric error and is the conservative read; `"zero_mean"` isolates the unfolding question
+C1 actually asks.
+
+Measured effect on the bar (`out/p1_bar.json`, 7680 rows):
+
+| `rho` | G-1x raw | G-1x zero-mean | ratio | RB-1x ratio |
+| --- | --- | --- | --- | --- |
+| 1.00 | 0.1401 | 0.1613 | 1.152 | 1.002 |
+| 0.10 | **0.1006** | **0.1231** | 1.224 | 1.014 |
+| 0.01 | 0.0433 | 0.0587 | 1.355 | 1.004 |
+
+**The headline survives.** G-1x moves from 0.1006 to 0.1231 px at `rho = 0.1`; both sit
+inside the proposal's asserted 0.1-0.15 px. RB-1x does not move at all, because at `M = 4`
+and `N >= 4` the common component is smaller and the alias structure dominates.
+
+### A6.3 Where the measurement refines the re-derivation
+
+The report predicted that the gauge is what produces the `rho^(-1/2)` divergence, implying
+that removing it would remove the divergence. **It does not, and the reason is instructive.**
+Because `h_0 = 0`, the first column of `V` is the constant vector, so `V^+` maps the common
+component of `q` exactly onto `e_0`: the gauge is precisely a pure baseband error. But the
+*relative* part of the `nu` term acts on `X_0` as well, and it survives the projection. So
+`eta` keeps its `rho^(-1/2)` behaviour after gauge fixing, and the measured ratio
+`eta_zm / eta_raw` is flat at 0.67-0.76 across two decades of `rho` and across `N` in
+`{3, 4, 6, 8}` rather than falling as the report's `(1 + rho) / (3 rho)` would require.
+Both statements are consistent with its own algebra; the asymptotic was applied outside the
+regime where it is the whole story.
+
+### A6.4 Blocking issue 2: a wording defect in A3.2 (REAL, CORRECTED HERE)
+
+A3.2 says the superseded model recovered "the baseband perfectly however wrong the
+estimates were" and that "all error landed in the aliases". **That is wrong as written and
+is corrected here.** `E_V e_0 = 0` is a statement about the first *column*, not the first
+*row*: baseband **input** sources no error, but alias input can still leak **into** the
+estimated baseband, since `Xhat_0 - X_0 = sum_{k>=1} (E_V)_{0k} X_k` is generically nonzero.
+
+The conclusion A3.2 drew from it is unaffected -- `eta` is still exactly `rho`-invariant
+under the superseded model, because `E_V x = E_{V,:,1:} x_{1:}` depends only on the alias
+coefficients -- but the sentence claimed more than the algebra supports and would have
+misled a reader. The corrected statement is: **baseband input causes no reconstruction
+error.**
+
+### A6.5 Qualifications accepted, and their standing
+
+Three limits on the model, none of which invalidate a result already recorded:
+
+1. **The `M`-term model assumes a target band limit.** Poisson summation has infinitely many
+   aliases; frequencies outside the modelled band contribute a coherent residual, which is
+   structured bias and not white noise. Bias B6 already covers truncation and
+   `plib.unfold_mismatch` already measures it.
+2. **`kappa` is `nu`-invariant only for a fixed alias-representative set.** Changing which
+   representative `h_k` is used to wrap a frequency into the Nyquist square changes `V`
+   itself. `plib.band_frequencies` returns the representative set alongside each `nu` for
+   exactly this reason, and A1.1 already treats distinct representative sets as distinct
+   geometries.
+3. **Per-frame gain variation enters at the same order as phase error** when
+   `|gamma_i| ~ 2 pi |f| |delta_i|`, and unlike the phase it is not protected by the
+   `h_0 = 0` structure. **This is not currently modelled and is now an open item.** It can
+   only make C1 harder, so it does not threaten a KILL verdict; it would threaten a SURVIVE
+   one. Recorded as such rather than quietly absorbed.
+
+### A6.6 Standing note
+
+A6.2 and A6.4 were both found by an agent that had no stake in the answer, in an instrument
+that had already passed 15 controls and 6 plants. This is the second time in this lane that
+a defect survived a full commissioning pass, and the reason is the same one A3.7 recorded:
+the controls tested the algebra the model already contained. Neither the gauge freedom nor
+the column/row distinction was anything the existing controls asked about.

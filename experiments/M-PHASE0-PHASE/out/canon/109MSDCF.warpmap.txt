@@ -1,0 +1,38 @@
+strehl-warpmap 1
+# a warp sidecar: per-frame placements, reference -> frame.
+# `a_re a_im b_re b_im` are f64 bit patterns; the trailing
+# decimals are a human aid and are NOT parsed.
+stack-name 109MSDCF
+stack-digest b70554b8cfd9b93e
+frames 22
+plane 3516x2344
+reference 11
+strategy S3-ba-unit
+resampler catmull-rom
+heldout-px none
+cycle-floor-px 3fd8a5ca58480e28 # 0.3851
+note strehl align, M86b, spans [1, 2, 4, 8, 16, 32, 64, 96, 128]
+# idx state a_re a_im b_re b_im | scale-1, rot, dx, dy
+0 placed 3ff02929024f86c0 3efdfb472d0cacc9 bfb3e8782ba749f3 3fe012dddc02c635 # g=+1.004887e-2 rot=+2.859264e-5 dx=-0.0778 dy=+0.5023
+1 placed 3ff025c30596b6d8 3ef2f6d4c566885e 3faa0f2700a87c86 3fd6fc3323adf250 # g=+9.219190e-3 rot=+1.808566e-5 dx=+0.0509 dy=+0.3591
+2 placed 3ff022279e69c6ba 3ecc9bf729b380b0 3fadb874f635911e 3fe02454c9b0a76e # g=+8.338565e-3 rot=+3.410487e-6 dx=+0.0580 dy=+0.5044
+3 placed 3ff01e45c71e4092 bed9ddce7d202338 3fb728586365e6cc 3fe0a22a087694f4 # g=+7.390764e-3 rot=-6.167038e-6 dx=+0.0905 dy=+0.5198
+4 placed 3ff01a8396e84a8b becc6fc2fcb88530 3fbc2a171605d2d1 3fda72d1ce2f1f18 # g=+6.473150e-3 rot=-3.389903e-6 dx=+0.1100 dy=+0.4133
+5 placed 3ff016cf6675efb4 beefec0966eaf126 3fb53cfa3a536f3b 3fdefb79ef892218 # g=+5.568886e-3 rot=-1.522160e-5 dx=+0.0830 dy=+0.4841
+6 placed 3ff012ccce2aab37 beeb49c8b5fac2ea bf8d73b1c74ce8c0 3fddc6f9ba832594 # g=+4.589849e-3 rot=-1.301204e-5 dx=-0.0144 dy=+0.4653
+7 placed 3ff00ed865ce2ae5 beec436f50933e4e bf723505f349bb00 3fd68efcd477a1f6 # g=+3.624342e-3 rot=-1.347705e-5 dx=-0.0044 dy=+0.3525
+8 placed 3ff00b00c4a162e5 beee88e40f67ed8e bfac04e52d41e24d 3fd3a6967ca7d350 # g=+2.686279e-3 rot=-1.456009e-5 dx=-0.0547 dy=+0.3070
+9 placed 3ff0076298d49369 bed33fd3b30c7198 bfc0577ee83d59d3 3fd0e8ed6bc9f5f3 # g=+1.803014e-3 rot=-4.589396e-6 dx=-0.1277 dy=+0.2642
+10 placed 3ff003b13d9df57a 3eb242c741f81160 bfc507ede6904b90 3fcf136442b1fa1e # g=+9.014518e-4 rot=+1.088432e-6 dx=-0.1643 dy=+0.2428
+11 placed 3feffffffffffffe 3bb0000000000000 3c80000000000000 0000000000000000 # g=-2.220446e-16 rot=+3.388132e-21 dx=+0.0000 dy=+0.0000
+12 placed 3feff8e32239b541 3eee019cdc080823 bfb9a91677961180 bfb340dc7cb1f738 # g=-8.682567e-4 rot=+1.430812e-5 dx=-0.1002 dy=-0.0752
+13 placed 3feff1f7c860698e 3f032c4d8eb3dc42 bfc367448ad70c4e bfb9511428dab3c4 # g=-1.712903e-3 rot=+3.656971e-5 dx=-0.1516 dy=-0.0989
+14 placed 3fefea8f1a455bd6 3f04e1746b810ae3 bfc8d1c38ab6e4df bfac8ad7041177c0 # g=-2.617310e-3 rot=+3.982674e-5 dx=-0.1939 dy=-0.0557
+15 placed 3fefe35efa68b3dd 3f0316d4ffa9e223 bfcdc0502ec1bfd6 bfa9bf500a47e088 # g=-3.494750e-3 rot=+3.640974e-5 dx=-0.2324 dy=-0.0503
+16 placed 3fefdc88c448f97e 3f0780c0c590d7f4 bfcb1697e5833b39 bfd2979997ec6742 # g=-4.329316e-3 rot=+4.482830e-5 dx=-0.2116 dy=-0.2905
+17 placed 3fefd570bc64b268 3f0f714a13ef521c bfcb2e1a57f028ea bfe55169e9ff35c6 # g=-5.195267e-3 rot=+5.997188e-5 dx=-0.2123 dy=-0.6662
+18 placed 3fefce293239e3c4 3f0cff8285ca095e bfc3d6d143f3241c bfe33db78dac2982 # g=-6.083872e-3 rot=+5.530946e-5 dx=-0.1550 dy=-0.6013
+19 placed 3fefc7deb2cb93fa 3f0fb803be4c72c3 bfc1381f149d58e9 bfdbc1c7442e5a97 # g=-6.851817e-3 rot=+6.049882e-5 dx=-0.1345 dy=-0.4337
+20 placed 3fefc1dec43db410 3f104d234edbdf71 bfc43d1cbeefc042 bfe1420c869839f8 # g=-7.584206e-3 rot=+6.218460e-5 dx=-0.1581 dy=-0.5393
+21 placed 3fefbbc667818405 3f119c23e647f8a0 bfca5549a904f950 bfd54820635fce7e # g=-8.328245e-3 rot=+6.717652e-5 dx=-0.2057 dy=-0.3325
+end 22

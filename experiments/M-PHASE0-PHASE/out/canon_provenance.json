@@ -1,0 +1,100 @@
+{
+ "109MSDCF": {
+  "n": 22,
+  "placed": 22,
+  "refus": 0,
+  "plane": [
+   3516,
+   2344
+  ],
+  "reference": "11",
+  "digest": "d9b8ec766b970a0288732d2dec9271d090c6e1d5edc82ae49608638267b6e6f0",
+  "heldout": "none",
+  "cyclefloor": "0.3851",
+  "stack_digest": "b70554b8cfd9b93e"
+ },
+ "112MSDCF": {
+  "n": 79,
+  "placed": 79,
+  "refus": 0,
+  "plane": [
+   3516,
+   2344
+  ],
+  "reference": "39",
+  "digest": "c3b7eaa525606c7081176477e668b557b1728fb1a07d0042ab923bbbc198d2cb",
+  "heldout": "1.2087",
+  "cyclefloor": "0.2477",
+  "stack_digest": "f68dce913832d69c"
+ },
+ "113MSDCF": {
+  "n": 63,
+  "placed": 63,
+  "refus": 0,
+  "plane": [
+   3516,
+   2344
+  ],
+  "reference": "31",
+  "digest": "2c13356197367297b8fb809ecdc146d15674e28eee8f5a6377408324d5a32410",
+  "heldout": "none",
+  "cyclefloor": "0.1805",
+  "stack_digest": "e5929b024e2a9a70"
+ },
+ "119MSDCF": {
+  "n": 33,
+  "placed": 33,
+  "refus": 0,
+  "plane": [
+   3516,
+   2344
+  ],
+  "reference": "16",
+  "digest": "bf9e03b3a2621672af25b537f41b91c3fe65b7541e6557fb43ee5648f12536c2",
+  "heldout": "none",
+  "cyclefloor": "0.4809",
+  "stack_digest": "f8e3b28733df513d"
+ },
+ "coffee-bean": {
+  "n": 105,
+  "placed": 105,
+  "refus": 0,
+  "plane": [
+   3516,
+   2344
+  ],
+  "reference": "52",
+  "digest": "d8347c52abaaecdaf377c252cb332ad68674712f006a74329beaf52c43dee855",
+  "heldout": "6.6705",
+  "cyclefloor": "2.2078",
+  "stack_digest": "bb9a2b40eefb65a9"
+ },
+ "coffee-bubbles": {
+  "n": 19,
+  "placed": 19,
+  "refus": 0,
+  "plane": [
+   3516,
+   2344
+  ],
+  "reference": "9",
+  "digest": "667f9de55069d16388e14d8cacc5cf04a327d34b02621fa8a5848d39251fb81b",
+  "heldout": "none",
+  "cyclefloor": "0.3325",
+  "stack_digest": "744fb84e3b2c7df1"
+ },
+ "foam": {
+  "n": 100,
+  "placed": 100,
+  "refus": 0,
+  "plane": [
+   3516,
+   2344
+  ],
+  "reference": "50",
+  "digest": "07fa3b0ec84158acd487f68e209bf8202234b515aafb05e9e0eedb2506095c1c",
+  "heldout": "3.5762",
+  "cyclefloor": "0.2328",
+  "stack_digest": "8cb3dc98fff98cfa"
+ }
+}

@@ -112,22 +112,27 @@ def main():
                 for rho in RHOS:
                     if snr_name != "inf" and rho != 0.1:
                         continue  # the SNR ladder is run at one rho only
-                    e = np.empty(len(SIGMA_GRID))
-                    en = np.empty(len(SIGMA_GRID))
-                    for i, s in enumerate(SIGMA_GRID):
-                        r = np.random.default_rng(7919 * ci + i)
-                        e[i], en[i] = plib.median_eta(
-                            reps, d, float(s), snr, r, TRIALS, rho=rho, nu=nu)
-                    bu, cu = crossing(SIGMA_GRID, e, 1.0)
-                    bn, cn = crossing(SIGMA_GRID, e, en)
-                    rows.append(dict(
-                        target=target, N=n, M=int(reps.shape[0]),
-                        kappa=k, nu_abs=float(np.hypot(*nu)),
-                        snr=snr_name, rho=rho,
-                        bar_unit=bu, censored_unit=bool(cu),
-                        bar_naive=bn, censored_naive=bool(cn),
-                        eta0=float(e[0]), eta_naive0=float(en[0]),
-                    ))
+                    # The gauge arm (A6.2) is run noiseless; the noise gate is a
+                    # separate effect and pricing it twice adds nothing.
+                    gauges = ("raw", "zero_mean") if snr_name == "inf" else ("raw",)
+                    for gauge in gauges:
+                        e = np.empty(len(SIGMA_GRID))
+                        en = np.empty(len(SIGMA_GRID))
+                        for i, s in enumerate(SIGMA_GRID):
+                            r = np.random.default_rng(7919 * ci + i)
+                            e[i], en[i] = plib.median_eta(
+                                reps, d, float(s), snr, r, TRIALS, rho=rho, nu=nu,
+                                gauge=gauge)
+                        bu, cu = crossing(SIGMA_GRID, e, 1.0)
+                        bn, cn = crossing(SIGMA_GRID, e, en)
+                        rows.append(dict(
+                            target=target, N=n, M=int(reps.shape[0]),
+                            kappa=k, nu_abs=float(np.hypot(*nu)),
+                            snr=snr_name, rho=rho, gauge=gauge,
+                            bar_unit=bu, censored_unit=bool(cu),
+                            bar_naive=bn, censored_naive=bool(cn),
+                            eta0=float(e[0]), eta_naive0=float(en[0]),
+                        ))
         print("  %-6s %4d configs done (%.0fs)" % (target, len(cfgs), time.time() - t0))
         sys.stdout.flush()
 
@@ -149,21 +154,26 @@ def main():
 def report(rows):
     print("\nbar vs scene ratio, noiseless, pooled over nu and N")
     print("-" * 78)
-    print("  %-7s %6s %5s  %-28s %-28s" % ("target", "rho", "n", "bar_unit (px)", "bar_naive (px)"))
-    print("  %-7s %6s %5s  %8s %8s %8s  %8s %8s %8s"
-          % ("", "", "", "p10", "median", "p90", "p10", "median", "p90"))
+    print("  %-7s %6s %5s  %-28s %-28s %8s"
+          % ("target", "rho", "n", "bar_unit RAW (px)", "bar_unit ZERO-MEAN (px)", "ratio"))
+    print("  %-7s %6s %5s  %8s %8s %8s  %8s %8s %8s  %8s"
+          % ("", "", "", "p10", "median", "p90", "median", "p10", "p90", "zm/raw"))
     for target in TARGET_N:
         for rho in RHOS:
             sel = [r for r in rows if r["target"] == target and r["snr"] == "inf"
-                   and r["rho"] == rho]
+                   and r["rho"] == rho and r["gauge"] == "raw"]
+            selz = [r for r in rows if r["target"] == target and r["snr"] == "inf"
+                    and r["rho"] == rho and r["gauge"] == "zero_mean"]
             if not sel:
                 continue
             bu = np.array([r["bar_unit"] for r in sel])
+            bz = np.array([r["bar_unit"] for r in selz])
             bn = np.array([r["bar_naive"] for r in sel])
-            print("  %-7s %6.2f %5d  %8.4f %8.4f %8.4f  %8.4f %8.4f %8.4f"
+            print("  %-7s %6.2f %5d  %8.4f %8.4f %8.4f  %8.4f %8.4f %8.4f  %8.4f"
                   % (target, rho, len(sel),
                      np.percentile(bu, 10), np.median(bu), np.percentile(bu, 90),
-                     np.percentile(bn, 10), np.median(bn), np.percentile(bn, 90)))
+                     np.median(bz), np.percentile(bz, 10), np.percentile(bz, 90),
+                     np.median(bz) / max(np.median(bu), 1e-12)))
 
     print("\nbar vs conditioning, rho = 0.1, noiseless")
     print("-" * 78)
@@ -171,7 +181,8 @@ def report(rows):
     for target in TARGET_N:
         for lo, hi in zip(edges[:-1], edges[1:]):
             sel = [r for r in rows if r["target"] == target and r["snr"] == "inf"
-                   and r["rho"] == 0.1 and lo <= r["kappa"] < hi]
+                   and r["rho"] == 0.1 and r["gauge"] == "raw"
+                   and lo <= r["kappa"] < hi]
             if len(sel) < 3:
                 continue
             bu = np.array([r["bar_unit"] for r in sel])
@@ -191,7 +202,7 @@ def report(rows):
         line = "  %-7s" % target
         for snr in ["inf", "30dB", "20dB"]:
             sel = [r for r in rows if r["target"] == target and r["snr"] == snr
-                   and r["rho"] == 0.1]
+                   and r["rho"] == 0.1 and r["gauge"] == "raw"]
             if sel:
                 line += "  %s: %.4f" % (snr, np.median([r["bar_unit"] for r in sel]))
         print(line)
