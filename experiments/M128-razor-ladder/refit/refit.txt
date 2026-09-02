@@ -1,0 +1,75 @@
+M128 -- independent re-derivation of the WIDTH-DOMINATED inference
+==========================================================================
+
+S0  INTERNAL CONSISTENCY OF THE CAPTURE (does the photometry make sense?)
+--------------------------------------------------------------------------
+    If these are the same feature at three apertures, contrast should fall
+    roughly as the aperture AREA, i.e. as N^-2, absent exposure compensation.
+      f/5.6 -> f/8   contrast ratio 1.79   N^2 ratio 2.04   (87% of prediction)
+      f/5.6 -> f/11   contrast ratio 3.78   N^2 ratio 3.86   (98% of prediction)
+    Consistent with a fixed exposure and the same physical feature.
+    This does not prove the identification; the verifier's template
+    correlation (0.811 at f/8, 0.728 at f/11) is what does that.
+
+T1  THE ENDPOINT RATIO  (assumption-light: needs no fit)
+--------------------------------------------------------------------------
+    A sharp edge REQUIRES rise(f/11)/rise(f/5.6) = 11.0/5.6 = 1.964
+
+    isotonic  measured ratio 0.791 +/- 0.335      sharp model is 3.50 sigma away
+    erf       measured ratio 0.902 +/- 0.269      sharp model is 3.94 sigma away
+
+    Both estimators fall BELOW 1.0 where the sharp model demands 1.96:
+    the rise does not grow with f-number, it is flat to decreasing.
+
+T2  THE CONSTRAINED FIT  rise^2 = w^2 + (k*N)^2,  w >= 0, k >= 0
+--------------------------------------------------------------------------
+    isotonic  w = 19.05 um   k = 0.000 um/f#
+              68% interval on w: 14.4 - 22.2     95%: 3.7 - 25.2
+              w=0 excluded at 2.03 sigma  (delta chi2 = 4.12)
+              verifier reported w = 19.1 um -> agreement 0.1 um
+    erf       w = 17.35 um   k = 0.000 um/f#
+              68% interval on w: 13.7 - 19.6     95%: 8.0 - 21.7
+              w=0 excluded at 2.50 sigma  (delta chi2 = 6.23)
+              verifier reported w = 17.3 um -> agreement 0.1 um
+
+S1  THE INSTRUMENTAL FLOOR  (the one confound that mimics intrinsic width)
+--------------------------------------------------------------------------
+    A fixed instrument-side blur enters the fit as a constant term in N,
+    which is EXACTLY the signature of intrinsic width. So a floor large
+    enough to account for w would make this whole verdict an artefact, and
+    it has to be budgeted rather than waved away.
+
+      sensor pitch                  5.12 um  -> pixel-aperture rise 4.10 um
+      G1 sublattice pitch           10.24 um  -> worst-case sampling  8.19 um
+      combined floor (quadrature)               9.16 um
+
+    The sampling term is a WORST CASE and is deliberately unfair to my own
+    conclusion: a slanted edge is sampled sub-pixel by construction, so a
+    competent reconstruction beats the raw sublattice pitch. Charging the
+    full pitch is the most hostile assumption available.
+
+      isotonic  w_measured 19.05 um  -  floor 9.16 um  =>  w_physical 16.70 um
+      erf       w_measured 17.35 um  -  floor 9.16 um  =>  w_physical 14.74 um
+
+    A physical width of 15-17 um SURVIVES the worst-case floor: YES
+    The floor cannot manufacture this result. That is the point of S1.
+
+VERDICT
+--------------------------------------------------------------------------
+  Independent refit reproduces the verifier's w to within 3 um on both
+  estimators: YES
+  k lands at or near zero on both -- no optical growth is required by the data.
+
+  T1 (ratio, independent-sigma) says 3.5-3.9 sigma against the sharp model.
+  T2 (constrained fit) says 2.0-2.5 sigma.
+  The verifier quoted 2-2.5 sigma after conservative allowances. My T2
+  agrees with that order; T1 looks stronger for the reason stated in the
+  docstring and is NOT the number to quote.
+
+  CONFIRMED: WIDTH-DOMINATED. The feature carries an intrinsic width of
+  roughly 17-19 um and cannot serve as an absolute optical reference.
+  It remains usable for exercising SFR machinery.
+
+  HONEST LIMIT: three apertures spanning a factor of 2 in N is weak
+  leverage. This excludes the sharp-edge model at ~2-2.5 sigma; it does
+  not measure w precisely, and the 95% intervals are wide (3.7-25.2 um).

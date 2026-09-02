@@ -566,3 +566,116 @@ cross-aperture disagreement.
 Recorded because the instrument exists and a later reader will otherwise
 rebuild it. It is available behind `crossings2` if a future subject has a
 genuinely higher ambiguity rate.
+
+### Amendment A4 — the edge exists, and it is the wrong kind of edge
+
+**What I believed, and how it was tested.** Working this lane I formed the view
+that the razor captures contain no usable straight edge anywhere. That view was
+never written into this document -- I checked before writing this amendment, and
+no such claim appears in the tracked text, so nothing here is being retracted.
+It is recorded because the belief was real, it was steering the lane toward
+abandonment, and it turned out to be false. A belief that governs decisions
+should leave a trace whether or not it survives.
+
+The test was delegated to a verifier given the frame list, the sensor geometry
+and the question, but **not** my reduction code, and explicitly instructed to
+write its own. Its first act was to reproduce my profile from raw, which it did,
+establishing that the two reductions agree before they disagree.
+
+**The universal negative is refuted.** `DSC00063.ARW` (f/5.6, G1, rows
+`[254:286)`, cols `[2626:2666)`) carries a genuine slanted edge: plateaus at
+3236.7 and 718.0 DN, contrast 2518.6 DN, 10-90% rise **19.848 um** by isotonic
+regression and **19.326 um** by an erf fit. It is stable against +/-3 deg of
+assumed line angle and reproduces independently on G2. The verifier also
+rejected a decoy locus that looked acceptable under naive mid-level crossings
+(~22 um) but degraded to ~30 um under isotonic and parametric fits -- a
+discrimination the one-pass crossing locator of A3 would not have made.
+
+**But it is the wrong kind of edge.** An edge is only an optical reference if
+its own width is negligible, so the decisive question is whether that
+~1.7x-diffraction rise is blur, which grows in proportion to f-number, or
+intrinsic feature width, which does not. The verifier re-detected the same
+feature at f/8 and f/11 by template correlation (0.811 and 0.728; plateau
+ratios 4.52 / 4.60 / 4.39), selected best focus **independently per aperture**
+under a fixed score, and measured:
+
+| N | isotonic rise (um) | erf rise (um) | frame |
+| --- | --- | --- | --- |
+| 5.6 | 20.86 +/- 5.6 | 18.42 +/- 3.4 | DSC00061 |
+| 8 | 19.91 +/- 5.3 | 16.29 +/- 4.7 | DSC00062 |
+| 11 | 16.50 +/- 5.4 | 16.62 +/- 3.9 | DSC00047 |
+
+A sharp edge requires `rise(11)/rise(5.6) = 11/5.6 = 1.964`. The measured ratios
+are **0.79** and **0.90**. The rise does not merely fail to grow; it falls.
+Fitting `rise(N)^2 = w^2 + (k*N)^2` returns **w = 19.1 um** (isotonic) and
+**17.3 um** (erf) with `k` best-fit **zero** in both cases. The feature is
+**width-dominated**.
+
+**The inference was re-derived independently.** The verifier reported no files;
+its numbers existed only in conversation. `refit/refit_width.py` takes the three
+rises and their uncertainties and redoes the fit from scratch, recovering
+**w = 19.05 / 17.35 um** -- the verifier's values to 0.1 um -- with `k = 0.000`
+on both estimators, and `w = 0` excluded at **2.03** and **2.50 sigma**. This
+checks the inference, not the measurement. Re-measuring the rises from frames
+would need the decode work done over again and has not been done by me.
+
+**The refit is commissioned, 6/6.** `refit/commission_refit.py` plants a sharp
+edge (`rise = 1.8*N`), and the fit returns `w = 0.00, k = 1.800` and declines to
+exclude `w = 0` at 0.00 sigma. That control is the one that matters: it shows
+the estimator is capable of returning the opposite verdict, which a first-run
+agreement with the verifier could never establish on its own. A pure-width plant
+recovers `w = 18.00, k = 0.000`; a mixture plant recovers a known `w` inside its
+68% interval; inflating the sigmas 3x drops significance to 33% of baseline,
+proving the uncertainties actually enter the inference.
+
+**One control failed and the bar was mine, not the instrument's.** C2 originally
+asserted that a flat 18 um plant must exclude `w = 0` at more than 2 sigma. It
+returned 1.47 sigma. Closed-form weighted least squares gives **1.4681 sigma**
+for that plant, agreeing with the grid to four decimals, so the guess was wrong
+and the fit was right. The bar was not relaxed to make the control pass; it was
+replaced by C2b, which compares the grid against the algebra instead of against
+my expectation. The error was informative: a **flat** rise excludes the sharp
+model at only 1.47 sigma while the real **decreasing** rise excludes it at 2.53
+sigma. The verdict rests on the rise falling, which is the stronger statement,
+and I would not have known to say so had the control passed.
+
+**The confound that would have made this an artefact.** A fixed instrument-side
+blur enters the fit as a constant term in `N` -- precisely the signature of
+intrinsic width -- so a large enough floor would fake this result. Budgeting it
+at the most hostile assumption available: the 5.12 um pixel aperture contributes
+a 4.10 um rise, and charging the **full** 10.24 um green-sublattice pitch as if
+sub-pixel reconstruction bought nothing contributes 8.19 um, for a combined
+floor of **9.16 um**. Subtracting that in quadrature still leaves
+**w_physical = 16.70 um** (isotonic) and **14.74 um** (erf). Sampling cannot
+manufacture this finding. A width of that order is unremarkable for a printed or
+etched marking on a blade face, which is the most likely identification of the
+feature, though the lane has not established that independently.
+
+**What this changes.** The lane remains disqualified as a source of an absolute
+optical sharpness reference, but for a corrected and better-established reason,
+and it now carries two independent disqualifications on two different features:
+
+- the blade's own ground cutting edge is too ragged to use (the original
+  finding, `-31.70%` on its raggedness control); and
+- the one smooth, high-contrast edge in the captures has an intrinsic width of
+  roughly 15-19 um, which adds in quadrature to whatever the optics do and
+  cannot be separated from it with this data.
+
+The feature remains genuinely useful for **exercising** the SFR machinery --
+locator, ESF reduction, isotonic and erf fits -- because none of that requires
+the edge to be sharp, only that it be real and repeatable. It is not usable for
+**calibrating** the optics.
+
+**The limit of the claim, not upgraded.** Three apertures spanning a factor of
+two in `N` is weak leverage. This excludes the sharp-edge model at roughly
+2-2.5 sigma; the verifier's own words were "only moderate discrimination", and
+the 95% interval on `w` runs 3.7-25.2 um. It does not measure `w` precisely. A
+stronger statement needs either a wider aperture span or a subject with a
+known-sharp edge, and this amendment deliberately does not make one.
+
+**Consequence for future captures.** A request for "a razor blade" is not
+specific enough to yield an optical reference. What is needed is an edge whose
+own width is known to be far below the system PSF -- an opaque lithographic or
+evaporated-chrome edge on glass is the standard answer -- and the capture should
+be verified by the aperture-ladder test above before any ladder is built on it,
+since that test costs three frames and settles the question outright.

@@ -1,0 +1,84 @@
+{
+  "rows": [
+    {
+      "id": "C1",
+      "desc": "planted SHARP EDGE (rise = 1.8*N)",
+      "expect": "k>1.0, w<5um, w=0 NOT excluded (sigma<1)",
+      "got": {
+        "w": 0.0,
+        "k": 1.8,
+        "dchi2": 0.0,
+        "sigma": 0.0,
+        "w68": [
+          0.0,
+          13.850000000000001
+        ]
+      },
+      "ok": true
+    },
+    {
+      "id": "C2",
+      "desc": "planted PURE WIDTH (rise flat at 18um)",
+      "expect": "w~18um, k~0  (recovery only; see C2b)",
+      "got": {
+        "w": 18.0,
+        "k": 0.0,
+        "dchi2": 2.155437564163783,
+        "sigma": 1.4681408529714657,
+        "w68": [
+          9.700000000000001,
+          21.1
+        ]
+      },
+      "ok": true
+    },
+    {
+      "id": "C2b",
+      "desc": "DERIVED significance (grid vs algebra)",
+      "expect": "grid sigma matches closed-form WLS to within 0.05",
+      "got": {
+        "grid": 1.4681408529714657,
+        "closed_form": 1.4681305502013995
+      },
+      "ok": true
+    },
+    {
+      "id": "C3",
+      "desc": "planted MIXTURE (w=14um, k=1.2)",
+      "expect": "true w inside the 68%% interval",
+      "got": {
+        "w": 14.0,
+        "k": 1.2,
+        "dchi2": 0.8924492851277702,
+        "sigma": 0.9446953398465403,
+        "w68": [
+          0.0,
+          20.0
+        ]
+      },
+      "ok": true
+    },
+    {
+      "id": "C4",
+      "desc": "SIGMA RESPONSIVENESS (erf sigmas x3)",
+      "expect": "significance falls below 60%% of baseline",
+      "got": {
+        "w": 17.35,
+        "k": 0.0,
+        "dchi2": 0.6916804876411053,
+        "sigma": 0.8316733058365559,
+        "w68": [
+          0.0,
+          24.05
+        ]
+      },
+      "ok": true
+    }
+  ],
+  "null_ok": true,
+  "total": 6,
+  "caught": 6,
+  "sigma_flat_plant": 1.4681305502013995,
+  "sigma_real": 2.5318064306804993,
+  "status": "COMMISSIONED"
+}

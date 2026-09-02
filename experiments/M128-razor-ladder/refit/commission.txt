@@ -1,0 +1,34 @@
+COMMISSIONING refit_width.py
+==========================================================================
+
+C1   planted SHARP EDGE (rise = 1.8*N)      CAUGHT
+      expected: k>1.0, w<5um, w=0 NOT excluded (sigma<1)
+      observed: w=0.00 um  k=1.800 um/f#  w=0 excluded at 0.00 sigma
+
+C2   planted PURE WIDTH (rise flat at 18um) CAUGHT
+      expected: w~18um, k~0  (recovery only; see C2b)
+      observed: w=18.00 um  k=0.000 um/f#  w=0 excluded at 1.47 sigma
+
+C2b  DERIVED significance (grid vs algebra) CAUGHT
+      expected: grid sigma matches closed-form WLS to within 0.05
+      observed: grid 1.4681 sigma vs closed-form 1.4681 sigma  (k*=2.0370, diff 0.0000)
+
+C3   planted MIXTURE (w=14um, k=1.2)        CAUGHT
+      expected: true w inside the 68%% interval
+      observed: w=14.00 um  68% interval 0.0-20.0 um  contains 14.0: True
+
+C4   SIGMA RESPONSIVENESS (erf sigmas x3)   CAUGHT
+      expected: significance falls below 60%% of baseline
+      observed: baseline 2.50 sigma -> inflated 0.83 sigma  (33% of baseline)
+
+C5   NULL: re-running the real script unmodified
+     GREEN  rc=0  w_iso=19.05  w_erf=17.35
+
+==========================================================================
+FINDING (from the disclosed C2 error):
+  a FLAT rise excludes the sharp model at only 1.47 sigma;
+  the real DECREASING rise excludes it at 2.53 sigma.
+  The verdict rests on the rise FALLING, not merely on it not growing.
+
+plants+null: 6    caught/green: 6    missed: 0
+STATUS: COMMISSIONED
