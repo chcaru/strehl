@@ -922,3 +922,180 @@ that had already passed 15 controls and 6 plants. This is the second time in thi
 a defect survived a full commissioning pass, and the reason is the same one A3.7 recorded:
 the controls tested the algebra the model already contained. Neither the gauge freedom nor
 the column/row distinction was anything the existing controls asked about.
+
+--------------------------------------------------------------------------------
+
+## Amendment A7 -- the achievable floor, the averaging measurement, and rho
+
+Registered after measuring. A7.1 through A7.3 execute section 4's plan and are
+reported as preregistered. **A7.4 (rho) is EXPLORATORY**, as A4 was: the
+preregistration named rho as a scale factor on the bar but did not specify how it
+would be measured, so the instrument that measures it was designed with the
+answer's direction already visible. It is recorded here so that the reader can
+discount it accordingly, and its bias direction was declared in the script before
+it was run.
+
+### A7.1 What accuracy the aligner achieves (`src/p4_floor.py`)
+
+Section 4 derived what registration accuracy the unfolding NEEDS. This measures
+what the aligner DELIVERS, which is the other half of the verdict.
+
+Two figures bracket the truth. The cycle-consistency floor is optimistic -- it is
+the aligner's self-consistency and a systematic error shared by every edge is
+invisible to it. Held-out reprojection is pessimistic -- it includes model error
+the unfolding would not have to pay. The floor is the correct one to compare
+against the bar, because the bar asks how well the pose is KNOWN.
+
+The shipped `cycle-floor-px` pools spans 1 through 128. Almost all of that range
+is out of scope: the unfolding registers frames that are within a depth of field
+of one another. Recut to within-DOF spans only (span <= 8):
+
+    median over 7 stacks     0.583 sensor px
+    range                    0.267 -- 1.430
+    best single stack        0.267  (113MSDCF)
+    innermost annulus, best  0.139  (113MSDCF, radius decile 1 of 10)
+
+Span 1 does not appear: the tightest triple (i, i+1, i+2) has outer span 2, so a
+cycle-consistency floor at span 1 is unmeasurable by construction.
+
+Against a bar of 0.1006 raw / 0.1231 gauge-fixed at kappa ~ 3 and rho = 0.1, the
+median stack misses by 4.7x and the best whole stack by 2.2x. Only the innermost
+annulus of the single best stack comes near, and it is still above the raw bar.
+
+### A7.2 Averaging does not rescue it (`src/p5_gain.py`)
+
+One escape was live and could not be settled by argument. A global solve uses many
+edges. If per-edge errors were independent, the solved pose could beat the per-edge
+floor by roughly sqrt(k) -- with k of 10 to 100 that is 3x to 10x, which is exactly
+the size of the gap. C1 would survive on that alone.
+
+Measured directly from the data with no solver in the loop: for each measured
+short-span edge, compare one two-hop path's prediction error against the mean of
+all available paths' predictions. That ratio IS the realised averaging gain.
+
+    realised gain     1.00 -- 1.28x, median 1.07x
+    iid prediction    2.24x
+
+The positive control is the load-bearing one here, because a gain of 1.0 is also
+what a broken instrument reports. On planted iid noise the instrument reads 1.45x;
+on a planted systematic error shared across paths it reads exactly 1.000x. It can
+see gain when gain exists.
+
+Registration error at within-DOF spans is therefore SYSTEMATIC, not random, and
+does not average down. The best achievable figure anywhere in the census, after
+whatever averaging is really available, is **0.225 sensor px**.
+
+### A7.3 The bar has a ceiling (`src/p6_ceiling.py`)
+
+This is a recut of `p1_bar.json`, not fresh evidence, and is kept in a separate
+script so it cannot be mistaken for one.
+
+The bar is proportional to 1/kappa and kappa is a condition number, so kappa >= 1
+and the bar cannot be loosened without limit. Verified rather than assumed: the
+minimum kappa over all 7680 rows is 1.0278. At the best-conditioned decile
+(kappa ~ 1.16), which is the most favourable geometry that exists anywhere in the
+census:
+
+    rho = 1      0.245 raw / 0.292 gauge-fixed sensor px
+    rho = 0.1    0.157 / 0.211
+    rho = 0.01   0.070 / 0.101
+
+So C1 survives only if rho ~ 1 AND the site is in the best-conditioned decile AND
+the stack is the best of the seven. That is a narrow escape but it is a real one,
+and it made rho the last free parameter in the argument.
+
+### A7.4 rho is zero, because the optics cannot reach the alias band (EXPLORATORY)
+
+`src/p7_rho.py`. Bias direction declared in the script before running: three
+approximations all INFLATE rho (unmeasurable aliases charged at the detection
+ceiling, residual chroma sitting exactly at the alias frequencies, unremoved noise
+landing in the alias band), and a larger rho LOOSENS the bar and FAVOURS C1.
+Subtracting the shot floor is the one step that cuts against C1, so it is estimated
+at the 10th percentile to deliberately under-subtract.
+
+Substrate: Sony ILCE-7CM2, pitch 5.1227 um, Nyquist 97.6 cyc/mm, FE 100mm F2.8
+Macro GM with a 2x teleconverter.
+
+    stack            F     f_die (cyc/pitch)   cyc/mm   diffraction cutoff, m=2
+    113MSDCF        11           0.181          35.4            0.28
+    112MSDCF        11           0.181          35.4            0.28
+    foam             8           0.248          48.4            0.39
+    coffee-bean      8           0.190          37.0            0.39
+    coffee-bubbles   8           0.256          50.0            0.39
+    109MSDCF        11           0.144          28.1            0.28
+    119MSDCF       5.6           0.210          41.1            0.55
+
+Every stack's scene spectrum sinks into its own photon shot noise between 0.144 and
+0.256 cycles/pitch, against a Nyquist of 0.500. The nearest G-1x alias frequency is
+at 0.354 and most lie beyond 0.5. Of the 64 band frequencies, 52 to 60 have to be
+skipped because their own power is already at the floor -- a ratio there would be a
+zero over a zero, and the skipped count is reported separately so it cannot be read
+as a measured one. Over the frequencies that can be scored, rho is ~1e-297: zero to
+the limit of measurement.
+
+The optics agree with the measurement independently. At m ~ 2 the effective aperture
+is about 3x the marked one, and the resulting diffraction cutoff (last column) lands
+at or just above the measured die-off in all seven cases. There is no content at the
+alias frequencies because the lens cannot form any.
+
+**m is the one soft spot.** It is not in EXIF (`FocusPosition2` and `SubjectDistance`
+are both absent) and the cutoff scales as 1/(1+m). The script reports the ladder
+m in {0, 1, 2}; m = 0 is physically impossible for macro but is listed because it is
+the most favourable case C1 could claim. Even at m = 0 the cutoff is 0.83 and the
+measured f_die is unchanged -- the measurement does not depend on m at all. Pinning
+m from `30-calibration-grid` would tighten the physical corroboration, not the
+measurement.
+
+### A7.5 Verdict on C1
+
+    needed, loosest possible (kappa ~ 1.16, rho = 1)    0.245 raw / 0.292 gauge-fixed
+    needed at the measured rho (-> 0)                   below 0.070 / 0.101
+    achievable, best anywhere after real averaging      0.225
+    achievable, median stack                            0.583
+
+At rho = 1 the best stack at the best-conditioned decile would just barely clear the
+gauge-fixed bar. That is why rho decided the lane. At the measured rho the bar is
+tighter than 0.101 and the best achievable figure misses it by 2.2x; the median
+misses by 5.8x.
+
+**C1 is KILLED**, and the kill is robust in the direction that matters: every
+approximation in the rho instrument was biased to favour C1, the averaging escape
+was measured rather than argued, and the aligner was proven deterministic in A5 so
+the floor is not an artefact of run-to-run variation.
+
+### A7.6 Instrument defects found, and the pattern
+
+Five in `p7_rho.py` alone, and the two that matter most were both invisible to a
+passing tally:
+
+1. The white-scene control read 2.9x low for both targets. All 64 alias lookups fell
+   past the last radial bin, and that bin was a degenerate FFT-corner bin reading
+   0.048 against a true flat level of 0.139 -- ratio 2.89, matching exactly.
+2. `plib.coset_reps` does not return the minimum-modulus coset member. It picks a
+   canonical representative for the conditioning algebra. For a falling spectrum
+   that names a member carrying far less power than its neighbour: every G-1x
+   representative sat at |f| >= 0.795 while nearer members existed.
+3. C-A went INERT. After the band was truncated to 0.5 the plant sat at |f| = 0.707,
+   outside the measurable range, so it moved nothing -- and an inert plant is
+   indistinguishable from a caught one in a tally that counts only greens. This is
+   the second inert plant in this lane (the first was `p4_controls` plant 1, which
+   patched `flib.then` while the generator BUILT with `then`, so generator and
+   checker shared the defect and cancelled exactly).
+4. Every stack reported rho of exactly 9.0000 -- the white-scene value. `mosaic()`
+   gain-normalises by each channel's mean and a dark frame's mean is ~0 after black
+   subtraction, so the noise spectrum exploded and swamped the signal. All six
+   synthetic controls passed throughout this failure, which is why five data-side
+   controls now exist.
+5. rho still read 9.0000. The spectrum collapses 200x between f = 0.02 and 0.09 and
+   then goes FLAT from 0.2 to 0.5. A diffraction-limited OTF is monotone decreasing
+   to its cutoff, so a flat spectrum out to Nyquist is impossible: that plateau is
+   photon shot noise, which a dark frame (read noise only, 3.8e-06 against a plateau
+   of 3.3e-04, a factor of 87) never captures. Scene power was being charged for it.
+
+The exposure control took two attempts and the first failure is worth recording.
+Varying ISO at fixed exposure does not change shot noise relative to signal, because
+ISO is gain applied after the photodiode and the electron count never moves. The
+first C-I expected the plateau to track ISO and read 1.0x over a 13x span -- correct,
+and completely uninformative. The lever is EXPOSURE. The same capture holds
+matched-ISO 1/2 s against 1/8 s pairs, 4x the light: plateau 3.62x (predict 4),
+scene 1.02x (predict 1), over 10 pairs. That is the control that means something.
