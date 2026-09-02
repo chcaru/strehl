@@ -398,4 +398,73 @@ disagree. Measured at f/18 on a 512-sample ROI: **all three select frame 38.** T
 control passes. It is nonetheless retained for every ROI, and the narrow band is used
 for all map work, because passing once is not passing everywhere.
 
+---
+
+### Amendment 5 — an SNR-equalised arm, registered before the verdict that needs it
+
+**Raised from synthetic evidence, before the commissioning battery reported, and
+before any real spectrum was reduced. Registered now precisely so that it cannot
+later look like a rescue invented to save a result.**
+
+**The problem.** `xspec.py`'s commissioning measured the crossing estimator's bias
+against signal-to-noise ratio on a diffraction roll-off, five seeds per point:
+
+| spectral SNR | auto arm | cross arm |
+| --- | --- | --- |
+| 15.0 | -4.5% | -4.9% |
+| 5.0 | -12.3% | -14.5% |
+| 2.0 | -22.7% | -25.8% |
+| 1.0 | -36.6% | -33.6% |
+
+The bias is **strongly SNR-dependent**, spanning 32.1 points for the auto arm and
+28.6 for the cross arm across a 15x range of noise.
+
+**Why that is nearly fatal here.** Exposure was held constant, so the mean patch
+level falls 4377 to 484 DN from f/5.6 to f/18 (measured, `out/smoke.txt`). Photon
+noise variance goes as the signal while scene power goes as the signal squared, so
+**spectral SNR goes as the signal**: a 9.0x range across the ladder. A bias that
+varies with SNR therefore varies with `N`, and Amendment 1's A1' registered exactly
+this as the outcome under which *"the ladder's falsification test is compromised and
+the lane must say so and stop."*
+
+Note also that the cross-spectrum arm does **not** rescue this. It removes the floor
+from the spectrum but not the floor's influence on where the crossing lands. T2's
+registered control is necessary and insufficient.
+
+**The mitigation, registered as a second arm rather than a replacement.** Equalise
+the SNR across apertures by *degrading* the bright ones to match the worst:
+
+1. Measure, per (ROI, aperture), the scene power in a fixed low-frequency band and
+   the noise power from the top of the band.
+2. Take the worst ratio over the five apertures as the common target, which is f/18
+   by construction.
+3. Add independent Gaussian noise to each plane of every other aperture to bring its
+   ratio down to that target. Added independently to G1 and G2, so the cross arm's
+   noise-independence is preserved.
+
+Every aperture then carries the **same** spectral SNR, so whatever bias the estimator
+has is **identical across the ladder by construction** and cancels exactly in
+`f_c(N) * N`. The price is precision at the bright apertures, paid knowingly: the
+falsification test needs a bias that cancels far more than it needs a small one.
+
+**Both arms are run and both are reported.**
+
+- **native SNR** — best precision, requires the commissioning battery's bias
+  correction, and that correction is large and therefore fragile.
+- **equalised SNR** — needs no correction for the constancy test, at a cost in
+  precision.
+
+**Registered in advance:** if the two arms agree, that is a strong internal control
+and the native arm may be quoted. **If they disagree, the equalised arm is the
+trustworthy one and the disagreement must be published, not averaged.** If the
+equalised arm cannot separate H2 from H3 because of its degraded precision, the
+honest report is that this capture cannot decide the question, and what a capture
+that could decide it would need — namely per-aperture exposure compensation, so that
+every aperture lands at the same mid-scale level instead of at a constant 1.3 s.
+
+**That last point is a capture requirement and is recorded as one**, independent of
+how this lane resolves: a spectral aperture ladder should hold the *exposure level*
+constant, not the *exposure time*.
+
+
 
