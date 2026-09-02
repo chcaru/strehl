@@ -462,3 +462,89 @@ conditioned are different claims, and the winnable-fraction denominators in §9 
 both. This is what control C-B and plant 2 exist to protect: the instrument shipped with a
 `smin > 0` rank test that reported `κ = 3.2e15` for a degenerate system instead of
 infeasible, and the control caught it.
+
+---
+
+## Amendment 2 — the bar depends on the scene, and the first run assumed the most generous one
+
+Written after `p1_bar.py` ran once and **before** its corrected re-run. The first run's
+output is retained as `out/p1_bar_rho1_SUPERSEDED.json` so the correction can be audited
+rather than taken on trust.
+
+### A2.1 `plib.unfold_trial` drew a white scene, which is the best case, not a neutral one
+
+Section 4 defined `eta = ||xhat - x|| / ||x_alias||` and left the scene implicit. The
+implementation drew all `M` components independently at unit variance, so the aliases
+carried `M-1` times the baseband energy. Real scenes do not: spectra fall off, and the
+alias representatives sit at strictly higher spatial frequency than the baseband one, so
+they carry **less** energy, not more.
+
+The direction is not neutral and is declared here. `||x_alias||` is the denominator of
+`eta`, so overstating it **understates** `eta` and **inflates** the bar. It also cripples
+the naive comparator, because the energy the naive method throws away is exactly
+`||x_alias||`. Both effects favour C1. The first run's headline — a tolerance near
+**0.84 px at kappa = 1** — is therefore registered as an **upper bound on the bar**, not
+the bar.
+
+### A2.2 The scene ratio becomes an explicit swept parameter
+
+Define
+
+    rho = E|x_k|^2 / E|x_0|^2,  k >= 1
+
+the per-alias-component energy relative to the baseband component at the same output
+frequency. `rho = 1` is the white scene the first run assumed. The bar is registered from
+here on as a function of **two** variables, `bar(kappa, rho)`, and `rho` is swept over
+`{1, 0.3, 0.1, 0.03, 0.01}`.
+
+Two consequences are predicted before the run, so that failing to see them falsifies the
+model rather than being absorbed into it:
+
+1. **The bar tightens monotonically as `rho` falls.** Less alias energy means less to win
+   and a smaller denominator.
+2. **`eta_naive -> 1` as `rho -> 0`.** With little alias energy there is little to leak,
+   so the realistic comparator converges on the idealised one and the two registered bars
+   must converge too. This is a self-consistency check on the whole construction, and it
+   is registered as control C-Y.
+
+### A2.3 The headline `rho` is modelled from measured spectral falloff, and the model is disclosed
+
+The alias frequencies of the G-1x problem sit above the warp plane's Nyquist — the plane is
+a 2x2 bin of the sensor, so it reaches `0.25 cyc/sensor-px` while the aliases sit near
+`0.5` — and are therefore **not directly measurable** from any plane-resolution product in
+this repository. Pretending otherwise would be the kind of unearned number this lane exists
+to remove.
+
+So the headline `rho` is obtained by fitting a power law `S(f) ~ f^-beta` to the measured
+plane spectrum of real captures over the band where it *is* observable, and extrapolating
+to the alias frequency. The fitted `beta`, the extrapolation factor, and the bar's
+sensitivity to `beta` are all reported. If the bar's verdict flips within the measured
+spread of `beta`, the lane reports NOT ROBUST rather than picking a `beta`.
+
+### A2.4 Censoring in the `bar ~ 1/(C kappa)` fit is a defect and is repaired
+
+The first run swept `sigma` only to 1.0 px and then **dropped** every configuration that
+had not yet crossed its threshold. That keeps the configurations that crossed early and
+discards the ones that never crossed, which biases the fitted `C` upward and is a silent
+selection on the outcome variable. The re-run extends the grid until crossings are
+interior, and any configuration still censored is **counted and reported** rather than
+dropped — the same rule Amendment A1.3 already imposed on infeasible sites.
+
+The first run also reported an IQR ratio of **11.21** for `G-1x/naive`, meaning
+`bar * kappa` was not remotely constant. Section 4.1's `eta ~ C kappa sigma` is therefore
+already known to be a poor single-parameter summary for at least one arm, and the re-run
+reports the spread rather than the median alone.
+
+### A2.5 Duplicate cached warpmaps disagree, so the census needs a canonical-map rule
+
+Control C-X measured `kappa` across every cached sidecar for each stack and found the same
+stack's duplicates disagreeing by up to a factor of **117** (`dry` 1.488 .. 50.460;
+`113MSDCF` 1.554 .. 47.007; `coffee` 1.499 .. 29.221). These are not rounding differences;
+they are different alignments produced under different strategies and spans.
+
+Registered rule, fixed before the census runs: a stack's canonical map is the one whose
+`strategy` and `note` match the product's current default path, with **zero refusals** and
+the **largest placed count**; ties break on the lexicographically smallest digest. The
+chosen digest is recorded per stack in the note, and the census is additionally repeated
+across *all* maps of each stack as a robustness ladder. If the verdict flips across that
+ladder, the lane reports NOT ROBUST.
