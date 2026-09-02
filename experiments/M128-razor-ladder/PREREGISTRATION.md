@@ -352,6 +352,9 @@ judgement.
 
     cd projects\strehl\experiments\M128-razor-ladder
     python src\predict.py                 # section 2, all registered numbers
+    python src\check_prereg.py            # re-derives every number in this doc
+    python src\commission_check.py        # proves check_prereg can fail
+    python src\census.py  --help          # section 6 acceptance, the go/no-go
     python src\focus.py   --help          # bracket sweep, best-focus plateau
     python src\geom.py    --help          # edge geometry census
     python src\diag.py    --help          # ESF and locus diagnostic
@@ -359,3 +362,80 @@ judgement.
 
 Captures are **read-only** at `D:\personal\macro\requests\19-razor-edge`.
 Outputs go under `out/` here and to `C:\dev\strehl-out\M128\`.
+
+---
+
+## 11. Amendments
+
+Every change to this document after registration is recorded here, with the
+measurement that forced it. Nothing above is edited in place.
+
+### A1 — registration of the ESF is reopened, and made a commissioned choice
+
+Registered in §4.1: *"Forbidden, stated explicitly: registering each column on
+its own measured crossing. That removes the very blur being measured and biases
+every result sharp."*
+
+**The measurement that forced the change.** `src/census.py` on `DSC00045.ARW`,
+horizontal-flat f/5.6, best focus, band-half 60, at three window lengths:
+
+| along-edge window | locus RMS about a straight line |
+| --- | --- |
+| 64 columns (best block) | 0.296 green px = **3.03 µm** |
+| 64 columns (median block) | 0.963 green px = 9.86 µm |
+| 800 columns (best window) | 1.309 green px = **13.40 µm** |
+| 800 columns, cubic instead of line | 1.283 green px = 13.14 µm |
+
+Command:
+
+    python src\census.py <frame> --win 800 --stride 200 --band-half 60
+
+Two things follow, neither of which was known when §4.1 was written.
+
+1. **The wander is dominated by long along-edge wavelengths.** A cubic removes
+   almost none of it (13.40 → 13.14 µm), so it is not a bow; it is wander at
+   scales of tens to hundreds of columns, which a low-order polynomial cannot
+   follow and a short window does not contain.
+2. **The wander is 30× the crossing-estimation noise.** Predicted σ_c is 0.044
+   green px = **0.45 µm**, from σ ≈ 25.5 DN at S ≈ 1500 against an ESF slope of
+   ≈ 580 DN/px. So straight-line registration is not the conservative choice —
+   it *imports* 13.4 µm of subject geometry into the measured width in order to
+   avoid a 0.45 µm estimation penalty. Against a smallest predicted rise of
+   10.37 µm, that is the difference between a measurement and a null result.
+
+**Why the original prohibition was over-broad.** Blur is an entirely
+*across-edge* quantity. Along-edge wander is geometry. Displacing each column by
+its own measured crossing therefore cannot remove blur *in principle*; the only
+mechanism by which it can bias the result is correlation between the noise in a
+column's crossing estimate and the noise in that same column's ESF samples. That
+is a real effect, it sharpens, and its scale is σ_c — not the scale of the
+wander. §4.1 conflated the two.
+
+**The amended rule.** Registration is on a locus **smoothed along the edge over
+`W` columns**. This is the correct family, because:
+
+- Along-edge smoothing over `W` columns cannot remove across-edge blur at any
+  `W`, since blur has no along-edge signature at all.
+- It reduces the estimation noise, and hence the self-registration bias, by
+  √`W`. At `W` = 16 that is σ_c = 0.011 green px = **0.11 µm**.
+- It still tracks wander at along-edge scales ≫ `W`, which is where the census
+  shows the wander lives.
+
+`W` → ∞ recovers the straight line; `W` = 1 recovers the forbidden per-column
+case. **`W` is therefore not assumed, it is commissioned**, on synthetic data
+with a planted blur and a planted wander drawn to match the measured 1.23 green
+px RMS. The bar: recovered `f_c` within 3% of planted, with the bias reported as
+a function of `W` so the choice is made on evidence rather than on the argument
+above. Registered as **control C9**.
+
+**Rule 20 — what would make C9 fail.** If the recovered `f_c` rises monotonically
+as `W` falls, with no plateau, then self-registration bias dominates at every
+usable `W` and there is no safe choice; the lane reverts to straight-line
+registration and reports the inflated `c` honestly. That outcome is a valid
+result of C9 and must be reported as such rather than treated as a reason to
+pick the `W` that gives the wanted answer.
+
+**What does not change.** `c` still cancels across the ladder (§1), so a large
+`c` costs precision, not validity. The verdict rules in §7 are untouched. The
+choice of `W` is frozen before any real measurement frame is analysed, exactly
+as the half-width is.
