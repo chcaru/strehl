@@ -227,6 +227,15 @@ against LOST.
    hard-errors rather than padding the missing tail with zeros, and
    `src/commission_neff.py` plants the historical lag-24 truncation to prove that guard
    fires — a guard that has never fired may be a no-op.
+7. **The checker itself had a defect, and commissioning found it.** `says()` searched the
+   whole document, so a presence check was satisfied by *any* copy of the phrase. Flipping
+   the §6 verdict from SURVIVE to KILL while leaving §1's copy intact left the checker
+   **GREEN at 170/170** — the single most load-bearing sentence in the note was
+   effectively unguarded. `says()` now takes a section anchor, and an unpinned phrase that
+   occurs more than once is reported as a defect rather than passed. Both verdict sites
+   are now checked at their own anchors, and `src/commission_note.py` carries the
+   §6-only flip as a counted plant so the repair cannot silently regress. It is 9 plants,
+   9 caught, with a null control.
 
 ## 8. What this asks of the proposal
 
@@ -252,6 +261,7 @@ against LOST.
     python experiments/M-PHASE0-ZFIELD/src/z1_census.py     # -> out/z1-census.json
     python experiments/M-PHASE0-ZFIELD/src/z5_verdict.py    # -> out/z5-verdict.json
     python experiments/M-PHASE0-ZFIELD/src/commission_neff.py  # guard fires on the planted defect
-    python experiments/M-PHASE0-ZFIELD/src/check_note.py    # 170/170 GREEN
+    python experiments/M-PHASE0-ZFIELD/src/check_note.py    # 171/171 GREEN
+    python experiments/M-PHASE0-ZFIELD/src/commission_note.py  # 9 plants, 9 caught, null control green
 
 No RAW is decoded and nothing under `D:\personal\macro` is read or written.

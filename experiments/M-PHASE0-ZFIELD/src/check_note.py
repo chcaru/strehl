@@ -69,9 +69,38 @@ def num(cell):
     return float(m.group(1)) if m else None
 
 
-def says(phrase, name):
+SECTIONS = {}
+for _m in re.finditer(r"^## (\d+)\.[^\n]*\n(.*?)(?=^## |\Z)", TEXT, re.M | re.S):
+    SECTIONS[_m.group(1)] = _m.group(2)
+
+
+def says(phrase, name, sec=None):
+    """A stated sentence is present, at its one canonical site.
+
+    A presence check is satisfied by ANY duplicate of the phrase, so an
+    unqualified document-wide search cannot tell "section 6 still says this"
+    from "section 1 happens to say it too". Commissioning caught exactly that:
+    flipping the section 6 verdict alone left section 1's copy and the check
+    stayed green. So a phrase occurring more than once without a declared
+    section is a defect in this checker, and is reported as one rather than
+    passed.
+    """
     pat = re.compile(r"\s+".join(re.escape(t) for t in phrase.split()))
-    chk("CLAIM", name, bool(pat.search(TEXT)), phrase[:70])
+    if sec is not None:
+        body = SECTIONS.get(sec)
+        if body is None:
+            chk("CLAIM", name, False, f"section {sec} not found in the note")
+            return
+        n = len(pat.findall(body))
+        chk("CLAIM", name, n == 1,
+            f"{n} occurrences in section {sec} (want 1): {phrase[:56]}")
+        return
+    n = len(pat.findall(TEXT))
+    if n > 1:
+        chk("CLAIM", name, False,
+            f"ambiguous: {n} occurrences document-wide, pin it with sec=")
+        return
+    chk("CLAIM", name, n == 1, phrase[:70])
 
 
 # --------------------------------------------------------------- DERIVED: kernels
@@ -271,7 +300,8 @@ def p_verdict():
 def claims():
     says("A5 survives its phase-0 kill gate, and it survives on a margin that the "
          "substrate itself was hiding", "headline is survive")
-    says("SURVIVE, NOT ROBUST", "verdict is not robust")
+    says("SURVIVE, NOT ROBUST", "verdict is not robust (headline)", sec="1")
+    says("SURVIVE, NOT ROBUST", "verdict is not robust (section 6)", sec="6")
     says("This does not license A5", "does not license A5")
     says("B1 as registered is incomplete, and the omitted half is the one that "
          "decides this lane", "B1 incomplete disclosed")

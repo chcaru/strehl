@@ -154,6 +154,17 @@ re-derives the same quantities from the raw data with independently written code
 is now the standard for this workstream: a lane's own controls cannot audit the lane's own
 summary statistics.**
 
+**And a checker is not exempt: ZFIELD's was commissioned, and it had a defect.** Its
+`says()` helper searched the whole document, so a presence check was satisfied by *any*
+copy of the phrase. Flipping the §6 verdict from SURVIVE to KILL while leaving §1's
+identical copy intact left the checker **GREEN at 170/170** — the single most load-bearing
+sentence in the note was effectively unguarded, and no amount of re-running it would have
+shown that. The general rule: **a presence-based check is satisfied by any duplicate of
+the value, so pin each check to its own anchor and treat an unpinned phrase that occurs
+more than once as a defect.** `says()` now reports ambiguity instead of passing, and the
+commissioner carries the §6-only flip as a counted plant (9 plants, 9 caught, null control
+green) so the repair cannot silently regress.
+
 **The halo complaint is answered.** All four HALO verdicts were false positives. The
 instrument walked 2–120 px and took its far reference at 400–900 px, never measuring
 120–400 px — exactly the interval where a halo's decay separates it from a scene lighting
