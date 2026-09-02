@@ -14,6 +14,20 @@ baseline on the real document: exit 0
   ok   6b arms table, an sd                     caught, and named the right line
   ok   6b gap sentence                          caught, and named the right line
   ok   6b slope sentence                        caught, and named the right line
+  ok   7 slope table                            caught, and named the right line
+  ok   7 slope headline, the sd                 caught, and named the right line
+  ok   7 aperture spread                        caught, and named the right line
+  ok   7 bias-vs-slope table                    caught, and named the right line
+  ok   7 points per alpha                       caught, and named the right line
+  ok   7 quantisation, bin size                 caught, and named the right line
+  ok   7 T6 table                               caught, and named the right line
+  ok   7a blocked effect table                  caught, and named the right line
+  ok   7a sign test                             caught, and named the right line
+  ok   7a steepening table                      caught, and named the right line
+  ok   7a object table                          caught, and named the right line
+  ok   7a mean object slope                     caught, and named the right line
+  ok   7a predicted steepening                  caught, and named the right line
+  ok   7a band tilt                             caught, and named the right line
 
-14/14 plants caught
+28/28 plants caught
 check_amend6.py is commissioned.

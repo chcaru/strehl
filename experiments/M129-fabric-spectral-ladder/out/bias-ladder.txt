@@ -1,0 +1,164 @@
+reach of the GQ lattice
+==========================================================================
+  GQ lattice pitch 1.4142 px, so its Nyquist is 0.35355 sensor cyc/px
+      ap    f_c H2    /Nyq    f_c H3    /Nyq  verdict
+    f5.6    0.5404  1.5284    0.6921  1.9575  neither
+      f8    0.3783  1.0699    0.4844  1.3702  neither
+     f11    0.2751  0.7781    0.3523  0.9965  both
+     f14    0.2161  0.6114    0.2768  0.7830  both
+     f18    0.1681  0.4755    0.2153  0.6090  both
+
+  f/11 under H3 is the point worth reading twice. Its true cutoff is
+  0.3523 against a Nyquist of 0.3536: 0.35% below it. The
+  preregistration called f/11's H3 margin '+0.24 cy/mm, not a margin'.
+  This says the same thing in the units that decide it: under H3, f/11's
+  cutoff sits essentially ON the GQ lattice's Nyquist and the lattice
+  cannot resolve it. f/14 and f/18 are the measurement, as registered.
+
+harness: plant a cutoff, recover it, with the noise floor pushed down
+==========================================================================
+    planted  recovered    ratio        snr
+     0.1200     0.1215   1.0128     4794.0
+     0.1800     0.1761   0.9783     7844.7
+     0.2500     0.2403   0.9612     9747.2
+     0.3000     0.2845   0.9483    10505.3
+  harness OK: a finite, near-unity ratio at every
+  planted cutoff. Finiteness is checked explicitly, because a NaN
+  satisfies an inequality silently and once printed 'harness OK' here.
+
+  READ THE TREND, NOT ONLY THE PASS. The noise floor here is pushed far
+  below anything the ladder sees (SNR 4794 to 10505, against 1730-2802 on the
+  real ladder), and the ratio still runs 1.0128 at f_c 0.12 down to 0.9483 at 0.30.
+  That is a CUTOFF-DEPENDENT bias with almost no noise to blame, and a
+  cutoff-dependent bias is the one kind that does not divide out of a
+  ladder: it tilts f_c.N across the apertures and so tilts the fitted B.
+  It is not fatal on its own, because both hypotheses are read with the
+  same instrument, but it is why P4 and not P3 is the decision.
+
+equalised arm: every aperture taken down to the worst of the primary
+arm, SNR 1730, per Amendment 6. Equalisation can only add noise,
+which is why the target is set by the worst and not by the mean.
+
+H2, native arm (object slope 2.260, B true 3.0763)
+--------------------------------------------------------------------------
+      ap  f_c true   f_c hat     bias      sd      snr    f_c.N
+    f5.6    0.5404        --       --      --       --       --   beyond GQ Nyquist
+      f8    0.3783        --       --      --       --       --   beyond GQ Nyquist
+     f11    0.2751    0.2524   -8.25%  0.0042   2799.6   2.7763 *
+     f14    0.2161    0.2020   -6.55%  0.0027   2605.4   2.8277 *
+     f18    0.1681    0.1595   -5.12%  0.0018   1726.9   2.8712 *
+  fitted on the primary arm: K 2.8251, B_hat 3.2951 against B true 3.0763 (+7.11%)
+  f_c.N spread across the primary arm: 1.37%
+
+H2, equalised arm (object slope 2.260, B true 3.0763)
+--------------------------------------------------------------------------
+      ap  f_c true   f_c hat     bias      sd      snr    f_c.N
+    f5.6    0.5404        --       --      --       --       --   beyond GQ Nyquist
+      f8    0.3783        --       --      --       --       --   beyond GQ Nyquist
+     f11    0.2751    0.2486   -9.63%  0.0034   1728.2   2.7345 *
+     f14    0.2161    0.2009   -7.03%  0.0027   1734.7   2.8132 *
+     f18    0.1681    0.1595   -5.12%  0.0018   1726.9   2.8712 *
+  fitted on the primary arm: K 2.8063, B_hat 3.3172 against B true 3.0763 (+7.83%)
+  f_c.N spread across the primary arm: 2.00%
+
+H3, native arm (object slope 2.515, B true 2.4020)
+--------------------------------------------------------------------------
+      ap  f_c true   f_c hat     bias      sd      snr    f_c.N
+    f5.6    0.6921        --       --      --       --       --   beyond GQ Nyquist
+      f8    0.4844        --       --      --       --       --   beyond GQ Nyquist
+     f11    0.3523    0.3004  -14.74%  0.0128   2762.5   3.3042 *
+     f14    0.2768    0.2520   -8.95%  0.0038   2602.3   3.5286 *
+     f18    0.2153    0.1982   -7.95%  0.0033   1725.4   3.5673 *
+  fitted on the primary arm: K 3.4667, B_hat 2.6853 against B true 2.4020 (+11.79%)
+  f_c.N spread across the primary arm: 3.35%
+
+H3, equalised arm (object slope 2.515, B true 2.4020)
+--------------------------------------------------------------------------
+      ap  f_c true   f_c hat     bias      sd      snr    f_c.N
+    f5.6    0.6921        --       --      --       --       --   beyond GQ Nyquist
+      f8    0.4844        --       --      --       --       --   beyond GQ Nyquist
+     f11    0.3523    0.2928  -16.90%  0.0120   1704.4   3.2207 *
+     f14    0.2768    0.2500   -9.70%  0.0050   1740.1   3.4996 *
+     f18    0.2153    0.1982   -7.95%  0.0033   1725.4   3.5673 *
+  fitted on the primary arm: K 3.4292, B_hat 2.7147 against B true 2.4020 (+13.02%)
+  f_c.N spread across the primary arm: 4.37%
+
+==========================================================================
+P4, the decision: does a ladder built at one hypothesis recover it?
+==========================================================================
+  the hypotheses stand 28.07% apart in B
+   built at        arm    B_hat    to H2    to H3  recovers
+         H2     native   3.2951   0.2188   0.8931  H2
+         H2  equalised   3.3172   0.2409   0.9152  H2
+         H3     native   2.6853   0.3910   0.2833  H3
+         H3  equalised   2.7147   0.3616   0.3127  H3
+
+registered predictions
+==========================================================================
+  PASS  P1  f_c read low everywhere (12 cells, worst -16.90%, best -5.12%)
+  PASS  P2  B inferred high (+7.11%, +7.83%, +11.79%, +13.02%)
+  FAIL  P3  |B error| < 5% (max 13.02%, = 46.4% of the gap)
+  PASS  P4  a ladder built at one hypothesis recovers that hypothesis
+  FAIL  P5  equalising flattens f_c.N (2.36% native -> 3.19% equalised)
+
+margin: how far is the recovered B from the decision boundary?
+==========================================================================
+  the boundary sits at B = 2.7391, midway between the hypotheses
+   built at        arm    B_hat    B_sem  distance    sigma
+         H2     native   3.2951   0.0067    0.5560     83.2
+         H2  equalised   3.3172   0.0061    0.5780     94.4
+         H3     native   2.6853   0.0105    0.0539      5.2
+         H3  equalised   2.7147   0.0106    0.0245      2.3
+
+  THE ASYMMETRY IS THE RESULT. H2 clears the boundary by a distance no
+  plausible disturbance could close. H3 does not. Under H3 every cutoff
+  sits higher, nearer the lattice Nyquist, exactly where the harness
+  showed the bias is largest -- and f/11's replicate scatter under H3 is
+  four times its scatter under H2. The lane's weak case is H3, and the
+  weakest arm clears the boundary by 2.3 sigma.
+
+the forward comparison, on the cells already measured
+==========================================================================
+  no new simulation: the same runs, read the other way round
+
+  native arm
+        ap  reported | H2  reported | H3      gap     sigma
+       f11         0.2524         0.3004    16.0%      14.2
+       f14         0.2020         0.2520    19.9%      42.4
+       f18         0.1595         0.1982    19.5%      40.9
+    combined separation 60.6 sigma
+
+  equalised arm
+        ap  reported | H2  reported | H3      gap     sigma
+       f11         0.2486         0.2928    15.1%      14.1
+       f14         0.2009         0.2500    19.6%      34.7
+       f18         0.1595         0.1982    19.5%      40.9
+    combined separation 55.5 sigma
+
+  Against 2.3 sigma for the inverse analysis on its weakest arm. The
+  hypotheses are 19% to 25% apart in the quantity the estimator actually
+  reports, and that gap does not depend on knowing the bias, only on the
+  bias being the same for a predicted cutoff and a measured one at the
+  same frequency -- which is the one thing about it that is certain.
+  These sigmas are an upper bound: real scatter is ROI-to-ROI, not
+  replicate-to-replicate, and will be larger.
+
+==========================================================================
+P3 IS FALSIFIED and that stands on the record. I predicted the bias
+would inflate B by under 5%, reasoning from Amendment 7a's applicable
+bias near 1.8%. It inflates B by up to 13.02%, seven times my estimate.
+The reason is visible in the harness: the bias grows with the cutoff,
+and Amendment 7a's figure was a single number for a quantity that is
+not one number.
+
+THE REGISTERED FALSIFIER IS NOT TRIGGERED. It was P4 failing, or the
+B error exceeding 14%. P4 passed and the error reached 13.02%.
+The lane continues, but not on the analysis it was going to use:
+inverting the estimator and reading B off the answer spends nearly
+half the gap on a correction I cannot pin down, and leaves H3 with
+2.3 sigma. The repair is to stop inverting. Push each
+hypothesis FORWARD through the estimator, bias and all, and compare
+predicted cutoffs against measured ones in the space where the
+measurement actually lives. A common bias then cancels by
+construction instead of being subtracted by hand. That is a change
+to the registered analysis and it needs an amendment before use.

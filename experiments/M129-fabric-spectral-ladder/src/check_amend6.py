@@ -48,17 +48,52 @@ def rows_after(text, heading, n):
     return out
 
 
+class Q(float):
+    """A number parsed from the document, carrying the precision it was quoted at.
+
+    A document that says "-0.44%" has committed to two decimals, so a recomputed
+    -0.4449 agrees with it exactly as well as the text allows. Judging that by a
+    relative tolerance calls it a 1.1% error; judging it by half a unit in the last
+    quoted place calls it agreement, which is what it is. Carrying the precision on
+    the value means every comparison gets the right tolerance automatically instead
+    of a blanket constant that is too loose for some figures and too tight for
+    others -- the blanket 0.02 previously in use silently passed a 6% error on the
+    between-aperture spread.
+    """
+
+    __slots__ = ("ulp",)
+
+
+def _q(s):
+    txt = str(s).replace("**", "").replace("~~", "")
+    m = re.search(r"-?\d+\.?\d*", txt)
+    if not m:
+        q = Q("nan")
+        q.ulp = 0.0
+        return q
+    tok = m.group()
+    q = Q(tok)
+    d = len(tok.split(".")[1]) if "." in tok else 0
+    q.ulp = 0.5 * 10.0 ** (-d)
+    return q
+
+
+def qf(s):
+    """Parse a regex-captured literal, keeping its quoted precision."""
+    return _q(s)
+
+
 def num(cell):
-    m = re.search(r"-?\d+\.?\d*", cell.replace("**", ""))
-    return float(m.group()) if m else float("nan")
+    return _q(cell)
 
 
-def check(name, got, want, tol=TOL):
+def check(name, got, want, tol=TOL, atol=None):
     rel = abs(got - want) / max(abs(want), 1e-9)
-    # The absolute escape hatch exists for the A4 table, whose values sit near
-    # zero where a relative tolerance is meaningless. It must NOT apply to large
-    # numbers, or a checker that looks strict silently stops discriminating.
-    ok = rel <= tol or (abs(want) < 1.0 and abs(got - want) <= 0.02)
+    # atol defaults to half a unit in the last place the DOCUMENT quoted, read off
+    # the literal itself, so nothing about the tolerance is hardcoded here.
+    if atol is None:
+        atol = getattr(want, "ulp", 0.0)
+    ok = rel <= tol or (atol > 0.0 and abs(got - want) <= atol)
     print(f"  {'ok ' if ok else 'FAIL'} {name:44s} doc {want:10.3f}  "
           f"recomputed {got:10.3f}")
     return ok
@@ -129,8 +164,8 @@ def main():
     else:
         mults = [(eq[i][t]["floor"] + eq[i][t]["add_var"]) / eq[i][t]["floor"]
                  for i in eq for t in ("f11", "f14")]
-        ok &= check("min floor multiplier", min(mults), float(m.group(1)))
-        ok &= check("max floor multiplier", max(mults), float(m.group(2)))
+        ok &= check("min floor multiplier", min(mults), qf(m.group(1)))
+        ok &= check("max floor multiplier", max(mults), qf(m.group(2)))
     m = re.search(r"knee-band ratio of ([\d.]+)x to ([\d.]+)x", flat)
     if not m:
         print("  FAIL residual-ratio prose sentence not found")
@@ -140,8 +175,8 @@ def main():
         for i in eq:
             a = [eq[i][t]["knee_after"] for t in ("f11", "f14", "f18")]
             afters.append(max(a) / min(a))
-        ok &= check("min residual knee ratio", min(afters), float(m.group(1)))
-        ok &= check("max residual knee ratio", max(afters), float(m.group(2)))
+        ok &= check("min residual knee ratio", min(afters), qf(m.group(1)))
+        ok &= check("max residual knee ratio", max(afters), qf(m.group(2)))
 
     print("\nAmendment 6b, the equalisation commissioning")
     eqp = os.path.join(OUT, "equalise-selftest.json")
@@ -168,29 +203,29 @@ def main():
             print("  FAIL differential-bias sentence not found")
             ok = False
         else:
-            ok &= check("gap before", e6["gap_raw"], float(m2.group(1)), tol=0.01)
-            ok &= check("gap after", e6["gap_eq"], float(m2.group(2)), tol=0.01)
+            ok &= check("gap before", e6["gap_raw"], qf(m2.group(1)), tol=0.01)
+            ok &= check("gap after", e6["gap_eq"], qf(m2.group(2)), tol=0.01)
         m3 = re.search(r"([\d.]+)\s+points\s+across\s+a\s+([\d.]+)x\s+power\s+ratio"
                        r"\s+is\s+\*\*([\d.]+)\s+points\s+per\s+e-fold", flat)
         if not m3:
             print("  FAIL slope sentence not found")
             ok = False
         else:
-            ok &= check("slope, gap", e6["gap_raw"], float(m3.group(1)), tol=0.01)
-            ok &= check("slope, snr ratio", e6["snr_ratio"], float(m3.group(2)),
+            ok &= check("slope, gap", e6["gap_raw"], qf(m3.group(1)), tol=0.01)
+            ok &= check("slope, snr ratio", e6["snr_ratio"], qf(m3.group(2)),
                         tol=0.02)
             ok &= check("slope, points/e-fold", e6["points_per_efold_power"],
-                        float(m3.group(3)), tol=0.02)
+                        qf(m3.group(3)), tol=0.02)
         m4 = re.search(r"real ladder's ([\d.]+)x, the expected differential bias is\s*"
                        r"\*\*([\d.]+) points", flat)
         if not m4:
             print("  FAIL applied-slope sentence not found")
             ok = False
         else:
-            r_low = float(m4.group(1))
+            r_low = qf(m4.group(1))
             ok &= check("applied differential",
                         e6["points_per_efold_power"] * np.log(r_low),
-                        float(m4.group(2)), tol=0.03)
+                        qf(m4.group(2)), tol=0.03)
 
     print("\nAmendment 7, the measured texture slope")
     sp = os.path.join(OUT, "slope-w2.json")
@@ -214,9 +249,9 @@ def main():
             ok = False
         else:
             ok &= check("slope, overall mean", s7["overall_mean"],
-                        float(m5.group(1)), tol=0.005)
+                        qf(m5.group(1)), tol=0.005)
             ok &= check("slope, overall sd", s7["overall_sd"],
-                        float(m5.group(2)), tol=0.005)
+                        qf(m5.group(2)), tol=0.005)
         m6 = re.search(r"Between-aperture spread of the mean slope is \*\*([\d.]+)\*\*;"
                        r" within-aperture, ROI to ROI, it is \*\*([\d.]+)\*\*; ratio"
                        r" \*\*([\d.]+)\*\*", flat)
@@ -225,11 +260,11 @@ def main():
             ok = False
         else:
             ok &= check("between-aperture spread", s7["between"],
-                        float(m6.group(1)), tol=0.005)
+                        qf(m6.group(1)), tol=0.005)
             ok &= check("within-aperture spread", s7["within"],
-                        float(m6.group(2)), tol=0.005)
+                        qf(m6.group(2)), tol=0.005)
             ok &= check("spread ratio", s7["between"] / s7["within"],
-                        float(m6.group(3)), tol=0.01)
+                        qf(m6.group(3)), tol=0.01)
         m7 = re.search(r"standard deviation of only \*\*([\d.]+)\*\* times its span",
                        flat)
         if not m7:
@@ -243,7 +278,7 @@ def main():
             # checker's own convention.
             ramp = np.linspace(0.0, 1.0, 5)
             ok &= check("ramp sd / span", float(np.std(ramp)),
-                        float(m7.group(1)), tol=0.01)
+                        qf(m7.group(1)), tol=0.01)
         if not s7["potent"]:
             print("  FAIL slope survey reports its potency control did not pass")
             ok = False
@@ -278,20 +313,20 @@ def main():
                 ok = False
         if m8a:
             ok &= check("points per unit alpha", b7["points_per_alpha"],
-                        float(m8a.group(1)), tol=0.01)
+                        qf(m8a.group(1)), tol=0.01)
         if m8b:
             ok &= check("bias at alpha 2.2", b7["bias_at_2p2"],
-                        float(m8b.group(1)), tol=0.01)
+                        qf(m8b.group(1)), tol=0.01)
         if m8c:
             ok &= check("bias at fabric alpha", b7["bias_at_fabric"],
-                        float(m8c.group(1)), tol=0.01)
+                        qf(m8c.group(1)), tol=0.01)
         m9 = re.search(r"optimistic by about (\d+\.\d+) points", flat)
         if not m9:
             print("  FAIL optimistic-by sentence not found")
             ok = False
         else:
             ok &= check("2.2 vs fabric difference", abs(b7["difference"]),
-                        float(m9.group(1)), tol=0.02)
+                        qf(m9.group(1)), tol=0.02)
         if not b7["prediction_confirmed"]:
             print("  FAIL slope_bias reports its registered prediction was refuted")
             ok = False
@@ -316,18 +351,18 @@ def main():
                 ok = False
         if m10:
             ok &= check("one bin, % of f_c", q7["bin_points"],
-                        float(m10.group(1)), tol=0.005)
+                        qf(m10.group(1)), tol=0.005)
         if m11:
             ok &= check("smallest gap", q7["bin_points"] / b7["nrep"],
-                        float(m11.group(1)), tol=0.01)
+                        qf(m11.group(1)), tol=0.01)
         if m12:
             ok &= check("endpoint difference", q7["range_points"],
-                        float(m12.group(1)), tol=0.01)
+                        qf(m12.group(1)), tol=0.01)
             ok &= check("endpoint sigma", q7["endpoint_sigma"],
-                        float(m12.group(2)), tol=0.02)
+                        qf(m12.group(2)), tol=0.02)
         if m13:
             ok &= check("hypotheses, bins apart", q7["separation_bins"],
-                        float(m13.group(1)), tol=0.02)
+                        qf(m13.group(1)), tol=0.02)
 
     print("\nAmendment 7, threat T6")
     wp = os.path.join(OUT, "weave-w2.json")
@@ -375,24 +410,24 @@ def main():
                 print(f"  FAIL Amendment 7a sentence '{label}' not found")
                 ok = False
         if m14:
-            ok &= check("7a residual sd", p7["resid_sd"], float(m14.group(1)),
+            ok &= check("7a residual sd", p7["resid_sd"], qf(m14.group(1)),
                         tol=0.01)
-            ok &= check("7a residual df", float(p7["dof"]), float(m14.group(2)))
-            ok &= check("7a effect se", p7["se"], float(m14.group(3)), tol=0.01)
+            ok &= check("7a residual df", float(p7["dof"]), qf(m14.group(2)))
+            ok &= check("7a effect se", p7["se"], qf(m14.group(3)), tol=0.01)
         if m15:
             ok &= check("7a sign positives", float(p7["sign_npos"]),
-                        float(m15.group(1)))
-            ok &= check("7a sign n", float(p7["sign_n"]), float(m15.group(2)))
+                        qf(m15.group(1)))
+            ok &= check("7a sign n", float(p7["sign_n"]), qf(m15.group(2)))
             ok &= check("7a mean difference", p7["mean_diff_f18_f11"],
-                        float(m15.group(3)), tol=0.01)
-            ok &= check("7a sign p", p7["sign_p"], float(m15.group(4)), tol=0.02)
+                        qf(m15.group(3)), tol=0.01)
+            ok &= check("7a sign p", p7["sign_p"], qf(m15.group(4)), tol=0.02)
         m16 = re.search(r"predicts \+(\d+\.\d+) \(H3\) to \+(\d+\.\d+) \(H2\)", flat)
         if not m16:
             print("  FAIL Amendment 7a predicted-steepening sentence not found")
             ok = False
         else:
             ok &= check("7a predicted arm H2", p7["predicted_arm"],
-                        float(m16.group(2)), tol=0.01)
+                        qf(m16.group(2)), tol=0.01)
         m17 = re.search(r"tilts one end relative to the other by \*\*(\d+\.\d+)x\*\*,"
                         r".{0,80}?level ratio of \*\*(\d+\.\d+)x\*\*", flat)
         m18 = re.search(r"shape error is about\s*\*\*(\d+)%\*\* of the level "
@@ -402,11 +437,11 @@ def main():
                 print(f"  FAIL Amendment 7a sentence '{label}' not found")
                 ok = False
         if m17:
-            ok &= check("7a band tilt", p7["band_tilt"], float(m17.group(1)),
+            ok &= check("7a band tilt", p7["band_tilt"], qf(m17.group(1)),
                         tol=0.01)
         if m18:
             ok &= check("7a shape vs level %", p7["shape_vs_level_pct"],
-                        float(m18.group(1)), tol=0.03)
+                        qf(m18.group(1)), tol=0.03)
 
     print("\nAmendment 7a, the object slope")
     op = os.path.join(OUT, "slope-object.json")
@@ -440,9 +475,9 @@ def main():
             ok = False
         else:
             ok &= check("7a object mean H2", o7["object_mean"]["H2"],
-                        float(m19.group(1)), tol=0.005)
+                        qf(m19.group(1)), tol=0.005)
             ok &= check("7a object mean H3", o7["object_mean"]["H3"],
-                        float(m19.group(2)), tol=0.005)
+                        qf(m19.group(2)), tol=0.005)
         m20 = re.search(r"within \*\*(\d+\.\d+)\*\* of the\s*long-assumed 2\.2", flat)
         if not m20:
             print("  FAIL Amendment 7a distance-from-2.2 sentence not found")
@@ -450,7 +485,7 @@ def main():
         else:
             ok &= check("7a distance from 2.2",
                         abs(o7["object_mean"]["H2"] - 2.2),
-                        float(m20.group(1)), tol=0.05)
+                        qf(m20.group(1)), tol=0.05)
         m21 = re.search(r"applicable bias is\s*about \*\*-(\d+\.\d+)%\*\*", flat)
         if not m21:
             print("  FAIL Amendment 7a applicable-bias sentence not found")
@@ -461,7 +496,7 @@ def main():
             a_obj = o7["object_mean"]["H2"]
             predicted = b7["bias_at_2p2"] + b7["points_per_alpha"] * (a_obj - 2.2)
             ok &= check("7a applicable bias", abs(predicted),
-                        float(m21.group(1)), tol=0.12)
+                        qf(m21.group(1)), tol=0.12)
         if o7["collapsed"]:
             print("  FAIL slope_object reports the spread collapsed, but Amendment")
             print("       7a states a residual confound remains")
