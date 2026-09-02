@@ -1,0 +1,56 @@
+M129 A1' INDEPENDENT VERIFICATION
+==============================================================================
+Runtime: 25.7 s
+Synthetic only. No capture or D:\ path was read.
+Independent code imports only m5_lib from the repository. It does not import bias_ladder.py, equalise.py, commission.py, or their helpers.
+GQ n=256, tile=128, Nyquist=0.35355 sensor cyc/px; ladder replicates=64, claim comparison uses first 16.
+
+C1 CONFIRMED: cutoff-dependent bias (claimed ratios 1.0128 at 0.12 and 0.9483 at 0.30)
+------------------------------------------------------------------------------
+gaussian-diffraction-256-128: ratio 1.0639 +/- 0.0601 at 0.12 -> 0.9316 +/- 0.0022 at 0.30; drop -0.1322, rho=-1.000.
+fixed-phase-diffraction-256-128: ratio 1.0070 +/- 0.0027 at 0.12 -> 0.9288 +/- 0.0020 at 0.30; drop -0.0783, rho=-1.000.
+fixed-phase-with-pixel-256-128: ratio 1.0070 +/- 0.0027 at 0.12 -> 0.9247 +/- 0.0023 at 0.30; drop -0.0823, rho=-1.000.
+fixed-phase-diffraction-512-256: ratio 0.9768 +/- 0.0029 at 0.12 -> 0.9368 +/- 0.0025 at 0.30; drop -0.0400, rho=-1.000.
+The trend survives fixed Fourier magnitudes, explicit pixel MTF, and doubling n/tile. Radial-bin quantisation changes individual steps but does not create the monotone loss.
+
+C2 CONFIRMED: B inferred high (claimed maximum +13.02%)
+------------------------------------------------------------------------------
+          case  B claimed   B verify     error     B sem
+     H2_native     3.2951     3.2665     6.18%    0.0071
+  H2_equalised     3.3172     3.3009     7.30%    0.0070
+     H3_native     2.6853     2.6917    12.06%    0.0102
+  H3_equalised     2.7147     2.7242    13.41%    0.0103
+Maximum verified inflation: 13.41%. The arithmetic was recomputed from the three recovered cutoffs, not copied from the claimed output.
+
+C3 CONFIRMED: boundary-margin asymmetry (claimed H2 equalised 94.4 sigma, H3 equalised 2.3 sigma)
+------------------------------------------------------------------------------
+H2 equalised, 16 reps: B=3.3009 +/- 0.0070; margin 80.32 sigma (covariance-aware 62.97).
+H3 equalised, 16 reps: B=2.7242 +/- 0.0103; margin 1.45 sigma (covariance-aware 1.33).
+H3 equalised, 64 reps: B=2.7268 +/- 0.0048; margin 2.55 sigma.
+Across 5,000 size-16 subsamples of that 64-replicate run, margin median=1.28, 5-95%=0.17-2.85; 77.1% fall below 1.96 sigma.
+Blunt sample-size verdict: 16 replicates are NOT enough to make a stable 2.3-sigma claim. The asymmetry is real, but the weak-side significance is sample-sensitive.
+f/11 SD ratio H3/H2: 2.36 (claimed 3.5). H3 f/11 reach is 0.9965 of Nyquist versus 0.7781 for H2.
+Claimed seed audit: aperture streams are distinct; there is no shared scene across apertures, while H2/H3 are paired at the same aperture.
+SEM check, H3 equalised 64: covariance-aware / independent-formula ratio=1.013 with independent aperture scenes; 1.068 when one scene is deliberately shared across apertures.
+Thus the claimed independent-aperture SEM formula is correct for the actual synthetic seed schedule; no covariance term was omitted there. A common-scene experiment needs the covariance-aware form.
+
+C4 CONFIRMED: forward comparison (claimed native combined 60.6 sigma)
+------------------------------------------------------------------------------
+f11: gap 15.5% (claimed 16.0%); independent 15.5 sigma, paired 16.5 sigma, correlation 0.188.
+f14: gap 18.2% (claimed 19.9%); independent 31.0 sigma, paired 31.0 sigma, correlation 0.000.
+f18: gap 18.9% (claimed 19.5%); independent 36.1 sigma, paired 34.9 sigma, correlation -0.118.
+Combined: independent claim method 50.1 sigma; paired covariance-aware 49.5 sigma.
+Spread decomposition at H3 f/11 equalised: scene-to-scene SD 0.010433, noise-only SD 0.010323; ratio 1.01. Achieved power SNRs are 1712 and 1709.
+Subtracting the noise variance in quadrature leaves a synthetic scene component only 0.15 times the noise SD: scene-to-scene variation does not dominate this cell.
+That ratio does NOT quantify a real-data upper-bound factor: the claimed synthetic replicates already redraw the scene every time. How much larger real ROI-to-ROI heterogeneity is cannot be determined without real captures, which this verification intentionally does not read.
+Also, a cutoff-dependent bias does not algebraically cancel in the forward comparison. It is included by simulating each hypothesis through the estimator. The numerical forward test can still be strong, but only to the extent that the synthetic forward model is faithful.
+
+FINAL VERDICTS
+------------------------------------------------------------------------------
+C1: CONFIRMED
+C2: CONFIRMED
+C3: CONFIRMED
+C4: CONFIRMED
+C3 16-replicate 2.3-sigma stability: CONTRADICTED
+C4 real-data upper-bound factor: CANNOT TELL
+Protected m5_lib.py: UNCHANGED and clean.

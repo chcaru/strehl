@@ -110,20 +110,32 @@ edge is real, but width-dominated: rises fall with aperture where a sharp edge d
 1.964× rise, and w = 0 is excluded at 2.03σ / 2.50σ. Charging the full green-sublattice
 pitch as an instrumental floor — hostile to that conclusion by construction — still leaves
 16.70 / 14.74 µm of physical width. Independent verification then closed the last escape:
-straight-line registration tolerates only **0.02–0.03 green px RMS** locus wander (≈0.23 µm
-over ~8 mm) against the blade's measured **1.23 px**, i.e. **54× over**, and per-column
-registration does not rescue it — it *sharpens the edge against itself*, biasing +91.05%
-even at zero raggedness. **The lane is dead and the pipeline needs a straighter subject: a
-lithographic chrome-on-glass edge, not a razor.** Amendment A4 in
-`experiments/M128-razor-ladder/PREREGISTRATION.md`, commit `5ab4b913`.
+against a bar of 5% error on recovered `f_c`, straight-line registration passes at **0.02
+and fails at 0.03 green px RMS** locus wander (0.205–0.307 µm; interpolated crossing
+0.0228) while the blade's measured scatter is **1.23 green px RMS** — **54× over**, and
+28× larger than the 0.044 px photon-noise prediction, so it is real subject raggedness and
+not estimator noise. Per-column registration does not rescue it: it fails *before any
+raggedness is introduced*, biasing `f_c` by **+91.05%** at zero wander with only 0.668 µm
+of residual smear, which is self-registration sharpening rather than untracked locus
+smear. **The lane is dead and the pipeline needs a straighter subject: a lithographic
+chrome-on-glass edge, not a razor.** Amendment A4 in
+`experiments/M128-razor-ladder/PREREGISTRATION.md`, tolerance ladder in
+`experiments/M128-razor-ladder/out/ragged-tolerance.json` (64 locus plants × 2 noise
+realisations per rung, 25 rungs), commit `5ab4b913`.
 
 **M129's four claims were independently confirmed, and its replicate count was not
-enough.** Independently written code reproduced C1–C4. The forward comparison is ~50σ
-(band gaps 15.5 / 18.2 / 18.9%) and the scene-to-scene versus noise-only sd ratio is 1.01,
-so that margin is not badly inflated by scene variation. But the **inverse B̂ comparison is
-weak under H3 (1.45–2.55σ)** and **16 replicates are insufficient: 77.1% of size-16
-subsamples fall below 1.96σ.** B is inferred high by 13.4%. Any future claim resting on the
-inverse comparison needs more replicates, not more analysis.
+enough.** Independently written code reproduced C1–C4; all four read `CONFIRMED` in
+`experiments/M129-fabric-spectral-ladder/out/verify-a1.json`. The **forward** comparison
+is overwhelming — combined **55.0σ** treating the arms as independent and **56.1σ** with
+their seed-schedule covariance included, on relative band gaps of 15.3 / 18.0 / 18.9% at
+f/11 / f/14 / f/18. The **inverse B̂** comparison under H3 is not: its boundary margin is
+**1.33σ** (covariance-aware) to **1.45σ** (independent) at 16 replicates, reaching only
+**2.52–2.55σ** at 64. The lane's own stability arm settles it — **77.1% of size-16
+subsamples fall below 1.96σ**, and the file records
+`sixteen_replicates_enough_for_stable_95pct_margin = False`. Any future claim resting on
+the inverse comparison needs more replicates, not more analysis. Note also that holding
+the scene fixed *raises* the 64-replicate margin from 2.517 to 2.850, so scene variation
+is a real contributor and not negligible.
 
 **Six lane-level defects were found by controls failing, and two by checkers.** In the
 two earliest control failures the premise was wrong and the bar was replaced by a
@@ -453,14 +465,15 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   `eps_r` error lives in the base lens term or the teleconverter term. This directly affects
   how the gear plugin should be structured.
 - **A lithographic straight edge, and the razor is not one.** M128 needed a knife-edge to
-  calibrate MTF and the delivered razor failed on straightness, not on contrast. Straight-line
-  registration tolerates **0.02–0.03 green px RMS** locus wander across the analysed span
-  (≈0.23 µm over ~8 mm); the razor measures **1.23 px**, 54× over, and per-column registration
-  cannot rescue it because it sharpens the edge against itself (+91.05% bias even at zero
-  raggedness). What would work is a **chrome-on-glass lithographic edge** — a resolution-target
-  substrate, a diced silicon wafer edge, or a cleaved crystal face. The requirement is
-  straightness at the sub-micron scale over the analysed span, not sharpness of the edge
-  transition, and no amount of analysis substitutes for it.
+  calibrate MTF and the delivered razor failed on straightness, not on contrast. Against a
+  5%-error bar on recovered `f_c`, straight-line registration passes at **0.02** and fails
+  at **0.03 green px RMS** locus wander (0.205–0.307 µm); the razor measures **1.23 green
+  px RMS**, 54× over, with block IQR ranging 0.18–4.0 px along the same edge. Per-column
+  registration cannot rescue it because it sharpens the edge against itself (+91.05% bias
+  at zero wander). What would work is a **chrome-on-glass lithographic edge** — a
+  resolution-target substrate, a diced silicon wafer edge, or a cleaved crystal face. The
+  requirement is straightness at the sub-micron scale over the analysed span, not sharpness
+  of the edge transition, and no amount of analysis substitutes for it.
 - **The seven new stacks delivered 2026-08-27** — `pottery-art-glazed-cpl`,
   `maldon-sea-salt-cpl`, `chia-seeds-cpl`, `medication-pill-cpl`, `duck-tape-side-layers-cpl`,
   `dime-flat-narrow-slices-cpl`, `unpopped-popcorn-kernels-cpl`, 1,292 frames total, at lower
