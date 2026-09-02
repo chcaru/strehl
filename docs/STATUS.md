@@ -39,11 +39,11 @@ general softness.
 
 ## 2. What was settled this session
 
-### 2.0 Phase 0 of the SOTA path — three lanes closed, zero captures consumed
+### 2.0 Phase 0 of the SOTA path — four lanes closed, zero captures consumed
 
 The owner's `docs/proposals/2026-08-sota-path.md` front-loads phase-0 gates that can
-kill an item before it is built. Three are now closed. **None consumed a capture, a
-decode, or a frame.** Two of the three found their headline measurement already sitting
+kill an item before it is built. Four are now closed. **None consumed a capture, a
+decode, or a frame.** Three of the four found their headline measurement already sitting
 in the corpus — a pattern strong enough that every remaining lane should begin by
 searching for existing data before planning any decode.
 
@@ -65,23 +65,82 @@ unregistered bonus brackets M129's open bellows factor B to **1.994–2.512**, e
 two of its three hypotheses at every λ across the stated systematic.
 `docs/research/M-PHASE0-QUINCUNX.md`, commit `c7173e2c`.
 
-**M128 razor ladder — disqualified twice, on two different features.** The ground
-cutting edge is too ragged (−31.70%). The one smooth high-contrast edge is real, but
-width-dominated: rises fall with aperture where a sharp edge demands a 1.964× rise, and
-w = 0 is excluded at 2.03σ / 2.50σ. Charging the full green-sublattice pitch as an
-instrumental floor — hostile to that conclusion by construction — still leaves
-16.70 / 14.74 µm of physical width. Useful for *exercising* SFR machinery, not for
-*calibrating* optics. Amendment A4 in `experiments/M128-razor-ladder/PREREGISTRATION.md`,
-commit `5ab4b913`.
+**M-PHASE0-ZFIELD — A5 survives, and the substrate nearly killed it by artefact.** The
+census ran on M66's eight response cubes, no decode. Read at face value the corpus says
+**KILL**: median WINNABLE 1.91% against a 2% bar. But the kill is by **EASY saturation**
+(median 92.1%), not by LOST — per-pixel σ_z is *too small*, which is the opposite of the
+failure A5 feared. That reading is an artefact of the substrate: M66 smooths the response
+over 27×27 then 17×17 where the shipping fine field is 5×5 (`FINE_WINDOW_RADIUS = 2`,
+`focus.rs:145`; both operators Tenengrad, `focus.rs:782–783`). Comparing sums of squared
+kernel weights, the shipping operator's response noise is **6.83×** larger. At that noise
+level WINNABLE is **14.02% / 10.12%** at DOF/2 = 1.5 / 3.0 → SURVIVE at both. At the
+conservative bound F = 5.40 the wide arm reads 9.03% and is INCONCLUSIVE, so the verdict
+is **SURVIVE, NOT ROBUST** and it licenses only the next decode-bearing lane, not A5
+itself. `docs/research/M-PHASE0-ZFIELD.md`.
 
-**Two lane-level defects were found by controls failing, and one by a checker.** In both
-control failures the premise was wrong and the bar was replaced by a *derived* one
-rather than relaxed; both errors had made the instrument look blinder than it was. The
-third — every QUINCUNX "median" was `sorted(v)[len(v)//2]`, the 4th of 6, biased upward —
-was invisible to all five of that lane's controls because all five compare the lane to
-itself. It was caught only by a checker that re-derives the same quantities from the raw
-spectra with independently written code. **That is now the standard for this workstream:
-a lane's own controls cannot audit the lane's own summary statistics.**
+**ZFIELD's transferable lesson is about bias registration, not about depth.** Bias B1 was
+registered as "regularisation inflates coherence, favours A5" — but the same smoothing
+also shrinks σ_z and inflates EASY, which works *against* A5, and that omitted half drives
+the entire census. **When declaring a bias direction, check whether the same mechanism acts
+through more than one channel.** Without the F-sensitivity analysis this lane would have
+reported KILL on a smoothing artefact.
+
+**ZFIELD also retired an estimator that three controls proved unusable.** The analytic
+`σ_z = σ_r/(|D|√2)` conditions on the argmax, and an argmax over pure noise *is* a spike,
+so it reports high curvature and therefore high confidence: it called **90.2% and 97.9% of
+a pure-noise cube confidently placeable**. A `|D|/σ_r` gate cannot fix this — the null's own
+`|D|/σ_r` is 3.66 and 4.97, so any threshold is N-dependent. It was replaced by a
+**per-pixel parametric bootstrap** (SG-smooth the measured curve to a working truth, add
+fresh noise at the pixel's own measured σ_r, re-run the real estimator, sd over 64 reps),
+which drove pure-noise placeability to **0.0%** and turned the bias conservative. That
+bootstrap is the lane's reusable instrument: because it adds noise of a *stated* size, it
+can simulate a different operator, and that single property is what produced the
+F-sensitivity curve and reversed the verdict.
+
+**Pooling gain must be quoted as measured `n_eff`, never window area.** Response noise is
+spatially correlated because the operator is a box filter — 1/e at 8 px in x and 12 px in y
+on 113MSDCF. A 9×9 window holds `n_eff = 1.54` independent samples against a nominal 81, a
+**53× deflation**; the nominal 9× gain is really 1.24×. The measured ladder is 1.03, 1.09,
+1.24, 1.57, 2.19 for W = 3, 5, 9, 17, 33. **`max_lag` must be ≥ `max(W) − 1`** or `n_eff` is
+silently inflated: truncating at 24 for W = 33 read 2.46 instead of 2.19.
+
+**M128 razor ladder — disqualified three times, and the third names the capture that would
+replace it.** The ground cutting edge is too ragged (−31.70%). The one smooth high-contrast
+edge is real, but width-dominated: rises fall with aperture where a sharp edge demands a
+1.964× rise, and w = 0 is excluded at 2.03σ / 2.50σ. Charging the full green-sublattice
+pitch as an instrumental floor — hostile to that conclusion by construction — still leaves
+16.70 / 14.74 µm of physical width. Independent verification then closed the last escape:
+straight-line registration tolerates only **0.02–0.03 green px RMS** locus wander (≈0.23 µm
+over ~8 mm) against the blade's measured **1.23 px**, i.e. **54× over**, and per-column
+registration does not rescue it — it *sharpens the edge against itself*, biasing +91.05%
+even at zero raggedness. **The lane is dead and the pipeline needs a straighter subject: a
+lithographic chrome-on-glass edge, not a razor.** Amendment A4 in
+`experiments/M128-razor-ladder/PREREGISTRATION.md`, commit `5ab4b913`.
+
+**M129's four claims were independently confirmed, and its replicate count was not
+enough.** Independently written code reproduced C1–C4. The forward comparison is ~50σ
+(band gaps 15.5 / 18.2 / 18.9%) and the scene-to-scene versus noise-only sd ratio is 1.01,
+so that margin is not badly inflated by scene variation. But the **inverse B̂ comparison is
+weak under H3 (1.45–2.55σ)** and **16 replicates are insufficient: 77.1% of size-16
+subsamples fall below 1.96σ.** B is inferred high by 13.4%. Any future claim resting on the
+inverse comparison needs more replicates, not more analysis.
+
+**Six lane-level defects were found by controls failing, and two by checkers.** In the
+two earliest control failures the premise was wrong and the bar was replaced by a
+*derived* one rather than relaxed; both errors had made the instrument look blinder than
+it was. ZFIELD then failed **four of its eight controls before measuring anything**, and
+all four were real: a registered analytic σ_z that under-reported by 1.81×, that same
+estimator calling 90–98% of a pure-noise cube placeable, a σ_r estimator disagreeing with
+two others by 2.4–4.5×, and a 51× pooling deflation nobody had priced. **A lane that
+writes its controls first will usually find that its registered instrument does not
+work.** The two checker finds were invisible to controls by construction: every QUINCUNX
+"median" was `sorted(v)[len(v)//2]`, the 4th of 6, biased upward — invisible to all five
+of that lane's controls because all five compare the lane to itself; and ZFIELD's `n_eff`
+truncation passed all eight of its controls identically either way, because none of them
+exercises a window wider than the truncation. Both were caught only by a checker that
+re-derives the same quantities from the raw data with independently written code. **That
+is now the standard for this workstream: a lane's own controls cannot audit the lane's own
+summary statistics.**
 
 **The halo complaint is answered.** All four HALO verdicts were false positives. The
 instrument walked 2–120 px and took its far reference at 400–900 px, never measuring
@@ -354,6 +413,18 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
     0.7368) runs to 0.50 cyc/px, so it is *not* `ncommon.py` output; its producer was never
     identified and remains **unaudited**. Only the 0.20–0.25 band was bounded for qualification;
     the other six were not. Fact 1981.
+21. **The estimator computes the per-pixel depth statistics and then throws them away, which
+    blocks the next ZFIELD lane.** `--stats` (`main.rs:668`) builds a `ThroughFocus`
+    (`merge_cmd.rs:4134`) holding the fine triple per pixel
+    (`through_focus.rs:158–202`), and `merge_cmd.rs:6567–6568` calls `subframe_offset(i)`
+    and `subframe_deficit(i)` across every pixel — then collects only `Vec<f32>` for
+    quantiling. Nothing per-pixel reaches disk, and the log-quadratic coefficient `a` is
+    never stored at all (a local at `through_focus.rs:495`). ZFIELD's SURVIVE verdict is
+    consequently an **extrapolation** — no number in it was measured on the shipping 5×5
+    operator; the 6.83× factor is computed from kernel weights under a white-input-noise
+    assumption. Exporting those arrays behind a path-bearing option is the smallest change
+    that would let the census be repeated on the real operator, and it is the difference
+    between a measured gate and an inferred one.
 
 ### 3.3 Open against the brief
 
@@ -381,6 +452,15 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
   `a7c2-fe100gm-2xtc-x4cpl` profile, so it is currently impossible to tell whether the ~40%
   `eps_r` error lives in the base lens term or the teleconverter term. This directly affects
   how the gear plugin should be structured.
+- **A lithographic straight edge, and the razor is not one.** M128 needed a knife-edge to
+  calibrate MTF and the delivered razor failed on straightness, not on contrast. Straight-line
+  registration tolerates **0.02–0.03 green px RMS** locus wander across the analysed span
+  (≈0.23 µm over ~8 mm); the razor measures **1.23 px**, 54× over, and per-column registration
+  cannot rescue it because it sharpens the edge against itself (+91.05% bias even at zero
+  raggedness). What would work is a **chrome-on-glass lithographic edge** — a resolution-target
+  substrate, a diced silicon wafer edge, or a cleaved crystal face. The requirement is
+  straightness at the sub-micron scale over the analysed span, not sharpness of the edge
+  transition, and no amount of analysis substitutes for it.
 - **The seven new stacks delivered 2026-08-27** — `pottery-art-glazed-cpl`,
   `maldon-sea-salt-cpl`, `chia-seeds-cpl`, `medication-pill-cpl`, `duck-tape-side-layers-cpl`,
   `dime-flat-narrow-slices-cpl`, `unpopped-popcorn-kernels-cpl`, 1,292 frames total, at lower

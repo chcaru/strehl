@@ -125,7 +125,7 @@ def bootstrap_sigma_z(curves, sig_r, reps=BOOT_REPS, seed=7,
     return np.std(z, axis=0)
 
 
-def noise_autocorr(cube, max_lag=24, n_frames=8, seed=0):
+def noise_autocorr(cube, max_lag=40, n_frames=8, seed=0):
     """Spatial autocorrelation of the response noise, along x and along y.
 
     Uses the 4th-difference field, which is noise-dominated by construction, and
@@ -157,12 +157,24 @@ def n_eff(rho_x, rho_y, w):
     S = sum_{d=-(w-1)}^{w-1} (w - |d|) * rho(|d|). Independent noise gives
     S_x = S_y = w and hence n_eff = w^2; fully correlated noise gives
     S = w^2 and hence n_eff = 1.
+
+    Raises if either rho is shorter than w - 1. Silently substituting 0 for an
+    unmeasured lag understates S, which overstates n_eff and the pooling gain --
+    the direction that flatters this lane. It cost the census a 2.46-vs-2.19
+    error at w = 33 before the checker caught it, so it is an error, not a
+    default.
     """
+    need = w - 1
+    for nm, rho in (("rho_x", rho_x), ("rho_y", rho_y)):
+        if len(rho) - 1 < need:
+            raise ValueError(
+                f"n_eff(w={w}) needs {nm} out to lag {need}, got {len(rho) - 1}; "
+                "raise noise_autocorr(max_lag=...) to at least max(WINDOWS) - 1")
+
     def s_of(rho):
-        tot = float(w) * 1.0
+        tot = float(w)
         for d in range(1, w):
-            r = rho[d] if d < len(rho) else 0.0
-            tot += 2.0 * (w - d) * r
+            tot += 2.0 * (w - d) * rho[d]
         return tot
     sx, sy = s_of(rho_x), s_of(rho_y)
     denom = sx * sy
@@ -194,3 +206,4 @@ def quantiles(a, qs=(5, 25, 50, 75, 95)):
         return {str(q): None for q in qs}
     v = np.percentile(f, qs)
     return {str(q): float(x) for q, x in zip(qs, v)}
+
