@@ -1,0 +1,28 @@
+{
+  "search": [
+    0.095,
+    0.34
+  ],
+  "danger_cymm": [
+    30.0,
+    55.0
+  ],
+  "z": 3.0,
+  "total_peaks": 1,
+  "danger_peaks": 1,
+  "worst_excess": 0.16555856690516127,
+  "bins_tested": 1350,
+  "expected_false": 1.8225,
+  "max_shared_frequency": 1,
+  "hits": [
+    {
+      "f": 0.27897572226500505,
+      "cy_mm": 54.4874457548838,
+      "excess": 0.16555856690516127,
+      "roi": 4,
+      "aperture": "f5.6"
+    }
+  ],
+  "control_pass": true,
+  "clean": true
+}

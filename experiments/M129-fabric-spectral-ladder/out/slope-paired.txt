@@ -1,0 +1,72 @@
+IS THE MEASURED SLOPE APERTURE-DEPENDENT? A PAIRED TEST.
+
+  The same six ROIs are measured at every aperture, so the comparison is
+  paired and the ROI main effect must be removed before apertures are
+  compared. slope_survey.py did not do that, and its verdict is too weak.
+
+      ap  mean alpha    effect      se       t
+    f5.6       3.402   +0.2761  0.0706   +3.91
+      f8       3.080   -0.0462  0.0706   -0.65
+     f11       2.949   -0.1773  0.0706   -2.51
+     f14       3.031   -0.0951  0.0706   -1.35
+     f18       3.168   +0.0425  0.0706   +0.60
+
+  residual sd 0.1730 on 20 df, so the standard error of each
+  aperture effect is 0.0706. An effect beyond about 0.145 is
+  significant at 5%.
+
+  SIGN TEST, f/18 minus f/11, which assumes nothing about the noise:
+    positive in 6 of 6 ROIs, mean difference +0.2198, sd 0.0643
+    two-sided p = 0.0312
+    VERDICT: the measured slope IS aperture-dependent across the primary
+    arm. slope_survey.py's 'aperture-independent' reading was wrong.
+
+  DOES DIFFRACTION EXPLAIN IT? The subject cannot change with aperture,
+  but the MEASURED slope can, because the MTF is already falling inside
+  the low band. The predicted steepening uses only the known MTF and the
+  band 0.040-0.090 cyc/px -- no measured quantity enters.
+
+  Under H2, B = 3.0763:
+      ap   predicted   pred rel   obs rel     diff
+    f5.6       3.335    +0.0000   +0.0000  +0.0000
+      f8       3.513    +0.1783   -0.3224  -0.5006
+     f11       3.774    +0.4392   -0.4534  -0.8926
+     f14       4.088    +0.7531   -0.3712  -1.1243
+     f18       4.619    +1.2841   -0.2337  -1.5178
+
+  Under H3, B = 2.4020:
+      ap   predicted   pred rel   obs rel     diff
+    f5.6       3.253    +0.0000   +0.0000  +0.0000
+      f8       3.381    +0.1280   -0.3224  -0.4504
+     f11       3.561    +0.3082   -0.4534  -0.7617
+     f14       3.768    +0.5150   -0.3712  -0.8862
+     f18       4.094    +0.8417   -0.2337  -1.0754
+
+  Across the primary arm f/11 to f/18:
+    observed steepening                      : +0.2198
+    predicted from diffraction alone, H2    : +0.8450   (observed / predicted 0.26)
+    predicted from diffraction alone, H3    : +0.5335   (observed / predicted 0.41)
+
+    The observed +0.2198 lies OUTSIDE the predicted range
+    +0.5335 to +0.8450 even allowing +/-0.206 of measurement
+    error, so something beyond the MTF differs between apertures in
+    the low band. This is a live confound, not a retired one.
+
+  f/5.6 IS THE ODD ONE OUT AND IT IS NOT DIFFRACTION. Diffraction predicts
+  f/5.6 to be the SHALLOWEST measured slope, since its cutoff is furthest
+  above the band. It is instead the steepest, at 3.402.
+  The likely cause is T1, the registered primary threat: f/5.6 has the
+  shallowest depth of field, so more of the ROI is out of focus, and
+  defocus blur steepens the spectrum. That is consistent with section
+  2.3 treating f/5.6 as an out-of-band control rather than a measurement.
+
+  WHAT THIS COSTS AMENDMENT 6. Equalising the low band assumes the band's
+  SHAPE is common and only its LEVEL differs. A slope difference of
+  0.2198 across a band spanning 2.25x in frequency tilts one
+  end of the band relative to the other by 1.195x. The measured
+  low-band power ratio being equalised is 1.72x, so the shape
+  error is about 27% of the level
+  difference being corrected. It is not negligible and it is not
+  dominant.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M129-fabric-spectral-ladder\out\slope-paired.json

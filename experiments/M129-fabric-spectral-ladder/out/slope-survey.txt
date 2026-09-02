@@ -1,0 +1,52 @@
+TEXTURE SPECTRAL SLOPE of the fabric weave
+
+Fitted as log P = a - alpha*log f over 0.040-0.090 sensor
+cyc/px (7.8-17.6 cy/mm), floor subtracted first.
+
+   ROI      f5.6       f8      f11      f14      f18   spread
+     0     3.088    2.772    2.516    2.576    2.785    0.572
+     1     3.279    3.033    3.066    3.187    3.227    0.246
+     2     3.430    3.194    3.348    3.552    3.613    0.418
+     3     3.450    2.783    2.840    2.948    3.137    0.667
+     4     3.658    3.488    2.856    2.893    3.030    0.803
+     5     3.507    3.208    3.066    3.029    3.217    0.477
+
+      ap  mean alpha  sd over ROIs
+    f5.6       3.402         0.180
+      f8       3.080         0.252
+     f11       2.949         0.256
+     f14       3.031         0.297
+     f18       3.168         0.248
+
+  overall mean alpha 3.126, sd 0.294
+
+  IS THE SLOPE APERTURE-DEPENDENT? Amendment 6's equalisation assumes not.
+    spread of the five aperture means      0.1553
+    mean spread across ROIs within one ap  0.2467
+    ratio 0.63
+    CONSISTENT with an aperture-independent slope: the between-aperture spread is
+    no larger than the ROI-to-ROI spread of the same quantity.
+
+  POTENCY, by planting. A test that cannot respond to a real aperture
+  dependence would pass the one above trivially. So each aperture's
+  spectrum is tilted by a KNOWN per-aperture amount and the fit must
+  recover it.
+
+  planted tilt has sd 0.4934 in alpha, twice the ROI-to-ROI
+  spread, running -0.6977 to +0.6977
+
+      ap   planted   recovered     error
+    f5.6   -0.6977     -0.6977   +0.0000
+      f8   -0.3489     -0.3489   +0.0000
+     f11   +0.0000     +0.0000   +0.0000
+     f14   +0.3489     +0.3489   +0.0000
+     f18   +0.6977     +0.6977   -0.0000
+
+    between-aperture spread, planted 0.4934, recovered 0.4422
+    worst per-aperture error 0.0000
+    the fit recovers the planted spread to 15%: PASS
+    and the aperture-independence test flips to DEPENDENT: PASS
+    potency PASS. The corrected fit's failure to
+    find an aperture dependence is therefore informative rather than blind.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M129-fabric-spectral-ladder\out\slope-w2.json

@@ -1,0 +1,33 @@
+CROSSING BIAS AGAINST TEXTURE SPECTRAL SLOPE
+
+planted f_c 0.1273 sensor cyc/px (24.9 cy/mm), 16 replicates per slope
+low-band SNR held at 2000 by adding noise, so the only
+variable is the slope. The fabric measures alpha = 3.126.
+
+PREDICTION, MADE BEFORE RUNNING: bias becomes MORE NEGATIVE as alpha
+grows, because a steeper spectrum reaches the floor at a lower frequency.
+
+    alpha   low SNR    bias %      sd    n
+    2.000      1994     -0.44    1.05   16
+    2.200      2010     -1.53    2.01   16
+    2.600      2005     -3.97    1.44   16
+    3.000      1988     -3.43    1.88   16
+    3.126      1993     -4.24    1.05   16
+    3.400      2003     -4.24    1.05   16
+    3.800      1978     -5.06    1.44   16
+
+  bias moves -2.35 points per unit of alpha
+  at alpha 2.2  (what every synthetic test so far planted): -1.53%
+  at alpha 3.126 (what the fabric actually is)            : -4.24%
+  difference -2.71 points
+
+  PREDICTION CONFIRMED: the bias is more negative on a steeper texture.
+
+  CONSEQUENCE FOR THE LANE. Every bias figure this lane has quoted was
+  measured at alpha 2.2 and the subject is alpha 3.126, so all of them
+  are wrong by about -2.7 points in the pessimistic direction. The
+  commissioning battery must sweep alpha over at least 2.8 to 3.5 -- the
+  fabric's measured mean plus and minus one ROI-to-ROI sd -- or its bias
+  correction is an extrapolation in the one variable that was never swept.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M129-fabric-spectral-ladder\out\slope-bias.json

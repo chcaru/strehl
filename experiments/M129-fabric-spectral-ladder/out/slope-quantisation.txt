@@ -1,0 +1,51 @@
+IS THE SLOPE RESULT QUANTISED?
+
+  planted f_c                     : 0.127279 sensor cyc/px
+  radial bin spacing              : 0.005524 sensor cyc/px
+  one bin, as a bias percentage   : 4.340 points
+
+  Every measured bias, divided by one bin. If these land on or near
+  half-integers, the estimator is returning grid values and the means
+  differ only by how many replicates fell in each bin.
+
+    alpha    bias %   in bins    frac
+    2.000    -0.445    -0.102  0.0225
+    2.200    -1.530    -0.353  0.0225
+    2.600    -3.971    -0.915  0.0225
+    3.000    -3.429    -0.790  0.0225
+    3.126    -4.243    -0.978  0.0225
+    3.400    -4.243    -0.978  0.0225
+    3.800    -5.056    -1.165  0.0225
+
+  smallest nonzero gap between distinct bias values : 0.2713 points
+  that gap in bins                                  : 0.0625
+  one bin over 16 replicates                        : 0.2713 points
+
+  CONFIRMED. The gaps are multiples of one bin divided by the
+  replicate count, which is exactly what a quantised estimator
+  averaged over replicates produces.
+
+  BUT THE MEAN IS NOT QUANTISED, AND THAT IS WHY THE RESULT STANDS.
+  Individual estimates land on the grid, yet the replicate standard
+  deviations are 1.05-2.01 points, which is 0.24-0.46 bins, so replicates do
+  scatter across adjacent bins and the mean interpolates between them.
+    standard error of each row : 0.263-0.503 points
+    endpoint difference        : 4.61 points, 10.4 sigma
+    a one-row step of ~0.8 pts : about 1.8 sigma -- marginal
+
+  HOW THE SLOPE RESULT MUST BE QUOTED. Quote the fitted slope and the
+  endpoints, which are resolved many times over. Do not quote row-to-row
+  differences as measurements: the tie between alpha 3.126 and 3.400 is
+  the grid, and the non-monotone step at 2.6 to 3.0 is replicate scatter.
+
+  THE NUMBER THIS ACTUALLY PRODUCED FOR THE LANE. One radial bin is
+  4.34% of f_c. That is the estimator's intrinsic resolution on
+  a single (ROI, aperture) cell, and it applies to the real ladder too,
+  not just to this synthetic sweep. Section 2.2 separates H2 from H3 by
+  28.07% in the product f_c*N, so the hypotheses are 6.5 bins apart.
+  Averaging over the six ROIs divides the scatter by sqrt(6), giving a
+  per-aperture standard error near 0.58 points if the real data scatter
+  like the synthetic. The separation is comfortably resolvable; it is the
+  BIAS, not the resolution, that threatens this lane.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M129-fabric-spectral-ladder\out\slope-quantisation.json

@@ -17,6 +17,8 @@ import numpy as np
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "out")
 DOC = os.path.join(HERE, "PREREGISTRATION.md")
+sys.path.insert(0, os.path.join(os.path.dirname(HERE), "m5-diffraction"))
+import m5_lib as _m5  # noqa: E402
 
 TOL = 0.02   # 2% relative, or half a unit in the last quoted place
 
@@ -190,8 +192,284 @@ def main():
                         e6["points_per_efold_power"] * np.log(r_low),
                         float(m4.group(2)), tol=0.03)
 
+    print("\nAmendment 7, the measured texture slope")
+    sp = os.path.join(OUT, "slope-w2.json")
+    if not os.path.exists(sp):
+        print("  FAIL out/slope-w2.json missing; run src/slope_survey.py")
+        ok = False
+    else:
+        with open(sp, encoding="utf-8") as fh:
+            s7 = json.load(fh)
+        srows = rows_after(text, "**The fabric's MEASURED low-band slope is alpha =",
+                           5)
+        for row in srows:
+            t = row[0].strip().replace("f/", "f").replace("f5.6", "f5.6")
+            t = {"f5.6": "f5.6", "f8": "f8", "f11": "f11",
+                 "f14": "f14", "f18": "f18"}[t]
+            ok &= check(f"slope, {t}", s7["per_aperture_mean"][t], num(row[1]))
+        m5 = re.search(r"MEASURED low-band slope is alpha = (\d+\.\d+), "
+                       r"ROI-to-ROI sd\s+(\d+\.\d+)", flat)
+        if not m5:
+            print("  FAIL slope headline sentence not found")
+            ok = False
+        else:
+            ok &= check("slope, overall mean", s7["overall_mean"],
+                        float(m5.group(1)), tol=0.005)
+            ok &= check("slope, overall sd", s7["overall_sd"],
+                        float(m5.group(2)), tol=0.005)
+        m6 = re.search(r"Between-aperture spread of the mean slope is \*\*([\d.]+)\*\*;"
+                       r" within-aperture, ROI to ROI, it is \*\*([\d.]+)\*\*; ratio"
+                       r" \*\*([\d.]+)\*\*", flat)
+        if not m6:
+            print("  FAIL aperture-independence sentence not found")
+            ok = False
+        else:
+            ok &= check("between-aperture spread", s7["between"],
+                        float(m6.group(1)), tol=0.005)
+            ok &= check("within-aperture spread", s7["within"],
+                        float(m6.group(2)), tol=0.005)
+            ok &= check("spread ratio", s7["between"] / s7["within"],
+                        float(m6.group(3)), tol=0.01)
+        m7 = re.search(r"standard deviation of only \*\*([\d.]+)\*\* times its span",
+                       flat)
+        if not m7:
+            print("  FAIL ramp sd-to-span sentence not found")
+            ok = False
+        else:
+            # ddof MUST match slope_survey.py, which uses numpy's default ddof=0
+            # throughout (ramp.std(), per_ap[t].std(), means.std()). Using the
+            # sample sd here would compare 0.395 against the code's 0.354 and
+            # report a failure in the document when the disagreement is the
+            # checker's own convention.
+            ramp = np.linspace(0.0, 1.0, 5)
+            ok &= check("ramp sd / span", float(np.std(ramp)),
+                        float(m7.group(1)), tol=0.01)
+        if not s7["potent"]:
+            print("  FAIL slope survey reports its potency control did not pass")
+            ok = False
+
+    print("\nAmendment 7, bias against slope")
+    bp = os.path.join(OUT, "slope-bias.json")
+    if not os.path.exists(bp):
+        print("  FAIL out/slope-bias.json missing; run src/slope_bias.py")
+        ok = False
+    else:
+        with open(bp, encoding="utf-8") as fh:
+            b7 = json.load(fh)
+        brows = rows_after(text, "reaches the floor at a lower frequency.", 7)
+        for row, rec in zip(brows, b7["rows"]):
+            ok &= check(f"alpha {rec['alpha']:.3f}, alpha", rec["alpha"],
+                        num(row[0]), tol=0.005)
+            ok &= check(f"alpha {rec['alpha']:.3f}, bias", rec["bias"],
+                        num(row[1]), tol=0.01)
+            ok &= check(f"alpha {rec['alpha']:.3f}, sd", rec["sd"],
+                        num(row[2]), tol=0.01)
+        # Each number is anchored on its own neighbouring literal. A single regex
+        # with lazy .*? between the captures can match a TRUNCATED number -- lazy
+        # expansion stops at the shortest match, so "-1.53%" can be captured as
+        # "3%" with the rest absorbed by the .*?. That reads as a pass.
+        m8a = re.search(r"\*\*(-?\d+\.\d+) points per unit of alpha\.\*\*", flat)
+        m8b = re.search(r"At 2\.2, [^:*]*: (-?\d+\.\d+)%", flat)
+        m8c = re.search(r"At 3\.126, [^:*]*: (-?\d+\.\d+)%", flat)
+        for label, m in (("points per alpha", m8a), ("bias at 2.2", m8b),
+                         ("bias at fabric", m8c)):
+            if not m:
+                print(f"  FAIL Amendment 7 slope sentence '{label}' not found")
+                ok = False
+        if m8a:
+            ok &= check("points per unit alpha", b7["points_per_alpha"],
+                        float(m8a.group(1)), tol=0.01)
+        if m8b:
+            ok &= check("bias at alpha 2.2", b7["bias_at_2p2"],
+                        float(m8b.group(1)), tol=0.01)
+        if m8c:
+            ok &= check("bias at fabric alpha", b7["bias_at_fabric"],
+                        float(m8c.group(1)), tol=0.01)
+        m9 = re.search(r"optimistic by about (\d+\.\d+) points", flat)
+        if not m9:
+            print("  FAIL optimistic-by sentence not found")
+            ok = False
+        else:
+            ok &= check("2.2 vs fabric difference", abs(b7["difference"]),
+                        float(m9.group(1)), tol=0.02)
+        if not b7["prediction_confirmed"]:
+            print("  FAIL slope_bias reports its registered prediction was refuted")
+            ok = False
+
+    print("\nAmendment 7, quantisation")
+    qp = os.path.join(OUT, "slope-quantisation.json")
+    if not os.path.exists(qp):
+        print("  FAIL out/slope-quantisation.json missing; run src/slope_quant.py")
+        ok = False
+    else:
+        with open(qp, encoding="utf-8") as fh:
+            q7 = json.load(fh)
+        m10 = re.search(r"one radial bin is \*\*([\d.]+)%\*\* of `f_c`", flat)
+        m11 = re.search(r"distinct bias values is \*\*([\d.]+)\*\* points", flat)
+        m12 = re.search(r"endpoint difference of ([\d.]+) points is \*\*([\d.]+)\s*"
+                        r"sigma\*\*", flat)
+        m13 = re.search(r"hypotheses lie ([\d.]+)\s*bins apart", flat)
+        for label, m in (("bin %", m10), ("gap", m11), ("endpoint", m12),
+                         ("separation", m13)):
+            if not m:
+                print(f"  FAIL Amendment 7 quantisation sentence '{label}' not found")
+                ok = False
+        if m10:
+            ok &= check("one bin, % of f_c", q7["bin_points"],
+                        float(m10.group(1)), tol=0.005)
+        if m11:
+            ok &= check("smallest gap", q7["bin_points"] / b7["nrep"],
+                        float(m11.group(1)), tol=0.01)
+        if m12:
+            ok &= check("endpoint difference", q7["range_points"],
+                        float(m12.group(1)), tol=0.01)
+            ok &= check("endpoint sigma", q7["endpoint_sigma"],
+                        float(m12.group(2)), tol=0.02)
+        if m13:
+            ok &= check("hypotheses, bins apart", q7["separation_bins"],
+                        float(m13.group(1)), tol=0.02)
+
+    print("\nAmendment 7, threat T6")
+    wp = os.path.join(OUT, "weave-w2.json")
+    if not os.path.exists(wp):
+        print("  FAIL out/weave-w2.json missing; run src/weave_peaks.py")
+        ok = False
+    else:
+        with open(wp, encoding="utf-8") as fh:
+            w7 = json.load(fh)
+        wrows = rows_after(text, "H2 and H3 candidates at f/14 and f/18.", 4)
+        want = [w7["bins_tested"], w7["expected_false"], w7["total_peaks"],
+                w7["max_shared_frequency"]]
+        names = ["bins examined", "expected false positives", "bins observed",
+                 "max shared frequency"]
+        for row, v, nm in zip(wrows, want, names):
+            ok &= check(f"T6, {nm}", float(v), num(row[1]), tol=0.02)
+        if not w7["control_pass"]:
+            print("  FAIL weave_peaks reports its own control did not pass")
+            ok = False
+        if not w7["clean"]:
+            print("  FAIL weave_peaks reports a harmonic in the danger zone")
+            ok = False
+
+    print("\nAmendment 7a, the paired aperture test")
+    pp = os.path.join(OUT, "slope-paired.json")
+    if not os.path.exists(pp):
+        print("  FAIL out/slope-paired.json missing; run src/slope_paired.py")
+        ok = False
+    else:
+        with open(pp, encoding="utf-8") as fh:
+            p7 = json.load(fh)
+        prows = rows_after(text, "Removing the ROI\nmain effect first:", 5) or \
+            rows_after(text, "| aperture | mean alpha | effect | t |", 5)
+        for row, t in zip(prows, tags):
+            ok &= check(f"7a effect, {t}", p7["effects"][t], num(row[2]), tol=0.01)
+            ok &= check(f"7a t, {t}", p7["effects"][t] / p7["se"], num(row[3]),
+                        tol=0.02)
+        m14 = re.search(r"Residual sd (\d+\.\d+) on (\d+) df, standard error of each"
+                        r"\s*effect (\d+\.\d+)", flat)
+        m15 = re.search(r"f/18 minus f/11 is positive in (\d+) of (\d+) ROIs\*\*,"
+                        r" mean\s*difference \+(\d+\.\d+), sign-test \*\*p = "
+                        r"(\d+\.\d+)\*\*", flat)
+        for label, m in (("residual sd", m14), ("sign test", m15)):
+            if not m:
+                print(f"  FAIL Amendment 7a sentence '{label}' not found")
+                ok = False
+        if m14:
+            ok &= check("7a residual sd", p7["resid_sd"], float(m14.group(1)),
+                        tol=0.01)
+            ok &= check("7a residual df", float(p7["dof"]), float(m14.group(2)))
+            ok &= check("7a effect se", p7["se"], float(m14.group(3)), tol=0.01)
+        if m15:
+            ok &= check("7a sign positives", float(p7["sign_npos"]),
+                        float(m15.group(1)))
+            ok &= check("7a sign n", float(p7["sign_n"]), float(m15.group(2)))
+            ok &= check("7a mean difference", p7["mean_diff_f18_f11"],
+                        float(m15.group(3)), tol=0.01)
+            ok &= check("7a sign p", p7["sign_p"], float(m15.group(4)), tol=0.02)
+        m16 = re.search(r"predicts \+(\d+\.\d+) \(H3\) to \+(\d+\.\d+) \(H2\)", flat)
+        if not m16:
+            print("  FAIL Amendment 7a predicted-steepening sentence not found")
+            ok = False
+        else:
+            ok &= check("7a predicted arm H2", p7["predicted_arm"],
+                        float(m16.group(2)), tol=0.01)
+        m17 = re.search(r"tilts one end relative to the other by \*\*(\d+\.\d+)x\*\*,"
+                        r".{0,80}?level ratio of \*\*(\d+\.\d+)x\*\*", flat)
+        m18 = re.search(r"shape error is about\s*\*\*(\d+)%\*\* of the level "
+                        r"difference", flat)
+        for label, m in (("tilt", m17), ("shape percent", m18)):
+            if not m:
+                print(f"  FAIL Amendment 7a sentence '{label}' not found")
+                ok = False
+        if m17:
+            ok &= check("7a band tilt", p7["band_tilt"], float(m17.group(1)),
+                        tol=0.01)
+        if m18:
+            ok &= check("7a shape vs level %", p7["shape_vs_level_pct"],
+                        float(m18.group(1)), tol=0.03)
+
+    print("\nAmendment 7a, the object slope")
+    op = os.path.join(OUT, "slope-object.json")
+    if not os.path.exists(op):
+        print("  FAIL out/slope-object.json missing; run src/slope_object.py")
+        ok = False
+    else:
+        with open(op, encoding="utf-8") as fh:
+            o7 = json.load(fh)
+        strows = rows_after(text, "| aperture | f_c H2 | steepening H2 |", 5)
+        # Steepening is quoted relative to a planted object slope of 3.000.
+        for row, t in zip(strows, tags):
+            for hyp, ci in (("H2", 2), ("H3", 4)):
+                ne = {"H2": 3.0763, "H3": 2.4020}[hyp] * \
+                    {"f5.6": 5.6, "f8": 8.0, "f11": 11.0,
+                     "f14": 14.0, "f18": 18.0}[t]
+                fcol = 1 if hyp == "H2" else 3
+                ok &= check(f"7a f_c {hyp}, {t}",
+                            float(_m5.f_cutoff_sensor(ne)), num(row[fcol]),
+                            tol=0.01)
+        orows = rows_after(text, "| aperture | measured | object H2 | object H3 |", 5)
+        for row, t in zip(orows, tags):
+            ok &= check(f"7a object H2, {t}", o7["object"]["H2"][t], num(row[2]),
+                        tol=0.01)
+            ok &= check(f"7a object H3, {t}", o7["object"]["H3"][t], num(row[3]),
+                        tol=0.01)
+        m19 = re.search(r"Mean object slope \*\*(\d+\.\d+)\*\* under H2, "
+                        r"\*\*(\d+\.\d+)\*\* under H3", flat)
+        if not m19:
+            print("  FAIL Amendment 7a mean-object sentence not found")
+            ok = False
+        else:
+            ok &= check("7a object mean H2", o7["object_mean"]["H2"],
+                        float(m19.group(1)), tol=0.005)
+            ok &= check("7a object mean H3", o7["object_mean"]["H3"],
+                        float(m19.group(2)), tol=0.005)
+        m20 = re.search(r"within \*\*(\d+\.\d+)\*\* of the\s*long-assumed 2\.2", flat)
+        if not m20:
+            print("  FAIL Amendment 7a distance-from-2.2 sentence not found")
+            ok = False
+        else:
+            ok &= check("7a distance from 2.2",
+                        abs(o7["object_mean"]["H2"] - 2.2),
+                        float(m20.group(1)), tol=0.05)
+        m21 = re.search(r"applicable bias is\s*about \*\*-(\d+\.\d+)%\*\*", flat)
+        if not m21:
+            print("  FAIL Amendment 7a applicable-bias sentence not found")
+            ok = False
+        else:
+            # Bias at the inferred object slope, read off slope_bias's fitted line
+            # anchored at its own alpha 2.2 measurement. Nothing is hardcoded.
+            a_obj = o7["object_mean"]["H2"]
+            predicted = b7["bias_at_2p2"] + b7["points_per_alpha"] * (a_obj - 2.2)
+            ok &= check("7a applicable bias", abs(predicted),
+                        float(m21.group(1)), tol=0.12)
+        if o7["collapsed"]:
+            print("  FAIL slope_object reports the spread collapsed, but Amendment")
+            print("       7a states a residual confound remains")
+            ok = False
+
     print()
-    print("all Amendment 6 figures reproduce" if ok else "SOME FIGURES DO NOT REPRODUCE")
+    print("all Amendment 6, 7 and 7a figures reproduce" if ok
+          else "SOME FIGURES DO NOT REPRODUCE")
     return 0 if ok else 1
 
 

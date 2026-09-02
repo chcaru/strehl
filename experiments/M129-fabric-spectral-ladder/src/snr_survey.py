@@ -169,7 +169,16 @@ def main():
             recs.append({"roi": i, "rc": roi["rc"], "cc": roi["cc"],
                          "aperture": t, "N": EXACT_N[t], "frame": j,
                          "file": os.path.basename(files[j]),
-                         "mean_dn": mean_dn, "floor": floor, "bands": bs})
+                         "mean_dn": mean_dn, "floor": floor, "bands": bs,
+                         # The whole radial PSD is kept so that later questions --
+                         # the texture's spectral slope, whether that slope is
+                         # aperture-independent below the cutoff, the shape of the
+                         # roll-off -- can be answered without another decode pass.
+                         # Six ROIs by five apertures of a few dozen bins is small,
+                         # and a decode pass is seven minutes.
+                         "f": [float(x) for x in f],
+                         "psd": [float(x) for x in p],
+                         "counts": [int(x) for x in c]})
             print(f"  {t:>6} {j:6d} {mean_dn:8.1f} {floor:10.1f} " +
                   "".join(f"{bs[b]['snr']:10.2f}" for b in BANDS))
         print()

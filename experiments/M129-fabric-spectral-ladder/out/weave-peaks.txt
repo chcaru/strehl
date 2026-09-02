@@ -1,0 +1,78 @@
+WEAVE HARMONICS: is there periodic structure near the cutoffs?
+
+Search region 18.6-66.4 cy/mm, from the top of the low band to the
+GQ lattice reach 69.05 cy/mm. A peak is a bin standing 3 sigma above the
+noise floor AFTER the spectrum has already reached that floor -- a
+re-emergence, which is the mechanism that would fool the estimator.
+Danger zone for the measurement is 30-55 cy/mm, bracketing the H2 and H3
+candidates at f/14 and f/18.
+
+   ROI       f5.6        f8       f11       f14       f18   worst re-emergence
+     0          0         0         0         0         0               0.000
+     1          0         0         0         0         0               0.000
+     2          0         0         0         0         0               0.000
+     3          0         0         0         0         0               0.000
+     4          1         0         0         0         0               0.166
+     5          0         0         0         0         0               0.000
+
+  'n/a' means the spectrum never reaches the floor inside the search
+  region, so re-emergence is undefined. That is the texture-limited case
+  and it is expected at the wide apertures:
+    f5.6 reaches floor in 6/6  f8 reaches floor in 6/6  f11 reaches floor in 6/6  f14 reaches floor in 6/6  f18 reaches floor in 6/6
+
+  re-emergent bins found anywhere : 1
+  re-emergent bins in danger zone : 1
+  largest re-emergence, as a fraction of the floor : 0.166
+
+  CONTROL. Two earlier versions of this control were wrong and both
+  failures were informative. The first compared bins against the
+  extrapolated power law and missed every plant. The second demanded the
+  detector see a re-emergence of 30% of the floor -- but the detector uses
+  the SAME rule as the crossing estimator, so a harmonic it cannot see is
+  one the estimator cannot see either, and demanding more sensitivity than
+  the estimator has tests the wrong thing.
+
+  The right control is a threshold calibration: plant just above the local
+  detection threshold and require a hit, plant just below and require a
+  miss. That shows the detector is sharp and that its blind spot is
+  exactly the estimator's blind spot.
+
+    at cy/mm  threshold   planted   expect          got
+        46.9      0.177     0.265      hit          hit
+        46.9      0.177     0.088     miss         miss
+        56.6      0.170     0.255      hit          hit
+        56.6      0.170     0.085     miss         miss
+        65.3      0.152     0.227      hit          hit
+        65.3      0.152     0.076     miss         miss
+
+  control PASS: the detector fires above its
+  threshold and is silent below it, at all three positions.
+
+  SENSITIVITY, stated plainly. The smallest re-emergence this null covers,
+  as a fraction of the floor, at each danger-zone frequency:
+     29.7 cy/mm :  0.234  (164 samples in the radial bin)
+     36.1 cy/mm :  0.208  (208 samples in the radial bin)
+     43.7 cy/mm :  0.195  (236 samples in the radial bin)
+     52.3 cy/mm :  0.170  (312 samples in the radial bin)
+  A harmonic below those heights is invisible here AND invisible to the
+  crossing estimator, so it cannot move the measurement.
+
+  IS THE ONE DETECTION REAL? A genuine weave harmonic is a property of the
+  fabric, so it sits at a FIXED frequency and must repeat across ROIs and
+  across apertures. An isolated bin in a single cell is what chance looks
+  like. Both readings are checked.
+
+    bins examined                       : 1350
+    false positives expected at 3 sigma : 1.8
+    detections observed                 : 1
+    most cells sharing one frequency    : 1 of 30
+        54.5 cy/mm : ROI4/f5.6 +0.166
+
+    READING: the count is at or below chance and nothing repeats at a
+    fixed frequency. There is no evidence of a weave harmonic.
+
+  VERDICT: nothing climbs back out of the floor inside the region
+  where the f/14 and f/18 cutoffs lie. The threat is retired for those
+  two apertures, which section 2.3 calls the measurement.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M129-fabric-spectral-ladder\out\weave-w2.json
