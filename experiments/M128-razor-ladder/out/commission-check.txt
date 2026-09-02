@@ -1,0 +1,30 @@
+backup: C:\Users\chris\AppData\Local\Temp\M128_PREREGISTRATION.md.bak
+
+baseline (unmutated): rc=0
+  M128 pre-registration check: 41 claims re-derived
+
+D1 table-1 cell, last digit of N_eff
+  rc=1  CAUGHT
+    - t1 H1 — fact 1149 N_eff: doc 20.898 != recomputed 20.899
+
+D2 rise-in-um cell, 0.01 um
+  rc=1  CAUGHT
+    - rise[um] H1 f/5.6: doc 13.64 != recomputed 13.65
+
+D3 rise-in-px cell, last digit
+  rc=1  CAUGHT
+    - rise[px] H3 f/11: doc 1.5954 != recomputed 1.5953
+
+D4 deleted prose claim (M5 bracket re-expressed)
+  rc=1  CAUGHT
+    - prose claim missing or altered (M5's bracket re-expressed with M84b's m): /`p` ∈ \[1\.318, 1\.926\]/
+
+D5 separation percentage, 0.01
+  rc=1  CAUGHT
+    - prose claim missing or altered (the separation trend across apertures): /11\.71% of the largest rise at f/5\.6.*?15\.82% at f/11/
+
+restored: identical to pre-run = True
+post-restore baseline: rc=0
+
+5/5 defects caught
+GREEN  every planted defect turned the checker red, and it is green again on the restored document

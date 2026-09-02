@@ -1,0 +1,98 @@
+M128 registered predictions
+a = 1009.41 um*cy/mm, b = 7.19 um, m = 2.7198 +/- 0.0051, lambda = 550 nm
+sensor pitch 5.12 um, green sublattice pitch 10.24 um, sensor Nyquist 97.65625 cy/mm
+
+2.1  round trip: each hypothesis' f_c at f/5.6 back to p
+        hypothesis  f_c cy/mm    N_eff        B        p
+     H1  fact 1149      87.00   20.899   3.7319   0.9956
+  H2  fact 1152 lo     105.54   17.227   3.0763   1.3099
+  H3  fact 1152 hi     135.17   13.451   2.4020   1.9400
+
+2.2  predicted 10-90% rise, um, negligible subject term (c = 0)
+        hypothesis       f/5.6         f/8        f/11
+     H1  fact 1149      13.650      18.067      23.898
+  H2  fact 1152 lo      11.965      15.440      20.116
+  H3  fact 1152 hi      10.366      12.865      16.336
+
+2.3  the same rises in green-plane px (10.24 um), which is what the ESF is binned in
+     H1  fact 1149      1.3330      1.7644      2.3338
+  H2  fact 1152 lo      1.1685      1.5078      1.9644
+  H3  fact 1152 hi      1.0123      1.2563      1.5953
+
+2.4  separation: worst-case adjacent-hypothesis gap per aperture
+  f/5.6: rises ['13.650', '11.965', '10.366']  min gap 1.599 um = 11.71% of the largest
+  f/8: rises ['18.067', '15.440', '12.865']  min gap 2.575 um = 14.25% of the largest
+  f/11: rises ['23.898', '20.116', '16.336']  min gap 3.780 um = 15.82% of the largest
+
+2.5  the ladder: rise^2(N) = s^2 N^2 + c^2 under each hypothesis, and what a shared subject term does to it
+  subject softness c =   0.0 um
+         H1  fact 1149 rises ['13.650', '18.067', '23.898']  -> s  2.0719 c   7.190 B  3.7319 p  0.9956
+      H2  fact 1152 lo rises ['11.965', '15.440', '20.116']  -> s  1.7079 c   7.190 B  3.0763 p  1.3099
+      H3  fact 1152 hi rises ['10.366', '12.865', '16.336']  -> s  1.3335 c   7.190 B  2.4020 p  1.9400
+  subject softness c =  10.0 um
+         H1  fact 1149 rises ['16.921', '20.650', '25.906']  -> s  2.0719 c  12.316 B  3.7319 p  0.9956
+      H2  fact 1152 lo rises ['15.594', '18.395', '22.464']  -> s  1.7079 c  12.316 B  3.0763 p  1.3099
+      H3  fact 1152 hi rises ['14.404', '16.294', '19.154']  -> s  1.3335 c  12.316 B  2.4020 p  1.9400
+  subject softness c =  20.0 um
+         H1  fact 1149 rises ['24.214', '26.952', '31.162']  -> s  2.0719 c  21.253 B  3.7319 p  0.9956
+      H2  fact 1152 lo rises ['23.306', '25.266', '28.366']  -> s  1.7079 c  21.253 B  3.0763 p  1.3099
+      H3  fact 1152 hi rises ['22.527', '23.780', '25.824']  -> s  1.3335 c  21.253 B  2.4020 p  1.9400
+  subject softness c =  30.0 um
+         H1  fact 1149 rises ['32.959', '35.020', '38.355']  -> s  2.0719 c  30.850 B  3.7319 p  0.9956
+      H2  fact 1152 lo rises ['32.298', '33.740', '36.120']  -> s  1.7079 c  30.850 B  3.0763 p  1.3099
+      H3  fact 1152 hi rises ['31.741', '32.642', '34.159']  -> s  1.3335 c  30.850 B  2.4020 p  1.9400
+
+2.6  M5's measured bracket, re-expressed with M84b's measured m
+    M5 upper B = 3.064: p = 1.3177, implied f_c at f/5.6 = 105.96 cy/mm
+    M5 lower B = 2.412: p = 1.9262, implied f_c at f/5.6 = 134.61 cy/mm
+  fact 1149 (p = 1) needs B = 3.7198, which M5's upper bound excludes
+
+2.7  HOW GOOD DOES THE MEASUREMENT HAVE TO BE
+  Monte Carlo on the SECONDARY reduction, the rise ladder. Truth is
+  H2 with a subject term c = 20 um, the pessimistic end of what the
+  bevel could contribute. Each of the three rises is perturbed by
+  independent Gaussian error of SD sigma_r, the ladder is refit, and
+  B is recovered. The three hypotheses sit at B = 3.7319 / 3.0763 /
+  2.4020, so adjacent gaps are about 0.66. 'assigned' is the fraction
+  of trials whose recovered B is nearest the true hypothesis; that is
+  the quantity the lane's verdict actually rests on.
+
+  truth: f_c(f/5.6) = 105.54 cy/mm, c = 20.0 um, rises ['23.306', '25.266', '28.366'] um
+  hypothesis B values ['3.7319', '3.0763', '2.4020'], min adjacent gap 0.6556
+   sigma_r um   rel %     B sd   gap/sd  assigned  neg s^2
+         0.02    0.08   0.0086    75.89    100.0%     0.0%
+         0.05    0.19   0.0217    30.19    100.0%     0.0%
+         0.10    0.39   0.0431    15.23    100.0%     0.0%
+         0.20    0.78   0.0867     7.56    100.0%     0.0%
+         0.35    1.36   0.1525     4.30     97.1%     0.0%
+         0.50    1.95   0.2188     3.00     87.4%     0.0%
+         1.00    3.90   0.4525     1.45     55.2%     0.0%
+         2.00    7.80   0.8496     0.77     31.0%     3.8%
+
+  REGISTERED PRECISION REQUIREMENT (secondary reduction): the
+  per-aperture 10-90% rise must be measured to 1 sigma <= 0.35 um,
+  which is about 1.4% of the rise, for a 4-sigma separation between
+  adjacent hypotheses. Above 0.5 um the ladder degrades quickly
+  because it is a difference of squares of three similar numbers.
+
+2.8  THE PRIMARY REDUCTION IS BETTER CONDITIONED, AND HERE IS WHY
+  m88lib.fit_fc fits A * diffraction(f_c) * pixel * gauss(sigma) to
+  the measured SFR. It separates the cutoff from the subject term by
+  the SHAPE of the MTF rolloff, not by its width alone, so sigma
+  absorbs bevel softness and residual defocus while f_c stays free.
+  That gives one f_c per aperture directly, and the test becomes
+  f_c(N) * N = const, which is a mean of three ratios rather than a
+  difference of squares.
+   rel err on f_c  implied B sd   gap/sd
+             0.5%        0.0089    73.82
+             1.0%        0.0178    36.91
+             2.0%        0.0355    18.46
+             3.0%        0.0533    12.30
+             5.0%        0.0888     7.38
+            10.0%        0.1776     3.69
+
+  REGISTERED PRECISION REQUIREMENT (primary reduction): f_c must be
+  measured to 5% relative per aperture for a 4-sigma separation. That
+  is a far weaker demand than the rise ladder's 1.4%, which is why
+  fit_fc is registered as primary and the rise ladder as the
+  independent cross-check on it, not the other way round.
