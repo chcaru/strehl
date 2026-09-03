@@ -1567,6 +1567,66 @@ With Scale retained, **M8 is squarely on the product path** -- every render
 resamples through a kernel with negative lobes, so the overshoot question is
 live rather than hypothetical.
 
+### 2.9.7 Nothing in this repository is sharpening-safe, and the number that said otherwise was underpowered
+
+The `S_25` hardening lane closed with a verdict I asked for and did not expect
+to be this complete: **close the lane, and the reason is worse than tone.**
+
+**The correction first, because I propagated the error.** I have been recording
+`S_25` as the one sharpening-safe statistic in the repository at `0.995819x`,
+and I repeated it to two lanes. That figure came from a 24-seed run. The lane
+expanded to a **64-site control** and re-ran the identical arms **against the
+unchanged 1% bar** (`M-PHASE0-SLANTEDGE.md:276-278`):
+
+> The expanded 64-site control also overturns the apparent native-S25
+> sharpening safety from the earlier 24-seed run: USM is now **+2.829%**,
+> outside the unchanged 1% bar.
+
+The matrix row at `:269` reads USM `1.028294` **RED**. **The bar did not move;
+the sample grew.** `0.418%` was not a property, it was an underpowered
+measurement -- and note the direction of the error: **the underpowered run
+produced the flattering number, and that is the number that got quoted
+onward.** This is the third time an underpowered or mis-read summary has misled
+this program, after the two recorded in 2.8.1.
+
+**The consequence is a clean sweep.** Every empirically constructed candidate
+in this repository rewards sharpening:
+
+| statistic | USM response |
+| --- | --- |
+| `Q25` | `5.560744x` (+456.07%) |
+| three slanted-edge implementations | ~9.9% "resolution" gain from USM alone |
+| `S_25` | `1.028294x` (+2.829%) |
+
+So `S_25` fails **all three** properties, not two: tone (`18818.9045x`),
+sharpening (`1.028294x`), and -- in every variant that repaired tone -- genuine
+resolution response, which reversed sign (`blur 1.268326`, `improvement
+.923468`).
+
+**Why the family is closed.** Unknown monotone tone is structurally confounded
+with edge shape inside the Fourier/SNR construction, so normalisation alone
+cannot separate tone from blur. The lane was careful not to overclaim: a finite
+search **does not** establish fundamental impossibility, only that further work
+would be invention of a new statistic rather than bounded hardening.
+
+**One transferable positive, and it should outlive the lane.** Tone invariance
+was obtained **without ordinality**: an independent 33-step PCHIP linearisation
+moved affine, gamma-3 and logistic arms by at most **`0.0141%`** without
+disturbing the USM result (`:286-289`). This matters because ordinality is the
+obvious route to tone-invariance and is the leading suspect for *why* `Q25`
+rewards sharpening -- rank construction appears to buy tone-invariance and pay
+in sharpening-safety. An external tone witness gets the invariance without that
+trade. It did not save `S_25`, whose optical arms reversed under the transform,
+so it is a technique rather than a fix.
+
+**What this does to the program.** It removes the last software route to a
+detail instrument from the existing families, and it makes the case for a
+*structural* guarantee rather than an empirical one as strong as it can get:
+every empirical candidate has now been defeated by a free operation any
+competitor can apply. The critical path is candidate 1's theorem-backed
+construction plus the owner's IBIS-off re-shoot -- which is where the program's
+effort is now pointed.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
