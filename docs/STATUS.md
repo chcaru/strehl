@@ -200,6 +200,65 @@ A follow-on lane (`M-PHASE0-SPLIT2`) is testing whether the 32-repeat capture su
 first of those, since repeated exposures of a fixed scene are non-degenerate by construction
 in a way split halves can never be.
 
+## 2.1 The scorecard now exists, and every value on it is UNMEASURED
+
+`docs/proposals/2026-09-sota-scorecard.md`, v1.1, commits `90bced75` and `986c4653`.
+
+Until now this project had no instrument that answered its own governing question. Progress
+toward SOTA was narrated rather than measured, and the one competitive measurement that
+existed had been **retracted** — the 17–27% detail deficit against Zerene and Helicon turned
+out to be a tone-curve artifact, with tone alone explaining 94.8% / 109.9% / 267.1% across
+three bands, and it was never replaced with a correct number.
+
+The scorecard was deliberately registered **before** the in-flight build lanes reported, so
+that it is a genuine pre-registration rather than a bar fitted to whatever the code turned
+out to do.
+
+SOTA is not redefined here. It is taken verbatim from the proposal (`2026-08-sota-path.md`
+:164-167): **"SOTA = a pre-registered scorecard, versus named comparators, on axes with
+commissioned instruments"**, where an instrument is admitted only after it has failed on a
+planted defect of the kind it polices and passed a null it was not tuned on. The proposal's
+own success statement (`:192-197`) is conjunctive — detail at or beyond the best shipping
+comparator, strictly lower noise, zero invented structure, bounded veil, plus certified
+acuity, `n_eff` and physical depth that no comparator emits at all.
+
+Twelve axes carry numeric bars: detail (cutoff ≥0.25 cyc/px, comparator ratio LCB95 ≥1.000),
+noise (efficiency ≤1.10, ratio UCB95 ≤0.950), halo/veil (median ≤1%, p99 ≤5%), artifacts
+(median Q ≤1.00, bad sites ≤1%), coverage (≥99%, longest gap ≤1%), clipping (≤0.10% per rail),
+colour (ΔE00 median/p95/max ≤1/2/3), invented values (**exactly 0.0000%**), certificates
+(false-certification UCB95 ≤1%), depth (median ≤0.5 step), speed (≥2× comparator, CPU ≤0.15
+s/frame), and memory (≤6 GiB, byte-identical across workers).
+
+**The honest current position: 45 UNMEASURED entries and a competitive standing of UNKNOWN.**
+That is the correct state of the record, not a gap in it.
+
+Four instruments were **dropped for being defeatable**: standalone SFR/MTF and band-power
+(sharpening-unsafe), same-frame split FRC (invalid for the reason D8 established), natural-image
+SSIMULACRA2/butteraugli, and composite scoring. Detail readings above 0.25 cyc/px are reported
+as `UNLICENSED_GT_0.25` rather than quoted as results.
+
+The comparator protocol is built so the specific failure that killed the last attempt cannot
+recur: every program receives byte-identical hashed linear ProPhoto TIFFs and emits audited
+linear TIFFs, XMP is ignored, development controls are rejected, a neutral-ramp test catches
+any tone or gain change, and numerical scoring precedes a single common display transform.
+Relative timing uses warm uncompressed input so it cannot reward a faster RAW decoder or
+faster storage; native-RAW timing is measured separately at 16 workers.
+
+The lane also corrected two things this document had asserted. **C10's registered bars were
+point ≥2.0 with lower bound ≥1.5**, not simply 1.5 — the measured R=0.70852 fails both, so the
+verdict stands, but the bar was mis-stated. And the request corpus holds **3,251 ARWs, not
+~3,361**.
+
+**One axis is blocked on a capture that does not exist.** M7 colour cannot be scored until a
+tilted ColorChecker Classic or Digital SG is captured under a measured illuminant with a grey
+card and darks. No enumerated capture is a traceable colour target spanning the focus sweep.
+This is a request for the owner, not a defect in the scorecard.
+
+**A coupling worth recording:** the proposal's own success statement names FRC as half of the
+D1 detail instrument. Same-frame split FRC is now invalid, so whether FRC is available to the
+scorecard at all depends on the `SPLIT2` repeat-pair result. If repeats do not rescue it, the
+detail axis rests on the slant edge alone.
+
 **M-PHASE0-PHASE — CLOSED. C1 is KILL at the measured ρ, and NOT ROBUST across the ρ
 census.** Getting here took a filed verdict, its retraction, and a sign fix in the
 lane's own algebra; read Amendments A7 (the wrong verdict), A8 (the retraction), A9 (the
