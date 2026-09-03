@@ -1168,6 +1168,17 @@ been scored on sw4. The contamination costs a future holdout, not a result alrea
 because I did not check the capture manifest before launching. Verifying capture roles is now
 part of launching any lane that reads real data.
 
+**Escalation, confirmed after the scorecard owner audited the boundary (`e68f40f7`, scorecard
+v1.2): the burn is not one capture but five, and it blocks three axes.** The holdout unit is
+subject plus uninterrupted session, so burning sw4 burned the whole
+`30-calibration-grid` group. I verified this independently rather than taking it on report: the
+five stacks run contiguously on 2026-09-01 from **20:57:42 to 21:09:06** and their frame counts
+match the manifest exactly. **M1, M5 and M9 cannot pass scorecard v1.2 until a fresh
+subject/session replaces them** — now the highest-priority owner capture request, §4.0 item 2.
+The scorecard also now carries a literal labelling rule: only a row whose evidence class begins
+`HOLDOUT` is holdout, and burned, development, control and historical rows all say
+`NOT HOLDOUT` explicitly. That closes the ambiguity my launch exploited.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
@@ -1423,10 +1434,11 @@ part of launching any lane that reads real data.
 
 ## 4. What the owner still owes, and what it would unlock
 
-### 4.0 Two physical captures the owner can make, in priority order
+### 4.0 Three physical captures the owner can make, in priority order
 
-Both are cheap, both are blocking, and neither can be produced by any agent. They are listed
-first because they are the only items on this list that no amount of autonomous work can clear.
+All three are cheap, all three are blocking, and none can be produced by any agent. They are
+listed first because they are the only items on this list that no amount of autonomous work can
+clear. **The third is new and it exists because of my error — see §2.8.3.**
 
 **1. Re-shoot the 32-repeat capture with IBIS / SteadyShot OFF.** This is the higher-value of
 the two and it is close to a one-setting fix. `12-bee-iso-var-no-bracket-32-repeat-diff-light`
@@ -1442,7 +1454,28 @@ specifies detail as "D1: FRC + slant-edge" — two instruments — and both FRC 
 closed. Same subject, same settings, stabilisation off is all that is needed; the existing
 protocol, registration and 17/17-plant commissioning battery are already built and waiting.
 
-**2. A ColorChecker capture, to unblock the colour axis (M7).** Required: a tilted ColorChecker
+**2. A replacement calibration-grid session — the burn cost five captures and three axes.**
+Scorecard v1.2 (`e68f40f7`) establishes that **the holdout unit is subject plus uninterrupted
+capture session, not a directory or a step width**, so reading an outcome on any member burns
+every member. I independently verified the boundary: all five `30-calibration-grid` stacks were
+shot contiguously on 2026-09-01 between **20:57:42 and 21:09:06**, with frame counts matching the
+manifest exactly (91, 55, 46, 23, 27). The README records constant subject, light, aperture, ISO
+and composition, with only step width varying. **There is no other calibration-grid group in
+`D:\personal\macro`.** So sw1, both sw4 stacks and both sw10 stacks are all burned.
+
+*What it needs:* a **fresh subject and a fresh session**, supplying
+**one dense checker-only reference**, **two independent scored repeats at one step width**, and
+**two independent sparse-step repeats**. The checker reference is never passed to a stacker in
+the corresponding scored arm. Same constancy discipline as the original: only step width changes.
+
+*What it unlocks:* **three scorecard axes, M1, M5 and M9, which cannot pass v1.2 without it.**
+M1 has only its untouched same-focus bee sentinel left and no depth-varying independent-repeat
+holdout; M5 keeps the tilted-ruler and natural holdouts but loses its registered sw4/sw10 grid
+arms; M9 keeps bee repeats but loses independent depth-stack certificate truth, and bee
+same-focus repeats alone cannot close it. The burned grid may still **commission** an instrument;
+it may never **score** one.
+
+**3. A ColorChecker capture, to unblock the colour axis (M7).** Required: a tilted ColorChecker
 Classic or Digital SG under a measured illuminant, together with a grey card and dark frames.
 Without it, M7 stays `UNMEASURED` permanently — it is the one scorecard axis with external
 ground truth, and it cannot be synthesised from existing captures.
