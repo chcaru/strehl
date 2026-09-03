@@ -55,6 +55,66 @@ lane should begin by searching for existing data before planning any decode.
 > if it resolves either way, what code actually changes? — and the ones that answer
 > "nothing" are to be dropped rather than run in proposal order.
 
+### 2.0.1 The triage, and what auditing it revealed
+
+`docs/proposals/2026-09-phase0-triage.md` (commit `f7017885`) asked one question of every
+remaining gate: if it resolves either way, what code changes? It found the remaining list
+was **twelve gates, not nine** — D11/DECODE, D13/IDLE and D15/NVME had been missed — named
+six as already answered in the corpus, recommended dropping C5/CURV outright (the lens bowl
+has no consumer, so no result could change anything), and concluded: *"Nothing remaining is
+worth doing before building. Stop phase 0."*
+
+**That triage was then audited, and it was wrong about half of what it claimed to close.**
+Of the three already-answered gates nobody was building on, an independent audit returned
+**DO NOT CLOSE on all three**:
+
+- **DPAR** — the null reproduces, but its sensitivity plant is **linear**, while
+  `AGENTS.md:173-176` and lane M103 establish that linear alignment plants do not transfer
+  to the measured curved track. The minimum detectable amplitude is therefore unknown, and
+  a null with unknown power is not evidence of absence.
+- **DECODE** — the headline "cold 1.245 GB/s" was **compressed-input** throughput, not the
+  allocated-output figure the claim implied; the same data gives ~2.47 GB/s on the other
+  convention. The benchmark harness was **absent from the repository**, "cold" meant only
+  "unread that session", and there was no timing RED control.
+- **NVME** — the device rate the proposal asks for had **never been measured at all**.
+
+The lesson generalises past these three: a paraphrase of a measurement is not the
+measurement, and this repo's numbers have to be re-run rather than re-read.
+
+### 2.0.2 DECODE and NVME, now actually measured — both CLOSE
+
+`docs/research/M-PHASE0-DECODE2.md`, `docs/research/M-PHASE0-NVME2.md`,
+`experiments/M-PHASE0-IOPERF/`. Commits `40e41a63` (harness) and `d337daa8` (reports).
+
+**D11/DECODE — PASS.** The real-ARW scaling curve the proposal actually specifies, with
+both byte conventions reported separately because conflating them is what made the old
+number uninterpretable:
+
+| threads | 1 | 2 | 4 | 8 | 16 | 32 |
+|---|---|---|---|---|---|---|
+| compressed-input MB/s | 194 | 359 | 510 | 591 | 721 | 719 |
+| allocated-output MB/s | 381 | 706 | 1002 | 1162 | 1416 | 1413 |
+
+A planted 200 ms delay was detected at 188–289 ms in every arm, so the timer is
+commissioned rather than assumed; nonzero output checksums and `black_box` consumption
+prove it is not timing a no-op. 381 allocated-output MB/s/core clears the 200 bar and
+1.413 GB/s clears the 1.0 bar. **Keep rawler; no owned decoder is warranted.**
+
+**D15/NVME — no bottleneck.** Cold **6.338 GB/s**, warm **20.615 GB/s**, ratio **3.25×**;
+replicated at 6.342/19.671 for 3.10×, with cold runs agreeing to 0.055%. Unbuffered reads
+stayed at 6.178 GB/s *after* warming, which is what proves cache bypass rather than merely
+asserting it. That is 1.268× the assumed 5 GB/s and **11.41%** of projected decode time.
+**No IOCP prefetch is warranted.**
+
+**The architecturally useful result is the comparison between them.** Storage delivers
+6.338 GB/s cold while decode consumes at 1.413 GB/s allocated-output — **storage is roughly
+4.5× faster than decode, so decode is the bottleneck and I/O is not.** That conclusion is
+robust to a large measurement error in either direction: it would take a ~4.5× mistake to
+flip it, which is why these two gates can close on speed numbers rather than needing the
+adversarial re-verification the image-quality claims get. Decode also **saturates at 16
+threads** (721→719 compressed, 1416→1413 allocated), so the remaining lever is not more
+worker threads but the **bounded decode→fold queue**, which is the live Rust seam.
+
 **M-PHASE0-PHASE — CLOSED. C1 is KILL at the measured ρ, and NOT ROBUST across the ρ
 census.** Getting here took a filed verdict, its retraction, and a sign fix in the
 lane's own algebra; read Amendments A7 (the wrong verdict), A8 (the retraction), A9 (the
