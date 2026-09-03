@@ -14,6 +14,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import struct
 import subprocess
 import sys
@@ -208,6 +209,43 @@ def write_json(path: Path, value: object) -> None:
     path.write_bytes(canonical_bytes(value))
 
 
+def validate_preregistered_anchors() -> dict:
+    if not MANIFEST_PATH.exists() or not PREREG_PATH.exists():
+        raise RuntimeError("sealed manifest and preregistration are required")
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    if sha256(MANIFEST_PATH) != FROZEN_MANIFEST_SHA256:
+        raise RuntimeError("sealed manifest hash drift")
+    if (
+        manifest.get("schema") != SCHEMA
+        or manifest.get("epoch") != EPOCH
+        or manifest.get("design_sha") != DESIGN_SHA256
+        or set(manifest.get("captures", {})) != set(CAPTURE_ORDER)
+    ):
+        raise RuntimeError("sealed manifest schema/epoch/design/capture ledger drift")
+    text = PREREG_PATH.read_text(encoding="utf-8")
+    for label, path in (("reference.py", Path(__file__)), ("measure.py", MEASURE_PATH)):
+        match = re.search(rf"^- `{re.escape(label)}`: `([0-9a-f]{{64}})`$", text, flags=re.MULTILINE)
+        if match is None or sha256(path.resolve()) != match.group(1):
+            raise RuntimeError(f"{label}: source hash does not match preregistration")
+    decoder = manifest.get("decoder", {})
+    if decoder.get("binding") != f"rawpy {rawpy.__version__}":
+        raise RuntimeError("rawpy version drift from sealed manifest")
+    if decoder.get("libraw") != ".".join(str(v) for v in rawpy.libraw_version):
+        raise RuntimeError("LibRaw version drift from sealed manifest")
+    exe_entry = manifest.get("alignment_binary", {})
+    exe = Path(exe_entry.get("path", ""))
+    if not exe.exists() or sha256(exe) != exe_entry.get("sha256"):
+        raise RuntimeError("alignment binary drift from sealed manifest")
+    for name, config in CAPTURES.items():
+        entry = manifest["captures"][name]
+        if Path(entry.get("root", "")).resolve() != Path(config["path"]).resolve():
+            raise RuntimeError(f"{name}: root drift from sealed manifest")
+        current_transform = sha256(Path(config["transform"]))
+        if current_transform != entry.get("transform", {}).get("sha256"):
+            raise RuntimeError(f"{name}: sidecar drift from sealed manifest")
+    return manifest
+
+
 def ordered_raws(config: dict) -> list[Path]:
     root = Path(config["path"])
     resolved = root.resolve()
@@ -353,8 +391,8 @@ def decode_cfa_planes(path: Path) -> tuple[tuple[np.ndarray, np.ndarray, np.ndar
         }
     if len({plane.shape for plane in planes}) != 1 or planes[0].shape != (2344, 3514):
         raise RuntimeError(f"{path}: unexpected LibRaw CFA-plane geometry {[p.shape for p in planes]}")
-    if max(black) - min(black) != 0:
-        raise RuntimeError(f"{path}: W1 decoder convention requires equal black levels, got {black}")
+    if black != [512.0, 512.0, 512.0, 512.0]:
+        raise RuntimeError(f"{path}: W1 decoder convention requires four 512-DN black levels, got {black}")
     return planes, meta
 
 
@@ -802,6 +840,7 @@ def _row(identifier: str, null_name: str, null_reading: object, null_green: bool
 
 
 def run_commissioning() -> dict:
+    manifest = validate_preregistered_anchors()
     calibration = calibrate_affine_model()
     frozen = np.asarray(FROZEN_NU_EFF, dtype=np.float64)
     if np.any(frozen <= 0):
@@ -919,16 +958,34 @@ def run_commissioning() -> dict:
         and np.array_equal(eg2, mosaic[1::2, 0::2])
         and np.array_equal(eb, mosaic[1::2, 1::2])
     )
-    two_plane_plant = len((eg1, eg2))
+    tagged = np.asarray(
+        [
+            [[[10.0]], [[20.0]], [[30.0]], [[40.0]]],
+            [[[14.0]], [[28.0]], [[42.0]], [[56.0]]],
+        ],
+        dtype=np.float64,
+    )
+    shared_weights = np.asarray([[[0.25]], [[0.75]]], dtype=np.float64)
+    reconstructed = np.sum(tagged * shared_weights[:, None, :, :], axis=0)
+    hull_lo = np.min(tagged, axis=0)
+    hull_hi = np.max(tagged, axis=0)
+    reconstructed = np.clip(reconstructed, hull_lo, hull_hi)
+    four_plane_ok = (
+        reconstructed.shape == (4, 1, 1)
+        and len(np.unique(reconstructed)) == 4
+        and np.all(reconstructed >= hull_lo)
+        and np.all(reconstructed <= hull_hi)
+    )
+    green_only = reconstructed[1:3]
     rows.append(
         _row(
-            "cfa-four-plane-extraction",
-            "canonical R/G1/G2/B phase tags",
-            decode_ok,
-            decode_ok,
+            "cfa-four-plane-reconstruction",
+            "canonical extraction + one shared weight + four hulls",
+            {"extracted": decode_ok, "outputs": reconstructed.ravel().tolist()},
+            decode_ok and four_plane_ok,
             "green-only reconstruction",
-            two_plane_plant,
-            two_plane_plant != 4,
+            {"shape": list(green_only.shape), "outputs": green_only.ravel().tolist()},
+            green_only.shape[0] != 4,
         )
     )
 
@@ -1034,14 +1091,15 @@ def run_commissioning() -> dict:
         )
     )
     pg_cover = []
+    pg_plant_cover = []
     for iso in (100.0, 500.0, 1000.0):
         a_eff, b_eff = noise_coefficients(iso)
         gain = a_eff * 2.0
         rn_dn = math.sqrt(b_eff * 2.0)
-        hits = total = 0
+        hits = total = plant_hits = plant_total = 0
         for r in range(24):
             rng = np.random.default_rng(0xA117 + int(iso) * 100 + r)
-            signal_dn = 1000.0
+            signal_dn = 100.0
             electrons = signal_dn / gain
             g1 = rng.poisson(electrons, size=(128, 128)) * gain + rng.normal(0, rn_dn, (128, 128))
             g2 = rng.poisson(electrons, size=(128, 128)) * gain + rng.normal(0, rn_dn, (128, 128))
@@ -1054,9 +1112,34 @@ def run_commissioning() -> dict:
             half = 1.96 * math.sqrt(2.0 * f * f / frozen[0])
             hits += int(np.count_nonzero(np.abs(e - f) <= half))
             total += len(e)
+            plant_rng = np.random.default_rng(0xBAD0 + int(iso) * 100 + r)
+            pg1 = plant_rng.poisson(electrons, size=(128, 128)) * gain + plant_rng.normal(
+                0, 10.0 * rn_dn, (128, 128)
+            )
+            pg2 = plant_rng.poisson(electrons, size=(128, 128)) * gain + plant_rng.normal(
+                0, 10.0 * rn_dn, (128, 128)
+            )
+            plant_luma = 0.5 * (pg1 + pg2)
+            plant_level = laplacian_pyramid(anscombe(plant_luma, a_eff, b_eff), 1)[0]
+            plant_energy = _interior_values(smooth5(plant_level * plant_level), max_values=12000)
+            plant_v = float(np.mean(anscombe_variance(plant_luma, a_eff, b_eff)))
+            plant_f = identity_beta0 * plant_v
+            plant_half = 1.96 * math.sqrt(2.0 * plant_f * plant_f / frozen[0])
+            plant_hits += int(np.count_nonzero(np.abs(plant_energy - plant_f) <= plant_half))
+            plant_total += len(plant_energy)
         pg_cover.append(hits / total)
-    pg_plant = float(min(pg_cover) - 0.20)
-    rows.append(_row("poisson-gaussian-null", "unfitted PG seeds/ISOs", pg_cover, min(pg_cover) >= 0.90, "20-point undercoverage plant", pg_plant, pg_plant < 0.90))
+        pg_plant_cover.append(plant_hits / plant_total)
+    rows.append(
+        _row(
+            "poisson-gaussian-null",
+            "unfitted PG seeds/ISOs",
+            pg_cover,
+            min(pg_cover) >= 0.90,
+            "10x read-noise data under sealed model",
+            pg_plant_cover,
+            min(pg_plant_cover) < 0.90,
+        )
+    )
 
     # Metric controls: 32 independent tiles, with a noise null not used by the
     # phase calibration.  Every detail reading is <=0.25 cyc/output-pixel.
@@ -1072,12 +1155,16 @@ def run_commissioning() -> dict:
         latent = gaussian_filter(rng.standard_normal((TILE + 4, TILE + 4)), 0.65)[2:-2, 2:-2]
         n1 = rng.normal(0, 0.08, (TILE, TILE))
         n2 = rng.normal(0, 0.08, (TILE, TILE))
+        n3 = rng.normal(0, 0.08, (TILE, TILE))
+        n4 = rng.normal(0, 0.08, (TILE, TILE))
         g1 = latent + n1
         g2 = latent + n2
+        h1 = latent + n3
+        h2 = latent + n4
         detail_legacy_1.append(detail_tile_power(g1, g2))
-        detail_legacy_2.append(detail_tile_power(g1, g2))
+        detail_legacy_2.append(detail_tile_power(h1, h2))
         detail_blur_1.append(detail_tile_power(gaussian_filter(g1, 1.2), gaussian_filter(g2, 1.2)))
-        detail_blur_2.append(detail_tile_power(g1, g2))
+        detail_blur_2.append(detail_tile_power(h1, h2))
         noise = rng.normal(0, 1, (TILE, TILE))
         p = flat_tile_power(noise)
         flat_legacy.append(p)

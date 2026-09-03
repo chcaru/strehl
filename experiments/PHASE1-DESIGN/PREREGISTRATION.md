@@ -220,8 +220,10 @@ Exact gate:
 python experiments/PHASE1-DESIGN/reference.py --commission; python experiments/PHASE1-DESIGN/measure.py --gate
 ```
 
-`measure.py` rehashes the manifest, both programs, this preregistration, all
-sidecars, and every RAW before scoring. Exit 0 means one fixed global `k`
+`measure.py` rehashes the manifest, both preregistered program digests, this
+preregistration, all sidecars against both the manifest and commissioning
+artifact, decoder versions against the manifest, and every RAW before scoring.
+Exit 0 means one fixed global `k`
 clears width and Pareto. Exit 20 means valid `NO_COMMON_K`, a successful W1
 kill. Exit 2 means instrument/seal/input failure. A width-negative run writes
 all 161 arms and every failed width criterion, performs no discretionary
@@ -229,8 +231,8 @@ Pareto render, prints `NO_COMMON_K`, and stops phase 1.
 
 ## Final source hashes
 
-- `reference.py`: `5d6645e3d51e567ee2b4df246309f481e9ae3e2ecafa704830bb6d11ddd5d203`
-- `measure.py`: `ed2bda79d0148a90578016027066dbbd586230791c40252b07809459cc6e811f`
+- `reference.py`: `aa613796fada0b282a919c6e55baf9b9113b0d3a0fa1b4d7bec4b1d9888a36f2`
+- `measure.py`: `9a7e2682c8c24d46c66fbbf7e3444ce43415e8535c58fadd1323cac58781310b`
 - `PREREGISTRATION.md` before substituting this self-referential list is not
   separately pinned here; commissioning pins the exact final file.
 - Alignment binary and every input/artifact hash: see the sealed manifest.

@@ -38,7 +38,7 @@ def load_json(path: Path) -> dict:
 def validate_sealed_inputs() -> tuple[dict, dict, dict]:
     if not R.MANIFEST_PATH.exists() or not R.COMMISSION_PATH.exists() or not R.PREREG_PATH.exists():
         raise RuntimeError("sealed manifest, preregistration, and commissioning artifact are required")
-    manifest = load_json(R.MANIFEST_PATH)
+    manifest = R.validate_preregistered_anchors()
     commission = load_json(R.COMMISSION_PATH)
     if (
         manifest.get("schema") != R.SCHEMA
@@ -69,9 +69,12 @@ def validate_sealed_inputs() -> tuple[dict, dict, dict]:
             raise RuntimeError(f"stale commissioning artifact: {key} is {got}, commissioned {expected.get(key)}")
     for name, cfg in R.CAPTURES.items():
         got = R.sha256(Path(cfg["transform"]))
-        want = commission.get("transforms", {}).get(name)
-        if got != want:
-            raise RuntimeError(f"{name}: transform hash mismatch {got} != {want}")
+        commissioned = commission.get("transforms", {}).get(name)
+        sealed = manifest["captures"][name]["transform"]["sha256"]
+        if got != commissioned or got != sealed:
+            raise RuntimeError(
+                f"{name}: transform hash mismatch current={got}, commissioned={commissioned}, sealed={sealed}"
+            )
         mcap = manifest["captures"][name]
         raws = R.ordered_raws(cfg)
         if len(raws) != len(mcap["raws"]):
@@ -94,6 +97,11 @@ def validate_sealed_inputs() -> tuple[dict, dict, dict]:
     frozen = np.asarray(commission.get("frozen_nu_eff"), dtype=np.float64)
     if not np.array_equal(frozen, np.asarray(R.FROZEN_NU_EFF, dtype=np.float64)):
         raise RuntimeError("commissioned nu_eff does not equal preregistered frozen vector")
+    environment = commission.get("environment", {})
+    if environment.get("rawpy") != R.rawpy.__version__:
+        raise RuntimeError("commissioned rawpy provenance drift")
+    if environment.get("libraw") != list(R.rawpy.libraw_version):
+        raise RuntimeError("commissioned LibRaw provenance drift")
     return manifest, commission, calibration
 
 
@@ -126,14 +134,9 @@ def legacy_weight(energy: np.ndarray, floor: np.ndarray, band: int) -> np.ndarra
     excess = np.maximum(np.asarray(energy, dtype=np.float64) - floor, 0.0)
     ratio = excess / np.maximum(floor, 1.0) / SNR_REF
     p = exponent_at(band)
-    if p == 2.0:
-        out = ratio * ratio
-    elif p == 1.0:
-        out = ratio
-    else:
-        with np.errstate(divide="ignore", invalid="ignore"):
-            out = np.exp(np.clip(p * np.log(ratio), -80.0, 80.0))
-        out[excess <= 0] = 0.0
+    with np.errstate(over="ignore", invalid="ignore"):
+        out = np.power(ratio, p)
+    out[excess <= 0] = 0.0
     if not np.all(np.isfinite(out) & (out >= 0)):
         raise RuntimeError(f"legacy band {band}: invalid soft weights")
     return out
