@@ -86,9 +86,10 @@ def check_arm(record: dict) -> list[str]:
                 and algebra["operator_minimum_eigenvalue"] > 0.0
             )
         elif name == "clipped-usm":
+            nonlinear = record.get("nonlinearity_audit")
             expected = bool(
-                record["transform_audit"]["changed_fraction"]
-                >= CLIP_POTENCY_MIN
+                nonlinear is not None
+                and nonlinear["changed_fraction"] >= CLIP_POTENCY_MIN
                 and comparison["ratio_ucb95_one_sided"]
                 <= NONLINEAR_UCB_MAX
             )
@@ -162,7 +163,18 @@ def self_test() -> int:
         if check_arm(mutant):
             caught += 1
     print(f"SELF-TEST caught {caught}/{len(plants)} arm mutations")
-    return 0 if caught == len(plants) else 1
+    clipped = copy.deepcopy(fixture)
+    clipped.update(
+        {
+            "arm": "clipped-usm",
+            "algebra_audit": None,
+            "nonlinearity_audit": {"changed_fraction": 0.0},
+            "pass": True,
+        }
+    )
+    no_op_caught = bool(check_arm(clipped))
+    print(f"SELF-TEST caught clipped no-op: {no_op_caught}")
+    return 0 if caught == len(plants) and no_op_caught else 1
 
 
 def main(argv: list[str] | None = None) -> int:

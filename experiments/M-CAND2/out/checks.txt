@@ -1,0 +1,21 @@
+Pre-freeze:
+  Python compile: GREEN
+  Literal-gate self-test: caught 4/4 mutations
+  Synthetic congruence: ratio 1.0000000000000102
+  Synthetic maximum score residual: 7.30e-14
+  Synthetic maximum congruence residual: 1.05e-15
+  Baseline preflight checker: GREEN
+
+Post-freeze:
+  Frozen path verification: GREEN (8/8 paths)
+  Unclipped-USM checker: GREEN
+  Unclipped-USM ratio residual: 2.66e-14
+  Unclipped-USM maximum score residual: 1.64e-11
+  Unclipped-USM maximum covariance congruence residual: 1.25e-15
+
+Post-arm checker correction:
+  Literal-gate self-test: caught 4/4 mutations
+  Clipped no-op sentinel: caught
+  Original clipped-USM output: RED as expected
+  Reason: zero low-rail hits and zero high-rail hits; clipping was a no-op
+  Later arms present: none

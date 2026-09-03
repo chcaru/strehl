@@ -127,6 +127,12 @@ def run_arm(name: str, freeze: str, output: Path) -> int:
     base = crossfit(base_data, "base")
     arm = crossfit(transformed_data, name)
     audit = transform_audit(base_data, transformed_data)
+    nonlinearity_audit = None
+    if name == "clipped-usm":
+        nonlinearity_audit = transform_audit(
+            apply_transform(base_data, "unclipped-usm"),
+            transformed_data,
+        )
 
     comparison = None
     algebra = None
@@ -158,7 +164,7 @@ def run_arm(name: str, freeze: str, output: Path) -> int:
             )
         elif name == "clipped-usm":
             passed = bool(
-                audit["changed_fraction"] >= CLIP_POTENCY_MIN
+                nonlinearity_audit["changed_fraction"] >= CLIP_POTENCY_MIN
                 and comparison["ratio_ucb95_one_sided"]
                 <= NONLINEAR_RATIO_UCB_MAX
             )
@@ -187,6 +193,7 @@ def run_arm(name: str, freeze: str, output: Path) -> int:
         "template_audit": template_audit(template_seed),
         "base_range": range_audit(base_data),
         "transform_audit": audit,
+        "nonlinearity_audit": nonlinearity_audit,
         "base": result_record(base),
         "candidate": result_record(arm),
         "comparison": comparison,
@@ -209,12 +216,19 @@ def run_arm(name: str, freeze: str, output: Path) -> int:
             f"{record['verdict']}"
         )
     else:
+        potency = (
+            f", nonlinear_changed="
+            f"{nonlinearity_audit['changed_fraction']:.6f}"
+            if nonlinearity_audit is not None
+            else ""
+        )
         print(
             f"{name}: R={comparison['ratio']:.9f}, "
             f"CI95=[{comparison['ratio_ci95_two_sided'][0]:.9f},"
             f"{comparison['ratio_ci95_two_sided'][1]:.9f}], "
             f"UCB95={comparison['ratio_ucb95_one_sided']:.9f}, "
-            f"changed={audit['changed_fraction']:.6f} -> {record['verdict']}"
+            f"changed={audit['changed_fraction']:.6f}"
+            f"{potency} -> {record['verdict']}"
         )
     return 0 if passed else 2
 

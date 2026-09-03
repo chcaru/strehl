@@ -1,0 +1,16 @@
+{
+  "assessment": "INVALID_NO_CLIPPING",
+  "candidate_verdict": "UNCOMMISSIONED",
+  "changed_fraction_baseline_to_clipped_usm": 1.0,
+  "changed_fraction_unclipped_to_clipped_usm": 0.0,
+  "frozen_potency_minimum": 0.001,
+  "high_rail_fraction": 0.0,
+  "later_arms_run": [],
+  "low_rail_fraction": 0.0,
+  "reason": "The frozen checker counted the linear USM change instead of the nonlinear clipping change. No sample hit either representable rail, so clipped USM equalled unclipped USM and the ratio-one result exercised only congruence invariance.",
+  "scientific_freeze": "c1e7840d3e509d69ce7496b6459d277989cde8db",
+  "source_result": "experiments/M-CAND2/out/clipped-usm.json",
+  "source_result_sha256": "51e078bf558073de546fd04a4225c069b90e90d90aad92a2c20a0dec4cc3f59e",
+  "unclipped_result_sha256": "c9d1b9550206278c39d8748d9f55e91a96dc2d9af4a6c5a8320ff0012e7ea6fc",
+  "stop_rule_applied": true
+}

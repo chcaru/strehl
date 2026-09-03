@@ -58,8 +58,8 @@ All deterministic challenges start from the identical sealed baseline floats.
    residual `<=1e-7`, congruence residual `<=1e-10`, and positive operator minimum
    eigenvalue.
 2. The same USM followed by clipping to `[0,1]`: first kill arm. At least `0.1%`
-   of scalar samples must change. Require one-sided `UCB95(R) <=1.01`; otherwise
-   candidate 2 is dead.
+   of scalar samples must change **between unclipped and clipped USM**. Require
+   one-sided `UCB95(R) <=1.01`; otherwise candidate 2 is dead.
 3. Gamma-3, then logistic `expit(12*(Y-0.5))`: each complete two-sided 95% ratio
    interval must lie within `[0.99,1.01]`.
 4. Saturation to `[0.10,0.90]`, then 8-bit quantization: a numeric result must have
@@ -86,3 +86,9 @@ regularization, projection/channel selection, or a failed common-covariance mode
 The experiment refuses nonstationary NEQ language, but full covariance itself does
 not require stationarity. Optical direction additionally requires downstream noise
 and a locally linear pre-noise task; both are explicit in the forward model.
+
+**Post-arm checker correction:** the bold comparison above states the intended
+potency test. Freeze `c1e7840d` implemented it incorrectly as baseline versus
+clipped USM. The first clipped run had zero rail hits, so it was a nonlinear
+no-op and is INVALID, not GREEN. This clarification changes no transform,
+estimator, threshold, or result; no later arm ran.
