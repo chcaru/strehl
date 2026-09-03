@@ -19,10 +19,11 @@ replaced.*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
+| **0** | **§35** — the **319-frame session**: your grid **plus a coplanar patch of fine matte paper / fabric fibres**, **IBIS and OSS OFF**, two independent `sw4` passes, two independent `sw10` passes, a dense `sw1` reference, 32 flats, 32 darks | ~1 sitting | **Supersedes §30 as the capture that unblocks the SOTA claim.** It is the only thing standing between here and a *measured* detail axis: M1, M5 and M9 all unblock together. **No purchase needed** — certification turned out not to be load-bearing. **Confirmed 2026-09: you are shooting this.** |
 | **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation among the CPL stacks**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
 | **2** | **§26** — a **bright** subject against a **deeply defocused dark** background, exposed **1–2 stops down** so nothing clips, 100–300 frames | ~1 afternoon | **The halo.** As of last night the rim around every edge in your renders has a measured fingerprint — it is exactly as wide as the software's frame-choosing window — but **two explanations survive that predict the same thing on every stack you already own.** They differ only on bright-object-on-dark-ground edges, and your corpus contains **5** usable ones. This is the capture that separates them, and the halo is the largest visible defect in your pictures. |
 | **3** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
-| **4** | **§30** — a **slanted-edge test chart** (printed or bought), shot square-on, filling a decent part of the frame | ~1 hr | **The one capture that unblocks the SOTA claim itself.** Three separate instruments tried to measure whether our output really resolves more detail than the tool we are compared against. **All three failed, and all three failed the same way** — every one of them is bounded by how sharp the edges are, and edge sharpness *is* the thing being compared. Your corpus has no straight, clean edge: its edges are **13–18 px wide**, and the honest limit measured last night is **5.1 px**. A proper chart lands at **2–3 px**, inside every limit found. Until this exists the comparison is not hard, it is **unanswerable**, and the claim stays retracted. |
+| ~~4~~ | ~~**§30** — a slanted-edge test chart~~ **— SUPERSEDED, do not shoot for this reason** | ~1 hr | **This row was wrong and is corrected.** It promised to unblock the SOTA claim. It cannot. Three independent slanted-edge implementations were built and **all three are now presentation diagnostics only** — they report a ~9.9% “resolution” gain from nothing but post-render unsharp masking, and the statistic built on them (`S_25`) moved **18818.9045x** under a tone curve and has been **withdrawn outright**. A better chart does not fix a metric that rewards sharpening; the defeat is in the instrument, not the data. **§35 replaces it.** |
 | 5 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
 | 6 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
 | 7 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
@@ -3925,3 +3926,140 @@ marked aperture than the project had been assuming.
 - Section 33 (a subject with contrast above 0.25 cyc/px) -- closely related and
   would pair well in the same session, since the fabric weave is exactly the kind
   of subject it asks for.
+
+
+---
+
+## 35. The 319-frame session -- REQUESTED 2026-09, one sitting, and it is the capture that unblocks the SOTA claim
+
+**Confirmed: the owner is shooting this within a few days, using fine matte
+paper / fabric fibres as the nonperiodic patch.**
+
+Bench sheet, same content, printable:
+[`docs/capture-requests/2026-09-319-frame-session.md`](capture-requests/2026-09-319-frame-session.md).
+
+### Why you are being asked
+
+Three scorecard axes -- **M1 (detail), M5 and M9** -- are blocked on data, not
+on code. Two lanes derived the required session independently, from different
+requirements, and specified the **same 319 frames**. This is the consolidated
+request, and it replaces the older detail-capture asks.
+
+**The single defect it fixes: every capture in the corpus was shot with IBIS
+on.** In-body stabilisation introduces a small per-frame geometric change that
+is **not a rigid translation**. That fails the local nontranslation gate --
+measured `0.107703`, independently reproduced at `0.105202` -- and a failed
+nontranslation gate defeats *every* repeat-pair instrument the detail axis
+could be built on. Nothing else about your existing captures is unsound.
+
+**Body SteadyShot OFF and lens OSS OFF is the entire point of the shoot.**
+
+### It needs nothing you have to buy, and that is a change
+
+An earlier draft of this request specified a *certified* 10-um clear-film grid
+carrying a custom-fabricated nonperiodic microdot field. **That is withdrawn.**
+
+M1 caps its claims in **native pixel** units -- the registered constraint is
+"no frequency above `0.25 cyc/native px`" -- and SOTA here is a **relative**
+claim: beating Zerene and Helicon on identical input. Absolute physical scale
+is consumed only when converting to cycles/mm or physical feature size, which
+is **M10's** problem and can wait for a separate, much smaller session.
+
+A Pyser-SGI S8 or equivalent 10-um stage micrometer is the right artifact for
+that later M10 session. It is a poor M1 target on its own, because its narrow
+repetitive field carries very little nonperiodic information.
+
+### What to shoot
+
+**In frame, two things, in the same plane:**
+
+1. **The microscope grid you already have** -- it supplies controlled, regular
+   depth structure through the focus sweep.
+2. **A coplanar patch of fine matte paper or fabric fibres** -- it supplies
+   content whose identity the stacker cannot guess.
+
+The second is not optional and it is the part currently missing from every
+capture. The scorecard names the failure directly: **"a periodic checker can
+carry its own answer."** A bare grid is predictable, so a program can score well
+on it without resolving anything. The patch must not shift between passes and
+must sit *in the same plane* as the grid, not behind it.
+
+**The blocks -- 319 frames total:**
+
+| Block | Frames | Purpose |
+| --- | ---: | --- |
+| `sw4-A` | 55 | step width 4, pass A |
+| `sw4-B` | 55 | step width 4, pass B -- an independent repeat of A |
+| `sw1` checker-only | 91 | dense reference. **Never feed this to a stacker.** |
+| `sw10-A` | 27 | step width 10, pass A |
+| `sw10-B` | 27 | step width 10, pass B -- an independent repeat of A |
+| flats | 32 | |
+| darks | 32 | |
+| **total** | **319** | |
+
+The A/B pairs are the whole point: two independent passes over identical
+geometry and exposure are what make a repeat-pair instrument possible at all.
+
+**Settings.** A7C II, FE 100mm Macro GM + 2x TC at 200 mm. M mode, **ISO 100,
+1 s, f/5.6**, identical for every frame in every block including both passes.
+14-bit lossless compressed RAW. **Fixed** white balance -- pick a value, not
+auto. EFCS on. **Off:** DRO, HDR, long-exposure NR, high-ISO NR, pixel shift,
+AF, in-camera auto lens corrections. Tripod, remote or self-timer, nothing
+touching the rig during a pass.
+
+**Lighting.** Flicker-free diffused LED, **warmed up at least 15 minutes**
+before the first frame. Source polariser plus crossed CPL. Matte-white backing.
+Tilt the target roughly **1 degree** so the sweep has something to resolve
+through.
+
+**Sweep.** Focus bracket, direction `0 -> +`, 1 s interval. **Return to an
+identical near-focus reset before each pass** -- A and B must start from the
+same place or they are not repeats.
+
+### This session is the HOLDOUT, and that imposes a rule
+
+The scorecard states that the burned grid and the development-only
+high-resolution slide "may commission a new instrument but may **never** provide
+its scored value". So:
+
+- **existing development captures commission the instrument;**
+- **this session supplies the scored value.**
+
+**It must be sealed on arrival and never used for development, tuning,
+threshold selection or debugging.** A holdout unit is subject plus uninterrupted
+session, so it cannot be partly spent -- if any lane renders it while an
+instrument is still being fitted, the holdout is burned and you would have to
+shoot it again.
+
+### Why this cannot come from existing files
+
+Every existing stack has IBIS on, so none can satisfy the nontranslation gate.
+No existing capture contains two independent passes over identical geometry and
+exposure. No existing capture pairs a regular depth structure with a coplanar
+nonperiodic patch in the same plane.
+
+### One check on arrival, which costs none of the holdout
+
+Run an **input-only** spectral eligibility check: confirm the fibre patch
+actually carries power out to `0.25 cyc/native px`. Input-only means it reads
+the RAW frames and never a render, so it spends none of the holdout. If the
+patch turns out too smooth, the rest of the session is still good and only
+those blocks would need reshooting.
+
+### What it unblocks
+
+M1's replacement statistic, M5, M9, and the commissioning of a repeat-pair
+detail instrument on data whose geometry is genuinely rigid. **It does not
+unblock M10** or any claim in cycles/mm -- those need the certified scale
+artifact and a separate small session.
+
+### Related
+
+- **Section 30 is superseded by this one.** The slanted-edge chart cannot
+  unblock the SOTA claim: all three slanted-edge implementations are now
+  presentation diagnostics only, reporting a ~9.9% "resolution" gain from
+  nothing but post-render unsharp masking, and `S_25` moved `18818.9045x` under
+  a tone curve and has been withdrawn outright. The defeat is in the
+  instrument, not in the data, so a better chart does not repair it.
+- Section 33 (contrast above `0.25 cyc/px`) asks for the same kind of content
+  the fibre patch supplies, and is largely absorbed by this request.
