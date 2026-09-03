@@ -223,3 +223,17 @@ independently generated USM improvement, which must raise `Q25` by at least
 25%, and (b) Gaussian blur sigma 1.5 as a degradation arm, which must lower it
 by at least 25%.  Disabled-improvement and disabled-degradation mutants must
 both go RED.  This adds no outcome threshold or data-dependent choice.
+
+**Commissioning correction, before opening any real source or outcome
+pixel.**  The first execution made the USM arm FAIL: on iid white noise its
+licensed `Q25` ratio was `0.784455` while its hull delta was `0.07538`.
+Because rank variance is fixed, USM moved iid-noise energy primarily beyond
+the licensed cap; the test fixture, not the observed data, contradicted the
+assumed direction.  No threshold is changed.  Freeze the flat positive as
+constant plus independently generated Gaussian-correlated noise (PCG64 seed
+22, correlation sigma 1.0), representing a smooth/demosaiced no-scene-signal
+field.  Direct-convolution USM sigma/amount 1.0/1.0 must still exceed the
+registered `1.25` `Q25` ratio and `0.005` hull delta.  The paired blur arm
+uses the same frozen correlated field.  The iid reading remains a disclosed
+diagnostic.  This fixture correction was made without reading any real source,
+PMax, or strehl pixel.
