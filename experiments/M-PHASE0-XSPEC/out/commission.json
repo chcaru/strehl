@@ -1,0 +1,475 @@
+{
+  "status": "GREEN",
+  "controls_pass": 8,
+  "controls_fail": 0,
+  "plants_caught": 9,
+  "plants_missed": 0,
+  "controls": [
+    {
+      "name": "C1 fixed external integer crop",
+      "status": "PASS",
+      "got": [
+        3.0,
+        1.0000000000000002
+      ],
+      "expected": [
+        3.0,
+        1.0
+      ],
+      "error": 2.220446049250313e-16
+    },
+    {
+      "name": "C2 independent spatial subpixel shift",
+      "status": "PASS",
+      "expected": [
+        0.46,
+        0.08000000000000002
+      ],
+      "phase": [
+        0.4538630726627881,
+        0.07547628970658996
+      ],
+      "phase_error": 0.007624029902940003,
+      "spatial": [
+        0.3611524994485054,
+        0.06812604772148972
+      ],
+      "spatial_error": 0.09955811924695075
+    },
+    {
+      "name": "C3 independent odd-phase transfer",
+      "status": "PASS",
+      "forward_rms_rad": 0.1225239374693882,
+      "reverse_rms_rad": 0.1225239374693882,
+      "forward_projection": 0.00029194269609078923,
+      "reverse_projection": -0.00029194269609078923,
+      "strength": 0.55,
+      "basis_rms_006_022": 0.36655420825482316
+    },
+    {
+      "name": "C4 even blur plus translation derotates to null",
+      "status": "PASS",
+      "phase_rms_rad": 0.007325495228753366,
+      "fit": [
+        0.5178376194292073,
+        0.08268059335193327
+      ],
+      "expected": [
+        0.53,
+        0.09
+      ],
+      "shift_error": 0.014194971462759654
+    },
+    {
+      "name": "C5 full contrast inversion reaches estimator ceiling",
+      "status": "PASS",
+      "shift": [
+        -2.8501286242138944e-18,
+        -1.1040246574435822e-17
+      ],
+      "phase_intercept_cycles": 0.5,
+      "bands": [
+        {
+          "rho": -1.0,
+          "ci95": [
+            -1.0000000000000002,
+            -0.9999999999999998
+          ],
+          "bins": 138,
+          "median_coherence": 1.0
+        },
+        {
+          "rho": -0.9999999999999999,
+          "ci95": [
+            -1.0,
+            -0.9999999999999998
+          ],
+          "bins": 236,
+          "median_coherence": 0.9999999999999999
+        },
+        {
+          "rho": -1.0,
+          "ci95": [
+            -1.0,
+            -0.9999999999999997
+          ],
+          "bins": 448,
+          "median_coherence": 0.9999999999999999
+        }
+      ]
+    },
+    {
+      "name": "C6 fixed frequency grid and boundaries",
+      "status": "PASS",
+      "scale": 1.0,
+      "grids": {
+        "64": {
+          "expected": {
+            "registration": 182,
+            "odd": 570,
+            "inv0": 138,
+            "inv1": 236,
+            "inv2": 448
+          },
+          "got": {
+            "registration": 182,
+            "odd": 570,
+            "inv0": 138,
+            "inv1": 236,
+            "inv2": 448
+          },
+          "matches": true
+        },
+        "48": {
+          "expected": {
+            "registration": 104,
+            "odd": 324,
+            "inv0": 82,
+            "inv1": 134,
+            "inv2": 246
+          },
+          "got": {
+            "registration": 104,
+            "odd": 324,
+            "inv0": 82,
+            "inv1": 134,
+            "inv2": 246
+          },
+          "matches": true
+        },
+        "32": {
+          "expected": {
+            "registration": 48,
+            "odd": 142,
+            "inv0": 38,
+            "inv1": 58,
+            "inv2": 112
+          },
+          "got": {
+            "registration": 48,
+            "odd": 142,
+            "inv0": 38,
+            "inv1": 58,
+            "inv2": 112
+          },
+          "matches": true
+        }
+      }
+    },
+    {
+      "name": "C7 analytic phase floor predicts holdout",
+      "status": "PASS",
+      "q": 1.1311401018400358,
+      "floor_scale": 1.0,
+      "holdout_median": 0.9879745455620651,
+      "holdout_p10_p90": [
+        0.9373298425382967,
+        1.0725671667715224
+      ],
+      "within_factor_two_fraction": 1.0,
+      "train_n": 32,
+      "holdout_n": 32
+    },
+    {
+      "name": "C8 rawpy loader against Rust rawler probe",
+      "status": "PASS",
+      "check_passed": true,
+      "rawpy_shape": [
+        4688,
+        7028
+      ],
+      "rawpy_width_used": 7028,
+      "rust_shape": [
+        4688,
+        7032
+      ],
+      "levels": [
+        512,
+        15360
+      ],
+      "pixel_repeat_equal": true,
+      "pixel_sha256": "d1914ef1f8e52700bb22a4810a3bfa525962ae62e1e9cc2f0132105fc8bfd558",
+      "probe": {
+        "command": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+          "probe",
+          "--limit",
+          "1",
+          "D:\\personal\\macro\\bee-1-cpl"
+        ],
+        "exit": 0,
+        "active_width": 7032,
+        "active_height": 4688,
+        "black": 512,
+        "white": 15360,
+        "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.586914, 1, 1.6035156, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.107 s\nper frame       : 0.1070 s\nthroughput      : 351.7 MB/s\n60-frame stack  : 6.42 s\n"
+      }
+    }
+  ],
+  "plants": [
+    {
+      "name": "P1 shift sign reversed",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "got": [
+        -3.0,
+        -1.0000000000000002
+      ],
+      "expected": [
+        3.0,
+        1.0
+      ],
+      "error": 6.324555320336759
+    },
+    {
+      "name": "P2 sensor axes swapped",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "got": [
+        1.0000000000000002,
+        3.0
+      ],
+      "expected": [
+        3.0,
+        1.0
+      ],
+      "error": 2.82842712474619
+    },
+    {
+      "name": "P3 GQ displacement misread as sensor units",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "got": [
+        1.5,
+        0.5000000000000001
+      ],
+      "expected": [
+        3.0,
+        1.0
+      ],
+      "error": 1.5811388300841895
+    },
+    {
+      "name": "P4 frequency axes doubled",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "scale": 2.0,
+      "grids": {
+        "64": {
+          "expected": {
+            "registration": 182,
+            "odd": 570,
+            "inv0": 138,
+            "inv1": 236,
+            "inv2": 448
+          },
+          "got": {
+            "registration": 48,
+            "odd": 142,
+            "inv0": 38,
+            "inv1": 58,
+            "inv2": 112
+          },
+          "matches": false
+        },
+        "48": {
+          "expected": {
+            "registration": 104,
+            "odd": 324,
+            "inv0": 82,
+            "inv1": 134,
+            "inv2": 246
+          },
+          "got": {
+            "registration": 24,
+            "odd": 82,
+            "inv0": 18,
+            "inv1": 36,
+            "inv2": 60
+          },
+          "matches": false
+        },
+        "32": {
+          "expected": {
+            "registration": 48,
+            "odd": 142,
+            "inv0": 38,
+            "inv1": 58,
+            "inv2": 112
+          },
+          "got": {
+            "registration": 10,
+            "odd": 32,
+            "inv0": 8,
+            "inv1": 14,
+            "inv2": 30
+          },
+          "matches": false
+        }
+      }
+    },
+    {
+      "name": "P5 linear phase ramp not removed",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "phase_rms_rad": 0.09968147990180369,
+      "fit": [
+        0.5178376194292073,
+        0.08268059335193327
+      ],
+      "expected": [
+        0.53,
+        0.09
+      ],
+      "shift_error": 0.014194971462759654
+    },
+    {
+      "name": "P6 complex cross-spectrum replaced by magnitude",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "odd": {
+        "forward_rms_rad": 0.006722860604751992,
+        "reverse_rms_rad": 0.006722860604751993,
+        "forward_projection": 7.164353720905805e-07,
+        "reverse_projection": -7.164353720905802e-07,
+        "strength": 0.55,
+        "basis_rms_006_022": 0.36655420825482316
+      },
+      "inversion": {
+        "shift": [
+          -2.8501286242138944e-18,
+          -1.1040246574435822e-17
+        ],
+        "phase_intercept_cycles": 0.5,
+        "bands": [
+          {
+            "rho": 1.0,
+            "ci95": [
+              0.9999999999999998,
+              1.0000000000000002
+            ],
+            "bins": 138,
+            "median_coherence": 1.0
+          },
+          {
+            "rho": 0.9999999999999999,
+            "ci95": [
+              0.9999999999999998,
+              1.0
+            ],
+            "bins": 236,
+            "median_coherence": 0.9999999999999999
+          },
+          {
+            "rho": 1.0,
+            "ci95": [
+              0.9999999999999997,
+              1.0
+            ],
+            "bins": 448,
+            "median_coherence": 0.9999999999999999
+          }
+        ]
+      }
+    },
+    {
+      "name": "P7 negative correlation clipped at zero",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "shift": [
+        -2.8501286242138944e-18,
+        -1.1040246574435822e-17
+      ],
+      "phase_intercept_cycles": 0.5,
+      "bands": [
+        {
+          "rho": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "bins": 138,
+          "median_coherence": 1.0
+        },
+        {
+          "rho": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "bins": 236,
+          "median_coherence": 0.9999999999999999
+        },
+        {
+          "rho": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "bins": 448,
+          "median_coherence": 0.9999999999999999
+        }
+      ]
+    },
+    {
+      "name": "P8 phase floor halved",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "q": 1.1311401018400358,
+      "floor_scale": 0.5,
+      "holdout_median": 1.9759490911241302,
+      "holdout_p10_p90": [
+        1.8746596850765933,
+        2.145134333543045
+      ],
+      "within_factor_two_fraction": 0.59375,
+      "train_n": 32,
+      "holdout_n": 32
+    },
+    {
+      "name": "P9 rawpy visible width treated as rawler width",
+      "status": "CAUGHT",
+      "landed": true,
+      "target_went_red": true,
+      "check_passed": false,
+      "rawpy_shape": [
+        4688,
+        7028
+      ],
+      "rawpy_width_used": 7032,
+      "rust_shape": [
+        4688,
+        7032
+      ],
+      "levels": [
+        512,
+        15360
+      ],
+      "pixel_repeat_equal": true,
+      "pixel_sha256": "d1914ef1f8e52700bb22a4810a3bfa525962ae62e1e9cc2f0132105fc8bfd558",
+      "probe": {
+        "command": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+          "probe",
+          "--limit",
+          "1",
+          "D:\\personal\\macro\\bee-1-cpl"
+        ],
+        "exit": 0,
+        "active_width": 7032,
+        "active_height": 4688,
+        "black": 512,
+        "white": 15360,
+        "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.586914, 1, 1.6035156, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.105 s\nper frame       : 0.1051 s\nthroughput      : 358.0 MB/s\n60-frame stack  : 6.31 s\n"
+      }
+    }
+  ]
+}
