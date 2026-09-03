@@ -1068,6 +1068,34 @@ position than the one D8 left, where the idea itself was dead.
 
 ## 4. What the owner still owes, and what it would unlock
 
+### 4.0 Two physical captures the owner can make, in priority order
+
+Both are cheap, both are blocking, and neither can be produced by any agent. They are listed
+first because they are the only items on this list that no amount of autonomous work can clear.
+
+**1. Re-shoot the 32-repeat capture with IBIS / SteadyShot OFF.** This is the higher-value of
+the two and it is close to a one-setting fix. `12-bee-iso-var-no-bracket-32-repeat-diff-light`
+is a genuinely good capture — verified from metadata as 576 real no-bracket exposures, two light
+passes, nine ISOs, 32 repeats per ISO, fixed exposure and invariant reported focus distance. The
+only thing wrong with it is that stabilisation was enabled, so the frames drift: at ISO 50 only
+frame 0 sat at `(0,0)`, 21 frames shifted one quad pixel and 10 shifted two. At 1.6 s and 200 mm
+on a static rig, IBIS does not remove motion — it creates it. Even after commissioned
+registration the second light block missed the `0.10` native-pixel gate at `0.107703`.
+
+*What it unlocks:* the detail axis gets its **second instrument** back. The governing proposal
+specifies detail as "D1: FRC + slant-edge" — two instruments — and both FRC routes are currently
+closed. Same subject, same settings, stabilisation off is all that is needed; the existing
+protocol, registration and 17/17-plant commissioning battery are already built and waiting.
+
+**2. A ColorChecker capture, to unblock the colour axis (M7).** Required: a tilted ColorChecker
+Classic or Digital SG under a measured illuminant, together with a grey card and dark frames.
+Without it, M7 stays `UNMEASURED` permanently — it is the one scorecard axis with external
+ground truth, and it cannot be synthesised from existing captures.
+
+*What it unlocks:* 1 of 12 scorecard axes, and the only one that can be checked against a
+physical standard rather than against strehl's own output.
+
+
 - **Flat fields: delivered.** Used; the resulting dust map was refuted on its own merits
   (fact 1856), which is a result rather than a waste.
 - **Captures with ≥400 px of clear background around the subject.** The **highest-value
