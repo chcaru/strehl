@@ -108,7 +108,7 @@ A(s;a,b) = (2/a) sqrt(max(a*max(s,0) + 3a^2/8 + b, 0))
 v_A = (a*max(s,0)+b)/(a*max(s,0)+3a^2/8+b)
 ```
 
-`beta_i,b` is commissioned from deterministic unit-white stochastic traces
+`beta_i,b` is commissioned from eight deterministic unit-white stochastic traces
 pulled through every actual sidecar matrix, translation, score origin, and
 sidecar centre. Bands 0–3 use each frame's direct 512-core trace; bands 4–6
 use a preregistered log-linear fit across the actual transform features to
@@ -229,7 +229,7 @@ Pareto render, prints `NO_COMMON_K`, and stops phase 1.
 
 ## Final source hashes
 
-- `reference.py`: `08eee60df8170500af11deab18d3a3074535ad16323554d7caa69edc7e37e51e`
+- `reference.py`: `5d6645e3d51e567ee2b4df246309f481e9ae3e2ecafa704830bb6d11ddd5d203`
 - `measure.py`: `ed2bda79d0148a90578016027066dbbd586230791c40252b07809459cc6e811f`
 - `PREREGISTRATION.md` before substituting this self-referential list is not
   separately pinned here; commissioning pins the exact final file.

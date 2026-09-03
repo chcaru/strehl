@@ -46,6 +46,7 @@ BOOTSTRAP_REPLICATES = 8192
 K_GRID = tuple(round(i * 0.05, 2) for i in range(161))
 AFFINE_CAL_SIZE = 768
 AFFINE_CAL_MARGIN = (AFFINE_CAL_SIZE - SCORE_SIZE) // 2
+AFFINE_CAL_REALISATIONS = 8
 AFFINE_CAL_SEED = 0xB37A_1101
 AFFINE_VALIDATION_SEED = 0xE771_9000
 NU_ANALYTIC = 13.37469
@@ -550,9 +551,20 @@ def calibrate_affine_model(seed: int = AFFINE_CAL_SEED) -> dict:
             int(config["score_origin"][1]) - AFFINE_CAL_MARGIN,
         )
         for frame, transform in enumerate(transforms):
-            field = affine_white(transform, origin, sidecar_plane, AFFINE_CAL_SIZE, seed + ordinal)
-            levels = laplacian_pyramid(field, BANDS)
-            raw_beta = [float(np.mean(_score_core(levels[b], b) ** 2)) for b in range(BANDS)]
+            raw_beta = np.zeros(BANDS, dtype=np.float64)
+            for realisation in range(AFFINE_CAL_REALISATIONS):
+                field = affine_white(
+                    transform,
+                    origin,
+                    sidecar_plane,
+                    AFFINE_CAL_SIZE,
+                    seed + ordinal * AFFINE_CAL_REALISATIONS + realisation,
+                )
+                levels = laplacian_pyramid(field, BANDS)
+                raw_beta += [
+                    float(np.mean(_score_core(levels[b], b) ** 2)) for b in range(BANDS)
+                ]
+            raw_beta /= AFFINE_CAL_REALISATIONS
             records.append(
                 {
                     "capture": capture,
@@ -560,7 +572,7 @@ def calibrate_affine_model(seed: int = AFFINE_CAL_SEED) -> dict:
                     "transform": [transform.a_re, transform.a_im, transform.b_re, transform.b_im],
                     "sidecar_plane": list(sidecar_plane),
                     "features": _affine_features(transform, config["score_origin"], sidecar_plane).tolist(),
-                    "raw_beta": raw_beta,
+                    "raw_beta": raw_beta.tolist(),
                 }
             )
             ordinal += 1
@@ -594,6 +606,7 @@ def calibrate_affine_model(seed: int = AFFINE_CAL_SEED) -> dict:
     return {
         "kind": "actual-affine stochastic trace over every sealed sidecar transform",
         "seed": seed,
+        "realisations": AFFINE_CAL_REALISATIONS,
         "field_size": AFFINE_CAL_SIZE,
         "score_core": SCORE_SIZE,
         "coarse_fit_from_band": 4,
