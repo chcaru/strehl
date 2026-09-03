@@ -34,6 +34,17 @@
       "tile-y0800-x1200.png": "478CF2F4BF3F5DEBF0E67A8187EB4FF7D637A2D2745AE22AA7DC9ABC2CE88693"
     }
   },
+  "flower_flat_wander": {
+    "quadrant_frozen_before_difference_utc": "2026-09-03T03:52:50Z",
+    "roi": [0, 1172, 1758, 3516],
+    "selection_rule": "Choose the image quadrant with the smallest fraction of green pixels below half the full-image median in the mean-base render, without reading the weighted-base render.",
+    "dark_fraction_by_quadrant": {
+      "top_left": 0.1928904553211294,
+      "top_right": 0.13331377986348122,
+      "bottom_left": 0.2708743794601303,
+      "bottom_right": 0.26106887992553524
+    }
+  },
   "sites": [
     {
       "name": "chia-1",
