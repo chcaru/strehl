@@ -828,6 +828,8 @@ def measure() -> dict:
         "schema": SCHEMA,
         "status": "GREEN",
         "label": LABEL,
+        "admission": "WITHDRAWN_OUTPUT_SPACE_SPECIFICITY_FAILURE",
+        "output_space": "SRGB_VIEWING_NOT_MEASUREMENT",
         "commission": {
             "controls_green": commissioned["control_count"],
             "plants_red": commissioned["mutant_count"],
