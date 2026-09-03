@@ -1,10 +1,17 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.2 (2026-09-03).** The metric, bar, and control
+**Status: SPEC / PRE-REGISTRATION v1.3 (2026-09-03).** The metric, bar, and control
 protocol was written before the current implementation lanes reported their outcomes.
 Revision 1.2 records one disclosed holdout leak solely to exclude its subject/session;
 the leaked values do not select or alter a metric, bar, control, or replacement
 capture. The competitive position remains **UNKNOWN**.
+
+**Revision 1.3 — fresh slide classified before outcomes:** the six
+`high-res-calibration-slide-cpl` stacks arrived with input metadata only. They form one
+657-frame physical-subject/session unit, assigned deliberately to development for the
+flat-path geometry/resampling investigation. All six report IBIS on, so none is
+admissible as an independent-repeat FRC arm. No render, metric, or visual verdict was
+used for this assignment.
 
 **Revision 1.2 — holdout quarantine:** the v1.1 baseline at `bc8f315a` reached no
 metric because the geometry gate refused every arm. Separately, W1 rendered and swept
@@ -19,7 +26,7 @@ explicit in the timing protocol. It imports no phase-1 acceptance bar and no mea
 quality result.
 
 This document owns the definition and protocol, not a result. The first render of any
-scored capture **under this protocol** seals v1.2; pre-existing unrelated masters are
+scored capture **under this protocol** seals v1.3; pre-existing unrelated masters are
 not score outputs. A later change to an instrument, bar, eligibility rule, comparator
 setting, capture, or aggregation rule requires a numbered revision and a fresh
 holdout capture. Existing score outputs may then be used only for development.
@@ -217,7 +224,7 @@ term rather than subject/object identity (rule 35, lines 457–462). Accordingly
    overconfident certificate, permuted depth, a 60-second timed delay, and a 7-GiB
    allocation. Every applicable gate must fail.
 4. A failed commissioning result voids the metric. It may not be repaired against the
-   scored captures under v1.2.
+   scored captures under v1.3.
 
 ## 2. Frozen capture set
 
@@ -245,6 +252,12 @@ other wording implies holdout status.
 | `requests\30-calibration-grid\calibration-grid-2-sw4-cpl` | 46; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Former scored repeat B; collateral same-subject/session burn. |
 | `requests\30-calibration-grid\calibration-grid-1-sw10-cpl` | 23; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Former sparse-step arm A; collateral same-subject/session burn. |
 | `requests\30-calibration-grid\calibration-grid-2-sw10-cpl` | 27; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Former sparse-step arm B; collateral same-subject/session burn. |
+| `requests\misc-diagnostic\high-res-calibration-slide-cpl\flat-sw4-cpl\flat-et6s-sw4-cpl` | 65; ISO 100, 6 s, f/5.6, 200 mm; IBIS on | **DEVELOPMENT — NOT HOLDOUT** | Flat-path identity and `cover=scale` resampling diagnostic; longest-exposure SNR rung. |
+| `requests\misc-diagnostic\high-res-calibration-slide-cpl\flat-sw4-cpl\flat-et2.5s-sw4-cpl` | 61; ISO 100, 2.5 s, f/5.6, 200 mm; IBIS on | **DEVELOPMENT — NOT HOLDOUT** | Flat-path identity and `cover=scale` diagnostic; middle SNR rung. |
+| `requests\misc-diagnostic\high-res-calibration-slide-cpl\flat-sw4-cpl\flat-et1s-sw4-cpl` | 60; ISO 100, 1 s, f/5.6, 200 mm; IBIS on | **DEVELOPMENT — NOT HOLDOUT** | Flat-path identity and `cover=scale` diagnostic; exposure-matched control for the tilted block. |
+| `requests\misc-diagnostic\high-res-calibration-slide-cpl\tilted-sw4-cpl` | 182; ISO 100, 1 s, f/5.6, 200 mm; IBIS on | **DEVELOPMENT — NOT HOLDOUT** | Dense controlled-tilt M5/M10 commissioning and geometry diagnostic. Never an FRC repeat or checker reference for a score. |
+| `requests\misc-diagnostic\high-res-calibration-slide-cpl\tilted-sw10-cpl` | 92; ISO 100, 1 s, f/5.6, 200 mm; IBIS on | **DEVELOPMENT — NOT HOLDOUT** | Sparse-step controlled-tilt M5 commissioning. Distinct geometry, not a repeat of the all-axis stack and never an FRC arm. |
+| `requests\misc-diagnostic\high-res-calibration-slide-cpl\very-tilted-all-axis-sw10-cpl` | 197; ISO 100, 1 s, f/5.6, 200 mm; IBIS on | **DEVELOPMENT — NOT HOLDOUT** | Sparse-step all-axis M5/M10 commissioning. Distinct geometry, not a repeat of tilted-sw10 and never an FRC arm. |
 | `requests\7-aperture-pairs\fabric-weave-f5.6-sw5-cpl` | 210; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Natural oriented high-frequency and colour-seam stress. |
 | `requests\7-aperture-pairs\fabric-weave-f8-sw5-cpl` | 150; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness. |
 | `requests\7-aperture-pairs\fabric-weave-f11-sw5-cpl` | 109; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness / diffraction control. |
@@ -273,7 +286,7 @@ resolution-ineligible; using it for M1 would repeat a known failure. It remains 
 for broad boundary profiles, where the checker does not self-register the edge to
 sharpen it.
 
-### 2.3 Holdout unit and burn log
+### 2.3 Holdout units and burn log
 
 The holdout unit is **subject plus uninterrupted capture session**, not a directory or
 step width. Rendering, tuning, or reading an outcome on any member burns every member
@@ -293,13 +306,35 @@ Therefore sw1, both sw4 stacks, and both sw10 stacks are all burned. The later W
 targets `flat-on-ruler-cpl`, `coffee-bubbles`, and `113MSDCF` do not extend the burn:
 none is labelled holdout here.
 
-**Axis consequence:** M1 has only its untouched same-focus bee sentinel left and has
-no depth-varying independent-repeat holdout. M5 retains the tilted-ruler and natural
-holdouts but loses its registered sw4/sw10 grid arms. M9 retains bee repeats but loses
-independent depth-stack certificate truth. **M1, M5, and M9 cannot pass v1.2 until a
-fresh subject/session supplies one dense checker-only reference, two independent
-scored repeats at one step width, and two independent sparse-step repeats.** The
-burned grid may commission checkers but may not contribute a score.
+The fresh high-resolution slide is conservatively one **657-frame unit** spanning
+20:13:04–21:01:58. The 16 min 45 s gap is a target reconfiguration inside the same
+evening's capture session, not independent evidence: the physical slide, camera,
+lens/teleconverter, ISO, and aperture remain the same. Exposure, step width,
+directory, and flat/tilted geometry do not split a subject into six holdouts.
+Touching any member would therefore burn all six.
+
+All six carry `ImageStabilization: On`. Registration-based M5 development is allowed,
+but repeat-pair FRC/M9 truth use is forbidden. The entire unit is deliberately spent
+on development: constant depth makes the flat block the cleaner identity/resampling
+test for the known `cover=scale` geometry defect, its exposure changes make an SNR
+ladder rather than matched repeats, and reserving the tilted views while tuning on the
+same slide would create target leakage.
+
+**Axis consequence:** these captures advance M5 coverage-instrument development and
+M10 planarity/order commissioning, but they close no holdout gap. M1 keeps only its
+same-focus bee sentinel; M5 retains ruler/natural holdouts but still lacks its
+replacement controlled-slide holdout; M9 retains bee repeats but lacks independent
+depth-stack truth.
+
+**M1, M5, and M9 cannot pass v1.3** until a fresh untouched subject/session supplies,
+at identical subject geometry, exposure, ISO, aperture, and focal length with
+**IBIS off**:
+
+1. one dense checker-only reference pass;
+2. two independent sw4 scored passes; and
+3. two independent sw10 sparse-step passes.
+
+A single repeated pair at only one step width does not close both registered arms.
 
 ### 2.4 Missing or insufficient truth captures
 
@@ -314,6 +349,12 @@ as “approximately 10.26 deg.” Unless an independent record bounds that angle
 enough for M10’s 2.5% truth-uncertainty gate, the physical-scale part of M10 also
 requires a new metrology capture. Image-derived focus may not be used to certify the
 angle it is being tested against.
+
+The high-resolution slide currently has no committed target-pitch certificate or
+external flat/tilted pose measurement. Its development unit may commission M10
+planarity and ordering, but it cannot contribute to M10's physical-depth bars. A
+future holdout requires those input-only truths to be frozen before any output is
+viewed.
 
 ## 3. Scorecard at a glance
 
@@ -352,14 +393,19 @@ are invariant to a common post-render linear gain or sharpening filter within ea
 
 **Input.**
 
-- Required depth-stack holdout: **absent after the calibration-grid burn**. Its
-  replacement must provide one dense checker-only reference and two independent
-  scored repeats at one step width.
-- Required sparse-step robustness holdout: **absent**. Its replacement must provide
-  two independent sparse-step repeats.
+- Required dense checker-only reference: **absent**. The new slide is
+  development-only and cannot become score evidence after its flat block is used.
+- Required matched primary repeats: **absent**. Two new independent sw4 passes at
+  identical geometry/exposure with IBIS off are required.
+- Required matched sparse-step repeats: **absent**. Two new independent sw10 passes
+  at identical geometry/exposure with IBIS off are required.
 - Development-only commissioning set: burned grid sw1 as reference, the two burned
   sw4 captures as repeat A/B, and the two burned sw10 captures. No value from this set
   may contribute to M1.
+- Development-only identity set: the three flat high-resolution-slide exposure
+  stacks. They may diagnose resampling/transfer but cannot contribute to M1.
+- Development-only controlled-tilt set: the three tilted high-resolution-slide
+  stacks. They may commission M5/M10 instruments but cannot contribute to M1.
 - Non-periodic sentinel: each 32-frame ISO-100 bee repeat is split into 8 held-out
   reference frames and two 12-frame scored repeat groups.
 - Dark/flat captures establish the common-mode and quantisation floors.
@@ -399,7 +445,7 @@ checker-only and is never passed to a stacker in the corresponding scored arm.
    without inferring what happens above it.
 7. An optional checker may inspect `(0.25,0.45] cyc/px`, but it may publish only
    `UNLICENSED_GT_0.25`, never a numerical cutoff, ranking, win, loss, or SOTA claim.
-   It cannot affect any v1.2 verdict.
+   It cannot affect any v1.3 verdict.
 
 **Success.** **SCORECARD ADDITION:** every scored capture has median
 `f_licensed =0.25 cyc/native px`; every capture and the pool have
@@ -560,11 +606,12 @@ spatial spectrum, demonstrating that the edge arm is not merely a texture detect
 **What it measures and why.** A stack may be sharp where it succeeds yet leave focus
 holes, choose the wrong depth, lose a thin layer, or crop away difficult regions.
 
-**Input.** The registered sw4/sw10 grid arms now require an untouched replacement;
-the burned grid is development-only. Remaining holdouts are all three tilted-ruler
-apertures, flower/fern, duck tape, and medication-pill. Sites are 128x128 input-fixed
-tiles. At least 500 eligible tiles overall and 50 per capture must qualify. M5 remains
-`UNMEASURED` until the grid arms are replaced rather than silently dropped.
+**Input.** The three new tilted-slide stacks are development-only commissioning
+captures; they do not replace the burned grid's holdout arm. Remaining holdouts are
+all three tilted-ruler apertures, flower/fern, duck tape, and medication-pill. The
+burned grid is also development-only. Sites are 128x128 input-fixed tiles. At least
+500 eligible tiles overall and 50 per capture must qualify. M5 remains
+`UNMEASURED` until a fresh controlled-slide holdout replaces the burned arm.
 
 **Exact computation.**
 
@@ -709,11 +756,13 @@ signature cancellation defect. D2 proposes a CRLB channel and an empirical chann
 (`2026-08-sota-path.md` lines 1554–1573), but the proposed same-capture split channel
 is no longer admissible.
 
-**Input.** An untouched replacement for the burned grid sw4 repeats and sw1 reference,
-plus the independent bee repeat groups and dark/FPN calibration. The burned grid may
-commission but may not score. Same-frame odd/even halves are forbidden. At least 500
-independent tile-band truth cells and 500 claimed-valid cells are required. Bee
-same-focus repeats alone cannot close M9's depth-stack certificate claim.
+**Input.** All six new slide stacks are development-only, and IBIS independently
+disqualifies them as repeat-pair truth. M9 requires a new dense checker-only pass, two
+matched sw4 passes, and two matched sw10 passes with IBIS off, plus the independent
+bee repeat groups and dark/FPN calibration. The burned grid may commission but may
+not score. Same-frame odd/even halves are forbidden. At least 500 independent
+tile-band truth cells and 500 claimed-valid cells are required. Bee same-focus
+repeats alone cannot close M9's depth-stack certificate claim.
 
 **Exact computation.**
 
@@ -753,8 +802,10 @@ geometric truth.
 
 **Input.** The three 10.26-degree tilted-ruler stacks, the flat battery null, and an
 independently implemented non-planar synthetic two-layer target whose latent depths
-are hidden from the estimator. The ruler’s 1/64-inch markings set lateral scale. At
-least 20 non-overlapping ruler strips and 10,000 target pixels must qualify.
+are hidden from the estimator. The ruler’s 1/64-inch markings set lateral scale. The
+fresh tilted-slide unit is development-only planarity/order commissioning and cannot
+be promoted to score evidence after diagnostic use. At least 20 non-overlapping ruler
+strips and 10,000 target pixels must qualify.
 
 **Exact computation.**
 
@@ -890,7 +941,7 @@ precision common deliverable, not a later 8-bit proxy.
 3. **SSIMULACRA2 / butteraugli on natural stacks:** the proposal names them
    (`2026-08-sota-path.md` lines 1525–1536) but supplies neither an all-in-focus truth
    image nor a bar. Comparing two unknown renders does not create a reference.
-   They may commission synthetic plants, but do not rank real outputs in v1.2.
+   They may commission synthetic plants, but do not rank real outputs in v1.3.
 4. **A single composite “SOTA score”:** weights would let noise purchase a halo or
    speed purchase lost depth. The proposal’s end-state is conjunctive.
 5. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
@@ -907,18 +958,18 @@ competitive statement is **unknown**.
 
 | ID | Metric | strehl | Zerene Stacker | Helicon Focus | Current standing |
 | --- | --- | --- | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Grid holdout burned; same-focus bee sentinel remains, but a replacement depth-stack repeat is required. |
+| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only; a fresh dense reference and matched IBIS-off sw4/sw10 pairs are absent. |
 | M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
 | M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Full-reach sites and new checker must commission. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.2 site manifest or control run exists. |
-| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Ruler/natural holdouts remain; registered sw4/sw10 grid arms burned and require replacement. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.3 site manifest or control run exists. |
+| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Same linear input/output transfer not yet run. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Traceable tilted colour target absent. |
 | M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing internal hull claims are not this external checker. |
-| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Grid repeated-truth holdout burned; same-focus bee repeats alone are insufficient. |
-| M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Physical/synthetic truth protocol not run. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.2 run. |
-| M12 | Memory / determinism | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | v1.2 worker/N matrix not run. |
+| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
+| M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.3 run. |
+| M12 | Memory / determinism | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | v1.3 worker/N matrix not run. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -948,7 +999,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 7. **The proposal’s competitive axis table is historical, not this scorecard.** Its
    “ahead” labels for noise, clipping, invented structure, and speed were obtained
    under different instruments and, in the old head-to-head, asymmetric development.
-   None is a v1.2 current-position value.
+   None is a v1.3 current-position value.
 8. **D2’s CRLB channel cannot certify itself.** The same noise model cannot generate
    admission and then validate its own certificate. M9 requires independent repeated
    exposures and external fixed-pattern treatment.
@@ -985,7 +1036,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.2`, only when every M1–M12 gate passes;
+- `PASS — SOTA under scorecard v1.3`, only when every M1–M12 gate passes;
 - `FAIL`, when any commissioned primary gate misses;
 - `UNMEASURED`, when any required metric, capture, comparator, or instrument is absent
   or invalid.
