@@ -31,10 +31,10 @@
       ],
       "phase_error": 0.007624029902940003,
       "spatial": [
-        0.3611524994485054,
-        0.06812604772148972
+        0.35022630247981135,
+        0.06616402182687844
       ],
-      "spatial_error": 0.09955811924695075
+      "spatial_error": 0.11064221147130499
     },
     {
       "name": "C3 independent odd-phase transfer",
@@ -202,7 +202,7 @@
         "active_height": 4688,
         "black": 512,
         "white": 15360,
-        "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.586914, 1, 1.6035156, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.107 s\nper frame       : 0.1070 s\nthroughput      : 351.7 MB/s\n60-frame stack  : 6.42 s\n"
+        "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.586914, 1, 1.6035156, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.116 s\nper frame       : 0.1159 s\nthroughput      : 324.5 MB/s\n60-frame stack  : 6.96 s\n"
       }
     }
   ],
@@ -468,7 +468,7 @@
         "active_height": 4688,
         "black": 512,
         "white": 15360,
-        "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.586914, 1, 1.6035156, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.105 s\nper frame       : 0.1051 s\nthroughput      : 358.0 MB/s\n60-frame stack  : 6.31 s\n"
+        "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.586914, 1, 1.6035156, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.100 s\nper frame       : 0.0997 s\nthroughput      : 377.5 MB/s\n60-frame stack  : 5.98 s\n"
       }
     }
   ]

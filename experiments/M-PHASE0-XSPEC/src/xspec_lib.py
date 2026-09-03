@@ -51,6 +51,9 @@ class CrossBundle:
         )
 
 
+_COARSE_CACHE: dict[tuple[int, float], tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+
+
 def file_sha256(path: str | Path) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as fh:
@@ -366,6 +369,25 @@ def cross_bundle(
     )
 
 
+def cross_bundle_from_ffts(
+    fa: np.ndarray,
+    fb: np.ndarray,
+    block_rc: tuple[tuple[int, int], ...],
+    n: int,
+) -> CrossBundle:
+    if fa.shape != fb.shape or fa.ndim != 3 or fa.shape[1:] != (n, n):
+        raise ValueError("cached FFT shapes do not match")
+    if fa.shape[0] != len(block_rc):
+        raise ValueError("cached FFT/block-coordinate count differs")
+    return CrossBundle(
+        cross=fa * np.conjugate(fb),
+        auto_a=np.abs(fa) ** 2,
+        auto_b=np.abs(fb) ** 2,
+        block_rc=block_rc,
+        n=n,
+    )
+
+
 def bundle_means(bundle: CrossBundle) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     cross = np.mean(bundle.cross, axis=0)
     pa = np.mean(bundle.auto_a, axis=0)
@@ -409,17 +431,47 @@ def fit_phase_shift(
     c0 = cross[coarse]
     w0 = np.abs(c0) * np.maximum(coherence[coarse], 1e-6)
     phasor0 = c0 / np.maximum(np.abs(c0), np.finfo(float).tiny)
-    best = None
-    for dx in range(-8, 9):
-        for dy in range(-8, 9):
-            ramp = np.exp(-2j * np.pi * (fx[coarse] * dx + fy[coarse] * dy))
-            # The intercept is nuisance phase.  Maximising the magnitude makes
-            # the translation fit invariant to a full contrast inversion;
-            # maximising only the real part spuriously turns pi into a shift.
-            score = float(abs(np.sum(w0 * phasor0 * ramp)) / np.sum(w0))
-            if best is None or score > best[0]:
-                best = (score, float(dx), float(dy))
-    dx, dy = best[1], best[2]
+    cache_key = (bundle.n, float(frequency_scale))
+    if cache_key not in _COARSE_CACHE:
+        geom = frequency_mask(
+            bundle.n,
+            (REG_BAND[0], 0.06),
+            scale=frequency_scale,
+        )
+        shifts = np.asarray(
+            [(dx, dy) for dx in range(-8, 9) for dy in range(-8, 9)],
+            dtype=np.float64,
+        )
+        phase = (
+            shifts[:, 0, None] * fx[geom][None, :]
+            + shifts[:, 1, None] * fy[geom][None, :]
+        )
+        _COARSE_CACHE[cache_key] = (
+            geom,
+            shifts,
+            np.exp(-2j * np.pi * phase),
+        )
+    geom, shifts, ramps = _COARSE_CACHE[cache_key]
+    valid = coherence[geom] >= 0.20
+    if int(np.sum(valid)) >= 8:
+        cg = cross[geom][valid]
+        wg = np.abs(cg) * np.maximum(coherence[geom][valid], 1e-6)
+        pg = cg / np.maximum(np.abs(cg), np.finfo(float).tiny)
+        scores = np.abs(ramps[:, valid] @ (wg * pg)) / np.sum(wg)
+    else:
+        # The registered fallback is the full coherent registration band.
+        shifts = np.asarray(
+            [(dx, dy) for dx in range(-8, 9) for dy in range(-8, 9)],
+            dtype=np.float64,
+        )
+        phase = (
+            shifts[:, 0, None] * fx[coarse][None, :]
+            + shifts[:, 1, None] * fy[coarse][None, :]
+        )
+        ramps_fallback = np.exp(-2j * np.pi * phase)
+        scores = np.abs(ramps_fallback @ (w0 * phasor0)) / np.sum(w0)
+    best_i = int(np.argmax(scores))
+    dx, dy = (float(v) for v in shifts[best_i])
 
     weight = np.abs(cross[keep]) * np.maximum(coherence[keep], 1e-6)
     weight /= max(float(np.median(weight)), np.finfo(float).tiny)
@@ -573,16 +625,38 @@ def fit_spatial_shift(
             )
     if len(blocks) < 2:
         raise ValueError("too few spatial blocks")
-    shifts = range(-max_gq_shift, max_gq_shift + 1)
+    shifts = list(range(-max_gq_shift, max_gq_shift + 1))
     surface = np.zeros((len(shifts), len(shifts)), dtype=np.float64)
-    for iu, du in enumerate(shifts):
-        for iv, dv in enumerate(shifts):
-            surface[iu, iv] = float(
-                np.mean([_spatial_score(x, y, du, dv) for x, y in blocks])
-            )
+    margin = max_gq_shift
+    for x, y in blocks:
+        xa = np.asarray(
+            x[margin : n - margin, margin : n - margin],
+            dtype=np.float64,
+        )
+        xa -= float(np.mean(xa))
+        xnorm = math.sqrt(float(np.sum(xa * xa)))
+        shifted = np.stack(
+            [
+                np.asarray(
+                    y[
+                        margin + du : n - margin + du,
+                        margin + dv : n - margin + dv,
+                    ],
+                    dtype=np.float64,
+                )
+                for du in shifts
+                for dv in shifts
+            ]
+        )
+        shifted -= np.mean(shifted, axis=(1, 2), keepdims=True)
+        ynorm = np.sqrt(np.sum(shifted * shifted, axis=(1, 2)))
+        scores = np.sum(shifted * xa[None, :, :], axis=(1, 2))
+        scores /= np.maximum(xnorm * ynorm, np.finfo(float).tiny)
+        surface += scores.reshape(len(shifts), len(shifts))
+    surface /= len(blocks)
     iu, iv = np.unravel_index(int(np.argmax(surface)), surface.shape)
-    du = float(list(shifts)[iu])
-    dv = float(list(shifts)[iv])
+    du = float(shifts[iu])
+    dv = float(shifts[iv])
     if 0 < iu < len(shifts) - 1:
         du += _parabolic_offset(
             surface[iu - 1, iv], surface[iu, iv], surface[iu + 1, iv]
@@ -609,8 +683,12 @@ def split_registration(
     a: np.ndarray,
     b: np.ndarray,
     n: int,
+    *,
+    bundle: CrossBundle | None = None,
 ) -> dict:
-    bundle = cross_bundle(a, b, n)
+    bundle = cross_bundle(a, b, n) if bundle is None else bundle
+    if bundle.n != n:
+        raise ValueError("cached bundle uses the wrong Fourier grid")
     halves = [
         [i for i, rc in enumerate(bundle.block_rc) if sum(rc) % 2 == parity]
         for parity in (0, 1)
