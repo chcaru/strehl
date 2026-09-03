@@ -1,10 +1,17 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.3 (2026-09-03).** The metric, bar, and control
-protocol was written before the current implementation lanes reported their outcomes.
-Revision 1.2 records one disclosed holdout leak solely to exclude its subject/session;
-the leaked values do not select or alter a metric, bar, control, or replacement
-capture. The competitive position remains **UNKNOWN**.
+**Status: SPEC / PRE-REGISTRATION v1.4 (2026-09-03).** The v1.0 metric, bar, and
+control protocol was written before implementation lanes reported outcomes.
+Subsequent revisions quarantine leaked evidence, classify captures before use, or
+withdraw/tighten an instrument defeated by independent commissioning; each change is
+recorded below. No v1.4 score output has been read. The competitive position remains
+**UNKNOWN**.
+
+**Revision 1.4 — defeated detail instrument withdrawn; M8 tightened before use:**
+M1 now has no active statistic or bar because both registered outputs failed
+independent commissioning. This revision also records which axes are scientifically
+measurable now and splits M8 into per-frame resampler- and final-output hull
+certificates. It registers no result and consumes no holdout.
 
 **Revision 1.3 — fresh slide classified before outcomes:** the six
 `high-res-calibration-slide-cpl` stacks arrived with input metadata only. They form one
@@ -26,7 +33,7 @@ explicit in the timing protocol. It imports no phase-1 acceptance bar and no mea
 quality result.
 
 This document owns the definition and protocol, not a result. The first render of any
-scored capture **under this protocol** seals v1.3; pre-existing unrelated masters are
+scored capture **under this protocol** seals v1.4; pre-existing unrelated masters are
 not score outputs. A later change to an instrument, bar, eligibility rule, comparator
 setting, capture, or aggregation rule requires a numbered revision and a fresh
 holdout capture. Existing score outputs may then be used only for development.
@@ -63,11 +70,12 @@ document’s proposed completions, not claims that the governing proposal alread
    Zerene PMax, Zerene DMap, and Helicon Methods A, B, and C, each at its frozen
    factory setting and with user post-processing disabled. “Best” is chosen in the
    comparator-favouring direction for each metric.
-4. A comparator mode may define a noise, artifact, speed, or memory envelope only if
-   it passes the input/output transfer audit and retains at least `98%` of the highest
-   M1 information cutoff achieved by any registered mode on that capture **and**
-   passes M1's matched-presentation guard. This stops a deliberately blurred
-   fast/quiet mode from becoming the quality comparator.
+4. Once a replacement M1 is admitted, a comparator mode may define a noise, artifact,
+   speed, or memory envelope only if it passes the input/output transfer audit and
+   retains at least `98%` of the highest replacement-M1 information score achieved by
+   any registered mode on that capture. This stops a deliberately blurred fast/quiet
+   mode from becoming the quality comparator. In v1.4 no mode can yet be
+   quality-qualified.
 5. Each capture must pass independently, and the pooled one-sided 95% confidence bar
    must also pass. Pooling may not rescue a failed capture.
 6. All confidence intervals resample independent physical sites, not pixels:
@@ -87,8 +95,8 @@ program/mode as one point and never splice modes into a fictional point.
 
 | Joint constraint | Cheat and opposed movement | Binding rule |
 | --- | --- | --- |
-| M1 information + M2 noise + M4 flat power + M8 hull | Harder averaging can lower noise by losing information; sharpening can flatter transfer while increasing flat power or leaving the source hull. | On the same bee-repeat output, publish `(f_licensed, S_25, eta, Q_flat, hull_rate)` and pass all four metric bars simultaneously. Neither a noise-only nor a detail-only quote is valid. |
-| M3 boundary integrity + local source coherence/width | Blur can hide a halo or veil while widening the edge and reducing agreement with the independently sharp source. | The same boundary render must pass M3's width bar and M5's local `rho_best>=0.90`; the build must also pass M1 on its independent-repeat captures. |
+| M1 information + M2 noise + M4 flat power + M8 hull | Harder averaging can lower noise by losing information; sharpening can flatter transfer while increasing flat power or leaving the source hull. | M1 presently has no admissible statistic. When it is replaced, publish the replacement detail value with `(eta, Q_flat, M8-R, M8-O)` from the same output and pass every bar simultaneously. Until then neither a noise-only nor a detail claim is valid. |
+| M3 boundary integrity + local source coherence/width | Blur can hide a halo or veil while widening the edge and reducing agreement with the independently sharp source. | The same boundary render must pass M3's width bar and M5's local `rho_best>=0.90`; the build must also pass a future commissioned M1 on independent-repeat captures. |
 | M6 clipping + §1.3 transfer + M5 highlight coherence | Darkening/tone compression avoids clipping; smoothing hides clipped texture. | The same output must pass the ramp, clipping, and highlight-coherence bars. |
 | M9 false certification + M9 coverage | Universal confidence overclaims; universal refusal obtains perfect precision by saying nothing. | Publish `(false_certification, true_band_coverage)` from one map; both bars must pass. |
 | M11 runtime + M12 determinism/memory | Serial execution can make hashes reproducible by abandoning the speed claim. | The primary CPU result is the 16-worker output; it must meet M11 and be byte-identical to 1/2/4/8-worker outputs while meeting M12. |
@@ -224,7 +232,7 @@ term rather than subject/object identity (rule 35, lines 457–462). Accordingly
    overconfident certificate, permuted depth, a 60-second timed delay, and a 7-GiB
    allocation. Every applicable gate must fail.
 4. A failed commissioning result voids the metric. It may not be repaired against the
-   scored captures under v1.3.
+   scored captures under v1.4.
 
 ## 2. Frozen capture set
 
@@ -326,7 +334,8 @@ same-focus bee sentinel; M5 retains ruler/natural holdouts but still lacks its
 replacement controlled-slide holdout; M9 retains bee repeats but lacks independent
 depth-stack truth.
 
-**M1, M5, and M9 cannot pass v1.3** until a fresh untouched subject/session supplies,
+**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.4** until a
+fresh untouched subject/session supplies,
 at identical subject geometry, exposure, ISO, aperture, and focal length with
 **IBIS off**:
 
@@ -360,14 +369,14 @@ viewed.
 
 | ID | Primary metric | Success bar |
 | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | Every scored capture: licensed median cutoff reaches `0.25 cyc/native px`; 95% lower bounds of strehl / best-comparator licensed cutoff and top-band `S_25` each `>=1.000`; matched-output gain and width each `0.95`–`1.05`. |
+| M1 | Sharpening-safe resolved information | **NO ADMISSIBLE BAR — WITHDRAWN.** `f_licensed` is blind and `S_25` is defeated by tone, noise and angle. |
 | M2 | Noise efficiency at matched information | Cross-fit efficiency `<=1.10`; 95% upper bound of strehl / quietest qualifying comparator `<=0.950`. |
 | M3 | Occlusion halo and broad veil | Median excess `<=1%` edge step, p99 `<=5%`; edges above 5% `<=1%` with Wilson upper bound `<=2%`; local source coherence `>=0.90`; no worse than best comparator. |
 | M4 | Non-edge artifact rate | Median flat-patchwork ratio `<=1.00`; sites above `1.25` or ghost ratio above `0.10`: `<=1%`, Wilson upper bound `<=2%`; no worse than best comparator. |
 | M5 | Depth-of-field coverage / stack failure | `>=99%` of eligible tiles pass `rho_best>=0.90` and focus margin `>=0.05`; Wilson lower bound `>=98%`; longest failed run `<=1%` of sweep. |
 | M6 | Recoverable highlight/shadow retention | Recoverable high-rail and low-rail clipping each `<=0.10%`; highlight-detail retention `>=0.90`; no worse than best comparator. |
 | M7 | Colour fidelity | Median DeltaE00 `<=1.0`, p95 `<=2.0`, maximum `<=3.0`, boundary-seam p99 `<=1.0`; ICC/300-DPI conformance `100%`; no worse than best comparator. |
-| M8 | Invented values / source-hull certificate | Samples beyond the independently reconstructed source hull plus tolerance: exactly `0.0000%`. |
+| M8 | Invented values / source-hull certificate | Per-frame resampler-hull violations and final-output source-hull violations: each exactly `0.0000%`. |
 | M9 | Acuity / `n_eff` certificate calibration | False-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`–`97%`; variance ratio `0.90`–`1.10`. |
 | M10 | Physical depth product | Valid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`. |
 | M11 | Wall-clock throughput | Warm common-input throughput `>=2.00x` fastest quality-qualified comparator; candidate/default baseline ratio `<=2.00`; native-RAW CPU at 16 workers `<=0.15 s/frame`; hybrid `<=0.06 s/frame`; cold `<=warm+20 s`; 100-frame live master `<=10 s` after last shutter. |
@@ -380,104 +389,92 @@ completions — including freezing D5's “roughly 2x” as `<=2.00` — are
 **SCORECARD ADDITIONS** because the proposal is silent, approximate, or contains
 `[bar]`.
 
+### 3.1 Measurement readiness as of v1.4
+
+This table separates scientific blockers from the baseline's single pre-metric
+refusal. Codes are the owner's requested categories: **(a)** missing admissible
+detail instrument, **(b)** unresolved native-scale/`cover=scale` geometry,
+**(c)** missing or under-powered capture, **(d)** unavailable common-input
+Zerene/Helicon output, and **(e)** scientifically measurable now. An **(e)** does not
+mean a result has been run.
+
+| Axis | Class | What can and cannot be measured now |
+|---|---|---|
+| M1 | **(a)(b)(c)(d)** | No active detail statistic or bar exists; scored matched repeats and comparator arms are also absent. |
+| M2 | **(a)(b)(d)** | Residual noise can be computed diagnostically, but the registered matched-information verdict cannot. |
+| M3 | **(a)(b)(d)** | Artifact counts without a licensed detail/matched-presentation arm cannot support the competitive claim. |
+| M4 | **(a)(b)(d)** | Flatness is computable diagnostically, but its detail-preserving comparator verdict is blocked. |
+| M5 | **(a)(b)(c)(d)** | No scored dense/sparse repeat unit exists, and failure coverage needs a licensed detail test. |
+| M6 | **(a)(b)(c)(d)** | The rail census is executable, but the registered capture set has fewer than 10,000 recoverable samples and the full axis includes detail retention and comparators. |
+| M7 | **(b)(c)(d)** | No traceable colour target exists. |
+| M8 | **(e)** | The v1.4 source-hull invariant needs neither detail nor a comparator and may use the development-only flat slide. Its checker still must be commissioned before a result is admitted. |
+| M9 | **(a)(b)(c)** | Repeat calibration captures are absent and the shipping product emits no admissible acuity/variance certificate. |
+| M10 | **(b)(c)** | No scored geometric-truth capture or compatible depth product exists. The tilted slide is development-only. |
+| M11 | **(a)(b)(d)** | A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict. |
+| M12 | **(e), scheduled** | Hashes and process-tree RSS need no detail, comparator or holdout. Arms at 1/2/4/8 workers fit the present cap; the registered 16-worker efficiency and modulo ladder require the reserved quiet host. |
+
+Thus M8 is the only complete quality axis ready now. M12 is scientifically
+unblocked, but its complete registered run is deliberately deferred to a quiet host.
+M6's clipping preflight and several other submetrics may be run as diagnostics; they
+are not complete axis verdicts.
+
 ## 4. Metric cards
 
-### M1 — sharpening-safe resolved information
+### M1 — WITHDRAWN: no admissible detail instrument
 
-**What it measures and why.** A focus stacker must preserve independently repeatable
-scene information across the depth sweep, not merely raise edge contrast. Raw band
-power, MTF50, acutance, and SFR can all rise after an uninformative sharpening pass.
-M1 instead uses target-locked signal-to-repeat-noise and independent-repeat FRC. Both
-are invariant to a common post-render linear gain or sharpening filter within each
-0.01-cyc/px bin.
+**What it must measure and why.** A focus stacker must preserve independently
+repeatable scene information across the depth sweep, not merely raise edge contrast.
+Raw band power, MTF50, acutance, SFR and other presentation statistics can all rise
+after an information-free sharpening pass.
 
-**Input.**
+**Why the v1.3 M1 instrument is withdrawn.** Independent commissioning established
+both failure modes that this pre-registration was intended to expose:
 
-- Required dense checker-only reference: **absent**. The new slide is
-  development-only and cannot become score evidence after its flat block is used.
-- Required matched primary repeats: **absent**. Two new independent sw4 passes at
-  identical geometry/exposure with IBIS off are required.
-- Required matched sparse-step repeats: **absent**. Two new independent sw10 passes
-  at identical geometry/exposure with IBIS off are required.
-- Development-only commissioning set: burned grid sw1 as reference, the two burned
-  sw4 captures as repeat A/B, and the two burned sw10 captures. No value from this set
-  may contribute to M1.
-- Development-only identity set: the three flat high-resolution-slide exposure
-  stacks. They may diagnose resampling/transfer but cannot contribute to M1.
-- Development-only controlled-tilt set: the three tilted high-resolution-slide
-  stacks. They may commission M5/M10 instruments but cannot contribute to M1.
-- Non-periodic sentinel: each 32-frame ISO-100 bee repeat is split into 8 held-out
-  reference frames and two 12-frame scored repeat groups.
-- Dark/flat captures establish the common-mode and quantisation floors.
+- `f_licensed` remained pinned at `0.15 cyc/px` for the base, physical blur, genuine
+  improvement and unsharp-mask arms. It is sharpening-invariant only because it is
+  blind.
+- `S_25` moved in the desired directions under the blur and genuine-improvement
+  plants and only `0.418%` under the registered unsharp mask, but it moved `4.8400x`
+  under gamma-3 tone and `18818.9045x` under a logistic tone curve. Its noise range
+  was `0.004972x`–`10.381863x`, and its 0.5/1/5/12-degree response was
+  `1.42205/1.18548/1/0.65802`.
 
-Every replacement checker reference and every held-out bee reference frame is
-checker-only and is never passed to a stacker in the corresponding scored arm.
+Accordingly, **the `S_25` requirement is withdrawn plainly, not weakened**, and the
+old `f_licensed`/`S_25` formulae are not claim-bearing scorecard outputs. Three
+independent slanted-edge implementations are also presentation diagnostics only:
+they report roughly a 9.9% “resolution” gain after post-render unsharp masking.
 
-**Exact computation.**
+**Input needed by a future replacement.** The capture deficiency remains:
 
-1. Form non-overlapping 256x256 linear-luminance tiles with a Tukey-0.25 window.
-   `Y = 0.2627R + 0.6780G + 0.0593B`.
-2. Select the reference focus frame/three-frame mean using only `0.05–0.12 cyc/px`.
-   Specifically, choose the maximum-power frame and inverse-variance average it with
-   its immediate predecessor/successor when present. For the same-focus bee sentinel,
-   average the eight held-out reference frames. The licensed score evaluates only
-   `0.15–0.25 cyc/px`.
-3. A bin is eligible only when reference/defocused source power has point ratio
-   `>=2.0` and tile-bootstrap lower 95% bound `>=1.5`.
-4. For repeat spectra `A_k`, `B_k` and independent reference `R_k`, in bin `b`:
+- one dense checker-only reference;
+- two independent sw4 passes at identical geometry and exposure, IBIS off;
+- two independent sw10 passes at identical geometry and exposure, IBIS off;
+- matched dark/flat captures and a non-periodic independent-reference sentinel.
 
-   `g_b = Re(sum(((A_k+B_k)/2) conj(R_k))) / sum(|R_k|^2)`
+The burned grid and the development-only high-resolution slide may commission a new
+instrument but may never provide its scored value.
 
-   `N_b = max(0.5 sum(|A_k-B_k|^2), N_floor,b)`, where `N_floor,b` is the
-   one-sided 95% upper bound from matched independent dark/flat repeats.
+**Exact computation.** None is admitted in v1.4. A replacement must be
+pre-registered before its fresh holdout is rendered, must use no frequency above
+`0.25 cyc/native px`, and must be implemented and audited independently of the
+pipeline producing the render.
 
-   `D_b = g_b^2 sum(|R_k|^2) / N_b`
+**Success.** There is deliberately no active numeric success bar. M1 remains
+**UNMEASURED**, and no detail, matched-information, quality-qualified comparator or
+SOTA claim is licensed until a replacement statistic and numeric bar survive
+commissioning.
 
-   `FRC_b = Re(sum(A_k conj(B_k))) /
-            sqrt(sum(|A_k|^2) sum(|B_k|^2))`.
+**Known defeat.** Sharpening can fake edge/detail transfer; monotone tone can fake
+spectral ratios; averaging can improve noise by destroying detail; shared fixed
+pattern or deterministic hallucination can make repeat renders agree; a periodic
+checker can carry its own answer.
 
-5. `f_licensed` is the upper edge, censored at `0.25 cyc/native px`, of the highest
-   contiguous bin sequence from 0.15 where both `D_b >= 1.0` and
-   `FRC_b >= 1/7`. Report cycles/native pixel and, on the grid, cycles/mm only through
-   that licensed endpoint.
-6. `S_25 = min(D_b)` over the five 0.01-cyc/px bins spanning
-   `0.20–0.25 cyc/px`. This compares information margin at the licensed endpoint
-   without inferring what happens above it.
-7. An optional checker may inspect `(0.25,0.45] cyc/px`, but it may publish only
-   `UNLICENSED_GT_0.25`, never a numerical cutoff, ranking, win, loss, or SOTA claim.
-   It cannot affect any v1.3 verdict.
-
-**Success.** **SCORECARD ADDITION:** every scored capture has median
-`f_licensed =0.25 cyc/native px`; every capture and the pool have
-`LCB95(f_licensed_strehl / max(f_licensed_comparator)) >=1.000` and
-`LCB95(S_25(strehl) / max_mode(S_25(comparator_mode))) >=1.000`.
-
-**Matched-presentation guard, not resolution evidence.** To stop a reversibly blurred
-render from buying noise or artifact wins, the median `g_b` over
-`0.15–0.25 cyc/px` and the median 10–90% edge-width ratio to the independent
-reference must each lie in `[0.95,1.05]`. These transfer quantities are explicitly
-**SHARPENING-UNSAFE** and cannot establish M1; they only qualify outputs as matched
-presentations after M1 has established information.
-
-**Known defeat.** Shared fixed pattern or a deterministic hallucination can make two
-renders agree; a known periodic grid can also reward a checker carrying its own
-answer. Post-hoc sharpening can inflate ordinary SFR.
-
-**Control.**
-
-- Reference locking excludes a common artifact not present in the independent input.
-- The non-periodic bee repeat must agree with the grid verdict.
-- A flat ROI must produce zero eligible bins.
-- A common-mode pattern planted identically in A/B but absent from the reference may
-  move `f_licensed` by at most `0.005 cyc/px`; flat/dark p95 FRC and target-locked `D`
-  must each be `<=0.10`, below the `1/7` decision threshold with margin.
-- A pre-sensor Gaussian blur plant, with fresh noise added after blur, must lower
-  `f_licensed` by at least `0.02 cyc/px`.
-- Float, unclipped unsharp-mask challenges at radii 0.5/1/2 px and amounts
-  0.5/1/2 may move `f_licensed` by at most `0.005 cyc/px`.
-
-Slanted-edge SFR is still reported as a presentation diagnostic, explicitly labelled
-**SHARPENING-UNSAFE**, and cannot determine M1.
+**Required controls for any replacement.** It must distinguish untuned null,
+pre-sensor blur and genuine optical improvement in the correct directions; refuse
+post-render unsharp-mask, gamma, logistic-tone, noise and edge-angle challenges; fail
+a common-mode A/B plant absent from the independent reference; and report a flat ROI
+as no detail evidence. Those challenge outcomes and numerical admission bars must be
+frozen in a later revision before score data are read.
 
 ### M2 — noise efficiency at matched information
 
@@ -501,7 +498,8 @@ ROIs total and 16 per light must qualify.
    spatial texture. The ideal difference of two independent 16-frame means is
    `sigma_ideal = sigma_1 * sqrt(2/16)`.
 4. `eta = sigma_res / sigma_ideal`. The comparator ratio uses paired ROIs and only
-   modes within `98%` of the M1 cutoff envelope.
+   modes within `98%` of a future replacement-M1 information envelope. No comparator
+   mode qualifies in v1.4.
 
 The `0.15–0.35 cyc/px` quantity here is a noise residual, not a detail or acuity
 reading; it does not license any spatial-resolution claim above `0.25 cyc/px`.
@@ -514,10 +512,11 @@ margin (`2026-08-sota-path.md` lines 192–195). **SCORECARD ADDITION:**
 flat ROI can lower the statistic without improving the stack.
 
 **Control.** Input-only cross-light ROI selection prevents output cherry-picking;
-§1.3 fixes gain and tone; M1 and its matched-presentation guard must remain green. A
+§1.3 fixes gain and tone; a future replacement M1 must remain green. A
 Gaussian-output-blur plant must improve raw noise while failing the edge-width/gain
 guard. Added independent noise of `0.25 sigma_1` must increase `eta` by at least
-`0.20`; the untouched temporal mean must fall in `0.90 <= eta <=1.10`.
+`0.20`; the untouched temporal mean must fall in `0.90 <= eta <=1.10`. Until M1 is
+replaced, `eta` is diagnostic only.
 
 ### M3 — occlusion halo and broad veil
 
@@ -560,10 +559,10 @@ normalisation can erase a veil; an optical halo already present in every source 
 mislabelled as a stacker artifact.
 
 **Control.** The score is excess over the source interval/reference, not absolute
-optical halo. M1, `rho_edge`, and the width guard catch blur. Crops and plateaus are
-frozen. A 6% planted rim and 6% 200-px veil must be detected on at least 95% of sites;
-untouched raw frames must have false-positive rate `<=1%`. Any checker that convicts
-the raw null is not admitted.
+optical halo. A future replacement M1, `rho_edge`, and the width guard catch blur.
+Crops and plateaus are frozen. A 6% planted rim and 6% 200-px veil must be detected on
+at least 95% of sites; untouched raw frames must have false-positive rate `<=1%`.
+Any checker that convicts the raw null is not admitted.
 
 ### M4 — non-edge artifact rate
 
@@ -595,11 +594,12 @@ At least 500 sites overall and 50 per scored capture must qualify.
 edges. A checker built from strehl’s own weight map would simply restate the
 generator.
 
-**Control.** M1 qualification catches blur. The checker sees inputs and final pixels,
-never weights. A planted 32-px spatial selector must make at least 95% of planted flat
-tiles exceed `Q=1.25`; a fixed-weight mean must produce no more than 1% failures.
-Shifting the output by one tile must destroy edge correspondence without changing its
-spatial spectrum, demonstrating that the edge arm is not merely a texture detector.
+**Control.** A future replacement M1 must catch blur. The checker sees inputs and
+final pixels, never weights. A planted 32-px spatial selector must make at least 95%
+of planted flat tiles exceed `Q=1.25`; a fixed-weight mean must produce no more than
+1% failures. Shifting the output by one tile must destroy edge correspondence without
+changing its spatial spectrum, demonstrating that the edge arm is not merely a
+texture detector.
 
 ### M5 — depth-of-field coverage and stack failures
 
@@ -640,11 +640,12 @@ presentation soft; an eligibility map derived from the output can omit the hard
 sites.
 
 **Control.** The denominator and best frame come only from common inputs and are
-frozen. Coherence is gain-invariant. M1 and its transfer guard catch softening.
+frozen. Coherence is gain-invariant. A future replacement M1 must catch softening.
 Removing the smallest contiguous run of at least three frames that covers at least
 10% of the eligible target depth must reduce measured coverage by at least 5
 percentage points and place the longest failure in that slab. A complete-stack null
-may move coverage by at most 1 point. M1 remains the separate resolution gate.
+may move coverage by at most 1 point. M1's future replacement remains the separate
+resolution gate.
 
 ### M6 — recoverable highlight and shadow retention
 
@@ -722,30 +723,69 @@ observed linear sample. The proposal explicitly requires a per-file hull census 
 `0.0000%` or coordinates for every exception
 (`2026-08-sota-path.md` lines 1579–1584).
 
-**Input.** Every scored quality capture.
+**Input.** Every scored quality capture. Before a scored run, commission the
+instrument on the development-only flat 1/2.5/6-second high-resolution-slide stacks.
+This use consumes no holdout. The active placement, including the cover transform, and
+the linear decoded source planes are evidence inputs.
 
 **Exact computation.**
 
-1. Independently warp each common input into the native output coordinate system.
-   The support interval for an output sample is the per-channel min/max over all
-   geometrically valid source samples and the four bilinear neighbours required by the
-   external warp.
-2. Let `tau=max(5*sigma_temporal, 2/65535)` per channel, where temporal sigma comes
-   from M2/darks, not from strehl.
-3. Count a violation when `O < min-tau` or `O > max+tau`; record coordinate, channel,
-   signed excess, and nearest source extrema.
+M8 has two mandatory censuses because a final broad hull can hide an interpolator
+excursion that another frame happens to bracket. M8-R is a **SCORECARD ADDITION**;
+M8-O is the proposal's per-file invariant.
 
-**Success.** **PROPOSAL BAR:** violation fraction exactly `0.0000%`.
+1. **M8-R, per-frame resampler hull.** At the linear pre-merge and pre-clamp `f32`
+   boundary, record the actual gathered value `r_k(x,y,c)` for every geometrically
+   valid placed frame, sample and channel. The trace contains values and coordinates,
+   never a producer-computed hull or pass flag.
+2. Independently map each output sample centre through the frozen placement. For
+   Catmull-Rom, read the exact 4x4 discrete source support used at that coordinate and
+   define `lo_k=min(support_16)` and `hi_k=max(support_16)`. Boundary coordinate
+   clamping must be reimplemented from the written resampler contract, not called from
+   strehl.
+3. Let
+   `tau_R = 8*ULP_f32(max(1, abs(lo_k), abs(hi_k)))`. Count an M8-R violation when
+   `r_k < lo_k-tau_R` or `r_k > hi_k+tau_R`. Sensor noise is already present in the
+   16 observed support samples, so temporal `5*sigma` is not a legitimate tolerance.
+   Here `ULP_f32(z)` is the distance from positive `f32` value `z` to its next
+   representable value.
+4. **M8-O, final-output hull.** At the same linear coordinate and channel, define
+   `lo_O=min_k(lo_k)` and `hi_O=max_k(hi_k)` over every geometrically valid input
+   frame, never strehl's elected contributor list. Compare the actual final linear
+   output `O` to this interval. For a 16-bit serialized audit only, add exactly
+   `0.5/65535` quantisation tolerance to the largest contributing `tau_R`; no tone,
+   noise or scene-adaptive tolerance is allowed.
+5. For both censuses report denominator, violation count and fraction, maximum signed
+   excess, and every violating `(capture, frame, x, y, channel)` coordinate. Separately
+   report the one-frame/reference-frame arm: under `crop`, an integer identity
+   placement must be a source copy within `tau_R`.
 
-**Known defeat.** Clamping every output to a broad source hull guarantees a pass while
-destroying contrast, highlights, or detail. Using strehl’s contributor list can omit
-the sample that disproves the claim.
+**Success.** **PROPOSAL BAR (M8-O):** final-output violation fraction exactly
+`0.0000%`. **SCORECARD ADDITION (M8-R):** resampler violation fraction exactly
+`0.0000%`; the crop/reference identity arm also has zero violations. A missing
+pre-clamp trace is `UNMEASURED`, not a pass.
 
-**Control.** The checker constructs support from every geometrically valid common
-input and never consumes the program contributor list. M1, M5, and M6 make destructive
-clamping unable to buy the overall verdict. An external convex mean must produce zero
-violations; setting 0.01% of pixels to the independently reconstructed hull bound plus
-`6*tau` must be detected with at least 99% sensitivity.
+**Current cover hypothesis.** The v1.3 definition was too weak: its all-frame hull and
+`5*sigma` tolerance could pass Catmull-Rom overshoot if another frame bracketed the
+excursion, merge/clamping removed it, or the noise tolerance absorbed it. The default
+Catmull-Rom kernel has negative lobes and explicitly permits hard-edge overshoot, while
+`cover=scale` resamples even the identity reference placement. Therefore scale-induced
+overshoot is plausible but not yet measured. M8-R will catch it at the stage where it
+is created; M8-O determines whether it survives to the deliverable. This is
+sharpening-independent source support, not a resolution statistic.
+
+**Known defeat.** Final clamping can erase M8-O evidence; a broad all-frame hull can
+bracket a per-frame excursion; a producer-supplied contributor mask or hull can omit
+the disproof; and destructive clipping can force a zero rate.
+
+**Control.** The checker is a separate implementation that reads source planes,
+placements and raw value traces and imports neither strehl's sampler nor its
+contributor/hull code. A synthetic hard step at a frozen fractional phase must cause
+at least one Catmull-Rom M8-R violation; copy and convex-bilinear nulls must produce
+zero. Every sample deliberately planted at `hi+32*tau` or `lo-32*tau` must be found.
+The crop/reference identity arm must produce zero. A future M1, M5 and M6 are the
+opposed controls against buying an overall quality verdict through clamping; while M1
+is absent, M8 may prove only this internal invariant, not SOTA.
 
 ### M9 — acuity and effective-sample certificate calibration
 
@@ -767,7 +807,8 @@ repeats alone cannot close M9's depth-stack certificate claim.
 **Exact computation.**
 
 1. For each tile and 0.05-cyc/px band whose upper edge is `<=0.25 cyc/px`, truth is
-   M1’s independent-repeat condition `D>=1` and `FRC>=1/7`.
+   the future independently commissioned M1 condition. The withdrawn v1.3
+   `D>=1 && FRC>=1/7` rule is not truth in v1.4.
 2. A claimed band is the highest licensed band strehl’s output certificate marks
    valid. Bands above `0.25 cyc/px` must be labelled `UNLICENSED` and cannot improve
    the score.
@@ -788,10 +829,11 @@ constant in generator and checker can make every calibration plot close by
 construction. A certificate can also pass by refusing almost every pixel.
 
 **Control.** Truth uses independent repeated exposures, external FPN treatment, and
-M1’s reference, never strehl’s model channel. The coverage bar prevents universal
-refusal. A certificate with every band valid must exceed the false-certification bar;
-one with every band invalid must fail coverage. Multiplying only the reported variance
-by 1.25 must move the variance ratio outside the pass interval.
+a future M1 independent reference, never strehl’s model channel. The coverage bar
+prevents universal refusal. A certificate with every band valid must exceed the
+false-certification bar; one with every band invalid must fail coverage. Multiplying
+only the reported variance by 1.25 must move the variance ratio outside the pass
+interval. With M1 absent, M9 has no empirical acuity truth and is `UNMEASURED`.
 
 ### M10 — physical depth product
 
@@ -932,19 +974,24 @@ precision common deliverable, not a later 8-bit proxy.
    MTF50, and slanted-edge SFR:** post-hoc sharpening or a tone curve can raise them
    without adding information. SFR remains a target/presentation diagnostic labelled
    unsafe; it cannot decide M1.
-2. **Same-frame split-half FRC/SNR:** dropped. The proposal describes the halves as
+2. **The v1.3 `f_licensed` / `S_25` composite:** dropped. The cutoff is blind to both
+   physical blur and genuine improvement. `S_25` survives the tested unsharp mask but
+   moves `18818.9045x` under a logistic tone curve, spans
+   `0.004972x`–`10.381863x` under noise, and is angle-dependent. A control defeated
+   it, so it cannot remain a requirement merely because no replacement exists.
+3. **Same-frame split-half FRC/SNR:** dropped. The proposal describes the halves as
    independent (`2026-08-sota-path.md` lines 1694–1733), but the commissioned lane
    found a common-mode adversary at `0.972099` and a null at `0.438734` against the
    `0.25` bar; reopening requires an independent repeated bracket, sensor-pattern
    subtraction, a non-degenerate partition, and a transferring tuner plant
    (`docs/STATUS.md` lines 156–198). M1/M9 therefore use repeated exposures only.
-3. **SSIMULACRA2 / butteraugli on natural stacks:** the proposal names them
+4. **SSIMULACRA2 / butteraugli on natural stacks:** the proposal names them
    (`2026-08-sota-path.md` lines 1525–1536) but supplies neither an all-in-focus truth
    image nor a bar. Comparing two unknown renders does not create a reference.
-   They may commission synthetic plants, but do not rank real outputs in v1.3.
-4. **A single composite “SOTA score”:** weights would let noise purchase a halo or
+   They may commission synthetic plants, but do not rank real outputs in v1.4.
+5. **A single composite “SOTA score”:** weights would let noise purchase a halo or
    speed purchase lost depth. The proposal’s end-state is conjunctive.
-5. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
+6. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
    for a traceable target.
 
 ## 6. Honest current position
@@ -958,18 +1005,18 @@ competitive statement is **unknown**.
 
 | ID | Metric | strehl | Zerene Stacker | Helicon Focus | Current standing |
 | --- | --- | --- | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only; a fresh dense reference and matched IBIS-off sw4/sw10 pairs are absent. |
+| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No admissible instrument or active bar; fresh dense reference and matched IBIS-off sw4/sw10 pairs are also absent. |
 | M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
 | M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Full-reach sites and new checker must commission. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.3 site manifest or control run exists. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.4 site manifest or control run exists. |
 | M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
-| M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Same linear input/output transfer not yet run. |
+| M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Traceable tilted colour target absent. |
-| M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing internal hull claims are not this external checker. |
+| M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | M8-R/M8-O are ready to commission on the development-only flat slide; no result has been read. |
 | M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
 | M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.3 run. |
-| M12 | Memory / determinism | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | v1.3 worker/N matrix not run. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.4 run; quiet host required. |
+| M12 | Memory / determinism | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | v1.4 worker/N matrix not run; 16-worker and modulo arms await a quiet host. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -999,7 +1046,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 7. **The proposal’s competitive axis table is historical, not this scorecard.** Its
    “ahead” labels for noise, clipping, invented structure, and speed were obtained
    under different instruments and, in the old head-to-head, asymmetric development.
-   None is a v1.3 current-position value.
+   None is a v1.4 current-position value.
 8. **D2’s CRLB channel cannot certify itself.** The same noise model cannot generate
    admission and then validate its own certificate. M9 requires independent repeated
    exposures and external fixed-pattern treatment.
@@ -1018,12 +1065,13 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 - **Accepted:** noise and information must be quoted jointly from the same output;
   confidence precision and coverage are an opposed pair; and determinism must be
   demonstrated at the worker count that also meets runtime.
-- **Accepted with correction:** “averaging fails MTF” becomes “averaging must fail the
-  sharpening-safe M1 information/transfer constraints.” Standalone MTF remains
-  inadmissible.
-- **Accepted with correction:** sharpening is bracketed by M1, M4, and M8 together.
-  Hull is corroborative, not guaranteed: a mild or explicitly clamped sharpening pass
-  can remain inside the hull, so hull alone is not the opposite of sharpening.
+- **Accepted with correction:** “averaging fails MTF” becomes “averaging must fail a
+  future commissioned sharpening-safe information constraint.” Standalone MTF remains
+  inadmissible, and v1.4 has no such instrument.
+- **Accepted with correction:** a future detail instrument, M4, and M8 should bracket
+  sharpening together. Hull is corroborative, not guaranteed: a mild or explicitly
+  clamped sharpening pass can remain inside the hull, so hull alone is not the
+  opposite of sharpening.
 - **Rejected:** making every metric a Pareto pair. Colour and physical depth have
   external truths, while the source hull is an invariant; forced opposites would be
   weaker than their independent controls.
@@ -1036,7 +1084,8 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.3`, only when every M1–M12 gate passes;
+- `PASS — SOTA under scorecard v1.4` is unavailable because M1 has no admitted
+  instrument or bar; a later pre-results revision with a commissioned M1 is required;
 - `FAIL`, when any commissioned primary gate misses;
 - `UNMEASURED`, when any required metric, capture, comparator, or instrument is absent
   or invalid.
