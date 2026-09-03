@@ -1,0 +1,61 @@
+"""Frozen pre-treatment Sharpness-40 PMax-native sites; generated 2026-09-03."""
+
+PMAX_SHA256 = "4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E"
+SCALE_SHA256 = "4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F"
+SUBJECT = "113-sharp"
+AUTHOR_GEOMETRY = {
+    "scale": 1.002600000000001,
+    "score": 0.6066122342226914,
+    "global_correction": [0.0, 8.0],
+    "residual_rms": 5.962847939999439,
+    "candidate_count": 96,
+    "eligible_count": 52,
+    "reasons": {
+        "eligible": 52,
+        "rail": 1,
+        "registration-gain": 9,
+        "registration-null": 34,
+    },
+}
+SITES = [
+    {"centre": [1024, 2560], "label": "detail"},
+    {"centre": [1024, 4608], "label": "detail"},
+    {"centre": [1024, 6144], "label": "detail"},
+    {"centre": [1536, 1024], "label": "detail"},
+    {"centre": [1536, 3072], "label": "detail"},
+    {"centre": [1536, 4096], "label": "detail"},
+    {"centre": [1536, 6144], "label": "detail"},
+    {"centre": [2048, 2560], "label": "detail"},
+    {"centre": [2048, 3072], "label": "detail"},
+    {"centre": [2048, 5120], "label": "detail"},
+    {"centre": [2048, 6144], "label": "detail"},
+    {"centre": [2560, 2560], "label": "detail"},
+    {"centre": [2560, 4096], "label": "detail"},
+    {"centre": [2560, 4608], "label": "detail"},
+    {"centre": [2560, 5120], "label": "detail"},
+    {"centre": [2560, 5632], "label": "detail"},
+    {"centre": [3072, 1024], "label": "detail"},
+    {"centre": [3072, 2560], "label": "detail"},
+    {"centre": [3072, 4096], "label": "detail"},
+    {"centre": [3072, 5632], "label": "detail"},
+    {"centre": [3584, 2048], "label": "detail"},
+    {"centre": [3584, 2560], "label": "detail"},
+    {"centre": [3584, 6144], "label": "detail"},
+    {"centre": [4096, 2560], "label": "detail"},
+    {"centre": [4096, 3072], "label": "detail"},
+    {"centre": [4096, 3584], "label": "detail"},
+    {"centre": [4096, 4096], "label": "detail"},
+    {"centre": [1024, 3072], "label": "flat"},
+    {"centre": [1536, 2560], "label": "flat"},
+    {"centre": [1536, 4608], "label": "flat"},
+    {"centre": [2048, 4096], "label": "flat"},
+    {"centre": [2048, 5632], "label": "flat"},
+    {"centre": [3072, 3584], "label": "flat"},
+    {"centre": [3072, 4608], "label": "flat"},
+    {"centre": [3584, 1536], "label": "flat"},
+    {"centre": [3584, 3584], "label": "flat"},
+    {"centre": [3584, 5632], "label": "flat"},
+    {"centre": [4096, 512], "label": "flat"},
+    {"centre": [4096, 2048], "label": "flat"},
+]
+SITE_DIGEST = "E3CF1842A94B71F825B6A6F41ADBC6120BD86F98FB3F7641C33A2D279F9330EE"
