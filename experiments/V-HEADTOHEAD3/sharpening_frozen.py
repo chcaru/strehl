@@ -65,3 +65,23 @@ DETAIL_1 = [
     [3584, 6144],
     [3072, 4608],
 ]
+
+# Source-only model outcome, frozen before either PMax or strehl was opened by
+# the follow-up.  The preregistered model failed closed at the identity/grid
+# boundary and on its zero-geometry assumption.
+MODEL_GREEN = False
+MODEL_SIGMA = 0.30
+MODEL_AMOUNT = 0.00
+MODEL_TRAIN_LOSS = 1.5723935858066076
+MODEL_TRAIN_IDENTITY_LOSS = 1.5723935858066076
+MODEL_HOLDOUT_LOSS = 2.519589081419451
+MODEL_HOLDOUT_IDENTITY_LOSS = 2.519589081419451
+MODEL_TABLE_DIGEST = "E15E5D6F8C8B6B7F77AEBD6AB6E6C53E1968568CEC2FC44B0EA22DC2064E5FC9"
+SOURCE_REGISTRATION_PROBE = (-2, 3, 0.007500113074354448)
+MODEL_FAILURES = (
+    "grid_boundary",
+    "source_geometry_nonzero",
+    "train_improvement",
+    "holdout_improvement",
+    "target_interval",
+)

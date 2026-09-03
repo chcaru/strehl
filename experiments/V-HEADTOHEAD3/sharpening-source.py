@@ -48,18 +48,35 @@ def model_mode() -> int:
         sc.SOURCE_0, sc.SOURCE_40, sc.HOLDOUT_IDS, holdout_sites
     )
     model, table = sc.fit_model(train, holdout)
-    if model.sigma in (0.30, 2.50) or model.amount in (0.00, 3.00):
-        raise RuntimeError(f"model optimum is on a grid boundary: {model}")
+    boundary = model.sigma in (0.30, 2.50) or model.amount in (0.00, 3.00)
     train_improvement = 1.0 - model.train_loss / model.train_identity_loss
     holdout_improvement = 1.0 - model.holdout_loss / model.holdout_identity_loss
-    rows = sc.source_holdout_rows(holdout_sites, model.sigma, model.amount)
-    target = sc.bootstrap_log_ratio(rows["actual_pred"])
+    probe_a = sc.green(sc.source_path(sc.SOURCE_0, sc.HOLDOUT_IDS[0]))
+    probe_b = sc.green(sc.source_path(sc.SOURCE_40, sc.HOLDOUT_IDS[0]))
+    _, _, source_probe = sc.registered_pair(
+        probe_a, probe_b, holdout_sites[0], max_shift=8
+    )
+    source_geometry_nonzero = source_probe[:2] != (0, 0)
+    target = None
+    source_flat = None
+    source_detail = None
+    source_hull = None
+    if not boundary and not source_geometry_nonzero:
+        rows = sc.source_holdout_rows(holdout_sites, model.sigma, model.amount)
+        target = sc.bootstrap_log_ratio(rows["actual_pred"])
+        n_flat = len(frozen.FLAT_1)
+        source_flat = sc.bootstrap_log_ratio(rows["sharp_base"][:n_flat])
+        source_detail = sc.bootstrap_log_ratio(rows["sharp_base"][n_flat:])
+        source_hull = sc.bootstrap_mean(rows["hull"][:n_flat])
     result = {
         "site_digest": frozen.SITE_DIGEST,
         "train_count": train["count"],
         "holdout_count": holdout["count"],
         "sigma": model.sigma,
         "amount": model.amount,
+        "boundary": boundary,
+        "source_registration_probe": list(source_probe),
+        "source_geometry_nonzero": source_geometry_nonzero,
         "train_loss": model.train_loss,
         "train_identity_loss": model.train_identity_loss,
         "train_improvement": train_improvement,
@@ -67,17 +84,39 @@ def model_mode() -> int:
         "holdout_identity_loss": model.holdout_identity_loss,
         "holdout_improvement": holdout_improvement,
         "holdout_target": target,
+        "source_flat_q25": source_flat,
+        "source_detail_q25": source_detail,
+        "source_flat_hull": source_hull,
         "table_digest": __import__("hashlib").sha256(
             json.dumps(table, separators=(",", ":")).encode("ascii")
         ).hexdigest().upper(),
         "unlicensed": sc.UNLICENSED,
     }
     result["model_green"] = bool(
-        train_improvement >= 0.25
+        not boundary
+        and not source_geometry_nonzero
+        and train_improvement >= 0.25
         and holdout_improvement >= 0.25
+        and target is not None
         and target["ci_low"] >= 0.85
         and target["ci_high"] <= 1.15
     )
+    result["failure_reasons"] = [
+        name
+        for name, failed in (
+            ("grid_boundary", boundary),
+            ("source_geometry_nonzero", source_geometry_nonzero),
+            ("train_improvement", train_improvement < 0.25),
+            ("holdout_improvement", holdout_improvement < 0.25),
+            (
+                "target_interval",
+                target is None
+                or target["ci_low"] < 0.85
+                or target["ci_high"] > 1.15,
+            ),
+        )
+        if failed
+    ]
     print("SOURCE_MODEL_JSON=" + json.dumps(result, sort_keys=True, separators=(",", ":")))
     return 0 if result["model_green"] else 2
 
