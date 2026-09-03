@@ -1,397 +1,367 @@
 # V-HEADTOHEAD3 — tone-neutral competitive baseline
 
-> **CORRECTION TO THE FIRST COMMITTED REPORT.**  Independent report
-> verification found a second same-bracket Zerene PMax render that the author
-> had seen in the file search but incorrectly grouped with inadmissible marker
-> captures.  The original two-render census and “no fine-band winner” headline
-> were false.  They are superseded below.
+> **CORRECTION / EXHAUSTIVE CENSUS.**  Two independent verification passes
+> broke the comparator census in the earlier committed reports.  The first
+> found a second 113 Zerene render.  The second proved that three previously
+> rejected Zerene marker renders match `119MSDCF`, and found three focus-stack
+> marker renders.  The focus-stack filenames then caused one more wrong-subject
+> assumption: the preregistered geometry gate rejected 113 (score 0.0802,
+> 160.6 px residual), while the unchanged fit accepted 119 (score 0.9832,
+> 1.33 px residual).  That correction was committed before reading those
+> outcome spectra.  The two- and three-pair accounts at commits `a050d686` and
+> `08a11d52` are superseded below.
 >
-> **VERDICT: NOT ROBUST across comparator input development.**  On the same 63
-> captures, strehl is unresolved against Zerene built from Lightroom
-> `Sharpness=0` inputs at 0.20–0.30 cyc/px, but **trails** Zerene built from
-> `Sharpness=40`, colour-NR 25 inputs: `R=0.3992
-> [0.3381,0.4720]` at 0.20–0.25 and `R=0.2834
-> [0.2178,0.3696]` at 0.25–0.30.  The latter changes from `0.9735` to `0.2834`
-> across those two available PMax renders.  Every focus-stack-fork band
-> remains unresolved.
->
-> The checker agrees on both sharpened-Zerene fine-band trails, but only 16/18
-> classes overall.  Coffee geometry also remains disagreed: 1.036 versus 1.044
-> (0.772%, beyond the preregistered 0.5% bar).
+> **VERDICT: NOT ROBUST across comparator development.**  Nine unique-byte
+> pairings survive.  The six newly admitted 119 arms produce no resolved win
+> or loss after the real flat-region veto.  The decisive instability remains
+> on the same 63-frame 113 bracket: at 0.25–0.30 cyc/px, strehl is unresolved
+> against PMax built from Lightroom `Sharpness=0` inputs,
+> `R=0.9735 [0.8339,1.1406]`, but trails PMax built from `Sharpness=40`,
+> colour-NR 25 inputs, `R=0.2834 [0.2178,0.3696]`.  Point tone cannot cause
+> that change; spatial preprocessing can.
 
 Preregistration:
 [`experiments/V-HEADTOHEAD3/PREREGISTRATION.md`](../../experiments/V-HEADTOHEAD3/PREREGISTRATION.md).
-The first two amendments in that file predate outcome measurement.  The second is
-substantive: synthetic commissioning proved that the original flat-spectrum
-ratio subtraction amplified additive noise by 25,494×.  It was replaced,
-before real outcomes, by a conservative same-direction flat veto.  A clearly
-labelled post-outcome census correction adds the omitted comparator without
-changing any band, threshold, ROI or verdict rule.
+The registration-gate and failed-flat-control amendments predate all real
+outcomes.  Every later census/provenance correction is labelled post-outcome
+and reuses the frozen bands, thresholds, ROI rules and verdict rules.
 
-## 1. Why this measurement exists
+## 1. Question and scope
 
-The 17–27% detail deficit reported by
-[`V-HEADTOHEAD.md`](V-HEADTOHEAD.md) is retracted.  The standing account in
-[`V-HEADTOHEAD2.md`](V-HEADTOHEAD2.md), including its registration-sign
-correction banner, shows that the old comparator tone curve explains 94.8%,
-109.9%, and 267.1% of the apparent three-band deficit.  A curve fitted using
-only 4×4 averages reproduced the disputed high-frequency power despite having
-no information above 0.125 cyc/px.  Raw render power was therefore not an
-admissible competitive statistic.
+The 17–27% detail deficit in
+[`V-HEADTOHEAD.md`](V-HEADTOHEAD.md) is retracted.  The standing correction in
+[`V-HEADTOHEAD2.md`](V-HEADTOHEAD2.md) shows that comparator tone accounts for
+94.8%, 109.9% and 267.1% of the old apparent three-band gap.  It also records
+the repaired registration-sign defect.
 
-This lane asks the narrower defensible question: how much **ordinal rendered
-structure** does each pipeline place in each spatial band after removing all
-strictly monotone point-tone information?  It does not call that quantity MTF
-or ground-truth fidelity.
+This lane asks a narrower question: how much **detail-specific ordinal rendered
+structure** does each complete pipeline place in each spatial band after
+removing every strictly monotone point-tone degree of freedom?  It does not
+call ordinal structure MTF, resolution truth, or faithful detail.
 
-## 2. Comparator renders and frozen provenance
+The strehl arm is the shipped `--srgb` DELIVER-V6 master from pinned commit
+`6af834dac08d6605aee7ea3ad75809fdf6313770`.  The comparators consumed
+Lightroom-developed TIFFs, while strehl consumed ARWs.  This is therefore a
+pipeline comparison, not an isolation of merge algorithms.
 
-Three usable render pairings exist:
+## 2. Comparator census and provenance
 
-| subject | strehl shipped master | comparator | bracket |
+Nine unique-byte render pairings are measured:
+
+| ID | strehl master | comparator render | provenance |
 | --- | --- | --- | --- |
-| `113MSDCF`, no input sharpening | `C:\dev\strehl-out\DELIVER-V6\masters\113MSDCF.tiff` | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif` (Zerene PMax) | 63 frames |
-| `113MSDCF`, sharpened inputs (post-registered) | same strehl master | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif` (Zerene PMax) | same 63 frames |
-| `coffee-bean` | `C:\dev\strehl-out\DELIVER-V6\masters\coffee-bean.tiff` | `C:\dev\macro\out\coffee-bean\stack.tif` (focus-stack fork) | 105 frames |
+| `113` | `113MSDCF.tiff` | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif` | Zerene PMax; 63/63 source identities; LR sharpening 0, colour NR 0, contrast +100 |
+| `113-sharp` | same | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif` | Zerene PMax; same 63/63 identities; LR sharpening 40, colour NR 25, contrast +100 |
+| `119-pmax` | `119MSDCF.tiff` | `D:\edited\macro\marker\2026-05-09-13.35.07 ZS PMax.tif` | Zerene PMax; 33/33 identities; LR contrast +50 |
+| `119-pmax-udr` | same | `D:\edited\macro\marker\2026-05-09-13.40.00 ZS PMax UDR.tif` | Zerene PMax UDR; same 33 identities; LR contrast +50 |
+| `119-pmax-udr-neutral` | same | `D:\edited\macro\marker2\2026-05-09-13.47.08 ZS PMax UDR.tif` | Zerene PMax UDR; same 33 identities; LR contrast 0 |
+| `119-fork` | same | `C:\dev\macro\out\stack_test2_rec2020.tif` | focus-stack fork, float Rec.2020 marker render |
+| `119-fork-defringed` | same | `C:\dev\macro\out\stack_test2_rec2020_defringed.tif` | postprocessed variant |
+| `119-fork-u16` | same | `C:\dev\macro\out\stack_test2_rec2020_16bit.tif` | 16-bit variant |
+| `cb` | `coffee-bean.tiff` | `C:\dev\macro\out\coffee-bean\stack.tif` | focus-stack fork; 105-frame bracket |
+
+`C:\dev\macro\out\stack_v3.tif` is byte-identical to
+`stack_test2_rec2020.tif` and is not double-counted.  The three marker-fork
+inputs have been deleted.  The rendered target, strong 119 geometry fit, and
+repository documentation are available, but their individual source
+identities and exact invocation cannot be re-audited.  In contrast, the
+Zerene 113 and 119 identity counts above come from embedded
+`OriginalDocumentID` values.
 
 No Helicon render was found under `C:\dev`, `D:\edited`, or
-`D:\personal\macro`.  Extra Zerene *marker* files exist, but the two prior
-head-to-head reports establish that those captures do not match a strehl
-bracket, so they are inadmissible.
-
-The two 113 TIFF input sets have identical filenames
-`DSC00001`–`DSC00063` and matching embedded `OriginalDocumentID` values 63/63.
-Their Lightroom XMP settings are uniform but different:
-
-| Zerene input directory | `Sharpness` | `ColorNoiseReduction` | `Contrast2012` |
-| --- | ---: | ---: | ---: |
-| `D:\edited\macro\test2` | 0 | 0 | +100 |
-| `D:\edited\macro\test` | 40 | 25 | +100 |
-
-The full-file hash control read:
+`D:\personal\macro`.  The twelve distinct frozen byte streams hash as follows:
 
 | file | bytes | SHA-256 |
 | --- | ---: | --- |
 | strehl `113MSDCF.tiff` | 197801290 | `4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F` |
-| Zerene PMax, sharpening 0 | 196453660 | `B240FE4016E97EBB194497B2798A095C63C490C4FFF54018D48D34C7523719A0` |
-| Zerene PMax, sharpening 40 | 196453660 | `4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E` |
+| 113 Zerene PMax, sharpening 0 | 196453660 | `B240FE4016E97EBB194497B2798A095C63C490C4FFF54018D48D34C7523719A0` |
+| 113 Zerene PMax, sharpening 40 | 196453660 | `4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E` |
+| strehl `119MSDCF.tiff` | 197801290 | `65AE95D15061EA455C239EC47CEC094A6461D1BD42A900A4139630499B162B9B` |
+| 119 Zerene PMax | 196453640 | `B94C04421C8EB5FADD766E99A361F2C0BE4DE5425BECABAEB8D1FC1C82AA146B` |
+| 119 Zerene PMax UDR, contrast +50 | 196453640 | `412E92611996DB808C60F522334881B9F4F108ED659F665560617FF19BA3A0EA` |
+| 119 Zerene PMax UDR, contrast 0 | 196453640 | `91A23716F5D1DAAB1A25A09BC2407EC386840858A559C72D7C074B89FABD5F97` |
+| marker fork, float | 392907466 | `2D1CCEC678F81173A231FBC7FD84E5457F361C57D32DFB06B24CBD82C1BBD6C2` |
+| marker fork, defringed | 392897296 | `82E1606DDF2627B938588F8DD4D7D8480392680CBCFD7D20900C84A043AAAA3B` |
+| marker fork, 16-bit | 196449104 | `930014DEAB9F4833ABD7F2D93880CECBA282C900C7FC29C13AA6155797404086` |
 | strehl `coffee-bean.tiff` | 197801290 | `F38CA50ED1A680FA4DBCDD8D0513BE538DD31634B4E89AC6A34885944790A2EC` |
-| focus-stack fork | 393326272 | `8636C20D73CA0CB1F57DB89BF8553ABC166E0FBC517E5C62A07C74DEE509066E` |
+| coffee fork | 393326272 | `8636C20D73CA0CB1F57DB89BF8553ABC166E0FBC517E5C62A07C74DEE509066E` |
 
-The strehl masters are not moving-HEAD renders.  The retained DELIVER-V6
-manifest and [`experiments/DELIVER-V6/BANK-33.md`](../../experiments/DELIVER-V6/BANK-33.md)
-record:
+DELIVER-V6 records executable SHA-256
+`2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7`
+and command `strehl.exe stack <source> -o <master> --srgb`, with a private
+`STREHL_CACHE_DIR` and all other `STREHL_*` variables unset.  This lane does
+not rerender.
 
-```text
-exe       C:\dev\strehl-out\DELIVER-V6\bin\strehl.exe
-SHA-256   2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7
-commit    6af834dac08d6605aee7ea3ad75809fdf6313770
-command   <exe> stack <absolute source directory> -o <absolute master> --srgb
-env       private STREHL_CACHE_DIR; all other STREHL_* unset
-```
+## 3. Tone-neutral statistic
 
-This is consequently a **pipeline comparison**: raw-fed strehl versus
-Lightroom-TIFF-fed comparators, measured on strehl's shipped `--srgb` master.
-It is not a merge-algorithm isolation.
-
-## 3. Statistic and tone-invariance theorem
-
-Only each render's native green plane is used.  In each native ROI, pixel
-values are replaced by average ranks
+Only native green pixels are measured.  In each native ROI, values become
+average ranks
 
 ```text
 q_j = (rank_j - (N+1)/2) / N .
 ```
 
 After DC removal and a separable Hann window, `A_k` is FFT power in band `k`
-divided by total power across the six admitted bands.  The bands in
-cycles/strehl-pixel are:
+divided by total power across the six bands:
 
 ```text
 0.02–0.05  0.05–0.10  0.10–0.20
-0.20–0.25  0.25–0.30  0.30–0.40
+0.20–0.25  0.25–0.30  0.30–0.40 cycles/strehl-pixel.
 ```
 
-Measurement pixels are never resampled.  If scale `s` expands comparator
-pixels onto the strehl grid, a 512-pixel strehl ROI is paired with
-`round(512/s)` native comparator pixels and comparator band edges are
+Measurement pixels are never resampled.  If one comparator pixel spans `s`
+strehl pixels, a 512-pixel strehl ROI is paired with
+`round(512/s)` native comparator pixels, and comparator band edges are
 multiplied by `s`.
 
-For any strictly increasing point map `phi`,
-`x_a < x_b` if and only if `phi(x_a) < phi(x_b)`, while equal values remain
-equal.  Thus the average ranks, registration ranks, ROI gates and partitions,
-all `A_k`, and the paired geometric-mean ratio
+For paired ROI `i`,
 
 ```text
-R_detail = exp(mean_i(log(A_strehl,i / A_comparator,i)))
+d_ik = log(A_strehl,ik / A_comparator,ik)
+R_detail,k = exp(mean_i(d_ik in the top texture half)).
 ```
 
-are unchanged.  `R>1` favours strehl.  Percentile 95% intervals use 10,000
-paired-ROI bootstrap draws, seed `20260902`.
+The bottom texture quartile supplies `R_flat`.  A resolved same-direction flat
+effect vetoes a provisional detail verdict.  `R>1` favours strehl.  Percentile
+95% intervals use 10,000 paired bootstrap draws, seed `20260902`.
 
-No nontrivial statistic can remain invariant to an arbitrary *non-decreasing*
-map that may collapse the image to a constant.  Clipping, newly created
-quantisation ties, channel mixing, spatially varying tone and non-monotone
-local contrast are exact exceptions.  Rail exclusion, tie census and plants
-bound these exposures; they do not turn them into a theorem.
+For any strictly increasing scalar point map `phi`, values retain exactly the
+same ordering and ties.  Average ranks, registration ranks, ROI gates,
+partitions, spectra, ratios and bootstrap draws are therefore identical.
+This theorem does not cover clipping, newly created quantisation ties,
+spatially varying/local tone, channel mixing, or non-monotone contrast.
 
 ## 4. Commissioning
 
-The investigator-favoured bias was declared as **strehl leads**.  Ordinal power
-can be fooled in that direction by noise, sharpening, ringing or resampling,
-and in the other direction by denoising, blur or rank ties.
+The declared investigator-favoured direction was **strehl leads**.  The first
+synthetic run did not pass: the preregistered flat-ratio subtraction amplified
+an additive-noise confound by 25,493.7×.  Before real outcomes it was replaced
+by the conservative same-direction veto.  The failed reading remains
+executable.
 
-The author's first synthetic run was not green: 15/16 controls passed while
-all 9 then-present plants went RED.  That exact early count is not retained in
-a committed log, so it is MEASURED but not independently reproducible.  The
-failed flat subtraction itself remains executable and reads a 25,493.7 maximum
-fine-band departure instead of the required ≤5%.  That failure caused the
-preregistered amendment; it was not waived.
-
-The final commissioned suite is:
-
-| arm | controls | deliberate defect plants | decisive reading |
+| suite | controls | defect plants | decisive reading |
 | --- | ---: | ---: | --- |
-| operators and synthetic estimator | 22/22 GREEN | 15/15 RED | rank oracle exact; all six shifts exact |
-| frozen hashes | 1/1 GREEN | 1/1 RED | one-nibble hash plant rejected |
-| real-ROI tone/potency | 3/3 GREEN | 2/2 RED | ordinal move `0`; raw move `30.4%` |
-| 113 full 96-ROI real tone curves | 3/3 GREEN | — | affine, gamma 3, logistic: every end-to-end delta `0` |
-| coffee full 96-ROI real tone curves | 3/3 GREEN | — | independently run; every end-to-end delta `0` |
-| sharpened-input Zerene real tone curve | 1/1 GREEN | — | gamma 3; every end-to-end delta `0` |
-| **total** | **33/33 GREEN** | **18/18 RED** | every deliberate plant fired |
+| synthetic operators/estimator | 22/22 GREEN | 15/15 RED | external rank oracle exact; all six shifts exact |
+| frozen byte hashes | 1/1 GREEN | 1/1 RED | 12 distinct hashes; one-nibble plant rejected |
+| real-ROI tone/potency | 3/3 GREEN | 2/2 RED | ordinal move 0; raw statistic moved 30.4% |
+| 113 full-pipeline tone curves | 3/3 GREEN | — | affine, gamma 3, logistic: every delta 0 |
+| coffee full-pipeline tone curves | 3/3 GREEN | — | affine, gamma 3, logistic: every delta 0 |
+| 113-sharp gamma 3 | 1/1 GREEN | — | every delta 0 |
+| 119-fork gamma 3 | 1/1 GREEN | — | every delta 0 |
+| **total** | **34/34 GREEN** | **18/18 RED** | every deliberate plant fired |
 
-The registration fixture plants `(0,0)`, `(1,0)`, `(0,-1)`, `(2,3)`,
-`(-3,2)`, and `(5,-5)`.  Every returned correction was exactly the negative
-displacement and made the untouched source and corrected interior
-byte-for-byte equal.  Wrong-sign and no-op implementations both went RED.
+The registration fixture planted `(0,0)`, `(1,0)`, `(0,-1)`, `(2,3)`,
+`(-3,2)`, and `(5,-5)`.  Every recovered value was the exact negative
+displacement and made the corrected interior equal an untouched source array.
+Wrong-sign and no-op implementations went RED.
 
-Other potency readings matter to interpretation:
+Additional potency:
 
-* Gaussian sigma 0→2 removed 99.8% of combined ordinal 0.20–0.40 share, so
-  the estimator can read fully present blur rather than saturating at a low
-  structural ceiling.
-* Unsharp masking raised combined 0.25–0.40 share by 49.3%.
-* A down/up resample moved one band by 77.5%.
-* A 12-bit quantisation changed unique/largest-tie occupancy from
-  `65536 / 0.00153%` to `3167 / 0.0961%`; 1%/99% clipping produced a 1.001%
-  largest tie.
-* The author observed the fixed external 4×4 rank oracle catch a wrong
-  expected-rank fixture in the independent checker before measurement.  That
-  pre-fix output is not committed; the corrected checker is executable and
-  passes its independent rank and registration predicates.
+* Gaussian sigma 0→2 removed 99.8% of combined ordinal 0.20–0.40 share.
+* Unsharp masking raised 0.25–0.40 share by 49.3%.
+* Down/up resampling moved one band by 77.5%.
+* 12-bit quantisation changed unique/largest-tie occupancy from
+  `65536 / 0.00153%` to `3167 / 0.0961%`; 1%/99% clipping produced a
+  1.001% largest tie.
+* The fixed external 4×4 oracle caught a wrong expected-rank fixture in the
+  independent checker before outcomes.
 
-Independent verification ran all three real-pixel tone curves on the fork,
-and gamma 3 was also run on the post-registered sharpened Zerene arm.  Every
-run returned zero geometry-rank, ROI-decision, partition, per-ROI and
-bootstrap-effect movement.
+## 5. Geometry, registration, and independent implementation
 
-## 5. Geometry, registration and ROI populations
+The author uses scipy ranks/zoom/full FFT and bootstrap seed `20260902`.
+The independent checker uses `numpy.unique` ranks,
+`skimage.phase_cross_correlation`, `skimage.resize`, a weighted real FFT, and
+seed `20260903`.  It imports no author outcome implementation.
 
-Scale is fitted on every eighth native green pixel **after ranking**, so the
-fit itself cannot see strict point tone.  Registration resampling is used only
-to find geometry; every reported spectrum reads native pixels.
-
-| pair | author scale | prior scale | checker scale | preregistered agreement |
+| pair | author/checker scale | relative difference | eligible author/checker | gate |
 | --- | ---: | ---: | ---: | --- |
-| 113/Zerene, sharpening 0 | 1.0020 | 1.0020 | 1.0020 | PASS, exact |
-| 113/Zerene, sharpening 40 | 1.0030 | — | 1.0080 | PASS at 0.4985% |
-| coffee/fork | 1.0360 | 1.0340 | 1.0440 | **FAIL**, author/checker differ 0.772% |
+| 113 PMax, sharpening 0 | 1.002 / 1.002 | 0 | 81 / 81 | PASS |
+| 113 PMax, sharpening 40 | 1.003 / 1.008 | 0.4985% | 55 / 56 | PASS |
+| 119 PMax | 0.996 / 1.001 | 0.5020% | 96 / 94 | **FAIL** |
+| 119 PMax UDR, contrast +50 | 0.996 / 1.003 | 0.7028% | 96 / 68 | **FAIL** |
+| 119 PMax UDR, contrast 0 | 1.003 / 1.003 | 0 | 70 / 67 | PASS |
+| 119 fork, float | 1.006 / 1.006 | 0 | 94 / 94 | PASS |
+| 119 fork, defringed | 1.006 / 1.006 | 0 | 94 / 94 | PASS |
+| 119 fork, 16-bit | 1.006 / 1.006 | 0 | 94 / 94 | PASS |
+| coffee fork | 1.036 / 1.044 | 0.7722% | 55 / 54 | **FAIL** |
 
-The author's coffee fit agrees with the prior independently reported 1.035063
-to 0.09%, but that fact does not erase the new checker disagreement.  Both
-fits have interior maxima.  Per the preregistration, the disagreement is
-published rather than reconciled.
+The three geometry failures are published, not reconciled.  They do not hide
+a resolved win/loss: all affected 119 and coffee bands remain unresolved under
+both implementations.  The marker PMax UDR 0.02–0.05 point estimates also
+miss the independent numeric agreement gate: author `0.7981`, checker
+`0.7064`, difference `0.0916` versus summed CI half-widths `0.0860`.
+The other 53/54 point estimates pass that gate.
 
-Real sign commissioning also passes:
+Author real-registration median correlations:
 
-| pair | no registration | wrong sign | corrected sign |
+| pair | none | wrong sign | corrected |
 | --- | ---: | ---: | ---: |
-| 113/Zerene, sharpening 0 | 0.4000 | 0.2918 | **0.6151** |
-| 113/Zerene, sharpening 40 | 0.2799 | 0.2553 | **0.3451** |
-| coffee/fork median rank correlation | 0.1894 | 0.1253 | **0.9530** |
+| 113 PMax, sharpening 0 | 0.4000 | 0.2918 | **0.6151** |
+| 113 PMax, sharpening 40 | 0.2799 | 0.2553 | **0.3451** |
+| 119 PMax | 0.4868 | 0.3026 | **0.8992** |
+| 119 PMax UDR, contrast +50 | 0.4875 | 0.3038 | **0.9018** |
+| 119 PMax UDR, contrast 0 | 0.8721 | 0.8371 | **0.9174** |
+| 119 fork, float / 16-bit | 0.7563 | 0.6051 | **0.9397** |
+| 119 fork, defringed | 0.7566 | 0.6051 | **0.9402** |
+| coffee fork | 0.1894 | 0.1253 | **0.9530** |
 
-The fixed 512-pixel grid produced:
+Across all 54 band outcomes, author/checker final classes agree 50/54.  The
+four differences are flat-veto versus non-veto, not opposing wins: two on
+113-sharp (0.02–0.05 and 0.10–0.20), plus 0.05–0.10 on 119 PMax and PMax UDR.
+All bands pass blur sensitivity.  No leave-one-out or spatial-quadrant reversal
+fires.
 
-| pair | candidates | eligible | detail (top half) | low-texture/flat (bottom quartile) | exclusions |
-| --- | ---: | ---: | ---: | ---: | --- |
-| 113/Zerene, sharpening 0 | 96 | 81 | 41 | 21 | 14 registration-null, 1 rail |
-| 113/Zerene, sharpening 40 | 96 | 55 | 28 | 14 | 34 registration-null, 6 registration-gain, 1 rail |
-| coffee/fork | 96 | 55 | 28 | 14 | 25 rail, 9 registration-null, 7 registration-gain |
+## 6. Competitive results
 
-The independent checker retains 81/41/21 on unsharpened 113, 56/28/14 on
-sharpened 113, and 54/27/14 on coffee.  Exact ROI centres, cut values, reasons,
-tie groups and quadrant estimates are printed in `RESULT_JSON`/`CHECK_JSON` by
-the commands in §9.
+The practical bar is 5%.  LEADS requires the lower detail CI above 1.05;
+TRAILS requires the upper CI below `1/1.05`; a resolved same-direction
+`R_flat` forces `UNRESOLVED (FLAT VETO)`.
 
-## 6. Competitive result
+### 6.1 113 Zerene PMax, Lightroom sharpening 0
 
-The preregistered practical bar is 5%.  A provisional LEADS/TRAILS class needs
-the corresponding 95% bound beyond 1.05 or `1/1.05`.  If the low-texture
-interval resolves in the same direction, the result is downgraded to
-UNRESOLVED (FLAT VETO).  All bands passed blur sensitivity; no leave-one-out
-or quadrant reversal fired.
-
-### 6.1 Strehl versus Zerene PMax, Lightroom sharpening 0 (`113MSDCF`)
-
-| cyc/px | `R_detail` [95% CI] | `R_flat` [95% CI] | verdict |
+| cyc/px | `R_detail` [95% CI] | `R_flat` [95% CI] | final |
 | --- | --- | --- | --- |
-| 0.02–0.05 | **1.0833 [1.0534, 1.1114]** | 0.7617 [0.7196, 0.8071] | **STREHL LEADS** |
-| 0.05–0.10 | 0.9239 [0.9029, 0.9452] | 0.8518 [0.8058, 0.8998] | UNRESOLVED — flat veto |
-| 0.10–0.20 | **0.8842 [0.8420, 0.9311]** | 1.1680 [1.1035, 1.2308] | **STREHL TRAILS** |
-| 0.20–0.25 | 0.8721 [0.7817, 0.9745] | 2.3833 [2.1009, 2.6967] | UNRESOLVED |
-| 0.25–0.30 | 0.9735 [0.8339, 1.1406] | 3.2530 [2.7675, 3.8098] | UNRESOLVED |
-| 0.30–0.40 | 1.0264 [0.8564, 1.2305] | 3.1692 [2.6437, 3.7543] | UNRESOLVED |
+| 0.02–0.05 | **1.0833 [1.0534,1.1114]** | 0.7617 [0.7196,0.8071] | **LEADS** |
+| 0.05–0.10 | 0.9239 [0.9029,0.9452] | 0.8518 [0.8058,0.8998] | FLAT VETO |
+| 0.10–0.20 | **0.8842 [0.8420,0.9311]** | 1.1680 [1.1035,1.2308] | **TRAILS** |
+| 0.20–0.25 | 0.8721 [0.7817,0.9745] | 2.3833 [2.1009,2.6967] | UNRESOLVED |
+| 0.25–0.30 | 0.9735 [0.8339,1.1406] | 3.2530 [2.7675,3.8098] | UNRESOLVED |
+| 0.30–0.40 | 1.0264 [0.8564,1.2305] | 3.1692 [2.6437,3.7543] | UNRESOLVED |
 
-On this development rung, strehl's resolved Zerene result changes sign with band: +8.3% ordinal
-share at 0.02–0.05 and −11.6% at 0.10–0.20.  There is no resolved Zerene
-fine-band deficit or lead above 0.20 cyc/px **on this rung**.
+### 6.2 113 Zerene PMax, sharpening 40 / colour NR 25
 
-### 6.2 Strehl versus Zerene PMax, Lightroom sharpening 40 / colour NR 25
-
-This arm was discovered by independent verification after the first report.
-It uses the same 63 source identities and the unchanged preregistered
-instrument.  Because the author and checker disagree on the 0.02–0.05 and
-0.10–0.20 flat vetoes, those two final classes are NOT ROBUST; they agree on
-both decisive fine-band trails.
-
-| cyc/px | author `R_detail` [95% CI] | author `R_flat` [95% CI] | author / checker class |
+| cyc/px | `R_detail` [95% CI] | `R_flat` [95% CI] | author/checker |
 | --- | --- | --- | --- |
-| 0.02–0.05 | 1.2856 [1.2448, 1.3260] | 1.2243 [1.0395, 1.4271] | LEADS / FLAT VETO — **NOT ROBUST** |
-| 0.05–0.10 | 0.9999 [0.9664, 1.0336] | 1.0285 [0.9386, 1.1221] | UNRESOLVED / UNRESOLVED |
-| 0.10–0.20 | 0.7538 [0.7223, 0.7887] | 0.8478 [0.7552, 0.9620] | TRAILS / FLAT VETO — **NOT ROBUST** |
-| 0.20–0.25 | **0.3992 [0.3381, 0.4720]** | 0.7395 [0.5011, 1.0546] | **TRAILS / TRAILS** |
-| 0.25–0.30 | **0.2834 [0.2178, 0.3696]** | 0.6365 [0.3860, 1.0007] | **TRAILS / TRAILS** |
-| 0.30–0.40 | 0.2018 [0.1461, 0.2797] | 0.4820 [0.2796, 0.7872] | FLAT VETO / FLAT VETO |
+| 0.02–0.05 | 1.2856 [1.2448,1.3260] | 1.2243 [1.0395,1.4271] | LEADS / FLAT VETO |
+| 0.05–0.10 | 0.9999 [0.9664,1.0336] | 1.0285 [0.9386,1.1221] | UNRESOLVED / UNRESOLVED |
+| 0.10–0.20 | 0.7538 [0.7223,0.7887] | 0.8478 [0.7552,0.9620] | TRAILS / FLAT VETO |
+| 0.20–0.25 | **0.3992 [0.3381,0.4720]** | 0.7395 [0.5011,1.0546] | **TRAILS / TRAILS** |
+| 0.25–0.30 | **0.2834 [0.2178,0.3696]** | 0.6365 [0.3860,1.0007] | **TRAILS / TRAILS** |
+| 0.30–0.40 | 0.2018 [0.1461,0.2797] | 0.4820 [0.2796,0.7872] | FLAT VETO / FLAT VETO |
 
-At 0.25–0.30, the two PMax outputs change `R_detail` from 0.9735
-(unsharpened-input rung) to 0.2834 (sharpened/NR-input rung), a 70.9% ratio
-change.  Point-tone invariance cannot and should not remove spatial sharpening
-or denoising.  Exact Zerene run parameters are not retained, so the input XMP
-is the documented difference rather than a complete causal isolation.  A
-single app-level “strehl versus Zerene” number is unsupported by these files.
+The development ladder changes 0.25–0.30 `R_detail` from 0.9735 to 0.2834,
+a 70.9% ratio change.  Exact Zerene run settings are not retained, so the XMP
+difference is documented association, not a complete causal isolation.
 
-### 6.3 Strehl versus focus-stack fork (`coffee-bean`)
+### 6.3 119 Zerene marker renders
 
-| cyc/px | `R_detail` [95% CI] | `R_flat` [95% CI] | verdict |
+Every final row is unresolved.  `FV` means the apparent direction is rejected
+by the same-direction flat-region control.
+
+| cyc/px | PMax +50 `R` [CI], final | PMax UDR +50 `R` [CI], final | PMax UDR neutral `R` [CI], final |
 | --- | --- | --- | --- |
-| 0.02–0.05 | 0.9466 [0.9369, 0.9563] | 0.8524 [0.7783, 0.9156] | UNRESOLVED |
-| 0.05–0.10 | 0.9984 [0.9886, 1.0095] | 0.9211 [0.8702, 0.9662] | UNRESOLVED |
-| 0.10–0.20 | 1.1302 [1.1061, 1.1560] | 1.1125 [1.0732, 1.1647] | UNRESOLVED — flat veto |
-| 0.20–0.25 | 1.2975 [1.2426, 1.3568] | 1.2891 [1.2282, 1.3637] | UNRESOLVED — flat veto |
-| 0.25–0.30 | 1.3915 [1.3034, 1.4850] | 1.3560 [1.2718, 1.4433] | UNRESOLVED — flat veto |
-| 0.30–0.40 | 1.3710 [1.2099, 1.5342] | 1.4079 [1.2102, 1.6413] | UNRESOLVED — flat veto |
+| 0.02–0.05 | 0.7968 [0.7515,0.8441], FV | 0.7981 [0.7531,0.8449], FV | 0.7272 [0.6878,0.7720], FV |
+| 0.05–0.10 | 0.9162 [0.8803,0.9526], UNRESOLVED | 0.9246 [0.8901,0.9602], UNRESOLVED | 0.8770 [0.8458,0.9100], FV |
+| 0.10–0.20 | 1.4347 [1.3231,1.5576], FV | 1.4118 [1.3079,1.5255], FV | 1.5159 [1.4254,1.6101], FV |
+| 0.20–0.25 | 2.5970 [2.2121,3.0459], FV | 2.4998 [2.1542,2.8980], FV | 2.9329 [2.6416,3.2420], FV |
+| 0.25–0.30 | 3.3410 [2.7925,3.9897], FV | 3.2527 [2.7396,3.8518], FV | 3.9086 [3.4846,4.3734], FV |
+| 0.30–0.40 | 3.7050 [3.0575,4.4760], FV | 3.8254 [3.1871,4.5653], FV | 4.8142 [4.2779,5.3889], FV |
 
-The tempting conclusion is that strehl leads the fork by 30–39% in the fine
-bands.  The real flat control reads essentially the same 29–41% direction, and
-the sharpening plant proves that ordinal share can rise without added faithful
-detail.  Calling those rows wins would repeat the project's historical error
-in a new statistic.  They are unresolved.
+The checker additionally applies the flat veto to the first two arms at
+0.05–0.10.  It never promotes a marker-Zerene row to a win or loss.
 
-### 6.4 Independent checker
+### 6.4 119 focus-stack marker renders
 
-The checker reimplements ranks with `numpy.unique`, registration with
-`skimage.phase_cross_correlation`, geometry with `skimage.resize`, the spectrum
-with a weighted real FFT, and uses bootstrap seed `20260903`.  It imports no
-author measurement module and carries no frozen outcome.
+Float and 16-bit variants have identical ordinal outcomes.  Defringing changes
+the point estimates only slightly.  All rows remain unresolved.
 
-| pair | checker `R_detail` by ascending band | final-class agreement |
-| --- | --- | ---: |
-| 113/Zerene, sharpening 0 | 1.0832, 0.9240, 0.8843, 0.8722, 0.9737, 1.0268 | 6/6 |
-| 113/Zerene, sharpening 40 | 1.2842, 0.9991, 0.7565, 0.3990, 0.2847, 0.2018 | 4/6 |
-| coffee/fork | 0.9428, 0.9982, 1.1432, 1.3392, 1.4369, 1.3756 | 6/6 |
+| cyc/px | float and 16-bit `R` [CI] | defringed `R` [CI] | final |
+| --- | --- | --- | --- |
+| 0.02–0.05 | 0.7506 [0.7036,0.7991] | 0.7497 [0.7029,0.7980] | FLAT VETO |
+| 0.05–0.10 | 1.0616 [1.0321,1.0912] | 1.0638 [1.0340,1.0937] | UNRESOLVED |
+| 0.10–0.20 | 1.7576 [1.6079,1.9273] | 1.7638 [1.6136,1.9329] | FLAT VETO |
+| 0.20–0.25 | 2.5756 [2.2413,2.9770] | 2.5841 [2.2464,2.9877] | FLAT VETO |
+| 0.25–0.30 | 2.7358 [2.3514,3.2235] | 2.7464 [2.3591,3.2409] | FLAT VETO |
+| 0.30–0.40 | 2.2081 [1.9000,2.6200] | 2.2177 [1.9055,2.6353] | FLAT VETO |
 
-All 18 author/checker point ratios lie within the sum of their 95%
-half-widths; the largest point-ratio difference is 3.3%.  Final-class
-agreement is 16/18.  Class agreement on coffee does not repair its scale gate:
-outcome class is robust to the two defensible geometry choices, while exact
-coffee geometry remains not agreed.
+The real flat estimates move in the same direction by similar or larger
+amounts—for example, float `R_flat=3.7162 [2.4542,5.8176]` at 0.25–0.30.
+Calling the nominal 2.74× detail value a win would relabel a general
+processing/noise difference as detail.
 
-### 6.5 Per-band standing across all available renders
+### 6.5 Coffee focus-stack fork
+
+| cyc/px | `R_detail` [95% CI] | `R_flat` [95% CI] | final |
+| --- | --- | --- | --- |
+| 0.02–0.05 | 0.9466 [0.9369,0.9563] | 0.8524 [0.7783,0.9156] | UNRESOLVED |
+| 0.05–0.10 | 0.9984 [0.9886,1.0095] | 0.9211 [0.8702,0.9662] | UNRESOLVED |
+| 0.10–0.20 | 1.1302 [1.1061,1.1560] | 1.1125 [1.0732,1.1647] | FLAT VETO |
+| 0.20–0.25 | 1.2975 [1.2426,1.3568] | 1.2891 [1.2282,1.3637] | FLAT VETO |
+| 0.25–0.30 | 1.3915 [1.3034,1.4850] | 1.3560 [1.2718,1.4433] | FLAT VETO |
+| 0.30–0.40 | 1.3710 [1.2099,1.5342] | 1.4079 [1.2102,1.6413] | FLAT VETO |
+
+### 6.6 Standing by band across all nine pairings
 
 | cyc/px | standing |
 | --- | --- |
-| 0.02–0.05 | **NOT ROBUST:** lead on unsharpened Zerene; checker disagreement on sharpened Zerene; fork unresolved |
-| 0.05–0.10 | UNRESOLVED on all three renders |
-| 0.10–0.20 | **NOT ROBUST:** trail on unsharpened Zerene; checker disagreement on sharpened Zerene; fork flat-vetoed |
-| 0.20–0.25 | **NOT ROBUST across development:** unresolved on unsharpened Zerene, trail on sharpened Zerene, fork flat-vetoed |
-| 0.25–0.30 | **NOT ROBUST across development:** unresolved on unsharpened Zerene, trail on sharpened Zerene, fork flat-vetoed |
-| 0.30–0.40 | UNRESOLVED on all three renders |
+| 0.02–0.05 | **NOT ROBUST:** strehl leads unsharpened 113 PMax; the sharpened 113 class disagrees author/checker; all seven other pairings are unresolved |
+| 0.05–0.10 | **UNRESOLVED:** no pairing produces a win or loss; two 119 flat-veto labels disagree without changing that conclusion |
+| 0.10–0.20 | **NOT ROBUST:** strehl trails unsharpened 113 PMax; sharpened 113 is TRAILS/FLAT-VETO across implementations; all seven others are flat-vetoed |
+| 0.20–0.25 | **NOT ROBUST across 113 development:** unresolved against sharpening-0 PMax, trails sharpening-40 PMax; seven others unresolved/flat-vetoed |
+| 0.25–0.30 | **NOT ROBUST across 113 development:** `0.9735 [0.8339,1.1406]` versus `0.2834 [0.2178,0.3696]`; seven others unresolved/flat-vetoed |
+| 0.30–0.40 | **UNRESOLVED:** no pairing produces a retained win or loss |
 
-## 7. What this does and does not establish
+## 7. Interpretation and Rust consequence
 
-It establishes that point tone no longer determines the answer.  It also
-establishes that the **available rendered pipeline is not stable across its
-documented input-development rungs**: the same program family and same 63
-capture identities move from unresolved to large, independently reproduced
-strehl trails at 0.20–0.30 between the two PMax files.  Therefore the correct
-competitive verdict is NOT ROBUST, not a single win or deficit.
-
-The old 17–27% deficit remains retracted; this does not reinstate its raw-power
-method or number.  The new 60.1% and 71.7% point trails against the sharpened
-PMax render are results of a whole rendered pipeline, not causal estimates of
-strehl's merge.  Raw development, demosaic, local contrast, denoising and
-sharpening remain inside the compared pipelines.  The `--srgb` master's
-demosaic and delivery tone also mean this is not the linear-resolution arm
-that the earlier report preferred.
+Point tone no longer determines the answer.  The real render corpus instead
+shows that comparator development, sharpening, denoising, local processing,
+and flat-region structure dominate several apparent high-band effects.  The
+old 17–27% deficit remains retracted; the new sharp-PMax trails are
+whole-pipeline associations, not proof that strehl's merge loses detail.
 
 ### What changes in Rust
 
-**Nothing in `src/` or `crates/` changes.**  This lane was explicitly
-read-only with respect to Rust, and its resolved deficits change with
-comparator preprocessing rather than being causally attributable to a stacker module.
-Changing merge, alignment or demosaic code from this evidence would be
-overreach.  The concrete change is to competitive validation: future detail
-claims must use the rank/native-grid instrument in
-`experiments/V-HEADTOHEAD3/` (or a truth-referenced successor), never raw render
-power across independently toned outputs.
+**Nothing in `src/` or `crates/` changes.**  The lane was read-only with
+respect to Rust, and no resolved result isolates alignment, merge, demosaic, or
+delivery code.  Changing those modules from a result that flips with
+comparator preprocessing would be overreach.  The actionable change is to
+competitive validation: future claims must use this native-grid rank
+instrument (or a truth-referenced successor) and matched input development,
+not raw power across independently toned renders.
 
 ### Could not verify
 
 * Helicon performance: no usable Helicon render exists in the searched roots.
-* A physical resolution/MTF winner, or whether extra ordinal structure is
-  faithful detail rather than sharpening.
-* Invariance to clipping, spatially varying/local tone, channel mixing, or
-  quantisation-created ties; the theorem covers strictly increasing point maps.
-* Coffee's exact scale within the preregistered author/checker tolerance.
-* Current moving-HEAD strehl performance; the measured deliverable is pinned to
-  `6af834dac08d`.
-* An algorithm-only comparison on identically developed linear inputs.
-* Exact comparator application settings beyond the retained output files and
-  prior reports; neither comparator has a complete reproducible run manifest.
+* The exact source identities and invocation for the three retained marker
+  focus-stack files; their source TIFF directory is gone.
+* A physical MTF or truth-fidelity winner, or whether extra ordinal structure
+  is detail rather than sharpening/ringing/noise.
+* Exact geometry within the 0.5% author/checker bar for 119 PMax, 119 PMax UDR
+  +50, or coffee.
+* Invariance to clipping, local/spatial tone, channel mixing, or new ties.
+* Exact comparator application settings beyond retained TIFFs/XMP and prior
+  reports; no comparator has a complete reproducible run manifest.
+* Moving-HEAD strehl; this measures pinned commit `6af834dac08d`.
 
 ## 8. Proposed corpus facts
 
-* **P1.** Three admissible render pairings survive: two Zerene PMax outputs
-  from the same 63-frame `113MSDCF` identities but different Lightroom
-  sharpening/NR rungs, plus the focus-stack fork on the 105-frame coffee-bean
-  bracket; no usable Helicon render was found.
-* **P2.** Average-rank native-grid band share is exactly invariant to strictly
-  increasing point tone.  Affine, gamma-3 and logistic real end-to-end plants
-  moved geometry ranks, ROI decisions, partitions and `R_detail` by zero; raw
-  power moved 30.4%.
-* **P3.** Registration returned the exact negative of six planted shifts.
-  Corrected real median correlation was 0.6151, 0.3451 and 0.9530 versus
-  wrong-sign 0.2918, 0.2553 and 0.1253.
-* **P4.** Against unsharpened-input Zerene, strehl leads at 0.02–0.05
-  (`1.0833 [1.0534,1.1114]`), trails at 0.10–0.20
-  (`0.8842 [0.8420,0.9311]`), and is unresolved above 0.20.  Against
-  sharpened-input Zerene it trails at 0.20–0.25 (`0.3992
-  [0.3381,0.4720]`) and 0.25–0.30 (`0.2834 [0.2178,0.3696]`).
-* **P5.** The checker agrees on 16/18 verdict classes, including both
-  sharpened-Zerene fine trails.  Coffee geometry differs 1.036 versus 1.044
-  (0.772%, FAIL); sharpened-Zerene geometry differs 1.003 versus 1.008
-  (0.4985%, PASS).
-* **P6.** No Rust change follows because no resolved result isolates a stacker
-  module; this lane changes the admissible competitive instrument instead.
-* **P7.** The app-level baseline is NOT ROBUST: at 0.25–0.30 the same scene's
-  ratio changes from 0.9735 to 0.2834 across the Lightroom development ladder.
+* **P1.** Nine unique-byte pairings survive: five Zerene outputs and four
+  focus-stack outputs; `stack_v3.tif` is an alias, and no Helicon render was
+  found.
+* **P2.** Native-grid average-rank band share is exactly invariant to strictly
+  increasing point tone.  Eight full-pipeline real tone plants moved every
+  outcome component by zero; raw power moved 30.4%.
+* **P3.** Registration recovered the exact negative of all six planted shifts.
+  Correct-sign real correlation exceeds both no-registration and wrong-sign
+  correlation on every pairing.
+* **P4.** On 113 sharpening-0 PMax, strehl leads 0.02–0.05 and trails
+  0.10–0.20.  On sharpening-40 PMax, both implementations retain trails at
+  0.20–0.25 and 0.25–0.30.
+* **P5.** All six newly admitted 119 comparator renders are unresolved in all
+  bands after the flat veto; their large nominal high-band ratios are not
+  detail-specific.
+* **P6.** Author/checker classes agree 50/54; no disagreement is an opposing
+  win/loss.  Three geometry pairs and one point estimate fail the independent
+  numeric gates.
+* **P7.** The app-level baseline is NOT ROBUST: 113 0.25–0.30 changes from
+  `0.9735` to `0.2834` across available Lightroom development rungs.
+* **P8.** No Rust change follows because no result causally isolates a Rust
+  stacker module.
 
-## 9. Reproduction commands
+## 9. Reproduction
 
-Run from
-`C:\dev\blog\death-of-software\projects\strehl\experiments\V-HEADTOHEAD3`
-with Python 3.12.10, NumPy 2.4.4, SciPy 1.17.1, tifffile 2026.5.2 and
-scikit-image 0.26.0:
+From `experiments\V-HEADTOHEAD3`, with Python 3.12.10, NumPy 2.4.4,
+SciPy 1.17.1, tifffile 2026.5.2, and scikit-image 0.26.0:
 
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
@@ -400,28 +370,32 @@ python -B commission.py
 python -B commission.py --hashes
 python -B commission.py --real
 python -B tone-check.py 113
+python -B tone-check.py cb
 python -B tone-check.py 113-sharp --curves gamma3
+python -B tone-check.py 119-fork --curves gamma3
 python -B geometry.py
-python -B measure.py 113
-python -B measure.py 113-sharp
-python -B measure.py cb
-python -B check.py 113 113-sharp cb
+python -B measure.py 113 113-sharp 119-pmax 119-pmax-udr 119-pmax-udr-neutral 119-fork 119-fork-defringed 119-fork-u16 cb
+python -B check.py 113 113-sharp 119-pmax 119-pmax-udr 119-pmax-udr-neutral 119-fork 119-fork-defringed 119-fork-u16 cb
 ```
 
-No command invokes strehl or reads a `STREHL_*` variable; no capture directory
-is written.  `measure.py` prints complete `RESULT_JSON`, including ROI centres
-and diagnostics.  `check.py` independently prints `CHECK_JSON`.
+`measure.py` prints complete `RESULT_JSON`, including ROI centres and
+diagnostics.  `check.py` prints independent `CHECK_JSON`.  No command invokes
+strehl or writes a capture directory.
 
-Research commits through the independently verified instrument:
+Research commits through the exhaustive pair table:
 
 ```text
 5d85d8e12ae35dee46568d31e1a662a4b451ecf4  initial preregistration
-11ed554e2a736789813074c642c536b967c3a16a  pre-outcome registration-gate amendment
+11ed554e2a736789813074c642c536b967c3a16a  registration-gate amendment
 48c81eebba999e8c2d76bc7460ded792408a8708  failed-control amendment
-9f08a4fa5602055db4b764caf6bb35e914604b22  instrument and independent checker
-fec4a572d140997cc7b7be673c9719c68fa7d2b3  close verifier-found gaps
-403693a1ce9a673d2181b1f3ed4bb0ada6fd65bd  preserve NOT SENSITIVE precedence
-a050d6861d5ab7655fe08a85c9fd1d3a29a2b1aa  first report (superseded census/headline)
-55a53bccc9458b950f8176716836afe18378e9a9  disclose post-outcome comparator
-3c108fac1cde4af7d92b2629e0d2f2abfcbadba0  add omitted Zerene arm
+9f08a4fa5602055db4b764caf6bb35e914604b22  instrument and checker
+fec4a572d140997cc7b7be673c9719c68fa7d2b3  verifier-found control fixes
+403693a1ce9a673d2181b1f3ed4bb0ada6fd65bd  verdict-precedence fix
+a050d6861d5ab7655fe08a85c9fd1d3a29a2b1aa  first report, superseded
+55a53bccc9458b950f8176716836afe18378e9a9  disclose second 113 render
+3c108fac1cde4af7d92b2629e0d2f2abfcbadba0  add second 113 arm
+08a11d528202eb3d84b257f6f0427c5e8226a9ab  three-pair report, superseded
+b31b8b858e2cf2956c7965c65affa6be014cad27  exhaustive-census disclosure
+178267c9a38f40ca3cfe979ea2fa13a5230ccdd2  pre-outcome fork-subject correction
+40b20bef0fe0cdaba7298573095806e580a7ed85  exhaustive pair tables
 ```
