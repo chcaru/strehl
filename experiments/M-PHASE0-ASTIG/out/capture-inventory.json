@@ -1,0 +1,5203 @@
+{
+  "schema_version": 1,
+  "role": "real RAW extraction; no focus-split verdict",
+  "invocation": "OMP_NUM_THREADS=OPENBLAS_NUM_THREADS=MKL_NUM_THREADS=1; PYTHONIOENCODING=utf-8; python experiments\\M-PHASE0-ASTIG\\src\\real_measure.py --stacks all --workers 4",
+  "source_sha256": {
+    "real_measure.py": "2ab91d3c69d2fe4c87eb155663f8353dde87afa84d96c6304f3a3eb0c2097b25",
+    "astiglib.py": "db96ce9b83d07a9af258780c3effd8f04415aea87186c8f5bf0949e6311732e3"
+  },
+  "capture_snapshot_unchanged": true,
+  "records": [
+    {
+      "stack": {
+        "name": "fabric-f11",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 11.0,
+        "expected_frames": 109
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\fabric-f11.npz",
+      "cache_bytes": 6518335,
+      "cache_sha256": "852427febd900ff53b532caf83a6fcb5bc67fc722c9f0c0c0b270b05fd627d67",
+      "elapsed_seconds": 17.394940899976064,
+      "inventory": {
+        "name": "fabric-f11",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 11.0,
+        "expected_frames": 109,
+        "files": [
+          {
+            "name": "DSC00001.ARW",
+            "bytes": 37490688,
+            "mtime_ns": 1788050547370000000
+          },
+          {
+            "name": "DSC00002.ARW",
+            "bytes": 37502976,
+            "mtime_ns": 1788050549070000000
+          },
+          {
+            "name": "DSC00003.ARW",
+            "bytes": 37531648,
+            "mtime_ns": 1788050550790000000
+          },
+          {
+            "name": "DSC00004.ARW",
+            "bytes": 37552128,
+            "mtime_ns": 1788050552490000000
+          },
+          {
+            "name": "DSC00005.ARW",
+            "bytes": 37572608,
+            "mtime_ns": 1788050554200000000
+          },
+          {
+            "name": "DSC00006.ARW",
+            "bytes": 37588992,
+            "mtime_ns": 1788050555910000000
+          },
+          {
+            "name": "DSC00007.ARW",
+            "bytes": 37605376,
+            "mtime_ns": 1788050557610000000
+          },
+          {
+            "name": "DSC00008.ARW",
+            "bytes": 37634048,
+            "mtime_ns": 1788050559310000000
+          },
+          {
+            "name": "DSC00009.ARW",
+            "bytes": 37650432,
+            "mtime_ns": 1788050561010000000
+          },
+          {
+            "name": "DSC00010.ARW",
+            "bytes": 37670912,
+            "mtime_ns": 1788050562720000000
+          },
+          {
+            "name": "DSC00011.ARW",
+            "bytes": 37691392,
+            "mtime_ns": 1788050564410000000
+          },
+          {
+            "name": "DSC00012.ARW",
+            "bytes": 37720064,
+            "mtime_ns": 1788050566110000000
+          },
+          {
+            "name": "DSC00013.ARW",
+            "bytes": 37736448,
+            "mtime_ns": 1788050567820000000
+          },
+          {
+            "name": "DSC00014.ARW",
+            "bytes": 37765120,
+            "mtime_ns": 1788050569510000000
+          },
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 37785600,
+            "mtime_ns": 1788050571220000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 37814272,
+            "mtime_ns": 1788050572930000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 37838848,
+            "mtime_ns": 1788050574620000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 37863424,
+            "mtime_ns": 1788050576310000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 37896192,
+            "mtime_ns": 1788050578020000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 37924864,
+            "mtime_ns": 1788050579720000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 37949440,
+            "mtime_ns": 1788050581440000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 37982208,
+            "mtime_ns": 1788050583130000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 38014976,
+            "mtime_ns": 1788050584830000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 38047744,
+            "mtime_ns": 1788050586540000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 38080512,
+            "mtime_ns": 1788050588230000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 38113280,
+            "mtime_ns": 1788050589940000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 38154240,
+            "mtime_ns": 1788050591630000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 38195200,
+            "mtime_ns": 1788050593300000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 38236160,
+            "mtime_ns": 1788050594980000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 38273024,
+            "mtime_ns": 1788050596670000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 38334464,
+            "mtime_ns": 1788050598380000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 38383616,
+            "mtime_ns": 1788050600080000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 38436864,
+            "mtime_ns": 1788050601760000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 38494208,
+            "mtime_ns": 1788050603440000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 38572032,
+            "mtime_ns": 1788050605140000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 38641664,
+            "mtime_ns": 1788050606860000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 38723584,
+            "mtime_ns": 1788050608540000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 38805504,
+            "mtime_ns": 1788050610260000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 38907904,
+            "mtime_ns": 1788050611970000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 39010304,
+            "mtime_ns": 1788050613670000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 39112704,
+            "mtime_ns": 1788050615370000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 39260160,
+            "mtime_ns": 1788050617060000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 39391232,
+            "mtime_ns": 1788050618740000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 39526400,
+            "mtime_ns": 1788050620440000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 39665664,
+            "mtime_ns": 1788050622140000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 39804928,
+            "mtime_ns": 1788050623850000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 39890944,
+            "mtime_ns": 1788050625550000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 40030208,
+            "mtime_ns": 1788050627250000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 40116224,
+            "mtime_ns": 1788050628950000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 40255488,
+            "mtime_ns": 1788050630650000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 40337408,
+            "mtime_ns": 1788050632350000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 40427520,
+            "mtime_ns": 1788050634040000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 40509440,
+            "mtime_ns": 1788050635750000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 40615936,
+            "mtime_ns": 1788050637450000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 40701952,
+            "mtime_ns": 1788050639180000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 40734720,
+            "mtime_ns": 1788050640880000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 40755200,
+            "mtime_ns": 1788050642560000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 40779776,
+            "mtime_ns": 1788050644260000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 40763392,
+            "mtime_ns": 1788050645950000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 40726528,
+            "mtime_ns": 1788050647670000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 40706048,
+            "mtime_ns": 1788050649360000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 40669184,
+            "mtime_ns": 1788050651070000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 40624128,
+            "mtime_ns": 1788050652780000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 40615936,
+            "mtime_ns": 1788050654480000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 40611840,
+            "mtime_ns": 1788050656170000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 40607744,
+            "mtime_ns": 1788050657880000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 40587264,
+            "mtime_ns": 1788050659590000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 40607744,
+            "mtime_ns": 1788050661300000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 40628224,
+            "mtime_ns": 1788050663020000000
+          },
+          {
+            "name": "DSC00070.ARW",
+            "bytes": 40665088,
+            "mtime_ns": 1788050664720000000
+          },
+          {
+            "name": "DSC00071.ARW",
+            "bytes": 40669184,
+            "mtime_ns": 1788050666430000000
+          },
+          {
+            "name": "DSC00072.ARW",
+            "bytes": 40673280,
+            "mtime_ns": 1788050668130000000
+          },
+          {
+            "name": "DSC00073.ARW",
+            "bytes": 40677376,
+            "mtime_ns": 1788050669850000000
+          },
+          {
+            "name": "DSC00074.ARW",
+            "bytes": 40706048,
+            "mtime_ns": 1788050671560000000
+          },
+          {
+            "name": "DSC00075.ARW",
+            "bytes": 40697856,
+            "mtime_ns": 1788050673260000000
+          },
+          {
+            "name": "DSC00076.ARW",
+            "bytes": 40701952,
+            "mtime_ns": 1788050674950000000
+          },
+          {
+            "name": "DSC00077.ARW",
+            "bytes": 40677376,
+            "mtime_ns": 1788050676650000000
+          },
+          {
+            "name": "DSC00078.ARW",
+            "bytes": 40620032,
+            "mtime_ns": 1788050678340000000
+          },
+          {
+            "name": "DSC00079.ARW",
+            "bytes": 40534016,
+            "mtime_ns": 1788050680040000000
+          },
+          {
+            "name": "DSC00080.ARW",
+            "bytes": 40525824,
+            "mtime_ns": 1788050681740000000
+          },
+          {
+            "name": "DSC00081.ARW",
+            "bytes": 40464384,
+            "mtime_ns": 1788050683440000000
+          },
+          {
+            "name": "DSC00082.ARW",
+            "bytes": 40321024,
+            "mtime_ns": 1788050685140000000
+          },
+          {
+            "name": "DSC00083.ARW",
+            "bytes": 40177664,
+            "mtime_ns": 1788050686830000000
+          },
+          {
+            "name": "DSC00084.ARW",
+            "bytes": 40022016,
+            "mtime_ns": 1788050688530000000
+          },
+          {
+            "name": "DSC00085.ARW",
+            "bytes": 39800832,
+            "mtime_ns": 1788050690230000000
+          },
+          {
+            "name": "DSC00086.ARW",
+            "bytes": 39649280,
+            "mtime_ns": 1788050691940000000
+          },
+          {
+            "name": "DSC00087.ARW",
+            "bytes": 39469056,
+            "mtime_ns": 1788050693650000000
+          },
+          {
+            "name": "DSC00088.ARW",
+            "bytes": 39305216,
+            "mtime_ns": 1788050695360000000
+          },
+          {
+            "name": "DSC00089.ARW",
+            "bytes": 39153664,
+            "mtime_ns": 1788050697040000000
+          },
+          {
+            "name": "DSC00090.ARW",
+            "bytes": 39034880,
+            "mtime_ns": 1788050698720000000
+          },
+          {
+            "name": "DSC00091.ARW",
+            "bytes": 38932480,
+            "mtime_ns": 1788050700450000000
+          },
+          {
+            "name": "DSC00092.ARW",
+            "bytes": 38850560,
+            "mtime_ns": 1788050702160000000
+          },
+          {
+            "name": "DSC00093.ARW",
+            "bytes": 38776832,
+            "mtime_ns": 1788050703860000000
+          },
+          {
+            "name": "DSC00094.ARW",
+            "bytes": 38719488,
+            "mtime_ns": 1788050705550000000
+          },
+          {
+            "name": "DSC00095.ARW",
+            "bytes": 38666240,
+            "mtime_ns": 1788050707260000000
+          },
+          {
+            "name": "DSC00096.ARW",
+            "bytes": 38608896,
+            "mtime_ns": 1788050708960000000
+          },
+          {
+            "name": "DSC00097.ARW",
+            "bytes": 38563840,
+            "mtime_ns": 1788050710660000000
+          },
+          {
+            "name": "DSC00098.ARW",
+            "bytes": 38518784,
+            "mtime_ns": 1788050712350000000
+          },
+          {
+            "name": "DSC00099.ARW",
+            "bytes": 38481920,
+            "mtime_ns": 1788050714050000000
+          },
+          {
+            "name": "DSC00100.ARW",
+            "bytes": 38449152,
+            "mtime_ns": 1788050715750000000
+          },
+          {
+            "name": "DSC00101.ARW",
+            "bytes": 38408192,
+            "mtime_ns": 1788050717470000000
+          },
+          {
+            "name": "DSC00102.ARW",
+            "bytes": 38371328,
+            "mtime_ns": 1788050719200000000
+          },
+          {
+            "name": "DSC00103.ARW",
+            "bytes": 38342656,
+            "mtime_ns": 1788050720910000000
+          },
+          {
+            "name": "DSC00104.ARW",
+            "bytes": 38305792,
+            "mtime_ns": 1788050722610000000
+          },
+          {
+            "name": "DSC00105.ARW",
+            "bytes": 38273024,
+            "mtime_ns": 1788050724310000000
+          },
+          {
+            "name": "DSC00106.ARW",
+            "bytes": 38240256,
+            "mtime_ns": 1788050726010000000
+          },
+          {
+            "name": "DSC00107.ARW",
+            "bytes": 38219776,
+            "mtime_ns": 1788050727720000000
+          },
+          {
+            "name": "DSC00108.ARW",
+            "bytes": 38187008,
+            "mtime_ns": 1788050729420000000
+          },
+          {
+            "name": "DSC00109.ARW",
+            "bytes": 38014976,
+            "mtime_ns": 1788050731130000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00001.ARW": "59d15196053c60b084036fca9824968a0a533ea174664ff60b3660913e7d7d03",
+          "DSC00055.ARW": "e1fc5da3067dea00b3a9e13ea151b13241a19669d47b4c88efae0a08402920ef",
+          "DSC00109.ARW": "87112a225114213ae5abbce43217ff9fc9ce097cc8bc9a7bbe206692b3e6a10d"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "fabric-f14",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f14-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 14.0,
+        "expected_frames": 83
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\fabric-f14.npz",
+      "cache_bytes": 4972073,
+      "cache_sha256": "58b8a657340c42813d9bf762c05d0f7cd12e2c3dd3cb34f44d67f9146cdf921e",
+      "elapsed_seconds": 13.124579800001811,
+      "inventory": {
+        "name": "fabric-f14",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f14-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 14.0,
+        "expected_frames": 83,
+        "files": [
+          {
+            "name": "DSC00001.ARW",
+            "bytes": 37011456,
+            "mtime_ns": 1788050787310000000
+          },
+          {
+            "name": "DSC00002.ARW",
+            "bytes": 37040128,
+            "mtime_ns": 1788050789000000000
+          },
+          {
+            "name": "DSC00003.ARW",
+            "bytes": 37060608,
+            "mtime_ns": 1788050790710000000
+          },
+          {
+            "name": "DSC00004.ARW",
+            "bytes": 37076992,
+            "mtime_ns": 1788050792420000000
+          },
+          {
+            "name": "DSC00005.ARW",
+            "bytes": 37097472,
+            "mtime_ns": 1788050794120000000
+          },
+          {
+            "name": "DSC00006.ARW",
+            "bytes": 37113856,
+            "mtime_ns": 1788050795800000000
+          },
+          {
+            "name": "DSC00007.ARW",
+            "bytes": 37134336,
+            "mtime_ns": 1788050797510000000
+          },
+          {
+            "name": "DSC00008.ARW",
+            "bytes": 37150720,
+            "mtime_ns": 1788050799200000000
+          },
+          {
+            "name": "DSC00009.ARW",
+            "bytes": 37175296,
+            "mtime_ns": 1788050800920000000
+          },
+          {
+            "name": "DSC00010.ARW",
+            "bytes": 37195776,
+            "mtime_ns": 1788050802610000000
+          },
+          {
+            "name": "DSC00011.ARW",
+            "bytes": 37216256,
+            "mtime_ns": 1788050804330000000
+          },
+          {
+            "name": "DSC00012.ARW",
+            "bytes": 37244928,
+            "mtime_ns": 1788050806030000000
+          },
+          {
+            "name": "DSC00013.ARW",
+            "bytes": 37269504,
+            "mtime_ns": 1788050807730000000
+          },
+          {
+            "name": "DSC00014.ARW",
+            "bytes": 37294080,
+            "mtime_ns": 1788050809430000000
+          },
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 37326848,
+            "mtime_ns": 1788050811140000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 37359616,
+            "mtime_ns": 1788050812840000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 37392384,
+            "mtime_ns": 1788050814540000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 37425152,
+            "mtime_ns": 1788050816240000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 37462016,
+            "mtime_ns": 1788050817940000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 37498880,
+            "mtime_ns": 1788050819630000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 37548032,
+            "mtime_ns": 1788050821320000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 37601280,
+            "mtime_ns": 1788050823010000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 37654528,
+            "mtime_ns": 1788050824720000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 37720064,
+            "mtime_ns": 1788050826420000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 37789696,
+            "mtime_ns": 1788050828120000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 37875712,
+            "mtime_ns": 1788050829820000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 37916672,
+            "mtime_ns": 1788050831510000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 38060032,
+            "mtime_ns": 1788050833190000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 38146048,
+            "mtime_ns": 1788050834890000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 38305792,
+            "mtime_ns": 1788050836600000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 38445056,
+            "mtime_ns": 1788050838300000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 38576128,
+            "mtime_ns": 1788050840000000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 38731776,
+            "mtime_ns": 1788050841700000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 38723584,
+            "mtime_ns": 1788050843400000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 38998016,
+            "mtime_ns": 1788050845110000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 39124992,
+            "mtime_ns": 1788050846810000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 39227392,
+            "mtime_ns": 1788050848510000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 39321600,
+            "mtime_ns": 1788050850220000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 39411712,
+            "mtime_ns": 1788050851910000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 39456768,
+            "mtime_ns": 1788050853610000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 39403520,
+            "mtime_ns": 1788050855310000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 39530496,
+            "mtime_ns": 1788050857020000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 39526400,
+            "mtime_ns": 1788050858720000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 39514112,
+            "mtime_ns": 1788050860420000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 39510016,
+            "mtime_ns": 1788050862110000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 39444480,
+            "mtime_ns": 1788050863810000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 39464960,
+            "mtime_ns": 1788050865500000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 39464960,
+            "mtime_ns": 1788050867220000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 39444480,
+            "mtime_ns": 1788050868920000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 39473152,
+            "mtime_ns": 1788050870620000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 39485440,
+            "mtime_ns": 1788050872330000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 39514112,
+            "mtime_ns": 1788050874020000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 39510016,
+            "mtime_ns": 1788050875740000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 39510016,
+            "mtime_ns": 1788050877430000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 39473152,
+            "mtime_ns": 1788050879130000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 39448576,
+            "mtime_ns": 1788050880830000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 39391232,
+            "mtime_ns": 1788050882510000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 39292928,
+            "mtime_ns": 1788050884220000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 39194624,
+            "mtime_ns": 1788050885930000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 39043072,
+            "mtime_ns": 1788050887660000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 38862848,
+            "mtime_ns": 1788050889360000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 38703104,
+            "mtime_ns": 1788050891060000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 38535168,
+            "mtime_ns": 1788050892750000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 38367232,
+            "mtime_ns": 1788050894450000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 38240256,
+            "mtime_ns": 1788050896160000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 38129664,
+            "mtime_ns": 1788050897850000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 38039552,
+            "mtime_ns": 1788050899550000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 37965824,
+            "mtime_ns": 1788050901250000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 37908480,
+            "mtime_ns": 1788050902940000000
+          },
+          {
+            "name": "DSC00070.ARW",
+            "bytes": 37859328,
+            "mtime_ns": 1788050904660000000
+          },
+          {
+            "name": "DSC00071.ARW",
+            "bytes": 37818368,
+            "mtime_ns": 1788050906370000000
+          },
+          {
+            "name": "DSC00072.ARW",
+            "bytes": 37781504,
+            "mtime_ns": 1788050908080000000
+          },
+          {
+            "name": "DSC00073.ARW",
+            "bytes": 37744640,
+            "mtime_ns": 1788050909780000000
+          },
+          {
+            "name": "DSC00074.ARW",
+            "bytes": 37711872,
+            "mtime_ns": 1788050911480000000
+          },
+          {
+            "name": "DSC00075.ARW",
+            "bytes": 37675008,
+            "mtime_ns": 1788050913210000000
+          },
+          {
+            "name": "DSC00076.ARW",
+            "bytes": 37646336,
+            "mtime_ns": 1788050914920000000
+          },
+          {
+            "name": "DSC00077.ARW",
+            "bytes": 37613568,
+            "mtime_ns": 1788050916610000000
+          },
+          {
+            "name": "DSC00078.ARW",
+            "bytes": 37593088,
+            "mtime_ns": 1788050918310000000
+          },
+          {
+            "name": "DSC00079.ARW",
+            "bytes": 37564416,
+            "mtime_ns": 1788050920010000000
+          },
+          {
+            "name": "DSC00080.ARW",
+            "bytes": 37539840,
+            "mtime_ns": 1788050921720000000
+          },
+          {
+            "name": "DSC00081.ARW",
+            "bytes": 37519360,
+            "mtime_ns": 1788050923430000000
+          },
+          {
+            "name": "DSC00082.ARW",
+            "bytes": 37486592,
+            "mtime_ns": 1788050925130000000
+          },
+          {
+            "name": "DSC00083.ARW",
+            "bytes": 37363712,
+            "mtime_ns": 1788050926820000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00001.ARW": "cd06064fdf455f6990f06d3c50056887b99796f3f2edcfdac0e9a346d4f8e0c9",
+          "DSC00042.ARW": "a096fd761424c85e56ff17c971f37dc9229313395b43a546a69e844d012d8ea2",
+          "DSC00083.ARW": "1cb57a9efdf3d5b8bb41b067b24f144b94f93aad61bcf172b4e22f9abbd1a573"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "fabric-f18",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f18-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 18.0,
+        "expected_frames": 71
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\fabric-f18.npz",
+      "cache_bytes": 4256050,
+      "cache_sha256": "74366411e41b4a1d45bc77c2ba75a2127b28fe49b6f54be877ba7b12cc4b8181",
+      "elapsed_seconds": 11.18266459996812,
+      "inventory": {
+        "name": "fabric-f18",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f18-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 18.0,
+        "expected_frames": 71,
+        "files": [
+          {
+            "name": "DSC00001.ARW",
+            "bytes": 36646912,
+            "mtime_ns": 1788050987530000000
+          },
+          {
+            "name": "DSC00002.ARW",
+            "bytes": 36671488,
+            "mtime_ns": 1788050989240000000
+          },
+          {
+            "name": "DSC00003.ARW",
+            "bytes": 36691968,
+            "mtime_ns": 1788050990950000000
+          },
+          {
+            "name": "DSC00004.ARW",
+            "bytes": 36716544,
+            "mtime_ns": 1788050992650000000
+          },
+          {
+            "name": "DSC00005.ARW",
+            "bytes": 36728832,
+            "mtime_ns": 1788050994320000000
+          },
+          {
+            "name": "DSC00006.ARW",
+            "bytes": 36749312,
+            "mtime_ns": 1788050996030000000
+          },
+          {
+            "name": "DSC00007.ARW",
+            "bytes": 36765696,
+            "mtime_ns": 1788050997720000000
+          },
+          {
+            "name": "DSC00008.ARW",
+            "bytes": 36794368,
+            "mtime_ns": 1788050999430000000
+          },
+          {
+            "name": "DSC00009.ARW",
+            "bytes": 36814848,
+            "mtime_ns": 1788051001140000000
+          },
+          {
+            "name": "DSC00010.ARW",
+            "bytes": 36835328,
+            "mtime_ns": 1788051002830000000
+          },
+          {
+            "name": "DSC00011.ARW",
+            "bytes": 36868096,
+            "mtime_ns": 1788051004530000000
+          },
+          {
+            "name": "DSC00012.ARW",
+            "bytes": 36896768,
+            "mtime_ns": 1788051006230000000
+          },
+          {
+            "name": "DSC00013.ARW",
+            "bytes": 36933632,
+            "mtime_ns": 1788051007920000000
+          },
+          {
+            "name": "DSC00014.ARW",
+            "bytes": 36970496,
+            "mtime_ns": 1788051009640000000
+          },
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 37007360,
+            "mtime_ns": 1788051011320000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 37048320,
+            "mtime_ns": 1788051013000000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 37109760,
+            "mtime_ns": 1788051014700000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 37163008,
+            "mtime_ns": 1788051016390000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 37220352,
+            "mtime_ns": 1788051018090000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 37314560,
+            "mtime_ns": 1788051019810000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 37404672,
+            "mtime_ns": 1788051021520000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 37507072,
+            "mtime_ns": 1788051023220000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 37613568,
+            "mtime_ns": 1788051024950000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 37728256,
+            "mtime_ns": 1788051026650000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 37855232,
+            "mtime_ns": 1788051028350000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 37982208,
+            "mtime_ns": 1788051030060000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 38105088,
+            "mtime_ns": 1788051031760000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 38223872,
+            "mtime_ns": 1788051033460000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 38338560,
+            "mtime_ns": 1788051035170000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 38436864,
+            "mtime_ns": 1788051036860000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 38514688,
+            "mtime_ns": 1788051038570000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 38567936,
+            "mtime_ns": 1788051040270000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 38625280,
+            "mtime_ns": 1788051041980000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 38645760,
+            "mtime_ns": 1788051043680000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 38662144,
+            "mtime_ns": 1788051045370000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 38658048,
+            "mtime_ns": 1788051047010000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 38666240,
+            "mtime_ns": 1788051048720000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 38662144,
+            "mtime_ns": 1788051050410000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 38649856,
+            "mtime_ns": 1788051052110000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 38658048,
+            "mtime_ns": 1788051053810000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 38653952,
+            "mtime_ns": 1788051055500000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 38658048,
+            "mtime_ns": 1788051057220000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 38645760,
+            "mtime_ns": 1788051058920000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 38629376,
+            "mtime_ns": 1788051060620000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 38592512,
+            "mtime_ns": 1788051062340000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 38531072,
+            "mtime_ns": 1788051064040000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 38457344,
+            "mtime_ns": 1788051065750000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 38359040,
+            "mtime_ns": 1788051067440000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 38252544,
+            "mtime_ns": 1788051069140000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 38117376,
+            "mtime_ns": 1788051070840000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 37974016,
+            "mtime_ns": 1788051072530000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 37842944,
+            "mtime_ns": 1788051074230000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 37711872,
+            "mtime_ns": 1788051075940000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 37593088,
+            "mtime_ns": 1788051077650000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 37486592,
+            "mtime_ns": 1788051079340000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 37404672,
+            "mtime_ns": 1788051081040000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 37339136,
+            "mtime_ns": 1788051082730000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 37285888,
+            "mtime_ns": 1788051084430000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 37244928,
+            "mtime_ns": 1788051086130000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 37203968,
+            "mtime_ns": 1788051087820000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 37171200,
+            "mtime_ns": 1788051089520000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 37130240,
+            "mtime_ns": 1788051091220000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 37109760,
+            "mtime_ns": 1788051092920000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 37081088,
+            "mtime_ns": 1788051094620000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 37060608,
+            "mtime_ns": 1788051096320000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 37040128,
+            "mtime_ns": 1788051098020000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 37015552,
+            "mtime_ns": 1788051099720000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 36999168,
+            "mtime_ns": 1788051101420000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 36974592,
+            "mtime_ns": 1788051103110000000
+          },
+          {
+            "name": "DSC00070.ARW",
+            "bytes": 36966400,
+            "mtime_ns": 1788051104820000000
+          },
+          {
+            "name": "DSC00071.ARW",
+            "bytes": 36823040,
+            "mtime_ns": 1788051106520000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00001.ARW": "95a5c0cef4a167dc64b95735b6fd4b975cc6468298b0b2bcc90fe5a5e2997347",
+          "DSC00036.ARW": "bd7ab1d0b5843bb4b1726966ed9a10d31eceac0184dbb4d479e87b674386169a",
+          "DSC00071.ARW": "b4b1533f2c57dd762eb484359c76556367942ef61d1762e952f81af13e7f751a"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "fabric-f5.6",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 5.6,
+        "expected_frames": 210
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\fabric-f5.6.npz",
+      "cache_bytes": 12525623,
+      "cache_sha256": "bceaa672323115d5f9034ccc3d5fd4c54d6a9949267f33a4b3d0cf72b6e2f3b6",
+      "elapsed_seconds": 33.150183799967635,
+      "inventory": {
+        "name": "fabric-f5.6",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 5.6,
+        "expected_frames": 210,
+        "files": [
+          {
+            "name": "DSC00001.ARW",
+            "bytes": 38711296,
+            "mtime_ns": 1788049626010000000
+          },
+          {
+            "name": "DSC00002.ARW",
+            "bytes": 38739968,
+            "mtime_ns": 1788049627640000000
+          },
+          {
+            "name": "DSC00003.ARW",
+            "bytes": 38756352,
+            "mtime_ns": 1788049629340000000
+          },
+          {
+            "name": "DSC00004.ARW",
+            "bytes": 38768640,
+            "mtime_ns": 1788049631040000000
+          },
+          {
+            "name": "DSC00005.ARW",
+            "bytes": 38785024,
+            "mtime_ns": 1788049632740000000
+          },
+          {
+            "name": "DSC00006.ARW",
+            "bytes": 38797312,
+            "mtime_ns": 1788049634430000000
+          },
+          {
+            "name": "DSC00007.ARW",
+            "bytes": 38813696,
+            "mtime_ns": 1788049636140000000
+          },
+          {
+            "name": "DSC00008.ARW",
+            "bytes": 38825984,
+            "mtime_ns": 1788049637830000000
+          },
+          {
+            "name": "DSC00009.ARW",
+            "bytes": 38842368,
+            "mtime_ns": 1788049639550000000
+          },
+          {
+            "name": "DSC00010.ARW",
+            "bytes": 38858752,
+            "mtime_ns": 1788049641250000000
+          },
+          {
+            "name": "DSC00011.ARW",
+            "bytes": 38875136,
+            "mtime_ns": 1788049642940000000
+          },
+          {
+            "name": "DSC00012.ARW",
+            "bytes": 38895616,
+            "mtime_ns": 1788049644640000000
+          },
+          {
+            "name": "DSC00013.ARW",
+            "bytes": 38912000,
+            "mtime_ns": 1788049646310000000
+          },
+          {
+            "name": "DSC00014.ARW",
+            "bytes": 38928384,
+            "mtime_ns": 1788049648010000000
+          },
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 38944768,
+            "mtime_ns": 1788049649710000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 38969344,
+            "mtime_ns": 1788049651400000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 38985728,
+            "mtime_ns": 1788049653120000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 39002112,
+            "mtime_ns": 1788049654820000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 39026688,
+            "mtime_ns": 1788049656520000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 39043072,
+            "mtime_ns": 1788049658210000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 39063552,
+            "mtime_ns": 1788049659900000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 39092224,
+            "mtime_ns": 1788049661610000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 39112704,
+            "mtime_ns": 1788049663300000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 39133184,
+            "mtime_ns": 1788049665000000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 39161856,
+            "mtime_ns": 1788049666710000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 39182336,
+            "mtime_ns": 1788049668400000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 39206912,
+            "mtime_ns": 1788049670100000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 39235584,
+            "mtime_ns": 1788049671820000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 39260160,
+            "mtime_ns": 1788049673490000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 39284736,
+            "mtime_ns": 1788049675240000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 39313408,
+            "mtime_ns": 1788049676950000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 39333888,
+            "mtime_ns": 1788049678660000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 39366656,
+            "mtime_ns": 1788049680360000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 39399424,
+            "mtime_ns": 1788049682060000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 39432192,
+            "mtime_ns": 1788049683760000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 39460864,
+            "mtime_ns": 1788049685460000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 39485440,
+            "mtime_ns": 1788049687150000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 39518208,
+            "mtime_ns": 1788049688840000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 39546880,
+            "mtime_ns": 1788049690590000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 39587840,
+            "mtime_ns": 1788049692300000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 39616512,
+            "mtime_ns": 1788049693990000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 39653376,
+            "mtime_ns": 1788049695700000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 39677952,
+            "mtime_ns": 1788049697390000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 39710720,
+            "mtime_ns": 1788049699100000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 39755776,
+            "mtime_ns": 1788049700800000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 39788544,
+            "mtime_ns": 1788049702500000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 39833600,
+            "mtime_ns": 1788049704190000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 39874560,
+            "mtime_ns": 1788049705890000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 39923712,
+            "mtime_ns": 1788049707590000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 39972864,
+            "mtime_ns": 1788049709290000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 40017920,
+            "mtime_ns": 1788049711020000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 40062976,
+            "mtime_ns": 1788049712720000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 40095744,
+            "mtime_ns": 1788049714440000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 40173568,
+            "mtime_ns": 1788049716130000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 40189952,
+            "mtime_ns": 1788049717850000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 40275968,
+            "mtime_ns": 1788049719560000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 40333312,
+            "mtime_ns": 1788049721250000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 40394752,
+            "mtime_ns": 1788049722960000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 40452096,
+            "mtime_ns": 1788049724650000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 40517632,
+            "mtime_ns": 1788049726360000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 40583168,
+            "mtime_ns": 1788049728050000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 40656896,
+            "mtime_ns": 1788049729740000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 40730624,
+            "mtime_ns": 1788049731450000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 40812544,
+            "mtime_ns": 1788049733170000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 40894464,
+            "mtime_ns": 1788049734880000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 40984576,
+            "mtime_ns": 1788049736570000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 41070592,
+            "mtime_ns": 1788049738280000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 41160704,
+            "mtime_ns": 1788049739980000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 41242624,
+            "mtime_ns": 1788049741690000000
+          },
+          {
+            "name": "DSC00070.ARW",
+            "bytes": 41340928,
+            "mtime_ns": 1788049743390000000
+          },
+          {
+            "name": "DSC00071.ARW",
+            "bytes": 41353216,
+            "mtime_ns": 1788049745070000000
+          },
+          {
+            "name": "DSC00072.ARW",
+            "bytes": 41431040,
+            "mtime_ns": 1788049746770000000
+          },
+          {
+            "name": "DSC00073.ARW",
+            "bytes": 41553920,
+            "mtime_ns": 1788049748460000000
+          },
+          {
+            "name": "DSC00074.ARW",
+            "bytes": 41709568,
+            "mtime_ns": 1788049750160000000
+          },
+          {
+            "name": "DSC00075.ARW",
+            "bytes": 41824256,
+            "mtime_ns": 1788049751890000000
+          },
+          {
+            "name": "DSC00076.ARW",
+            "bytes": 41533440,
+            "mtime_ns": 1788049753580000000
+          },
+          {
+            "name": "DSC00077.ARW",
+            "bytes": 41762816,
+            "mtime_ns": 1788049755290000000
+          },
+          {
+            "name": "DSC00078.ARW",
+            "bytes": 42012672,
+            "mtime_ns": 1788049757000000000
+          },
+          {
+            "name": "DSC00079.ARW",
+            "bytes": 42135552,
+            "mtime_ns": 1788049758700000000
+          },
+          {
+            "name": "DSC00080.ARW",
+            "bytes": 42192896,
+            "mtime_ns": 1788049760400000000
+          },
+          {
+            "name": "DSC00081.ARW",
+            "bytes": 42393600,
+            "mtime_ns": 1788049762090000000
+          },
+          {
+            "name": "DSC00082.ARW",
+            "bytes": 42491904,
+            "mtime_ns": 1788049763800000000
+          },
+          {
+            "name": "DSC00083.ARW",
+            "bytes": 42569728,
+            "mtime_ns": 1788049765490000000
+          },
+          {
+            "name": "DSC00084.ARW",
+            "bytes": 42672128,
+            "mtime_ns": 1788049767180000000
+          },
+          {
+            "name": "DSC00085.ARW",
+            "bytes": 42749952,
+            "mtime_ns": 1788049768880000000
+          },
+          {
+            "name": "DSC00086.ARW",
+            "bytes": 42835968,
+            "mtime_ns": 1788049770600000000
+          },
+          {
+            "name": "DSC00087.ARW",
+            "bytes": 42926080,
+            "mtime_ns": 1788049772310000000
+          },
+          {
+            "name": "DSC00088.ARW",
+            "bytes": 42991616,
+            "mtime_ns": 1788049774000000000
+          },
+          {
+            "name": "DSC00089.ARW",
+            "bytes": 43081728,
+            "mtime_ns": 1788049775710000000
+          },
+          {
+            "name": "DSC00090.ARW",
+            "bytes": 43151360,
+            "mtime_ns": 1788049777420000000
+          },
+          {
+            "name": "DSC00091.ARW",
+            "bytes": 43020288,
+            "mtime_ns": 1788049779150000000
+          },
+          {
+            "name": "DSC00092.ARW",
+            "bytes": 43208704,
+            "mtime_ns": 1788049780840000000
+          },
+          {
+            "name": "DSC00093.ARW",
+            "bytes": 43282432,
+            "mtime_ns": 1788049782560000000
+          },
+          {
+            "name": "DSC00094.ARW",
+            "bytes": 43397120,
+            "mtime_ns": 1788049784250000000
+          },
+          {
+            "name": "DSC00095.ARW",
+            "bytes": 43474944,
+            "mtime_ns": 1788049785960000000
+          },
+          {
+            "name": "DSC00096.ARW",
+            "bytes": 43524096,
+            "mtime_ns": 1788049787660000000
+          },
+          {
+            "name": "DSC00097.ARW",
+            "bytes": 43573248,
+            "mtime_ns": 1788049789360000000
+          },
+          {
+            "name": "DSC00098.ARW",
+            "bytes": 43675648,
+            "mtime_ns": 1788049791050000000
+          },
+          {
+            "name": "DSC00099.ARW",
+            "bytes": 43724800,
+            "mtime_ns": 1788049792760000000
+          },
+          {
+            "name": "DSC00100.ARW",
+            "bytes": 43753472,
+            "mtime_ns": 1788049794460000000
+          },
+          {
+            "name": "DSC00101.ARW",
+            "bytes": 43786240,
+            "mtime_ns": 1788049796160000000
+          },
+          {
+            "name": "DSC00102.ARW",
+            "bytes": 43814912,
+            "mtime_ns": 1788049797870000000
+          },
+          {
+            "name": "DSC00103.ARW",
+            "bytes": 43769856,
+            "mtime_ns": 1788049799560000000
+          },
+          {
+            "name": "DSC00104.ARW",
+            "bytes": 43708416,
+            "mtime_ns": 1788049801270000000
+          },
+          {
+            "name": "DSC00105.ARW",
+            "bytes": 43732992,
+            "mtime_ns": 1788049802980000000
+          },
+          {
+            "name": "DSC00106.ARW",
+            "bytes": 43757568,
+            "mtime_ns": 1788049804670000000
+          },
+          {
+            "name": "DSC00107.ARW",
+            "bytes": 43839488,
+            "mtime_ns": 1788049806370000000
+          },
+          {
+            "name": "DSC00108.ARW",
+            "bytes": 43810816,
+            "mtime_ns": 1788049808080000000
+          },
+          {
+            "name": "DSC00109.ARW",
+            "bytes": 43802624,
+            "mtime_ns": 1788049809780000000
+          },
+          {
+            "name": "DSC00110.ARW",
+            "bytes": 43761664,
+            "mtime_ns": 1788049811480000000
+          },
+          {
+            "name": "DSC00111.ARW",
+            "bytes": 43720704,
+            "mtime_ns": 1788049813190000000
+          },
+          {
+            "name": "DSC00112.ARW",
+            "bytes": 43675648,
+            "mtime_ns": 1788049814890000000
+          },
+          {
+            "name": "DSC00113.ARW",
+            "bytes": 43675648,
+            "mtime_ns": 1788049816600000000
+          },
+          {
+            "name": "DSC00114.ARW",
+            "bytes": 43642880,
+            "mtime_ns": 1788049818320000000
+          },
+          {
+            "name": "DSC00115.ARW",
+            "bytes": 43667456,
+            "mtime_ns": 1788049820020000000
+          },
+          {
+            "name": "DSC00116.ARW",
+            "bytes": 43675648,
+            "mtime_ns": 1788049821720000000
+          },
+          {
+            "name": "DSC00117.ARW",
+            "bytes": 43679744,
+            "mtime_ns": 1788049823420000000
+          },
+          {
+            "name": "DSC00118.ARW",
+            "bytes": 43630592,
+            "mtime_ns": 1788049825120000000
+          },
+          {
+            "name": "DSC00119.ARW",
+            "bytes": 43634688,
+            "mtime_ns": 1788049826810000000
+          },
+          {
+            "name": "DSC00120.ARW",
+            "bytes": 43659264,
+            "mtime_ns": 1788049828510000000
+          },
+          {
+            "name": "DSC00121.ARW",
+            "bytes": 43683840,
+            "mtime_ns": 1788049830230000000
+          },
+          {
+            "name": "DSC00122.ARW",
+            "bytes": 43634688,
+            "mtime_ns": 1788049831920000000
+          },
+          {
+            "name": "DSC00123.ARW",
+            "bytes": 43687936,
+            "mtime_ns": 1788049833630000000
+          },
+          {
+            "name": "DSC00124.ARW",
+            "bytes": 43704320,
+            "mtime_ns": 1788049835340000000
+          },
+          {
+            "name": "DSC00125.ARW",
+            "bytes": 43732992,
+            "mtime_ns": 1788049837030000000
+          },
+          {
+            "name": "DSC00126.ARW",
+            "bytes": 43700224,
+            "mtime_ns": 1788049838740000000
+          },
+          {
+            "name": "DSC00127.ARW",
+            "bytes": 43769856,
+            "mtime_ns": 1788049840440000000
+          },
+          {
+            "name": "DSC00128.ARW",
+            "bytes": 43790336,
+            "mtime_ns": 1788049842160000000
+          },
+          {
+            "name": "DSC00129.ARW",
+            "bytes": 43794432,
+            "mtime_ns": 1788049843850000000
+          },
+          {
+            "name": "DSC00130.ARW",
+            "bytes": 43847680,
+            "mtime_ns": 1788049845550000000
+          },
+          {
+            "name": "DSC00131.ARW",
+            "bytes": 43798528,
+            "mtime_ns": 1788049847260000000
+          },
+          {
+            "name": "DSC00132.ARW",
+            "bytes": 43880448,
+            "mtime_ns": 1788049848960000000
+          },
+          {
+            "name": "DSC00133.ARW",
+            "bytes": 43884544,
+            "mtime_ns": 1788049850670000000
+          },
+          {
+            "name": "DSC00134.ARW",
+            "bytes": 43880448,
+            "mtime_ns": 1788049852350000000
+          },
+          {
+            "name": "DSC00135.ARW",
+            "bytes": 43909120,
+            "mtime_ns": 1788049854050000000
+          },
+          {
+            "name": "DSC00136.ARW",
+            "bytes": 43913216,
+            "mtime_ns": 1788049855740000000
+          },
+          {
+            "name": "DSC00137.ARW",
+            "bytes": 43925504,
+            "mtime_ns": 1788049857460000000
+          },
+          {
+            "name": "DSC00138.ARW",
+            "bytes": 43905024,
+            "mtime_ns": 1788049859160000000
+          },
+          {
+            "name": "DSC00139.ARW",
+            "bytes": 43864064,
+            "mtime_ns": 1788049860860000000
+          },
+          {
+            "name": "DSC00140.ARW",
+            "bytes": 43937792,
+            "mtime_ns": 1788049862560000000
+          },
+          {
+            "name": "DSC00141.ARW",
+            "bytes": 43917312,
+            "mtime_ns": 1788049864260000000
+          },
+          {
+            "name": "DSC00142.ARW",
+            "bytes": 43929600,
+            "mtime_ns": 1788049865950000000
+          },
+          {
+            "name": "DSC00143.ARW",
+            "bytes": 43921408,
+            "mtime_ns": 1788049867660000000
+          },
+          {
+            "name": "DSC00144.ARW",
+            "bytes": 43933696,
+            "mtime_ns": 1788049869370000000
+          },
+          {
+            "name": "DSC00145.ARW",
+            "bytes": 43917312,
+            "mtime_ns": 1788049871070000000
+          },
+          {
+            "name": "DSC00146.ARW",
+            "bytes": 43888640,
+            "mtime_ns": 1788049872780000000
+          },
+          {
+            "name": "DSC00147.ARW",
+            "bytes": 43876352,
+            "mtime_ns": 1788049874480000000
+          },
+          {
+            "name": "DSC00148.ARW",
+            "bytes": 43868160,
+            "mtime_ns": 1788049876180000000
+          },
+          {
+            "name": "DSC00149.ARW",
+            "bytes": 43716608,
+            "mtime_ns": 1788049877880000000
+          },
+          {
+            "name": "DSC00150.ARW",
+            "bytes": 43520000,
+            "mtime_ns": 1788049879580000000
+          },
+          {
+            "name": "DSC00151.ARW",
+            "bytes": 43696128,
+            "mtime_ns": 1788049881290000000
+          },
+          {
+            "name": "DSC00152.ARW",
+            "bytes": 43630592,
+            "mtime_ns": 1788049882990000000
+          },
+          {
+            "name": "DSC00153.ARW",
+            "bytes": 43585536,
+            "mtime_ns": 1788049884700000000
+          },
+          {
+            "name": "DSC00154.ARW",
+            "bytes": 43487232,
+            "mtime_ns": 1788049886400000000
+          },
+          {
+            "name": "DSC00155.ARW",
+            "bytes": 43413504,
+            "mtime_ns": 1788049888110000000
+          },
+          {
+            "name": "DSC00156.ARW",
+            "bytes": 43319296,
+            "mtime_ns": 1788049889810000000
+          },
+          {
+            "name": "DSC00157.ARW",
+            "bytes": 43212800,
+            "mtime_ns": 1788049891520000000
+          },
+          {
+            "name": "DSC00158.ARW",
+            "bytes": 43073536,
+            "mtime_ns": 1788049893210000000
+          },
+          {
+            "name": "DSC00159.ARW",
+            "bytes": 42995712,
+            "mtime_ns": 1788049894910000000
+          },
+          {
+            "name": "DSC00160.ARW",
+            "bytes": 42885120,
+            "mtime_ns": 1788049896630000000
+          },
+          {
+            "name": "DSC00161.ARW",
+            "bytes": 42758144,
+            "mtime_ns": 1788049898340000000
+          },
+          {
+            "name": "DSC00162.ARW",
+            "bytes": 42635264,
+            "mtime_ns": 1788049900040000000
+          },
+          {
+            "name": "DSC00163.ARW",
+            "bytes": 42504192,
+            "mtime_ns": 1788049901740000000
+          },
+          {
+            "name": "DSC00164.ARW",
+            "bytes": 42344448,
+            "mtime_ns": 1788049903440000000
+          },
+          {
+            "name": "DSC00165.ARW",
+            "bytes": 42201088,
+            "mtime_ns": 1788049905140000000
+          },
+          {
+            "name": "DSC00166.ARW",
+            "bytes": 42078208,
+            "mtime_ns": 1788049906840000000
+          },
+          {
+            "name": "DSC00167.ARW",
+            "bytes": 41943040,
+            "mtime_ns": 1788049908550000000
+          },
+          {
+            "name": "DSC00168.ARW",
+            "bytes": 41816064,
+            "mtime_ns": 1788049910240000000
+          },
+          {
+            "name": "DSC00169.ARW",
+            "bytes": 41697280,
+            "mtime_ns": 1788049911950000000
+          },
+          {
+            "name": "DSC00170.ARW",
+            "bytes": 41603072,
+            "mtime_ns": 1788049913640000000
+          },
+          {
+            "name": "DSC00171.ARW",
+            "bytes": 41455616,
+            "mtime_ns": 1788049915360000000
+          },
+          {
+            "name": "DSC00172.ARW",
+            "bytes": 41365504,
+            "mtime_ns": 1788049917050000000
+          },
+          {
+            "name": "DSC00173.ARW",
+            "bytes": 41336832,
+            "mtime_ns": 1788049918760000000
+          },
+          {
+            "name": "DSC00174.ARW",
+            "bytes": 41218048,
+            "mtime_ns": 1788049920450000000
+          },
+          {
+            "name": "DSC00175.ARW",
+            "bytes": 41107456,
+            "mtime_ns": 1788049922160000000
+          },
+          {
+            "name": "DSC00176.ARW",
+            "bytes": 40910848,
+            "mtime_ns": 1788049923860000000
+          },
+          {
+            "name": "DSC00177.ARW",
+            "bytes": 40964096,
+            "mtime_ns": 1788049925550000000
+          },
+          {
+            "name": "DSC00178.ARW",
+            "bytes": 40960000,
+            "mtime_ns": 1788049927240000000
+          },
+          {
+            "name": "DSC00179.ARW",
+            "bytes": 40890368,
+            "mtime_ns": 1788049928950000000
+          },
+          {
+            "name": "DSC00180.ARW",
+            "bytes": 40828928,
+            "mtime_ns": 1788049930640000000
+          },
+          {
+            "name": "DSC00181.ARW",
+            "bytes": 40771584,
+            "mtime_ns": 1788049932350000000
+          },
+          {
+            "name": "DSC00182.ARW",
+            "bytes": 40710144,
+            "mtime_ns": 1788049934070000000
+          },
+          {
+            "name": "DSC00183.ARW",
+            "bytes": 40652800,
+            "mtime_ns": 1788049935770000000
+          },
+          {
+            "name": "DSC00184.ARW",
+            "bytes": 40595456,
+            "mtime_ns": 1788049937480000000
+          },
+          {
+            "name": "DSC00185.ARW",
+            "bytes": 40542208,
+            "mtime_ns": 1788049939170000000
+          },
+          {
+            "name": "DSC00186.ARW",
+            "bytes": 40493056,
+            "mtime_ns": 1788049940880000000
+          },
+          {
+            "name": "DSC00187.ARW",
+            "bytes": 40435712,
+            "mtime_ns": 1788049942580000000
+          },
+          {
+            "name": "DSC00188.ARW",
+            "bytes": 40390656,
+            "mtime_ns": 1788049944280000000
+          },
+          {
+            "name": "DSC00189.ARW",
+            "bytes": 40337408,
+            "mtime_ns": 1788049945950000000
+          },
+          {
+            "name": "DSC00190.ARW",
+            "bytes": 40288256,
+            "mtime_ns": 1788049947660000000
+          },
+          {
+            "name": "DSC00191.ARW",
+            "bytes": 40243200,
+            "mtime_ns": 1788049949370000000
+          },
+          {
+            "name": "DSC00192.ARW",
+            "bytes": 40198144,
+            "mtime_ns": 1788049951100000000
+          },
+          {
+            "name": "DSC00193.ARW",
+            "bytes": 40148992,
+            "mtime_ns": 1788049952800000000
+          },
+          {
+            "name": "DSC00194.ARW",
+            "bytes": 40112128,
+            "mtime_ns": 1788049954500000000
+          },
+          {
+            "name": "DSC00195.ARW",
+            "bytes": 40067072,
+            "mtime_ns": 1788049956200000000
+          },
+          {
+            "name": "DSC00196.ARW",
+            "bytes": 40026112,
+            "mtime_ns": 1788049957890000000
+          },
+          {
+            "name": "DSC00197.ARW",
+            "bytes": 39989248,
+            "mtime_ns": 1788049959600000000
+          },
+          {
+            "name": "DSC00198.ARW",
+            "bytes": 39948288,
+            "mtime_ns": 1788049961300000000
+          },
+          {
+            "name": "DSC00199.ARW",
+            "bytes": 39911424,
+            "mtime_ns": 1788049963000000000
+          },
+          {
+            "name": "DSC00200.ARW",
+            "bytes": 39874560,
+            "mtime_ns": 1788049964680000000
+          },
+          {
+            "name": "DSC00201.ARW",
+            "bytes": 39837696,
+            "mtime_ns": 1788049966380000000
+          },
+          {
+            "name": "DSC00202.ARW",
+            "bytes": 39800832,
+            "mtime_ns": 1788049968080000000
+          },
+          {
+            "name": "DSC00203.ARW",
+            "bytes": 39763968,
+            "mtime_ns": 1788049969780000000
+          },
+          {
+            "name": "DSC00204.ARW",
+            "bytes": 39735296,
+            "mtime_ns": 1788049971480000000
+          },
+          {
+            "name": "DSC00205.ARW",
+            "bytes": 39702528,
+            "mtime_ns": 1788049973180000000
+          },
+          {
+            "name": "DSC00206.ARW",
+            "bytes": 39673856,
+            "mtime_ns": 1788049974870000000
+          },
+          {
+            "name": "DSC00207.ARW",
+            "bytes": 39645184,
+            "mtime_ns": 1788049976560000000
+          },
+          {
+            "name": "DSC00208.ARW",
+            "bytes": 39612416,
+            "mtime_ns": 1788049978260000000
+          },
+          {
+            "name": "DSC00209.ARW",
+            "bytes": 39587840,
+            "mtime_ns": 1788049979960000000
+          },
+          {
+            "name": "DSC00210.ARW",
+            "bytes": 39190528,
+            "mtime_ns": 1788049981670000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00001.ARW": "ed89ac88080e41486ec5a902f20d423f4f6f40e49d7a942828cbe652fb665866",
+          "DSC00106.ARW": "cd385323d3fc64e9b0c03eb4ba6823dc885a23eecda995db3c7513fda7dacf0f",
+          "DSC00210.ARW": "651b2128713b20fa08945626a53fc255f9331ea966c59fb1e9de909bd957868f"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "fabric-f8",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 8.0,
+        "expected_frames": 150
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\fabric-f8.npz",
+      "cache_bytes": 8952403,
+      "cache_sha256": "53df8dfac9e6a30db4b6f4b6e541743554acc85149bf2c29ff9d2c5f1e90f3ae",
+      "elapsed_seconds": 23.38871680002194,
+      "inventory": {
+        "name": "fabric-f8",
+        "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+        "role": "aperture",
+        "setup": "fabric",
+        "step_width": 5,
+        "aperture": 8.0,
+        "expected_frames": 150,
+        "files": [
+          {
+            "name": "DSC00001.ARW",
+            "bytes": 38113280,
+            "mtime_ns": 1788050258600000000
+          },
+          {
+            "name": "DSC00002.ARW",
+            "bytes": 38150144,
+            "mtime_ns": 1788050260210000000
+          },
+          {
+            "name": "DSC00003.ARW",
+            "bytes": 38170624,
+            "mtime_ns": 1788050261920000000
+          },
+          {
+            "name": "DSC00004.ARW",
+            "bytes": 38187008,
+            "mtime_ns": 1788050263630000000
+          },
+          {
+            "name": "DSC00005.ARW",
+            "bytes": 38203392,
+            "mtime_ns": 1788050265340000000
+          },
+          {
+            "name": "DSC00006.ARW",
+            "bytes": 38223872,
+            "mtime_ns": 1788050267050000000
+          },
+          {
+            "name": "DSC00007.ARW",
+            "bytes": 38240256,
+            "mtime_ns": 1788050268760000000
+          },
+          {
+            "name": "DSC00008.ARW",
+            "bytes": 38260736,
+            "mtime_ns": 1788050270460000000
+          },
+          {
+            "name": "DSC00009.ARW",
+            "bytes": 38281216,
+            "mtime_ns": 1788050272170000000
+          },
+          {
+            "name": "DSC00010.ARW",
+            "bytes": 38297600,
+            "mtime_ns": 1788050273870000000
+          },
+          {
+            "name": "DSC00011.ARW",
+            "bytes": 38326272,
+            "mtime_ns": 1788050275570000000
+          },
+          {
+            "name": "DSC00012.ARW",
+            "bytes": 38338560,
+            "mtime_ns": 1788050277270000000
+          },
+          {
+            "name": "DSC00013.ARW",
+            "bytes": 38363136,
+            "mtime_ns": 1788050278960000000
+          },
+          {
+            "name": "DSC00014.ARW",
+            "bytes": 38387712,
+            "mtime_ns": 1788050280650000000
+          },
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 38416384,
+            "mtime_ns": 1788050282360000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 38436864,
+            "mtime_ns": 1788050284070000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 38465536,
+            "mtime_ns": 1788050285780000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 38486016,
+            "mtime_ns": 1788050287480000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 38510592,
+            "mtime_ns": 1788050289180000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 38543360,
+            "mtime_ns": 1788050290890000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 38572032,
+            "mtime_ns": 1788050292600000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 38600704,
+            "mtime_ns": 1788050294280000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 38629376,
+            "mtime_ns": 1788050295960000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 38658048,
+            "mtime_ns": 1788050297660000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 38686720,
+            "mtime_ns": 1788050299360000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 38719488,
+            "mtime_ns": 1788050301070000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 38756352,
+            "mtime_ns": 1788050302760000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 38789120,
+            "mtime_ns": 1788050304460000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 38821888,
+            "mtime_ns": 1788050306170000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 38862848,
+            "mtime_ns": 1788050307840000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 38899712,
+            "mtime_ns": 1788050309530000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 38932480,
+            "mtime_ns": 1788050311240000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 38977536,
+            "mtime_ns": 1788050312950000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 39014400,
+            "mtime_ns": 1788050314660000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 39055360,
+            "mtime_ns": 1788050316380000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 39096320,
+            "mtime_ns": 1788050318080000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 39112704,
+            "mtime_ns": 1788050319790000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 39129088,
+            "mtime_ns": 1788050321490000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 39186432,
+            "mtime_ns": 1788050323190000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 39292928,
+            "mtime_ns": 1788050324890000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 39358464,
+            "mtime_ns": 1788050326590000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 39415808,
+            "mtime_ns": 1788050328290000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 39444480,
+            "mtime_ns": 1788050329990000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 39567360,
+            "mtime_ns": 1788050331690000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 39641088,
+            "mtime_ns": 1788050333390000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 39714816,
+            "mtime_ns": 1788050335090000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 39788544,
+            "mtime_ns": 1788050336780000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 39878656,
+            "mtime_ns": 1788050338480000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 39968768,
+            "mtime_ns": 1788050340200000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 40079360,
+            "mtime_ns": 1788050341910000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 40181760,
+            "mtime_ns": 1788050343620000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 40288256,
+            "mtime_ns": 1788050345320000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 40407040,
+            "mtime_ns": 1788050347040000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 40443904,
+            "mtime_ns": 1788050348760000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 40349696,
+            "mtime_ns": 1788050350460000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 40366080,
+            "mtime_ns": 1788050352190000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 40857600,
+            "mtime_ns": 1788050353880000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 40964096,
+            "mtime_ns": 1788050355570000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 41066496,
+            "mtime_ns": 1788050357260000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 41189376,
+            "mtime_ns": 1788050358960000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 41287680,
+            "mtime_ns": 1788050360650000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 41410560,
+            "mtime_ns": 1788050362360000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 41443328,
+            "mtime_ns": 1788050364060000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 41517056,
+            "mtime_ns": 1788050365760000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 41652224,
+            "mtime_ns": 1788050367400000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 41783296,
+            "mtime_ns": 1788050369110000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 41869312,
+            "mtime_ns": 1788050370810000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 41938944,
+            "mtime_ns": 1788050372500000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 42020864,
+            "mtime_ns": 1788050374210000000
+          },
+          {
+            "name": "DSC00070.ARW",
+            "bytes": 42090496,
+            "mtime_ns": 1788050375920000000
+          },
+          {
+            "name": "DSC00071.ARW",
+            "bytes": 42131456,
+            "mtime_ns": 1788050377610000000
+          },
+          {
+            "name": "DSC00072.ARW",
+            "bytes": 42221568,
+            "mtime_ns": 1788050379310000000
+          },
+          {
+            "name": "DSC00073.ARW",
+            "bytes": 42283008,
+            "mtime_ns": 1788050381010000000
+          },
+          {
+            "name": "DSC00074.ARW",
+            "bytes": 42348544,
+            "mtime_ns": 1788050382710000000
+          },
+          {
+            "name": "DSC00075.ARW",
+            "bytes": 42373120,
+            "mtime_ns": 1788050384400000000
+          },
+          {
+            "name": "DSC00076.ARW",
+            "bytes": 42393600,
+            "mtime_ns": 1788050386090000000
+          },
+          {
+            "name": "DSC00077.ARW",
+            "bytes": 42422272,
+            "mtime_ns": 1788050387800000000
+          },
+          {
+            "name": "DSC00078.ARW",
+            "bytes": 42381312,
+            "mtime_ns": 1788050389530000000
+          },
+          {
+            "name": "DSC00079.ARW",
+            "bytes": 42336256,
+            "mtime_ns": 1788050391230000000
+          },
+          {
+            "name": "DSC00080.ARW",
+            "bytes": 42311680,
+            "mtime_ns": 1788050392940000000
+          },
+          {
+            "name": "DSC00081.ARW",
+            "bytes": 42262528,
+            "mtime_ns": 1788050394650000000
+          },
+          {
+            "name": "DSC00082.ARW",
+            "bytes": 42213376,
+            "mtime_ns": 1788050396370000000
+          },
+          {
+            "name": "DSC00083.ARW",
+            "bytes": 42156032,
+            "mtime_ns": 1788050398070000000
+          },
+          {
+            "name": "DSC00084.ARW",
+            "bytes": 42143744,
+            "mtime_ns": 1788050399770000000
+          },
+          {
+            "name": "DSC00085.ARW",
+            "bytes": 42119168,
+            "mtime_ns": 1788050401460000000
+          },
+          {
+            "name": "DSC00086.ARW",
+            "bytes": 42123264,
+            "mtime_ns": 1788050403140000000
+          },
+          {
+            "name": "DSC00087.ARW",
+            "bytes": 42123264,
+            "mtime_ns": 1788050404830000000
+          },
+          {
+            "name": "DSC00088.ARW",
+            "bytes": 42119168,
+            "mtime_ns": 1788050406530000000
+          },
+          {
+            "name": "DSC00089.ARW",
+            "bytes": 42143744,
+            "mtime_ns": 1788050408220000000
+          },
+          {
+            "name": "DSC00090.ARW",
+            "bytes": 42156032,
+            "mtime_ns": 1788050409980000000
+          },
+          {
+            "name": "DSC00091.ARW",
+            "bytes": 42172416,
+            "mtime_ns": 1788050411680000000
+          },
+          {
+            "name": "DSC00092.ARW",
+            "bytes": 42192896,
+            "mtime_ns": 1788050413380000000
+          },
+          {
+            "name": "DSC00093.ARW",
+            "bytes": 42192896,
+            "mtime_ns": 1788050415080000000
+          },
+          {
+            "name": "DSC00094.ARW",
+            "bytes": 42221568,
+            "mtime_ns": 1788050416780000000
+          },
+          {
+            "name": "DSC00095.ARW",
+            "bytes": 42237952,
+            "mtime_ns": 1788050418490000000
+          },
+          {
+            "name": "DSC00096.ARW",
+            "bytes": 42237952,
+            "mtime_ns": 1788050420180000000
+          },
+          {
+            "name": "DSC00097.ARW",
+            "bytes": 42237952,
+            "mtime_ns": 1788050421820000000
+          },
+          {
+            "name": "DSC00098.ARW",
+            "bytes": 42258432,
+            "mtime_ns": 1788050423540000000
+          },
+          {
+            "name": "DSC00099.ARW",
+            "bytes": 42266624,
+            "mtime_ns": 1788050425240000000
+          },
+          {
+            "name": "DSC00100.ARW",
+            "bytes": 42283008,
+            "mtime_ns": 1788050426930000000
+          },
+          {
+            "name": "DSC00101.ARW",
+            "bytes": 42283008,
+            "mtime_ns": 1788050428630000000
+          },
+          {
+            "name": "DSC00102.ARW",
+            "bytes": 42303488,
+            "mtime_ns": 1788050430320000000
+          },
+          {
+            "name": "DSC00103.ARW",
+            "bytes": 42307584,
+            "mtime_ns": 1788050432030000000
+          },
+          {
+            "name": "DSC00104.ARW",
+            "bytes": 42287104,
+            "mtime_ns": 1788050433740000000
+          },
+          {
+            "name": "DSC00105.ARW",
+            "bytes": 42291200,
+            "mtime_ns": 1788050435440000000
+          },
+          {
+            "name": "DSC00106.ARW",
+            "bytes": 42266624,
+            "mtime_ns": 1788050437140000000
+          },
+          {
+            "name": "DSC00107.ARW",
+            "bytes": 42225664,
+            "mtime_ns": 1788050438820000000
+          },
+          {
+            "name": "DSC00108.ARW",
+            "bytes": 42188800,
+            "mtime_ns": 1788050440500000000
+          },
+          {
+            "name": "DSC00109.ARW",
+            "bytes": 42156032,
+            "mtime_ns": 1788050442170000000
+          },
+          {
+            "name": "DSC00110.ARW",
+            "bytes": 42029056,
+            "mtime_ns": 1788050443890000000
+          },
+          {
+            "name": "DSC00111.ARW",
+            "bytes": 41988096,
+            "mtime_ns": 1788050445590000000
+          },
+          {
+            "name": "DSC00112.ARW",
+            "bytes": 41869312,
+            "mtime_ns": 1788050447280000000
+          },
+          {
+            "name": "DSC00113.ARW",
+            "bytes": 41730048,
+            "mtime_ns": 1788050448970000000
+          },
+          {
+            "name": "DSC00114.ARW",
+            "bytes": 41619456,
+            "mtime_ns": 1788050450650000000
+          },
+          {
+            "name": "DSC00115.ARW",
+            "bytes": 41476096,
+            "mtime_ns": 1788050452360000000
+          },
+          {
+            "name": "DSC00116.ARW",
+            "bytes": 41361408,
+            "mtime_ns": 1788050454050000000
+          },
+          {
+            "name": "DSC00117.ARW",
+            "bytes": 41193472,
+            "mtime_ns": 1788050455750000000
+          },
+          {
+            "name": "DSC00118.ARW",
+            "bytes": 41029632,
+            "mtime_ns": 1788050457450000000
+          },
+          {
+            "name": "DSC00119.ARW",
+            "bytes": 40849408,
+            "mtime_ns": 1788050459140000000
+          },
+          {
+            "name": "DSC00120.ARW",
+            "bytes": 40681472,
+            "mtime_ns": 1788050460830000000
+          },
+          {
+            "name": "DSC00121.ARW",
+            "bytes": 40534016,
+            "mtime_ns": 1788050462540000000
+          },
+          {
+            "name": "DSC00122.ARW",
+            "bytes": 40386560,
+            "mtime_ns": 1788050464240000000
+          },
+          {
+            "name": "DSC00123.ARW",
+            "bytes": 40284160,
+            "mtime_ns": 1788050465970000000
+          },
+          {
+            "name": "DSC00124.ARW",
+            "bytes": 40198144,
+            "mtime_ns": 1788050467680000000
+          },
+          {
+            "name": "DSC00125.ARW",
+            "bytes": 40108032,
+            "mtime_ns": 1788050469380000000
+          },
+          {
+            "name": "DSC00126.ARW",
+            "bytes": 40038400,
+            "mtime_ns": 1788050471090000000
+          },
+          {
+            "name": "DSC00127.ARW",
+            "bytes": 39968768,
+            "mtime_ns": 1788050472780000000
+          },
+          {
+            "name": "DSC00128.ARW",
+            "bytes": 39907328,
+            "mtime_ns": 1788050474490000000
+          },
+          {
+            "name": "DSC00129.ARW",
+            "bytes": 39849984,
+            "mtime_ns": 1788050476190000000
+          },
+          {
+            "name": "DSC00130.ARW",
+            "bytes": 39796736,
+            "mtime_ns": 1788050477900000000
+          },
+          {
+            "name": "DSC00131.ARW",
+            "bytes": 39743488,
+            "mtime_ns": 1788050479640000000
+          },
+          {
+            "name": "DSC00132.ARW",
+            "bytes": 39690240,
+            "mtime_ns": 1788050481340000000
+          },
+          {
+            "name": "DSC00133.ARW",
+            "bytes": 39641088,
+            "mtime_ns": 1788050483050000000
+          },
+          {
+            "name": "DSC00134.ARW",
+            "bytes": 39579648,
+            "mtime_ns": 1788050484730000000
+          },
+          {
+            "name": "DSC00135.ARW",
+            "bytes": 39546880,
+            "mtime_ns": 1788050486460000000
+          },
+          {
+            "name": "DSC00136.ARW",
+            "bytes": 39501824,
+            "mtime_ns": 1788050488170000000
+          },
+          {
+            "name": "DSC00137.ARW",
+            "bytes": 39444480,
+            "mtime_ns": 1788050489890000000
+          },
+          {
+            "name": "DSC00138.ARW",
+            "bytes": 39415808,
+            "mtime_ns": 1788050491600000000
+          },
+          {
+            "name": "DSC00139.ARW",
+            "bytes": 39383040,
+            "mtime_ns": 1788050493310000000
+          },
+          {
+            "name": "DSC00140.ARW",
+            "bytes": 39346176,
+            "mtime_ns": 1788050495000000000
+          },
+          {
+            "name": "DSC00141.ARW",
+            "bytes": 39309312,
+            "mtime_ns": 1788050496690000000
+          },
+          {
+            "name": "DSC00142.ARW",
+            "bytes": 39272448,
+            "mtime_ns": 1788050498400000000
+          },
+          {
+            "name": "DSC00143.ARW",
+            "bytes": 39231488,
+            "mtime_ns": 1788050500140000000
+          },
+          {
+            "name": "DSC00144.ARW",
+            "bytes": 39198720,
+            "mtime_ns": 1788050501850000000
+          },
+          {
+            "name": "DSC00145.ARW",
+            "bytes": 39161856,
+            "mtime_ns": 1788050503550000000
+          },
+          {
+            "name": "DSC00146.ARW",
+            "bytes": 39129088,
+            "mtime_ns": 1788050505260000000
+          },
+          {
+            "name": "DSC00147.ARW",
+            "bytes": 39092224,
+            "mtime_ns": 1788050506950000000
+          },
+          {
+            "name": "DSC00148.ARW",
+            "bytes": 39059456,
+            "mtime_ns": 1788050508640000000
+          },
+          {
+            "name": "DSC00149.ARW",
+            "bytes": 39026688,
+            "mtime_ns": 1788050510360000000
+          },
+          {
+            "name": "DSC00150.ARW",
+            "bytes": 38711296,
+            "mtime_ns": 1788050512050000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00001.ARW": "30cd8fedda30c7b5ee2d87e8ce21aa2d2321fd94c5f252f0b0768e8bcaddf4cc",
+          "DSC00076.ARW": "24f083989bc41f4ba53c350f1a8e9f2e9e6c1ff682c7657803f08b7025572f70",
+          "DSC00150.ARW": "bca5e4a0c1a2f45fd969e2bf5f52b63897789e337f1881c1471987a4081db489"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "grid1-sw1",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+        "role": "grid",
+        "setup": "grid1",
+        "step_width": 1,
+        "aperture": 5.6,
+        "expected_frames": 91
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\grid1-sw1.npz",
+      "cache_bytes": 5331857,
+      "cache_sha256": "13169e66633dc02fccea5bc6324569efdffbae8570f2e702dfa02edad3f8aa21",
+      "elapsed_seconds": 13.642630800022744,
+      "inventory": {
+        "name": "grid1-sw1",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+        "role": "grid",
+        "setup": "grid1",
+        "step_width": 1,
+        "aperture": 5.6,
+        "expected_frames": 91,
+        "files": [
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 42352640,
+            "mtime_ns": 1788321831930000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 42565632,
+            "mtime_ns": 1788321833400000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 42782720,
+            "mtime_ns": 1788321834830000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 42983424,
+            "mtime_ns": 1788321836280000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 43196416,
+            "mtime_ns": 1788321837710000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 43405312,
+            "mtime_ns": 1788321839170000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 43614208,
+            "mtime_ns": 1788321840610000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 43819008,
+            "mtime_ns": 1788321842040000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 44044288,
+            "mtime_ns": 1788321843490000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 44265472,
+            "mtime_ns": 1788321844950000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 44494848,
+            "mtime_ns": 1788321846410000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 44711936,
+            "mtime_ns": 1788321847870000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 44933120,
+            "mtime_ns": 1788321849320000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 45154304,
+            "mtime_ns": 1788321850770000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 45359104,
+            "mtime_ns": 1788321852260000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 45572096,
+            "mtime_ns": 1788321853730000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 45776896,
+            "mtime_ns": 1788321855190000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 45973504,
+            "mtime_ns": 1788321856660000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 46161920,
+            "mtime_ns": 1788321858090000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 46366720,
+            "mtime_ns": 1788321859550000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 46551040,
+            "mtime_ns": 1788321861010000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 46743552,
+            "mtime_ns": 1788321862470000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 46927872,
+            "mtime_ns": 1788321863910000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 47099904,
+            "mtime_ns": 1788321865370000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 47288320,
+            "mtime_ns": 1788321866840000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 47448064,
+            "mtime_ns": 1788321868300000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 47603712,
+            "mtime_ns": 1788321869740000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 47755264,
+            "mtime_ns": 1788321871200000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 47890432,
+            "mtime_ns": 1788321872660000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 48029696,
+            "mtime_ns": 1788321874120000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 48164864,
+            "mtime_ns": 1788321875570000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 48283648,
+            "mtime_ns": 1788321877020000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 48402432,
+            "mtime_ns": 1788321878480000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 48398336,
+            "mtime_ns": 1788321879940000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 48508928,
+            "mtime_ns": 1788321881390000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 48611328,
+            "mtime_ns": 1788321882880000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 48693248,
+            "mtime_ns": 1788321884350000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 48779264,
+            "mtime_ns": 1788321885820000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 48848896,
+            "mtime_ns": 1788321887290000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 48910336,
+            "mtime_ns": 1788321888760000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 48963584,
+            "mtime_ns": 1788321890210000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 49016832,
+            "mtime_ns": 1788321891630000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 49061888,
+            "mtime_ns": 1788321893100000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 49094656,
+            "mtime_ns": 1788321894560000000
+          },
+          {
+            "name": "DSC00070.ARW",
+            "bytes": 49115136,
+            "mtime_ns": 1788321896020000000
+          },
+          {
+            "name": "DSC00071.ARW",
+            "bytes": 49135616,
+            "mtime_ns": 1788321897490000000
+          },
+          {
+            "name": "DSC00072.ARW",
+            "bytes": 49147904,
+            "mtime_ns": 1788321898960000000
+          },
+          {
+            "name": "DSC00073.ARW",
+            "bytes": 49135616,
+            "mtime_ns": 1788321900410000000
+          },
+          {
+            "name": "DSC00074.ARW",
+            "bytes": 49127424,
+            "mtime_ns": 1788321901870000000
+          },
+          {
+            "name": "DSC00075.ARW",
+            "bytes": 49111040,
+            "mtime_ns": 1788321903340000000
+          },
+          {
+            "name": "DSC00076.ARW",
+            "bytes": 49086464,
+            "mtime_ns": 1788321904790000000
+          },
+          {
+            "name": "DSC00077.ARW",
+            "bytes": 49057792,
+            "mtime_ns": 1788321906260000000
+          },
+          {
+            "name": "DSC00078.ARW",
+            "bytes": 48996352,
+            "mtime_ns": 1788321907730000000
+          },
+          {
+            "name": "DSC00079.ARW",
+            "bytes": 48955392,
+            "mtime_ns": 1788321909200000000
+          },
+          {
+            "name": "DSC00080.ARW",
+            "bytes": 48898048,
+            "mtime_ns": 1788321910660000000
+          },
+          {
+            "name": "DSC00081.ARW",
+            "bytes": 48828416,
+            "mtime_ns": 1788321912130000000
+          },
+          {
+            "name": "DSC00082.ARW",
+            "bytes": 48865280,
+            "mtime_ns": 1788321913610000000
+          },
+          {
+            "name": "DSC00083.ARW",
+            "bytes": 48779264,
+            "mtime_ns": 1788321915080000000
+          },
+          {
+            "name": "DSC00084.ARW",
+            "bytes": 48680960,
+            "mtime_ns": 1788321916550000000
+          },
+          {
+            "name": "DSC00085.ARW",
+            "bytes": 48566272,
+            "mtime_ns": 1788321917990000000
+          },
+          {
+            "name": "DSC00086.ARW",
+            "bytes": 48459776,
+            "mtime_ns": 1788321919460000000
+          },
+          {
+            "name": "DSC00087.ARW",
+            "bytes": 48291840,
+            "mtime_ns": 1788321920900000000
+          },
+          {
+            "name": "DSC00088.ARW",
+            "bytes": 48156672,
+            "mtime_ns": 1788321922320000000
+          },
+          {
+            "name": "DSC00089.ARW",
+            "bytes": 48021504,
+            "mtime_ns": 1788321923780000000
+          },
+          {
+            "name": "DSC00090.ARW",
+            "bytes": 47882240,
+            "mtime_ns": 1788321925250000000
+          },
+          {
+            "name": "DSC00091.ARW",
+            "bytes": 47718400,
+            "mtime_ns": 1788321926700000000
+          },
+          {
+            "name": "DSC00092.ARW",
+            "bytes": 47554560,
+            "mtime_ns": 1788321928140000000
+          },
+          {
+            "name": "DSC00093.ARW",
+            "bytes": 47386624,
+            "mtime_ns": 1788321929600000000
+          },
+          {
+            "name": "DSC00094.ARW",
+            "bytes": 47202304,
+            "mtime_ns": 1788321931080000000
+          },
+          {
+            "name": "DSC00095.ARW",
+            "bytes": 46989312,
+            "mtime_ns": 1788321932520000000
+          },
+          {
+            "name": "DSC00096.ARW",
+            "bytes": 46796800,
+            "mtime_ns": 1788321933960000000
+          },
+          {
+            "name": "DSC00097.ARW",
+            "bytes": 46600192,
+            "mtime_ns": 1788321935400000000
+          },
+          {
+            "name": "DSC00098.ARW",
+            "bytes": 46395392,
+            "mtime_ns": 1788321936870000000
+          },
+          {
+            "name": "DSC00099.ARW",
+            "bytes": 46186496,
+            "mtime_ns": 1788321938330000000
+          },
+          {
+            "name": "DSC00100.ARW",
+            "bytes": 45969408,
+            "mtime_ns": 1788321939780000000
+          },
+          {
+            "name": "DSC00101.ARW",
+            "bytes": 45756416,
+            "mtime_ns": 1788321941230000000
+          },
+          {
+            "name": "DSC00102.ARW",
+            "bytes": 45522944,
+            "mtime_ns": 1788321942680000000
+          },
+          {
+            "name": "DSC00103.ARW",
+            "bytes": 45297664,
+            "mtime_ns": 1788321944140000000
+          },
+          {
+            "name": "DSC00104.ARW",
+            "bytes": 45072384,
+            "mtime_ns": 1788321945620000000
+          },
+          {
+            "name": "DSC00105.ARW",
+            "bytes": 44838912,
+            "mtime_ns": 1788321947070000000
+          },
+          {
+            "name": "DSC00106.ARW",
+            "bytes": 44613632,
+            "mtime_ns": 1788321948530000000
+          },
+          {
+            "name": "DSC00107.ARW",
+            "bytes": 44384256,
+            "mtime_ns": 1788321949990000000
+          },
+          {
+            "name": "DSC00108.ARW",
+            "bytes": 44158976,
+            "mtime_ns": 1788321951450000000
+          },
+          {
+            "name": "DSC00109.ARW",
+            "bytes": 43941888,
+            "mtime_ns": 1788321952900000000
+          },
+          {
+            "name": "DSC00110.ARW",
+            "bytes": 43712512,
+            "mtime_ns": 1788321954350000000
+          },
+          {
+            "name": "DSC00111.ARW",
+            "bytes": 43503616,
+            "mtime_ns": 1788321955800000000
+          },
+          {
+            "name": "DSC00112.ARW",
+            "bytes": 43286528,
+            "mtime_ns": 1788321957270000000
+          },
+          {
+            "name": "DSC00113.ARW",
+            "bytes": 43077632,
+            "mtime_ns": 1788321958710000000
+          },
+          {
+            "name": "DSC00114.ARW",
+            "bytes": 42876928,
+            "mtime_ns": 1788321960150000000
+          },
+          {
+            "name": "DSC00115.ARW",
+            "bytes": 42659840,
+            "mtime_ns": 1788321961610000000
+          },
+          {
+            "name": "DSC00116.ARW",
+            "bytes": 42455040,
+            "mtime_ns": 1788321963040000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00026.ARW": "38ac5ab6d7dda76e4edab52646dfc7e244f08782407726b8c784313d10259a60",
+          "DSC00071.ARW": "7120148b5ecd1b005599786ed073ac1b14649677615eaea668adcb3e7e457508",
+          "DSC00116.ARW": "31c5e136cca150defc2bbc2b5b6dd8b84e4365e727ba259d8dc2b8358f3fe484"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "grid1-sw10",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+        "role": "grid",
+        "setup": "grid1",
+        "step_width": 10,
+        "aperture": 5.6,
+        "expected_frames": 23
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\grid1-sw10.npz",
+      "cache_bytes": 1353559,
+      "cache_sha256": "16020795e4e23e97a463ae7a9d894528810268865d54cabcd3d8d24782db60bc",
+      "elapsed_seconds": 4.065978699945845,
+      "inventory": {
+        "name": "grid1-sw10",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+        "role": "grid",
+        "setup": "grid1",
+        "step_width": 10,
+        "aperture": 5.6,
+        "expected_frames": 23,
+        "files": [
+          {
+            "name": "DSC00007.ARW",
+            "bytes": 42348544,
+            "mtime_ns": 1788322038210000000
+          },
+          {
+            "name": "DSC00008.ARW",
+            "bytes": 43200512,
+            "mtime_ns": 1788322039660000000
+          },
+          {
+            "name": "DSC00009.ARW",
+            "bytes": 44044288,
+            "mtime_ns": 1788322041100000000
+          },
+          {
+            "name": "DSC00010.ARW",
+            "bytes": 44941312,
+            "mtime_ns": 1788322042540000000
+          },
+          {
+            "name": "DSC00011.ARW",
+            "bytes": 45764608,
+            "mtime_ns": 1788322044000000000
+          },
+          {
+            "name": "DSC00012.ARW",
+            "bytes": 46538752,
+            "mtime_ns": 1788322045470000000
+          },
+          {
+            "name": "DSC00013.ARW",
+            "bytes": 47263744,
+            "mtime_ns": 1788322046890000000
+          },
+          {
+            "name": "DSC00014.ARW",
+            "bytes": 47894528,
+            "mtime_ns": 1788322048350000000
+          },
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 48402432,
+            "mtime_ns": 1788322049810000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 48697344,
+            "mtime_ns": 1788322051270000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 48963584,
+            "mtime_ns": 1788322052700000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 49119232,
+            "mtime_ns": 1788322054090000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 49131520,
+            "mtime_ns": 1788322055530000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 49025024,
+            "mtime_ns": 1788322057010000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 48861184,
+            "mtime_ns": 1788322058460000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 48472064,
+            "mtime_ns": 1788322059920000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 47882240,
+            "mtime_ns": 1788322061340000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 47210496,
+            "mtime_ns": 1788322062790000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 46403584,
+            "mtime_ns": 1788322064240000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 45547520,
+            "mtime_ns": 1788322065720000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 44625920,
+            "mtime_ns": 1788322067150000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 43732992,
+            "mtime_ns": 1788322068600000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 42864640,
+            "mtime_ns": 1788322070060000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00007.ARW": "999cf5b7b2e762bb5fb2afc6f97a93821df774a23cbcc14b1ba3c8ff52a9602a",
+          "DSC00018.ARW": "4a7872a9cf4220824ac373a4d7bad7d97fc6ebc4a6efbede2aafb3a9d8c1ba38",
+          "DSC00029.ARW": "2b03ae9c5a809d1eafcaeb6920f4a1af06258c49142f161703b94f8e9d71af9d"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "grid1-sw4",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+        "role": "grid",
+        "setup": "grid1",
+        "step_width": 4,
+        "aperture": 5.6,
+        "expected_frames": 55
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\grid1-sw4.npz",
+      "cache_bytes": 3225811,
+      "cache_sha256": "85a5db5b799f434d8cdec102e59e3f247a2fafa5bd2d620639615c72032497ba",
+      "elapsed_seconds": 9.160659500048496,
+      "inventory": {
+        "name": "grid1-sw4",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+        "role": "grid",
+        "setup": "grid1",
+        "step_width": 4,
+        "aperture": 5.6,
+        "expected_frames": 55,
+        "files": [
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 40579072,
+            "mtime_ns": 1788321462540000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 40898560,
+            "mtime_ns": 1788321463990000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 41238528,
+            "mtime_ns": 1788321465440000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 41664512,
+            "mtime_ns": 1788321466890000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 42057728,
+            "mtime_ns": 1788321468350000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 42459136,
+            "mtime_ns": 1788321469800000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 42897408,
+            "mtime_ns": 1788321471260000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 43319296,
+            "mtime_ns": 1788321472720000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 43737088,
+            "mtime_ns": 1788321474170000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 44171264,
+            "mtime_ns": 1788321475630000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 44597248,
+            "mtime_ns": 1788321477100000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 45019136,
+            "mtime_ns": 1788321478540000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 45420544,
+            "mtime_ns": 1788321480000000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 45793280,
+            "mtime_ns": 1788321481460000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 46166016,
+            "mtime_ns": 1788321482900000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 46538752,
+            "mtime_ns": 1788321484360000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 46911488,
+            "mtime_ns": 1788321485810000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 47263744,
+            "mtime_ns": 1788321487270000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 47587328,
+            "mtime_ns": 1788321488750000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 47869952,
+            "mtime_ns": 1788321490210000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 48128000,
+            "mtime_ns": 1788321491620000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 48369664,
+            "mtime_ns": 1788321493080000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 48472064,
+            "mtime_ns": 1788321494540000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 48660480,
+            "mtime_ns": 1788321496010000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 48812032,
+            "mtime_ns": 1788321497480000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 48930816,
+            "mtime_ns": 1788321498950000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 49016832,
+            "mtime_ns": 1788321500360000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 49078272,
+            "mtime_ns": 1788321501830000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 49094656,
+            "mtime_ns": 1788321503300000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 49082368,
+            "mtime_ns": 1788321504770000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 49049600,
+            "mtime_ns": 1788321506240000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 48963584,
+            "mtime_ns": 1788321507690000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 48840704,
+            "mtime_ns": 1788321509150000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 48816128,
+            "mtime_ns": 1788321510620000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 48648192,
+            "mtime_ns": 1788321512070000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 48439296,
+            "mtime_ns": 1788321513530000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 48152576,
+            "mtime_ns": 1788321514960000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 47878144,
+            "mtime_ns": 1788321516440000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 47550464,
+            "mtime_ns": 1788321517880000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 47202304,
+            "mtime_ns": 1788321519330000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 46817280,
+            "mtime_ns": 1788321520790000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 46395392,
+            "mtime_ns": 1788321522260000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 45985792,
+            "mtime_ns": 1788321523700000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 45539328,
+            "mtime_ns": 1788321525150000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 45080576,
+            "mtime_ns": 1788321526610000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 44621824,
+            "mtime_ns": 1788321528080000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 44146688,
+            "mtime_ns": 1788321529540000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 43683840,
+            "mtime_ns": 1788321530990000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 43241472,
+            "mtime_ns": 1788321532450000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 42803200,
+            "mtime_ns": 1788321533910000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 42381312,
+            "mtime_ns": 1788321535360000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 41979904,
+            "mtime_ns": 1788321536810000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 41615360,
+            "mtime_ns": 1788321538270000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 41287680,
+            "mtime_ns": 1788321539710000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 40984576,
+            "mtime_ns": 1788321541160000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00015.ARW": "557dd9766d19937fa5495469887c2330789443417bd9631ca06214d15ac1effe",
+          "DSC00042.ARW": "17eb6a8409917a360bbf77a5ecf257051cd153850f06dc07e6b9a78b300ecf81",
+          "DSC00069.ARW": "fd631e2a85bd7ab49fb3c9bde40da7ae91e4edfad03a9c83dcf101bf1c818fcb"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "grid2-sw10",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+        "role": "grid",
+        "setup": "grid2",
+        "step_width": 10,
+        "aperture": 5.6,
+        "expected_frames": 27
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\grid2-sw10.npz",
+      "cache_bytes": 1587918,
+      "cache_sha256": "0944b84f2837858c0ce304a819e12b946ded2264e0562db135f36d1c8d9ecf7f",
+      "elapsed_seconds": 4.563095399993472,
+      "inventory": {
+        "name": "grid2-sw10",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+        "role": "grid",
+        "setup": "grid2",
+        "step_width": 10,
+        "aperture": 5.6,
+        "expected_frames": 27,
+        "files": [
+          {
+            "name": "DSC00008.ARW",
+            "bytes": 41046016,
+            "mtime_ns": 1788322108400000000
+          },
+          {
+            "name": "DSC00009.ARW",
+            "bytes": 41852928,
+            "mtime_ns": 1788322109850000000
+          },
+          {
+            "name": "DSC00010.ARW",
+            "bytes": 42688512,
+            "mtime_ns": 1788322111300000000
+          },
+          {
+            "name": "DSC00011.ARW",
+            "bytes": 43536384,
+            "mtime_ns": 1788322112730000000
+          },
+          {
+            "name": "DSC00012.ARW",
+            "bytes": 44408832,
+            "mtime_ns": 1788322114180000000
+          },
+          {
+            "name": "DSC00013.ARW",
+            "bytes": 45285376,
+            "mtime_ns": 1788322115640000000
+          },
+          {
+            "name": "DSC00014.ARW",
+            "bytes": 46075904,
+            "mtime_ns": 1788322117100000000
+          },
+          {
+            "name": "DSC00015.ARW",
+            "bytes": 46829568,
+            "mtime_ns": 1788322118550000000
+          },
+          {
+            "name": "DSC00016.ARW",
+            "bytes": 47521792,
+            "mtime_ns": 1788322119990000000
+          },
+          {
+            "name": "DSC00017.ARW",
+            "bytes": 48095232,
+            "mtime_ns": 1788322121430000000
+          },
+          {
+            "name": "DSC00018.ARW",
+            "bytes": 48451584,
+            "mtime_ns": 1788322122890000000
+          },
+          {
+            "name": "DSC00019.ARW",
+            "bytes": 48807936,
+            "mtime_ns": 1788322124360000000
+          },
+          {
+            "name": "DSC00020.ARW",
+            "bytes": 49037312,
+            "mtime_ns": 1788322125820000000
+          },
+          {
+            "name": "DSC00021.ARW",
+            "bytes": 49131520,
+            "mtime_ns": 1788322127290000000
+          },
+          {
+            "name": "DSC00022.ARW",
+            "bytes": 49106944,
+            "mtime_ns": 1788322128760000000
+          },
+          {
+            "name": "DSC00023.ARW",
+            "bytes": 48947200,
+            "mtime_ns": 1788322130220000000
+          },
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 48738304,
+            "mtime_ns": 1788322131670000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 48250880,
+            "mtime_ns": 1788322133150000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 47652864,
+            "mtime_ns": 1788322134610000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 46919680,
+            "mtime_ns": 1788322136080000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 46100480,
+            "mtime_ns": 1788322137530000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 45244416,
+            "mtime_ns": 1788322138990000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 44343296,
+            "mtime_ns": 1788322140450000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 43462656,
+            "mtime_ns": 1788322141910000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 42582016,
+            "mtime_ns": 1788322143330000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 41779200,
+            "mtime_ns": 1788322144790000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 41086976,
+            "mtime_ns": 1788322146260000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00008.ARW": "7a33b289e2cbff61cd9f5889f2d85d2911aba8dae0fa70547204d80e033151a5",
+          "DSC00021.ARW": "60c93b60ea709e2c477809539b8d004999103935c13ad43f75a93337e65c937f",
+          "DSC00034.ARW": "611bedecc64bcd1f01172277310b1f9882947c11b2aed86719ec3d538cb77766"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "grid2-sw4",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+        "role": "grid",
+        "setup": "grid2",
+        "step_width": 4,
+        "aperture": 5.6,
+        "expected_frames": 46
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\grid2-sw4.npz",
+      "cache_bytes": 2699574,
+      "cache_sha256": "5c3640f2d45162e670f305a770f2669c5c74ce0d16c79a02ba7f02617b648a94",
+      "elapsed_seconds": 7.561844299954828,
+      "inventory": {
+        "name": "grid2-sw4",
+        "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+        "role": "grid",
+        "setup": "grid2",
+        "step_width": 4,
+        "aperture": 5.6,
+        "expected_frames": 46,
+        "files": [
+          {
+            "name": "DSC00024.ARW",
+            "bytes": 41984000,
+            "mtime_ns": 1788321634500000000
+          },
+          {
+            "name": "DSC00025.ARW",
+            "bytes": 42381312,
+            "mtime_ns": 1788321635950000000
+          },
+          {
+            "name": "DSC00026.ARW",
+            "bytes": 42799104,
+            "mtime_ns": 1788321637410000000
+          },
+          {
+            "name": "DSC00027.ARW",
+            "bytes": 43220992,
+            "mtime_ns": 1788321638860000000
+          },
+          {
+            "name": "DSC00028.ARW",
+            "bytes": 43630592,
+            "mtime_ns": 1788321640320000000
+          },
+          {
+            "name": "DSC00029.ARW",
+            "bytes": 44064768,
+            "mtime_ns": 1788321641760000000
+          },
+          {
+            "name": "DSC00030.ARW",
+            "bytes": 44490752,
+            "mtime_ns": 1788321643200000000
+          },
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 44929024,
+            "mtime_ns": 1788321644660000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 45346816,
+            "mtime_ns": 1788321646100000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 45744128,
+            "mtime_ns": 1788321647560000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 46133248,
+            "mtime_ns": 1788321649020000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 46522368,
+            "mtime_ns": 1788321650480000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 46899200,
+            "mtime_ns": 1788321651930000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 47243264,
+            "mtime_ns": 1788321653390000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 47587328,
+            "mtime_ns": 1788321654850000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 47878144,
+            "mtime_ns": 1788321656310000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 48140288,
+            "mtime_ns": 1788321657760000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 48386048,
+            "mtime_ns": 1788321659200000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 48492544,
+            "mtime_ns": 1788321660660000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 48672768,
+            "mtime_ns": 1788321662120000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 48832512,
+            "mtime_ns": 1788321663570000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 48955392,
+            "mtime_ns": 1788321665010000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 49049600,
+            "mtime_ns": 1788321666460000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 49106944,
+            "mtime_ns": 1788321667920000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 49127424,
+            "mtime_ns": 1788321669390000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 49115136,
+            "mtime_ns": 1788321670870000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 49078272,
+            "mtime_ns": 1788321672330000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 49004544,
+            "mtime_ns": 1788321673780000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 48885760,
+            "mtime_ns": 1788321675220000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 48828416,
+            "mtime_ns": 1788321676560000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 48668672,
+            "mtime_ns": 1788321678010000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 48455680,
+            "mtime_ns": 1788321679450000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 48173056,
+            "mtime_ns": 1788321680920000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 47886336,
+            "mtime_ns": 1788321682380000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 47570944,
+            "mtime_ns": 1788321683830000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 47214592,
+            "mtime_ns": 1788321685310000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 46833664,
+            "mtime_ns": 1788321686760000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 46305280,
+            "mtime_ns": 1788321688210000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 45961216,
+            "mtime_ns": 1788321689670000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 45551616,
+            "mtime_ns": 1788321691110000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 45080576,
+            "mtime_ns": 1788321692560000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 44658688,
+            "mtime_ns": 1788321694020000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 44195840,
+            "mtime_ns": 1788321695500000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 43757568,
+            "mtime_ns": 1788321696950000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 43319296,
+            "mtime_ns": 1788321698410000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 42885120,
+            "mtime_ns": 1788321699860000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00024.ARW": "6f7f19feba911bead9e9b720d54b761320b948097038c1a1639ef9c3b855a715",
+          "DSC00047.ARW": "0ad53b2a72c2ac070ebee22fb35d49a68e0c1b1af93d79116b011b1d5977510b",
+          "DSC00069.ARW": "fa9ccaaa8740b00068f404a75474eaa2deb6c03727c9bf1b014dea29b6e88f5d"
+        }
+      }
+    },
+    {
+      "stack": {
+        "name": "razor-flat-f8",
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl",
+        "role": "flat-control",
+        "setup": "razor",
+        "step_width": 4,
+        "aperture": 8.0,
+        "expected_frames": 50
+      },
+      "metadata": {
+        "shape": [
+          4688,
+          7028
+        ],
+        "dtype": "uint16",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "color_desc": "RGBG",
+        "black_levels": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "container_white": 16383.0
+      },
+      "cache": "out\\cache\\razor-flat-f8.npz",
+      "cache_bytes": 19272,
+      "cache_sha256": "d31197b4bed9dc6e17bfa7e57a46e261ab636a36ac636e439fcb8bee0f968ea2",
+      "elapsed_seconds": 6.49148409999907,
+      "inventory": {
+        "name": "razor-flat-f8",
+        "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f8-cpl",
+        "role": "flat-control",
+        "setup": "razor",
+        "step_width": 4,
+        "aperture": 8.0,
+        "expected_frames": 50,
+        "files": [
+          {
+            "name": "DSC00031.ARW",
+            "bytes": 36577280,
+            "mtime_ns": 1788129792260000000
+          },
+          {
+            "name": "DSC00032.ARW",
+            "bytes": 36638720,
+            "mtime_ns": 1788129795880000000
+          },
+          {
+            "name": "DSC00033.ARW",
+            "bytes": 36708352,
+            "mtime_ns": 1788129799500000000
+          },
+          {
+            "name": "DSC00034.ARW",
+            "bytes": 36794368,
+            "mtime_ns": 1788129803110000000
+          },
+          {
+            "name": "DSC00035.ARW",
+            "bytes": 36896768,
+            "mtime_ns": 1788129806740000000
+          },
+          {
+            "name": "DSC00036.ARW",
+            "bytes": 37023744,
+            "mtime_ns": 1788129810370000000
+          },
+          {
+            "name": "DSC00037.ARW",
+            "bytes": 37179392,
+            "mtime_ns": 1788129814000000000
+          },
+          {
+            "name": "DSC00038.ARW",
+            "bytes": 37380096,
+            "mtime_ns": 1788129817620000000
+          },
+          {
+            "name": "DSC00039.ARW",
+            "bytes": 37621760,
+            "mtime_ns": 1788129821250000000
+          },
+          {
+            "name": "DSC00040.ARW",
+            "bytes": 37888000,
+            "mtime_ns": 1788129824890000000
+          },
+          {
+            "name": "DSC00041.ARW",
+            "bytes": 38207488,
+            "mtime_ns": 1788129828500000000
+          },
+          {
+            "name": "DSC00042.ARW",
+            "bytes": 38563840,
+            "mtime_ns": 1788129832130000000
+          },
+          {
+            "name": "DSC00043.ARW",
+            "bytes": 38924288,
+            "mtime_ns": 1788129835760000000
+          },
+          {
+            "name": "DSC00044.ARW",
+            "bytes": 39276544,
+            "mtime_ns": 1788129839380000000
+          },
+          {
+            "name": "DSC00045.ARW",
+            "bytes": 39608320,
+            "mtime_ns": 1788129843010000000
+          },
+          {
+            "name": "DSC00046.ARW",
+            "bytes": 39903232,
+            "mtime_ns": 1788129846640000000
+          },
+          {
+            "name": "DSC00047.ARW",
+            "bytes": 40153088,
+            "mtime_ns": 1788129850260000000
+          },
+          {
+            "name": "DSC00048.ARW",
+            "bytes": 40357888,
+            "mtime_ns": 1788129853890000000
+          },
+          {
+            "name": "DSC00049.ARW",
+            "bytes": 40501248,
+            "mtime_ns": 1788129857520000000
+          },
+          {
+            "name": "DSC00050.ARW",
+            "bytes": 40587264,
+            "mtime_ns": 1788129861130000000
+          },
+          {
+            "name": "DSC00051.ARW",
+            "bytes": 40701952,
+            "mtime_ns": 1788129864740000000
+          },
+          {
+            "name": "DSC00052.ARW",
+            "bytes": 40742912,
+            "mtime_ns": 1788129868370000000
+          },
+          {
+            "name": "DSC00053.ARW",
+            "bytes": 40779776,
+            "mtime_ns": 1788129871990000000
+          },
+          {
+            "name": "DSC00054.ARW",
+            "bytes": 40771584,
+            "mtime_ns": 1788129875610000000
+          },
+          {
+            "name": "DSC00055.ARW",
+            "bytes": 40771584,
+            "mtime_ns": 1788129879240000000
+          },
+          {
+            "name": "DSC00056.ARW",
+            "bytes": 40734720,
+            "mtime_ns": 1788129882850000000
+          },
+          {
+            "name": "DSC00057.ARW",
+            "bytes": 40669184,
+            "mtime_ns": 1788129886490000000
+          },
+          {
+            "name": "DSC00058.ARW",
+            "bytes": 40538112,
+            "mtime_ns": 1788129890100000000
+          },
+          {
+            "name": "DSC00059.ARW",
+            "bytes": 40439808,
+            "mtime_ns": 1788129893730000000
+          },
+          {
+            "name": "DSC00060.ARW",
+            "bytes": 40251392,
+            "mtime_ns": 1788129897360000000
+          },
+          {
+            "name": "DSC00061.ARW",
+            "bytes": 40067072,
+            "mtime_ns": 1788129900970000000
+          },
+          {
+            "name": "DSC00062.ARW",
+            "bytes": 39821312,
+            "mtime_ns": 1788129904600000000
+          },
+          {
+            "name": "DSC00063.ARW",
+            "bytes": 39534592,
+            "mtime_ns": 1788129908230000000
+          },
+          {
+            "name": "DSC00064.ARW",
+            "bytes": 39227392,
+            "mtime_ns": 1788129911850000000
+          },
+          {
+            "name": "DSC00065.ARW",
+            "bytes": 38912000,
+            "mtime_ns": 1788129915460000000
+          },
+          {
+            "name": "DSC00066.ARW",
+            "bytes": 38584320,
+            "mtime_ns": 1788129919080000000
+          },
+          {
+            "name": "DSC00067.ARW",
+            "bytes": 38273024,
+            "mtime_ns": 1788129922690000000
+          },
+          {
+            "name": "DSC00068.ARW",
+            "bytes": 37982208,
+            "mtime_ns": 1788129926330000000
+          },
+          {
+            "name": "DSC00069.ARW",
+            "bytes": 37736448,
+            "mtime_ns": 1788129929960000000
+          },
+          {
+            "name": "DSC00070.ARW",
+            "bytes": 37515264,
+            "mtime_ns": 1788129933590000000
+          },
+          {
+            "name": "DSC00071.ARW",
+            "bytes": 37326848,
+            "mtime_ns": 1788129937230000000
+          },
+          {
+            "name": "DSC00072.ARW",
+            "bytes": 37163008,
+            "mtime_ns": 1788129940840000000
+          },
+          {
+            "name": "DSC00073.ARW",
+            "bytes": 37036032,
+            "mtime_ns": 1788129944470000000
+          },
+          {
+            "name": "DSC00074.ARW",
+            "bytes": 36937728,
+            "mtime_ns": 1788129948100000000
+          },
+          {
+            "name": "DSC00075.ARW",
+            "bytes": 36847616,
+            "mtime_ns": 1788129951720000000
+          },
+          {
+            "name": "DSC00076.ARW",
+            "bytes": 36777984,
+            "mtime_ns": 1788129955350000000
+          },
+          {
+            "name": "DSC00077.ARW",
+            "bytes": 36712448,
+            "mtime_ns": 1788129958960000000
+          },
+          {
+            "name": "DSC00078.ARW",
+            "bytes": 36659200,
+            "mtime_ns": 1788129962600000000
+          },
+          {
+            "name": "DSC00079.ARW",
+            "bytes": 36610048,
+            "mtime_ns": 1788129966230000000
+          },
+          {
+            "name": "DSC00080.ARW",
+            "bytes": 36569088,
+            "mtime_ns": 1788129969840000000
+          }
+        ],
+        "anchor_sha256": {
+          "DSC00031.ARW": "0c90465e7b482cbcbeb7ae2c8636cc1019d4b106575b3254dc004dc9d49de651",
+          "DSC00056.ARW": "bcf8c94a838668e61ab1cbb53e2b8d5848e25de558c5ba5e04f9a6f6acb4d2a8",
+          "DSC00080.ARW": "9fed3a232025a1617dcc941dca3adffe6334d8022d865ca93f44aa4a647567c6"
+        }
+      }
+    }
+  ]
+}

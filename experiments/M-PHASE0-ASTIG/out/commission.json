@@ -2,17 +2,17 @@
   "schema_version": 1,
   "role": "commissioning before any real-effect estimate",
   "provenance": {
-    "git_head": "f7017885c90078d601e459d2c0eba6af2c7120ea",
+    "git_head": "be8a9ec9f46a583e5a118e2e24d9203a6f0523a0",
     "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
     "platform": "Windows-11-10.0.26200-SP0",
     "numpy": "2.4.4",
     "scipy": "1.17.1",
     "invocation": "PYTHONIOENCODING=utf-8; PYTHONPATH=<repo>\\experiments\\M-PHASE0-ASTIG\\src; python experiments\\M-PHASE0-ASTIG\\src\\commission.py",
     "source_sha256": {
-      "astiglib.py": "d23f407948df3fcf7bcccba88b037e886b2f293afd0443e123935289803f2e5f",
+      "astiglib.py": "db96ce9b83d07a9af258780c3effd8f04415aea87186c8f5bf0949e6311732e3",
       "truth_factory.py": "24ca4ebefeec92854394237a79278434d70a44d2e49f25c5a8dbb5665a8bd25b",
-      "fixed_predicate.py": "652aada8efcc59ae9e7caee0d984b8fc8a66144bd57da7a3a7000ca9670e2fe8",
-      "commission.py": "362d742b82c272a1d46e71c462b1d464f44e550d520cb93d715d83a623a398f5"
+      "fixed_predicate.py": "df4e74fb4edec4beb1b60a1ca0ee598f44a10db2b1cbf8a254807b632d641a2a",
+      "commission.py": "03e87a076809161a093fec20a00cdfe4c86cb25ea60b1a91df348e67fc13a21f"
     }
   },
   "tally": {
@@ -4116,24 +4116,42 @@
       "clean_status": "PASS",
       "plant_status": "RED",
       "clean": {
-        "criterion": "all cardinal sectors same positive sign, range <0.20 frame",
-        "readings": {
+        "criterion": "image sectors share positive sign/range <0.20 and literal external geometry table is exact",
+        "image_readings": {
           "left": 3.9991442281513905,
           "right": 3.998859638938309,
           "top": 4.001081382159325,
           "bottom": 3.9997889322973714
         },
-        "range": 0.0022217432210158705
+        "image_passed": true,
+        "range": 0.0022217432210158705,
+        "literal_source": "fixed_predicate.py CARDINAL_MAPPING",
+        "literal_readings": {
+          "left": 4.0,
+          "right": 4.0,
+          "top": 4.0,
+          "bottom": 4.0
+        },
+        "literal_passed": true
       },
       "planted": {
-        "criterion": "all cardinal sectors same positive sign, range <0.20 frame",
-        "readings": {
+        "criterion": "image sectors share positive sign/range <0.20 and literal external geometry table is exact",
+        "image_readings": {
           "left": 3.9991442281513905,
           "right": 3.998859638938309,
           "top": -4.001081382159325,
           "bottom": -3.9997889322973714
         },
-        "range": 8.000225610310714
+        "image_passed": false,
+        "range": 8.000225610310714,
+        "literal_source": "fixed_predicate.py CARDINAL_MAPPING",
+        "literal_readings": {
+          "left": 4.0,
+          "right": 4.0,
+          "top": -4.0,
+          "bottom": -4.0
+        },
+        "literal_passed": false
       }
     },
     {

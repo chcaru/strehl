@@ -209,8 +209,11 @@ def fit_log_peak(
     baseline: float | None = None,
     apply_gates: bool = True,
     defect: str | None = None,
+    mode: str = "log",
 ) -> Peak:
     """Fit M33's three-point log parabola to one response curve."""
+    if mode not in ("log", "linear"):
+        raise ValueError("mode must be 'log' or 'linear'")
     e = np.asarray(tuple(curve), dtype=np.float64)
     if e.ndim != 1 or e.size < 7 or not np.all(np.isfinite(e)):
         return Peak(False, None, None, None, None, None, None, "bad curve")
@@ -225,7 +228,8 @@ def fit_log_peak(
         return Peak(False, None, k, None, b, prominence, None, "no neighbours")
     floor = max(float(np.max(e)) * 1e-12, 1e-30)
     s = np.maximum(e - b, floor)
-    lm, l0, lp = np.log(s[k - 1 : k + 2])
+    transformed = np.log(s) if mode == "log" else s
+    lm, l0, lp = transformed[k - 1 : k + 2]
     denom = float(lm - 2.0 * l0 + lp)
     curvature = -denom
     if defect == "integer-argmax":
@@ -273,18 +277,21 @@ def _fit_pair(
     apply_gates: bool,
     defect: str | None,
     baseline: float | None = None,
+    fit_mode: str = "log",
 ) -> tuple[Peak, Peak, float | None, float | None]:
     px = fit_log_peak(
         ex,
         baseline=baseline,
         apply_gates=apply_gates,
         defect="integer-argmax" if defect == "integer-argmax" else None,
+        mode=fit_mode,
     )
     py = fit_log_peak(
         ey,
         baseline=baseline,
         apply_gates=apply_gates,
         defect="integer-argmax" if defect == "integer-argmax" else None,
+        mode=fit_mode,
     )
     if not px.valid or not py.valid:
         return px, py, None, None
@@ -302,6 +309,8 @@ def measure_stats(
     apply_gates: bool = True,
     defect: str | None = None,
     baseline: float | None = None,
+    fit_mode: str = "log",
+    keep_bootstrap: bool = False,
 ) -> dict:
     """Fit a paired tile and estimate uncertainty by paired block bootstrap."""
     allowed = {
@@ -329,6 +338,7 @@ def measure_stats(
         apply_gates=effective_gates,
         defect=defect,
         baseline=baseline,
+        fit_mode=fit_mode,
     )
     out = {
         "valid": bool(px.valid and py.valid),
@@ -363,7 +373,9 @@ def measure_stats(
     mus = []
     zxs = []
     zys = []
-    for bx, by in zip(cx, cy):
+    sample_delta = np.full(bootstraps, np.nan, dtype=np.float64)
+    sample_mu = np.full(bootstraps, np.nan, dtype=np.float64)
+    for sample_index, (bx, by) in enumerate(zip(cx, cy)):
         b_ex, b_ey = aggregate_curves(stats, bx, by)
         bpx, bpy, bd, bm = _fit_pair(
             b_ex,
@@ -372,6 +384,7 @@ def measure_stats(
             apply_gates=effective_gates,
             defect=defect,
             baseline=baseline,
+            fit_mode=fit_mode,
         )
         if bpx.valid and bpy.valid and bd is not None and bm is not None:
             assert bpx.z is not None and bpy.z is not None
@@ -379,6 +392,8 @@ def measure_stats(
             zys.append(bpy.z)
             deltas.append(bd)
             mus.append(bm)
+            sample_delta[sample_index] = bd
+            sample_mu[sample_index] = bm
     valid_fraction = len(deltas) / bootstraps
     out["bootstrap_valid"] = len(deltas)
     out["bootstrap_valid_fraction"] = valid_fraction
@@ -403,6 +418,11 @@ def measure_stats(
         "delta": summary(deltas),
         "mu": summary(mus),
     }
+    if keep_bootstrap:
+        out["bootstrap_samples"] = {
+            "delta": sample_delta.tolist(),
+            "mu": sample_mu.tolist(),
+        }
     arm_width_ok = (
         out["bootstrap"]["zx"]["width95"] <= MAX_ARM_CI_WIDTH
         and out["bootstrap"]["zy"]["width95"] <= MAX_ARM_CI_WIDTH
@@ -429,6 +449,9 @@ def measure_cube(
     seed: int = BOOTSTRAP_SEED,
     apply_gates: bool = True,
     defect: str | None = None,
+    fit_mode: str = "log",
+    baseline: float | None = None,
+    keep_bootstrap: bool = False,
 ) -> dict:
     stats = cube_sufficient_stats(cube, block_grid=block_grid)
     return measure_stats(
@@ -438,6 +461,9 @@ def measure_cube(
         seed=seed,
         apply_gates=apply_gates,
         defect=defect,
+        fit_mode=fit_mode,
+        baseline=baseline,
+        keep_bootstrap=keep_bootstrap,
     )
 
 

@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "role": "independent report-number checker and commissioning",
+  "independence": "recomputes claims from real-primary.json, commission.json, loader-check.json, verdict-commission.json, capture-inventory.json, selected sensitivity reductions, and all sensitivity-file existence; does not read verdict.json or import verdict.py",
+  "actual_report": {
+    "checks": 11,
+    "passed": 11,
+    "failed": 0,
+    "records": [
+      {
+        "id": "verdict",
+        "passed": true,
+        "criterion": "verdict claim must follow the raw sector count and fixed threshold"
+      },
+      {
+        "id": "decisive-counts",
+        "passed": true,
+        "criterion": "primary sector counts and D4 refusal must match raw reduction"
+      },
+      {
+        "id": "arm-widths",
+        "passed": true,
+        "criterion": "rejected arm interval widths must match raw reduction"
+      },
+      {
+        "id": "capture-accounting",
+        "passed": true,
+        "criterion": "capture counts and read-only snapshot must match extraction inventory"
+      },
+      {
+        "id": "grid2-diagnostic",
+        "passed": true,
+        "criterion": "non-decisive grid2 point and interval must match raw reduction"
+      },
+      {
+        "id": "estimator-commissioning",
+        "passed": true,
+        "criterion": "estimator control tally and fixed readings must match commission.json"
+      },
+      {
+        "id": "auxiliary-commissioning",
+        "passed": true,
+        "criterion": "loader and verdict-gate commissioning must match their outputs"
+      },
+      {
+        "id": "sensitivities",
+        "passed": true,
+        "criterion": "all fourteen registered sensitivity outputs must exist and be reported"
+      },
+      {
+        "id": "sensitivity-diagnostics",
+        "passed": true,
+        "criterion": "valid sensitivity D4 diagnostics must match their raw reductions"
+      },
+      {
+        "id": "sampling-diagnostics",
+        "passed": true,
+        "criterion": "empirical slope ratios and rescaled coarse points must match primary data"
+      },
+      {
+        "id": "rust-consequence",
+        "passed": true,
+        "criterion": "NOT ROBUST consequence must explicitly leave all three modules unchanged"
+      }
+    ]
+  },
+  "commissioning": {
+    "plants": 11,
+    "red": 11,
+    "missed": 0,
+    "records": [
+      {
+        "id": "verdict",
+        "plant": "replace '**NOT ROBUST.**' with '**KILL.**'",
+        "status": "RED"
+      },
+      {
+        "id": "decisive-counts",
+        "plant": "replace '**2 valid outer sectors out of 4' with '**4 valid outer sectors out of 4'",
+        "status": "RED"
+      },
+      {
+        "id": "arm-widths",
+        "plant": "replace '**2.688939' with '**1.000000'",
+        "status": "RED"
+      },
+      {
+        "id": "capture-accounting",
+        "plant": "replace '915 registered ARWs' with '999 registered ARWs'",
+        "status": "RED"
+      },
+      {
+        "id": "grid2-diagnostic",
+        "plant": "replace '**-0.051409 frames**' with '**-1.051409 frames**'",
+        "status": "RED"
+      },
+      {
+        "id": "estimator-commissioning",
+        "plant": "replace '**8 of 8 controls**' with '**7 of 8 controls**'",
+        "status": "RED"
+      },
+      {
+        "id": "auxiliary-commissioning",
+        "plant": "replace 'reproduced 2/2 contracts' with 'reproduced 1/2 contracts'",
+        "status": "RED"
+      },
+      {
+        "id": "sensitivities",
+        "plant": "replace '**14 of 14 registered sensitivities**' with '**13 of 14 registered sensitivities**'",
+        "status": "RED"
+      },
+      {
+        "id": "sensitivity-diagnostics",
+        "plant": "replace '0.024268 frames' with '0.999999 frames'",
+        "status": "RED"
+      },
+      {
+        "id": "sampling-diagnostics",
+        "plant": "replace '2.0469 and 2.0236' with '9.9999 and 9.9999'",
+        "status": "RED"
+      },
+      {
+        "id": "rust-consequence",
+        "plant": "replace '**No Rust source changes.**' with '**Rust source changes required.**'",
+        "status": "RED"
+      }
+    ]
+  },
+  "provenance": {
+    "invocation": "PYTHONIOENCODING=utf-8; python experiments\\M-PHASE0-ASTIG\\src\\report_check.py",
+    "report_sha256": "97499eeb80b183c2975888276ed3eec57325bf910468af70c8f0293ca8949860",
+    "source_sha256": "0833ed8f3ce5f4395ab8d41ed3b559dae175892fdb7dd4ec793940f6e6b39237",
+    "input_sha256": {
+      "real-primary.json": "ccd6053909b6661767c3cc084116f26bb099b0fc2ea39a122394cc47d79f011d",
+      "commission.json": "3956e04c4c0a76a98d1a21bf137e365a9df6794f906a9952c88149e840d5f798",
+      "loader-check.json": "5f7dd5774c67a135c983449073c5cf5acbb6242cc49744f588a437ecee8120a0",
+      "verdict-commission.json": "b491a25e52fbbfb0a6bad60ea6c31b9cccb2d969a78aefc6c540c8bafaf2e189",
+      "capture-inventory.json": "689c478471c5214f558ff2ec53e1bb1227943c668ae0a206e471df7151d56b79",
+      "sensitivity-tile128.json": "8fff37da9d570fa36b4601168cdb4fb0749dcf834cfa79a5d51e1c89ababd512",
+      "sensitivity-tile256.json": "e205630199ebd72d7b50aab4a24b7418cb5389d14c1ba1771f0bcc9213a48f4a",
+      "sensitivity-g1.json": "c3178e42800019656ea79d76c00a94da11b940c3a4ce091212cf7d0ee232332d",
+      "sensitivity-g2.json": "eb6a5c796d45d3ab923d6ca78c528b2ec26989ed8f95b9f2345df40677b851a6",
+      "sensitivity-block3.json": "623872ffe1ae381a3d9716c60384b79fb69e84f70639f4004bd813c57da66b00",
+      "sensitivity-block5.json": "34122f820a150d7ae5840ef9cafa9ac654b83a184c3a998a700954cb8c9e011d",
+      "sensitivity-xminus2.json": "4336e51177472630e5285dc603f744d170f1d15467e79da7bf454ac5f4b57d2a",
+      "sensitivity-xplus2.json": "ccedf46859bb82fe072c7d1db70f2dd7c24860eca0007089cb2a04fc35f1a0af",
+      "sensitivity-linear.json": "70e93377edca00783f3a87eeb1eda5d9c1905bf23c5e2622b51fb7b0bb13f7c9",
+      "sensitivity-log-no-baseline.json": "1ff1568550cb7fc5ab8dc0ca2180eb2cf16ec25d82b59dd1383fd53deb0636e1",
+      "sensitivity-omit-left.json": "1533b49593d3c2fccaf998517a2a79b2597e01c42598d421430a920ebcd0d50d",
+      "sensitivity-omit-right.json": "6ce309c59622265d622b49b65daaf6f042918ba1838a25d3b52fd8ce44924ad0",
+      "sensitivity-omit-top.json": "3f4b2b2c0f297aab9c438852267d377f5f48f9014d16f56e6677f83431606376",
+      "sensitivity-omit-bottom.json": "eb1d015aa3d83080034766467fc1c7435d09900285d29760565bcbe876f37e38"
+    }
+  }
+}

@@ -196,15 +196,31 @@ def p4_cardinal_mapping(defect: str | None = None) -> tuple[bool, dict]:
         row = measured_delta(4.0, sector, seed=20261030 + i, defect=defect)
         readings[sector] = row["estimate"]["delta"]
     vals = [x for x in readings.values() if x is not None]
-    passed = (
+    image_passed = (
         len(vals) == 4
         and all(x > 0 for x in vals)
         and max(vals) - min(vals) < 0.20
     )
+    literal_readings = {
+        sector: A.mapped_delta(zx, zy, sector, defect)
+        for sector, (zx, zy, _) in F.CARDINAL_MAPPING.items()
+    }
+    literal_passed = all(
+        abs(literal_readings[sector] - expected) < 1e-12
+        for sector, (_, _, expected) in F.CARDINAL_MAPPING.items()
+    )
+    passed = image_passed and literal_passed
     return passed, {
-        "criterion": "all cardinal sectors same positive sign, range <0.20 frame",
-        "readings": readings,
+        "criterion": (
+            "image sectors share positive sign/range <0.20 and literal "
+            "external geometry table is exact"
+        ),
+        "image_readings": readings,
+        "image_passed": image_passed,
         "range": float(max(vals) - min(vals)) if len(vals) == 4 else None,
+        "literal_source": "fixed_predicate.py CARDINAL_MAPPING",
+        "literal_readings": literal_readings,
+        "literal_passed": literal_passed,
     }
 
 

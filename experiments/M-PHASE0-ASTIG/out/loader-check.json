@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "role": "loader commissioning only; no sharpness statistic computed",
+  "file": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl\\DSC00015.ARW",
+  "file_sha256": "557dd9766d19937fa5495469887c2330789443417bd9631ca06214d15ac1effe",
+  "rawpy": {
+    "status": "PASS",
+    "metadata_first": {
+      "shape": [
+        4688,
+        7028
+      ],
+      "dtype": "uint16",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "color_desc": "RGBG",
+      "black_levels": [
+        512.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "container_white": 16383.0
+    },
+    "metadata_second": {
+      "shape": [
+        4688,
+        7028
+      ],
+      "dtype": "uint16",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "color_desc": "RGBG",
+      "black_levels": [
+        512.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "container_white": 16383.0
+    },
+    "pixel_sha256_first": "a6047beca9918d4ec87626a389b91f1197a60d081d0c383144962f9b776015e5",
+    "pixel_sha256_second": "a6047beca9918d4ec87626a389b91f1197a60d081d0c383144962f9b776015e5",
+    "plane_summaries": {
+      "R": {
+        "mean": 1422.8294075040646,
+        "sd": 140.22531379501646,
+        "min": 807,
+        "max": 2064
+      },
+      "G1": {
+        "mean": 3064.3898933762753,
+        "sd": 342.06984138668935,
+        "min": 1490,
+        "max": 4808
+      },
+      "G2": {
+        "mean": 3062.1164468163424,
+        "sd": 341.6701333447486,
+        "min": 1480,
+        "max": 4820
+      },
+      "B": {
+        "mean": 2187.0121990099087,
+        "sd": 263.4974722930658,
+        "min": 1026,
+        "max": 3405
+      }
+    }
+  },
+  "rawler": {
+    "status": "PASS",
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+    "binary_sha256": "faa69e00d38bf954570cbad0c3f954de03937649ebc65616657d016d4824d28e",
+    "returncode": 0,
+    "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.8027344, 1, 1.5253906, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.098 s\nper frame       : 0.0981 s\nthroughput      : 413.7 MB/s\n60-frame stack  : 5.88 s\n",
+    "stderr": ""
+  },
+  "known_representation_difference": {
+    "rawpy_visible_width": 7028,
+    "rawler_active_width": 7032,
+    "difference_sensor_columns": 4,
+    "rawpy_container_white": 16383.0,
+    "rawler_linear_white": 15360,
+    "interpretation": "both committed contracts reproduced; verdict coordinates use only rawpy visible pixels and clipping uses 15360"
+  },
+  "padded_shape_plant": {
+    "planted_shape": [
+      5120,
+      7168
+    ],
+    "status": "RED",
+    "criterion": "padded 5120x7168 shape must fail rawpy visible contract"
+  },
+  "tally": {
+    "known_answer_pass": 2,
+    "known_answer_total": 2,
+    "plants_red": 1,
+    "plants_total": 1
+  },
+  "not_verified": "strehl probe exposes no pixel checksum or per-plane moments, so the two decoders were not compared pixel by pixel",
+  "invocation": "PYTHONIOENCODING=utf-8; python experiments\\M-PHASE0-ASTIG\\src\\loader_check.py",
+  "source_sha256": "ce6c893db2453e7797f7969844ac6bd879e861226ff906ed956882de597766a6"
+}

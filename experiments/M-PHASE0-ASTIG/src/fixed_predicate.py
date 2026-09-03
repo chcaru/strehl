@@ -44,3 +44,12 @@ PEAK_1 = 3.25
 PEAK_2 = 7.375
 SPLIT = 4.125
 TOLERANCE = 0.02
+
+# Literal geometry predicate copied from the preregistered cardinal mapping.
+# These values are not produced by the synthetic image factory.
+CARDINAL_MAPPING = {
+    "left": (7.0, 3.0, 4.0),
+    "right": (7.0, 3.0, 4.0),
+    "top": (3.0, 7.0, 4.0),
+    "bottom": (3.0, 7.0, 4.0),
+}

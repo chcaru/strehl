@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "role": "commissioning before trusting the real-data verdict",
+  "fixture": "literal dictionaries independent of real_measure.py and reduce_real.py",
+  "tally": {
+    "controls": 6,
+    "clean_pass": 6,
+    "clean_fail": 0,
+    "plants": 6,
+    "red": 6,
+    "missed": 0
+  },
+  "records": [
+    {
+      "id": "commissioning",
+      "plant": "ignore-commission",
+      "clean_status": "PASS",
+      "plant_status": "RED",
+      "baseline_failures": [],
+      "invalid_fixture_failures": [
+        "commissioning"
+      ],
+      "defective_evaluator_failures": []
+    },
+    {
+      "id": "loader",
+      "plant": "ignore-loader",
+      "clean_status": "PASS",
+      "plant_status": "RED",
+      "baseline_failures": [],
+      "invalid_fixture_failures": [
+        "loader"
+      ],
+      "defective_evaluator_failures": []
+    },
+    {
+      "id": "capture-snapshot",
+      "plant": "ignore-inventory",
+      "clean_status": "PASS",
+      "plant_status": "RED",
+      "baseline_failures": [],
+      "invalid_fixture_failures": [
+        "capture-snapshot"
+      ],
+      "defective_evaluator_failures": []
+    },
+    {
+      "id": "flat-refusal",
+      "plant": "ignore-flat",
+      "clean_status": "PASS",
+      "plant_status": "RED",
+      "baseline_failures": [],
+      "invalid_fixture_failures": [
+        "flat-refusal"
+      ],
+      "defective_evaluator_failures": []
+    },
+    {
+      "id": "centre-null",
+      "plant": "ignore-centre",
+      "clean_status": "PASS",
+      "plant_status": "RED",
+      "baseline_failures": [],
+      "invalid_fixture_failures": [
+        "centre-null"
+      ],
+      "defective_evaluator_failures": []
+    },
+    {
+      "id": "primary-outer-sectors",
+      "plant": "ignore-sectors",
+      "clean_status": "PASS",
+      "plant_status": "RED",
+      "baseline_failures": [],
+      "invalid_fixture_failures": [
+        "primary-outer-sectors"
+      ],
+      "defective_evaluator_failures": []
+    }
+  ],
+  "provenance": {
+    "invocation": "PYTHONIOENCODING=utf-8; PYTHONPATH=<repo>\\experiments\\M-PHASE0-ASTIG\\src; python experiments\\M-PHASE0-ASTIG\\src\\commission_verdict.py",
+    "source_sha256": {
+      "commission_verdict.py": "32857f5375d8626ede7175c79958965f1127bbcd7add0a3bc05bd33e8096181e",
+      "verdict.py": "ca30135680062dc09c9b7539450318625782df976dbdbfdcb29cbbee16d57882"
+    }
+  }
+}

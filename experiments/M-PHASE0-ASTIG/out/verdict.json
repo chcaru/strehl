@@ -1,0 +1,2310 @@
+{
+  "schema_version": 1,
+  "claim": "C7 astigmatism",
+  "verdict": "NOT ROBUST",
+  "decision_stage": "preregistered section-9 stop gate",
+  "decisive_quantity": {
+    "name": "minimum valid outer sectors across primary setups",
+    "value": 2,
+    "required_each": 3,
+    "sampling_uncertainty": "not applicable to the deterministic validity count; each tile gate uses a 2,000-draw 95% bootstrap interval",
+    "D4_abs_frames": null,
+    "D4_reason": "grid1-sw4 outer invalid"
+  },
+  "stop_failures": [
+    {
+      "id": "primary-outer-sectors",
+      "reason": "a primary setup has fewer than three valid outer sectors",
+      "counts": {
+        "grid1-sw4": 2,
+        "grid2-sw4": 3
+      },
+      "required_each": 3
+    }
+  ],
+  "controls": {
+    "estimator": {
+      "controls": 8,
+      "clean_pass": 8,
+      "clean_fail": 0,
+      "plants": 8,
+      "red": 8,
+      "missed": 0
+    },
+    "verdict_evaluator": {
+      "controls": 6,
+      "clean_pass": 6,
+      "clean_fail": 0,
+      "plants": 6,
+      "red": 6,
+      "missed": 0
+    },
+    "loader": {
+      "known_answer_pass": 2,
+      "known_answer_total": 2,
+      "plants_red": 1,
+      "plants_total": 1
+    },
+    "flat_refused": true
+  },
+  "primary": {
+    "variant": "primary",
+    "primary_pair": {
+      "valid": false,
+      "reason": "grid1-sw4 outer invalid"
+    },
+    "setups": {
+      "grid1-sw4": {
+        "outer": {
+          "radius": 0.9,
+          "valid_sectors": [
+            "top",
+            "bottom"
+          ],
+          "valid_sector_count": 2,
+          "sector_deltas": {
+            "top": 0.40485904647178117,
+            "bottom": -0.0213218983606005
+          },
+          "valid": false,
+          "reason": "fewer than three valid cardinal sectors"
+        },
+        "outer_tile_gates": [
+          {
+            "sector": "left",
+            "valid_for_map": false,
+            "delta": -0.6103803422944445,
+            "uncertainty_rejection": "arm CI width",
+            "x_width95": 2.6889390658081957,
+            "y_width95": 0.6454405308579823
+          },
+          {
+            "sector": "right",
+            "valid_for_map": false,
+            "delta": -0.2856662680022666,
+            "uncertainty_rejection": "arm CI width",
+            "x_width95": 2.282475160942674,
+            "y_width95": 0.2558571004976429
+          },
+          {
+            "sector": "top",
+            "valid_for_map": true,
+            "delta": 0.40485904647178117,
+            "uncertainty_rejection": null,
+            "x_width95": 0.3901720520252425,
+            "y_width95": 0.9185596993201202
+          },
+          {
+            "sector": "bottom",
+            "valid_for_map": true,
+            "delta": -0.0213218983606005,
+            "uncertainty_rejection": null,
+            "x_width95": 0.4966057169688334,
+            "y_width95": 1.3540730695340955
+          }
+        ],
+        "centre_delta": -0.2904580065264888,
+        "centre_delta_interval": {
+          "mean": -0.2619156672508146,
+          "sd": 0.13514918444812296,
+          "lo95": -0.4470105835925085,
+          "hi95": 0.1508990329222994,
+          "width95": 0.5979096165148079
+        }
+      },
+      "grid2-sw4": {
+        "outer": {
+          "radius": 0.9,
+          "valid_sectors": [
+            "right",
+            "top",
+            "bottom"
+          ],
+          "valid_sector_count": 3,
+          "sector_deltas": {
+            "right": -0.0636830225802143,
+            "top": 0.5831287696574456,
+            "bottom": -0.05140863593908307
+          },
+          "valid": true,
+          "delta": -0.05140863593908307,
+          "abs_delta": 0.05140863593908307,
+          "bootstrap": {
+            "n": 2000,
+            "mean": 0.08690920521727923,
+            "median": 0.05455517435864543,
+            "sd": 0.1923998744606636,
+            "lo95": -0.19346402804205098,
+            "hi95": 0.5498801099802633,
+            "width95": 0.7433441380223142
+          },
+          "horizontal_axis": {
+            "delta": null,
+            "bootstrap": null
+          },
+          "vertical_axis": {
+            "delta": 0.2658600668591813,
+            "bootstrap": {
+              "n": 2000,
+              "mean": 0.30978956566126875,
+              "median": 0.281716207873032,
+              "sd": 0.1814021580653367,
+              "lo95": 0.09345229806919701,
+              "hi95": 0.6311032516297927,
+              "width95": 0.5376509535605958
+            }
+          },
+          "same_sign_count": 2
+        },
+        "outer_tile_gates": [
+          {
+            "sector": "left",
+            "valid_for_map": false,
+            "delta": -0.5430511928640556,
+            "uncertainty_rejection": "arm CI width",
+            "x_width95": 1.8819350100375836,
+            "y_width95": 0.5448234018449902
+          },
+          {
+            "sector": "right",
+            "valid_for_map": true,
+            "delta": -0.0636830225802143,
+            "uncertainty_rejection": null,
+            "x_width95": 0.9799946780385511,
+            "y_width95": 0.34676801289477766
+          },
+          {
+            "sector": "top",
+            "valid_for_map": true,
+            "delta": 0.5831287696574456,
+            "uncertainty_rejection": null,
+            "x_width95": 0.20283054565229008,
+            "y_width95": 0.7209678383515232
+          },
+          {
+            "sector": "bottom",
+            "valid_for_map": true,
+            "delta": -0.05140863593908307,
+            "uncertainty_rejection": null,
+            "x_width95": 0.4575674081780079,
+            "y_width95": 0.7078632291117266
+          }
+        ],
+        "centre_delta": -0.40633857778973237,
+        "centre_delta_interval": {
+          "mean": -0.5837340313469743,
+          "sd": 0.3868305661456586,
+          "lo95": -1.3989802581490636,
+          "hi95": -0.15893247886094694,
+          "width95": 1.2400477792881166
+        }
+      }
+    }
+  },
+  "sensitivities": {
+    "tile128": {
+      "variant": "tile128",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top"
+            ],
+            "valid_sector_count": 1,
+            "sector_deltas": {
+              "top": 0.46474314872491007
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6337748918523403,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.7899351534359695,
+              "y_width95": 0.7405151209890128
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.20772284715997102,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.5140391549634344,
+              "y_width95": 0.19349482520310346
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.46474314872491007,
+              "uncertainty_rejection": null,
+              "x_width95": 0.6214998536195253,
+              "y_width95": 1.0901416128807462
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": false,
+              "delta": -0.15857223530374398,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 0.5968586710963564,
+              "y_width95": 2.141382878812845
+            }
+          ],
+          "centre_delta": -0.2868284817380484,
+          "centre_delta_interval": {
+            "mean": -0.24890490652908173,
+            "sd": 0.20724125931919507,
+            "lo95": -0.597253436959208,
+            "hi95": 0.22108555399874832,
+            "width95": 0.8183389909579563
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top"
+            ],
+            "valid_sector_count": 1,
+            "sector_deltas": {
+              "top": 0.600804545048522
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.514592254164544,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.3853155577605882,
+              "y_width95": 0.8325451334461142
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": 0.004969861519157348,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 4.49622525397039,
+              "y_width95": 0.3511891084098835
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.600804545048522,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5032122482501435,
+              "y_width95": 0.672218563456255
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": false,
+              "delta": -0.12768525261921937,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 0.5474241615615121,
+              "y_width95": 1.861095934533619
+            }
+          ],
+          "centre_delta": -0.36704098555190967,
+          "centre_delta_interval": {
+            "mean": -0.5639624160910303,
+            "sd": 0.367509552441765,
+            "lo95": -1.3362848948106925,
+            "hi95": -0.06911345002801648,
+            "width95": 1.267171444782676
+          }
+        }
+      }
+    },
+    "tile256": {
+      "variant": "tile256",
+      "primary_pair": {
+        "valid": true,
+        "definition": "abs(mean(delta_grid1-sw4(r=.90), delta_grid2-sw4(r=.90)))",
+        "setup_points": {
+          "grid1-sw4": -0.011751685266276013,
+          "grid2-sw4": -0.03678439657078769
+        },
+        "signed_mean": -0.024268040918531852,
+        "D4_abs_frames": 0.024268040918531852,
+        "signed_bootstrap": {
+          "n": 2000,
+          "mean": -0.026227762952498807,
+          "median": -0.01873074615460446,
+          "sd": 0.17089830381952886,
+          "lo95": -0.3578441990772281,
+          "hi95": 0.2945787073309336,
+          "width95": 0.6524229064081617
+        },
+        "magnitude_bootstrap": {
+          "n": 2000,
+          "mean": 0.1356733039008417,
+          "median": 0.11238482384713944,
+          "sd": 0.1071355043836538,
+          "lo95": 0.0051442918784252,
+          "hi95": 0.3940356343042073,
+          "width95": 0.3888913424257821
+        }
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 3,
+            "sector_deltas": {
+              "right": -0.3030486677266637,
+              "top": 0.3954256415762991,
+              "bottom": -0.011751685266276013
+            },
+            "valid": true,
+            "delta": -0.011751685266276013,
+            "abs_delta": 0.011751685266276013,
+            "bootstrap": {
+              "n": 2000,
+              "mean": -0.08987515853958486,
+              "median": -0.08858406288753073,
+              "sd": 0.23395124052904948,
+              "lo95": -0.5258084315521849,
+              "hi95": 0.32630391949716964,
+              "width95": 0.8521123510493546
+            },
+            "horizontal_axis": {
+              "delta": null,
+              "bootstrap": null
+            },
+            "vertical_axis": {
+              "delta": 0.19183697815501155,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.12174340640057522,
+                "median": 0.14124162399305717,
+                "sd": 0.2754356961018483,
+                "lo95": -0.4466282765015218,
+                "hi95": 0.5901204224385589,
+                "width95": 1.0367486989400807
+              }
+            },
+            "same_sign_count": 2
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6312487427843649,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.347502810487672,
+              "y_width95": 0.5576733463093149
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.3030486677266637,
+              "uncertainty_rejection": null,
+              "x_width95": 1.067613501852989,
+              "y_width95": 0.30617271240679855
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.3954256415762991,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4594147827911783,
+              "y_width95": 1.3531283118330997
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.011751685266276013,
+              "uncertainty_rejection": null,
+              "x_width95": 0.599058323953944,
+              "y_width95": 1.3599989709007474
+            }
+          ],
+          "centre_delta": -0.28330705214003515,
+          "centre_delta_interval": {
+            "mean": -0.2793141051463679,
+            "sd": 0.10802717148137161,
+            "lo95": -0.46006158348442233,
+            "hi95": -0.0012680695624157348,
+            "width95": 0.4587935139220066
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 3,
+            "sector_deltas": {
+              "right": -0.0875944577795238,
+              "top": 0.5585232134247207,
+              "bottom": -0.03678439657078769
+            },
+            "valid": true,
+            "delta": -0.03678439657078769,
+            "abs_delta": 0.03678439657078769,
+            "bootstrap": {
+              "n": 2000,
+              "mean": 0.04289688081459322,
+              "median": 0.03310386257331288,
+              "sd": 0.15068552597622262,
+              "lo95": -0.22625699432278806,
+              "hi95": 0.39498611404997674,
+              "width95": 0.6212431083727648
+            },
+            "horizontal_axis": {
+              "delta": null,
+              "bootstrap": null
+            },
+            "vertical_axis": {
+              "delta": 0.2608694084269665,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.2562465425798042,
+                "median": 0.274401981481577,
+                "sd": 0.1493942358303088,
+                "lo95": -0.14659061358083467,
+                "hi95": 0.4890194851242091,
+                "width95": 0.6356100987050438
+              }
+            },
+            "same_sign_count": 2
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.566541302181351,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.1410587522176403,
+              "y_width95": 0.5238628413914697
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.0875944577795238,
+              "uncertainty_rejection": null,
+              "x_width95": 0.7589047026755154,
+              "y_width95": 0.3005330748291897
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5585232134247207,
+              "uncertainty_rejection": null,
+              "x_width95": 0.22745401997022796,
+              "y_width95": 0.3408681359866108
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.03678439657078769,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5291395265886472,
+              "y_width95": 1.2214830892955888
+            }
+          ],
+          "centre_delta": -0.4013631168142844,
+          "centre_delta_interval": {
+            "mean": -0.4584160613954031,
+            "sd": 0.2787435954763327,
+            "lo95": -1.2067157942768074,
+            "hi95": 0.0543061314073166,
+            "width95": 1.261021925684124
+          }
+        }
+      }
+    },
+    "g1": {
+      "variant": "g1",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.42405489558449716,
+              "bottom": -0.03388409790993663
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.63188397487869,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.7327530000970626,
+              "y_width95": 0.702615769378351
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2731523284507631,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.0918963998812075,
+              "y_width95": 0.22888463549785598
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.42405489558449716,
+              "uncertainty_rejection": null,
+              "x_width95": 0.39008081661615535,
+              "y_width95": 0.9643446836136356
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.03388409790993663,
+              "uncertainty_rejection": null,
+              "x_width95": 0.42876621867668874,
+              "y_width95": 1.239715540081061
+            }
+          ],
+          "centre_delta": -0.2764089738971123,
+          "centre_delta_interval": {
+            "mean": -0.25179290187474546,
+            "sd": 0.11364329678211638,
+            "lo95": -0.4056289044938645,
+            "hi95": 0.07658498832431743,
+            "width95": 0.48221389281818194
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 3,
+            "sector_deltas": {
+              "right": -0.06301710711315422,
+              "top": 0.6008185557131185,
+              "bottom": -0.05320000280909909
+            },
+            "valid": true,
+            "delta": -0.05320000280909909,
+            "abs_delta": 0.05320000280909909,
+            "bootstrap": {
+              "n": 2000,
+              "mean": 0.07979367248508058,
+              "median": 0.04365167556460392,
+              "sd": 0.1908883390033295,
+              "lo95": -0.19525557435190422,
+              "hi95": 0.5509677457922463,
+              "width95": 0.7462233201441505
+            },
+            "horizontal_axis": {
+              "delta": null,
+              "bootstrap": null
+            },
+            "vertical_axis": {
+              "delta": 0.2738092764520097,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.30707063961163233,
+                "median": 0.2900020006545505,
+                "sd": 0.15722380173391762,
+                "lo95": 0.08864231927931857,
+                "hi95": 0.5895221504747866,
+                "width95": 0.5008798311954681
+              }
+            },
+            "same_sign_count": 2
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5689649269340613,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.1174119217455516,
+              "y_width95": 0.4994853499894383
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.06301710711315422,
+              "uncertainty_rejection": null,
+              "x_width95": 1.0492261946388624,
+              "y_width95": 0.4070089225872806
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.6008185557131185,
+              "uncertainty_rejection": null,
+              "x_width95": 0.18546362720408993,
+              "y_width95": 0.7988754779557325
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05320000280909909,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4542456773405128,
+              "y_width95": 0.6147914199314748
+            }
+          ],
+          "centre_delta": -0.4246762858966022,
+          "centre_delta_interval": {
+            "mean": -0.5516650441134234,
+            "sd": 0.35348897123777456,
+            "lo95": -1.3788069222805628,
+            "hi95": -0.10419877300938742,
+            "width95": 1.2746081492711754
+          }
+        }
+      }
+    },
+    "g2": {
+      "variant": "g2",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.40804025652757403,
+              "bottom": 0.00013435157164209954
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5872014595552777,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.607428949776601,
+              "y_width95": 0.6086290870654736
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2870580684263899,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.2662436004416975,
+              "y_width95": 0.2876039545779605
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40804025652757403,
+              "uncertainty_rejection": null,
+              "x_width95": 0.38209445516459084,
+              "y_width95": 0.8781534609569484
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": 0.00013435157164209954,
+              "uncertainty_rejection": null,
+              "x_width95": 0.556017265716779,
+              "y_width95": 1.327442871945415
+            }
+          ],
+          "centre_delta": -0.340134054584901,
+          "centre_delta_interval": {
+            "mean": -0.3137212579576186,
+            "sd": 0.15715813263966963,
+            "lo95": -0.536689802289927,
+            "hi95": 0.14152554512794543,
+            "width95": 0.6782153474178725
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 3,
+            "sector_deltas": {
+              "right": -0.06679573959782914,
+              "top": 0.5771663841047143,
+              "bottom": -0.036903735800724036
+            },
+            "valid": true,
+            "delta": -0.036903735800724036,
+            "abs_delta": 0.036903735800724036,
+            "bootstrap": {
+              "n": 2000,
+              "mean": 0.09882501407091203,
+              "median": 0.06877871673594527,
+              "sd": 0.1880040567067215,
+              "lo95": -0.18709624902725447,
+              "hi95": 0.5289062807101331,
+              "width95": 0.7160025297373875
+            },
+            "horizontal_axis": {
+              "delta": null,
+              "bootstrap": null
+            },
+            "vertical_axis": {
+              "delta": 0.27013132415199514,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.31129243359777725,
+                "median": 0.28713805846913054,
+                "sd": 0.1752866224264421,
+                "lo95": 0.10733987124353236,
+                "hi95": 0.6099584053924846,
+                "width95": 0.5026185341489522
+              }
+            },
+            "same_sign_count": 2
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5007957377566097,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.8099537530792293,
+              "y_width95": 0.60105848219672
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.06679573959782914,
+              "uncertainty_rejection": null,
+              "x_width95": 0.9523619944070916,
+              "y_width95": 0.3136752132434708
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5771663841047143,
+              "uncertainty_rejection": null,
+              "x_width95": 0.19653701371561638,
+              "y_width95": 0.5986801267153368
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.036903735800724036,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4731397282443126,
+              "y_width95": 0.7292812249538905
+            }
+          ],
+          "centre_delta": -0.4049967707306692,
+          "centre_delta_interval": {
+            "mean": -0.5761753713077221,
+            "sd": 0.3861235467516259,
+            "lo95": -1.4280680183508614,
+            "hi95": -0.1825023864010334,
+            "width95": 1.245565631949828
+          }
+        }
+      }
+    },
+    "block3": {
+      "variant": "block3",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "bottom"
+            ],
+            "valid_sector_count": 1,
+            "sector_deltas": {
+              "bottom": -0.02132189836058984
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6103803422944516,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.472573008356239,
+              "y_width95": 0.3789725932402668
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.28566626800221684,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.1990962293177176,
+              "y_width95": 0.17312868213166865
+            },
+            {
+              "sector": "top",
+              "valid_for_map": false,
+              "delta": 0.4048590464718025,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 0.5300971459065273,
+              "y_width95": 1.686947399020415
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.02132189836058984,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5892175628430003,
+              "y_width95": 0.8031605162802968
+            }
+          ],
+          "centre_delta": -0.29045800652650655,
+          "centre_delta_interval": {
+            "mean": -0.28509235547512407,
+            "sd": 0.19096610813432904,
+            "lo95": -0.9110782609888279,
+            "hi95": 0.07926891618430204,
+            "width95": 0.99034717717313
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.5831287696574279,
+              "bottom": -0.05140863593907241
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5430511928640804,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.5021154914633232,
+              "y_width95": 0.6456108423961417
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.06368302258026404,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.7769328334679138,
+              "y_width95": 0.3071904921641675
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5831287696574279,
+              "uncertainty_rejection": null,
+              "x_width95": 0.1852207994340347,
+              "y_width95": 1.2595783216330894
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05140863593907241,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5641741129976765,
+              "y_width95": 0.4023528382601107
+            }
+          ],
+          "centre_delta": -0.4063385777897146,
+          "centre_delta_interval": {
+            "mean": -0.47426494849031486,
+            "sd": 0.25052905018874094,
+            "lo95": -1.165621288331226,
+            "hi95": -0.07591820245629642,
+            "width95": 1.0897030858749297
+          }
+        }
+      }
+    },
+    "block5": {
+      "variant": "block5",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top"
+            ],
+            "valid_sector_count": 1,
+            "sector_deltas": {
+              "top": 0.4048590464718167
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6103803422944019,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 4.232091522748803,
+              "y_width95": 0.35807413825466483
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.28566626800223816,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.9844272648959844,
+              "y_width95": 0.4844444607358298
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.4048590464718167,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4860411475164703,
+              "y_width95": 0.962956146525169
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": false,
+              "delta": -0.021321898360611158,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 0.26817900687214546,
+              "y_width95": 2.1107848851298137
+            }
+          ],
+          "centre_delta": -0.290458006526503,
+          "centre_delta_interval": {
+            "mean": -0.29032961456559075,
+            "sd": 0.10585120369131207,
+            "lo95": -0.48375288862296123,
+            "hi95": -0.06723192963222345,
+            "width95": 0.41652095899073777
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top"
+            ],
+            "valid_sector_count": 1,
+            "sector_deltas": {
+              "top": 0.5831287696573924
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5430511928640556,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.662077726026075,
+              "y_width95": 0.7693135853473834
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.0636830225802214,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.8524533608466953,
+              "y_width95": 0.42002677236003194
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5831287696573924,
+              "uncertainty_rejection": null,
+              "x_width95": 0.21850695611025017,
+              "y_width95": 0.6425253136212596
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": false,
+              "delta": -0.05140863593907241,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 0.23481206198021454,
+              "y_width95": 3.4931146134881423
+            }
+          ],
+          "centre_delta": -0.4063385777897359,
+          "centre_delta_interval": {
+            "mean": -0.4531324050301701,
+            "sd": 0.2989024768918687,
+            "lo95": -1.2623611568326134,
+            "hi95": 0.021319987599668477,
+            "width95": 1.283681144432282
+          }
+        }
+      }
+    },
+    "xminus2": {
+      "variant": "xminus2",
+      "primary_pair": {
+        "valid": true,
+        "definition": "abs(mean(delta_grid1-sw4(r=.90), delta_grid2-sw4(r=.90)))",
+        "setup_points": {
+          "grid1-sw4": -0.15561101145869927,
+          "grid2-sw4": -0.05859285537790271
+        },
+        "signed_mean": -0.10710193341830099,
+        "D4_abs_frames": 0.10710193341830099,
+        "signed_bootstrap": {
+          "n": 2000,
+          "mean": -0.09893595812533035,
+          "median": -0.09969938669832645,
+          "sd": 0.16319344984865197,
+          "lo95": -0.4512818585425318,
+          "hi95": 0.24999006071296523,
+          "width95": 0.701271919255497
+        },
+        "magnitude_bootstrap": {
+          "n": 2000,
+          "mean": 0.14993962152059356,
+          "median": 0.12462427217128402,
+          "sd": 0.11803468059777142,
+          "lo95": 0.005983103950679691,
+          "hi95": 0.455233710211669,
+          "width95": 0.4492506062609893
+        }
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "left",
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 4,
+            "sector_deltas": {
+              "left": -0.6100074594559679,
+              "right": -0.2892991112265406,
+              "top": 0.40208362125060404,
+              "bottom": -0.021922911690857916
+            },
+            "valid": true,
+            "delta": -0.15561101145869927,
+            "abs_delta": 0.15561101145869927,
+            "bootstrap": {
+              "n": 2000,
+              "mean": -0.1988697626126239,
+              "median": -0.18313491548668992,
+              "sd": 0.18272658000346204,
+              "lo95": -0.5630193976419781,
+              "hi95": 0.11844223429890308,
+              "width95": 0.6814616319408812
+            },
+            "horizontal_axis": {
+              "delta": -0.44965328534125426,
+              "bootstrap": {
+                "n": 2000,
+                "mean": -0.516418555722896,
+                "median": -0.4950541704385678,
+                "sd": 0.20643739637758757,
+                "lo95": -1.0406777770995206,
+                "hi95": -0.25585588687143024,
+                "width95": 0.7848218902280903
+              }
+            },
+            "vertical_axis": {
+              "delta": 0.19008035477987306,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.16720243830227724,
+                "median": 0.18305104744364176,
+                "sd": 0.2356549292017914,
+                "lo95": -0.3246144770314559,
+                "hi95": 0.5851739189189323,
+                "width95": 0.9097883959503883
+              }
+            },
+            "same_sign_count": 3
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": true,
+              "delta": -0.6100074594559679,
+              "uncertainty_rejection": null,
+              "x_width95": 0.3073856201422345,
+              "y_width95": 0.6605347105983839
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.2892991112265406,
+              "uncertainty_rejection": null,
+              "x_width95": 1.1774635474389825,
+              "y_width95": 0.27394535054834535
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40208362125060404,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5240630519821252,
+              "y_width95": 0.929228591372933
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.021922911690857916,
+              "uncertainty_rejection": null,
+              "x_width95": 0.6303905623657293,
+              "y_width95": 1.3496301889050244
+            }
+          ],
+          "centre_delta": -0.29028142889950104,
+          "centre_delta_interval": {
+            "mean": -0.2314390282064195,
+            "sd": 0.13005129133927118,
+            "lo95": -0.383353770236356,
+            "hi95": 0.14050940936561276,
+            "width95": 0.5238631796019687
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "left",
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 4,
+            "sector_deltas": {
+              "left": -0.5404010050776904,
+              "right": -0.06727299462087188,
+              "top": 0.5817557313452504,
+              "bottom": -0.04991271613493353
+            },
+            "valid": true,
+            "delta": -0.05859285537790271,
+            "abs_delta": 0.05859285537790271,
+            "bootstrap": {
+              "n": 2000,
+              "mean": -0.005829544051288792,
+              "median": -0.022263630059728534,
+              "sd": 0.15787712461611356,
+              "lo95": -0.27491716926605414,
+              "hi95": 0.3414088991768276,
+              "width95": 0.6163260684428817
+            },
+            "horizontal_axis": {
+              "delta": -0.30383699984928114,
+              "bootstrap": {
+                "n": 2000,
+                "mean": -0.3018232494781387,
+                "median": -0.30471300628419673,
+                "sd": 0.14633396308141755,
+                "lo95": -0.5702405757591659,
+                "hi95": -0.0037495130181628353,
+                "width95": 0.566491062741003
+              }
+            },
+            "vertical_axis": {
+              "delta": 0.2659215076051584,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.32514428410055035,
+                "median": 0.2888629049287825,
+                "sd": 0.20411888710211193,
+                "lo95": 0.08663865504100277,
+                "hi95": 0.7150998738216789,
+                "width95": 0.6284612187806762
+              }
+            },
+            "same_sign_count": 3
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": true,
+              "delta": -0.5404010050776904,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4449092892090558,
+              "y_width95": 0.599705881409367
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.06727299462087188,
+              "uncertainty_rejection": null,
+              "x_width95": 1.0557213617084145,
+              "y_width95": 0.3606127746333385
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5817557313452504,
+              "uncertainty_rejection": null,
+              "x_width95": 0.27996025318714146,
+              "y_width95": 0.6597606050754585
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.04991271613493353,
+              "uncertainty_rejection": null,
+              "x_width95": 0.6391377647789511,
+              "y_width95": 0.6864744509361245
+            }
+          ],
+          "centre_delta": -0.40594473962677213,
+          "centre_delta_interval": {
+            "mean": -0.569194922601145,
+            "sd": 0.40667784047771827,
+            "lo95": -1.462262105942923,
+            "hi95": -0.06542942200603734,
+            "width95": 1.3968326839368856
+          }
+        }
+      }
+    },
+    "xplus2": {
+      "variant": "xplus2",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.40713489711643547,
+              "bottom": -0.020875886912758546
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6108155901761343,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.9115354244445903,
+              "y_width95": 0.6712936509819265
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2819322056371405,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.0748504247165585,
+              "y_width95": 0.24498018744010608
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40713489711643547,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4830405429032325,
+              "y_width95": 0.9846424661473279
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.020875886912758546,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5380023189685907,
+              "y_width95": 1.2784507937047884
+            }
+          ],
+          "centre_delta": -0.2909520307666291,
+          "centre_delta_interval": {
+            "mean": -0.25974630622343875,
+            "sd": 0.0769607885894152,
+            "lo95": -0.3747104811875673,
+            "hi95": -0.0578710012937595,
+            "width95": 0.3168394798938078
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.5842728340515322,
+              "bottom": -0.05298489321642208
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5456630848421948,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 3.4411885750586713,
+              "y_width95": 0.5715815439202672
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.05995050463645413,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.727653040643105,
+              "y_width95": 0.32876131653461016
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5842728340515322,
+              "uncertainty_rejection": null,
+              "x_width95": 0.21384579424420735,
+              "y_width95": 0.7378692104244813
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05298489321642208,
+              "uncertainty_rejection": null,
+              "x_width95": 0.48508093940912644,
+              "y_width95": 0.675298828323232
+            }
+          ],
+          "centre_delta": -0.4072966674291898,
+          "centre_delta_interval": {
+            "mean": -0.4993371491361031,
+            "sd": 0.25887846809098003,
+            "lo95": -1.2755688385376591,
+            "hi95": -0.24726709963848686,
+            "width95": 1.0283017388991722
+          }
+        }
+      }
+    },
+    "linear": {
+      "variant": "linear",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.40518306974336227,
+              "bottom": -0.021380438812943936
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6086480616198102,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.710461022299608,
+              "y_width95": 0.6491024932192566
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.28797997078928006,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.297425556072156,
+              "y_width95": 0.24752805660599364
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40518306974336227,
+              "uncertainty_rejection": null,
+              "x_width95": 0.3879075086761219,
+              "y_width95": 0.939436705064022
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.021380438812943936,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5041154704013238,
+              "y_width95": 1.3261008558837943
+            }
+          ],
+          "centre_delta": -0.29041875377377124,
+          "centre_delta_interval": {
+            "mean": -0.2605816962743191,
+            "sd": 0.1365315149091863,
+            "lo95": -0.4428867332553013,
+            "hi95": 0.15567706988588648,
+            "width95": 0.5985638031411877
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 3,
+            "sector_deltas": {
+              "right": -0.06346286244080801,
+              "top": 0.5819599089345218,
+              "bottom": -0.051241721718213284
+            },
+            "valid": true,
+            "delta": -0.051241721718213284,
+            "abs_delta": 0.051241721718213284,
+            "bootstrap": {
+              "n": 2000,
+              "mean": 0.08961179467703329,
+              "median": 0.06267034482168299,
+              "sd": 0.18353341460979658,
+              "lo95": -0.19572958839055693,
+              "hi95": 0.5259929295226169,
+              "width95": 0.7217225179131739
+            },
+            "horizontal_axis": {
+              "delta": null,
+              "bootstrap": null
+            },
+            "vertical_axis": {
+              "delta": 0.26535909360815424,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.3113717035139555,
+                "median": 0.2909858964171521,
+                "sd": 0.17289727334598634,
+                "lo95": 0.08989306485876321,
+                "hi95": 0.609580744359927,
+                "width95": 0.5196876795011638
+              }
+            },
+            "same_sign_count": 2
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.541033427036643,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.9259036425558893,
+              "y_width95": 0.5538116861656093
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.06346286244080801,
+              "uncertainty_rejection": null,
+              "x_width95": 0.947205228341339,
+              "y_width95": 0.35442721279570577
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5819599089345218,
+              "uncertainty_rejection": null,
+              "x_width95": 0.1989179191078705,
+              "y_width95": 0.6934923735094927
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.051241721718213284,
+              "uncertainty_rejection": null,
+              "x_width95": 0.48130440417242326,
+              "y_width95": 0.7285023022301047
+            }
+          ],
+          "centre_delta": -0.406840400305569,
+          "centre_delta_interval": {
+            "mean": -0.5494883420473986,
+            "sd": 0.3750950725811309,
+            "lo95": -1.3983615166708883,
+            "hi95": -0.0003077910199104841,
+            "width95": 1.3980537256509777
+          }
+        }
+      }
+    },
+    "log-no-baseline": {
+      "variant": "log-no-baseline",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.4048648340518781,
+              "bottom": -0.02131320373341694
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6103655568859558,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.684647042162549,
+              "y_width95": 0.6570745563097944
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2856829272181116,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.1742257096381863,
+              "y_width95": 0.2590588394936617
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.4048648340518781,
+              "uncertainty_rejection": null,
+              "x_width95": 0.3835317916234722,
+              "y_width95": 0.9160552375902036
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.02131320373341694,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5112831585425113,
+              "y_width95": 1.358615680589427
+            }
+          ],
+          "centre_delta": -0.2904531188661288,
+          "centre_delta_interval": {
+            "mean": -0.25541997168907754,
+            "sd": 0.14145699633439054,
+            "lo95": -0.4454281237375162,
+            "hi95": 0.17520569128063887,
+            "width95": 0.6206338150181551
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 3,
+            "sector_deltas": {
+              "right": -0.06367300615187332,
+              "top": 0.5830845552389725,
+              "bottom": -0.05137460352525025
+            },
+            "valid": true,
+            "delta": -0.05137460352525025,
+            "abs_delta": 0.05137460352525025,
+            "bootstrap": {
+              "n": 2000,
+              "mean": 0.08606595694980142,
+              "median": 0.05589199117775934,
+              "sd": 0.18655039350260236,
+              "lo95": -0.19638665520985707,
+              "hi95": 0.5278305947037338,
+              "width95": 0.7242172499135909
+            },
+            "horizontal_axis": {
+              "delta": null,
+              "bootstrap": null
+            },
+            "vertical_axis": {
+              "delta": 0.26585497585686113,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.3017261957107698,
+                "median": 0.2812816207010629,
+                "sd": 0.160318976876656,
+                "lo95": 0.09179218020509734,
+                "hi95": 0.5661846661904794,
+                "width95": 0.47439248598538203
+              }
+            },
+            "same_sign_count": 2
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5429958988846977,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.9252009637934027,
+              "y_width95": 0.5542033795318879
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.06367300615187332,
+              "uncertainty_rejection": null,
+              "x_width95": 0.9603782185056673,
+              "y_width95": 0.34732721802787125
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5830845552389725,
+              "uncertainty_rejection": null,
+              "x_width95": 0.19382683059615502,
+              "y_width95": 0.6851802664414564
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05137460352525025,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4658445135242886,
+              "y_width95": 0.6665799979639537
+            }
+          ],
+          "centre_delta": -0.4063699147616582,
+          "centre_delta_interval": {
+            "mean": -0.5558057004875498,
+            "sd": 0.3748724701058001,
+            "lo95": -1.410175736006532,
+            "hi95": -0.06505733745906489,
+            "width95": 1.345118398547467
+          }
+        }
+      }
+    },
+    "omit-left": {
+      "variant": "omit-left",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.40485904647178117,
+              "bottom": -0.0213218983606005
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6103803422944445,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.655471825700438,
+              "y_width95": 0.6652881547848324
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2856662680022666,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.3301447652411014,
+              "y_width95": 0.2564503439653265
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40485904647178117,
+              "uncertainty_rejection": null,
+              "x_width95": 0.39493720903398,
+              "y_width95": 0.9090382075703438
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.0213218983606005,
+              "uncertainty_rejection": null,
+              "x_width95": 0.5141785510476744,
+              "y_width95": 1.3562928565061725
+            }
+          ],
+          "centre_delta": -0.2904580065264888,
+          "centre_delta_interval": {
+            "mean": -0.2598519877277292,
+            "sd": 0.13156098762234583,
+            "lo95": -0.4414374138853635,
+            "hi95": 0.10982737687991162,
+            "width95": 0.5512647907652751
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 3,
+            "sector_deltas": {
+              "right": -0.0636830225802143,
+              "top": 0.5831287696574456,
+              "bottom": -0.05140863593908307
+            },
+            "valid": true,
+            "delta": -0.05140863593908307,
+            "abs_delta": 0.05140863593908307,
+            "bootstrap": {
+              "n": 2000,
+              "mean": 0.08432289870575556,
+              "median": 0.051384874757523846,
+              "sd": 0.19084617086529976,
+              "lo95": -0.18995202604953745,
+              "hi95": 0.5575139811569904,
+              "width95": 0.7474660072065278
+            },
+            "horizontal_axis": {
+              "delta": null,
+              "bootstrap": null
+            },
+            "vertical_axis": {
+              "delta": 0.2658600668591813,
+              "bootstrap": {
+                "n": 2000,
+                "mean": 0.3058158872511475,
+                "median": 0.2820363110802129,
+                "sd": 0.16217010850447092,
+                "lo95": 0.0922382989869314,
+                "hi95": 0.6041714854173547,
+                "width95": 0.5119331864304233
+              }
+            },
+            "same_sign_count": 2
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5430511928640556,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.8702556381114839,
+              "y_width95": 0.5453203952094334
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.0636830225802143,
+              "uncertainty_rejection": null,
+              "x_width95": 0.9935840239122271,
+              "y_width95": 0.348264523500184
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5831287696574456,
+              "uncertainty_rejection": null,
+              "x_width95": 0.19607702245799885,
+              "y_width95": 0.7287029332983224
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05140863593908307,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4495824988616768,
+              "y_width95": 0.6626204375860247
+            }
+          ],
+          "centre_delta": -0.40633857778973237,
+          "centre_delta_interval": {
+            "mean": -0.54121475599933,
+            "sd": 0.36808534477202604,
+            "lo95": -1.408147618446757,
+            "hi95": -0.06922320932830807,
+            "width95": 1.338924409118449
+          }
+        }
+      }
+    },
+    "omit-right": {
+      "variant": "omit-right",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.40485904647178117,
+              "bottom": -0.0213218983606005
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6103803422944445,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.677744159886373,
+              "y_width95": 0.654236356143219
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2856662680022666,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.262778618710584,
+              "y_width95": 0.2559441760046255
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40485904647178117,
+              "uncertainty_rejection": null,
+              "x_width95": 0.39014575288119246,
+              "y_width95": 0.918186102522192
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.0213218983606005,
+              "uncertainty_rejection": null,
+              "x_width95": 0.49373573847988794,
+              "y_width95": 1.3682043862191193
+            }
+          ],
+          "centre_delta": -0.2904580065264888,
+          "centre_delta_interval": {
+            "mean": -0.2625643798678235,
+            "sd": 0.13111447259047862,
+            "lo95": -0.44413684320118485,
+            "hi95": 0.13270494286677115,
+            "width95": 0.576841786067956
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "top": 0.5831287696574456,
+              "bottom": -0.05140863593908307
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5430511928640556,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.8836096064966306,
+              "y_width95": 0.5518607455589262
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.0636830225802143,
+              "uncertainty_rejection": null,
+              "x_width95": 0.9903069303795959,
+              "y_width95": 0.35678432567864604
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5831287696574456,
+              "uncertainty_rejection": null,
+              "x_width95": 0.1921973356155675,
+              "y_width95": 0.6966714691999059
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05140863593908307,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4787633256663497,
+              "y_width95": 0.7018372497714331
+            }
+          ],
+          "centre_delta": -0.40633857778973237,
+          "centre_delta_interval": {
+            "mean": -0.5513693746696938,
+            "sd": 0.3665580716084978,
+            "lo95": -1.367423766654324,
+            "hi95": -0.08026374518047966,
+            "width95": 1.2871600214738443
+          }
+        }
+      }
+    },
+    "omit-top": {
+      "variant": "omit-top",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "bottom"
+            ],
+            "valid_sector_count": 1,
+            "sector_deltas": {
+              "bottom": -0.0213218983606005
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6103803422944445,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.687044466789583,
+              "y_width95": 0.6363011021432641
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2856662680022666,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.2795955564634554,
+              "y_width95": 0.25208786822233265
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40485904647178117,
+              "uncertainty_rejection": null,
+              "x_width95": 0.3903005159209769,
+              "y_width95": 0.9193993302738264
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.0213218983606005,
+              "uncertainty_rejection": null,
+              "x_width95": 0.495285387190858,
+              "y_width95": 1.3471180298553485
+            }
+          ],
+          "centre_delta": -0.2904580065264888,
+          "centre_delta_interval": {
+            "mean": -0.2610966067219373,
+            "sd": 0.13300584890819125,
+            "lo95": -0.4471403022030807,
+            "hi95": 0.14532678458584677,
+            "width95": 0.5924670867889275
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "bottom"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "right": -0.0636830225802143,
+              "bottom": -0.05140863593908307
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5430511928640556,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.8831763937224792,
+              "y_width95": 0.5428173464825292
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.0636830225802143,
+              "uncertainty_rejection": null,
+              "x_width95": 0.9412263694179721,
+              "y_width95": 0.3609772072780899
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5831287696574456,
+              "uncertainty_rejection": null,
+              "x_width95": 0.19714916334774202,
+              "y_width95": 0.7267668039030113
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05140863593908307,
+              "uncertainty_rejection": null,
+              "x_width95": 0.475904977512144,
+              "y_width95": 0.7322320358928245
+            }
+          ],
+          "centre_delta": -0.40633857778973237,
+          "centre_delta_interval": {
+            "mean": -0.5574616706151813,
+            "sd": 0.38068503074161164,
+            "lo95": -1.400483126817412,
+            "hi95": -0.06872256800244603,
+            "width95": 1.331760558814966
+          }
+        }
+      }
+    },
+    "omit-bottom": {
+      "variant": "omit-bottom",
+      "primary_pair": {
+        "valid": false,
+        "reason": "grid1-sw4 outer invalid"
+      },
+      "setups": {
+        "grid1-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "top"
+            ],
+            "valid_sector_count": 1,
+            "sector_deltas": {
+              "top": 0.40485904647178117
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.6103803422944445,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.7306848017328775,
+              "y_width95": 0.6466785968183686
+            },
+            {
+              "sector": "right",
+              "valid_for_map": false,
+              "delta": -0.2856662680022666,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 2.240182737823659,
+              "y_width95": 0.2497521372191116
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.40485904647178117,
+              "uncertainty_rejection": null,
+              "x_width95": 0.38673595744540634,
+              "y_width95": 0.9397987842801285
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.0213218983606005,
+              "uncertainty_rejection": null,
+              "x_width95": 0.4883346854425774,
+              "y_width95": 1.3632556597080594
+            }
+          ],
+          "centre_delta": -0.2904580065264888,
+          "centre_delta_interval": {
+            "mean": -0.25951007808123777,
+            "sd": 0.12919228484692752,
+            "lo95": -0.44818498755679065,
+            "hi95": 0.11789638108035705,
+            "width95": 0.5660813686371478
+          }
+        },
+        "grid2-sw4": {
+          "outer": {
+            "radius": 0.9,
+            "valid_sectors": [
+              "right",
+              "top"
+            ],
+            "valid_sector_count": 2,
+            "sector_deltas": {
+              "right": -0.0636830225802143,
+              "top": 0.5831287696574456
+            },
+            "valid": false,
+            "reason": "fewer than three valid cardinal sectors"
+          },
+          "outer_tile_gates": [
+            {
+              "sector": "left",
+              "valid_for_map": false,
+              "delta": -0.5430511928640556,
+              "uncertainty_rejection": "arm CI width",
+              "x_width95": 1.9502449850122172,
+              "y_width95": 0.5537692296806007
+            },
+            {
+              "sector": "right",
+              "valid_for_map": true,
+              "delta": -0.0636830225802143,
+              "uncertainty_rejection": null,
+              "x_width95": 0.9814890096481719,
+              "y_width95": 0.36282727162303274
+            },
+            {
+              "sector": "top",
+              "valid_for_map": true,
+              "delta": 0.5831287696574456,
+              "uncertainty_rejection": null,
+              "x_width95": 0.2021097991064451,
+              "y_width95": 0.7050563328889368
+            },
+            {
+              "sector": "bottom",
+              "valid_for_map": true,
+              "delta": -0.05140863593908307,
+              "uncertainty_rejection": null,
+              "x_width95": 0.45702972858610025,
+              "y_width95": 0.7250619086216865
+            }
+          ],
+          "centre_delta": -0.40633857778973237,
+          "centre_delta_interval": {
+            "mean": -0.5340821207089541,
+            "sd": 0.35561519934902125,
+            "lo95": -1.3875654376797097,
+            "hi95": -0.1539668448127344,
+            "width95": 1.2335985928669753
+          }
+        }
+      }
+    }
+  },
+  "post_stop_inference": {
+    "status": "NOT PERFORMED",
+    "reason": "Preregistration section 9 says to stop rather than interpret numbers when a primary setup has fewer than three valid outer sectors. D4, multiplicity-controlled bounds, empirical step-width rescaling, and ladder classifications therefore cannot establish a claim verdict."
+  },
+  "rust_consequence": {
+    "change": "none",
+    "reason": "A NOT ROBUST verdict preregistered no Rust change until a repeat controlled chart resolves the failed primary gate.",
+    "deferred_modules": [
+      "crates/strehl-core/src/focus.rs",
+      "crates/strehl-core/src/pyramid.rs",
+      "crates/strehl-cli/src/merge_cmd.rs"
+    ]
+  },
+  "provenance": {
+    "git_head": "3f7841836549e31b6ad8e7d137356cf809a4d7d5",
+    "invocation": "PYTHONIOENCODING=utf-8; python experiments\\M-PHASE0-ASTIG\\src\\verdict.py",
+    "input_sha256": {
+      "commission": "3956e04c4c0a76a98d1a21bf137e365a9df6794f906a9952c88149e840d5f798",
+      "verdict_commission": "b491a25e52fbbfb0a6bad60ea6c31b9cccb2d969a78aefc6c540c8bafaf2e189",
+      "loader": "5f7dd5774c67a135c983449073c5cf5acbb6242cc49744f588a437ecee8120a0",
+      "inventory": "689c478471c5214f558ff2ec53e1bb1227943c668ae0a206e471df7151d56b79",
+      "primary": "ccd6053909b6661767c3cc084116f26bb099b0fc2ea39a122394cc47d79f011d",
+      "sensitivity-tile128": "8fff37da9d570fa36b4601168cdb4fb0749dcf834cfa79a5d51e1c89ababd512",
+      "sensitivity-tile256": "e205630199ebd72d7b50aab4a24b7418cb5389d14c1ba1771f0bcc9213a48f4a",
+      "sensitivity-g1": "c3178e42800019656ea79d76c00a94da11b940c3a4ce091212cf7d0ee232332d",
+      "sensitivity-g2": "eb6a5c796d45d3ab923d6ca78c528b2ec26989ed8f95b9f2345df40677b851a6",
+      "sensitivity-block3": "623872ffe1ae381a3d9716c60384b79fb69e84f70639f4004bd813c57da66b00",
+      "sensitivity-block5": "34122f820a150d7ae5840ef9cafa9ac654b83a184c3a998a700954cb8c9e011d",
+      "sensitivity-xminus2": "4336e51177472630e5285dc603f744d170f1d15467e79da7bf454ac5f4b57d2a",
+      "sensitivity-xplus2": "ccedf46859bb82fe072c7d1db70f2dd7c24860eca0007089cb2a04fc35f1a0af",
+      "sensitivity-linear": "70e93377edca00783f3a87eeb1eda5d9c1905bf23c5e2622b51fb7b0bb13f7c9",
+      "sensitivity-log-no-baseline": "1ff1568550cb7fc5ab8dc0ca2180eb2cf16ec25d82b59dd1383fd53deb0636e1",
+      "sensitivity-omit-left": "1533b49593d3c2fccaf998517a2a79b2597e01c42598d421430a920ebcd0d50d",
+      "sensitivity-omit-right": "6ce309c59622265d622b49b65daaf6f042918ba1838a25d3b52fd8ce44924ad0",
+      "sensitivity-omit-top": "3f4b2b2c0f297aab9c438852267d377f5f48f9014d16f56e6677f83431606376",
+      "sensitivity-omit-bottom": "eb1d015aa3d83080034766467fc1c7435d09900285d29760565bcbe876f37e38"
+    },
+    "source_sha256": "ca30135680062dc09c9b7539450318625782df976dbdbfdcb29cbbee16d57882"
+  }
+}
