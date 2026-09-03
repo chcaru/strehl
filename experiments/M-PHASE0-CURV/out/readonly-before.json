@@ -1,0 +1,35 @@
+{
+  "label": "before",
+  "command": "Get-ChildItem -LiteralPath <root> -Force -File -Recurse",
+  "recorded_utc": "2026-09-03T03:12:21.9507879Z",
+  "captures": [
+    {
+      "path": "D:\\personal\\macro\\requests\\8-tilted-planar",
+      "file_count": 271,
+      "arw_count": 270,
+      "total_bytes": 10735535283,
+      "newest_write_utc": "2026-09-02T06:35:56.5678791Z"
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid",
+      "file_count": 243,
+      "arw_count": 242,
+      "total_bytes": 11203777286,
+      "newest_write_utc": "2026-09-02T06:34:18.0536838Z"
+    },
+    {
+      "path": "D:\\personal\\macro\\flat-on-ruler-cpl",
+      "file_count": 79,
+      "arw_count": 79,
+      "total_bytes": 5379518464,
+      "newest_write_utc": "2026-08-24T03:22:18.1400000Z"
+    },
+    {
+      "path": "D:\\personal\\macro\\dime-flat-narrow-slices-cpl",
+      "file_count": 207,
+      "arw_count": 207,
+      "total_bytes": 8237678592,
+      "newest_write_utc": "2026-08-28T03:55:37.9200000Z"
+    }
+  ]
+}

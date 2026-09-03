@@ -1,0 +1,195 @@
+{
+  "status": "RED",
+  "summary": {
+    "controls": 8,
+    "controls_green": 7,
+    "plants": 10,
+    "plants_red": 9
+  },
+  "controls": [
+    {
+      "id": "E1-external-plane",
+      "green": true,
+      "readings": {
+        "fixture_sha256": "745bbbcedb3da04842740a88a01ce21109a75393dcc371804d62874c63973d69",
+        "registered_q_h": 0.0014189237471156921
+      }
+    },
+    {
+      "id": "E2-curvature-dose",
+      "green": true,
+      "readings": {
+        "median_recovered": {
+          "-2.0": -2.0001350500416666,
+          "-1.0": -0.9999987783293295,
+          "-0.5": -0.5001200166382338,
+          "0.0": 0.00018826127921727734,
+          "0.5": 0.5001105862040716,
+          "1.0": 0.9998912626548937,
+          "2.0": 1.999944071424278
+        },
+        "ratios_nonzero": [
+          1.0000675250208333,
+          0.9999987783293295,
+          1.0002400332764676,
+          1.0002211724081431,
+          0.9998912626548937,
+          0.999972035712139
+        ],
+        "dose_slope": 1.00001557955593,
+        "fully_present_minus2_reading": -2.0001350500416666,
+        "fully_present_plus2_reading": 1.999944071424278,
+        "seeds_per_dose": 32
+      }
+    },
+    {
+      "id": "E3-tilt-nonlinearity-null",
+      "green": true,
+      "readings": {
+        "registered_q_h": [
+          0.00046050917252896557,
+          -0.00021667224201839808,
+          1.5562139223591713e-06
+        ]
+      }
+    },
+    {
+      "id": "E4-pure-noise-refusal",
+      "green": true,
+      "readings": {
+        "valid_fraction": 0.0
+      }
+    },
+    {
+      "id": "E5-aperture-width",
+      "green": true,
+      "readings": {
+        "widths_frames": [
+          2.0,
+          4.0,
+          8.0
+        ],
+        "q_h": [
+          1.002410197537243,
+          0.9991312621809938,
+          1.0036992043758999
+        ]
+      }
+    },
+    {
+      "id": "E6-centre-invariance",
+      "green": true,
+      "readings": {
+        "centred_q_h": 1.0008267196256224,
+        "translated_q_h": 1.0090018038924382
+      }
+    },
+    {
+      "id": "E7-ladder-verdict",
+      "green": true,
+      "readings": {
+        "registered": "NOT ROBUST"
+      }
+    },
+    {
+      "id": "E8-raw-contract-and-checker",
+      "green": false,
+      "readings": {
+        "raw": {
+          "file": "D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl\\DSC00040.ARW",
+          "rust": {
+            "active_width": 7032,
+            "active_height": 4688,
+            "black": 512,
+            "white": 15360,
+            "camera": "ILCE-7CM2"
+          },
+          "rawpy": {
+            "shape": [
+              4688,
+              7028
+            ],
+            "black": 512,
+            "container_white": 16383,
+            "pattern": [
+              [
+                0,
+                1
+              ],
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "repeat_pixel_sha_equal": true,
+          "contract_green": false
+        },
+        "checker": {
+          "baseline_green": true,
+          "number_plant_red": true,
+          "verdict_plant_red": true,
+          "pass": true
+        }
+      }
+    }
+  ],
+  "plants": [
+    {
+      "id": "P1-affine-radial-on-external-plane",
+      "red": true,
+      "defective_reading": -3.8757607067236193
+    },
+    {
+      "id": "P2-inverted-curvature-sign",
+      "red": true,
+      "defective_reading": -1.9986953956204352
+    },
+    {
+      "id": "P3-affine-plus-radius-leakage",
+      "red": true,
+      "defective_reading": [
+        0.8526228390846758,
+        1.0906472985068016,
+        0.9295681158993808
+      ]
+    },
+    {
+      "id": "P4-bypassed-peak-reality",
+      "red": true,
+      "defective_reading": 1.0
+    },
+    {
+      "id": "P5-width-coupled-position",
+      "red": true,
+      "defective_reading": 6.202964624055229
+    },
+    {
+      "id": "P6-dropped-linear-nuisance",
+      "red": true,
+      "defective_reading": 42.64393384758645
+    },
+    {
+      "id": "P7-primary-only-verdict",
+      "red": true,
+      "defective_reading": "SURVIVE"
+    },
+    {
+      "id": "P8-wrong-active-dimension",
+      "red": false,
+      "defective_reading": {
+        "wrong_dimension_passed": true
+      }
+    },
+    {
+      "id": "P9-stale-deciding-number",
+      "red": true,
+      "defective_reading": true
+    },
+    {
+      "id": "P10-flipped-report-verdict",
+      "red": true,
+      "defective_reading": true
+    }
+  ]
+}
