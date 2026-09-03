@@ -1,6 +1,26 @@
 # Phase 1 — unified banded-admission merge
 
-Status: PROPOSAL — repository-verified implementation design; W1 is a mandatory go/no-go gate. A2 and B3 are excluded from executable phase 1 by repository evidence. The executable spine is A1/A4/B4/B6 behind the aligned-pyramid freeze and D9(a).
+> **REFUTED — DO NOT IMPLEMENT. This design is retained as history only.**
+>
+> The W1 go/no-go gate below **fired against this design** and it did not survive.
+> The result was `NO_COMMON_K`: of 42 predicates, 16 pass at some `k` and 26 pass
+> at none, and critically **no predicate in bands 4–6 passes at any `k` in
+> `[0,8]`**. The two ends of the band range require opposite values of the single
+> constant this design has on offer, so the gap cannot be closed by choosing `k`
+> better. **The design is refuted, not untuned**, and it must not be revived by
+> adjusting a constant.
+>
+> The verdict was challenged on four separate grounds by the program orchestrator
+> and survived all four; the numbers were then independently re-verified. See
+> `docs/STATUS.md` §2.8 for the challenge and its outcome.
+>
+> Everything below this banner is the design *as written before the gate fired*.
+> Its capture manifest, its repository citation audit, its A2/B3 archival
+> evidence, and its correction that `119MSDCF` is not a scorecard systems arm
+> remain independently factual and may be cited. **The merge design itself may
+> not.**
+
+Status: **REFUTED by the W1 gate.** Originally: PROPOSAL — repository-verified implementation design; W1 is a mandatory go/no-go gate. A2 and B3 are excluded from executable phase 1 by repository evidence. The executable spine is A1/A4/B4/B6 behind the aligned-pyramid freeze and D9(a).
 
 Verified 2026-09-02 PDT first against repository HEAD `40b20bef0fe0cdaba7298573095806e580a7ed85`; symbol anchors were refreshed at `986c46535fc082395831724f1d45c33a1d974390`, and this replacement was rechecked against current HEAD `a3d4ba30e2a1f4ba64a4192ff89742d9947d7618`. `crates/strehl-cli/src/merge_cmd.rs` remained under active edit, so volatile CLI locations below are anchored on symbols rather than depending on line numbers.
 

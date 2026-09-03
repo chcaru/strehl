@@ -1751,6 +1751,78 @@ axis is hard, and has not yet bought a single admissible number.
 
 ---
 
+### 2.9.9 Phase 0 closed while I was watching the detail axis, and the shape of what it produced is the finding
+
+I swept every lane I had lost track of and demanded a bounded reading. Thirteen
+answered. Phase 0 is now substantially complete, and I had not noticed, because
+my attention had been entirely on the detail axis. The census matters more than
+any single entry in it.
+
+| lane | gate | verdict | the number | commit |
+|---|---|---|---|---|
+| IOPERF | D11 decode | **PASS** | `719.3` MB/s compressed-input at 32 threads; `193.9` at one | `d337daa8` |
+| IOPERF | D15 storage | **PASS** | `6.338` GB/s cold, `20.615` GB/s warm, `3.25x`; replicated `3.10x` | `d337daa8` |
+| DPAR2 | curved-track | **KILL** | MDA80 `<=0.010` plane px/depth-step, bootstrap 95% `[0.010, 0.010]` | `7a1a3128` |
+| XSPEC | C10 | **NOT ROBUST** | `R=0.70852`, CI `[0.66732, 0.76315]`, against a required `>=2.0` | `4f1f28ec` |
+| VEIL2 | A2 | **STOP, DO NOT BUILD** | `theta=-0.081241`, CI `[-0.235876, +0.051078]`; audit `0/7` | `e4e3939f`, `bcc77de9` |
+| LCA | C2 | **STOP** | R `4.22-7.54%`, B `3.51-7.13%` axial forfeit, but only `1/4` stacks valid against a frozen `4/4` gate | `a3b87d36` |
+| CAND1 | detail | **KILL** | USM `1.095732x` against a frozen `1.01` | `efd5a2` / `efa25bd2` |
+| COVER | build path | **CLOSED** | `+2.61%` ring, `256 px` inset, `64.60%` retained | `66e79043` |
+| phase 1 | W1 | **REFUTED** | `NO_COMMON_K`; no band 4-6 predicate passes at any `k` | `f5658e5d` (design, now bannered) |
+
+**Read the verdict column, not the rows.** Of nine closed gates, **seven are
+refusals** — kill, stop, not robust, closed, refuted. Two are passes, and both of
+those are systems gates whose practical content is also *"do not build"*: D11
+says retain `rawler` rather than own a decoder, D15 says do not build an IOCP
+subsystem. **Phase 0 did not tell this program what to build. It told it what not
+to build, nine times.**
+
+That is a legitimate outcome and it is what a kill-gate phase is for. It is also
+the precise reason the SOTA claim is now so narrowly loaded: every axis that
+could have been cleared cheaply has been cleared, and what remains is the detail
+axis and M8. There is no longer a broad front of work — there are two places
+where a real win is still available, and one of them has no instrument yet.
+
+**The lanes have internalised the power discipline, and one of them caught the
+`S_25` failure mode in itself before I could.** VEIL2 reported its own primary arm
+with this qualification, unprompted: *"The 20,000 resamples are not independent
+observations; the effective count is 36."* That is exactly the error that let
+`S_25` be recorded as sharpening-safe at `0.995819x` from an underpowered run
+before reversing to `1.028294x` at 64 sites against an unchanged bar. A lane
+volunteering the deflating version of its own sample size is worth more to this
+program than a lane volunteering a result.
+
+**Harnesses worth keeping, which is the part that outlives the questions.** Three
+lanes left behind rigs that are reusable and were commissioned rather than merely
+written: XSPEC's spectral harness at `experiments/M-PHASE0-XSPEC/src/`, which
+passed `8/8` controls and caught `9/9` planted defects; IOPERF's decode and
+cold/warm storage harness at `experiments/M-PHASE0-IOPERF/`, commit `40e41a63`;
+and DPAR2's curved-track plant rig with a cancellation-immune fixed oracle and
+96-phase power calibration. **This program has been short of trustworthy
+harnesses and now has three.** A future lane should reuse one rather than build a
+fourth incomparable one.
+
+**A landmine was found and closed.** `docs/proposals/2026-09-phase1-design.md`
+remained committed as an *executable* proposal with no record that its own
+mandatory gate had fired against it. A reader arriving later would have found an
+authoritative, carefully cited implementation design for a refuted mechanism. It
+now carries a `REFUTED - DO NOT IMPLEMENT` banner at the head, which states the
+`NO_COMMON_K` result, records that the design is refuted rather than untuned so
+that nobody revives it by adjusting a constant, and preserves the parts of it
+that remain independently factual. **The lane that wrote the document is the one
+that reported the hazard**, which is the behaviour I want and did not have to ask
+for.
+
+**What this does not change.** Still zero verified improvement in picture quality.
+The two passes are throughput, not detail, and a fast decoder does not make a
+better photograph. But the earlier claim in this file that the program had taken
+*no formal readings at all* was too harsh on it: D11 and D15 are commissioned,
+replicated, controlled readings that closed real build decisions, and the seven
+refusals are readings too. The program's problem is not that it cannot measure.
+**It is that almost everything it has measured has told it to stop.**
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
