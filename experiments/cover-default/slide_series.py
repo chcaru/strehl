@@ -1,8 +1,9 @@
 """Independent geometry adjudicator for the COVER calibration-slide series.
 
-This program reads only WarpMap sidecars.  It does not import the earlier
-``audit.py``, invoke strehl, inspect captures, fit placements, or write files.
-All results, including refusals, are emitted as deterministic JSON on stdout.
+This program reads WarpMap sidecars and source-file metadata.  It does not
+import the earlier ``audit.py``, invoke strehl, decode captures, fit placements,
+or write files.  All results, including refusals, are emitted as deterministic
+JSON on stdout.
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ import hashlib
 import json
 import math
 import re
+import stat
 import struct
 import sys
 from dataclasses import dataclass
@@ -66,6 +68,17 @@ SPECS_BY_NAME = {spec.name: spec for spec in STACK_SPECS}
 
 
 @dataclass(frozen=True)
+class SourceIdentity:
+    """Full sorted source inventory used to validate one sidecar."""
+
+    directory: Path
+    entries: tuple[tuple[str, int], ...]
+    digest: str
+    inventory_sha256: str
+    total_bytes: int
+
+
+@dataclass(frozen=True)
 class Placement:
     """One serialized reference-to-frame similarity."""
 
@@ -104,6 +117,11 @@ class WarpMap:
     records: tuple[FrameRecord, ...]
 
 
+FNV1A64_OFFSET = 0xCBF29CE484222325
+FNV1A64_PRIME = 0x00000100000001B3
+U64_MASK = 0xFFFFFFFFFFFFFFFF
+
+
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise CommissionError(message)
@@ -111,13 +129,17 @@ def _require(condition: bool, message: str) -> None:
 
 def _parse_uint(raw: str, key: str) -> int:
     if not INTEGER_RE.fullmatch(raw):
-        raise AdjudicationError(f"{key}: expected an unsigned decimal integer, got {raw!r}")
+        raise AdjudicationError(
+            f"{key}: expected an unsigned decimal integer, got {raw!r}"
+        )
     return int(raw)
 
 
 def _f64_from_bits(raw: str, key: str) -> tuple[str, float]:
     if not F64_BITS_RE.fullmatch(raw):
-        raise AdjudicationError(f"{key}: expected exactly 16 hexadecimal f64 bits, got {raw!r}")
+        raise AdjudicationError(
+            f"{key}: expected exactly 16 hexadecimal f64 bits, got {raw!r}"
+        )
     bits = raw.lower()
     value = struct.unpack(">d", int(bits, 16).to_bytes(8, "big"))[0]
     return bits, value
@@ -146,6 +168,90 @@ def _unescape(raw: str) -> str:
         output.append("\n" if escaped == "n" else "\r" if escaped == "r" else escaped)
         index += 1
     return "".join(output)
+
+
+def _stack_identity_bytes(entries: Sequence[tuple[str, int]]) -> bytes:
+    encoded = bytearray()
+    for name, size in entries:
+        if size < 0 or size > U64_MASK:
+            raise AdjudicationError(
+                f"source entry {name!r} has size outside unsigned 64-bit range: {size}"
+            )
+        try:
+            encoded.extend(name.encode("utf-8"))
+        except UnicodeEncodeError as error:
+            raise AdjudicationError(
+                f"source entry name is not UTF-8 encodable: {name!r}"
+            ) from error
+        encoded.append(0)
+        encoded.extend(size.to_bytes(8, "little"))
+        encoded.append(0)
+    return bytes(encoded)
+
+
+def stack_digest(entries: Sequence[tuple[str, int]]) -> str:
+    """Mirror ``StackIdentity::from_entries`` over an ordered inventory."""
+
+    digest = FNV1A64_OFFSET
+    for byte in _stack_identity_bytes(entries):
+        digest = ((digest ^ byte) * FNV1A64_PRIME) & U64_MASK
+    return f"{digest:016x}"
+
+
+def _source_identity_from_entries(
+    directory: Path, entries: Sequence[tuple[str, int]]
+) -> SourceIdentity:
+    fixed = tuple(entries)
+    identity_bytes = _stack_identity_bytes(fixed)
+    return SourceIdentity(
+        directory=directory,
+        entries=fixed,
+        digest=stack_digest(fixed),
+        inventory_sha256=hashlib.sha256(identity_bytes).hexdigest().upper(),
+        total_bytes=sum(size for _, size in fixed),
+    )
+
+
+def _ascii_lower(value: str) -> str:
+    return "".join(
+        chr(ord(char) + 32) if "A" <= char <= "Z" else char for char in value
+    )
+
+
+def _ordered_source_entries(
+    entries: Iterable[tuple[str, int]],
+) -> tuple[tuple[str, int], ...]:
+    # Python's WindowsPath ordering is case-folded, unlike Rust's PathBuf Ord.
+    # For the UTF-8-encodable names admitted by _stack_identity_bytes, lexical
+    # Unicode order is also WTF-8 byte order, which is Rust's Windows OsStr Ord.
+    return tuple(sorted(entries, key=lambda entry: entry[0]))
+
+
+def _read_source_identity(spec: StackSpec, directory: Path) -> SourceIdentity:
+    try:
+        children = tuple(directory.iterdir())
+    except OSError as error:
+        raise AdjudicationError(
+            f"{spec.name}: cannot list source directory {directory}: {error}"
+        ) from error
+
+    entries: list[tuple[str, int]] = []
+    for child in children:
+        if _ascii_lower(child.suffix) != ".arw":
+            continue
+        try:
+            # DirEntry::file_type().is_file() in the frozen Rust reference
+            # renderer does not follow symlinks.
+            metadata = child.lstat()
+        except OSError as error:
+            raise AdjudicationError(
+                f"{spec.name}: cannot stat source entry {child}: {error}"
+            ) from error
+        if stat.S_ISREG(metadata.st_mode):
+            entries.append((child.name, metadata.st_size))
+    if not entries:
+        raise AdjudicationError(f"{spec.name}: no .ARW source files in {directory}")
+    return _source_identity_from_entries(directory, _ordered_source_entries(entries))
 
 
 def _optional_f64(raw: str | None, key: str) -> SerializedOptionalF64:
@@ -201,7 +307,9 @@ def parse_warpmap_text(text: str, source: str = "<memory>") -> WarpMap:
             continue
 
         if saw_end:
-            raise AdjudicationError(f"{source}:{line_number}: record follows the end marker")
+            raise AdjudicationError(
+                f"{source}:{line_number}: record follows the end marker"
+            )
 
         if head == "end":
             end_count = _parse_uint(rest, f"{source}:{line_number}: end")
@@ -253,7 +361,9 @@ def parse_warpmap_text(text: str, source: str = "<memory>") -> WarpMap:
         if not rest:
             raise AdjudicationError(f"{source}:{line_number}: empty header {head!r}")
         if head in headers:
-            raise AdjudicationError(f"{source}:{line_number}: duplicate header {head!r}")
+            raise AdjudicationError(
+                f"{source}:{line_number}: duplicate header {head!r}"
+            )
         headers[head] = rest
 
     if not saw_magic:
@@ -362,7 +472,9 @@ def _validate_warpmap(
             raise AdjudicationError(f"{source}: frame {index} was refused")
         values = (record.a.real, record.a.imag, record.b.real, record.b.imag)
         if not all(math.isfinite(value) for value in values):
-            raise AdjudicationError(f"{source}: frame {index} has a non-finite placement")
+            raise AdjudicationError(
+                f"{source}: frame {index} has a non-finite placement"
+            )
 
     reference = warpmap.records[spec.reference]
     if require_exact_reference and (
@@ -374,7 +486,9 @@ def _validate_warpmap(
         )
 
 
-def validate_warpmap(warpmap: WarpMap, spec: StackSpec, source: str = "<memory>") -> None:
+def validate_warpmap(
+    warpmap: WarpMap, spec: StackSpec, source: str = "<memory>"
+) -> None:
     """Apply every frozen strict pre-measurement gate."""
 
     _validate_warpmap(
@@ -396,6 +510,31 @@ def validate_product_warpmap(
         source,
         require_exact_reference=False,
     )
+
+
+def validate_source_identity(
+    warpmap: WarpMap,
+    spec: StackSpec,
+    identity: SourceIdentity,
+    source: str = "<memory>",
+) -> None:
+    """Refuse unless source names/sizes/count reproduce the sidecar identity."""
+
+    if identity.directory.name != spec.stack_name:
+        raise AdjudicationError(
+            f"{source}: source directory name {identity.directory.name!r}, "
+            f"expected {spec.stack_name!r}"
+        )
+    if len(identity.entries) != spec.frames:
+        raise AdjudicationError(
+            f"{source}: source inventory has {len(identity.entries)} .ARW files, "
+            f"expected {spec.frames} for {spec.name}"
+        )
+    if identity.digest != warpmap.stack_digest:
+        raise AdjudicationError(
+            f"{source}: source stack digest {identity.digest}, "
+            f"sidecar declares {warpmap.stack_digest}"
+        )
 
 
 def _reference_transform_report(warpmap: WarpMap, spec: StackSpec) -> dict[str, Any]:
@@ -569,7 +708,11 @@ def subset_indices() -> tuple[int, ...]:
 
 
 def _measurement_row(
-    spec: StackSpec, path: Path, raw_bytes: bytes, warpmap: WarpMap
+    spec: StackSpec,
+    path: Path,
+    raw_bytes: bytes,
+    warpmap: WarpMap,
+    identity: SourceIdentity,
 ) -> dict[str, Any]:
     placements = _placements(warpmap)
     k = cover_scale(placements)
@@ -582,9 +725,22 @@ def _measurement_row(
         "validation": "PASS",
         "source_identity": {
             "stack_name": warpmap.stack_name,
-            "stack_digest": warpmap.stack_digest,
+            "source_directory": str(identity.directory.resolve()),
+            "sidecar_stack_digest": warpmap.stack_digest,
+            "recomputed_stack_digest": identity.digest,
             "digest_basis": "sorted source file name and size entries",
-            "frames": warpmap.frames,
+            "validated": identity.digest == warpmap.stack_digest,
+            "frames": len(identity.entries),
+            "total_bytes": identity.total_bytes,
+            "first_entry": {
+                "name": identity.entries[0][0],
+                "size": identity.entries[0][1],
+            },
+            "last_entry": {
+                "name": identity.entries[-1][0],
+                "size": identity.entries[-1][1],
+            },
+            "inventory_sha256": identity.inventory_sha256,
         },
         "frames": warpmap.frames,
         "reference": warpmap.reference,
@@ -619,7 +775,9 @@ def _read_sidecar(
     try:
         text = raw_bytes.decode("utf-8")
     except UnicodeDecodeError as error:
-        raise AdjudicationError(f"{spec.name}: sidecar is not UTF-8: {error}") from error
+        raise AdjudicationError(
+            f"{spec.name}: sidecar is not UTF-8: {error}"
+        ) from error
     source = f"{spec.name}={path}"
     warpmap = parse_warpmap_text(text, source)
     if product_mode:
@@ -630,11 +788,12 @@ def _read_sidecar(
 
 
 def _bindings(
-    raw_bindings: Sequence[str], command_name: str = "measure"
+    raw_bindings: Sequence[str], command_name: str, binding_kind: str
 ) -> dict[str, Path]:
     if len(raw_bindings) != len(STACK_SPECS):
         raise AdjudicationError(
-            f"{command_name} requires exactly {len(STACK_SPECS)} name=path sidecars"
+            f"{command_name} requires exactly {len(STACK_SPECS)} "
+            f"name=path {binding_kind}"
         )
     bindings: dict[str, Path] = {}
     for raw in raw_bindings:
@@ -646,29 +805,35 @@ def _bindings(
                 f"unknown sidecar name {name!r}; expected {sorted(SPECS_BY_NAME)}"
             )
         if name in bindings:
-            raise AdjudicationError(f"duplicate sidecar name {name!r}")
+            raise AdjudicationError(f"duplicate {binding_kind} name {name!r}")
         bindings[name] = Path(path_text)
     missing = [spec.name for spec in STACK_SPECS if spec.name not in bindings]
     if missing:
-        raise AdjudicationError(f"missing sidecar name(s): {', '.join(missing)}")
+        raise AdjudicationError(f"missing {binding_kind} name(s): {', '.join(missing)}")
     return bindings
 
 
-def _command_measure(
-    args: argparse.Namespace, *, product_mode: bool
-) -> dict[str, Any]:
+def _command_measure(args: argparse.Namespace, *, product_mode: bool) -> dict[str, Any]:
     command_name = "measure-product" if product_mode else "measure"
-    bindings = _bindings(args.sidecars, command_name)
+    bindings = _bindings(args.sidecars, command_name, "sidecars")
+    source_bindings = _bindings(args.sources, command_name, "source directories")
     rows: list[dict[str, Any]] = []
     warpmaps: dict[str, WarpMap] = {}
     for spec in STACK_SPECS:
         path = bindings[spec.name]
+        identity = _read_source_identity(spec, source_bindings[spec.name])
         raw_bytes, warpmap = _read_sidecar(
             spec,
             path,
             product_mode=product_mode,
         )
-        rows.append(_measurement_row(spec, path, raw_bytes, warpmap))
+        validate_source_identity(
+            warpmap,
+            spec,
+            identity,
+            f"{spec.name}={source_bindings[spec.name]}",
+        )
+        rows.append(_measurement_row(spec, path, raw_bytes, warpmap, identity))
         warpmaps[spec.name] = warpmap
     by_name = {row["name"]: row for row in rows}
 
@@ -711,9 +876,7 @@ def _command_measure(
         "crop_edge_pass": edge_pass,
         "pass": snr_pass,
         "verdict": (
-            "ESSENTIALLY_UNCHANGED"
-            if snr_pass
-            else "EXPOSURE_SOLVE_SENSITIVE"
+            "ESSENTIALLY_UNCHANGED" if snr_pass else "EXPOSURE_SOLVE_SENSITIVE"
         ),
     }
 
@@ -766,6 +929,7 @@ def _command_measure(
             "serialized_values": "IEEE-754 binary64 decoded from exact 16-hex-digit fields",
             "geometry": "3 px margin; all four plane corners; 60 bisections",
             "membership": "all placed frames, except only the preregistered N182-to-N92 subset",
+            "source_identity": "FNV-1a-64 over every sorted .ARW name, NUL, little-endian u64 size, NUL",
             "invokes_strehl": False,
             "writes_result_files": False,
         },
@@ -816,12 +980,12 @@ def _placement(
     )
 
 
-def _synthetic_sidecar(spec: StackSpec) -> str:
+def _synthetic_sidecar(spec: StackSpec, digest: str) -> str:
     identity = " ".join(IDENTITY_BITS)
     lines = [
         "strehl-warpmap 1",
         "stack-name " + spec.stack_name,
-        "stack-digest 0123456789abcdef",
+        "stack-digest " + digest,
         f"frames {spec.frames}",
         f"plane {WIDTH}x{HEIGHT}",
         f"reference {spec.reference}",
@@ -862,6 +1026,16 @@ def _expect_product_refusal(text: str, spec: StackSpec) -> str:
     raise CommissionError("product mode accepted a planted invalid sidecar")
 
 
+def _expect_source_refusal(
+    warpmap: WarpMap, spec: StackSpec, identity: SourceIdentity
+) -> str:
+    try:
+        validate_source_identity(warpmap, spec, identity)
+    except AdjudicationError as error:
+        return str(error)
+    raise CommissionError("a planted source-identity mismatch was accepted")
+
+
 def command_commission(_: argparse.Namespace) -> dict[str, Any]:
     identity = _placement()
     defect = _placement(b_re=16.0, b_im=-12.0)
@@ -874,12 +1048,12 @@ def command_commission(_: argparse.Namespace) -> dict[str, Any]:
     defect_corners = _mapped_corners(defect, WIDTH, HEIGHT, 1.0)
     corner_deltas = [
         math.hypot(got_x - want_x, got_y - want_y)
-        for (want_x, want_y), (got_x, got_y) in zip(
-            baseline_corners, defect_corners
-        )
+        for (want_x, want_y), (got_x, got_y) in zip(baseline_corners, defect_corners)
     ]
     _require(max(corner_deltas) > 0.0, "known transform defect was not detected")
-    _require(defect_k < smaller_k < baseline_k, "smaller transform defect did not improve k")
+    _require(
+        defect_k < smaller_k < baseline_k, "smaller transform defect did not improve k"
+    )
     _require(restored_k == baseline_k, "restored transform did not return exact k")
     _require(
         _mapped_corners(identity, WIDTH, HEIGHT, 1.0) == baseline_corners,
@@ -955,13 +1129,60 @@ def command_commission(_: argparse.Namespace) -> dict[str, Any]:
     subset_constraints = tuple(full_constraints[index] for index in indices)
     full_k = cover_scale(full_constraints)
     subset_k = cover_scale(subset_constraints)
-    _require(1 not in indices, "commission's planted removed constraint survived the subset")
+    _require(
+        1 not in indices, "commission's planted removed constraint survived the subset"
+    )
     _require(subset_k >= full_k, "removing constraints lowered k")
 
+    fixed_digest_vector = (("a.ARW", 10), ("b.ARW", 20))
+    fixed_digest = stack_digest(fixed_digest_vector)
+    _require(
+        fixed_digest == "9d06cf05b27f7b40",
+        "FNV-1a implementation missed the fixed external digest oracle",
+    )
+    _require(
+        stack_digest((("a.ARW", 11), ("b.ARW", 20))) != fixed_digest,
+        "source-size mutation did not change the stack digest",
+    )
+    _require(
+        stack_digest(fixed_digest_vector) == fixed_digest,
+        "restored source inventory did not restore the digest exactly",
+    )
+    mixed_case_entries = _ordered_source_entries((("a.ARW", 10), ("B.ARW", 20)))
+    _require(
+        tuple(name for name, _ in mixed_case_entries) == ("B.ARW", "a.ARW"),
+        "source inventory used case-folded Windows Path ordering",
+    )
+    _require(
+        stat.S_ISREG(stat.S_IFREG | 0o644) and not stat.S_ISREG(stat.S_IFLNK | 0o777),
+        "source file-type gate admitted a symbolic link",
+    )
+
     spec = STACK_SPECS[0]
-    good_text = _synthetic_sidecar(spec)
+    synthetic_entries = tuple(
+        (f"DSC{index:05d}.ARW", 1_000_000 + index) for index in range(spec.frames)
+    )
+    synthetic_identity = _source_identity_from_entries(
+        Path(spec.stack_name), synthetic_entries
+    )
+    good_text = _synthetic_sidecar(spec, synthetic_identity.digest)
     good_map = parse_warpmap_text(good_text)
     validate_warpmap(good_map, spec)
+    validate_source_identity(good_map, spec, synthetic_identity)
+    wrong_digest_text = _replace_line(
+        good_text,
+        "stack-digest ",
+        "stack-digest 0000000000000000",
+    )
+    wrong_digest_refusal = _expect_source_refusal(
+        parse_warpmap_text(wrong_digest_text), spec, synthetic_identity
+    )
+    missing_entry_identity = _source_identity_from_entries(
+        Path(spec.stack_name), synthetic_entries[:-1]
+    )
+    missing_entry_refusal = _expect_source_refusal(
+        good_map, spec, missing_entry_identity
+    )
     subtle_bits = _f64_to_bits(math.nextafter(1.0, math.inf))
     subtle_value = _f64_from_bits(subtle_bits, "commission subtle f64")[1]
     _require(
@@ -998,7 +1219,9 @@ def command_commission(_: argparse.Namespace) -> dict[str, Any]:
             _replace_line(good_text, "frames ", f"frames {spec.frames - 1}"), spec
         ),
     }
-    _require(reference_line in good_text, "synthetic reference line was not constructed")
+    _require(
+        reference_line in good_text, "synthetic reference line was not constructed"
+    )
 
     material_placement = _placement(b_re=30.0, b_im=40.0)
     material_text = _replace_line(
@@ -1020,6 +1243,7 @@ def command_commission(_: argparse.Namespace) -> dict[str, Any]:
         Path("<commission-memory>"),
         material_text.encode("utf-8"),
         material_map,
+        synthetic_identity,
     )
     reference_after = material_map.records[spec.reference]
     material_report = material_row["reference_transform"]
@@ -1095,6 +1319,19 @@ def command_commission(_: argparse.Namespace) -> dict[str, Any]:
             "exact_f64_bits_round_trip": subtle_bits,
             "refusals": validation_refusals,
         },
+        "source_identity": {
+            "fixed_external_vector_entries": list(fixed_digest_vector),
+            "fixed_external_vector_digest": fixed_digest,
+            "mixed_case_sort_order": [name for name, _ in mixed_case_entries],
+            "symbolic_link_is_regular_file": stat.S_ISREG(stat.S_IFLNK | 0o777),
+            "source_size_mutation_detected": (
+                stack_digest((("a.ARW", 11), ("b.ARW", 20))) != fixed_digest
+            ),
+            "restoration_exact": stack_digest(fixed_digest_vector) == fixed_digest,
+            "valid_inventory_accepted": True,
+            "wrong_digest_refusal": wrong_digest_refusal,
+            "missing_entry_refusal": missing_entry_refusal,
+        },
         "reference_gauge": {
             "strict_reference_refusal": strict_reference_refusal,
             "product_nonidentity_accepted": True,
@@ -1127,10 +1364,24 @@ def parser() -> argparse.ArgumentParser:
     commission.set_defaults(run=command_commission)
 
     measure = commands.add_parser("measure")
+    measure.add_argument(
+        "--source",
+        dest="sources",
+        action="append",
+        required=True,
+        metavar="NAME=DIR",
+    )
     measure.add_argument("sidecars", nargs="+", metavar="NAME=PATH")
     measure.set_defaults(run=command_measure)
 
     measure_product = commands.add_parser("measure-product")
+    measure_product.add_argument(
+        "--source",
+        dest="sources",
+        action="append",
+        required=True,
+        metavar="NAME=DIR",
+    )
     measure_product.add_argument("sidecars", nargs="+", metavar="NAME=PATH")
     measure_product.set_defaults(run=command_measure_product)
     return result

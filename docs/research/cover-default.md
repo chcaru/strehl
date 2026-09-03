@@ -17,6 +17,15 @@ No sharpness, acuity, SFR, gradient, or visual-quality statistic appears in
 this decision. The positive result is exact integers and the negative result
 is fixed geometry plus absolute green-channel levels.
 
+A later, preregistered development extension over the released
+calibration-slide session reproduced Crop identity at three exposures: all
+72,106,680 emitted RGB16 samples matched external LibRaw predictions exactly,
+while Scale changed 94.7696%--99.1441% of the registered overlaps. It also
+**refuted** the source's unqualified "`k` falls as the stack deepens" claim:
+the strict eight-point chain has reversals at N=60→61 and N=92→182. Neither
+result repairs Crop's independent 256 px border blocker, so the default
+decision remains unchanged.
+
 ## 1. Frozen predicates, capture governance, and provenance
 
 The authoritative predicates were committed before any comparison or treatment
@@ -65,13 +74,22 @@ executable:
   9,913,344 bytes
 ```
 
-Only captures classified as non-holdout in
+The initial audit decoded only captures classified as non-holdout in
 `docs/proposals/2026-09-sota-scorecard.md` were decoded. The measured inputs
 were `109MSDCF`, `113MSDCF`, `coffee-bubbles`, and
 `flat-on-ruler-cpl`. `D:\personal\macro` was read only. The 299-frame
 `bee-1-cpl` performance holdout was not opened. All outputs and the one copied
 diagnostic RAW were written beneath `D:\strehl-out\cover-default`. Rust,
 Rayon, OMP, OpenBLAS, MKL, and NumExpr were capped at eight threads.
+
+Scorecard v1.3 commit `e91ba50eb36a83b97700b541358beb77bcc8ed86`
+subsequently released the six-stack
+`high-res-calibration-slide-cpl` session unit as
+**DEVELOPMENT — NOT HOLDOUT** specifically for flat-path identity, coverage,
+and Scale-resampling diagnostics. The extension below spent that whole unit.
+The capture tree remained read only; sidecars, copied references, and TIFFs
+were written only beneath `D:\strehl-out\cover-default-slide-v2`. No holdout
+was opened.
 
 ## 2. Harness commissioning
 
@@ -423,7 +441,262 @@ for legacy freezes or a deliberate Crop rebaseline. Clearing an ambient
 variable makes today's invocation hermetic; it does not pin tomorrow's
 default.
 
-## 7. Verification and limitations
+## 7. Development extension — released calibration-slide session
+
+### 7.1 Frozen protocol, reference-gauge failure, and provenance
+
+This extension was preregistered before any member of the released session was
+aligned, decoded, or rendered:
+
+* protocol commit
+  `485619d2a7adce02d7eec33d6b07b01798ee2db7`,
+  `slide-series-preregistration.md` SHA-256
+  `AC66147457C8508ED04D3E34057236B585F3113BD66AE433CBEF0A0487FF1638`;
+* initial instrument commit
+  `b35b0e52fc3312fe05d52ff98999b3ba2482d25f`;
+* external checker `slide_external_decode.py` SHA-256
+  `07FDBE4CB32A7FE8539C40AA9B38AC50BC9B6D7DEB76D7B80BA15ACCEDE29722`;
+* Rust reference renderer `cover-reference.rs` SHA-256
+  `F1762977AA8AE7C1D95366F5C65A6857DC6AB012E9E7323A4054FF6CD2BF5C7E`.
+
+The first real preflight stopped before exposing any `k`: the flat-1s
+reference was numerically close to identity but not exact f64 identity. The
+original registered result is therefore permanently
+**`UNMEASURABLE_REFERENCE_NOT_BIT_IDENTITY`**. Before inspecting another
+reference, a crop rectangle, a RAW decode, or a pixel result, commit
+`342702793587bba3a50c89a0ac3f39fb62f7130a` froze a separately labelled
+`ACTUAL_PRODUCT_DIAGNOSTIC`. Its amendment has SHA-256
+`C3AABA922C36E36560D420156C3821D1ED2B28A7CE4A9669B90962DDA5FE6E13`.
+It sets no post-result tolerance and forbids canonicalising, rebasing, or
+rounding the placement. Commit
+`7948bf35522c5453a2334c5e657d8819115a5f05` implemented that explicit mode.
+
+All six actual references then proved non-bit-identical:
+
+| stack | exact f64 bits `(a.re,a.im,b.re,b.im)` | maximum centred-corner displacement |
+| --- | --- | ---: |
+| flat-1s | `3fefffffffffffff,3be0000000000000,bc80000000000000,3cb0000000000000` | 2.3472018171527914e-13 px |
+| flat-2p5s | `3ff0000000000000,0000000000000000,3c70000000000000,bcb0000000000000` | 2.2247786310271853e-16 px |
+| flat-6s | `3ff0000000000001,3be0000000000000,3c80000000000000,bcb0000000000000` | 4.692938957858195e-13 px |
+| tilted-sw10 | `3ff0000000000000,bc20000000000000,0000000000000000,0000000000000000` | 9.163039456629760e-16 px |
+| tilted-sw4 | `3ff0000000000000,0000000000000000,3c80000000000000,3ca0000000000000` | 1.1443916996305594e-16 px |
+| all-axis-sw10 | `3ff0000000000000,3c10000000000000,0000000000000000,0000000000000000` | 4.581519728314880e-16 px |
+
+The six sidecars came from the preregistered eight-thread invocation of the
+frozen aligner identified in section 1. The reference renderer was built from
+`7948bf35` with
+`RUSTFLAGS=--cfg cover_slide_audit_20260903` and had:
+
+```text
+D:\strehl-out\cover-default-slide-v2\target\release\examples\cover-reference.exe
+SHA-256 3D3C400D833051F50E010985672CEF07BD6A3A9E29D2D9900952E6534CA3E83B
+```
+
+It loaded and identity-checked every sorted source `.ARW`, the full sidecar,
+the registered reference, Catmull-Rom, all placements, and the source digest
+before decoding only the reference. It then called production
+`cover_or_explain` and `warp_frame_in_place`; it did not merge, elect,
+pyramid-decompose, repair defects, correct CA, restore, expose, colour-map, or
+apply a display curve.
+
+An independent verifier found one provenance defect after the first geometry
+measurement: the Python adjudicator checked that `stack-digest` was syntactic
+hex but did not recompute it from the source inventory. No geometry equation
+or result was affected, but its `"validation": "PASS"` claim was too strong.
+The adjudicator was corrected to require six explicit read-only source
+directories and to reproduce Rust's FNV-1a digest over every sorted
+`(filename,size)` entry. Current `slide_series.py` SHA-256 is
+`99823DB0838E2EE6684E6066E695E80F94994B41DA9A962D476E0FED935DA18F`.
+The corrected command rejected planted digest/count changes, then revalidated
+all 657 source entries and reproduced every geometry number unchanged:
+
+| stack | N | recomputed = sidecar FNV-1a | inventory SHA-256 | sidecar SHA-256 |
+| --- | ---: | --- | --- | --- |
+| flat-1s | 60 | `00feb5f7eb369463` | `6BBAE09C4CF0CDACE84C50FCBE2D8C9D135C1B4DE9AEB1865B42B85B71DAEAEC` | `862C6FD8E1956FDD53F527A12809B3079226334265EDADFF8AA1F0EA3B9B828C` |
+| flat-2p5s | 61 | `670ef0480ca81076` | `D39CC3AE911C7706AEB054CB470A05C16030965A225482C526115C8379DA4D71` | `0C2CF172F7577189D2EE6F19F281D1A5BA821E7EC4A2F4D13F0BB12B87D4C638` |
+| flat-6s | 65 | `7cc19bab0cba440f` | `1DCC9A4FABCC29F5811AF075381CAFC8EF05F9A75A101DCE6C1CF024FABCCF5C` | `60A33EA0513E6408313EAA5698106FEC9B23FD6E8E325C246141C1905F2427F3` |
+| tilted-sw10 | 92 | `3c8796d7fd1acf46` | `500753BD7F5F11C06882A9A3D2DECE82A07CE0BB93F52CADC13CD8A4E624B759` | `DB982BEDAE1172EB51D5787F4C6746C1FD552E33077CCAFAD5469BC96D6B10D1` |
+| tilted-sw4 | 182 | `175c37dbe6abc528` | `9ABE7BBC11B05985A5E5F6D95F53443A64B9DE8A903EBB936E4DF343E2F61A98` | `AE39DE48B8FA3EFD8A6F65422A4FE9A62B8D687B47B8BB7F359B2DD843E99839` |
+| all-axis-sw10 | 197 | `bf3746281784cbbb` | `9F83AC7BDD9FAF9CE255ECAC9F5820D4B8605CC21423B1ABFB5A0117F86056DD` | `133AAD1446F50F570CAFC9DF636661318A6688A7C1B8C2D5F2A9EC9BD2CDEBEC` |
+
+The exact corrected geometry invocation was:
+
+```powershell
+$base='D:\personal\macro\requests\misc-diagnostic\high-res-calibration-slide-cpl'
+python -B experiments\cover-default\slide_series.py measure-product `
+  --source "flat-1s=$base\flat-sw4-cpl\flat-et1s-sw4-cpl" `
+  --source "flat-2p5s=$base\flat-sw4-cpl\flat-et2.5s-sw4-cpl" `
+  --source "flat-6s=$base\flat-sw4-cpl\flat-et6s-sw4-cpl" `
+  --source "tilted-sw10=$base\tilted-sw10-cpl" `
+  --source "tilted-sw4=$base\tilted-sw4-cpl" `
+  --source "all-axis-sw10=$base\very-tilted-all-axis-sw10-cpl" `
+  flat-1s=D:\strehl-out\cover-default-slide-v2\warpmaps\flat-1s.warpmap.txt `
+  flat-2p5s=D:\strehl-out\cover-default-slide-v2\warpmaps\flat-2p5s.warpmap.txt `
+  flat-6s=D:\strehl-out\cover-default-slide-v2\warpmaps\flat-6s.warpmap.txt `
+  tilted-sw10=D:\strehl-out\cover-default-slide-v2\warpmaps\tilted-sw10.warpmap.txt `
+  tilted-sw4=D:\strehl-out\cover-default-slide-v2\warpmaps\tilted-sw4.warpmap.txt `
+  all-axis-sw10=D:\strehl-out\cover-default-slide-v2\warpmaps\all-axis-sw10.warpmap.txt
+```
+
+### 7.2 Geometry commissioning and Q2
+
+Before the corrected measurement:
+
+```powershell
+python -B experiments\cover-default\slide_series.py commission
+```
+
+returned `COMMISSIONED`. A fixed external two-entry oracle produced FNV-1a
+`9d06cf05b27f7b40`; changing one source size changed the digest, restoring it
+restored the digest exactly, a wrong sidecar digest was refused, and a
+59-versus-60 inventory was refused. Mixed-case names sorted in Rust's
+case-sensitive order and a symbolic-link file type was refused. The existing
+geometry plant moved
+`k` from 0.9974380871050387 to 0.9872013651877134; the registered improvement
+arm moved it back toward truth to 0.9948805460750854, and restoration returned
+exactly 0.9974380871050387. Equality and reversal plants failed strict
+ordering, threshold-nextafter plants straddled the registered limits, and
+removing a planted subset constraint did not reduce `k`.
+
+The separately labelled actual-product values are:
+
+| point | N | `k` | `100*(1/k-1)` | Crop `(x,y,w,h)` | provenance |
+| --- | ---: | ---: | ---: | --- | --- |
+| documented anchor | 22 | 0.9870 | 1.317122594% | — | source assertion |
+| flat-1s | 60 | 0.9862106434499731 | 1.398216156% | 25,17,3466,2310 | measured |
+| flat-2p5s | 61 | 0.9869882377791444 | 1.318330019% | 23,16,3470,2312 | measured |
+| flat-6s | 65 | 0.9859311178882552 | 1.426963999% | 25,17,3466,2310 | measured |
+| tilted-sw10 | 92 | 0.9652763795078986 | 3.597272370% | 62,41,3392,2262 | measured |
+| tilted-sw4 | 182 | 0.9676287511847108 | 3.345420315% | 57,38,3402,2268 | measured |
+| all-axis-sw10 | 197 | 0.9378551850015397 | 6.626269811% | 110,73,3296,2198 | measured |
+| documented anchor | 299 | 0.9321 | 7.284626113% | — | source assertion; holdout untouched |
+
+All six new values lie strictly between the two source anchors, but the
+preregistered chain is **`NOT_ORDERED`**:
+
+* `k60=0.9862106434499731 < k61=0.9869882377791444`;
+* `k92=0.9652763795078986 < k182=0.9676287511847108`.
+
+Thus the weak magnitude range is corroborated, but the claimed unqualified
+depth law does not survive. It must not be rescued by averaging.
+
+The flat exposure/SNR control also failed. Its `k` span was
+0.001057119890889191 against the frozen 0.0010 maximum, a failure by
+0.000057119890889191. Integer edge-loss spans did pass
+`(left,right,top,bottom)=(2,2,1,1)` px against the 2 px limits. The combined
+registered verdict is **`EXPOSURE_SOLVE_SENSITIVE`**: these product solves
+cannot be described as a purely geometric depth law.
+
+The deterministic N=182→92 subset included both endpoints and reference 91.
+It gave `k=0.9676287511847108`, exactly the full N=182 value, so removing
+constraints correctly did not lower `k`. It differed from the independent
+tilted-sw10 N=92 value by 0.002352371676812237, exceeding the 0.0010 bound.
+The verdict is **`CAPTURE_STEP_WIDTH_SENSITIVE`**, not depth-density support.
+Moreover, the tilted N=92 and N=182 maps report held-out errors of
+12.095237912344203 px and 8.662102059714970 px respectively, both beyond the
+aligner's 4 px usability threshold (`align_cmd.rs:472-478`). They are faithful
+measurements of the global model the product applies, not established
+physical-geometry truth.
+
+### 7.3 Q1 at three exposures
+
+The three registered references were copied to the private output tree and
+hash-checked:
+
+| case | private RAW SHA-256 | Crop TIFF SHA-256 | Scale TIFF SHA-256 |
+| --- | --- | --- | --- |
+| flat-1s | `3A5FC6993D0EC24468FD24684AABE7783FE06D3D85EEC040584330AF0153A03B` | `15227287E89FFE59F0EAF7FA8198382E5B04E17C152012D31375605691386B2F` | `407FB1F79227A37B3C60717959142ABC2EB78D8C936B347EEF7BD3D3CCAA5FF3` |
+| flat-2p5s | `9FB1CC9C323D13D72467411F9FFE607F20C6D088EAEA374F4F0AB9C56098535D` | `E20DB21BBF801272562E8893A29369089BB63C9FAED368AB5D68C7A2C34C069A` | `AA087D09AFE085DA1AD9F116FFA00A8636AB884753467BB90A606EC22EAF7D97` |
+| flat-6s | `A5225AEF221DAD3D6EB850940BE527E48A99548EF3CF23990AE4D09EA5B5A146` | `7A967457CD05A21C281D94BE12288533AA15C3B168BFB6F0E41F5FBFDDC6ED0E` | `8B34EAA79634AC6D960D4CE1DB365872F8AB02D99A85FF24BE63C1CAE20F26D6` |
+
+The exact external comparison was:
+
+```powershell
+python -B experiments\cover-default\slide_external_decode.py measure-product `
+  --case flat-1s `
+    D:\strehl-out\cover-default-slide-v2\refs\flat-1s\DSC00046.ARW `
+    D:\strehl-out\cover-default-slide-v2\warpmaps\flat-1s.warpmap.txt `
+    D:\strehl-out\cover-default-slide-v2\q1\flat-1s\crop-reference.tiff `
+    D:\strehl-out\cover-default-slide-v2\q1\flat-1s\scale-reference.tiff `
+  --case flat-2p5s `
+    D:\strehl-out\cover-default-slide-v2\refs\flat-2p5s\DSC00050.ARW `
+    D:\strehl-out\cover-default-slide-v2\warpmaps\flat-2p5s.warpmap.txt `
+    D:\strehl-out\cover-default-slide-v2\q1\flat-2p5s\crop-reference.tiff `
+    D:\strehl-out\cover-default-slide-v2\q1\flat-2p5s\scale-reference.tiff `
+  --case flat-6s `
+    D:\strehl-out\cover-default-slide-v2\refs\flat-6s\DSC00047.ARW `
+    D:\strehl-out\cover-default-slide-v2\warpmaps\flat-6s.warpmap.txt `
+    D:\strehl-out\cover-default-slide-v2\q1\flat-6s\crop-reference.tiff `
+    D:\strehl-out\cover-default-slide-v2\q1\flat-6s\scale-reference.tiff
+```
+
+rawpy 0.27.0 / LibRaw 0.22.1 decoded each RAW in two independent contexts.
+Both contexts reproduced their full visible-mosaic hashes. The checker then
+independently applied the frozen RGGB, black-512, usable-white-15360, per-site
+clamp, two-green average, float32 WB, and RGB16 rounding rules. Normalised WB
+gains were `(2.775390625,1,1.5205078125)`,
+`(2.7587890625,1,1.5322265625)`, and
+`(2.7392578125,1,1.560546875)` for 1 s, 2.5 s, and 6 s.
+
+| comparison | samples | max abs | RMS | differing samples / fraction |
+| --- | ---: | ---: | ---: | ---: |
+| flat-1s external→Crop, full emitted extent | 24,019,380 | **0 DN** | **0 DN** | **0 / 0%** |
+| flat-1s unscaled external→Scale | 24,710,448 | 22,831 DN | 2997.023928606048 DN | 24,272,164 / 98.2263211092% |
+| flat-2p5s external→Crop, full emitted extent | 24,067,920 | **0 DN** | **0 DN** | **0 / 0%** |
+| flat-2p5s unscaled external→Scale | 24,710,448 | 57,937 DN | 7379.469079321559 DN | 24,498,939 / 99.1440503224% |
+| flat-6s external→Crop, full emitted extent | 24,019,380 | **0 DN** | **0 DN** | **0 / 0%** |
+| flat-6s unscaled external→Scale | 24,710,448 | 60,720 DN | 16953.854662869253 DN | 23,417,982 / 94.7695565859% |
+
+Crop's R, G, and B channels were separately exact. The per-channel sample
+counts were 8,006,460, 8,022,640, and 8,006,460 by case. Scale used the
+preregistered common `3514x2344x3` rawpy domain; its last two plane columns
+have no external binned-RAW counterpart and were not silently added after
+inspection.
+
+The categorical exposure predicate is therefore
+**`CROP_EXACT_SCALE_CHANGED_AT_ALL_THREE_EXPOSURES`**. The Scale DN RMS changes
+with exposure because the signal being interpolated changes; the
+preregistration explicitly reports but does not require invariance of that
+quantity. What is invariant is the exact-Crop/changed-Scale result. In
+particular, the tiny nonidentity reference placements were consumed unchanged,
+yet integer addressing and floating-point evaluation still serialized every
+Crop sample exactly.
+
+Commissioning preceded each real comparison. A candidate-side centre-green
+XOR `0x8000` changed exactly one sample (max 32768 DN; RMS
+6.686041046626796, 6.679295465157900, and 6.686041046626796 DN by case).
+Replacing it with XOR `0x0001` was the registered improvement arm: max fell to
+1 DN and RMS to 0.000204041780, 0.000203835921, and 0.000204041780 DN.
+Restoration returned every statistic to exact zero. A one-quad wrong Crop
+origin changed 95.5716800%, 97.4822835%, and 92.1876793%; correcting only the
+externally specified origin returned all channels to exact zero. The real
+Scale arms remained far above the 1% positive-control threshold.
+
+An independent read-only implementation, importing neither COVER Python
+module, reproduced all six aggregate rows, every Crop channel, all mutation
+and origin controls, all RAW mosaic and candidate-array hashes, all six `k`
+values and crop rectangles, both ordering reversals, the SNR span, and the
+N=182→92 control.
+
+### 7.4 Product decision after the extension
+
+The extension strengthens the mechanism statement: on four externally decoded
+references in total, including three exposure levels, Crop is a bit-for-bit
+integer window and Scale resamples almost every sample. It weakens the source's
+causal story: product `k` is neither strictly ordered by N nor invariant enough
+across the flat exposure solves to qualify as a pure depth law, and the
+step-width pair does not isolate frame count.
+
+Neither finding changes the shipping gate. Crop still runs the merge pyramid
+on the uncovered full plane before cutting out its smaller rectangle. The
+separately measured 109 profile still requires a **256 px** safe inset, twice
+the frozen 128 px maximum, and retains only **64.6047%** of the original plane;
+the second subject still validates no finite general inset. **Keep Scale as the
+default.** Crop remains useful as an explicit diagnostic, but making it the
+default would exchange a proven resample for a larger unresolved border
+contamination without an admissible universal crop.
+
+## 8. Verification and limitations
 
 Commands read to completion:
 
@@ -439,9 +712,44 @@ python -B experiments\cover-default\external_decode.py measure
   -> PASS; rawpy repeat and wrong-origin controls passed,
      Crop/direct/no-fit exact, Scale positive arm detected
 
+python -B experiments\cover-default\slide_series.py commission
+  -> COMMISSIONED; fixed FNV oracle, source mutation/restoration,
+     geometry defect/improvement/restoration, strict-order, threshold,
+     subset, and exact-reference controls passed
+
+python -B experiments\cover-default\slide_series.py measure-product
+  <six explicit --source bindings> <six explicit sidecar bindings>
+  -> MEASURED; all 657 source entries reproduced all six sidecar
+     digests; strict reference result UNMEASURABLE; actual-product
+     results NOT_ORDERED / EXPOSURE_SOLVE_SENSITIVE /
+     CAPTURE_STEP_WIDTH_SENSITIVE
+
+python -B experiments\cover-default\slide_external_decode.py measure-product
+  <three explicit RAW/sidecar/Crop/Scale cases>
+  -> PASS; commissioning and repeated LibRaw controls passed;
+     Crop exact and Scale changed at all three exposures
+
 independent inline rawpy/NumPy/tifffile reimplementation
   -> exit 0; reproduced mosaic/prediction hashes and every Q1 aggregate
      without importing the COVER checker or a repository module
+
+independent inline sidecar/source-geometry reimplementation
+  -> exit 0; reproduced source identities, all six geometry rows,
+     strict failures, SNR result, and subset result without importing
+     the COVER adjudicator
+
+python -m ruff check experiments\cover-default\slide_series.py
+python -m ruff format --check experiments\cover-default\slide_series.py
+  -> passed
+
+rustfmt --edition 2024 --config skip_children=true --check
+  crates\strehl-cli\examples\cover-reference.rs
+  -> exit 0
+
+cargo test --release -p strehl-cli --example cover-reference
+  --target-dir D:\strehl-out\cover-default-slide-v2\target -j 8 --
+  --test-threads=1
+  -> 46 passed
 
 rustfmt --edition 2024 --check crates\strehl-cli\tests\byte-freeze.rs
   -> exit 0
@@ -463,22 +771,29 @@ pre-existing formatting differences in files including
 `crates/strehl-cli/build.rs`; the assigned Rust file passes direct `rustfmt
 --check`.
 
-Verified here: the corrected Q1 transparency result against two copied
-rawpy/LibRaw decodes; its per-channel and cross-path exact integers; the
-candidate-side defect, improvement, restoration, wrong-origin, and Scale
-controls; four diagnostic `k` values; both 113 depth series; two subjects'
-four-arm render provenance; every registered border annulus; output
+Verified here: Q1 transparency for the original 109 reference and all three
+released flat references against two-context rawpy/LibRaw decodes; every Crop
+channel; candidate-side defect, improvement, restoration, wrong-origin, and
+Scale controls; source names/sizes/counts and sidecar identity for all six
+released stacks; six actual-product `k` values, reference bits, crop
+rectangles, ordering, SNR, and subset controls; both earlier 113 depth series;
+two subjects' four-arm border provenance and every registered annulus; output
 dimensions; the freeze failure plant; and the repaired freeze under the same
 plant.
 
-An independent read-only verifier recomputed Q1 in signed integer chunks,
-solved Q2 directly from the serialized f64 inequalities, and reimplemented the
-Q3 annulus calculation without calling `audit.py`. It reproduced every reported
-number and found no defect in the decision or the scoped freeze-harness change.
+Independent read-only verifiers recomputed Q1 in signed integer chunks, solved
+Q2 directly from serialized f64 inequalities, found and caused correction of
+the original source-digest validation omission, and reimplemented the Q3
+annulus calculation without calling a COVER module. After correction they
+reproduced every reported decision input.
 
 Not verified here: the 299-frame holdout value; a universal depth-only law
-under changing references; external identity for any RAW other than the frozen
-109 reference; any sharpness or visual advantage; or a finite safe inset that
-generalises beyond 109. The assertion that cropping is common product-category
-behaviour is context supplied to the lane, not a measurement made by this
-audit.
+under changing references; any sharpness or visual advantage; or a finite safe
+inset that generalises beyond 109. The N=299 `k=0.9321` row and the assertion
+that cropping is common product-category behaviour are supplied context, not
+fresh measurements. The tilted maps' global-similarity geometry is a product
+behavior measurement, not assumed physical truth. The six TIFFs are
+content-hashed and their arrays independently checked, but no saved artifact
+cryptographically binds each TIFF to the candidate executable; that binding
+rests on the observed renderer invocations, their validation banners, and the
+recorded build/hash chronology.
