@@ -93,12 +93,16 @@ def main() -> int:
     x = np.arange(shape[1], dtype=np.float64)
     above_cap = np.sin(2.0 * np.pi * 36.0 * x / shape[1])[None, :]
     above_cap = np.repeat(above_cap, shape[0], axis=0)
-    above_power = np.abs(np.fft.fft2(above_cap)) ** 2
-    leakage = float(np.sum(above_power[mask]) / np.sum(above_power))
+    licensed_cap = np.sin(2.0 * np.pi * 28.0 * x / shape[1])[None, :]
+    licensed_cap = np.repeat(licensed_cap, shape[0], axis=0)
+    backend_leakage = sc.q25_rank_field(above_cap) / sc.q25_rank_field(licensed_cap)
+    mixed_input_ratio = sc.q25(licensed_cap + above_cap) / sc.q25(licensed_cap)
     r.control(
-        "above-cap sinusoid isolation",
-        leakage <= 1e-24 and sc.UNLICENSED == "UNLICENSED_GT_0.25",
-        f"licensed leakage={leakage:.3e}; outcome={sc.UNLICENSED}",
+        "spectral-backend above-cap exclusion",
+        backend_leakage <= 1e-6 and sc.UNLICENSED == "UNLICENSED_GT_0.25",
+        f"backend relative leakage={backend_leakage:.3e}; "
+        f"end-to-end rank diagnostic={mixed_input_ratio:.6f}; "
+        f"outcome={sc.UNLICENSED}",
     )
 
     # Point-tone invariance and raw-substitution potency.
@@ -217,23 +221,21 @@ def main() -> int:
             for actual, predicted in zip(held_actual, held_predicted)
         ]
     )
+    actual_base = np.asarray(
+        [
+            math.log(sc.q25(actual) / sc.q25(base))
+            for base, actual in zip(held_base, held_actual)
+        ]
+    )
+    predicted_base = np.asarray(
+        [
+            math.log(sc.q25(predicted) / sc.q25(base))
+            for base, predicted in zip(held_base, held_predicted)
+        ]
+    )
     held_target = float(np.exp(np.mean(actual_predicted)))
-    d_out = float(
-        np.mean(
-            [
-                math.log(sc.q25(actual) / sc.q25(base))
-                for base, actual in zip(held_base, held_actual)
-            ]
-        )
-    )
-    d_pred = float(
-        np.mean(
-            [
-                math.log(sc.q25(predicted) / sc.q25(base))
-                for base, predicted in zip(held_base, held_predicted)
-            ]
-        )
-    )
+    d_out = float(np.mean(actual_base))
+    d_pred = float(np.mean(predicted_base))
     closure = d_pred / d_out
     original = float(
         np.exp(
@@ -246,17 +248,36 @@ def main() -> int:
         )
     )
     forward = float(np.exp(-np.mean(actual_predicted)))
+    rng_boot = np.random.default_rng(20260904)
+    boot_target = np.empty(10_000)
+    boot_closure = np.empty(10_000)
+    boot_forward = np.empty(10_000)
+    boot_original = np.empty(10_000)
+    for i in range(len(boot_target)):
+        ix = rng_boot.integers(0, len(held_base), len(held_base))
+        boot_target[i] = np.exp(np.mean(actual_predicted[ix]))
+        boot_forward[i] = np.exp(-np.mean(actual_predicted[ix]))
+        boot_original[i] = np.exp(-np.mean(actual_base[ix]))
+        boot_closure[i] = np.mean(predicted_base[ix]) / np.mean(actual_base[ix])
+    target_ci = np.quantile(boot_target, [0.025, 0.975])
+    closure_ci = np.quantile(boot_closure, [0.025, 0.975])
+    forward_ci = np.quantile(boot_forward, [0.025, 0.975])
+    original_ci = np.quantile(boot_original, [0.025, 0.975])
     reproduces = (
-        0.75 <= closure <= 1.25
-        and 0.85 <= forward <= 1.15
-        and original < 0.95
-        and forward >= 0.95
+        closure_ci[0] >= 0.75
+        and closure_ci[1] <= 1.25
+        and forward_ci[0] >= 0.85
+        and forward_ci[1] <= 1.15
+        and original_ci[1] < 0.95
+        and forward_ci[0] >= 0.95
     )
     r.control(
         "heldout target and synthetic REPRODUCES",
-        0.90 <= held_target <= 1.10 and reproduces,
-        f"actual/pred={held_target:.4f}, closure={closure:.4f}, "
-        f"forward={forward:.4f}, original={original:.4f}",
+        target_ci[0] >= 0.90 and target_ci[1] <= 1.10 and reproduces,
+        f"actual/pred={held_target:.4f}{target_ci.tolist()}, "
+        f"closure={closure:.4f}{closure_ci.tolist()}, "
+        f"forward={forward:.4f}{forward_ci.tolist()}, "
+        f"original={original:.4f}{original_ci.tolist()}",
     )
     noop_d_pred = float(
         np.mean(

@@ -237,3 +237,19 @@ registered `1.25` `Q25` ratio and `0.005` hull delta.  The paired blur arm
 uses the same frozen correlated field.  The iid reading remains a disclosed
 diagnostic.  This fixture correction was made without reading any real source,
 PMax, or strehl pixel.
+
+**Post-outcome independent-verification correction.**  Item 6 above was
+overstated: adding an above-cap sinusoid to an *intensity image* changes its
+global rank ordering, so no nonconstant rank statistic can be simultaneously
+invariant to every monotone point map and invariant to that perturbation.
+Independent verification routed the plant through `Q25` and observed
+`0.427222`, correctly falsifying the original end-to-end claim.  The repaired
+control targets the actual licensing contract: the production spectral
+backend, after the rank field is constructed, must suppress a fixed
+0.28125-cyc/px component by at least `1e6` relative to a fixed
+0.21875-cyc/px component, and all above-cap reporting remains the literal
+sentinel.  The end-to-end `0.427222` reading remains printed as a diagnostic,
+not hidden.  This correction was made after outcomes, so it cannot rehabilitate
+the preregistered causal verdict; that verdict remains `INDETERMINATE`.  The
+metadata finding that the comparator arm is not a one-variable sharpening
+experiment does not depend on `Q25`.

@@ -111,13 +111,9 @@ def licensed_mask(shape: tuple[int, int], band_scale: float = 1.0) -> np.ndarray
     return (r >= 0.20 * band_scale) & (r < 0.25 * band_scale)
 
 
-def q25(a: np.ndarray, band_scale: float = 1.0) -> float:
-    """Licensed-band energy per fixed average-rank variance.
-
-    The denominator is Parseval's expected windowed energy from the rank
-    variance.  It does not inspect any other measured frequency band.
-    """
-    q = midrank_field(np.asarray(a))
+def q25_rank_field(q: np.ndarray, band_scale: float = 1.0) -> float:
+    """Licensed spectral backend for an already constructed rank field."""
+    q = np.asarray(q, np.float64).copy()
     q -= np.mean(q)
     var = float(np.mean(q * q))
     if not var > 0:
@@ -130,6 +126,15 @@ def q25(a: np.ndarray, band_scale: float = 1.0) -> float:
     if not den > 0:
         raise ValueError("Q25 denominator is not positive")
     return num / den
+
+
+def q25(a: np.ndarray, band_scale: float = 1.0) -> float:
+    """Licensed-band energy per fixed average-rank variance.
+
+    The denominator is Parseval's expected windowed energy from the rank
+    variance.  It does not inspect any other measured frequency band.
+    """
+    return q25_rank_field(midrank_field(np.asarray(a)), band_scale)
 
 
 def raw_q25(a: np.ndarray, band_scale: float = 1.0) -> float:
