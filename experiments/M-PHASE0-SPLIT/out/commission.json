@@ -5,16 +5,45 @@
     "N1": 101,
     "P1": 101,
     "S1": 101,
-    "C1": 101
+    "C1": 101,
+    "C2": 101,
+    "C3": 101
+  },
+  "plant_readings": {
+    "N1": "NULL mean_abs=1.000000 max_ring_abs_t=inf bands=[1.0, 1.0, 1.0]",
+    "P1": "POSITIVE low=-0.066251 high=-0.000509 full_max_error=0.000e0",
+    "S1": "SHARPEN frc_max_move=0.010859 naive_acuity_gain=1.838176 crossing_before=Measured(0.2221923423232235) crossing_after=Measured(0.22054251020488932) crossing_move=0.838176",
+    "C1": "CENSOR crossing=Measured(0.5)",
+    "C2": "EDGE_CASES gapped=Measured(0.18571428571428572) short_tail=Insufficient",
+    "C3": "EDGE_CASES gapped=Insufficient short_tail=CensoredAbove { lower_bound: 0.4 }"
   },
   "all_plants_red": true,
+  "python_checker": {
+    "clean_exit": 0,
+    "plants": {
+      "--plant-last-bin": 1,
+      "--plant-compress-gaps": 1,
+      "--plant-false-above-tail": 1
+    },
+    "all_plants_red": true
+  },
+  "control_families": [
+    "fixed_external_dft",
+    "independent_noise_null",
+    "common_mode_adversary",
+    "positive_and_full_effect",
+    "identical_sharpening",
+    "endpoint_censoring",
+    "gapped_and_incomplete_transition_refusal"
+  ],
   "independent_direct_dft_max_relative_error": 2.1290866952824046e-15,
   "readings": {
-    "null": "NULL mean_abs=0.047182 bands=[-0.027520009132006504, -0.013546933823746625, -0.01406766333162078]",
+    "null": "NULL mean_abs=0.047182 max_ring_abs_t=3.167384 bands=[-0.027520009132006504, -0.013546933823746625, -0.01406766333162078]",
     "common_mode": "COMMON_MODE low_band=0.972099 (expected null-bar violation)",
     "positive": "POSITIVE low=0.989378 high=0.013942 full_max_error=0.000e0",
     "sharpen": "SHARPEN frc_max_move=0.010859 naive_acuity_gain=1.838176 crossing_before=Measured(0.2221923423232235) crossing_after=Measured(0.22054251020488932) crossing_move=-0.001650",
-    "censor": "CENSOR crossing=CensoredAbove { lower_bound: 0.5 }"
+    "censor": "CENSOR crossing=CensoredAbove { lower_bound: 0.5 }",
+    "edge_cases": "EDGE_CASES gapped=Insufficient short_tail=Insufficient"
   },
   "clean_command": [
     "cargo",

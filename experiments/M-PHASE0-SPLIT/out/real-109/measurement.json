@@ -1,0 +1,49 @@
+{
+  "status": "MEASURED",
+  "product_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\real-109\\products",
+  "tile_count": 117,
+  "point_estimate": {
+    "outcome": "MEASURED",
+    "frequency_or_bound": 0.4003665568136043
+  },
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 14164006,
+    "outcome_counts": {
+      "MEASURED": 1000
+    },
+    "measured_fraction": 1.0,
+    "measured_median": 0.399985992025639,
+    "measured_95_percentile_interval": [
+      0.3819157379212761,
+      0.4088708365330558
+    ]
+  },
+  "aggregate_frc": {
+    "0.02_to_0.10": 0.9993536142213117,
+    "0.10_to_0.25": 0.9734689705647893,
+    "0.35_to_0.48": 0.12416537358294018
+  },
+  "tile_outcomes": {
+    "counts": {
+      "MEASURED": 116,
+      "CENSORED_ABOVE": 1
+    },
+    "measured_median": 0.35428618091749997,
+    "measured_range": [
+      0.271148508254,
+      0.48930970457
+    ]
+  },
+  "null_product": {
+    "pixels": 8241504,
+    "mean_dn": -0.25090735865686653,
+    "rms_dn": 14.4214620866802,
+    "median_abs_dn": 6.0,
+    "p95_abs_dn": 32.0,
+    "saturated_pixels": 0
+  },
+  "threshold": 0.14285714285714285,
+  "minimum_ring_samples": 16,
+  "uncertainty_scope": "deterministic spatial tile bootstrap; measures field-composition sensitivity, not shared-sensor/common-mode bias"
+}

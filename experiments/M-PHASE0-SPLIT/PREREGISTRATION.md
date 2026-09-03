@@ -137,3 +137,37 @@ and the naive acuity positive control must rise at least 25%.  `S1` still
 substitutes naive acuity for resolution and must go RED.  The maximum ring move
 remains reported as a sensitivity, not scored as a pass/fail gate.  This
 amendment is additive so the failed original specification remains auditable.
+
+## Post-measurement commissioning correction
+
+Audit after the first real run found that the registered null gates pooled broad
+bands and therefore did not literally test the user's phrase “at all
+frequencies.”  The real number is treated as provisional until a stricter
+synthetic check passes.  Before running that new check, its bar is fixed here:
+at every individually usable ring, treat the 16 independent tiles as
+replicates, compute the mean tile FRC divided by its sample SE, and require the
+maximum absolute Student statistic to be below **4.0**.  With roughly 30 rings
+and 15 degrees of freedom this is an approximately 5%-familywise two-sided
+screen; it tests consistency with zero rather than demanding an impossible
+literal zero from finite noise.  `N1` remains the positive failure.  If this
+new gate fails, the real result is discarded rather than the bar being moved.
+
+## Independent-verification correction, after the initial report
+
+Independent verification found two unregistered classifier edge defects.  The
+implementation had discarded physical ring indices before looking for three
+“consecutive” below-threshold rings, so unusable rings could be silently
+compressed out.  It also labelled a curve whose final one or two rings dropped
+below threshold `CENSORED_ABOVE`, even though neither a stable crossing nor a
+valid lower bound had been established.  The affected result was treated as
+provisional while both Rust and the CSV re-checker were corrected.
+
+The correction preserves ring indices and requires physical adjacency across
+the bracketing ring and all three confirming rings.  If a curve ends below the
+threshold without three such rings, or if the transition is interrupted by an
+unusable ring, it returns `INSUFFICIENT`.  Post-hoc regression plants `C2`
+(compress the missing ring away) and `C3` (restore the false terminal
+`CENSORED_ABOVE`) must each go RED; they are regression evidence, not falsely
+presented as preregistered controls.  The aggregate real result is retained
+only if its decisive rings are physically contiguous and usable and independent
+reclassification leaves its outcome and value unchanged.

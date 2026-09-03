@@ -96,7 +96,7 @@ pub enum Crossing {
     CensoredAbove { lower_bound: f64 },
     /// Correlation was already below threshold at the first usable ring.
     CensoredBelow { upper_bound: f64 },
-    /// Too few powered, contiguous rings to classify.
+    /// Too few powered, contiguous rings, or an incomplete/gapped transition.
     Insufficient,
 }
 
@@ -180,7 +180,7 @@ fn analyse_pair_impl(
             let origin_x = start_x + tile_x * tile_size;
             let origin_y = start_y + tile_y * tile_size;
             let rings = tile_spectrum(a, b, width, origin_x, origin_y, tile_size, wrong_conjugate);
-            let crossing = crossing_impl(&rings, last_bin_fallback);
+            let crossing = crossing_impl(&rings, last_bin_fallback, false, false);
             tiles.push(TileSpectrum {
                 tile_x,
                 tile_y,
@@ -198,7 +198,7 @@ fn analyse_pair_impl(
             dst.absorb(src);
         }
     }
-    let crossing = crossing_impl(&aggregate, last_bin_fallback);
+    let crossing = crossing_impl(&aggregate, last_bin_fallback, false, false);
 
     Ok(SplitAnalysis {
         tile_size,
@@ -299,31 +299,44 @@ fn tile_spectrum(
 
 /// Classify an FRC curve without converting a censored endpoint into a number.
 pub fn classify_crossing(rings: &[RingSums]) -> Crossing {
-    crossing_impl(rings, false)
+    crossing_impl(rings, false, false, false)
 }
 
-fn crossing_impl(rings: &[RingSums], last_bin_fallback: bool) -> Crossing {
-    let usable: Vec<(f64, f64)> = rings
+fn crossing_impl(
+    rings: &[RingSums],
+    last_bin_fallback: bool,
+    ignore_ring_gaps: bool,
+    false_above_tail: bool,
+) -> Crossing {
+    let usable: Vec<(usize, f64, f64)> = rings
         .iter()
         .filter(|r| r.count >= MIN_RING_SAMPLES)
-        .filter_map(|r| r.frc().filter(|v| v.is_finite()).map(|v| (r.frequency, v)))
+        .filter_map(|r| {
+            r.frc()
+                .filter(|v| v.is_finite())
+                .map(|v| (r.radius, r.frequency, v))
+        })
         .collect();
     if usable.len() < 4 {
         return Crossing::Insufficient;
     }
-    if usable[0].1 < FRC_THRESHOLD {
+    if usable[0].2 < FRC_THRESHOLD {
         return Crossing::CensoredBelow {
-            upper_bound: usable[0].0,
+            upper_bound: usable[0].1,
         };
     }
 
     for i in 1..usable.len().saturating_sub(2) {
-        let (f0, y0) = usable[i - 1];
-        let (f1, y1) = usable[i];
+        let (_, f0, y0) = usable[i - 1];
+        let (_, f1, y1) = usable[i];
+        let consecutive = usable[i - 1..i + 3]
+            .windows(2)
+            .all(|pair| pair[1].0 == pair[0].0 + 1);
         if y0 >= FRC_THRESHOLD
             && usable[i..i + 3]
                 .iter()
-                .all(|(_, value)| *value < FRC_THRESHOLD)
+                .all(|(_, _, value)| *value < FRC_THRESHOLD)
+            && (ignore_ring_gaps || consecutive)
         {
             let dy = y0 - y1;
             let t = if dy.abs() > f64::EPSILON {
@@ -335,13 +348,17 @@ fn crossing_impl(rings: &[RingSums], last_bin_fallback: bool) -> Crossing {
         }
     }
 
-    let last = usable.last().expect("checked non-empty").0;
+    let (_, last_frequency, last_frc) = *usable.last().expect("checked non-empty");
     if last_bin_fallback {
         // Commissioning plant C1: the historical defect.  This branch is not
         // reachable from the public function.
-        Crossing::Measured(last)
+        Crossing::Measured(last_frequency)
+    } else if false_above_tail || last_frc >= FRC_THRESHOLD {
+        Crossing::CensoredAbove {
+            lower_bound: last_frequency,
+        }
     } else {
-        Crossing::CensoredAbove { lower_bound: last }
+        Crossing::Insufficient
     }
 }
 
@@ -470,6 +487,41 @@ mod tests {
         sum / count as f64
     }
 
+    fn max_ring_null_t(analysis: &SplitAnalysis) -> f64 {
+        let mut max_t = 0.0f64;
+        for radius in 1..analysis.aggregate.len() {
+            let values: Vec<f64> = analysis
+                .tiles
+                .iter()
+                .filter_map(|tile| {
+                    let ring = &tile.rings[radius];
+                    (ring.count >= MIN_RING_SAMPLES)
+                        .then(|| ring.frc())
+                        .flatten()
+                })
+                .collect();
+            if values.len() < 4 {
+                continue;
+            }
+            let mean = values.iter().sum::<f64>() / values.len() as f64;
+            let variance = values
+                .iter()
+                .map(|value| (value - mean).powi(2))
+                .sum::<f64>()
+                / (values.len() - 1) as f64;
+            let se = (variance / values.len() as f64).sqrt();
+            let t = if se > 0.0 {
+                (mean / se).abs()
+            } else if mean == 0.0 {
+                0.0
+            } else {
+                f64::INFINITY
+            };
+            max_t = max_t.max(t);
+        }
+        max_t
+    }
+
     fn unsharp(v: &[f32], width: usize, height: usize, amount: f32) -> Vec<f32> {
         let mut out = vec![0.0; v.len()];
         for y in 0..height {
@@ -542,7 +594,7 @@ mod tests {
     fn commission_acceptance() {
         let plant = std::env::var(PLANT_ENV).unwrap_or_default();
         assert!(
-            ["", "N1", "P1", "S1", "C1"].contains(&plant.as_str()),
+            ["", "N1", "P1", "S1", "C1", "C2", "C3"].contains(&plant.as_str()),
             "unknown {PLANT_ENV}={plant}"
         );
 
@@ -556,13 +608,18 @@ mod tests {
         }
         let null = analyse_pair_impl(&a, &b, width, height, tile, false, false).unwrap();
         let null_abs = mean_abs_frc(&null.aggregate);
+        let null_max_t = max_ring_null_t(&null);
         let null_bands = [
             band_mean(&null.aggregate, 0.02, 0.15),
             band_mean(&null.aggregate, 0.15, 0.30),
             band_mean(&null.aggregate, 0.30, 0.48),
         ];
-        println!("NULL mean_abs={null_abs:.6} bands={null_bands:?}");
+        println!("NULL mean_abs={null_abs:.6} max_ring_abs_t={null_max_t:.6} bands={null_bands:?}");
         assert!(null_abs < 0.05);
+        assert!(
+            null_max_t < 4.0,
+            "at least one Fourier ring is inconsistent with zero"
+        );
         assert!(null_bands.iter().all(|v| v.abs() < 0.08));
 
         // Same fixed pattern in otherwise independent noise: this must look
@@ -676,6 +733,40 @@ mod tests {
         .crossing;
         println!("CENSOR crossing={censored:?}");
         assert!(matches!(censored, Crossing::CensoredAbove { .. }));
+
+        // These are the two exact classifier defects found by independent
+        // verification. C2 recreates the old compression of missing physical
+        // rings; C3 recreates the old false lower bound when a curve falls only
+        // in its final one or two rings.
+        let curve = |values: &[Option<f64>]| {
+            values
+                .iter()
+                .enumerate()
+                .map(|(i, value)| RingSums {
+                    radius: i + 1,
+                    frequency: (i + 1) as f64 / 10.0,
+                    count: value.map_or(0, |_| MIN_RING_SAMPLES),
+                    cross: value.unwrap_or(0.0),
+                    power_a: value.map_or(0.0, |_| 1.0),
+                    power_b: value.map_or(0.0, |_| 1.0),
+                })
+                .collect::<Vec<_>>()
+        };
+        let gapped = crossing_impl(
+            &curve(&[Some(0.4), Some(0.1), None, Some(0.05), Some(0.04)]),
+            false,
+            plant == "C2",
+            false,
+        );
+        let short_tail = crossing_impl(
+            &curve(&[Some(0.9), Some(0.8), Some(0.1), Some(0.05)]),
+            false,
+            false,
+            plant == "C3",
+        );
+        println!("EDGE_CASES gapped={gapped:?} short_tail={short_tail:?}");
+        assert!(matches!(gapped, Crossing::Insufficient));
+        assert!(matches!(short_tail, Crossing::Insufficient));
     }
 
     #[test]

@@ -1,0 +1,81 @@
+{
+  "feature_commit": "1cd3019c77b8f4a2c45cd1d541cc85305296e390",
+  "build_command": "STREHL_BUILD_ID=1cd3019c77b8f4a2c45cd1d541cc85305296e390 cargo build --release",
+  "capture_directory": "D:\\personal\\macro\\109MSDCF",
+  "capture_read_only": true,
+  "frames": 22,
+  "limit": null,
+  "capture_digest_from_aligner": "b70554b8cfd9b93e",
+  "alignment_command": "target\\release\\strehl.exe align D:\\personal\\macro\\109MSDCF --out C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\real-109\\109-warpmap.txt --resampler catmull-rom",
+  "alignment": {
+    "sidecar_sha256": "C29CAB9C6F944F4D03C4402998E54AAD4D4221CC450AC4BEF42A453DE848434D",
+    "reference_frame": 11,
+    "placed": 22,
+    "refused": 0,
+    "held_out_error": "NOT_MEASURED_TOO_FEW_EDGES",
+    "cycle_consistency_floor_plane_px": 0.385,
+    "corner_drift_plane_px": 39.011
+  },
+  "common_stack_arguments": [
+    "stack",
+    "D:\\personal\\macro\\109MSDCF",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "scale",
+    "--fix-ca",
+    "off"
+  ],
+  "split_arguments": [
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\real-109\\main.tiff",
+    "--split-out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\real-109\\products"
+  ],
+  "baseline_arguments": [
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\real-109\\baseline-no-split.tiff"
+  ],
+  "runtime_environment": {
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\real-109\\109-warpmap.txt",
+    "STREHL_PYRAMID_WORKERS": "1",
+    "RAYON_NUM_THREADS": "1",
+    "STREHL_FIX_CA": "off (set by --fix-ca before worker threads)",
+    "STREHL_MERGE": null,
+    "STREHL_COVER": null,
+    "STREHL_PHOTOMETRIC": null,
+    "STREHL_DEFECT": null,
+    "STREHL_ONLY_FRAME": null,
+    "STREHL_CONFIDENCE_MAP": null,
+    "STREHL_GATE_FLOOR": null,
+    "STREHL_GATE_FLOOR_SCALE": null,
+    "STREHL_MEAN_COARSE": null,
+    "STREHL_SPLIT_TEST_PLANT": null,
+    "STREHL_RESTORE_GAIN_CAP": null
+  },
+  "ordinary_output": {
+    "split_off_sha256": "629DA64F9C47FE248E8423F3C26373C9E072B0E41AA83D0F643C2B441A7236A9",
+    "split_on_sha256": "629DA64F9C47FE248E8423F3C26373C9E072B0E41AA83D0F643C2B441A7236A9",
+    "bytes_each": 49450019,
+    "byte_identical": true
+  },
+  "logs": {
+    "split": "run.log",
+    "baseline": "baseline-run.log"
+  }
+}

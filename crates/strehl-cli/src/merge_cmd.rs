@@ -33,8 +33,8 @@
 //! trivially by a merge that is wrong in the other direction, so the report
 //! prints them together and neither is a result on its own.
 
-use std::path::{Path, PathBuf};
 use std::io::{BufWriter, Write};
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Instant;
 
@@ -4621,7 +4621,11 @@ struct SplitWorker {
 }
 
 impl SplitWorker {
-    fn new(geom: PlaneGeometry, cfg: MergeConfig, sizes: &[strehl_core::pyramid::LevelSize]) -> Self {
+    fn new(
+        geom: PlaneGeometry,
+        cfg: MergeConfig,
+        sizes: &[strehl_core::pyramid::LevelSize],
+    ) -> Self {
         Self {
             even: BandMerge::new(geom.width, geom.height, 1, cfg),
             odd: BandMerge::new(geom.width, geom.height, 1, cfg),
@@ -5573,7 +5577,10 @@ fn write_split_products(
     let mut manifest = BufWriter::new(file);
     writeln!(manifest, "EXPERIMENTAL SPLIT-STACK DIAGNOSTIC; NOT A RESOLUTION CERTIFICATE")?;
     writeln!(manifest, "plane={}x{} native quad pixels", geom.width, geom.height)?;
-    writeln!(manifest, "halves=global filename index parity; even={even_frames}; odd={odd_frames}")?;
+    writeln!(
+        manifest,
+        "halves=global filename index parity; even={even_frames}; odd={odd_frames}"
+    )?;
     writeln!(
         manifest,
         "tiles={}x{} of {}x{}; centred origin={},{}",
