@@ -316,10 +316,11 @@ def evaluate(
         return _refusal(f"TONE_CALIBRATION: {exc}")
 
     angle = reference_angle_deg(prepared)
+    refusal_reasons = []
     if spec["eligibility"] and not eligibility.get("pass"):
-        return _refusal("SOURCE_INELIGIBLE", angle_deg=angle)
+        refusal_reasons.append("SOURCE_INELIGIBLE")
     if spec["angle_gate"] and not ANGLE_MIN <= angle <= ANGLE_MAX:
-        return _refusal("ANGLE_OUT_OF_RANGE", angle_deg=angle)
+        refusal_reasons.append("ANGLE_OUT_OF_RANGE")
 
     floors = (
         [float(value) for value in calibration["p95_higher"]]
@@ -401,12 +402,17 @@ def evaluate(
 
     if not math.isfinite(score) or score <= 0.0:
         return _refusal("NONPOSITIVE_SCORE", angle_deg=angle)
-    return {
-        "status": "VALUE",
-        "value": score,
+    output = {
+        "status": "REFUSED" if refusal_reasons else "VALUE",
         "metric_name": metric_name,
         "angle_deg": angle,
         "floor_activation_fraction": activation_fraction,
         "slope": slope,
         "bin_medians": bin_medians,
     }
+    if refusal_reasons:
+        output["reason"] = "+".join(refusal_reasons)
+        output["diagnostic_value"] = score
+    else:
+        output["value"] = score
+    return output

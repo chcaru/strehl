@@ -56,12 +56,25 @@ def ratio(record: object, base: float) -> float | None:
     return float(record["value"]) / base if is_value(record) else None
 
 
+def diagnostic_value(record: object) -> float | None:
+    if is_value(record):
+        return float(record["value"])
+    if (
+        isinstance(record, dict)
+        and isinstance(record.get("diagnostic_value"), (int, float))
+        and math.isfinite(float(record["diagnostic_value"]))
+        and float(record["diagnostic_value"]) > 0.0
+    ):
+        return float(record["diagnostic_value"])
+    return None
+
+
 def close_frac(actual: float | None, expected: float, limit: float) -> bool:
     return actual is not None and abs(actual / expected - 1.0) <= limit
 
 
 def naming_ok(record: object) -> bool:
-    if not is_value(record):
+    if diagnostic_value(record) is None:
         return True
     name = str(record.get("metric_name", "")).lower()
     forbidden = ("mtf", "sfr", "cutoff", "cycles")
@@ -101,10 +114,21 @@ def adjudicate_variant(
     arms = candidate.get("arms", {})
     base_record = arms.get("base")
     base = float(base_record["value"]) if is_value(base_record) else None
+    diagnostic_base = diagnostic_value(base_record)
 
     arm_ratios = {
         arm: ratio(arms.get(arm), base)
         if base is not None else None
+        for arm in ARM_IDS
+        if arm != "base"
+    }
+    diagnostic_arm_ratios = {
+        arm: (
+            diagnostic_value(arms.get(arm)) / diagnostic_base
+            if diagnostic_base is not None
+            and diagnostic_value(arms.get(arm)) is not None
+            else None
+        )
         for arm in ARM_IDS
         if arm != "base"
     }
@@ -117,6 +141,16 @@ def adjudicate_variant(
     numeric_noise = [
         value for value in noise_ratios
         if value is not None
+    ]
+    diagnostic_noise_ratios = [
+        (
+            diagnostic_value(row.get("measurement")) / diagnostic_base
+            if isinstance(row, dict)
+            and diagnostic_base is not None
+            and diagnostic_value(row.get("measurement")) is not None
+            else None
+        )
+        for row in noise_records
     ]
     noise_median = (
         float(sorted(numeric_noise)[11] + sorted(numeric_noise)[12]) / 2.0
@@ -140,12 +174,13 @@ def adjudicate_variant(
         if angle == 5.0:
             measured = (
                 float(record["angle_deg"])
-                if is_value(record)
+                if isinstance(record, dict)
                 and isinstance(record.get("angle_deg"), (int, float))
                 else None
             )
             passed = (
-                measured is not None
+                is_value(record)
+                and measured is not None
                 and abs(measured - 5.0) <= 0.2
             )
         else:
@@ -256,6 +291,7 @@ def adjudicate_variant(
         ),
         "gates": gates,
         "base": base,
+        "diagnostic_base": diagnostic_base,
         "ratios": {
             **arm_ratios,
             "noise": noise_ratios,
@@ -264,10 +300,47 @@ def adjudicate_variant(
             "noise_max": max(numeric_noise) if numeric_noise else None,
             "noise_worst_abs": noise_worst,
         },
+        "diagnostic_ratios": {
+            **diagnostic_arm_ratios,
+            "noise": diagnostic_noise_ratios,
+            "noise_median": (
+                float(
+                    sorted(value for value in diagnostic_noise_ratios
+                           if value is not None)[11]
+                    + sorted(value for value in diagnostic_noise_ratios
+                             if value is not None)[12]
+                ) / 2.0
+                if sum(
+                    value is not None
+                    for value in diagnostic_noise_ratios
+                ) == 24 else None
+            ),
+            "noise_min": min(
+                (value for value in diagnostic_noise_ratios
+                 if value is not None),
+                default=None,
+            ),
+            "noise_max": max(
+                (value for value in diagnostic_noise_ratios
+                 if value is not None),
+                default=None,
+            ),
+            "noise_worst_abs": max(
+                (abs(value - 1.0)
+                 for value in diagnostic_noise_ratios
+                 if value is not None),
+                default=None,
+            ),
+        },
         "angles": angle_details,
         "flat_controls": {
-            key: value.get("status")
-            if isinstance(value, dict) else "MISSING"
+            key: {
+                "status": (
+                    value.get("status")
+                    if isinstance(value, dict) else "MISSING"
+                ),
+                "diagnostic_value": diagnostic_value(value),
+            }
             for key, value in flat_controls.items()
         },
         "floor_activation_fraction": activation,
@@ -453,6 +526,12 @@ def commission_checker() -> dict[str, object]:
     changed = copy.deepcopy(candidate)
     changed["angles"][2]["measurement"] = {"status": "REFUSED"}
     add("angle_five_missing", "angle", changed)
+    changed = copy.deepcopy(candidate)
+    changed["angles"][2]["measurement"] = {
+        "status": "REFUSED",
+        "angle_deg": 5.0,
+    }
+    add("angle_five_refused", "angle", changed)
     changed = copy.deepcopy(candidate)
     for row in changed["angles"]:
         row["measurement"] = literal_value(
@@ -696,4 +775,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
