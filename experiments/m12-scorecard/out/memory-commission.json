@@ -1,0 +1,101 @@
+{
+  "null": {
+    "argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\parent.py",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\child.py",
+      "67108864"
+    ],
+    "memory": {
+      "max_gap_ms": 11.123600008431822,
+      "max_lateness_ms": 4.941999970469624,
+      "median_gap_ms": 9.980700007872656,
+      "missed_intervals": 0,
+      "peak_process_count": 2,
+      "peak_process_tree_page_fault_count": 22291,
+      "peak_process_tree_private_committed_bytes": 80814080,
+      "peak_process_tree_working_set_bytes": 90112000,
+      "peak_temp_file_bytes": 0,
+      "process_lifetimes": [
+        {
+          "created": 134329282320300323,
+          "first_seen_s": 0.030063699989113957,
+          "last_seen_s": 2.0602447999990545,
+          "parent_pid": 29492,
+          "pid": 2500,
+          "samples": 204
+        },
+        {
+          "created": 134329282319964605,
+          "first_seen_s": 0.004941999970469624,
+          "last_seen_s": 2.0602447999990545,
+          "parent_pid": 18924,
+          "pid": 29492,
+          "samples": 207
+        }
+      ],
+      "sample_count": 209,
+      "sample_interval_ms": 10.0
+    },
+    "requested_allocation_bytes": 67108864,
+    "returncode": 0,
+    "started_utc": "2026-09-03T16:57:11Z",
+    "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\null-64mib.stderr.log",
+    "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\null-64mib.stdout.log",
+    "wall_seconds": 2.0833094000117853
+  },
+  "plant": {
+    "argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\parent.py",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\child.py",
+      "7516192768"
+    ],
+    "memory": {
+      "max_gap_ms": 10.73869998799637,
+      "max_lateness_ms": 4.372499999590218,
+      "median_gap_ms": 10.004600044339895,
+      "missed_intervals": 0,
+      "peak_process_count": 2,
+      "peak_process_tree_page_fault_count": 1844408,
+      "peak_process_tree_private_committed_bytes": 7544582144,
+      "peak_process_tree_working_set_bytes": 7539310592,
+      "peak_temp_file_bytes": 0,
+      "process_lifetimes": [
+        {
+          "created": 134329282341097471,
+          "first_seen_s": 0.030455200001597404,
+          "last_seen_s": 2.800375899998471,
+          "parent_pid": 43632,
+          "pid": 40220,
+          "samples": 278
+        },
+        {
+          "created": 134329282340802692,
+          "first_seen_s": 0.004372499999590218,
+          "last_seen_s": 2.810380500042811,
+          "parent_pid": 18924,
+          "pid": 43632,
+          "samples": 282
+        }
+      ],
+      "sample_count": 284,
+      "sample_interval_ms": 10.0
+    },
+    "requested_allocation_bytes": 7516192768,
+    "returncode": 0,
+    "started_utc": "2026-09-03T16:57:14Z",
+    "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\plant-7gib.stderr.log",
+    "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\work\\memory-control\\plant-7gib.stdout.log",
+    "wall_seconds": 2.8367404000018723
+  },
+  "schema": 1,
+  "status": "COMMISSIONED",
+  "verdict": {
+    "null_peak_private_committed_bytes": 80814080,
+    "null_stayed_below_one_gib": true,
+    "plant_peak_private_committed_bytes": 7544582144,
+    "plant_peak_process_count": 2,
+    "seven_gib_child_exceeded_six_gib_bar": true
+  }
+}

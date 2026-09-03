@@ -1,0 +1,150 @@
+{
+  "byte_freeze_registry": {
+    "diagnostic_rows": [
+      {
+        "alignment_mode": "off",
+        "id": "coffee-bean-20-gate2-unaligned",
+        "limit": 20,
+        "line": 105,
+        "merge": "estimator",
+        "stack": "coffee-bean"
+      },
+      {
+        "alignment_mode": "on-sidecar-override",
+        "id": "coffee-bean-20-gate2-sidecar",
+        "limit": 20,
+        "line": 106,
+        "merge": "estimator",
+        "stack": "coffee-bean"
+      },
+      {
+        "alignment_mode": "off",
+        "id": "coffee-bean-20-gate2-pyramid",
+        "limit": 20,
+        "line": 107,
+        "merge": "pyramid",
+        "stack": "coffee-bean"
+      }
+    ],
+    "path": "crates\\strehl-cli\\tests\\byte-freezes.tsv",
+    "required_n_rows": []
+  },
+  "captures": {
+    "bee-1-cpl": {
+      "arw_count": 299,
+      "bytes": 11328233472,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "missing_expected": [],
+      "path": "D:\\personal\\macro\\bee-1-cpl",
+      "unexpected_arw": []
+    },
+    "bee_prefixes": {
+      "299": true,
+      "33": true,
+      "96": true,
+      "97": true,
+      "98": true,
+      "99": true
+    },
+    "coffee-bean": {
+      "arw_count": 105,
+      "bytes": 4161077248,
+      "exists": true,
+      "first": "DSC00016.ARW",
+      "last": "DSC00120.ARW",
+      "missing_expected": [],
+      "path": "D:\\personal\\macro\\coffee-bean",
+      "unexpected_arw": []
+    }
+  },
+  "experiments": {
+    "current_run_manifest": "experiments\\SCORECARD\\RUN-MANIFEST.json",
+    "current_run_manifest_exists": false,
+    "stale_product_flags": [
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "stale_run_manifest": "experiments\\SCORECARD-BASELINE\\out\\RUN-MANIFEST.json",
+    "stale_run_manifest_exists": true,
+    "stale_scorecard_version": "v1.1"
+  },
+  "generated_utc": "2026-09-03T17:08:33Z",
+  "product_arm": {
+    "command_template": "strehl.exe stack <STACK> --limit <N> --out <OUT>.tiff --linear-srgb --demosaic",
+    "current_source_candidate_only": {
+      "alignment": "on by default",
+      "backend": "pyramid (resolved shipping default)",
+      "bit_depth": 16,
+      "colour": "linear sRGB",
+      "format": "TIFF",
+      "photometric": "not applied on pyramid backend",
+      "pyramid_gate": 2.0,
+      "resolution": "full sensor via --demosaic"
+    },
+    "reason": "No current experiments/SCORECARD/RUN-MANIFEST.json freezes the scored commit, binary, resolved defaults, environment, and highest-precision output.",
+    "registered": false,
+    "source_citations": {
+      "alignment": {
+        "line": 1277,
+        "matching_lines": [
+          1277
+        ],
+        "path": "crates\\strehl-cli\\src\\align_cmd.rs"
+      },
+      "backend": {
+        "line": 429,
+        "matching_lines": [
+          429
+        ],
+        "path": "crates\\strehl-cli\\src\\merge_cmd.rs"
+      },
+      "demosaic_flag": {
+        "line": null,
+        "matching_lines": [
+          337,
+          816
+        ],
+        "path": "crates\\strehl-cli\\src\\main.rs"
+      },
+      "gate": {
+        "line": 1252,
+        "matching_lines": [
+          1252
+        ],
+        "path": "crates\\strehl-core\\src\\pyramid.rs"
+      },
+      "linear_srgb_flag": {
+        "line": 327,
+        "matching_lines": [
+          327
+        ],
+        "path": "crates\\strehl-cli\\src\\main.rs"
+      }
+    },
+    "worker_environment": "STREHL_PYRAMID_WORKERS=<1|2|4|8|16>"
+  },
+  "registered_scorecard": {
+    "commit": "48a1d9027cc65b6a1340db00df945eeba153fc7b",
+    "m12_lines": [
+      984,
+      1049
+    ],
+    "sha256": "9CBBBA9B536A063F3A44F4EDC3C6538AFD486F8574D278EEF6A346E9E6E86061",
+    "version": "v1.6"
+  },
+  "schema": 1,
+  "supplied_scorecard_revision": {
+    "commit": "dd957dd5f8ef36af99065db5aa52065171556adf",
+    "sha256": "E14E6F7129B343F4ACCE92EE28677116032343C6A1CC2A77319922669C05758C",
+    "superseded_by_current_file": true,
+    "version": "v1.5"
+  },
+  "working_scorecard": {
+    "git_status": "M docs/proposals/2026-09-sota-scorecard.md",
+    "matches_registered_bytes": false,
+    "sha256": "9FBD18BD1DE7C4B7C2055A4074C459693C11C3EFD654767F4595C251C7E98598",
+    "version": "v1.7"
+  }
+}

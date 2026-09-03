@@ -1,0 +1,6 @@
+work/
+out/runs/
+out/*.log
+out/*.tif
+out/*.tiff
+__pycache__/
