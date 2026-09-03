@@ -562,6 +562,7 @@ def main() -> int:
             / f"b1_{stack}_main.npz"
         )
         if not path.is_file():
+            path.parent.mkdir(parents=True, exist_ok=True)
             legacy_b1.run(stack)
         legacy_paths[stack] = path
 
