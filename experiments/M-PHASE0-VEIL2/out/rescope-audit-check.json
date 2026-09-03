@@ -1,0 +1,221 @@
+{
+  "decision": "STOP_DO_NOT_BUILD",
+  "errors": [],
+  "self_commissioning": {
+    "all_controls_passed": true,
+    "all_plants_red": true,
+    "controls": [
+      {
+        "name": "structured-causal-result-accepted",
+        "pass": true
+      },
+      {
+        "name": "structured-aperture-result-accepted",
+        "pass": true
+      },
+      {
+        "name": "nonzero-potency-exit-recognized",
+        "pass": true
+      },
+      {
+        "name": "commissioned-current-record-recognized",
+        "pass": true
+      }
+    ],
+    "controls_passed": 4,
+    "controls_total": 4,
+    "plants": [
+      {
+        "errors": [
+          "direct_mechanism: gate disagrees with independent derivation",
+          "mechanism_commissioned: gate disagrees with independent derivation",
+          "cancellation_resistant: gate disagrees with independent derivation",
+          "reproducible_and_current: gate disagrees with independent derivation",
+          "tone_confound_excluded: gate disagrees with independent derivation",
+          "single_depth_defocus_excluded: gate disagrees with independent derivation",
+          "diffraction_excluded: gate disagrees with independent derivation",
+          "stale gate count",
+          "decision does not follow fail-closed lookup"
+        ],
+        "expected_error": "direct_mechanism: gate disagrees with independent derivation",
+        "name": "false-all-pass",
+        "red": true
+      },
+      {
+        "errors": [
+          "reproducible_and_current: gate disagrees with independent derivation",
+          "stale gate count"
+        ],
+        "expected_error": "reproducible_and_current: gate disagrees with independent derivation",
+        "name": "hidden-missing-artifact",
+        "red": true
+      },
+      {
+        "errors": [
+          "tone_confound_excluded: gate disagrees with independent derivation",
+          "stale gate count",
+          "tone sign-flip flag is stale"
+        ],
+        "expected_error": "tone_confound_excluded: gate disagrees with independent derivation",
+        "name": "suppressed-tone-flip",
+        "red": true
+      },
+      {
+        "errors": [
+          "recorded commit order disagrees with git"
+        ],
+        "expected_error": "recorded commit order disagrees with git",
+        "name": "reversed-commit-order",
+        "red": true
+      },
+      {
+        "errors": [
+          "direct_mechanism: gate disagrees with independent derivation",
+          "stale gate count"
+        ],
+        "expected_error": "direct_mechanism: gate disagrees with independent derivation",
+        "name": "direct-mechanism-false-negative",
+        "red": true
+      },
+      {
+        "errors": [
+          "mechanism_commissioned: gate disagrees with independent derivation",
+          "stale gate count",
+          "potency exit-status audit is stale"
+        ],
+        "expected_error": "mechanism_commissioned: gate disagrees with independent derivation",
+        "name": "mechanism-commission-false-negative",
+        "red": true
+      },
+      {
+        "errors": [
+          "cancellation_resistant: gate disagrees with independent derivation",
+          "stale gate count"
+        ],
+        "expected_error": "cancellation_resistant: gate disagrees with independent derivation",
+        "name": "cancellation-false-negative",
+        "red": true
+      },
+      {
+        "errors": [
+          "single_depth_defocus_excluded: gate disagrees with independent derivation",
+          "stale gate count"
+        ],
+        "expected_error": "single_depth_defocus_excluded: gate disagrees with independent derivation",
+        "name": "defocus-false-negative",
+        "red": true
+      },
+      {
+        "errors": [
+          "diffraction_excluded: gate disagrees with independent derivation",
+          "stale gate count"
+        ],
+        "expected_error": "diffraction_excluded: gate disagrees with independent derivation",
+        "name": "diffraction-false-negative",
+        "red": true
+      },
+      {
+        "errors": [
+          "causal intervention record is malformed",
+          "causal intervention flag is stale"
+        ],
+        "expected_error": "causal intervention record is malformed",
+        "name": "direct-null-placeholder",
+        "red": true
+      },
+      {
+        "errors": [
+          "diffraction aperture endpoint record is malformed",
+          "diffraction endpoint flag is stale"
+        ],
+        "expected_error": "diffraction aperture endpoint record is malformed",
+        "name": "diffraction-null-placeholder",
+        "red": true
+      },
+      {
+        "errors": [
+          "diffraction aperture endpoint record is malformed",
+          "diffraction endpoint flag is stale"
+        ],
+        "expected_error": "diffraction aperture endpoint record is malformed",
+        "name": "diffraction-string-placeholder",
+        "red": true
+      },
+      {
+        "errors": [
+          "potency exit-status audit is stale"
+        ],
+        "expected_error": "potency exit-status audit is stale",
+        "name": "false-potency-propagation",
+        "red": true
+      },
+      {
+        "errors": [
+          "return 0 does not propagate a potency failure"
+        ],
+        "expected_error": "return 0 does not propagate a potency failure",
+        "name": "potency-return-zero-source",
+        "red": true
+      },
+      {
+        "errors": [
+          "caught nonzero exit does not propagate failure"
+        ],
+        "expected_error": "caught nonzero exit does not propagate failure",
+        "name": "potency-caught-nonzero-exit",
+        "red": true
+      },
+      {
+        "errors": [
+          "unreachable nonzero exit does not propagate failure"
+        ],
+        "expected_error": "unreachable nonzero exit does not propagate failure",
+        "name": "potency-unreachable-nonzero-exit",
+        "red": true
+      },
+      {
+        "errors": [
+          "outer-caught exit does not propagate failure"
+        ],
+        "expected_error": "outer-caught exit does not propagate failure",
+        "name": "potency-outer-caught-nonzero-exit",
+        "red": true
+      },
+      {
+        "errors": [
+          "diffraction aperture endpoint record is malformed",
+          "diffraction endpoint flag is stale"
+        ],
+        "expected_error": "diffraction aperture endpoint record is malformed",
+        "name": "diffraction-zero-scaling-placeholder",
+        "red": true
+      },
+      {
+        "errors": [
+          "current repaired record is stale: commission_status",
+          "current repaired record is stale: controls",
+          "current repaired record is stale: plants",
+          "current repaired record is stale: checker_status",
+          "newer-result standing flag is stale"
+        ],
+        "expected_error": "newer-result standing flag is stale",
+        "name": "uncommissioned-adverse-standing",
+        "red": true
+      },
+      {
+        "errors": [
+          "current repaired record is stale: theta_ci95",
+          "current repaired record is stale: denominator",
+          "current repaired record is stale: detail_ci95",
+          "current repaired record is stale: failed_gates"
+        ],
+        "expected_error": "current repaired record is stale: theta_ci95",
+        "name": "stale-current-result-fields",
+        "red": true
+      }
+    ],
+    "plants_red": 20,
+    "plants_total": 20
+  },
+  "status": "PASS"
+}

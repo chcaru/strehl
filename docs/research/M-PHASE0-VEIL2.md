@@ -36,7 +36,7 @@ An adversarial arm with no per-frame anchor gives `theta=0.7410`, 95% CI
 per-crop-percentile normalization. Under the preregistered fixed-paper
 normalization, the answer becomes `theta=-0.0812`, 95% CI
 `[-0.2359, 0.0511]`. The conclusion therefore depends on the exposure/tone
-anchor and the commissioned instrument refuses the effect. M63's later warning
+anchor and the commissioned instrument refuses the effect. M63's separate warning
 is also respected: two focus-response peaks were never used as proof of two
 physical layers.
 
@@ -174,3 +174,88 @@ python experiments\M-PHASE0-VEIL2\src\check.py
 
 The complete numerical record is
 [`out/measurement.json`](../../experiments/M-PHASE0-VEIL2/out/measurement.json).
+
+---
+
+## 2026-09-02 re-scope audit: the “already answered” claim fails
+
+**Re-scope verdict:** **STOP_DO_NOT_BUILD. The prior A2 finding did not survive
+the ordered audit.** The pro-build bias and seven fail-closed gates were frozen
+in
+[`RESCOPE-AUDIT-PLAN.md`](../../experiments/M-PHASE0-VEIL2/RESCOPE-AUDIT-PLAN.md)
+before formal scoring. Result: **0/7 passed**; the independent checker passed
+with **4/4 positive controls and 20/20 self-plants RED**.
+
+### What the earlier work established—and what it did not
+
+`V-VEILCLAW` directly observed foreground hairs and the claw at two focus
+positions, and measured the familiar 0.581/0.892/0.802 base split with +0.852
+detail correlation. Its repaired focus-curve classifier was reported 7/7 on
+known curves with a flat null. The current harness remains 6/6 on its synthetic
+curves because the real CSV is absent; independent verification regenerated
+the curve from all 299 RAWs and recovered the published f182/f288 peaks exactly.
+The classifier is therefore commissioned and reproducible for **curve shape**.
+It is not a commissioned test of the causal claim that the pyramid mean base
+made the master pedestal.
+
+The originating README explicitly calls that mechanism a “lead, not a finding”
+because `meanveil.py` could not confirm it. `BUILD-VEILMAP` explicitly records
+that its base/detail cross-reference to the merge was **NOT DONE**. Its own
+commission cannot now run because the external SHIP-V1 master is absent; its
+potency run lacks the external tensor. None of the 27 tracked predecessor files
+is an outcome artifact. The curve can be regenerated from RAW, but the exact
+old master/base result cannot. Moreover, its commission tests `DriftFitter`, while the
+measurement adds `TrackFitter` and a polynomial solve, and its drift plant
+imports the same production `veilgrid.gather` it exercises. No planted
+wrong-sign or wrong-component defect ever commissioned the A2 base mechanism.
+`potency.py` also prints failed potency without returning nonzero; an
+independently planted all-FLAT tensor printed four failures and exited 0.
+
+There is no formal retraction banner on `V-VEILCLAW`, but its explicit
+limitation binds. On the earlier broad flower aura, `V-veiling` says “the
+finding survives; the mechanism does not”; this is contrary context, not a
+claw-specific retraction. Likewise, `BUILD-BLEND`'s broad-aura intervention
+measured both base policies removing that aura equally and localized its bowl
+one level higher, in selected coarse Laplacian bands. It does not directly
+falsify the claw, but it does defeat source inspection as sufficient causal
+proof. Finally, the “already answered” triage commit `f7017885` (20:06) is an
+ancestor of, and predates, the adverse repaired commissioned result
+`e4e3939f` (21:51).
+
+### Tone, defocus, and diffraction
+
+The result is not protected from the exact contrast/tone failure named in the
+order. Changing only the per-reference positive scale—slopes
+**1.0152–1.0722**, hence strictly increasing affine maps—moves the claw result
+from `theta=+0.7410`, 95% CI `[0.7242,0.7910]`, to `theta=-0.0812`, 95% CI
+`[-0.2359,0.0511]`. Its sign reverses without changing pixel order. The
+fixed-paper tone gate also reads 10.17 against a 0.25 ceiling. Therefore a
+contrast/tone change can reproduce or erase the claimed win; the old Gaussian
+means and Pearson correlations do not rule it out.
+
+The claw contact sheet proves two contents at that one site, but the classifier
+is not generally specific to two depths: M63's single-depth silhouette fires
+at **78.9%** versus **78.3%** for the supposed occlusion class, and its physical
+single-depth plant produces strong symmetric defocus side-lobes. No comparable
+one-depth edge null commissions the predecessor classifier. None of the cited
+A2 evidence measures its endpoint across `7-aperture-pairs`; this lane had
+explicitly excluded that ladder. Diffraction separation is therefore absent,
+not assumed from a shared aperture.
+
+### Binding consequence
+
+The newer direct instrument is reproducible and independently verified:
+11/11 controls and plants, checker 7/7 RED, but layer separation is only
+0.01757, detail lower95 is -0.00302, tone and geometry fail, and the verdict is
+`NOT ROBUST`. The machine audit and evidence are in
+[`out/rescope-audit.json`](../../experiments/M-PHASE0-VEIL2/out/rescope-audit.json);
+its checker is
+[`out/rescope-audit-check.json`](../../experiments/M-PHASE0-VEIL2/out/rescope-audit-check.json).
+
+The re-scope order says to stop if Part 1 fails. Therefore **no Rust was
+changed**, no new coherence-ramped A2 pyramid flag was added, no before/after
+feature delta was rendered, and the zero-magnitude/wrong-sign feature controls
+were not run. Pre-existing estimator-only `STREHL_VEIL` and global
+`STREHL_PYRAMID_MEAN_COARSE` controls are not the proposed treatment. Building
+it after a 0/7 audit would violate the explicit stop condition, not cure phase
+0.

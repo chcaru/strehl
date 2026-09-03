@@ -1,0 +1,260 @@
+{
+  "bias": "toward SURVIVES_AUDIT and building",
+  "claim": "A2 depth-boundary base/coarse pedestal",
+  "decision": "STOP_DO_NOT_BUILD",
+  "gates": {
+    "cancellation_resistant": {
+      "pass": false,
+      "reason": "The load-bearing causal inference has no commissioned plant, while the drift plant imports the production gather it checks."
+    },
+    "diffraction_excluded": {
+      "pass": false,
+      "reason": "None of the cited A2 evidence measures the endpoint on the 7-aperture-pairs ladder."
+    },
+    "direct_mechanism": {
+      "pass": false,
+      "reason": "The origin labels the base explanation a lead; VEILMAP did not cross-reference it to the merge; the measured base-arm contrast did not uniquely buy aura removal."
+    },
+    "mechanism_commissioned": {
+      "pass": false,
+      "reason": "The available 6/6 run commissions only the synthetic curve classifier; the real curve is absent, VEILMAP's commission targets DriftFitter while measurement adds TrackFitter and a polynomial solve, and no wrong-component/sign plant targets the base mechanism."
+    },
+    "reproducible_and_current": {
+      "pass": false,
+      "reason": "The focus curve can be regenerated from the 299 RAWs, but the old mechanism master/output cannot; the newer commissioned result is adverse rather than confirmatory."
+    },
+    "single_depth_defocus_excluded": {
+      "pass": false,
+      "reason": "The claw contents are directly two-layer, but the detector has no comparable one-depth edge null and M63 measured such false positives."
+    },
+    "tone_confound_excluded": {
+      "pass": false,
+      "reason": "A strictly increasing per-image affine rescaling flips theta from +0.7410 to -0.0812."
+    }
+  },
+  "gates_passed": 0,
+  "gates_total": 7,
+  "observations": {
+    "artifacts": {
+      "external_available": {
+        "real_claw_csv": false,
+        "ship_v1_bee_master": false,
+        "veilmap_tensor": false
+      },
+      "focus_curve_raw_count": 299,
+      "focus_curve_reproducible_from_raw": true,
+      "predecessor_mechanism_master_available": false,
+      "tracked_artifacts": [],
+      "tracked_files": 27
+    },
+    "causal_intervention": {
+      "claw_base_or_coarse_treatment_results": [],
+      "observed": false,
+      "required_by_proposal": true
+    },
+    "citations": {
+      "base_arms_remove_aura_equally": {
+        "found": true,
+        "lines": [
+          431
+        ],
+        "needle": "Both base bands removed the aura equally well",
+        "path": "docs/research/BUILD-BLEND.md"
+      },
+      "current_verdict": {
+        "found": true,
+        "lines": [
+          4
+        ],
+        "needle": "**Verdict:** **NOT ROBUST**",
+        "path": "docs/research/M-PHASE0-VEIL2.md"
+      },
+      "independent_verifier_refutes_complete_mechanism": {
+        "found": true,
+        "lines": [
+          19
+        ],
+        "needle": "The mechanism does not.",
+        "path": "docs/research/V-veiling.md"
+      },
+      "origin_limits_mechanism": {
+        "found": true,
+        "lines": [
+          77
+        ],
+        "needle": "lead, not a finding",
+        "path": "experiments/V-VEILCLAW/README.md"
+      },
+      "proposal_requires_treatment_response": {
+        "found": true,
+        "lines": [
+          547
+        ],
+        "needle": "master base moves from 0.802 toward 0.581",
+        "path": "docs/proposals/2026-08-sota-path.md"
+      },
+      "single_depth_defocus_not_excluded": {
+        "found": true,
+        "lines": [
+          811
+        ],
+        "needle": "not excluded.** The statistic does not distinguish",
+        "path": "docs/research/M63-bimodality.md"
+      },
+      "single_depth_sidelobe_measured": {
+        "found": true,
+        "lines": [
+          995
+        ],
+        "needle": "Confirmation on a physically correct single-depth plant",
+        "path": "docs/research/M63-bimodality.md"
+      },
+      "veilmap_missing_merge_cross_reference": {
+        "found": true,
+        "lines": [
+          282
+        ],
+        "needle": "Cross-reference to the merge (NOT DONE)",
+        "path": "experiments/BUILD-VEILMAP/README.md"
+      }
+    },
+    "commit_order": {
+      "repair_is_ancestor_of_triage": false,
+      "repaired_measurement_commit": "e4e3939f32213872db9df49832ff4d8456f41a80",
+      "triage_commit": "f7017885c90078d601e459d2c0eba6af2c7120ea",
+      "triage_is_ancestor_of_repair": true
+    },
+    "current_repaired_record": {
+      "checker_plants": [
+        7,
+        7
+      ],
+      "checker_status": "PASS",
+      "commission_status": "COMMISSIONED",
+      "controls": [
+        11,
+        11
+      ],
+      "denominator": 0.017569392919540405,
+      "detail_ci95": [
+        -0.0030221214437635116,
+        0.6814315225623543
+      ],
+      "failed_gates": [
+        "geometry",
+        "positive_denominators_at_least_0.15",
+        "primary_detail_identity",
+        "tone_locality"
+      ],
+      "independently_derived_theta": -0.08124085077799131,
+      "plants": [
+        11,
+        11
+      ],
+      "recorded_theta": -0.08124085077799131,
+      "theta_ci95": [
+        -0.23587551716282168,
+        0.051077560941093364
+      ],
+      "verdict": "NOT ROBUST"
+    },
+    "defocus": {
+      "curve_classifier_has_comparable_single_depth_null": false,
+      "m63_single_depth_false_positive_documented": true,
+      "primary_contact_sheet_directly_observed_two_contents": true
+    },
+    "diffraction": {
+      "a2_aperture_endpoint_records": [],
+      "a2_endpoint_measured_across_aperture": false,
+      "aperture_mentions_in_cited_evidence": {
+        "docs/research/BUILD-BLEND.md": false,
+        "docs/research/V-veiling.md": false,
+        "experiments/BUILD-VEILMAP/README.md": false,
+        "experiments/V-VEILCLAW/README.md": false
+      },
+      "current_lane_explicitly_did_not_test_aperture": true
+    },
+    "generator_checker": {
+      "build_veilmap_commission_tests_drift_fitter": true,
+      "build_veilmap_measurement_uses_poly_solve": true,
+      "build_veilmap_measurement_uses_track_fitter": true,
+      "build_veilmap_plant_imports_production_gather": true,
+      "build_veilmap_potency_explicit_raises": 0,
+      "build_veilmap_potency_explicit_returns": 0,
+      "build_veilmap_potency_propagates_failure": false,
+      "build_veilmap_potency_sys_exit_calls": 0,
+      "classifier_is_not_mechanism_instrument": true,
+      "mechanism_specific_red_plant_found": false
+    },
+    "hashes": {
+      "experiments\\M-PHASE0-VEIL2\\out\\check.json": "136A5D478D460B4CAEEB7121457DA1495CDD17CD52356309EB3D643BEA6F58EC",
+      "experiments\\M-PHASE0-VEIL2\\out\\commission.json": "01A033AB3BA0DA1EA9BDE54F70B4A959856EA8983896C2AA8AF4173910EB51DD",
+      "experiments\\M-PHASE0-VEIL2\\out\\measurement.json": "BD4FBA8C705D16650073619C929BA5D847C7E3A00A390E91BD2C26ED75A63D02"
+    },
+    "predecessor_commands": {
+      "curve_classifier_commission": {
+        "args": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "experiments/ORCH-drift-check/commission_verdict.py"
+        ],
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "real claw curve available: False  (synthetic cases only)\n\ncase                              want         new          old            verdict\nflat + noise                      FLAT         FLAT         FLAT           PASS\nsingle interior peak              SINGLE-PEAK  SINGLE-PEAK  INTERIOR-PEAK  PASS\ntwo peaks, claw-like              TWO-PEAK     TWO-PEAK     INTERIOR-PEAK  PASS\ntwo peaks, 35 apart               TWO-PEAK     TWO-PEAK     INTERIOR-PEAK  PASS\nmonotone rise to end              PEAK-AT-END  PEAK-AT-END  INTERIOR-PEAK  PASS\nsingle peak + valley + tiny bump  SINGLE-PEAK  SINGLE-PEAK  INTERIOR-PEAK  PASS\n\nrepaired verdict() correct on   : 6/6\ntwo-layer cases                 : 2\n  caught by repaired verdict()  : 2\n  missed by original verdict()  : 2\n\nCOMMISSIONED\n"
+      },
+      "veilmap_commission": {
+        "args": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "experiments/BUILD-VEILMAP/commission.py"
+        ],
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-VEILMAP\\commission.py\", line 125, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-VEILMAP\\commission.py\", line 57, in main\n    ref = master_ref(a.subject)\n          ^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-VEILMAP\\commission.py\", line 36, in master_ref\n    m = tifffile.imread(str(MASTERS / f\"{subject}.tiff\"))\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\tifffile\\tifffile.py\", line 1240, in imread\n    with TiffFile(\n         ^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\tifffile\\tifffile.py\", line 4525, in __init__\n    fh = FileHandle(file, mode=mode, name=name, offset=offset, size=size)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\tifffile\\tifffile.py\", line 12716, in __init__\n    self.open()\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\tifffile\\tifffile.py\", line 12736, in open\n    self._fh = open(  # noqa: SIM115\n               ^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\dev\\\\strehl-out\\\\SHIP-V1\\\\bee-3-cpl.tiff'\n",
+        "stdout": ""
+      },
+      "veilmap_potency": {
+        "args": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "experiments/BUILD-VEILMAP/potency.py"
+        ],
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-VEILMAP\\potency.py\", line 69, in <module>\n    main()\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\BUILD-VEILMAP\\potency.py\", line 33, in main\n    z = np.load(pathlib.Path(a.out) / \"tensors\" / f\"{a.subject}.npz\")\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\lib\\_npyio_impl.py\", line 454, in load\n    fid = stack.enter_context(open(os.fspath(file), \"rb\"))\n                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\dev\\\\strehl-out\\\\BUILD-VEILMAP\\\\tensors\\\\bee-3-cpl.npz'\n",
+        "stdout": ""
+      }
+    },
+    "standing": {
+      "newer_result_is_adverse": true,
+      "older_focus_curve_still_reproducible": true,
+      "older_mechanism_result_reproducible": false
+    },
+    "tone_witness": {
+      "all_slopes_strictly_positive": true,
+      "common_master_paper_ci95": [
+        0.7242321135728207,
+        0.7909907297390739
+      ],
+      "common_master_paper_theta": 0.7410471222216484,
+      "explanation": "Each reference changes only by a positive scalar when moving between the common-master-paper and per-frame-paper conventions.",
+      "fixed_paper_ci95": [
+        -0.23587551716282168,
+        0.051077560941093364
+      ],
+      "fixed_paper_theta": -0.08124085077799131,
+      "positive_affine_slopes_common_to_fixed": {
+        "background": {
+          "285": 1.0716785920125955,
+          "288": 1.0721720800606944,
+          "291": 1.0717802903827838
+        },
+        "foreground": {
+          "176": 1.015164727200321,
+          "180": 1.015358874575989,
+          "184": 1.0190585365532725
+        }
+      },
+      "theta_sign_flips": true
+    }
+  },
+  "versions": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10"
+  }
+}

@@ -64,3 +64,25 @@ the monotone positive-gain witness, and predecessor rerun exit/output.
 `src/check_rescope_audit.py` will independently validate the record and
 commission itself with in-memory plants for a false all-pass verdict, a hidden
 missing artifact, a tone-flip suppression, and a reversed commit order.
+
+## Post-audit verifier repair
+
+The frozen gates and decision rule above are unchanged. The first independent
+verification found that the four planned checker plants exercised false
+positives but not false-negative gate records. Before filing, the checker was
+strengthened to derive all seven gates in both directions and expanded to nine
+plants: the original four plus false-negative direct-mechanism, mechanism-
+commissioning, cancellation, defocus, and diffraction records. It also audits
+BUILD-VEILMAP potency's missing nonzero failure path and distinguishes a
+reproducible focus curve from the missing mechanism master.
+
+A second independent verification then planted the exact remaining hazards:
+`return 0` in the potency failure branch, null/string causal and aperture
+placeholders, and an uncommissioned later verdict. The final checker therefore
+requires structured causal/aperture records, a nonzero process exit tied to the
+potency failure branch, and a fully commissioned current result before calling
+it adverse. A final hardening pass made the potency check path-sensitive,
+binds diffraction vectors to a hashed external JSON record and derives their
+scaling statistic, and cross-checks every cited current-result field. It has
+four positive controls and twenty targeted RED plants; the frozen gates and
+fail-closed decision remain unchanged.
