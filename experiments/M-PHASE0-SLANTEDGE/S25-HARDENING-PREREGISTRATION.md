@@ -224,3 +224,21 @@ provenance, completeness or nondeterminism failures do not.
 No result JSON is written.  Complete machine-readable results go to stdout and
 the report records every registered row.
 
+## Pre-outcome implementation amendment A1
+
+The first post-freeze invocation at implementation commit `ee2b0a3c` stopped
+before adjudication with `INVALID_MEASUREMENT`.  Both measurement children
+returned zero and the registered row-completeness checks passed, but both
+emitted NumPy's `invalid value encountered in scalar subtract` warning while
+computing the flat-source bootstrap percentile.  The checker's registered
+no-stderr condition therefore made `deterministic_repeat=false`.  No variant
+value, ratio or survivor was printed or inspected.
+
+The cause is interpolation between non-finite bootstrap sentinels in
+`np.quantile`, not a candidate outcome.  Freeze this single implementation
+repair before rerunning: sort all 10,000 bootstrap ratios and take zero-based
+element 499 as the lower 5% order statistic.  This equals NumPy's documented
+`method="lower"` index for a finite population and never performs arithmetic
+on the `-inf` refusal sentinels.  No fixture, variant, threshold, formula,
+seed, status rule or other code may change.  The complete six-variant battery
+must rerun twice from the start.
