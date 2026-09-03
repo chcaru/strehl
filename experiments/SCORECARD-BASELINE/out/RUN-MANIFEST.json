@@ -1,0 +1,61 @@
+{
+  "binary": {
+    "build_command": "cargo build --release --jobs 8 --manifest-path C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\source\\Cargo.toml --target-dir C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\target",
+    "build_id_override": "4b60b1ba9f56",
+    "runtime_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\bin\\strehl.exe",
+    "sha256": "814eb719608cc0f085fbd49e7529eb6fa4e50031070f5f57af4fc2812cee4363",
+    "version": "strehl 0.0.0 (4b60b1ba9f56)"
+  },
+  "capability_preflight": {
+    "stack_help_mentions_confidence_map": true,
+    "stack_help_mentions_depth_output": false,
+    "stack_help_mentions_linear_srgb": true,
+    "stack_help_mentions_n_eff_map": true,
+    "stack_help_mentions_prophoto": false,
+    "stack_help_mentions_tiff_input": false
+  },
+  "host": {
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+    "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)"
+  },
+  "quality_product_arm": {
+    "alignment": "shipping default",
+    "cache_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\work\\cache",
+    "command_flags": [
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "cover": "shipping default scale",
+    "input": "original ARW subsets",
+    "merge": "shipping default inferred by CLI",
+    "purpose": "native-RAW product diagnostic, not the absent common-TIFF arm"
+  },
+  "scorecard": {
+    "path": "docs\\proposals\\2026-09-sota-scorecard.md",
+    "sha256": "11a754a61837ebe70cd1d59b9ad224d9240cfd105747b1cc28fce78befc03baa",
+    "version": "v1.1"
+  },
+  "source": {
+    "archive_command": "git archive --format=tar 4b60b1ba9f56abe92573451815e67f03725d19fa",
+    "commit": "4b60b1ba9f56abe92573451815e67f03725d19fa",
+    "working_tree_source_used": false
+  },
+  "thread_cap": {
+    "cargo_jobs": 8,
+    "exploratory_max": 8,
+    "quality_pyramid_workers_override": null,
+    "rayon_threads": 8
+  },
+  "timing": {
+    "m11_m12_run": false,
+    "reason": "quiet machine-wide window not yet available",
+    "requested_window_minutes": [
+      90,
+      120
+    ]
+  }
+}

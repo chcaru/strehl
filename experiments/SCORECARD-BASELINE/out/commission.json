@@ -1,0 +1,128 @@
+{
+  "all_commissioned": true,
+  "null": {
+    "expected_red": false,
+    "external_predicates": {
+      "blur_noise_ratio": 0.32647106188028513,
+      "blur_width_ratio": 3.415530398675198,
+      "common_mode_cutoff_movement": 0.0,
+      "flat_signal_ratio": 0.0607356044989019,
+      "geometry_shift": [
+        -2.0,
+        3.0
+      ],
+      "m1_S25": 28.14069100686433,
+      "m1_cutoff": 0.25,
+      "m2_eta": 1.0034863456945962,
+      "unsharp_cutoff_movement": 0.0
+    },
+    "passed": true
+  },
+  "null_stayed_green": true,
+  "plants": [
+    {
+      "plant": "M1_BLUR",
+      "reading": {
+        "expected_red": true,
+        "external_predicates": {
+          "blur_noise_ratio": 0.32647106188028513,
+          "blur_width_ratio": 3.415530398675198,
+          "common_mode_cutoff_movement": 0.0,
+          "cutoff_drop": 0.07999999999999999,
+          "flat_signal_ratio": 0.0607356044989019,
+          "geometry_shift": [
+            -2.0,
+            3.0
+          ],
+          "m1_S25": 0.007100215189072972,
+          "m1_cutoff": 0.17,
+          "m2_eta": 1.0034863456945962,
+          "unsharp_cutoff_movement": 0.0
+        },
+        "passed": true
+      },
+      "returncode": 1,
+      "stderr": "",
+      "went_red": true
+    },
+    {
+      "plant": "M2_NOISE",
+      "reading": {
+        "expected_red": true,
+        "external_predicates": {
+          "blur_noise_ratio": 0.32126626661698704,
+          "blur_width_ratio": 3.415530398675198,
+          "common_mode_cutoff_movement": 0.0,
+          "eta_increase": 0.23153071933702174,
+          "flat_signal_ratio": 0.0607356044989019,
+          "geometry_shift": [
+            -2.0,
+            3.0
+          ],
+          "m1_S25": 28.14069100686433,
+          "m1_cutoff": 0.25,
+          "m2_eta": 1.235017065031618,
+          "unsharp_cutoff_movement": 0.0
+        },
+        "passed": true
+      },
+      "returncode": 1,
+      "stderr": "",
+      "went_red": true
+    },
+    {
+      "plant": "M2_BLUR",
+      "reading": {
+        "expected_red": true,
+        "external_predicates": {
+          "blur_noise_ratio": 0.32647106188028513,
+          "blur_width_ratio": 3.415530398675198,
+          "common_mode_cutoff_movement": 0.0,
+          "flat_signal_ratio": 0.0607356044989019,
+          "geometry_shift": [
+            -2.0,
+            3.0
+          ],
+          "m1_S25": 28.14069100686433,
+          "m1_cutoff": 0.25,
+          "m2_eta": 1.0034863456945962,
+          "unsharp_cutoff_movement": 0.0
+        },
+        "passed": true
+      },
+      "returncode": 1,
+      "stderr": "",
+      "went_red": true
+    },
+    {
+      "plant": "GEOMETRY",
+      "reading": {
+        "expected_red": true,
+        "external_predicates": {
+          "blur_noise_ratio": 0.32647106188028513,
+          "blur_width_ratio": 3.415530398675198,
+          "common_mode_cutoff_movement": 0.0,
+          "flat_signal_ratio": 0.0607356044989019,
+          "geometry_shift": [
+            -2.0,
+            2.0
+          ],
+          "m1_S25": 28.14069100686433,
+          "m1_cutoff": 0.25,
+          "m2_eta": 1.0034863456945962,
+          "unsharp_cutoff_movement": 0.0
+        },
+        "passed": true
+      },
+      "returncode": 1,
+      "stderr": "",
+      "went_red": true
+    }
+  ],
+  "thread_caps": {
+    "MKL_NUM_THREADS": "8",
+    "NUMEXPR_NUM_THREADS": "8",
+    "OMP_NUM_THREADS": "8",
+    "OPENBLAS_NUM_THREADS": "8"
+  }
+}

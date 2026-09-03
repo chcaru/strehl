@@ -1,0 +1,8 @@
+work/
+out/*.tif
+out/*.tiff
+out/*.npy
+out/*.npz
+out/*.log
+out/renders/
+__pycache__/

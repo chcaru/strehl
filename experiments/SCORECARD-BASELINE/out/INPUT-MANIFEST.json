@@ -1,0 +1,1010 @@
+{
+  "capture_inventory": {
+    "113MSDCF": {
+      "arw_count": 63,
+      "bytes": 2436931584,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00063.ARW",
+      "path": "D:\\personal\\macro\\113MSDCF"
+    },
+    "angled-ruler": {
+      "arw_count": 299,
+      "bytes": 20075192320,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\highly-angled-ruler-mm-cpl"
+    },
+    "battery": {
+      "arw_count": 30,
+      "bytes": 1137696768,
+      "exists": true,
+      "first": "DSC00011.ARW",
+      "last": "DSC00040.ARW",
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso100-sw4-cpl"
+    },
+    "bee-1": {
+      "arw_count": 299,
+      "bytes": 11328233472,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\bee-1-cpl"
+    },
+    "bee-repeat": {
+      "arw_count": 576,
+      "bytes": 21696909312,
+      "exists": true,
+      "first": "DSC00296.ARW",
+      "last": "DSC00871.ARW",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light"
+    },
+    "calibration-grid-1-sw10": {
+      "arw_count": 23,
+      "bytes": 1070936064,
+      "exists": true,
+      "first": "DSC00007.ARW",
+      "last": "DSC00029.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl"
+    },
+    "calibration-grid-1-sw4": {
+      "arw_count": 55,
+      "bytes": 2513940480,
+      "exists": true,
+      "first": "DSC00015.ARW",
+      "last": "DSC00069.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl"
+    },
+    "calibration-grid-2-sw10": {
+      "arw_count": 27,
+      "bytes": 1236983808,
+      "exists": true,
+      "first": "DSC00008.ARW",
+      "last": "DSC00034.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl"
+    },
+    "calibration-grid-2-sw4": {
+      "arw_count": 46,
+      "bytes": 2141048832,
+      "exists": true,
+      "first": "DSC00024.ARW",
+      "last": "DSC00069.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl"
+    },
+    "calibration-grid-sw1": {
+      "arw_count": 91,
+      "bytes": 4240867328,
+      "exists": true,
+      "first": "DSC00026.ARW",
+      "last": "DSC00116.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl"
+    },
+    "chia": {
+      "arw_count": 130,
+      "bytes": 5198598144,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00130.ARW",
+      "path": "D:\\personal\\macro\\chia-seeds-cpl"
+    },
+    "coffee-bean": {
+      "arw_count": 105,
+      "bytes": 4161077248,
+      "exists": true,
+      "first": "DSC00016.ARW",
+      "last": "DSC00120.ARW",
+      "path": "D:\\personal\\macro\\coffee-bean"
+    },
+    "coffee-bubbles": {
+      "arw_count": 19,
+      "bytes": 750227456,
+      "exists": true,
+      "first": "DSC00034.ARW",
+      "last": "DSC00052.ARW",
+      "path": "D:\\personal\\macro\\coffee-bubbles"
+    },
+    "darks": {
+      "arw_count": 506,
+      "bytes": 17221115904,
+      "exists": true,
+      "first": "DSC00872.ARW",
+      "last": "DSC01377.ARW",
+      "path": "D:\\personal\\macro\\requests\\6-11-extended-dark-frames"
+    },
+    "duck-tape": {
+      "arw_count": 197,
+      "bytes": 8063741952,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00197.ARW",
+      "path": "D:\\personal\\macro\\duck-tape-side-layers-cpl"
+    },
+    "fabric-f11": {
+      "arw_count": 109,
+      "bytes": 4265734144,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00109.ARW",
+      "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl"
+    },
+    "fabric-f5.6": {
+      "arw_count": 210,
+      "bytes": 8710852608,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00210.ARW",
+      "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl"
+    },
+    "fabric-f8": {
+      "arw_count": 150,
+      "bytes": 6054940672,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00150.ARW",
+      "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl"
+    },
+    "flower-fern": {
+      "arw_count": 299,
+      "bytes": 20103155712,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "path": "D:\\personal\\macro\\flower-bud-with-background-fern-cpl"
+    },
+    "foam": {
+      "arw_count": 100,
+      "bytes": 4179152896,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00100.ARW",
+      "path": "D:\\personal\\macro\\foam"
+    },
+    "medication-pill": {
+      "arw_count": 146,
+      "bytes": 5430525952,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00146.ARW",
+      "path": "D:\\personal\\macro\\medication-pill-cpl"
+    },
+    "paper": {
+      "arw_count": 110,
+      "bytes": 4399677440,
+      "exists": true,
+      "first": "DSC00165.ARW",
+      "last": "DSC00274.ARW",
+      "path": "D:\\personal\\macro\\requests\\10-paper-iso-var"
+    },
+    "razor": {
+      "arw_count": 67,
+      "bytes": 2637230080,
+      "exists": true,
+      "first": "DSC00018.ARW",
+      "last": "DSC00084.ARW",
+      "path": "D:\\personal\\macro\\requests\\19-razor-edge\\horizontal-flat\\razor-edge-horizontal-flat-sw4-f5.6-cpl"
+    },
+    "ruler-f11": {
+      "arw_count": 65,
+      "bytes": 2500730880,
+      "exists": true,
+      "first": "DSC00016.ARW",
+      "last": "DSC00080.ARW",
+      "path": "D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f11-sw7-cpl"
+    },
+    "ruler-f5.6": {
+      "arw_count": 120,
+      "bytes": 4872204288,
+      "exists": true,
+      "first": "DSC00040.ARW",
+      "last": "DSC00159.ARW",
+      "path": "D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl"
+    },
+    "ruler-f8": {
+      "arw_count": 85,
+      "bytes": 3362598912,
+      "exists": true,
+      "first": "DSC00026.ARW",
+      "last": "DSC00110.ARW",
+      "path": "D:\\personal\\macro\\requests\\8-tilted-planar\\ruler-incline-ang10.26deg-inches-f8-sw7-cpl"
+    },
+    "salt": {
+      "arw_count": 255,
+      "bytes": 9754378240,
+      "exists": true,
+      "first": "DSC00001.ARW",
+      "last": "DSC00255.ARW",
+      "path": "D:\\personal\\macro\\maldon-sea-salt-cpl"
+    }
+  },
+  "colour_space_conflict": {
+    "M1_luma_coefficients": [
+      0.2627,
+      0.678,
+      0.0593
+    ],
+    "coefficient_identity": "Rec.2020/D65 luminance coefficients, not ProPhoto/D50",
+    "common_contract": "linear ProPhoto RGB D50"
+  },
+  "decoder": {
+    "extension_path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
+    "extension_sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897",
+    "first_frame_metadata": {
+      "black_levels": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "camera_whitebalance": [
+        2344.0,
+        1024.0,
+        2026.0,
+        1024.0
+      ],
+      "crop_yxhw": [
+        40,
+        58,
+        4608,
+        6912
+      ],
+      "postprocess_shape": [
+        4688,
+        7028,
+        3
+      ],
+      "raw_pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "raw_visible_shape": [
+        4688,
+        7028
+      ],
+      "rgb_xyz_matrix": [
+        [
+          0.7459999918937683,
+          -0.23649999499320984,
+          -0.058800000697374344
+        ],
+        [
+          -0.5687000155448914,
+          1.3442000150680542,
+          0.24740000069141388
+        ],
+        [
+          -0.06239999830722809,
+          0.11559999734163284,
+          0.6583999991416931
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "white_level": 16383
+    },
+    "implementation": "rawpy/LibRaw, independent of strehl/rawler",
+    "libraw_version": [
+      0,
+      22,
+      1
+    ],
+    "rawpy_version": "0.27.0",
+    "settings": {
+      "adjust_maximum_thr": 0.0,
+      "auto_white_balance": false,
+      "camera_white_balance": true,
+      "demosaic_algorithm": "AHD",
+      "denoising": "off",
+      "gamma": [
+        1.0,
+        1.0
+      ],
+      "highlight_mode": "Clip",
+      "lens_correction": "off",
+      "no_auto_bright": true,
+      "no_auto_scale": false,
+      "output_bps": 16,
+      "output_color": "linear sRGB",
+      "sharpening": "off",
+      "user_flip": 0,
+      "xmp": "not read"
+    }
+  },
+  "exif_dump": {
+    "command": "exiftool -json -G -a -s <64 registered bee ARWs>",
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\SCORECARD-BASELINE\\out\\exif-bee.json",
+    "sha256": "a26538d820b2918cc74a8e4d984b323d79d88b3e1b54333d738e92954e838132"
+  },
+  "exif_group_census": {
+    "dark": [
+      {
+        "count": 22,
+        "exposure": 1,
+        "f_number": 5.6,
+        "iso": 100
+      },
+      {
+        "count": 22,
+        "exposure": 10,
+        "f_number": 5.6,
+        "iso": 100
+      },
+      {
+        "count": 22,
+        "exposure": 2.5,
+        "f_number": 5.6,
+        "iso": 100
+      },
+      {
+        "count": 22,
+        "exposure": 5,
+        "f_number": 5.6,
+        "iso": 100
+      },
+      {
+        "count": 22,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 1000
+      },
+      {
+        "count": 22,
+        "exposure": 1,
+        "f_number": 5.6,
+        "iso": 1000
+      },
+      {
+        "count": 22,
+        "exposure": 2.5,
+        "f_number": 5.6,
+        "iso": 1000
+      },
+      {
+        "count": 22,
+        "exposure": 5,
+        "f_number": 5.6,
+        "iso": 1000
+      },
+      {
+        "count": 22,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 160
+      },
+      {
+        "count": 22,
+        "exposure": 1,
+        "f_number": 5.6,
+        "iso": 160
+      },
+      {
+        "count": 22,
+        "exposure": 2.5,
+        "f_number": 5.6,
+        "iso": 160
+      },
+      {
+        "count": 22,
+        "exposure": 5,
+        "f_number": 5.6,
+        "iso": 160
+      },
+      {
+        "count": 22,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 2000
+      },
+      {
+        "count": 22,
+        "exposure": 1,
+        "f_number": 5.6,
+        "iso": 2000
+      },
+      {
+        "count": 22,
+        "exposure": 2.5,
+        "f_number": 5.6,
+        "iso": 2000
+      },
+      {
+        "count": 22,
+        "exposure": 5,
+        "f_number": 5.6,
+        "iso": 2000
+      },
+      {
+        "count": 22,
+        "exposure": 1,
+        "f_number": 5.6,
+        "iso": 400
+      },
+      {
+        "count": 22,
+        "exposure": 2.5,
+        "f_number": 5.6,
+        "iso": 400
+      },
+      {
+        "count": 22,
+        "exposure": 5,
+        "f_number": 5.6,
+        "iso": 400
+      },
+      {
+        "count": 22,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 800
+      },
+      {
+        "count": 22,
+        "exposure": 1,
+        "f_number": 5.6,
+        "iso": 800
+      },
+      {
+        "count": 22,
+        "exposure": 2.5,
+        "f_number": 5.6,
+        "iso": 800
+      },
+      {
+        "count": 22,
+        "exposure": 5,
+        "f_number": 5.6,
+        "iso": 800
+      }
+    ],
+    "paper": [
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 100
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 100
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 125
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 125
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 160
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 160
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 200
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 200
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 250
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 250
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 320
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 320
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 400
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 400
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 50
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 50
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 500
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 64
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 64
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 640
+      },
+      {
+        "count": 5,
+        "exposure": 0.125,
+        "f_number": 5.6,
+        "iso": 80
+      },
+      {
+        "count": 5,
+        "exposure": 0.5,
+        "f_number": 5.6,
+        "iso": 80
+      }
+    ]
+  },
+  "m1_floor_preflight": {
+    "bee_exposure": [
+      100,
+      1.6,
+      5.6
+    ],
+    "matching_dark_count": 0,
+    "matching_flat_count": 0,
+    "scorecard_consequence": "M1/M9 formal bee truth is UNMEASURED when no matching dark/FPN map exists"
+  },
+  "m7_preflight": {
+    "candidate_count": 0,
+    "traceable_target_candidates": []
+  },
+  "requests_census": {
+    "arw": 4086,
+    "bytes": 156900323438,
+    "files": 4096
+  },
+  "scorecard_sha256": "11a754a61837ebe70cd1d59b9ad224d9240cfd105747b1cc28fce78befc03baa",
+  "source_tree_read_only": true,
+  "used_files": [
+    {
+      "mtime_utc": "2026-08-31T02:52:44.310000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00328.ARW",
+      "sha256": "b935bd6fca3196113c1dc5e5b1320c932b9a2484408b8a5b57c9ab456971de60",
+      "size": 36347904
+    },
+    {
+      "mtime_utc": "2026-08-31T02:52:46.530000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00329.ARW",
+      "sha256": "30067c51c0859fc17a56cd01410d58b783419a3926a89e63509ddb8efef821a6",
+      "size": 36343808
+    },
+    {
+      "mtime_utc": "2026-08-31T02:52:48.800000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00330.ARW",
+      "sha256": "f31fc5e1c419cd2112fad18999c42ef59ff3b5a7763bf066704a8150d8d093d5",
+      "size": 36339712
+    },
+    {
+      "mtime_utc": "2026-08-31T02:52:51.020000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00331.ARW",
+      "sha256": "75cefdcc2e0219c71e741edd4bb1f50c4b8bdcb173054a2737129cf60d73be01",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:52:53.240000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00332.ARW",
+      "sha256": "d2fb23c2b71213b1b8e576a42d0bd275d0d237e3978be335e85c42b871cf7cda",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:52:55.470000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00333.ARW",
+      "sha256": "2d59bbcd783fbc8d2ddf1853ec9ebb1544eca69e9e513559f51913886f5f34f2",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:52:57.680000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00334.ARW",
+      "sha256": "a7d2dd40442ac7e05fd2eb6a86b9e5bfae669c55dd48ec68093f2ab7173f7b2d",
+      "size": 36343808
+    },
+    {
+      "mtime_utc": "2026-08-31T02:52:59.910000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00335.ARW",
+      "sha256": "187f157cdd26baa6563290ecbc07cc1812d163a929986599ea0627d248c0ad27",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:02.130000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00336.ARW",
+      "sha256": "41a0a4723cea362200f91b527f101bd93e6da370b5faca79e141bb08a409b93d",
+      "size": 36343808
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:04.380000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00337.ARW",
+      "sha256": "744ae9655b4a1b86a7cc7c48813cd0bd412199326dc1f42cbf3666f34605d2b7",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:06.660000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00338.ARW",
+      "sha256": "0a709b90c5dc85394ab85edf150d41c920395e3eaec0bc8041c10a725a0799ef",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:08.880000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00339.ARW",
+      "sha256": "73b32c94cb10a09701d69799a921248cf6132d9d04e6f2cfc90ad6d4b8b43556",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:11.150000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00340.ARW",
+      "sha256": "d2ba7ab37a44ce59dbc911413b32b70b735ffeff9768a928ddc40ea1097536f1",
+      "size": 36339712
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:13.360000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00341.ARW",
+      "sha256": "dec749818b3694e74c25cfbb6207c64234bb4493ed88ba4bddb02a0a7de1975b",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:15.580000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00342.ARW",
+      "sha256": "f1a397e411dcb726f67e44ba847730c4c74460d3dca744cde429d82f3ead07bc",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:17.800000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00343.ARW",
+      "sha256": "7c4878b65c462dddaa175f2fa2e4ed126c801dae9542e5895aa6cee2670af8d2",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:20.030000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00344.ARW",
+      "sha256": "0f274e12a373eed71b957472b7e8b5b7782f3625c93df1967f7d631612a31c18",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:22.240000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00345.ARW",
+      "sha256": "44ab71dba4d47b1a76d0a0e8ac30156bc999130ab5278c5ef626be96c198eb8e",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:24.460000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00346.ARW",
+      "sha256": "cf52493994ebf5adfd9b7cd95a26b8e1f250b19f76cebc354f32b606cd1bf8c5",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:26.710000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00347.ARW",
+      "sha256": "c48ab0146be1bdec2a8ab7eed63e9afd7c919aae1b34c60c054633f099dbe90f",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:28.940000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00348.ARW",
+      "sha256": "2ca9f41d7bebf906d7cc5bfc92d56a774f9d9bac3add74da4009d9eeb486c743",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:31.150000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00349.ARW",
+      "sha256": "8370598b6efcdea436b1f30e3bfb49246b0df9adf4ebbed65d3f5ed66ff0089c",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:33.380000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00350.ARW",
+      "sha256": "51380795dbea085b8f2929ca14b544915a63f5d858476bace864376e2261bece",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:35.600000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00351.ARW",
+      "sha256": "a94e38d26a377e509c18cd66abe2ca2e3fda1793e2bd7248b67faad47d485291",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:37.820000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00352.ARW",
+      "sha256": "b1605aef81b46e4de0123dd9e8f50e37654d33bacf95fb2e7848e9201ee1946b",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:40.050000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00353.ARW",
+      "sha256": "787e469ca1b0dd10a1f228407bedea3fb16989868350b29d59190a77c6a47fa7",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:42.280000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00354.ARW",
+      "sha256": "04cea1b521e0805af684922811927c3b5b923c5998e0553babf1b31937f3ed78",
+      "size": 36339712
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:44.500000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00355.ARW",
+      "sha256": "d3723d1bf58ac36f137107bc8eb383fb4c4648c6697d41d335c564e1339e12e7",
+      "size": 36331520
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:46.760000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00356.ARW",
+      "sha256": "34afaf03abb463a285ad8bbf024cc2ee207f7f9b7c8d65969918df786c30fd1c",
+      "size": 36339712
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:48.990000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00357.ARW",
+      "sha256": "70ae74a95a356287dc1ccf6c0e6601143a7650fa5a0e3ba564f9cc7dcf804d09",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:51.200000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00358.ARW",
+      "sha256": "78f45014aed446ffd5a4355ba2b1777f1ec4faf1cf33f995d225abe175e7bd81",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T02:53:53.450000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00359.ARW",
+      "sha256": "2eccc4ddec4a77a840fd34df631977b274f7160c0ea4e978ce67ea6ba9fc2302",
+      "size": 36335616
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:43.770000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00584.ARW",
+      "sha256": "6d3a3fe4058d10aeb3fb3009d0215751c5a5470ed20e96e91dcb8f1ebb860c6e",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:45.990000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00585.ARW",
+      "sha256": "fc1110096036424b68a594387571edcd2cedc49b6fe0990e4fb6e3b334ac0d38",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:48.250000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00586.ARW",
+      "sha256": "a8b2cecb190a9baa4fd862515b63df1452c917874926df4f2dc905b2a4eabfe8",
+      "size": 35516416
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:50.470000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00587.ARW",
+      "sha256": "a2f757b8a47c3046829ea0a797a4496ad027a9d9f56f867e845aeab256cbad5e",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:52.700000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00588.ARW",
+      "sha256": "688c29a40fc811b06437d12df067b812ae04c62a540af6525e0667ed128934ae",
+      "size": 35516416
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:54.930000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00589.ARW",
+      "sha256": "23237a186eeabd90810fbfbe4c7bb2bd2a8ce04ccbc96df2fa0260dd3be51aec",
+      "size": 35516416
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:57.200000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00590.ARW",
+      "sha256": "6cc992f97195200c20fc57b0286b3ecbb4bdda5445cb30858ed2037647de666f",
+      "size": 35512320
+    },
+    {
+      "mtime_utc": "2026-08-31T03:06:59.430000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00591.ARW",
+      "sha256": "b3a16282cdae9a85ffd38e0dde08e4f6891c512278648355eadb719acda6e47e",
+      "size": 35516416
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:01.650000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00592.ARW",
+      "sha256": "3bfd7c6ea55be5f4ba68148a49c4b80aa7121557f67c15477988c1472f787521",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:04.010000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00593.ARW",
+      "sha256": "ac7b1b384fcb8b87073a633ac1a1e7a2df1dc71ae4fc9641c239016406373adf",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:06.230000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00594.ARW",
+      "sha256": "3aad33987a3416cd8c58d197761f63077d6398bf0ffc9b7f8e01baa960f3640a",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:08.450000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00595.ARW",
+      "sha256": "09294ad2669e057cc204eca052084bc050073505e975fb1c34ccff2573763ffa",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:10.670000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00596.ARW",
+      "sha256": "b4718fd3e4f59d09875bfaa96738c83d883be5ded7bdefd0fdebc2876eba8c4d",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:12.940000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00597.ARW",
+      "sha256": "33f0915b8f8a7986d964468bd7c89604c63aacbc722314daf70ceb23fcc74a17",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:15.210000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00598.ARW",
+      "sha256": "6dc743b53437395db001a5bb91e3cd4317d56b31f17a470ce9a7f4d90e386aa8",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:17.420000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00599.ARW",
+      "sha256": "54e79958796c83ae1df7c67dec2b88315daa64aaa89af53f92c8c28109de5b5f",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:19.640000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00600.ARW",
+      "sha256": "aa75a1675b19ab0f995331eae4ec7e0e2917cc9ef0034c797ad63e94c8d06df7",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:21.870000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00601.ARW",
+      "sha256": "0bf420d27fa015153e2d93c8c54842e49e651e8a8a275c695c93b06b7693aa71",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:24.230000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00602.ARW",
+      "sha256": "4698c311b41e3b6afbec94e79d3118eb604f34e2ff14969b40ee8555fcca5a91",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:26.450000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00603.ARW",
+      "sha256": "c9d622067ba14ba99e939af80cf1e08b4a5097791ed4cfd85802205114277ed8",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:28.740000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00604.ARW",
+      "sha256": "c706b98af636d4fa738e6aca49060aeb1b7e0b89cb3a3ac1d15a0b7fcd5059d7",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:31.020000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00605.ARW",
+      "sha256": "cd3c71bbe36548ea8440dcb635ea72ac35236cadfc50dcb058718a5df9720a57",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:33.260000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00606.ARW",
+      "sha256": "ab5d973f1e41bf0730143658f1bbcf23a7a5335ca5082246ca3990b11d2a228b",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:35.480000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00607.ARW",
+      "sha256": "0dcac38e61ad540b35f44a59c97953e9d72c5c27a2acaff54e8389b661699252",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:37.840000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00608.ARW",
+      "sha256": "5c952ef91cd1f2a25599957ae18830ec0fc1d06a4581c91f3c5aa378225d078a",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:40.100000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00609.ARW",
+      "sha256": "a3c64f4147decf10dd9cbf56adc73e108e293b600974f05c1c3ffe2303a172b4",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:42.310000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00610.ARW",
+      "sha256": "bde92f971d6ee9db7d4ea0960faf99adf06798c643decb906a4194008d198d29",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:44.680000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00611.ARW",
+      "sha256": "985bed7b69d8be7954e308501727485fb352f260f077b7d64548abbd06fabf47",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:46.900000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00612.ARW",
+      "sha256": "c193877d3ebad7838d4298da2be5627adf08b73e2b820210333845a6d05e114e",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:49.230000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00613.ARW",
+      "sha256": "ca4a6881281e2f34a9a9b27cdbe4962d203b2abab5dfc64408ad2123b974aa06",
+      "size": 35520512
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:51.570000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00614.ARW",
+      "sha256": "c2d6daf98e99bcecf4bab572c827ddd13ca3548b49cb400a4f1ab2ea74d59cc8",
+      "size": 35524608
+    },
+    {
+      "mtime_utc": "2026-08-31T03:07:53.790000+00:00",
+      "path": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light\\DSC00615.ARW",
+      "sha256": "a7da46e1ea8d15e7cd034fafac93e0dd38282da5e18cb7f31c98dd89946b3e55",
+      "size": 35520512
+    }
+  ]
+}
