@@ -242,3 +242,29 @@ element 499 as the lower 5% order statistic.  This equals NumPy's documented
 on the `-inf` refusal sentinels.  No fixture, variant, threshold, formula,
 seed, status rule or other code may change.  The complete six-variant battery
 must rerun twice from the start.
+
+## Post-gate completeness amendment A2
+
+The repaired complete run was valid and deterministic, but the independent
+focused/defocused edge failed the preregistered eligibility predicate in three
+of five endpoint bins.  Consequently V1--V5 correctly returned
+`SOURCE_INELIGIBLE` on every score arm.  The run disclosed C0 and eligibility
+readings but no V1--V5 score value.
+
+That fail-closed result already fixes the admissibility verdict: no V1--V5
+variant from this run can be admitted.  It also exposed that the implementation
+did not execute the preregistered demand to report every candidate's full
+matrix after disqualification.  Freeze this reporting-only repair before any
+latent V1--V5 score is opened:
+
+* eligibility and angle failures latch the final public status as `REFUSED`;
+* computation continues unchanged and serializes the already registered score
+  as `diagnostic_value`, never `value`;
+* the checker never uses `diagnostic_value` to pass a gate or admit a variant,
+  but reports diagnostic ratios so the trade-off remains inspectable; and
+* tone-calibration failure, non-positive bins/slope, or insufficient finite
+  sites may still prevent a diagnostic and must remain explicit.
+
+No formula, fixture, seed, threshold, variant, eligibility result or verdict
+rule changes.  The complete six-variant battery again reruns twice from the
+start.
