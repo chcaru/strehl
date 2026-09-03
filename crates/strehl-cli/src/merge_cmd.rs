@@ -34,6 +34,7 @@
 //! prints them together and neither is a result on its own.
 
 use std::path::{Path, PathBuf};
+use std::io::{BufWriter, Write};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Instant;
 
@@ -56,6 +57,7 @@ use strehl_core::pyramid::{
     BandMerge, BaseBand, FrameWorkspace, MergeConfig, SelectMode, Workspace, level_sizes,
     luma_variance,
 };
+use strehl_core::split::{self, Crossing, SplitAnalysis};
 use strehl_core::stack::{DEFAULT_SPECKLE_TOLERANCE as SPECKLE_TOLERANCE, speckle_fraction};
 use strehl_core::through_focus::{
     ConfidenceVector, FINE_FOCUS_NOISE_SD, FLAG_BIMODAL, FLAG_BRACKET_BOUNDARY,
@@ -154,6 +156,12 @@ pub struct MergeOptions {
     /// See [`write_confidence_map`] for the grid, the value convention and the
     /// polarity, which is the opposite of `n_eff`'s.
     pub confidence_map: Option<PathBuf>,
+    /// Off-by-default same-pass odd/even diagnostic product directory.
+    ///
+    /// The main accumulator remains first and unchanged; each half gets a
+    /// separate green-luma `BandMerge`, so its data-dependent weights are
+    /// re-derived rather than inherited from the full stack.
+    pub split_out: Option<PathBuf>,
     /// Fit and apply a per-frame affine photometric gain. **Default on**
     /// since V-TONE; it was opt-in from M99 until then.
     ///
@@ -2915,6 +2923,10 @@ pub fn preflight_soft_kernel() -> Result<()> {
 /// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
     preflight_soft_kernel()?;
+    ensure!(
+        opts.split_out.is_none() || opts.backend == MergeBackend::Pyramid,
+        "--split-out is available only with --merge pyramid"
+    );
     match opts.backend {
         MergeBackend::Pyramid => run_pyramid(opts),
         MergeBackend::Estimator => run_estimator(opts),
@@ -4580,6 +4592,75 @@ struct FoldPart {
     folded: usize,
     beta_sum: Vec<f64>,
     beta_n: usize,
+    split: Option<SplitPart>,
+}
+
+struct SplitPart {
+    even: BandMerge,
+    odd: BandMerge,
+    even_frames: usize,
+    odd_frames: usize,
+}
+
+impl SplitPart {
+    fn absorb(&mut self, other: &Self) {
+        self.even.absorb(&other.even);
+        self.odd.absorb(&other.odd);
+        self.even_frames += other.even_frames;
+        self.odd_frames += other.odd_frames;
+    }
+}
+
+struct SplitWorker {
+    even: BandMerge,
+    odd: BandMerge,
+    even_ws: FrameWorkspace,
+    odd_ws: FrameWorkspace,
+    even_frames: usize,
+    odd_frames: usize,
+}
+
+impl SplitWorker {
+    fn new(geom: PlaneGeometry, cfg: MergeConfig, sizes: &[strehl_core::pyramid::LevelSize]) -> Self {
+        Self {
+            even: BandMerge::new(geom.width, geom.height, 1, cfg),
+            odd: BandMerge::new(geom.width, geom.height, 1, cfg),
+            even_ws: FrameWorkspace::new(sizes, 1),
+            odd_ws: FrameWorkspace::new(sizes, 1),
+            even_frames: 0,
+            odd_frames: 0,
+        }
+    }
+
+    fn add_frame(
+        &mut self,
+        index: usize,
+        luma: &[f32],
+        variance: &[f32],
+        beta: Option<&[f32]>,
+    ) {
+        let plane = [luma];
+        if index.is_multiple_of(2) {
+            self.even_ws.next_frame();
+            self.even
+                .add_frame_with_gain(&plane, luma, variance, beta, &mut self.even_ws);
+            self.even_frames += 1;
+        } else {
+            self.odd_ws.next_frame();
+            self.odd
+                .add_frame_with_gain(&plane, luma, variance, beta, &mut self.odd_ws);
+            self.odd_frames += 1;
+        }
+    }
+
+    fn into_part(self) -> SplitPart {
+        SplitPart {
+            even: self.even,
+            odd: self.odd,
+            even_frames: self.even_frames,
+            odd_frames: self.odd_frames,
+        }
+    }
 }
 
 struct BandWorker {
@@ -4600,10 +4681,11 @@ struct BandWorker {
     /// the failure mode this project exists to catch.
     beta_sum: Vec<f64>,
     beta_n: usize,
+    split: Option<SplitWorker>,
 }
 
 impl BandWorker {
-    fn new(geom: PlaneGeometry, cfg: MergeConfig) -> Self {
+    fn new(geom: PlaneGeometry, cfg: MergeConfig, split: bool) -> Self {
         let sizes = level_sizes(geom.width, geom.height, cfg.bands);
         let px = geom.pixels();
         Self {
@@ -4617,6 +4699,7 @@ impl BandWorker {
             beta: Vec::new(),
             beta_sum: Vec::new(),
             beta_n: 0,
+            split: split.then(|| SplitWorker::new(geom, cfg, &sizes)),
         }
     }
 
@@ -4677,7 +4760,20 @@ impl BandWorker {
         self.fws.next_frame();
         self.merge
             .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
+        if let Some(split) = self.split.as_mut() {
+            split.add_frame(index, &self.luma, &self.var, frame_beta);
+        }
         Ok(true)
+    }
+
+    fn into_part(self, folded: usize) -> FoldPart {
+        FoldPart {
+            merge: self.merge,
+            folded,
+            beta_sum: self.beta_sum,
+            beta_n: self.beta_n,
+            split: self.split.map(SplitWorker::into_part),
+        }
     }
 }
 
@@ -5254,6 +5350,280 @@ fn band_workers(per_worker_bytes: usize, frames: usize) -> Result<usize> {
     Ok(by_memory.min(frames.max(1)))
 }
 
+const SPLIT_TILE_SIZE: usize = 256;
+
+fn quantise_linear_dn(v: f32) -> u16 {
+    if v.is_finite() {
+        v.round().clamp(0.0, f32::from(u16::MAX)) as u16
+    } else {
+        0
+    }
+}
+
+fn write_split_frc(path: &Path, analysis: &SplitAnalysis) -> Result<()> {
+    let file = std::fs::File::create(path)
+        .with_context(|| format!("creating split product {}", path.display()))?;
+    let mut out = BufWriter::new(file);
+    writeln!(out, "radius,frequency,count,cross,power_even,power_odd,frc")?;
+    for ring in analysis.aggregate.iter().skip(1) {
+        let frc = ring.frc().map(|v| format!("{v:.12}")).unwrap_or_default();
+        writeln!(
+            out,
+            "{},{:.12},{},{:.17e},{:.17e},{:.17e},{}",
+            ring.radius,
+            ring.frequency,
+            ring.count,
+            ring.cross,
+            ring.power_a,
+            ring.power_b,
+            frc
+        )?;
+    }
+    Ok(())
+}
+
+fn write_split_tile_spectra(path: &Path, analysis: &SplitAnalysis) -> Result<()> {
+    let file = std::fs::File::create(path)
+        .with_context(|| format!("creating split product {}", path.display()))?;
+    let mut out = BufWriter::new(file);
+    writeln!(
+        out,
+        "tile_x,tile_y,origin_x,origin_y,radius,frequency,count,cross,power_even,power_odd,frc"
+    )?;
+    for tile in &analysis.tiles {
+        for ring in tile.rings.iter().skip(1) {
+            let frc = ring.frc().map(|v| format!("{v:.12}")).unwrap_or_default();
+            writeln!(
+                out,
+                "{},{},{},{},{},{:.12},{},{:.17e},{:.17e},{:.17e},{}",
+                tile.tile_x,
+                tile.tile_y,
+                tile.origin_x,
+                tile.origin_y,
+                ring.radius,
+                ring.frequency,
+                ring.count,
+                ring.cross,
+                ring.power_a,
+                ring.power_b,
+                frc
+            )?;
+        }
+    }
+    Ok(())
+}
+
+fn write_split_acuity(path: &Path, analysis: &SplitAnalysis) -> Result<()> {
+    let file = std::fs::File::create(path)
+        .with_context(|| format!("creating split product {}", path.display()))?;
+    let mut out = BufWriter::new(file);
+    writeln!(
+        out,
+        "tile_x,tile_y,origin_x,origin_y,outcome,frequency_or_bound"
+    )?;
+    for tile in &analysis.tiles {
+        let value = tile
+            .crossing
+            .frequency()
+            .map(|v| format!("{v:.12}"))
+            .unwrap_or_default();
+        writeln!(
+            out,
+            "{},{},{},{},{},{}",
+            tile.tile_x,
+            tile.tile_y,
+            tile.origin_x,
+            tile.origin_y,
+            tile.crossing.label(),
+            value
+        )?;
+    }
+    Ok(())
+}
+
+/// Collapse and emit the off-by-default split products.
+///
+/// Both analyses happen before TIFF quantisation. M115 measured shared
+/// quantisation error making a difference image under-report by 16x, so moving
+/// `analyse_pair` below the `u16` conversion is a correctness bug, not a
+/// harmless refactor.
+fn write_split_products(
+    dir: &Path,
+    split: SplitPart,
+    geom: PlaneGeometry,
+    sizes: &[strehl_core::pyramid::LevelSize],
+) -> Result<Crossing> {
+    std::fs::create_dir_all(dir)
+        .with_context(|| format!("creating split product directory {}", dir.display()))?;
+    let SplitPart {
+        even,
+        odd,
+        even_frames,
+        odd_frames,
+    } = split;
+    ensure!(
+        even_frames > 0 && odd_frames > 0,
+        "cannot finish empty split halves"
+    );
+
+    let mut ws = Workspace::new(sizes);
+    let mut even_planes = even.finish(&mut ws);
+    ensure!(
+        even_planes.len() == 1,
+        "even split returned {} planes, not 1",
+        even_planes.len()
+    );
+    let even_plane = even_planes.pop().expect("checked one plane");
+    drop(even);
+
+    let mut odd_planes = odd.finish(&mut ws);
+    ensure!(
+        odd_planes.len() == 1,
+        "odd split returned {} planes, not 1",
+        odd_planes.len()
+    );
+    let odd_plane = odd_planes.pop().expect("checked one plane");
+    drop(odd);
+    drop(ws);
+
+    // The correlation and null statistics see f32. Only the display products
+    // below quantise, after every decision has been taken.
+    let analysis = split::analyse_pair(
+        &even_plane,
+        &odd_plane,
+        geom.width,
+        geom.height,
+        SPLIT_TILE_SIZE,
+    )?;
+
+    let even_path = dir.join("half-even.tiff");
+    let odd_path = dir.join("half-odd.tiff");
+    let null_path = dir.join("null-signed.tiff");
+    let q_even: Vec<u16> = even_plane.iter().copied().map(quantise_linear_dn).collect();
+    image_out::write_gray16(
+        &even_path,
+        geom.width as u32,
+        geom.height as u32,
+        &q_even,
+    )?;
+    drop(q_even);
+    let q_odd: Vec<u16> = odd_plane.iter().copied().map(quantise_linear_dn).collect();
+    image_out::write_gray16(
+        &odd_path,
+        geom.width as u32,
+        geom.height as u32,
+        &q_odd,
+    )?;
+    drop(q_odd);
+    let q_null: Vec<u16> = even_plane
+        .iter()
+        .zip(&odd_plane)
+        .map(|(&a, &b)| {
+            let v = if a.is_finite() && b.is_finite() {
+                (a - b).round() + 32768.0
+            } else {
+                32768.0
+            };
+            v.clamp(0.0, f32::from(u16::MAX)) as u16
+        })
+        .collect();
+    image_out::write_gray16(
+        &null_path,
+        geom.width as u32,
+        geom.height as u32,
+        &q_null,
+    )?;
+
+    write_split_frc(&dir.join("frc.csv"), &analysis)?;
+    write_split_tile_spectra(&dir.join("frc-tiles.csv"), &analysis)?;
+    write_split_acuity(&dir.join("acuity.csv"), &analysis)?;
+
+    let mut acuity_map = Vec::with_capacity(analysis.tiles.len());
+    let mut class_map = Vec::with_capacity(analysis.tiles.len());
+    for tile in &analysis.tiles {
+        let q = tile
+            .crossing
+            .frequency()
+            .map(|f| (f.clamp(0.0, 0.5) * 131_070.0).round() as u16)
+            .unwrap_or(0);
+        acuity_map.push(q);
+        class_map.push(match tile.crossing {
+            Crossing::Insufficient => 0,
+            Crossing::Measured(_) => 1,
+            Crossing::CensoredAbove { .. } => 2,
+            Crossing::CensoredBelow { .. } => 3,
+        });
+    }
+    image_out::write_gray16(
+        &dir.join("acuity.tiff"),
+        analysis.tiles_x as u32,
+        analysis.tiles_y as u32,
+        &acuity_map,
+    )?;
+    image_out::write_gray16(
+        &dir.join("acuity-class.tiff"),
+        analysis.tiles_x as u32,
+        analysis.tiles_y as u32,
+        &class_map,
+    )?;
+
+    let manifest_path = dir.join("README.txt");
+    let file = std::fs::File::create(&manifest_path)
+        .with_context(|| format!("creating split product {}", manifest_path.display()))?;
+    let mut manifest = BufWriter::new(file);
+    writeln!(manifest, "EXPERIMENTAL SPLIT-STACK DIAGNOSTIC; NOT A RESOLUTION CERTIFICATE")?;
+    writeln!(manifest, "plane={}x{} native quad pixels", geom.width, geom.height)?;
+    writeln!(manifest, "halves=global filename index parity; even={even_frames}; odd={odd_frames}")?;
+    writeln!(
+        manifest,
+        "tiles={}x{} of {}x{}; centred origin={},{}",
+        analysis.tiles_x,
+        analysis.tiles_y,
+        analysis.tile_size,
+        analysis.tile_size,
+        analysis.start_x,
+        analysis.start_y
+    )?;
+    writeln!(manifest, "window=mean removal then separable Hann")?;
+    writeln!(manifest, "threshold=1/7; three consecutive below-threshold rings required")?;
+    writeln!(
+        manifest,
+        "global_outcome={}; frequency_or_bound={}",
+        analysis.crossing.label(),
+        analysis
+            .crossing
+            .frequency()
+            .map(|v| format!("{v:.12} cycles/quad-pixel"))
+            .unwrap_or_else(|| "none".to_string())
+    )?;
+    writeln!(manifest, "half TIFFs=above-black camera-linear green DN")?;
+    writeln!(manifest, "null-signed.tiff=even-odd DN; zero is code 32768")?;
+    writeln!(manifest, "acuity.tiff=0..0.5 cycles/quad-pixel mapped to 0..65535")?;
+    writeln!(
+        manifest,
+        "acuity-class.tiff=0 insufficient, 1 measured, 2 censored above, 3 censored below"
+    )?;
+    writeln!(
+        manifest,
+        "WARNING=common sensor structure and shared registration error can raise FRC"
+    )?;
+
+    eprintln!(
+        "split FRC       : {} {}",
+        analysis.crossing.label(),
+        analysis
+            .crossing
+            .frequency()
+            .map(|v| format!("{v:.6} cycles/quad-pixel"))
+            .unwrap_or_else(|| "without a usable bound".into())
+    );
+    eprintln!(
+        "                  experimental diagnostic only; common-mode sensor structure can \
+         correlate both halves."
+    );
+    Ok(analysis.crossing)
+}
+
 /// The `lateral CA` prologue line, reporting the **resolved decision** rather
 /// than the switch.
 ///
@@ -5356,6 +5726,12 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let t_start = Instant::now();
     let paths = crate::raw_paths(&opts.dir, opts.limit)?;
     let paths = only_frame(paths);
+    if opts.split_out.is_some() {
+        ensure!(
+            paths.len() >= 2,
+            "--split-out needs at least two frames, one for each disjoint half"
+        );
+    }
     ensure!(
         paths.len() < u16::MAX as usize,
         "{} frames exceeds the u16 frame-index range",
@@ -5544,6 +5920,17 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let per_worker_bytes =
         4 * (acc_floats + ws_floats + (BAND_PLANES + 2) * geom.pixels()) + frame_bytes;
     let workers = band_workers(per_worker_bytes, paths.len())?;
+    // Deliberately do NOT feed the diagnostic memory into `band_workers`.
+    // Worker count fixes the ordinary merge's chunk boundaries and therefore
+    // its floating-point reduction order. Enabling diagnostics must not change
+    // the primary image. Report the real extra allocation instead of hiding it.
+    let split_extra_per_worker = if opts.split_out.is_some() {
+        let half_acc = BandMerge::new(geom.width, geom.height, 1, cfg).accumulator_floats();
+        let half_ws = FrameWorkspace::new(&sizes, 1).floats();
+        4 * 2 * (half_acc + half_ws)
+    } else {
+        0
+    };
     let per_chunk = paths.len().div_ceil(workers);
     eprintln!(
         "memory plan     : {workers} workers x {:.0} MB = {:.1} GB against a {} MB budget, \
@@ -5554,6 +5941,16 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         workers as f64 * per_worker_bytes as f64 / (1 << 30) as f64,
         MEMORY_BUDGET_BYTES / (1 << 20),
     );
+    if split_extra_per_worker > 0 {
+        eprintln!(
+            "split diagnostic : ON, +{:.0} MB per worker ({:.1} GB total live estimate). \
+             Worker count is\n                  frozen to the ordinary merge so its reduction \
+             order and output bytes cannot move.",
+            split_extra_per_worker as f64 / (1 << 20) as f64,
+            workers as f64 * (per_worker_bytes + split_extra_per_worker) as f64
+                / (1 << 30) as f64,
+        );
+    }
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
     let t_fold = Instant::now();
@@ -5561,23 +5958,19 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     let parts: Vec<Result<FoldPart>> = indexed
         .par_chunks(per_chunk)
         .map(|chunk| {
-            let mut w = BandWorker::new(geom, cfg);
+            let mut w = BandWorker::new(geom, cfg, opts.split_out.is_some());
             let mut folded = 0usize;
             for (i, p) in chunk {
                 if w.fold(p, *i, geom, levels, &noise, warps, defect)? {
                     folded += 1;
                 }
             }
-            Ok(FoldPart {
-                merge: w.merge,
-                folded,
-                beta_sum: w.beta_sum,
-                beta_n: w.beta_n,
-            })
+            Ok(w.into_part(folded))
         })
         .collect();
 
     let mut merged: Option<BandMerge> = None;
+    let mut split_merged: Option<SplitPart> = None;
     let mut folded_total = 0usize;
     let mut beta_sum: Vec<f64> = Vec::new();
     let mut beta_n = 0usize;
@@ -5587,6 +5980,7 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
             folded: n,
             beta_sum: bs,
             beta_n: bn,
+            split,
         } = part?;
         folded_total += n;
         if beta_sum.len() < bs.len() {
@@ -5599,6 +5993,12 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         match &mut merged {
             Some(a) => a.absorb(&m),
             None => merged = Some(m),
+        }
+        if let Some(split) = split {
+            match &mut split_merged {
+                Some(a) => a.absorb(&split),
+                None => split_merged = Some(split),
+            }
         }
     }
     let merge = merged.context("no frames were folded")?;
@@ -5675,10 +6075,34 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     eprintln!();
 
     // ---- collapse and write ----------------------------------------------
+    if let Some(dir) = &opts.split_out {
+        let split = split_merged.context("split diagnostics were requested but not accumulated")?;
+        ensure!(
+            split.even_frames > 0 && split.odd_frames > 0,
+            "alignment left an empty split half (even {}, odd {} frames)",
+            split.even_frames,
+            split.odd_frames
+        );
+        let even_frames = split.even_frames;
+        let odd_frames = split.odd_frames;
+        let t_split = Instant::now();
+        write_split_products(dir, split, geom, &sizes)?;
+        eprintln!(
+            "split products  : {} (even {} / odd {} frames, {:.1} s)",
+            dir.display(),
+            even_frames,
+            odd_frames,
+            t_split.elapsed().as_secs_f64()
+        );
+    }
     let Some(path) = &opts.out else {
         eprintln!(
-            "no --out        : nothing written. This arm has no measurement report of its own \
-             yet, so a\n                  run without --out only proves the fold completes."
+            "no --out        : no primary image written{}.",
+            if opts.split_out.is_some() {
+                "; split diagnostic products were written above"
+            } else {
+                "; the run only proves the fold completes"
+            }
         );
         eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
         return Ok(());

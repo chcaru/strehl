@@ -32,6 +32,7 @@ pub mod pyramid;
 pub mod restore;
 pub mod robust;
 pub mod softgate;
+pub mod split;
 pub mod stack;
 pub mod through_focus;
 pub mod warpmap;

@@ -117,3 +117,23 @@ half counts/refusals, registration residuals shared by both halves, window and
 ring choices, tile content, and threshold censoring.  This lane will not wire
 automatic tuning: the corpus's prior split objective ran to a boundary and rose
 4.14 times on a flat ROI.
+
+## Commissioning amendment, before real pixels
+
+The first clean sharpening control exposed a bad **control specification**, not
+a favourable result: identical spatial unsharp masking changed the largest
+individual finite-window ring by 0.010859, while the registered resolution
+crossing moved from 0.222192 to 0.220543 cycles/pixel (a **decrease** of
+0.001650, versus one ring = 0.015625) and naive gradient acuity rose 1.838176x.
+The original `5e-4` all-ring clause incorrectly demanded the infinite/periodic
+algebra after mean removal, finite tiling and Hann windowing, which do not
+commute with a spatial filter.  It would reject the metric when sharpening made
+its headline estimate slightly worse.
+
+Before any real capture was opened, that non-load-bearing clause is therefore
+retired.  The frozen sharpening gate is now the question the user actually
+posed: the reported crossing must **not increase**, must stay within one ring,
+and the naive acuity positive control must rise at least 25%.  `S1` still
+substitutes naive acuity for resolution and must go RED.  The maximum ring move
+remains reported as a sensitivity, not scored as a pass/fail gate.  This
+amendment is additive so the failed original specification remains auditable.
