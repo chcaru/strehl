@@ -1,0 +1,97 @@
+{
+  "schema": "V-HEADTOHEAD3-SHARPENING-TRANSFER-ADJUDICATION-2",
+  "status": "GREEN",
+  "label": "PRESENTATION_SENSITIVITY_NOT_RESOLUTION",
+  "site_digest": "B3A2F5279069A3CC85FB42F49F6FDA39397423D9A65565CAB88CCF8E627679F6",
+  "geometry_comparison": {
+    "pmax0": {
+      "author_scale": 1.0019999999999998,
+      "checker_scale": 1.0019999999999998,
+      "relative_disagreement": 0.0
+    },
+    "pmax40": {
+      "author_scale": 1.003,
+      "checker_scale": 1.003,
+      "relative_disagreement": 0.0
+    }
+  },
+  "quantity_comparison": {
+    "T0": {
+      "author": {
+        "point": 1.7301351632006512,
+        "ci_low": 1.673840893106796,
+        "ci_high": 1.7967879374057794,
+        "n": 24
+      },
+      "checker": {
+        "point": 1.7301351632006512,
+        "ci_low": 1.6745097778034943,
+        "ci_high": 1.7974088242527266,
+        "n": 24
+      },
+      "intervals_overlap": true,
+      "points_cross_contained": true
+    },
+    "M40": {
+      "author": {
+        "point": 1.018650470160784,
+        "ci_low": 0.6936535218549639,
+        "ci_high": 1.582538643243249,
+        "n": 24
+      },
+      "checker": {
+        "point": 1.018650470160784,
+        "ci_low": 0.6941993917146807,
+        "ci_high": 1.582108508894841,
+        "n": 24
+      },
+      "intervals_overlap": true,
+      "points_cross_contained": true
+    },
+    "TS": {
+      "author": {
+        "point": 1.566263148203094,
+        "ci_low": 1.5115432219529534,
+        "ci_high": 1.6171764065774912,
+        "n": 24
+      },
+      "checker": {
+        "point": 1.5662631482030942,
+        "ci_low": 1.5089943840756583,
+        "ci_high": 1.6188973897700383,
+        "n": 24
+      },
+      "intervals_overlap": true,
+      "points_cross_contained": true
+    },
+    "O40": {
+      "author": {
+        "point": 1.698458120701173,
+        "ci_low": 1.084590996341728,
+        "ci_high": 2.5007202542654943,
+        "n": 24
+      },
+      "checker": {
+        "point": 1.6984581207011726,
+        "ci_low": 1.088448746546439,
+        "ci_high": 2.4942758841397965,
+        "n": 24
+      },
+      "intervals_overlap": true,
+      "points_cross_contained": true
+    }
+  },
+  "withheld_quantities": {
+    "S40": "UNLICENSED_GT_0.25",
+    "R0": "UNLICENSED_GT_0.25"
+  },
+  "transfer_vs_synthetic": {
+    "synthetic_reference": 5.560744,
+    "author_T0_over_synthetic": 0.31113375533933074,
+    "checker_T0_over_synthetic": 0.31113375533933074,
+    "author_log_fraction": 0.31951351522826144,
+    "checker_log_fraction": 0.31951351522826144
+  },
+  "unlicensed": "UNLICENSED_GT_0.25",
+  "verdict": "UNRESOLVED"
+}

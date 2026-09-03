@@ -1,5 +1,24 @@
 # V-HEADTOHEAD3 — tone-neutral competitive baseline
 
+> **EXACT EXTERNAL-USM TRANSFER.  FORMAL VERDICT: `UNRESOLVED`;
+> COMPETITIVE DISPOSITION: SHARPENED ARM INADMISSIBLE.**  An independently
+> commissioned sibling battery confirmed the tone result but refused licensed
+> `Q25` as resolution: genuine improvement read `0.977981x` (wrong sign),
+> while radius-1/amount-0.5 USM read `5.560744x`.  Applying that exact unclipped
+> operator to the frozen real sites raised PMax0 `Q25` by
+> `1.7301 [1.6738,1.7968]x`, point-matching the observed licensed
+> PMax40/PMax0 rung of `1.6985 [1.0846,2.5007]x`;
+> USM(PMax0)/PMax40 is `1.0187 [0.6937,1.5825]`.  Applying it to strehl raised
+> `Q25` `1.5663 [1.5115,1.6172]x`.  Thus the real response is far below the
+> synthetic `5.56x`, and the preregistered interval rule remains unresolved,
+> but an information-free post-process reproduces the comparator rung at the
+> point estimate.  Together with the positive flat/hull controls and
+> eleven-field development confound, PMax40 cannot evidence a strehl
+> stacking-resolution deficit.  Sharpening-0 is the only admissible
+> sharpening-matched descriptive arm, but its direct cross-grid transfer
+> reading is `UNLICENSED_GT_0.25`; physical resolution remains undetermined.
+> Details are in §0.5.
+
 > **2026-09-03 COVER-MODE CAUSAL ARM.  VERDICT:
 > `COVER_NOT_CAUSE`.**  The frozen default render was reproduced byte for
 > byte, then rerendered with `--cover crop` as the only intervention.  At the
@@ -197,6 +216,80 @@ No Rust source changes follow.  The actionable change is experimental:
 future Zerene/strehl detail claims require one common linear input set and a
 one-variable development ladder.  The current `src/` and `crates/` pipeline
 has no result here that causally identifies a module to change.
+
+### 0.5 Exact external-USM transfer and sharpening-matched arm
+
+M-PHASE0-SLANTEDGE independently vendored and commissioned the licensed
+`Q25` implementation.  Tone invariance survived:
+affine/gamma-3/logistic read `0.999963/1.000000/0.999966`.  But sigma-0.75
+blur, a genuine sigma-1.20 improvement, and radius-1/amount-0.5 USM read
+`0.841501`, `0.977981`, and `5.560744x`.  The improvement has the wrong sign
+and information-free sharpening is rewarded by 456%; `Q25` is therefore
+refused as a sharpening-safe or calibrated resolution instrument.
+
+Before applying the sibling operator to real pixels, the 24 existing
+source-only detail sites, three input hashes, `[0.20,0.25)` band, operator,
+bootstrap seeds, and verdict rules were frozen in
+`SLANTEDGE-TRANSFER-PREREGISTRATION.md`.  Author commissioning finished
+17/17 controls GREEN and 12/12 plants RED; the independent checker finished
+30/30 and 14/14; adjudication finished 2/2 and 22/22.  The controls include
+the externally fixed wrong-sign physical-improvement reading, the positive
+USM arm, exact tone anchors, a bootstrap oracle, shift-sign plants, and
+window/bound registration defects.
+
+| presentation quantity | author 95% CI | checker 95% CI |
+| --- | ---: | ---: |
+| `T0`: USM05(PMax0) / PMax0 | `1.7301 [1.6738,1.7968]` | `1.7301 [1.6745,1.7974]` |
+| `M40`: USM05(PMax0) / PMax40 | `1.0187 [0.6937,1.5825]` | `1.0187 [0.6942,1.5821]` |
+| `TS`: USM05(strehl) / strehl | `1.5663 [1.5115,1.6172]` | `1.5663 [1.5090,1.6189]` |
+| `S40`: USM05(strehl) / PMax40 | `UNLICENSED_GT_0.25` | `UNLICENSED_GT_0.25` |
+| `R0`: strehl / PMax0 | `UNLICENSED_GT_0.25` | `UNLICENSED_GT_0.25` |
+| `O40`: PMax40 / PMax0 | `1.6985 [1.0846,2.5007]` | `1.6985 [1.0884,2.4943]` |
+
+The exact real PMax0 gain is only 31.11% of the synthetic ratio, or 31.95%
+of its log effect: the synthetic magnitude does not transfer.  Nevertheless,
+its point estimate slightly exceeds the real PMax40/PMax0 rung.  The formal
+verdict is `UNRESOLVED`, not `REAL_TRANSFER_SUFFICIENT`, because the paired
+`M40` interval spans one.  Strehl's own `1.5663x` response is likewise close
+to the `1.6985x` rung (7.8% smaller at the point estimate), but it is only a
+within-strehl presentation sensitivity: no preregistered strehl-rung
+reproduction verdict was defined.
+
+The first adjudication stopped: the initial checker's unrestricted,
+unwindowed registration excluded six fixed sites and returned a different
+candidate.  `SLANTEDGE-TRANSFER-CORRECTION.md` records the defect before the
+corrected outcome.  On the 18 common sites author/checker `O40` read
+`2.56552/2.56946`, consistent with the differing retained-site sets rather
+than a material common-site `Q25` disagreement.  A Hann-window and explicit
+±32 search were then independently implemented and commissioned without
+changing any scientific threshold; corrected scales, all four licensed point
+estimates, 24/24 retained sites, and the final `UNRESOLVED` verdict agree.
+
+Final independent verification then found that the cross-grid `R0` and `S40`
+masks reached `0.250500` and `0.250750` cycles/native-pixel.  The post-outcome
+`SLANTEDGE-TRANSFER-LICENSING-CORRECTION.md` withdraws both numbers.  Schema-2
+instruments no longer compute them, emit only `UNLICENSED_GT_0.25`, and
+commission numeric leaks to RED.  This does not change `T0`, `M40`, `TS`,
+`O40`, or the formal verdict, but it means the requested direct
+sharpening-matched strehl/PMax0 reading could not be determined within the
+licensed band.
+
+The competitive conclusion is stronger than the formal transfer branch:
+because `Q25` rewards a detail-free spatial operation, neither PMax40 nor the
+historical `UNLICENSED_GT_0.25` swing can establish a physical strehl deficit.
+Positive flat power (`1.7291 [1.3645,2.1638]`) and hull excess
+(`0.03692 [0.01311,0.06010]`) corroborate added non-detail-site structure,
+while eleven simultaneous development changes prevent identifying its
+physical cause.  Sharpening-0 remains the only admissible descriptive arm.
+Whether PMax40 recovered scene detail, amplified noise/ringing, or both could
+not be determined.
+
+The geometry factor `s` was measured from image content by scale sweeps and
+registered rank correlation, not inferred from nominal dimensions.  The
+completed §10 `COVER_NOT_CAUSE` verdict is unchanged.  No Rust source change
+follows: this result refuses the metric rather than isolating a defect in
+`crates/strehl-core` or `crates/strehl-cli`, and §10 still supports retaining
+`CoverMode::Scale`.
 
 ## 1. Question and scope
 
@@ -530,6 +623,12 @@ not raw power across independently toned renders.
   that the two source sets form a development ladder.
 * **P8.** No Rust change follows because no result causally isolates a Rust
   stacker module.
+* **P9.** Licensed `Q25` is tone-invariant but not sharpening-safe or
+  resolution-calibrated.  Exact radius-1/amount-0.5 USM raises real PMax0
+  `1.7301x` versus an observed PMax40/PMax0 `1.6985x`, but the paired closure
+  interval spans one and the registered transfer verdict is `UNRESOLVED`.
+* **P10.** Comparator scale `s` was fitted from image content, not nominal
+  dimensions; the independent `cover=crop` arm remains `COVER_NOT_CAUSE`.
 
 ## 9. Reproduction
 
@@ -559,6 +658,12 @@ python -B sharpening-source.py model  # expected exit 2: frozen model gate
 python -B sharpening-metadata.py
 python -B sharpening-measure.py       # expected exit 2: INDETERMINATE
 python -B sharpening-check.py
+python -B sharpening-transfer.py --commission
+python -B sharpening-transfer-check.py --commission
+python -B sharpening-transfer-adjudicate.py --commission
+python -B sharpening-transfer.py --output out\SHARPENING-TRANSFER-AUTHOR.json
+python -B sharpening-transfer-check.py --output out\SHARPENING-TRANSFER-CHECKER.json
+python -B sharpening-transfer-adjudicate.py --author out\SHARPENING-TRANSFER-AUTHOR.json --checker out\SHARPENING-TRANSFER-CHECKER.json --output out\SHARPENING-TRANSFER-ADJUDICATION.json
 ```
 
 `measure.py` prints complete `RESULT_JSON`, including ROI centres and
@@ -591,6 +696,10 @@ eac01548723d0c583a9a52912706f4bc8e7fe29a  failed source-model freeze
 3f0838b12294de380a3a16ee42ade5998bd9547d  outcome and independent checker
 23dd924166107607e5ead82f11140fe6d6d6b3a8  repair verifier-found commissioning defects
 233f1165063d30a2c941b7129a3287e7f99d2e69  correct above-cap and interval controls
+f6f238c8c0ed46bb2a0711dd5d45b11cabe5c07e  preregister external USM transfer
+33b6d343833dbe1408c3d3906193545d3a4948a4  commissioned transfer instruments
+a5276964415ebe26ce8cb8f26073a2e7ad2e4ae1  correct checker registration before rerun
+c000634609f0ab5a15fcaeb2a9598c272f1a2698  withdraw unlicensed cross-grid readings
 ```
 
 ## 10. Controlled `cover=scale` versus `cover=crop`
