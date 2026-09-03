@@ -1,11 +1,17 @@
-# M-PHASE0-SPLIT2 — repeated exposures are not a stationary FRC pair
+# M-PHASE0-SPLIT2 — scorecard-licensed registration fails the second-light gate
 
-**Verdict: CAPTURE GATE FAIL / NO BUILD.** The directory really does contain
-two sets of 32 repeated exposures per ISO at fixed reported focus, but the
-images are not stationary in sensor coordinates. The preregistered first-pass
-ISO-50 gate measured a monotone 1–2 quad-pixel displacement while in-camera
-image stabilization was on. Per the committed protocol, no real FRC or
-`P_sig/P_noise` result was retained and no Rust is warranted.
+**Final verdict: NOT ROBUST / NO BUILD.** The directory really does contain
+two sets of 32 repeated exposures per ISO at fixed reported focus. The original
+protocol stopped on 1–2 quad-pixel motion. After that result, the orchestrator
+supplied the independently preregistered SOTA scorecard, which names this
+capture and licenses analytical Fourier translation. Amendment 1 therefore
+tested the two scorecard-registered ISO-100 runs without inspecting an FRC
+outcome. The bright run passes the scorecard's 0.10-native-pixel
+non-translation RMS gate at 0.064031; the second-light run fails at
+**0.107703**. An independent spatial estimator reproduces the decisions at
+0.070005 and **0.105202**. No real FRC or `P_sig/P_noise` result was retained,
+no frequency above the 0.25 cycles/native-pixel licence was inspected, and no
+Rust is warranted.
 
 Preregistration and metadata-validator commissioning precede pixel measurement
 in commit `f24b08da`. All capture paths were read only.
@@ -26,9 +32,9 @@ in commit `f24b08da`. All capture paths were read only.
 * `ImageStabilization = On` in all reported metadata.
 
 Thus the directory name is substantially truthful: these are no-bracket
-repeats at fixed reported focus under two light levels. It is not, however, a
-set of co-registered observations of one latent, which is the property the
-proposed Fourier correlation needs.
+repeats at fixed reported focus under two light levels. They require
+registration before Fourier correlation, and the two light blocks do not both
+pass the same registered translation-only geometry gate.
 
 ## The load-bearing fixed-scene gate
 
@@ -56,11 +62,35 @@ with non-identity best correlations 0.997857–0.999778. Its planted
 zero-shift-only search goes RED. `ImageStabilization = On` is consistent with
 sensor motion, but metadata plus correlation do not prove the physical cause.
 
+## Scorecard-licensed amendment and corrected geometry statistic
+
+The scorecard was committed independently before this lane reported and says
+translation may be removed analytically as a Fourier phase ramp. It also names
+`DSC00328.ARW`–`DSC00359.ARW` and `DSC00584.ARW`–`DSC00615.ARW` as the two
+ISO-100 bee repeats. `AMENDMENT-1.md` freezes those inputs, excludes the pixels
+used for alignment from FRC, and allows only a unit-modulus phase ramp.
+
+The first amended gate used maximum quadrant range as a conservative proxy and
+went RED at 0.07/0.10 quad pixel. Audit found that the scorecard's literal is
+vector **RMS in native pixels**, not maximum component range.
+`GATE-CORRECTION.md` records this error and its flattering-direction correction
+before re-running the checker. The correct result is:
+
+| light pass | Fourier estimator RMS (native px) | independent ECC RMS | 0.10 bar |
+| --- | ---: | ---: | --- |
+| bright ISO 100 | 0.064031 | 0.070005 | PASS |
+| second-light ISO 100 | **0.107703** | **0.105202** | **FAIL** |
+
+The second method uses OpenCV ECC in the spatial domain; it does not import the
+Fourier estimator. Both assign the same per-light decisions. This rules out a
+phase-ramp sign error and makes the 7.7% overrun decision-relevant rather than a
+single-estimator accident.
+
 ## Commissioning retained, real FRC forbidden
 
-Although the capture gate stops the measurement, the offline instrument was
-completed and commissioned before the gate was read. `out/commission.json`
-records nine named plants, all RED:
+Although the geometry gate stops the measurement, the offline instrument was
+completed and commissioned before FRC was read. `out/commission.json` records
+eleven named plants, all RED:
 
 | control | clean reading |
 | --- | ---: |
@@ -84,38 +114,48 @@ and makes the nominal C output move by 25.002575 when only D receives a fixed
 external checkerboard. The external lineage predicate requires no C movement,
 so T1 goes RED. This directly demonstrates why self-tuning must be held out.
 
-Across the metadata, FRC/stability, and independent-verifier instruments,
-14/14 planted defects go RED.
+The analytical translator recovers an externally evaluated
+`(1.25,-0.40)`-quad-pixel displacement within 0.02 pixel, leaves Fourier
+magnitude unchanged to 1.67e-16 relative, and aligns it to 0.002651 relative
+RMS. Wrong-sign A1 goes RED. Local-warp A2 plants a known 0.12-native-pixel RMS
+and the checker reads 0.123288; the independent ECC checker reads 0.108305 and
+its own zero-residual plant also goes RED.
+
+Across the metadata, FRC/stability/alignment, and two independent-verifier
+instruments, 17/17 planted defects go RED.
 
 ## Illumination and the stopped claim
 
 The approximately 1 EV second-pass change could depress a genuine cross-light
-FRC. The protocol therefore restricted the primary null to each 32-frame
-fixed-light run, used drift-cancelling disjoint ABBA contrasts, and reserved
-cross-light scalar normalization as sensitivity analysis. None was run after
-the geometric gate failed. Consequently illumination cannot flatter this STOP:
-the deciding statistic is displacement, and the independent verifier removes
-mean and scale before correlation.
+FRC. The protocol therefore never pairs the light levels: each 32-frame block
+must pass independently, with drift-cancelling ABBA contrasts and a disjoint
+photometric-normalization sensitivity arm. None was run after the second
+geometry gate failed. Illumination cannot flatter this STOP: both geometry
+estimators remove mean and scale, and only local translation residual decides.
 
-There is deliberately no `out/measurement.json`. Therefore the requested real
-repeat null versus the 0.25 SNR bar, and its comparison with historical
-0.438734, are **not measured**. Quoting a value would violate the conditional
-protocol. Likewise, the 0.972099 comparison above is a commissioned synthetic
-adversary, not a result from these ARWs.
+There is deliberately no `out/measurement.json` and no
+`out/aligned-measurement.json`. Therefore the requested real repeat null versus
+the 0.25 SNR bar, and its comparison with historical 0.438734, are **not measured**.
+Quoting a value would violate both conditional protocols. Likewise,
+the 0.972099 comparison above is a commissioned synthetic adversary, not a
+result from these ARWs.
 
 ## Consequence for source
 
 **Nothing changes in Rust.** A repeat-only product already would not apply to a
-normal single focus stack; this candidate dataset additionally needs an
-uncommissioned registration model before its halves share a latent. Building
-dual accumulators or an FRC product now would productise an unidentified
-registration/fixed-pattern mixture.
+normal single focus stack; the scorecard-registered second-light sentinel also
+fails the commissioned translation-only gate. Building dual accumulators or an
+FRC product now would productise an unidentified
+registration/fixed-pattern/illumination mixture.
 
-Reopening requires a new capture with stabilization off and a zero-shift gate,
-or a separately preregistered, commissioned lossless registration experiment.
+Reopening requires a new capture with stabilization off or both independent
+light blocks passing the scorecard geometry gate.
 Even then, repeated exposures share stable sensor structure; an ABBA difference
 null cancels that structure and cannot prove it does not inflate scene-pair
-FRC.
+FRC. For the SOTA scorecard this means FRC remains unavailable from this
+sentinel; this lane cannot supply a licensed M1 detail result, so the headline
+detail claim remains unmeasured unless an independent admitted instrument
+succeeds elsewhere.
 
 ## Traceability
 
@@ -125,3 +165,9 @@ FRC.
 * `measure.py`, `out/pixel-gate.json` — preregistered pixel gate.
 * `verify_pixel_gate.py`, `out/pixel-gate-verification.json` — independent
   direct-correlation verification and its RED plant.
+* `AMENDMENT-1.md`, `GATE-CORRECTION.md` — externally licensed phase-ramp
+  protocol and post-RED correction to the scorecard's literal RMS statistic.
+* `align.py`, `measure_aligned.py`, `out/alignment-gate.json` — analytical
+  translation control and the two ISO-100 geometry gates.
+* `verify_alignment_gate.py`, `out/alignment-gate-verification.json` —
+  independent spatial subpixel verification and its RED plant.

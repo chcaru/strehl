@@ -10,7 +10,9 @@
     "C3": 1,
     "G1": 1,
     "G2": 1,
-    "T1": 1
+    "T1": 1,
+    "A1": 1,
+    "A2": 1
   },
   "plant_readings": {
     "N1": "COMMISSION RED N1: AssertionError:",
@@ -21,10 +23,31 @@
     "C3": "COMMISSION RED C3: AssertionError:",
     "G1": "COMMISSION RED G1: AssertionError:",
     "G2": "COMMISSION RED G2: AssertionError:",
-    "T1": "COMMISSION RED T1: AssertionError:"
+    "T1": "COMMISSION RED T1: AssertionError:",
+    "A1": "COMMISSION RED A1: AssertionError:",
+    "A2": "COMMISSION RED A2: AssertionError:"
   },
   "plant_measurements": {
     "N1": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -73,6 +96,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           1.0,
@@ -133,6 +183,25 @@
       "stability_error": null
     },
     "S1": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -181,6 +250,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           -0.0036307916878334386,
@@ -241,6 +337,25 @@
       "stability_error": null
     },
     "C1": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -289,6 +404,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           -0.0036307916878334386,
@@ -349,6 +491,25 @@
       "stability_error": null
     },
     "C2": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -397,6 +558,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           -0.0036307916878334386,
@@ -457,6 +645,25 @@
       "stability_error": null
     },
     "C3": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -505,6 +712,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           -0.0036307916878334386,
@@ -565,6 +799,25 @@
       "stability_error": null
     },
     "G1": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -613,6 +866,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           -0.0036307916878334386,
@@ -646,6 +926,25 @@
       "stability_error": "nonzero integer phase shift: [(0, 0), (0, 0), (0, -1), (0, 0)]"
     },
     "G2": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -694,6 +993,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           -0.0036307916878334386,
@@ -727,6 +1053,25 @@
       "stability_error": "focus-proxy deviation 1.161969 >=0.10"
     },
     "T1": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
       "classifier": {
         "censored": {
           "frequency_or_bound": 0.5,
@@ -797,6 +1142,33 @@
         ]
       },
       "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
       "null": {
         "bands": [
           -0.0036307916878334386,
@@ -807,6 +1179,297 @@
         "mean_abs_frc": 0.029622191046692982
       },
       "plant": "T1",
+      "positive": {
+        "high_band_frc": 0.0041149690420633775,
+        "identity_max_error": 4.440892098500626e-16,
+        "low_band_frc": 0.9909998021676522
+      },
+      "sharpening": {
+        "checked_crossing_move": -0.0007543209641277526,
+        "crossing_after": {
+          "frequency_or_bound": 0.2230371891678181,
+          "outcome": "MEASURED"
+        },
+        "crossing_before": {
+          "frequency_or_bound": 0.22379151013194584,
+          "outcome": "MEASURED"
+        },
+        "crossing_move": -0.0007543209641277526,
+        "maximum_ring_frc_move": 0.01124745223336654,
+        "naive_acuity_gain": 1.832679111110752
+      },
+      "stability": {
+        "log_high_mid_ratio": [
+          -5.968579444149281,
+          -5.968307365544031,
+          -5.968260902501667,
+          -5.968348299198928
+        ],
+        "maximum_deviation": 0.00025161177780219646,
+        "median": -5.968327832371479,
+        "shifts": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "stability_error": null
+    },
+    "A1": {
+      "analytical_alignment": null,
+      "analytical_alignment_error": "translation did not align external truth: {'true_displacement': [1.25, -0.4], 'estimated_alignment': [-1.23, 0.39], 'estimated_displacement': [1.23, -0.39], 'maximum_estimation_error': 0.020000000000000018, 'aligned_relative_rms': 0.29934015764423905, 'phase_ramp_magnitude_relative_error': 1.674222682563168e-16, 'ifft_imaginary_relative_rms': 2.620108648602261e-05}",
+      "classifier": {
+        "censored": {
+          "frequency_or_bound": 0.5,
+          "outcome": "CENSORED_ABOVE"
+        },
+        "gapped": {
+          "frequency_or_bound": null,
+          "outcome": "INSUFFICIENT"
+        },
+        "short_tail": {
+          "frequency_or_bound": null,
+          "outcome": "INSUFFICIENT"
+        }
+      },
+      "common_mode": {
+        "low_band_frc": 0.9739863709911375
+      },
+      "data_dependent_tuner": {
+        "evaluation_high_band_frc": 0.003491627702354946,
+        "external_c_output_max_change": 0.0,
+        "external_predicate": "perturb D only; C output must be bit-identical",
+        "perturbed_selected_leak": 0.0,
+        "selected_leak": 0.0,
+        "selected_strength": 4.0,
+        "training_candidates": [
+          {
+            "score": 0.2265724080673056,
+            "strength": 0.0
+          },
+          {
+            "score": 0.2816990426036956,
+            "strength": 0.5
+          },
+          {
+            "score": 0.3262921029281017,
+            "strength": 1.0
+          },
+          {
+            "score": 0.40586998032065597,
+            "strength": 2.0
+          },
+          {
+            "score": 0.5245865006417852,
+            "strength": 4.0
+          }
+        ]
+      },
+      "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.028284271247461926,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ],
+          [
+            -1.23,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.0,
+        "warped": false
+      },
+      "null": {
+        "bands": [
+          -0.0036307916878334386,
+          0.011965170048415404,
+          -0.014001276406143563
+        ],
+        "max_ring_abs_t": 1.7255860609219387,
+        "mean_abs_frc": 0.029622191046692982
+      },
+      "plant": "A1",
+      "positive": {
+        "high_band_frc": 0.0041149690420633775,
+        "identity_max_error": 4.440892098500626e-16,
+        "low_band_frc": 0.9909998021676522
+      },
+      "sharpening": {
+        "checked_crossing_move": -0.0007543209641277526,
+        "crossing_after": {
+          "frequency_or_bound": 0.2230371891678181,
+          "outcome": "MEASURED"
+        },
+        "crossing_before": {
+          "frequency_or_bound": 0.22379151013194584,
+          "outcome": "MEASURED"
+        },
+        "crossing_move": -0.0007543209641277526,
+        "maximum_ring_frc_move": 0.01124745223336654,
+        "naive_acuity_gain": 1.832679111110752
+      },
+      "stability": {
+        "log_high_mid_ratio": [
+          -5.968579444149281,
+          -5.968307365544031,
+          -5.968260902501667,
+          -5.968348299198928
+        ],
+        "maximum_deviation": 0.00025161177780219646,
+        "median": -5.968327832371479,
+        "shifts": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "stability_error": null
+    },
+    "A2": {
+      "analytical_alignment": {
+        "aligned_relative_rms": 0.002651281664693248,
+        "estimated_alignment": [
+          -1.23,
+          0.39
+        ],
+        "estimated_displacement": [
+          1.23,
+          -0.39
+        ],
+        "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+        "maximum_estimation_error": 0.020000000000000018,
+        "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+        "true_displacement": [
+          1.25,
+          -0.4
+        ]
+      },
+      "analytical_alignment_error": null,
+      "classifier": {
+        "censored": {
+          "frequency_or_bound": 0.5,
+          "outcome": "CENSORED_ABOVE"
+        },
+        "gapped": {
+          "frequency_or_bound": null,
+          "outcome": "INSUFFICIENT"
+        },
+        "short_tail": {
+          "frequency_or_bound": null,
+          "outcome": "INSUFFICIENT"
+        }
+      },
+      "common_mode": {
+        "low_band_frc": 0.9739863709911375
+      },
+      "data_dependent_tuner": {
+        "evaluation_high_band_frc": 0.003491627702354946,
+        "external_c_output_max_change": 0.0,
+        "external_predicate": "perturb D only; C output must be bit-identical",
+        "perturbed_selected_leak": 0.0,
+        "selected_leak": 0.0,
+        "selected_strength": 4.0,
+        "training_candidates": [
+          {
+            "score": 0.2265724080673056,
+            "strength": 0.0
+          },
+          {
+            "score": 0.2816990426036956,
+            "strength": 0.5
+          },
+          {
+            "score": 0.3262921029281017,
+            "strength": 1.0
+          },
+          {
+            "score": 0.40586998032065597,
+            "strength": 2.0
+          },
+          {
+            "score": 0.5245865006417852,
+            "strength": 4.0
+          }
+        ]
+      },
+      "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+      "local_translation_residual": {
+        "global_alignment_quad_pixels": [
+          -1.24,
+          0.4
+        ],
+        "measured_residual_rms_native_pixels": 0.12328828005937964,
+        "quadrant_alignments_quad_pixels": [
+          [
+            -1.17,
+            0.39
+          ],
+          [
+            -1.29,
+            0.39
+          ],
+          [
+            -1.17,
+            0.39
+          ],
+          [
+            -1.29,
+            0.39
+          ]
+        ],
+        "true_residual_rms_native_pixels": 0.12,
+        "warped": true
+      },
+      "null": {
+        "bands": [
+          -0.0036307916878334386,
+          0.011965170048415404,
+          -0.014001276406143563
+        ],
+        "max_ring_abs_t": 1.7255860609219387,
+        "mean_abs_frc": 0.029622191046692982
+      },
+      "plant": "A2",
       "positive": {
         "high_band_frc": 0.0041149690420633775,
         "identity_max_error": 4.440892098500626e-16,
@@ -866,9 +1529,30 @@
     "identical_sharpening",
     "endpoint_gap_and_tail_refusal",
     "pixel_shift_and_focus_stability",
-    "held_out_data_dependent_tuner_lineage"
+    "held_out_data_dependent_tuner_lineage",
+    "external_analytic_translation_and_wrong_sign",
+    "external_nontranslation_residual_rms"
   ],
   "readings": {
+    "analytical_alignment": {
+      "aligned_relative_rms": 0.002651281664693248,
+      "estimated_alignment": [
+        -1.23,
+        0.39
+      ],
+      "estimated_displacement": [
+        1.23,
+        -0.39
+      ],
+      "ifft_imaginary_relative_rms": 2.6201086486025137e-05,
+      "maximum_estimation_error": 0.020000000000000018,
+      "phase_ramp_magnitude_relative_error": 1.674222682563168e-16,
+      "true_displacement": [
+        1.25,
+        -0.4
+      ]
+    },
+    "analytical_alignment_error": null,
     "classifier": {
       "censored": {
         "frequency_or_bound": 0.5,
@@ -917,6 +1601,33 @@
       ]
     },
     "fixed_external_dft_max_relative_error": 1.5968146798953905e-15,
+    "local_translation_residual": {
+      "global_alignment_quad_pixels": [
+        -1.24,
+        0.4
+      ],
+      "measured_residual_rms_native_pixels": 0.028284271247461926,
+      "quadrant_alignments_quad_pixels": [
+        [
+          -1.23,
+          0.39
+        ],
+        [
+          -1.23,
+          0.39
+        ],
+        [
+          -1.23,
+          0.39
+        ],
+        [
+          -1.23,
+          0.39
+        ]
+      ],
+      "true_residual_rms_native_pixels": 0.0,
+      "warped": false
+    },
     "null": {
       "bands": [
         -0.0036307916878334386,

@@ -1,6 +1,6 @@
 {
   "status": "VERIFIED",
-  "claims_checked": 26,
+  "claims_checked": 36,
   "capture_files": 576,
   "groups": 18,
   "shift_counts": {
@@ -9,8 +9,16 @@
     "(2, 0)": 10
   },
   "all_gate_methods_agree": true,
-  "total_plants_red": 14,
-  "measurement_file_absent": true,
+  "alignment_primary_decisions": [
+    true,
+    false
+  ],
+  "alignment_independent_decisions": [
+    true,
+    false
+  ],
+  "total_plants_red": 17,
+  "measurement_files_absent": true,
   "commission": {
     "clean_exit": 0,
     "planted_report_value_exit": 1,

@@ -11,12 +11,25 @@ from pathlib import Path
 
 import numpy as np
 
+import align
 import frc
 
 
 LANE = Path(__file__).resolve().parent
 OUT = LANE / "out"
-PLANTS = ("N1", "P1", "S1", "C1", "C2", "C3", "G1", "G2", "T1")
+PLANTS = (
+    "N1",
+    "P1",
+    "S1",
+    "C1",
+    "C2",
+    "C3",
+    "G1",
+    "G2",
+    "T1",
+    "A1",
+    "A2",
+)
 
 
 def smooth_signal(n: int, seed: int) -> np.ndarray:
@@ -332,6 +345,13 @@ def acceptance(plant: str) -> dict[str, object]:
         stability_error = str(error)
 
     tuner = tuner_control(plant)
+    alignment = None
+    alignment_error = None
+    try:
+        alignment = align.commission_alignment(wrong_sign=plant == "A1")
+    except AssertionError as error:
+        alignment_error = str(error)
+    local_residual = align.commission_local_residual(warped=plant == "A2")
     result = {
         "plant": plant or None,
         "fixed_external_dft_max_relative_error": external_dft_error,
@@ -362,6 +382,9 @@ def acceptance(plant: str) -> dict[str, object]:
         "stability": stability,
         "stability_error": stability_error,
         "data_dependent_tuner": tuner,
+        "analytical_alignment": alignment,
+        "analytical_alignment_error": alignment_error,
+        "local_translation_residual": local_residual,
     }
     print("READINGS " + json.dumps(result, allow_nan=True, sort_keys=True))
 
@@ -382,6 +405,8 @@ def acceptance(plant: str) -> dict[str, object]:
     assert short_tail["outcome"] == "INSUFFICIENT"
     assert stability_error is None
     assert tuner["external_c_output_max_change"] == 0.0
+    assert alignment_error is None
+    assert local_residual["measured_residual_rms_native_pixels"] <= 0.10
     return result
 
 
@@ -465,6 +490,8 @@ def main() -> int:
             "endpoint_gap_and_tail_refusal",
             "pixel_shift_and_focus_stability",
             "held_out_data_dependent_tuner_lineage",
+            "external_analytic_translation_and_wrong_sign",
+            "external_nontranslation_residual_rms",
         ],
         "readings": readings,
     }

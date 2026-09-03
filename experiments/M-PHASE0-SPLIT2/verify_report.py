@@ -30,6 +30,12 @@ def verify(*, plant_report_value: bool) -> dict[str, object]:
     independent = json.loads(
         (OUT / "pixel-gate-verification.json").read_text(encoding="utf-8")
     )
+    alignment_gate = json.loads(
+        (OUT / "alignment-gate.json").read_text(encoding="utf-8")
+    )
+    alignment_independent = json.loads(
+        (OUT / "alignment-gate-verification.json").read_text(encoding="utf-8")
+    )
 
     file_count = int(metadata["files"]) + (1 if plant_report_value else 0)
     require(note, f"{file_count} contiguous ARWs")
@@ -113,6 +119,8 @@ def verify(*, plant_report_value: bool) -> dict[str, object]:
         "G1",
         "G2",
         "T1",
+        "A1",
+        "A2",
     }
     assert all(code == 1 for code in commission["plants"].values())
     tuner = commission["plant_measurements"]["T1"]["data_dependent_tuner"]
@@ -120,31 +128,76 @@ def verify(*, plant_report_value: bool) -> dict[str, object]:
     assert tuner["evaluation_high_band_frc"] == 1.0
     require(note, f"{tuner['external_c_output_max_change']:.6f}")
 
+    alignment = clean["analytical_alignment"]
+    require(note, "within 0.02 pixel")
+    require(note, f"{alignment['phase_ramp_magnitude_relative_error']:.2e}")
+    require(note, f"aligns it to {alignment['aligned_relative_rms']:.6f} relative")
+    local_plant = commission["plant_measurements"]["A2"][
+        "local_translation_residual"
+    ]
+    require(
+        note,
+        f"checker reads {local_plant['measured_residual_rms_native_pixels']:.6f}",
+    )
+
+    assert alignment_gate["status"] == "ALIGNMENT_GATE_RED"
+    primary_values = [
+        float(run["maximum_nontranslation_residual_rms_native_pixels"])
+        for run in alignment_gate["runs"]
+    ]
+    primary_decisions = [
+        bool(run["passes_translation_only_gate"])
+        for run in alignment_gate["runs"]
+    ]
+    assert primary_decisions == [True, False]
+    assert alignment_independent["status"] == "VERIFIED"
+    independent_values = [
+        float(run["maximum_nontranslation_residual_rms_native_pixels"])
+        for run in alignment_independent["runs"]
+    ]
+    independent_decisions = [
+        bool(run["passes"]) for run in alignment_independent["runs"]
+    ]
+    assert independent_decisions == primary_decisions
+    for value in (*primary_values, *independent_values):
+        require(note, f"{value:.6f}")
+    ecc_warp = alignment_independent["commission"]["warped_fixture"]
+    require(
+        note,
+        f"ECC checker reads "
+        f"{float(ecc_warp['measured_residual_rms_native_pixels']):.6f}",
+    )
+
     assert metadata_commission["all_plants_red"] is True
     assert len(metadata_commission["plants"]) == 4
     assert independent["commission"]["plant_went_red"] is True
     total_plants = (
         len(metadata_commission["plants"])
         + len(commission["plants"])
-        + 1
+        + 2
     )
     require(note, f"{total_plants}/{total_plants} planted defects go RED")
 
     if (OUT / "measurement.json").exists():
         raise AssertionError("real FRC measurement exists despite failed gate")
-    require(note, "There is deliberately no `out/measurement.json`.")
+    if (OUT / "aligned-measurement.json").exists():
+        raise AssertionError("aligned FRC measurement exists despite failed gate")
+    require(note, "There is deliberately no `out/measurement.json` and no")
+    require(note, "`out/aligned-measurement.json`.")
     require(note, "are **not measured**")
     require(note, "**Nothing changes in Rust.**")
 
     return {
         "status": "VERIFIED",
-        "claims_checked": 26,
+        "claims_checked": 36,
         "capture_files": metadata["files"],
         "groups": len(metadata["groups"]),
         "shift_counts": {str(key): value for key, value in counts.items()},
         "all_gate_methods_agree": independent["all_methods_agree"],
+        "alignment_primary_decisions": primary_decisions,
+        "alignment_independent_decisions": independent_decisions,
         "total_plants_red": total_plants,
-        "measurement_file_absent": True,
+        "measurement_files_absent": True,
     }
 
 

@@ -1,0 +1,1824 @@
+{
+  "status": "ALIGNMENT_GATE_RED",
+  "scorecard_translation_rule": "analytic Fourier phase ramp; 0.10 native-pixel local residual limit",
+  "runs": [
+    {
+      "pass": 1,
+      "iso": 100,
+      "first_file": "DSC00328.ARW",
+      "last_file": "DSC00359.ARW",
+      "nontranslation_residual_rms_limit_native_pixels": 0.1,
+      "maximum_quadrant_range_quad_pixels": 0.07000000000000028,
+      "maximum_nontranslation_residual_rms_native_pixels": 0.06403124237432854,
+      "passes_translation_only_gate": true,
+      "frames": [
+        {
+          "index": 0,
+          "file": "DSC00328.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.0,
+            0.0
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.0,
+          "nontranslation_residual_rms_native_pixels": 0.0
+        },
+        {
+          "index": 1,
+          "file": "DSC00329.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.38,
+            0.08
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.38,
+              0.07
+            ],
+            [
+              0.38,
+              0.08
+            ],
+            [
+              0.38,
+              0.07
+            ],
+            [
+              0.39,
+              0.07
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.010000000000000009,
+          "nontranslation_residual_rms_native_pixels": 0.019999999999999997
+        },
+        {
+          "index": 2,
+          "file": "DSC00330.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.6599999999999999,
+            -0.02
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.6599999999999999,
+              -0.02
+            ],
+            [
+              0.64,
+              -0.01
+            ],
+            [
+              0.65,
+              -0.03
+            ],
+            [
+              0.6699999999999999,
+              -0.02
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.029999999999999916,
+          "nontranslation_residual_rms_native_pixels": 0.0282842712474618
+        },
+        {
+          "index": 3,
+          "file": "DSC00331.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.24,
+            -0.32
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.25,
+              -0.31
+            ],
+            [
+              0.22,
+              -0.32
+            ],
+            [
+              0.25,
+              -0.32
+            ],
+            [
+              0.26,
+              -0.32
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.04000000000000001,
+          "nontranslation_residual_rms_native_pixels": 0.03316624790355401
+        },
+        {
+          "index": 4,
+          "file": "DSC00332.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.5700000000000001,
+            -0.01
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.5800000000000001,
+              -0.01
+            ],
+            [
+              0.55,
+              -0.01
+            ],
+            [
+              0.5700000000000001,
+              -0.01
+            ],
+            [
+              0.5800000000000001,
+              -0.01
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.030000000000000027,
+          "nontranslation_residual_rms_native_pixels": 0.024494897427831803
+        },
+        {
+          "index": 5,
+          "file": "DSC00333.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.37,
+            -0.06
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.37,
+              -0.05
+            ],
+            [
+              0.36,
+              -0.06
+            ],
+            [
+              0.37,
+              -0.06
+            ],
+            [
+              0.38,
+              -0.06
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.020000000000000018,
+          "nontranslation_residual_rms_native_pixels": 0.01732050807568878
+        },
+        {
+          "index": 6,
+          "file": "DSC00334.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.62,
+            0.11
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.62,
+              0.1
+            ],
+            [
+              0.6,
+              0.11
+            ],
+            [
+              0.61,
+              0.1
+            ],
+            [
+              0.62,
+              0.11
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.020000000000000018,
+          "nontranslation_residual_rms_native_pixels": 0.02645751311064592
+        },
+        {
+          "index": 7,
+          "file": "DSC00335.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.45,
+            -0.04
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.46,
+              -0.04
+            ],
+            [
+              0.43,
+              -0.04
+            ],
+            [
+              0.45,
+              -0.04
+            ],
+            [
+              0.46,
+              -0.04
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.030000000000000027,
+          "nontranslation_residual_rms_native_pixels": 0.024494897427831803
+        },
+        {
+          "index": 8,
+          "file": "DSC00336.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.85,
+            -0.28
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.85,
+              -0.28
+            ],
+            [
+              0.8200000000000001,
+              -0.27
+            ],
+            [
+              0.84,
+              -0.28
+            ],
+            [
+              0.85,
+              -0.28
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.029999999999999916,
+          "nontranslation_residual_rms_native_pixels": 0.03316624790355393
+        },
+        {
+          "index": 9,
+          "file": "DSC00337.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.5700000000000001,
+            -0.37
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.5800000000000001,
+              -0.37
+            ],
+            [
+              0.55,
+              -0.36
+            ],
+            [
+              0.5700000000000001,
+              -0.37
+            ],
+            [
+              0.5800000000000001,
+              -0.36
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.030000000000000027,
+          "nontranslation_residual_rms_native_pixels": 0.028284271247461926
+        },
+        {
+          "index": 10,
+          "file": "DSC00338.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.75,
+            -0.21
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.76,
+              -0.21
+            ],
+            [
+              0.72,
+              -0.2
+            ],
+            [
+              0.75,
+              -0.21
+            ],
+            [
+              0.76,
+              -0.2
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.040000000000000036,
+          "nontranslation_residual_rms_native_pixels": 0.03605551275463991
+        },
+        {
+          "index": 11,
+          "file": "DSC00339.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.9,
+            -0.12
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.91,
+              -0.12
+            ],
+            [
+              0.87,
+              -0.11
+            ],
+            [
+              0.9,
+              -0.12
+            ],
+            [
+              0.91,
+              -0.11
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.040000000000000036,
+          "nontranslation_residual_rms_native_pixels": 0.03605551275463992
+        },
+        {
+          "index": 12,
+          "file": "DSC00340.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.73,
+            -0.09
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.74,
+              -0.1
+            ],
+            [
+              0.71,
+              -0.09
+            ],
+            [
+              0.73,
+              -0.1
+            ],
+            [
+              0.74,
+              -0.08
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.030000000000000027,
+          "nontranslation_residual_rms_native_pixels": 0.030000000000000023
+        },
+        {
+          "index": 13,
+          "file": "DSC00341.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.89,
+            -0.15
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.9,
+              -0.15
+            ],
+            [
+              0.85,
+              -0.14
+            ],
+            [
+              0.89,
+              -0.15
+            ],
+            [
+              0.89,
+              -0.14
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.050000000000000044,
+          "nontranslation_residual_rms_native_pixels": 0.04358898943540676
+        },
+        {
+          "index": 14,
+          "file": "DSC00342.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.87,
+            -0.15
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.89,
+              -0.15
+            ],
+            [
+              0.84,
+              -0.14
+            ],
+            [
+              0.87,
+              -0.15
+            ],
+            [
+              0.88,
+              -0.14
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.050000000000000044,
+          "nontranslation_residual_rms_native_pixels": 0.04000000000000002
+        },
+        {
+          "index": 15,
+          "file": "DSC00343.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.08,
+            -0.08
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.09,
+              -0.08
+            ],
+            [
+              1.05,
+              -0.07
+            ],
+            [
+              1.08,
+              -0.08
+            ],
+            [
+              1.09,
+              -0.07
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.040000000000000036,
+          "nontranslation_residual_rms_native_pixels": 0.03605551275463992
+        },
+        {
+          "index": 16,
+          "file": "DSC00344.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.13,
+            -0.05
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.1400000000000001,
+              -0.06
+            ],
+            [
+              1.09,
+              -0.05
+            ],
+            [
+              1.13,
+              -0.06
+            ],
+            [
+              1.1400000000000001,
+              -0.04
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.050000000000000044,
+          "nontranslation_residual_rms_native_pixels": 0.04582575694955834
+        },
+        {
+          "index": 17,
+          "file": "DSC00345.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.06,
+            -0.06
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.07,
+              -0.06
+            ],
+            [
+              1.02,
+              -0.05
+            ],
+            [
+              1.06,
+              -0.06
+            ],
+            [
+              1.07,
+              -0.05
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.050000000000000044,
+          "nontranslation_residual_rms_native_pixels": 0.04472135954999583
+        },
+        {
+          "index": 18,
+          "file": "DSC00346.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.02,
+            -0.11
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.03,
+              -0.12
+            ],
+            [
+              0.98,
+              -0.1
+            ],
+            [
+              1.02,
+              -0.11
+            ],
+            [
+              1.02,
+              -0.1
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.050000000000000044,
+          "nontranslation_residual_rms_native_pixels": 0.04472135954999582
+        },
+        {
+          "index": 19,
+          "file": "DSC00347.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.18,
+            -0.27
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.2,
+              -0.28
+            ],
+            [
+              1.1400000000000001,
+              -0.26
+            ],
+            [
+              1.18,
+              -0.28
+            ],
+            [
+              1.19,
+              -0.27
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.05999999999999983,
+          "nontranslation_residual_rms_native_pixels": 0.048989794855663425
+        },
+        {
+          "index": 20,
+          "file": "DSC00348.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.97,
+            -0.38
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.99,
+              -0.39
+            ],
+            [
+              0.94,
+              -0.37
+            ],
+            [
+              0.97,
+              -0.38
+            ],
+            [
+              0.98,
+              -0.37
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.050000000000000044,
+          "nontranslation_residual_rms_native_pixels": 0.041231056256176644
+        },
+        {
+          "index": 21,
+          "file": "DSC00349.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.18,
+            -0.22
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.19,
+              -0.23
+            ],
+            [
+              1.1400000000000001,
+              -0.21
+            ],
+            [
+              1.18,
+              -0.22
+            ],
+            [
+              1.18,
+              -0.21
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.04999999999999982,
+          "nontranslation_residual_rms_native_pixels": 0.044721359549995635
+        },
+        {
+          "index": 22,
+          "file": "DSC00350.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.2,
+            -0.14
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.21,
+              -0.15
+            ],
+            [
+              1.16,
+              -0.13
+            ],
+            [
+              1.2,
+              -0.14
+            ],
+            [
+              1.2,
+              -0.13
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.050000000000000044,
+          "nontranslation_residual_rms_native_pixels": 0.04472135954999583
+        },
+        {
+          "index": 23,
+          "file": "DSC00351.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.1400000000000001,
+            -0.11
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.16,
+              -0.13
+            ],
+            [
+              1.11,
+              -0.11
+            ],
+            [
+              1.15,
+              -0.12
+            ],
+            [
+              1.15,
+              -0.11
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.04999999999999982,
+          "nontranslation_residual_rms_native_pixels": 0.04472135954999563
+        },
+        {
+          "index": 24,
+          "file": "DSC00352.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.24,
+            -0.37
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.26,
+              -0.38
+            ],
+            [
+              1.2,
+              -0.35
+            ],
+            [
+              1.24,
+              -0.37
+            ],
+            [
+              1.25,
+              -0.36
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06000000000000005,
+          "nontranslation_residual_rms_native_pixels": 0.05196152422706637
+        },
+        {
+          "index": 25,
+          "file": "DSC00353.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.3900000000000001,
+            -0.32
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.41,
+              -0.34
+            ],
+            [
+              1.35,
+              -0.3
+            ],
+            [
+              1.3900000000000001,
+              -0.33
+            ],
+            [
+              1.4,
+              -0.31
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.05999999999999983,
+          "nontranslation_residual_rms_native_pixels": 0.05567764362830015
+        },
+        {
+          "index": 26,
+          "file": "DSC00354.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.34,
+            -0.07
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.3599999999999999,
+              -0.1
+            ],
+            [
+              1.31,
+              -0.07
+            ],
+            [
+              1.34,
+              -0.09
+            ],
+            [
+              1.35,
+              -0.07
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.04999999999999982,
+          "nontranslation_residual_rms_native_pixels": 0.05196152422706626
+        },
+        {
+          "index": 27,
+          "file": "DSC00355.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.33,
+            -0.21
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.35,
+              -0.23
+            ],
+            [
+              1.29,
+              -0.2
+            ],
+            [
+              1.33,
+              -0.21
+            ],
+            [
+              1.33,
+              -0.2
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06000000000000005,
+          "nontranslation_residual_rms_native_pixels": 0.05099019513592788
+        },
+        {
+          "index": 28,
+          "file": "DSC00356.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.45,
+            -0.4
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.47,
+              -0.42
+            ],
+            [
+              1.4,
+              -0.38
+            ],
+            [
+              1.45,
+              -0.4
+            ],
+            [
+              1.45,
+              -0.39
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07000000000000006,
+          "nontranslation_residual_rms_native_pixels": 0.0616441400296898
+        },
+        {
+          "index": 29,
+          "file": "DSC00357.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.27,
+            -0.41
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.29,
+              -0.44
+            ],
+            [
+              1.23,
+              -0.4
+            ],
+            [
+              1.27,
+              -0.42
+            ],
+            [
+              1.27,
+              -0.4
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06000000000000005,
+          "nontranslation_residual_rms_native_pixels": 0.05656854249492383
+        },
+        {
+          "index": 30,
+          "file": "DSC00358.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.56,
+            -0.54
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.58,
+              -0.56
+            ],
+            [
+              1.51,
+              -0.52
+            ],
+            [
+              1.56,
+              -0.54
+            ],
+            [
+              1.56,
+              -0.52
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07000000000000006,
+          "nontranslation_residual_rms_native_pixels": 0.06403124237432854
+        },
+        {
+          "index": 31,
+          "file": "DSC00359.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.62,
+            -0.35
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.6400000000000001,
+              -0.37
+            ],
+            [
+              1.5699999999999998,
+              -0.34
+            ],
+            [
+              1.6099999999999999,
+              -0.36
+            ],
+            [
+              1.62,
+              -0.34
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07000000000000028,
+          "nontranslation_residual_rms_native_pixels": 0.06082762530298245
+        }
+      ],
+      "elapsed_seconds": 25.803465299948584
+    },
+    {
+      "pass": 2,
+      "iso": 100,
+      "first_file": "DSC00584.ARW",
+      "last_file": "DSC00615.ARW",
+      "nontranslation_residual_rms_limit_native_pixels": 0.1,
+      "maximum_quadrant_range_quad_pixels": 0.10000000000000009,
+      "maximum_nontranslation_residual_rms_native_pixels": 0.10770329614268992,
+      "passes_translation_only_gate": false,
+      "frames": [
+        {
+          "index": 0,
+          "file": "DSC00584.ARW",
+          "global_alignment_shift_quad_pixels": [
+            0.0,
+            0.0
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.0,
+          "nontranslation_residual_rms_native_pixels": 0.0
+        },
+        {
+          "index": 1,
+          "file": "DSC00585.ARW",
+          "global_alignment_shift_quad_pixels": [
+            1.98,
+            -0.29
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              1.98,
+              -0.28
+            ],
+            [
+              1.91,
+              -0.26
+            ],
+            [
+              1.98,
+              -0.29
+            ],
+            [
+              2.01,
+              -0.29
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.09999999999999987,
+          "nontranslation_residual_rms_native_pixels": 0.08246211251235318
+        },
+        {
+          "index": 2,
+          "file": "DSC00586.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.0,
+            -0.06
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.0,
+              -0.06
+            ],
+            [
+              1.93,
+              -0.04
+            ],
+            [
+              1.99,
+              -0.07
+            ],
+            [
+              2.02,
+              -0.06
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.09000000000000008,
+          "nontranslation_residual_rms_native_pixels": 0.07681145747868615
+        },
+        {
+          "index": 3,
+          "file": "DSC00587.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.04,
+            0.09
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.04,
+              0.09
+            ],
+            [
+              1.98,
+              0.11
+            ],
+            [
+              2.03,
+              0.09
+            ],
+            [
+              2.06,
+              0.1
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000007,
+          "nontranslation_residual_rms_native_pixels": 0.06782329983125278
+        },
+        {
+          "index": 4,
+          "file": "DSC00588.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.03,
+            0.33
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.03,
+              0.32
+            ],
+            [
+              1.97,
+              0.34
+            ],
+            [
+              2.02,
+              0.31
+            ],
+            [
+              2.05,
+              0.33
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07999999999999985,
+          "nontranslation_residual_rms_native_pixels": 0.06855654600401027
+        },
+        {
+          "index": 5,
+          "file": "DSC00589.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.02,
+            0.11
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.02,
+              0.1
+            ],
+            [
+              1.96,
+              0.13
+            ],
+            [
+              2.01,
+              0.1
+            ],
+            [
+              2.04,
+              0.11
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000007,
+          "nontranslation_residual_rms_native_pixels": 0.06855654600401054
+        },
+        {
+          "index": 6,
+          "file": "DSC00590.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.02,
+            -0.04
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.02,
+              -0.04
+            ],
+            [
+              1.96,
+              -0.02
+            ],
+            [
+              2.02,
+              -0.05
+            ],
+            [
+              2.04,
+              -0.04
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000007,
+          "nontranslation_residual_rms_native_pixels": 0.06708203932499374
+        },
+        {
+          "index": 7,
+          "file": "DSC00591.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.31,
+            0.15
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.31,
+              0.14
+            ],
+            [
+              2.25,
+              0.18
+            ],
+            [
+              2.3,
+              0.14
+            ],
+            [
+              2.34,
+              0.15
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08999999999999986,
+          "nontranslation_residual_rms_native_pixels": 0.07549834435270748
+        },
+        {
+          "index": 8,
+          "file": "DSC00592.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.05,
+            0.06
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.05,
+              0.04
+            ],
+            [
+              2.0,
+              0.08
+            ],
+            [
+              2.05,
+              0.04
+            ],
+            [
+              2.07,
+              0.05
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06999999999999984,
+          "nontranslation_residual_rms_native_pixels": 0.06480740698407847
+        },
+        {
+          "index": 9,
+          "file": "DSC00593.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.05,
+            0.04
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.05,
+              0.03
+            ],
+            [
+              1.99,
+              0.07
+            ],
+            [
+              2.04,
+              0.03
+            ],
+            [
+              2.07,
+              0.04
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07999999999999985,
+          "nontranslation_residual_rms_native_pixels": 0.07211102550927963
+        },
+        {
+          "index": 10,
+          "file": "DSC00594.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.18,
+            -0.18
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.18,
+              -0.18
+            ],
+            [
+              2.11,
+              -0.15
+            ],
+            [
+              2.18,
+              -0.19
+            ],
+            [
+              2.21,
+              -0.18
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.10000000000000009,
+          "nontranslation_residual_rms_native_pixels": 0.08246211251235339
+        },
+        {
+          "index": 11,
+          "file": "DSC00595.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.12,
+            0.08
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.12,
+              0.05
+            ],
+            [
+              2.07,
+              0.1
+            ],
+            [
+              2.11,
+              0.05
+            ],
+            [
+              2.14,
+              0.07
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07000000000000028,
+          "nontranslation_residual_rms_native_pixels": 0.07280109889280541
+        },
+        {
+          "index": 12,
+          "file": "DSC00596.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.29,
+            -0.11
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.29,
+              -0.13
+            ],
+            [
+              2.23,
+              -0.08
+            ],
+            [
+              2.2800000000000002,
+              -0.13
+            ],
+            [
+              2.32,
+              -0.12
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08999999999999986,
+          "nontranslation_residual_rms_native_pixels": 0.07999999999999995
+        },
+        {
+          "index": 13,
+          "file": "DSC00597.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.23,
+            -0.16
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.23,
+              -0.19
+            ],
+            [
+              2.18,
+              -0.13
+            ],
+            [
+              2.22,
+              -0.18
+            ],
+            [
+              2.25,
+              -0.17
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06999999999999984,
+          "nontranslation_residual_rms_native_pixels": 0.07280109889280503
+        },
+        {
+          "index": 14,
+          "file": "DSC00598.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.09,
+            -0.15
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.08,
+              -0.18
+            ],
+            [
+              2.03,
+              -0.12
+            ],
+            [
+              2.08,
+              -0.17
+            ],
+            [
+              2.1,
+              -0.16
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07000000000000028,
+          "nontranslation_residual_rms_native_pixels": 0.07874007874011812
+        },
+        {
+          "index": 15,
+          "file": "DSC00599.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.15,
+            0.0
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.15,
+              -0.03
+            ],
+            [
+              2.1,
+              0.03
+            ],
+            [
+              2.14,
+              -0.02
+            ],
+            [
+              2.17,
+              0.0
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06999999999999984,
+          "nontranslation_residual_rms_native_pixels": 0.07211102550927964
+        },
+        {
+          "index": 16,
+          "file": "DSC00600.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.2,
+            -0.16
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.2,
+              -0.19
+            ],
+            [
+              2.14,
+              -0.12
+            ],
+            [
+              2.19,
+              -0.17
+            ],
+            [
+              2.22,
+              -0.16
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000007,
+          "nontranslation_residual_rms_native_pixels": 0.08185352771872458
+        },
+        {
+          "index": 17,
+          "file": "DSC00601.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.54,
+            0.2
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.54,
+              0.16
+            ],
+            [
+              2.48,
+              0.23
+            ],
+            [
+              2.52,
+              0.17
+            ],
+            [
+              2.55,
+              0.19
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07,
+          "nontranslation_residual_rms_native_pixels": 0.0871779788708135
+        },
+        {
+          "index": 18,
+          "file": "DSC00602.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.32,
+            -0.03
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.32,
+              -0.06
+            ],
+            [
+              2.27,
+              0.01
+            ],
+            [
+              2.31,
+              -0.05
+            ],
+            [
+              2.34,
+              -0.03
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06999999999999999,
+          "nontranslation_residual_rms_native_pixels": 0.07681145747868595
+        },
+        {
+          "index": 19,
+          "file": "DSC00603.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.21,
+            -0.19
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.2,
+              -0.22
+            ],
+            [
+              2.15,
+              -0.15
+            ],
+            [
+              2.2,
+              -0.21
+            ],
+            [
+              2.22,
+              -0.2
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07000000000000028,
+          "nontranslation_residual_rms_native_pixels": 0.08306623862918076
+        },
+        {
+          "index": 20,
+          "file": "DSC00604.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.23,
+            -0.05
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.22,
+              -0.09
+            ],
+            [
+              2.18,
+              -0.02
+            ],
+            [
+              2.22,
+              -0.08
+            ],
+            [
+              2.24,
+              -0.06
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.06999999999999999,
+          "nontranslation_residual_rms_native_pixels": 0.07937253933193758
+        },
+        {
+          "index": 21,
+          "file": "DSC00605.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.27,
+            0.11
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.27,
+              0.06
+            ],
+            [
+              2.22,
+              0.14
+            ],
+            [
+              2.26,
+              0.08
+            ],
+            [
+              2.29,
+              0.1
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000002,
+          "nontranslation_residual_rms_native_pixels": 0.0860232526704262
+        },
+        {
+          "index": 22,
+          "file": "DSC00606.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.52,
+            -0.05
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.52,
+              -0.09
+            ],
+            [
+              2.45,
+              -0.01
+            ],
+            [
+              2.5,
+              -0.07
+            ],
+            [
+              2.5300000000000002,
+              -0.06
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000007,
+          "nontranslation_residual_rms_native_pixels": 0.09539392014169447
+        },
+        {
+          "index": 23,
+          "file": "DSC00607.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.3,
+            -0.11
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.29,
+              -0.15
+            ],
+            [
+              2.24,
+              -0.07
+            ],
+            [
+              2.29,
+              -0.13
+            ],
+            [
+              2.31,
+              -0.11
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07999999999999999,
+          "nontranslation_residual_rms_native_pixels": 0.08660254037844357
+        },
+        {
+          "index": 24,
+          "file": "DSC00608.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.5300000000000002,
+            0.15
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.5300000000000002,
+              0.1
+            ],
+            [
+              2.48,
+              0.18
+            ],
+            [
+              2.51,
+              0.12
+            ],
+            [
+              2.54,
+              0.15
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.07999999999999999,
+          "nontranslation_residual_rms_native_pixels": 0.08544003745317554
+        },
+        {
+          "index": 25,
+          "file": "DSC00609.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.4699999999999998,
+            -0.19
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.4699999999999998,
+              -0.23
+            ],
+            [
+              2.4,
+              -0.15
+            ],
+            [
+              2.46,
+              -0.22
+            ],
+            [
+              2.49,
+              -0.2
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.0900000000000003,
+          "nontranslation_residual_rms_native_pixels": 0.09797958971132709
+        },
+        {
+          "index": 26,
+          "file": "DSC00610.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.22,
+            -0.2
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.22,
+              -0.24
+            ],
+            [
+              2.16,
+              -0.16
+            ],
+            [
+              2.21,
+              -0.22
+            ],
+            [
+              2.24,
+              -0.21
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000007,
+          "nontranslation_residual_rms_native_pixels": 0.08831760866327852
+        },
+        {
+          "index": 27,
+          "file": "DSC00611.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.45,
+            -0.04
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.45,
+              -0.09
+            ],
+            [
+              2.39,
+              -0.01
+            ],
+            [
+              2.43,
+              -0.07
+            ],
+            [
+              2.46,
+              -0.05
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08,
+          "nontranslation_residual_rms_native_pixels": 0.09219544457292889
+        },
+        {
+          "index": 28,
+          "file": "DSC00612.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.3,
+            -0.34
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.3,
+              -0.39
+            ],
+            [
+              2.23,
+              -0.3
+            ],
+            [
+              2.29,
+              -0.36
+            ],
+            [
+              2.31,
+              -0.35
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.09000000000000002,
+          "nontranslation_residual_rms_native_pixels": 0.09848857801796093
+        },
+        {
+          "index": 29,
+          "file": "DSC00613.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.51,
+            -0.19
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.51,
+              -0.25
+            ],
+            [
+              2.44,
+              -0.15
+            ],
+            [
+              2.49,
+              -0.22
+            ],
+            [
+              2.52,
+              -0.2
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.1,
+          "nontranslation_residual_rms_native_pixels": 0.10770329614268992
+        },
+        {
+          "index": 30,
+          "file": "DSC00614.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.32,
+            -0.02
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.32,
+              -0.07
+            ],
+            [
+              2.27,
+              0.01
+            ],
+            [
+              2.31,
+              -0.05
+            ],
+            [
+              2.34,
+              -0.03
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08,
+          "nontranslation_residual_rms_native_pixels": 0.08602325267042615
+        },
+        {
+          "index": 31,
+          "file": "DSC00615.ARW",
+          "global_alignment_shift_quad_pixels": [
+            2.54,
+            -0.13
+          ],
+          "quadrant_alignment_shifts_quad_pixels": [
+            [
+              2.54,
+              -0.17
+            ],
+            [
+              2.48,
+              -0.09
+            ],
+            [
+              2.5300000000000002,
+              -0.15
+            ],
+            [
+              2.56,
+              -0.13
+            ]
+          ],
+          "maximum_quadrant_range_quad_pixels": 0.08000000000000007,
+          "nontranslation_residual_rms_native_pixels": 0.08774964387392124
+        }
+      ],
+      "elapsed_seconds": 13.956810899951961
+    }
+  ]
+}
