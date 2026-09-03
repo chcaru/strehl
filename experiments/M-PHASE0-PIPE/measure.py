@@ -303,6 +303,7 @@ def run_stack(
     known_worker_mb: float | None,
     idle_wait_s: float,
     memory_wait_s: float,
+    cooldown_s: float,
 ) -> dict[str, Any]:
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.unlink(missing_ok=True)
@@ -324,8 +325,13 @@ def run_stack(
         "queue": queue,
         "plant_ms": plant_ms,
         "logical_cpus": LOGICAL_CPUS,
+        "cooldown_s": cooldown_s,
     }
     base.update(executable_provenance(exe))
+
+    if cooldown_s > 0.0:
+        print(f"cooldown {cooldown_s:.0f}s before {label} {pass_name}", flush=True)
+        time.sleep(cooldown_s)
 
     try:
         pre_busy, total_mem, avail_mem, required_gib = wait_for_resources(
@@ -418,6 +424,13 @@ def run_stack(
         reasons.append(f"pre_busy={pre_busy:.4f} > 0.15")
     if external_busy_frac > 0.10:
         reasons.append(f"external_busy={external_busy_frac:.4f} > 0.10")
+    queue_banner = str(record.get("queue_banner", ""))
+    if queue == "on" and not queue_banner.startswith("BOUNDED RENDEZVOUS"):
+        reasons.append(
+            f"{QUEUE_ENV}=on did not report BOUNDED RENDEZVOUS: {queue_banner!r}"
+        )
+    if queue == "off" and not queue_banner.startswith("SERIAL"):
+        reasons.append(f"{QUEUE_ENV}=off did not report SERIAL: {queue_banner!r}")
 
     if process.returncode == 0 and destination.exists():
         try:
@@ -456,6 +469,7 @@ def add_common_run_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--idle-wait-s", type=float, default=60.0)
     parser.add_argument("--memory-wait-s", type=float, default=300.0)
+    parser.add_argument("--cooldown-s", type=float, default=0.0)
 
 
 def command_manifest(args: argparse.Namespace) -> int:
@@ -486,6 +500,7 @@ def command_commission(args: argparse.Namespace) -> int:
         source_commit=args.source_commit,
         idle_wait_s=args.idle_wait_s,
         memory_wait_s=args.memory_wait_s,
+        cooldown_s=args.cooldown_s,
     )
     baseline = run_stack(
         **common,
@@ -551,6 +566,7 @@ def command_sweep(args: argparse.Namespace) -> int:
                 known_worker_mb=known_worker_mb,
                 idle_wait_s=args.idle_wait_s,
                 memory_wait_s=args.memory_wait_s,
+                cooldown_s=args.cooldown_s,
             )
             if record.get("worker_mb"):
                 known_worker_mb = float(record["worker_mb"])
@@ -559,8 +575,10 @@ def command_sweep(args: argparse.Namespace) -> int:
 
 def command_bench(args: argparse.Namespace) -> int:
     known_worker_mb: float | None = None
+    first = args.start_with
+    second = "on" if first == "off" else "off"
     for repetition in range(args.repetitions):
-        modes = ["off", "on"] if repetition % 2 == 0 else ["on", "off"]
+        modes = [first, second] if repetition % 2 == 0 else [second, first]
         for mode in modes:
             record = run_stack(
                 exe=args.exe,
@@ -581,6 +599,7 @@ def command_bench(args: argparse.Namespace) -> int:
                 known_worker_mb=known_worker_mb,
                 idle_wait_s=args.idle_wait_s,
                 memory_wait_s=args.memory_wait_s,
+                cooldown_s=args.cooldown_s,
             )
             if record.get("worker_mb"):
                 known_worker_mb = float(record["worker_mb"])
@@ -683,6 +702,7 @@ def build_parser() -> argparse.ArgumentParser:
     bench = commands.add_parser("bench")
     add_common_run_args(bench)
     bench.add_argument("--repetitions", type=int, default=5)
+    bench.add_argument("--start-with", choices=["off", "on"], default="off")
     bench.set_defaults(func=command_bench)
 
     summary = commands.add_parser("summary")
