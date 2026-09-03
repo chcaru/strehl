@@ -1,0 +1,30 @@
+# Keep this measurement harness out of the shipping workspace.
+[workspace]
+
+[package]
+name = "m-phase0-ioperf"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.98"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+rayon = "1.12"
+strehl-raw = { path = "../../crates/strehl-raw" }
+
+[dev-dependencies]
+divan = "=0.1.21"
+
+[[bench]]
+name = "decode"
+harness = false
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+
+[profile.bench]
+inherits = "release"
+debug = true
