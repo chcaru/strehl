@@ -1,0 +1,73 @@
+{
+  "status": "AUDITED",
+  "historical_numeric_reproduction": {
+    "passed": true,
+    "checks": {
+      "blur_min_0.9938": true,
+      "blur_max_0.9974": true,
+      "blur_count_8": true,
+      "blur_monotone": true,
+      "filter_readings": true,
+      "identity_rounds_1.0000": true,
+      "published_literals_present": true
+    },
+    "measured": {
+      "blur_recovery_min": 0.9938215871339492,
+      "blur_recovery_max": 0.9973982082455048,
+      "blur_recovery_count": 8,
+      "blur_monotone": true,
+      "filter_snr_ratios": {
+        "flat x3": 0.9999999995707624,
+        "unsharp 1+2f": 0.9986024700086039,
+        "unsharp 1+6f": 0.9980240009854322,
+        "inverse taper": 0.9946221492886471
+      },
+      "filter_max_fractional_move": 0.005377850711352883,
+      "null_max_snr": {
+        "BEST1": 0.11269577078115299,
+        "FRAME*": 0.1408281646168066,
+        "FRAME_PIX": 0.08383066958632354,
+        "GATE": 0.12858337339883352,
+        "MEAN": 0.43873374239164753,
+        "MF": 0.07203106438954919,
+        "WIENER": 0.07395463633607881,
+        "WIENER_UNG": 3.3312875184656177
+      },
+      "null_failed_arms": [
+        "MEAN",
+        "WIENER_UNG"
+      ],
+      "identity_min": 0.9999999999873305,
+      "identity_max": 1.0000000000000002
+    }
+  },
+  "transfer_and_meaning": {
+    "historical_null_passed": false,
+    "historical_null_failed_arms": [
+      "MEAN",
+      "WIENER_UNG"
+    ],
+    "common_mode_adversary_low_band_frc": 0.972099,
+    "common_mode_adversary_violates_null": true,
+    "power_identity_is_algebraic": true,
+    "historical_control_summary": [
+      "C10",
+      "C1p",
+      "C2",
+      "C3",
+      "C6"
+    ],
+    "data_dependent_tuning_plant_present": false,
+    "later_frc_withdrawal_found": true,
+    "triage_false_branch_found": true
+  },
+  "verdict": "STOP_REMOVE_RUST",
+  "stop_reasons": [
+    "historical split null failed on two arms",
+    "common-mode structure reads as strong correlated signal",
+    "the 1.0000 power identity is algebraic, not a control",
+    "no plant transfers to a data-dependent per-stack tuner",
+    "later commissioned work withdrew the numeric FRC crossing"
+  ],
+  "interpretation": "Numerical reproduction is necessary but does not establish that cross-half correlation is scene detail or that the objective can tune itself."
+}

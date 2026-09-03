@@ -1,0 +1,11 @@
+{
+  "status": "GREEN",
+  "claims_checked": 5,
+  "plants": {
+    "numeric": true,
+    "null": true,
+    "withdrawal": true,
+    "verdict": true
+  },
+  "all_plants_red": true
+}

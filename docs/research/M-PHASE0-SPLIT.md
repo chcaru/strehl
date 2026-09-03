@@ -1,14 +1,20 @@
-# M-PHASE0-SPLIT — productised split-stack diagnostics
+# M-PHASE0-SPLIT — the cited result reproduces, but does not license a build
 
-**Verdict: NARROWED — SHIP DIAGNOSTIC ONLY.**  The Rust product is useful and
-its off-state is proven non-perturbing, but the corpus does **not** license D8's
-automatic tuning or “certified resolution” language.  On `109MSDCF` the new
-same-invocation estimator reports a 1/7 FRC crossing of **0.400367
-cycles/quad-pixel**, with a 1,000-resample spatial-tile bootstrap median
-**0.399986** and 95% percentile interval **[0.381916, 0.408871]**.  That is a
-deterministically reproduced correlation crossing, not an independently
-repeated or unbiased optical-resolution estimate: common sensor structure is
-indistinguishable from scene signal to this split.
+**Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.**
+The orchestrator's closure warning arrived after the flagged prototype had
+already been committed.  Re-audit against the triage's own binding FALSE branch
+changes the action: the exact historical M115 numbers reproduce, but their
+controls do not transfer to the common-mode and data-dependent-tuning failures
+on which D8 depends.  The prototype's Rust CLI/core/merge wiring is therefore
+removed in the corrective commit; its code, measurements, and failure are
+retained in history and in this experiment.
+
+The prototype measured a 1/7 FRC crossing of **0.400367
+cycles/quad-pixel** on `109MSDCF`, with a 1,000-resample spatial-tile bootstrap
+median **0.399986** and 95% percentile interval **[0.381916, 0.408871]**.
+That remains a deterministically reproduced cross-half correlation crossing,
+not optical resolution: common sensor structure is indistinguishable from scene
+signal, and the number does not justify keeping a product path.
 
 Preregistered before implementation in
 `experiments/M-PHASE0-SPLIT/PREREGISTRATION.md`.  Feature commit measured:
@@ -35,8 +41,8 @@ breaks the premise.  Audit broke the broad premise:
   `(P(A)+P(B))/2 = P_sig + P_noise` is an identity.  They cannot catch a wrong
   generator and checker that share an error.
 * M115's replacement flat null itself failed the registered 0.25 bar:
-  `MEAN=0.2984`, `WIENER_UNG=0.4034` (§2.6).
-* `SYNTHESIS.md` facts 467–478 are an explicit later correction.  The published
+  `MEAN=0.2984`, `WIENER_UNG=0.4034` (`M115-deconv-headroom.md` §2.5).
+* `M41-r3-kill-measured.md` facts 475–478 are an explicit later correction.  The published
   **0.4961** crossing was the final ring returned on no crossing; 9/12 values
   were that fallback.  A 4×4×2 sweep repaired **0/32** settings, so the crossing
   was withdrawn.  A flat ROI reached the same endpoint.
@@ -51,54 +57,98 @@ breaks the premise.  Audit broke the broad premise:
   shift and **1.354 px** local residual on `bee-1-cpl`; the planted residual was
   sufficient for **87.3%** of observed incoherence.
 
-M115 has no retraction banner at its top, but the later numbered synthesis facts
-do withdraw the FRC-crossing use.  Therefore this lane implements the useful
-diagnostic substrate and explicitly declines the already-refuted claims.
+M115 has no retraction banner at its top, but the later M41 fact rows
+do withdraw the FRC-crossing use.  The lane initially treated that as permission
+for a diagnostic-only substrate.  The orchestrator's later clarification makes
+the triage's FALSE branch binding instead, so that interpretation is withdrawn.
 
 The mandatory mechanical prior-art search was commissioned first and passed all
 two positive and one negative self-tests.  Its split/FRC search surfaced M92,
 M97, M103, M127, V-THESIS, V-DCNULL, and both V-SOFTCHECK reports.
 
-## 2. Rust product
+### Post-update reproduction and transfer audit
 
-The explicit, off-by-default surface is:
+The later orchestrator warning required execution, not quotation.  The loader in
+`rerun_m115.py` was commissioned before opening RAWs: clean exit 0; plants `H1`
+(wrong Git blob), `H2` (failed output reroot), and `H3` (wrong extraction) all
+exited 1.  It then loaded the four exact source blobs at historical commit
+`77c8d5e9ac6ed342cdc841e541c98f87e5c743f8` directly from Git, changing only
+M115's output root to this lane, and reran `s01_rois.py` plus
+`s03_instrument.py` on the original 22-frame, 33-frame, and 360-frame inputs.
+
+**The cited numbers reproduce.**  Eight blur recoveries span
+**0.9938215871–0.9973982082** and are monotone.  Common-filter SNR ratios are
+**1.0000000, 0.9986025, 0.9980240, 0.9946221**; the maximum movement is
+**0.537785%**.  The power identity spans
+**0.999999999987–1.000000000000**.  This rules out a transcription or stale-run
+explanation.
+
+**The meaning does not survive.**  The same exact rerun returns the historical
+split null **FAIL**: `MEAN` maximum mid-band SNR **0.438734** and `WIENER_UNG`
+**3.331288** against 0.25.  The 1.0000 identity follows algebraically from the
+three definitions in `split_stats`; it is bookkeeping, not an independent
+control.  The common-filter check likewise applies the same linear transfer to
+both halves and cannot exercise a data-dependent tuner.  C2 proves response to
+a same-model Gaussian blur, but does not plant fixed-pattern/common-mode
+content, unequal half latents, or a tuning change.
+
+The new prototype's own common-mode adversary supplies the missing transfer
+test and fails decisively: independent noise plus the same fixed pattern reads
+low-band FRC **0.972099**.  M41 facts 475–478 independently withdraw the numeric
+FRC crossing: 9/12 were endpoint fallbacks, 0/32 repair settings worked, a flat
+ROI reproduced the detail reading, and blur sensitivity fell as `1-rho` under
+shared content.  `audit_postupdate.py` therefore returns
+`STOP_REMOVE_RUST`; its separately written checker re-derived five claims and
+caught 4/4 planted report defects.
+
+The first audit aggregation run itself failed safely but flatteringly: it
+reported that the historical numbers did not reproduce because its Markdown
+literal for the published blur range was wrong.  Reading the individual
+booleans exposed the mismatch.  After correcting that literal, numerical
+reproduction is GREEN and the STOP verdict remains for the five independent
+transfer/meaning failures above.  The favourable-to-STOP error is not counted
+as evidence.
+
+## 2. Rolled-back Rust prototype
+
+The now-removed, off-by-default surface was:
 
 ```text
 strehl stack <DIR> --split-out <PRODUCT_DIR>
 ```
 
-It is accepted only by the pyramid backend; pairing it with
-`--merge estimator` exits 1 with a named refusal.
+It was accepted only by the pyramid backend; pairing it with
+`--merge estimator` exited 1 with a named refusal.
 
-`crates/strehl-cli/src/merge_cmd.rs` now keeps the existing four-plane full
-`BandMerge` and, only when requested, adds separate one-plane even and odd
+The prototype in `crates/strehl-cli/src/merge_cmd.rs` kept the existing four-plane full
+`BandMerge` and, only when requested, added separate one-plane even and odd
 green-luma `BandMerge` plus workspaces inside each existing worker.  Global
-filename index parity is fixed before any alignment refusal.  Each half folds
-only its own frames and re-derives every band weight.  It uses the same decoded
+filename index parity was fixed before any alignment refusal.  Each half folded
+only its own frames and re-derived every band weight.  It used the same decoded
 and registered luma and the same warp map as the full result, eliminating the
 separate-invocation solve measured by V-SOFTCHECK.
 
-The ordinary accumulator is updated first, and its worker count, chunk
-boundaries, and absorb order are unchanged.  On all 22 real frames, the main
+The ordinary accumulator was updated first, and its worker count, chunk
+boundaries, and absorb order were unchanged.  On all 22 real frames, the main
 TIFF with split off and on is byte-identical:
 
 `629DA64F…A7236A9` both ways, **49,450,019 bytes**.
 
-The diagnostic costs **+1006 MB per worker** at this geometry; the one-worker
-run held an estimated 2.3 GB.  The banner reports this explicitly.  Worker count
-is deliberately not reduced, because doing so changes the full render's
+The diagnostic cost **+1006 MB per worker** at this geometry; the one-worker
+run held an estimated 2.3 GB.  The banner reported this explicitly.  Worker count
+was deliberately not reduced, because doing so changes the full render's
 floating reduction order.  This makes the flag unsuitable on a memory-limited
 host unless `STREHL_PYRAMID_WORKERS` is lowered; it is another reason the
-feature remains experimental.
+prototype was not suitable for retention.
 
-`crates/strehl-core/src/split.rs` supplies the dependency-free radix-2 FFT,
+The historical `crates/strehl-core/src/split.rs` supplied the dependency-free radix-2 FFT,
 ring sufficient statistics, and a crossing type with explicit
 `MEASURED`, `CENSORED_ABOVE`, `CENSORED_BELOW`, and `INSUFFICIENT` outcomes.
-No endpoint fallback exists on the production path.  A confirmed crossing
+No endpoint fallback existed on the prototype path.  A confirmed crossing
 requires three physically adjacent usable rings after the bracketing ring; a
 gapped or incomplete terminal drop is `INSUFFICIENT`.
 
-Products are computed from the two `f32` collapses **before** quantisation:
+Products were computed from the two `f32` collapses **before** quantisation:
 
 * `half-even.tiff`, `half-odd.tiff` — above-black linear green DN;
 * `null-signed.tiff` — even minus odd, zero at code 32768;
@@ -108,10 +158,10 @@ Products are computed from the two `f32` collapses **before** quantisation:
   censor class;
 * `README.txt` — units, conventions, and the common-mode warning.
 
-`main.rs` owns the flag/help/refusal and `lib.rs` exports the spectral module.
+`main.rs` owned the flag/help/refusal and `lib.rs` exported the spectral module.
 No change was needed in `pyramid.rs`: `BandMerge` was already plane-count
-generic and `finish(&self)` already supported all three accumulators.  No
-auto-tuner was added.
+generic and `finish(&self)` already supported all three accumulators.  No auto-tuner was added.  All of this wiring has now been removed from HEAD;
+the offline Python measurement and committed run products remain.
 
 ## 3. Commissioning
 
@@ -201,16 +251,27 @@ map “certified resolution.”
 
 ## 5. Decision and source consequence
 
-**Keep the Rust changes, keep the flag off by default, and label every output
-experimental.**  The useful result is that one invocation now produces truly
-disjoint, independently weighted halves and an inspectable null while proving
-the delivered master does not move.  That removes the measured
-separate-alignment confound and makes future repeated-bracket validation cheap.
+**Remove the Rust changes.**  The triage states its FALSE consequence
+unambiguously: “No current merge code changes. Keep the split instrument offline
+in Python.”  HEAD therefore no longer contains `--split-out`, the dual
+accumulators, `strehl_core::split`, or the Rust probe.  `main.rs`,
+`merge_cmd.rs`, and `lib.rs` are restored byte-for-byte to their state
+immediately before feature commit `1cd3019c`; the two feature-only Rust files are
+deleted.
 
-**Do not change the merge constants from these numbers.  Do not add automatic
-tuning.  Do not call `acuity.csv` a certificate.**  The corpus already proves
-that common-mode content can make a flat field look resolved and that a
-coherence objective can reward a detail-losing average.
+The useful result is retained offline: commissioned synthetic controls, the
+real half products and sufficient spectra, the independent CSV classifier, and
+the exact historical M115 rerun.  They can support a future experiment, but not
+a shipping path.  Re-opening requires a genuinely independent repeated bracket
+or independently commissioned sensor-pattern subtraction, a non-degenerate
+balanced partition, and a plant that changes the actual data-dependent tuning
+choice while a tuner-blind metric grades it.
+
+**Do not change merge constants from the 0.400367 crossing.  Do not add automatic
+tuning.  Do not call `acuity.csv` a certificate.**  The corpus and the new
+common-mode arm prove that a flat/shared pattern can look resolved, while the
+coherence-only average can earn a perfect score after losing 29.6% of delivered
+band power.
 
 The preregistered “shift parity by one” sensitivity was itself a no-op: it only
 swaps the names even and odd, leaving symmetric FRC unchanged.  It cannot

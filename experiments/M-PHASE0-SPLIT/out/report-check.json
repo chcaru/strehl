@@ -1,11 +1,13 @@
 {
   "status": "GREEN",
-  "claims_checked": 9,
+  "claims_checked": 12,
   "plants": {
     "real": true,
     "null_control": true,
     "sharpen": true,
-    "hash": true
+    "hash": true,
+    "verdict": true,
+    "rerun_null": true
   },
   "all_plants_red": true
 }

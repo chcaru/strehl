@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -13,17 +14,20 @@ REPORT = ROOT / "docs" / "research" / "M-PHASE0-SPLIT.md"
 COMMISSION = LANE / "out" / "commission.json"
 REAL = LANE / "out" / "real-109" / "measurement.json"
 RUN = LANE / "out" / "real-109" / "run.json"
+POSTUPDATE = LANE / "out" / "postupdate-audit.json"
 
 
 def expected_literals() -> dict[str, str]:
     commission = json.loads(COMMISSION.read_text(encoding="utf-8"))
     real = json.loads(REAL.read_text(encoding="utf-8"))
     run = json.loads(RUN.read_text(encoding="utf-8"))
+    postupdate = json.loads(POSTUPDATE.read_text(encoding="utf-8"))
     point = float(real["point_estimate"]["frequency_or_bound"])
     bootstrap = real["bootstrap"]
     ci = bootstrap["measured_95_percentile_interval"]
     null = real["null_product"]
     readings = commission["readings"]
+    rerun = postupdate["historical_numeric_reproduction"]["measured"]
     null_mean = f"{float(null['mean_dn']):.3f}".replace("-", "−")
     return {
         "real": f"**{point:.10f} cycles/quad-pixel**",
@@ -39,6 +43,15 @@ def expected_literals() -> dict[str, str]:
             f"{len(commission['plants'])} named Rust plants"
         ),
         "classifier_edges": "`gapped=Insufficient`, `short_tail=Insufficient`",
+        "verdict": "**Verdict: KILL — STOP/REMOVE RUST; retain the split instrument offline.**",
+        "rerun_blur": (
+            f"**{float(rerun['blur_recovery_min']):.10f}–"
+            f"{float(rerun['blur_recovery_max']):.10f}**"
+        ),
+        "rerun_null": (
+            "`MEAN` maximum mid-band SNR **0.438734** and `WIENER_UNG` "
+            "**3.331288**"
+        ),
         "null_real": (
             f"mean **{null_mean} DN**, RMS "
             f"**{float(null['rms_dn']):.3f} DN**"
@@ -63,6 +76,22 @@ def verify(text: str) -> list[str]:
                 missing.append(name)
         elif " ".join(literal.split()) not in normalised:
             missing.append(name)
+    rust_root = ROOT / "crates"
+    forbidden = {
+        "split_module": rust_root / "strehl-core" / "src" / "split.rs",
+        "split_probe": rust_root / "strehl-core" / "examples" / "split-probe.rs",
+    }
+    for name, path in forbidden.items():
+        if path.exists():
+            missing.append(f"removal:{name}")
+    for name, path in {
+        "main": rust_root / "strehl-cli" / "src" / "main.rs",
+        "merge": rust_root / "strehl-cli" / "src" / "merge_cmd.rs",
+        "lib": rust_root / "strehl-core" / "src" / "lib.rs",
+    }.items():
+        source = path.read_text(encoding="utf-8")
+        if "--split-out" in source or "split_out" in source or "mod split" in source:
+            missing.append(f"removal:{name}")
     return missing
 
 
@@ -75,8 +104,17 @@ def main() -> int:
 
     plants = {}
     if "--commission" in sys.argv:
-        for name in ("real", "null_control", "sharpen", "hash"):
-            planted = text.replace(expected_literals()[name], f"PLANTED-{name}", 1)
+        for name in ("real", "null_control", "sharpen", "hash", "verdict", "rerun_null"):
+            literal = expected_literals()[name]
+            pattern = r"\s+".join(
+                re.escape(part) for part in re.split(r"\s+", literal.strip())
+            )
+            planted, replacements = re.subn(
+                pattern, f"PLANTED-{name}", text, count=1
+            )
+            if replacements != 1:
+                print(f"REPORT CHECKER COULD NOT PLANT {name}")
+                return 1
             caught = bool(verify(planted))
             plants[name] = caught
             if not caught:

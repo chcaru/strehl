@@ -1,0 +1,16 @@
+{
+  "status": "COMMISSIONED_GREEN",
+  "clean_exit": 0,
+  "plants": {
+    "H1": 1,
+    "H2": 1,
+    "H3": 1
+  },
+  "all_plants_red": true,
+  "external_predicate": "fixed Git blob object IDs at historical commit",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\rerun_m115.py",
+    "--self-test"
+  ]
+}

@@ -586,21 +586,6 @@ enum Command {
         #[arg(long, value_name = "PATH")]
         confidence_map: Option<PathBuf>,
 
-        /// Write experimental split-stack diagnostics into DIR.
-        ///
-        /// The pyramid merge is accumulated three ways in one registered pass:
-        /// the ordinary full stack plus disjoint even/odd frame halves, each
-        /// deriving its own band weights. Products are two linear green half
-        /// renders, a signed half-difference null, FRC curves, and per-tile
-        /// 1/7-crossing acuity. A censored curve stays a bound; it is never
-        /// reported as the final Fourier bin.
-        ///
-        /// OFF BY DEFAULT and PYRAMID BACKEND ONLY. This is a diagnostic, not a
-        /// resolution certificate: shared sensor structure and shared
-        /// registration error can correlate the halves.
-        #[arg(long, value_name = "DIR")]
-        split_out: Option<PathBuf>,
-
         /// Fit and apply a per-frame affine photometric gain before the focus
         /// measure. ON BY DEFAULT since V-TONE. Pass `off` for the old merge.
         ///
@@ -946,7 +931,6 @@ fn main() -> Result<()> {
             index_map,
             n_eff_map,
             confidence_map,
-            split_out,
             photometric,
             target_n_eff,
             stats,
@@ -1036,9 +1020,6 @@ fn main() -> Result<()> {
                   RANK -- how centrally the merged output sits inside the observations. The \
                   polarity is opposite -- high n_eff is good, high confidence-map is bad -- so \
                   the two cannot be compared by reading, only by knowing which one you have."),
-                ("--split-out", split_out.is_some(), merge_cmd::MergeBackend::Estimator,
-                 "no counterpart. Split diagnostics re-run the pyramid merge's data-dependent \
-                  band weights independently in each disjoint half."),
             ];
             // A flag belonging to the other backend is REFUSED, not ignored.
             // The failure this guards against is the one the whole switch
@@ -1185,7 +1166,6 @@ fn main() -> Result<()> {
             index_map,
             n_eff_map,
             confidence_map,
-            split_out,
             // Resolved above, with its provenance, so the banner can name the
             // channel that chose this mode.
             photometric: photometric_mode,

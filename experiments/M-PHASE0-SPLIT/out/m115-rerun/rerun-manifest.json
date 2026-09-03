@@ -1,0 +1,61 @@
+{
+  "status": "HISTORICAL_M115_RERUN_COMPLETE",
+  "historical_commit": "77c8d5e9ac6ed342cdc841e541c98f87e5c743f8",
+  "source_blobs": {
+    "m115lib.py": "32ef59f026572ceb1d4b951254d693c4d3aaf94a",
+    "s01_rois.py": "dd8e7319848753312f5d847dab4b1bb92c87b174",
+    "s02_controls_a.py": "250ec013764c8efe75ffe1091b508972fc508e21",
+    "s03_instrument.py": "efa37273f1bbde8cff20a8d014c95f3454178e04"
+  },
+  "sole_source_edit": {
+    "from": "OUT = r\"C:\\dev\\strehl-out\\M115-deconv-headroom\\out\"",
+    "to": "OUT = r\"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-SPLIT\\out\\m115-rerun\""
+  },
+  "captures": {
+    "D:\\personal\\macro\\109MSDCF": {
+      "files": 22,
+      "filename_size_digest": "032af3fa20140bf4aca42cf2e0acd15f233cd5f4ab0cd6f05f905c9ccccfeaa6",
+      "read_only_input": true
+    },
+    "D:\\personal\\macro\\119MSDCF": {
+      "files": 33,
+      "filename_size_digest": "5efd59608887cf54ee869cd9f69dd25b84bd08fc40a3f821e5716c9704ddc96f",
+      "read_only_input": true
+    },
+    "D:\\personal\\macro\\flat-fields\\flat-fields": {
+      "files": 360,
+      "filename_size_digest": "e8dd24a5d5cfeda5e4aba8b12ff3c5106145fb39c84a0fbbde449778dd35575f",
+      "read_only_input": true
+    }
+  },
+  "elapsed_seconds": 78.227303981781,
+  "extracted": {
+    "blur_recovery_min": 0.9938215871339492,
+    "blur_recovery_max": 0.9973982082455048,
+    "blur_recovery_count": 8,
+    "blur_monotone": true,
+    "filter_snr_ratios": {
+      "flat x3": 0.9999999995707624,
+      "unsharp 1+2f": 0.9986024700086039,
+      "unsharp 1+6f": 0.9980240009854322,
+      "inverse taper": 0.9946221492886471
+    },
+    "filter_max_fractional_move": 0.005377850711352883,
+    "null_max_snr": {
+      "BEST1": 0.11269577078115299,
+      "FRAME*": 0.1408281646168066,
+      "FRAME_PIX": 0.08383066958632354,
+      "GATE": 0.12858337339883352,
+      "MEAN": 0.43873374239164753,
+      "MF": 0.07203106438954919,
+      "WIENER": 0.07395463633607881,
+      "WIENER_UNG": 3.3312875184656177
+    },
+    "null_failed_arms": [
+      "MEAN",
+      "WIENER_UNG"
+    ],
+    "identity_min": 0.9999999999873305,
+    "identity_max": 1.0000000000000002
+  }
+}
