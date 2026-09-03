@@ -36,7 +36,7 @@
   },
   "flower_flat_wander": {
     "quadrant_frozen_before_difference_utc": "2026-09-03T03:52:50Z",
-    "roi": [0, 1172, 1758, 3516],
+    "roi": [0, 1172, 1760, 3520],
     "selection_rule": "Choose the image quadrant with the smallest fraction of green pixels below half the full-image median in the mean-base render, without reading the weighted-base render.",
     "dark_fraction_by_quadrant": {
       "top_left": 0.1928904553211294,
