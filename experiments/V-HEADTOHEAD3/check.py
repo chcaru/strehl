@@ -333,6 +333,12 @@ def verdict(e: dict, k: int, sensitive: bool = True) -> str:
     return "UNRESOLVED (FLAT VETO)" if primary == flat != "UNRESOLVED" else primary
 
 
+def robustness_downgrade(current: str, label: str, triggered: bool) -> str:
+    if not triggered or current == "NOT SENSITIVE":
+        return current
+    return label
+
+
 def run(key: str) -> dict:
     sp, cp, label = PATHS[key]
     g = geometry(sp, cp)
@@ -398,8 +404,9 @@ def run(key: str) -> dict:
                 )
                 reversed_k |= cls == opposite
         loo_reversal.append(reversed_k)
-        if reversed_k:
-            classes[k] = "UNRESOLVED (LOO REVERSAL)"
+        classes[k] = robustness_downgrade(
+            classes[k], "UNRESOLVED (LOO REVERSAL)", reversed_k
+        )
 
     quadrants = []
     for qy in range(2):
@@ -423,8 +430,9 @@ def run(key: str) -> dict:
             opposite_count = 0
         opposed = opposite_count >= 2
         quadrant_opposition.append(opposed)
-        if opposed:
-            classes[k] = "UNRESOLVED (QUADRANT)"
+        classes[k] = robustness_downgrade(
+            classes[k], "UNRESOLVED (QUADRANT)", opposed
+        )
     for k, name in enumerate(BAND_NAMES):
         print(
             f"CHECK {name}: R_detail={e['r_detail'][k]:.4f} "
@@ -464,6 +472,13 @@ def self_test() -> None:
     a, b = overlap(source, moving, got)
     if got != (-3, 2) or not np.array_equal(a, b):
         raise RuntimeError(f"checker registration sign failed: {got}")
+    if (
+        robustness_downgrade(
+            "NOT SENSITIVE", "UNRESOLVED (QUADRANT)", True
+        )
+        != "NOT SENSITIVE"
+    ):
+        raise RuntimeError("checker robustness precedence failed")
     print("CHECK SELF-TEST GREEN: external ranks and shift correction (-3,+2)")
 
 

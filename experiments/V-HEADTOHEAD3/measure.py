@@ -24,6 +24,7 @@ from ordinal import (
     measure_roi,
     ordinal_shares,
     quadrant_ratios,
+    robustness_downgrade,
 )
 
 
@@ -108,8 +109,9 @@ def run_pair(key: str) -> dict:
         opposite = "TRAILS" if p == "LEADS" else "LEADS" if p == "TRAILS" else None
         reversed_k = bool(opposite and any(row[k] == opposite for row in loo))
         loo_reversal.append(reversed_k)
-        if reversed_k:
-            classes[k] = "UNRESOLVED (LOO REVERSAL)"
+        classes[k] = robustness_downgrade(
+            classes[k], "UNRESOLVED (LOO REVERSAL)", reversed_k
+        )
 
     quadrants = quadrant_ratios(eligible, detail_cut, sg.shape)
     quadrant_opposition = []
@@ -123,8 +125,9 @@ def run_pair(key: str) -> dict:
             n_opposite = 0
         opposed = n_opposite >= 2
         quadrant_opposition.append(opposed)
-        if opposed:
-            classes[k] = "UNRESOLVED (QUADRANT)"
+        classes[k] = robustness_downgrade(
+            classes[k], "UNRESOLVED (QUADRANT)", opposed
+        )
 
     diagnosed = [r for r in rows if "corr_fixed" in r]
     corr_fixed = np.asarray([r["corr_fixed"] for r in diagnosed])
@@ -135,7 +138,10 @@ def run_pair(key: str) -> dict:
         and np.nanmedian(corr_fixed) > np.nanmedian(corr_wrong)
     )
     if not aggregate_sign_ok:
-        classes = ["UNRESOLVED (REGISTRATION)" for _ in classes]
+        classes = [
+            robustness_downgrade(c, "UNRESOLVED (REGISTRATION)", True)
+            for c in classes
+        ]
 
     for k, name in enumerate(BAND_NAMES):
         print(

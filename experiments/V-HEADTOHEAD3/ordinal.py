@@ -491,6 +491,13 @@ def classify(
     return "UNRESOLVED (FLAT VETO)" if provisional == flat != "UNRESOLVED" else provisional
 
 
+def robustness_downgrade(current: str, label: str, triggered: bool) -> str:
+    """Apply a robustness veto without overwriting lack of band sensitivity."""
+    if not triggered or current == "NOT SENSITIVE":
+        return current
+    return label
+
+
 def leave_one_out_classes(detail: np.ndarray, flat: np.ndarray) -> list[list[str]]:
     """Deterministic point-estimate classes for preregistered reversal check."""
     out: list[list[str]] = []

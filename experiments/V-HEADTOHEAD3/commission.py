@@ -20,6 +20,7 @@ from ordinal import (
     overlap_after_shift,
     phase_correction,
     raw_shares,
+    robustness_downgrade,
     sha256,
     tie_census,
 )
@@ -428,6 +429,19 @@ def flat_noise_controls(rec: Record) -> None:
         "production classifier without flat veto",
         without_veto != production and without_veto == "TRAILS",
         f"mutant={without_veto}, production={production}",
+    )
+    precedence = robustness_downgrade(
+        "NOT SENSITIVE", "UNRESOLVED (QUADRANT)", True
+    )
+    rec.control(
+        "NOT SENSITIVE robustness precedence",
+        precedence == "NOT SENSITIVE",
+        f"downgrade result={precedence}",
+    )
+    rec.plant(
+        "unconditional robustness overwrite",
+        "UNRESOLVED (QUADRANT)" != precedence,
+        "old unconditional assignment would overwrite NOT SENSITIVE",
     )
 
     structured_texture = float(np.sum(ordinal_shares(fixture())[:3]))
