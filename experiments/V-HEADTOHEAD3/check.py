@@ -46,6 +46,36 @@ PATHS = {
         Path(r"D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif"),
         "Zerene Stacker PMax (Lightroom Sharpness 40, colour NR 25)",
     ),
+    "119-fork": (
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\119MSDCF.tiff"),
+        Path(r"C:\dev\macro\out\stack_test2_rec2020.tif"),
+        "focus-stack fork (marker-stroke scene, Rec.2020 float)",
+    ),
+    "119-fork-defringed": (
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\119MSDCF.tiff"),
+        Path(r"C:\dev\macro\out\stack_test2_rec2020_defringed.tif"),
+        "focus-stack fork (defringed variant)",
+    ),
+    "119-fork-u16": (
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\119MSDCF.tiff"),
+        Path(r"C:\dev\macro\out\stack_test2_rec2020_16bit.tif"),
+        "focus-stack fork (16-bit variant)",
+    ),
+    "119-pmax": (
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\119MSDCF.tiff"),
+        Path(r"D:\edited\macro\marker\2026-05-09-13.35.07 ZS PMax.tif"),
+        "Zerene PMax (119MSDCF, Lightroom contrast +50)",
+    ),
+    "119-pmax-udr": (
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\119MSDCF.tiff"),
+        Path(r"D:\edited\macro\marker\2026-05-09-13.40.00 ZS PMax UDR.tif"),
+        "Zerene PMax UDR (119MSDCF, Lightroom contrast +50)",
+    ),
+    "119-pmax-udr-neutral": (
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\119MSDCF.tiff"),
+        Path(r"D:\edited\macro\marker2\2026-05-09-13.47.08 ZS PMax UDR.tif"),
+        "Zerene PMax UDR (119MSDCF, Lightroom contrast 0)",
+    ),
     "cb": (
         Path(r"C:\dev\strehl-out\DELIVER-V6\masters\coffee-bean.tiff"),
         Path(r"C:\dev\macro\out\coffee-bean\stack.tif"),
