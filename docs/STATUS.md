@@ -1468,6 +1468,54 @@ an open question I have put back to the lane before troubling the owner — SOTA
 comparator-leading, which is a *relative* claim, and that distinction may decide whether this is a
 procurement problem or a shoot-this-week problem.
 
+### 2.9.5 The first formal reading is being taken, and the evidence I offered for it did not qualify
+
+M12 (engineering reproducibility) is one of only two scorecard axes executable
+without the missing detail instrument, so it is the program's first chance at a
+formal reading of any kind. I tried to shortcut it and was correctly refused.
+
+A concurrency lane had already measured 18 renders, six each at pyramid worker
+counts 1, 4 and 8, and found hashes identical **within** each count but three
+different hashes **across** counts. Together with `byte-freeze.rs:512-514`,
+which admits in its own words that `STREHL_PYRAMID_WORKERS` "changes the fold's
+reduction order, which is worth 1 DN on a fifth of a percent of pixels", I put
+it to the registrar that M12's byte-invariance bar was already MEASURED and
+FAILING, and asked it to be strict with me.
+
+**It refused, and I verified the refusal at source rather than accepting it.**
+The hash `C6765BFA...` is `byte-freezes.tsv:107`, the
+`coffee-bean-20-gate2-pyramid` row: **N=20**, `env_align = 0`,
+`alignment_mode = off`, and its own registry note states verbatim that
+"photometric gain, clip census, outlier rejection, halo correction,
+through-focus statistics" are **not applied**. It is a stripped arm with
+alignment disabled, not the product, and not the registered N of 33/105/299.
+
+The general rule this establishes, which is the same error in a new costume as
+the two summary errors recorded in 2.8.1: **a hash is evidence only about the
+exact configuration that produced it.** Reading it as evidence about the
+product is reading a summary instead of the source.
+
+The registrar split the axis rather than ruling on a conflation (v1.5,
+`dd957dd5`, verified):
+
+- **M12-D, fixed-worker determinism** -- diagnostic PASS, and it holds.
+- **M12-S, cross-worker scaling invariance** -- diagnostic FAIL.
+- Both formal sub-bars remain **UNMEASURED**. This is therefore still not the
+  first scorecard reading.
+
+Splitting them matters because a product may legitimately be deterministic
+while being worker-count dependent; the severity and the repair differ
+completely, and one bar reading "byte invariance" could not have said which.
+
+**Structural note on who measures.** The registrar sets the bar, so it must not
+also take the reading; that is exactly the generator/checker cancellation this
+repository has rediscovered six times, and rule 35 forbids it. I opened a
+separate measurement lane. It must commission its harness against a plant
+proven potent before any hash it reports is admissible, and it is explicitly
+authorised to return a failing M12-S as a complete deliverable.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
@@ -1718,6 +1766,8 @@ procurement problem or a shoot-this-week problem.
 12. **Plugin surface** — in progress, not finished.
 13. **Colour management, photometric normalisation, outlier/robustness mask** — named in the
     research and unplanned. These are the unglamorous layer a SOTA claim dies without.
+
+---
 
 ---
 
