@@ -196,13 +196,30 @@ def pure_noise_valid_fraction(bypass: bool) -> float:
 
 
 def mock_ladder_verdict(ignore_ladders: bool = False) -> str:
-    primary = C.classify_interval(1.2, [0.7, 1.7])
-    aperture = C.classify_interval(0.0, [-0.1, 0.1])
-    if ignore_ladders:
-        return "SURVIVE" if primary == "MATERIAL" else "NARROWED"
-    if {primary, aperture} == {"MATERIAL", "NEGLIGIBLE"}:
-        return "NOT ROBUST"
-    return "NARROWED"
+    positive = {"classification": "MATERIAL", "q_h_frames": 1.2}
+    small_positive = {"classification": "DETECTED-SMALL", "q_h_frames": 0.4}
+    negligible = {"classification": "NEGLIGIBLE", "q_h_frames": 0.0}
+    unresolved = {"classification": "UNRESOLVED", "q_h_frames": 0.0}
+    stacks = {
+        "primary-f5p6": positive,
+        "aperture-f8": positive,
+        "aperture-f11": small_positive,
+        "target-flat-ruler": small_positive,
+        "target-dime": unresolved,
+    }
+    ladders = {
+        # The extra negligible rung makes the complete ladder NOT ROBUST,
+        # while a primary-only defect sees an otherwise valid SURVIVE case.
+        "aperture": [positive, positive, small_positive, negligible],
+        "target": [positive, small_positive, unresolved],
+    }
+    verdict, _ = C.choose_lane_verdict(
+        stacks,
+        ladders,
+        {"applicable": False},
+        defect_ignore_ladders=ignore_ladders,
+    )
+    return verdict
 
 
 def parse_probe(text: str) -> dict[str, object]:

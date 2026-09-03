@@ -131,6 +131,9 @@
           "baseline_green": true,
           "number_plant_red": true,
           "verdict_plant_red": true,
+          "classification_boundaries_green": true,
+          "independent_ladder_green": true,
+          "recorded_verdict_plant_red": true,
           "pass": true
         }
       }

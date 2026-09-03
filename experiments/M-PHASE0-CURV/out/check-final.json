@@ -1,0 +1,14 @@
+{
+  "bootstrap_reps_2000": true,
+  "bootstrap_ci": true,
+  "independent_primary_q": true,
+  "independent_q_value": 0.31696118470773227,
+  "interval_classifications": true,
+  "ladder_checks": true,
+  "independent_lane_verdict": true,
+  "independent_verdict_value": "NARROWED",
+  "report_pins_headline": true,
+  "verdict_allowed": true,
+  "captures_unchanged": true,
+  "pass": true
+}

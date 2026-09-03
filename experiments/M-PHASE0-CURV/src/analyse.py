@@ -8,7 +8,6 @@ import json
 import math
 from pathlib import Path
 import sys
-from typing import Iterable
 
 import numpy as np
 
@@ -232,9 +231,6 @@ def shift_rows_quarter_width(
         "curve_noise",
         "prominence_sigma",
         "adjusted_r2",
-        "concave",
-        "interior",
-        "vertex_inside",
         "green_agreement_frames",
         "peak_clip_fraction",
         "peak_min_signal_dn",
@@ -251,71 +247,12 @@ def shift_rows_quarter_width(
     return shifted
 
 
-def detected_sign(result: dict[str, object]) -> int:
-    if result["classification"] not in {"MATERIAL", "DETECTED-SMALL"}:
-        return 0
-    q = float(result["q_h_frames"])
-    return 1 if q > 0.0 else -1
-
-
-def ladder_flip(results: Iterable[dict[str, object]]) -> dict[str, object]:
-    rows = list(results)
-    classes = [str(row["classification"]) for row in rows]
-    signs = [detected_sign(row) for row in rows]
-    material_negligible = "MATERIAL" in classes and "NEGLIGIBLE" in classes
-    sign_flip = 1 in signs and -1 in signs
-    return {
-        "classes": classes,
-        "detected_signs": signs,
-        "material_negligible_flip": material_negligible,
-        "detected_sign_flip": sign_flip,
-        "flip": bool(material_negligible or sign_flip),
-    }
-
-
 def choose_verdict(
     stacks: dict[str, dict[str, object]],
     ladders: dict[str, list[dict[str, object]]],
     placebo: dict[str, object],
 ) -> tuple[str, list[str]]:
-    reasons: list[str] = []
-    flips = {
-        name: ladder_flip(rungs)
-        for name, rungs in ladders.items()
-    }
-    flipped = [name for name, result in flips.items() if result["flip"]]
-    if flipped:
-        return "NOT ROBUST", [f"registered flip in {', '.join(flipped)} ladder"]
-
-    primary = stacks["primary-f5p6"]
-    p_sign = detected_sign(primary)
-    aperture = [stacks["aperture-f8"], stacks["aperture-f11"]]
-    independent = [stacks["target-flat-ruler"], stacks["target-dime"]]
-    if (
-        primary["classification"] == "MATERIAL"
-        and p_sign != 0
-        and all(detected_sign(row) == p_sign for row in aperture)
-        and any(detected_sign(row) == p_sign for row in independent)
-    ):
-        verdict = "SURVIVE"
-        reasons.append("material primary replicated across aperture and target")
-    elif (
-        all(
-            stacks[name]["classification"] == "NEGLIGIBLE"
-            for name in ("primary-f5p6", "aperture-f8", "aperture-f11")
-        )
-        and not any(detected_sign(row) for row in independent)
-    ):
-        verdict = "KILL"
-        reasons.append("all controlled apertures negligible; no independent detection")
-    else:
-        verdict = "NARROWED"
-        reasons.append("registered SURVIVE and KILL replication bars were not both met")
-
-    if bool(placebo.get("applicable")) and not bool(placebo.get("reduced_below_half")):
-        verdict = "NARROWED"
-        reasons.append("spatial shift retained at least half the detected magnitude")
-    return verdict, reasons
+    return C.choose_lane_verdict(stacks, ladders, placebo)
 
 
 def analyse_all() -> dict[str, object]:
@@ -434,7 +371,7 @@ def analyse_all() -> dict[str, object]:
         },
         "spatial_shift_placebo": placebo,
         "ladder_checks": {
-            name: ladder_flip(rungs) for name, rungs in ladders.items()
+            name: C.ladder_flip(rungs) for name, rungs in ladders.items()
         },
         "measurement_manifests": {
             stack_id: {

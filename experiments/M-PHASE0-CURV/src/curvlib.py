@@ -455,6 +455,85 @@ def classify_interval(q: float, ci95: Iterable[float]) -> str:
     return "UNRESOLVED"
 
 
+def detected_sign(result: dict[str, object]) -> int:
+    """Sign of a registered detection, or zero for a non-detection."""
+    if result["classification"] not in {"MATERIAL", "DETECTED-SMALL"}:
+        return 0
+    q = float(result["q_h_frames"])
+    return 1 if q > 0.0 else -1
+
+
+def ladder_flip(results: Iterable[dict[str, object]]) -> dict[str, object]:
+    """Apply the registered MATERIAL/NEGLIGIBLE and detected-sign tests."""
+    rows = list(results)
+    classes = [str(row["classification"]) for row in rows]
+    signs = [detected_sign(row) for row in rows]
+    material_negligible = "MATERIAL" in classes and "NEGLIGIBLE" in classes
+    sign_flip = 1 in signs and -1 in signs
+    return {
+        "classes": classes,
+        "detected_signs": signs,
+        "material_negligible_flip": material_negligible,
+        "detected_sign_flip": sign_flip,
+        "flip": bool(material_negligible or sign_flip),
+    }
+
+
+def choose_lane_verdict(
+    stacks: dict[str, dict[str, object]],
+    ladders: dict[str, list[dict[str, object]]],
+    placebo: dict[str, object],
+    *,
+    defect_ignore_ladders: bool = False,
+) -> tuple[str, list[str]]:
+    """Apply the preregistered lane decision tree.
+
+    ``defect_ignore_ladders`` exists only so commissioning can plant the exact
+    primary-only decision defect in this production path.
+    """
+    reasons: list[str] = []
+    if not defect_ignore_ladders:
+        flipped = [
+            name for name, rungs in ladders.items() if ladder_flip(rungs)["flip"]
+        ]
+        if flipped:
+            return "NOT ROBUST", [
+                f"registered flip in {', '.join(flipped)} ladder"
+            ]
+
+    primary = stacks["primary-f5p6"]
+    p_sign = detected_sign(primary)
+    aperture = [stacks["aperture-f8"], stacks["aperture-f11"]]
+    independent = [stacks["target-flat-ruler"], stacks["target-dime"]]
+    if (
+        primary["classification"] == "MATERIAL"
+        and p_sign != 0
+        and all(detected_sign(row) == p_sign for row in aperture)
+        and any(detected_sign(row) == p_sign for row in independent)
+    ):
+        verdict = "SURVIVE"
+        reasons.append("material primary replicated across aperture and target")
+    elif (
+        all(
+            stacks[name]["classification"] == "NEGLIGIBLE"
+            for name in ("primary-f5p6", "aperture-f8", "aperture-f11")
+        )
+        and not any(detected_sign(row) for row in independent)
+    ):
+        verdict = "KILL"
+        reasons.append("all controlled apertures negligible; no independent detection")
+    else:
+        verdict = "NARROWED"
+        reasons.append("registered SURVIVE and KILL replication bars were not both met")
+
+    if bool(placebo.get("applicable")) and not bool(
+        placebo.get("reduced_below_half")
+    ):
+        verdict = "NARROWED"
+        reasons.append("spatial shift retained at least half the detected magnitude")
+    return verdict, reasons
+
+
 def surface_gate(
     x_sensor: np.ndarray,
     y_sensor: np.ndarray,

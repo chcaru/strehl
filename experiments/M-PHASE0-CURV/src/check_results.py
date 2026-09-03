@@ -106,6 +106,85 @@ def independent_q(
     return float(_irls(np.column_stack(columns), z)[-1])
 
 
+def classify_interval(q: float, ci95: list[float]) -> str:
+    lo, hi = (float(value) for value in ci95)
+    if lo >= 0.50 or hi <= -0.50:
+        return "MATERIAL"
+    if (lo > 0.0 or hi < 0.0) and abs(float(q)) >= 0.25:
+        return "DETECTED-SMALL"
+    if lo >= -0.25 and hi <= 0.25:
+        return "NEGLIGIBLE"
+    return "UNRESOLVED"
+
+
+def detected_sign(result: dict[str, object]) -> int:
+    if result["classification"] not in {"MATERIAL", "DETECTED-SMALL"}:
+        return 0
+    return 1 if float(result["q_h_frames"]) > 0.0 else -1
+
+
+def ladder_flip(rows: list[dict[str, object]]) -> dict[str, object]:
+    classes = [str(row["classification"]) for row in rows]
+    signs = [detected_sign(row) for row in rows]
+    material_negligible = "MATERIAL" in classes and "NEGLIGIBLE" in classes
+    sign_change = 1 in signs and -1 in signs
+    return {
+        "classes": classes,
+        "detected_signs": signs,
+        "material_negligible_flip": material_negligible,
+        "detected_sign_flip": sign_change,
+        "flip": bool(material_negligible or sign_change),
+    }
+
+
+def independent_lane_verdict(
+    stacks: dict[str, dict[str, object]],
+    ladders: dict[str, list[dict[str, object]]],
+    placebo: dict[str, object],
+) -> str:
+    if any(bool(ladder_flip(rows)["flip"]) for rows in ladders.values()):
+        return "NOT ROBUST"
+    primary = stacks["primary-f5p6"]
+    sign = detected_sign(primary)
+    apertures = [stacks["aperture-f8"], stacks["aperture-f11"]]
+    independent = [stacks["target-flat-ruler"], stacks["target-dime"]]
+    if (
+        primary["classification"] == "MATERIAL"
+        and sign != 0
+        and all(detected_sign(row) == sign for row in apertures)
+        and any(detected_sign(row) == sign for row in independent)
+    ):
+        verdict = "SURVIVE"
+    elif (
+        all(
+            stacks[name]["classification"] == "NEGLIGIBLE"
+            for name in ("primary-f5p6", "aperture-f8", "aperture-f11")
+        )
+        and not any(detected_sign(row) for row in independent)
+    ):
+        verdict = "KILL"
+    else:
+        verdict = "NARROWED"
+    if bool(placebo.get("applicable")) and not bool(
+        placebo.get("reduced_below_half")
+    ):
+        verdict = "NARROWED"
+    return verdict
+
+
+def classification_matches(result: dict[str, object]) -> bool:
+    if not bool(result["scorable"]):
+        return result["classification"] == "UNSCORABLE"
+    bootstrap = result["bootstrap"]
+    if not isinstance(bootstrap, dict):
+        return False
+    expected = classify_interval(
+        float(result["q_h_frames"]),
+        [float(value) for value in bootstrap["ci95"]],
+    )
+    return result["classification"] == expected
+
+
 def self_test() -> dict[str, object]:
     expected = {"verdict": "SURVIVE", "q": 1.25, "ci95": [0.75, 1.75]}
     good = (
@@ -115,10 +194,32 @@ def self_test() -> dict[str, object]:
     )
     number_mutation = good.replace("1.2500", "1.4500", 1)
     verdict_mutation = good.replace("VERDICT: SURVIVE", "VERDICT: KILL")
+    positive = {"classification": "MATERIAL", "q_h_frames": 1.2}
+    small = {"classification": "DETECTED-SMALL", "q_h_frames": 0.4}
+    negligible = {"classification": "NEGLIGIBLE", "q_h_frames": 0.0}
+    unresolved = {"classification": "UNRESOLVED", "q_h_frames": 0.0}
+    stacks = {
+        "primary-f5p6": positive,
+        "aperture-f8": positive,
+        "aperture-f11": small,
+        "target-flat-ruler": small,
+        "target-dime": unresolved,
+    }
+    ladders = {
+        "aperture": [positive, positive, small, negligible],
+        "target": [positive, small, unresolved],
+    }
+    computed = independent_lane_verdict(stacks, ladders, {"applicable": False})
     result = {
         "baseline_green": report_matches(good, expected),
         "number_plant_red": not report_matches(number_mutation, expected),
         "verdict_plant_red": not report_matches(verdict_mutation, expected),
+        "classification_boundaries_green": (
+            classify_interval(1.2, [0.7, 1.7]) == "MATERIAL"
+            and classify_interval(0.0, [-0.1, 0.1]) == "NEGLIGIBLE"
+        ),
+        "independent_ladder_green": computed == "NOT ROBUST",
+        "recorded_verdict_plant_red": computed != "SURVIVE",
     }
     result["pass"] = bool(all(result.values()))
     return result
@@ -148,6 +249,50 @@ def check_final() -> dict[str, object]:
     )
     checks["independent_primary_q"] = abs(q2 - float(primary["q_h_frames"])) <= 5e-8
     checks["independent_q_value"] = q2
+
+    stack_results = results["stacks"]
+    sensitivities = results["sensitivities"]
+    classification_rows = list(stack_results.values())
+    classification_rows.extend(sensitivities["degree"])
+    classification_rows.extend(sensitivities["peak_estimator"])
+    classification_rows.extend(sensitivities["field_radius"])
+    classification_rows.extend(sensitivities["green"])
+    classification_rows.append(sensitivities["ordinary_least_squares"])
+    classification_rows.append(results["spatial_shift_placebo"]["shifted"])
+    checks["interval_classifications"] = all(
+        classification_matches(row) for row in classification_rows
+    )
+
+    ladders = {
+        "aperture": [
+            stack_results["primary-f5p6"],
+            stack_results["aperture-f8"],
+            stack_results["aperture-f11"],
+        ],
+        "target": [
+            stack_results["primary-f5p6"],
+            stack_results["target-flat-ruler"],
+            stack_results["target-dime"],
+            stack_results["grid-1-sw1"],
+            stack_results["grid-1-sw4"],
+            stack_results["grid-1-sw10"],
+            stack_results["grid-2-sw4"],
+            stack_results["grid-2-sw10"],
+        ],
+        "degree": sensitivities["degree"],
+        "peak-estimator": sensitivities["peak_estimator"],
+        "field-radius": sensitivities["field_radius"],
+        "green-replicate": sensitivities["green"],
+    }
+    rebuilt_ladders = {name: ladder_flip(rows) for name, rows in ladders.items()}
+    checks["ladder_checks"] = rebuilt_ladders == results["ladder_checks"]
+    independent_verdict = independent_lane_verdict(
+        stack_results,
+        ladders,
+        results["spatial_shift_placebo"],
+    )
+    checks["independent_lane_verdict"] = independent_verdict == results["verdict"]
+    checks["independent_verdict_value"] = independent_verdict
 
     expected = {
         "verdict": results["verdict"],
@@ -181,7 +326,16 @@ def check_final() -> dict[str, object]:
     }
     checks["captures_unchanged"] = a == b
     checks["pass"] = bool(
-        all(v for k, v in checks.items() if k not in {"independent_q_value", "pass"})
+        all(
+            v
+            for k, v in checks.items()
+            if k
+            not in {
+                "independent_q_value",
+                "independent_verdict_value",
+                "pass",
+            }
+        )
     )
     return checks
 
@@ -191,10 +345,13 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     result = self_test() if args.self_test else check_final()
+    if not args.self_test:
+        (OUT / "check-final.json").write_text(
+            json.dumps(result, indent=2) + "\n", encoding="utf-8"
+        )
     print(json.dumps(result, indent=2))
     return 0 if result["pass"] else 1
 
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
-

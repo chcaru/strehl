@@ -1,0 +1,1888 @@
+{
+  "schema": 1,
+  "stack_id": "target-dime",
+  "role": "independent-target",
+  "capture_path": "D:\\personal\\macro\\dime-flat-narrow-slices-cpl",
+  "response_npz": "out/target-dime-responses.npz",
+  "response_npz_sha256": "e74d5ecbd9bfa1981e83dd1bc3453190ad3883f3c17f7daeb4dc80c59aaefcc1",
+  "frames": 207,
+  "sites": 651,
+  "grid": [
+    31,
+    21
+  ],
+  "active_width": 7028,
+  "active_height": 4688,
+  "black": 512,
+  "usable_white": 15360,
+  "aperture": 5.6,
+  "focus_distance_first_m": 0.273841307296975,
+  "focus_distance_last_m": 0.277110541270397,
+  "focus_distance_nondecreasing": true,
+  "elapsed_seconds": 124.05111622810364,
+  "files": [
+    {
+      "name": "DSC00001.ARW",
+      "bytes": 37740544,
+      "mtime_ns": 1787889082650000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00002.ARW",
+      "bytes": 37769216,
+      "mtime_ns": 1787889083800000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00003.ARW",
+      "bytes": 37797888,
+      "mtime_ns": 1787889085030000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00004.ARW",
+      "bytes": 37806080,
+      "mtime_ns": 1787889086270000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00005.ARW",
+      "bytes": 37818368,
+      "mtime_ns": 1787889087520000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00006.ARW",
+      "bytes": 37830656,
+      "mtime_ns": 1787889088750000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00007.ARW",
+      "bytes": 37838848,
+      "mtime_ns": 1787889090020000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00008.ARW",
+      "bytes": 37851136,
+      "mtime_ns": 1787889091250000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00009.ARW",
+      "bytes": 37863424,
+      "mtime_ns": 1787889092500000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00010.ARW",
+      "bytes": 37871616,
+      "mtime_ns": 1787889093730000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00011.ARW",
+      "bytes": 37875712,
+      "mtime_ns": 1787889094960000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00012.ARW",
+      "bytes": 37896192,
+      "mtime_ns": 1787889096190000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00013.ARW",
+      "bytes": 37904384,
+      "mtime_ns": 1787889097430000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00014.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787889098670000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00015.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787889099900000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00016.ARW",
+      "bytes": 37945344,
+      "mtime_ns": 1787889101140000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00017.ARW",
+      "bytes": 37961728,
+      "mtime_ns": 1787889102400000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00018.ARW",
+      "bytes": 37978112,
+      "mtime_ns": 1787889103640000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00019.ARW",
+      "bytes": 37986304,
+      "mtime_ns": 1787889104870000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00020.ARW",
+      "bytes": 38002688,
+      "mtime_ns": 1787889106110000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00021.ARW",
+      "bytes": 38019072,
+      "mtime_ns": 1787889107350000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00022.ARW",
+      "bytes": 38031360,
+      "mtime_ns": 1787889108580000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00023.ARW",
+      "bytes": 38051840,
+      "mtime_ns": 1787889109820000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00024.ARW",
+      "bytes": 38068224,
+      "mtime_ns": 1787889111050000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00025.ARW",
+      "bytes": 38080512,
+      "mtime_ns": 1787889112290000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00026.ARW",
+      "bytes": 38100992,
+      "mtime_ns": 1787889113560000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00027.ARW",
+      "bytes": 38117376,
+      "mtime_ns": 1787889114790000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00028.ARW",
+      "bytes": 38133760,
+      "mtime_ns": 1787889116020000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00029.ARW",
+      "bytes": 38158336,
+      "mtime_ns": 1787889117250000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00030.ARW",
+      "bytes": 38174720,
+      "mtime_ns": 1787889118470000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00031.ARW",
+      "bytes": 38199296,
+      "mtime_ns": 1787889119710000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00032.ARW",
+      "bytes": 38215680,
+      "mtime_ns": 1787889120930000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00033.ARW",
+      "bytes": 38219776,
+      "mtime_ns": 1787889122180000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00034.ARW",
+      "bytes": 38260736,
+      "mtime_ns": 1787889123420000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00035.ARW",
+      "bytes": 38289408,
+      "mtime_ns": 1787889124660000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00036.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1787889125900000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00037.ARW",
+      "bytes": 38342656,
+      "mtime_ns": 1787889127130000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00038.ARW",
+      "bytes": 38371328,
+      "mtime_ns": 1787889128380000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00039.ARW",
+      "bytes": 38404096,
+      "mtime_ns": 1787889129610000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00040.ARW",
+      "bytes": 38313984,
+      "mtime_ns": 1787889130830000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00041.ARW",
+      "bytes": 38445056,
+      "mtime_ns": 1787889132060000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00042.ARW",
+      "bytes": 38494208,
+      "mtime_ns": 1787889133310000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00043.ARW",
+      "bytes": 38531072,
+      "mtime_ns": 1787889134550000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00044.ARW",
+      "bytes": 38572032,
+      "mtime_ns": 1787889135790000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00045.ARW",
+      "bytes": 38617088,
+      "mtime_ns": 1787889137030000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00046.ARW",
+      "bytes": 38662144,
+      "mtime_ns": 1787889138280000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00047.ARW",
+      "bytes": 38694912,
+      "mtime_ns": 1787889139510000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00048.ARW",
+      "bytes": 38744064,
+      "mtime_ns": 1787889140740000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00049.ARW",
+      "bytes": 38793216,
+      "mtime_ns": 1787889141980000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00050.ARW",
+      "bytes": 38846464,
+      "mtime_ns": 1787889143220000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00051.ARW",
+      "bytes": 38891520,
+      "mtime_ns": 1787889144460000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00052.ARW",
+      "bytes": 38948864,
+      "mtime_ns": 1787889145710000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00053.ARW",
+      "bytes": 39002112,
+      "mtime_ns": 1787889146940000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00054.ARW",
+      "bytes": 39075840,
+      "mtime_ns": 1787889148200000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00055.ARW",
+      "bytes": 39133184,
+      "mtime_ns": 1787889149440000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00056.ARW",
+      "bytes": 39202816,
+      "mtime_ns": 1787889150700000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00057.ARW",
+      "bytes": 39206912,
+      "mtime_ns": 1787889151950000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00058.ARW",
+      "bytes": 39305216,
+      "mtime_ns": 1787889153180000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00059.ARW",
+      "bytes": 39391232,
+      "mtime_ns": 1787889154440000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00060.ARW",
+      "bytes": 39481344,
+      "mtime_ns": 1787889155680000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00061.ARW",
+      "bytes": 39550976,
+      "mtime_ns": 1787889156940000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00062.ARW",
+      "bytes": 39636992,
+      "mtime_ns": 1787889158170000000,
+      "focus_distance_m": 0.273841307296975,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00063.ARW",
+      "bytes": 39714816,
+      "mtime_ns": 1787889159400000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00064.ARW",
+      "bytes": 39800832,
+      "mtime_ns": 1787889160640000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00065.ARW",
+      "bytes": 39931904,
+      "mtime_ns": 1787889161890000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00066.ARW",
+      "bytes": 39997440,
+      "mtime_ns": 1787889163090000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00067.ARW",
+      "bytes": 40148992,
+      "mtime_ns": 1787889164330000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00068.ARW",
+      "bytes": 40198144,
+      "mtime_ns": 1787889165560000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00069.ARW",
+      "bytes": 40321024,
+      "mtime_ns": 1787889166800000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00070.ARW",
+      "bytes": 40464384,
+      "mtime_ns": 1787889168050000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00071.ARW",
+      "bytes": 40611840,
+      "mtime_ns": 1787889169290000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00072.ARW",
+      "bytes": 40685568,
+      "mtime_ns": 1787889170530000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00073.ARW",
+      "bytes": 40808448,
+      "mtime_ns": 1787889171770000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00074.ARW",
+      "bytes": 41000960,
+      "mtime_ns": 1787889173010000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00075.ARW",
+      "bytes": 41111552,
+      "mtime_ns": 1787889174260000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00076.ARW",
+      "bytes": 41160704,
+      "mtime_ns": 1787889175500000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00077.ARW",
+      "bytes": 41263104,
+      "mtime_ns": 1787889176760000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00078.ARW",
+      "bytes": 41553920,
+      "mtime_ns": 1787889178000000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00079.ARW",
+      "bytes": 41758720,
+      "mtime_ns": 1787889179240000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00080.ARW",
+      "bytes": 41795584,
+      "mtime_ns": 1787889180490000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00081.ARW",
+      "bytes": 41951232,
+      "mtime_ns": 1787889181730000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00082.ARW",
+      "bytes": 42131456,
+      "mtime_ns": 1787889182980000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00083.ARW",
+      "bytes": 42401792,
+      "mtime_ns": 1787889184240000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00084.ARW",
+      "bytes": 42377216,
+      "mtime_ns": 1787889185480000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00085.ARW",
+      "bytes": 42536960,
+      "mtime_ns": 1787889186750000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00086.ARW",
+      "bytes": 42852352,
+      "mtime_ns": 1787889187980000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00087.ARW",
+      "bytes": 42721280,
+      "mtime_ns": 1787889189230000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00088.ARW",
+      "bytes": 42799104,
+      "mtime_ns": 1787889190480000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00089.ARW",
+      "bytes": 43028480,
+      "mtime_ns": 1787889191730000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00090.ARW",
+      "bytes": 43294720,
+      "mtime_ns": 1787889192980000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00091.ARW",
+      "bytes": 43438080,
+      "mtime_ns": 1787889194220000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00092.ARW",
+      "bytes": 43438080,
+      "mtime_ns": 1787889195480000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00093.ARW",
+      "bytes": 43589632,
+      "mtime_ns": 1787889196720000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00094.ARW",
+      "bytes": 43425792,
+      "mtime_ns": 1787889197900000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00095.ARW",
+      "bytes": 43737088,
+      "mtime_ns": 1787889199130000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00096.ARW",
+      "bytes": 43724800,
+      "mtime_ns": 1787889200360000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00097.ARW",
+      "bytes": 43466752,
+      "mtime_ns": 1787889201610000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00098.ARW",
+      "bytes": 43610112,
+      "mtime_ns": 1787889202840000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00099.ARW",
+      "bytes": 43675648,
+      "mtime_ns": 1787889204080000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00100.ARW",
+      "bytes": 43827200,
+      "mtime_ns": 1787889205330000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00101.ARW",
+      "bytes": 43679744,
+      "mtime_ns": 1787889206550000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00102.ARW",
+      "bytes": 43405312,
+      "mtime_ns": 1787889207790000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00103.ARW",
+      "bytes": 43466752,
+      "mtime_ns": 1787889209030000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00104.ARW",
+      "bytes": 43507712,
+      "mtime_ns": 1787889210280000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00105.ARW",
+      "bytes": 43417600,
+      "mtime_ns": 1787889211540000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00106.ARW",
+      "bytes": 43552768,
+      "mtime_ns": 1787889212790000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00107.ARW",
+      "bytes": 43384832,
+      "mtime_ns": 1787889214030000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00108.ARW",
+      "bytes": 43302912,
+      "mtime_ns": 1787889215270000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00109.ARW",
+      "bytes": 43216896,
+      "mtime_ns": 1787889216520000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00110.ARW",
+      "bytes": 43270144,
+      "mtime_ns": 1787889217780000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00111.ARW",
+      "bytes": 43175936,
+      "mtime_ns": 1787889219030000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00112.ARW",
+      "bytes": 42893312,
+      "mtime_ns": 1787889220260000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00113.ARW",
+      "bytes": 42795008,
+      "mtime_ns": 1787889221520000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00114.ARW",
+      "bytes": 42749952,
+      "mtime_ns": 1787889222760000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00115.ARW",
+      "bytes": 42676224,
+      "mtime_ns": 1787889224020000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00116.ARW",
+      "bytes": 42725376,
+      "mtime_ns": 1787889225270000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00117.ARW",
+      "bytes": 42553344,
+      "mtime_ns": 1787889226510000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00118.ARW",
+      "bytes": 42315776,
+      "mtime_ns": 1787889227750000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00119.ARW",
+      "bytes": 42143744,
+      "mtime_ns": 1787889229000000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00120.ARW",
+      "bytes": 41947136,
+      "mtime_ns": 1787889230230000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00121.ARW",
+      "bytes": 41955328,
+      "mtime_ns": 1787889231470000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00122.ARW",
+      "bytes": 41922560,
+      "mtime_ns": 1787889232710000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00123.ARW",
+      "bytes": 41684992,
+      "mtime_ns": 1787889233970000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00124.ARW",
+      "bytes": 41553920,
+      "mtime_ns": 1787889235200000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00125.ARW",
+      "bytes": 41525248,
+      "mtime_ns": 1787889236440000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00126.ARW",
+      "bytes": 41345024,
+      "mtime_ns": 1787889237680000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00127.ARW",
+      "bytes": 41197568,
+      "mtime_ns": 1787889238910000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00128.ARW",
+      "bytes": 41025536,
+      "mtime_ns": 1787889240140000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00129.ARW",
+      "bytes": 40988672,
+      "mtime_ns": 1787889241370000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00130.ARW",
+      "bytes": 40923136,
+      "mtime_ns": 1787889242610000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00131.ARW",
+      "bytes": 40742912,
+      "mtime_ns": 1787889243850000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00132.ARW",
+      "bytes": 40697856,
+      "mtime_ns": 1787889245090000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00133.ARW",
+      "bytes": 40579072,
+      "mtime_ns": 1787889246340000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00134.ARW",
+      "bytes": 40431616,
+      "mtime_ns": 1787889247590000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00135.ARW",
+      "bytes": 40341504,
+      "mtime_ns": 1787889248820000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00136.ARW",
+      "bytes": 40189952,
+      "mtime_ns": 1787889250080000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00137.ARW",
+      "bytes": 40087552,
+      "mtime_ns": 1787889251320000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00138.ARW",
+      "bytes": 39952384,
+      "mtime_ns": 1787889252560000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00139.ARW",
+      "bytes": 39899136,
+      "mtime_ns": 1787889253810000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00140.ARW",
+      "bytes": 39825408,
+      "mtime_ns": 1787889255070000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00141.ARW",
+      "bytes": 39755776,
+      "mtime_ns": 1787889256320000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00142.ARW",
+      "bytes": 39649280,
+      "mtime_ns": 1787889257490000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00143.ARW",
+      "bytes": 39583744,
+      "mtime_ns": 1787889258720000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00144.ARW",
+      "bytes": 39538688,
+      "mtime_ns": 1787889259960000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00145.ARW",
+      "bytes": 39428096,
+      "mtime_ns": 1787889261190000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00146.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1787889262420000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00147.ARW",
+      "bytes": 39333888,
+      "mtime_ns": 1787889263650000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00148.ARW",
+      "bytes": 39305216,
+      "mtime_ns": 1787889264900000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00149.ARW",
+      "bytes": 39223296,
+      "mtime_ns": 1787889266140000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00150.ARW",
+      "bytes": 39174144,
+      "mtime_ns": 1787889267400000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00151.ARW",
+      "bytes": 39129088,
+      "mtime_ns": 1787889268630000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00152.ARW",
+      "bytes": 39104512,
+      "mtime_ns": 1787889269870000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00153.ARW",
+      "bytes": 39063552,
+      "mtime_ns": 1787889271110000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00154.ARW",
+      "bytes": 39026688,
+      "mtime_ns": 1787889272350000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00155.ARW",
+      "bytes": 38973440,
+      "mtime_ns": 1787889273590000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00156.ARW",
+      "bytes": 38932480,
+      "mtime_ns": 1787889274830000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00157.ARW",
+      "bytes": 38891520,
+      "mtime_ns": 1787889276080000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00158.ARW",
+      "bytes": 38850560,
+      "mtime_ns": 1787889277310000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00159.ARW",
+      "bytes": 38793216,
+      "mtime_ns": 1787889278540000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00160.ARW",
+      "bytes": 38801408,
+      "mtime_ns": 1787889279780000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00161.ARW",
+      "bytes": 38756352,
+      "mtime_ns": 1787889281020000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00162.ARW",
+      "bytes": 38711296,
+      "mtime_ns": 1787889282260000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00163.ARW",
+      "bytes": 38715392,
+      "mtime_ns": 1787889283480000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00164.ARW",
+      "bytes": 38674432,
+      "mtime_ns": 1787889284720000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00165.ARW",
+      "bytes": 38662144,
+      "mtime_ns": 1787889285950000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00166.ARW",
+      "bytes": 38633472,
+      "mtime_ns": 1787889287200000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00167.ARW",
+      "bytes": 38612992,
+      "mtime_ns": 1787889288440000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00168.ARW",
+      "bytes": 38588416,
+      "mtime_ns": 1787889289660000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00169.ARW",
+      "bytes": 38559744,
+      "mtime_ns": 1787889290910000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00170.ARW",
+      "bytes": 38518784,
+      "mtime_ns": 1787889292160000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00171.ARW",
+      "bytes": 38518784,
+      "mtime_ns": 1787889293400000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00172.ARW",
+      "bytes": 38494208,
+      "mtime_ns": 1787889294640000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00173.ARW",
+      "bytes": 38477824,
+      "mtime_ns": 1787889295870000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00174.ARW",
+      "bytes": 38465536,
+      "mtime_ns": 1787889297100000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00175.ARW",
+      "bytes": 38445056,
+      "mtime_ns": 1787889298340000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00176.ARW",
+      "bytes": 38420480,
+      "mtime_ns": 1787889299570000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00177.ARW",
+      "bytes": 38408192,
+      "mtime_ns": 1787889300800000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00178.ARW",
+      "bytes": 38395904,
+      "mtime_ns": 1787889302040000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00179.ARW",
+      "bytes": 38379520,
+      "mtime_ns": 1787889303280000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00180.ARW",
+      "bytes": 38363136,
+      "mtime_ns": 1787889304520000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00181.ARW",
+      "bytes": 38346752,
+      "mtime_ns": 1787889305760000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00182.ARW",
+      "bytes": 38326272,
+      "mtime_ns": 1787889307010000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00183.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1787889308260000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00184.ARW",
+      "bytes": 38313984,
+      "mtime_ns": 1787889309500000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00185.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1787889310730000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00186.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1787889311990000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00187.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1787889313220000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00188.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1787889314460000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00189.ARW",
+      "bytes": 38268928,
+      "mtime_ns": 1787889315700000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00190.ARW",
+      "bytes": 38256640,
+      "mtime_ns": 1787889316930000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00191.ARW",
+      "bytes": 38252544,
+      "mtime_ns": 1787889318200000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00192.ARW",
+      "bytes": 38252544,
+      "mtime_ns": 1787889319430000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00193.ARW",
+      "bytes": 38240256,
+      "mtime_ns": 1787889320650000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00194.ARW",
+      "bytes": 38240256,
+      "mtime_ns": 1787889321890000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00195.ARW",
+      "bytes": 38248448,
+      "mtime_ns": 1787889323130000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00196.ARW",
+      "bytes": 38244352,
+      "mtime_ns": 1787889324360000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00197.ARW",
+      "bytes": 38240256,
+      "mtime_ns": 1787889325590000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00198.ARW",
+      "bytes": 38240256,
+      "mtime_ns": 1787889326830000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00199.ARW",
+      "bytes": 38252544,
+      "mtime_ns": 1787889328070000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00200.ARW",
+      "bytes": 38256640,
+      "mtime_ns": 1787889329310000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00201.ARW",
+      "bytes": 38260736,
+      "mtime_ns": 1787889330550000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00202.ARW",
+      "bytes": 38268928,
+      "mtime_ns": 1787889331770000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00203.ARW",
+      "bytes": 38260736,
+      "mtime_ns": 1787889332980000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00204.ARW",
+      "bytes": 38195200,
+      "mtime_ns": 1787889334220000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00205.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1787889335450000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00206.ARW",
+      "bytes": 38289408,
+      "mtime_ns": 1787889336690000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    },
+    {
+      "name": "DSC00207.ARW",
+      "bytes": 37765120,
+      "mtime_ns": 1787889337920000000,
+      "focus_distance_m": 0.277110541270397,
+      "f_number": 5.6,
+      "iso": 100,
+      "exposure_seconds": 0.8
+    }
+  ]
+}
