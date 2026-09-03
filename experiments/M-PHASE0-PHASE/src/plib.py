@@ -187,10 +187,30 @@ def band_frequencies(target, grid=8):
 
 
 def full_reps(reps, nu):
-    """The frequencies that actually carry phase: `nu + h_k`, not `h_k`.
+    """The frequencies that actually carry phase: `nu - h_k`, not `h_k`.
+
+    SIGN (amendment A9.1).  `coset_reps` returns the element of each coset
+    NEAREST to `nu`, which is the element for which `nu - h_k` lands inside the
+    band -- that is what its own docstring specifies.  The scene frequencies
+    aliasing onto the measurement at `nu` are `nu + Lambda*`, and because
+    `Lambda*` is symmetric, `-h_k` is in it whenever `h_k` is.  So the alias
+    whose representative lies in the band is `nu - h_k`.
+
+    This module previously returned `nu + h_k`, which put 64 of 128 G-1x
+    components and 192 of 256 RB-1x components OUTSIDE the band.  Since `c = 1`,
+    the band here is the FULL sensor band [-0.5, 0.5)^2, not the green channel's
+    own aliased band, so every unknown the unfolding solves for must lie inside
+    it -- the M unknowns are separated by the alias vector, not scattered beyond
+    Nyquist.  M-PHASE0-RHO's physical translation control reads absolute error
+    0.302143 under `nu + h_k` and exactly 0 under `nu - h_k`.
+
+    `nu + h_k` and `nu - h_k` differ by `2 h_k`, a lattice vector whenever the
+    representative is half-integral, so both name the SAME replica.  They do not
+    carry the same phase, because a sub-pixel displacement is not on the
+    sampling lattice, so the choice is not cosmetic and no gauge absorbs it.
 
     A frame displaced by `d_i` shifts the WHOLE scene, so replica `k` arrives
-    with phase `exp(j 2 pi <nu + h_k, d_i>)`.  Factoring out the common
+    with phase `exp(j 2 pi <nu - h_k, d_i>)`.  Factoring out the common
     `exp(j 2 pi <nu, d_i>)` gives `A = D V` with `D` diagonal and unitary, so
     it leaves every singular value alone and `kappa` may be computed from the
     alias offsets alone.  It does NOT leave the reconstruction alone: `D` is
@@ -201,7 +221,7 @@ def full_reps(reps, nu):
     therefore immune to displacement error, which recovers the baseband exactly
     and is an artifact.  Control C-AB pins that difference.
     """
-    return np.asarray(reps, dtype=float) + np.asarray(nu, dtype=float)
+    return np.asarray(nu, dtype=float) - np.asarray(reps, dtype=float)
 
 
 def system_matrix(reps, d):

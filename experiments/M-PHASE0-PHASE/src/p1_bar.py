@@ -37,7 +37,7 @@ import plib
 OUT = os.path.join(os.path.dirname(__file__), "..", "out", "p1_bar.json")
 
 SIGMA_GRID = np.concatenate([[0.0], np.geomspace(1e-3, 2.0, 31)])
-RHOS = [1.0, 0.3, 0.1, 0.03, 0.01]
+RHOS = [1.0, 0.3, 0.1, 0.06, 0.03, 0.01, 0.0055, 0.001, 0.0001]
 SNRS = [("inf", np.inf), ("30dB", 30.0), ("20dB", 20.0)]
 TRIALS = 1000
 SAMPLES = 320

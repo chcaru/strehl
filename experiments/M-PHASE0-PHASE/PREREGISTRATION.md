@@ -1337,3 +1337,80 @@ sign, and the verdict must then be resolved by field radius rather than pooled,
 because A8.4 established that achievable accuracy is 0.0801 sensor px at field
 centre against 0.2256 at the corner. A pooled comparison cannot decide a claim whose
 two sides both vary by 3x across the field.
+
+--------------------------------------------------------------------------------
+
+## Amendment A10 -- the sign is fixed, the bar is rebuilt, and C1 is NOT ROBUST
+
+### A10.1 the fix and the controls that can see it
+
+`plib.full_reps` now returns `nu - h_k`. Two new controls were added because all 15
+existing ones passed under BOTH signs -- C-A generates its data with `full_reps` and
+solves with `full_reps`, so the defect cancelled exactly, for the third time in this
+lane.
+
+  C-AC  every phase-carrying frequency lies inside the output band. Reads
+        `full_reps` against a fixed geometric predicate, so no generator/checker
+        symmetry can cancel it. Worst target now 0 of 128 outside.
+  C-AD  the model's phase matches a scene actually sampled on the quincunx
+        lattice. Builds a complex exponential at a known continuous frequency,
+        evaluates it at real lattice sites displaced by known sub-pixel amounts,
+        and demodulates. `full_reps` never touches the data. Reads
+        sampled-vs-predicted 4.55e-15 and model-vs-physics 0.00e+00.
+
+Commissioned by plant 0, which restores the retracted `nu + h_k`: C-AC goes to
+768 of 1024 outside and C-AD to model-vs-physics 1.00. **17/17 controls, 7/7 plants.**
+
+`record()` was also returning None, so `not ac` would have been true unconditionally
+and plant 0 would have read CAUGHT however the controls behaved. That is the A8.3
+failure mode -- a check that cannot fail -- caught this time before it shipped.
+
+### A10.2 the corrected sign LOOSENS the bar
+
+G-1x zero-mean maxima, old sign -> corrected:
+
+    rho 0.01   0.3093 -> 0.3592
+    rho 0.10   0.4015 -> 0.4996
+    rho 1.00   0.4303 -> 0.6872
+
+The correction therefore moves the verdict TOWARD C1 surviving, against my prior
+finding. The rho grid was extended down to 0.0001 because the old grid bottomed at
+0.01 and the measured value lies below it. `p1_bar.json` is now 12800 rows.
+
+### A10.3 the verdict is NOT ROBUST
+
+`src/p8_verdict.py`. The bar is reported as a true MAXIMUM alongside median/p90/p99,
+replacing p6's decile median, and accuracy is resolved by field radius instead of
+pooled. Winnable fraction, G-1x zero-mean, against section 9's thresholds:
+
+    rho        field centre     inner annulus    corner
+    0.0055        22.2% KILL       7.5% KILL     1.2% KILL
+    0.0100        35.3% NARROWED  15.3% KILL     2.5% KILL
+    0.0300        56.6% NARROWED  41.9% NARROWED 9.1% KILL
+    0.0600        61.9% SURVIVE   53.8% NARROWED 20.6% KILL
+
+**At the measured rho = 0.0055 the verdict is KILL at every radius.** But it flips to
+NARROWED at rho = 0.01, which is inside M-PHASE0-RHO's own 95% interval
+(0.00185-0.01078), and to SURVIVE at the top of the design census. Section 9 requires
+NOT ROBUST when the verdict flips across any ladder, and it flips across the rho
+ladder within the measured uncertainty.
+
+**Filed verdict: KILL at the measured rho, NOT ROBUST across the rho census.**
+
+The dominant term is rho and it is not resolved. M-PHASE0-RHO records that a
+frequency-grid refinement moves its median by 30.49x, which spans this entire range
+by itself, and that only 9 of 46 of its records directly detect high-band power. Until
+the grid and boundary convention are pinned, the rho uncertainty is wider than the
+distance between KILL and SURVIVE, and no amount of work on the aligner changes that.
+
+### A10.4 what is still owed
+
+The per-site joint census -- each real site's own conditioning, frequency, frame count
+and measured registration error, taken together rather than as marginal summaries --
+has still not been run, and section 9's thresholds are defined over it. A10.3 is the
+winnable fraction over the CONDITIONING census, which is an input to that calculation
+and not a substitute for it. The accuracy figures also remain optimistic (cycle
+consistency is blind to shared systematics) and are scored against a held-out noisy
+edge rather than truth, so they are not accuracy against truth and are not claimed to
+be. `p5_gain`'s estimator is still capped at sqrt(3) and its four controls still share
+`flib.then` between generator and checker; neither is repaired here.

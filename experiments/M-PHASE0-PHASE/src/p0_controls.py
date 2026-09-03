@@ -26,6 +26,7 @@ RESULTS = []
 def record(name, ok, detail):
     RESULTS.append((name, bool(ok), detail))
     print("  %-6s %-46s %s" % ("PASS" if ok else "FAIL", name, detail))
+    return bool(ok)
 
 
 def rand_d(n, spread=3.0, rng=None):
@@ -385,6 +386,86 @@ def c_ab_alias_only_model_is_blind_to_baseband_error():
                   "alias-only |E e0| = %.2e (artifact); nu-carrying = %.4f" % (blind, seeing))
 
 
+def c_ac_phase_frequencies_lie_in_the_reconstruction_band():
+    """A9.1.  Every phase-carrying frequency must lie inside the output band.
+
+    `c = 1`, so the band here is the FULL sensor band [-0.5, 0.5)^2 -- the
+    full-resolution output the unfolding produces -- not the channel's own
+    aliased band.  Each unknown the solver returns IS a scene amplitude at one
+    of those frequencies, so a frequency outside the band names an output cell
+    that does not exist.
+
+    This control cannot be cancelled by a generator/checker symmetry, because it
+    reads `full_reps` against a fixed geometric predicate rather than against
+    data built by the same function.  That matters: the previous `nu + h_k` sign
+    put 64 of 128 G-1x and 192 of 256 RB-1x components outside the band, and all
+    15 other controls passed anyway -- C-A generates with `full_reps` and solves
+    with `full_reps`, so the sign cancelled exactly.
+    """
+    worst = None
+    for name in ("G-1x", "G-2x", "RB-1x", "RB-2x"):
+        c = plib.TARGETS[name]["cell"]
+        out = 0
+        tot = 0
+        for nu, reps in plib.band_frequencies(name, grid=8):
+            f = plib.full_reps(reps, nu)
+            inside = np.all((f >= -c / 2 - 1e-9) & (f < c / 2 + 1e-9), axis=1)
+            out += int((~inside).sum())
+            tot += f.shape[0]
+        if worst is None or out > worst[1]:
+            worst = (name, out, tot)
+    return record("C-AC phase frequencies lie in the output band",
+                  worst[1] == 0,
+                  "worst target %s: %d of %d outside" % worst)
+
+
+def c_ad_phase_matches_actual_lattice_sampling():
+    """A9.1.  The model's phases must match a scene actually sampled on the CFA.
+
+    Built from physics, not from `full_reps`: a pure complex exponential at a
+    known continuous frequency is evaluated at real quincunx lattice sites that
+    have been displaced by a known sub-pixel amount, and the per-frame phase is
+    read off by demodulating at the band frequency.  `full_reps` never touches
+    the data, so a sign error in it cannot cancel.
+
+    The green quincunx sublattice is {p : px + py even}.  For a scene
+    `exp(j 2 pi <f, x>)` sampled at `x = p + d_i`, demodulating by
+    `exp(-j 2 pi <nu, p>)` and summing over the sublattice leaves
+    `exp(j 2 pi <f, d_i>)` times a real count, so the measured per-frame phase
+    is carried by the TRUE continuous frequency `f`.
+
+    The test asserts the model reproduces that for the alias replica: with the
+    scene placed at the in-band alias `nu - h_1`, the phase the model predicts
+    must match the sampled phase to machine precision.
+    """
+    rng = np.random.default_rng(90210)
+    nu = np.array([0.31, -0.18])
+    reps = np.array(plib.coset_reps("G-1x", nu), dtype=float)
+    d = np.array([[0.0, 0.0], [0.27, -0.41], [-0.13, 0.36], [0.44, 0.09]])
+
+    n = 64
+    px, py = np.meshgrid(np.arange(n), np.arange(n), indexing="ij")
+    keep = ((px + py) % 2 == 0)
+    p = np.stack([px[keep], py[keep]], axis=1).astype(float)
+
+    worst = 0.0
+    for h in reps:
+        f_true = nu - h
+        demod = np.exp(-2j * np.pi * (p @ nu))
+        for di in d:
+            samples = np.exp(2j * np.pi * ((p + di) @ f_true))
+            measured = (samples * demod).sum() / len(p)
+            predicted = np.exp(2j * np.pi * float(f_true @ di))
+            worst = max(worst, abs(measured - predicted))
+
+    model = plib.full_reps(reps, nu)
+    agrees = float(np.abs(model - (nu - reps)).max())
+    return record("C-AD model phase matches real lattice sampling",
+                  worst < 1e-9 and agrees < 1e-12,
+                  "sampled-vs-predicted %.2e; model-vs-physics %.2e"
+                  % (worst, agrees))
+
+
 def commission():
     """Each plant must make its target control FAIL.  A control that has never
     fired may be a no-op."""
@@ -392,6 +473,34 @@ def commission():
     print("-" * 78)
     caught = 0
     total = 0
+
+    # Plant 0: restore the `nu + h_k` representative sign that A9.1 retracted.
+    # This is the defect C-AC and C-AD exist to catch, and it is planted FIRST
+    # because it is the one defect this battery previously missed entirely --
+    # all 15 other controls passed under both signs, since C-A generates its
+    # data with `full_reps` and solves it with `full_reps`, so the sign
+    # cancelled exactly.  Both new controls must go RED, and the plant must be
+    # confirmed to actually change the geometry rather than silently no-op.
+    total += 1
+    real_full_reps = plib.full_reps
+    plib.full_reps = lambda reps, nu: (np.asarray(reps, dtype=float)
+                                       + np.asarray(nu, dtype=float))
+    try:
+        probe = plib.full_reps(np.array([[0.0, 0.0], [0.5, 0.5]]),
+                               np.array([0.31, -0.18]))
+        landed = abs(float(probe[1][0]) - 0.81) < 1e-12
+        depth = len(RESULTS)
+        ac = c_ac_phase_frequencies_lie_in_the_reconstruction_band()
+        ad = c_ad_phase_matches_actual_lattice_sampling()
+        del RESULTS[depth:]
+    finally:
+        plib.full_reps = real_full_reps
+    fired = landed and not ac and not ad
+    caught += fired
+    print("  %-8s plant 0  nu+h sign: plant landed=%s, C-AC %s, C-AD %s"
+          % ("CAUGHT" if fired else "MISSED", landed,
+             "RED" if not ac else "still green",
+             "RED" if not ad else "still green"))
 
     # Plant 1: displacements read in PLANE pixels instead of SENSOR pixels -- a
     # factor-of-two scaling of every displacement, which is the actual unit
@@ -505,6 +614,8 @@ def main():
     c_z_white_scene_is_the_generous_end()
     c_aa_kappa_is_invariant_to_nu()
     c_ab_alias_only_model_is_blind_to_baseband_error()
+    c_ac_phase_frequencies_lie_in_the_reconstruction_band()
+    c_ad_phase_matches_actual_lattice_sampling()
 
     all_caught = commission()
 
