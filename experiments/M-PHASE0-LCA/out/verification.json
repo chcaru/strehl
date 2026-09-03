@@ -1,0 +1,158 @@
+{
+  "commission_summary_recomputed": {
+    "all_passed": true,
+    "controls_green": 8,
+    "controls_total": 8,
+    "plants_red": 9,
+    "plants_total": 9
+  },
+  "controls": [
+    {
+      "errors": [],
+      "green": true,
+      "name": "V1_detailed_artifacts_imply_recorded_verdict",
+      "plants": [
+        {
+          "name": "VP1_falsify_headline_A",
+          "red": true
+        },
+        {
+          "name": "VP2_hide_ladder_flip",
+          "red": true
+        },
+        {
+          "name": "VP3_falsify_cache_hash",
+          "red": true
+        },
+        {
+          "name": "VP4_false_green_commission_summary",
+          "red": true
+        },
+        {
+          "name": "VP9_delete_required_green_reference_control",
+          "red": true
+        },
+        {
+          "name": "VP10_delete_required_cache_record",
+          "red": true
+        },
+        {
+          "name": "VP11_delete_required_step_ladder",
+          "red": true
+        },
+        {
+          "name": "VP12_delete_parameter_ladder_arm",
+          "red": true
+        },
+        {
+          "name": "VP17_honestly_report_failed_commission",
+          "red": true
+        }
+      ]
+    },
+    {
+      "errors": [],
+      "green": true,
+      "name": "V2_report_matches_machine_readable_result",
+      "plants": [
+        {
+          "name": "VP5_flip_section_one_verdict",
+          "red": true
+        },
+        {
+          "name": "VP6_change_section_one_A",
+          "red": true
+        },
+        {
+          "name": "VP7_hide_registered_96px_null_failure",
+          "red": true
+        },
+        {
+          "name": "VP8_falsify_printed_cache_hash",
+          "red": true
+        },
+        {
+          "name": "VP13_swap_printed_cache_hash_labels",
+          "red": true
+        },
+        {
+          "name": "VP14_flip_printed_Q2_category",
+          "red": true
+        },
+        {
+          "name": "VP15_falsify_primary_delta_B",
+          "red": true
+        },
+        {
+          "name": "VP16_falsify_parameter_rung_count",
+          "red": true
+        },
+        {
+          "name": "VP18_print_failed_commission_honestly",
+          "red": true
+        }
+      ]
+    }
+  ],
+  "filed_verdict": "NOT ROBUST",
+  "primary_actionability": {
+    "A_ci95_frames": [
+      0.5101308496376333,
+      0.5883434484965022
+    ],
+    "A_min_abs_subject_median_frames": 0.5367112630080602,
+    "bootstrap_draws": 10000,
+    "category": "SURVIVE",
+    "negative_subjects": 3,
+    "null_gate_passed": true,
+    "null_records": [
+      {
+        "abs_median_plus_halfwidth": 0.04063630462938761,
+        "ci95": [
+          -0.026387941356610156,
+          0.018966155967596876
+        ],
+        "label": "grid_sw4",
+        "median": -0.010835074330895367,
+        "passes_0p125": true
+      },
+      {
+        "abs_median_plus_halfwidth": 0.023735635308810288,
+        "ci95": [
+          -0.004316883015107464,
+          0.023735635308810288
+        ],
+        "label": "fabric_f11_sw5",
+        "median": 0.00888539411268141,
+        "passes_0p125": true
+      },
+      {
+        "abs_median_plus_halfwidth": 0.08858758026571678,
+        "ci95": [
+          -0.08858758026571678,
+          -0.007313588419066264
+        ],
+        "label": "ruler_f11_sw7",
+        "median": -0.03457736257327859,
+        "passes_0p125": true
+      }
+    ],
+    "radius_group": null,
+    "seed": 20260902,
+    "subject_count": 3,
+    "subject_delta_r_medians_frames": {
+      "fabric_f11_sw5": -0.6593896307202272,
+      "grid_sw4": -1.7383500726377008,
+      "ruler_f11_sw7": -0.5367112630080602
+    }
+  },
+  "schema": 1,
+  "scope": "artifact/regression verification only; independent scientific verification is reported separately",
+  "summary": {
+    "all_passed": true,
+    "controls_green": 2,
+    "controls_total": 2,
+    "plants_red": 18,
+    "plants_total": 18
+  }
+}

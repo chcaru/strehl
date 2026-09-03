@@ -1,0 +1,499 @@
+{
+  "controls": [
+    {
+      "green": true,
+      "name": "C1_fixed_external_peak_predicate",
+      "plants": [
+        {
+          "name": "P1_linear_domain_instead_of_log",
+          "reading": {
+            "offsets": {
+              "delta_b": 0.5,
+              "delta_null": 0.0,
+              "delta_r": -0.770390635519691
+            },
+            "peaks": {
+              "B": 5.5,
+              "G1": 5.0,
+              "G2": 5.0,
+              "R": 4.229609364480309
+            },
+            "valid": {
+              "B": true,
+              "G1": true,
+              "G2": true,
+              "R": true
+            }
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "offsets": {
+          "delta_b": 0.5,
+          "delta_null": 0.0,
+          "delta_r": -0.7500000000000053
+        },
+        "peaks": {
+          "B": 5.5,
+          "G1": 5.0,
+          "G2": 5.0,
+          "R": 4.249999999999995
+        },
+        "valid": {
+          "B": true,
+          "G1": true,
+          "G2": true,
+          "R": true
+        }
+      }
+    },
+    {
+      "green": true,
+      "name": "C2_signed_offsets_and_frame_units",
+      "plants": [
+        {
+          "name": "P2_inverted_vertex_sign",
+          "reading": {
+            "offsets": {
+              "delta_b": -0.5,
+              "delta_null": 0.0,
+              "delta_r": -1.2499999999999951
+            },
+            "peaks": {
+              "B": 4.5,
+              "G1": 5.0,
+              "G2": 5.0,
+              "R": 3.750000000000005
+            },
+            "valid": {
+              "B": true,
+              "G1": true,
+              "G2": true,
+              "R": true
+            }
+          },
+          "red": true
+        },
+        {
+          "name": "P3_doubled_frame_coordinate",
+          "reading": {
+            "offsets": {
+              "delta_b": 1.0,
+              "delta_null": 0.0,
+              "delta_r": -1.5000000000000107
+            },
+            "peaks": {
+              "B": 11.0,
+              "G1": 10.0,
+              "G2": 10.0,
+              "R": 8.49999999999999
+            },
+            "valid": {
+              "B": true,
+              "G1": true,
+              "G2": true,
+              "R": true
+            }
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "offsets": {
+          "delta_b": 0.5,
+          "delta_null": 0.0,
+          "delta_r": -0.7500000000000053
+        },
+        "peaks": {
+          "B": 5.5,
+          "G1": 5.0,
+          "G2": 5.0,
+          "R": 4.249999999999995
+        },
+        "valid": {
+          "B": true,
+          "G1": true,
+          "G2": true,
+          "R": true
+        }
+      }
+    },
+    {
+      "green": true,
+      "name": "C5_green_pair_null_sensitivity",
+      "plants": [
+        {
+          "name": "P6_shift_G2_by_one_frame",
+          "reading": {
+            "delta_null": -1.0
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "delta_null": 0.0
+      }
+    },
+    {
+      "green": true,
+      "name": "C2b_fixed_external_green_reference",
+      "plants": [
+        {
+          "name": "P9_use_G1_instead_of_two_site_mean",
+          "reading": {
+            "delta_b": 1.25,
+            "delta_null": -1.0,
+            "delta_r": -0.25
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "delta_b": 0.75,
+        "delta_null": -1.0,
+        "delta_r": -0.75
+      }
+    },
+    {
+      "green": true,
+      "name": "C3_fixed_CFA_layout",
+      "plants": [
+        {
+          "name": "P4_swap_G2_and_B_sites",
+          "reading": {
+            "B": 303.0,
+            "G1": 202.0,
+            "G2": 404.0,
+            "R": 101.0
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "B": 404.0,
+        "G1": 202.0,
+        "G2": 303.0,
+        "R": 101.0
+      }
+    },
+    {
+      "green": true,
+      "name": "C4_registration_roll_convention",
+      "plants": [
+        {
+          "name": "P5_invert_registration_sign",
+          "reading": {
+            "rows": [
+              {
+                "expected": [
+                  0,
+                  0
+                ],
+                "recovered": [
+                  0.0,
+                  0.0
+                ],
+                "would_pass": true
+              },
+              {
+                "expected": [
+                  3,
+                  -5
+                ],
+                "recovered": [
+                  -3.0,
+                  5.0
+                ],
+                "would_pass": false
+              },
+              {
+                "expected": [
+                  -7,
+                  4
+                ],
+                "recovered": [
+                  7.0,
+                  -4.0
+                ],
+                "would_pass": false
+              },
+              {
+                "expected": [
+                  11,
+                  9
+                ],
+                "recovered": [
+                  -11.0,
+                  -9.0
+                ],
+                "would_pass": false
+              },
+              {
+                "expected": [
+                  -13,
+                  -8
+                ],
+                "recovered": [
+                  13.0,
+                  8.0
+                ],
+                "would_pass": false
+              }
+            ]
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "rows": [
+          {
+            "correlation_peak": 1.0,
+            "expected": [
+              0,
+              0
+            ],
+            "green": true,
+            "recovered": [
+              -0.0,
+              -0.0
+            ]
+          },
+          {
+            "correlation_peak": 0.9620927689904202,
+            "expected": [
+              3,
+              -5
+            ],
+            "green": true,
+            "recovered": [
+              3.0,
+              -5.0
+            ]
+          },
+          {
+            "correlation_peak": 0.9382082460322629,
+            "expected": [
+              -7,
+              4
+            ],
+            "green": true,
+            "recovered": [
+              -7.0,
+              4.0
+            ]
+          },
+          {
+            "correlation_peak": 0.8490338321746325,
+            "expected": [
+              11,
+              9
+            ],
+            "green": true,
+            "recovered": [
+              11.0,
+              9.0
+            ]
+          },
+          {
+            "correlation_peak": 0.8290236091784451,
+            "expected": [
+              -13,
+              -8
+            ],
+            "green": true,
+            "recovered": [
+              -13.0,
+              -8.0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "green": true,
+      "name": "C6_dose_response_and_ceiling",
+      "plants": [
+        {
+          "name": "P7_clamp_recovered_effect_at_quarter_frame",
+          "reading": {
+            "absolute_response": [
+              0.0,
+              0.2499999999999991,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "slope_through_one_frame": 0.2000000000000002
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "absolute_response": [
+          0.0,
+          0.2499999999999991,
+          0.5,
+          1.0,
+          2.0
+        ],
+        "doses_frames": [
+          0.0,
+          0.25,
+          0.5,
+          1.0,
+          2.0
+        ],
+        "estimator_delta_r_frames": [
+          0.0,
+          -0.2499999999999991,
+          -0.5,
+          -1.0,
+          -2.0
+        ],
+        "fully_present_one_frame_reading": 1.0,
+        "slope_through_one_frame": 1.0
+      }
+    },
+    {
+      "green": true,
+      "name": "C7_independent_decoder_contract",
+      "plants": [
+        {
+          "name": "P8_treat_padded_buffer_as_active",
+          "reading": {
+            "planted_metadata": {
+              "black_levels": [
+                512.0,
+                512.0,
+                512.0,
+                512.0
+              ],
+              "color_desc": "RGBG",
+              "container_white": 16383,
+              "dtype": "uint16",
+              "pattern": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  3,
+                  2
+                ]
+              ],
+              "shape": [
+                5120,
+                7168
+              ]
+            }
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "file": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl\\DSC00015.ARW",
+        "plane_summary": {
+          "B": {
+            "median_black_subtracted": 1673.0,
+            "p01": 990.0,
+            "p99": 2388.0
+          },
+          "G1": {
+            "median_black_subtracted": 2552.0,
+            "p01": 1669.0,
+            "p99": 3501.0
+          },
+          "G2": {
+            "median_black_subtracted": 2550.0,
+            "p01": 1666.0,
+            "p99": 3496.0
+          },
+          "R": {
+            "median_black_subtracted": 910.0,
+            "p01": 553.0,
+            "p99": 1280.0
+          }
+        },
+        "rawpy_metadata": {
+          "black_levels": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "color_desc": "RGBG",
+          "container_white": 16383,
+          "dtype": "uint16",
+          "pattern": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "shape": [
+            4688,
+            7028
+          ]
+        },
+        "rawpy_pixel_sha256_first": "a6047beca9918d4ec87626a389b91f1197a60d081d0c383144962f9b776015e5",
+        "rawpy_pixel_sha256_second": "a6047beca9918d4ec87626a389b91f1197a60d081d0c383144962f9b776015e5",
+        "rust_probe": {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+            "probe",
+            "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+            "--limit",
+            "1"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "camera          : ILCE-7CM2\niso             : 100\nbuffer          : 7168 x 5120\nactive area     : 7032 x 4688 at (0, 0)  [32.97 MP]\nlevels          : black 512, white 15360\nwb coeffs       : [2.8027344, 1, 1.5253906, NaN]\nallocation      : 73.4 MB/frame, 65.9 MB useful (10.2% padding)\n\ndecoded         : 1 ok, 0 failed\nelapsed         : 0.120 s\nper frame       : 0.1202 s\nthroughput      : 337.7 MB/s\n60-frame stack  : 7.21 s\n"
+        },
+        "width_difference_explained": "rawpy/LibRaw exposes 7028 visible columns; strehl/rawler reports 7032 active columns. Verdict path uses only rawpy's copied 7028."
+      }
+    }
+  ],
+  "environment": {
+    "binary_sha256": {
+      "numpy_multiarray": "f4523c2dfe641a904605029ce4a5046388bd61b18afc0594d34018b5e6d848f8",
+      "rawpy": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897",
+      "scipy_ndimage": "7a5bfe894a43b761f2042f2a35c1e799aaa964b60e33b1acc55bf8062636f191"
+    },
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "environment": {
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONIOENCODING": "utf-8",
+      "PYTHONPATH": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+    },
+    "numpy": "2.4.4",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "rawpy": "0.27.0",
+    "repo_head": "a50a6ce41e50013575e667bc9675310ba5ed1add",
+    "scipy": "1.17.1"
+  },
+  "input_sha256": {
+    "fixtures/fixed-curves.json": "cec7a3239b0264ee21df4461f8f5553433b986c0fc44271192871dd2fbf481b1",
+    "fixtures/fixed-offset-input.json": "fd5c949bd9a291b398aebcb5fc4e3c6e887342042299469b7112e2f95a09960c",
+    "fixtures/fixed-offset-predicate.json": "676faf0c01043541e4be789f09be73ba5379147e62ca63d485b926eb56c98b1b",
+    "fixtures/fixed-predicate.json": "23bdd3e21fe9aae05e0ae2b28173e5bda0f0af920b48e89c7dd16393b461b564",
+    "src/commission.py": "f6a7c353937b80fb4abb9b433801bb085440a8fb3031539c031c120073952ce8",
+    "src/lca_lib.py": "c604b936974ea3ad2e629ee39cdb293a146756b8e85eb8d2aa447ed38fa1cb7b"
+  },
+  "purpose": "M-PHASE0-LCA pre-measurement commissioning",
+  "schema": 1,
+  "summary": {
+    "all_passed": true,
+    "controls_green": 8,
+    "controls_total": 8,
+    "plants_red": 9,
+    "plants_total": 9
+  }
+}
