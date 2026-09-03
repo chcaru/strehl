@@ -1627,6 +1627,24 @@ competitor can apply. The critical path is candidate 1's theorem-backed
 construction plus the owner's IBIS-off re-shoot -- which is where the program's
 effort is now pointed.
 
+**The registrar turned the failure into a guard, which is the right response to
+a recurring defect.** Scorecard v1.6 (`48a1d902`) preserves the supersession
+history rather than swapping the number, and adds a new condition of admission
+for any replacement detail statistic (`2026-09-sota-scorecard.md:519-521`):
+
+> Its sharpening battery must use **at least 64 independent sites** and
+> **retain its frozen bar as sample size grows**; a **structural invariance
+> argument is still required because empirical non-rejection is not a
+> guarantee**.
+
+That last clause is now binding on candidate 1: a clean USM arm does not by
+itself admit an instrument. The structural argument must also state **where the
+theorem stops applying** -- the data processing inequality governs the estimand
+`I(X;Y)`, and a trained observer or variational bound is not the estimand.
+`2026-09-sota-scorecard.md:485-488` confirms M1 is otherwise unchanged: still no
+statistic, still no bar, still `UNMEASURED`, and the superseding result
+strengthens admission rather than resurrecting any candidate.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
