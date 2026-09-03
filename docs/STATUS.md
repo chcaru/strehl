@@ -1307,6 +1307,64 @@ The scorecard also now carries a literal labelling rule: only a row whose eviden
 `HOLDOUT` is holdout, and burned, development, control and historical rows all say
 `NOT HOLDOUT` explicitly. That closes the ambiguity my launch exploited.
 
+## 2.9 The program's shape after phase 1, and the one thing blocking everything
+
+### 2.9.1 The honest position
+
+Thirteen-plus phase-0 gates are closed and **every one is negative or neutral.** Phase 1 was
+designed, gated and falsified before a line of its production code was written. The only
+production Rust this program has merged is `1da5e87b`, and independent verification found it
+**defective** — its byte-freeze row was weakened rather than strengthened, and its claimed speedup
+recomputes to `0.948029x`, i.e. about 5% *slower*, from runs taken under 19.6–38.8% external load.
+
+**So: net verified product improvement to date is zero.**
+
+That reads badly and I am recording it plainly, but it is not the same as no progress. The prior
+corpus was rejected precisely because it accumulated claims that did not survive scrutiny. This
+session's product is a program that **refuses to fool itself**: six generator/checker cancellations
+found, three prescribed fixes that carried their own defects caught before application, a headline
+of my own overturned by my own lane, and a build path killed by its own preregistered gate at the
+cheapest possible moment. **A stacker that cannot tell whether it improved is not one gate away
+from SOTA; it is one instrument away.** Which is the next subsection.
+
+### 2.9.2 The binding constraint: the program can prove things are wrong and cannot prove anything is right
+
+Every refusal above shares one cause. **There is no admissible instrument for the detail axis**
+(§2.6, §2.7), and detail is the axis on which a focus stacker is judged. Three slant-edge
+implementations reward a post-render unsharp mask by ~+9.9% with no detector; `Q25` rewards it
+`5.560744x` while reading a genuine improvement at the wrong sign; `S_25` survives sharpening but
+moves `18818.9045x` under a logistic tone curve. Split-frame FRC is dead by construction (D8) and
+repeat-pair FRC is blocked on an IBIS-off re-shoot (D8b).
+
+**This is the critical path and everything else is downstream of it.** A correct fix cannot be
+scored, so it cannot be defended; an incorrect one cannot be caught. Lane **INSTRUMENT** now owns
+the question of whether an admissible instrument is obtainable from the captures that exist —
+including whether repeat-pair FRC can be rescued from IBIS-on data, which if answered "no"
+converts the owner re-shoot from desirable to **required**.
+
+### 2.9.3 The build path that replaces phase 1
+
+**`cover=scale` (§2.8.3).** It is now the program's primary build lane, and it was chosen for one
+property the alternatives lack: **it can be adjudicated without a resolution metric.**
+
+The claim under test is bit-identity, not sharpness. Under `CoverMode::Crop` a frame whose
+placement is an integer translation — the reference frame's identity being the extreme case —
+"reaches the output through an interpolating kernel evaluated exactly on a sample, which is a
+copy." Under the `Scale` default, `S_k` rides on every placement and that same frame is resampled.
+**"Is this the same data?" has no sign ambiguity, cannot be fooled by sharpening, and is immune to
+the tone sensitivity that killed `S_25`.** That is why this lane can proceed while the detail axis
+is still refused.
+
+The prize is real and largest where it matters most: **`1/k - 1` is 1.3% at 22 frames and 7.3% at
+299 frames**, and the deepest stack is the scorecard's own performance master. The competitive
+argument points the same way — real focus stackers crop, because alignment always loses border;
+upsampling the whole frame to preserve nominal dimensions is the unusual choice, not the safe one.
+
+**What would make this lane fail, stated in advance:** if the reference frame turns out not to be
+bit-reproducible under `Crop`, or if the documented border hazard — coarse pyramid bands spreading
+black fill inward before the crop discards it — costs more than the resample it saves. Both are
+measurable, both are preregistered, and a negative result closes the lane honestly.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
