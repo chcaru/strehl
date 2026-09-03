@@ -149,7 +149,7 @@ def eligibility_from_power_rows(
         ratios = np.full(BOOTSTRAP_DRAWS, -math.inf, dtype=np.float64)
         valid = (numerator > 0.0) & (denominator > 0.0)
         ratios[valid] = numerator[valid] / denominator[valid]
-        lower.append(float(np.quantile(ratios, 0.05)))
+        lower.append(float(np.sort(ratios)[499]))
 
     rows = []
     for index in range(5):
