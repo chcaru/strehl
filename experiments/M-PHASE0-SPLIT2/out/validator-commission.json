@@ -1,0 +1,12 @@
+{
+  "status": "COMMISSIONED_GREEN",
+  "clean_status": "METADATA_VALIDATED",
+  "plants": {
+    "M1": "RED",
+    "M2": "RED",
+    "M3": "RED",
+    "M4": "RED"
+  },
+  "all_plants_red": true,
+  "external_predicate": "contiguous DSC00296..DSC00871 filename sequence"
+}
