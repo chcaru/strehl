@@ -1,19 +1,25 @@
 # Phase 1 — unified banded-admission merge
 
-Status: PROPOSAL — repository-verified implementation design; W1 is a mandatory go/no-go gate, A2 is closed negative, and the B3 evidence conflict must be resolved before Rust implementation.
+Status: PROPOSAL — repository-verified implementation design; W1 is a mandatory go/no-go gate. A2 and B3 are excluded from executable phase 1 by repository evidence. The executable spine is A1/A4/B4/B6 behind the aligned-pyramid freeze and D9(a).
 
-Verified 2026-09-02 PDT first against repository HEAD `40b20bef0fe0cdaba7298573095806e580a7ed85`; symbol anchors were refreshed after concurrent HEAD advanced to `986c46535fc082395831724f1d45c33a1d974390`. `crates/strehl-cli/src/merge_cmd.rs` remained under active edit, so volatile CLI locations below are anchored on symbols as well as line numbers.
+Verified 2026-09-02 PDT first against repository HEAD `40b20bef0fe0cdaba7298573095806e580a7ed85`; symbol anchors were refreshed at `986c46535fc082395831724f1d45c33a1d974390`, and this replacement was rechecked against current HEAD `a3d4ba30e2a1f4ba64a4192ff89742d9947d7618`. `crates/strehl-cli/src/merge_cmd.rs` remained under active edit, so volatile CLI locations below are anchored on symbols rather than depending on line numbers.
 
 ## 1. Decision and scope
 
-Phase 1 is one default-path pyramid merge composed of A1, A4, B3, B4, and B6, after D9(a) and an aligned-pyramid byte freeze. It retains the seven-band Burt–Adelson Laplacian pyramid, `BaseBand::Mean`, the normalized-input hull, and a single fixed admission constant selected by W1. It replaces the width-confounded soft-power selector with a two-pass, noise-priced band-admission rule; emits a vector confidence product; applies photometric normalization consistently to pixels and their noise model; and uses no replacement selection-inflation constant.
+The governing proposal literally defines phase 1 as one merge containing A1, A2, A4, B3, B4, and B6, after an aligned-pyramid byte freeze and D9(a) (`docs/proposals/2026-08-sota-path.md` §9, “Phase 1 — one merge”). Subsequent repository evidence removes two arms:
 
-A2 is **not** executable phase-1 scope. `docs/research/M-PHASE0-VEIL2.md` is a final negative report, not a pending one: verdict `NOT ROBUST`, no Rust arm, and the base remains `BaseBand::Mean`. The historical A2 design is retained only in Appendix A. It may not activate without a new, explicit report that supersedes M-PHASE0-VEIL2.
+- A2 is `NOT ROBUST`; `M-PHASE0-VEIL2` forbids its Rust arm and retains `BaseBand::Mean`.
+- B3 is not supported as a product law. `M99-photometric` directly tests the alignment sidecar’s scale ladder and refutes the fixed inverse-square predictor; `BUILD-GHOST` measures a different, independently refitted pairwise scale and does not validate the sidecar predictor. B3 is archived in Appendix B.
 
-Two constraints are absolute:
+Executable phase 1 is therefore **A1/A4/B4/B6**. It retains the seven-band Burt–Adelson Laplacian pyramid, `BaseBand::Mean`, and `Hull::InputRange`; replaces soft-power selection with a two-pass band-admission rule; emits a vector confidence product; and introduces no replacement selection-inflation constant. It applies no per-frame photometric gain: phase-1 gains are identically one.
 
-1. `docs/STATUS.md` records D8/SPLIT as killed. No split half, FRC, or other subdivision of one stack may choose or adapt `k`, per capture or per tile. Reopening D8 requires the independent repeated-bracket capture its verdict names.
-2. No claim above **0.25 cycles/output-pixel** is licensed until the capture requested by `docs/captures-needed.md` §33 exists and passes its own commissioning. Phase-1 measurements must truncate every spatial-frequency statistic at 0.25 cyc/px.
+D9(a) is a determinism prerequisite, not a promised speedup. Its fixed lattice must fit within the scorecard’s 6-GiB process-tree ceiling. The proposal’s claimed 1.29× refund is withdrawn for the current full-image accumulator geometry unless a separately measured memory-reducing design earns it.
+
+Three constraints are absolute:
+
+1. D8/SPLIT is killed. No subdivision of one bracket may choose or adapt `k`.
+2. No claim above **0.25 cycles/output-pixel** is licensed until the §33 capture exists and passes its own commissioning.
+3. A capture family used to choose `k`, a metric, a crop, a threshold, or an implementation response is development data and cannot provide primary W5 or SOTA-scorecard evidence for that version.
 
 ## 2. Verification ledger
 
@@ -21,9 +27,9 @@ Two constraints are absolute:
 
 | Citation | Result | Repository reading |
 |---|---|---|
-| `docs/proposals/2026-08-sota-path.md:2074-2083` | **Resolved** | Defines phase 1 as A1/A2/A4/B3/B4/B6, names the aligned-pyramid freeze, requires D9(a) first, and exits with per-band `n_eff` artifacts. Later evidence removes A2. |
+| `docs/proposals/2026-08-sota-path.md:2074-2083` | **Resolved; superseded in part by later evidence** | Defines literal phase 1 as A1/A2/A4/B3/B4/B6, requires the aligned-pyramid freeze and D9(a), and exits with per-band `n_eff` artifacts. Later repository evidence removes A2 and B3 from the executable spine. |
 | `docs/proposals/2026-08-sota-path.md:459-576` | **Resolved, but provisional** | Contains A1, A2, and the opening of A4. A1's acceptance text still contains literal `[bar]` placeholders, so it is not an executable acceptance specification by itself. |
-| `docs/proposals/2026-08-sota-path.md:751-769` | **Resolved, contradicted elsewhere** | Contains B3 and B4. B3 asserts the inverse-square magnification law; current source and M99 dispute that law. B4 is consistent with current `SELECTION_INFLATION = 1.0`. |
+| `docs/proposals/2026-08-sota-path.md:751-769` | **Resolved; B3 rejected, B4 retained** | Contains B3 and B4. B3’s alignment-scale law is contradicted by the direct `WarpMap`-scale test in `M99-photometric`; `BUILD-GHOST` measures independently refitted pairwise scales and does not overturn that product result. B4 agrees with current `SELECTION_INFLATION = 1.0`. |
 | `docs/proposals/2026-08-sota-path.md:815-837` | **Resolved, but provisional** | Contains B6 generalized-Anscombe gating. It also contains a `[level bar]` placeholder and marks a supporting literature citation as remembered rather than verified. |
 | `docs/research/M-PHASE0-VEIL2.md:1-7,139-154` | **Resolved; supplied status was wrong** | The report is final, `NOT ROBUST`; it forbids an A2 Rust arm and keeps `BaseBand::Mean`. Calling it “pending” is incorrect. |
 | `crates/strehl-core/src/pyramid.rs:1289-1687` | **Partially resolves** | The range contains `BandMerge` and `add_frame_with_gain`, but no longer contains `absorb` or `finish`. Current anchors are approximately `BandMerge` 1310, `add_frame_with_gain` 1614, `absorb` 1914, and `finish` 2185. The composite citation is therefore stale. |
@@ -57,90 +63,73 @@ The required PIPE test was deliberately not run during this documentation-only t
 
 The active CLI working tree also contains an optional `--confidence-map` implementation measuring output centrality in calibrated noise units. It is not the phase-1 confidence vector and currently requires another frame pass after `finish`. W2 must integrate without overwriting or relabelling that work; the phase-1 bundle must be produced from merge sufficient statistics without adding a third decode pass.
 
-### 2.3 Repository-wins discrepancies and blockers
+### 2.3 Repository-wins resolutions
 
-These are not editorial caveats. They are entry conditions or design changes that implementation must respect.
+1. **A2 is excluded.** `BaseBand::Mean` remains.
+2. **B3 is excluded.** `M99-photometric` tests the scale ladder the product actually holds. Relative to the no-law residual, fixed `-2A` reads 3.96×, 0.722×, 1.277×, and 5.72× on its four decks; fitted exponents are -4.740, -6.466, -0.879, and -3.045. This fails its registered predictor.
+3. **`BUILD-GHOST` does not rescue B3.** Its scale is independently refitted pairwise rather than read from the shipping `WarpMap`; its median subject slope is 0.365 against the fixed prediction 1.0. Its `p=0.0025` establishes informative pairing, not unit slope. Six large-ramp subjects obtain 2.07×–5.06× RMS reduction, but the report recommends not porting photometric normalization and explicitly says foam’s output benefit was not measured.
+4. **The merge is strictly two-pass.** There is no residual-gain fit, calibration decode, or pass-dependent normalization. Passes one and two consume the same black-subtracted aligned samples. Required confidence statistics are retained during those passes.
+5. **Foam is no longer calibration data.** With B3 removed, W1–W3 do not inspect it; W5 may use it as sealed phase-1 stress evidence. It remains historically studied, not historically unseen.
+6. **Capture independence is by family, not spelling.** `112MSDCF` and `113MSDCF` are one subject family; because W1 uses 113, 112 is regression-only. All five calibration-grid sweeps form one target family and remain sealed from W1–W3 and phase-1 adaptation. `coffee-bubbles` and `coffee-bean` are distinct subjects with 19 and 105 ARWs and no shared frames.
+7. **The uncertainty equation remains uncommissioned design material.** `sigma_E^2=(2F^2+4Fq)/nu_eff` must pass W1’s real-band null and positive controls before W3.
+8. **Winner and fallback semantics are fixed.** Winner is finite argmax `E`, ties choose the lower stable frame ordinal, and `q_w=0` routes every frame through unit-weight arithmetic mean.
+9. **The global-width prior is hostile.** Existing reports show large cross-stack dispersion. `NO_COMMON_K` is therefore an expected successful negative, not an invitation to tune by capture.
+10. **The aligned-pyramid freeze is absent.** The registry’s current pyramid row has alignment disabled. An executable aligned row must be committed before D9 changes reduction behavior.
+11. **D9 does not buy speed under current memory geometry.** The registry reports 1328 MiB per current worker: four are about 5312 MiB, eight about 10624 MiB. `BandMerge::accumulator_floats` implies about 629 MiB per full accumulator; 32 alone are about 19.6 GiB before workspaces. D9 may establish determinism, but no 1.29× refund is claimed.
+12. **PIPE ownership remains exclusive.** W2 never edits `merge_cmd/decode_queue.rs` and does not enter `merge_cmd.rs` or the freeze harness until their current owners commit and hand off clean files.
 
-1. **A2 is final-negative, not pending.** It is excluded.
-2. **B3 has conflicting repository evidence.** The proposal, README, and `docs/research/BUILD-GHOST.md` support `ln(flux) = -2 ln(scale)` and report up to 5.06× RMS reduction with permutation `p = 0.0025`. Current `crates/strehl-core/src/photometric.rs` and `docs/research/M99-photometric.md` say an aligner-derived inverse-square law was refuted, with fitted exponents from about -0.879 to -6.466. These may be different masks or estimands, but that reconciliation is absent. W4 must reproduce both readings under one scale convention and one pixel mask before landing the law. If it cannot, phase 1 stops.
-3. **Scaled noise support is already present.** `photometric::scale_plane_noise` and `scale_noise_model` already implement the correct transform for an applied pixel gain. W4 must reuse and test them, not add a second scaling path.
-4. **The uncertainty equation is new design material.** `sigma_E^2 = (2F^2 + 4Fq)/nu_eff` is mathematically consistent with a noncentral Gaussian squared-energy approximation, but no repository report commissions it on real bands.
-5. **The original wording mixes domains.** “Generalized-Anscombe decision space” and the supplied linear-energy `F`, `q`, and variance equations do not say whether samples, coefficients, or energies are transformed. Section 4 freezes the intended interpretation: normalize linear samples, apply the generalized Anscombe transform to shared-green samples, then build the decision pyramid; reconstruct from a separate linear-DN pyramid. W1 must commission that exact reading before W3.
-6. **Winner semantics were omitted.** Section 4 makes the winner the maximum finite decision-space energy `E`, ties by lower stable frame ordinal, and treats `q_w = 0` as the below-floor case. Changing the winner to `q`, SNR, or a stabilized score is a new preregistered arm, not an implementation detail.
-7. **“Below-floor winner means mean” conflicts with unconditional `w = 1/F`.** Section 4 resolves this by using unit weights for every frame in a below-floor band coefficient. Otherwise it would be inverse-variance averaging, not a plain mean.
-8. **A global gate has hostile prior evidence.** Existing measurements report about 3.25× sibling dispersion and about 49.5× dispersion across five stacks after scalar correction. W1 is therefore a genuine kill gate, not a calibration ceremony.
-9. **The aligned-pyramid freeze is absent.** `byte-freezes.tsv` has one pyramid row, but it has `env_align=0`; no aligned-pyramid row exists.
-10. **D9(a)'s performance claim is not supported by the current memory geometry.** The freeze row reports a current worker footprint of about 1328 MiB. From `BandMerge::accumulator_floats`, the 3516×2344, four-plane, seven-band accumulator alone is about 629 MiB: 32 full partials are therefore about 19.6 GiB before workspaces, while eight current concurrent workers are about 10.4 GiB. Four workers already approach the 6 GiB product budget. A fixed reduction lattice can make bytes worker-invariant, but it cannot by itself refund the measured 1.29× four-versus-eight-worker cost under that same budget. The refund needs smaller/tiled partials, spatial cooperation, or spill. W2 must separate the determinism acceptance from the unproven speed claim.
-11. **The prescribed W2 ordering conflicts with D9's own prose.** D9 says the aligned row should exist before its freeze event, while W2 says D9 is the first serial commit and the row comes next. Reconciliation: before changing code, W2 must measure and archive the pre-D9 aligned invocation; commit D9 first; then add the post-D9 invariant row, recording both hashes and the intentional transition in the row rationale. If a literal pre-existing registry row is required, the commit order must change.
-12. **Residual photometric fitting threatens the two-pass and 2.00× contracts.** A residual estimated from decoded pixels is not available when pass-one decisions are made. A separate calibration decode makes three passes; applying the residual only in pass two makes pass-one winners inconsistent. W4 must demonstrate a no-extra-decode source of the residual, or phase 1 must either drop residual fitting or revise the runtime bar before implementation.
-13. **Current D9(a) is not implemented.** The pyramid path still partitions by the selected worker count, so the reduction tree changes with `STREHL_PYRAMID_WORKERS`.
-14. **Concurrent ownership is live.** At verification time `merge_cmd.rs` and `byte-freeze.rs` were modified and `merge_cmd/decode_queue.rs` was untracked. W2 must not begin in those files until their owners land and the preconditions in §7.2 pass.
-15. **Foam cannot be both W4 calibration and untouched W5 acceptance.** W4's required `<= 0.05`-stop result consumes `foam`, while W5 names it as untouched. W5 may report foam as a regression/stress check after W4, but it is not independent. A genuinely untouched replacement capture must be named before W5 if independent photometric acceptance is required.
-16. **“Untouched” is only a phase-1 hold-out claim.** Several W5 captures, especially `coffee-bean` and `foam`, already appear in repository research and freeze work. W5 can keep them out of W1's `k` selection; it cannot represent them as historically unseen.
+## 3. Capture manifest and leakage boundary
 
-## 3. Capture manifest
+Nothing under `D:\personal\macro` may be written, renamed, or used as a cache destination.
 
-Counts are read-only recursive counts of RAW `.ARW` frames. Nothing under `D:\personal\macro` may be written, renamed, sidecar-updated, or used as a cache destination.
+A capture is **consumed** when its pixels or candidate outcomes influence `k`, `nu_eff`, crop selection, exclusions, a threshold, a model choice, or a code response. Listing paths, counting files, and reading metadata for inventory do not consume it. Captures from the same physical target/session family are not promoted to independent subjects merely because they are separate directories.
 
-The shorthand `sw4` and `sw10` is ambiguous: both calibration-grid setup 1 and setup 2 contain those sweep widths. Setup 1 is the phase-1 definition because it is the only setup containing the required sw1/sw4/sw10 trio. The setup-2 alternatives remain recorded so the ambiguity cannot be silently rediscovered later.
-
-| Role | Name | Full path | Frames | Diagnostic value |
+| Role | Capture | Full path | ARWs | Diagnostic value |
 |---|---|---|---:|---|
-| W1 calibration | sw4 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw4-cpl` | 55 | Controlled medium-step bracket with grid edges and repeated spatial structure; it anchors the middle of the sampling ladder. |
-| W1 calibration | coffee-bubbles | `D:\personal\macro\coffee-bubbles` | 19 | The capture on which flat/detail selection-concentration inversion was measured; it is not a clean fixed-focus null. |
-| W1 calibration | 113MSDCF | `D:\personal\macro\113MSDCF` | 63 | Natural fine-detail/MTF bracket and the shorter member of the 112/113 replicate pair. |
-| W5 held-out | sw1 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw1-cpl` | 91 | Dense focus sampling; tests whether a globally fixed `k` over-admits nearly redundant frames. |
-| W5 held-out | sw10 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw10-cpl` | 23 | Coarse focus sampling; tests whether the same `k` collapses toward selection when adjacent frames differ strongly. |
-| W5 held-out | 112MSDCF | `D:\personal\macro\112MSDCF` | 79 | Same-subject replicate of 113MSDCF with 16 additional frames; separates rule stability from one bracket's depth. |
-| W5 held-out | coffee-bean | `D:\personal\macro\coffee-bean` | 105 | Deep rigid stack and the repository's named hull-clamp stress capture; polariser provenance remains unresolved. |
-| W4 calibration / W5 regression | foam | `D:\personal\macro\foam` | 100 | Unique measured 0.32-stop local photometric outlier over eight frames and a non-rigid scene; W4 consumes it, so it cannot also be independent W5 hold-out evidence. |
-| Excluded ambiguity | alternate sw4 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-2-sw4-cpl` | 46 | A second setup with the same shorthand; excluded from phase 1 to prevent accidental capture substitution. |
-| Excluded ambiguity | alternate sw10 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-2-sw10-cpl` | 27 | A second setup with the same shorthand; excluded from phase 1 to prevent accidental capture substitution. |
+| W1 development | flat-on-ruler | `D:\personal\macro\flat-on-ruler-cpl` | 79 | Rigid planar null: printed card fixed to a steel ruler, sharp markings and paper fibre, with flat and structured regions. Use coherent detail; use MTF only if the input-only line-locus qualifier passes. |
+| W1 development | coffee-bubbles | `D:\personal\macro\coffee-bubbles` | 19 | Known flat/detail concentration inversion; development-only in the SOTA scorecard. |
+| W1 development | 113MSDCF | `D:\personal\macro\113MSDCF` | 63 | Natural detail through 0.25 cyc/px; already a historical regression sentinel, not a primary scorecard acuity capture. |
+| W5 sealed reference | grid-1 sw1 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw1-cpl` | 91 | Dense independent grid reference; never a scored repeat. |
+| W5 sealed primary | grid-1 sw4 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw4-cpl` | 55 | Scorecard repeat A. |
+| W5 sealed primary | grid-2 sw4 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-2-sw4-cpl` | 46 | Scorecard repeat B from a separate setup. |
+| W5 sealed stress | grid-1 sw10 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw10-cpl` | 23 | Sparse-step stress A. |
+| W5 sealed stress | grid-2 sw10 | `D:\personal\macro\requests\30-calibration-grid\calibration-grid-2-sw10-cpl` | 27 | Sparse-step stress B. |
+| W5 sealed primary | coffee-bean | `D:\personal\macro\coffee-bean` | 105 | Distinct from coffee-bubbles; rigid deep-stack hull and medium-N systems stress. |
+| W5 sealed primary | foam | `D:\personal\macro\foam` | 100 | Non-rigid, specular and exposure-irregular stress. It tests robustness of the no-B3 product; it does not establish a photometric correction benefit. |
+| Sealed reserve | 119MSDCF | `D:\personal\macro\119MSDCF` | 33 | Not assigned by the current scorecard; kept unopened by W1–W3 pending a future role. |
+| W5 systems | bee-1-cpl | `D:\personal\macro\bee-1-cpl` | 299 | Scorecard N=33, N=100, and N=299 wall-clock and memory arms. |
+| Regression only | 112MSDCF | `D:\personal\macro\112MSDCF` | 79 | Same subject and sweep as W1’s 113MSDCF; cannot be independent evidence after 113 is used. |
 
-All eight named captures exist. No named capture is missing.
+> **Disputed prescribed claim — corrected, not applied as written:** the replacement labelled `119MSDCF` the scorecard short-stack systems arm. The current scorecard does not mention `119MSDCF`; M11/M12 use the first 33 frames of `bee-1-cpl`. The row above keeps `119MSDCF` sealed but does not attribute a scorecard role to it.
+
+All grid captures remain sealed from W1–W3 and phase-1 outcome-driven adaptation until W5 candidate scoring. An independently preregistered scorecard lane may measure its frozen baseline on the grid family, but its sites or outcomes must not cross into W1–W3. W5 freezes all input-derived sites before rendering candidate output and reports the grid family hierarchically by setup/capture rather than pretending five sweeps are five subjects. If implementation changes after a W5 miss, every opened W5 capture becomes development data for that revision and fresh validation captures are required.
+
+If the already-launched W1 has exposed candidate results from grid-1 sw4, that capture is consumed and may not remain scorecard repeat A. If no candidate result or outcome-dependent crop was seen, quarantine the abandoned W1 artifacts, record the aborted access, amend the preregistration, and restart with flat-on-ruler.
 
 ## 4. Merge contract
 
 ### 4.1 Fixed topology and notation
 
-- Keep `DEFAULT_BANDS = 7`, the existing Burt–Adelson reduce/expand operators, borders, and linear-DN reconstruction.
-- Keep `BaseBand::Mean`; the base residual is always the arithmetic mean of normalized linear-DN base coefficients.
-- Keep `mean_coarse = 0` unless a separate measured ladder changes it; phase 1 does not change it.
-- A band coefficient is indexed by frame `i`, band `b`, and native band-grid position `p`.
-- `N` is frame count. Stable frame ordinal is input order after the CLI has produced its deterministic path list.
-- `S_i(p)` is black-subtracted, photometrically normalized shared-green luma: `(G1 + G2)/2` on the aligned quad grid.
-- The decision variance is temporal Poisson–Gaussian variance. PRNU is deliberately excluded because the repository noise model documents that fixed pattern cancels in a between-frame decision; it remains relevant to output uncertainty, not admission.
+- Keep `DEFAULT_BANDS = 7`, existing Burt–Adelson reduce/expand operators, replicated borders, and linear-DN reconstruction.
+- Keep `BaseBand::Mean`; the base is the arithmetic mean of black-subtracted aligned linear-DN base coefficients.
+- Keep `mean_coarse = 0` unless a separate measured ladder changes it.
+- Keep `Hull::InputRange`, evaluated against the aligned, black-subtracted phase-1 inputs.
+- A coefficient is indexed by frame `i`, band `b`, and native band position `p`.
+- Stable frame ordinal is deterministic input order after CLI path resolution.
+- `S_i(p)=(G1+G2)/2` on the aligned quad grid. Phase 1 applies no per-frame photometric gain.
+- PRNU is excluded from between-frame admission variance, consistent with the current noise-model contract; it remains relevant to output uncertainty.
 
-### 4.2 B3 photometric normalization
+### 4.2 B3 — excluded from executable phase 1
 
-The proposed deterministic arm is
+Phase 1 does not derive gain from alignment scale, fit gain from frame pixels, or compose a residual curve. Every per-frame gain is exactly one. Existing `photometric::PhotometricMap`, `PhotometricMap::from_flux`, `scale_plane_noise`, and `scale_noise_model` remain available to the estimator/reference path but are not changed or newly invoked by the phase-1 pyramid.
 
-```text
-c_i = (scale_i / scale_ref)^2
-X'_i = c_i X_i
-```
+This decision keeps the merge at two RAW decodes. It also prevents pass one from electing under one photometric state and pass two from estimating under another.
 
-where `scale_i` and `scale_ref` must use one documented alignment-transform convention. Applying `c_i` to samples requires the noise transform already implemented in `photometric.rs`:
-
-```text
-a'_i = c_i a_i
-b'_i = c_i^2 b_i
-Var[X'_i | X'_i = s'] = a'_i s' + b'_i
-```
-
-For `PlaneNoise`, this means scaling `gain_dn_per_e` and white-about-black by `c_i` while keeping `read_noise_e` unchanged; `scale_noise_model` is the canonical implementation. The input hull is accumulated after this normalization.
-
-Residual fitting is permitted only if W4 resolves blocker 2 and blocker 12. The preregistered residual is
-
-```text
-r_i = log2(g_measured_i / c_i)          [stops]
-```
-
-on one fixed eroded low-detail mask. If every contiguous eight-frame window has peak-to-peak residual `<= 0.10` stop, set residual gain to 1. If any window exceeds `0.10` stop, fit a smooth residual curve and compose it with `c_i`; after fitting, foam's maximum eight-frame peak-to-peak residual must be `<= 0.05` stop. This path may not make pass-one and pass-two normalization differ. If it needs an extra RAW decode, the two-pass/runtime contract has failed and must be explicitly renegotiated rather than hidden.
+Appendix B records the evidence and reopening requirements. B3 may return only through a separate preregistered milestone; it is not a latent phase-1 flag.
 
 ### 4.3 B6 decision transform
 
-For each normalized frame, form effective shared-green temporal-noise coefficients
+For each frame, form effective shared-green temporal-noise coefficients:
 
 ```text
 a_G = (a_G1 + a_G2) / 4
@@ -150,13 +139,13 @@ A(s; a_G, b_G) = (2 / a_G) * sqrt(max(a_G*s + 3*a_G^2/8 + b_G, 0))
 v_A(s) = (a_G*s + b_G) / (a_G*s + 3*a_G^2/8 + b_G)
 ```
 
-`A` is used only for focus decisions. Linear normalized planes are decomposed separately for accumulation and reconstruction. Under a photometric gain `c`, `s'=cs`, `a'=ca`, and `b'=c^2b`, so `A(s';a',b') = A(s;a,b)` algebraically. W4's gain-invariance test allows maximum absolute floating error `2e-5` over the preregistered signal/gain grid.
+`A` is used only for focus decisions. A separate linear-DN pyramid supplies the estimate and hull. Denominators and propagated variances must be finite and positive; non-finite decision samples neither win nor enter admission.
 
-The denominator and `v_A` must be finite and positive. Non-finite decision samples never win and are never admitted. Below-black samples use `s=0`, matching `PlaneNoise::variance`.
+The algebraic covariance control remains mandatory even though the product applies no gain: for synthetic `s'=c*s`, `a'=c*a`, and `b'=c^2*b`, the implementation must satisfy `A(s';a',b')=A(s;a,b)` to maximum absolute error `2e-5` over the preregistered grid. This commissions B6 arithmetic; it does not license B3.
 
 ### 4.4 Pass one: `BandReference`
 
-For every frame, build the generalized-Anscombe shared-green Laplacian pyramid. At every `(b,p)`:
+For every frame, build the generalized-Anscombe shared-green Laplacian decision pyramid. At every `(b,p)`:
 
 ```text
 L_i       = LaplacianBand_b(A_i)[p]
@@ -166,41 +155,41 @@ q_i       = max(E_i - F_i, 0)
 sigma2_Ei = (2*F_i^2 + 4*F_i*q_i) / nu_eff_b
 ```
 
-`beta_i,b` is the frame- and warp-specific band-noise gain already represented by `BandGain`/`frame_beta`; no global scalar may replace it. `v_A,i,b` is the variance field propagated down the same Gaussian pyramid. `nu_eff_b` is a W1-commissioned, conservative per-band value validated across the preregistered warp-phase range. Warp interpolation changes correlation as well as energy, so one value is acceptable only if its null coverage holds across those phases. `NU_SMOOTH = 13.37469` is only the analytic independent-sample starting value; it must not be relabelled as a measured correlated-band value.
+`beta_i,b` is the frame- and warp-specific band-noise transfer represented by `BandGain` and `frame_beta`. `v_A,i,b` follows the existing Gaussian variance pyramid. `NU_SMOOTH = 13.37469` is only the independent-sample starting value; W1 must commission conservative per-band `nu_eff_b` values against real correlated bands and the preregistered warp phases.
 
-`BandReference` stores, at native band resolution:
+`BandReference` stores at native band resolution:
 
 ```text
-winner_energy: f32      // E_w
-winner_floor: f32       // F_w
-winner_variance: f32    // sigma2_Ew
-winner_frame: u16/u32   // type selected from maximum supported N
-below_floor: bit        // q_w == 0
+winner_energy: f32
+winner_floor: f32
+winner_variance: f32
+winner_frame: u16/u32
+below_floor: bit
 ```
 
-The winner is the largest finite `E_i`. Equal bit-pattern energies choose the lower stable frame ordinal. If no finite energy exists, mark the coefficient invalid and fail the merge with coordinates; do not silently emit a mean.
-
-A below-floor winner is one with `q_w = 0`. It routes **all frames with unit weights** to an arithmetic mean for that band coefficient.
+Winner is the maximum finite `E_i`; equal bit-pattern energies choose the lower stable frame ordinal. `below_floor` means `q_w=0`. No finite winner is a merge error with band and coordinates, not a silent fallback.
 
 ### 4.5 Pass two: admission and linear reconstruction
 
-Re-decode and identically normalize/align each frame. Recompute its decision-space `E_i`, `F_i`, `q_i`, and `sigma2_Ei` using the same functions and frozen tables as pass one. For a non-below-floor winner, admit frame `i` iff
+Re-decode each frame and repeat the same black subtraction, defect handling, alignment, crop, shared-green construction, variance propagation, and frame-specific `beta` calculation. No state estimated from pass one changes the input samples or noise model in pass two.
+
+For an above-floor winner, admit frame `i` iff:
 
 ```text
 E_w - E_i <= k * sqrt(sigma2_Ew + sigma2_Ei)
 ```
 
-The winner is always admitted. Exactly one fixed global `k`, selected by W1, is compiled as the product default and recorded in provenance. A per-capture value is not an allowed product mode or an acceptance workaround.
+The winner is always admitted. Exactly one fixed global `k`, selected by W1, is the product default and is recorded in provenance. A per-capture value is forbidden.
 
 Use one shared-green weight for all four CFA planes:
 
 ```text
-w_i = 1 / F_i                   if admitted and winner is above floor
-w_i = 1                         if winner is below floor
-w_i = 0                         otherwise
+w_i = 1/F_i   if admitted and winner is above floor
+w_i = 1       if winner is below floor
+w_i = 0       otherwise
 ```
 
-Every used `F_i` must be finite and strictly positive; otherwise fail with the frame, band, and coordinates. Do not hide a model failure behind an epsilon. Accumulate at each band coefficient and plane:
+A used `F_i` must be finite and strictly positive. Accumulate:
 
 ```text
 sum_wL[c] += w_i * L_linear_i[c]
@@ -210,160 +199,229 @@ L_out[c]   = sum_wL[c] / sum_w
 n_eff      = sum_w^2 / sum_w2
 ```
 
-`sum_w == 0` is an error because the winner must be admitted. Keep accumulation precision and reduction order fixed by W3/D9; do not introduce atomics whose order is scheduler-dependent.
+For a below-floor winner, every valid frame receives unit weight, yielding an arithmetic mean. `sum_w==0` is an error.
 
-Accumulate each normalized native CFA plane's `lo`/`hi` before decomposition. Reconstruct each CFA plane from the seven admitted linear bands plus the arithmetic-mean base, then apply the existing normalized-input hull clamp:
+During this same pass, retain the minimum decision response and the responses at `winner_frame-1`, `winner_frame`, and `winner_frame+1` needed for the baseline-subtracted log-parabola. Do not decode frames after `BandMerge::finish`.
+
+Accumulate each aligned native CFA plane’s `lo`/`hi`, reconstruct the seven linear bands plus arithmetic-mean base, and apply:
 
 ```text
-d_hull = max(lo - reconstructed, 0, reconstructed - hi)  // pre-clamp, linear DN
+d_hull = max(lo - reconstructed, 0, reconstructed - hi)
 output = clamp(reconstructed, lo, hi)
 ```
 
 ### 4.6 B4 output uncertainty
 
-No replacement selection inflation is allowed. Keep the multiplier exactly `1.0`. Where predicted temporal output variance is required, derive it from the actual weights:
+No replacement selection inflation is allowed. Keep the multiplier exactly `1.0`. Where temporal output variance is required:
 
 ```text
 Var_out = sum_i(w_i^2 * Var_i) / (sum_i w_i)^2
 ```
 
-Any fixed multiplier other than 1.0 requires a new independent measurement and proposal.
+A fixed multiplier other than 1.0 requires a new independent measurement.
 
 ### 4.7 A4 `ConfidenceBundle`
 
-Add `crates/strehl-core/src/confidence.rs` and export it from `lib.rs`. Reuse `ThroughFocus::subframe_deficit`; do not fork its log-parabola math. The bundle is a vector, never a scalar score:
+Add `crates/strehl-core/src/confidence.rs` and export it from `lib.rs`. Reuse the baseline-subtracted log-parabola semantics of `ThroughFocus::subframe_deficit`; do not create a competing formula.
 
-1. **Per-band Kish participation:** `n_eff_b(p) = sum_w^2/sum_w2` at each band's native resolution.
-2. **Sub-frame deficit:** baseline-subtracted log-parabola `1 - f(k*)/f(peak)` at quad resolution, with invalid/boundary state preserved rather than encoded as zero.
-3. **Admission width:** per-band winner-referenced `k*sqrt(2*sigma2_Ew)` at native resolution, plus a documented Burt–Adelson expansion to quad resolution for display. The native map is authoritative.
-4. **Hull distance:** pre-clamp `d_hull` in linear DN per CFA plane at quad resolution.
-5. **Validity/provenance masks:** below-floor, invalid parabola, bracket boundary, and censored state when B2 eventually exists. Phase 1 does not invent B2.
+The bundle contains:
 
-W2 adds `--confidence-bundle <directory>`. The directory contains lossless 32-bit float TIFFs and a JSON manifest naming dimensions, band, units, invalid encoding, input hashes, alignment sidecar hash, noise-model provenance, photometric law and gains, `k`, `nu_eff`, `beta` provenance, frame count/order, reduction-lattice ID, git SHA, and hull policy. Confidence generation must not alter image bytes. It must not require the active centrality map's optional third pass.
+1. Per-band Kish `n_eff` at native band resolution.
+2. Baseline-subtracted sub-frame deficit, preserving boundary/invalid state.
+3. Native per-band admission width `k*sqrt(2*sigma2_Ew)` plus a documented display expansion; native values are authoritative.
+4. Pre-clamp hull distance in linear DN per CFA plane.
+5. Below-floor, invalid-parabola, bracket-boundary, and future-censoring validity masks.
+
+`--confidence-bundle <directory>` writes lossless float TIFFs and a manifest naming dimensions, units, invalid encoding, input hashes, alignment hash, noise provenance, `photometric_policy=none`, `k`, `nu_eff`, `beta` provenance, frame order, lattice ID, git SHA, and hull policy. Confidence generation must not alter image bytes or require a post-`finish` decode. The existing centrality `--confidence-map` remains separately named and optional.
 
 ## 5. Determinism, orchestration, and freezes
 
-### 5.1 D9(a)
+### 5.1 D9(a): determinism without a speed claim
 
-Partition the stable frame list into a fixed chunk lattice independent of worker count. Each chunk processes frames in stable ordinal order. Absorb partials in ascending chunk ID through a fixed tree/order. Record chunk count and lattice version in the run banner and confidence manifest. Worker count may change scheduling only, never grouping or absorb order.
+Use lattice ID `cpu-v1-c4-ceil`. For `N` frames:
 
-The chunk count must be memory-safe. The proposal's illustrative 32 full-image partials do not fit the present 6 GiB budget. W2 may use fewer chunks for the first determinism landing, but must not claim the 1.29× refund unless a measured smaller/tiled representation or spatial-cooperation design actually permits more concurrent work under the budget.
+```text
+logical_chunks = min(N, 4)
+chunk_size     = ceil(N / 4)
+chunk j        = [j*chunk_size, min((j+1)*chunk_size, N))
+```
 
-Acceptance: one release-build aligned-pyramid freeze invocation, forced with `STREHL_PYRAMID_WORKERS=1`, `2`, `4`, and `8`, produces identical SHA-256 and byte count. Peak memory is reported for every arm; an 8-worker hash obtained only by exceeding the product memory budget proves determinism, not a shippable speedup.
+Omit empty chunks. This matches the current four-worker contiguous partition. Every chunk folds frames in stable ordinal order. `BandMerge::absorb` consumes partials in ascending chunk ID. Requested worker count changes only scheduling; it never changes frame grouping or reduction order.
+
+Concurrency is separately capped by the measured process-tree memory model. If four concurrent phase-1 partials do not fit, run the same four logical chunks in smaller batches; do not change chunk boundaries or lattice ID. The banner reports requested workers, effective concurrent chunks, logical chunk count, per-pass memory estimate, and measured peak.
+
+The current baseline geometry predicts:
+
+- 1328 MiB × 4 workers = 5312 MiB before unmodelled process-tree headroom;
+- 1328 MiB × 8 workers = 10624 MiB, above 6 GiB;
+- about 629 MiB per full accumulator;
+- 32 full accumulators ≈19.6 GiB before workspaces.
+
+Therefore D9 claims **worker-count-invariant bytes only**. It does not claim the proposal’s 1.29× speed refund. A scorecard speed pass remains unmeasured and may fail even when D9 succeeds.
+
+Acceptance is byte-identical output at requested workers 1/2/4/8/16, with process-tree peak committed memory `<=6 GiB` in every arm. The 16-worker arm must meet the scorecard runtime bar before any SOTA speed claim; an effective cap of four is reported, not disguised.
 
 ### 5.2 PIPE hand-off
 
-`lane-PIPE` exclusively owns `crates/strehl-cli/src/merge_cmd/decode_queue.rs`. W2 consumes `decode_queue::rendezvous` and never edits that file. W2 is blocked from `merge_cmd.rs` until PIPE lands and all commands below hold:
+`lane-PIPE` exclusively owns `crates/strehl-cli/src/merge_cmd/decode_queue.rs`. W2 consumes `decode_queue::rendezvous` and never edits that file.
+
+Before W2 touches integration or freeze files, all commands must pass:
 
 ```powershell
-git status --short -- crates/strehl-cli/src/merge_cmd.rs crates/strehl-cli/src/merge_cmd/decode_queue.rs
+git status --short -- crates/strehl-cli/src/merge_cmd.rs crates/strehl-cli/src/merge_cmd/decode_queue.rs crates/strehl-cli/tests/byte-freeze.rs crates/strehl-cli/tests/byte-freezes.tsv
 rg "mod decode_queue|decode_queue::rendezvous" crates/strehl-cli/src/merge_cmd.rs
 cargo test -p strehl-cli --bin strehl decode_fold_queue
 ```
 
-The first command must print nothing; the second must find both seam references; the third must exit 0. At this document's verification point the first failed (`merge_cmd.rs` modified, `decode_queue.rs` untracked), the second passed by inspection, and the third was not run. `byte-freeze.rs` was also modified by another lane and must be clean or explicitly handed off before W2 edits it.
+The first command must print nothing; the second must find both seam references; the test must exit 0. If PIPE does not land that seam, W2 is blocked pending a revised orchestration design.
 
-Every phase-1 pass uses the same bounded decode-to-fold rendezvous. A producer error closes the queue and reaches the consumer; consumer failure cancels production; no decoded-frame backlog may grow with `N`.
+Both phase-1 passes use the landed bounded rendezvous. Producer failure reaches the consumer, consumer failure cancels production, and decoded-frame backlog remains constant in stack depth.
 
-### 5.3 Freeze order
+### 5.3 Correct freeze order
 
-1. Before code changes, render and record the current aligned-pyramid invocation at workers 1/2/4/8 as a pre-D9 measurement.
-2. Land D9(a) as W2's first serial commit.
-3. Add the aligned-pyramid registry row with its post-D9 worker-invariant hash; record the pre-D9 hashes and the intentional transition in `why`.
-4. Land two-pass orchestration and phase-1 default selection.
-5. Add phase-1 and legacy control freeze rows, confidence-bundle provenance checks, and teeth plants proving each row can fail.
+1. **Wait for PIPE and the freeze owner to land.**
+2. **Commit the pre-D9 aligned freeze first.** Extend the registry so the invocation records an explicit pyramid selector, `STREHL_PYRAMID_WORKERS`, and PIPE queue mode. Add an aligned sidecar row using the committed `coffee-bean-20.warpmap.txt`, `--merge pyramid`, `--pyramid-select soft`, `--pyramid-gate 2.0`, `--limit 20`, workers `4`, and an explicit queue mode. Independently measure the hash, then prove the row’s teeth with a pyramid-path plant.
+3. **Land D9 as the first behavior-changing W2 commit.** `cpu-v1-c4-ceil` must reproduce the pre-D9 workers=4 hash unchanged, because it preserves that exact partition and absorb order. Workers 1/2/4/8/16 must then reproduce that same hash.
+4. If the workers=4 hash moves, stop before re-baselining. Attribute the movement independently; a post-D9 hash generated and accepted by the same change is not a freeze.
+5. After W1 GO and W3 completion, integrate admission. Keep the pre-D9/D9 row explicitly on `soft`; add a separate explicit `admission` row carrying the fixed `k`. Only then flip the product default.
+
+The old ordering—implement D9 and add the first aligned row afterwards—tests only that D9 can reproduce its own answer. It loses the executable pre-change predicate, cannot distinguish intended reduction movement from unrelated aligned-path movement, and recreates generator/checker cancellation.
 
 ## 6. Acceptance definitions
 
-All confidence intervals are two-sided 95% block-bootstrap intervals over preregistered, non-overlapping spatial tiles, except an “upper95” or “lower95” bar, which refers to the corresponding one-sided endpoint. Bootstrap seed, tile size, crop coordinates, exclusions, and replicate count are written before scoring. Every frequency-domain metric is restricted to `<= 0.25 cyc/px`.
+All intervals are 95% block-bootstrap intervals over preregistered non-overlapping physical sites. Seeds, tiles, crops, exclusions, and replicate counts are frozen before candidate output. No scored frequency exceeds 0.25 cyc/px.
 
-- **Width match:** for every W1 capture, scored band, and preregistered ROI, `abs(mean_n_eff_candidate / mean_n_eff_legacy_gate4.5 - 1) <= 0.05`. Legacy `n_eff` uses its actual soft weights; zero-weight mean fallback uses unit weights.
-- **Detail/MTF retention:** ratio `candidate / legacy-gate-4.5`; the lower 95% bound must be `>= 0.95` on every calibration capture's preregistered detail instrument.
-- **Flat power:** ratio of integrated output power in preregistered flat/defocused ROIs over `0.10–0.25 cyc/px`, `candidate / legacy-gate-4.5`; the upper 95% bound must be `<= 0.90` on every applicable calibration capture.
-- **Sampled `n_eff` correctness:** maximum absolute error between Rust bundle and independent LibRaw recomputation is `<= 0.02` over a deterministic preregistered sample.
-- **Selector census:** fraction of valid coefficients with exactly one admitted frame is `< 0.1%` for every scored band and held-out capture. Count admissions directly; do not infer the census from rounded `n_eff`.
-- **Hull:** maximum excess beyond independently recomputed normalized input bounds is `<= 1 DN`, including output quantization.
-- **Runtime:** release candidate wall time divided by release legacy gate-4.5 wall time is `<= 2.00` on every held-out capture, same machine and worker setting, alternating order, with the repository timing rule applied. Optional centrality-map time is reported separately; required confidence-bundle time is included.
-- **Determinism:** release output hashes are identical at workers 1/2/4/8.
-- **W4 VST invariance:** maximum absolute transformed-value difference under consistent sample/noise scaling is `<= 2e-5`.
-- **W4 foam residual:** maximum contiguous-eight-frame peak-to-peak residual after permitted fitting is `<= 0.05` stop, and fitting is never engaged when the prefit residual is `<= 0.10` stop.
+- **Width match:** on flat-on-ruler, coffee-bubbles, and 113MSDCF, for every applicable band and frozen ROI, `abs(mean_n_eff_candidate/mean_n_eff_legacy_gate4.5 - 1) <= 0.05`.
+- **Detail/MTF retention:** candidate/legacy-gate-4.5 lower95 `>=0.95` on each applicable W1 development capture and later on every applicable W5 capture. MTF is permitted only after its input-only line-locus qualification; otherwise use the preregistered coherent-detail instrument.
+- **Flat power:** candidate/legacy-gate-4.5 integrated over `0.10–0.25 cyc/px`; upper95 `<=0.90` on every applicable flat/defocused ROI.
+- **Sampled `n_eff`:** maximum absolute Rust-versus-independent-LibRaw error `<=0.02`.
+- **Selector census:** coefficients admitting exactly one frame `<0.1%` in every scored band/capture. Count admissions directly.
+- **Hull:** maximum output excess beyond independently recomputed aligned-input bounds `<=1 DN`, including quantization.
+- **Runtime:** release candidate/post-D9 legacy-gate-4.5 warm-wall ratio `<=2.00` on every timed held-out capture, with the same lattice ID, requested worker setting, queue policy, registration, write, and required confidence bundle. No D9 refund is subtracted.
+- **Memory:** peak native-RAW process-tree committed bytes `<=6 GiB`; `peak_N299/peak_N33<=1.10`. Record working set, child processes, page faults, and temporary bytes.
+- **Determinism:** highest-precision delivered image bytes are identical at requested workers 1/2/4/8/16 while remaining within the memory bar.
+- **B6 covariance:** maximum generalized-Anscombe error under consistently scaled synthetic sample/noise parameters `<=2e-5`.
+- **Pass count:** exactly two RAW decodes per accepted frame. Required confidence output adds none.
+- **Data separation:** all grid captures, coffee-bean, foam, 119MSDCF, and bee-1 remain unopened by W1–W3. `112MSDCF` is regression-only because W1 consumes its same-subject partner, 113MSDCF.
+
+There is no phase-1 photometric-residual or foam-correction acceptance criterion because B3 is not executable scope.
 
 ## 7. Workstreams
 
-| ID | Workstream | Dependencies | Owned files | Completion gate |
-|---|---|---|---|---|
-| W1 | Preregister and pilot | None | `docs/proposals/2026-09-phase1-design.md`; `experiments/PHASE1-DESIGN/PREREGISTRATION.md`; `reference.py`; `measure.py` | Both exact gate commands exit 0; one fixed global `k`; width match `<=5%`; detail/MTF lower95 `>=0.95`; flat-power upper95 `<=0.90`. “No common k exists” is a successful negative and stops phase 1. |
-| W2 | D9 and product integration | W1 GO; PIPE landed; final W3/W4 API at integration | `crates/strehl-cli/src/main.rs`; `merge_cmd.rs`; `tests/byte-freeze.rs`; `tests/byte-freezes.tsv`. Explicitly not `merge_cmd/decode_queue.rs`. | D9 first serial commit; aligned freeze; two-pass queue orchestration; default selector; confidence bundle; provenance; release hashes identical at workers 1/2/4/8. |
-| W3 | Core admission and confidence | W1 GO | `crates/strehl-core/src/pyramid.rs`; `through_focus.rs`; new `confidence.rs`; `lib.rs` | Typed pass APIs, commissioned uncertainty/admission, linear reconstruction/hull, vector confidence, and `cargo test -p strehl-core` green. |
-| W4 | Photometric law | W1 GO; B3 conflict adjudicated | `crates/strehl-core/src/photometric.rs` | One documented scale convention reconciles BUILD-GHOST and M99; existing noise-scaling path reused; VST error `<=2e-5`; foam residual `<=0.05` stop without violating two-pass/runtime contract. |
-| W5 | Independent acceptance | W2 + W3 + W4; independent photometric capture named or foam downgraded to regression | `experiments/PHASE1-VERIFY/PREREGISTRATION.md`; `verify.py` | Phase-1 held-outs; independent LibRaw decode; Pareto bars; `n_eff` error `<=0.02`; selectors `<0.1%`; hull `<=1 DN`; runtime `<=2.00×`; workspace tests and clippy green. |
+| ID | Workstream | Parallel-safe | Dependencies | Owned files | Completion gate |
+|---|---|---|---|---|---|
+| W1 | Independent admission pilot | Yes | None | `experiments/PHASE1-DESIGN/PREREGISTRATION.md`; `reference.py`; `measure.py` | One fixed global `k`; width mismatch `<=5%`; detail/MTF lower95 `>=0.95`; flat-power upper95 `<=0.90`. `NO_COMMON_K` is a successful negative and stops integration. |
+| W2 | Freeze, D9, and CLI integration | Yes relative to W1/W3; internally serial | PIPE and freeze-owner hand-off for pre-freeze/D9; W1 GO and W3 API before integration | `crates/strehl-cli/src/main.rs`; `crates/strehl-cli/src/merge_cmd.rs`; `crates/strehl-cli/tests/byte-freeze.rs`; `crates/strehl-cli/tests/byte-freezes.tsv`. Never `merge_cmd/decode_queue.rs`. | Pre-D9 aligned row committed and commissioned; D9 preserves its workers=4 hash; 1/2/4/8/16 hashes match under 6 GiB; two-pass orchestration, confidence bundle, provenance, and explicit soft/admission rows land. |
+| W3 | Core admission, B6, and A4 | Yes | W1 GO | `crates/strehl-core/src/pyramid.rs`; `through_focus.rs`; new `confidence.rs`; `lib.rs` | Typed pass APIs; commissioned energy uncertainty; linear reconstruction/hull; vector confidence; `cargo test -p strehl-core` green. |
+| W5 | Independent acceptance | No | W2 + W3 | `experiments/PHASE1-VERIFY/PREREGISTRATION.md`; `verify.py` | Sealed-capture Pareto, confidence, selector, hull, two-pass, runtime, memory, and determinism bars pass; workspace tests and clippy pass. |
+
+W4 is retired from phase 1 rather than silently repurposed: it was the B3 workstream, and B3 is archived.
 
 ### 7.1 W1 selection rule
 
-Before looking at candidate outcomes, W1 records crop coordinates, exclusions, bootstrap plan, `nu_eff` commissioning, and the ordered grid
+Before outcomes, W1 freezes crops, exclusions, bootstrap plan, `nu_eff`, and:
 
 ```text
 k = 0.00, 0.05, 0.10, ..., 8.00
 ```
 
-Run every grid value unchanged on all three calibration captures. First discard every value that fails the per-capture/per-band/per-ROI 5% width match. Among survivors, require both Pareto bars on all applicable captures. Select the smallest surviving `k`; the tie-break is fixed in advance and cannot depend on image appearance. If no value survives, report `NO_COMMON_K` and stop. No interpolation, per-capture value, post-hoc crop, or expanded range is allowed without a new preregistration and a fresh untouched calibration set.
+Run every value unchanged on flat-on-ruler, coffee-bubbles, and 113MSDCF. Discard any value missing a required 5% width match. Among survivors, require every applicable Pareto bar on all three captures. Select the smallest survivor. No interpolation, expanded grid, per-capture value, or post-outcome crop is permitted.
 
-### 7.2 W2 integration details
+No common value means `NO_COMMON_K`, a successful W1 result that halts W3 and W2 integration.
 
-- Preserve an explicit legacy gate-4.5 arm for controls and freeze rows.
-- Make banded admission the default only after W1 returns GO and all freeze teeth pass.
-- Both passes must call the same frame preparation function for decode, black subtraction, photometric gain, defect handling, warp, crop, luma, variance, and frame-specific `beta`.
-- The queue remains bounded and cancellation-safe in both passes.
-- Confidence output is opt-in but production-supported; it contains all A4 channels and complete provenance.
-- The active centrality `--confidence-map` remains a separately named optional diagnostic.
+### 7.2 W2 details
 
-### 7.3 W5 held-out protocol
+- W2 may perform the pre-freeze and D9 milestones while W1 runs, after PIPE and freeze-file hand-off.
+- D9 is the first behavior-changing W2 commit; the pre-D9 freeze instrumentation commit necessarily precedes it.
+- Preserve explicit legacy soft/gate-4.5 controls.
+- Both passes call the same frame preparation seam for decode, black subtraction, defects, warp, crop, luma, variance, and `beta`.
+- Apply no phase-1 photometric gain.
+- Use the landed bounded queue in both passes.
+- Produce `ConfidenceBundle` from pass sufficient statistics, not another frame traversal.
+- Flip the default only after W1 GO and all freeze teeth pass.
 
-W1–W4 may list but must not decode, inspect, crop, or score sw1, sw10, 112MSDCF, or coffee-bean before W5 preregistration is sealed. This means held out from phase-1 parameter selection, not historically unseen by the repository. W4 necessarily scores foam; W5 may include it as a declared regression/stress case, but not as independent evidence. If independent photometric evidence is required, seal a replacement path before W4 opens it.
+### 7.3 W5 protocol
 
-W5 uses rawpy/LibRaw to decode mosaics independently of the Rust RAW path, consumes the same read-only alignment transforms or independently recreated transforms, and recomputes decisions, weights, `n_eff`, and hull bounds without calling `strehl-core`.
+Before any W5 candidate render, seal input-derived site manifests for the full grid family, coffee-bean, foam, and the `bee-1-cpl` N=33/100/299 systems arms. Grid sw1 is reference-only; grid-1/grid-2 sw4 are primary repeats; both sw10 captures are sparse-step stress. Treat setup and capture as hierarchy levels. `119MSDCF` remains an unassigned sealed reserve, not current scorecard evidence.
 
-Pareto bars are the W1 bars, evaluated per held-out capture where the instrument applies. The 0.25 cyc/px ceiling remains in force. W5 reports every miss as a result; it does not retune `k`.
+`112MSDCF` may be reported only as same-subject regression after W1’s use of 113MSDCF. It cannot rescue a failed independent capture.
+
+Decode independently with rawpy/LibRaw and do not call `strehl-core` when recomputing decisions, weights, `n_eff`, or hulls. W5 never retunes `k`. A miss either stops this phase-1 version or forces a new preregistration and fresh validation captures.
+
+### 7.4 Sequencing and critical path
+
+W1’s synthetic commissioning may run immediately. Its real-capture phase must use the corrected development set. PIPE proceeds independently. After PIPE and freeze-file hand-off, W2 may commit the pre-D9 row and D9 while W1 runs. W3 starts only on W1 GO. W2 integration waits for both W1 GO and W3. W5 follows integration.
+
+The joined critical path is:
+
+```text
+W1 GO -> W3 --------------------\
+                                  -> W2 integration -> W5
+PIPE -> pre-D9 freeze -> D9 ----/
+```
 
 ## 8. Rejected alternatives and controls
 
-- **Extend soft-power weighting:** rejected because changing its exponent or threshold preserves the width-confounded selector. The repository already shows equal threshold is not equal effective width; any comparison must match Kish `n_eff`.
-- **Move to estimator/per-pixel geometry:** rejected because the measured flat-ground winner field becomes patchwork/plateaus. Phase 1 changes admission policy while retaining band geometry.
-- **Per-capture `k`:** rejected as a failed global model, not a product feature.
-- **Split-stack self-tuning:** prohibited by D8.
-- **Replacement selection inflation:** prohibited by B4's negative evidence.
+- **Extend soft-power weighting:** preserves the width-confounded selector.
+- **Move to estimator/per-pixel geometry:** restores measured flat-ground patchwork.
+- **Per-capture `k`:** a failed global model, not a product feature.
+- **Split-stack tuning:** prohibited by D8.
+- **Replacement selection inflation:** contradicted by B4 evidence.
+- **B3 alignment-scale gain:** rejected because the shipping `WarpMap` predictor fails M99; independently refitted pairwise scale is not a substitute.
+- **Residual gain in phase 1:** rejected because a pixel-derived fit is unavailable before pass one and creates a third decode.
+- **D9 speed refund:** rejected under the current 1328-MiB worker geometry; determinism is retained.
 
-Cheat/control matrix:
-
-| Cheat | Why a headline can look good | Control that must fail it |
+| Cheat | Misleading result | Control |
 |---|---|---|
-| Average nearly everything | Suppresses flat noise | Width match and detail/MTF lower95 `>=0.95`. |
-| Sharpen output | Raises detail/MTF | Flat-power upper95 `<=0.90`, normalized-input hull `<=1 DN`, and signal-correlated detail instrument. |
-| Fabricate/smooth confidence | Makes maps look plausible | Independent LibRaw recomputation, max `n_eff` error `<=0.02`, manifest hashes. |
-| Force serial execution | Makes hashes deterministic | Worker 1/2/4/8 hashes plus runtime and peak-memory reports. |
-| Tune one `k` per capture | Makes every calibration pass | Manifest equality and the explicit `NO_COMMON_K` rule. |
-| Claim fine detail from noise | Raises high-band power | Hard cutoff at 0.25 cyc/px until §33 exists. |
+| Average nearly everything | Low flat noise | Width match and detail lower95 `>=0.95`. |
+| Sharpen output | High detail/MTF | Flat-power upper95 `<=0.90`, input hull `<=1 DN`, and coherent-detail control. |
+| Fabricate confidence | Plausible maps | Independent LibRaw recomputation; `n_eff` error `<=0.02`; manifest hashes. |
+| Force serial execution | Stable hashes | 1/2/4/8/16 hashes jointly reported with runtime and 6-GiB memory. |
+| Tune `k` by capture | Every development capture passes | One manifest-global value and explicit `NO_COMMON_K`. |
+| Tune on a score capture | Good apparent generalization | Capture-family ledger; all grid captures sealed from phase-1 development until W5 candidate scoring. |
+| Hide a third pass | Better-looking algorithm description | Decode census and complete process timing. |
+| Claim D9 refund outside budget | Fast non-product arm | Process-tree peak `<=6 GiB`; requested and effective concurrency both printed. |
+| Claim high-frequency detail from noise | Attractive band power | Hard 0.25-cyc/px ceiling until §33. |
 
 ## 9. Risk register and stop conditions
 
 | Risk | Detection | Required response |
 |---|---|---|
-| No common `k` passes width and Pareto gates | W1 `measure.py --gate` | Successful negative; print `NO_COMMON_K`; stop phase 1. |
-| B3 evidence cannot be reconciled | W4 common-mask reproduction | Stop phase 1; do not land inverse-square law. |
-| Residual fit needs a third decode | W4 pass accounting/timing | Drop residual arm or revise design and runtime bar before Rust; never hide pass cost. |
-| Commissioned `nu_eff` invalidates uncertainty model | Null/positive controls miss their coverage | Stop W3; revise the statistical model in a new preregistration. |
-| D9 lattice exceeds memory or gives no speed refund | Peak-memory and worker sweep | Ship determinism only if within product memory; withdraw refund claim or add tiled/spatial design. |
-| PIPE seam or freeze files remain dirty | W2 preflight | Do not edit owned integration files. |
-| Confidence bundle requires a post-finish frame pass | Pass accounting | Redesign sufficient statistics; required bundle may not create a third decode. |
-| Held-out capture viewed early | Access/provenance log | Invalidate held-out set and name replacements before scoring. |
-| Foam is presented as untouched after W4 used it | W4/W5 manifests | Label it regression-only and use a sealed replacement for independent photometric acceptance. |
-| Any claim needs `>0.25 cyc/px` | Metric manifest | Mark unlicensed; wait for §33. |
+| No common `k` | W1 gate | Report `NO_COMMON_K`; stop phase-1 integration. |
+| W1 consumes a scorecard grid capture | Access/result ledger | Halt and retarget before outcomes; if outcomes were visible, invalidate that capture as holdout. |
+| `nu_eff` model misses real-band coverage | W1 null/positive controls | Stop W3 and revise under a new preregistration. |
+| Two-pass candidate exceeds `2.00×` | W5 complete warm-wall timing | Fail phase 1; do not subtract decode or claim a D9 refund. |
+| D9 exceeds 6 GiB | Process-tree monitor | Reduce scheduling concurrency without changing `cpu-v1-c4-ceil`; if still over, D9 fails. |
+| D9 gives no speed improvement | Worker sweep | Publish determinism only; SOTA speed remains unmeasured/failed. |
+| Pre-D9 aligned row is added after D9 | Commit/freeze audit | Reject the freeze and recreate an executable pre-change predicate before proceeding. |
+| PIPE or freeze files remain dirty | W2 preflight | Do not edit them. |
+| Confidence requires another decode | Decode census | Redesign sufficient statistics; required confidence may not create pass three. |
+| W5 capture influences a repair | Outcome/code chronology | Mark the family development and require fresh validation. |
+| Any metric needs `>0.25 cyc/px` | Metric manifest | Emit `UNLICENSED_GT_0.25`; wait for §33. |
 
-Nine negative gates are evidence, not implementation failures. W1 and W4 are allowed—and required—to halt the build.
+Negative W1 or W5 outcomes are successful measurements. No workstream is tasked with making phase 1 pass.
 
 ## Appendix A — A2 archival activation condition
 
 A2's “robust coarse base” is not part of executable phase 1. `M-PHASE0-VEIL2` found it not robust and explicitly forbids a Rust arm. `BaseBand::Mean` remains. This appendix activates only if a later report names M-PHASE0-VEIL2, supplies independent positive evidence and kill bars, and explicitly authorizes Rust. Merely obtaining a visually pleasing base or changing the A1 selector is not a superseding result.
+
+## Appendix B — B3 archival evidence and reopening condition
+
+B3 is not executable phase-1 scope.
+
+`M99-photometric` directly evaluates `ln(flux/flux_ref)=-2 ln(a/a_ref)` using the alignment scale the shipping merge holds. The fixed predictor is worse than the null by 3.96×, 1.277×, and 5.72× on three decks and improves the fourth only to 0.722×, missing its registered bar. Free exponents span -0.879 to -6.466. `PhotometricMap::from_flux`, rather than an alignment-law constructor, reflects that result.
+
+`BUILD-GHOST` later finds physically informative pairing between flux and independently refitted pairwise similarity scale (`p=0.0025`) and six large-ramp subjects with 2.07×–5.06× RMS reduction. That estimator is not the product `WarpMap`; the median slope is 0.365 rather than the fixed 1.0; and the report recommends deferring the port. Foam’s 0.3165-stop eight-frame excursion is real, but improvement of its merged output was explicitly not measured.
+
+Reopening B3 requires all of:
+
+1. one documented scale convention connecting the shipping `WarpMap` to independently measured pairwise magnification;
+2. a shuffled/interleaved-focus capture separating scale from elapsed time and illumination;
+3. a held-out predictor whose fixed slope includes 1.0 and whose correction beats the no-law residual under preregistered bars;
+4. measured final-image benefit, not flux-fit benefit alone;
+5. a gain available before pass one without an extra RAW decode, or a separately approved pass/runtime design.
+
+Existing `scale_noise_model` remains the required propagation if a future arm earns activation.
 
 ## W1 brief — hand this to an implementer verbatim
 
@@ -373,105 +431,115 @@ Implement W1 only. Do not modify Rust. Create:
 - `experiments/PHASE1-DESIGN/reference.py`
 - `experiments/PHASE1-DESIGN/measure.py`
 
-Treat `D:\personal\macro` and everything beneath it as strictly read-only. Put every cache, copied transform, crop, manifest, and result under `experiments\PHASE1-DESIGN\`. Never allow a decoder, aligner, or sidecar writer to choose an input directory as its output directory.
+Treat `D:\personal\macro` and all descendants as strictly read-only. Write caches, manifests, transforms, crops, and results only beneath `experiments\PHASE1-DESIGN\`.
 
-### Capture manifest
+Do not decode or score any calibration-grid capture in W1. The committed SOTA scorecard reserves that family for later reference and scored repeats.
 
-Calibration captures—these three and only these three may be decoded or scored in W1:
+### Development captures
 
-1. `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw4-cpl` — 55 RAW frames. Controlled medium-step grid bracket; supplies repeatable edges and the middle of the focus-sampling ladder.
-2. `D:\personal\macro\coffee-bubbles` — 19 RAW frames. Supplies the measured flat/detail selection-concentration inversion; do not call it a fixed-focus null.
-3. `D:\personal\macro\113MSDCF` — 63 RAW frames. Supplies natural fine detail/MTF structure and the shorter side of a replicate pair.
+These three and only these three may influence W1:
 
-Reserved after W1—record these paths, but do not decode, inspect pixels, choose crops from, or score them in W1:
+1. `D:\personal\macro\flat-on-ruler-cpl` — **79 ARWs**. A rigid planar null: printed card fixed to a steel ruler, with sharp markings, paper fibre, and flat regions. Use coherent detail over 0.10–0.25 cyc/px. Use an MTF statistic only if an input-only line-locus qualification is frozen first and passes.
+2. `D:\personal\macro\coffee-bubbles` — **19 ARWs**. The known flat/detail selection-concentration inversion and a scorecard development-only subject.
+3. `D:\personal\macro\113MSDCF` — **63 ARWs**. Natural fine detail with usable signal only through 0.25 cyc/px; a development/regression subject, not primary scorecard acuity evidence.
 
-- `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw1-cpl` — 91 frames; dense-sampling extreme.
-- `D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw10-cpl` — 23 frames; coarse-sampling extreme.
-- `D:\personal\macro\112MSDCF` — 79 frames; same-subject replicate with 16 more frames than 113MSDCF.
-- `D:\personal\macro\coffee-bean` — 105 frames; deep hull-clamp stress capture.
-- `D:\personal\macro\foam` — 100 frames; 0.32-stop/eight-frame photometric outlier and non-rigid stress capture. W4 is specified to consume it, so it is a W5 regression case rather than untouched evidence unless the workstream assignment changes.
+The following are sealed from W1:
 
-The shorthand `sw4` and `sw10` is ambiguous. Setup-2 alternatives exist at `D:\personal\macro\requests\30-calibration-grid\calibration-grid-2-sw4-cpl` (46 frames) and `D:\personal\macro\requests\30-calibration-grid\calibration-grid-2-sw10-cpl` (27 frames). They are excluded. Use setup 1 exactly.
+- all five directories under `D:\personal\macro\requests\30-calibration-grid\`;
+- `D:\personal\macro\coffee-bean`;
+- `D:\personal\macro\foam`;
+- `D:\personal\macro\119MSDCF` (sealed reserve; not a current scorecard systems arm);
+- `D:\personal\macro\bee-1-cpl`;
+- `D:\personal\macro\112MSDCF`.
 
-### Preregister before scoring
+`112MSDCF` is the same subject/sweep family as 113MSDCF and can later be regression-only, not independent validation.
 
-In `PREREGISTRATION.md`, before producing candidate metrics, record and hash:
+If a previous W1 attempt has already shown candidate results from grid-1 sw4, stop and report that access immediately; do not conceal it by restarting. If only inventory was read and no candidate outcome or outcome-dependent crop was seen, quarantine the aborted artifacts, record the aborted invocation, and restart under this brief.
 
-- the complete ordered RAW manifests;
-- fixed crop coordinates, flat/detail labels, exclusions, and alignment-transform provenance;
-- decoder name/version and linearization/black-level convention;
-- bands and frequency bins, never exceeding 0.25 cycles/output-pixel;
-- the block-bootstrap tile size, deterministic seed, replicate count, and confidence-interval convention;
-- the `nu_eff` commissioning method and frozen per-band values;
-- the ordered global grid `k = 0.00, 0.05, ..., 8.00`;
-- the exact legacy gate-4.5 equations and fallback behavior;
-- the exact candidate equations below;
-- the rule that no crop, grid range, metric, exclusion, or tie-break changes after outcomes are visible.
+### Preregister before real scoring
+
+Record and hash:
+
+- complete ordered RAW manifests;
+- fixed crops, flat/detail labels, exclusions, and alignment provenance;
+- decoder/version and black-level convention;
+- bands and bins, all `<=0.25 cyc/px`;
+- bootstrap site unit, tile size, seed, replicates, and interval convention;
+- commissioned per-band `nu_eff`;
+- `k=0.00,0.05,...,8.00`;
+- exact legacy gate-4.5 equations and fallback;
+- exact candidate equations;
+- the rule that outcomes cannot change captures, crops, metrics, exclusions, grid, or tie-breaks.
+
+Phase 1 applies no per-frame photometric gain. Candidate and legacy arms must consume byte-identical black-subtracted aligned samples.
 
 ### Commission the independent crop implementation
 
-`reference.py` must decode with an independent LibRaw binding such as rawpy. It may consume read-only alignment transforms, but it must not call or import `strehl-core`, reuse Rust merge output as an intermediate, or copy Rust numerical routines. Candidate and legacy arms must see byte-identical aligned linear samples so the merge policy is the only changed variable.
+Decode through an independent LibRaw binding such as rawpy. Do not import or call `strehl-core`, and do not use Rust merge output as an intermediate.
 
-Implement and commission these equations:
+Implement:
 
 ```text
 A(s;a,b) = (2/a) sqrt(max(a*max(s,0) + 3a^2/8 + b, 0))
 E_i      = smooth5(LaplacianBand(A_i)^2)
 F_i      = beta_i,b * v_A,i,b
 q_i      = max(E_i - F_i, 0)
-sigma2_i = (2F_i^2 + 4F_i q_i) / nu_eff_b
-winner    = finite argmax(E_i), stable lower-frame tie-break
-admit_i   = winner OR E_w - E_i <= k sqrt(sigma2_w + sigma2_i)
-w_i       = 1/F_i for admitted frames; fail if F_i is non-finite or non-positive
-n_eff     = (sum w_i)^2 / sum(w_i^2)
+sigma2_i = (2F_i^2 + 4F_i*q_i) / nu_eff_b
+winner   = finite argmax(E_i), lower-frame tie-break
+admit_i  = winner OR E_w-E_i <= k*sqrt(sigma2_w+sigma2_i)
+w_i      = 1/F_i when admitted
+n_eff    = (sum w_i)^2 / sum(w_i^2)
 ```
 
-If `q_w = 0`, admit every frame with unit weight so the result is an arithmetic mean. Accumulate decisions from shared green and apply one weight to all CFA planes; reconstruct in normalized linear DN; retain the normalized-input hull.
+If `q_w=0`, admit every valid frame with unit weight and emit the arithmetic mean. Use shared green for decisions and one weight for all CFA planes. Reconstruct from a separate linear-DN pyramid and retain the aligned-input hull.
 
-Commission before real scoring with all of the following, and make `--commission` fail on any miss:
+`--commission` must fail unless all of these pass:
 
-- hand-calculated tiny arrays for `F`, `q`, `sigma2`, admission, tie-breaking, unit-mean fallback, and Kish `n_eff`;
-- constant-field and Poisson–Gaussian nulls with empirical interval coverage matching the preregistered tolerance;
-- planted in-focus coefficients whose known admission boundary moves monotonically with `k`;
-- frame-order permutations that leave floating results within the preregistered independent-reference tolerance and winner ties deterministic;
-- consistent photometric scaling showing generalized-Anscombe error `<=2e-5`;
-- identity/positive controls proving the metric code can report both pass and fail;
-- measured correlated-band `nu_eff` with null coverage across the preregistered warp phases; do not silently substitute the analytic `13.37469` independence approximation.
+- hand-calculated arrays for `F`, `q`, `sigma2`, admission, tie-breaking, mean fallback, and Kish `n_eff`;
+- Poisson–Gaussian and constant-field null coverage;
+- planted focus coefficients whose boundary moves monotonically with `k`;
+- deterministic winner ties under frame-order scheduling changes;
+- generalized-Anscombe synthetic covariance error `<=2e-5`;
+- controls capable of producing both pass and fail;
+- real correlated-band `nu_eff` coverage across preregistered warp phases, without relabelling `NU_SMOOTH=13.37469` as measured.
 
-### Width match and choose `k`
+The synthetic scaling control commissions B6 arithmetic only. It does not apply or license B3.
 
-For each value in `0.00, 0.05, ..., 8.00`, run the unchanged value on all three calibration captures. Compare candidate Kish `n_eff` with the independently implemented legacy pyramid at gate 4.5. A value is width-matched only if, for every preregistered capture, scored band, and ROI,
+### Width-match and select `k`
+
+Run every grid value unchanged on all three development captures. A value survives width matching only if every applicable capture, band, and frozen ROI satisfies:
 
 ```text
-abs(mean_n_eff_candidate / mean_n_eff_legacy_gate4.5 - 1) <= 0.05
+abs(mean_n_eff_candidate/mean_n_eff_legacy_gate4.5 - 1) <= 0.05
 ```
 
-Discard every non-matching value. For each survivor, compute:
+Each survivor must then satisfy:
 
-- detail/MTF ratio `candidate / legacy-gate-4.5`, with lower 95% bound required to be `>= 0.95`;
-- flat/defocused power ratio over `0.10–0.25 cyc/px`, `candidate / legacy-gate-4.5`, with upper 95% bound required to be `<= 0.90`.
+```text
+detail or qualified-MTF lower95(candidate/legacy_gate4.5) >= 0.95
+flat-power upper95(candidate/legacy_gate4.5)              <= 0.90
+```
 
-A value passes only if every applicable preregistered capture passes both its width and Pareto requirements. Select the smallest passing value. Do not interpolate or extend the grid after looking.
+Flat power is integrated over 0.10–0.25 cyc/px. Select the smallest passing `k`.
 
-**Exactly one fixed global `k` is permitted across calibration-grid-1-sw4-cpl, coffee-bubbles, and 113MSDCF. A per-capture `k` is a failed workstream, not a workaround. Reporting `NO_COMMON_K` / “no common k exists” is a successful outcome of W1 and correctly halts phase 1. Do not tune around that result.**
+Exactly one value must serve flat-on-ruler, coffee-bubbles, and 113MSDCF. Per-capture values, interpolation, a wider post-outcome grid, or replacement crops are failures, not repairs.
 
-### Exact gate command and exit criteria
+### Exact command and STOP result
 
-Run exactly:
+Run:
 
 ```powershell
 python experiments/PHASE1-DESIGN/reference.py --commission; python experiments/PHASE1-DESIGN/measure.py --gate
 ```
 
-Both programs must independently exit 0. `measure.py --gate` must refuse to run or exit nonzero if commissioning artifacts are absent, stale, or hash-mismatched.
+Both commands exit 0 only when one fixed global `k` passes all width and Pareto bars. `measure.py` must refuse stale or hash-mismatched commissioning artifacts.
 
-Exit 0 from `measure.py --gate` means all of the following are true against legacy gate-4.5:
+If no common value exists:
 
-- one and only one fixed global `k` was selected from the preregistered grid;
-- Kish `n_eff` width mismatch is at most 5% for every required capture/band/ROI;
-- detail/MTF lower 95% bound is at least 0.95;
-- flat-power upper 95% bound is at most 0.90;
-- no scored frequency exceeds 0.25 cyc/px;
-- all manifests, crops, parameters, intervals, and failures are written to the results directory.
+1. write every arm and failed criterion;
+2. print `NO_COMMON_K`;
+3. return a distinct nonzero gate code;
+4. report W1 as a successful negative;
+5. stop W3 and phase-1 integration.
 
-If no common value meets those conditions, write the full negative report, print `NO_COMMON_K`, return a distinct nonzero gate code for automation, and stop phase 1. The scientific outcome is successful even though the feature build does not proceed.
+Do not tune around `NO_COMMON_K`.
