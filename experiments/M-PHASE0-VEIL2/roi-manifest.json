@@ -1,0 +1,62 @@
+{
+  "frozen_before_measurement_utc": "2026-09-03T03:44:32Z",
+  "selection_rule": "Inspect native master tiles in raster order. Keep the first three spatially separate 96x96 sites with a dark crevice, an adjacent bright seed lip, and directly visible best-focus runs for both layers. Frame runs were chosen from registered raw-green contact sheets before any base-band statistic was evaluated.",
+  "coordinate_system": "Binned 3516x2344 linear-sRGB product output; ROIs are half-open [y0,y1,x0,x1].",
+  "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+  "warpmap": "out/warpmaps/chia-full.txt",
+  "coverage": 0.9597,
+  "master": "out/renders/chia-mean-linear.tiff",
+  "sites": [
+    {
+      "name": "chia-1",
+      "roi": [300, 396, 304, 400],
+      "foreground_frames": [40, 41, 42],
+      "background_frames": [55, 56, 57],
+      "visible_identity": "The bright upper-left seed lip is crisp in frames 40-42; the darker lower-right seed surface behind the diagonal crevice is crisp in frames 55-57.",
+      "selection_sheets_sha256": {
+        "frames-02.png": "16A3979A97767280FA0F625FDAB6E49CD17B01CF621AB3656B7C055133D3D800",
+        "frames-03.png": "40B01041760EBBF19B2E8AF9276AC553BE97E38CEFD089B0C661C4DD420B172F"
+      }
+    },
+    {
+      "name": "chia-2",
+      "roi": [250, 346, 720, 816],
+      "foreground_frames": [44, 45, 46],
+      "background_frames": [34, 35, 36],
+      "visible_identity": "The bright right-hand seed lip is crisp in frames 44-46; the darker recessed left-hand surface is crisp in frames 34-36.",
+      "selection_sheets_sha256": {
+        "frames-02.png": "68C40AD3CDA2E6F029CF22BF9C220FFA8FB74B46968DE65BD9ABE93494ACE15F",
+        "frames-03.png": "B9F8865A67DFBF2BB975FCCCC501E788D9BB95E987AC23807342EAC16427F935"
+      }
+    },
+    {
+      "name": "chia-3",
+      "roi": [304, 400, 800, 896],
+      "foreground_frames": [40, 41, 42],
+      "background_frames": [70, 71, 72],
+      "visible_identity": "The bright left-hand seed lip is crisp in frames 40-42; the darker lower-right seed surface behind the crevice is crisp in frames 70-72.",
+      "selection_sheets_sha256": {
+        "frames-02.png": "02BCCCFA0E9676EEEA2B4232AB4234C0FD76AA1D37EEB21E74B20D4B08239BC9",
+        "frames-03.png": "D5623026A5849AD3A0A3D40262B42FE0295945B13207A704DC304630EA22D9C1",
+        "frames-04.png": "0F52C9CE0A8DEC3050C0AF8BF73ED27A4F00C0CAE44A51DAE3F1405CA7279CEF"
+      }
+    }
+  ],
+  "raw_frames": {
+    "34": {"name": "DSC00035.ARW", "sha256": "B8BC201E4D03EBBD3F8A91C1B9331845E8D68C9B9D1E05D663221A53A8733B58"},
+    "35": {"name": "DSC00036.ARW", "sha256": "FD9E8AEC67B095494F916015F320D6EF18EC5265C089CB821A363BE589F2959E"},
+    "36": {"name": "DSC00037.ARW", "sha256": "43F336C8EA372E0DABCC6B623C1E765FBA999AA5AC40CB85BF665A6E13410CFA"},
+    "40": {"name": "DSC00041.ARW", "sha256": "47B7227793FD8AE0269289B47E91929800B621BEFF3923F5C72BB42ED2939DE7"},
+    "41": {"name": "DSC00042.ARW", "sha256": "BA81B707220FF6ACEA8A93DA09D16F6B4DEF6A04DDC9401110B5A2063DAD17AB"},
+    "42": {"name": "DSC00043.ARW", "sha256": "6DE99ED48BC168742A754C90586B0B302FB62F18450F8615EE07D5DED6E1F8C9"},
+    "44": {"name": "DSC00045.ARW", "sha256": "DEC255C3D0A6BBB8C32665E527A10D63AF569DED2186F8696777866BD7C65366"},
+    "45": {"name": "DSC00046.ARW", "sha256": "F9D83B15CDB37AA8B46BDD5F62141F8F01E9503E4B3806837798F86B35CF78D6"},
+    "46": {"name": "DSC00047.ARW", "sha256": "961498B49621C40F27625D3BF2B96A4DBD0E19862DEBFE46933BD0805A0971B6"},
+    "55": {"name": "DSC00056.ARW", "sha256": "35B714ACD66FF96D72595CBA191A54C37173C2A859BBF5F19BB3B3A9CEF6FC0A"},
+    "56": {"name": "DSC00057.ARW", "sha256": "8BF593C5CA114B6C8BCB418ECE9F1B7D3DA1F046720925B230E142F78E2CF65E"},
+    "57": {"name": "DSC00058.ARW", "sha256": "6384FE060F2779EF9FF91A46FF7F611E8FF0D9596D591F2673333646072AB41C"},
+    "70": {"name": "DSC00071.ARW", "sha256": "C90A4FA774092DDB816F1784BFA5E8944AB34CFB0A64AE84DAB62EE2834BC58F"},
+    "71": {"name": "DSC00072.ARW", "sha256": "3AB25FABFD96D9F6B43E424098BCD74FDB34426E26EF830FD34AE45ED8C771DD"},
+    "72": {"name": "DSC00073.ARW", "sha256": "60CF15F16199F0E490D38BEA9C851BA28301D295E4268D0999E4B4D62FFAFF09"}
+  }
+}
