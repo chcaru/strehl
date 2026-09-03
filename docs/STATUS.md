@@ -905,6 +905,88 @@ was caught widening the edge `3.4155x`.
 The lane also confirmed it will **reuse the V-HEADTOHEAD3 instrument** rather than build a
 competing one, and correctly declined to retrofit V-HEADTOHEAD3's numbers into its own frozen
 run.
+## 2.6 The detail axis has no admissible instrument at all
+
+Commits `a60a7b6b` (preregistration) and `422e009d` (verdict). Note
+`docs/research/M-PHASE0-SLANTEDGE.md`; audit `experiments/M-PHASE0-SLANTEDGE/`.
+
+The proposal at `docs/proposals/2026-08-sota-path.md:192-197` prescribes **"D1: FRC +
+slant-edge"** — two instruments for the detail axis. The scoreboard for that prescription is
+now complete, and it is empty:
+
+| instrument | state |
+|---|---|
+| split FRC | dead — D8, KILL / STOP_REMOVE_RUST |
+| repeat-pair FRC | blocked on a physical re-shoot with IBIS off — D8b, §2.4 |
+| slanted-edge SFR/MTF | **refused** — every implementation rewards sharpening |
+
+**No axis of the SOTA scorecard can currently be measured for detail.** This is a structural
+finding about the program, not a result from one lane.
+
+### 2.6.1 Three implementations, one failure, and it is the one that matters
+
+The commissioned search covered `experiments/`, `docs/research/`, `crates/` and `scripts/`.
+Three real implementations exist — `M88-optical-ceiling/src/m88lib.py` (canonical ISO-12233-style
+RAW SFR), `M104c-mtf/mtf.py` (compact reimplementation), and `BUILD-RESAMP/slanted_edge.py`
+(rendered-raster MTF50/SFR). M88b and M128 are adapters around M88; the Rust hits are analytic
+kernel models, not image instruments; `scripts/` has none.
+
+The decisive arm applied unclipped float unsharp masking, radius 1.0, amount 0.5, **after
+rendering**. It adds no independent scene information. Every implementation scored it as improved
+resolution and **none of the three flags or refuses it**:
+
+| candidate | USM ratio | verdict |
+|---|---:|---|
+| M88 SFR→MTF50 | `1.098673` | +9.87%, no detector |
+| M104c | `1.098679` | +9.87%, no detector |
+| BUILD-RESAMP | `1.092354` | +9.24%, no detector |
+
+### 2.6.2 Why this cannot be dismissed as a dead metric
+
+This is the part that makes the verdict binding, and it is the discipline six earlier lanes
+lacked. **The audit included a genuine-improvement arm, and all three implementations passed it.**
+
+| arm | truth | recovered across the three |
+|---|---:|---|
+| identity null | exact | bit-exact in all three |
+| added sigma-0.75 blur | `0.894427` | `0.894870` – `0.900002` |
+| **genuine sigma-1.20 improvement** | `1.25` | `1.238651` – `1.248849` |
+
+Both quantitative arms clear the frozen 5% bar in every implementation. So these are not
+constant-zero, wrong-signed or blind statistics: **they track real blur and real resolution gains
+correctly, and still cannot distinguish sharpening from resolution.** A degradation-only audit
+would have passed all three. This is the concrete case for the standing rule that an audit needs
+an improvement arm as well as a defect arm.
+
+### 2.6.3 The other defeats, and one contrast worth keeping
+
+Sharpening is the disqualifying failure, but it is not the only one. Tone: affine moved MTF50 by
+numerical zero (expected from DC normalisation, and **not** monotone-tone invariance), while
+gamma 3 raised it **17.41–17.67%** and a strictly increasing logistic raised it
+**49.30–50.71%**, undetected on every path. Noise: M88 scored 13/24 noisier arms *above* base, up
+to **+55.91%**; BUILD-RESAMP 14/24, up to **+15.78%**; M104c none above base but collapsing to
+`0.202`–`0.282x`, which is failure to separate rather than robustness. The 0.25 licence bound is
+vulnerable in all three — each returns a number in `0.309`–`0.312` where it should refuse.
+Demosaic exposure is protected only in M88, by its canonical linear-RAW G1/G2 scope.
+
+**The contrast that matters:** V-HEADTOHEAD3's ordinal band statistic *is* invariant to monotone
+point transforms — affine, gamma-3 and logistic moved it by exactly 0 while raw band power moved
+30.4%. The slant-edge paths are not. The competitive position in §2.2 therefore rests on a
+strictly better-behaved statistic than anything the detail axis was supposed to use.
+
+### 2.6.4 The audit rig is now the program's best asset here
+
+`measure.py` generates plants without calling any candidate's synthetic helper. `commission.py`
+runs measurement as a child process, imports neither generator nor candidate, and compares only
+serialized values against literal analytic predicates. It passed an all-GREEN literal fixture
+first, then caught **8/8** single-property sabotages: identity, blur, true improvement,
+sharpening, tone, noise, angle and licensing. It is reusable, and it is being reused to test
+whether any surviving statistic can hold the detail axis.
+
+**Not verified:** no physical chart or capture was opened, so transfer to a correctly tilted real
+capture is unknown. The corpus lint is blocked by six pre-existing violations in
+`M-PHASE0-SPLIT*.md`, none introduced here.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
