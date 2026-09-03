@@ -114,8 +114,18 @@ def verify_freeze(commit: str) -> dict[str, str]:
     for relative in FROZEN_PATHS:
         disk_path = REPO / relative
         disk = disk_path.read_bytes()
-        frozen = git_output("show", f"{resolved}:{relative}")
-        if disk != frozen:
+        frozen_blob = git_output("rev-parse", f"{resolved}:{relative}").decode().strip()
+        disk_blob = subprocess.check_output(
+            [
+                "git",
+                "hash-object",
+                f"--path={relative}",
+                str(disk_path),
+            ],
+            cwd=REPO,
+            stderr=subprocess.STDOUT,
+        ).decode().strip()
+        if disk_blob != frozen_blob:
             raise RuntimeError(f"frozen path differs from {resolved}: {relative}")
         hashes[relative] = hashlib.sha256(disk).hexdigest()
     return {"commit": resolved, **hashes}

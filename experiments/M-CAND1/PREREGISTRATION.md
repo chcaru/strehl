@@ -107,3 +107,13 @@ bits with a 72-to-96-tile change of `0.002289` bits. Its arm-blind 90%-power
 minimum detectable ratio change is `0.290713`, inside the frozen `0.30` bar.
 This history is retained to separate legitimate pre-seal dynamic-range work from
 forbidden control tuning.
+
+## Pre-arm execution repair
+
+The first `usm` invocation stopped inside `verify_freeze`, before RAW loading,
+sample generation, fitting, or any arm output. The verifier compared working-tree
+bytes with Git blob bytes, so Windows CRLF checkout normalization falsely reported
+the preregistration as changed. The only repair replaces that byte comparison with
+Git's path-aware clean-filter blob hash. The estimator, data, seeds, thresholds,
+transforms, and preflight are unchanged. A new freeze commit containing this note
+and the verifier repair is the scientific freeze.
