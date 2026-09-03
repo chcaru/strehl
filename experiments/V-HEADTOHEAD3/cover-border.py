@@ -814,13 +814,13 @@ def measure() -> dict:
     rois_clear = (
         specific
         and crop_safe is not None
-        and int(crop_safe) * OUTPUT_PIXELS_PER_PLANE_PIXEL <= cc.BORDER
+        and int(crop_safe) <= cc.BORDER
     )
     if not specific:
         disposition = "PROFILE_NOT_SPECIFIC_ON_113"
     elif crop_safe is None:
         disposition = "CROP_SAFE_INSET_UNBOUNDED"
-    elif crop_safe * OUTPUT_PIXELS_PER_PLANE_PIXEL <= cc.BORDER:
+    elif crop_safe <= cc.BORDER:
         disposition = "EXISTING_256PX_ROIS_CLEAR_PROFILE"
     else:
         disposition = "EXISTING_256PX_ROIS_NOT_CLEAR_PROFILE"
@@ -842,16 +842,12 @@ def measure() -> dict:
         "profile": {
             "threshold": THRESHOLD,
             "deep_start_px": DEEP_START,
-            "distance_unit": "camera_linear_plane_pixels",
-            "output_pixels_per_plane_pixel": OUTPUT_PIXELS_PER_PLANE_PIXEL,
+            "distance_unit": "srgb_output_pixels",
             "scale": profiles["scale"],
             "crop": profiles["crop"],
             "specific": specific,
         },
-        "existing_roi_minimum_clearance_output_px": cc.BORDER,
-        "existing_roi_minimum_clearance_plane_px": (
-            cc.BORDER // OUTPUT_PIXELS_PER_PLANE_PIXEL
-        ),
+        "existing_roi_minimum_clearance_px": cc.BORDER,
         "existing_rois_clear_profile": rois_clear,
         "disposition": disposition,
         "resolution_verdict": "NOT_MEASURED_Q25_REFUSED",
@@ -882,13 +878,13 @@ def measure_linear() -> dict:
     rois_clear = (
         specific
         and crop_safe is not None
-        and int(crop_safe) <= cc.BORDER
+        and int(crop_safe) * OUTPUT_PIXELS_PER_PLANE_PIXEL <= cc.BORDER
     )
     if not specific:
         disposition = "PROFILE_NOT_SPECIFIC_ON_113"
     elif crop_safe is None:
         disposition = "CROP_SAFE_INSET_UNBOUNDED"
-    elif crop_safe <= cc.BORDER:
+    elif crop_safe * OUTPUT_PIXELS_PER_PLANE_PIXEL <= cc.BORDER:
         disposition = "EXISTING_256PX_ROIS_CLEAR_PROFILE"
     else:
         disposition = "EXISTING_256PX_ROIS_NOT_CLEAR_PROFILE"
@@ -917,11 +913,16 @@ def measure_linear() -> dict:
         "profile": {
             "threshold": THRESHOLD,
             "deep_start_px": DEEP_START,
+            "distance_unit": "camera_linear_plane_pixels",
+            "output_pixels_per_plane_pixel": OUTPUT_PIXELS_PER_PLANE_PIXEL,
             "scale": profiles["scale"],
             "crop": profiles["crop"],
             "specific": specific,
         },
-        "existing_roi_minimum_clearance_px": cc.BORDER,
+        "existing_roi_minimum_clearance_output_px": cc.BORDER,
+        "existing_roi_minimum_clearance_plane_px": (
+            cc.BORDER // OUTPUT_PIXELS_PER_PLANE_PIXEL
+        ),
         "existing_rois_clear_profile": rois_clear,
         "disposition": disposition,
         "resolution_verdict": "NOT_MEASURED_Q25_REFUSED",
