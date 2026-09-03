@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import collections
+import importlib.util
 import json
 import math
 import os
 import subprocess
 from pathlib import Path
+from types import ModuleType
 from typing import Sequence
 
 import numpy as np
@@ -57,6 +60,11 @@ LINEAR_SCALE2 = OUT / "113-cover-scale-linear-b2.tiff"
 LINEAR_CROP7 = OUT / "113-cover-crop-linear-b7.tiff"
 LINEAR_CROP2 = OUT / "113-cover-crop-linear-b2.tiff"
 LINEAR_RENDER_PROVENANCE = OUT / "COVER-BORDER-LINEAR-RENDER-PROVENANCE.json"
+LINEAR_RESULT = OUT / "COVER-BORDER-LINEAR-RESULT.json"
+FROZEN_SITES = HERE / "cover_frozen_113.py"
+OUTPUT_PIXELS_PER_PLANE_PIXEL = 2
+SENSITIVITY_SCALE_CLEARANCE = 1280
+SENSITIVITY_CROP_CLEARANCE = 640
 CACHE = OUT / "cache"
 WARP_MAP = CACHE / "113MSDCF-7f5a36c866189cc7.warpmap.txt"
 EXPECTED = {
@@ -806,13 +814,13 @@ def measure() -> dict:
     rois_clear = (
         specific
         and crop_safe is not None
-        and int(crop_safe) <= cc.BORDER
+        and int(crop_safe) * OUTPUT_PIXELS_PER_PLANE_PIXEL <= cc.BORDER
     )
     if not specific:
         disposition = "PROFILE_NOT_SPECIFIC_ON_113"
     elif crop_safe is None:
         disposition = "CROP_SAFE_INSET_UNBOUNDED"
-    elif crop_safe <= cc.BORDER:
+    elif crop_safe * OUTPUT_PIXELS_PER_PLANE_PIXEL <= cc.BORDER:
         disposition = "EXISTING_256PX_ROIS_CLEAR_PROFILE"
     else:
         disposition = "EXISTING_256PX_ROIS_NOT_CLEAR_PROFILE"
@@ -834,11 +842,16 @@ def measure() -> dict:
         "profile": {
             "threshold": THRESHOLD,
             "deep_start_px": DEEP_START,
+            "distance_unit": "camera_linear_plane_pixels",
+            "output_pixels_per_plane_pixel": OUTPUT_PIXELS_PER_PLANE_PIXEL,
             "scale": profiles["scale"],
             "crop": profiles["crop"],
             "specific": specific,
         },
-        "existing_roi_minimum_clearance_px": cc.BORDER,
+        "existing_roi_minimum_clearance_output_px": cc.BORDER,
+        "existing_roi_minimum_clearance_plane_px": (
+            cc.BORDER // OUTPUT_PIXELS_PER_PLANE_PIXEL
+        ),
         "existing_rois_clear_profile": rois_clear,
         "disposition": disposition,
         "resolution_verdict": "NOT_MEASURED_Q25_REFUSED",
@@ -915,6 +928,284 @@ def measure_linear() -> dict:
     }
 
 
+def _load_module(path: Path) -> ModuleType:
+    spec = importlib.util.spec_from_file_location(
+        "cover_border_frozen_sites",
+        path,
+    )
+    if spec is None or spec.loader is None:
+        raise ValueError(f"cannot import frozen module {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _sensitivity_guards(
+    rows: list[dict],
+    shape: tuple[int, int],
+) -> tuple[list[float], bool]:
+    quadrants = []
+    for qy in (0, 1):
+        for qx in (0, 1):
+            chosen = [
+                row
+                for row in rows
+                if (row["centre"][0] >= shape[0] / 2) == bool(qy)
+                and (row["centre"][1] >= shape[1] / 2) == bool(qx)
+            ]
+            if chosen:
+                quadrants.append(
+                    math.exp(
+                        sum(
+                            math.log(row["crop_q"][2] / row["scale_q"][2])
+                            for row in chosen
+                        )
+                        / len(chosen)
+                    )
+                )
+    loo_reversal = False
+    for omit in range(len(rows)):
+        remaining = [
+            math.log(row["crop_q"][2] / row["scale_q"][2])
+            for index, row in enumerate(rows)
+            if index != omit
+        ]
+        if remaining and math.exp(sum(remaining) / len(remaining)) <= 1.0:
+            loo_reversal = True
+            break
+    return quadrants, loo_reversal
+
+
+def _interval(payload: dict) -> list[float]:
+    return [
+        float(payload["estimate"]),
+        float(payload["ci_low"]),
+        float(payload["ci_high"]),
+    ]
+
+
+def sensitivity_unit_commission() -> dict:
+    dimensions = {
+        "scale": {
+            "linear": list(tifffile.memmap(LINEAR_SCALE7).shape[:2]),
+            "output": list(tifffile.memmap(SCALE7).shape[:2]),
+        },
+        "crop": {
+            "linear": list(tifffile.memmap(LINEAR_CROP7).shape[:2]),
+            "output": list(tifffile.memmap(CROP7).shape[:2]),
+        },
+    }
+    controls = {
+        "scale_exact_conversion": dimensions["scale"]
+        == {"linear": [2344, 3516], "output": [4688, 7032]},
+        "crop_exact_conversion": dimensions["crop"]
+        == {"linear": [2298, 3448], "output": [4596, 6896]},
+        "scale_threshold": 2 * 640 == SENSITIVITY_SCALE_CLEARANCE,
+        "crop_threshold": 2 * 320 == SENSITIVITY_CROP_CLEARANCE,
+    }
+    mutants = {
+        "conversion_omitted": 640 != SENSITIVITY_SCALE_CLEARANCE,
+        "conversion_inverted": 640 // 2 != SENSITIVITY_SCALE_CLEARANCE,
+        "scale_threshold_minus_one": 2 * 640 - 1
+        != SENSITIVITY_SCALE_CLEARANCE,
+        "crop_threshold_minus_one": 2 * 320 - 1
+        != SENSITIVITY_CROP_CLEARANCE,
+    }
+    green = all(controls.values()) and all(mutants.values())
+    return {
+        "schema": "V-HEADTOHEAD3-COVER-BORDER-UNIT-COMMISSION-1",
+        "status": "GREEN" if green else "RED",
+        "green": green,
+        "dimensions": dimensions,
+        "controls": controls,
+        "caught_red_mutants": mutants,
+    }
+
+
+def sensitivity() -> dict:
+    commissioned = commission()
+    if not commissioned["green"]:
+        raise RuntimeError("border instrument commission failed")
+    linear = json.loads(LINEAR_RESULT.read_text(encoding="utf-8"))
+    if (
+        linear.get("schema") != LINEAR_SCHEMA
+        or linear.get("profile", {}).get("scale", {}).get("safe_inset_px") != 640
+        or linear.get("profile", {}).get("crop", {}).get("safe_inset_px") != 320
+        or linear.get("profile", {}).get("specific") is not False
+    ):
+        raise RuntimeError("linear profile freeze changed")
+    unit = sensitivity_unit_commission()
+    if not unit["green"]:
+        raise RuntimeError("sensitivity unit commission failed")
+    frozen = _load_module(FROZEN_SITES)
+    sites = list(frozen.SITES)
+    digest = cc.site_digest(sites)
+    if digest != str(frozen.SITE_DIGEST).upper():
+        raise RuntimeError("frozen site digest mismatch")
+    provenance = json.loads(BASE_PROVENANCE.read_text(encoding="utf-8"))
+    cc.validate_provenance(
+        provenance,
+        CROP7,
+        SCALE7,
+        cc.PMAX["113"],
+        str(frozen.PMAX_SHA256).upper(),
+        str(frozen.SCALE_SHA256).upper(),
+        str(frozen.SUBJECT),
+    )
+    scale_geometry = cc.fit_geometry(SCALE7, cc.PMAX["113"])
+    crop_geometry = cc.fit_geometry(CROP7, cc.PMAX["113"])
+    for name, geometry in (
+        ("scale", scale_geometry),
+        ("crop", crop_geometry),
+    ):
+        if not geometry["coarse_interior"] or not geometry["fine_interior"]:
+            raise RuntimeError(f"{name} scale optimum is not interior")
+    if (
+        abs(
+            scale_geometry["scale"] / float(frozen.AUTHOR_GEOMETRY["scale"])
+            - 1.0
+        )
+        > 0.005
+    ):
+        raise RuntimeError("scale geometry no longer agrees with frozen fit")
+    scale = cc.green(SCALE7)
+    crop = cc.green(CROP7)
+    pmax = cc.green(cc.PMAX["113"])
+    losses = collections.Counter()
+    retained = []
+    clearances = {"scale": [], "crop": []}
+    for site in sites:
+        scale_row = cc.map_site(
+            scale,
+            pmax,
+            site["centre"],
+            scale_geometry,
+        )
+        crop_row = cc.map_site(
+            crop,
+            pmax,
+            site["centre"],
+            crop_geometry,
+        )
+        if scale_row["reason"] is not None:
+            losses[f"scale-{scale_row['reason']}"] += 1
+            continue
+        if crop_row["reason"] is not None:
+            losses[f"crop-{crop_row['reason']}"] += 1
+            continue
+        if scale_row["pmax_q"] != crop_row["pmax_q"]:
+            raise RuntimeError("paired arms did not use identical PMax pixels")
+        scale_clearance = int(scale_row["border_clearance"])
+        crop_clearance = int(crop_row["border_clearance"])
+        if scale_clearance < SENSITIVITY_SCALE_CLEARANCE:
+            losses["scale-profile-clearance"] += 1
+            continue
+        if crop_clearance < SENSITIVITY_CROP_CLEARANCE:
+            losses["crop-profile-clearance"] += 1
+            continue
+        retained.append(
+            {
+                "centre": site["centre"],
+                "label": site["label"],
+                "scale_q": scale_row["arm_q"],
+                "crop_q": crop_row["arm_q"],
+                "pmax_q": scale_row["pmax_q"],
+            }
+        )
+        clearances["scale"].append(scale_clearance)
+        clearances["crop"].append(crop_clearance)
+    counts = collections.Counter(row["label"] for row in retained)
+    enough = counts["detail"] >= 12 and counts["flat"] >= 6
+    result = {
+        "schema": "V-HEADTOHEAD3-COVER-BORDER-SENSITIVITY-1",
+        "status": "GREEN",
+        "label": "CENTRAL_SITE_ORDINAL_BAND_POWER_NOT_RESOLUTION",
+        "bias": "TOWARD_RETAINING_COVER_NOT_CAUSE",
+        "commission": {
+            "border_controls_green": commissioned["control_count"],
+            "border_plants_red": commissioned["mutant_count"],
+            "unit_controls_green": len(unit["controls"]),
+            "unit_plants_red": len(unit["caught_red_mutants"]),
+        },
+        "profile": {
+            "specific": False,
+            "black_fill_reach": "UNRESOLVED",
+            "nominal_scale_plane_px": 640,
+            "nominal_crop_plane_px": 320,
+            "output_pixels_per_plane_pixel": OUTPUT_PIXELS_PER_PLANE_PIXEL,
+            "required_scale_output_clearance_px": (
+                SENSITIVITY_SCALE_CLEARANCE
+            ),
+            "required_crop_output_clearance_px": SENSITIVITY_CROP_CLEARANCE,
+        },
+        "site_digest": digest,
+        "frozen_counts": dict(collections.Counter(
+            site["label"] for site in sites
+        )),
+        "retained_counts": dict(counts),
+        "loss_reasons": dict(losses),
+        "minimum_retained_clearance_px": {
+            name: min(values) if values else None
+            for name, values in clearances.items()
+        },
+        "geometry": {
+            "scale": scale_geometry,
+            "crop": crop_geometry,
+            "s_determination": "IMAGE_FITTED_INDEPENDENTLY_PER_RENDER",
+        },
+        "counts_pass": enough,
+        "resolution_verdict": "NOT_MEASURED_Q25_REFUSED",
+    }
+    if not enough:
+        return {
+            **result,
+            "disposition": "BORDER_UNRESOLVED_INSUFFICIENT_CENTRAL_SITES",
+            "primary_0.10_0.20": None,
+        }
+    detail = [row for row in retained if row["label"] == "detail"]
+    flat = [row for row in retained if row["label"] == "flat"]
+    detail_primary = cc.bootstrap(detail, cc.SEED)[2]
+    flat_primary = cc.bootstrap(flat, cc.SEED + 1)[2]
+    if isinstance(detail_primary, str) or isinstance(flat_primary, str):
+        raise RuntimeError("primary sensitivity band became unlicensed")
+    quadrants, loo_reversal = _sensitivity_guards(detail, pmax.shape)
+    causal = cc.cover_verdict(
+        detail_primary["scale_over_pmax"]["class"],
+        detail_primary["crop_over_pmax"]["class"],
+        detail_primary["crop_over_scale"]["ci_low"],
+        detail_primary["crop_over_scale"]["ci_high"],
+        quadrants,
+        loo_reversal,
+    )
+    return {
+        **result,
+        "primary_0.10_0.20": {
+            "detail": {
+                "scale_over_pmax": _interval(
+                    detail_primary["scale_over_pmax"]
+                ),
+                "crop_over_pmax": _interval(
+                    detail_primary["crop_over_pmax"]
+                ),
+                "crop_over_scale": _interval(
+                    detail_primary["crop_over_scale"]
+                ),
+            },
+            "flat_crop_over_scale": _interval(
+                flat_primary["crop_over_scale"]
+            ),
+            "quadrant_effects": quadrants,
+            "leave_one_out_reversal": loo_reversal,
+            "registered_causal_label": causal,
+        },
+        "disposition": (
+            "CENTRAL_SITE_" + causal
+            if causal != cc.UNLICENSED
+            else cc.UNLICENSED
+        ),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -925,14 +1216,20 @@ def main() -> int:
             "measure",
             "render-linear",
             "measure-linear",
+            "sensitivity",
+            "commission-sensitivity",
         ),
     )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    if args.command == "commission":
+    if args.command in ("commission", "commission-sensitivity"):
         if args.output is not None:
             parser.error("commission accepts no output path")
-        result = commission()
+        result = (
+            commission()
+            if args.command == "commission"
+            else sensitivity_unit_commission()
+        )
         code = 0 if result["green"] else 2
     elif args.command in ("render", "render-linear"):
         if args.output is not None:
@@ -940,7 +1237,12 @@ def main() -> int:
         result = render() if args.command == "render" else render_linear()
         code = 0
     else:
-        result = measure() if args.command == "measure" else measure_linear()
+        if args.command == "measure":
+            result = measure()
+        elif args.command == "measure-linear":
+            result = measure_linear()
+        else:
+            result = sensitivity()
         code = 0
     if args.output is not None:
         args.output.write_text(
