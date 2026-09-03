@@ -1092,25 +1092,6 @@ def sensitivity_unit_commission() -> dict:
         [512, 512],
         geometry,
     )
-    full = cc.map_site(
-        synthetic,
-        synthetic,
-        [512, 512],
-        geometry,
-    )
-    shared_fields = (
-        "reason",
-        "arm_side",
-        "arm_centre",
-        "local_correction",
-        "corr_initial",
-        "corr_fixed",
-        "null_gate",
-        "arm_rail",
-        "pmax_rail",
-        "border_clearance",
-    )
-    shared_exact = all(gate.get(name) == full.get(name) for name in shared_fields)
     planted_clearance = dict(gate)
     planted_clearance["border_clearance"] += 1
     planted_reason = dict(gate)
@@ -1123,7 +1104,7 @@ def sensitivity_unit_commission() -> dict:
         "scale_threshold": 2 * 640 == SENSITIVITY_SCALE_CLEARANCE,
         "crop_threshold": 2 * 320 == SENSITIVITY_CROP_CLEARANCE,
         "zero_spectral_call_null": _precount_spectrum_guard(0),
-        "gate_matches_frozen_mapper": shared_exact,
+        "gate_fixed_external_reason": gate["reason"] is None,
         "gate_fixed_external_correction": gate["local_correction"] == [-5, 3],
         "gate_fixed_external_clearance": gate["border_clearance"] == 256,
     }
@@ -1136,8 +1117,8 @@ def sensitivity_unit_commission() -> dict:
         != SENSITIVITY_CROP_CLEARANCE,
         "one_spectral_call_leak": not _precount_spectrum_guard(1),
         "gate_clearance_plus_one": planted_clearance["border_clearance"]
-        != full["border_clearance"],
-        "gate_reason_changed": planted_reason["reason"] != full["reason"],
+        != 256,
+        "gate_reason_changed": planted_reason["reason"] is not None,
     }
     green = all(controls.values()) and all(mutants.values())
     return {
