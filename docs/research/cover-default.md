@@ -2,9 +2,10 @@
 
 **Status: CLOSED — keep `scale` as the default.**
 
-`crop` passes its necessary mechanism test: an identity placement is a
-bit-perfect copy, while `scale` changes 98.1463% of the same serialized
-samples. It nevertheless fails the shipping gate. On `109MSDCF`, the
+`crop` passes its necessary mechanism test against an external decoder:
+rawpy/LibRaw predicts all 24,580,566 serialized samples exactly (max 0 DN,
+RMS 0 DN, 0% different), while `scale` changes 98.1462% of the external
+overlap. It nevertheless fails the shipping gate. On `109MSDCF`, the
 seven-band crop carries a boundary-local level excess as large as 2.61% and
 does not remain within 0.1% of the two-band control until a 256 px inset. That
 is twice the preregistered maximum, and retaining only the post-inset rectangle
@@ -27,6 +28,19 @@ render:
   `D69F48B8DD11100901FC4FE04A24A90CB82EFC58C8D3B574509B7B3DA191BDDF`;
 * `experiments/cover-default/audit.py` SHA-256:
   `7ADDB1254D7CD946183AA02F64016E67FF72E250D6E1746EDDB57297A9EE2A4D`.
+
+The first Q1 compared two strehl-produced paths and was later recognised as an
+internal differential rather than the requested transparency test. Before any
+external decode or external-to-render comparison, the corrected predicate was
+committed as
+`fdea80e903d1ddc9c6f2576968446fa19a9295f6`
+(`external-decode-preregistration.md` SHA-256
+`C2A74BE71149CF8CD79BA6F7C921BF3D5AE6397B276675BCA5703C212A7DC640`).
+The independently implemented checker was then frozen before measurement as
+`a79ad2fa41ceb262ffd5f9ef3637394463943558`
+(`external_decode.py` SHA-256
+`A24DC1DA706077023637A653CBF3CC747948EBBC3B34CC6B844E583AA8B84B93`).
+Both commits remained ancestors of the post-measurement branch.
 
 `git merge-base --is-ancestor c40a965e HEAD` returned 0 after measurement. The
 shared branch advanced while this lane ran, so later `HEAD` is not used to
@@ -90,7 +104,7 @@ This commissions worsening, improvement, restoration, origin bookkeeping,
 the 0.1% border threshold, and the independent geometry port. It does not ask
 strehl to state the expected answer.
 
-## 3. Q1 — identity is exact under Crop, not Scale
+## 3. Q1 — external LibRaw confirms Crop identity and Scale resampling
 
 ### 3.1 Input and invocation
 
@@ -133,7 +147,7 @@ rerun without the estimator-only flag.
 | Crop | 3506x2337 | 49,162,127 | `9033579443C98A769770F71A239104E3529F53FB152308080A7EE4AC1C72C972` |
 | Scale | 3516x2344 | 49,450,019 | `23A385AC2E5C0C70B1F436C3D9E5F3C13E905FB8DE9A177AA1D988DAFDBE2FC2` |
 
-### 3.2 Exact results
+### 3.2 Original internal differential
 
 Each row was emitted by:
 
@@ -150,10 +164,73 @@ python -B experiments\cover-default\audit.py compare `
 | direct→Scale | (0,0) | 24,724,512 | 8656 DN | 215.449413 DN | 98.146321% |
 
 The wrong-origin plant fired strongly and correcting only the externally known
-origin returned every statistic to zero. Crop is therefore the exact serialized
-window of both the direct decode path and the unity-scale no-fit path. Scale,
-on the exact same identity placement, is not a pass-through. This establishes
-the documented resampling mechanism; it does not assign quality to either arm.
+origin returned every statistic to zero. These rows establish that Crop is the
+exact serialized window of the direct and unity-scale no-fit arms, while Scale
+is not a pass-through. They do **not** establish transparency to the RAW:
+direct, no-fit, Crop, and Scale all share strehl/rawler decode, pyramid, and
+output code. They are retained as a commissioned internal differential, not
+promoted to external identity evidence.
+
+### 3.3 Corrected external-decoder result
+
+After the amended predicate and checker were committed, and after the host's
+exclusive quiet window expired, commissioning ran before the external result:
+
+```powershell
+python -B experiments\cover-default\external_decode.py commission
+```
+
+All frozen hashes matched. Three literal RGGB encoder fixtures produced exactly
+`(32768,32768,32768)`, `(65535,0,32768)`, and
+`(65535,65535,65535)`; R/B-order and pre-black-gain plants moved them. A
+candidate-side centre-green XOR `0x8000` produced exactly one difference,
+max 32768 DN and RMS 6.60927763384 DN. Replacing it with XOR `0x0001`
+improved max to 1 DN and RMS to 0.000201699147 DN; restoration returned max,
+RMS, and differing fraction to zero. Thus both the render-side comparison and
+its improvement direction fired before the result was read.
+
+The measurement command was:
+
+```powershell
+python -B experiments\cover-default\external_decode.py measure
+```
+
+It copied rawpy's visible mosaic inside each of two independent LibRaw
+contexts. Both copies were `uint16` RGGB `4688x7028`, had black levels
+`[512,512,512,512]`, container white 16383, camera white balance
+`[2930,1024,1518,1024]`, and SHA-256
+`894A15258713A9B260DB20792CB847D70898CEBECBAEA0871790D242BC659830`.
+The fixed float32 gains were
+`[2.861328125,1.0,1.482421875]`. The independently encoded external
+`3514x2344` overlap had SHA-256
+`2BC36C76D8075F6532105C15675F6CA416E3D055B82955B35408D472E15A7B0C`;
+its `(5,4,3506,2337)` prediction had SHA-256
+`81F8B29B01592F5345581A7081183179CA247EAB244A05D984EB7FBBD96F0C76`.
+
+| external comparison | samples | max abs | RMS | differing |
+| --- | ---: | ---: | ---: | ---: |
+| planted Crop origin `(6,4)` | 24,580,566 | 6235 DN | 195.437548515 DN | 23,892,271 (97.1998407%) |
+| **Crop origin `(5,4)`** | **24,580,566** | **0 DN** | **0 DN** | **0 (0%)** |
+| direct, rawpy overlap | 24,710,448 | 0 DN | 0 DN | 0 (0%) |
+| no-fit, Crop window | 24,580,566 | 0 DN | 0 DN | 0 (0%) |
+| Scale, rawpy overlap | 24,710,448 | 8656 DN | 215.440799045 DN | 24,252,367 (98.1462052%) |
+
+Crop's R, G, and B channels were separately exact: each had max 0 DN, RMS
+0 DN, and 0 of 8,193,522 samples different. Fixing only the planted origin
+improved every registered statistic to zero; the Scale positive arm remained
+strong. This establishes the end-to-end claim for this frozen reference:
+LibRaw sensor integers, independently encoded without importing strehl, match
+Crop bit-for-bit, while Scale resamples them.
+
+An independent read-only verifier reimplemented the calculation inline from
+rawpy, NumPy, tifffile, and the production arithmetic without importing the
+checker or any repository Python module. It reproduced both expected-array
+hashes and every aggregate number above, and confirmed no strehl, rawler,
+render, build, or cargo path executed. It also checked the only potentially
+different green-black ordering: all green sites in this RAW exceed black
+(minima 553 and 546), so the two expressions differ at zero of 8,236,816
+quads. The Q1 pyramid arm itself deinterleaves and clamps each site before
+forming green, matching the preregistered construction.
 
 ## 4. Q2 — measured `k` and what “deeper” does and does not mean
 
@@ -354,6 +431,18 @@ Commands read to completion:
 python -B experiments\cover-default\audit.py commission
   -> COMMISSIONED
 
+python -B experiments\cover-default\external_decode.py commission
+  -> COMMISSIONED; literal encoder, candidate mutation, improvement,
+     restoration, and frozen-input controls all passed
+
+python -B experiments\cover-default\external_decode.py measure
+  -> PASS; rawpy repeat and wrong-origin controls passed,
+     Crop/direct/no-fit exact, Scale positive arm detected
+
+independent inline rawpy/NumPy/tifffile reimplementation
+  -> exit 0; reproduced mosaic/prediction hashes and every Q1 aggregate
+     without importing the COVER checker or a repository module
+
 rustfmt --edition 2024 --check crates\strehl-cli\tests\byte-freeze.rs
   -> exit 0
 
@@ -374,10 +463,13 @@ pre-existing formatting differences in files including
 `crates/strehl-cli/build.rs`; the assigned Rust file passes direct `rustfmt
 --check`.
 
-Verified here: the exact Q1 integer results, four diagnostic `k` values, both
-113 depth series, two subjects' four-arm render provenance, every registered
-border annulus, output dimensions, the freeze failure plant, and the repaired
-freeze under the same plant.
+Verified here: the corrected Q1 transparency result against two copied
+rawpy/LibRaw decodes; its per-channel and cross-path exact integers; the
+candidate-side defect, improvement, restoration, wrong-origin, and Scale
+controls; four diagnostic `k` values; both 113 depth series; two subjects'
+four-arm render provenance; every registered border annulus; output
+dimensions; the freeze failure plant; and the repaired freeze under the same
+plant.
 
 An independent read-only verifier recomputed Q1 in signed integer chunks,
 solved Q2 directly from the serialized f64 inequalities, and reimplemented the
@@ -385,7 +477,8 @@ Q3 annulus calculation without calling `audit.py`. It reproduced every reported
 number and found no defect in the decision or the scoped freeze-harness change.
 
 Not verified here: the 299-frame holdout value; a universal depth-only law
-under changing references; any sharpness or visual advantage; or a finite safe
-inset that generalises beyond 109. The assertion that cropping is common
-product-category behaviour is context supplied to the lane, not a measurement
-made by this audit.
+under changing references; external identity for any RAW other than the frozen
+109 reference; any sharpness or visual advantage; or a finite safe inset that
+generalises beyond 109. The assertion that cropping is common product-category
+behaviour is context supplied to the lane, not a measurement made by this
+audit.
