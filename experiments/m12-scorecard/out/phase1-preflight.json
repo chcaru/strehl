@@ -70,7 +70,7 @@
     "stale_run_manifest_exists": true,
     "stale_scorecard_version": "v1.1"
   },
-  "generated_utc": "2026-09-03T17:08:33Z",
+  "generated_utc": "2026-09-03T17:11:24Z",
   "product_arm": {
     "command_template": "strehl.exe stack <STACK> --limit <N> --out <OUT>.tiff --linear-srgb --demosaic",
     "current_source_candidate_only": {
@@ -126,13 +126,13 @@
     "worker_environment": "STREHL_PYRAMID_WORKERS=<1|2|4|8|16>"
   },
   "registered_scorecard": {
-    "commit": "48a1d9027cc65b6a1340db00df945eeba153fc7b",
+    "commit": "2fd2b1312f8d487637091b1ea72eb130d4eeb890",
     "m12_lines": [
-      984,
-      1049
+      1038,
+      1103
     ],
-    "sha256": "9CBBBA9B536A063F3A44F4EDC3C6538AFD486F8574D278EEF6A346E9E6E86061",
-    "version": "v1.6"
+    "sha256": "D9DE5D5AB428337C1076B531B5244FB1E26B38370DC1C9A4825C4CE192306C43",
+    "version": "v1.7"
   },
   "schema": 1,
   "supplied_scorecard_revision": {
@@ -142,9 +142,9 @@
     "version": "v1.5"
   },
   "working_scorecard": {
-    "git_status": "M docs/proposals/2026-09-sota-scorecard.md",
+    "git_status": "",
     "matches_registered_bytes": false,
-    "sha256": "9FBD18BD1DE7C4B7C2055A4074C459693C11C3EFD654767F4595C251C7E98598",
+    "sha256": "A98852E18CE64CED72360507DB0A7923F063AE095F108B23779B60FDD2092211",
     "version": "v1.7"
   }
 }
