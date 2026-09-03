@@ -20,6 +20,21 @@ spectrum, so the subtraction amplified rather than removed the confound.  It
 is replaced below by a conservative same-direction flat-stratum veto.  The
 failed reading remains part of the record; no threshold was tuned on real data.
 
+**Post-outcome census correction, 2026-09-03.**  Independent verification of
+the first committed report found an additional admissible render that the
+author's machine search had listed but incorrectly grouped with mismatched
+marker captures:
+`D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif`, SHA-256
+`4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E`,
+196453660 B.  Its 63 input filenames and all 63 embedded
+`OriginalDocumentID` values match the selected `test2` bracket exactly.  The
+development ladder differs: every `test` input records Lightroom
+`Sharpness=40`, `ColorNoiseReduction=25`, `Contrast2012=+100`; every `test2`
+input records `0`, `0`, `+100`.  This arm is necessarily post-registered, not
+preregistered.  It reuses every frozen band, threshold, ROI and verdict rule
+below without alteration, and disagreement across the two development rungs
+must be reported as NOT ROBUST rather than choosing the favourable rung.
+
 ## Question and scope
 
 On the two same-bracket comparator renders that still exist, does strehl carry
@@ -38,11 +53,12 @@ report already answers the tone-neutral question.  The user dispatch allocates
 the `V-HEADTOHEAD3` stem; the central AGENTS.md ledger is outside this lane's
 write permission.
 
-Two admissible pairings exist:
+Three admissible render pairings exist:
 
 | ID | strehl | comparator | same source bracket |
 | --- | --- | --- | --- |
 | `113` | `C:\dev\strehl-out\DELIVER-V6\masters\113MSDCF.tiff`, SHA-256 `4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F`, 197801290 B | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif`, SHA-256 `B240FE4016E97EBB194497B2798A095C63C490C4FFF54018D48D34C7523719A0`, 196453660 B, Zerene PMax | 63 ARWs / 63 input TIFFs |
+| `113-sharp` (post-registered) | same strehl master | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif`, SHA-256 `4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E`, 196453660 B, Zerene PMax | same 63 ARWs / 63 input TIFFs; Lightroom sharpening/colour-NR rung |
 | `cb` | `C:\dev\strehl-out\DELIVER-V6\masters\coffee-bean.tiff`, SHA-256 `F38CA50ED1A680FA4DBCDD8D0513BE538DD31634B4E89AC6A34885944790A2EC`, 197801290 B | `C:\dev\macro\out\coffee-bean\stack.tif`, SHA-256 `8636C20D73CA0CB1F57DB89BF8553ABC166E0FBC517E5C62A07C74DEE509066E`, 393326272 B, focus-stack fork | 105 ARWs / 105 input TIFFs |
 
 The executable checker must hash the byte streams itself.  Its RED plant
@@ -56,7 +72,7 @@ The frozen strehl executable is
 `strehl.exe stack <absolute ARW directory> -o <absolute master> --srgb`,
 private `STREHL_CACHE_DIR`, and all other `STREHL_*` unset.  This lane does not
 rerender.  No Helicon output was found in `C:\dev`, `D:\edited`, or
-`D:\personal\macro`; extra Zerene marker renders are inadmissible because the
+`D:\personal\macro`; extra Zerene *marker* renders are inadmissible because the
 prior reports establish that their captures do not match a strehl bracket.
 
 ## Declared bias and failure directions
