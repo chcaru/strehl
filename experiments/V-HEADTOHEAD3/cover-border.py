@@ -18,6 +18,8 @@ import cover_core as cc
 
 SCHEMA = "V-HEADTOHEAD3-COVER-BORDER-1"
 RENDER_SCHEMA = "V-HEADTOHEAD3-COVER-BORDER-RENDER-1"
+LINEAR_SCHEMA = "V-HEADTOHEAD3-COVER-BORDER-LINEAR-2"
+LINEAR_RENDER_SCHEMA = "V-HEADTOHEAD3-COVER-BORDER-LINEAR-RENDER-2"
 LABEL = "GEOMETRY_AND_BAND_DEPTH_NOT_RESOLUTION"
 THREAD_CAP = 8
 THRESHOLD = 0.001
@@ -50,6 +52,11 @@ SCALE2 = OUT / "113-cover-scale-b2.tiff"
 CROP2 = OUT / "113-cover-crop-b2.tiff"
 BASE_PROVENANCE = OUT / "COVER-RENDER-PROVENANCE.json"
 RENDER_PROVENANCE = OUT / "COVER-BORDER-RENDER-PROVENANCE.json"
+LINEAR_SCALE7 = OUT / "113-cover-scale-linear-b7.tiff"
+LINEAR_SCALE2 = OUT / "113-cover-scale-linear-b2.tiff"
+LINEAR_CROP7 = OUT / "113-cover-crop-linear-b7.tiff"
+LINEAR_CROP2 = OUT / "113-cover-crop-linear-b2.tiff"
+LINEAR_RENDER_PROVENANCE = OUT / "COVER-BORDER-LINEAR-RENDER-PROVENANCE.json"
 CACHE = OUT / "cache"
 WARP_MAP = CACHE / "113MSDCF-7f5a36c866189cc7.warpmap.txt"
 EXPECTED = {
@@ -98,6 +105,25 @@ def render_argv(mode: str, output: Path) -> list[str]:
         "--srgb",
         "--pyramid-bands",
         "2",
+    ]
+    if mode == "crop":
+        argv.extend(("--cover", "crop"))
+    elif mode != "scale":
+        raise ValueError(f"unknown mode {mode!r}")
+    return argv
+
+
+def linear_render_argv(mode: str, bands: int, output: Path) -> list[str]:
+    if bands not in (2, 7):
+        raise ValueError(f"unsupported band depth {bands}")
+    argv = [
+        str(cc.EXE),
+        "stack",
+        str(cc.SOURCE),
+        "-o",
+        str(output.resolve()),
+        "--pyramid-bands",
+        str(bands),
     ]
     if mode == "crop":
         argv.extend(("--cover", "crop"))
@@ -230,6 +256,153 @@ def render() -> dict:
         },
     }
     RENDER_PROVENANCE.write_text(
+        json.dumps(payload, indent=2, allow_nan=False),
+        encoding="utf-8",
+    )
+    return payload
+
+
+def _render_one_linear(
+    mode: str,
+    bands: int,
+    output: Path,
+    env: dict[str, str],
+) -> dict:
+    argv = linear_render_argv(mode, bands, output)
+    forbidden = {"--srgb", "--auto-exposure", "--exposure", "--linear-srgb"}
+    if forbidden.intersection(argv):
+        raise RuntimeError("viewing/tone option leaked into linear render")
+    run = subprocess.run(
+        argv,
+        cwd=str(HERE.parent.parent),
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    log = run.stdout + ("\n" if run.stdout and run.stderr else "") + run.stderr
+    if run.returncode != 0:
+        raise RuntimeError(f"{mode} b{bands} linear render failed:\n{log}")
+    if not output.is_file():
+        raise RuntimeError(f"{mode} b{bands} linear render produced no file")
+    facts = cc.parse_render_log(log, mode)
+    image = tifffile.memmap(output)
+    shape = list(image.shape)
+    expected_shape = [2344, 3516, 3] if mode == "scale" else [2298, 3448, 3]
+    if shape != expected_shape or image.dtype != np.uint16:
+        raise RuntimeError(
+            f"{mode} b{bands} linear output changed: {shape} {image.dtype}"
+        )
+    if facts["placed"] != 63 or facts["refused"] != 0:
+        raise RuntimeError(f"{mode} b{bands} placement count changed")
+    if not math.isclose(float(facts["k"]), 0.9809, abs_tol=5e-5):
+        raise RuntimeError(f"{mode} b{bands} coverage k changed")
+    if mode == "crop":
+        for name, expected in EXPECTED_CROP_RECT.items():
+            if facts.get(name) != expected:
+                raise RuntimeError(f"crop b{bands} {name} changed")
+        if facts.get("unity_scale") is not True:
+            raise RuntimeError(f"crop b{bands} is not unity scale")
+    elif facts.get("unity_scale") is not False:
+        raise RuntimeError(f"scale b{bands} unexpectedly reports unity scale")
+    return {
+        "path": str(output.resolve()),
+        "argv": argv,
+        "exit_code": run.returncode,
+        "sha256": cc.sha256(output),
+        "shape": shape,
+        "dtype": str(image.dtype),
+        "facts": facts,
+        "log": log,
+    }
+
+
+def render_linear() -> dict:
+    cc.verify_hashes()
+    if (
+        cc.sha256(SCALE7) != EXPECTED["scale7"]
+        or cc.sha256(CROP7) != EXPECTED["crop7"]
+        or cc.sha256(WARP_MAP) != EXPECTED["warp_map"]
+    ):
+        raise RuntimeError("frozen scale/crop inputs changed")
+    outputs = (
+        LINEAR_SCALE7,
+        LINEAR_SCALE2,
+        LINEAR_CROP7,
+        LINEAR_CROP2,
+        LINEAR_RENDER_PROVENANCE,
+    )
+    occupied = [path for path in outputs if path.exists()]
+    if occupied:
+        raise RuntimeError(f"refusing to overwrite outputs: {occupied}")
+    before = cc.source_manifest()
+    if (
+        before["digest"] != EXPECTED["source_manifest"]
+        or before["counts"] != {".arw": 63, ".xmp": 63}
+    ):
+        raise RuntimeError("source manifest changed before linear renders")
+    env = render_environment()
+    effective = {
+        name: value
+        for name, value in env.items()
+        if name.upper().startswith("STREHL_")
+    }
+    if effective != {"STREHL_CACHE_DIR": str(CACHE.resolve())}:
+        raise RuntimeError(f"unexpected effective STREHL variables: {effective}")
+    arms = {}
+    for mode, bands, output in (
+        ("scale", 7, LINEAR_SCALE7),
+        ("scale", 2, LINEAR_SCALE2),
+        ("crop", 7, LINEAR_CROP7),
+        ("crop", 2, LINEAR_CROP2),
+    ):
+        arms[f"{mode}_b{bands}"] = _render_one_linear(
+            mode,
+            bands,
+            output,
+            env,
+        )
+    after = cc.source_manifest()
+    if after["digest"] != before["digest"] or after["counts"] != before["counts"]:
+        raise RuntimeError("source bytes changed during linear renders")
+    if cc.sha256(WARP_MAP) != EXPECTED["warp_map"]:
+        raise RuntimeError("cached warp map changed during linear renders")
+    if arms["scale_b7"]["shape"] != arms["scale_b2"]["shape"]:
+        raise RuntimeError("scale linear band-depth shape mismatch")
+    if arms["crop_b7"]["shape"] != arms["crop_b2"]["shape"]:
+        raise RuntimeError("crop linear band-depth shape mismatch")
+    payload = {
+        "schema": LINEAR_RENDER_SCHEMA,
+        "label": LABEL,
+        "correction": "CAMERA_LINEAR_MATCHED_FOUR_CELL",
+        "executable": {
+            "path": str(cc.EXE),
+            "sha256": cc.sha256(cc.EXE),
+        },
+        "source": {
+            "path": str(cc.SOURCE),
+            "manifest_sha256": before["digest"],
+            "counts": before["counts"],
+        },
+        "warp_map": {
+            "path": str(WARP_MAP.resolve()),
+            "sha256": cc.sha256(WARP_MAP),
+            "frames": 63,
+            "placed": 63,
+            "reference": 31,
+            "k": EXACT_K,
+            "upsample_percent": EXACT_UPSAMPLE_PERCENT,
+        },
+        "arms": arms,
+        "environment": {
+            "effective_strehl": effective,
+            "rayon_num_threads": int(env["RAYON_NUM_THREADS"]),
+            "numeric_thread_cap": THREAD_CAP,
+        },
+    }
+    LINEAR_RENDER_PROVENANCE.write_text(
         json.dumps(payload, indent=2, allow_nan=False),
         encoding="utf-8",
     )
@@ -534,6 +707,76 @@ def validate_render_provenance(payload: dict) -> None:
         raise RuntimeError("render provenance failed: " + ", ".join(failures))
 
 
+def validate_linear_render_provenance(payload: dict) -> None:
+    failures = []
+    if payload.get("schema") != LINEAR_RENDER_SCHEMA:
+        failures.append("schema")
+    if payload.get("label") != LABEL:
+        failures.append("label")
+    if payload.get("correction") != "CAMERA_LINEAR_MATCHED_FOUR_CELL":
+        failures.append("correction")
+    if payload.get("executable", {}).get("sha256") != cc.HASHES[cc.EXE]:
+        failures.append("executable")
+    source = payload.get("source", {})
+    if (
+        source.get("manifest_sha256") != EXPECTED["source_manifest"]
+        or source.get("counts") != {".arw": 63, ".xmp": 63}
+    ):
+        failures.append("source")
+    warp = payload.get("warp_map", {})
+    if (
+        warp.get("sha256") != EXPECTED["warp_map"]
+        or warp.get("frames") != 63
+        or warp.get("placed") != 63
+        or warp.get("reference") != 31
+        or warp.get("k") != EXACT_K
+        or warp.get("upsample_percent") != EXACT_UPSAMPLE_PERCENT
+    ):
+        failures.append("warp map")
+    if payload.get("environment") != {
+        "effective_strehl": {"STREHL_CACHE_DIR": str(CACHE.resolve())},
+        "rayon_num_threads": THREAD_CAP,
+        "numeric_thread_cap": THREAD_CAP,
+    }:
+        failures.append("environment")
+    arms = payload.get("arms", {})
+    specs = (
+        ("scale", 7, LINEAR_SCALE7, [2344, 3516, 3]),
+        ("scale", 2, LINEAR_SCALE2, [2344, 3516, 3]),
+        ("crop", 7, LINEAR_CROP7, [2298, 3448, 3]),
+        ("crop", 2, LINEAR_CROP2, [2298, 3448, 3]),
+    )
+    for mode, bands, path, shape in specs:
+        arm = arms.get(f"{mode}_b{bands}", {})
+        if (
+            arm.get("path") != str(path.resolve())
+            or arm.get("argv") != linear_render_argv(mode, bands, path)
+            or arm.get("exit_code") != 0
+            or arm.get("sha256") != cc.sha256(path)
+            or arm.get("shape") != shape
+            or arm.get("dtype") != "uint16"
+        ):
+            failures.append(f"{mode} b{bands}")
+        try:
+            facts = cc.parse_render_log(str(arm.get("log", "")), mode)
+        except ValueError:
+            failures.append(f"{mode} b{bands} log")
+        else:
+            if arm.get("facts") != facts:
+                failures.append(f"{mode} b{bands} facts")
+    current = cc.source_manifest()
+    if (
+        current["digest"] != EXPECTED["source_manifest"]
+        or current["counts"] != {".arw": 63, ".xmp": 63}
+        or cc.sha256(WARP_MAP) != EXPECTED["warp_map"]
+    ):
+        failures.append("live frozen inputs")
+    if failures:
+        raise RuntimeError(
+            "linear render provenance failed: " + ", ".join(failures)
+        )
+
+
 def _green(path: Path) -> np.ndarray:
     image = tifffile.memmap(path)
     if image.ndim != 3 or image.shape[2] < 2:
@@ -602,11 +845,87 @@ def measure() -> dict:
     }
 
 
+def measure_linear() -> dict:
+    commissioned = commission()
+    if not commissioned["green"]:
+        raise RuntimeError("border instrument commission failed")
+    payload = json.loads(
+        LINEAR_RENDER_PROVENANCE.read_text(encoding="utf-8")
+    )
+    validate_linear_render_provenance(payload)
+    profiles = {}
+    for mode, seven, two in (
+        ("scale", LINEAR_SCALE7, LINEAR_SCALE2),
+        ("crop", LINEAR_CROP7, LINEAR_CROP2),
+    ):
+        rows, safe, deep_ratio = border_rows(_green(seven), _green(two))
+        profiles[mode] = {
+            "safe_inset_px": safe,
+            "deep_ratio": deep_ratio,
+            "rows": rows,
+        }
+    specific = profiles["scale"]["safe_inset_px"] == 8
+    crop_safe = profiles["crop"]["safe_inset_px"]
+    rois_clear = (
+        specific
+        and crop_safe is not None
+        and int(crop_safe) <= cc.BORDER
+    )
+    if not specific:
+        disposition = "PROFILE_NOT_SPECIFIC_ON_113"
+    elif crop_safe is None:
+        disposition = "CROP_SAFE_INSET_UNBOUNDED"
+    elif crop_safe <= cc.BORDER:
+        disposition = "EXISTING_256PX_ROIS_CLEAR_PROFILE"
+    else:
+        disposition = "EXISTING_256PX_ROIS_NOT_CLEAR_PROFILE"
+    return {
+        "schema": LINEAR_SCHEMA,
+        "status": "GREEN",
+        "label": LABEL,
+        "correction": "CAMERA_LINEAR_MATCHED_FOUR_CELL",
+        "withdrawn_srgb_profile": {
+            "reason": "OUTPUT_SPACE_SPECIFICITY_FAILURE",
+            "scale_nominal_safe_inset_px": 768,
+            "crop_nominal_safe_inset_px": 768,
+            "admitted": False,
+        },
+        "commission": {
+            "controls_green": commissioned["control_count"],
+            "plants_red": commissioned["mutant_count"],
+        },
+        "render_provenance": str(LINEAR_RENDER_PROVENANCE.resolve()),
+        "frames": 63,
+        "placed": 63,
+        "refused": 0,
+        "k": EXACT_K,
+        "upsample_percent": EXACT_UPSAMPLE_PERCENT,
+        "crop_rect_xywh": [34, 23, 3448, 2298],
+        "profile": {
+            "threshold": THRESHOLD,
+            "deep_start_px": DEEP_START,
+            "scale": profiles["scale"],
+            "crop": profiles["crop"],
+            "specific": specific,
+        },
+        "existing_roi_minimum_clearance_px": cc.BORDER,
+        "existing_rois_clear_profile": rois_clear,
+        "disposition": disposition,
+        "resolution_verdict": "NOT_MEASURED_Q25_REFUSED",
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "command",
-        choices=("commission", "render", "measure"),
+        choices=(
+            "commission",
+            "render",
+            "measure",
+            "render-linear",
+            "measure-linear",
+        ),
     )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
@@ -615,13 +934,13 @@ def main() -> int:
             parser.error("commission accepts no output path")
         result = commission()
         code = 0 if result["green"] else 2
-    elif args.command == "render":
+    elif args.command in ("render", "render-linear"):
         if args.output is not None:
             parser.error("render writes its frozen provenance path")
-        result = render()
+        result = render() if args.command == "render" else render_linear()
         code = 0
     else:
-        result = measure()
+        result = measure() if args.command == "measure" else measure_linear()
         code = 0
     if args.output is not None:
         args.output.write_text(
