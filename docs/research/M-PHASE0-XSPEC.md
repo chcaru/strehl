@@ -1,7 +1,9 @@
 # M-PHASE0-XSPEC — C10's complex through-focus phase channel
 
-**Lane:** `experiments/M-PHASE0-XSPEC/`  
-**Status:** complete; **NOT ROBUST**  
+**Lane:** `experiments/M-PHASE0-XSPEC/`
+
+**Status:** complete; **NOT ROBUST**
+
 **Preregistration:** commit `efdc6829`  
 **Commissioned estimator:** commits `db43d7e4`, `e78f1b46`
 
