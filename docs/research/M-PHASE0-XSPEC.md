@@ -4,7 +4,8 @@
 
 **Status:** complete; **NOT ROBUST**
 
-**Preregistration:** commit `efdc6829`  
+**Preregistration:** commit `efdc6829`
+
 **Commissioned estimator:** commits `db43d7e4`, `e78f1b46`
 
 ## Finding
