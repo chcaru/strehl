@@ -200,6 +200,67 @@ A follow-on lane (`M-PHASE0-SPLIT2`) is testing whether the 32-repeat capture su
 first of those, since repeated exposures of a fixed scene are non-degenerate by construction
 in a way split halves can never be.
 
+### 2.0.5 A2/VEIL2 — STOP_DO_NOT_BUILD, and the veil was a tone artifact
+
+`docs/research/M-PHASE0-VEIL2.md`, `experiments/M-PHASE0-VEIL2/`. Commits: repaired measurement
+`e4e3939f`, frozen plan `cbb27ea2`, final audit `bcc77de9`. Independent verifier:
+`VERIFIED_STOP`.
+
+A2 was ranked by the triage among the **top three highest-value items in the entire remaining
+phase-0 list**, and the lane was re-scoped from measurement to building on that basis. It
+audited the prior finding first, as instructed, and the prior finding **failed 0 of 7 gates**.
+
+**The decisive result is a tone reversal.** A strictly positive monotone rescaling in the range
+`1.0152–1.0722` — a transform that **does not change pixel order** — reverses the measured
+effect from `θ=+0.74105` to `θ=−0.08124`. The corrected measurement carries a 95% CI of
+`[−0.23588, 0.05108]`, which straddles zero. A quantity that can be flipped in sign by a
+monotone remap is not measuring veiling glare; it is measuring contrast. This is the **second**
+time in this repository that a headline result has turned out to be a tone artifact, the first
+being the retracted 17–27% detail deficit in the head-to-head.
+
+Three further failures, each independently sufficient:
+
+- **The mechanism was never a finding.** The predecessor's two-peak focus curve *does*
+  reproduce, on 299 RAWs at f182/f288. But the base/coarse causal mechanism the build was to
+  rest on is described by its own originating note as a **"lead, not a finding"**, and
+  `BUILD-VEILMAP` never cross-referenced it to the merge at all. The curve *classifier* was
+  commissioned; the causal mechanism was not.
+- **The instrument was underpowered by 8.5×.** The measured denominator is `0.01757` against a
+  registered potency floor of `0.15`, and the potency failure **exits zero** — it does not
+  announce itself.
+- **Generator/checker cancellation, again.** The drift plant imports production
+  `veilgrid.gather`, so it shares a code path with the thing it is testing and is not
+  cancellation-resistant. `BUILD-VEILMAP` commissions `DriftFitter` while the measurement adds
+  `TrackFitter` and `solve_poly` — the commissioned component is not the component used.
+
+The audit instrument itself was commissioned to this repo's standard: **4/4 positive controls
+and 20/20 planted defects RED.** No Rust was written and no flag was added, because a failed
+Part 1 prohibited Part 2.
+
+### 2.0.6 The triage is now wrong on five of six claimed closures
+
+`docs/proposals/2026-09-phase0-triage.md` named six gates as already answered by the corpus:
+LCA, VEIL2, SPLIT, DPAR, DECODE and NVME. **Five have now been audited and all five failed.**
+
+| Claimed closure | Audit result |
+|---|---|
+| DPAR | Null reproduces, but the sensitivity plant is *linear* while the real track is curved — power unknown |
+| DECODE | Headline figure was compressed-input, not allocated-output; harness absent from the repo; no timing RED control |
+| NVME | The device rate the proposal asks for was **never measured at all** |
+| SPLIT | Numbers reproduce **exactly**; closure still fails — split halves are not independent |
+| VEIL2 | 0/7 gates; the effect reverses under a monotone remap |
+| LCA | Under audit |
+
+The generalisable finding, now demonstrated five times: **a paraphrase of a measurement is not
+the measurement.** Every one of these was written down accurately somewhere in the corpus and
+every one meant something other than what a careful reader concluded from it. This repository's
+numbers must be **re-run, not re-read** — and the triage, which read rather than ran, is exactly
+the process that fails.
+
+That is not an argument against the triage having been written. It correctly identified where
+the decision value was; it was simply wrong about which questions were closed. Its own header
+banner records that it is not self-certifying.
+
 ## 2.1 The scorecard now exists, and every value on it is UNMEASURED
 
 `docs/proposals/2026-09-sota-scorecard.md`, v1.1, commits `90bced75` and `986c4653`.
