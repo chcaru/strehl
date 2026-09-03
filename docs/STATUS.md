@@ -115,6 +115,44 @@ adversarial re-verification the image-quality claims get. Decode also **saturate
 threads** (721→719 compressed, 1416→1413 allocated), so the remaining lever is not more
 worker threads but the **bounded decode→fold queue**, which is the live Rust seam.
 
+### 2.0.3 C4c/DPAR — KILL, on a sensitivity argument that now holds
+
+`docs/research/M-PHASE0-DPAR2.md`, `experiments/M-PHASE0-DPAR2/`. Commits `e27e3dd8`
+(preregistration) and `7a1a3128` (implementation and results).
+
+The audit's objection to M6 was that its sensitivity plant was **linear**, so the minimum
+detectable amplitude on the **curved** track was unknown and the null could not be read as
+absence. That objection is now answered, and it resolved in the opposite direction from the
+one I expected — the instrument turned out to be far *more* sensitive than feared, not less.
+
+**MDA80 ≤ 0.010 plane px per depth-step at radius 1000** (≤0.020 at radius 2000), with the
+bootstrap crossing at 0.010 [0.010, 0.010]. Because 0.010 was the first nonzero rung of the
+ladder, this is an **upper bound** on the minimum detectable amplitude — the true figure may
+be lower still. At that dose the instrument scored **96/96 detections** (Wilson 95%
+[0.9615, 1.0000]) against **3/96** at zero dose.
+
+That settles the reading of the null:
+
+- The proposal's predicted **0.300–0.600 px/depth-step clears MDA by 30×.**
+- The **0.0269–0.0538 px/step** regime the audit measured on real adjacent pairs *also*
+  reached 96/96 detections.
+- The unplanted primary stayed null at **ρ = +0.1352, p = 0.4896**.
+
+So the instrument is demonstrably able to see the claimed effect, with a 30× margin, and it
+sees nothing. **Verdict: KILL.** Nothing changes in Rust.
+
+Six controls passed, including the kind this repo has repeatedly needed: an **external M103
+track predicate** (read 46.0921 px curvature with accelerating rates, while a straight chord
+failed), a **literal oracle** that recovered six values exactly and rejected its own
+mutation, similarity orthogonality at 5.75e-15, tangential change 9.29e-14 px, a
+bit-identical zero dose, and a fast evaluator matching unchanged M6 S2 to 2.22e-16. An
+independent verifier recomputed the power, bootstrap, curvature and orthogonality and found
+no defects.
+
+Scope limit, stated by the lane: the result covers M6's post-correlation residual reader.
+Continuous MDA below 0.010 and dose-dependent upstream rejection from a full curved
+image-render plant remain unmeasured.
+
 **M-PHASE0-PHASE — CLOSED. C1 is KILL at the measured ρ, and NOT ROBUST across the ρ
 census.** Getting here took a filed verdict, its retraction, and a sign fix in the
 lane's own algebra; read Amendments A7 (the wrong verdict), A8 (the retraction), A9 (the
