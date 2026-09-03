@@ -44,6 +44,9 @@ DIFFERENCE_FIELDS = (
     "rms_dn",
     "mean_abs_dn",
 )
+IDENTITY_BITS = (0x3FF0000000000000, 0, 0, 0)
+STRICT_PREREGISTERED_STATUS = "UNMEASURABLE_REFERENCE_NOT_BIT_IDENTITY"
+PRODUCT_DIAGNOSTIC_LABEL = "ACTUAL_PRODUCT_DIAGNOSTIC"
 F64_HEX = re.compile(r"^[0-9a-f]{16}$")
 U64_HEX = re.compile(r"^[0-9a-f]{16}$")
 CAPTURE_ROOT = os.path.normcase(os.path.abspath(r"D:\personal\macro"))
@@ -547,6 +550,119 @@ def _commission_contract_refusals() -> dict[str, str]:
     return messages
 
 
+def _synthetic_sidecar(
+    expected: CaseExpectation,
+    reference_bits: tuple[int, int, int, int] = IDENTITY_BITS,
+) -> str:
+    identity = " ".join(f"{bits:016x}" for bits in IDENTITY_BITS)
+    lines = [
+        "strehl-warpmap 1",
+        f"stack-name {expected.stack_name}",
+        "stack-digest 0123456789abcdef",
+        f"frames {expected.frames}",
+        f"plane {EXPECTED_PLANE_SHAPE[1]}x{EXPECTED_PLANE_SHAPE[0]}",
+        f"reference {expected.reference}",
+        "strategy synthetic-commission",
+        "resampler catmull-rom",
+        "heldout-px none",
+        "cycle-floor-px none",
+    ]
+    reference = " ".join(f"{bits:016x}" for bits in reference_bits)
+    lines.extend(
+        f"{index} placed {reference if index == expected.reference else identity}"
+        for index in range(expected.frames)
+    )
+    lines.append(f"end {expected.frames}")
+    return "\n".join(lines) + "\n"
+
+
+def _reference_gauge(geometry: SidecarGeometry) -> dict[str, Any]:
+    placement = geometry.placements[geometry.reference]
+    a_re, a_im, b_re, b_im = placement.values
+    scale_minus_one = a_re - 1.0
+    cx = float(geometry.width) * 0.5
+    cy = float(geometry.height) * 0.5
+    centered_corners = (
+        (-cx, -cy),
+        (cx, -cy),
+        (-cx, cy),
+        (cx, cy),
+    )
+    displacements = tuple(
+        math.hypot(
+            scale_minus_one * x - a_im * y + b_re,
+            scale_minus_one * y + a_im * x + b_im,
+        )
+        for x, y in centered_corners
+    )
+    return {
+        "reference_transform_f64_bits": [
+            f"{bits:016x}" for bits in placement.bits
+        ],
+        "exact_identity": placement.bits == IDENTITY_BITS,
+        "max_centered_corner_displacement_px": max(displacements),
+        "displacement_expression": "|((a - 1) * z + b)|",
+    }
+
+
+def _commission_reference_gauge() -> dict[str, Any]:
+    expected = EXPECTED_CASES[0]
+    observed_bits = tuple(
+        int(token, 16)
+        for token in (
+            "3fefffffffffffff",
+            "3be0000000000000",
+            "bc80000000000000",
+            "3cb0000000000000",
+        )
+    )
+    source = "<synthetic-product-reference>"
+    text = _synthetic_sidecar(expected, observed_bits)
+
+    try:
+        _parse_sidecar_text(
+            text,
+            source,
+            expected,
+            require_exact_reference=True,
+        )
+    except ValueError as error:
+        strict_refusal = str(error)
+    else:
+        raise AssertionError("strict sidecar gate accepted a non-bit-identity reference")
+    if "not exact serialized f64 identity" not in strict_refusal:
+        raise AssertionError(f"strict sidecar gate refused for the wrong reason: {strict_refusal}")
+
+    product = _parse_sidecar_text(
+        text,
+        source,
+        expected,
+        require_exact_reference=False,
+    )
+    gauge = _reference_gauge(product)
+    expected_displacement_hex = "0x1.08457c7bf0f44p-42"
+    if product.placements[product.reference].bits != observed_bits:
+        raise AssertionError("product sidecar gate canonicalized the reference bits")
+    if gauge["exact_identity"]:
+        raise AssertionError("product reference gauge reported exact identity")
+    if float(gauge["max_centered_corner_displacement_px"]).hex() != expected_displacement_hex:
+        raise AssertionError(
+            "cancellation-resistant reference displacement changed: "
+            f"{gauge['max_centered_corner_displacement_px']!r}"
+        )
+
+    return {
+        "strict_nonidentity_rejected": True,
+        "strict_refusal": strict_refusal,
+        "product_nonidentity_accepted": True,
+        "product_reference_preserved": (
+            product.placements[product.reference].bits == observed_bits
+        ),
+        "expected_max_centered_corner_displacement_f64_hex": expected_displacement_hex,
+        "product_reference_gauge": gauge,
+    }
+
+
 def commission() -> dict[str, Any]:
     synthetic = np.arange(18 * 24 * 3, dtype=np.uint16).reshape(18, 24, 3)
     return {
@@ -556,6 +672,7 @@ def commission() -> dict[str, Any]:
         "candidate_comparator": candidate_mutation_controls(synthetic),
         "crop_origin_control": _commission_origin_control(),
         "contract_refusals": _commission_contract_refusals(),
+        "reference_gauge": _commission_reference_gauge(),
     }
 
 
@@ -592,12 +709,17 @@ def _sidecar_metric(raw: str, label: str) -> tuple[float | None, str | None]:
     return value, token
 
 
-def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
-    text = path.read_bytes().decode("utf-8", errors="strict")
+def _parse_sidecar_text(
+    text: str,
+    source: str,
+    expected: CaseExpectation,
+    *,
+    require_exact_reference: bool,
+) -> SidecarGeometry:
     lines = text.splitlines()
     if not lines or lines[0].strip() != "strehl-warpmap 1":
         found = lines[0].strip() if lines else "<empty>"
-        raise ValueError(f"{path}: expected 'strehl-warpmap 1', got {found!r}")
+        raise ValueError(f"{source}: expected 'strehl-warpmap 1', got {found!r}")
 
     headers: dict[str, str] = {}
     records: dict[int, Placement | None] = {}
@@ -608,13 +730,13 @@ def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
         if not line or line.startswith("#"):
             continue
         if ended:
-            raise ValueError(f"{path}:{line_number}: data after end record")
+            raise ValueError(f"{source}:{line_number}: data after end record")
         head, separator, rest = line.partition(" ")
         rest = rest.strip() if separator else ""
         if head == "end":
             fields = line.split("#", 1)[0].split()
             if len(fields) != 2:
-                raise ValueError(f"{path}:{line_number}: malformed end record")
+                raise ValueError(f"{source}:{line_number}: malformed end record")
             end_count = int(fields[1])
             ended = True
             continue
@@ -622,14 +744,14 @@ def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
             body = line.split("#", 1)[0].split()
             index = int(head)
             if index in records:
-                raise ValueError(f"{path}:{line_number}: duplicate frame {index}")
+                raise ValueError(f"{source}:{line_number}: duplicate frame {index}")
             if len(body) >= 2 and body[1] == "refused":
                 records[index] = None
                 continue
             if len(body) != 6 or body[1] != "placed":
-                raise ValueError(f"{path}:{line_number}: malformed placement record")
+                raise ValueError(f"{source}:{line_number}: malformed placement record")
             parsed = tuple(
-                _f64_from_hex(token, f"{path}:{line_number} field {field}")
+                _f64_from_hex(token, f"{source}:{line_number} field {field}")
                 for field, token in enumerate(body[2:], start=1)
             )
             records[index] = Placement(
@@ -638,7 +760,7 @@ def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
             )
             continue
         if head in headers:
-            raise ValueError(f"{path}:{line_number}: duplicate header {head!r}")
+            raise ValueError(f"{source}:{line_number}: duplicate header {head!r}")
         headers[head] = rest
 
     required = {
@@ -654,7 +776,7 @@ def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
     }
     missing = sorted(required - set(headers))
     if missing:
-        raise ValueError(f"{path}: missing sidecar headers {missing}")
+        raise ValueError(f"{source}: missing sidecar headers {missing}")
 
     frames = int(headers["frames"])
     if frames != expected.frames or frames != 2 * expected.reference + frames % 2:
@@ -664,7 +786,7 @@ def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
         )
     if end_count != frames or set(records) != set(range(frames)):
         raise ValueError(
-            f"{path}: truncated or non-contiguous records: frames={frames}, "
+            f"{source}: truncated or non-contiguous records: frames={frames}, "
             f"records={len(records)}, end={end_count}"
         )
 
@@ -680,34 +802,38 @@ def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
         )
     digest = headers["stack-digest"].strip()
     if not U64_HEX.fullmatch(digest):
-        raise ValueError(f"{path}: invalid stack-digest {digest!r}")
+        raise ValueError(f"{source}: invalid stack-digest {digest!r}")
     if not headers["strategy"]:
-        raise ValueError(f"{path}: empty alignment strategy")
+        raise ValueError(f"{source}: empty alignment strategy")
     if headers["resampler"] != "catmull-rom":
-        raise ValueError(f"{path}: resampler {headers['resampler']!r}, expected 'catmull-rom'")
+        raise ValueError(
+            f"{source}: resampler {headers['resampler']!r}, expected 'catmull-rom'"
+        )
 
     plane = headers["plane"].split("x")
     if len(plane) != 2:
-        raise ValueError(f"{path}: malformed plane {headers['plane']!r}")
+        raise ValueError(f"{source}: malformed plane {headers['plane']!r}")
     width, height = (int(value) for value in plane)
     if (height, width) != EXPECTED_PLANE_SHAPE:
         raise ValueError(
-            f"{path}: plane {width}x{height}, "
+            f"{source}: plane {width}x{height}, "
             f"expected {EXPECTED_PLANE_SHAPE[1]}x{EXPECTED_PLANE_SHAPE[0]}"
         )
 
     refused = sum(value is None for value in records.values())
     if refused:
-        raise ValueError(f"{path}: expected {frames} placed / 0 refused, got {frames-refused}/{refused}")
+        raise ValueError(
+            f"{source}: expected {frames} placed / 0 refused, "
+            f"got {frames-refused}/{refused}"
+        )
     placements = tuple(records[index] for index in range(frames))
     if any(value is None for value in placements):
         raise AssertionError("refused placement survived the refusal gate")
     placed = tuple(value for value in placements if value is not None)
-    identity_bits = (0x3FF0000000000000, 0, 0, 0)
-    if placed[reference].bits != identity_bits:
+    if require_exact_reference and placed[reference].bits != IDENTITY_BITS:
         got = tuple(f"{bits:016x}" for bits in placed[reference].bits)
         raise ValueError(
-            f"{path}: reference placement is not exact serialized f64 identity: {got}"
+            f"{source}: reference placement is not exact serialized f64 identity: {got}"
         )
 
     heldout_px, heldout_bits = _sidecar_metric(headers["heldout-px"], "heldout-px")
@@ -730,6 +856,21 @@ def parse_sidecar(path: Path, expected: CaseExpectation) -> SidecarGeometry:
         cycle_floor_bits=cycle_floor_bits,
         placements=placed,
         refused=refused,
+    )
+
+
+def parse_sidecar(
+    path: Path,
+    expected: CaseExpectation,
+    *,
+    require_exact_reference: bool = True,
+) -> SidecarGeometry:
+    text = path.read_bytes().decode("utf-8", errors="strict")
+    return _parse_sidecar_text(
+        text,
+        str(path),
+        expected,
+        require_exact_reference=require_exact_reference,
     )
 
 
@@ -990,8 +1131,15 @@ def _origin_control(
 def measure_case(
     case: CaseSpec,
     frozen: dict[str, dict[str, str]],
+    *,
+    require_exact_reference: bool = True,
 ) -> dict[str, Any]:
-    geometry = parse_sidecar(case.sidecar, case.expected)
+    geometry = parse_sidecar(
+        case.sidecar,
+        case.expected,
+        require_exact_reference=require_exact_reference,
+    )
+    reference_gauge = _reference_gauge(geometry)
     k = cover_scale(geometry)
     rectangle = cover_rect(geometry.width, geometry.height, k)
     x, y, crop_width, crop_height = rectangle
@@ -1049,6 +1197,9 @@ def measure_case(
             f"{case.expected.name}: one-quad origin control is outside rawpy overlap"
         )
 
+    # The candidate already applied the serialized reference placement.  This
+    # independent arm stays a direct sensor Crop so any candidate pixel change
+    # remains an exactness failure instead of being canonicalized away here.
     origin_control, crop_prediction, crop_stats = _origin_control(
         first.mosaic,
         site_black,
@@ -1092,9 +1243,10 @@ def measure_case(
             "refused": geometry.refused,
             "reference": geometry.reference,
             "reference_filename": case.expected.reference_filename,
-            "reference_transform_f64_bits": [
-                f"{bits:016x}" for bits in geometry.placements[geometry.reference].bits
+            "reference_transform_f64_bits": reference_gauge[
+                "reference_transform_f64_bits"
             ],
+            "reference_gauge": reference_gauge,
             "plane_width_height": [geometry.width, geometry.height],
             "strategy": geometry.strategy,
             "resampler": geometry.resampler,
@@ -1137,12 +1289,20 @@ def measure_case(
     }
 
 
-def measure(rows: Sequence[Sequence[str]]) -> tuple[dict[str, Any], bool]:
+def _measure(
+    rows: Sequence[Sequence[str]],
+    *,
+    require_exact_reference: bool,
+) -> tuple[dict[str, Any], bool]:
     commissioning = commission()
     cases = parse_case_specs(rows)
     frozen = freeze_inputs(cases)
     results = [
-        measure_case(case, frozen[case.expected.name])
+        measure_case(
+            case,
+            frozen[case.expected.name],
+            require_exact_reference=require_exact_reference,
+        )
         for case in cases
     ]
     verify_inputs_unchanged(cases, frozen)
@@ -1168,12 +1328,19 @@ def measure(rows: Sequence[Sequence[str]]) -> tuple[dict[str, Any], bool]:
     return payload, passed
 
 
-def parser() -> argparse.ArgumentParser:
-    root = argparse.ArgumentParser()
-    commands = root.add_subparsers(dest="command", required=True)
-    commands.add_parser("commission")
-    measure_parser = commands.add_parser("measure")
-    measure_parser.add_argument(
+def measure(rows: Sequence[Sequence[str]]) -> tuple[dict[str, Any], bool]:
+    return _measure(rows, require_exact_reference=True)
+
+
+def measure_product(rows: Sequence[Sequence[str]]) -> tuple[dict[str, Any], bool]:
+    payload, passed = _measure(rows, require_exact_reference=False)
+    payload["result_label"] = PRODUCT_DIAGNOSTIC_LABEL
+    payload["strict_preregistered_status"] = STRICT_PREREGISTERED_STATUS
+    return payload, passed
+
+
+def _add_measure_cases(command: argparse.ArgumentParser) -> None:
+    command.add_argument(
         "--case",
         action="append",
         nargs=5,
@@ -1181,6 +1348,16 @@ def parser() -> argparse.ArgumentParser:
         metavar=("NAME", "RAW", "SIDECAR", "CROP_TIFF", "SCALE_TIFF"),
         help="repeat exactly three times, once for each registered flat exposure",
     )
+
+
+def parser() -> argparse.ArgumentParser:
+    root = argparse.ArgumentParser()
+    commands = root.add_subparsers(dest="command", required=True)
+    commands.add_parser("commission")
+    measure_parser = commands.add_parser("measure")
+    _add_measure_cases(measure_parser)
+    product_parser = commands.add_parser("measure-product")
+    _add_measure_cases(product_parser)
     return root
 
 
@@ -1190,6 +1367,9 @@ def main() -> int:
         if args.command == "commission":
             payload = commission()
             exit_code = 0
+        elif args.command == "measure-product":
+            payload, passed = measure_product(args.case)
+            exit_code = 0 if passed else 1
         else:
             payload, passed = measure(args.case)
             exit_code = 0 if passed else 1

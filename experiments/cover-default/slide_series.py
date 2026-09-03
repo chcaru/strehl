@@ -25,6 +25,7 @@ MARGIN_PX = 3.0
 SNR_K_SPAN_LIMIT = 0.0010
 SNR_EDGE_SPAN_LIMIT_PX = 2
 SUBSET_K_SPAN_LIMIT = 0.0010
+ACTUAL_PRODUCT_DIAGNOSTIC = "ACTUAL_PRODUCT_DIAGNOSTIC"
 IDENTITY_BITS = (
     "3ff0000000000000",
     "0000000000000000",
@@ -315,8 +316,14 @@ def parse_warpmap_text(text: str, source: str = "<memory>") -> WarpMap:
     )
 
 
-def validate_warpmap(warpmap: WarpMap, spec: StackSpec, source: str = "<memory>") -> None:
-    """Apply every frozen pre-measurement gate."""
+def _validate_warpmap(
+    warpmap: WarpMap,
+    spec: StackSpec,
+    source: str,
+    *,
+    require_exact_reference: bool,
+) -> None:
+    """Apply the common frozen gates and the requested reference-gauge gate."""
 
     if warpmap.stack_name != spec.stack_name:
         raise AdjudicationError(
@@ -358,11 +365,58 @@ def validate_warpmap(warpmap: WarpMap, spec: StackSpec, source: str = "<memory>"
             raise AdjudicationError(f"{source}: frame {index} has a non-finite placement")
 
     reference = warpmap.records[spec.reference]
-    if not isinstance(reference, Placement) or reference.bits != IDENTITY_BITS:
+    if require_exact_reference and (
+        not isinstance(reference, Placement) or reference.bits != IDENTITY_BITS
+    ):
         got = reference.bits if isinstance(reference, Placement) else "refused"
         raise AdjudicationError(
             f"{source}: reference transform is not exact f64 identity; got {got}"
         )
+
+
+def validate_warpmap(warpmap: WarpMap, spec: StackSpec, source: str = "<memory>") -> None:
+    """Apply every frozen strict pre-measurement gate."""
+
+    _validate_warpmap(
+        warpmap,
+        spec,
+        source,
+        require_exact_reference=True,
+    )
+
+
+def validate_product_warpmap(
+    warpmap: WarpMap, spec: StackSpec, source: str = "<memory>"
+) -> None:
+    """Apply every frozen gate except strict reference bit identity."""
+
+    _validate_warpmap(
+        warpmap,
+        spec,
+        source,
+        require_exact_reference=False,
+    )
+
+
+def _reference_transform_report(warpmap: WarpMap, spec: StackSpec) -> dict[str, Any]:
+    reference = warpmap.records[spec.reference]
+    if not isinstance(reference, Placement):
+        raise AdjudicationError(
+            f"{spec.name}: reference frame {spec.reference} was refused"
+        )
+    half_width = warpmap.width * 0.5
+    half_height = warpmap.height * 0.5
+    delta_a = reference.a - 1.0
+    maximum_displacement = max(
+        abs(delta_a * complex(x, y) + reference.b)
+        for x in (-half_width, half_width)
+        for y in (-half_height, half_height)
+    )
+    return {
+        "f64_bits": list(reference.bits),
+        "exact_identity": reference.bits == IDENTITY_BITS,
+        "max_centered_corner_displacement_px": maximum_displacement,
+    }
 
 
 def _placements(warpmap: WarpMap) -> tuple[Placement, ...]:
@@ -539,6 +593,7 @@ def _measurement_row(
         "placed": len(placements),
         "refused": warpmap.frames - len(placements),
         "reference_identity_bits": list(IDENTITY_BITS),
+        "reference_transform": _reference_transform_report(warpmap, spec),
         "strategy": warpmap.strategy,
         "note": warpmap.note,
         "heldout_px": warpmap.heldout_px.value,
@@ -554,7 +609,9 @@ def _measurement_row(
     }
 
 
-def _read_sidecar(spec: StackSpec, path: Path) -> tuple[bytes, WarpMap]:
+def _read_sidecar(
+    spec: StackSpec, path: Path, *, product_mode: bool = False
+) -> tuple[bytes, WarpMap]:
     try:
         raw_bytes = path.read_bytes()
     except OSError as error:
@@ -565,14 +622,19 @@ def _read_sidecar(spec: StackSpec, path: Path) -> tuple[bytes, WarpMap]:
         raise AdjudicationError(f"{spec.name}: sidecar is not UTF-8: {error}") from error
     source = f"{spec.name}={path}"
     warpmap = parse_warpmap_text(text, source)
-    validate_warpmap(warpmap, spec, source)
+    if product_mode:
+        validate_product_warpmap(warpmap, spec, source)
+    else:
+        validate_warpmap(warpmap, spec, source)
     return raw_bytes, warpmap
 
 
-def _bindings(raw_bindings: Sequence[str]) -> dict[str, Path]:
+def _bindings(
+    raw_bindings: Sequence[str], command_name: str = "measure"
+) -> dict[str, Path]:
     if len(raw_bindings) != len(STACK_SPECS):
         raise AdjudicationError(
-            f"measure requires exactly {len(STACK_SPECS)} name=path sidecars"
+            f"{command_name} requires exactly {len(STACK_SPECS)} name=path sidecars"
         )
     bindings: dict[str, Path] = {}
     for raw in raw_bindings:
@@ -592,13 +654,20 @@ def _bindings(raw_bindings: Sequence[str]) -> dict[str, Path]:
     return bindings
 
 
-def command_measure(args: argparse.Namespace) -> dict[str, Any]:
-    bindings = _bindings(args.sidecars)
+def _command_measure(
+    args: argparse.Namespace, *, product_mode: bool
+) -> dict[str, Any]:
+    command_name = "measure-product" if product_mode else "measure"
+    bindings = _bindings(args.sidecars, command_name)
     rows: list[dict[str, Any]] = []
     warpmaps: dict[str, WarpMap] = {}
     for spec in STACK_SPECS:
         path = bindings[spec.name]
-        raw_bytes, warpmap = _read_sidecar(spec, path)
+        raw_bytes, warpmap = _read_sidecar(
+            spec,
+            path,
+            product_mode=product_mode,
+        )
         rows.append(_measurement_row(spec, path, raw_bytes, warpmap))
         warpmaps[spec.name] = warpmap
     by_name = {row["name"]: row for row in rows}
@@ -686,8 +755,12 @@ def command_measure(args: argparse.Namespace) -> dict[str, Any]:
         ),
     }
 
-    return {
-        "command": "measure",
+    if product_mode:
+        for control in (order, snr_control, step_width_control):
+            control["diagnostic_label"] = ACTUAL_PRODUCT_DIAGNOSTIC
+
+    payload = {
+        "command": command_name,
         "status": "MEASURED",
         "method": {
             "serialized_values": "IEEE-754 binary64 decoded from exact 16-hex-digit fields",
@@ -701,6 +774,32 @@ def command_measure(args: argparse.Namespace) -> dict[str, Any]:
         "snr_control": snr_control,
         "step_width_control": step_width_control,
     }
+    if product_mode:
+        nonexact_references = [
+            row["name"]
+            for row in rows
+            if not row["reference_transform"]["exact_identity"]
+        ]
+        payload.update(
+            {
+                "diagnostic_label": ACTUAL_PRODUCT_DIAGNOSTIC,
+                "strict_preregistered_status": (
+                    "UNMEASURABLE_REFERENCE_NOT_BIT_IDENTITY"
+                    if nonexact_references
+                    else "MEASURABLE"
+                ),
+                "nonexact_reference_maps": nonexact_references,
+            }
+        )
+    return payload
+
+
+def command_measure(args: argparse.Namespace) -> dict[str, Any]:
+    return _command_measure(args, product_mode=False)
+
+
+def command_measure_product(args: argparse.Namespace) -> dict[str, Any]:
+    return _command_measure(args, product_mode=True)
 
 
 def _placement(
@@ -752,6 +851,15 @@ def _expect_refusal(text: str, spec: StackSpec) -> str:
     except AdjudicationError as error:
         return str(error)
     raise CommissionError("a planted invalid sidecar was accepted")
+
+
+def _expect_product_refusal(text: str, spec: StackSpec) -> str:
+    try:
+        parsed = parse_warpmap_text(text)
+        validate_product_warpmap(parsed, spec)
+    except AdjudicationError as error:
+        return str(error)
+    raise CommissionError("product mode accepted a planted invalid sidecar")
 
 
 def command_commission(_: argparse.Namespace) -> dict[str, Any]:
@@ -892,6 +1000,56 @@ def command_commission(_: argparse.Namespace) -> dict[str, Any]:
     }
     _require(reference_line in good_text, "synthetic reference line was not constructed")
 
+    material_placement = _placement(b_re=30.0, b_im=40.0)
+    material_text = _replace_line(
+        good_text,
+        f"{spec.reference} placed ",
+        f"{spec.reference} placed " + " ".join(material_placement.bits),
+    )
+    strict_reference_refusal = _expect_refusal(material_text, spec)
+    _require(
+        "reference transform is not exact f64 identity" in strict_reference_refusal,
+        "strict mode did not reject the material nonidentity reference",
+    )
+    material_map = parse_warpmap_text(material_text)
+    records_before = material_map.records
+    reference_before = material_map.records[spec.reference]
+    validate_product_warpmap(material_map, spec)
+    material_row = _measurement_row(
+        spec,
+        Path("<commission-memory>"),
+        material_text.encode("utf-8"),
+        material_map,
+    )
+    reference_after = material_map.records[spec.reference]
+    material_report = material_row["reference_transform"]
+    transform_unchanged = (
+        material_map.records is records_before
+        and reference_after is reference_before
+        and reference_after == material_placement
+    )
+    _require(transform_unchanged, "product mode mutated the reference transform")
+    _require(
+        material_report["f64_bits"] == list(material_placement.bits),
+        "product mode did not report the serialized reference bits unchanged",
+    )
+    _require(
+        not material_report["exact_identity"],
+        "product mode incorrectly reported exact reference identity",
+    )
+    _require(
+        material_report["max_centered_corner_displacement_px"] == 50.0,
+        "reference displacement did not recover the exact 30-40-50 oracle",
+    )
+    _require(
+        material_row["k"] < baseline_k,
+        "product measurement did not retain the material reference transform",
+    )
+    product_common_gate_refusal = _expect_product_refusal(
+        _replace_line(material_text, "resampler ", "resampler bilinear"),
+        spec,
+    )
+
     return {
         "command": "commission",
         "status": "COMMISSIONED",
@@ -937,6 +1095,20 @@ def command_commission(_: argparse.Namespace) -> dict[str, Any]:
             "exact_f64_bits_round_trip": subtle_bits,
             "refusals": validation_refusals,
         },
+        "reference_gauge": {
+            "strict_reference_refusal": strict_reference_refusal,
+            "product_nonidentity_accepted": True,
+            "product_common_gate_refusal": product_common_gate_refusal,
+            "serialized_transform_unchanged": transform_unchanged,
+            "reference_transform": material_report,
+            "exact_displacement_oracle_px": 50.0,
+            "admission_threshold_px": None,
+            "material_nonidentity_reported_without_threshold": (
+                material_report["max_centered_corner_displacement_px"] == 50.0
+            ),
+            "identity_baseline_k": baseline_k,
+            "actual_product_k": material_row["k"],
+        },
         "invokes_strehl": False,
         "writes_result_files": False,
     }
@@ -957,6 +1129,10 @@ def parser() -> argparse.ArgumentParser:
     measure = commands.add_parser("measure")
     measure.add_argument("sidecars", nargs="+", metavar="NAME=PATH")
     measure.set_defaults(run=command_measure)
+
+    measure_product = commands.add_parser("measure-product")
+    measure_product.add_argument("sidecars", nargs="+", metavar="NAME=PATH")
+    measure_product.set_defaults(run=command_measure_product)
     return result
 
 
@@ -977,7 +1153,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "error": str(error),
                 "status": (
                     "UNMEASURABLE"
-                    if command == "measure"
+                    if command in {"measure", "measure-product"}
                     else "COMMISSION_FAILED"
                     if command == "commission"
                     else "REFUSED"

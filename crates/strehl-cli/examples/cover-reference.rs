@@ -24,12 +24,15 @@ const SOFTWARE: &str = concat!(
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail, ensure};
-use strehl_core::align::{Resampler, Similarity};
+use strehl_core::align::{Resampler, Similarity, corners};
 use strehl_core::noise::Levels;
 use strehl_core::plane::{PlaneGeometry, QuadSource};
 use strehl_core::warpmap::{FrameWarp, StackIdentity, WarpMap};
 
-const USAGE: &str = "usage: cover-reference <DIR> <WARPMAP> <crop|scale> <OUT.tiff>";
+const ACTUAL_PRODUCT_REFERENCE_FLAG: &str = "--actual-product-reference";
+const STRICT_REFERENCE_STATUS: &str = "UNMEASURABLE_REFERENCE_NOT_BIT_IDENTITY";
+const USAGE: &str =
+    "usage: cover-reference <DIR> <WARPMAP> <crop|scale> <OUT.tiff> [--actual-product-reference]";
 
 #[derive(Debug, PartialEq, Eq)]
 struct Args {
@@ -37,15 +40,25 @@ struct Args {
     warpmap: PathBuf,
     mode: align_cmd::CoverMode,
     out: PathBuf,
+    actual_product_reference: bool,
 }
 
 fn parse_args_from(args: impl IntoIterator<Item = String>) -> Result<Args> {
     let args: Vec<String> = args.into_iter().collect();
     ensure!(
-        args.len() == 4,
-        "{USAGE}\nexpected exactly four operands, found {}",
+        args.len() == 4 || args.len() == 5,
+        "{USAGE}\nexpected exactly four operands and at most one explicit fifth flag, found {} arguments",
         args.len()
     );
+    let actual_product_reference = match args.get(4) {
+        None => false,
+        Some(flag) if flag == ACTUAL_PRODUCT_REFERENCE_FLAG => true,
+        Some(flag) => {
+            bail!(
+                "{USAGE}\nfifth argument must be exactly {ACTUAL_PRODUCT_REFERENCE_FLAG:?}, found {flag:?}"
+            )
+        }
+    };
     let mode = match args[2].as_str() {
         "crop" => align_cmd::CoverMode::Crop,
         "scale" => align_cmd::CoverMode::Scale,
@@ -66,6 +79,7 @@ fn parse_args_from(args: impl IntoIterator<Item = String>) -> Result<Args> {
         warpmap: PathBuf::from(&args[1]),
         mode,
         out,
+        actual_product_reference,
     })
 }
 
@@ -124,7 +138,57 @@ fn is_exact_identity(t: Similarity) -> bool {
         && t.b.im.to_bits() == 0.0f64.to_bits()
 }
 
-fn validate_map(map: &WarpMap, identity: &StackIdentity, paths: &[PathBuf]) -> Result<usize> {
+fn reference_f64_bits(t: Similarity) -> [u64; 4] {
+    [
+        t.a.re.to_bits(),
+        t.a.im.to_bits(),
+        t.b.re.to_bits(),
+        t.b.im.to_bits(),
+    ]
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct ReferenceGauge {
+    f64_bits: [u64; 4],
+    exact_identity: bool,
+    max_centered_corner_displacement: f64,
+}
+
+fn reference_gauge(t: Similarity, geometry: PlaneGeometry) -> ReferenceGauge {
+    // Do not evaluate `t.apply(z) - z`: near identity that subtracts two
+    // plane-scale coordinates and can erase the displacement being measured.
+    // This is the alignment source's cancellation-resistant expression.
+    let a_minus_one = t.a - Similarity::IDENTITY.a;
+    let max_centered_corner_displacement = corners(geometry)
+        .into_iter()
+        .map(|z| (a_minus_one * z + t.b).abs())
+        .fold(0.0f64, f64::max);
+    ReferenceGauge {
+        f64_bits: reference_f64_bits(t),
+        exact_identity: is_exact_identity(t),
+        max_centered_corner_displacement,
+    }
+}
+
+/// Admit the serialized placement or refuse it; never construct a replacement.
+fn admit_reference_placement(
+    reference: usize,
+    placement: Similarity,
+    actual_product_reference: bool,
+) -> Result<Similarity> {
+    ensure!(
+        actual_product_reference || is_exact_identity(placement),
+        "sidecar reference {reference} is not exact serialized f64 identity: {:?}",
+        placement.to_params()
+    );
+    Ok(placement)
+}
+
+fn validate_map(
+    map: &WarpMap,
+    identity: &StackIdentity,
+    paths: &[PathBuf],
+) -> Result<(usize, Similarity)> {
     map.check_stack(identity)
         .context("the explicit sidecar does not identify the full sorted stack")?;
     ensure!(
@@ -174,12 +238,7 @@ fn validate_map(map: &WarpMap, identity: &StackIdentity, paths: &[PathBuf]) -> R
     let reference_placement = map
         .placement(reference)
         .context("reading the registered reference placement")?;
-    ensure!(
-        is_exact_identity(reference_placement),
-        "sidecar reference {reference} is not exact serialized f64 identity: {:?}",
-        reference_placement.to_params()
-    );
-    Ok(reference)
+    Ok((reference, reference_placement))
 }
 
 fn validate_rect(rect: align_cmd::CropRect, full: PlaneGeometry) -> Result<()> {
@@ -307,7 +366,7 @@ fn run(args: Args) -> Result<()> {
         .with_context(|| format!("{} is not UTF-8", args.warpmap.display()))?;
     let map = WarpMap::from_text(sidecar_text)
         .with_context(|| format!("parsing explicit sidecar {}", args.warpmap.display()))?;
-    let reference = validate_map(&map, &identity, &paths)?;
+    let (reference, serialized_reference_placement) = validate_map(&map, &identity, &paths)?;
     let original_geom = map.geometry();
     let original_provenance = map.provenance().clone();
 
@@ -330,12 +389,40 @@ fn run(args: Args) -> Result<()> {
         original_provenance.heldout_px, original_provenance.cycle_floor_px
     );
     println!(
-        "reference       : [{reference}] {} (exact serialized f64 identity)",
+        "reference       : [{reference}] {}",
         paths[reference]
             .file_name()
             .map(|s| s.to_string_lossy())
             .unwrap_or_default()
     );
+    let reference_gauge = reference_gauge(serialized_reference_placement, original_geom);
+    println!(
+        "reference bits  : a.re={:016x} a.im={:016x} b.re={:016x} b.im={:016x}",
+        reference_gauge.f64_bits[0],
+        reference_gauge.f64_bits[1],
+        reference_gauge.f64_bits[2],
+        reference_gauge.f64_bits[3]
+    );
+    println!("exact_identity  : {}", reference_gauge.exact_identity);
+    println!(
+        "reference gauge : max centered-corner displacement {:.17e} plane px",
+        reference_gauge.max_centered_corner_displacement
+    );
+    let admitted_reference_placement = admit_reference_placement(
+        reference,
+        serialized_reference_placement,
+        args.actual_product_reference,
+    )?;
+    if args.actual_product_reference {
+        println!(
+            "reference mode  : actual-product (serialized placement admitted without mutation)"
+        );
+        if !reference_gauge.exact_identity {
+            println!("strict_preregistered_status = {STRICT_REFERENCE_STATUS}");
+        }
+    } else {
+        println!("reference mode  : strict preregistered exact-bit identity");
+    }
     println!(
         "registration    : {} placed / {} refused; Catmull-Rom",
         map.placed_count(),
@@ -426,7 +513,17 @@ fn run(args: Args) -> Result<()> {
     let reference_placement = covered_map
         .placement(reference)
         .context("reading covered reference placement")?;
+    if args.mode == align_cmd::CoverMode::Crop {
+        ensure!(
+            reference_f64_bits(reference_placement)
+                == reference_f64_bits(admitted_reference_placement),
+            "production Crop coverage mutated the admitted reference placement"
+        );
+    }
     let mut scratch = align_cmd::WarpScratch::new(original_geom);
+    // Pass the production-covered map's placement itself. In actual-product
+    // mode there is no identity substitute, rebase, reconstruction, or
+    // canonicalization between this lookup and the production warp call.
     let covered_fraction = align_cmd::warp_frame_in_place(
         &mut frame,
         reference_placement,
@@ -504,15 +601,29 @@ mod tests {
     }
 
     #[test]
-    fn cli_is_exactly_four_operands_and_two_modes() {
+    fn cli_preserves_strict_four_operands_and_has_one_explicit_fifth_flag() {
         let crop =
             parse_args_from(["stack", "full.warpmap.txt", "crop", "out.tiff"].map(String::from))
                 .unwrap();
         assert_eq!(crop.mode, align_cmd::CoverMode::Crop);
+        assert!(!crop.actual_product_reference);
         let scale =
             parse_args_from(["stack", "full.warpmap.txt", "scale", "out.TIFF"].map(String::from))
                 .unwrap();
         assert_eq!(scale.mode, align_cmd::CoverMode::Scale);
+        assert!(!scale.actual_product_reference);
+        let actual = parse_args_from(
+            [
+                "stack",
+                "full.warpmap.txt",
+                "crop",
+                "out.tiff",
+                ACTUAL_PRODUCT_REFERENCE_FLAG,
+            ]
+            .map(String::from),
+        )
+        .unwrap();
+        assert!(actual.actual_product_reference);
 
         for bad in [
             vec!["stack", "full.warpmap.txt", "off", "out.tiff"],
@@ -520,6 +631,21 @@ mod tests {
             vec!["stack", "full.warpmap.txt", "crop", "out.tif"],
             vec!["stack", "full.warpmap.txt", "crop"],
             vec!["stack", "full.warpmap.txt", "crop", "out.tiff", "extra"],
+            vec![
+                "stack",
+                "full.warpmap.txt",
+                "crop",
+                "out.tiff",
+                "--actual-product-reference=1",
+            ],
+            vec![
+                "stack",
+                "full.warpmap.txt",
+                "crop",
+                "out.tiff",
+                ACTUAL_PRODUCT_REFERENCE_FLAG,
+                ACTUAL_PRODUCT_REFERENCE_FLAG,
+            ],
         ] {
             assert!(
                 parse_args_from(bad.into_iter().map(String::from)).is_err(),
@@ -537,6 +663,66 @@ mod tests {
         };
         assert_eq!(signed_zero, Similarity::IDENTITY);
         assert!(!is_exact_identity(signed_zero));
+        let error = admit_reference_placement(7, signed_zero, false).unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("sidecar reference 7 is not exact serialized f64 identity")
+        );
+    }
+
+    #[test]
+    fn actual_product_mode_admits_the_exact_serialized_placement_unchanged() {
+        let placement = Similarity {
+            a: Cx::new(
+                f64::from_bits(0x3fef_ffff_ffff_ffff),
+                f64::from_bits(0x3be0_0000_0000_0000),
+            ),
+            b: Cx::new(
+                f64::from_bits(0xbc80_0000_0000_0000),
+                f64::from_bits(0x3cb0_0000_0000_0000),
+            ),
+        };
+        assert!(!is_exact_identity(placement));
+        assert!(admit_reference_placement(0, placement, false).is_err());
+        let admitted = admit_reference_placement(0, placement, true).unwrap();
+        assert_eq!(reference_f64_bits(admitted), reference_f64_bits(placement));
+    }
+
+    #[test]
+    fn amendment_reference_displacement_matches_the_centered_corner_oracle() {
+        let placement = Similarity {
+            a: Cx::new(
+                f64::from_bits(0x3fef_ffff_ffff_ffff),
+                f64::from_bits(0x3be0_0000_0000_0000),
+            ),
+            b: Cx::new(
+                f64::from_bits(0xbc80_0000_0000_0000),
+                f64::from_bits(0x3cb0_0000_0000_0000),
+            ),
+        };
+        let gauge = reference_gauge(
+            placement,
+            PlaneGeometry {
+                width: 3516,
+                height: 2344,
+            },
+        );
+        assert_eq!(
+            gauge.f64_bits,
+            [
+                0x3fef_ffff_ffff_ffff,
+                0x3be0_0000_0000_0000,
+                0xbc80_0000_0000_0000,
+                0x3cb0_0000_0000_0000,
+            ]
+        );
+        assert!(!gauge.exact_identity);
+        assert_eq!(
+            gauge.max_centered_corner_displacement.to_bits(),
+            0x3d50_8457_c7bf_0f44,
+            "expected 2.3472018171527914e-13 plane px"
+        );
     }
 
     #[test]
