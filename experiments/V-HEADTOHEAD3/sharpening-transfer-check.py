@@ -492,22 +492,40 @@ def overlap_after_shift(
 def phase_correction(
     reference: np.ndarray,
     moving: np.ndarray,
+    max_shift: int = MAX_SHIFT,
 ) -> tuple[int, int, float]:
     a = np.asarray(reference, np.float64)
     b = np.asarray(moving, np.float64)
     if a.shape != b.shape or a.ndim != 2:
         raise ValueError("phase correlation requires equal 2-D shapes")
-    shift, _, _ = phase_cross_correlation(
-        a,
-        b,
-        upsample_factor=1,
-        normalization="phase",
+    if max_shift < 0 or max_shift >= min(a.shape) // 2:
+        raise ValueError("invalid phase-correlation search bound")
+    window = (
+        np.hanning(a.shape[0])[:, None]
+        * np.hanning(a.shape[1])[None, :]
     )
-    if shift.shape != (2,) or not np.all(np.isfinite(shift)):
-        raise ValueError("phase correlation returned a non-finite shift")
+    fa = np.fft.rfft2((a - np.mean(a)) * window)
+    fb = np.fft.rfft2((b - np.mean(b)) * window)
+    cross = fa * np.conj(fb)
+    cross /= np.abs(cross) + np.finfo(np.float64).eps
+    correlation = np.fft.irfft2(cross, s=a.shape)
+    distance_y = np.minimum(
+        np.arange(a.shape[0]),
+        a.shape[0] - np.arange(a.shape[0]),
+    )
+    distance_x = np.minimum(
+        np.arange(a.shape[1]),
+        a.shape[1] - np.arange(a.shape[1]),
+    )
+    allowed = (
+        (distance_y[:, None] <= max_shift)
+        & (distance_x[None, :] <= max_shift)
+    )
+    correlation = np.where(allowed, correlation, -np.inf)
+    iy, ix = np.unravel_index(np.argmax(correlation), correlation.shape)
     correction = (
-        int(round(float(shift[0]))),
-        int(round(float(shift[1]))),
+        int(iy - a.shape[0] if iy > a.shape[0] // 2 else iy),
+        int(ix - a.shape[1] if ix > a.shape[1] // 2 else ix),
     )
     aa, bb = overlap_after_shift(a, b, correction)
     return correction[0], correction[1], pearson(aa, bb)
@@ -1125,6 +1143,40 @@ def _shift_gate(
     )
 
 
+def _unwindowed_phase_mutant(
+    reference: np.ndarray,
+    moving: np.ndarray,
+) -> tuple[int, int, float]:
+    """Commissioning-only defect: omit the registered Hann window."""
+    a = np.asarray(reference, np.float64)
+    b = np.asarray(moving, np.float64)
+    fa = np.fft.rfft2(a - np.mean(a))
+    fb = np.fft.rfft2(b - np.mean(b))
+    cross = fa * np.conj(fb)
+    cross /= np.abs(cross) + np.finfo(np.float64).eps
+    correlation = np.fft.irfft2(cross, s=a.shape)
+    distance_y = np.minimum(
+        np.arange(a.shape[0]),
+        a.shape[0] - np.arange(a.shape[0]),
+    )
+    distance_x = np.minimum(
+        np.arange(a.shape[1]),
+        a.shape[1] - np.arange(a.shape[1]),
+    )
+    allowed = (
+        (distance_y[:, None] <= MAX_SHIFT)
+        & (distance_x[None, :] <= MAX_SHIFT)
+    )
+    iy, ix = np.unravel_index(
+        np.argmax(np.where(allowed, correlation, -np.inf)),
+        correlation.shape,
+    )
+    dy = int(iy - a.shape[0] if iy > a.shape[0] // 2 else iy)
+    dx = int(ix - a.shape[1] if ix > a.shape[1] // 2 else ix)
+    aa, bb = overlap_after_shift(a, b, (dy, dx))
+    return dy, dx, pearson(aa, bb)
+
+
 def _expected_manifest_copy() -> dict[str, object]:
     return {
         "SITE_DIGEST": SITE_DIGEST,
@@ -1281,6 +1333,61 @@ def commission_result() -> dict:
             first_plant[1],
             pearson(a, b),
         ),
+    )
+    edge_rng = np.random.default_rng(0)
+    edge_reference = edge_rng.normal(size=(96, 104))
+    edge_moving = _translate_nonwrapping(edge_reference, first_plant)
+    border = 20
+    edge_moving[:border, :] = 20.0 * edge_rng.normal(
+        size=edge_moving[:border, :].shape
+    )
+    edge_moving[-border:, :] = 20.0 * edge_rng.normal(
+        size=edge_moving[-border:, :].shape
+    )
+    edge_moving[:, :border] = 20.0 * edge_rng.normal(
+        size=edge_moving[:, :border].shape
+    )
+    edge_moving[:, -border:] = 20.0 * edge_rng.normal(
+        size=edge_moving[:, -border:].shape
+    )
+    edge_correction = phase_correction(edge_reference, edge_moving)
+    unwindowed_correction = _unwindowed_phase_mutant(
+        edge_reference,
+        edge_moving,
+    )
+    controls["windowed_edge_shift"] = bool(
+        edge_correction[:2] == (-first_plant[0], -first_plant[1])
+        and np.isfinite(edge_correction[2])
+    )
+    mutants["phase_window_disabled"] = (
+        unwindowed_correction[:2]
+        != (-first_plant[0], -first_plant[1])
+    )
+
+    outside_plant = (40, -39)
+    outside_moving = _translate_nonwrapping(
+        shift_reference,
+        outside_plant,
+    )
+    bounded_dy, bounded_dx, _ = phase_correction(
+        shift_reference,
+        outside_moving,
+    )
+    unbounded, _, _ = phase_cross_correlation(
+        shift_reference,
+        outside_moving,
+        upsample_factor=1,
+        normalization="phase",
+    )
+    controls["shift_bound_enforced"] = (
+        abs(bounded_dy) <= MAX_SHIFT
+        and abs(bounded_dx) <= MAX_SHIFT
+        and (bounded_dy, bounded_dx)
+        != (-outside_plant[0], -outside_plant[1])
+    )
+    mutants["shift_bound_disabled"] = (
+        abs(int(round(float(unbounded[0])))) > MAX_SHIFT
+        or abs(int(round(float(unbounded[1])))) > MAX_SHIFT
     )
 
     oracle_ratios = np.asarray(
