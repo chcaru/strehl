@@ -12,6 +12,14 @@ reaches only 0.0664 correlation at the corrected sign, so the fixed gate would
 have made the requested comparison impossible by construction.  No other term
 changed.
 
+Amended again after the first synthetic commissioning run, still before any
+real outcome measurement: the predeclared flat-stratum log subtraction failed
+its own additive-noise control by 25,494×.  Rank normalisation makes an additive
+fine-noise process a vastly larger *ratio* on a flat spectrum than on a detail
+spectrum, so the subtraction amplified rather than removed the confound.  It
+is replaced below by a conservative same-direction flat-stratum veto.  The
+failed reading remains part of the record; no threshold was tuned on real data.
+
 ## Question and scope
 
 On the two same-bracket comparator renders that still exist, does strehl carry
@@ -126,15 +134,18 @@ symmetrically as the geometric mean of the arms' total ordinal share from
 low-texture/flat control, the top half is the detail stratum, and the middle
 quartile is unused.  The primary effect is
 
-`theta_k = mean(d_ik in detail) - mean(d_ik in low-texture)`,
+`theta_k = mean(d_ik in detail)`, with `R_detail = exp(theta_k)`.
 
-with `R_adj = exp(theta_k)`.  The unadjusted `R_detail` and the flat-control
-`R_flat` are also mandatory.  This subtraction prevents a general
-high-frequency/noise advantage from being called detail-specific structure.
+`R_flat = exp(mean(d_ik in low-texture))` is a mandatory placebo.  A
+statistically resolved flat effect in the same direction vetoes a detail
+verdict rather than being subtracted from it.  This avoids both errors exposed
+by commissioning: calling a general high-frequency/noise advantage
+detail-specific, and pretending that a multiplicative ratio correction can
+remove additive noise from a nearly zero flat-band denominator.
 
-Uncertainty is a two-stratum paired bootstrap (10,000 replicates, PCG64 seed
-`20260902`), independently resampling ROI pairs within detail and
-low-texture strata.  The percentile 95% interval is preregistered; a
+Uncertainty is a paired bootstrap within each stratum (10,000 replicates,
+PCG64 seed `20260902`).  Separate percentile 95% intervals are reported for
+`R_detail` and `R_flat`; a
 leave-one-ROI-out range and four spatial-quadrant estimates are robustness
 diagnostics, not alternate headline estimators.
 
@@ -159,7 +170,7 @@ Before real outcome measurement, the instrument must pass all of these:
    of the implementation must match exactly.  Permuting two expected ranks
    must go RED.
 2. **Tone invariance:** identity versus affine, gamma 3.0, and a strong
-   strictly increasing logistic S-curve must move every `A_k` and `R_adj` by at
+   strictly increasing logistic S-curve must move every `A_k` and `R_detail` by at
    most `1e-10`, first on synthetic data and then on an actual ROI.  Raw
    intensity band share must move by at least 5% under one of the same curves
    (potency).  Replacing rank share with raw share must go RED.
@@ -175,10 +186,11 @@ Before real outcome measurement, the instrument must pass all of these:
    by at least 15% from sigma 0 to 2.  A disabled blur plant must go RED.
    Per-band absolute change must be at least 5% for that band to be SENSITIVE.
 7. **Flat/noise placebo:** identical constant-plus-fixed-noise arms must read
-   `R_adj=1` to `1e-10`.  Adding the same independent fine noise process to
-   comparator detail and comparator flat must move unadjusted fine share but
-   leave the adjusted effect within 5%; omitting the flat subtraction must go
-   RED.
+   `R_detail=R_flat=1` to `1e-10`.  Adding the same independent fine noise
+   process to comparator detail and comparator flat must move unadjusted fine
+   share and produce a resolved same-direction flat effect, causing the verdict
+   to be vetoed as UNRESOLVED.  Omitting that veto must go RED.  The superseded
+   subtraction is required to fail this control and its reading is retained.
 8. **Tie/clipping exposure:** a 12-bit quantisation and a 1%/99% clip are
    measured.  They are not expected to be invariant; failure to detect a
    changed tie census must go RED.  Real-arm largest tie groups and rail
@@ -193,12 +205,14 @@ silently waived.
 
 For a SENSITIVE band:
 
-* **LEADS:** lower 95% bound of `R_adj` is above `1.05`;
+* **LEADS:** lower 95% bound of `R_detail` is above `1.05`;
 * **TRAILS:** upper 95% bound is below `1/1.05 = 0.952381`;
 * **UNRESOLVED:** otherwise.
 
 The 5% region is a practical-equivalence guard against declaring tiny
-rank-spectrum shifts.  A class is additionally downgraded to UNRESOLVED if
+rank-spectrum shifts.  A provisional LEADS/TRAILS class is downgraded to
+UNRESOLVED (FLAT VETO) when the flat-control 95% interval is wholly beyond the
+same 5% guard in the same direction.  A class is additionally downgraded if
 fewer than 12 detail or 6 low-texture ROIs survive, if the leave-one-out class
 can reverse, or if two or more spatial quadrants have opposite signed point
 effects.  A band that fails blur reach is NOT SENSITIVE.  If the two subjects'
@@ -208,5 +222,5 @@ sharpening/noise plants decide how strongly they can be interpreted as
 faithful detail.
 
 The author code and an independent implementation must agree on geometry scale
-within 0.5%, per-band class, and `R_adj` within the sum of their bootstrap
+within 0.5%, per-band class, and `R_detail` within the sum of their bootstrap
 half-widths.  Disagreement is published, not reconciled.
