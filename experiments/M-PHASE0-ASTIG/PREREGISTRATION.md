@@ -316,3 +316,55 @@ three valid outer sectors.
 
 All scripts and generated outputs will live under this experiment directory.
 No file under `D:\personal\macro` will be written.
+
+---
+
+## Amendment 1 — the two decoders expose different valid contracts
+
+Status: **REGISTERED AFTER THE LOADER PREFLIGHT FAILED, BEFORE ANY REAL
+SHARPNESS RESPONSE OR FOCUS SPLIT WAS COMPUTED.**
+
+The original §4 required rawpy and `strehl probe` to agree on active dimensions
+and white level. The first loader-only preflight correctly made that requirement
+RED:
+
+```text
+rawpy:        visible 7028 x 4688, black 512, container white 16383
+strehl probe: active  7032 x 4688, black 512, linear    white 15360
+```
+
+This is not a newly discovered discrepancy and it is not evidence of corrupt
+pixels. The corpus already distinguishes the two representations:
+
+* `docs/research/BUILD-CHROMA.md` records rawpy's `4688 x 7028`,
+  `raw_pattern [[0,1],[3,2]]`, `RGBG`, black 512 and container white 16383;
+* `crates/strehl-raw/src/lib.rs` and `strehl probe` record rawler's
+  `7032 x 4688` active rectangle inside its padded decode, black 512 and
+  camera-linear white 15360;
+* `experiments/M-PHASE0-LCA/src/commission.py::loader_control` explicitly
+  accepts both contracts, explains the four-column difference, and uses only
+  rawpy's copied 7028-column array for that lane's verdict.
+
+The failed original gate asked two unlike representations to be identical. It
+cannot be repaired by silently choosing the one that lets this lane continue.
+The replacement gate, fixed now, is:
+
+1. two independent rawpy opens must be byte-identical and each must report
+   `(4688,7028)`, `uint16`, pattern `[[0,1],[3,2]]`, `RGBG`, four black levels
+   of 512 and container white 16383;
+2. the committed release binary must exit zero and report camera `ILCE-7CM2`,
+   ISO 100, active `7032 x 4688`, black 512 and linear white 15360 on that same
+   directory;
+3. a planted padded shape `(5120,7168)` must make the rawpy contract RED;
+4. all measurement coordinates are derived from rawpy's visible array only;
+   the clipping gate uses the stricter camera-linear white 15360; and
+5. shifting every horizontal tile centre by the entire representation
+   difference (±2 green-plane columns) is added as a mandatory sensitivity. A
+   sign or one-frame-threshold flip is **NOT ROBUST**.
+
+The replacement does **not** claim an independent pixel-by-pixel decode:
+`strehl probe` prints no pixel checksum or per-plane moments. That part of the
+original requirement is **not verified and is withdrawn**, rather than
+pretended satisfied by opening rawpy twice. The two rawpy opens test lifetime
+and determinism; the rawler probe independently tests file identity, camera
+metadata, geometry and levels.
