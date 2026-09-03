@@ -1,0 +1,28 @@
+{
+  "derived_verdict": "NOT ROBUST",
+  "errors": [],
+  "self_commissioning": {
+    "all_plants_red": true,
+    "plants": [
+      {
+        "name": "theta-arithmetic",
+        "red": true
+      },
+      {
+        "name": "verdict-lookup",
+        "red": true
+      },
+      {
+        "name": "site-run-length",
+        "red": true
+      },
+      {
+        "name": "report-result-mismatch",
+        "red": true
+      }
+    ],
+    "plants_red": 4,
+    "plants_total": 4
+  },
+  "status": "PASS"
+}

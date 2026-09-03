@@ -214,6 +214,40 @@ def spatial_blocks(shape: tuple[int, int], block: int = 16) -> list[tuple[slice,
     return out
 
 
+def _correlation_sufficient(
+    x: np.ndarray,
+    y: np.ndarray,
+    blocks: Sequence[tuple[slice, slice]],
+) -> np.ndarray:
+    """Per-block sufficient statistics for exact concatenated correlation."""
+    rows = []
+    for s in blocks:
+        a = np.asarray(x[s], dtype=np.float64).ravel()
+        b = np.asarray(y[s], dtype=np.float64).ravel()
+        rows.append(
+            [
+                a.size,
+                a.sum(),
+                b.sum(),
+                a @ a,
+                b @ b,
+                a @ b,
+            ]
+        )
+    return np.asarray(rows, dtype=np.float64)
+
+
+def _correlation_from_sufficient(rows: np.ndarray) -> float:
+    n, sx, sy, sxx, syy, sxy = np.asarray(rows, dtype=np.float64).sum(axis=0)
+    if n <= 0:
+        return float("nan")
+    vx = sxx - sx * sx / n
+    vy = syy - sy * sy / n
+    cov = sxy - sx * sy / n
+    den = math.sqrt(max(vx, 0.0) * max(vy, 0.0))
+    return float(cov / den) if den > 0 else float("nan")
+
+
 def classify_interval(lo: float, hi: float, replicated: bool = False) -> str:
     if lo >= 0.50 and replicated:
         return "SURVIVE"
@@ -270,6 +304,8 @@ def score_site(
     bm_block = np.asarray([float(rm[s].mean()) for s in blocks])
     bf_block = np.asarray([[float(z[s].mean()) for s in blocks] for z in rf])
     bb_block = np.asarray([[float(z[s].mean()) for s in blocks] for z in rb])
+    detail_b_stats = _correlation_sufficient(hmr, hbr, blocks)
+    detail_f_stats = _correlation_sufficient(hmr, hfr, blocks)
     rng = np.random.default_rng(seed)
     theta_boot = np.empty(reps, dtype=np.float64)
     d_boot = np.empty(reps, dtype=np.float64)
@@ -286,10 +322,9 @@ def score_site(
         # Spatial cluster bootstrap for the detail gate. Frame uncertainty is
         # already represented in theta; using the frozen medians here keeps the
         # two effects identifiable.
-        xs = np.concatenate([hmr[s].ravel() for s in (blocks[j] for j in si)])
-        ys_b = np.concatenate([hbr[s].ravel() for s in (blocks[j] for j in si)])
-        ys_f = np.concatenate([hfr[s].ravel() for s in (blocks[j] for j in si)])
-        d_boot[i] = correlation(xs, ys_b) - correlation(xs, ys_f)
+        d_boot[i] = _correlation_from_sufficient(
+            detail_b_stats[si]
+        ) - _correlation_from_sufficient(detail_f_stats[si])
 
     finite = theta_boot[np.isfinite(theta_boot)]
     df = d_boot[np.isfinite(d_boot)]
@@ -333,13 +368,32 @@ def tone_locality_gate(
     anchor_rois: Sequence[Sequence[int]],
 ) -> dict:
     delta = candidate - baseline
-    target = abs(float(np.mean(crop(delta, target_roi))))
+    observed = float(np.mean(crop(delta, target_roi)))
+    target = abs(observed)
     anchors = [abs(float(np.mean(crop(delta, r)))) for r in anchor_rois]
-    frac = max(anchors, default=float("inf")) / max(target, 1e-12)
+    x = np.asarray(
+        [float(np.mean(crop(baseline, r))) for r in anchor_rois],
+        dtype=np.float64,
+    )
+    y = np.asarray(
+        [float(np.mean(crop(candidate, r))) for r in anchor_rois],
+        dtype=np.float64,
+    )
+    design = np.column_stack([x, np.ones(len(x), dtype=np.float64)])
+    slope, intercept = np.linalg.lstsq(design, y, rcond=None)[0]
+    target_baseline = float(np.mean(crop(baseline, target_roi)))
+    predicted = float(slope * target_baseline + intercept - target_baseline)
+    frac = abs(predicted) / max(target, 1e-12)
     return {
         "target_effect": target,
+        "target_effect_signed": observed,
         "anchor_effects": anchors,
-        "max_anchor_fraction": frac,
+        "affine_slope": float(slope),
+        "affine_intercept": float(intercept),
+        "affine_predicted_target_effect": predicted,
+        "affine_explained_fraction": frac,
+        "max_anchor_fraction": max(anchors, default=float("inf"))
+        / max(target, 1e-12),
         "pass": target > 0 and frac <= 0.25,
     }
 
@@ -396,4 +450,3 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: f.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest().upper()
-

@@ -1,0 +1,93 @@
+{
+  "align": {
+    "command": [
+      "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+      "align",
+      "D:\\personal\\macro\\bee-3-cpl",
+      "--out",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\bee-3-full.txt",
+      "--reference",
+      "149",
+      "--threads",
+      "4",
+      "--resampler",
+      "catmull-rom"
+    ],
+    "elapsed_seconds": 150.9218366999994,
+    "environment": {
+      "RAYON_NUM_THREADS": "4",
+      "STREHL_*": "all unset"
+    },
+    "exit_code": 0,
+    "output_text": "stack bee-3-cpl: 299 frames, digest 8d023c0fe355d109\n  reference frame 149 (--reference)\n  decoded 299 frames in 21.3 s, plane 3516x2344\n  measured 1961/2340 edges in 129.0 s (16.2% refused)\nalign: track prior on, lambda=1 huber=Some(1.0) px\n\n  placed 299/299 frames, refused 0\n  total corner drift frame 0 -> 298: 185.266 plane px\n  held-out corner error (median): 13.353 plane px\n  cycle-consistency floor: 2.908 plane px\n  wrote C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\bee-3-full.txt\n\n  NOTE: held-out error 13.353 px is above M86's T_usable of 4.0 px. The sidecar is still a large improvement on no registration at all, but it is not a precise solve.\n"
+  },
+  "artifact": {
+    "bytes": 49450680,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-mean-linear.tiff",
+    "sha256": "46DEAC1A1BEB636B2A99D9F3C16100E1F838634C38C44164D5FD935E313925F4"
+  },
+  "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+  "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+  "command": [
+    "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\bee-3-cpl",
+    "-o",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-mean-linear.tiff",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2.0",
+    "--pyramid-exponent",
+    "2.0",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--linear-srgb"
+  ],
+  "elapsed_seconds": 255.00198410003213,
+  "ended_utc": "2026-09-03T03:28:26.024226+00:00",
+  "environment": {
+    "RAYON_NUM_THREADS": "4",
+    "STREHL_ALIGN": "(unset/default on)",
+    "STREHL_ONLY_FRAME": "(unset)",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\bee-3-full.txt",
+    "all_other_STREHL_variables": "unset",
+    "cleared_inherited_STREHL_variables": []
+  },
+  "exit_code": 0,
+  "explicit_absences": [
+    "--demosaic",
+    "--srgb",
+    "--exposure",
+    "--photometric",
+    "STREHL_RESTORE",
+    "STREHL_FIX_CA",
+    "STREHL_FIX_HALO"
+  ],
+  "inventory": {
+    "absolute_stack": "D:\\personal\\macro\\bee-3-cpl",
+    "first": "DSC00001.ARW",
+    "first_sha256": "BCF575F697D690B483B22D63539327920FE384D6C388ED34D2C61C6409440EF6",
+    "frames": 299,
+    "last": "DSC00299.ARW",
+    "last_sha256": "A5A83423D7A66002282F2258A0B79342C50B6C2E42620363D4B40FDD0B5DF529",
+    "total_bytes": 11308236800
+  },
+  "name": "bee-3-mean",
+  "only_frame_zero_based": null,
+  "output_text": "build           : strehl 0.0.0 (6af834dac08d)\nmerge backend   : pyramid (--merge)\nstrehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)\ncamera          : ILCE-7CM2\nlateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)\niso             : 100\nlevels          : black 512, white 15360\nnoise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.\n                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,\n                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the\n                  camera's own white level, which checks one relation and is not a PTC; the\n                  PTC now exists and the relation survives it at true gain steps -- the ISO 160\n                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.\n                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below\n                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.\n                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the\n                  camera MODEL and nothing here was fitted from this stack. Below the profile's\n                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor\n                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126\n                  -- the corpus holds no ISO 64 or 80 capture).\ndefect map      : off (STREHL_DEFECT=off)\nframes          : 299 from D:\\personal\\macro\\bee-3-cpl  (first decode 0.13 s)\nplanes          : 3516 x 2344 per CFA plane\n--- the merge ---\nbands           : 7 Laplacian levels + 1 base, coarsest 28 x 19\nselection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.\n                  Sign coherence is free: a convex combination cannot take adjacent\n                  coefficients from opposite-signed frames, which is the ringing a\n                  coefficient-wise argmax produces.\nnoise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the\n                  merge averages -- which is the correct estimator when there is no\n                  information, and the only operation that gets below single-frame noise.\nexponent        : 2.00\nper-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)\n                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a\n                  fine band is one high-frequency coefficient nobody can see; a wrong pick\n                  in a coarse band IS the rim.\nbase band       : plain mean across frames\nnot applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus\n                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.\nalignment       : ON (sidecar-override), reference frame 149, 299 placed / 0 refused, 0.0 s\n  held-out err  : 13.353 px   resampler: CatmullRom\n  coverage      : field of view scaled to 0.9321 so that EVERY frame covers every pixel (6.8% of width dropped, then upsampled to keep the output dimensions).\nmemory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in\n                  the frame count. The merge is a fold: every accumulator is a sum, so a\n                  frame is built, added and dropped. STREHL_PYRAMID_WORKERS=N overrides.\n\nfolded          : 299 / 299 frames in 254.3 s (0.85 s per frame, 4 workers)\nband noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000\n                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)\nmeasured floor  : 1.0422 0.0553 0.0113 0.0027\n                  x white       : 1.1713 1.0449 1.1150 1.1435\n                  THE FLOOR THE GATE ACTUALLY USED, averaged over 299 warped\n  frames. The line above it is the white-noise constant, which is\n  exact only for an UNWARPED frame; resampling correlates neighbours\n                  and moves the per-band split. Bands past this list kept the constant.\n                  STREHL_GATE_FLOOR=white restores it everywhere.\naveraged        : 8.4% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%\n                  per level, the fraction of coefficients where NO frame cleared the noise\n                  floor and the merge therefore averaged instead of selecting. Near 0%\n                  everywhere would mean the gate is not gating and this is a naive\n                  pyramid stacker.\n\ncolour          : camera RGB -> LINEAR sRGB (BT.709 primaries, D65 white)\n                  characterisation: decoder color_matrix[D65]\n                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]\n                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 2.5693 B 1.5684\n                  Order: black, as-shot WB, 2x2 bin, matrix, clamp -- NO transfer curve, safe to measure on.\n\nwrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-mean-linear.tiff (3516 x 2344, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), binned from one 2x2 quad per pixel)\ncollapse+write  : 0.3 s\ntotal           : 255.0 s\n",
+  "source_commit": "6af834dac08d6605aee7ea3ad75809fdf6313770",
+  "started_utc": "2026-09-03T03:24:11.034303+00:00",
+  "status": "OK",
+  "warpmap": {
+    "bytes": 40826,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\bee-3-full.txt",
+    "sha256": "5A9F5FEA984897530D0C0FA522B98B4AD7B8CE026ACA7C3FAF80A74F7A5E8217"
+  }
+}

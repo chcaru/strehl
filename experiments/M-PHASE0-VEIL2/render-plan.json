@@ -1,0 +1,232 @@
+{
+  "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+  "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+  "source_commit": "6af834dac08d6605aee7ea3ad75809fdf6313770",
+  "threads": 4,
+  "jobs": [
+    {
+      "name": "bee-3-mean",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-mean-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-full.txt",
+      "reference": 149,
+      "base": "mean"
+    },
+    {
+      "name": "bee-3-f149",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-f149-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-f149-unused.txt",
+      "only_frame": 149,
+      "base": "mean"
+    },
+    {
+      "name": "bee-3-f176",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-f176-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-f176-unused.txt",
+      "only_frame": 176,
+      "base": "mean"
+    },
+    {
+      "name": "bee-3-f180",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-f180-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-f180-unused.txt",
+      "only_frame": 180,
+      "base": "mean"
+    },
+    {
+      "name": "bee-3-f184",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-f184-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-f184-unused.txt",
+      "only_frame": 184,
+      "base": "mean"
+    },
+    {
+      "name": "bee-3-f285",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-f285-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-f285-unused.txt",
+      "only_frame": 285,
+      "base": "mean"
+    },
+    {
+      "name": "bee-3-f288",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-f288-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-f288-unused.txt",
+      "only_frame": 288,
+      "base": "mean"
+    },
+    {
+      "name": "bee-3-f291",
+      "stack": "D:\\personal\\macro\\bee-3-cpl",
+      "output": "out/renders/bee-3-f291-linear.tiff",
+      "warpmap": "out/warpmaps/bee-3-f291-unused.txt",
+      "only_frame": 291,
+      "base": "mean"
+    },
+    {
+      "name": "chia-mean",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-mean-linear.tiff",
+      "warpmap": "out/warpmaps/chia-full.txt",
+      "reference": 65,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f040",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f040-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f040-unused.txt",
+      "only_frame": 40,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f041",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f041-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f041-unused.txt",
+      "only_frame": 41,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f042",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f042-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f042-unused.txt",
+      "only_frame": 42,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f057",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f057-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f057-unused.txt",
+      "only_frame": 57,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f070",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f070-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f070-unused.txt",
+      "only_frame": 70,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f071",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f071-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f071-unused.txt",
+      "only_frame": 71,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f072",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f072-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f072-unused.txt",
+      "only_frame": 72,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f039",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f039-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f039-unused.txt",
+      "only_frame": 39,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f043",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f043-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f043-unused.txt",
+      "only_frame": 43,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f058",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f058-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f058-unused.txt",
+      "only_frame": 58,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f059",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f059-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f059-unused.txt",
+      "only_frame": 59,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f060",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f060-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f060-unused.txt",
+      "only_frame": 60,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f064",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f064-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f064-unused.txt",
+      "only_frame": 64,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f065",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f065-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f065-unused.txt",
+      "only_frame": 65,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f066",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f066-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f066-unused.txt",
+      "only_frame": 66,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f067",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f067-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f067-unused.txt",
+      "only_frame": 67,
+      "base": "mean"
+    },
+    {
+      "name": "chia-f073",
+      "stack": "D:\\personal\\macro\\chia-seeds-cpl",
+      "output": "out/renders/chia-f073-linear.tiff",
+      "warpmap": "out/warpmaps/chia-f073-unused.txt",
+      "only_frame": 73,
+      "base": "mean"
+    },
+    {
+      "name": "flower-mean",
+      "stack": "D:\\personal\\macro\\flower-bud-alone-cpl",
+      "output": "out/renders/flower-mean-linear.tiff",
+      "warpmap": "out/warpmaps/flower-full.txt",
+      "reference": 102,
+      "base": "mean"
+    },
+    {
+      "name": "flower-weighted",
+      "stack": "D:\\personal\\macro\\flower-bud-alone-cpl",
+      "output": "out/renders/flower-weighted-linear.tiff",
+      "warpmap": "out/warpmaps/flower-full.txt",
+      "reference": 102,
+      "base": "weighted"
+    }
+  ]
+}

@@ -59,6 +59,10 @@
     },
     {
       "control": {
+        "affine_explained_fraction": 2.220445850726984e-15,
+        "affine_intercept": 0.43400178966835956,
+        "affine_predicted_target_effect": 2.220446049250313e-16,
+        "affine_slope": 0.2517210307644621,
         "anchor_effects": [
           0.0,
           0.0,
@@ -66,11 +70,16 @@
         ],
         "max_anchor_fraction": 0.0,
         "pass": true,
-        "target_effect": 0.10000000894069672
+        "target_effect": 0.10000000894069672,
+        "target_effect_signed": -0.10000000894069672
       },
       "control_pass": true,
       "id": "C4-tone-locality",
       "plant": {
+        "affine_explained_fraction": 1.000000262445217,
+        "affine_intercept": 0.34902993492030254,
+        "affine_predicted_target_effect": -0.11355638504028309,
+        "affine_slope": 0.20243735642870989,
         "anchor_effects": [
           0.11355635523796082,
           0.11355635523796082,
@@ -78,7 +87,8 @@
         ],
         "max_anchor_fraction": 1.0,
         "pass": false,
-        "target_effect": 0.11355635523796082
+        "target_effect": 0.11355635523796082,
+        "target_effect_signed": -0.11355635523796082
       },
       "plant_red": true,
       "reading": 1.0

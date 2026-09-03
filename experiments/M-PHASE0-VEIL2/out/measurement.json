@@ -1,0 +1,1636 @@
+{
+  "adversarial_falsification": {
+    "bee_no_per_frame_normalization": {
+      "class": "UNMEASURABLE",
+      "score": {
+        "bands": 7,
+        "bootstrap": {
+          "clusters": 36,
+          "reps": 20000,
+          "seed": 5903002
+        },
+        "denominator": 0.043290287256240845,
+        "detail": {
+          "corr_background": 0.7780167560450241,
+          "corr_foreground": 0.3155292313686159,
+          "corr_margin": 0.4624875246764082,
+          "projection_background": 0.8188860110803192
+        },
+        "detail_margin_ci95": [
+          0.001672929400992316,
+          0.6934470509633786
+        ],
+        "detail_margin_se": 0.17559426374526196,
+        "means": {
+          "background": 0.46430179476737976,
+          "foreground": 0.5075920820236206,
+          "master": 0.49636080861091614
+        },
+        "roi": [
+          1320,
+          1415,
+          1040,
+          1135
+        ],
+        "theta": 0.7405590462769374,
+        "theta_ci95": [
+          0.7236805013322506,
+          0.7906605744663336
+        ],
+        "theta_se": 0.01997321563866183
+      }
+    },
+    "chia_no_per_frame_normalization": {
+      "hierarchical": {
+        "bootstrap": {
+          "frame_runs_resampled": true,
+          "reps": 20000,
+          "seed": 5903002,
+          "sites_resampled": 3,
+          "spatial_blocks_resampled": true
+        },
+        "theta": 0.9922369799025882,
+        "theta_ci95": [
+          0.13357071648070817,
+          1.194639221709118
+        ],
+        "theta_se": 0.3848126044696644
+      },
+      "sites": [
+        {
+          "class": "UNMEASURABLE",
+          "name": "chia-1",
+          "score": {
+            "bands": 7,
+            "bootstrap": {
+              "clusters": 36,
+              "reps": 20000,
+              "seed": 5903002
+            },
+            "denominator": -0.021513819694519043,
+            "detail": {
+              "corr_background": 0.9684608145622984,
+              "corr_foreground": 0.994788222762483,
+              "corr_margin": -0.026327408200184643,
+              "projection_background": 1.0296198888783283
+            },
+            "detail_margin_ci95": [
+              -0.05929098406157711,
+              -0.010542078135721797
+            ],
+            "detail_margin_se": 0.01231911348957117,
+            "means": {
+              "background": 1.8301713466644287,
+              "foreground": 1.8086575269699097,
+              "master": 1.8088245391845703
+            },
+            "roi": [
+              300,
+              396,
+              304,
+              400
+            ],
+            "theta": 0.9922369799025882,
+            "theta_ci95": [
+              0.8978566850057683,
+              1.2093848390488373
+            ],
+            "theta_se": 0.07445669834234823
+          }
+        },
+        {
+          "class": "UNMEASURABLE",
+          "name": "chia-2",
+          "score": {
+            "bands": 7,
+            "bootstrap": {
+              "clusters": 36,
+              "reps": 20000,
+              "seed": 5903002
+            },
+            "denominator": -0.01223289966583252,
+            "detail": {
+              "corr_background": 0.946335844044164,
+              "corr_foreground": 0.9639726346727656,
+              "corr_margin": -0.017636790628601573,
+              "projection_background": 1.0297955298480972
+            },
+            "detail_margin_ci95": [
+              -0.04591341216756753,
+              0.00790714830511515
+            ],
+            "detail_margin_se": 0.013622413238908311,
+            "means": {
+              "background": 0.9505228400230408,
+              "foreground": 0.9382899403572083,
+              "master": 0.9366671442985535
+            },
+            "roi": [
+              304,
+              400,
+              800,
+              896
+            ],
+            "theta": 1.1326583314655467,
+            "theta_ci95": [
+              1.026011523503952,
+              1.2252434289373646
+            ],
+            "theta_se": 0.06007173435910777
+          }
+        },
+        {
+          "class": "UNMEASURABLE",
+          "name": "chia-3",
+          "score": {
+            "bands": 7,
+            "bootstrap": {
+              "clusters": 36,
+              "reps": 20000,
+              "seed": 5903002
+            },
+            "denominator": -0.011426806449890137,
+            "detail": {
+              "corr_background": 0.9900229968497194,
+              "corr_foreground": 0.9895499357012106,
+              "corr_margin": 0.0004730611485087577,
+              "projection_background": 0.997545187544235
+            },
+            "detail_margin_ci95": [
+              -0.0032103280607639283,
+              0.005987528138320574
+            ],
+            "detail_margin_se": 0.0023601148401019966,
+            "means": {
+              "background": 1.186749815940857,
+              "foreground": 1.1753230094909668,
+              "master": 1.1848920583724976
+            },
+            "roi": [
+              304,
+              400,
+              1320,
+              1416
+            ],
+            "theta": 0.16257889520630117,
+            "theta_ci95": [
+              0.044143398819974984,
+              0.23883352057266155
+            ],
+            "theta_se": 0.0481748404498831
+          }
+        }
+      ]
+    },
+    "purpose": "Test whether removing the preregistered per-image paper normalization can recover the predecessor's flattering conclusion. This arm was added only to try to break the filed result and is not used by the verdict lookup."
+  },
+  "bee": {
+    "channels": {
+      "blue": {
+        "class": "UNMEASURABLE",
+        "paper_anchors_dn": {
+          "background": {
+            "285": 19159.98828125,
+            "288": 19150.30859375,
+            "291": 19157.14453125
+          },
+          "foreground": {
+            "176": 20212.318359375,
+            "180": 20208.1015625,
+            "184": 20137.6328125
+          },
+          "master": 20533.0
+        },
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01515042781829834,
+          "detail": {
+            "corr_background": 0.7510655878932114,
+            "corr_foreground": 0.44763834518189255,
+            "corr_margin": 0.3034272427113189,
+            "projection_background": 0.8067423439510081
+          },
+          "detail_margin_ci95": [
+            -0.10098338497209891,
+            0.5519817826241774
+          ],
+          "detail_margin_se": 0.16647636863763346,
+          "means": {
+            "background": 0.46361440420150757,
+            "foreground": 0.4787648320198059,
+            "master": 0.45829665660858154
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.35099653004540055,
+          "theta_ci95": [
+            -0.5882822199735491,
+            -0.1543447946400987
+          ],
+          "theta_se": 0.11165523757073151
+        }
+      },
+      "green": {
+        "class": "UNMEASURABLE",
+        "paper_anchors_dn": {
+          "background": {
+            "285": 17783.130859375,
+            "288": 17776.5078125,
+            "291": 17781.720703125
+          },
+          "foreground": {
+            "176": 18774.703125,
+            "180": 18771.498046875,
+            "184": 18702.755859375
+          },
+          "master": 19059.0
+        },
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.017574846744537354,
+          "detail": {
+            "corr_background": 0.7780157812764891,
+            "corr_foreground": 0.31524742437927766,
+            "corr_margin": 0.4627683568972114,
+            "projection_background": 0.7639078879977438
+          },
+          "detail_margin_ci95": [
+            0.0018489542067349949,
+            0.6938405776761306
+          ],
+          "detail_margin_se": 0.17566701614947136,
+          "means": {
+            "background": 0.4977905750274658,
+            "foreground": 0.5153654217720032,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.08135299484156727,
+          "theta_ci95": [
+            -0.2387110423911603,
+            0.049587436288161986
+          ],
+          "theta_se": 0.0742647053782851
+        }
+      },
+      "red": {
+        "class": "UNMEASURABLE",
+        "paper_anchors_dn": {
+          "background": {
+            "285": 16320.5390625,
+            "288": 16319.892578125,
+            "291": 16326.4228515625
+          },
+          "foreground": {
+            "176": 17228.7734375,
+            "180": 17219.1328125,
+            "184": 17164.0703125
+          },
+          "master": 17538.0
+        },
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.020046710968017578,
+          "detail": {
+            "corr_background": 0.7762962732675849,
+            "corr_foreground": 0.2865539073900918,
+            "corr_margin": 0.4897423658774931,
+            "projection_background": 0.7304401418927507
+          },
+          "detail_margin_ci95": [
+            0.016149687775316886,
+            0.695300965065003
+          ],
+          "detail_margin_se": 0.17433768534489108,
+          "means": {
+            "background": 0.5211334824562073,
+            "foreground": 0.5411801934242249,
+            "master": 0.5239196419715881
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": 0.13898337337361147,
+          "theta_ci95": [
+            0.014642571018624342,
+            0.24219509444496648
+          ],
+          "theta_se": 0.05891118502021899
+        }
+      }
+    },
+    "geometry": {
+      "disagreement_px": 20.22335350844748,
+      "estimates": [
+        {
+          "dx": 0.2561658314743198,
+          "dy": -1.5588527807694774,
+          "response": 0.7560365152441793
+        },
+        {
+          "dx": -11.841521597517506,
+          "dy": -17.76471548529861,
+          "response": 0.015579401411943965
+        }
+      ],
+      "pass": false,
+      "windows": [
+        [
+          1320,
+          1415,
+          1040,
+          1087
+        ],
+        [
+          1320,
+          1415,
+          1088,
+          1135
+        ]
+      ]
+    },
+    "independent_decoder": {
+      "calibration_intercept": 0.010484529579631445,
+      "calibration_rois": [
+        [
+          50,
+          200,
+          3250,
+          3450
+        ],
+        [
+          800,
+          896,
+          800,
+          896
+        ],
+        [
+          800,
+          896,
+          1300,
+          1396
+        ]
+      ],
+      "calibration_slope": 0.9900487822413795,
+      "class": "UNMEASURABLE",
+      "decoder": "rawpy/LibRaw raw_image_visible, direct two-green bin",
+      "raw_frames": {
+        "176": {
+          "name": "DSC00177.ARW",
+          "sha256": "063568FB9EA8770FFCC227FFC44E4CA7D6F1AFFE86DDE49FC4027F98892E91E1"
+        },
+        "180": {
+          "name": "DSC00181.ARW",
+          "sha256": "EB2828B6CB1EB81A3F1D29D4F61209A38F484E1FCB1B696E6D544B996A92B5C0"
+        },
+        "184": {
+          "name": "DSC00185.ARW",
+          "sha256": "19B01DED3194692A6DB5B8F8C450BF08AFFA40F8EC1DC32BAA5EF1EAC5780E56"
+        },
+        "285": {
+          "name": "DSC00286.ARW",
+          "sha256": "88129BBBF9E97D4C20F2E9CAAD01A321EB45DCFE4D025A521256698D768AC9CE"
+        },
+        "288": {
+          "name": "DSC00289.ARW",
+          "sha256": "ED6885DF832BE94682D1994BB310B81B9F7D79F4B0CB15F48E0F0B0B4385734A"
+        },
+        "291": {
+          "name": "DSC00292.ARW",
+          "sha256": "F188E05FF6C9730DFBF0AE678C3A8FBECF7828A87E1B740AA6D75130668885FC"
+        }
+      },
+      "same_class_as_primary": true,
+      "score": {
+        "bands": 7,
+        "bootstrap": {
+          "clusters": 36,
+          "reps": 20000,
+          "seed": 5903002
+        },
+        "denominator": 0.01695135235786438,
+        "detail": {
+          "corr_background": 0.7742224587885023,
+          "corr_foreground": 0.3270038181703722,
+          "corr_margin": 0.44721864061813005,
+          "projection_background": 0.7658257128919614
+        },
+        "detail_margin_ci95": [
+          -0.013968002093237102,
+          0.6793224150226214
+        ],
+        "detail_margin_se": 0.1754131522466606,
+        "means": {
+          "background": 0.4967348873615265,
+          "foreground": 0.5136862397193909,
+          "master": 0.49636080861091614
+        },
+        "roi": [
+          1320,
+          1415,
+          1040,
+          1135
+        ],
+        "theta": -0.022067782128120425,
+        "theta_ci95": [
+          -0.17008505936805127,
+          0.10625193959252767
+        ],
+        "theta_se": 0.07151461129307388
+      },
+      "target_pixels_used_for_calibration": false
+    },
+    "layer_truth": {
+      "distinct_contents_observed": true,
+      "pass": true,
+      "peak_count_diagnostic_only": 2,
+      "separated_frame_runs": true
+    },
+    "paper_anchors_dn": {
+      "background": {
+        "285": 17783.130859375,
+        "288": 17776.5078125,
+        "291": 17781.720703125
+      },
+      "foreground": {
+        "176": 18774.703125,
+        "180": 18771.498046875,
+        "184": 18702.755859375
+      },
+      "master": 19059.0
+    },
+    "paper_null": {
+      "median": 0.0009840726852416992,
+      "p95_p05": 0.0022884041536599398,
+      "pass": true
+    },
+    "primary": {
+      "bands": 7,
+      "bootstrap": {
+        "clusters": 36,
+        "reps": 20000,
+        "seed": 5903002
+      },
+      "denominator": 0.017574846744537354,
+      "detail": {
+        "corr_background": 0.7780157812764891,
+        "corr_foreground": 0.31524742437927766,
+        "corr_margin": 0.4627683568972114,
+        "projection_background": 0.7639078879977438
+      },
+      "detail_margin_ci95": [
+        0.0018489542067349949,
+        0.6938405776761306
+      ],
+      "detail_margin_se": 0.17566701614947136,
+      "means": {
+        "background": 0.4977905750274658,
+        "foreground": 0.5153654217720032,
+        "master": 0.49636080861091614
+      },
+      "roi": [
+        1320,
+        1415,
+        1040,
+        1135
+      ],
+      "theta": -0.08135299484156727,
+      "theta_ci95": [
+        -0.2387110423911603,
+        0.049587436288161986
+      ],
+      "theta_se": 0.0742647053782851
+    },
+    "primary_channel": "green",
+    "primary_class": "UNMEASURABLE",
+    "sensitivities": {
+      "bands-6": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 6,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.02625584602355957,
+          "detail": {
+            "corr_background": 0.7618656522998803,
+            "corr_foreground": 0.29907191804203465,
+            "corr_margin": 0.4627937342578457,
+            "projection_background": 0.8085776307186209
+          },
+          "detail_margin_ci95": [
+            -9.815158020287559e-05,
+            0.6858711374137865
+          ],
+          "detail_margin_se": 0.17359989502224585,
+          "means": {
+            "background": 0.5444889664649963,
+            "foreground": 0.5707448124885559,
+            "master": 0.5458135008811951
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": 0.0504472190692395,
+          "theta_ci95": [
+            -0.27041318984956514,
+            0.22317586609959245
+          ],
+          "theta_se": 0.12742048362903177
+        }
+      },
+      "bands-8": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 8,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.002872765064239502,
+          "detail": {
+            "corr_background": 0.8313301508847772,
+            "corr_foreground": 0.5084890420723256,
+            "corr_margin": 0.32284110881245165,
+            "projection_background": 0.790763651588703
+          },
+          "detail_margin_ci95": [
+            0.006501728567066092,
+            0.5286883240438572
+          ],
+          "detail_margin_se": 0.13223025093535853,
+          "means": {
+            "background": 0.4276343882083893,
+            "foreground": 0.4305071532726288,
+            "master": 0.4219982922077179
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -1.9619063427184265,
+          "theta_ci95": [
+            -2.7670192494668346,
+            -1.469540533133738
+          ],
+          "theta_se": 0.3309378483565127
+        }
+      },
+      "bilinear-registration": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.017582416534423828,
+          "detail": {
+            "corr_background": 0.7778919699462039,
+            "corr_foreground": 0.31443211642972413,
+            "corr_margin": 0.4634598535164798,
+            "projection_background": 0.7669429087327336
+          },
+          "detail_margin_ci95": [
+            0.004505011251830611,
+            0.6938401711994326
+          ],
+          "detail_margin_se": 0.1749360920190343,
+          "means": {
+            "background": 0.4977654218673706,
+            "foreground": 0.5153478384017944,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.07988738372250698,
+          "theta_ci95": [
+            -0.23670134779322297,
+            0.05164240145469901
+          ],
+          "theta_se": 0.07426695686054219
+        }
+      },
+      "registration-dy+0-dx+1": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01775258779525757,
+          "detail": {
+            "corr_background": 0.7588668954711559,
+            "corr_foreground": 0.3213960150762431,
+            "corr_margin": 0.43747088039491283,
+            "projection_background": 0.7290734940964098
+          },
+          "detail_margin_ci95": [
+            -0.016676961916957857,
+            0.6645685979966995
+          ],
+          "detail_margin_se": 0.17394751595267927,
+          "means": {
+            "background": 0.4979283809661865,
+            "foreground": 0.5156809687614441,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.08830106198315198,
+          "theta_ci95": [
+            -0.24815056871261096,
+            0.045045531399252936
+          ],
+          "theta_se": 0.07554632927777412
+        }
+      },
+      "registration-dy+0-dx-1": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.017394840717315674,
+          "detail": {
+            "corr_background": 0.7853378365785765,
+            "corr_foreground": 0.2906419672646014,
+            "corr_margin": 0.4946958693139751,
+            "projection_background": 0.7893847490958821
+          },
+          "detail_margin_ci95": [
+            0.03981556104757002,
+            0.7245160316934122
+          ],
+          "detail_margin_se": 0.17310742295983944,
+          "means": {
+            "background": 0.4976506233215332,
+            "foreground": 0.5150454640388489,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.07414926825590998,
+          "theta_ci95": [
+            -0.22868379297702032,
+            0.05480282262154309
+          ],
+          "theta_se": 0.07317225052130658
+        }
+      },
+      "registration-dy+1-dx+0": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01738893985748291,
+          "detail": {
+            "corr_background": 0.7831205403247015,
+            "corr_foreground": 0.31999633699626506,
+            "corr_margin": 0.4631242033284364,
+            "projection_background": 0.7702679552472734
+          },
+          "detail_margin_ci95": [
+            -0.0009659337017938898,
+            0.6963303945590289
+          ],
+          "detail_margin_se": 0.17717924925691117,
+          "means": {
+            "background": 0.496090292930603,
+            "foreground": 0.5134792327880859,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": 0.015556766687918612,
+          "theta_ci95": [
+            -0.12477693860165175,
+            0.13340114340091497
+          ],
+          "theta_se": 0.06668605314733407
+        }
+      },
+      "registration-dy+1-dx+1": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01756647229194641,
+          "detail": {
+            "corr_background": 0.768913913631987,
+            "corr_foreground": 0.30548059841317393,
+            "corr_margin": 0.4634333152188131,
+            "projection_background": 0.7400897501348627
+          },
+          "detail_margin_ci95": [
+            0.011319373228298088,
+            0.6903634101928581
+          ],
+          "detail_margin_se": 0.173066995680748,
+          "means": {
+            "background": 0.49623051285743713,
+            "foreground": 0.5137969851493835,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": 0.007417297640274637,
+          "theta_ci95": [
+            -0.13600812915188618,
+            0.12791576934937537
+          ],
+          "theta_se": 0.06801733494914543
+        }
+      },
+      "registration-dy+1-dx-1": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01721012592315674,
+          "detail": {
+            "corr_background": 0.7844076534788084,
+            "corr_foreground": 0.3180975914428587,
+            "corr_margin": 0.46631006203594966,
+            "projection_background": 0.7897583198049997
+          },
+          "detail_margin_ci95": [
+            0.0003392018751489023,
+            0.7009478241892777
+          ],
+          "detail_margin_se": 0.17734924623691375,
+          "means": {
+            "background": 0.49594420194625854,
+            "foreground": 0.5131543278694153,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": 0.024207066614023786,
+          "theta_ci95": [
+            -0.11297475145589159,
+            0.13922456721111715
+          ],
+          "theta_se": 0.06525727752821209
+        }
+      },
+      "registration-dy-1-dx+0": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01774883270263672,
+          "detail": {
+            "corr_background": 0.7636853984360296,
+            "corr_foreground": 0.2724455286138826,
+            "corr_margin": 0.49123986982214696,
+            "projection_background": 0.7484711491234805
+          },
+          "detail_margin_ci95": [
+            0.05137458324197183,
+            0.7121571660340864
+          ],
+          "detail_margin_se": 0.16750578032663607,
+          "means": {
+            "background": 0.4994959831237793,
+            "foreground": 0.517244815826416,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.17664116651442696,
+          "theta_ci95": [
+            -0.3496275884171505,
+            -0.032519170561196846
+          ],
+          "theta_se": 0.08157954542114464
+        }
+      },
+      "registration-dy-1-dx+1": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01793152093887329,
+          "detail": {
+            "corr_background": 0.7402198440055425,
+            "corr_foreground": 0.3002065460047727,
+            "corr_margin": 0.4400132980007698,
+            "projection_background": 0.7098007164634156
+          },
+          "detail_margin_ci95": [
+            0.0011564690729680754,
+            0.66144874095615
+          ],
+          "detail_margin_se": 0.16890664541972414,
+          "means": {
+            "background": 0.49963003396987915,
+            "foreground": 0.5175615549087524,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.18231723734464386,
+          "theta_ci95": [
+            -0.3576205693294879,
+            -0.036812117450986635
+          ],
+          "theta_se": 0.08251413596664266
+        }
+      },
+      "registration-dy-1-dx-1": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.017572075128555298,
+          "detail": {
+            "corr_background": 0.776593427411105,
+            "corr_foreground": 0.237849277074712,
+            "corr_margin": 0.538744150336393,
+            "projection_background": 0.779236586547391
+          },
+          "detail_margin_ci95": [
+            0.10719512418030755,
+            0.7567296076744066
+          ],
+          "detail_margin_se": 0.16389436040040148,
+          "means": {
+            "background": 0.49935564398765564,
+            "foreground": 0.5169277191162109,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.1704315144813363,
+          "theta_ci95": [
+            -0.34090636024667087,
+            -0.02821471386869439
+          ],
+          "theta_se": 0.08054715813265939
+        }
+      },
+      "roi-dilated-8": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 49,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.01728096604347229,
+          "detail": {
+            "corr_background": 0.7975943560432316,
+            "corr_foreground": 0.3515257747083143,
+            "corr_margin": 0.4460685813349173,
+            "projection_background": 0.7676384993473697
+          },
+          "detail_margin_ci95": [
+            0.10115358441246443,
+            0.6568860556657953
+          ],
+          "detail_margin_se": 0.14161076517689763,
+          "means": {
+            "background": 0.49669429659843445,
+            "foreground": 0.5139752626419067,
+            "master": 0.49514976143836975
+          },
+          "roi": [
+            1312,
+            1423,
+            1032,
+            1143
+          ],
+          "theta": -0.08937782506945725,
+          "theta_ci95": [
+            -0.24947647347746518,
+            0.046155176847241325
+          ],
+          "theta_se": 0.07613507527314727
+        }
+      },
+      "roi-eroded-8": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 25,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.017822325229644775,
+          "detail": {
+            "corr_background": 0.7112292489435033,
+            "corr_foreground": 0.38098339396504993,
+            "corr_margin": 0.3302458549784533,
+            "projection_background": 0.7273100804188818
+          },
+          "detail_margin_ci95": [
+            -0.36499809398487126,
+            0.6755153702368956
+          ],
+          "detail_margin_se": 0.26379844126197205,
+          "means": {
+            "background": 0.49872732162475586,
+            "foreground": 0.5165496468544006,
+            "master": 0.4973926544189453
+          },
+          "roi": [
+            1328,
+            1407,
+            1048,
+            1127
+          ],
+          "theta": -0.07488737797190051,
+          "theta_ci95": [
+            -0.22965067482835338,
+            0.05652076806594117
+          ],
+          "theta_se": 0.07261523966692551
+        }
+      },
+      "single-frame-180-288": {
+        "class": "UNMEASURABLE",
+        "same_class_as_primary": true,
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": 0.017609834671020508,
+          "detail": {
+            "corr_background": 0.77555468834944,
+            "corr_foreground": 0.31772255118207254,
+            "corr_margin": 0.4578321371673674,
+            "projection_background": 0.7550432200841581
+          },
+          "detail_margin_ci95": [
+            0.014177677448213183,
+            0.6718669085897984
+          ],
+          "detail_margin_se": 0.1663913088109806,
+          "means": {
+            "background": 0.4977993965148926,
+            "foreground": 0.5154092311859131,
+            "master": 0.49636080861091614
+          },
+          "roi": [
+            1320,
+            1415,
+            1040,
+            1135
+          ],
+          "theta": -0.08169230040210666,
+          "theta_ci95": [
+            -0.22663045204861237,
+            0.030209151752152184
+          ],
+          "theta_se": 0.06560190792379125
+        }
+      }
+    },
+    "tone_locality": {
+      "affine_explained_fraction": 10.056536333497954,
+      "affine_intercept": -0.022778435511608474,
+      "affine_predicted_target_effect": -0.013771937816174529,
+      "affine_slope": 1.0180951380846572,
+      "anchor_effects": [
+        0.0012304105330258608,
+        0.04034527763724327,
+        0.0029174648225307465
+      ],
+      "max_anchor_fraction": 29.460904911107225,
+      "pass": false,
+      "target_effect": 0.001369451405480504,
+      "target_effect_signed": -0.001369451405480504
+    }
+  },
+  "bootstrap": {
+    "reps": 20000,
+    "seed": 5903002
+  },
+  "chia": {
+    "hierarchical": {
+      "bootstrap": {
+        "frame_runs_resampled": true,
+        "reps": 20000,
+        "seed": 5903002,
+        "sites_resampled": 3,
+        "spatial_blocks_resampled": true
+      },
+      "theta": 1.2614434863564825,
+      "theta_ci95": [
+        -0.8537468415961645,
+        2.245014960774605
+      ],
+      "theta_se": 1.868564522200078
+    },
+    "master_paper_anchor_dn": 11164.0,
+    "reference_paper_anchors_dn": {
+      "39": 11136.2724609375,
+      "40": 11151.783203125,
+      "41": 11155.923828125,
+      "42": 11141.6005859375,
+      "43": 11150.974609375,
+      "57": 11288.8125,
+      "58": 11281.943359375,
+      "59": 11273.4248046875,
+      "60": 11267.685546875,
+      "64": 11208.001953125,
+      "65": 11209.900390625,
+      "66": 11203.109375,
+      "67": 11201.54296875,
+      "70": 11186.185546875,
+      "71": 11174.9990234375,
+      "72": 11159.779296875,
+      "73": 11147.533203125
+    },
+    "sites": [
+      {
+        "class": "UNMEASURABLE",
+        "layer_truth": {
+          "distinct_contents_observed": true,
+          "pass": true,
+          "peak_count_diagnostic_only": 2,
+          "separated_frame_runs": true
+        },
+        "minimum_frame_separation": 15,
+        "name": "chia-1",
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": -0.0009866952896118164,
+          "detail": {
+            "corr_background": 0.9684575830886626,
+            "corr_foreground": 0.9947816096259622,
+            "corr_margin": -0.026324026537299594,
+            "projection_background": 1.040117737992943
+          },
+          "detail_margin_ci95": [
+            -0.05927969564527024,
+            -0.01053447000850458
+          ],
+          "detail_margin_se": 0.012318874314079286,
+          "means": {
+            "background": 1.8117228746414185,
+            "foreground": 1.8107361793518066,
+            "master": 1.8088245391845703
+          },
+          "roi": [
+            300,
+            396,
+            304,
+            400
+          ],
+          "theta": 2.937416938504289,
+          "theta_ci95": [
+            -6.910646526496939,
+            22.196746630415237
+          ],
+          "theta_se": 120.93740032549141
+        }
+      },
+      {
+        "class": "UNMEASURABLE",
+        "layer_truth": {
+          "distinct_contents_observed": true,
+          "pass": true,
+          "peak_count_diagnostic_only": 2,
+          "separated_frame_runs": true
+        },
+        "minimum_frame_separation": 28,
+        "name": "chia-2",
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": -0.010755777359008789,
+          "detail": {
+            "corr_background": 0.9463309738687973,
+            "corr_foreground": 0.9639538225571044,
+            "corr_margin": -0.017622848688307102,
+            "projection_background": 1.0301026131256406
+          },
+          "detail_margin_ci95": [
+            -0.04589836710805062,
+            0.007918131560019042
+          ],
+          "detail_margin_se": 0.013622332151823008,
+          "means": {
+            "background": 0.9502349495887756,
+            "foreground": 0.9394791722297668,
+            "master": 0.9366671442985535
+          },
+          "roi": [
+            304,
+            400,
+            800,
+            896
+          ],
+          "theta": 1.2614434863564825,
+          "theta_ci95": [
+            1.1713263780851735,
+            1.484356198216587
+          ],
+          "theta_se": 0.08031998617096028
+        }
+      },
+      {
+        "class": "UNMEASURABLE",
+        "layer_truth": {
+          "distinct_contents_observed": true,
+          "pass": true,
+          "peak_count_diagnostic_only": 2,
+          "separated_frame_runs": true
+        },
+        "minimum_frame_separation": 21,
+        "name": "chia-3",
+        "score": {
+          "bands": 7,
+          "bootstrap": {
+            "clusters": 36,
+            "reps": 20000,
+            "seed": 5903002
+          },
+          "denominator": -0.005406498908996582,
+          "detail": {
+            "corr_background": 0.9900222712704265,
+            "corr_foreground": 0.9895544757197114,
+            "corr_margin": 0.0004677955507150777,
+            "projection_background": 1.0012836002511394
+          },
+          "detail_margin_ci95": [
+            -0.0032144312074154193,
+            0.005976218211454012
+          ],
+          "detail_margin_se": 0.002358430656149239,
+          "means": {
+            "background": 1.182248830795288,
+            "foreground": 1.1768423318862915,
+            "master": 1.1848920583724976
+          },
+          "roi": [
+            304,
+            400,
+            1320,
+            1416
+          ],
+          "theta": -0.48889819857561795,
+          "theta_ci95": [
+            -1.0956972082845042,
+            -0.15633488596072503
+          ],
+          "theta_se": 0.2484362136300539
+        }
+      }
+    ]
+  },
+  "claim": "A2 stack-induced depth-boundary base-band pedestal",
+  "flower_weighted_minus_mean": {
+    "channels": {
+      "blue": {
+        "p95_p05_dn": 1458.549079832031,
+        "pass": false,
+        "plane": [
+          -422.3828191468827,
+          0.4029054272589266,
+          0.18397265783165168
+        ]
+      },
+      "green": {
+        "p95_p05_dn": 1493.410171413765,
+        "pass": false,
+        "plane": [
+          -430.7062965620076,
+          0.40742194147009775,
+          0.2011776463642798
+        ]
+      },
+      "red": {
+        "p95_p05_dn": 1424.1414812042347,
+        "pass": false,
+        "plane": [
+          -402.6648255287586,
+          0.3796881380928412,
+          0.19883225482741892
+        ]
+      }
+    },
+    "pass_green": false,
+    "roi": [
+      0,
+      1172,
+      1760,
+      3520
+    ]
+  },
+  "not_optical_glare": true,
+  "provenance": {
+    "bee_coverage": 0.9321,
+    "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+    "chia_coverage": 0.9597,
+    "pass": true,
+    "renders": [
+      {
+        "bytes": 49450680,
+        "frame": null,
+        "name": "bee-3-mean",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-mean-linear.tiff",
+        "problems": [],
+        "sha256": "46DEAC1A1BEB636B2A99D9F3C16100E1F838634C38C44164D5FD935E313925F4"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 149,
+        "name": "bee-3-f149",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-f149-linear.tiff",
+        "problems": [],
+        "sha256": "CDA2EDF6C241B145B39E7FB58575DE92361DFB3CFFEC81AA1421FDE05AD4C6D4"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 176,
+        "name": "bee-3-f176",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-f176-linear.tiff",
+        "problems": [],
+        "sha256": "F0FFC47282E11115236A065E0C201644F019F46C6ADC829271E48579997FC6BA"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 180,
+        "name": "bee-3-f180",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-f180-linear.tiff",
+        "problems": [],
+        "sha256": "DFF171DC1F4DAAABBA5BFC3EA227E7136D1456F30E2091067C7FFC922959756F"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 184,
+        "name": "bee-3-f184",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-f184-linear.tiff",
+        "problems": [],
+        "sha256": "0546896E5944A8BFD092F19A0ACE48F7709F4F457B0CF47872AE9C32D1B3695E"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 285,
+        "name": "bee-3-f285",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-f285-linear.tiff",
+        "problems": [],
+        "sha256": "37CEB4248B4D1EB3C4D0A7CF4673AEB10F7941C0EED132293E8B0C3DC983E0EC"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 288,
+        "name": "bee-3-f288",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-f288-linear.tiff",
+        "problems": [],
+        "sha256": "7A518ED39B3048FA7EB53212E660FC8FE2A647309958C4BF84916456E913004F"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 291,
+        "name": "bee-3-f291",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\bee-3-f291-linear.tiff",
+        "problems": [],
+        "sha256": "1F73C9E1D04EC77D707DA8DD32AAF2D2B3C3E5D88686A21F8EDAA8229A252CE3"
+      },
+      {
+        "bytes": 49450680,
+        "frame": null,
+        "name": "chia-mean",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-mean-linear.tiff",
+        "problems": [],
+        "sha256": "4B9954B8F5BD045E520D9635655153D7F432BBE07706BF839A2808E3B0389935"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 39,
+        "name": "chia-f039",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f039-linear.tiff",
+        "problems": [],
+        "sha256": "0A2D2333FAB3E094152A90F1F17D649CD77ED5526EC1D66D4763E457AD940354"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 40,
+        "name": "chia-f040",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f040-linear.tiff",
+        "problems": [],
+        "sha256": "ABC7A2871EDD690FEF2F1F86209E01B43709F892260814E8CE0C6F3D551AFE64"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 41,
+        "name": "chia-f041",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f041-linear.tiff",
+        "problems": [],
+        "sha256": "C9316984B183F0854972C817D1A731DA27F4ECABB45F54FED3A6782382403070"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 42,
+        "name": "chia-f042",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f042-linear.tiff",
+        "problems": [],
+        "sha256": "2EB5EAD78A874CA62D435DDED68C8DBE3FA77641E2B53A431611436E967BA8C0"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 43,
+        "name": "chia-f043",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f043-linear.tiff",
+        "problems": [],
+        "sha256": "941D769EF3D021FB89C908C0A0A46CBA46B3433F8F872BF83C02FBFC25113C08"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 57,
+        "name": "chia-f057",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f057-linear.tiff",
+        "problems": [],
+        "sha256": "C8BD819FE7DE94F5DB297BB0F71A51D30819A0A8D1376A0367C4048205DEC66F"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 58,
+        "name": "chia-f058",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f058-linear.tiff",
+        "problems": [],
+        "sha256": "A323A57089FF2A249C0447A338B886DF7362EA511F349C9EF0A17D2B620DC547"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 59,
+        "name": "chia-f059",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f059-linear.tiff",
+        "problems": [],
+        "sha256": "3EB104D6289DBBF967F0D4B1E9978B2A869977EF0AFDA5E3888C83A722C56081"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 60,
+        "name": "chia-f060",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f060-linear.tiff",
+        "problems": [],
+        "sha256": "C0C9C893DAFEE54ED650E15201DB0FC6DBA6FDF826899746B7BD907135BBDDC6"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 64,
+        "name": "chia-f064",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f064-linear.tiff",
+        "problems": [],
+        "sha256": "75CDE97566C8C54F5A1D20771BA27286C275EECA1F08BFEE51037F1F463DCA32"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 65,
+        "name": "chia-f065",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f065-linear.tiff",
+        "problems": [],
+        "sha256": "4C3027F86C392A3A243BC94AC90540296041D6D28FE9A2C74809AC5188E126D0"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 66,
+        "name": "chia-f066",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f066-linear.tiff",
+        "problems": [],
+        "sha256": "AD93D631040959737EF83BEB438DC6027EEC45CFA753198A13FF711DF04F3F4E"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 67,
+        "name": "chia-f067",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f067-linear.tiff",
+        "problems": [],
+        "sha256": "BC3DDAF168268F87ACDC8DA0179FBA976B2D780043C7A2828686F5291750D723"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 70,
+        "name": "chia-f070",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f070-linear.tiff",
+        "problems": [],
+        "sha256": "A5A18D91B191B083CEF6FCF637B2AF6757CECA3364749B60EE6DF7A841A23B74"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 71,
+        "name": "chia-f071",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f071-linear.tiff",
+        "problems": [],
+        "sha256": "1E9B2261D9C88828411A202B1A0AFB511F96D50D4BBCA2FAB2E52A9AEE054352"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 72,
+        "name": "chia-f072",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f072-linear.tiff",
+        "problems": [],
+        "sha256": "3B5E36AB1A7E24D0958015F0D0C10437DDCE58D904FE57E408C072F4D92509FE"
+      },
+      {
+        "bytes": 49450680,
+        "frame": 73,
+        "name": "chia-f073",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-f073-linear.tiff",
+        "problems": [],
+        "sha256": "AE753DEC24E3B7A681544315DF03932BA361C918E6DFB290B33FDCAE216A1552"
+      },
+      {
+        "bytes": 49506936,
+        "frame": null,
+        "name": "flower-mean",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\flower-mean-linear.tiff",
+        "problems": [],
+        "sha256": "F6BFB962D602D41B1C9FC4814A579519D1A21EEAD1060439AA3C24A9CD0369FC"
+      },
+      {
+        "bytes": 49506936,
+        "frame": null,
+        "name": "flower-weighted",
+        "pass": true,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\flower-weighted-linear.tiff",
+        "problems": [],
+        "sha256": "D54FC7D522E85EEE78906B1BEC95F08A3E036CAADC037D29C3E57A6395B03F45"
+      }
+    ],
+    "source_commit": "6af834dac08d6605aee7ea3ad75809fdf6313770"
+  },
+  "required_gates": {
+    "channels_stay_in_class": true,
+    "commissioning": true,
+    "coverage_matches_manifest": true,
+    "geometry": false,
+    "independent_decoder_stays_in_class": true,
+    "layer_truth": true,
+    "paper_null": true,
+    "positive_denominators_at_least_0.15": false,
+    "primary_detail_identity": false,
+    "render_provenance": true,
+    "sensitivities_stay_in_class": true,
+    "tone_locality": false
+  },
+  "verdict": "NOT ROBUST",
+  "versions": {
+    "numpy": "2.4.4",
+    "opencv": "4.13.0",
+    "python": "3.12.10",
+    "rawpy": "0.27.0",
+    "scipy": "1.17.1",
+    "tifffile": "2026.5.2"
+  }
+}

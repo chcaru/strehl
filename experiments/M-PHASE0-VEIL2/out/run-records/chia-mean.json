@@ -1,0 +1,93 @@
+{
+  "align": {
+    "command": [
+      "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+      "align",
+      "D:\\personal\\macro\\chia-seeds-cpl",
+      "--out",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\chia-full.txt",
+      "--reference",
+      "65",
+      "--threads",
+      "4",
+      "--resampler",
+      "catmull-rom"
+    ],
+    "elapsed_seconds": 52.35709569999017,
+    "environment": {
+      "RAYON_NUM_THREADS": "4",
+      "STREHL_*": "all unset"
+    },
+    "exit_code": 0,
+    "output_text": "stack chia-seeds-cpl: 130 frames, digest 73ad8bfdf559ebc2\n  reference frame 65 (--reference)\n  decoded 130 frames in 8.2 s, plane 3516x2344\n  measured 819/819 edges in 44.0 s (0.0% refused)\nalign: track prior on, lambda=1 huber=Some(1.0) px\n\n  placed 130/130 frames, refused 0\n  total corner drift frame 0 -> 129: 103.632 plane px\n  held-out corner error (median): 2.165 plane px\n  cycle-consistency floor: 0.192 plane px\n  wrote C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\chia-full.txt\n"
+  },
+  "artifact": {
+    "bytes": 49450680,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-mean-linear.tiff",
+    "sha256": "4B9954B8F5BD045E520D9635655153D7F432BBE07706BF839A2808E3B0389935"
+  },
+  "binary": "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+  "binary_sha256": "2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7",
+  "command": [
+    "C:\\dev\\strehl-out\\DELIVER-V6\\bin\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\chia-seeds-cpl",
+    "-o",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-mean-linear.tiff",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2.0",
+    "--pyramid-exponent",
+    "2.0",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--linear-srgb"
+  ],
+  "elapsed_seconds": 111.09720310004195,
+  "ended_utc": "2026-09-03T03:31:14.996526+00:00",
+  "environment": {
+    "RAYON_NUM_THREADS": "4",
+    "STREHL_ALIGN": "(unset/default on)",
+    "STREHL_ONLY_FRAME": "(unset)",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\chia-full.txt",
+    "all_other_STREHL_variables": "unset",
+    "cleared_inherited_STREHL_variables": []
+  },
+  "exit_code": 0,
+  "explicit_absences": [
+    "--demosaic",
+    "--srgb",
+    "--exposure",
+    "--photometric",
+    "STREHL_RESTORE",
+    "STREHL_FIX_CA",
+    "STREHL_FIX_HALO"
+  ],
+  "inventory": {
+    "absolute_stack": "D:\\personal\\macro\\chia-seeds-cpl",
+    "first": "DSC00001.ARW",
+    "first_sha256": "27C270C6B2C04DFE5D183023B7E7A80F3965DBC0F1EC4D7E37282FCFFF77FD77",
+    "frames": 130,
+    "last": "DSC00130.ARW",
+    "last_sha256": "1C72D34C741A03DE7A98198422C50C0B6BD0882270656A739C608B56D0331B1B",
+    "total_bytes": 5198598144
+  },
+  "name": "chia-mean",
+  "only_frame_zero_based": null,
+  "output_text": "build           : strehl 0.0.0 (6af834dac08d)\nmerge backend   : pyramid (--merge)\nstrehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)\ncamera          : ILCE-7CM2\nlateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)\niso             : 50\nlevels          : black 512, white 15360\nnoise model     : PROVENANCE=Profile -- camera profile at ISO 50. Trustworthy for ranking.\n                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,\n                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the\n                  camera's own white level, which checks one relation and is not a PTC; the\n                  PTC now exists and the relation survives it at true gain steps -- the ISO 160\n                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.\n                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below\n                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.\n                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the\n                  camera MODEL and nothing here was fitted from this stack. Below the profile's\n                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor\n                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126\n                  -- the corpus holds no ISO 64 or 80 capture).\ndefect map      : off (STREHL_DEFECT=off)\nframes          : 130 from D:\\personal\\macro\\chia-seeds-cpl  (first decode 0.12 s)\nplanes          : 3516 x 2344 per CFA plane\n--- the merge ---\nbands           : 7 Laplacian levels + 1 base, coarsest 28 x 19\nselection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.\n                  Sign coherence is free: a convex combination cannot take adjacent\n                  coefficients from opposite-signed frames, which is the ringing a\n                  coefficient-wise argmax produces.\nnoise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the\n                  merge averages -- which is the correct estimator when there is no\n                  information, and the only operation that gets below single-frame noise.\nexponent        : 2.00\nper-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)\n                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a\n                  fine band is one high-frequency coefficient nobody can see; a wrong pick\n                  in a coarse band IS the rim.\nbase band       : plain mean across frames\nnot applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus\n                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.\nalignment       : ON (sidecar-override), reference frame 65, 130 placed / 0 refused, 0.0 s\n  held-out err  : 2.165 px   resampler: CatmullRom\n  coverage      : field of view scaled to 0.9597 so that EVERY frame covers every pixel (4.0% of width dropped, then upsampled to keep the output dimensions).\nmemory plan     : 4 workers x 1328 MB = 5.2 GB against a 6144 MB budget, CONSTANT in\n                  the frame count. The merge is a fold: every accumulator is a sum, so a\n                  frame is built, added and dropped. STREHL_PYRAMID_WORKERS=N overrides.\n\nfolded          : 130 / 130 frames in 110.4 s (0.85 s per frame, 4 workers)\nband noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000\n                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)\nmeasured floor  : 1.0271 0.0525 0.0106 0.0026\n                  x white       : 1.1543 0.9914 1.0539 1.0798\n                  THE FLOOR THE GATE ACTUALLY USED, averaged over 130 warped\n  frames. The line above it is the white-noise constant, which is\n  exact only for an UNWARPED frame; resampling correlates neighbours\n                  and moves the per-band split. Bands past this list kept the constant.\n                  STREHL_GATE_FLOOR=white restores it everywhere.\naveraged        : 1.8% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%\n                  per level, the fraction of coefficients where NO frame cleared the noise\n                  floor and the merge therefore averaged instead of selecting. Near 0%\n                  everywhere would mean the gate is not gating and this is a naive\n                  pyramid stacker.\n\ncolour          : camera RGB -> LINEAR sRGB (BT.709 primaries, D65 white)\n                  characterisation: decoder color_matrix[D65]\n                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]\n                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 2.3457 B 1.8613\n                  Order: black, as-shot WB, 2x2 bin, matrix, clamp -- NO transfer curve, safe to measure on.\n\nwrote           : C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\renders\\chia-mean-linear.tiff (3516 x 2344, 16-bit RGB, linear sRGB (BT.709 primaries, D65, no transfer curve), binned from one 2x2 quad per pixel)\ncollapse+write  : 0.3 s\ntotal           : 111.1 s\n",
+  "source_commit": "6af834dac08d6605aee7ea3ad75809fdf6313770",
+  "started_utc": "2026-09-03T03:29:23.899897+00:00",
+  "status": "OK",
+  "warpmap": {
+    "bytes": 17973,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-VEIL2\\out\\warpmaps\\chia-full.txt",
+    "sha256": "BACDA1A6E1A85A3559E57C80C6ABE41FBEF7BCCE29BF0AC9942A815BE680E49E"
+  }
+}
