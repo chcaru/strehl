@@ -1622,6 +1622,40 @@ measurable, both are preregistered, and a negative result closes the lane honest
 
 ### 4.0 Three physical captures the owner can make, in priority order
 
+> **Ruling recorded 2026-09-02 (scorecard v1.3, `e91ba50e`), and it does not clear these items.**
+> The owner supplied a fresh six-stack set at
+> `requests\misc-diagnostic\high-res-calibration-slide-cpl` (657 frames, 2026-09-02). The
+> scorecard owner classified **all six as `DEVELOPMENT - NOT HOLDOUT`**, ruled them **one 657-frame
+> session unit**, and found they **do not satisfy the item-2 replacement spec**. I asked it to
+> check my reading rather than agree with it, and it reached the same conclusion independently and
+> for the same three reasons: **IBIS is on in all six**, the three flat stacks vary *exposure*
+> rather than repeating a condition (`6 s / 2.5 s / 1 s`, an SNR ladder), and the two `sw10`
+> stacks differ in *geometry* so they are not repeats of each other. A dense checker-only
+> reference does plausibly exist in `tilted-sw4-cpl` (182 frames).
+>
+> **They are not wasted.** The ruling deliberately spends the whole unit diagnostically: the flats
+> isolate `cover=scale` (§2.9.3) because **a flat target is a degenerate focus stack**, which
+> removes stacking difficulty as a confound and leaves resampling as the only explanation for a
+> frequency-dependent deficit. They also supply the depth-scaling curve for `k` at frame counts
+> 60/61/65/92/182/197, against documented anchors at 22 and 299, plus an SNR-invariance control
+> that can falsify the whole `cover` premise. The tilted stacks advance M5 and M10 **instrument
+> development** but cannot score either axis.
+
+### 4.0.0 These two requests may be one capture session, and the owner should be told that
+
+**Items 1 and 2 below were specified separately and I now think item 2, shot correctly, may close
+both.** Item 2 already calls for **two independent scored repeats at one step width**. Two
+independent passes over the same depth target, each stacked, are exactly a **repeat pair** — and
+running FRC between the two stacked outputs measures the resolution of *the stacker's output*,
+which is the quantity a focus stacker should actually be judged on. Item 1's re-shoot measures
+repeats at a single focus, which characterises the render and detector rather than the stack.
+
+**Stated as a hypothesis, not a conclusion.** Lane INSTRUMENT owns the question of what
+formulation of FRC is admissible and whether resampling during registration destroys the noise
+independence it depends on. **I will not send the owner a consolidated request until INSTRUMENT
+rules**, because he will shoot it once and a wrong specification costs another round trip. If the
+consolidation holds, one IBIS-off session closes the detail axis *and* unblocks M1, M5 and M9.
+
 All three are cheap, all three are blocking, and none can be produced by any agent. They are
 listed first because they are the only items on this list that no amount of autonomous work can
 clear. **The third is new and it exists because of my error — see §2.8.3.**
