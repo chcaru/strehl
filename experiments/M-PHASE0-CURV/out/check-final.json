@@ -3,6 +3,8 @@
   "bootstrap_ci": true,
   "independent_primary_q": true,
   "independent_q_value": 0.31696118470773227,
+  "independent_bootstrap_samples": true,
+  "independent_bootstrap_max_abs_diff": 0.0,
   "interval_classifications": true,
   "ladder_checks": true,
   "independent_lane_verdict": true,

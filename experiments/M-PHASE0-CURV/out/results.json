@@ -3619,7 +3619,7 @@
   },
   "commission": {
     "path": "out/commission.json",
-    "sha256": "1a9d8a7e7407648197595e23dd0e755ed461d86649820b080cb4c284785fe7fe"
+    "sha256": "6c11c4d33e9e306cad30f0a99b0e496bd2b74ea009ee8965500f6d63c8e1d60a"
   },
   "bootstrap_reps": 2000,
   "bootstrap_seed": 12918822

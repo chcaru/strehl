@@ -485,22 +485,14 @@ def main() -> int:
         e5_green,
         {"widths_frames": widths, "q_h": width_q},
     )
-    x, y, g1, g2 = independent_response_generator(
-        1.0, 8.0, 0xC5E5FF, width_varies=True
-    )
-    z_bad = []
-    valid_bad = []
-    xn = (x - WIDTH / 2) / (HEIGHT / 2)
-    yn = (y - HEIGHT / 2) / (HEIGHT / 2)
-    t = math.radians(17.0)
-    vcoord = -math.sin(t) * xn + math.cos(t) * yn
-    for i in range(len(x)):
-        p = C.peaks_for_site(g1[:, i], g2[:, i])
-        z_bad.append(float(p["k_primary_avg"]) + 0.65 * 8.0 * vcoord[i] ** 2)
-        valid_bad.append(bool(p["valid"]))
-    kk = np.asarray(valid_bad)
     width_defect_q = float(
-        C.fit_surface(x[kk], y[kk], np.asarray(z_bad)[kk], WIDTH, HEIGHT)["q_h_frames"]
+        recover_synthetic(
+            1.0,
+            8.0,
+            0xC5E5FF,
+            width_varies=True,
+            peak_width_coupling=0.65,
+        )["q_h_frames"]
     )
     add_plant(
         plants,

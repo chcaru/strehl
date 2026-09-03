@@ -91,6 +91,17 @@ def independent_q(
     x = np.array([float(r["x_sensor"]) for r in valid])
     y = np.array([float(r["y_sensor"]) for r in valid])
     z = np.array([float(r[key]) for r in valid])
+    return independent_q_arrays(x, y, z, width, height, degree=degree)
+
+
+def independent_q_arrays(
+    x: np.ndarray,
+    y: np.ndarray,
+    z: np.ndarray,
+    width: float,
+    height: float,
+    degree: int = 3,
+) -> float:
     xn = (x - width / 2.0) / (height / 2.0)
     yn = (y - height / 2.0) / (height / 2.0)
     linear = np.column_stack([np.ones_like(xn), xn, yn])
@@ -104,6 +115,50 @@ def independent_q(
     columns.extend(u**d for d in range(1, degree + 1))
     columns.extend([v, u * v, u * u * v, v * v])
     return float(_irls(np.column_stack(columns), z)[-1])
+
+
+def independent_bootstrap(
+    rows: list[dict[str, str]],
+    width: float,
+    height: float,
+    *,
+    reps: int,
+    seed: int,
+    key: str = "k_primary_avg",
+    degree: int = 3,
+) -> tuple[np.ndarray, int]:
+    """Second implementation of the registered 5-by-4 cluster resampler."""
+    valid = [row for row in rows if row["valid"].lower() == "true"]
+    x = np.asarray([float(row["x_sensor"]) for row in valid])
+    y = np.asarray([float(row["y_sensor"]) for row in valid])
+    z = np.asarray([float(row[key]) for row in valid])
+    bx = np.clip((x / width * 5).astype(int), 0, 4)
+    by = np.clip((y / height * 4).astype(int), 0, 3)
+    block = by * 5 + bx
+    occupied = np.unique(block)
+    rng = np.random.default_rng(seed)
+    values: list[float] = []
+    attempts = 0
+    while len(values) < reps and attempts < reps * 3:
+        attempts += 1
+        chosen = rng.choice(occupied, size=len(occupied), replace=True)
+        indices = np.concatenate([np.flatnonzero(block == value) for value in chosen])
+        try:
+            q = independent_q_arrays(
+                x[indices],
+                y[indices],
+                z[indices],
+                width,
+                height,
+                degree=degree,
+            )
+        except np.linalg.LinAlgError:
+            continue
+        if math.isfinite(q):
+            values.append(q)
+    if len(values) != reps:
+        raise RuntimeError(f"independent bootstrap made {len(values)}/{reps} fits")
+    return np.asarray(values), int(len(occupied))
 
 
 def classify_interval(q: float, ci95: list[float]) -> str:
@@ -249,6 +304,20 @@ def check_final() -> dict[str, object]:
     )
     checks["independent_primary_q"] = abs(q2 - float(primary["q_h_frames"])) <= 5e-8
     checks["independent_q_value"] = q2
+    regenerated, occupied = independent_bootstrap(
+        rows,
+        float(primary["active_width"]),
+        float(primary["active_height"]),
+        reps=int(primary["bootstrap"]["reps"]),
+        seed=int(primary["bootstrap"]["seed"]),
+    )
+    bootstrap_delta = float(np.max(np.abs(regenerated - samples)))
+    checks["independent_bootstrap_samples"] = bool(
+        len(regenerated) == len(samples)
+        and occupied == int(primary["bootstrap"]["occupied_blocks"])
+        and bootstrap_delta <= 5e-8
+    )
+    checks["independent_bootstrap_max_abs_diff"] = bootstrap_delta
 
     stack_results = results["stacks"]
     sensitivities = results["sensitivities"]
@@ -332,6 +401,7 @@ def check_final() -> dict[str, object]:
             if k
             not in {
                 "independent_q_value",
+                "independent_bootstrap_max_abs_diff",
                 "independent_verdict_value",
                 "pass",
             }

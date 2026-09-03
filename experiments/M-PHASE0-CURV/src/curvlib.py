@@ -541,8 +541,9 @@ def surface_gate(
     height_sensor: float,
 ) -> dict[str, object]:
     x, y = normalised_coordinates(x_sensor, y_sensor, width_sensor, height_sensor)
-    # Direction-independent conservative span: the smaller of x/y spans is a
-    # lower bound on the eventual cross-track span.
+    # Direction-independent early diagnostic only.  This is not a lower bound
+    # on the eventual cross-track span for an arbitrary rotated point cloud;
+    # analyse.complete_gate enforces the actual fitted-v span.
     conservative_span = min(float(np.ptp(x)), float(np.ptp(y)))
     bx = np.clip((np.asarray(x_sensor) / width_sensor * 5).astype(int), 0, 4)
     by = np.clip((np.asarray(y_sensor) / height_sensor * 4).astype(int), 0, 3)
@@ -554,7 +555,5 @@ def surface_gate(
         "enough_sites": bool(len(x) >= 180),
         "enough_blocks": bool(len(blocks) >= 12),
         "enough_span": bool(conservative_span >= 1.2),
-        "pass": bool(
-            len(x) >= 180 and len(blocks) >= 12 and conservative_span >= 1.2
-        ),
+        "pass": bool(len(x) >= 180 and len(blocks) >= 12),
     }

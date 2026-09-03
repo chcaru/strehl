@@ -38,9 +38,7 @@ The deciding values are in
 `experiments/M-PHASE0-CURV/out/results.json`; the 2,000 bootstrap samples and
 the complete 651-site table are in that JSON and
 `out/primary-f5p6-peaks.csv`. The result JSON SHA-256 at report time is
-`620fed633e1a0e2afe5617201e398b90c2f496dbee787536fcbf8d2096ce1e2b`
-(it is expected to change only if this report's final rerun changes an
-upstream artifact hash).
+`4c40379ed082fd4ef2dd5be00ca61572cdb35e00b6abc9a849acefabc50fa11a`.
 
 ## 2. The dispatch summary was not C5's actual claim
 
@@ -130,7 +128,7 @@ specification.
 The final suite is **9/9 controls GREEN and 11/11 planted defects RED**.
 `out/commission.json` has every predicate and reading; its report-time
 SHA-256 is
-`1a9d8a7e7407648197595e23dd0e755ed461d86649820b080cb4c284785fe7fe`.
+`6c11c4d33e9e306cad30f0a99b0e496bd2b74ea009ee8965500f6d63c8e1d60a`.
 
 | control | unmodified reading | planted defect and RED reading |
 |---|---|---|
@@ -138,7 +136,7 @@ SHA-256 is
 | E2 known dose ladder | ±2-frame full doses read `-2.000135/+1.999944`; slope `1.000016` | inverted coefficient read `-1.998695` on positive dose |
 | E3 tilt/nonlinear-axis null | three nulls `+0.000461,-0.000217,+0.000002` | affine-radius leakage `+0.852623,+1.090647,+0.929568` |
 | E4 pure noise | `0/651` sites valid | bypass admitted `651/651` |
-| E5 response width | planted +1 read `1.002410,0.999131,1.003699` at widths 2/4/8 | width coupling read `6.202965` |
+| E5 response width | planted +1 read `1.002410,0.999131,1.003699` at widths 2/4/8 | production width-coupling plant read `2.872472` |
 | E6 centre translation | `1.000827` versus `1.009002` | dropping linear protection read `42.643934` |
 | E7 production verdict path | contradictory fixed ladder => NOT ROBUST | primary-only path => SURVIVE |
 | E8 decode + independent checker | fixed Rust/rawpy contract and all checker mutations rejected | wrong active dimension, stale number, flipped verdict all RED |
@@ -222,6 +220,15 @@ the decision tree was moved into `curvlib.py`, E7 commissioned that exact
 path, and `check_results.py` independently reimplemented classification,
 ladders, and the lane decision. The final suite remained 9/9 and 11/11.
 
+A final read-only verifier then found that P5's first implementation planted a
+spatial `v^2` offset directly instead of invoking the production
+`width_coupling` defect hook. Before filing, P5 was repaired to exercise that
+exact registered mechanism; it still went RED at `2.872472`. The same audit
+removed an unnecessary coordinate-span pre-gate (the registered fitted-`v`
+span remains enforced) and added an independent regeneration of every
+bootstrap resample. These repairs changed neither the deciding number nor any
+real-data classification.
+
 ## 8. Read-only and independent checks
 
 `snapshot.ps1 before` and `after` independently inventoried the four capture
@@ -232,7 +239,8 @@ ARWs and about 35.6 GB across the four roots; no capture file was written.
 `check_results.py` does not import `curvlib.py`. It independently:
 
 1. rebuilds the Huber design from `primary-f5p6-peaks.csv`;
-2. recomputes the 2,000-sample percentile interval;
+2. independently regenerates all 2,000 spatial-block resamples and their
+   percentile interval (maximum sample difference `0.0`);
 3. reclassifies every stack and sensitivity;
 4. rebuilds all ladder flips and the lane decision;
 5. pins the report verdict/deciding number; and
