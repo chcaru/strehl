@@ -752,6 +752,67 @@ The generalisable law, stated once more because it has now cost six lanes: **a p
 measurement is not the measurement.** Re-run it, do not re-read it. LCA sharpens the law —
 here the paraphrase was wrong about *which physical effect the claim concerned*, and no amount
 of careful reading of the summary would have caught that. Only going back to the measurement did.
+## 2.4 D8b/SPLIT2 — the capture is genuine, the geometry is not; detail now rests on one instrument
+
+The last available route to an FRC instrument is closed for now, and the reason is a capture
+setting rather than a flaw in the idea. **Verdict: NOT ROBUST / NO BUILD.** Rust unchanged.
+
+**The metadata gate passed, and it mattered that it was run.** `12-bee-iso-var-no-bracket-32-repeat-diff-light`
+is exactly what its name claims: 576 genuine no-bracket exposures, two light passes, nine ISOs,
+32 repeats per ISO, f/5.6, 1.6 s, 200 mm, manual focus, and an invariant reported focus distance
+of `0.273841307296975 m`. The gate was mandatory precisely because a directory name is not
+evidence — but here the name was honest, and the capture is the genuinely independent repeats
+that same-frame splitting could never provide.
+
+**The capture is defeated by its own stabiliser.** The preregistered pixel gate found the frames
+do not sit still: at ISO 50 only frame 0 remained at `(0,0)`, while 21 frames shifted one quad
+pixel and 10 shifted two. **Image stabilisation was on.** At 1.6 s and 200 mm on a static rig,
+IBIS does not remove motion between frames — it introduces it.
+
+**The lane then did the honest thing twice over.** On learning that the independently registered
+scorecard permits analytical translation, it amended its protocol *before* retaining any FRC
+outcome, implemented commissioned Fourier phase-ramp registration, and applied the scorecard's
+`0.10` native-pixel non-translation RMS gate. Registration rescued one illumination block and
+not the other:
+
+| ISO-100 light block | Fourier gate | Independent OpenCV ECC | Verdict |
+|---|---:|---:|---|
+| Bright | `0.064031` native px | `0.070005` | PASS |
+| Second light | **`0.107703`** | **`0.105202`** | **FAIL** |
+
+Two independent registration implementations agree to within `0.003` native pixel on both
+blocks. The second-light block reverses the decision across the illumination ladder, which files
+NOT ROBUST. The roughly 1 EV blocks were evaluated separately and **never pooled**, so weaker
+illumination could not be used to rescue a geometric failure.
+
+**Commissioning: 17/17 plants RED.** The alignment control recovered an externally imposed
+`(1.25, -0.40)` quad-pixel shift to within `0.02` pixel; the wrong-sign arm failed as it should;
+a known `0.12` native-pixel local warp read `0.123288` and correctly failed. The
+data-dependent-tuner plant — the trap this lane itself identified after D8 — stayed RED: full
+evaluation leakage drove FRC to exactly `1.0`, and perturbing only `D` changed `C` by
+`25.002575`.
+
+**It stopped rather than measuring past a failed gate.** The real repeat-pair null against
+`0.25`, the comparisons with the historical `0.438734` / `0.972099` values, sharpening
+invariance, and any FRC crossing were deliberately **not measured** once the geometry gate
+failed. Nothing above `0.25` cycles/native-pixel was claimed.
+
+### 2.4.1 The detail axis now rests on the slant edge alone
+
+This is the program consequence and it is worth stating flatly. The governing proposal's success
+statement (`2026-08-sota-path.md:192-197`) specifies the detail instrument as **"D1: FRC +
+slant-edge"** — two instruments. D8/SPLIT removed same-frame split FRC as invalid, because two
+halves of the same frames are not independent. SPLIT2 was the remaining route to a legitimate
+FRC, and it is blocked on capture geometry.
+
+So the most contested axis on the scorecard — the one whose previous measurement was retracted
+as a tone artifact — currently has **one** instrument where the proposal called for two.
+
+**This failure is cheap to reverse, and the fix belongs to the owner.** The capture itself is
+correct in every respect the lane could check; only stabilisation spoils it. A recapture of the
+same subject with **IBIS/SteadyShot switched off** would very likely clear the `0.10` gate on
+both light blocks and hand the detail axis its second instrument back. That is a far better
+position than the one D8 left, where the idea itself was dead.
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
