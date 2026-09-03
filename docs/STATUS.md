@@ -464,7 +464,8 @@ The one piece of evidence still standing against C1 is weak and does not sustain
 a 63-crop probe over frames and field positions found no radial excess near the alias
 boundary on the two stacks examined, so C1 may be *unproductive* on these particular
 scenes. Unproductive is not refuted.
-
+
+
 > **RETRACTED — everything from here to the end of this lane's section is the claim
 > as I originally filed it, preserved so the error is legible. Do not cite it.** C1
 > proposes recovering detail
@@ -674,6 +675,83 @@ is where the measured 24–240× selection premium applies. Facts 1843–1845, 1
 
 ---
 
+## 2.3 C2/LCA — STOP, no Rust; the effect is real, the build is not licensed
+
+This is the sixth and last of the triage's claimed closures, and the sixth to come back
+negative. `decision = STOP` in `out/c2-audit.json`; no Rust was written, `STREHL_AXIAL_CA_SHIFT`
+was not added, and the concurrent `merge_cmd.rs` work was not touched.
+
+**The dispatch was wrong about which claim C2 even makes.** C2 concerns *longitudinal/axial*
+chromatic aberration — wavelength-dependent best-focus position along the bracket — not
+lateral CA's wavelength-dependent radial magnification. The lane proved the distinction rather
+than asserting it: lateral magnification error must be **zero at the optical centre**, but the
+independent radius fit puts essentially the whole effect already there, with centre intercepts
+of **-0.8183 frames** `[-0.9725, -0.4531]` on lavendar and **-0.8765 frames**
+`[-0.9343, -0.8216]` on coffee, both retaining at least half the fitted edge magnitude.
+`radial_axial_discriminator.*.passes_axial_gate = True` for both.
+
+**The existence of the effect is not retracted and was never in doubt.** M107 and BUILD-CHROMA
+already measured the same physical effect with two other instruments. A registered retraction
+scan over 56 files classified all 37 `RETRACT`/`WITHDRAW`/`AMEND` hits and found
+`axial_or_forfeit_retraction_found = False`. What fails is the *build* step, not the physics.
+
+**Tone defeated a third lane — but differently, and the difference matters.** Unlike
+V-HEADTOHEAD2, the legacy measurement here is black-subtracted native-CFA linear RAW: no
+demosaic, no colour matrix, no white balance, no render curve. It is not the same developed-TIFF
+contrast artifact. The failure is that the *replacement* tone-invariant metric is underpowered:
+the affine-invariant Sobel-energy/local-variance curves retained 24 valid tiles on `coffee-bean`
+but **zero** on `lavendar-cpl`, `couch-fibers-cpl` and `bee-2-cpl`, and zero on both registered
+lavendar gamma arms (0.8 and 1.2). Direct RAW spot checks match the caches to 7.1e-08 relative
+error, so this is the metric genuinely declining, not a cache indexing bug. The required
+four-stack tone gate therefore **cannot be evaluated at all**, which files STOP rather than a
+refutation.
+
+**The lane filed against its own headline, which is the discipline this program has been
+missing.** The preregistered primary arm *passed*: `A = 0.5367 frames`, CI `[0.5101, 0.5883]`,
+clearing the historic M107 bar, with all three medians carrying the prior-registered negative
+sign and every same-wavelength G1-G2 null clearing the 0.125-frame gate. That arm says SURVIVE.
+But a registered field-radius rung moved to NARROWED (`A = 0.5170`, `[0.4237, 0.5883]`) and the
+96-plane-pixel tile failed its null gate at 0.1389 frame. The protocol says a category change
+anywhere on a registered ladder files NOT ROBUST, so that is what was filed — against a
+headline number that had already cleared its bar.
+
+**A protocol breach was disclosed rather than erased.** A preliminary run occurred after
+preregistration while the instrument and fixtures were still untracked. Independent review
+caught it, and also found that equal G1/G2 peaks had made the external fixture blind to using G1
+alone as the green reference. Commit `a50a6ce4` froze a repaired instrument with unequal,
+separately fixed G1/G2 inputs and plants the exact G1-only defect. All five preliminary caches
+were then deleted and **all 343 RAW frames re-decoded**; `cache.*.reused` is false for every
+stack. The lane states plainly that a forward repair cannot make the discarded run
+retrospectively compliant, so the chronology breach stands disclosed. Commissioning after the
+freeze: **2/2 controls GREEN, 6/6 plants RED**.
+
+**It also found a defect in the prior work it was asked to build on.** BUILD-CHROMA printed each
+channel's four gains as an ordered range **without associating values to stack names**, so the
+registered per-stack loss mapping cannot be reproduced on three of the four stacks
+(`registered_loss_mapping_passes = False` for bee-2, coffee-bean and lavendar). The published
+loss *multiset* does reproduce. A number that cannot be tied back to the subject it came from
+cannot license a per-stack correction.
+
+Three of nine decision gates are False: `tone_normalised_metric_valid_on_all_four_stacks`,
+`gamma_diagnostic_valid_on_lavendar`, and `registered_per_stack_loss_mapping_reproduced`.
+
+Before any build, a new preregistered audit must commission a tone-invariant payoff statistic
+that retains valid peaks on all four stacks, freeze the correct per-stack gain association, and
+return GO. Only then do the zero-output identity and wrong-sign-harm render bars become
+licensed. Independent ultra-verification recomputed every headline NPZ statistic, checked RAW
+samples and cache fingerprints, and returned VERIFIED for STOP/no-Rust.
+
+### 2.3.1 The triage is now wrong on six of six
+
+Every claim the decision-value triage marked as a high-value closable win has come back
+negative: DPAR (linear plant on a curved track), DECODE (compressed-input vs allocated-output,
+harness absent), NVME (never actually measured), SPLIT (numbers reproduce exactly, closure still
+fails), VEIL2 (0/7 gates), and now LCA (STOP, and the claim was mislabelled in dispatch).
+
+The generalisable law, stated once more because it has now cost six lanes: **a paraphrase of a
+measurement is not the measurement.** Re-run it, do not re-read it. LCA sharpens the law —
+here the paraphrase was wrong about *which physical effect the claim concerned*, and no amount
+of careful reading of the summary would have caught that. Only going back to the measurement did.
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
