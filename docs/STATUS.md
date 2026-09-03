@@ -1086,6 +1086,88 @@ now known to reward sharpening. Two routes remain, and they are not equivalent:
    tone, noise and angle robustness. That is a build, not a discovery, and it is the first
    constructive lead the detail axis has had.
 
+## 2.8 The phase-1 kill gate fired — and I am not accepting it yet
+
+Commits `e64fca59`, `4bada8e3`, `6b9eb171`, `0c503d84`, `345ef331`, `0eadaa54`, `da00deba`,
+`99fe6a5f`, `7d5c58fc`. Artifact `experiments/PHASE1-DESIGN/results/gate.json`.
+
+W1 is the kill gate for all of phase 1 — W2, W4 and W5 depend on it. It swept a single global
+band-width constant `k` from `0.00` to `8.00` in steps of `0.05` (161 arms) across
+`flat-on-ruler-cpl` (79 frames), `coffee-bubbles` (19) and `113MSDCF` (63), against 42 width
+predicates. **It returned `NO_COMMON_K`**, with `width_survivors: []`, `passing_k: []` and
+`selected_k: null`. Commissioning sealed with five SHA-256 hashes and `commissioning_status:
+PASS`; 17/17 synthetic nulls GREEN and plants RED; `design_sha` correctly pins `fe111781`.
+`table`, `metrics` and `render_provenance` are empty, which is **correct**: the protocol stops
+before rendering when there are no survivors, so no Pareto numbers were computed or invented.
+
+**By its own terms this halts phase 1 cheaply, before a line of production Rust was written.
+That is exactly what a kill gate is for, and the lane executed it properly.** I am still not
+recording it as decisive, for the reason below.
+
+### 2.8.1 Every predicate fails at every `k`, and the high bands do not respond to `k` at all
+
+I read `gate.json` directly rather than accepting the summary. **All 42 predicates fail at all
+161 arms, including the `k=0.00` sentinel.** The failures are not scattered — they decay
+monotonically with band index. At `k=0.60`, the best arm:
+
+| band | detail ratios (3 captures) | flat ratios |
+|---|---|---|
+| 0 | `.4588 .4755 .6367` | `.0895 .2142 .5868` |
+| 2 | `.1437 .2006 .1790` | `.1375 .4933 .1902` |
+| 4 | `.0356 .0647 .0509` | `.0470 .0705 .0510` |
+| 6 | `.0160 .0604 .0166` | `.0160 .0562 .0270` |
+
+The bar wants ratios within 5% of `1.0`. **Nothing is near `1.0`; everything sits far below it
+and roughly halves each band.** Best `worst_error` across the whole sweep is `0.984017` against a
+`0.05` bar — **19.7x over**, at `k=0.60` through `0.85`.
+
+**And `113MSDCF` band 6 reads exactly `0.0160` at `k=0.60`, `0.85`, `1.00` and `2.00`** —
+bit-identical across a 3.3x change in the swept parameter, while band 0 swings from `0.4588` to
+`1.6012` over the same range. **A predicate that does not respond to the parameter being swept
+cannot license a conclusion about that parameter.** If the high bands are frozen regardless of
+`k`, then "no `k` satisfies all 42" can be simultaneously true and uninformative.
+
+### 2.8.2 The shape is the `cover=scale` signature, from a third independent direction
+
+A monotone deficit that worsens with every band, present at every `k` including the sentinel, is
+the signature of a **resampling difference**, not a width mismatch. Two sibling results found the
+same shape independently:
+
+- the scorecard baseline's geometry gate, `0.2901%–0.4619%` scale disagreement against a `0.10%`
+  bar (§2.5), traced to `DEFAULT_COVER_MODE = CoverMode::Scale`;
+- the head-to-head's band pattern, leading at 0.02–0.05 cyc/px and trailing monotonically worse
+  to 0.20–0.30 (§2.2).
+
+W1's reference is an independently written Catmull-Rom pull via rawpy/LibRaw; the production path
+applies the coverage rescale. **If production resamples by ~0.3% and the reference does not, the
+two diverge further in every higher band — which is the table above.** The lane has been sent
+back with four questions and one decisive experiment: **re-run the sweep under `--cover crop`**
+(unity scale, `align_cmd.rs:966,990`). If the ratios move toward `1.0`, `NO_COMMON_K` is an
+artifact of a known product defect. If they do not, the kill stands and is far stronger for
+having survived. Also outstanding: whether bands 5–6 lie outside the `[0.10, 0.25]` cyc/px
+frequency licence and should never have been allowed to bind the verdict at all.
+
+### 2.8.3 A scorecard holdout capture is burned, by my error
+
+**`calibration-grid-1 sw4` is no longer untouched holdout evidence.** I launched W1 against it in
+parallel with the scorecard baseline lane without realising it was holdout. I halted W1 on
+reading the leakage boundary in `2026-09-phase1-design.md` §3, but too late.
+
+**W1 disclosed the leak plainly and unprompted, on line one, twice.** Before the halt it had
+observed sw4's complete 161-value width sweep and the sentinel readings **detail `1.063350`,
+flat-power `1.329831`**. It quarantined the pilot in `0c503d84` and retargeted onto three
+non-holdout captures, each of which I verified against the scorecard manifest before unblocking
+it. The scorecard owner has been asked to mark sw4 burned and to determine whether any
+same-subject partner is compromised with it.
+
+**The cost is bounded by luck, not by process:** the frozen baseline (`bc8f315a`) returned
+UNMEASURED on all twelve axes, blocked before any metric by the geometry gate, so no axis had yet
+been scored on sw4. The contamination costs a future holdout, not a result already taken.
+
+**The process lesson is mine.** Two lanes were pointed at the same capture for different purposes
+because I did not check the capture manifest before launching. Verifying capture roles is now
+part of launching any lane that reads real data.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
