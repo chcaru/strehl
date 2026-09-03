@@ -215,3 +215,11 @@ physical resolution, MTF, M1, M4, or M8.
 
 Every positive control must pass and every planted defect must go RED before
 either PMax output or strehl is opened by the new outcome instrument.
+
+**Dispatcher amendment, still before commissioning or any new outcome
+measurement.**  The owner additionally requires both directions of reach, so
+the commissioned `Q25` control must include (a) the already specified
+independently generated USM improvement, which must raise `Q25` by at least
+25%, and (b) Gaussian blur sigma 1.5 as a degradation arm, which must lower it
+by at least 25%.  Disabled-improvement and disabled-degradation mutants must
+both go RED.  This adds no outcome threshold or data-dependent choice.
