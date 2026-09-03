@@ -1647,6 +1647,110 @@ strengthens admission rather than resurrecting any candidate.
 
 ---
 
+### 2.9.8 A theorem was not enough: the sharpening problem survived a structural guarantee
+
+Candidate 1 is dead. It was killed by its own first arm, and the arm was the one
+I registered as decisive before any code was written.
+
+The candidate was target-conditional ideal-observer information. It was ranked
+first for one reason: the data processing inequality makes "deterministic
+sharpening cannot increase it" a *theorem* rather than an observation. Every
+statistic this program had tried before it was an empirical construction that
+happened to resist sharpening until it did not. This one was supposed to be
+different in kind.
+
+Under the registered unsharp mask at radius `1.0`, amount `0.5`, the estimator
+rose from `0.125099` to `0.137075` bits per tile. That is `R=1.095732`, an
+increase of `+9.573%`, with a one-sided 95% upper bound of `1.129895` against a
+bar frozen at `1.01`. The reading was taken over 480 independent macro-tile
+clusters and 3,840 held-out trials, with bootstrapping over acquisition blocks
+above sites — comfortably past the 64-site minimum the scorecard registered at
+`docs/proposals/2026-09-sota-scorecard.md:519-521`. This was not an underpowered
+run. Freeze `613eaf1a`, result `efa25bd2`, amendment `2d3d247d`, report at
+`docs/research/M-CAND1.md:39-42`. I verified all four numbers at source before
+writing this section.
+
+The lane then did the thing that makes the result trustworthy: it stopped. The
+degradation, improvement and null arms were never run, and the runner hard-refused
+commissioning, because the binding stop rule said a decision-relevant increase
+kills the candidate outright and is never grounds for a retune. **A lane that
+kills its own candidate on the first arm and declines to collect the flattering
+arms afterwards is the only kind of lane whose greens would have meant anything.**
+
+**The failure was predicted, in writing, before the measurement.** The
+investigation proposal that ranked this candidate opens its reasoning with a
+section titled *the central distinction: estimand is not estimator*, and the
+brief I sent the lane recorded the same risk as the candidate's decisive
+exposure: a theorem about an estimand is not a guarantee about a finite-sample
+estimator. Recording it in advance is what makes it evidence now rather than
+hindsight.
+
+**What the kill actually teaches, which is more than the four before it.** The
+tally is now five statistics defeated by a single free operation that any
+competitor can apply for nothing:
+
+| statistic | USM response |
+|---|---|
+| `Q25` | `5.560744x` (+456.07%) |
+| three slanted-edge implementations | ~9.9% "resolution" gain |
+| `S_25` | `1.028294x` (+2.829%) |
+| candidate 1 ideal-observer information | `1.095732x` (+9.573%) |
+
+The first four could be read as a run of bad luck in statistic design. The fifth
+cannot, and that is its value. The data processing inequality is not wrong here
+and the estimator is not buggy; the two simply are not the same object. The
+inequality governs `I(X;Y)`, a property of the joint distribution. What was
+measured is a finite, capacity-limited, fitted lower bound on it. Sharpening adds
+no information — it makes the information already present more *accessible* to a
+bounded-capacity reader, and a lower bound that tightens when the signal becomes
+easier to read will rise even though the quantity it bounds cannot.
+
+That mechanism is not specific to this construction. Every statistic computable
+on finite data is a bounded-capacity read of the image, so **the failure should be
+expected to generalise to the whole class, and the burden now falls on any future
+candidate to explain why it escapes.** Stating that here is the difference between
+five separate disappointments and one understood obstacle.
+
+**Where this leaves the detail axis.** The investigation proposal ranked three
+candidates and the second has a claim that is different in kind from the first,
+which is why the program continues rather than stopping. For a linear sharpening
+operator `A`, the full-covariance form satisfies
+`(A d)^T (A K A^T)^{-1} (A d) = d^T K^{-1} d`. That is congruence invariance of a
+quadratic form, and the proposal is explicit at `:114` that it is *both* an
+estimand result *and* a finite-sample algebraic property — for the full-rank,
+unregularized, congruence-equivariant form only. Shrinkage, diagonal covariance,
+channel selection and pseudoinverses all destroy it. So candidate 2 is not exposed
+at the seam that killed candidate 1, because its invariance holds on the sample
+covariance and not merely in the population.
+
+**A defect in candidate 2's test plan, found before it was run, and now corrected
+in the lane brief.** The registered kill arm uses unclipped float USM. As an
+operator that is `1.5·I − 0.5·G`, whose eigenvalues lie in `[1.0, 1.5)` — strictly
+positive, therefore invertible and full-rank. It is precisely the case the
+congruence identity protects. Candidate 2 would therefore have passed the
+registered sharpening arm *by algebra*, and a test a candidate passes by
+construction measures nothing about its fitness. Left uncorrected this would have
+produced the program's first green on the detail axis and it would have been
+hollow.
+
+The arm is retained, but its status is downgraded to an implementation check: if
+the unclipped ratio does not come out at 1 to numerical tolerance, the estimator
+is not congruence-equivariant and there is a bug. Two honest adversaries were
+added in its place. **Clipped USM**, because clipping is nonlinear and every real
+competitor sharpens and then clips to the representable range, so the algebraic
+protection evaporates exactly where the operation is realistic. And **nonlinear
+tone**, gamma-3 and logistic, where the proposal states at `:114` that conventional
+NEQ is invariant to nonsingular linear transforms and not to arbitrary tone, and
+that these *"remain empirical kill arms"*. If candidate 2 dies, tone is the
+likeliest cause.
+
+**Scoreboard.** Still zero formal scorecard readings and zero verified improvement
+in picture quality. Two candidates of three are now spent on the axis the whole
+SOTA claim rests on. The program has bought real understanding of why the detail
+axis is hard, and has not yet bought a single admissible number.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
