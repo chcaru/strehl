@@ -40,6 +40,7 @@ NOISE_SEEDS = tuple(range(2026090300, 2026090324))
 ANGLES = (0.5, 1.0, 5.0, 12.0)
 BLUR_RATIO = 0.8944271909999159
 IMPROVEMENT_RATIO = 1.25
+FLOOR_VARIANT_IDS = VARIANT_IDS[1:]
 
 
 def is_value(record: object) -> bool:
@@ -387,6 +388,24 @@ def validate_measurement(measurement: dict) -> dict[str, bool]:
     }
 
 
+def validate_floor_probe(probe: dict) -> bool:
+    variants = probe.get("variants", {})
+    return (
+        probe.get("mutant") == "ZERO_P95_HIGHER"
+        and probe.get("variant_ids") == list(FLOOR_VARIANT_IDS)
+        and set(variants) == set(FLOOR_VARIANT_IDS)
+        and all(
+            isinstance(variants[variant_id], dict)
+            and variants[variant_id].get("status") == "REFUSED"
+            and variants[variant_id].get("reason")
+            == "INVALID_FLOOR_PROFILE"
+            and "value" not in variants[variant_id]
+            and "diagnostic_value" not in variants[variant_id]
+            for variant_id in FLOOR_VARIANT_IDS
+        )
+    )
+
+
 def literal_value(value: float, angle: float = 5.0) -> dict:
     return {
         "status": "VALUE",
@@ -621,6 +640,24 @@ def commission_checker() -> dict[str, object]:
     structural_results["omitted_noise"] = not validate_measurement(
         changed_measurement
     )["complete_rows"]
+    floor_probe = {
+        "mutant": "ZERO_P95_HIGHER",
+        "variant_ids": list(FLOOR_VARIANT_IDS),
+        "variants": {
+            variant_id: {
+                "status": "REFUSED",
+                "reason": "INVALID_FLOOR_PROFILE",
+            }
+            for variant_id in FLOOR_VARIANT_IDS
+        },
+    }
+    structural_results["zero_floor_child"] = validate_floor_probe(
+        floor_probe
+    )
+    floor_probe["variants"]["V1_FLOOR_ELIG_MIN"] = literal_value(1.0)
+    structural_results["zero_floor_child_value"] = not validate_floor_probe(
+        floor_probe
+    )
 
     all_tests = {**sabotage_results, **structural_results}
     caught = sum(all_tests.values())
@@ -682,12 +719,23 @@ def main() -> int:
     args = parser.parse_args()
 
     checker = commission_checker()
-    if args.checker_only or not checker["green"]:
+    floor_probe, floor_probe_rc, floor_probe_err = run_child(
+        "s25h_floor_probe.py"
+    )
+    floor_probe_green = (
+        floor_probe_rc == 0
+        and not floor_probe_err
+        and validate_floor_probe(floor_probe)
+    )
+    if args.checker_only or not checker["green"] or not floor_probe_green:
         print(json.dumps({
             "schema": 1,
             "checker_commission": checker,
+            "floor_mutant_probe": floor_probe,
+            "floor_mutant_probe_green": floor_probe_green,
+            "floor_mutant_probe_stderr": floor_probe_err,
         }, indent=2, sort_keys=True))
-        return 0 if checker["green"] else 2
+        return 0 if checker["green"] and floor_probe_green else 2
 
     provenance, provenance_rc, provenance_err = run_child(
         "verify_survivor_vendor.py"
@@ -700,6 +748,7 @@ def main() -> int:
         or not provenance.get("green")
         or preflight_rc != 0
         or preflight.get("status") != "FORMAL_REAL_M1_BLOCKED"
+        or not floor_probe_green
     ):
         print(json.dumps({
             "schema": 1,
@@ -707,6 +756,7 @@ def main() -> int:
             "provenance": provenance,
             "provenance_stderr": provenance_err,
             "real_preflight": preflight,
+            "floor_mutant_probe": floor_probe,
             "preflight_stderr": preflight_err,
             "status": "PREMEASUREMENT_GATE_FAILED",
         }, indent=2, sort_keys=True))
@@ -754,6 +804,7 @@ def main() -> int:
         "checker_commission": checker,
         "provenance": provenance,
         "real_preflight": preflight,
+        "floor_mutant_probe": floor_probe,
         "deterministic_repeat": deterministic,
         "structure": structure,
         "environment": first["environment"],

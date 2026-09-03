@@ -326,6 +326,11 @@ def evaluate(
         [float(value) for value in calibration["p95_higher"]]
         if spec["floor"] else None
     )
+    if floors is not None and (
+        len(floors) != 10
+        or not all(math.isfinite(value) and value > 0.0 for value in floors)
+    ):
+        return _refusal("INVALID_FLOOR_PROFILE", angle_deg=angle)
     rows = [
         m1_tile(a, b, reference, noise_floor=floors)
         for a, b, reference in prepared
@@ -342,9 +347,9 @@ def evaluate(
                 abs_tol=0.0,
             )
             for row in rows
-            for index in range(10)
+            for index in range(5, 10)
         )
-        activation_fraction = active / (len(rows) * 10)
+        activation_fraction = active / (len(rows) * 5)
 
     bin_medians = []
     for index in range(10):
@@ -373,6 +378,11 @@ def evaluate(
             ])
             valid = np.isfinite(values) & (values > 0.0)
             valid_counts.append(int(np.sum(valid)))
+            if not np.all(valid):
+                return _refusal(
+                    f"NONPOSITIVE_D_BIN_{index}",
+                    angle_deg=angle,
+                )
             if int(np.sum(valid)) < MIN_VALID_SITES:
                 return _refusal(
                     f"INSUFFICIENT_D_BIN_{index}",

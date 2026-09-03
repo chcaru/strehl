@@ -82,9 +82,13 @@ def _noise(namespace: int, item: int, role: int) -> np.ndarray:
 
 def calibration_pairs() -> Iterator[tuple[np.ndarray, np.ndarray]]:
     for pair in range(CALIBRATION_PAIRS):
+        rng = np.random.default_rng(np.random.SeedSequence([
+            CALIBRATION_NAMESPACE,
+            pair,
+        ]))
         yield (
-            _noise(CALIBRATION_NAMESPACE, pair, 0),
-            _noise(CALIBRATION_NAMESPACE, pair, 1),
+            rng.normal(0.0, NOISE_SD, (SIDE, SIDE)),
+            rng.normal(0.0, NOISE_SD, (SIDE, SIDE)),
         )
 
 
@@ -198,4 +202,3 @@ def heterogeneous_power_control() -> tuple[np.ndarray, np.ndarray]:
     defocused = np.ones((SITE_COUNT, 5), dtype=np.float64)
     focused[-4:, :] = 20.0
     return focused, defocused
-
