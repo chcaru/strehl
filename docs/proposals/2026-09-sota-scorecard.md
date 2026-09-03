@@ -1,11 +1,19 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.4 (2026-09-03).** The v1.0 metric, bar, and
+**Status: SPEC / PRE-REGISTRATION v1.5 (2026-09-03).** The v1.0 metric, bar, and
 control protocol was written before implementation lanes reported outcomes.
 Subsequent revisions quarantine leaked evidence, classify captures before use, or
 withdraw/tighten an instrument defeated by independent commissioning; each change is
-recorded below. No v1.4 score output has been read. The competitive position remains
+recorded below. No v1.5 score output has been read. The competitive position remains
 **UNKNOWN**.
+
+**Revision 1.5 — M12 terms separated; existing evidence ruled out of protocol:**
+fixed-worker reproducibility is now named **determinism**, while equality across
+worker counts is named **scaling invariance**. Existing source admissions and a
+reported unaligned N=20 1/4/8-worker sweep are strong diagnostic evidence that the
+former holds and the latter fails, but they are not the registered N=33/105/299
+native-product matrix. M12 therefore remains `UNMEASURED`; no host run was performed
+for this revision.
 
 **Revision 1.4 — defeated detail instrument withdrawn; M8 tightened before use:**
 M1 now has no active statistic or bar because both registered outputs failed
@@ -33,7 +41,7 @@ explicit in the timing protocol. It imports no phase-1 acceptance bar and no mea
 quality result.
 
 This document owns the definition and protocol, not a result. The first render of any
-scored capture **under this protocol** seals v1.4; pre-existing unrelated masters are
+scored capture **under this protocol** seals v1.5; pre-existing unrelated masters are
 not score outputs. A later change to an instrument, bar, eligibility rule, comparator
 setting, capture, or aggregation rule requires a numbered revision and a fresh
 holdout capture. Existing score outputs may then be used only for development.
@@ -74,7 +82,7 @@ document’s proposed completions, not claims that the governing proposal alread
    speed, or memory envelope only if it passes the input/output transfer audit and
    retains at least `98%` of the highest replacement-M1 information score achieved by
    any registered mode on that capture. This stops a deliberately blurred fast/quiet
-   mode from becoming the quality comparator. In v1.4 no mode can yet be
+   mode from becoming the quality comparator. In v1.5 no mode can yet be
    quality-qualified.
 5. Each capture must pass independently, and the pooled one-sided 95% confidence bar
    must also pass. Pooling may not rescue a failed capture.
@@ -99,7 +107,7 @@ program/mode as one point and never splice modes into a fictional point.
 | M3 boundary integrity + local source coherence/width | Blur can hide a halo or veil while widening the edge and reducing agreement with the independently sharp source. | The same boundary render must pass M3's width bar and M5's local `rho_best>=0.90`; the build must also pass a future commissioned M1 on independent-repeat captures. |
 | M6 clipping + §1.3 transfer + M5 highlight coherence | Darkening/tone compression avoids clipping; smoothing hides clipped texture. | The same output must pass the ramp, clipping, and highlight-coherence bars. |
 | M9 false certification + M9 coverage | Universal confidence overclaims; universal refusal obtains perfect precision by saying nothing. | Publish `(false_certification, true_band_coverage)` from one map; both bars must pass. |
-| M11 runtime + M12 determinism/memory | Serial execution can make hashes reproducible by abandoning the speed claim. | The primary CPU result is the 16-worker output; it must meet M11 and be byte-identical to 1/2/4/8-worker outputs while meeting M12. |
+| M11 runtime + M12 determinism/scaling invariance/memory | Serial execution can make fixed-worker runs deterministic by abandoning the speed claim. | The primary CPU result is the 16-worker output; it must meet M11, reproduce at fixed width, and be byte-identical to 1/2/4/8-worker outputs while meeting M12. |
 
 This opposed-pair framing is not universal. M7 colour has an external target, M10
 depth has physical/hidden truth, and M8 has an exact independently reconstructed
@@ -232,7 +240,7 @@ term rather than subject/object identity (rule 35, lines 457–462). Accordingly
    overconfident certificate, permuted depth, a 60-second timed delay, and a 7-GiB
    allocation. Every applicable gate must fail.
 4. A failed commissioning result voids the metric. It may not be repaired against the
-   scored captures under v1.4.
+   scored captures under v1.5.
 
 ## 2. Frozen capture set
 
@@ -334,7 +342,7 @@ same-focus bee sentinel; M5 retains ruler/natural holdouts but still lacks its
 replacement controlled-slide holdout; M9 retains bee repeats but lacks independent
 depth-stack truth.
 
-**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.4** until a
+**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.5** until a
 fresh untouched subject/session supplies,
 at identical subject geometry, exposure, ISO, aperture, and focal length with
 **IBIS off**:
@@ -380,7 +388,7 @@ viewed.
 | M9 | Acuity / `n_eff` certificate calibration | False-certification Wilson upper bound `<=1%`; true-band coverage `>=90%`; nominal 95% interval coverage `93%`–`97%`; variance ratio `0.90`–`1.10`. |
 | M10 | Physical depth product | Valid target pixels `>=99%`; rank correlation `>=0.99`; median error `<=0.5` focus step, p95 `<=1.0` step; physical slope error `<=5%`. |
 | M11 | Wall-clock throughput | Warm common-input throughput `>=2.00x` fastest quality-qualified comparator; candidate/default baseline ratio `<=2.00`; native-RAW CPU at 16 workers `<=0.15 s/frame`; hybrid `<=0.06 s/frame`; cold `<=warm+20 s`; 100-frame live master `<=10 s` after last shutter. |
-| M12 | Memory and systems invariance | Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; byte-identical output at 1/2/4/8/16 workers while the 16-worker run passes M11; N-mod-4 per-frame spread `<=2%`. |
+| M12 | Memory, determinism, and scaling invariance | Warm peak process-tree memory `<=6 GiB`; 299/33-frame peak ratio `<=1.10`; every fixed-worker repeat is byte-identical and the outputs at 1/2/4/8/16 workers are mutually byte-identical while 16 workers passes M11; N-mod-4 per-frame spread `<=2%`. |
 
 M8, the M11 comparator/CPU/hybrid/cold/live targets, the M12 6-GiB bar, and byte
 invariance come directly from the proposal
@@ -389,7 +397,7 @@ completions — including freezing D5's “roughly 2x” as `<=2.00` — are
 **SCORECARD ADDITIONS** because the proposal is silent, approximate, or contains
 `[bar]`.
 
-### 3.1 Measurement readiness as of v1.4
+### 3.1 Measurement readiness as of v1.5
 
 This table separates scientific blockers from the baseline's single pre-metric
 refusal. Codes are the owner's requested categories: **(a)** missing admissible
@@ -411,7 +419,7 @@ mean a result has been run.
 | M9 | **(a)(b)(c)** | Repeat calibration captures are absent and the shipping product emits no admissible acuity/variance certificate. |
 | M10 | **(b)(c)** | No scored geometric-truth capture or compatible depth product exists. The tilted slide is development-only. |
 | M11 | **(a)(b)(d)** | A quiet host is additionally required; native-decode timing alone is a diagnostic, not the registered competitive verdict. |
-| M12 | **(e), scheduled** | Hashes and process-tree RSS need no detail, comparator or holdout. Arms at 1/2/4/8 workers fit the present cap; the registered 16-worker efficiency and modulo ladder require the reserved quiet host. |
+| M12 | **(e), scheduled; formal value UNMEASURED** | Hashes and process-tree RSS need no detail, comparator or holdout. Existing out-of-protocol evidence diagnoses fixed-worker determinism as holding and cross-worker scaling invariance as failing, but the registered N/worker matrix still requires the reserved quiet host. |
 
 Thus M8 is the only complete quality axis ready now. M12 is scientifically
 unblocked, but its complete registered run is deliberately deferred to a quiet host.
@@ -454,7 +462,7 @@ they report roughly a 9.9% “resolution” gain after post-render unsharp maski
 The burned grid and the development-only high-resolution slide may commission a new
 instrument but may never provide its scored value.
 
-**Exact computation.** None is admitted in v1.4. A replacement must be
+**Exact computation.** None is admitted in v1.5. A replacement must be
 pre-registered before its fresh holdout is rendered, must use no frequency above
 `0.25 cyc/native px`, and must be implemented and audited independently of the
 pipeline producing the render.
@@ -499,7 +507,7 @@ ROIs total and 16 per light must qualify.
    `sigma_ideal = sigma_1 * sqrt(2/16)`.
 4. `eta = sigma_res / sigma_ideal`. The comparator ratio uses paired ROIs and only
    modes within `98%` of a future replacement-M1 information envelope. No comparator
-   mode qualifies in v1.4.
+   mode qualifies in v1.5.
 
 The `0.15–0.35 cyc/px` quantity here is a noise residual, not a detail or acuity
 reading; it does not license any spatial-resolution claim above `0.25 cyc/px`.
@@ -808,7 +816,7 @@ repeats alone cannot close M9's depth-stack certificate claim.
 
 1. For each tile and 0.05-cyc/px band whose upper edge is `<=0.25 cyc/px`, truth is
    the future independently commissioned M1 condition. The withdrawn v1.3
-   `D>=1 && FRC>=1/7` rule is not truth in v1.4.
+   `D>=1 && FRC>=1/7` rule is not truth in v1.5.
 2. A claimed band is the highest licensed band strehl’s output certificate marks
    valid. Bands above `0.25 cyc/px` must be labelled `UNLICENSED` and cannot improve
    the score.
@@ -950,15 +958,41 @@ non-product behaviour.
    arm; comparative memory is reported but is not a substitute.
 2. Sample process-tree private committed bytes and working set every 10 ms; report
    peak committed bytes.
-3. Hash delivered bytes at worker counts 1/2/4/8/16.
-4. Compute warm-memory ratio `peak_N299/peak_N33`.
-5. For N=96–99, divide warm wall time by N and compute
+3. After one warm-up, hash the highest-precision delivered bytes from each of the six
+   scored repetitions at worker counts 1/2/4/8/16 for each registered N. Do not hash
+   a later 8-bit proxy.
+4. **M12-D, fixed-worker determinism:** for each `(N, worker_count)`, count distinct
+   hashes across its six repetitions.
+5. **M12-S, cross-worker scaling invariance:** for each N, count distinct hashes
+   across the canonical outputs at worker counts 1/2/4/8/16.
+6. Compute warm-memory ratio `peak_N299/peak_N33`.
+7. For N=96–99, divide warm wall time by N and compute
    `(max-min)/min`.
 
 **Success.** The proposal bars are warm peak `<=6 GiB` and byte invariance. The
 **SCORECARD ADDITIONS** that make “flat” numeric are
-`peak_N299/peak_N33<=1.10` and N-mod-4 per-frame spread `<=2%`. All worker hashes must
-be identical, and the 16-worker output must simultaneously pass M11.
+`peak_N299/peak_N33<=1.10` and N-mod-4 per-frame spread `<=2%`. M12-D requires
+exactly one distinct hash in every fixed-worker six-run cell. M12-S requires exactly
+one distinct hash across all five worker counts at every N, and the 16-worker output
+must simultaneously pass M11. A product may pass M12-D while failing M12-S; the two
+verdicts must never be conflated.
+
+**Existing-evidence ruling.** The repository contains strong mechanism evidence but
+not a scorecard reading. `byte-freeze.rs` says changing
+`STREHL_PYRAMID_WORKERS` changes reduction order and moves 1 DN on about 0.2% of
+pixels; `merge_cmd.rs` records 2 versus 7 workers differing on 0.2573% of a 205-frame
+stack, maximum 1 DN (`byte-freeze.rs` lines 512–515; `merge_cmd.rs` lines
+5322–5329). Both are outside the registered N/worker matrix. The reported
+18-run sweep has six stable repetitions at each of 1/4/8 workers and three different
+cross-worker hashes; its `C6765BFA...` arm matches the registered N=20
+`coffee-bean-20-gate2-pyramid` byte-freeze, not N=33/105/299. That row freezes
+`env_align=0`, `alignment_mode=off`, an empty scratch cache, and a pyramid path whose
+own banner says photometric gain, clip census, outlier rejection, halo correction and
+through-focus statistics were not applied. It also lacks workers 2 and 16 and a
+scorecard command/output manifest proving the hashed artifact is the registered
+highest-precision native product deliverable. Therefore it is
+**diagnostic M12-D PASS / diagnostic M12-S FAIL**, while both formal sub-bars and M12
+overall remain **UNMEASURED**.
 
 **Known defeat.** Disk spill lowers RAM, monitoring only the parent misses workers,
 and nondeterminism can disappear if outputs are rounded before hashing.
@@ -967,6 +1001,14 @@ and nondeterminism can disappear if outputs are rounded before hashing.
 lifetime. Allocate a planted 7-GiB child buffer and require the monitor to exceed the
 bar; write one random output LSB and require the hash gate to fail. Hash the highest
 precision common deliverable, not a later 8-bit proxy.
+
+**Remaining registered run.** Reserve one uninterrupted **120-minute quiet-host
+window**. Run native ARWs at N=33/105/299 with workers 1/2/4/8/16, one warm-up then
+six alternating-order scored repetitions per cell, hashing every deliverable and
+sampling the whole process tree every 10 ms. Run N=96/97/98/99 at 16 workers with the
+same warm-up/six-sweep timing protocol for the modulo bar. This single run supplies
+M12-D, M12-S, peak memory, `peak_N299/peak_N33`, and N-mod-4 spread; do not spend a
+separate host window rediscovering the already-understood reduction-order mechanism.
 
 ## 5. Metrics deliberately rejected as primary evidence
 
@@ -988,7 +1030,7 @@ precision common deliverable, not a later 8-bit proxy.
 4. **SSIMULACRA2 / butteraugli on natural stacks:** the proposal names them
    (`2026-08-sota-path.md` lines 1525–1536) but supplies neither an all-in-focus truth
    image nor a bar. Comparing two unknown renders does not create a reference.
-   They may commission synthetic plants, but do not rank real outputs in v1.4.
+   They may commission synthetic plants, but do not rank real outputs in v1.5.
 5. **A single composite “SOTA score”:** weights would let noise purchase a halo or
    speed purchase lost depth. The proposal’s end-state is conjunctive.
 6. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
@@ -1008,15 +1050,15 @@ competitive statement is **unknown**.
 | M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No admissible instrument or active bar; fresh dense reference and matched IBIS-off sw4/sw10 pairs are also absent. |
 | M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
 | M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Full-reach sites and new checker must commission. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.4 site manifest or control run exists. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.5 site manifest or control run exists. |
 | M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Traceable tilted colour target absent. |
 | M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | M8-R/M8-O are ready to commission on the development-only flat slide; no result has been read. |
 | M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
 | M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.4 run; quiet host required. |
-| M12 | Memory / determinism | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | v1.4 worker/N matrix not run; 16-worker and modulo arms await a quiet host. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.5 run; quiet host required. |
+| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.5 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -1046,7 +1088,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 7. **The proposal’s competitive axis table is historical, not this scorecard.** Its
    “ahead” labels for noise, clipping, invented structure, and speed were obtained
    under different instruments and, in the old head-to-head, asymmetric development.
-   None is a v1.4 current-position value.
+   None is a v1.5 current-position value.
 8. **D2’s CRLB channel cannot certify itself.** The same noise model cannot generate
    admission and then validate its own certificate. M9 requires independent repeated
    exposures and external fixed-pattern treatment.
@@ -1067,7 +1109,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
   demonstrated at the worker count that also meets runtime.
 - **Accepted with correction:** “averaging fails MTF” becomes “averaging must fail a
   future commissioned sharpening-safe information constraint.” Standalone MTF remains
-  inadmissible, and v1.4 has no such instrument.
+  inadmissible, and v1.5 has no such instrument.
 - **Accepted with correction:** a future detail instrument, M4, and M8 should bracket
   sharpening together. Hull is corroborative, not guaranteed: a mild or explicitly
   clamped sharpening pass can remain inside the hull, so hull alone is not the
@@ -1084,7 +1126,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.4` is unavailable because M1 has no admitted
+- `PASS — SOTA under scorecard v1.5` is unavailable because M1 has no admitted
   instrument or bar; a later pre-results revision with a commissioned M1 is required;
 - `FAIL`, when any commissioned primary gate misses;
 - `UNMEASURED`, when any required metric, capture, comparator, or instrument is absent
