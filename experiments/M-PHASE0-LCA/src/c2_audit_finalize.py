@@ -42,6 +42,77 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def classify_retraction(
+    relative: str,
+    tokens: list[str],
+    context: str,
+) -> str:
+    lowered = context.lower()
+    target_terms = (
+        "axial",
+        "longitudinal",
+        "through-focus peak",
+        "focus peak",
+        "green-election forfeit",
+        "gradient energy forfeit",
+    )
+    negations = (
+        "does not retract",
+        "not retract",
+        "not a retraction",
+        "is not withdrawn",
+        "remain live",
+        "remains live",
+    )
+    if (
+        any(token in tokens for token in ("RETRACT", "WITHDRAW"))
+        and any(term in lowered for term in target_terms)
+        and not any(term in lowered for term in negations)
+    ):
+        return "AXIAL_OR_FORFEIT_RETRACTION"
+    if relative.endswith("docs/research/M107-chroma.md"):
+        return (
+            "premeasurement amendment reference; no axial peak or "
+            "green-election-forfeit withdrawal"
+        )
+    if relative.endswith("docs/research/M107b-radial-chroma.md"):
+        return (
+            "withdraws R1 radial rising-excess interpretation, not the "
+            "whole-field axial peak or raw green-election forfeit"
+        )
+    if relative.endswith("docs/research/BUILD-CHROMA.md"):
+        return (
+            "withdraws lateral-epsilon focus-dependence arms and discusses "
+            "other retractions; axial headline/forfeit is not withdrawn"
+        )
+    if relative.endswith("docs/research/M113-ca.md"):
+        return (
+            "corrects lateral ring-bootstrap uncertainty; not an axial "
+            "peak/forfeit withdrawal"
+        )
+    if relative.endswith("docs/research/V-CA-audit.md"):
+        return (
+            "audits lateral/render correction and withdraws rendered "
+            "blue-harm framing; not the native-CFA axial result"
+        )
+    if relative.endswith("M114-ca-verify/RETRACTION.txt"):
+        return (
+            "retracts rendered lateral gain/application-factor claims; "
+            "not the native-CFA axial result"
+        )
+    if relative.endswith("PRE-REGISTRATION-2-AMENDMENT.md"):
+        return (
+            "registered amendment made before the affected M107 arm; "
+            "not a result withdrawal"
+        )
+    if "/experiments/M107-chroma/" in f"/{relative}":
+        return (
+            "source/control branch mentioning amend/withdraw/retract; "
+            "not a report-level axial finding withdrawal"
+        )
+    return "UNCLASSIFIED"
+
+
 def legacy_path(stack: str) -> Path:
     return (
         audit.AUDIT_OUT
@@ -115,54 +186,11 @@ def complete_retraction_audit() -> dict:
     ]
     files = sorted(set(exact_files + recursive_files))
 
-    def classification(path: Path) -> str:
-        relative = path.relative_to(audit.REPO).as_posix()
-        if relative.endswith("docs/research/M107-chroma.md"):
-            return (
-                "premeasurement amendment reference; no axial peak or "
-                "green-election-forfeit withdrawal"
-            )
-        if relative.endswith("docs/research/M107b-radial-chroma.md"):
-            return (
-                "withdraws R1 radial rising-excess interpretation, not the "
-                "whole-field axial peak or raw green-election forfeit"
-            )
-        if relative.endswith("docs/research/BUILD-CHROMA.md"):
-            return (
-                "withdraws lateral-epsilon focus-dependence arms and discusses "
-                "other retractions; axial headline/forfeit is not withdrawn"
-            )
-        if relative.endswith("docs/research/M113-ca.md"):
-            return (
-                "corrects lateral ring-bootstrap uncertainty; not an axial "
-                "peak/forfeit withdrawal"
-            )
-        if relative.endswith("docs/research/V-CA-audit.md"):
-            return (
-                "audits lateral/render correction and withdraws rendered "
-                "blue-harm framing; not the native-CFA axial result"
-            )
-        if relative.endswith("M114-ca-verify/RETRACTION.txt"):
-            return (
-                "retracts rendered lateral gain/application-factor claims; "
-                "not the native-CFA axial result"
-            )
-        if relative.endswith("PRE-REGISTRATION-2-AMENDMENT.md"):
-            return (
-                "registered amendment made before the affected M107 arm; "
-                "not a result withdrawal"
-            )
-        if "/experiments/M107-chroma/" in f"/{relative}":
-            return (
-                "source/control branch mentioning amend/withdraw/retract; "
-                "not a report-level axial finding withdrawal"
-            )
-        return "UNCLASSIFIED"
-
     hits = []
     scanned = []
     for path in files:
         text = path.read_text(encoding="utf-8", errors="replace")
+        lines = text.splitlines()
         relative = path.relative_to(audit.REPO).as_posix()
         scanned.append(
             {
@@ -170,28 +198,32 @@ def complete_retraction_audit() -> dict:
                 "sha256": file_sha256(path),
             }
         )
-        for line_number, line in enumerate(text.splitlines(), 1):
+        for line_number, line in enumerate(lines, 1):
             tokens = [
                 token
                 for token in ("RETRACT", "WITHDRAW", "AMEND")
                 if token in line.upper()
             ]
             if tokens:
+                first = max(0, line_number - 3)
+                last = min(len(lines), line_number + 2)
+                context = "\n".join(lines[first:last])
                 hits.append(
                     {
                         "path": relative,
                         "line": line_number,
                         "tokens": tokens,
                         "text": line.strip(),
-                        "classification": classification(path),
+                        "classification": classify_retraction(
+                            relative, tokens, context
+                        ),
                     }
                 )
     all_classified = all(
         hit["classification"] != "UNCLASSIFIED" for hit in hits
     )
     axial_retraction = any(
-        "axial peak/forfeit withdrawal" in hit["classification"]
-        and hit["classification"].startswith("retracts")
+        hit["classification"] == "AXIAL_OR_FORFEIT_RETRACTION"
         for hit in hits
     )
     return {
@@ -232,6 +264,12 @@ def audit_result(result: dict) -> list[str]:
         not retractions["axial_or_forfeit_retraction_found"]
     ):
         errors.append("retraction decision gate drift")
+    derived_retraction = any(
+        hit["classification"] == "AXIAL_OR_FORFEIT_RETRACTION"
+        for hit in retractions["token_hits"]
+    )
+    if retractions["axial_or_forfeit_retraction_found"] != derived_retraction:
+        errors.append("retraction finding does not follow classified hits")
     return errors
 
 
@@ -474,14 +512,20 @@ def main() -> int:
     changed_type["claim_type"] = "lateral chromatic aberration"
     mutations.append(("FP4_relabel_axial_as_lateral", changed_type))
 
-    incomplete_retractions = copy.deepcopy(result)
-    incomplete_retractions["retraction_audit"]["all_hits_classified"] = False
-    mutations.append(
-        ("FP5_hide_unclassified_retraction_hit", incomplete_retractions)
-    )
-
     for name, mutated in mutations:
         plants.append({"name": name, "red": bool(audit_result(mutated))})
+    planted_classification = classify_retraction(
+        "experiments/M114-ca-verify/RETRACTION.txt",
+        ["RETRACT"],
+        "RETRACT the native-CFA axial peak and green-election forfeit.",
+    )
+    plants.append(
+        {
+            "name": "FP5_detect_explicit_axial_forfeit_retraction",
+            "red": planted_classification
+            == "AXIAL_OR_FORFEIT_RETRACTION",
+        }
+    )
     verification = {
         "control_green": not baseline_errors,
         "control_errors": baseline_errors,
