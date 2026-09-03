@@ -861,10 +861,11 @@ def run_commissioning() -> dict:
     for path in (Path(__file__), MEASURE_PATH, PREREG_PATH, MANIFEST_PATH):
         if not path.exists():
             raise RuntimeError(f"commissioning requires sealed artifact {path}")
-        scripts[str(path.relative_to(HERE))] = sha256(path)
-    if not FROZEN_MANIFEST_SHA256 or scripts[str(MANIFEST_PATH.relative_to(HERE))] != FROZEN_MANIFEST_SHA256:
+        scripts[path.relative_to(HERE).as_posix()] = sha256(path)
+    manifest_key = MANIFEST_PATH.relative_to(HERE).as_posix()
+    if not FROZEN_MANIFEST_SHA256 or scripts[manifest_key] != FROZEN_MANIFEST_SHA256:
         raise RuntimeError(
-            f"manifest hash is not sealed/matched: got {scripts[str(MANIFEST_PATH.relative_to(HERE))]}, "
+            f"manifest hash is not sealed/matched: got {scripts[manifest_key]}, "
             f"expected {FROZEN_MANIFEST_SHA256 or '<unset>'}"
         )
     transforms = {name: sha256(Path(cfg["transform"])) for name, cfg in CAPTURES.items()}

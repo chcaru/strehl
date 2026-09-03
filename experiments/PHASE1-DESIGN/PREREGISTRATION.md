@@ -307,7 +307,7 @@ rehashes every RAW before scoring.
 
 At sealing (before this file itself existed), program hashes were:
 
-- `reference.py`: `b5c831e93fc572606cad21b5b1d49839e2a838875197d0e938e2e6a412f92961`
+- `reference.py`: `405508ecbdb9093e8eb3c4538cb2dfde1c1292f45aaf35997e1c19b83e63c185`
 - `measure.py`: `d964fac2d0edaacf7cc08ef7e8d667b4990b7a8e917f269d50ff2aa48e4227e9`
 
 The exact commissioning command hashes the final files again; those runtime
