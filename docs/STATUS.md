@@ -1086,7 +1086,7 @@ now known to reward sharpening. Two routes remain, and they are not equivalent:
    tone, noise and angle robustness. That is a build, not a discovery, and it is the first
    constructive lead the detail axis has had.
 
-## 2.8 The phase-1 kill gate fired — and I am not accepting it yet
+## 2.8 The phase-1 kill gate fired, I challenged it, and it survived
 
 Commits `e64fca59`, `4bada8e3`, `6b9eb171`, `0c503d84`, `345ef331`, `0eadaa54`, `da00deba`,
 `99fe6a5f`, `7d5c58fc`. Artifact `experiments/PHASE1-DESIGN/results/gate.json`.
@@ -1104,10 +1104,28 @@ before rendering when there are no survivors, so no Pareto numbers were computed
 That is exactly what a kill gate is for, and the lane executed it properly.** I am still not
 recording it as decisive, for the reason below.
 
-### 2.8.1 Every predicate fails at every `k`, and the high bands do not respond to `k` at all
+### 2.8.1 No `k` clears the gate, and bands 4-6 never clear it at all
 
-I read `gate.json` directly rather than accepting the summary. **All 42 predicates fail at all
-161 arms, including the `k=0.00` sentinel.** The failures are not scattered — they decay
+> **Corrected after re-reading `gate.json`. My first version of this subsection said "all 42
+> predicates fail at all 161 arms". That is false, and the truth is a stronger result.** The
+> counts below are recomputed from the file, not from any summary.
+
+The gate evaluates **42 predicates** — 3 captures x 2 ROIs x 7 bands — at each of **161** `k`
+arms spanning `k = 0.00` to `8.00`: **6,762 evaluations**, of which the file records **6,518
+failures**. So **244 evaluations pass**, and 135 of the 161 arms have at least one passing
+predicate. No arm passes all 42, which is what the gate requires, so `pass` is `false`
+everywhere — but "everything fails everywhere" was my error.
+
+**What actually fails is structural, and it is sharper than a blanket failure would be:**
+
+- **16 of the 42 predicates pass at some `k`. The other 26 never pass at any `k`.**
+- **Every predicate that ever passes lies in bands 0-3. No predicate in band 4, 5 or 6 passes at
+  any `k` in the entire sweep, for any capture, in either ROI.** That is an 18-predicate wall.
+- The best arms in the sweep reach **4 of 42** (`k=1.90`, `1.95`, `2.15`, `2.20`, `6.85`, `6.90`).
+- Passing predicates cluster in the `flat` ROI and in the finest band: `113MSDCF flat band 0`
+  alone accounts for 119 of the 244 passes.
+
+The failures decay monotonically with band index. At `k=0.60`:
 monotonically with band index. At `k=0.60`, the best arm:
 
 | band | detail ratios (3 captures) | flat ratios |
@@ -1119,15 +1137,125 @@ monotonically with band index. At `k=0.60`, the best arm:
 
 The bar wants ratios within 5% of `1.0`. **Nothing is near `1.0`; everything sits far below it
 and roughly halves each band.** Best `worst_error` across the whole sweep is `0.984017` against a
-`0.05` bar — **19.7x over**, at `k=0.60` through `0.85`.
+`0.05` bar — **19.7x over** — and it is pinned at that same value across all 35 arms from
+`k=0.60` to `k=2.30`.
 
-**And `113MSDCF` band 6 reads exactly `0.0160` at `k=0.60`, `0.85`, `1.00` and `2.00`** —
-bit-identical across a 3.3x change in the swept parameter, while band 0 swings from `0.4588` to
-`1.6012` over the same range. **A predicate that does not respond to the parameter being swept
-cannot license a conclusion about that parameter.** If the high bands are frozen regardless of
-`k`, then "no `k` satisfies all 42" can be simultaneously true and uninformative.
+**And `113MSDCF` band 6 flat holds exactly one value, `0.015983`, across all 29 arms from
+`k=0.60` to `k=2.00`** — bit-identical through a 3.3x change in the swept parameter, while band 0
+swings from `0.4588` to `1.6012` over the same range. That froze my reading at the time: a
+predicate that does not respond to the swept parameter cannot license a conclusion about it, so I
+challenged the kill rather than record it.
 
-### 2.8.2 The shape is the `cover=scale` signature, from a third independent direction
+**The challenge was wrong and the plateau is real behaviour** — §2.8.2 has the mechanism, and I
+have since confirmed every figure against the file: the value is `1/62.5652 = 0.015983` to six
+places, and **the first change is at exactly `k=5.1500`**, where it steps to `0.016177`. It is a
+staircase, not a flat line, and the sweep's densest region happens to sit on one tread.
+
+### 2.8.2 My challenge was wrong. The kill stands, and phase 1 is stopped
+
+**W1 refuted the resampling hypothesis on all four points, with mechanism, and I accept it.** I
+said I would record the kill as decisive if it survived the challenge. It survived.
+
+**1. The ratio is not a cross-implementation width comparison.** Numerator is the ROI-mean
+**candidate Kish `n_eff`** at that `k`; denominator is the ROI-mean **legacy gate-4.5 Kish
+`n_eff`** on the same band, same ROI, and byte-identical rawpy-aligned samples
+(`measure.py:152-280`). **No Rust merge output supplies either side.** A resampling difference
+between reference and production therefore cannot enter, and my whole hypothesis was
+inapplicable.
+
+**2. I had the band ordering backwards.** Band indices run **fine to coarse**, so bands 5 and 6
+are the *coarsest*, with nominal Nyquists of `0.0078125` and `0.00390625` cyc/output-pixel — far
+**below** the `0.25` licence, not above it. The `[0.10, 0.25]` interval applies only to
+post-reconstruction Pareto metrics, never to width predicates. Nothing was clipped.
+
+**3. The frozen `0.0160` is a real admission plateau, not a dead predicate.** For `113MSDCF`
+band 6 the candidate `n_eff` is exactly `1.0` from `k=0.60` through `k=2.00` — winner-take-all,
+one frame admitted — while the legacy means are `62.4113` (detail) and `62.5652` (flat). The ratios are
+therefore the reciprocals, and I confirmed both against the file to six places: detail
+`1/62.4113 = 0.016023`, flat `1/62.5652 = 0.015983`. They are constant because the admission set
+does not change. **The first admission transition is
+`k=5.15`.** The predicate does respond to `k`; it responds in steps, and that range sits inside
+one step.
+
+**4. `k=0.00` is not an identity.** With unique `q_w>0` it admits only the winner (`n_eff=1`);
+exact energy ties are also admitted; if `q_w=0` every frame gets unit weight (`n_eff=N`). The old
+negative sentinel was explicitly removed. So 42/42 failing there is expected behaviour, not
+miscalibration.
+
+**On the `--cover crop` experiment specifically:** `strehl align` has no such option — cover mode
+belongs to the merge command. More to the point, **W1 applies the raw sidecar unchanged to frozen
+interior ROIs, so it is already Crop-equivalent in sampling geometry.** A rerun could not move
+these ratios without changing the measured object to production output, which would violate the
+sealed gate. Refusing the experiment was correct.
+
+**Independent recomputation reproduced the full 161 x 42 = 6,762-evaluation grid exactly**,
+matching every one of the 6,518 stored failure records, and again found zero arms clearing all 42.
+
+### 2.8.2.1 What the kill actually means
+
+**No single global `k` makes the banded candidate's effective sample count match the legacy
+merge's across all bands and ROIs, and the obstruction is a wall rather than a near miss.**
+
+The mechanism and the band structure agree, which is what makes this convincing. Kish `n_eff`
+measures how many frames actually contribute. The legacy merge averages heavily in the coarse
+bands — about **62 frames** at `113MSDCF` band 6. The candidate, at every `k` the sweep visits
+below `5.15`, admits **one**. **The coarser the band, the more legacy averages, and the further
+the candidate falls behind; no constant closes a gap that grows with band index.** Raising `k`
+far enough to admit more frames at the coarse end drives the fine end past the bar in the other
+direction — band 0 has already overshot to `1.6012` by `k=2.00`.
+
+That is exactly the observed pattern: **bands 0-3 can be made to pass somewhere, bands 4-6 never
+pass anywhere**, and the two ends want opposite values of the one constant on offer.
+
+**Phase 1 as designed is stopped.** Its premise was one fixed global constant; the gate tested
+exactly that premise and falsified it before a line of production Rust was written. W2, W4 and W5
+do not proceed. **This is the kill gate working as intended, and it is the cheapest result this
+program has bought.**
+
+One caveat recorded deliberately: matching legacy `n_eff` was the design's own preregistered
+acceptance criterion. A better algorithm might legitimately differ from legacy rather than match
+it. **That objection is not available now** — the bar was registered before measurement, and
+relitigating a preregistered criterion after seeing the outcome is the exact failure this
+repository guards against. If the criterion was wrong, that is a finding about the design lane's
+choice of bar, to be argued on its own and before the next gate, not a reason to reopen this one.
+
+### 2.8.3 The `cover=scale` defect is real, larger than I thought, and independent of phase 1
+
+The hypothesis failed for W1 but the defect it pointed at is documented in the source itself, and
+the numbers are worse than the scorecard's figure implies. `align_cmd.rs:944-1000`:
+
+> *"The dropped field of view is paid for by an upsample of `1/k` at every pixel of every render,
+> and because `S_k` rides on every placement, the reference frame — whose placement is the
+> identity, and which would otherwise pass through the interpolator untouched — is resampled
+> too."*
+
+| stack | frames | `k` | implied upsample `1/k − 1` |
+|---|---:|---:|---:|
+| `109MSDCF` | 22 | `0.9870` | **1.3%** |
+| `bee-1-cpl` | 299 | `0.9321` | **7.3%** |
+
+> *"`k` falls as the stack deepens … so the tax is worst on the deepest stacks."*
+
+**The scorecard's `0.2901%–0.4619%` is a disagreement between two renders, not the absolute
+rescale.** The absolute upsample is **1.3% at 22 frames and 7.3% at 299 frames**, and
+`bee-1-cpl` — the scorecard's own performance master — is the 299-frame case. Selection is
+`--cover` flag, then `STREHL_COVER` env, then the `Scale` default (`merge_cmd.rs:2686`);
+`STREHL_COVER=0` is a *third* mode (`Skip`) that leaves uncovered edges and is not a valid
+control. Crop's own price is documented too: output dimensions change to about `k*W x k*H`, and
+"the merge still runs on the full plane, so frames that do not reach the border still fold their
+black fill there, and the pyramid's coarse bands spread that fill inward some distance before the
+crop discards it."
+
+**This is now the program's most actionable product lead and it belongs to the head-to-head lane,
+not to phase 1.**
+
+### 2.8.4 The old hypothesis, kept for the record — **SUPERSEDED, and wrong**
+
+> **Everything in this subsection is my refuted challenge, preserved because a program that
+> deletes its wrong turns cannot be audited. It is wrong on the mechanism, wrong on the band
+> ordering, and wrong that W1 was a third confirming direction. §2.8.2 has the correction.
+> Two confirming directions for `cover=scale` remain, not three: the scorecard geometry gate and
+> the head-to-head band pattern.**
 
 A monotone deficit that worsens with every band, present at every `k` including the sentinel, is
 the signature of a **resampling difference**, not a width mismatch. Two sibling results found the
@@ -1147,7 +1275,7 @@ artifact of a known product defect. If they do not, the kill stands and is far s
 having survived. Also outstanding: whether bands 5–6 lie outside the `[0.10, 0.25]` cyc/px
 frequency licence and should never have been allowed to bind the verdict at all.
 
-### 2.8.3 A scorecard holdout capture is burned, by my error
+### 2.8.5 A scorecard holdout capture is burned, by my error
 
 **`calibration-grid-1 sw4` is no longer untouched holdout evidence.** I launched W1 against it in
 parallel with the scorecard baseline lane without realising it was holdout. I halted W1 on
