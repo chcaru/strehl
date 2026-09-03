@@ -322,6 +322,16 @@ detail axis rests on the slant edge alone.
 
 ## 2.2 Where strehl actually stands — the first honest answer since the retraction
 
+> **AMENDED — see §2.7. The instrument used below rewards sharpening by +456%.** An
+> independent harness that never touched this lane's code found the licensed ordinal Q25
+> statistic reports information-free unsharp masking as `5.560744x` improved while reading a
+> genuine resolution improvement as `0.977981x` — the wrong sign. **The tone-invariance claim
+> below is confirmed and stands.** The band ratios against *sharpened* comparators do not: the
+> leading explanation for the high-band deficit is now that the comparator's sharpening is being
+> rewarded, not that strehl resolves less. **Treat the sharpening-0 tie as the honest comparison
+> and the 3.5x deficit as unproven.** The NOT ROBUST verdict was correct; §2.7 says why.
+
+
 `docs/research/V-HEADTOHEAD3.md`, `experiments/V-HEADTOHEAD3/`. Fourteen commits, `5d85d8e1`
 through `e162519f`. **Verdict: NOT ROBUST.**
 
@@ -986,6 +996,95 @@ whether any surviving statistic can hold the detail axis.
 **Not verified:** no physical chart or capture was opened, so transfer to a correctly tilted real
 capture is unknown. The corpus lint is blocked by six pre-existing violations in
 `M-PHASE0-SPLIT*.md`, none introduced here.
+
+## 2.7 Both surviving detail candidates fail; one of them was holding up §2.2
+
+Commits `1639efc4`, `e4b95d3c`, `09977acc`. Registration
+`experiments/M-PHASE0-SLANTEDGE/SURVIVOR-PREREGISTRATION.md`; results at
+`docs/research/M-PHASE0-SLANTEDGE.md:145`.
+
+With slant-edge refused (§2.6), two statistics elsewhere in the program looked like they might
+hold the detail axis: **SCORECARD-BASELINE's M1**, whose own commissioning reported unsharp
+movement `0`, and **V-HEADTOHEAD3's licensed ordinal Q25**, proven invariant to monotone point
+transforms. Both were run through the §2.6 rig **with no threshold changed**. Neither is
+admissible.
+
+The rig was tightened for this: candidate functions were copied verbatim into the audit tree, and
+a separate process verified **3 full source hashes and 11 function ASTs before every run**, so a
+candidate silently drifting out from under the audit is detected rather than assumed away. The
+checker imported neither plants nor candidates, passed a literal all-GREEN fixture, then caught
+**10/10** single-property sabotages including source drift. Two complete child-process runs were
+bit-for-bit deterministic. An independent verifier passed it on 74 report comparisons, zero
+failures.
+
+### 2.7.1 Q25 rewards sharpening by +456% and misses real improvement entirely
+
+| arm | licensed Q25 (base `9.52160e-4`) | |
+|---|---:|---|
+| identity | `1.000000x` | |
+| physical sigma-0.75 blur | `.841501x` | responds; misses the `0.894427 ±5%` bar |
+| **genuine sigma-1.20 improvement** | **`.977981x`** | **wrong sign, −2.20%** |
+| **post-render USM r1.0/a0.5** | **`5.560744x`** | **+456.07%** |
+| affine / gamma-3 / logistic | `.999963 / 1 / .999966` | **tone bar PASSED** |
+| noise | median `17.0056x`, range `15.9320–18.3498x` | |
+
+**Q25 disposition: REFUSED.**
+
+Two things must be said together. **The tone-invariance claim in §2.2 is confirmed by a harness
+that never touched that lane's code** — `.999963/1/.999966`. That was the claim the whole
+instrument was built to establish, and it survived external audit intact.
+
+**And the same statistic inflates 5.56x under information-free sharpening while a real
+resolution gain reads −2.2%.** §2.2 reported strehl tied against sharpening-0 PMax
+(`0.9735 [0.8339, 1.1406]`) and trailing 3.5x against sharpening-40. A statistic with this
+response manufactures exactly that pattern from the comparator's sharpening alone. **The
+competitive position is amended accordingly: the sharpening-0 tie is the honest comparison; the
+high-band deficit is unproven.** The NOT ROBUST verdict stands and is now explained rather than
+merely declared.
+
+A lead about the construction, not just a defect: the **historical `A20_25` moved the opposite
+way under USM, `.591780x`**. Restricting the numerator to `[.20,.25)` to respect the 0.25
+licensing bound appears to be what introduced the sharpening reward. `A20_25` cannot rescue the
+result — its six-band denominator reaches 0.40 and is unlicensed, and it misses both physical
+bars and the noise bar — but the direction change locates the problem.
+
+### 2.7.2 M1's cutoff is blind; its second output is the most promising thing found
+
+| native field | base | identity | blur | improvement | USM |
+|---|---:|---:|---:|---:|---:|
+| `f_licensed` | `.150000` | `1.000000x` | `1.000000x` **RED** | `1.000000x` **RED** | `1.000000x` GREEN |
+| `S_25` | `6.68974e-5` | `1.000000x` | `.226526x` **RED** | `8.274764x` **RED** | `.995819x` GREEN |
+
+**The claim-bearing cutoff is `USM_INVARIANT_BUT_BLIND`.** `f_licensed` sits pinned at its `0.15`
+floor for base, blur, real improvement *and* USM. This is the exact failure mode the audit was
+sent to distinguish, and it was named rather than reported as a pass — an instrument reading `0`
+under sharpening is only invariant if it still moves under real resolution, and this one does not.
+
+**`S_25` is a different story and is worth keeping.** It moves strongly in the correct direction
+under both physical arms — `.226526x` under blur, `8.274764x` under genuine improvement — while
+USM changes it by only **−0.418%**. That combination is precisely what the detail axis needs and
+nothing else in the program has shown it. It is not admissible as it stands: it is not calibrated
+to MTF50, it fails the unchanged ratio bars, and it is defeated by tone (gamma-3 `4.8400x`,
+logistic `18818.9045x`), by noise (median `.330086x`, range `.004972x–10.381863x`, so some
+noisier arms score much *better*), and by angle (`1.42205/1.18548/1/.65802`). **M1 disposition:
+NOT COMMISSIONED.**
+
+**Scope limit, stated by the lane and not by me:** this synthetic adapter cannot adjudicate the
+formal scorecard M1, which has a registered tile-eligibility denominator and dark/flat noise
+floors the plant does not supply. The verdict is against M1 *on this fixture*.
+
+### 2.7.3 Where the detail axis now stands
+
+Every candidate the proposal named or the program produced has been tested and refused. The
+detail axis has **no admissible instrument**, and the competitive position rests on a statistic
+now known to reward sharpening. Two routes remain, and they are not equivalent:
+
+1. **The owner's IBIS-off re-shoot (§4.0).** Restores repeat-pair FRC, whose protocol and 17/17
+   plant battery are already built. This is the critical path and it is blocked on a physical
+   capture.
+2. **Harden `S_25`.** It already has the sharpening/blur/improvement behaviour; what it lacks is
+   tone, noise and angle robustness. That is a build, not a discovery, and it is the first
+   constructive lead the detail axis has had.
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
