@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
@@ -37,6 +38,7 @@ SIDE = 512
 SEED = 20260904
 UNLICENSED = "UNLICENSED_GT_0.25"
 FIT_EDGES = np.arange(0.02, 0.201, 0.01, dtype=np.float64)
+_SOURCE_NAME = re.compile(r"20260507-DSC\d{5}\.tif$", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -66,6 +68,32 @@ def source_manifest() -> list[tuple[Path, Path]]:
         if not a.is_file() or not b.is_file():
             raise FileNotFoundError(f"missing source pair: {a}, {b}")
     return pairs
+
+
+def source_fit_edges_are_valid(edges: Sequence[float]) -> bool:
+    """The model fit must not inspect the held-out 0.20--0.25 band."""
+    x = np.asarray(edges, np.float64)
+    return bool(
+        x.ndim == 1
+        and len(x) >= 2
+        and np.all(np.isfinite(x))
+        and np.all(np.diff(x) > 0)
+        and x[0] >= 0.02 - 1e-12
+        and x[-1] <= 0.20 + 1e-12
+    )
+
+
+def require_source_model_paths(paths: Iterable[Path]) -> None:
+    """Reject any competitive output imported into source-model fitting."""
+    allowed_roots = {SOURCE_0, SOURCE_40}
+    rejected = [
+        Path(path)
+        for path in paths
+        if Path(path).parent not in allowed_roots
+        or _SOURCE_NAME.fullmatch(Path(path).name) is None
+    ]
+    if rejected:
+        raise ValueError(f"source model received forbidden outcome path(s): {rejected}")
 
 
 def _window(shape: tuple[int, int]) -> np.ndarray:
@@ -249,6 +277,8 @@ def transfer_loss(transfer: dict, sigma: float, amount: float) -> float:
 
 
 def fit_model(train: dict, holdout: dict) -> tuple[Model, list[list[float]]]:
+    if not source_fit_edges_are_valid(FIT_EDGES):
+        raise RuntimeError(f"source fit overlaps held-out band: {FIT_EDGES}")
     sigmas = np.round(np.arange(0.30, 2.501, 0.05), 2)
     amounts = np.round(np.arange(0.00, 3.001, 0.05), 2)
     table: list[list[float]] = []

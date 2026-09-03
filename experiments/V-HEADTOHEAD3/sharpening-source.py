@@ -30,6 +30,10 @@ def sites_mode() -> int:
 
 def model_mode() -> int:
     frozen = _frozen()
+    manifest = sc.source_manifest()
+    sc.require_source_model_paths(path for pair in manifest for path in pair)
+    if not sc.source_fit_edges_are_valid(sc.FIT_EDGES):
+        raise RuntimeError("source fit edges overlap the held-out target band")
     selected = sc.select_sites()
     if selected["digest"] != frozen.SITE_DIGEST:
         raise RuntimeError(

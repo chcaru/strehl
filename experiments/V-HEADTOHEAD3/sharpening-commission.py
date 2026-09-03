@@ -90,6 +90,16 @@ def main() -> int:
         bool(not mutant[inside] and mutant[outside]),
         "mutant admits 0.28125 and rejects licensed 0.21875",
     )
+    x = np.arange(shape[1], dtype=np.float64)
+    above_cap = np.sin(2.0 * np.pi * 36.0 * x / shape[1])[None, :]
+    above_cap = np.repeat(above_cap, shape[0], axis=0)
+    above_power = np.abs(np.fft.fft2(above_cap)) ** 2
+    leakage = float(np.sum(above_power[mask]) / np.sum(above_power))
+    r.control(
+        "above-cap sinusoid isolation",
+        leakage <= 1e-24 and sc.UNLICENSED == "UNLICENSED_GT_0.25",
+        f"licensed leakage={leakage:.3e}; outcome={sc.UNLICENSED}",
+    )
 
     # Point-tone invariance and raw-substitution potency.
     a = fixture()
@@ -138,8 +148,11 @@ def main() -> int:
     )
     r.plant(
         "disabled improvement arm",
-        sharp_ratio > 1.25 and sharp_hull > 0.005,
-        "identity operator would read ratio 1 and hull 0",
+        not (
+            sc.q25(flat.copy()) / sc.q25(flat) > 1.25
+            and sc.rank_hull_delta(flat, flat.copy())[0] > 0.005
+        ),
+        "executed identity mutant reads ratio 1 and hull 0, so the gate rejects it",
     )
     blurred = ndimage.gaussian_filter(flat, 1.5, mode="reflect")
     blur_ratio = sc.q25(blurred) / sc.q25(flat)
@@ -150,16 +163,27 @@ def main() -> int:
     )
     r.plant(
         "disabled degradation arm",
-        blur_ratio < 0.75,
-        "identity operator would read ratio 1",
+        not (sc.q25(flat.copy()) / sc.q25(flat) < 0.75),
+        "executed identity mutant reads ratio 1, so the gate rejects it",
     )
 
-    # Rank hull itself must ignore a point curve and catch direction reversal.
-    gamma_hull = sc.rank_hull_delta(flat, np.exp(flat))[0]
+    # Rank hull itself must ignore every registered point curve and catch
+    # direction reversal.
+    hull_tones = {
+        "affine": lambda z: 2.3 * z + 7.0,
+        "gamma3": lambda z: (z - np.min(z) + 1e-9) ** 3,
+        "logistic": lambda z: 1.0 / (1.0 + np.exp(-40.0 * (z - np.median(z)))),
+    }
+    hull_moves = {
+        name: abs(
+            sc.rank_hull_delta(curve(flat), curve(sharp))[0] - sharp_hull
+        )
+        for name, curve in hull_tones.items()
+    }
     r.control(
-        "rank-hull tone null",
-        abs(gamma_hull) <= 1e-12,
-        f"exp point-map delta={gamma_hull:.3e}",
+        "rank-hull registered-tone invariance",
+        max(hull_moves.values()) <= 1e-12,
+        ", ".join(f"{name}={move:.3e}" for name, move in hull_moves.items()),
     )
     reversed_hull = sc.rank_hull_delta(sharp, flat)[0]
     r.plant(
@@ -184,10 +208,103 @@ def main() -> int:
         recovered,
         f"expected (1.00,1.00), got ({model.sigma:.2f},{model.amount:.2f})",
     )
+    held_actual = [b for _, b in samples_hold]
+    held_base = [a for a, _ in samples_hold]
+    held_predicted = [sc.usm(a, model.sigma, model.amount) for a in held_base]
+    actual_predicted = np.asarray(
+        [
+            math.log(sc.q25(actual) / sc.q25(predicted))
+            for actual, predicted in zip(held_actual, held_predicted)
+        ]
+    )
+    held_target = float(np.exp(np.mean(actual_predicted)))
+    d_out = float(
+        np.mean(
+            [
+                math.log(sc.q25(actual) / sc.q25(base))
+                for base, actual in zip(held_base, held_actual)
+            ]
+        )
+    )
+    d_pred = float(
+        np.mean(
+            [
+                math.log(sc.q25(predicted) / sc.q25(base))
+                for base, predicted in zip(held_base, held_predicted)
+            ]
+        )
+    )
+    closure = d_pred / d_out
+    original = float(
+        np.exp(
+            np.mean(
+                [
+                    math.log(sc.q25(base) / sc.q25(actual))
+                    for base, actual in zip(held_base, held_actual)
+                ]
+            )
+        )
+    )
+    forward = float(np.exp(-np.mean(actual_predicted)))
+    reproduces = (
+        0.75 <= closure <= 1.25
+        and 0.85 <= forward <= 1.15
+        and original < 0.95
+        and forward >= 0.95
+    )
+    r.control(
+        "heldout target and synthetic REPRODUCES",
+        0.90 <= held_target <= 1.10 and reproduces,
+        f"actual/pred={held_target:.4f}, closure={closure:.4f}, "
+        f"forward={forward:.4f}, original={original:.4f}",
+    )
+    noop_d_pred = float(
+        np.mean(
+            [
+                math.log(sc.q25(base.copy()) / sc.q25(base))
+                for base in held_base
+            ]
+        )
+    )
+    noop_closure = noop_d_pred / d_out
+    noop_forward = original
+    noop_reproduces = (
+        0.75 <= noop_closure <= 1.25
+        and 0.85 <= noop_forward <= 1.15
+        and original < 0.95
+        and noop_forward >= 0.95
+    )
     r.plant(
         "no-op transfer model",
-        model.train_loss < 0.75 * model.train_identity_loss,
+        not noop_reproduces,
+        f"executed no-op gives closure={noop_closure:.4f}, "
+        f"forward={noop_forward:.4f}; "
         f"fit={model.train_loss:.5f}, identity={model.train_identity_loss:.5f}",
+    )
+    r.control(
+        "source-only fit/input guards",
+        sc.source_fit_edges_are_valid(sc.FIT_EDGES),
+        f"fit maximum={sc.FIT_EDGES[-1]:.2f}; source manifest accepted",
+    )
+    sc.require_source_model_paths(
+        path for pair in sc.source_manifest() for path in pair
+    )
+    mutant_edges = np.append(sc.FIT_EDGES, 0.25)
+    r.plant(
+        "heldout-band imported into fit",
+        not sc.source_fit_edges_are_valid(mutant_edges),
+        f"mutant fit maximum={mutant_edges[-1]:.2f} is rejected",
+    )
+    try:
+        sc.require_source_model_paths([sc.PMAX_0, sc.STREHL])
+    except ValueError:
+        outcome_import_caught = True
+    else:
+        outcome_import_caught = False
+    r.plant(
+        "outcome imported into source model",
+        outcome_import_caught,
+        "PMax/strehl path mutant is rejected by the production guard",
     )
 
     # Registration convention against an untouched source.
