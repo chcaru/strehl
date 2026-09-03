@@ -1,5 +1,17 @@
 # V-HEADTOHEAD3 — tone-neutral competitive baseline
 
+> **2026-09-03 COVER-MODE CAUSAL ARM.  VERDICT:
+> `COVER_NOT_CAUSE`.**  The frozen default render was reproduced byte for
+> byte, then rerendered with `--cover crop` as the only intervention.  At the
+> primary licensed 0.10–0.20 cyc/native-px band, crop/default is
+> `1.0093 [1.0031,1.0156]`; the independent implementation reads
+> `1.0103 [1.0043,1.0165]`.  Both intervals lie wholly inside the
+> preregistered `[0.98,1.02]` equivalence region, while both default and crop
+> remain classified as trailing the unchanged sharpening-0 PMax render.
+> Removing the coverage resample therefore recovers about 1%, not the
+> competitive deficit.  Crop also removes 3.86% of output pixels.  Details,
+> provenance and the no-Rust disposition are in §10.
+
 > **2026-09-04 SHARPENING FOLLOW-UP / CAUSAL CORRECTION.**  The two
 > 63-frame 113 source sets do **not** form a sharpening-only ladder.  An
 > all-file XMP census found eleven differing development fields on every
@@ -249,8 +261,8 @@ No Helicon render was found under `C:\dev`, `D:\edited`, or
 DELIVER-V6 records executable SHA-256
 `2A7BCD7B098D3523AB54491784436EB5F69A358ECFBEC5155108EC552D0712B7`
 and command `strehl.exe stack <source> -o <master> --srgb`, with a private
-`STREHL_CACHE_DIR` and all other `STREHL_*` variables unset.  This lane does
-not rerender.
+`STREHL_CACHE_DIR` and all other `STREHL_*` variables unset.  The baseline
+did not rerender; the later controlled scale/crop pair is documented in §10.
 
 ## 3. Tone-neutral statistic
 
@@ -579,4 +591,116 @@ eac01548723d0c583a9a52912706f4bc8e7fe29a  failed source-model freeze
 3f0838b12294de380a3a16ee42ade5998bd9547d  outcome and independent checker
 23dd924166107607e5ead82f11140fe6d6d6b3a8  repair verifier-found commissioning defects
 233f1165063d30a2c941b7129a3287e7f99d2e69  correct above-cap and interval controls
+```
+
+## 10. Controlled `cover=scale` versus `cover=crop`
+
+Cover preregistration:
+[`experiments/V-HEADTOHEAD3/COVER-PREREGISTRATION.md`](../../experiments/V-HEADTOHEAD3/COVER-PREREGISTRATION.md),
+commit `e4b1d9482244d8baba4fa673a083f334d3613f19`.  Author and
+independent instruments plus both input-only site freezes were committed at
+`ba3e2bb9949444f672362b6c6bbf5e8bce301dd7` before either treatment
+render existed.  The declared bias was toward crop improving 0.10–0.20.
+Contrary prior evidence was also frozen: BUILD-CROP had measured a
+`-0.0030 dex` wrong-sign effect on other stacks.
+
+### 10.1 Commissioning and provenance
+
+The final author commission is 16/16 controls GREEN and 26/26 plants RED;
+the independently implemented checker is 19/19 and 27/27.  Both execute
+blur-degradation and independent-USM-improvement arms.  They recover planted
+scale, translation correction sign and exact crop origin against fixed
+predicates, and reject changed executable/comparator/scale identities,
+swapped comparator labels, extra flags, inherited `STREHL_*`, excess thread
+caps, a changed source manifest, missing border clearance and numeric
+above-cap output.  Independent final verification found no defect.
+
+The exact historical default invocation, using the pinned executable, yielded
+SHA-256
+`4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F`:
+byte-identical to the frozen master.  Only then did the script add
+`--cover crop`.  Both runs placed 63/63 frames with none refused.  All 63
+ARWs and 63 XMPs were byte-stable before and after at manifest digest
+`A6275BE83552AC1BE4E23381A42BF1024FB33C217A9529DCDCC018BB4992AC5D`;
+both comparator hashes also remained fixed.  The crop hash is
+`5B5F863AB2602EA18DB995FEA6361D4AB86B8FF24ECBCB9D2A470E637091F18B`.
+Full logs and manifests are in
+`out/COVER-RENDER-PROVENANCE.json`; compact outcomes are in
+`out/COVER-RESULTS.json`.
+
+The renderer reported `k=0.9809`, a `3448 x 2298` plane-pixel rectangle at
+`(34,23)` of `3516 x 2344`, emitted at unity scale.  Output dimensions changed
+from `7032 x 4688` to `6896 x 4596`: 98.066% width, 98.038% height and
+96.141% pixels retained.  At 300 dpi this is `23.440 x 15.627 in` versus
+`22.987 x 15.320 in`, a `0.453 x 0.307 in` linear loss.
+
+### 10.2 Primary sharpening-0 PMax result
+
+Sites were frozen in the unchanged PMax native grid before crop existed:
+34 detail and 16 flat, digest
+`79DC2EDB0F9F67878E97A7EABCC0E2E06BEA4327B6CB8E03F635479391641543`.
+One detail site hit the preregistered 256-pixel crop-border gate, leaving
+33 detail and 16 flat in both implementations.  PMax pixels are identical
+between arms.  The statistic here uses the separately preregistered strict
+rank-energy denominator and sites, so its absolute strehl/PMax ratios do not
+replace §5's earlier score; crop/default is the controlled causal effect.
+
+| cyc/native px | default/PMax | crop/PMax | crop/default |
+| --- | ---: | ---: | ---: |
+| 0.02–0.05 | `0.5096 [0.4478,0.5792]` | `0.5097 [0.4485,0.5787]` | `1.0004 [0.9976,1.0028]` |
+| 0.05–0.10 | `0.4580 [0.4019,0.5228]` | `0.4583 [0.4015,0.5242]` | `1.0007 [0.9963,1.0051]` |
+| **0.10–0.20** | **`0.4631 [0.3894,0.5510]`** | **`0.4674 [0.3931,0.5568]`** | **`1.0093 [1.0031,1.0156]`** |
+| 0.20–0.25 | `UNLICENSED_GT_0.25` | `UNLICENSED_GT_0.25` | `UNLICENSED_GT_0.25` |
+
+The final band is unlicensed because crop's measured scale maps its upper edge
+above 0.25.  No wider-band number is used.  At the primary band the
+input-fixed flat crop/default reading is
+`1.0047 [0.9956,1.0154]`.  All four detail quadrants are positive and there is
+no leave-one-site reversal, but the registered recovery rule requires the
+gain lower bound to exceed 1.02.  Instead the complete interval lies inside
+`[0.98,1.02]`: **`COVER_NOT_CAUSE`**.
+
+The independent checker reads default/PMax
+`0.4628 [0.3895,0.5499]`, crop/PMax
+`0.4675 [0.3931,0.5561]`, and crop/default
+`1.0103 [1.0043,1.0165]`, with the same verdict.  Author/checker image-fitted
+scales disagree by only 0.020% (default) and 0.061% (crop), below the 0.5%
+stop bar.  These `s` values, like the earlier §5 values of about 1.002 and
+1.003, come from image content via scale sweeps and correlation—not nominal
+dimensions.
+
+### 10.3 Confounded Sharpness-40 secondary
+
+The secondary arm also returns `COVER_NOT_CAUSE`.  Author default/PMax40 is
+`0.3084 [0.2706,0.3513]`, crop/PMax40 is
+`0.3089 [0.2714,0.3517]`, and crop/default is
+`1.0015 [0.9957,1.0076]` at 0.10–0.20.  The independent crop/default reading
+is `1.0069 [1.0012,1.0127]`; its largest geometry disagreement is 0.387%,
+still below the stop bar.  This does not rehabilitate the comparator:
+§0's eleven-field development confound remains.
+
+### 10.4 Disposition and Rust consequence
+
+The 1.9% linear coverage fit does not explain the competitive 0.10–0.20
+trail.  Removing it produces only a roughly 1% rendered ordinal change and
+does not change either arm's `TRAILS` class, while sacrificing 3.86% of the
+image.  This eliminates the most plausible output-geometry confound but does
+not prove that the remaining trail is a merge defect: PMax still consumed
+differently developed inputs.
+
+**No Rust change follows.**  In particular,
+`crates/strehl-cli/src/align_cmd.rs` should retain `CoverMode::Scale` as the
+default; this result gives no detail basis for switching it to crop.
+`crates/strehl-cli/src/merge_cmd.rs` also needs no coverage-path change.
+Future phase-1 detail work should use common linear inputs rather than target
+the already isolated cover transform.
+
+Reproduction, with all numerical and Rayon thread caps set to 8:
+
+```powershell
+python -B cover-commission.py
+python -B cover-check.py --commission
+python -B cover-render.py
+python -B cover-measure.py --crop out\113-cover-crop.tiff --scale out\113-cover-scale-control.tiff --pmax "D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif" --frozen-sites cover_frozen_113.py --provenance out\COVER-RENDER-PROVENANCE.json
+python -B cover-check.py --crop out\113-cover-crop.tiff --scale out\113-cover-scale-control.tiff --pmax "D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif" --frozen-sites cover_frozen_113.py --provenance out\COVER-RENDER-PROVENANCE.json
 ```
