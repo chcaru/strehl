@@ -1,0 +1,23 @@
+freeze 613eaf1af9d65a56796474bd53df27caf05cd032
+> python -B experiments\M-CAND1\src\check.py --self-test
+SELF-TEST caught 10/10 literal-gate mutations
+exit 0
+> python -B experiments\M-CAND1\src\check.py preflight experiments\M-CAND1\out\preflight.json
+GREEN: preflight result follows frozen literal gates
+exit 0
+> python -B experiments\M-CAND1\src\check.py usm experiments\M-CAND1\out\usm.json
+GREEN: usm result follows frozen literal gates
+exit 0
+commission NOT RUN: usm.json stop_after_this_arm=true
+> python -B experiments\M-CAND1\src\run.py commission --freeze 613eaf1af9d65a56796474bd53df27caf05cd032
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M-CAND1\src\run.py", line 230, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M-CAND1\src\run.py", line 226, in main
+    return run_commission(args.freeze, args.usm, args.out)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M-CAND1\src\run.py", line 118, in run_commission
+    raise RuntimeError("USM did not pass; frozen stop rule forbids later arms")
+RuntimeError: USM did not pass; frozen stop rule forbids later arms
+exit 1
