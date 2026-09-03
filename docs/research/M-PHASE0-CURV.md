@@ -38,7 +38,7 @@ The deciding values are in
 `experiments/M-PHASE0-CURV/out/results.json`; the 2,000 bootstrap samples and
 the complete 651-site table are in that JSON and
 `out/primary-f5p6-peaks.csv`. The result JSON SHA-256 at report time is
-`4c40379ed082fd4ef2dd5be00ca61572cdb35e00b6abc9a849acefabc50fa11a`.
+`4bfed7175e2bb4f54570194e4ba7b8bac06025eb6fb108b13dc9592ff329389a`.
 
 ## 2. The dispatch summary was not C5's actual claim
 
@@ -125,10 +125,10 @@ specification.
 
 ## 5. Commissioning
 
-The final suite is **9/9 controls GREEN and 11/11 planted defects RED**.
+The final suite is **10/10 controls GREEN and 12/12 planted defects RED**.
 `out/commission.json` has every predicate and reading; its report-time
 SHA-256 is
-`6c11c4d33e9e306cad30f0a99b0e496bd2b74ea009ee8965500f6d63c8e1d60a`.
+`dba7e36ccf10298d629bbd5021895d4dad6dc4b804980eccd8839940499a6d40`.
 
 | control | unmodified reading | planted defect and RED reading |
 |---|---|---|
@@ -141,6 +141,7 @@ SHA-256 is
 | E7 production verdict path | contradictory fixed ladder => NOT ROBUST | primary-only path => SURVIVE |
 | E8 decode + independent checker | fixed Rust/rawpy contract and all checker mutations rejected | wrong active dimension, stale number, flipped verdict all RED |
 | E9 2-D response | fixed in-focus frame 7 recovered; response strictly decreased over eight blur doses | frame-axis Sobel peaked at frame 6 |
+| E10 fitted cross-track support | 195 sites, 15 blocks, fitted-`v` span `2.52`, 91 sites per side passed despite smaller sensor-axis span `1.00` | treating sensor-axis span as a lower bound returned false |
 
 E1 is the required cancellation-immune predicate. Its input and answer were
 created by M84b code that this lane neither imports nor modifies, pinned by
@@ -218,7 +219,8 @@ audit found E7's conceptual mock had not called the production verdict
 function and the first checker only echoed the JSON verdict. Before filing,
 the decision tree was moved into `curvlib.py`, E7 commissioned that exact
 path, and `check_results.py` independently reimplemented classification,
-ladders, and the lane decision. The final suite remained 9/9 and 11/11.
+ladders, and the lane decision. At that stage the suite remained 9/9 and
+11/11.
 
 A final read-only verifier then found that P5's first implementation planted a
 spatial `v^2` offset directly instead of invoking the production
@@ -228,6 +230,12 @@ removed an unnecessary coordinate-span pre-gate (the registered fitted-`v`
 span remains enforced) and added an independent regeneration of every
 bootstrap resample. These repairs changed neither the deciding number nor any
 real-data classification.
+
+The verifier correctly noted that the repaired support gate itself still
+lacked a plant. E10/P12 now commission the exact production gate on a fixed
+point cloud whose fitted cross-track span is `2.52` although its smaller
+sensor-axis span is only `1.00`; reinstating the defective proxy goes RED.
+That brings the final suite to 10 controls and 12 plants.
 
 ## 8. Read-only and independent checks
 

@@ -101,45 +101,7 @@ def arrays_from_rows(
 
 
 def complete_gate(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> dict[str, object]:
-    if len(z) == 0:
-        return {
-            "n": 0,
-            "occupied_blocks": 0,
-            "conservative_v_span": 0.0,
-            "enough_sites": False,
-            "enough_blocks": False,
-            "enough_span": False,
-            "sites_v_negative": 0,
-            "sites_v_positive": 0,
-            "actual_v_span": 0.0,
-            "enough_each_side": False,
-            "pass": False,
-        }
-    gate = C.surface_gate(x, y, WIDTH, HEIGHT)
-    side_negative = side_positive = 0
-    v_span = 0.0
-    if len(z) >= 12:
-        preliminary = C.fit_surface(x, y, z, WIDTH, HEIGHT)
-        xn, yn = C.normalised_coordinates(x, y, WIDTH, HEIGHT)
-        axis = np.asarray(preliminary["gradient_unit"], dtype=float)
-        v = -axis[1] * xn + axis[0] * yn
-        side_negative = int(np.sum(v < 0.0))
-        side_positive = int(np.sum(v > 0.0))
-        v_span = float(np.ptp(v))
-    gate.update(
-        {
-            "sites_v_negative": side_negative,
-            "sites_v_positive": side_positive,
-            "actual_v_span": v_span,
-            "enough_each_side": side_negative >= 30 and side_positive >= 30,
-        }
-    )
-    gate["pass"] = bool(
-        gate["pass"]
-        and gate["enough_each_side"]
-        and v_span >= 1.2
-    )
-    return gate
+    return C.complete_surface_gate(x, y, z, WIDTH, HEIGHT)
 
 
 def fit_registered(

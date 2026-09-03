@@ -557,3 +557,62 @@ def surface_gate(
         "enough_span": bool(conservative_span >= 1.2),
         "pass": bool(len(x) >= 180 and len(blocks) >= 12),
     }
+
+
+def complete_surface_gate(
+    x_sensor: np.ndarray,
+    y_sensor: np.ndarray,
+    z_frame: np.ndarray,
+    width_sensor: float,
+    height_sensor: float,
+    *,
+    defect_conservative_span: bool = False,
+) -> dict[str, object]:
+    """Registered site/block/side/fitted-cross-track support gate."""
+    x = np.asarray(x_sensor, dtype=np.float64)
+    y = np.asarray(y_sensor, dtype=np.float64)
+    z = np.asarray(z_frame, dtype=np.float64)
+    if len(z) == 0:
+        return {
+            "n": 0,
+            "occupied_blocks": 0,
+            "conservative_v_span": 0.0,
+            "enough_sites": False,
+            "enough_blocks": False,
+            "enough_span": False,
+            "sites_v_negative": 0,
+            "sites_v_positive": 0,
+            "actual_v_span": 0.0,
+            "enough_each_side": False,
+            "pass": False,
+        }
+    gate = surface_gate(x, y, width_sensor, height_sensor)
+    side_negative = side_positive = 0
+    v_span = 0.0
+    if len(z) >= 12:
+        preliminary = fit_surface(x, y, z, width_sensor, height_sensor)
+        xn, yn = normalised_coordinates(x, y, width_sensor, height_sensor)
+        axis = np.asarray(preliminary["gradient_unit"], dtype=float)
+        v = -axis[1] * xn + axis[0] * yn
+        side_negative = int(np.sum(v < 0.0))
+        side_positive = int(np.sum(v > 0.0))
+        v_span = float(np.ptp(v))
+    gate.update(
+        {
+            "sites_v_negative": side_negative,
+            "sites_v_positive": side_positive,
+            "actual_v_span": v_span,
+            "enough_each_side": side_negative >= 30 and side_positive >= 30,
+        }
+    )
+    passed = bool(
+        gate["pass"]
+        and gate["enough_each_side"]
+        and v_span >= 1.2
+    )
+    if defect_conservative_span:
+        # Deliberate E10 defect: treat the smaller sensor-axis span as a lower
+        # bound on a rotated point cloud's fitted cross-track span.
+        passed = passed and bool(gate["enough_span"])
+    gate["pass"] = passed
+    return gate

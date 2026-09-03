@@ -352,6 +352,37 @@ def image_response_control() -> tuple[dict[str, object], int]:
     }, bad_peak
 
 
+def fitted_span_gate_control() -> tuple[dict[str, object], bool]:
+    """Broad fitted-v support whose smaller sensor-axis span is below 1.2."""
+    xs = np.linspace(0.08 * WIDTH, 0.92 * WIDTH, 15)
+    ys = np.linspace(0.25 * HEIGHT, 0.75 * HEIGHT, 13)
+    x, y = np.meshgrid(xs, ys)
+    x = x.ravel()
+    y = y.ravel()
+    yn = (y - HEIGHT / 2.0) / (HEIGHT / 2.0)
+    z = 30.0 + 8.0 * yn
+    good = C.complete_surface_gate(x, y, z, WIDTH, HEIGHT)
+    bad = C.complete_surface_gate(
+        x,
+        y,
+        z,
+        WIDTH,
+        HEIGHT,
+        defect_conservative_span=True,
+    )
+    reading = {
+        "sites": good["n"],
+        "occupied_blocks": good["occupied_blocks"],
+        "sensor_axis_min_span": good["conservative_v_span"],
+        "fitted_v_span": good["actual_v_span"],
+        "sites_v_negative": good["sites_v_negative"],
+        "sites_v_positive": good["sites_v_positive"],
+        "production_pass": good["pass"],
+        "defective_pass": bad["pass"],
+    }
+    return reading, bool(bad["pass"])
+
+
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     controls: list[dict[str, object]] = []
@@ -607,6 +638,25 @@ def main() -> int:
         "P11-frame-axis-sobel",
         wrong_axis_peak != int(image_reading["fixed_in_focus_frame"]),
         wrong_axis_peak,
+    )
+
+    # E10: exact production support gate, added by the final independent audit.
+    gate_reading, defective_gate_pass = fitted_span_gate_control()
+    add_control(
+        controls,
+        "E10-fitted-cross-track-span",
+        bool(
+            gate_reading["production_pass"]
+            and gate_reading["fitted_v_span"] >= 1.2
+            and gate_reading["sensor_axis_min_span"] < 1.2
+        ),
+        gate_reading,
+    )
+    add_plant(
+        plants,
+        "P12-sensor-span-as-lower-bound",
+        not defective_gate_pass,
+        defective_gate_pass,
     )
 
     summary = {

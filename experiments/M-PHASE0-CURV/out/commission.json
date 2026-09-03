@@ -1,10 +1,10 @@
 {
   "status": "GREEN",
   "summary": {
-    "controls": 9,
-    "controls_green": 9,
-    "plants": 11,
-    "plants_red": 11
+    "controls": 10,
+    "controls_green": 10,
+    "plants": 12,
+    "plants_red": 12
   },
   "controls": [
     {
@@ -157,6 +157,20 @@
         "strictly_decreases_with_blur": true,
         "wrong_axis_peak_frame": 6
       }
+    },
+    {
+      "id": "E10-fitted-cross-track-span",
+      "green": true,
+      "readings": {
+        "sites": 195,
+        "occupied_blocks": 15,
+        "sensor_axis_min_span": 1.0,
+        "fitted_v_span": 2.5200000000000005,
+        "sites_v_negative": 91,
+        "sites_v_positive": 91,
+        "production_pass": true,
+        "defective_pass": false
+      }
     }
   ],
   "plants": [
@@ -220,6 +234,11 @@
       "id": "P11-frame-axis-sobel",
       "red": true,
       "defective_reading": 6
+    },
+    {
+      "id": "P12-sensor-span-as-lower-bound",
+      "red": true,
+      "defective_reading": false
     }
   ]
 }
