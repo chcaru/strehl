@@ -1342,6 +1342,61 @@ the question of whether an admissible instrument is obtainable from the captures
 including whether repeat-pair FRC can be rescued from IBIS-on data, which if answered "no"
 converts the owner re-shoot from desirable to **required**.
 
+### 2.9.2.1 The scorecard can no longer express its own most important axis
+
+**M1, detail, now has no statistic and no numeric bar.** Scorecard v1.4 (`64d9d675`) withdrew
+`S_25` outright at my request, on the evidence in §2.7: it moves `18818.9045x` under a logistic
+tone curve, and the alternative `f_licensed` is blind. I asked for a plain withdrawal rather than
+a weakened bar, on the principle that **an honest gap is worth more than a bar that cannot be
+met** — a bar nothing can satisfy would have read as a pending measurement instead of a missing
+instrument.
+
+This is the instrument crisis (§2.9.2) written into the measuring device itself. The scorecard is
+the program's own definition of SOTA, and **it currently has no way to state whether this stacker
+resolves more detail than Zerene or Helicon.** Overall SOTA therefore remains `UNMEASURED`, and
+will remain so on that axis no matter how much engineering happens, until lane INSTRUMENT
+produces something admissible.
+
+**Axis readiness, from the owner's v1.4 triage:**
+
+| axis | status |
+|---|---|
+| **M8** invented values | **(e) measurable now — the only fully unblocked axis** |
+| **M12** memory / determinism | **(e) scheduled** — 1/2/4/8-worker hashes and RSS ready; the 16-worker run needs a quiet host |
+| M1, M5 | blocked on instrument, geometry, capture **and** comparator |
+| M2, M3, M4, M11 | blocked on instrument, geometry, comparator |
+| M6 clipping | census executable but **underpowered below 10,000 recoverable samples** |
+| M7 colour | no traceable colour target exists |
+| M9, M10 | blocked, and the certificate and depth **products do not exist** |
+
+### 2.9.2.2 M8 is the one place a real win is currently available
+
+I put a hypothesis to the scorecard owner: that `cover=scale` may be **inventing pixel values**,
+because `S_k` rides on every placement so every frame passes through **Catmull-Rom**, whose
+negative lobes overshoot at edges. An overshooting kernel can emit values no input frame brackets
+— which is exactly what M8 forbids at a bar of **exactly `0.0000%`**.
+
+The owner's verdict was the useful kind: **plausible, but v1.4's predecessor could have passed
+it.** An all-frame hull, a `5σ` tolerance and a post-merge measurement point could each have
+hidden the overshoot, so the axis was split and tightened:
+
+- **M8-R, per-frame resampler hull — the primary.** Pre-merge, pre-clamp linear `f32`, against an
+  **independently reconstructed** exact Catmull-Rom source-support hull; tolerance
+  `tau_R = 8*ULP_f32(max(1, abs(lo_k), abs(hi_k)))`. Catches invention **where it is created**.
+- **M8-O, final-output hull.** Final linear output against the all-valid-frame hull, tolerance
+  only `0.5/65535`. Determines whether the invention **survives to the deliverable**.
+
+**The recorded defeat is why both are needed: final clamping can erase M8-O evidence**, so a clean
+M8-O alone proves nothing. Commissioning is mandatory — a fractional-step Catmull plant must
+produce at least one M8-R violation, while copy and convex-bilinear nulls must produce none.
+
+**Why this matters more than its size suggests.** M8 is **metric-free and sharpening-immune**. It
+asks whether a value is bracketed by the data, which has no sign ambiguity, no tone sensitivity
+and nothing for a sharpening filter to exploit. It is therefore the one axis that can move while
+the detail axis is refused. Routed to lane COVER, which already holds both cover arms and the
+flat-slide unit. **If `scale` violates and `crop` does not, that is a demonstrable improvement on
+a registered axis — and it would be the first this program has produced.**
+
 ### 2.9.3 The build path that replaces phase 1
 
 **`cover=scale` (§2.8.3).** It is now the program's primary build lane, and it was chosen for one
