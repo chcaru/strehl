@@ -813,6 +813,98 @@ correct in every respect the lane could check; only stabilisation spoils it. A r
 same subject with **IBIS/SteadyShot switched off** would very likely clear the `0.10` gate on
 both light blocks and hand the detail axis its second instrument back. That is a far better
 position than the one D8 left, where the idea itself was dead.
+## 2.5 The scorecard self-baseline — all twelve axes UNMEASURED, and the reason is the product
+
+The first independent attempt to fill in the scorecard returned **UNMEASURED on every axis**. The
+lane is `docs/research/SCORECARD-BASELINE.md`, frozen against scorecard v1.1
+(`11a754a6…`), a frozen binary `strehl 0.0.0 (4b60b1ba9f56)` and a pre-render freeze at
+`bc8f315a`.
+
+**No axis was blocked by the instrument. All eight rendered arms failed a gate that sits *before*
+any metric runs.** An independently commissioned affine reader measures **`0.2901%`–`0.4619%`
+scale disagreement** between strehl's renders and their references, against a `<=0.10%` bar
+(`out/GEOMETRY-AUDIT.json`, `all_scale_invalid = true`). The required common ProPhoto-TIFF input
+adapter is also absent.
+
+**The geometry audit is properly commissioned, so this is not an artefact of a hair-trigger
+gate.** Its identity null reads `0.0%`; its **translation-only null reads `0.008%` and passes**,
+so pure translation does not trip the scale gate and there is no false positive; and a planted
+scale-plus-rotation defect at `0.3031%` correctly fails. The real renders read `0.2946%`,
+`0.3019%` and `0.2901%` — **the shipping renders sit almost exactly at the magnitude of the
+deliberate defect plant.**
+
+### 2.5.1 The mechanism is strehl's own documented default
+
+This is not a mystery and it is not a bug report against the scorecard. It is the shipping
+default behaving as designed:
+
+* `align_cmd.rs:1003` — `pub const DEFAULT_COVER_MODE: CoverMode = CoverMode::Scale;`
+* `align_cmd.rs:957` — `CoverMode::Scale` *"shrinks the reference grid by `k <= 1` about the
+  plane"* so that every frame covers the output.
+* `align_cmd.rs:966,990` — `CoverMode::Crop` instead *"renders the covered rectangle at unity
+  scale"* and composes nothing.
+* `align_cmd.rs:975` already concedes *"`CoverMode::Scale` is still the default. There is a
+  second price…"*
+* `merge_cmd.rs:3272-3276` prints the banner the baseline lane independently observed:
+  *"field of view scaled to {k:.4} so that EVERY frame covers…"*
+* `examples/build-resamp-mtf.rs:268` exists precisely to measure it — *"the fit_to_cover coverage
+  upscale, ALONE, catmull-rom"* — and `strehl-core/src/align.rs:2754` records **+0.0179 dex** for
+  removing the coverage rescale.
+
+**strehl's default output path applies a resampling the comparator does not.**
+
+### 2.5.2 This is the first actionable SOTA lead the program has produced
+
+A 0.3% scale change across a 3516-pixel axis sweeps sampling phase through every sub-pixel
+offset — zero displacement at the centre, ~10 px at the edge. A large fraction of the frame is
+therefore interpolated at or near half-pixel phase, where Catmull-Rom loses substantial energy
+near Nyquist while costing almost nothing at low frequency.
+
+That predicts the measured competitive pattern in §2.2 exactly:
+
+| Band (cyc/px) | Measured | Resample loss predicts |
+|---|---|---|
+| 0.02–0.05 | strehl **LEADS** `1.0833` | ~no loss |
+| 0.05–0.10 | unresolved | small loss |
+| 0.10–0.20 | strehl **TRAILS** `0.8842` | growing loss |
+| 0.20–0.30 | trails badly | largest loss |
+
+A deficit that worsens monotonically with spatial frequency is the signature of a resampling
+kernel, not of a stacking-quality difference. **If that is the cause, strehl is not losing detail
+in its merge at all — it is discarding it in its output geometry, and the switch already
+exists.** The V-HEADTOHEAD3 lane has been tasked to re-render with `--cover crop` and re-run the
+band ratios, with the field-of-view and ROI-pairing traps stated explicitly. Either outcome is
+useful: a recovered trail is a real product win, an unchanged trail eliminates the most plausible
+confound and hands phase 1 a clean target.
+
+**This is a hypothesis with a mechanism and a prediction, not a result.** It is not recorded as a
+finding until that arm runs.
+
+### 2.5.3 What the baseline established along the way
+
+Read as a census rather than a scorecard, the lane is not empty:
+
+* **M7 colour** — `traceable tilted target candidates: 0`. Independent confirmation that the
+  capture blocker in §4.0 is real and not an oversight.
+* **M6 clipping** — the rail census proves the high arm is under 10,000 even before alignment:
+  salt `1,193`, battery `1,230`, angled ruler/grid `0`.
+* **M9 certification** — matching bee dark/flat groups `0/0`, and the shipping default **emits no
+  licensed-band acuity or variance certificate at all**.
+* **M10 depth** — no depth product exists; the ruler record says only *"approximately 10.26 deg"*.
+* **M1/M2 diagnostics** (invalid as scores, retained as diagnostics): cutoff `0.15` on both bee
+  lights, `S_25` of `6.20e-5` and `6.34e-5`; M2 medians `1.8483` and `2.5156` against an
+  `eta <= 1.10` bar, affine slopes `1.0630`–`1.0687`.
+* Nothing above `0.25 cyc/native px` was inspected or reported.
+
+**Its commissioning is real.** The M1 instrument moved `0.080 cyc/px` on a planted pre-sensor
+blur while untuned nulls held at `0` for common pattern movement and — notably — `0` for
+**unsharp movement**, i.e. that instrument is invariant to unsharp masking rather than rewarded by
+it. M2 rose `0.2315` on a planted `0.25 sigma_1`, and a blur that lowered noise to `0.3265x`
+was caught widening the edge `3.4155x`.
+
+The lane also confirmed it will **reuse the V-HEADTOHEAD3 instrument** rather than build a
+competing one, and correctly declined to retrofit V-HEADTOHEAD3's numbers into its own frozen
+run.
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
