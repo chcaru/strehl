@@ -445,6 +445,13 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_ALIGN",
     "STREHL_WARPMAP",
     "STREHL_CACHE_DIR",
+    // The coverage policy changes both the sampling geometry and, under
+    // `crop`, the output dimensions. Commissioned with an ambient
+    // `STREHL_COVER=crop`: the aligned coffee-bean freeze moved from
+    // 49,450,019 to 48,875,075 bytes while its unaligned control held. Without
+    // clearing this variable, a dirty shell looks exactly like a geometry
+    // regression in the byte-freeze.
+    "STREHL_COVER",
     "STREHL_FIX_HALO",
     "STREHL_FIX_HALO_DELTA",
     // The per-frame measured noise floor. `STREHL_GATE_FLOOR=white` restores
