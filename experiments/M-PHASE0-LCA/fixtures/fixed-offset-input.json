@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "description": "Fixed external peak positions for commissioning the green-reference composition. The estimator reads these inputs but did not generate them.",
+  "peaks": {
+    "R": 4.25,
+    "G1": 4.5,
+    "G2": 5.5,
+    "B": 5.75
+  }
+}

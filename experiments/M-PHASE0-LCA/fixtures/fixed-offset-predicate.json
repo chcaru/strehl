@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "description": "Separately fixed external answer for fixed-offset-input.json. Green is the mean of the two independently supplied green-site peaks.",
+  "offsets": {
+    "delta_r": -0.75,
+    "delta_b": 0.75,
+    "delta_null": -1.0
+  },
+  "absolute_tolerance_frames": 1e-12
+}

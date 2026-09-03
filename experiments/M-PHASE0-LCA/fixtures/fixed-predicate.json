@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "description": "Externally frozen predicate for fixed-curves.json. The checker compares against these constants; it does not derive them from the response table.",
+  "peaks": {
+    "R": 4.25,
+    "G1": 5.0,
+    "G2": 5.0,
+    "B": 5.5
+  },
+  "offsets": {
+    "delta_r": -0.75,
+    "delta_b": 0.5,
+    "delta_null": 0.0
+  },
+  "absolute_tolerance_frames": 0.01
+}
