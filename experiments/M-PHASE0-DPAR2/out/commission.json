@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "lane": "M-PHASE0-DPAR2",
+  "stage": "commission",
+  "pass": true,
+  "controls": {
+    "C1_external_curved_track": {
+      "source": "experiments/M103-halfdrift/data/truth-dense.json",
+      "source_sha256": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+      "real": {
+        "max_chord_deviation_plane_px": 46.09205867718498,
+        "worst_j": 200,
+        "rates_abs_ln_per_frame": [
+          0.0003019918057354016,
+          0.0005087563208703865,
+          0.0007200206887923708
+        ],
+        "predicates": {
+          "deviation_range": true,
+          "worst_j_200": true,
+          "rate_0_96": true,
+          "rate_96_192": true,
+          "rate_192_298": true,
+          "strict_acceleration": true
+        },
+        "pass": true
+      },
+      "straight_chord_mutation": {
+        "max_chord_deviation_plane_px": 0.0,
+        "worst_j": 0,
+        "rates_abs_ln_per_frame": [
+          0.000517295346195124,
+          0.000517295346195124,
+          0.0005172953461951241
+        ],
+        "predicates": {
+          "deviation_range": false,
+          "worst_j_200": false,
+          "rate_0_96": false,
+          "rate_96_192": true,
+          "rate_192_298": false,
+          "strict_acceleration": false
+        },
+        "pass": false
+      },
+      "pass": true
+    },
+    "C2_estimator_read": {
+      "P1-both": {
+        "rho_dg_w": -0.7059633491950997,
+        "p_torus": 0.010416666666666666,
+        "detected": true,
+        "expected_rho": -0.706,
+        "rho_tolerance": 0.005,
+        "expected_detected": true,
+        "pass": true
+      },
+      "P2-blur-only": {
+        "rho_dg_w": -0.09949204483438982,
+        "p_torus": 0.28125,
+        "detected": false,
+        "expected_rho": -0.099,
+        "rho_tolerance": 0.005,
+        "expected_detected": false,
+        "pass": true
+      },
+      "pass": true
+    },
+    "C3_external_scalar_fixture": {
+      "actual_radial_px": [
+        0.15,
+        -0.3,
+        0.3,
+        -0.6,
+        0.6,
+        -1.2
+      ],
+      "fixed_expected_radial_px": [
+        0.15,
+        -0.3,
+        0.3,
+        -0.6,
+        0.6,
+        -1.2
+      ],
+      "max_abs_error_px": 0.0,
+      "straight_unit_factor_mutation": [
+        0.3,
+        -0.6,
+        0.3,
+        -0.6,
+        0.3,
+        -0.6
+      ],
+      "mutation_would_pass": false,
+      "pass": true
+    },
+    "C4_similarity_and_channel_wiring": {
+      "zero": {
+        "max_similarity_inner_product_ratio": 0.0,
+        "max_tangential_change_px": 0.0,
+        "bit_identical_zero": true
+      },
+      "max_dose": {
+        "max_similarity_inner_product_ratio": 5.751786737874062e-15,
+        "max_tangential_change_px": 9.287015600989434e-14,
+        "bit_identical_zero": null,
+        "max_abs_radial_plant_px": 887.966873883673,
+        "n_planted_rows": 15599
+      },
+      "max_vector_change_px": 887.966873883673,
+      "predicates": {
+        "zero_bit_identical": true,
+        "orthogonal_to_scale": true,
+        "tangential_unchanged": true,
+        "nonzero_fixture_exercised": true
+      },
+      "pass": true
+    },
+    "C5_null_and_expressiveness": {
+      "zero_dose": {
+        "amplitude_px_per_step_r1000": 0.0,
+        "amplitude_px_per_step_r2000": 0.0,
+        "detections": 3,
+        "replicates": 96,
+        "power": 0.03125,
+        "power_wilson95": [
+          0.010684070371201164,
+          0.0878867932453698
+        ],
+        "rho_identity": 0.1352007596310364,
+        "p_identity": 0.4895833333333333,
+        "rho_phase_median": 0.0006443298969072168,
+        "rho_phase_range": [
+          -0.3550596852957136,
+          0.2980466630493761
+        ]
+      },
+      "zero_false_detection_rate": 0.03125,
+      "curved_adjacent_increment_cv": 0.42492333776706864,
+      "chord_adjacent_increment_cv": 1.247429532899022e-15,
+      "max_abs_ln_difference_from_chord": 0.021634144528923593,
+      "predicates": {
+        "zero_false_detection_le_0p10": true,
+        "curved_increment_cv_nonzero": true,
+        "mapped_track_differs_from_chord": true,
+        "chord_increment_cv_lt_1e_minus_12": true
+      },
+      "pass": true
+    },
+    "C6_fast_path_equals_m6": {
+      "rows": [
+        {
+          "phase": 0,
+          "amplitude": 0.0,
+          "m6_rho": 0.13520075963103637,
+          "fast_rho": 0.1352007596310364,
+          "abs_rho_error": 2.7755575615628914e-17,
+          "m6_p": 0.4895833333333333,
+          "fast_p": 0.4895833333333333,
+          "abs_p_error": 0.0
+        },
+        {
+          "phase": 0,
+          "amplitude": 0.0269,
+          "m6_rho": -0.9629544221378188,
+          "fast_rho": -0.962954422137819,
+          "abs_rho_error": 2.220446049250313e-16,
+          "m6_p": 0.010416666666666666,
+          "fast_p": 0.010416666666666666,
+          "abs_p_error": 0.0
+        },
+        {
+          "phase": 17,
+          "amplitude": 0.3,
+          "m6_rho": -0.9929734129137276,
+          "fast_rho": -0.9929734129137278,
+          "abs_rho_error": 1.1102230246251565e-16,
+          "m6_p": 0.010416666666666666,
+          "fast_p": 0.010416666666666666,
+          "abs_p_error": 0.0
+        }
+      ],
+      "pass": true
+    }
+  },
+  "provenance": {
+    "experiments/m6-residual-halo/data/119MSDCF-tiles.csv": "640b8f4fddf7fb08aea3559f1f9ca2ed637d973ee2723210f543acc728b02a85",
+    "experiments/m6-residual-halo/data/119MSDCF-focus.csv": "7eaa3a485a490ff012df4aa820d61362a72610dc2665ba17def439784a8badce",
+    "experiments/m6-residual-halo/data/119MSDCF-fits.csv": "df503b2346a27f5231a111a58511afddcef45a2a45b875c5ed11bd1ad154ed95",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m6-residual-halo/m6_lib.py": "abee0c6c8c19c0ae1ea61b5fdf2a6a85940b3243482e7cbb656e3d197f14f552"
+  }
+}
