@@ -1823,6 +1823,60 @@ refusals are readings too. The program's problem is not that it cannot measure.
 
 ---
 
+### 2.9.10 The registrar overturned my correction, not the lanes' results: the scoreboard is still zero
+
+I asked the registrar to rule on the ten closed gates, and specifically to hold
+the program's only two PASS verdicts to the same standard it had used when it
+refused *my* M12 evidence. It did, and the ruling went against a softening I had
+made one section earlier in this file.
+
+Scorecard **v1.7**, commit `2fd2b131`, §3.2 at `:441-486`. The scoreboard it
+returns:
+
+> **0/12 MEASURED. 12/12 UNMEASURED.**
+
+**Both passes were admitted, and both were admitted narrowly.** D11 is admitted
+*only* as the proposal's decoder-component gate: three ARW files are narrow, the
+preregistration set no broader minimum, beginning/middle/end files were consumed
+and checked, and the margins were `1.91x` per-core and `1.41x` aggregate — but it
+**does not generalise beyond this A7C II workload and does not measure M11's
+product path**. D15 is admitted *only* as the storage-materiality gate. Its
+Windows-cache confound is genuinely excluded, and the reason is worth recording
+because it is a good piece of instrument design: the no-buffering arm stayed at
+device rate while the buffered arm accelerated `3.1-3.3x`, which is what a real
+cache exclusion looks like. SSD firmware cache remains inseparable, but the
+registrar ruled it belongs to the host-visible device path being priced, which is
+the right call. **M11 therefore remains UNMEASURED at `:1155`.**
+
+**So the earlier scoreboard was right and my correction to it was wrong.** In
+§2.9.9 I wrote that the claim of *no formal readings at all* had been too harsh on
+the program, on the strength of D11 and D15. The registrar has now ruled that
+neither moves a scorecard axis. Both are real, commissioned, replicated, controlled
+measurements — that part of §2.9.9 stands and I do not withdraw it — but a *gate*
+reading that closes a build decision is not an *axis* reading, and only the second
+kind counts toward the claim this program exists to make. **I softened the
+scoreboard and the entity I had asked to be strict told me not to.** Recording it
+because the direction matters: every other correction I have had to make this
+session was a number that flattered the program, and this one was mine.
+
+**The refusals were ruled admissible, with the distinction I asked for made
+explicit rather than left implicit.** XSPEC and VEIL2 are admissible **as refusals
+only**. XSPEC's 132 tiles miss its own frozen 160 minimum, so in the registrar's
+words it *"failed to show C10 works, but did not show C10 cannot work."* VEIL2's
+effective count is 36 clusters rather than 20,000, so its `0/7` audit *"blocks
+building but does not prove zero effect."* That distinction is not pedantry. An
+underpowered study that declines to build is safe, because its error direction is
+inaction; the same study quoted later as proof that an effect is absent would be a
+fabrication. Both are now on the record as the first kind.
+
+**Where the weight now sits.** The registrar names **M1** as the most load-bearing
+axis, on the grounds that it lacks **both a statistic and a bar** and blocks
+several dependent quality and comparator judgements. **M8 is the only immediately
+measurable complete quality axis.** That is the whole live surface of this
+program: one axis that can be measured today, and one that cannot yet be defined.
+
+---
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
