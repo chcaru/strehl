@@ -1,0 +1,569 @@
+{
+  "grids": {
+    "64": {
+      "floor_commissioned": true,
+      "tile_population_ok": false,
+      "stacks": {
+        "bee-1-cpl": {
+          "odd_records": 654,
+          "odd_tiles": 132,
+          "odd_observed_over_floor": {
+            "median": 0.7085199646381894,
+            "ci95": [
+              0.6673192064908227,
+              0.763150815833862
+            ]
+          },
+          "odd_excess_rms_rad": {
+            "median": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ]
+          },
+          "odd_pass": false,
+          "field_annuli": [
+            {
+              "name": "inner",
+              "radius_fraction": [
+                0.0,
+                0.5773502691896257
+              ],
+              "records": 569,
+              "tiles": 115,
+              "median_observed_over_floor": 0.6901265594919075,
+              "median_excess_rms_rad": 0.0
+            },
+            {
+              "name": "middle",
+              "radius_fraction": [
+                0.5773502691896257,
+                0.816496580927726
+              ],
+              "records": 75,
+              "tiles": 15,
+              "median_observed_over_floor": 0.8846709853111112,
+              "median_excess_rms_rad": 0.0
+            },
+            {
+              "name": "outer",
+              "radius_fraction": [
+                0.816496580927726,
+                null
+              ],
+              "records": 10,
+              "tiles": 2,
+              "median_observed_over_floor": 0.8133544090220013,
+              "median_excess_rms_rad": 0.0
+            }
+          ],
+          "registration_records_all": 1320,
+          "registration_records_accepted": 1052,
+          "registration_phase_precision_sensor_px": {
+            "median": 0.2005298573663878,
+            "ci95": [
+              0.16951739563135104,
+              0.22892628381322702
+            ]
+          },
+          "registration_spatial_precision_sensor_px": {
+            "median": 0.07253352548939015,
+            "ci95": [
+              0.06304427036188728,
+              0.08738591100012605
+            ]
+          },
+          "registration_phase_over_spatial": {
+            "ratio_of_medians": 2.76465063587348,
+            "ci95": [
+              2.2933868706968155,
+              3.2559122391772557
+            ]
+          },
+          "registration_pass": false,
+          "errors": 6
+        },
+        "wrapped-text-1": {
+          "odd_records": 1000,
+          "odd_tiles": 200,
+          "odd_observed_over_floor": {
+            "median": 0.8051750467192107,
+            "ci95": [
+              0.7545892188097267,
+              0.8500423805734549
+            ]
+          },
+          "odd_excess_rms_rad": {
+            "median": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ]
+          },
+          "odd_pass": false,
+          "field_annuli": [
+            {
+              "name": "inner",
+              "radius_fraction": [
+                0.0,
+                0.5773502691896257
+              ],
+              "records": 645,
+              "tiles": 129,
+              "median_observed_over_floor": 0.7719421084423673,
+              "median_excess_rms_rad": 0.0
+            },
+            {
+              "name": "middle",
+              "radius_fraction": [
+                0.5773502691896257,
+                0.816496580927726
+              ],
+              "records": 275,
+              "tiles": 55,
+              "median_observed_over_floor": 0.8252033785358931,
+              "median_excess_rms_rad": 0.0
+            },
+            {
+              "name": "outer",
+              "radius_fraction": [
+                0.816496580927726,
+                null
+              ],
+              "records": 80,
+              "tiles": 16,
+              "median_observed_over_floor": 0.9955628394217091,
+              "median_excess_rms_rad": 0.010052314298678946
+            }
+          ],
+          "registration_records_all": 2000,
+          "registration_records_accepted": 1457,
+          "registration_phase_precision_sensor_px": {
+            "median": 0.07203330407276247,
+            "ci95": [
+              0.06644214872616291,
+              0.07953353873786806
+            ]
+          },
+          "registration_spatial_precision_sensor_px": {
+            "median": 0.0424368883966524,
+            "ci95": [
+              0.03577491043609147,
+              0.0504774642337381
+            ]
+          },
+          "registration_phase_over_spatial": {
+            "ratio_of_medians": 1.6974219080220019,
+            "ci95": [
+              1.4451297141749981,
+              2.000031053298088
+            ]
+          },
+          "registration_pass": false,
+          "errors": 0
+        }
+      },
+      "inversion": {
+        "status": "FAIL",
+        "eligible_occlusion_tiles": 142,
+        "inverted_occlusion_tiles": 42,
+        "occlusion_fraction": 0.29577464788732394,
+        "occlusion_wilson95": [
+          0.2268885962910116,
+          0.3754192764565551
+        ],
+        "eligible_placebo_tiles": 135,
+        "inverted_placebo_tiles": 42,
+        "placebo_fraction": 0.3111111111111111,
+        "risk_ratio": 0.9507042253521126,
+        "risk_ratio_ci95": [
+          0.8506488692923088,
+          1.06094806353056
+        ],
+        "eligible_tiles_all": 332,
+        "inverted_tiles_all": 122
+      },
+      "verdict": "NOT ROBUST",
+      "deciding_odd_lower95": 0.6673192064908227
+    },
+    "48": {
+      "floor_commissioned": false,
+      "tile_population_ok": false,
+      "stacks": {
+        "bee-1-cpl": {
+          "odd_records": 514,
+          "odd_tiles": 132,
+          "odd_observed_over_floor": {
+            "median": 1.0071754595631373,
+            "ci95": [
+              0.9265421475501817,
+              1.0718601449201466
+            ]
+          },
+          "odd_excess_rms_rad": {
+            "median": 0.023893297954890515,
+            "ci95": [
+              0.0,
+              0.06689902866309709
+            ]
+          },
+          "odd_pass": false,
+          "field_annuli": [
+            {
+              "name": "inner",
+              "radius_fraction": [
+                0.0,
+                0.5773502691896257
+              ],
+              "records": 453,
+              "tiles": 115,
+              "median_observed_over_floor": 0.9650463876870127,
+              "median_excess_rms_rad": 0.0
+            },
+            {
+              "name": "middle",
+              "radius_fraction": [
+                0.5773502691896257,
+                0.816496580927726
+              ],
+              "records": 51,
+              "tiles": 15,
+              "median_observed_over_floor": 1.4796670384312045,
+              "median_excess_rms_rad": 0.20730464383871228
+            },
+            {
+              "name": "outer",
+              "radius_fraction": [
+                0.816496580927726,
+                null
+              ],
+              "records": 10,
+              "tiles": 2,
+              "median_observed_over_floor": 1.1936618516136384,
+              "median_excess_rms_rad": 0.2139052572081957
+            }
+          ],
+          "registration_records_all": 1315,
+          "registration_records_accepted": 1050,
+          "registration_phase_precision_sensor_px": {
+            "median": 0.17806416586297413,
+            "ci95": [
+              0.16073137015611572,
+              0.19917359235311288
+            ]
+          },
+          "registration_spatial_precision_sensor_px": {
+            "median": 0.07346658716908497,
+            "ci95": [
+              0.06311250603961757,
+              0.08507960057579195
+            ]
+          },
+          "registration_phase_over_spatial": {
+            "ratio_of_medians": 2.423743537360127,
+            "ci95": [
+              2.023201912366244,
+              2.867685177524309
+            ]
+          },
+          "registration_pass": false,
+          "errors": 159
+        },
+        "wrapped-text-1": {
+          "odd_records": 939,
+          "odd_tiles": 200,
+          "odd_observed_over_floor": {
+            "median": 1.3517447956629645,
+            "ci95": [
+              1.2261350353039708,
+              1.468483347435931
+            ]
+          },
+          "odd_excess_rms_rad": {
+            "median": 0.19016359955229656,
+            "ci95": [
+              0.15229001146337912,
+              0.2352469044051942
+            ]
+          },
+          "odd_pass": false,
+          "field_annuli": [
+            {
+              "name": "inner",
+              "radius_fraction": [
+                0.0,
+                0.5773502691896257
+              ],
+              "records": 641,
+              "tiles": 129,
+              "median_observed_over_floor": 1.3421779882965479,
+              "median_excess_rms_rad": 0.2008862753426497
+            },
+            {
+              "name": "middle",
+              "radius_fraction": [
+                0.5773502691896257,
+                0.816496580927726
+              ],
+              "records": 242,
+              "tiles": 55,
+              "median_observed_over_floor": 1.3165372338080141,
+              "median_excess_rms_rad": 0.1550441055029247
+            },
+            {
+              "name": "outer",
+              "radius_fraction": [
+                0.816496580927726,
+                null
+              ],
+              "records": 56,
+              "tiles": 16,
+              "median_observed_over_floor": 1.517827994623438,
+              "median_excess_rms_rad": 0.23198605963144103
+            }
+          ],
+          "registration_records_all": 2000,
+          "registration_records_accepted": 1458,
+          "registration_phase_precision_sensor_px": {
+            "median": 0.07067537032846151,
+            "ci95": [
+              0.06527812823210212,
+              0.0765503877484987
+            ]
+          },
+          "registration_spatial_precision_sensor_px": {
+            "median": 0.03692611393038726,
+            "ci95": [
+              0.03099447703820213,
+              0.0424720439170768
+            ]
+          },
+          "registration_phase_over_spatial": {
+            "ratio_of_medians": 1.913967184895167,
+            "ci95": [
+              1.6654361111284302,
+              2.2584592569072703
+            ]
+          },
+          "registration_pass": false,
+          "errors": 61
+        }
+      },
+      "inversion": {
+        "status": "FAIL",
+        "eligible_occlusion_tiles": 142,
+        "inverted_occlusion_tiles": 56,
+        "occlusion_fraction": 0.39436619718309857,
+        "occlusion_wilson95": [
+          0.31778349295783453,
+          0.47651368260125165
+        ],
+        "eligible_placebo_tiles": 135,
+        "inverted_placebo_tiles": 54,
+        "placebo_fraction": 0.4,
+        "risk_ratio": 0.9859154929577464,
+        "risk_ratio_ci95": [
+          0.8990956955045063,
+          1.0864048235879857
+        ],
+        "eligible_tiles_all": 332,
+        "inverted_tiles_all": 177
+      },
+      "verdict": "NOT ROBUST",
+      "deciding_odd_lower95": 0.9265421475501817
+    },
+    "32": {
+      "floor_commissioned": false,
+      "tile_population_ok": false,
+      "stacks": {
+        "bee-1-cpl": {
+          "odd_records": 236,
+          "odd_tiles": 132,
+          "odd_observed_over_floor": {
+            "median": 1.1739990725944718,
+            "ci95": [
+              1.0618077211811696,
+              1.3147314636334264
+            ]
+          },
+          "odd_excess_rms_rad": {
+            "median": 0.03963304907351804,
+            "ci95": [
+              0.022236197736263227,
+              0.056326357216372094
+            ]
+          },
+          "odd_pass": false,
+          "field_annuli": [
+            {
+              "name": "inner",
+              "radius_fraction": [
+                0.0,
+                0.5773502691896257
+              ],
+              "records": 211,
+              "tiles": 115,
+              "median_observed_over_floor": 1.107117012745557,
+              "median_excess_rms_rad": 0.03424771048008849
+            },
+            {
+              "name": "middle",
+              "radius_fraction": [
+                0.5773502691896257,
+                0.816496580927726
+              ],
+              "records": 22,
+              "tiles": 15,
+              "median_observed_over_floor": 1.7099823313158975,
+              "median_excess_rms_rad": 0.10730315101846
+            },
+            {
+              "name": "outer",
+              "radius_fraction": [
+                0.816496580927726,
+                null
+              ],
+              "records": 3,
+              "tiles": 2,
+              "median_observed_over_floor": 1.4701950827895693,
+              "median_excess_rms_rad": 0.1112909632180861
+            }
+          ],
+          "registration_records_all": 1086,
+          "registration_records_accepted": 961,
+          "registration_phase_precision_sensor_px": {
+            "median": 0.12535705507717448,
+            "ci95": [
+              0.113310631060308,
+              0.13736397407592282
+            ]
+          },
+          "registration_spatial_precision_sensor_px": {
+            "median": 0.06387502969838356,
+            "ci95": [
+              0.05589304180179153,
+              0.07213006556185901
+            ]
+          },
+          "registration_phase_over_spatial": {
+            "ratio_of_medians": 1.9625361533154295,
+            "ci95": [
+              1.6669943006367303,
+              2.2783778192107564
+            ]
+          },
+          "registration_pass": false,
+          "errors": 942
+        },
+        "wrapped-text-1": {
+          "odd_records": 535,
+          "odd_tiles": 200,
+          "odd_observed_over_floor": {
+            "median": 1.3122420802237238,
+            "ci95": [
+              1.154265672084734,
+              1.5377382271413713
+            ]
+          },
+          "odd_excess_rms_rad": {
+            "median": 0.06117156358177286,
+            "ci95": [
+              0.036368602035206476,
+              0.08945112359395724
+            ]
+          },
+          "odd_pass": false,
+          "field_annuli": [
+            {
+              "name": "inner",
+              "radius_fraction": [
+                0.0,
+                0.5773502691896257
+              ],
+              "records": 388,
+              "tiles": 129,
+              "median_observed_over_floor": 1.2388956770018598,
+              "median_excess_rms_rad": 0.052129039580078654
+            },
+            {
+              "name": "middle",
+              "radius_fraction": [
+                0.5773502691896257,
+                0.816496580927726
+              ],
+              "records": 120,
+              "tiles": 55,
+              "median_observed_over_floor": 1.4180620871473062,
+              "median_excess_rms_rad": 0.07897164814178743
+            },
+            {
+              "name": "outer",
+              "radius_fraction": [
+                0.816496580927726,
+                null
+              ],
+              "records": 27,
+              "tiles": 16,
+              "median_observed_over_floor": 2.806728798268908,
+              "median_excess_rms_rad": 0.19883361064530974
+            }
+          ],
+          "registration_records_all": 1920,
+          "registration_records_accepted": 1462,
+          "registration_phase_precision_sensor_px": {
+            "median": 0.060600057896044696,
+            "ci95": [
+              0.05548174439293328,
+              0.06676457328969469
+            ]
+          },
+          "registration_spatial_precision_sensor_px": {
+            "median": 0.0211734230202981,
+            "ci95": [
+              0.019099703761882608,
+              0.02349801147283885
+            ]
+          },
+          "registration_phase_over_spatial": {
+            "ratio_of_medians": 2.8620812911521147,
+            "ci95": [
+              2.5556277515876435,
+              3.218976895253812
+            ]
+          },
+          "registration_pass": false,
+          "errors": 979
+        }
+      },
+      "inversion": {
+        "status": "FAIL",
+        "eligible_occlusion_tiles": 142,
+        "inverted_occlusion_tiles": 5,
+        "occlusion_fraction": 0.035211267605633804,
+        "occlusion_wilson95": [
+          0.015132189304854042,
+          0.07977538315512533
+        ],
+        "eligible_placebo_tiles": 135,
+        "inverted_placebo_tiles": 9,
+        "placebo_fraction": 0.06666666666666667,
+        "risk_ratio": 0.5281690140845071,
+        "risk_ratio_ci95": [
+          0.1898025002376652,
+          0.838031687870615
+        ],
+        "eligible_tiles_all": 332,
+        "inverted_tiles_all": 86
+      },
+      "verdict": "NOT ROBUST",
+      "deciding_odd_lower95": 1.0618077211811696
+    }
+  },
+  "grid_verdicts": {
+    "64": "NOT ROBUST",
+    "48": "NOT ROBUST",
+    "32": "NOT ROBUST"
+  },
+  "verdict": "NOT ROBUST",
+  "primary_deciding_odd_lower95": 0.6673192064908227
+}
