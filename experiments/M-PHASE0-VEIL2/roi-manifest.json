@@ -7,6 +7,33 @@
   "warpmap": "out/warpmaps/chia-full.txt",
   "coverage": 0.9597,
   "master": "out/renders/chia-mean-linear.tiff",
+  "bee": {
+    "anchors_frozen_before_measurement_utc": "2026-09-03T03:49:38Z",
+    "stack": "D:\\personal\\macro\\bee-3-cpl",
+    "master": "out/renders/bee-3-mean-linear.tiff",
+    "warpmap": "out/warpmaps/bee-3-full.txt",
+    "coverage": 0.9321,
+    "roi": [1320, 1415, 1040, 1135],
+    "paper_roi": [50, 200, 3250, 3450],
+    "midtone_anchor_roi": [800, 896, 800, 896],
+    "dark_anchor_roi": [800, 896, 1300, 1396],
+    "geometry_windows": [
+      [1320, 1415, 1040, 1087],
+      [1320, 1415, 1088, 1135]
+    ],
+    "foreground_frames": [176, 180, 184],
+    "background_frames": [285, 288, 291],
+    "anchor_selection": "The midtone and dark ROIs were chosen by sight from the alignment-reference frame 149 before any theta computation. The paper ROI and primary ROI were inherited and preregistered.",
+    "alignment_reference": {
+      "index": 149,
+      "name": "DSC00150.ARW",
+      "sha256": "2E4A7A4D54E4D1F36F95613470AB9CEAF1695593EA25CF1A215A67303FFAF3B0"
+    },
+    "anchor_tile_sha256": {
+      "tile-y0800-x0800.png": "F3328D765DC60E874386F01599C5E3E9BBF24DE369644A57347722C917CFAA5B",
+      "tile-y0800-x1200.png": "478CF2F4BF3F5DEBF0E67A8187EB4FF7D637A2D2745AE22AA7DC9ABC2CE88693"
+    }
+  },
   "sites": [
     {
       "name": "chia-1",
