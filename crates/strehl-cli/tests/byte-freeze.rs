@@ -512,13 +512,8 @@ const RENDER_ENV: &[&str] = &[
     // `STREHL_PYRAMID_WORKERS` is milder but real: it changes the fold's
     // reduction order, which is worth 1 DN on a fifth of a percent of pixels,
     // and a byte-freeze is precisely the instrument that cannot tolerate 1 DN.
-    // `STREHL_DECODE_FOLD_QUEUE` is required to be numerically transparent,
-    // but it selects a separate concurrent execution path. Clear it so these
-    // rows continue to freeze the shipped serial default rather than letting
-    // an operator's benchmark shell silently choose what CI exercises.
     "STREHL_MERGE",
     "STREHL_PYRAMID_WORKERS",
-    "STREHL_DECODE_FOLD_QUEUE",
     // The veil envelope. `STREHL_VEIL` rewrites the merged sums at every
     // eligible pixel, so an ambient setting would move these hashes while
     // appearing nowhere in any row. Registered here in the same commit that

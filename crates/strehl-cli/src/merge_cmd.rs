@@ -72,7 +72,6 @@ use crate::image_out;
 pub(crate) mod dump;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
-mod decode_queue;
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
     roi_green, srgb_encode,
@@ -4633,31 +4632,12 @@ impl BandWorker {
         warps: Option<&WarpMap>,
         defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
     ) -> Result<bool> {
-        let frame = decode_frame(path, index)?;
-        self.fold_decoded(frame, index, geom, levels, noise, warps, defect)
-    }
-
-    /// Register and fold a frame that a bounded producer has already decoded.
-    ///
-    /// Everything after decode is shared with [`Self::fold`], so queue mode
-    /// changes scheduling only: it cannot acquire a second numerical path.
-    #[allow(clippy::too_many_arguments)]
-    fn fold_decoded(
-        &mut self,
-        frame: Frame,
-        index: usize,
-        geom: PlaneGeometry,
-        levels: Levels,
-        noise: &NoiseModel,
-        warps: Option<&WarpMap>,
-        defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
-    ) -> Result<bool> {
         self.beta.clear();
         if let Some(p) = self.floor.as_mut() {
             p.invalidate();
         }
-        if !prepare_frame(
-            frame,
+        if !load_frame(
+            path,
             index,
             geom,
             levels,
@@ -4699,19 +4679,6 @@ impl BandWorker {
             .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
         Ok(true)
     }
-
-    fn into_part(self, folded: usize) -> FoldPart {
-        FoldPart {
-            merge: self.merge,
-            folded,
-            beta_sum: self.beta_sum,
-            beta_n: self.beta_n,
-        }
-    }
-}
-
-fn decode_frame(path: &Path, index: usize) -> Result<Frame> {
-    strehl_raw::decode(path).with_context(|| format!("frame {index}"))
 }
 
 /// Decode, register and deinterleave one frame into its four CFA planes and
@@ -4737,101 +4704,81 @@ fn load_frame(
     planes: &mut [Vec<f32>],
     luma: &mut [f32],
 ) -> Result<bool> {
-    let frame = decode_frame(path, index)?;
-    prepare_frame(
-        frame, index, geom, levels, warps, defect, scratch, floor, planes, luma,
-    )
-}
-
-/// Register and deinterleave one already-decoded frame.
-///
-/// Kept separate from [`decode_frame`] so the opt-in producer can decode one
-/// frame ahead without duplicating any transform or arithmetic.
-#[allow(clippy::too_many_arguments)]
-fn prepare_frame(
-    mut frame: Frame,
-    index: usize,
-    geom: PlaneGeometry,
-    levels: Levels,
-    warps: Option<&WarpMap>,
-    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
-    scratch: &mut WarpScratch,
-    floor: Option<&mut gatefloor::Probe>,
-    planes: &mut [Vec<f32>],
-    luma: &mut [f32],
-) -> Result<bool> {
-    ensure!(
-        frame.levels == levels,
-        "frame {index} has levels black {} white {}, but the stack was calibrated at \
-         black {} white {}",
-        frame.levels.black,
-        frame.levels.white,
-        levels.black,
-        levels.white
-    );
-    // ---- sensor defect correction, BEFORE THE WARP -------------------
-    //
-    // This ordering is the whole point of the feature and it is why these
-    // four lines sit above the `warps` block rather than below it. The
-    // map's coordinates name photosites. After `warp_frame_in_place` the
-    // sample at (x, y) is a resampled combination of several photosites
-    // from somewhere else, so the map no longer addresses anything: the
-    // correction would land beside the defect and brighten clean pixels,
-    // which is strictly worse than leaving it alone.
-    //
-    // Note that the justification is *mis-addressing*, not smearing. M101
-    // measured the elected trail at 0.931 px against a 0.937 px shift
-    // null, so on this body the stack does NOT spread a defect into an arc
-    // -- see BUILD-DEFECT.md P2b, which refutes that premise. The ordering
-    // requirement survives the refutation unchanged, because a map indexed
-    // by photosite cannot address a resampled buffer however far the
-    // defect did or did not travel.
-    //
-    // `strehl_core::defect_map`'s
-    // `dust_correction_must_precede_the_warp_to_land_on_the_defect` plants
-    // a mote and fails if these lines are moved below the warp;
-    // `with_an_identity_warp_the_two_orderings_are_bit_identical` proves
-    // that test is measuring the ordering and not the resampler.
-    if let Some((plan, tally)) = defect {
-        crate::stack::apply_defects(plan, &mut frame, tally, index)?;
-    }
-    if let Some(map) = warps {
-        match map.warp(index)? {
-            FrameWarp::Placed(t) => {
-                align_cmd::warp_frame_in_place(&mut frame, *t, geom, map.resampler(), scratch)?;
-                // This frame's own band-noise floor, at this frame's own
-                // sub-pixel phase, measured here because this is the only
-                // place the decoded frame and the transform that was
-                // actually applied to it are both in scope. See
-                // `gatefloor` for why neither a constant nor a formula can
-                // stand in for it.
-                //
-                // An unwarped frame -- `warps` is `None`, or the solve
-                // refused this one -- never reaches this line, so it keeps
-                // the shipping white-noise floor and its output is
-                // bit-identical. That is a property of the control flow,
-                // not of a tolerance.
-                if let Some(p) = floor {
-                    p.measure(&frame, index, *t, geom, map.resampler(), scratch)?;
-                }
-            }
-            // The solve could not connect this frame to the bracket, so its
-            // geometry is unknown and folding it would put mis-registered
-            // data into the merge.
-            FrameWarp::Refused(_) => return Ok(false),
+    {
+        let mut frame = strehl_raw::decode(path).with_context(|| format!("frame {index}"))?;
+        ensure!(
+            frame.levels == levels,
+            "frame {index} has levels black {} white {}, but the stack was calibrated at \
+             black {} white {}",
+            frame.levels.black,
+            frame.levels.white,
+            levels.black,
+            levels.white
+        );
+        // ---- sensor defect correction, BEFORE THE WARP -------------------
+        //
+        // This ordering is the whole point of the feature and it is why these
+        // four lines sit above the `warps` block rather than below it. The
+        // map's coordinates name photosites. After `warp_frame_in_place` the
+        // sample at (x, y) is a resampled combination of several photosites
+        // from somewhere else, so the map no longer addresses anything: the
+        // correction would land beside the defect and brighten clean pixels,
+        // which is strictly worse than leaving it alone.
+        //
+        // Note that the justification is *mis-addressing*, not smearing. M101
+        // measured the elected trail at 0.931 px against a 0.937 px shift
+        // null, so on this body the stack does NOT spread a defect into an arc
+        // -- see BUILD-DEFECT.md P2b, which refutes that premise. The ordering
+        // requirement survives the refutation unchanged, because a map indexed
+        // by photosite cannot address a resampled buffer however far the
+        // defect did or did not travel.
+        //
+        // `strehl_core::defect_map`'s
+        // `dust_correction_must_precede_the_warp_to_land_on_the_defect` plants
+        // a mote and fails if these lines are moved below the warp;
+        // `with_an_identity_warp_the_two_orderings_are_bit_identical` proves
+        // that test is measuring the ordering and not the resampler.
+        if let Some((plan, tally)) = defect {
+            crate::stack::apply_defects(plan, &mut frame, tally, index)?;
         }
-    }
+        if let Some(map) = warps {
+            match map.warp(index)? {
+                FrameWarp::Placed(t) => {
+                    align_cmd::warp_frame_in_place(&mut frame, *t, geom, map.resampler(), scratch)?;
+                    // This frame's own band-noise floor, at this frame's own
+                    // sub-pixel phase, measured here because this is the only
+                    // place the decoded frame and the transform that was
+                    // actually applied to it are both in scope. See
+                    // `gatefloor` for why neither a constant nor a formula can
+                    // stand in for it.
+                    //
+                    // An unwarped frame -- `warps` is `None`, or the solve
+                    // refused this one -- never reaches this line, so it keeps
+                    // the shipping white-noise floor and its output is
+                    // bit-identical. That is a property of the control flow,
+                    // not of a tolerance.
+                    if let Some(p) = floor {
+                        p.measure(&frame, index, *t, geom, map.resampler(), scratch)?;
+                    }
+                }
+                // The solve could not connect this frame to the bracket, so its
+                // geometry is unknown and folding it would put mis-registered
+                // data into the merge.
+                FrameWarp::Refused(_) => return Ok(false),
+            }
+        }
 
-    let black = levels.black;
-    let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
-    let (gw, gh) = (geom.width, geom.height);
-    for (p, (dx, dy)) in BAND_PLANE_OFFSETS.iter().enumerate() {
-        let out = &mut planes[p];
-        for py in 0..gh {
-            let row = (ay + 2 * py + dy) * stride + ax + dx;
-            let dst = &mut out[py * gw..py * gw + gw];
-            for (px, o) in dst.iter_mut().enumerate() {
-                *o = (f32::from(frame.data[row + 2 * px]) - black).max(0.0);
+        let black = levels.black;
+        let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
+        let (gw, gh) = (geom.width, geom.height);
+        for (p, (dx, dy)) in BAND_PLANE_OFFSETS.iter().enumerate() {
+            let out = &mut planes[p];
+            for py in 0..gh {
+                let row = (ay + 2 * py + dy) * stride + ax + dx;
+                let dst = &mut out[py * gw..py * gw + gw];
+                for (px, o) in dst.iter_mut().enumerate() {
+                    *o = (f32::from(frame.data[row + 2 * px]) - black).max(0.0);
+                }
             }
         }
     }
@@ -4846,58 +4793,9 @@ fn prepare_frame(
     Ok(true)
 }
 
-/// Fold one existing chunk while decoding at most one frame ahead.
-///
-/// The chunk is the same contiguous slice the serial Rayon path receives.
-/// Both the item carried through the channel and the consumer call include the
-/// original absolute index, so neither channel scheduling nor a refused warp
-/// can change frame membership or order.
-#[allow(clippy::too_many_arguments)]
-fn fold_chunk_queued(
-    chunk: &[(usize, PathBuf)],
-    geom: PlaneGeometry,
-    cfg: MergeConfig,
-    levels: Levels,
-    noise: &NoiseModel,
-    warps: Option<&WarpMap>,
-    defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
-) -> Result<FoldPart> {
-    let mut worker = BandWorker::new(geom, cfg);
-    let mut folded = 0usize;
-    decode_queue::rendezvous::<(usize, Frame), anyhow::Error, _, _>(
-        chunk.len(),
-        |offset| {
-            let (index, path) = &chunk[offset];
-            Ok((*index, decode_frame(path, *index)?))
-        },
-        |_, (index, frame)| {
-            if worker.fold_decoded(frame, index, geom, levels, noise, warps, defect)? {
-                folded += 1;
-            }
-            Ok(())
-        },
-    )?;
-    Ok(worker.into_part(folded))
-}
-
 /// Env twin of `--pyramid-workers`, and the only way to raise the fold's
 /// parallelism on a machine with more RAM than the budget assumes.
 const BAND_WORKERS_ENV: &str = "STREHL_PYRAMID_WORKERS";
-
-/// Opt-in bounded overlap between RAW decode and pyramid folding.
-const DECODE_FOLD_QUEUE_ENV: &str = "STREHL_DECODE_FOLD_QUEUE";
-
-fn decode_fold_queue_enabled() -> Result<bool> {
-    match std::env::var(DECODE_FOLD_QUEUE_ENV) {
-        Err(std::env::VarError::NotPresent) => Ok(false),
-        Err(std::env::VarError::NotUnicode(_)) => {
-            bail!("{DECODE_FOLD_QUEUE_ENV} is not valid Unicode")
-        }
-        Ok(v) if v.trim().is_empty() || v.trim().eq_ignore_ascii_case("off") => Ok(false),
-        Ok(v) if v.trim().eq_ignore_ascii_case("on") => Ok(true),
-        Ok(v) => bail!("{DECODE_FOLD_QUEUE_ENV}={v:?} must be `on` or `off`"),
-    }
-}
 
 /// Env twin of `--confidence-map`, for a harness that cannot edit the command
 /// line. The flag wins, exactly as `--n-eff-map` beats [`NEFF_ENV`].
@@ -5449,9 +5347,6 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         cfg.sharpen_per_octave.is_finite() && cfg.sharpen_per_octave >= 1.0,
         "--pyramid-sharpen must be finite and at least 1.0 (1.0 disables the ramp)"
     );
-    // Resolve before the prologue decode. A typo in an explicitly requested
-    // scheduling mode must not burn one RAW decode before it is refused.
-    let decode_fold_queue = decode_fold_queue_enabled()?;
     // Same rule and same reason as the estimator arm: a viewing control asked
     // for without --srgb is an error, refused before a frame is read, because a
     // user who believes they brightened the measurement file and did not has no
@@ -5659,64 +5554,28 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         workers as f64 * per_worker_bytes as f64 / (1 << 30) as f64,
         MEMORY_BUDGET_BYTES / (1 << 20),
     );
-    if decode_fold_queue {
-        let extra_bytes = workers.saturating_mul(frame_bytes);
-        let bounded_bytes = workers.saturating_mul(per_worker_bytes.saturating_add(frame_bytes));
-        eprintln!(
-            "decode/fold queue : BOUNDED RENDEZVOUS ({DECODE_FOLD_QUEUE_ENV}=on), zero buffered\n  \
-                               frames and at most {workers} producer-held decoded frames \
-             ({:.0} MB)\n                  beyond serial; analytic live bound {:.1} GB, \
-             constant in stack depth.",
-            extra_bytes as f64 / (1 << 20) as f64,
-            bounded_bytes as f64 / (1 << 30) as f64,
-        );
-    } else {
-        eprintln!(
-            "decode/fold queue : SERIAL ({DECODE_FOLD_QUEUE_ENV}=off; unset/blank is the default)"
-        );
-    }
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
     let t_fold = Instant::now();
     let indexed: Vec<(usize, PathBuf)> = paths.iter().cloned().enumerate().collect();
-    let parts: Vec<Result<FoldPart>> = if decode_fold_queue {
-        // Keep fold consumers off the Rayon pool. `rawler` may use that pool
-        // while decoding, and parking every Rayon worker on `recv` would turn
-        // the overlap path into starvation. Handles are joined in chunk order,
-        // preserving the exact `BandMerge::absorb` order below.
-        std::thread::scope(|scope| {
-            let noise = &noise;
-            let handles: Vec<_> = indexed
-                .chunks(per_chunk)
-                .map(|chunk| {
-                    scope.spawn(move || {
-                        fold_chunk_queued(chunk, geom, cfg, levels, noise, warps, defect)
-                    })
-                })
-                .collect();
-            handles
-                .into_iter()
-                .map(|handle| match handle.join() {
-                    Ok(part) => part,
-                    Err(payload) => std::panic::resume_unwind(payload),
-                })
-                .collect()
-        })
-    } else {
-        indexed
-            .par_chunks(per_chunk)
-            .map(|chunk| {
-                let mut w = BandWorker::new(geom, cfg);
-                let mut folded = 0usize;
-                for (i, p) in chunk {
-                    if w.fold(p, *i, geom, levels, &noise, warps, defect)? {
-                        folded += 1;
-                    }
+    let parts: Vec<Result<FoldPart>> = indexed
+        .par_chunks(per_chunk)
+        .map(|chunk| {
+            let mut w = BandWorker::new(geom, cfg);
+            let mut folded = 0usize;
+            for (i, p) in chunk {
+                if w.fold(p, *i, geom, levels, &noise, warps, defect)? {
+                    folded += 1;
                 }
-                Ok(w.into_part(folded))
+            }
+            Ok(FoldPart {
+                merge: w.merge,
+                folded,
+                beta_sum: w.beta_sum,
+                beta_n: w.beta_n,
             })
-            .collect()
-    };
+        })
+        .collect();
 
     let mut merged: Option<BandMerge> = None;
     let mut folded_total = 0usize;
@@ -8746,7 +8605,6 @@ mod tests {
         // SAFETY: single-threaded within this test; see the doc comment.
         unsafe { std::env::remove_var(MERGE_BACKEND_ENV) };
         unsafe { std::env::remove_var(BAND_WORKERS_ENV) };
-        unsafe { std::env::remove_var(DECODE_FOLD_QUEUE_ENV) };
 
         assert_eq!(
             resolved(None).unwrap(),
@@ -8936,40 +8794,6 @@ mod tests {
             band_workers(third, 64).unwrap(),
             3,
             "band_workers did not return to its unset value"
-        );
-
-        assert!(
-            !decode_fold_queue_enabled().unwrap(),
-            "an unset {DECODE_FOLD_QUEUE_ENV} did not select the serial default"
-        );
-        for v in ["", "   ", "off", "OFF", " Off "] {
-            unsafe { std::env::set_var(DECODE_FOLD_QUEUE_ENV, v) };
-            assert!(
-                !decode_fold_queue_enabled().unwrap(),
-                "{DECODE_FOLD_QUEUE_ENV}={v:?} did not select serial"
-            );
-        }
-        for v in ["on", "ON", " On "] {
-            unsafe { std::env::set_var(DECODE_FOLD_QUEUE_ENV, v) };
-            assert!(
-                decode_fold_queue_enabled().unwrap(),
-                "{DECODE_FOLD_QUEUE_ENV}={v:?} did not select the queue"
-            );
-        }
-        for bad in ["0", "1", "true", "yes", "banana"] {
-            unsafe { std::env::set_var(DECODE_FOLD_QUEUE_ENV, bad) };
-            let err = decode_fold_queue_enabled()
-                .expect_err("an unknown queue mode was accepted")
-                .to_string();
-            assert!(
-                err.contains(DECODE_FOLD_QUEUE_ENV) && err.contains("on") && err.contains("off"),
-                "{DECODE_FOLD_QUEUE_ENV}={bad:?} refusal was unclear: {err}"
-            );
-        }
-        unsafe { std::env::remove_var(DECODE_FOLD_QUEUE_ENV) };
-        assert!(
-            !decode_fold_queue_enabled().unwrap(),
-            "the queue resolver did not return to its unset serial default"
         );
 
         // The photometric channel, added when its default flipped from `Off`
