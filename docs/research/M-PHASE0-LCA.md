@@ -349,3 +349,112 @@ NumPy multiarray, and SciPy ndimage binary hashes into each cache. A repeat
 with unchanged inputs reuses only an exact fingerprint match. The definitive
 run rebuilt all five caches (`reused=false`). All generated artifacts are
 under `experiments/M-PHASE0-LCA/out/`.
+
+## 10. Re-scope audit: the requested build is locked out
+
+On 2026-09-02 the orchestrator re-scoped this lane: audit the corpus claim that
+C2 was already answered, then build only if that audit returned GO. The new
+protocol was committed before replay as
+`08cf9401fe79f4e15973c02aa89518b24ec687ed`. Its conjunctive Part-1 gate
+returned **STOP**, so no Rust prototype or corrected render was permitted.
+
+### 10.1 What reproduced
+
+The missing BUILD-CHROMA artifacts were regenerated from all 1,002 RAW frames,
+then scored by an independent implementation that does not import the legacy
+peak/loss checker:
+
+| stack | dR, frames | dB, frames | R forfeit | B forfeit |
+|---|---:|---:|---:|---:|
+| `lavendar-cpl` | -0.8075 | -0.7185 | 6.62% | 5.19% |
+| `coffee-bean` | -0.8100 | -0.4845 | 7.36% | 3.51% |
+| `couch-fibers-cpl` | -0.8977 | -0.7124 | 7.54% | 7.06% |
+| `bee-2-cpl` | -0.6601 | -0.7540 | 4.22% | 7.13% |
+
+All offset errors against the old report are below 0.00005 frame, and every
+G1-G2 null clears 0.034 frame including uncertainty against the 0.125 gate.
+The published channel-wise gain multisets reproduce: R
+4.22/6.62/7.36/7.54% and B 3.51/5.19/7.06/7.13%.
+
+The audit preregistration made one explicit error: BUILD-CHROMA printed those
+four gains as channel-wise ranges without stack labels, and the new table
+incorrectly assigned that printed order to the four stacks. The frozen
+per-stack mapping therefore fails even though the multisets reproduce. It was
+not rewritten after measurement.
+
+### 10.2 Commissioning and cancellation
+
+The new checker reads a committed external response table and a separately
+committed answer. **2/2 controls are GREEN and 6/6 exact defects go RED**:
+vertex-sign inversion, doubled frame scale, R/B swap, G1-only reference,
+loss-sign inversion, and omitted affine normalisation. Its STOP finalizer has
+one integrity control and five plants, all RED.
+
+The old synthetic defocus generator uses Gaussian blur independently of the
+three-point peak checker, so it is not literal generator/checker cancellation.
+It remains supporting evidence only. The fixed predicate is the
+cancellation-immune control; real G1-G2 data and M107's R↔G1 label swap are
+additional data paths the peak checker did not generate.
+
+### 10.3 Tone audit: the build-blocking failure
+
+The legacy measurement itself is black-subtracted native-CFA linear RAW: no
+demosaic, colour matrix, white balance, render tone curve, or comparator. The
+old numbers are therefore not the same kind of developed-TIFF contrast
+artifact that retracted V-HEADTOHEAD2.
+
+That provenance is not enough to promote raw Sobel forfeit to a
+tone-independent *recoverable output gain*. The preregistered affine-invariant
+`Sobel energy / local variance` focus curves retained 24 valid tiles on
+`coffee-bean`, but **zero accepted tiles** on `lavendar-cpl`,
+`couch-fibers-cpl`, and `bee-2-cpl`. Both registered lavendar gamma arms
+(0.8 and 1.2) also retained zero tiles. Direct RAW spot checks match those
+caches within 7.1e-08 relative error; this is the metric declining, not a cache
+indexing bug. The required four-stack tone gate cannot be evaluated and files
+STOP.
+
+### 10.4 It is axial, not lateral
+
+The evidence supports **longitudinal/axial chromatic aberration**. It measures
+peak position along focus-frame index. The independent radius fit gives:
+
+* lavendar centre intercept -0.8183 frames,
+  95% CI [-0.9725,-0.4531];
+* coffee centre intercept -0.8765 frames,
+  95% CI [-0.9343,-0.8216].
+
+Both retain at least half the fitted edge magnitude. Lateral radial
+magnification must be zero at the optical centre; the whole measured effect is
+already present there.
+
+The registered retraction scan covered 56 files: every `.md`, `.txt`, and
+`.py` under `experiments/M107-chroma`, plus the exact BUILD-CHROMA, M107,
+M107b, M113, M114-retraction, and V-CA notes. All 37
+`RETRACT`/`WITHDRAW`/`AMEND` hits are recorded and classified. None withdraws
+these axial peaks or raw forfeit. Existing withdrawals concern
+lateral-epsilon focus dependence, M113's lateral bootstrap width, M114's
+rendered gain/application factor, and V-CA's rendered blue-harm claim.
+
+### 10.5 Product consequence
+
+**No Rust changes were made under the re-scoped order.** In particular,
+`STREHL_AXIAL_CA_SHIFT` was not added and the foreign concurrent
+`merge_cmd.rs` work was not touched. Because Part 1 returned STOP, there is no
+default/zero/corrected/wrong-sign render and no before/after gain to report.
+Claiming the requested zero and wrong-sign controls without running them would
+be worse than shipping nothing.
+
+Before a build, a new preregistered audit must commission a tone-invariant
+payoff statistic that retains valid peaks on all four stacks, freeze the
+correct per-stack gain association, and return GO. Only then do the zero-output
+identity and wrong-sign-harm render bars become licensed.
+
+Machine-readable trace:
+`out/c2-audit-commission.json`, `out/c2-audit.json`. The commission source was
+frozen at `2bfbb13a7135ce560e11d57f897c11098e7219f7`; the RAW/cache producer at
+`cb66893eabf3822ff0485f9fbc9d9c2319a81e8c`; and the result finalizer at
+`7d7c6ef7a5aa2b906aad06d98e8845580d6c8cc2`. The JSON also records the exact
+finalizer source hash rather than claiming circular commit provenance.
+Independent ultra-verification recomputed every headline NPZ statistic,
+checked RAW samples and cache fingerprints, and returned **VERIFIED** for
+STOP/no-Rust.

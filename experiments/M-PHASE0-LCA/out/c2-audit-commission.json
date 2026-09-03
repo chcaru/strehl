@@ -1,0 +1,165 @@
+{
+  "controls": [
+    {
+      "green": true,
+      "name": "C1_fixed_external_peak_offset_and_loss",
+      "plants": [
+        {
+          "name": "P1_invert_vertex_sign",
+          "reading": {
+            "forfeit": {
+              "B": -0.040462427745664886,
+              "G1": -0.30434782608695654,
+              "R": 0.0
+            },
+            "offsets": {
+              "delta_b": -0.08333333333333348,
+              "delta_null": -1.0,
+              "delta_r": 0.0
+            },
+            "peaks": {
+              "B": 2.9166666666666665,
+              "G1": 2.5,
+              "G2": 3.5,
+              "R": 3.0
+            }
+          },
+          "red": true
+        },
+        {
+          "name": "P2_double_frame_scale",
+          "reading": {
+            "forfeit": {
+              "B": 0.3142857142857143,
+              "G1": 0.0,
+              "R": 0.4375
+            },
+            "offsets": {
+              "delta_b": -1.833333333333333,
+              "delta_null": -2.0,
+              "delta_r": -2.0
+            },
+            "peaks": {
+              "B": 6.166666666666667,
+              "G1": 7.0,
+              "G2": 9.0,
+              "R": 6.0
+            }
+          },
+          "red": true
+        },
+        {
+          "name": "P3_swap_red_and_blue",
+          "reading": {
+            "forfeit": {
+              "B": 0.4375,
+              "G1": 0.0,
+              "R": 0.3142857142857143
+            },
+            "offsets": {
+              "delta_b": -1.0,
+              "delta_null": -1.0,
+              "delta_r": -0.9166666666666665
+            },
+            "peaks": {
+              "B": 3.0,
+              "G1": 3.5,
+              "G2": 4.5,
+              "R": 3.0833333333333335
+            }
+          },
+          "red": true
+        },
+        {
+          "name": "P4_use_G1_only",
+          "reading": {
+            "forfeit": {
+              "B": 0.1428571428571428,
+              "G1": 0.0,
+              "R": 0.21875
+            },
+            "offsets": {
+              "delta_b": -0.4166666666666665,
+              "delta_null": -1.0,
+              "delta_r": -0.5
+            },
+            "peaks": {
+              "B": 3.0833333333333335,
+              "G1": 3.5,
+              "G2": 4.5,
+              "R": 3.0
+            }
+          },
+          "red": true
+        },
+        {
+          "name": "P5_invert_loss_sign",
+          "reading": {
+            "forfeit": {
+              "B": -0.3142857142857143,
+              "G1": -0.0,
+              "R": -0.4375
+            },
+            "offsets": {
+              "delta_b": -0.9166666666666665,
+              "delta_null": -1.0,
+              "delta_r": -1.0
+            },
+            "peaks": {
+              "B": 3.0833333333333335,
+              "G1": 3.5,
+              "G2": 4.5,
+              "R": 3.0
+            }
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "forfeit": {
+          "B": 0.3142857142857143,
+          "G1": 0.0,
+          "R": 0.4375
+        },
+        "offsets": {
+          "delta_b": -0.9166666666666665,
+          "delta_null": -1.0,
+          "delta_r": -1.0
+        },
+        "peaks": {
+          "B": 3.0833333333333335,
+          "G1": 3.5,
+          "G2": 4.5,
+          "R": 3.0
+        }
+      }
+    },
+    {
+      "green": true,
+      "name": "C2_affine_normalised_focus",
+      "plants": [
+        {
+          "name": "P6_omit_variance_normalisation",
+          "reading": {
+            "relative_change": 1.8900000000000001
+          },
+          "red": true
+        }
+      ],
+      "reading": {
+        "affine": 2.0821820314087276,
+        "base": 2.082182031408727,
+        "relative_error": 2.220446049250313e-16
+      }
+    }
+  ],
+  "purpose": "commission independent C2 corpus-audit checker",
+  "schema": 1,
+  "summary": {
+    "all_passed": true,
+    "controls_green": 2,
+    "controls_total": 2,
+    "plants_red": 6,
+    "plants_total": 6
+  }
+}
