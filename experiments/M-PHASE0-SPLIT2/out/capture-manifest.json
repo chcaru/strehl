@@ -1,0 +1,1178 @@
+{
+  "status": "METADATA_VALIDATED",
+  "capture": "D:\\personal\\macro\\requests\\12-bee-iso-var-no-bracket-32-repeat-diff-light",
+  "files": 576,
+  "filename_first": "DSC00296.ARW",
+  "filename_last": "DSC00871.ARW",
+  "camera": "ILCE-7CM2",
+  "fixed": {
+    "ExposureTime": 1.6,
+    "FNumber": 5.6,
+    "FocalLength": 200.0,
+    "BitsPerSample": 14.0,
+    "FocusMode": "Manual",
+    "FocusModeExifToolNumeric": "0"
+  },
+  "iso_counts": {
+    "50": 64,
+    "64": 64,
+    "80": 64,
+    "100": 64,
+    "200": 64,
+    "320": 64,
+    "400": 64,
+    "500": 64,
+    "640": 64
+  },
+  "pass_iso_order": [
+    [
+      400,
+      100,
+      200,
+      320,
+      500,
+      640,
+      80,
+      64,
+      50
+    ],
+    [
+      100,
+      640,
+      400,
+      50,
+      200,
+      64,
+      500,
+      80,
+      320
+    ]
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "pass": 1,
+      "iso": 400,
+      "files": [
+        "DSC00296.ARW",
+        "DSC00297.ARW",
+        "DSC00298.ARW",
+        "DSC00299.ARW",
+        "DSC00300.ARW",
+        "DSC00301.ARW",
+        "DSC00302.ARW",
+        "DSC00303.ARW",
+        "DSC00304.ARW",
+        "DSC00305.ARW",
+        "DSC00306.ARW",
+        "DSC00307.ARW",
+        "DSC00308.ARW",
+        "DSC00309.ARW",
+        "DSC00310.ARW",
+        "DSC00311.ARW",
+        "DSC00312.ARW",
+        "DSC00313.ARW",
+        "DSC00314.ARW",
+        "DSC00315.ARW",
+        "DSC00316.ARW",
+        "DSC00317.ARW",
+        "DSC00318.ARW",
+        "DSC00319.ARW",
+        "DSC00320.ARW",
+        "DSC00321.ARW",
+        "DSC00322.ARW",
+        "DSC00323.ARW",
+        "DSC00324.ARW",
+        "DSC00325.ARW",
+        "DSC00326.ARW",
+        "DSC00327.ARW"
+      ],
+      "first_timestamp": "2026-08-30T19:51:12.324000",
+      "last_timestamp": "2026-08-30T19:52:21.206000",
+      "duration_seconds": 68.882,
+      "inter_frame_gap_seconds": {
+        "median": 2.219,
+        "maximum": 2.241
+      },
+      "brightness_value_ev": {
+        "mean": -0.2282958984375,
+        "minimum": -0.25625,
+        "maximum": -0.19375,
+        "range": 0.06249999999999997
+      },
+      "file_size_bytes": {
+        "mean": 39580032.0,
+        "cv": 9.803735469828256e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 1,
+      "pass": 1,
+      "iso": 100,
+      "files": [
+        "DSC00328.ARW",
+        "DSC00329.ARW",
+        "DSC00330.ARW",
+        "DSC00331.ARW",
+        "DSC00332.ARW",
+        "DSC00333.ARW",
+        "DSC00334.ARW",
+        "DSC00335.ARW",
+        "DSC00336.ARW",
+        "DSC00337.ARW",
+        "DSC00338.ARW",
+        "DSC00339.ARW",
+        "DSC00340.ARW",
+        "DSC00341.ARW",
+        "DSC00342.ARW",
+        "DSC00343.ARW",
+        "DSC00344.ARW",
+        "DSC00345.ARW",
+        "DSC00346.ARW",
+        "DSC00347.ARW",
+        "DSC00348.ARW",
+        "DSC00349.ARW",
+        "DSC00350.ARW",
+        "DSC00351.ARW",
+        "DSC00352.ARW",
+        "DSC00353.ARW",
+        "DSC00354.ARW",
+        "DSC00355.ARW",
+        "DSC00356.ARW",
+        "DSC00357.ARW",
+        "DSC00358.ARW",
+        "DSC00359.ARW"
+      ],
+      "first_timestamp": "2026-08-30T19:52:44.315000",
+      "last_timestamp": "2026-08-30T19:53:53.454000",
+      "duration_seconds": 69.139,
+      "inter_frame_gap_seconds": {
+        "median": 2.223,
+        "maximum": 2.278
+      },
+      "brightness_value_ev": {
+        "mean": -0.0793701171875,
+        "minimum": -0.1859375,
+        "maximum": 0.02109375,
+        "range": 0.20703125
+      },
+      "file_size_bytes": {
+        "mean": 36337152.0,
+        "cv": 9.239602829750181e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 2,
+      "pass": 1,
+      "iso": 200,
+      "files": [
+        "DSC00360.ARW",
+        "DSC00361.ARW",
+        "DSC00362.ARW",
+        "DSC00363.ARW",
+        "DSC00364.ARW",
+        "DSC00365.ARW",
+        "DSC00366.ARW",
+        "DSC00367.ARW",
+        "DSC00368.ARW",
+        "DSC00369.ARW",
+        "DSC00370.ARW",
+        "DSC00371.ARW",
+        "DSC00372.ARW",
+        "DSC00373.ARW",
+        "DSC00374.ARW",
+        "DSC00375.ARW",
+        "DSC00376.ARW",
+        "DSC00377.ARW",
+        "DSC00378.ARW",
+        "DSC00379.ARW",
+        "DSC00380.ARW",
+        "DSC00381.ARW",
+        "DSC00382.ARW",
+        "DSC00383.ARW",
+        "DSC00384.ARW",
+        "DSC00385.ARW",
+        "DSC00386.ARW",
+        "DSC00387.ARW",
+        "DSC00388.ARW",
+        "DSC00389.ARW",
+        "DSC00390.ARW",
+        "DSC00391.ARW"
+      ],
+      "first_timestamp": "2026-08-30T19:54:13.796000",
+      "last_timestamp": "2026-08-30T19:55:22.851000",
+      "duration_seconds": 69.055,
+      "inter_frame_gap_seconds": {
+        "median": 2.221,
+        "maximum": 2.277
+      },
+      "brightness_value_ev": {
+        "mean": -0.171044921875,
+        "minimum": -0.225,
+        "maximum": -0.1,
+        "range": 0.125
+      },
+      "file_size_bytes": {
+        "mean": 37791232.0,
+        "cv": 0.00010047551837931559
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 3,
+      "pass": 1,
+      "iso": 320,
+      "files": [
+        "DSC00392.ARW",
+        "DSC00393.ARW",
+        "DSC00394.ARW",
+        "DSC00395.ARW",
+        "DSC00396.ARW",
+        "DSC00397.ARW",
+        "DSC00398.ARW",
+        "DSC00399.ARW",
+        "DSC00400.ARW",
+        "DSC00401.ARW",
+        "DSC00402.ARW",
+        "DSC00403.ARW",
+        "DSC00404.ARW",
+        "DSC00405.ARW",
+        "DSC00406.ARW",
+        "DSC00407.ARW",
+        "DSC00408.ARW",
+        "DSC00409.ARW",
+        "DSC00410.ARW",
+        "DSC00411.ARW",
+        "DSC00412.ARW",
+        "DSC00413.ARW",
+        "DSC00414.ARW",
+        "DSC00415.ARW",
+        "DSC00416.ARW",
+        "DSC00417.ARW",
+        "DSC00418.ARW",
+        "DSC00419.ARW",
+        "DSC00420.ARW",
+        "DSC00421.ARW",
+        "DSC00422.ARW",
+        "DSC00423.ARW"
+      ],
+      "first_timestamp": "2026-08-30T19:55:52.822000",
+      "last_timestamp": "2026-08-30T19:57:01.823000",
+      "duration_seconds": 69.001,
+      "inter_frame_gap_seconds": {
+        "median": 2.224,
+        "maximum": 2.272
+      },
+      "brightness_value_ev": {
+        "mean": -0.24929199218749998,
+        "minimum": -0.2875,
+        "maximum": -0.21328125,
+        "range": 0.07421874999999997
+      },
+      "file_size_bytes": {
+        "mean": 38983040.0,
+        "cv": 0.00012763403474299755
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 4,
+      "pass": 1,
+      "iso": 500,
+      "files": [
+        "DSC00424.ARW",
+        "DSC00425.ARW",
+        "DSC00426.ARW",
+        "DSC00427.ARW",
+        "DSC00428.ARW",
+        "DSC00429.ARW",
+        "DSC00430.ARW",
+        "DSC00431.ARW",
+        "DSC00432.ARW",
+        "DSC00433.ARW",
+        "DSC00434.ARW",
+        "DSC00435.ARW",
+        "DSC00436.ARW",
+        "DSC00437.ARW",
+        "DSC00438.ARW",
+        "DSC00439.ARW",
+        "DSC00440.ARW",
+        "DSC00441.ARW",
+        "DSC00442.ARW",
+        "DSC00443.ARW",
+        "DSC00444.ARW",
+        "DSC00445.ARW",
+        "DSC00446.ARW",
+        "DSC00447.ARW",
+        "DSC00448.ARW",
+        "DSC00449.ARW",
+        "DSC00450.ARW",
+        "DSC00451.ARW",
+        "DSC00452.ARW",
+        "DSC00453.ARW",
+        "DSC00454.ARW",
+        "DSC00455.ARW"
+      ],
+      "first_timestamp": "2026-08-30T19:57:27.865000",
+      "last_timestamp": "2026-08-30T19:58:36.893000",
+      "duration_seconds": 69.028,
+      "inter_frame_gap_seconds": {
+        "median": 2.222,
+        "maximum": 2.261
+      },
+      "brightness_value_ev": {
+        "mean": -0.2173095703125,
+        "minimum": -0.25234375,
+        "maximum": -0.18203125,
+        "range": 0.07031249999999997
+      },
+      "file_size_bytes": {
+        "mean": 40194048.0,
+        "cv": 6.74042421039588e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 5,
+      "pass": 1,
+      "iso": 640,
+      "files": [
+        "DSC00456.ARW",
+        "DSC00457.ARW",
+        "DSC00458.ARW",
+        "DSC00459.ARW",
+        "DSC00460.ARW",
+        "DSC00461.ARW",
+        "DSC00462.ARW",
+        "DSC00463.ARW",
+        "DSC00464.ARW",
+        "DSC00465.ARW",
+        "DSC00466.ARW",
+        "DSC00467.ARW",
+        "DSC00468.ARW",
+        "DSC00469.ARW",
+        "DSC00470.ARW",
+        "DSC00471.ARW",
+        "DSC00472.ARW",
+        "DSC00473.ARW",
+        "DSC00474.ARW",
+        "DSC00475.ARW",
+        "DSC00476.ARW",
+        "DSC00477.ARW",
+        "DSC00478.ARW",
+        "DSC00479.ARW",
+        "DSC00480.ARW",
+        "DSC00481.ARW",
+        "DSC00482.ARW",
+        "DSC00483.ARW",
+        "DSC00484.ARW",
+        "DSC00485.ARW",
+        "DSC00486.ARW",
+        "DSC00487.ARW"
+      ],
+      "first_timestamp": "2026-08-30T19:59:17.427000",
+      "last_timestamp": "2026-08-30T20:00:26.298000",
+      "duration_seconds": 68.871,
+      "inter_frame_gap_seconds": {
+        "median": 2.219,
+        "maximum": 2.263
+      },
+      "brightness_value_ev": {
+        "mean": -0.231103515625,
+        "minimum": -0.26015625,
+        "maximum": -0.21328125,
+        "range": 0.04687499999999997
+      },
+      "file_size_bytes": {
+        "mean": 40799488.0,
+        "cv": 8.108555391013589e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 6,
+      "pass": 1,
+      "iso": 80,
+      "files": [
+        "DSC00488.ARW",
+        "DSC00489.ARW",
+        "DSC00490.ARW",
+        "DSC00491.ARW",
+        "DSC00492.ARW",
+        "DSC00493.ARW",
+        "DSC00494.ARW",
+        "DSC00495.ARW",
+        "DSC00496.ARW",
+        "DSC00497.ARW",
+        "DSC00498.ARW",
+        "DSC00499.ARW",
+        "DSC00500.ARW",
+        "DSC00501.ARW",
+        "DSC00502.ARW",
+        "DSC00503.ARW",
+        "DSC00504.ARW",
+        "DSC00505.ARW",
+        "DSC00506.ARW",
+        "DSC00507.ARW",
+        "DSC00508.ARW",
+        "DSC00509.ARW",
+        "DSC00510.ARW",
+        "DSC00511.ARW",
+        "DSC00512.ARW",
+        "DSC00513.ARW",
+        "DSC00514.ARW",
+        "DSC00515.ARW",
+        "DSC00516.ARW",
+        "DSC00517.ARW",
+        "DSC00518.ARW",
+        "DSC00519.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:00:53.775000",
+      "last_timestamp": "2026-08-30T20:02:03.132000",
+      "duration_seconds": 69.357,
+      "inter_frame_gap_seconds": {
+        "median": 2.23,
+        "maximum": 2.287
+      },
+      "brightness_value_ev": {
+        "mean": -0.1252685546875,
+        "minimum": -0.22890625,
+        "maximum": -0.04140625,
+        "range": 0.1875
+      },
+      "file_size_bytes": {
+        "mean": 37109760.0,
+        "cv": 4.7793896456094844e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 7,
+      "pass": 1,
+      "iso": 64,
+      "files": [
+        "DSC00520.ARW",
+        "DSC00521.ARW",
+        "DSC00522.ARW",
+        "DSC00523.ARW",
+        "DSC00524.ARW",
+        "DSC00525.ARW",
+        "DSC00526.ARW",
+        "DSC00527.ARW",
+        "DSC00528.ARW",
+        "DSC00529.ARW",
+        "DSC00530.ARW",
+        "DSC00531.ARW",
+        "DSC00532.ARW",
+        "DSC00533.ARW",
+        "DSC00534.ARW",
+        "DSC00535.ARW",
+        "DSC00536.ARW",
+        "DSC00537.ARW",
+        "DSC00538.ARW",
+        "DSC00539.ARW",
+        "DSC00540.ARW",
+        "DSC00541.ARW",
+        "DSC00542.ARW",
+        "DSC00543.ARW",
+        "DSC00544.ARW",
+        "DSC00545.ARW",
+        "DSC00546.ARW",
+        "DSC00547.ARW",
+        "DSC00548.ARW",
+        "DSC00549.ARW",
+        "DSC00550.ARW",
+        "DSC00551.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:02:18.954000",
+      "last_timestamp": "2026-08-30T20:03:28.311000",
+      "duration_seconds": 69.357,
+      "inter_frame_gap_seconds": {
+        "median": 2.222,
+        "maximum": 2.368
+      },
+      "brightness_value_ev": {
+        "mean": -0.2229248046875,
+        "minimum": -0.33046875,
+        "maximum": -0.1,
+        "range": 0.23046874999999997
+      },
+      "file_size_bytes": {
+        "mean": 36595584.0,
+        "cv": 6.845113829089211e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 8,
+      "pass": 1,
+      "iso": 50,
+      "files": [
+        "DSC00552.ARW",
+        "DSC00553.ARW",
+        "DSC00554.ARW",
+        "DSC00555.ARW",
+        "DSC00556.ARW",
+        "DSC00557.ARW",
+        "DSC00558.ARW",
+        "DSC00559.ARW",
+        "DSC00560.ARW",
+        "DSC00561.ARW",
+        "DSC00562.ARW",
+        "DSC00563.ARW",
+        "DSC00564.ARW",
+        "DSC00565.ARW",
+        "DSC00566.ARW",
+        "DSC00567.ARW",
+        "DSC00568.ARW",
+        "DSC00569.ARW",
+        "DSC00570.ARW",
+        "DSC00571.ARW",
+        "DSC00572.ARW",
+        "DSC00573.ARW",
+        "DSC00574.ARW",
+        "DSC00575.ARW",
+        "DSC00576.ARW",
+        "DSC00577.ARW",
+        "DSC00578.ARW",
+        "DSC00579.ARW",
+        "DSC00580.ARW",
+        "DSC00581.ARW",
+        "DSC00582.ARW",
+        "DSC00583.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:03:43.986000",
+      "last_timestamp": "2026-08-30T20:04:53.492000",
+      "duration_seconds": 69.506,
+      "inter_frame_gap_seconds": {
+        "median": 2.222,
+        "maximum": 2.389
+      },
+      "brightness_value_ev": {
+        "mean": -0.2785888671875,
+        "minimum": -0.3578125,
+        "maximum": -0.1703125,
+        "range": 0.18749999999999997
+      },
+      "file_size_bytes": {
+        "mean": 36143360.0,
+        "cv": 7.462303894077089e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 9,
+      "pass": 2,
+      "iso": 100,
+      "files": [
+        "DSC00584.ARW",
+        "DSC00585.ARW",
+        "DSC00586.ARW",
+        "DSC00587.ARW",
+        "DSC00588.ARW",
+        "DSC00589.ARW",
+        "DSC00590.ARW",
+        "DSC00591.ARW",
+        "DSC00592.ARW",
+        "DSC00593.ARW",
+        "DSC00594.ARW",
+        "DSC00595.ARW",
+        "DSC00596.ARW",
+        "DSC00597.ARW",
+        "DSC00598.ARW",
+        "DSC00599.ARW",
+        "DSC00600.ARW",
+        "DSC00601.ARW",
+        "DSC00602.ARW",
+        "DSC00603.ARW",
+        "DSC00604.ARW",
+        "DSC00605.ARW",
+        "DSC00606.ARW",
+        "DSC00607.ARW",
+        "DSC00608.ARW",
+        "DSC00609.ARW",
+        "DSC00610.ARW",
+        "DSC00611.ARW",
+        "DSC00612.ARW",
+        "DSC00613.ARW",
+        "DSC00614.ARW",
+        "DSC00615.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:06:43.778000",
+      "last_timestamp": "2026-08-30T20:07:53.791000",
+      "duration_seconds": 70.013,
+      "inter_frame_gap_seconds": {
+        "median": 2.232,
+        "maximum": 2.364
+      },
+      "brightness_value_ev": {
+        "mean": -1.026025390625,
+        "minimum": -1.178125,
+        "maximum": -0.9046875,
+        "range": 0.2734375000000001
+      },
+      "file_size_bytes": {
+        "mean": 35521024.0,
+        "cv": 8.527436734219721e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 10,
+      "pass": 2,
+      "iso": 640,
+      "files": [
+        "DSC00616.ARW",
+        "DSC00617.ARW",
+        "DSC00618.ARW",
+        "DSC00619.ARW",
+        "DSC00620.ARW",
+        "DSC00621.ARW",
+        "DSC00622.ARW",
+        "DSC00623.ARW",
+        "DSC00624.ARW",
+        "DSC00625.ARW",
+        "DSC00626.ARW",
+        "DSC00627.ARW",
+        "DSC00628.ARW",
+        "DSC00629.ARW",
+        "DSC00630.ARW",
+        "DSC00631.ARW",
+        "DSC00632.ARW",
+        "DSC00633.ARW",
+        "DSC00634.ARW",
+        "DSC00635.ARW",
+        "DSC00636.ARW",
+        "DSC00637.ARW",
+        "DSC00638.ARW",
+        "DSC00639.ARW",
+        "DSC00640.ARW",
+        "DSC00641.ARW",
+        "DSC00642.ARW",
+        "DSC00643.ARW",
+        "DSC00644.ARW",
+        "DSC00645.ARW",
+        "DSC00646.ARW",
+        "DSC00647.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:08:09.187000",
+      "last_timestamp": "2026-08-30T20:09:18.446000",
+      "duration_seconds": 69.259,
+      "inter_frame_gap_seconds": {
+        "median": 2.222,
+        "maximum": 2.394
+      },
+      "brightness_value_ev": {
+        "mean": -1.308984375,
+        "minimum": -1.396875,
+        "maximum": -1.240625,
+        "range": 0.15625
+      },
+      "file_size_bytes": {
+        "mean": 39720064.0,
+        "cv": 5.898239911870636e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 11,
+      "pass": 2,
+      "iso": 400,
+      "files": [
+        "DSC00648.ARW",
+        "DSC00649.ARW",
+        "DSC00650.ARW",
+        "DSC00651.ARW",
+        "DSC00652.ARW",
+        "DSC00653.ARW",
+        "DSC00654.ARW",
+        "DSC00655.ARW",
+        "DSC00656.ARW",
+        "DSC00657.ARW",
+        "DSC00658.ARW",
+        "DSC00659.ARW",
+        "DSC00660.ARW",
+        "DSC00661.ARW",
+        "DSC00662.ARW",
+        "DSC00663.ARW",
+        "DSC00664.ARW",
+        "DSC00665.ARW",
+        "DSC00666.ARW",
+        "DSC00667.ARW",
+        "DSC00668.ARW",
+        "DSC00669.ARW",
+        "DSC00670.ARW",
+        "DSC00671.ARW",
+        "DSC00672.ARW",
+        "DSC00673.ARW",
+        "DSC00674.ARW",
+        "DSC00675.ARW",
+        "DSC00676.ARW",
+        "DSC00677.ARW",
+        "DSC00678.ARW",
+        "DSC00679.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:09:32.118000",
+      "last_timestamp": "2026-08-30T20:10:41.599000",
+      "duration_seconds": 69.481,
+      "inter_frame_gap_seconds": {
+        "median": 2.221,
+        "maximum": 2.399
+      },
+      "brightness_value_ev": {
+        "mean": -1.33681640625,
+        "minimum": -1.43203125,
+        "maximum": -1.2015625,
+        "range": 0.23046875
+      },
+      "file_size_bytes": {
+        "mean": 38361472.0,
+        "cv": 6.461455237100252e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 12,
+      "pass": 2,
+      "iso": 50,
+      "files": [
+        "DSC00680.ARW",
+        "DSC00681.ARW",
+        "DSC00682.ARW",
+        "DSC00683.ARW",
+        "DSC00684.ARW",
+        "DSC00685.ARW",
+        "DSC00686.ARW",
+        "DSC00687.ARW",
+        "DSC00688.ARW",
+        "DSC00689.ARW",
+        "DSC00690.ARW",
+        "DSC00691.ARW",
+        "DSC00692.ARW",
+        "DSC00693.ARW",
+        "DSC00694.ARW",
+        "DSC00695.ARW",
+        "DSC00696.ARW",
+        "DSC00697.ARW",
+        "DSC00698.ARW",
+        "DSC00699.ARW",
+        "DSC00700.ARW",
+        "DSC00701.ARW",
+        "DSC00702.ARW",
+        "DSC00703.ARW",
+        "DSC00704.ARW",
+        "DSC00705.ARW",
+        "DSC00706.ARW",
+        "DSC00707.ARW",
+        "DSC00708.ARW",
+        "DSC00709.ARW",
+        "DSC00710.ARW",
+        "DSC00711.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:10:57.823000",
+      "last_timestamp": "2026-08-30T20:12:07.732000",
+      "duration_seconds": 69.909,
+      "inter_frame_gap_seconds": {
+        "median": 2.227,
+        "maximum": 2.378
+      },
+      "brightness_value_ev": {
+        "mean": -1.2988525390625,
+        "minimum": -1.38515625,
+        "maximum": -1.13515625,
+        "range": 0.25
+      },
+      "file_size_bytes": {
+        "mean": 35333504.0,
+        "cv": 7.45063769094059e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 13,
+      "pass": 2,
+      "iso": 200,
+      "files": [
+        "DSC00712.ARW",
+        "DSC00713.ARW",
+        "DSC00714.ARW",
+        "DSC00715.ARW",
+        "DSC00716.ARW",
+        "DSC00717.ARW",
+        "DSC00718.ARW",
+        "DSC00719.ARW",
+        "DSC00720.ARW",
+        "DSC00721.ARW",
+        "DSC00722.ARW",
+        "DSC00723.ARW",
+        "DSC00724.ARW",
+        "DSC00725.ARW",
+        "DSC00726.ARW",
+        "DSC00727.ARW",
+        "DSC00728.ARW",
+        "DSC00729.ARW",
+        "DSC00730.ARW",
+        "DSC00731.ARW",
+        "DSC00732.ARW",
+        "DSC00733.ARW",
+        "DSC00734.ARW",
+        "DSC00735.ARW",
+        "DSC00736.ARW",
+        "DSC00737.ARW",
+        "DSC00738.ARW",
+        "DSC00739.ARW",
+        "DSC00740.ARW",
+        "DSC00741.ARW",
+        "DSC00742.ARW",
+        "DSC00743.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:12:24.610000",
+      "last_timestamp": "2026-08-30T20:13:34.145000",
+      "duration_seconds": 69.535,
+      "inter_frame_gap_seconds": {
+        "median": 2.225,
+        "maximum": 2.389
+      },
+      "brightness_value_ev": {
+        "mean": -1.202783203125,
+        "minimum": -1.334375,
+        "maximum": -1.08828125,
+        "range": 0.24609375
+      },
+      "file_size_bytes": {
+        "mean": 36816128.0,
+        "cv": 7.057005670622419e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 14,
+      "pass": 2,
+      "iso": 64,
+      "files": [
+        "DSC00744.ARW",
+        "DSC00745.ARW",
+        "DSC00746.ARW",
+        "DSC00747.ARW",
+        "DSC00748.ARW",
+        "DSC00749.ARW",
+        "DSC00750.ARW",
+        "DSC00751.ARW",
+        "DSC00752.ARW",
+        "DSC00753.ARW",
+        "DSC00754.ARW",
+        "DSC00755.ARW",
+        "DSC00756.ARW",
+        "DSC00757.ARW",
+        "DSC00758.ARW",
+        "DSC00759.ARW",
+        "DSC00760.ARW",
+        "DSC00761.ARW",
+        "DSC00762.ARW",
+        "DSC00763.ARW",
+        "DSC00764.ARW",
+        "DSC00765.ARW",
+        "DSC00766.ARW",
+        "DSC00767.ARW",
+        "DSC00768.ARW",
+        "DSC00769.ARW",
+        "DSC00770.ARW",
+        "DSC00771.ARW",
+        "DSC00772.ARW",
+        "DSC00773.ARW",
+        "DSC00774.ARW",
+        "DSC00775.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:13:51.297000",
+      "last_timestamp": "2026-08-30T20:15:01.029000",
+      "duration_seconds": 69.732,
+      "inter_frame_gap_seconds": {
+        "median": 2.226,
+        "maximum": 2.36
+      },
+      "brightness_value_ev": {
+        "mean": -1.1872802734375,
+        "minimum": -1.334375,
+        "maximum": -0.9984375,
+        "range": 0.3359375000000001
+      },
+      "file_size_bytes": {
+        "mean": 35704576.0,
+        "cv": 3.9920588242932376e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 15,
+      "pass": 2,
+      "iso": 500,
+      "files": [
+        "DSC00776.ARW",
+        "DSC00777.ARW",
+        "DSC00778.ARW",
+        "DSC00779.ARW",
+        "DSC00780.ARW",
+        "DSC00781.ARW",
+        "DSC00782.ARW",
+        "DSC00783.ARW",
+        "DSC00784.ARW",
+        "DSC00785.ARW",
+        "DSC00786.ARW",
+        "DSC00787.ARW",
+        "DSC00788.ARW",
+        "DSC00789.ARW",
+        "DSC00790.ARW",
+        "DSC00791.ARW",
+        "DSC00792.ARW",
+        "DSC00793.ARW",
+        "DSC00794.ARW",
+        "DSC00795.ARW",
+        "DSC00796.ARW",
+        "DSC00797.ARW",
+        "DSC00798.ARW",
+        "DSC00799.ARW",
+        "DSC00800.ARW",
+        "DSC00801.ARW",
+        "DSC00802.ARW",
+        "DSC00803.ARW",
+        "DSC00804.ARW",
+        "DSC00805.ARW",
+        "DSC00806.ARW",
+        "DSC00807.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:15:20.303000",
+      "last_timestamp": "2026-08-30T20:16:29.570000",
+      "duration_seconds": 69.267,
+      "inter_frame_gap_seconds": {
+        "median": 2.225,
+        "maximum": 2.374
+      },
+      "brightness_value_ev": {
+        "mean": -1.2993408203125,
+        "minimum": -1.38125,
+        "maximum": -1.21328125,
+        "range": 0.16796875
+      },
+      "file_size_bytes": {
+        "mean": 39016192.0,
+        "cv": 6.395240602340419e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 16,
+      "pass": 2,
+      "iso": 80,
+      "files": [
+        "DSC00808.ARW",
+        "DSC00809.ARW",
+        "DSC00810.ARW",
+        "DSC00811.ARW",
+        "DSC00812.ARW",
+        "DSC00813.ARW",
+        "DSC00814.ARW",
+        "DSC00815.ARW",
+        "DSC00816.ARW",
+        "DSC00817.ARW",
+        "DSC00818.ARW",
+        "DSC00819.ARW",
+        "DSC00820.ARW",
+        "DSC00821.ARW",
+        "DSC00822.ARW",
+        "DSC00823.ARW",
+        "DSC00824.ARW",
+        "DSC00825.ARW",
+        "DSC00826.ARW",
+        "DSC00827.ARW",
+        "DSC00828.ARW",
+        "DSC00829.ARW",
+        "DSC00830.ARW",
+        "DSC00831.ARW",
+        "DSC00832.ARW",
+        "DSC00833.ARW",
+        "DSC00834.ARW",
+        "DSC00835.ARW",
+        "DSC00836.ARW",
+        "DSC00837.ARW",
+        "DSC00838.ARW",
+        "DSC00839.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:16:46.989000",
+      "last_timestamp": "2026-08-30T20:17:56.884000",
+      "duration_seconds": 69.895,
+      "inter_frame_gap_seconds": {
+        "median": 2.224,
+        "maximum": 2.373
+      },
+      "brightness_value_ev": {
+        "mean": -1.06533203125,
+        "minimum": -1.25625,
+        "maximum": -0.8890625,
+        "range": 0.3671875000000001
+      },
+      "file_size_bytes": {
+        "mean": 36125056.0,
+        "cv": 7.42392713658047e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    },
+    {
+      "group_index": 17,
+      "pass": 2,
+      "iso": 320,
+      "files": [
+        "DSC00840.ARW",
+        "DSC00841.ARW",
+        "DSC00842.ARW",
+        "DSC00843.ARW",
+        "DSC00844.ARW",
+        "DSC00845.ARW",
+        "DSC00846.ARW",
+        "DSC00847.ARW",
+        "DSC00848.ARW",
+        "DSC00849.ARW",
+        "DSC00850.ARW",
+        "DSC00851.ARW",
+        "DSC00852.ARW",
+        "DSC00853.ARW",
+        "DSC00854.ARW",
+        "DSC00855.ARW",
+        "DSC00856.ARW",
+        "DSC00857.ARW",
+        "DSC00858.ARW",
+        "DSC00859.ARW",
+        "DSC00860.ARW",
+        "DSC00861.ARW",
+        "DSC00862.ARW",
+        "DSC00863.ARW",
+        "DSC00864.ARW",
+        "DSC00865.ARW",
+        "DSC00866.ARW",
+        "DSC00867.ARW",
+        "DSC00868.ARW",
+        "DSC00869.ARW",
+        "DSC00870.ARW",
+        "DSC00871.ARW"
+      ],
+      "first_timestamp": "2026-08-30T20:18:11.453000",
+      "last_timestamp": "2026-08-30T20:19:20.929000",
+      "duration_seconds": 69.476,
+      "inter_frame_gap_seconds": {
+        "median": 2.221,
+        "maximum": 2.4
+      },
+      "brightness_value_ev": {
+        "mean": -1.3572021484375,
+        "minimum": -1.428125,
+        "maximum": -1.271875,
+        "range": 0.15625
+      },
+      "file_size_bytes": {
+        "mean": 37896704.0,
+        "cv": 7.020214846192945e-05
+      },
+      "focus_metadata": {
+        "FocusDistance2": [
+          "0.273841307296975"
+        ]
+      }
+    }
+  ],
+  "light_shift_ev_pass2_minus_pass1": {
+    "50": -1.020263671875,
+    "64": -0.9643554687500001,
+    "80": -0.9400634765625001,
+    "100": -0.9466552734375001,
+    "200": -1.03173828125,
+    "320": -1.10791015625,
+    "400": -1.1085205078125,
+    "500": -1.08203125,
+    "640": -1.077880859375
+  },
+  "focus_numeric_tags_present": [
+    "FocusDistance2"
+  ],
+  "focus_numeric_values": {
+    "FocusDistance2": [
+      "0.273841307296975"
+    ]
+  },
+  "image_stabilization_values": [
+    "1"
+  ],
+  "image_stabilization_labels": [
+    "On"
+  ],
+  "image_stabilization_tag_count": 576,
+  "metadata_limit": "Manual focus and invariant reported focus tags do not prove the physical focus ring or subject stayed fixed; pixel stability is a separate gate."
+}

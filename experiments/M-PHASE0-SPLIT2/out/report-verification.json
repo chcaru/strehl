@@ -1,0 +1,19 @@
+{
+  "status": "VERIFIED",
+  "claims_checked": 26,
+  "capture_files": 576,
+  "groups": 18,
+  "shift_counts": {
+    "(0, 0)": 1,
+    "(1, 0)": 21,
+    "(2, 0)": 10
+  },
+  "all_gate_methods_agree": true,
+  "total_plants_red": 14,
+  "measurement_file_absent": true,
+  "commission": {
+    "clean_exit": 0,
+    "planted_report_value_exit": 1,
+    "plant_went_red": true
+  }
+}

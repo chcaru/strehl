@@ -95,12 +95,13 @@ def validate(rows: list[dict[str, object]]) -> dict[str, object]:
     models = {str(row.get("Model", "")).strip() for row in rows}
     if models != {"ILCE-7CM2"}:
         raise ValueError(f"camera model varies: {models}")
-    focus_modes = {
-        str(row.get("FocusMode", "")).strip().lower().replace(" ", "")
-        for row in rows
-    }
-    if focus_modes not in ({"manual"}, {"manualfocus"}, {"mf"}):
-        raise ValueError(f"focus mode is not fixed manual focus: {focus_modes}")
+    focus_mode_codes = {str(row.get("FocusMode", "")).strip() for row in rows}
+    # ExifTool's numeric (-n) Sony FocusMode value 0 is Manual. Keep accepting
+    # the printed label so the synthetic validator remains independent of the
+    # ExifTool representation.
+    focus_modes = {value.lower().replace(" ", "") for value in focus_mode_codes}
+    if focus_modes not in ({"0"}, {"manual"}, {"manualfocus"}, {"mf"}):
+        raise ValueError(f"focus mode is not fixed manual focus: {focus_mode_codes}")
 
     times = [timestamp(row) for row in rows]
     if any(right <= left for left, right in zip(times, times[1:])):
@@ -207,6 +208,24 @@ def validate(rows: list[dict[str, object]]) -> dict[str, object]:
     }
     if any(len(values) > 1 for values in focus_variation.values()):
         raise ValueError(f"numeric focus metadata varies: {focus_variation}")
+    stabilization_rows = [
+        row for row in rows if "ImageStabilization" in row
+    ]
+    if stabilization_rows and len(stabilization_rows) != len(rows):
+        raise ValueError(
+            f"ImageStabilization is present on only "
+            f"{len(stabilization_rows)}/{len(rows)} files"
+        )
+    stabilization_values = sorted(
+        {
+            str(row["ImageStabilization"])
+            for row in stabilization_rows
+        }
+    )
+    stabilization_labels = [
+        {"0": "Off", "1": "On"}.get(value, f"Unknown({value})")
+        for value in stabilization_values
+    ]
 
     return {
         "status": "METADATA_VALIDATED",
@@ -218,13 +237,16 @@ def validate(rows: list[dict[str, object]]) -> dict[str, object]:
         "fixed": {
             field: expected for field, expected in fixed_numeric.items()
         }
-        | {"FocusMode": next(iter(focus_modes))},
+        | {"FocusMode": "Manual", "FocusModeExifToolNumeric": next(iter(focus_mode_codes))},
         "iso_counts": dict(sorted(iso_counts.items())),
         "pass_iso_order": pass_isos,
         "groups": groups,
         "light_shift_ev_pass2_minus_pass1": light_shifts,
         "focus_numeric_tags_present": focus_tags,
         "focus_numeric_values": focus_variation,
+        "image_stabilization_values": stabilization_values,
+        "image_stabilization_labels": stabilization_labels,
+        "image_stabilization_tag_count": len(stabilization_rows),
         "metadata_limit": (
             "Manual focus and invariant reported focus tags do not prove the "
             "physical focus ring or subject stayed fixed; pixel stability is a separate gate."
@@ -253,7 +275,7 @@ def synthetic_rows() -> list[dict[str, object]]:
                         "FocalLength": 200,
                         "BitsPerSample": 14,
                         "Model": "ILCE-7CM2",
-                        "FocusMode": "Manual",
+                        "FocusMode": 0,
                         "FocusPosition": "fixed",
                         "DateTimeOriginal": (
                             datetime(2026, 1, 1)
@@ -281,7 +303,7 @@ def commission() -> dict[str, object]:
         elif name == "M2":
             rows[17]["ExposureTime"] = 0.8
         elif name == "M3":
-            rows[33]["FocusMode"] = "Continuous AF"
+            rows[33]["FocusMode"] = 2
         else:
             for row in rows:
                 row["BrightnessValue"] = 2.0
@@ -323,6 +345,7 @@ def read_metadata() -> list[dict[str, object]]:
         "BrightnessValue",
         "WhiteBalance",
         "DriveMode",
+        "ImageStabilization",
     )
     command = ["exiftool", "-json", "-n", "-api", "LargeFileSupport=1"]
     command.extend(f"-{field}" for field in fields)
