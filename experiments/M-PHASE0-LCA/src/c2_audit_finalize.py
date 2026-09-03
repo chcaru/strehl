@@ -45,9 +45,11 @@ def file_sha256(path: Path) -> str:
 def classify_retraction(
     relative: str,
     tokens: list[str],
+    line: str,
     context: str,
 ) -> str:
-    lowered = context.lower()
+    lowered_line = line.lower()
+    lowered_context = context.lower()
     target_terms = (
         "axial",
         "longitudinal",
@@ -58,16 +60,46 @@ def classify_retraction(
     )
     negations = (
         "does not retract",
+        "do not retract",
+        "never retract",
         "not retract",
         "not a retraction",
+        "no retraction",
+        "does not withdraw",
+        "do not withdraw",
+        "never withdraw",
         "is not withdrawn",
+        "not withdrawn",
         "remain live",
         "remains live",
     )
+    action_token = any(
+        token in tokens for token in ("RETRACT", "WITHDRAW")
+    )
+    target_on_line = any(term in lowered_line for term in target_terms)
+    negated_on_line = any(term in lowered_line for term in negations)
+    if action_token and target_on_line and not negated_on_line:
+        return "AXIAL_OR_FORFEIT_RETRACTION"
+    banner = lowered_line.strip(" #*:_-") in {
+        "retract",
+        "retracted",
+        "retraction",
+        "withdraw",
+        "withdrawal",
+        "withdrawn",
+    }
+    following_target_lines = [
+        candidate
+        for candidate in lowered_context.splitlines()[1:]
+        if any(term in candidate for term in target_terms)
+    ]
     if (
-        any(token in tokens for token in ("RETRACT", "WITHDRAW"))
-        and any(term in lowered for term in target_terms)
-        and not any(term in lowered for term in negations)
+        action_token
+        and banner
+        and any(
+            not any(negation in candidate for negation in negations)
+            for candidate in following_target_lines
+        )
     ):
         return "AXIAL_OR_FORFEIT_RETRACTION"
     if relative.endswith("docs/research/M107-chroma.md"):
@@ -205,8 +237,8 @@ def complete_retraction_audit() -> dict:
                 if token in line.upper()
             ]
             if tokens:
-                first = max(0, line_number - 3)
-                last = min(len(lines), line_number + 2)
+                first = line_number - 1
+                last = min(len(lines), line_number + 3)
                 context = "\n".join(lines[first:last])
                 hits.append(
                     {
@@ -215,7 +247,7 @@ def complete_retraction_audit() -> dict:
                         "tokens": tokens,
                         "text": line.strip(),
                         "classification": classify_retraction(
-                            relative, tokens, context
+                            relative, tokens, line, context
                         ),
                     }
                 )
@@ -518,12 +550,34 @@ def main() -> int:
         "experiments/M114-ca-verify/RETRACTION.txt",
         ["RETRACT"],
         "RETRACT the native-CFA axial peak and green-election forfeit.",
+        "RETRACT the native-CFA axial peak and green-election forfeit.",
+    )
+    planted_nearby_negation = classify_retraction(
+        "docs/research/M107-chroma.md",
+        ["RETRACT"],
+        "RETRACT the native-CFA axial peak and green-election forfeit.",
+        (
+            "RETRACT the native-CFA axial peak and green-election forfeit.\n"
+            "This does not retract the lateral epsilon."
+        ),
+    )
+    planted_explicit_negation = classify_retraction(
+        "docs/research/M107-chroma.md",
+        ["WITHDRAW"],
+        "DO NOT WITHDRAW the native-CFA axial peak.",
+        "DO NOT WITHDRAW the native-CFA axial peak.",
     )
     plants.append(
         {
             "name": "FP5_detect_explicit_axial_forfeit_retraction",
-            "red": planted_classification
-            == "AXIAL_OR_FORFEIT_RETRACTION",
+            "red": (
+                planted_classification
+                == "AXIAL_OR_FORFEIT_RETRACTION"
+                and planted_nearby_negation
+                == "AXIAL_OR_FORFEIT_RETRACTION"
+                and planted_explicit_negation
+                != "AXIAL_OR_FORFEIT_RETRACTION"
+            ),
         }
     )
     verification = {
