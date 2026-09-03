@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "description": "Separately fixed answer for c2-audit-gain-input.json.",
+  "absolute_tolerance": 1e-12,
+  "peaks": {
+    "R": 3.0,
+    "G1": 3.5,
+    "G2": 4.5,
+    "B": 3.0833333333333335
+  },
+  "offsets": {
+    "delta_r": -1.0,
+    "delta_b": -0.9166666666666665,
+    "delta_null": -1.0
+  },
+  "forfeit": {
+    "R": 0.4375,
+    "B": 0.3142857142857143,
+    "G1": 0.0
+  }
+}
