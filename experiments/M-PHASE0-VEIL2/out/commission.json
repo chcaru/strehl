@@ -1,0 +1,164 @@
+{
+  "all_plants_red": true,
+  "controls_passed": 8,
+  "controls_total": 8,
+  "plants_red": 8,
+  "plants_total": 8,
+  "rows": [
+    {
+      "control": {
+        "expand_max_abs": 1.9073486328125e-06,
+        "pass": true,
+        "reduce_max_abs": 9.5367431640625e-07,
+        "theta_ladder": {
+          "0.0": -4.47029933124322e-07,
+          "0.25": 0.24999701980044584,
+          "0.5": 0.49999478465078023,
+          "0.75": 0.749991804451226,
+          "1.0": 0.9999883772217387
+        }
+      },
+      "control_pass": true,
+      "id": "C1-known-theta",
+      "plant": {
+        "pass": false,
+        "theta": -4.47029933124322e-07
+      },
+      "plant_red": true,
+      "reading": "analytic theta and slow REDUCE"
+    },
+    {
+      "control": {
+        "denominator": 0.40000486373901367,
+        "pass": true
+      },
+      "control_pass": true,
+      "id": "C2-layer-sign",
+      "plant": {
+        "denominator": -0.40000486373901367,
+        "pass": false
+      },
+      "plant_red": true,
+      "reading": 0.40000486373901367
+    },
+    {
+      "control": {
+        "margin": 0.9999999950670088,
+        "pass": true,
+        "projection": 0.9999996274809739
+      },
+      "control_pass": true,
+      "id": "C3-detail-not-blur",
+      "plant": {
+        "margin": 0.9999999948157997,
+        "pass": false,
+        "projection": 3.725289687865795e-07
+      },
+      "plant_red": true,
+      "reading": "sigma=1.5 at full effect"
+    },
+    {
+      "control": {
+        "anchor_effects": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_anchor_fraction": 0.0,
+        "pass": true,
+        "target_effect": 0.10000000894069672
+      },
+      "control_pass": true,
+      "id": "C4-tone-locality",
+      "plant": {
+        "anchor_effects": [
+          0.11355635523796082,
+          0.11355635523796082,
+          0.11355635523796082
+        ],
+        "max_anchor_fraction": 1.0,
+        "pass": false,
+        "target_effect": 0.11355635523796082
+      },
+      "plant_red": true,
+      "reading": 1.0
+    },
+    {
+      "control": {
+        "median": 0.0,
+        "p95_p05": 0.0,
+        "pass": true
+      },
+      "control_pass": true,
+      "id": "C5-paper-null",
+      "plant": {
+        "median": 0.02743464708328247,
+        "p95_p05": 0.015683650970458984,
+        "pass": false
+      },
+      "plant_red": true,
+      "reading": 0.02743464708328247
+    },
+    {
+      "control": {
+        "disagreement_px": 0.07071067811865475,
+        "pass": true
+      },
+      "control_pass": true,
+      "id": "C6-geometry",
+      "plant": {
+        "disagreement_px": 1.0,
+        "pass": false
+      },
+      "plant_red": true,
+      "reading": 1.0
+    },
+    {
+      "control": {
+        "p95_p05_dn": 1.7763568394002505e-14,
+        "pass": true,
+        "plane": [
+          17.00000000000003,
+          0.030000000000000034,
+          -0.019999999999999997
+        ]
+      },
+      "control_pass": true,
+      "id": "C7-flat-wander",
+      "plant": {
+        "p95_p05_dn": 574.9665442457706,
+        "pass": false,
+        "plane": [
+          296.42270058708425,
+          0.030000000000000235,
+          -0.01999999999999971
+        ]
+      },
+      "plant_red": true,
+      "reading": 574.9665442457706
+    },
+    {
+      "control": {
+        "distinct_contents_observed": true,
+        "pass": true,
+        "peak_count_diagnostic_only": 2,
+        "separated_frame_runs": true
+      },
+      "control_pass": true,
+      "id": "C8-layer-truth",
+      "plant": {
+        "distinct_contents_observed": false,
+        "pass": false,
+        "peak_count_diagnostic_only": 2,
+        "separated_frame_runs": false
+      },
+      "plant_red": true,
+      "reading": "same peak count, opposite predicate"
+    }
+  ],
+  "status": "COMMISSIONED",
+  "versions": {
+    "numpy": "2.4.4",
+    "opencv": "4.13.0"
+  }
+}

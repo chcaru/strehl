@@ -1,0 +1,10 @@
+# Large reproducible product-path artifacts stay local. Their hashes, sizes,
+# commands, environment, and numerical reductions are committed under out/.
+out/renders/
+out/warpmaps/
+out/contact-sheets/
+out/cache/
+out/run-logs/
+__pycache__/
+src/__pycache__/
+
