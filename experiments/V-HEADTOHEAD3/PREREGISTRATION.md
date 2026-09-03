@@ -5,6 +5,13 @@ from any of the four renders below.  File dimensions, types, byte counts and
 hashes were inspected first for admissibility and provenance; no detail
 statistic or registration was measured.
 
+Amended at 2026-09-02T21:38-07:00, still before reading outcome pixels: the
+fixed 0.30 real-ROI correlation gate was replaced by an empirical shift-null
+gate.  The already-read prior report states that the admissible fork pair
+reaches only 0.0664 correlation at the corrected sign, so the fixed gate would
+have made the requested comparison impossible by construction.  No other term
+changed.
+
 ## Question and scope
 
 On the two same-bracket comparator renders that still exist, does strehl carry
@@ -75,10 +82,14 @@ the nearest native comparator crop of side `round(512/s)`.  Comparator band
 edges are multiplied by `s`, so both spectra describe the same scene
 frequencies.  Candidate strehl centres are a fixed 512-pixel grid, at least
 384 pixels from each edge.  A pair is admissible only when both crops are in
-bounds, the registered rank correlation is at least 0.30, registration
-improves correlation by at least 0.05 over no correction, and neither crop has
-more than 1.0% of samples at a container rail.  All exclusions and coverage
-are reported.
+bounds, its registered rank correlation exceeds the 99.9th percentile of 64
+fixed, non-overlapping toroidal-shift correlations for that ROI, registration
+improves correlation by at least 0.02 over no correction, and neither crop has
+more than 1.0% of samples at a container rail.  This null-calibrated gate is
+used instead of a fixed correlation threshold because the prior corpus already
+records only 0.0664 correlation for the fork pair even at the repaired sign;
+silently choosing 0.30 would preclude measuring that available comparator.
+All exclusions and coverage are reported.
 
 `integer_shift(reference, moving)` must return the **correction** `(-dy,-dx)`
 when the moving image was planted at displacement `(dy,dx)`.  It is
