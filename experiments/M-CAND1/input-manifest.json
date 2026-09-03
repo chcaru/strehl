@@ -1,0 +1,41 @@
+{
+  "corpus_root": "D:\\personal\\macro\\requests\\30-calibration-grid",
+  "selection_rule": "Lexicographic middle frame from each of the five development stacks present on 2026-09-03.",
+  "sessions": [
+    {
+      "session": "calibration-grid-1-sw1-cpl",
+      "file": "DSC00071.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl\\DSC00071.ARW",
+      "bytes": 49135616,
+      "sha256": "7120148b5ecd1b005599786ed073ac1b14649677615eaea668adcb3e7e457508"
+    },
+    {
+      "session": "calibration-grid-1-sw10-cpl",
+      "file": "DSC00018.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl\\DSC00018.ARW",
+      "bytes": 49119232,
+      "sha256": "4a7872a9cf4220824ac373a4d7bad7d97fc6ebc4a6efbede2aafb3a9d8c1ba38"
+    },
+    {
+      "session": "calibration-grid-1-sw4-cpl",
+      "file": "DSC00042.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl\\DSC00042.ARW",
+      "bytes": 49078272,
+      "sha256": "17eb6a8409917a360bbf77a5ecf257051cd153850f06dc07e6b9a78b300ecf81"
+    },
+    {
+      "session": "calibration-grid-2-sw10-cpl",
+      "file": "DSC00021.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl\\DSC00021.ARW",
+      "bytes": 49131520,
+      "sha256": "60c93b60ea709e2c477809539b8d004999103935c13ad43f75a93337e65c937f"
+    },
+    {
+      "session": "calibration-grid-2-sw4-cpl",
+      "file": "DSC00047.ARW",
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl\\DSC00047.ARW",
+      "bytes": 49106944,
+      "sha256": "0ad53b2a72c2ac070ebee22fb35d49a68e0c1b1af93d79116b011b1d5977510b"
+    }
+  ]
+}
