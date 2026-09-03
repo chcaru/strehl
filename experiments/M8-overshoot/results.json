@@ -1,0 +1,357 @@
+{
+  "aggregate": {
+    "m8_o": {
+      "denominator": 74173536,
+      "fraction": 0.013261441385240148,
+      "lower_violations": 976925,
+      "max_abs_signed_excess_linear": 1.0491852760314941,
+      "max_abs_signed_excess_u16_lsb": 68758.35706472397,
+      "max_upper_signed_excess_linear": 0.0037032901208461366,
+      "min_lower_signed_excess_linear": -1.0491852760314941,
+      "percent": 1.326144138524015,
+      "upper_violations": 6723,
+      "violations": 983648
+    },
+    "m8_r": {
+      "denominator": 6131678976,
+      "fraction": 0.010305688906307153,
+      "lower_violations": 32634423,
+      "max_abs_signed_excess": 586.2158203125,
+      "max_upper_signed_excess": 586.2158203125,
+      "min_lower_signed_excess": -240.0400390625,
+      "percent": 1.0305688906307153,
+      "upper_violations": 30556753,
+      "violations": 63191176
+    }
+  },
+  "commissioning": {
+    "bilinear_null": {
+      "denominator": 300,
+      "violations": 0
+    },
+    "catmull_hard_step": {
+      "denominator": 252,
+      "lower_violations": 14,
+      "max_upper_signed_excess": 0.0625,
+      "min_lower_signed_excess": -0.0625,
+      "upper_violations": 14,
+      "violations": 28
+    },
+    "checks": {
+      "bilinear_green": true,
+      "catmull_red": true,
+      "copy_exact": true,
+      "copy_green": true,
+      "hi_lo_both_found": true
+    },
+    "copy_null": {
+      "copy_denominator": 252,
+      "copy_max_abs": 0.0,
+      "copy_violations": 0,
+      "denominator": 252,
+      "violations": 0
+    },
+    "explicit_hi_lo_plant": {
+      "denominator": 252,
+      "lower_violations": 1,
+      "max_upper_signed_excess": 3.0517578125e-05,
+      "min_lower_signed_excess": -3.0517578125e-05,
+      "upper_violations": 1,
+      "violations": 2
+    },
+    "passed": true
+  },
+  "development_arms": {
+    "flat-et1s": {
+      "cover_scale": 0.9862,
+      "frames": 60,
+      "m8_o": {
+        "clamping_caveat": "Final clamping can erase M8-O evidence; a zero M8-O count is not a pass without the pre-clamp M8-R census.",
+        "denominator": 24724512,
+        "fraction": 0.0003058503237596762,
+        "lower_violations": 6344,
+        "max_abs_signed_excess_linear": 0.0011276316754630922,
+        "max_abs_signed_excess_u16_lsb": 73.89934185147375,
+        "max_upper_signed_excess_linear": 0.0011276316754630922,
+        "min_lower_signed_excess_linear": -0.000749496014083445,
+        "percent": 0.030585032375967623,
+        "quantisation_tolerance": 7.629510948348211e-06,
+        "tiff_sha256": "1B559A76D7ADC33262B5EEFB59E56462D70E62B375E665D6E9B56BC328D1B48E",
+        "unbracketed_samples": 0,
+        "upper_violations": 1218,
+        "violations": 7562
+      },
+      "m8_o_evidence": {
+        "manifest_coordinates": 7562,
+        "manifest_sha256": "8CE8C33802F6AB116FEF5E6D76F5C916ADC13633EC3EA10F51D2B885E8C92925",
+        "summary_sha256": "F159C80B6123044E1AEDBBA1037B0097CB8CD31BD620BF6786A60D58C12BAEE9"
+      },
+      "m8_o_normalization": {
+        "formula": "output_gain / frame_site_gain / sensor_range",
+        "frame_site_gain_ranges": {
+          "0": [
+            2.775390625,
+            2.775390625
+          ],
+          "1": [
+            1.0,
+            1.0
+          ],
+          "2": [
+            1.5205078125,
+            1.5205078125
+          ]
+        },
+        "output_gains": [
+          2.775390625,
+          1.0,
+          1.5205078125
+        ],
+        "sensor_range": 14848.0
+      },
+      "m8_r": {
+        "coverage_mismatches": 0,
+        "denominator": 1977960960,
+        "fraction": 0.011679500489231092,
+        "lower_violations": 11880280,
+        "max_abs_signed_excess": 129.3218994140625,
+        "max_upper_signed_excess": 129.3218994140625,
+        "min_lower_signed_excess": -86.11053466796875,
+        "percent": 1.1679500489231092,
+        "upper_violations": 11221316,
+        "violations": 23101596
+      },
+      "m8_r_evidence": {
+        "manifest_coordinates": 23101596,
+        "manifest_count": 240,
+        "manifest_index_sha256": "56022E183B536D644379B78B520890CAB02115B1F7F4D441D48A9291C3140920",
+        "summary_sha256": "E7C56D4B49BD49DE5E3F97501D4E81025BD12BA2C436691B33D49DBA3C1199CF"
+      },
+      "sites": 240
+    },
+    "flat-et2.5s": {
+      "cover_scale": 0.987,
+      "frames": 61,
+      "m8_o": {
+        "clamping_caveat": "Final clamping can erase M8-O evidence; a zero M8-O count is not a pass without the pre-clamp M8-R census.",
+        "denominator": 24724512,
+        "fraction": 0.000594066325758017,
+        "lower_violations": 12309,
+        "max_abs_signed_excess_linear": 0.0019104144038784576,
+        "max_abs_signed_excess_u16_lsb": 125.19900795817472,
+        "max_upper_signed_excess_linear": 0.0019104144038784576,
+        "min_lower_signed_excess_linear": -0.0018111848559233534,
+        "percent": 0.0594066325758017,
+        "quantisation_tolerance": 7.629510948348211e-06,
+        "tiff_sha256": "D7A1A1046BB3F6C14CB41DB825401A6A571FF1C9DD2FA116BED08331C6F52066",
+        "unbracketed_samples": 0,
+        "upper_violations": 2379,
+        "violations": 14688
+      },
+      "m8_o_evidence": {
+        "manifest_coordinates": 14688,
+        "manifest_sha256": "4E8FDB296477D8D8B9194FA1675C5844543941683BF709DD928AEFF1E1E89A18",
+        "summary_sha256": "FC550007B63CDDE687B9C0BAD052C56FEC6C8ED376213F37704674D24561D20B"
+      },
+      "m8_o_normalization": {
+        "formula": "output_gain / frame_site_gain / sensor_range",
+        "frame_site_gain_ranges": {
+          "0": [
+            2.7587890625,
+            2.7587890625
+          ],
+          "1": [
+            1.0,
+            1.0
+          ],
+          "2": [
+            1.5322265625,
+            1.5322265625
+          ]
+        },
+        "output_gains": [
+          2.7587890625,
+          1.0,
+          1.5322265625
+        ],
+        "sensor_range": 14848.0
+      },
+      "m8_r": {
+        "coverage_mismatches": 0,
+        "denominator": 2010926976,
+        "fraction": 0.010347911808011869,
+        "lower_violations": 10704150,
+        "max_abs_signed_excess": 273.181640625,
+        "max_upper_signed_excess": 273.181640625,
+        "min_lower_signed_excess": -119.3642578125,
+        "percent": 1.034791180801187,
+        "upper_violations": 10104745,
+        "violations": 20808895
+      },
+      "m8_r_evidence": {
+        "manifest_coordinates": 20808895,
+        "manifest_count": 244,
+        "manifest_index_sha256": "DB04A5EE317F7226E736EBE7CA95E4721CE9D813C22E17DA7CED627A846F9546",
+        "summary_sha256": "89EF5E11DAE2C45EA5B39A67DE08FF5006A0A10D62D0BEEEFD4C41EAD1667C79"
+      },
+      "sites": 244
+    },
+    "flat-et6s": {
+      "cover_scale": 0.9859,
+      "frames": 65,
+      "m8_o": {
+        "clamping_caveat": "Final clamping can erase M8-O evidence; a zero M8-O count is not a pass without the pre-clamp M8-R census.",
+        "denominator": 24724512,
+        "fraction": 0.03888440750620275,
+        "lower_violations": 958272,
+        "max_abs_signed_excess_linear": 1.0491852760314941,
+        "max_abs_signed_excess_u16_lsb": 68758.35706472397,
+        "max_upper_signed_excess_linear": 0.0037032901208461366,
+        "min_lower_signed_excess_linear": -1.0491852760314941,
+        "percent": 3.888440750620275,
+        "quantisation_tolerance": 7.629510948348211e-06,
+        "tiff_sha256": "7884DD2B809361CE8B0B57FA291B7C1A68DFBEDD71CA8A076F4271CD32AA76BD",
+        "unbracketed_samples": 0,
+        "upper_violations": 3126,
+        "violations": 961398
+      },
+      "m8_o_evidence": {
+        "manifest_coordinates": 961398,
+        "manifest_sha256": "69D943773F4B17769B103C5EA1F9E6EAF0893813BF84689867D475761DB53927",
+        "summary_sha256": "9613FEDC683FB1356C8F9E24FB50B2F4EC811A3DCF4CAC2A53FA910D4DB590AB"
+      },
+      "m8_o_normalization": {
+        "formula": "output_gain / frame_site_gain / sensor_range",
+        "frame_site_gain_ranges": {
+          "0": [
+            2.7392578125,
+            2.7392578125
+          ],
+          "1": [
+            1.0,
+            1.0
+          ],
+          "2": [
+            1.560546875,
+            1.560546875
+          ]
+        },
+        "output_gains": [
+          2.7392578125,
+          1.0,
+          1.560546875
+        ],
+        "sensor_range": 14848.0
+      },
+      "m8_r": {
+        "coverage_mismatches": 0,
+        "denominator": 2142791040,
+        "fraction": 0.008997930568162166,
+        "lower_violations": 10049993,
+        "max_abs_signed_excess": 586.2158203125,
+        "max_upper_signed_excess": 586.2158203125,
+        "min_lower_signed_excess": -240.0400390625,
+        "percent": 0.8997930568162167,
+        "upper_violations": 9230692,
+        "violations": 19280685
+      },
+      "m8_r_evidence": {
+        "manifest_coordinates": 19280685,
+        "manifest_count": 260,
+        "manifest_index_sha256": "0F53CC2EE09E40CE7E64ED864DA396BD9580099747EB8C2CD867A7706D10A8A0",
+        "summary_sha256": "799F1B3C47705EDA9A5DC90946D5F52C44C07FF2BD82D5E148739FB8F27841D1"
+      },
+      "sites": 260
+    }
+  },
+  "identity": {
+    "copy_denominator": 32919152,
+    "copy_max_abs": 0.0,
+    "copy_violations": 0,
+    "evidence": {
+      "manifest_coordinates": 0,
+      "manifest_count": 0,
+      "manifest_index_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "summary_sha256": "97F2B9A702376311CBD99A3ABC1AF51A78018E2FAB2DDC37C97A0D9960F36E7A"
+    },
+    "m8_r": {
+      "coverage_mismatches": 0,
+      "denominator": 32919152,
+      "fraction": 0.0,
+      "lower_violations": 0,
+      "max_abs_signed_excess": 0.0,
+      "max_upper_signed_excess": 0.0,
+      "min_lower_signed_excess": 0.0,
+      "percent": 0.0,
+      "upper_violations": 0,
+      "violations": 0
+    }
+  },
+  "independence": {
+    "checker": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M8-overshoot\\checker.py",
+    "coordinate_reconstruction_function": "row_coordinates",
+    "forbidden_strehl_imports": [],
+    "imports": [
+      "__future__",
+      "argparse",
+      "ast",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "math",
+      "numpy",
+      "os",
+      "pathlib",
+      "struct",
+      "tifffile",
+      "typing"
+    ],
+    "independent": true,
+    "sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+    "support_reconstruction_function": "exact_support",
+    "tolerance_function": "tau_r"
+  },
+  "instrumentation": {
+    "checker_sha256": "B66C9465D5F644D66646A14722475987F187E32B02ED3B687997C18CE1670B89",
+    "source_after_sha256": {
+      "align_cmd.rs": "F00AE825D4ED850830AB78D49B551E211A95C62EACF448A56C4BCB7BB5FFBAFD",
+      "m8_trace.rs": "D6DB609AC725A89377EAF9B0272E8ED62E69AC12E840F6DD89416B7E044A2E0D",
+      "main.rs": "4B1A9680C40AE516702039B19057B4F02CBB7C578F2BBA677F277869FE49924B"
+    },
+    "source_before_sha256": {
+      "align_cmd.rs": "77498F962FE2C5F2373FD00AEFBBA6B7535C15594DA213271BE33624296E9CEE",
+      "hook_source": "D6DB609AC725A89377EAF9B0272E8ED62E69AC12E840F6DD89416B7E044A2E0D",
+      "main.rs": "CB55BC7894CB5F10DBE1AE29B9EAD893838829A4DC1040AB2A14F26EBF5EA582"
+    },
+    "value_only_trace_protocol": 2
+  },
+  "protocol": 2,
+  "read_only_inputs": {
+    "after_utc": "2026-09-03T17:18:41.2611247Z",
+    "before_utc": "2026-09-03T16:45:35.4970119Z",
+    "captures": [
+      {
+        "bytes": 2307440640.0,
+        "files": 60,
+        "metadata_sha256": "D372C7DC5B4E398C7BD47BBA82C0FF026D041E81B15ED7CB0CA7BE9C2CF41767",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et1s-sw4-cpl"
+      },
+      {
+        "bytes": 2470408192.0,
+        "files": 61,
+        "metadata_sha256": "7E3E597FA06CF8D0FCE81A5F1F6FBFADDBC25A2CDFD1C3174FB007C0A0402F14",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et2.5s-sw4-cpl"
+      },
+      {
+        "bytes": 2783895552.0,
+        "files": 65,
+        "metadata_sha256": "33524A87838D12491C0CB52EFBDC2D1196D3C2C255CB5FB2FB04AE3DDF019108",
+        "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-cpl\\flat-sw4-cpl\\flat-et6s-sw4-cpl"
+      }
+    ],
+    "method": "Get-ChildItem -Force -Recurse; SHA-256(path|length|mtime_utc_ticks|attributes)",
+    "unchanged": true
+  },
+  "reason": "M8-R and M8-O require exactly 0.0000%; all three development arms violate both bars.",
+  "verdict": "FAIL"
+}

@@ -1,0 +1,15 @@
+[workspace]
+
+[package]
+name = "m8-overshoot-fixture"
+version = "0.0.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+anyhow = "1.0"
+strehl-core = { path = "../../crates/strehl-core" }
+
+[profile.release]
+opt-level = 3
