@@ -10,9 +10,9 @@ from pathlib import Path
 from typing import Mapping
 
 
-SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-ADJUDICATION-1"
-AUTHOR_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-AUTHOR-1"
-CHECKER_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-CHECK-1"
+SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-ADJUDICATION-2"
+AUTHOR_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-AUTHOR-2"
+CHECKER_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-CHECK-2"
 STATUS = "MEASURED_PENDING_CROSSCHECK"
 LABEL = "PRESENTATION_SENSITIVITY_NOT_RESOLUTION"
 UNLICENSED = "UNLICENSED_GT_0.25"
@@ -49,11 +49,21 @@ EXPECTED_SITES = (
     (3584, 6144),
     (3072, 4608),
 )
-QUANTITIES = ("T0", "M40", "TS", "S40", "R0", "O40")
+QUANTITIES = ("T0", "M40", "TS", "O40")
+WITHHELD_QUANTITIES = ("S40", "R0")
 
 
 class StopAdjudication(RuntimeError):
     """The preregistered cross-implementation stop."""
+
+
+def _finite_number(value: object) -> bool:
+    if type(value) not in (int, float):
+        return False
+    try:
+        return math.isfinite(float(value))
+    except (OverflowError, ValueError):
+        return False
 
 
 def frozen_verdict(
@@ -70,12 +80,22 @@ def frozen_verdict(
 
 
 def _valid_interval(row: Mapping) -> bool:
+    if not isinstance(row, Mapping):
+        return False
     try:
-        n = int(row["n"])
+        raw_n = row["n"]
+        if type(raw_n) is not int:
+            return False
+        if not all(
+            _finite_number(row[name])
+            for name in ("point", "ci_low", "ci_high")
+        ):
+            return False
+        n = raw_n
         point = float(row["point"])
         low = float(row["ci_low"])
         high = float(row["ci_high"])
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError, OverflowError):
         return False
     return (
         n >= 12
@@ -87,7 +107,10 @@ def _valid_interval(row: Mapping) -> bool:
 
 
 def _hash_map(document: Mapping) -> dict[str, str]:
-    hashes = document.get("provenance", {}).get("hashes", {})
+    provenance = document.get("provenance", {})
+    if not isinstance(provenance, Mapping):
+        return {}
+    hashes = provenance.get("hashes", {})
     if not isinstance(hashes, Mapping):
         return {}
     return {
@@ -115,7 +138,24 @@ def _band_ok(document: Mapping) -> bool:
     }
 
 
+def _strict_sites(value: object) -> tuple[tuple[int, int], ...]:
+    if not isinstance(value, (list, tuple)):
+        return ()
+    rows: list[tuple[int, int]] = []
+    for site in value:
+        if (
+            not isinstance(site, (list, tuple))
+            or len(site) != 2
+            or any(type(coordinate) is not int for coordinate in site)
+        ):
+            return ()
+        rows.append((site[0], site[1]))
+    return tuple(rows)
+
+
 def adjudicate(author: Mapping, checker: Mapping) -> dict:
+    if not isinstance(author, Mapping) or not isinstance(checker, Mapping):
+        raise StopAdjudication("candidate documents must be JSON objects")
     failures: list[str] = []
     if author.get("schema") != AUTHOR_SCHEMA:
         failures.append("author schema")
@@ -131,7 +171,11 @@ def adjudicate(author: Mapping, checker: Mapping) -> dict:
             failures.append(f"{name} label")
         if document.get("unlicensed") != UNLICENSED:
             failures.append(f"{name} cap sentinel")
-        if document.get("provenance", {}).get("site_digest") != SITE_DIGEST:
+        provenance = document.get("provenance", {})
+        if (
+            not isinstance(provenance, Mapping)
+            or provenance.get("site_digest") != SITE_DIGEST
+        ):
             failures.append(f"{name} site digest")
         if _hash_map(document) != EXPECTED_HASHES:
             failures.append(f"{name} hashes")
@@ -139,15 +183,13 @@ def adjudicate(author: Mapping, checker: Mapping) -> dict:
             failures.append(f"{name} operator")
         if not _band_ok(document):
             failures.append(f"{name} band")
-        if int(document.get("retained_count", 0)) < 12:
+        retained_value = document.get("retained_count", 0)
+        retained_count = (
+            retained_value if type(retained_value) is int else 0
+        )
+        if retained_count < 12:
             failures.append(f"{name} retained sites")
-        try:
-            frozen_sites = tuple(
-                tuple(map(int, site))
-                for site in document.get("frozen_sites", ())
-            )
-        except (TypeError, ValueError):
-            frozen_sites = ()
+        frozen_sites = _strict_sites(document.get("frozen_sites", ()))
         if frozen_sites != EXPECTED_SITES:
             failures.append(f"{name} frozen sites")
         if document.get("bootstrap") != {
@@ -156,22 +198,48 @@ def adjudicate(author: Mapping, checker: Mapping) -> dict:
             "paired_site_indices": True,
         }:
             failures.append(f"{name} bootstrap")
-        if set(document.get("quantities", {})) != set(QUANTITIES):
+        quantities = document.get("quantities", {})
+        if not isinstance(quantities, Mapping):
+            quantities = {}
+        if set(quantities) != (
+            set(QUANTITIES) | set(WITHHELD_QUANTITIES)
+        ):
             failures.append(f"{name} quantities")
+        for quantity in WITHHELD_QUANTITIES:
+            if quantities.get(quantity) != UNLICENSED:
+                failures.append(f"{name} {quantity} licensing")
 
     geometry_comparison = {}
     for comparator in ("pmax0", "pmax40"):
         try:
             a_geometry = author["geometry"][comparator]
             c_geometry = checker["geometry"][comparator]
+            if not _finite_number(a_geometry["scale"]) or not _finite_number(
+                c_geometry["scale"]
+            ):
+                raise ValueError("invalid scale")
             a_scale = float(a_geometry["scale"])
             c_scale = float(c_geometry["scale"])
+            if (
+                not math.isfinite(a_scale)
+                or not math.isfinite(c_scale)
+                or a_scale <= 0.0
+                or c_scale <= 0.0
+            ):
+                raise ValueError("invalid scale")
             disagreement = max(a_scale / c_scale, c_scale / a_scale) - 1.0
             interior = all(
-                bool(row["coarse_interior"]) and bool(row["fine_interior"])
+                row["coarse_interior"] is True
+                and row["fine_interior"] is True
                 for row in (a_geometry, c_geometry)
             )
-        except (KeyError, TypeError, ValueError, ZeroDivisionError):
+        except (
+            KeyError,
+            TypeError,
+            ValueError,
+            OverflowError,
+            ZeroDivisionError,
+        ):
             failures.append(f"{comparator} geometry")
             continue
         geometry_comparison[comparator] = {
@@ -257,6 +325,9 @@ def adjudicate(author: Mapping, checker: Mapping) -> dict:
         "site_digest": SITE_DIGEST,
         "geometry_comparison": geometry_comparison,
         "quantity_comparison": quantity_comparison,
+        "withheld_quantities": {
+            name: UNLICENSED for name in WITHHELD_QUANTITIES
+        },
         "transfer_vs_synthetic": transfer_comparison,
         "unlicensed": UNLICENSED,
         "verdict": author_verdict,
@@ -275,11 +346,12 @@ def _fixture(schema: str) -> dict:
             ("T0", 1.20, 1.10, 1.30),
             ("M40", 1.10, 1.01, 1.20),
             ("TS", 1.15, 1.08, 1.22),
-            ("S40", 0.98, 0.90, 1.06),
-            ("R0", 0.99, 0.91, 1.07),
             ("O40", 1.09, 1.02, 1.16),
         )
     }
+    quantities.update(
+        {name: UNLICENSED for name in WITHHELD_QUANTITIES}
+    )
     return {
         "schema": schema,
         "status": STATUS,
@@ -363,8 +435,8 @@ def commission() -> dict:
         ),
         (
             "point_not_cross_contained",
-            lambda a, c: c["quantities"]["R0"].update(
-                {"point": 1.08, "ci_low": 1.06, "ci_high": 1.20}
+            lambda a, c: c["quantities"]["O40"].update(
+                {"point": 1.18, "ci_low": 1.15, "ci_high": 1.30}
             ),
         ),
         (
@@ -420,6 +492,54 @@ def commission() -> dict:
         (
             "above_cap_number",
             lambda a, c: c.__setitem__("unlicensed", 0.28125),
+        ),
+        (
+            "withheld_quantity_number",
+            lambda a, c: c["quantities"].__setitem__("R0", 0.99),
+        ),
+        (
+            "null_quantities",
+            lambda a, c: c.__setitem__("quantities", None),
+        ),
+        (
+            "null_retained_count",
+            lambda a, c: c.__setitem__("retained_count", None),
+        ),
+        (
+            "infinite_retained_count",
+            lambda a, c: c.__setitem__("retained_count", float("inf")),
+        ),
+        (
+            "infinite_interval_count",
+            lambda a, c: c["quantities"]["T0"].__setitem__(
+                "n",
+                float("inf"),
+            ),
+        ),
+        (
+            "negative_scale",
+            lambda a, c: c["geometry"]["pmax0"].__setitem__(
+                "scale",
+                -1.002,
+            ),
+        ),
+        (
+            "nan_scale",
+            lambda a, c: c["geometry"]["pmax0"].__setitem__(
+                "scale",
+                float("nan"),
+            ),
+        ),
+        (
+            "fractional_site",
+            lambda a, c: c["frozen_sites"][0].__setitem__(0, 2048.75),
+        ),
+        (
+            "string_interior",
+            lambda a, c: c["geometry"]["pmax0"].__setitem__(
+                "coarse_interior",
+                "false",
+            ),
         ),
         (
             "too_few_sites",

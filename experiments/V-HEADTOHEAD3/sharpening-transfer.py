@@ -42,8 +42,8 @@ from ordinal import (
 )
 
 
-SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-AUTHOR-1"
-COMMISSION_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-COMMISSION-1"
+SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-AUTHOR-2"
+COMMISSION_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-COMMISSION-2"
 LABEL = "PRESENTATION_SENSITIVITY_NOT_RESOLUTION"
 USM_SIGMA = 1.0
 USM_AMOUNT = 0.5
@@ -249,7 +249,6 @@ def measure_site(
     pmax40: np.ndarray,
     strehl: np.ndarray,
     centre: Sequence[int],
-    geometry0: Mapping,
     geometry40: Mapping,
 ) -> tuple[dict[str, float], dict]:
     p0, p40, pmax_correction = _registered_pmax_pair(
@@ -257,47 +256,27 @@ def measure_site(
         pmax40,
         centre,
     )
-    s40, p40s, strehl40_correction = _strehl_pair(
+    s40, _p40s, strehl40_correction = _strehl_pair(
         strehl,
         pmax40,
         centre,
         geometry40,
-    )
-    s0, p0s, strehl0_correction = _strehl_pair(
-        strehl,
-        pmax0,
-        centre,
-        geometry0,
     )
     q_p0 = _required_q25("pmax0", p0)
     q_p40 = _required_q25("pmax40", p40)
     q_usm_p0 = _required_q25("usm_pmax0", usm05(p0))
     q_s40 = _required_q25("strehl40", s40)
     q_usm_s40 = _required_q25("usm_strehl", usm05(s40))
-    q_p40s = _required_q25(
-        "pmax40_for_strehl",
-        p40s,
-        float(geometry40["scale"]),
-    )
-    q_s0 = _required_q25("strehl0", s0)
-    q_p0s = _required_q25(
-        "pmax0_for_strehl",
-        p0s,
-        float(geometry0["scale"]),
-    )
     values = {
         "T0": math.log(q_usm_p0 / q_p0),
         "M40": math.log(q_usm_p0 / q_p40),
         "TS": math.log(q_usm_s40 / q_s40),
-        "S40": math.log(q_usm_s40 / q_p40s),
-        "R0": math.log(q_s0 / q_p0s),
         "O40": math.log(q_p40 / q_p0),
     }
     return values, {
         "centre": list(map(int, centre)),
         "pmax40_to_pmax0": list(pmax_correction),
         "strehl_to_pmax40": list(strehl40_correction),
-        "strehl_to_pmax0": list(strehl0_correction),
     }
 
 
@@ -334,7 +313,7 @@ def outcome() -> dict:
     strehl = green_memmap(sc.STREHL)
     logs = {
         name: []
-        for name in ("T0", "M40", "TS", "S40", "R0", "O40")
+        for name in ("T0", "M40", "TS", "O40")
     }
     retained = []
     rejected = []
@@ -345,7 +324,6 @@ def outcome() -> dict:
                 pmax40,
                 strehl,
                 centre,
-                geometry0,
                 geometry40,
             )
         except ValueError as exc:
@@ -395,7 +373,11 @@ def outcome() -> dict:
         "retained_count": len(retained),
         "retained_sites": retained,
         "rejected_sites": rejected,
-        "quantities": summaries,
+        "quantities": {
+            **summaries,
+            "S40": sc.UNLICENSED,
+            "R0": sc.UNLICENSED,
+        },
         "transfer_vs_synthetic": {
             "synthetic_reference": SYNTHETIC_TRANSFER,
             "T0_over_synthetic": {

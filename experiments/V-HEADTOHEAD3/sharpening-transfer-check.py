@@ -51,8 +51,8 @@ from skimage.registration import phase_cross_correlation
 from skimage.transform import resize
 
 
-SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-CHECK-1"
-COMMISSION_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-COMMISSION-1"
+SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-CHECK-2"
+COMMISSION_SCHEMA = "V-HEADTOHEAD3-SHARPENING-TRANSFER-COMMISSION-2"
 PRESENTATION_LABEL = "PRESENTATION_SENSITIVITY_NOT_RESOLUTION"
 UNLICENSED = "UNLICENSED_GT_0.25"
 
@@ -767,50 +767,27 @@ def measure_site(
     pmax40: np.ndarray,
     strehl: np.ndarray,
     centre: Sequence[int],
-    geometry0: Mapping[str, object],
     geometry40: Mapping[str, object],
 ) -> tuple[dict[str, float], dict]:
     p0, p40, pmax_diagnostic = registered_pmax_pair(
         pmax0, pmax40, centre
     )
-    s40, p40s, strehl40_diagnostic = registered_strehl_pair(
+    s40, _p40s, strehl40_diagnostic = registered_strehl_pair(
         strehl,
         pmax40,
         centre,
         geometry40,
         "strehl_to_pmax40",
     )
-    s0, p0s, strehl0_diagnostic = registered_strehl_pair(
-        strehl,
-        pmax0,
-        centre,
-        geometry0,
-        "strehl_to_pmax0",
-    )
-
     q_p0 = _required_q25("pmax0", p0)
     q_p40 = _required_q25("pmax40", p40)
     q_usm_p0 = _required_q25("usm_pmax0", usm05(p0))
     q_s40 = _required_q25("strehl_for_pmax40", s40)
     q_usm_s40 = _required_q25("usm_strehl", usm05(s40))
-    q_p40s = _required_q25(
-        "pmax40_for_strehl",
-        p40s,
-        float(geometry40["scale"]),
-    )
-    q_s0 = _required_q25("strehl_for_pmax0", s0)
-    q_p0s = _required_q25(
-        "pmax0_for_strehl",
-        p0s,
-        float(geometry0["scale"]),
-    )
-
     logs = {
         "T0": math.log(q_usm_p0) - math.log(q_p0),
         "M40": math.log(q_usm_p0) - math.log(q_p40),
         "TS": math.log(q_usm_s40) - math.log(q_s40),
-        "S40": math.log(q_usm_s40) - math.log(q_p40s),
-        "R0": math.log(q_s0) - math.log(q_p0s),
         "O40": math.log(q_p40) - math.log(q_p0),
     }
     if not all(np.isfinite(value) for value in logs.values()):
@@ -819,7 +796,6 @@ def measure_site(
         "centre": list(map(int, centre)),
         "pmax40_to_pmax0": pmax_diagnostic,
         "strehl_to_pmax40": strehl40_diagnostic,
-        "strehl_to_pmax0": strehl0_diagnostic,
     }
 
 
@@ -921,7 +897,7 @@ def outcome() -> dict:
     pmax40 = green_memmap(PMAX40)
     strehl = green_memmap(STREHL)
     logs: dict[str, list[float]] = {
-        name: [] for name in ("T0", "M40", "TS", "S40", "R0", "O40")
+        name: [] for name in ("T0", "M40", "TS", "O40")
     }
     retained: list[dict] = []
     rejected: list[dict] = []
@@ -932,7 +908,6 @@ def outcome() -> dict:
                 pmax40,
                 strehl,
                 centre,
-                geometry0,
                 geometry40,
             )
         except SiteRejected as exc:
@@ -988,7 +963,11 @@ def outcome() -> dict:
         "retained_count": len(retained),
         "retained_sites": retained,
         "rejected_sites": rejected,
-        "quantities": summaries,
+        "quantities": {
+            **summaries,
+            "S40": UNLICENSED,
+            "R0": UNLICENSED,
+        },
         "transfer_vs_synthetic": _transfer_comparisons(summaries["T0"]),
         "unlicensed": UNLICENSED,
         "candidate_verdict": verdict,
