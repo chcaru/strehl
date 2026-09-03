@@ -11,6 +11,29 @@ the nominated captures.
 `requests\8-tilted-planar`, `requests\30-calibration-grid`,
 `flat-on-ruler-cpl`, and `dime-flat-narrow-slices-cpl`.
 
+### Amendment A1 — registered after the first commissioning RED, before measurement
+
+The first E8 run decoded one control frame and correctly went RED: Rust/rawler
+reports active `7032 x 4688`, while rawpy's `raw_image_visible` is
+`7028 x 4688`. Black agrees at 512; Rust exposes the usable white 15360 while
+rawpy exposes container white 16383. This exact four-column convention is also
+reported by the pre-existing M84 lane, so it is not silently reconciled by
+cropping one arm to the other.
+
+E8's original requirement that the two decoders "agree on active dimensions"
+is **superseded** by a stricter fixed-contract check: height must agree at 4688,
+rawpy width must equal Rust width minus exactly four, the two white semantics
+must retain `15360 <= 16383`, and all other registered fields must agree. The
+measurement coordinate system is rawpy-visible `7028 x 4688`, because that is
+the buffer the Python response operator actually reads. The planted dimension
+defect now mutates that fixed `-4` relation and must go RED.
+
+The complete failed reading is preserved as
+`out/commission-initial-red.json` (SHA-256
+`d1814a701433a799f1e83bad6e9e607115d16b7b16da7c55f39b3060c41c7267`).
+No focus response or image statistic had been computed when this amendment was
+written.
+
 ## 1. The authoritative question, and a correction to the dispatch summary
 
 The dispatch summary describes field curvature as potentially requiring a
@@ -293,10 +316,12 @@ and the named planted defect makes the same check RED.
 7. **E7, ladder verdict.** A fixed mock ladder containing a material positive
    rung and a negligible rung must return NOT ROBUST. Plant: inspect only the
    primary rung; the check must go RED.
-8. **E8, RAW contract and checker.** Rust `strehl probe --limit 1` and rawpy
-   must agree on camera, active dimensions, black, and usable/container white
-   semantics for one file; two rawpy reads must have byte-identical active
-   mosaics. Plant a wrong CFA/dimension in memory and require rejection.
+8. **E8, RAW contract and checker.** As superseded by Amendment A1, Rust
+   `strehl probe --limit 1` and rawpy must match the fixed decoder relation:
+   4688 rows in both, rawpy's visible width exactly four columns below Rust's
+   7032-column active area, black 512 in both, and usable/container whites
+   15360/16383. Two rawpy reads must have byte-identical visible mosaics. Plant
+   a wrong CFA/dimension relation in memory and require rejection.
    Separately, the final checker self-test changes the deciding number and
    verdict in an in-memory report string; both mutations must go RED.
 
