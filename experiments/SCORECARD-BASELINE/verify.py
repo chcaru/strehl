@@ -43,8 +43,19 @@ def main() -> int:
     measurements = OUT / "MEASUREMENTS.json"
     if measurements.exists():
         data = read_json(measurements)
+        geometry = read_json(OUT / "GEOMETRY-AUDIT.json")
+        rails = read_json(OUT / "RAIL-PREFLIGHT.json")
+        renders = read_json(OUT / "RENDER-MANIFEST.json")
         require(len(data["m1"]) == 2, "expected two M1 bee diagnostics")
         require(len(data["m2"]) == 2, "expected two M2 bee diagnostics")
+        require(len(renders["records"]) == 8, "expected eight frozen score renders")
+        require(
+            len({row["sha256"] for row in renders["records"]}) == 8,
+            "score render hashes are not all distinct",
+        )
+        require(geometry["commissioning"]["commissioned"], "geometry audit uncommissioned")
+        require(geometry["all_scale_invalid"], "a frozen arm unexpectedly passed scale")
+        require(rails["commissioning"]["commissioned"], "rail census uncommissioned")
         for row in data["m1"]:
             require(row["f_licensed"]["point"] <= 0.25, "unlicensed M1 detail escaped")
             require(row["formal_status"] == "UNMEASURED", "native diagnostic became formal")

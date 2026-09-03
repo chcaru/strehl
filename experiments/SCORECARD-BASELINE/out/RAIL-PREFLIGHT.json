@@ -1,0 +1,160 @@
+{
+  "commissioning": {
+    "commissioned": true,
+    "external_predicate": {
+      "high": "sample >= black + 0.98*(white-black)",
+      "low": "sample <= black + 0.02*(white-black)"
+    },
+    "high_rail_plant_went_red": true,
+    "low_rail_plant_went_red": true,
+    "null_stayed_green": true
+  },
+  "rows": [
+    {
+      "capture": "foam",
+      "frames": 100,
+      "high_recoverable_10000_possible": true,
+      "high_samples_across_frames": 617425,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 834366433,
+      "maximum_normalized": 1.0,
+      "minimum_normalized": -0.0025203200806502425,
+      "path": "D:\\personal\\macro\\foam",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "salt",
+      "frames": 255,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 1193,
+      "low_recoverable_10000_possible": false,
+      "low_samples_across_frames": 15,
+      "maximum_normalized": 1.0,
+      "minimum_normalized": 0.01877638460084431,
+      "path": "D:\\personal\\macro\\maldon-sea-salt-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "battery",
+      "frames": 30,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 1230,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 903692045,
+      "maximum_normalized": 1.0,
+      "minimum_normalized": -0.0013861760443576335,
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\flat-round-3V-battery-cpl\\flat-round-3V-battery-iso100-sw4-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "angled-ruler",
+      "frames": 299,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 0,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 9017810,
+      "maximum_normalized": 0.9314472938063134,
+      "minimum_normalized": 0.007119904227836935,
+      "path": "D:\\personal\\macro\\highly-angled-ruler-mm-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "calibration-grid-sw1",
+      "frames": 91,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 0,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 51051253,
+      "maximum_normalized": 0.5275029928800957,
+      "minimum_normalized": 0.0042215361350891566,
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw1-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "calibration-grid-1-sw4",
+      "frames": 55,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 0,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 25703467,
+      "maximum_normalized": 0.5336777770776888,
+      "minimum_normalized": 0.0042845441371054125,
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw4-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "calibration-grid-2-sw4",
+      "frames": 46,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 0,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 25558473,
+      "maximum_normalized": 0.530023312960746,
+      "minimum_normalized": 0.0042845441371054125,
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw4-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "calibration-grid-1-sw10",
+      "frames": 23,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 0,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 12740613,
+      "maximum_normalized": 0.5183668325877386,
+      "minimum_normalized": 0.004410560141137924,
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-1-sw10-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "calibration-grid-2-sw10",
+      "frames": 27,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 0,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 12780881,
+      "maximum_normalized": 0.5096717283094953,
+      "minimum_normalized": 0.004410560141137924,
+      "path": "D:\\personal\\macro\\requests\\30-calibration-grid\\calibration-grid-2-sw10-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "fabric-f5.6",
+      "frames": 210,
+      "high_recoverable_10000_possible": true,
+      "high_samples_across_frames": 14461915,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 433147692,
+      "maximum_normalized": 1.0,
+      "minimum_normalized": -0.0008191040262113289,
+      "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f5.6-sw5-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "fabric-f8",
+      "frames": 150,
+      "high_recoverable_10000_possible": true,
+      "high_samples_across_frames": 19724,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 866764614,
+      "maximum_normalized": 1.0,
+      "minimum_normalized": -0.0008821120282275849,
+      "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f8-sw5-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    },
+    {
+      "capture": "fabric-f11",
+      "frames": 109,
+      "high_recoverable_10000_possible": false,
+      "high_samples_across_frames": 82,
+      "low_recoverable_10000_possible": true,
+      "low_samples_across_frames": 1342352482,
+      "maximum_normalized": 1.0,
+      "minimum_normalized": -0.0016382080524226577,
+      "path": "D:\\personal\\macro\\requests\\7-aperture-pairs\\fabric-weave-f11-sw5-cpl",
+      "qualification_scope": "A false value proves underpower because recoverable unique output pixels cannot exceed total rail samples. A true value is necessary, not sufficient."
+    }
+  ],
+  "status": "INPUT_ONLY_NECESSARY_CONDITION",
+  "workers": 8
+}

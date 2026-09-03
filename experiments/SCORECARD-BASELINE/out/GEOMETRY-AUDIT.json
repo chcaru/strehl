@@ -1,0 +1,347 @@
+{
+  "all_scale_invalid": true,
+  "commissioning": {
+    "commissioned": true,
+    "identity_null": {
+      "anisotropy_percent": 1.2966960838411978e-09,
+      "correlation": 0.999999984424779,
+      "isotropic_scale": 1.0,
+      "matrix_downsampled": [
+        [
+          1.0,
+          -5.898987461699923e-12,
+          -4.171841205824478e-10
+        ],
+        [
+          -7.068108251462313e-12,
+          1.0,
+          -5.669563707400016e-10
+        ]
+      ],
+      "rotation_deg": -3.349284349719329e-11,
+      "scale_disagreement_percent": 0.0,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": true,
+      "singular_values": [
+        1.0000000000064835,
+        0.9999999999935165
+      ],
+      "translation_yx_fullres": [
+        -4.535650965920013e-09,
+        -3.3374729646595824e-09
+      ]
+    },
+    "null_stayed_green": true,
+    "plant_went_red": true,
+    "scale_rotation_plant": {
+      "anisotropy_percent": 0.007002265193167823,
+      "correlation": 0.9918302670454887,
+      "isotropic_scale": 1.003031401483839,
+      "matrix_downsampled": [
+        [
+          1.0030643939971924,
+          0.0004332344979047775,
+          0.03600315749645233
+        ],
+        [
+          -0.00041030257125385106,
+          1.0029982328414917,
+          -0.300657719373703
+        ]
+      ],
+      "rotation_deg": -0.024092523548595188,
+      "scale_disagreement_percent": 0.3031401483839069,
+      "scorecard_rotation_pass": false,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.003066413420849,
+        1.0029963907689172
+      ],
+      "translation_yx_fullres": [
+        -2.405261754989624,
+        0.28802525997161865
+      ]
+    },
+    "translation_null": {
+      "anisotropy_percent": 0.047303806212306565,
+      "correlation": 0.9868975980476621,
+      "isotropic_scale": 1.0000836321308366,
+      "matrix_downsampled": [
+        [
+          1.0002323389053345,
+          0.00028374703833833337,
+          0.3501555919647217
+        ],
+        [
+          8.41354631120339e-05,
+          0.99993497133255,
+          -0.27271050214767456
+        ]
+      ],
+      "rotation_deg": -0.0057179720445966935,
+      "scale_disagreement_percent": 0.008363213083661947,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": true,
+      "singular_values": [
+        1.0003201791301848,
+        0.9998471410680617
+      ],
+      "translation_yx_fullres": [
+        -2.1816840171813965,
+        2.8012447357177734
+      ]
+    }
+  },
+  "reason": "The pre-registered 0.10% scale threshold is applied, but this conventional external estimator was added after first score bytes and therefore only invalidates; it cannot rescue or score the arms.",
+  "rows": [
+    {
+      "anisotropy_percent": 0.015755761128355417,
+      "correlation": 0.9999176763159126,
+      "isotropic_scale": 1.0029465527060593,
+      "matrix_downsampled": [
+        [
+          1.0028945207595825,
+          -3.985706280218437e-05,
+          -1.4598814249038696
+        ],
+        [
+          -7.843873754609376e-05,
+          1.0029985904693604,
+          -1.0459789037704468
+        ]
+      ],
+      "reference": "bright_reference8.npy",
+      "render": "m1-bright-a12",
+      "rotation_deg": -0.001102036353146229,
+      "scale_disagreement_percent": 0.2946552706059258,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0030253346056348,
+        1.0028677769943513
+      ],
+      "translation_yx_fullres": [
+        -8.367831230163574,
+        -11.679051399230957
+      ]
+    },
+    {
+      "anisotropy_percent": 0.02875199566116926,
+      "correlation": 0.9998899350126433,
+      "isotropic_scale": 1.0030189067502162,
+      "matrix_downsampled": [
+        [
+          1.0029383897781372,
+          -6.61078083794564e-05,
+          -1.4587208032608032
+        ],
+        [
+          -0.00017207291966769844,
+          1.0030994415283203,
+          -1.1329931020736694
+        ]
+      ],
+      "reference": "bright_reference8.npy",
+      "render": "m1-bright-b12",
+      "rotation_deg": -0.0030265399545577752,
+      "scale_disagreement_percent": 0.30189067502162104,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0031626770308857,
+        1.002875157074274
+      ],
+      "translation_yx_fullres": [
+        -9.063944816589355,
+        -11.669766426086426
+      ]
+    },
+    {
+      "anisotropy_percent": 0.010466585351509572,
+      "correlation": 0.9998454955654,
+      "isotropic_scale": 1.002900718364088,
+      "matrix_downsampled": [
+        [
+          1.0028661489486694,
+          -5.248776142252609e-05,
+          -1.4399455785751343
+        ],
+        [
+          -2.6089648599736392e-05,
+          1.0029352903366089,
+          -1.3623406887054443
+        ]
+      ],
+      "reference": "second_reference8.npy",
+      "render": "m1-second-a12",
+      "rotation_deg": 0.000754062900816169,
+      "scale_disagreement_percent": 0.29007183640878953,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0029530526562522,
+        1.0028483868027371
+      ],
+      "translation_yx_fullres": [
+        -10.898725509643555,
+        -11.519564628601074
+      ]
+    },
+    {
+      "anisotropy_percent": 0.020646042741190307,
+      "correlation": 0.9998354588541828,
+      "isotropic_scale": 1.0029035753683972,
+      "matrix_downsampled": [
+        [
+          1.0028321743011475,
+          -6.895179103594273e-05,
+          -1.4075472354888916
+        ],
+        [
+          -8.014694321900606e-05,
+          1.0029749870300293,
+          -1.394409418106079
+        ]
+      ],
+      "reference": "second_reference8.npy",
+      "render": "m1-second-b12",
+      "rotation_deg": -0.00031978895252514827,
+      "scale_disagreement_percent": 0.2903575368397249,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0030068108949153,
+        1.0028003504675034
+      ],
+      "translation_yx_fullres": [
+        -11.155275344848633,
+        -11.260377883911133
+      ]
+    },
+    {
+      "anisotropy_percent": 0.01562971562825144,
+      "correlation": 0.9999624841655218,
+      "isotropic_scale": 1.0033767801819884,
+      "matrix_downsampled": [
+        [
+          1.003413200378418,
+          1.8366275980952196e-05,
+          -1.706173300743103
+        ],
+        [
+          0.00011992179497610778,
+          1.0033403635025024,
+          -1.1838490962982178
+        ]
+      ],
+      "reference": "bright_second16.npy",
+      "render": "m2-bright-first16",
+      "rotation_deg": 0.0028995601275837654,
+      "scale_disagreement_percent": 0.33767801819883925,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0034549318034531,
+        1.0032986346471706
+      ],
+      "translation_yx_fullres": [
+        -9.470792770385742,
+        -13.649386405944824
+      ]
+    },
+    {
+      "anisotropy_percent": 0.021666215868543226,
+      "correlation": 0.999902873639482,
+      "isotropic_scale": 1.0029918502393285,
+      "matrix_downsampled": [
+        [
+          1.0029304027557373,
+          -4.567225187201984e-05,
+          -1.448358416557312
+        ],
+        [
+          -0.00013275674427859485,
+          1.0030533075332642,
+          -1.138818621635437
+        ]
+      ],
+      "reference": "bright_first16.npy",
+      "render": "m2-bright-second16",
+      "rotation_deg": -0.0024873451599875963,
+      "scale_disagreement_percent": 0.2991850239328464,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0031001871689793,
+        1.0028835250102939
+      ],
+      "translation_yx_fullres": [
+        -9.110548973083496,
+        -11.586867332458496
+      ]
+    },
+    {
+      "anisotropy_percent": 0.012692524847013331,
+      "correlation": 0.9999612510204736,
+      "isotropic_scale": 1.0046188814481078,
+      "matrix_downsampled": [
+        [
+          1.004671335220337,
+          1.0381724678154569e-05,
+          -2.2902348041534424
+        ],
+        [
+          6.106848741183057e-05,
+          1.0045664310455322,
+          -1.8668662309646606
+        ]
+      ],
+      "reference": "second_second16.npy",
+      "render": "m2-second-first16",
+      "rotation_deg": 0.0014453926906828178,
+      "scale_disagreement_percent": 0.4618881448107848,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0046823460768366,
+        1.0045554208283665
+      ],
+      "translation_yx_fullres": [
+        -14.934929847717285,
+        -18.32187843322754
+      ]
+    },
+    {
+      "anisotropy_percent": 0.015310874612994851,
+      "correlation": 0.9998652215830811,
+      "isotropic_scale": 1.0029962036852136,
+      "matrix_downsampled": [
+        [
+          1.0029453039169312,
+          -8.26412724563852e-05,
+          -1.497549295425415
+        ],
+        [
+          -3.17181802529376e-05,
+          1.0030471086502075,
+          -1.450783371925354
+        ]
+      ],
+      "reference": "second_first16.npy",
+      "render": "m2-second-second16",
+      "rotation_deg": 0.0014544812054660269,
+      "scale_disagreement_percent": 0.2996203685213583,
+      "scorecard_rotation_pass": true,
+      "scorecard_scale_pass": false,
+      "singular_values": [
+        1.0030727609798111,
+        1.0029196522336812
+      ],
+      "translation_yx_fullres": [
+        -11.606266975402832,
+        -11.98039436340332
+      ]
+    }
+  ],
+  "status": "POST_SCORE_REJECTION_AUDIT_NOT_A_V1_1_SCORE"
+}
