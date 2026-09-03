@@ -320,6 +320,68 @@ D1 detail instrument. Same-frame split FRC is now invalid, so whether FRC is ava
 scorecard at all depends on the `SPLIT2` repeat-pair result. If repeats do not rescue it, the
 detail axis rests on the slant edge alone.
 
+## 2.2 Where strehl actually stands — the first honest answer since the retraction
+
+`docs/research/V-HEADTOHEAD3.md`, `experiments/V-HEADTOHEAD3/`. Fourteen commits, `5d85d8e1`
+through `e162519f`. **Verdict: NOT ROBUST.**
+
+Since the 17–27% detail deficit was retracted as a tone artifact, this project has had **no
+answer at all** to the question its entire goal depends on. It now has one, produced by an
+instrument built specifically so that the failure which killed the last attempt cannot recur.
+
+**The instrument is tone-invariant and this was proven, not asserted.** Strong affine, gamma-3
+and logistic tone curves moved the ordinal statistic by **exactly 0**, while raw band power
+under the same transforms moved **30.4%**. That single comparison is the whole difference
+between this measurement and the retracted one. Commissioning: **34/34 controls GREEN, 18/18
+planted defects RED.** The registration sign defect recorded against `V-HEADTOHEAD2` is also
+fixed and commissioned — all six planted shifts recovered the exact *negative* correction. An
+independent exhaustive audit reproduced all 54 outcomes.
+
+**Comparator renders exist**, contrary to the concern that a fresh head-to-head would be
+blocked: five Zerene renders under `D:\edited\macro\{test,test2,marker,marker2}` and four
+unique focus-stack renders under `C:\dev\macro\out` (`stack_v3.tif` is a byte-identical alias).
+**No Helicon render exists in the searched roots**, so Helicon remains unmeasured.
+
+**The measured position, per band:**
+
+| Band (cyc/px) | Result | Ratio and 95% CI |
+|---|---|---|
+| 0.02–0.05 | strehl **LEADS** | `1.0833 [1.0534, 1.1114]` |
+| 0.05–0.10 | unresolved | — |
+| 0.10–0.20 | strehl **TRAILS** | `0.8842 [0.8420, 0.9311]` |
+| 0.20–0.25 | strehl trails sharpened PMax | `0.3992 [0.3381, 0.4720]` |
+| 0.25–0.30 | strehl trails sharpened PMax | `0.2834 [0.2178, 0.3696]` |
+| 0.30–0.40 | unresolved | — |
+
+**Why the verdict is NOT ROBUST rather than a clean result: the answer depends on how the
+comparator is configured.** At 0.25–0.30 cyc/px, strehl is *unresolved* — statistically tied —
+against **sharpening-0** PMax at `0.9735 [0.8339, 1.1406]`, and **trails by 3.5×** against
+**sharpening-40 / colour-NR-25** PMax at `0.2834`. Same tool, same stack, opposite conclusion.
+There is no single number for "where strehl stands" until the comparator's preprocessing is
+pinned.
+
+**The retained trail at 0.10–0.20 is the real replacement for the retracted deficit.** It holds
+across comparator configurations, its CI excludes parity, and it is tone-invariant. It is
+roughly a **12% mid-band detail deficit** — smaller than the retracted 17–27%, and accompanied
+by a **retained ~8% lead at 0.02–0.05** that the earlier account never reported.
+
+**Nothing changes in Rust.** The lane states this explicitly: the result moves with comparator
+preprocessing and isolates no module in `src/` or `crates/`.
+
+**The open question this leaves, and it is the important one.** The scorecard registers
+sharpening as the primary defeat for any detail metric, and its stated controls for that are
+**flat-field power and hull distance**. This lane ran neither — the string `hull` does not
+appear in its note. So it is not yet known whether sharpened PMax's high-band advantage is
+**real resolution or sharpening artifact**. A tone-invariant statistic is invariant to monotone
+*point* transforms; sharpening is a *spatial* operation and passes straight through it. Until
+that discrimination is run, the 0.20–0.30 trails cannot be interpreted, and the honest summary
+is: **strehl leads low-band, trails mid-band by ~12%, and its high-band standing is
+undetermined.**
+
+Also unverified by this lane: Helicon performance, the exact source identities of three
+marker-fork files, physical MTF fidelity, and the exact geometry behind three author/checker
+disagreements.
+
 **M-PHASE0-PHASE — CLOSED. C1 is KILL at the measured ρ, and NOT ROBUST across the ρ
 census.** Getting here took a filed verdict, its retraction, and a sign fix in the
 lane's own algebra; read Amendments A7 (the wrong verdict), A8 (the retraction), A9 (the
