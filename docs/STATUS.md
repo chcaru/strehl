@@ -39,19 +39,59 @@ general softness.
 
 ## 2. What was settled this session
 
-### 2.0 Phase 0 of the SOTA path — four lanes closed, one RETRACTED
+### 2.0 Phase 0 of the SOTA path — five lanes closed, none of which changed the code
 
 The owner's `docs/proposals/2026-08-sota-path.md` front-loads phase-0 gates that can
-kill an item before it is built. Four are closed and **one reported verdict has been
-retracted under independent verification.** None consumed a capture, a decode, or a
-frame. Three of the four closed lanes found their headline measurement already sitting
-in the corpus — a pattern strong enough that every remaining lane should begin by
-searching for existing data before planning any decode.
+kill an item before it is built. Five are now closed. Three of them found their headline
+measurement already sitting in the corpus — a pattern strong enough that every remaining
+lane should begin by searching for existing data before planning any decode.
 
-**M-PHASE0-PHASE — RETRACTED. I reported C1 KILLED. Independent verification broke that
-verdict on three independent load-bearing defects. C1 is UNREFUTED.** The retraction and
-the defect list are Amendment A8 in the lane's `PREREGISTRATION.md`; read it before
-anything below. The original claim is left in place, marked, so the error stays legible.
+> **The standing criticism of this whole phase, recorded here because it is the most
+> important thing on this page.** Across 63 commits, phase 0 has changed **zero lines of
+> Rust**. Five closed lanes have produced not one decision that altered the stacker. The
+> owner's opening complaint was that this project "was not trending in a SOTA
+> direction"; a month of phase-0 work has reproduced that rather than fixed it. The
+> remaining phase-0 claims are therefore being triaged by **decision value** — for each,
+> if it resolves either way, what code actually changes? — and the ones that answer
+> "nothing" are to be dropped rather than run in proposal order.
+
+**M-PHASE0-PHASE — CLOSED. C1 is KILL at the measured ρ, and NOT ROBUST across the ρ
+census.** Getting here took a filed verdict, its retraction, and a sign fix in the
+lane's own algebra; read Amendments A7 (the wrong verdict), A8 (the retraction), A9 (the
+sign defect) and A10 (the rebuilt bar and the standing verdict) in that order, because
+the sequence is the finding.
+
+The standing result. Winnable fraction, G-1x zero-mean, against §9's thresholds
+(≥60% SURVIVE / 25–60% NARROWED / <25% KILL):
+
+| ρ | field centre | inner annulus | corner |
+|---|---|---|---|
+| **0.0055** (measured) | 22.2% KILL | 7.5% KILL | 1.2% KILL |
+| 0.0100 (inside the 95% CI) | 35.3% NARROWED | 15.3% KILL | 2.5% KILL |
+| 0.0600 (census top) | 61.9% SURVIVE | 53.8% NARROWED | 20.6% KILL |
+
+**At the measured ρ the verdict is KILL at every field radius. It flips to NARROWED at
+ρ = 0.01, which is inside M-PHASE0-RHO's own 95% interval of 0.00185–0.01078, and to
+SURVIVE at the top of the design census — so §9 requires NOT ROBUST.**
+
+**The dominant term is ρ, and it is a measurement convention rather than a capability.**
+M-PHASE0-RHO records that refining the frequency grid moves its median by **30.49×**,
+which spans the whole KILL-to-SURVIVE range by itself, and that only 9 of its 46 records
+directly detect high-band power. Until the grid and boundary convention are pinned, the
+ρ uncertainty is wider than the distance between the two verdicts, and **no work on the
+aligner changes that.** This is the concrete reason C1 cannot be settled by building.
+
+**Two corrections this lane forced on its own instruments**, both of which had been
+flattering the conclusion: `plib.full_reps` used `ν + h` where the algebra requires
+`ν − h`, and **all 15 existing controls passed under both signs** because the control
+generated its data with the same function it was testing. That is the third
+generator/checker cancellation in this lane alone. It now stands at 17 controls and 7
+plants, with two new controls (`C-AC`, `C-AD`) that read the function under test against
+a fixed geometric predicate and against real lattice sampling, so no such symmetry can
+cancel them again.
+
+The earlier retracted verdict and its three load-bearing defects are Amendment A8; the
+original claim is left in place, marked, so the error stays legible.
 
 The three defects, each sufficient on its own to void the verdict:
 
