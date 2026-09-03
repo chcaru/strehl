@@ -51,6 +51,14 @@ PAIRS: dict[str, Pair] = {
         "4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F",
         "B240FE4016E97EBB194497B2798A095C63C490C4FFF54018D48D34C7523719A0",
     ),
+    "113-sharp": Pair(
+        "113-sharp",
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\113MSDCF.tiff"),
+        Path(r"D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif"),
+        "Zerene Stacker PMax (Lightroom Sharpness 40, colour NR 25)",
+        "4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F",
+        "4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E",
+    ),
     "cb": Pair(
         "cb",
         Path(r"C:\dev\strehl-out\DELIVER-V6\masters\coffee-bean.tiff"),

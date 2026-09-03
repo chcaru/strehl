@@ -41,6 +41,11 @@ PATHS = {
         Path(r"D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif"),
         "Zerene Stacker PMax",
     ),
+    "113-sharp": (
+        Path(r"C:\dev\strehl-out\DELIVER-V6\masters\113MSDCF.tiff"),
+        Path(r"D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif"),
+        "Zerene Stacker PMax (Lightroom Sharpness 40, colour NR 25)",
+    ),
     "cb": (
         Path(r"C:\dev\strehl-out\DELIVER-V6\masters\coffee-bean.tiff"),
         Path(r"C:\dev\macro\out\coffee-bean\stack.tif"),

@@ -484,17 +484,23 @@ def hash_controls(rec: Record) -> None:
     all_ok = True
     actual_first = None
     expected_first = None
+    seen: set[Path] = set()
     for pair in PAIRS.values():
         for path, expected in (
             (pair.strehl, pair.strehl_sha256),
             (pair.comparator, pair.comparator_sha256),
         ):
+            if path in seen:
+                continue
+            seen.add(path)
             actual = sha256(path)
             readings.append(f"{path.name}={actual[:12]}")
             all_ok &= actual == expected
             if actual_first is None:
                 actual_first, expected_first = actual, expected
-    rec.control("four frozen file hashes", all_ok, ", ".join(readings))
+    rec.control(
+        f"{len(seen)} unique frozen file hashes", all_ok, ", ".join(readings)
+    )
     assert actual_first is not None and expected_first is not None
     sabotaged = ("0" if expected_first[0] != "0" else "1") + expected_first[1:]
     rec.plant(
