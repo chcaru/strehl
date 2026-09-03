@@ -1,11 +1,17 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.6 (2026-09-03).** The v1.0 metric, bar, and
+**Status: SPEC / PRE-REGISTRATION v1.7 (2026-09-03).** The v1.0 metric, bar, and
 control protocol was written before implementation lanes reported outcomes.
 Subsequent revisions quarantine leaked evidence, classify captures before use, or
 withdraw/tighten an instrument defeated by independent commissioning; each change is
-recorded below. No v1.6 score output has been read. The competitive position remains
+recorded below. No v1.7 score output has been read. The competitive position remains
 **UNKNOWN**.
+
+**Revision 1.7 — phase-0 decision-gate census registered:** all nine closed
+implementation gates now have a verdict, number, independent-unit count, provenance,
+and explicit scorecard effect. The two systems PASS verdicts are admitted only for
+their narrow build/no-build questions; neither is an M11 product-path score. The
+M1–M12 scoreboard remains 0 measured / 12 unmeasured.
 
 **Revision 1.6 — underpowered S25 sharpening result superseded:** the earlier
 24-seed `0.995819x` USM reading is replaced by the 64-site `1.028294x` result
@@ -47,7 +53,7 @@ explicit in the timing protocol. It imports no phase-1 acceptance bar and no mea
 quality result.
 
 This document owns the definition and protocol, not a result. The first render of any
-scored capture **under this protocol** seals v1.6; pre-existing unrelated masters are
+scored capture **under this protocol** seals v1.7; pre-existing unrelated masters are
 not score outputs. A later change to an instrument, bar, eligibility rule, comparator
 setting, capture, or aggregation rule requires a numbered revision and a fresh
 holdout capture. Existing score outputs may then be used only for development.
@@ -88,7 +94,7 @@ document’s proposed completions, not claims that the governing proposal alread
    speed, or memory envelope only if it passes the input/output transfer audit and
    retains at least `98%` of the highest replacement-M1 information score achieved by
    any registered mode on that capture. This stops a deliberately blurred fast/quiet
-   mode from becoming the quality comparator. In v1.6 no mode can yet be
+   mode from becoming the quality comparator. In v1.7 no mode can yet be
    quality-qualified.
 5. Each capture must pass independently, and the pooled one-sided 95% confidence bar
    must also pass. Pooling may not rescue a failed capture.
@@ -246,7 +252,7 @@ term rather than subject/object identity (rule 35, lines 457–462). Accordingly
    overconfident certificate, permuted depth, a 60-second timed delay, and a 7-GiB
    allocation. Every applicable gate must fail.
 4. A failed commissioning result voids the metric. It may not be repaired against the
-   scored captures under v1.6.
+   scored captures under v1.7.
 
 ## 2. Frozen capture set
 
@@ -348,7 +354,7 @@ same-focus bee sentinel; M5 retains ruler/natural holdouts but still lacks its
 replacement controlled-slide holdout; M9 retains bee repeats but lacks independent
 depth-stack truth.
 
-**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.6** until a
+**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.7** until a
 fresh untouched subject/session supplies,
 at identical subject geometry, exposure, ISO, aperture, and focal length with
 **IBIS off**:
@@ -403,7 +409,7 @@ completions — including freezing D5's “roughly 2x” as `<=2.00` — are
 **SCORECARD ADDITIONS** because the proposal is silent, approximate, or contains
 `[bar]`.
 
-### 3.1 Measurement readiness as of v1.6
+### 3.1 Measurement readiness as of v1.7
 
 This table separates scientific blockers from the baseline's single pre-metric
 refusal. Codes are the owner's requested categories: **(a)** missing admissible
@@ -431,6 +437,54 @@ Thus M8 is the only complete quality axis ready now. M12 is scientifically
 unblocked, but its complete registered run is deliberately deferred to a quiet host.
 M6's clipping preflight and several other submetrics may be run as diagnostics; they
 are not complete axis verdicts.
+
+### 3.2 Closed program decision gates
+
+These gates decide whether a proposed implementation branch is licensed. They are
+registered because otherwise their results will be mistaken for missing work, but
+they are **not** M1–M12 output scores. “PASS” below means the narrow phase-0 question
+was answered; “KILL/STOP/NOT ROBUST/CLOSED/REFUTED” licenses a no-build decision at
+the stated scope. No row may silently populate §6.
+
+| Lane / gate | Registered verdict and number | Independent units / power | Frozen and result commits | Scorecard effect |
+|---|---|---|---|---|
+| IOPERF / D11 decode | **PASS — retain rawler.** Allocated-output rate `381.0 MB/s` at one thread and `1,413.4 MB/s` at 32; paired compressed-input rates `193.9` and `719.3 MB/s`; saturation by 16 threads. A 200-ms plant added 188–289 ms. | Three A7C II ARWs (first/middle/last) per iteration; seven Divan samples; forward/reverse sweeps at 1/2/4/8/16/32 threads. | `40e41a63` / `d337daa8` | Admitted for D11's decoder build gate only. It is not M11 end-to-end native-product throughput. |
+| IOPERF / D15 storage | **PASS — do not build IOCP.** Cold no-buffering `6.338 GB/s`, immediate buffered warm `20.615 GB/s`, `3.25x`; replication `6.342/19.671`, `3.10x`; independent third cold `6.334 GB/s`. Storage was 11.41% of projected decode time against a 20% materiality bar. | 60 ARWs, exactly 2,252,959,744 compressed bytes; QD8; two accepted runs plus one independent read-only replication. | `40e41a63` / `d337daa8` | Admitted for D15's storage-materiality gate only. It is not M11 cold-minus-warm product latency. |
+| DPAR2 / C4c curved track | **KILL** the stated `0.3–0.6 px/depth-step` mechanism. MDA80 `<=0.010 px/step` at radius 1000, bootstrap 95% `[0.010,0.010]`; proposed minimum cleared by 30x. Null `rho=+0.1352`, `p=0.4896`. | 15,599 accepted residual observations, three stacks, 96 preserved-noise torus phases; first nonzero rung detected 96/96. | `e27e3dd8` / `7a1a3128` | Admissible conditional KILL of C4c, not a universal claim that every lens lacks every smaller or differently shaped term. No axis score. |
+| XSPEC / C10 | **NOT ROBUST.** `R=0.70852`, CI `[0.66732,0.76315]`, below point/lower bars `2.0/1.5`; held-out grid-48 floor `71.43%` of 49 against 80%. | Bee: 654 records / 132 tiles, below the frozen 160-tile minimum. Text: 1,000 / 200. | `efdc6829` / `4f1f28ec` | Admissible refusal to build. It does not establish that C10 is absent or incapable. No axis score. |
+| VEIL2 / A2 | **STOP — DO NOT BUILD.** Primary `theta=-0.081241`, CI `[-0.235876,+0.051078]`; four potency/provenance gates failed; re-scope audit `0/7`. | Effective `n=36` spatial clusters. The 20,000 bootstrap draws are Monte Carlo resamples, not independent observations. | `e4e3939f`, `bcc77de9` | Admissible refusal only. It does not prove zero veil or settle M3. |
+| LCA / C2 | **STOP.** Reproduced axial focus forfeits: R `4.22–7.54%`, B `3.51–7.13%`, but tone-normalised evidence was valid on only 1/4 stacks; both registered gamma arms were invalid. | 1,002 RAW frames across four stacks; frozen four-stack tone gate required 4/4. | `08cf9401` / `a3b87d36` | Axial CA exists; a field-valid corrective build is not licensed. This is not M7 colour fidelity. |
+| CAND1 / detail instrument | **KILL candidate 1.** USM/base `1.095732x`, one-sided UCB95 `1.129895`, against frozen `<=1.01`. | 480 independent macro-tile clusters, eight trials each (3,840 trials) across five acquisition blocks. | `613eaf1`, `efa25bd2`, `2d3d247d` | Admissible instrument KILL. M1 still has no statistic or bar. |
+| COVER / default path | **CLOSED — keep Scale.** Crop ring up to `+2.6106%`; minimum evidenced safe inset 256 px; retained area `64.6047%` against 80%. Scale changes 98.1463% of identity-arm samples. | Four development captures decoded; `109MSDCF` supplied the admitted inset profile, while the ruler specificity arm refused a general safe inset. | `66e79043` | Crop is not licensed as the default. The scorecard native-scale geometry gate remains unresolved; this is not M8-R/M8-O. |
+| Phase 1 / W1 | **REFUTED — DO NOT IMPLEMENT.** `NO_COMMON_K`: 16/42 predicates pass at some `k`, 26/42 at none, and no band-4–6 predicate passes anywhere in `[0,8]`. | 42 frozen capture/band predicates over the 161-value width grid on three development captures. | `f5658e5d` | Refutes the one-constant phase-1 design; no M1–M12 output was produced. |
+
+**Strict systems-gate ruling.** D11 and D15 are admitted as phase-0 PASS
+verdicts because their governing proposal asks for those exact component estimands,
+not a full product render. D11's three-file set is narrow, but the frozen gate had no
+cross-file minimum, sampled the bracket's beginning/middle/end, consumed and checked
+every decode, and clears its bars by 1.91x per core and 1.41x aggregate. Its result is
+scoped to this A7C II codec/workload and cannot generalise to another camera or fill
+M11.
+
+D15's no-buffering arm bypasses the Windows page cache and remains at device rate
+after the buffered warm placebo becomes 3.1–3.3x faster. SSD controller
+firmware/DRAM cannot be disabled, but it is part of the host-visible device path D15
+asked to price; this is not a NAND-only claim. The result is scoped to this 980 PRO,
+QD8 workload. Neither systems PASS supplies M11's registration, merge, colour,
+write, comparator, or end-to-end cold/warm terms.
+
+**Power ruling.** XSPEC and VEIL2 are admissible **refusals**, not admissible
+negative capability claims. XSPEC missed its own 160-tile minimum and therefore says
+“C10 was not shown to work,” not “C10 was shown not to work.” VEIL2's effective
+sample is 36 clusters, not 20,000 observations; its 0/7 audit stops the build but
+does not prove the underlying effect is zero. Under-power is safe only because these
+verdicts decline authorization rather than assert absence.
+
+**Resulting scoreboard:** **0 of 12 axes MEASURED; 12 of 12 UNMEASURED.** M1 carries
+the greatest logical weight because it has neither an instrument nor a bar and is a
+qualification dependency for multiple quality and comparator axes. M8 remains the
+only complete quality axis immediately measurable, but a pass there cannot rescue
+an absent M1.
 
 ## 4. Metric cards
 
@@ -497,7 +551,7 @@ battery; it does not resurrect or select a statistic.
 The burned grid and the development-only high-resolution slide may commission a new
 instrument but may never provide its scored value.
 
-**Exact computation.** None is admitted in v1.6. A replacement must be
+**Exact computation.** None is admitted in v1.7. A replacement must be
 pre-registered before its fresh holdout is rendered, must use no frequency above
 `0.25 cyc/native px`, and must be implemented and audited independently of the
 pipeline producing the render.
@@ -545,7 +599,7 @@ ROIs total and 16 per light must qualify.
    `sigma_ideal = sigma_1 * sqrt(2/16)`.
 4. `eta = sigma_res / sigma_ideal`. The comparator ratio uses paired ROIs and only
    modes within `98%` of a future replacement-M1 information envelope. No comparator
-   mode qualifies in v1.6.
+   mode qualifies in v1.7.
 
 The `0.15–0.35 cyc/px` quantity here is a noise residual, not a detail or acuity
 reading; it does not license any spatial-resolution claim above `0.25 cyc/px`.
@@ -854,7 +908,7 @@ repeats alone cannot close M9's depth-stack certificate claim.
 
 1. For each tile and 0.05-cyc/px band whose upper edge is `<=0.25 cyc/px`, truth is
    the future independently commissioned M1 condition. The withdrawn v1.3
-   `D>=1 && FRC>=1/7` rule is not truth in v1.6.
+   `D>=1 && FRC>=1/7` rule is not truth in v1.7.
 2. A claimed band is the highest licensed band strehl’s output certificate marks
    valid. Bands above `0.25 cyc/px` must be labelled `UNLICENSED` and cannot improve
    the score.
@@ -1071,7 +1125,7 @@ separate host window rediscovering the already-understood reduction-order mechan
 4. **SSIMULACRA2 / butteraugli on natural stacks:** the proposal names them
    (`2026-08-sota-path.md` lines 1525–1536) but supplies neither an all-in-focus truth
    image nor a bar. Comparing two unknown renders does not create a reference.
-   They may commission synthetic plants, but do not rank real outputs in v1.6.
+   They may commission synthetic plants, but do not rank real outputs in v1.7.
 5. **A single composite “SOTA score”:** weights would let noise purchase a halo or
    speed purchase lost depth. The proposal’s end-state is conjunctive.
 6. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
@@ -1088,18 +1142,18 @@ competitive statement is **unknown**.
 
 | ID | Metric | strehl | Zerene Stacker | Helicon Focus | Current standing |
 | --- | --- | --- | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No admissible instrument or active bar; fresh dense reference and matched IBIS-off sw4/sw10 pairs are also absent. |
+| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | CAND1 is killed; no admissible instrument or active bar remains, and fresh matched captures are absent. |
 | M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
-| M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Full-reach sites and new checker must commission. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.6 site manifest or control run exists. |
+| M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | VEIL2 stops the A2 build premise but does not measure M3; full-reach sites and its checker remain absent. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.7 site manifest or control run exists. |
 | M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
-| M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Traceable tilted colour target absent. |
-| M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | M8-R/M8-O are ready to commission on the development-only flat slide; no result has been read. |
+| M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | LCA confirms an axial effect but licenses no correction and is not colour fidelity; traceable target absent. |
+| M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | COVER closes the default-choice branch, not the hull census; M8-R/M8-O remain ready but unread. |
 | M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
 | M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.6 run; quiet host required. |
-| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.6 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | D11 decode and D15 storage component gates PASS; the complete product/comparator v1.7 run is absent. |
+| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.7 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -1129,19 +1183,16 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 7. **The proposal’s competitive axis table is historical, not this scorecard.** Its
    “ahead” labels for noise, clipping, invented structure, and speed were obtained
    under different instruments and, in the old head-to-head, asymmetric development.
-   None is a v1.6 current-position value.
+   None is a v1.7 current-position value.
 8. **D2’s CRLB channel cannot certify itself.** The same noise model cannot generate
    admission and then validate its own certificate. M9 requires independent repeated
    exposures and external fixed-pattern treatment.
-9. **Phase-0 outcomes narrow the implementation path.** C1/PHASE flips inside the
-   measured convention interval and is therefore not robust (`docs/STATUS.md` lines
-   203–223). C10/XSPEC measured `R=0.70852` with lower bound `0.66732` against required
-   point/lower bars `2.0/1.5` (`docs/research/M-PHASE0-XSPEC.md` lines 31–35).
-   C4c/DPAR is killed with the proposed effect 30x above the commissioned detection
-   bound (`docs/STATUS.md` lines 118–145). Decode saturates at 16 threads and storage
-   is about 4.5x faster, so I/O is not the bottleneck (`docs/STATUS.md` lines
-   107–116). These results do not change the score bars, but they invalidate proposal
-   text that treats those channels or I/O assumptions as open SOTA leverage.
+9. **Phase-0 outcomes narrow the implementation path; they do not populate an
+   axis.** The earlier C1/PHASE result still flips inside the measured convention
+   interval and is not robust (`docs/STATUS.md` lines 203–223). The later closed-gate
+   census, including strict scope and power rulings, is registered in §3.2. Those
+   results invalidate proposal branches that remain written as open leverage, but
+   none changes an M1–M12 bar or supplies a §6 score.
 
 ### 7.1 Disposition of the independent opposed-pair stress test
 
@@ -1150,7 +1201,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
   demonstrated at the worker count that also meets runtime.
 - **Accepted with correction:** “averaging fails MTF” becomes “averaging must fail a
   future commissioned sharpening-safe information constraint.” Standalone MTF remains
-  inadmissible, and v1.6 has no such instrument.
+  inadmissible, and v1.7 has no such instrument.
 - **Accepted with correction:** a future detail instrument, M4, and M8 should bracket
   sharpening together. Hull is corroborative, not guaranteed: a mild or explicitly
   clamped sharpening pass can remain inside the hull, so hull alone is not the
@@ -1167,7 +1218,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.6` is unavailable because M1 has no admitted
+- `PASS — SOTA under scorecard v1.7` is unavailable because M1 has no admitted
   instrument or bar; a later pre-results revision with a commissioned M1 is required;
 - `FAIL`, when any commissioned primary gate misses;
 - `UNMEASURED`, when any required metric, capture, comparator, or instrument is absent
