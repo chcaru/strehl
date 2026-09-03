@@ -1,11 +1,17 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.5 (2026-09-03).** The v1.0 metric, bar, and
+**Status: SPEC / PRE-REGISTRATION v1.6 (2026-09-03).** The v1.0 metric, bar, and
 control protocol was written before implementation lanes reported outcomes.
 Subsequent revisions quarantine leaked evidence, classify captures before use, or
 withdraw/tighten an instrument defeated by independent commissioning; each change is
-recorded below. No v1.5 score output has been read. The competitive position remains
+recorded below. No v1.6 score output has been read. The competitive position remains
 **UNKNOWN**.
+
+**Revision 1.6 — underpowered S25 sharpening result superseded:** the earlier
+24-seed `0.995819x` USM reading is replaced by the 64-site `1.028294x` result
+against the unchanged 1% bar. This strengthens, but does not otherwise alter, M1's
+withdrawal. It also preserves the independently successful PCHIP tone-witness
+construction for future instruments.
 
 **Revision 1.5 — M12 terms separated; existing evidence ruled out of protocol:**
 fixed-worker reproducibility is now named **determinism**, while equality across
@@ -41,7 +47,7 @@ explicit in the timing protocol. It imports no phase-1 acceptance bar and no mea
 quality result.
 
 This document owns the definition and protocol, not a result. The first render of any
-scored capture **under this protocol** seals v1.5; pre-existing unrelated masters are
+scored capture **under this protocol** seals v1.6; pre-existing unrelated masters are
 not score outputs. A later change to an instrument, bar, eligibility rule, comparator
 setting, capture, or aggregation rule requires a numbered revision and a fresh
 holdout capture. Existing score outputs may then be used only for development.
@@ -82,7 +88,7 @@ document’s proposed completions, not claims that the governing proposal alread
    speed, or memory envelope only if it passes the input/output transfer audit and
    retains at least `98%` of the highest replacement-M1 information score achieved by
    any registered mode on that capture. This stops a deliberately blurred fast/quiet
-   mode from becoming the quality comparator. In v1.5 no mode can yet be
+   mode from becoming the quality comparator. In v1.6 no mode can yet be
    quality-qualified.
 5. Each capture must pass independently, and the pooled one-sided 95% confidence bar
    must also pass. Pooling may not rescue a failed capture.
@@ -240,7 +246,7 @@ term rather than subject/object identity (rule 35, lines 457–462). Accordingly
    overconfident certificate, permuted depth, a 60-second timed delay, and a 7-GiB
    allocation. Every applicable gate must fail.
 4. A failed commissioning result voids the metric. It may not be repaired against the
-   scored captures under v1.5.
+   scored captures under v1.6.
 
 ## 2. Frozen capture set
 
@@ -342,7 +348,7 @@ same-focus bee sentinel; M5 retains ruler/natural holdouts but still lacks its
 replacement controlled-slide holdout; M9 retains bee repeats but lacks independent
 depth-stack truth.
 
-**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.5** until a
+**Even after an M1 replacement exists, M1, M5, and M9 cannot pass v1.6** until a
 fresh untouched subject/session supplies,
 at identical subject geometry, exposure, ISO, aperture, and focal length with
 **IBIS off**:
@@ -377,7 +383,7 @@ viewed.
 
 | ID | Primary metric | Success bar |
 | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | **NO ADMISSIBLE BAR — WITHDRAWN.** `f_licensed` is blind and `S_25` is defeated by tone, noise and angle. |
+| M1 | Sharpening-safe resolved information | **NO ADMISSIBLE BAR — WITHDRAWN.** `f_licensed` is blind; native `S_25` fails sharpening and tone, while tone-hardened derivatives reverse the optical controls. |
 | M2 | Noise efficiency at matched information | Cross-fit efficiency `<=1.10`; 95% upper bound of strehl / quietest qualifying comparator `<=0.950`. |
 | M3 | Occlusion halo and broad veil | Median excess `<=1%` edge step, p99 `<=5%`; edges above 5% `<=1%` with Wilson upper bound `<=2%`; local source coherence `>=0.90`; no worse than best comparator. |
 | M4 | Non-edge artifact rate | Median flat-patchwork ratio `<=1.00`; sites above `1.25` or ghost ratio above `0.10`: `<=1%`, Wilson upper bound `<=2%`; no worse than best comparator. |
@@ -397,7 +403,7 @@ completions — including freezing D5's “roughly 2x” as `<=2.00` — are
 **SCORECARD ADDITIONS** because the proposal is silent, approximate, or contains
 `[bar]`.
 
-### 3.1 Measurement readiness as of v1.5
+### 3.1 Measurement readiness as of v1.6
 
 This table separates scientific blockers from the baseline's single pre-metric
 refusal. Codes are the owner's requested categories: **(a)** missing admissible
@@ -441,16 +447,45 @@ both failure modes that this pre-registration was intended to expose:
 - `f_licensed` remained pinned at `0.15 cyc/px` for the base, physical blur, genuine
   improvement and unsharp-mask arms. It is sharpening-invariant only because it is
   blind.
-- `S_25` moved in the desired directions under the blur and genuine-improvement
-  plants and only `0.418%` under the registered unsharp mask, but it moved `4.8400x`
-  under gamma-3 tone and `18818.9045x` under a logistic tone curve. Its noise range
-  was `0.004972x`–`10.381863x`, and its 0.5/1/5/12-degree response was
-  `1.42205/1.18548/1/0.65802`.
+- The earlier 24-seed native `S_25` run read USM/base `0.995819x`
+  (`-0.418%`) and therefore appeared to pass the frozen 1% commissioning bar.
+  The identical arms on the expanded 64-site control read `1.028294x`
+  (`+2.829%`), **RED against the unchanged 1% bar**. The bar did not move; the
+  sample grew. The flattering 24-seed result was underpowered and is superseded
+  (`docs/research/M-PHASE0-SLANTEDGE.md` lines 269 and 276–278).
+- Native `S_25` also moved `4.8400x` under gamma-3 tone and `18818.9045x` under
+  a logistic tone curve. Its noise range was `0.004972x`–`10.381863x`, and its
+  0.5/1/5/12-degree response was `1.42205/1.18548/1/0.65802`. Derivatives that
+  hardened tone reversed the optical controls: blur `1.268326x` and genuine
+  improvement `0.923468x` (ibid., lines 269–274).
 
 Accordingly, **the `S_25` requirement is withdrawn plainly, not weakened**, and the
 old `f_licensed`/`S_25` formulae are not claim-bearing scorecard outputs. Three
 independent slanted-edge implementations are also presentation diagnostics only:
 they report roughly a 9.9% “resolution” gain after post-render unsharp masking.
+
+**Current sharpening-safe inventory.** No admissible detail statistic in this
+repository is sharpening-safe: no statistic that still responds correctly to physical
+blur and genuine improvement survives sharpening. Q25 rewards the same
+information-free USM by `5.560744x`; all three slanted-edge implementations report
+roughly 9.9% improvement; and native `S_25` now reads `1.028294x`, outside its
+unchanged 1% bar. Hardened `S_25` derivatives that suppress USM are not
+counterexamples because they cease to be resolution statistics: blur scores sharper
+and genuine improvement scores worse.
+This complete candidate sweep requires a future instrument to have a structural
+reason sharpening cannot improve it; a small empirical battery alone is not evidence.
+
+**Reusable positive from the failed lane.** An external 33-step PCHIP linearisation
+moved affine, gamma, and logistic tone arms by at most `0.0141%` without disturbing
+the USM result. Tone invariance therefore does not require an ordinal statistic.
+Future candidates may reuse this independent tone witness, but it does not excuse
+their own sharpening, optical-direction, noise, angle, and null controls
+(ibid., lines 286–289).
+
+**Effect on M1 replacement.** None of M1's status, missing captures, or absence of a
+numeric bar changes. The superseding result strengthens the admission requirement:
+a replacement needs structural sharpening protection plus the full commissioned
+battery; it does not resurrect or select a statistic.
 
 **Input needed by a future replacement.** The capture deficiency remains:
 
@@ -462,7 +497,7 @@ they report roughly a 9.9% “resolution” gain after post-render unsharp maski
 The burned grid and the development-only high-resolution slide may commission a new
 instrument but may never provide its scored value.
 
-**Exact computation.** None is admitted in v1.5. A replacement must be
+**Exact computation.** None is admitted in v1.6. A replacement must be
 pre-registered before its fresh holdout is rendered, must use no frequency above
 `0.25 cyc/native px`, and must be implemented and audited independently of the
 pipeline producing the render.
@@ -481,8 +516,11 @@ checker can carry its own answer.
 pre-sensor blur and genuine optical improvement in the correct directions; refuse
 post-render unsharp-mask, gamma, logistic-tone, noise and edge-angle challenges; fail
 a common-mode A/B plant absent from the independent reference; and report a flat ROI
-as no detail evidence. Those challenge outcomes and numerical admission bars must be
-frozen in a later revision before score data are read.
+as no detail evidence. Its sharpening battery must use at least 64 independent sites
+and retain its frozen bar as sample size grows; a structural invariance argument is
+still required because empirical non-rejection is not a guarantee. Those challenge
+outcomes and numerical admission bars must be frozen in a later revision before score
+data are read.
 
 ### M2 — noise efficiency at matched information
 
@@ -507,7 +545,7 @@ ROIs total and 16 per light must qualify.
    `sigma_ideal = sigma_1 * sqrt(2/16)`.
 4. `eta = sigma_res / sigma_ideal`. The comparator ratio uses paired ROIs and only
    modes within `98%` of a future replacement-M1 information envelope. No comparator
-   mode qualifies in v1.5.
+   mode qualifies in v1.6.
 
 The `0.15–0.35 cyc/px` quantity here is a noise residual, not a detail or acuity
 reading; it does not license any spatial-resolution claim above `0.25 cyc/px`.
@@ -816,7 +854,7 @@ repeats alone cannot close M9's depth-stack certificate claim.
 
 1. For each tile and 0.05-cyc/px band whose upper edge is `<=0.25 cyc/px`, truth is
    the future independently commissioned M1 condition. The withdrawn v1.3
-   `D>=1 && FRC>=1/7` rule is not truth in v1.5.
+   `D>=1 && FRC>=1/7` rule is not truth in v1.6.
 2. A claimed band is the highest licensed band strehl’s output certificate marks
    valid. Bands above `0.25 cyc/px` must be labelled `UNLICENSED` and cannot improve
    the score.
@@ -1017,10 +1055,13 @@ separate host window rediscovering the already-understood reduction-order mechan
    without adding information. SFR remains a target/presentation diagnostic labelled
    unsafe; it cannot decide M1.
 2. **The v1.3 `f_licensed` / `S_25` composite:** dropped. The cutoff is blind to both
-   physical blur and genuine improvement. `S_25` survives the tested unsharp mask but
-   moves `18818.9045x` under a logistic tone curve, spans
-   `0.004972x`–`10.381863x` under noise, and is angle-dependent. A control defeated
-   it, so it cannot remain a requirement merely because no replacement exists.
+   physical blur and genuine improvement. Native `S_25` moves `1.028294x` under
+   USM on the superseding 64-site battery, outside the unchanged 1% bar; the earlier
+   24-seed `0.995819x` apparent pass is underpowered and superseded. It also moves
+   `18818.9045x` under a logistic tone curve, spans `0.004972x`–`10.381863x`
+   under noise, and is angle-dependent. Tone-hardened derivatives reverse the optical
+   controls. A control defeated every form, so it cannot remain a requirement merely
+   because no replacement exists.
 3. **Same-frame split-half FRC/SNR:** dropped. The proposal describes the halves as
    independent (`2026-08-sota-path.md` lines 1694–1733), but the commissioned lane
    found a common-mode adversary at `0.972099` and a null at `0.438734` against the
@@ -1030,7 +1071,7 @@ separate host window rediscovering the already-understood reduction-order mechan
 4. **SSIMULACRA2 / butteraugli on natural stacks:** the proposal names them
    (`2026-08-sota-path.md` lines 1525–1536) but supplies neither an all-in-focus truth
    image nor a bar. Comparing two unknown renders does not create a reference.
-   They may commission synthetic plants, but do not rank real outputs in v1.5.
+   They may commission synthetic plants, but do not rank real outputs in v1.6.
 5. **A single composite “SOTA score”:** weights would let noise purchase a halo or
    speed purchase lost depth. The proposal’s end-state is conjunctive.
 6. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
@@ -1050,15 +1091,15 @@ competitive statement is **unknown**.
 | M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No admissible instrument or active bar; fresh dense reference and matched IBIS-off sw4/sw10 pairs are also absent. |
 | M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
 | M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Full-reach sites and new checker must commission. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.5 site manifest or control run exists. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.6 site manifest or control run exists. |
 | M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New tilted block advances development only; a replacement controlled-slide holdout remains absent. |
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | The current rail census is under-powered; detail, geometry and comparator arms are blocked. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Traceable tilted colour target absent. |
 | M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | M8-R/M8-O are ready to commission on the development-only flat slide; no result has been read. |
 | M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide is development-only and has IBIS on; fresh depth-stack truth remains absent. |
 | M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | New slide can commission planarity/order only; it is not holdout or physical truth. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.5 run; quiet host required. |
-| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.5 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.6 run; quiet host required. |
+| M12 | Memory / determinism / scaling invariance | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Out-of-protocol evidence is diagnostic M12-D PASS / M12-S FAIL; the v1.6 N=33/105/299 matrix and memory/modulo arms await a quiet host. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -1088,7 +1129,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 7. **The proposal’s competitive axis table is historical, not this scorecard.** Its
    “ahead” labels for noise, clipping, invented structure, and speed were obtained
    under different instruments and, in the old head-to-head, asymmetric development.
-   None is a v1.5 current-position value.
+   None is a v1.6 current-position value.
 8. **D2’s CRLB channel cannot certify itself.** The same noise model cannot generate
    admission and then validate its own certificate. M9 requires independent repeated
    exposures and external fixed-pattern treatment.
@@ -1109,7 +1150,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
   demonstrated at the worker count that also meets runtime.
 - **Accepted with correction:** “averaging fails MTF” becomes “averaging must fail a
   future commissioned sharpening-safe information constraint.” Standalone MTF remains
-  inadmissible, and v1.5 has no such instrument.
+  inadmissible, and v1.6 has no such instrument.
 - **Accepted with correction:** a future detail instrument, M4, and M8 should bracket
   sharpening together. Hull is corroborative, not guaranteed: a mild or explicitly
   clamped sharpening pass can remain inside the hull, so hull alone is not the
@@ -1126,7 +1167,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.5` is unavailable because M1 has no admitted
+- `PASS — SOTA under scorecard v1.6` is unavailable because M1 has no admitted
   instrument or bar; a later pre-results revision with a commissioned M1 is required;
 - `FAIL`, when any commissioned primary gate misses;
 - `UNMEASURED`, when any required metric, capture, comparator, or instrument is absent
