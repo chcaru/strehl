@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import math
 import warnings
@@ -14,6 +15,7 @@ import c2_audit as audit
 
 
 PRODUCER_COMMIT = "cb66893eabf3822ff0485f9fbc9d9c2319a81e8c"
+COMMISSION_COMMIT = "2bfbb13a7135ce560e11d57f897c11098e7219f7"
 
 
 def finite_or_none(value):
@@ -30,6 +32,14 @@ def finite_or_none(value):
     if isinstance(value, (np.bool_,)):
         return bool(value)
     return value
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while chunk := handle.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def legacy_path(stack: str) -> Path:
@@ -85,6 +95,118 @@ def derive_decision(result: dict) -> str:
     )
 
 
+def complete_retraction_audit() -> dict:
+    exact_files = [
+        audit.DOCS / "BUILD-CHROMA.md",
+        audit.DOCS / "M107-chroma.md",
+        audit.DOCS / "M107b-radial-chroma.md",
+        audit.DOCS / "M113-ca.md",
+        audit.DOCS / "V-CA-audit.md",
+        audit.REPO
+        / "experiments"
+        / "M114-ca-verify"
+        / "RETRACTION.txt",
+    ]
+    m107_root = audit.REPO / "experiments" / "M107-chroma"
+    recursive_files = [
+        path
+        for path in m107_root.rglob("*")
+        if path.is_file() and path.suffix.lower() in {".md", ".txt", ".py"}
+    ]
+    files = sorted(set(exact_files + recursive_files))
+
+    def classification(path: Path) -> str:
+        relative = path.relative_to(audit.REPO).as_posix()
+        if relative.endswith("docs/research/M107-chroma.md"):
+            return (
+                "premeasurement amendment reference; no axial peak or "
+                "green-election-forfeit withdrawal"
+            )
+        if relative.endswith("docs/research/M107b-radial-chroma.md"):
+            return (
+                "withdraws R1 radial rising-excess interpretation, not the "
+                "whole-field axial peak or raw green-election forfeit"
+            )
+        if relative.endswith("docs/research/BUILD-CHROMA.md"):
+            return (
+                "withdraws lateral-epsilon focus-dependence arms and discusses "
+                "other retractions; axial headline/forfeit is not withdrawn"
+            )
+        if relative.endswith("docs/research/M113-ca.md"):
+            return (
+                "corrects lateral ring-bootstrap uncertainty; not an axial "
+                "peak/forfeit withdrawal"
+            )
+        if relative.endswith("docs/research/V-CA-audit.md"):
+            return (
+                "audits lateral/render correction and withdraws rendered "
+                "blue-harm framing; not the native-CFA axial result"
+            )
+        if relative.endswith("M114-ca-verify/RETRACTION.txt"):
+            return (
+                "retracts rendered lateral gain/application-factor claims; "
+                "not the native-CFA axial result"
+            )
+        if relative.endswith("PRE-REGISTRATION-2-AMENDMENT.md"):
+            return (
+                "registered amendment made before the affected M107 arm; "
+                "not a result withdrawal"
+            )
+        if "/experiments/M107-chroma/" in f"/{relative}":
+            return (
+                "source/control branch mentioning amend/withdraw/retract; "
+                "not a report-level axial finding withdrawal"
+            )
+        return "UNCLASSIFIED"
+
+    hits = []
+    scanned = []
+    for path in files:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        relative = path.relative_to(audit.REPO).as_posix()
+        scanned.append(
+            {
+                "path": relative,
+                "sha256": file_sha256(path),
+            }
+        )
+        for line_number, line in enumerate(text.splitlines(), 1):
+            tokens = [
+                token
+                for token in ("RETRACT", "WITHDRAW", "AMEND")
+                if token in line.upper()
+            ]
+            if tokens:
+                hits.append(
+                    {
+                        "path": relative,
+                        "line": line_number,
+                        "tokens": tokens,
+                        "text": line.strip(),
+                        "classification": classification(path),
+                    }
+                )
+    all_classified = all(
+        hit["classification"] != "UNCLASSIFIED" for hit in hits
+    )
+    axial_retraction = any(
+        "axial peak/forfeit withdrawal" in hit["classification"]
+        and hit["classification"].startswith("retracts")
+        for hit in hits
+    )
+    return {
+        "scope": (
+            "all .md/.txt/.py files in experiments/M107-chroma plus exact "
+            "BUILD-CHROMA, M107, M107b, M113, M114-retraction, and V-CA notes"
+        ),
+        "files_scanned": scanned,
+        "token_hits": hits,
+        "hit_count": len(hits),
+        "all_hits_classified": all_classified,
+        "axial_or_forfeit_retraction_found": axial_retraction,
+    }
+
+
 def audit_result(result: dict) -> list[str]:
     errors = []
     if result["decision"] != derive_decision(result):
@@ -103,6 +225,13 @@ def audit_result(result: dict) -> list[str]:
         "longitudinal/axial focus displacement, not lateral radial scale"
     ):
         errors.append("aberration type drift")
+    retractions = result["retraction_audit"]
+    if not retractions["all_hits_classified"]:
+        errors.append("retraction hit classification is incomplete")
+    if result["decision_gates"]["no_axial_or_forfeit_retraction"] != (
+        not retractions["axial_or_forfeit_retraction_found"]
+    ):
+        errors.append("retraction decision gate drift")
     return errors
 
 
@@ -183,7 +312,7 @@ def main() -> int:
         )
         for index, stack in enumerate(("lavendar-cpl", "coffee-bean"))
     }
-    retractions = audit.retraction_audit()
+    retractions = complete_retraction_audit()
 
     cache_identity = {}
     for stack in audit.STACKS:
@@ -245,7 +374,15 @@ def main() -> int:
     }
     result = {
         "schema": 1,
-        "producer_commit": PRODUCER_COMMIT,
+        "provenance": {
+            "audit_cache_producer_commit": PRODUCER_COMMIT,
+            "commission_source_commit": COMMISSION_COMMIT,
+            "finalizer_source_sha256": file_sha256(Path(__file__)),
+            "note": (
+                "c2-audit.json is written by this finalizer; the commit that "
+                "eventually records the JSON is not used as circular provenance"
+            ),
+        },
         "question": (
             "Does the prior finding, as dispatched, support building the "
             "axial channel-epoch correction now?"
@@ -336,6 +473,12 @@ def main() -> int:
     changed_type = copy.deepcopy(result)
     changed_type["claim_type"] = "lateral chromatic aberration"
     mutations.append(("FP4_relabel_axial_as_lateral", changed_type))
+
+    incomplete_retractions = copy.deepcopy(result)
+    incomplete_retractions["retraction_audit"]["all_hits_classified"] = False
+    mutations.append(
+        ("FP5_hide_unclassified_retraction_hit", incomplete_retractions)
+    )
 
     for name, mutated in mutations:
         plants.append({"name": name, "red": bool(audit_result(mutated))})
