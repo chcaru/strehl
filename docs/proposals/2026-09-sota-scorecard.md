@@ -1,9 +1,17 @@
 # strehl — pre-registered SOTA scorecard
 
-**Status: SPEC / PRE-REGISTRATION v1.1 (2026-09-02).** This scorecard was written
-before the current implementation lanes reported their outcomes. No output from an
-in-flight lane was inspected or used to choose a metric, bar, capture, or control.
-The competitive position at freeze time is **UNKNOWN**.
+**Status: SPEC / PRE-REGISTRATION v1.2 (2026-09-03).** The metric, bar, and control
+protocol was written before the current implementation lanes reported their outcomes.
+Revision 1.2 records one disclosed holdout leak solely to exclude its subject/session;
+the leaked values do not select or alter a metric, bar, control, or replacement
+capture. The competitive position remains **UNKNOWN**.
+
+**Revision 1.2 — holdout quarantine:** the v1.1 baseline at `bc8f315a` reached no
+metric because the geometry gate refused every arm. Separately, W1 rendered and swept
+the calibration-grid-1 sw4 capture and disclosed outcomes before it was halted. The
+entire same-subject calibration-grid session is therefore burned as future holdout
+evidence; see §2.3 and quarantine commit `0c503d84`. No scorecard value changes from
+`UNMEASURED`.
 
 **Revision 1.1, still before any score render:** adds joint anti-cheat constraints,
 caps every licensed detail claim at `0.25 cyc/px`, and makes decode/storage control
@@ -11,7 +19,7 @@ explicit in the timing protocol. It imports no phase-1 acceptance bar and no mea
 quality result.
 
 This document owns the definition and protocol, not a result. The first render of any
-scored capture **under this protocol** seals v1.1; pre-existing unrelated masters are
+scored capture **under this protocol** seals v1.2; pre-existing unrelated masters are
 not score outputs. A later change to an instrument, bar, eligibility rule, comparator
 setting, capture, or aggregation rule requires a numbered revision and a fresh
 holdout capture. Existing score outputs may then be used only for development.
@@ -209,7 +217,7 @@ term rather than subject/object identity (rule 35, lines 457–462). Accordingly
    overconfident certificate, permuted depth, a 60-second timed delay, and a 7-GiB
    allocation. Every applicable gate must fail.
 4. A failed commissioning result voids the metric. It may not be repaired against the
-   scored captures under v1.1.
+   scored captures under v1.2.
 
 ## 2. Frozen capture set
 
@@ -227,45 +235,73 @@ All input derivatives, manifests, and outputs must be written beneath
 
 ### 2.2 Scored and control captures
 
-| Capture | Verified ARWs / metadata | Registered role |
-| --- | ---: | --- |
-| `requests\30-calibration-grid\calibration-grid-1-sw1-cpl` | 91; ISO 100, 1 s, f/5.6 | Dense independent reference for the 0.01 mm microscope grid. Never a scored repeat. |
-| `requests\30-calibration-grid\calibration-grid-1-sw4-cpl` | 55; ISO 100, 1 s, f/5.6 | Independent scored repeat A for M1/M5/M9. |
-| `requests\30-calibration-grid\calibration-grid-2-sw4-cpl` | 46; ISO 100, 1 s, f/5.6 | Independent scored repeat B for M1/M5/M9. |
-| `requests\30-calibration-grid\calibration-grid-1-sw10-cpl` | 23; ISO 100, 1 s, f/5.6 | Sparse-step coverage stress A. |
-| `requests\30-calibration-grid\calibration-grid-2-sw10-cpl` | 27; ISO 100, 1 s, f/5.6 | Sparse-step coverage stress B. |
-| `requests\7-aperture-pairs\fabric-weave-f5.6-sw5-cpl` | 210; ISO 100, 1.3 s | Natural oriented high-frequency and colour-seam stress. |
-| `requests\7-aperture-pairs\fabric-weave-f8-sw5-cpl` | 150; ISO 100, 1.3 s | Aperture robustness. |
-| `requests\7-aperture-pairs\fabric-weave-f11-sw5-cpl` | 109; ISO 100, 1.3 s | Aperture robustness / diffraction control. |
-| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl` | 120 | M5 depth coverage and M10 physical-depth slope. |
-| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f8-sw7-cpl` | 85 | Cross-aperture depth consistency. |
-| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 | Cross-aperture depth consistency. |
-| `requests\12-bee-iso-var-no-bracket-32-repeat-diff-light` | 576 total | Independent repeated exposures for M1/M2/M9. Bright ISO 100 is `DSC00328.ARW`–`DSC00359.ARW`; second-light ISO 100 is `DSC00584.ARW`–`DSC00615.ARW`, 32 each, 1.6 s, f/5.6. |
-| `requests\10-paper-iso-var` | 110 total | Flat/noise transfer control. ISO 100, 1/8 s is `DSC00245.ARW`–`DSC00249.ARW`. The actual EXIF census includes ISO 250 although the README list omits it. |
-| `requests\6-11-extended-dark-frames` | 506 | Independent temporal-noise and fixed-pattern floor; never an image-quality subject. |
-| `requests\19-razor-edge\horizontal-flat\razor-edge-horizontal-flat-sw4-f5.6-cpl` | 67 | Isolated bright-on-dark boundary control for M3 only. The razor is forbidden for M1. |
-| `duck-tape-side-layers-cpl` | 197 | Thin fibres crossing textured ground; occlusion/ghost stress. |
-| `chia-seeds-cpl` | 130 | Deep-crevice broad-veil specimen. |
-| `flower-bud-with-background-fern-cpl` | 299 | Dense multi-layer occlusion and coverage stress. |
-| `coffee-bubbles` | 19 | High-ISO patchwork/mottle commissioning subject; development only, not holdout. |
-| `medication-pill-cpl` | 146 | Low-contrast powder/focus-election stress. |
-| `foam` | 100 | Specular, coloured, near-rail highlight stress. |
-| `requests\misc-diagnostic\flat-round-3V-battery-cpl\flat-round-3V-battery-iso100-sw4-cpl` | 30 | Reflective neutral metal, fine scratches, clipping/colour-seam stress. |
-| `maldon-sea-salt-cpl` | 255 | Translucent facets and recoverable highlights. |
-| `highly-angled-ruler-mm-cpl` | 299 | Neutral edges and lateral-colour stress. |
-| `bee-1-cpl` | 299, `DSC00001.ARW`–`DSC00299.ARW` | 33 MP wall-clock and memory master. First 100 frames are the live-latency arm. |
-| `coffee-bean` | 105 ARWs, `DSC00016.ARW`–`DSC00120.ARW` | Historical comparator continuity and medium-N speed; never used to recover the retracted detail claim. |
-| `113MSDCF` | 63 ARWs, `DSC00001.ARW`–`DSC00063.ARW` | Historical `Contrast2012` regression sentinel only; not a primary acuity subject. |
+**Literal rule:** only a row whose evidence class begins `HOLDOUT` is holdout. No
+other wording implies holdout status.
 
-The calibration grid is admitted to M1 only if an input-only qualification finds at
-least 30 non-overlapping sites with line-locus RMS `<=0.02 green px`, source signal
-ratio point estimate `>=2.0`, and 95% lower bound `>=1.5`. The latter two numbers are
-the already registered signal-qualification convention, not a result. The razor’s
-measured `1.23 green px` locus raggedness makes it resolution-ineligible; using it for
-M1 would repeat a known failure. It remains useful for broad boundary profiles, where
-the checker does not self-register the edge to sharpen it.
+| Capture | Verified ARWs / metadata | Evidence class | Registered role |
+| --- | ---: | --- | --- |
+| `requests\30-calibration-grid\calibration-grid-1-sw1-cpl` | 91; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Former dense checker reference. Same subject/session as leaked sw4; cannot score M1/M5/M9. |
+| `requests\30-calibration-grid\calibration-grid-1-sw4-cpl` | 55; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | W1 swept `k` and observed outcomes; quarantine `0c503d84`. |
+| `requests\30-calibration-grid\calibration-grid-2-sw4-cpl` | 46; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Former scored repeat B; collateral same-subject/session burn. |
+| `requests\30-calibration-grid\calibration-grid-1-sw10-cpl` | 23; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Former sparse-step arm A; collateral same-subject/session burn. |
+| `requests\30-calibration-grid\calibration-grid-2-sw10-cpl` | 27; ISO 100, 1 s, f/5.6 | **BURNED — DEVELOPMENT ONLY, NOT HOLDOUT** | Former sparse-step arm B; collateral same-subject/session burn. |
+| `requests\7-aperture-pairs\fabric-weave-f5.6-sw5-cpl` | 210; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Natural oriented high-frequency and colour-seam stress. |
+| `requests\7-aperture-pairs\fabric-weave-f8-sw5-cpl` | 150; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness. |
+| `requests\7-aperture-pairs\fabric-weave-f11-sw5-cpl` | 109; ISO 100, 1.3 s | **HOLDOUT — QUALITY** | Aperture robustness / diffraction control. |
+| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f5.6-sw7-cpl` | 120 | **HOLDOUT — QUALITY** | M5 depth coverage and conditional M10 physical-depth slope. |
+| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f8-sw7-cpl` | 85 | **HOLDOUT — QUALITY** | Cross-aperture depth consistency. |
+| `requests\8-tilted-planar\ruler-incline-ang10.26deg-inches-f11-sw7-cpl` | 65 | **HOLDOUT — QUALITY** | Cross-aperture depth consistency. |
+| `requests\12-bee-iso-var-no-bracket-32-repeat-diff-light` | 576 total | **HOLDOUT — QUALITY** | Independent repeated exposures for M1/M2/M9. Bright ISO 100 is `DSC00328.ARW`–`DSC00359.ARW`; second-light ISO 100 is `DSC00584.ARW`–`DSC00615.ARW`, 32 each, 1.6 s, f/5.6. |
+| `requests\10-paper-iso-var` | 110 total | **CONTROL — NOT HOLDOUT** | Flat/noise transfer control. ISO 100, 1/8 s is `DSC00245.ARW`–`DSC00249.ARW`. The actual EXIF census includes ISO 250 although the README list omits it. |
+| `requests\6-11-extended-dark-frames` | 506 | **CONTROL — NOT HOLDOUT** | Independent temporal-noise and fixed-pattern floor; never an image-quality subject. |
+| `requests\19-razor-edge\horizontal-flat\razor-edge-horizontal-flat-sw4-f5.6-cpl` | 67 | **CONTROL — NOT HOLDOUT** | Isolated bright-on-dark boundary control for M3 only. The razor is forbidden for M1. |
+| `duck-tape-side-layers-cpl` | 197 | **HOLDOUT — QUALITY** | Thin fibres crossing textured ground; occlusion/ghost stress. |
+| `chia-seeds-cpl` | 130 | **HOLDOUT — QUALITY** | Deep-crevice broad-veil specimen. |
+| `flower-bud-with-background-fern-cpl` | 299 | **HOLDOUT — QUALITY** | Dense multi-layer occlusion and coverage stress. |
+| `coffee-bubbles` | 19 | **DEVELOPMENT — NOT HOLDOUT** | High-ISO patchwork/mottle commissioning subject. |
+| `medication-pill-cpl` | 146 | **HOLDOUT — QUALITY** | Low-contrast powder/focus-election stress. |
+| `foam` | 100 | **HOLDOUT — QUALITY** | Specular, coloured, near-rail highlight stress. |
+| `requests\misc-diagnostic\flat-round-3V-battery-cpl\flat-round-3V-battery-iso100-sw4-cpl` | 30 | **HOLDOUT — QUALITY** | Reflective neutral metal, fine scratches, clipping/colour-seam stress. |
+| `maldon-sea-salt-cpl` | 255 | **HOLDOUT — QUALITY** | Translucent facets and recoverable highlights. |
+| `highly-angled-ruler-mm-cpl` | 299 | **HOLDOUT — QUALITY** | Neutral edges and lateral-colour stress. |
+| `bee-1-cpl` | 299, `DSC00001.ARW`–`DSC00299.ARW` | **HOLDOUT — PERFORMANCE** | 33 MP wall-clock and memory master. First 100 frames are the live-latency arm. |
+| `coffee-bean` | 105 ARWs, `DSC00016.ARW`–`DSC00120.ARW` | **FIXED HISTORICAL BENCHMARK — NOT HOLDOUT** | Comparator continuity and medium-N speed; never used to recover the retracted detail claim. |
+| `113MSDCF` | 63 ARWs, `DSC00001.ARW`–`DSC00063.ARW` | **HISTORICAL CONTROL — NOT HOLDOUT** | `Contrast2012` regression sentinel only; not a primary acuity subject. |
 
-### 2.3 Missing or insufficient truth captures
+The razor’s measured `1.23 green px` locus raggedness makes it
+resolution-ineligible; using it for M1 would repeat a known failure. It remains useful
+for broad boundary profiles, where the checker does not self-register the edge to
+sharpen it.
+
+### 2.3 Holdout unit and burn log
+
+The holdout unit is **subject plus uninterrupted capture session**, not a directory or
+step width. Rendering, tuning, or reading an outcome on any member burns every member
+of that unit. A `HOLDOUT` capture may be decoded to build the frozen common input and
+input-only site manifest, but no output, metric, visual verdict, parameter sweep, or
+code-acceptance decision may be seen before the registered score run.
+
+All five `30-calibration-grid` stacks are one unit. Its README says subject, light,
+aperture, ISO, and composition were constant and only step width changed. EXIF places
+the five stacks contiguously on 2026-09-01 from 20:57:42 through 21:09:06. There is no
+other calibration-grid capture group in `D:\personal\macro`.
+
+W1 swept `k=0.00:0.05:8.00` (161 values) on
+`calibration-grid-1-sw4-cpl` and read real-stack sentinel outcomes before halt:
+detail `1.063350`, flat power `1.329831`. Commit `0c503d84` quarantines that pilot.
+Therefore sw1, both sw4 stacks, and both sw10 stacks are all burned. The later W1
+targets `flat-on-ruler-cpl`, `coffee-bubbles`, and `113MSDCF` do not extend the burn:
+none is labelled holdout here.
+
+**Axis consequence:** M1 has only its untouched same-focus bee sentinel left and has
+no depth-varying independent-repeat holdout. M5 retains the tilted-ruler and natural
+holdouts but loses its registered sw4/sw10 grid arms. M9 retains bee repeats but loses
+independent depth-stack certificate truth. **M1, M5, and M9 cannot pass v1.2 until a
+fresh subject/session supplies one dense checker-only reference, two independent
+scored repeats at one step width, and two independent sparse-step repeats.** The
+burned grid may commission checkers but may not contribute a score.
+
+### 2.4 Missing or insufficient truth captures
 
 No enumerated capture is a traceable colour target spanning the focus sweep. `foam`,
 fabric, metal, and neutral paper can reveal seams or casts but cannot supply true
@@ -316,14 +352,20 @@ are invariant to a common post-render linear gain or sharpening filter within ea
 
 **Input.**
 
-- Depth stack: grid sw1 is the reference; the two sw4 captures are repeat A/B.
-- Sparse robustness: the two sw10 captures.
+- Required depth-stack holdout: **absent after the calibration-grid burn**. Its
+  replacement must provide one dense checker-only reference and two independent
+  scored repeats at one step width.
+- Required sparse-step robustness holdout: **absent**. Its replacement must provide
+  two independent sparse-step repeats.
+- Development-only commissioning set: burned grid sw1 as reference, the two burned
+  sw4 captures as repeat A/B, and the two burned sw10 captures. No value from this set
+  may contribute to M1.
 - Non-periodic sentinel: each 32-frame ISO-100 bee repeat is split into 8 held-out
   reference frames and two 12-frame scored repeat groups.
 - Dark/flat captures establish the common-mode and quantisation floors.
 
-Grid sw1 and every held-out bee reference frame are checker-only and are never passed
-to a stacker in the corresponding scored arm.
+Every replacement checker reference and every held-out bee reference frame is
+checker-only and is never passed to a stacker in the corresponding scored arm.
 
 **Exact computation.**
 
@@ -357,7 +399,7 @@ to a stacker in the corresponding scored arm.
    without inferring what happens above it.
 7. An optional checker may inspect `(0.25,0.45] cyc/px`, but it may publish only
    `UNLICENSED_GT_0.25`, never a numerical cutoff, ranking, win, loss, or SOTA claim.
-   It cannot affect any v1.1 verdict.
+   It cannot affect any v1.2 verdict.
 
 **Success.** **SCORECARD ADDITION:** every scored capture has median
 `f_licensed =0.25 cyc/native px`; every capture and the pool have
@@ -484,8 +526,9 @@ the raw null is not admitted.
 Neither is adequately represented by a single “halo” number.
 
 **Input.** Input-flat sites from medication-pill, bee background, foam, and
-coffee-bubbles for commissioning; structured edge sites from grid, fabric, duck tape,
-and flower/fern. At least 500 sites overall and 50 per scored capture must qualify.
+coffee-bubbles for commissioning; holdout structured edge sites from fabric, duck
+tape, and flower/fern. The burned grid may commission the detector but cannot score.
+At least 500 sites overall and 50 per scored capture must qualify.
 
 **Exact computation.**
 
@@ -517,9 +560,11 @@ spatial spectrum, demonstrating that the edge arm is not merely a texture detect
 **What it measures and why.** A stack may be sharp where it succeeds yet leave focus
 holes, choose the wrong depth, lose a thin layer, or crop away difficult regions.
 
-**Input.** The sw4 and sw10 grid pairs, all three tilted-ruler apertures,
-flower/fern, duck tape, and medication-pill. Sites are 128x128 input-fixed tiles.
-At least 500 eligible tiles overall and 50 per capture must qualify.
+**Input.** The registered sw4/sw10 grid arms now require an untouched replacement;
+the burned grid is development-only. Remaining holdouts are all three tilted-ruler
+apertures, flower/fern, duck tape, and medication-pill. Sites are 128x128 input-fixed
+tiles. At least 500 eligible tiles overall and 50 per capture must qualify. M5 remains
+`UNMEASURED` until the grid arms are replaced rather than silently dropped.
 
 **Exact computation.**
 
@@ -664,9 +709,11 @@ signature cancellation defect. D2 proposes a CRLB channel and an empirical chann
 (`2026-08-sota-path.md` lines 1554–1573), but the proposed same-capture split channel
 is no longer admissible.
 
-**Input.** Independent grid sw4 repeats with sw1 reference, independent bee repeat
-groups, and dark/FPN calibration. Same-frame odd/even halves are forbidden. At least
-500 independent tile-band truth cells and 500 claimed-valid cells are required.
+**Input.** An untouched replacement for the burned grid sw4 repeats and sw1 reference,
+plus the independent bee repeat groups and dark/FPN calibration. The burned grid may
+commission but may not score. Same-frame odd/even halves are forbidden. At least 500
+independent tile-band truth cells and 500 claimed-valid cells are required. Bee
+same-focus repeats alone cannot close M9's depth-stack certificate claim.
 
 **Exact computation.**
 
@@ -843,7 +890,7 @@ precision common deliverable, not a later 8-bit proxy.
 3. **SSIMULACRA2 / butteraugli on natural stacks:** the proposal names them
    (`2026-08-sota-path.md` lines 1525–1536) but supplies neither an all-in-focus truth
    image nor a bar. Comparing two unknown renders does not create a reference.
-   They may commission synthetic plants, but do not rank real outputs in v1.1.
+   They may commission synthetic plants, but do not rank real outputs in v1.2.
 4. **A single composite “SOTA score”:** weights would let noise purchase a halo or
    speed purchase lost depth. The proposal’s end-state is conjunctive.
 5. **Natural-object colour agreement:** programs can agree and all be wrong. M7 waits
@@ -860,18 +907,18 @@ competitive statement is **unknown**.
 
 | ID | Metric | strehl | Zerene Stacker | Helicon Focus | Current standing |
 | --- | --- | --- | --- | --- | --- |
-| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Common-input arm and commissioned repeat instrument required. |
+| M1 | Sharpening-safe resolved information | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Grid holdout burned; same-focus bee sentinel remains, but a replacement depth-stack repeat is required. |
 | M2 | Noise efficiency | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Prior numbers were not produced under this matched-information protocol. |
 | M3 | Halo / veil | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Full-reach sites and new checker must commission. |
-| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.1 site manifest or control run exists. |
-| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Capture set exists; score does not. |
+| M4 | Artifact rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | No v1.2 site manifest or control run exists. |
+| M5 | DOF coverage / failure rate | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Ruler/natural holdouts remain; registered sw4/sw10 grid arms burned and require replacement. |
 | M6 | Highlight/shadow retention | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Same linear input/output transfer not yet run. |
 | M7 | Colour fidelity | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Traceable tilted colour target absent. |
 | M8 | Independent source-hull census | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing internal hull claims are not this external checker. |
-| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Independent repeated-truth run absent. |
+| M9 | Certificate calibration | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Grid repeated-truth holdout burned; same-focus bee repeats alone are insufficient. |
 | M10 | Physical depth accuracy | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Physical/synthetic truth protocol not run. |
-| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.1 run. |
-| M12 | Memory / determinism | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | v1.1 worker/N matrix not run. |
+| M11 | Wall-clock throughput | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | Existing timings are not the complete common-input v1.2 run. |
+| M12 | Memory / determinism | **UNMEASURED** | **UNMEASURED** | **UNMEASURED** | v1.2 worker/N matrix not run. |
 
 ## 7. Corrections and gaps in the governing proposal
 
@@ -901,7 +948,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 7. **The proposal’s competitive axis table is historical, not this scorecard.** Its
    “ahead” labels for noise, clipping, invented structure, and speed were obtained
    under different instruments and, in the old head-to-head, asymmetric development.
-   None is a v1.1 current-position value.
+   None is a v1.2 current-position value.
 8. **D2’s CRLB channel cannot certify itself.** The same noise model cannot generate
    admission and then validate its own certificate. M9 requires independent repeated
    exposures and external fixed-pattern treatment.
@@ -938,7 +985,7 @@ The proposal is authoritative about direction, but these parts cannot stand as w
 A result report must reproduce this scorecard verbatim by hash, publish every invalid
 and refused arm, include commands and complete manifests, and state the verdict as:
 
-- `PASS — SOTA under scorecard v1.1`, only when every M1–M12 gate passes;
+- `PASS — SOTA under scorecard v1.2`, only when every M1–M12 gate passes;
 - `FAIL`, when any commissioned primary gate misses;
 - `UNMEASURED`, when any required metric, capture, comparator, or instrument is absent
   or invalid.
