@@ -30,6 +30,12 @@ The frozen rule was `UCB95(J_USM/J_base) <= 1.01`; otherwise kill immediately
 (`experiments/M-CAND1/PREREGISTRATION.md:81-93`;
 `docs/proposals/2026-09-detail-instrument-investigation.md:347`).
 
+The arm used 480 macro-tile clusters with eight balanced held-out trials each
+(3,840 trial scores) across five acquisition blocks. The bootstrap resampled block
+then tile; trials and pixels never inflated the sample count
+(`experiments/M-CAND1/PREREGISTRATION.md:81-86`;
+`experiments/M-CAND1/out/usm.json:79-82`).
+
 Baseline was `0.125099` bits/tile; unclipped float USM radius `1.0`, amount `0.5`
 was `0.137075`. Effect: `R=1.095732` (**+9.573%**), paired log ratio `0.091423`,
 and `+0.011976` bits, with two-sided delta CI
