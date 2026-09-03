@@ -1,7 +1,7 @@
-"""Commission all eight M-PHASE0-VEIL2 gates before real measurement.
+"""Commission all M-PHASE0-VEIL2 gates before real measurement.
 
 Each control has a paired planted defect.  A plant is successful only when the
-named check reads RED; merely obtaining eight green controls is insufficient.
+named check reads RED; merely obtaining green controls is insufficient.
 """
 
 from __future__ import annotations
@@ -17,13 +17,17 @@ ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 
 from veil2lib import (  # noqa: E402
-    detrended_wander,
+    Similarity,
+    detrended_wander_jackknife,
     expand5,
+    exact_cover_scale,
     geometry_gate,
     layer_truth_gate,
     paper_null_gate,
     pyramid_base,
     reduce5,
+    remap_similarity,
+    remap_similarity_catmull,
     score_site,
     tone_locality_gate,
     write_json,
@@ -215,12 +219,23 @@ def main() -> int:
     # C7: a plane is removable; an 835-DN radial bowl is not.
     yy, xx = np.indices((512, 512), dtype=np.float64)
     plane = 17.0 + 0.03 * xx - 0.02 * yy
-    c7 = detrended_wander(plane)
+    c7 = detrended_wander_jackknife(plane)
     rr = ((xx - 255.5) ** 2 + (yy - 255.5) ** 2)
     rr /= rr.max()
     bowl = 835.0 * rr
-    p7 = detrended_wander(plane + bowl)
-    rows.append(row("C7-flat-wander", c7, p7, p7["p95_p05_dn"]))
+    p7 = detrended_wander_jackknife(plane + bowl)
+    p7["pass"] = p7["ci95_jackknife"][0] <= 400.0
+    rows.append(
+        row(
+            "C7-flat-wander",
+            c7,
+            p7,
+            {
+                "point_dn": p7["p95_p05_dn"],
+                "lower95_dn": p7["ci95_jackknife"][0],
+            },
+        )
+    )
 
     # C8: an external content label, not the response generator, establishes
     # layer truth. A single-depth curve is allowed to have two peaks and fails.
@@ -231,6 +246,92 @@ def main() -> int:
         distinct_contents_observed=False, separated_frame_runs=False, peak_count=2
     )
     rows.append(row("C8-layer-truth", c8, p8, "same peak count, opposite predicate"))
+
+    # C9: Rust gathers with Catmull-Rom a=-1/2, not OpenCV's a=-3/4 cubic.
+    impulse = np.zeros((8, 8), dtype=np.float32)
+    impulse[3, 2] = 1.0
+    half_pixel = Similarity(1.0, 0.0, 0.5, 0.0)
+    expected = -1.0 / 16.0
+    catmull_read = float(remap_similarity_catmull(impulse, half_pixel)[3, 3])
+    opencv_read = float(
+        remap_similarity(impulse, half_pixel, interpolation=cv2.INTER_CUBIC)[3, 3]
+    )
+    c9 = {
+        "pass": abs(catmull_read - expected) <= 1e-7,
+        "expected_external": expected,
+        "reading": catmull_read,
+    }
+    p9 = {
+        "pass": abs(opencv_read - expected) <= 1e-7,
+        "expected_external": expected,
+        "reading": opencv_read,
+    }
+    rows.append(row("C9-catmull-gather", c9, p9, opencv_read))
+
+    # C10: a translated 100x100 plane has an analytic 3-pixel cover bound.
+    # Using the four-decimal console banner instead of the sidecar is the plant.
+    expected_cover = 36.0 / 49.0
+    cover_read = exact_cover_scale(
+        (100, 100),
+        [Similarity(1.0, 0.0, 0.0, 0.0), Similarity(1.0, 0.0, 10.0, 0.0)],
+    )
+    rounded_cover = round(cover_read, 4)
+    c10 = {
+        "pass": abs(cover_read - expected_cover) <= 1e-12,
+        "expected_external": expected_cover,
+        "reading": cover_read,
+    }
+    p10 = {
+        "pass": abs(rounded_cover - expected_cover) <= 1e-12,
+        "expected_external": expected_cover,
+        "reading": rounded_cover,
+    }
+    rows.append(row("C10-exact-cover-scale", c10, p10, rounded_cover))
+
+    # C11: frame-run resampling must widen the detail interval when one of
+    # three directly generated frames has the opposite detail sign.
+    small_bg, small_fg, small_roi = fixture(256)
+    detail_master = master_at(0.70, small_bg, small_fg)
+    detail_background = [small_bg, small_bg, np.float32(0.80) - small_bg]
+    detail_foreground = [small_fg, small_fg, small_fg]
+    resampled = score_site(
+        detail_master,
+        detail_foreground,
+        detail_background,
+        small_roi,
+        bands=7,
+        reps=2000,
+        resample_frame_runs=True,
+    )
+    fixed_frames = score_site(
+        detail_master,
+        detail_foreground,
+        detail_background,
+        small_roi,
+        bands=7,
+        reps=2000,
+        resample_frame_runs=False,
+    )
+    resampled_width = (
+        resampled["detail_margin_ci95"][1] - resampled["detail_margin_ci95"][0]
+    )
+    fixed_width = (
+        fixed_frames["detail_margin_ci95"][1]
+        - fixed_frames["detail_margin_ci95"][0]
+    )
+    c11 = {
+        "pass": resampled_width >= 1.50,
+        "detail_ci95": resampled["detail_margin_ci95"],
+        "width": resampled_width,
+    }
+    p11 = {
+        "pass": fixed_width >= 1.50,
+        "detail_ci95": fixed_frames["detail_margin_ci95"],
+        "width": fixed_width,
+    }
+    rows.append(
+        row("C11-detail-frame-bootstrap", c11, p11, fixed_width)
+    )
 
     controls = sum(r["control_pass"] for r in rows)
     reds = sum(r["plant_red"] for r in rows)

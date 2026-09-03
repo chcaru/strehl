@@ -33,7 +33,8 @@ from veil2lib import (  # noqa: E402
     BOOT_SEED,
     channel_float,
     crop,
-    detrended_wander,
+    detrended_wander_jackknife,
+    exact_cover_scale,
     geometry_gate,
     layer_truth_gate,
     paper_normalize,
@@ -42,6 +43,7 @@ from veil2lib import (  # noqa: E402
     pyramid_base,
     read_tiff,
     remap_similarity,
+    remap_similarity_catmull,
     score_site,
     sha256,
     spatial_blocks,
@@ -131,10 +133,14 @@ def aligned_reference(
     transform,
     coverage: float,
     *,
-    interpolation: int = cv2.INTER_CUBIC,
+    interpolation: int | None = None,
 ) -> tuple[np.ndarray, float]:
     a = channel_float(read_tiff(path), channel)
-    a = remap_similarity(a, transform.fitted(coverage), interpolation)
+    fitted = transform.fitted(coverage)
+    if interpolation is None:
+        a = remap_similarity_catmull(a, fitted)
+    else:
+        a = remap_similarity(a, fitted, interpolation)
     return paper_normalize(a, PAPER_ROI)
 
 
@@ -145,7 +151,7 @@ def aligned_product_set(
     transforms: dict,
     coverage: float,
     *,
-    interpolation: int = cv2.INTER_CUBIC,
+    interpolation: int | None = None,
 ) -> tuple[list[np.ndarray], dict[str, float]]:
     out = []
     anchors = {}
@@ -296,7 +302,7 @@ def rawpy_decoder_arm(
         source = files[frame]
         raw_hashes[str(frame)] = {"name": source.name, "sha256": sha256(source)}
         a = raw_green(source)
-        a = remap_similarity(a, transforms[frame].fitted(coverage), cv2.INTER_CUBIC)
+        a = remap_similarity_catmull(a, transforms[frame].fitted(coverage))
         a, _ = paper_normalize(a, PAPER_ROI)
         raw_images.append(a)
 
@@ -348,7 +354,7 @@ def flower_wander(manifest: dict) -> dict:
             - mean[:, :, channel].astype(np.float64),
             roi,
         )
-        result["channels"][name] = detrended_wander(delta)
+        result["channels"][name] = detrended_wander_jackknife(delta)
     result["pass_green"] = result["channels"]["green"]["pass"]
     return result
 
@@ -396,14 +402,18 @@ def main() -> int:
 
     bee_record = run_record("bee-3-mean")
     chia_record = run_record("chia-mean")
-    bee_coverage = coverage_from_record(bee_record)
-    chia_coverage = coverage_from_record(chia_record)
+    bee_banner_coverage = coverage_from_record(bee_record)
+    chia_banner_coverage = coverage_from_record(chia_record)
+    bee_meta, bee_warps = parse_warpmap(resolve(bee["warpmap"]))
+    chia_meta, chia_warps = parse_warpmap(resolve(manifest["warpmap"]))
+    bee_coverage = exact_cover_scale(tuple(bee_meta["plane"]), bee_warps.values())
+    chia_coverage = exact_cover_scale(tuple(chia_meta["plane"]), chia_warps.values())
     coverage_pass = (
-        abs(bee_coverage - float(bee["coverage"])) <= 5e-5
-        and abs(chia_coverage - float(manifest["coverage"])) <= 5e-5
+        abs(bee_coverage - float(bee["coverage"])) <= 1e-12
+        and abs(chia_coverage - float(manifest["coverage"])) <= 1e-12
+        and abs(bee_coverage - bee_banner_coverage) <= 5e-5
+        and abs(chia_coverage - chia_banner_coverage) <= 5e-5
     )
-    _, bee_warps = parse_warpmap(resolve(bee["warpmap"]))
-    _, chia_warps = parse_warpmap(resolve(manifest["warpmap"]))
 
     bee_master_path = resolve(bee["master"])
     bee_channels = {}
@@ -704,8 +714,9 @@ def main() -> int:
 
     commission_pass = (
         commission.get("status") == "COMMISSIONED"
-        and commission.get("controls_passed") == 8
-        and commission.get("plants_red") == 8
+        and commission.get("controls_passed") == commission.get("controls_total")
+        and commission.get("plants_red") == commission.get("plants_total")
+        and commission.get("controls_total") == 11
     )
     sensitivity_pass = all(
         z["same_class_as_primary"] for z in sensitivities.values()
@@ -790,6 +801,8 @@ def main() -> int:
             "source_commit": EXPECTED_SOURCE,
             "bee_coverage": bee_coverage,
             "chia_coverage": chia_coverage,
+            "bee_banner_coverage": bee_banner_coverage,
+            "chia_banner_coverage": chia_banner_coverage,
             "renders": provenance,
         },
         "versions": {

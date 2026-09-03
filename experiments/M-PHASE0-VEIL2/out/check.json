@@ -17,12 +17,24 @@
         "red": true
       },
       {
+        "name": "frame-run-bootstrap",
+        "red": true
+      },
+      {
+        "name": "exact-coverage",
+        "red": true
+      },
+      {
+        "name": "flat-wander-confidence",
+        "red": true
+      },
+      {
         "name": "report-result-mismatch",
         "red": true
       }
     ],
-    "plants_red": 4,
-    "plants_total": 4
+    "plants_red": 7,
+    "plants_total": 7
   },
   "status": "PASS"
 }

@@ -3,7 +3,7 @@
 Commissioned phase-0 acceptance instrument for proposal claim A2: the
 depth-aware pyramid base band. This is not a lens-scatter experiment; see
 `PREREGISTRATION.md`. The committed verdict is **NOT ROBUST**: the normalized
-claw statistic is `-0.0814 [-0.2387, 0.0496]`, but its layer separation and
+claw statistic is `-0.0812 [-0.2359, 0.0511]`, but its layer separation and
 three other registered potency gates fail, so it is not a licensed KILL.
 
 Run from the repository root with UTF-8 and sibling imports enabled:

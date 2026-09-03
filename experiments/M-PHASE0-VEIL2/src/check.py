@@ -1,7 +1,7 @@
 """Cross-check M-PHASE0-VEIL2 records without carrying its verdict.
 
 The checker derives theta, gate states, and the verdict from recorded
-components. It also commissions itself with four in-memory corruptions; each
+components. It also commissions itself with seven in-memory corruptions; each
 must make the corresponding validation go RED.
 """
 
@@ -72,18 +72,56 @@ def validate_commission(commission: dict) -> list[str]:
     rows = commission.get("rows", [])
     controls = sum(bool(r.get("control_pass")) for r in rows)
     reds = sum(bool(r.get("plant_red")) for r in rows)
-    if len(rows) != 8:
-        errors.append("commission does not contain eight paired checks")
+    expected_ids = {
+        "C1-known-theta",
+        "C2-layer-sign",
+        "C3-detail-not-blur",
+        "C4-tone-locality",
+        "C5-paper-null",
+        "C6-geometry",
+        "C7-flat-wander",
+        "C8-layer-truth",
+        "C9-catmull-gather",
+        "C10-exact-cover-scale",
+        "C11-detail-frame-bootstrap",
+    }
+    by_id = {r.get("id"): r for r in rows}
+    if set(by_id) != expected_ids:
+        errors.append("commission does not contain the eleven required paired checks")
     if controls != len(rows) or commission.get("controls_passed") != controls:
         errors.append("not every commissioning control passes")
     if reds != len(rows) or commission.get("plants_red") != reds:
         errors.append("not every commissioning plant is RED")
     if commission.get("status") != "COMMISSIONED":
         errors.append("commission status is not COMMISSIONED")
+    if "C7-flat-wander" in by_id:
+        c7 = by_id["C7-flat-wander"]
+        if c7["control"]["ci95_jackknife"][1] > 100.0:
+            errors.append("C7 control upper95 exceeds 100 DN")
+        if c7["plant"]["ci95_jackknife"][0] <= 400.0:
+            errors.append("C7 planted bowl lower95 does not exceed 400 DN")
+    if "C9-catmull-gather" in by_id:
+        c9 = by_id["C9-catmull-gather"]
+        if abs(c9["control"]["reading"] - (-1.0 / 16.0)) > 1e-7:
+            errors.append("C9 Catmull outer tap misses external -1/16 predicate")
+        if abs(c9["plant"]["reading"] - (-3.0 / 32.0)) > 1e-7:
+            errors.append("C9 OpenCV cubic plant did not read -3/32")
+    if "C10-exact-cover-scale" in by_id:
+        c10 = by_id["C10-exact-cover-scale"]
+        if abs(c10["control"]["reading"] - (36.0 / 49.0)) > 1e-12:
+            errors.append("C10 exact coverage misses external 36/49 predicate")
+        if abs(c10["plant"]["reading"] - round(36.0 / 49.0, 4)) > 1e-12:
+            errors.append("C10 rounded-banner plant has the wrong reading")
+    if "C11-detail-frame-bootstrap" in by_id:
+        c11 = by_id["C11-detail-frame-bootstrap"]
+        if c11["control"]["width"] < 1.50:
+            errors.append("C11 resampled detail interval is not wide")
+        if c11["plant"]["width"] >= 1.50:
+            errors.append("C11 fixed-frame plant unexpectedly preserved uncertainty")
     return errors
 
 
-def derived_gates(measurement: dict, commission: dict) -> dict:
+def derived_gates(measurement: dict, commission: dict, manifest: dict) -> dict:
     primary = measurement["bee"]["primary"]
     primary_class = interval_class(primary)
     chia = measurement["chia"]["sites"]
@@ -93,9 +131,16 @@ def derived_gates(measurement: dict, commission: dict) -> dict:
         "render_provenance": all(
             bool(z.get("pass")) for z in provenance.get("renders", [])
         ),
-        "coverage_matches_manifest": bool(
-            measurement["required_gates"]["coverage_matches_manifest"]
-        ),
+        "coverage_matches_manifest": abs(
+            measurement["provenance"]["bee_coverage"]
+            - float(manifest["bee"]["coverage"])
+        )
+        <= 1e-12
+        and abs(
+            measurement["provenance"]["chia_coverage"]
+            - float(manifest["coverage"])
+        )
+        <= 1e-12,
         "positive_denominators_at_least_0.15": primary["denominator"] >= 0.15
         and all(z["score"]["denominator"] >= 0.15 for z in chia),
         "primary_detail_identity": primary["detail_margin_ci95"][0] > 0.30,
@@ -148,7 +193,11 @@ def validate_artifacts(measurement: dict) -> list[str]:
     return errors
 
 
-def validate_measurement(measurement: dict, commission: dict) -> list[str]:
+def validate_measurement(
+    measurement: dict,
+    commission: dict,
+    manifest: dict,
+) -> list[str]:
     errors = []
     primary = measurement["bee"]["primary"]
     means = primary["means"]
@@ -178,7 +227,16 @@ def validate_measurement(measurement: dict, commission: dict) -> list[str]:
             errors.append(f"{label}: non-finite theta record")
         if lo > hi:
             errors.append(f"{label}: inverted confidence interval")
-    gates = derived_gates(measurement, commission)
+        if score.get("bootstrap", {}).get("frame_runs_resampled") is not True:
+            errors.append(f"{label}: frame runs were not resampled")
+    if (
+        measurement["chia"]["hierarchical"]
+        .get("bootstrap", {})
+        .get("frame_runs_resampled")
+        is not True
+    ):
+        errors.append("chia hierarchy did not resample frame runs")
+    gates = derived_gates(measurement, commission, manifest)
     if gates != measurement.get("required_gates"):
         errors.append("required gate map is not derivable from components")
     verdict = derived_verdict(measurement, gates)
@@ -219,7 +277,7 @@ def main() -> int:
     errors = (
         validate_manifest(manifest)
         + validate_commission(commission)
-        + validate_measurement(measurement, commission)
+        +         validate_measurement(measurement, commission, manifest)
         + validate_artifacts(measurement)
         + validate_report(measurement, report)
     )
@@ -231,7 +289,7 @@ def main() -> int:
     plants.append(
         {
             "name": "theta-arithmetic",
-            "red": bool(validate_measurement(bad, commission)),
+            "red": bool(validate_measurement(bad, commission, manifest)),
         }
     )
 
@@ -240,7 +298,7 @@ def main() -> int:
     plants.append(
         {
             "name": "verdict-lookup",
-            "red": bool(validate_measurement(bad, commission)),
+            "red": bool(validate_measurement(bad, commission, manifest)),
         }
     )
 
@@ -252,6 +310,36 @@ def main() -> int:
         {
             "name": "site-run-length",
             "red": bool(validate_manifest(bad_manifest, hash_raws=False)),
+        }
+    )
+
+    bad = copy.deepcopy(measurement)
+    bad["bee"]["primary"]["bootstrap"]["frame_runs_resampled"] = False
+    plants.append(
+        {
+            "name": "frame-run-bootstrap",
+            "red": bool(validate_measurement(bad, commission, manifest)),
+        }
+    )
+
+    bad_manifest = copy.deepcopy(manifest)
+    bad_manifest["bee"]["coverage"] += 0.001
+    plants.append(
+        {
+            "name": "exact-coverage",
+            "red": bool(validate_measurement(measurement, commission, bad_manifest)),
+        }
+    )
+
+    bad_commission = copy.deepcopy(commission)
+    c7 = next(
+        z for z in bad_commission["rows"] if z["id"] == "C7-flat-wander"
+    )
+    c7["plant"]["ci95_jackknife"][0] = 399.0
+    plants.append(
+        {
+            "name": "flat-wander-confidence",
+            "red": bool(validate_commission(bad_commission)),
         }
     )
 
@@ -278,7 +366,7 @@ def main() -> int:
             "plants": plants,
         },
         "derived_verdict": derived_verdict(
-            measurement, derived_gates(measurement, commission)
+            measurement, derived_gates(measurement, commission, manifest)
         ),
     }
     write_json(ROOT / "out" / "check.json", result)

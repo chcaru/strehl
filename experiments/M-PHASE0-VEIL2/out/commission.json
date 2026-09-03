@@ -1,9 +1,9 @@
 {
   "all_plants_red": true,
-  "controls_passed": 8,
-  "controls_total": 8,
-  "plants_red": 8,
-  "plants_total": 8,
+  "controls_passed": 11,
+  "controls_total": 11,
+  "plants_red": 11,
+  "plants_total": 11,
   "rows": [
     {
       "control": {
@@ -125,27 +125,42 @@
     },
     {
       "control": {
+        "ci95_jackknife": [
+          0.0,
+          7.117187187159003e-14
+        ],
+        "jackknife_clusters": 16,
         "p95_p05_dn": 1.7763568394002505e-14,
         "pass": true,
         "plane": [
           17.00000000000003,
           0.030000000000000034,
           -0.019999999999999997
-        ]
+        ],
+        "se_jackknife": 2.7249134427340573e-14
       },
       "control_pass": true,
       "id": "C7-flat-wander",
       "plant": {
+        "ci95_jackknife": [
+          425.1746449609195,
+          724.7584435306217
+        ],
+        "jackknife_clusters": 16,
         "p95_p05_dn": 574.9665442457706,
         "pass": false,
         "plane": [
           296.42270058708425,
           0.030000000000000235,
           -0.01999999999999971
-        ]
+        ],
+        "se_jackknife": 76.4244384106383
       },
       "plant_red": true,
-      "reading": 574.9665442457706
+      "reading": {
+        "lower95_dn": 425.1746449609195,
+        "point_dn": 574.9665442457706
+      }
     },
     {
       "control": {
@@ -164,6 +179,60 @@
       },
       "plant_red": true,
       "reading": "same peak count, opposite predicate"
+    },
+    {
+      "control": {
+        "expected_external": -0.0625,
+        "pass": true,
+        "reading": -0.0625
+      },
+      "control_pass": true,
+      "id": "C9-catmull-gather",
+      "plant": {
+        "expected_external": -0.0625,
+        "pass": false,
+        "reading": -0.09375
+      },
+      "plant_red": true,
+      "reading": -0.09375
+    },
+    {
+      "control": {
+        "expected_external": 0.7346938775510204,
+        "pass": true,
+        "reading": 0.7346938775510206
+      },
+      "control_pass": true,
+      "id": "C10-exact-cover-scale",
+      "plant": {
+        "expected_external": 0.7346938775510204,
+        "pass": false,
+        "reading": 0.7347
+      },
+      "plant_red": true,
+      "reading": 0.7347
+    },
+    {
+      "control": {
+        "detail_ci95": [
+          -0.9999999812374846,
+          1.0000000782505203
+        ],
+        "pass": true,
+        "width": 2.0000000594880047
+      },
+      "control_pass": true,
+      "id": "C11-detail-frame-bootstrap",
+      "plant": {
+        "detail_ci95": [
+          1.0000000075702289,
+          1.000000080146922
+        ],
+        "pass": false,
+        "width": 7.257669309979065e-08
+      },
+      "plant_red": true,
+      "reading": 7.257669309979065e-08
     }
   ],
   "status": "COMMISSIONED",

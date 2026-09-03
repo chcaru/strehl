@@ -249,3 +249,24 @@ their baseline CIs.
 * KILL or NOT ROBUST changes no production Rust; `BaseBand::Mean` stays.
 
 This phase-0 lane itself is prohibited from editing Rust.
+
+## 9. Post-result verification repairs (not part of the frozen preregistration)
+
+The original preregistration above is preserved verbatim. After the first
+result was filed, an independent read-only rerun found four defects. The final
+instrument repairs them transparently:
+
+* C7 now applies its registered 100/400-DN bars to a plane-refitted 4×4
+  delete-block jackknife interval, not only a point estimate.
+* Reference gathers now derive the full-precision 60-bisection cover scale from
+  the sidecars and use Rust's Catmull-Rom `a=-1/2`, not the rounded console
+  banner and OpenCV's `a=-3/4` cubic. C9 plants the wrong cubic kernel; C10
+  plants four-decimal coverage.
+* The detail bootstrap now resamples frame runs as well as spatial blocks. C11
+  plants the former fixed-frame-median implementation.
+* The report now describes the predecessor's own-crop 99.5th-percentile
+  normalization correctly.
+
+Thus the final commissioning requirement is 11/11 controls and 11/11 plants.
+The frozen statistic, gates, thresholds, verdict lookup, bias direction, and
+Rust consequence above did not change.
