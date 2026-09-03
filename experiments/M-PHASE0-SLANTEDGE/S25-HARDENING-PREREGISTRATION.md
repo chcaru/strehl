@@ -268,3 +268,29 @@ latent V1--V5 score is opened:
 No formula, fixture, seed, threshold, variant, eligibility result or verdict
 rule changes.  The complete six-variant battery again reruns twice from the
 start.
+
+## Post-outcome conformance amendment A3
+
+An independent verifier reproduced the no-admission result and every reported
+number, then found three implementation/specification mismatches.  Freeze the
+following conformance repairs before changing code:
+
+1. The registered unconditional non-positive-`D_b` refusal takes precedence
+   over the later 58/64 completeness clause.  Any non-finite or non-positive
+   site `D_b` in a licensed bin must refuse; the 58/64 clause remains redundant
+   documentation of the minimum finite count.
+2. For calibration pair `p`, initialise exactly one PCG64 generator from the
+   registered `SeedSequence([2026091000,p])`, draw A first and B second.  Do not
+   append an unregistered role integer.  This correction is expected to change
+   floors and all dependent numbers, so the entire matrix must be replaced,
+   not patched.
+3. Floor activation is the fraction over the five licensed bins only.  The
+   checker must additionally run an actual child-process mutant whose supplied
+   `p95_higher` vector is ten zeros.  Every floor-aware variant must explicitly
+   refuse that base probe as `INVALID_FLOOR_PROFILE`; a literal mutation that
+   turns one such refusal into a value must go RED.  This replaces the
+   insufficient serialized-fraction-only mutation.
+
+No acceptance threshold, score formula, arm, variant, or eligibility rule
+changes.  Existing outcome prose is provisional until the corrected complete
+battery reruns twice and an independent verifier accepts it.
