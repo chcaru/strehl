@@ -153,6 +153,53 @@ Scope limit, stated by the lane: the result covers M6's post-correlation residua
 Continuous MDA below 0.010 and dose-dependent upstream rejection from a full curved
 image-render plant remain unmeasured.
 
+### 2.0.4 D8/SPLIT — KILL, and the Rust was removed again
+
+`docs/research/M-PHASE0-SPLIT.md`, `experiments/M-PHASE0-SPLIT/`. Corrective commit
+`1ac21560`; the superseded prototype commits are `1cd3019c` and `81ad96fd`.
+
+This lane is the clearest demonstration yet of the failure mode this whole phase exists to
+guard against, because it happened **twice in one lane and was caught the second time**.
+
+The lane first built the feature — dual even/odd accumulators in `merge_cmd.rs`, an FRC
+module in `strehl-core`, an off-by-default `--split-out` flag — and filed **NARROWED: ship
+diagnostic only**, on the strength of seven passing control families, six Rust plants going
+RED, and the headline selling point apparently confirmed: identical sharpening moved the
+crossing only 0.222192 → 0.220543 while a naive acuity measure falsely rose 1.838176×.
+
+It then re-audited under a standing instruction that stopping is a success, and **reversed
+itself to KILL, removing every line of Rust it had written.** The shared files were verified
+byte-identical to pre-feature commit `d337daa8`, and `cargo test --workspace` passes 541
+core, 115 CLI and 5 byte-freeze tests.
+
+**The distinction it drew is the most valuable output of this phase.** Re-running M115's
+exact source blobs from commit `77c8d5e9` on the original 22/33/360-frame inputs, the
+published numbers *do* reproduce — blur recovery 0.9938215871–0.9973982082, filter maximum
+movement 0.537785%, identity 0.999999999987–1.000000000000. **And reproduction still does not
+license building.** Closure fails on evidence reproduction cannot touch:
+
+- the historical null reads **MEAN 0.438734** and **WIENER_UNG 3.331288** against a 0.25 bar;
+- a **common-mode adversary reads FRC 0.972099**;
+- the 1.0000 identity is **algebraic** — a tautology rather than evidence, which is the
+  capped-control failure pattern this repo keeps rediscovering;
+- **no plant exercises a data-dependent tuner**;
+- M41 records **9/12 endpoint fallbacks and 0/32 successful repairs**.
+
+The mechanism behind all of it is one thing: **two halves of the same frames are not
+independent.** They share fixed-pattern noise, sensor structure and scene, so their
+correlation is inflated by construction, and no accounting fixes a partition that is
+degenerate at source.
+
+The lane also self-reported an error in its own favour: its first audit aggregator falsely
+reported non-reproduction because of a wrong Markdown literal — an error that *favoured*
+stopping. It was caught and corrected and did not change the verdict.
+
+**Reopening D8 as scoped requires** an independent repeated bracket, sensor-pattern
+subtraction, a non-degenerate partition, and a plant that transfers to actual self-tuning.
+A follow-on lane (`M-PHASE0-SPLIT2`) is testing whether the 32-repeat capture supplies the
+first of those, since repeated exposures of a fixed scene are non-degenerate by construction
+in a way split halves can never be.
+
 **M-PHASE0-PHASE — CLOSED. C1 is KILL at the measured ρ, and NOT ROBUST across the ρ
 census.** Getting here took a filed verdict, its retraction, and a sign fix in the
 lane's own algebra; read Amendments A7 (the wrong verdict), A8 (the retraction), A9 (the
