@@ -227,3 +227,100 @@ unlicensed, and it also misses both physical ratio bars and the noise bar.
 decisive sharpening and genuine-improvement controls.  No real capture,
 holdout, reserve, Rust source, SCORECARD-BASELINE path or V-HEADTOHEAD3 path
 was modified.
+
+## S25 hardening build
+
+**Status: complete. Verdict: NO ADMISSIBLE S25 VARIANT.**  Six
+outcome-independent variants were frozen before measurement.  None combines
+tone invariance, sharpening safety, quantitatively correct bidirectional
+optical response, noise robustness and the angle contract.  This finite search
+does not prove the trade-off fundamental.
+
+The preregistration is
+`experiments/M-PHASE0-SLANTEDGE/S25-HARDENING-PREREGISTRATION.md`.
+`s25h_fixtures.py` owns plants, `s25h_variants.py` owns candidates, and
+`s25h_commission.py` imports neither: it invokes measurement and source
+provenance as child processes and checks literal predicates.  Relevant commits
+are `f78e8288` (freeze), `ee2b0a3c` (implementation), `c90e13d4`/`da0efcb2`
+(pre-outcome warning repair), and `aa540580`/`80a56369` (retain every
+disqualified diagnostic).  Independent verification then found three
+specification mismatches; `2b377e21` froze their correction before
+`9fbc9b21` repaired calibration stream construction, licensed-bin activation,
+strict non-positive-D refusal and the executed zero-floor mutant.
+
+The first implementation run stopped before adjudication because NumPy warned
+while interpolating non-finite flat-bootstrap sentinels.  The registered repair
+uses the exact lower 5% order statistic.  The next valid run found the main
+edge ineligible and therefore exposed no V1–V5 score.  A second registered
+repair retained latent diagnostics while keeping every public status
+`REFUSED`; diagnostics can never pass a gate.
+
+### Full frozen matrix
+
+All entries are arm/base ratios.  Identity is exactly `1.000000` for every
+variant.  Daggers are diagnostics behind the already-failed source-eligibility
+gate, not admissible measurements.  Noise is `median [min,max]`; the frozen
+worst-case 5% bar is applied to every one of 24 retained readings.
+Native/diagnostic base values are `9.56626e-5, 8.45709e-5, .472695, .472695,
+.472695, .481947` in row order.
+
+| variant | blur | improvement | USM | affine / gamma-3 / logistic | noise | disposition |
+|---|---:|---:|---:|---:|---:|---|
+| `C0_NATIVE_MIN` | .293334 | 2.297574 | **1.028294 RED** | 1 / 1.215825 / 12352.494864 | .405570 [.215095,.980975] | RED: every target property except affine/identity |
+| `V1_FLOOR_ELIG_MIN`† | .301519 | 2.414290 | **1.163158 RED** | 1.131153 / 1.375283 / 3424.239914 | .458762 [.243305,1.109633] | REFUSED; floor/min does not harden S25 |
+| `V2_GES_OLS`† | **1.268326 wrong sign** | **.923468 wrong sign** | 1.000425 | 1.000349 / 1.216039 / 1.792007 | 1.161719 [1.062812,1.277234] | REFUSED; shape conversion reverses optics |
+| `V3_RAMP_GES_OLS`† | **1.268326 wrong sign** | **.923468 wrong sign** | 1.000425 | 1 / .999859 / .999896 | 1.161719 [1.062812,1.277234] | REFUSED; tone fixed, optics/noise fail |
+| `V4_RAMP_GES_OLS_ANGLE`† | **1.268326 wrong sign** | **.923468 wrong sign** | 1.000425 | 1 / .999859 / .999896 | 1.161719 [1.062812,1.277234] | REFUSED; same plus angle gate |
+| `V5_RAMP_GES_TS_ANGLE`† | **1.236317 wrong sign** | **.897858 wrong sign** | 1.007743 | 1 / .999972 / 1.000030 | 1.129713 [1.035713,1.283063] | REFUSED; robust slope changes no conclusion |
+
+The expanded 64-site control also overturns the apparent native-S25
+sharpening safety from the earlier 24-seed run: USM is now **+2.829%**, outside
+the unchanged 1% bar.  The empirical noise floor activates in **96.25%** of
+licensed base bin/site cells, yet V1's USM error grows to **+16.316%** and its
+noise median stays at .458762x.  A fixed floor does not preserve the common-filter
+cancellation: unclipped USM raises repeat-difference energy above the floor
+selectively.
+
+The Gaussian-equivalent shape conversion restores USM invariance but is not a
+resolution statistic: blur scores sharper and real improvement scores worse.
+It also lets extra white noise improve the score by median 13.0–16.2%.
+Independent 33-step PCHIP linearisation is the one clean success: V3–V5 move
+under affine/gamma/logistic by at most **0.0141%**, without losing their USM
+result.  Tone can therefore be fixed without ordinality, but that does not fix
+the optical/noise defeats.
+
+### Controls and formal-M1 preflight
+
+The source-only eligibility bins from 0.20 upward read
+`point/LCB = 2.715/1.978, 3.645/2.051, 2.051/1.018,
+2.045/.865, 1.373/.254`; only the first two pass.  Equal-focus and flat
+sources refuse.  The point-only plant reads 2.1875 with LCB 1.296875 and
+refuses.  V1–V5 refuse both untouched and USM flat ROIs; C0 instead emits
+numeric values whose USM/base ratio is 1.008060.
+
+The reference-derived angle estimates are
+`.513040, 1.025409, 5.118501, 12.262438` degrees.  V4/V5's `[2,10]` gate
+correctly separates the four geometries in isolation, but the required
+5-degree numeric arm remains officially refused because the source itself is
+ineligible.  C0–V3 have no angle gate.
+
+The checker catches **27/27** single-property sabotages, including an executed
+zero-floor child mutant, point-only eligibility, flat admission, survivor-only
+output and MTF50 relabelling.  Two full child runs are exactly deterministic;
+all three inherited source hashes and 11 function ASTs pass.
+
+Formal real M1 remains blocked without opening pixels: matched bee darks/flats
+are both count zero, the defocused-source denominator is undefined, current
+outputs are linear sRGB against a ProPhoto contract, every baseline output is
+scale-invalid, and the independent repeat's second block remains over the
+registration gate at `.107703` native px.  Absolute MTF50 was explicitly
+out of scope; every hardening variant reads only `[.20,.25)`.
+
+Reproduce from the repository root with all numerical thread variables set to
+one:
+
+```powershell
+python -B experiments\M-PHASE0-SLANTEDGE\s25h_commission.py --checker-only
+python -B experiments\M-PHASE0-SLANTEDGE\s25h_real_preflight.py
+python -B experiments\M-PHASE0-SLANTEDGE\s25h_commission.py
+```
