@@ -35,9 +35,20 @@ preregistered.  It reuses every frozen band, threshold, ROI and verdict rule
 below without alteration, and disagreement across the two development rungs
 must be reported as NOT ROBUST rather than choosing the favourable rung.
 
+**Second post-outcome census correction, 2026-09-03.**  Verification of that
+correction proved that the three `marker`/`marker2` Zerene files actually match
+the frozen 33-frame `119MSDCF` bracket 33/33 by `OriginalDocumentID`; the prior
+report had paired a focus-stack output with the *wrong strehl subject*, not
+proved the comparator captures unusable.  A complete `C:\dev\macro` inventory
+also exposed three unique-byte focus-stack variants of the 63-frame 113
+bracket; `stack_v3.tif` is a byte-identical alias of
+`stack_test2_rec2020.tif` and is not double-counted.  These six additional arms
+are post-registered under the same unchanged rules.  This second correction
+retracts the three-pair census rather than defending it.
+
 ## Question and scope
 
-On the two same-bracket comparator renders that still exist, does strehl carry
+On every surviving same-bracket comparator render, does strehl carry
 more or less **detail-specific ordinal spatial structure** in each admitted
 frequency band?  This is a pipeline comparison, not an algorithm-only
 comparison: the comparators consumed Lightroom-developed TIFFs, while strehl
@@ -53,12 +64,18 @@ report already answers the tone-neutral question.  The user dispatch allocates
 the `V-HEADTOHEAD3` stem; the central AGENTS.md ledger is outside this lane's
 write permission.
 
-Three admissible render pairings exist:
+Nine unique-byte admissible render pairings exist:
 
 | ID | strehl | comparator | same source bracket |
 | --- | --- | --- | --- |
 | `113` | `C:\dev\strehl-out\DELIVER-V6\masters\113MSDCF.tiff`, SHA-256 `4E915024ED32DB0A9AF5F28B71C32832FEA49121A61E10E1BE2EE86EC46BAC0F`, 197801290 B | `D:\edited\macro\test2\2026-05-09-12.12.17 ZS PMax.tif`, SHA-256 `B240FE4016E97EBB194497B2798A095C63C490C4FFF54018D48D34C7523719A0`, 196453660 B, Zerene PMax | 63 ARWs / 63 input TIFFs |
 | `113-sharp` (post-registered) | same strehl master | `D:\edited\macro\test\2026-05-07-21.31.06 ZS PMax.tif`, SHA-256 `4D490F71EF63DA33758A49BF583AD2166CD014A5401ED64EDB5E5EDCABB47A3E`, 196453660 B, Zerene PMax | same 63 ARWs / 63 input TIFFs; Lightroom sharpening/colour-NR rung |
+| `113-fork` (post-registered) | same strehl master | `C:\dev\macro\out\stack_test2_rec2020.tif`, SHA-256 `2D1CCEC678F81173A231FBC7FD84E5457F361C57D32DFB06B24CBD82C1BBD6C2`, 392907466 B, focus-stack fork | same 63 developed TIFFs; `stack_v3.tif` is byte-identical |
+| `113-fork-defringed` (post-registered) | same strehl master | `C:\dev\macro\out\stack_test2_rec2020_defringed.tif`, SHA-256 `82E1606DDF2627B938588F8DD4D7D8480392680CBCFD7D20900C84A043AAAA3B`, 392897296 B | same 63, postprocessed variant |
+| `113-fork-u16` (post-registered) | same strehl master | `C:\dev\macro\out\stack_test2_rec2020_16bit.tif`, SHA-256 `930014DEAB9F4833ABD7F2D93880CECBA282C900C7FC29C13AA6155797404086`, 196449104 B | same 63, 16-bit variant |
+| `119-pmax` (post-registered) | `C:\dev\strehl-out\DELIVER-V6\masters\119MSDCF.tiff`, SHA-256 `65AE95D15061EA455C239EC47CEC094A6461D1BD42A900A4139630499B162B9B`, 197801290 B | `D:\edited\macro\marker\2026-05-09-13.35.07 ZS PMax.tif`, SHA-256 `B94C04421C8EB5FADD766E99A361F2C0BE4DE5425BECABAEB8D1FC1C82AA146B`, 196453640 B | 33 ARWs / 33 TIFFs; LR contrast +50 |
+| `119-pmax-udr` (post-registered) | same 119 master | `D:\edited\macro\marker\2026-05-09-13.40.00 ZS PMax UDR.tif`, SHA-256 `412E92611996DB808C60F522334881B9F4F108ED659F665560617FF19BA3A0EA`, 196453640 B | same 33 TIFFs |
+| `119-pmax-udr-neutral` (post-registered) | same 119 master | `D:\edited\macro\marker2\2026-05-09-13.47.08 ZS PMax UDR.tif`, SHA-256 `91A23716F5D1DAAB1A25A09BC2407EC386840858A559C72D7C074B89FABD5F97`, 196453640 B | same 33 identities; LR contrast 0 |
 | `cb` | `C:\dev\strehl-out\DELIVER-V6\masters\coffee-bean.tiff`, SHA-256 `F38CA50ED1A680FA4DBCDD8D0513BE538DD31634B4E89AC6A34885944790A2EC`, 197801290 B | `C:\dev\macro\out\coffee-bean\stack.tif`, SHA-256 `8636C20D73CA0CB1F57DB89BF8553ABC166E0FBC517E5C62A07C74DEE509066E`, 393326272 B, focus-stack fork | 105 ARWs / 105 input TIFFs |
 
 The executable checker must hash the byte streams itself.  Its RED plant
@@ -72,8 +89,7 @@ The frozen strehl executable is
 `strehl.exe stack <absolute ARW directory> -o <absolute master> --srgb`,
 private `STREHL_CACHE_DIR`, and all other `STREHL_*` unset.  This lane does not
 rerender.  No Helicon output was found in `C:\dev`, `D:\edited`, or
-`D:\personal\macro`; extra Zerene *marker* renders are inadmissible because the
-prior reports establish that their captures do not match a strehl bracket.
+`D:\personal\macro`.
 
 ## Declared bias and failure directions
 
@@ -86,10 +102,10 @@ Ordinal band share can be fooled upward by noise, spatial sharpening, ringing,
 demosaic texture, resampling, or clipping-created boundaries; it can be fooled
 downward by denoising, blur, a demosaic low-pass, or rank ties.  It measures
 rendered ordinal structure, not MTF or truth fidelity.  Registration failure
-can move either way.  The low-texture difference-in-differences control below
-removes a common noise/processing floor but cannot distinguish faithful detail
-from scene-dependent sharpening.  Those limitations will constrain the nouns
-used in the verdict.
+can move either way.  The low-texture same-direction veto below rejects a
+common noise/processing direction but cannot distinguish faithful detail from
+scene-dependent sharpening.  Those limitations will constrain the nouns used
+in the verdict.
 
 ## Geometry and registration
 
