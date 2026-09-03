@@ -1514,6 +1514,59 @@ separate measurement lane. It must commission its harness against a plant
 proven potent before any hash it reports is admissible, and it is explicitly
 authorised to return a failing M12-S as a complete deliverable.
 
+### 2.9.6 The replacement build path is closed by measurement, for the reason I predicted
+
+2.9.3 proposed `cover = scale` as the build path replacing phase 1, on the
+ground that Scale resamples every pixel of every render including the reference
+frame, whose placement is the identity. That is confirmed: measured `k` is
+`0.9870` on a 22-frame stack and `0.9321` on a 299-frame stack, so the
+interpolator runs on everything, always.
+
+**The path is nevertheless closed, and the audit that closed it is the most
+disciplined work this program has produced** (`66e79043`,
+`docs/research/cover-default.md`). Crop's identity placement is a bit-exact
+window -- that gate passed. The other three failed:
+
+| gate | result |
+| --- | --- |
+| outer 0-16 Crop ring within 0.1% on every stack | **FAIL** -- up to `+2.61%` |
+| safe inset at most 128 px on every stack | **FAIL** -- `256 px` needed |
+| at least 80% of original pixels after inset | **FAIL** -- `64.60%` |
+
+**The mechanism is the one I predicted before the measurement.** Crop happens
+*after* the full-plane pyramid has already transported the uncovered-fill
+boundary inward, so the border contamination is inside the kept region rather
+than in the discarded margin. Paying 35% of the frame to avoid a 1.3-7.3%
+resample is the worse trade. `DEFAULT_COVER_MODE` remains `Scale`.
+
+Predicting the defect correctly and still having the path close is the right
+outcome to record plainly: **a correct diagnosis is not a repair**, and the
+program's net verified product improvement remains zero.
+
+**One genuine improvement did land, and it is the first.** The audit found a
+hermeticity bug independent of the default decision: `RENDER_ENV` did not clear
+ambient `STREHL_COVER`, so a dirty shell was indistinguishable from a geometry
+regression. Commissioned rather than asserted -- under a planted
+`STREHL_COVER=crop` the aligned freeze moved from
+`E600A506...` at `49,450,019` bytes to `C3B3B05C...` at `48,875,075` bytes and
+the run exited 101, while the unaligned control held as a specificity check.
+`STREHL_COVER` is now cleared with the other render inputs and all three rows
+reproduce twice bit-for-bit under the same planted value
+(`byte-freeze.rs:445-455`). This is a test-integrity fix, not a picture-quality
+one, and it should be scored as such.
+
+The audit also stated its own limits without being asked: the 299-frame holdout
+value, a universal depth-only law, any sharpness or visual advantage, and a
+finite safe inset generalising beyond one stack are all explicitly **not**
+verified, and the claim that cropping is normal product behaviour is marked as
+context supplied to the lane rather than a measurement.
+
+**Consequence for the program.** M8 was routed to this lane and the lane closed
+without reaching it, so M8 was briefly unowned; it now has a dedicated lane.
+With Scale retained, **M8 is squarely on the product path** -- every render
+resamples through a kernel with negative lobes, so the overshoot question is
+live rather than hypothetical.
+
 ---
 
 ## 3. Gaps, ranked by what stands between here and print-worthy
