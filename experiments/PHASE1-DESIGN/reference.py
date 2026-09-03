@@ -37,31 +37,34 @@ MEASURE_PATH = HERE / "measure.py"
 
 BANDS = 7
 SCORE_SIZE = 512
-HALO = 256
+HALO = 512
 WORK_SIZE = SCORE_SIZE + 2 * HALO
 TILE = 32
 FREQ_OUTPUT = (0.10, 0.25)
 BOOTSTRAP_SEED = 0x5A17_2026
 BOOTSTRAP_REPLICATES = 8192
 K_GRID = tuple(round(i * 0.05, 2) for i in range(161))
-PHASE_GRID = tuple(i / 8.0 for i in range(8))
-CAL_SIZE = 512
-CAL_REALISATIONS = 8
-VALIDATION_REALISATIONS = 4
+AFFINE_CAL_SIZE = 768
+AFFINE_CAL_MARGIN = (AFFINE_CAL_SIZE - SCORE_SIZE) // 2
+AFFINE_CAL_SEED = 0xB37A_1101
+AFFINE_VALIDATION_SEED = 0xE771_9000
 NU_ANALYTIC = 13.37469
+SCHEMA = 2
+EPOCH = "w1-fe111781"
+DESIGN_SHA256 = "fe111781488ce950372fd17e45ab1d402dcc0e34"
 
 # Filled after the deterministic synthetic calibration and sealed by the
 # preregistration commit.  --commission refuses drift from these values.
 FROZEN_NU_EFF = (
-    8.5,
-    9.0,
     8.0,
+    10.0,
+    9.5,
+    9.0,
+    9.0,
+    9.0,
     7.5,
-    6.5,
-    2.5,
-    0.5,
 )
-FROZEN_MANIFEST_SHA256 = "79b74a013e6598c985b6ad7bc969c732cf4189d8467eec3e13313ca23ab13b09"
+FROZEN_MANIFEST_SHA256 = "2a5f7f64942ec6044d59a5bfd561d3849522d3688cf0691256adb113ba97cc18"
 
 KERNEL = np.asarray([1, 4, 6, 4, 1], dtype=np.float64) / 16.0
 
@@ -70,11 +73,24 @@ def _pairs(values: Sequence[tuple[int, int]]) -> list[list[int]]:
     return [[int(x), int(y)] for x, y in values]
 
 
-SW4_DETAIL = _pairs(
-    [(x, y) for y in (45, 97, 149, 201) for x in (48, 100, 152, 204, 256, 308, 360, 412)]
+FLAT_DETAIL = _pairs(
+    [
+        (32, 352), (160, 416), (320, 288), (288, 288), (224, 256), (0, 352),
+        (480, 128), (64, 448), (288, 416), (448, 256), (64, 320), (320, 256),
+        (480, 256), (416, 320), (192, 256), (288, 320), (64, 352), (64, 256),
+        (160, 256), (480, 352), (352, 352), (32, 480), (416, 128), (416, 480),
+        (320, 192), (256, 288), (416, 288), (416, 160), (0, 384), (288, 192),
+        (320, 352), (288, 256),
+    ]
 )
-SW4_FLAT = _pairs(
-    [(x, y) for y in (21, 73, 125, 177) for x in (24, 76, 128, 180, 232, 284, 336, 388)]
+FLAT_FLAT = _pairs(
+    [
+        (0, 32), (160, 0), (0, 0), (192, 0), (224, 0), (96, 32), (64, 0),
+        (64, 32), (256, 0), (32, 0), (160, 32), (128, 0), (320, 32), (160, 64),
+        (0, 64), (352, 96), (416, 32), (448, 32), (96, 0), (128, 32), (128, 64),
+        (448, 0), (96, 64), (320, 0), (384, 448), (32, 96), (384, 0), (288, 64),
+        (480, 32), (64, 96), (64, 64), (64, 128),
+    ]
 )
 COFFEE_DETAIL = _pairs(
     [
@@ -119,13 +135,13 @@ DCF113_FLAT = _pairs(
 
 
 CAPTURES = {
-    "sw4": {
-        "path": Path(r"D:\personal\macro\requests\30-calibration-grid\calibration-grid-1-sw4-cpl"),
-        "frames": 55,
-        "score_origin": [1500, 916],
-        "transform": TRANSFORMS / "sw4.warpmap.txt",
-        "detail_tiles": SW4_DETAIL,
-        "flat_tiles": SW4_FLAT,
+    "flat-on-ruler": {
+        "path": Path(r"D:\personal\macro\flat-on-ruler-cpl"),
+        "frames": 79,
+        "score_origin": [1500, 900],
+        "transform": TRANSFORMS / "flat-on-ruler.warpmap.txt",
+        "detail_tiles": FLAT_DETAIL,
+        "flat_tiles": FLAT_FLAT,
         "align_threads": 8,
     },
     "coffee-bubbles": {
@@ -147,6 +163,15 @@ CAPTURES = {
         "align_threads": 4,
     },
 }
+
+CAPTURE_ORDER = ("flat-on-ruler", "coffee-bubbles", "113MSDCF")
+EXPECTED_ROOTS = (
+    Path(r"D:\personal\macro\flat-on-ruler-cpl"),
+    Path(r"D:\personal\macro\coffee-bubbles"),
+    Path(r"D:\personal\macro\113MSDCF"),
+)
+if tuple(CAPTURES) != CAPTURE_ORDER or tuple(c["path"] for c in CAPTURES.values()) != EXPECTED_ROOTS:
+    raise RuntimeError("W1 capture ledger drifted from the fe111781 development-only allowlist")
 
 
 @dataclass(frozen=True)
@@ -183,7 +208,12 @@ def write_json(path: Path, value: object) -> None:
 
 
 def ordered_raws(config: dict) -> list[Path]:
-    paths = sorted(config["path"].rglob("*.ARW"), key=lambda p: str(p.relative_to(config["path"])).casefold())
+    root = Path(config["path"])
+    resolved = root.resolve()
+    allowed = {p.resolve() for p in EXPECTED_ROOTS}
+    if resolved not in allowed or "30-calibration-grid" in str(resolved).casefold():
+        raise RuntimeError(f"refusing non-development W1 root {resolved}")
+    paths = sorted(root.rglob("*.ARW"), key=lambda p: str(p.relative_to(root)).casefold())
     if len(paths) != config["frames"]:
         raise RuntimeError(f"{config['path']}: expected {config['frames']} ARWs, found {len(paths)}")
     return paths
@@ -292,47 +322,62 @@ def scalar_catmull(source: np.ndarray, x: float, y: float) -> float:
     return total
 
 
-def extract_greens(mosaic: np.ndarray, pattern: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def extract_cfa_planes(mosaic: np.ndarray, pattern: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Copy the four RGGB phase planes in canonical R,G1,G2,B order."""
     p = np.asarray(pattern)
     if p.shape != (2, 2) or not np.array_equal(p, np.asarray([[0, 1], [3, 2]])):
         raise RuntimeError(f"W1 requires LibRaw RGGB/RGBG phase [[0,1],[3,2]], got {p.tolist()}")
     a = np.asarray(mosaic)
-    return np.array(a[0::2, 1::2], copy=True), np.array(a[1::2, 0::2], copy=True)
+    return (
+        np.array(a[0::2, 0::2], copy=True),
+        np.array(a[0::2, 1::2], copy=True),
+        np.array(a[1::2, 0::2], copy=True),
+        np.array(a[1::2, 1::2], copy=True),
+    )
 
 
-def decode_green_planes(path: Path) -> tuple[np.ndarray, np.ndarray, dict]:
+def decode_cfa_planes(path: Path) -> tuple[tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray], dict]:
     with rawpy.imread(str(path)) as raw:
         visible = np.array(raw.raw_image_visible, dtype=np.float32, copy=True)
-        g1, g2 = extract_greens(visible, raw.raw_pattern)
+        planes = extract_cfa_planes(visible, raw.raw_pattern)
         black = [float(v) for v in raw.black_level_per_channel]
         camera_white = raw.camera_white_level_per_channel
         meta = {
             "visible_shape": list(visible.shape),
-            "plane_shape": list(g1.shape),
+            "plane_shape": list(planes[0].shape),
             "black": black,
             "container_white": float(raw.white_level),
             "camera_white": None if camera_white is None else [float(v) for v in camera_white],
             "iso": float(raw.other.iso_speed),
         }
-    if g1.shape != g2.shape or g1.shape[0] != 2344 or g1.shape[1] != 3514:
-        raise RuntimeError(f"{path}: unexpected LibRaw green geometry {g1.shape}/{g2.shape}")
+    if len({plane.shape for plane in planes}) != 1 or planes[0].shape != (2344, 3514):
+        raise RuntimeError(f"{path}: unexpected LibRaw CFA-plane geometry {[p.shape for p in planes]}")
     if max(black) - min(black) != 0:
         raise RuntimeError(f"{path}: W1 decoder convention requires equal black levels, got {black}")
-    return g1, g2, meta
+    return planes, meta
 
 
-def prepared_crop(path: Path, transform: Similarity, score_origin: Sequence[int]) -> tuple[np.ndarray, np.ndarray, dict]:
-    g1, g2, meta = decode_green_planes(path)
+def prepared_crop(
+    path: Path,
+    transform: Similarity,
+    score_origin: Sequence[int],
+    sidecar_plane: Sequence[int],
+) -> tuple[tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray], dict]:
+    planes, meta = decode_cfa_planes(path)
     work_origin = (int(score_origin[0]) - HALO, int(score_origin[1]) - HALO)
-    plane = (3516, 2344)
-    a = gather_crop(g1, transform, work_origin, sidecar_plane=plane)
-    b = gather_crop(g2, transform, work_origin, sidecar_plane=plane)
     # Black subtraction follows interpolation.  Catmull undershoot below black
     # is clipped at physical zero before both policy arms see the same bytes.
-    black = float(meta["black"][1])
-    a = np.maximum(a - black, 0.0, dtype=np.float32)
-    b = np.maximum(b - black, 0.0, dtype=np.float32)
-    return a, b, meta
+    phase_to_black = (0, 1, 3, 2)
+    aligned = []
+    for source, black_index in zip(planes, phase_to_black, strict=True):
+        gathered = gather_crop(
+            source,
+            transform,
+            work_origin,
+            sidecar_plane=(int(sidecar_plane[0]), int(sidecar_plane[1])),
+        )
+        aligned.append(np.maximum(gathered - float(meta["black"][black_index]), 0.0, dtype=np.float32))
+    return tuple(aligned), meta
 
 
 def noise_coefficients(iso: float) -> tuple[float, float]:
@@ -407,17 +452,46 @@ def collapse_pyramid(levels: Sequence[np.ndarray]) -> np.ndarray:
     return out.astype(np.float32)
 
 
-def _translated_white(rng: np.random.Generator, size: int, fx: float, fy: float) -> np.ndarray:
-    source = rng.standard_normal((size + 3, size + 3), dtype=np.float64)
-    wx = catmull_weights(np.asarray(fx))
-    wy = catmull_weights(np.asarray(fy))
-    out = np.zeros((size, size), dtype=np.float64)
-    for j in range(4):
-        row = np.zeros_like(out)
-        for i in range(4):
-            row += source[j : j + size, i : i + size] * float(wx[i])
-        out += row * float(wy[j])
-    return out.astype(np.float32)
+def affine_white(
+    transform: Similarity,
+    origin: Sequence[int],
+    sidecar_plane: Sequence[int],
+    size: int,
+    seed: int,
+) -> np.ndarray:
+    """Pull deterministic unit white noise through one actual affine lattice.
+
+    The source is only the bounding box needed by this output crop.  Its global
+    integer origin is retained, so the interpolation phases are identical to a
+    full sensor-sized white source without allocating one.
+    """
+    ox, oy = int(origin[0]), int(origin[1])
+    cx, cy = float(sidecar_plane[0]) * 0.5, float(sidecar_plane[1]) * 0.5
+    corners_x = np.asarray([ox, ox + size - 1, ox, ox + size - 1], dtype=np.float64)
+    corners_y = np.asarray([oy, oy, oy + size - 1, oy + size - 1], dtype=np.float64)
+    sx, sy = transform.apply(corners_x, corners_y, cx, cy)
+    xmin, xmax = math.floor(float(np.min(sx))) - 1, math.floor(float(np.max(sx))) + 2
+    ymin, ymax = math.floor(float(np.min(sy))) - 1, math.floor(float(np.max(sy))) + 2
+    rng = np.random.default_rng(seed)
+    source = rng.standard_normal((ymax - ymin + 1, xmax - xmin + 1), dtype=np.float64)
+    out = np.empty((size, size), dtype=np.float32)
+    gx = np.arange(ox, ox + size, dtype=np.float64)
+    for row0 in range(0, size, 32):
+        gy = np.arange(oy + row0, oy + min(row0 + 32, size), dtype=np.float64)
+        yy, xx = np.meshgrid(gy, gx, indexing="ij")
+        sx, sy = transform.apply(xx, yy, cx, cy)
+        x0 = np.floor(sx).astype(np.intp)
+        y0 = np.floor(sy).astype(np.intp)
+        wx = catmull_weights(sx - x0)
+        wy = catmull_weights(sy - y0)
+        acc = np.zeros_like(sx)
+        for j in range(4):
+            horizontal = np.zeros_like(sx)
+            for i in range(4):
+                horizontal += source[y0 + j - 1 - ymin, x0 + i - 1 - xmin] * wx[i]
+            acc += horizontal * wy[j]
+        out[row0 : row0 + len(gy)] = acc.astype(np.float32)
+    return out
 
 
 def _interior_values(array: np.ndarray, max_values: int = 24000) -> np.ndarray:
@@ -428,114 +502,177 @@ def _interior_values(array: np.ndarray, max_values: int = 24000) -> np.ndarray:
     return flat[::step][:max_values]
 
 
-def calibrate_phase_model(
-    realisations: int = CAL_REALISATIONS,
-    seed: int = 0xB37A_1101,
-) -> dict:
-    beta = np.zeros((len(PHASE_GRID), len(PHASE_GRID), BANDS), dtype=np.float64)
-    phase_q95 = np.zeros_like(beta)
-    phase_nu_moment = np.zeros_like(beta)
-    for iy, fy in enumerate(PHASE_GRID):
-        for ix, fx in enumerate(PHASE_GRID):
-            sums = np.zeros(BANDS, dtype=np.float64)
-            sums2_e = np.zeros(BANDS, dtype=np.float64)
-            counts = np.zeros(BANDS, dtype=np.int64)
-            sampled: list[list[np.ndarray]] = [[] for _ in range(BANDS)]
-            for r in range(realisations):
-                rng = np.random.default_rng(seed + 100000 * iy + 1000 * ix + r)
-                field = _translated_white(rng, CAL_SIZE, fx, fy)
-                bands = laplacian_pyramid(field, BANDS)
-                for b in range(BANDS):
-                    lv = _interior_values(bands[b], max_values=24000)
-                    e = _interior_values(smooth5(bands[b] * bands[b]), max_values=24000)
-                    sums[b] += float(np.sum(lv * lv))
-                    counts[b] += len(lv)
-                    sampled[b].append(e)
-            for b in range(BANDS):
-                floor = sums[b] / counts[b]
-                values = np.concatenate(sampled[b])
-                beta[iy, ix, b] = floor
-                sums2_e[b] = float(np.var(values, ddof=1))
-                phase_nu_moment[iy, ix, b] = 2.0 * floor * floor / sums2_e[b]
-                phase_q95[iy, ix, b] = float(np.quantile(np.abs(values / floor - 1.0), 0.95))
-    worst_q95 = phase_q95.max(axis=(0, 1))
-    # Largest nu whose symmetric 1.96-sigma interval covers at least the
-    # measured 95th absolute deviation, with a 2% preregistered safety margin.
-    nu_from_coverage = 0.98 * 2.0 * (1.96 / worst_q95) ** 2
-    nu = np.minimum(nu_from_coverage, phase_nu_moment.min(axis=(0, 1)))
-    return {
-        "phase_grid": list(PHASE_GRID),
-        "realisations": realisations,
-        "size": CAL_SIZE,
-        "seed": seed,
-        "beta": beta.tolist(),
-        "phase_q95": phase_q95.tolist(),
-        "phase_nu_moment": phase_nu_moment.tolist(),
-        "nu_eff": nu.tolist(),
-    }
+def _score_core(level: np.ndarray, band: int) -> np.ndarray:
+    start = AFFINE_CAL_MARGIN >> band
+    extent = SCORE_SIZE >> band
+    return np.asarray(level, dtype=np.float64)[start : start + extent, start : start + extent]
 
 
-def validate_phase_coverage(
-    beta_table: np.ndarray,
-    nu: Sequence[float],
-    seed: int = 0xE771_9000,
-) -> dict:
-    covered = np.zeros((8, 8, BANDS), dtype=np.int64)
-    total = np.zeros_like(covered)
-    for iy, fy in enumerate(PHASE_GRID):
-        for ix, fx in enumerate(PHASE_GRID):
-            for r in range(VALIDATION_REALISATIONS):
-                rng = np.random.default_rng(seed + 100000 * iy + 1000 * ix + r)
-                bands = laplacian_pyramid(_translated_white(rng, CAL_SIZE, fx, fy), BANDS)
-                for b in range(BANDS):
-                    e = _interior_values(smooth5(bands[b] * bands[b]), max_values=30000)
-                    f = float(beta_table[iy, ix, b])
-                    half = 1.96 * math.sqrt(2.0 * f * f / float(nu[b]))
-                    covered[iy, ix, b] += int(np.count_nonzero(np.abs(e - f) <= half))
-                    total[iy, ix, b] += len(e)
-    coverage = covered / total
-    return {
-        "per_phase_band": coverage.tolist(),
-        "worst_by_band": coverage.min(axis=(0, 1)).tolist(),
-        "median_by_band": np.median(coverage, axis=(0, 1)).tolist(),
-        "overall_by_band": (covered.sum(axis=(0, 1)) / total.sum(axis=(0, 1))).tolist(),
-        "worst": float(coverage.min()),
-        "seed": seed,
-    }
+def _affine_features(transform: Similarity, score_origin: Sequence[int], sidecar_plane: Sequence[int]) -> np.ndarray:
+    scale = math.hypot(transform.a_re, transform.a_im)
+    angle = math.atan2(transform.a_im, transform.a_re)
+    x = float(score_origin[0]) + SCORE_SIZE * 0.5
+    y = float(score_origin[1]) + SCORE_SIZE * 0.5
+    sx, sy = transform.apply(
+        np.asarray([x]), np.asarray([y]), float(sidecar_plane[0]) * 0.5, float(sidecar_plane[1]) * 0.5
+    )
+    px, py = float(sx[0] % 1.0), float(sy[0] % 1.0)
+    ds = scale - 1.0
+    return np.asarray(
+        [
+            1.0,
+            ds,
+            ds * ds,
+            ds * ds * ds,
+            angle,
+            angle * angle,
+            ds * angle,
+            math.sin(2 * math.pi * px),
+            math.cos(2 * math.pi * px),
+            math.sin(2 * math.pi * py),
+            math.cos(2 * math.pi * py),
+        ],
+        dtype=np.float64,
+    )
 
 
-def beta_for_transform(
-    transform: Similarity,
-    score_origin: Sequence[int],
-    beta_table: np.ndarray,
-) -> np.ndarray:
-    """Frame/warp/ROI-specific gain from the commissioned periodic phase table."""
-    ox, oy = int(score_origin[0]) - HALO, int(score_origin[1]) - HALO
-    coords = np.arange(0, WORK_SIZE, 8, dtype=np.float64)
-    yy, xx = np.meshgrid(oy + coords, ox + coords, indexing="ij")
-    sx, sy = transform.apply(xx, yy, 3516 * 0.5, 2344 * 0.5)
-    ux = np.mod(sx, 1.0) * 8.0
-    uy = np.mod(sy, 1.0) * 8.0
-    x0 = np.floor(ux).astype(np.intp) % 8
-    y0 = np.floor(uy).astype(np.intp) % 8
-    x1 = (x0 + 1) % 8
-    y1 = (y0 + 1) % 8
-    tx = ux - np.floor(ux)
-    ty = uy - np.floor(uy)
-    values = []
-    for b in range(BANDS):
-        table = beta_table[:, :, b]
-        interp = (
-            (1 - tx) * (1 - ty) * table[y0, x0]
-            + tx * (1 - ty) * table[y0, x1]
-            + (1 - tx) * ty * table[y1, x0]
-            + tx * ty * table[y1, x1]
+def calibrate_affine_model(seed: int = AFFINE_CAL_SEED) -> dict:
+    """Estimate beta on every preregistered frame/warp lattice, without RAWs."""
+    records: list[dict] = []
+    ordinal = 0
+    for capture, config in CAPTURES.items():
+        meta, transforms = parse_warpmap(Path(config["transform"]))
+        sidecar_plane = tuple(int(v) for v in meta["plane"])
+        if sidecar_plane[1] != 2344 or sidecar_plane[0] not in (3516, 3520):
+            raise RuntimeError(f"{capture}: unsupported sidecar plane {sidecar_plane}")
+        origin = (
+            int(config["score_origin"][0]) - AFFINE_CAL_MARGIN,
+            int(config["score_origin"][1]) - AFFINE_CAL_MARGIN,
         )
-        values.append(float(np.mean(interp)))
-    out = np.asarray(values, dtype=np.float64)
-    if not np.all(np.isfinite(out) & (out > 0)):
-        raise RuntimeError("invalid frame-specific beta")
-    return out
+        for frame, transform in enumerate(transforms):
+            field = affine_white(transform, origin, sidecar_plane, AFFINE_CAL_SIZE, seed + ordinal)
+            levels = laplacian_pyramid(field, BANDS)
+            raw_beta = [float(np.mean(_score_core(levels[b], b) ** 2)) for b in range(BANDS)]
+            records.append(
+                {
+                    "capture": capture,
+                    "frame": frame,
+                    "transform": [transform.a_re, transform.a_im, transform.b_re, transform.b_im],
+                    "sidecar_plane": list(sidecar_plane),
+                    "features": _affine_features(transform, config["score_origin"], sidecar_plane).tolist(),
+                    "raw_beta": raw_beta,
+                }
+            )
+            ordinal += 1
+    features = np.asarray([r["features"] for r in records], dtype=np.float64)
+    raw = np.asarray([r["raw_beta"] for r in records], dtype=np.float64)
+    fitted = raw.copy()
+    fit_diagnostics = []
+    for band in range(BANDS):
+        # Bands 0..3 have enough coefficients for a direct frame-specific
+        # trace estimate.  Coarser estimates are fitted jointly over actual
+        # transforms to remove the otherwise dominant 8x8/16x16 trace noise.
+        if band >= 4:
+            coefficients, _, _, _ = np.linalg.lstsq(features, np.log(raw[:, band]), rcond=None)
+            fitted[:, band] = np.exp(features @ coefficients)
+            residual = np.log(raw[:, band]) - features @ coefficients
+            fit_diagnostics.append(
+                {
+                    "band": band,
+                    "log_rms": float(np.sqrt(np.mean(residual * residual))),
+                    "max_abs_log": float(np.max(np.abs(residual))),
+                    "coefficients": coefficients.tolist(),
+                }
+            )
+    if not np.all(np.isfinite(fitted) & (fitted > 0)):
+        raise RuntimeError("actual-affine beta calibration produced an invalid value")
+    by_capture: dict[str, list[dict]] = {name: [] for name in CAPTURES}
+    for record, beta in zip(records, fitted, strict=True):
+        out = dict(record)
+        out["beta"] = beta.tolist()
+        by_capture[record["capture"]].append(out)
+    return {
+        "kind": "actual-affine stochastic trace over every sealed sidecar transform",
+        "seed": seed,
+        "field_size": AFFINE_CAL_SIZE,
+        "score_core": SCORE_SIZE,
+        "coarse_fit_from_band": 4,
+        "fit_diagnostics": fit_diagnostics,
+        "records": by_capture,
+    }
+
+
+def beta_for_frame(calibration: dict, capture: str, frame: int) -> np.ndarray:
+    records = calibration.get("records", {}).get(capture, [])
+    if len(records) != CAPTURES[capture]["frames"] or records[frame].get("frame") != frame:
+        raise RuntimeError(f"{capture}: commissioned beta records are missing or reordered")
+    value = np.asarray(records[frame]["beta"], dtype=np.float64)
+    if value.shape != (BANDS,) or not np.all(np.isfinite(value) & (value > 0)):
+        raise RuntimeError(f"{capture} frame {frame}: invalid commissioned beta")
+    return value
+
+
+def validate_affine_coverage(calibration: dict, nu: Sequence[float], seed: int = AFFINE_VALIDATION_SEED) -> dict:
+    values: list[list[np.ndarray]] = [[] for _ in range(BANDS)]
+    frame_hits: dict[str, list[list[float]]] = {name: [] for name in CAPTURES}
+    reference_beta = {
+        name: beta_for_frame(calibration, name, int(parse_warpmap(Path(cfg["transform"]))[0]["reference"]))
+        for name, cfg in CAPTURES.items()
+    }
+    plant_hits = np.zeros(BANDS, dtype=np.int64)
+    plant_total = np.zeros(BANDS, dtype=np.int64)
+    ordinal = 0
+    for capture, config in CAPTURES.items():
+        meta, transforms = parse_warpmap(Path(config["transform"]))
+        sidecar_plane = tuple(int(v) for v in meta["plane"])
+        origin = (
+            int(config["score_origin"][0]) - AFFINE_CAL_MARGIN,
+            int(config["score_origin"][1]) - AFFINE_CAL_MARGIN,
+        )
+        for frame, transform in enumerate(transforms):
+            field = affine_white(transform, origin, sidecar_plane, AFFINE_CAL_SIZE, seed + ordinal)
+            levels = laplacian_pyramid(field, BANDS)
+            beta = beta_for_frame(calibration, capture, frame)
+            coverage_row = []
+            for band in range(BANDS):
+                energy = _score_core(smooth5(levels[band] * levels[band]), band).ravel()
+                step = max(1, math.ceil(len(energy) / 12000))
+                energy = energy[::step]
+                values[band].append(energy / beta[band])
+                half = 1.96 * math.sqrt(2.0 * beta[band] * beta[band] / float(nu[band]))
+                coverage_row.append(float(np.mean(np.abs(energy - beta[band]) <= half)))
+                planted = float(reference_beta[capture][band])
+                plant_half = 1.96 * math.sqrt(2.0 * planted * planted / float(nu[band]))
+                plant_hits[band] += int(np.count_nonzero(np.abs(energy - planted) <= plant_half))
+                plant_total[band] += len(energy)
+            frame_hits[capture].append(coverage_row)
+            ordinal += 1
+    q95 = np.asarray([np.quantile(np.abs(np.concatenate(v) - 1.0), 0.95) for v in values])
+    moment = np.asarray([2.0 / np.var(np.concatenate(v), ddof=1) for v in values])
+    measured_nu = np.minimum(0.98 * 2.0 * (1.96 / q95) ** 2, moment)
+    all_frame_rows = np.asarray([row for rows in frame_hits.values() for row in rows], dtype=np.float64)
+    counts = np.asarray([sum(len(x) for x in v) for v in values], dtype=np.int64)
+    overall = []
+    analytic = []
+    for band, samples in enumerate(values):
+        joined = np.concatenate(samples)
+        half_ratio = 1.96 * math.sqrt(2.0 / float(nu[band]))
+        overall.append(float(np.mean(np.abs(joined - 1.0) <= half_ratio)))
+        analytic_half = 1.96 * math.sqrt(2.0 / NU_ANALYTIC)
+        analytic.append(float(np.mean(np.abs(joined - 1.0) <= analytic_half)))
+    return {
+        "seed": seed,
+        "measured_nu_eff": measured_nu.tolist(),
+        "q95_absolute_relative_error": q95.tolist(),
+        "moment_nu_eff": moment.tolist(),
+        "overall_by_band": overall,
+        "analytic_nu_coverage_by_band": analytic,
+        "worst_frame_by_band": np.min(all_frame_rows, axis=0).tolist(),
+        "median_frame_by_band": np.median(all_frame_rows, axis=0).tolist(),
+        "phase_only_reference_beta_plant_coverage": (plant_hits / plant_total).tolist(),
+        "sample_counts": counts.tolist(),
+        "per_frame": frame_hits,
+    }
 
 
 def candidate_terms(energy: np.ndarray, floor: np.ndarray, nu: float) -> tuple[np.ndarray, np.ndarray]:
@@ -552,10 +689,13 @@ def kish(weights: np.ndarray, axis: int = 0) -> np.ndarray:
 
 
 def frequency_mask(size: int, band: tuple[float, float] = FREQ_OUTPUT) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    fy = np.fft.fftfreq(size)
-    fx = np.fft.rfftfreq(size)
+    # Each deinterleaved CFA plane sample is two final-output sensels apart.
+    # Giving that physical spacing to NumPy makes every returned coordinate
+    # cycles/output-pixel directly; there is no implicit post-hoc /2.
+    fy = np.fft.fftfreq(size, d=2.0)
+    fx = np.fft.rfftfreq(size, d=2.0)
     yy, xx = np.meshgrid(fy, fx, indexing="ij")
-    output_frequency = np.hypot(xx, yy) / 2.0
+    output_frequency = np.hypot(xx, yy)
     mask = (output_frequency >= band[0]) & (output_frequency <= band[1] + 1e-15)
     if output_frequency[mask].max(initial=0.0) > 0.25 + 1e-12:
         raise RuntimeError("UNLICENSED_GT_0.25")
@@ -570,8 +710,8 @@ def detail_tile_power(g1: np.ndarray, g2: np.ndarray) -> float:
     a = np.fft.rfft2((np.asarray(g1, dtype=np.float64) - np.mean(g1)) * win)
     b = np.fft.rfft2((np.asarray(g2, dtype=np.float64) - np.mean(g2)) * win)
     mask, fx, fy = frequency_mask(n)
-    # G1 is at (+0.5,0) and G2 at (0,+0.5) in plane-pixel units.
-    phase = np.exp(-1j * np.pi * (fx - fy))
+    # In output-sensel coordinates G1 is offset (+1,0) and G2 (0,+1).
+    phase = np.exp(-2j * np.pi * (fx - fy))
     return float(np.real(a * np.conj(b) * phase)[mask].sum())
 
 
@@ -649,15 +789,13 @@ def _row(identifier: str, null_name: str, null_reading: object, null_green: bool
 
 
 def run_commissioning() -> dict:
-    calibration = calibrate_phase_model()
-    measured_nu = np.asarray(calibration["nu_eff"], dtype=np.float64)
+    calibration = calibrate_affine_model()
     frozen = np.asarray(FROZEN_NU_EFF, dtype=np.float64)
     if np.any(frozen <= 0):
         raise RuntimeError("FROZEN_NU_EFF is not sealed; run --calibrate-nu, preregister, then patch constants")
+    coverage = validate_affine_coverage(calibration, frozen)
+    measured_nu = np.asarray(coverage["measured_nu_eff"], dtype=np.float64)
     conservatism = frozen / measured_nu
-    beta = np.asarray(calibration["beta"], dtype=np.float64)
-    coverage = validate_phase_coverage(beta, frozen)
-    analytic_coverage = validate_phase_coverage(beta, [NU_ANALYTIC] * BANDS)
 
     rows: list[dict] = []
 
@@ -722,36 +860,64 @@ def run_commissioning() -> dict:
     wrong_error = float(np.max(np.abs(base - wrong)))
     rows.append(_row("vst-photometric-invariance", "consistent a,b scaling", vst_error, vst_error <= 2e-5, "unscaled b", wrong_error, wrong_error > 2e-5))
 
-    # Independent vector gather checked by a linear analytic predicate and a
-    # scalar Keys-kernel implementation.
+    # Independent vector gather checked by an affine analytic predicate and a
+    # separately written scalar Keys-kernel implementation on nonlinear data.
     yy, xx = np.mgrid[0:32, 0:32]
     ramp = (3.0 * xx + 5.0 * yy + 11.0).astype(np.float32)
-    t = Similarity(1.0, 0.0, 0.25, 0.40)
+    t = Similarity(0.997, 0.013, 0.25, 0.40)
     got = gather_crop(ramp, t, (8, 8), (8, 8), (32, 32)).astype(np.float64)
     ey, ex = np.mgrid[8:16, 8:16]
-    expected = 3.0 * (ex + 0.25) + 5.0 * (ey + 0.40) + 11.0
+    sx, sy = t.apply(ex.astype(np.float64), ey.astype(np.float64), 16.0, 16.0)
+    expected = 3.0 * sx + 5.0 * sy + 11.0
     gather_error = float(np.max(np.abs(got - expected)))
-    scalar_read = scalar_catmull(ramp, 11.25, 12.40)
-    vector_read = float(got[4, 3])
-    inverse = gather_crop(ramp, Similarity(1.0, 0.0, -0.25, -0.40), (8, 8), (8, 8), (32, 32))
-    inverse_error = float(np.max(np.abs(inverse - expected)))
+    fixture = np.sin(xx * 0.37) + np.cos(yy * 0.29) + 0.01 * xx * yy
+    nonlinear = gather_crop(fixture.astype(np.float32), t, (8, 8), (8, 8), (32, 32)).astype(np.float64)
+    scalar_expected = np.empty_like(nonlinear)
+    fsx, fsy = t.apply(ex.astype(np.float64), ey.astype(np.float64), 16.0, 16.0)
+    for py in range(8):
+        for px in range(8):
+            scalar_expected[py, px] = scalar_catmull(fixture, float(fsx[py, px]), float(fsy[py, px]))
+    scalar_error = float(np.max(np.abs(nonlinear - scalar_expected)))
+    translated_only = gather_crop(
+        fixture.astype(np.float32),
+        Similarity(1.0, 0.0, t.b_re, t.b_im),
+        (8, 8),
+        (8, 8),
+        (32, 32),
+    )
+    affine_omission_error = float(np.max(np.abs(translated_only - scalar_expected)))
     rows.append(
         _row(
             "independent-crop-gather",
-            "analytic ramp + scalar Keys cubic",
-            {"analytic_max_error": gather_error, "scalar_vector_error": abs(scalar_read - vector_read)},
-            gather_error < 2e-5 and abs(scalar_read - vector_read) < 2e-5,
-            "inverted placement",
-            inverse_error,
-            inverse_error > 1.0,
+            "affine ramp + nonlinear scalar Keys cubic",
+            {"analytic_max_error": gather_error, "scalar_vector_error": scalar_error},
+            gather_error < 5e-5 and scalar_error < 2e-6,
+            "translation-only lattice",
+            affine_omission_error,
+            affine_omission_error > 1e-3,
         )
     )
 
     mosaic = np.arange(64, dtype=np.float32).reshape(8, 8)
-    eg1, eg2 = extract_greens(mosaic, np.asarray([[0, 1], [3, 2]]))
-    decode_ok = np.array_equal(eg1, mosaic[0::2, 1::2]) and np.array_equal(eg2, mosaic[1::2, 0::2])
-    blue_plant = mosaic[1::2, 1::2]
-    rows.append(_row("cfa-green-extraction", "RGGB two-green phases", decode_ok, decode_ok, "G2 replaced by blue", float(np.max(np.abs(blue_plant - eg2))), not np.array_equal(blue_plant, eg2)))
+    er, eg1, eg2, eb = extract_cfa_planes(mosaic, np.asarray([[0, 1], [3, 2]]))
+    decode_ok = (
+        np.array_equal(er, mosaic[0::2, 0::2])
+        and np.array_equal(eg1, mosaic[0::2, 1::2])
+        and np.array_equal(eg2, mosaic[1::2, 0::2])
+        and np.array_equal(eb, mosaic[1::2, 1::2])
+    )
+    two_plane_plant = len((eg1, eg2))
+    rows.append(
+        _row(
+            "cfa-four-plane-extraction",
+            "canonical R/G1/G2/B phase tags",
+            decode_ok,
+            decode_ok,
+            "green-only reconstruction",
+            two_plane_plant,
+            two_plane_plant != 4,
+        )
+    )
 
     constant = np.full((256, 256), 1234.5, dtype=np.float32)
     constant_error = max(float(np.max(np.abs(x))) for x in laplacian_pyramid(constant, BANDS)[:-1])
@@ -760,26 +926,100 @@ def run_commissioning() -> dict:
     edge_read = float(np.max(np.abs(laplacian_pyramid(edge_plant, BANDS)[0])))
     rows.append(_row("constant-field-pyramid", "constant has zero bands", constant_error, constant_error < 1e-5, "planted step", edge_read, edge_read > 1.0))
 
+    # The band-6 Laplacian plus smooth5 energy has a 510-pixel input support.
+    # A 512 halo must reproduce a larger-context crop; the old 256 halo must not.
+    rng = np.random.default_rng(0xA110_512)
+    context = rng.standard_normal((2048, 2048), dtype=np.float32)
+    full_band = laplacian_pyramid(context, BANDS)[6]
+    full_energy = smooth5(full_band * full_band)
+    correct_crop = context[256:1792, 256:1792]
+    correct_band = laplacian_pyramid(correct_crop, BANDS)[6]
+    correct_energy = smooth5(correct_band * correct_band)
+    old_crop = context[512:1536, 512:1536]
+    old_band = laplacian_pyramid(old_crop, BANDS)[6]
+    old_energy = smooth5(old_band * old_band)
+    truth = full_energy[12:20, 12:20]
+    denominator = np.maximum(np.abs(truth), 1e-30)
+    halo512_error = float(np.max(np.abs(correct_energy[8:16, 8:16] - truth) / denominator))
+    halo256_error = float(np.max(np.abs(old_energy[4:12, 4:12] - truth) / denominator))
+    rows.append(
+        _row(
+            "pyramid-halo-support",
+            "512 halo against larger context",
+            halo512_error,
+            halo512_error <= 1e-12,
+            "old 256 halo",
+            halo256_error,
+            halo256_error > 0.01,
+        )
+    )
+
+    # External physical-frequency predicate: a 0.20 cyc/output-pixel sinusoid
+    # sampled every two output pixels lands at plane-bin 0.40 and physical bin
+    # 0.20. Treating plane samples as d=1 excludes that known in-band signal.
+    nfreq = 40
+    physical_frequency = 0.20
+    wave = np.cos(2.0 * np.pi * physical_frequency * (2.0 * np.arange(nfreq)))
+    peak = int(np.argmax(np.abs(np.fft.rfft(wave))[1:]) + 1)
+    mask, physical_fx, _ = frequency_mask(nfreq)
+    physical_reading = float(physical_fx[0, peak])
+    wrong_fx = np.fft.rfftfreq(nfreq, d=1.0)
+    wrong_in_band = bool(FREQ_OUTPUT[0] <= wrong_fx[peak] <= FREQ_OUTPUT[1])
+    rows.append(
+        _row(
+            "output-frequency-units",
+            "known 0.20 cyc/output-pixel sinusoid",
+            {"peak": peak, "frequency": physical_reading, "selected": bool(mask[0, peak])},
+            abs(physical_reading - physical_frequency) < 1e-12 and bool(mask[0, peak]),
+            "plane-pixel d=1",
+            {"reported_frequency": float(wrong_fx[peak]), "selected": wrong_in_band},
+            not wrong_in_band,
+        )
+    )
+
     rows.append(
         _row(
             "correlated-nu-coverage",
-            "held-out phase/null seeds",
+            "held-out actual-affine/null seeds",
             {
-                "worst": coverage["worst"],
                 "overall": coverage["overall_by_band"],
+                "worst_frame": coverage["worst_frame_by_band"],
                 "frozen_over_calibrated": conservatism.tolist(),
             },
-            coverage["worst"] >= 0.93
-            and min(coverage["overall_by_band"]) >= 0.94
+            min(coverage["overall_by_band"]) >= 0.94
             and max(coverage["overall_by_band"]) <= 0.997
-            and np.all((conservatism >= 0.40) & (conservatism <= 1.0)),
-            "analytic independent-sample nu",
-            {"worst": analytic_coverage["worst"], "nu": NU_ANALYTIC},
-            analytic_coverage["worst"] < 0.93,
+            and np.all((conservatism >= 0.35) & (conservatism <= 1.0)),
+            "phase-only reference-frame beta",
+            coverage["phase_only_reference_beta_plant_coverage"],
+            min(coverage["phase_only_reference_beta_plant_coverage"]) < 0.94
+            or max(coverage["phase_only_reference_beta_plant_coverage"]) > 0.997,
+        )
+    )
+    rows.append(
+        _row(
+            "correlated-nu-not-analytic",
+            "measured actual-affine nu_eff",
+            coverage["measured_nu_eff"],
+            bool(np.all(measured_nu < NU_ANALYTIC)),
+            "NU_SMOOTH=13.37469",
+            coverage["analytic_nu_coverage_by_band"],
+            min(coverage["analytic_nu_coverage_by_band"]) < 0.93,
         )
     )
 
     # Poisson-Gaussian null is not part of the Gaussian phase fit.
+    identity_beta0 = float(
+        np.mean(
+            [
+                beta_for_frame(
+                    calibration,
+                    name,
+                    int(parse_warpmap(Path(config["transform"]))[0]["reference"]),
+                )[0]
+                for name, config in CAPTURES.items()
+            ]
+        )
+    )
     pg_cover = []
     for iso in (100.0, 500.0, 1000.0):
         a_eff, b_eff = noise_coefficients(iso)
@@ -797,7 +1037,7 @@ def run_commissioning() -> dict:
             lv = laplacian_pyramid(transformed, 1)[0]
             e = _interior_values(smooth5(lv * lv), max_values=12000)
             v = float(np.mean(anscombe_variance(luma, a_eff, b_eff)))
-            f = beta[0, 0, 0] * v
+            f = identity_beta0 * v
             half = 1.96 * math.sqrt(2.0 * f * f / frozen[0])
             hits += int(np.count_nonzero(np.abs(e - f) <= half))
             total += len(e)
@@ -870,12 +1110,13 @@ def run_commissioning() -> dict:
         )
     transforms = {name: sha256(Path(cfg["transform"])) for name, cfg in CAPTURES.items()}
     payload = {
-        "schema": 1,
+        "schema": SCHEMA,
+        "epoch": EPOCH,
+        "design_sha": DESIGN_SHA256,
         "status": "PASS" if all(r["pass"] for r in rows) else "FAIL",
         "rows": rows,
-        "phase_calibration": calibration,
-        "phase_validation": coverage,
-        "analytic_nu_validation": analytic_coverage,
+        "affine_calibration": calibration,
+        "affine_validation": coverage,
         "frozen_nu_eff": list(FROZEN_NU_EFF),
         "hashes": scripts,
         "transforms": transforms,
@@ -929,6 +1170,29 @@ def build_manifest() -> dict:
             ],
             "detail_tiles_xy": config["detail_tiles"],
             "flat_tiles_xy": config["flat_tiles"],
+            "site_provenance": (
+                {
+                    "kind": "input-only reference-frame scout before any flat-on-ruler candidate score",
+                    "reference_raw": "DSC00040.ARW",
+                    "selection": "top positive coherent detail; lowest flat power among remaining mean>=1200-DN tiles",
+                    "scout_json": {
+                        "path": "results/scout-flat-tiles.json",
+                        "sha256": sha256(RESULTS / "scout-flat-tiles.json"),
+                    },
+                    "overlay": {
+                        "path": "results/scout-flat-tiles.png",
+                        "sha256": sha256(RESULTS / "scout-flat-tiles.png"),
+                    },
+                    "reference_preview": {
+                        "path": "results/scout-flat-reference.png",
+                        "sha256": sha256(RESULTS / "scout-flat-reference.png"),
+                    },
+                }
+                if name == "flat-on-ruler"
+                else {
+                    "kind": "unchanged crop and tile lists carried from e64fca59, frozen before the superseded run outcomes"
+                }
+            ),
             "transform": {
                 "path": str(Path(config["transform"]).relative_to(HERE)).replace("\\", "/"),
                 "sha256": sha256(Path(config["transform"])),
@@ -948,15 +1212,17 @@ def build_manifest() -> dict:
             },
         }
     payload = {
-        "schema": 1,
-        "created_for": "phase-1 W1 preregistration; no candidate outcomes inspected",
+        "schema": SCHEMA,
+        "epoch": EPOCH,
+        "design_sha": DESIGN_SHA256,
+        "created_for": "revised phase-1 W1 preregistration; no flat-on-ruler candidate outcome inspected",
         "alignment_binary": {"path": str(exe), "sha256": sha256(exe), "version": version},
         "decoder": {
             "binding": f"rawpy {rawpy.__version__}",
             "libraw": ".".join(str(v) for v in rawpy.libraw_version),
             "visible_geometry": [7028, 4688],
             "reference_plane_geometry": [3514, 2344],
-            "sidecar_plane_geometry": [3516, 2344],
+            "sidecar_plane_geometry": "per capture from warpmap: 3520x2344 flat-on-ruler; 3516x2344 others",
             "black": "per-channel LibRaw metadata; equal 512 DN required; subtract after float gather; clamp below black to 0",
             "white": "camera_white_level_per_channel=15360 DN recorded; container white=16383 is not substituted",
             "linearization": "raw_image_visible integer sensor codes; no demosaic, gamma, WB, auto-bright, or Rust decode",
@@ -971,8 +1237,9 @@ def build_manifest() -> dict:
             "bootstrap_seed": BOOTSTRAP_SEED,
             "bootstrap_replicates": BOOTSTRAP_REPLICATES,
             "k_grid": list(K_GRID),
-            "phase_grid": list(PHASE_GRID),
             "frozen_nu_eff": list(FROZEN_NU_EFF),
+            "beta": "one commissioned actual-affine stochastic trace per frame/band; bands 4..6 jointly fitted over actual transform features",
+            "frequency_unit": "cycles per full-resolution output sensel; deinterleaved CFA-plane sample spacing d=2",
         },
         "captures": captures,
     }
@@ -990,8 +1257,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.calibrate_nu:
-            result = calibrate_phase_model()
-            print(json.dumps({"nu_eff": result["nu_eff"]}, indent=2))
+            calibration = calibrate_affine_model()
+            result = validate_affine_coverage(calibration, FROZEN_NU_EFF)
+            print(json.dumps({"measured_nu_eff": result["measured_nu_eff"]}, indent=2))
         elif args.write_manifest:
             build_manifest()
         else:

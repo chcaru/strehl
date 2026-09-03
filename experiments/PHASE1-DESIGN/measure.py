@@ -29,18 +29,28 @@ SNR_REF = 64.0
 WIDTH_BAR = 0.05
 DETAIL_BAR = 0.95
 FLAT_BAR = 0.90
-NEGATIVE_SENTINEL_K = 0.0
 
 
 def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def validate_sealed_inputs() -> tuple[dict, dict, np.ndarray]:
+def validate_sealed_inputs() -> tuple[dict, dict, dict]:
     if not R.MANIFEST_PATH.exists() or not R.COMMISSION_PATH.exists() or not R.PREREG_PATH.exists():
         raise RuntimeError("sealed manifest, preregistration, and commissioning artifact are required")
     manifest = load_json(R.MANIFEST_PATH)
     commission = load_json(R.COMMISSION_PATH)
+    if (
+        manifest.get("schema") != R.SCHEMA
+        or commission.get("schema") != R.SCHEMA
+        or manifest.get("epoch") != R.EPOCH
+        or commission.get("epoch") != R.EPOCH
+        or manifest.get("design_sha") != R.DESIGN_SHA256
+        or commission.get("design_sha") != R.DESIGN_SHA256
+    ):
+        raise RuntimeError("revised W1 schema/epoch/design seal mismatch")
+    if set(manifest.get("captures", {})) != set(R.CAPTURE_ORDER):
+        raise RuntimeError("manifest capture ledger is not the exact three-capture development allowlist")
     if commission.get("status") != "PASS":
         raise RuntimeError("commissioning artifact is absent or not PASS")
     manifest_hash = R.sha256(R.MANIFEST_PATH)
@@ -74,13 +84,17 @@ def validate_sealed_inputs() -> tuple[dict, dict, np.ndarray]:
             got = R.sha256(path)
             if got != entry["sha256"]:
                 raise RuntimeError(f"{name}: RAW hash changed at {path}")
-    beta = np.asarray(commission["phase_calibration"]["beta"], dtype=np.float64)
-    if beta.shape != (8, 8, R.BANDS) or not np.all(np.isfinite(beta) & (beta > 0)):
-        raise RuntimeError(f"invalid commissioned beta table {beta.shape}")
+    calibration = commission.get("affine_calibration", {})
+    if set(calibration.get("records", {})) != set(R.CAPTURE_ORDER):
+        raise RuntimeError("commissioned actual-affine beta ledger is incomplete")
+    for name, config in R.CAPTURES.items():
+        values = np.asarray([row.get("beta") for row in calibration["records"][name]], dtype=np.float64)
+        if values.shape != (config["frames"], R.BANDS) or not np.all(np.isfinite(values) & (values > 0)):
+            raise RuntimeError(f"{name}: invalid commissioned actual-affine beta shape {values.shape}")
     frozen = np.asarray(commission.get("frozen_nu_eff"), dtype=np.float64)
     if not np.array_equal(frozen, np.asarray(R.FROZEN_NU_EFF, dtype=np.float64)):
         raise RuntimeError("commissioned nu_eff does not equal preregistered frozen vector")
-    return manifest, commission, beta
+    return manifest, commission, calibration
 
 
 def tile_mask(tiles: Sequence[Sequence[int]]) -> np.ndarray:
@@ -188,10 +202,10 @@ def candidate_neff_means(
     return {name: (value / mask_sums[name]).tolist() for name, value in sums.items()}
 
 
-def analyze_capture_width(name: str, config: dict, beta_table: np.ndarray) -> dict:
+def analyze_capture_width(name: str, config: dict, calibration: dict) -> dict:
     start_time = time.perf_counter()
     meta, transforms = R.parse_warpmap(Path(config["transform"]))
-    if meta["plane"] != [3516, 2344] or len(transforms) != config["frames"]:
+    if meta["plane"][0] not in (3516, 3520) or meta["plane"][1] != 2344 or len(transforms) != config["frames"]:
         raise RuntimeError(f"{name}: transform geometry/count mismatch")
     raws = R.ordered_raws(config)
     labels = {
@@ -208,7 +222,8 @@ def analyze_capture_width(name: str, config: dict, beta_table: np.ndarray) -> di
 
     for index, (path, transform) in enumerate(zip(raws, transforms, strict=True)):
         print(f"{name}: width pass frame {index + 1}/{len(raws)}", flush=True)
-        g1, g2, decode = R.prepared_crop(path, transform, config["score_origin"])
+        planes, decode = R.prepared_crop(path, transform, config["score_origin"], meta["plane"])
+        _, g1, g2, _ = planes
         luma = 0.5 * (g1 + g2)
         a, b0 = R.noise_coefficients(decode["iso"])
         decision = R.anscombe(luma, a, b0)
@@ -217,7 +232,7 @@ def analyze_capture_width(name: str, config: dict, beta_table: np.ndarray) -> di
         va_pyr = R.gaussian_pyramid(v_a, R.BANDS)
         linear_pyr = R.laplacian_pyramid(luma, R.BANDS)
         variance_pyr = R.gaussian_pyramid(a * luma + b0, R.BANDS)
-        frame_beta = R.beta_for_transform(transform, config["score_origin"], beta_table)
+        frame_beta = R.beta_for_frame(calibration, name, index)
         beta_records.append(frame_beta.tolist())
         isos.append(float(decode["iso"]))
         for band in range(R.BANDS):
@@ -237,7 +252,7 @@ def analyze_capture_width(name: str, config: dict, beta_table: np.ndarray) -> di
             else:
                 legacy_sumw[band] += weight
                 legacy_sumw2[band] += weight * weight
-        del g1, g2, luma, decision, v_a, decision_pyr, va_pyr, linear_pyr, variance_pyr
+        del planes, g1, g2, luma, decision, v_a, decision_pyr, va_pyr, linear_pyr, variance_pyr
         gc.collect()
 
     band_rows = []
@@ -286,9 +301,11 @@ def width_survivors(width_results: dict[str, dict]) -> tuple[list[float], list[d
     for grid_index, k in enumerate(R.K_GRID):
         failures = []
         worst = 0.0
+        predicates = 0
         for capture, result in width_results.items():
             for band in result["bands"]:
                 for roi, values in band["rois"].items():
+                    predicates += 1
                     error = float(values["width_error"][grid_index])
                     worst = max(worst, error)
                     if error > WIDTH_BAR + 1e-12:
@@ -301,49 +318,50 @@ def width_survivors(width_results: dict[str, dict]) -> tuple[list[float], list[d
                                 "error": error,
                             }
                         )
+        if predicates != len(R.CAPTURES) * R.BANDS * 2:
+            raise RuntimeError(f"k={k:.2f}: expected 42 width predicates, found {predicates}")
         passed = not failures
         if passed:
             survivors.append(k)
-        summary.append({"k": k, "pass": passed, "worst_error": worst, "failures": failures})
+        summary.append(
+            {"k": k, "pass": passed, "predicates": predicates, "worst_error": worst, "failures": failures}
+        )
     return survivors, summary
 
 
 def render_capture(
     name: str,
     config: dict,
-    beta_table: np.ndarray,
+    calibration: dict,
     k_values: Sequence[float],
-) -> tuple[dict[float, tuple[np.ndarray, np.ndarray]], tuple[np.ndarray, np.ndarray], dict]:
+) -> tuple[dict[float, tuple[np.ndarray, ...]], tuple[np.ndarray, ...], dict]:
     """Decode once, then render legacy and every requested candidate k."""
     start_time = time.perf_counter()
-    _, transforms = R.parse_warpmap(Path(config["transform"]))
+    meta, transforms = R.parse_warpmap(Path(config["transform"]))
     raws = R.ordered_raws(config)
     e_levels: list[list[np.ndarray]] = [[] for _ in range(R.BANDS)]
     f_levels: list[list[np.ndarray]] = [[] for _ in range(R.BANDS)]
-    g1_levels: list[list[np.ndarray]] = [[] for _ in range(R.BANDS + 1)]
-    g2_levels: list[list[np.ndarray]] = [[] for _ in range(R.BANDS + 1)]
+    plane_levels: list[list[list[np.ndarray]]] = [
+        [[] for _ in range(R.BANDS + 1)] for _ in range(4)
+    ]
     legacy_levels: list[list[np.ndarray]] = [[] for _ in range(R.BANDS)]
-    lo1 = np.full((R.WORK_SIZE, R.WORK_SIZE), np.inf, dtype=np.float32)
-    hi1 = np.full_like(lo1, -np.inf)
-    lo2 = np.full_like(lo1, np.inf)
-    hi2 = np.full_like(lo1, -np.inf)
+    lows = [np.full((R.WORK_SIZE, R.WORK_SIZE), np.inf, dtype=np.float32) for _ in range(4)]
+    highs = [np.full((R.WORK_SIZE, R.WORK_SIZE), -np.inf, dtype=np.float32) for _ in range(4)]
 
     for index, (path, transform) in enumerate(zip(raws, transforms, strict=True)):
         print(f"{name}: render pass frame {index + 1}/{len(raws)}", flush=True)
-        g1, g2, decode = R.prepared_crop(path, transform, config["score_origin"])
-        np.minimum(lo1, g1, out=lo1)
-        np.maximum(hi1, g1, out=hi1)
-        np.minimum(lo2, g2, out=lo2)
-        np.maximum(hi2, g2, out=hi2)
-        luma = 0.5 * (g1 + g2)
+        planes, decode = R.prepared_crop(path, transform, config["score_origin"], meta["plane"])
+        for plane_index, plane in enumerate(planes):
+            np.minimum(lows[plane_index], plane, out=lows[plane_index])
+            np.maximum(highs[plane_index], plane, out=highs[plane_index])
+        luma = 0.5 * (planes[1] + planes[2])
         a, b0 = R.noise_coefficients(decode["iso"])
         decision_pyr = R.laplacian_pyramid(R.anscombe(luma, a, b0), R.BANDS)
         va_pyr = R.gaussian_pyramid(R.anscombe_variance(luma, a, b0), R.BANDS)
         luma_pyr = R.laplacian_pyramid(luma, R.BANDS)
         variance_pyr = R.gaussian_pyramid(a * luma + b0, R.BANDS)
-        p1 = R.laplacian_pyramid(g1, R.BANDS)
-        p2 = R.laplacian_pyramid(g2, R.BANDS)
-        frame_beta = R.beta_for_transform(transform, config["score_origin"], beta_table)
+        pyramids = [R.laplacian_pyramid(plane, R.BANDS) for plane in planes]
+        frame_beta = R.beta_for_frame(calibration, name, index)
         for band in range(R.BANDS):
             e = R.smooth5(decision_pyr[band] * decision_pyr[band])
             f = (frame_beta[band] * va_pyr[band]).astype(np.float32)
@@ -354,11 +372,11 @@ def render_capture(
             le = R.smooth5(luma_pyr[band] * luma_pyr[band])
             lf = LEGACY_GATE * frame_beta[band] * variance_pyr[band]
             legacy_levels[band].append(legacy_weight(le, lf, band).astype(np.float32))
-            g1_levels[band].append(p1[band])
-            g2_levels[band].append(p2[band])
-        g1_levels[-1].append(p1[-1])
-        g2_levels[-1].append(p2[-1])
-        del g1, g2, luma, decision_pyr, va_pyr, luma_pyr, variance_pyr, p1, p2
+            for plane_index in range(4):
+                plane_levels[plane_index][band].append(pyramids[plane_index][band])
+        for plane_index in range(4):
+            plane_levels[plane_index][-1].append(pyramids[plane_index][-1])
+        del planes, pyramids, luma, decision_pyr, va_pyr, luma_pyr, variance_pyr
         gc.collect()
 
     candidate_pyramids = {float(k): [None] * (R.BANDS + 1) for k in k_values}
@@ -367,20 +385,21 @@ def render_capture(
         print(f"{name}: merging band {band}", flush=True)
         e = np.stack(e_levels[band], axis=0).astype(np.float64)
         f = np.stack(f_levels[band], axis=0).astype(np.float64)
-        c1 = np.stack(g1_levels[band], axis=0).astype(np.float64)
-        c2 = np.stack(g2_levels[band], axis=0).astype(np.float64)
+        coefficients = [
+            np.stack(plane_levels[plane_index][band], axis=0).astype(np.float64)
+            for plane_index in range(4)
+        ]
         lw = np.stack(legacy_levels[band], axis=0).astype(np.float64)
         lden = np.sum(lw, axis=0)
-        l1 = np.sum(lw * c1, axis=0)
-        l2 = np.sum(lw * c2, axis=0)
         fallback = lden <= 0
-        legacy_band1 = np.empty_like(lden)
-        legacy_band2 = np.empty_like(lden)
-        legacy_band1[~fallback] = l1[~fallback] / lden[~fallback]
-        legacy_band2[~fallback] = l2[~fallback] / lden[~fallback]
-        legacy_band1[fallback] = np.mean(c1[:, fallback], axis=0)
-        legacy_band2[fallback] = np.mean(c2[:, fallback], axis=0)
-        legacy_pyramid[band] = (legacy_band1.astype(np.float32), legacy_band2.astype(np.float32))
+        legacy_bands = []
+        for cfa in coefficients:
+            numerator = np.sum(lw * cfa, axis=0)
+            merged = np.empty_like(lden)
+            merged[~fallback] = numerator[~fallback] / lden[~fallback]
+            merged[fallback] = np.mean(cfa[:, fallback], axis=0)
+            legacy_bands.append(merged.astype(np.float32))
+        legacy_pyramid[band] = tuple(legacy_bands)
 
         winner = np.argmax(e, axis=0)
         yy, xx = np.indices(winner.shape)
@@ -400,42 +419,46 @@ def render_capture(
             den = np.sum(weights, axis=0)
             if np.any(~np.isfinite(den) | (den <= 0)):
                 raise RuntimeError(f"{name} k={k} band={band}: candidate sum_w invalid")
-            out1 = np.sum(weights * c1, axis=0) / den
-            out2 = np.sum(weights * c2, axis=0) / den
-            candidate_pyramids[float(k)][band] = (out1.astype(np.float32), out2.astype(np.float32))
+            candidate_pyramids[float(k)][band] = tuple(
+                (np.sum(weights * cfa, axis=0) / den).astype(np.float32) for cfa in coefficients
+            )
         e_levels[band].clear()
         f_levels[band].clear()
-        g1_levels[band].clear()
-        g2_levels[band].clear()
+        for plane_index in range(4):
+            plane_levels[plane_index][band].clear()
         legacy_levels[band].clear()
-        del e, f, c1, c2, lw, threshold, sig, weights
+        del e, f, coefficients, lw, threshold, sig, weights
         gc.collect()
 
-    base1 = np.mean(np.stack(g1_levels[-1], axis=0).astype(np.float64), axis=0).astype(np.float32)
-    base2 = np.mean(np.stack(g2_levels[-1], axis=0).astype(np.float64), axis=0).astype(np.float32)
-    legacy_pyramid[-1] = (base1, base2)
+    bases = tuple(
+        np.mean(np.stack(plane_levels[plane_index][-1], axis=0).astype(np.float64), axis=0).astype(np.float32)
+        for plane_index in range(4)
+    )
+    legacy_pyramid[-1] = bases
     for k in k_values:
-        candidate_pyramids[float(k)][-1] = (base1, base2)
+        candidate_pyramids[float(k)][-1] = bases
 
-    def finish(level_pairs: Sequence[tuple[np.ndarray, np.ndarray] | None]) -> tuple[np.ndarray, np.ndarray]:
-        if any(pair is None for pair in level_pairs):
+    def finish(level_tuples: Sequence[tuple[np.ndarray, ...] | None]) -> tuple[np.ndarray, ...]:
+        if any(level is None for level in level_tuples):
             raise RuntimeError("incomplete reconstruction pyramid")
-        p1 = [pair[0] for pair in level_pairs if pair is not None]
-        p2 = [pair[1] for pair in level_pairs if pair is not None]
-        out1 = np.clip(R.collapse_pyramid(p1), lo1, hi1)
-        out2 = np.clip(R.collapse_pyramid(p2), lo2, hi2)
         ys, xs = score_slice(0)
-        return out1[ys, xs].copy(), out2[ys, xs].copy()
+        outputs = []
+        for plane_index in range(4):
+            levels = [level[plane_index] for level in level_tuples if level is not None]
+            reconstructed = np.clip(R.collapse_pyramid(levels), lows[plane_index], highs[plane_index])
+            outputs.append(reconstructed[ys, xs].copy())
+        return tuple(outputs)
 
     legacy = finish(legacy_pyramid)
     candidates = {k: finish(levels) for k, levels in candidate_pyramids.items()}
     provenance = {
         "frames": len(raws),
         "seconds": time.perf_counter() - start_time,
-        "hull": "per-green normalized-input level-0 clamp",
+        "hull": "separate aligned-input level-0 clamp for R/G1/G2/B",
+        "cfa_planes": ["R", "G1", "G2", "B"],
         "linear_base": "arithmetic mean",
     }
-    del e_levels, f_levels, g1_levels, g2_levels, legacy_levels, candidate_pyramids, legacy_pyramid
+    del e_levels, f_levels, plane_levels, legacy_levels, candidate_pyramids, legacy_pyramid
     gc.collect()
     return candidates, legacy, provenance
 
@@ -443,17 +466,19 @@ def render_capture(
 def capture_metrics(
     capture: str,
     config: dict,
-    candidates: dict[float, tuple[np.ndarray, np.ndarray]],
-    legacy: tuple[np.ndarray, np.ndarray],
+    candidates: dict[float, tuple[np.ndarray, ...]],
+    legacy: tuple[np.ndarray, ...],
 ) -> dict:
-    legacy_detail = R.metric_values(*legacy, config["detail_tiles"], "detail")
-    legacy_flat = R.metric_values(*legacy, config["flat_tiles"], "flat")
+    if len(legacy) != 4 or any(len(value) != 4 for value in candidates.values()):
+        raise RuntimeError(f"{capture}: metrics require reconstructed R/G1/G2/B")
+    legacy_detail = R.metric_values(legacy[1], legacy[2], config["detail_tiles"], "detail")
+    legacy_flat = R.metric_values(legacy[1], legacy[2], config["flat_tiles"], "flat")
     capture_index = list(R.CAPTURES).index(capture)
     seed = R.BOOTSTRAP_SEED + 1009 * capture_index
     out = {}
     for k, planes in candidates.items():
-        candidate_detail = R.metric_values(*planes, config["detail_tiles"], "detail")
-        candidate_flat = R.metric_values(*planes, config["flat_tiles"], "flat")
+        candidate_detail = R.metric_values(planes[1], planes[2], config["detail_tiles"], "detail")
+        candidate_flat = R.metric_values(planes[1], planes[2], config["flat_tiles"], "flat")
         detail = R.bootstrap_ratio(
             candidate_detail,
             legacy_detail,
@@ -489,24 +514,61 @@ def contiguous_ranges(values: Sequence[float]) -> list[list[float]]:
     return groups
 
 
+def run_self_test() -> int:
+    def fake_result(lo: int, hi: int) -> dict:
+        errors = [0.0 if lo <= i <= hi else 0.06 for i in range(len(R.K_GRID))]
+        ratios = [1.0 + value for value in errors]
+        return {
+            "bands": [
+                {
+                    "band": band,
+                    "rois": {
+                        roi: {"width_error": list(errors), "ratio": list(ratios)}
+                        for roi in ("detail", "flat")
+                    },
+                }
+                for band in range(R.BANDS)
+            ]
+        }
+
+    common = {
+        "flat-on-ruler": fake_result(20, 40),
+        "coffee-bubbles": fake_result(30, 50),
+        "113MSDCF": fake_result(35, 45),
+    }
+    survivors, rows = width_survivors(common)
+    if survivors[0] != R.K_GRID[35] or survivors[-1] != R.K_GRID[40]:
+        raise RuntimeError(f"global-intersection self-test failed: {survivors}")
+    disjoint = {
+        "flat-on-ruler": fake_result(0, 20),
+        "coffee-bubbles": fake_result(30, 50),
+        "113MSDCF": fake_result(60, 80),
+    }
+    none, _ = width_survivors(disjoint)
+    if none or any(row["predicates"] != 42 for row in rows):
+        raise RuntimeError("NO_COMMON_K/predicate-count self-test failed")
+    print("measure self-test: null=GREEN planted-disjoint-captures=RED")
+    return 0
+
+
 def run_gate() -> int:
     started = time.perf_counter()
-    manifest, commission, beta = validate_sealed_inputs()
+    manifest, commission, calibration = validate_sealed_inputs()
     width_results = {}
     for name, config in R.CAPTURES.items():
-        width_results[name] = analyze_capture_width(name, config, beta)
+        width_results[name] = analyze_capture_width(name, config, calibration)
     survivors, width_grid = width_survivors(width_results)
     print(f"global width survivors: {survivors}", flush=True)
 
-    metric_ks = survivors if survivors else [NEGATIVE_SENTINEL_K]
     metrics: dict[str, dict] = {}
     render_provenance = {}
-    for name, config in R.CAPTURES.items():
-        candidates, legacy, provenance = render_capture(name, config, beta, metric_ks)
-        metrics[name] = capture_metrics(name, config, candidates, legacy)
-        render_provenance[name] = provenance
-        del candidates, legacy
-        gc.collect()
+    if survivors:
+        for name, config in R.CAPTURES.items():
+            candidates, legacy, provenance = render_capture(name, config, calibration, survivors)
+            metrics[name] = capture_metrics(name, config, candidates, legacy)
+            render_provenance[name] = provenance
+            del candidates, legacy
+            gc.collect()
 
     passing = []
     for k in survivors:
@@ -515,34 +577,34 @@ def run_gate() -> int:
             passing.append(k)
     selected = min(passing) if passing else None
     verdict = f"COMMON_K={selected:.2f}" if selected is not None else "NO_COMMON_K"
-    report_k = selected if selected is not None else NEGATIVE_SENTINEL_K
-    report_key = f"{report_k:.2f}"
     table = []
-    grid_index = R.K_GRID.index(report_k)
-    for name, config in R.CAPTURES.items():
-        width_ok = all(
-            band["rois"][roi]["width_error"][grid_index] <= WIDTH_BAR + 1e-12
-            for band in width_results[name]["bands"]
-            for roi in band["rois"]
-        )
-        row_metrics = metrics[name][report_key]
-        table.append(
-            {
-                "capture": name,
-                "frames": config["frames"],
-                "k": report_k,
-                "k_role": "selected" if selected is not None else "preregistered-negative-sentinel",
-                "width_pass": width_ok,
-                "detail_lower95": row_metrics["detail"]["lower95"],
-                "flat_upper95": row_metrics["flat"]["upper95"],
-                "pass": bool(width_ok and row_metrics["pass_detail"] and row_metrics["pass_flat"]),
-            }
-        )
+    if selected is not None:
+        report_key = f"{selected:.2f}"
+        grid_index = R.K_GRID.index(selected)
+        for name, config in R.CAPTURES.items():
+            width_ok = all(
+                band["rois"][roi]["width_error"][grid_index] <= WIDTH_BAR + 1e-12
+                for band in width_results[name]["bands"]
+                for roi in band["rois"]
+            )
+            row_metrics = metrics[name][report_key]
+            table.append(
+                {
+                    "capture": name,
+                    "frames": config["frames"],
+                    "k": selected,
+                    "width_pass": width_ok,
+                    "detail_lower95": row_metrics["detail"]["lower95"],
+                    "flat_upper95": row_metrics["flat"]["upper95"],
+                    "pass": bool(width_ok and row_metrics["pass_detail"] and row_metrics["pass_flat"]),
+                }
+            )
     payload = {
-        "schema": 1,
+        "schema": R.SCHEMA,
+        "epoch": R.EPOCH,
+        "design_sha": R.DESIGN_SHA256,
         "verdict": verdict,
         "selected_k": selected,
-        "negative_sentinel_k": NEGATIVE_SENTINEL_K if selected is None else None,
         "width_survivors": survivors,
         "passing_k": passing,
         "passing_ranges": contiguous_ranges(passing),
@@ -582,10 +644,12 @@ def run_gate() -> int:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--gate", action="store_true", required=True)
-    parser.parse_args(argv)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--gate", action="store_true")
+    group.add_argument("--self-test", action="store_true")
+    args = parser.parse_args(argv)
     try:
-        return run_gate()
+        return run_gate() if args.gate else run_self_test()
     except Exception as exc:
         print(f"measure.py: ERROR: {exc}", file=sys.stderr)
         return 2
