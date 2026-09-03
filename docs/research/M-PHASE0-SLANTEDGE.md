@@ -141,3 +141,89 @@ $env:PYTHONDONTWRITEBYTECODE='1'
 python -B experiments\M-PHASE0-SLANTEDGE\commission.py
 python scripts\corpus_lint.py --root .
 ```
+
+## Survivor follow-up: M1 and ordinal Q25
+
+**Status: complete. Verdict: NO SURVIVOR IS ADMITTED BY THE FULL FROZEN
+BATTERY.**  This follow-up does not revive slanted-edge MTF50.  It asks whether
+SCORECARD-BASELINE M1 and V-HEADTOHEAD3's ordinal statistic resist USM while
+still responding to physical blur and improvement.
+
+The outcome-independent registration is
+`experiments/M-PHASE0-SLANTEDGE/SURVIVOR-PREREGISTRATION.md`.  Relevant
+candidate functions were copied verbatim into the owned tree.  A separate
+process checked the three full source hashes and 11 function ASTs before each
+run; the adapter imported only the copies.  The checker imported neither
+plants nor candidates, passed a literal all-GREEN fixture, and caught **10/10**
+single-property sabotages, including source drift and MTF50 relabelling.  Two
+complete child-process runs were bit-for-bit deterministic.
+
+Neither candidate reports MTF50, so native outputs are not renamed.  The
+absolute Gaussian MTF50 anchors are unsupported.  Ratios below are nevertheless
+judged against the unchanged frozen bars: blur `0.894427 +/-5%`, improvement
+`1.25 +/-5%`, USM `<=1.01`, tone movement `<=1%`, and noise median/worst
+movement `<=3%/5%`.
+
+### SCORECARD-BASELINE M1
+
+The adapter supplied 24 independent noisy A/B/reference triplets.  Physical
+blur/improvement changed A/B before noise; post-render USM filtered complete
+noisy A/B renders; the independent reference remained fixed.
+
+| native field | base | identity | blur | improvement | USM |
+|---|---:|---:|---:|---:|---:|
+| `f_licensed` | .150000 | 1.000000x | 1.000000x **RED** | 1.000000x **RED** | 1.000000x GREEN |
+| `S_25` | 6.68974e-5 | 1.000000x | .226526x **RED** | 8.274764x **RED** | .995819x GREEN |
+| `gain_median` guard | .109115 | 1.000000x | .670214x | 1.919579x | 1.271414x |
+
+The claim-bearing cutoff sits at its 0.15 floor for base, blur, real
+improvement and USM: on this frozen fixture it is
+`USM_INVARIANT_BUT_BLIND`.  The second claim-bearing output is not blind:
+`S_25` moves strongly in the correct directions under both physical arms while
+USM changes it by only -0.418%.  It is not quantitatively calibrated to MTF50,
+however, and fails the unchanged ratio bars.  The sharpening-unsafe
+`gain_median` guard correctly remains presentation-sensitive and is not used
+as resolution evidence.
+
+Affine tone is numerically invariant in both claim fields.  Gamma-3/logistic
+move `S_25` by **4.8400x/18818.9045x**; logistic also moves `f_licensed` from
+.15 to .25.  The extra-noise `S_25` median is `.330086x`, range
+`.004972x-10.381863x`; thus some noisier arms score much better.  Native score
+ratios at 0.5/1/5/12 degrees are `1/1/1/1` for the floored cutoff and
+`1.42205/1.18548/1/0.65802` for `S_25`; M1 emits no edge-angle/refusal output.
+The sigma-.60 arm returns `.17` and `.008855`, respectively.  M1 reads only
+`[.15,.25)` and caps the cutoff, so frequency licensing is structurally
+protected, although the frozen exact-sentinel interface is unsupported.
+
+**M1 disposition: NOT COMMISSIONED BY THIS HARNESS.**  It demonstrates a
+useful sharpening-safe, bidirectional `S_25` response, but its resolution
+cutoff is blind on the plant and the composite fails tone, noise, angle,
+absolute-calibration and exact-sentinel bars.  This synthetic adapter cannot
+adjudicate formal scorecard M1: it lacks the registered tile-eligibility
+denominator and dark/flat noise floor.
+
+### V-HEADTOHEAD3 licensed ordinal Q25
+
+| native field | base | identity | blur | improvement | USM |
+|---|---:|---:|---:|---:|---:|
+| licensed `Q25` | 9.52160e-4 | 1.000000x | .841501x **RED** | .977981x **RED/wrong sign** | **5.560744x RED** |
+| historical `A20_25` | .0310560 | 1.000000x | .796069x | 1.097075x | .591780x |
+
+The decisive candidate, licensed Q25, reports the information-free USM as
+**+456.07% improved** while a genuine sigma-1.20 improvement reads **-2.20%**.
+It is therefore neither sharpening-safe nor a calibrated resolution
+instrument on this plant.  Affine/gamma/logistic ratios are
+`.999963/1/.999966`, passing the tone bar.  Noise ratios are
+`15.9320-18.3498x` (median `17.0056x`).  The 0.5/1/5/12-degree ratios are
+`.961215/.966181/1/1.064245`; there is no angle gate.
+
+Q25's numerator is structurally restricted to `[.20,.25)` and its denominator
+is spatial rank variance, so it does not import an above-cap spectral result;
+the exact sentinel interface remains unsupported.  The historical statistic
+cannot rescue the result: its six-band denominator reaches 0.40 and is
+unlicensed, and it also misses both physical ratio bars and the noise bar.
+
+**Q25 disposition: REFUSED.**  It passes point-tone invariance but fails the
+decisive sharpening and genuine-improvement controls.  No real capture,
+holdout, reserve, Rust source, SCORECARD-BASELINE path or V-HEADTOHEAD3 path
+was modified.
