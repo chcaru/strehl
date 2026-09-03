@@ -1420,6 +1420,54 @@ bit-reproducible under `Crop`, or if the documented border hazard — coarse pyr
 black fill inward before the crop discards it — costs more than the resample it saves. Both are
 measurable, both are preregistered, and a negative result closes the lane honestly.
 
+### 2.9.4 The detail axis has no instrument on any capture that exists, and I was wrong about why
+
+Lane INSTRUMENT returned the verdict: **no admissible detail instrument is obtainable from current
+captures.** It also corrected a claim I had been repeating, and the correction matters.
+
+**What I had been asserting:** that subpixel alignment destroys the noise independence repeat-pair
+FRC depends on, so IBIS-on data is unusable.
+
+**Why that is too broad.** D8b already implements the safest possible correction — disjoint
+alignment data plus a **unit-modulus Fourier phase ramp**, not spatial interpolation
+(`experiments/M-PHASE0-SPLIT2/AMENDMENT-1.md:28-42`, `align.py:25-43,85-106`). It **preserves
+magnitude to `1.67e-16`**. A unitary phase shift does not create cross-frame dependence, so the
+generic objection does not apply.
+
+**The actual blockers are three, and they are worse than the one I named** because none is fixed by
+a better interpolator (`docs/research/M-PHASE0-SPLIT2.md:144-155`):
+
+1. **Spatially varying geometry.** The residual is not rigid, so no global shift corrects it. The
+   second light block fails the local nontranslation gate at `0.107703`, independently reproduced
+   at `0.105202` (`:69-85,113-120`).
+2. **Data-dependent registration**, which couples the alignment to the content being measured.
+3. **Stable sensor structure (FPN) that the ABBA null cancels rather than tests** — so the null
+   passing is not evidence the instrument works.
+
+Same-frame FRC remains dead independently: common-mode content leaves the adversary reading
+`0.972099`, and no threshold repairs it (`docs/research/M-PHASE0-SPLIT.md:95-101`).
+
+**The leading replacement is target-conditional ideal-observer information** — `I(X;Y)` between a
+target variable and a complete output tile. It is ranked first because **the data processing
+inequality makes "deterministic sharpening cannot increase it" a theorem rather than a heuristic**,
+with unclipped USM predicted to give *equality*; tone invariance is likewise a property of the
+estimand. **That is the first candidate in this program whose two decisive failures are excluded by
+construction rather than by hope.**
+
+**The risk that will decide it, stated before measurement:** a theorem about an estimand is not a
+guarantee about a finite-sample estimator. A trained observer can reward USM by fitting artefacts
+or by exploiting leakage from a periodic target. **The rule is therefore binding: the USM arm at
+radius 1 / amount 0.5 runs first, and failing it kills the candidate outright rather than
+triggering a retune.** A candidate that needs tuning to pass the sharpening arm has failed it.
+
+**One further finding, which raises the cost of the fix:** existing rulers do not establish
+physical scale, pose, magnification or focus advance (`docs/research/M84-ruler-metrology.md:239-266`),
+and the burned grid was only *nominally* 0.01 mm, clear film over paper. Whether a **certified**
+target is genuinely required, or whether a relative comparator claim can proceed without one, is
+an open question I have put back to the lane before troubling the owner — SOTA here is defined as
+comparator-leading, which is a *relative* claim, and that distinction may decide whether this is a
+procurement problem or a shoot-this-week problem.
+
 ## 3. Gaps, ranked by what stands between here and print-worthy
 
 ### 3.1 Blocking
@@ -1705,11 +1753,19 @@ running FRC between the two stacked outputs measures the resolution of *the stac
 which is the quantity a focus stacker should actually be judged on. Item 1's re-shoot measures
 repeats at a single focus, which characterises the render and detector rather than the stack.
 
-**Stated as a hypothesis, not a conclusion.** Lane INSTRUMENT owns the question of what
-formulation of FRC is admissible and whether resampling during registration destroys the noise
-independence it depends on. **I will not send the owner a consolidated request until INSTRUMENT
-rules**, because he will shoot it once and a wrong specification costs another round trip. If the
-consolidation holds, one IBIS-off session closes the detail axis *and* unblocks M1, M5 and M9.
+**CONFIRMED — by two lanes that never spoke to each other.** Lane INSTRUMENT independently
+specified a replacement session of **exactly 319 RAWs**: `sw4-A 55`, `sw4-B 55`, `sw1` checker-only
+`91`, `sw10-A 27`, `sw10-B 27`, plus **32 matched flats and 32 darks**. I verified the arithmetic.
+That sequence **matches the scorecard's separately derived M1/M5/M9 replacement spec** — one dense
+checker-only reference, two identical-condition repeats at one step width, two identical-condition
+sparse-step repeats — which was written from scoring requirements, not from instrument
+requirements. **Two lanes converged on the same session from different directions, so one IBIS-off
+capture closes the detail axis and unblocks M1, M5 and M9 together.**
+
+**Still being settled before I send it:** whether the target must be *certified* (a procurement
+problem) or merely stable and nonperiodic (a shoot-this-week problem), and whether an interim
+IBIS-off shoot on existing equipment would license anything. The owner shoots once, so the
+specification goes out complete or not at all.
 
 All three are cheap, all three are blocking, and none can be produced by any agent. They are
 listed first because they are the only items on this list that no amount of autonomous work can
